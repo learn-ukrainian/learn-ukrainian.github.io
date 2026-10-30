@@ -17,6 +17,7 @@ Default is dry-run. See docs/runbooks/worktree-cleanup.md
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import subprocess
@@ -430,6 +431,30 @@ def verify_branch_gone(
         remote_error=remote_error,
         local_error=local_error,
     )
+
+
+def observe_cleanup(repo_root: Path, pr: PullRequestInfo) -> dict[str, bool]:
+    """Live cleanup facts for a merged PR, from the checks this command runs.
+
+    Read-only: it runs ``find_matching_worktrees`` and the dry-run
+    ``verify_branch_gone``. A fact that cannot be read is reported as present,
+    so an unreadable cleanup never reads as a clean one.
+    """
+    primary = rw.primary_checkout_root(repo_root)
+    present = {"worktree_present": True, "local_branch_present": True, "remote_branch_present": True}
+    failures = (MergeCloseoutError, RuntimeError, OSError, subprocess.SubprocessError)
+    if not pr.head_ref_name:
+        return present
+    with contextlib.suppress(*failures):
+        present["worktree_present"] = bool(find_matching_worktrees(primary, pr))
+    try:
+        status = verify_branch_gone(primary, pr, apply=False)
+    except failures:
+        status = None
+    if status is not None:
+        present["local_branch_present"] = not (status.local_gone and status.local_error is None)
+        present["remote_branch_present"] = not (status.remote_gone and status.remote_error is None)
+    return present
 
 
 def _closeout_api(repo_root: Path, request: Request) -> Any:

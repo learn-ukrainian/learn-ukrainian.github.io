@@ -501,6 +501,21 @@ class GhGitHubAdapter:
             branch=branch or pr.get("head_branch"),
             worktree=worktree or str(self.repo_root),
         )
+        if str(pr.get("state") or "").upper() == "MERGED":
+            # The default worktree is this checkout, which is always registered,
+            # so a merged task's cleanup comes from what merge_closeout verifies.
+            from scripts.orchestration import merge_closeout
+
+            local.update(merge_closeout.observe_cleanup(
+                self.repo_root,
+                merge_closeout.PullRequestInfo(
+                    number=pr["number"],
+                    state="MERGED",
+                    head_ref_name=branch or pr.get("head_branch"),
+                    head_sha=pr.get("head_sha"),
+                    repository=merge_closeout.canonical_repository(github["repository"]),
+                ),
+            ))
         return {
             "schema_version": task_lifecycle.OBSERVATION_SCHEMA_VERSION,
             "observed_at": now,
@@ -1176,8 +1191,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--repo-root", type=Path, default=repo_root_from_file(), help='Repository worktree root; defaults to this checkout.')
     sub = parser.add_subparsers(dest="command", required=True)
     recover = sub.add_parser(
-        "recover-local", help="Append a verified local observation for an already-reaped merged task.",
-        description="Recover historical dispatch facts from a verified preservation bundle. Use only after removal.\nChild association and historical common-closeout recovery read GitHub; ordinary recovery is offline.",
+        "recover-local", help="Legacy tasks only: append a verified local observation for an already-reaped merged task.",
+        description="Legacy tasks only: recover historical dispatch facts from a verified preservation bundle, after removal.\nDispatch v2 tasks need no recovery; mutate close-issue observes the cleanup of a merged task itself.\nChild association and historical common-closeout recovery read GitHub; ordinary recovery is offline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Example:
   .venv/bin/python -m scripts.orchestration.task_closeout recover-local --state-file ledger.json --task-record task.json --preserved-manifest batch_state/preserved/task/attempt.manifest.json --push-record push.json

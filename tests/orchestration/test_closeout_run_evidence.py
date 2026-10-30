@@ -450,6 +450,32 @@ def test_cleanup_residual_is_distinct_from_product_proof(bound_case):
     assert report["criteria"][0]["missing"] == []
 
 
+@pytest.mark.parametrize(("worktrees", "status", "residual"), [
+    ([], mc.BranchStatus("codex/42-closeout", remote_gone=True, local_gone=True), None),
+    (["/repo/.worktrees/dispatch/codex/42-closeout"], mc.BranchStatus("codex/42-closeout", True, True), "worktree_present"),
+    ([], mc.BranchStatus("codex/42-closeout", remote_gone=True, local_gone=False), "local_branch_present"),
+    ([], mc.BranchStatus("codex/42-closeout", remote_gone=False, local_gone=True), "remote_branch_present"),
+    ([], mc.BranchStatus("codex/42-closeout", False, True, remote_error="cannot verify origin HEAD"), "remote_branch_present"),
+    (RuntimeError("git worktree list failed"), mc.BranchStatus("codex/42-closeout", True, True), "worktree_present"),
+])
+def test_merged_observation_takes_cleanup_from_closeout_facts(bound_case, monkeypatch, tmp_path, worktrees, status, residual):
+    """The default worktree is the always-registered checkout, so it never decides cleanup."""
+    _ledger, observation, *_ = bound_case
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "_github_observation", lambda *_a: deepcopy(observation["github"]))
+    monkeypatch.setattr(tl, "observe_local_git", lambda *a, **k: {**deepcopy(observation["local"]), "worktree_present": True})
+
+    def matching(_root, _pr):
+        if isinstance(worktrees, Exception):
+            raise worktrees
+        return worktrees
+
+    monkeypatch.setattr(mc, "find_matching_worktrees", matching)
+    monkeypatch.setattr(mc, "verify_branch_gone", lambda *_a, **_k: status)
+    local = task_closeout.GhGitHubAdapter(tmp_path).observe(_ledger, now=NOW)["local"]
+    keys = ("worktree_present", "local_branch_present", "remote_branch_present")
+    assert {key: local[key] for key in keys} == {key: key == residual for key in keys}
+
+
 def test_all_closure_due_criteria_include_cleanup_boundary(bound_case):
     ledger, observation, *_ = bound_case
     criteria = ledger["ac_snapshot"]["criteria"]
