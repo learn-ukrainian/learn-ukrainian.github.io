@@ -20,7 +20,7 @@ from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_d
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers, runtime_context, store
+from scripts.dispatcher import admission, agy_sandbox, git, headroom, ownership, providers, runtime_context, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 from scripts.dispatcher.watchdog import (
@@ -201,10 +201,10 @@ def _spec(record: dict, options: dict) -> TaskSpec:
 
 
 def _outside_cause(paths, owned) -> str | None:
-    from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
+    from scripts.guardrails.delegate_ownership import sanitize_for_display
     from scripts.secret_redactor import redact_text
 
-    outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
+    outside = ownership.outside_owned(paths, owned)
     if not outside:
         return None
     cause = "outside_owned_paths: " + ", ".join(sanitize_for_display(redact_text(path)) for path in outside)
@@ -213,17 +213,7 @@ def _outside_cause(paths, owned) -> str | None:
 
 def _verification_cause(exc: Exception) -> str:
     """Name what stopped the ownership check: the failing Git step, or the check's own refusal."""
-    if isinstance(exc, subprocess.TimeoutExpired):
-        detail = f"git {exc.cmd[1]} timed out"
-    elif isinstance(exc, subprocess.CalledProcessError):
-        detail = f"git {exc.cmd[1]} failed"
-    elif isinstance(exc, ValueError):
-        detail = str(exc)
-    elif isinstance(exc, KeyError):
-        detail = f"record field {exc} missing"
-    else:
-        detail = type(exc).__name__
-    return f"owned_paths_verification_failed: {detail}"[:200]
+    return f"owned_paths_verification_failed: {ownership.failure_detail(exc)}"[:200]
 
 
 def _enforce_delivery(record: dict) -> None:
@@ -236,21 +226,9 @@ def _enforce_delivery(record: dict) -> None:
         try:
             with git.ownership_git(record) as run:
                 base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
-                merge_base = run("merge-base", record["head_sha"], base_sha)
                 start_sha = record.get("worktree_start_sha", record["worktree_base_sha"])
-                revision_range = (record["head_sha"], "--not", merge_base, start_sha)
-                if (record["commits_ahead"] or 0) > 0 and not run("rev-list", "--max-count=1", *revision_range):
-                    raise ValueError("empty ownership range with recorded commits ahead")
-                version = tuple(int(part) for part in run("version").split()[2].split(".")[:2])
-                remerge = version >= (2, 36)
-                # Remerge diffs isolate edits made during a merge from clean upstream changes.
-                # Older Git and octopus merges cannot prove the absence of resolution edits.
-                paths = run(
-                    "log", "--format=", "--name-only", "-z", "-r", "--no-renames", "--root",
-                    "--remerge-diff" if remerge else "--cc", *revision_range, strip=False,
-                ).split("\0")
-                if run("rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
-                    raise ValueError("merge resolution paths cannot be verified")
+                paths = ownership.delivered_paths(run, record["head_sha"], base_sha, start_sha,
+                                                  commits_expected=True)
             cause = _outside_cause(paths, owned)
         except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError) as exc:
             cause = _verification_cause(exc)

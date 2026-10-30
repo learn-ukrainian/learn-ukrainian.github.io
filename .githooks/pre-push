@@ -17,6 +17,7 @@ tee "$updates_file" >/dev/null
 if [[ $# -ne 0 ]]; then
   run_project_python "$source_root/.githooks/pre_push_gate.py" --push-messages "$@" <"$updates_file"
 fi
+check_owned_paths push <"$updates_file"
 run_project_python "$hook_dir/check-pytest-stamp.py" "$@" <"$updates_file"
 # The gate runs the pre-commit pre-push stage over the explicit outgoing range,
 # with the per-commit OPSEC and internal-ID scans (#10033). It runs no tests of
