@@ -528,3 +528,116 @@ This grouped ledger is not an official 81-item Standard checklist. The level
 descriptor (`:223-226`) governs difficulty, with first-contact performance at 6
 and integrated performance at 55. Lesson delivery, handwriting/audio assets
 and independent unseen-task evaluation remain with the curriculum-upgrade driver.
+
+## 12. Revision r5 (OHO)
+
+This revision grounds the A1 arc in Anna Ohoiko's *Oho! Ukrainian Grammar & Workbook A1* (2026; Sources store `owned-oho-a1-workbook`, chunks `p0001`–`p0230`; companion transcripts `owned-oho-a1-transcripts`, chunks `p0001`–`p0011`), evaluated alongside two independent read-only checks: Sol (`cto-e1f7-arcoho-sol.result`) and Gemini (`cto-e1f7-arcoho2-agy.result`).
+
+Operator rules govern this revision:
+1. The OHO workbook glossary (pp. 200–216, chunks `p0200`–`p0216`) is the A1 minimum vocabulary floor.
+2. Items in *500 Verbs* and *1000 Words* outside this glossary belong to A2 and later.
+3. A1 retains English scaffolding throughout.
+4. Content is strictly A1; beyond-minimum items are acknowledged as A1+ departures or deferred to A2.
+
+Each of the seven subsections (a)–(g) below is drafted with its exact OHO evidence as a separable decision for operator determination.
+
+### (a) Vocabulary ledger
+
+- **OHO evidence:** `owned-oho-a1-workbook` chunks `p0200`–`p0216` (printed pages 200–216, *«Словничок / Vocabulary»*); companion audio transcripts `owned-oho-a1-transcripts` (chunks `p0001`–`p0011`).
+- **Machine-readable ledger:** [`docs/epics/a1-oho-vocabulary-ledger.yaml`](a1-oho-vocabulary-ledger.yaml).
+- **Exact glossary counts (replacing unverified counts in prior checks):**
+  - **1,664** dictionary lines printed across the 17 glossary pages.
+  - **1,744** distinct headwords / lexical entries in the verified reference inventory (`registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml`), consisting of **1,652** single words and **92** multiword expressions/phrases, expanding gender pairs (e.g. `австралієць, ч.` / `австралійка, ж.`).
+  - **1,750** members if the 6 orthographic/spelling variant pairs printed on the same line (`сільниця, сільничка`, `вчора, учора`, `вночі, уночі`, `ввечері, увечері`, `вранці, уранці`, `удень, вдень`) are expanded as distinct rows.
+  - **1,738** unique base lemmas.
+  - **299** verb pairs in OHO's verb appendix (pp. 217–223), which are excluded from A1 and assigned to A2+ per the operator's rule.
+  - *Correction of prior reports:* Sol's check left full coverage unverified (`NOT CHECKED`). Gemini's check cited the 1,744 figure without line verification and hallucinated «ринва» as a phonetic drill word (neither «ринва» nor any derivative appears in the glossary or workbook text).
+- **Unplaceable entries: 0.** Every one of the 1,744 glossary entries is assigned to a specific owning position (1–55) with its contextual sense and downstream reuse positions:
+  - Cultural realia and state symbols (`герб`, `тризуб`, `прапор`, `писанка`, `вишиванка`, `калина`, `лелека`, `булава`, `Тарас Шевченко`) are owned by position 1 (`introduction-to-ukrainian`) as English-scaffolded cultural symbols, and position 5 (`reading-ukrainian`), with later reuse in 46 (`holidays`) and 55 (`a1-finale`).
+  - Clothing items (`блузка`, `кофта`, `куртка`, `майка`, `сорочка`, `спідниця`, `футболка`, `шарф`, `шкарпетка`, `шорти`, `штани`) are owned by position 39 (`shopping`), with reuse in 41 and 55.
+  - Digital, civic, and administrative terms (`інтернет`, `пароль`, `пін-код`, `онлайн`, `канал`, `натиснути`, `бюджет`, `резюме`, `кар'єра`, `зарплата`, `декрет`, `орендувати`, `коворкінг`, `конференція`) are owned by position 52 (`my-story`), position 5 (`reading-ukrainian`), and position 26 (`free-time`).
+  - Crisis, emergency, and contemporary defense terms (`військо`, `укриття`, `каска`, `повітряна тривога`) are owned by position 54 (`emergencies`); civic giving (`донатити`) is owned by position 26 (`free-time`).
+  - Phonetic demonstration words from Unit 1 (`ґава`, `ґанок`, `ґедзь`, `ґрунт`, `ґудзик`, `джміль`, `джерело`, `дзвін`, `дзвоник`, `дзеркало`, `хрущ`, `жук`, `рись`, `тин`, `булька`, `бук`) are owned by position 5 (`reading-ukrainian`) and position 24 (`weather`), exercising taught Cyrillic letters.
+  - Colloquial formulas (`байдуже` at 15; `дати п'ять`, `солодких снів` at 6) are owned by their conversational modules.
+  - Checkpoint modules (7, 14, 21, 27, 35, 41, 47) and finale (55) introduce 0 new entries, preserving invariant D4.
+
+### (b) Case order
+
+- **OHO evidence:** OHO Unit 5 Lesson 33 (chunk W0087: SVO sentence frame with direct object, *Я люблю борщ*, *Я люблю Україну*); Unit 6 Lessons 45–48 (chunks W0113–W0122: Accusative case for inanimate objects, direction with в/на, days of the week, animate objects, agreeing adjectives, personal pronouns); Unit 7 Lessons 49–55 (chunks W0123–W0138: Locative case with у/в/на, months, masculine -у/-ю, consonant alternations г->з, к->ц, х->с, vowel alternations о/е->і, locative adjectives).
+- **Draft version (following OHO):**
+  - Introduce an early inanimate direct-object accusative model alongside present tense verbs at positions 15–16 (*Я люблю каву*, *Я читаю книжку*).
+  - Teach the full Accusative case before the Locative case:
+    - Positions 29–31: Accusative case system (direction with в/на, days of the week, inanimate objects, animate objects).
+    - Positions 32–33: Transport and city navigation.
+    - Positions 36–37: Food, drink, and café ordering.
+    - Positions 38–40: Locative case system (place with в/на, city institutions, housing and rooms).
+- **Alternative (retaining ULP order):**
+  - Keep Locative before Accusative: Place (positions 29–30) → Direction (position 31) → Object (positions 37, 40).
+  - *Stated reason for ULP alternative:* The locative case in Ukrainian has only prepositional uses (`у/в`, `на`) answering the essential communicative inquiry *де?* (у Києві, на роботі, в кімнаті). Its singular endings are uniform and regular, avoiding early case syncretism (accusative animate masculine matching genitive, and inanimate masculine/neuter matching nominative). Learning static location first provides learners a stable inflected noun foundation before tackling transitive direct objects and directional motion.
+
+### (c) First-ten conversational prerequisites
+
+- **OHO evidence:** OHO Unit 2 Lessons 11–17 (chunks W0037–W0050): personal pronouns and formal/informal address (*Як справи?*, *Як ти?*, *Як ви?*, Lesson 11); accusative personal pronouns (*Мене звати...*, *Як вас звати?*, Lesson 12); prepositional genitive pronouns of possession (*У мене є...*, Lesson 13); animate/inanimate questions (*Хто це?*, *Що це?*, Lesson 14); negation and polar yes/no questions (*Це ти? Ні, це не я.*, Lesson 15); conjunctions *і*, *й*, *та*, *а*, *або*, *чи* and alternative questions (*Це кава чи чай?*, Lessons 16–17).
+- **Arc adjustment:**
+  - Shift conversational prerequisites into positions 2–6 before the first-contact checkpoint at position 7:
+    - **Position 2 (`sounds-letters-and-hello`):** Greeting formulas (*Привіт!*, *Добрий день!*, *Добрий ранок!*, *Добрий вечір!*), core gratitude and politeness (*Дякую!*, *Будь ласка!*), polar tokens (*Так*, *Ні*).
+    - **Position 3 (`who-am-i`):** Identity questions (*Хто це?*, *Хто ви?*, *Як вас звати? / Як тебе звати?*), formal/informal pronoun distinction (*ти* vs *ви*), first-person replies (*Мене звати...*, *Я студент...*), and basic negation (*Ні, я не...*).
+    - **Position 4 (`my-family`):** Possession questions (*Чи є у вас...?*, *У вас є...?*), affirmative possession (*У мене є...*), family address, and coordinating conjunction *і / й*.
+    - **Position 6 (`first-conversations`):** Sustained 4–6 turn exchanges combining formal and informal registers (*Як ви?* vs *Як ти?*), yes/no inquiries (*чи*), polar denial (*Це не я*), and basic contrastive/additive linking (*і*, *а*, *але*), completing the communicative prerequisite inventory prior to position 7 (`checkpoint-first-contact`).
+
+### (d) Alphabet (Operator choice)
+
+- **OHO evidence:** OHO Unit 1 Lesson 01 (chunk W0015): Presents the full 33-letter Ukrainian alphabet at once, showing both printed and handwritten/cursive forms with audio accompaniment. Lessons 02–10 then systematically treat phonetic topics (vowels, jotation, voicing, hard/soft, soft sign, apostrophe, syllables, stress).
+- **Primary proposal (following OHO adult L2 approach):**
+  - Position 2 presents the full 33-letter alphabet overview (printed and cursive letter models, letter names, audio-grounded).
+  - Eliminates artificial letter gating, enabling learners to decode adult survival cognates (*чай*, *кафе*, *банк*, *метро*, *аптека*) immediately.
+  - Positions 2–5 stage the phonetic topics:
+    - Position 2: Full alphabet overview + 6 vowel sounds, stressed vs unstressed vowels, statement/question intonation.
+    - Position 3: Hard vs soft consonants, hardness before [е], syllable division and stress rules, voiced/voiceless pairs д–т, з–с, г–х.
+    - Position 4: Jotated vowels (я, ю, є, ї), apostrophe, pair б–п.
+    - Position 5: Affricates (дж, дз), consonants ґ, ж, ч, ш, щ, ц, ф, letter names, cursive recognition and handwriting practice.
+- **Alternative (primer-metered option, current r4.1):**
+  - Retain the Bukvar-metered progression (Захарійчук 2025): 12 letters at position 2, 9 letters at 3, 5 letters at 4, 7 letters at 5, strictly gating printable words to introduced letters.
+- **Disposition:** *Operator choice.*
+
+### (e) Pacing rules made explicit
+
+- **OHO and pilot rubric evidence:** `docs/epics/fresh-build-a1-v1-import.md` lines 150–175 (the pilot rubric):
+  - At most 3 new letters introduced per lesson, with 1-letter remainder lessons.
+  - At most one new grammar slice per lesson.
+  - No new grammar slice beside new letters in the same lesson.
+- **Positions 2–3 allocation:**
+  - Pos 2: 12 letters across 5 estimated lessons (4 teaching + 1 recap) = exactly 3 letters per teaching lesson.
+  - Pos 3: 9 letters across 4 estimated lessons (3 teaching + 1 recap) = exactly 3 letters per teaching lesson.
+  - *Result:* Positions 2–3 have zero spare teaching lessons if the recap is a standalone lesson.
+  - *Explicit rule:* In lessons introducing 3 new letters, no new grammar slice may be introduced; communicative phrases in positions 2–3 (greetings, *Мене звати*) must be handled as fixed lexical chunks. If a module embeds its recap in the final lesson (reducing Pos 2 to 4 lessons or Pos 3 to 3 lessons), either lesson count estimates must be expanded or the full-alphabet overview in subsection (d) adopted.
+
+### (f) OHO's A1+ items and numerals placement
+
+- **OHO evidence:** OHO chunk W0010 (author notes grammar scope is "A1+" with items exceeding the minimum standard); Unit 8 Lessons 56–60 (numerals); Unit 9 Lessons 63–65 (aspect pairs) and Lesson 67 (synthetic future); Unit 10 Lesson 72 (first-person plural imperative).
+- **Analysis against State Standard 2024:**
+  1. **Verb Aspect Pairs** (OHO Lessons 63–65):
+     - *Standard reference:* Systematic aspect pair formation belongs to **A2** (`lines 1367–1375`). A1 includes only "first awareness" and "a few perfective futures" (`lines 718–719`).
+     - *Status:* **A1 retains first awareness only (selected perfectives at Pos 51); systematic aspect pairs begin at A2.**
+  2. **Synthetic Future** (*питиму*, *робитиму*; OHO Lesson 67):
+     - *Standard reference:* Standard A1 specifies only compound imperfective future with *бути* (`lines 715–717`). The synthetic future is classified at **B1** (`lines 2287–2289`), treated in ULP at Season 3 Lesson 98.
+     - *Status:* **A1 includes compound future only (Pos 50); synthetic future is excluded from A1 and deferred to B1/A2.**
+  3. **First-Person Plural Imperative** (*ходімо!*, *перевірмо!*, *зробімо!*; OHO Lesson 72):
+     - *Standard reference:* Standard A1 imperative mood is restricted to **second person singular and plural only** (`lines 721–725`). First-person plural imperatives belong to **A2** (`lines 1380–1385`).
+     - *Status:* **A1 includes second person singular and plural only (Pos 43); first-person plural imperative belongs to A2.**
+  4. **Numerals Placement** (OHO Unit 8 vs Arc Pos 11):
+     - *Standard reference:* Cardinal numerals for prices, age, and phone numbers are listed under A1.2 (`lines 652–654`).
+     - *Status:* State both options:
+       - *Option 1 (Keep at Pos 11):* Serves immediate communicative needs for age, phone numbers, and prices early in the course (ULP Season 1 Lesson 11).
+       - *Option 2 (OHO placement):* Defer systematic 0–1000 cardinals to Unit 8 / Pos 22 (prior to clock time), keeping only fixed age and price formulas in early modules to reduce cognitive load.
+
+### (g) Adult/teen framing for positions 1–10 tasks
+
+- **OHO evidence:** OHO chunks W0012, W0015–W0016, W0031–W0032, W0042, W0053–W0056 (adult/teen contexts including personal-data forms, city inquiries, technology, devices, belongings, and practical occupations).
+- **Framing requirements:**
+  - Tasks in positions 1–10 must reflect adult and teenage real-world language needs:
+    - Replace primary-school animal identification and syllable grids with adult survival vocabulary and cognates (*кафе, бар, таксі, метро, банк, офіс, парк, готель, вайфай, пароль, сайт*).
+    - Position 3 (identity): Adult professions (*айтівець, інженер, викладач, дизайнер, лікар, студент, журналіст*), origin, and language abilities.
+    - Position 4 (family): Adult personal circles (partner, spouse, children, friends, house, car), allowing personal variation beyond nuclear family drawings.
+    - Positions 8–10 (belongings, descriptions, colors): Everyday adult items (*телефон, ноутбук, рюкзак, паспорт, ключі, кава, одяг*), practical descriptions of belongings and personal appearance.
+    - Syllables and phonetics: Explicitly framed as pronunciation and rhythm aids (as in OHO Lesson 09), eliminating primary-school hyphenation/line-breaking drills in early levels.
