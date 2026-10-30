@@ -18,6 +18,11 @@ This guard is deliberately narrow. It catches high-confidence dump shapes only:
   - `scripts.session_supervisor worker-env` environment views, including the
     explicit `--all` form
 
+It also refuses full-command-line process kills that can match the invoking
+shell: `pkill -f`, and a `pgrep -f` anywhere in the same invocation as a `kill`
+whose operands are not literal numeric PIDs. The secret override does not
+apply to them, nor to a command too deep or malformed to read whole.
+
 Quote-aware tokenization keeps dangerous-looking strings inside a quoted commit
 message from becoming false positives. This is defense-in-depth, not a sandbox.
 """
@@ -61,6 +66,12 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # or launching another program, and absent from the table. All else is Consider.
 # grep -c TOKEN .env and cp .env backup remain conservative denials even though
 # those operations do not print values.
+# Process-kill facts are collected per invocation without data flow, so a
+# full-match pgrep beside any nonliteral kill is refused. eval, `env -S`,
+# scripts fed to a shell on stdin and abbreviated long options are not
+# modeled. Only the launchers in _WRAPPER_OPTIONS plus `env` and `xargs` are
+# resolved; others such as setsid, doas or find -exec are not.
+# Quote-spliced command words (`'k'ill`) are a shared tokenizer limit.
 
 from __future__ import annotations
 
@@ -590,6 +601,86 @@ def _pipelines(command: str) -> list[list[list[str]]]:
     return pipelines
 
 
+# Wrapper: (short options taking a value, long options taking a value,
+# short and long options that only look a command up and never run it,
+# positional operands before the command).
+_WRAPPER_OPTIONS = {
+    "sudo": (
+        "CDghpRrtTUu",
+        {
+            "--chdir",
+            "--chroot",
+            "--close-from",
+            "--command-timeout",
+            "--group",
+            "--host",
+            "--other-user",
+            "--prompt",
+            "--role",
+            "--type",
+            "--user",
+        },
+        {"-e", "-K", "-l", "-V", "-v", "--edit", "--list", "--remove-timestamp", "--validate", "--version"},
+        0,
+    ),
+    "exec": ("a", set(), set(), 0),
+    "time": ("fo", {"--format", "--output"}, set(), 0),
+    "nice": ("n", {"--adjustment"}, set(), 0),
+    "stdbuf": ("ioe", {"--input", "--output", "--error"}, set(), 0),
+    "timeout": ("ks", {"--kill-after", "--signal"}, set(), 1),
+    "command": ("", set(), {"-v", "-V"}, 0),
+    "nohup": ("", set(), set(), 0),
+    "builtin": ("", set(), set(), 0),
+    "busybox": ("", set(), {"--help", "--install", "--list", "--list-full"}, 0),
+}
+
+
+def _after_wrapper_options(seg: list[str], i: int, wrapper: str, redirects: list[str]) -> int:
+    """Return the index after a wrapper's options and operands, or -1 for a lookup.
+
+    Redirections may sit anywhere among them; they are moved to `redirects`.
+    """
+    value_letters, value_longs, lookups, positionals = _WRAPPER_OPTIONS[wrapper]
+    value_pending = False
+    options = True
+    while i < len(seg):
+        skip = _redirection_skip_count(seg[i])
+        if skip:
+            redirects.extend(seg[i : i + skip])
+            i += skip
+            continue
+        word = _strip_quotes(seg[i])
+        if value_pending:
+            value_pending = False
+            i += 1
+            continue
+        if options and word == "--":
+            options = False
+            i += 1
+            continue
+        if not options or not word.startswith("-") or word == "-":
+            if not positionals:
+                return i
+            positionals -= 1
+            options = False
+            i += 1
+            continue
+        i += 1
+        if word.startswith("--"):
+            name = word.split("=", 1)[0]
+            if name in lookups:
+                return -1
+            value_pending = name in value_longs and "=" not in word
+            continue
+        for index, letter in enumerate(word[1:], 1):
+            if f"-{letter}" in lookups:
+                return -1
+            if letter in value_letters:
+                value_pending = index == len(word) - 1
+                break
+    return i
+
+
 def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
     """Return `(command, raw_args, index)` after simple wrappers/assignments."""
     i = 0
@@ -634,29 +725,14 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
             i += skip
             continue
         wrapper = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
-        if wrapper in {"sudo", "time", "nohup", "exec", "builtin", "command"}:
-            i += 1
-            if wrapper == "command":
-                while i < len(seg) and _strip_quotes(seg[i]) in {"-p", "--"}:
-                    i += 1
-            continue
-        if wrapper in {"nice", "timeout", "stdbuf"}:
-            i += 1
-            if wrapper == "nice":
-                if i < len(seg) and _strip_quotes(seg[i]) == "-n":
-                    i += 2
-                elif i < len(seg) and re.fullmatch(r"-\d+", _strip_quotes(seg[i])):
-                    i += 1
-            elif wrapper == "timeout":
-                while i < len(seg) and _strip_quotes(seg[i]).startswith("-"):
-                    i += 2 if _strip_quotes(seg[i]) in {"-s", "--signal", "-k", "--kill-after"} else 1
-                i += 1  # duration
-            else:
-                while i < len(seg) and re.fullmatch(r"-[ioe](?:\d+)?", _strip_quotes(seg[i])):
-                    i += 1
+        if wrapper in _WRAPPER_OPTIONS:
+            i = _after_wrapper_options(seg, i + 1, wrapper, redirects)
+            if i < 0:
+                return None
             continue
         if wrapper == "env":
             j = i + 1
+            value_pending = False
             while j < len(seg):
                 token = _strip_quotes(seg[j])
                 skip = _redirection_skip_count(seg[j])
@@ -664,17 +740,23 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
                     redirects.extend(seg[j : j + skip])
                     j += skip
                     continue
+                if value_pending:
+                    # The value of -u, -C or -S is the next non-redirect word.
+                    value_pending = False
+                    j += 1
+                    continue
                 if token.isdigit():
                     return "env", redirects + seg[i + 1 :], i
                 if _is_assignment(seg[j]):
                     j += 1
-                elif token in {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"} and j + 1 < len(seg):
-                    j += 2
-                elif (
-                    token.startswith(("--unset=", "--chdir=", "--split-string="))
-                    or token in {"-i", "-0", "--ignore-environment", "--null"}
-                    or token.startswith("-")
-                ):
+                elif token.startswith("--"):
+                    value_pending = token in {"--unset", "--chdir", "--split-string"}
+                    j += 1
+                elif token.startswith("-"):
+                    for index, letter in enumerate(token[1:], 1):
+                        if letter in "uCS":
+                            value_pending = index == len(token) - 1
+                            break
                     j += 1
                 else:
                     break
@@ -687,8 +769,6 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
         return None
 
     cmd = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
-    if cmd == "busybox" and i + 1 < len(seg) and _strip_quotes(seg[i + 1]) == "sh":
-        return "sh", redirects + seg[i + 2 :], i + 1
     return cmd, redirects + seg[i + 1 :], i
 
 
@@ -891,6 +971,11 @@ def _has_safe_downstream(pipeline: list[list[str]], seg_index: int) -> bool:
 
 
 def _without_redirects(args: list[str]) -> list[str]:
+    return [_strip_quotes(arg) for arg in _raw_without_redirects(args)]
+
+
+def _raw_without_redirects(args: list[str]) -> list[str]:
+    """Drop redirections, keeping each remaining word's quoting."""
     result = []
     index = 0
     while index < len(args):
@@ -898,7 +983,7 @@ def _without_redirects(args: list[str]) -> list[str]:
         if skip:
             index += skip
         else:
-            result.append(_strip_quotes(args[index]))
+            result.append(args[index])
             index += 1
     return result
 
@@ -1621,6 +1706,8 @@ def _script_words(args: list[str], index: int) -> list[str]:
 def _shell_script(args: list[str]) -> list[str]:
     """Extract the script operand of a shell -c invocation."""
 
+    # Redirections may precede or sit among the options (`sh 2>/dev/null -c ...`).
+    args = _raw_without_redirects(args)
     i = 0
     while i < len(args):
         option = _strip_quotes(args[i])
@@ -1657,6 +1744,140 @@ def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
         cursor = end
     out.append(command[cursor:])
     return "".join(out), substitutions
+
+
+# procps pgrep/pkill short options whose value follows the letter or the next word.
+_PROCESS_VALUE_OPTIONS = set("dgGPstuUFOrq")
+_PROCESS_SHELLS = {"bash", "sh", "dash", "zsh", "ksh"}
+_XARGS_VALUE_LONGS = {
+    "--arg-file",
+    "--delimiter",
+    "--max-lines",
+    "--max-args",
+    "--max-procs",
+    "--max-chars",
+    "--process-slot-var",
+}
+
+
+def _process_block_msg(reason: str) -> str:
+    return (
+        f"BLOCKED by guard-secret-print (#M-5): {reason}.\n\n"
+        "Kill exact numeric PIDs read in an earlier command, or stop a harness background "
+        "task with the harness's own stop tool.\n"
+    )
+
+
+def _full_process_match(args: list[str]) -> bool:
+    """Whether pgrep/pkill options select by full command line (-f, --full)."""
+    words = iter(_strip_quotes(arg) for arg in _without_redirects(args))
+    for word in words:
+        if word == "--":
+            return False
+        if word == "--full":
+            return True
+        # Signals (-9, -TERM, -SIGHUP) and long options carry no -f letter.
+        if word.startswith("--") or not word.startswith("-") or re.fullmatch(r"-[A-Z0-9+]+", word):
+            continue
+        for index, letter in enumerate(word[1:], 1):
+            if letter == "f":
+                return True
+            if letter in _PROCESS_VALUE_OPTIONS:
+                if index == len(word) - 1:
+                    next(words, None)
+                break
+    return False
+
+
+def _literal_pid_kill(args: list[str]) -> bool:
+    """Whether kill names only literal numeric PIDs, as in `kill -TERM 123`."""
+    words = [_strip_quotes(arg) for arg in _without_redirects(args)]
+    pids = 0
+    expect_value = False
+    for word in words:
+        if expect_value:
+            expect_value = False
+            if not re.fullmatch(r"[A-Za-z0-9+]+", word):
+                return False
+        elif word in {"-s", "-n", "--signal"}:
+            expect_value = True
+        elif re.fullmatch(r"\d+", word):
+            pids += 1
+        elif not (word == "--" or re.fullmatch(r"-[A-Za-z0-9+]+", word)):
+            return False
+    return pids > 0 and not expect_value
+
+
+def _xargs_target(args: list[str]) -> list[str]:
+    """Return the command words xargs runs, after its own options."""
+    words = _raw_without_redirects(args)
+    index = 0
+    while index < len(words):
+        word = _strip_quotes(words[index])
+        if word == "--":
+            return words[index + 1 :]
+        if word in _XARGS_VALUE_LONGS:
+            index += 2
+        elif word.startswith("--") or word == "-":
+            index += 1
+        elif word.startswith("-"):
+            index += 1
+            # A value letter ends a short cluster; at its end the value is the next word.
+            for position, letter in enumerate(word[1:], 1):
+                if letter in "adEILnPs":
+                    index += position == len(word) - 1
+                    break
+        else:
+            return words[index:]
+    return []
+
+
+def _segment_process_facts(segment: list[str], depth: int) -> set[str]:
+    found = _command_at(segment)
+    fed = False
+    while found is not None and found[0] == "xargs":
+        target = _xargs_target(found[1])
+        found = _command_at(target) if target else None
+        fed = True
+    if found is None:
+        return set()
+    cmd, args, _ = found
+    if cmd == "__UNDECIDABLE_SECRET_COMMAND__":
+        return {"limit"}
+    if cmd in {"pkill", "pgrep"}:
+        return {cmd} if _full_process_match(args) else set()
+    if cmd == "kill":
+        # xargs appends its input to the operands, so a fed kill is never literal.
+        return {"kill"} if fed or not _literal_pid_kill(args) else set()
+    if cmd in _PROCESS_SHELLS:
+        facts: set[str] = set()
+        for script in _shell_script(args):
+            facts |= _process_facts(script, depth=depth + 1)
+        return facts
+    return set()
+
+
+def _process_facts(command: str, *, depth: int = 0) -> set[str]:
+    """Collect full-match selections and nonliteral kills across one invocation.
+
+    Facts are gathered from every statement, substitution and nested shell
+    script, ignoring pipes, loops, groups and assignments between them, so a
+    selection reaches its kill however the command routes the PIDs. A part
+    that cannot be read adds the "limit" fact and keeps the facts already found.
+    """
+    if depth >= 12:
+        return {"limit"}
+    try:
+        executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
+    except ShellPreprocessLimit:
+        return {"limit"}
+    facts: set[str] = set()
+    for _, body in substitutions.values():
+        facts |= _process_facts(body, depth=depth + 1)
+    for pipeline in _pipelines(executable):
+        for segment in pipeline:
+            facts |= _segment_process_facts(segment, depth)
+    return facts
 
 
 def _scan_command(
@@ -1744,18 +1965,33 @@ def _main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if args == ["--self-test"]:
         return _self_test()
-    if os.environ.get("LEARN_UK_SECRETS_OK") == "1":
-        return 0
+    # The secret-output override does not cover process kills.
+    override = os.environ.get("LEARN_UK_SECRETS_OK") == "1"
 
     payload = _read_payload()
     if payload is None or not isinstance(payload.get("tool_input", {}), dict):
+        if override:
+            return 0
         sys.stderr.write(_block_msg("malformed hook payload"))
         return 2
     if not isinstance(payload.get("tool_input", {}).get("command", ""), str):
+        if override:
+            return 0
         sys.stderr.write(_block_msg("malformed hook command"))
         return 2
     command = _command(payload)
     if not command:
+        return 0
+
+    process_facts = _process_facts(command)
+    if "pkill" in process_facts or {"pgrep", "kill"} <= process_facts:
+        sys.stderr.write(_process_block_msg("full-command-line process kills can match the invoking shell"))
+        return 2
+    if "limit" in process_facts:
+        # Fail closed: the override never covers a command the process scan cannot read whole.
+        sys.stderr.write(_process_block_msg("nested shell command could not be parsed safely"))
+        return 2
+    if override:
         return 0
 
     try:
