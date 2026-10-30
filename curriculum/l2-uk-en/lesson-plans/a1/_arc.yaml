@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: 6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10
+  sha256: f53d6b477f45a9450eaefcfc131c8549f50fea21cecb3bc226b95148078f6f3d
 est_lessons_total: 162
 positions:
 - position: 1
