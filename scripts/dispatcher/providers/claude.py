@@ -65,6 +65,7 @@ _ADVISOR_OFF_ENV = {"CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1"}
 _ADVISOR_MODEL = "opus"
 _ADVISED_MODEL = "claude-sonnet-5-5"
 _ADVISED_ON_REQUEST_MODEL = "claude-haiku-5-5"
+MODEL_USAGE_SOURCE = "claude-result-model-usage"
 # The managed sources --restricted keeps (https://code.claude.com/docs/en/managed-settings, "Where each
 # mechanism stores the policy"): on Linux the files under /etc/claude-code, which env_sanitize checks
 # as one root, and server-managed settings, cached in the config directory and fetched at start
@@ -129,41 +130,12 @@ def model_id(model: str) -> str | None:
     return canonical_model_id(model)
 
 
-def _remaps_models(spec: TaskSpec, env: Mapping[str, str]) -> bool:
-    """Whether a settings file this run may load changes which model a model id runs.
-
-    Claude Code resolves ``--model`` through ``modelOverrides`` and the ``ANTHROPIC_*MODEL`` environment
-    names of its settings files (https://code.claude.com/docs/en/model-config), so the approved id could
-    run another model. Checked at launch over the worktree's project and local settings, the dispatcher
-    checkout's local settings (a worktree loads them) and the account's user settings. A file that is
-    present but unreadable counts as a remap.
-    """
-    config = env.get("CLAUDE_CONFIG_DIR") or (str(Path(env["HOME"]) / ".claude") if env.get("HOME") else None)
-    files = [spec.worktree / ".claude" / "settings.json", spec.worktree / ".claude" / "settings.local.json",
-             rules_core.source_path(".claude/settings.local.json")]
-    files += [Path(config) / "settings.json"] if config else []
-    for path in files:
-        try:
-            settings = json.loads(path.read_text(encoding="utf-8"))
-        except FileNotFoundError:
-            continue
-        except (OSError, ValueError):
-            return True
-        if not isinstance(settings, dict):
-            return True
-        names = settings.get("env")
-        if settings.get("modelOverrides") or (isinstance(names, dict) and any(
-                str(name).startswith(("ANTHROPIC_MODEL", "ANTHROPIC_DEFAULT_", "ANTHROPIC_SMALL_FAST")) for name in names)):
-            return True
-    return False
-
-
-def advisor_enabled(spec: TaskSpec, env: Mapping[str, str]) -> bool:
+def advisor_enabled(spec: TaskSpec) -> bool:
     """Whether this run gets the Opus advisor: a workspace-write Sonnet 5.5, or a Haiku 5.5 that asked for it.
 
-    A run whose settings remap models is not advised, since the id that earned the advisor may not be the model that runs.
+    No settings file is read: a settings remap of the model is caught after the run, by ``executor_failure``.
     """
-    if spec.mode != "workspace-write" or _remaps_models(spec, env):
+    if spec.mode != "workspace-write":
         return False
     model = model_id(spec.model)
     return model == _ADVISED_MODEL or (model == _ADVISED_ON_REQUEST_MODEL and spec.options.get("advisor") == _ADVISOR_MODEL)
@@ -176,6 +148,36 @@ def _advised_model_arg(model: str) -> str:
     so it may run another model than the one that earned the advisor; the id keeps its context suffix.
     """
     return model_id(model) + model[model.index("["):] if "[" in model else model_id(model)
+
+
+def executor_failure(spec: TaskSpec, stdout: str) -> tuple[str | None, str | None] | None:
+    """The executor model an advised run's terminal result attests, and a failure naming both ids unless it is the approved one.
+
+    A settings file can remap which model an id runs (https://code.claude.com/docs/en/model-config). The dispatcher
+    reads none of them; the run's own ``modelUsage`` must report the approved id instead. It reports the advisor's
+    model too, so a mismatch names the one other model as the executor, or none. None for a run without the advisor.
+    """
+    if not advisor_enabled(spec):
+        return None
+    approved, result = model_id(spec.model), {}
+    for line in jsonl_lines(stdout):
+        try:
+            event = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(event, dict) and event.get("type") == "result":
+            result = event
+    usage = result.get("modelUsage")
+    reported = sorted({
+        (entry.get("canonicalModel") if isinstance(entry, dict) and isinstance(entry.get("canonicalModel"), str)
+         else name).split("[", 1)[0]
+        for name, entry in usage.items()
+    }) if isinstance(usage, dict) else []
+    if approved in reported:
+        return approved, None
+    executors = [model for model in reported if model != model_id(_ADVISOR_MODEL)]
+    return (executors[0] if len(executors) == 1 else None,
+            f"claude_advisor_executor_unverified: approved {approved}, reported {', '.join(reported) or 'none'}")
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
@@ -203,7 +205,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.claude_account not in (None, "a"):
         argv += ["--settings", _LABELLED_SETTINGS, "--setting-sources", _LABELLED_SETTING_SOURCES]
     env = {**env, **_BACKGROUND_ENV}
-    if advisor_enabled(spec, env):
+    if advisor_enabled(spec):
         argv += ["--advisor", _ADVISOR_MODEL]
         argv[argv.index("--model") + 1] = _advised_model_arg(spec.model)
         env.pop("CLAUDE_CODE_DISABLE_ADVISOR_TOOL", None)

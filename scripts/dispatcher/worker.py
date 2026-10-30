@@ -588,9 +588,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         exit_code = 0 if lingered else returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
-        parsed = provider.parse(
-            stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), exit_code, final_text
-        )
+        stdout = stdout_path.read_text(errors="replace")
+        parsed = provider.parse(stdout, stderr_path.read_text(errors="replace"), exit_code, final_text)
         text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
         # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
         resolved_model = parsed.resolved_model
@@ -627,6 +626,14 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
 
             if refusal := identity_failure(spec.model, resolved_model):
                 status, error = "failed", refusal
+        if status == "done" and spec.agent == "claude":
+            # An advised run attests its executor from its own result; another model never settles done (#12094).
+            from scripts.dispatcher.providers.claude import MODEL_USAGE_SOURCE, executor_failure
+
+            if (attested := executor_failure(spec, stdout)) is not None:
+                record.update(_stream_attestation(MODEL_USAGE_SOURCE, attested[0]))
+                if attested[1]:
+                    status, error = "failed", attested[1]
         if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
             try:
                 from scripts.review.verdict_parser import recognized_verdicts

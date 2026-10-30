@@ -250,7 +250,10 @@ role and are not a last resort for any of them.
   brief limits an advised worker to two consultations per task, before committing to an approach
   and before declaring done. Advisor iterations appear in the run's recorded `usage.iterations`,
   apart from the executor's token counts. The advisor needs Claude Code's feature-flag fetch, so
-  the dispatcher never passes `DISABLE_TELEMETRY`.
+  the dispatcher never passes `DISABLE_TELEMETRY`. An advised run passes the approved model id,
+  never an alias, and reads no settings file; after the run, the terminal result's `modelUsage`
+  must report that id, or the task settles `failed` with both ids in its error and the reported
+  executor in `resolved_model`.
 - **Subagent default stays unset**: do not set `CLAUDE_CODE_SUBAGENT_MODEL` or
   `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`. Built-in general-purpose and Plan agents
   are not limited to read-only search; a global Haiku override would admit
