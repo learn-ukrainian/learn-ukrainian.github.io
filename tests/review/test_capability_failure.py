@@ -196,9 +196,11 @@ def test_every_verdict_reader_sees_a_declared_reply_as_blocked():
 
 def test_a_reply_the_verdict_readers_disagree_on_refuses():
     reply = json.dumps({**json.loads(structured()), "unreviewed_key": True})
-    assert recorder._review_verdict_and_count(reply) == ("BLOCKED", 0) and recognized_verdicts(reply) == []
+    assert recognized_verdicts(reply) == []
+    with pytest.raises(recorder.RecordError, match="unreviewed_key"):
+        recorder._review_verdict_and_count(reply)
     record, reply = run_record(reply=reply)
-    with pytest.raises(cf.CapabilityFailureRefused, match=r"\[verdict\].*not read as one BLOCKED by every reader"):
+    with pytest.raises(cf.CapabilityFailureRefused, match=r"\[run\].*unreviewed_key"):
         classify(record, reply)
 
 

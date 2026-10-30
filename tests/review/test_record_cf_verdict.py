@@ -209,6 +209,7 @@ def test_approve_line_beside_top_level_request_changes_envelope_is_refused(deep,
 @pytest.mark.parametrize("update", [
     {"findings": "not a list"}, {"findings": [None]}, {"verdict": "APPROVED"},
     {"verdict": "INVALID"}, {"overall": {}},
+    {"overall": {"correctness": "correct", "explanation": "", "confidence": 0.9}, "findings": []},
 ])
 def test_invalid_structured_verdict_or_count_refuses(scanned_recorder, tmp_path, update):
     tasks, comments, calls, sent, _ = scanned_recorder
@@ -220,9 +221,21 @@ def test_invalid_structured_verdict_or_count_refuses(scanned_recorder, tmp_path,
     assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
 
 
+@pytest.mark.parametrize("beside_verdict_line", [True, False], ids=["verdict-line-and-block", "whole-json"])
+def test_finding_with_extra_status_field_is_refused_naming_it(scanned_recorder, tmp_path, beside_verdict_line):
+    """The recorder refuses a reply the closeout verifier would reject, naming the field (#12080)."""
+    tasks, comments, calls, sent, _ = scanned_recorder
+    payload = structured_review(1)
+    payload["overall"]["correctness"] = "correct"
+    payload["findings"][0].update(priority="P3", status="open")
+    block = json.dumps(payload, indent=2)
+    write_task(tasks, reply=f"VERDICT: APPROVE\n\n```json\n{block}\n```\n" if beside_verdict_line else block)
+    with pytest.raises(recorder.RecordError, match=r"schema_violation:findings\.0:.*'status' was unexpected.*allowed"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
+
+
 @pytest.mark.parametrize("payload,expected", [
-    ({"schema_version": "code-review-findings.v1", "overall": {
-        "correctness": "correct", "explanation": "", "confidence": 0.9}, "findings": []}, "BLOCKED"),
     ("VERDICT: APPROVE\n- prose item\n- another prose item", "APPROVED"),
 ])
 def test_unavailable_structured_count_is_unknown(payload, expected):

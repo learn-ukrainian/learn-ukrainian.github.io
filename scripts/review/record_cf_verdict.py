@@ -70,6 +70,7 @@ from scripts.review.model_catalog import (
     load_model_catalog,
     resolve_catalog_model_id,
 )
+from scripts.review.review_contract import ContractError, validate_reviewer_payload
 from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_MODELS,
     REVIEW_CANDIDATES,
@@ -91,6 +92,7 @@ from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 from scripts.review.verdict_parser import (
     _REVIEW_VERDICT_LINE_RE,
+    MISSING_CAPABILITIES_FIELD,
     _commonmark_lines,
     _findings_json_verdicts,
     _without_code_fences,
@@ -165,8 +167,13 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
     except ValueError:
         payload = None
     if isinstance(payload, dict) and payload.get("schema_version") == REVIEW_SCHEMA_VERSION:
+        # The closeout verifier's schema judges the reply itself, not a canonical subset of it.
+        payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
         try:
+            validate_reviewer_payload(payload)
             verdict, evidence = resolve_verdict_and_evidence(payload)
+        except ContractError as exc:
+            raise RecordError(f"structured review verdict or findings invalid: {exc}") from None
         except ReviewPublicationError:
             raise RecordError("structured review verdict or findings invalid") from None
         return verdict, len(evidence.findings) if evidence is not None else "unknown"
