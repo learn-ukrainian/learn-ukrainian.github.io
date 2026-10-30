@@ -1,0 +1,136 @@
+built_with:
+  mcp_commit: 25db4e1d2a3ea735751c32c787bb4332460dec85
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: e9f9da3ca796cd1d6aab403c96bc02c0e2fcd36e3d4650cb4537d366b94e85f1
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+exercises:
+- id: X-001
+  items_sample:
+  - '196. І. Поміркуйте: 1) для чого потрібно знати алфавіт; 2) чи є, на вашу
+
+    думку, в алфавіті букви, без яких можна обійтися?'
+  pattern: Explain the practical purpose of an alphabet; adapt the reflection to an adult choosing how to study, with all
+    instructions and responses in English.
+  quote: '196. І. Поміркуйте: 1) для чого потрібно знати алфавіт; 2) чи є, на вашу
+
+    думку, в алфавіті букви, без яких можна обійтися?'
+  sha256: eb8dd1b37031255935603cbc16398c701946c0e02702c4cd5372a1e8d4c46cf6
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 86
+    row_sha256: 5d17fe32ef3fdc0d31a28d84f995bac352ce6b7f9ca47cdc1c742a8a016caf50
+    section_id: 38992
+module: a1/introduction-to-ukrainian
+texts:
+- id: T-001
+  quote: 'Українська мова належить до слов''янської групи індоєвропейської родини мов
+
+    (східнослов''янська підгрупа).'
+  sha256: a6ca4a22eba633589937ecfedae061e2d475a8ea5cd3fe7d09c0aad9b20e1e87
+  source:
+    author: haluzynska
+    chunk_id: uni-ukrmova-prof-haluzynska-2006_s0007
+    file: uni-ukrmova-prof-haluzynska-2006
+    grade: university
+    kind: textbook
+    page: 5
+    row_sha256: 0d904f4392e6858a37d0dd537f9e874b26047d755f4d873f2ad6ea80ba0b97ea
+    section_id: 52532
+  supports: Ukrainian is a Slavic language in the Indo-European family; this is language identity, not a comparison with Russian.
+- id: T-002
+  quote: '1798 рік – початок нової української літературної
+
+    мови
+
+    Виходять друком перші 3 частини “Енеїди”
+
+    І.П.Котляревського. І.Котляревський –
+
+    зачинатель нової української
+
+    літературної мови, який ввів до літератури
+
+    багату, колоритну, співучу народну мову'
+  sha256: 484dccc76058644f60a483ae18e3804de2dfa57872f80a4546cf0b0867ff2293
+  source:
+    author: haluzynska
+    chunk_id: uni-ukrmova-prof-haluzynska-2006_s0009
+    file: uni-ukrmova-prof-haluzynska-2006
+    grade: university
+    kind: textbook
+    page: 6
+    row_sha256: 23f28caff074e2461c983da1a61f083e7ce8c67457b6849a79b73891fcd461bf
+    section_id: 52533
+  supports: The 1798 publication of the first three parts of Kotliarevskyi's Eneida is a milestone of the new literary language,
+    not the birth of spoken Ukrainian.
+- id: T-003
+  quote: "Це передусім праці Юрія Жлук- \nтенка, професора Київського університету ім. Тараса Шевченка, \n«Українсько-англійські\
+    \ міжмовні відносини. Українська мова у США \nі Канаді» (1964), «Мовні контакти» (1966), в яких автор аналізував \nбілінгвізм\
+    \ українців у англомовному світі, інтерференційні впливи \nанглійської мови на українську на різних структурних рівнях\
+    \ мови."
+  sha256: 8440973b231bd9e94a371ae0428de46ebd891568506b11a533ed00f2e1e3d2ea
+  source:
+    author: masenko
+    chunk_id: uni-ukrmova-sociolinguistics-masenko-2010_s0030
+    file: uni-ukrmova-sociolinguistics-masenko-2010
+    grade: university
+    kind: textbook
+    page: 18
+    row_sha256: 73fe2b115c0f2f0df7521e8f7e8b03c5b9aac1cd8e3254f89ac025c99b5acabb
+    section_id: 53873
+  supports: Ukrainian is also used in diaspora communities, with the United States and Canada as documented examples; no current
+    population statistics.
+- id: T-004
+  quote: 'На письмі звуки позначаємо буквами.
+
+    Сукупність букв, розташованих у встановленому для
+
+    певної мови порядку, називають алфавітом (азбукою, абет-
+
+    кою). В українському алфавіті 33 букви.'
+  sha256: bd613df3f806a03de3b47139b2364a1ee69ef484f27a23f507725bb5f618ebd2
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 86
+    row_sha256: 5d17fe32ef3fdc0d31a28d84f995bac352ce6b7f9ca47cdc1c742a8a016caf50
+    section_id: 38992
+  supports: An alphabet is an ordered set of letters; Ukrainian has 33. The overview creates no acquired letter inventory.
+- id: T-005
+  quote: Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо­ .
+  sha256: 41ac561f36a54a234ab6d29b093244f2708657a2620dafa4c610e35d63cb739e
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 86
+    row_sha256: 5d17fe32ef3fdc0d31a28d84f995bac352ce6b7f9ca47cdc1c742a8a016caf50
+    section_id: 38992
+  supports: Listening and speaking operate on sounds; reading and writing operate on visible letters. This distinction guides
+    a balanced personal study plan, without prescribing one mandatory daily order.
+videos:
+- channel: Speak Ukrainian
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
+    http_status: 200
+  id: V-001
+  url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
+  use: Optional whole-video listening preview of Ukrainian letter sounds with the picture visible; no acquired letters, word
+    learning, decoding or pronunciation test.

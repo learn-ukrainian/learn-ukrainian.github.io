@@ -5717,6 +5717,10 @@
       "sha256": "6227308121fdb1fdaf33bc47bf16dca296f335cf0616a47587367ab28f4d6dca"
     },
     {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml",
+      "sha256": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2"
+    },
+    {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml",
       "sha256": "1b46ecf105e05dbbdac324abb563529420f5daeddb6e061bfdad6b0e0a73d5c7"
     },
@@ -5731,6 +5735,10 @@
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_titles_en.yaml",
       "sha256": "1b82b22b0dc49da5e7b231daf73a68cacdd59f90a882aaab135ac9c84eb95009"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml",
+      "sha256": "64ff89075438bee091611a5d0347670cf7fa9fe2b914a9c93b22ab03c094aee1"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml",
