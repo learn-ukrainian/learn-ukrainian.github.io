@@ -200,6 +200,7 @@ materialize_agy_rules() {
     script="$(mktemp "${TMPDIR}/agy-rules.XXXXXX.py")"
     cat > "$script" <<'PY'
 import contextlib
+import errno
 import json
 import os
 import secrets
@@ -232,8 +233,14 @@ def read_leaf(dir_fd: int, name: str) -> bytes | None:
         flags |= os.O_CLOEXEC
     try:
         fd = os.open(name, flags, dir_fd=dir_fd)
-    except (FileNotFoundError, OSError):
+    except FileNotFoundError:
         return None
+    except OSError as exc:
+        # A symlink must be replaced, not followed. Any other read failure
+        # leaves the existing entry in place.
+        if exc.errno == errno.ELOOP:
+            return None
+        raise
     try:
         chunks = []
         while chunk := os.read(fd, 1024 * 1024):
@@ -312,17 +319,6 @@ agent_fd = open_agent_directory(str(agent_root))
 try:
     rules_fd = open_child_directory(agent_fd, "rules")
     try:
-        keep = {name for name, _blob, _body in files}
-        for stale in os.listdir(rules_fd):
-            if not (stale.startswith("core-part-") and stale.endswith(".md")) or stale in keep:
-                continue
-            info = os.stat(stale, dir_fd=rules_fd, follow_symlinks=False)
-            if not (stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode)):
-                raise SystemExit(f"AGY rule part {stale} is not a file")
-            os.unlink(stale, dir_fd=rules_fd)
-        for name, blob, _body in files:
-            if read_leaf(rules_fd, name) != blob:
-                write_leaf(rules_fd, name, blob)
         current = read_leaf(agent_fd, "rules.json")
         existing = {}
         if current is not None:
@@ -337,6 +333,17 @@ try:
             raise SystemExit("AGY rules.json exclude must be a list of strings")
         existing["exclude"] = sorted(set(exclude).union(excluded))
         rendered = (json.dumps(existing, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+        keep = {name for name, _blob, _body in files}
+        for stale in os.listdir(rules_fd):
+            if not (stale.startswith("core-part-") and stale.endswith(".md")) or stale in keep:
+                continue
+            info = os.stat(stale, dir_fd=rules_fd, follow_symlinks=False)
+            if not (stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode)):
+                raise SystemExit(f"AGY rule part {stale} is not a file")
+            os.unlink(stale, dir_fd=rules_fd)
+        for name, blob, _body in files:
+            if read_leaf(rules_fd, name) != blob:
+                write_leaf(rules_fd, name, blob)
         if current != rendered:
             write_leaf(agent_fd, "rules.json", rendered)
     finally:
