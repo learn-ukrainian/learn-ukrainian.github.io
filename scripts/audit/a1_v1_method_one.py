@@ -141,6 +141,13 @@ def lexical_candidates(kind: str, value: dict, item: object, options: object) ->
     return result
 
 
+def syllable_problem(value: dict, typ: str) -> str | None:
+    adapted = {k: v.replace("\u0301", "") if isinstance(v, str) else v for k, v in value.items()}
+    if typ == "divide-words":
+        adapted["answer"] = "-".join(str(adapted.get("answer", "")).split())
+    return _structural_activity_error({"items": [adapted]}, typ, {})
+
+
 def matching_problems(slug: str, section: str, pairs: list) -> dict[int, list[str]]:
     valid = [(i, pair) for i, pair in enumerate(pairs) if isinstance(pair, dict)]
     problems = {i: ["pair entry is not a mapping"] for i, pair in enumerate(pairs) if not isinstance(pair, dict)}
@@ -222,11 +229,8 @@ def rendered_audit(mods: list[str]) -> tuple[list[dict], dict, dict, list[dict]]
                         if error:
                             problems.append(error)
                     elif kind in {"CountSyllables", "DivideWords"}:
-                        adapted = {k: v.replace("\u0301", "") if isinstance(v, str) else v for k, v in value.items()}
                         typ = "count-syllables" if kind == "CountSyllables" else "divide-words"
-                        if typ == "divide-words":
-                            adapted["answer"] = "-".join(adapted["answer"].split())
-                        error = _structural_activity_error({"items": [adapted]}, typ, {})
+                        error = syllable_problem(value, typ)
                         if error:
                             problems.append(error)
                     elif kind == "ErrorCorrection":
@@ -467,12 +471,7 @@ def audit() -> dict:
                             add_check(row, "key", problem)
                             add_check(row, "multiset", problem)
                         elif typ in {"count-syllables", "divide-words"}:
-                            adapted = {
-                                k: v.replace("\u0301", "") if isinstance(v, str) else v for k, v in value.items()
-                            }
-                            if typ == "divide-words":
-                                adapted["answer"] = "-".join(str(adapted.get("answer", "")).split())
-                            problem = _structural_activity_error({"items": [adapted]}, typ, {})
+                            problem = syllable_problem(value, typ)
                             add_check(row, "key", problem)
                             add_check(row, "syllables", problem)
                         elif typ == "match-up":
