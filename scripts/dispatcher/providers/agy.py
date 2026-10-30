@@ -14,6 +14,37 @@ MODEL_SOURCE = "agy-stream-json"
 
 _BACKGROUND_TERMINATED_RE = re.compile(r"terminating (?P<count>\d+) background task\(s\)")
 _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in progress")
+# One structured diagnostic line the CLI writes beside the terminal result.
+# Status and code are the provider's own classification, the same role as
+# Claude's api_error_status and Codex's terminal failure message.
+_AGY_ERROR_PREFIX = "AGY_ERROR:"
+_CAPACITY_STATUSES = frozenset({"RESOURCE_EXHAUSTED", "UNAVAILABLE"})
+_CAPACITY_CODES = frozenset({429, 529})
+
+
+def _stderr_capacity(stderr: str) -> bool:
+    """True when stderr has exactly one AGY_ERROR naming a quota or capacity limit.
+
+    A missing line, a malformed line, or more than one line is not that signal.
+    Prose on stderr is never read: only this structured diagnostic classifies.
+    """
+    payloads = []
+    for line in stderr.splitlines():
+        if not line.startswith(_AGY_ERROR_PREFIX):
+            continue
+        try:
+            payload = json.loads(line[len(_AGY_ERROR_PREFIX) :].strip())
+        except ValueError:
+            return False
+        if not isinstance(payload, dict):
+            return False
+        payloads.append(payload)
+    if len(payloads) != 1:
+        return False
+    status, code = payloads[0].get("status"), payloads[0].get("error_code")
+    if isinstance(status, str) and status in _CAPACITY_STATUSES:
+        return True
+    return isinstance(code, int) and not isinstance(code, bool) and code in _CAPACITY_CODES
 
 
 def transport_model(model: str) -> str:
@@ -133,7 +164,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     result, error, models = {}, None, set()
-    terminal_seen = False
+    terminal_seen, stream_clean = False, True
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -141,10 +172,15 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             event = json.loads(line)
         except ValueError:
             error = error or "agy: invalid JSON stream"
+            stream_clean = False
             continue
         if not isinstance(event, dict):
             error = error or "agy: invalid event"
+            stream_clean = False
             continue
+        if terminal_seen:
+            # Anything after the terminal result makes a capacity classification untrustworthy.
+            stream_clean = False
         models.update(_init_models(event))
         if event.get("event") == "result":
             if terminal_seen:
@@ -154,22 +190,48 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             terminal = event.get("result")
             if not isinstance(terminal, dict):
                 error = error or "agy: invalid terminal result"
+                stream_clean = False
                 continue
             result = terminal
             if result.get("status") != "SUCCESS" or result.get("error"):
                 error = error or "agy: terminal result unsuccessful"
         elif event.get("event") == "error":
             error = error or "agy: terminal error"
+            stream_clean = False
     text = result.get("response")
     text = text if isinstance(text, str) and text.strip() else None
     usage = result.get("usage")
-    if _PRINT_TIMEOUT_PARTIAL_RE.search(stderr) or any(
-        int(match["count"]) > 0 for match in _BACKGROUND_TERMINATED_RE.finditer(stderr)
-    ):
+    incomplete = bool(
+        _PRINT_TIMEOUT_PARTIAL_RE.search(stderr)
+        or any(int(match["count"]) > 0 for match in _BACKGROUND_TERMINATED_RE.finditer(stderr))
+    )
+    if incomplete:
         error = error or "agy: incomplete run"
+    quota_message = result.get("error")
+    if (
+        stream_clean
+        and terminal_seen
+        and not incomplete
+        and result.get("status") != "SUCCESS"
+        and error == "agy: terminal result unsuccessful"
+        and isinstance(quota_message, str)
+        and quota_message.strip()
+        and _stderr_capacity(stderr)
+    ):
+        # Before the exit-status overwrite, as Claude and Codex do. The terminal
+        # error is the provider's reset hint; the AGY_ERROR line is the classification.
+        return ParsedResult(
+            None,
+            usage if isinstance(usage, dict) else None,
+            f"agy: {quota_message}",
+            one_model(models),
+            rate_limited=True,
+        )
     if returncode:
         error = f"agy: exited with status {returncode}"
     return ParsedResult(
-        text, usage if isinstance(usage, dict) else None, error or (None if text else "agy: missing final text"),
+        text,
+        usage if isinstance(usage, dict) else None,
+        error or (None if text else "agy: missing final text"),
         one_model(models),
     )

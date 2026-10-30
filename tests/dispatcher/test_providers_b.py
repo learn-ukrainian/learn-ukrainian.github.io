@@ -559,6 +559,41 @@ def test_claude_unclean_capacity_stream_stays_failed(stdout):
     assert (result.rate_limited, result.error) == (False, "claude: exited with status 1")
 
 
+# AGY ends a quota refusal with one terminal result and one structured AGY_ERROR line.
+# Exit 0 keeps "terminal result unsuccessful"; exit 3 overwrites that with the exit status.
+_AGY_QUOTA = (
+    "Individual quota reached. Please upgrade your subscription to increase your limits. "
+    "Resets in 1h43m57s."
+)
+
+
+def _agy_quota_stream(message):
+    events = [
+        {"event": "init", "init": {"model": "gemini-3.8-flash-high"}},
+        {"event": "result", "result": {"status": "ERROR", "response": "partial", "error": message}},
+    ]
+    stdout = "".join(json.dumps(event) + "\n" for event in events)
+    payload = {
+        "status": "RESOURCE_EXHAUSTED", "error_code": 429, "code_kind": "http", "retryable": True,
+        "short_error": f"RESOURCE_EXHAUSTED (code 429): {message}",
+    }
+    return stdout, f"error: {message}\nAGY_ERROR: {json.dumps(payload)}\n"
+
+
+def test_agy_quota_error_settles_rate_limited_and_a_real_failure_stays_failed():
+    """Defect class: a capacity limit reported as a work failure."""
+    stdout, stderr = _agy_quota_stream(_AGY_QUOTA)
+    for returncode in (0, 3):
+        result = load("agy").parse(stdout, stderr, returncode, None)
+        assert (result.rate_limited, result.error) == (True, f"agy: {_AGY_QUOTA}")
+    ordinary = load("agy").parse(ERROR["agy"] + "\n", "boom\n", 3, None)
+    assert (ordinary.rate_limited, ordinary.error) == (False, "agy: exited with status 3")
+    prose = load("agy").parse(stdout, f"error: {_AGY_QUOTA}\n", 0, None)
+    assert (prose.rate_limited, prose.error) == (False, "agy: terminal result unsuccessful")
+    dirty = load("agy").parse(stdout + "not json\n", stderr, 0, None)
+    assert dirty.rate_limited is False
+
+
 # --- AGY read-only boundary (C-3027) -------------------------------------------------------------
 
 _RELAY_SERVER = """import json, sys, time
