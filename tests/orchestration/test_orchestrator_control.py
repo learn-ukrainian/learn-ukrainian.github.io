@@ -337,7 +337,6 @@ def test_v2_launch_flag_parity_and_watchdog_forwarding(tmp_path: Path, capsys, m
 @pytest.mark.parametrize(
     "option",
     [
-        ["--max-budget-usd", "1"],
         ["--lifecycle-file", "ledger.json"],
         ["--authoring-review-risk", "medium"],
         ["--mode", "danger"],

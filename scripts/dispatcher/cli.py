@@ -86,6 +86,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-author-model", None, "Author model for family check (default: no review check)"),
         ("codex-account", None, "Codex account: sub or api (default: sub; api requires a private codex_accounts.json binding)"),
         ("claude-account", None, "Claude account: subscription a or b, or API key kk or szb (default: inherited configuration)"),
+        ("max-budget-usd", None, "Spend cap in USD for a Claude API-key account, at most its configured amount "
+         "(default: that amount)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
         ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
         ("research-role", None, "Research role metadata (default: none)"),
@@ -286,6 +288,8 @@ def _dispatch(args) -> int:
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     account_fields = admission.claude_account(agent, args.claude_account)
     args.claude_account = account_fields.get("claude_account", args.claude_account)
+    if admission.claude_budget(args.claude_account, args.max_budget_usd) is None and args.max_budget_usd is not None:
+        raise ValueError("--max-budget-usd applies only to a Claude API-key account")
     account_fields.update(admission.codex_account(agent, args.codex_account))
     args.codex_account = account_fields.get("codex_account")
     if args.print_advisory_binding:

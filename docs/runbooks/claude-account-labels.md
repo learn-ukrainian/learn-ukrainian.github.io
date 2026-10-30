@@ -263,6 +263,26 @@ file, and the launch guard recomputes it. No plan is classified: Claude Code
 does not use a helper's key to fetch organisational policy (`claude doctor`:
 "apiKeyHelper keys are not used for it").
 
+### Spend cap and prompt cache
+
+An API-key run is billed per token, so every dispatch on `kk` or `szb` passes
+Claude Code `--max-budget-usd` (print mode stops the run at that spend). The
+default is `CLAUDE_API_KEY_BUDGET_USD` in `scripts/agent_runtime/attempt_boundary.py`,
+beside the label list: 20 USD per run for each label. A dispatch can lower it with
+`dispatch.py dispatch --max-budget-usd <amount>`; an amount above the configured
+one, a non-positive, non-numeric or finer-than-a-cent one, or a label with no configured amount
+refuses before any worktree exists, naming the account
+(`claude_account_budget_cap_invalid`, `claude_account_budget_cap_unresolved`). The
+flag on a subscription label (`a`, `b`) or another seat is refused; those runs are
+unchanged and carry no cap.
+
+Workspace-write runs on an API-key label also set
+`CLAUDE_CODE_PROMPT_CACHE_TTL=1h`. Print mode gives an API key the 5 minute cache
+lifetime (only subscription logins get an hour), so a code worker whose tests run
+longer than 5 minutes between model requests would pay for the cache write again
+each time. Read-only runs are short and keep the default. See
+[Claude Code prompt caching](https://code.claude.com/docs/en/prompt-caching).
+
 Limits: an API-key label is never the fleet-wide default (the default file
 names `a` or `b` only); the ordinary runtime adapter and sealed review attempts
 refuse it (`claude_account_api_key_route_unsupported`), so only

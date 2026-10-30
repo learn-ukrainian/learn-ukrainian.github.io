@@ -3313,6 +3313,26 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkey
     assert not tasks.exists()
 
 
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp_path, mode):
+    """An uncapped paid run is the defect: only an API-key label carries ``--max-budget-usd``."""
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_API_KEY_BUDGET_USD
+
+    spec = TaskSpec("cap", "claude", "m", None, mode, tmp_path, tmp_path / "p", tmp_path / "f")
+    spec.prompt_file.write_bytes(b"prompt")
+    build = providers.load("claude").build
+    for label, amount in CLAUDE_API_KEY_BUDGET_USD.items():
+        invocation = build(dataclasses.replace(spec, claude_account=label), {})
+        assert invocation.argv[invocation.argv.index("--max-budget-usd") + 1] == f"{amount:.2f}"
+        assert invocation.env.get("CLAUDE_CODE_PROMPT_CACHE_TTL") == ("1h" if mode == "workspace-write" else None)
+    lowered = dataclasses.replace(spec, claude_account="kk", options={"max_budget_usd": "2.5"})
+    assert build(lowered, {}).argv[build(lowered, {}).argv.index("--max-budget-usd") + 1] == "2.50"
+    for label in ("a", "b", None):
+        invocation = build(dataclasses.replace(spec, claude_account=label), {})
+        assert "--max-budget-usd" not in invocation.argv
+        assert "CLAUDE_CODE_PROMPT_CACHE_TTL" not in invocation.env
+
+
 def _spawn_refused_record(tmp_path, monkeypatch, task_id):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     path = store.record_path(task_id)
