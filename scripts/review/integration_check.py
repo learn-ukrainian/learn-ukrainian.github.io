@@ -73,7 +73,8 @@ from scripts.curriculum.validate.validate import main as validate_main
 from scripts.review import findings_db, fixloop, record, second_seat, settle
 from scripts.review.prompts import check as prompt_check
 from scripts.review.prompts import render as prompt_render
-from scripts.review.receipts.ledger import LedgerError, create_empty_ledger, records
+from scripts.review.receipts.ledger import LedgerError, records
+from tests.build.plan_review_records import record_plan_review
 from tests.build.test_fresh_assemble import (
     make_text_record,
     validate_fixture_draft,
@@ -86,7 +87,7 @@ from tests.build.test_fresh_runner import _FixtureSources
 from tests.curriculum import test_plan_validate as plan_fixture
 from tests.curriculum.resolver.evidence_helpers import receipt_source_paths
 from tests.helpers import plan_review_world
-from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _review
+from tests.review.test_r1_schema_ledger import _dump
 from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsupported
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -471,40 +472,23 @@ class ModuleWorld(World):
         return self.state_dir / "plan-review.manifest.yaml"
 
     def promote_crafted(self) -> dict[str, Any]:
-        """A crafted plan review recorded through ``record`` and accepted by ``plan-promote``."""
-        review_id, attempt_id = "review-plan", "attempt-plan"
-        ledger = self.ledgers / review_id / f"{attempt_id}.jsonl"
-        create_empty_ledger(ledger)
-        review = self.out / "plan.return.yaml"
-        _dump(
-            review,
-            _review(
-                kind="plan",
-                manifest_hash=self.plan_review_digest,
-                checks={name: "clean" for name in PLAN_CHECKS},
-                findings=[],
-                attempt_id=attempt_id,
-                review_id=review_id,
-            ),
-        )
-        self.task("plan-review-claude", "claude", "claude-sonnet-5-5")
-        recorded = run_main(
-            record.main,
-            [
-                str(review),
-                "--manifest",
-                str(self.plan_manifest_path),
-                "--ledger",
-                str(ledger),
-                "--task-id",
-                "plan-review-claude",
-                *self.location_args(),
-            ],
-        )
-        if recorded.code != 0:
-            raise RuntimeError(
-                f"the crafted plan review was not recorded: {recorded.err.strip()} {recorded.out[-300:]}"
+        """A crafted plan review recorded through ``record`` and accepted by ``plan-promote``.
+
+        The crafted attempt is bound like a real one (#12114): a done full-access dispatch record, its saved
+        result and an ok Sources receipt, which ``plan-promote`` verifies before promoting.
+        """
+        try:
+            record_plan_review(
+                self.root,
+                LEVEL,
+                SLUG,
+                self.plan_review_digest,
+                review_id="review-plan",
+                attempt_id="attempt-plan",
+                seat=("claude", "claude-sonnet-5-5"),
             )
+        except AssertionError as error:
+            raise RuntimeError(f"the crafted plan review was not recorded: {error}") from error
         return self.promote()
 
     def promote(self) -> dict[str, Any]:
