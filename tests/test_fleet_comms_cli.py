@@ -129,7 +129,7 @@ def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPa
                 argv.append(action.option_strings[0])
             argv.append("1" if action.type is int else "fixture")
         entrypoints.append((argv, parser.get_default("func").__name__))
-    assert len(entrypoints) == 25
+    assert len(entrypoints) == 26
     for argv, handler_name in entrypoints:
         handler = Mock(side_effect=AssertionError("unsafe root reached command handler"))
         with monkeypatch.context() as guard:

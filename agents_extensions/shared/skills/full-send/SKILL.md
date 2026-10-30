@@ -146,6 +146,41 @@ this one obsolete; or the next step is outside your authority or your brief. Esc
 CTO and, for decisions in rules core P6, to the advisors. Reach the operator only for the
 operator-only list and for a review dispute unresolved after two replies.
 
+## Ask the CTO and wait for the answer
+
+A dispatched worker's Fleet recipient is its task id, `$LEARN_UKRAINIAN_DISPATCH_TASK_ID`; the
+coordinator publishes the reply there, and claiming needs no registered seat. Use it as the
+`--worker-id` too. Put the question and that recipient name in the message to `claude-cto`
+(literal interpreter path, as above):
+
+```bash
+printf '%s\n' "question: <one decision, the options, your recommendation>; reply to: $LEARN_UKRAINIAN_DISPATCH_TASK_ID" |
+  /abs/path/.venv/bin/python -m scripts.fleet_comms channel publish cto - \
+    --sender "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --source cto --recipient claude-cto \
+    --idempotency-key "ask-$LEARN_UKRAINIAN_DISPATCH_TASK_ID-<n>"
+```
+
+Then wait, for at most 30 minutes, one Bash call per minute (`sleep 60`, then claim). Exit 1 means no
+reply yet:
+
+```bash
+/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries claim \
+  --recipient "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID"
+```
+
+On a claim, read the reply with its `delivery_id` and `fence_token`, apply it, then acknowledge:
+
+```bash
+/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries read "<delivery_id>" \
+  --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --fence-token "<fence_token>"
+/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries ack "<delivery_id>" \
+  --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --fence-token "<fence_token>"
+```
+
+If a lease expires before you finish, claim again. If nothing arrives in time, end with
+`BLOCKED waiting on <the open question>` and a hand-off record ([delivery](references/delivery.md#hand-off-record))
+that states the question, the branch and head, and what is done, so a successor can resume.
+
 ## Report
 
 Lead with the outcome. Then: PR, merge SHA, the proof (commands and run ids), review rounds
