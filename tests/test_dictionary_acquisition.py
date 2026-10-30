@@ -425,6 +425,16 @@ def test_legacy_null_is_unattested_and_empty_200_is_parse_error(tmp_path):
     assert path.read_bytes() == original
 
 
+def test_manifest_lemma_apostrophe_uses_article_slug(tmp_path):
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"entries": [{"lemma": "м'ясо"}]}), encoding="utf-8")
+    args = acquisition.parser().parse_args(
+        ["run", "--root", str(tmp_path / "staging"), "--dictionary", "vts", "--manifest", str(manifest)]
+    )
+    _spec, targets = acquisition.make_spec(args)
+    assert targets == [("м'ясо", "м_ясо")]
+
+
 def test_manifest_configuration_and_durable_target_drift_refused(tmp_path, capsys):
     clock = Clock()
     argv = arguments(tmp_path)
