@@ -252,22 +252,20 @@ workbook:
       - statement: 'Я знаю друга keeps друг unchanged.'
         answer: false
         explanation: 'Друг becomes друга.'
-  - type: match-up
+  - type: group-sort
     title: People and things questions
-    instruction: Match each word with the question it answers in this lesson.
-    pairs:
-      - left: 'мама'
-        right: 'кого?'
-      - left: 'брат'
-        right: 'кого?'
-      - left: 'лікар'
-        right: 'кого?'
-      - left: 'хліб'
-        right: 'що?'
-      - left: 'дерево'
-        right: 'що?'
-      - left: 'кава'
-        right: 'що?'
+    instruction: Я бачу ___. Розподіли додатки за питаннями кого? і що? / Sort the objects by the question they answer after Я бачу.
+    groups:
+      - label: кого?
+        items:
+          - маму
+          - брата
+          - лікаря
+      - label: що?
+        items:
+          - хліб
+          - дерево
+          - каву
   - type: unjumble
     title: Build people lines
     instruction: Put the words in a natural order.

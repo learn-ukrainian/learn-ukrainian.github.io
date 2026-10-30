@@ -2,25 +2,25 @@
 inline:
   - id: act-1
     type: match-up
-    title: 'Хобі: дієслово і слово'
-    instruction: З'єднай дієслово з логічним словом або фразою.
+    title: 'Хобі: українською й англійською'
+    instruction: З’єднай українську фразу з її англійським перекладом. / Match each Ukrainian phrase with its English translation.
     pairs:
-      - left: грати
-        right: у футбол
-      - left: грати
-        right: на гітарі
-      - left: слухати
-        right: музику
-      - left: дивитися
-        right: фільми
-      - left: ходити
-        right: в кіно
-      - left: ходити
-        right: в театр
-      - left: читати
-        right: книгу
-      - left: малювати
-        right: вдома
+      - left: грати у футбол
+        right: to play football
+      - left: грати на гітарі
+        right: to play the guitar
+      - left: слухати музику
+        right: to listen to music
+      - left: дивитися фільми
+        right: to watch films
+      - left: ходити в кіно
+        right: to go to the cinema
+      - left: ходити в театр
+        right: to go to the theatre
+      - left: читати книгу
+        right: to read a book
+      - left: малювати вдома
+        right: to draw at home
   - id: act-2
     type: fill-in
     title: Частота і запрошення

@@ -201,7 +201,7 @@ tool. **Березень** can remind you of **береза**. **Квітень*
 
 ### Місяць і пора року
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "січень", "right": "зима"}, {"left": "квітень", "right": "весна"}, {"left": "липень", "right": "літо"}, {"left": "жовтень", "right": "осінь"}, {"left": "лютий", "right": "зима"}, {"left": "травень", "right": "весна"}, {"left": "серпень", "right": "літо"}, {"left": "листопад", "right": "осінь"}]`)} instruction={"З'єднай місяць із відповідною порою року."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"зима": ["січень", "лютий"], "весна": ["квітень", "травень"], "літо": ["липень", "серпень"], "осінь": ["жовтень", "листопад"]}`)} instruction={"Розподіли назви місяців за порами року в Україні."} isUkrainian={false} />
 
 When you answer "in which month?", use a month phrase:
 These month phrases also use **у/в**:

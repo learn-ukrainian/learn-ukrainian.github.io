@@ -55,26 +55,26 @@ inline:
           - п'ятниця
         explanation: 'After субота comes неділя.'
   - id: act-2
-    type: match-up
+    type: group-sort
     title: Місяць і пора року
-    instruction: З'єднай місяць із відповідною порою року.
-    pairs:
-      - left: січень
-        right: зима
-      - left: квітень
-        right: весна
-      - left: липень
-        right: літо
-      - left: жовтень
-        right: осінь
-      - left: лютий
-        right: зима
-      - left: травень
-        right: весна
-      - left: серпень
-        right: літо
-      - left: листопад
-        right: осінь
+    instruction: Розподіли назви місяців за порами року в Україні.
+    groups:
+      - label: зима
+        items:
+          - січень
+          - лютий
+      - label: весна
+        items:
+          - квітень
+          - травень
+      - label: літо
+        items:
+          - липень
+          - серпень
+      - label: осінь
+        items:
+          - жовтень
+          - листопад
   - id: act-3
     type: fill-in
     title: У/в для календаря
