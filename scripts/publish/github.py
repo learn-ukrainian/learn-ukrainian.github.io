@@ -705,7 +705,12 @@ def publish(
 
         readiness_runner = merge_readiness_runner(runner)
         parent_node = None
-        if verb == "issue-create" and "parent" in fields:
+        if verb == "issue-create":
+            if "parent" not in fields:
+                raise gate.PublishBlocked(
+                    "PARENT_REQUIRED: issue-create requires parent, the number of a registered open stream epic; "
+                    "nothing was created."
+                )
             parent_node = _parent_epic_node(readiness_runner, gh_repo, fields["parent"], cwd, environment)
 
         def queue_probe():

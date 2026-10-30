@@ -9,6 +9,7 @@ that requires structured investigation (not simple fixes).
 .venv/bin/python -m scripts.publish issue-create \
   --title "bug: Brief description of the problem" \
   --body-file /tmp/issue-body.md \
+  --parent <stream-epic-number> \
   --label "bug" \
   --label "infrastructure" \
   --label "agent:claude"

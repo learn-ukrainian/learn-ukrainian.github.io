@@ -8,6 +8,7 @@ Use this template when creating issues to fix audit failures or module quality i
 .venv/bin/python -m scripts.publish issue-create \
   --title "fix(level): Module slug - failing gates" \
   --body-file /tmp/issue-body.md \
+  --parent <stream-epic-number> \
   --label "bug" \
   --label "curriculum" \
   --label "agent:gemini"

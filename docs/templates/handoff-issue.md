@@ -9,6 +9,7 @@ Use this template when creating GitHub issues for agent-to-agent handoffs.
 .venv/bin/python -m scripts.publish issue-create \
   --title "type(scope): Brief description" \
   --body-file /tmp/issue-body.md \
+  --parent <stream-epic-number> \
   --label "enhancement" \
   --label "agent:gemini"  # or agent:claude
 ```
