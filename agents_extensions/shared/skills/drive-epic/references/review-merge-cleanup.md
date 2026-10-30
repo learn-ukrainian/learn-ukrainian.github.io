@@ -41,8 +41,8 @@ Sonnet (or any one model). The writer's family is never eligible.
 chosen from the "Code review" row of `model-assignment.md`
 (GLM from the Cloud catalog, Grok, GPT, … — never Kimi; whatever the
 live catalog lists that is outside the author's family and meets
-that Code review routing). Dispatch v2 refuses protected bound-review execution with
-`--review-id`, `--attempt-id` and `--review-attempt`. High/critical, infra and security
+that Code review routing). Dispatch v2 runs bound review attempts; the procedure is in
+[`formal-review-attempt-isolation.md` § Running a bound attempt](../../../../../docs/runbooks/formal-review-attempt-isolation.md#running-a-bound-attempt). High/critical, infra and security
 reviews exclude Gemini. Ukrainian reviews
 require Sources MCP. The bridge refuses Gemini code reviews. **VPS drivers** may still
 use the existing `ask-<lane>` / `dispatch.py` review path below; the landing order
