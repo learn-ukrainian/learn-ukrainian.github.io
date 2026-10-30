@@ -18,10 +18,14 @@ This guard is deliberately narrow. It catches high-confidence dump shapes only:
   - `scripts.session_supervisor worker-env` environment views, including the
     explicit `--all` form
 
-It also refuses full-command-line process kills that can match the invoking
-shell: `pkill -f`, and a `pgrep -f` anywhere in the same invocation as a `kill`
-whose operands are not literal numeric PIDs. The secret override does not
-apply to them, nor to a command too deep or malformed to read whole.
+It also refuses process kills that would reach the agent's own shell, its
+harness or an ancestor. Kill sites (`kill`, `pkill`, `killall`, and `pgrep` or
+`pidof` feeding a non-literal `kill`) are resolved against the live process
+table with procps' own selection; full-command-line selections are refused,
+since the agent's shell holds the command. Shell text the guard cannot read
+(a shell fed by a pipe, `eval` of an unknown value, `env -S`, a command name
+it cannot resolve) is refused too. The secret override does not apply to any
+of these, nor to a command too deep or malformed to read whole.
 
 Quote-aware tokenization keeps dangerous-looking strings inside a quoted commit
 message from becoming false positives. This is defense-in-depth, not a sandbox.
@@ -66,20 +70,26 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # or launching another program, and absent from the table. All else is Consider.
 # grep -c TOKEN .env and cp .env backup remain conservative denials even though
 # those operations do not print values.
-# Process-kill facts are collected per invocation without data flow, so a
-# full-match pgrep beside any nonliteral kill is refused. eval, `env -S`,
-# scripts fed to a shell on stdin and abbreviated long options are not
-# modeled. Only the launchers in _WRAPPER_OPTIONS plus `env` and `xargs` are
-# resolved; others such as setsid, doas or find -exec are not.
-# Quote-spliced command words (`'k'ill`) are a shared tokenizer limit.
+# Process kills (#12118): kill sites are paired per invocation without data
+# flow, so a selector reaching a protected process beside any non-literal kill
+# is refused. The process reader closes shell grammar only: code in other
+# languages (`python -c` with os.kill, awk system()), files the command does not
+# write, functions and aliases defined outside the command text, and kill
+# operands from sources other than pgrep and pidof (`ps | awk`, `lsof -t`, PID
+# files) are not read. Only an execution-time control could see those.
 
 from __future__ import annotations
 
 import codecs
+import getopt
 import json
 import os
+import pwd
 import re
 import shlex
+import shutil
+import signal
+import subprocess
 import sys
 
 # Use the sibling helper in either the source tree or a deployed hook copy.
@@ -1823,9 +1833,128 @@ def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
     return "".join(out), substitutions
 
 
-# procps pgrep/pkill short options whose value follows the letter or the next word.
-_PROCESS_VALUE_OPTIONS = set("dgGPstuUFOrq")
+# Process kills are decided from the live process table (#12118). The text
+# reader finds kill sites and refuses any shell construct that runs text it
+# cannot read; the kill sites are then resolved against the live processes the
+# agent depends on with procps' own selection, never predicted from text.
+_KILL_COMMANDS = {"kill", "pkill", "killall"}
+_PROCESS_SELECTORS = {"pgrep", "pidof"}
 _PROCESS_SHELLS = {"bash", "sh", "dash", "zsh", "ksh"}
+# Commands that print or look up their operands and never run them.
+_PROCESS_DATA_COMMANDS = {
+    "echo",
+    "printf",
+    "grep",
+    "egrep",
+    "fgrep",
+    "type",
+    "which",
+    "whereis",
+    "man",
+    "help",
+    "whatis",
+    "apropos",
+}
+# A later word naming one of these may be a command another program runs.
+_PROCESS_COMMAND_STARTS = _KILL_COMMANDS | _PROCESS_SELECTORS | _PROCESS_SHELLS | {"eval", "xargs", "env"}
+_SELF_PID_EXPANSION = re.compile(r"\$(?:\$|\{\$\}|\{?PPID\b|\{?BASHPID\b)")
+_SELF_MATCH = "a process kill would reach the agent's own shell, its harness or an ancestor"
+# The agent's shell holds the command inside a harness wrapper the guard cannot know.
+_FULL_MATCH = "full-command-line process kills can match the agent's own shell, whose command line holds the command"
+_PARAMETER = re.compile(r"\$(?:\{([A-Za-z_][A-Za-z0-9_]*)(?:(:?-)([^}$`\\]*))?\}|([A-Za-z_][A-Za-z0-9_]*))")
+_MAX_WORD_CANDIDATES = 16
+# Tools that write every file operand, and tools that write only their last operand.
+_FILE_WRITERS = {"tee", "touch"}
+_FILE_COPIERS = {"cp", "mv", "install", "ln"}
+_SUBSTITUTION_MARKER = re.compile(r"__GUARD_SUBSTITUTION_\d+__+")
+_PGREP_LONG_NAME_WARNING = (
+    "pgrep: pattern that searches for process name longer than 15 characters will result in zero matches\n"
+    "Try `pgrep -f' option to match against the complete command line.\n"
+)
+# procps 4.0.4 signal_name_to_number(): its table, aliases and specials, compared case-insensitively.
+_PROCPS_SIGNALS = {
+    "ABRT",
+    "ALRM",
+    "BUS",
+    "CHLD",
+    "CONT",
+    "FPE",
+    "HUP",
+    "ILL",
+    "INT",
+    "KILL",
+    "PIPE",
+    "POLL",
+    "PROF",
+    "PWR",
+    "QUIT",
+    "SEGV",
+    "STKFLT",
+    "STOP",
+    "SYS",
+    "TERM",
+    "TRAP",
+    "TSTP",
+    "TTIN",
+    "TTOU",
+    "URG",
+    "USR1",
+    "USR2",
+    "VTALRM",
+    "WINCH",
+    "XCPU",
+    "XFSZ",
+    "CLD",
+    "IO",
+    "IOT",
+    "RTMIN",
+    "EXIT",
+    "NULL",
+}
+# procps 4.0.4 pgrep/pkill getopt_long tables.
+_PGREP_SHORT = "lad:vwLF:cfinoxP:O:AHg:s:u:U:G:t:r:Vh"
+_PKILL_SHORT = "eq:LF:cfinoxP:O:AHg:s:u:U:G:t:r:Vh"
+_PGREP_LONG = [
+    "signal=",
+    "ignore-ancestors",
+    "require-handler",
+    "count",
+    "cgroup=",
+    "delimiter=",
+    "list-name",
+    "list-full",
+    "full",
+    "pgroup=",
+    "group=",
+    "ignore-case",
+    "newest",
+    "oldest",
+    "older=",
+    "parent=",
+    "session=",
+    "terminal=",
+    "euid=",
+    "uid=",
+    "inverse",
+    "lightweight",
+    "exact",
+    "pidfile=",
+    "logpidfile",
+    "echo",
+    "ns=",
+    "nslist=",
+    "queue=",
+    "runstates=",
+    "help",
+    "version",
+]
+# Options whose meaning is the same for the agent's shell and its stand-in, and
+# for the live ancestors when the command runs: name, case, inversion and IDs.
+_PGREP_SELECTION = {"-i": "-i", "--ignore-case": "-i", "-x": "-x", "--exact": "-x", "-v": "-v", "--inverse": "-v"}
+_PGREP_SELECTION_VALUES = {"-u": "-u", "--euid": "-u", "-U": "-U", "--uid": "-U", "-G": "-G", "--group": "-G"}
+# Options that only shape output or the signal sent, never the selection.
+_PGREP_OUTPUT = {"--signal", "-e", "--echo", "-q", "--queue", "-c", "--count", "-l", "--list-name"}
+_PGREP_OUTPUT |= {"-a", "--list-full", "-d", "--delimiter"}
 _XARGS_VALUE_LONGS = {
     "--arg-file",
     "--delimiter",
@@ -1837,6 +1966,78 @@ _XARGS_VALUE_LONGS = {
 }
 
 
+class _Unresolvable(Exception):
+    """The live process table cannot answer for this command."""
+
+
+class _ProcessFacts:
+    """Kill sites, selectors and unreadable parts found in one invocation."""
+
+    def __init__(self, command: str) -> None:
+        self.command = command
+        self.limit = False
+        self.opaque = False
+        self.unresolved = False
+        self.calls: list[tuple[str, tuple[str, ...], bool]] = []
+        # The raw value words assigned to each parameter, or None when one is not a plain assignment.
+        self.assignments: dict[str, list[str] | None] = {}
+        self._documents: dict[str, list[tuple[str, bool]]] | None = None
+        self._written_paths: set[str] | None = None
+
+    def written_paths(self) -> set[str]:
+        """Normalized paths the command writes: output redirections and file-writing tools' operands."""
+        if self._written_paths is None:
+            written: set[str] = set()
+            try:
+                pipelines = _process_pipelines(preprocess_shell_command(self.command))
+            except (ValueError, ShellPreprocessLimit):
+                pipelines = []
+            for segment in (segment for pipeline in pipelines for segment in pipeline):
+                for index, word in enumerate(segment[:-1]):
+                    if re.fullmatch(r"\d*(?:>|>>|>\||&>|&>>)", word):
+                        written.add(segment[index + 1])
+                program = _shell_word_value(segment[0])
+                if program in _FILE_WRITERS:
+                    written.update(segment[1:])
+                elif program in _FILE_COPIERS:
+                    written.update(segment[-1:])
+                elif program == "dd":
+                    written.update(word[3:] for word in segment if word.startswith("of="))
+            values = (_shell_word_value(word) for word in written)
+            self._written_paths = {os.path.normpath(value) for value in values if value}
+        return self._written_paths
+
+    def documents(self) -> dict[str, list[tuple[str, bool]]]:
+        if self._documents is None:
+            self._documents = _heredoc_inputs(self.command)
+        return self._documents
+
+    def parameter_words(self, name: str) -> list[str] | None:
+        """The words a parameter can hold: its plain assignments, or the inherited environment.
+
+        Any other spelling of the name in the command (`read K`, `printf -v K`,
+        `for K in`) may assign it some other way, so it cannot be resolved.
+        """
+        # A name glued to an option cluster (`printf -vK`) is a spelling too.
+        named = len(re.findall(rf"(?:(?<![A-Za-z0-9_])|(?<=-)[A-Za-z]*){name}(?![A-Za-z0-9_])", self.command))
+        expanded = len(re.findall(rf"\$\{{?{name}(?![A-Za-z0-9_])", self.command))
+        assigned = self.assignments.get(name, [])
+        if assigned is None or named != expanded + len(assigned):
+            return None
+        return assigned or [shlex.quote(os.environ.get(name, ""))]
+
+    def parameter(self, name: str, depth: int) -> list[str] | None:
+        """Every value a parameter can hold, or None when one is unknown."""
+        words = self.parameter_words(name)
+        values: list[str] = []
+        for word in words or []:
+            candidates = _word_candidates(word, self, depth + 1)
+            if candidates is None:
+                return None
+            values += candidates
+        return values if words is not None else None
+
+
 def _process_block_msg(reason: str) -> str:
     return (
         f"BLOCKED by guard-secret-print (#M-5): {reason}.\n\n"
@@ -1845,44 +2046,148 @@ def _process_block_msg(reason: str) -> str:
     )
 
 
-def _full_process_match(args: list[str]) -> bool:
-    """Whether pgrep/pkill options select by full command line (-f, --full)."""
-    words = iter(_strip_quotes(arg) for arg in _without_redirects(args))
-    for word in words:
-        if word == "--":
-            return False
-        if word == "--full":
-            return True
-        # Signals (-9, -TERM, -SIGHUP) and long options carry no -f letter.
-        if word.startswith("--") or not word.startswith("-") or re.fullmatch(r"-[A-Z0-9+]+", word):
+def _word_parts(word: str) -> list[tuple[str, str]] | None:
+    """Split a shell word into ("lit", text), ("param", spelling) and ("dyn", "") parts.
+
+    Quote removal is applied; a parameter's spelling keeps a leading quote mark
+    when it was double-quoted. None means the word's quoting is malformed.
+    """
+    parts: list[tuple[str, str]] = []
+    index = 0
+
+    def parameter(quoted: bool) -> int:
+        match = _PARAMETER.match(word, index)
+        if match is None:
+            parts.append(("dyn", ""))
+            return len(word)
+        parts.append(("param", ('"' if quoted else "") + match.group(0)))
+        return match.end()
+
+    while index < len(word):
+        char = word[index]
+        marker = _SUBSTITUTION_MARKER.match(word, index)
+        if marker:
+            # A hidden command substitution, quoted or not.
+            parts.append(("dyn", ""))
+            index = marker.end()
+        elif char == "'":
+            end = word.find("'", index + 1)
+            if end < 0:
+                return None
+            parts.append(("lit", word[index + 1 : end]))
+            index = end + 1
+        elif char == '"':
+            index += 1
+            while index < len(word) and word[index] != '"':
+                marker = _SUBSTITUTION_MARKER.match(word, index)
+                if marker:
+                    parts.append(("dyn", ""))
+                    index = marker.end()
+                elif word[index] == "$":
+                    index = parameter(True)
+                elif word[index] == "`":
+                    parts.append(("dyn", ""))
+                    index += 1
+                elif word[index] == "\\" and index + 1 < len(word) and word[index + 1] in '$`"\\\n':
+                    parts.append(("lit", word[index + 1] if word[index + 1] != "\n" else ""))
+                    index += 2
+                else:
+                    parts.append(("lit", word[index]))
+                    index += 1
+            if index >= len(word):
+                return None
+            index += 1
+        elif char == "\\":
+            if index + 1 >= len(word):
+                return None
+            parts.append(("lit", word[index + 1] if word[index + 1] != "\n" else ""))
+            index += 2
+        elif char == "$":
+            index = parameter(False)
+        elif (
+            char in "`*?"
+            or (char == "~" and index == 0)
+            or (char == "[" and "]" in word[index + 1 :])
+            or (char == "{" and re.match(r"\{[^}]*(?:,|\.\.)[^}]*\}", word[index:]))
+        ):
+            # Substitutions, globs, tildes and brace expansions.
+            parts.append(("dyn", ""))
+            index += 1
+        else:
+            parts.append(("lit", char))
+            index += 1
+    return parts
+
+
+def _shell_word_value(word: str) -> str | None:
+    """Return a word after Bash quote removal, or None when an expansion could change it."""
+    parts = _word_parts(word)
+    if parts is None or any(kind != "lit" for kind, _ in parts):
+        return None
+    return "".join(text for _, text in parts)
+
+
+def _word_candidates(word: str, facts: _ProcessFacts, depth: int = 0) -> list[str] | None:
+    """Every value a word can take, expanding simple parameters; None when unknown."""
+    parts = _word_parts(word)
+    if parts is None or depth > 4:
+        return None
+    candidates = [""]
+    for kind, text in parts:
+        if kind == "dyn":
+            return None
+        if kind == "lit":
+            candidates = [candidate + text for candidate in candidates]
             continue
-        for index, letter in enumerate(word[1:], 1):
-            if letter == "f":
-                return True
-            if letter in _PROCESS_VALUE_OPTIONS:
-                if index == len(word) - 1:
-                    next(words, None)
-                break
-    return False
+        quoted = text.startswith('"')
+        match = _PARAMETER.match(text.lstrip('"'))
+        assert match is not None
+        values = facts.parameter(match.group(1) or match.group(4), depth)
+        if values is None:
+            return None
+        if match.group(2):
+            default = _shell_word_value(match.group(3) or "")
+            if default is None:
+                return None
+            values = [value or default for value in values] if match.group(2) == ":-" else [*values, default]
+        # Unquoted expansions are split into words and globbed.
+        if not quoted and any(re.search(r"[\s*?[]", value) for value in values):
+            return None
+        candidates = [candidate + value for candidate in candidates for value in values]
+        if len(candidates) > _MAX_WORD_CANDIDATES:
+            return None
+    return candidates
 
 
-def _literal_pid_kill(args: list[str]) -> bool:
-    """Whether kill names only literal numeric PIDs, as in `kill -TERM 123`."""
-    words = [_strip_quotes(arg) for arg in _without_redirects(args)]
-    pids = 0
-    expect_value = False
-    for word in words:
-        if expect_value:
-            expect_value = False
-            if not re.fullmatch(r"[A-Za-z0-9+]+", word):
-                return False
-        elif word in {"-s", "-n", "--signal"}:
-            expect_value = True
-        elif re.fullmatch(r"\d+", word):
-            pids += 1
-        elif not (word == "--" or re.fullmatch(r"-[A-Za-z0-9+]+", word)):
-            return False
-    return pids > 0 and not expect_value
+def _command_names(word: str, facts: _ProcessFacts, depth: int = 0) -> list[str] | None:
+    """The program names a command word can run, or None when it cannot be known."""
+    candidates = _word_candidates(word, facts)
+    if candidates is not None:
+        if "" in candidates:
+            return None
+        # A word ending in a slash names a directory, which runs nothing.
+        return sorted({candidate.rsplit("/", 1)[-1] for candidate in candidates} - {""})
+    parts = _word_parts(word)
+    if parts is None or depth > 4:
+        return None
+    if len(parts) == 1 and parts[0][0] == "param":
+        # A lone parameter names whatever program each of its assigned words names.
+        match = _PARAMETER.match(parts[0][1].lstrip('"'))
+        assert match is not None
+        words = None if match.group(2) else facts.parameter_words(match.group(1) or match.group(4))
+        names: set[str] = set()
+        for assigned in words or []:
+            found = _command_names(assigned, facts, depth + 1)
+            if found is None:
+                return None
+            names.update(found)
+        return sorted(names) if words is not None else None
+    # A path whose last component is literal names its program whatever the directory.
+    slashes = [index for index, (kind, text) in enumerate(parts) if kind == "lit" and "/" in text]
+    if not slashes or any(kind != "lit" for kind, _ in parts[slashes[-1] + 1 :]):
+        return None
+    name = parts[slashes[-1]][1].rsplit("/", 1)[-1] + "".join(text for _, text in parts[slashes[-1] + 1 :])
+    return [name] if name else []
 
 
 def _xargs_target(args: list[str]) -> list[str]:
@@ -1909,59 +2214,775 @@ def _xargs_target(args: list[str]) -> list[str]:
     return []
 
 
-def _segment_process_facts(segment: list[str], depth: int) -> set[str]:
-    found = _command_at(segment)
-    fed = False
-    while found is not None and found[0] == "xargs":
-        target = _xargs_target(found[1])
-        found = _command_at(target) if target else None
-        fed = True
+def _script_operand(args: list[str]) -> str | None:
+    """Return the script-file word of a shell without -c, None when it reads standard
+    input, or "" when it only reports and runs nothing (`--version`, `--help`)."""
+    pending = 0
+    for word in _raw_without_redirects(args):
+        value = _shell_word_value(word)
+        if value in {"--version", "--help"}:
+            return ""
+        if value is None:
+            return word
+        if pending:
+            pending -= 1
+        elif value[:1] in {"-", "+"} and value not in {"-", "+", "--"}:
+            name = value.lstrip("-+")
+            if not value.startswith("--") and "s" in name:
+                return None
+            if value.startswith("-") and not value.startswith("--") and "n" in name:
+                # noexec: the shell only parses its script.
+                return ""
+            if name in _SHELL_VALUE_OPTIONS:
+                pending = 1
+            elif not value.startswith("--"):
+                pending = sum(letter in "oO" for letter in name)
+        elif value != "--":
+            return None if value in {"-", "+"} or value.startswith(("/dev/", "/proc/")) else word
+    return None
+
+
+def _stdin_scripts(args: list[str], facts: _ProcessFacts) -> list[str] | None:
+    """Scripts a shell reads from its here-document or here-string, or None if not readable."""
+    scripts: list[str] = []
+    index = 0
+    while index < len(args):
+        token = args[index]
+        operator = re.match(r"\d*(<<<|<<-?)", token)
+        if operator is None:
+            index += 1
+            continue
+        word = token[operator.end() :] or (args[index + 1] if index + 1 < len(args) else "")
+        index += 1 if token[operator.end() :] else 2
+        value = _shell_word_value(word)
+        if value is None:
+            return None
+        if operator.group(1) == "<<<":
+            scripts.append(value)
+            continue
+        documents = facts.documents().get(value)
+        if not documents:
+            return None
+        for body, quoted in documents:
+            # An unquoted delimiter expands the body before the shell reads it.
+            if not quoted and re.search(r"[$`\\]", body):
+                return None
+            scripts.append(body)
+    return scripts
+
+
+def _written_here(word: str, facts: _ProcessFacts) -> bool:
+    """Whether the command itself writes the script it runs."""
+    value = _shell_word_value(word)
+    return value is not None and os.path.normpath(value) in facts.written_paths()
+
+
+_SHELL_OPERATORS = sorted(
+    {"<<<", "<<-", "<<", ">>", "<&", ">&", "&>>", "&>", ">|", "<>", "&&", "||", "|&", ";;", "|", "&", ";", "(", ")"}
+    | {"<", ">"},
+    key=len,
+    reverse=True,
+)
+
+
+def _process_tokens(text: str) -> list[str]:
+    """Split shell text into quote-preserving words and operators, as Bash does.
+
+    Unlike the shared lexer, a quote may open inside a word (`K='a b'`), and a
+    `${...}` expansion stays one word. Raises ValueError on an unclosed quote.
+    """
+    tokens: list[str] = []
+    word: list[str] = []
+    quote = ""
+    index = 0
+
+    def flush() -> None:
+        if word:
+            tokens.append("".join(word))
+            word.clear()
+
+    while index < len(text):
+        char = text[index]
+        if quote:
+            word.append(char)
+            if quote == '"' and char == "\\" and index + 1 < len(text):
+                word.append(text[index + 1])
+                index += 1
+            elif char == quote:
+                quote = ""
+            index += 1
+        elif char == "\\":
+            if text.startswith("\\\n", index):
+                index += 2
+                continue
+            word.append(text[index : index + 2])
+            index += 2
+        elif char in "'\"":
+            quote = char
+            word.append(char)
+            index += 1
+        elif text.startswith("${", index):
+            end = text.find("}", index)
+            if end < 0:
+                raise ValueError("unclosed parameter expansion")
+            word.append(text[index : end + 1])
+            index = end + 1
+        elif text.startswith("$(", index):
+            # An arithmetic expansion or a substitution the caller left in place.
+            depth, end = 0, index + 1
+            while end < len(text):
+                depth += {"(": 1, ")": -1}.get(text[end], 0)
+                if depth == 0:
+                    break
+                end += 1
+            if depth:
+                raise ValueError("unclosed substitution")
+            word.append(text[index : end + 1])
+            index = end + 1
+        elif char in " \t":
+            flush()
+            index += 1
+        elif char == "\n":
+            flush()
+            tokens.append("\n")
+            index += 1
+        elif char == "(" and "".join(word).endswith("="):
+            # An array assignment's element list belongs to its word.
+            depth, end, inner = 0, index, ""
+            while end < len(text):
+                if inner:
+                    inner = "" if text[end] == inner else inner
+                elif text[end] in "'\"":
+                    inner = text[end]
+                else:
+                    depth += {"(": 1, ")": -1}.get(text[end], 0)
+                    if depth == 0:
+                        break
+                end += 1
+            if depth:
+                raise ValueError("unclosed array assignment")
+            word.append(text[index : end + 1])
+            index = end + 1
+        elif char in ";&|()<>":
+            # Digits right before a redirection name its file descriptor (`2>`).
+            prefix = "".join(word) if word and "".join(word).isdigit() and char in "<>" else ""
+            if prefix:
+                word.clear()
+            flush()
+            operator = next(op for op in _SHELL_OPERATORS if text.startswith(op, index))
+            tokens.append(prefix + operator)
+            index += len(operator)
+        else:
+            word.append(char)
+            index += 1
+    if quote:
+        raise ValueError("unclosed quote")
+    flush()
+    return tokens
+
+
+_CASE_OPENERS = {"do", "then", "else", "{", "!", "time"}
+# Builtins that run or bind shell text; a path never reaches them.
+_TEXT_BUILTINS = {"eval", "alias", "trap", "hash", "enable", "source", "."}
+
+
+def _process_pipelines(text: str) -> list[list[list[str]]]:
+    """Group `_process_tokens` into pipelines of simple-command segments."""
+    pipelines: list[list[list[str]]] = []
+    pipeline: list[list[str]] = []
+    segment: list[str] = []
+    # Inside `case WORD in`, patterns up to `)` are not commands.
+    case_state = ""
+    for token in _process_tokens(text):
+        if case_state == "word":
+            case_state = "patterns" if token == "in" else "word"
+            continue
+        if case_state == "patterns":
+            if token == "esac":
+                case_state = ""
+            elif token == ")":
+                case_state = "body"
+            continue
+        if case_state == "body" and token in {";;", ";&", ";;&"}:
+            case_state = "patterns"
+            token = ";"
+        if token == "case" and set(segment) <= _CASE_OPENERS:
+            case_state = "word"
+            continue
+        if case_state == "body" and not segment and token == "esac":
+            case_state = ""
+            continue
+        if token in {"|", "|&"}:
+            if segment:
+                pipeline.append(segment)
+            segment = []
+        elif token in SEPARATORS or token in {"(", ")", ";;"} or _is_command_brace(token, segment):
+            if segment:
+                pipeline.append(segment)
+            if pipeline:
+                pipelines.append(pipeline)
+            pipeline, segment = [], []
+        else:
+            segment.append(token)
+    if segment:
+        pipeline.append(segment)
+    if pipeline:
+        pipelines.append(pipeline)
+    return pipelines
+
+
+def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *, fed: bool = False) -> None:
+    if depth >= 12:
+        facts.limit = True
+        return
+    # `env -S` splits a string into a command the reader never sees.
+    for index, word in enumerate(words):
+        if _shell_word_value(word) not in {"env", "/usr/bin/env", "/bin/env"}:
+            continue
+        for option in words[index + 1 :]:
+            if _is_assignment(option):
+                continue
+            values = _word_candidates(option, facts)
+            if values is None and _command_names(option, facts) is not None:
+                # A path with a literal program name is the command, not an option.
+                break
+            if values is None or any(re.match(r"-[^-]*S|--s", value) for value in values):
+                facts.opaque = True
+            if values is None or not any(value.startswith("-") for value in values):
+                break
+    found = _command_at(words)
     if found is None:
-        return set()
-    cmd, args, _ = found
+        return
+    cmd, args, index = found
     if cmd == "__UNDECIDABLE_SECRET_COMMAND__":
-        return {"limit"}
-    if cmd in {"pkill", "pgrep"}:
-        return {cmd} if _full_process_match(args) else set()
-    if cmd == "kill":
-        # xargs appends its input to the operands, so a fed kill is never literal.
-        return {"kill"} if fed or not _literal_pid_kill(args) else set()
-    if cmd in _PROCESS_SHELLS:
-        facts: set[str] = set()
-        for script in _shell_script(args):
-            facts |= _process_facts(script, depth=depth + 1)
-        return facts
-    return set()
+        facts.limit = True
+        return
+    names = _command_names(words[index], facts)
+    if names is None:
+        facts.unresolved = True
+        return
+    for name in names:
+        if name in _TEXT_BUILTINS and "/" in words[index]:
+            name = ""
+        if name != cmd and (name in _WRAPPER_OPTIONS or name in {"env", "xargs"}):
+            # A spliced or expanded wrapper word, read again as its literal name.
+            _segment_process_facts([*words[:index], shlex.quote(name), *words[index + 1 :]], facts, depth + 1, fed=fed)
+        else:
+            _program_process_facts(name, words, index, args, facts, depth, fed)
 
 
-def _process_facts(command: str, *, depth: int = 0) -> set[str]:
-    """Collect full-match selections and nonliteral kills across one invocation.
+def _program_process_facts(
+    name: str, words: list[str], index: int, args: list[str], facts: _ProcessFacts, depth: int, fed: bool
+) -> None:
+    if name == "xargs":
+        target = _xargs_target(args)
+        if target:
+            # The target is shorter than the segment, so a long xargs chain ends.
+            _segment_process_facts(target, facts, depth, fed=True)
+    elif name in _KILL_COMMANDS or name in _PROCESS_SELECTORS:
+        facts.calls.append((name, tuple(_raw_without_redirects(args)), fed))
+    elif name in _PROCESS_SHELLS or name in {"source", "."}:
+        scripts = _shell_script(args) if name in _PROCESS_SHELLS else []
+        if not scripts:
+            operand = _script_operand(args)
+            if operand == "":
+                return
+            if operand is None:
+                scripts = _stdin_scripts(args, facts) or []
+                facts.opaque = facts.opaque or not scripts
+            elif _written_here(operand, facts):
+                facts.opaque = True
+        for script in scripts:
+            _collect_process_facts(script, facts, depth + 1)
+    elif name in {"eval", "alias", "trap"}:
+        # eval runs its words joined by spaces; alias stores each NAME=TEXT, and
+        # trap its first operand, as shell text that runs later.
+        words = _raw_without_redirects(args)
+        if name == "trap":
+            words = [word for word in words if not (_shell_word_value(word) or "").startswith("-")][:1]
+        candidates = [_word_candidates(word, facts) for word in words]
+        if any(values is None for values in candidates):
+            facts.opaque = True
+            return
+        if name == "eval":
+            scripts = [""]
+            for values in candidates:
+                scripts = [f"{script} {value}".lstrip() for script in scripts for value in values or []]
+                if len(scripts) > _MAX_WORD_CANDIDATES:
+                    facts.opaque = True
+                    return
+        else:
+            scripts = [value.split("=", 1)[-1] for values in candidates for value in values or []]
+        for script in scripts:
+            _collect_process_facts(script, facts, depth + 1)
+    elif name in {"hash", "enable"}:
+        # Both can bind a command name to another program.
+        facts.opaque = True
+    elif name not in _PROCESS_DATA_COMMANDS:
+        if "/" in words[index] and _written_here(words[index], facts):
+            facts.opaque = True
+        # Another program may run a later word as a command (`setsid pkill`, `find -exec`).
+        for later in range(index + 1, len(words)):
+            starts = _PROCESS_COMMAND_STARTS - (_TEXT_BUILTINS if "/" in words[later] else set())
+            if set(_command_names(words[later], facts) or ()) & starts:
+                _segment_process_facts(words[later:], facts, depth + 1, fed=fed)
 
-    Facts are gathered from every statement, substitution and nested shell
-    script, ignoring pipes, loops, groups and assignments between them, so a
-    selection reaches its kill however the command routes the PIDs. A part
-    that cannot be read adds the "limit" fact and keeps the facts already found.
+
+def _record_assignments(executable: str, facts: _ProcessFacts) -> None:
+    """Record literal parameter assignments, from plain words and export-style builtins."""
+    for pipeline in _process_pipelines(_decode_ansi_c_quotes(executable)):
+        for segment in pipeline:
+            words = [word for word in segment if word not in {"!", "{", "(", "then", "do", "else"}]
+            index = 0
+            while index < len(words) and _is_assignment(words[index]):
+                index += 1
+            assigned = words[:index]
+            if index < len(words) and _shell_word_value(words[index]) in {
+                "export",
+                "local",
+                "declare",
+                "typeset",
+                "readonly",
+            }:
+                for word in words[index + 1 :]:
+                    if _is_assignment(word):
+                        assigned.append(word)
+                    elif not re.fullmatch(r"-[xgr]+", _shell_word_value(word) or ""):
+                        # Arrays, namerefs and computed names are not literal assignments.
+                        for other in words[index + 1 :]:
+                            facts.assignments[(_shell_word_value(other) or "").split("=", 1)[0]] = None
+                        break
+            for word in assigned:
+                key, raw = word.split("=", 1)
+                known = facts.assignments.get(key, [])
+                facts.assignments[key] = None if known is None else [*known, raw]
+
+
+def _echo_output(body: str) -> str | None:
+    """The output of a substitution that is one plain `echo` of literal words, else None."""
+    try:
+        pipelines = _process_pipelines(body)
+    except ValueError:
+        return None
+    if len(pipelines) != 1 or len(pipelines[0]) != 1:
+        return None
+    values = [_shell_word_value(word) for word in pipelines[0][0]]
+    # echo reads only leading -n, -e and -E words as options.
+    if values[:1] != ["echo"] or None in values or re.fullmatch(r"-[neE]+", values[1] if len(values) > 1 else ""):
+        return None
+    return " ".join(value for value in values[1:] if value is not None)
+
+
+def _inline_echo_substitutions(executable: str, substitutions: dict[str, tuple[str, str]]) -> str:
+    """Replace each plain-echo substitution with its output, quoted for where it stands."""
+    for marker, (_, body) in substitutions.items():
+        output = _echo_output(body)
+        start = executable.find(marker)
+        if output is None or start < 0:
+            continue
+        quoted = shell_quote_after(executable[:start], "") == '"'
+        if quoted:
+            text = re.sub(r'([\\"$`])', r"\\\1", output)
+        elif re.fullmatch(r"[A-Za-z0-9 _./=:,+@%-]*", output):
+            # Unquoted output is split into words, as the reader splits plain text.
+            text = output
+        else:
+            continue
+        executable = executable[:start] + text + executable[start + len(marker) :]
+    return executable
+
+
+def _collect_process_facts(command: str, facts: _ProcessFacts, depth: int = 0) -> None:
+    """Record kill sites, selectors and unreadable parts across one invocation.
+
+    Statements, substitutions and nested shell scripts all count, without data
+    flow between them, so a selection reaches its kill however the PIDs travel.
     """
     if depth >= 12:
-        return {"limit"}
+        facts.limit = True
+        return
     try:
         executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
     except ShellPreprocessLimit:
-        return {"limit"}
-    facts: set[str] = set()
+        facts.limit = True
+        return
+    try:
+        pipelines = _process_pipelines(_decode_ansi_c_quotes(_inline_echo_substitutions(executable, substitutions)))
+    except ValueError:
+        facts.limit = True
+        return
+    if depth == 0:
+        _record_assignments(executable, facts)
     for _, body in substitutions.values():
-        facts |= _process_facts(body, depth=depth + 1)
-    # Facts from both tokenizations count. Shell words show a quote in a shell's
-    # options and a script spliced from quote fragments (`'pkill -'f`); the
-    # fragments show a word the readers only know unquoted (`'-f'""`).
-    seen: set[tuple[str, ...]] = set()
-    for shell_words in (False, True):
-        for pipeline in _pipelines(executable, shell_words=shell_words):
-            for segment in pipeline:
-                if tuple(segment) not in seen:
-                    seen.add(tuple(segment))
-                    facts |= _segment_process_facts(segment, depth)
-    return facts
+        _collect_process_facts(body, facts, depth + 1)
+    # Bash's own words read a spliced word whole (`'pk'"ill"`). The shared
+    # lexer's words are read only for the shell rule's refusals of unreadable options.
+    # The shared parser keeps an expanding here-document's substitutions as lines
+    # of their own; they fill the document and run no command of their own.
+    bodies = [body for documents in facts.documents().values() for body, quoted in documents if not quoted]
+    fillers = {marker for marker, (_, body) in substitutions.items() if any(body in text for text in bodies)}
+    for pipeline in pipelines:
+        for segment in pipeline:
+            if segment != [next(iter(fillers & set(segment)), None)]:
+                _segment_process_facts(segment, facts, depth)
+    for pipeline in _pipelines(executable):
+        for segment in pipeline:
+            found = _command_at(segment)
+            if found is not None and (
+                found[0] == "__UNDECIDABLE_SECRET_COMMAND__"
+                or (found[0] in _PROCESS_SHELLS and "__UNDECIDABLE_SECRET_COMMAND__" in _shell_script(found[1]))
+            ):
+                facts.limit = True
+
+
+class _Process:
+    """One protected process as the kill programs see it."""
+
+    def __init__(self, pid: int) -> None:
+        try:
+            with open(f"/proc/{pid}/stat", "rb") as handle:
+                stat = handle.read()
+            with open(f"/proc/{pid}/cmdline", "rb") as handle:
+                argv = [part.decode(errors="replace") for part in handle.read().split(b"\0")]
+            with open(f"/proc/{pid}/status", encoding="utf-8", errors="replace") as handle:
+                uid_line = next(line for line in handle if line.startswith("Uid:"))
+        except (OSError, StopIteration) as exc:
+            raise _Unresolvable from exc
+        head, _, tail = stat.rpartition(b")")
+        fields = tail.split()
+        self.pid = pid
+        self.comm = head.split(b"(", 1)[1].decode(errors="replace")
+        self.ppid = int(fields[1])
+        self.pgid = int(fields[2])
+        self.argv0 = argv[0] if argv else ""
+        self.ruid = int(uid_line.split()[1])
+
+
+class _ProcessTable:
+    """The processes a kill must not reach, with read-only queries against them.
+
+    They are every live ancestor of this hook, from its launcher through the
+    harness to PID 1, and the agent's own shell. That shell does not exist yet,
+    so one stand-in per installed POSIX shell name waits on a pipe in its place;
+    only properties a stand-in shares with it (name, credentials) are queried.
+    """
+
+    def __init__(self) -> None:
+        self._ancestors: list[_Process] | None = None
+        self._stand_ins: list[subprocess.Popen[bytes]] = []
+        self._stand_in_processes: list[_Process] | None = None
+
+    def __enter__(self) -> _ProcessTable:
+        return self
+
+    def __exit__(self, *_: object) -> None:
+        for stand_in in self._stand_ins:
+            if stand_in.stdin is not None:
+                stand_in.stdin.close()
+        for stand_in in self._stand_ins:
+            try:
+                stand_in.wait(timeout=1)
+            except subprocess.TimeoutExpired:
+                stand_in.kill()
+                stand_in.wait()
+
+    @property
+    def ancestors(self) -> list[_Process]:
+        if self._ancestors is None:
+            ancestors: list[_Process] = []
+            pid = os.getppid()
+            while pid > 0 and len(ancestors) < 1024:
+                ancestors.append(_Process(pid))
+                pid = ancestors[-1].ppid
+            if not ancestors:
+                raise _Unresolvable
+            self._ancestors = ancestors
+        return self._ancestors
+
+    def protected(self) -> list[_Process]:
+        if self._stand_in_processes is None:
+            for shell in sorted(_PROCESS_SHELLS):
+                path = shutil.which(shell)
+                if path is None:
+                    continue
+                try:
+                    self._stand_ins.append(
+                        subprocess.Popen(
+                            [path, "-c", "read -r line"],
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                        )
+                    )
+                except OSError as exc:
+                    raise _Unresolvable from exc
+            if not self._stand_ins:
+                raise _Unresolvable
+            self._stand_in_processes = [_Process(stand_in.pid) for stand_in in self._stand_ins]
+        return [*self._stand_in_processes, *self.ancestors]
+
+    def _alive(self) -> None:
+        if any(stand_in.poll() is not None for stand_in in self._stand_ins):
+            raise _Unresolvable
+
+    def pgrep_selects(self, selection: tuple[list[str], set[int] | None] | None) -> bool:
+        """Whether `pgrep ARGS`, in any common locale, selects a protected process.
+
+        A parent restriction (`-P`) is applied here from the table: an ancestor's
+        parent is known, and the agent's shell counts as a child of every ancestor.
+        None is an invocation that only reports, or fails, and selects nothing.
+        """
+        if selection is None:
+            return False
+        args, parents = selection
+        pgrep = shutil.which("pgrep")
+        if pgrep is None:
+            raise _Unresolvable
+        pids = {process.pid for process in self.protected()}
+        found: set[int] = set()
+        for locale in (None, "C", "C.UTF-8"):
+            env = dict(os.environ) if locale is None else {**os.environ, "LC_ALL": locale}
+            result = _run_read_only([pgrep, *args], env)
+            # pgrep warns, and matches nothing, for a name longer than a 15-character comm.
+            stderr = result.stderr.replace(_PGREP_LONG_NAME_WARNING, "")
+            if result.returncode not in {0, 1} or stderr or not re.fullmatch(r"(\d+\n)*", result.stdout):
+                raise _Unresolvable
+            found.update(int(pid) for pid in result.stdout.split())
+        self._alive()
+        if parents is not None:
+            ancestors = {process.pid for process in self.ancestors}
+            pids = {
+                process.pid
+                for process in self.protected()
+                if process.ppid in parents or (process.pid not in ancestors and parents & ancestors)
+            }
+        return bool(found & pids)
+
+    def pidof_selects(self, args: list[str]) -> bool:
+        """Whether `pidof ARGS` lists a protected process."""
+        pidof = shutil.which("pidof")
+        if pidof is None:
+            raise _Unresolvable
+        pids = {process.pid for process in self.protected()}
+        result = _run_read_only([pidof, *args], dict(os.environ))
+        if result.returncode not in {0, 1} or result.stderr or not re.fullmatch(r"[\d ]*\n?", result.stdout):
+            raise _Unresolvable
+        self._alive()
+        return bool({int(pid) for pid in result.stdout.split()} & pids)
+
+
+def _run_read_only(argv: list[str], env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(argv, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=2, env=env)
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        raise _Unresolvable from exc
+
+
+def _procps_signal(word: str) -> bool:
+    """procps 4.0.4 signal_name_to_number() on `word` without its dash, as a predicate."""
+    name = word[3:] if word[:3].upper() == "SIG" else word
+    if name.upper() in _PROCPS_SIGNALS:
+        return True
+    if name[:6].upper() == "RTMIN+":
+        name = name[6:]
+    match = re.fullmatch(r"[ \t\n\v\f\r]*([+-]?\d+)", name)
+    return match is not None and 0 <= int(match.group(1)) <= 127 - signal.SIGRTMIN
+
+
+def _pgrep_selection(values: list[str], *, pkill: bool) -> tuple[list[str], set[int] | None] | None:
+    """Rebuild a pgrep or pkill selection as canonical pgrep arguments, or refuse it."""
+    if pkill:
+        # procps signal_option(): the first dashed word that names a signal is removed.
+        for index, value in enumerate(values):
+            if value.startswith("-") and _procps_signal(value[1:]):
+                values = values[:index] + values[index + 1 :]
+                break
+    try:
+        options, operands = getopt.gnu_getopt(values, _PKILL_SHORT if pkill else _PGREP_SHORT, _PGREP_LONG)
+    except getopt.GetoptError as exc:
+        raise _Unresolvable from exc
+    if len(operands) > 1 or (pkill and any(option in {"-v", "-l", "-a", "-d", "-w"} for option, _ in options)):
+        raise _Unresolvable
+    if any(option in {"-h", "--help", "-V", "--version"} for option, _ in options):
+        # Help and version output stop procps before it selects anything.
+        return None
+    selection: list[str] = []
+    parents: set[int] | None = None
+    for option, value in options:
+        if option in {"-P", "--parent"}:
+            if not re.fullmatch(r"\d+(?:,\d+)*", value):
+                raise _Unresolvable
+            parents = (parents or set()) | {int(pid) for pid in value.split(",")}
+        elif option in _PGREP_SELECTION:
+            if _PGREP_SELECTION[option] not in selection:
+                selection.append(_PGREP_SELECTION[option])
+        elif option in _PGREP_SELECTION_VALUES:
+            selection += [_PGREP_SELECTION_VALUES[option], value]
+        elif option in {"-f", "--full"}:
+            raise _Unresolvable(_FULL_MATCH)
+        elif option not in _PGREP_OUTPUT:
+            # Sessions, groups, terminals, ages, states, pidfiles, threads, namespaces
+            # and signal handlers differ between the agent's shell and its stand-in or
+            # change before the command runs.
+            raise _Unresolvable
+    if not operands and parents is None and not any(option in _PGREP_SELECTION_VALUES for option, _ in options):
+        # procps refuses a selection without criteria, so nothing is signalled.
+        return None
+    # A parent restriction alone selects every process, filtered by the table.
+    return [*selection, "--", *(operands or [""])], parents
+
+
+def _killall_selects(values: list[str], table: _ProcessTable) -> bool:
+    """Whether psmisc killall's literal name match can reach a protected process."""
+    ignore_case = False
+    uid: int | None = None
+    names: list[str] = []
+    options = True
+    index = 0
+    while index < len(values):
+        value = values[index]
+        index += 1
+        if not options or value == "-" or not value.startswith("-"):
+            names.append(value)
+        elif value == "--":
+            options = False
+        elif value in {"-s", "--signal", "-signal", "-u", "--user", "-user"}:
+            if index >= len(values):
+                raise _Unresolvable
+            if value.lstrip("-") == "user" or value == "-u":
+                try:
+                    uid = pwd.getpwnam(values[index]).pw_uid
+                except KeyError as exc:
+                    raise _Unresolvable from exc
+            index += 1
+        elif value.lstrip("-") in {"exact", "quiet", "verbose", "wait", "ignore-case"} or (
+            value[1:] and set(value[1:]) <= set("eqvwI")
+        ):
+            ignore_case = ignore_case or "I" in value or value.lstrip("-") == "ignore-case"
+        elif not _procps_signal(value[1:]):
+            # Regexes, process groups, ages, namespaces, contexts and paths are refused.
+            raise _Unresolvable
+    if not names or any("/" in name for name in names):
+        raise _Unresolvable
+
+    def same(left: str, right: str) -> bool:
+        return left.lower() == right.lower() if ignore_case else left == right
+
+    for process in table.protected():
+        if uid is not None and process.ruid != uid:
+            continue
+        program = process.argv0.rsplit("/", 1)[-1]
+        # A superset of match_process_name(): the comm, its 15-character prefix,
+        # and the long name read from the command line.
+        if any(
+            same(name, process.comm)
+            or same(name[:15], process.comm)
+            or same(name, program)
+            or same(name, process.argv0)
+            for name in names
+        ):
+            return True
+    return False
+
+
+def _pidof_selection(values: list[str]) -> list[str]:
+    """Keep sysvinit pidof's selecting options; output-only and omit options only narrow it."""
+    try:
+        options, operands = getopt.gnu_getopt(values, "cd:hno:qsxz")
+    except getopt.GetoptError as exc:
+        raise _Unresolvable from exc
+    if not operands or any(option == "-h" for option, _ in options):
+        raise _Unresolvable
+    return [*(option for option, _ in options if option in {"-c", "-n", "-x", "-z"}), *operands]
+
+
+def _kill_operands(raw: tuple[str, ...], fed: bool, table: _ProcessTable) -> tuple[str | None, bool]:
+    """Check kill's operands; return a refusal and whether any operand is not literal."""
+    words = list(raw)
+    index = 0
+    signal_seen = False
+    while index < len(words):
+        value = _shell_word_value(words[index])
+        if value in {"-l", "-L"}:
+            return None, False
+        if value in {"-s", "-n"}:
+            index += 2
+            signal_seen = True
+        elif value == "--":
+            index += 1
+            break
+        elif value is not None and value.startswith("-") and len(value) > 1 and not signal_seen:
+            # The first signal word; later dashed numbers are process groups.
+            index += 1
+            signal_seen = True
+        else:
+            break
+    operands = words[index:]
+    dynamic = fed or not operands
+    for word in operands:
+        if _SELF_PID_EXPANSION.search(word):
+            return _SELF_MATCH, True
+        value = _shell_word_value(word)
+        if value is None or not re.fullmatch(r"-?\d+", value):
+            dynamic = True
+            continue
+        number = int(value)
+        if number in {0, -1}:
+            return _SELF_MATCH, dynamic
+        if number > 0 and number in {process.pid for process in table.ancestors}:
+            return _SELF_MATCH, dynamic
+        if number < 0 and -number in {process.pgid for process in table.ancestors}:
+            return _SELF_MATCH, dynamic
+    return None, dynamic
+
+
+def _process_values(raw: tuple[str, ...]) -> list[str]:
+    values = [_shell_word_value(word) for word in raw]
+    if any(value is None for value in values):
+        raise _Unresolvable
+    return [value for value in values if value is not None]
+
+
+def _resolve_process_calls(calls: list[tuple[str, tuple[str, ...], bool]], table: _ProcessTable) -> str | None:
+    nonliteral = False
+    for name, raw, fed in calls:
+        if name == "kill":
+            reason, dynamic = _kill_operands(raw, fed, table)
+            if reason:
+                return reason
+            nonliteral = nonliteral or dynamic
+        elif (name == "pkill" and table.pgrep_selects(_pgrep_selection(_process_values(raw), pkill=True))) or (
+            name == "killall" and _killall_selects(_process_values(raw), table)
+        ):
+            return _SELF_MATCH
+    # A kill whose PIDs come from elsewhere is paired with every selector in the
+    # invocation, however the PIDs travel between them.
+    if nonliteral:
+        for name, raw, _ in calls:
+            if name == "pgrep" and table.pgrep_selects(_pgrep_selection(_process_values(raw), pkill=False)):
+                return _SELF_MATCH
+            if name == "pidof" and table.pidof_selects(_pidof_selection(_process_values(raw))):
+                return _SELF_MATCH
+    return None
+
+
+def _process_refusal(command: str) -> str | None:
+    """Return why a command's process kills are refused, or None to allow them."""
+    facts = _ProcessFacts(command)
+    _collect_process_facts(command, facts)
+    if facts.limit:
+        return "nested shell command could not be parsed safely"
+    if facts.opaque:
+        return "the command runs shell text the guard cannot read, which could stop the agent's own process"
+    if facts.unresolved:
+        return "a command name the guard cannot resolve could stop the agent's own process"
+    if not facts.calls:
+        return None
+    try:
+        with _ProcessTable() as table:
+            return _resolve_process_calls(facts.calls, table)
+    except _Unresolvable as exc:
+        return exc.args[0] if exc.args else "a process kill could not be resolved against the live process table"
 
 
 def _scan_command(
@@ -2016,6 +3037,21 @@ def _scan_command(
                     reason = _scan_command(script, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
                     if reason:
                         return reason
+    # Rejoined shell words also read a script spliced from quote fragments
+    # whole (`bash -c 'en'"v" _`), as the process check reads it.
+    for pipeline in _pipelines(executable, shell_words=True):
+        for segment in pipeline:
+            found = _command_at(segment)
+            if found is None or found[0] not in _PROCESS_SHELLS:
+                continue
+            args = found[1]
+            for marker, (prefix, body) in substitutions.items():
+                spelling = prefix + body + ("`" if prefix.startswith("`") else ")")
+                args = [arg.replace(marker, spelling) for arg in args]
+            for script in _shell_script(args):
+                reason = _scan_command(script, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
+                if reason:
+                    return reason
     return None
 
 
@@ -2067,13 +3103,11 @@ def _main(argv: list[str] | None = None) -> int:
     if not command:
         return 0
 
-    process_facts = _process_facts(command)
-    if "pkill" in process_facts or {"pgrep", "kill"} <= process_facts:
-        sys.stderr.write(_process_block_msg("full-command-line process kills can match the invoking shell"))
-        return 2
-    if "limit" in process_facts:
-        # Fail closed: the override never covers a command the process scan cannot read whole.
-        sys.stderr.write(_process_block_msg("nested shell command could not be parsed safely"))
+    # Fail closed: the override never covers a process kill or a command the
+    # process reader cannot read whole.
+    process_reason = _process_refusal(command)
+    if process_reason:
+        sys.stderr.write(_process_block_msg(process_reason))
         return 2
     if override:
         return 0
