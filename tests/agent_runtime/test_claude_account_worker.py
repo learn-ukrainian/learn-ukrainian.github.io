@@ -477,9 +477,9 @@ def test_bound_label_inert_user_settings_names_are_admitted(accounts, case):
 def test_bound_label_auto_mode_is_refused(accounts, case):
     """User settings carrying ``autoMode`` refuse value-free before spawn (#10619).
 
-    On d183ad934b the worker ran: the classifier reads ``autoMode`` from the
-    user settings whatever the setting sources (see
-    ``test_real_cli_reads_auto_mode_whatever_the_setting_sources``).
+    On d183ad934b the worker ran, although Claude Code 2.1.300's classifier
+    read ``autoMode`` from the user settings whatever the setting sources (see
+    ``test_real_cli_unloads_the_labelled_user_auto_mode``).
     """
     _user_settings(accounts, AUTO_MODE_REFUSED[case])
 
@@ -1518,16 +1518,19 @@ def test_real_cli_inert_user_settings_names_change_no_auth_source(real_cli):
     assert _plan(real_cli, claude_account="b").env_overrides["CLAUDE_CONFIG_DIR"] == str(real_cli.config_dir)
 
 
-def test_real_cli_reads_auto_mode_whatever_the_setting_sources(real_cli):
-    """Why ``autoMode`` refuses (#10619): with the labelled run's own arguments the classifier still reads it.
+def test_real_cli_unloads_the_labelled_user_auto_mode(real_cli):
+    """``autoMode`` in the user file is classifier policy, and it refuses (#10619).
 
-    ``--setting-sources project,local`` leaves the user scope off, yet the
-    installed CLI reports the user file's four rule lists as its classifier
-    configuration. Equal ``auth status`` output says nothing about this.
+    With the user scope on, the installed CLI reports the file's four rule
+    lists as its classifier configuration. Claude Code 2.1.300 did the same
+    under the labelled run's ``--setting-sources project,local``; 2.1.314
+    keeps them out and reports its built-in lists. Equal ``auth status``
+    output says nothing about this, and the refusal holds either way.
     """
     _user_settings(real_cli, AUTO_MODE_SETTINGS["auto_mode"])
 
-    assert json.loads(_real(real_cli, "auto-mode", "config")) == AUTO_MODE_LISTS
+    assert json.loads(_real(real_cli, "auto-mode", "config", sources=False)) == AUTO_MODE_LISTS
+    assert json.loads(_real(real_cli, "auto-mode", "config")) == json.loads(_real(real_cli, "auto-mode", "defaults"))
     with pytest.raises(ClaudeAccountRefused) as refused:
         _plan(real_cli, claude_account="b")
     assert refused.value.code == "claude_account_settings_credential_source"
