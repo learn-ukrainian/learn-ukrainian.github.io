@@ -34,8 +34,8 @@ def model_observer(stdout_path):
         pending = lines.pop()
         for line in lines:
             try:
-                model = _init_model(json.loads(line.decode(errors="replace")))
-            except ValueError:
+                model = _init_model(json.loads(line.decode()))
+            except ValueError:  # invalid JSON or invalid UTF-8: not a valid record, so it attests nothing
                 continue
             if model is not None:
                 models.add(model)

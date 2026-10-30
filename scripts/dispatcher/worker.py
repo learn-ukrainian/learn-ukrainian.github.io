@@ -527,6 +527,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
+        # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
+        resolved_model = parsed.resolved_model
         if spec.agent == "agy" and spec.mode == "read-only":
             # Only the boundary's receipt, written outside the sandbox, proves the run read-only and
             # supplies its Sources count (C-3027); without a verified one the run fails.
@@ -548,7 +550,6 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 error = f"{result.failure_code}: {result.stderr_excerpt}"
                 status = "failed"
                 return
-        resolved_model = parsed.resolved_model
         status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
         if returncode < 0:
             status = "crashed"
