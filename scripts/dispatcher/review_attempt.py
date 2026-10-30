@@ -1,0 +1,162 @@
+"""Execute one bound formal review attempt (#12114).
+
+Admission (``admit``) runs in the dispatch command before anything is created: the
+prompt must be the exact render of the attempt's manifest with this dispatch's ids
+(``check_review_contract`` and ``check_prompt``), its Sources tool requirements must be
+granted, and every pinned input must equal the dispatch commit's bytes, so a refused
+tree leaves the attempt id unspent.
+
+Execution (``run``) runs in the task's supervisor once its record exists: the actual
+checkout is verified again, the attempt id is claimed (the exclusive empty ledger),
+the per-attempt Sources server, sidecar and scoped home are prepared on that claim,
+and the seat runs through the agent runtime's attempt boundary
+(``agent_runtime.runner.invoke`` with ``review_attempt_tool_config``) with the
+rendered prompt's exact bytes. The runtime owns the OS boundary, egress proxy and
+Sources socket; there is no fallback to an ordinary launch. The recorder
+(``scripts.review.record``) later binds the saved result to this record.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import subprocess
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from scripts.dispatcher import store
+
+
+def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict:
+    """Refuse a bound launch whose prompt, tools or pinned inputs do not match; return its review contract."""
+    from scripts.agent_runtime.review_mcp import check_review_contract, check_review_tool_requirements
+    from scripts.orchestration.worktree_claims import required_review_input_root
+    from scripts.review.prompts.check import check_prompt
+    from scripts.review.render_contract import ReviewContractError
+
+    access = args.review_access or "isolated"
+    if access == "full" and not args.full_checkout:
+        raise ValueError("review_attempt_full_checkout_required: full review access needs --full-checkout")
+    if args.output_schema is not None:
+        raise ValueError("attempt_output_schema_unsupported: a bound attempt returns its review document")
+    if args.prompt_file in (None, "-"):
+        raise ValueError("review_attempt_prompt_file_required: a bound attempt's prompt is a rendered --prompt-file")
+    text = prompt.decode("utf-8")
+    ids = dict(review_id=binding["review_id"], attempt_id=binding["attempt_id"])
+    try:
+        contract = check_review_contract(Path(args.prompt_file), text, **ids)
+        checked = check_prompt(
+            text,
+            Path(args.review_attempt),
+            repo_root=Path(required_review_input_root(contract)),
+            prompts_dir=Path(contract["server_checkout"]) / "scripts/review/prompts",
+            recorded_prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
+            files_read=contract["recorded_files_read"],
+            template_sha256=contract["recorded_template_sha256"],
+            recorded_templates=contract["recorded_templates"],
+            review_access=access,
+            **ids,
+        )
+    except ReviewContractError as exc:
+        raise ValueError(str(exc)) from None
+    if not checked.passed:
+        raise ValueError("prompt_render_invalid: " + "; ".join(checked.errors))
+    check_review_tool_requirements(text, access)
+    _check_pins_at_commit(repo, sha, Path(args.review_attempt))
+    return contract
+
+
+def _check_pins_at_commit(repo: Path, sha: str, manifest_path: Path) -> None:
+    """Every manifest pin must hold the dispatch commit's bytes, before a worktree or record exists."""
+    from scripts.build.fresh.manifest import pinned_entries
+
+    for _, entry in pinned_entries(yaml.safe_load(manifest_path.read_bytes())):
+        shown = subprocess.run(
+            ["git", "-C", str(repo), "cat-file", "blob", f"{sha}:{entry['path']}"],
+            capture_output=True, timeout=60, check=False,
+        )
+        if shown.returncode or hashlib.sha256(shown.stdout).hexdigest() != entry["sha256"]:
+            raise ValueError(f"full_review_tree_mismatch: {entry['path']} at {sha} is not the manifest's pinned input")
+
+
+@dataclass
+class Outcome:
+    status: str
+    error: str | None
+    text: str | None
+    sources_calls: int | None
+    identity: dict
+
+
+def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int]) -> Outcome:
+    """Claim, prepare and run the bound attempt of ``record``; never falls back to an unbounded launch."""
+    from scripts.agent_runtime import runner
+    from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
+    from scripts.agent_runtime.errors import (
+        AgentRuntimeError,
+        AgentStalledError,
+        AgentTimeoutError,
+        RateLimitedError,
+    )
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt, review_attempt_tool_config
+    from scripts.review.isolation import ReviewIsolationError
+    from scripts.review.receipts import ledger
+
+    binding, access = record["review_attempt"], record.get("review_access") or "isolated"
+    manifest = Path(record["options"]["review_attempt"])
+    workspace = Path(record["worktree_path"])
+    unknown = dict(resolved_model="unknown", resolved_model_known=False, resolved_model_source="unobserved")
+    try:
+        if access == "full":
+            verify_full_review_tree(manifest, workspace)
+        store.check_review_attempt(binding, claim=True, owner=record["task_id"])
+        plan = prepare_review_attempt(
+            binding["review_id"], binding["attempt_id"], manifest, spec.agent,
+            receipts_root=store.receipts_root(), review_contract=record.get("review_contract"),
+            review_access=access, checkout_root=workspace, claimed=True,
+        )
+        if plan.manifest_sha256 != binding["manifest_sha256"]:
+            raise ValueError("attempt_manifest_hash_mismatch: the manifest changed after admission")
+        tool_config = review_attempt_tool_config(
+            plan, manifest_path=manifest, input_root=record["review_contract"]["input_root"], cwd=workspace,
+            task_id=record["task_id"], model=spec.model, effort=spec.effort, review_access=access,
+            review_profile=record.get("review_profile") or "code",
+            base_tool_config={"run_nonce": record["run_nonce"]},
+        )
+    except (OSError, ValueError, ReviewIsolationError) as exc:
+        return Outcome("failed", f"review_attempt_refused: {exc}"[:500], None, None, unknown)
+    hard, silence, initial = deadlines
+    try:
+        result = runner.invoke(
+            spec.agent, prompt, mode="read-only", cwd=workspace, model=spec.model, task_id=record["task_id"],
+            tool_config=dict(tool_config), entrypoint="dispatch", hard_timeout=int(hard) if hard else 86400,
+            stdout_silence_timeout=silence or None, initial_response_timeout=initial or None, effort=spec.effort,
+            allow_runner_failover=False,
+        )
+    except (AgentTimeoutError, AgentStalledError) as exc:
+        return Outcome("timeout", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
+    except RateLimitedError as exc:
+        return Outcome("rate_limited", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
+    except AgentRuntimeError as exc:
+        return Outcome("failed", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
+    # Only an identity the runtime observed from the provider is attested; a requested model never is.
+    known = result.identity_state == "observed"
+    identity = dict(
+        resolved_model=result.observed_model if known else "unknown",
+        resolved_model_known=known,
+        resolved_model_source=result.observed_model_source if known else "unobserved",
+    )
+    ok = result.ok and bool(result.response.strip())
+    error = None if ok else (result.failure_code or result.stderr_excerpt or "provider returned no successful response")
+    return Outcome("done" if ok else "failed", error, result.response if ok else None,
+                   _ledger_count(ledger, plan.ledger_path), identity)
+
+
+def _ledger_count(ledger: Any, path: Path) -> int | None:
+    """The attempt's Sources receipts, read from the ledger the outside server wrote."""
+    try:
+        return len(ledger.records(path))
+    except (OSError, ValueError, ledger.LedgerError):
+        return None

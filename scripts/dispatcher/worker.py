@@ -500,6 +500,24 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         except headroom.RateLimitedError as exc:
             status, error = "rate_limited", str(exc)
             return
+        if record.get("review_attempt"):
+            # A bound formal attempt runs only inside the agent runtime's attempt boundary, with the rendered
+            # prompt's exact bytes: no dispatch context, no task-store grant, no ordinary launch (#12114).
+            from scripts.dispatcher import review_attempt
+
+            prompt = spec.prompt_file.read_bytes()
+            record.update(status="running", runtime_input_sha256=hashlib.sha256(prompt).hexdigest())
+            store.replace(record, path)
+            interruptible = True  # cancel unwinds the runtime, which kills the seat and tears the boundary down
+            try:
+                checkpoint()
+                outcome = review_attempt.run(spec, record, prompt.decode("utf-8"),
+                                             (hard_timeout, silence_timeout, initial_response_timeout))
+            finally:
+                interruptible = False
+            status, error, text, sources_calls = outcome.status, outcome.error, outcome.text, outcome.sources_calls
+            record.update(outcome.identity)
+            return
         schema = None
         if options.get("output_schema_path") is not None:
             from scripts.dispatcher.output_schema import load
