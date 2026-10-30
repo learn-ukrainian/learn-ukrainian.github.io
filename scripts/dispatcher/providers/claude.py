@@ -175,7 +175,8 @@ def executor_failure(spec: TaskSpec, stdout: str) -> tuple[str | None, str | Non
     }) if isinstance(usage, dict) else []
     if approved in reported:
         return approved, None
-    executors = [model for model in reported if model != model_id(_ADVISOR_MODEL)]
+    advisor = model_id(_ADVISOR_MODEL)  # the advisor may be reported under an alias key such as ``opus``
+    executors = [model for model in reported if model_id(model) != advisor]
     return (executors[0] if len(executors) == 1 else None,
             f"claude_advisor_executor_unverified: approved {approved}, reported {', '.join(reported) or 'none'}")
 
