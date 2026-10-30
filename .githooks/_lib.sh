@@ -37,6 +37,15 @@ run_pre_commit() {
     -- "$@"
 }
 
+# A dispatched write task learns at commit or push time that it changed a path outside its
+# owned paths; settlement still refuses such a delivery (#12113). Work outside a task skips it.
+check_owned_paths() {
+  if [[ -z "${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" || ! -f "$source_root/scripts/dispatcher/ownership.py" ]]; then
+    return 0
+  fi
+  (cd "$source_root" && run_project_python -m scripts.dispatcher.ownership --worktree "$worktree_root" "$@")
+}
+
 require_git_lfs() {
   if ! command -v git-lfs >/dev/null 2>&1; then
     echo "Git hook error: this repository uses Git LFS, but git-lfs is not installed." >&2
