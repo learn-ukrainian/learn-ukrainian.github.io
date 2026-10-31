@@ -26,7 +26,7 @@ arc_ref:
   position: 5
 evidence_ref:
   path: curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml
-  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  sha256: 'b78431b72e66063e678e721af28a40a4ba7858f81f81b4678d6378f3ffd87a8c'
 lessons:
 - n: 1
   slug: last-consonants
