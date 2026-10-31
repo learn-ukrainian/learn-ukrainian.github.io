@@ -10961,7 +10961,9 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         ]
         if not matching_headings:
             missing.append(title)
-        elif not _strip_comments(_extract_section_text(text, title, archetype_key=archetype_id)).strip():
+        elif len(matching_headings) == 1 and not _strip_comments(
+            _extract_section_text(text, title, archetype_key=archetype_id),
+        ).strip():
             empty.append(title)
         if len(matching_headings) > 1:
             duplicate_headings.append(
