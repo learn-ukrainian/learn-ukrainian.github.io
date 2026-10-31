@@ -8,7 +8,8 @@ from scripts.agent_runtime.read_only_tmp import dispatch_lease
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher.types import TaskSpec
 
-_CONTEXT = ("PATH", "HOME", "LANG", "TERM", "TMPDIR")
+# LU_SENSE_PROOF_DIR is a host path with no secret in the name; pack-verify reads the proofs inside it.
+_CONTEXT = ("PATH", "HOME", "LANG", "TERM", "TMPDIR", "LU_SENSE_PROOF_DIR")
 _AUTH = {
     "codex": ("OPENAI_API_KEY", "CODEX_API_KEY", "CODEX_HOME"),
     "claude": ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CONFIG_DIR"),
