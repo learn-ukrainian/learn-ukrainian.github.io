@@ -683,7 +683,8 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
 
     used_pct = account_used_pct(None if inputs.structural else account)
     paused = refusal_reason(
-        candidate_dispatch_model(candidate), used_pct=lambda lane: used_pct(lane) if lane == "claude" else None
+        candidate_dispatch_model(candidate),
+        used_pct=lambda lane: used_pct(lane) if lane == "claude" and candidate.route == "claude" else None,
     )
     if paused:
         return paused

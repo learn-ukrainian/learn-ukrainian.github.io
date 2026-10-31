@@ -19,6 +19,34 @@ from tests.claude_route_accounts import HOST_ACCOUNT
 GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
 
 
+def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatch):
+    """A hold for one plan must not remove seats running on another quota."""
+    from scripts.agent_runtime import model_pause
+
+    monkeypatch.setattr(
+        model_pause,
+        "load_policy",
+        lambda: {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]},
+    )
+    monkeypatch.setattr(model_pause, "account_used_pct", lambda account: lambda lane: 90)
+    native = REVIEW_CANDIDATES["claude-opus-5-5"]
+    agy = replace(
+        GEMINI,
+        name="agy-opus",
+        concrete_model="claude-opus-5-5-high",
+        family=native.family,
+        model_roles=native.model_roles,
+        suitability_roles=native.suitability_roles,
+    )
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="low", claude_account=HOST_ACCOUNT)
+
+    native_result = evaluate_candidate(native, inputs)
+    assert native_result.status == "excluded"
+    assert "MODEL_HEADROOM" in native_result.reason
+    agy_result = evaluate_candidate(agy, inputs)
+    assert agy_result.status == "eligible", agy_result.reason
+
+
 @pytest.mark.parametrize(
     "task_id,expected",
     [
