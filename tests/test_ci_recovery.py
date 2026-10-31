@@ -172,6 +172,8 @@ class Transport:
                         }
                     )
                 data = [comments]
+            elif endpoint.endswith("/files"):
+                data = [[{"filename": "scripts/example.py"}]]
             elif endpoint.endswith("/timeline"):
                 data = (
                     [[{"id": 987, "event": "removed_from_merge_queue", "created_at": "2026-10-09T11:00:00Z"}]]
