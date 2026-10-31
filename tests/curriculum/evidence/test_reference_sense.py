@@ -1799,7 +1799,9 @@ def test_book_only_meaning_still_fails_beside_a_cited_gloss(bound, tmp_path, cas
     assert {s["path"].removeprefix("curriculum/l2-uk-en/evidence/a1/") for s in result["suspects"]} == flagged
 
 
-def _capture_fixture_scan(bound, tmp_path, mutate=lambda record: None, *, escape_notes=False, formula=False):
+def _capture_fixture_scan(
+    bound, tmp_path, mutate=lambda record: None, *, escape_notes=False, formula=False, extra_files=None
+):
     _root, api, _b = bound
     wording = "invented confidential destination"
     api.close()
@@ -1820,13 +1822,18 @@ def _capture_fixture_scan(bound, tmp_path, mutate=lambda record: None, *, escape
     git(repo, "init", "-q")
     git(repo, "config", "user.email", "fixture@example.invalid")
     git(repo, "config", "user.name", "Fixture")
-    git(repo, "commit", "--allow-empty", "-qm", "base")
     path = repo / "tests/curriculum/evidence/fixtures/a1_gloss_candidates.json"
     path.parent.mkdir(parents=True)
-    content = json.dumps({"records": {"W-001": record}}, indent=2)
+    unchanged = {"W-unchanged": {"note": "ordinary unchanged data"}}
+    path.write_text(json.dumps({"records": unchanged}, indent=2))
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "base")
+    content = json.dumps({"records": {**unchanged, "W-001": record}}, indent=2)
     if escape_notes:
         content = content.replace('"note": "invented', '"note": "\\u0069nvented')
     path.write_text(content)
+    for name, value in (extra_files or {}).items():
+        (repo / name).write_text(value)
     git(repo, "add", ".")
     git(repo, "commit", "-qm", "capture")
     result = sense_cli.leak_scan(repo, private, context, {"words": [word]}, api, base="HEAD^")
@@ -1854,6 +1861,7 @@ def test_leak_scan_exempts_cited_open_row_in_capture_fixture(bound, tmp_path, fo
         "row_extra",
         "record_extra",
         "newline",
+        "jsonl",
     ],
 )
 def test_leak_scan_gates_uncited_or_altered_fixture_row(bound, tmp_path, case):
@@ -1880,6 +1888,9 @@ def test_leak_scan_gates_uncited_or_altered_fixture_row(bound, tmp_path, case):
         elif case == "newline":
             record["note"] = "invented\nconfidential destination"
 
-    result = _capture_fixture_scan(bound, tmp_path, mutate, escape_notes=case in {"row_extra", "record_extra"})
+    extra = {"probe.jsonl": '{"note": "\\u0069nvented confidential destination"}\n{}\n'} if case == "jsonl" else None
+    result = _capture_fixture_scan(
+        bound, tmp_path, mutate, escape_notes=case in {"row_extra", "record_extra"}, extra_files=extra
+    )
     assert result["status"] == "failed", result
     assert result["signals"]["distinctive_wording"] > 0

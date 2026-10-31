@@ -257,7 +257,7 @@ def _redact_validated_locations(
                         )
                         not in headwords
                         or any(
-                            type(row.get(key)) is not type(value) or row.get(key) != value
+                            key not in row or type(row[key]) is not type(value) or row[key] != value
                             for key, value in cited.items()
                         )
                     ):
@@ -653,39 +653,59 @@ def leak_scan(
                 wording.update(distinctive[term])
         return wording
 
+    def decoded_wording(text: str, path: str):
+        """Decoded-only matches and their scalar extents, for detection and attribution."""
+        if "\\" not in text:
+            return
+        loader = getattr(yaml, "CBaseLoader", yaml.BaseLoader)
+        try:
+            roots = [(node, 0) for node in yaml.compose_all(text, Loader=loader)]
+        except yaml.YAMLError as error:
+            if Path(path).suffix != ".jsonl":
+                raise ValueError("structured_scan_decode_failed") from error
+            roots, offset = [], 0
+            for line in text.splitlines(keepends=True):
+                if line.strip():
+                    try:
+                        json.loads(line)
+                        roots.append((yaml.compose(line, Loader=loader), offset))
+                    except (ValueError, yaml.YAMLError) as error:
+                        raise ValueError("structured_scan_decode_failed") from error
+                offset += len(line)
+        seen, pending = set(), roots
+        while pending:
+            node, offset = pending.pop()
+            if node is None or id(node) in seen:
+                continue
+            seen.add(id(node))
+            if isinstance(node, yaml.ScalarNode):
+                start, end = offset + node.start_mark.index, offset + node.end_mark.index
+                matches = wording_ids(node.value) - wording_ids(text[start:end])
+                if matches:
+                    yield matches, start, end
+            elif isinstance(node, yaml.SequenceNode):
+                pending.extend((child, offset) for child in node.value)
+            elif isinstance(node, yaml.MappingNode):
+                pending.extend((child, offset) for pair in node.value for child in pair)
+
     def detect(text: str, path: str) -> dict[str, Counter]:
         wording = wording_ids(text)
         pairs = set().union(*(mapping_ids(line) for line in text.splitlines()))
         # Parse only structured files with a possible cross-line pair. Sibling
         # YAML/JSON records cannot lend each other a lemma or a meaning.
         if Path(path).suffix in {".yaml", ".yml", ".json", ".jsonl"} and (mapping_ids(text) - pairs or "\\" in text):
+            for matches, _start, _end in decoded_wording(text, path):
+                wording.update(matches)
             try:
                 for doc in yaml.load_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)):
                     for record in _record_texts(doc):
                         pairs.update(mapping_ids(record))
-                if "\\" in text:
-                    # Escapes outside exempt scalars must not hide private wording.
-                    # Count only matches missing from each scalar's literal spelling.
-                    seen = set()
-                    pending = list(yaml.compose_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)))
-                    while pending:
-                        node = pending.pop()
-                        if node is None or id(node) in seen:
-                            continue
-                        seen.add(id(node))
-                        if isinstance(node, yaml.ScalarNode):
-                            literal = text[node.start_mark.index : node.end_mark.index]
-                            wording.update(wording_ids(node.value) - wording_ids(literal))
-                        elif isinstance(node, yaml.SequenceNode):
-                            pending.extend(node.value)
-                        elif isinstance(node, yaml.MappingNode):
-                            pending.extend(child for pair in node.value for child in pair)
             except yaml.YAMLError:
                 # Invalid structured data still receives the literal line scan.
                 pass
         return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
 
-    def attribute(text: str, spans: list[tuple[int, int]], records: list[str]) -> dict[str, Counter] | None:
+    def attribute(text: str, spans: list[tuple[int, int]], records: list[str], path: str) -> dict[str, Counter] | None:
         """Matches not wholly inside one unchanged record, or None when positions are unknown."""
 
         def within(extents: list[tuple[int, int]]) -> bool:
@@ -698,6 +718,9 @@ def leak_scan(
         for term, a, b in located:
             if not within([(a, b)]):
                 wording.update(distinctive[term])
+        for matches, a, b in decoded_wording(text, path):
+            if not within([(a, b)]):
+                wording.update(matches)
         pairs, offset = set(), 0
         for line in text.splitlines(keepends=True):
             located = _located(mapping_pattern, mapping_prefixes, line, offset)
@@ -730,7 +753,7 @@ def leak_scan(
                 spans, paths = _unchanged_records(content.decode("utf-8"), prior)
                 if spans:
                     doc = yaml.load(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader))
-                    gated = attribute(text, spans, list(_record_texts(doc, skip=paths))) or found
+                    gated = attribute(text, spans, list(_record_texts(doc, skip=paths)), path) or found
             except (subprocess.CalledProcessError, UnicodeError, yaml.YAMLError):
                 gated = found
         for signal, matches in found.items():
@@ -1073,6 +1096,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
         # Parse/SQLite/ledger errors can contain private input. Only controlled
         # reason codes are safe to report; never print an arbitrary exception.
         safe_codes = {
+            "structured_scan_decode_failed",
             "sense_bindings_invalid",
             "word_missing",
             "review_arguments_required",
