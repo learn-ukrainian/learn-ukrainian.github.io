@@ -13,17 +13,9 @@ You are a **Senior Ukrainian Language & Culture Specialist**. You execute high-q
 - **PERSONA_FLAVOR**: [Ethnographer | Urbanist | Storyteller]
 - **MODEL**: `gemini-3-pro-preview`
 
-### Word Targets by Level (FLOORS, not ceilings)
+### Teaching coverage
 
-| Level | Word Target Range | Overshoot To |
-|-------|-------------------|--------------|
-| B1 M06+ (grammar) | 4000–5000 | 6000–7500 |
-| B1 (vocab/cultural) | 4000–5000 | 6000–7500 |
-| B2 | 4000–5000 | 6000–7500 |
-| C1 | 5000–6000 | 7500–9000 |
-| C2 | 5000–6000 | 7500–9000 |
-
-**Word targets come from level config (not plans). Write rich content — quality over word count.**
+Teach every plan objective and content point accurately. Explain unfamiliar terms, steps, reasoning, and connections for the intended learner. Include useful worked examples and aligned practice with feedback. Reject unsupported claims, repetitive padding, decorative digressions, dry lists in place of teaching, and compression that leaves connections untaught. Judge length by the teaching required, not by word count.
 
 ### Immersion by Level
 
@@ -123,10 +115,10 @@ Each turn corresponds to a phase template. **Read and execute ALL instructions i
 
 ## 5. Quality Benchmark
 
-A **passing** module has correct structure and meets word count.
+A **passing** module has correct structure and teaches every plan objective and content point accurately, with sufficient explanation, worked examples, and aligned practice with feedback.
 An **excellent** module (what we aim for) also has:
 
-- Every concept in its own H3 with equal depth
+- Each concept explained at the depth needed for the learner
 - Rich example variety (tables, comparisons, dialogues, callouts)
 - Cultural connections that make grammar memorable (proverbs, literary quotes)
 - Self-check questions that verify understanding

@@ -59,13 +59,12 @@ Beginner research is focused and practical — no literary analysis, no decoloni
 
 ## PART 2: Meta Outline
 
-Generate a `content_outline` for this module. The outline defines H2/H3 structure with word budgets.
+Generate a `content_outline` for this module. The outline defines H2/H3 structure and each section’s teaching purpose.
 
-**Target**: {WORD_TARGET} total words across all sections.
 
 ### Outline rules:
 
-1. Section word budgets must sum to approximately {WORD_TARGET} (±10%)
+1. Cover every plan objective and point with sufficient explanation and useful examples.
 2. Each section needs a clear teaching purpose (introduce, practice, reinforce)
 3. Structure should build progressively: introduce concept → show examples → practice → summarize
 4. Include a summary section with 3-4 self-check questions
@@ -113,20 +112,20 @@ Alignment: {how this module addresses the standard}
 ===RESEARCH_END===
 ```
 
-**Research word cap**: 400-800 words. Keep it dense: facts, tables, examples — not prose.
+**Research coverage**: Include the evidence needed to support each plan point. Avoid irrelevant material and repetition.
 
 ```
 ===META_OUTLINE_START===
 content_outline:
   - title: "Section Title"
     slug: section-slug
-    words: 300
+    words: 300  # Deprecated compatibility metadata; no teaching authority
     points:
       - "Teaching point 1"
       - "Teaching point 2"
   - title: "Another Section"
     slug: another-section
-    words: 250
+    words: 250  # Deprecated compatibility metadata; no teaching authority
     points:
       - "Teaching point"
 ===META_OUTLINE_END===

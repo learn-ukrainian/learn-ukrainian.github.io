@@ -17,7 +17,7 @@
 Every build specializes this contract with three per-module artifacts:
 
 1. **Plan YAML** at `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` —
-   section order, word budgets, teaching beats, required vocabulary.
+   section order, teaching beats, required vocabulary. Numeric sizing fields are legacy metadata without teaching authority.
 2. **Shared contract YAML** rendered as `{CONTRACT_YAML}` in both
    writer and reviewer prompts — the plan's section contract, activity
    obligations, dialogue acts, factual anchors, banned error patterns.
@@ -75,40 +75,15 @@ A1/A2, or short English glosses after Ukrainian dialogue turns at A1.
 **Authority:** plan YAML `teaching_beats.sections[*].teaching_beats`
 and `section_contract.covers` when present.
 
-Each section lists the items it MUST cover, a word budget (typically
-`{target: 300, min: 270, max: 330}`), and an ordered activity
-obligation chain.
+Each section lists the items it MUST cover and an ordered activity obligation chain.
 
-**Writer side.** Every item in the section's covers/beats list MUST
-appear in that section's prose. Do NOT silently defer an item to a
-later section — that is the #1431 `Кольори` failure (contract promised
-12 colors, writer delivered 6 + синій and pushed the rest to Section
-3).
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 
-When the 270–330 budget cannot fit every contracted item at readable
-density, emit a structured overflow block at the end of the section:
+**Writer side.** Every item in the section's covers/beats list must be taught in that section. Do not silently defer it to a later section or module. Explain unfamiliar terms and the steps between ideas. Use tables and lists to organize teaching, with enough prose and worked examples to make their meaning clear.
 
-```
-<section_overflow>
-section: "Кольори"
-reason: 12 colors + hard/soft split exceeds 330 words at A1 density.
-items_needing_more_budget:
-  - "блакитний color introduction (was deferred)"
-  - "compound shade формулу (темно-/світло-)"
-proposed_budget_delta: "+60 words"
-</section_overflow>
-```
+If an objective cannot be supported, identify that objective and the missing evidence for source research or versioned plan review. Do not invent material. A legacy `<section_overflow>` disclosure can report a scope or evidence gap, but no numeric budget requires it. A disclosure does not substitute for missing teaching.
 
-The convergence loop treats `<section_overflow>` as a plan-revision
-signal (plan-authoring bug, not writer bug) — not a review failure.
-The writer still covers every item; the block documents that the
-budget constraint fought the coverage constraint.
-
-**Reviewer side.** Score plan-adherence against whether every covered
-item appears in its section. An explicit `<section_overflow>` block
-in the writer output is a POSITIVE honesty signal — do NOT penalize
-it. Penalize ONLY silent deferrals (an item listed in Section N's
-contract that was moved to Section N+1 without overflow disclosure).
+**Reviewer side.** Judge whether every contracted item is taught accurately and sufficiently for the learner in its assigned section. Report missing coverage, unsupported claims and silent deferrals with exact evidence. Never reward or penalize a count, section overrun or under-budget result.
 
 ## §3 Dialogue contract — corpus-grounded or nothing
 

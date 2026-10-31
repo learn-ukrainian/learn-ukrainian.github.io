@@ -1,6 +1,6 @@
 ---
 id: R-TEXTBOOK-30W
-description: Chunk_id-first textbook grounding with ≥30-word verbatim blockquotes for adult sources.
+description: Chunk_id-first textbook grounding with faithful relevant verbatim blockquotes for adult sources.
 applies_to:
   levels: [all]
   tracks: [all]
@@ -15,8 +15,8 @@ depends_on: [R-CITE-HONEST]
 
 (B) **Retrieve the chunk text.** Call `mcp__sources__get_chunk_context(chunk_id=<ID>)`. This step is MANDATORY — calling `search_text` alone returns a truncated snippet, not the full chunk text. The `chunk_context_for_all_refs` gate verifies these calls; if any fetchable reference is missing a `get_chunk_context` call, the gate HARD-rejects regardless of blockquote content.
 
-(C) **Surface only adult-appropriate source blockquotes.** Grade 1-3 chunks ground choices but do NOT appear as learner-facing `>` blockquotes. Adult-appropriate sources require one verbatim >=30-word Ukrainian blockquote per cited reference; no paraphrasing, translation, stitching, Russian-script text, or syllable-hyphen edits.
+(C) **Surface only adult-appropriate source blockquotes.** Grade 1-3 chunks ground choices but do NOT appear as learner-facing `>` blockquotes. Adult-appropriate sources require one relevant verbatim Ukrainian blockquote per cited reference; no paraphrasing, translation, stitching, Russian-script text, or syllable-hyphen edits.
 
 (D) Add the exact citation line immediately after the blockquote: `*— <Author>, Grade <N>, p.<PAGE>*` (em-dash + spaces, italic).
 
-For adult-appropriate blockquotes, fewer than 30 words per blockquote, or a blockquote whose text is not literally contained in the returned chunk, makes the `published_quote_for_publishable_refs` gate HARD-reject. For Grade 1, 2, or 3 chunks, missing a learner-facing `>` blockquote is correct; the chunk still must be retrieved and used as grounding.
+Adult-appropriate blockquotes must be literally contained in the returned chunk. Preserve source fidelity regardless of quotation length. Existing runtime quote-length checks are migrated separately under #12256 AC-02. For Grade 1, 2, or 3 chunks, missing a learner-facing `>` blockquote is correct; the chunk still must be retrieved and used as grounding.

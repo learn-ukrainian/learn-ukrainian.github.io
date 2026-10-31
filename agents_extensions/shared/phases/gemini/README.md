@@ -24,7 +24,7 @@ Templates use `{PLACEHOLDER}` syntax. Claude replaces these before writing the p
 | `{VOCAB_PATH}` | `curriculum/l2-uk-en/{track}/vocabulary/{slug}.yaml` |
 | `{QUICK_REF_PATH}` | `agents_extensions/shared/quick-ref/{LEVEL}.md` |
 | `{SCHEMA_PATH}` | `schemas/activities-{track}.schema.json` |
-| `{WORD_TARGET}` | From level config (`scripts/audit/config.py`) |
+| `{WORD_TARGET}` | Historical, non-authoritative length metadata from level config (`scripts/audit/config.py`) |
 | `{SLUG}` | Module slug |
 | `{TRACK}` | Track identifier |
 
@@ -46,7 +46,7 @@ The `_retired/` archive remains for existing compatibility tests.
 | `phase-0-research-seminar.md` | 0 | Deep research for seminar tracks |
 | `_retired/phase-0-research-core.md` | 0 | Lightweight research for core tracks |
 | `_retired/phase-0-5-enrich-plan.md` | 0.5 | Enrich plan content_outline + vocabulary_hints from research |
-| `_retired/phase-1-meta.md` | 1 | Refine content_outline with word allocations |
+| `_retired/phase-1-meta.md` | 1 | Refine content_outline and teaching points |
 | `phase-2-content.md` | 2 | Write lesson prose (1.5x overshoot) |
 | `phase-3-activities.md` | 3 | Generate activities + vocabulary YAML |
 | `phase-5-review.md` | 5 | Critical 14-dimension deep review |

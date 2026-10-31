@@ -10,16 +10,14 @@
 - **Active voice** preferred — passive only when agent truly unknown
 
 ### 2. Engagement — Would You Keep Reading?
-- Opening hook in first 50 words (question, vivid scene, provocative fact)
+- Opening hook (question, vivid scene, provocative fact)
 - {ENGAGEMENT_MIN}+ callout boxes using 4+ different types
 - Direct address to reader (Уявіть..., Чому це важливо?)
 - No formulaic openers ("In this lesson, we will...")
 - Each section has its own narrative approach — never repeat the same skeleton
 
-### 3. Word Count — Targets Are Minimums
-- Minimum: {WORD_TARGET} words. Below = FAIL.
-- Maximum: ~150% of target. Excess is padding, not depth.
-- Section budgets are guidance (±30% OK), but no section starved (<50% of budget)
+### 3. Teaching coverage
+- Teach every plan objective and content point accurately. Explain unfamiliar terms, steps, reasoning, and connections for the intended learner. Include useful worked examples and aligned practice with feedback. Reject unsupported claims, repetitive padding, decorative digressions, dry lists in place of teaching, and compression that leaves connections untaught. Judge length by the teaching required, not by word count.
 
 ### 4. Writing Quality — No Robotic Prose
 - Every paragraph: ONE clear point, logical flow between sentences
@@ -35,7 +33,7 @@
 - No English inside Ukrainian sentences — English only in parenthetical translations
 
 ### 6. Research Fidelity
-- Every outline point from the plan must have dedicated prose (50-100+ words each)
+- Teach every outline point with sufficient explanation for the learner
 - No fabricated quotes, dates, or historical facts
 - Soften absolute claims (єдиний, перший, ніколи) unless verified
 
@@ -49,5 +47,5 @@
 - **[NON-STANDARD] override**: If an activity's `focus` description contradicts the default pattern for that type (e.g., match-up for letter→sound instead of word→translation), treat the focus as a hard override of the default.
 
 ### 9. Pacing — No Exposition Deserts
-- Maximum 200 words of continuous exposition without a structural element (table, example list, callout box, or pattern box).
+- Organize exposition with structural elements when they help comprehension.
 - For PPP modules: alternate between explanation and practice within each H2 section.

@@ -2,7 +2,7 @@
 
 **Use this template for every figure researched in BIO Phase 1** — both the original roster (R1a-R5, issues #2317-#2322 under epic #2309) and the 2026-06-29 **+77 expansion** roster (umbrella #2535; first dossiers tracked as new sub-issues, NOT retrofits of #2317-#2322).
 
-**Target length:** ~1500 words (range: 1200–2000 acceptable).
+Provide enough sourced evidence and explanation to support the dossier requirements. Do not pad or omit necessary detail to meet a length target. The existing runtime dossier word-count gate remains active.
 **File location:** `docs/research/bio/{slug}.md`
 **SSOT for module ordering / slugs:** `curriculum/l2-uk-en/curriculum.yaml` (`levels.bio.modules`; derive the live slug count from the manifest rather than hard-coding it).
 **Slug source (by roster):**
@@ -71,7 +71,7 @@ This is the load-bearing section. Required specificity:
 - **When (specific dates):** {YYYY-MM-DD; if uncertain, give the range and source of uncertainty}
 - **By whom (specific Russian/Soviet/RF agency):** {Imperial gendarmerie | Cheka | OGPU | NKVD | MGB | KGB | FSB | military unit}
 - **Document references:** {court case number, NKVD file ID, show-trial name, etc. — quote the citation, not a paraphrase}
-- **Mechanism specifics:** {1-3 paragraphs of factual detail}
+- **Mechanism specifics:** {sourced factual detail sufficient to explain the mechanism}
 - **What survived / what was destroyed:** {if applicable — manuscripts destroyed, family pursued, etc.}
 
 If oppression was indirect (censorship, blacklist, professional destruction) rather than physical: same specificity rules apply. Name the document, the date, the body.
@@ -110,7 +110,7 @@ For every figure, list:
 - **Where modern Russian disinformation attacks them (if applicable):** {1-2 bullet points}
 - **Polish / Jewish / other-perspective considerations (if applicable):** {1-2 bullet points}
 
-For Block G (politically charged): this section is mandatory and must be longer (300+ words). See `docs/best-practices/politically-charged-bios.md` (#2311).
+For Block G (politically charged): this section is mandatory and must explain the evidence and contested points sufficiently. See `docs/best-practices/politically-charged-bios.md` (#2311).
 
 ## 7. Cross-track links
 

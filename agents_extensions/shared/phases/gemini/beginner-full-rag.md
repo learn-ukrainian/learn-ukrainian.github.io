@@ -75,13 +75,17 @@ Use `search_text` only when you explicitly want textbook-only scoping.
 
 ## 4. Outline
 
-Write **{TOPIC_TITLE}** for the {TRACK} track. Target: {WORD_TARGET}–{WORD_CEILING} words.
+Write **{TOPIC_TITLE}** for the {TRACK} track. Teach each plan point with enough explanation and useful examples for the learner.
 
 ### CRITICAL: EXACT H2 HEADERS (copy-paste, do not alter)
 
 {EXACT_SECTION_TITLES}
 
-### Section Word Budgets
+## Teaching coverage
+
+Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
+
+The following injected table is historical, non-authoritative length metadata. Do not use it to judge or set teaching length.
 
 {SECTION_BUDGET_TABLE}
 

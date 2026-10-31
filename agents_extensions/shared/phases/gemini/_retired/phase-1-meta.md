@@ -27,20 +27,17 @@ Read the **old meta file** (for reference only — you are REPLACING the content
 
 ## Your Task
 
-**Rebuild** the `content_outline` in the meta file from scratch, using the plan's section structure as the skeleton and the research notes to inform depth and word allocation.
+**Rebuild** the `content_outline` in the meta file from scratch, using the plan's section structure as the skeleton and the research notes to inform depth and specific teaching points.
 
-1. Every section has a `words` allocation
-2. Word allocations sum to approximately **{WORD_TARGET}** (the level's word target, provided by the build system)
-3. Sections are informed by research notes (sections with richer research get more words)
-4. Section names are natural Ukrainian H2 headings
-5. Each section's `points` list is specific and actionable — not vague ("cover grammar" → bad; "Each POS gets its own H3 with definition, question, 2+ examples, usage note" → good)
+1. Every section has a teaching purpose
+2. Sections are informed by research notes
+3. Section names are natural Ukrainian H2 headings
+4. Each section's `points` list is specific and actionable — not vague ("cover grammar" → bad; "Each POS gets its own H3 with definition, question, 2+ examples, usage note" → good)
 
 ### Rules
 
 - **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
-- Allocations should sum to approximately {WORD_TARGET} words (±10% is acceptable)
-- Minimum section allocation: 200 words (smaller sections should be merged)
-- Each section must have `section`, `words`, and `points` fields
+- Each section must have `section`, `words`, and `points` fields. The numeric `words` field is deprecated compatibility metadata and has no teaching authority.
 - Section names must be Ukrainian (this is the lesson content heading)
 - **Bridge modules (immersion < 90%):** Note the plan's `immersion` field in the outline. The intro section should explicitly list English scaffolding requirements.
 - Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
@@ -58,16 +55,15 @@ Return the refined content_outline as YAML:
 ===META_OUTLINE_START===
 content_outline:
   - section: "{Section 1 name in Ukrainian}"
-    words: {allocation}
+    words: {allocation}  # Deprecated compatibility metadata; no teaching authority
     points:
       - "{key point 1}"
       - "{key point 2}"
   - section: "{Section 2 name}"
-    words: {allocation}
+    words: {allocation}  # Deprecated compatibility metadata; no teaching authority
     points:
       - "..."
   # ... all sections
-  # Total: {WORD_TARGET} words
 ===META_OUTLINE_END===
 ```
 
@@ -77,8 +73,6 @@ Before returning, verify:
 - [ ] All section names are Ukrainian
 - [ ] **Section names match plan exactly** — If the plan has a `content_outline` with section names, your output MUST use those EXACT names (or very close Ukrainian equivalents). Do NOT invent new section names that diverge from the plan. The audit will fail if meta section names don't match the content's H2 headings, which must match the plan.
 - [ ] Each section has `words` and `points`
-- [ ] Sum of all `words` = {WORD_TARGET}
-- [ ] No section has fewer than 200 words
 - [ ] Points reflect research findings
 - [ ] Section order follows logical narrative flow
 

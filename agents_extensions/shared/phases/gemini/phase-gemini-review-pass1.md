@@ -71,7 +71,7 @@ Any discrepancy between module content and these sources is a factual error.
 ## Pre-Computed Metrics
 
 ```
-Word count:       {COMPUTED_WORD_COUNT} / {COMPUTED_WORD_TARGET} ({COMPUTED_WORD_PERCENT}%)
+Actual word count: {COMPUTED_WORD_COUNT}
 Activities:       {COMPUTED_ACTIVITY_COUNT}
 Vocabulary items: {COMPUTED_VOCAB_COUNT}
 Immersion:        {COMPUTED_IMMERSION_PERCENT}%
@@ -121,11 +121,9 @@ For EACH entry in `activity_hints`:
 3. Check if the `items` count is met
 4. Flag missing activity types as **MEDIUM**
 
-#### A4. Section Word Budgets
+#### A4. Teaching coverage
 
-For EACH section in `content_outline` with a `words` target:
-1. Estimate the word count of the corresponding content section
-2. Flag sections >10% under their target as **MEDIUM**
+Check each outline point for accurate, sufficient explanation and useful examples. Flag missing coverage and evidence gaps.
 
 #### A5. Pronunciation Videos (if plan has `pronunciation_videos`)
 

@@ -21,7 +21,7 @@ Use `「...」` (CJK corner brackets) for ALL Ukrainian citations — NOT `«»`
 - Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording
 - Verify each with Grep before adding: `Grep pattern="first 5 words" path="{CONTENT_PATH}"`
 - If Grep returns no match, you paraphrased — delete and re-copy
-- Minimum 8 citations for modules >2000 words
+- Use enough verified citations to support the findings and report evidence gaps.
 - In the review body below, you may ONLY use `「」` citations that appear in this bank
 
 ### Output Block 1: Review

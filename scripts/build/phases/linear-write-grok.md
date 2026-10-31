@@ -16,12 +16,12 @@ Before the four artifact fences, you MUST emit exactly one consolidated `<plan_t
 
 The `<plan_thinking>` block MUST contain these exact XML sub-nodes:
 <sections>
-One compact line per contracted section. Each line must include section title, required plan-vocabulary lemmas, Knowledge Packet/textbook refs, and word budget.
+One compact line per contracted section. Each line must include section title, required plan-vocabulary lemmas, Knowledge Packet/textbook refs, and the explanation and practice needed for coverage.
 Example:
-Діалоги: vocab=[прокидатися, вмиватися]; refs=Захарійчук G1 p.52; budget=300w.
-Дієслова на -ся: vocab=[...]; refs=Караман G10 p.176; budget=300w.
-Мій ранок: vocab=[...]; refs=...; budget=300w.
-Підсумок: vocab=[...]; refs=...; budget=300w.
+Діалоги: vocab=[прокидатися, вмиватися]; refs=Захарійчук G1 p.52; teaching=explanation, worked examples and practice.
+Дієслова на -ся: vocab=[...]; refs=Караман G10 p.176; teaching=explanation, worked examples and practice.
+Мій ранок: vocab=[...]; refs=...; teaching=explanation, worked examples and practice.
+Підсумок: vocab=[...]; refs=...; teaching=explanation, worked examples and practice.
 </sections>
 <verification_trace>
 One compact line per MCP tool call you intend to make for the module.
@@ -121,7 +121,7 @@ that failure class. Run each check while drafting, not as a separate pass.
 
    **Step A — find the chunk_id.** Call `mcp__sources__search_text` with a query containing the **author surname AND the page number as plain digits** (e.g. `Захарійчук 162`, `Караман 176`, `Захарійчук 163`). The chunk_id pattern is `<source_file>_s<PAGE>` where `<PAGE>` is the zero-padded 4-digit page (`p.162` → `_s0162`). Scan the top results for a `Chunk ID:` ending in the right page suffix. If none match, refine: try different word orders, add a Ukrainian phrase distinctive to that page (from the Knowledge Packet), narrow to one author. Don't stop until you've identified the exact chunk_id.
 
-   **Step B — fetch the verbatim text.** Once you have the matching chunk_id (e.g. `4-klas-ukrmova-zaharijchuk_s0162`), call `mcp__sources__get_chunk_context(chunk_id="4-klas-ukrmova-zaharijchuk_s0162")` (or pass the chunk_id positionally as documented in the tool's signature). Then copy-paste ≥30 contiguous words from THAT chunk's returned `text` into a blockquote in `module.md`, preserving punctuation and Cyrillic letter forms exactly. Paraphrasing, composing from memory, fusing snippets from multiple chunks, summarizing, "improving" punctuation, or substituting equivalent phrases is a hard fail — take a contiguous block verbatim.
+   **Step B — fetch the verbatim text.** Once you have the matching chunk_id (e.g. `4-klas-ukrmova-zaharijchuk_s0162`), call `mcp__sources__get_chunk_context(chunk_id="4-klas-ukrmova-zaharijchuk_s0162")` (or pass the chunk_id positionally as documented in the tool's signature). Then copy-paste a relevant contiguous passage from THAT chunk's returned `text` into a blockquote in `module.md`, preserving punctuation and Cyrillic letter forms exactly. Paraphrasing, composing from memory, fusing snippets from multiple chunks, summarizing, "improving" punctuation, or substituting equivalent phrases is a hard fail — take a contiguous block verbatim.
 
    **Citation line format (mandatory; `citations_resolve` enforces it).** Immediately below the blockquote add `*— <Author>, Grade <N>, p.<PAGE>*` using the **exact** strings from the plan_references entry (e.g. `*— Захарійчук, Grade 4, p.162*`). Do NOT add the textbook title ("Українська мова") — that breaks the matcher because the plan_references format is `<Author> Grade <N>, p.<PAGE>` and the matcher requires that exact shape.
 
@@ -328,13 +328,15 @@ The deterministic wiki-coverage gate hard-fails when any phonetic_rule has
 - Slug: {MODULE_SLUG}
 - Topic: {TOPIC_TITLE}
 - Phase: {PHASE}
-- Word target: {WORD_TARGET}
+- Teaching criterion: complete coverage and sufficient explanation; no length target.
 
 ## Module Size Policy — dossier/evidence-led expansion control (#4801)
 
 {SIZE_POLICY}
 
-The plan floor still binds, but expansion above complete coverage must be source-backed and pedagogically useful. If the policy reports `plan_policy_review_required` or `blocked_until_research_dossier`, do not pad; complete verifiable coverage and emit `<!-- SIZE_POLICY_MISMATCH: plan floor exceeds sourced evidence -->`.
+Legacy size metadata below is retained as runtime context only. Numeric floors, ceilings and ranges have no teaching authority. Complete the supported objectives; identify each unsupported objective or evidence gap for source research or versioned plan review. Never invent depth or pad. Runtime length gates and plan-data migration remain separate work under #12256 AC-02 and AC-03.
+
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 
 ## Learner State
 
@@ -358,7 +360,7 @@ Words and grammar listed in **Cumulative vocabulary** / **Grammar already taught
 
 ## Tone and immersion (mandatory)
 
-Write restrained, concrete educational prose from the first draft. Reject decorative pathos, hagiography, elegiac/heroizing framing, symbolic abstractions, and thesis-sounding sentences that feel impressive but vague. Every sentence must do one concrete job: name a source-grounded fact, show a Ukrainian form in use, explain a language pattern, or direct a learner action. If it cannot, replace it with concrete content or cut it; never pad, and never drop below the contract word floor. For BIO and cultural modules, keep biography, reception, and context factual and natural; do not turn the person or topic into a legend or moral emblem, and do not reach for melodramatic Soviet/post-Soviet pathos. State repression, censorship, russification, institutional pressure, and decolonization facts plainly when the plan or sources require them.
+Write restrained, concrete educational prose from the first draft. Reject decorative pathos, hagiography, elegiac/heroizing framing, symbolic abstractions, and thesis-sounding sentences that feel impressive but vague. Every sentence must do one concrete job: name a source-grounded fact, show a Ukrainian form in use, explain a language pattern, or direct a learner action. If it cannot, replace it with concrete content or cut it; never pad or compress away necessary teaching. For BIO and cultural modules, keep biography, reception, and context factual and natural; do not turn the person or topic into a legend or moral emblem, and do not reach for melodramatic Soviet/post-Soviet pathos. State repression, censorship, russification, institutional pressure, and decolonization facts plainly when the plan or sources require them.
 
 The prose of `module.md` is for a learner who is encountering Ukrainian, not
 for a teacher narrating their own lesson plan. Hold to this register:
@@ -384,9 +386,7 @@ for a teacher narrating their own lesson plan. Hold to this register:
   is not a target to approach asymptotically; over-writing in English is
   the single biggest failure mode of this prompt. Write less English, not
   more Ukrainian.
-- **Section length is bounded by the contract YAML.** If you find yourself
-  expanding an English bridge sentence, cut it instead. Word budgets are
-  authoritative.
+- **Explain each teaching move at the learner's level.** Preserve the band's A1 English support and use it to explain unfamiliar terms and connections. Remove redundant bridges, while keeping necessary explanation. Section word budgets are not authoritative.
 
 **Dialogue format (REQUIRED for gate counting).** All Ukrainian dialogue lines MUST be emitted as one of:
 

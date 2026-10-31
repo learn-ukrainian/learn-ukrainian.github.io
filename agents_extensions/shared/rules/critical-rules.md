@@ -17,9 +17,9 @@
 Gemini-family work goes through the AGY lane (`ab ask-agy`, `.venv/bin/python scripts/dispatch.py dispatch --agent agy --model <model> --prompt-file <brief>`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
 Code review eligibility follows the `model-assignment.md` Code review row.
 
-### 5. Word Targets Are Minimums
-**NEVER** reduce content or change `word_target` to match short content. Expand the content instead.
-Scope: legacy module workflows (`non-negotiable-rules.md` rule 1); core fresh-build lessons are sized by their own contracts (rule 4).
+### 5. Coverage and teaching adequacy
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
+Preserve source fidelity, practice requirements, level-appropriate comprehensibility and A1 English support. See `non-negotiable-rules.md` rules 1 and 3.
 
 ### 6. GitHub Issues as Persistent Memory
 Every change tracked via a GH issue, or via the CTO-ordered brief when no issue is opened. Only the CTO opens issues: epic and lane drivers report findings to the CTO through Fleet Comms. After work: update/close. Reference the issue in commits when one exists. Full protocol: [`issue-tracking.md`](../../../docs/best-practices/issue-tracking.md)

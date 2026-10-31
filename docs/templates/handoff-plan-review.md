@@ -39,7 +39,7 @@ This is a high-leverage point - catching issues here prevents costly rework late
 ### Structure Validation
 - [ ] All required sections present (title, objectives, outline, vocabulary)
 - [ ] `content_outline` has appropriate depth for level
-- [ ] Word targets realistic for content scope
+- [ ] Objectives and content points have enough detail to guide accurate teaching
 - [ ] Subsections map to pedagogical goals
 
 ### Vocabulary Validation
@@ -101,7 +101,7 @@ Canonical pack: `docs/best-practices/task-quality.md` (DoR before start; termina
 
 ### Approval Required For
 - Any vocabulary additions/removals
-- Word target changes
+- Changes to existing plan sizing fields
 - Outline structure changes
 - Objective modifications
 ```

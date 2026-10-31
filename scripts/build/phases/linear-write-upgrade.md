@@ -18,8 +18,7 @@ breakdown, guided practice, independent practice, recap and next step.
 openers, unread Ukrainian walls, AI padding). Rewrite explanations that a learner at
 this module cannot use. Keep original activity IDs when you keep the activity.
 The introduction belongs to lesson 1. Expand with useful transitions and breakdown
-tables; never pad. Each lesson must meet its word_target (minimum 550); the whole
-module must reach at least 2000 prose tokens. The final lesson closes the module
+tables; never pad. Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count. The final lesson closes the module
 with `### Підсумок модуля — Module summary` and 4–7 bilingual can-do bullets
 (module 9 *shape* only). Do **not** title it `Завершення модуля`.
 

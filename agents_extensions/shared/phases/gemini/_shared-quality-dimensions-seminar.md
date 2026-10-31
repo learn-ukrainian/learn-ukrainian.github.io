@@ -17,17 +17,15 @@
 - Prefer Ukrainian-language academic sources (uk.wikipedia.org, history.org.ua, litopys.org.ua)
 
 ### 3. Engagement — Would You Keep Reading?
-- Opening hook in first 50 words
+- Opening hook
 - {ENGAGEMENT_MIN}+ callout boxes using 4+ different types
 - Narrative arc: HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 - 2+ surprising/counterintuitive facts, 2+ "why this matters now" statements
 - Direct address to reader (Уявіть..., Чому це важливо?)
 - No formulaic openers, no generic conclusions — end with resonance
 
-### 4. Word Count — Targets Are Minimums
-- Minimum: {WORD_TARGET} words. Below = FAIL.
-- Maximum: ~150% of target.
-- Section budgets are guidance (±30% OK), but no section starved (<50% of budget)
+### 4. Teaching coverage
+- Teach every plan objective and content point accurately. Explain unfamiliar terms, steps, reasoning, and connections for the intended learner. Include useful worked examples and aligned practice with feedback. Reject unsupported claims, repetitive padding, decorative digressions, dry lists in place of teaching, and compression that leaves connections untaught. Judge length by the teaching required, not by word count.
 
 ### 5. Writing Quality — No Robotic Prose
 - Every paragraph: ONE clear point, logical flow
@@ -62,5 +60,5 @@
 - **Activity hints are HARD constraints**: item counts and focus descriptions in `activity_hints` are minimums, not suggestions.
 
 ### 11. Pacing — No Exposition Deserts
-- Maximum 200 words of continuous exposition without a structural element (table, example list, callout box, or primary source quote).
+- Organize exposition with structural elements when they help comprehension.
 - Alternate between analysis and evidence within each H2 section.

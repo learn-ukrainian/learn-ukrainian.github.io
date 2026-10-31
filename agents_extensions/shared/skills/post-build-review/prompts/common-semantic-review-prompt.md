@@ -101,12 +101,8 @@ semantic findings.
 - Inspect pedagogy, plan adherence, coherence, learner register, cognitive
   load, naturalness, engagement, and source-backed density. Do not turn a word
   count or Bilash-specific structure into a universal rule.
-- Inspect deterministic paragraph-repetition locations and the marginal
-  pedagogical value of authored prose throughout the full size band, not only
-  above the advisory ceiling. Repeated framing, conclusions, transitions, or
-  definitions require revision even when total length is nominally in range.
-- Treat long source-dense material and necessary pedagogy as acceptable.
-  Advisory-ceiling excess alone is never a semantic failure.
+- Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
+- Inspect deterministic paragraph-repetition locations for lost teaching value, wherever they occur. Preserve useful practice and necessary explanation; flag repeated framing, conclusions, transitions or definitions when they are padding. Numeric size metadata never decides semantic acceptance.
 - Detect internal production workflow on learner surfaces. References to an
   accepted dossier, available package, project corpus, hidden search result,
   source packet, or reviewer process are not source literacy. Treat actual

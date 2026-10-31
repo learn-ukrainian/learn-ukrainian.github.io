@@ -21,7 +21,7 @@
 ## Downstream Audit Gates (know these BEFORE you start)
 
 Phase B content must pass these gates — plan your research accordingly:
-- **Word count**: minimum **{WORD_TARGET}** words
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes
 - **Engagement callouts**: map 6+ hooks to specific sections during research
 - **Duplicate headers**: ensure outline section names don't share keywords
@@ -81,7 +81,7 @@ Based on Batch 1 results, fill gaps with ONE of:
 6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.
 
 ### Research Output Cap
-Keep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).
+Include the evidence needed to support each plan point. Avoid irrelevant material and repetition.
 Focus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.
 
 If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:

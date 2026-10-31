@@ -114,8 +114,8 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
 ```yaml
 - type: quiz
   title: "Перевірте знання"
-  items:  # minItems: 8, question ≥5 words
-    - question: "Яка частина мови позначає дію або стан предмета?"  # ≥5 words!
+  items:  # minItems: 8
+    - question: "Яка частина мови позначає дію або стан предмета?"
       explanation: "Дієслово позначає дію або стан."  # HERE at question level
       options:  # exactly 4
         - text: "дієслово"
@@ -128,7 +128,7 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
           correct: false
 ```
 
-**Key rules**: `explanation` at QUESTION level (not inside options), `question` ≥5 words, exactly 4 options, exactly 1 `correct: true`.
+**Key rules**: `explanation` at QUESTION level (not inside options), clear `question` text, exactly 4 options, exactly 1 `correct: true`.
 
 ### Correct Reading Schema (REFERENCE)
 
@@ -184,7 +184,7 @@ options:
     correct: true
 ```
 
-2. **Quiz question text length** — Every `question` field must be ≥5 words. WRONG: "Слово «хто» — це..." (3 words). RIGHT: "До якої частини мови належить слово «хто»?" (8 words). Short questions fail the pedagogy gate.
+2. **Quiz question clarity** — Write questions that state the task clearly for the intended learner. Examples: "Слово «хто» — це..."; "До якої частини мови належить слово «хто»?"
 
 3. **No extra fields** — The schema uses `additionalProperties: false`. ANY field not in the schema causes instant failure. Common mistakes: adding `id` to non-reading activities, adding `hint` where not allowed, adding `explanation` inside option objects.
 

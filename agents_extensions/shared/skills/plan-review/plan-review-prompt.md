@@ -16,22 +16,11 @@ You have THREE authority sources. Use ALL of them:
 
 Read the plan YAML file, then systematically check every item below.
 
-## Word Targets (from config.py)
+## Coverage and teaching adequacy
 
-**NEVER lower these. If the plan has a different value, flag as CRITICAL.**
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 
-| Track | target_words |
-|-------|-------------|
-| A1 | 1200 |
-| A1-checkpoint | 1000 |
-| A2 | 2000 |
-| A2-checkpoint | 1500 |
-| B1 | 4000 |
-| B1-checkpoint | 4000 |
-| B2, B2-checkpoint, B2-capstone | 4000 |
-| C1, C1-checkpoint | 4000 |
-| C2 | 5000 |
-| C2-checkpoint | 4000 |
+Stored `word_target` and section `words` fields are legacy metadata, not review criteria. Do not change locked plan data or reject a plan for a numeric length mismatch. Schema and validator migration is tracked separately in #12256 AC-02.
 
 ---
 
@@ -41,10 +30,7 @@ Read the plan YAML file, then systematically check every item below.
 
 Flag as **CRITICAL**.
 
-- [ ] **word_target matches config** — See table above.
-- [ ] **Section budgets sum correctly** — Sum all section `words:` values. Must be within +/-10% of `word_target`.
-- [ ] **No section >10% under its budget** — Each section's word count should not be more than 10% below its stated target.
-- [ ] **Required fields present** — module, level, sequence, slug, version, title, subtitle, focus, pedagogy, word_target, objectives, content_outline, vocabulary_hints, activity_hints, persona, grammar, register.
+- [ ] **Required fields present** — module, level, sequence, slug, version, title, subtitle, focus, pedagogy, objectives, content_outline, vocabulary_hints, activity_hints, persona, grammar, register.
 - [ ] **Version is a string** — `version: '2.0'` not `version: 2.0`.
 
 ### 2. STATE STANDARD ALIGNMENT (MANDATORY)
@@ -116,8 +102,7 @@ Only for slugs containing "cyrillic-code":
 ## Rule Compliance
 | Check | Status | Details |
 |-------|--------|---------|
-| word_target | PASS/FAIL | Plan: X, Config: Y |
-| section_budgets | PASS/FAIL | Sum = X vs target Y (+/-Z%) |
+| coverage_and_teaching | PASS/FAIL | Objectives, content points, explanations, worked examples, practice and feedback; evidence gaps: ... |
 | required_fields | PASS/FAIL | Missing: ... |
 | version_string | PASS/FAIL | ... |
 
@@ -162,8 +147,7 @@ Only for slugs containing "cyrillic-code":
 ### Review rules (#10665, binding)
 
 These apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8 to a plan review.
-The contract is the plan's acceptance: the State Standard floor, the CEFR level, the config
-targets above and the cited sources.
+The contract is the plan's acceptance: the State Standard floor, the CEFR level, the coverage and teaching-adequacy criterion above and the cited sources.
 
 - **Ukrainian errors block.** A sourced Ukrainian error in the plan (vocabulary, forms,
   stress, example phrases, grammar rules, Russicism claims) is **CRITICAL** and the verdict

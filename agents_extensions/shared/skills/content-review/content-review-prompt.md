@@ -1,6 +1,6 @@
 # Content Quality Review Prompt
 
-You are reviewing a BUILT Ukrainian language course module. The module has already passed pipeline audit gates (word count, activity count, VESUM coverage). Your job is to find quality issues the pipeline CANNOT catch: pedagogical quality, plan adherence, linguistic accuracy, content coherence, and engagement.
+You are reviewing a BUILT Ukrainian language course module. The module has already passed pipeline audit gates (activity count, VESUM coverage; legacy runtime length checks are migrated separately under #12256 AC-02). Your job is to find quality issues the pipeline CANNOT catch: pedagogical quality, plan adherence, linguistic accuracy, content coherence, and engagement.
 
 ## Input
 
@@ -78,7 +78,9 @@ Read the activities YAML and check:
 
 - [ ] **Engagement boxes** -- Count callout boxes (> [!cultural], > [!myth-buster], > [!tip], > [!warning], etc.). The per-level minimum is `min_engagement` in `scripts/audit/config.py` (the pipeline gate counts it; A1 has no count minimum by design). Judge quality — placement, Ukrainian mnemonic value, relevance — and flag as **MEDIUM** when the level's minimum is missed or the boxes are filler.
 - [ ] **Tables** -- Grammar explanations should use tables, not prose. Flag prose-only grammar as **LOW**.
-- [ ] **Wall of text** -- Flag any section >300 words without a table, list, callout box, or heading break as **MEDIUM**.
+- [ ] **Readable teaching** -- Flag dense, poorly segmented exposition when it obscures a teaching step. Use examples, transitions and structural breaks where they help comprehension; no word quota determines a finding.
+
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 - [ ] **Videos embedded** -- If the plan references pronunciation videos, are they embedded as markdown links in the content? Flag missing embeds as **MEDIUM**.
 
 ### 6. LLM FINGERPRINT
@@ -132,7 +134,7 @@ Read the activities YAML and check:
 **Track:** {track} | **Sequence:** {sequence}
 **Mode:** core / folk / history / biography / literary / oes-ruth
 **Tier:** 1-beginner / 2-core / 3-seminar / 4-advanced
-**Pipeline:** PASS (words: X, target: Y)
+**Pipeline:** [actual gate results; distinguish runtime checks from semantic acceptance]
 **Verdict:** A / B / C / F / INCONCLUSIVE
 
 ## Plan Adherence

@@ -41,7 +41,7 @@ Read ALL of these files from disk before writing anything:
 ```
 Skill identity:   {SKILL_IDENTITY}
 Module persona:   {PERSONA_VOICE}, acting as {PERSONA_ROLE}
-Word count:       {AUDIT_WORD_COUNT} / {WORD_TARGET} ({WORD_PERCENT}%)
+Actual word count: {AUDIT_WORD_COUNT}
 Activities:       {ACTIVITY_COUNT}
 Vocabulary items: {VOCAB_COUNT}
 Engagement boxes: {ENGAGEMENT_COUNT}

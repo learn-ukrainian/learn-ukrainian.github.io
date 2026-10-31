@@ -2,7 +2,7 @@
 
 > **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_VOICE}.
 
-> **Your task: Write approximately {WORD_TARGET} words that REVIEW and SYNTHESIZE prior material — NOT teach new concepts.**
+> **Your task: Review and synthesize prior material with sufficient explanation, worked examples, and aligned practice. Do not teach new concepts.**
 > {WRITING_TONE_INSTRUCTION}
 
 > **Output capacity: You can generate 65,000+ tokens per response.** Do NOT preemptively truncate.
@@ -43,7 +43,7 @@
 | File | Purpose |
 |------|---------|
 | `{RESEARCH_PATH}` | Research notes |
-| `{PLAN_PATH}` | Content outline, section word allocations, vocabulary_hints |
+| `{PLAN_PATH}` | Content outline and vocabulary_hints |
 | `{QUICK_REF_PATH}` | Level constraints, immersion % |
 
 Read ALL files before writing.
@@ -78,7 +78,7 @@ Read ALL files before writing.
 
 Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 
-- **Target**: {WORD_TARGET}–{WORD_CEILING} words (below {WORD_TARGET} = FAIL)
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Engagement callouts**: **{ENGAGEMENT_MIN}+ MANDATORY** — spread across sections, at least 3 different types
 - **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
 
@@ -94,7 +94,7 @@ Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 - End with a clear signal of readiness for the next phase
 
 **Structure each skill-review section as:**
-1. **Brief reminder** (1-2 sentences max) of what the skill is — NOT a full re-explanation
+1. **Reminder** of the skill, with any explanation needed for understanding
 2. **New context** that exercises the skill — a scenario, dialogue, or situation the learner hasn't seen
 3. **Integration challenge** that combines this skill with others from the same block
 4. **Reinforcement callout** (tip, culture note, or encouragement)
@@ -122,7 +122,11 @@ Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 
 3. **Vary containers.** Never use the same container type twice in a row.
 
-### Section Word Budgets
+## Teaching coverage
+
+Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
+
+The following injected table is historical, non-authoritative length metadata. Do not use it to judge or set teaching length.
 
 {SECTION_BUDGET_TABLE}
 
@@ -135,7 +139,7 @@ Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 
 ### Audit Gates (your content will be checked for)
 
-- **Word count**: minimum {WORD_TARGET} words
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Russianisms**: banned (кушати, получати, etc.)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear
 - **Euphony**: і/й, у/в alternation
@@ -150,7 +154,7 @@ Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 ## Pre-Submission Checks
 
 1. **Plan compliance**: Does every point in the content_outline have dedicated prose?
-2. **Word count**: Does the total meet {WORD_TARGET}?
+3. **Teaching coverage**: Are explanations, connections, examples, and aligned practice sufficient for the learner?
 3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
 4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
 5. **Synthesis check**: Does every section COMBINE skills rather than re-teach them individually?
@@ -176,7 +180,7 @@ Not covered:
 
 > **{INTRO_HOOK}**
 >
-> {2-3 celebratory sentences acknowledging progress}
+> {Acknowledge progress}
 
 ## {Section 1}
 ...
@@ -194,9 +198,9 @@ Not covered:
 
 ```
 ===WORD_COUNTS===
-Section "{name}": {count} words (minimum: {allocation})
+Section "{name}": {count} words
 ...
-Total: {total} words (target: {WORD_TARGET})
+Total: {total} words
 ===WORD_COUNTS===
 ```
 
@@ -219,6 +223,6 @@ Total: {total} words (target: {WORD_TARGET})
 - Do NOT introduce new vocabulary or grammar not from prior modules
 - **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content.
 - Do NOT skip sections from the content_outline
-- Do NOT write fewer than {WORD_TARGET} words
+- Teach the plan fully without repetition or padding.
 - Do NOT use straight quotes "..." — always «...»
 - Do NOT re-explain concepts in detail — brief reminders only, then synthesize

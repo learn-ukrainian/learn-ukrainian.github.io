@@ -7,7 +7,7 @@
 
 ## Gate Hierarchy
 
-Modules pass through gates in order. All must pass for a module to be "fully complete."
+The audit reports automated gate results. A passing audit alone does not establish that a module has been delivered or that its teaching is adequate.
 
 ```
 Content Gates (automated)
@@ -24,7 +24,7 @@ MDX Gate (deterministic)
 └── 7. MDX generation         — always last, always succeeds if content passes
 ```
 
-**Shippable = all content gates PASS + review ≥ 8/10.** The review gate is not enforced by the automated audit; per-track review state is read from `GET /api/state/track-health/{track}` (`final_review`, `attention`).
+The automated audit does not enforce the review gate. Per-track review state is read from `GET /api/state/track-health/{track}` (`final_review`, `attention`). Apply the delivery requirements in [`task-quality.md`](task-quality.md#definition-of-done-dod--may-we-close--claim-finished) as well as the applicable review and content requirements.
 
 ---
 
@@ -65,30 +65,18 @@ curl -s http://localhost:8765/api/state/track-health/a1 | python3 -m json.tool
 
 ## Word Count Gate
 
-### Thresholds by level
+Existing runtime paths still enforce word-count targets and may retry or fail
+content below their configured thresholds. These checks have not been removed;
+see `scripts/audit/config.py` and the applicable build path for their current
+behavior. Record a failing gate as a residual rather than padding the lesson.
 
-| Level | Min words (audit passes) |
-|-------|--------------------------|
-| A1 M01-05 | 300w |
-| A1 M06-10 | 500w |
-| A1 M11+ | 750w |
-| A2 | 1000w |
-| B1 | 1500w |
-| B2 | 1750w |
-| C1 | 3000w |
-| C2 | 3000w |
-| HIST | 5000w |
-| BIO | 5000w |
-| ISTORIO | 5000w |
-| LIT | 2500w |
-
-**Word target in meta file overrides the above.** If meta sets `word_target: 4000`, that's the gate.
-
-### Word count failures
-If the content phase produces <80% of target: automatic retry (up to 3 attempts).
-If still failing after retries: the review phase (review+fix) should add content.
-
----
+For content quality, accept teaching that covers every plan objective and
+content point accurately, with sufficient explanation for the intended learner,
+useful worked examples, and aligned practice with feedback. Explain unfamiliar
+terms, steps, reasoning, and connections. Reject missing coverage, unsupported
+claims, repetitive padding, decorative digressions, dry lists replacing teaching,
+and compression that leaves learners to infer untaught connections. Judge length
+by what the teaching requires; neither reward nor penalize a word count.
 
 ## Outline Compliance Gate
 
@@ -114,8 +102,7 @@ YAML must validate against `schemas/activities-{level}.schema.json`.
 
 ### MIN/MAX philosophy (#1550 unit 4)
 
-Activity counts and word counts are **MINIMUMS, never maximums**. The audit
-follows this rule:
+The audit applies activity-count minimums and advisory maximums:
 
 | Direction | Behaviour | Example |
 |-----------|-----------|---------|
@@ -124,13 +111,12 @@ follows this rule:
 | Above soft MAX cap | `WARN` only | A1 module with 17 activities |
 
 The `*_MAX` keys (`max_activities`, `INLINE_MAX`, `WORKBOOK_MAX`) are
-guidance for the writer — they are *not* hard ceilings. CLAUDE.md is
-explicit: word-count and activity-count targets are MINIMUMS. Going over
-emits a soft warning; the audit does **not** fail the module.
+guidance for the writer, not hard ceilings. Going over emits a soft warning;
+the activity count alone does not fail the module.
 
 The MIN gates (`min_activities`, `min_types_unique`,
-`min_items_per_activity`, `min_vocab`, word-count target) remain hard
-fails — those are the contracts.
+`min_items_per_activity`, `min_vocab`) remain hard failures. Runtime word-count
+gates also remain active, as described above.
 
 ### `letter_module: true` exception class
 
@@ -142,8 +128,7 @@ Plans for alphabet/letter-driven modules (`A1.1` phonetics) may declare
   activities, so the level cap of 9 doesn't apply).
 - **Keeps** the activity-count MIN floor — letter modules still need at
   least the level minimum.
-- **Keeps** the word-count target — prose length expectations are
-  level-standard.
+- **Keeps** the existing runtime word-count gate.
 - **Keeps** the type-diversity MIN — letter modules still need 3–4
   distinct types (image-to-letter, match-up, fill-in, watch-and-repeat).
 
@@ -202,6 +187,8 @@ Detects AI slop patterns that make content feel machine-generated.
 Two check suites detect LLM content-generation and review-gaming patterns. All checks are deterministic (no LLM calls). Source: `scripts/audit/checks/`.
 
 ### Content Gaming (`content_gaming.py` + `content_purity.py`)
+
+The following are existing runtime signals, not authoring length targets.
 
 | Check | Type | Severity | Trigger |
 |-------|------|----------|---------|
@@ -297,4 +284,6 @@ curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}  # specific module
 | `FAIL` | One or more gates fail |
 | `in-progress` | Build currently running |
 
-A module is only "done" when status is `PASS`.
+`PASS` is an audit result, not proof of adequate teaching or delivery. Verify
+the content criterion above and the end-to-end delivery and hygiene requirements
+in [`task-quality.md`](task-quality.md#definition-of-done-dod--may-we-close--claim-finished) before claiming completion.

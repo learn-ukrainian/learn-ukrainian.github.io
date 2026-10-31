@@ -85,7 +85,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 | Category | Pattern | Example | Required Fix |
 |----------|---------|---------|--------------|
 | **OVERWHELMING_INTRO** | Too much complexity too fast | First paragraph uses dense Ukrainian | A1: add English scaffolding; A2: rewrite in easier Ukrainian with repeated frames |
-| **NO_QUICK_WIN** | Long content before any practice | 500 words before first activity | Add mini-exercise earlier |
+| **NO_QUICK_WIN** | Long content before any practice | Teaching moves accumulate without a chance to apply them | Add mini-exercise earlier |
 | **MISSING_SUPPORT** | Learner left to guess meaning | Dense Ukrainian with no frame | Add a simple Ukrainian frame or a short gloss |
 | **SCARY_GRAMMAR** | Complex terminology for beginners | "Accusative case" without explanation | Simplify or explain term |
 | **NO_ENCOURAGEMENT** | Flat, mechanical instruction | "Now do exercise 2" | Add "Great! Now let's..." |
@@ -203,7 +203,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 
 - ❌ Opens with grammar terminology
 - ❌ >10 new words without practice
-- ❌ No English for first 200 words
+- ❌ A1 begins without needed English support
 - ❌ "This is easy" (patronizing)
 - ❌ Complex sentence structures in Ukrainian
 - ❌ No visual aids for grammar

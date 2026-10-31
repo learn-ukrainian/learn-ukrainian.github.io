@@ -48,7 +48,7 @@ HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 
 | Element | What to Look For | Red Flag |
 |---------|------------------|----------|
-| **HOOK** (first 100 words) | Grabs attention, poses question, creates stakes | Generic intro, "In this module we will..." |
+| **HOOK** (opening) | Grabs attention, poses question, creates stakes | Generic intro, "In this module we will..." |
 | **TENSION** | Problem to solve, mystery to uncover, conflict to resolve | No driving question, just facts |
 | **JOURNEY** | Progressive revelation, building complexity | Random fact dump, no progression |
 | **CLIMAX** | Key insight, turning point, "aha!" moment | No peak, everything equally weighted |
@@ -63,9 +63,9 @@ HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 
 | Metric | A+ Standard | Fail |
 |--------|-------------|------|
-| Max paragraph length | ≤150 words | >200 words without break |
-| Engagement breaks | Every 300-400 words | >500 words without callout/question/example |
-| Sentence variety | Mix of 10-word and 40-word sentences | All sentences same length |
+| Paragraph structure | One coherent teaching move with clear transitions | Several unexplained moves without a useful break |
+| Engagement breaks | Examples, questions and callouts where they support understanding | Unbroken exposition that leaves reasoning or application unclear |
+| Sentence variety | Natural rhythm and level-appropriate comprehensibility | Monotonous or hard-to-follow syntax |
 | White space | Visual rhythm on page | Intimidating text blocks |
 
 ### Emotional Journey Mapping
@@ -175,15 +175,15 @@ When Lecture Quality < 9, apply these fixes:
 ### Strategy L4: Break Up Dense Sections
 
 **Before (wall):**
-> [200 words of continuous historical description]
+> [Continuous historical description without interpretation]
 
 **After (with breathing room):**
-> [100 words of description]
+> [Historical description]
 >
 > > **Чи знали ви?**
 > > [Surprising fact that illustrates the point]
 >
-> [100 words continuing the narrative]
+> [Narrative continues]
 
 ### Strategy L5: End Sections with Forward Momentum
 

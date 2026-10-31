@@ -80,7 +80,7 @@ Treatment-specific checks:
 
 Evidence MUST be a verbatim quote from the cited artifact location
 (quote-marked). Paraphrase or summary evidence is invalid and forces
-KEYWORD_STUFFING. Quotes must be at least 8 words long unless the obligation is
+KEYWORD_STUFFING. Quotes must include enough context to prove treatment of the obligation, including when it is
 a single short word/phrase the manifest specifies — in which case quote the
 full surrounding sentence containing it.
 
@@ -152,7 +152,7 @@ Mixed-verdict shape:
 - Level: {LEVEL}
 - Module: {MODULE_NUM}
 - Slug: {MODULE_SLUG}
-- Word target: {WORD_TARGET}
+- Teaching criterion: complete supported coverage; no length target.
 
 ## Wiki Obligations Manifest
 

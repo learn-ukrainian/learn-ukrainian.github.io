@@ -27,31 +27,11 @@ You have THREE authority sources. Use ALL of them:
 
 Read the plan YAML file, then systematically check every item below.
 
-## Size Policy (#4801)
+## Coverage and teaching adequacy
 
-Do not review seminar plans with a single fixed target table. The plan
-`word_target` is the current floor until an explicit plan/policy revision
-changes it, and dossier/source density controls justified expansion above that
-floor.
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 
-Review size in three parts:
-
-1. `word_target` must be numeric and must not be silently lowered from the
-   existing locked plan.
-2. Section budgets must align with the plan floor unless the plan carries an
-   explicit size-policy rationale.
-3. Expansion above coverage must be source-backed and pedagogically useful; if
-   the dossier is thin, flag research incompleteness or plan/policy mismatch
-   instead of demanding filler.
-
-Typical advisory ranges:
-
-| Band | Advisory range |
-|------|----------------|
-| Sparse dossier | 3800-5000 |
-| Normal dossier | 5000-6500 |
-| Dense dossier | 6500-8000 |
-| Exceptional dossier | 8000+ only with explicit justification |
+Judge source support and planned treatment, not dossier density bands or word budgets. Name unsupported objectives and missing evidence for research or versioned plan review. Stored size metadata is not a teaching target; do not change locked plan data. Runtime validators are migrated separately under #12256 AC-02.
 
 ---
 
@@ -61,10 +41,7 @@ Typical advisory ranges:
 
 Flag as **CRITICAL**.
 
-- [ ] **word_target has policy authority** — Numeric floor is present and either matches the locked plan/default or carries an explicit size-policy rationale. Do not auto-fail FOLK solely for being 4000 or 5000; flag unresolved plan/policy mismatch instead.
-- [ ] **Section budgets sum correctly** — Sum all section `words:` values. Must be within +/-10% of `word_target`.
-- [ ] **No section >10% under its budget** — Each section's word count should not be more than 10% below its stated target.
-- [ ] **Required fields present** — module, level, sequence, slug, version, title, focus, pedagogy, word_target, objectives, content_outline, vocabulary_hints, activity_hints, persona.
+- [ ] **Required fields present** — module, level, sequence, slug, version, title, focus, pedagogy, objectives, content_outline, vocabulary_hints, activity_hints, persona.
 - [ ] **Version is a string** — `version: '2.0'` not `version: 2.0`.
 
 ### 2. FACTUAL ACCURACY (MANDATORY — replaces State Standard check)
@@ -173,8 +150,7 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 ## Rule Compliance
 | Check | Status | Details |
 |-------|--------|---------|
-| word_target | PASS/FAIL | Plan floor: X; size-policy status/rationale |
-| section_budgets | PASS/FAIL | Sum = X vs track target (+/-Z%) |
+| coverage_and_teaching | PASS/FAIL | Objectives, content points, explanations, worked examples, practice and feedback; evidence gaps: ... |
 | required_fields | PASS/FAIL | Missing: ... |
 | version_string | PASS/FAIL | ... |
 
@@ -219,7 +195,7 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 ### Review rules (#10665, binding)
 
 These apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8 to a seminar plan
-review. The contract is the plan's acceptance: the track's size policy, the seminar level,
+review. The contract is the plan's acceptance: the coverage and teaching-adequacy criterion above, the seminar level,
 the stated scope and the cited sources.
 
 - **Ukrainian errors block.** A sourced Ukrainian language, factual or source error in the

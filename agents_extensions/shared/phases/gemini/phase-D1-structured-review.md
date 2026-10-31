@@ -63,7 +63,7 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   {SKILL_IDENTITY}
 Module persona:   {PERSONA_VOICE}, acting as {PERSONA_ROLE}
-Word count:       {COMPUTED_WORD_COUNT} / {COMPUTED_WORD_TARGET} ({COMPUTED_WORD_PERCENT}%)
+Actual word count: {COMPUTED_WORD_COUNT}
 Activities:       {COMPUTED_ACTIVITY_COUNT}
 Vocabulary items: {COMPUTED_VOCAB_COUNT}
 Engagement boxes: {COMPUTED_ENGAGEMENT_COUNT}
@@ -263,7 +263,7 @@ Also check for:
 
 **IMPORTANT — What is NOT an LLM fingerprint:**
 - Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts
-- Rich, substantive content that exceeds the word target — word targets are MINIMUMS. More content is better if it's pedagogically useful. Do NOT penalize word count overshoot in any dimension. Only penalize obvious filler/padding (repetitive motivational prose, saying the same thing three ways)
+- Assess teaching by accuracy and sufficiency, not word count. Flag repetitive filler and padding.
 - Varied callout boxes, cultural hooks, and engagement elements
 
 **Callout monotony test**: Are 3+ callouts using the same title? If yes → flag as repetitive.

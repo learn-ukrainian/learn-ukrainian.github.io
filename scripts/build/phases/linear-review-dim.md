@@ -68,8 +68,7 @@ For `{DIM}` specifically:
   human vs robotic. Score the *quality* of engagement, not its presence —
   presence is the gate's job.
 - `pedagogical`: does the sequencing actually teach? Are examples
-  illuminating? Does each concept earn the next? The gate confirmed word
-  budgets and section presence; you assess whether the pedagogy *works*.
+  illuminating? Does each concept earn the next? Section presence alone cannot prove adequate teaching; you assess whether the pedagogy *works*.
   Source-pedagogy failures are in scope even when the plan/wiki asked for
   them: REVISE or REJECT any grammar module that promotes a metaphor,
   discourse heuristic, activity label, or writer-created grouping into a
@@ -427,7 +426,7 @@ known_grammar from prior modules. Verify the writer:
 
 1. **Did not re-explain already-taught grammar.** If the learner-state lists
    "Genitive case endings -а/-я" as known_grammar and this module derives the
-   rule from scratch in 200+ words, FLAG `re_explained_known_grammar`. Brief
+   already-taught rule from scratch without a new teaching need, FLAG `re_explained_known_grammar`. Brief
    reference (`як ти бачив у модулі 7`) is fine; a full re-derivation is not.
 
 2. **Did not introduce unknown vocabulary without inline gloss.** Scan
@@ -490,18 +489,13 @@ them to know what to fix on retry.
 - Level: {LEVEL}
 - Module: {MODULE_NUM}
 - Slug: {MODULE_SLUG}
-- Word target: {WORD_TARGET}
+- Teaching criterion: complete coverage and sufficient explanation; no length target.
 
 ## Module Size Policy — dossier/evidence-led advisory context (#4801)
 
 {SIZE_POLICY}
 
-Use this as review context, not as a mechanical word-count gate. Inspect the
-deterministic paragraph matches and marginal pedagogical value throughout the
-full size band, not only above the advisory ceiling. Source-backed density and
-necessary pedagogy remain acceptable even when long. Repeated framing,
-conclusions, transitions, definitions, generic exposition, or uncited
-interpretation are filler/padding defects when they affect `{DIM}`.
+Use source evidence as review context, not as a mechanical word-count gate. Ignore numeric size bands, floors and ceilings in the legacy metadata above. Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count. Source-backed density and necessary pedagogy remain acceptable. Repeated framing, conclusions, transitions, definitions, generic exposition or uncited interpretation are filler/padding defects when they affect `{DIM}`.
 
 ## Immersion Rule
 
