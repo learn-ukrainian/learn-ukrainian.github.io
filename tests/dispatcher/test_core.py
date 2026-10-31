@@ -1759,6 +1759,9 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
                                             "--owned-path", "delivered.txt", *flags))
     assert result["worktree_base_sha"] == starting_head
     assert (result["status"], result["error"]) == ("done", None)
+    # Settlement can now remove this published tree; restore the exact head for the older-Git proof.
+    if not Path(result["worktree_path"]).exists():
+        run_git(sandbox.repo, "worktree", "add", "--detach", result["worktree_path"], result["head_sha"])
     original = git._verification_git
     monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
                         "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
