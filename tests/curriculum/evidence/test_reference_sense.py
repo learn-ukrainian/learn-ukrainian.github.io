@@ -1800,7 +1800,15 @@ def test_book_only_meaning_still_fails_beside_a_cited_gloss(bound, tmp_path, cas
 
 
 def _capture_fixture_scan(
-    bound, tmp_path, mutate=lambda record: None, *, escape_notes=False, formula=False, extra_files=None
+    bound,
+    tmp_path,
+    mutate=lambda record: None,
+    *,
+    escape_notes=False,
+    formula=False,
+    extra_files=None,
+    full_tree=False,
+    mapping_probe=False,
 ):
     _root, api, _b = bound
     wording = "invented confidential destination"
@@ -1817,6 +1825,9 @@ def _capture_fixture_scan(
     neighbour = {"lemma": "neighbour", "pos": "noun", "locator": "p201 n#2"}
     context = bindings.Context("a1", {}, [neighbour])
     private = {neighbour["locator"]: {"meaning": wording}}
+    if mapping_probe:
+        context.inventory.append({"lemma": "mapping-neighbour", "pos": "noun", "locator": "p202 n#3"})
+        private["p202 n#3"] = {"meaning": "confidential"}
     repo = tmp_path / "capture-probe"
     repo.mkdir()
     git(repo, "init", "-q")
@@ -1826,6 +1837,8 @@ def _capture_fixture_scan(
     path.parent.mkdir(parents=True)
     unchanged = {"W-unchanged": {"note": "ordinary unchanged data"}}
     path.write_text(json.dumps({"records": unchanged}, indent=2))
+    if full_tree:
+        (repo / "legacy.yaml").write_text('broken: ["\\u0069"\n')
     git(repo, "add", ".")
     git(repo, "commit", "-qm", "base")
     content = json.dumps({"records": {**unchanged, "W-001": record}}, indent=2)
@@ -1836,7 +1849,14 @@ def _capture_fixture_scan(
         (repo / name).write_text(value)
     git(repo, "add", ".")
     git(repo, "commit", "-qm", "capture")
-    result = sense_cli.leak_scan(repo, private, context, {"words": [word]}, api, base="HEAD^")
+    report = tmp_path / "full-tree.json" if full_tree else None
+    result = sense_cli.leak_scan(repo, private, context, {"words": [word]}, api, base="HEAD^", full_tree_report=report)
+    if report:
+        full = json.loads(report.read_text())
+        assert {"path": "legacy.yaml", "signal": "structured_scan_decode_failed", "locators": [], "count": 1} in full[
+            "suspects"
+        ]
+        assert result == sense_cli.leak_scan(repo, private, context, {"words": [word]}, api, base="HEAD^")
     assert wording not in json.dumps(result)
     return result
 
@@ -1862,6 +1882,11 @@ def test_leak_scan_exempts_cited_open_row_in_capture_fixture(bound, tmp_path, fo
         "record_extra",
         "newline",
         "jsonl",
+        "json_surrogate",
+        "full_tree",
+        "gated_decode_failure",
+        "mapping_surrogate",
+        "mapping_jsonl_surrogate",
     ],
 )
 def test_leak_scan_gates_uncited_or_altered_fixture_row(bound, tmp_path, case):
@@ -1883,18 +1908,36 @@ def test_leak_scan_gates_uncited_or_altered_fixture_row(bound, tmp_path, case):
             captured["source"] = "dmklinger UK→ЕN"
         elif case == "row_extra":
             captured["note"] = "invented confidential destination"
-        elif case == "record_extra":
+        elif case in {"record_extra", "full_tree"}:
             record["note"] = "invented confidential destination"
         elif case == "newline":
             record["note"] = "invented\nconfidential destination"
 
-    extra = (
-        {"probe.jsonl": '{"note": "\\u0069nvented confidential destination", "tag": "left\u2028right"}\n{}\n'}
-        if case == "jsonl"
-        else None
-    )
+    extra = None
+    if case == "jsonl":
+        extra = {
+            "probe.jsonl": '{"note": "\\u0069nvented confidential destination", "tag": "left\u2028right", "symbol": "\\ud83d\\ude00"}\n{}\n'
+        }
+    elif case == "json_surrogate":
+        extra = {"probe.json": '{"note": "\\u0069nvented confidential destination", "symbol": "\\ud83d\\ude00"}'}
+    elif case in {"mapping_surrogate", "mapping_jsonl_surrogate"}:
+        value = '{"lemma": "mapping-neighbour", "meaning": "\\u0063onfidential", "symbol": "\\ud83d\\ude00"}'
+        extra = {"probe.jsonl": value + "\n{}\n"} if case == "mapping_jsonl_surrogate" else {"probe.json": value}
+    elif case == "gated_decode_failure":
+        with pytest.raises(ValueError, match=r"^structured_scan_decode_failed$"):
+            _capture_fixture_scan(bound, tmp_path, extra_files={"broken.yaml": 'broken: ["\\u0069"\n'})
+        return
     result = _capture_fixture_scan(
-        bound, tmp_path, mutate, escape_notes=case in {"row_extra", "record_extra"}, extra_files=extra
+        bound,
+        tmp_path,
+        mutate,
+        escape_notes=case in {"row_extra", "record_extra", "full_tree"},
+        extra_files=extra,
+        full_tree=case == "full_tree",
+        mapping_probe=case in {"mapping_surrogate", "mapping_jsonl_surrogate"},
     )
     assert result["status"] == "failed", result
-    assert result["signals"]["distinctive_wording"] > 0
+    if case in {"mapping_surrogate", "mapping_jsonl_surrogate"}:
+        assert result["signals"]["mapping_copy"] == 1
+    else:
+        assert result["signals"]["distinctive_wording"] > 0

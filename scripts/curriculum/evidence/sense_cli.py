@@ -191,7 +191,14 @@ def _redact_validated_locations(
         def exempt(allowed):
             """Ranges of single-reached scalars holding exactly their allowed value; any other voids the file."""
             for scalar, value in allowed:
-                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != value or reached[id(scalar)] != 1:
+                if not isinstance(scalar, yaml.ScalarNode):
+                    raise ValueError("location_not_exempt")
+                actual = (
+                    json.loads(text[scalar.start_mark.index : scalar.end_mark.index])
+                    if kind == "capture"
+                    else scalar.value
+                )
+                if actual != value or reached[id(scalar)] != 1:
                     raise ValueError("location_not_exempt")
                 cleared.add(id(scalar))
                 yield scalar.start_mark.index, scalar.end_mark.index
@@ -211,7 +218,7 @@ def _redact_validated_locations(
             other = blanked.value if isinstance(node, yaml.SequenceNode) else [p for kv in blanked.value for p in kv]
             return len(pairs) == len(other) and all(same(a, b, seen) for a, b in zip(pairs, other, strict=True))
 
-        payload = yaml.safe_load(text)
+        payload = json.loads(text) if kind == "capture" else yaml.safe_load(text)
         if kind == "capture":
             nodes = mapping(mapping(tree)["records"])
             entries = [(wid, entry, nodes[wid]) for wid, entry in payload["records"].items()]
@@ -654,13 +661,32 @@ def leak_scan(
                 wording.update(distinctive[term])
         return wording
 
+    def documents(text: str, path: str):
+        try:
+            return list(yaml.load_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)))
+        except yaml.YAMLError:
+            try:
+                return list(yaml.load_all(text, Loader=yaml.BaseLoader))
+            except yaml.YAMLError:
+                if Path(path).suffix != ".jsonl":
+                    raise
+                return [yaml.load(line, Loader=yaml.BaseLoader) for line in jsonl_lines(text) if line.strip()]
+
     def decoded_wording(text: str, path: str):
         """Decoded-only matches and their scalar extents, for detection and attribution."""
         if "\\" not in text:
             return
         loader = getattr(yaml, "CBaseLoader", yaml.BaseLoader)
+
+        def compose(value):
+            try:
+                return list(yaml.compose_all(value, Loader=loader))
+            except yaml.YAMLError:
+                # libyaml rejects JSON surrogate escapes that the Python loader accepts.
+                return list(yaml.compose_all(value, Loader=yaml.BaseLoader))
+
         try:
-            roots = [(node, 0) for node in yaml.compose_all(text, Loader=loader)]
+            roots = [(node, 0) for node in compose(text)]
         except yaml.YAMLError as error:
             if Path(path).suffix != ".jsonl":
                 raise ValueError("structured_scan_decode_failed") from error
@@ -669,7 +695,7 @@ def leak_scan(
                 if line.strip():
                     try:
                         json.loads(line)
-                        roots.append((yaml.compose(line, Loader=loader), offset))
+                        roots.extend((node, offset) for node in compose(line))
                     except (ValueError, yaml.YAMLError) as error:
                         raise ValueError("structured_scan_decode_failed") from error
                 end = text.find("\n", offset)
@@ -682,7 +708,14 @@ def leak_scan(
             seen.add(id(node))
             if isinstance(node, yaml.ScalarNode):
                 start, end = offset + node.start_mark.index, offset + node.end_mark.index
-                matches = wording_ids(node.value) - wording_ids(text[start:end])
+                literal, value = text[start:end], node.value
+                try:
+                    decoded = json.loads(literal)
+                    if isinstance(decoded, str):
+                        value = decoded
+                except ValueError:
+                    pass
+                matches = wording_ids(value) - wording_ids(literal)
                 if matches:
                     yield matches, start, end
             elif isinstance(node, yaml.SequenceNode):
@@ -699,9 +732,10 @@ def leak_scan(
             for matches, _start, _end in decoded_wording(text, path):
                 wording.update(matches)
             try:
-                for doc in yaml.load_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)):
+                for doc in documents(text, path):
                     for record in _record_texts(doc):
-                        pairs.update(mapping_ids(record))
+                        # BaseLoader leaves JSON UTF-16 pairs as surrogate code points.
+                        pairs.update(mapping_ids(json.loads(json.dumps(record))))
             except yaml.YAMLError:
                 # Invalid structured data still receives the literal line scan.
                 pass
@@ -741,12 +775,20 @@ def leak_scan(
             )
         # Changed records are scanned whole, including the fields of unchanged records nested in them.
         for record in records:
-            pairs.update(mapping_ids(record))
+            pairs.update(mapping_ids(json.loads(json.dumps(record))))
         return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
 
     def scan(content: bytes, path: str, category: str, *, gate: bool = True, base_path: str | None = None):
         text = content.decode("utf-8", errors="replace")
-        found = detect(text, path)
+        try:
+            found = detect(text, path)
+        except ValueError as error:
+            if gate or str(error) != "structured_scan_decode_failed":
+                raise
+            full_counts[category] += 1
+            full_signals["structured_scan_decode_failed"] += 1
+            full_suspects.append({"path": path, "signal": "structured_scan_decode_failed", "locators": [], "count": 1})
+            return
         gated = found
         if gate and base_path is not None and any(found.values()):
             # A suspect only inside records identical at the merge-base is reported, not gated.
@@ -754,7 +796,7 @@ def leak_scan(
                 prior = bindings.git(repo, "cat-file", "blob", f"{merge_base}:{base_path}").decode("utf-8")
                 spans, paths = _unchanged_records(content.decode("utf-8"), prior)
                 if spans:
-                    doc = yaml.load(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader))
+                    doc = documents(text, path)[0]
                     gated = attribute(text, spans, list(_record_texts(doc, skip=paths)), path) or found
             except (subprocess.CalledProcessError, UnicodeError, yaml.YAMLError):
                 gated = found

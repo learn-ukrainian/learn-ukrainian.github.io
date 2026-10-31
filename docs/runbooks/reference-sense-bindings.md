@@ -204,8 +204,11 @@ Kaikki payloads and occurrences outside those validated scalars still scan.
 Structured string escapes are decoded for private-wording detection, without
 counting an occurrence twice when its literal spelling already matches.
 Decoded matches retain their scalar positions for unchanged-record attribution.
-JSONL decoding handles each non-empty line separately. If an escaped structured
-file cannot be decoded, the check fails with `structured_scan_decode_failed`.
+JSONL decoding handles each non-empty line separately. A Python-loader fallback
+accepts JSON surrogate escapes rejected by libyaml. A gated escaped structured
+file that cannot be decoded fails with `structured_scan_decode_failed`; an
+ungated file is listed with that signal, its path and a count in the full-tree
+report, without changing the receipt gate.
 In a changed YAML/JSON file other than the level stores, a suspect formed only
 inside one record identical at the merge-base is listed under
 `pre_existing_suspects` (path, signal, locators, count) and does not fail the
