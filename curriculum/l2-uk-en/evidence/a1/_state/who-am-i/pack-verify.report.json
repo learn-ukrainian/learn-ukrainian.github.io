@@ -1,0 +1,32 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 0,
+    "notes_count": 0,
+    "standard_count": 2,
+    "texts_count": 6,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 3
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml",
+    "sha256": "58384afe8da0c643fd941dab5db62fcd209301ebe2d4f3e74d394c4c456af2c6"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock",
+    "sha256": "1b697e54c2558479d6c38974f77fb5c631737cca76c9799b7e7815a9eb7c51fd"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "who-am-i",
+  "status": "ok",
+  "strict": true,
+  "warnings": []
+}
