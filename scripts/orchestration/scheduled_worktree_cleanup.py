@@ -616,7 +616,8 @@ def _deferred(branch: str, head_sha: str) -> dict[str, Any]:
 # Retained reasons the alert hook reports at once: salvage or a removal guard stopped on content
 # that could be lost, rather than waiting for a cause to clear.
 SAFETY_STOP_REASONS = frozenset({"salvage_failed", "salvage_unverified", "large_ignored_output",
-                                 "nested_repository_unpushed", "worktree_remove_failed", "settlement_failed"})
+                                 "nested_repository_unpushed", "worktree_remove_failed", "settlement_failed",
+                                 "opsec_refused"})
 
 
 def settle_terminal_worktrees(repo_root: Path, *, apply: bool, github: GitHubReads) -> dict[str, Any] | None:

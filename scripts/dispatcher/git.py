@@ -7,6 +7,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 from contextlib import contextmanager, suppress
 from datetime import datetime
 from functools import partial
@@ -565,6 +566,9 @@ def _merged_pr_contains(record: dict, run, pull_heads: dict[str, str], head: str
 # Branches the hourly hygiene run pushes a finished task's otherwise unpublished work to; only the operator
 # deletes them.
 SALVAGE_PREFIX = "refs/heads/salvage/"
+# Fixed disposition detail when the public push gate refuses a salvage push, or cannot run.
+# Scanner output stays out of the task record.
+OPSEC_REFUSAL_DETAIL = "the public push gate refused this range"
 # Meaningful ignored output (outside caches and provisioned links) above this keeps a tree for its owner: the
 # removal chokepoint only records ignored output, and salvage does not push it.
 SALVAGE_IGNORED_LIMIT = 100 * 1024 * 1024
@@ -629,6 +633,58 @@ def _salvage_hold(tree: Path, primary: Path, untracked: list[str]) -> tuple[str,
     return None
 
 
+def _require_public_push(tree: Path, remote: str, ref: str, commit: str) -> None:
+    """Refuse unless the public push gate would allow pushing ``commit`` to ``ref`` on ``remote``.
+
+    Reuses ``git_push.scan_push`` (the pre-push message scan) and ``lint_opsec_leaks.py
+    --commit-range`` (the pre-push gate's blob scan). Any refusal or any failure to run either
+    scan raises ``_Kept`` and does not push. The detail is a fixed phrase.
+    """
+    from scripts.opsec import git_push
+    from scripts.opsec.prepublish import OVERRIDE, PublishBlocked
+
+    def refuse() -> None:
+        raise _Kept("opsec_refused", OPSEC_REFUSAL_DETAIL)
+
+    snapshot = dict(os.environ)
+    try:
+        git_dir = _git(tree, "rev-parse", "--absolute-git-dir", isolate=True)
+        base = _git(tree, "merge-base", "origin/main", commit, isolate=True)
+        environment = dict(os.environ)
+        environment.pop(OVERRIDE, None)
+        environment.update(GIT_DIR=git_dir, GIT_WORK_TREE=str(tree))
+        if GIT_BINARY:
+            environment["LU_OPSEC_REAL_GIT"] = GIT_BINARY
+        line = f"{commit} {commit} {ref} {'0' * len(commit)}\n".encode()
+        try:
+            with git_push.deadline(git_push.scan_timeout(environment)):
+                git_push.scan_push([remote, remote], line, environment)
+        except PublishBlocked:
+            refuse()
+        except git_push.ScanTimeout:
+            refuse()
+        script = tree / "scripts/audit/lint_opsec_leaks.py"
+        if not script.is_file():
+            refuse()
+        lint_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+        lint_env.pop(OVERRIDE, None)
+        lint_env["GIT_TERMINAL_PROMPT"] = "0"
+        completed = subprocess.run(
+            [sys.executable, str(script), "--commit-range", f"{base}..{commit}"],
+            cwd=tree, env=lint_env, capture_output=True, text=True, timeout=120, check=False,
+        )
+        if completed.returncode != 0:
+            refuse()
+    except _Kept:
+        raise
+    except Exception:
+        refuse()
+    finally:
+        for key, value in snapshot.items():
+            if key not in os.environ:
+                os.environ[key] = value
+
+
 def _salvage(record: dict, tree: Path, head: str, changed: list[str]) -> tuple[str, str]:
     """Push the tree's commits and uncommitted work to a new salvage branch; return the commit and its tree.
 
@@ -660,12 +716,17 @@ def _salvage(record: dict, tree: Path, head: str, changed: list[str]) -> tuple[s
 
     try:
         if advertised() is None:
+            # The same privacy scans an ordinary public push runs. A refusal is not a transport failure
+            # and must not be retried.
+            _require_public_push(tree, remote, ref, commit)
             # A refused push (the branch appeared meanwhile, or a transport failure) is judged by what
             # the remote advertises next.
             with suppress(subprocess.CalledProcessError):
                 _verification_git(tree, "push", "--quiet", f"--force-with-lease={ref}:", "--", remote,
                                   f"{commit}:{ref}", credential_remote=remote, timeout=VERIFICATION_FETCH_TIMEOUT)
         verified = advertised()
+    except _Kept:
+        raise
     except (OSError, ValueError, subprocess.SubprocessError):
         raise _Kept("salvage_failed", f"push of {ref} to the recorded remote failed") from None
     if verified is None:
@@ -696,6 +757,9 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
         return dict(worktree_disposition=state, worktree_disposition_reason=reason,
                     **({"worktree_disposition_detail": detail} if detail else {}))
 
+    # An owner hold is decided before any Git read, push, or removal.
+    if record.get("worktree_retention_hold") is True:
+        return disposition("retained", "retention_hold")
     if record.get("options", {}).get("cwd"):
         return disposition("retained", "borrowed_worktree")
     try:

@@ -55,6 +55,7 @@ def build_parser() -> argparse.ArgumentParser:
         "  .venv/bin/python scripts/dispatch.py wait TASK --run-nonce NONCE --timeout 60\n"
         "  .venv/bin/python scripts/dispatch.py grant-paths TASK --run-nonce NONCE --owned-path tests/fix.py "
         "--reason 'Approved fixture change' --approval-ref message-id\n"
+        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --set\n"
         "Outputs: task JSON, prompt, result and logs; new branch/worktree on dispatch.\n"
         "Exit codes: 0 success, 1 terminal failure, 2 invalid/refused request,\n"
         "  3 host admission refused (retryable), 4 worktree disk full, 124 client timeout.\n"
@@ -235,6 +236,27 @@ def build_parser() -> argparse.ArgumentParser:
     )
     trees.add_argument("--repo", help="fleet_repos.yaml key (default: public primary)")
     trees.add_argument("--all", action="store_true", help="Also match archived records (default: hot only)")
+    retain = subs.add_parser(
+        "retain-worktree",
+        help="Set or clear one task's worktree retention hold",
+        description="Set or clear the retention hold on one task's worktree.\n"
+        "Use when an owner must keep that worktree. Settlement, salvage and scheduled cleanup then "
+        "leave it untouched. Do not use this command to publish, delete, or inspect the worktree.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --set\n"
+        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --clear\n"
+        "Outputs: JSON with task_id and worktree_retention_hold. Writes the task record only.\n"
+        "Side effects: --set stores the hold and a non-retry retained disposition; --clear removes the "
+        "hold and, when the disposition reason is retention_hold, drops that disposition. Neither pushes "
+        "nor removes the worktree.\n"
+        "Exit codes: 0 hold updated, 2 missing record or invalid request.\n"
+        "Related: docs/runbooks/worktree-cleanup.md.",
+    )
+    retain.add_argument("task_id", help="Task ID whose worktree to hold, e.g. worker-42")
+    mode = retain.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--set", action="store_true", help="Set the hold (required unless --clear)")
+    mode.add_argument("--clear", action="store_true", help="Clear the hold; does not push or remove (required unless --set)")
     return parser
 
 
@@ -524,6 +546,28 @@ def _status_or_fail_payload(task_id: str, *, run_nonce: str | None = None) -> di
     return result
 
 
+def _retain_worktree(task_id: str, *, hold: bool) -> dict:
+    """Set or clear ``worktree_retention_hold`` under the task lock. Never pushes or removes."""
+    path = store.record_path(task_id)
+    with store.task_state_lock(path):
+        record = store.read(task_id)
+        if record.get("schema_version") != 2:
+            raise ValueError("retention hold requires a dispatch v2 task")
+        if hold:
+            record["worktree_retention_hold"] = True
+            record["worktree_disposition"] = "retained"
+            record["worktree_disposition_reason"] = "retention_hold"
+            record.pop("worktree_disposition_detail", None)
+        else:
+            record.pop("worktree_retention_hold", None)
+            if record.get("worktree_disposition_reason") == "retention_hold":
+                record.pop("worktree_disposition", None)
+                record.pop("worktree_disposition_reason", None)
+                record.pop("worktree_disposition_detail", None)
+        store.replace(record, path)
+    return {"task_id": task_id, "worktree_retention_hold": hold}
+
+
 def _status_or_fail(args: argparse.Namespace) -> int:
     try:
         status = _status_or_fail_payload(args.task_id, run_nonce=args.run_nonce)
@@ -548,6 +592,9 @@ def main(argv=None) -> int:
             return _status_or_fail(args)
         if args.command == "dispatch":
             return _dispatch(args)
+        if args.command == "retain-worktree":
+            print(json.dumps(_retain_worktree(args.task_id, hold=args.set), indent=2))
+            return 0
         if args.command == "grant-paths":
             try:
                 result = store.grant_paths(args.task_id, args.run_nonce, args.owned_path, args.reason, args.approval_ref)

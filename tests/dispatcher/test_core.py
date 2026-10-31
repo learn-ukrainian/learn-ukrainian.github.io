@@ -55,6 +55,9 @@ def sandbox(tmp_path, hermetic_monitor):
     resolver = repo / "scripts/common/repo_root.py"
     with resolver.open("a") as stream:
         stream.write(f"\n\ndef project_interpreter(root=None):\n    return Path({sys.executable!r})\n")
+    audit = repo / "scripts/audit"
+    audit.mkdir(parents=True)
+    shutil.copy(SOURCE / "scripts/audit/lint_opsec_leaks.py", audit / "lint_opsec_leaks.py")
     shutil.copy(SOURCE / "scripts/dispatch.py", repo / "scripts/dispatch.py")
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     (repo / "scripts/fleet").mkdir()
@@ -833,6 +836,88 @@ def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_sal
     assert run_git(sandbox.remote, "rev-parse", f"{salvaged}^") == record["head_sha"]
     assert run_git(sandbox.remote, "show", f"{salvaged}:delivered.txt") == "uncommitted delivery"
     assert run_git(sandbox.remote, "show", f"{salvaged}:notes.txt") == "untracked note"
+
+
+def _salvage_ref(record):
+    return f"refs/heads/salvage/{record['task_id']}"
+
+
+def test_salvage_keeps_a_tree_when_the_push_scan_refuses(sandbox, monkeypatch, synthetic_opsec):
+    """Defect class: salvage pushes a range the OPSEC push scan would refuse because hooksPath is /dev/null."""
+    from scripts.orchestration.scheduled_worktree_cleanup import SAFETY_STOP_REASONS
+    from tests.opsec_fixtures import TOKEN
+
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    tree, ref = Path(record["worktree_path"]), _salvage_ref(record)
+    run_git(tree, "-c", "core.hooksPath=/dev/null", "commit", "--allow-empty", "-m", f"note {TOKEN}")
+    in_process_repo(sandbox, monkeypatch)
+
+    def settled():
+        return json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+
+    worker.settle_left_worktrees(salvage=True)
+    first = settled()
+    assert (first["worktree_disposition"], first["worktree_disposition_reason"]) == ("retained", "opsec_refused")
+    assert first["worktree_disposition_reason"] not in worker.RETRY_REASONS
+    assert first["worktree_disposition_reason"] in SAFETY_STOP_REASONS
+    assert first["worktree_disposition_detail"] == git.OPSEC_REFUSAL_DETAIL
+    assert TOKEN not in json.dumps(first)
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+    worker.settle_left_worktrees(salvage=True)
+    assert settled()["worktree_disposition_reason"] == "opsec_refused"
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+
+
+def test_salvage_still_publishes_a_range_the_push_scan_accepts(sandbox, monkeypatch, synthetic_opsec):
+    """Defect class: regression of clean public salvage. A range the push scan accepts is still published."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    tree, ref = Path(record["worktree_path"]), _salvage_ref(record)
+    head = run_git(tree, "rev-parse", "HEAD")
+    in_process_repo(sandbox, monkeypatch)
+    worker.settle_left_worktrees(salvage=True)
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
+    assert not tree.exists()
+    assert run_git(sandbox.remote, "rev-parse", ref) == head
+
+
+def test_retention_hold_blocks_settlement_salvage_and_cleanup(sandbox, monkeypatch, synthetic_opsec):
+    """Defect class: an unpublished tree has no owner hold, so salvage retries it."""
+    from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    tree, ref = Path(record["worktree_path"]), _salvage_ref(record)
+    sandbox.cli("retain-worktree", record["task_id"], "--set")
+    held = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert held["worktree_retention_hold"] is True
+    assert held["worktree_disposition_reason"] == "retention_hold"
+    assert "retention_hold" not in worker.RETRY_REASONS
+    in_process_repo(sandbox, monkeypatch)
+    assert git.settle_worktree(held) == {
+        "worktree_disposition": "retained", "worktree_disposition_reason": "retention_hold",
+    }
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+    worker.settle_left_worktrees(salvage=True)
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+    (sandbox.repo / "batch_state").mkdir()
+    (sandbox.repo / "batch_state/tasks").symlink_to(sandbox.tasks, target_is_directory=True)
+    report = cleanup.settle_terminal_worktrees(sandbox.repo, apply=True, github=cleanup.GitHubReads())
+    assert report["complete"] and report["error"] is None
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+    listed = report["trees"][0]
+    assert listed["reason"] == "retention_hold" and listed["safety_stop"] is False
+    sandbox.cli("retain-worktree", record["task_id"], "--clear")
+    cleared = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert "worktree_retention_hold" not in cleared
+    assert "worktree_disposition" not in cleared
+    worker.settle_left_worktrees(salvage=True)
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
+    assert not tree.exists()
+    assert run_git(sandbox.remote, "rev-parse", ref)
 
 
 @pytest.mark.parametrize("pull_ref,disposition", [(True, ("removed", "clean")), (False, ("retained", "unpublished"))])
