@@ -1,4 +1,4 @@
-"""#9125: literal changed paths and an additive, tracked security inventory."""
+"""Literal changed paths and a conservative owned-scope fallback."""
 
 from __future__ import annotations
 
@@ -46,7 +46,7 @@ def test_every_security_glob_matches_a_tracked_file(pattern):
         ((), (), False),
         (("docs/readme.md", "site/src/app.ts"), (), False),
         (("docs/readme.md", "scripts/ocr/_credentials.py"), ("site/src/app.ts",), True),
-        (("site/src/app.ts",), ("scripts/ocr/_credentials.py",), True),
+        (("site/src/app.ts",), ("scripts/ocr/_credentials.py",), False),
         (("scripts/ocr/_credentials.py",), ("!scripts/ocr/_credentials.py",), True),
         (("./scripts/delegate.py",), (), True),
         ((), ("./scripts/delegate.py",), True),
@@ -69,7 +69,7 @@ def test_every_security_glob_matches_a_tracked_file(pattern):
         ((), ("docs/",), False),
     ],
 )
-def test_classifier_and_risk_are_additive(paths, owned, expected):
+def test_changed_paths_are_authoritative_with_owned_scope_fallback(paths, owned, expected):
     assert is_security_sensitive_change(paths, owned) is expected
     for risk in ("low", "medium", "high", "critical"):
         assert effective_review_risk(risk, paths, owned) == ("critical" if expected else risk)

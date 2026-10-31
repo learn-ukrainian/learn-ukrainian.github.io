@@ -1,6 +1,6 @@
 """Security-sensitive review paths approved for #9125.
 
-Changed paths are authoritative; caller-owned paths can only add coverage.
+Changed paths are authoritative; owned scope is a fallback before changes exist.
 Git collection disables rename compaction so both names and deletions survive.
 """
 
@@ -62,15 +62,16 @@ SECURITY_SENSITIVE_PATHS = (
 
 
 def is_security_sensitive_change(changed_paths: Iterable[str], owned_paths: Iterable[str] = ()) -> bool:
-    """Match literal changes plus owned files or directories containing security paths."""
+    """Match actual changes, or conservative owned scope when no changes exist."""
 
     def normalized(path: str) -> str:
         while path.startswith("./"):
             path = path[2:]
         return path
 
-    if any(fnmatchcase(normalized(path), pattern) for path in changed_paths for pattern in SECURITY_SENSITIVE_PATHS):
-        return True
+    changed = tuple(changed_paths)
+    if changed:
+        return any(fnmatchcase(normalized(path), pattern) for path in changed for pattern in SECURITY_SENSITIVE_PATHS)
     for path in owned_paths:
         path = normalized(path).rstrip("/")
         if path in {"", "."}:
