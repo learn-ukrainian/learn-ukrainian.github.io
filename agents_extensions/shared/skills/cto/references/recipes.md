@@ -103,6 +103,9 @@ A brief never tells a worker to bring current main into its branch before review
 queue tests the PR against main at enqueue, so a worker refreshes from main only when GitHub
 reports a conflict or a required check fails because of a change on main, since each refresh
 restarts exact-head CI.
+A dispatch whose task includes review rounds, the merge queue or long authoring
+passes sets `--hard-timeout 14400`, because the dispatcher default is 7200 seconds
+(`scripts/dispatcher/cli.py`) and a running task's deadline cannot be extended.
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
