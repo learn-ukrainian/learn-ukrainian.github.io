@@ -36,6 +36,7 @@ from scripts.common.jsonl import jsonl_lines, physical_lines
 from scripts.common.scratch import ensure_scratch_root
 from scripts.orchestration import worktree_git as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
+from scripts.orchestration.task_record_store import read_task_record
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
 AGENTS = frozenset({"codex", "claude", "grok", "agy", "kimi", "cursor", "deepseek", "gemini", "glm"})
@@ -305,7 +306,9 @@ def _task_records(repo: Path) -> list[tuple[Path, dict[str, object]]]:
     records: list[tuple[Path, dict[str, object]]] = []
     for path in task_dir.glob("*.json"):
         try:
-            state = json.loads(path.read_text(encoding="utf-8"))
+            state = read_task_record(path)
+            if state is None:
+                continue
         except (OSError, ValueError) as exc:
             raise RuntimeError(f"cannot inspect task state {path.name}: {exc}") from exc
         if not isinstance(state, dict):

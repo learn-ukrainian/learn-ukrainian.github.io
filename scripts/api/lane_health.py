@@ -3,7 +3,6 @@
 Part of the routing-budget guard (epic #4707).
 """
 
-import json
 import logging
 import math
 import os
@@ -13,7 +12,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, iter_task_records
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, iter_task_records, read_task_record
 
 try:
     from agent_runtime.agent_identity import normalize_seat, seat_read_aliases
@@ -245,8 +244,7 @@ def scan_lane_health(
                 if stat.st_mtime < cutoff_timestamp:
                     continue
 
-                with open(entry, encoding="utf-8") as f:
-                    record = json.load(f)
+                record = read_task_record(entry)
 
                 if not isinstance(record, dict):
                     continue

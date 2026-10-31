@@ -33,6 +33,7 @@ from scripts.orchestration.execution_safe_git import run_git
 from scripts.orchestration.task_record_store import (
     iter_task_records,
     locate_task_record,
+    read_task_record,
     relocated_result_file,
 )
 
@@ -235,7 +236,10 @@ def discover_task_states(task_dir: Path, *, limit: int) -> list[dict[str, Any]]:
         return []
     tasks: list[dict[str, Any]] = []
     for path in iter_task_records(task_dir, include_archive=False):
-        state = read_json(path)
+        try:
+            state = read_task_record(path)
+        except (OSError, ValueError):
+            continue
         if not state:
             continue
         state["_state_file"] = str(path)

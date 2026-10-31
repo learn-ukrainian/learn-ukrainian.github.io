@@ -37,6 +37,7 @@ from scripts.guardrails.delegate_ownership import (
 )
 from scripts.orchestration import dispatch_admission, dispatch_settle
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, worker_liveness
+from scripts.orchestration.task_record_store import read_task_record
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
@@ -182,8 +183,10 @@ def _run_reconcile_sweep(
         task_id = state_file.stem
         try:
             try:
-                state = json.loads(state_file.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
+                state = read_task_record(state_file)
+                if state is None:
+                    continue
+            except (OSError, ValueError):
                 unparseable_tasks.append(task_id)
                 continue
             if not isinstance(state, dict):

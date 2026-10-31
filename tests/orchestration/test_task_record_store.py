@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 from scripts.orchestration import task_record_store as store
 
 
@@ -9,7 +11,7 @@ def test_iter_task_records_yields_hot_then_archive(tmp_path):
     tasks = tmp_path / "tasks"
     (tasks / "archive").mkdir(parents=True)
     for path in (tasks / "b.json", tasks / "a.json", tasks / "archive" / "a.json", tasks / "archive" / "c.json"):
-        path.write_text("{}", encoding="utf-8")
+        path.write_text(json.dumps({"task_id": path.stem, "schema_version": 2}), encoding="utf-8")
     (tasks / "a.result").write_text("reply", encoding="utf-8")
     (tasks / "nested.json").mkdir()  # a directory is never a record
 

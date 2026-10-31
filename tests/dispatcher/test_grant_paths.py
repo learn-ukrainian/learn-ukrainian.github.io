@@ -216,3 +216,48 @@ class TestMergedPRRecoveryUsesGrant:
         world.files[77] = ["extra.txt", "second.txt"]
         worker._enforce_delivery(world.record)
         assert (world.record["status"], world.record["error"]) == ("no_deliverable", "outside_owned_paths: second.txt")
+
+
+@pytest.mark.parametrize("mutation", ["heartbeat", "settling", "terminal", "nonce"])
+def test_validation_does_not_hold_lock_and_rechecks_settlement(grant_task, monkeypatch, mutation):
+    """Slow grant validation cannot block supervision or grant after its cutoff."""
+    import threading
+
+    validating, release = threading.Event(), threading.Event()
+    original = store._grant_paths_validated
+
+    def validation(root, paths):
+        validating.set()
+        assert release.wait(5), "validation was never released"
+        return original(root, paths)
+
+    def supervisor_write():
+        path = store.record_path("worker")
+        with store.task_state_lock(path):
+            current = store.read("worker")
+            if mutation == "settling":
+                store.begin_settlement(current)
+            elif mutation == "nonce":
+                current["run_nonce"] = "replacement"
+                path.write_text(json.dumps(current))
+            else:
+                current.update(heartbeat="fresh")
+                if mutation == "terminal":
+                    current["status"] = "done"
+                store.replace(current)
+
+    monkeypatch.setattr(store, "_grant_paths_validated", validation)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+        request = pool.submit(grant, grant_task, "extra.txt")
+        try:
+            assert validating.wait(5)
+            pool.submit(supervisor_write).result(timeout=5)
+        finally:
+            release.set()
+        if mutation == "heartbeat":
+            assert request.result(timeout=5)["effective_scope"] == ["original.txt", "extra.txt"]
+            assert store.read("worker")["heartbeat"] == "fresh"
+        else:
+            with pytest.raises(ValueError, match=r"nonce|not settling"):
+                request.result(timeout=5)
+            assert "owned_path_grants" not in store.read("worker")

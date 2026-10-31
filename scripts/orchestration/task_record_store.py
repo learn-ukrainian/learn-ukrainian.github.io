@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import fcntl
 import json
+import logging
 import os
 import re
 import threading
@@ -34,6 +35,56 @@ ARCHIVE_DIR_NAME = "archive"
 # Lock-file inodes each thread holds through task_state_lock.
 _HELD_TASK_LOCKS = threading.local()
 _REDISPATCH_ARCHIVED_STEM_RE = re.compile(r"^(?P<base>.+)\.(?P<tag>\d{8}T\d{6}\d*Z(?:\.\d+)?)\.archived$")
+_LOG = logging.getLogger(__name__)
+
+
+def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = False) -> dict[str, Any] | None:
+    """Distinguish records from sidecars without hiding damaged record claims.
+
+    Dispatch writes an integer schema version and a task-id basename; legacy
+    records may identify a run by filename and lifecycle fields alone. The v2
+    basename and archive collision stamps follow the by-id naming contract. A
+    broken JSON object may have lost its markers to truncation, so it remains
+    a record claim and fails closed.
+    """
+    try:
+        record = json.loads(raw.decode("utf-8"))
+    except (ValueError, RecursionError) as exc:
+        if isinstance(exc, UnicodeDecodeError) or raw.lstrip().removeprefix(b"\xef\xbb\xbf").startswith(b"{"):
+            raise
+        record = None
+    if not isinstance(record, dict):
+        _LOG.warning("NON_RECORD_FILE: %s", path)
+        return None
+    task_id = record.get("task_id")
+    legacy = "schema_version" not in record and (
+        any(key in record for key in (
+            "run_nonce", "worktree_path", "worktree_prep", "review_attempt", "review_contract", "worktree_branch"
+        )) or ("agent" in record and "status" in record)
+    )
+    receipt = ("schema" in record and "schema_version" not in record
+               and isinstance(task_id, str) and not candidate_task_record_names(task_id, (path.name,)))
+    if receipt or not ("task_id" in record or isinstance(record.get("schema_version"), int) or legacy):
+        _LOG.warning("NON_RECORD_FILE: %s", path)
+        return None
+    if "schema_version" in record and (type(record["schema_version"]) is not int
+                                       or record["schema_version"] not in {1, 2}):
+        if display_unknown_schema and type(record["schema_version"]) is int and record["schema_version"] > 2:
+            # API visibility only: no unknown field can claim a live worker,
+            # reviewer, repository, process, grant or result.
+            return {"schema_version": record["schema_version"]}
+        raise ValueError(f"task record {path} has invalid schema_version")
+    if (("task_id" in record and (not isinstance(task_id, str) or not task_id))
+            or (record.get("schema_version") == 2 and (
+                not isinstance(task_id, str) or not candidate_task_record_names(task_id, (path.name,))
+            ))):
+        raise ValueError(f"task record {path} has invalid task identity")
+    return record
+
+
+def read_task_record(path: Path) -> dict[str, Any] | None:
+    """Read a scan candidate; foreign files are reported, damaged records raise."""
+    return parse_task_record(path, path.read_bytes())
 
 
 def task_record_path(tasks_dir: Path, task_id: str) -> Path:
@@ -92,7 +143,15 @@ def iter_task_records(tasks_dir: Path, *, include_archive: bool) -> Iterator[Pat
             paths = sorted(path for path in directory.glob("*.json") if path.is_file())
         except OSError:
             continue
-        yield from paths
+        for path in paths:
+            try:
+                if read_task_record(path) is None:
+                    continue
+            except (OSError, ValueError):
+                # The caller owns its refusal/unknown policy. Never filter a
+                # damaged record out of an admission, quota or cleanup scan.
+                pass
+            yield path
 
 
 def relocated_result_file(record_path: Path, result_file: str | None) -> str | None:

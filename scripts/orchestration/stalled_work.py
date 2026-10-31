@@ -25,7 +25,7 @@ from scripts.fleet.ignored_task_output import succession_streams
 from scripts.fleet_comms.authority import AuthorityService
 from scripts.orchestration import stale_task_records as stale
 from scripts.orchestration.integration_sweep import GitHubAdapter, SweepError, lookup_verdict
-from scripts.orchestration.task_record_store import iter_task_records
+from scripts.orchestration.task_record_store import iter_task_records, read_task_record
 from scripts.orchestration.validate_fleet_taxonomy import ASSIGNMENTS_PATH, TAXONOMY_PATH, _load_yaml
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
@@ -78,7 +78,9 @@ def load_records(tasks: Path, now: datetime) -> tuple[list[stale.Candidate], lis
             continue
         seen.add(path.name)
         try:
-            record = json.loads(path.read_text())
+            record = read_task_record(path)
+            if record is None:
+                continue
             if not isinstance(record, dict):
                 raise ValueError("not an object")
             stat = path.stat()

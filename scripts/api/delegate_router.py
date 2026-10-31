@@ -17,6 +17,7 @@ from typing import Any, Literal
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from scripts.agent_runtime.accounting import recorded_model_accounting_fields
+from scripts.orchestration.task_record_store import parse_task_record
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
@@ -123,9 +124,9 @@ def _read_task_state(
         return None
     for attempt in range(TASK_READ_RETRIES):
         try:
-            with open(fullpath, encoding="utf-8") as handle:
-                data = json.loads(handle.read())
-        except (OSError, json.JSONDecodeError):
+            with open(fullpath, "rb") as handle:
+                data = parse_task_record(Path(path), handle.read(), display_unknown_schema=True)
+        except (OSError, ValueError):
             if attempt + 1 == TASK_READ_RETRIES:
                 return None
             time.sleep(TASK_READ_RETRY_SECONDS)
@@ -513,7 +514,8 @@ def _delegate_task_rows(
 
 
 def _task_file_fingerprint(name: str, st: os.stat_result) -> _TaskFileFingerprint:
-    return name, st.st_mtime_ns, st.st_ctime_ns, st.st_size, st.st_ino
+    # Discard summaries cached before task-record classification.
+    return f"record-v1:{name}", st.st_mtime_ns, st.st_ctime_ns, st.st_size, st.st_ino
 
 
 def _task_generation_token(newest_mtime_ns: int, files: list[tuple[str, os.stat_result]]) -> str:
@@ -567,6 +569,19 @@ def _delegate_task_rows_locked(
     if include_archive:
         scanned_dirs.add(os.path.join(tasks_dir_str, TASK_ARCHIVE_DIR_NAME))
 
+    if task_generation is not None:
+        # Cache generations inventory names and stats, including foreign files;
+        # match state_router's cheap token without parsing JSON on warm requests.
+        for directory in scanned_dirs:
+            for path in Path(directory).glob("*.json"):
+                try:
+                    file_stat = path.stat()
+                except OSError:
+                    generation_observed = False
+                    continue
+                task_files.append((path.name, file_stat))
+                newest_mtime_ns = max(newest_mtime_ns, file_stat.st_mtime_ns)
+
     dirty_records: list[tuple] = []
     seen_paths: set[str] = set()
 
@@ -580,10 +595,6 @@ def _delegate_task_rows_locked(
         except OSError:
             generation_observed = False
             continue
-        if task_generation is not None:
-            task_files.append((path.name, file_stat))
-            newest_mtime_ns = max(newest_mtime_ns, file_stat.st_mtime_ns)
-
         cached = task_cache.get(path_str)
 
         if cached is not None and cached[0] == fingerprint:

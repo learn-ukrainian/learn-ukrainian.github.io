@@ -55,6 +55,8 @@ except ModuleNotFoundError:  # direct file-path invocation
     from scripts.common.safe_unit_install import InstallError, install_unit, open_state_log
 
 # Git commit hooks inject GIT_DIR / GIT_INDEX_FILE / etc. into the environment.
+from scripts.orchestration.task_record_store import read_task_record
+
 # Integrity checks must not inherit those or they inspect the outer repo, not
 # the fixture / --repo path under test. Same scrub list as check_core_bare.
 _GIT_REDIRECT_KEYS = frozenset(
@@ -201,8 +203,10 @@ def _running_dispatches(tasks_dir: Path | None) -> list[dict[str, Any]]:
     running: list[dict[str, Any]] = []
     for path in sorted(tasks_dir.glob("*.json")):
         try:
-            state = json.loads(path.read_text())
-        except (OSError, json.JSONDecodeError):
+            state = read_task_record(path)
+            if state is None:
+                continue
+        except (OSError, ValueError):
             continue
         if state.get("status") not in ("running", "spawning"):
             continue
@@ -230,7 +234,7 @@ def _load_state(state_dir: Path) -> dict[str, Any]:
         return {}
     try:
         return json.loads(path.read_text())
-    except (OSError, json.JSONDecodeError):
+    except (OSError, ValueError):
         return {}
 
 

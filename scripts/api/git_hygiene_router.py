@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import asyncio
 import fnmatch
-import json
 import os
 import shlex
 import subprocess
@@ -31,6 +30,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from scripts.common.git_context import sanitized_git_env
+from scripts.orchestration.task_record_store import read_task_record
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 
@@ -266,15 +266,8 @@ def _active_task_ids(project_root: Path) -> set[str]:
         if not entry.name.endswith(".json"):
             continue
         try:
-            with open(entry.path, "rb") as f:
-                raw = f.read(4096)
-        except OSError:
-            continue
-        if b'"running"' not in raw:
-            continue
-        try:
-            payload = json.loads(raw.decode("utf-8", errors="replace"))
-        except (OSError, json.JSONDecodeError):
+            payload = read_task_record(Path(entry.path))
+        except (OSError, ValueError):
             continue
         if not isinstance(payload, dict) or payload.get("status") != "running":
             continue
