@@ -952,6 +952,12 @@ def test_criterion_receipts_skip_non_ledger_files(tmp_path: Path, monkeypatch: p
     path.with_name("issue-12345-behavior-proof.json").write_text(
         json.dumps({"receipt": "not a lifecycle ledger"}), encoding="utf-8",
     )
+    path.with_name("issue-\u0661\u0662\u0663\u0664\u0665.json").write_text(
+        json.dumps({"receipt": "unicode digits are not a ledger name"}), encoding="utf-8",
+    )
+    path.with_name("issue-12345\u0666.json").write_text(
+        json.dumps({"receipt": "mixed digits are not a ledger name"}), encoding="utf-8",
+    )
 
     reports = mc.collect_criterion_receipts(
         tmp_path, mc.PullRequestInfo(77, "MERGED", "codex/branch", "a" * 40), repo="org/repo",
