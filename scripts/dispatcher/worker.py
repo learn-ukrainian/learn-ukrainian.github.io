@@ -708,7 +708,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             final = invocation.final_file
             final_text = final.read_text(errors="replace") if final and final.exists() else None
             stdout = stdout_path.read_text(errors="replace")
-            parse_options = {"output_schema": schema} if spec.agent == "agy" else {}
+            parse_options = {"output_schema": schema} if spec.agent == "agy" and schema is not None else {}
             parsed = provider.parse(stdout, stderr_path.read_text(errors="replace"), exit_code, final_text, **parse_options)
             text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
             # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
