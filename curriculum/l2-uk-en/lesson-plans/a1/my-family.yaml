@@ -26,7 +26,7 @@ arc_ref:
   position: 4
 evidence_ref:
   path: curriculum/l2-uk-en/evidence/a1/my-family.yaml
-  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  sha256: '720a3f6489ecd51c127b9855c25531a7bc261cc85b07e812dd04b174b0093db2'
 lessons:
 - n: 1
   slug: people-in-my-circle
