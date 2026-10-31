@@ -26,7 +26,7 @@ arc_ref:
   position: 6
 evidence_ref:
   path: curriculum/l2-uk-en/evidence/a1/first-conversations.yaml
-  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  sha256: 'd8afd475d303a0d364d8c73f3c52267f3ec964c8d857c2861b741e4373a72fc7'
 lessons:
 - n: 1
   slug: a-formal-first-conversation
