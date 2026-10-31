@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 from collections import Counter
+from dataclasses import replace
 from functools import partial
 from pathlib import Path
 
@@ -174,6 +175,21 @@ def test_slice3_authorities_and_reviewed_chain_replay(monkeypatch, tmp_path, cap
     assert target["build"]["rules_version"] == "a1-slice3-v1"
     assert target["build"]["inputs"]["I"]["allocation"]["ref"] == "registry/atlas/identity/a1-v1-slice3.json"
     assert target["build"]["inputs"]["O"]["batch"]["ref"] == "registry/atlas/a1-v1-slice3.json"
+    no_sense_effective, no_sense_rows = context.validate_inputs(
+        batch["inventory"], batch["base"], batch["companion"], batch["manifest"], batch["sources"], batch["pins"])
+    next(entry for entry in no_sense_effective["entries"] if entry["card_id"] == "wc_n1g44brn5vs2")["senses"] = []
+    no_sense_context = replace(context, validate_inputs=lambda *_: (no_sense_effective, no_sense_rows))
+    no_sense_result = cards.build(**batch, batch=no_sense_context)
+    assert next(card for card in no_sense_result["cards"] if card["card_id"] == "wc_n1g44brn5vs2")["senses"] == []
+    sense_fields = {"definition_uk", "gloss_en", "sense_label", "register", "synonyms", "antonyms",
+                    "examples", "russification_exposed", "collocations"}
+    empty_rows = [row for row in no_sense_result["accounting"]
+                  if row["card_id"] == "wc_n1g44brn5vs2" and row["field"] in sense_fields]
+    assert len(empty_rows) == 9
+    assert {row["field"]: (row["sense_id"], row["state"], row["reason"], row["dependency"], row["owner"])
+            for row in empty_rows} == {field: (None, "empty", "source_sense_claim_unresolved",
+        "exact source claim and reviewed sense correspondence", "Atlas coordinator") for field in sense_fields}
+    assert all(row["assertion_ids"] == [] and row["receipt_ids"] == [] for row in empty_rows)
     mirror = copy.deepcopy(batch)
     claim = mirror["manifest"]["claims"][0]
     claim.update(record_key="mirror:яйце", pointer="/article", span=[0, 20])
