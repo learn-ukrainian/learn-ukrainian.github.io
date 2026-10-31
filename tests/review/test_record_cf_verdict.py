@@ -938,3 +938,21 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
     apostrophe_marker = sweep.parse_marker(comments[3]["body"])
     assert apostrophe_marker["void"] == "quote-mismatch"
     assert apostrophe_marker["coverage"] == []
+
+    spaces = reply.replace(
+        '"quote": "немає"',
+        '"finding": "Frozen input quote: \' \'. "',
+    )
+    write_task(
+        tasks,
+        task_id="review-spaces",
+        reply=spaces,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-spaces", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    spaces_marker = sweep.parse_marker(comments[4]["body"])
+    assert spaces_marker["void"] == "quote-mismatch"
+    assert spaces_marker["coverage"] == []

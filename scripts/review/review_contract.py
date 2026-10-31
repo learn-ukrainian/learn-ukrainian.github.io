@@ -1074,7 +1074,7 @@ def _presented_quotes(text: str) -> list[str]:
         while end < length:
             if text[end] in closers and not _interior_apostrophe(text, end):
                 span = text[index + 1 : end]
-                if span.strip():
+                if span:
                     spans.append(span)
                 index = end
                 break
