@@ -805,8 +805,13 @@ def test_scheduled_settlement_does_not_retain_regenerable_dependencies_as_unique
                 assert stream.read(20) == b"unpublished evidence"
 
 
-def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_salvage_ref(sandbox, monkeypatch):
-    """#12043 AC-06a: a finished task's dirty tree stayed forever; a failed salvage push must still keep it."""
+def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_salvage_ref(
+        sandbox, monkeypatch, synthetic_opsec):
+    """#12043 AC-06a: a finished task's dirty tree stayed forever; a failed salvage push must still keep it.
+
+    The synthetic matcher lets the push scan run where the private install is absent, so a refused
+    push is still salvage_failed rather than a scan that could not start.
+    """
     record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
     assert record["worktree_disposition_reason"] == "dirty"
     tree, ref = Path(record["worktree_path"]), f"refs/heads/salvage/{record['task_id']}"
