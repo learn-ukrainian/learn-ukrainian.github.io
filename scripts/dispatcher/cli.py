@@ -137,7 +137,8 @@ def build_parser() -> argparse.ArgumentParser:
                           help="Mark a review as requiring a verdict; read-only, metadata only (default: off)")
     for flag in ("review-id", "attempt-id", "review-attempt"):
         dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest file for --review-attempt; all three "
-                              "required, with a rendered --prompt-file; runs inside the attempt boundary (default: none)")
+                              "required, with a rendered --prompt-file; use --pinned-head, not --branch or --pr; "
+                              "runs inside the attempt boundary (default: none)")
     dispatch.add_argument("--review-access", choices=get_args(ReviewAccess),
                           help="Bound review access; full needs --full-checkout (default: isolated for bound attempts)")
     dispatch.add_argument(
@@ -275,6 +276,12 @@ def _worktrees(repo_key: str | None, include_archive: bool) -> list[dict]:
 
 def _dispatch(args) -> int:
     if binding := store.review_binding(vars(args)):
+        # Bound attempts have their own accounting; PR selectors would also charge their records to a PR budget.
+        if args.branch is not None or args.pr is not None:
+            raise ValueError(
+                "review_attempt_pr_selector_unsupported: --review-attempt cannot be combined with --branch or --pr; "
+                "use --pinned-head as in docs/runbooks/formal-review-attempt-isolation.md#running-a-bound-attempt"
+            )
         store.check_review_attempt(binding)
         # The supervisor re-reads the manifest from another working directory.
         args.review_attempt = str(Path(args.review_attempt).resolve())
