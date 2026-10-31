@@ -259,7 +259,25 @@ def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list
 
 # A top-level JSON object carrying any of these keys is offered as a findings envelope.
 _FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
+_JSON_KEY_RE = re.compile(r'("(?:\\.|[^"\\])*")\s*(?::|$)')
 _JSON_VALUE_START_RE = re.compile(r" {0,3}[\[{]")
+
+
+class _UnreadableFindings(ValueError):
+    """A findings envelope is present but cannot be read completely."""
+
+
+def _looks_like_findings(source: str) -> bool:
+    if not re.match(r"\s*\{", source):
+        return False
+    for match in _JSON_KEY_RE.finditer(source):
+        try:
+            key = json.loads(match[1])
+        except ValueError:
+            continue
+        if key in _FINDINGS_ENVELOPE_KEYS:
+            return True
+    return False
 
 
 def _top_level_json_values(response: str) -> Iterator[Any]:
@@ -282,7 +300,13 @@ def _top_level_json_values(response: str) -> Iterator[Any]:
             try:
                 value = json.loads(token.content)
             except ValueError:
+                if _looks_like_findings(token.content):
+                    raise _UnreadableFindings("inconclusive: findings JSON cannot be decoded") from None
                 continue
+            if isinstance(value, dict) and _FINDINGS_ENVELOPE_KEYS & value.keys():
+                start, end = token.map
+                if end - 1 <= start or not _closes_code_fence(lines[end - 1], token.markup):
+                    raise _UnreadableFindings("inconclusive: findings fence is unclosed")
             yield value
         elif token.type in {"paragraph_open", "heading_open"} and token.map:
             for number in range(*token.map):
@@ -292,6 +316,8 @@ def _top_level_json_values(response: str) -> Iterator[Any]:
                 try:
                     value, consumed = decoder.raw_decode(text, starts[number] + match.end() - 1)
                 except ValueError:
+                    if _looks_like_findings(text[starts[number] + match.end() - 1 :]):
+                        raise _UnreadableFindings("inconclusive: findings JSON cannot be decoded") from None
                     continue
                 yield value
 
@@ -313,9 +339,69 @@ def invalid_findings_block(response: str, *, stated: str | None = None) -> str |
                 checked_findings_payload(payload, stated=stated)
             except (ContractError, ReviewPublicationError) as exc:
                 return f"top-level findings block fails validation: {exc}"
+    except _UnreadableFindings as exc:
+        return str(exc)
     except RecursionError:
         return "top-level blocks cannot be decided"
     return None
+
+
+# These are declarations by the reviewer about its own unfinished work, not
+# general uses of "incomplete" in findings about the code under review.
+_INCOMPLETE_REVIEW_RE = re.compile(
+    r"(?:^|[.!?:]\s+)(?:(?:however|unfortunately),?\s+)?(?:"
+    r"(?:I|we)\s+(?:(?:could|can|did|have)\s+not|cannot|couldn't|can't|didn't|haven't|"
+    r"(?:am|are|was|were)\s+unable\s+to)\s+"
+    r"(?:finish(?:ed)?|complete(?:d)?)\s+(?:(?:the|this|my|our|full|entire)\s+)*"
+    r"(?:review(?:ing)?|check(?:ing)?|audit(?:ing)?)\b"
+    r"|(?:(?:the|this|my|our)\s+)?review\s+"
+    r"(?:(?:is|was|remains?)\s+(?:incomplete|unfinished|not\s+(?:complete|completed|finished))|"
+    r"(?:did\s+not|didn't|has\s+not|hasn't)\s+(?:finish(?:ed)?|complete(?:d)?))\b)",
+    re.IGNORECASE,
+)
+
+
+def _without_inline_json(text: str) -> str:
+    """Leave own prose around decoded JSON, whose explanation is read separately."""
+    parts: list[str] = []
+    cursor = offset = 0
+    for line in _commonmark_lines(text, keepends=True):
+        match = _JSON_VALUE_START_RE.match(line)
+        start = offset + match.end() - 1 if match else -1
+        offset += len(line)
+        if match is None or start < cursor:
+            continue
+        try:
+            _, end = json.JSONDecoder().raw_decode(text, start)
+        except ValueError:
+            continue
+        parts.extend((text[cursor:start], "\n"))
+        cursor = end
+    return "".join((*parts, text[cursor:]))
+
+
+def declares_incomplete_review(response: str) -> bool:
+    """Whether own prose or a findings explanation declares the review unfinished.
+
+    Quoted blocks, code and inline examples are not reviewer declarations.
+    No new completion field is required of existing complete replies.
+    """
+    from markdown_it import MarkdownIt
+
+    visible = _without_inline_json(_without_code_fences(response, keep_unclosed=False))
+    prose = []
+    for token in MarkdownIt("commonmark").parse(visible):
+        if token.type == "inline":
+            prose.append("".join(
+                " " if child.type in {"softbreak", "hardbreak", "code_inline"} else child.content
+                for child in token.children or []
+            ))
+    for payload in _top_level_json_values(response):
+        if isinstance(payload, dict) and _FINDINGS_ENVELOPE_KEYS & payload.keys():
+            overall = payload.get("overall")
+            if isinstance(overall, dict) and isinstance(overall.get("explanation"), str):
+                prose.append(overall["explanation"])
+    return any(_INCOMPLETE_REVIEW_RE.search(text) for text in prose)
 
 
 def declares_missing_capabilities(response: str) -> bool:
