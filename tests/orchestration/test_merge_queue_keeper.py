@@ -226,6 +226,45 @@ def test_prompt_bound_red_team_marker_is_accepted_by_keeper(tmp_path: Path) -> N
     assert "reason=ready" in lines[0]
 
 
+def test_partial_item_coverage_is_not_enqueued(tmp_path: Path) -> None:
+    """A recorded APPROVE of part of a declared denominator must not enqueue (#12247)."""
+
+    def covered(items: tuple[str, ...]) -> dict[str, Any]:
+        return {
+            "body": build_comment(
+                sha=HEAD_A,
+                task_id="review-chunk",
+                started="2026-09-23T12:00:00.000001+00:00",
+                verdict="APPROVED",
+                model="gpt-6.1-sol",
+                family="openai",
+                reply="VERDICT: APPROVE",
+                review_profile="ukrainian",
+                sources_mcp_call_count=3,
+                author_models=["gemini-3.8-flash-high"],
+                denominator=("card-a", "card-b"),
+                coverage=items,
+            ),
+            "user": {"login": "driver"},
+            "author_association": "MEMBER",
+            "created_at": "2026-09-23T13:00:00Z",
+            "updated_at": "2026-09-23T13:00:00Z",
+        }
+
+    partial = FakeGitHub()
+    partial.comments_rows = [covered(("card-a",))]
+    lines, failed = keeper.run(partial, tmp_path / "partial.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(partial)
+    assert "state=needs-coverage reason=needs-CF" in lines[0]
+
+    complete = FakeGitHub()
+    complete.comments_rows = [covered(("card-a", "card-b"))]
+    lines, failed = keeper.run(complete, tmp_path / "complete.json", apply=True)
+    assert not failed
+    assert mutations(complete) == ["enqueue"]
+
+
 def test_learner_content_with_only_a_code_approval_is_not_enqueued(tmp_path: Path) -> None:
     # #12181: no Ukrainian verdict yet still means the Ukrainian seats are missing.
     fake = FakeGitHub()
