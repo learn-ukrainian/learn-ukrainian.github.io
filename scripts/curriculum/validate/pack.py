@@ -9,7 +9,8 @@ establish models (evidence-pack-v1 schema). A text record's `quote` bytes and a
 video record's `url`, `models.segment` and `use` are kept for the review gates (#9487), as are
 the printable text of text, exercise and example records and an example's `sentence_ref.words`.
 The word store
-(evidence/<level>/_words.yaml) holds `words[] {id, lemma, forms[] {tags}}`; a record's `gloss_en` is kept too.
+(evidence/<level>/_words.yaml) holds `words[] {id, lemma, forms[] {tags}}` and `kind: formula` records
+`{id, text, parts[] {word, form}}`, whose printed text stands as the lemma; a record's `gloss_en` is kept too.
 A `<file>.lock` sidecar sits beside each file; its first whitespace-delimited
 token is the lowercase hex sha256 of the file's bytes. Duplicate ids fail.
 """
@@ -181,6 +182,41 @@ def load_pack(pack_path: Path) -> Pack:
     )
 
 
+def _formula_record(words_path: Path, entry: dict) -> WordRecord:
+    """A `kind: formula` store record (evidence/formulas.py): printed `text` and `parts`, no lemma or forms.
+
+    The printed text stands as the lemma, so a plan's `lemma: Добрий день!` (rule 7), the C29 phrase lookup and
+    the contiguous-token print match all read the formula the way the store prints it. A formula has no forms.
+    """
+    parts = entry.get("parts")
+    if (
+        not isinstance(entry.get("text"), str)
+        or not entry["text"].strip()
+        or not isinstance(parts, list)
+        or not parts
+        or not all(
+            isinstance(part, dict) and isinstance(part.get("word"), str) and isinstance(part.get("form"), str)
+            for part in parts
+        )
+    ):
+        raise PlanError(
+            codes.WORDS_MALFORMED,
+            f"{words_path}: a formula record lacks id, text or parts (each part a word id and a form): {entry!r}",
+        )
+    return WordRecord(
+        id=entry["id"],
+        lemma=entry["text"],
+        form_tags=frozenset(),
+        cefr_level=_cefr_level(entry),
+        gloss_en=entry["gloss_en"] if isinstance(entry.get("gloss_en"), str) else None,
+    )
+
+
+def _cefr_level(entry: dict) -> str | None:
+    cefr = entry.get("cefr")
+    return cefr.get("level") if isinstance(cefr, dict) and isinstance(cefr.get("level"), str) else None
+
+
 def load_words(words_path: Path) -> WordStore:
     """Load the level word store, rejecting duplicate ids."""
     data = _read_yaml(words_path, codes.WORDS_NOT_FOUND, codes.WORDS_YAML_INVALID)
@@ -188,6 +224,11 @@ def load_words(words_path: Path) -> WordStore:
         raise PlanError(codes.WORDS_MALFORMED, f"{words_path} does not hold a words: list")
     records: dict[str, WordRecord] = {}
     for entry in data["words"]:
+        if isinstance(entry, dict) and isinstance(entry.get("id"), str) and entry.get("kind") == "formula":
+            if entry["id"] in records:
+                raise PlanError(codes.DUPLICATE_WORD_ID, f"{words_path}: id {entry['id']} appears twice")
+            records[entry["id"]] = _formula_record(words_path, entry)
+            continue
         if (
             not isinstance(entry, dict)
             or not isinstance(entry.get("id"), str)
@@ -209,14 +250,12 @@ def load_words(words_path: Path) -> WordStore:
                 tagged_forms.append((form["tags"], form["form"]))
         if entry["id"] in records:
             raise PlanError(codes.DUPLICATE_WORD_ID, f"{words_path}: id {entry['id']} appears twice")
-        cefr = entry.get("cefr")
-        cefr_level = cefr.get("level") if isinstance(cefr, dict) and isinstance(cefr.get("level"), str) else None
         records[entry["id"]] = WordRecord(
             id=entry["id"],
             lemma=entry["lemma"],
             form_tags=frozenset(tags),
             form_texts=tuple(form_texts),
-            cefr_level=cefr_level,
+            cefr_level=_cefr_level(entry),
             tagged_forms=tuple(tagged_forms),
             gloss_en=entry["gloss_en"] if isinstance(entry.get("gloss_en"), str) else None,
         )

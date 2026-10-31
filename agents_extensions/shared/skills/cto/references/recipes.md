@@ -93,6 +93,9 @@ scripts/dispatch.py dispatch ... --claude-account <label>`: the launcher exports
 while that ambient value is set (`claude_account_ambient_conflict`).
 Dispatch every takeover successor with `--base origin/main`, never the PR branch as base;
 the `takeover` skill checks out the PR branch.
+The successor's owned paths must cover the original PR's full diff against `origin/main`,
+not only its own fixes, because `delivered_paths` counts the PR's inherited commits as the
+successor's changes.
 `delivered_paths` in `scripts/dispatcher/ownership.py` excludes commits reachable from the
 base and task start, so using the PR branch as base can make the ownership check count newer
 main commits as the worker's changes and refuse the push when the worker brings main into its branch.

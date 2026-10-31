@@ -483,12 +483,24 @@ def _safe_git_config(source: Path) -> bytes:
 def _trusted_database(worktree: Path, repository: Path, relative: str) -> Path:
     """The primary checkout's database file a worktree link must name, or a refusal.
 
-    Only the link ``provision_links`` makes is admitted: a symlink resolving exactly to the primary
-    checkout's own regular file at the same path. A missing link, a tracked or redirected link,
-    or a primary file reached through a link is refused, so branch content never picks a mount.
+    Sources may be the primary checkout's validated generation selector. Only its current
+    selection is mounted, through the untracked link to the primary selector that
+    ``provision_links`` makes. Other databases still require the primary's own regular file.
     """
+    from scripts.storage.topology import STORE_FILES, inspect_selector, store_kind
+
     link, trusted = worktree / relative, repository / relative
     try:
+        if relative == f"data/{STORE_FILES['sources'][0]}" and trusted.is_symlink():
+            if (not link.is_symlink() or link.readlink() != trusted
+                    or os.path.realpath(trusted.parent) != str(trusted.parent)
+                    or _git(worktree, "ls-files", "--", relative)):
+                raise Refused(f"database link {relative} is missing or not the dispatcher's link")
+            selection = inspect_selector(trusted)
+            if (store_kind(trusted).kind != "selector" or selection.layout != "selector"
+                    or selection.generation is None):
+                raise Refused(f"database link {relative} does not name the primary checkout's database")
+            trusted = selection.generation
         if not link.is_symlink() or os.path.realpath(trusted) != str(trusted):
             raise Refused(f"database link {relative} is missing or not the dispatcher's link")
         if not stat.S_ISREG(os.lstat(trusted).st_mode) or link.resolve(strict=True) != trusted:
@@ -619,6 +631,11 @@ class _Boundary:
         argv = wrap_argv_with_sandbox(inner, sandbox)
         masks = [argument for path in hidden for argument in ("--tmpfs", str(path), "--remount-ro", str(path))]
         masks += [argument for copy, source in overlays for argument in ("--ro-bind", str(copy), str(source))]
+        for link, target in databases:
+            primary = repository / link.relative_to(self.worktree)
+            if primary != target:
+                # The worktree link names the selector, while only its selected file is mounted.
+                masks += ["--ro-bind", str(target), str(primary)]
         argv[-len(inner):-len(inner)] = [
             *masks, "--ro-bind", str(boundary / "passwd"), "/etc/passwd", "--ro-bind", str(boundary / "group"),
             "/etc/group", "--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(self.worktree),

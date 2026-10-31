@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { compareCurrent, type PreviewCard } from '../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../lib/lexicon/atlas-data-source';
-import { attributionGap, attributionLinks, releaseAccounting, releaseReportUrl, type LoadedRelease, type ReleaseCard, type ReleaseRow } from '../lib/lexicon/word-card-release';
-import { groupReleasePages, pagePath, sourceCredits, type Credit, type FactGroup, type ParadigmCell, type ParadigmTable, type ReadableEntry, type ReleasePage, type SlotLabel } from '../lib/lexicon/word-card-readable';
+import { attributionGap, attributionLinks, releaseAccounting, releaseReportUrl, type LoadedRelease, type ReleaseCard, type ReleaseIndex, type ReleaseRow } from '../lib/lexicon/word-card-release';
+import { groupReleasePages, pagePath, readableEntry, sourceCredits, type Credit, type FactGroup, type ParadigmCell, type ParadigmTable, type ReadableEntry, type ReleasePage, type SlotLabel } from '../lib/lexicon/word-card-readable';
 
 function Accounting({ rows, scope, learner = false }: Pick<LoadedRelease, 'rows'> & { scope: string; learner?: boolean }) {
   const { attributionGaps, ...coverage } = releaseAccounting(rows);
@@ -133,12 +133,40 @@ function Entry({ entry, pin }: { entry: ReadableEntry; pin: ReleasePage['pin'] }
   </article>;
 }
 
-/** C37 search belongs to word and card candidate routes; the two release summaries stay summaries. */
+/** C37 search belongs to word and card candidate routes; the release summaries and the index stay lists. */
 export function candidateSearchVisible(routePath: string): boolean {
-  return routePath !== 'release' && routePath !== 'compare/release';
+  return routePath !== 'release' && routePath !== 'compare/release' && routePath !== '';
 }
 
-export default function WordCardPreview({ card, current, compare }: { card: PreviewCard | ReleaseCard | ReleasePage | LoadedRelease; current: EntryRecord | null; compare: boolean }) {
+function ReleaseIndexList({ card }: { card: ReleaseIndex }) {
+  const collator = new Intl.Collator('uk');
+  const listed = new Map(groupReleasePages(card.rows).dispositions.map(item => [item.cardId, item]));
+  const items = card.rows.map(row => {
+    const entry = readableEntry(row, 1);
+    const place = listed.get(row.card_id);
+    const pos = entry.facts.find(group => group.field === 'pos')?.facts.map(fact => fact.value).join('; ') || 'not supplied';
+    const href = place?.listed && place.key
+      ? `${pagePath(place.key)}#entry-${row.card_id}`
+      : `/lexicon-v2/release/${encodeURIComponent(row.card_id)}/`;
+    return { id: row.card_id, headword: entry.display, pos, status: row.status, href };
+  }).sort((a, b) => collator.compare(a.headword, b.headword) || (a.id < b.id ? -1 : 1));
+  return <div data-release-index>
+    <p data-release-version>Release {card.pin.release_version}</p>
+    <p data-release-count>{items.length} cards</p>
+    <Scroll label="Every card in this release"><table>
+      <caption>Every card in this release</caption>
+      <thead><tr><th scope="col">Headword</th><th scope="col">Part of speech</th><th scope="col">Status</th></tr></thead>
+      <tbody>{items.map(item => <tr key={item.id} data-index-card={item.id}>
+        <th scope="row" lang="uk"><a data-card-page href={item.href}>{item.headword}</a></th>
+        <td data-pos={item.pos}>{item.pos}</td>
+        <td data-status={item.status}>{item.status}</td>
+      </tr>)}</tbody>
+    </table></Scroll>
+  </div>;
+}
+
+export default function WordCardPreview({ card, current, compare }: { card: PreviewCard | ReleaseCard | ReleasePage | ReleaseIndex | LoadedRelease; current: EntryRecord | null; compare: boolean }) {
+  if (card.kind === 'release-index') return <ReleaseIndexList card={card} />;
   if (card.kind === 'release') {
     const { pages, dispositions } = groupReleasePages(card.rows);
     const entries = pages.reduce((n, page) => n + page.entries.length, 0);

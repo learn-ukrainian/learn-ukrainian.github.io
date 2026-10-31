@@ -642,6 +642,21 @@ def store_kind(path: str | os.PathLike[str]) -> StoreRef:
     return StoreRef("other")
 
 
+def store_data_dir(path: str | os.PathLike[str]) -> Path:
+    """The directory that holds the Sources store ``path`` names.
+
+    The live store is a selector link into ``sources-generations/``, and callers
+    often hold the already-followed generation path. Either way the store's
+    directory is the selector's, never the generation directory, so nothing derived
+    from it (a cache, a lock, a backup, a repository root) lands inside the
+    generations. Any other path (a fixture or staged copy) keeps its own parent.
+    """
+    ref = store_kind(path)
+    if ref.lock_dir is not None:
+        return ref.lock_dir.resolve()
+    return Path(path).resolve().parent
+
+
 def _names_selector(path: Path) -> bool:
     """True for a symlink whose text points into a Sources generation directory."""
     if not path.is_symlink():

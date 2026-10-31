@@ -28,6 +28,7 @@ from scripts.lib.readonly_sqlite import (
 from scripts.lib.readonly_sqlite import (
     refuse_writable_corpus_database,
 )
+from scripts.storage.topology import store_kind
 from scripts.wiki import sources_db
 
 ULIF_FORMS_PARSER_VERSION = ulif_dictua_parse.ULIF_FORMS_PARSER_VERSION
@@ -49,7 +50,9 @@ def build_ulif_forms(
 
     raw_cache = Path(raw_cache_path).resolve() if raw_cache_path is not None else ulif_raw_cache.cache_path(target_db)
 
-    lock_file = Path(f"{target_db}.build.lock")
+    # The lock sits beside the selector as `sources.db.build.lock`, never inside the generation directory.
+    ref = store_kind(target_db)
+    lock_file = ref.lock_dir / "sources.db.build.lock" if ref.lock_dir is not None else Path(f"{target_db}.build.lock")
     lock = FileLock(str(lock_file), timeout=0)
     try:
         lock.acquire(timeout=0)

@@ -1,6 +1,6 @@
 import type { EntryRecord } from './atlas-data-source';
 import type { PreviewCard } from './word-card-preview';
-import { loadWordCardRelease, type LoadedRelease, type ReleaseCard, type ReleasePin } from './word-card-release';
+import { loadWordCardRelease, type LoadedRelease, type ReleaseCard, type ReleaseIndex, type ReleasePin } from './word-card-release';
 import { groupReleasePages, type ReleasePage } from './word-card-readable';
 
 export const publicReleasePin = {
@@ -10,16 +10,27 @@ export const publicReleasePin = {
 } satisfies ReleasePin;
 
 export type PreviewInput = {
-  name: string; card: PreviewCard | ReleaseCard | ReleasePage | LoadedRelease; current: EntryRecord | null;
+  name: string; card: PreviewCard | ReleaseCard | ReleasePage | ReleaseIndex | LoadedRelease; current: EntryRecord | null;
   fingerprint: string; source: string; generatedAt: string; manifestVersion: string;
 };
 
 /** Static routes of the preview page: every input once as itself and once under `compare/`. */
 export function previewStaticPaths(samples: PreviewInput[]) {
   return samples.flatMap(sample => [false, true].map(compare => ({
-    params: { path: `${compare ? 'compare/' : ''}${sample.name}` },
+    params: { path: `${compare ? 'compare/' : ''}${sample.name}` as string | undefined },
     props: { ...sample, compare },
   })));
+}
+
+/** One index route for a loaded release. No compare twin. Absent when the release was refused. */
+export function previewIndexPaths(samples: PreviewInput[]) {
+  const sample = [...samples].reverse().find(input => input.name === 'release');
+  if (sample?.card.kind !== 'release') return [];
+  const card: ReleaseIndex = {
+    kind: 'release-index', rows: sample.card.rows, pin: sample.card.pin,
+    ...(sample.card.withdrawalNotice === undefined ? {} : { withdrawalNotice: sample.card.withdrawalNotice }),
+  };
+  return [{ params: { path: undefined }, props: { ...sample, name: '', compare: false, card } }];
 }
 
 /** Build-time selection only. Public input never consults controlled records or a current pointer. */

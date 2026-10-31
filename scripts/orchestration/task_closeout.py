@@ -170,11 +170,13 @@ class GhGitHubAdapter:
             ) from exc
 
     def registered_stream_epics(self, repository: str | None = None) -> list[int]:
-        """Use the checkout's registry only for its resolved repository.
+        """Return membership roots for this checkout's repository.
 
         Init and every mutation observation pass the task identity here, so
         both native ancestry and body fallback consume a bound registry.
-        Read-only registry inspection may omit the identity.
+        Read-only registry inspection may omit the identity. Closed epics
+        remain registered for launcher and session consumers and are excluded
+        here, matching the issue-quality checker.
         """
         if repository is not None:
             document = self._json(["gh", "repo", "view", "--json", "nameWithOwner"])
@@ -187,8 +189,11 @@ class GhGitHubAdapter:
         try:
             from scripts.orchestration import issue_stream_audit
 
+            # Closed epics stay in the file for launcher and Work API consumers.
+            # Membership roots are the audit registry only (#12176).
             registry = issue_stream_audit.load_registry(
-                self.repo_root / "scripts" / "config" / "issue_streams.yaml"
+                self.repo_root / "scripts" / "config" / "issue_streams.yaml",
+                audit_only=True,
             )
         except (OSError, ValueError) as exc:
             raise task_lifecycle.LifecycleError(

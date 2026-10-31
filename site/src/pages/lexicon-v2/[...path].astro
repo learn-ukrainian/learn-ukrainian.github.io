@@ -5,10 +5,10 @@ import AtlasTypeahead from '../../lexicon/AtlasTypeahead.astro';
 import WordCardPreview, { candidateSearchVisible } from '../../lexicon/WordCardPreview';
 import type { PreviewCard } from '../../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
-import type { LoadedRelease, ReleaseCard } from '../../lib/lexicon/word-card-release';
+import type { LoadedRelease, ReleaseCard, ReleaseIndex } from '../../lib/lexicon/word-card-release';
 import type { ReleasePage } from '../../lib/lexicon/word-card-readable';
 import '../../styles/word-card-preview.css';
-import { previewStaticPaths, releasePreviewInputs, type PreviewInput } from '../../lib/lexicon/word-card-preview-inputs';
+import { previewIndexPaths, previewStaticPaths, releasePreviewInputs, type PreviewInput } from '../../lib/lexicon/word-card-preview-inputs';
 
 export async function getStaticPaths() {
   if (process.env.ATLAS_WORD_CARD_PREVIEW !== '1') return [];
@@ -21,17 +21,19 @@ export async function getStaticPaths() {
   samples.push(...releasePreviewInputs({ enabled: true,
     controlled: import.meta.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS === '1',
     artifactPath: process.env.ATLAS_WORD_CARD_RELEASE_PATH, pin: process.env.ATLAS_WORD_CARD_RELEASE_PIN }));
-  return previewStaticPaths(samples);
+  return [...previewStaticPaths(samples), ...previewIndexPaths(samples)];
 }
 interface Props {
-  card: PreviewCard | ReleaseCard | ReleasePage | LoadedRelease; current: EntryRecord | null; compare: boolean;
+  card: PreviewCard | ReleaseCard | ReleasePage | ReleaseIndex | LoadedRelease; current: EntryRecord | null; compare: boolean;
   fingerprint: string; source: string; generatedAt: string; manifestVersion: string;
 }
 const { card, current, compare, fingerprint, source, generatedAt, manifestVersion } = Astro.props;
 const page = card.kind === 'release-page' ? card.page : null;
+const index = card.kind === 'release-index';
 const showCandidateSearch = candidateSearchVisible(Astro.params.path ?? '');
+const pinned = card.kind === 'release-card' || card.kind === 'release' || index;
 ---
-<CourseLayout title={page ? `${page.title} — word-card preview` : 'Word-card preview'} description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
+<CourseLayout title={page ? `${page.title} — word-card preview` : index ? 'Word cards' : 'Word-card preview'} description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
   <meta slot="head" name="robots" content="noindex, nofollow" />
   <main class="word-card-preview">
     {page ? <>
@@ -40,9 +42,9 @@ const showCandidateSearch = candidateSearchVisible(Astro.params.path ?? '');
       {compare && <p>Current / candidate comparison</p>}
     </> : <>
       <aside role="note" data-preview-banner>Optional noindex preview, not certified learner cards. Producer status is not linguistic certification or switch approval.</aside>
-      <h1>{compare ? 'Current / candidate comparison' : 'Word-card preview'}</h1>
+      <h1>{index ? 'Word cards' : compare ? 'Current / candidate comparison' : 'Word-card preview'}</h1>
       <p>Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code></p>
-      <p>{card.kind === 'release-card' || card.kind === 'release' ? 'Pinned release preview. Publication and switch gates remain separate.' : 'Real data unavailable. Data #10516 owns the certified export. Atlas retains deployed preview, accepted better/worse evidence and page-switch gates.'}</p>
+      <p>{pinned ? 'Pinned release preview. Publication and switch gates remain separate.' : 'Real data unavailable. Data #10516 owns the certified export. Atlas retains deployed preview, accepted better/worse evidence and page-switch gates.'}</p>
     </>}
     <div class:list={['preview-columns', { comparison: compare }]}>
       {compare && <section aria-label="Current presentation"><h2>Current presentation</h2>
