@@ -1405,6 +1405,28 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
         )
 
 
+def test_delivery_snapshot_does_not_execute_worker_git_config(sandbox):
+    """The supervisor must not execute worker-controlled Git configuration."""
+    worktree = sandbox.repo.parent / "worker"
+    head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    run_git(sandbox.repo, "worktree", "add", "-b", "delivery", str(worktree), head)
+    run_git(worktree, "push", "origin", "delivery")
+    run_git(sandbox.repo, "config", "extensions.worktreeConfig", "true")
+    marker = sandbox.repo.parent / "fsmonitor-executed"
+    run_git(worktree, "config", "--worktree", "core.fsmonitor", f'touch "{marker}"')
+    probe = TaskSpec("snapshot", "codex", "echo", None, "workspace-write", worktree,
+                     worktree / "prompt", worktree / "result")
+    observed = git.snapshot_delivery(probe, {
+        "task_id": "snapshot", "worktree_base_sha": head, "worktree_branch": "delivery",
+        "worktree_remote_url": str(sandbox.remote),
+    })
+    assert not marker.exists(), "the supervisor executed the worker's fsmonitor command"
+    assert observed["push_state"] == "pushed"
+    assert observed["head_sha"] == observed["remote_head_sha"] == head
+    assert observed["commits_ahead"] == 0
+    assert observed["worktree_dirty_on_exit"] is False
+
+
 @pytest.mark.parametrize("model,mode,owned,state,cause", [
     ("pushed", "workspace-write", ["other/"], "no_deliverable", "outside_owned_paths: delivered.txt"),
     ("pushed", "workspace-write", ["delivered.txt"], "done", None),
