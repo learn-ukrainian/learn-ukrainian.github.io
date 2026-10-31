@@ -1,16 +1,13 @@
 """Worktree creation and observational Git delivery reporting."""
 
 import contextvars
-import errno
 import fcntl
 import json
-import logging
 import os
 import re
 import shutil
-import stat
 import subprocess
-from contextlib import ExitStack, contextmanager, suppress
+from contextlib import contextmanager, suppress
 from datetime import datetime
 from functools import partial
 from pathlib import Path, PurePosixPath
@@ -25,7 +22,7 @@ from scripts.common.task_scratch import allocate
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import site_deps
 from scripts.dispatcher.types import TaskSpec
-from scripts.storage.topology import STORE_FILES, inspect_selector, store_kind
+from scripts.storage.topology import STORE_FILES
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"
@@ -326,11 +323,11 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         else:
             run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
         run_git(path, "reset", "--hard", sha)
-        provision_links(repo, path)
     # Outside the lock: a store miss runs one npm install, and other creations must not wait for it.
     site_deps.provision(repo, path)
 
 
+# Fixed conventional slots for sandbox refusal and legacy cleanup, never provisioning.
 DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
 # Legacy dependency links earlier dispatches provisioned; never provisioned again.
 NODE_LINKS = ("node_modules", "site/node_modules")
@@ -341,42 +338,6 @@ PULL_HEADS = "refs/pull/*/head"
 PULL_HEAD = re.compile(r"refs/pull/[0-9]+/head")
 
 
-def provision_links(repo: Path, worktree: Path) -> None:
-    """Share databases only; dependency installs stay local to each worktree (see site_deps)."""
-    repo = repo.absolute()
-    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    for relative in DATABASE_LINKS:
-        parts = Path(relative).parts
-        with ExitStack() as stack:
-            def open_directory(name, parent=None):
-                fd = os.open(name, flags, dir_fd=parent)
-                stack.callback(os.close, fd)
-                return fd
-
-            try:
-                source = open_directory(repo)
-                for part in parts[:-1]:
-                    source = open_directory(part, source)
-                target = os.stat(parts[-1], dir_fd=source, follow_symlinks=False)
-                selector = (
-                    relative == f"data/{STORE_FILES['sources'][0]}"
-                    and stat.S_ISLNK(target.st_mode)
-                    and store_kind(repo / relative).kind == "selector"
-                    and inspect_selector(repo / relative).layout == "selector"
-                )
-                if not (stat.S_ISREG(target.st_mode) or stat.S_ISDIR(target.st_mode) or selector):
-                    logging.getLogger(__name__).warning("Skipping link %s: source is not a real file or directory", relative)
-                    continue
-                destination = open_directory(worktree)
-                for part in parts[:-1]:
-                    with suppress(FileExistsError):
-                        os.mkdir(part, dir_fd=destination)
-                    destination = open_directory(part, destination)
-                os.symlink(repo / relative, parts[-1], dir_fd=destination)
-            except OSError as exc:
-                if exc.errno not in (errno.ENOENT, errno.ENOTDIR, errno.ELOOP, errno.EEXIST):
-                    raise
-                logging.getLogger(__name__).warning("Skipping link %s: %s", relative, errno.errorcode[exc.errno])
 
 
 def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:

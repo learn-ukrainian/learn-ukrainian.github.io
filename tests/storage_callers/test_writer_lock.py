@@ -116,10 +116,10 @@ import sys
 from pathlib import Path
 from scripts.storage import topology as t, generations as g
 path = Path(sys.argv[1])
-request = t._prepare_store_write_target("sources", intent="update", target=t.ExplicitStoreWriteTarget(path))
+request = t._prepare_store_write_target("sources", path.parent.parent, intent="update", target=t.ExplicitStoreWriteTarget(path))
 assert isinstance(request, t.ExplicitStoreWriteTarget), request
 with g.store_writer(request.location):
-    binding = t.resolve_store_for_write("sources", intent="update", target=request)
+    binding = t.resolve_store_for_write("sources", path.parent.parent, intent="update", target=request)
     assert isinstance(binding, t.WriteStoreBinding), binding
     assert binding.path == path.resolve()
 print("inherited binding verified")

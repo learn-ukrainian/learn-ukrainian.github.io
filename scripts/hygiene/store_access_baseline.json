@@ -239,20 +239,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/build/v7_build.py",
-      "kind": "store_path",
-      "scope": "_provision_data_symlinks",
-      "fingerprint": "155a8cce06ba3188f44a9a40c7b85b4480ca5337c6cde7c82d2a742925880ca5",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/v7_build.py",
-      "kind": "store_path",
-      "scope": "_provision_data_symlinks",
-      "fingerprint": "349066cc2e16a5564d1563d427b3ba0a4877334bac8cf43269ec32586e209390",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/lexicon/admit_fmu_boosters.py",
       "kind": "store_path",
       "scope": "<module>",
