@@ -191,6 +191,18 @@ meaning alone never counts. Validated binding `span` and store `gloss_en`
 locations retain their scalar exemptions; so does a meaning exactly equal to
 its record's exempt gloss cited from an open-dictionary row, in the store or
 in the one request record (same lemma, POS and entry) that built it.
+The level's `tests/curriculum/evidence/fixtures/<level>_gloss_candidates.json`
+capture uses the same scalar-location validation for a row's `translations`
+and `text`. Its source must be `dmklinger UK→EN`, its integer id must resolve
+in the live Sources table, and every captured table field must equal that row
+without text normalization. The row must belong to the store record's own
+lemma, and the capture record's lemma and POS must equal the store's. A formula
+capture must match its store text and cite a row for that formula's headword
+or declared alias. Missing,
+altered or private citations receive no exemption. Other fields, uncited
+Kaikki payloads and occurrences outside those validated scalars still scan.
+Structured string escapes are decoded for private-wording detection, without
+counting an occurrence twice when its literal spelling already matches.
 In a changed YAML/JSON file other than the level stores, a suspect formed only
 inside one record identical at the merge-base is listed under
 `pre_existing_suspects` (path, signal, locators, count) and does not fail the

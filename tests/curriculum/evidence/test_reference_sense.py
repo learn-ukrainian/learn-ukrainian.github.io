@@ -1797,3 +1797,89 @@ def test_book_only_meaning_still_fails_beside_a_cited_gloss(bound, tmp_path, cas
     assert result["status"] == "failed", result
     assert result["signals"]["mapping_copy"] == len(flagged)
     assert {s["path"].removeprefix("curriculum/l2-uk-en/evidence/a1/") for s in result["suspects"]} == flagged
+
+
+def _capture_fixture_scan(bound, tmp_path, mutate=lambda record: None, *, escape_notes=False, formula=False):
+    _root, api, _b = bound
+    wording = "invented confidential destination"
+    api.close()
+    with sqlite3.connect(api.sources_db) as db:
+        db.execute(
+            "UPDATE dmklinger_uk_en SET translations=?, text=?, source=? WHERE id=1",
+            (json.dumps([wording]), f"synthetic (noun): {wording}", "dmklinger UK→EN"),
+        )
+    captured = dict(api._db().execute("SELECT * FROM dmklinger_uk_en WHERE id=1").fetchone())
+    word = {"id": "W-001", "kind": "formula", "text": "synthetic"} if formula else WORD
+    record = {**{key: value for key, value in word.items() if key != "id"}, "rows": [captured]}
+    mutate(record)
+    neighbour = {"lemma": "neighbour", "pos": "noun", "locator": "p201 n#2"}
+    context = bindings.Context("a1", {}, [neighbour])
+    private = {neighbour["locator"]: {"meaning": wording}}
+    repo = tmp_path / "capture-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    git(repo, "commit", "--allow-empty", "-qm", "base")
+    path = repo / "tests/curriculum/evidence/fixtures/a1_gloss_candidates.json"
+    path.parent.mkdir(parents=True)
+    content = json.dumps({"records": {"W-001": record}}, indent=2)
+    if escape_notes:
+        content = content.replace('"note": "invented', '"note": "\\u0069nvented')
+    path.write_text(content)
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "capture")
+    result = sense_cli.leak_scan(repo, private, context, {"words": [word]}, api, base="HEAD^")
+    assert wording not in json.dumps(result)
+    return result
+
+
+@pytest.mark.parametrize("formula", [False, True])
+def test_leak_scan_exempts_cited_open_row_in_capture_fixture(bound, tmp_path, formula):
+    """#12226: a byte-identical cited open row must not gate as a private leak."""
+    result = _capture_fixture_scan(bound, tmp_path, formula=formula)
+    assert result["status"] == "checked", result
+    assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 0}
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "uncited",
+        "altered",
+        "wrong_id",
+        "other_lemma",
+        "private_source",
+        "lookalike",
+        "row_extra",
+        "record_extra",
+        "newline",
+    ],
+)
+def test_leak_scan_gates_uncited_or_altered_fixture_row(bound, tmp_path, case):
+    """#12226: missing, forged or non-identical citations must not admit private wording."""
+
+    def mutate(record):
+        captured = record["rows"][0]
+        if case == "uncited":
+            captured.pop("source")
+        elif case == "altered":
+            captured["text"] += " extra"
+        elif case == "wrong_id":
+            captured["id"] = 999999
+        elif case == "other_lemma":
+            record["lemma"] = "neighbour"
+        elif case == "private_source":
+            captured["source"] = "ohoiko_reference"
+        elif case == "lookalike":
+            captured["source"] = "dmklinger UK→ЕN"
+        elif case == "row_extra":
+            captured["note"] = "invented confidential destination"
+        elif case == "record_extra":
+            record["note"] = "invented confidential destination"
+        elif case == "newline":
+            record["note"] = "invented\nconfidential destination"
+
+    result = _capture_fixture_scan(bound, tmp_path, mutate, escape_notes=case in {"row_extra", "record_extra"})
+    assert result["status"] == "failed", result
+    assert result["signals"]["distinctive_wording"] > 0

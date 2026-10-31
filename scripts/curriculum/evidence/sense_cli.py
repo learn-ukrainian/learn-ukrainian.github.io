@@ -148,7 +148,7 @@ def _redact_validated_locations(
     or in the one request record that built it, is that row's text and is
     redacted with it.
     """
-    if kind not in {"bindings", "words", "requests"}:
+    if kind not in {"bindings", "words", "requests", "capture"}:
         return content
     try:
         text = content.decode("utf-8")
@@ -210,14 +210,61 @@ def _redact_validated_locations(
             other = blanked.value if isinstance(node, yaml.SequenceNode) else [p for kv in blanked.value for p in kv]
             return len(pairs) == len(other) and all(same(a, b, seen) for a, b in zip(pairs, other, strict=True))
 
-        nodes = mapping(tree)["bindings" if kind == "bindings" else "words"]
-        if not isinstance(nodes, yaml.SequenceNode):
-            return content
         payload = yaml.safe_load(text)
-        entries = payload.get("bindings" if kind == "bindings" else "words", [])
+        if kind == "capture":
+            nodes = mapping(mapping(tree)["records"])
+            entries = [(wid, entry, nodes[wid]) for wid, entry in payload["records"].items()]
+        else:
+            key = "bindings" if kind == "bindings" else "words"
+            nodes = mapping(tree)[key]
+            if not isinstance(nodes, yaml.SequenceNode):
+                return content
+            entries = ((None, entry, node) for entry, node in zip(payload.get(key, []), nodes.value, strict=True))
         ranges = []
-        for entry, node in zip(entries, nodes.value, strict=True):
+        for wid, entry, node in entries:
             fields = mapping(node)
+            if kind == "capture":
+                word = words.get(wid)
+                if not word:
+                    continue
+                if word.get("kind") == "formula":
+                    if (entry.get("kind"), entry.get("text")) != ("formula", word["text"]):
+                        continue
+                    headwords = {
+                        bindings.formulas.printed_headword(word["text"]),
+                        *(bindings.formulas.headword(alias) for alias in word.get("aliases", [])),
+                    }
+                else:
+                    if (entry.get("lemma"), entry.get("pos")) != (word["lemma"], word["pos"]):
+                        continue
+                    headwords = {sources.unstressed_headword(word["lemma"])}
+                rows = fields.get("rows")
+                if not isinstance(rows, yaml.SequenceNode):
+                    continue
+                for row, row_node in zip(entry.get("rows", []), rows.value, strict=True):
+                    if not isinstance(row, dict) or type(row.get("id")) is not int:
+                        continue
+                    cited = api._db().execute("SELECT * FROM dmklinger_uk_en WHERE id=?", (row["id"],)).fetchone()
+                    if cited is None:
+                        continue
+                    cited = dict(cited)
+                    if (
+                        cited.get("source") != "dmklinger UK→EN"
+                        or (
+                            bindings.formulas.headword(cited["word"])
+                            if word.get("kind") == "formula"
+                            else sources.unstressed_headword(cited["word"])
+                        )
+                        not in headwords
+                        or any(
+                            type(row.get(key)) is not type(value) or row.get(key) != value
+                            for key, value in cited.items()
+                        )
+                    ):
+                        continue
+                    row_fields = mapping(row_node)
+                    ranges.extend(exempt([(row_fields[key], cited[key]) for key in ("translations", "text")]))
+                continue
             if kind == "requests":
                 # A request meaning is public only through the cited gloss of the one store
                 # record built from it; the request itself cites nothing.
@@ -599,21 +646,40 @@ def leak_scan(
                 forms.update(mapping_forms.get(term, ()))
         return meanings & forms
 
-    def detect(text: str, path: str) -> dict[str, Counter]:
+    def wording_ids(text: str) -> Counter:
         wording = Counter()
         for match in wording_pattern.finditer(_scan_normalize(text)):
             for term in wording_prefixes[match[1]]:
                 wording.update(distinctive[term])
+        return wording
+
+    def detect(text: str, path: str) -> dict[str, Counter]:
+        wording = wording_ids(text)
         pairs = set().union(*(mapping_ids(line) for line in text.splitlines()))
         # Parse only structured files with a possible cross-line pair. Sibling
         # YAML/JSON records cannot lend each other a lemma or a meaning.
-        if Path(path).suffix in {".yaml", ".yml", ".json", ".jsonl"} and (
-            mapping_ids(text) - pairs or any(escape in text for escape in (r"\u", r"\U", r"\x", r"\N"))
-        ):
+        if Path(path).suffix in {".yaml", ".yml", ".json", ".jsonl"} and (mapping_ids(text) - pairs or "\\" in text):
             try:
                 for doc in yaml.load_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)):
                     for record in _record_texts(doc):
                         pairs.update(mapping_ids(record))
+                if "\\" in text:
+                    # Escapes outside exempt scalars must not hide private wording.
+                    # Count only matches missing from each scalar's literal spelling.
+                    seen = set()
+                    pending = list(yaml.compose_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)))
+                    while pending:
+                        node = pending.pop()
+                        if node is None or id(node) in seen:
+                            continue
+                        seen.add(id(node))
+                        if isinstance(node, yaml.ScalarNode):
+                            literal = text[node.start_mark.index : node.end_mark.index]
+                            wording.update(wording_ids(node.value) - wording_ids(literal))
+                        elif isinstance(node, yaml.SequenceNode):
+                            pending.extend(node.value)
+                        elif isinstance(node, yaml.MappingNode):
+                            pending.extend(child for pair in node.value for child in pair)
             except yaml.YAMLError:
                 # Invalid structured data still receives the literal line scan.
                 pass
@@ -698,6 +764,8 @@ def leak_scan(
             if path == prefix + "_words.yaml"
             else "requests"
             if Path(path).parent == Path(prefix, "_requests") and path.endswith(".words.yaml")
+            else "capture"
+            if path == f"tests/curriculum/evidence/fixtures/{context.level}_gloss_candidates.json"
             else "other"
         )
         scan(
