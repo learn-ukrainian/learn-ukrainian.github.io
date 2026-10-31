@@ -22,6 +22,7 @@ from scripts.review.receipts import ledger
 FIXTURE = json.loads((Path(__file__).parent / "fixtures/reference_sense_synthetic.json").read_text())
 WORD = {"id": "W-001", "lemma": "synthetic", "pos": "noun"}
 KEY = FIXTURE["key"].encode()
+VESUM_ENTRY = {"source": "vesum", "entry_id": 7}
 
 
 def row(value, index=1, *, word="synthetic", pos="noun"):
@@ -1610,18 +1611,19 @@ def test_store_gloss_is_public_only_as_an_open_atom_of_its_own_lemma(bound, tmp_
     assert meaning not in json.dumps(result)
 
 
-def _meaning_scan(bound, tmp_path, *, meaning, request_entry=None, prose=None):
+def _meaning_scan(bound, tmp_path, *, meaning, entry=VESUM_ENTRY, request=None, path="probe.words.yaml", prose=None):
     """Scan a store record and its request; the private meaning is one word of row 1's open head."""
     _root, api, _b = bound
     context = bindings.Context("a1", {}, bindings.public_entries(a1_reference.INVENTORY_PATH))
     private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": "first"}}
-    entry = {"entry_id": 7, "source": "synthetic"}
-    word = {**WORD, "entry": entry, "forms": [], "meaning": meaning}
+    word = {**WORD, **({"entry": entry} if entry else {}), "forms": [], "meaning": meaning}
     selection = sense_cli._select(word, context, api)
     record = {**word, "gloss_en": selection.gloss, "gloss_source": selection.source}
     if selection.ref is not None:
         record["gloss_ref"] = selection.ref
-    request = {"lemma": WORD["lemma"], "pos": WORD["pos"], "want": "new", "entry": request_entry or entry}
+    if request is None:
+        own = {"lemma": WORD["lemma"], "pos": WORD["pos"], "want": "new", **({"entry": entry} if entry else {})}
+        request = lock_yaml({"level": "a1", "words": [{**own, "meaning": meaning}]}).decode()
     repo = tmp_path / "meaning-probe"
     repo.mkdir()
     git(repo, "init", "-q")
@@ -1629,11 +1631,9 @@ def _meaning_scan(bound, tmp_path, *, meaning, request_entry=None, prose=None):
     git(repo, "config", "user.name", "Fixture")
     git(repo, "commit", "--allow-empty", "-qm", "base")
     level = repo / "curriculum/l2-uk-en/evidence/a1"
-    (level / "_requests").mkdir(parents=True)
+    (level / "_requests" / path).parent.mkdir(parents=True)
     (level / "_words.yaml").write_bytes(lock_yaml({"words": [record]}))
-    (level / "_requests/probe.words.yaml").write_bytes(
-        lock_yaml({"level": "a1", "words": [{**request, "meaning": meaning}]})
-    )
+    (level / "_requests" / path).write_text(request)
     if prose is not None:
         (level / "notes.yaml").write_text(prose)
     git(repo, "add", ".")
@@ -1650,23 +1650,34 @@ def test_meaning_equal_to_its_cited_gloss_is_public_in_store_and_request(bound, 
     assert result["status"] == "checked", result
 
 
+REQUEST = "level: a1\nwords:\n- lemma: synthetic\n  pos: noun\n  want: new\n  entry: {%s}\n  meaning: %s\n"
+REQUEST_PAIR = REQUEST % ("source: vesum, entry_id: 7", ">-\n    first translation") + (
+    "- lemma: synthetic\n  pos: noun\n  want: new\n  meaning: first\n"
+)
+
+
 @pytest.mark.parametrize(
-    "case,flagged",
+    "case,options,flagged",
     [
-        ("meaning_alone", {"_words.yaml", "_requests/probe.words.yaml"}),
-        ("request_without_cited_store_record", {"_requests/probe.words.yaml"}),
-        ("free_prose", {"notes.yaml"}),
+        ("meaning_alone", {"meaning": "first"}, {"_words.yaml", "_requests/probe.words.yaml"}),
+        (
+            "request_without_cited_store_record",
+            {"request": REQUEST % ("source: vesum, entry_id: 8", "first translation")},
+            {"_requests/probe.words.yaml"},
+        ),
+        ("free_prose", {"prose": "texts:\n- quote: synthetic\n  supports: the first sense\n"}, {"notes.yaml"}),
+        ("block_scalar_then_book_only_record", {"request": REQUEST_PAIR}, {"_requests/probe.words.yaml"}),
+        (
+            "duplicate_entry_keys",
+            {"request": REQUEST % ("source: vesum, entry_id: 8, entry_id: 7", "first translation")},
+            {"_requests/probe.words.yaml"},
+        ),
+        ("request_without_entry", {"entry": None}, {"_requests/probe.words.yaml"}),
+        ("nested_request_path", {"path": "nested/probe.words.yaml"}, {"_requests/nested/probe.words.yaml"}),
     ],
 )
-def test_book_only_meaning_still_fails_beside_a_cited_gloss(bound, tmp_path, case, flagged):
-    meaning = "first" if case == "meaning_alone" else "first translation"
-    _selection, result = _meaning_scan(
-        bound,
-        tmp_path,
-        meaning=meaning,
-        request_entry={"entry_id": 8, "source": "synthetic"} if case == "request_without_cited_store_record" else None,
-        prose="texts:\n- quote: synthetic\n  supports: the first sense\n" if case == "free_prose" else None,
-    )
+def test_book_only_meaning_still_fails_beside_a_cited_gloss(bound, tmp_path, case, options, flagged):
+    _selection, result = _meaning_scan(bound, tmp_path, **{"meaning": "first translation", **options})
     assert result["status"] == "failed", result
     assert result["signals"]["mapping_copy"] == len(flagged)
     assert {s["path"].removeprefix("curriculum/l2-uk-en/evidence/a1/") for s in result["suspects"]} == flagged
