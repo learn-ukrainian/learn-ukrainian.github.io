@@ -67,7 +67,9 @@ def _is_review_task(task: Mapping[str, Any]) -> bool:
 
     An advisory decision (``advisory_role``) is not a review; its consumer checks it.
     """
-    if task.get("advisory_role") is not None:
+    if task.get("advisory_role") is not None or any(
+        task.get(key) for key in ("trial_label", "trial_role", "trial_qualified_task")
+    ):
         return False
     return review_typed(dict(task)) or bool(task.get("review_mode") or task.get("type") == "review")
 

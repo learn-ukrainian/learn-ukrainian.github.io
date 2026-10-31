@@ -455,3 +455,51 @@ def test_pause_lifts_by_itself_after_until(headroom_box):
     """Ported from tests/test_model_pause.py::test_pause_lifts_by_itself_after_until."""
     headroom_box.policy({"pauses": [{"pattern": "claude-*", "until": "2000-01-01T00:00:00Z"}]})
     assert headroom_box.dispatch() == 0
+
+
+@pytest.mark.parametrize("defect", [None, "missing_pair", "trial_pair", "input", "head", "role", "label", "write"])
+def test_trial_shadow_requires_qualified_matching_task(headroom_box, monkeypatch, capsys, defect):
+    from scripts.dispatcher import headroom
+
+    box = headroom_box
+    box.policy({})
+    monkeypatch.setattr(git, "resolve_repo", lambda *_a: (box.root, {"key": "public", "github": "example/repo"}))
+    now = datetime.now(UTC)
+    entry = {"model": "gpt-6.1-sol", "roles": ["authoring"], "reason": "New role measurement with no prior runs",
+             "start": (now - timedelta(days=1)).isoformat(), "review_date": (now + timedelta(days=1)).isoformat(),
+             "decided_by": "cto", "evidence": {"window_start": (now - timedelta(days=2)).isoformat(),
+                 "window_end": (now - timedelta(days=1)).isoformat(), "dispatch_records": []}}
+    (box.root / "model-roles.json").write_text(json.dumps({"bans": [], "trials": [entry]}))
+    qualified = {"task_id": "qualified", "run_nonce": "qualified-run", "model": "claude-sonnet-5-5",
+                 "agent": "claude", "mode": "read-only", "research_role": "authoring", "status": "done",
+                 "repository_id": "example/repo", "worktree_base_sha": "a" * 40,
+                 "prompt_sha256": store.digest(b"Explain the result")}
+    trial = {**qualified, "task_id": "trial", "model": "gpt-6.1-sol", "agent": "codex", "schema_version": 2,
+             "trial_role": "authoring", "trial_qualified_task": "qualified", "trial_label": "trial"}
+    if defect == "trial_pair":
+        qualified["trial_label"] = "trial"
+    elif defect == "input":
+        qualified["prompt_sha256"] = "b" * 64
+    elif defect == "head":
+        qualified["worktree_base_sha"] = "b" * 40
+    elif defect == "role":
+        qualified["research_role"] = "recon"
+    elif defect == "label":
+        trial.pop("trial_label")
+    elif defect == "write":
+        trial["mode"] = "workspace-write"
+    if defect != "missing_pair":
+        (box.tasks / "qualified.json").write_text(json.dumps(qualified))
+    flags = ["--trial-role", "authoring", "--trial-qualified-task", "qualified", "--pinned-head", "a" * 40,
+             "--research-role", "authoring"]
+    if defect in {"label", "write"}:
+        with pytest.raises(ValueError, match="MODEL_ROLE_TRIAL_REFUSED"):
+            headroom.check_plan("codex", "gpt-6.1-sol", trial)
+    else:
+        result = box.dispatch(*flags, agent="codex", model="gpt-6.1-sol")
+        assert result == (0 if defect is None else 2)
+        if defect is not None:
+            assert "MODEL_ROLE_TRIAL_REFUSED" in capsys.readouterr().err
+        else:
+            headroom.check_plan("codex", "gpt-6.1-sol", trial)
+    assert box.launches == ([("codex", "gpt-6.1-sol", None)] if defect is None else [])

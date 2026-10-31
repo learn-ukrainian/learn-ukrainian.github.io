@@ -503,6 +503,15 @@ def resolve_and_admit(
     if review_activity:
         _refuse_non_review_models(target_model for _, target_model, _ in resolved)
     if new_dispatch or review_dispatch:
+        from .model_pause import dispatch_roles, refuse_model_roles
+
+        roles = dispatch_roles({"mode": mode, "research_role": task_role}, review=review_activity)
+        if not review_activity:
+            for requested_model in models:
+                refuse_model_roles(requested_model, roles)
+        for selected in (target_model or _seat_default_model(recipient, harness)
+                         for recipient, target_model, _ in resolved):
+            refuse_model_roles(selected, roles)
         # Operator pauses apply to new work only, never to messaging or to
         # lifecycle operations on existing work.
         # Checked against the identities actually selected, so an automatic

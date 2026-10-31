@@ -21,6 +21,21 @@ from scripts.review.ukrainian_seats import (
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
 
 
+@pytest.mark.parametrize("marker", ["trial_label", "trial_role", "trial_qualified_task"])
+def test_trial_never_becomes_review_of_record(tmp_path, monkeypatch, marker):
+    from scripts.review.review_lineage import review_records
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, **{marker: "trial"})
+    with pytest.raises(recorder.RecordError, match="MODEL_ROLE_TRIAL_REFUSED"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == [] and calls["posts"] == 0
+    task = json.loads((tasks / "review-one.json").read_text())
+    with pytest.raises(recorder.RecordError, match="MODEL_ROLE_TRIAL_REFUSED"):
+        recorder.reviewer_identity(task)
+    assert review_records(tasks, repository="owner/repo") == []
+
+
 @pytest.fixture
 def scanned_recorder(monkeypatch, tmp_path):
     """Exercise the supported publisher; fake only GitHub reads and transport."""

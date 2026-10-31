@@ -63,6 +63,62 @@ inferring eligibility or priority from rung position or from this text.
 
 Match the EXACT command — not a principle. Memory does not enforce; the dispatch tool does. Established 2026-05-06 after repeated drift on cost discipline.
 
+## CTO role bans and shadow trials
+
+The CTO has delegated authority to ban a model from specified roles and to run
+it on trial in specified roles, including authoring, review, driving and advice.
+This delegation does not grant authority to change other policy. Existing
+model pauses, headroom caps, review ladders, designated approval and catalog
+retirements still apply. A ban or trial can only restrict those gates.
+
+The CTO owns `model-roles.json`, next to the existing `model-pause.json` policy.
+`LU_MODEL_ROLES_FILE` can select its location. Its root contains `bans` and
+`trials` lists. A missing file means no role restrictions; an unreadable file
+or any malformed entry refuses new admissions and reviewer selections.
+Every entry records:
+
+- `model`, a concrete model identity; aliases resolve to their catalog model.
+- `roles`, the roles affected by this decision.
+- `reason`, citing the model's dispatch task IDs and explaining the decision.
+- `start` and `review_date`, explicit UTC timestamps, and `decided_by`.
+- `evidence`, containing UTC `window_start`, `window_end` and
+  `dispatch_records`. Each record contains `task_id`, terminal `status`,
+  `duration_s`, `timeout_source`, `cause` and boolean `model_failure`.
+
+Build dispatch evidence with `role_dispatch_evidence(task_id)` in
+`scripts.agent_runtime.model_pause`. The loader checks evidence against the
+canonical dispatch records for the named model and window. A caller-imposed
+hard timeout, including a short deadline, or caller cancellation is not
+evidence that the model failed. Record its caller source and actual cause with
+`model_failure: false`; unknown timeout causes also establish no model failure.
+For a new model's trial, a window with no dispatches records an empty list and
+the reason explains the absence of history. Preserve the full window's evidence,
+including successful runs and caller-limited runs, rather than selecting only
+unsuccessful runs.
+
+At the review date the entry expires unless the CTO renews it with a new date
+and current evidence. Expiry grants no new catalog authority or qualification.
+Renewal and qualification decisions record their measurement and decision maker.
+Role names `implementation` and `coding` mean authoring; `driver` and
+`orchestration` mean driving; `advisory` and `consult` mean advice; `reviewer`
+and `critique` mean review. Other named roles retain their names. Admission
+also infers authoring from write mode and review from review flags. A model
+under an active restriction requires a declared or inferred role.
+
+Trial dispatches are read-only shadow seats explicitly labelled `trial` and
+paired with a qualified non-trial seat on the same input, role and exact head.
+Use `--trial-role ROLE --trial-qualified-task TASK --pinned-head SHA` and
+declare the role with `--research-role ROLE`. The qualified task must have
+finished successfully. Admission binds its run nonce, repository, input digest
+and exact head, and rechecks that binding before the provider starts.
+Keep the shadow's result and dispatch record for measurement. The qualified
+seat remains responsible for the work and every gate. A trial never supplies
+review of record, designated approval or any other gate, even if its result
+says APPROVE. No trial changes retirement, risk, independence or capability
+requirements. Qualification requires measured evidence and the approval
+already required for the resulting routing change; ending a trial alone
+does not add a model to a ladder.
+
 ## Worker resource policy
 
 **Default author and reviewer pairs (operator C-2903, 2026-10-27).** This is the single

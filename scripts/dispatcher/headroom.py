@@ -25,6 +25,11 @@ def check_plan(agent: str, model: str, record: dict, *, review: bool = False) ->
         [model], policy=model_pause.policy_for_seat(agent, review=review),
         used_pct=model_pause.account_used_pct(account),
     )
+    from scripts.dispatcher import checks
+
+    trial = checks.check_trial_shadow(agent, model, record)
+    roles = model_pause.dispatch_roles(record, review=review)
+    model_pause.refuse_model_roles(model, roles, shadow=bool(trial))
 
 
 def check_runtime(agent: str, model: str) -> None:

@@ -1686,6 +1686,9 @@ def _review_branch(task: dict[str, Any]) -> str:
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
     from scripts.guardrails.worktree_containment import PROTECTED_BRANCHES
 
+    if any(task.get(key) for key in ("trial_label", "trial_role", "trial_qualified_task")):
+        raise RecordError("MODEL_ROLE_TRIAL_REFUSED: a trial never supplies review of record")
+
     # V2 owns a separate checkout branch; only review_branch identifies its PR.
     fields = ("review_branch",) if task.get("schema_version") == 2 else ("review_branch", "worktree_branch")
     branches = []
@@ -2183,6 +2186,8 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
             task = read_task_record(path)
             if task is None:
                 continue
+            if any(task.get(key) for key in ("trial_label", "trial_role", "trial_qualified_task")):
+                continue
             prep = task.get("worktree_prep")
             prep_sha = prep.get("base_sha") if isinstance(prep, dict) else None
             prep_matches = (
@@ -2273,6 +2278,8 @@ def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
     The recorder publishes a verdict only for this identity; the approval
     carry-over applies the same rule to every run in a PR's review lineage.
     """
+    if any(task.get(key) for key in ("trial_label", "trial_role", "trial_qualified_task")):
+        raise RecordError("MODEL_ROLE_TRIAL_REFUSED: a trial never supplies review of record")
     cursor = task.get("agent") == "cursor"
     native_grok = task.get("agent") in {"grok", "grok-build"}
     reported = task.get("resolved_model") if cursor or native_grok else task.get("model")

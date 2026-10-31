@@ -289,3 +289,58 @@ def test_usage_readers_require_a_named_claude_account(monkeypatch) -> None:
             mp.account_used_pct(bare)
     with pytest.raises(TypeError, match="used_pct"):
         mp.refuse_paused_models(["claude-opus-5-5"], policy={"headroom": []}, now=NOW)
+
+
+@pytest.mark.parametrize("case,expected", [
+    ("ban", "MODEL_ROLE_BANNED"), ("other_role", None), ("expired", None), ("future", None),
+    ("trial", "MODEL_ROLE_TRIAL_SHADOW_REQUIRED"), ("shadow", None),
+    ("missing_role", "MODEL_ROLE_REQUIRED"), ("malformed", "MODEL_ROLE_POLICY_INVALID"),
+    ("caller_failure", "MODEL_ROLE_POLICY_INVALID"), ("forged_source", "MODEL_ROLE_POLICY_INVALID"),
+    ("wrong_model", "MODEL_ROLE_POLICY_INVALID"), ("alias", "MODEL_ROLE_BANNED"),
+    ("unknown_model", "MODEL_ROLE_POLICY_INVALID"),
+])
+def test_role_policy_validation_and_expiry(tmp_path, monkeypatch, case, expected):
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    task = {"task_id": "role-run", "model": "claude-opus-5-5", "status": "timeout", "duration_s": 12,
+            "started_at": "2026-10-09T12:00:00Z", "kill_reason": "hard_timeout",
+            "error": "process deadline exceeded"}
+    (tasks / "role-run.json").write_text(json.dumps(task))
+    run = {"task_id": "role-run", "status": "timeout", "duration_s": 12, "timeout_source": "caller",
+           "cause": "process deadline exceeded", "model_failure": False}
+    entry = {"model": "claude-opus-5-5", "roles": ["review"], "reason": "Decision citing role-run",
+             "start": "2026-10-10T00:00:00Z", "review_date": "2026-10-12T00:00:00Z", "decided_by": "cto",
+             "evidence": {"window_start": "2026-10-09T00:00:00Z", "window_end": "2026-10-10T00:00:00Z",
+                          "dispatch_records": [run]}}
+    policy = {"bans": [entry], "trials": []}
+    roles, model, shadow = {"review"}, "claude-opus-5-5", False
+    if case == "other_role":
+        roles = {"implementation"}
+    elif case == "expired":
+        entry["review_date"] = NOW.isoformat()
+    elif case == "future":
+        entry["start"] = "2026-10-11T00:00:00Z"
+    elif case in {"trial", "shadow"}:
+        policy = {"bans": [], "trials": [entry]}
+        shadow = case == "shadow"
+    elif case == "missing_role":
+        roles = set()
+    elif case == "malformed":
+        entry["roles"] = "review"
+    elif case == "caller_failure":
+        run["model_failure"] = True
+    elif case == "forged_source":
+        run.update(timeout_source="provider", model_failure=True)
+    elif case == "wrong_model":
+        task["model"] = "gpt-6.1-sol"
+        (tasks / "role-run.json").write_text(json.dumps(task))
+    elif case == "alias":
+        model = "opus[1m]"
+    elif case == "unknown_model":
+        entry["model"] = "unknown-model"
+    path = tmp_path / "model-roles.json"
+    path.write_text(json.dumps(policy))
+    monkeypatch.setenv("LU_MODEL_ROLES_FILE", str(path))
+    reason = mp.role_refusal_reason(model, roles, now=NOW, shadow=shadow)
+    assert (reason.split(":", 1)[0] if reason else None) == expected
