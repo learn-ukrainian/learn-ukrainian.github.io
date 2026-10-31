@@ -820,11 +820,11 @@ def other_lane_record(payload: Any, lane: str) -> Mapping[str, Any]:
 def account_weekly_used_pct(payload: Any, *, account: ClaudeAccount) -> float | None:
     """``account``'s weekly used-% from a routing-budget payload, or None.
 
-    Only a fresh reading may block: the default account's lane row when its
-    probe is fresh and not withdrawn (status ``unknown``), another account's
-    ``ok`` row (measured within the cache TTL, no failure since) with a known
-    weekly ``left_pct``. A stale, unknown or missing reading, and an
-    unresolved account, give None.
+    The account's own ``ok`` row (measured within the cache TTL, no failure
+    since) with a known weekly ``left_pct`` takes precedence, including for
+    the default account. Only when its account row is absent may the default
+    account use its fresh lane probe. A stale, unknown or missing reading,
+    and an unresolved account, give None.
     """
     from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
 
@@ -832,6 +832,14 @@ def account_weekly_used_pct(payload: Any, *, account: ClaudeAccount) -> float | 
     if not isinstance(payload, Mapping) or account.label is None:
         return None
     payload = bind_snapshot(payload, account=account)
+    rows = payload.get("claude_accounts")
+    row_key = f"claude:{account.label}"
+    if isinstance(rows, Mapping) and row_key in rows:
+        row = rows[row_key]
+        if not isinstance(row, Mapping) or row.get("status") != "ok" or row.get("stale") is not False:
+            return None
+        left = account_left_pct(row.get("weekly"))
+        return None if left is None else 100.0 - left
     if account.label == DEFAULT_CLAUDE_ACCOUNT:
         agents = payload.get("agents")
         info = agents.get(CLAUDE_LANE) if isinstance(agents, Mapping) else None
@@ -846,12 +854,7 @@ def account_weekly_used_pct(payload: Any, *, account: ClaudeAccount) -> float | 
         if isinstance(value, int | float) and not isinstance(value, bool):
             return float(value)
         return None
-    rows = payload.get("claude_accounts")
-    row = rows.get(f"claude:{account.label}") if isinstance(rows, Mapping) else None
-    if not isinstance(row, Mapping) or row.get("status") != "ok" or row.get("stale") is not False:
-        return None
-    left = account_left_pct(row.get("weekly"))
-    return None if left is None else 100.0 - left
+    return None
 
 
 def capacity_verdict(payload: Mapping[str, Any] | None, *, account: ClaudeAccount) -> str:

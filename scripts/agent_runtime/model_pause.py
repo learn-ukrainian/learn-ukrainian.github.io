@@ -21,8 +21,8 @@ entry is inert, so the pause lifts by itself at the reset.
 ``headroom``: a model matching ``pattern`` is refused while the lane's weekly
 plan usage (routing-budget) is at or above ``max_weekly_used_pct``. The
 ``claude`` lane's usage is the meter of the account the claude seat runs as,
-which every reader names (``account_used_pct``, #10619, #10630). Unreadable
-usage does not block (a warning is the caller's to log); a missing or invalid
+which every reader names (``account_used_pct``, #10619, #10630). Unknown or
+stale usage refuses models matching a headroom entry; a missing or invalid
 policy file means no pauses.
 """
 
@@ -32,6 +32,7 @@ import fnmatch
 import functools
 import http.client
 import json
+import math
 import os
 import urllib.request
 from collections.abc import Callable, Iterable, Mapping
@@ -222,7 +223,9 @@ def headroom_stop(
         if not _matches(pattern, model):
             continue
         used = used_pct(lane)
-        if used is not None and used >= float(cap):
+        if used is None or not math.isfinite(used) or not 0 <= used <= 100:
+            return {**entry, "used_pct": None}
+        if used >= float(cap):
             return {**entry, "used_pct": used}
     return None
 
@@ -241,7 +244,10 @@ def refusal_reason(
     # Public-safe codes only: reasons, times and usage stay in the private policy.
     if active_pause(model, policy, now):
         return f"MODEL_PAUSED: {model} is paused by operator policy"
-    if headroom_stop(model, policy, used_pct):
+    stop = headroom_stop(model, policy, used_pct)
+    if stop is not None and stop["used_pct"] is None:
+        return f"MODEL_HEADROOM_USAGE_UNKNOWN: {model} has no fresh plan usage reading"
+    if stop is not None:
         return f"MODEL_HEADROOM: {model} is held for plan headroom"
     return None
 
