@@ -925,6 +925,63 @@ def test_retention_hold_blocks_settlement_salvage_and_cleanup(sandbox, monkeypat
     assert run_git(sandbox.remote, "rev-parse", ref)
 
 
+def test_salvage_uses_the_trusted_linter_when_the_worktree_copy_exits_clean(sandbox, monkeypatch, synthetic_opsec):
+    """Defect: a worktree can replace its blob linter with a script that exits 0 and salvage will push."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    tree, ref = Path(record["worktree_path"]), _salvage_ref(record)
+    (tree / "scripts/audit/lint_opsec_leaks.py").write_text("raise SystemExit(0)\n")
+    (tree / "notes.txt").write_text(".".join(("10", "1", "2", "3")) + "\n")
+    in_process_repo(sandbox, monkeypatch)
+    worker.settle_left_worktrees(salvage=True)
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("retained", "opsec_refused")
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+
+
+def test_retention_hold_survives_a_stale_record_write_and_skips_inspection(sandbox, monkeypatch):
+    """Defect: a supervisor write from an older copy drops the hold, and the old-tree report still reads Git."""
+    from datetime import UTC, datetime, timedelta
+
+    from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    tree = Path(record["worktree_path"])
+    sandbox.cli("retain-worktree", record["task_id"], "--set")
+    path = sandbox.tasks / f"{record['task_id']}.json"
+    stale = json.loads(path.read_text())
+    stale.pop("worktree_retention_hold")
+    stale["worktree_disposition"] = "removed"
+    stale["worktree_disposition_reason"] = "clean"
+    in_process_repo(sandbox, monkeypatch)
+    store.replace(stale, path)
+    kept = json.loads(path.read_text())
+    assert kept["worktree_retention_hold"] is True
+    assert kept["worktree_disposition_reason"] == "retention_hold"
+    naked = dict(record)
+    naked.pop("worktree_retention_hold", None)
+    assert git.settle_worktree(naked)["worktree_disposition_reason"] == "retention_hold"
+    assert tree.is_dir()
+    kept["finished_at"] = (datetime.now(UTC) - timedelta(hours=7)).isoformat()
+    path.write_text(json.dumps(kept))
+    (sandbox.repo / "batch_state").mkdir()
+    (sandbox.repo / "batch_state/tasks").symlink_to(sandbox.tasks, target_is_directory=True)
+    monkeypatch.setattr(cleanup.worktree_git, "control_plane_root", lambda root: sandbox.repo)
+
+    def refused(*args, **kwargs):
+        raise AssertionError("held tree was inspected")
+
+    monkeypatch.setattr(cleanup, "_inspect_terminal_git", refused)
+    report = cleanup.report_terminal_worktrees(sandbox.repo)
+    assert report["tasks"] == []
+    sandbox.cli("retain-worktree", record["task_id"], "--clear")
+    cleared = json.loads(path.read_text())
+    assert "worktree_retention_hold" not in cleared
+    cleared["worktree_disposition"] = "removed"
+    cleared["worktree_disposition_reason"] = "clean"
+    store.replace(cleared, path)
+    assert "worktree_retention_hold" not in json.loads(path.read_text())
+
+
 @pytest.mark.parametrize("pull_ref,disposition", [(True, ("removed", "clean")), (False, ("retained", "unpublished"))])
 def test_recovery_removes_squash_merged_write_task_only_when_a_pull_ref_holds_its_head(sandbox, pull_ref, disposition):
     """CTO residual: after a squash merge and branch deletion, D3 never fired, so the worktree stayed forever."""

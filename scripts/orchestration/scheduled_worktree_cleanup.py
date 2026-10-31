@@ -541,6 +541,8 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
                 continue
             row["task_id"] = record.get("task_id") or path.stem
             row["worktree_path"] = worktree.relative_to(root).as_posix()
+            if record.get("worktree_retention_hold") is True:
+                continue
 
             dirty = len(
                 _inspect_terminal_git(worktree, "status", "--porcelain=v1", "--untracked-files=all").splitlines()

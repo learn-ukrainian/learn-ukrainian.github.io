@@ -559,7 +559,8 @@ def _retain_worktree(task_id: str, *, hold: bool) -> dict:
             record["worktree_disposition_reason"] = "retention_hold"
             record.pop("worktree_disposition_detail", None)
         else:
-            record.pop("worktree_retention_hold", None)
+            # False, not absence: a stale copy must not put the hold back.
+            record["worktree_retention_hold"] = False
             if record.get("worktree_disposition_reason") == "retention_hold":
                 record.pop("worktree_disposition", None)
                 record.pop("worktree_disposition_reason", None)

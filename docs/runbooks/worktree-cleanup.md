@@ -275,8 +275,9 @@ and is not pushed or retried; the hourly alert names it with the other safety
 stops. An owner sets or clears a hold with
 `scripts/dispatch.py retain-worktree TASK --set` or `--clear`. While the hold
 is set, settlement, salvage and this run leave the worktree untouched
-(`retention_hold`). Clearing the hold does not push or remove the tree; the
-next settlement decides. The run's private receipt lists every
+(`retention_hold`). A later write of the task record does not drop the hold,
+and the old-tree report does not inspect a held checkout. Clearing the hold
+does not push or remove the tree; the next settlement decides. The run's private receipt lists every
 finished task's tree still on disk with its reason; the summary carries
 `retained_count`, `retained_safety_stops` and `retained_complete`.
 The same run prunes the nightly data-tier job's abandoned checkouts

@@ -669,15 +669,23 @@ def _require_public_push(tree: Path, remote: str, ref: str, commit: str) -> None
             refuse()
         except git_push.ScanTimeout:
             refuse()
-        script = tree / "scripts/audit/lint_opsec_leaks.py"
-        if not script.is_file():
+        # The checkout under salvage can replace its own linter. Run the copy next to this
+        # module, and point Git at the salvage objects.
+        script = Path(__file__).resolve().parents[2] / "scripts/audit/lint_opsec_leaks.py"
+        try:
+            script.resolve().relative_to(tree.resolve())
+        except ValueError:
+            inside = False
+        else:
+            inside = True
+        if inside or not script.is_file():
             refuse()
         lint_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
         lint_env.pop(OVERRIDE, None)
-        lint_env["GIT_TERMINAL_PROMPT"] = "0"
+        lint_env.update(GIT_DIR=git_dir, GIT_WORK_TREE=str(tree), GIT_TERMINAL_PROMPT="0")
         completed = subprocess.run(
             [sys.executable, str(script), "--commit-range", f"{base}..{commit}"],
-            cwd=tree, env=lint_env, capture_output=True, text=True, timeout=120, check=False,
+            cwd=script.parents[2], env=lint_env, capture_output=True, text=True, timeout=120, check=False,
         )
         if completed.returncode != 0:
             refuse()
@@ -742,6 +750,24 @@ def _salvage(record: dict, tree: Path, head: str, changed: list[str]) -> tuple[s
     return commit, snapshot
 
 
+def _retention_held(record: dict) -> bool:
+    """Whether this record or the copy on disk is an owner hold.
+
+    A supervisor can still be holding the record from before the hold was set.
+    """
+    if record.get("worktree_retention_hold") is True:
+        return True
+    task_id = record.get("task_id")
+    if not isinstance(task_id, str):
+        return False
+    try:
+        from scripts.dispatcher import store
+        disk = store.read(task_id)
+    except (OSError, ValueError, RecursionError):
+        return False
+    return isinstance(disk, dict) and disk.get("worktree_retention_hold") is True
+
+
 def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
     """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
 
@@ -763,8 +789,9 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
         return dict(worktree_disposition=state, worktree_disposition_reason=reason,
                     **({"worktree_disposition_detail": detail} if detail else {}))
 
-    # An owner hold is decided before any Git read, push, or removal.
-    if record.get("worktree_retention_hold") is True:
+    # An owner hold is decided before any Git read, push, or removal. The disk
+    # record wins when this copy is stale.
+    if _retention_held(record):
         return disposition("retained", "retention_hold")
     if record.get("options", {}).get("cwd"):
         return disposition("retained", "borrowed_worktree")
