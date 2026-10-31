@@ -6,12 +6,12 @@ All rules are hard requirements. Partial compliance = failure.
 
 ## Quick Reference
 
-The two word-target rows below follow rule 1's scope. Its anti-padding exception binds both workflows.
+Coverage and teaching adequacy apply to every workflow (rule 1).
 
 | When... | Do this |
 |---|---|
-| Building content | Check `config.py` target_words FIRST — never hardcode from memory |
-| Module under word target | Add only source-backed necessary pedagogy; if grounded material is exhausted, emit `SIZE_POLICY_MISMATCH` and route to plan review. Never lower the target or auto-pad |
+| Building content | Teach every objective and content point accurately, with explanation, worked examples, practice and feedback |
+| Coverage or evidence gap | Identify the unsupported objective or missing evidence and route it to source research or versioned plan review; never invent or pad |
 | Audit gate shows ❌ | Fix it. ALL gates must be GREEN or the module fails |
 | Fixing a module | Follow the current build correction or module-completion contract (rule 4) |
 | Reviewing content | Cite SPECIFIC examples from the text, or the review is invalid (rule 6) |
@@ -24,21 +24,17 @@ The two word-target rows below follow rule 1's scope. Its anti-padding exception
 
 ---
 
-## 1. Word Count Targets (Source of Truth: `config.py`)
+## 1. Coverage and teaching adequacy
 
 <critical>
 
-**Scope.** Rule 1, rule 3 and the Words, Activities, Unique_types and Vocab rows of rule 2 bind legacy module workflows: every module workflow outside the fresh-build engine (for example V7, the linear pipeline and `track-completion`). Core fresh-build lessons (rule 4) are sized by their own contracts, not by these `config.py` targets, section tolerances or count minimums, nor by any overshoot. Legacy workflows keep every target unchanged; the Naturalness row of rule 2 and all other rules bind both. Exception: rule 1's anti-padding duty also binds both: content meets any word target only with source-backed necessary pedagogy, never by repeating exposition or auto-padding. The rest of rule 1 (`config.py` sizing and `SIZE_POLICY_MISMATCH` routing) stays legacy-only.
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 
-Meet reviewed targets with source-backed necessary pedagogy. Never lower targets
-to match content, repeat exposition to reach them, or auto-pad. If grounded
-material is exhausted, emit `SIZE_POLICY_MISMATCH` and route to plan review.
+This criterion binds legacy modules and core fresh-build lessons alike. Use source-backed necessary pedagogy; never invent facts, interpretation or examples to fill space. An unsupported objective or evidence gap requires a specific report and source research or versioned plan review. Length alone is never a reason to expand, trim, accept or reject content.
 
-**Always read config.py** before generating content_outline or word budgets: `.venv/bin/python -c "import sys; sys.path.insert(0,'scripts'); from audit.config import LEVEL_CONFIG; print(LEVEL_CONFIG['{LEVEL}']['target_words'])"`
+Activity, type-variety and vocabulary requirements in rule 2 retain their legacy scope; fresh-build lessons follow their own contracts (rule 4). Naturalness, source fidelity, practice and plan-file protections remain binding.
 
-**Word targets:** A1=1200, A1-cp=1000, A2=2000, A2-cp=1500, B1/B1-cp/B2/B2-cp/B2-cap/C1/C1-cp/C2-cp=4000, C2=5000, HIST/ISTORIO/BIO/LIT/OES/RUTH=5000. If stale, re-read `scripts/audit/config.py`.
-
-**Lesson learned:** Jan 2026 — 270 ISTORIO plans generated at 3500 instead of 4000 because agent hardcoded from memory instead of reading config.py.
+Executable length gates and stored sizing metadata are migrated separately under #12256 AC-02 and AC-03. This guidance changes neither their current runtime behavior nor plan data. Report a length-only runtime failure as migration evidence; do not pad, change a locked plan or bypass a check to satisfy it.
 
 </critical>
 
@@ -50,7 +46,7 @@ ALL gates must be GREEN (✅) or the module FAILS.
 
 | Gate | Requirement |
 |---|---|
-| Words | ≥ target from config.py |
+| Teaching adequacy | Full objective/content-point coverage, sufficient explanation, worked examples and aligned practice with feedback |
 | Activities | ≥ minimum count for level |
 | Unique_types | Sufficient variety |
 | Vocab | ≥ minimum vocabulary for level |
@@ -60,19 +56,11 @@ Fix every failing gate. No exceptions, no "good enough."
 
 ---
 
-## 3. Section-Level Word Targets (Flexible Guidance)
+## 3. Section coverage and comprehensibility
 
-Section targets are guidance, not hard limits.
+Teach every section's contracted content points where the plan places them. Make connections explicit, explain unfamiliar terms and reasoning, and use worked examples before aligned practice. Tables and lists organize material; they do not replace necessary teaching. Segment prose where the learner needs a pause or a new step, without sentence, paragraph or section word quotas.
 
-**Hard requirements:**
-1. **Total word count** ≥ `word_target`
-2. Each section within **±10% tolerance** of its target
-
-**Flexible:** Redistribute words between sections freely. One section 20% over is fine if no section is >10% under.
-
-**Priority:** Objectives and evidence coverage first → repair genuine section
-gaps with sourced pedagogy → route plan-policy mismatch instead of filling a
-section quota with repeated prose.
+Repair genuine coverage and explanation gaps with sourced pedagogy. Identify unsupported objectives and missing evidence for research or versioned plan review. Never fill a section with repeated prose.
 
 ---
 
@@ -143,9 +131,9 @@ Plans in `plans/` are the source of truth. They require user approval to change.
 
 **When build can't meet plan:** STOP → report "Plan requires X but Y isn't achievable because Z" → propose new plan version → user approves → write the new plan with an incremented `version` field. Prior versions live in git history (`git show HEAD:<path>`), not tracked `.bak` files.
 
-**Never** silently modify plan files, lower word_target to match output, or stage plan `.yaml.bak` files.
+**Never** silently modify plan files or stage plan `.yaml.bak` files. Existing sizing fields are not teaching targets; do not change locked metadata to fit an output.
 
-**Exception**: The pipeline may auto-fix plan `vocabulary_hints` entries that fail VESUM verification. Changes are version-bumped and logged in `plan_fixes`. Content outline, objectives, and word targets remain immutable.
+**Exception**: The pipeline may auto-fix plan `vocabulary_hints` entries that fail VESUM verification. Changes are version-bumped and logged in `plan_fixes`. Content outline, objectives, and existing plan metadata remain immutable without approved versioned revision.
 
 ---
 

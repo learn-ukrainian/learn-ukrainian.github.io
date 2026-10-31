@@ -61,7 +61,7 @@ HOOK → DISCOVER → EXPLAIN → PRACTICE → APPLY → SUMMARIZE
 | Concept density | 3-5 concepts per section | >7 concepts without processing |
 | Example per concept | ≥2 examples | Concept without example |
 | Practice per concept | ≥1 exercise | Content-heavy, practice-light |
-| Section length | 300-500 words | >700 words without break |
+| Section structure | Explanation and examples grouped into useful teaching steps | Several teaching moves without a useful break |
 
 ### Engagement Journey Mapping
 
@@ -87,7 +87,7 @@ HOOK → DISCOVER → EXPLAIN → PRACTICE → APPLY → SUMMARIZE
 | **TEXTBOOK_EXAMPLES** | Generic, forgettable examples | "Іван читає книгу" | Use culturally rich example |
 | **NO_CHALLENGE** | Content too easy for level | B1 grammar at A2 difficulty | Increase complexity |
 | **ABSTRACT_GRAMMAR** | Rules without application | "Verbs agree in number and gender" | Show in real sentence |
-| **WALL_OF_EXPLANATION** | >500 words of explanation | Long prose about case usage | Break up with examples |
+| **WALL_OF_EXPLANATION** | Explanation without worked application | Prose about case usage leaves the learner unable to apply it | Add worked examples and aligned practice |
 | **PRACTICE_AFTERTHOUGHT** | Exercises seem tacked on | Random exercises at end | Integrate practice throughout |
 | **COLD_TEACHER** | No personality or warmth | "The rule is..." (flat) | Add teacher voice |
 

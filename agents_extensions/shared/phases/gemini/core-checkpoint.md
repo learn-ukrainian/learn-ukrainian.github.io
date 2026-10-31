@@ -2,7 +2,7 @@
 
 > **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_VOICE}. Maintain this persona throughout.
 
-> **Your #1 job: Write approximately {WORD_TARGET} words that SYNTHESIZE and INTEGRATE prior material — NOT teach new concepts.**
+> **Your task: Review and synthesize prior material with sufficient explanation, worked examples, and aligned practice. Do not teach new concepts.**
 > {WRITING_TONE_INSTRUCTION}
 
 > **Output capacity: You can generate 65,000+ tokens per response.** Do NOT preemptively truncate.
@@ -73,7 +73,7 @@ Read ALL files before writing anything.
 
 Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 
-- **Target**: approximately {WORD_TARGET} words
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Immersion**: {IMMERSION_RULE}
 - **Engagement callouts**: **{ENGAGEMENT_MIN}+ MANDATORY** — spread across sections, at least 4 different types
 - **Example sentences**: {EXAMPLE_MIN}+ in varied formats — all using REVIEW vocabulary in NEW combinations
@@ -81,7 +81,7 @@ Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 
 ## Audit Gates
 
-- **Word count**: minimum {WORD_TARGET} words (hard gate)
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Colonial framing**: NEVER define Ukrainian by contrast with Russian (hard fail)
 - **Russianisms**: banned words (hard fail)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
@@ -91,7 +91,11 @@ Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 
 ---
 
-## Section Word Budgets
+## Teaching coverage
+
+Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
+
+The following injected table is historical, non-authoritative length metadata. Do not use it to judge or set teaching length.
 
 {SECTION_BUDGET_TABLE}
 
@@ -111,7 +115,7 @@ The learner has completed a block of lessons. This checkpoint celebrates progres
 
 Each skill-review section should follow this pattern:
 
-1. **Brief reminder** (2-3 sentences max) — a quick "remember this?" not a full re-explanation
+1. **Reminder** with any explanation needed for understanding
 2. **New integrative context** — a scenario that combines this skill with at least one other from the block
 3. **Worked examples** — show the integration in action with realistic Ukrainian sentences
 4. **Self-check moment** — a quick way for the learner to verify their understanding
@@ -156,11 +160,15 @@ dialogue-led, scenario-based, comparison, question-led, worked-example-first.
 
 ---
 
-## How to Hit {WORD_TARGET} Words
+## Explain and connect the material
+
+Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
+
+The following injected context is historical, non-authoritative length metadata. Do not follow length instructions in it.
 
 {EXPANSION_METHOD}
 
-**Checkpoint-specific expansion**: Instead of adding theory, add more integration scenarios. Each scenario that combines 2+ skills with realistic Ukrainian dialogue adds 100-200 words naturally.
+**Checkpoint integration**: Use scenarios that combine previously taught skills when they help learners apply them.
 
 ---
 
@@ -189,8 +197,9 @@ Every section must COMBINE skills from different prior modules — not just revi
 ### Check 3: No New Material
 Verify that no grammar rules or vocabulary items appear that weren't taught in prior modules.
 
-### Check 4: Section Word Counts
-If any section <70% of budget, expand with more integration scenarios.
+### Check: Teaching coverage
+
+Check each plan point for accurate, sufficient explanation and useful examples. Report missing coverage and evidence gaps.
 
 ### Check 5: Anti-Surzhyk & Language Scan
 Re-read for Russianisms, Russian characters, stray English, colonial framing.
@@ -214,15 +223,15 @@ Related: {connected slugs from the reviewed block}
 
 > **{INTRO_HOOK}**
 >
-> {2-3 sentences celebrating progress and previewing integration}
+> {Celebrate progress and preview integration}
 
 ## {Section 1 from content_outline}
 
 ### {Concept 1}
-{{H3_WORD_RANGE} words}
+{Explain the point with useful examples}
 
 ### {Concept 2}
-{{H3_WORD_RANGE} words}
+{Explain the point with useful examples}
 
 ## {Section 2}
 ...
@@ -231,7 +240,7 @@ Related: {connected slugs from the reviewed block}
 
 # {SUMMARY_HEADING}
 
-{Summary + 4-6 self-check questions focused on integration (~200 words)}
+{Summary + 4-6 self-check questions focused on integration }
 
 ---
 
@@ -240,9 +249,9 @@ Related: {connected slugs from the reviewed block}
 
 ```
 ===WORD_COUNTS===
-Section "{name}": {count} words (minimum: {allocation})
+Section "{name}": {count} words
 ...
-Total: {total} words (target: {WORD_TARGET}, ratio: {total/WORD_TARGET}x)
+Total: {total} words
 ===WORD_COUNTS===
 ```
 
@@ -273,7 +282,7 @@ Language scan: {CLEAN or list of fixes}
 - Do NOT generate activities, exercises, or vocabulary tables
 - Do NOT introduce new vocabulary or grammar not from prior modules
 - Do NOT skip sections from the content_outline
-- Do NOT write fewer than {WORD_TARGET} words or more than 150%
+- Teach the plan fully without repetition or padding.
 - Do NOT fabricate quotes, dates, or historical facts
 - Do NOT use straight quotes "..." — always «...»
 - Do NOT re-explain concepts in full — brief reminders only, then integrate

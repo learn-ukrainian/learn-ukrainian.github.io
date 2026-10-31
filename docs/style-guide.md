@@ -37,7 +37,7 @@ bubbly, never condescending, never "fun!" for its own sake.
 | Tables | Use for declension, conjugation, minimal pairs — not for flowing prose. |
 | Callouts | Use `> **Примітка:**` for side notes; reserve for genuinely important asides, not decoration. |
 | Dialogue | One speaker per line, dash prefix: `— Привіт! — Доброго дня.` Name in bold if multiple speakers matter. |
-| Word counts | Each H2 section should roughly hit its word target. Total module must meet level minimum (A1=1200, A2=2000, B1–C1=4000, C2=5000). |
+| Teaching depth | Cover each plan objective and content point accurately, with explanations, worked examples, and aligned practice with feedback suited to the learner. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, missing coverage, padding, decorative digressions, lists that replace teaching, and compression that leaves connections untaught. Length follows the teaching; do not reward or penalize a word count. |
 
 ---
 

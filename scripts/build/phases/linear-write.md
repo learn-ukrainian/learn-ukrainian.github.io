@@ -4,7 +4,7 @@ This is the actionable subset of `docs/north-star.md` for the writer phase.
 Shared module contract path: `scripts/build/contracts/module-contract.md`.
 
 <!-- rule_id: #R-VOICE-META -->
-Write restrained, concrete educational prose from the first draft. Reject decorative pathos, hagiography, elegiac/heroizing framing, symbolic abstractions, and thesis-sounding sentences that feel impressive but vague. Every sentence must do one concrete job: name a source-grounded fact, show a Ukrainian form in use, explain a language pattern, or direct a learner action. If it cannot, replace it with concrete content or cut it; never pad, and never drop below the contract word floor. For BIO and cultural modules, keep biography, reception, and context factual and natural; do not turn the person or topic into a legend or moral emblem, and do not reach for melodramatic Soviet/post-Soviet pathos. State repression, censorship, russification, institutional pressure, and decolonization facts plainly when the plan or sources require them.
+Write restrained, concrete educational prose from the first draft. Reject decorative pathos, hagiography, elegiac/heroizing framing, symbolic abstractions, and thesis-sounding sentences that feel impressive but vague. Every sentence must do one concrete job: name a source-grounded fact, show a Ukrainian form in use, explain a language pattern, or direct a learner action. If it cannot, replace it with concrete content or cut it; never pad or compress away necessary teaching. For BIO and cultural modules, keep biography, reception, and context factual and natural; do not turn the person or topic into a legend or moral emblem, and do not reach for melodramatic Soviet/post-Soviet pathos. State repression, censorship, russification, institutional pressure, and decolonization facts plainly when the plan or sources require them.
 
 Adult peer voice only. No English meta-narration or teacherly transitions in `module.md`. Forbidden patterns include "Welcome to...", "In this section...", "in this module/lesson", "we/you will learn", "Let's now look at", "Note/Notice/Observe/Pay attention/Remember...", plus Ukrainian meta such as "у цьому модулі/уроці/розділі/темі", "ми вивчимо", "ми побачимо", "далі ми...". Speak TO the learner about the LANGUAGE; never narrate ABOUT the module. Open sections with a fact, example, dialogue line, or direct second-person instruction.
 
@@ -32,7 +32,7 @@ Bounded composition is allowed only for English scaffold glosses (A1/A2), dialog
 
 Voice rewrite, NOT translation: convert methodological wiki prose to 2nd-person teacher voice (Ukrainian-first with brief English at A1/A2, Ukrainian at B1+). You may shorten/reorder/add transitions, but may NOT add unauthorized Ukrainian content. If a section is thin, emit `<implementation_map>` `treatment="deferred — wiki section thin"`; do not invent filler.
 
-Still load-bearing: voice rewrite quality (`#R-VOICE-META`, `#R-SINGLE-VOICE-A1`, `#R-AUDIENCE-LANGUAGE-A1`), citation honesty (`#R-CITE-HONEST`), VESUM (`#R-VESUM-ALL-WORDS`), russianism/calque/surzhyk/paronym gates, prose floor (`#R-PROSE-FLOOR-A1` remains HARD despite renderer framing), bad-form markers (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), artifact emission, and dialogue count/format.
+Still load-bearing: voice rewrite quality (`#R-VOICE-META`, `#R-SINGLE-VOICE-A1`, `#R-AUDIENCE-LANGUAGE-A1`), citation honesty (`#R-CITE-HONEST`), VESUM (`#R-VESUM-ALL-WORDS`), russianism/calque/surzhyk/paronym gates, teaching explanation (`#R-PROSE-FLOOR-A1` keeps its registry ID but imposes no length floor), bad-form markers (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), artifact emission, and dialogue count/format.
 
 Upstream guard: `wiki_completeness_gate` blocks thin wikis; if this prompt runs, the wiki passed. Render it faithfully.
 
@@ -61,7 +61,7 @@ authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 Emit one `<plan_reasoning section="...">...</plan_reasoning>` block per section (<=200 words).
 
 Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not write a single blob of prose):
-- `<word_budget>`: section word allocation + running total vs {WORD_TARGET}.
+- `<word_budget>`: describe the section's coverage and explanation needs; this legacy tag is not a numeric budget.
 - `<plan_vocab>`: required plan-vocabulary lemmas used + grounding Ukrainian sentence.
 - `<register>`: immersion ratio from the Immersion Rule + how this section preserves it.
 - `<teaching_sequence>`: Knowledge Packet facts/citations this section uses.
@@ -87,7 +87,7 @@ If `activity_split_audit.split_valid=false`, rebalance inline/workbook first.
 Сибір case study (May 2026): a prior answer fabricated a Грінченко citation, an Антоненко-Давидович claim, and a fused Shevchenko line. Verify before citing; do not ship authority theatre.
 
 <!-- rule_id: #R-VESUM-ALL-WORDS -->
-**1. Verify every example word in VESUM** — exhaustively, not a sample. Batch-verify every distinct Cyrillic word form in `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` via `mcp__sources__verify_words`, except bad-form-marker spans and `error:`/`errorWord:` fields — including derived adjectives (`-ний/-овий/-альний/-увальний`), `-ість` nouns, agent nouns, and every hyphenated compound. Replace any miss not heritage-attested (`search_slovnyk_me`/`search_heritage`, `is_russianism==false`) with an attested synonym or rephrase before emitting; an unverified content word fails the build. **First-pass-critical:** the `python_qg` correction loop does LITERAL find/replace only — it CANNOT rephrase a coinage/jargon into a synonym, and a failed correction deletes content (also failing `word_count`); do not rely on it. Before any reflexive `-ся` form, verify it; traps `пити → *п'юся`, `читати → *читаюся`, `писати → *пишуся` fail unless VESUM says otherwise.
+**1. Verify every example word in VESUM** — exhaustively, not a sample. Batch-verify every distinct Cyrillic word form in `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` via `mcp__sources__verify_words`, except bad-form-marker spans and `error:`/`errorWord:` fields — including derived adjectives (`-ний/-овий/-альний/-увальний`), `-ість` nouns, agent nouns, and every hyphenated compound. Replace any miss not heritage-attested (`search_slovnyk_me`/`search_heritage`, `is_russianism==false`) with an attested synonym or rephrase before emitting; an unverified content word fails the build. **First-pass-critical:** the `python_qg` correction loop does LITERAL find/replace only — it CANNOT rephrase a coinage/jargon into a synonym, and a failed correction can delete necessary teaching; do not rely on it. Before any reflexive `-ся` form, verify it; traps `пити → *п'юся`, `читати → *читаюся`, `писати → *пишуся` fail unless VESUM says otherwise.
 
 <!-- rule_id: #R-BAD-FORM-MARKER -->
 **Bad-form marker convention (MANDATORY everywhere).** Any Ukrainian word form that is NOT in VESUM and appears only as a teaching contrast MUST be wrapped in `<!-- bad -->...<!-- /bad -->` markers in every artifact. Do not use italics or bare prose for bad forms.
@@ -108,7 +108,7 @@ Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__chec
 **Grammar claim grounding.** EVERY specific grammar claim (aspect, case endings, syntax, phonetics, morphology, word formation, stress/prosody, orthography, or meaning distinctions) MUST cite an authoritative source. Name it in text or as `<!-- VERIFY: source="..." grade="..." author="..." -->`. If the rule is not verbatim in the packet, verify via `mcp__sources__search_text` and cite the exact grade and author.
 
 <!-- rule_id: #R-TEXTBOOK-30W -->
-**Textbook grounding.** For each `plan_references` entry, call `mcp__sources__get_chunk_context(chunk_id=<ID>)` and ground from THAT text. Do NOT use `search_text` or topic-keyword search for plan references. The `chunk_context_for_all_refs` gate hard-rejects missing calls. Grade 1-3 chunks may ground choices but must NOT appear as learner-facing `>` blockquotes. Adult-appropriate cited references need one verbatim >=30-word Ukrainian blockquote plus `*— <Author>, Grade <N>, p.<PAGE>*`; shorter, stitched, translated, Russian-script, or non-literal quotes fail `published_quote_for_publishable_refs`.
+**Textbook grounding.** For each `plan_references` entry, call `mcp__sources__get_chunk_context(chunk_id=<ID>)` and ground from THAT text. Do NOT use `search_text` or topic-keyword search for plan references. The `chunk_context_for_all_refs` gate hard-rejects missing calls. Grade 1-3 chunks may ground choices but must NOT appear as learner-facing `>` blockquotes. Adult-appropriate cited references need one verbatim Ukrainian blockquote that supports the teaching plus `*— <Author>, Grade <N>, p.<PAGE>*`; stitched, translated, Russian-script, or non-literal quotes fail `published_quote_for_publishable_refs`.
 
 <!-- rule_id: #R-CITE-HONEST -->
 Resources must be plan/wiki/telemetry-grounded. `resources.yaml role: textbook` entries come ONLY from `plan.references` and must carry the plan chunk_id in `packet_chunk_id`, `chunk_id`, or `notes`. Knowledge Packet anchors and out-of-plan `search_text` results may support understanding, but they MUST NOT become textbook resources.
@@ -207,17 +207,19 @@ Non-plan vocabulary must pass `query_cefr_level`, frequency, or ULP coverage for
 - Slug: {MODULE_SLUG}
 - Topic: {TOPIC_TITLE}
 - Phase: {PHASE}
-- Authored-word **minimum**: {WORD_TARGET} — this is an exact reviewed FLOOR. The Markdown-aware gate counts learner-facing authored instructional/expository words, including heading text, while reporting primary-source quotations separately and excluding comments, directive/component syntax, and URLs.
+- Teaching criterion: complete coverage and sufficient explanation; no length target.
 
-## Module Size Policy — dossier/evidence-led expansion control (#4801)
+## Coverage and teaching adequacy
+
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
+
+## Source support and legacy runtime context
+
+Legacy size metadata below is retained as runtime context only. Numeric floors, ceilings and ranges have no teaching authority. Complete the supported objectives; identify each unsupported objective or evidence gap for source research or versioned plan review. Never invent depth or pad. Runtime length gates and plan-data migration remain separate work under #12256 AC-02 and AC-03.
 
 {SIZE_POLICY}
 
-Satisfy the objectives and evidence coverage, not a token target; retire the old 150% multiplier thinking. The policy never lowers the plan floor. Expansion must be source-backed and pedagogically useful; do not repeat framing, conclusions, transitions, or definitions to reach the floor. If grounded material is exhausted or the policy blocks expansion, emit the required `SIZE_POLICY_MISMATCH` marker and stop for plan review instead of padding.
-
-## Section Word Budgets — policy-aware first-draft requirements
-
-The first draft must meet or exceed `{WORD_TARGET}` when the evidence can responsibly support the reviewed plan. Section `words:` values guide coverage; they are not quotas to fill with repeated prose. Targeted expansion is allowed only with substantive, cited exposition, examples, close-reading, source comparison, and necessary cultural/grammar analysis. `:::primary-reading` quoted text is reported separately; surrounding authored explanation carries the floor.
+Section sizing metadata below is historical, not a first-draft quota. Cover the plan's content points without aiming at these counts.
 
 {SECTION_WORD_BUDGETS}
 
@@ -277,7 +279,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 1. **Ukrainian-first, em-dash gloss.** Every Ukrainian term appears in Ukrainian before its English gloss, separated by an em dash: `прокидаюся — I wake up`. Never write "the word for wake up is ...".
 2. **Stress marks are deterministic.** The pipeline applies stress marks to every multi-syllable Ukrainian word after writing. Write plain Ukrainian; do not hand-stress.
 3. **Dialogues are Ukrainian-first.** Use `<DialogueBox uk="..." en="..." />` for side-by-side translation. The `uk` turn is Ukrainian-only; do not interleave English grammar inside turns.
-4. **Dialogue inline gloss discipline.** Keep any A1/A2 line-level English support no more than 8 words from its Ukrainian dialogue line; put full translation at the block bottom.
+4. **Dialogue inline gloss discipline.** Place A1/A2 line-level English support next to its Ukrainian dialogue line; put full translation at the block bottom.
 5. **Comprehension/recall is Ukrainian-only.** Tab 3 content stems and answer options are Ukrainian-only; English appears only in UI affordances.
 6. **No named narrator.** Teaching voice is "you" / "your", not "Hi, I'm Anna/Oksana/Teacher X". Named people only inside dialogues. Copy Ohoiko's *method* (sound, then English that explains, then Ukrainian again), not her scripts or persona. Anchor examples in real Ukrainian places/foods/routines; never "the student must learn...".
 6b. **Unread letters.** Until this module (and earlier ones) have taught a grapheme, do not ask the learner to *read* it in teaching prose. English carries the explanation; Ukrainian is the example with audio/video. A1.1 modules 1–4 need English next to prompts, options, and explanations.
@@ -294,7 +296,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 **Use grammar terms at A1.** Use proper grammatical terminology in English explanations: **noun**, **verb**, **adjective**, **adverb**, **pronoun**, **reflexive**, **conjugation**. Do NOT paraphrase (`a thing`, `an action`, `a word for`, `a doing-word`, `the X-form of Y`). Adult learners benefit from real grammar terms because they transfer to future modules and outside references.
 
 <!-- rule_id: #R-PROSE-FLOOR-A1 -->
-**Prose words only — section budget.** Per-section word budgets (270-330 for A1) count PROSE only. Callouts, dialogue boxes, table cells, bullets, comments do NOT count. Structural elements are *bonus density*, not budget — still emit ≥270 words of prose AROUND tables/callouts. Reach the prose floor BEFORE you optimize for clean structure.
+**Explain the teaching around structure.** Use flowing, level-appropriate prose to explain every concept, unfamiliar term and connection. Tables, dialogue boxes, callouts and lists organize examples; they do not replace necessary explanation. Give useful worked examples and aligned practice with feedback. No prose floor or section word budget applies.
 
 <!-- rule_id: #R-CLEAN-TABLES -->
 **Clean table formatting.** Tables: bold ONLY the target Ukrainian forms. Pronoun columns (`я`, `ти`, ...), English headers, and English glosses remain in regular weight. Conjugation tables teaching a present-tense paradigm must include the FULL set of person/number rows: **я / ти / він,вона,воно / ми / ви / вони** (six rows). Vocabulary tables stay two-column unless a third column adds essential teaching value (e.g., stress mark, IPA).

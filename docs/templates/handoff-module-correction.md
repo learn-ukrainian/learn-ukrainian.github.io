@@ -29,7 +29,7 @@ Use this template when creating issues to fix audit failures or module quality i
 
 | Gate | Status | Details |
 |------|--------|---------|
-| Word Count | :x: FAIL | 2,340 / 3,000 required |
+| Word Count | [status] | [current runtime gate result, if applicable] |
 | Outline Compliance | :x: FAIL | Missing: "Practice Exercises" section |
 | Activity Count | :white_check_mark: PASS | 45 items |
 | Vocabulary | :white_check_mark: PASS | 28 lemmas |
@@ -48,7 +48,7 @@ Use this template when creating issues to fix audit failures or module quality i
 Canonical pack: `docs/best-practices/task-quality.md` (DoR before start; terminal goal + residual on close).
 
 - [ ] All audit gates show :white_check_mark: PASS
-- [ ] Word count meets target (95%+ minimum)
+- [ ] Every objective and content point is taught accurately with sufficient explanation, worked examples, and aligned practice with feedback
 - [ ] All plan outline sections present
 - [ ] Status JSON updated with passing status
 - [ ] Issue commented with audit output

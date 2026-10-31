@@ -66,7 +66,7 @@ When researching, frame Ukrainian independently — **never as a derivative or v
 - Note how topics have been historically misframed by Russian/Soviet sources and provide the Ukrainian-centric perspective
 
 ### Research Output Cap
-Keep research notes under **1500 words**. Focus on density: facts, dates, quotes, tables — not prose.
+Include the evidence needed to support each plan point. Avoid irrelevant material and repetition.
 
 ### Additional for Core B (B1.6+, B2, C1, C2, PRO)
 
@@ -77,7 +77,7 @@ Keep research notes under **1500 words**. Focus on density: facts, dates, quotes
 ## Downstream Audit Gates (Phase B content will be checked for)
 
 Plan your outline knowing that Phase B content must pass these gates:
-- **Word count**: minimum **{WORD_TARGET}** words — allocate outline sections accordingly
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
 - **Russianisms**: ensure vocabulary_hints and examples avoid banned words (кушати→їсти, получати→отримувати)
 - **Duplicate headers**: ensure outline section names don't share keywords
@@ -88,14 +88,12 @@ Plan your outline knowing that Phase B content must pass these gates:
 
 After completing research, rebuild the `content_outline` using:
 - The plan's section structure as skeleton
-- Research findings to inform depth and word allocation
+- Research findings to inform depth and specific teaching points
 
 ### Rules for Meta Outline
 
 - **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
-- Allocations must sum to approximately **{WORD_TARGET}** words (±10% acceptable)
-- Minimum section allocation: 200 words (merge smaller sections)
-- Each section must have `section`, `words`, and `points` fields
+- Each section must have `section`, `words`, and `points` fields. The numeric `words` field is deprecated compatibility metadata and has no teaching authority.
 - Section names must be in Ukrainian (these become H2 headings in the lesson)
 - **Section names must match plan exactly** — use exact names from plan's `content_outline` (or very close Ukrainian equivalents)
 - Points are specific and actionable — not vague ("cover grammar" → bad; "Each case form gets its own H3 with definition, 2+ examples, usage note" → good)
@@ -152,16 +150,15 @@ Alignment: {how this module addresses the standard}
 ===META_OUTLINE_START===
 content_outline:
   - section: "{Section 1 name in Ukrainian}"
-    words: {allocation}
+    words: {allocation}  # Deprecated compatibility metadata; no teaching authority
     points:
       - "{key point 1}"
       - "{key point 2}"
   - section: "{Section 2 name}"
-    words: {allocation}
+    words: {allocation}  # Deprecated compatibility metadata; no teaching authority
     points:
       - "..."
   # ... all sections
-  # Total: ~{WORD_TARGET} words
 ===META_OUTLINE_END===
 ```
 
@@ -170,8 +167,6 @@ content_outline:
 - [ ] All section names are Ukrainian
 - [ ] Section names match plan structure
 - [ ] Each section has `words` and `points`
-- [ ] Sum of all `words` ≈ {WORD_TARGET}
-- [ ] No section has fewer than 200 words
 - [ ] Points are actionable and specific
 
 ---

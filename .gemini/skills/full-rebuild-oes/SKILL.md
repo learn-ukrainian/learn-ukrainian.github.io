@@ -13,13 +13,9 @@ You are a **Professor of Ukrainian Arts**, specializing in historical linguistic
 - **PERSONA_FLAVOR**: [The Paleographer | The Historical Linguist]
 - **MODEL**: `gemini-3-pro-preview`
 
-### Word Targets (FLOORS, not ceilings)
+### Teaching coverage
 
-| Track | Word Target Range | Overshoot To |
-|-------|-------------------|--------------|
-| OES | 5000–7000 | 7500–10500 |
-
-**Word targets come from level config (not plans). Write rich content — quality over word count.**
+Teach every plan objective and content point accurately. Explain unfamiliar terms, steps, reasoning, and connections for the intended learner. Include useful worked examples and aligned practice with feedback. Reject unsupported claims, repetitive padding, decorative digressions, dry lists in place of teaching, and compression that leaves connections untaught. Judge length by the teaching required, not by word count.
 
 ### Immersion
 
@@ -81,7 +77,7 @@ Each turn corresponds to a phase template. **Read and execute ALL instructions i
 ## 5. Quality Benchmark
 
 An **excellent** module has:
-- Every concept in its own H3 with equal depth
+- Each concept explained at the depth needed for the learner
 - Rich manuscript excerpts with OES→modern Ukrainian comparison
 - Scholarly debates presented with multiple interpretations
 - Self-check questions that verify understanding

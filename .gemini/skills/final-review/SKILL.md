@@ -9,6 +9,10 @@ description: Adversarial final review for otaman-built modules. Runs in a NEW se
 > You did NOT build it. You did NOT review it. You are a fresh pair of eyes.
 > Your job: find every remaining defect. Trust nothing. Verify everything.
 
+## Teaching adequacy
+
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
+
 ## PERMISSIONS
 
 **You have FULL read-write access.** You MUST use `run_shell_command` to execute:
@@ -444,7 +448,7 @@ Apply the appropriate tier based on track:
 **Red flags:**
 - Opens with grammar terminology without explanation
 - >10 new words without practice break
-- No English for first 200 words at A1
+- Missing English explanations where A1 learners need them
 - Complex Ukrainian sentence structures
 - Abrupt ending without encouragement
 
@@ -480,7 +484,7 @@ Apply the appropriate tier based on track:
 - Primary sources woven into narrative (not separate sections)
 - Decolonization perspective (not Russian-centric history)
 - Emotional engagement: curiosity, surprise, pride moments
-- Dense walls of text broken with callouts every 300-400 words
+- Organize dense exposition with helpful examples, callouts, or other structural elements
 - Named figures, specific dates, concrete details (not vague generalizations)
 
 **Immersion targets:** 98-100% Ukrainian
@@ -548,7 +552,7 @@ Apply the appropriate tier based on track:
 
 **REJECT when:**
 - Audit fails and cannot be fixed
-- Content is clearly thin (< 70% of word target)
+- Plan objectives or content points lack accurate, sufficient teaching, worked examples, or aligned practice with feedback; or necessary connections, terms, steps, or reasoning are left unexplained
 - Obvious Russianisms persist after fix attempt
 - Activities contain nonsensical sentences that can't be fixed
 - Multiple Phase 6b fixes were not applied and content suffers

@@ -51,7 +51,7 @@ You have access to Ukrainian language tools via MCP. **Use them during research.
 6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.
 
 ### Research Output Cap
-Keep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).
+Include the evidence needed to support each plan point. Avoid irrelevant material and repetition.
 Focus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.
 
 If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:
@@ -70,16 +70,13 @@ If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish
 
 After completing research, rebuild the `content_outline` using:
 - The plan's section structure as skeleton
-- Your research notes to inform depth and word allocation
+- Your research notes to inform depth and specific teaching points
 
 ### Rules for Meta Outline
 
 - **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
-- Allocations must sum to approximately **{WORD_TARGET}** words (±10% acceptable)
-- Minimum section allocation: 200 words (merge smaller sections)
-- For modules with target ≥ 4000w, aim for **8-12 sections minimum** — this prevents any one section from consuming a disproportionate share of the module.
-- **No single section may consume more than 25% of the total word target.** A 5000w module → max 1250w per section. If a plan section would exceed this, you MUST split it.
-- Each section must have `section`, `words`, and `points` fields
+- Organize sections around the teaching points and their connections.
+- Each section must have `section`, `words`, and `points` fields. The numeric `words` field is deprecated compatibility metadata and has no teaching authority.
 - Section names must be in Ukrainian (these become H2 headings in the lesson)
 - **Section names must match plan exactly** — if the plan has a `content_outline` with section names, use those EXACT names (or very close Ukrainian equivalents). When splitting a large plan section, add a subtitle (e.g. "Читання: I — Походження").
 - Points reflect research findings — cite specific facts, dates, quotes where relevant
@@ -97,16 +94,16 @@ After completing research, rebuild the `content_outline` using:
    - `"Читання: II — Суспільний устрій і права"` (bullets 5-7)
    - `"Читання: III — Духовний світ та побут"` (bullets 8-11)
    - etc.
-4. Allocate words based on research depth for each cluster
+4. Explain the evidence and teaching purpose for each cluster
 
-**Example:** A plan section `Читання` with 14 bullet points should NOT become one 3200w meta section. It should become 4-5 sub-sections of 600-800w each. The bullets tell you what the sub-sections should cover.
+**Example:** Organize the plan section `Читання` and its bullet points into subsections when that helps learners follow the material.
 
 ---
 
 ## Downstream Audit Gates (Phase B content will be checked for)
 
 Plan your research and outline knowing that Phase B content must pass these gates:
-- **Word count**: minimum **{WORD_TARGET}** words — allocate outline sections accordingly
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
 - **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)
 - **Duplicate headers**: ensure outline section names don't share keywords
@@ -196,16 +193,15 @@ Key facts, dates, sources for this section...
 ===META_OUTLINE_START===
 content_outline:
   - section: "{Section 1 name in Ukrainian}"
-    words: {allocation}
+    words: {allocation}  # Deprecated compatibility metadata; no teaching authority
     points:
       - "{key point 1 — informed by research}"
       - "{key point 2}"
   - section: "{Section 2 name}"
-    words: {allocation}
+    words: {allocation}  # Deprecated compatibility metadata; no teaching authority
     points:
       - "..."
   # ... all sections
-  # Total: ~{WORD_TARGET} words
 ===META_OUTLINE_END===
 ```
 
@@ -215,8 +211,6 @@ content_outline:
 - [ ] All section names are Ukrainian
 - [ ] Section names match plan structure
 - [ ] Each section has `words` and `points`
-- [ ] Sum of all `words` ≈ {WORD_TARGET}
-- [ ] No section has fewer than 200 words
 - [ ] Points reflect research findings
 
 ---

@@ -2,10 +2,10 @@
 
 > **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_VOICE}. Maintain this persona throughout — do not drift into generic AI tone.
 
-> **Your #1 job: Write approximately {WORD_TARGET} words of clear, well-structured Ukrainian content.**
+> **Your job: Teach the plan accurately and clearly, with enough explanation for the intended learner.**
 > {WRITING_TONE_INSTRUCTION}
 
-> **Output capacity: You can generate 65,000+ tokens per response.** A {WORD_TARGET}-word Ukrainian module is ~{WORD_TARGET_TOKENS}K tokens — well within your single-turn limit. Do NOT preemptively truncate, self-limit, or report TOKEN_LIMIT_TRUNCATION friction. Write the complete module in full.
+> Write the complete module without truncating necessary teaching.
 
 ## Files to Read
 
@@ -66,7 +66,7 @@ These resources were found during the discover phase. They include videos, blog 
 
 Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
-- **Target**: approximately {WORD_TARGET} words (this is both the minimum AND the approximate ceiling — do not dramatically overshoot)
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Immersion**: {IMMERSION_RULE}
 - **Engagement callouts**: **{ENGAGEMENT_MIN}+ MANDATORY** — spread across sections, at least 4 different types. Content with fewer than {ENGAGEMENT_MIN} callout boxes FAILS validation.
 - **Example sentences**: {EXAMPLE_MIN}+ in varied formats (inline, standalone, tables, dialogues)
@@ -75,7 +75,7 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 ## Downstream Audit Gates (your content will be checked for)
 
 Write with these in mind — errors here trigger Phase D repair cycles:
-- **Word count**: minimum **{WORD_TARGET}** words (hard gate)
+- **Teaching coverage**: Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
 - **Colonial framing**: NEVER define Ukrainian by contrast with Russian (hard fail)
 - **Russianisms**: banned words — кушати, приймати участь, получати, самий кращий, слідуючий (hard fail)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
@@ -85,9 +85,11 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 ---
 
-## Section Word Budgets
+## Teaching coverage
 
-**The global word target is the hard gate. Section budgets are guidance** — aim for each section's target, but natural variation (±30%) between sections is fine as long as no section is starved (<50% of its budget) and the total meets the global minimum.
+Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
+
+The following injected table is historical, non-authoritative length metadata. Do not use it to judge or set teaching length.
 
 {SECTION_BUDGET_TABLE}
 
@@ -177,7 +179,11 @@ Prefer: «Ви можете використати...», «Ми застосов
 
 ---
 
-## How to Hit {WORD_TARGET} Words (Expansion Method)
+## Explain and connect the material
+
+Teach every plan objective and content point accurately, with sufficient explanation for the learner, useful worked examples, and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning, and connections. Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that leaves connections untaught. Judge length by teaching needs, not word count.
+
+The following injected context is historical, non-authoritative length metadata. Do not follow length instructions in it.
 
 {EXPANSION_METHOD}
 
@@ -350,7 +356,7 @@ After drafting your content, run these three checks. Fix any issues found before
 Open the `content_outline` from the plan. Go through EVERY `points:` item in EVERY section:
 - Does your content address this point with dedicated prose (not just a passing mention)?
 - If a point is missing or only touched in a phrase, **add it now** — write a full paragraph or subsection for it.
-- Each outline point should map to at least 50-100 words of content.
+- Teach each outline point with sufficient explanation and useful examples.
 
 ### Check 2: Fact-Check Absolute Claims
 
@@ -365,12 +371,9 @@ For EACH occurrence, ask: **Is this literally true? Can I name a counterexample?
   - «never» → «rarely» or «almost never» (unless it's a grammatical absolute)
 - Historical dates and biographical facts: verify against the research file. If the research doesn't confirm it, **remove the claim**.
 
-### Check 3: Section Word Counts
+### Check: Teaching coverage
 
-Count words per section. Compare against the `words:` allocation in the content_outline:
-- If any section is below 70% of its budget → **expand it** (add examples, callouts, tables)
-- If the total is below {WORD_TARGET} → expand the thinnest sections first
-- Report the counts honestly in the `===WORD_COUNTS===` block
+Check each plan point for accurate, sufficient explanation and useful examples. Report missing coverage and evidence gaps.
 
 ### Check 4: Anti-Surzhyk & Language Scan
 
@@ -401,15 +404,15 @@ Related: {connected slugs}
 
 > **{INTRO_HOOK}**
 >
-> {2-3 sentences of significance}
+> {Explain the significance}
 
 ## {Section 1 from content_outline}
 
 ### {Concept 1}
-{{H3_WORD_RANGE} words: clear explanation with examples}
+{clear explanation with examples}
 
 ### {Concept 2}
-{{H3_WORD_RANGE} words: same depth}
+{explanation and useful examples appropriate to this concept}
 
 {comparison table or callout}
 
@@ -423,7 +426,7 @@ Related: {connected slugs}
 
 # {SUMMARY_HEADING}
 
-{Summary + 4-6 self-check questions (~200 words)}
+{Summary + 4-6 self-check questions}
 
 ---
 
@@ -434,9 +437,9 @@ After the content block, report word counts per section:
 
 ```
 ===WORD_COUNTS===
-Section "{name}": {count} words (minimum: {allocation})
+Section "{name}": {count} words
 ...
-Total: {total} words (target: {WORD_TARGET}, ratio: {total/WORD_TARGET}x)
+Total: {total} words
 ===WORD_COUNTS===
 ```
 
@@ -453,8 +456,8 @@ Plan compliance: {X}/{Y} outline points addressed (list any points you added dur
 Absolute claims: {number checked} — {list each softened or removed claim, or "all verified"}
 Language scan: {CLEAN or list of fixes made}
 Word counts:
-  - {section}: {count} / {target} ✅|❌
-  - TOTAL: {total} / {WORD_TARGET} ✅|❌
+  - {section}: {count}
+  - TOTAL: {total}
 ===CONTENT_VERIFY_END===
 ```
 
@@ -476,7 +479,7 @@ Word counts:
 - Do NOT generate activities, exercises, or vocabulary tables (Phase 3 handles these)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
 - Do NOT skip sections from the content_outline
-- Do NOT write fewer than {WORD_TARGET} words total. Do NOT write more than 150% of {WORD_TARGET} — excess prose is padding, not depth.
+- Teach the plan fully without repetition or padding.
 - Do NOT request skills or delegate to Claude
 - Do NOT fabricate quotes, dates, or historical facts — if the research file doesn't confirm it, don't claim it
 - Do NOT make absolute claims ("unique", "only", "first", "never") without verification — soften if uncertain

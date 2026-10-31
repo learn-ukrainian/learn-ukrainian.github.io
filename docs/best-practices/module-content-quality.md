@@ -27,16 +27,20 @@ This curriculum teaches Ukrainian to English speakers. It is not neutral educati
 - **No passive voice** where active is possible
 - **Cyrillic only** — no transliteration except A1 phonetics modules
 
-### Source hierarchy for verification
-1. Горох (Horoh) — modern Ukrainian language norms
-2. Грінченко (Hrinchenko) — historical Ukrainian dictionary
-3. Антоненко-Давидович (Antonenko-Davydovych) — usage guide
+### Sources for verification
+
+Select the authority for the question's facet as specified in
+[`core.md` P5](../../agents_extensions/shared/rules/core.md). Check forms and
+morphology with VESUM, spelling with Pravopys, stress with the specified stress
+sources, and meaning with modern dictionaries. Use the listed sources for
+Russianisms, heritage, and etymology in their respective roles. Mark unresolved
+claims for verification.
 
 ### Grammar quality
 - Case agreement must be perfect
 - Verb aspect choice must be semantically correct
 - Gender agreement: adjectives, past-tense verbs
-- Sentence length: max 35 words for seminar tracks, shorter for beginner
+- Make sentences comprehensible for the intended level and segment explanations where useful
 
 ---
 
@@ -110,44 +114,30 @@ HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 | Pattern | Fix |
 |---------|-----|
 | "In this module we will learn..." | Replace with hook or question |
-| Wall of facts without interpretation | Add "why this matters" after every 2 facts |
+| Wall of facts without interpretation | Explain why the facts matter and how they connect |
 | Textbook passive voice | Rewrite as direct narrative |
 | Generic conclusion | End with resonance, quote, or call to action |
 | Orphan facts (interesting but unconnected) | Connect to main narrative or cut |
 
 ---
 
-## Word Count Standards
+## Teaching adequacy
 
-**Word targets are MINIMUMS, not maximums.** Exceeding is expected and good.
-
-| Level | Core target | Seminar target |
-|-------|-------------|---------------|
-| A1 | 750w (M11+) | — |
-| A2 | 1000w | — |
-| B1 | 1500w | — |
-| B2 | 1750w | — |
-| C1 | 3000w | — |
-| C2 | 3000w | — |
-| All seminar tracks | — | 5000w (HIST, BIO, ISTORIO, LIT, FOLK, OES, RUTH) |
-
-**Never lower a word target to match thin content. Expand the content.**
-
----
+Accept content when every plan objective and content point is taught accurately,
+with sufficient explanation for the intended learner, useful worked examples,
+and aligned practice with feedback. Explain unfamiliar terms, steps, reasoning,
+and connections between ideas. Reject missing coverage, unsupported claims,
+repetitive padding, decorative digressions, dry lists replacing teaching, and
+compression that forces learners to infer untaught connections. Judge length by
+what the teaching requires; neither reward nor penalize a word count.
 
 ## Immersion Standards
 
-| Level | Ukrainian % |
-|-------|------------|
-| A1 | 10-40% (English scaffolds Ukrainian content) |
-| A2 M01-20 | 85-100% (easy Ukrainian is the teaching voice; English for glosses only) |
-| A2 M21-50 | 90-100% (richer Ukrainian; English for glosses only) |
-| A2 M51-70 | 95-100% (near-B1 Ukrainian; English for glosses only) |
-| B1 | 90-100% |
-| B2+ | 100% |
-| Seminar tracks | 98-100% |
-
----
+Use `IMMERSION_POLICIES` and `compute_immersion_band` in
+[`scripts/config.py`](../../scripts/config.py) for the current track and module.
+The policy supplies language roles and structural requirements as well as
+advisory percentages. A1 retains English support for learners; apply the
+appropriate band and learner-state rules from the configuration.
 
 ## Research-Based Content
 
@@ -197,10 +187,10 @@ Run through this before finalizing any module:
 
 - [ ] No Russianisms or calques
 - [ ] Ukrainian perspective throughout (no Soviet/Russian framing)
-- [ ] Opening hook engages in first 50 words
+- [ ] Opening hook engages the learner
 - [ ] At least 2 surprising facts or myth-busters
 - [ ] Primary sources cited and analyzed (seminar tracks)
-- [ ] Word count meets or exceeds target
+- [ ] Every objective and content point is taught with sufficient explanation, examples, and aligned practice with feedback
 - [ ] Immersion % correct for level
 - [ ] Activities test understanding, not just recall
 - [ ] Closing resonates — not a generic summary

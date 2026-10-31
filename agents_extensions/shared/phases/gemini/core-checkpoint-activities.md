@@ -129,7 +129,7 @@ Start with simpler integration (2 skills) and build to more complex (3+ skills).
 ```yaml
 - type: quiz
   title: "Перевірте знання"
-  items:  # minItems: 8, question >= 5 words
+  items:  # minItems: 8
     - question: "Integration question combining skill A and skill B?"
       explanation: "Explanation connecting both skills."
       options:  # exactly 4, exactly 1 correct
@@ -205,7 +205,7 @@ Start with simpler integration (2 skills) and build to more complex (3+ skills).
 
 ## Mandatory Self-Check
 
-1. **QUIZ**: exactly 1 `correct: true` per item, question >= 5 words
+1. **QUIZ**: exactly 1 `correct: true` per item; write clear questions
 2. **FILL-IN**: `answer` must appear in `options`
 3. **UNJUMBLE**: single sentence per item
 4. **ANAGRAM**: scrambled letters = answer letters, space-separated

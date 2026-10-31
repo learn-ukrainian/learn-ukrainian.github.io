@@ -29,7 +29,7 @@ This checks: word count, Russianisms, engagement callouts, euphony, structure, i
 
 If the audit fails:
 1. Read the specific gate failures and violation details from the audit output
-2. Edit `{CONTENT_PATH}` to fix each issue (add words if under target, remove Russianisms, add callout boxes, etc.)
+2. Edit `{CONTENT_PATH}` to fix each issue (fix coverage or evidence gaps, remove Russianisms, add callout boxes, etc.)
 3. Re-run: `bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
 4. If still failing after 2 fix attempts, proceed to output anyway — the validate phase will handle remaining issues.
 

@@ -48,7 +48,7 @@ Level:        {LEVEL}
 Module:       #{MODULE_NUM}
 Slug:         {SLUG}
 Title:        {TOPIC_TITLE}
-Word target:  {WORD_TARGET}
+Historical length metadata (non-authoritative): {WORD_TARGET}
 ```
 
 ---

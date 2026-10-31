@@ -39,7 +39,7 @@ Do not assume you wrote this content. Do not be generous.**
 ```
 Skill identity:   {SKILL_IDENTITY}
 Module persona:   {PERSONA_VOICE}, acting as {PERSONA_ROLE}
-Word count:       {COMPUTED_WORD_COUNT} / {COMPUTED_WORD_TARGET} ({COMPUTED_WORD_PERCENT}%)
+Actual word count: {COMPUTED_WORD_COUNT}
 Activities:       {COMPUTED_ACTIVITY_COUNT}
 Vocabulary items: {COMPUTED_VOCAB_COUNT}
 Engagement boxes: {COMPUTED_ENGAGEMENT_COUNT}

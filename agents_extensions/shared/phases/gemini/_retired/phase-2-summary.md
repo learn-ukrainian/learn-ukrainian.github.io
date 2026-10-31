@@ -12,7 +12,7 @@
 
 Write the final summary section (**Підсумок**) for the module **{TOPIC_TITLE}**.
 
-- **Minimum**: 300 words
+- Explain the summary points sufficiently for the learner.
 - **Content**: Summarize the key grammar and cultural takeaways from the module.
 - **Self-Check**: Include 4-6 self-assessment questions (Перевірте себе).
 
@@ -39,7 +39,7 @@ These are the module's stated learning objectives:
 
 # Підсумок
 
-{Summary text — 2-3 paragraphs}
+{Summary text that explains the connections}
 
 **Перевірте себе:**
 1. {Question 1}

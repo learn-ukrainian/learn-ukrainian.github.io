@@ -122,7 +122,7 @@ RIGHT (additive via `insert_after`):
 - Level: {LEVEL}
 - Module: {MODULE_NUM}
 - Slug: {MODULE_SLUG}
-- Word target: {WORD_TARGET}
+- Teaching criterion: complete supported coverage; no length target.
 - Failure group: {FAILURE_GROUP_KEY}
 - Coverage before this pass: {COVERAGE_PCT_BEFORE}
 - Iteration: {ITERATION}

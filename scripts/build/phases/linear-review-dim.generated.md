@@ -204,17 +204,13 @@ reviewer-protocol failure.
 - Level: {LEVEL}
 - Module: {MODULE_NUM}
 - Slug: {MODULE_SLUG}
-- Word target: {WORD_TARGET}
+- Teaching criterion: complete coverage and sufficient explanation; no length target.
 
 ## Module Size Policy — dossier/evidence-led advisory context (#4801)
 
 {SIZE_POLICY}
 
-Use this as review context, not as a mechanical word-count gate. If the module
-is over the advisory ceiling, decide whether the extra length is source-backed
-density and necessary pedagogy, or filler/padding. Source-backed density is not
-a defect; repeated framing, generic exposition, uncited interpretation, and
-inflated transitions are defects when they affect `{DIM}`.
+Use source evidence as review context, not as a mechanical word-count gate. Ignore numeric size bands, floors and ceilings in the legacy metadata above. Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count. Source-backed density and necessary pedagogy remain acceptable. Repeated framing, conclusions, transitions, definitions, generic exposition or uncited interpretation are filler/padding defects when they affect `{DIM}`.
 
 ## Learner State
 

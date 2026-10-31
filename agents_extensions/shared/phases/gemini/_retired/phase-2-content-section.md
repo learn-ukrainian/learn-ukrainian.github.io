@@ -2,16 +2,16 @@
 
 > **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_VOICE}. Maintain this persona throughout — do not drift into generic AI tone.
 
-> **Your #1 job: Write {HARD_MINIMUM_WORD_COUNT} words for the section "{SECTION_TITLE}".**
-> This is ONE section of a larger module — stay within your word budget.
-> **Do NOT exceed 2x your target.** If your target is 300, write 300-600. If 900, write 900-1400. Going over wastes tokens and bloats the module.
+> **Your job: Teach every point in section "{SECTION_TITLE}" accurately and sufficiently for the learner.**
+> This is one section of a larger module. Stay within its teaching scope.
+> Teach the section fully without repetition, padding or compression that leaves connections untaught.
 
 ## Files to Read
 
 | File | Purpose |
 |------|---------|
 | `{RESEARCH_PATH}` | Factual foundation — use exhaustively |
-| `{META_PATH}` | Content outline with section word allocations |
+| `{META_PATH}` | Content outline and teaching points |
 | `{PLAN_PATH}` | Objectives, vocabulary_hints (use ONLY these words) |
 | `{QUICK_REF_PATH}` | Level constraints, immersion %, engagement minimums |
 
@@ -21,7 +21,7 @@ Read ALL four files before writing anything.
 
 Write the section prose for **{SECTION_TITLE}** within the module **{TOPIC_TITLE}**.
 
-- **WORD BUDGET**: {HARD_MINIMUM_WORD_COUNT} words minimum, {HARD_MINIMUM_WORD_COUNT} × 2 maximum. Stay in this range.
+- Explain unfamiliar terms, steps, reasoning, and connections with useful examples.
 - **Engagement callouts**: Include at least {SECTION_ENGAGEMENT_MIN} callout(s) in this section.
 - **Example sentences**: Include at least {SECTION_EXAMPLE_MIN} example sentences in this section.
 
@@ -102,11 +102,11 @@ These biographical details have appeared in previous `[!biography]` callouts or 
 
 ### Rule 1: Every Concept Gets Dedicated Depth
 Each item in this section MUST get its own `### H3` subsection.
-Minimum **100-150 words per H3 block**.
+Explain each H3 point sufficiently for the learner.
 
 ### Rule 2: Depth Components
 Each H3 concept block MUST contain:
-1. **Definition/explanation** (3+ sentences)
+1. **Definition/explanation** sufficient for the learner
 2. **Detailed mechanics** (how it works, formation, patterns)
 3. **3+ example sentences** in context
 4. **Usage note or comparison** (nuance, common pitfalls)
@@ -122,7 +122,7 @@ FORBIDDEN: 5+ consecutive `_Приклад:_` lines. Mix these formats:
 - Callout boxes with examples
 
 ### Rule 4: Presentation Consistency
-All items in a category: SAME format, SAME depth (±20%), SAME example count (±1).
+Present items consistently while giving each the explanation and examples it needs.
 
 ### Rule 5: Anti-Robotic Writing
 - No 3+ sentences starting with the same phrase
@@ -132,16 +132,9 @@ All items in a category: SAME format, SAME depth (±20%), SAME example count (±
 
 ---
 
-## How to Stay in Budget (Quality over Quantity)
+## Teaching coverage
 
-**Write to your word budget — not more, not less.**
-
-- Target: {HARD_MINIMUM_WORD_COUNT} words. Ceiling: 2× that number.
-- If under target: add depth to existing concepts (examples, tables, callouts).
-- If OVER target: you are bloating. Cut filler, merge similar points, remove redundant examples.
-- **This is ONE section of a multi-section module.** The module has other sections covering other topics. Do not expand beyond your scope.
-
-**Per concept (each H3):** 2-3 sentences of explanation + 2-3 examples + 1 usage note = ~100-150 words. That's enough.
+Teach each concept accurately with sufficient explanation and useful examples. Avoid repetition, padding, decorative digressions, and untaught connections. Stay within this section’s scope.
 
 ---
 
@@ -293,10 +286,10 @@ Re-read your section for:
 ## {SECTION_TITLE}
 
 ### {Concept 1}
-{100-150+ words}
+{Explanation and useful examples}
 
 ### {Concept 2}
-{100-150+ words}
+{Explanation and useful examples}
 
 ...
 
@@ -307,7 +300,7 @@ After the content block, report word count:
 
 ```
 ===WORD_COUNTS===
-Section "{SECTION_TITLE}": {count} words (budget: {HARD_MINIMUM_WORD_COUNT}-{HARD_MINIMUM_WORD_COUNT}×2)
+Section "{SECTION_TITLE}": {count} words
 ===WORD_COUNTS===
 ```
 

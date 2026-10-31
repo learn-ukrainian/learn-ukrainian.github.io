@@ -60,7 +60,7 @@ style preferences — they're contractual anchors. See
 
 **Module:** {MODULE_NUM}: {TOPIC_TITLE} ({LEVEL}, {PHASE})
 **Writer:** {WRITER_MODEL}
-**Word target:** {WORD_TARGET}
+**Teaching criterion:** complete supported coverage; no length target.
 
 ## Level Immersion Rule (§1)
 

@@ -24,9 +24,7 @@ Apply disposition in this order:
 Semantic `PASS` never overrides deterministic or track-policy findings. A
 declared claim count never substitutes for its atomic ledger. Metadata never
 substitutes for direct verification of perceptual audio, video, image, text, or
-interactive claims. A count
-above the size-policy advisory ceiling is not an automatic failure; the
-semantic reviewer decides whether the excess is sourced density or padding.
+interactive claims. Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count. Numeric size metadata is never a semantic acceptance criterion. Existing deterministic and track-policy runtime findings remain separate until their AC-02 migration.
 The combined result is immutable evidence for the hashed inputs only.
 
 Canonical severity is `blocker | high | medium | low | info`, matching the

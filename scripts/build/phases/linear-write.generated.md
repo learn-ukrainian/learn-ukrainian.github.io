@@ -24,33 +24,19 @@ RAG chunks.
 - Slug: {MODULE_SLUG}
 - Topic: {TOPIC_TITLE}
 - Phase: {PHASE}
-- Word **minimum**: {WORD_TARGET} — this is a FLOOR, not a target. Plan section
-  budgets around **~1.20× the minimum**: the strict gate tokenization excludes
-  markdown comments, JSX syntax, punctuation, numbers, and page refs, so a
-  self-counted `wc -w` runs ~15% high. Do NOT calibrate length down because the
-  topic feels simple — write to the depth the directives below demand.
+- Teaching criterion: complete coverage and sufficient explanation; no length target.
 
-## Module Size Policy — dossier/evidence-led expansion control (#4801)
+## Coverage and teaching adequacy
+
+Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
+
+## Source support and legacy runtime context
+
+Legacy size metadata below is retained as runtime context only. Numeric floors, ceilings and ranges have no teaching authority. Complete the supported objectives; identify each unsupported objective or evidence gap for source research or versioned plan review. Never invent depth or pad. Runtime length gates and plan-data migration remain separate work under #12256 AC-02 and AC-03.
 
 {SIZE_POLICY}
 
-This policy does not lower the plan floor on its own. It controls expansion
-permission: never invent depth to satisfy a fixed word count, and never treat
-old 150% multiplier thinking as a target. If the policy reports
-`plan_policy_review_required` or `blocked_until_research_dossier`, complete the
-verifiable coverage and emit the required `SIZE_POLICY_MISMATCH` marker instead
-of padding.
-
-## Section Word Budgets — policy-aware first-draft requirements
-
-The first draft must meet or exceed `{WORD_TARGET}` and must hit every section
-`words:` budget below when the size policy permits source-backed expansion. If
-the first draft is short, the pipeline may request targeted expansion before
-Python QG continues; that expansion is allowed only with substantive, cited
-exposition, examples, close-reading, source comparison, and cultural/grammar
-analysis.
-`:::primary-reading` quoted text is excluded from counted words; surrounding
-explanation must carry the budget.
+Section sizing metadata below is historical, not a first-draft quota. Cover the plan's content points without aiming at these counts.
 
 {SECTION_WORD_BUDGETS}
 
@@ -219,7 +205,7 @@ the fix, `correctAnswer:`, `right:`, `fix:`) leak deliberate typos into
 
 Emit one `<plan_reasoning section="...">...</plan_reasoning>` block per section
 (≤200 words), each containing these exact XML sub-nodes: `<word_budget>`
-(allocation + running total vs {WORD_TARGET}), `<plan_vocab>` (required lemmas +
+(coverage and explanation needs; legacy tag name only, no numeric budget), `<plan_vocab>` (required lemmas +
 grounding sentence), `<register>` (immersion ratio + how preserved),
 `<teaching_sequence>` (Knowledge Packet facts/citations used),
 `<implementation_map>` (list every `obligation_id` once with artifact, location,
@@ -250,15 +236,12 @@ convert remaining bad forms to `<!-- bad -->...<!-- /bad -->`. If
 
 - **Depth, positively stated.** Conjugation/case paradigms ship the FULL six-row
   person/number set (`я / ти / він,вона,воно / ми / ви / вони`). Give ≥1 prose
-  model sentence per concept AND per required vocab item. Reach the prose floor
-  with flowing teacher prose AROUND tables/callouts — structure is bonus density,
-  never a substitute for prose.
+  model sentence per concept AND per required vocab item. Explain how forms and ideas connect in flowing teacher prose around tables and callouts; structure never substitutes for explanation.
 - **Warm, collaborative teacher voice.** Speak TO the learner ("you" / "your"),
   warm and direct — never clipped, never bureaucratic, never third-person about
   the learner. One single teacher voice across the whole module (see
   `#R-SINGLE-VOICE-A1`, `#R-VOICE-META`).
-- **Prose vs structure.** `word_count` counts PROSE only (not callouts, tables,
-  bullets, dialogue cells, comments). Put flowing prose in section bodies; put
+- **Prose vs structure.** Explain the teaching in section bodies; put
   paradigms, trap pairs, and vocab in tables/components per `#R-CLEAN-TABLES`.
 - **Verify every Cyrillic form.** Call `mcp__sources__verify_words` for EVERY
   Cyrillic form before emitting it (except marker-protected bad forms and the

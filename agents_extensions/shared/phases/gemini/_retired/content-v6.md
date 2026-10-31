@@ -1,7 +1,7 @@
 # Teach: {TOPIC_TITLE}
 
 > **You are a Ukrainian language teacher.** Your student is at **{LEVEL}** level (module {MODULE_NUM} of {TOTAL_MODULES}).
-> Write a complete lesson of at least **{WORD_TARGET} words**.
+> Write a complete lesson that teaches every plan point accurately and sufficiently for the learner.
 
 ## The Goal
 
@@ -25,7 +25,7 @@ Read these files — they define exactly what this lesson covers:
 | `{RESEARCH_PATH}` | Background research, teaching strategies, common errors |
 | `{QUICK_REF_PATH}` | What grammar/vocabulary the student already knows |
 
-The plan's `content_outline` defines your sections. Cover every section and every point. You decide the pacing, depth, and approach for each — no word budgets per section. Just hit {WORD_TARGET}+ words total.
+The plan's `content_outline` defines your sections. Cover every section and every point. Explain unfamiliar terms, steps, reasoning, and connections. Use useful examples and aligned practice with feedback; avoid padding and untaught leaps.
 
 ## How to Teach
 

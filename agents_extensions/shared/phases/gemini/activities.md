@@ -192,7 +192,7 @@ These activity types follow a reading activity. Use `source_reading` to link bac
   source_reading: reading-hrushevsky
   title: "Есе: народоцентричний підхід"
   prompt: "Як Грушевський обґрунтовує свій народоцентричний підхід до історії? Наведіть конкретні приклади з тексту."
-  min_words: 150
+  min_words: 150  # Legacy schema compatibility metadata, not a teaching or response-length target
   model_answer: "Грушевський будує свій аргумент на протиставленні..."
   rubric:
     - criteria: "Аргументація"
