@@ -648,6 +648,12 @@ def _require_public_push(tree: Path, remote: str, ref: str, commit: str) -> None
 
     snapshot = dict(os.environ)
     try:
+        # The message scan excludes history already on the public default branch only when that
+        # tip is in this object store. A missing tip makes it scan already-public commits.
+        with suppress(OSError, subprocess.SubprocessError):
+            _verification_git(tree, "fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
+                              "+refs/heads/main:refs/remotes/origin/main", credential_remote=remote,
+                              timeout=VERIFICATION_FETCH_TIMEOUT)
         git_dir = _git(tree, "rev-parse", "--absolute-git-dir", isolate=True)
         base = _git(tree, "merge-base", "origin/main", commit, isolate=True)
         environment = dict(os.environ)
