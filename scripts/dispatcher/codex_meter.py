@@ -9,7 +9,7 @@ from pathlib import Path
 
 from scripts.agent_runtime.codex_accounts import CodexAccountRefused, load_codex_account_binding
 from scripts.common.task_store_paths import tasks_dir
-from scripts.orchestration.task_record_store import iter_task_records
+from scripts.orchestration.task_record_store import iter_task_records, read_task_record
 
 # Standard USD per million tokens, matching scripts/config/model_catalog.yaml.
 # Luna cached input: https://developers.openai.com/api/docs/models/gpt-6-luna
@@ -42,7 +42,9 @@ def estimate(directory: Path, budget: Decimal) -> dict:
         raise ValueError("task store unavailable")
     for path in iter_task_records(directory, include_archive=True):
         try:
-            record = json.loads(path.read_text())
+            record = read_task_record(path)
+            if record is None:
+                continue
         except (OSError, ValueError):
             unknown += 1
             continue

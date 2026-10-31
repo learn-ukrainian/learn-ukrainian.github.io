@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import fcntl
 import json
+import logging
 import os
 import re
 import threading
@@ -31,9 +32,73 @@ from pathlib import Path
 from typing import Any
 
 ARCHIVE_DIR_NAME = "archive"
+REVIEW_TASK_FLAG_FIELDS = (
+    "pr", "review_attempt", "require_review_verdict", "review_profile", "review_author_model", "review_risk",
+)
 # Lock-file inodes each thread holds through task_state_lock.
 _HELD_TASK_LOCKS = threading.local()
 _REDISPATCH_ARCHIVED_STEM_RE = re.compile(r"^(?P<base>.+)\.(?P<tag>\d{8}T\d{6}\d*Z(?:\.\d+)?)\.archived$")
+_LOG = logging.getLogger(__name__)
+
+
+def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = False) -> dict[str, Any] | None:
+    """Distinguish records from sidecars without hiding damaged record claims.
+
+    Dispatch writes an integer schema version and a task-id basename; legacy
+    records may identify a run by filename and lifecycle fields alone. The v2
+    basename and archive collision stamps follow the by-id naming contract. A
+    broken JSON object may have lost its markers to truncation, so it remains
+    a record claim and fails closed.
+    """
+    try:
+        decoded = raw.decode("utf-8")
+        record = json.loads(decoded)
+    except RecursionError as exc:
+        raise ValueError(f"task record {path} exceeds JSON parser nesting") from exc
+    except ValueError as exc:
+        if isinstance(exc, UnicodeDecodeError):
+            raise
+        prefix = 0
+        while prefix < len(decoded) and (decoded[prefix].isspace() or decoded[prefix] in "\ufeff\x00"):
+            prefix += 1
+        if decoded.startswith("{", prefix):
+            raise
+        record = None
+    if not isinstance(record, dict):
+        _LOG.warning("NON_RECORD_FILE: %s", path)
+        return None
+    task_id = record.get("task_id")
+    legacy = "schema_version" not in record and (
+        any(key in record for key in (
+            "run_nonce", "worktree_path", "cwd", "acp_runtime_paths", "worktree_prep",
+            "review_attempt", "review_contract", "worktree_branch", "branch", "authoring_review_admission"
+        )) or ("agent" in record and "status" in record)
+        or any(record.get(name) not in (None, False, "", []) for name in REVIEW_TASK_FLAG_FIELDS)
+        or bool(record.get("review_mode") or record.get("type") == "review")
+    )
+    receipt = ("schema" in record and "schema_version" not in record
+               and isinstance(task_id, str) and not candidate_task_record_names(task_id, (path.name,)))
+    if (receipt and not legacy) or not ("task_id" in record or isinstance(record.get("schema_version"), int) or legacy):
+        _LOG.warning("NON_RECORD_FILE: %s", path)
+        return None
+    if "schema_version" in record and (type(record["schema_version"]) is not int
+                                       or record["schema_version"] not in {1, 2}):
+        if display_unknown_schema and type(record["schema_version"]) is int and record["schema_version"] > 2:
+            # API visibility only: no unknown field can claim a live worker,
+            # reviewer, repository, process, grant or result.
+            return {"schema_version": record["schema_version"]}
+        raise ValueError(f"task record {path} has invalid schema_version")
+    if (("task_id" in record and (not isinstance(task_id, str) or not task_id))
+            or (record.get("schema_version") == 2 and (
+                not isinstance(task_id, str) or not candidate_task_record_names(task_id, (path.name,))
+            ))):
+        raise ValueError(f"task record {path} has invalid task identity")
+    return record
+
+
+def read_task_record(path: Path) -> dict[str, Any] | None:
+    """Read a scan candidate; foreign files are reported, damaged records raise."""
+    return parse_task_record(path, path.read_bytes())
 
 
 def task_record_path(tasks_dir: Path, task_id: str) -> Path:
@@ -79,12 +144,13 @@ def locate_task_record(tasks_dir: Path, task_id: str) -> Path | None:
 
 
 def iter_task_records(tasks_dir: Path, *, include_archive: bool) -> Iterator[Path]:
-    """Yield task record files: the hot directory sorted by name, then the archive.
+    """Yield candidate JSON paths: the hot directory sorted by name, then the archive.
 
     ``include_archive=False`` is the hot directory alone, the view every active
     reader needs. A task id re-dispatched after its old record was archived has
     one record in each place; both are yielded because they are two runs. A
-    directory that is missing or unreadable yields nothing.
+    directory that is missing or unreadable yields nothing. Readers classify at
+    their own read, after their mtime, status-byte or fingerprint prefilters.
     """
     directories = [tasks_dir, tasks_dir / ARCHIVE_DIR_NAME] if include_archive else [tasks_dir]
     for directory in directories:

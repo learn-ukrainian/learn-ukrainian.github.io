@@ -42,10 +42,16 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from scripts.rag.vesum_reingest import (
     DEFAULT_LOCK_PATH,
-    PRODUCTION_DB_PATH,
     _canonical_jsonl_sha256,
     load_lock,
     sha256_file,
+)
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreBinding,
+    StoreRefusal,
+    resolve_store,
+    resolve_store_for_write,
 )
 from scripts.verification.vesum import (
     InspectionStatus,
@@ -54,7 +60,7 @@ from scripts.verification.vesum import (
     verify_word,
 )
 
-DEFAULT_SHADOW_PATH = PROJECT_ROOT / "data" / "vesum_shadow_v680.db"
+DEFAULT_SHADOW_PATH = None
 
 
 class ActivationError(RuntimeError):
@@ -71,6 +77,10 @@ def verify_shadow_database(
     lock: dict[str, Any],
 ) -> dict[str, Any]:
     """Verify shadow database schema, row counts, metadata, and probes before activation."""
+    source = resolve_store("vesum", PROJECT_ROOT, binding=StoreBinding("vesum", shadow_path))
+    if isinstance(source, StoreRefusal):
+        raise ActivationError(source.reason) from None
+    shadow_path = source.path
     if not shadow_path.is_file() or shadow_path.stat().st_size == 0:
         raise ActivationError(f"Shadow database not found or empty: {shadow_path}")
 
@@ -169,16 +179,22 @@ def verify_shadow_database(
 
 def activate_database(
     shadow_path: Path,
-    target_path: Path = PRODUCTION_DB_PATH,
+    target_path: Path | None = None,
     lock_path: Path = DEFAULT_LOCK_PATH,
     *,
     backup: bool = True,
+    db_role: str = "active",
+    create: bool = False,
 ) -> dict[str, Any]:
     """Atomically activate shadow database into target path with pre/post verification."""
+    binding = resolve_store_for_write("vesum", PROJECT_ROOT, intent="create" if create else "update",
+        operation="replace", target=None if target_path is None else ExplicitStoreWriteTarget(target_path, db_role))
+    if isinstance(binding, StoreRefusal):
+        raise ActivationError(binding.reason) from None
+    target_path = binding.path
     lock = load_lock(lock_path)
     summary = verify_shadow_database(shadow_path, lock)
 
-    target_path.parent.mkdir(parents=True, exist_ok=True)
     backup_path: Path | None = None
 
     if target_path.exists() and backup:
@@ -231,9 +247,19 @@ def activate_database(
 
 def rollback_database(
     backup_path: Path,
-    target_path: Path = PRODUCTION_DB_PATH,
+    target_path: Path | None = None,
+    *, db_role: str = "active", create: bool = False,
 ) -> dict[str, Any]:
     """Roll back production database to a specified backup."""
+    binding = resolve_store_for_write("vesum", PROJECT_ROOT, intent="create" if create else "update",
+        operation="replace", target=None if target_path is None else ExplicitStoreWriteTarget(target_path, db_role))
+    if isinstance(binding, StoreRefusal):
+        raise ActivationError(binding.reason) from None
+    target_path = binding.path
+    source = resolve_store("vesum", PROJECT_ROOT, binding=StoreBinding("vesum", backup_path))
+    if isinstance(source, StoreRefusal):
+        raise ActivationError(source.reason) from None
+    backup_path = source.path
     if not backup_path.is_file() or backup_path.stat().st_size == 0:
         raise ActivationError(f"Backup file not found or empty: {backup_path}")
 
@@ -270,20 +296,24 @@ def rollback_database(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Activate or rollback marker-preserving VESUM database")
     parser.add_argument("--shadow", type=Path, default=DEFAULT_SHADOW_PATH, help="Verified shadow database path")
-    parser.add_argument("--target", type=Path, default=PRODUCTION_DB_PATH, help="Target production database path")
+    parser.add_argument("--target", type=Path, default=None, help="Target production database path")
     parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK_PATH, help="Source lockfile path")
     parser.add_argument("--no-backup", action="store_true", help="Skip creating backup of target database")
     parser.add_argument("--rollback", type=Path, help="Roll back target database from specified backup path")
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Replacement target role (default: active)")
+    parser.add_argument("--create-db", action="store_true", help="Permit a separate shadow replacement target to be created (default: update)")
     args = parser.parse_args()
+    if not args.rollback and args.shadow is None:
+        parser.error("activation requires an explicit --shadow input")
 
     if args.rollback:
-        receipt = rollback_database(args.rollback, target_path=args.target)
+        receipt = rollback_database(args.rollback, target_path=args.target, db_role=args.db_role, create=args.create_db)
     else:
         receipt = activate_database(
             args.shadow,
             target_path=args.target,
             lock_path=args.lock,
-            backup=not args.no_backup,
+            backup=not args.no_backup, db_role=args.db_role, create=args.create_db,
         )
 
     print(json.dumps(receipt, ensure_ascii=False, indent=2))

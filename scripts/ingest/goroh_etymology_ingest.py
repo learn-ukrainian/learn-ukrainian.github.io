@@ -12,6 +12,7 @@ import sqlite3
 import sys
 import time
 import unicodedata
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -26,7 +27,7 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 REPO = Path(__file__).resolve().parents[2]
-DEFAULT_DB = REPO / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 DEFAULT_MANIFEST = REPO / "site" / "src" / "data" / "lexicon-manifest.json"
 GOROH_BASE = "https://goroh.pp.ua/Етимологія"
 DEFAULT_USER_AGENT = (
@@ -71,6 +72,16 @@ ON CONFLICT(requested_lemma) DO UPDATE SET
 _SPACE_RE = re.compile(r"\s+")
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 _APOSTROPHES = ("'", "’", "ʼ")
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 class StopIngest(RuntimeError):
@@ -292,64 +303,81 @@ def ingest_goroh_etymology(
     user_agent: str,
     timeout: int,
     max_text_chars: int,
+    db_role: str = "active",
+    create: bool = False,
 ) -> tuple[int, int]:
     """Fetch Atlas-bounded Goroh etymology rows into sources.db."""
-    if not dry_run:
-        refuse_writable_corpus_database(str(db_path))
-    conn = None if dry_run else sqlite3.connect(str(db_path))
-    fetched = 0
-    loaded = 0
-    try:
-        if conn is not None:
-            ensure_goroh_etymology_schema(conn)
-        for lemma_index, lemma in enumerate(lemmas):
-            if conn is not None and not refresh and _is_cached(conn, lemma):
-                print(f"{lemma}: cached")
-                continue
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
+    with nullcontext() if dry_run else store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        ) if not dry_run else None
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        if binding is not None:
+            db_path = binding.path
+        if not dry_run:
+            refuse_writable_corpus_database(str(db_path))
+        conn = None if dry_run else sqlite3.connect(binding.sqlite_uri, uri=True)
+        fetched = 0
+        loaded = 0
+        try:
+            if conn is not None:
+                ensure_goroh_etymology_schema(conn)
+            for lemma_index, lemma in enumerate(lemmas):
+                if conn is not None and not refresh and _is_cached(conn, lemma):
+                    print(f"{lemma}: cached")
+                    continue
 
-            row = None
-            for candidate_index, candidate in enumerate(lookup_candidates(lemma)):
-                if (lemma_index or candidate_index) and sleep_s > 0:
-                    time.sleep(sleep_s)
-                fetched += 1
-                try:
-                    row = fetch_goroh_entry(
-                        candidate,
-                        requested_lemma=lemma,
-                        user_agent=user_agent,
-                        timeout=timeout,
-                        max_text_chars=max_text_chars,
-                    )
-                except StopIngest as exc:
-                    print(str(exc), file=sys.stderr)
-                    return fetched, loaded
-                if row:
-                    if candidate != lemma:
-                        print(f"{lemma}: {row['headword']} via {candidate}")
-                    else:
-                        print(f"{lemma}: {row['headword']}")
-                    break
-
-            if not row:
-                print(f"{lemma}: no Goroh etymology")
-                if conn is not None and refresh:
-                    with conn:
-                        conn.execute(
-                            "DELETE FROM goroh_etymology WHERE requested_lemma = ?",
-                            (clean_text(lemma),),
+                row = None
+                for candidate_index, candidate in enumerate(lookup_candidates(lemma)):
+                    if (lemma_index or candidate_index) and sleep_s > 0:
+                        time.sleep(sleep_s)
+                    fetched += 1
+                    try:
+                        row = fetch_goroh_entry(
+                            candidate,
+                            requested_lemma=lemma,
+                            user_agent=user_agent,
+                            timeout=timeout,
+                            max_text_chars=max_text_chars,
                         )
-                continue
-            if dry_run:
+                    except StopIngest as exc:
+                        print(str(exc), file=sys.stderr)
+                        return fetched, loaded
+                    if row:
+                        if candidate != lemma:
+                            print(f"{lemma}: {row['headword']} via {candidate}")
+                        else:
+                            print(f"{lemma}: {row['headword']}")
+                        break
+
+                if not row:
+                    print(f"{lemma}: no Goroh etymology")
+                    if conn is not None and refresh:
+                        with conn:
+                            conn.execute(
+                                "DELETE FROM goroh_etymology WHERE requested_lemma = ?",
+                                (clean_text(lemma),),
+                            )
+                    continue
+                if dry_run:
+                    loaded += 1
+                    continue
+                assert conn is not None
+                with conn:
+                    upsert_goroh_row(conn, row)
                 loaded += 1
-                continue
-            assert conn is not None
-            with conn:
-                upsert_goroh_row(conn, row)
-            loaded += 1
-        return fetched, loaded
-    finally:
-        if conn is not None:
-            conn.close()
+            return fetched, loaded
+        finally:
+            if conn is not None:
+                conn.close()
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -416,6 +444,8 @@ Exit codes:
         default=DEFAULT_USER_AGENT,
         help=f"HTTP User-Agent for direct Goroh requests. Default: {DEFAULT_USER_AGENT}",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); use staging for a separate output")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a staging/shadow database (default: update only)")
     return parser
 
 
@@ -434,10 +464,14 @@ def main(argv: list[str] | None = None) -> int:
         user_agent=args.user_agent,
         timeout=max(1, args.timeout),
         max_text_chars=max(1, args.max_text_chars),
-    )
+     db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     print(f"Fetched {fetched} Goroh page(s); loaded {loaded} row(s).")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

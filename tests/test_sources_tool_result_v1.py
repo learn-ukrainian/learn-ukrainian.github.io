@@ -276,6 +276,7 @@ def test_synii_pinned_lookup(server_module, monkeypatch, tmp_path, synii_matches
     """Exercise the real SQL lookup with source-attested rows, including POS filtering."""
     import sqlite3
 
+    from scripts.storage.topology import ENV_VESUM_DB
     from scripts.verification import vesum
 
     db_path = tmp_path / "vesum.db"
@@ -284,7 +285,7 @@ def test_synii_pinned_lookup(server_module, monkeypatch, tmp_path, synii_matches
         conn.executemany("INSERT INTO forms VALUES (?, ?, ?, ?)", [
             ("синій", row["lemma"], row["pos"], row["tags"]) for row in synii_matches
         ])
-    monkeypatch.setattr(vesum, "VESUM_DB_PATH", db_path)
+    monkeypatch.setenv(ENV_VESUM_DB, str(db_path))
     monkeypatch.setattr(vesum, "_vesum_conn", None)
     monkeypatch.setattr(vesum, "_vesum_conn_path", None)
     monkeypatch.setattr(server_module, "_vesum_source_version", lambda: SYNII_SHA256)

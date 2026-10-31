@@ -17,7 +17,15 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
-DEFAULT_DB = Path("data/sources.db")
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
+
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 
 CYRILLIC_SCRIPT_MARKERS = {
     "р.",
@@ -264,75 +272,96 @@ def _load_forms(raw_json: str) -> dict[str, Any]:
     return decoded if isinstance(decoded, dict) else {}
 
 
-def recover_database(db_path: Path, dry_run: bool = False) -> dict[str, int | float]:
+def recover_database(db_path: Path, dry_run: bool = False, *, db_role: str = "active", create: bool = False) -> dict[str, int | float]:
     """Populate esum_cognate_forms.cognate_forms_recovered from cognate_forms."""
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
 
-    refuse_writable_corpus_database(db_path)
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    try:
-        if not dry_run:
-            ensure_recovered_column(conn)
-
-        rows = conn.execute(
-            """
-            SELECT entry_id, cognate_forms
-            FROM esum_cognate_forms
-            ORDER BY entry_id
-            """
-        ).fetchall()
-
-        entries_with_eligible = 0
-        entries_with_recovered = 0
-        recovered_forms_total = 0
-
-        updates: list[tuple[str, int]] = []
-        for row in rows:
-            forms = _load_forms(row["cognate_forms"])
-            if any(should_recover_marker(marker) for marker in forms):
-                entries_with_eligible += 1
-            recovered = recover_cognate_forms(forms)
-            if recovered:
-                entries_with_recovered += 1
-                recovered_forms_total += len(recovered)
-            updates.append((json.dumps(recovered, ensure_ascii=False, sort_keys=True), row["entry_id"]))
-
-        if not dry_run:
-            with conn:
-                conn.executemany(
-                    """
-                    UPDATE esum_cognate_forms
-                    SET cognate_forms_recovered = ?
-                    WHERE entry_id = ?
-                    """,
-                    updates,
-                )
-
-        coverage_pct = round(
-            (entries_with_recovered / entries_with_eligible * 100) if entries_with_eligible else 0.0,
-            2,
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
         )
-        return {
-            "rows_processed": len(rows),
-            "entries_with_non_cyrillic_markers": entries_with_eligible,
-            "entries_with_recovered_latin": entries_with_recovered,
-            "recovered_forms_total": recovered_forms_total,
-            "coverage_pct": coverage_pct,
-        }
-    finally:
-        conn.close()
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+
+        refuse_writable_corpus_database(db_path)
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        conn.row_factory = sqlite3.Row
+        try:
+            if not dry_run:
+                ensure_recovered_column(conn)
+
+            rows = conn.execute(
+                """
+                SELECT entry_id, cognate_forms
+                FROM esum_cognate_forms
+                ORDER BY entry_id
+                """
+            ).fetchall()
+
+            entries_with_eligible = 0
+            entries_with_recovered = 0
+            recovered_forms_total = 0
+
+            updates: list[tuple[str, int]] = []
+            for row in rows:
+                forms = _load_forms(row["cognate_forms"])
+                if any(should_recover_marker(marker) for marker in forms):
+                    entries_with_eligible += 1
+                recovered = recover_cognate_forms(forms)
+                if recovered:
+                    entries_with_recovered += 1
+                    recovered_forms_total += len(recovered)
+                updates.append((json.dumps(recovered, ensure_ascii=False, sort_keys=True), row["entry_id"]))
+
+            if not dry_run:
+                with conn:
+                    conn.executemany(
+                        """
+                        UPDATE esum_cognate_forms
+                        SET cognate_forms_recovered = ?
+                        WHERE entry_id = ?
+                        """,
+                        updates,
+                    )
+
+            coverage_pct = round(
+                (entries_with_recovered / entries_with_eligible * 100) if entries_with_eligible else 0.0,
+                2,
+            )
+            return {
+                "rows_processed": len(rows),
+                "entries_with_non_cyrillic_markers": entries_with_eligible,
+                "entries_with_recovered_latin": entries_with_recovered,
+                "recovered_forms_total": recovered_forms_total,
+                "coverage_pct": coverage_pct,
+            }
+        finally:
+            conn.close()
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args()
 
-    stats = recover_database(args.db, dry_run=args.dry_run)
+    stats = recover_database(args.db, dry_run=args.dry_run, db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     print(json.dumps(stats, ensure_ascii=False, indent=2))
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

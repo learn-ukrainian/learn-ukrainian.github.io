@@ -28,9 +28,29 @@ except ModuleNotFoundError as exc:
     from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-VESUM_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"
+
 _TRAILING_PUNCTUATION = "?!."
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[3]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 @dataclass(frozen=True)
 class VocabCoverageResult:
@@ -79,7 +99,8 @@ def _load_vocab_words(vocab_yaml_path: Path) -> tuple[str, ...]:
     return tuple(words)
 
 
-def _vesum_lemma_lookup(term: str, db_path: Path = VESUM_DB_PATH) -> str | None:
+def _vesum_lemma_lookup(term: str, db_path: Path | None = None) -> str | None:
+    db_path = _store_path('vesum', db_path)
     if not db_path.exists() or db_path.stat().st_size == 0:
         return None
 
@@ -88,7 +109,7 @@ def _vesum_lemma_lookup(term: str, db_path: Path = VESUM_DB_PATH) -> str | None:
         return None
 
     try:
-        with _open_readonly(str(db_path)) as db:
+        with _open_readonly(_store_path('vesum', db_path, required=True)) as db:
             # Current contract for this validator: data/vesum.db exposes
             # vesum(form, lemma). Older local imports used forms(word_form, lemma),
             # so keep that fallback to avoid making the validator environment-fragile.
@@ -160,3 +181,10 @@ def check_vocab_coverage(
         missing_terms=tuple(missing),
         present_mapping=present_mapping,
     )
+
+
+def __getattr__(name):
+    stores = {'VESUM_DB_PATH': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)

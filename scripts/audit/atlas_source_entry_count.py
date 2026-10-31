@@ -290,7 +290,7 @@ def build_source_entry_count(
     include_ohoiko_private: bool = False,
     ohoiko_private_roots: Sequence[Path] = (atlas_source_census.DEFAULT_OHOIKO_PRIVATE_ROOT,),
     textbook_txt_root: Path | None = atlas_source_census.DEFAULT_TEXTBOOK_TXT_ROOT,
-    sources_db_path: Path | None = atlas_source_census.DEFAULT_SOURCES_DB,
+    sources_db_path: Path | None | str = "default",
     textbook_jsonl_root: Path | None = DEFAULT_TEXTBOOK_JSONL_ROOT,
     vesum_lookup: VesumLookup | None = verify_words,
 ) -> SourceEntryCountResult:

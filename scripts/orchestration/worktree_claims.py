@@ -42,7 +42,7 @@ from scripts.orchestration.dead_worker_state import worker_liveness
 from scripts.orchestration.execution_safe_git import SafeGitRunner
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
-from scripts.orchestration.task_record_store import task_record_path
+from scripts.orchestration.task_record_store import parse_task_record, task_record_path
 from scripts.path_safety import assert_delete_target
 
 # Lock files live in ``<git common dir>/<LOCK_DIR_NAME>`` so every checkout of
@@ -417,12 +417,12 @@ def active_worktree_claim_refusal(
             continue
         except OSError:
             return refused(state_file, "unreadable")
-        if not record_may_claim_worktree(raw, needles):
-            continue
         try:
-            record = json.loads(raw)
+            record = parse_task_record(state_file, raw)
         except (ValueError, RecursionError):
             return refused(state_file, "unreadable")
+        if record is None or not record_may_claim_worktree(raw, needles):
+            continue
         if not isinstance(record, dict):
             # Valid JSON that is not an object (a worker's proof list) is no task record; a
             # record cut short by a failed write never parses, so it still refuses above.

@@ -50,6 +50,26 @@ EDGE_PUNCT_RE = re.compile(r"^[^\w'’-]+|[^\w'’-]+$")
 APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "′": "'"})
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def _strip_stress(text: str) -> str:
     decomposed = unicodedata.normalize("NFD", text)
     stripped = "".join(char for char in decomposed if char not in {"\u0301", "\u0300"})
@@ -126,8 +146,8 @@ class ProjectPaths:
             root=resolved_root,
             curriculum_root=resolved_root / "curriculum" / "l2-uk-en",
             curriculum_manifest=resolved_root / "curriculum" / "l2-uk-en" / "curriculum.yaml",
-            vesum_db=resolved_root / "data" / "vesum.db",
-            sources_db=resolved_root / "data" / "sources.db",
+            vesum_db=_store_path('vesum', root=resolved_root),
+            sources_db=_store_path('sources', root=resolved_root),
         )
 
 
@@ -197,7 +217,7 @@ class VesumLookup:
     def __init__(self, db_path: Path):
         if not db_path.exists():
             raise FileNotFoundError(f"VESUM database not found at {db_path}")
-        self._conn = _open_readonly(str(db_path))
+        self._conn = _open_readonly(_store_path('vesum', db_path, required=True))
         self._cache: dict[str, str | None] = {}
 
     def close(self) -> None:
@@ -252,7 +272,7 @@ class PulsLookup:
     def __init__(self, db_path: Path):
         if not db_path.exists():
             raise FileNotFoundError(f"Sources database not found at {db_path}")
-        self._conn = _open_readonly(str(db_path))
+        self._conn = _open_readonly(_store_path('sources', db_path, required=True))
         self._cache: dict[str, str | None] = {}
 
     def close(self) -> None:

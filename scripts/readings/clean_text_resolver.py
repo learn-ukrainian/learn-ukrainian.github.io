@@ -49,7 +49,7 @@ from scripts.readings.rights_classifier import (
 
 LOGGER = logging.getLogger(__name__)
 
-DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
+
 DEFAULT_OUT = PROJECT_ROOT / "data" / "primary_text_clean_resolution.json"
 
 CorpusMatch = Literal["exact", "substring"]
@@ -63,6 +63,26 @@ ChunkID = int | str
 
 AUTHOR_PREFIX_RE = re.compile(r"^\s*(?P<prefix>[^.]{2,120})\.\s+(?P<title>.+)$")
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 class CleanTextSource(TypedDict):
     """Serializable reference to hostable clean text."""
@@ -148,11 +168,12 @@ class WorkIndex:
     groups: tuple[WorkGroup, ...]
 
 
-def load_work_index(db_path: Path = DEFAULT_DB) -> WorkIndex:
+def load_work_index(db_path: Path | None = None) -> WorkIndex:
     """Load literary_texts into a deterministic in-memory work index."""
 
+    db_path = _store_path('sources', db_path)
     try:
-        with _open_readonly(db_path) as conn:
+        with _open_readonly(_store_path('sources', db_path, required=True)) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(
                 """
@@ -260,7 +281,7 @@ def resolve_clean_text(
 
 
 def build_clean_text_manifest(
-    db_path: Path = DEFAULT_DB,
+    db_path: Path | None = None,
     plans_dir: Path = DEFAULT_PLANS_DIR,
     *,
     track: str | None = None,
@@ -268,6 +289,7 @@ def build_clean_text_manifest(
 ) -> dict[str, Any]:
     """Build a clean-text resolution manifest for demanded primary works."""
 
+    db_path = _store_path('sources', db_path)
     index = load_work_index(db_path)
     demand_manifest = build_manifest(plans_dir, track=track)
     entries: list[dict[str, Any]] = []
@@ -335,7 +357,7 @@ def build_parser() -> argparse.ArgumentParser:
     """Build command-line parser."""
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db", type=Path, default=DEFAULT_DB, help="SQLite sources DB")
+    parser.add_argument("--db", type=Path, default=_store_path('sources', globals().get('DEFAULT_DB')), help="SQLite sources DB")
     parser.add_argument("--work", help="Work title single clean-text lookup")
     parser.add_argument("--author", help="Author name single clean-text lookup")
     parser.add_argument(
@@ -638,6 +660,14 @@ def _clean_query_text(value: str) -> str:
 def _normalized_key(work: str, author: str) -> str:
     return f"{normalize_work_title(work)}::{normalize_author(author)}"
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -30,7 +30,6 @@ import re
 import sqlite3
 import sys
 from collections.abc import Iterable
-from functools import lru_cache
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -228,6 +227,26 @@ LEADING_LANGUAGE_ABBREVIATIONS = {
 }
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def _looks_like_strong_entry_start_textpdf(line: str) -> bool:
     """Strong text-pdf entry start: punctuated Cyrillic headword or bracketed form."""
     plain = re.match(
@@ -247,35 +266,41 @@ def _lemma_lookup_key(lemma: str) -> str:
 
 
 def _vesum_db_path() -> Path:
-    return REPO / "data" / "vesum.db"
+    return _store_path('vesum')
 
 
 def _vesum_conn() -> SQLiteConnection | None:
-    global _VESUM_CONN, _VESUM_CONN_UNAVAILABLE
-    if _VESUM_CONN_UNAVAILABLE:
-        return None
-    if _VESUM_CONN is not None:
-        return _VESUM_CONN
+    global _VESUM_CONN, _VESUM_CONN_UNAVAILABLE, _VESUM_LEMMAS
     db_path = _vesum_db_path()
-    if not db_path.exists():
-        _VESUM_CONN_UNAVAILABLE = True
-        return None
     try:
-        _VESUM_CONN = _open_readonly(db_path)
-    except sqlite3.Error:
-        _VESUM_CONN_UNAVAILABLE = True
+        stat = db_path.stat()
+        key = (db_path, stat.st_ino, stat.st_mtime_ns, stat.st_size)
+    except OSError:
+        key = None
+    if globals().get("_VESUM_CONN_KEY") != key:
+        if _VESUM_CONN is not None:
+            _VESUM_CONN.close()
+        _VESUM_CONN = None
+        _VESUM_CONN_UNAVAILABLE = False
+        _VESUM_LEMMAS = None
+        globals()["_VESUM_CONN_KEY"] = key
+    if key is None:
         return None
+    if _VESUM_CONN is None:
+        try:
+            _VESUM_CONN = _open_readonly(_store_path("vesum", db_path, required=True))
+        except sqlite3.Error:
+            return None
     return _VESUM_CONN
 
 
 def _vesum_lemmas() -> frozenset[str]:
     global _VESUM_LEMMAS
+    conn = _vesum_conn()
     if _VESUM_LEMMAS is not None:
         return _VESUM_LEMMAS
-    conn = _vesum_conn()
     if conn is None:
-        _VESUM_LEMMAS = frozenset()
-        return _VESUM_LEMMAS
+        return frozenset()
     try:
         _VESUM_LEMMAS = frozenset(
             _lemma_lookup_key(row[0])
@@ -283,11 +308,10 @@ def _vesum_lemmas() -> frozenset[str]:
             if row[0]
         )
     except sqlite3.Error:
-        _VESUM_LEMMAS = frozenset()
+        return frozenset()
     return _VESUM_LEMMAS
 
 
-@lru_cache(maxsize=8192)
 def _vesum_has_lemma(lemma: str) -> bool:
     key = _lemma_lookup_key(lemma)
     if not key:

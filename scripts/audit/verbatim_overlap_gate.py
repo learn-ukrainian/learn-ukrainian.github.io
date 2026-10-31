@@ -86,6 +86,26 @@ ALL_POSSIBLE_CORPORA: dict[str, tuple[str, str, str, str]] = {
 }
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def get_default_index_db_path(
     sources_db: Path | str,
     k: int,
@@ -971,7 +991,7 @@ def _chained_run_len(tokens: list[str], hit_start_positions: set[int], k: int) -
 def open_sources(db_path: Path | str) -> sqlite3.Connection:
     # sources.db is only read here; open_readonly also disables the statement
     # cache that is unsafe on a shared connection (#11217).
-    conn = open_readonly(db_path, check_same_thread=False)
+    conn = open_readonly(_store_path('sources', db_path, required=True), check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -1147,7 +1167,7 @@ def cmd_baseline_sweep(args: argparse.Namespace) -> int:
 
 def build_argparser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Deterministic verbatim overlap gate (advisory)")
-    p.add_argument("--sources-db", default="data/sources.db", help="Path to sources.db (or :memory: for tests)")
+    p.add_argument("--sources-db", default=None, help="Path to sources.db (or :memory: for tests)")
     p.add_argument("--index-db", default=None, help="Explicit index sqlite path")
     p.add_argument("--k", type=int, default=K_DEFAULT, help="Shingle size (words)")
     p.add_argument("--df-n", type=int, default=DF_N_DEFAULT, help="DF threshold for ratio allowlist")

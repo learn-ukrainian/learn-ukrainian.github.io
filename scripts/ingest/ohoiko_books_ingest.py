@@ -49,7 +49,7 @@ from scripts.lexicon.ohoiko_quality_enrichment import normalize_chunk_lines
 from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+DB_PATH = None  # Selected by the connection owner at call time.
 REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 
 # Page-furniture patterns that should be stripped from entry bodies.
@@ -91,6 +91,16 @@ _SECTION_TERMINATORS = (
     "Find out more at",  # Promotional back-matter URLs
     "Most Useful Ukrainian Words",  # Repeating header in back-matter pages
     "My New Ukrainian Words",  # Blank-journal section header
+)
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
 )
 
 
@@ -427,7 +437,16 @@ def main(argv: list[str] | None = None) -> int:
         default=DB_PATH,
         help="Override target DB path (testing only).",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args(argv)
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update",
+        target=None if args.db is None else ExplicitStoreWriteTarget(args.db, args.db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    args.db = Path(request.location)
 
     book = BOOKS[args.book]
     txt_path = REFERENCES_DIR / book.txt_filename
@@ -451,48 +470,59 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     print(f"\n🗃️  Writing to {args.db}")
-    refuse_writable_corpus_database(str(args.db))
-    conn = sqlite3.connect(str(args.db))
-    try:
-        # Deterministic BEFORE evidence
-        before = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
-            (book.source_file,),
-        ).fetchone()[0]
-        total_before = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
-        print(f"   BEFORE: {before} rows for {book.source_file!r} (table total: {total_before:,})")
-
-        inserted, skipped = ingest_entries(conn, book, entries, force=args.force)
-        conn.commit()
-
-        after = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
-            (book.source_file,),
-        ).fetchone()[0]
-        total_after = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
-        print(f"   inserted: {inserted}, skipped: {skipped}")
-        print(
-            f"   AFTER: {after} rows for {book.source_file!r} "
-            f"(table total: {total_after:,}, delta +{total_after - total_before})"
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update", target=request,
         )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        args.db = binding.path
+        refuse_writable_corpus_database(str(args.db))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            # Deterministic BEFORE evidence
+            before = conn.execute(
+                "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
+                (book.source_file,),
+            ).fetchone()[0]
+            total_before = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
+            print(f"   BEFORE: {before} rows for {book.source_file!r} (table total: {total_before:,})")
 
-        # Sample row evidence
-        sample = conn.execute(
-            """SELECT chunk_id, title, char_count, substr(text, 1, 80) AS snippet
-                 FROM textbooks WHERE source_file = ? ORDER BY chunk_id LIMIT 3""",
-            (book.source_file,),
-        ).fetchall()
-        print("\n--- AFTER sample rows ---")
-        for row in sample:
-            print(f"  chunk_id={row[0]}")
-            print(f"    title={row[1]!r}")
-            print(f"    char_count={row[2]}")
-            print(f"    snippet={row[3]!r}")
-    finally:
-        conn.close()
+            inserted, skipped = ingest_entries(conn, book, entries, force=args.force)
+            conn.commit()
 
-    return 0
+            after = conn.execute(
+                "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
+                (book.source_file,),
+            ).fetchone()[0]
+            total_after = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
+            print(f"   inserted: {inserted}, skipped: {skipped}")
+            print(
+                f"   AFTER: {after} rows for {book.source_file!r} "
+                f"(table total: {total_after:,}, delta +{total_after - total_before})"
+            )
+
+            # Sample row evidence
+            sample = conn.execute(
+                """SELECT chunk_id, title, char_count, substr(text, 1, 80) AS snippet
+                     FROM textbooks WHERE source_file = ? ORDER BY chunk_id LIMIT 3""",
+                (book.source_file,),
+            ).fetchall()
+            print("\n--- AFTER sample rows ---")
+            for row in sample:
+                print(f"  chunk_id={row[0]}")
+                print(f"    title={row[1]!r}")
+                print(f"    char_count={row[2]}")
+                print(f"    snippet={row[3]!r}")
+        finally:
+            conn.close()
+
+        return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

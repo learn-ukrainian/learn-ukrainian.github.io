@@ -36,7 +36,7 @@ from scripts.control_plane.storage import (
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.message_plane import resolve_plane_mode
 from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, parse_task_record
 
 # Alert thresholds are intentionally reported, not enforced here. #5646 owns
 # consuming them. Dispatch uses the delegate default floor of 7,200 seconds.
@@ -917,7 +917,16 @@ def _read_task_record(path: Path) -> tuple[object, str | None]:
             os.close(fd)
         if len(raw) > _MAX_TASK_RECORD_BYTES:
             return None, "task_record_too_large"
-        return json.loads(raw.decode("utf-8")), None
+        record = parse_task_record(path, raw)
+        if record is None:
+            # Classification is shared; retain this collector's shape-only
+            # diagnostics so every scanned source remains accounted for.
+            try:
+                is_object = isinstance(json.loads(raw.decode("utf-8")), dict)
+            except ValueError:
+                return None, "task_record_unreadable"
+            return None, "not_a_task_record" if is_object else "task_record_not_object"
+        return record, None
     except (OSError, ValueError, RecursionError, MemoryError):
         # ValueError covers JSONDecodeError, UnicodeDecodeError and the
         # integer-string-conversion limit; RecursionError covers deep nesting;
@@ -1002,6 +1011,8 @@ def collect_stream_bottleneck_metrics(
             record, read_error = _read_task_record(path)
             if read_error is not None:
                 errors.append(_dispatch_error(read_error))
+                continue
+            if record is None:
                 continue
             if not isinstance(record, dict):
                 errors.append(_dispatch_error("task_record_not_object"))

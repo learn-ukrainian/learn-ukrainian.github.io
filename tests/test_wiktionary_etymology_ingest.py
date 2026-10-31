@@ -96,7 +96,7 @@ def test_downloaded_unpinned_archive_is_rejected_before_database_write(
         wiktionary.main([
             "--download", "--dump", str(destination),
             "--db", str(database), "--lemma", "fixture",
-        ])
+         "--db-role", "staging", "--create-db"])
 
     assert destination.read_bytes() == payload
     assert not database.exists()
@@ -140,7 +140,7 @@ def test_wiktionary_schema_and_ingest_are_idempotent_with_phrase_skip(tmp_path: 
         refresh=False,
         dry_run=False,
         max_text_chars=1200,
-    )
+     db_role="staging", create=True)
     assert (scanned, loaded, skipped) == (1, 1, 1)
 
     conn = sqlite3.connect(db_path)
@@ -162,7 +162,7 @@ def test_wiktionary_schema_and_ingest_are_idempotent_with_phrase_skip(tmp_path: 
         refresh=False,
         dry_run=False,
         max_text_chars=1200,
-    )
+     db_role="staging", create=True)
     assert (scanned_again, loaded_again, skipped_again) == (0, 0, 1)
     assert conn.execute("SELECT count(*) FROM wiktionary_etymology").fetchone()[0] == 1
     conn.close()
@@ -221,7 +221,7 @@ def test_low_quality_wiktionary_work_row_is_not_stored(tmp_path: Path) -> None:
         refresh=True,
         dry_run=False,
         max_text_chars=1200,
-    )
+     db_role="staging", create=True)
     assert (scanned, loaded, skipped) == (1, 0, 0)
 
     conn = sqlite3.connect(db_path)

@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.dispatcher import environment, git
+from scripts.dispatcher import agy_sandbox, environment, git
 from scripts.dispatcher.types import TaskSpec
 from scripts.orchestration.worktree_artifacts import is_disposable_path
 from scripts.storage.topology import STORE_FILES
@@ -33,7 +33,6 @@ def test_real_npm_ci_cannot_corrupt_primary_install(layout, tmp_path, relative):
     target = primary / relative
     (target / "sentinel").write_text("primary dependency")
     before = target.stat().st_ino
-    git.provision_links(primary, worktree)
     local = worktree / relative
     local.mkdir(parents=True, exist_ok=True)
     (local / "obsolete").write_text("stale worktree dependency")
@@ -62,7 +61,6 @@ def test_real_npm_ci_cannot_corrupt_primary_install(layout, tmp_path, relative):
 def layout(tmp_path):
     primary, worktree = tmp_path / "primary", tmp_path / "worktree"
     primary.mkdir()
-    worktree.mkdir()
     for relative in LINKS:
         target = primary / relative
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -70,6 +68,13 @@ def layout(tmp_path):
             target.write_text("database sentinel")
         else:
             target.mkdir()
+    run_git(primary, "init", "-b", "main")
+    run_git(primary, "config", "user.name", "Fixture")
+    run_git(primary, "config", "user.email", "fixture@example.invalid")
+    (primary / ".gitignore").write_text("data/\nnode_modules/\nsite/node_modules/\n.worktrees/\n")
+    run_git(primary, "add", ".gitignore")
+    run_git(primary, "commit", "-m", "fixture")
+    git.create_worktree(primary, worktree, "codex/layout", "main")
     return primary, worktree
 
 
@@ -101,13 +106,12 @@ def test_creation_and_recreation_provision_clean_reapable_links(layout, full_che
     worktree = primary / ".worktrees/dispatch/codex/fixture"
     for round_number in range(2):
         git.create_worktree(primary, worktree, f"codex/fixture-{round_number}", sha, full_checkout=full_checkout)
-        git.provision_links(primary, worktree)
         for relative in git.DATABASE_LINKS:
             link = worktree / relative
-            assert link.is_symlink()
-            assert link.readlink() == primary / relative
+            assert not link.exists()
+            assert not link.is_symlink()
             assert run_git(worktree, "check-ignore", relative) == relative
-            assert is_disposable_path(Path(relative), worktree=worktree, primary=primary)
+            assert not is_disposable_path(Path(relative), worktree=worktree, primary=primary)
         for relative in git.NODE_LINKS:
             assert not (worktree / relative).exists()
             assert not (worktree / relative).is_symlink()
@@ -163,27 +167,20 @@ def test_branch_content_cannot_choose_agy_host_database_mount(layout, case):
         vesum.rename(saved)
         vesum.symlink_to(saved)
 
-    git.provision_links(primary, worktree)
     relative = "data/vesum.db" if case == "vesum-link" else SOURCES_LINK
     link = worktree / relative
-    invalid_primary = case in {
-        "malformed", "invalid-name", "missing", "generation-link", "generation-directory",
-        "directory-link", "vesum-link",
-    }
-    assert link.is_symlink() is not invalid_primary
-    if invalid_primary:
-        # The boundary must refuse independently of provisioning.
-        link.symlink_to(primary / relative)
-    elif case in {"stale", "direct-generation", "foreign"}:
-        link.unlink()
-        link.symlink_to({"stale": stale, "direct-generation": selected, "foreign": primary / "data/vesum.db"}[case])
-    elif case == "tracked":
-        run_git(worktree, "add", "-f", relative)
-
+    link.parent.mkdir(parents=True, exist_ok=True)
+    assert not link.exists() and not link.is_symlink()
+    if case in {"stale", "direct-generation", "foreign", "tracked"}:
+        link.symlink_to({"stale": stale, "direct-generation": selected,
+                         "foreign": primary / "data/vesum.db", "tracked": selector}[case])
+        if case == "tracked":
+            run_git(worktree, "add", "-f", relative)
     if case in {"selected", "legacy"}:
         expected = selected if case == "selected" else selector
         assert _trusted_database(worktree, primary, relative) == expected
-        assert link.read_text() == "database sentinel"
+        assert expected.read_text() == "database sentinel"
+        assert not link.exists() and not link.is_symlink()
         if case == "selected":
             replacement = generations / "sources.20261030T220000Z-111111111111.db"
             replacement.write_text("new generation")
@@ -208,7 +205,8 @@ def test_existing_destination_is_never_overwritten(layout, kind):
     else:
         entry.symlink_to(primary / ("data/sources.db" if kind == "link" else "absent"))
     before = entry.lstat()
-    git.provision_links(primary, worktree)
+    with pytest.raises(agy_sandbox.Refused, match="worktree_local_store"):
+        agy_sandbox._trusted_database(worktree, primary, SOURCES_LINK)
     assert entry.lstat() == before
 
 
@@ -217,7 +215,8 @@ def test_missing_targets_are_not_linked(tmp_path):
     primary, worktree = tmp_path / "primary", tmp_path / "worktree"
     primary.mkdir()
     worktree.mkdir()
-    git.provision_links(primary, worktree)
+    with pytest.raises(agy_sandbox.Refused):
+        agy_sandbox._trusted_database(worktree, primary, SOURCES_LINK)
     assert list(worktree.iterdir()) == []
 
 
@@ -233,7 +232,8 @@ def test_symlink_escape_is_refused(layout, tmp_path, side, relative):
     if entry.exists():
         entry.rename(root / "saved")
     entry.symlink_to(outside)
-    git.provision_links(primary, worktree)
+    with pytest.raises(agy_sandbox.Refused):
+        agy_sandbox._trusted_database(worktree, primary, SOURCES_LINK)
     assert (outside / "sources.db").read_text() == "outside sentinel"
     assert sorted(p.name for p in outside.iterdir()) == ["sources.db"]
     if side == "source":
@@ -241,31 +241,29 @@ def test_symlink_escape_is_refused(layout, tmp_path, side, relative):
 
 
 def test_atomic_creation_preserves_racing_entry(layout, monkeypatch):
-    """A competing creator between inspection and symlink creation must never lose its entry."""
+    """No provisioning or trust check may replace a concurrently created store slot."""
     primary, worktree = layout
-    original = git.os.symlink
-    shared, racing = primary / SOURCES_LINK, worktree / SOURCES_LINK
+    racing = worktree / SOURCES_LINK
+    racing.parent.mkdir(parents=True, exist_ok=True)
+    racing.write_text("racing writer")
 
-    def competing_creator(source, destination, *, dir_fd):
-        if destination == "sources.db" and source == shared:
-            racing.write_text("racing writer")
-        return original(source, destination, dir_fd=dir_fd)
-
-    monkeypatch.setattr(git.os, "symlink", competing_creator)
-    git.provision_links(primary, worktree)
+    def forbidden(*args, **kwargs):
+        pytest.fail("store provisioning attempted to create a symlink")
+    monkeypatch.setattr(git.os, "symlink", forbidden)
+    with pytest.raises(agy_sandbox.Refused, match="worktree_local_store"):
+        agy_sandbox._trusted_database(worktree, primary, SOURCES_LINK)
     assert racing.read_text() == "racing writer"
 
 
 def test_unexpected_io_failure_is_reported(layout, monkeypatch):
-    """Permission and I/O failures must not silently produce incomplete provisioning."""
+    """Permission and I/O failures refuse the store boundary rather than a partial launch."""
     primary, worktree = layout
 
     def denied(*args, **kwargs):
         raise PermissionError(errno.EACCES, "denied")
-
-    monkeypatch.setattr(git.os, "symlink", denied)
-    with pytest.raises(PermissionError):
-        git.provision_links(primary, worktree)
+    monkeypatch.setattr(git.os, "open", denied)
+    with pytest.raises(agy_sandbox.Refused, match="worktree_local_store"):
+        agy_sandbox._trusted_database(worktree, primary, SOURCES_LINK)
 
 
 @pytest.mark.parametrize("relative", ["node_modules", "site/node_modules"])
@@ -273,7 +271,6 @@ def test_unexpected_io_failure_is_reported(layout, monkeypatch):
 def test_child_env_refuses_shared_install_without_changing_git_gh(layout, monkeypatch, relative, tool, args):
     """Dispatch PATH must guard shared installs without enabling legacy git/gh policies."""
     primary, worktree = layout
-    git.provision_links(primary, worktree)
     for legacy in git.NODE_LINKS:
         link = worktree / legacy
         link.parent.mkdir(parents=True, exist_ok=True)
@@ -329,9 +326,8 @@ def test_unavailable_guard_keeps_new_installs_isolated_and_refuses_legacy_links(
         )
         access = os.access
         monkeypatch.setattr(os, "access", lambda path, mode: path != unavailable and access(path, mode))
-    git.provision_links(primary, worktree)
     for relative in LINKS:
-        assert (worktree / relative).is_symlink() == relative.endswith(".db")
+        assert not (worktree / relative).is_symlink()
     (worktree / "node_modules").symlink_to(primary / "node_modules")
     spec = TaskSpec("fixture", "codex", "stub", None, "workspace-write", worktree, worktree / "prompt", worktree / "final")
     with pytest.raises(ValueError, match="npm/npx guard unavailable"):

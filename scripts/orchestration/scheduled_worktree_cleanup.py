@@ -49,7 +49,7 @@ from scripts.orchestration import backup_failure_alert, disk_watermark_alert, wo
 from scripts.orchestration.execution_safe_git import GIT
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.pool_headroom import _read_limit
-from scripts.orchestration.task_record_store import iter_task_records
+from scripts.orchestration.task_record_store import iter_task_records, read_task_record
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
@@ -516,7 +516,9 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
     for path in iter_task_records(tasks_dir, include_archive=True):
         row = {"task_id": path.stem, "action": "error"}
         try:
-            record = json.loads(path.read_text(encoding="utf-8"))
+            record = read_task_record(path)
+            if record is None:
+                continue
             if not isinstance(record, dict):
                 raise ValueError("invalid task record")
             if record.get("status") not in worktree_git._TERMINAL_DISPATCH_STATUSES:
@@ -658,7 +660,9 @@ def settle_terminal_worktrees(repo_root: Path, *, apply: bool, github: GitHubRea
         unreadable.append(root.name)
     for name in names:
         try:
-            record = json.loads((root / name).read_text(encoding="utf-8"))
+            record = read_task_record(root / name)
+            if record is None:
+                continue
         except IsADirectoryError:
             continue
         except (OSError, ValueError):

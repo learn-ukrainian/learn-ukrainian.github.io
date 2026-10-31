@@ -51,8 +51,8 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.level_config import resolve_module_track
 
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-DEFAULT_VESUM = PROJECT_ROOT / "data" / "vesum.db"
-DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+
+
 DEFAULT_CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 KAIKKI_SOURCE = "kaikki/Wiktionary (CC BY-SA 3.0)"
 
@@ -92,6 +92,26 @@ DATE_PREFIX_RE = re.compile(r"^\d{4}-\d{2}-\d{2}(?:$|[T ])")
 IPA_RE = re.compile(r"^(?:\[[^\[\]]+\]|/[^/]+/)$")
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 @dataclass(frozen=True, slots=True)
 class Violation:
     """One deterministic Word Atlas conformance violation."""
@@ -104,7 +124,8 @@ class Violation:
 class VesumLemmaLookup:
     """Small cached VESUM lookup layer for Atlas page heads."""
 
-    def __init__(self, db_path: Path = DEFAULT_VESUM):
+    def __init__(self, db_path: Path | None = None):
+        db_path = _store_path('vesum', db_path)
         self.db_path = Path(db_path)
         self._conn: SQLiteConnection | None = None
         self._cache: dict[str, bool] = {}
@@ -120,7 +141,7 @@ class VesumLemmaLookup:
         if self._conn is None:
             if not self.db_path.exists():
                 raise FileNotFoundError(f"VESUM database not found: {self.db_path}")
-            self._conn = _open_readonly(self.db_path)
+            self._conn = _open_readonly(_store_path('vesum', self.db_path, required=True))
 
     def close(self) -> None:
         if self._conn is not None:
@@ -160,7 +181,8 @@ class HeritageLemmaLookup:
     fallback (e.g. CI, which already skips the membership gate entirely without VESUM).
     """
 
-    def __init__(self, db_path: Path = DEFAULT_SOURCES_DB):
+    def __init__(self, db_path: Path | None = None):
+        db_path = _store_path('sources', db_path)
         self.db_path = Path(db_path)
         self._conn: SQLiteConnection | None = None
         self._cache: dict[str, bool] = {}
@@ -176,7 +198,7 @@ class HeritageLemmaLookup:
         if self._conn is None:
             if not self.db_path.exists():
                 raise FileNotFoundError(f"sources database not found: {self.db_path}")
-            self._conn = _open_readonly(self.db_path)
+            self._conn = _open_readonly(_store_path('sources', self.db_path, required=True))
 
     def close(self) -> None:
         if self._conn is not None:
@@ -956,8 +978,8 @@ def _print_violations(violations: list[Violation]) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate Word Atlas manifest conformance gates")
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    parser.add_argument("--vesum", type=Path, default=DEFAULT_VESUM)
-    parser.add_argument("--heritage", type=Path, default=DEFAULT_SOURCES_DB)
+    parser.add_argument("--vesum", type=Path, default=_store_path('vesum', globals().get('DEFAULT_VESUM')))
+    parser.add_argument("--heritage", type=Path, default=_store_path('sources', globals().get('DEFAULT_SOURCES_DB')))
     parser.add_argument("--curriculum", type=Path, default=DEFAULT_CURRICULUM)
     args = parser.parse_args(argv)
 
@@ -973,6 +995,14 @@ def main(argv: list[str] | None = None) -> int:
     _print_violations(violations)
     return 1 if violations else 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_VESUM': 'vesum', 'DEFAULT_SOURCES_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

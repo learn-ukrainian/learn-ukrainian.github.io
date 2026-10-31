@@ -21,7 +21,7 @@ from pathlib import Path
 
 import yaml
 
-from scripts.atlas.teacher_vesum_attest import DEFAULT_VESUM_DB, VesumAttestation, attest_lemmas
+from scripts.atlas.teacher_vesum_attest import VesumAttestation, attest_lemmas
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.storage.paths import REGISTRY_ROOT
 
@@ -614,7 +614,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--vesum-db",
         type=Path,
-        default=DEFAULT_VESUM_DB,
+        default=None,
         help="VESUM SQLite path used only with --reclassify-vesum-attested.",
     )
     parser.add_argument(

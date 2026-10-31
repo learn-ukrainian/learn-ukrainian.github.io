@@ -1,4 +1,4 @@
-PYTHON ?= .venv/bin/python
+PYTHON ?= $(shell git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python
 
 CURATED_SEED_INPUT ?= .claude/atlas-epic/plans/curated-seed/v5-curated-with-provenance.jsonl
 CURATED_SEED_DIR ?= data/lexicon
@@ -8,7 +8,7 @@ CURATED_SEED_LOCAL_SMOKE_OUT ?= batch_state/curated-v5-local-practice
 CURATED_SEED_LOCAL_SMOKE_TARGET ?= 700
 CURATED_SEED_GOLD_TARGET ?= 40
 CURATED_SEED_GOLD_OUT ?= site/public/lexicon
-CURATED_SEED_GOLD_VESUM_DB ?= data/vesum.db
+CURATED_SEED_GOLD_VESUM_DB ?= $(shell $(PYTHON) -c 'from scripts.rag import config; print(config.VESUM_DB_PATH)')
 CURATED_MEMBERSHIP ?= site/src/data/lexicon-teacher-curated-membership.json
 CURATED_MEMBERSHIP_HOMEWORK ?= .claude/atlas-epic/plans/curated-seed/curated-seed.jsonl
 CURATED_MEMBERSHIP_TEACHER ?= site/src/data/lexicon-teacher-cloze.json
@@ -73,7 +73,7 @@ practice-deck:
 	$(PYTHON) scripts/audit/generate_practice_deck.py --curated-membership "$(CURATED_MEMBERSHIP)"
 
 practice-deck-publish: practice-deck
-	$(PYTHON) scripts/practice_deck/publish.py --curated-membership "$(CURATED_MEMBERSHIP)" --vesum-db data/vesum.db
+	$(PYTHON) scripts/practice_deck/publish.py --curated-membership "$(CURATED_MEMBERSHIP)" --vesum-db "$(CURATED_SEED_GOLD_VESUM_DB)"
 
 teacher-deck-refresh:
 	@test -n "$(DOCX)" || (echo 'usage: make teacher-deck-refresh DOCX=/path/to/master.docx' && exit 2)
@@ -81,7 +81,7 @@ teacher-deck-refresh:
 
 practice-deck-linguistic-gate:
 	$(PYTHON) -c 'from scripts.practice_deck.io import PracticeDeckHydrationError, ensure_practice_deck_hydrated; exec("try:\n    ensure_practice_deck_hydrated()\nexcept PracticeDeckHydrationError as exc:\n    if \"refusing to overwrite local practice deck\" not in str(exc):\n        raise")'
-	$(PYTHON) scripts/audit/check_static_practice_assets.py --vesum-db data/vesum.db
+	$(PYTHON) scripts/audit/check_static_practice_assets.py --vesum-db "$(CURATED_SEED_GOLD_VESUM_DB)"
 
 open-dataset:
 	$(PYTHON) scripts/lexicon/export_open_dataset.py

@@ -1,9 +1,9 @@
-"""Projected stdlib-only canary for the read-only AGY sandbox (C-3027).
+"""Projected canary for the read-only AGY sandbox (C-3027).
 
 The parent copies this file into the sandbox's read-only boundary directory and runs it as the
 sandbox's first process, after bubblewrap has finished every mount. It tries each planned syscall,
 reports the outcomes on an inherited descriptor and starts AGY only when the parent, having checked
-the report itself, answers with the go byte. It imports no repository code.
+the report itself, answers with the go byte. Its fixed read probe imports only the projected trusted store contracts and locality dependency.
 """
 
 from __future__ import annotations
@@ -13,11 +13,58 @@ import json
 import os
 import socket
 import sys
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Literal
 
 
-def _attempt(op: str, path: str, port: int | None) -> str:
+@dataclass(frozen=True)
+class StoreReadResult:
+    status: Literal["read", "refused"]
+    store: str
+    reason: str | None = None
+
+
+def _read_store(store: str, repository: str) -> StoreReadResult:
+    """One fixed contract probe; no caller-supplied code, SQL or import location."""
+    if store not in {"sources", "vesum"}:
+        return StoreReadResult("refused", store, "unsupported_read_store")
+    sys.path.insert(0, str(Path(__file__).parent / "store_contract"))
+    import sqlite3
+
+    from scripts.lib.readonly_sqlite import open_readonly
+    from scripts.storage.topology import StoreRefusal, resolve_store
+
+    binding = resolve_store(store, Path(repository), env={})
+    if isinstance(binding, StoreRefusal):
+        return StoreReadResult("refused", store, binding.reason)
+    try:
+        connection = open_readonly(binding.path)
+        try:
+            connection.execute("SELECT count(*) FROM sqlite_master").fetchone()
+        finally:
+            connection.close()
+    except sqlite3.Error as error:
+        try:
+            with binding.path.open("rb") as stream:
+                header = stream.read(20)
+            missing_shm = not binding.path.with_name(binding.path.name + "-shm").exists()
+        except OSError:
+            return StoreReadResult("refused", store, "store_unavailable")
+        if (header.startswith(b"SQLite format 3\0") and header[18:20] == b"\x02\x02" and missing_shm
+                and getattr(error, "sqlite_errorcode", 0) & 0xff in {sqlite3.SQLITE_READONLY, sqlite3.SQLITE_CANTOPEN}):
+            return StoreReadResult("refused", store, "wal_sidecars_unavailable")
+        return StoreReadResult("refused", store, "store_unavailable")
+    except OSError:
+        return StoreReadResult("refused", store, "store_unavailable")
+    return StoreReadResult("read", store)
+
+
+def _attempt(op: str, path: str, port: int | None, store: str | None = None) -> str | dict:
     """Run one probe; the errno name of its failure, or ``OK``."""
     try:
+        if op == "store_read":
+            return asdict(_read_store(store or "", path))
         if op == "write_open":
             os.close(os.open(path, os.O_WRONLY | os.O_CLOEXEC))
         elif op == "create":
@@ -62,7 +109,8 @@ def main() -> int:
     with open(plan_path, encoding="utf-8") as handle:
         plan = json.load(handle)
     outcomes = [
-        {**probe, "outcome": _attempt(probe["op"], probe["path"], probe.get("port"))} for probe in plan["probes"]
+        {**probe, "outcome": _attempt(probe["op"], probe["path"], probe.get("port"), probe.get("store"))}
+        for probe in plan["probes"]
     ]
     with os.fdopen(plan["report_fd"], "w", encoding="utf-8") as report:
         report.write(json.dumps({"pid": os.getpid(), "probes": outcomes}))

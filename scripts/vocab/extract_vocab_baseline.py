@@ -47,7 +47,7 @@ except ModuleNotFoundError as exc:
 # ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
+
 
 # POS tags we keep (content words). VESUM uses: noun, verb, adj, adv, numr, ...
 KEEP_POS = {"noun", "verb", "adj", "adv"}
@@ -69,6 +69,26 @@ MIN_WORD_LEN = 2
 # Minimum frequency — word must appear at least this many times in the module
 MIN_FREQ = 1
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def tokenize_ukrainian(text: str) -> list[str]:
     """Extract Ukrainian word tokens from markdown text."""
@@ -195,8 +215,8 @@ def main():
         print(f"ERROR: Level directory not found: {level_dir}", file=sys.stderr)
         sys.exit(1)
 
-    if not VESUM_DB.exists():
-        print(f"ERROR: VESUM database not found: {VESUM_DB}", file=sys.stderr)
+    if not _store_path('vesum', globals().get('VESUM_DB')).exists():
+        print(f"ERROR: VESUM database not found: {_store_path('vesum', globals().get('VESUM_DB'))}", file=sys.stderr)
         sys.exit(1)
 
     md_files = sorted(level_dir.glob("*.md"))
@@ -205,7 +225,7 @@ def main():
         sys.exit(1)
 
     vocab_dir = level_dir / "vocabulary"
-    conn = _open_readonly(str(VESUM_DB))
+    conn = _open_readonly(_store_path('vesum', _store_path('vesum', globals().get('VESUM_DB')), required=True))
 
     wrote = 0
     skipped = 0
@@ -227,6 +247,14 @@ def main():
     conn.close()
     print(f"\nDone: {wrote} written | {skipped} skipped | {errors} errors")
 
+
+
+
+def __getattr__(name):
+    stores = {'VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     main()

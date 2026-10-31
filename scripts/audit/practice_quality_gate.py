@@ -62,13 +62,6 @@ try:
 except ImportError:
     from verification.vesum import verify_word
 
-try:
-    from scripts.rag.config import VESUM_DB_PATH as DEFAULT_VESUM_DB
-except ImportError:
-    try:
-        from rag.config import VESUM_DB_PATH as DEFAULT_VESUM_DB
-    except ImportError:
-        DEFAULT_VESUM_DB = PROJECT_ROOT / "data/vesum.db"
 
 try:
     from scripts.audit.practice_linguistic import INTENTIONAL_ERROR_PATTERNS
@@ -113,14 +106,7 @@ except ImportError:
     )
 
 # sources.db is gitignored; a dispatch worktree reads the enclosing primary checkout's copy.
-DEFAULT_SOURCES_DB = next(
-    (
-        parent / "data/sources.db"
-        for parent in (PROJECT_ROOT, *PROJECT_ROOT.parents)
-        if (parent / "data/sources.db").is_file()
-    ),
-    PROJECT_ROOT / "data/sources.db",
-)
+
 DEFAULT_TEACHER_CLOZE = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "registry/practice/textbook-error-corrections.json"
 DEFAULT_ERROR_CORRECTION_EVIDENCE = EVIDENCE_SNAPSHOT_PATH
@@ -154,6 +140,26 @@ _INTENTIONAL_ERROR_PATTERNS = INTENTIONAL_ERROR_PATTERNS
 _CYRILLIC_WORD_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ]+(?:['-][а-яіїєґА-ЯІЇЄҐ]+)*")
 _ROMAN_NUMERAL_RE = re.compile(r"(?=.)M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def _normalize_plain(text: str) -> str:
     """Casefold, strip stress/accent marks, and normalize apostrophes.
@@ -198,7 +204,7 @@ def check_word_in_vesum(word: str, db_path: Path | str | None = None) -> bool:
     return bool(results) and all(results)
 
 
-def audit_teacher_cloze_deck(path: Path | str, vesum_db: Path | str | None = DEFAULT_VESUM_DB) -> list[dict[str, Any]]:
+def audit_teacher_cloze_deck(path: Path | str, vesum_db: Path | str | None = None) -> list[dict[str, Any]]:
     """Audit teacher cloze deck for structural, linguistic and quarantine integrity."""
     violations: list[dict[str, Any]] = []
     p = Path(path)
@@ -327,7 +333,7 @@ class _SourceRows:
     def __init__(self, sources_db: Path, vesum: VesumLookup | None):
         import sqlite3
 
-        self._conn = _open_readonly(sources_db)
+        self._conn = _open_readonly(_store_path('sources', sources_db, required=True))
         try:
             self._conn.execute("SELECT id, grade, author, title, text FROM textbooks LIMIT 0")
             self._conn.execute("SELECT id, word, section, text FROM style_guide LIMIT 0")
@@ -371,7 +377,7 @@ def _error_correction_source_rows(sources_db: Path | str | None, vesum: VesumLoo
     import sqlite3
 
     try:
-        return _SourceRows(Path(sources_db), vesum or _error_correction_vesum(DEFAULT_VESUM_DB))
+        return _SourceRows(Path(sources_db), vesum or _error_correction_vesum(_store_path("vesum", globals().get("DEFAULT_VESUM_DB"))))
     except (sqlite3.Error, OSError, ValueError) as exc:
         raise ValueError("supplied sources_db is not a readable sources database") from exc
 
@@ -520,7 +526,7 @@ def _typed_answer_violations(
 
 def audit_error_correction_deck(
     path: Path | str,
-    vesum_db: Path | str | None = DEFAULT_VESUM_DB,
+    vesum_db: Path | str | None = None,
     sources_db: Path | str | None = None,
     evidence_path: Path | str = DEFAULT_ERROR_CORRECTION_EVIDENCE,
 ) -> list[dict[str, Any]]:
@@ -728,7 +734,7 @@ def audit_sentence_inventory(path: Path | str) -> list[dict[str, Any]]:
 
 def audit_practice_shards(
     shards_dir: Path | str = DEFAULT_SHARDS_DIR,
-    vesum_db: Path | str | None = DEFAULT_VESUM_DB,
+    vesum_db: Path | str | None = None,
     *,
     check_volume: bool = True,
     verify_vesum: bool = True,
@@ -1014,7 +1020,7 @@ def audit_practice_shards(
 def audit_card_ambiguity(
     shards_dir: Path | str = DEFAULT_SHARDS_DIR,
     sample_size: int = 5,
-    vesum_db: Path | str | None = DEFAULT_VESUM_DB,
+    vesum_db: Path | str | None = None,
     *,
     mock_response: dict[str, Any] | None = None,
     strict_ambiguity: bool = False,
@@ -1218,7 +1224,7 @@ def run_all_practice_audits(
     teacher_cloze: Path | str = DEFAULT_TEACHER_CLOZE,
     error_corrections: Path | str = DEFAULT_ERROR_CORRECTIONS,
     sentence_inventory: Path | str = DEFAULT_SENTENCE_INVENTORY,
-    vesum_db: Path | str | None = DEFAULT_VESUM_DB,
+    vesum_db: Path | str | None = None,
     *,
     sources_db: Path | str | None = None,
     all_modes: bool = False,
@@ -1284,7 +1290,7 @@ def main() -> int:
     parser.add_argument("--error-corrections", default=str(DEFAULT_ERROR_CORRECTIONS), help="Error-correction JSON (default: registry deck)")
     parser.add_argument("--sentence-inventory", default=str(DEFAULT_SENTENCE_INVENTORY), help="Sentence inventory JSON (default: bundled inventory)")
     parser.add_argument("--shards-dir", default=str(DEFAULT_SHARDS_DIR), help="Practice shard directory (default: site/public/lexicon)")
-    parser.add_argument("--vesum-db", default=str(DEFAULT_VESUM_DB), help="VESUM database (default: data/vesum.db; used with --verify-vesum)")
+    parser.add_argument("--vesum-db", default=str(_store_path("vesum", globals().get("DEFAULT_VESUM_DB"))), help="VESUM database (default: data/vesum.db; used with --verify-vesum)")
     parser.add_argument("--sources-db", type=Path, help="Verify error-correction rows against this sources.db (default: snapshot-only)")
     parser.add_argument("--all-modes", action="store_true", help="Audit all 10 practice-shard modes (default: off)")
     parser.add_argument("--verify-vesum", action="store_true", help="Verify morphological attestation in VESUM (default: off)")
@@ -1352,6 +1358,14 @@ def main() -> int:
 
     return 1
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_SOURCES_DB': 'sources', 'DEFAULT_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     sys.exit(main())

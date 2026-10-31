@@ -31,7 +31,7 @@ import yaml
 from scripts.fleet.regenerable_output import committed_release_pins, is_regenerable_ignored_path
 from scripts.orchestration import worktree_artifacts as artifacts
 from scripts.orchestration.preparation_evidence import UniqueKeyLoader
-from scripts.orchestration.task_record_store import task_record_path
+from scripts.orchestration.task_record_store import parse_task_record, task_record_path
 
 # Bound automatic disk duplication. Larger outputs require owner disposition;
 # the complete source checkout survives rather than receiving a partial copy.
@@ -220,6 +220,7 @@ def _identity_decoder_context() -> dict[str, Any]:
     return {
         "python": list(sys.version_info[:3]),
         "int_max_str_digits": getattr(sys, "get_int_max_str_digits", lambda: 0)(),
+        "task_record_classifier": 1,
     }
 
 
@@ -403,7 +404,9 @@ def _matching_worktree_records_once(
             and set(entry["identity"]) == set(_IDENTITY_KEYS)
         )
         try:
-            record = entry["identity"] if hit else json.loads(raw)
+            record = entry["identity"] if hit else parse_task_record(path, raw)
+            if record is None:
+                continue
         except ValueError:
             # Reuse the claim owner's existing released-record proof only for
             # corrupt records with no possible retention key. Valid records,
@@ -423,7 +426,7 @@ def _matching_worktree_records_once(
                 record, worktree, repo_root=repo_root, resolved_worktree=resolved_worktree, claim_paths=claim_paths
             ):
                 if hit:
-                    record = json.loads(raw)  # Return the complete canonical record, never its projection.
+                    record = parse_task_record(path, raw)  # Return the canonical record, never its projection.
                 matches.append((path, record))
             elif (
                 resolved_worktree is not None

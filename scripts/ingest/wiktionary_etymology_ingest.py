@@ -15,6 +15,7 @@ import sys
 import unicodedata
 import xml.etree.ElementTree as ET
 from collections import defaultdict
+from contextlib import nullcontext
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import quote
@@ -27,7 +28,7 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 REPO = Path(__file__).resolve().parents[2]
-DEFAULT_DB = REPO / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 DEFAULT_MANIFEST = REPO / "site" / "src" / "data" / "lexicon-manifest.json"
 
 WIKTIONARY_DUMP_DATE = "20260601"
@@ -132,6 +133,16 @@ _LANG_LABELS = {
     "ru": "р.",
     "uk": "укр.",
 }
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 @dataclass(frozen=True)
@@ -673,58 +684,75 @@ def ingest_wiktionary_etymology(
     refresh: bool,
     dry_run: bool,
     max_text_chars: int,
+    db_role: str = "active",
+    create: bool = False,
 ) -> tuple[int, int, int]:
     """Load Atlas-bounded uk.wiktionary etymology rows into sources.db."""
-    if not dry_run:
-        refuse_writable_corpus_database(str(db_path))
-    conn = None if dry_run else sqlite3.connect(str(db_path))
-    skipped_phrases = 0
-    loaded = 0
-    pending: list[str] = []
-    try:
-        if conn is not None:
-            ensure_wiktionary_etymology_schema(conn)
-        for lemma in lemmas:
-            if has_whitespace(lemma):
-                print(f"{lemma}: skipped phrase")
-                skipped_phrases += 1
-                continue
-            if conn is not None and not refresh and _is_cached(conn, lemma):
-                print(f"{lemma}: cached")
-                continue
-            pending.append(clean_text(lemma))
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
+    with nullcontext() if dry_run else store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        ) if not dry_run else None
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        if binding is not None:
+            db_path = binding.path
+        if not dry_run:
+            refuse_writable_corpus_database(str(db_path))
+        conn = None if dry_run else sqlite3.connect(binding.sqlite_uri, uri=True)
+        skipped_phrases = 0
+        loaded = 0
+        pending: list[str] = []
+        try:
+            if conn is not None:
+                ensure_wiktionary_etymology_schema(conn)
+            for lemma in lemmas:
+                if has_whitespace(lemma):
+                    print(f"{lemma}: skipped phrase")
+                    skipped_phrases += 1
+                    continue
+                if conn is not None and not refresh and _is_cached(conn, lemma):
+                    print(f"{lemma}: cached")
+                    continue
+                pending.append(clean_text(lemma))
 
-        rows = extract_wiktionary_etymology_rows(
-            dump_path,
-            pending,
-            max_text_chars=max_text_chars,
-        ) if pending else {}
-        for lemma in pending:
-            row = rows.get(lemma)
-            if not row:
-                print(f"{lemma}: no uk.wiktionary etymology")
-                if conn is not None and refresh:
-                    with conn:
-                        conn.execute(
-                            "DELETE FROM wiktionary_etymology WHERE requested_lemma = ?",
-                            (clean_text(lemma),),
-                        )
-                continue
-            if row["headword"] != lemma:
-                print(f"{lemma}: {row['headword']}")
-            else:
-                print(f"{lemma}: loaded")
-            if dry_run:
+            rows = extract_wiktionary_etymology_rows(
+                dump_path,
+                pending,
+                max_text_chars=max_text_chars,
+            ) if pending else {}
+            for lemma in pending:
+                row = rows.get(lemma)
+                if not row:
+                    print(f"{lemma}: no uk.wiktionary etymology")
+                    if conn is not None and refresh:
+                        with conn:
+                            conn.execute(
+                                "DELETE FROM wiktionary_etymology WHERE requested_lemma = ?",
+                                (clean_text(lemma),),
+                            )
+                    continue
+                if row["headword"] != lemma:
+                    print(f"{lemma}: {row['headword']}")
+                else:
+                    print(f"{lemma}: loaded")
+                if dry_run:
+                    loaded += 1
+                    continue
+                assert conn is not None
+                with conn:
+                    upsert_wiktionary_row(conn, row)
                 loaded += 1
-                continue
-            assert conn is not None
-            with conn:
-                upsert_wiktionary_row(conn, row)
-            loaded += 1
-        return len(pending), loaded, skipped_phrases
-    finally:
-        if conn is not None:
-            conn.close()
+            return len(pending), loaded, skipped_phrases
+        finally:
+            if conn is not None:
+                conn.close()
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -797,6 +825,8 @@ Outputs:
         default=DEFAULT_USER_AGENT,
         help=f"HTTP User-Agent for dump download. Default: {DEFAULT_USER_AGENT}",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); use staging for a separate output")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a staging/shadow database (default: update only)")
     return parser
 
 
@@ -822,7 +852,7 @@ def main(argv: list[str] | None = None) -> int:
         refresh=args.refresh,
         dry_run=args.dry_run,
         max_text_chars=max(1, args.max_text_chars),
-    )
+     db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     print(
         f"Scanned {scanned} single-word lemma(s); loaded {loaded} row(s); "
         f"skipped {skipped_phrases} phrase(s)."
@@ -831,4 +861,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

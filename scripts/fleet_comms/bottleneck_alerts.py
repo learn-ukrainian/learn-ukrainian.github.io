@@ -9,7 +9,6 @@ dedupe and re-arming.
 from __future__ import annotations
 
 import errno
-import json
 import logging
 import re
 import sqlite3
@@ -32,6 +31,7 @@ from scripts.ai_agent_bridge import _channels
 from scripts.ai_agent_bridge._db import get_db
 from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
 from scripts.fleet_comms.message_plane import default_plane_root
+from scripts.orchestration.task_record_store import read_task_record
 
 logger = logging.getLogger(__name__)
 
@@ -351,7 +351,9 @@ def _scan_finalization_attention(*, task_root: Path, now: datetime) -> tuple[int
     try:
         for path in sorted(task_root.glob("*.json")):
             try:
-                task = json.loads(path.read_text())
+                task = read_task_record(path)
+                if task is None:
+                    continue
                 if not isinstance(task, dict):
                     raise ValueError("invalid_task_record")
                 if task.get("status") != "needs_finalize":

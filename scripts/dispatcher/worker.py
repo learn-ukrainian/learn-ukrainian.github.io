@@ -520,7 +520,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
 
             prompt = spec.prompt_file.read_bytes()
             record.update(status="running", runtime_input_sha256=hashlib.sha256(prompt).hexdigest())
-            store.replace(record, path)
+            store.replace(record, path, require_existing=True)
             interruptible = True  # cancel unwinds the runtime, which kills the seat and tears the boundary down
             try:
                 checkpoint()
@@ -599,7 +599,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 start_new_session=True,
             )
             record.update(status="running", provider_pgid=child.pid)
-            store.replace(record, path)
+            store.replace(record, path, require_existing=True)
             terminal_observer = getattr(provider, "terminal_result_observer", None)
             source = getattr(provider, "MODEL_SOURCE", None)
             observe_model = provider.model_observer(stdout_path) if source else None
@@ -614,7 +614,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 fields = _stream_attestation(source, resolved_model)
                 if any(record.get(key) != value for key, value in fields.items()):
                     record.update(fields)
-                    store.replace(record, path)
+                    store.replace(record, path, require_existing=True)
 
             lingered = communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
                                    initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
@@ -682,6 +682,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         record.update(kill_reason=exc.kind, stderr_excerpt=exc.diagnostic)
     except subprocess.TimeoutExpired:
         status, error = "timeout", "process deadline exceeded"
+    except store.TaskRecordError as exc:
+        status, error = "crashed", exc.code
     except Exception:
         status, error = "crashed", "supervisor or provider processing failed"
     finally:
@@ -693,7 +695,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 terminate()
                 returncode = child.returncode
             if not record.get("settling_at"):
-                store.begin_settlement(record)
+                try:
+                    store.begin_settlement(record)
+                except store.TaskRecordError as exc:
+                    status, error = "crashed", exc.code
             # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
             if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
                 record["read_only_boundary_cleanup"] = residue
@@ -719,7 +724,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if sources_calls is not None:
                 record["sources_mcp_call_count"] = sources_calls
             record.update(git.snapshot_delivery(spec, record))
-            _enforce_delivery(record)
+            if error and error.startswith("TASK_RECORD_"):
+                record.update(worktree_disposition="retained", worktree_disposition_reason="task_record_damaged")
+            else:
+                _enforce_delivery(record)
             if children := _running_children(record):
                 # A run that ends while a task it dispatched still runs left that result unconsumed (#12156).
                 record["orphaned_child_tasks"] = children
@@ -745,11 +753,18 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                         record.update(status="cancelled", error="cancelled by client")
                     if (children := record.get("orphaned_child_tasks")) and record["status"] != "done":
                         record["error"] = f"orphaned_child_tasks: {', '.join(children)}; {record['error']}"
-                    store.replace(record, path)
+                    try:
+                        store.replace(record, path, require_existing=True)
+                    except store.TaskRecordError:
+                        store.publish_failed_record(record, path)
                 finally:
                     signal.pthread_sigmask(signal.SIG_SETMASK, mask)
-                _reap_settled(record, patience=SETTLE_PATIENCE)
-                store.replace(record, path)
+                if record.get("worktree_disposition_reason") != "task_record_damaged":
+                    _reap_settled(record, patience=SETTLE_PATIENCE)
+                try:
+                    store.replace(record, path, require_existing=True)
+                except store.TaskRecordError:
+                    store.publish_failed_record(record, path)
         finally:
             signal.signal(signal.SIGTERM, previous_term)
             signal.signal(signal.SIGINT, previous_int)

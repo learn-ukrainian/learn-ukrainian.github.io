@@ -51,7 +51,7 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _CURRICULUM_ROOT = _PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
 # VESUM database for POS lookup
-_VESUM_DB = _PROJECT_ROOT / "data" / "vesum.db"
+
 
 # Ukrainian POS labels
 _POS_LABELS = {
@@ -71,15 +71,35 @@ _POS_LABELS = {
 _GENDER_MAP = {":m:": "ч.", ":f:": "ж.", ":n:": "с."}
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def _vesum_lookup(word: str) -> tuple[str, str]:
     """Look up a word in VESUM for POS and gender.
 
     Returns (pos_label, gender_label) — empty strings if not found.
     """
-    if not _VESUM_DB.exists():
+    if not _store_path('vesum', globals().get('_VESUM_DB')).exists():
         return "", ""
     try:
-        db = _open_readonly(str(_VESUM_DB))
+        db = _open_readonly(_store_path('vesum', _store_path('vesum', globals().get('_VESUM_DB')), required=True))
         row = db.execute(
             "SELECT pos, tags FROM forms WHERE lemma = ? LIMIT 1",
             (word.lower(),),
@@ -350,14 +370,12 @@ def _resolve_textbook_url(title: str) -> str:
 
     # Try to find matching source_file in our textbook_refs module
     try:
-        from pathlib import Path
-
         from build.textbook_refs import _PDF_BASE, _PDF_OVERRIDES, _SHKOLA_OVERRIDES
-        db_path = Path(__file__).resolve().parents[2] / "data" / "sources.db"
+        db_path = _store_path("sources", root=_PROJECT_ROOT)
         if not db_path.exists():
             return ""
 
-        conn = _open_readonly(str(db_path))
+        conn = _open_readonly(_store_path('sources', db_path, required=True))
         # Find source_file matching author + grade, prefer ukrmova over ukrlit
         rows = conn.execute(
             "SELECT DISTINCT source_file FROM textbooks "
@@ -860,6 +878,14 @@ def enrich_file(content_path: Path, plan_path: Path) -> list[str]:
 
 
 # CLI for testing
+
+
+def __getattr__(name):
+    stores = {'_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
+
 if __name__ == "__main__":
     import sys
 

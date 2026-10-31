@@ -517,20 +517,6 @@ def _resolve_short_sha(repo_root: Path, ref: str) -> str:
     return (proc.stdout or "").strip() or ref
 
 
-def _provision_data_symlinks(worktree_path: Path, main_checkout_root: Path) -> None:
-    for relative in (Path("data") / "sources.db", Path("data") / "vesum.db"):
-        source = main_checkout_root / relative
-        if not source.exists():
-            print(
-                f"Warning: skipping worktree data link for missing {source}",
-                file=sys.stderr,
-            )
-            continue
-        target = worktree_path / relative
-        if target.exists() or target.is_symlink():
-            continue
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.symlink_to(source.resolve())
 
 
 def _setup_worktree(level: str, slug: str, raw_path: str | None) -> BuildWorktree:
@@ -571,7 +557,6 @@ def _setup_worktree(level: str, slug: str, raw_path: str | None) -> BuildWorktre
             (proc.stderr or proc.stdout or "git worktree add failed").strip()
         )
 
-    _provision_data_symlinks(worktree_path, _main_checkout_root(repo_root))
     return BuildWorktree(
         path=worktree_path,
         branch=branch,

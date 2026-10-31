@@ -121,6 +121,57 @@ def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, mon
     assert not (tmp_path / "tasks").exists()
 
 
+def test_bound_attempt_cannot_spend_an_exhausted_branch_pr_budget(attempt, tmp_path, monkeypatch, capsys):
+    """Defect class: a bound attempt is charged to a branch's ordinary PR review budget (#12216)."""
+    from scripts.dispatcher import review_attempt
+    from scripts.review import record_cf_verdict as recorder
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    for index in range(3):
+        (tasks / f"prior-{index}.json").write_text(json.dumps(dict(
+            task_id=f"prior-{index}", schema_version=2, repository="example/public", status="failed",
+            mode="read-only", review_profile="infra", review_branch="review/target",
+            worktree_base_sha=str(index + 1) * 40,
+        )))
+    before = {path.name: path.read_bytes() for path in tasks.iterdir()}
+    monkeypatch.setattr(recorder, "_open_pr_number", lambda *_: None)
+    budget = Mock(wraps=checks.check_review_budget)
+    monkeypatch.setattr(checks, "check_review_budget", budget)
+    monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
+    monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path / "checkout", "codex/review", "a" * 40))
+    monkeypatch.setattr(git, "create_worktree", Mock())
+    monkeypatch.setattr(checks, "check_branch_author_families", lambda *a: None)
+    monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    monkeypatch.setattr(worker, "settle_left_worktrees", lambda: None)
+    monkeypatch.setattr(review_attempt, "admit", lambda *a: {})
+    launch = Mock()
+    monkeypatch.setattr(worker, "start", launch)
+
+    for selector in (("--branch", "review/target"), ("--pr", "42")):
+        assert invoke(attempt, *selector, "--review-profile", "infra") == 2
+        error = capsys.readouterr().err
+        assert "review_attempt_pr_selector_unsupported" in error
+        assert "docs/runbooks/formal-review-attempt-isolation.md#running-a-bound-attempt" in error
+        assert "--pinned-head" in error
+        budget.assert_not_called()
+        launch.assert_not_called()
+        git.create_worktree.assert_not_called()
+        assert {path.name: path.read_bytes() for path in tasks.iterdir()} == before
+
+    assert invoke([], "--branch", "review/target", "--review-profile", "infra") == 2
+    assert "REVIEW_BUDGET_EXHAUSTED" in capsys.readouterr().err
+    budget.assert_called_once()
+    launch.assert_not_called()
+    git.create_worktree.assert_not_called()
+    assert {path.name: path.read_bytes() for path in tasks.iterdir()} == before
+
+    budget.reset_mock()
+    assert invoke(attempt, "--pinned-head", "a" * 40, "--review-profile", "infra") == 0
+    budget.assert_not_called()
+    launch.assert_called_once()
+
+
 @pytest.mark.parametrize("suffix", [".jsonl", ".jsonl.sha256", ".mcp.json", ".codex-home", ".agy-home"])
 def test_legacy_artifact_spends_attempt_even_without_task_record(attempt, tmp_path, suffix, capsys):
     receipts = tmp_path / "review-receipts" / "review"

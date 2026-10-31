@@ -23,8 +23,6 @@ from scripts.audit.resolve_fixture_rights import (
     CHUNK_ID_RE,
     DEFAULT_FIXTURE_DIR,
     DEFAULT_LICENSE_MAP,
-    DEFAULT_SOURCES_DB,
-    DEFAULT_VESUM_DB,
     resolve_rows,
 )
 
@@ -202,8 +200,8 @@ def build_rewrites(args: argparse.Namespace) -> dict[str, dict[tuple[str, str], 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fixtures", type=Path, default=DEFAULT_FIXTURE_DIR)
-    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
+    parser.add_argument("--sources-db", type=Path, default=None)
+    parser.add_argument("--vesum-db", type=Path, default=None)
     parser.add_argument("--license-map", type=Path, default=DEFAULT_LICENSE_MAP)
     parser.add_argument("--check", action="store_true", help="Print planned rewrites without writing fixtures.")
     return parser

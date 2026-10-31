@@ -13,8 +13,7 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
 * lets AGY reach the network only through the CONNECT-only egress proxy of formal review attempts
   (exact allowlisted hosts; host and loopback addresses refused);
 * runs AGY under bubblewrap (``review.isolation``). The root is empty except for read-only binds of
-  the system runtime, the AGY binary, the task worktree, its Git metadata and the resolved database
-  link targets. PID, IPC, UTS and network namespaces and procfs are private, every capability is
+  the system runtime, the AGY binary, the task worktree, its Git metadata and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
   dropped and the root is remounted read-only, so the runtime (which holds TMPDIR) is the only
   writable path;
 * runs the canary as the sandbox's first process and starts AGY only after the launcher has checked
@@ -51,7 +50,7 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
-from scripts.common.repo_root import project_interpreter
+from scripts.common.repo_root import main_checkout_root, project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -480,34 +479,83 @@ def _safe_git_config(source: Path) -> bytes:
     return "".join(lines).encode()
 
 
-def _trusted_database(worktree: Path, repository: Path, relative: str) -> Path:
-    """The primary checkout's database file a worktree link must name, or a refusal.
-
-    Sources may be the primary checkout's validated generation selector. Only its current
-    selection is mounted, through the untracked link to the primary selector that
-    ``provision_links`` makes. Other databases still require the primary's own regular file.
-    """
-    from scripts.storage.topology import STORE_FILES, inspect_selector, store_kind
-
-    link, trusted = worktree / relative, repository / relative
+def _empty_store_slot(worktree: Path, relative: str) -> None:
+    """Inspect every component without following branch-controlled symlinks."""
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
     try:
-        if relative == f"data/{STORE_FILES['sources'][0]}" and trusted.is_symlink():
-            if (not link.is_symlink() or link.readlink() != trusted
-                    or os.path.realpath(trusted.parent) != str(trusted.parent)
-                    or _git(worktree, "ls-files", "--", relative)):
-                raise Refused(f"database link {relative} is missing or not the dispatcher's link")
+        with contextlib.ExitStack() as stack:
+            descriptor = os.open(worktree, flags)
+            stack.callback(os.close, descriptor)
+            parts = Path(relative).parts
+            for part in parts[:-1]:
+                descriptor = os.open(part, flags, dir_fd=descriptor)
+                stack.callback(os.close, descriptor)
+            try:
+                os.stat(parts[-1], dir_fd=descriptor, follow_symlinks=False)
+            except FileNotFoundError:
+                return
+            raise Refused("worktree_local_store")
+    except FileNotFoundError:
+        return
+    except OSError:
+        raise Refused("worktree_local_store") from None
+
+
+def _trusted_database(worktree: Path, repository: Path, relative: str) -> Path:
+    """Select only from the agreed primary, independently of worktree content."""
+    from scripts.storage.topology import STORE_FILES, inspect_selector
+
+    if relative not in {f"data/{STORE_FILES[name][0]}" for name in ("sources", "vesum")}:
+        raise Refused("unsupported_read_store")
+    _empty_store_slot(worktree, relative)
+    trusted = repository / relative
+    try:
+        if os.path.realpath(trusted.parent) != str(trusted.parent):
+            raise Refused("store_parent_not_real_directory")
+        if not stat.S_ISDIR(trusted.parent.lstat().st_mode):
+            raise Refused("store_parent_not_real_directory")
+        if relative == f"data/{STORE_FILES['sources'][0]}":
             selection = inspect_selector(trusted)
-            if (store_kind(trusted).kind != "selector" or selection.layout != "selector"
-                    or selection.generation is None):
-                raise Refused(f"database link {relative} does not name the primary checkout's database")
+            if selection.layout not in {"selector", "legacy_file"} or selection.generation is None:
+                raise Refused(selection.reason)
             trusted = selection.generation
-        if not link.is_symlink() or os.path.realpath(trusted) != str(trusted):
-            raise Refused(f"database link {relative} is missing or not the dispatcher's link")
-        if not stat.S_ISREG(os.lstat(trusted).st_mode) or link.resolve(strict=True) != trusted:
-            raise Refused(f"database link {relative} does not name the primary checkout's database")
-    except OSError as exc:
-        raise Refused(f"database link {relative} cannot be resolved") from exc
+        if not stat.S_ISREG(trusted.lstat().st_mode):
+            raise Refused("store_not_regular_file")
+    except OSError:
+        raise Refused("store_unavailable") from None
     return trusted
+
+
+def _store_sidecars(target: Path) -> list[Path]:
+    """Only a selected file's own existing regular sidecars may be exposed."""
+    result = []
+    for suffix in ("-wal", "-shm"):
+        path = target.with_name(target.name + suffix)
+        try:
+            info = path.lstat()
+        except FileNotFoundError:
+            continue
+        if not stat.S_ISREG(info.st_mode):
+            raise Refused("store_sidecar_not_regular_file")
+        result.append(path)
+    return result
+
+
+def _store_read_expectation(store: str, target: Path, sidecars: list[Path]) -> list[dict]:
+    read = {"status": "read", "store": store, "reason": None}
+    with target.open("rb") as stream:
+        header = stream.read(20)
+    wal = header.startswith(b"SQLite format 3\0") and header[18:20] == b"\x02\x02"
+    if wal and target.with_name(target.name + "-shm") not in sidecars:
+        return [read, {"status": "refused", "store": store, "reason": "wal_sidecars_unavailable"}]
+    return [read]
+
+
+def _probe_passed(probe: dict) -> bool:
+    expected = probe.get("expect")
+    if probe.get("op") == "store_read":
+        return isinstance(expected, list) and probe.get("outcome") in expected
+    return probe.get("outcome") == expected
 
 
 def _write_error(path: Path) -> str:
@@ -551,6 +599,8 @@ class _Boundary:
         common = Path(_git(self.worktree, "rev-parse", "--path-format=absolute", "--git-common-dir").strip()).resolve(
             strict=True)
         repository = common.parent
+        if main_checkout_root(self.worktree).resolve(strict=True) != repository:
+            raise Refused("store_primary_disagreement")
         self.common = common
 
         self.base.mkdir(mode=0o700)  # exclusive: an existing scratch is never reused or removed
@@ -571,7 +621,21 @@ class _Boundary:
             raise Refused("the AGY OAuth token is unavailable") from exc
         _write_private(app / "antigravity-oauth-token", token)  # a regular-file copy: no shared link or inode
         projected = {name: source.read_bytes() for name, source in _PROJECTED.items()}
+        # The canary imports these trusted contracts, never branch-controlled code.
+        for relative in ("scripts/storage/topology.py", "scripts/lib/readonly_sqlite.py", "scripts/common/repo_root.py"):
+            projected[f"store_contract/{relative}"] = (ROOT / relative).read_bytes()
+        for package in ("scripts", "scripts/storage", "scripts/lib", "scripts/common"):
+            projected[f"store_contract/{package}/__init__.py"] = b""
+        import psutil
+
+        locality_package = Path(psutil.__file__).parent
+        for source in locality_package.iterdir():
+            if source.is_file() and source.suffix in {".py", ".so"}:
+                if source.is_symlink():
+                    raise Refused("store_locality_runtime_not_regular_file")
+                projected[f"store_contract/psutil/{source.name}"] = source.read_bytes()
         for name, data in projected.items():
+            (boundary / name).parent.mkdir(mode=0o700, parents=True, exist_ok=True)
             _write_private(boundary / name, data, 0o500)
         digest = hashlib.sha256(Path(__file__).read_bytes())
         for name in sorted(projected):
@@ -592,10 +656,13 @@ class _Boundary:
 
         reads, hidden = full_review_reads(self.worktree)
         corpus = (repository / "data").resolve()
-        reads = [path for path in reads if path != corpus]  # Sources serves the corpus; only database links resolve
-        databases = [(self.worktree / relative, _trusted_database(self.worktree, repository, relative))
-                     for relative in DATABASE_LINKS
-                     if os.path.lexists(self.worktree / relative) or os.path.lexists(repository / relative)]
+        reads = [path for path in reads if path != corpus]
+        databases = []
+        for relative in DATABASE_LINKS:
+            _empty_store_slot(self.worktree, relative)
+            if os.path.lexists(repository / relative):
+                databases.append((self.worktree / relative, _trusted_database(self.worktree, repository, relative)))
+        sidecars = [path for _, target in databases for path in _store_sidecars(target)]
         # Git reads only these copies: remotes, credentials, URL rewrites, helpers and includes stay outside.
         overlays = []
         for name, source in (("gitconfig", common / "config"), ("gitconfig.worktree", git_dir / "config.worktree")):
@@ -610,6 +677,17 @@ class _Boundary:
         if tracked is None:
             raise Refused("the worktree has no tracked regular file to probe")
         probes = self._probes(tracked, git_dir, overlays, databases, repository, tmp / f"canary-{nonce}", nonce)
+        for slot, target in databases:
+            store = "sources" if slot.name == "sources.db" else "vesum"
+            probes.append({"op": "store_read", "path": str(self.worktree), "store": store,
+                           "expect": _store_read_expectation(store, target, sidecars)})
+            for suffix in ("-wal", "-shm"):
+                path = target.with_name(target.name + suffix)
+                if path not in sidecars:
+                    probes.append({"op": "create", "path": str(path), "expect": "EROFS"})
+        for path in sidecars:
+            probes.extend([{"op": "write_open", "path": str(path), "expect": _write_error(path)},
+                           {"op": "chmod", "path": str(path), "expect": "EROFS"}])
         self.receipt["canary"] = {"targets": sorted({probe["path"] for probe in probes}), "passed": False}
 
         env_keep = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "TMPDIR") if name in os.environ}
@@ -617,7 +695,7 @@ class _Boundary:
         self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
         sandbox = prepare_host_sandbox(
             engine="agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
-            runtime_reads=[*runtime_files(agy), *reads, *(target for _, target in databases),
+            runtime_reads=[*runtime_files(agy), *reads, *(target for _, target in databases), *sidecars,
                            *runtime_context.read_roots(), boundary],
             network_allowed=False,
         )
@@ -634,8 +712,8 @@ class _Boundary:
         for link, target in databases:
             primary = repository / link.relative_to(self.worktree)
             if primary != target:
-                # The worktree link names the selector, while only its selected file is mounted.
-                masks += ["--ro-bind", str(target), str(primary)]
+                # Present inspect_selector's exact layout without mounting over the host link.
+                masks += ["--symlink", str(target.relative_to(primary.parent)), str(primary)]
         argv[-len(inner):-len(inner)] = [
             *masks, "--ro-bind", str(boundary / "passwd"), "/etc/passwd", "--ro-bind", str(boundary / "group"),
             "/etc/group", "--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(self.worktree),
@@ -657,7 +735,7 @@ class _Boundary:
         try:
             report = self._report(report_read)
             outcomes = report.get("probes") if isinstance(report, dict) else None
-            failed = [probe for probe in outcomes or [] if probe.get("outcome") != probe.get("expect")]
+            failed = [probe for probe in outcomes or [] if not _probe_passed(probe)]
             passed = isinstance(outcomes, list) and len(outcomes) == len(probes) and not failed and all(
                 {key: probe.get(key) for key in planned} == planned for probe, planned in zip(outcomes, probes, strict=True))
             self.receipt["canary"].update(probes=outcomes, passed=passed)
@@ -695,9 +773,21 @@ class _Boundary:
             expect("chmod", source, "EROFS")
         expect("create", self.common / "refs" / "heads" / f"agy-canary-{nonce}", "EROFS")
         for link, target in databases:
-            for path in (link, target):
-                expect("write_open", path, _write_error(target))
-                expect("chmod", path, "EROFS")
+            expect("write_open", link, "ENOENT")
+            expect("chmod", link, "ENOENT")
+            expect("create", link, "EROFS")
+            expect("write_open", target, _write_error(target))
+            expect("chmod", target, "EROFS")
+            if target.parent.name == "sources-generations":
+                expect("stat", target.with_name(target.name + ".receipt.json"), "ENOENT")
+                from scripts.storage.topology import is_generation_name
+
+                absent_generation = next((path for path in sorted(target.parent.iterdir())
+                                          if path != target and is_generation_name(path.name)),
+                                         target.with_name("sources.19000101T000000Z-000000000000.db"))
+                if absent_generation == target:
+                    absent_generation = target.with_name("sources.19000101T000000Z-111111111111.db")
+                expect("stat", absent_generation, "ENOENT")
         home = Path.home()
         # A host path the launcher cannot even stat is unreachable inside too, so only present ones are probed.
         for relative in _HOST_SECRETS:

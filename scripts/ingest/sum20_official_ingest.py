@@ -49,7 +49,17 @@ except ImportError:  # pragma: no cover - direct script execution
     )
 
 REPO = Path(__file__).resolve().parents[2]
-DEFAULT_DB = REPO / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 class IngestCounts(dict[str, int]):
@@ -67,6 +77,8 @@ def ingest_wordids(
     retries: int = 3,
     retry_backoff_s: float = 2.0,
     sleep: callable = time.sleep,
+    db_role: str = "active",
+    create: bool = False,
 ) -> dict[str, int]:
     """Ingest a sequential bounded range and preserve a safe resume point.
 
@@ -74,69 +86,82 @@ def ingest_wordids(
     that wordid.  Thus neither can become a negative cache entry and the next
     invocation retries exactly the failed wordid.
     """
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     if limit < 0:
         raise ValueError("limit must be zero (unbounded) or a positive integer")
     if start_wordid is not None and start_wordid < 1:
         raise ValueError("start_wordid must be at least 1")
 
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
-    counts = IngestCounts(ok=0, unchanged=0, not_found=0, transient_error=0, parse_error=0)
-    try:
-        ensure_sum20_official_schema(conn)
-        wordid = start_wordid if start_wordid is not None else crawl_resume_wordid(conn)
-        attempted = 0
-        while limit == 0 or attempted < limit:
-            outcome = fetch_sum20_wordid(
-                wordid,
-                retries=retries,
-                retry_backoff_s=retry_backoff_s,
-                sleep=sleep,
-            )
-            attempted += 1
-            if outcome.status == "ok":
-                try:
-                    article = parse_sum20_article(outcome.document_html, wordid)
-                except Sum20ParseError:
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        conn.row_factory = sqlite3.Row
+        counts = IngestCounts(ok=0, unchanged=0, not_found=0, transient_error=0, parse_error=0)
+        try:
+            ensure_sum20_official_schema(conn)
+            wordid = start_wordid if start_wordid is not None else crawl_resume_wordid(conn)
+            attempted = 0
+            while limit == 0 or attempted < limit:
+                outcome = fetch_sum20_wordid(
+                    wordid,
+                    retries=retries,
+                    retry_backoff_s=retry_backoff_s,
+                    sleep=sleep,
+                )
+                attempted += 1
+                if outcome.status == "ok":
+                    try:
+                        article = parse_sum20_article(outcome.document_html, wordid)
+                    except Sum20ParseError:
+                        with conn:
+                            record_crawl_outcome(conn, wordid=wordid, status="parse_error", error_text="unusable article")
+                        counts["parse_error"] += 1
+                        counts.exit_code = 4
+                        break
                     with conn:
-                        record_crawl_outcome(conn, wordid=wordid, status="parse_error", error_text="unusable article")
-                    counts["parse_error"] += 1
-                    counts.exit_code = 4
+                        changed = upsert_sum20_article(conn, article)
+                        record_crawl_outcome(
+                            conn,
+                            wordid=wordid,
+                            status="ok",
+                            content_sha256=article.content_sha256,
+                        )
+                        advance_crawl_checkpoint(conn, wordid)
+                    counts["ok" if changed else "unchanged"] += 1
+                elif outcome.status == "not_found":
+                    with conn:
+                        record_crawl_outcome(conn, wordid=wordid, status="not_found")
+                        advance_crawl_checkpoint(conn, wordid)
+                    counts["not_found"] += 1
+                else:
+                    with conn:
+                        record_crawl_outcome(
+                            conn,
+                            wordid=wordid,
+                            status=outcome.status,
+                            error_text=outcome.error_text,
+                        )
+                    counts[outcome.status] += 1
+                    counts.exit_code = 4 if outcome.status == "parse_error" else (3 if outcome.terminal else 1)
                     break
-                with conn:
-                    changed = upsert_sum20_article(conn, article)
-                    record_crawl_outcome(
-                        conn,
-                        wordid=wordid,
-                        status="ok",
-                        content_sha256=article.content_sha256,
-                    )
-                    advance_crawl_checkpoint(conn, wordid)
-                counts["ok" if changed else "unchanged"] += 1
-            elif outcome.status == "not_found":
-                with conn:
-                    record_crawl_outcome(conn, wordid=wordid, status="not_found")
-                    advance_crawl_checkpoint(conn, wordid)
-                counts["not_found"] += 1
-            else:
-                with conn:
-                    record_crawl_outcome(
-                        conn,
-                        wordid=wordid,
-                        status=outcome.status,
-                        error_text=outcome.error_text,
-                    )
-                counts[outcome.status] += 1
-                counts.exit_code = 4 if outcome.status == "parse_error" else (3 if outcome.terminal else 1)
-                break
-            wordid += 1
-            if limit == 0 or attempted < limit:
-                sleep(max(MIN_CRAWL_DELAY_S, delay_s))
-        return counts
-    finally:
-        conn.close()
+                wordid += 1
+                if limit == 0 or attempted < limit:
+                    sleep(max(MIN_CRAWL_DELAY_S, delay_s))
+            return counts
+        finally:
+            conn.close()
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -183,6 +208,8 @@ Related: scripts.ingest.dictionary_acquisition; docs/runbooks/dictionary-acquisi
         default=2.0,
         help="Initial exponential-backoff delay in seconds (default: 2.0).",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); use staging for a separate output")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a staging/shadow database (default: update only)")
     return parser
 
 
@@ -196,7 +223,7 @@ def main(argv: list[str] | None = None) -> int:
             delay_s=max(0.0, args.delay),
             retries=max(0, args.retries),
             retry_backoff_s=max(0.0, args.retry_backoff),
-        )
+         db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     except (OSError, sqlite3.Error, ValueError):
         print("СУМ-20 ingest failed: input or storage error", file=sys.stderr)
         return 1
@@ -210,4 +237,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

@@ -37,7 +37,7 @@ from scripts.rag.word_identity import normalize_evidence_form
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_LOCK_PATH = PROJECT_ROOT / "scripts" / "config" / "vesum_source.lock.json"
-PRODUCTION_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"
+PRODUCTION_DB_PATH = None  # Injectable legacy exclusion; selection belongs to topology.
 OPERATOR_ENTRYPOINT_PATH = PROJECT_ROOT / "scripts" / "rag" / "build_vesum_shadow.py"
 
 SCHEMA_VERSION = "vesum-reingest-v2"
@@ -491,15 +491,22 @@ def build_shadow_database(asset_path: Path, output_path: Path) -> BuildSummary:
     can feed it synthetic block samples.  Operator-facing callers must use
     :func:`build_from_lock`.
     """
-    if output_path.resolve() == PRODUCTION_DB_PATH.resolve():
+    from scripts.storage.topology import ExplicitStoreWriteTarget, StoreRefusal, resolve_store_for_write
+
+    if PRODUCTION_DB_PATH is not None and output_path.resolve() == PRODUCTION_DB_PATH.resolve():
         raise VesumReingestError(
             "Refusing to replace data/vesum.db: step 1 only builds an explicit shadow database"
         )
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output = resolve_store_for_write("vesum", PROJECT_ROOT, intent="create", operation="replace",
+                                     target=ExplicitStoreWriteTarget(output_path, "shadow"))
+    if isinstance(output, StoreRefusal):
+        message = "step 1 only builds an explicit shadow database" if output.reason == "target_is_active_store" else output.reason
+        raise VesumReingestError(message) from None
+    output_path = output.path
     temporary_path = output_path.with_name(f".{output_path.name}.tmp")
     temporary_path.unlink(missing_ok=True)
 
-    connection = sqlite3.connect(temporary_path)
+    connection = sqlite3.connect(temporary_path.as_uri() + "?mode=rwc", uri=True)
     try:
         connection.execute("PRAGMA foreign_keys = ON")
         connection.execute("PRAGMA journal_mode = OFF")

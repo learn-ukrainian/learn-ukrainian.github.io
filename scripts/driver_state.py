@@ -67,6 +67,7 @@ from scripts.common.epic_selector import validate_epic
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 from scripts.common.task_store_paths import tasks_dir
+from scripts.orchestration.task_record_store import read_task_record
 
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
@@ -363,7 +364,6 @@ def _fetch_monitor_task(task_id: str, *, run_nonce: str) -> dict | None:
 def running_workers(initiator: str) -> int | None:
     """Count own live runs, reading both task schemas without settling records."""
     try:
-        from scripts.dispatcher import store
         from scripts.dispatcher.worker import _identity
         from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
     except Exception:
@@ -376,7 +376,9 @@ def running_workers(initiator: str) -> int | None:
     deadline = time.monotonic() + 6
     for record in tasks.glob("*.json"):
         try:
-            data = store.read(record.stem)
+            data = read_task_record(record)
+            if data is None:
+                continue
         except (OSError, ValueError, TypeError):
             return None
         if not isinstance(data, dict):

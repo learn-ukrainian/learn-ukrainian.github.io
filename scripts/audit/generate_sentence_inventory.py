@@ -39,8 +39,8 @@ except ModuleNotFoundError as exc:
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_PRACTICE_LEXEMES_DIR = Path("site/public/lexicon")
-DEFAULT_SOURCES_DB = Path("data/sources.db")
-DEFAULT_VESUM_DB = Path("data/vesum.db")
+
+
 DEFAULT_OUT = Path("site/src/data/lexicon-sentence-inventory.json")
 PRACTICE_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 # Textbook FTS often ranks exercise prompts and dictionary fragments ahead of a
@@ -287,6 +287,26 @@ ULP_LICENSE = {
 }
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def _text(value: Any) -> str | None:
     return value.strip() if isinstance(value, str) and value.strip() else None
 
@@ -417,7 +437,7 @@ class VesumSentenceVerifier:
     """Small cached VESUM lookup used only for sentence-shape screening."""
 
     def __init__(self, path: Path) -> None:
-        self.conn = _open_readonly(path)
+        self.conn = _open_readonly(_store_path('vesum', path, required=True))
         self.cache: dict[str, bool] = {}
         self.imperative_cache: dict[str, bool] = {}
 
@@ -776,11 +796,12 @@ def build_inventory(
     max_per_lemma: int = 1,
     textbook_search_limit: int = TEXTBOOK_SEARCH_LIMIT,
 ) -> list[dict[str, Any]]:
+    vesum_db = _store_path('vesum', vesum_db)
     if max_per_lemma < 1:
         raise ValueError("max_per_lemma must be positive")
     if textbook_search_limit < 1:
         raise ValueError("textbook search limit must be positive")
-    conn = _open_readonly(sources_db)
+    conn = _open_readonly(_store_path('sources', sources_db, required=True))
     conn.row_factory = sqlite3.Row
     vesum = VesumSentenceVerifier(vesum_db) if vesum_db is not None and vesum_db.exists() else None
     try:
@@ -822,8 +843,8 @@ def write_inventory(rows: list[dict[str, Any]], out_path: Path) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
+    parser.add_argument("--sources-db", type=Path, default=_store_path('sources', globals().get('DEFAULT_SOURCES_DB')))
+    parser.add_argument("--vesum-db", type=Path, default=_store_path('vesum', globals().get('DEFAULT_VESUM_DB')))
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument(
         "--residual-from",
@@ -895,6 +916,14 @@ def main(argv: list[str] | None = None) -> int:
     print(f"sentence inventory: {len(rows)} rows")
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_SOURCES_DB': 'sources', 'DEFAULT_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

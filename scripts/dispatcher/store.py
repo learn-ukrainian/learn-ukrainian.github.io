@@ -13,14 +13,23 @@ from pathlib import Path, PureWindowsPath
 from scripts.common.git_context import validate_plain_branch_name
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher.types import ReviewAttempt
-from scripts.orchestration.task_record_store import task_state_lock
-
-try:
-    from scripts.orchestration.task_record_store import iter_task_records, locate_task_record, relocated_result_file
-except ImportError:
-    iter_task_records = locate_task_record = relocated_result_file = None
+from scripts.orchestration.task_record_store import (
+    iter_task_records,
+    locate_task_record,
+    read_task_record,
+    relocated_result_file,
+    task_state_lock,
+)
 
 ACTIVE = {"spawning", "running"}
+
+
+class TaskRecordError(ValueError):
+    """The supervisor cannot trust its durable record for settlement."""
+
+    def __init__(self, code: str):
+        super().__init__(code)
+        self.code = code
 
 
 def now() -> str:
@@ -155,13 +164,21 @@ def record_path(task_id: str) -> Path:
     return tasks_dir() / f"{task_id}.json"
 
 
-def _write(path: Path, record: dict, exclusive: bool = False, *, grant: dict | None = None) -> None:
+def _write(path: Path, record: dict, exclusive: bool = False, *, grant: dict | None = None,
+           require_existing: bool = False) -> None:
     # Reentrant: settlement, create and grant_paths already hold this same inode lock.
     with task_state_lock(path):
+        if require_existing and not path.exists():
+            raise TaskRecordError("TASK_RECORD_DAMAGED")
         if not exclusive and path.exists():
-            current = json.loads(path.read_text())
+            try:
+                current = json.loads(path.read_text())
+                if not isinstance(current, dict):
+                    raise ValueError("not an object")
+            except (OSError, ValueError, RecursionError) as exc:
+                raise TaskRecordError("TASK_RECORD_DAMAGED") from exc
             if current.get("run_nonce") != record.get("run_nonce"):
-                raise ValueError("run nonce mismatch")
+                raise TaskRecordError("TASK_RECORD_REPLACED: run nonce mismatch")
             if "owned_path_grants" in current:
                 record["owned_path_grants"] = current["owned_path_grants"]
             if current.get("settling_at"):
@@ -219,7 +236,12 @@ def read(task_id: str, nonce: str | None = None, *, missing_ok=False) -> dict | 
         if missing_ok:
             return None
         raise ValueError("task not found")
-    record = json.loads(path.read_text())
+    try:
+        record = json.loads(path.read_text())
+        if not isinstance(record, dict):
+            raise ValueError("not an object")
+    except (OSError, ValueError, RecursionError) as exc:
+        raise TaskRecordError("TASK_RECORD_DAMAGED") from exc
     if nonce is not None and record.get("run_nonce") != nonce:
         raise ValueError("run nonce mismatch")
     if relocated_result_file:
@@ -227,8 +249,24 @@ def read(task_id: str, nonce: str | None = None, *, missing_ok=False) -> dict | 
     return record
 
 
-def replace(record: dict, path: Path | None = None) -> None:
-    _write(path or record_path(record["task_id"]), record)
+def replace(record: dict, path: Path | None = None, *, require_existing: bool = False) -> None:
+    _write(path or record_path(record["task_id"]), record, require_existing=require_existing)
+
+
+def publish_failed_record(record: dict, path: Path) -> None:
+    """Recover a damaged supervisor record as failure, never overwrite another run."""
+    with task_state_lock(path):
+        try:
+            current = json.loads(path.read_text())
+        except (FileNotFoundError, ValueError, RecursionError):
+            current = None
+        if (isinstance(current, dict) and isinstance(current.get("run_nonce"), str)
+                and current["run_nonce"] != record["run_nonce"]):
+            raise TaskRecordError("TASK_RECORD_REPLACED: run nonce mismatch")
+        record.update(status="cancelled" if record.get("status") == "cancelled" else "crashed",
+                      error="TASK_RECORD_DAMAGED", finished_at=now(),
+                      worktree_disposition="retained", worktree_disposition_reason="task_record_damaged")
+        _write_atomic(path, record, exclusive=False)
 
 
 def _grant_paths_validated(root: Path, paths: list[str]) -> list[str]:
@@ -271,6 +309,20 @@ def _grant_paths_validated(root: Path, paths: list[str]) -> list[str]:
     return paths
 
 
+def _grant_worktree(record: dict) -> Path:
+    if record.get("schema_version") != 2 or record.get("status") != "running" or record.get("settling_at"):
+        raise ValueError("grants require a running v2 task that is not settling")
+    sealed = ("review_attempt", "advisory_envelope", "advisory_binding_sha256", "advisory_binding",
+              "advisory_role", "advisory_task", "driver_brief", "bounded", "bounded_implementation")
+    options = record.get("options") or {}
+    if (record.get("mode") != "workspace-write"
+            or any(record.get(key) is not None for key in sealed)
+            or any(options.get(key) not in (None, "None", False, "False", "") for key in sealed)
+            or record.get("research_task_family") in {"bounded", "bounded_implementation"}):
+        raise ValueError("grants are refused for sealed envelopes and read-only tasks")
+    return Path(record["worktree_path"]).resolve(strict=True)
+
+
 def grant_paths(task_id: str, run_nonce: str, paths: list[str], reason: str, approval_ref: str) -> dict:
     """Append attributable approval for an honest worker; caller identity is unauthenticated."""
     from scripts.dispatcher import ownership
@@ -288,20 +340,13 @@ def grant_paths(task_id: str, run_nonce: str, paths: list[str], reason: str, app
         parent = read(ancestor)
         ancestor = parent.get("parent_task_id")
     path = record_path(task_id)
+    snapshot = read(task_id, run_nonce)
+    root = _grant_worktree(snapshot)
+    normalized = _grant_paths_validated(root, paths)
     with task_state_lock(path):
         record = read(task_id, run_nonce)
-        if record.get("schema_version") != 2 or record.get("status") != "running" or record.get("settling_at"):
-            raise ValueError("grants require a running v2 task that is not settling")
-        sealed = ("review_attempt", "advisory_envelope", "advisory_binding_sha256", "advisory_binding",
-                  "advisory_role", "advisory_task", "driver_brief", "bounded", "bounded_implementation")
-        options = record.get("options") or {}
-        if (record.get("mode") != "workspace-write"
-                or any(record.get(key) is not None for key in sealed)
-                or any(options.get(key) not in (None, "None", False, "False", "") for key in sealed)
-                or record.get("research_task_family") in {"bounded", "bounded_implementation"}):
-            raise ValueError("grants are refused for sealed envelopes and read-only tasks")
-        root = Path(record["worktree_path"]).resolve(strict=True)
-        normalized = _grant_paths_validated(root, paths)
+        if _grant_worktree(record) != root:
+            raise ValueError("task worktree changed during grant validation")
         ownership.effective_scope(record)
         request = dict(task_id=task_id, run_nonce=run_nonce, owned_paths=normalized,
                        reason=reason, approval_ref=approval_ref)
@@ -321,7 +366,12 @@ def begin_settlement(record: dict) -> None:
     """Close grants and refresh them before delivery evidence is collected."""
     path = record_path(record["task_id"])
     with task_state_lock(path):
-        current = read(record["task_id"], record["run_nonce"])
+        try:
+            current = read(record["task_id"], record["run_nonce"])
+            if not isinstance(current, dict):
+                raise ValueError("not an object")
+        except (OSError, ValueError, RecursionError) as exc:
+            raise TaskRecordError("TASK_RECORD_DAMAGED") from exc
         current["settling_at"] = current.get("settling_at") or now()
         replace(current, path)
         record["settling_at"] = current["settling_at"]
@@ -330,31 +380,19 @@ def begin_settlement(record: dict) -> None:
 
 def list_tasks(status: str | None = None, include_archive=False, *, strict=False) -> list[dict]:
     root = tasks_dir()
-    paths = (
-        iter_task_records(root, include_archive=include_archive)
-        if iter_task_records
-        else (
-            path
-            for folder in ([root, root / "archive"] if include_archive else [root])
-            for path in folder.glob("*.json")
-        )
-    )
+    paths = iter_task_records(root, include_archive=include_archive)
     records = []
     for path in paths:
         try:
-            record = json.loads(path.read_text())
-            if not isinstance(record, dict) or "task_id" not in record:
+            record = read_task_record(path)
+            if record is None or "task_id" not in record:
                 continue
-            if "schema" in record and "schema_version" not in record:
-                continue  # AGY sandbox receipt, not a task record
-            if not isinstance(record["task_id"], str):
-                raise ValueError("invalid task record")
             if status is None or record.get("status") == status:
                 if relocated_result_file:
                     record["result_file"] = relocated_result_file(path, record.get("result_file"))
                 records.append(record)
         except (OSError, ValueError):
             if strict:
-                raise ValueError("unreadable task record; review attempt reuse cannot be excluded") from None
+                raise ValueError(f"unreadable task record {path}; review attempt reuse cannot be excluded") from None
             continue
     return records

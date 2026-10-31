@@ -110,6 +110,26 @@ ACCUSATIVE_PREPOSITIONS = frozenset({"у", "в", "на", "за", "про", "че
 COMPLEXITY_TOKENS = frozenset({"який", "яка", "яке", "які", "коли", "якщо", "щоб", "тому"})
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 @dataclass(frozen=True)
 class TatoebaSentence:
     sentence_id: int
@@ -921,11 +941,11 @@ def main(
     cc0_path = require_existing_path(args.cc0_sentences, "Tatoeba CC0 sentences") if args.cc0_sentences else None
 
     if vesum_json_path is None:
-        vesum_db = PROJECT_ROOT / "data" / "vesum.db"
+        vesum_db = _store_path('vesum')
         if not vesum_db.exists():
             raise FileNotFoundError(
                 f"missing real VESUM db for generation: {vesum_db}\n"
-                "Symlink or copy the hydrated main-checkout data/vesum.db into this worktree, "
+                "Configure a valid primary VESUM store with LU_VESUM_DB, "
                 "or pass --vesum-json for fixture-only runs."
             )
 

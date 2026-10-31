@@ -33,7 +33,8 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
 
-from scripts.rag.config import VESUM_DB_PATH
+from scripts.rag import config as _rag_config
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 _vesum_conn = None
 _vesum_conn_path: Path | None = None
@@ -113,9 +114,13 @@ class LemmaInspection:
 
 
 def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
-    if db_path is not None:
-        return Path(db_path)
-    return VESUM_DB_PATH
+    binding = StoreBinding("vesum", Path(db_path)) if db_path is not None else None
+    result = resolve_store("vesum", PROJECT_ROOT, binding=binding)
+    if isinstance(result, StoreRefusal):
+        if result.reason == "store_missing":
+            raise FileNotFoundError("VESUM database not found: store_missing") from None
+        raise FileNotFoundError(result.reason) from None
+    return result.path
 
 
 def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int] | None) -> SQLiteConnection:
@@ -880,3 +885,9 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+def __getattr__(name: str) -> Path:
+    if name == "VESUM_DB_PATH":
+        return _rag_config.VESUM_DB_PATH
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

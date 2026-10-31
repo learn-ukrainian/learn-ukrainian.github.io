@@ -44,6 +44,7 @@ from scripts.common import github_client
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import pr_identity
+from scripts.orchestration.task_record_store import read_task_record
 
 REPO_ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 
@@ -254,8 +255,8 @@ def _task_state_index(tasks_dir: Path) -> dict[Path, dict[str, Any]]:
         return index
     for path in sorted(tasks_dir.glob("*.json")):
         try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+            data = read_task_record(path)
+        except (OSError, ValueError):
             continue
         if not isinstance(data, dict):
             continue

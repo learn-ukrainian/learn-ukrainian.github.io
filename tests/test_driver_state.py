@@ -919,7 +919,7 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     monkeypatch.setattr(driver_state, "_fetch_monitor_task", fetch)
     record = driver_state.tasks_dir() / "t0.json"
     if fault == "bad-json":
-        record.write_text("invalid")
+        record.write_text("{")
     elif fault == "no-nonce":
         data = json.loads(record.read_text())
         data.pop("run_nonce")
@@ -938,7 +938,7 @@ def test_worker_import_failure_keeps_floor_unknown(driver, state, monkeypatch, e
     original = builtins.__import__
 
     def fail_store(name, *args, **kwargs):
-        if name == "scripts.dispatcher":
+        if name == "scripts.dispatcher.worker":
             raise error("synthetic dispatcher import failure")
         return original(name, *args, **kwargs)
 

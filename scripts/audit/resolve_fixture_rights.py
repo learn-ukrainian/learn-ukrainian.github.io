@@ -48,8 +48,8 @@ DEFAULT_RIGHTS_JSON = REPO_ROOT / "tests/fixtures/qg_bakeoff_rights/rights.json"
 DEFAULT_MATRIX_DOC = REPO_ROOT / "docs/projects/qg-quality-gate/fixture-rights-matrix.md"
 DEFAULT_REPLACE_LIST = REPO_ROOT / "docs/projects/qg-quality-gate/fixture-rights-replace-list.md"
 DEFAULT_LICENSE_MAP = Path(__file__).with_name("source_license_map.json")
-DEFAULT_SOURCES_DB = REPO_ROOT / "data/sources.db"
-DEFAULT_VESUM_DB = REPO_ROOT / "data/vesum.db"
+
+
 
 CHUNK_ID_RE = re.compile(r"\b(?:[a-f0-9]{8}_c\d{4}|[\w-]+_s\d{4}|ext-[\w-]+-\d+)\b")
 QUOTE_RE = re.compile(r"«([^»]+)»")
@@ -57,6 +57,26 @@ EXPLICIT_POINTER_RE = re.compile(r"^\s*POINTER:", re.IGNORECASE)
 TOKEN_RE = re.compile(r"[0-9A-Za-zА-Яа-яІіЇїЄєҐґ'’ʼ-]{2,}", re.UNICODE)
 FTS_TOKEN_RE = re.compile(r"[0-9A-Za-zА-Яа-яІіЇїЄєҐґ]{2,}", re.UNICODE)
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 @dataclass(frozen=True)
 class TableSpec:
@@ -722,8 +742,8 @@ def resolve_rows(
     license_entries = load_license_map(license_map)
     replace_entries = load_replace_list(replace_list)
     connections: dict[str, SQLiteConnection] = {
-        "sources": _open_readonly(sources_db),
-        "vesum": _open_readonly(vesum_db),
+        "sources": _open_readonly(_store_path('sources', sources_db, required=True)),
+        "vesum": _open_readonly(_store_path('vesum', vesum_db, required=True)),
     }
     for conn in connections.values():
         conn.row_factory = sqlite3.Row
@@ -896,8 +916,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--fixtures", type=Path, default=DEFAULT_FIXTURE_DIR)
     parser.add_argument("--rights-json", type=Path, default=DEFAULT_RIGHTS_JSON)
     parser.add_argument("--matrix-doc", type=Path, default=DEFAULT_MATRIX_DOC)
-    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
+    parser.add_argument("--sources-db", type=Path, default=_store_path('sources', globals().get('DEFAULT_SOURCES_DB')))
+    parser.add_argument("--vesum-db", type=Path, default=_store_path('vesum', globals().get('DEFAULT_VESUM_DB')))
     parser.add_argument("--license-map", type=Path, default=DEFAULT_LICENSE_MAP)
     parser.add_argument("--replace-list", type=Path, default=DEFAULT_REPLACE_LIST)
     parser.add_argument("--check", action="store_true", help="Resolve and print summary without writing files.")
@@ -912,6 +932,14 @@ def main() -> int:
     print_summary(rows, args.rights_json, args.matrix_doc, wrote=not args.check)
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_SOURCES_DB': 'sources', 'DEFAULT_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

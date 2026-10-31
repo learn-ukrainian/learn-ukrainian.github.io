@@ -62,7 +62,7 @@ from scripts.lexicon.ohoiko_quality_enrichment import normalize_500_verbs_lines
 from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+DB_PATH = None  # Selected by the connection owner at call time.
 REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 
 SOURCE_FILE = "anna-ohoiko-500-verbs"
@@ -109,6 +109,16 @@ _INDEX_TERMINATOR = "Index of Ukrainian Verbs"
 # ---------------------------------------------------------------------------
 # Data model
 # ---------------------------------------------------------------------------
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 @dataclass
@@ -381,7 +391,16 @@ def main(argv: list[str] | None = None) -> int:
         default=DB_PATH,
         help="Override target DB path (testing only).",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args(argv)
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update",
+        target=None if args.db is None else ExplicitStoreWriteTarget(args.db, args.db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    args.db = Path(request.location)
 
     txt_path = REFERENCES_DIR / TXT_FILENAME
     if not txt_path.exists():
@@ -409,54 +428,65 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     print(f"\n🗃️  Writing to {args.db}")
-    refuse_writable_corpus_database(str(args.db))
-    conn = sqlite3.connect(str(args.db))
-    try:
-        before = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
-            (SOURCE_FILE,),
-        ).fetchone()[0]
-        total_before = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
-        sec_before = conn.execute(
-            "SELECT COUNT(*) FROM textbook_sections WHERE source_file = ?",
-            (SOURCE_FILE,),
-        ).fetchone()[0]
-        print(f"   BEFORE: {before} chunks, {sec_before} sections for {SOURCE_FILE!r} (table total: {total_before:,})")
-
-        inserted, skipped = ingest_verbs(conn, verbs, force=args.force)
-        conn.commit()
-
-        after = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
-            (SOURCE_FILE,),
-        ).fetchone()[0]
-        total_after = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
-        sec_after = conn.execute(
-            "SELECT COUNT(*) FROM textbook_sections WHERE source_file = ?",
-            (SOURCE_FILE,),
-        ).fetchone()[0]
-        print(f"   inserted: {inserted}, skipped: {skipped}")
-        print(
-            f"   AFTER: {after} chunks, {sec_after} sections for {SOURCE_FILE!r} "
-            f"(table total: {total_after:,}, delta +{total_after - total_before})"
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update", target=request,
         )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        args.db = binding.path
+        refuse_writable_corpus_database(str(args.db))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            before = conn.execute(
+                "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
+                (SOURCE_FILE,),
+            ).fetchone()[0]
+            total_before = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
+            sec_before = conn.execute(
+                "SELECT COUNT(*) FROM textbook_sections WHERE source_file = ?",
+                (SOURCE_FILE,),
+            ).fetchone()[0]
+            print(f"   BEFORE: {before} chunks, {sec_before} sections for {SOURCE_FILE!r} (table total: {total_before:,})")
 
-        sample = conn.execute(
-            """SELECT chunk_id, title, char_count, substr(text, 1, 100) AS snippet
-                 FROM textbooks WHERE source_file = ? ORDER BY chunk_id LIMIT 3""",
-            (SOURCE_FILE,),
-        ).fetchall()
-        print("\n--- AFTER sample rows ---")
-        for row in sample:
-            print(f"  chunk_id={row[0]}")
-            print(f"    title={row[1]!r}")
-            print(f"    char_count={row[2]}")
-            print(f"    snippet={row[3]!r}")
-    finally:
-        conn.close()
+            inserted, skipped = ingest_verbs(conn, verbs, force=args.force)
+            conn.commit()
 
-    return 0
+            after = conn.execute(
+                "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
+                (SOURCE_FILE,),
+            ).fetchone()[0]
+            total_after = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
+            sec_after = conn.execute(
+                "SELECT COUNT(*) FROM textbook_sections WHERE source_file = ?",
+                (SOURCE_FILE,),
+            ).fetchone()[0]
+            print(f"   inserted: {inserted}, skipped: {skipped}")
+            print(
+                f"   AFTER: {after} chunks, {sec_after} sections for {SOURCE_FILE!r} "
+                f"(table total: {total_after:,}, delta +{total_after - total_before})"
+            )
+
+            sample = conn.execute(
+                """SELECT chunk_id, title, char_count, substr(text, 1, 100) AS snippet
+                     FROM textbooks WHERE source_file = ? ORDER BY chunk_id LIMIT 3""",
+                (SOURCE_FILE,),
+            ).fetchall()
+            print("\n--- AFTER sample rows ---")
+            for row in sample:
+                print(f"  chunk_id={row[0]}")
+                print(f"    title={row[1]!r}")
+                print(f"    char_count={row[2]}")
+                print(f"    snippet={row[3]!r}")
+        finally:
+            conn.close()
+
+        return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None
