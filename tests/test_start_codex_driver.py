@@ -325,6 +325,25 @@ def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> No
     assert result.stdout.index("would mint and bootstrap") < result.stdout.index("would bind drive-epic")
 
 
+def test_driver_launch_with_caller_prompt_passes_one_positional_prompt(tmp_path: Path) -> None:
+    argv_path = tmp_path / "argv"
+    baseline = run_launcher(
+        "start-codex-driver.sh", "--epic", "devops",
+        env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path)},
+    )
+    assert baseline.returncode == 0, baseline.stderr
+    baseline_argv = argv_path.read_bytes().decode().split("\0")[:-1]
+    caller = 'Caller instructions\nKeep "quotes" and --epic atlas literal.'
+    result = run_launcher(
+        "start-codex-driver.sh", "--epic", "devops", caller,
+        env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path)},
+    )
+    assert result.returncode == 0, result.stderr
+    argv = argv_path.read_bytes().decode().split("\0")[:-1]
+    assert baseline_argv[-1].startswith("First run lu-driver-state render --lane devops")
+    assert argv == [*baseline_argv[:-1], baseline_argv[-1] + "\n\nCaller instructions:\n" + caller]
+
+
 @pytest.mark.rules_core_absent
 def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> None:
     result = run_launcher(

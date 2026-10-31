@@ -27,7 +27,7 @@ def _canary_binding_probe(
             'fleet_comms_cold_clause() { printf "test plane"; }; '
             'canary_binding_probe() { '
             'LC_DRY_RUN="$CANARY_TEST_DRY_RUN"; LC_ROOT="$CANARY_TEST_ROOT"; '
-            'LC_EPIC=infra; LC_FORWARD_ARGS=(); '
+            'LC_EPIC=infra; LC_FORWARD_ARGS=(); LC_CALLER_PROMPT_ARGS=(); '
             'launcher_adapter_canary; launcher_bind_drive_epic; '
             'printf "LC_DRIVER_PROMPT=%s\n" "$LC_DRIVER_PROMPT"; }; '
             # Exercise actual entry initialization, stopping before startup side effects.
@@ -84,7 +84,7 @@ def test_binding_uses_explicit_adapter_execution_report(
             "bash", "-euo", "pipefail", "-c",
             'source "$1/scripts/lib/launcher_core.sh"; '
             'LC_PROVIDER_CANARY_RAN="$2"; LC_DRY_RUN="$3"; LC_ROOT="$4"; '
-            'LC_EPIC=infra; LC_FORWARD_ARGS=(); '
+            'LC_EPIC=infra; LC_FORWARD_ARGS=(); LC_CALLER_PROMPT_ARGS=(); '
             'launcher_inject_driver_agent() { :; }; '
             'fleet_comms_cold_clause() { printf "test plane"; }; '
             'launcher_bind_drive_epic; printf "LC_DRIVER_PROMPT=%s\n" "$LC_DRIVER_PROMPT"',
