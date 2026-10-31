@@ -9,6 +9,7 @@ import sqlite3
 from pathlib import Path
 
 from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from scripts.storage.topology import store_data_dir
 
 RAW_TABLE = "ulif_dictua_raw_responses"
 RAW_SCHEMA = """
@@ -41,7 +42,7 @@ def cache_path(source_db: str | Path | None = None) -> Path:
     if override := os.environ.get("LU_ULIF_RAW_CACHE"):
         return Path(override).expanduser().resolve()
     if source_db is not None:
-        return Path(source_db).resolve().parent / "lexicon/cache/ulif_raw.sqlite"
+        return store_data_dir(source_db) / "lexicon/cache/ulif_raw.sqlite"
     return _primary_checkout() / "data/lexicon/cache/ulif_raw.sqlite"
 
 

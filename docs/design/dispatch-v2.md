@@ -32,6 +32,20 @@ it refuses when a candidate record cannot be read or parsed. A file in the
 task-record directory that parses as JSON but is not an object, such as a
 worker's proof list, is no task record and never blocks a removal.
 
+## Owned paths a gate adds
+
+A commit gate that regenerates a file whenever its input changes would block a
+worker that owns the input but not the file. Such a file is added to the
+`--owned-path` set when an owned path's literal part is the gate's input tree,
+inside it or above it, unless the set already covers the file. The one gate
+declared so far (`scope.GENERATED_OUTPUTS`) is the lexicon fingerprint gate:
+owning anything under `scripts/lexicon` also owns
+`site/src/data/lexicon-manifest.fingerprint.json`. Dispatch prints each added
+file on stderr and resolves the set once, before the advisory binding, bounded
+admission, the sparse checkout and the task record read it, so an advisory
+envelope for such a task names the file too. Hooks and settlement read the
+recorded `owned_paths` as before.
+
 ## Tasks a run dispatches
 
 A task dispatched from inside another task's run (its environment carries

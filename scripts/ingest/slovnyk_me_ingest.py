@@ -19,7 +19,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly, refuse_writable_corpus_database
-from scripts.storage.topology import is_network_filesystem_path
+from scripts.storage.topology import is_network_filesystem_path, store_data_dir
 from scripts.wiki.slovnyk_me import (
     DEFAULT_SLOVNYK_ME_DICTS,
     DEFAULT_USER_AGENT,
@@ -311,7 +311,7 @@ def backup_database(conn: SQLiteConnection, db_path: Path, backup_dir: Path | No
     An unresolved predecessor from an earlier failed run refuses rather than piling
     up another full-size copy.
     """
-    backup_dir = backup_dir or db_path.parent / "backups"
+    backup_dir = backup_dir or store_data_dir(db_path) / "backups"
     if is_network_filesystem_path(backup_dir):
         raise ValueError("sources.db backups must stay on local storage")
     backup_dir.mkdir(parents=True, exist_ok=True)

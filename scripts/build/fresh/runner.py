@@ -87,6 +87,7 @@ from scripts.build.fresh.writer import strip_markdown_fence
 from scripts.common.jsonl import jsonl_lines
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.evidence.tags import to_oracle
+from scripts.curriculum.evidence.word_records import printed
 from scripts.curriculum.learner_state import codes as learner_codes
 from scripts.curriculum.learner_state.inventory_gate import check_lesson
 from scripts.curriculum.learner_state.observed import ObservedError, write_observed
@@ -1290,7 +1291,7 @@ def check_6_count(expanded: dict[str, Any], words: dict[str, Any] | None = None)
             record = records.get(match.group(1)) if match else None
             if record is None:
                 return failure(6, "gloss_record_missing", "pack", token=unit["text"])
-            lemma_count = len(tokenize(record["text"] if record.get("kind") == "formula" else record["lemma"]))
+            lemma_count = len(tokenize(printed(record) or ""))
             gloss_count = len(tokenize(record.get("gloss_en") or ""))
             uk += lemma_count
             total += lemma_count + gloss_count

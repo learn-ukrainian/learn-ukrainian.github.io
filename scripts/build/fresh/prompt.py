@@ -41,6 +41,7 @@ from scripts.build.fresh.draft_schema import (
     activity_payload_schema,
 )
 from scripts.build.fresh.immersion import ImmersionPayload, compute_immersion_payload
+from scripts.curriculum.evidence.word_records import is_formula, printed
 from scripts.curriculum.learner_state.planned import PlannedState
 from scripts.curriculum.validate.registry import load_registry
 
@@ -115,6 +116,7 @@ RECORD_ID_RE = re.compile(
 
 #: Word-store fields the cited-records section reads (``gloss`` and ``forms`` are optional).
 WORD_RECORD_FIELDS = ("lemma", "pos")
+FORMULA_RECORD_FIELDS = ("text", "parts")
 
 #: Source-dict fields printed as attribution, in order, per pack source kind (null and empty values are omitted).
 SOURCE_FIELDS = {
@@ -344,12 +346,12 @@ def learner_state_view(
     """The complete planned state before this lesson, as the writer reads it (#9182).
 
     Built from the ``to_dict()`` document the lesson reviewer receives and ``learner_state_sha256``
-    hashes; it only adds each word's lemma from the word store and each grammar id's point from the
+    hashes; it only adds each word's lemma (a formula's printed text) from the word store and each grammar id's point from the
     grammar registry. An id with no lemma or point fails the render: the writer must see the whole state.
     """
     state = _state_dict(learner_state)
     lemmas = {
-        rec["id"]: rec.get("lemma")
+        rec["id"]: printed(rec)
         for rec in (word_store or {}).get("words") or []
         if isinstance(rec, dict) and "id" in rec
     }
@@ -412,7 +414,8 @@ def cited_record_views(cited_records: Mapping[str, Any]) -> list[dict[str, Any]]
         kind = RECORD_KINDS.get(str(record_id).split("-", 1)[0])
         if kind is None or kind not in required:
             raise ValueError(f"cited_record_invalid: {record_id!r} is not a known record kind")
-        missing = [field for field in required[kind] if field != "id" and field not in record]
+        fields = FORMULA_RECORD_FIELDS if is_formula(record) else required[kind]
+        missing = [field for field in fields if field != "id" and field not in record]
         if missing:
             raise ValueError(f"cited_record_invalid: {kind} record {record_id!r} lacks {missing}")
         source = record.get("source")

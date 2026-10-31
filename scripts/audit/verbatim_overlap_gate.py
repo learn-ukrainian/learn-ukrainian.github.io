@@ -49,6 +49,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.lib.readonly_sqlite import open_readonly
+from scripts.storage.topology import store_data_dir
 
 # Version the extraction contract so golden tests + index can invalidate together.
 EXTRACTION_SPEC_VERSION: str = "2026-07-v1-ua-learner-activities"
@@ -91,7 +92,7 @@ def get_default_index_db_path(
     corpora: list[tuple[str, str, str, str]] | None = None,
 ) -> Path:
     sources_db = Path(sources_db)
-    parent_dir = Path(".") if str(sources_db) == ":memory:" else sources_db.parent
+    parent_dir = Path(".") if str(sources_db) == ":memory:" else store_data_dir(sources_db)
 
     default_corpora = FULL_CORPORA + SELF_CORPORA
     is_default = False
