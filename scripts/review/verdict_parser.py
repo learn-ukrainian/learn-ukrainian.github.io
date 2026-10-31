@@ -421,15 +421,31 @@ def _completion_prose(response: str) -> list[str]:
                 for child in token.children or []
             )
             lines = []
+            continuations = []
             for line in _commonmark_lines(rendered):
-                for pattern in (_REVIEW_VERDICT_LINE_RE, _REVIEW_SCORE_LINE_RE):
-                    if match := pattern.match(line):
-                        # Render emphasis first so removing metadata leaves no
-                        # closing markers in front of its own explanation.
-                        line = "\n" + line[match.end():] + "\n"
+                metadata = False
+                while True:
+                    candidate = line.lstrip(" \t.!?:;") if metadata else line
+                    match = _REVIEW_VERDICT_LINE_RE.match(candidate) or _REVIEW_SCORE_LINE_RE.match(candidate)
+                    if match is None:
                         break
-                lines.append(line)
-            prose.extend(paragraph.replace("\n", " ").strip() for paragraph in re.split(r"\n[ \t]*\n", "\n".join(lines)))
+                    # Render emphasis first, then consume the whole leading
+                    # metadata sequence so a score cannot hide its explanation.
+                    metadata = True
+                    line = candidate[match.end():]
+                if metadata:
+                    lines.append("\n" + candidate + "\n")
+                    # A metadata tail can also be own prose continued by a
+                    # soft wrap, rather than an annotation before a new sentence.
+                    continuations.append("\n" + candidate)
+                else:
+                    lines.append(line)
+                    continuations.append(line)
+            for paragraphs in (lines, continuations):
+                prose.extend(
+                    paragraph.replace("\n", " ").strip()
+                    for paragraph in re.split(r"\n[ \t]*\n", "\n".join(paragraphs))
+                )
     return prose
 
 
