@@ -882,7 +882,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/a2-bridge/activities.yaml",
-      "sha256": "c53046a221d18de01b3441a4d9ce06f969358e8692f8fc361a008057c29480da"
+      "sha256": "3acbf8d1ef0f4317eab4a7eb35dd9e48142762c7244517b70b27a2b20e88b6d5"
     },
     {
       "path": "curriculum/l2-uk-en/a2/a2-bridge/module.md",
@@ -14190,7 +14190,7 @@
     },
     {
       "path": "site/src/content/docs/a2/a2-bridge.mdx",
-      "sha256": "98d5f8ef44ed761708914952ae1d6a4824d3e00cc16e34ca4d1045aa9e14f7d9"
+      "sha256": "1275938da760d4488892960134a5a5a164433297d3eb073b464bd010a5c0b566"
     },
     {
       "path": "site/src/content/docs/a2/a2-comprehensive-review.mdx",
