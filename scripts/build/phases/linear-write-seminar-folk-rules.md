@@ -3,9 +3,9 @@
 
 Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 
-Use grounded corpus analysis, worked examples, source comparison and necessary cultural explanation to teach the plan. Section sizing metadata is historical, not a quota.
+Use grounded corpus analysis, worked examples, source comparison and necessary cultural explanation to teach every point in the section coverage checklist. Ignore legacy section sizing metadata.
 
-{SECTION_WORD_BUDGETS}
+{SECTION_COVERAGE}
 
 <!-- rule_id: #R-FOLK-PUBLIC-REGISTER -->
 FOLK learner pages are Ukrainian-first seminar pages: no English UI labels such as `Texts you'll read`, no rendered `title_en` glosses in module reading lists, and no English CEFR/register labels such as `C1+ learner`. Reading lists show Ukrainian title, Ukrainian genre, and public reading link only. Every written FOLK module must pass a student-read fluency gate: read the rendered page top-to-bottom and fix broken syntax, sentence splicing, word salad, repetitive proof/source boilerplate, or unnatural Ukrainian before review. Source discipline must appear as coherent literary analysis grounded in public texts, not as meta-explanations of the validation workflow.

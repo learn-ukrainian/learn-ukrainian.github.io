@@ -81,7 +81,7 @@ Accept content when every plan objective and content point is taught accurately,
 
 **Writer side.** Every item in the section's covers/beats list must be taught in that section. Do not silently defer it to a later section or module. Explain unfamiliar terms and the steps between ideas. Use tables and lists to organize teaching, with enough prose and worked examples to make their meaning clear.
 
-If an objective cannot be supported, identify that objective and the missing evidence for source research or versioned plan review. Do not invent material. A legacy `<section_overflow>` disclosure can report a scope or evidence gap, but no numeric budget requires it. A disclosure does not substitute for missing teaching.
+For deficient coverage, emit `<!-- UNSUPPORTED_OBJECTIVE: objective=<objective or content point>; missing teaching=<needed explanation, examples or practice> -->`. For missing source support, emit `<!-- EVIDENCE_GAP: objective=<objective or content point>; missing evidence=<needed source support> -->`. These explicit outcomes route to source research or versioned plan review without length-driven expansion or retries. Do not invent material. A legacy `<section_overflow>` disclosure can report a scope or evidence gap, but no numeric budget requires it. A disclosure does not substitute for missing teaching.
 
 **Reviewer side.** Judge whether every contracted item is taught accurately and sufficiently for the learner in its assigned section. Report missing coverage, unsupported claims and silent deferrals with exact evidence. Never reward or penalize a count, section overrun or under-budget result.
 

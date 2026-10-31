@@ -71,11 +71,7 @@ def test_writer_draft_length_precheck_never_expands_from_a_short_count(tmp_path:
     )
     (module_dir / "module.md").write_text(initial, encoding="utf-8")
     plan_path = tmp_path / "plan.yaml"
-    # Core track (not folk/seminar). A short draft used to trigger a targeted
-    # writer reprompt that rewarded the word count. Under #12256 AC-02 length is
-    # informational: the precheck reports the shortfall, never invokes the
-    # writer, and v7_build treats the resulting policy_mismatch as advisory
-    # because it only reads `applied`, which stays False.
+    # A short draft never invokes the writer or produces a length failure.
     plan_path.write_text("level: a1\nsequence: 1\nslug: sample\n", encoding="utf-8")
 
     def corrector(context: linear_pipeline.CorrectionContext) -> str:
@@ -89,9 +85,9 @@ def test_writer_draft_length_precheck_never_expands_from_a_short_count(tmp_path:
     )
 
     assert result["applied"] is False
-    assert result["patch_status"] == "policy_mismatch"
-    assert result["policy_mismatch"] is True
-    assert result["before"]["passed"] is False
+    assert result["patch_status"] == "informational"
+    assert result["outcomes"] == []
+    assert result["before"]["passed"] is True
     assert result["after"] == result["before"]
     assert result["size_policy"]["status"] == "advisory_ok"
     assert (module_dir / "module.md").read_text(encoding="utf-8") == initial
@@ -3488,45 +3484,11 @@ def test_contract_yaml_handles_list_shape_vocabulary_hints() -> None:
     assert "ремарка" in out
 
 
-# ---------------------------------------------------------------------------
-# Gate relaxations (2026-05-23) — user-direction enforcement
-# ---------------------------------------------------------------------------
-#
-# Two surgical relaxations were applied to the `plan_sections` and
-# `vesum_verified` gates after the 2026-05-21 a1/my-morning build #13
-# terminal cascade exposed two structural false-positive patterns:
-#
-# 1. `plan_sections` failed on per-section min/max bounds when the writer's
-#    word_count correction rebalanced total but left one section ~5% short.
-#    User direction: "the section wordcount is a guidance for the writer,
-#    it is not a reason to drop an error. The important is that the whole
-#    content is a whole and not less than the planned word count."
-#
-# 2. `vesum_verified` failed on legitimate hyphenated multi-word
-#    constructions like `літера-в-літеру` ("letter by letter") which VESUM
-#    only indexes by single lemma. User direction: "there are many of these
-#    kind of constructions in the Ukrainian language, do not drop [an]
-#    error if VESUM is not supporting it but we need to be able to check
-#    if they are correct with another tool."
-#
-# The tests below pin those relaxations against regression.
+# Section presence and Ukrainian verification remain independent of length.
 
 
 def test_section_gate_passes_when_section_below_min_but_present() -> None:
-    """Per-section under-min does NOT fail the gate (advisory only).
-
-    Reflects user direction 2026-05-23: per-section word counts are
-    GUIDANCE for the writer, not a build-fail trigger. The gate-level
-    `passed` reflects only missing headings. Per-section budgets are
-    retained as diagnostics so the writer correction prompt can use them
-    for targeting guidance, but they do NOT halt the build.
-
-    The 2026-05-21 a1/my-morning build #13 cascade — where the writer's
-    word_count r1 correction landed total at 1200 but left Діалоги
-    (257/270 = 95%) and Мій ранок (265/270 = 98%) under their per-section
-    min while Підсумок overshot, triggering terminal halt — is the
-    canonical failure pattern this relaxation prevents.
-    """
+    """Present sections never fail or steer corrections on a word budget."""
     plan = {
         "content_outline": [
             {"section": "Діалоги", "words": 300, "points": ["p1"]},
@@ -3544,23 +3506,16 @@ def test_section_gate_passes_when_section_below_min_but_present() -> None:
     )
     report = linear_pipeline._section_gate(text, plan)
     assert report["passed"] is True, (
-        "Per-section under-min must not fail the gate per user direction "
-        "2026-05-23"
+        "Section counts must not steer or fail the module"
     )
-    # Diagnostic budgets still reflect the per-section state.
-    budgets = {item["section"]: item for item in report["word_budgets"]}
-    assert budgets["Діалоги"]["under_min"] is True
-    assert budgets["Діалоги"]["passed"] is False  # per-section advisory marker
-    assert budgets["Підсумок"]["over_max"] is True
-    assert budgets["Підсумок"]["under_min"] is False
+    assert "word_budgets" not in report
+    assert report["outcomes"] == []
 
 
 def test_section_gate_fails_on_missing_heading() -> None:
     """A contracted section absent from module.md still fails the gate.
 
-    Missing headings remain a hard fail — the writer must emit every
-    section the plan contracted for. Only per-section word counts were
-    relaxed by the 2026-05-23 change.
+    Missing headings still expose untaught plan sections independently of length.
     """
     plan = {
         "content_outline": [
