@@ -129,6 +129,62 @@ def _run(coro):
     return asyncio.run(coro)
 
 
+def test_sources_metrics_endpoint_counts_tool_calls_and_errors(server_module, monkeypatch):
+    """Sources failures and latency must be visible in Prometheus scrapes."""
+    from prometheus_client.parser import text_string_to_metric_families
+    from starlette.testclient import TestClient
+
+    monkeypatch.setattr(server_module, "_CALL_GOVERNOR", None)
+    handler = AsyncMock(return_value=[TextContent(type="text", text="fixture")])
+    monkeypatch.setattr(server_module, "handle_collection_stats", handler)
+    app = server_module.create_http_app()
+    with TestClient(app, base_url="http://127.0.0.1:8766", client=("127.0.0.1", 50000)) as client:
+        initial = client.get("/metrics")
+        assert initial.status_code == 200
+        assert initial.headers["content-type"].startswith("text/plain")
+
+        def call(name):
+            response = client.post("/mcp", json={
+                "jsonrpc": "2.0", "id": 1, "method": "tools/call",
+                "params": {"name": name, "arguments": {}},
+            })
+            assert response.status_code == 200
+            return response.json()["result"]
+
+        assert not call("collection_stats")["isError"]
+        handler.side_effect = RuntimeError("private failure detail")
+        assert call("collection_stats")["isError"]
+        assert call("unregistered-tool-one")["isError"]
+        assert call("unregistered-tool-two")["isError"]
+        scrape = client.get("/metrics")
+        assert scrape.status_code == 200
+        samples = {
+            (sample.name, frozenset(sample.labels.items())): sample.value
+            for family in text_string_to_metric_families(scrape.text)
+            for sample in family.samples
+        }
+        for tool, status, count in (
+            ("collection_stats", "success", 1),
+            ("collection_stats", "error", 1),
+            ("unknown", "error", 2),
+        ):
+            labels = frozenset({"tool": tool, "status_class": status}.items())
+            assert samples[("sources_tool_requests_total", labels)] == count
+            assert samples[("sources_tool_duration_seconds_count", labels)] == count
+            assert samples[("sources_tool_duration_seconds_sum", labels)] > 0
+            bucket = labels | {("le", "+Inf")}
+            assert samples[("sources_tool_duration_seconds_bucket", bucket)] == count
+            if status == "error":
+                assert samples[("sources_tool_errors_total", labels)] == count
+        assert "private failure detail" not in scrape.text
+        assert "unregistered-tool-one" not in scrape.text
+        assert "unregistered-tool-two" not in scrape.text
+        assert client.get("/metrics").text == scrape.text
+
+    with TestClient(server_module.create_http_app(), client=("192.0.2.1", 50000)) as remote_client:
+        assert remote_client.get("/metrics").status_code == 403
+
+
 def test_network_sources_override_has_missing_database_responses(server_module, tmp_path, monkeypatch):
     from wiki import sources_db
 

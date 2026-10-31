@@ -30,11 +30,13 @@ import asyncio
 import contextvars
 import functools
 import hashlib
+import ipaddress
 import json
 import re
 import sqlite3
 import sys
 import threading
+import time
 import unicodedata
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -62,6 +64,7 @@ import scripts.wiki.sources_db as sources_db_full_name
 import wiki.sources_db as sources_db_short_name
 from scripts.lib.readonly_sqlite import SerializedConnection, SerializedCursor
 from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
+from scripts.rag.metrics import ToolMetrics
 from scripts.storage.generations import one_generation as one_sources_generation
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
@@ -2422,6 +2425,8 @@ async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
 
 
 _CALL_GOVERNOR: CallGovernor | None = None
+_TOOL_METRICS = ToolMetrics()
+_METRIC_TOOL_NAMES: frozenset[str] | None = None
 
 
 def _call_governor() -> CallGovernor:
@@ -2442,7 +2447,24 @@ def _call_governor() -> CallGovernor:
 
 
 async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:
-    """MCP 2.0 registered handler for tools/call — the actual wire path.
+    """Measure every wire call, including governor refusals and failures."""
+    global _METRIC_TOOL_NAMES
+    if _METRIC_TOOL_NAMES is None:
+        _METRIC_TOOL_NAMES = frozenset(tool.name for tool in await list_tools())
+    # Unknown names are client-controlled; they must share one label value.
+    tool = params.name if params.name in _METRIC_TOOL_NAMES else "unknown"
+    started = time.monotonic()
+    status_class = "error"
+    try:
+        result = await _execute_tool_call(_ctx, params)
+        status_class = "error" if result.is_error else "success"
+        return result
+    finally:
+        _TOOL_METRICS.observe(tool, status_class, time.monotonic() - started)
+
+
+async def _execute_tool_call(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:
+    """Run one governed tool call and build its MCP result.
 
     Fails closed: any handler exception or unknown-tool name becomes a
     safe, generic ``isError=True`` result. The raw exception message and
@@ -4591,14 +4613,26 @@ def create_http_app():
     Uses MCP 2.0's built-in ``Server.streamable_http_app`` for the
     streamable-HTTP endpoint, with ``stateless_http=True`` and
     ``json_response=True`` so each request is independent and answered with a
-    single JSON body. Public routes are ``/mcp`` and ``/health`` only — legacy
-    SSE (``/sse``, ``/messages/``) is not advertised. GET/DELETE on ``/mcp``
+    single JSON body. Routes are ``/mcp``, ``/health`` and loopback-only
+    ``/metrics``. Legacy SSE (``/sse``, ``/messages/``) is not advertised. GET/DELETE on ``/mcp``
     are rejected with 405 so Streamable HTTP clients do not hang on an empty
     SSE notification stream.
     """
     _set_http_mode(True)
     from starlette.responses import Response
     from starlette.routing import Route
+
+    async def handle_metrics(request):
+        from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+
+        # Keep metrics local even if the listener's host is overridden.
+        try:
+            loopback = request.client is not None and ipaddress.ip_address(request.client.host).is_loopback
+        except ValueError:
+            loopback = False
+        if not loopback:
+            return Response(status_code=403)
+        return Response(generate_latest(_TOOL_METRICS.registry), headers={"Content-Type": CONTENT_TYPE_LATEST})
 
     async def handle_health(request):
         from wiki.sources_db import SOURCES_DB_PATH
@@ -4612,6 +4646,7 @@ def create_http_app():
 
     custom_routes = [
         Route("/health", endpoint=handle_health),
+        Route("/metrics", endpoint=handle_metrics),
     ]
 
     app = server.streamable_http_app(
