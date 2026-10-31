@@ -134,7 +134,10 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
                 "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "clean"}}}}
         elif args[1:4] == ["api", "--method", "GET"]:
             reads.append(args)
-            body = [[recorded_approval("a" * 40)]] if "/issues/1/comments" in args[4] else {"login": "unit"}
+            if "/pulls/1/files" in args[4]:
+                body = [[{"filename": "scripts/example.py"}]]
+            else:
+                body = [[recorded_approval("a" * 40)]] if "/issues/1/comments" in args[4] else {"login": "unit"}
         else:
             writes.append(args)
             return subprocess.CompletedProcess(args, 0, "", "")
@@ -147,8 +150,8 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
             pub.publish("pr-merge", repo=repo, number=1, runner=spy, env={})
         assert writes == []
     # Read the head-bound checks; ready merges also read the default squash text
-    # and the recorded review seats (#12020), here an exact-head approval (#12031).
-    assert len(reads) == (6 if state == "ready" else 3)
+    # the recorded review seats (#12020), here an exact-head approval (#12031), and the PR's files (#12181).
+    assert len(reads) == (7 if state == "ready" else 3)
 
 
 def test_worker_merge_guard_and_changed_head_refuse_before_write():

@@ -399,6 +399,8 @@ def test_merge_readiness_reads_and_the_merge_receive_no_override(synthetic_opsec
         elif args[:4] == ["gh", "api", "--method", "GET"]:
             if args[4] == "repos/unit/public/issues/1/comments?per_page=100":
                 out = json.dumps([[recorded_approval(head)]])
+            elif args[4] == "repos/unit/public/pulls/1/files?per_page=100":
+                out = json.dumps([[{"filename": "scripts/example.py"}]])
             else:
                 assert args[4] == "user?per_page=100"
                 out = json.dumps({"login": "unit"})
@@ -418,7 +420,9 @@ def test_merge_readiness_reads_and_the_merge_receive_no_override(synthetic_opsec
     pub.publish("pr-merge", repo="unit/public", number=1, runner=runner, env=env)
     assert calls[-1][0][:3] == ["gh", "pr", "merge"], calls
     assert [argv[4] for argv, _ in calls if argv[:4] == ["gh", "api", "--method", "GET"]] == [
-        "repos/unit/public/issues/1/comments?per_page=100", "user?per_page=100",
+        "repos/unit/public/issues/1/comments?per_page=100",
+        "repos/unit/public/pulls/1/files?per_page=100",
+        "user?per_page=100",
     ], calls
     for argv, environment in calls:
         assert not any(key.startswith(gate.OVERRIDE) for key in environment), argv

@@ -3421,9 +3421,11 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
         f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({check_runs!r}))\n"
         f"elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/commits/{head}/status?per_page=100']:\n"
         "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({'total_count': 0, 'statuses': []}))\n"
-        # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031), fleet identity.
+        # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031), the PR's files, fleet identity.
         "elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/issues/1234/comments?per_page=100']:\n"
         f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({[recorded_approval(head)]!r}))\n"
+        "elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/pulls/1234/files?per_page=100']:\n"
+        "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps([{'filename': 'scripts/example.py'}]))\n"
         "elif args[:5] == ['api', '--include', '--method', 'GET', 'user?per_page=100']:\n"
         "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({'login': 'unit'}))\n"
         "elif args[:5] == ['api', '--include', '--method', 'POST', 'graphql']:\n"
@@ -3467,13 +3469,14 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
             f"real-gh pr merge 1234 --repo unit/public --squash --subject=clean (#1234) --match-head-commit={head}"
         )
         # Squash text, then the recorded review seats (#12020), here an exact-head
-        # approval (#12031); then the merge.
-        assert [record["argv"][:5] for record in sent[5:8]] == [
+        # approval (#12031), and the PR's files (#12181); then the merge.
+        assert [record["argv"][:5] for record in sent[5:9]] == [
             ["api", "--include", "--method", "POST", "graphql"],
             ["api", "--include", "--method", "GET", "repos/unit/public/issues/1234/comments?per_page=100"],
+            ["api", "--include", "--method", "GET", "repos/unit/public/pulls/1234/files?per_page=100"],
             ["api", "--include", "--method", "GET", "user?per_page=100"],
         ]
-        assert [record["argv"][:2] for record in sent[8:]] == [["pr", "merge"]]
+        assert [record["argv"][:2] for record in sent[9:]] == [["pr", "merge"]]
         assert sent[-1]["--body-file"] == "* clean"
     elif readiness.startswith("squash-"):
         assert proc.returncode != 0
