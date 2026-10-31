@@ -17,12 +17,20 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
+
 try:
     from scripts.etymology.recover_latin_cognates import ensure_recovered_column, recover_cognate_forms
 except ModuleNotFoundError:  # pragma: no cover - direct-script support
     from recover_latin_cognates import ensure_recovered_column, recover_cognate_forms
 
-DEFAULT_DB = Path("data/sources.db")
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 DEFAULT_TELEMETRY = Path("audit/etymology-phase-1/cognate_extraction_coverage.json")
 PROTO_MARKERS = ("псл.", "іє.", "стел.")
 QUALIFIER_WORDS = {
@@ -181,107 +189,121 @@ def _load_markers(cognates_json: str) -> list[str]:
     return [marker for marker in decoded if isinstance(marker, str) and marker]
 
 
-def extract_database(db_path: Path, telemetry_path: Path, min_coverage_pct: float = 65.0) -> dict[str, object]:
-    refuse_writable_corpus_database(db_path)
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    try:
-        create_schema(conn)
-        rows = conn.execute(
-            """
-            SELECT id, etymology_text, cognates
-            FROM esum_etymology_meta
-            ORDER BY id
-            """
-        ).fetchall()
-
-        marker_declared_expected: Counter[str] = Counter()
-        marker_extractable_expected: Counter[str] = Counter()
-        marker_extracted: Counter[str] = Counter()
-        entries_with_declared_markers = 0
-        entries_with_forms = 0
-        total_forms = 0
-
-        with conn:
-            for row in rows:
-                markers = _load_markers(row["cognates"])
-                if markers:
-                    entries_with_declared_markers += 1
-                marker_declared_expected.update(markers)
-                forms, proto_form = extract_forms_from_text(row["etymology_text"], markers)
-                extractable_markers = extractable_markers_from_text(row["etymology_text"], markers, forms)
-                marker_extractable_expected.update(extractable_markers)
-                if forms:
-                    entries_with_forms += 1
-                total_forms += len(forms)
-                marker_extracted.update(forms.keys())
-                recovered_forms = recover_cognate_forms(forms)
-                conn.execute(
-                    """
-                    INSERT INTO esum_cognate_forms (
-                        entry_id, cognate_forms, cognate_forms_recovered,
-                        proto_form, extracted_count, expected_count
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(entry_id) DO UPDATE SET
-                        cognate_forms = excluded.cognate_forms,
-                        cognate_forms_recovered = excluded.cognate_forms_recovered,
-                        proto_form = excluded.proto_form,
-                        extracted_count = excluded.extracted_count,
-                        expected_count = excluded.expected_count
-                    """,
-                    (
-                        row["id"],
-                        json.dumps(forms, ensure_ascii=False, sort_keys=True),
-                        json.dumps(recovered_forms, ensure_ascii=False, sort_keys=True),
-                        proto_form,
-                        len(forms),
-                        len(markers),
-                    ),
-                )
-
-        per_marker = {}
-        per_marker_declared = {}
-        for marker in sorted(marker_declared_expected):
-            expected = marker_extractable_expected[marker]
-            extracted = marker_extracted[marker]
-            per_marker[marker] = {
-                "expected": expected,
-                "extracted": extracted,
-                "pct": round((extracted / expected * 100) if expected else 0.0, 2),
-            }
-            declared_expected = marker_declared_expected[marker]
-            extracted = marker_extracted[marker]
-            per_marker_declared[marker] = {
-                "expected": declared_expected,
-                "extracted": extracted,
-                "pct": round((extracted / declared_expected * 100) if declared_expected else 0.0, 2),
-            }
-
-        coverage_pct = round(
-            (entries_with_forms / entries_with_declared_markers * 100) if entries_with_declared_markers else 0.0,
-            2,
+def extract_database(db_path: Path, telemetry_path: Path, min_coverage_pct: float = 65.0, *, db_role: str = "active", create: bool = False) -> dict[str, object]:
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
         )
-        telemetry: dict[str, object] = {
-            "entries_processed": len(rows),
-            "entries_with_declared_markers": entries_with_declared_markers,
-            "entries_with_at_least_one_form": entries_with_forms,
-            "total_forms_extracted": total_forms,
-            "coverage_pct": coverage_pct,
-            "all_entries_coverage_pct": round((entries_with_forms / len(rows) * 100) if rows else 0.0, 2),
-            "per_marker_coverage": per_marker,
-            "per_marker_declared_coverage": per_marker_declared,
-        }
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(db_path)
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        conn.row_factory = sqlite3.Row
+        try:
+            create_schema(conn)
+            rows = conn.execute(
+                """
+                SELECT id, etymology_text, cognates
+                FROM esum_etymology_meta
+                ORDER BY id
+                """
+            ).fetchall()
 
-        telemetry_path.parent.mkdir(parents=True, exist_ok=True)
-        telemetry_path.write_text(json.dumps(telemetry, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            marker_declared_expected: Counter[str] = Counter()
+            marker_extractable_expected: Counter[str] = Counter()
+            marker_extracted: Counter[str] = Counter()
+            entries_with_declared_markers = 0
+            entries_with_forms = 0
+            total_forms = 0
 
-        if coverage_pct < min_coverage_pct:
-            raise RuntimeError(f"Cognate extraction coverage {coverage_pct}% is below {min_coverage_pct}%")
+            with conn:
+                for row in rows:
+                    markers = _load_markers(row["cognates"])
+                    if markers:
+                        entries_with_declared_markers += 1
+                    marker_declared_expected.update(markers)
+                    forms, proto_form = extract_forms_from_text(row["etymology_text"], markers)
+                    extractable_markers = extractable_markers_from_text(row["etymology_text"], markers, forms)
+                    marker_extractable_expected.update(extractable_markers)
+                    if forms:
+                        entries_with_forms += 1
+                    total_forms += len(forms)
+                    marker_extracted.update(forms.keys())
+                    recovered_forms = recover_cognate_forms(forms)
+                    conn.execute(
+                        """
+                        INSERT INTO esum_cognate_forms (
+                            entry_id, cognate_forms, cognate_forms_recovered,
+                            proto_form, extracted_count, expected_count
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        ON CONFLICT(entry_id) DO UPDATE SET
+                            cognate_forms = excluded.cognate_forms,
+                            cognate_forms_recovered = excluded.cognate_forms_recovered,
+                            proto_form = excluded.proto_form,
+                            extracted_count = excluded.extracted_count,
+                            expected_count = excluded.expected_count
+                        """,
+                        (
+                            row["id"],
+                            json.dumps(forms, ensure_ascii=False, sort_keys=True),
+                            json.dumps(recovered_forms, ensure_ascii=False, sort_keys=True),
+                            proto_form,
+                            len(forms),
+                            len(markers),
+                        ),
+                    )
 
-        return telemetry
-    finally:
-        conn.close()
+            per_marker = {}
+            per_marker_declared = {}
+            for marker in sorted(marker_declared_expected):
+                expected = marker_extractable_expected[marker]
+                extracted = marker_extracted[marker]
+                per_marker[marker] = {
+                    "expected": expected,
+                    "extracted": extracted,
+                    "pct": round((extracted / expected * 100) if expected else 0.0, 2),
+                }
+                declared_expected = marker_declared_expected[marker]
+                extracted = marker_extracted[marker]
+                per_marker_declared[marker] = {
+                    "expected": declared_expected,
+                    "extracted": extracted,
+                    "pct": round((extracted / declared_expected * 100) if declared_expected else 0.0, 2),
+                }
+
+            coverage_pct = round(
+                (entries_with_forms / entries_with_declared_markers * 100) if entries_with_declared_markers else 0.0,
+                2,
+            )
+            telemetry: dict[str, object] = {
+                "entries_processed": len(rows),
+                "entries_with_declared_markers": entries_with_declared_markers,
+                "entries_with_at_least_one_form": entries_with_forms,
+                "total_forms_extracted": total_forms,
+                "coverage_pct": coverage_pct,
+                "all_entries_coverage_pct": round((entries_with_forms / len(rows) * 100) if rows else 0.0, 2),
+                "per_marker_coverage": per_marker,
+                "per_marker_declared_coverage": per_marker_declared,
+            }
+
+            telemetry_path.parent.mkdir(parents=True, exist_ok=True)
+            telemetry_path.write_text(json.dumps(telemetry, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+            if coverage_pct < min_coverage_pct:
+                raise RuntimeError(f"Cognate extraction coverage {coverage_pct}% is below {min_coverage_pct}%")
+
+            return telemetry
+        finally:
+            conn.close()
 
 
 def main() -> int:
@@ -289,12 +311,18 @@ def main() -> int:
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--telemetry", type=Path, default=DEFAULT_TELEMETRY)
     parser.add_argument("--min-coverage-pct", type=float, default=65.0)
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args()
 
-    telemetry = extract_database(args.db, args.telemetry, args.min_coverage_pct)
+    telemetry = extract_database(args.db, args.telemetry, args.min_coverage_pct, db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     print(json.dumps(telemetry, ensure_ascii=False, indent=2))
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

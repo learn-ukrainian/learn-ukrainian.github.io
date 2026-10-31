@@ -40,7 +40,7 @@ except ModuleNotFoundError as exc:
 DEFAULT_CONTENT_ROOT = Path("site/src/content/docs")
 DEFAULT_MANIFEST = Path("site/src/data/etymology-manifest.json")
 DEFAULT_OUTPUT = Path("site/src/data/vesum-vocab-lemmas.json")
-DEFAULT_VESUM_DB = Path("data/vesum.db")
+
 VERSION = "2026-05-21-v1"
 STRESS_MARKS = {"\u0300", "\u0301", "\u0341"}
 
@@ -51,6 +51,26 @@ TAB_OPEN_RE = re.compile(r"<TabItem\b(?P<attrs>[^>]*)>", re.IGNORECASE)
 TAB_CLOSE_RE = re.compile(r"</TabItem>", re.IGNORECASE)
 LABEL_RE = re.compile(r"""(?:^|\s)label\s*=\s*(?P<quote>["'])(?P<label>.*?)(?P=quote)""", re.DOTALL)
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def normalize_lemma(value: str) -> str:
     """Lowercase and strip combining stress marks without changing й/ї."""
@@ -226,8 +246,9 @@ def build_vesum_vocab_lemmas(
     *,
     content_root: Path = DEFAULT_CONTENT_ROOT,
     manifest_path: Path = DEFAULT_MANIFEST,
-    vesum_db: Path = DEFAULT_VESUM_DB,
+    vesum_db: Path | None = None,
 ) -> dict:
+    vesum_db = _store_path('vesum', vesum_db)
     words, source_files = extract_vocabulary_words(content_root)
     manifest_lemma_keys = load_manifest_lemma_keys(manifest_path)
 
@@ -236,7 +257,7 @@ def build_vesum_vocab_lemmas(
     direct_manifest_matches = 0
     ambiguous_or_missing = 0
 
-    conn = _open_readonly(vesum_db)
+    conn = _open_readonly(_store_path('vesum', vesum_db, required=True))
     try:
         for word in sorted(words, key=normalize_lemma):
             normalized_word = normalize_lemma(word)
@@ -288,7 +309,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--content-root", type=Path, default=DEFAULT_CONTENT_ROOT)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
+    parser.add_argument("--vesum-db", type=Path, default=_store_path('vesum', globals().get('DEFAULT_VESUM_DB')))
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
 
@@ -302,6 +323,14 @@ def main() -> int:
     print(json.dumps({**output["stats"], "output_file": str(args.output)}, ensure_ascii=False, indent=2))
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -35,13 +35,23 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 REPO = Path(__file__).resolve().parents[2]
-DEFAULT_DB = REPO / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 
 SPACE_RE = re.compile(r"[ \t]+")
 PAGE_LINE_RE = re.compile(r"^(?:\[?\s*(?:с\.|стор\.|page)\s*)?(\d{1,4})\s*\]?$", re.IGNORECASE)
 INLINE_PAGE_RE = re.compile(r"\[(?:с\.|стор\.|page)\s*(\d{1,4})\]", re.IGNORECASE)
 SENTENCE_RE = re.compile(r"(?<=[.!?…])\s+")
 QUOTE_RE = r"[«\"“](.+?)[»\"”]"
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 @dataclass(frozen=True)
@@ -589,7 +599,14 @@ ADAPTERS: dict[str, Adapter] = {
 }
 
 
-def ingest(adapter: Adapter, input_path: Path, db_path: Path, *, dry_run: bool, force: bool) -> IngestResult:
+def ingest(adapter: Adapter, input_path: Path, db_path: Path, *, dry_run: bool, force: bool, db_role: str = "active", create: bool = False) -> IngestResult:
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     if not input_path.exists():
         raise FileNotFoundError(f"Input file not found: {input_path}")
 
@@ -597,25 +614,31 @@ def ingest(adapter: Adapter, input_path: Path, db_path: Path, *, dry_run: bool, 
     if dry_run:
         return IngestResult(adapter.source, parsed=len(rows), inserted=0, skipped=0, dry_run=True)
 
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path))
-    try:
-        with conn:
-            adapter.ensure_schema(conn)
-            if force:
-                adapter.force_clear(conn)
-            inserted = 0
-            skipped = 0
-            for row in rows:
-                if adapter.insert_row(conn, row):
-                    inserted += 1
-                else:
-                    skipped += 1
-            adapter.rebuild_fts(conn)
-        return IngestResult(adapter.source, parsed=len(rows), inserted=inserted, skipped=skipped, dry_run=False)
-    finally:
-        conn.close()
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            with conn:
+                adapter.ensure_schema(conn)
+                if force:
+                    adapter.force_clear(conn)
+                inserted = 0
+                skipped = 0
+                for row in rows:
+                    if adapter.insert_row(conn, row):
+                        inserted += 1
+                    else:
+                        skipped += 1
+                adapter.rebuild_fts(conn)
+            return IngestResult(adapter.source, parsed=len(rows), inserted=inserted, skipped=skipped, dry_run=False)
+        finally:
+            conn.close()
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -662,6 +685,8 @@ Examples:
         action="store_true",
         help="Delete existing rows for the selected source before inserting parsed rows.",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); use staging for a separate output")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a staging/shadow database (default: update only)")
     return parser
 
 
@@ -670,7 +695,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     adapter = ADAPTERS[args.source]
     try:
-        result = ingest(adapter, args.input, args.db, dry_run=args.dry_run, force=args.force)
+        result = ingest(adapter, args.input, args.db, dry_run=args.dry_run, force=args.force, db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     except (OSError, sqlite3.Error) as exc:
         print(f"dictionary_ingest: {exc}", file=sys.stderr)
         return 1
@@ -686,4 +711,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

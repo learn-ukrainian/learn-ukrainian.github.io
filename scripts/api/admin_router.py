@@ -20,6 +20,7 @@ import inspect
 import json
 import os
 import shutil
+import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -45,6 +46,26 @@ ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 
 
 
+
+
+
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def _data_dir(ctx: MonitorContext) -> Path:
     return ctx.roots.project_root / "data"
@@ -204,7 +225,7 @@ async def disk_usage(ctx: MonitorContext = Depends(get_ctx)):
         "textbook_chunks": data_dir / "textbook_chunks",
         "backups": ctx.roots.backup_dir,
         "logs": ctx.roots.logs_dir,
-        "vesum_db": data_dir / "vesum.db",
+        "vesum_db": _store_path('vesum', root=ctx.roots.project_root),
     }
 
     # Run all dir_size calls in parallel

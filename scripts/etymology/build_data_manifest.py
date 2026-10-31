@@ -69,14 +69,34 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - direct-script support
     from transliterate import transliterate
 
-DEFAULT_DB = Path("data/sources.db")
+
 DEFAULT_OUTPUT = Path("site/src/data/etymology-manifest.json")
 MANIFEST_VERSION = "2026-05-15-v1"
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def load_manifest(db_path: Path) -> dict:
     """Load all ESUM entries from sources.db and shape into the build manifest."""
-    conn = _open_readonly(db_path)
+    conn = _open_readonly(_store_path('sources', db_path, required=True))
     conn.row_factory = sqlite3.Row
     try:
         cognate_columns = {row["name"] for row in conn.execute("PRAGMA table_info(esum_cognate_forms)")}
@@ -177,7 +197,7 @@ def load_manifest(db_path: Path) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db", type=Path, default=DEFAULT_DB)
+    parser.add_argument("--db", type=Path, default=_store_path('sources', globals().get('DEFAULT_DB')))
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
 
@@ -199,6 +219,14 @@ def main() -> int:
     )
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

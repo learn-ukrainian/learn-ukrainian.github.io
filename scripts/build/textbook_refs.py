@@ -41,7 +41,7 @@ except ModuleNotFoundError as exc:
     from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+
 WIKI_DIR = PROJECT_ROOT / "wiki"
 
 # pidruchnyk.com.ua hosts PDFs at this base URL
@@ -97,6 +97,26 @@ _AUTHORS = {
 }
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def _parse_page(title: str) -> int | None:
     """Extract page number from chunk title like 'Сторінка 73'."""
     m = re.search(r"Сторінка\s+(\d+)", title)
@@ -131,7 +151,7 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
 
     Returns list of dicts with: author, grade, year, title, url, page
     """
-    if not SOURCES_DB.exists():
+    if not _store_path('sources', globals().get('SOURCES_DB')).exists():
         return []
 
     # Find the wiki article for this module
@@ -176,7 +196,7 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
         return _refs_from_plan(level, slug)
 
     # Resolve chunk_ids to PDF URLs
-    conn = _open_readonly(str(SOURCES_DB))
+    conn = _open_readonly(_store_path('sources', _store_path('sources', globals().get('SOURCES_DB')), required=True))
     conn.row_factory = sqlite3.Row
     seen_books: dict[str, dict] = {}  # source_file → best ref
 
@@ -268,3 +288,10 @@ def _refs_from_plan(level: str, slug: str) -> list[dict]:
             })
 
     return results[:5]
+
+
+def __getattr__(name):
+    stores = {'SOURCES_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)

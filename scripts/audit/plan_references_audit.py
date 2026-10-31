@@ -65,7 +65,7 @@ except ModuleNotFoundError as exc:
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 PLANS_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
-SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+
 DEFAULT_OUT_DIR = PROJECT_ROOT / "audit" / "a1-a2-plan-references-2026-05-15"
 DEFAULT_TRACKS = ("a1", "a2")
 
@@ -93,6 +93,26 @@ _CYRILLIC_AUTHOR_CANONICAL: dict[str, str] = {
     "Пономарьова": "Пономарова",
 }
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def _canonicalize_author_uk(author: str) -> str:
     """Canonical-form lookup; pass-through on miss."""
@@ -642,7 +662,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--db",
         type=Path,
-        default=SOURCES_DB,
+        default=_store_path('sources', globals().get('SOURCES_DB')),
         help="Path to data/sources.db.",
     )
     parser.add_argument(
@@ -673,7 +693,7 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     findings: list[Finding] = []
-    with _open_readonly(str(args.db)) as conn:
+    with _open_readonly(_store_path('sources', args.db, required=True)) as conn:
         conn.row_factory = sqlite3.Row
         for cite in all_cites:
             f = _audit_citation(
@@ -747,6 +767,14 @@ def main(argv: list[str] | None = None) -> int:
     print(summary)
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'SOURCES_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     sys.exit(main())

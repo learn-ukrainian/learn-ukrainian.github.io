@@ -32,8 +32,18 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
-DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 RECEIPT_SCHEMA_VERSION = "incremental-historical-source-ingest.v1"
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 def _canonical_bytes(value: Any) -> bytes:
@@ -113,6 +123,8 @@ def ingest(
     coverage_receipt_path: Path,
     output_receipt_path: Path,
     dry_run: bool = False,
+    db_role: str = "active",
+    create: bool = False,
 ) -> dict[str, Any]:
     rows = load_rows(jsonl_path)
     collection_id = str(rows[0][0])
@@ -137,67 +149,81 @@ def ingest(
     }
     if dry_run:
         return plan
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     if not db_path.is_file():
         raise HistoricalSourceError(f"database does not exist: {db_path}")
-
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path), timeout=60)
-    conn.execute("PRAGMA foreign_keys=ON")
-    try:
-        ensure_historical_source_schema(conn)
-        before = _counts(conn, collection_id)
-        conn.execute("BEGIN IMMEDIATE")
-        conn.execute(
-            "DELETE FROM historical_source_records WHERE collection_id = ?",
-            (collection_id,),
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
         )
-        insert_rows(conn, rows)
-        actual_ids = [
-            str(row[0])
-            for row in conn.execute(
-                "SELECT source_record_id FROM historical_source_records "
-                "WHERE collection_id = ? ORDER BY source_record_id",
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, timeout=60, uri=True)
+        conn.execute("PRAGMA foreign_keys=ON")
+        try:
+            ensure_historical_source_schema(conn)
+            before = _counts(conn, collection_id)
+            conn.execute("BEGIN IMMEDIATE")
+            conn.execute(
+                "DELETE FROM historical_source_records WHERE collection_id = ?",
                 (collection_id,),
             )
-        ]
-        if set(actual_ids) != set(source_ids) or len(actual_ids) != len(source_ids):
-            raise HistoricalSourceError("database collection IDs do not equal input IDs")
-        conn.execute(
-            "INSERT INTO historical_source_records_fts(historical_source_records_fts) "
-            "VALUES ('rebuild')"
-        )
-        validate_historical_fts(conn)
-        integrity = conn.execute("PRAGMA integrity_check").fetchone()[0]
-        if integrity != "ok":
-            raise HistoricalSourceError(f"PRAGMA integrity_check returned {integrity!r}")
-        after = _counts(conn, collection_id)
-        if after["collection_rows"] != len(rows):
-            raise HistoricalSourceError(
-                f"collection has {after['collection_rows']} rows, expected {len(rows)}"
+            insert_rows(conn, rows)
+            actual_ids = [
+                str(row[0])
+                for row in conn.execute(
+                    "SELECT source_record_id FROM historical_source_records "
+                    "WHERE collection_id = ? ORDER BY source_record_id",
+                    (collection_id,),
+                )
+            ]
+            if set(actual_ids) != set(source_ids) or len(actual_ids) != len(source_ids):
+                raise HistoricalSourceError("database collection IDs do not equal input IDs")
+            conn.execute(
+                "INSERT INTO historical_source_records_fts(historical_source_records_fts) "
+                "VALUES ('rebuild')"
             )
-        conn.commit()
-        checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
-    except BaseException:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
+            validate_historical_fts(conn)
+            integrity = conn.execute("PRAGMA integrity_check").fetchone()[0]
+            if integrity != "ok":
+                raise HistoricalSourceError(f"PRAGMA integrity_check returned {integrity!r}")
+            after = _counts(conn, collection_id)
+            if after["collection_rows"] != len(rows):
+                raise HistoricalSourceError(
+                    f"collection has {after['collection_rows']} rows, expected {len(rows)}"
+                )
+            conn.commit()
+            checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
+        except BaseException:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
 
-    receipt = {
-        **plan,
-        "dry_run": False,
-        "before_transaction": before,
-        "after_transaction": after,
-        "integrity_check": "ok",
-        "wal_checkpoint": checkpoint,
-        "database_sha256": sha256_file(db_path),
-        "coverage_known_identified_total_lower_bound": coverage.get(
-            "known_identified_total_lower_bound"
-        ),
-        "coverage_known_unexposed_residual": coverage.get("known_unexposed_residual"),
-    }
-    _atomic_write_json(output_receipt_path, receipt)
-    return receipt
+        receipt = {
+            **plan,
+            "dry_run": False,
+            "before_transaction": before,
+            "after_transaction": after,
+            "integrity_check": "ok",
+            "wal_checkpoint": checkpoint,
+            "database_sha256": sha256_file(db_path),
+            "coverage_known_identified_total_lower_bound": coverage.get(
+                "known_identified_total_lower_bound"
+            ),
+            "coverage_known_unexposed_residual": coverage.get("known_unexposed_residual"),
+        }
+        _atomic_write_json(output_receipt_path, receipt)
+        return receipt
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -207,6 +233,8 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--coverage-receipt", type=Path, required=True)
     parser.add_argument("--output-receipt", type=Path, required=True)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active")
+    parser.add_argument("--create-db", action="store_true")
     return parser.parse_args(argv)
 
 
@@ -218,10 +246,14 @@ def main(argv: list[str] | None = None) -> int:
         coverage_receipt_path=args.coverage_receipt,
         output_receipt_path=args.output_receipt,
         dry_run=args.dry_run,
-    )
+     db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

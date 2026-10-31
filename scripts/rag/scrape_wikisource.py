@@ -10,7 +10,7 @@ Usage:
 
     # Scrape + ingest a folk category into a local sources.db
     .venv/bin/python scripts/rag/scrape_wikisource.py \
-        --category "Категорія:Думи" --ingest --db data/sources.db
+        --category "Категорія:Думи" --ingest
 
     # Scrape all works by an author
     .venv/bin/python scripts/rag/scrape_wikisource.py \
@@ -43,7 +43,7 @@ from urllib.parse import quote, urlencode
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from rag.config import CHUNK_MAX_TOKENS, DATA_DIR, LITERARY_DIR
+from rag.config import CHUNK_MAX_TOKENS, LITERARY_DIR
 from rag.scrape_ukrlib import (
     NAROD_AUTHOR,
     NAROD_PERIOD,
@@ -64,7 +64,7 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
 API = "https://uk.wikisource.org/w/api.php"
 WIKI_BASE_URL = "https://uk.wikisource.org/wiki"
 DEFAULT_FOLK_CATEGORY = "Категорія:Думи"
-DEFAULT_DB_PATH = DATA_DIR / "sources.db"
+DEFAULT_DB_PATH = None  # Selected by the connection owner at call time.
 DELAY_BETWEEN_WORKS = 0.5
 
 FOLK_CATEGORY_GENRES = {
@@ -103,6 +103,16 @@ SESSION.headers.update({
         "(https://learn-ukrainian.github.io; educational project)"
     ),
 })
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 def _pace_api_call() -> None:
@@ -491,7 +501,14 @@ def _write_folk_jsonl(
     return total_chunks
 
 
-def ingest_jsonl(jsonl_path: Path, db_path: Path) -> int:
+def ingest_jsonl(jsonl_path: Path, db_path: Path, *, db_role: str = "active", create: bool = False) -> int:
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     source_file = jsonl_path.stem
     rows = []
     with open(jsonl_path, encoding="utf-8") as f:
@@ -506,17 +523,24 @@ def ingest_jsonl(jsonl_path: Path, db_path: Path) -> int:
                  (chunk_id, title, text, source_file, source_url, author, work, work_id,
                   year, genre, language_period, char_count)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path))
-    try:
-        with conn:
-            conn.execute("DELETE FROM literary_texts WHERE source_file = ?", (source_file,))
-            if rows:
-                conn.executemany(lit_sql, rows)
-            conn.execute("INSERT INTO literary_fts(literary_fts) VALUES('rebuild')")
-    finally:
-        conn.close()
-    return len(rows)
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            with conn:
+                conn.execute("DELETE FROM literary_texts WHERE source_file = ?", (source_file,))
+                if rows:
+                    conn.executemany(lit_sql, rows)
+                conn.execute("INSERT INTO literary_fts(literary_fts) VALUES('rebuild')")
+        finally:
+            conn.close()
+        return len(rows)
 
 
 def scrape_category(
@@ -527,7 +551,9 @@ def scrape_category(
     skip_titles_file: Path | None = None,
     limit: int | None = None,
     genre: str | None = None,
-    db_path: Path = DEFAULT_DB_PATH,
+    db_path: Path | None = None,
+    db_role: str = "active",
+    create: bool = False,
 ) -> int:
     """Scrape one Wikisource folk category to JSONL, optionally replacing DB rows."""
     output_path = _folk_output_path(category)
@@ -550,7 +576,7 @@ def scrape_category(
         return total_chunks
 
     if ingest:
-        inserted = ingest_jsonl(output_path, db_path)
+        inserted = ingest_jsonl(output_path, db_path, db_role=db_role, create=create)
         print(f"[wikisource-folk] ingested {inserted} rows into {db_path}")
 
     return total_chunks
@@ -926,6 +952,8 @@ def main(argv: list[str] | None = None) -> int:
             "Constitution. Set to 0.0 to keep everything."
         ),
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args(argv)
 
     if args.author:
@@ -962,10 +990,14 @@ def main(argv: list[str] | None = None) -> int:
         skip_titles_file=args.skip_titles_file,
         limit=args.limit,
         genre=args.genre,
-        db_path=args.db,
+        db_path=args.db, db_role=args.db_role, create=args.create_db,
     )
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

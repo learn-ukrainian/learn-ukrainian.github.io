@@ -37,7 +37,6 @@ if __package__ in {None, ""}:
 
 from scripts.curriculum.evidence import codes, config, db_identity, tags
 from scripts.lexicon.runner.ulif_dictua_parse import lookup_ulif_label
-from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
 from scripts.wiki.sources_db import normalize_ulif_dictua_query, using_connection
@@ -119,6 +118,26 @@ RECEIPT_EVIDENCE_STORES = {
     "ulif": ("ulif_dictua_entries", "id"),
 }
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[3]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def _normalize_text_evidence(text: str) -> str:
     """Remove soft typesetting breaks, preserving spaces without a newline."""
@@ -224,13 +243,7 @@ def _signature(path: Path) -> tuple[int, int, int, int] | None:
 
 
 def _sources_path() -> Path:
-    path = REPO_ROOT / "data/sources.db"
-    if path.is_file():
-        return path
-    from scripts.guardrails.worktree_containment import resolve_main_root
-
-    return resolve_main_root(REPO_ROOT) / "data/sources.db"
-
+    return _store_path("sources", root=REPO_ROOT)
 
 def _kaikki_path() -> Path:
     if override := os.environ.get("LEXICON_KAIKKI_SIDE_DB"):
@@ -801,11 +814,13 @@ class Sources:
         wal_ceiling_bytes: int | None = None,
         free_disk_floor_bytes: int | None = None,
     ):
+        sources_db = _store_path('sources', sources_db, root=REPO_ROOT)
+        vesum_db = _store_path('vesum', vesum_db, root=REPO_ROOT)
         self.sources_db = Path(sources_db) if sources_db is not None else _sources_path()
         self.kaikki_db = Path(kaikki_db) if kaikki_db is not None else _kaikki_path()
         self._kaikki_conn: SQLiteConnection | None = None
         self._kaikki_content_sha256: str | None = None
-        self.vesum_db = Path(vesum_db) if vesum_db is not None else VESUM_DB_PATH
+        self.vesum_db = Path(vesum_db) if vesum_db is not None else _store_path("vesum", root=REPO_ROOT)
         self.standard_path = (
             Path(standard_path)
             if standard_path is not None
@@ -1652,3 +1667,9 @@ def inspect_lemma_forms(lemma: str, pos: str) -> ParadigmResult:
 
 def stress_for_form(form: str, vesum_tags: str) -> SourceResult[dict]:
     return _default().stress_for_form(form, vesum_tags)
+
+
+def __getattr__(name: str) -> Path:
+    if name == "VESUM_DB_PATH":
+        return _store_path("vesum", root=REPO_ROOT)
+    raise AttributeError(name)

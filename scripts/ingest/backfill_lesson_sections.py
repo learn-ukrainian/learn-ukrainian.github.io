@@ -54,7 +54,7 @@ from scripts.ingest._section_coverage import (
 from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+DB_PATH = None  # Selected by the connection owner at call time.
 
 # Source_files we expect to backfill, with how to derive section_number
 # from the chunk_id suffix. The suffix format is the chunk_id's tail
@@ -73,6 +73,16 @@ TARGETED_SOURCE_FILES = (
 # chunk_id format: ``<source_file>_<prefix><digits>`` where prefix is
 # one of ``e`` (entry) for Ohoiko and ``l`` (lesson) for ULP.
 _CHUNK_SUFFIX_RE = re.compile(r"_([elv])(\d+)$")
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 def _section_title_for(source_file: str, chunk_title: str, number: int) -> str:
@@ -164,84 +174,104 @@ def main(argv: list[str] | None = None) -> int:
             "Limit backfill to this source_file. Repeat to target several. Defaults to all 7 known orphan source_files."
         ),
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args(argv)
-
-    refuse_writable_corpus_database(str(args.db))
-    conn = sqlite3.connect(str(args.db))
-    try:
-        ensure_section_schema(conn)
-
-        targets = tuple(args.source_file) if args.source_file else TARGETED_SOURCE_FILES
-
-        # BEFORE evidence
-        print(f"🗃️  Target DB: {args.db}")
-        total_orphans_before = conn.execute(
-            f"""SELECT COUNT(*) FROM textbooks
-                 WHERE source_file IN ({",".join("?" * len(targets))})
-                   AND parent_section_id IS NULL""",
-            targets,
-        ).fetchone()[0]
-        total_sections_before = conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0]
-        print(
-            f"\nBEFORE: {total_orphans_before:,} orphan chunks across "
-            f"{len(targets)} source_files; total textbook_sections rows: "
-            f"{total_sections_before:,}"
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update",
+        target=None if args.db is None else ExplicitStoreWriteTarget(args.db, args.db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    args.db = Path(request.location)
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update", target=request,
         )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        args.db = binding.path
 
-        # Per-source backfill
-        total_inserted = 0
-        total_linked = 0
-        for sf in targets:
-            print(f"\n📚 {sf}")
-            n_orphan, inserted, linked = backfill_source_file(conn, sf, dry_run=args.dry_run)
-            print(f"   orphans found: {n_orphan}")
-            print(f"   sections inserted: {inserted}")
-            print(f"   chunks linked: {linked}")
-            total_inserted += inserted
-            total_linked += linked
+        refuse_writable_corpus_database(str(args.db))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            ensure_section_schema(conn)
 
-        if not args.dry_run:
-            conn.commit()
+            targets = tuple(args.source_file) if args.source_file else TARGETED_SOURCE_FILES
 
-        # AFTER evidence
-        total_orphans_after = conn.execute(
-            f"""SELECT COUNT(*) FROM textbooks
-                 WHERE source_file IN ({",".join("?" * len(targets))})
-                   AND parent_section_id IS NULL""",
-            targets,
-        ).fetchone()[0]
-        total_sections_after = conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0]
-        print(
-            f"\nAFTER: {total_orphans_after:,} orphan chunks remain across "
-            f"{len(targets)} source_files; total textbook_sections rows: "
-            f"{total_sections_after:,} "
-            f"(delta +{total_sections_after - total_sections_before})"
-        )
+            # BEFORE evidence
+            print(f"🗃️  Target DB: {args.db}")
+            total_orphans_before = conn.execute(
+                f"""SELECT COUNT(*) FROM textbooks
+                     WHERE source_file IN ({",".join("?" * len(targets))})
+                       AND parent_section_id IS NULL""",
+                targets,
+            ).fetchone()[0]
+            total_sections_before = conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0]
+            print(
+                f"\nBEFORE: {total_orphans_before:,} orphan chunks across "
+                f"{len(targets)} source_files; total textbook_sections rows: "
+                f"{total_sections_before:,}"
+            )
 
-        # SAMPLE rows for the largest source
-        if not args.dry_run and total_inserted > 0:
-            print("\n--- SAMPLE backfilled sections ---")
+            # Per-source backfill
+            total_inserted = 0
+            total_linked = 0
             for sf in targets:
-                row = conn.execute(
-                    """SELECT s.section_id, s.section_title, s.section_number, s.grade,
-                              t.chunk_id, t.parent_section_id
-                         FROM textbook_sections s
-                         JOIN textbooks t ON t.parent_section_id = s.section_id
-                        WHERE s.source_file = ?
-                        ORDER BY CAST(s.section_number AS INTEGER) LIMIT 1""",
-                    (sf,),
-                ).fetchone()
-                if row:
-                    print(
-                        f"   {sf}: section_id={row[0]} title={row[1]!r} "
-                        f"num={row[2]!r} grade={row[3]} chunk={row[4]} "
-                        f"parent={row[5]}"
-                    )
+                print(f"\n📚 {sf}")
+                n_orphan, inserted, linked = backfill_source_file(conn, sf, dry_run=args.dry_run)
+                print(f"   orphans found: {n_orphan}")
+                print(f"   sections inserted: {inserted}")
+                print(f"   chunks linked: {linked}")
+                total_inserted += inserted
+                total_linked += linked
 
-        return 0 if total_orphans_after == 0 or args.dry_run else 1
-    finally:
-        conn.close()
+            if not args.dry_run:
+                conn.commit()
+
+            # AFTER evidence
+            total_orphans_after = conn.execute(
+                f"""SELECT COUNT(*) FROM textbooks
+                     WHERE source_file IN ({",".join("?" * len(targets))})
+                       AND parent_section_id IS NULL""",
+                targets,
+            ).fetchone()[0]
+            total_sections_after = conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0]
+            print(
+                f"\nAFTER: {total_orphans_after:,} orphan chunks remain across "
+                f"{len(targets)} source_files; total textbook_sections rows: "
+                f"{total_sections_after:,} "
+                f"(delta +{total_sections_after - total_sections_before})"
+            )
+
+            # SAMPLE rows for the largest source
+            if not args.dry_run and total_inserted > 0:
+                print("\n--- SAMPLE backfilled sections ---")
+                for sf in targets:
+                    row = conn.execute(
+                        """SELECT s.section_id, s.section_title, s.section_number, s.grade,
+                                  t.chunk_id, t.parent_section_id
+                             FROM textbook_sections s
+                             JOIN textbooks t ON t.parent_section_id = s.section_id
+                            WHERE s.source_file = ?
+                            ORDER BY CAST(s.section_number AS INTEGER) LIMIT 1""",
+                        (sf,),
+                    ).fetchone()
+                    if row:
+                        print(
+                            f"   {sf}: section_id={row[0]} title={row[1]!r} "
+                            f"num={row[2]!r} grade={row[3]} chunk={row[4]} "
+                            f"parent={row[5]}"
+                        )
+
+            return 0 if total_orphans_after == 0 or args.dry_run else 1
+        finally:
+            conn.close()
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

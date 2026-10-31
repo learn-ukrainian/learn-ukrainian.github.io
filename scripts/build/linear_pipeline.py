@@ -58,7 +58,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
-TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+
 FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "folk_heritage_attestations.yaml"
 FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "foreign_proper_noun_attestations.yaml"
 PRIMARY_TEXT_SOURCES_PATH = PROJECT_ROOT / "registry" / "primary_text_sources.yaml"
@@ -429,6 +429,26 @@ WRITER_INFRA_DENYLIST_PATHS = (
     "*dispatch*",
 )
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def ensure_claude_writer_agent_deployed(
     *,
@@ -2078,11 +2098,11 @@ def _lookup_textbook_reference_chunk(
     if parsed is None:
         return None
     author, grade, page = parsed
-    if not TEXTBOOK_SOURCES_DB_PATH.exists():
+    if not _store_path('sources', globals().get('TEXTBOOK_SOURCES_DB_PATH')).exists():
         return None
 
     try:
-        with _open_readonly(TEXTBOOK_SOURCES_DB_PATH) as conn:
+        with _open_readonly(_store_path('sources', _store_path('sources', globals().get('TEXTBOOK_SOURCES_DB_PATH')), required=True)) as conn:
             conn.row_factory = sqlite3.Row
             source_files = _source_files_for_textbook_reference(conn, author, grade)
             if source_files is None:
@@ -15188,10 +15208,10 @@ def _lookup_textbook_metadata(source_file: str) -> dict[str, str] | None:
     crosses writing systems (per ADR
     ``docs/decisions/2026-05-15-cyrillic-native-matcher.md``).
     """
-    if not TEXTBOOK_SOURCES_DB_PATH.exists():
+    if not _store_path('sources', globals().get('TEXTBOOK_SOURCES_DB_PATH')).exists():
         return None
     try:
-        with _open_readonly(TEXTBOOK_SOURCES_DB_PATH) as conn:
+        with _open_readonly(_store_path('sources', _store_path('sources', globals().get('TEXTBOOK_SOURCES_DB_PATH')), required=True)) as conn:
             row = conn.execute(
                 "SELECT author_uk, grade FROM textbooks WHERE source_file = ? LIMIT 1",
                 (source_file,),
@@ -16848,3 +16868,10 @@ def _textbook_quote_fidelity_gate(
         "verdict": "WARN" if passed and warnings else "PASS" if passed else "REJECT",
         "severity": "WARN" if passed and warnings else "HARD" if not passed else None,
     }
+
+
+def __getattr__(name):
+    stores = {'TEXTBOOK_SOURCES_DB_PATH': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)

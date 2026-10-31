@@ -19,8 +19,18 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_JSONL = REPO / "data" / "processed" / "esum_vol1.jsonl"
-DEFAULT_DB = REPO / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 MIGRATION = REPO / "migrations" / "add_esum_table.sql"
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 def _load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -57,55 +67,69 @@ def _entry_hash(row: dict[str, Any]) -> str:
     return hashlib.sha1(text).hexdigest()
 
 
-def load_esum(jsonl: Path, db: Path) -> int:
+def load_esum(jsonl: Path, db: Path, *, db_role: str = "active", create: bool = False) -> int:
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db is None else ExplicitStoreWriteTarget(db, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db = Path(request.location)
     rows = _load_jsonl(jsonl)
-    refuse_writable_corpus_database(str(db))
-    conn = sqlite3.connect(str(db))
-    try:
-        _apply_migration(conn)
-        _ensure_meta_schema(conn)
-        with conn:
-            volumes = sorted({int(row["vol"]) for row in rows})
-            placeholders = ",".join("?" for _ in volumes)
-            conn.execute(
-                f"DELETE FROM esum_etymology_meta WHERE vol IN ({placeholders})",
-                volumes,
-            )
-            conn.executemany(
-                """
-                INSERT INTO esum_etymology_meta
-                    (lemma, vol, page, entry_hash, etymology_text, cognates, source)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(lemma, vol, page, entry_hash) DO UPDATE SET
-                    etymology_text = excluded.etymology_text,
-                    cognates = excluded.cognates,
-                    source = excluded.source
-                """,
-                [
-                    (
-                        str(row["lemma"]),
-                        int(row["vol"]),
-                        int(row["page"]),
-                        _entry_hash(row),
-                        str(row["etymology_text"]),
-                        json.dumps(row.get("cognates", []), ensure_ascii=False),
-                        "ЕСУМ vol. 1",
-                    )
-                    for row in rows
-                ],
-            )
-            conn.execute("DELETE FROM esum_etymology")
-            conn.execute(
-                """
-                INSERT INTO esum_etymology(rowid, lemma, etymology_text, cognates, vol, page)
-                SELECT id, lemma, etymology_text, cognates, vol, page
-                FROM esum_etymology_meta
-                ORDER BY vol, page, lemma
-                """
-            )
-        return len(rows)
-    finally:
-        conn.close()
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db = binding.path
+        refuse_writable_corpus_database(str(db))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            _apply_migration(conn)
+            _ensure_meta_schema(conn)
+            with conn:
+                volumes = sorted({int(row["vol"]) for row in rows})
+                placeholders = ",".join("?" for _ in volumes)
+                conn.execute(
+                    f"DELETE FROM esum_etymology_meta WHERE vol IN ({placeholders})",
+                    volumes,
+                )
+                conn.executemany(
+                    """
+                    INSERT INTO esum_etymology_meta
+                        (lemma, vol, page, entry_hash, etymology_text, cognates, source)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(lemma, vol, page, entry_hash) DO UPDATE SET
+                        etymology_text = excluded.etymology_text,
+                        cognates = excluded.cognates,
+                        source = excluded.source
+                    """,
+                    [
+                        (
+                            str(row["lemma"]),
+                            int(row["vol"]),
+                            int(row["page"]),
+                            _entry_hash(row),
+                            str(row["etymology_text"]),
+                            json.dumps(row.get("cognates", []), ensure_ascii=False),
+                            "ЕСУМ vol. 1",
+                        )
+                        for row in rows
+                    ],
+                )
+                conn.execute("DELETE FROM esum_etymology")
+                conn.execute(
+                    """
+                    INSERT INTO esum_etymology(rowid, lemma, etymology_text, cognates, vol, page)
+                    SELECT id, lemma, etymology_text, cognates, vol, page
+                    FROM esum_etymology_meta
+                    ORDER BY vol, page, lemma
+                    """
+                )
+            return len(rows)
+        finally:
+            conn.close()
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -116,7 +140,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=f"""Examples:
-  .venv/bin/python scripts/ingest/esum_load.py --jsonl data/processed/esum_vol1.jsonl --db data/sources.db
+  .venv/bin/python scripts/ingest/esum_load.py --jsonl data/processed/esum_vol1.jsonl
   .venv/bin/python scripts/ingest/esum_load.py --jsonl {DEFAULT_JSONL} --db {DEFAULT_DB}
 
 Outputs:
@@ -141,6 +165,8 @@ Related:
         default=DEFAULT_DB,
         help=f"SQLite sources.db path to update. Default: {DEFAULT_DB}",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); use staging for a separate output")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a staging/shadow database (default: update only)")
     return parser
 
 
@@ -155,10 +181,14 @@ def main(argv: list[str] | None = None) -> int:
     if not MIGRATION.exists():
         print(f"Migration file not found: {MIGRATION}", file=sys.stderr)
         return 1
-    loaded = load_esum(args.jsonl, args.db)
+    loaded = load_esum(args.jsonl, args.db, db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     print(f"Loaded {loaded:,} ЕСУМ entries into {args.db}")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

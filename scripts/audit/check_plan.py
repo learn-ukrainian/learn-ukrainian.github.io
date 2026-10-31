@@ -44,7 +44,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
-SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+
 
 # Combining acute accent
 STRESS_MARK = "\u0301"
@@ -157,6 +157,26 @@ _AUTHOR_ALIASES = {
     "varzatska": "varzatska",
 }
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 class PlanIssue:
     """A single issue found in a plan."""
@@ -537,7 +557,7 @@ def _known_textbooks(sources_db: Path) -> list[dict[str, object]]:
             f"sources_db not found at {sources_db}. "
             "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = _open_readonly(str(sources_db))
+    conn = _open_readonly(_store_path('sources', sources_db, required=True))
     try:
         rows = conn.execute(
             "SELECT DISTINCT source_file, grade, author FROM textbooks ORDER BY source_file"
@@ -577,9 +597,10 @@ def _reference_matches_textbook(source_name: str, textbook: dict[str, object]) -
 
 def check_textbook_references_in_corpus(
     plan: dict,
-    sources_db: Path = SOURCES_DB,
+    sources_db: Path | None = None,
 ) -> list[PlanIssue]:
     """Reject textbook-looking plan references absent from sources_db."""
+    sources_db = _store_path('sources', sources_db)
     references = plan.get("references")
     if not isinstance(references, list) or not references:
         return []
@@ -897,6 +918,14 @@ def main(argv: list[str] | None = None) -> int:
 
     return 1 if total_errors > 0 else 0
 
+
+
+
+def __getattr__(name):
+    stores = {'SOURCES_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -74,7 +74,7 @@ from common.http_status import has_http_status
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[1]
 QUERIES_PATH = SCRIPT_DIR / "benchmark_queries.yaml"
-SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+
 
 # EmbeddingGemma config
 GEMMA_MODEL_NAME = "google/embeddinggemma-300m"
@@ -204,6 +204,26 @@ LITERARY_SOURCE_FILES = {
 
 
 # ── Metrics ───────────────────────────────────────────────────────
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def recall_at_k(retrieved_ids: list[str], relevant_ids: list[str], k: int) -> float:
     """Fraction of relevant docs found in top-K retrieved."""
@@ -342,12 +362,12 @@ def count_overlong_texts(tokenizer, texts: list[str], max_length: int) -> tuple[
 
 def get_db_connection() -> SQLiteConnection:
     """Open the benchmark source DB."""
-    if not SOURCES_DB_PATH.exists():
+    if not _store_path('sources', globals().get('SOURCES_DB_PATH')).exists():
         raise FileNotFoundError(
-            f"Sources database not found at {SOURCES_DB_PATH}. "
+            f"Sources database not found at {_store_path('sources', globals().get('SOURCES_DB_PATH'))}. "
             "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = _open_readonly(str(SOURCES_DB_PATH))
+    conn = _open_readonly(_store_path('sources', _store_path('sources', globals().get('SOURCES_DB_PATH')), required=True))
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -1498,7 +1518,7 @@ def print_dry_run_plan(args: argparse.Namespace):
     )
     print(
         "DRY RUN: would sample "
-        f"{args.sample_size} chunks per period from {SOURCES_DB_PATH}."
+        f"{args.sample_size} chunks per period from {_store_path('sources', globals().get('SOURCES_DB_PATH'))}."
     )
     maybe_hold_dry_run_lock_for_tests()
 
@@ -1520,6 +1540,14 @@ def main(argv: list[str] | None = None) -> int:
         # Keep the file descriptor alive for the process lifetime; close on exit.
         lock_fd.close()
 
+
+
+
+def __getattr__(name):
+    stores = {'SOURCES_DB_PATH': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -5,6 +5,7 @@ from __future__ import annotations
 import concurrent.futures
 import inspect
 import os
+import sys
 import threading
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field, replace
@@ -34,6 +35,32 @@ if TYPE_CHECKING:
 # that inspect ``work_router._IN_FLIGHT_BUILDS`` keep seeing the live slot map.
 _WORK_IN_FLIGHT_BUILDS: dict[Any, Any] = {}
 
+
+
+
+from scripts.storage.topology import (
+    StoreBinding,
+    StoreRefusal,
+    resolve_active_sources_db,
+    resolve_store,
+    unavailable_store_path,
+)
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def _as_path(value: os.PathLike[str] | str) -> Path:
     return Path(value).expanduser()
@@ -238,6 +265,11 @@ class MonitorContext:
             return connect_sqlite(path.resolve().as_uri() + "?mode=ro", uri=True)
         return connect_sqlite(str(path))
 
+    def _open_sources_db(self, database: os.PathLike[str] | str, *, read_only: bool = True) -> Any:
+        path = self._resolve_db_path(database)
+        path = _store_path("sources", path, root=self.roots.project_root, required=True)
+        return connect_sqlite(path.as_uri() + "?mode=ro", uri=True)
+
 
 def get_ctx(request: Request) -> MonitorContext:
     """Return the context attached to the app serving the current request."""
@@ -277,6 +309,7 @@ def _roots(
     session_streams_db_path: Path,
     backup_dir: Path,
     textbooks_dir: Path,
+    fixture: bool,
 ) -> MonitorRoots:
     image_dir = project_root / "data" / "textbook_images"
     return MonitorRoots(
@@ -293,7 +326,8 @@ def _roots(
         effective_roots=_effective_roots(project_root),
         images_dir=image_dir,
         textbooks_dir=textbooks_dir,
-        sources_db_path=project_root / "data" / "sources.db",
+        sources_db_path=(resolve_active_sources_db(project_root, env={}).path
+                         if fixture else _store_path('sources', root=project_root)),
         message_db_path=message_db_path,
         session_streams_db_path=session_streams_db_path,
         epics_db_path=session_streams_db_path,
@@ -338,7 +372,7 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
     context.runtime.register_resource(image_store)
 
     return MonitorStores(
-        sources_db=DatabaseHandle(roots.sources_db_path, context._open_db),
+        sources_db=DatabaseHandle(roots.sources_db_path, context._open_sources_db),
         message_db=DatabaseHandle(roots.message_db_path, context._open_db),
         presence_store=presence_store,
         report_store=report_store,
@@ -378,6 +412,7 @@ def _build_context(
         session_streams_db_path=session_streams_db_path,
         backup_dir=backup_dir,
         textbooks_dir=textbooks_dir,
+        fixture=fixture,
     )
     context = MonitorContext(roots=roots, stores=MonitorStores(), root=root)
     return replace(context, stores=_stores(context, fixture=fixture))

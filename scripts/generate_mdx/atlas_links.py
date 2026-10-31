@@ -354,22 +354,28 @@ def _load_index(manifest_path: str) -> dict[str, str]:
     return _load_manifest_tables(manifest_path)[0]
 
 
-@lru_cache(maxsize=1)
 def _vesum_connection() -> SQLiteConnection | None:
     """Open VESUM read-only, or return None where it is not installed (CI)."""
-    try:
-        from rag.config import VESUM_DB_PATH
-    except ModuleNotFoundError:  # pragma: no cover - package import path
-        from scripts.rag.config import VESUM_DB_PATH
-    if not Path(VESUM_DB_PATH).is_file():
+    from scripts.storage.topology import StoreRefusal, resolve_store
+
+    binding = resolve_store("vesum")
+    if isinstance(binding, StoreRefusal):
         return None
     try:
-        return _open_readonly(VESUM_DB_PATH, check_same_thread=False)
+        stat = binding.path.stat()
+    except OSError:
+        return None
+    return _vesum_connection_at(binding.path, (stat.st_ino, stat.st_mtime_ns, stat.st_size))
+
+
+@lru_cache(maxsize=1)
+def _vesum_connection_at(path: Path, signature: tuple[int, int, int]) -> SQLiteConnection | None:
+    try:
+        return _open_readonly(path, check_same_thread=False)
     except sqlite3.Error:
         return None
 
 
-@lru_cache(maxsize=4096)
 def _vesum_has_proper_reading(form: str) -> bool:
     """True when VESUM tags this exact (capitalised) form as a proper name."""
     connection = _vesum_connection()

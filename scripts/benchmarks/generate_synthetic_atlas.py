@@ -57,11 +57,31 @@ ROOT = Path(__file__).resolve().parents[2]
 
 DEFAULT_SOURCE_DB = ROOT / "data" / "atlas.db"
 DEFAULT_OUT = ROOT / "data" / "atlas-synthetic.db"
-DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
+
 DEFAULT_SEED = 8307
 
 SLUG_SUFFIX_TEMPLATE = "--syn{index:07d}"
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def _open_readonly(path: Path) -> sqlite3.Connection:
     return _open_shared_readonly(path)
@@ -390,7 +410,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="positive target article count (default: DISTINCT lemma count in --vesum-db)",
     )
     parser.add_argument(
-        "--vesum-db", type=Path, default=DEFAULT_VESUM_DB,
+        "--vesum-db", type=Path, default=_store_path('vesum', globals().get('DEFAULT_VESUM_DB')),
         help="VESUM SQLite DB used for the default target (default: data/vesum.db)",
     )
     return parser.parse_args(argv)
@@ -408,6 +428,14 @@ def main(argv: list[str] | None = None) -> int:
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

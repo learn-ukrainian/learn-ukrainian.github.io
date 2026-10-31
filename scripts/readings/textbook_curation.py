@@ -40,7 +40,7 @@ from scripts.readings.rights_classifier import normalize_author, normalize_token
 
 LOGGER = logging.getLogger(__name__)
 
-DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
+
 DEFAULT_OUT = PROJECT_ROOT / "data" / "primary_text_curation.json"
 MAX_RETURNED_HITS = 10
 
@@ -51,6 +51,26 @@ WHITESPACE_RE = re.compile(r"\s+")
 
 WorkMatch = Literal["exact", "substring"]
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 @dataclass(frozen=True)
 class Section:
@@ -113,7 +133,7 @@ def load_sections(db_path: Path) -> list[Section]:
     """Load textbook_sections rows from a read-only SQLite connection."""
 
     try:
-        with _open_readonly(db_path) as conn:
+        with _open_readonly(_store_path('sources', db_path, required=True)) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(
                 """
@@ -233,13 +253,14 @@ def _lookup_prepared(
 
 
 def build_curation_manifest(
-    db_path: Path = DEFAULT_DB,
+    db_path: Path | None = None,
     plans_dir: Path = DEFAULT_PLANS_DIR,
     *,
     track: str | None = None,
 ) -> dict[str, Any]:
     """Build an enriched primary-text manifest with textbook curation results."""
 
+    db_path = _store_path('sources', db_path)
     sections = load_sections(db_path)
     prepared_sections = _prepare_sections(sections)
     demand_manifest = build_manifest(plans_dir, track=track)
@@ -299,7 +320,7 @@ def build_parser() -> argparse.ArgumentParser:
     """Build command-line argument parser."""
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db", type=Path, default=DEFAULT_DB, help="SQLite sources DB")
+    parser.add_argument("--db", type=Path, default=_store_path('sources', globals().get('DEFAULT_DB')), help="SQLite sources DB")
     parser.add_argument("--work", help="Work title for a single curation lookup")
     parser.add_argument("--author", help="Author name for a single curation lookup")
     parser.add_argument(
@@ -422,6 +443,14 @@ def _optional_int(value: object) -> int | None:
         return None
     return int(value)
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

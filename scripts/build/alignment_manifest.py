@@ -57,6 +57,26 @@ _PATH_ATTRS = {
 }
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def _default_project_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
@@ -67,7 +87,7 @@ def _static_default_attr(name: str) -> Any:
     if name == "CURRICULUM_ROOT":
         return _default_project_root() / "curriculum" / "l2-uk-en"
     if name == "SOURCES_DB_PATH":
-        return _default_project_root() / "data" / "sources.db"
+        return _store_path('sources', root=_resolve_attr("PROJECT_ROOT"))
     if name == "CANONICAL_ANCHORS_PATH":
         return _default_project_root() / "registry" / "canonical_anchors.yaml"
     if name == "DECISIONS_PATH":
@@ -121,7 +141,7 @@ def _resolve_attr(name: str) -> Any:
         root = getattr(v6_build, "CURRICULUM_ROOT", None) if v6_build is not None else None
         return Path(root) if root is not None else _resolve_attr("PROJECT_ROOT") / "curriculum" / "l2-uk-en"
     if name == "SOURCES_DB_PATH":
-        return _resolve_attr("PROJECT_ROOT") / "data" / "sources.db"
+        return _store_path('sources', root=_resolve_attr("PROJECT_ROOT"))
     if name == "CANONICAL_ANCHORS_PATH":
         return _resolve_attr("PROJECT_ROOT") / "registry" / "canonical_anchors.yaml"
     if name == "DECISIONS_PATH":
@@ -307,7 +327,7 @@ def _sources_hash() -> str:
     # `Path.as_uri()` produces a cross-platform-safe `file://…` URI;
     # raw f-string interpolation leaks backslashes on Windows. Flagged
     # by gemini-review on PR #1468.
-    with _open_readonly(sources_db_path) as connection:
+    with _open_readonly(_store_path('sources', sources_db_path, required=True)) as connection:
         manifest_rows = tuple(
             _sqlite_table_snapshot(connection, table_name)
             for table_name in _sqlite_indexed_table_names(connection)

@@ -76,7 +76,6 @@ from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_fo
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
-DB = PROJECT_ROOT / "data" / "sources.db"
 BRIDGE = PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"
 VENV_PY = project_interpreter()
 
@@ -85,6 +84,26 @@ VENV_PY = project_interpreter()
 # 60s but headroom is cheap.
 JUDGE_TIMEOUT_S = 480
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 def _read_jsonl_records(path: Path) -> list[dict[str, Any]]:
     """Load physical JSONL records independently of model/corpus setup."""
@@ -97,7 +116,7 @@ def retrieve_antonenko(text: str, k: int = 8) -> list[dict]:
     Used to ground the judge prompt in the canonical Russianism reference
     rather than relying on the judge's pre-training memory of Antonenko.
     """
-    conn = _open_readonly(DB)
+    conn = _open_readonly(_store_path('sources', _store_path('sources', globals().get('DB')), required=True))
     try:
         words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
         if not words:
@@ -305,6 +324,14 @@ def main() -> None:
             f.flush()
     print(f"Done — wrote {len(inputs)} judgments to {out_path}", file=sys.stderr)
 
+
+
+
+def __getattr__(name):
+    stores = {'DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     main()

@@ -49,7 +49,7 @@ finally:
     sys.path[:] = _import_path
     del _import_path
 
-DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+
 DEFAULT_UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
@@ -81,6 +81,26 @@ SOURCE_LANG_FOR_SCHEMA = {
     "uk": "unknown",
 }
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 @dataclass(frozen=True, slots=True)
 class UaGecCandidate:
@@ -423,7 +443,7 @@ def load_candidates(db_path: Path, *, tags: Sequence[str] = TARGET_TAGS) -> list
         raise FileNotFoundError(f"UA-GEC sources database not found: {db_path}")
 
     placeholders = ",".join("?" for _ in tags)
-    conn = _open_readonly(db_path)
+    conn = _open_readonly(_store_path('sources', db_path, required=True))
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(
@@ -760,7 +780,7 @@ def format_report(report: CurationReport, *, output_path: Path | None = None, dr
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH, help="Path to data/sources.db.")
+    parser.add_argument("--db-path", type=Path, default=_store_path('sources', globals().get('DEFAULT_DB_PATH')), help="Path to data/sources.db.")
     parser.add_argument(
         "--ua-gec-root",
         type=Path,
@@ -812,6 +832,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(format_report(report, output_path=args.output, dry_run=False))
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_DB_PATH': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

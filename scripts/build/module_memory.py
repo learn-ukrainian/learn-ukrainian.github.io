@@ -60,6 +60,26 @@ WRITER_ADDRESSABLE_ERROR_CLASSES = {
 logger = logging.getLogger(__name__)
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def module_memory_path(curriculum_root: Path, level: str, slug: str) -> Path:
     return curriculum_root / level / "orchestration" / slug / "module-memory.yaml"
 
@@ -223,11 +243,11 @@ def compute_sources_manifest(
 ) -> dict[str, str]:
     manifest: dict[str, str] = {}
 
-    vesum_db = project_root / "data" / "vesum.db"
+    vesum_db = _store_path('vesum', root=project_root)
     for table_name, digest in _sqlite_table_hashes(vesum_db, ("lemmas", "forms")).items():
         manifest[f"sqlite://data/vesum.db#{table_name}"] = digest
 
-    sources_db = project_root / "data" / "sources.db"
+    sources_db = _store_path('sources', root=project_root)
     textbooks_hash = _sqlite_group_digest(sources_db, ("textbooks_fts",))
     if textbooks_hash is not None:
         manifest["sqlite://data/sources.db#textbooks_fts"] = textbooks_hash
