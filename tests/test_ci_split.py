@@ -1017,14 +1017,19 @@ def test_pr_selection_estimated_just_under_the_timeout_is_deferred_not_run_to_th
     assert selected['safe_budget_seconds'] == affected.SAFE_SECONDS
     assert not selected['guards_exceed_safe_budget']
 
-    # Importing tests are bounded by the same rule.
+    # Importing tests are bounded by the same rule. The durations stay uncommitted:
+    # a committed change under scripts/ci is an infrastructure change and skips the fill.
     (repo / 'module.py').write_text('X = 1\n')
-    monkeypatch.setattr(affected, 'importing_tests', lambda *_: [heavy])
-    (repo / affected.DURATIONS).write_text(json.dumps({guard: 5, heavy: 410, light: 10}))
-    _git(repo, 'add', '.')
+    _git(repo, 'add', 'module.py')
     _git(repo, *ident, 'commit', '-qm', 'module')
-    imported = affected.plan(base, _git(repo, 'rev-parse', 'HEAD'))
+    module_candidate = _git(repo, 'rev-parse', 'HEAD')
+    reached: list[bool] = []
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: reached.append(True) or [heavy])
+    (repo / affected.DURATIONS).write_text(json.dumps({guard: 200, heavy: 150, light: 10}))
+    imported = affected.plan(candidate, module_candidate)
+    assert reached and imported['importing_test_files'] == [heavy]
     assert heavy in imported['deferred_files'] and heavy not in imported['run_files']
+    assert 'runner-variance margin' in imported['reason']
 
     # Guards alone over the safe budget are recorded, not run into the kill.
     (repo / affected.DURATIONS).write_text(json.dumps({guard: 420, heavy: 1, light: 1}))
