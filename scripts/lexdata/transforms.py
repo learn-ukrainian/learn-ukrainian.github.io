@@ -97,6 +97,7 @@ _OHOIKO_PARSER_MODULES = (
     "scripts/common/github_usage.py",
     "scripts/common/repo_root.py",
     "scripts/common/scratch.py",
+    "scripts/github_check_rollup.py",
     "scripts/lib/readonly_sqlite.py",
     "scripts/opsec/gh_snapshot.py",
     "scripts/opsec/prepublish.py",
