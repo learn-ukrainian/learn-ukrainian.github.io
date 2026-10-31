@@ -32,6 +32,13 @@ can no longer revoke one through an unrelated malformed marker, and every
 ``unknown`` verdict names a typed reason from ``UNKNOWN_REASONS`` and the comment.
 Every valid current-head rejection stands regardless of later same-head approvals.
 A different head requires its own review; old-head rejections do not decide it.
+
+A marker may also name the artifact items it covers and the review brief's item
+denominator (#12257). A head that declares one is approved only when every
+required Ukrainian seat's non-void APPROVE coverage equals that denominator and
+no non-void rejection stands. A voided chunk does not count. Markers that
+disagree on the denominator make the head ``unknown`` (``denominator-mismatch``).
+A head with no denominator is unchanged.
 """
 
 from __future__ import annotations
@@ -60,13 +67,23 @@ from scripts.review.ukrainian_seats import (
 
 Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
+# Item ids on a coverage marker. One token, no spaces; the recorder uses ITEM_ID_RE.
+_ITEM_ID = r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}"
+ITEM_ID_RE = re.compile(_ITEM_ID + r"\Z")
+_ITEM_LIST = rf"{_ITEM_ID}(?:,{_ITEM_ID})*"
+# A chunk voided before its coverage counts (#12257). The reason is the marker token.
+VOID_QUOTE_MISMATCH = "quote-mismatch"
+VOID_REVIEWER_BOOKKEEPING = "reviewer-bookkeeping"
+CHUNK_VOIDS = frozenset({VOID_QUOTE_MISMATCH, VOID_REVIEWER_BOOKKEEPING})
 MARKER = re.compile(
     r"<!-- cf-verdict v1 sha=(?P<sha>[0-9a-f]{40}) task=(?P<task>[^\s]+) "
     r"started=(?P<started>[^\s]+) verdict=(?P<verdict>APPROVED|APPROVE|CHANGES_REQUESTED|BLOCKED) "
     r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+)(?: review_mode=(?P<review_mode>red_team))?"
     r"(?: unknown_history=(?P<unknown_history>[0-9a-f]{40}(?:,[0-9a-f]{40})*))?"
     r"(?: authorship=(?P<authorship>verified_app_bot))?"
-    r"(?: review_profile=(?P<review_profile>ukrainian))?(?: sources_calls=(?P<sources_calls>[0-9]+))? -->\Z"
+    r"(?: review_profile=(?P<review_profile>ukrainian))?(?: sources_calls=(?P<sources_calls>[0-9]+))?"
+    rf"(?: denominator=(?P<denominator>{_ITEM_LIST}))?(?: coverage=(?P<coverage>-|{_ITEM_LIST}))?"
+    rf"(?: void=(?P<void>{VOID_QUOTE_MISMATCH}|{VOID_REVIEWER_BOOKKEEPING}))? -->\Z"
 )
 MARKER_PREFIX = CF_VERDICT_MARKER_PREFIX
 # Stable reason codes for an ``unknown`` verdict (#11127); consumers may match on them.
@@ -79,6 +96,8 @@ MARKER_MALFORMED_CURRENT_HEAD = "marker-malformed-current-head"  # a malformed m
 MARKER_MENTIONS_CURRENT_HEAD = "marker-mentions-current-head"  # a malformed old-head marker cites this head
 MARKER_EDITED = "marker-edited"  # a marker for this head was edited after posting
 REVIEWER_UNATTESTED = "reviewer-unattested"  # a marker for this head has no attested reviewer family
+# Chunks of one review named different item denominators (#12257).
+DENOMINATOR_MISMATCH = "denominator-mismatch"
 UNKNOWN_REASONS = (
     COMMENTS_UNAVAILABLE,
     HEAD_INVALID,
@@ -89,6 +108,7 @@ UNKNOWN_REASONS = (
     MARKER_MENTIONS_CURRENT_HEAD,
     MARKER_EDITED,
     REVIEWER_UNATTESTED,
+    DENOMINATOR_MISMATCH,
 )
 # Git's default abbreviation; a body citing this much of the current head names it.
 HEAD_MENTION_LENGTH = 7
@@ -99,6 +119,8 @@ VERDICT_ALIASES = {"APPROVE": "APPROVED"}
 SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
 # A Ukrainian-profile head whose recorded seats do not cover the author rule; never approval.
 NEEDS_SEAT = "needs-seat"
+# A head whose review brief declared an item denominator that APPROVE coverage has not filled.
+NEEDS_COVERAGE = "needs-coverage"
 # Recorder headings; a body that opens with one is a verdict record, never informal prose.
 RECORD_HEADINGS = ("### Cross-family review\n", "### Adversarial red-team review\n")
 # Every recorder opens the reviewer's reply with this line, right after the record's lines.
@@ -231,6 +253,19 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     profile = item.pop("review_profile")
     if profile is not None:
         item["review_profile"] = profile
+    raw_denominator = item.pop("denominator")
+    raw_coverage = item.pop("coverage")
+    raw_void = item.pop("void")
+    if (raw_denominator is None) != (raw_coverage is None) or (raw_void is not None and raw_denominator is None):
+        return None
+    denominator = _item_ids(raw_denominator, empty=False)
+    coverage = _item_ids(raw_coverage, empty=True)
+    if raw_denominator is not None and (
+        denominator is None or coverage is None or not set(coverage) <= set(denominator)
+    ):
+        return None
+    if raw_void is not None and raw_void not in CHUNK_VOIDS:
+        return None
     # The record's own lines end where the recorder opens the reply, or, in a record
     # without a reply, at the trailer; nothing else in the body can end them early (#12020).
     prefix, opened, _ = body.partition(REPLY_OPENER)
@@ -286,6 +321,11 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         f"Reviewer model: {item['model']}",
         f"Task id: {item['task']}",
     ]
+    if raw_denominator is not None:
+        identity.append(f"Denominator: {','.join(denominator or ())}")
+        identity.append("Coverage: " + (",".join(coverage or ()) if coverage else "-"))
+    if raw_void is not None:
+        identity.append(f"Chunk void: {raw_void}")
     if any(line not in readable for line in identity):
         return None
     # Every readable line is one the recorder writes for these trailer fields, so an
@@ -310,7 +350,28 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         return None
     item["author_models"] = tuple(authored[0].removeprefix("Authored by: ").split(", ")) if authored else ()
     item["verdict"] = VERDICT_ALIASES.get(item["verdict"], item["verdict"])
+    if raw_denominator is not None:
+        item["denominator"] = denominator
+        item["coverage"] = coverage
+    if raw_void is not None:
+        item["void"] = raw_void
     return item
+
+
+def _item_ids(value: str | None, *, empty: bool) -> list[str] | None:
+    """Sorted unique item ids from a marker token, ``[]`` for ``-``, or None when the token is illegal.
+
+    ``None`` as ``value`` means the token is absent. An absent token returns an empty list only so
+    the caller can tell a missing pair from a bad token by checking the raw string first.
+    """
+    if value is None:
+        return []
+    if value == "-":
+        return [] if empty else None
+    ids = value.split(",")
+    if ids != sorted(set(ids)) or any(ITEM_ID_RE.fullmatch(item) is None for item in ids):
+        return None
+    return ids
 
 
 def pr_file_paths(rows: object) -> list[str]:
@@ -355,6 +416,55 @@ def ukrainian_seat_families(markers: Iterable[Mapping[str, Any]]) -> set[str]:
     }
 
 
+def _coverage_decision(
+    candidates: list[tuple[Any, tuple[Any, int], dict[str, Any]]],
+    *,
+    learner_content: bool,
+) -> tuple[str, dict[str, Any], tuple[str, ...], str | None, int, datetime | None] | None:
+    """Gate a head that declares an item denominator. None when none of its markers do.
+
+    The tuple is ``(state, marker, seats, reason, comment_index, started)``. ``reason``
+    is set only when chunks disagree on the denominator. A voided chunk counts as
+    neither coverage nor a rejection. An APPROVE that names no denominator adds no items.
+    """
+    declared = [item for item in candidates if item[2].get("denominator")]
+    if not declared:
+        return None
+    denominators = {tuple(item[2]["denominator"]) for item in declared}
+    if len(denominators) != 1:
+        first = min(declared, key=lambda item: item[1][1])
+        return ("unknown", first[2], (), DENOMINATOR_MISMATCH, first[1][1], first[0])
+    denominator = set(denominators.pop())
+    active = [item for item in candidates if not item[2].get("void")]
+    standing = [item for item in active if item[2]["verdict"] in REJECTED]
+    if standing:
+        winner = max(standing, key=lambda item: (item[0], item[1]))
+        return (winner[2]["verdict"], winner[2], (), None, winner[1][1], winner[0])
+    approvals = [item for item in active if item[2]["verdict"] not in REJECTED]
+    by_family: dict[str, set[str]] = {}
+    for _, _, marker in approvals:
+        if not marker.get("denominator") or marker.get("review_mode", "cross_family") != "cross_family":
+            continue
+        by_family.setdefault(marker["family"], set()).update(marker.get("coverage") or ())
+    union: set[str] = set().union(*by_family.values()) if by_family else set()
+    seats = tuple(
+        sorted(family for family, ids in by_family.items() if ids == denominator and family in UKRAINIAN_SEAT_FAMILIES)
+    )
+    profiled = [marker for _, _, marker in approvals if is_ukrainian_review(marker)]
+    pool = approvals or active or candidates
+    latest = max(item[0] for item in pool)
+    winner = next(item for item in pool if item[0] == latest)
+    if union != denominator:
+        state = NEEDS_COVERAGE
+    elif (bool(profiled) or learner_content) and not required_ukrainian_seats(
+        attested_author_families(profiled)
+    ) <= set(seats):
+        state = NEEDS_SEAT
+    else:
+        state = "APPROVED"
+    return (state, winner[2], seats, None, winner[1][1], winner[0])
+
+
 def lookup_verdict(
     comments: Sequence[Mapping[str, Any]] | None,
     sha: str,
@@ -369,6 +479,9 @@ def lookup_verdict(
     A head is approved only once its Ukrainian seats have approved it when it
     carries a Ukrainian-profile approval or, by ``learner_content``, changes
     learner content (``changes_learner_content``), even with no Ukrainian verdict yet.
+    When a marker declares an item denominator, approval also needs each required
+    seat's non-void APPROVE coverage to equal it (#12257). A voided chunk and a
+    marker that names no denominator add no items.
     A malformed marker poisons this SHA unless it is attributable to another head; see
     the module docstring for the threat model (#11127).
     """
@@ -453,6 +566,23 @@ def lookup_verdict(
     if not candidates:
         state = "CF-unrecorded" if legacy else "CF-stale" if other_head else "needs-CF"
         return Verdict(state, untrusted_markers=tuple(untrusted), superseded_markers=tuple(superseded))
+    covered = _coverage_decision(candidates, learner_content=learner_content)
+    if covered is not None:
+        state, marker, seats, reason, index, started = covered
+        if reason is not None:
+            return unknown(reason, index, comments[index])
+        return Verdict(
+            state,
+            marker["task"],
+            marker["model"],
+            marker["family"],
+            started,
+            tuple(untrusted),
+            marker.get("review_mode", "cross_family"),
+            tuple(marker.get("unknown_history", ())),
+            superseded_markers=tuple(superseded),
+            ukrainian_seats=seats,
+        )
     approvals = [item for item in candidates if item[2]["verdict"] not in REJECTED]
     # Same-head approvals cannot clear a rejection, including when started and posted later.
     # Keep the latest rejection by review start, then posting time for stalled-work reporting.
@@ -621,7 +751,7 @@ def classify_pr(pr: Mapping[str, Any], verdict: Verdict, *, queued: bool | None,
         state = "armed"
     elif verdict.state == "unknown" or queued is None or "CI unknown" in " ".join(blockers):
         state = "CF-unknown" if verdict.state == "unknown" else "unknown"
-    elif verdict.state in {"needs-CF", "CF-unrecorded", "CF-stale", NEEDS_SEAT}:
+    elif verdict.state in {"needs-CF", "CF-unrecorded", "CF-stale", NEEDS_SEAT, NEEDS_COVERAGE}:
         state = verdict.state
     elif verdict.state in REJECTED:
         state = "CF-rejected"

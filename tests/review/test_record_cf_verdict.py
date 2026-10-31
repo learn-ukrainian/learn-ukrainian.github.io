@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -838,3 +839,48 @@ def test_recorded_round_stores_score_with_reviewer_and_author_models(scanned_rec
     ) in body
     marker = sweep.parse_marker(body)
     assert (marker["verdict"], marker["model"], marker["family"]) == ("CHANGES_REQUESTED", "gpt-6.1-sol", "openai")
+
+
+def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
+    """A quote that is not a literal substring of the frozen item does not count as coverage."""
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_bytes(render_item_packet(packet).encode())
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps(
+            {
+                "schema": "ukrainian-item-judgments.v1",
+                "items": [
+                    {
+                        "id": "card-a",
+                        "verdict": "APPROVE",
+                        "finding": "",
+                        "sources": "VESUM",
+                        "quote": "немає",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        )
+        + "\n```\n"
+    )
+    assert "немає" not in packet["items"][0]["text"]
+    write_task(
+        tasks,
+        reply=reply,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert marker["void"] == "quote-mismatch"
+    assert marker["coverage"] == []
+    assert marker["denominator"] == ["card-a", "card-b"]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_COVERAGE
