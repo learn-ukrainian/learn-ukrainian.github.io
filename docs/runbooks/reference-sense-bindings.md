@@ -188,7 +188,10 @@ lemma–meaning mapping appearing on one line or in one YAML/JSON record. Store
 forms also identify the lemma. A meaning equal to an open-dictionary atom for
 that lemma is public data and never counts; an unrelated common one-word
 meaning alone never counts. Validated binding `span` and store `gloss_en`
-locations retain their scalar exemptions. Tracked HEAD blobs are read through
+locations retain their scalar exemptions; so does a meaning exactly equal to
+its record's exempt gloss cited from an open-dictionary row, in the store or
+in the one request record (same lemma, POS and entry) that built it. Tracked
+HEAD blobs are read through
 one `git cat-file --batch` stream; patterns are compiled once. Diagnostics
 contain only paths, public locators and counts. An unavailable PR is explicitly
 `unverified`. Resolve every suspected leak

@@ -3391,6 +3391,7 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
             "completed_at": "2026-01-01T00:01:00Z",
         }],
     }
+    workflow_run = {"id": 31, "name": "CI", "head_sha": head, "check_suite_id": 41, "workflow_id": 7}
     # Real gh answers the squash-text GraphQL read with GitHub's default squash subject and body.
     pull = {
         "headRefOid": head,
@@ -3419,11 +3420,16 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
         f"json.dumps({checks!r}))\n"
         f"elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/commits/{head}/check-runs?per_page=100']:\n"
         f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({check_runs!r}))\n"
+        # The rollup binds each Actions check run to its exact-head run (#12209).
+        "elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/actions/runs/31']:\n"
+        f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({workflow_run!r}))\n"
         f"elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/commits/{head}/status?per_page=100']:\n"
         "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({'total_count': 0, 'statuses': []}))\n"
-        # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031), fleet identity.
+        # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031), the PR's files, fleet identity.
         "elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/issues/1234/comments?per_page=100']:\n"
         f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({[recorded_approval(head)]!r}))\n"
+        "elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/pulls/1234/files?per_page=100']:\n"
+        "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps([{'filename': 'scripts/example.py'}]))\n"
         "elif args[:5] == ['api', '--include', '--method', 'GET', 'user?per_page=100']:\n"
         "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({'login': 'unit'}))\n"
         "elif args[:5] == ['api', '--include', '--method', 'POST', 'graphql']:\n"
@@ -3455,9 +3461,10 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
     assert sent[0]["argv"][:5] == ["api", "--include", "--method", "GET", "repos/unit/public/pulls/1234"]
     assert sent[1]["argv"][:2] == ["pr", "checks"]
     if readiness != "unverifiable":
-        assert [record["argv"][:5] for record in sent[2:5]] == [
+        assert [record["argv"][:5] for record in sent[2:6]] == [
             ["api", "--include", "--method", "GET", "repos/unit/public/pulls/1234"],
             ["api", "--include", "--method", "GET", f"repos/unit/public/commits/{head}/check-runs?per_page=100"],
+            ["api", "--include", "--method", "GET", "repos/unit/public/actions/runs/31"],
             ["api", "--include", "--method", "GET", f"repos/unit/public/commits/{head}/status?per_page=100"],
         ]
     if readiness == "ready":
@@ -3467,13 +3474,14 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
             f"real-gh pr merge 1234 --repo unit/public --squash --subject=clean (#1234) --match-head-commit={head}"
         )
         # Squash text, then the recorded review seats (#12020), here an exact-head
-        # approval (#12031); then the merge.
-        assert [record["argv"][:5] for record in sent[5:8]] == [
+        # approval (#12031), and the PR's files (#12181); then the merge.
+        assert [record["argv"][:5] for record in sent[6:10]] == [
             ["api", "--include", "--method", "POST", "graphql"],
             ["api", "--include", "--method", "GET", "repos/unit/public/issues/1234/comments?per_page=100"],
+            ["api", "--include", "--method", "GET", "repos/unit/public/pulls/1234/files?per_page=100"],
             ["api", "--include", "--method", "GET", "user?per_page=100"],
         ]
-        assert [record["argv"][:2] for record in sent[8:]] == [["pr", "merge"]]
+        assert [record["argv"][:2] for record in sent[10:]] == [["pr", "merge"]]
         assert sent[-1]["--body-file"] == "* clean"
     elif readiness.startswith("squash-"):
         assert proc.returncode != 0
@@ -3482,11 +3490,11 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
             assert "rule=synthetic-rule class=1 field=body line=1" in proc.stderr
         else:
             assert "squash text unverifiable" in proc.stderr
-        assert len(sent) == 6 and sent[-1]["argv"][:5] == ["api", "--include", "--method", "POST", "graphql"]
+        assert len(sent) == 7 and sent[-1]["argv"][:5] == ["api", "--include", "--method", "POST", "graphql"]
     else:
         assert proc.returncode != 0
         assert "OPSEC: merge" in proc.stderr
-        assert len(sent) == (2 if readiness == "unverifiable" else 5)
+        assert len(sent) == (2 if readiness == "unverifiable" else 6)
 
 
 @pytest.mark.parametrize("verb", ["pr-comment", "issue-comment", "pr-create"])

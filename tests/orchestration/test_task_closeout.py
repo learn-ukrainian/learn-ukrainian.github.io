@@ -664,6 +664,69 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
     ]
 
 
+@pytest.mark.parametrize(
+    ("later_pr_run", "opt_in_workflow", "expected_ok", "expected_failed"),
+    [
+        ("success", 7, True, []),
+        ("failure", 7, False, ["CI Gate"]),
+        # Another workflow with the same display name never supersedes the failure.
+        ("success", 8, False, ["CI Gate"]),
+    ],
+)
+def test_12209_older_opt_in_failure_does_not_override_a_later_pr_run(
+    tmp_path: Path, github_transport, later_pr_run, opt_in_workflow, expected_ok, expected_failed
+) -> None:
+    """Same-name CI Gate rows: the latest run of one workflow decides; workflows stay apart."""
+    from scripts.common.github_client import Response
+
+    def check(run_id: int, suite: int, conclusion: str, started_at: str) -> dict:
+        return {
+            "id": run_id * 10, "name": "CI Gate", "status": "completed", "conclusion": conclusion,
+            "started_at": started_at, "completed_at": started_at, "head_sha": HEAD,
+            "check_suite": {"id": suite}, "app": {"id": 15368, "slug": "github-actions"},
+            "details_url": f"https://github.com/org/repo/actions/runs/{run_id}/job/{run_id * 10}",
+        }
+
+    runs = {
+        301: {"id": 301, "name": "CI", "head_sha": HEAD, "check_suite_id": 31, "workflow_id": 7},
+        302: {"id": 302, "name": "CI", "head_sha": HEAD, "check_suite_id": 32, "workflow_id": opt_in_workflow},
+    }
+
+    def transport(method, endpoint, headers, body, timeout):
+        payload = None
+        if endpoint == "repos/org/repo/pulls/77":
+            payload = {"number": 77, "html_url": "https://github.com/org/repo/pull/77", "state": "open",
+                       "draft": False, "head": {"sha": HEAD, "ref": "codex/42-closeout"}, "body": "Refs #42"}
+        elif endpoint == f"repos/org/repo/commits/{HEAD}/check-runs?per_page=100":
+            payload = {"total_count": 2, "check_runs": [
+                check(302, 32, "failure", "2026-10-31T04:29:34Z"),  # opt-in workflow_dispatch run
+                check(301, 31, later_pr_run, "2026-10-31T04:34:13Z"),  # PR run, finishes later
+            ]}
+        elif endpoint.startswith("repos/org/repo/actions/runs/"):
+            payload = runs[int(endpoint.rsplit("/", 1)[1])]
+        elif endpoint == f"repos/org/repo/commits/{HEAD}/status?per_page=100":
+            payload = {"total_count": 0, "statuses": []}
+        elif endpoint == "graphql":
+            payload = {"data": {"repository": {"pullRequest": {
+                "autoMergeRequest": None, "reviewDecision": "APPROVED",
+                "closingIssuesReferences": {"totalCount": 0, "nodes": [], "pageInfo": {"hasNextPage": False}},
+            }}}}
+        elif endpoint == "repos/org/repo/pulls/77/reviews?per_page=100":
+            payload = []
+        else:
+            raise AssertionError(f"unexpected request: {method} {endpoint}")
+        return Response(200, {}, json.dumps(payload).encode())
+
+    github_transport(transport)
+    pr = task_closeout.GhGitHubAdapter(tmp_path)._read_pr("org/repo", 77)
+
+    ok, waiting, failed = task_lifecycle._checks_status(["CI Gate"], pr["checks"])
+    assert (ok, waiting, failed) == (expected_ok, False, expected_failed)
+    assert {(c["workflowName"], c["appSlug"], c["workflowId"]) for c in pr["checks"]} == {
+        ("CI", "github-actions", workflow) for workflow in {7, opt_in_workflow}
+    }
+
+
 def _transferred_ledger_and_reader(
     tmp_path: Path,
     *,

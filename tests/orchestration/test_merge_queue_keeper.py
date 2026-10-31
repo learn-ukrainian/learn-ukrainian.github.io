@@ -107,6 +107,7 @@ class FakeGitHub:
         self.job_rows: list[dict[str, Any]] = []
         self.issue_rows: list[dict[str, Any]] = []
         self.squash: bool | None = False
+        self.files = ["scripts/example.py"]
 
     def squash_blocked(self, number: int, head: str) -> bool | None:
         self.actions.append(("squash-read", (number, head)))
@@ -128,6 +129,9 @@ class FakeGitHub:
 
     def comments(self, number: int) -> list[dict[str, Any]]:
         return list(self.comments_rows)
+
+    def pr_files(self, number: int) -> list[str]:
+        return list(self.files)
 
     def checks(self, head: str) -> list[dict[str, Any]]:
         return self.check_rows
@@ -185,7 +189,7 @@ def run(
     fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, verdict: str = "APPROVED", *, apply: bool = True
 ) -> tuple[list[str], bool]:
     reason = "comments-unavailable" if verdict == "unknown" else None
-    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict(verdict, reason=reason))
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login, **_: Verdict(verdict, reason=reason))
     monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: verdict == "APPROVED")
     return keeper.run(fake, path, apply=apply)
 
@@ -220,6 +224,17 @@ def test_prompt_bound_red_team_marker_is_accepted_by_keeper(tmp_path: Path) -> N
     assert not failed
     assert mutations(fake) == ["enqueue"]
     assert "reason=ready" in lines[0]
+
+
+def test_learner_content_with_only_a_code_approval_is_not_enqueued(tmp_path: Path) -> None:
+    # #12181: no Ukrainian verdict yet still means the Ukrainian seats are missing.
+    fake = FakeGitHub()
+    fake.files = ["scripts/example.py", "curriculum/l2-uk-en/a1/example.md"]
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "state=needs-seat reason=needs-CF" in lines[0]
 
 
 def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) -> None:
@@ -470,7 +485,7 @@ def test_queued_verdict_lookup_error_reports_without_revocation(
 ) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     monkeypatch.setattr(
-        keeper, "lookup_verdict", lambda *args: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
+        keeper, "lookup_verdict", lambda *args, **_: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
     )
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
@@ -482,7 +497,7 @@ def test_queued_red_ci_revokes_even_when_verdict_lookup_errors(tmp_path: Path, m
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.check_rows = checks(conclusion="failure")
     monkeypatch.setattr(
-        keeper, "lookup_verdict", lambda *args: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
+        keeper, "lookup_verdict", lambda *args, **_: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
     )
     keeper.run(fake, tmp_path / "state.json", apply=True)
     assert ("dequeue", "PR_node_42") in fake.actions
@@ -1283,7 +1298,7 @@ def _gate(tmp_path: Path, decisions: dict[str, Any] | None = None, *, raw: str |
 
 
 def gated(fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, gate: Path, *, apply: bool = True) -> tuple[list[str], bool]:
-    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict("APPROVED"))
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login, **_: Verdict("APPROVED"))
     monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: True)
     return keeper.run(fake, path, apply=apply)
 
