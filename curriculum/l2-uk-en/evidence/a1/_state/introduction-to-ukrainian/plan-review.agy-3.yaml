@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-8425d-introduction-to-ukrainian"
+  attempt_id: "agy-3"
+  manifest_sha256: "eb9e089d3c3f9119d724ebc71adf0536220a37730e322b62cf83f5df03b5814f"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "<model>"
+  harness: "<harness>"
+  family: "<family>"
+  prompt_sha256: "fed2451f17e56b22156fd16d0aab3882c6575d280e3f5ffd753dcc01cbe5ed1e"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean  # inspect_words: VESUM clean analyses for українська, мова, мій, план, навчання (receipt rr-499b73e6702491df74a7); verify_stress: украї́нська (rr-42015d018bec96cbe6cb), мо́ва (rr-bb489d8b998d8d0c3dcb), навча́ння (rr-c9c4dc49c5389891da37); query_sum20: мова (rr-3605c73d8f06ff3732ef), план (rr-eabb7f965cec1d0671ed)
+  sequencing: clean
+  sizing: clean
+  inventory: clean
+  activities: clean
+  evidence_fit: clean  # search_text: T-001 uni-ukrmova-prof-haluzynska-2006_s0007 (rr-79782caaf1b0c9145164); T-002 uni-ukrmova-prof-haluzynska-2006_s0009 (rr-a88a2be9bd65b989badc); T-003 uni-ukrmova-sociolinguistics-masenko-2010_s0030 (rr-32f1a72bbde90cf5e6d0); T-004, T-005, X-001 5-klas-ukrmova-zabolotnyi-2023_s0062 (rr-c19d11b6ff57a48e4d1a); search_resources: V-001 id 762 (rr-a8be9a69093fabf5a773)
+  standard_and_ulp: clean
+findings: []
