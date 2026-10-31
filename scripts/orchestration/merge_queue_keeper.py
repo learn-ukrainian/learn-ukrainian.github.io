@@ -35,6 +35,7 @@ from scripts.opsec.prepublish import (
 from scripts.orchestration import pr_ownership
 from scripts.orchestration.integration_sweep import (
     COMMENTS_UNAVAILABLE,
+    NEEDS_COVERAGE,
     NEEDS_SEAT,
     Verdict,
     changes_learner_content,
@@ -50,9 +51,10 @@ FLOOR = 500
 MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
 HOLD_TITLE = re.compile(r"\[(?:needs operator go|hold)\]", re.I)
 HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
-# No recorded approval for the head that would merge, or only some of a Ukrainian
-# profile's seats (#12020). All four surface as needs-CF.
-MISSING_CF_STATES = frozenset({"needs-CF", "CF-stale", "CF-unrecorded", NEEDS_SEAT})
+# No recorded approval for the head that would merge, only some of a Ukrainian
+# profile's seats (#12020), or a declared item denominator that is not fully
+# covered (#12257). All of these surface as needs-CF, so a queued partial is revoked.
+MISSING_CF_STATES = frozenset({"needs-CF", "CF-stale", "CF-unrecorded", NEEDS_SEAT, NEEDS_COVERAGE})
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 # Slow mode: ``--apply`` skips a run that starts within this many seconds of
 # the last recorded run, so a frequent timer can be throttled without a unit edit.

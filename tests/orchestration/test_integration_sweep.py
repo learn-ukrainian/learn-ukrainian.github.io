@@ -752,3 +752,74 @@ def test_report_names_unknown_reason_and_comment_without_bodies(monkeypatch, cap
     row = json.loads(capsys.readouterr().out)[0]
     assert (row["verdict_reason"], row["verdict_comment"]) == ("marker-malformed-current-head", "5150")
     assert row["superseded_markers"] == ["9001", "9002"]
+
+
+def _covered(task, coverage, *, verdict="APPROVED", started=START):
+    body = build_comment(
+        sha=SHA,
+        task_id=task,
+        started=started,
+        verdict=verdict,
+        model="gpt-6.1-sol",
+        family="openai",
+        reply=f"VERDICT: {verdict}",
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        author_models=["gemini-3.8-flash-high"],
+        denominator=("card-a", "card-b"),
+        coverage=coverage,
+    )
+    return posted(
+        {
+            "id": task,
+            "body": body,
+            "user": {"login": "fleet"},
+            "author_association": "MEMBER",
+            "created_at": "2026-09-23T13:00:00Z",
+            "updated_at": "2026-09-23T13:00:00Z",
+        },
+        "2026-09-23T13:00:00Z",
+    )
+
+
+def test_item_coverage_gate():
+    """Partial APPROVE coverage, a same-head rejection, and a voided chunk do not approve."""
+    partial = _covered("partial", ("card-a",))
+    verdict = sweep.lookup_verdict([partial], SHA, "fleet")
+    assert verdict.state == sweep.NEEDS_COVERAGE
+    assert sweep.classify_pr(pr(), verdict, queued=False, observed_at=START).state == sweep.NEEDS_COVERAGE
+
+    chunks = [
+        _covered("chunk-a", ("card-a",)),
+        _covered("chunk-b", ("card-b",), started="2026-09-23T12:00:01.000001+00:00"),
+    ]
+    ready = sweep.lookup_verdict(chunks, SHA, "fleet")
+    assert ready.state == "APPROVED"
+    assert sweep.classify_pr(pr(), ready, queued=False, observed_at=START).state == "ready"
+
+    rejected = [
+        *chunks,
+        _covered(
+            "reject",
+            ("card-a", "card-b"),
+            verdict="CHANGES_REQUESTED",
+            started="2026-09-23T12:00:02.000001+00:00",
+        ),
+    ]
+    assert sweep.lookup_verdict(rejected, SHA, "fleet").state == "CHANGES_REQUESTED"
+
+    voided = _covered("voided", ("card-a", "card-b"))
+    voided["body"] = voided["body"].replace(
+        " coverage=card-a,card-b -->",
+        " coverage=card-a,card-b void=quote-mismatch -->",
+    ).replace("Coverage: card-a,card-b\n", "Coverage: card-a,card-b\nChunk void: quote-mismatch\n")
+    assert sweep.parse_marker(voided["body"])["void"] == "quote-mismatch"
+    assert sweep.lookup_verdict([voided], SHA, "fleet").state == sweep.NEEDS_COVERAGE
+
+    code_profile = _covered("code-chunk", ("card-b",))
+    code_profile["body"] = code_profile["body"].replace(" review_profile=ukrainian", "").replace(
+        "Review profile: ukrainian\n", ""
+    ).replace(" sources_calls=3", "").replace("Sources MCP calls: 3\n", "")
+    assert "review_profile" not in sweep.parse_marker(code_profile["body"])
+    mixed = [_covered("uk-partial", ("card-a",)), code_profile]
+    assert sweep.lookup_verdict(mixed, SHA, "fleet").state == sweep.NEEDS_COVERAGE

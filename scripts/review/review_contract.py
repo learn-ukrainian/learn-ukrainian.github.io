@@ -10,12 +10,17 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from scripts.orchestration.integration_sweep import (
+    ITEM_ID_RE,
+    VOID_QUOTE_MISMATCH,
+    VOID_REVIEWER_BOOKKEEPING,
+)
 from scripts.review.evidence import (
     OUTCOME_LINE_MISMATCH,
     OUTCOME_MALFORMED,
@@ -845,3 +850,341 @@ def verify_review(
 def normalize_for_hash(raw: str) -> str:
     """Expose line-ending-only normalization for callers that need it."""
     return normalize_line_endings(raw)
+
+
+# A chunked Ukrainian review. The tool builds the packet; the reviewer returns judgments only.
+PACKET_SCHEMA = "ukrainian-item-packet.v1"
+JUDGMENT_SCHEMA = "ukrainian-item-judgments.v1"
+MAX_CHUNK_ROWS = 250
+_JUDGMENT_KEYS = frozenset({"id", "verdict", "finding", "sources"})
+_QUOTE_KEYS = frozenset({"quote", "quotes"})
+_JUDGMENT_VERDICT = {
+    "APPROVE": "APPROVED",
+    "APPROVED": "APPROVED",
+    "REQUEST_CHANGES": "CHANGES_REQUESTED",
+    "CHANGES_REQUESTED": "CHANGES_REQUESTED",
+    "BLOCKED": "BLOCKED",
+}
+
+
+@dataclass(frozen=True)
+class ItemChunk:
+    """The items one chunk verdict covers. ``void`` means that coverage does not count."""
+
+    denominator: tuple[str, ...]
+    coverage: tuple[str, ...]
+    void: str | None = None
+
+
+def _fenced(text: str, info: str) -> list[str]:
+    return re.findall(rf"^```{re.escape(info)}[ \t]*\n(.*?)\n```[ \t]*$", text, re.M | re.S)
+
+
+def _item_id(value: object, label: str) -> str:
+    if not isinstance(value, str) or ITEM_ID_RE.fullmatch(value) is None:
+        raise ContractError(f"{label} is not an item id")
+    return value
+
+
+def _frozen_row(item: Mapping[str, Any]) -> dict[str, str]:
+    row = {"id": _item_id(item.get("id"), "item id"), "text": item.get("text")}
+    if not isinstance(row["text"], str):
+        raise ContractError(f"{row['id']}: frozen item text must be a string")
+    activity = item.get("activity")
+    if activity is not None:
+        if not isinstance(activity, str) or not activity:
+            raise ContractError(f"{row['id']}: activity must be a non-empty string")
+        row["activity"] = activity
+    return row
+
+
+def split_item_chunks(
+    items: Sequence[Mapping[str, Any]], *, limit: int = MAX_CHUNK_ROWS
+) -> list[tuple[dict[str, str], ...]]:
+    """Split frozen items into chunks of at most ``limit`` rows, never splitting an activity."""
+    if limit < 1:
+        raise ContractError("chunk limit must be positive")
+    rows = [_frozen_row(item) for item in items]
+    if len({row["id"] for row in rows}) != len(rows):
+        raise ContractError("duplicate item id")
+    groups: list[list[dict[str, str]]] = []
+    by_activity: dict[str, list[dict[str, str]]] = {}
+    for row in sorted(rows, key=lambda item: item["id"]):
+        activity = row.get("activity")
+        if activity is None:
+            groups.append([row])
+            continue
+        by_activity.setdefault(activity, []).append(row)
+    for activity, grouped in by_activity.items():
+        if len(grouped) > limit:
+            raise ContractError(f"activity {activity!r} has {len(grouped)} items, above the {limit}-row chunk limit")
+        groups.append(grouped)
+    groups.sort(key=lambda group: group[0]["id"])
+    chunks: list[tuple[dict[str, str], ...]] = []
+    current: list[dict[str, str]] = []
+    for group in groups:
+        if current and len(current) + len(group) > limit:
+            chunks.append(tuple(current))
+            current = []
+        current.extend(group)
+    if current:
+        chunks.append(tuple(current))
+    return chunks
+
+
+def build_item_packet(
+    items: Sequence[Mapping[str, Any]], *, denominator: Sequence[str] | None = None
+) -> dict[str, Any]:
+    """Per-item table, offsets, pointers, counts and coverage for one chunk of frozen items.
+
+    Offsets are into this chunk's own text: the item texts in id order, joined by a newline.
+    ``denominator`` is the brief's full item set. It defaults to this chunk's ids.
+    """
+    rows = [_frozen_row(item) for item in items]
+    if len({row["id"] for row in rows}) != len(rows):
+        raise ContractError("duplicate item id")
+    if not rows:
+        raise ContractError("ITEM_PACKET_EMPTY: a packet needs at least one item")
+    if len(rows) > MAX_CHUNK_ROWS:
+        raise ContractError(f"chunk exceeds {MAX_CHUNK_ROWS} items")
+    ordered = sorted(rows, key=lambda row: row["id"])
+    ids = [row["id"] for row in ordered]
+    declared = [_item_id(item, "denominator id") for item in (ids if denominator is None else denominator)]
+    if declared != sorted(set(declared)):
+        raise ContractError("denominator must be sorted, unique item ids")
+    if not set(ids) <= set(declared):
+        raise ContractError("chunk items are outside the denominator")
+    table = []
+    cursor = 0
+    for index, row in enumerate(ordered):
+        if index:
+            cursor += 1
+        text = row["text"]
+        table.append(
+            {
+                "id": row["id"],
+                "offset": cursor,
+                "end": cursor + len(text),
+                "length": len(text),
+                "text": text,
+                "pointer": f"items/{row['id']}",
+                "state": "unreviewed",
+            }
+        )
+        cursor += len(text)
+    return {
+        "schema": PACKET_SCHEMA,
+        "denominator": declared,
+        "coverage": ids,
+        "counts": {"items": len(table), "unreviewed": len(table)},
+        "items": table,
+    }
+
+
+def render_item_packet(packet: Mapping[str, Any]) -> str:
+    """The fence the review brief hands to the reviewer. The reviewer does not rebuild it."""
+    body = json.dumps(packet, ensure_ascii=False, indent=2)
+    return f"```ukrainian-item-packet\n{body}\n```\n"
+
+
+def parse_item_packet(text: str) -> dict[str, Any]:
+    """The one tool-built packet in ``text``. A hand-edited offset, count or pointer is refused."""
+    bodies = _fenced(text, "ukrainian-item-packet")
+    if len(bodies) != 1:
+        raise ContractError("ITEM_PACKET_COUNT: the brief must contain one item packet")
+    try:
+        payload = json.loads(bodies[0])
+    except json.JSONDecodeError as exc:
+        raise ContractError(f"ITEM_PACKET_MALFORMED: {exc.msg}") from None
+    if not isinstance(payload, dict) or not isinstance(payload.get("items"), list):
+        raise ContractError("ITEM_PACKET_MALFORMED: packet items are required")
+    if not isinstance(payload.get("denominator"), list):
+        raise ContractError("ITEM_PACKET_MALFORMED: packet denominator is required")
+    frozen = []
+    for row in payload["items"]:
+        if not isinstance(row, dict):
+            raise ContractError("ITEM_PACKET_MALFORMED: each item must be an object")
+        frozen.append({"id": row.get("id"), "text": row.get("text")})
+    expected = build_item_packet(frozen, denominator=payload["denominator"])
+    if payload != expected:
+        raise ContractError(
+            "PACKET_NOT_TOOL_BUILT: offsets, counts, pointers or coverage do not match the frozen items"
+        )
+    return expected
+
+
+def load_frozen_item_packet(task: Mapping[str, Any]) -> dict[str, Any] | None:
+    """The packet frozen in the task's brief, or None when that brief declares no denominator.
+
+    A task that names a brief must still be readable, and a stored prompt digest must
+    match the bytes on disk, before the absence of a packet means there is no
+    denominator. A missing, unreadable or drifted brief is not an unchunked review.
+    """
+    path = task.get("prompt_file")
+    if not isinstance(path, str) or not path:
+        return None
+    try:
+        raw = Path(path).read_bytes()
+    except OSError as exc:
+        raise ContractError("FROZEN_BRIEF_UNREADABLE: the frozen review brief cannot be read") from exc
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeError as exc:
+        raise ContractError("FROZEN_BRIEF_UNREADABLE: review brief is not utf-8") from exc
+    digest = task.get("prompt_sha256")
+    if isinstance(digest, str) and digest and hashlib.sha256(raw).hexdigest() != digest:
+        raise ContractError("FROZEN_BRIEF_MISMATCH: the item packet is not the brief the task froze")
+    if "```ukrainian-item-packet" not in text:
+        return None
+    if not (isinstance(digest, str) and digest):
+        raise ContractError("FROZEN_BRIEF_MISMATCH: the item packet is not the brief the task froze")
+    return parse_item_packet(text)
+
+
+def reply_has_item_judgments(reply: str) -> bool:
+    return "```ukrainian-item-judgments" in reply
+
+
+# Opener to the marks that can close it. An apostrophe between two letters is part of
+# the word (м'ясо, п’ять), not a boundary, so a pair can contain one.
+_QUOTE_CLOSERS = {
+    "«": ("»",),
+    "„": ("“", "”", '"'),
+    "“": ("”",),
+    '"': ('"',),
+    "‘": ("’",),
+    "'": ("'",),
+    "`": ("`",),
+}
+_APOSTROPHES = frozenset({"'", "’"})
+
+
+def _presented_quotes(text: str) -> list[str]:
+    """Complete paired quotations in ``text``. An interior word apostrophe stays inside the pair."""
+    spans: list[str] = []
+    index = 0
+    length = len(text)
+    while index < length:
+        mark = text[index]
+        closers = _QUOTE_CLOSERS.get(mark)
+        if closers is None or _interior_apostrophe(text, index):
+            index += 1
+            continue
+        end = index + 1
+        while end < length:
+            if text[end] in closers and not _interior_apostrophe(text, end):
+                span = text[index + 1 : end]
+                if span:
+                    spans.append(span)
+                index = end
+                break
+            end += 1
+        index += 1
+    return spans
+
+
+def _interior_apostrophe(text: str, index: int) -> bool:
+    mark = text[index]
+    if mark not in _APOSTROPHES or index == 0 or index + 1 == len(text):
+        return False
+    return text[index - 1].isalpha() and text[index + 1].isalpha()
+
+
+def _quote_spans(row: Mapping[str, Any]) -> list[str] | None:
+    """Spans the judgment presents as quotes of the frozen item, or None when one is not text."""
+    spans: list[str] = []
+    if "quote" in row:
+        quote = row["quote"]
+        if not isinstance(quote, str):
+            return None
+        spans.append(quote)
+    if "quotes" in row:
+        quotes = row["quotes"]
+        if not isinstance(quotes, list) or not all(isinstance(item, str) for item in quotes):
+            return None
+        spans.extend(quotes)
+    return spans
+
+
+def _rollup(verdicts: Sequence[str]) -> str:
+    if any(item == "BLOCKED" for item in verdicts):
+        return "BLOCKED"
+    if any(item == "CHANGES_REQUESTED" for item in verdicts):
+        return "CHANGES_REQUESTED"
+    return "APPROVED"
+
+
+def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> ItemChunk:
+    """Coverage of one chunk. A quote that is not a literal substring of its item voids the chunk.
+
+    The reply's only payload is per-item verdict, finding and Sources evidence, keyed by the
+    packet's item id. Offsets, counts, pointers, tables and a coverage set void it as
+    reviewer bookkeeping and do not count. A quote of the frozen item, in the quote fields
+    or as a quoted span in the finding, the Sources evidence or the reply, must be
+    a literal substring. On an approval that mismatch voids the chunk. It does not erase a
+    rejection verdict.
+    """
+    bodies = _fenced(reply, "ukrainian-item-judgments")
+    if len(bodies) != 1:
+        raise ContractError("ITEM_JUDGMENTS_MISSING: a declared item denominator needs one judgment block")
+    try:
+        payload = json.loads(bodies[0])
+    except json.JSONDecodeError as exc:
+        raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: {exc.msg}") from None
+    if not isinstance(payload, dict) or payload.get("schema") != JUDGMENT_SCHEMA:
+        raise ContractError("ITEM_JUDGMENTS_MALFORMED: judgments schema is required")
+    rows = payload.get("items")
+    if not isinstance(rows, list) or not rows:
+        raise ContractError("ITEM_JUDGMENTS_MALFORMED: judgments need at least one item")
+    frozen = {row["id"]: row["text"] for row in packet["items"]}
+    allowed = set(packet["coverage"])
+    bookkeeping = bool(set(payload) - {"schema", "items"})
+    quote_bad = False
+    judged: list[str] = []
+    verdicts: list[str] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ContractError("ITEM_JUDGMENTS_MALFORMED: each judgment must be an object")
+        item_id = row.get("id")
+        if not isinstance(item_id, str) or item_id not in allowed:
+            raise ContractError("ITEM_OUTSIDE_CHUNK: a judgment names an item this chunk was not given")
+        if item_id in judged:
+            raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: duplicate judgment {item_id}")
+        verdict = _JUDGMENT_VERDICT.get(row.get("verdict"))
+        finding = row.get("finding")
+        sources = row.get("sources")
+        if verdict is None or not isinstance(finding, str) or not isinstance(sources, str):
+            raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: {item_id} needs a verdict, finding and sources")
+        if set(row) - _JUDGMENT_KEYS - _QUOTE_KEYS:
+            bookkeeping = True
+        spans = _quote_spans(row)
+        item_text = frozen[item_id]
+        presented = _presented_quotes(finding) + _presented_quotes(sources)
+        if spans is None or any(not span or span not in item_text for span in spans):
+            quote_bad = True
+        if any(span not in item_text for span in presented):
+            quote_bad = True
+        judged.append(item_id)
+        verdicts.append(verdict)
+    outside = re.sub(
+        r"^```ukrainian-item-judgments[ \t]*\n.*?\n```[ \t]*\n?",
+        "",
+        reply,
+        count=1,
+        flags=re.M | re.S,
+    )
+    item_texts = tuple(frozen.values())
+    if any(all(span not in text for text in item_texts) for span in _presented_quotes(outside)):
+        quote_bad = True
+    rollup = _rollup(verdicts)
+    if rollup != stated:
+        raise ContractError("VERDICT_ITEM_MISMATCH: the verdict line does not match the item judgments")
+    # A mismatched quote drops an approval's coverage. It must not hide a rejection.
+    if quote_bad and rollup == "APPROVED":
+        void: str | None = VOID_QUOTE_MISMATCH
+    elif bookkeeping:
+        void = VOID_REVIEWER_BOOKKEEPING
+    else:
+        void = None
+    covered = () if void else tuple(sorted(judged))
+    return ItemChunk(tuple(packet["denominator"]), covered, void)
