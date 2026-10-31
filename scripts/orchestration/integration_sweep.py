@@ -48,6 +48,7 @@ from typing import Any
 
 from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.common.github_client import GitHubRateLimited, timer
+from scripts.deploy.auto_deploy_eligibility import CONTENT_PATH_PREFIXES, SITE_CODE_PATH_EXCEPTIONS
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.publish.github import CF_VERDICT_MARKER_PREFIX, Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
@@ -111,6 +112,8 @@ FREE_RECORD_LINES = re.compile(
 )
 REQUIRED_CHECKS = ("CI Gate",)
 DEFAULT_GH_TIMEOUT_SECONDS = 60.0
+# GitHub lists at most this many files of a pull request; a list this long may be cut short.
+PR_FILES_LIMIT = 3000
 
 
 class SweepError(RuntimeError):
@@ -310,6 +313,37 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     return item
 
 
+def pr_file_paths(rows: object) -> list[str]:
+    """Every path a pull request's file list names, the old path of a rename included.
+
+    Raises ``ValueError`` when the list is malformed (a rename without its old path
+    included) or may be cut short.
+    """
+    if not isinstance(rows, list) or len(rows) >= PR_FILES_LIMIT:
+        raise ValueError("PR file list partial or malformed")
+    paths: list[str] = []
+    for row in rows:
+        if not isinstance(row, Mapping) or not isinstance(row.get("filename"), str) or not row["filename"]:
+            raise ValueError("PR file list malformed")
+        paths.append(row["filename"])
+        # A rename names its old path, which may be learner content; a rename that does not is unknown.
+        previous = row.get("previous_filename")
+        if isinstance(previous, str) and previous:
+            paths.append(previous)
+        elif previous is not None or row.get("status") == "renamed":
+            raise ValueError("PR file list malformed")
+    return paths
+
+
+def changes_learner_content(paths: Iterable[str]) -> bool:
+    """Whether a change to ``paths`` changes learner content, which takes the Ukrainian seats.
+
+    The content surfaces are the auto-deploy ones, the repository's one list of
+    paths that can change published learner content (#12181).
+    """
+    return any(path not in SITE_CODE_PATH_EXCEPTIONS and path.startswith(CONTENT_PATH_PREFIXES) for path in paths)
+
+
 def ukrainian_seat_families(markers: Iterable[Mapping[str, Any]]) -> set[str]:
     """Families of the eligible cross-family Ukrainian seats among ``markers``."""
     return {
@@ -327,10 +361,14 @@ def lookup_verdict(
     authenticated_login: str | None,
     *,
     complete: bool = True,
+    learner_content: bool = False,
 ) -> Verdict:
     """Resolve one SHA's verdict; malformed or edited evidence for it poisons it.
 
     A valid rejection stands for this exact SHA regardless of later approvals.
+    A head is approved only once its Ukrainian seats have approved it when it
+    carries a Ukrainian-profile approval or, by ``learner_content``, changes
+    learner content (``changes_learner_content``), even with no Ukrainian verdict yet.
     A malformed marker poisons this SHA unless it is attributable to another head; see
     the module docstring for the threat model (#11127).
     """
@@ -428,8 +466,10 @@ def lookup_verdict(
     state = marker["verdict"]
     profiled = [item[2] for item in approvals if is_ukrainian_review(item[2])]
     seats = () if standing else tuple(sorted(ukrainian_seat_families(profiled)))
-    if not standing and profiled and not required_ukrainian_seats(attested_author_families(profiled)) <= set(seats):
-        # A Ukrainian-profile head is approved only once every required seat has approved it.
+    needs_seats = bool(profiled) or learner_content
+    if not standing and needs_seats and not required_ukrainian_seats(attested_author_families(profiled)) <= set(seats):
+        # A Ukrainian head is approved only once every required seat has approved it. With no
+        # Ukrainian verdict the authors are unattested, so both seats are required (#12181).
         state = NEEDS_SEAT
     return Verdict(
         state,
@@ -675,6 +715,15 @@ class GitHubAdapter:
             raise SweepError("PR comments malformed")
         return comments
 
+    def pr_files(self, repository: str, number: int) -> list[str]:
+        pages = self._json(Request("read-pr-files", repo=repository, number=number, paginate=True, slurp=True))
+        if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
+            raise SweepError("PR files pagination incomplete")
+        try:
+            return pr_file_paths([item for page in pages for item in page])
+        except ValueError as exc:
+            raise SweepError(str(exc)) from exc
+
     def queue_membership(self, repository: str, pr: Mapping[str, Any]) -> bool:
         data = self._json(
             Request(
@@ -708,7 +757,9 @@ def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None)
             rows.append(classify_pr(pr, Verdict("unknown", reason=HEAD_INVALID), queued=None, observed_at=observed))
             continue
         try:
-            verdict = lookup_verdict(adapter.comments(repository, number), head, login)
+            comments = adapter.comments(repository, number)
+            content = changes_learner_content(adapter.pr_files(repository, number))
+            verdict = lookup_verdict(comments, head, login, learner_content=content)
         except SweepError:
             verdict = Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
         try:

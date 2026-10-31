@@ -482,10 +482,16 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
     approval is refused too (#12031). Where it is false, a PR with no recorded review is
     outside the recorder's regime and is not refused here, unless the head's own rollup
     carries the recorder's status: then its record was removed or rewritten, and the
-    status alone is unverifiable.
+    status alone is unverifiable. A PR whose files change learner content takes its
+    Ukrainian seats even with no Ukrainian verdict recorded yet (#12181).
     """
     from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
-    from scripts.orchestration.integration_sweep import NEEDS_SEAT, lookup_verdict
+    from scripts.orchestration.integration_sweep import (
+        NEEDS_SEAT,
+        changes_learner_content,
+        lookup_verdict,
+        pr_file_paths,
+    )
 
     # The setting is explicit per repository; an absent, ambiguous or non-boolean one is unverifiable.
     rows = [
@@ -497,8 +503,8 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
         raise gate.PublishBlocked("OPSEC: merge refused: the repository's verdict_recorder setting is unverifiable.")
     try:
         documents = []
-        for operation, selectors in (("comments", {"number": number}), ("identity", {})):
-            paged = operation == "comments"
+        for operation, selectors in (("comments", {"number": number}), ("pr-files", {"number": number}), ("identity", {})):
+            paged = operation != "identity"
             result = read(
                 operation, repo=dest, runner=runner, cwd=cwd, env=environment, capture_output=True,
                 text=True, check=False, timeout=30, paginate=paged, slurp=paged, **selectors,
@@ -506,13 +512,14 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
             if result.returncode:
                 raise ValueError
             documents.append(json.loads(result.stdout))
-        pages, identity = documents
+        pages, files, identity = documents
         login = identity.get("login") if isinstance(identity, dict) else None
-        if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
+        if not all(isinstance(paged, list) and all(isinstance(page, list) for page in paged) for paged in (pages, files)):
             raise ValueError
         if not isinstance(login, str) or not re.fullmatch(r"\S+", login):
             raise ValueError
-        state = lookup_verdict([item for page in pages for item in page], head, login).state
+        content = changes_learner_content(pr_file_paths([item for page in files for item in page]))
+        state = lookup_verdict([item for page in pages for item in page], head, login, learner_content=content).state
     except github_client.GitHubRateLimited:
         raise
     except Exception:
@@ -552,7 +559,7 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
 def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
     """Resolve live PR/run identities and posted evidence before any recovery write."""
     from scripts.gh_merge_queue_status import extract_pr_number
-    from scripts.orchestration.integration_sweep import lookup_verdict
+    from scripts.orchestration.integration_sweep import changes_learner_content, lookup_verdict, pr_file_paths
 
     def fetch(name, **selectors):
         unknown = "RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable"
@@ -592,8 +599,8 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
                 capture_output=True,
                 text=True,
                 check=True,
-                paginate=name in {"comments", "timeline", "jobs"},
-                slurp=name in {"comments", "timeline", "jobs"},
+                paginate=name in {"comments", "timeline", "jobs", "pr-files"},
+                slurp=name in {"comments", "timeline", "jobs", "pr-files"},
                 **selectors,
             )
             refusal = github_client.refusal_of(result, injected=runner is not None)
@@ -602,6 +609,10 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
             value = json.loads(result.stdout)
             if name in {"comments", "timeline"}:
                 return [item for page in value for item in page]
+            if name == "pr-files":
+                if not isinstance(value, list) or not all(isinstance(page, list) for page in value):
+                    raise ValueError("PR files pagination incomplete")
+                return pr_file_paths([item for page in value for item in page])
             if name == "jobs":
                 return [job for page in value for job in page["jobs"]]
             return value
@@ -645,8 +656,9 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
     if prior:
         raise gate.PublishBlocked(recovery.spent_reason(prior))
     comments = fetch("comments", number=number)
+    content = changes_learner_content(fetch("pr-files", number=number))
     login = fetch("identity").get("login")
-    if not isinstance(login, str) or lookup_verdict(comments, head, login).state != "APPROVED":
+    if not isinstance(login, str) or lookup_verdict(comments, head, login, learner_content=content).state != "APPROVED":
         raise gate.PublishBlocked("RECOVERY_APPROVAL_MISSING: exact-head recorded approval required")
     evidence = recovery.evidence_from_comments(
         comments, number, head, authenticated_login=login, run_id=fields["number"]

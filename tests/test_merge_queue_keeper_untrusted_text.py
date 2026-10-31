@@ -66,8 +66,14 @@ class Transport:
                 "viewerMergeHeadlineText": "A change", "viewerMergeBodyText": "A change",
             }}}}), "")
         if argv[1:4] == ["api", "--method", "GET"]:
-            # pr-merge reads the recorded review seats (#12020): the approval, fleet identity.
-            seats = [[approval()]] if "/issues/42/comments" in argv[4] else {"login": "driver"}
+            # pr-merge reads the recorded review seats (#12020): the approval, the PR's files
+            # (#12181), fleet identity.
+            if "/issues/42/comments" in argv[4]:
+                seats: object = [[approval()]]
+            elif "/pulls/42/files" in argv[4]:
+                seats = [[{"filename": "scripts/example.py"}]]
+            else:
+                seats = {"login": "driver"}
             return subprocess.CompletedProcess(argv, 0, json.dumps(seats), "")
         if verb == ["pr", "merge"]:
             body = Path(argv[argv.index("--body-file") + 1]).read_text(encoding="utf-8")
@@ -146,6 +152,9 @@ class Subject(keeper.GitHub):
 
     def comments(self, number: int) -> list[dict[str, Any]]:
         return list(self.comment_rows)
+
+    def pr_files(self, number: int) -> list[str]:
+        return ["scripts/example.py"]
 
     def checks(self, head: str) -> list[dict[str, Any]]:
         return self.check_rows

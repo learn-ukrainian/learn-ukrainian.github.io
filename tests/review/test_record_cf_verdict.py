@@ -515,7 +515,12 @@ def merge(monkeypatch, comments):
                 "headRefOid": SHA, "isMergeQueueEnabled": False,
                 "viewerMergeHeadlineText": "clean (#42)", "viewerMergeBodyText": "clean"}}}}
         elif args[1:4] == ["api", "--method", "GET"]:
-            body = [comments] if "/issues/42/comments" in args[4] else {"login": "fleet"}
+            if "/issues/42/comments" in args[4]:
+                body = [comments]
+            elif "/pulls/42/files" in args[4]:
+                body = [[{"filename": "scripts/example.py"}]]
+            else:
+                body = {"login": "fleet"}
         else:
             writes.append(args)
             return subprocess.CompletedProcess(args, 0, "", "")
