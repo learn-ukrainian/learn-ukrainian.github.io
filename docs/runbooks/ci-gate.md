@@ -331,7 +331,7 @@ Eight test files are listed in `scripts/ci/history-tests.txt`. All eight read ol
 commits: `git ls-tree`/`git show`/`git cat-file` of an old SHA, a recorded historical
 commit, a frozen base commit, and `origin/main` ancestry. Fetching `main` from GitHub on a
 shallow checkout downloaded all of main's history, 65-77 s per test instead of
-0.3 s, which is why the dispatch tests that did so left the list. `split_tests.py` pins the listed files to shard 1
+0.3 s; the dispatch tests that did so were deleted with the legacy delegate. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out
 with full history (`fetch-depth: 0`), a full clone with every blob (see
 "Full-history checkouts are blobless" below). Shards 2..N check out only the tested
