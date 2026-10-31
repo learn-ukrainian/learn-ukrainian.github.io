@@ -103,6 +103,11 @@ Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
 update the tests that pin the changed behaviour.
+A brief whose change adds or renames tracked files under `registry/` or `docs/` also owns
+`docs/knowledge/catalogue.yaml` and `docs/README.md`, because the docs catalogue check
+requires every tracked file under those roots to be covered by a family glob and, when that
+catalogue changes, the generated family table in `docs/README.md` regenerated
+(`python -m scripts.docs.catalogue readme`).
 Retained evidence, evaluation material and anything a later session needs goes under
 `/home/ops/ops-state/<topic>/` (mode 0700 when private), never a session scratchpad, and the
 brief names that path.
