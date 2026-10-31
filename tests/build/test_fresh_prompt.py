@@ -692,6 +692,31 @@ def test_render_fails_when_a_state_id_has_no_lemma_or_point(
         )
 
 
+def test_cited_formula_record_renders_in_the_writer_prompt(sample_plan_entry, sample_learner_state, sample_cited_records):
+    """A cited `kind: formula` record has `text` and `parts`, no `lemma` or `pos`; the prompt prints it (#12185)."""
+    formula = {
+        "id": "W-002",
+        "kind": "formula",
+        "text": "mama doma!",
+        "parts": [{"word": "W-001", "form": "mama"}, {"word": "W-003", "form": "doma"}],
+    }
+    cited = {**sample_cited_records, "W-002": formula}
+    prompt = render_lesson_prompt(
+        sample_plan_entry,
+        cited_records=cited,
+        learner_state=sample_learner_state,
+        word_store=SAMPLE_WORD_STORE,
+        immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+        style_card_path=CARDS_DIR / "a1.md",
+    )
+    assert "### Record `W-002`\n- Kind: word\n- Formula: mama doma!\n- Parts: mama (W-001), doma (W-003)\n" in prompt
+    with pytest.raises(ValueError, match=r"cited_record_invalid.*W-002.*parts"):
+        cited_record_views({"W-002": {key: value for key, value in formula.items() if key != "parts"}})
+
+
 def test_learner_state_view_prints_formula_text(full_learner_state):
     """A taught formula record has `text` and `parts`, no `lemma`; the writer reads its printed text (#12185)."""
     formula = {
