@@ -1,6 +1,7 @@
 """Schema loss, unsafe bindings and invalid final output must fail closed."""
 
 import json
+import re
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -195,3 +196,47 @@ def test_agy_schema_argument_too_large_refused(dispatch, capsys):
     dispatch.schema.write_text(json.dumps({"type": "object", "description": "x" * (128 * 1024)}))
     dispatch.invoke(agent="agy", expected=2)
     assert "agy_output_schema_unsupported" in capsys.readouterr().err
+
+
+def test_review_path_pattern_portable_equivalence():
+    """Defect class: a portable-schema rewrite changes which repository paths are accepted."""
+    from scripts.review.review_contract import load_schema
+
+    original = re.compile(r"^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\.\.(?:/|$))"
+                          r"[A-Za-z0-9._@+-]+(?:/[A-Za-z0-9._@+-]+)*$")
+    portable = re.compile(load_schema()["$defs"]["repo_relative_path"]["pattern"])
+    cases = [
+        ("a", True), (".", True), ("./a", True), ("a/.", True), ("...", True),
+        ("..hidden", True), ("a/..hidden", True), (".agent/file", True),
+        ("scripts/dispatcher/agy.py", True), ("+a/@b_1-c.txt", True),
+        ("", False), ("..", False), ("../a", False), ("a/..", False),
+        ("a/../b", False), ("a//b", False), ("/a", False), ("a/", False),
+        ("C:/a", False), ("a\\b", False), ("a:b", False), ("~/.ssh", False),
+        ("a b", False), ("a\nb", False), ("./..", False),
+    ]
+    for path, expected in cases:
+        assert (original.search(path) is not None, portable.search(path) is not None) == (expected, expected), path
+
+
+@pytest.mark.parametrize("phase", ["before-init", "after-init", "success"])
+def test_agy_schema_rejection_is_typed_before_model_init(phase):
+    """Defect class: a native schema refusal loses its reason or is misclassified after initialization."""
+    from scripts.review.review_contract import load_schema
+
+    message = "invalid --json-schema: unsupported regular expression\n    - unsupported Perl syntax: `(?!`"
+    stderr = f"Error: {message}\n\nUsage of agy:\n  --json-schema Optional schema\n"
+    payload = {"schema_version": "code-review-findings.v1", "findings": [],
+               "overall": {"correctness": "correct", "explanation": "No defect found.", "confidence": 0.9}}
+    stdout = "" if phase == "before-init" else json.dumps(
+        {"event": "init", "init": {"model": "gemini-3.8-flash-high"}}
+    ) + "\n"
+    if phase == "success":
+        stdout += json.dumps({"event": "result", "result": {"status": "SUCCESS", "structured_output": payload}})
+    parsed = agy.parse(stdout, stderr, 0 if phase == "success" else 1, None, output_schema=load_schema())
+    if phase == "before-init":
+        assert parsed.error == "agy_output_schema_unsupported: " + message
+        assert parsed.text is None and parsed.resolved_model is None
+    elif phase == "after-init":
+        assert parsed.error == "agy: exited with status 1"
+    else:
+        assert parsed.error is None and json.loads(parsed.text) == payload

@@ -261,9 +261,26 @@ def continuation(invocation: Invocation, conversation: str) -> Invocation:
     return replace(invocation, argv=argv, stdin=stdin)
 
 
+def _schema_refusal(stderr: str) -> str | None:
+    """The native CLI's schema error, before it initializes a model turn."""
+    lines = stderr.split("\n")
+    for index, line in enumerate(lines):
+        if not line.startswith("Error: invalid --json-schema:"):
+            continue
+        message = [line.removeprefix("Error: ").removesuffix("\r")]
+        for detail in lines[index + 1:]:
+            if not detail.startswith((" ", "\t")) or not detail.strip():
+                break
+            message.append(detail.removesuffix("\r"))
+        return "agy_output_schema_unsupported: " + "\n".join(message)
+    return None
+
+
 def parse(
     stdout: str, stderr: str, returncode: int, final_text: str | None, *, output_schema: dict | None = None,
 ) -> ParsedResult:
+    if returncode and not stdout.strip() and (refusal := _schema_refusal(stderr)):
+        return ParsedResult(None, None, refusal)
     result, error, models = {}, None, set()
     terminal_seen, stream_clean = False, True
     open_steps: set[int] = set()
