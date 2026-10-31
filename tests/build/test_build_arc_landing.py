@@ -105,7 +105,7 @@ def root(tmp_path: Path) -> gen.Roots:
     return roots
 
 
-def test_real_arc_generates_55_planned_positions_and_is_current() -> None:
+def test_real_arc_generates_55_positions_and_is_current() -> None:
     roots = gen.Roots(REPO_ROOT, LEVEL)
     arc = load_arc(LEVEL)
     files = gen.generated_files(roots, arc)
@@ -120,7 +120,10 @@ def test_real_arc_generates_55_planned_positions_and_is_current() -> None:
     # Positions climb the ladder as plans are reviewed and lessons built; every state is a ladder state.
     assert {r["state"] for r in records} <= {"planned", "plan_reviewed", "built", "reviewed"}
     assert all(r["previous_edition_href"] in (None, f"/a1-v1/{r['slug']}/") for r in records)
-    assert all(r["state"] == "planned" and r["scope"] is None for r in records[:10])
+    recorded = json.loads(roots.data_json.read_text(encoding="utf-8"))["positions"]
+    assert [(r["slug"], r["state"], r["scope"]) for r in records] == [
+        (r["slug"], r["state"], r["scope"]) for r in recorded
+    ]
     status = yaml.safe_load(roots.level_status.read_text(encoding="utf-8"))
     assert status["a1"]["planned"] == len(arc)
 
