@@ -336,3 +336,97 @@ those frozen source bytes. Fresh source acquisition requires a new freeze.
 This authoring slice does not close #11943 or its nine acceptance criteria,
 fulfill the parent held-out and browser obligations, publish a site, or establish
 independent semantic approval.
+
+## Slice 6: next remaining entries, held for independent review
+
+The [slice-6 inputs](../../../registry/atlas/a1-v1-slice6-inputs.json)
+retain the approved proposal verbatim. The selector reproduces all
+60 entries and 258 ordered occurrences from the original inventory,
+excluding 676 prior allocated rows. The same eight-plan priority join
+has no preferred remaining targets. Selection does not certify earlier slices.
+
+The [slice-6 manifest](../../../registry/atlas/a1-v1-slice6.json) and
+[allocation companion](../../../registry/atlas/identity/a1-v1-slice6.json)
+append 57 card identities and 55 source-local senses. Existing ULIF-backed
+identities for `яблуко`, `новий`, and `чорний` retain their IDs, original
+unsplit senses, and separate spelling-only predecessors. Their correspondence
+still requires independent Ukrainian review. Every prior creation key,
+sense, source record, and history event is preserved.
+
+Before allocation, the source census compares every consumed observation
+with the full canonical pilot rows and the frozen slice-2 through slice-5
+Sources bundles. It also compares the actual runtime calls. The six unchanged
+ULIF and PULS rows for those three reused cards keep their original
+source-record IDs. Different headwords returning the same unavailable
+response remain separate query observations. An unavailable response supplies
+no frequency claim.
+
+The complete ledger retains all 2144 original rows:
+
+| State | Rows |
+| --- | ---: |
+| `allocated_slice4_unreviewed` | 191 |
+| `ineligible_slice6` | 463 |
+| `delivered_slice2` | 19 |
+| `allocated_slice5_unreviewed` | 289 |
+| `delivered_slice3` | 177 |
+| `card_produced` | 258 |
+| `cap_deferred_slice6` | 747 |
+
+The unchanged ineligible kinds are phrases, ambiguous rows, names, unresolved
+rows, and slash alternatives. All original row mappings remain intact.
+
+Literal Sources replies support VESUM forms for all 60 cards,
+ULIF stress for 51 cards, and 55 ВТС definition spans across
+52 cards. Every quotation interval and digest is computed from its
+captured response. Official СУМ-20 misses and mirror-only replies remain
+explicit. Mirrors and heritage evidence are contextual. СУМ-11 supplies no
+normative field. Source retrieval times absent from a reply stay unknown.
+
+Meanings remain empty for `вчителька`, `канадка`, `продавчиня`, `купити`,
+`дорого`, `дешево`, and `глечик`, where the captured modern dictionary
+misses or provides only a cross-reference. Stress remains empty for
+`продавчиня` and the seven monosyllabic headwords without an explicit accent
+in the captured priority sources. Unsupported fields retain a reason,
+dependency, and owner. Source gaps belong to Atlas.
+
+The frozen `скільки` target remains VESUM adverb entry `360598`.
+The captured ULIF numeral and ВТС quantity-question sense have no adjudicated
+correspondence to that entry. Its meaning and stress fields remain empty,
+and its three price-question rows carry an explicit identity and sense hold.
+Atlas owns source reconciliation; an independent Sources reviewer owns the
+linguistic verdict. The first committed allocation excludes the unsupported
+anchor and provisional sense from the unpublished author attempt. That attempt
+is retained in Fleet evidence, and its withdrawn provisional sense ID stays
+reserved. Every prior committed identity and mint remains unchanged.
+
+The candidate `вода` example retains the original sentence and line break
+from Захарійчук's 2025 grade-1 буквар, chunk
+`1-klas-bukvar-zaharijchuk-2025-2_s0080`. Its displayed field stays empty.
+Independent Sources review must establish the exact-version quotation,
+sense, and A1 suitability. No example approval or complete chain is claimed.
+
+The generated field ledger contains 1494 rows:
+443 supported, 866 empty, and 185 not applicable.
+The full raw Sources bundle, per-card versions, all four projections,
+source identity census, and mandatory 60-entry review packet are retained
+in durable Fleet custody. Replays use the exact sealed source bytes.
+
+```sh
+.venv/bin/python -m scripts.atlas.a1_slice6_inputs --check-selection
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice6 \
+  --sources "$TMPDIR/sources.json" --output "$TMPDIR/cards.json"
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice6 \
+  --sources "$TMPDIR/sources.json" --output "$TMPDIR/cards.json" --check
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice6 \
+  --sources "$TMPDIR/sources.json" --output "$TMPDIR/cards.json" --check --require-chain
+```
+
+`--check` compares the rebuilt main bundle and all four sibling projections.
+`--require-chain` refuses with `reviewed_full_receipt_chain_pending` until a
+real example has independent approval. The PR remains held on the slice-5
+branch while that predecessor is unmerged. Review and landing also require
+the review infrastructure gate, the full slice-4 audit, explicit release,
+current-head CI, and independent review of all 60 entries.
+#11943 and all nine parent criteria remain open. This slice supplies no
+publication, browser acceptance, or independent held-out proof.
