@@ -121,6 +121,54 @@ def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, mon
     assert not (tmp_path / "tasks").exists()
 
 
+def test_lexical_render_admission_rejects_tampering(tmp_path, monkeypatch):
+    """Defect class: lexical admission refuses valid renders or accepts altered prompts/identity/schema."""
+    import subprocess
+    from functools import partial
+    from pathlib import Path
+
+    from scripts.agent_runtime import attempt_boundary, review_mcp
+    from scripts.dispatcher import review_attempt
+    from scripts.review.prompts.render import render_prompt
+    from tests.review.test_prompts import _setup_lexical_fixture
+
+    manifest_path, manifest, _ = _setup_lexical_fixture(tmp_path)
+    prompt_file = tmp_path / "lexical.prompt"
+    prompt, _, _ = render_prompt(manifest_path, repo_root=tmp_path, output_path=prompt_file,
+                                 review_id="review", attempt_id="attempt", review_access="isolated")
+    args = cli.build_parser().parse_args([
+        "dispatch", "--agent", "agy", "--model", "gemini-3.8-flash-high", "--effort", "high",
+        "--mode", "read-only", "--review-profile", "ukrainian", "--review-author-model", "gpt-6.1-sol",
+        "--review-id", "review", "--attempt-id", "attempt", "--review-attempt", str(manifest_path),
+        "--prompt-file", str(prompt_file), "--review-access", "isolated",
+    ])
+    binding = store.review_binding(vars(args))
+    for command in (["git", "init", "-q"], ["git", "add", manifest["inputs"]["candidates"]["path"]],
+                    ["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+                     "commit", "-qm", "Public candidate fixture"]):
+        subprocess.run(command, cwd=tmp_path, check=True, capture_output=True, timeout=30)
+    sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=tmp_path, timeout=30).decode().strip()
+    # Exercise the real server contract against the checkout containing this change.
+    checkout = Path(__file__).resolve().parents[2]
+    monkeypatch.setattr(review_mcp, "check_review_contract",
+                        partial(review_mcp.check_review_contract, server_checkout=checkout))
+    contract = review_attempt.admit(args, prompt.encode(), binding, tmp_path, sha)
+    assert contract["templates"] == ["lexical-review.md.j2"]
+    assert attempt_boundary.authorized_closure(manifest, tmp_path) == {
+        manifest["inputs"]["candidates"]["path"]: (tmp_path / manifest["inputs"]["candidates"]["path"]).read_bytes()
+    }
+    with pytest.raises(ValueError, match="review_render_record_stale"):
+        review_attempt.admit(args, (prompt + "altered").encode(), binding, tmp_path, sha)
+    for name, invalid in (("review_profile", "code"), ("review_author_model", None), ("effort", "low"),
+                          ("output_schema", "override.json")):
+        original = getattr(args, name)
+        setattr(args, name, invalid)
+        reason = "attempt_output_schema_unsupported" if name == "output_schema" else "lexical_review_identity_required"
+        with pytest.raises(ValueError, match=reason):
+            review_attempt.admit(args, prompt.encode(), binding, tmp_path, sha)
+        setattr(args, name, original)
+
+
 def test_bound_attempt_cannot_spend_an_exhausted_branch_pr_budget(attempt, tmp_path, monkeypatch, capsys):
     """Defect class: a bound attempt is charged to a branch's ordinary PR review budget (#12216)."""
     from scripts.dispatcher import review_attempt
