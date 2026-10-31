@@ -908,6 +908,7 @@ def test_form_choice_prints_store_spelling_and_state_is_byte_stable(tmp_path, mo
     assert {name: (state / name).read_bytes() for name in before} == before
 
 
+@pytest.mark.usefixtures("no_free_disk_floor")
 def test_runner_keeps_owned_source_snapshot_through_choice_gate(tmp_path, monkeypatch):
     from scripts.curriculum.evidence.sources import SourceResult, Sources
 
@@ -938,6 +939,7 @@ def test_runner_keeps_owned_source_snapshot_through_choice_gate(tmp_path, monkey
     assert len(captured) == 1 and captured[0]._conn is None
 
 
+@pytest.mark.usefixtures("no_free_disk_floor")
 def test_runner_releases_owned_snapshot_on_resolver_failure(tmp_path, monkeypatch):
     from scripts.curriculum.evidence.sources import Sources
 
@@ -956,6 +958,7 @@ def test_runner_releases_owned_snapshot_on_resolver_failure(tmp_path, monkeypatc
     assert len(captured) == 1 and isinstance(captured[0], Sources) and captured[0]._conn is None
 
 
+@pytest.mark.usefixtures("no_free_disk_floor")
 @pytest.mark.parametrize("dispatch_fails", [False, True])
 def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, monkeypatch, dispatch_fails):
     import sqlite3
