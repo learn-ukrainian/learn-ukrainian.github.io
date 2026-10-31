@@ -1,6 +1,6 @@
 """Assemble an approved fixed A1 receipt batch, with complete row and field accounting.
 
-Use for #11943 slices 2 and 3, never for certification, publication or expanding their denominators.
+Use for #11943 slices 2–4, never for certification, publication or expanding their denominators.
 """
 
 import argparse
@@ -49,6 +49,8 @@ class BatchContext:
     row_card_ids: Mapping[str, str]
     identity_methods: Mapping[str, str]
     validate_inputs: Callable[[dict, dict, dict, dict, dict, dict], tuple[dict, list[dict]]]
+    row_ledger: Mapping[str, Mapping] | None = None
+    residual_owners: Mapping[str, str] | None = None
 
 
 def require(condition, reason):
@@ -217,7 +219,7 @@ def _scope(claim, manifest, receipt, *, batch=None, record=None):
         require(scope["card_id"] == claim["card_id"] and scope["sense_id"] == claim["sense_id"], "scope_subject_mismatch")
     if field == "definition_uk":
         if receipt["source_id"] == "ulif":
-            require(batch is not None and batch.version == "a1-slice3-v1", "meaning_source_invalid")
+            require(batch is not None and batch.version in {"a1-slice3-v1", "a1-slice4-v1"}, "meaning_source_invalid")
             require(record is not None and receipt["payload_pointer"] == "/sense_gloss"
                     and isinstance(record["payload"].get("sense_gloss"), str)
                     and receipt["span"] == [0, len(record["payload"]["sense_gloss"])]
@@ -358,14 +360,17 @@ def build(inventory, base, companion, manifest, sources, pins, register, *, batc
                     state, reason = "not_applicable", "no_lexical_gender_for_this_pos"
                 elif not ids:
                     reason = stress_reasons.get(card_id) if field == "stress" else None
-                    reason = reason or manifest["field_residuals"].get(field, "source_sense_claim_unresolved")
+                    reason = reason or manifest["field_residuals"].get(f"{card_id}/{sid}/{field}",
+                        manifest["field_residuals"].get(field, "source_sense_claim_unresolved"))
+                owners = batch.residual_owners or {} if batch is not None else {}
+                owner = owners.get(f"{card_id}/{sid}/{field}", owners.get(field, "Atlas coordinator"))
                 accounting.append({"inventory_row_ids": row_ids[card_id], "card_id": card_id,
                     "card_version": card["build"]["card_version"], "sense_id": None if sid == card_id else sid,
                     "field": field, "state": state, "assertion_ids": ids,
                     "receipt_ids": sorted({rid for aid in ids for rid in assertion_receipts[aid]}),
                     "reason": reason, "dependency": None if state == "supported" else
                     manifest["field_dependencies"].get(field, "exact source claim and reviewed sense correspondence"),
-                    "owner": None if state == "supported" else "Atlas coordinator"})
+                    "owner": None if state == "supported" else owner})
     selected_ids = {r["id"] for r in selected}
     previous_ids = {r["id"] for r in selected_rows(inventory)} if batch is not None else set()
     rows = [{"inventory_row_id": r["id"], "mapping": copy.deepcopy(r["mapping"]),
@@ -374,6 +379,10 @@ def build(inventory, base, companion, manifest, sources, pins, register, *, batc
              "card_id": row_card_ids[r["id"]] if r["id"] in selected_ids else
              r["mapping"]["pilot"]["card_id"] if r["id"] in previous_ids else None,
              "owner": "Atlas coordinator"} for r in inventory["rows"]]
+    if batch is not None and batch.row_ledger is not None:
+        for row in rows:
+            if row["inventory_row_id"] not in selected_ids:
+                row.update(batch.row_ledger[row["inventory_row_id"]])
     result = {"schema_version": "atlas-" + version.removesuffix("-v1") + "-build.v1", "cards": list(cards.values()),
               "receipts": list(receipts.values()), "assertion_receipts": assertion_receipts,
               "accounting": accounting, "rows": rows, "pending_examples": pending,
@@ -485,8 +494,8 @@ Outputs: host-only card/receipt/accounting bundle; no source-store writes, alloc
 Exit codes: 0 verified output; 1 refused input or evidence; 2 usage error.
 Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
 """)
-    parser.add_argument("--batch", choices=("slice2", "slice3"), default="slice2",
-                        help="Approved fixed batch to assemble or check (default: slice2), e.g. slice3")
+    parser.add_argument("--batch", choices=("slice2", "slice3", "slice4"), default="slice2",
+                        help="Approved fixed batch to assemble or check (default: slice2), e.g. slice4")
     parser.add_argument("--sources", type=Path, required=True, help="Frozen host-only Sources bundle, e.g. batch_state/a1/sources.json")
     parser.add_argument("--output", type=Path, required=True, help="Ignored output JSON inside this worktree, e.g. batch_state/a1/cards.json")
     parser.add_argument("--check", action="store_true", help="Verify an existing output without rewriting it (default: off)")
@@ -495,7 +504,11 @@ Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
     args = parser.parse_args(argv)
     try:
         batch = None
-        if args.batch == "slice3":
+        if args.batch == "slice4":
+            from scripts.atlas.a1_slice4_inputs import load_batch
+
+            manifest, inventory, base, companion, batch = load_batch(ROOT)
+        elif args.batch == "slice3":
             from scripts.atlas.a1_slice3_inputs import load_batch
 
             manifest, inventory, base, companion, batch = load_batch(ROOT)
