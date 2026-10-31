@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -22,7 +23,7 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import admission, agy_sandbox, git, headroom, ownership, providers, runtime_context, store
 from scripts.dispatcher.environment import child_env
-from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.types import ParsedResult, TaskSpec
 from scripts.dispatcher.watchdog import (
     TERMINAL_EXIT_GRACE_S,
     DeadlineExpired,
@@ -360,6 +361,59 @@ def _running_children(record: dict) -> list[str]:
     return []
 
 
+def _children_at(record: dict, deadline: float, checkpoint) -> list[str]:
+    """Child tasks still running at ``deadline``.
+
+    Polls until they leave the active states or the deadline passes. A hard
+    timeout of zero does not wait: the caller is already out of time. Cancel
+    is checked on each poll, the same way the provider wait checks it.
+    """
+    children = _running_children(record)
+    while children and time.monotonic() < deadline:
+        checkpoint()
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
+        time.sleep(min(1.0, remaining))
+        children = _running_children(record)
+    return children
+
+
+def _agy_follow_up(spec: TaskSpec, record: dict, parsed: ParsedResult, started: float,
+                   hard_timeout: float, resumes: int, checkpoint) -> tuple[str | None, ParsedResult]:
+    """Resume an AGY workspace-write turn that closed while its work was still open.
+
+    Returns ``(conversation id, parsed)`` to launch again, or ``(None, parsed)``
+    to settle ``parsed``. A child still active at the task deadline becomes a
+    typed failure naming that child. The resume flag is the adapter's
+    ``--conversation``.
+    """
+    from scripts.dispatcher.providers.agy import CONTINUATION_LIMIT, conversation_id
+
+    if spec.agent != "agy" or spec.mode != "workspace-write":
+        return None, parsed
+    incomplete = parsed.error == "agy: incomplete run"
+    children = _running_children(record)
+    if not incomplete and not children:
+        return None, parsed
+    deadline = started + hard_timeout if hard_timeout > 0 else time.monotonic()
+    saw_children = bool(children)
+    if children:
+        children = _children_at(record, deadline, checkpoint)
+    if children:
+        named = ", ".join(children)
+        return None, replace(parsed, error=f"agy_child_still_running: {named}")
+    if resumes >= CONTINUATION_LIMIT or time.monotonic() >= deadline:
+        return None, parsed
+    if not incomplete and not saw_children:
+        return None, parsed
+    log = spec.final_file.with_suffix(".log")
+    conversation = conversation_id(log) if log.is_file() else None
+    if not conversation:
+        return None, parsed
+    return conversation, parsed
+
+
 # Dispositions that can change once other processes end, the tree is committed or reverted, the work is
 # published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
 # clears; every later dispatch and every settlement settles these again, and still removes
@@ -550,6 +604,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         provider = providers.load(spec.agent)
         invocation = runtime_context.build(spec, child_env(spec))
         record["runtime_input_sha256"] = hashlib.sha256(invocation.stdin or b"").hexdigest()
+        pending_conversation = None
+        continuations = 0
         try:
             invocation = admission.claude_launch(spec, invocation)
             if spec.agent == "claude" and spec.claude_account not in (None, "a"):
@@ -583,55 +639,74 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             interruptible = False
         if slots_record is not None:
             record["review_test_slots"] = slots_record
-        with tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdin, stdout_path.open("wb") as out, stderr_path.open("ab") as err:
-            stdin.write(invocation.stdin or b"")
-            stdin.seek(0)
-            output_sizes = out.tell(), err.tell()
-            checkpoint()  # the last one before the provider starts: a cancelled run launches nothing
-            child = subprocess.Popen(
-                invocation.argv,
-                stdin=stdin,
-                stdout=out,
-                stderr=err,
-                cwd=spec.worktree,
-                # The CLI's governed test runs join this hold through its marker (#11230).
-                env={**invocation.env, **slots.environment()} if slots else invocation.env,
-                start_new_session=True,
-            )
-            record.update(status="running", provider_pgid=child.pid)
-            store.replace(record, path, require_existing=True)
-            terminal_observer = getattr(provider, "terminal_result_observer", None)
-            source = getattr(provider, "MODEL_SOURCE", None)
-            observe_model = provider.model_observer(stdout_path) if source else None
+        while True:
+            if pending_conversation:
+                from scripts.dispatcher.providers.agy import continuation
 
-            def watch():
-                # A running author's commits are reviewable only once its record attests the model (#12014).
-                nonlocal resolved_model
-                checkpoint()
-                if observe_model is None or source is None:
-                    return
-                resolved_model = observe_model()
-                fields = _stream_attestation(source, resolved_model)
-                if any(record.get(key) != value for key, value in fields.items()):
-                    record.update(fields)
-                    store.replace(record, path, require_existing=True)
+                invocation = continuation(runtime_context.build(spec, child_env(spec)), pending_conversation)
+            launch_hard = hard_timeout
+            if hard_timeout > 0:
+                launch_hard = max(0.0, hard_timeout - (time.monotonic() - started))
+            if pending_conversation and hard_timeout > 0 and launch_hard <= 0:
+                break
+            with tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdin, stdout_path.open("wb") as out, stderr_path.open(
+                "wb" if pending_conversation else "ab"
+            ) as err:
+                stdin.write(invocation.stdin or b"")
+                stdin.seek(0)
+                output_sizes = out.tell(), err.tell()
+                checkpoint()  # the last one before the provider starts: a cancelled run launches nothing
+                child = subprocess.Popen(
+                    invocation.argv,
+                    stdin=stdin,
+                    stdout=out,
+                    stderr=err,
+                    cwd=spec.worktree,
+                    # The CLI's governed test runs join this hold through its marker (#11230).
+                    env={**invocation.env, **slots.environment()} if slots else invocation.env,
+                    start_new_session=True,
+                )
+                record.update(status="running", provider_pgid=child.pid)
+                store.replace(record, path, require_existing=True)
+                terminal_observer = getattr(provider, "terminal_result_observer", None)
+                source = getattr(provider, "MODEL_SOURCE", None)
+                observe_model = provider.model_observer(stdout_path) if source else None
 
-            lingered = communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
-                                   initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
-                                   terminal_observer(stdout_path) if terminal_observer else None, watch)
-        if lingered:
-            _end_lingering(child, spec)
+                def watch(observe_model=observe_model, source=source):
+                    # A running author's commits are reviewable only once its record attests the model (#12014).
+                    nonlocal resolved_model
+                    checkpoint()
+                    if observe_model is None or source is None:
+                        return
+                    resolved_model = observe_model()
+                    fields = _stream_attestation(source, resolved_model)
+                    if any(record.get(key) != value for key, value in fields.items()):
+                        record.update(fields)
+                        store.replace(record, path, require_existing=True)
+
+                lingered = communicate(child, invocation, stdout_path, stderr_path, launch_hard, silence_timeout,
+                                       initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
+                                       terminal_observer(stdout_path) if terminal_observer else None, watch)
+            if lingered:
+                _end_lingering(child, spec)
+            returncode = child.returncode
+            # A provider ended after its terminal result is judged by that result, not by how it was ended.
+            exit_code = 0 if lingered else returncode
+            final = invocation.final_file
+            final_text = final.read_text(errors="replace") if final and final.exists() else None
+            stdout = stdout_path.read_text(errors="replace")
+            parsed = provider.parse(stdout, stderr_path.read_text(errors="replace"), exit_code, final_text)
+            text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
+            # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
+            resolved_model = parsed.resolved_model
+            conversation, parsed = _agy_follow_up(
+                spec, record, parsed, started, hard_timeout, continuations, checkpoint)
+            if conversation is None:
+                text = parsed.text
+                break
+            pending_conversation = conversation
+            continuations += 1
         store.begin_settlement(record)
-        returncode = child.returncode
-        # A provider ended after its terminal result is judged by that result, not by how it was ended.
-        exit_code = 0 if lingered else returncode
-        final = invocation.final_file
-        final_text = final.read_text(errors="replace") if final and final.exists() else None
-        stdout = stdout_path.read_text(errors="replace")
-        parsed = provider.parse(stdout, stderr_path.read_text(errors="replace"), exit_code, final_text)
-        text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
-        # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
-        resolved_model = parsed.resolved_model
         if spec.agent == "agy" and spec.mode == "read-only":
             # Only the boundary's receipt, written outside the sandbox, proves the run read-only and
             # supplies its Sources count (C-3027); without a verified one the run fails.
