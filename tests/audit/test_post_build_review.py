@@ -1816,9 +1816,9 @@ def test_mechanical_track_policy_detects_crosslinks_and_rights(tmp_path: Path) -
 @pytest.mark.parametrize(
     ("signal", "expected_severity", "expected_disposition"),
     [
-        ("below_plan_floor", "high", "BLOCK"),
+        ("evidence_gap", "high", "BLOCK"),
         ("repetitive_authored_prose", "medium", "REVISE"),
-        ("over_advisory_ceiling", "info", "PASS"),
+        ("over_advisory_ceiling", None, "PASS"),
     ],
 )
 def test_size_policy_signals_drive_fail_closed_post_build_disposition(
@@ -1865,7 +1865,7 @@ def test_size_policy_signals_drive_fail_closed_post_build_disposition(
         "learner_evidence_ledger": [],
     }
 
-    assert [finding["severity"] for finding in findings] == [expected_severity]
+    assert [finding["severity"] for finding in findings] == ([expected_severity] if expected_severity else [])
     assert pbr.combine_disposition(deterministic, semantic, findings)["status"] == expected_disposition
 
 
@@ -1882,18 +1882,18 @@ def test_multiple_size_policy_signals_are_not_hidden_by_status_priority() -> Non
         target,
         track_policy,
         {
-            "status": "plan_review_needed",
-            "decision_signals": ["plan_review_needed", "below_plan_floor"],
-            "notes": ["SIZE_POLICY_MISMATCH"],
+            "status": "evidence_gap",
+            "decision_signals": ["evidence_gap", "repetitive_authored_prose", "below_plan_floor"],
+            "notes": ["EVIDENCE_GAP"],
             "repetition": None,
         },
     )
 
     assert [finding["id"] for finding in findings] == [
-        "size-policy-plan_review_needed",
-        "size-policy-below_plan_floor",
+        "size-policy-evidence_gap",
+        "size-policy-repetitive_authored_prose",
     ]
-    assert {finding["severity"] for finding in findings} == {"high"}
+    assert {finding["severity"] for finding in findings} == {"high", "medium"}
 
 
 @pytest.mark.parametrize(

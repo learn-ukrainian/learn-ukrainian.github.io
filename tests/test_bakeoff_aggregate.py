@@ -7,7 +7,10 @@ from typing import Any
 from scripts.audit import bakeoff_aggregate
 
 WRITERS = ("gemini", "claude", "gpt55")
-CONTENT_DIMS = bakeoff_aggregate.CONTENT_DIMS
+# Historical telemetry includes the retired word-count score.
+CONTENT_DIMS = (
+    "immersion", "word count", "naturalness", "activity quality", "vocabulary", "plan adherence",
+)
 
 
 def _write_jsonl(path: Path, events: list[dict[str, Any]], *, malformed: bool = False) -> None:
@@ -268,7 +271,7 @@ def test_bakeoff_aggregate_content_min_dim_and_weighted_score(tmp_path: Path) ->
     report = _run_aggregate(_make_fixture(tmp_path))
 
     assert "| **min dim** | 9.00 (naturalness) | 8.00 (immersion) | 7.50 (naturalness) |" in report
-    assert "| **weighted score** | 9.37 | 8.18 | 7.72 |" in report
+    assert "| **weighted score** | 9.25 | 8.09 | 7.61 |" in report
 
 
 def test_bakeoff_aggregate_missing_writer_telemetry_marks_absent(tmp_path: Path, capsys) -> None:

@@ -460,9 +460,6 @@ def _score_v6_knowledge_packet(text: str) -> dict:
     authors = set(re.findall(r"> \*\*Source:\*\*\s*(.+?)(?:,|Grade)", text))
     author_count = len(authors)
 
-    # Word count
-    words = len(text.split())
-
     # state_standard → section coverage (max 2)
     if section_count >= 5:
         dims["state_standard"] = {"score": 2, "max": 2, "detail": f"{section_count} sections covered"}
@@ -510,25 +507,14 @@ def _score_v6_knowledge_packet(text: str) -> dict:
     else:
         dims["source_verification"] = {"score": 0, "max": 2, "detail": f"only {source_count} sources"}
 
-    # claim_grounding → Ukrainian terms in text (max 2)
-    uk_terms = len(re.findall(r"[а-яіїєґ]{3,}", text))
-    if uk_terms >= 500:
-        dims["claim_grounding"] = {"score": 2, "max": 2, "detail": f"{uk_terms} Ukrainian terms"}
-    elif uk_terms >= 100:
-        dims["claim_grounding"] = {"score": 1, "max": 2, "detail": f"{uk_terms} terms"}
-    else:
-        dims["claim_grounding"] = {"score": 0, "max": 2, "detail": f"only {uk_terms} terms"}
+    # Grounding uses distinct cited examples, as in the other core format.
+    # Raw Ukrainian word occurrences reward repeated prose rather than evidence.
+    dims["claim_grounding"] = _score_claim_grounding(text)
 
     # discovery_integration → N/A for V6 (max 1)
     dims["discovery_integration"] = {"score": 1, "max": 1, "detail": "N/A for V6"}
 
-    # specificity → word count richness (max 2)
-    if words >= 3000:
-        dims["specificity"] = {"score": 2, "max": 2, "detail": f"{words} words"}
-    elif words >= 1500:
-        dims["specificity"] = {"score": 1, "max": 2, "detail": f"{words} words (need 3000+)"}
-    else:
-        dims["specificity"] = {"score": 0, "max": 2, "detail": f"only {words} words"}
+    # Drop the length-only dimension; assessment normalizes the remaining max.
 
     return dims
 
@@ -682,11 +668,11 @@ def _score_history(text: str) -> dict:
     if section is None:
         dims["decolonization"] = {"score": 0, "max": 1, "detail": "missing"}
     else:
-        wc = len(section.split())
-        if wc >= 30:
-            dims["decolonization"] = {"score": 1, "max": 1, "detail": f"{wc} words"}
-        else:
-            dims["decolonization"] = {"score": 0, "max": 1, "detail": f"{wc} words (need 30+)"}
+        # Presence is a format signal; semantic review verifies the claims.
+        dims["decolonization"] = {
+            "score": 1 if section.strip() else 0, "max": 1,
+            "detail": "present" if section.strip() else "empty",
+        }
 
     # section_notes (max 1)
     section = _extract_section(text, [r"##\s*Section-Mapped Research Notes"])

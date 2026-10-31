@@ -124,7 +124,7 @@ def test_short_intentional_recap_is_not_actionable_repetition() -> None:
     assert repetition.matches == ()
 
 
-def test_sparse_bio_dossier_reports_plan_review_without_lowering_floor(
+def test_sparse_bio_dossier_counts_are_descriptive_only(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -151,13 +151,13 @@ def test_sparse_bio_dossier_reports_plan_review_without_lowering_floor(
     assert len(report) == 1
     row = report[0]
     assert row["density_band"] == "sparse"
-    assert row["effective_min"] == 5200
+    assert row["effective_min"] is None
     assert row["advisory_ceiling"] == 5200
-    assert row["status"] == "plan_review_needed"
-    assert "source-saturation evidence" in " ".join(row["notes"])
+    assert row["status"] == "advisory_ok"
+    assert row["decision_signals"] == ()
 
 
-def test_plan_review_needed_takes_precedence_over_below_floor(
+def test_below_legacy_floor_does_not_require_plan_review(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -177,8 +177,8 @@ def test_plan_review_needed_takes_precedence_over_below_floor(
     report = audit.build_report(tracks=["bio"], built_only=True)
 
     row = report[0]
-    assert row["status"] == "plan_review_needed"
-    assert "review the plan before expanding" in " ".join(row["notes"])
+    assert row["status"] == "advisory_ok"
+    assert row["decision_signals"] == ()
 
 
 def test_dense_folk_dossier_allows_dense_advisory_ceiling(
@@ -250,9 +250,9 @@ def test_reviewed_size_policy_override_replaces_generic_band_and_keeps_metrics(
 
     assert row["basis"] == "explicit_plan_size_policy"
     assert row["density_band"] == "reviewed_plan_override"
-    assert row["effective_min"] == 4200
+    assert row["effective_min"] is None
     assert row["advisory_ceiling"] == 4800
-    assert row["status"] == "explicit_override"
+    assert row["status"] == "advisory_ok"
     assert row["metrics"]["words"] > 0
     assert "Saturation evidence:" in " ".join(row["notes"])
 
@@ -328,7 +328,7 @@ def test_core_c1_c2_uses_evidence_packet_basis_when_no_dossier_exists(
     assert row["density_band"] == "core_research_extended"
     assert row["advisory_ceiling"] == 6500
     assert row["status"] == "advisory_ok"
-    assert "Core A1-C2 uses a pedagogy/evidence-packet basis" in " ".join(row["notes"])
+    assert row["decision_signals"] == ()
 
 
 def test_filler_heavy_module_above_floor_still_requires_repetition_revision(
@@ -395,15 +395,12 @@ def test_source_dense_module_above_ceiling_is_advisory_not_size_rejection(
     row = audit.build_report(tracks=["folk"], built_only=True)[0]
 
     assert row["actual_words"] > row["advisory_ceiling"]
-    assert row["decision_signals"] == (
-        "over_advisory_ceiling",
-        "exceptional_justification_required",
-    )
-    assert row["status"] == "exceptional_justification_required"
+    assert row["decision_signals"] == ()
+    assert row["status"] == "advisory_ok"
     assert row["repetition"]["matches"] == ()
 
 
-def test_mismatch_marker_and_exact_floor_violation_are_both_preserved(
+def test_evidence_gap_routes_independently_of_legacy_floor(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -421,7 +418,7 @@ def test_mismatch_marker_and_exact_floor_violation_are_both_preserved(
         tmp_path,
         "a1",
         "exhausted-evidence",
-        "<!-- SIZE_POLICY_MISMATCH: plan floor exceeds sourced evidence -->\n"
+        "<!-- EVIDENCE_GAP: objective=explain the concept; missing evidence=source support -->\n"
         "# Огляд\n\n"
         + " ".join(["слово"] * 50),
     )
@@ -429,9 +426,9 @@ def test_mismatch_marker_and_exact_floor_violation_are_both_preserved(
     row = audit.build_report(tracks=["a1"], built_only=True)[0]
 
     assert row["actual_words"] == 51
-    assert row["size_policy_mismatch"] is True
-    assert row["status"] == "plan_review_needed"
-    assert row["decision_signals"] == ("plan_review_needed", "below_plan_floor")
+    assert row["evidence_gap"] is True
+    assert row["status"] == "evidence_gap"
+    assert row["decision_signals"] == ("evidence_gap",)
 
 
 def test_all_core_and_seminar_tracks_have_one_size_policy_route() -> None:
