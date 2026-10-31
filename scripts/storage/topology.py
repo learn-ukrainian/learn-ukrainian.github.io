@@ -821,8 +821,9 @@ def _validate_write_candidate(
                 if live.exists() and path.exists() and path.samefile(live):
                     return refuse("target_is_active_store")
                 if filename == STORE_FILES["sources"][0] and path.exists():
+                    generation_dir = live.parent if is_generation_name(live.name) else live.parent / GENERATIONS_DIRNAME
                     try:
-                        generations = tuple((live.parent / GENERATIONS_DIRNAME).iterdir())
+                        generations = tuple(generation_dir.iterdir())
                     except FileNotFoundError:
                         generations = ()
                     for generation in generations:

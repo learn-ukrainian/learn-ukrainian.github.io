@@ -74,12 +74,12 @@ def test_staging_aliases_live_store_by_inode_or_symlink(stores, tmp_path):
         assert result == t.StoreRefusal("vesum", "target_is_active_store")
 
 
-@pytest.mark.parametrize("configured", [False, True], ids=["primary", "configured"])
+@pytest.mark.parametrize("configured", ["primary", "configured", "generation"])
 @pytest.mark.parametrize("role", ["staging", "shadow"])
 @pytest.mark.parametrize("intent", ["update", "create"])
 def test_output_hardlink_to_historical_sources_generation_is_refused(stores, tmp_path, configured, role, intent):
     """A differently named inode alias must not mutate a non-selected generation."""
-    data = tmp_path / "configured" if configured else stores / "data"
+    data = stores / "data" if configured == "primary" else tmp_path / "configured"
     data.mkdir(exist_ok=True)
     directory = data / t.GENERATIONS_DIRNAME
     directory.mkdir()
@@ -88,12 +88,14 @@ def test_output_hardlink_to_historical_sources_generation_is_refused(stores, tmp
     historical = directory / "sources.20261031T000000Z-222222222222.db"
     historical.write_bytes(b"historical fixture")
     selector = data / "sources.db"
-    if not configured:
+    if configured == "primary":
         selector.unlink()
     selector.symlink_to(selected.relative_to(data))
     alias = tmp_path / "output.db"
     alias.hardlink_to(historical)
-    environment = {t.ENV_SOURCES_DB: str(selector)} if configured else {}
+    environment = {} if configured == "primary" else {
+        t.ENV_SOURCES_DB: str(selected if configured == "generation" else selector),
+    }
 
     result = t.resolve_store_for_write(
         "sources", stores, intent=intent,
