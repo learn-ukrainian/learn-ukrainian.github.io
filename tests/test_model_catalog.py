@@ -312,11 +312,14 @@ def test_unknown_activity_and_unknown_model():
         (lambda c: c["review_scheduler"]["activity_roles"].pop("consult"), "must define exactly"),
         (lambda c: c["review_scheduler"]["activity_roles"]["review"].append("typo_review"), "which no model holds"),
         (
-            lambda c: c["review_candidates"]["claude-opus-5-5"].update(
-                model_id="claude-fable-5-1",
-                invocation=c["review_candidates"]["claude-opus-5-5"]["invocation"].replace(
-                    "claude-opus-5-5", "claude-fable-5-1"
+            lambda c: (
+                c["review_candidates"]["claude-opus-5-5"].update(
+                    model_id="claude-fable-5-1",
+                    invocation=c["review_candidates"]["claude-opus-5-5"]["invocation"].replace(
+                        "claude-opus-5-5", "claude-fable-5-1"
+                    ),
                 ),
+                c["review_candidates"]["claude-opus-5-5-agy"].pop("transport_fallback_for"),
             ),
             r"review_candidates\.claude-opus-5-5: model 'claude-fable-5-1'.*holds no review",
         ),

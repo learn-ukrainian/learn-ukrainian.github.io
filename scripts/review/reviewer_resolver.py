@@ -683,7 +683,8 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
 
     used_pct = account_used_pct(None if inputs.structural else account)
     paused = refusal_reason(
-        candidate_dispatch_model(candidate), used_pct=lambda lane: used_pct(lane) if lane == "claude" else None
+        candidate_dispatch_model(candidate),
+        used_pct=lambda lane: used_pct(lane) if lane == "claude" and candidate.route == "claude" else None,
     )
     if paused:
         return paused
@@ -1005,9 +1006,9 @@ def _evaluate_candidate(
                 capacity=capacity,
             )
 
-    # #10073: low/medium code review only through AGY. Pins, custom ladders,
+    # #10073: Gemini code review is low/medium only through AGY. Pins, custom ladders,
     # advisory evaluation and forged roles cannot bypass the risk boundary.
-    if (candidate.concrete_model.casefold().startswith("gemini-") or candidate.route == "agy") and (
+    if (model_family == "google" or (candidate.route == "agy" and model_family != "anthropic")) and (
         candidate.route != "agy"
         or inputs.risk.strip().casefold() not in {"low", "medium"}
         or is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)

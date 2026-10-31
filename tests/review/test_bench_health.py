@@ -27,12 +27,12 @@ from tests.claude_route_accounts import HOST_ACCOUNT
 GROK = "grok-4.7-cursor-fallback"
 DEFAULT_COUNTS = {
     "anthropic": ["openai_frontier", GROK],
-    "google": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "openai": [GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "moonshot": ["openai_frontier", "claude-opus-5-5", "claude-sonnet-5-5"],
-    "zhipu": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "xai": ["openai_frontier", "claude-opus-5-5", "claude-sonnet-5-5"],
-    "deepseek": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "google": ["openai_frontier", GROK, "claude-opus-5-5", "claude-opus-5-5-agy", "claude-sonnet-5-5", "claude-sonnet-5-5-agy"],
+    "openai": [GROK, "claude-opus-5-5", "claude-opus-5-5-agy", "claude-sonnet-5-5", "claude-sonnet-5-5-agy"],
+    "moonshot": ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-agy", "claude-sonnet-5-5", "claude-sonnet-5-5-agy"],
+    "zhipu": ["openai_frontier", GROK, "claude-opus-5-5", "claude-opus-5-5-agy", "claude-sonnet-5-5", "claude-sonnet-5-5-agy"],
+    "xai": ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-agy", "claude-sonnet-5-5", "claude-sonnet-5-5-agy"],
+    "deepseek": ["openai_frontier", GROK, "claude-opus-5-5", "claude-opus-5-5-agy", "claude-sonnet-5-5", "claude-sonnet-5-5-agy"],
 }
 
 
@@ -104,11 +104,11 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
     if risk == "high":
         assert {family: results[family] for family in ("anthropic", "openai")} == {
             "anthropic": ["openai_frontier", GROK],
-            "openai": [GROK, "claude-opus-5-5"],
+            "openai": [GROK, "claude-opus-5-5", "claude-opus-5-5-agy"],
         }
         for family in set(AUTHOR_FAMILIES) - {"anthropic", "openai"}:
             grok_seats = [] if family == "xai" else [] if family == "moonshot" else [GROK]
-            assert results[family] == ["openai_frontier", *grok_seats, "claude-opus-5-5"]
+            assert results[family] == ["openai_frontier", *grok_seats, "claude-opus-5-5", "claude-opus-5-5-agy"]
         # The resolver names the single eligibility rule, not a bench-local list.
         rule = "performed only by gpt-6.1-sol, claude-opus-5-5, grok-4.7"
         assert not {GROK}.intersection(exclusions["anthropic"])
@@ -118,7 +118,7 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
     if risk != "critical":
         return
     assert results["anthropic"] == ["openai_frontier", GROK]
-    assert results["openai"] == [GROK, "claude-opus-5-5"]
+    assert results["openai"] == [GROK, "claude-opus-5-5", "claude-opus-5-5-agy"]
     assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier", GROK}
     assert not {"glm-5.3", "composer-2.5", "pool", "pool-xs"} & set(exclusions["anthropic"])
     assert not {GROK}.intersection(exclusions["anthropic"])
@@ -288,6 +288,8 @@ def test_accepted_single_seat_still_requires_available_reviewer(risk, status, ro
     # Unhealthy routes cannot fill the bench; non-Claude near-cap routes can.
     data = {"agents": {lane: {"status": status, "remaining_pct": 5} for lane in (route, "grok", "cursor")},
             "diagnostics": {"stale": False}}
+    if route == "claude":
+        data["agents"]["agy"] = {"status": "unhealthy"}
     assert main(["--risk", risk], routing_snapshot=data) == (1 if status == "unhealthy" or route == "claude" else 0)
     captured = capsys.readouterr()
     if status == "near_cap":
@@ -328,6 +330,7 @@ def test_bench_health_main_returns_one_when_unhealthy(capsys):
     mock_snapshot = {
         "agents": {
             "claude": {"status": "unhealthy", "health": {"healthy": False}},
+            "agy": {"status": "unhealthy", "health": {"healthy": False}},
             "codex": {"status": "cool", "health": {"healthy": True}},
             "gemini": {"status": "unhealthy", "health": {"healthy": False}},
             "grok": {"status": "unhealthy", "health": {"healthy": False}},

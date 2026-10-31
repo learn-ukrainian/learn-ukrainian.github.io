@@ -22,7 +22,7 @@ def family_exclusion(
     if author_family is None:
         if family in {"moonshot", "deepseek"}:
             return "excluded", "code-review family exclusions"
-        if (family == "google" or route == "agy") and not (
+        if (family == "google" or (route == "agy" and family != "anthropic")) and not (
             family == "google" and route == "agy" and transport == "agy" and risk in {"low", "medium"}
         ):
             return "excluded", "Gemini code review requires AGY at low/medium risk (#10073)"

@@ -919,10 +919,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError(
                     f"review_candidates.{name}.transport_fallback_for must reference a primary transport of the same model"
                 )
-        if (model_id.casefold().startswith("gemini-") or candidate.get("route") == "agy") and (
+        if (models[model_id]["family"] == "google" or candidate.get("route") == "agy") and (
             candidate.get("route") != "agy"
             or transport_raw != "agy"
-            or models[model_id]["family"] != "google"
+            or models[model_id]["family"] not in {"google", "anthropic"}
         ):
             raise ModelCatalogError(
                 f"review_candidates.{name}: Gemini code review requires the native AGY route (#10073)"

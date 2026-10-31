@@ -969,7 +969,7 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
         routes = catalog["roles"][f"code_review_{risk}"]["routes"]
         assert "anthropic_authority/cursor_fallback" not in routes
         assert "xai_reviewer/cursor_fallback" in routes
-    assert set(catalog["seats"]["anthropic_authority"]["routes"]) == {"native"}
+    assert list(catalog["seats"]["anthropic_authority"]["routes"]) == ["native", "agy"]
     assert set(catalog["seats"]["xai_reviewer"]["routes"]) == {"cursor_fallback"}
     assert "transport_fallback_for" not in catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]
     opus = catalog["models"]["claude-opus-5-5"]
@@ -989,7 +989,7 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
 # the #10262 explicit AGY review-risk refusals in both configurations, and the #10630
 # capture-driver account; see SPEC.md.
 PINNED_DIGESTS = {
-    "v2-baseline.json.gz": "b11efb93e2702bf344f21d46c87058153b5d4a77752839d7fd9f144da501187e",
+    "v2-baseline.json.gz": "399cf15d4a0efa36bff57c143a66638a085b792d069c38ccb07955c1dee068ab",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
     "SPEC.md": "c0e7d80b83e40e32b230d0fe9baf6a168f32a5965636f1a22f6639421f55823f",
@@ -1042,7 +1042,7 @@ def assert_frozen_routing_fixture_pinned(root: Path) -> None:
 # The current fixture contains only the expanded catalog and the existing 1432
 # reviewer cases. It was computed with pure resolver calls, without launching workers.
 _V2_BASELINE_PATH = FIXTURE / "v2-baseline.json.gz"
-assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "b11efb93e2702bf344f21d46c87058153b5d4a77752839d7fd9f144da501187e"
+assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "399cf15d4a0efa36bff57c143a66638a085b792d069c38ccb07955c1dee068ab"
 _V2_BASELINE = json.loads(gzip.decompress(_V2_BASELINE_PATH.read_bytes()))
 CURRENT_BASELINE = _V2_BASELINE["baseline"]
 CURRENT_INPUTS = _V2_BASELINE["inputs"]
@@ -1113,6 +1113,45 @@ def assert_frozen_surfaces(actual, *, surfaces):
             elevation = _pop_budget_elevation_role(value)
             assert hashlib.sha256(encode(elevation)).hexdigest() == "4a395379ef040f47f69be6badd96376bcbc1041d8698ff0703bc9209e399592d"
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
+
+
+def refresh_current_baseline():
+    """Recapture the existing cases with frozen time, no live usage, and no dispatches."""
+    from functools import partial
+
+    from scripts.fleet import credit_lane
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from scripts.review.role_resolution import expanded_legacy_view
+    from tests.claude_route_accounts import HOST_ACCOUNT
+
+    capture = deepcopy(_V2_BASELINE)
+    catalog = plain(expanded_legacy_view())
+    catalog["models"].pop("gemini-4-carbon")
+    catalog["models"].pop("gpt-6.1-terra")
+    _pop_budget_elevation_role(catalog)
+    capture["baseline"]["catalog"] = catalog
+    usage_dir = _V2_BASELINE_PATH.parent / ".recapture-no-live-usage"
+    assert not usage_dir.exists()
+    receipts = []
+    with (
+        patch("scripts.agent_runtime.model_pause.load_policy", return_value={}),
+        patch.object(credit_lane, "routing_facts", partial(credit_lane.routing_facts, now=FIXED_NOW, usage_dir=usage_dir)),
+        patch.object(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief, now=FIXED_NOW)),
+    ):
+        for raw_case in capture["inputs"]["reviewer"]:
+            case = deepcopy(raw_case)
+            for key in ("required_capabilities", "subject_seats", "subject_families", "author_families"):
+                if key in case:
+                    case[key] = frozenset(case[key])
+            if "owned_paths" in case:
+                case["owned_paths"] = tuple(case["owned_paths"])
+            receipts.append(observed(lambda case=case: resolve_reviewer(ResolverInputs(**case, claude_account=HOST_ACCOUNT))))
+    capture["baseline"]["reviewer"] = receipts
+    assert capture["inputs"] == _V2_BASELINE["inputs"]
+    raw = gzip.compress(encode(capture), mtime=0)
+    _V2_BASELINE_PATH.write_bytes(raw)
+    print(json.dumps({"cases": len(receipts), "inputs_sha256": hashlib.sha256(encode(capture["inputs"])).hexdigest(),
+                      "baseline_sha256": hashlib.sha256(raw).hexdigest()}))
 
 
 def test_deepseek_flash_execution_requires_opencode():
