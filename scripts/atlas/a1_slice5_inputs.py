@@ -244,7 +244,7 @@ def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, sele
                 claims.append(claim)
         chosen, _ = cards.choose_stress(attempts)
         if chosen:
-            cards.require(sources["records"][chosen["record_key"]]["source_id"] in {"ulif", "sum20"},
+            cards.require(sources["records"][chosen["record_key"]]["source_id"] in cards.STRESS_ORDER,
                           "slice5_stress_authority")
     for claim in claims:
         record = sources["records"][claim["record_key"]]
