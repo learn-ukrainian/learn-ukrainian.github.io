@@ -59,7 +59,7 @@ is the single source of truth for membership (auditor:
 
 | Stream | Epic(s) | Scope |
 | --- | --- | --- |
-| epics | #10453 | Epic coordination |
+| epics | #10453, #12239 (overflow epic for the existing stream; #10453 is at GitHub's 100 native sub-issue limit) | Epic coordination |
 | atlas-practice | #4387, #12166 (overflow epic for the existing stream; #4387 is at GitHub's 100 native sub-issue limit) | Word Atlas + Practice Hub product & UX (intake epics #4220, #4378, #5224 and UX epic #4700 folded into umbrella #4387) |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
 | infra-harness | #6943 (successor to closed #4707), #9737, #11254 (all three closed; remain registered for launcher selectors) | Infra & fleet reliability (hooks, dispatch, routing). CI speed/reliability program (#8875): [`ci-speed-program.md`](epics/ci-speed-program.md) |
