@@ -380,7 +380,7 @@ def active_worktree_claim_refusal(
     """
 
     def refused(state_file: Path, problem: str) -> str:
-        return f"task record {state_file.name} {problem}; refusing worktree removal"
+        return f"task record {state_file} {problem}; refusing worktree removal"
 
     try:
         target = resolve_claim_path(str(worktree), repo_root=repo_root)
@@ -907,9 +907,9 @@ def owner_release_refusal(
     except FileNotFoundError:
         return f"owner task {owner_task_id} has no task record; refusing worktree removal"
     except (OSError, ValueError, RecursionError):
-        return f"owner task record {record_path.name} unreadable; refusing worktree removal"
+        return f"owner task record {record_path} unreadable; refusing worktree removal"
     if not isinstance(record, dict):
-        return f"owner task record {record_path.name} unreadable; refusing worktree removal"
+        return f"owner task record {record_path} unreadable; refusing worktree removal"
     if record.get("task_id") != owner_task_id:
         return f"owner task {owner_task_id} identity mismatch; refusing worktree removal"
     nonce = record.get("run_nonce")

@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
+
+import pytest
 
 from scripts.orchestration import task_record_store as store
 
@@ -81,3 +84,14 @@ def test_relocated_result_file_points_at_the_moved_sidecar(tmp_path):
     # Hot records and empty values are never rewritten.
     assert store.relocated_result_file(tasks / "old.json", hot_result) == hot_result
     assert store.relocated_result_file(archived, None) is None
+
+
+def test_blank_v2_named_record_is_damaged_not_foreign(tmp_path):
+    """Defect class: an empty or NUL-filled v2-named record read as foreign (#12219)."""
+    for raw in (b"", b" \n\t", b"\x00" * 64, b"\xef\xbb\xbf\x00"):
+        for name in ("worker.json", "worker.20261023T091234Z.7.archived.json"):
+            path = tmp_path / name
+            with pytest.raises(ValueError, match=re.escape(f"task record {path} is empty")):
+                store.parse_task_record(path, raw)
+    # A blank file no dispatch could have named stays foreign.
+    assert store.parse_task_record(tmp_path / "not a task id.json", b"") is None

@@ -187,3 +187,31 @@ def test_mid_run_record_damage_publishes_typed_terminal_failure(sandbox, monkeyp
     assert reaped == []
     assert signal.getsignal(signal.SIGTERM) is previous_term
     assert signal.getsignal(signal.SIGINT) is previous_int
+
+
+def test_failed_record_recovery_types_os_errors_and_keeps_a_removed_tree(tmp_path, monkeypatch):
+    """Defect class: an OSError subclass escaping without a typed outcome, or a removed disposition overwritten."""
+    record = dict(schema_version=2, task_id="probe", run_nonce="n1", status="running")
+    unwritable = tmp_path / "unwritable.json"
+    unwritable.mkdir()
+    with pytest.raises(store.TaskRecordError, match=r"^TASK_RECORD_IO_ERROR: IsADirectoryError$"):
+        store.publish_failed_record(dict(record), unwritable)
+    unreadable = tmp_path / "unreadable.json"
+    unreadable.write_text("{")
+    read_text = type(unreadable).read_text
+
+    def denied(path, *args, **kwargs):
+        if path == unreadable:
+            raise PermissionError("test denial")
+        return read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(type(unreadable), "read_text", denied)
+    with pytest.raises(store.TaskRecordError, match=r"^TASK_RECORD_IO_ERROR: PermissionError$"):
+        store.publish_failed_record(dict(record), unreadable)
+    assert read_text(unreadable) == "{"
+    reaped = tmp_path / "probe.json"
+    reaped.write_text('{"schema_version":2,')
+    store.publish_failed_record(dict(record, worktree_disposition="removed", worktree_disposition_reason="merged"), reaped)
+    terminal = json.loads(reaped.read_text())
+    assert (terminal["status"], terminal["error"]) == ("crashed", "TASK_RECORD_DAMAGED")
+    assert (terminal["worktree_disposition"], terminal["worktree_disposition_reason"]) == ("removed", "merged")

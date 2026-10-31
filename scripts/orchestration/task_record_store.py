@@ -38,7 +38,33 @@ REVIEW_TASK_FLAG_FIELDS = (
 # Lock-file inodes each thread holds through task_state_lock.
 _HELD_TASK_LOCKS = threading.local()
 _REDISPATCH_ARCHIVED_STEM_RE = re.compile(r"^(?P<base>.+)\.(?P<tag>\d{8}T\d{6}\d*Z(?:\.\d+)?)\.archived$")
+# The task-id grammar dispatch enforces when it names a v2 record (scripts/dispatcher/store.record_path).
+_V2_TASK_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}")
 _LOG = logging.getLogger(__name__)
+# Foreign-file fingerprints this process has already reported; scans repeat, the warning does not.
+_REPORTED_FOREIGN: set[tuple[str, int, int]] = set()
+_REPORTED_FOREIGN_LIMIT = 65536
+
+
+def _report_foreign(path: Path, raw: bytes) -> None:
+    """Warn once per process for each foreign file's path and content; a rewritten file is reported again."""
+    fingerprint = (str(path), len(raw), hash(raw))
+    if fingerprint in _REPORTED_FOREIGN:
+        return
+    if len(_REPORTED_FOREIGN) >= _REPORTED_FOREIGN_LIMIT:
+        _REPORTED_FOREIGN.clear()
+    _REPORTED_FOREIGN.add(fingerprint)
+    _LOG.warning("NON_RECORD_FILE: %s", path)
+
+
+def _has_v2_record_name(path: Path) -> bool:
+    """Whether dispatch could have written ``path`` as a v2 record, archive collision stamps included."""
+    if not path.name.endswith(".json"):
+        return False
+    stem = path.name[:-5]
+    while match := _REDISPATCH_ARCHIVED_STEM_RE.fullmatch(stem):
+        stem = match["base"]
+    return _V2_TASK_ID_RE.fullmatch(stem) is not None and ".." not in stem
 
 
 def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = False) -> dict[str, Any] | None:
@@ -48,7 +74,9 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
     records may identify a run by filename and lifecycle fields alone. The v2
     basename and archive collision stamps follow the by-id naming contract. A
     broken JSON object may have lost its markers to truncation, so it remains
-    a record claim and fails closed.
+    a record claim and fails closed. So does a file carrying a v2 record name
+    whose bytes are empty, whitespace, BOM or NUL only: a crash can leave a
+    record zero-filled, and a blank file has no content that marks it foreign.
     """
     try:
         decoded = raw.decode("utf-8")
@@ -63,9 +91,11 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
             prefix += 1
         if decoded.startswith("{", prefix):
             raise
+        if prefix == len(decoded) and _has_v2_record_name(path):
+            raise ValueError(f"task record {path} is empty") from None
         record = None
     if not isinstance(record, dict):
-        _LOG.warning("NON_RECORD_FILE: %s", path)
+        _report_foreign(path, raw)
         return None
     task_id = record.get("task_id")
     legacy = "schema_version" not in record and (
@@ -79,7 +109,7 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
     receipt = ("schema" in record and "schema_version" not in record
                and isinstance(task_id, str) and not candidate_task_record_names(task_id, (path.name,)))
     if (receipt and not legacy) or not ("task_id" in record or isinstance(record.get("schema_version"), int) or legacy):
-        _LOG.warning("NON_RECORD_FILE: %s", path)
+        _report_foreign(path, raw)
         return None
     if "schema_version" in record and (type(record["schema_version"]) is not int
                                        or record["schema_version"] not in {1, 2}):
