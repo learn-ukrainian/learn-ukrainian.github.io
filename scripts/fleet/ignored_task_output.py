@@ -220,6 +220,7 @@ def _identity_decoder_context() -> dict[str, Any]:
     return {
         "python": list(sys.version_info[:3]),
         "int_max_str_digits": getattr(sys, "get_int_max_str_digits", lambda: 0)(),
+        "task_record_classifier": 1,
     }
 
 
@@ -403,10 +404,9 @@ def _matching_worktree_records_once(
             and set(entry["identity"]) == set(_IDENTITY_KEYS)
         )
         try:
-            full_record = parse_task_record(path, raw)
-            if full_record is None:
+            record = entry["identity"] if hit else parse_task_record(path, raw)
+            if record is None:
                 continue
-            record = entry["identity"] if hit else full_record
         except ValueError:
             # Reuse the claim owner's existing released-record proof only for
             # corrupt records with no possible retention key. Valid records,
@@ -426,7 +426,7 @@ def _matching_worktree_records_once(
                 record, worktree, repo_root=repo_root, resolved_worktree=resolved_worktree, claim_paths=claim_paths
             ):
                 if hit:
-                    record = full_record  # Return the complete canonical record, never its projection.
+                    record = parse_task_record(path, raw)  # Return the canonical record, never its projection.
                 matches.append((path, record))
             elif (
                 resolved_worktree is not None

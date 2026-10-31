@@ -49,7 +49,9 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
     """
     try:
         record = json.loads(raw.decode("utf-8"))
-    except (ValueError, RecursionError) as exc:
+    except RecursionError as exc:
+        raise ValueError(f"task record {path} exceeds JSON parser nesting") from exc
+    except ValueError as exc:
         if isinstance(exc, UnicodeDecodeError) or raw.lstrip().removeprefix(b"\xef\xbb\xbf").startswith(b"{"):
             raise
         record = None
@@ -59,7 +61,8 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
     task_id = record.get("task_id")
     legacy = "schema_version" not in record and (
         any(key in record for key in (
-            "run_nonce", "worktree_path", "worktree_prep", "review_attempt", "review_contract", "worktree_branch"
+            "run_nonce", "worktree_path", "cwd", "acp_runtime_paths", "worktree_prep",
+            "review_attempt", "review_contract", "worktree_branch"
         )) or ("agent" in record and "status" in record)
     )
     receipt = ("schema" in record and "schema_version" not in record

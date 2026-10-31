@@ -78,7 +78,7 @@ def test_damaged_record_still_refuses_admission(tmp_path, monkeypatch, damaged):
 
 
 @pytest.mark.parametrize("phase", ["provider_exit", "settlement_cutoff", "terminal_write"])
-@pytest.mark.parametrize("damage", ["deleted", "truncated", "non_object", "missing_nonce", "replaced_nonce"])
+@pytest.mark.parametrize("damage", ["deleted", "truncated", "non_object", "missing_nonce", "replaced_nonce", "recursion"])
 def test_mid_run_record_damage_publishes_typed_terminal_failure(sandbox, monkeypatch, phase, damage):
     """Record loss/corruption cannot strand a supervisor or overwrite a replacement run."""
     from tests.dispatcher import stub_provider
@@ -112,6 +112,8 @@ def test_mid_run_record_damage_publishes_typed_terminal_failure(sandbox, monkeyp
             path.write_text('{"schema_version":2,')
         elif damage == "non_object":
             path.write_text("[]")
+        elif damage == "recursion":
+            path.write_text("[" * 100000)
         elif damage == "missing_nonce":
             path.write_text("{}")
         else:

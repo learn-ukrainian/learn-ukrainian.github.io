@@ -175,7 +175,7 @@ def _write(path: Path, record: dict, exclusive: bool = False, *, grant: dict | N
                 current = json.loads(path.read_text())
                 if not isinstance(current, dict):
                     raise ValueError("not an object")
-            except (OSError, ValueError) as exc:
+            except (OSError, ValueError, RecursionError) as exc:
                 raise TaskRecordError("TASK_RECORD_DAMAGED") from exc
             if current.get("run_nonce") != record.get("run_nonce"):
                 raise TaskRecordError("TASK_RECORD_REPLACED: run nonce mismatch")
@@ -240,7 +240,7 @@ def read(task_id: str, nonce: str | None = None, *, missing_ok=False) -> dict | 
         record = json.loads(path.read_text())
         if not isinstance(record, dict):
             raise ValueError("not an object")
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, RecursionError) as exc:
         raise TaskRecordError("TASK_RECORD_DAMAGED") from exc
     if nonce is not None and record.get("run_nonce") != nonce:
         raise ValueError("run nonce mismatch")
@@ -258,7 +258,7 @@ def publish_failed_record(record: dict, path: Path) -> None:
     with task_state_lock(path):
         try:
             current = json.loads(path.read_text())
-        except (FileNotFoundError, ValueError):
+        except (FileNotFoundError, ValueError, RecursionError):
             current = None
         if (isinstance(current, dict) and isinstance(current.get("run_nonce"), str)
                 and current["run_nonce"] != record["run_nonce"]):
@@ -370,7 +370,7 @@ def begin_settlement(record: dict) -> None:
             current = read(record["task_id"], record["run_nonce"])
             if not isinstance(current, dict):
                 raise ValueError("not an object")
-        except (OSError, ValueError) as exc:
+        except (OSError, ValueError, RecursionError) as exc:
             raise TaskRecordError("TASK_RECORD_DAMAGED") from exc
         current["settling_at"] = current.get("settling_at") or now()
         replace(current, path)

@@ -124,8 +124,8 @@ def _read_task_state(
         return None
     for attempt in range(TASK_READ_RETRIES):
         try:
-            with open(fullpath, "rb") as handle:
-                data = parse_task_record(Path(path), handle.read(), display_unknown_schema=True)
+            with open(fullpath, encoding="utf-8") as handle:
+                data = parse_task_record(Path(path), handle.read().encode("utf-8"), display_unknown_schema=True)
         except (OSError, ValueError):
             if attempt + 1 == TASK_READ_RETRIES:
                 return None

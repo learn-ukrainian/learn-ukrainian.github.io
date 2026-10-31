@@ -917,7 +917,16 @@ def _read_task_record(path: Path) -> tuple[object, str | None]:
             os.close(fd)
         if len(raw) > _MAX_TASK_RECORD_BYTES:
             return None, "task_record_too_large"
-        return parse_task_record(path, raw), None
+        record = parse_task_record(path, raw)
+        if record is None:
+            # Classification is shared; retain this collector's shape-only
+            # diagnostics so every scanned source remains accounted for.
+            try:
+                is_object = isinstance(json.loads(raw.decode("utf-8")), dict)
+            except ValueError:
+                return None, "task_record_unreadable"
+            return None, "not_a_task_record" if is_object else "task_record_not_object"
+        return record, None
     except (OSError, ValueError, RecursionError, MemoryError):
         # ValueError covers JSONDecodeError, UnicodeDecodeError and the
         # integer-string-conversion limit; RecursionError covers deep nesting;
