@@ -67,7 +67,7 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
     )
     receipt = ("schema" in record and "schema_version" not in record
                and isinstance(task_id, str) and not candidate_task_record_names(task_id, (path.name,)))
-    if receipt or not ("task_id" in record or isinstance(record.get("schema_version"), int) or legacy):
+    if (receipt and not legacy) or not ("task_id" in record or isinstance(record.get("schema_version"), int) or legacy):
         _LOG.warning("NON_RECORD_FILE: %s", path)
         return None
     if "schema_version" in record and (type(record["schema_version"]) is not int

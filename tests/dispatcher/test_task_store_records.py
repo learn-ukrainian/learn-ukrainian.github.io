@@ -54,6 +54,19 @@ def test_foreign_sidecar_does_not_block_review_admission(tmp_path, monkeypatch, 
     assert str(sidecar) in caplog.text
 
 
+def test_receipt_marker_cannot_hide_legacy_review_claim(tmp_path, monkeypatch):
+    """A receipt marker cannot remove a lifecycle claim from admission's inventory."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    record = dict(schema="agy-read-only.v1", task_id="legacy-review", agent="claude", status="done",
+                  review_profile="infra", review_mode="cross_family", repository="org/repo", worktree_branch="topic")
+    (tmp_path / "legacy-review.receipt.json").write_text(json.dumps(record))
+
+    assert [row["task_id"] for _, row in review_lineage.review_records(tmp_path, repository="org/repo")] == [
+        "legacy-review"
+    ]
+    assert [row["task_id"] for row in store.list_tasks(include_archive=True, strict=True)] == ["legacy-review"]
+
+
 @pytest.mark.parametrize("damaged", [
     b'{"schema_version":2,"task_id":"damaged",',
     b'{"schema_version":3,"task_id":"damaged"}',
