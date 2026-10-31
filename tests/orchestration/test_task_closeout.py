@@ -665,13 +665,18 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
 
 
 @pytest.mark.parametrize(
-    ("later_pr_run", "expected_ok", "expected_failed"),
-    [("success", True, []), ("failure", False, ["CI Gate"])],
+    ("later_pr_run", "opt_in_workflow", "expected_ok", "expected_failed"),
+    [
+        ("success", 7, True, []),
+        ("failure", 7, False, ["CI Gate"]),
+        # Another workflow with the same display name never supersedes the failure.
+        ("success", 8, False, ["CI Gate"]),
+    ],
 )
 def test_12209_older_opt_in_failure_does_not_override_a_later_pr_run(
-    tmp_path: Path, github_transport, later_pr_run, expected_ok, expected_failed
+    tmp_path: Path, github_transport, later_pr_run, opt_in_workflow, expected_ok, expected_failed
 ) -> None:
-    """Same-name CI Gate rows from two runs of one workflow: the latest run decides."""
+    """Same-name CI Gate rows: the latest run of one workflow decides; workflows stay apart."""
     from scripts.common.github_client import Response
 
     def check(run_id: int, suite: int, conclusion: str, started_at: str) -> dict:
@@ -684,7 +689,7 @@ def test_12209_older_opt_in_failure_does_not_override_a_later_pr_run(
 
     runs = {
         301: {"id": 301, "name": "CI", "head_sha": HEAD, "check_suite_id": 31, "workflow_id": 7},
-        302: {"id": 302, "name": "CI", "head_sha": HEAD, "check_suite_id": 32, "workflow_id": 7},
+        302: {"id": 302, "name": "CI", "head_sha": HEAD, "check_suite_id": 32, "workflow_id": opt_in_workflow},
     }
 
     def transport(method, endpoint, headers, body, timeout):
@@ -717,7 +722,9 @@ def test_12209_older_opt_in_failure_does_not_override_a_later_pr_run(
 
     ok, waiting, failed = task_lifecycle._checks_status(["CI Gate"], pr["checks"])
     assert (ok, waiting, failed) == (expected_ok, False, expected_failed)
-    assert [(c["workflowName"], c["appSlug"]) for c in pr["checks"]] == [("CI", "github-actions")]
+    assert {(c["workflowName"], c["appSlug"], c["workflowId"]) for c in pr["checks"]} == {
+        ("CI", "github-actions", workflow) for workflow in {7, opt_in_workflow}
+    }
 
 
 def _transferred_ledger_and_reader(

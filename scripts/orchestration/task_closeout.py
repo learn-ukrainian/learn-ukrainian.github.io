@@ -111,6 +111,9 @@ _CHECK_IDENTITY_FIELDS = (
     "updatedAt",
     "context",
 )
+# Integer provenance that keeps two workflows sharing a display name apart
+# when task_lifecycle collapses the projected rows again.
+_CHECK_IDENTITY_IDS = ("workflowId", "appId")
 
 
 def project_closeout_checks(rollup: list[Any]) -> list[Any]:
@@ -148,6 +151,10 @@ def project_closeout_checks(rollup: list[Any]) -> list[Any]:
         for field in _CHECK_IDENTITY_FIELDS:
             value = raw.get(field)
             if isinstance(value, str) and value.strip():
+                row[field] = value
+        for field in _CHECK_IDENTITY_IDS:
+            value = raw.get(field)
+            if type(value) is int and value > 0:
                 row[field] = value
         checks.append(row)
     return checks
