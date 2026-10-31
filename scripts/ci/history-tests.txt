@@ -7,6 +7,7 @@
 # its file here. See docs/runbooks/ci-gate.md "History shard".
 
 # Read old commits.
+tests/atlas/test_a1_vocabulary_inventory.py  # git ls-tree/show at frozen A1-v1 commit
 tests/build/test_reviewer_scoring_parity.py  # git show <old sha>:<path>
 tests/orchestration/test_curriculum_lifecycle_pilot.py  # verifies a recorded historical commit
 tests/review/test_model_catalog.py  # recaptures routing source contracts at the frozen base commit
