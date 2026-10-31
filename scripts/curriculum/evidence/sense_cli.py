@@ -338,6 +338,98 @@ def _record_texts(value: object, ancestors: frozenset[int] = frozenset()):
             yield "\n".join(parts)
 
 
+def _blank_unchanged_records(text: str, base_text: str) -> tuple[str, list[tuple[int, int]]]:
+    """Empty every YAML/JSON mapping identical to the merge-base record at its structural path.
+
+    Returns the emptied text and the emptied source spans.
+
+    A record's identity is its structural path from the document root (mapping
+    keys with their tags, sequence indices) plus its parsed value; its source
+    span must also be unchanged, so an added comment is never emptied. A moved or
+    reordered record is compared with whatever the base holds at its new path.
+    Anything ambiguous (a parse error, several documents, an alias, a duplicate
+    or non-scalar key, a blanked text that parses differently) empties nothing,
+    so every record still gates.
+    """
+    try:
+        head, prior = yaml.compose(text), yaml.compose(base_text)
+    except yaml.YAMLError:
+        return text, []
+    if head is None or prior is None:
+        return text, []
+
+    def index(node, path: tuple, nodes: dict, seen: set[int]) -> None:
+        if id(node) in seen:
+            raise ValueError("alias")
+        seen.add(id(node))
+        nodes[path] = node
+        if isinstance(node, yaml.SequenceNode):
+            for i, child in enumerate(node.value):
+                index(child, (*path, ("index", i)), nodes, seen)
+        elif isinstance(node, yaml.MappingNode):
+            keys = [(key.tag, key.value) for key, _value in node.value if isinstance(key, yaml.ScalarNode)]
+            if len(keys) != len(node.value) or len(set(keys)) != len(keys):
+                raise ValueError("ambiguous_key")
+            for key, value in node.value:
+                if id(key) in seen:
+                    raise ValueError("alias")
+                seen.add(id(key))
+                index(value, (*path, ("key", key.tag, key.value)), nodes, seen)
+
+    def same(a, b, emptied: frozenset[int] = frozenset()) -> bool:
+        if type(a) is not type(b):
+            return False
+        if id(a) in emptied:
+            return not b.value
+        if isinstance(a, yaml.ScalarNode):
+            return (a.tag, a.value) == (b.tag, b.value)
+        pairs = a.value if isinstance(a, yaml.SequenceNode) else [p for kv in a.value for p in kv]
+        other = b.value if isinstance(b, yaml.SequenceNode) else [p for kv in b.value for p in kv]
+        return (
+            a.tag == b.tag
+            and len(pairs) == len(other)
+            and all(same(x, y, emptied) for x, y in zip(pairs, other, strict=True))
+        )
+
+    def span(node, source: str) -> str:
+        return source[node.start_mark.index : node.end_mark.index]
+
+    head_nodes, base_nodes = {}, {}
+    try:
+        index(head, (), head_nodes, set())
+        index(prior, (), base_nodes, set())
+    except ValueError:
+        return text, []
+    emptied, covered = [], set()
+    for path, node in head_nodes.items():
+        other = base_nodes.get(path)
+        if (
+            isinstance(node, yaml.MappingNode)
+            and not any(path[:i] in covered for i in range(len(path)))
+            and other is not None
+            and same(node, other)
+            and span(node, text) == span(other, base_text)
+        ):
+            covered.add(path)
+            emptied.append(node)
+    spans = sorted((n.start_mark.index, n.end_mark.index) for n in emptied)
+    blanked = text
+    for start, end in reversed(spans):
+        # An empty mapping replaces the record; line breaks stay, so no two lines join.
+        chars = list(re.sub(r"[^\r\n]", " ", text[start:end]))
+        close = next((i for i, char in enumerate(chars) if i and char not in "\r\n"), None)
+        if close is None:
+            return text, []
+        chars[0], chars[close] = "{", "}"
+        blanked = blanked[:start] + "".join(chars) + blanked[end:]
+    try:
+        if spans and same(head, yaml.compose(blanked), frozenset(id(n) for n in emptied)):
+            return blanked, spans
+    except yaml.YAMLError:
+        pass
+    return text, []
+
+
 def _head_blobs(repo: Path, paths: set[str] | None = None):
     """Read committed blobs through one cat-file stream, including binary files."""
     entries = bindings.git(repo, "ls-tree", "-r", "-z", "HEAD").split(b"\0")
@@ -399,7 +491,10 @@ def leak_scan(
         if p
     }
     prefix = f"curriculum/l2-uk-en/evidence/{context.level}/"
-    gate_paths = changed_paths | {prefix + bindings.BINDINGS, prefix + "_words.yaml"}
+    stores = {prefix + bindings.BINDINGS, prefix + "_words.yaml"}
+    gate_paths = changed_paths | stores
+    # Level stores always gate whole; other changed YAML/JSON files gate by record.
+    record_paths = {p for p in changed_paths - stores if Path(p).suffix in {".yaml", ".yml", ".json"}}
     scope = {
         "kind": "diff",
         "merge_base": merge_base,
@@ -473,7 +568,7 @@ def leak_scan(
     mapping_pattern, mapping_prefixes = _scan_pattern(set(mapping_meanings) | set(mapping_forms))
     leaks = Counter(committed_files=0, commit_messages=0, pr_text=0)
     signals = Counter(distinctive_wording=0, mapping_copy=0)
-    suspects = []
+    suspects, pre_existing = [], []
     files, byte_count = 0, 0
     full_counts = Counter(committed_files=0)
     full_signals = Counter(distinctive_wording=0, mapping_copy=0)
@@ -488,13 +583,12 @@ def leak_scan(
                 forms.update(mapping_forms.get(term, ()))
         return meanings & forms
 
-    def scan(content: bytes, path: str, category: str, *, gate: bool = True):
-        text = content.decode("utf-8", errors="replace")
+    def detect(text: str, path: str, lines: list[str] | None = None) -> dict[str, Counter]:
         wording = Counter()
         for match in wording_pattern.finditer(_scan_normalize(text)):
             for term in wording_prefixes[match[1]]:
                 wording.update(distinctive[term])
-        pairs = set().union(*(mapping_ids(line) for line in text.splitlines()))
+        pairs = set().union(*(mapping_ids(line) for line in (text.splitlines() if lines is None else lines)))
         # Parse only structured files with a possible cross-line pair. Sibling
         # YAML/JSON records cannot lend each other a lemma or a meaning.
         if Path(path).suffix in {".yaml", ".yml", ".json", ".jsonl"} and (
@@ -507,18 +601,46 @@ def leak_scan(
             except yaml.YAMLError:
                 # Invalid structured data still receives the literal line scan.
                 pass
-        for signal, matches in (("distinctive_wording", wording), ("mapping_copy", Counter({p: 1 for p in pairs}))):
-            count = sum(matches.values())
-            if count:
-                suspect = {"path": path, "signal": signal, "locators": sorted(matches), "count": count}
-                if gate:
-                    leaks[category] += count
-                    signals[signal] += count
-                    suspects.append(suspect)
-                if full_tree_report is not None and category == "committed_files":
-                    full_counts[category] += count
-                    full_signals[signal] += count
-                    full_suspects.append(suspect)
+        return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
+
+    def scan(content: bytes, path: str, category: str, *, gate: bool = True, base_path: str | None = None):
+        text = content.decode("utf-8", errors="replace")
+        found = detect(text, path)
+        gated = found
+        if gate and base_path is not None and any(found.values()):
+            # A suspect only inside records identical at the merge-base is reported, not gated.
+            try:
+                prior = bindings.git(repo, "cat-file", "blob", f"{merge_base}:{base_path}").decode("utf-8")
+                blanked, spans = _blank_unchanged_records(content.decode("utf-8"), prior)
+            except (subprocess.CalledProcessError, UnicodeError):
+                spans = []
+            if spans:
+                # A line shared with anything outside an unchanged record keeps its line signal.
+                lines, offset = [], 0
+                for line in text.splitlines(keepends=True):
+                    first = offset + len(line) - len(line.lstrip())
+                    last = offset + len(line.rstrip())
+                    offset += len(line)
+                    if not any(start <= first and last <= end for start, end in spans):
+                        lines.append(line)
+                gated = detect(blanked, path, lines)
+        for signal, matches in found.items():
+            count = sum(gated[signal].values())
+            if gate and count:
+                leaks[category] += count
+                signals[signal] += count
+                suspects.append({"path": path, "signal": signal, "locators": sorted(gated[signal]), "count": count})
+            older = matches - gated[signal]
+            if gate and older:
+                pre_existing.append(
+                    {"path": path, "signal": signal, "locators": sorted(older), "count": sum(older.values())}
+                )
+            if full_tree_report is not None and category == "committed_files" and matches:
+                full_counts[category] += sum(matches.values())
+                full_signals[signal] += sum(matches.values())
+                full_suspects.append(
+                    {"path": path, "signal": signal, "locators": sorted(matches), "count": sum(matches.values())}
+                )
 
     for path, content in _head_blobs(repo, None if full_tree_report is not None else gate_paths):
         if path in gate_paths:
@@ -540,6 +662,7 @@ def leak_scan(
             path,
             "committed_files",
             gate=path in gate_paths,
+            base_path=path if path in record_paths else None,
         )
     messages = bindings.git(repo, "log", "--format=%B", f"{merge_base}..{head}")
     scan(messages, "commit_messages", "commit_messages")
@@ -565,6 +688,7 @@ def leak_scan(
         "counts": dict(leaks),
         "signals": dict(signals),
         "suspects": suspects,
+        "pre_existing_suspects": pre_existing,
         "tracked_files": files,
         "tracked_bytes": byte_count,
         "patterns": {"distinctive_wording": len(distinctive), "mapping_copy": len(mapping_meanings)},
