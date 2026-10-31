@@ -207,8 +207,8 @@ def test_nonregular_build_output_is_refused(checkout):
         ("package-lock.json", '{"lockfileVersion": 3}\n'),
         ("uv.lock", 'version = 1\n[[package]]\nname = "pytest"\nversion = "8.4.2"\n'),
         ("poetry.lock", '[[package]]\nname = "pytest"\nversion = "8.4.2"\n'),
-        ("requirements.txt", "pytest==8.4.2\n"),
-        ("requirements.lock", "pytest==8.4.2\n"),
+        ("requirements.txt", "pytest==8.4.2\n./packages/v4-runtime\n"),
+        ("requirements.lock", "pytest==8.4.2\n./packages/v4-runtime\n"),
     ],
 )
 def test_regenerable_proof_refuses_unparseable_lockfile(checkout, filename, valid):
@@ -219,6 +219,8 @@ def test_regenerable_proof_refuses_unparseable_lockfile(checkout, filename, vali
     fixtures.artifact(checkout, name, b"dependency output")
     if filename != "package-lock.json":
         fixtures.artifact(checkout, ".venv/pyvenv.cfg", b"home = toolchain\n")
+    if filename.startswith("requirements"):
+        fixtures.artifact(checkout, "packages/v4-runtime/pyproject.toml", b'[project]\nname = "v4-runtime"\nversion = "1"\n')
     lock = repo / filename
     for content, expected in [(valid, True), ("not lockfile content [\n", False)]:
         lock.write_text(content)

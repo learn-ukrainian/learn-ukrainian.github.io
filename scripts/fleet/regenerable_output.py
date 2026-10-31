@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from packaging.requirements import Requirement
+from packaging.requirements import InvalidRequirement, Requirement
 
 from scripts.common.nofollow_walk import ComponentOpenError
 from scripts.orchestration.worktree_artifacts import REGENERABLE_CACHE_DIRECTORIES
@@ -485,7 +485,7 @@ def _compare_external_copy(run: CopyProofRun, worktree: Path, relative: Path, ca
         return False
 
 
-def _parse_dependency_input(filename: str, payload: bytes) -> None:
+def _parse_dependency_input(filename: str, payload: bytes, *, worktree: Path) -> None:
     """Parse dependency inputs using their format's parser; invalid input raises ValueError."""
     text = payload.decode("utf-8")
     if filename == "package-lock.json":
@@ -494,10 +494,28 @@ def _parse_dependency_input(filename: str, payload: bytes) -> None:
     elif filename in {"uv.lock", "poetry.lock"}:
         tomllib.loads(text)
     else:
-        for line in text.splitlines():
-            requirement = re.split(r"\s+#", line, maxsplit=1)[0].strip()
-            if requirement and not requirement.startswith("#"):
-                Requirement(requirement)
+        from pip._internal.exceptions import PipError
+        from pip._internal.req.constructors import parse_req_from_line
+        from pip._internal.req.req_file import get_line_parser, preprocess
+        from pip._internal.vcs.versioncontrol import is_url
+
+        parse_line = get_line_parser(None)
+        try:
+            for _, line in preprocess(text):
+                requirement, options = parse_line(line)
+                if options.requirements or options.constraints or options.editables:
+                    # An indirect input needs its own tracked, unchanged proof.
+                    raise ValueError("indirect requirement input is not proven")
+                if not requirement:
+                    continue
+                try:
+                    Requirement(requirement)
+                except InvalidRequirement:
+                    if not is_url(requirement):
+                        requirement = str(worktree / requirement)
+                parse_req_from_line(requirement, None)
+        except PipError as exc:
+            raise ValueError("invalid requirements input") from exc
 
 
 def _venv_is_rebuildable(worktree: Path, prefix: Path, tracked: set[str]) -> bool:
@@ -521,7 +539,7 @@ def _venv_is_rebuildable(worktree: Path, prefix: Path, tracked: set[str]) -> boo
                 ["cat-file", "blob", f"HEAD:{lock.as_posix()}"], cwd=worktree,
                 env=artifacts._safe_git_env(), capture_output=True, check=True, timeout=30,
             ).stdout
-            _parse_dependency_input(filename, blob)
+            _parse_dependency_input(filename, blob, worktree=worktree)
             artifacts.safe_git(
                 ["diff", "--cached", "--quiet", "HEAD", "--", lock.as_posix()], cwd=worktree,
                 env=artifacts._safe_git_env(), capture_output=True, check=True, timeout=30,
@@ -640,7 +658,7 @@ def _matches_regenerable_pattern(
                 content = artifacts._read_preserved_bytes(worktree / lock, root=worktree)
                 if content.file_type != "regular":
                     return False
-                _parse_dependency_input(lock.name, content.payload)
+                _parse_dependency_input(lock.name, content.payload, worktree=worktree)
                 return True
             except (OSError, ValueError, ComponentOpenError):
                 return False
