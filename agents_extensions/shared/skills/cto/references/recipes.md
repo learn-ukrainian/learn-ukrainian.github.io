@@ -123,6 +123,9 @@ Before writing a brief from a tracker item, read its full history with `lu-drive
 (all notes): operator amendments are recorded as notes.
 Each brief also sets the worker's follow-up cap: how many follow-up tasks it may start and in
 which owned paths (rules core P1).
+A brief's tool-block or question line says: report to claude-cto and wait for the reply as
+`full-send` describes for a coordinator question. It never says only "stop and report": a worker
+reads that as the end of its task and exits before the reply arrives.
 A brief for a Sonnet 5.5 workspace-write worker, or a Haiku 5.5 one dispatched with `--advisor opus`,
 tells it that it has an Opus advisor and may consult it at most twice per task: before committing
 to an approach and before declaring done. Claude Code has no call-cap setting, so the brief is the
