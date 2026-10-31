@@ -1372,12 +1372,18 @@ def retired_model_refusal(
         if datetime.now(UTC) >= expiry:
             return f"model {text!r} red-team exception expired at {restriction['expires_at']}"
         context = review_context or {}
-        authors = {resolve_catalog_model_id(value, catalog) for value in context.get("author_models", ())}
-        authors.discard(None)
+        author_values = context.get("author_models", ())
+        if isinstance(author_values, (str, bytes)) or author_values is None:
+            author_values = (author_values,)
+        # A missing or non-catalog author is not the restricted author. Dropping
+        # it would admit a branch that is not shown to be that author's.
+        author_gap = any(
+            resolve_catalog_model_id(value, catalog) != restriction["author_model"] for value in author_values
+        ) or bool(context.get("unknown_history"))
         if (context.get("review_mode") != restriction["review_mode"] or context.get("review_profile") != restriction["review_profile"]
                 or context.get("transport") != restriction["transport"]
                 or resolve_catalog_model_id(context.get("author_model"), catalog) != restriction["author_model"]
-                or authors - {restriction["author_model"]}
+                or author_gap
                 or context.get("requested_role") not in (None, "", restriction["role"])):
             return f"model {text!r} is restricted to red-team code review of {restriction['author_model']}-authored PRs through {restriction['transport']} (#10437)"
         return None
