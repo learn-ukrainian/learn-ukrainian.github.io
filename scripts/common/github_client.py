@@ -48,6 +48,7 @@ from typing import Any
 from urllib.parse import quote, quote_plus, urlencode, urlsplit
 
 from scripts.common import github_usage
+from scripts.github_check_rollup import bind_workflow_runs, project_check_runs
 
 CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
 CACHE_MAX_BYTES = 64 * 1024 * 1024
@@ -2053,6 +2054,19 @@ def _read_command(client, kind, action, options, positional, *, timeout, fresh):
             if checks.error:
                 return checks
             rows = checks.value["check_runs"]
+            # REST check runs carry no workflow; gh's rollup does. Bind each
+            # Actions row to its exact-head run so two same-name runs of one
+            # workflow collapse to the latest. Unproven rows stay partial.
+            runs = []
+
+            def get_run(run_id):
+                run = client.request("GET", f"{root}/actions/runs/{run_id}", timeout=timeout, fresh=fresh)
+                runs.append(run)
+                return None if run.error else run.value
+
+            bound = bind_workflow_runs(rows, value["headRefOid"], repo, get_run)
+            _merge_observation(checks, *(run for run in runs if not run.error))
+            rows = project_check_runs(bound if bound is not None else rows)
             status = _counted_pages(
                 client,
                 f"{root}/commits/{value['headRefOid']}/status?per_page=100",
@@ -2072,6 +2086,11 @@ def _read_command(client, kind, action, options, positional, *, timeout, fresh):
                     "detailsUrl": r.get("html_url"),
                     "startedAt": r.get("started_at"),
                     "completedAt": r.get("completed_at"),
+                    **{
+                        field: r[field]
+                        for field in ("appSlug", "appId", "workflowId", "workflowName")
+                        if r.get(field) is not None
+                    },
                 }
                 for r in rows
             ]
