@@ -34,10 +34,30 @@ except ModuleNotFoundError as exc:
     from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
+
 _APOSTROPHE_FOLD = str.maketrans({"’": "'", "ʼ": "'", "ʻ": "'", "＇": "'"})
 _WORD_RE = re.compile(r"[^\W\d_]+(?:'[^\W\d_]+)*", re.UNICODE)
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 class VesumAttestation(TypedDict):
     """Structured VESUM evidence suitable for the private teacher package."""
@@ -60,10 +80,10 @@ def content_tokens(value: str) -> list[str]:
 
 
 def _open_read_only(path: Path) -> SQLiteConnection:
-    resolved = path.expanduser().resolve()
+    resolved = _store_path("vesum", path, required=True)
     if not resolved.is_file():
         raise FileNotFoundError(f"VESUM database not found: {resolved}")
-    connection = _open_readonly(resolved)
+    connection = _open_readonly(_store_path('vesum', resolved, required=True))
     connection.row_factory = sqlite3.Row
     return connection
 
@@ -131,7 +151,7 @@ def _attest_with_connection(lemma: str, connection: SQLiteConnection) -> VesumAt
     }
 
 
-def attest_lemma(lemma: str, *, vesum_db: Path = DEFAULT_VESUM_DB) -> VesumAttestation:
+def attest_lemma(lemma: str, *, vesum_db: Path | None = None) -> VesumAttestation:
     """Attest one teacher lemma against VESUM, including phrase-head recovery.
 
     Lookup order is deterministic: normalized full string, the first content
@@ -139,15 +159,24 @@ def attest_lemma(lemma: str, *, vesum_db: Path = DEFAULT_VESUM_DB) -> VesumAttes
     at least three characters. A positive token match is lexical attestation
     for local recognition only, not sentence evidence.
     """
+    vesum_db = _store_path('vesum', vesum_db)
     with _open_read_only(vesum_db) as connection:
         return _attest_with_connection(lemma, connection)
 
 
-def attest_lemmas(lemmas: Iterable[str], *, vesum_db: Path = DEFAULT_VESUM_DB) -> list[VesumAttestation]:
+def attest_lemmas(lemmas: Iterable[str], *, vesum_db: Path | None = None) -> list[VesumAttestation]:
     """Attest a batch through one read-only connection in input order.
 
     The result is equivalent to calling :func:`attest_lemma` per value, but a
     package refresh avoids repeatedly opening a large shared SQLite artifact.
     """
+    vesum_db = _store_path('vesum', vesum_db)
     with _open_read_only(vesum_db) as connection:
         return [_attest_with_connection(lemma, connection) for lemma in lemmas]
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)

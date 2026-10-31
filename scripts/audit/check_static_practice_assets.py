@@ -56,6 +56,26 @@ finally:
     sys.path[:] = _import_path
     del _import_path
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 @contextmanager
 def _audit_dir_off_sys_path() -> Iterator[None]:
     """Load runtime package dependencies without the CLI directory shadowing config."""
@@ -83,7 +103,7 @@ DEFAULT_PRACTICE_DIR = Path("site/public/lexicon")
 DEFAULT_REVIEWED_SOURCES = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
 DEFAULT_SENTENCE_INVENTORY = Path("site/src/data/lexicon-sentence-inventory.json")
-DEFAULT_VESUM_DB = Path("data/vesum.db")
+
 DEFAULT_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 # Shared SSOT with generate_daily_pool via daily_cefr (A1–C2). A sibling A1/A2/B1
 # copy rejected the true-CEFR B2/C1 rows that #6728 now emits into the daily pool.
@@ -811,6 +831,8 @@ def check_assets(
     error_corrections: Path | None = None,
     run_qa_gate: bool = False,
 ) -> dict[str, Any]:
+    if vesum_db is not None:
+        vesum_db = _store_path('vesum', vesum_db)
     errors: list[str] = []
     warnings: list[str] = []
     pointer = _read_pointer(errors)
@@ -1025,6 +1047,14 @@ Related: generate_practice_deck.py; docs/practice/IMPERATIVE-PRACTICE-SPEC.md.
                 print(f"- {error}")
     return 0 if summary["ok"] else 1
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

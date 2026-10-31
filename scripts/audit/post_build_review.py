@@ -100,6 +100,26 @@ CONNECTS_TO_RE = re.compile(r"^(?P<track>[a-z0-9-]+)-(?P<sequence>\d+)-(?P<slug>
 HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 class ReviewProtocolError(RuntimeError):
     """Raised when protocol inputs cannot be resolved safely."""
 
@@ -2153,7 +2173,7 @@ def build_vocabulary_surface_candidates(
             tokenized_lines.append((path, line_number, visible, matches))
             unique_tokens.update(_candidate_match_key(match.group(0)) for match in matches)
 
-    vesum_path = main_checkout_root(repo_root) / "data" / "vesum.db"
+    vesum_path = _store_path('vesum', root=main_checkout_root(repo_root))
     vesum_status = "available"
     try:
         verified = verify_words_fn(sorted(unique_tokens), db_path=vesum_path)

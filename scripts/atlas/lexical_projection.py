@@ -40,7 +40,7 @@ except ModuleNotFoundError as exc:
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
+
 
 RECORD_TYPES = (
     "source",
@@ -78,6 +78,26 @@ EXERCISE_INSTRUCTION_RE = re.compile(
 UKRAINIAN_TOKEN_RE = re.compile(r"[А-Яа-яІіЇїЄєҐґ]+(?:[ʼ’'][А-Яа-яІіЇїЄєҐґ]+)*")
 APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'"})
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 class ProjectionError(ValueError):
     """The declared lexical source cannot safely become a projection."""
@@ -315,10 +335,11 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def load_vesum_forms(vesum_db: Path) -> frozenset[str]:
     """Load the authoritative visible VESUM forms once per build."""
+    vesum_db = _store_path("vesum", vesum_db, required=True)
     if not vesum_db.is_file():
         raise ProjectionError(f"VESUM forms database is required for attestation ingest: {vesum_db}")
     try:
-        with open_readonly(vesum_db) as connection:
+        with open_readonly(_store_path('vesum', vesum_db, required=True)) as connection:
             rows = connection.execute("SELECT word_form FROM forms").fetchall()
     except sqlite3.Error as exc:
         raise ProjectionError(f"cannot read VESUM forms from {vesum_db}: {exc}") from exc
@@ -580,10 +601,11 @@ def build_projection(
     input_jsonl: Path,
     db_path: Path,
     *,
-    vesum_db: Path = DEFAULT_VESUM_DB,
+    vesum_db: Path | None = None,
     strict: bool = False,
 ) -> BuildResult:
     """Build a fresh v2 projection and atomically replace ``db_path`` on success."""
+    vesum_db = _store_path('vesum', vesum_db)
     records = _read_jsonl(input_jsonl)
     attestation_count = sum(record.get("record_type") == "attestation" for record in records)
     vesum_forms = load_vesum_forms(vesum_db) if attestation_count else frozenset()
@@ -674,7 +696,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build the ADR-017 Atlas lexical v2 projection.")
     parser.add_argument("--input", required=True, type=Path, help="Canonical lexical source JSONL")
     parser.add_argument("--db", required=True, type=Path, help="Projection SQLite path")
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
+    parser.add_argument("--vesum-db", type=Path, default=_store_path('vesum', globals().get('DEFAULT_VESUM_DB')))
     parser.add_argument("--export", type=Path, help="Optional canonical JSONL export path")
     parser.add_argument("--rejections", type=Path, help="Optional rejected-attestation JSONL report")
     parser.add_argument(
@@ -702,6 +724,14 @@ def main() -> None:
     except ProjectionError as exc:
         raise SystemExit(f"lexical projection failed: {exc}") from exc
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     main()

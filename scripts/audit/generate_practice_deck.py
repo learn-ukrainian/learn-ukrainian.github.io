@@ -77,6 +77,26 @@ finally:
     del _import_path
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def _load_morphological_validator() -> Any:
     """Load the morphological validator without importing curriculum checks."""
     import importlib.util
@@ -98,7 +118,7 @@ check_agreement = _MORPHOLOGICAL_VALIDATOR.check_agreement
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_ATLAS_DB = Path("data/atlas.db")
-DEFAULT_SOURCES_DB = Path("data/sources.db")
+
 # Deck shards are served as literal static files from public/ (not via dynamic .json.ts
 # endpoints) so the fetch URL resolves identically in dev and prod — astro's
 # `trailingSlash: 'always'` otherwise serves a dynamic endpoint only at the trailing-slash
@@ -113,7 +133,7 @@ DEFAULT_PARONYM_PAIRS = REGISTRY_ROOT / "lexicon/paronym_pairs.yaml"
 DEFAULT_ANTONYM_PAIRS = REGISTRY_ROOT / "lexicon/antonym_pairs.yaml"
 DEFAULT_HOMONYM_PAIRS = REGISTRY_ROOT / "lexicon/homonym_pairs.yaml"
 DEFAULT_SYNONYM_VERDICTS = REGISTRY_ROOT / "lexicon/synonym_pair_verdicts.yaml"
-DEFAULT_ULIF_DB = Path("data/sources.db")
+
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
 DEFAULT_TARGET = 8500
@@ -552,7 +572,7 @@ class SqliteSourcePassages:
 
     def chunk_text(self, chunk_id: str) -> str | None:
         if chunk_id not in self._cache:
-            with open_readonly(self.db_path) as connection:
+            with open_readonly(_store_path('sources', self.db_path, required=True)) as connection:
                 row = connection.execute("SELECT text FROM textbooks WHERE chunk_id = ?", (chunk_id,)).fetchone()
             self._cache[chunk_id] = row[0] if row else None
         return self._cache[chunk_id]
@@ -3436,7 +3456,7 @@ def _imperative_connection(verifier: VesumVerifier) -> sqlite3.Connection:
         from scripts.rag.config import VESUM_DB_PATH
 
         path = verifier.db_path or VESUM_DB_PATH
-        return open_readonly(path)
+        return open_readonly(_store_path('vesum', path, required=True))
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, tags TEXT, pos TEXT)")
     if isinstance(verifier, JsonVesumVerifier):
@@ -8420,7 +8440,7 @@ def main(argv: list[str] | None = None) -> int:
         "Use hydrated Atlas/VESUM data for publication or JSON fixtures for testing.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  %(prog)s --atlas-db data/atlas.db --vesum-db data/vesum.db
+  %(prog)s --atlas-db data/atlas.db
   %(prog)s --manifest tests/fixtures/lexicon-practice-manifest.json --vesum-fixture tests/fixtures/lexicon-practice-vesum.json --out-dir batch_state/practice
 Outputs: practice-{mode}.{level}.json shards in --out-dir, including index metadata.
 Exit codes: 0 success; nonzero on invalid data, validation failures, or CLI errors.
@@ -8516,7 +8536,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     parser.add_argument(
         "--ulif-db",
         type=Path,
-        default=DEFAULT_ULIF_DB,
+        default=_store_path('sources', globals().get('DEFAULT_ULIF_DB')),
         help="sources.db holding checked ULIF synonym groups; synonym cards need it (default: data/sources.db).",
     )
     parser.add_argument(
@@ -8527,7 +8547,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     parser.add_argument(
         "--sources-db",
         type=Path,
-        default=DEFAULT_SOURCES_DB,
+        default=_store_path('sources', globals().get('DEFAULT_SOURCES_DB')),
         help=(
             "Sources SQLite (the `sources` MCP database) used to verify heritage normativeSupport/currentNormSupport and paronym "
             "glossSources passages; when missing, those modes fail closed (default: data/sources.db)."
@@ -8793,6 +8813,14 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         print(path)
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_SOURCES_DB': 'sources', 'DEFAULT_ULIF_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

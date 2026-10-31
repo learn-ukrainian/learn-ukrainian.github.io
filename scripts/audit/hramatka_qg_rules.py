@@ -208,6 +208,26 @@ _HERITAGE_SAFE = frozenset(
 )
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 @dataclass(frozen=True, slots=True)
 class AdaptedLesson:
     """Learner-facing module-dir payload derived from lesson_json."""
@@ -801,10 +821,10 @@ def _is_missing_table_error(exc: BaseException) -> bool:
 
 
 def _sources_conn():
-    db = _SOURCES_DB_OVERRIDE or (PROJECT_ROOT / "data" / "sources.db")
+    db = _SOURCES_DB_OVERRIDE or (_store_path('sources'))
     if not db.exists():
         return None
-    conn = _open_readonly(str(db))
+    conn = _open_readonly(_store_path('sources', db, required=True))
     conn.row_factory = sqlite3.Row
     return conn
 

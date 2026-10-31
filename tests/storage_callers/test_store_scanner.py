@@ -3,24 +3,24 @@
 from scripts.hygiene import lint_source_db_writable_connects as lint
 
 
-def test_diagnostic_and_logical_label_are_not_store_constructions():
+def test_diagnostic_and_logical_label_are_not_store_constructions(tmp_path):
     source = '''
 from pathlib import Path
 ROOT = Path(__file__).parent
 def check(ref, table):
     return f"{ref['rowId']} is not in sources.db", f"sqlite://data/vesum.db#{table}"
 '''
-    assert lint.classify_store_source(source, "scripts/audit/example.py") == []
+    assert lint.classify_store_source(source, str(tmp_path / "example.py")) == []
 
 
-def test_real_store_paths_and_sqlite_uris_are_still_caught():
+def test_real_store_paths_and_sqlite_uris_are_still_caught(tmp_path):
     source = '''
 from pathlib import Path
 ROOT = Path(__file__).parent
 database = ROOT / "data" / "vesum.db"
 source = f"file:{ROOT}/data/sources.db?mode=rw"
 '''
-    assert len(lint.classify_store_source(source, "scripts/example.py")) == 2
+    assert len(lint.classify_store_source(source, str(tmp_path / "example.py"))) == 2
 
 
 def test_aliased_writer_resolution_is_collection_time_access():

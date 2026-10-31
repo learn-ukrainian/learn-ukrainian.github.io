@@ -36,6 +36,26 @@ logger = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def _resolve_shared_data_file(*parts: str) -> Path:
     """Resolve repo-shared data files from a worktree when needed.
 
@@ -59,7 +79,7 @@ def _resolve_shared_data_file(*parts: str) -> Path:
     return candidate
 
 
-VESUM_DB = _resolve_shared_data_file("data", "vesum.db")
+
 
 # Ukrainian POS labels
 _POS_LABELS = {
@@ -104,9 +124,9 @@ def vesum_enrich_entry(entry: dict) -> dict:
 
     found_in_vesum = False
 
-    if VESUM_DB.exists():
+    if _store_path('vesum', globals().get('VESUM_DB')).exists():
         try:
-            db = _open_readonly(str(VESUM_DB))
+            db = _open_readonly(_store_path('vesum', _store_path('vesum', globals().get('VESUM_DB')), required=True))
             try:
                 row = db.execute(
                     "SELECT pos, tags FROM forms WHERE word_form = ? LIMIT 1",
@@ -270,3 +290,10 @@ def build_slovnyk_markdown(
 def _esc(s: str) -> str:
     """Escape quotes and apostrophes for JSX string props."""
     return s.replace("\\", "\\\\").replace('"', '\\"').replace("'", "&#39;")
+
+
+def __getattr__(name):
+    stores = {'VESUM_DB': 'vesum'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)

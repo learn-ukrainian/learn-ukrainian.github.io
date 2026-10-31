@@ -225,111 +225,6 @@
   },
   "entries": [
     {
-      "path": "scripts/analytics/vocab_progression.py",
-      "kind": "store_path",
-      "scope": "ProjectPaths.from_root",
-      "fingerprint": "f0bc6c9053548589a382907fa1112a3fb61c6e26b72876878524d9085997763f",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/api/admin_router.py",
-      "kind": "store_path",
-      "scope": "disk_usage",
-      "fingerprint": "64c2ffd07edd6e00999e84a2a450885d75761e3bb1702d69b05ff2ac570ab36d",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/api/monitor_context.py",
-      "kind": "store_path",
-      "scope": "_roots",
-      "fingerprint": "c17c9b6f8706c15728c0f34bb244f511bf567d146b8d47319a1a852c4d047423",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/atlas/lexical_projection.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/atlas/teacher_vesum_attest.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/atlas_source_census.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/check_plan.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/check_static_practice_assets.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/generate_practice_deck.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/generate_practice_deck.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
-      "occurrence": 1
-    },
-    {
-      "path": "scripts/audit/generate_sentence_inventory.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/generate_sentence_inventory.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/generate_tatoeba_cloze_candidates.py",
-      "kind": "store_path",
-      "scope": "main",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/hramatka_qg_rules.py",
-      "kind": "store_path",
-      "scope": "_sources_conn",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/ingest_ua_gec_gold.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/audit/lint_opsec_leaks.py",
       "kind": "store_path",
       "scope": "<module>",
@@ -344,143 +239,10 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/audit/plan_references_audit.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/post_build_review.py",
-      "kind": "store_path",
-      "scope": "build_vocabulary_surface_candidates",
-      "fingerprint": "e77d4300163e364ecdba98d6683695127826a78840c4d12814239fbb861b5260",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/practice_quality_gate.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "c79766413f2ee30fe62827a4edbc2e71033efa7d411f7ed5b5d8d30a80e7cf3c",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/practice_quality_gate.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "39c00d4a4e88f75d01f59068531790cfa5f800c0f6cf4df64a3e897cbf3a1f28",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/resolve_fixture_rights.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "2982faef50ddfdde8f1fe2308631493aa0783476381611cc3169e468f5860308",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/resolve_fixture_rights.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "270605899d22cc1c3d228ff2bd6ec7c7e199584cc2c70addbfc657e76c2362e9",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/russianism_judge.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/validate_atlas_conformance.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/validate_atlas_conformance.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/verbatim_overlap_gate.py",
-      "kind": "store_path",
-      "scope": "build_argparser",
-      "fingerprint": "db0c155a610529f1a5102e5c1a6a39fee997fa8a8ee168bfd8432aa66c490589",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/benchmarks/generate_synthetic_atlas.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/alignment_manifest.py",
-      "kind": "store_path",
-      "scope": "_static_default_attr",
-      "fingerprint": "f060404e3b6295de5121cd618c1ac52954a982943047b5cf5a78df1aff84ba97",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/alignment_manifest.py",
-      "kind": "store_path",
-      "scope": "_resolve_attr",
-      "fingerprint": "e3efb2908317388d3b80c8eb8d03fcac1fcf73bd69daff8fe87d967c8cff452a",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/enrich.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a024fa6cadfff8a7a04b49376b334b546438a49cab8482bb775112b6f883b5a1",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/build/enrich.py",
       "kind": "store_path",
       "scope": "_resolve_textbook_url",
       "fingerprint": "b9db7dec0f665e60150130e78767e7931d6bcedecffd6db1eea3f11869829398",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/module_memory.py",
-      "kind": "store_path",
-      "scope": "compute_sources_manifest",
-      "fingerprint": "eeea48d7b0e163b4db6ff9da389ace72c9eb6301e2e9e7c192b4406b0f516897",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/module_memory.py",
-      "kind": "store_path",
-      "scope": "compute_sources_manifest",
-      "fingerprint": "bb89f38ede0322af7eeca0d0dd06cf764d6a7390f58fdc7b3fd8932a4799d2b3",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/phases/vocab_coverage.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/textbook_refs.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
       "occurrence": 0
     },
     {
@@ -495,41 +257,6 @@
       "kind": "store_path",
       "scope": "_provision_data_symlinks",
       "fingerprint": "349066cc2e16a5564d1563d427b3ba0a4877334bac8cf43269ec32586e209390",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/vocab_gen.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "d02b6a840b357ca536816d2ceae0a760039458d5ab8bf17a331ea39c53f22b48",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/curriculum/evidence/sources.py",
-      "kind": "store_path",
-      "scope": "_sources_path",
-      "fingerprint": "2982faef50ddfdde8f1fe2308631493aa0783476381611cc3169e468f5860308",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/curriculum/evidence/sources.py",
-      "kind": "store_path",
-      "scope": "_sources_path",
-      "fingerprint": "16d935599bb3107975d6eacba35d82c4b4152c99c43cde9a1f10eb7096f42415",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/etymology/build_data_manifest.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/etymology/build_vesum_vocab_lemmas.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
       "occurrence": 0
     },
     {
@@ -572,13 +299,6 @@
       "kind": "store_path",
       "scope": "<module>",
       "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/ingest/esum_ingest.py",
-      "kind": "store_path",
-      "scope": "_vesum_db_path",
-      "fingerprint": "3fde61d674c18ff41a4821a7181da8d4df26f19c5c93b978d5cf970b758f6835",
       "occurrence": 0
     },
     {
@@ -1975,27 +1695,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/rag/benchmark_embeddings.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/rag/config.py",
-      "kind": "store_path",
-      "scope": "_resolve_vesum_db_path",
-      "fingerprint": "8c71de487c9bddcece80f3685b19244792ce3f045d7452e879570bf2fdb94317",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/rag/config.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "606b1566d5d2d0e5ae2e527dc524ebdc8bf6d38f814247a93e8569fa4e104658",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/rag/migrate_add_literary_source_url.py",
       "kind": "store_path",
       "scope": "<module>",
@@ -2024,27 +1723,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/readings/clean_text_resolver.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/readings/generate_readings.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/readings/textbook_curation.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/storage/topology.py",
       "kind": "store_path",
       "scope": "resolve_active_sources_db",
@@ -2064,20 +1742,6 @@
       "scope": "resolve_active_sources_db",
       "fingerprint": "8f0244e912ff4dfe197396d901337a5f86c0474492531963c833f4553225e693",
       "occurrence": 1
-    },
-    {
-      "path": "scripts/tools/build_pidruchnyk_mapping.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/vocab/extract_vocab_baseline.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 0
     },
     {
       "path": "scripts/wiki/build_sources_db.py",

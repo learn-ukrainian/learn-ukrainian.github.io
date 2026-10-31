@@ -35,7 +35,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from scripts.rag.config import VESUM_DB_PATH as DEFAULT_VESUM_DB_PATH
+from scripts.rag import config as rag_config
 from scripts.verification import vesum
 
 from .config import BATCH_STATE_DIR, PROJECT_ROOT
@@ -55,7 +55,15 @@ SUPPORT_DIR = Path(
 BAKER_STATE_PATH = Path(
     os.environ.get("HRAMATKA_BAKER_STATE_PATH", str(HRAMATKA_STATE_DIR / "baker-state.json"))
 )
-VESUM_DB_PATH = Path(os.environ.get("HRAMATKA_VESUM_DB_PATH", str(DEFAULT_VESUM_DB_PATH)))
+def _vesum_path() -> Path:
+    explicit = globals().get("VESUM_DB_PATH", os.environ.get("HRAMATKA_VESUM_DB_PATH"))
+    return vesum._resolve_vesum_db_path(explicit) if explicit is not None else rag_config.VESUM_DB_PATH
+
+
+def __getattr__(name: str) -> Path:
+    if name in {"VESUM_DB_PATH", "DEFAULT_VESUM_DB_PATH"}:
+        return _vesum_path()
+    raise AttributeError(name)
 SCHEMA_PATHS = (
     PROJECT_ROOT / "packages" / "activity-kit" / "src" / "lu.activity.v1.schema.json",
     PROJECT_ROOT / "packages" / "activity-kit" / "src" / "lu.lesson.v1.schema.json",
@@ -286,7 +294,7 @@ def lesson_support(lesson_id: UUID, x_hramatka_owner: str = Header(...)) -> dict
 def verify_linguistics(payload: VerifyFormsRequest) -> dict[str, Any]:
     """Batch-attest up to 200 Ukrainian forms using the loaded VESUM dictionary."""
     try:
-        attestations = vesum.verify_words(payload.forms, pos_filter=payload.pos, db_path=VESUM_DB_PATH)
+        attestations = vesum.verify_words(payload.forms, pos_filter=payload.pos, db_path=_vesum_path())
     except (FileNotFoundError, OSError, sqlite3.Error) as exc:
         raise HTTPException(status_code=503, detail="VESUM dictionary unavailable") from exc
     results = [
@@ -365,7 +373,7 @@ def _check_schemas() -> tuple[bool, str]:
 
 def _check_vesum() -> tuple[bool, str]:
     try:
-        conn = vesum.get_vesum_conn(VESUM_DB_PATH)
+        conn = vesum.get_vesum_conn(_vesum_path())
         count = int(conn.execute("SELECT COUNT(*) FROM forms").fetchone()[0])
     except (FileNotFoundError, OSError, sqlite3.Error) as exc:
         logger.warning("vesum check failed: %s", exc)

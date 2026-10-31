@@ -44,6 +44,9 @@ except ModuleNotFoundError as exc:
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
+
+
+
 if __name__ == "__main__":
     if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
         sys.path.pop(0)
@@ -69,7 +72,7 @@ DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.js
 DEFAULT_TEXTBOOK_TXT_ROOT = PROJECT_ROOT / "docs" / "references" / "private" / "textbooks-txt"
 DEFAULT_TEXTBOOK_PDF_ROOT = TEXTBOOK_PDFS_DIR
 DEFAULT_TEXTBOOK_JSONL_ROOT = PROJECT_ROOT / "data" / "textbook_chunks"
-DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+
 DEFAULT_OHOIKO_PRIVATE_ROOT = PROJECT_ROOT / "docs" / "references" / "private" / "ohoiko-june-a1-book" / "notes"
 DEFAULT_OHOIKO_INVENTORIES = (REGISTRY_ROOT / "lexicon" / "source-inventory" / "ohoiko-abetka-keywords.yaml",)
 DEFAULT_TEXTBOOK_INVENTORIES = (
@@ -106,6 +109,26 @@ TEXTBOOK_GRADE_RE = re.compile(
 )
 LEADING_GRADE_RE = re.compile(r"^(?P<grade>0?[1-9]|1[01])[-_]")
 
+
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
 
 @dataclass
 class SurfaceStats:
@@ -172,11 +195,13 @@ def build_atlas_source_census(
     ohoiko_private_roots: Sequence[Path] = (DEFAULT_OHOIKO_PRIVATE_ROOT,),
     textbook_txt_root: Path | None = DEFAULT_TEXTBOOK_TXT_ROOT,
     textbook_pdf_root: Path | None = DEFAULT_TEXTBOOK_PDF_ROOT,
-    sources_db_path: Path | None = DEFAULT_SOURCES_DB,
+    sources_db_path: Path | None | str = "default",
     textbook_jsonl_root: Path | None = None,
     include_pdfs: bool = False,
 ) -> AtlasSourceCensus:
     """Scan configured source lanes and return aggregate planning counts."""
+    if sources_db_path == 'default':
+        sources_db_path = _store_path('sources', root=root)
     root = root.resolve()
     atlas = load_atlas_state(_resolve_optional_path(manifest_path, root))
     census = AtlasSourceCensus(
@@ -397,7 +422,7 @@ def scan_sources_db_textbooks(root: Path, census: AtlasSourceCensus, db_path: Pa
     source_files: set[str] = set()
     char_count = 0
     try:
-        with _open_readonly(source_db) as conn:
+        with _open_readonly(_store_path('sources', source_db, required=True)) as conn:
             cursor = conn.execute(
                 "select coalesce(nullif(grade, ''), 'unknown'), text, source_file, char_count from textbooks"
             )
@@ -949,7 +974,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--sources-db",
         type=Path,
-        default=DEFAULT_SOURCES_DB,
+        default=_store_path('sources', globals().get('DEFAULT_SOURCES_DB')),
         help="Local sources.db path for the SQLite textbook corpus.",
     )
     parser.add_argument("--skip-sources-db", action="store_true", help="Do not scan SQLite textbook corpus.")
@@ -1005,6 +1030,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(format_markdown_report(census))
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_SOURCES_DB': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())

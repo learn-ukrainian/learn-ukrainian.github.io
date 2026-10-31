@@ -36,7 +36,7 @@ except ModuleNotFoundError as exc:
     from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "registry" / "pidruchnyk_urls.yaml"
 BASE_URL = "https://pidruchnyk.com.ua"
 REQUEST_DELAY_S = 0.5
@@ -81,6 +81,26 @@ AUTHOR_NAMES = {
 }
 
 
+
+
+def _store_path(store, path=None, *, root=None, required=False):
+    """Resolve each read at use time; compatibility defaults never name a local store."""
+    import sys
+    from pathlib import Path
+
+    repository = Path(__file__).resolve().parents[2]
+    if str(repository) not in sys.path:
+        sys.path.append(str(repository))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+
+    result = resolve_store(store, root or repository,
+                           binding=None if path is None else StoreBinding(store, Path(path)))
+    if isinstance(result, StoreRefusal):
+        if required:
+            raise FileNotFoundError(result.reason) from None
+        return unavailable_store_path(store)
+    return result.path
+
 def source_file_author(source_file: str) -> str:
     """Resolve a Ukrainian surname from a source_file."""
     for key, label in AUTHOR_NAMES.items():
@@ -123,7 +143,7 @@ def source_file_category(source_file: str) -> str | None:
 
 def load_source_files(db_path: Path) -> list[str]:
     """Load the distinct textbook source_file IDs from SQLite."""
-    conn = _open_readonly(str(db_path))
+    conn = _open_readonly(_store_path('sources', db_path, required=True))
     try:
         rows = conn.execute(
             "SELECT DISTINCT source_file FROM textbooks ORDER BY source_file"
@@ -257,7 +277,7 @@ def build_mapping(db_path: Path, output_path: Path, force: bool) -> int:
 def main() -> int:
     """CLI entrypoint."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db", type=Path, default=DEFAULT_DB_PATH)
+    parser.add_argument("--db", type=Path, default=_store_path('sources', globals().get('DEFAULT_DB_PATH')))
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT_PATH)
     parser.add_argument("--force", action="store_true", help="Refresh all entries")
     args = parser.parse_args()
@@ -266,6 +286,14 @@ def main() -> int:
     print(f"Wrote {count} pidruchnyk URLs to {args.output}")
     return 0
 
+
+
+
+def __getattr__(name):
+    stores = {'DEFAULT_DB_PATH': 'sources'}
+    if name in stores:
+        return _store_path(stores[name])
+    raise AttributeError(name)
 
 if __name__ == "__main__":
     raise SystemExit(main())
