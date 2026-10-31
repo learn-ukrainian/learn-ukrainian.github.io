@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "a1-introduction-to-ukrainian-m-r1"
+  attempt_id: "agy-m-r1"
+  manifest_sha256: "bec0f2ee31f32ea07b1bf0420e1afd187db7c54a430361cfe1c1dda327c249f9"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gemini-3.8-flash-high"
+  harness: "agy"
+  family: "gemini"
+  prompt_sha256: "e95982eae9384fc5265a89c2c58ba0863fd9edc490dc3fac86b6417e0bb353d4"
+checks:
+  closing_shape: clean # Shape (a) dedicated recap lesson (Lesson 2 "my-study-plan") matches arc est_lessons: 2
+  title_describes_job: clean # Titles/subtitles match jobs; all prose field sentences strictly unilingual English or Ukrainian
+  title_quantities: clean # No inventory quantities in titles/subtitles; matches scope sidecar (0 letters, 0 grammar, 0 core vocab)
+  quoted_forms: clean # inspect_word "українська" (receipt: rr-517db48030c24338fc26), "мова" (receipt: rr-66b6cb44aacb8aaad6c9), "мій" (receipt: rr-da4b3e71a9bba5f227c9), "план" (receipt: rr-7859de772953c1cbbc4d), "навчання" (receipt: rr-ee2154ee9febf9396500); verify_stress "украї́нська" (receipt: rr-02fa9f76ae30e588a971), "мо́ва" (receipt: rr-8996d443806d3602c6b2), "навча́ння" (receipt: rr-e6c632cfd02c791109b3)
+  sequencing: clean # Zero prior knowledge required; reachable; no chunks analyzed; alphabet overview only; R-27 theory-to-practice progression
+  sizing: clean # Sized for ~45 min total learner work across 2 lessons (overview + practical study plan workshop); neither crams nor drags
+  inventory: clean # Exactly 0 core, 0 incidental, 0 recycled vocabulary, 0 grammar, 0 letters; conforms to band_key: a1-orientation (r3.1, r4, r6)
+  activities: clean # R-19 models; workbook distinct types: match-up (0.5), odd-one-out (0.5); operations rotate; v1_totals: no_mapped_v1_module; recap task "personal-study-routine" meets #10105
+  evidence_fit: clean # search_text T-001 (uni-ukrmova-prof-haluzynska-2006_s0007, receipt: rr-a7aa41200a6c345261f2), T-002 (uni-ukrmova-prof-haluzynska-2006_s0009, receipt: rr-5609157060d74121f378), T-003 (uni-ukrmova-sociolinguistics-masenko-2010_s0030, receipt: rr-861567fb095a0d8c79bb), T-004, T-005, X-001 (5-klas-ukrmova-zabolotnyi-2023_s0062, receipt: rr-a295fa5450f3a479efaf)
+  standard_and_ulp: clean # Position 1 standard_line_refs: []; band_key: a1-orientation; no early items; complies with Standard floor and ULP schedule
+findings: []

@@ -1,0 +1,32 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 0,
+    "notes_count": 0,
+    "standard_count": 0,
+    "texts_count": 2,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 1
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml",
+    "sha256": "1241ca86545fd578d3a17c90e8a4dd683ba1843ec4dfccfa38433cd28a835ae8"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml.lock",
+    "sha256": "7da946b96123c09aaedf8de79296e82dfa438bbeb7b2ecef489c1ec7d536fdea"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "checkpoint-first-contact",
+  "status": "ok",
+  "strict": true,
+  "warnings": []
+}

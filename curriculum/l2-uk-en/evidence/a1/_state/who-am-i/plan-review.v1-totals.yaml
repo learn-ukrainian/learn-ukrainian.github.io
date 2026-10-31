@@ -1,0 +1,65 @@
+level: a1
+slug: who-am-i
+totals:
+  all:
+    activities:
+      by_type:
+        fill-in: 3
+        group-sort: 1
+        match-up: 2
+        quiz: 3
+        translate: 1
+      total: 10
+    response_opportunities:
+      by_type:
+        fill-in: 17
+        group-sort: 6
+        match-up: 13
+        quiz: 14
+        translate: 6
+      total: 56
+    uncounted_activities:
+      by_type: {}
+      total: 0
+  inline:
+    activities:
+      by_type:
+        fill-in: 1
+        match-up: 1
+        quiz: 2
+      total: 4
+    response_opportunities:
+      by_type:
+        fill-in: 5
+        match-up: 5
+        quiz: 8
+      total: 18
+    uncounted_activities:
+      by_type: {}
+      total: 0
+  workbook:
+    activities:
+      by_type:
+        fill-in: 2
+        group-sort: 1
+        match-up: 1
+        quiz: 1
+        translate: 1
+      total: 6
+    response_opportunities:
+      by_type:
+        fill-in: 12
+        group-sort: 6
+        match-up: 8
+        quiz: 6
+        translate: 6
+      total: 38
+    uncounted_activities:
+      by_type: {}
+      total: 0
+v1_module:
+  path: curriculum/l2-uk-en/a1-v1/who-am-i/activities.yaml
+  sha256: 81a98293a69d1fc735000e687f462022d0e171ffe76894e8a6f498f9272b835a
+  shape: inline/workbook keys
+  status: present
+v1_totals_schema: 1

@@ -1,0 +1,667 @@
+plan_schema: 2
+module: reading-ukrainian
+level: a1
+sequence: 5
+slug: reading-ukrainian
+version: '10.0'
+title: Алфавіт
+subtitle: Useful labels, complete letter acquisition and handwritten recognition
+focus: Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations
+  of taught letters Adult or teen situations retain English support. Private-book wording is not teaching
+  material. Unresolved formula ids remain withheld from teaching and scoring.
+objectives:
+- Acquire the remaining seven letters and recognise the joined digraph sounds.
+- Read useful labels and distinguish the completed consonant pairs.
+- Use alphabet order, letter names, printed and handwritten forms, and supported capitalisation.
+connects_to:
+- first-conversations
+prerequisites:
+- my-family
+register: neutral
+changelog:
+- '10.0 (2026-10-31): Independently authored for #8425 steps 1-4 under the approved r6 arc. Plans only;
+  no lesson builds.'
+arc_ref:
+  level: a1
+  position: 5
+evidence_ref:
+  path: curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: last-consonants
+  title: прапор
+  kind: teach
+  job: Read useful culture labels with the remaining seven letters and distinguish the completed voice
+    pairs.
+  rationale: The full alphabet was an overview at position 2. This lesson now acquires its remaining letters
+    through adult museum and community-event labels; pair work is sound practice, not a phonetic taxonomy
+    test. English explains the task and the source-grounded model. Spoken rehearsal precedes supported
+    print. New words are chosen for this adult purpose rather than to fill a vocabulary quota; no activity
+    prompt gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id001
+      - Ґ
+      - Ж
+      - Ч
+      - Ш
+      - Щ
+      - Ц
+      - Ф
+      sounds: []
+    grammar:
+    - id: G-a1-022
+      point: The two g-type consonants and the newly completed hushing voice pairs have distinct source-modelled
+        pronunciations.
+      evidence:
+      - T-401
+      - T-402
+    vocabulary:
+      core:
+      - lemma: вишиванка
+        evidence: W-188
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: герб
+        evidence: W-189
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: прапор
+        evidence: W-194
+        forms:
+        - noun:inanim:m:v_naz
+      incidental: []
+      recycled:
+      - W-205
+      - W-195
+      - W-196
+  steps:
+  - id: s1
+    kind: teach
+    teach: Connect all seven remaining letter shapes to teacher-modelled sounds, then decode the three
+      source-verified culture labels. Contrast Ґ/К, Ж/Ш, ДЖ/Ч and ДЗ/Ц from T-403, without claiming that
+      a two-letter joined sound is an additional alphabet letter. The teacher models Ґ, Ж, Ч, Ш, Щ, Ц,
+      Ф before the learner repeats each sound and connects it to its printed capital and small form. The
+      collected whole video is additional listening exposure, not a verified recording of each target.
+    introduces:
+      letters: *id001
+      grammar: &id002
+      - G-a1-022
+      vocabulary:
+      - W-188
+      - W-189
+      - W-194
+    uses:
+      grammar: []
+      vocabulary:
+      - W-205
+      - W-195
+      - W-196
+    evidence: &id003
+    - T-401
+    - T-402
+    - T-403
+    - V-203
+    - V-401
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id002
+      vocabulary:
+      - W-188
+      - W-189
+      - W-194
+      - W-205
+      - W-195
+      - W-196
+    evidence: *id003
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: image-to-letter
+    placement: inline
+    focus: Recognise Ґ, Ж, Ч, Ш, Щ, Ц, Ф and their small forms in useful museum-label print after hearing
+      the teacher models. Distinguish the completed sound pairs orally; glyph choice options contain acquired
+      letters only.
+    targets:
+    - W-188
+    - W-189
+    - W-194
+    learner_reads: []
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: Choose the culture-label word that matches a museum or community-event image. Use the other
+      acquired culture labels as distractors, shuffle choices and explain each mismatch in English. Do
+      not test cultural history.
+    targets:
+    - W-188
+    - W-189
+    - W-194
+    - W-205
+    - W-195
+    - W-196
+    learner_reads: []
+    options:
+    - вишиванка
+    - герб
+    - прапор
+    - родина
+    - Канада
+    - мова
+  videos:
+  - evidence: V-203
+    use: 'Lesson 1 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  - evidence: V-401
+    use: 'Lesson 1 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 2
+  slug: hushing-letters
+  title: писанка
+  kind: teach
+  job: Read and say short culture labels while keeping the last hushing letter distinct.
+  rationale: Newly decodable, meaningful labels give hushing practice a purpose. The lesson recycles the
+    previous labels instead of adding a disconnected alphabet word list. English explains the task and
+    the source-grounded model. Spoken rehearsal precedes supported print. New words are chosen for this
+    adult purpose rather than to fill a vocabulary quota; no activity prompt gives its answer, and choice
+    order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id004 []
+      sounds: []
+    grammar:
+    - id: G-a1-023
+      point: The last hushing letter represents two consonant sounds; it is distinguished from the other
+        hushing letters in acquired print.
+      evidence:
+      - T-402
+      - T-403
+    vocabulary:
+      core:
+      - lemma: писанка
+        evidence: W-193
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: калина
+        evidence: W-191
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: лелека
+        evidence: W-192
+        forms:
+        - noun:anim:f:v_naz
+      incidental: []
+      recycled:
+      - W-188
+      - W-189
+      - W-194
+  steps:
+  - id: s1
+    kind: teach
+    teach: Use T-402 to distinguish Щ from Ш and Ч in acquired print and in teacher-modelled sound. Decode
+      the Easter-egg, viburnum and stork labels from their word records, and select a label for an adult
+      event display. Use dictionary meanings without extra cultural claims.
+    introduces:
+      letters: *id004
+      grammar: &id005
+      - G-a1-023
+      vocabulary:
+      - W-193
+      - W-191
+      - W-192
+    uses:
+      grammar: []
+      vocabulary:
+      - W-188
+      - W-189
+      - W-194
+    evidence: &id006
+    - T-402
+    - T-403
+    - V-203
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id005
+      vocabulary:
+      - W-193
+      - W-191
+      - W-192
+      - W-188
+      - W-189
+      - W-194
+    evidence: *id006
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Observe the different acquired hushing-letter shapes and hear the teacher model their sounds,
+      then read the acquired display labels aloud. The sound comparison uses T-402 rather than guessed
+      phonetic spellings.
+    targets:
+    - W-193
+    - W-191
+    - W-192
+    learner_reads: []
+  - id: a2
+    type: anagram
+    placement: workbook
+    focus: Reconstruct acquired display-label words from their letters, using a contextual picture or
+      definition that does not name the answer. Check the result against the sourced spelling, then use
+      it as a label.
+    targets:
+    - W-193
+    - W-191
+    - W-192
+    - W-188
+    - W-189
+    - W-194
+    learner_reads: []
+  videos:
+  - evidence: V-203
+    use: 'Lesson 2 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 3
+  slug: joined-sounds
+  title: дзеркало
+  kind: teach
+  job: Recognise joined digraph sounds while reading a doorbell or mirror label.
+  rationale: Two-letter spellings are encountered as joined sounds in their sourced contexts; the lesson
+    does not generalise to a prefix boundary. The two new useful labels anchor the contrast. English explains
+    the task and the source-grounded model. Spoken rehearsal precedes supported print. New words are chosen
+    for this adult purpose rather than to fill a vocabulary quota; no activity prompt gives its answer,
+    and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id007 []
+      sounds: []
+    grammar:
+    - id: G-a1-024
+      point: The two digraphs each represent a joined consonant sound in the cited source words; their
+        voiced and voiceless families are rehearsed.
+      evidence:
+      - T-402
+      - T-403
+    vocabulary:
+      core:
+      - lemma: дзвінок
+        evidence: W-217
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: дзеркало
+        evidence: W-218
+        forms:
+        - noun:inanim:n:v_naz
+      - lemma: ґудзик
+        evidence: W-216
+        forms:
+        - noun:inanim:m:v_naz
+      incidental: []
+      recycled:
+      - W-188
+      - W-194
+      - W-193
+  steps:
+  - id: s1
+    kind: teach
+    teach: The teacher models the joined digraphs in the exact source words in T-402 and T-403, then rehearses
+      the bell, mirror and button labels from the word store. Explain that the alphabet still has 33 letters,
+      and that a prefix boundary can make the two letters separate sounds; no morphology system is taught.
+    introduces:
+      letters: *id007
+      grammar: &id008
+      - G-a1-024
+      vocabulary:
+      - W-217
+      - W-218
+      - W-216
+    uses:
+      grammar: []
+      vocabulary:
+      - W-188
+      - W-194
+      - W-193
+    evidence: &id009
+    - T-402
+    - T-403
+    - V-203
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id008
+      vocabulary:
+      - W-217
+      - W-218
+      - W-216
+      - W-188
+      - W-194
+      - W-193
+    evidence: *id009
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: See the source digraph spellings and hear the teacher model their joined sounds. Say the acquired
+      bell and mirror labels, then locate the digraph in their print. Teacher-only source examples are
+      not scored vocabulary.
+    targets:
+    - W-217
+    - W-218
+    - W-216
+    learner_reads: []
+  - id: a2
+    type: match-up
+    placement: workbook
+    focus: Pair the acquired doorbell, mirror and button words with useful object labels or English meanings,
+      then read the selected label aloud. Every form side binds its record and each pair has a sourced
+      reason.
+    targets:
+    - W-217
+    - W-218
+    - W-216
+    - W-188
+    - W-194
+    - W-193
+    learner_reads: []
+  videos:
+  - evidence: V-203
+    use: 'Lesson 3 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 4
+  slug: names-labels-and-alphabet
+  title: Алфавіт
+  kind: teach
+  job: Use alphabet order and letter names to locate a name, recognise handwriting and write a supported
+    label.
+  rationale: Letter names serve lookup and spelling. The printed-to-handwritten comparison serves reading,
+    with heavy handwriting deferred. Proper names and derived words are compared in the exact r6 examples
+    without teaching adjective agreement. English explains the task and the source-grounded model. Spoken
+    rehearsal precedes supported print. New words are chosen for this adult purpose rather than to fill
+    a vocabulary quota; no activity prompt gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id010 []
+      sounds: []
+    grammar:
+    - id: G-a1-025
+      point: The alphabet has a fixed order and letter names; printed and handwritten capitals and small
+        letters are recognised, with source-grounded capitalisation of names.
+      evidence:
+      - T-401
+      - T-404
+    vocabulary:
+      core:
+      - lemma: Україна
+        evidence: W-183
+        forms:
+        - noun:inanim:f:v_naz:prop:geo
+      - lemma: Київ
+        evidence: W-184
+        forms:
+        - noun:inanim:m:v_naz:prop:geo
+      - lemma: українець
+        evidence: W-198
+        forms:
+        - noun:anim:m:v_naz
+      - lemma: українка
+        evidence: W-199
+        forms:
+        - noun:anim:f:v_naz
+      - lemma: київський
+        evidence: W-310
+        forms:
+        - adj:m:v_naz
+      - lemma: український
+        evidence: W-311
+        forms:
+        - adj:m:v_naz:compb
+      incidental: []
+      recycled:
+      - W-091
+      - W-093
+      - W-188
+      - W-194
+      - W-193
+  steps:
+  - id: s1
+    kind: teach
+    teach: Name acquired letters and locate words in alphabet order using T-401. Use T-404 for proper-name
+      capitals and T-405 for the attested derived-adjective contrast. Compare the country, its person
+      word, the capital city and its derived adjective using their sourced word records. Recognise printed/handwritten
+      capitals and small letters in the whole V-401. Copy a chosen own or fictional name and surname with
+      a complete alphabet reference; do not require unsourced inflections or a new surname formula.
+    introduces:
+      letters: *id010
+      grammar: &id011
+      - G-a1-025
+      vocabulary:
+      - W-183
+      - W-184
+      - W-198
+      - W-199
+      - W-310
+      - W-311
+    uses:
+      grammar: []
+      vocabulary:
+      - W-091
+      - W-093
+      - W-188
+      - W-194
+      - W-193
+    evidence: &id012
+    - T-401
+    - T-404
+    - T-405
+    - S-401
+    - S-402
+    - S-403
+    - V-401
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id011
+      vocabulary:
+      - W-183
+      - W-184
+      - W-198
+      - W-199
+      - W-310
+      - W-311
+      - W-091
+      - W-093
+      - W-188
+      - W-194
+      - W-193
+    evidence: *id012
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Compare printed and handwritten forms in the complete visible alphabet video, hear the letter
+      names, then match a selected sourced name to its printed badge. Use the same content in two scripts
+      rather than a typing or handwriting-speed test.
+    targets:
+    - W-183
+    - W-184
+    - W-198
+    - W-199
+    - W-310
+    - W-311
+    learner_reads: []
+  - id: a2
+    type: order
+    placement: workbook
+    focus: Put a small set of acquired labels in alphabet order for a directory. Explain the first differing
+      letter and verify the order using the alphabet reference. Then practise an initial capital in a
+      supported name and lower case in the derived adjective.
+    targets:
+    - W-183
+    - W-184
+    - W-198
+    - W-199
+    - W-310
+    - W-311
+    - W-091
+    - W-093
+    - W-188
+    learner_reads: []
+  videos:
+  - evidence: V-401
+    use: 'Lesson 4 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 5
+  slug: my-useful-reading-route
+  title: Алфавіт
+  kind: recap
+  job: Read useful labels and prepare a supported name entry for an adult directory.
+  rationale: Use acquired language to accomplish a chosen adult purpose. The learner makes meaningful
+    choices, then checks the result against the stated criteria. This task replaces a second exercise
+    set; it introduces nothing.
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled:
+      - W-188
+      - W-189
+      - W-194
+      - W-193
+      - W-191
+      - W-192
+      - W-217
+      - W-218
+      - W-216
+      - W-183
+      - W-184
+      - W-198
+      - W-199
+      - W-310
+      - W-311
+      - W-091
+      - W-093
+  steps:
+  - id: s1
+    kind: recap
+    uses:
+      grammar:
+      - G-a1-022
+      - G-a1-023
+      - G-a1-024
+      - G-a1-025
+      vocabulary:
+      - W-188
+      - W-189
+      - W-194
+      - W-193
+      - W-191
+      - W-192
+      - W-217
+      - W-218
+      - W-216
+      - W-183
+      - W-184
+      - W-198
+      - W-199
+      - W-310
+      - W-311
+      - W-091
+      - W-093
+    evidence:
+    - T-401
+    - T-402
+    - T-404
+    - T-405
+    - V-401
+    practice: []
+    needs: []
+    task:
+      id: my-useful-reading-route-task
+      action: personalize
+      context_en: You are preparing name badges and labels for a community event. Choose a sourced persona
+        or your own name with the alphabet reference available.
+      instruction_en: Choose useful labels, read them to a partner and place them next to the intended
+        objects. Find a chosen name in an alphabetised mini-directory, match its printed and handwritten
+        versions, and write the supported name and surname for a badge. Use the acquired proper-name and
+        derived-word examples to check initial capitals. Explain which label you chose for your event.
+      response_mode: spoken_or_written
+      success_criteria_en:
+      - A partner can identify the selected objects from the labels.
+      - The chosen name can be found by alphabet order and spelled with letter names.
+      - The printed and handwritten entries identify the same person.
+      - The supported name and surname keep their capitals.
+      - The source-grounded proper-name and derived-word distinction is applied.
+      learner_reads:
+      - ref: T-405
+        words:
+        - київський
+      - ref: T-404
+        words:
+        - Україна
+  consolidation: []
+  activities: []
+  videos:
+  - evidence: V-401
+    use: 'Lesson 5 s1: revisit the collected whole visible video as familiar listening before the practical
+      task. No new inventory is acquired or tested from it.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []

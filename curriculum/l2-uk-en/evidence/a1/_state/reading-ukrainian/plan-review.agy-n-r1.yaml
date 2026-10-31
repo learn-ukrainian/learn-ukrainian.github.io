@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "a1-reading-ukrainian-n-r1"
+  attempt_id: "agy-n-r1"
+  manifest_sha256: "7e2529759a000649024e2183980f741baccee07164f9cccb45ef562cf7dc6b37"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gemini-3.8-flash-high"
+  harness: "agy"
+  family: "google"
+  prompt_sha256: "438b276d36a7960f1a5c335811a33a468aa6971c47188a1ad86f47d7da008832"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean # verify_words: ґудзик, дзвінок, дзеркало, герб, прапор, вишиванка, писанка, калина, лелека, Україна, Київ, українець, українка, український, київський (receipt: rr-de13f0d29b33e96c9fab); родина, Канада, мова (receipt: rr-75330b73cb6c3ee9a9df)
+  sequencing: clean
+  sizing: clean
+  inventory: clean
+  activities: clean # workbook types rotate across lessons (quiz, anagram, match-up, order); v1 activity count reduction justified by pruning primary-school syllable-division drills per Arc r6 (g)
+  evidence_fit: clean # search_text: 'алфавіт 33 літери' chunk 2-klas-ukrmova-vashulenko-2019-1_s0024 (receipt: rr-3059c6246f437ddbef23); verify_stress: дзеркало (receipt: rr-17d8ab9956e103b4e8e6), ґудзик (receipt: rr-dd4603e419120afde904)
+  standard_and_ulp: clean
+findings: []

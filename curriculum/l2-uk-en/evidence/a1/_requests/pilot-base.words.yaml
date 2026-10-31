@@ -1,0 +1,554 @@
+request_schema: 1
+level: a1
+words:
+- lemma: я
+  pos: noun
+  want: W-001
+  note: 'closed class: personal pronoun (1st pers sing); basic speaker reference'
+  meaning: I
+  entry:
+    source: vesum
+    entry_id: 436573
+- lemma: ти
+  pos: noun
+  want: W-002
+  note: 'closed class: personal pronoun (2nd pers sing); base-layer item (position
+    43 please-do-this teaches imperative contrast in ти/ви forms, not the pronoun)'
+  meaning: you
+  entry:
+    source: vesum
+    entry_id: 386161
+- lemma: він
+  pos: noun
+  want: W-003
+  note: 'closed class: personal pronoun (3rd pers masc sing); taught at position 8
+    (things-have-gender)'
+  meaning: he
+  entry:
+    source: vesum
+    entry_id: 60367
+- lemma: вона
+  pos: noun
+  want: W-004
+  note: 'closed class: personal pronoun (3rd pers fem sing); taught at position 8
+    (things-have-gender)'
+  meaning: she
+  entry:
+    source: vesum
+    entry_id: 65760
+- lemma: воно
+  pos: noun
+  want: W-005
+  note: 'closed class: personal pronoun (3rd pers neut sing); taught at position 8
+    (things-have-gender)'
+  meaning: it
+  entry:
+    source: vesum
+    entry_id: 65771
+- lemma: ми
+  pos: noun
+  want: W-006
+  note: 'closed class: personal pronoun (1st pers plur); basic plural reference'
+  meaning: we
+  entry:
+    source: vesum
+    entry_id: 201086
+- lemma: ви
+  pos: noun
+  want: W-007
+  note: 'closed class: personal pronoun (2nd pers plur/polite); base-layer item (position
+    43 please-do-this teaches imperative contrast in ти/ви forms, not the pronoun)'
+  meaning: you
+  entry:
+    source: vesum
+    entry_id: 40782
+- lemma: вони
+  pos: noun
+  want: W-008
+  note: 'closed class: personal pronoun (3rd pers plur); taught at position 13 (many-things)'
+  meaning: they
+  entry:
+    source: vesum
+    entry_id: 65765
+- lemma: себе
+  pos: noun
+  want: W-009
+  note: 'closed class: reflexive pronoun (lemma for себе/собі/собою); basic reference'
+  meaning: oneself
+  entry:
+    source: vesum
+    entry_id: 354517
+- lemma: мій
+  pos: adj
+  want: W-010
+  note: 'closed class: possessive pronoun (1st pers sing); taught at position 8 (things-have-gender)'
+  entry:
+    source: vesum
+    entry_id: 202885
+- lemma: твій
+  pos: adj
+  want: W-011
+  note: 'closed class: possessive pronoun (2nd pers sing); taught at position 8 (things-have-gender)'
+  entry:
+    source: vesum
+    entry_id: 382533
+- lemma: свій
+  pos: adj
+  want: W-012
+  note: 'closed class: reflexive possessive pronoun; basic possessive reference'
+  entry:
+    source: vesum
+    entry_id: 353716
+- lemma: наш
+  pos: adj
+  want: W-013
+  note: 'closed class: possessive pronoun (1st pers plur); basic possessive reference'
+  entry:
+    source: vesum
+    entry_id: 226424
+- lemma: ваш
+  pos: adj
+  want: W-014
+  note: 'closed class: possessive pronoun (2nd pers plur); basic possessive reference'
+  entry:
+    source: vesum
+    entry_id: 35684
+- lemma: їхній
+  pos: adj
+  want: W-015
+  note: 'closed class: possessive pronoun (3rd pers plur); basic possessive reference'
+  entry:
+    source: vesum
+    entry_id: 157361
+- lemma: цей
+  pos: adj
+  want: W-016
+  note: 'closed class: demonstrative pronoun (proximal); taught at position 12 (this-and-that)'
+  entry:
+    source: vesum
+    entry_id: 416048
+- lemma: той
+  pos: adj
+  want: W-017
+  note: 'closed class: demonstrative pronoun (distal); taught at position 12 (this-and-that)'
+  entry:
+    source: vesum
+    entry_id: 387967
+- lemma: у
+  pos: prep
+  want: W-018
+  note: 'closed class: preposition; taught at position 28 (euphony) and position 29
+    (where-is-it)'
+  meaning: in
+  entry:
+    source: vesum
+    entry_id: 394472
+- lemma: в
+  pos: prep
+  want: W-019
+  note: 'closed class: preposition, euphonic partner of у; taught at position 28 (euphony)
+    and position 29 (where-is-it)'
+  meaning: in
+  entry:
+    source: vesum
+    entry_id: 33484
+- lemma: уві
+  pos: prep
+  want: W-020
+  note: 'closed class: preposition, euphonic partner of у'
+  meaning: in
+  entry:
+    source: vesum
+    entry_id: 394976
+- lemma: з
+  pos: prep
+  want: W-021
+  note: 'closed class: preposition; taught at position 28 (euphony) and position 34
+    (where-from)'
+  entry:
+    source: vesum
+    entry_id: 117511
+- lemma: із
+  pos: prep
+  want: W-022
+  note: 'closed class: preposition, euphonic partner of з; taught at position 28 (euphony)
+    and position 34 (where-from)'
+  entry:
+    source: vesum
+    entry_id: 152312
+- lemma: зі
+  pos: prep
+  want: W-023
+  note: 'closed class: preposition, euphonic partner of з; taught at position 28 (euphony)
+    and position 34 (where-from)'
+  entry:
+    source: vesum
+    entry_id: 144948
+- lemma: зо
+  pos: prep
+  want: W-024
+  note: 'closed class: preposition, euphonic partner of з; taught at position 28 (euphony)'
+  entry:
+    source: vesum
+    entry_id: 148740
+- lemma: на
+  pos: prep
+  want: W-025
+  note: 'closed class: preposition; taught at position 29 (where-is-it)'
+  entry:
+    source: vesum
+    entry_id: 210137
+- lemma: до
+  pos: prep
+  want: W-026
+  note: 'closed class: preposition; taught at position 31 (where-to)'
+  entry:
+    source: vesum
+    entry_id: 98118
+- lemma: від
+  pos: prep
+  want: W-027
+  note: 'closed class: preposition; taught at position 34 (where-from)'
+  entry:
+    source: vesum
+    entry_id: 52607
+- lemma: од
+  pos: prep
+  want: W-028
+  note: 'closed class: preposition, euphonic partner of від; taught at position 34
+    (where-from)'
+  entry:
+    source: vesum
+    entry_id: 248043
+- lemma: для
+  pos: prep
+  want: W-029
+  note: 'closed class: preposition; relational preposition of purpose/beneficiary'
+  entry:
+    source: vesum
+    entry_id: 97932
+- lemma: без
+  pos: prep
+  want: W-030
+  note: 'closed class: preposition; met at position 36 (food-and-drink) and position
+    38 (at-the-cafe)'
+  entry:
+    source: vesum
+    entry_id: 18751
+- lemma: за
+  pos: prep
+  want: W-031
+  note: 'closed class: preposition; relational preposition'
+  entry:
+    source: vesum
+    entry_id: 117514
+- lemma: під
+  pos: prep
+  want: W-032
+  note: 'closed class: preposition; spatial preposition'
+  entry:
+    source: vesum
+    entry_id: 277007
+- lemma: піді
+  pos: prep
+  want: W-033
+  note: 'closed class: preposition, euphonic partner of під'
+  entry:
+    source: vesum
+    entry_id: 278234
+- lemma: підо
+  pos: prep
+  want: W-034
+  note: 'closed class: preposition, euphonic partner of під'
+  entry:
+    source: vesum
+    entry_id: 279898
+- lemma: над
+  pos: prep
+  want: W-035
+  note: 'closed class: preposition; spatial preposition'
+  entry:
+    source: vesum
+    entry_id: 212130
+- lemma: наді
+  pos: prep
+  want: W-036
+  note: 'closed class: preposition, euphonic partner of над'
+  entry:
+    source: vesum
+    entry_id: 212690
+- lemma: надо
+  pos: prep
+  want: W-037
+  note: 'closed class: preposition, euphonic partner of над'
+  entry:
+    source: vesum
+    entry_id: 213112
+- lemma: перед
+  pos: prep
+  want: W-038
+  note: 'closed class: preposition; spatial and temporal preposition'
+  entry:
+    source: vesum
+    entry_id: 266332
+- lemma: переді
+  pos: prep
+  want: W-039
+  note: 'closed class: preposition, euphonic partner of перед'
+  entry:
+    source: vesum
+    entry_id: 266639
+- lemma: передо
+  pos: prep
+  want: W-040
+  note: 'closed class: preposition, euphonic partner of перед'
+  entry:
+    source: vesum
+    entry_id: 266787
+- lemma: після
+  pos: prep
+  want: W-041
+  note: 'closed class: preposition; taught at position 23 (days-and-months) and position
+    25 (my-day)'
+  entry:
+    source: vesum
+    entry_id: 283192
+- lemma: між
+  pos: prep
+  want: W-042
+  note: 'closed class: preposition; spatial relational preposition'
+  entry:
+    source: vesum
+    entry_id: 202378
+- lemma: межи
+  pos: prep
+  want: W-043
+  note: 'closed class: preposition; older, stylistically marked variant of між, not
+    a sound-driven alternation like з/із/зі'
+  entry:
+    source: vesum
+    entry_id: 198975
+- lemma: біля
+  pos: prep
+  want: W-044
+  note: 'closed class: preposition; taught at position 29 (where-is-it) and position
+    30 (my-city)'
+  entry:
+    source: vesum
+    entry_id: 24395
+- lemma: через
+  pos: prep
+  want: W-045
+  note: 'closed class: preposition; relational preposition of traversal/cause'
+  entry:
+    source: vesum
+    entry_id: 419569
+- lemma: про
+  pos: prep
+  want: W-046
+  note: 'closed class: preposition; taught at position 40 (people-around-me) with
+    accusative'
+  entry:
+    source: vesum
+    entry_id: 317199
+- lemma: при
+  pos: prep
+  want: W-047
+  note: 'closed class: preposition; relational preposition'
+  entry:
+    source: vesum
+    entry_id: 310340
+- lemma: о
+  pos: prep
+  want: W-048
+  note: 'closed class: preposition; taught at position 22 (what-time) for clock time'
+  meaning: at
+  entry:
+    source: vesum
+    entry_id: 241944
+- lemma: об
+  pos: prep
+  want: W-049
+  note: 'closed class: preposition, euphonic partner of о; taught at position 22 (what-time)'
+  entry:
+    source: vesum
+    entry_id: 241961
+- lemma: і
+  pos: conj
+  want: W-050
+  note: 'closed class: coordinating conjunction; taught at position 28 (euphony) and
+    position 44 (linking-ideas)'
+  entry:
+    source: vesum
+    entry_id: 151491
+- lemma: й
+  pos: conj
+  want: W-051
+  note: 'closed class: coordinating conjunction, euphonic partner of і; taught at
+    position 28 (euphony) and position 44 (linking-ideas)'
+  entry:
+    source: vesum
+    entry_id: 157363
+- lemma: та
+  pos: conj
+  want: W-052
+  note: 'closed class: coordinating conjunction, semantic/euphonic partner of і; taught
+    at position 44 (linking-ideas)'
+  entry:
+    source: vesum
+    entry_id: 380642
+- lemma: а
+  pos: conj
+  want: W-053
+  note: 'closed class: coordinating conjunction (adversative); taught at position
+    44 (linking-ideas)'
+  entry:
+    source: vesum
+    entry_id: 1
+- lemma: але
+  pos: conj
+  want: W-054
+  note: 'closed class: coordinating conjunction (adversative); taught at position
+    44 (linking-ideas)'
+  entry:
+    source: vesum
+    entry_id: 5704
+- lemma: бо
+  pos: conj
+  want: W-055
+  note: 'closed class: subordinating conjunction (causal); taught at position 44 (linking-ideas)'
+  entry:
+    source: vesum
+    entry_id: 26563
+- lemma: або
+  pos: conj
+  want: W-056
+  note: 'closed class: coordinating conjunction (disjunctive); basic clause connector'
+  entry:
+    source: vesum
+    entry_id: 280
+- lemma: якщо
+  pos: conj
+  want: W-057
+  note: 'closed class: subordinating conjunction (conditional); basic clause connector'
+  entry:
+    source: vesum
+    entry_id: 441309
+- lemma: щоб
+  pos: conj
+  want: W-058
+  note: 'closed class: subordinating conjunction (purpose); basic clause connector'
+  entry:
+    source: vesum
+    entry_id: 429018
+- lemma: щоби
+  pos: conj
+  want: W-059
+  note: 'closed class: subordinating conjunction (purpose), partner of щоб; basic
+    clause connector'
+  entry:
+    source: vesum
+    entry_id: 429020
+- lemma: поки
+  pos: conj
+  want: W-060
+  note: 'closed class: subordinating conjunction (temporal); basic clause connector'
+  entry:
+    source: vesum
+    entry_id: 293011
+- lemma: не
+  pos: part
+  want: W-061
+  note: 'closed class: negative particle; taught at position 19 (questions: negate)'
+  entry:
+    source: vesum
+    entry_id: 226767
+- lemma: ні
+  pos: part
+  want: W-062
+  meaning: 'no'
+  note: 'closed class: negative/responsive particle; taught at position 19 (questions:
+    negate). Sources verification: VESUM part; query_sum20 ні sense 2 (negative
+    reply), slovnyk.me newsum mirror; translate_en_uk no, Балла EN→UK.'
+  entry:
+    source: vesum
+    entry_id: 239112
+- lemma: же
+  pos: part
+  want: W-063
+  note: 'closed class: emphatic particle'
+  entry:
+    source: vesum
+    entry_id: 115456
+- lemma: ж
+  pos: part
+  want: W-064
+  note: 'closed class: emphatic particle, euphonic partner of же'
+  entry:
+    source: vesum
+    entry_id: 114826
+- lemma: ось
+  pos: part
+  want: W-065
+  note: 'closed class: deictic/demonstrative particle'
+  entry:
+    source: vesum
+    entry_id: 257922
+- lemma: ще
+  pos: adv
+  want: W-066
+  note: 'closed class: temporal/additive discourse adverb functioning as particle;
+    met at position 38 (at-the-cafe)'
+  entry:
+    source: vesum
+    entry_id: 428572
+- lemma: іще
+  pos: adv
+  want: W-067
+  note: 'closed class: temporal/additive discourse adverb, euphonic partner of ще'
+  entry:
+    source: vesum
+    entry_id: 157179
+- lemma: вже
+  pos: adv
+  want: W-068
+  note: 'closed class: temporal discourse adverb functioning as particle; basic aspectual
+    particle'
+  entry:
+    source: vesum
+    entry_id: 40046
+- lemma: уже
+  pos: adv
+  want: W-069
+  note: 'closed class: temporal discourse adverb, euphonic partner of вже'
+  entry:
+    source: vesum
+    entry_id: 396274
+- lemma: лише
+  pos: part
+  want: W-070
+  note: 'closed class: restrictive particle'
+  entry:
+    source: vesum
+    entry_id: 187388
+- lemma: лиш
+  pos: part
+  want: W-071
+  note: 'closed class: restrictive particle, partner of лише'
+  entry:
+    source: vesum
+    entry_id: 187370
+- lemma: тільки
+  pos: part
+  want: W-072
+  note: 'closed class: restrictive particle'
+  entry:
+    source: vesum
+    entry_id: 387183
+- lemma: саме
+  pos: part
+  want: W-073
+  note: 'closed class: identifying/emphatic particle'
+  entry:
+    source: vesum
+    entry_id: 349712

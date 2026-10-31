@@ -5710,39 +5710,87 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
-      "sha256": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f"
+      "sha256": "cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_retired.yaml",
       "sha256": "6227308121fdb1fdaf33bc47bf16dca296f335cf0616a47587367ab28f4d6dca"
     },
     {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/checkpoint-first-contact.yaml",
+      "sha256": "e695ef74a9ee5af4c8c5af38d3afa6e1071177a9cfaf0e82988d85160abc272c"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/first-conversations.yaml",
+      "sha256": "d22c3b64cbc468d3d9e5dbb99cc7c7d1e635148d872cf007403c69c62a528976"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml",
+      "sha256": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/my-family.yaml",
+      "sha256": "c7d2d1db80de4c11acb1ac7cfd0c23c3bdf1c688adc40f67b52c780a957f7090"
+    },
+    {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml",
-      "sha256": "1b46ecf105e05dbbdac324abb563529420f5daeddb6e061bfdad6b0e0a73d5c7"
+      "sha256": "c3c82c346c13fffcd14f630136b28416d2c8ba64dcaa09fc08eb5db63a2c68be"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml",
-      "sha256": "84e7dcdc47f03ceea16a51811d2c327b1b84a57e0df6d88f57a751e1efeb8455"
+      "sha256": "f5ca4e8e8fc3e8555a4d7f8f0cc9ecee9b8b555f39ef65269beed5ca9f67b6c4"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml",
       "sha256": "5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a"
     },
     {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/things-have-gender.yaml",
+      "sha256": "b697c683313a31bf06c5c952101d5f3c5e437c2eed663596b7258c869c66ed93"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/who-am-i.yaml",
+      "sha256": "9b7692cbd53886f2eb6d8f0e5c5f27c9dc81f4d7248d8608c3a60b4c45517012"
+    },
+    {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_titles_en.yaml",
       "sha256": "1b82b22b0dc49da5e7b231daf73a68cacdd59f90a882aaab135ac9c84eb95009"
     },
     {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/checkpoint-first-contact.yaml",
+      "sha256": "5c84620020a7f67411756537edc4330a28ba6336128db4dfcd1cee91027cf12a"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/first-conversations.yaml",
+      "sha256": "64bf9edd04bd28925871f0d2aa854f58d7c657c4c4289d6efe1981d9c41eb60a"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml",
+      "sha256": "7fff0950d868daf93fe15d89b0ff10dd7b4f8f4bea71ab45f76e415d8a275002"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml",
+      "sha256": "416a649be45428bd790c35101d0ca7df4246ab35c6e605aa06b63f57606c905e"
+    },
+    {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml",
-      "sha256": "d7561a1505d84ad0646574c25999442e95a4657318350a61d77726a298269309"
+      "sha256": "6081fd6d636e7bf7cadd534159f1abe6ebfa9d7091c4c2f411ae3f20deb84f15"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml",
-      "sha256": "23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75"
+      "sha256": "e5e29a1eb7142cf8307359c618dad9775aae4710d782d982b2bdc916819bfddb"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml",
       "sha256": "74f2fca8de73eecf402c0795b19c93bbb8a9f59d9b1cad431cc389ffcfdcf373"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/things-have-gender.yaml",
+      "sha256": "a309c5ff347cae354be6c4e9860bc779f60a3e9c876bdb46e43ed978568eb8de"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml",
+      "sha256": "d2294865c0c383e9c1ac2bf18922aeed4219d07b9a19f7d7579e6cd451386ba7"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml",
@@ -13930,7 +13978,7 @@
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-first-contact/index.mdx",
-      "sha256": "9fc07baa8dda1b44626facd82ece0c826969bb74aa1766ecee1ea2e0f86a697f"
+      "sha256": "583361dba093accc5f1861decaf9433e322704d4d3bbf34fdb72b194bb219f45"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-food-shopping/index.mdx",
@@ -13966,7 +14014,7 @@
     },
     {
       "path": "site/src/content/docs/a1/first-conversations/index.mdx",
-      "sha256": "36e5c362959397714e995fe5b16e782da08c48c241a6ae149fa8cc0a307d98d7"
+      "sha256": "4fd9e68093f64ed8fdef49e6bbaee48e82e69beb086006895130cf20ce3d8655"
     },
     {
       "path": "site/src/content/docs/a1/food-and-drink/index.mdx",
@@ -14006,7 +14054,7 @@
     },
     {
       "path": "site/src/content/docs/a1/introduction-to-ukrainian/index.mdx",
-      "sha256": "e4cc219124b40231c72a7315a24256f443c1d77243194de3fac5cd01eb65ecc3"
+      "sha256": "e6e29f6e576a485748ed52c1aab434934e215c8d3bfa1156f9b8479cc5df86ff"
     },
     {
       "path": "site/src/content/docs/a1/linking-ideas/index.mdx",
@@ -14026,7 +14074,7 @@
     },
     {
       "path": "site/src/content/docs/a1/my-family/index.mdx",
-      "sha256": "46cdb2d7f1818daf68f3d9f00e950d11b3b85181ba888904d30d8b11f334dca3"
+      "sha256": "453bca3495b8cd2eb209be19abfdb5618fc51dbda84e60c7d12b5816f7788922"
     },
     {
       "path": "site/src/content/docs/a1/my-morning/index.mdx",
@@ -14054,7 +14102,7 @@
     },
     {
       "path": "site/src/content/docs/a1/reading-ukrainian/index.mdx",
-      "sha256": "7191c467525c3cb6db8221209f52e9b4749fd39387b4d9af78383288e8c6ae35"
+      "sha256": "057ca1d8bd93e96def17e825e30af1c177bbcf61b1db934f87efeae2e5b74c84"
     },
     {
       "path": "site/src/content/docs/a1/shopping/index.mdx",
@@ -14062,7 +14110,7 @@
     },
     {
       "path": "site/src/content/docs/a1/sounds-letters-and-hello/index.mdx",
-      "sha256": "4f4ce1a014ff625eb1d28f939561f2a7906a66c14c895c5bfbba85084fd79e11"
+      "sha256": "8091388b3ffd0f8131f5b35ff2751cc59317267e43dc3895dfd7efd051f90327"
     },
     {
       "path": "site/src/content/docs/a1/special-signs/index.mdx",
@@ -14074,7 +14122,7 @@
     },
     {
       "path": "site/src/content/docs/a1/things-have-gender/index.mdx",
-      "sha256": "c8d81fae2e9212b03179684f1a33a74d798396da7a089c3f2d42042d198b8e65"
+      "sha256": "4af1d76dd5b45ea52241fddfbc2fa2e9a23aabe3f33df5f1e73420ff7424a05f"
     },
     {
       "path": "site/src/content/docs/a1/this-and-that/index.mdx",
@@ -14134,7 +14182,7 @@
     },
     {
       "path": "site/src/content/docs/a1/who-am-i/index.mdx",
-      "sha256": "75146957cc950fe5fe3d5e9b750f7ddf6e891df7be8577eab0061ed4596762aa"
+      "sha256": "f5ebc3273ec03c7771144b8dd8337bb408b98b3dd6972c3bbc5007f7624666c1"
     },
     {
       "path": "site/src/content/docs/a1/yesterday/index.mdx",

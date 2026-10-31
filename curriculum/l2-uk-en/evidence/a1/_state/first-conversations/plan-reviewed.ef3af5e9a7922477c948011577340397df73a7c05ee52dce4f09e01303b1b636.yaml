@@ -1,0 +1,580 @@
+plan_schema: 2
+module: first-conversations
+level: a1
+sequence: 6
+slug: first-conversations
+version: '1.0'
+title: Дуже приємно!
+subtitle: Purposeful first conversations and appropriate endings
+focus: Sustain a scaffolded 4-6-turn conversation with greetings, Добраніч, personal data, family and
+  belongings; practise stressed/unstressed [е], [и] Adult or teen situations retain English support. Private-book
+  wording is not teaching material. Unresolved formula ids remain withheld from teaching and scoring.
+objectives:
+- Sustain and adapt a scaffolded four-to-six-turn exchange in formal and informal contexts.
+- Combine acquired identity, family and belonging labels with sourced status and courtesy chunks.
+- Practise stressed and unstressed e/i, then read and write a supported short message.
+connects_to:
+- checkpoint-first-contact
+prerequisites:
+- reading-ukrainian
+register: neutral
+changelog:
+- '1.0 (2026-10-31): Independently authored for #8425 steps 1-4 under the approved r6 arc. Plans only;
+  no lesson builds.'
+arc_ref:
+  level: a1
+  position: 6
+evidence_ref:
+  path: curriculum/l2-uk-en/evidence/a1/first-conversations.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: a-formal-first-conversation
+  title: Дуже приємно!
+  kind: teach
+  job: Sustain a supported formal first meeting and distinguish stressed from unstressed e/i.
+  rationale: The learner now decodes the full alphabet, so print supports a whole exchange. The two vowel
+    families are heard in familiar words rather than taught as a spelling algorithm. English explains
+    the task and the source-grounded model. Spoken rehearsal precedes supported print. New words are chosen
+    for this adult purpose rather than to fill a vocabulary quota; no activity prompt gives its answer,
+    and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id001 []
+      sounds: []
+    grammar:
+    - id: G-a1-026
+      point: Stressed and unstressed vowel pronunciations are contrasted in the two specified vowel families
+        while familiar conversation chunks are recycled.
+      evidence:
+      - T-501
+      - T-502
+    vocabulary:
+      core:
+      - lemma: чудово
+        evidence: W-238
+        forms:
+        - adv:compb:predic
+      - lemma: добре
+        evidence: W-236
+        forms:
+        - adv:compb:predic
+      - lemma: Дуже приємно!
+        evidence: W-305
+        forms: []
+      - lemma: як
+        evidence: W-279
+        forms:
+        - adv:pron:int:rel
+      incidental: []
+      recycled:
+      - W-001
+      - W-002
+      - W-074
+      - W-287
+      - W-290
+      - W-296
+      - W-195
+      - W-226
+      - W-227
+      - W-206
+  steps:
+  - id: s1
+    kind: teach
+    teach: Use T-501 to compare stressed and unstressed e/i in teacher-modelled acquired words. Recycle
+      a formal greeting, name and origin; add the pleasant-meeting formula and a brief status response.
+      Use only source-verified words and memorised constructions, without a pronoun-case or spelling-rule
+      table. The exact transcript-backed origin model remains the position-3 chunk.
+    introduces:
+      letters: *id001
+      grammar: &id002
+      - G-a1-026
+      vocabulary:
+      - W-238
+      - W-236
+      - W-305
+      - W-279
+    uses:
+      grammar: []
+      vocabulary:
+      - W-001
+      - W-002
+      - W-074
+      - W-287
+      - W-290
+      - W-296
+      - W-195
+      - W-226
+      - W-227
+      - W-206
+    evidence: &id003
+    - T-501
+    - T-502
+    - S-501
+    - S-502
+    - S-504
+    - S-505
+    - V-501
+    - T-505
+    - T-505
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id002
+      vocabulary:
+      - W-238
+      - W-236
+      - W-305
+      - W-279
+      - W-001
+      - W-002
+      - W-074
+      - W-287
+      - W-290
+      - W-296
+      - W-195
+      - W-226
+      - W-227
+      - W-206
+    evidence: *id003
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Watch the whole collected first-meeting video, then hear a teacher-modelled acquired exchange.
+      Rehearse a greeting, an identity turn and a brief response. Compare the two e/i vowel families with
+      the form-specific sourced stress; no untimed video passage supplies a scored listening key.
+    targets:
+    - W-238
+    - W-236
+    - W-305
+    - W-279
+    learner_reads: []
+  - id: a2
+    type: order
+    placement: workbook
+    focus: Order acquired conversational turns to make a purposeful four-to-six-turn meeting. Several
+      orders may be natural; bind each scored sequence to a clear context and explain why the key fits,
+      then perform a personal version.
+    targets:
+    - W-238
+    - W-236
+    - W-305
+    - W-279
+    - W-001
+    - W-002
+    - W-074
+    learner_reads: []
+  videos:
+  - evidence: V-501
+    use: 'Lesson 1 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 2
+  slug: a-friendly-follow-up
+  title: Так собі.
+  kind: teach
+  job: Adapt a four-to-six-turn exchange to a peer, a family photo or a familiar belonging.
+  rationale: Changing relationship and purpose makes recycling communicative. A polite regret and a neutral
+    status response are acquired chunks, with complex cases left unexplained. Belongings use already acquired
+    labels; new object vocabulary stays at position 8. English explains the task and the source-grounded
+    model. Spoken rehearsal precedes supported print. New words are chosen for this adult purpose rather
+    than to fill a vocabulary quota; no activity prompt gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id004 []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - lemma: Так собі.
+        evidence: W-303
+        forms: []
+      - lemma: На жаль.
+        evidence: W-304
+        forms: []
+      - lemma: Гарного дня!
+        evidence: W-306
+        forms: []
+      incidental: []
+      recycled:
+      - W-001
+      - W-002
+      - W-074
+      - W-296
+      - W-305
+      - W-238
+      - W-236
+      - W-205
+      - W-081
+      - W-101
+      - W-010
+      - W-011
+      - W-218
+      - W-216
+  steps:
+  - id: s1
+    kind: teach
+    teach: Rehearse a peer greeting, a name or family-label turn, a short status response, and a suitable
+      close. Add the sourced neutral status, regret and good-day formulas as whole chunks. Identify a
+      familiar belonging with the previously supported possessive label. Change an owner or interlocutor
+      and adapt the exchange; no unavailable formula is taught.
+    introduces:
+      letters: *id004
+      grammar: &id005 []
+      vocabulary:
+      - W-303
+      - W-304
+      - W-306
+    uses:
+      grammar: []
+      vocabulary:
+      - W-001
+      - W-002
+      - W-074
+      - W-296
+      - W-305
+      - W-238
+      - W-236
+      - W-205
+      - W-081
+      - W-101
+      - W-010
+      - W-011
+      - W-218
+      - W-216
+    evidence: &id006
+    - T-502
+    - T-503
+    - T-504
+    - S-503
+    - S-504
+    - V-501
+    - V-502
+    - T-505
+    - T-505
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id005
+      vocabulary:
+      - W-303
+      - W-304
+      - W-306
+      - W-001
+      - W-002
+      - W-074
+      - W-296
+      - W-305
+      - W-238
+      - W-236
+      - W-205
+      - W-081
+      - W-101
+      - W-010
+      - W-011
+      - W-218
+      - W-216
+    evidence: *id006
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: phrase-table
+    placement: inline
+    focus: Use a small table of acquired greeting, identity, status and closing alternatives to rehearse
+      different purposeful peer exchanges. Every printed option is an acquired record or a source-grounded
+      combination of acquired words; columns express communicative role, not grammatical case.
+    targets:
+    - W-303
+    - W-304
+    - W-306
+    learner_reads: []
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: Choose a response fitting the Ukrainian turn and the stated adult relationship. Each item has
+      one contextually suitable key and clearly unsuitable acquired alternatives, with shuffled order
+      and an English explanation. Do not translate the key or name its grammatical form in the prompt.
+    targets:
+    - W-303
+    - W-304
+    - W-306
+    - W-001
+    - W-002
+    - W-074
+    learner_reads: []
+    options:
+    - Так собі.
+    - На жаль.
+    - Гарного дня!
+    - я
+    - ти
+    - привіт
+  videos:
+  - evidence: V-501
+    use: 'Lesson 2 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  - evidence: V-502
+    use: 'Lesson 2 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 3
+  slug: leaving-for-the-night
+  title: добраніч
+  kind: teach
+  job: Choose a suitable night-time or daytime close and complete a short written message.
+  rationale: A farewell depends on the situation rather than on memorising a list. The attested night-time
+    interjection supplies the required distinction while unresolved courtesy expressions remain withheld.
+    English explains the task and the source-grounded model. Spoken rehearsal precedes supported print.
+    New words are chosen for this adult purpose rather than to fill a vocabulary quota; no activity prompt
+    gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id007 []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - lemma: добраніч
+        evidence: W-273
+        forms:
+        - intj
+      incidental: []
+      recycled:
+      - W-287
+      - W-290
+      - W-294
+      - W-305
+      - W-306
+      - W-303
+      - W-238
+      - W-236
+      - W-001
+      - W-002
+  steps:
+  - id: s1
+    kind: teach
+    teach: Model the night-time interjection from its word record and contrast its use with the acquired
+      daytime and general farewells. Use the familiar courtesy sequence in T-502, then write a supported
+      short message with a chosen greeting, a personal detail and an appropriate close. Do not introduce
+      the separate unresolved sweet-dreams expression.
+    introduces:
+      letters: *id007
+      grammar: &id008 []
+      vocabulary:
+      - W-273
+    uses:
+      grammar: []
+      vocabulary:
+      - W-287
+      - W-290
+      - W-294
+      - W-305
+      - W-306
+      - W-303
+      - W-238
+      - W-236
+      - W-001
+      - W-002
+    evidence: &id009
+    - T-502
+    - S-503
+    - S-504
+    - V-501
+    - T-505
+    - T-505
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id008
+      vocabulary:
+      - W-273
+      - W-287
+      - W-290
+      - W-294
+      - W-305
+      - W-306
+      - W-303
+      - W-238
+      - W-236
+      - W-001
+      - W-002
+    evidence: *id009
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Hear the teacher model the acquired farewells for a daytime meeting and leaving for bed. Choose
+      the context, say an appropriate closing and explain in English why the alternative does not fit.
+      The whole visible video is listening exposure only.
+    targets:
+    - W-273
+    learner_reads: []
+  - id: a2
+    type: match-up
+    placement: workbook
+    focus: Match acquired closing formulas to contrasting adult communication situations. Supply a sourced
+      reason for every pair, with record-bound form sides; then change the message recipient and choose
+      a suitable close.
+    targets:
+    - W-273
+    - W-287
+    - W-290
+    - W-294
+    learner_reads: []
+  videos:
+  - evidence: V-501
+    use: 'Lesson 3 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 4
+  slug: my-purposeful-first-conversation
+  title: Дуже приємно!
+  kind: recap
+  job: Sustain and adapt a first-contact exchange, then leave a short written message.
+  rationale: Use acquired language to accomplish a chosen adult purpose. The learner makes meaningful
+    choices, then checks the result against the stated criteria. This task replaces a second exercise
+    set; it introduces nothing.
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled:
+      - W-001
+      - W-002
+      - W-074
+      - W-287
+      - W-290
+      - W-294
+      - W-296
+      - W-195
+      - W-226
+      - W-227
+      - W-205
+      - W-081
+      - W-101
+      - W-010
+      - W-011
+      - W-218
+      - W-216
+      - W-238
+      - W-236
+      - W-305
+      - W-279
+      - W-303
+      - W-304
+      - W-306
+      - W-273
+  steps:
+  - id: s1
+    kind: recap
+    uses:
+      grammar:
+      - G-a1-026
+      vocabulary:
+      - W-001
+      - W-002
+      - W-074
+      - W-287
+      - W-290
+      - W-294
+      - W-296
+      - W-195
+      - W-226
+      - W-227
+      - W-205
+      - W-081
+      - W-101
+      - W-010
+      - W-011
+      - W-218
+      - W-216
+      - W-238
+      - W-236
+      - W-305
+      - W-279
+      - W-303
+      - W-304
+      - W-306
+      - W-273
+    evidence:
+    - T-501
+    - T-502
+    - T-503
+    - T-504
+    - V-501
+    - T-505
+    practice: []
+    needs: []
+    task:
+      id: my-purposeful-first-conversation-task
+      action: personalize
+      context_en: You meet an adult course participant or receive a brief message from a peer. Choose
+        the person, purpose and whether it is daytime or night-time.
+      instruction_en: Create a four-to-six-turn exchange using an appropriate greeting, a personal or
+        fictional detail, a response and a purposeful close. Include a family label or an acquired belonging
+        label where it serves your chosen situation. Listen to a partner’s version and respond to its
+        meaning. Then write a supported short message changing the recipient or time of day.
+      response_mode: spoken_or_written
+      success_criteria_en:
+      - The exchange has four to six connected turns with a clear purpose.
+      - The chosen register fits the recipient.
+      - The reply responds to the partner’s actual detail.
+      - The closing fits the selected time and context.
+      - The supported message communicates a chosen detail without copying a whole model.
+      - The two vowel families and familiar stress remain intelligible.
+      learner_reads:
+      - ref: T-502
+        words:
+        - Привіт!
+        - Добрий день!
+        - До побачення!
+  consolidation: []
+  activities: []
+  videos:
+  - evidence: V-501
+    use: 'Lesson 4 s1: revisit the collected whole visible video as familiar listening before the practical
+      task. No new inventory is acquired or tested from it.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []

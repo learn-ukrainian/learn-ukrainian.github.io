@@ -1,0 +1,562 @@
+plan_schema: 2
+module: my-family
+level: a1
+sequence: 4
+slug: my-family
+version: '1.0'
+title: родина
+subtitle: A chosen family photo, supported labels and the apostrophe
+focus: Introduce people in a chosen family photo or equivalent using supported possessive phrases Adult
+  or teen situations retain English support. Private-book wording is not teaching material. Unresolved
+  formula ids remain withheld from teaching and scoring.
+objectives:
+- Introduce selected people or a pet using supported possessive chunks.
+- Acquire the five staged letters and use the apostrophe in a source-attested family word.
+- Distinguish the b/p family and write meaningful supported captions.
+connects_to:
+- reading-ukrainian
+prerequisites:
+- who-am-i
+register: neutral
+changelog:
+- '1.0 (2026-10-31): Independently authored for #8425 steps 1-4 under the approved r6 arc. Plans only;
+  no lesson builds.'
+arc_ref:
+  level: a1
+  position: 4
+evidence_ref:
+  path: curriculum/l2-uk-en/evidence/a1/my-family.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: people-in-my-circle
+  title: родина
+  kind: teach
+  job: Identify chosen people with supported family labels and recognise the five new letters.
+  rationale: A chosen family, trusted circle or fictional photo avoids assumptions about household or
+    relationships. Possessives are supported label chunks here, not an agreement lesson. English explains
+    the task and the source-grounded model. Spoken rehearsal precedes supported print. New words are chosen
+    for this adult purpose rather than to fill a vocabulary quota; no activity prompt gives its answer,
+    and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id001
+      - Б
+      - Й
+      - Ї
+      - Ю
+      - Є
+      sounds: []
+    grammar:
+    - id: G-a1-019
+      point: The newly acquired iotated vowel letters are interpreted from source sound models; the letter
+        with two dots always represents two sounds.
+      evidence:
+      - T-302
+      - T-303
+    vocabulary:
+      core:
+      - lemma: мама
+        evidence: W-081
+        forms:
+        - noun:anim:f:v_naz
+      - lemma: тато
+        evidence: W-101
+        forms:
+        - noun:anim:m:v_naz
+      - lemma: родина
+        evidence: W-205
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: мій
+        evidence: W-010
+        forms:
+        - adj:m:v_naz:pron:pos
+      - lemma: твій
+        evidence: W-011
+        forms:
+        - adj:m:v_naz:pron:pos
+      incidental: []
+      recycled:
+      - W-001
+      - W-002
+      - W-091
+      - W-093
+  steps:
+  - id: s1
+    kind: teach
+    teach: Connect the new iotated letters with their source models in T-302, including the always-two-sound
+      letter. Introduce the mother, father and family labels with fixed my/your labels from T-303 and
+      T-304. Do not explain possessive agreement or grammatical gender yet. The teacher models Б, Й, Ї,
+      Ю, Є before the learner repeats each sound and connects it to its printed capital and small form.
+      The collected whole video is additional listening exposure, not a verified recording of each target.
+    introduces:
+      letters: *id001
+      grammar: &id002
+      - G-a1-019
+      vocabulary:
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+    uses:
+      grammar: []
+      vocabulary:
+      - W-001
+      - W-002
+      - W-091
+      - W-093
+    evidence: &id003
+    - T-302
+    - T-303
+    - T-304
+    - V-301
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id002
+      vocabulary:
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+      - W-001
+      - W-002
+      - W-091
+      - W-093
+    evidence: *id003
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: View a chosen adult family photo or equivalent and hear the teacher label the selected people.
+      Recognise Б, Й, Ї, Ю, Є and their small forms, then say an appropriate supported label.
+    targets:
+    - W-081
+    - W-101
+    - W-205
+    - W-010
+    - W-011
+    learner_reads: []
+  - id: a2
+    type: match-up
+    placement: workbook
+    focus: Match acquired family labels to the selected people on a fictional profile. Use only the supported
+      possessive-label models, with sourced word records for form sides, and explain the relationship
+      in English.
+    targets:
+    - W-081
+    - W-101
+    - W-205
+    - W-010
+    - W-011
+    - W-001
+    - W-002
+    - W-091
+    learner_reads: []
+  videos:
+  - evidence: V-301
+    use: 'Lesson 1 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 2
+  slug: family-and-apostrophe
+  title: сім’я
+  kind: teach
+  job: Read a familiar family word with the apostrophe and label children in a chosen family context.
+  rationale: Separate pronunciation has an immediate use in a familiar family label. The source rules
+    are reduced to the encountered pattern; no exhaustive spelling exceptions or line-break drills appear.
+    English explains the task and the source-grounded model. Spoken rehearsal precedes supported print.
+    New words are chosen for this adult purpose rather than to fill a vocabulary quota; no activity prompt
+    gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id004 []
+      sounds: []
+    grammar:
+    - id: G-a1-020
+      point: 'An apostrophe marks separate pronunciation: the preceding consonant remains hard and the
+        following iotated vowel letter represents two sounds.'
+      evidence:
+      - T-301
+      - T-303
+    vocabulary:
+      core:
+      - lemma: сім'я
+        evidence: W-138
+        forms:
+        - noun:inanim:f:v_naz:xp1
+      - lemma: дитина
+        evidence: W-202
+        forms:
+        - noun:anim:f:v_naz
+      - lemma: син
+        evidence: W-158
+        forms:
+        - noun:anim:m:v_naz
+      - lemma: донька
+        evidence: W-229
+        forms:
+        - noun:anim:f:v_naz
+      incidental: []
+      recycled:
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+  steps:
+  - id: s1
+    kind: teach
+    teach: Use the exact family-word spelling in T-301 to connect the apostrophe with separate pronunciation.
+      Keep the typographic apostrophe in learner print. Introduce the child, son and daughter labels in
+      a chosen profile, using already supported possessive chunks. Dictionary identity keys retain their
+      source spelling.
+    introduces:
+      letters: *id004
+      grammar: &id005
+      - G-a1-020
+      vocabulary:
+      - W-138
+      - W-202
+      - W-158
+      - W-229
+    uses:
+      grammar: []
+      vocabulary:
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+    evidence: &id006
+    - T-301
+    - T-303
+    - T-304
+    - V-301
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id005
+      vocabulary:
+      - W-138
+      - W-202
+      - W-158
+      - W-229
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+    evidence: *id006
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Observe the apostrophe in the source-attested family word, listen to the teacher model separate
+      pronunciation, and use it to introduce a chosen photo. The unmarked source word is shown only after
+      its letters are acquired.
+    targets:
+    - W-138
+    - W-202
+    - W-158
+    - W-229
+    learner_reads: []
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: Select the acquired label matching a person in a fictional family card. Each item has at least
+      two plausible printed choices with exactly one contextual key. Shuffle the choices; explain the
+      relationship without translating the key in the prompt.
+    targets:
+    - W-138
+    - W-202
+    - W-158
+    - W-229
+    - W-081
+    - W-101
+    - W-205
+    learner_reads: []
+    options:
+    - сім’я
+    - дитина
+    - син
+    - донька
+    - мама
+    - тато
+    - родина
+  videos:
+  - evidence: V-301
+    use: 'Lesson 2 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 3
+  slug: family-voice-pair
+  title: брат
+  kind: teach
+  job: Introduce siblings, grandparents or a pet and distinguish the b/p sound family.
+  rationale: The new voice pair recycles a letter in useful family words. Learners choose which people
+    to discuss, including fictional profiles. English explains the task and the source-grounded model.
+    Spoken rehearsal precedes supported print. New words are chosen for this adult purpose rather than
+    to fill a vocabulary quota; no activity prompt gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id007 []
+      sounds: []
+    grammar:
+    - id: G-a1-021
+      point: The newly acquired voiced consonant and its previously acquired voiceless partner are contrasted
+        by voice in source-modelled family words.
+      evidence:
+      - T-305
+      - T-303
+    vocabulary:
+      core:
+      - lemma: сестра
+        evidence: W-206
+        forms:
+        - noun:anim:f:v_naz
+      - lemma: брат
+        evidence: W-239
+        forms:
+        - noun:anim:m:v_naz
+      - lemma: бабуся
+        evidence: W-234
+        forms:
+        - noun:anim:f:v_naz
+      - lemma: дідусь
+        evidence: W-235
+        forms:
+        - noun:anim:m:v_naz
+      - lemma: кіт
+        evidence: W-203
+        forms:
+        - noun:anim:m:v_naz
+      incidental: []
+      recycled:
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+      - W-138
+      - W-202
+      - W-158
+      - W-229
+  steps:
+  - id: s1
+    kind: teach
+    teach: The teacher models Б and П from T-305, then rehearses the acquired brother and grandmother
+      labels without devoicing the voiced partner. Add sister, grandfather and cat labels. Reuse only
+      the acquired my/your family chunks; the later-letter our and polite/plural your labels wait for
+      position 8 with the full agreement explanation.
+    introduces:
+      letters: *id007
+      grammar: &id008
+      - G-a1-021
+      vocabulary:
+      - W-206
+      - W-239
+      - W-234
+      - W-235
+      - W-203
+    uses:
+      grammar: []
+      vocabulary:
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+      - W-138
+      - W-202
+      - W-158
+      - W-229
+    evidence: &id009
+    - T-305
+    - T-303
+    - T-304
+    - V-301
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id008
+      vocabulary:
+      - W-206
+      - W-239
+      - W-234
+      - W-235
+      - W-203
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+      - W-138
+      - W-202
+      - W-158
+      - W-229
+    evidence: *id009
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: watch-and-repeat
+    placement: inline
+    focus: Watch the whole family video for listening input, then repeat teacher-modelled Б/П and the
+      family labels in a chosen context. The video has no claimed exact target timestamps.
+    targets:
+    - W-206
+    - W-239
+    - W-234
+    - W-235
+    - W-203
+    learner_reads: []
+  - id: a2
+    type: match-up
+    placement: workbook
+    focus: Match each acquired relationship or pet label to its profile entry. Distinguish two different
+      relationships in each comparison rather than matching identical strings. Source form sides from
+      word records, with one reason per pair.
+    targets:
+    - W-206
+    - W-239
+    - W-234
+    - W-235
+    - W-203
+    - W-081
+    - W-101
+    - W-205
+    learner_reads: []
+  videos:
+  - evidence: V-301
+    use: 'Lesson 3 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 4
+  slug: my-chosen-circle
+  title: родина
+  kind: recap
+  job: Introduce selected people in a chosen photo or fictional circle.
+  rationale: Use acquired language to accomplish a chosen adult purpose. The learner makes meaningful
+    choices, then checks the result against the stated criteria. This task replaces a second exercise
+    set; it introduces nothing.
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled:
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+      - W-138
+      - W-202
+      - W-158
+      - W-229
+      - W-206
+      - W-239
+      - W-234
+      - W-235
+      - W-203
+  steps:
+  - id: s1
+    kind: recap
+    uses:
+      grammar:
+      - G-a1-019
+      - G-a1-020
+      - G-a1-021
+      vocabulary:
+      - W-081
+      - W-101
+      - W-205
+      - W-010
+      - W-011
+      - W-138
+      - W-202
+      - W-158
+      - W-229
+      - W-206
+      - W-239
+      - W-234
+      - W-235
+      - W-203
+    evidence:
+    - T-301
+    - T-303
+    - T-304
+    - V-301
+    practice: []
+    needs: []
+    task:
+      id: my-chosen-circle-task
+      action: personalize
+      context_en: A new acquaintance asks about a photo. Choose your own photo, a fictional family or
+        an equivalent trusted circle; you do not have to disclose personal relationships.
+      instruction_en: Choose the people or pet you want to introduce. Say the acquired labels with the
+        practised possessive chunks, then write short supported captions. Read a partner’s chosen captions
+        and identify the intended people. Change one relationship or owner and adapt a label rather than
+        copying the model.
+      response_mode: spoken_or_written
+      success_criteria_en:
+      - The chosen labels identify the intended people or pet.
+      - The possessive-label chunks match the intended speaker and recipient.
+      - The source-attested family word keeps its apostrophe and separate pronunciation.
+      - A partner can match the supported captions to the chosen photo.
+      learner_reads:
+      - ref: T-303
+        words:
+        - твоя мама
+        - моя мама
+  consolidation: []
+  activities: []
+  videos:
+  - evidence: V-301
+    use: 'Lesson 4 s1: revisit the collected whole visible video as familiar listening before the practical
+      task. No new inventory is acquired or tested from it.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []

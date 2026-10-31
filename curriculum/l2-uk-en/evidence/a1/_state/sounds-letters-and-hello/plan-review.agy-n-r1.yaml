@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "a1-sounds-letters-and-hello-n-r1"
+  attempt_id: "agy-n-r1"
+  manifest_sha256: "dcb02bfb8ee53b4db2179acaad5284ef219cb836eaa14c096eb8ca3a5fd5ba75"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "<model>"
+  harness: "<harness>"
+  family: "<family>"
+  prompt_sha256: "9c6d05bb9b4f2a516e712fe2dcaf87833f48ee3e0e5eb94cba37d8a5a866c1da"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean  # verify_words: rr-16d71166da1c316883ce (привіт, голосні, звуки, букви, слова, наголос, інтонація, добрий, день, моя, розмова); inspect_words: rr-bea2843b4955f3e8e154 (all forms clean in contextual sense)
+  sequencing: clean
+  sizing: clean
+  inventory: clean  # verify_words: rr-6450149fe4bed5a72989 (all 19 core items confirmed); verify_stress: rr-cba2c97891d9bbc53a21 (приві́т); search_style_guide: rr-e76a5a037c8b7937b76d; search_slovnyk_me: rr-d7d3db66c45365fc2ad4 (па-па)
+  activities: clean  # mapped v1 totals: 10 inline (62 response opportunities, 0 workbook) vs fresh plan 10 inline + 11 workbook across 5 instructional lessons (5 distinct workbook types, longest same-type run 1); response opportunities are not_available_at_this_stage
+  evidence_fit: clean  # search_text: rr-3f8e3f66b95f79da0866 (Avramenko 8-klas chunk 8-klas-ukrmova-avramenko-2025_s0104 on etiquette dialogue formulas)
+  standard_and_ulp: clean
+findings: []

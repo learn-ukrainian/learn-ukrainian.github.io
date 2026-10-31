@@ -1,0 +1,47 @@
+issue: 8425
+status: unresolved
+disposition: <!-- VERIFY --> No selected Sources-backed bilingual gloss. Retain every formula definition;
+  do not teach or score any of these formula ids until source selection is recorded. An English note is
+  not a selected gloss.
+owner: claude-cto
+items:
+- id: W-297
+  text: Моє прізвище...
+  status: unresolved
+  required: Sources-backed bilingual formula sense and citation, selected through the word-store tools
+  use: withheld pending verification
+- id: W-298
+  text: Як вас звати?
+  status: unresolved
+  required: Sources-backed bilingual formula sense and citation, selected through the word-store tools
+  use: withheld pending verification
+- id: W-299
+  text: Хто це?
+  status: unresolved
+  required: Sources-backed bilingual formula sense and citation, selected through the word-store tools
+  use: withheld pending verification
+- id: W-301
+  text: У мене є...
+  status: unresolved
+  required: Sources-backed bilingual formula sense and citation, selected through the word-store tools
+  use: withheld pending verification
+- id: W-302
+  text: Що нового?
+  status: unresolved
+  required: Sources-backed bilingual formula sense and citation, selected through the word-store tools
+  use: withheld pending verification
+- id: W-307
+  text: Солодких снів!
+  status: unresolved
+  required: Sources-backed bilingual formula sense and citation, selected through the word-store tools
+  use: withheld pending verification
+- id: W-308
+  text: Дати п’ять!
+  status: unresolved
+  required: Sources-backed bilingual formula sense and citation, selected through the word-store tools
+  use: withheld pending verification
+- id: W-309
+  text: Передати привіт.
+  status: unresolved
+  required: Sources-backed bilingual formula sense and citation, selected through the word-store tools
+  use: withheld pending verification

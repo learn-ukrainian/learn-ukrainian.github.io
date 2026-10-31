@@ -1,0 +1,129 @@
+{
+  "activity_report": {
+    "explanation_coverage": "not_available_at_this_stage",
+    "lessons": [
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "observe": 2,
+              "quiz": 1
+            },
+            "total": 3
+          },
+          "workbook": {
+            "by_type": {
+              "match-up": 1,
+              "odd-one-out": 1
+            },
+            "total": 2
+          }
+        },
+        "distinct_types": [
+          "match-up",
+          "observe",
+          "odd-one-out",
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 1
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {},
+            "total": 0
+          },
+          "workbook": {
+            "by_type": {},
+            "total": 0
+          }
+        },
+        "distinct_types": [],
+        "has_workbook": false,
+        "is_recap": true,
+        "kind": "recap",
+        "n": 2
+      }
+    ],
+    "module": {
+      "all_distinct_types": [
+        "match-up",
+        "observe",
+        "odd-one-out",
+        "quiz"
+      ],
+      "inline_activities": 3,
+      "largest_workbook_type": "match-up",
+      "largest_workbook_type_share": 0.5,
+      "longest_same_type_workbook_run": 1,
+      "longest_same_type_workbook_run_type": "match-up",
+      "non_recap_lessons": 1,
+      "non_recap_lessons_with_workbook": 1,
+      "workbook_activities": 2,
+      "workbook_distinct_types": [
+        "match-up",
+        "odd-one-out"
+      ],
+      "workbook_presence_complete": true
+    },
+    "module_slug": "introduction-to-ukrainian",
+    "rendered": "not_available_at_this_stage",
+    "response_opportunities": "not_available_at_this_stage",
+    "stage": "plan"
+  },
+  "failures": [],
+  "inputs": {
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "8ff6f38e34eedc3151bf15f3c622ed318113a5d7e94eb2880c7b14e2ba86f761",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "0581c149864df57af58f0b8675a88924869a212d4f21ddaa6103d3223213aa40",
+    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml": "0a78fbdec4b52213a020f177c29c7c002ffc6fd1399c7bbfda575c9594b2da98",
+    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock": "e9dae00fa24f49de91e24bee6580f9fc797963aac8de0df96ea36936d961ea88",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "6e4677d46398bb934d189ab2f7b5c2a1afba3afc8daa16563acbf93ceace0d03",
+    "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
+    "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
+    "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
+    "schemas/arc.schema.json": "af1c1ee66c1e58fda00c975663fe409ad1e2b6033b699c916f36b23fdd5d75b2",
+    "schemas/module-plan-v2.schema.json": "112982f5ff3a7477596a52dce0003e3c7cf9579c98a41eca068a31f6087776e2",
+    "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
+    "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
+    "scripts/curriculum/validate/placement_table.yaml": "b3268a3feae54e4a91f28d5a0858989f291ed3280412345ef07f031075543234"
+  },
+  "level": "a1",
+  "mode": "provisional",
+  "not_checked": [
+    {
+      "code": "minutes_constants_undefined",
+      "lesson": null,
+      "message": "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
+      "step": null
+    },
+    {
+      "code": "arc_has_no_structured_grammar_or_vocabulary",
+      "lesson": null,
+      "message": "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
+      "step": null
+    },
+    {
+      "code": "title_quantities_not_parsed",
+      "lesson": null,
+      "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
+      "step": null
+    },
+    {
+      "code": "pending_promotion",
+      "lesson": null,
+      "message": "evidence_ref.sha256 is a960f2b776f249d13de286f88aaa67f084fbb5ccf96f37c1f71c70506b4aa5a9 and the provisional pack's sha256 is 0a78fbdec4b52213a020f177c29c7c002ffc6fd1399c7bbfda575c9594b2da98; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "step": null
+    }
+  ],
+  "notes": [],
+  "slug": "introduction-to-ukrainian",
+  "status": "pass",
+  "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",
+  "waivers": []
+}

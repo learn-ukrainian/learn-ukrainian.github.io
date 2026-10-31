@@ -1,0 +1,179 @@
+issue: 8425
+source: Ukrainian Lessons public word recordings
+records:
+- word: W-074
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/2_pryvit.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 9ad59ddaab7ee8360310eee4d8f9d3784ed71c54e6233be26550ce1943528a0b
+  http_status: 200
+  bytes: 8604
+  duration_seconds: 0.711678
+  interval: 0–0.711678
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-076
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/88_den.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 4405d24d183f90dd0be027a1674e0d4c5404f0c34d6b6ebeff4fc3cbefe6ec1e
+  http_status: 200
+  bytes: 8155
+  duration_seconds: 0.900476
+  interval: 0–0.900476
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-237
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/90_ranok.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 68e87c992df24f974f187d9f48a7ad4422d97db0cdd88c550227ddbb8f39fe5e
+  http_status: 200
+  bytes: 10059
+  duration_seconds: 1.016689
+  interval: 0–1.016689
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-200
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/91_vechir.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: ca817047a11d8ce2f96f6589bc5b6128d499f33cb6597f7e84aeaa7ecfb2fbfb
+  http_status: 200
+  bytes: 10113
+  duration_seconds: 0.987642
+  interval: 0–0.987642
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-220
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/89_nich.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: bf4991434850169a3cd8ce2ac7db75d91605665d6a136d7ecbc2ba66ed627ea6
+  http_status: 200
+  bytes: 9276
+  duration_seconds: 1.016667
+  interval: 0–1.016667
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-096
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/5_tak.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 678184dce1140fd50d0d7c9c65bb1cf565c6bb3cb84cba6edac12591a6b5d992
+  http_status: 200
+  bytes: 6359
+  duration_seconds: 0.595488
+  interval: 0–0.595488
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-295
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/7.-vitaju.mp3
+  publisher_page: https://www.ukrainianlessons.com/greetings/
+  publisher_page_sha256: 68512d269bd33e3591ad7a0f753c8ec9f00f94d6be58fe4c3319842760cbff5a
+  audio_sha256: f809e20ebc624c6ae8a62b67ba22e6e9577699bc471ff54b7f9e7c731626b17b
+  http_status: 200
+  bytes: 23260
+  duration_seconds: 1.310227
+  interval: 0–1.310227
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-294
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/2.-buvaj.mp3
+  publisher_page: https://www.ukrainianlessons.com/goodbye-in-ukrainian/
+  publisher_page_sha256: 50eab2c82cf82879674b7d4eb6b3e5c4535aeb9fe5d0358211be86bd6f4975fe
+  audio_sha256: 2eefd1b2bd56e961917e2daa355c98974c7f05d463a8e13810c8af244166bf90
+  http_status: 200
+  bytes: 17258
+  duration_seconds: 0.98771
+  interval: 0–0.987710
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-274
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/8.-pa-pa.mp3
+  publisher_page: https://www.ukrainianlessons.com/goodbye-in-ukrainian/
+  publisher_page_sha256: 50eab2c82cf82879674b7d4eb6b3e5c4535aeb9fe5d0358211be86bd6f4975fe
+  audio_sha256: f4f7becfdce33033f7428ed5c21447d156620aa224909749f86c48effa455c0f
+  http_status: 200
+  bytes: 17835
+  duration_seconds: 0.967551
+  interval: 0–0.967551
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-291
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/8_bud_laska.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: b297c7173262803ad0965d6fe1ae107fc6f9908f3617c94471c986f183839f77
+  http_status: 200
+  bytes: 10844
+  duration_seconds: 1.016667
+  interval: 0–1.016667
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-292
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/9_diakuiu.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: dea92971a89be420a9c59d87a81287409bfe24ae15ff356a9c1d34e5b8000ca0
+  http_status: 200
+  bytes: 8863
+  duration_seconds: 0.813333
+  interval: 0–0.813333
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-293
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/7_vybachte.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 44283822461a7de468e593589ecd9982005a0f43eb4453f74efcc5d4f7974eff
+  http_status: 200
+  bytes: 10374
+  duration_seconds: 0.973107
+  interval: 0–0.973107
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-287
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/1_dobryi_den.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 7648d1def9d8e000922a493b83055bef5adf84f018f05299e6320e9d6d8f8e4b
+  http_status: 200
+  bytes: 12692
+  duration_seconds: 1.278118
+  interval: 0–1.278118
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-288
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/3_dobroho_ranku.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 25f1ab0dfd05c600c2774642a023954c4284ca6f3d5ab0425ec30bdf485cd705
+  http_status: 200
+  bytes: 12903
+  duration_seconds: 1.24907
+  interval: 0–1.249070
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-289
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/4_dobryi_vechir.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 75d84c9c4c5b23181b8037d3500290fb10714e4921ebc0b55659b5e39777aed3
+  http_status: 200
+  bytes: 11551
+  duration_seconds: 1.016689
+  interval: 0–1.016689
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.
+- word: W-290
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/23_do_pobachennia.mp3
+  publisher_page: https://www.ukrainianlessons.com/ph-essential/
+  publisher_page_sha256: 5042e397a0c844647083b4dcc5fb36bfe1aa11fed37a3bbe8ef14abf6de9b24e
+  audio_sha256: 6b27008a94b035fa25d83060d316c81c53d9c03fa7a0b0c09979ece0c144c859
+  http_status: 200
+  bytes: 12932
+  duration_seconds: 1.190975
+  interval: 0–1.190975
+  provenance: Dedicated word/phrase recording linked by the publisher; complete file interval measured
+    by ffprobe, not an inferred YouTube excerpt.

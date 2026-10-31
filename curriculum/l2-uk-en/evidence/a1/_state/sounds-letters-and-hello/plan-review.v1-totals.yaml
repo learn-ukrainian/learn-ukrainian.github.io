@@ -4,22 +4,20 @@ totals:
   all:
     activities:
       by_type:
-        error-correction: 1
         fill-in: 1
         group-sort: 1
         match-up: 1
-        quiz: 3
+        quiz: 4
         translate: 1
         true-false: 1
         watch-and-repeat: 1
       total: 10
     response_opportunities:
       by_type:
-        error-correction: 5
         fill-in: 6
         group-sort: 14
         match-up: 9
-        quiz: 15
+        quiz: 20
         translate: 7
         true-false: 6
         watch-and-repeat: 0
@@ -30,22 +28,20 @@ totals:
   inline:
     activities:
       by_type:
-        error-correction: 1
         fill-in: 1
         group-sort: 1
         match-up: 1
-        quiz: 3
+        quiz: 4
         translate: 1
         true-false: 1
         watch-and-repeat: 1
       total: 10
     response_opportunities:
       by_type:
-        error-correction: 5
         fill-in: 6
         group-sort: 14
         match-up: 9
-        quiz: 15
+        quiz: 20
         translate: 7
         true-false: 6
         watch-and-repeat: 0
@@ -65,7 +61,7 @@ totals:
       total: 0
 v1_module:
   path: curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/activities.yaml
-  sha256: f29906d7e668234e5bea0a82a0106d982036bc5c2e71e12c9c679433cfd0d52b
+  sha256: eecf652a468979301424fcf82f8f2177c88e4c2b4ed6ecd1a718e8e267022de0
   shape: flat list (no placement marker; counted as inline)
   status: present
 v1_totals_schema: 1

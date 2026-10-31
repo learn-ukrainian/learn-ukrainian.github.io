@@ -1,0 +1,899 @@
+plan_schema: 2
+module: things-have-gender
+level: a1
+sequence: 8
+slug: things-have-gender
+version: '1.0'
+title: Рід іменників
+subtitle: Familiar belongings, noun gender and the complete singular possessive set
+focus: Identify familiar belongings using noun gender and the complete singular possessive set, including
+  наш, ваш, їхній Adult or teen situations retain English support. Private-book wording is not teaching
+  material. Unresolved formula ids remain withheld from teaching and scoring.
+objectives:
+- Identify familiar belongings with sourced masculine, feminine and neuter singular noun classes.
+- Use all singular-gender forms of my, your, our, polite/plural your and their.
+- Use invariant his and her labels and distinguish owner meaning from noun agreement.
+- Read and produce useful labels that allow another person to identify an object and its owner.
+connects_to:
+- what-is-it-like
+prerequisites:
+- checkpoint-first-contact
+register: neutral
+changelog:
+- '1.0 (2026-10-31): Independently authored for #8425 steps 1-4 under the approved r6 arc. Plans only;
+  no lesson builds.'
+arc_ref:
+  level: a1
+  position: 8
+evidence_ref:
+  path: curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml
+  sha256: '34d289bdda9ca3f3a82c7439240fcff001d3e2fa791df097b44a7b2c04fec6b7'
+lessons:
+- n: 1
+  slug: familiar-things-and-gender
+  title: книжка
+  kind: teach
+  job: Identify familiar belongings and associate each singular noun with its sourced grammatical gender.
+  rationale: A grammatical class belongs to the noun rather than to the physical object. Begin with a
+    small, useful contrasting set; dictionary records settle it, so an ending is a clue rather than an
+    infallible rule. English explains the task and the source-grounded model. Spoken rehearsal precedes
+    supported print. New words are chosen for this adult purpose rather than to fill a vocabulary quota;
+    no activity prompt gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id001 []
+      sounds: []
+    grammar:
+    - id: G-a1-027
+      point: Familiar singular nouns have masculine, feminine or neuter grammatical gender; source paradigms
+        settle the gender rather than the physical object.
+      evidence:
+      - T-701
+      - S-701
+    vocabulary:
+      core:
+      - lemma: книжка
+        evidence: W-204
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: телефон
+        evidence: W-207
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: вікно
+        evidence: W-251
+        forms:
+        - noun:inanim:n:v_naz
+      - lemma: він
+        evidence: W-003
+        forms:
+        - noun:unanim:m:v_naz:pron:pers:3
+      - lemma: вона
+        evidence: W-004
+        forms:
+        - noun:unanim:f:v_naz:pron:pers:3
+      - lemma: воно
+        evidence: W-005
+        forms:
+        - noun:unanim:n:v_naz:pron:pers:3
+      incidental: []
+      recycled:
+      - W-218
+      - W-216
+      - W-010
+  steps:
+  - id: s1
+    kind: teach
+    teach: Use T-701 to distinguish masculine, feminine and neuter singular noun classes. Present the
+      book, phone and window labels with the matching speaker-reference pronouns from their sourced records.
+      Compare endings as a first clue, check each noun against its record, and exclude plural-only nouns
+      rather than guessing their gender.
+    introduces:
+      letters: *id001
+      grammar: &id002
+      - G-a1-027
+      vocabulary:
+      - W-204
+      - W-207
+      - W-251
+      - W-003
+      - W-004
+      - W-005
+    uses:
+      grammar: []
+      vocabulary:
+      - W-218
+      - W-216
+      - W-010
+    evidence: &id003
+    - T-701
+    - S-701
+    - V-701
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id002
+      vocabulary:
+      - W-204
+      - W-207
+      - W-251
+      - W-003
+      - W-004
+      - W-005
+      - W-218
+      - W-216
+      - W-010
+    evidence: *id003
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Observe a familiar item and its sourced noun label with the gender-support pronoun. Say the
+      label and choose another object carrying the same noun class; do not equate physical ownership or
+      a person’s identity with grammatical gender.
+    targets:
+    - W-204
+    - W-207
+    - W-251
+    - W-003
+    - W-004
+    - W-005
+    learner_reads: []
+  - id: a2
+    type: group-sort
+    placement: workbook
+    focus: Group the singular book, phone, window, mirror and button records by Gender with values Masc,
+      Fem and Neut. Bind every entry to its word record and explain why. Use only the context-specific
+      marker-free analysis; replace any unresolved ambiguous entry rather than guessing a key.
+    targets:
+    - W-204
+    - W-207
+    - W-251
+    - W-218
+    - W-216
+    learner_reads: []
+  videos:
+  - evidence: V-701
+    use: 'Lesson 1 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 2
+  slug: mine-and-yours
+  title: мій
+  kind: teach
+  job: Identify an item as mine or yours using the possessed noun’s singular gender.
+  rationale: 'Previously supported family labels now become an explicit agreement pattern. Contrast owner
+    with possessed noun: changing owner chooses the possessive family; changing the noun chooses its singular
+    gender form. English explains the task and the source-grounded model. Spoken rehearsal precedes supported
+    print. New words are chosen for this adult purpose rather than to fill a vocabulary quota; no activity
+    prompt gives its answer, and choice order is shuffled.'
+  inventory:
+    phonetics:
+      letters: &id004 []
+      sounds: []
+    grammar:
+    - id: G-a1-028
+      point: The first- and second-person singular possessive forms agree with the gender of the possessed
+        singular noun.
+      evidence:
+      - T-702
+      - T-701
+    vocabulary:
+      core:
+      - lemma: стіл
+        evidence: W-225
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: лампа
+        evidence: W-224
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: ліжко
+        evidence: W-248
+        forms:
+        - noun:inanim:n:v_naz
+      incidental: []
+      recycled:
+      - W-010
+      - W-011
+      - W-204
+      - W-207
+      - W-251
+      - W-003
+      - W-004
+      - W-005
+  steps:
+  - id: s1
+    kind: teach
+    teach: Use the public matrix in T-702 and word-store forms to teach all masculine, feminine and neuter
+      singular forms of the acquired my and your possessives. Keep the owner fixed while changing the
+      table, lamp or bed noun; then keep the noun fixed and change owner. Do not teach plural agreement
+      or adjective agreement as a general system.
+    introduces:
+      letters: *id004
+      grammar: &id005
+      - G-a1-028
+      vocabulary:
+      - W-225
+      - W-224
+      - W-248
+    uses:
+      grammar: []
+      vocabulary:
+      - W-010
+      - W-011
+      - W-204
+      - W-207
+      - W-251
+      - W-003
+      - W-004
+      - W-005
+    evidence: &id006
+    - T-702
+    - T-701
+    - S-701
+    - V-702
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id005
+      vocabulary:
+      - W-225
+      - W-224
+      - W-248
+      - W-010
+      - W-011
+      - W-204
+      - W-207
+      - W-251
+      - W-003
+      - W-004
+      - W-005
+    evidence: *id006
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: phrase-table
+    placement: inline
+    focus: Build singular labels by choosing an owner and a source-verified noun. The table presents all
+      three gender forms of the two possessive records; choose a label, say it and change one feature
+      at a time.
+    targets:
+    - W-010
+    - W-011
+    - W-225
+    - W-224
+    - W-248
+    - W-204
+    - W-207
+    - W-251
+    learner_reads: []
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: Choose the complete label fitting an item and its stated owner. Give two to four store-generated
+      possessive forms across noun-gender contexts, with one matching key per item, shuffled options and
+      a sourced explanation for every wrong option.
+    targets:
+    - W-010
+    - W-011
+    - W-225
+    - W-224
+    - W-248
+    - W-204
+    - W-207
+    - W-251
+    learner_reads: []
+    options:
+    - мій стіл
+    - мій лампа
+    - мій ліжко
+    - мій книжка
+    - мій телефон
+    - мій вікно
+    - моя стіл
+    - моя лампа
+    - моя ліжко
+    - моя книжка
+    - моя телефон
+    - моя вікно
+    - моє стіл
+    - моє лампа
+    - моє ліжко
+    - моє книжка
+    - моє телефон
+    - моє вікно
+    - твій стіл
+    - твій лампа
+    - твій ліжко
+    - твій книжка
+    - твій телефон
+    - твій вікно
+    - твоя стіл
+    - твоя лампа
+    - твоя ліжко
+    - твоя книжка
+    - твоя телефон
+    - твоя вікно
+    - твоє стіл
+    - твоє лампа
+    - твоє ліжко
+    - твоє книжка
+    - твоє телефон
+    - твоє вікно
+  videos:
+  - evidence: V-702
+    use: 'Lesson 2 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 3
+  slug: ours-yours-and-theirs
+  title: їхній
+  kind: teach
+  job: Identify shared belongings with our, polite or plural your, and their singular possessive forms.
+  rationale: A shared workspace gives the three owner groups a practical contrast. All three forms per
+    possessive are available from the source matrix and store; the lesson keeps possessed objects singular.
+    English explains the task and the source-grounded model. Spoken rehearsal precedes supported print.
+    New words are chosen for this adult purpose rather than to fill a vocabulary quota; no activity prompt
+    gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id008 []
+      sounds: []
+    grammar:
+    - id: G-a1-029
+      point: The possessives for our, polite or plural your, and their agree with the gender of the possessed
+        singular noun.
+      evidence:
+      - T-702
+      - T-701
+    vocabulary:
+      core:
+      - lemma: наш
+        evidence: W-013
+        forms: &id007
+        - adj:m:v_naz:pron:pos
+        - adj:f:v_naz:pron:pos
+        - adj:n:v_naz:pron:pos
+      - lemma: ваш
+        evidence: W-014
+        forms: *id007
+      - lemma: їхній
+        evidence: W-015
+        forms: *id007
+      - lemma: рюкзак
+        evidence: W-211
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: ручка
+        evidence: W-221
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: ноутбук
+        evidence: W-262
+        forms:
+        - noun:inanim:m:v_naz
+      incidental: []
+      recycled:
+      - W-010
+      - W-011
+      - W-204
+      - W-207
+      - W-251
+      - W-225
+      - W-224
+      - W-248
+  steps:
+  - id: s1
+    kind: teach
+    teach: Use T-702 to introduce all singular-gender forms of our, polite/plural your and their. Distinguish
+      a plural or polite owner from multiple possessed objects. Label a backpack, pen or laptop for the
+      chosen owner, then vary the noun across the already acquired masculine, feminine and neuter set.
+      Use only nominative singular objects.
+    introduces:
+      letters: *id008
+      grammar: &id009
+      - G-a1-029
+      vocabulary:
+      - W-013
+      - W-014
+      - W-015
+      - W-211
+      - W-221
+      - W-262
+    uses:
+      grammar: []
+      vocabulary:
+      - W-010
+      - W-011
+      - W-204
+      - W-207
+      - W-251
+      - W-225
+      - W-224
+      - W-248
+    evidence: &id010
+    - T-702
+    - T-701
+    - S-701
+    - V-702
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id009
+      vocabulary:
+      - W-013
+      - W-014
+      - W-015
+      - W-211
+      - W-221
+      - W-262
+      - W-010
+      - W-011
+      - W-204
+      - W-207
+      - W-251
+      - W-225
+      - W-224
+      - W-248
+    evidence: *id010
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: phrase-table
+    placement: inline
+    focus: Use an owner card and an acquired noun to build a singular possessive label. Present the three
+      gender forms of each new possessive record, then contrast the polite recipient with a group of owners
+      without introducing plural object agreement.
+    targets:
+    - W-013
+    - W-014
+    - W-015
+    - W-211
+    - W-221
+    - W-262
+    - W-204
+    - W-207
+    - W-251
+    learner_reads: []
+  - id: a2
+    type: match-up
+    placement: workbook
+    focus: Match each owner-and-object context to its complete sourced singular label. Bind form sides
+      to their word records, state why the owner and noun gender fit, and include contrasting contexts
+      so matching does not reduce to identical words.
+    targets:
+    - W-013
+    - W-014
+    - W-015
+    - W-211
+    - W-221
+    - W-262
+    - W-010
+    - W-011
+    - W-204
+    learner_reads: []
+  videos:
+  - evidence: V-702
+    use: 'Lesson 3 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 4
+  slug: his-hers-and-my-desk
+  title: його
+  kind: teach
+  job: Identify belongings with his and her and distinguish these invariant forms from the agreeing possessive
+    families.
+  rationale: The invariant forms complete the singular possessive set. Owner meaning changes the label
+    while noun gender leaves these two forms unchanged. A mixed set checks the pattern without adding
+    oblique-pronoun grammar. English explains the task and the source-grounded model. Spoken rehearsal
+    precedes supported print. New words are chosen for this adult purpose rather than to fill a vocabulary
+    quota; no activity prompt gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id011 []
+      sounds: []
+    grammar:
+    - id: G-a1-030
+      point: The possessives for his and her keep their form across singular noun genders; they are distinguished
+        from the agreeing possessive set.
+      evidence:
+      - T-703
+      - T-702
+    vocabulary:
+      core:
+      - lemma: його
+        evidence: W-232
+        forms:
+        - adj:m:v_naz:nv:pron:pos
+        - adj:f:v_naz:nv:pron:pos
+        - adj:n:v_naz:nv:pron:pos
+      - lemma: її
+        evidence: W-278
+        forms:
+        - adj:m:v_naz:nv:pron:pos
+        - adj:f:v_naz:nv:pron:pos
+        - adj:n:v_naz:nv:pron:pos
+      - lemma: шафа
+        evidence: W-208
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: олівець
+        evidence: W-230
+        forms:
+        - noun:inanim:m:v_naz
+      incidental: []
+      recycled:
+      - W-010
+      - W-011
+      - W-013
+      - W-014
+      - W-015
+      - W-204
+      - W-207
+      - W-251
+      - W-225
+      - W-224
+      - W-248
+      - W-211
+      - W-221
+      - W-262
+  steps:
+  - id: s1
+    kind: teach
+    teach: Use the possessive column and examples in T-703 to introduce his and her labels. Change the
+      possessed singular noun through all three genders while preserving the possessive form. Contrast
+      with all acquired agreeing possessives from T-702, and use the wardrobe or pencil labels as meaningful
+      additions. Do not analyse personal-pronoun objects or the source’s full case contrasts.
+    introduces:
+      letters: *id011
+      grammar: &id012
+      - G-a1-030
+      vocabulary:
+      - W-232
+      - W-278
+      - W-208
+      - W-230
+    uses:
+      grammar: []
+      vocabulary:
+      - W-010
+      - W-011
+      - W-013
+      - W-014
+      - W-015
+      - W-204
+      - W-207
+      - W-251
+      - W-225
+      - W-224
+      - W-248
+      - W-211
+      - W-221
+      - W-262
+    evidence: &id013
+    - T-703
+    - T-702
+    - T-701
+    - S-701
+    - V-701
+    - V-702
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id012
+      vocabulary:
+      - W-232
+      - W-278
+      - W-208
+      - W-230
+      - W-010
+      - W-011
+      - W-013
+      - W-014
+      - W-015
+      - W-204
+      - W-207
+      - W-251
+      - W-225
+      - W-224
+      - W-248
+      - W-211
+      - W-221
+      - W-262
+    evidence: *id013
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Observe three singular nouns with each invariant possessive. Say a chosen label, then change
+      the noun and notice which part stays the same. Compare with an agreeing my or their label using
+      the same acquired nouns.
+    targets:
+    - W-232
+    - W-278
+    - W-208
+    - W-230
+    learner_reads: []
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: Select a complete singular label from a mixed owner-and-object context using all seven possessive
+      families across the set. Each item has clearly wrong owner or agreement distractors and one key;
+      shuffle choices and explain the source-grounded reason without revealing the answer in the prompt.
+    targets:
+    - W-010
+    - W-011
+    - W-013
+    - W-014
+    - W-015
+    - W-232
+    - W-278
+    - W-208
+    - W-230
+    - W-204
+    - W-207
+    - W-251
+    learner_reads: []
+    options:
+    - мій шафа
+    - мій олівець
+    - мій книжка
+    - мій телефон
+    - мій вікно
+    - моя шафа
+    - моя олівець
+    - моя книжка
+    - моя телефон
+    - моя вікно
+    - моє шафа
+    - моє олівець
+    - моє книжка
+    - моє телефон
+    - моє вікно
+    - твій шафа
+    - твій олівець
+    - твій книжка
+    - твій телефон
+    - твій вікно
+    - твоя шафа
+    - твоя олівець
+    - твоя книжка
+    - твоя телефон
+    - твоя вікно
+    - твоє шафа
+    - твоє олівець
+    - твоє книжка
+    - твоє телефон
+    - твоє вікно
+    - наш шафа
+    - наш олівець
+    - наш книжка
+    - наш телефон
+    - наш вікно
+    - наша шафа
+    - наша олівець
+    - наша книжка
+    - наша телефон
+    - наша вікно
+    - наше шафа
+    - наше олівець
+    - наше книжка
+    - наше телефон
+    - наше вікно
+    - ваш шафа
+    - ваш олівець
+    - ваш книжка
+    - ваш телефон
+    - ваш вікно
+    - ваша шафа
+    - ваша олівець
+    - ваша книжка
+    - ваша телефон
+    - ваша вікно
+    - ваше шафа
+    - ваше олівець
+    - ваше книжка
+    - ваше телефон
+    - ваше вікно
+    - їхній шафа
+    - їхній олівець
+    - їхній книжка
+    - їхній телефон
+    - їхній вікно
+    - їхня шафа
+    - їхня олівець
+    - їхня книжка
+    - їхня телефон
+    - їхня вікно
+    - їхнє шафа
+    - їхнє олівець
+    - їхнє книжка
+    - їхнє телефон
+    - їхнє вікно
+    - його шафа
+    - його олівець
+    - його книжка
+    - його телефон
+    - його вікно
+    - її шафа
+    - її олівець
+    - її книжка
+    - її телефон
+    - її вікно
+  videos:
+  - evidence: V-701
+    use: 'Lesson 4 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  - evidence: V-702
+    use: 'Lesson 4 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 5
+  slug: our-shared-space
+  title: їхній
+  kind: recap
+  job: Identify and label familiar belongings for the people sharing a space.
+  rationale: Use acquired language to accomplish a chosen adult purpose. The learner makes meaningful
+    choices, then checks the result against the stated criteria. This task replaces a second exercise
+    set; it introduces nothing.
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled:
+      - W-204
+      - W-207
+      - W-251
+      - W-003
+      - W-004
+      - W-005
+      - W-225
+      - W-224
+      - W-248
+      - W-013
+      - W-014
+      - W-015
+      - W-211
+      - W-221
+      - W-262
+      - W-232
+      - W-278
+      - W-208
+      - W-230
+      - W-010
+      - W-011
+  steps:
+  - id: s1
+    kind: recap
+    uses:
+      grammar:
+      - G-a1-027
+      - G-a1-028
+      - G-a1-029
+      - G-a1-030
+      vocabulary:
+      - W-204
+      - W-207
+      - W-251
+      - W-003
+      - W-004
+      - W-005
+      - W-225
+      - W-224
+      - W-248
+      - W-013
+      - W-014
+      - W-015
+      - W-211
+      - W-221
+      - W-262
+      - W-232
+      - W-278
+      - W-208
+      - W-230
+      - W-010
+      - W-011
+    evidence:
+    - T-701
+    - T-702
+    - T-703
+    - V-701
+    practice: []
+    needs: []
+    task:
+      id: our-shared-space-task
+      action: personalize
+      context_en: You and other adults share a work or study space. Choose a set of acquired objects and
+        decide which belong to you, your partner, another person or a group.
+      instruction_en: Read a partner’s acquired labels and return the objects to the intended owners.
+        Create your own spoken or written labels for selected singular belongings. Change an owner and
+        a noun, then adapt the labels. Include an invariant his/her label and an agreeing possessive label,
+        and explain the choice using the noun’s sourced gender. Use the other acquired possessive families
+        as needed for your chosen people.
+      response_mode: spoken_or_written
+      success_criteria_en:
+      - The noun labels identify the intended familiar objects.
+      - The possessive meaning identifies the intended owner.
+      - Agreeing possessives match the possessed singular noun’s sourced gender.
+      - His and her keep their form when the noun gender changes.
+      - The partner can act on the labels to return an object.
+      - The changed owner and noun lead to a newly chosen label rather than a copied model.
+      learner_reads:
+      - ref: T-702
+        words:
+        - мій
+        - моя
+        - моє
+        - твій
+        - твоя
+        - твоє
+        - наш
+        - наша
+        - наше
+        - ваш
+        - ваша
+        - ваше
+        - їхній
+        - їхня
+        - їхнє
+  consolidation: []
+  activities: []
+  videos:
+  - evidence: V-701
+    use: 'Lesson 5 s1: revisit the collected whole visible video as familiar listening before the practical
+      task. No new inventory is acquired or tested from it.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []

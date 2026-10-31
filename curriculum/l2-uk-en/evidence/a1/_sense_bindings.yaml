@@ -511,6 +511,836 @@ bindings:
   match: dictionary
   method: ohoiko_reference
   word: W-184
+- commitment: 5c2429162da7245b82c522b31520ab9b831fb55909722b6c65a3d09947f9e874
+  gloss: embroidered shirt
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#1
+  match: book
+  method: ohoiko_reference
+  word: W-188
+- commitment: 83bfd3977f28ed85251335eb5b13762ed7a4b0e80a00182a21d86c485a88f6eb
+  gloss: coat of arms
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#3
+  match: dictionary
+  method: ohoiko_reference
+  word: W-189
+- commitment: 49071333f56bb6644d84f471d6ebff93eb9bf49f472012135a2d70c80aef61f6
+  gloss: name
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#5
+  match: dictionary
+  method: ohoiko_reference
+  word: W-190
+- commitment: 78f31915ac7b798a96bcb1fe36579d374e8229db6111e228dca94f106485bcf9
+  gloss: viburnum
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#6
+  match: dictionary
+  method: ohoiko_reference
+  word: W-191
+- commitment: 32a60e53395e9562cf3ebd989451c07d0b2d9a2c288558fcfa1752f249b685e0
+  gloss: stork
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#7
+  match: dictionary
+  method: ohoiko_reference
+  word: W-192
+- commitment: 890113e8850610a6bcfbad605f2068f5d96f6466c5d7c1a13e064d6bd10a6d1d
+  gloss: Ukrainian Easter egg
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#11
+  match: book
+  method: ohoiko_reference
+  word: W-193
+- commitment: 9e4c854b52ff5131dc3d31b268bf80605acee7ee0a1e1312fcc1d671113895fa
+  gloss: flag
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#12
+  match: dictionary
+  method: ohoiko_reference
+  word: W-194
+- commitment: f3c9e15ae7cefcaaf1cb2ad4eb6fb40b3dec39ab57674224e7dcbba74ee0efb4
+  gloss: Canada
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#35
+  match: dictionary
+  method: ohoiko_reference
+  word: W-195
+- commitment: c1f7d33d837b3e547223027c5cf89a80fc062890197e893bd79bf2d48744bffe
+  gloss: language
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#51
+  match: dictionary
+  method: ohoiko_reference
+  word: W-196
+- commitment: 2ac2c1a89de8e7589729555d0bb4ba2ee499728e5a53de506c2c7162baa6407f
+  gloss: Poland
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#55
+  match: dictionary
+  method: ohoiko_reference
+  word: W-197
+- commitment: adbad0ed8dc3b2a57c552bb7bf69d1cd1122643d4c0c1fcbd59c6fe4275a2764
+  gloss: Ukrainian
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#70
+  match: book
+  method: ohoiko_reference
+  word: W-198
+- commitment: a9ee5889f447fda56aa15295ca3003a0fe4824364e1b50cde616705a94736d44
+  gloss: Ukrainian
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#71
+  match: book
+  method: ohoiko_reference
+  word: W-199
+- commitment: f9327fc6e67df746f9d954bf6c52e0df06645c5c281de31d885055b2bdb151ef
+  gloss: evening
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#96
+  match: dictionary
+  method: ohoiko_reference
+  word: W-200
+- commitment: e22db1457eb0863976435ee79634c7b894be73f782d769f565f44d335957cd62
+  gloss: smoke
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#103
+  match: dictionary
+  method: ohoiko_reference
+  word: W-201
+- commitment: d2892f080eddd238ecfd9f00d199f83b55aaea87abf47ebae86ae38da18ed702
+  gloss: child
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#104
+  match: dictionary
+  method: ohoiko_reference
+  word: W-202
+- commitment: ba47c4ad0b8405959e758403893e69ea117bcd3a47c3d667af568a8b086d5a71
+  gloss: cat
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#118
+  match: dictionary
+  method: ohoiko_reference
+  word: W-203
+- commitment: 27773811a9c0a89e7eb761c49b24a54e95cedcee9eeac7efcc640b8866042437
+  gloss: book
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#119
+  match: dictionary
+  method: ohoiko_reference
+  word: W-204
+- commitment: 5e271a62a5d458404f4f54614237ee50694c81cb105dc8ebd7e1688e0f97dcae
+  gloss: family
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#144
+  match: dictionary
+  method: ohoiko_reference
+  word: W-205
+- commitment: 8bcb5c93b03b5f8eefd600dc8b475757be11dd4fed48fcb405c038fcb21a0afc
+  gloss: sister
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#146
+  match: dictionary
+  method: ohoiko_reference
+  word: W-206
+- commitment: cbc4b0bcb963276b335e0c4b89ab13a63a52e47a14d76ff0bbe26a9d40ca1b22
+  gloss: phone
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#154
+  match: book
+  method: ohoiko_reference
+  word: W-207
+- commitment: 38fda8c17525c8d7ffab18ece41766b336d4273b3be0bbf07d0660a4e73f60a6
+  gloss: closet
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#164
+  match: dictionary
+  method: ohoiko_reference
+  word: W-208
+- commitment: 0ed9565d8545191ac7542d94b9d255abe1a4b9c5b2bb3815ed44741b932b8ea2
+  gloss: computer
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#186
+  match: dictionary
+  method: ohoiko_reference
+  word: W-209
+- commitment: 36e79428d91ef2618d9d985e954ea7e5bd0e36b3ea33d5159c94108e2a2eaeb1
+  gloss: backpack
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#209
+  match: dictionary
+  method: ohoiko_reference
+  word: W-211
+- commitment: f79077eb8f471fe9c660c721000717916ea0a484bcbfd99db8911d55fb555cf6
+  gloss: France
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#217
+  match: dictionary
+  method: ohoiko_reference
+  word: W-212
+- commitment: 6eecff2867a1570682dfb181697946412bd0812fbb168e68cfa657ae852ae817
+  gloss: lawyer
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#221
+  match: dictionary
+  method: ohoiko_reference
+  word: W-213
+- commitment: 7caa5c368a8efcae7eb5816a6a0fe6312d8ee9216ea78b76ca72aa80fd4fe664
+  gloss: lawyer
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#222
+  match: dictionary
+  method: ohoiko_reference
+  word: W-214
+- commitment: c981f2e064a996052f79aa2e4105adab5682ce812a1fc1f42738e90553ef4096
+  gloss: soup
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#223
+  match: dictionary
+  method: ohoiko_reference
+  word: W-215
+- commitment: 2dc2c07062d765b8f7d92c9f2ba40c538ecee6edc6bb75db97a9f83c8c51902b
+  gloss: button
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#239
+  match: dictionary
+  method: ohoiko_reference
+  word: W-216
+- commitment: 8e62ebc18b04ae489a8ef2336fbb3cd07894b21f4e9ba2519fe75ee6f523db97
+  gloss: bell
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#246
+  match: dictionary
+  method: ohoiko_reference
+  word: W-217
+- commitment: 1cb7eabfb7ebd7392640abbe600e8cbc8a6f1977010c11c12bc51bbf0cf7215b
+  gloss: mirror
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#249
+  match: dictionary
+  method: ohoiko_reference
+  word: W-218
+- commitment: 428d55692c9d9acd6f986b94d7ba607766f3cadb043b6b0cb0836d7beb201aa5
+  gloss: beetle
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#253
+  match: dictionary
+  method: ohoiko_reference
+  word: W-219
+- commitment: f0104ec5f2fc087f0cd1705666d301e7c949085eb27ee033613a4d622c74f162
+  gloss: night
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#262
+  match: dictionary
+  method: ohoiko_reference
+  word: W-220
+- commitment: 5be1628c56a71a8f420af42d11ea78247d1194f1e937f4683d40c4fda246fc90
+  gloss: pen
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#268
+  match: dictionary
+  method: ohoiko_reference
+  word: W-221
+- commitment: f0aff688218bf84d7ac8064d24d131ec3cd5c9f97ff88ac347ecd1e915f406ce
+  gloss: father
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#282
+  match: dictionary
+  method: ohoiko_reference
+  word: W-222
+- commitment: 77a1e343ec2cccfadcee08edd91e662b6821788d3542999b91c027e17810454a
+  gloss: bubble
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#287
+  match: dictionary
+  method: ohoiko_reference
+  word: W-223
+- commitment: 8d4dda248eb234c7b295e2f633546029a3b4d7853e12ae40b70cf542f9416645
+  gloss: lamp
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#297
+  match: dictionary
+  method: ohoiko_reference
+  word: W-224
+- commitment: 1bfaaf66b3e371b2f1113586881308e294cd53d6b3e4fea4984788ddc143532a
+  gloss: table
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#318
+  match: dictionary
+  method: ohoiko_reference
+  word: W-225
+- commitment: fb9660c79fdca4b3b3c5ea8c269841a3b47e0c48c1610238adcf73807ff1d762
+  gloss: student
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#320
+  match: dictionary
+  method: ohoiko_reference
+  word: W-226
+- commitment: cd88cefa60d8565d5729100b68a6ba0ff74d8659350b163bf0c8dea997350cb4
+  gloss: student
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#321
+  match: dictionary
+  method: ohoiko_reference
+  word: W-227
+- commitment: daf63b4d88e2006ffdfe0e9ca876bdb77b30ac31b546876a0a70d7ac657521c8
+  gloss: wallet
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#344
+  match: dictionary
+  method: ohoiko_reference
+  word: W-228
+- commitment: d0e1e2904590cf611c1c33614ab398e0451e6c9f379eaa2a70ae125b559f4e1d
+  gloss: daughter
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#356
+  match: dictionary
+  method: ohoiko_reference
+  word: W-229
+- commitment: 83b5a3fbea0748e0931ee27314640b3da2da813a5e593f756a38bccc7dd440f2
+  gloss: pencil
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#373
+  match: dictionary
+  method: ohoiko_reference
+  word: W-230
+- commitment: 13852b603ec305e6b38d614af8678a126d1fc1c3a9fe01f746c8a6f815d6b306
+  gloss: chair
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#387
+  match: dictionary
+  method: ohoiko_reference
+  word: W-231
+- commitment: ddaad6ecbf10c0d718104bf41ba981e3c35a516e66851495d0effee96e471240
+  gloss: his
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p203 Словничок#410
+  match: dictionary
+  method: ohoiko_reference
+  word: W-232
+- commitment: f2bfd290414b6dd6fd80e6cf22bb7cfbb64392fc70d9520fa46776d4f6e563b0
+  gloss: man
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#466
+  match: dictionary
+  method: ohoiko_reference
+  word: W-233
+- commitment: f3b0e288ad29c28d396e91081b2fd3a80678d2c7c52c1ec81bf7dc5519114996
+  gloss: grandmother
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#525
+  match: dictionary
+  method: ohoiko_reference
+  word: W-234
+- commitment: c50a8fd6b8e0a657bc272a7cbde31e3a7a759421aadb51222618a10d1c58a5e9
+  gloss: grandfather
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#528
+  match: dictionary
+  method: ohoiko_reference
+  word: W-235
+- commitment: 99d640f119ba0d8f5de8bcacbcc3acd752790192132307317d320e54851bbe7c
+  gloss: good
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#529
+  match: book
+  method: ohoiko_reference
+  word: W-236
+- commitment: 53858c0c0f14e389ec3a0e707210117fa9afcb47fda1991d7b4e489c48bec687
+  gloss: morning
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#546
+  match: dictionary
+  method: ohoiko_reference
+  word: W-237
+- commitment: 76ee783d71a376f4a22b90a7550451436fd078f78b297e38218391ee5a77126a
+  gloss: great
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#551
+  match: book
+  method: ohoiko_reference
+  word: W-238
+- commitment: 3a5a0cd0319a3a91d4e385d9599fc9820740cfd55467004957a16a0eb685d68e
+  gloss: brother
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#556
+  match: dictionary
+  method: ohoiko_reference
+  word: W-239
+- commitment: fc412b496ddebe9c2e9a6ce5b52ea8bc220e37bb0e98b2b508b3843fc1abed15
+  gloss: wife
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#561
+  match: dictionary
+  method: ohoiko_reference
+  word: W-240
+- commitment: 3cf4483e4f1eeff067f7ef2c2189cd14e0b8e7ce9f1764782fce6d1ab95154fd
+  gloss: book
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#564
+  match: dictionary
+  method: ohoiko_reference
+  word: W-241
+- commitment: 2ea3b408e9ec110c987ac445201b638b95ccb7a8fa4c3722b16fc4dc867cdae2
+  gloss: mace
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#574
+  match: dictionary
+  method: ohoiko_reference
+  word: W-242
+- commitment: 6b7126356581af7e2ccb4214e8a1623b01563b577b6c84626501e56cef6767a7
+  gloss: university teacher
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#622
+  match: book
+  method: ohoiko_reference
+  word: W-243
+- commitment: 4fc3aba1652e98418cc6bd16ec5d901d83b9df62d06b38fca2f9e7bb851b9929
+  gloss: university teacher
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#623
+  match: book
+  method: ohoiko_reference
+  word: W-244
+- commitment: 4d415b30c2390ac71c4d28fa1f311c711d178c04e951d6fb201d393ea40c047b
+  gloss: doctor
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#632
+  match: dictionary
+  method: ohoiko_reference
+  word: W-245
+- commitment: 8629de21f05e79bae95c00cb6220df8074d3ee9dbcf0d3021befd99913833314
+  gloss: doctor
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#633
+  match: book
+  method: ohoiko_reference
+  word: W-246
+- commitment: 6cf30c2653759e59804382496b16203959f66b8b860e1f421d97da27674435a3
+  gloss: dog
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#653
+  match: dictionary
+  method: ohoiko_reference
+  word: W-247
+- commitment: f01de4ca0e716f477aa405e7ff591a76715bff460bd8d4c3998f643edc9d9323
+  gloss: bed
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p206 Словничок#681
+  match: dictionary
+  method: ohoiko_reference
+  word: W-248
+- commitment: d70a370f6d2c6bf657b5115f139b44e1c1be73f842382fe11b2ae1fd1fd39a5a
+  gloss: paper
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p207 Словничок#811
+  match: dictionary
+  method: ohoiko_reference
+  word: W-249
+- commitment: 07677948785601da0099e791777b0aa34bc1aa9a1e25784ebd9e5244afbc725d
+  gloss: sleep
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p207 Словничок#817
+  match: dictionary
+  method: ohoiko_reference
+  word: W-250
+- commitment: 37e2ea87d742031a5766a96925d59e5f11e36cc21a83845bb6dd424f02bee58f
+  gloss: window
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p207 Словничок#875
+  match: dictionary
+  method: ohoiko_reference
+  word: W-251
+- commitment: 082b4ee222949273a395ae901a5c21157b38750824035fff4a155e8e7de55803
+  gloss: textbook
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p207 Словничок#886
+  match: dictionary
+  method: ohoiko_reference
+  word: W-252
+- commitment: f92b72ec75825cde237ab6b5b2b3f5cb71c178b75d0d7f1c80274b794d176f40
+  gloss: oak
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p208 Словничок#943
+  match: dictionary
+  method: ohoiko_reference
+  word: W-253
+- commitment: 7d5222a556bdf68e73ee9096d24256027d18147d62b68f5b87db9b03e843d723
+  gloss: sofa
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p210 Словничок#1116
+  match: dictionary
+  method: ohoiko_reference
+  word: W-254
+- commitment: 3fe5bea435e524d2fb4801d1f8aee2ecabd19455fd3b9f389f2ff55e5d3669ae
+  gloss: notebook
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p210 Словничок#1117
+  match: dictionary
+  method: ohoiko_reference
+  word: W-255
+- commitment: 79be094efc75855b50b2fb5d5aff15a6293381c42edb62bbf1036bc5cd1652c2
+  gloss: dictionary
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p210 Словничок#1183
+  match: dictionary
+  method: ohoiko_reference
+  word: W-256
+- commitment: 03787ad595b029a1823149b6ab4ac3eb667212ce1ab946cf8c31233b0e52e183
+  gloss: board
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p215 Словничок#1688
+  match: dictionary
+  method: ohoiko_reference
+  word: W-257
+- commitment: 9986f358bcf9e7dc4447961d2cfc9a0335085aa96f9eb19444be122139a38da7
+  gloss: inconvenience
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p216 Словничок#1739
+  match: dictionary
+  method: ohoiko_reference
+  word: W-258
+- commitment: f9c582114cbbbdb1f3c9284215853d10fe71a0cad551888f99ae5ae49b2de53b
+  gloss: to forgive
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p217 Додаток#1775
+  match: dictionary
+  method: ohoiko_reference
+  word: W-263
+- commitment: df9600ad1ed194cf41df09fbf23fcf7a5c5daf27e46b167f85100ad4247ee5fe
+  gloss: to thank
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p218 Додаток#1820
+  match: dictionary
+  method: ohoiko_reference
+  word: W-264
+- commitment: 0a1b9f09fc2887b8138abfb9e19c2b993472c7a2486a20f3ab02f862f87aabaf
+  gloss: to visit
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p212 Словничок#1424
+  match: dictionary
+  method: ohoiko_reference
+  word: W-265
+- commitment: e14a623f221820b1fc814e88324cdc6b4e61bef397138e7c6aaa2d72306533aa
+  gloss: to greet
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p211 Словничок#1317
+  match: dictionary
+  method: ohoiko_reference
+  word: W-266
+- commitment: f83ac85a3046d46802b18c648791359672316d56bac8255f8a574ec7c522acb5
+  gloss: to be
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p217 Додаток#1764
+  match: dictionary
+  method: ohoiko_reference
+  word: W-267
+- commitment: 627efdd959282d34a6de35aa89db301492fb97b950dbd9175228876766cf7332
+  gloss: new
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p207 Словничок#905
+  match: dictionary
+  method: ohoiko_reference
+  word: W-275
+- commitment: f50aa575d500370f7cdd5f3775cafbc6c0da8e3ff3a16c2064258048edc318e1
+  gloss: very
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#482
+  match: dictionary
+  method: ohoiko_reference
+  word: W-276
+- commitment: 47ebf463968ba1c8a7964dc5ed2c3a0ddc133757531b2ecef3365fced7e4eb6e
+  gloss: nice
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p205 Словничок#649
+  match: dictionary
+  method: ohoiko_reference
+  word: W-277
+- commitment: b28d8e36bfc51355b74524c0b8af8cf85e13b67fcbf0c449eeb2dbf0f334b95e
+  gloss: her
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#176
+  match: dictionary
+  method: ohoiko_reference
+  word: W-278
+- commitment: e36804f8dda7bd9ae1ef18d02c700eb3519c2c5f0c2353126df3c20c2ce0476b
+  gloss: to give
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p218 Додаток#1809
+  match: dictionary
+  method: ohoiko_reference
+  word: W-282
+- commitment: 8a6caeb8ad80ea4bbe502389878e62adf37446de9de777e3aaac16408aa03f32
+  gloss: five
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p201 Словничок#198
+  match: dictionary
+  method: ohoiko_reference
+  word: W-283
+- commitment: c2cc4556915f06ed9bb42ab507284b7fa85f646c6e82e983088d92264b611555
+  gloss: 'yes'
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p204 Словничок#547
+  match: book
+  method: ohoiko_reference
+  word: W-285
+- commitment: 3c5f12fe2ea6d2ee071026c11e1235c64dd05e476a6c919f4e911096df9f4b3a
+  gloss: this
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p202 Словничок#218
+  match: dictionary
+  method: ohoiko_reference
+  word: W-286
+- atom_index: 0
+  candidates_sha256: d0df61b314e4544654c5f2d364e11b29c194bcaffd6ee48bf1bd23bfa570ed8f
+  definition_sha256: c8b4c3ef83161c43c860cc91e8fd4285881f5b827fd62abed716b144ca854248
+  id: 27796
+  method: formula_row.v1
+  row_sha256: e259216b1c8ef76eec2c774b19007c3fb51f88c0295f3d28afe80a0a675f6ff5
+  span: hello
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-287
+- atom_index: 0
+  candidates_sha256: 941daf30f5c029a04e2f8c2a3ebfdce057c62f4eb2f590b93d605379075a6fab
+  definition_sha256: 9b09d59d3cbee1b5df5e2cf7fc1f28ffef4de63a1c197b2cdf5f7cecc417b285
+  id: 28779
+  method: formula_row.v1
+  row_sha256: 0dcab0fd51f8ee105803776af68cfb036869e0626c326525c218a0dab70218d1
+  span: good morning
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-288
+- atom_index: 0
+  candidates_sha256: 04752528d047a519d2cfb20218289dd864df2b4765c45b6d440a7d4df473fda2
+  definition_sha256: 101324c517491645b04f95c564d05a178f3516faac54179b5729672cd15969de
+  id: 28348
+  method: formula_row.v1
+  row_sha256: f86aa4dd0105d4c3f1ab40a54141981739181c07c7c6f08d50367e5361719756
+  span: good evening
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-289
+- atom_index: 0
+  candidates_sha256: 6bc2f45b9d1082e2482e085b1a445fb4278372a76669487c9e36193d5cd19cec
+  definition_sha256: 6f02951da3098130e07d82ec25a88484a2290b72a6ceb67e527ae6f93c96c27e
+  id: 27794
+  method: formula_row.v1
+  row_sha256: 9f051af7fefcb0c1a452896c627d25d22f9f7e294f0502f86ded18d07cb7be30
+  span: goodbye
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-290
+- atom_index: 0
+  candidates_sha256: c6e1330e20970b9d19eabbf25e52960f8d8ee9738c4ed5cb383d129517d3ec8b
+  definition_sha256: 54391d8b5eeecf0a3e30c1560880231dc0801879f146a60b4323336e9b1be65f
+  id: 25998
+  method: formula_row.v1
+  row_sha256: 05e34d0585d097dfb8f9ff32fa13f42912778cfec3d8845c5829c748560b10ba
+  span: please
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-291
+- atom_index: 0
+  candidates_sha256: 5366324c94c1644257a8a2d7b6c2d10f07f50ed4330170991f7f7938fdd4083e
+  definition_sha256: 9b61169b5e51b72f8207834ad9aafa9a875cd0130ee1a72d202c071a654e1b07
+  id: 20168
+  method: formula_row.v1
+  row_sha256: ac9d4a7fc2b8ddedf23a755c818616d55b8cc8073a6b6436b486ff6462a5da52
+  span: thank you
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-292
+- atom_index: 0
+  candidates_sha256: 8dd65b818b86958cee549e4d8fb0c56b0a183a7ea8af2b2954c25c0e86dbb2de
+  definition_sha256: a6c987b141ae8f643f642052891d4abef028a2a4e93f4ec5b722c19d0d9189a5
+  id: 22212
+  method: formula_row.v1
+  row_sha256: 189d55a50b86cfcb4e5c066036af1aa9721fd499bc8fc91cdbd654666a7529ed
+  span: excuse me
+  span_index: 1
+  table: dmklinger_uk_en
+  word: W-293
+- atom_index: 0
+  candidates_sha256: a4557434f0c7f5bc41fc8c6629c055f7cc94f8676bde2b39eed9cd934036d0ee
+  definition_sha256: 7b70a3f36d66a767f6104fd62a6e2c20161614e21f084f33d70ec7d7622df7d1
+  id: 20063
+  method: formula_row.v1
+  row_sha256: 5f84320291d202becd2f57c2b26c1c7d6d829e0c2b615f8cafd50bb781f19c31
+  span: cheers
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-294
+- atom_index: 0
+  candidates_sha256: cc5042186a811424912d729d20f1156b47b93196fd060ad0be7732f1db985005
+  definition_sha256: 1f46fecc8c6ea930d24f6085a60216e57797c07ca5942d74b60f734bb12b6af4
+  id: 20112
+  method: formula_row.v1
+  row_sha256: 91cc27fd77280bc2798359e6654b05211b110036c023877cda4f4a50454f6243
+  span: hello
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-295
+- atom_index: 0
+  candidates_sha256: f5b808b85e474f92f947d0b090c07550c8c58b1d8cda6d9d824dd86b8183dc2b
+  definition_sha256: 70f7e7e86d74014c6b7a6c0117c814bf8fd9fad74a4a78c259aac9e8d52c370e
+  id: 25195
+  method: formula_row.v1
+  row_sha256: 9304bab09b4010512888498b1516a5244917d3980dcd36c53e86c28eb0702a7d
+  span: my name is
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-296
+- atom_index: 0
+  candidates_sha256: 34bb549ac65879a51f058060e81e24dbaf2593681df89fcd1a71bd12c85f9a63
+  definition_sha256: 614cde06b74b8f7666376d6ecf96a45154b1ac158681821ca67f542542043aec
+  id: 20645
+  method: formula_row.v1
+  row_sha256: ed651eede69aa67de3203692290a66ea5b8ffbf19048991fcdd12a50f3d8ad2e
+  span: what is that?
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-300
+- atom_index: 0
+  candidates_sha256: 85ecec0993093d638c48ba4f8ffa4c3c41aa689c9fc366ffc5cb71ce20cf80c2
+  definition_sha256: 2c24d058910e42c396fa9d05e17076be5f62c5803964c24f34e682171c835669
+  id: 24334
+  method: formula_row.v1
+  row_sha256: 6edc91376b925dc3e4cbcac9d81f756f1ec6ed66f45bb43f791431686b2939f1
+  span: so-so
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-303
+- atom_index: 0
+  candidates_sha256: f197bdf0414ddfb83e5f0f60be908c6b8a48f4581976bc722f5025fd9b659ca7
+  definition_sha256: 41e0999244290c4e1bffe562c0db224be7f9b4e471d0829dc09ac0c6787b1eb3
+  id: 22643
+  method: formula_row.v1
+  row_sha256: ee96a88eff134f2839557ea83b5b56532c8cc297ccf7bde0eeb460956223b2cd
+  span: unfortunately
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-304
+- atom_index: 0
+  candidates_sha256: 95140b159251c60c53a3f51162721aafb13bba1c3eac0f76ae1890dba67d3e63
+  definition_sha256: f7920fe538d556bd01bfddf57d6e0d46c57b0d9896c45a734548bea65f4aa07b
+  id: 28352
+  method: formula_row.v1
+  row_sha256: 362addd18fded8a1823e7812cfcafde5d48f8e824d193de11e84217d43b54a2a
+  span: nice to meet you
+  span_index: 2
+  table: dmklinger_uk_en
+  word: W-305
+- atom_index: 0
+  candidates_sha256: b4ce6a169daae5ae1faef75c48ae4881de7ae395dc79d818c54fbeb9fd072773
+  definition_sha256: ea1a2d3f3b1d0da242ffa64a3e4204d725028e81119e3abf99cbb847258ae769
+  id: 27024
+  method: formula_row.v1
+  row_sha256: fc58772a75ad2783991457bcb125a5aadb409787f87887835291713f302c3935
+  span: have a nice day
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-306
+- commitment: 24ada36b76a3e5cf39e6914c1af2a9fd0cd2e9405e734788212b9e1c6d7cb03e
+  gloss: Kyiv
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#40
+  match: book
+  method: ohoiko_reference
+  word: W-310
+- commitment: 78917c420c05c49d01a1175da304017283b11eb03c479af8e7477893ccdc28d5
+  gloss: Ukrainian
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#72
+  match: dictionary
+  method: ohoiko_reference
+  word: W-311
 bindings_schema: 1
 level: a1
 matcher: reference_sense_v1

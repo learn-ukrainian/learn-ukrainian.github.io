@@ -1,0 +1,25 @@
+request_schema: 1
+level: a1
+words:
+- lemma: київський
+  pos: adj
+  want: W-310
+  meaning: relating to Kyiv and its residents
+  note: >-
+    Public-source English rendering of the definition returned by Sources query_sum20,
+    slovnyk.me newsum mirror entry for київський, retrieved 2026-08-24T19:54:50+00:00,
+    sha256 328c747b11cca25de22ac6df84963b96f8fb8f25fe9c9971acd33ffe221d5d1f.
+    Sources verify_words confirms marker-free adjective analyses; query_ulif_records
+    confirms complete verified entry 96043. Used for the r6 position-5 capitalisation
+    contrast only, without teaching adjective agreement.
+- lemma: український
+  pos: adj
+  want: W-311
+  meaning: relating to Ukraine and Ukrainians
+  note: >-
+    Public-source English rendering of the definition returned by Sources query_sum20,
+    slovnyk.me newsum mirror entry for український, retrieved 2026-09-06T02:46:08+00:00,
+    sha256 af4884613e663ca2f207cf9e27a879148d490dced37d4c2b596819ed2ecd8ca1.
+    Sources verify_words and query_ulif_records confirm the adjective identity and
+    forms. Used for the r6 position-5 proper-name versus derived-adjective contrast,
+    without teaching adjective agreement.

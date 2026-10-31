@@ -1,0 +1,372 @@
+built_with:
+  mcp_commit: c7e4971b4866a404564a93624f6403d78225770a
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: 2f0444e9531ec797b3a16c2992747695a427f318de0a74a6680179690ad15ed1
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+module: a1/first-conversations
+standard:
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-501
+  lines: 459-459
+  text: '      попрощатися: До побачення. Добраніч. Бувай;'
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-502
+  lines: 239-243
+  text: "      1.1.1.2. Особа розуміє:\n      короткі репліки стислого діалогу, що стосуються основних потреб\nповсякденного\
+    \ життя;\n      короткі монологічні висловлювання визначеної тематики (див. Каталог А\nта Каталог Б), сформульовані літературною\
+    \ мовою."
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-503
+  lines: 268-270
+  text: "      1.1.2.2. Діалогічне мовлення:\n      прості запитання й відповіді щодо особистих даних (інформація про себе,\n\
+    адреса, робота, сім’я);"
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-504
+  lines: 410-432
+  text: "     1.4.1.2.1. Особа розуміє прості висловлювання співрозмовника в межах\nмінімального переліку мовленнєвих ситуацій\
+    \ (див. Каталог А та Каталог Б),\nякщо співрозмовник висловлюється повільно, досить чітко, повторює і\nперефразовує свої\
+    \ висловлювання.\n\n      1.4.1.2.2. Особа вміє:\n      адекватно, відповідно до норм мовленнєвого етикету реагувати на\n\
+    репліки співрозмовника;\n      брати участь у простому діалозі, виражаючи комунікативні наміри в\nмежах мінімального набору\
+    \ мовленнєвих ситуацій (див. Каталог Б);\n      вживати стандартні мовні формули привітання, прощання, подяки,\nвибачення\
+    \ і побажання;\n      відрекомендувати себе, розповісти про себе, свою сім’ю, хобі, навчання\nчи роботу (хто я, хто він\
+    \ / вона?; яке моє, його / її ім’я?; яка моя, його / її\nнаціональність, рідна країна і мова?), а також про свій дім,\
+    \ своє місто й рідну\nкраїну;\n      відповідати на прості запитання про особу, об’єкт, місце чи ознаку і\nставити елементарні\
+    \ запитання;\n      висловити елементарні прохання: Дайте, будь ласка. Скажіть, будь\nласка.\n\n      1.4.2. Типи текстів:\n\
+    \      простий діалог (4 – 6 реплік) у межах мінімального переліку мовленнєвих"
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-505
+  lines: 578-579
+  text: '     вимова голосних у наголошеній і ненаголошеній позиціях. Вимова
+
+    ненаголошених [е], [и]: с[еи]стра, в[еи]черя, в[ие]делка, з[ие]ма;'
+texts:
+- id: T-501
+  quote: '230. А. Вимовте вголос слова, звертаючи увагу на місце наголосу.
+
+    зима
+
+    зимонька
+
+    височ¾нь
+
+    високо
+
+    озеро
+
+    озер
+
+    Б. Простежте, чи чітко й виразно звучать голосні [е], [и] у словах пер-
+
+    шої колонки. А другої?
+
+    В. Зробіть висновок про особливості вимови звуків [е], [и] в наголоше-
+
+    них і ненаголошених складах.
+
+    Чітка вимова
+
+    Усі наголошені голосні вимовляємо чітко й виразно.
+
+    Голосні [а], [у], [і] вимовляємо чітко й у ненаголошених
+
+    складах. НАПРИКЛАД: [мал′унок], [ос′ін′], [меду].
+
+    Наближення до іншого звука
+
+    Ненаголошений [о] перед складом з наголошеним [у]
+
+    вимовляємо з наближенням до [у]. НАПРИКЛАД: [зоузул′а],
+
+    [моутуз­ ка].
+
+    Ненаголошений [е] вимовляємо з наближенням до [и].
+
+    НАПРИКЛАД: [зеирно].
+
+    Ненаголошений [и] вимовляємо з наближенням до [е].
+
+    НАПРИКЛАД: [зиема].
+
+    Проте в закінченнях слів ненаголошені [е], [и] звучать
+
+    виразно: [море], [мами].
+
+    Довідником правильної вимови є орфоепічний словник.
+
+    231. Прочитайте вголос речення, правильно вимовляючи голосні зву-
+
+    ки. Запишіть фонетичною транскрипцією виділені слова. Поясніть ви-
+
+    мову наголошених і ненаголошених голосних у них.
+
+    1. Тобі, голубко, хоч води напиться (Л. Костенко).
+
+    2. Кришталевії джерела до весни укрила крига (С. Фоменко).
+
+    3. Слухайтесь мене, то вас лихо не мине (Нар. творчість).
+
+    Букви е, и
+
+    Написання букв е, и в КОРЕНЯХ слів можна перевірити
+
+    наголосом. Для цього потрібно змінити слово або дібрати
+
+    до нього спільнокореневе так, щоб ненаголошений [е] або
+
+    [и] став наголошеним. НАПРИКЛАД: великий, бо велич.
+
+    Якщо написання сумнівного голосного не можна переві-
+
+    рити наголосом, то користуємося такими правилами:
+
+    97'
+  sha256: 269a7a3e8b42d29c149a12820b20db7c939aaaf4961a29cff2b7c0e40c6cb15e
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0076
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 100
+    row_sha256: a6e16f9b46b7d1959320c38ad660037e3726c150885337696396d47e37f502b3
+    section_id: 39006
+  supports: Stressed and unstressed e/i pronunciation; the text distinguishes root-vowel approximation from clear endings.
+    No spelling-rule system is taught.
+- id: T-502
+  quote: 'Привіт! Вітаю! Доброго
+
+    ранку! Добрий
+
+    день! Добрий вечір!
+
+    Бувай (бувайте)! До
+
+    побачення! Моє вам
+
+    шанування!'
+  sha256: 579a7616cc2522a3bbef66ce7f853796643bfced743e7a5dc92bf5ad96abb737
+  source:
+    author: avramenko
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0007
+    file: 6-klas-ukrmova-avramenko-2023
+    grade: '6'
+    kind: textbook
+    page: 8
+    row_sha256: 348ae03ef66d40ffd9bb6bdcdd70019249522c6963aba3b7e75007ca81397ebb
+    section_id: 28663
+  supports: Attested familiar greetings and farewells; only the acquired expressions are selected for learner print.
+- id: T-503
+  quote: '— Доброго ранку! Ти не бачило
+
+    мою маму?
+
+    — А яка твоя мама?
+
+    — Моя мама найкраща! Вона добра
+
+    й ласкава. У неї гарний голос.
+
+    — Ось твоя мама!
+
+    — Ні, це не моя мама!
+
+    — Я знаю, де твоя мама! Ідемо,
+
+    покажу.
+
+    — Ось твоя мама!
+
+    Пухнастик так злякався великої білої
+
+    свині, що кинувся тікати. Його побачив
+
+    Барвистий Метелик.
+
+    — Біжи за мною. Я приведу тебе
+
+    до мами.
+
+    Pidruchnyk.com.ua
+
+    — Матусю! Я дуже радий тебе ба-
+
+    чити! Ти найкраща, наймиліша, най-
+
+    добріша мама у світі! (за Юлією Карпен-
+
+    ко).
+
+    Яка пригода сталася з кошеням? До кого
+
+    воно зверталося за допомогою? Чому всі зві-
+
+    рята приводили його до своїх мам? Хто до-
+
+    поміг Пухнастику? Які слова він сказав, коли
+
+    зустрів свою маму?
+
+    100'
+  sha256: 862eab57781013abddcaa3c256fac24249a6f3be211011b4362d8d745710d0ab
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0099
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 102
+    row_sha256: 090bdf75a8a0484dab81ccf6b55269d8cfbf32bc0bb0fefe4778b43c1e3f484b
+    section_id: 13161
+  supports: Recycle acquired family labels in a conversation without introducing the source story or its complex clauses.
+- id: T-504
+  quote: '2. Що цікавого щодо займенників ви помітили в реченнях?
+
+    3. Якому стилю властиві такі речення? Поміркуйте чому.
+
+    Присвійні займенники
+
+    Присвійні (від присвоїти) займенники вказують на
+
+    належність когось або чогось певній особі, вони спів-
+
+    відносяться з особовими займенниками.
+
+    Особові Присвійні Особові Присвійні
+
+    я
+
+    мій, моя, моє,
+
+    мої ми
+
+    наш, наша,
+
+    наше, наші
+
+    ти твій, твоя,
+
+    твоє, твої ви ваш, ваша,
+
+    ваше, ваші
+
+    він, воно,
+
+    вона його, її вони їхній, їхня,
+
+    їхнє, їхні
+
+    До будь-якої особи: свій, своя, своє, свої
+
+    Присвійні займенники змінюються за відмінками,
+
+    родами та числами.
+
+    Чол. рід Однина Множина
+
+    Жін. рід Серед. рід
+
+    Н. мій моя мій мої
+
+    Р. мого
+
+    ́ моєї мого ́ моїх
+
+    Д. моє
+
+    ́му моїй моє ́му моїм
+
+    Зн. мій, мого ́ мою мій, мого мої, моїх
+
+    Ор. мої м моєю мої м моїми
+
+    М. ́
+
+    ́
+
+    (на) моє
+
+    му,
+
+    на мої м (на) моїй (на) моє
+
+    му,
+
+    на мої м (на) моїх
+
+    § 54. Розряди займенників за значенням та особливості відмінювання 259'
+  sha256: fe58b02931cbe842442addcbf11c36e7199e832e886d4c093dbdd8c77eea465f
+  source:
+    author: litvinova
+    chunk_id: 6-klas-ukrmova-litvinova-2023_s0264
+    file: 6-klas-ukrmova-litvinova-2023
+    grade: '6'
+    kind: textbook
+    page: 259
+    row_sha256: c653fb04229d2fd59ea794f4c08ce56b289aac316750276512d7c845d6bcb621
+    section_id: 47460
+  supports: Previously supported possessive labels identify a belonging; agreement remains a fixed model until position 8.
+- id: T-505
+  quote: '1. Складіть і розіграйте діалог у трьох групах із використанням етикетних
+
+    формул (по п’ять-шість реплік).
+
+    1-ша група — вітання з адміністратором спортклубу та з’ясування
+
+    основ­ них правил поводження в залі.
+
+    2-га група — знайомство з однолітками в таборі відпочинку й розмова
+
+    про плани на літо.
+
+    3-тя група — пропозиція допомогти літній людині з важким пакунком
+
+    біля супермаркету.'
+  sha256: a51c5cf7880005c0bc490cce6ebc5457a628ceff8364498285149cd002909984
+  source:
+    author: avramenko
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0007
+    file: 6-klas-ukrmova-avramenko-2023
+    grade: '6'
+    kind: textbook
+    page: 8
+    row_sha256: 348ae03ef66d40ffd9bb6bdcdd70019249522c6963aba3b7e75007ca81397ebb
+    section_id: 28663
+  supports: Purposeful five-to-six-turn dialogues are modelled for different interlocutors, including an adult sport-club
+    administrator; the plan adapts the purpose to acquired first-contact language.
+videos:
+- channel: Ukrainian with Olha
+  checked:
+    content_type: text/html
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=3zZWCCS7igw
+    http_status: 200
+  id: V-501
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=3zZWCCS7igw
+  use: Collected first-introduction video, used as supported listening input before a live adult introduction. Untaught words
+    remain exposure. Show the whole video visibly with sound and picture. No verified word-level timing or models.words is
+    claimed.
+- channel: VERBA SCHOOL
+  checked:
+    content_type: text/html
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=LARvKb7D38M
+    http_status: 200
+  id: V-502
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=LARvKb7D38M
+  use: Collected family and possessive video, used for listening and repeated supported family labels, without teaching the
+    full agreement system before position 8. Show the whole video visibly with sound and picture. No verified word-level timing
+    or models.words is claimed.

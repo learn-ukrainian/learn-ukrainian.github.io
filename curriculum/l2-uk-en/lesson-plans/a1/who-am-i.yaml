@@ -1,0 +1,619 @@
+plan_schema: 2
+module: who-am-i
+level: a1
+sequence: 3
+slug: who-am-i
+version: '1.0'
+title: Мене звати...
+subtitle: Names, occupations, origin models, softness and syllables
+focus: Introduce yourself and ask identity; common professions and origin phrases Adult or teen situations
+  retain English support. Private-book wording is not teaching material. Unresolved formula ids remain
+  withheld from teaching and scoring.
+objectives:
+- Introduce yourself or a chosen persona with a name, common profession and supported origin phrase.
+- Acquire the nine declared letters and distinguish the staged hard/soft and voiced/voiceless contrasts.
+- Use spoken syllables and verified stress to make a first introduction clear.
+connects_to:
+- my-family
+prerequisites:
+- sounds-letters-and-hello
+register: neutral
+changelog:
+- '1.0 (2026-10-31): Independently authored for #8425 steps 1-4 under the approved r6 arc. Plans only;
+  no lesson builds.'
+arc_ref:
+  level: a1
+  position: 3
+evidence_ref:
+  path: curriculum/l2-uk-en/evidence/a1/who-am-i.yaml
+  sha256: '58384afe8da0c643fd941dab5db62fcd209301ebe2d4f3e74d394c4c456af2c6'
+lessons:
+- n: 1
+  slug: names-and-professions
+  title: лікар
+  kind: teach
+  job: Say a name and a common profession in a first meeting, and connect four new letters to sound.
+  rationale: Begin with a name badge and useful occupation labels. Compare hard articulation before the
+    already acquired e vowel without teaching a full consonant chart. English explains the task and the
+    source-grounded model. Spoken rehearsal precedes supported print. New words are chosen for this adult
+    purpose rather than to fill a vocabulary quota; no activity prompt gives its answer, and choice order
+    is shuffled.
+  inventory:
+    phonetics:
+      letters: &id001
+      - Д
+      - К
+      - Л
+      - С
+      sounds: []
+    grammar:
+    - id: G-a1-015
+      point: Consonants before the vowel represented by the letter acquired in position 2 stay hard in
+        the source models.
+      evidence:
+      - T-201
+      - T-206
+    vocabulary:
+      core:
+      - lemma: лікар
+        evidence: W-245
+        forms:
+        - noun:anim:m:v_naz
+      - lemma: лікарка
+        evidence: W-246
+        forms:
+        - noun:anim:f:v_naz
+      - lemma: Ніна
+        evidence: W-091
+        forms:
+        - noun:anim:f:v_naz:prop:fname
+      - lemma: Іван
+        evidence: W-093
+        forms:
+        - noun:anim:m:v_naz:prop:fname
+      incidental: []
+      recycled:
+      - W-001
+      - W-074
+      - W-096
+  steps:
+  - id: s1
+    kind: teach
+    teach: Use a chosen name badge and the doctor labels as nominal self-identification models. Rehearse
+      hard articulation before e from T-206 with teacher-only source examples; keep the advanced source
+      examples in the teacher frame. The teacher models Д, К, Л, С before the learner repeats each sound
+      and connects it to its printed capital and small form. The collected whole video is additional listening
+      exposure, not a verified recording of each target.
+    introduces:
+      letters: *id001
+      grammar: &id002
+      - G-a1-015
+      vocabulary:
+      - W-245
+      - W-246
+      - W-091
+      - W-093
+    uses:
+      grammar: []
+      vocabulary:
+      - W-001
+      - W-074
+      - W-096
+    evidence: &id003
+    - T-201
+    - T-206
+    - T-205
+    - V-201
+    - V-203
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id002
+      vocabulary:
+      - W-245
+      - W-246
+      - W-091
+      - W-093
+      - W-001
+      - W-074
+      - W-096
+    evidence: *id003
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: image-to-letter
+    placement: inline
+    focus: Connect Д, К, Л, С and their small forms to the teacher-modelled sounds. Practise the new name
+      and occupation labels orally, then identify only acquired glyphs on a name badge.
+    targets:
+    - W-245
+    - W-246
+    - W-091
+    - W-093
+    learner_reads: []
+  - id: a2
+    type: match-up
+    placement: workbook
+    focus: Pair the doctor labels and the selected names with the matching adult profile or badge. Both
+      form sides bind their word records; contextual English support is available. Follow with an unscored
+      spoken self-introduction.
+    targets:
+    - W-245
+    - W-246
+    - W-091
+    - W-093
+    - W-001
+    - W-074
+    - W-096
+    learner_reads: []
+  videos:
+  - evidence: V-201
+    use: 'Lesson 1 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  - evidence: V-203
+    use: 'Lesson 1 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 2
+  slug: origin-and-softness
+  title: Канада
+  kind: teach
+  job: State an origin with a supported country model, give a name, and distinguish hard and soft consonants.
+  rationale: The remaining new letters make common identity print readable. Country forms remain memorised
+    models; no genitive system is explained. The soft sign is a pronunciation cue. English explains the
+    task and the source-grounded model. Spoken rehearsal precedes supported print. New words are chosen
+    for this adult purpose rather than to fill a vocabulary quota; no activity prompt gives its answer,
+    and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id004
+      - З
+      - У
+      - Х
+      - ь
+      - Г
+      sounds: []
+    grammar:
+    - id: G-a1-016
+      point: Hard and soft consonants are contrasted by hearing; the soft sign marks softness and has
+        no sound of its own.
+      evidence:
+      - T-201
+      - T-204
+    vocabulary:
+      core:
+      - lemma: Канада
+        evidence: W-195
+        forms:
+        - noun:inanim:f:v_naz:prop:geo
+      - lemma: студент
+        evidence: W-226
+        forms:
+        - noun:anim:m:v_naz
+      - lemma: студентка
+        evidence: W-227
+        forms:
+        - noun:anim:f:v_naz
+      - lemma: Мене звати...
+        evidence: W-296
+        forms: []
+      incidental: []
+      recycled:
+      - W-001
+      - W-002
+      - W-091
+      - W-093
+      - W-245
+      - W-246
+  steps:
+  - id: s1
+    kind: teach
+    teach: Teach the sourced name formula W-296 and the student labels. Use the public ULP 1-04 origin
+      model linked by V-204 and substitute the dictionary-verified country form; mark the whole construction
+      as memorised, without a case table. Contrast hard and soft articulation using T-201, and explain
+      that the soft sign has no separate sound. Unresolved formulas remain withheld. The teacher models
+      З, У, Х, ь, Г before the learner repeats each sound and connects it to its printed capital and small
+      form. The collected whole video is additional listening exposure, not a verified recording of each
+      target.
+    introduces:
+      letters: *id004
+      grammar: &id005
+      - G-a1-016
+      vocabulary:
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+    uses:
+      grammar: []
+      vocabulary:
+      - W-001
+      - W-002
+      - W-091
+      - W-093
+      - W-245
+      - W-246
+    evidence: &id006
+    - T-201
+    - T-204
+    - T-205
+    - S-202
+    - V-201
+    - V-203
+    - V-204
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id005
+      vocabulary:
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+      - W-001
+      - W-002
+      - W-091
+      - W-093
+      - W-245
+      - W-246
+    evidence: *id006
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Observe the teacher-modelled country and identity turns, then choose a sourced profile and
+      say its name, occupation and country. Contrast the new letter shapes, including ь; no invented recording
+      is used.
+    targets:
+    - W-195
+    - W-226
+    - W-227
+    - W-296
+    learner_reads: []
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: Choose the printed occupation or name matching each adult profile. Each item has a clearly
+      wrong, acquired-word distractor; shuffle options and explain each mismatch. Do not score an unresolved
+      formula.
+    targets:
+    - W-195
+    - W-226
+    - W-227
+    - W-296
+    - W-001
+    - W-002
+    - W-091
+    learner_reads: []
+    options:
+    - Канада
+    - студент
+    - студентка
+    - Мене звати...
+    - я
+    - ти
+    - Ніна
+  videos:
+  - evidence: V-201
+    use: 'Lesson 2 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  - evidence: V-203
+    use: 'Lesson 2 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  - evidence: V-204
+    use: 'Lesson 2 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 3
+  slug: syllables-for-speaking
+  title: мова
+  kind: teach
+  job: Use vowel beats to pronounce a familiar identity word with its verified stress.
+  rationale: Syllables help a first introduction sound clear. This is oral rhythm, with decodable print
+    as support, and never a lesson in line-breaking rules. English explains the task and the source-grounded
+    model. Spoken rehearsal precedes supported print. New words are chosen for this adult purpose rather
+    than to fill a vocabulary quota; no activity prompt gives its answer, and choice order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id007 []
+      sounds: []
+    grammar:
+    - id: G-a1-017
+      point: A spoken syllable contains a vowel sound; segmenting a familiar word supports pronunciation
+        and stress without teaching line breaking.
+      evidence:
+      - T-203
+      - S-201
+    vocabulary:
+      core:
+      - lemma: мова
+        evidence: W-196
+        forms:
+        - noun:inanim:f:v_naz
+      incidental: []
+      recycled:
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+  steps:
+  - id: s1
+    kind: teach
+    teach: Model the spoken syllable beats in the familiar country and language words using T-203. Each
+      beat contains a vowel sound. Recycle stress from position 2, using only the form-specific store
+      evidence, and rehearse an introduction after the model. Do not divide a word for a line break.
+    introduces:
+      letters: *id007
+      grammar: &id008
+      - G-a1-017
+      vocabulary:
+      - W-196
+    uses:
+      grammar: []
+      vocabulary:
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+    evidence: &id009
+    - T-203
+    - S-201
+    - T-205
+    - V-201
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id008
+      vocabulary:
+      - W-196
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+    evidence: *id009
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: count-syllables
+    placement: inline
+    focus: Hear teacher-modelled familiar words, tap the vowel beats, and count their spoken syllables.
+      Show only acquired print; this is pronunciation support rather than written line breaking.
+    targets:
+    - W-196
+    learner_reads: []
+  - id: a2
+    type: pick-syllables
+    placement: workbook
+    focus: Choose the spoken-syllable count for a familiar acquired word, then say it in an introduction.
+      Use English count labels so this does not teach a numeral system.
+    targets:
+    - W-196
+    - W-195
+    - W-226
+    - W-227
+    learner_reads: []
+  videos:
+  - evidence: V-201
+    use: 'Lesson 3 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 4
+  slug: voiced-and-voiceless-pairs
+  title: лікар
+  kind: teach
+  job: Keep the three newly available consonant pair families distinct in a clear first introduction.
+  rationale: Voice/noise comparisons prevent flattening different consonants into one sound. Teacher demonstration
+    supplies the exact isolated sounds; the whole video is exposure only. English explains the task and
+    the source-grounded model. Spoken rehearsal precedes supported print. New words are chosen for this
+    adult purpose rather than to fill a vocabulary quota; no activity prompt gives its answer, and choice
+    order is shuffled.
+  inventory:
+    phonetics:
+      letters: &id010 []
+      sounds: []
+    grammar:
+    - id: G-a1-018
+      point: The source-paired consonant families for the three newly acquired voiced letters contrast
+        voice and noise with noise alone.
+      evidence:
+      - T-202
+      - T-205
+    vocabulary:
+      core: []
+      incidental: []
+      recycled:
+      - W-245
+      - W-246
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+  steps:
+  - id: s1
+    kind: teach
+    teach: The teacher models Д and Т, З and С, Г and Х as the three pair families established by T-202.
+      Feel voice vibration, alternate each pair, then rehearse the acquired identity words without adding
+      a new word list or devoicing rule. Recycle question and statement contours.
+    introduces:
+      letters: *id010
+      grammar: &id011
+      - G-a1-018
+      vocabulary: []
+    uses:
+      grammar: []
+      vocabulary:
+      - W-245
+      - W-246
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+    evidence: &id012
+    - T-202
+    - T-205
+    - V-201
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: *id011
+      vocabulary:
+      - W-245
+      - W-246
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+    evidence: *id012
+    practice:
+    - a2
+    needs: []
+  consolidation:
+  - a2
+  activities:
+  - id: a1
+    type: watch-and-repeat
+    placement: inline
+    focus: Watch the whole first-meeting video for listening, then repeat each teacher-modelled Д/Т, З/С
+      and Г/Х contrast and the acquired introduction. No exact video segment is claimed as a model.
+    targets: []
+    learner_reads: []
+  - id: a2
+    type: odd-one-out
+    placement: workbook
+    focus: Compare acquired letter/sound family cards and choose the one outside each pair family. Each
+      item includes one unambiguous mismatch and no untaught glyph; say the matching pair aloud.
+    targets:
+    - W-245
+    - W-246
+    - W-195
+    learner_reads: []
+  videos:
+  - evidence: V-201
+    use: 'Lesson 4 s1: supported listening with the complete collected video visibly playing. Listen for
+      the lesson situation, then rehearse with the teacher. The video is not a bounded word-level model.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns:
+    - a2
+- n: 5
+  slug: my-first-introduction
+  title: Мене звати...
+  kind: recap
+  job: Introduce a chosen adult persona or yourself to a new acquaintance.
+  rationale: Use acquired language to accomplish a chosen adult purpose. The learner makes meaningful
+    choices, then checks the result against the stated criteria. This task replaces a second exercise
+    set; it introduces nothing.
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled:
+      - W-074
+      - W-001
+      - W-002
+      - W-091
+      - W-093
+      - W-245
+      - W-246
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+      - W-196
+  steps:
+  - id: s1
+    kind: recap
+    uses:
+      grammar:
+      - G-a1-015
+      - G-a1-016
+      - G-a1-017
+      - G-a1-018
+      vocabulary:
+      - W-074
+      - W-001
+      - W-002
+      - W-091
+      - W-093
+      - W-245
+      - W-246
+      - W-195
+      - W-226
+      - W-227
+      - W-296
+      - W-196
+    evidence:
+    - T-204
+    - T-205
+    - V-201
+    practice: []
+    needs: []
+    task:
+      id: my-first-introduction-task
+      action: personalize
+      context_en: You are meeting a new participant at a community course. Use your own details or a sourced
+        fictional profile; sharing personal information is optional.
+      instruction_en: Choose a greeting, give a name and an appropriate occupation or student label, add
+        the practised origin model, and choose a suitable farewell. Say the exchange with a partner, then
+        write a supported name badge using acquired letters. Change the profile and repeat without copying
+        a whole model.
+      response_mode: spoken_or_written
+      success_criteria_en:
+      - The chosen name identifies the intended person.
+      - The occupation and origin match the chosen profile.
+      - The greeting and farewell fit the relationship.
+      - A partner can distinguish the practised consonant families and stress.
+      - The supported badge communicates the selected name.
+      learner_reads: []
+  consolidation: []
+  activities: []
+  videos:
+  - evidence: V-201
+    use: 'Lesson 5 s1: revisit the collected whole visible video as familiar listening before the practical
+      task. No new inventory is acquired or tested from it.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []

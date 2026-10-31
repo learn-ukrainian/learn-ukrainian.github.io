@@ -1,0 +1,54 @@
+inputs:
+  arc:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml
+    sha256: 9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe
+  arc_source:
+    path: docs/epics/fresh-build-a1-arc.md
+    sha256: 03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d
+  decisions:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml
+    sha256: 9608ea4b8bc86bff2fd327196f28f9bc126b310ad08d5f2f0ce19f862d9b061d
+  grammar:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml
+    sha256: cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334
+  learner_state:
+    path: curriculum/l2-uk-en/evidence/a1/_state/things-have-gender/plan-review.learner-state.yaml
+    sha256: 5f90275dca76913f5e50c515329a7660851b996c43bf63b445e648f37dc2d3a2
+  pack:
+    path: curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml
+    sha256: 34d289bdda9ca3f3a82c7439240fcff001d3e2fa791df097b44a7b2c04fec6b7
+  pack_lock:
+    path: curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml.lock
+    sha256: 866f355a98705f993a2e4fb1cf6d7d3024a8233c77c4b622d85baac8b2a7294a
+  pack_verify_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/things-have-gender/pack-verify.report.json
+    sha256: f7da6fbdbafff36676e7ae7aa4f73aa0a57dcacab45de4a37fc396d418de699d
+  plan:
+    path: curriculum/l2-uk-en/lesson-plans/a1/things-have-gender.yaml
+    sha256: 976046ddf164f8f28668fd4838a84e66525f239265f034cb575d9cb7dd433f0b
+  requirements:
+    path: docs/epics/fresh-build-requirements.md
+    sha256: d0d5008aefd21a34fa5cea307254bbd9b044ac9c3eef3db1d1e6e9a3d02d629f
+  scope:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_scope/things-have-gender.yaml
+    sha256: b697c683313a31bf06c5c952101d5f3c5e437c2eed663596b7258c869c66ed93
+  v1_totals:
+    path: curriculum/l2-uk-en/evidence/a1/_state/things-have-gender/plan-review.v1-totals.yaml
+    sha256: 6e16ec9b04e1de0981750e7918fd955c0f3bbcd0716000ff65fd2f7a3cb17265
+  validate_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/things-have-gender/plan-validate.report.json
+    sha256: cd204c7b44d6eb2ee8808183054571897d0106270a612a1f5b3e1efa94188ac9
+  words:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml
+    sha256: 8ff6f38e34eedc3151bf15f3c622ed318113a5d7e94eb2880c7b14e2ba86f761
+  words_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
+    sha256: 0581c149864df57af58f0b8675a88924869a212d4f21ddaa6103d3223213aa40
+kind: plan
+learner_state:
+  sha256: 324a0c2e2ae9117465930ab6354328d82480729c74c3376cf84b37865ba5be27
+  source: planned_state
+level: a1
+manifest_schema: 1
+position: 8
+slug: things-have-gender

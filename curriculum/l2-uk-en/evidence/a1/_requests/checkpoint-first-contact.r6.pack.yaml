@@ -1,0 +1,32 @@
+request_schema: 1
+module: a1/checkpoint-first-contact
+texts:
+- id: T-601
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0007
+  span:
+    first_words: РОЗВИТОК МОВЛЕННЯ § 3 СКЛАДАННЯ ДІАЛОГІВ ВІДПОВІДНО ДО СИТУАЦІЇ СПІЛКУВАННЯ
+    last_words: (усно). Вико- ристайте по три-чотири репліки до кожного сюжету. 8
+  supports: A purposeful first-contact exchange; checkpoint uses only inventory acquired in positions
+    2-6.
+- id: T-602
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0099
+  span:
+    first_words: — Доброго ранку! Ти не бачило мою маму? — А
+    last_words: Пухнастику? Які слова він сказав, коли зустрів свою маму? 100
+  supports: Previously acquired family labels used for an optional photograph or fictional profile.
+videos:
+- id: V-601
+  url: https://www.youtube.com/watch?v=3zZWCCS7igw
+  channel: Ukrainian with Olha
+  use: Collected first-introduction video, used as supported listening input before a live adult introduction.
+    Untaught words remain exposure. Show the whole video visibly with sound and picture. No verified word-level
+    timing or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+standard: []
