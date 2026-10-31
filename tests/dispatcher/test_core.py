@@ -691,6 +691,27 @@ def test_write_task_merged_into_main_counts_as_published_after_its_branch_is_del
     assert branch not in local_branches(sandbox.repo)
 
 
+def test_publication_check_accepts_head_contained_in_successor_branch(sandbox, monkeypatch):
+    """Defect class: successor-branch ancestry was missed by ordinary publication checks."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    tree = Path(record["worktree_path"])
+    successor = run_git(tree, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m", "successor")
+    run_git(tree, "push", str(sandbox.remote), f"{successor}:refs/heads/successor")
+    in_process_repo(sandbox, monkeypatch)
+    verification_git = git._verification_git
+    fetches = []
+
+    def counted(path, *args, **kwargs):
+        if args[0] == "fetch":
+            fetches.append(args)
+        return verification_git(path, *args, **kwargs)
+
+    monkeypatch.setattr(git, "_verification_git", counted)
+    assert git.settle_worktree(record) == dict(worktree_disposition="removed", worktree_disposition_reason="clean")
+    assert len(fetches) == 1
+    assert not tree.exists()
+
+
 @pytest.mark.parametrize("unknown", [False, True])
 def test_settlement_ignores_setup_links_and_regenerable_caches_and_records_unknown_ignored_files(
         sandbox, monkeypatch, unknown):
@@ -769,9 +790,9 @@ def test_scheduled_settlement_does_not_retain_regenerable_dependencies_as_unique
     settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert report["complete"] and report["error"] is None
     if output == "dependencies":
-        assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
+        assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
         assert not tree.exists() and report["trees"] == []
-        assert run_git(sandbox.remote, "show", f"salvage/{record['task_id']}:delivered.txt") == "literal delivered value"
+        assert run_git(sandbox.remote, "for-each-ref", f"refs/heads/salvage/{record['task_id']}") == ""
     else:
         assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("retained", "large_ignored_output")
         assert dependency.stat().st_size == git.SALVAGE_IGNORED_LIMIT + 1
