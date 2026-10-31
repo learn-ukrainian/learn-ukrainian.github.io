@@ -313,14 +313,17 @@ def _scan_pattern(terms: set[str]) -> tuple[re.Pattern, dict[str, list[str]]]:
     return re.compile(r"(?<!\w)(?=(" + (expression(trie) if terms else r"(?!)") + r")(?!\w))"), prefixes
 
 
-def _record_texts(value: object, ancestors: frozenset[int] = frozenset()):
-    """Yield individual YAML/JSON mappings, never aggregate sibling records."""
-    if id(value) in ancestors:
+def _record_texts(value: object, ancestors: frozenset[int] = frozenset(), path: tuple = (), skip=frozenset()):
+    """Yield individual YAML/JSON mappings, never aggregate sibling records.
+
+    A record at a structural path in ``skip``, and every record inside it, is not yielded.
+    """
+    if id(value) in ancestors or path in skip:
         return
     ancestors = ancestors | {id(value)}
     if isinstance(value, list):
-        for item in value:
-            yield from _record_texts(item, ancestors)
+        for i, item in enumerate(value):
+            yield from _record_texts(item, ancestors, (*path, ("index", i)), skip)
     elif isinstance(value, dict):
         parts = []
         for key, child in value.items():
@@ -333,9 +336,114 @@ def _record_texts(value: object, ancestors: frozenset[int] = frozenset()):
                 parts.extend(str(v) for v in child if isinstance(v, (str, int, float, bool)))
                 if key == "forms":
                     parts.extend(str(v.get("form", "")) for v in child if isinstance(v, dict))
-            yield from _record_texts(child, ancestors)
+            yield from _record_texts(child, ancestors, (*path, ("key", key)), skip)
         if parts:
             yield "\n".join(parts)
+
+
+def _unchanged_records(text: str, base_text: str) -> tuple[list[tuple[int, int]], set[tuple]]:
+    """Source spans and structural paths of YAML/JSON mappings identical to the merge-base record.
+
+    A record's identity is its structural path from the document root (mapping
+    keys and their tags, sequence indices, and each container's tag) plus its
+    parsed value; its source span must also be unchanged, so an added comment
+    never joins it. A moved or reordered record is compared with whatever the
+    base holds at its new path. Only the outermost unchanged mapping is
+    returned. Anything ambiguous (a parse error, several documents, an alias, a
+    duplicate or non-scalar key) returns nothing, so every record still gates.
+    """
+    try:
+        head, prior = yaml.compose(text), yaml.compose(base_text)
+    except yaml.YAMLError:
+        return [], set()
+    if head is None or prior is None:
+        return [], set()
+
+    def index(node, path: tuple, plain: tuple, nodes: dict, seen: set[int]) -> None:
+        """Key each node by its tagged structural path; the plain path matches the loaded document."""
+        if id(node) in seen:
+            raise ValueError("alias")
+        seen.add(id(node))
+        nodes[path] = (node, plain)
+        if isinstance(node, yaml.SequenceNode):
+            for i, child in enumerate(node.value):
+                index(child, (*path, ("index", node.tag, i)), (*plain, ("index", i)), nodes, seen)
+        elif isinstance(node, yaml.MappingNode):
+            keys = [key.value for key, _value in node.value if isinstance(key, yaml.ScalarNode)]
+            if len(keys) != len(node.value) or len(set(keys)) != len(keys):
+                raise ValueError("ambiguous_key")
+            for key, value in node.value:
+                if id(key) in seen:
+                    raise ValueError("alias")
+                seen.add(id(key))
+                # A container or key tag change (``1`` to ``"1"``) is a different path.
+                tagged = ("key", node.tag, key.tag, key.value)
+                index(value, (*path, tagged), (*plain, ("key", key.value)), nodes, seen)
+
+    def same(a, b) -> bool:
+        if type(a) is not type(b) or a.tag != b.tag:
+            return False
+        if isinstance(a, yaml.ScalarNode):
+            return a.value == b.value
+        pairs = a.value if isinstance(a, yaml.SequenceNode) else [p for kv in a.value for p in kv]
+        other = b.value if isinstance(b, yaml.SequenceNode) else [p for kv in b.value for p in kv]
+        return len(pairs) == len(other) and all(same(x, y) for x, y in zip(pairs, other, strict=True))
+
+    def span(node, source: str) -> str:
+        return source[node.start_mark.index : node.end_mark.index]
+
+    head_nodes, base_nodes = {}, {}
+    try:
+        index(head, (), (), head_nodes, set())
+        index(prior, (), (), base_nodes, set())
+    except ValueError:
+        return [], set()
+    spans, covered, paths = [], set(), set()
+    for path, (node, plain) in head_nodes.items():
+        other = base_nodes.get(path, (None, None))[0]
+        if (
+            isinstance(node, yaml.MappingNode)
+            and not any(path[:i] in covered for i in range(len(path)))
+            and other is not None
+            and same(node, other)
+            and span(node, text) == span(other, base_text)
+        ):
+            covered.add(path)
+            paths.add(plain)
+            spans.append((node.start_mark.index, node.end_mark.index))
+    return spans, paths
+
+
+def _located(pattern: re.Pattern, prefixes: dict[str, list[str]], text: str, offset: int = 0):
+    """Each scan match as (term, raw start, raw end) in ``text``, or None when positions are unknown.
+
+    Scan normalization is rebuilt per base character with its combining marks, so
+    every normalized character keeps the source extent it came from.
+    """
+    chars, extents = [], []
+    for token in re.finditer(r"\S+", text):
+        if chars:
+            chars.append(" ")
+            extents.append((token.start(), token.start()))
+        i, raw = 0, token[0]
+        while i < len(raw):
+            j = i + 1
+            while j < len(raw) and unicodedata.combining(raw[j]):
+                j += 1
+            piece = unicodedata.normalize("NFC", raw[i:j]).casefold()
+            chars.extend(piece)
+            extents.extend([(token.start() + i, token.start() + j)] * len(piece))
+            i = j
+    normalized = "".join(chars)
+    if normalized != _scan_normalize(text):
+        return None
+    found = []
+    for match in pattern.finditer(normalized):
+        start = match.start(1)
+        for term in prefixes[match[1]]:
+            covered = extents[start : start + len(term)]
+            found.append((term, offset + min(a for a, _ in covered), offset + max(b for _, b in covered)))
+    return found
 
 
 def _head_blobs(repo: Path, paths: set[str] | None = None):
@@ -399,7 +507,10 @@ def leak_scan(
         if p
     }
     prefix = f"curriculum/l2-uk-en/evidence/{context.level}/"
-    gate_paths = changed_paths | {prefix + bindings.BINDINGS, prefix + "_words.yaml"}
+    stores = {prefix + bindings.BINDINGS, prefix + "_words.yaml"}
+    gate_paths = changed_paths | stores
+    # Level stores always gate whole; other changed YAML/JSON files gate by record.
+    record_paths = {p for p in changed_paths - stores if Path(p).suffix in {".yaml", ".yml", ".json"}}
     scope = {
         "kind": "diff",
         "merge_base": merge_base,
@@ -473,7 +584,7 @@ def leak_scan(
     mapping_pattern, mapping_prefixes = _scan_pattern(set(mapping_meanings) | set(mapping_forms))
     leaks = Counter(committed_files=0, commit_messages=0, pr_text=0)
     signals = Counter(distinctive_wording=0, mapping_copy=0)
-    suspects = []
+    suspects, pre_existing = [], []
     files, byte_count = 0, 0
     full_counts = Counter(committed_files=0)
     full_signals = Counter(distinctive_wording=0, mapping_copy=0)
@@ -488,8 +599,7 @@ def leak_scan(
                 forms.update(mapping_forms.get(term, ()))
         return meanings & forms
 
-    def scan(content: bytes, path: str, category: str, *, gate: bool = True):
-        text = content.decode("utf-8", errors="replace")
+    def detect(text: str, path: str) -> dict[str, Counter]:
         wording = Counter()
         for match in wording_pattern.finditer(_scan_normalize(text)):
             for term in wording_prefixes[match[1]]:
@@ -507,18 +617,73 @@ def leak_scan(
             except yaml.YAMLError:
                 # Invalid structured data still receives the literal line scan.
                 pass
-        for signal, matches in (("distinctive_wording", wording), ("mapping_copy", Counter({p: 1 for p in pairs}))):
-            count = sum(matches.values())
-            if count:
-                suspect = {"path": path, "signal": signal, "locators": sorted(matches), "count": count}
-                if gate:
-                    leaks[category] += count
-                    signals[signal] += count
-                    suspects.append(suspect)
-                if full_tree_report is not None and category == "committed_files":
-                    full_counts[category] += count
-                    full_signals[signal] += count
-                    full_suspects.append(suspect)
+        return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
+
+    def attribute(text: str, spans: list[tuple[int, int]], records: list[str]) -> dict[str, Counter] | None:
+        """Matches not wholly inside one unchanged record, or None when positions are unknown."""
+
+        def within(extents: list[tuple[int, int]]) -> bool:
+            return any(all(start <= a and b <= end for a, b in extents) for start, end in spans)
+
+        located = _located(wording_pattern, wording_prefixes, text)
+        if located is None:
+            return None
+        wording = Counter()
+        for term, a, b in located:
+            if not within([(a, b)]):
+                wording.update(distinctive[term])
+        pairs, offset = set(), 0
+        for line in text.splitlines(keepends=True):
+            located = _located(mapping_pattern, mapping_prefixes, line, offset)
+            offset += len(line)
+            if located is None:
+                return None
+            meanings, forms = {}, {}
+            for term, a, b in located:
+                for locator in mapping_meanings.get(term, ()):
+                    meanings.setdefault(locator, []).append((a, b))
+                for locator in mapping_forms.get(term, ()):
+                    forms.setdefault(locator, []).append((a, b))
+            # A one-line pair is pre-existing only when both halves sit inside the same unchanged record.
+            pairs.update(
+                locator for locator in meanings.keys() & forms.keys() if not within(meanings[locator] + forms[locator])
+            )
+        # Changed records are scanned whole, including the fields of unchanged records nested in them.
+        for record in records:
+            pairs.update(mapping_ids(record))
+        return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
+
+    def scan(content: bytes, path: str, category: str, *, gate: bool = True, base_path: str | None = None):
+        text = content.decode("utf-8", errors="replace")
+        found = detect(text, path)
+        gated = found
+        if gate and base_path is not None and any(found.values()):
+            # A suspect only inside records identical at the merge-base is reported, not gated.
+            try:
+                prior = bindings.git(repo, "cat-file", "blob", f"{merge_base}:{base_path}").decode("utf-8")
+                spans, paths = _unchanged_records(content.decode("utf-8"), prior)
+                if spans:
+                    doc = yaml.load(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader))
+                    gated = attribute(text, spans, list(_record_texts(doc, skip=paths))) or found
+            except (subprocess.CalledProcessError, UnicodeError, yaml.YAMLError):
+                gated = found
+        for signal, matches in found.items():
+            count = sum(gated[signal].values())
+            if gate and count:
+                leaks[category] += count
+                signals[signal] += count
+                suspects.append({"path": path, "signal": signal, "locators": sorted(gated[signal]), "count": count})
+            older = matches - gated[signal]
+            if gate and older:
+                pre_existing.append(
+                    {"path": path, "signal": signal, "locators": sorted(older), "count": sum(older.values())}
+                )
+            if full_tree_report is not None and category == "committed_files" and matches:
+                full_counts[category] += sum(matches.values())
+                full_signals[signal] += sum(matches.values())
+                full_suspects.append(
+                    {"path": path, "signal": signal, "locators": sorted(matches), "count": sum(matches.values())}
+                )
 
     for path, content in _head_blobs(repo, None if full_tree_report is not None else gate_paths):
         if path in gate_paths:
@@ -540,6 +705,7 @@ def leak_scan(
             path,
             "committed_files",
             gate=path in gate_paths,
+            base_path=path if path in record_paths else None,
         )
     messages = bindings.git(repo, "log", "--format=%B", f"{merge_base}..{head}")
     scan(messages, "commit_messages", "commit_messages")
@@ -565,6 +731,7 @@ def leak_scan(
         "counts": dict(leaks),
         "signals": dict(signals),
         "suspects": suspects,
+        "pre_existing_suspects": pre_existing,
         "tracked_files": files,
         "tracked_bytes": byte_count,
         "patterns": {"distinctive_wording": len(distinctive), "mapping_copy": len(mapping_meanings)},
