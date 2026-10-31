@@ -182,6 +182,7 @@ from scripts.audit.check_no_internal_ids import DOCS_DIR, scan_text
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
+from scripts.curriculum.evidence.word_records import printed
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.curriculum.resolver import codes as resolver_codes
@@ -484,7 +485,7 @@ def gloss_replacer(words_store: dict[str, Any], *, include_english: bool = True)
         wid = match.group(1)
         w_rec = words_by_id.get(wid)
         if w_rec:
-            lem = w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", "")
+            lem = printed(w_rec) or ""
             gl = w_rec.get("gloss_en") or ""
             return f"{lem} ({gl})" if gl and include_english else lem
         return wid
@@ -1734,7 +1735,7 @@ def assemble_expanded_document(
                 w_rec = words_by_id.get(wid)
                 if not w_rec:
                     raise AssemblerError(WORD_NOT_FOUND, f"core word {wid} not found in words store")
-                lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
+                lemma = str(printed(w_rec) or "")
                 add_unit("slovnyk", None, None, None, f"core_{wid}", "record_print", lemma, source="record", ref=wid)
 
     for inc in incidental_items:
@@ -1744,7 +1745,7 @@ def assemble_expanded_document(
             w_rec = words_by_id.get(wid)
             if not w_rec:
                 raise AssemblerError(WORD_NOT_FOUND, f"incidental word {wid} not found in words store")
-            lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
+            lemma = str(printed(w_rec) or "")
             add_unit("slovnyk", None, None, None, f"inc_{wid}", "record_print", lemma, source="record", ref=wid)
 
     # 4. Tab: resursy (Resources) - CITED ids only
@@ -2076,7 +2077,7 @@ def build_slovnyk_entries(
         if wid not in words_by_id:
             return
         w_rec = words_by_id[wid]
-        lemma = str(w_rec.get("text") if w_rec.get("kind") == "formula" else w_rec.get("lemma", ""))
+        lemma = str(printed(w_rec) or "")
 
         # Lemma stress comes from the record's lemma form, never first learner form
         stressed_lemma = lemma
