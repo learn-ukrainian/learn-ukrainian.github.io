@@ -1797,3 +1797,147 @@ def test_book_only_meaning_still_fails_beside_a_cited_gloss(bound, tmp_path, cas
     assert result["status"] == "failed", result
     assert result["signals"]["mapping_copy"] == len(flagged)
     assert {s["path"].removeprefix("curriculum/l2-uk-en/evidence/a1/") for s in result["suspects"]} == flagged
+
+
+def _capture_fixture_scan(
+    bound,
+    tmp_path,
+    mutate=lambda record: None,
+    *,
+    escape_notes=False,
+    formula=False,
+    extra_files=None,
+    full_tree=False,
+    mapping_probe=False,
+):
+    _root, api, _b = bound
+    wording = "invented confidential destination"
+    api.close()
+    with sqlite3.connect(api.sources_db) as db:
+        db.execute(
+            "UPDATE dmklinger_uk_en SET translations=?, text=?, source=? WHERE id=1",
+            (json.dumps([wording]), f"synthetic (noun): {wording}", "dmklinger UK→EN"),
+        )
+    captured = dict(api._db().execute("SELECT * FROM dmklinger_uk_en WHERE id=1").fetchone())
+    word = {"id": "W-001", "kind": "formula", "text": "synthetic"} if formula else WORD
+    record = {**{key: value for key, value in word.items() if key != "id"}, "rows": [captured]}
+    mutate(record)
+    neighbour = {"lemma": "neighbour", "pos": "noun", "locator": "p201 n#2"}
+    context = bindings.Context("a1", {}, [neighbour])
+    private = {neighbour["locator"]: {"meaning": wording}}
+    if mapping_probe:
+        context.inventory.append({"lemma": "mapping-neighbour", "pos": "noun", "locator": "p202 n#3"})
+        private["p202 n#3"] = {"meaning": "confidential"}
+    repo = tmp_path / "capture-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    path = repo / "tests/curriculum/evidence/fixtures/a1_gloss_candidates.json"
+    path.parent.mkdir(parents=True)
+    unchanged = {"W-unchanged": {"note": "ordinary unchanged data"}}
+    path.write_text(json.dumps({"records": unchanged}, indent=2))
+    if full_tree:
+        (repo / "legacy.yaml").write_text('broken: ["\\u0069"\n')
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "base")
+    content = json.dumps({"records": {**unchanged, "W-001": record}}, indent=2)
+    if escape_notes:
+        content = content.replace('"note": "invented', '"note": "\\u0069nvented')
+    path.write_text(content)
+    for name, value in (extra_files or {}).items():
+        (repo / name).write_text(value)
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "capture")
+    report = tmp_path / "full-tree.json" if full_tree else None
+    result = sense_cli.leak_scan(repo, private, context, {"words": [word]}, api, base="HEAD^", full_tree_report=report)
+    if report:
+        full = json.loads(report.read_text())
+        assert {"path": "legacy.yaml", "signal": "structured_scan_decode_failed", "locators": [], "count": 1} in full[
+            "suspects"
+        ]
+        assert result == sense_cli.leak_scan(repo, private, context, {"words": [word]}, api, base="HEAD^")
+    assert wording not in json.dumps(result)
+    return result
+
+
+@pytest.mark.parametrize("formula", [False, True])
+def test_leak_scan_exempts_cited_open_row_in_capture_fixture(bound, tmp_path, formula):
+    """#12226: a byte-identical cited open row must not gate as a private leak."""
+    result = _capture_fixture_scan(bound, tmp_path, formula=formula)
+    assert result["status"] == "checked", result
+    assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 0}
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "uncited",
+        "altered",
+        "wrong_id",
+        "other_lemma",
+        "private_source",
+        "lookalike",
+        "row_extra",
+        "record_extra",
+        "newline",
+        "jsonl",
+        "json_surrogate",
+        "full_tree",
+        "gated_decode_failure",
+        "mapping_surrogate",
+        "mapping_jsonl_surrogate",
+    ],
+)
+def test_leak_scan_gates_uncited_or_altered_fixture_row(bound, tmp_path, case):
+    """#12226: missing, forged or non-identical citations must not admit private wording."""
+
+    def mutate(record):
+        captured = record["rows"][0]
+        if case == "uncited":
+            captured.pop("source")
+        elif case == "altered":
+            captured["text"] += " extra"
+        elif case == "wrong_id":
+            captured["id"] = 999999
+        elif case == "other_lemma":
+            record["lemma"] = "neighbour"
+        elif case == "private_source":
+            captured["source"] = "ohoiko_reference"
+        elif case == "lookalike":
+            captured["source"] = "dmklinger UK→ЕN"
+        elif case == "row_extra":
+            captured["note"] = "invented confidential destination"
+        elif case in {"record_extra", "full_tree"}:
+            record["note"] = "invented confidential destination"
+        elif case == "newline":
+            record["note"] = "invented\nconfidential destination"
+
+    extra = None
+    if case == "jsonl":
+        extra = {
+            "probe.jsonl": '{"note": "\\u0069nvented confidential destination", "tag": "left\u2028right", "symbol": "\\ud83d\\ude00"}\n{}\n'
+        }
+    elif case == "json_surrogate":
+        extra = {"probe.json": '{"note": "\\u0069nvented confidential destination", "symbol": "\\ud83d\\ude00"}'}
+    elif case in {"mapping_surrogate", "mapping_jsonl_surrogate"}:
+        value = '{"lemma": "mapping-neighbour", "meaning": "\\u0063onfidential", "symbol": "\\ud83d\\ude00"}'
+        extra = {"probe.jsonl": value + "\n{}\n"} if case == "mapping_jsonl_surrogate" else {"probe.json": value}
+    elif case == "gated_decode_failure":
+        with pytest.raises(ValueError, match=r"^structured_scan_decode_failed$"):
+            _capture_fixture_scan(bound, tmp_path, extra_files={"broken.yaml": 'broken: ["\\u0069"\n'})
+        return
+    result = _capture_fixture_scan(
+        bound,
+        tmp_path,
+        mutate,
+        escape_notes=case in {"row_extra", "record_extra", "full_tree"},
+        extra_files=extra,
+        full_tree=case == "full_tree",
+        mapping_probe=case in {"mapping_surrogate", "mapping_jsonl_surrogate"},
+    )
+    assert result["status"] == "failed", result
+    if case in {"mapping_surrogate", "mapping_jsonl_surrogate"}:
+        assert result["signals"]["mapping_copy"] == 1
+    else:
+        assert result["signals"]["distinctive_wording"] > 0
