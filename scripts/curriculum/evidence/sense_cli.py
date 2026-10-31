@@ -345,12 +345,12 @@ def _unchanged_records(text: str, base_text: str) -> tuple[list[tuple[int, int]]
     """Source spans and structural paths of YAML/JSON mappings identical to the merge-base record.
 
     A record's identity is its structural path from the document root (mapping
-    keys, sequence indices) plus its parsed value; its source span must also be
-    unchanged, so an added comment never joins it. A moved or reordered record is
-    compared with whatever the base holds at its new path. Only the outermost
-    unchanged mapping is returned. Anything ambiguous (a parse error, several
-    documents, an alias, a duplicate or non-scalar key) returns nothing, so every
-    record still gates.
+    keys and their tags, sequence indices, and each container's tag) plus its
+    parsed value; its source span must also be unchanged, so an added comment
+    never joins it. A moved or reordered record is compared with whatever the
+    base holds at its new path. Only the outermost unchanged mapping is
+    returned. Anything ambiguous (a parse error, several documents, an alias, a
+    duplicate or non-scalar key) returns nothing, so every record still gates.
     """
     try:
         head, prior = yaml.compose(text), yaml.compose(base_text)
@@ -359,14 +359,15 @@ def _unchanged_records(text: str, base_text: str) -> tuple[list[tuple[int, int]]
     if head is None or prior is None:
         return [], set()
 
-    def index(node, path: tuple, nodes: dict, seen: set[int]) -> None:
+    def index(node, path: tuple, plain: tuple, nodes: dict, seen: set[int]) -> None:
+        """Key each node by its tagged structural path; the plain path matches the loaded document."""
         if id(node) in seen:
             raise ValueError("alias")
         seen.add(id(node))
-        nodes[path] = node
+        nodes[path] = (node, plain)
         if isinstance(node, yaml.SequenceNode):
             for i, child in enumerate(node.value):
-                index(child, (*path, ("index", i)), nodes, seen)
+                index(child, (*path, ("index", node.tag, i)), (*plain, ("index", i)), nodes, seen)
         elif isinstance(node, yaml.MappingNode):
             keys = [key.value for key, _value in node.value if isinstance(key, yaml.ScalarNode)]
             if len(keys) != len(node.value) or len(set(keys)) != len(keys):
@@ -375,7 +376,9 @@ def _unchanged_records(text: str, base_text: str) -> tuple[list[tuple[int, int]]
                 if id(key) in seen:
                     raise ValueError("alias")
                 seen.add(id(key))
-                index(value, (*path, ("key", key.value)), nodes, seen)
+                # A container or key tag change (``1`` to ``"1"``) is a different path.
+                tagged = ("key", node.tag, key.tag, key.value)
+                index(value, (*path, tagged), (*plain, ("key", key.value)), nodes, seen)
 
     def same(a, b) -> bool:
         if type(a) is not type(b) or a.tag != b.tag:
@@ -391,21 +394,22 @@ def _unchanged_records(text: str, base_text: str) -> tuple[list[tuple[int, int]]
 
     head_nodes, base_nodes = {}, {}
     try:
-        index(head, (), head_nodes, set())
-        index(prior, (), base_nodes, set())
+        index(head, (), (), head_nodes, set())
+        index(prior, (), (), base_nodes, set())
     except ValueError:
         return [], set()
-    spans, paths = [], set()
-    for path, node in head_nodes.items():
-        other = base_nodes.get(path)
+    spans, covered, paths = [], set(), set()
+    for path, (node, plain) in head_nodes.items():
+        other = base_nodes.get(path, (None, None))[0]
         if (
             isinstance(node, yaml.MappingNode)
-            and not any(path[:i] in paths for i in range(len(path)))
+            and not any(path[:i] in covered for i in range(len(path)))
             and other is not None
             and same(node, other)
             and span(node, text) == span(other, base_text)
         ):
-            paths.add(path)
+            covered.add(path)
+            paths.add(plain)
             spans.append((node.start_mark.index, node.end_mark.index))
     return spans, paths
 

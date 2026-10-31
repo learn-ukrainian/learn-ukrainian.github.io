@@ -195,8 +195,8 @@ In a changed YAML/JSON file other than the level stores, a suspect formed only
 inside one record identical at the merge-base is listed under
 `pre_existing_suspects` (path, signal, locators, count) and does not fail the
 gate; route it to the file's lane. A record's identity is its structural path
-from the document root (mapping keys and sequence indices) plus its parsed
-value, and its source span must also be unchanged, so an added comment still
+from the document root (mapping keys and sequence indices, with their tags)
+plus its parsed value, and its source span must also be unchanged, so an added comment still
 gates. A moved or reordered record is compared with what the merge-base holds
 at its new path, so it gates. A match or a one-line pair that reaches outside
 that record, and any new or changed record (scanned whole, with the fields of

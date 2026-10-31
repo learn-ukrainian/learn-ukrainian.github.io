@@ -677,6 +677,15 @@ def _positions(records, *, yaml_style=False, one_line=False):
             "failed",
         ),
         (
+            "retyped_key",
+            "a.yaml",
+            "1:\n- lemma: synthetic\n  meaning: confidential\nmeta: a\n",
+            '"1":\n- lemma: synthetic\n  meaning: confidential\nmeta: a\n',
+            None,
+            None,
+            "failed",
+        ),
+        (
             "changed_parent_of_unchanged_child",
             "a.yaml",
             "info:\n  lemma: synthetic\nmeaning: harmless\n",
