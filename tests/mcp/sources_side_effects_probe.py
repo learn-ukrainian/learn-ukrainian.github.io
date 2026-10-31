@@ -353,9 +353,8 @@ def _hermetic(scratch: Path, effects: SideEffects) -> None:
     redirects = {
         "SOURCES_DB_PATH": ("wiki.sources_db", "scripts.wiki.sources_db"),
         "_DEFAULT_DB": ("rag.wiki_cache", "scripts.rag.wiki_cache"),
-        "VESUM_DB_PATH": ("rag.config", "scripts.rag.config", "scripts.verification.vesum"),
     }
-    stores = {"SOURCES_DB_PATH": "sources.db", "_DEFAULT_DB": "wiki_cache.db", "VESUM_DB_PATH": "vesum.db"}
+    stores = {"SOURCES_DB_PATH": "sources.db", "_DEFAULT_DB": "wiki_cache.db"}
     for attribute, modules in redirects.items():
         for name in modules:
             setattr(importlib.import_module(name), attribute, scratch / stores[attribute])
@@ -431,9 +430,13 @@ def main(argv: list[str] | None = None) -> int:
     sys.dont_write_bytecode = True
 
     if args.hermetic:
-        fixture.build(scratch)
+        sys.path.insert(0, str(PROJECT_ROOT))
+        from scripts.storage.topology import ENV_VESUM_DB
+
+        _sources_db, vesum_db = fixture.build(scratch)
         # The store's own override, honoured by every resolver of the active sources DB.
         os.environ[ENV_SOURCES_DB] = str(scratch / "sources.db")
+        os.environ[ENV_VESUM_DB] = str(vesum_db)
         os.environ[ENV_WORD_CARDS_DIR] = str(fixture.build_word_cards(scratch))
     effects = SideEffects([log_dir])
     # Before the server import, so a module that binds ``connect`` at import is guarded too.

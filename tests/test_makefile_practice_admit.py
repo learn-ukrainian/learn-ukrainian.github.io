@@ -28,9 +28,11 @@ def test_curated_admit_dry_run_consumes_only_the_local_practice_overlay() -> Non
     assert "atlas-local-practice-refresh" not in output
 
 
-def test_gold_slice_dry_run_uses_bounded_local_static_shards_without_cloze() -> None:
+def test_gold_slice_dry_run_uses_bounded_local_static_shards_without_cloze(tmp_path: Path) -> None:
+    vesum_db = tmp_path / "vesum fixture.db"
+    vesum_db.touch()
     result = subprocess.run(
-        ["make", "-n", "practice-gold-curated-seed"],
+        ["make", "-n", "practice-gold-curated-seed", f"CURATED_SEED_GOLD_VESUM_DB={vesum_db}"],
         cwd=ROOT,
         check=True,
         capture_output=True,
@@ -44,6 +46,6 @@ def test_gold_slice_dry_run_uses_bounded_local_static_shards_without_cloze() -> 
     assert '--target "40"' in output
     assert "--seed-selection representative" in output
     assert "--disable-cloze" in output
-    assert '--vesum-db "data/vesum.db"' in output
+    assert f'--vesum-db "{vesum_db}"' in output
     assert "practice-deck-publish" not in output
     assert "atlas-local-practice-refresh" not in output

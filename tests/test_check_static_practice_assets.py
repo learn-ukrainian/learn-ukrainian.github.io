@@ -1176,7 +1176,8 @@ def test_actual_make_prepares_before_validation_and_preserves_precise_refusal(tm
         (sandbox / "site/src/data/lexicon-daily-pool.json").write_text("[]")
     before = _input_snapshot(sandbox / "site")
     env = {**os.environ, "PREP_CASE": case}
-    result = subprocess.run(["make", "practice-deck-linguistic-gate", f"PYTHON={sys.executable}"],
+    result = subprocess.run(["make", "practice-deck-linguistic-gate", f"PYTHON={sys.executable}",
+                             f"CURATED_SEED_GOLD_VESUM_DB={sandbox / 'data/vesum.db'}"],
                             cwd=sandbox, env=env, capture_output=True, text=True, check=False, timeout=60)
     assert (sandbox / "events").exists(), result.stdout + result.stderr
     events = (sandbox / "events").read_text().splitlines()
