@@ -18,10 +18,11 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.common.git_credentials import canonical_origins as canonical_origins
 from scripts.common.git_credentials import verification_credentials
 from scripts.common.repo_root import resolve_repo_root
-from scripts.common.task_scratch import allocate
+from scripts.common.task_scratch import TaskScratchError, allocate
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import site_deps
 from scripts.dispatcher.types import TaskSpec
+from scripts.orchestration.execution_safe_git import run_git as execution_safe_git
 from scripts.storage.topology import STORE_FILES
 
 ROOT = resolve_repo_root(Path(__file__), 2)
@@ -348,10 +349,11 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
     )
     try:
         start_sha = record.get("worktree_start_sha", record["worktree_base_sha"])
+        local = partial(execution_safe_git, cwd=spec.worktree, capture_output=True, text=True, check=True, timeout=30)
         delivery.update(
-            head_sha=_git(spec.worktree, "rev-parse", "HEAD"),
-            commits_ahead=int(_git(spec.worktree, "rev-list", "--count", f"{start_sha}..HEAD")),
-            worktree_dirty_on_exit=bool(_git(spec.worktree, "status", "--porcelain")),
+            head_sha=local(["rev-parse", "HEAD"]).stdout.strip(),
+            commits_ahead=int(local(["rev-list", "--count", f"{start_sha}..HEAD"]).stdout),
+            worktree_dirty_on_exit=bool(local(["status", "--porcelain"]).stdout.strip()),
         )
         if spec.mode == "read-only":
             delivery["push_state"] = "not_applicable"
@@ -361,7 +363,11 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
             if delivery["publish_branch"] is not None:
                 branches.append(delivery["publish_branch"])
             refs = list(dict.fromkeys(f"refs/heads/{name}" for name in branches))
-            remote = _git(spec.worktree, "ls-remote", "--heads", "origin", *refs)
+            remote_url = record["worktree_remote_url"]
+            if verification_origin(spec.worktree) != remote_url:
+                raise ValueError("origin URL changed since dispatch")
+            with _private_remote_git(record["task_id"], remote_url) as (run, _):
+                remote = run("ls-remote", "--heads", "origin", *refs)
             heads = {ref: sha for sha, ref in (line.split() for line in remote.splitlines()) if ref in refs}
             matched = next((ref for ref in refs if heads.get(ref) == delivery["head_sha"]), None)
             delivery["remote_ref"] = matched
@@ -370,7 +376,7 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
             delivery["push_state_reason"] = (
                 "remote_head_matches" if matched else "remote_head_differs" if heads else "remote_branch_missing"
             )
-    except (OSError, ValueError, subprocess.SubprocessError):
+    except (OSError, ValueError, subprocess.SubprocessError, TaskScratchError):
         pass
     if spec.mode != "read-only" and delivery["worktree_dirty_on_exit"]:
         delivery["push_state"] = "unpushed"
