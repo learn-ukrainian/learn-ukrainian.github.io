@@ -979,3 +979,121 @@ def test_pr_importing_tests_fill_only_to_the_fill_budget(
     assert selected['estimate_seconds'] == 265
     assert selected['reason'] == 'recorded estimate exceeds 600 second cap'
     assert affected.CAP_SECONDS == 600
+
+
+def test_pr_selection_estimated_just_under_the_timeout_is_deferred_not_run_to_the_kill(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A 475 s estimate is under both limits but has no room for runner variance: defer it."""
+    from scripts.ci import pr_affected_tests as affected
+
+    guard, heavy, light = 'tests/test_guard.py', 'tests/test_heavy.py', 'tests/test_light.py'
+    repo = tmp_path / 'margin'
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / 'tests').mkdir()
+    for name in (guard, heavy, light):
+        (repo / name).write_text('def test_x():\n    pass\n')
+    (repo / affected.GUARDS).write_text(guard + '\n')
+    # 60 s reserve + 5 s guard + 400 s + 10 s changed tests = 475 s, like the 464.9 s selection
+    # that was killed at 480 s; the 10 s test still fits the safe budget.
+    (repo / affected.DURATIONS).write_text(json.dumps({guard: 5, heavy: 400, light: 10}))
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    _git(repo, 'init', '-q', '-b', 'main')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    for name in (heavy, light):
+        (repo / name).write_text('def test_x():\n    assert True\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'change')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    monkeypatch.chdir(repo)
+    selected = affected.plan(base, candidate)
+    assert selected['estimate_seconds'] == 475
+    assert selected['estimate_seconds'] < affected.TIMEOUT_SECONDS < affected.CAP_SECONDS
+    assert selected['run_files'] == [guard, light]
+    assert selected['deferred_files'] == [heavy]
+    assert 'runner-variance margin' in selected['reason']
+    assert selected['safe_budget_seconds'] == affected.SAFE_SECONDS
+    assert not selected['guards_exceed_safe_budget']
+
+    # Importing tests are bounded by the same rule. The durations stay uncommitted:
+    # a committed change under scripts/ci is an infrastructure change and skips the fill.
+    (repo / 'module.py').write_text('X = 1\n')
+    _git(repo, 'add', 'module.py')
+    _git(repo, *ident, 'commit', '-qm', 'module')
+    module_candidate = _git(repo, 'rev-parse', 'HEAD')
+    reached: list[bool] = []
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: reached.append(True) or [heavy])
+    (repo / affected.DURATIONS).write_text(json.dumps({guard: 200, heavy: 150, light: 10}))
+    imported = affected.plan(candidate, module_candidate)
+    assert reached and imported['importing_test_files'] == [heavy]
+    assert heavy in imported['deferred_files'] and heavy not in imported['run_files']
+    assert 'runner-variance margin' in imported['reason']
+
+    # Guards alone over the safe budget are recorded, not run into the kill.
+    (repo / affected.DURATIONS).write_text(json.dumps({guard: 420, heavy: 1, light: 1}))
+    over = affected.plan(base, candidate)
+    assert over['guards_exceed_safe_budget'] is True
+    assert over['run_files'] == [guard]
+
+
+def test_main_refuses_when_guards_alone_exceed_the_safe_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
+) -> None:
+    """main() records the refusal and returns before pytest when guards exceed the safe budget."""
+    from scripts.ci import pr_affected_tests as affected
+
+    guard = 'tests/test_guard.py'
+    repo = tmp_path / 'refusal'
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / 'tests').mkdir()
+    (repo / guard).write_text('def test_x():\n    assert False, "pytest must not run"\n')
+    (repo / affected.GUARDS).write_text(guard + '\n')
+    # 60 s reserve + 420 s guard is over the 406 s safe budget, so main must refuse.
+    (repo / affected.DURATIONS).write_text(json.dumps({guard: 420}))
+    (repo / 'module.py').write_text('X = 1\n')
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    _git(repo, 'init', '-q', '-b', 'main')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    _git(repo, 'checkout', '-qb', 'pr')
+    (repo / 'module.py').write_text('X = 2\n')
+    _git(repo, 'add', 'module.py')
+    _git(repo, *ident, 'commit', '-qm', 'PR')
+    head = _git(repo, 'rev-parse', 'HEAD')
+    _git(repo, 'checkout', '-q', 'main')
+    _git(repo, *ident, 'merge', '--no-ff', '-qm', 'candidate', 'pr')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    payload = {
+        'action': 'opened',
+        'repository': {'default_branch': 'main'},
+        'pull_request': {
+            'number': 7,
+            'base': {'sha': base, 'ref': 'main'},
+            'head': {'sha': head},
+        },
+    }
+    event = tmp_path / 'event.json'
+    event.write_text(json.dumps(payload))
+    for key, value in {
+        'EVENT_NAME': 'pull_request',
+        'GITHUB_EVENT_PATH': str(event),
+        'GITHUB_SHA': candidate,
+        'GITHUB_REF': 'refs/pull/7/merge',
+    }.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.chdir(repo)
+    monkeypatch.setattr(sys, 'argv', ['pr-affected'])
+    assert affected.main() == 1
+    recorded = capsys.readouterr()
+    assert 'stage=safe_budget' in recorded.err
+    assert 'reason=guards_exceed_safe_budget' in recorded.err
+    assert affected.GUARDS_REASON in recorded.err
+    report = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
+    assert report['execution_status'] == 'not_run_guards_exceed_safe_budget'
+    assert report['guards_exceed_safe_budget'] is True
+    assert report['run_files'] == [guard]
+    assert report['candidate'] == candidate
+    assert not (repo / 'ci-artifacts/pr-affected.xml').exists()

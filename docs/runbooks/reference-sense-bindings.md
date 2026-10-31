@@ -190,7 +190,19 @@ that lemma is public data and never counts; an unrelated common one-word
 meaning alone never counts. Validated binding `span` and store `gloss_en`
 locations retain their scalar exemptions; so does a meaning exactly equal to
 its record's exempt gloss cited from an open-dictionary row, in the store or
-in the one request record (same lemma, POS and entry) that built it. Tracked
+in the one request record (same lemma, POS and entry) that built it.
+In a changed YAML/JSON file other than the level stores, a suspect formed only
+inside one record identical at the merge-base is listed under
+`pre_existing_suspects` (path, signal, locators, count) and does not fail the
+gate; route it to the file's lane. A record's identity is its structural path
+from the document root (mapping keys and sequence indices, with their tags)
+plus its parsed value, and its source span must also be unchanged, so an added comment still
+gates. A moved or reordered record is compared with what the merge-base holds
+at its new path, so it gates. A match or a one-line pair that reaches outside
+that record, and any new or changed record (scanned whole, with the fields of
+unchanged records nested in it), still fails. A file that does not parse at
+both commits, or has several documents, an alias or a duplicate key, gates
+whole; free-text files and the level stores gate whole as before. Tracked
 HEAD blobs are read through
 one `git cat-file --batch` stream; patterns are compiled once. Diagnostics
 contain only paths, public locators and counts. An unavailable PR is explicitly

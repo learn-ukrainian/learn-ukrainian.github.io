@@ -621,6 +621,122 @@ def test_leak_signals_mapping_wording_and_public_exceptions(bound, tmp_path, mea
     assert result["pr_text"] == "unverified"
 
 
+RECORD = '{"lemma": "synthetic",\n"meaning": "confidential"}'
+YAML_RECORD = "- lemma: synthetic\n  meaning: confidential\n"
+
+
+def _positions(records, *, yaml_style=False, one_line=False):
+    if yaml_style:
+        return "positions:\n" + "".join("  " + line + "\n" for r in records for line in r.splitlines())
+    return '{"positions": [' + (", " if one_line else ",\n").join(records) + "]}\n"
+
+
+@pytest.mark.parametrize(
+    "case,name,base,head,meaning,signal,expected",
+    [
+        # #12212: a regenerated file keeps a pre-existing record exactly as it was.
+        ("unchanged", "a.json", [RECORD, '{"slug": "a"}'], [RECORD, '{"slug": "b"}'], None, None, "checked"),
+        ("unchanged_yaml", "a.yaml", [YAML_RECORD, "- slug: a"], [YAML_RECORD, "- slug: b"], None, None, "checked"),
+        (
+            "unchanged_one_line",
+            "a.json",
+            _positions(['{"lemma": "synthetic", "meaning": "confidential"}', '{"slug": "a"}'], one_line=True),
+            _positions(['{"lemma": "synthetic", "meaning": "confidential"}', '{"slug": "b"}'], one_line=True),
+            None,
+            None,
+            "checked",
+        ),
+        (
+            "changed",
+            "a.json",
+            [RECORD, '{"slug": "a"}'],
+            ['{"x": 1,\n' + RECORD[1:], '{"slug": "b"}'],
+            None,
+            None,
+            "failed",
+        ),
+        ("copied", "a.json", [RECORD, '{"slug": "a"}'], [RECORD, RECORD], None, None, "failed"),
+        ("moved", "a.json", [RECORD, '{"slug": "a"}'], ['{"slug": "a"}', RECORD], None, None, "failed"),
+        (
+            "commented",
+            "a.yaml",
+            [YAML_RECORD, "- slug: a"],
+            [YAML_RECORD + "  # synthetic", "- slug: b"],
+            None,
+            None,
+            "failed",
+        ),
+        ("added_file", "a.json", None, [RECORD, '{"slug": "b"}'], None, None, "failed"),
+        (
+            "shares_a_line",
+            "a.json",
+            _positions(['{"lemma": "synthetic"}', '{"slug": "a"}'], one_line=True),
+            _positions(['{"lemma": "synthetic"}', '{"meaning": "confidential"}'], one_line=True),
+            None,
+            None,
+            "failed",
+        ),
+        (
+            "retyped_key",
+            "a.yaml",
+            "1:\n- lemma: synthetic\n  meaning: confidential\nmeta: a\n",
+            '"1":\n- lemma: synthetic\n  meaning: confidential\nmeta: a\n',
+            None,
+            None,
+            "failed",
+        ),
+        (
+            "changed_parent_of_unchanged_child",
+            "a.yaml",
+            "info:\n  lemma: synthetic\nmeaning: harmless\n",
+            "info:\n  lemma: synthetic\nmeaning: confidential\n",
+            None,
+            None,
+            "failed",
+        ),
+        (
+            "wording_across_an_unchanged_record",
+            "a.yaml",
+            "a:\n  key: alpha\nbeta other: 1\n",
+            "a:\n  key: alpha\nbeta gamma: 1\n",
+            "alpha beta gamma",
+            "distinctive_wording",
+            "failed",
+        ),
+    ],
+)
+def test_pre_existing_record_is_reported_not_gated(bound, tmp_path, case, name, base, head, meaning, signal, expected):
+    root, api, _b = bound
+
+    def document(records):
+        return records if isinstance(records, str) else _positions(records, yaml_style=name.endswith(".yaml"))
+
+    repo = tmp_path / "record-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    if base is not None:
+        (repo / name).write_text(document(base))
+    git(repo, "add", ".")
+    git(repo, "commit", "--allow-empty", "-qm", "base")
+    (repo / name).write_text(document(head))
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "regenerate")
+    context = bindings.Context.read("a1", root)
+    meaning = meaning or "confidential"
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": meaning}}
+    result = sense_cli.leak_scan(repo, private, context, {"words": [WORD]}, api, base="HEAD^")
+    assert result["status"] == expected, result
+    suspect = [
+        {"path": name, "signal": signal or "mapping_copy", "locators": [FIXTURE["private"]["locator"]], "count": 1}
+    ]
+    assert (result["suspects"], result["pre_existing_suspects"]) == (
+        ([], suspect) if expected == "checked" else (suspect, [])
+    )
+    assert meaning not in json.dumps(result)
+
+
 def test_leak_scan_accepts_a_store_with_formula_records(bound, tmp_path):
     """A formula has no lemma; the lexical public maps skip it rather than fail."""
     root, api, _b = bound
