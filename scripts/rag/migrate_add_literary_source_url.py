@@ -38,8 +38,18 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+DEFAULT_DB_PATH = None  # Selected by the connection owner at call time.
 LITERARY_DIR = PROJECT_ROOT / "data" / "literary_texts"
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 def _get_column_names(conn: sqlite3.Connection, table: str = "literary_texts") -> set[str]:
@@ -153,78 +163,98 @@ def backfill_from_jsonl(
     }
 
 
-def run_migration(db_path: Path, *, dry_run: bool = False) -> dict[str, Any]:
+def run_migration(db_path: Path, *, dry_run: bool = False, db_role: str = "active", create: bool = False) -> dict[str, Any]:
     """Perform the column add (if needed) + backfill. Returns summary for tests/CI."""
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     if not db_path.exists():
         return {"db_path": str(db_path), "existed": False, "added_column": False}
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
 
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path))
-    try:
-        added = False
-        stats: dict[str, Any] = {}
-        with conn:
-            added = ensure_source_url_column(conn)
-            # Show pragma for evidence (caller/test can capture)
-            pragma_rows = conn.execute("PRAGMA table_info(literary_texts)").fetchall()
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            added = False
+            stats: dict[str, Any] = {}
+            with conn:
+                added = ensure_source_url_column(conn)
+                # Show pragma for evidence (caller/test can capture)
+                pragma_rows = conn.execute("PRAGMA table_info(literary_texts)").fetchall()
 
-        print(f"[migrate] DB: {db_path}")
-        print(f"[migrate] source_url column added this run: {added}")
-        print("[migrate] PRAGMA table_info(literary_texts) [after ensure]:")
-        for col in pragma_rows:
-            print(" ", col)
+            print(f"[migrate] DB: {db_path}")
+            print(f"[migrate] source_url column added this run: {added}")
+            print("[migrate] PRAGMA table_info(literary_texts) [after ensure]:")
+            for col in pragma_rows:
+                print(" ", col)
 
-        if dry_run:
-            print("[migrate] --dry-run: backfill skipped")
+            if dry_run:
+                print("[migrate] --dry-run: backfill skipped")
+                return {
+                    "db_path": str(db_path),
+                    "existed": True,
+                    "added_column": added,
+                    "dry_run": True,
+                    "pragma_after": pragma_rows,
+                }
+
+            url_by_chunk, present_waves = load_urls_by_chunk_id(LITERARY_DIR)
+            print(f"[migrate] Loaded source_url for {len(url_by_chunk)} chunks from {len(present_waves)} local waves under {LITERARY_DIR}")
+
+            with conn:
+                stats = backfill_from_jsonl(conn, url_by_chunk, present_waves)
+
+            print("\n[backfill] Results:")
+            print(f"  total literary_texts rows: {stats['total_rows']}")
+            print(f"  rows updated with source_url: {stats['updated']}")
+            print(f"  rows left NULL/empty: {stats['still_null']}")
+            if stats.get("absent_waves"):
+                aw = stats["absent_waves"]
+                print(f"  waves absent locally (rows left NULL for these): {', '.join(aw[:8])}{' ...' if len(aw) > 8 else ''} (total {len(aw)})")
+            print("  NULL reasons (counts):")
+            for reason, count in sorted(stats.get("null_reasons", {}).items(), key=lambda kv: -kv[1]):
+                print(f"    {count}: {reason}")
+
             return {
                 "db_path": str(db_path),
                 "existed": True,
                 "added_column": added,
-                "dry_run": True,
+                "stats": stats,
                 "pragma_after": pragma_rows,
             }
-
-        url_by_chunk, present_waves = load_urls_by_chunk_id(LITERARY_DIR)
-        print(f"[migrate] Loaded source_url for {len(url_by_chunk)} chunks from {len(present_waves)} local waves under {LITERARY_DIR}")
-
-        with conn:
-            stats = backfill_from_jsonl(conn, url_by_chunk, present_waves)
-
-        print("\n[backfill] Results:")
-        print(f"  total literary_texts rows: {stats['total_rows']}")
-        print(f"  rows updated with source_url: {stats['updated']}")
-        print(f"  rows left NULL/empty: {stats['still_null']}")
-        if stats.get("absent_waves"):
-            aw = stats["absent_waves"]
-            print(f"  waves absent locally (rows left NULL for these): {', '.join(aw[:8])}{' ...' if len(aw) > 8 else ''} (total {len(aw)})")
-        print("  NULL reasons (counts):")
-        for reason, count in sorted(stats.get("null_reasons", {}).items(), key=lambda kv: -kv[1]):
-            print(f"    {count}: {reason}")
-
-        return {
-            "db_path": str(db_path),
-            "existed": True,
-            "added_column": added,
-            "stats": stats,
-            "pragma_after": pragma_rows,
-        }
-    finally:
-        conn.close()
+        finally:
+            conn.close()
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Add source_url to literary_texts + backfill from JSONL")
     p.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH, help="Path to sources.db (default: data/sources.db)")
     p.add_argument("--dry-run", action="store_true", help="Add column if needed but skip UPDATE backfill")
+    p.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active")
+    p.add_argument("--create-db", action="store_true")
     return p.parse_args(argv)
 
 
 if __name__ == "__main__":
-    args = _parse_args()
-    result = run_migration(args.db_path, dry_run=args.dry_run)
-    if result.get("stats"):
-        s = result["stats"]
-        print(f"\nDONE. updated={s['updated']} still_null={s['still_null']}")
-    else:
-        print("DONE.")
-    sys.exit(0)
+    try:
+        args = _parse_args()
+        result = run_migration(args.db_path, dry_run=args.dry_run, db_role=args.db_role, create=args.create_db)
+        if result.get("stats"):
+            s = result["stats"]
+            print(f"\nDONE. updated={s['updated']} still_null={s['still_null']}")
+        else:
+            print("DONE.")
+        sys.exit(0)
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

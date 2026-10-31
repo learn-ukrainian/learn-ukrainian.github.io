@@ -14,7 +14,7 @@ title-probed from the source pages during wave-1 acquisition (2026-07-06).
 Usage:
     .venv/bin/python scripts/ingest/incremental_textbook_ingest.py \
         --slugs 9-klas-khimiya-popel-2017 [...] \
-        [--db data/sources.db] [--chunks-root GDRIVE/textbook_chunks] [--dry-run]
+        [] [--chunks-root GDRIVE/textbook_chunks] [--dry-run]
     .venv/bin/python scripts/ingest/incremental_textbook_ingest.py --wave1
 """
 
@@ -90,7 +90,7 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
 # repo-local data/textbook_chunks directory is the production source.
 CHUNKS_DIR = TEXTBOOK_CHUNKS_DIR
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
-DEFAULT_DB = PRIMARY_ROOT / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 
 # These sources have a dedicated, fail-closed database cutover. The generic
 # ingest entry point may build a dry-run plan for them and may populate a
@@ -128,6 +128,16 @@ WAVE1_SLUGS: tuple[str, ...] = (
     "9-klas-heometriya-merzliak-2017",
     "9-klas-informatyka-ryvkind-2017",
     "9-klas-khimiya-popel-2017",
+)
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
 )
 
 
@@ -420,6 +430,8 @@ def ingest(
     copied_database_rehearsal: bool = False,
     additional_rehearsal_policy_sha256: str | None = None,
     live_ingest_gate_path: Path | None = None,
+    db_role: str = "active",
+    create: bool = False,
 ) -> dict[str, int]:
     """Run one atomic replace/quarantine/FTS-resync cycle.
 
@@ -427,6 +439,18 @@ def ingest(
     production, so MCP readers are not blocked by this writer; still,
     prefer running while no build/review dispatch is mid-flight.
     """
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
+    from scripts.storage.topology import resolve_store, unavailable_store_path
+
+    active = resolve_store("sources", Path(__file__).resolve().parents[2])
+    live_db_path = (globals().get("DEFAULT_DB") or
+                    (unavailable_store_path("sources") if isinstance(active, StoreRefusal) else active.path))
     quarantine_slugs = list(quarantine_slugs or [])
     overlap = sorted(set(slugs) & set(quarantine_slugs))
     if overlap:
@@ -455,7 +479,7 @@ def ingest(
             live_ingest_gate_sha256 = validate_live_ingest_preconditions(
                 gate_path=Path(live_ingest_gate_path),
                 db_path=db_path,
-                expected_live_db_path=DEFAULT_DB,
+                expected_live_db_path=live_db_path,
                 source_ids=slugs,
                 quarantine_source_ids=quarantine_slugs,
                 source_policy_sha256=str(policy_sha256),
@@ -494,9 +518,9 @@ def ingest(
             )
         if not db_path.is_file():
             raise IngestError("copied-database rehearsal target does not exist")
-        same_as_live = db_path.resolve() == DEFAULT_DB.resolve()
-        if DEFAULT_DB.is_file() and db_path.is_file():
-            same_as_live = same_as_live or os.path.samefile(db_path, DEFAULT_DB)
+        same_as_live = db_path.resolve() == live_db_path.resolve()
+        if live_db_path.is_file() and db_path.is_file():
+            same_as_live = same_as_live or os.path.samefile(db_path, live_db_path)
         if same_as_live:
             raise IngestError("copied-database rehearsal refuses the live sources database")
     if (
@@ -550,160 +574,167 @@ def ingest(
             )
         except UniversitySourcePolicyError as exc:
             raise IngestError(str(exc)) from exc
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path), timeout=30.0)
-    committed = False
-    checkpoint: list[int] | None = None
-    post_commit_error: str | None = None
-    try:
-        conn.execute("PRAGMA foreign_keys = ON")
-        journal_mode = str(conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
-        if journal_mode == "wal":
-            preflight_checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
-            if preflight_checkpoint != [0, 0, 0]:
-                raise IngestError(f"WAL was not settled before ingest: {preflight_checkpoint}")
-        conn.execute("BEGIN IMMEDIATE")
-        db_sha256_before = sha256_file(db_path)
-        if live_ingest_gate_sha256 is not None and db_sha256_before != EXPECTED_LIVE_DB_SHA256:
-            raise IngestError("live database preimage changed after gate validation")
-        ensure_schema(conn)
-        foreign_key_failures_before, foreign_key_hash_before = _foreign_key_evidence(conn)
-        before = _database_counts(conn)
-        expected_live_table_counts = {
-            key: LIVE_INGEST_COUNTS_BEFORE[key]
-            for key in ("textbook_rows", "fts_rows", "section_rows")
-        }
-        if live_ingest_gate_sha256 is not None and before != expected_live_table_counts:
-            raise IngestError("live database counts changed after gate validation")
-        for slug in quarantine_slugs:
-            deleted = conn.execute("DELETE FROM textbooks WHERE source_file = ?", (slug,)).rowcount
-            deleted_sections = conn.execute("DELETE FROM textbook_sections WHERE source_file = ?", (slug,)).rowcount
-            receipts[slug] = {
-                "source_file": slug,
-                "disposition": (
-                    "quarantined_by_university_source_policy"
-                    if slug in university_quarantines
-                    else "quarantined_unverified_ocr"
-                ),
-                "deleted_rows": deleted,
-                "deleted_sections": deleted_sections,
-            }
-            if slug in university_quarantines:
-                receipts[slug]["university_source_policy"] = university_quarantines[slug]
-            print(f"  {slug}: quarantined {deleted} rows and {deleted_sections} sections")
-        for slug, rows in per_slug_rows.items():
-            deleted = conn.execute("DELETE FROM textbooks WHERE source_file = ?", (slug,)).rowcount
-            conn.executemany(TB_SQL, rows)
-            section_rows, linked_rows, section_policy = _rebuild_source_sections(conn, slug)
-            counts[slug] = len(rows)
-            receipts[slug] = {
-                "source_file": slug,
-                "deleted_rows": deleted,
-                "inserted_rows": len(rows),
-                "section_rows": section_rows,
-                "linked_rows": linked_rows,
-                "section_policy": section_policy,
-            }
-            if slug in university_admissions:
-                receipts[slug]["university_source_policy"] = university_admissions[slug]
-            print(f"  {slug}: deleted {deleted}, inserted {len(rows)}, sections {section_rows}, links {linked_rows}")
-        print("  resyncing textbooks_fts (external-content rebuild)…")
-        conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
-        for slug, rows in per_slug_rows.items():
-            receipts[slug]["fts"] = _fts_source_evidence(conn, slug, len(rows))
-            print(f"  FTS evidence: {json.dumps(receipts[slug]['fts'], ensure_ascii=False)}")
-        for slug in quarantine_slugs:
-            receipts[slug]["fts"] = _fts_source_evidence(conn, slug, 0)
-            print(f"  quarantine FTS evidence: {json.dumps(receipts[slug]['fts'], ensure_ascii=False)}")
-        after = _database_counts(conn)
-        if after["textbook_rows"] != after["fts_rows"]:
-            raise IngestError("global textbooks/textbooks_fts row parity failed after ingest")
-        foreign_key_failures_after, foreign_key_hash_after = _foreign_key_evidence(conn)
-        integrity_rows = [str(row[0]) for row in conn.execute("PRAGMA integrity_check").fetchall()]
-        integrity = "ok" if integrity_rows == ["ok"] else integrity_rows
-        if foreign_key_failures_after != foreign_key_failures_before or integrity != "ok":
-            raise IngestError(
-                "database validation failed: "
-                f"foreign_keys_before={len(foreign_key_failures_before)} "
-                f"foreign_keys_after={len(foreign_key_failures_after)} integrity={integrity!r}"
-            )
-        if dry_run:
-            conn.execute("ROLLBACK")
-            print("  DRY-RUN: rolled back")
-        else:
-            conn.execute("COMMIT")
-            committed = True
-        if journal_mode == "wal":
-            try:
-                checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
-            except sqlite3.Error as exc:
-                if not committed:
-                    raise
-                post_commit_error = (
-                    "WAL checkpoint failed after ingest: "
-                    f"{type(exc).__name__}: {exc}"
-                )
-            if checkpoint is not None and checkpoint != [0, 0, 0]:
-                message = f"WAL checkpoint did not settle after ingest: {checkpoint}"
-                if not committed:
-                    raise IngestError(message)
-                post_commit_error = message
-    except BaseException:
-        # Explicit rollback (review, PR #4624): never leave the live DB with
-        # an open write transaction on the error path.
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
-    receipt_document = {
-        "schema_version": "incremental-textbook-ingest.v2",
-        "status": (
-            "committed_with_post_commit_error"
-            if post_commit_error is not None
-            else "committed"
-            if committed
-            else "dry_run_rolled_back"
-        ),
-        "execution_scope": (
-            "copied_database_rehearsal"
-            if copied_database_rehearsal
-            else "live_database_authorized_cutover"
-            if live_ingest_gate_sha256 is not None
-            else "dry_run"
-            if dry_run
-            else "live_database"
-        ),
-        "db_path": str(db_path),
-        "db_sha256_before": db_sha256_before,
-        "db_sha256_after": sha256_file(db_path),
-        "requested_replace_sources": sorted(slugs),
-        "requested_quarantine_sources": sorted(quarantine_slugs),
-        "university_source_policy_sha256": (
-            policy_sha256 if university_admissions or university_quarantines else None
-        ),
-        "live_ingest_gate_sha256": live_ingest_gate_sha256,
-        "before": before,
-        "after_transaction": after,
-        "integrity_check": integrity,
-        "foreign_key_failure_count_before": len(foreign_key_failures_before),
-        "foreign_key_failure_count_after": len(foreign_key_failures_after),
-        "foreign_key_failure_hash_before": foreign_key_hash_before,
-        "foreign_key_failure_hash_after": foreign_key_hash_after,
-        "foreign_key_failures_unchanged": foreign_key_failures_after == foreign_key_failures_before,
-        "wal_checkpoint": checkpoint,
-        "post_commit_error": post_commit_error,
-        "per_source": [receipts[slug] for slug in sorted(receipts)],
-    }
-    if receipt_path is not None:
-        atomic_write(
-            Path(receipt_path),
-            json.dumps(receipt_document, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
         )
-    for _slug, receipt in receipts.items():
-        print(f"  receipt: {json.dumps(receipt, ensure_ascii=False, sort_keys=True)}")
-    if post_commit_error is not None:
-        raise PostCommitIngestError(post_commit_error)
-    return counts
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, timeout=30.0, uri=True)
+        committed = False
+        checkpoint: list[int] | None = None
+        post_commit_error: str | None = None
+        try:
+            conn.execute("PRAGMA foreign_keys = ON")
+            journal_mode = str(conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
+            if journal_mode == "wal":
+                preflight_checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
+                if preflight_checkpoint != [0, 0, 0]:
+                    raise IngestError(f"WAL was not settled before ingest: {preflight_checkpoint}")
+            conn.execute("BEGIN IMMEDIATE")
+            db_sha256_before = sha256_file(db_path)
+            if live_ingest_gate_sha256 is not None and db_sha256_before != EXPECTED_LIVE_DB_SHA256:
+                raise IngestError("live database preimage changed after gate validation")
+            ensure_schema(conn)
+            foreign_key_failures_before, foreign_key_hash_before = _foreign_key_evidence(conn)
+            before = _database_counts(conn)
+            expected_live_table_counts = {
+                key: LIVE_INGEST_COUNTS_BEFORE[key]
+                for key in ("textbook_rows", "fts_rows", "section_rows")
+            }
+            if live_ingest_gate_sha256 is not None and before != expected_live_table_counts:
+                raise IngestError("live database counts changed after gate validation")
+            for slug in quarantine_slugs:
+                deleted = conn.execute("DELETE FROM textbooks WHERE source_file = ?", (slug,)).rowcount
+                deleted_sections = conn.execute("DELETE FROM textbook_sections WHERE source_file = ?", (slug,)).rowcount
+                receipts[slug] = {
+                    "source_file": slug,
+                    "disposition": (
+                        "quarantined_by_university_source_policy"
+                        if slug in university_quarantines
+                        else "quarantined_unverified_ocr"
+                    ),
+                    "deleted_rows": deleted,
+                    "deleted_sections": deleted_sections,
+                }
+                if slug in university_quarantines:
+                    receipts[slug]["university_source_policy"] = university_quarantines[slug]
+                print(f"  {slug}: quarantined {deleted} rows and {deleted_sections} sections")
+            for slug, rows in per_slug_rows.items():
+                deleted = conn.execute("DELETE FROM textbooks WHERE source_file = ?", (slug,)).rowcount
+                conn.executemany(TB_SQL, rows)
+                section_rows, linked_rows, section_policy = _rebuild_source_sections(conn, slug)
+                counts[slug] = len(rows)
+                receipts[slug] = {
+                    "source_file": slug,
+                    "deleted_rows": deleted,
+                    "inserted_rows": len(rows),
+                    "section_rows": section_rows,
+                    "linked_rows": linked_rows,
+                    "section_policy": section_policy,
+                }
+                if slug in university_admissions:
+                    receipts[slug]["university_source_policy"] = university_admissions[slug]
+                print(f"  {slug}: deleted {deleted}, inserted {len(rows)}, sections {section_rows}, links {linked_rows}")
+            print("  resyncing textbooks_fts (external-content rebuild)…")
+            conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
+            for slug, rows in per_slug_rows.items():
+                receipts[slug]["fts"] = _fts_source_evidence(conn, slug, len(rows))
+                print(f"  FTS evidence: {json.dumps(receipts[slug]['fts'], ensure_ascii=False)}")
+            for slug in quarantine_slugs:
+                receipts[slug]["fts"] = _fts_source_evidence(conn, slug, 0)
+                print(f"  quarantine FTS evidence: {json.dumps(receipts[slug]['fts'], ensure_ascii=False)}")
+            after = _database_counts(conn)
+            if after["textbook_rows"] != after["fts_rows"]:
+                raise IngestError("global textbooks/textbooks_fts row parity failed after ingest")
+            foreign_key_failures_after, foreign_key_hash_after = _foreign_key_evidence(conn)
+            integrity_rows = [str(row[0]) for row in conn.execute("PRAGMA integrity_check").fetchall()]
+            integrity = "ok" if integrity_rows == ["ok"] else integrity_rows
+            if foreign_key_failures_after != foreign_key_failures_before or integrity != "ok":
+                raise IngestError(
+                    "database validation failed: "
+                    f"foreign_keys_before={len(foreign_key_failures_before)} "
+                    f"foreign_keys_after={len(foreign_key_failures_after)} integrity={integrity!r}"
+                )
+            if dry_run:
+                conn.execute("ROLLBACK")
+                print("  DRY-RUN: rolled back")
+            else:
+                conn.execute("COMMIT")
+                committed = True
+            if journal_mode == "wal":
+                try:
+                    checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
+                except sqlite3.Error as exc:
+                    if not committed:
+                        raise
+                    post_commit_error = (
+                        "WAL checkpoint failed after ingest: "
+                        f"{type(exc).__name__}: {exc}"
+                    )
+                if checkpoint is not None and checkpoint != [0, 0, 0]:
+                    message = f"WAL checkpoint did not settle after ingest: {checkpoint}"
+                    if not committed:
+                        raise IngestError(message)
+                    post_commit_error = message
+        except BaseException:
+            # Explicit rollback (review, PR #4624): never leave the live DB with
+            # an open write transaction on the error path.
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
+        receipt_document = {
+            "schema_version": "incremental-textbook-ingest.v2",
+            "status": (
+                "committed_with_post_commit_error"
+                if post_commit_error is not None
+                else "committed"
+                if committed
+                else "dry_run_rolled_back"
+            ),
+            "execution_scope": (
+                "copied_database_rehearsal"
+                if copied_database_rehearsal
+                else "live_database_authorized_cutover"
+                if live_ingest_gate_sha256 is not None
+                else "dry_run"
+                if dry_run
+                else "live_database"
+            ),
+            "db_path": str(db_path),
+            "db_sha256_before": db_sha256_before,
+            "db_sha256_after": sha256_file(db_path),
+            "requested_replace_sources": sorted(slugs),
+            "requested_quarantine_sources": sorted(quarantine_slugs),
+            "university_source_policy_sha256": (
+                policy_sha256 if university_admissions or university_quarantines else None
+            ),
+            "live_ingest_gate_sha256": live_ingest_gate_sha256,
+            "before": before,
+            "after_transaction": after,
+            "integrity_check": integrity,
+            "foreign_key_failure_count_before": len(foreign_key_failures_before),
+            "foreign_key_failure_count_after": len(foreign_key_failures_after),
+            "foreign_key_failure_hash_before": foreign_key_hash_before,
+            "foreign_key_failure_hash_after": foreign_key_hash_after,
+            "foreign_key_failures_unchanged": foreign_key_failures_after == foreign_key_failures_before,
+            "wal_checkpoint": checkpoint,
+            "post_commit_error": post_commit_error,
+            "per_source": [receipts[slug] for slug in sorted(receipts)],
+        }
+        if receipt_path is not None:
+            atomic_write(
+                Path(receipt_path),
+                json.dumps(receipt_document, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            )
+        for _slug, receipt in receipts.items():
+            print(f"  receipt: {json.dumps(receipt, ensure_ascii=False, sort_keys=True)}")
+        if post_commit_error is not None:
+            raise PostCommitIngestError(post_commit_error)
+        return counts
 
 
 def load_native_anomaly_quarantine_plan(
@@ -772,8 +803,17 @@ def quarantine_native_anomaly_chunks(
     quarantine_dir: Path,
     db_path: Path,
     dry_run: bool,
+    db_role: str = "active",
+    create: bool = False,
 ) -> dict[str, Any]:
     """Atomically remove only hash-bound anomalous chunks from production search."""
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     plan = load_native_anomaly_quarantine_plan(
         audit_path,
         chunks_root=chunks_root,
@@ -781,165 +821,172 @@ def quarantine_native_anomaly_chunks(
     )
     db_path = Path(db_path)
     per_source: list[dict[str, Any]] = []
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path), timeout=30.0)
-    committed = False
-    checkpoint: list[int] | None = None
-    post_commit_error: str | None = None
-    try:
-        conn.execute("PRAGMA foreign_keys = ON")
-        journal_mode = str(conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
-        if journal_mode == "wal":
-            preflight_checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
-            if preflight_checkpoint != [0, 0, 0]:
-                raise IngestError(f"WAL was not settled before quarantine: {preflight_checkpoint}")
-        db_sha256_before = sha256_file(db_path)
-        conn.execute("BEGIN IMMEDIATE")
-        foreign_key_failures_before = sorted(
-            tuple(row) for row in conn.execute("PRAGMA foreign_key_check").fetchall()
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
         )
-        foreign_key_hash_before = hashlib.sha256(
-            json.dumps(foreign_key_failures_before, separators=(",", ":")).encode("utf-8")
-        ).hexdigest()
-        before = {
-            "textbook_rows": conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0],
-            "fts_rows": conn.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0],
-            "section_rows": conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0],
-        }
-        for source_file, chunk_ids in sorted(plan.items()):
-            existing_ids = {
-                str(row[0])
-                for row in conn.execute(
-                    "SELECT chunk_id FROM textbooks WHERE source_file = ?",
-                    (source_file,),
-                )
-            }
-            already_absent_ids = sorted(set(chunk_ids) - existing_ids)
-            present_chunk_ids = sorted(set(chunk_ids) & existing_ids)
-            rows_before = len(existing_ids)
-            if present_chunk_ids:
-                conn.executemany(
-                    "DELETE FROM textbooks WHERE source_file = ? AND chunk_id = ?",
-                    [(source_file, chunk_id) for chunk_id in present_chunk_ids],
-                )
-                section_rows, linked_rows, section_policy = _rebuild_source_sections(conn, source_file)
-            else:
-                section_rows = conn.execute(
-                    "SELECT COUNT(*) FROM textbook_sections WHERE source_file = ?",
-                    (source_file,),
-                ).fetchone()[0]
-                linked_rows = conn.execute(
-                    "SELECT COUNT(*) FROM textbooks WHERE source_file = ? AND parent_section_id IS NOT NULL",
-                    (source_file,),
-                ).fetchone()[0]
-                section_policy = "unchanged_already_absent"
-            rows_after = conn.execute(
-                "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
-                (source_file,),
-            ).fetchone()[0]
-            if rows_before - rows_after != len(present_chunk_ids):
-                raise IngestError(f"{source_file}: database deletion count differs from audit")
-            remaining = conn.execute(
-                f"SELECT chunk_id FROM textbooks WHERE source_file = ? "
-                f"AND chunk_id IN ({','.join('?' for _ in chunk_ids)})",
-                (source_file, *chunk_ids),
-            ).fetchall()
-            if remaining:
-                raise IngestError(f"{source_file}: audited chunks remain after quarantine")
-            per_source.append(
-                {
-                    "source_file": source_file,
-                    "audited_chunk_count": len(chunk_ids),
-                    "removed_chunk_count": len(present_chunk_ids),
-                    "removed_chunk_ids": present_chunk_ids,
-                    "already_absent_chunk_count": len(already_absent_ids),
-                    "already_absent_chunk_ids": already_absent_ids,
-                    "rows_before": rows_before,
-                    "rows_after": rows_after,
-                    "section_rows_after": section_rows,
-                    "linked_rows_after": linked_rows,
-                    "section_policy": section_policy,
-                }
-            )
-
-        conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
-        after = {
-            "textbook_rows": conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0],
-            "fts_rows": conn.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0],
-            "section_rows": conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0],
-        }
-        if after["textbook_rows"] != after["fts_rows"]:
-            raise IngestError("global textbooks/textbooks_fts row parity failed after quarantine")
-        foreign_key_failures_after = sorted(
-            tuple(row) for row in conn.execute("PRAGMA foreign_key_check").fetchall()
-        )
-        foreign_key_hash_after = hashlib.sha256(
-            json.dumps(foreign_key_failures_after, separators=(",", ":")).encode("utf-8")
-        ).hexdigest()
-        integrity = str(conn.execute("PRAGMA integrity_check").fetchone()[0])
-        if foreign_key_failures_after != foreign_key_failures_before or integrity != "ok":
-            raise IngestError(
-                "database validation failed: "
-                f"foreign_keys_before={len(foreign_key_failures_before)} "
-                f"foreign_keys_after={len(foreign_key_failures_after)} integrity={integrity!r}"
-            )
-        if dry_run:
-            conn.execute("ROLLBACK")
-        else:
-            conn.execute("COMMIT")
-            committed = True
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, timeout=30.0, uri=True)
+        committed = False
+        checkpoint: list[int] | None = None
+        post_commit_error: str | None = None
+        try:
+            conn.execute("PRAGMA foreign_keys = ON")
+            journal_mode = str(conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
             if journal_mode == "wal":
-                try:
-                    checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
-                except sqlite3.Error as exc:
-                    post_commit_error = (
-                        "WAL checkpoint failed after quarantine: "
-                        f"{type(exc).__name__}: {exc}"
+                preflight_checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
+                if preflight_checkpoint != [0, 0, 0]:
+                    raise IngestError(f"WAL was not settled before quarantine: {preflight_checkpoint}")
+            db_sha256_before = sha256_file(db_path)
+            conn.execute("BEGIN IMMEDIATE")
+            foreign_key_failures_before = sorted(
+                tuple(row) for row in conn.execute("PRAGMA foreign_key_check").fetchall()
+            )
+            foreign_key_hash_before = hashlib.sha256(
+                json.dumps(foreign_key_failures_before, separators=(",", ":")).encode("utf-8")
+            ).hexdigest()
+            before = {
+                "textbook_rows": conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0],
+                "fts_rows": conn.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0],
+                "section_rows": conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0],
+            }
+            for source_file, chunk_ids in sorted(plan.items()):
+                existing_ids = {
+                    str(row[0])
+                    for row in conn.execute(
+                        "SELECT chunk_id FROM textbooks WHERE source_file = ?",
+                        (source_file,),
                     )
-                if checkpoint is not None and checkpoint != [0, 0, 0]:
-                    post_commit_error = (
-                        f"WAL checkpoint did not settle after quarantine: {checkpoint}"
+                }
+                already_absent_ids = sorted(set(chunk_ids) - existing_ids)
+                present_chunk_ids = sorted(set(chunk_ids) & existing_ids)
+                rows_before = len(existing_ids)
+                if present_chunk_ids:
+                    conn.executemany(
+                        "DELETE FROM textbooks WHERE source_file = ? AND chunk_id = ?",
+                        [(source_file, chunk_id) for chunk_id in present_chunk_ids],
                     )
-    except BaseException:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
+                    section_rows, linked_rows, section_policy = _rebuild_source_sections(conn, source_file)
+                else:
+                    section_rows = conn.execute(
+                        "SELECT COUNT(*) FROM textbook_sections WHERE source_file = ?",
+                        (source_file,),
+                    ).fetchone()[0]
+                    linked_rows = conn.execute(
+                        "SELECT COUNT(*) FROM textbooks WHERE source_file = ? AND parent_section_id IS NOT NULL",
+                        (source_file,),
+                    ).fetchone()[0]
+                    section_policy = "unchanged_already_absent"
+                rows_after = conn.execute(
+                    "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
+                    (source_file,),
+                ).fetchone()[0]
+                if rows_before - rows_after != len(present_chunk_ids):
+                    raise IngestError(f"{source_file}: database deletion count differs from audit")
+                remaining = conn.execute(
+                    f"SELECT chunk_id FROM textbooks WHERE source_file = ? "
+                    f"AND chunk_id IN ({','.join('?' for _ in chunk_ids)})",
+                    (source_file, *chunk_ids),
+                ).fetchall()
+                if remaining:
+                    raise IngestError(f"{source_file}: audited chunks remain after quarantine")
+                per_source.append(
+                    {
+                        "source_file": source_file,
+                        "audited_chunk_count": len(chunk_ids),
+                        "removed_chunk_count": len(present_chunk_ids),
+                        "removed_chunk_ids": present_chunk_ids,
+                        "already_absent_chunk_count": len(already_absent_ids),
+                        "already_absent_chunk_ids": already_absent_ids,
+                        "rows_before": rows_before,
+                        "rows_after": rows_after,
+                        "section_rows_after": section_rows,
+                        "linked_rows_after": linked_rows,
+                        "section_policy": section_policy,
+                    }
+                )
 
-    return {
-        "schema_version": "textbook-native-anomaly-quarantine.v1",
-        "status": (
-            "committed_with_post_commit_error"
-            if post_commit_error is not None
-            else "committed"
-            if committed
-            else "dry_run_rolled_back"
-        ),
-        "policy": "Exact audited chunk ids only; no text repair, replacement, or inferred deletion.",
-        "audit_path": str(Path(audit_path)),
-        "audit_sha256": sha256_file(Path(audit_path)),
-        "quarantine_dir": str(Path(quarantine_dir)),
-        "db_path": str(db_path),
-        "db_sha256_before": db_sha256_before,
-        "db_sha256_after": sha256_file(db_path),
-        "audited_source_count": len(per_source),
-        "removed_source_count": sum(int(item["removed_chunk_count"] > 0) for item in per_source),
-        "removed_chunk_count": sum(int(item["removed_chunk_count"]) for item in per_source),
-        "already_absent_chunk_count": sum(
-            int(item["already_absent_chunk_count"]) for item in per_source
-        ),
-        "before": before,
-        "after_transaction": after,
-        "integrity_check": integrity,
-        "foreign_key_failure_count_before": len(foreign_key_failures_before),
-        "foreign_key_failure_count_after": len(foreign_key_failures_after),
-        "foreign_key_failure_hash_before": foreign_key_hash_before,
-        "foreign_key_failure_hash_after": foreign_key_hash_after,
-        "foreign_key_failures_unchanged": foreign_key_failures_after == foreign_key_failures_before,
-        "wal_checkpoint": checkpoint,
-        "post_commit_error": post_commit_error,
-        "per_source": per_source,
-    }
+            conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
+            after = {
+                "textbook_rows": conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0],
+                "fts_rows": conn.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0],
+                "section_rows": conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0],
+            }
+            if after["textbook_rows"] != after["fts_rows"]:
+                raise IngestError("global textbooks/textbooks_fts row parity failed after quarantine")
+            foreign_key_failures_after = sorted(
+                tuple(row) for row in conn.execute("PRAGMA foreign_key_check").fetchall()
+            )
+            foreign_key_hash_after = hashlib.sha256(
+                json.dumps(foreign_key_failures_after, separators=(",", ":")).encode("utf-8")
+            ).hexdigest()
+            integrity = str(conn.execute("PRAGMA integrity_check").fetchone()[0])
+            if foreign_key_failures_after != foreign_key_failures_before or integrity != "ok":
+                raise IngestError(
+                    "database validation failed: "
+                    f"foreign_keys_before={len(foreign_key_failures_before)} "
+                    f"foreign_keys_after={len(foreign_key_failures_after)} integrity={integrity!r}"
+                )
+            if dry_run:
+                conn.execute("ROLLBACK")
+            else:
+                conn.execute("COMMIT")
+                committed = True
+                if journal_mode == "wal":
+                    try:
+                        checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
+                    except sqlite3.Error as exc:
+                        post_commit_error = (
+                            "WAL checkpoint failed after quarantine: "
+                            f"{type(exc).__name__}: {exc}"
+                        )
+                    if checkpoint is not None and checkpoint != [0, 0, 0]:
+                        post_commit_error = (
+                            f"WAL checkpoint did not settle after quarantine: {checkpoint}"
+                        )
+        except BaseException:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
+
+        return {
+            "schema_version": "textbook-native-anomaly-quarantine.v1",
+            "status": (
+                "committed_with_post_commit_error"
+                if post_commit_error is not None
+                else "committed"
+                if committed
+                else "dry_run_rolled_back"
+            ),
+            "policy": "Exact audited chunk ids only; no text repair, replacement, or inferred deletion.",
+            "audit_path": str(Path(audit_path)),
+            "audit_sha256": sha256_file(Path(audit_path)),
+            "quarantine_dir": str(Path(quarantine_dir)),
+            "db_path": str(db_path),
+            "db_sha256_before": db_sha256_before,
+            "db_sha256_after": sha256_file(db_path),
+            "audited_source_count": len(per_source),
+            "removed_source_count": sum(int(item["removed_chunk_count"] > 0) for item in per_source),
+            "removed_chunk_count": sum(int(item["removed_chunk_count"]) for item in per_source),
+            "already_absent_chunk_count": sum(
+                int(item["already_absent_chunk_count"]) for item in per_source
+            ),
+            "before": before,
+            "after_transaction": after,
+            "integrity_check": integrity,
+            "foreign_key_failure_count_before": len(foreign_key_failures_before),
+            "foreign_key_failure_count_after": len(foreign_key_failures_after),
+            "foreign_key_failure_hash_before": foreign_key_hash_before,
+            "foreign_key_failure_hash_after": foreign_key_hash_after,
+            "foreign_key_failures_unchanged": foreign_key_failures_after == foreign_key_failures_before,
+            "wal_checkpoint": checkpoint,
+            "post_commit_error": post_commit_error,
+            "per_source": per_source,
+        }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -988,6 +1035,8 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_UNIVERSITY_POLICY,
         help="Hash-bound audience/lane policy required for every uni-* source",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args(argv)
 
     if not (args.slugs or args.wave1 or args.quarantine_audit or args.quarantine_slugs):
@@ -1005,7 +1054,7 @@ def main(argv: list[str] | None = None) -> int:
                 quarantine_dir=args.quarantine_dir,
                 db_path=args.db,
                 dry_run=args.dry_run,
-            )
+             db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
             if args.receipt:
                 atomic_write(
                     args.receipt,
@@ -1030,7 +1079,7 @@ def main(argv: list[str] | None = None) -> int:
             university_policy_path=args.university_policy,
             copied_database_rehearsal=args.copied_db_rehearsal,
             live_ingest_gate_path=args.live_ingest_gate,
-        )
+         db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     except PostCommitIngestError as exc:
         print(f"COMMITTED_WITH_POST_COMMIT_ERROR: {exc}", file=sys.stderr)
         return 3
@@ -1045,4 +1094,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

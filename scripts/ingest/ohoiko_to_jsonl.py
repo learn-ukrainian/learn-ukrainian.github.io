@@ -29,7 +29,17 @@ from scripts.ingest import ohoiko_books_ingest as books
 from scripts.ingest import ohoiko_verbs_ingest as verbs
 from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
-DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 def resolve_gdrive_root() -> Path | None:
@@ -146,51 +156,65 @@ def write_jsonl(path: Path, rows: Sequence[dict[str, Any]]) -> Path:
     return path
 
 
-def ingest_jsonl(path: Path, *, db_path: Path, force: bool) -> dict[str, int]:
+def ingest_jsonl(path: Path, *, db_path: Path, force: bool, db_role: str = "active", create: bool = False) -> dict[str, int]:
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     rows = [json.loads(line) for line in jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
     if not rows:
         return {"inserted": 0}
     source_file = str(rows[0]["source_file"])
-    refuse_writable_corpus_database(db_path)
-    conn = sqlite3.connect(db_path)
-    try:
-        before = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]
-        if force:
-            conn.execute("DELETE FROM textbooks WHERE source_file = ?", (source_file,))
-        inserted = 0
-        for row in rows:
-            if not force:
-                exists = conn.execute(
-                    "SELECT 1 FROM textbooks WHERE chunk_id = ? LIMIT 1", (row["chunk_id"],)
-                ).fetchone()
-                if exists:
-                    continue
-            conn.execute(
-                """
-                INSERT INTO textbooks (
-                    chunk_id, title, text, source_file, grade, author, char_count,
-                    parent_section_id, author_uk, subject
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)
-                """,
-                (
-                    row["chunk_id"],
-                    row["section_title"],
-                    row["text"],
-                    source_file,
-                    row.get("grade") or "",
-                    row.get("author") or "Anna Ohoiko",
-                    len(row["text"]),
-                    row.get("author_uk") or "Анна Огойко",
-                    row.get("subject") or "lexicon",
-                ),
-            )
-            inserted += 1
-        conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
-        conn.commit()
-        after = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]
-    finally:
-        conn.close()
-    return {"before": before, "after": after, "inserted": inserted}
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(db_path)
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            before = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]
+            if force:
+                conn.execute("DELETE FROM textbooks WHERE source_file = ?", (source_file,))
+            inserted = 0
+            for row in rows:
+                if not force:
+                    exists = conn.execute(
+                        "SELECT 1 FROM textbooks WHERE chunk_id = ? LIMIT 1", (row["chunk_id"],)
+                    ).fetchone()
+                    if exists:
+                        continue
+                conn.execute(
+                    """
+                    INSERT INTO textbooks (
+                        chunk_id, title, text, source_file, grade, author, char_count,
+                        parent_section_id, author_uk, subject
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)
+                    """,
+                    (
+                        row["chunk_id"],
+                        row["section_title"],
+                        row["text"],
+                        source_file,
+                        row.get("grade") or "",
+                        row.get("author") or "Anna Ohoiko",
+                        len(row["text"]),
+                        row.get("author_uk") or "Анна Огойко",
+                        row.get("subject") or "lexicon",
+                    ),
+                )
+                inserted += 1
+            conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
+            conn.commit()
+            after = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]
+        finally:
+            conn.close()
+        return {"before": before, "after": after, "inserted": inserted}
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -204,6 +228,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     p.add_argument("--words", action="store_true")
     p.add_argument("--verbs", action="store_true")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    p.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = p.parse_args(argv)
     if not (args.all or args.words or args.verbs):
         print("error: pass --all or --words/--verbs", file=sys.stderr)
@@ -233,9 +259,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             path = write_jsonl(out_root / name, rows)
             print("wrote", path, flush=True)
             if args.ingest:
-                print("ingest", ingest_jsonl(path, db_path=args.db, force=args.force), flush=True)
+                print("ingest", ingest_jsonl(path, db_path=args.db, force=args.force, db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False)), flush=True)
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

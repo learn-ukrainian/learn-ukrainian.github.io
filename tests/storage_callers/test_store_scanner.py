@@ -40,3 +40,18 @@ def resolve_store_for_write():
     return sqlite3.connect("sources.db")
 '''
     assert len(lint.classify_source(source, "scripts/storage/topology.py")) == 1
+
+
+def test_parser_help_does_not_taint_namespace_but_store_defaults_are_found(tmp_path):
+    source = '''
+import argparse
+from pathlib import Path
+ROOT = Path(__file__).parent
+parser = argparse.ArgumentParser(description="Ingest notes into data/sources.db")
+args = parser.parse_args()
+text = ROOT / args.book
+sample = len(args.items) // 2
+'''
+    assert lint.classify_store_source(source, str(tmp_path / "source.py")) == []
+    source += "parser.add_argument('--db', default=ROOT / 'data' / 'sources.db')\n"
+    assert [f.kind for f in lint.classify_store_source(source, str(tmp_path / "source.py"))] == ["store_path"]

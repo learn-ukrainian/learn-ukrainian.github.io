@@ -28,7 +28,7 @@ def test_cache_cli_import_is_offline_bounded_idempotent_and_searchable(tmp_path,
     before = source.read_bytes()
     db = tmp_path / "sources.db"
     monkeypatch.setattr(ingest, "fetch_entries", lambda *a, **kw: pytest.fail("offline import fetched live data"))
-    args = ["--cache-dir", str(cache), "--db", str(db), "--dict", "vts"]
+    args = ["--cache-dir", str(cache), "--db", str(db), "--dict", "vts", "--db-role", "staging", "--create-db"]
     assert ingest.main([*args, "--dry-run"]) == 0
     assert not db.exists()
     assert ingest.main(args) == 0
@@ -64,7 +64,7 @@ def test_bad_cache_refuses_before_creating_database(tmp_path, mutation):
     (cache / "fixture.json").write_text(json.dumps(data))
     db = tmp_path / "sources.db"
     with pytest.raises(ValueError):
-        ingest.main(["--cache-dir", str(cache), "--dict", "vts", "--db", str(db)])
+        ingest.main(["--cache-dir", str(cache), "--dict", "vts", "--db", str(db), "--db-role", "staging", "--create-db"])
     assert not db.exists()
 
 
@@ -82,7 +82,7 @@ def test_every_cached_dictionary_is_imported_with_provenance_and_use_role(tmp_pa
     write_cache(cache, data)
     write_cache(cache, snapshot(word="other"))
     db = tmp_path / "sources.db"
-    report = ingest.ingest_cache(db, cache, words=["fixture"], dictionaries=None, dry_run=False, max_text_chars=30)
+    report = ingest.ingest_cache(db, cache, words=["fixture"], dictionaries=None, dry_run=False, max_text_chars=30, db_role="staging", create=True)
     assert report.entries == {"vts": 1, "newsum": 1, "sum": 1, "orthoepy": 1}
     assert report.files == 1 and report.inserted == 4
     full_text = snapshot()["lookups"]["vts"]["text"]
@@ -106,7 +106,7 @@ def test_dict_option_narrows_the_import(tmp_path):
     data["lookups"].update(snapshot(slug="newsum")["lookups"])
     write_cache(cache, data)
     db = tmp_path / "sources.db"
-    report = ingest.ingest_cache(db, cache, words=[], dictionaries=["newsum"], dry_run=False, max_text_chars=200)
+    report = ingest.ingest_cache(db, cache, words=[], dictionaries=["newsum"], dry_run=False, max_text_chars=200, db_role="staging", create=True)
     assert report.entries == {"newsum": 1}
     with sqlite3.connect(db) as conn:
         assert conn.execute("SELECT dictionary_slug FROM slovnyk_me_entries").fetchall() == [("newsum",)]
@@ -123,7 +123,7 @@ def test_observed_404_is_a_not_found_row_and_a_bare_null_is_not(tmp_path):
     write_cache(cache, data)
     db = tmp_path / "sources.db"
     args = dict(words=[], dictionaries=None, dry_run=False, max_text_chars=200)
-    report = ingest.ingest_cache(db, cache, **args)
+    report = ingest.ingest_cache(db, cache, **args, db_role="staging", create=True)
     assert report.misses == {"synonyms": 1}
     assert report.unproven == {"orthoepy": 1, "ukreng": 1}
     with sqlite3.connect(db) as conn:
@@ -138,7 +138,7 @@ def test_observed_404_is_a_not_found_row_and_a_bare_null_is_not(tmp_path):
         )]
         assert conn.execute("SELECT count(*) FROM slovnyk_me_entries").fetchone()[0] == 1
         first = conn.execute("SELECT * FROM slovnyk_me_lookup_misses").fetchall()
-    ingest.ingest_cache(db, cache, **args)
+    ingest.ingest_cache(db, cache, **args, db_role="staging", create=True)
     with sqlite3.connect(db) as conn:
         assert conn.execute("SELECT * FROM slovnyk_me_lookup_misses").fetchall() == first
 
@@ -151,9 +151,9 @@ def test_positive_entry_supersedes_a_recorded_miss(tmp_path):
     write_cache(cache, missing)
     db = tmp_path / "sources.db"
     args = dict(words=[], dictionaries=None, dry_run=False, max_text_chars=200)
-    assert ingest.ingest_cache(db, cache, **args).inserted_misses == 1
+    assert ingest.ingest_cache(db, cache, **args, db_role="staging", create=True).inserted_misses == 1
     write_cache(cache, snapshot())
-    ingest.ingest_cache(db, cache, **args)
+    ingest.ingest_cache(db, cache, **args, db_role="staging", create=True)
     with sqlite3.connect(db) as conn:
         assert conn.execute("SELECT count(*) FROM slovnyk_me_lookup_misses").fetchone()[0] == 0
         assert conn.execute("SELECT count(*) FROM slovnyk_me_entries").fetchone()[0] == 1
@@ -167,7 +167,7 @@ def test_mirror_shape_takes_its_timestamp_from_provenance(tmp_path):
     mirror["provenance"] = {"mirror": "slovnyk.me vts", "updated_at": "2026-10-10T08:16:18+00:00"}
     write_cache(cache, mirror)
     db = tmp_path / "sources.db"
-    ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200)
+    ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200, db_role="staging", create=True)
     with sqlite3.connect(db) as conn:
         assert conn.execute("SELECT fetched_at FROM slovnyk_me_entries").fetchall() == [("2026-10-10T08:16:18+00:00",)]
 
@@ -176,7 +176,7 @@ def test_dry_run_reads_but_never_writes(tmp_path):
     cache = tmp_path / "cache"
     write_cache(cache, snapshot())
     db = tmp_path / "sources.db"
-    report = ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=True, max_text_chars=200)
+    report = ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=True, max_text_chars=200, db_role="staging", create=True)
     assert report.entries == {"vts": 1}
     assert not db.exists()
 
@@ -204,7 +204,7 @@ def test_existing_database_is_backed_up_before_the_write(tmp_path, monkeypatch):
     monkeypatch.setattr(ingest, "backup_database", capture_backup)
     report = ingest.ingest_cache(
         db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200, backup_dir=backups,
-    )
+     db_role="staging", create=True)
     assert copy_contents == [([("before",)], [])]
     assert report.backup_removed is True
     assert report.backup_path is None
@@ -217,7 +217,7 @@ def test_network_database_is_refused_before_any_write(tmp_path, monkeypatch):
     monkeypatch.setattr(ingest, "is_network_filesystem_path", lambda path: True)
     db = tmp_path / "sources.db"
     with pytest.raises(ValueError, match="local storage"):
-        ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200)
+        ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200, db_role="staging", create=True)
     assert not db.exists()
 
 
@@ -247,7 +247,7 @@ def test_older_table_gains_provenance_columns_without_losing_rows(tmp_path):
 
 def test_cache_path_unavailable_and_missing_input(tmp_path):
     with pytest.raises(ValueError, match="unavailable"):
-        ingest.ingest_cache(tmp_path / "db", tmp_path / "missing", words=[], dictionaries=["vts"], dry_run=True, max_text_chars=200)
+        ingest.ingest_cache(tmp_path / "db", tmp_path / "missing", words=[], dictionaries=["vts"], dry_run=True, max_text_chars=200, db_role="staging", create=True)
     assert ingest.main([]) == 2
     assert "--cache-dir" in ingest.build_parser().format_help()
 
@@ -267,7 +267,7 @@ def test_existing_live_cli_path_and_word_file_still_use_bounded_fetch(tmp_path, 
     words_file = tmp_path / "words.txt"
     words_file.write_text("# fixture\nfixture\nother\n\n")
     db = tmp_path / "sources.db"
-    args = ["fixture", "--words-file", str(words_file), "--dict", "vts", "--dict", "sum", "--sleep", "0", "--db", str(db)]
+    args = ["fixture", "--words-file", str(words_file), "--dict", "vts", "--dict", "sum", "--sleep", "0", "--db", str(db), "--db-role", "staging", "--create-db"]
     assert ingest.main([*args, "--dry-run"]) == 0
     assert not db.exists()
     assert ingest.main(args) == 0

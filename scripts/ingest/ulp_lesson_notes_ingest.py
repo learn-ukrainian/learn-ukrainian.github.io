@@ -71,7 +71,7 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+DB_PATH = None  # Selected by the connection owner at call time.
 REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 AUTHOR = "Ukrainian Lessons Podcast"
 # Cyrillic canonical form; populated into textbooks.author_uk so the
@@ -147,6 +147,16 @@ _MAX_BODY_LINES = 2000
 # ---------------------------------------------------------------------------
 # Per-book config
 # ---------------------------------------------------------------------------
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 @dataclass(frozen=True)
@@ -490,7 +500,16 @@ def _run_book(
     db_path: Path,
     dry_run: bool,
     force: bool,
+    db_role: str = "active",
+    create: bool = False,
 ) -> int:
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     txt_path = REFERENCES_DIR / book.txt_filename
     if not txt_path.exists():
         print(f"❌ Source file not found: {txt_path}", file=sys.stderr)
@@ -518,45 +537,52 @@ def _run_book(
         return 0
 
     print(f"\n🗃️  Writing to {db_path}")
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path))
-    try:
-        before = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
-            (book.source_file,),
-        ).fetchone()[0]
-        total_before = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
-        print(f"   BEFORE: {before} rows for {book.source_file!r} (table total: {total_before:,})")
-
-        inserted, skipped = ingest_lessons(conn, book, lessons, force=force)
-        conn.commit()
-
-        after = conn.execute(
-            "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
-            (book.source_file,),
-        ).fetchone()[0]
-        total_after = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
-        print(f"   inserted: {inserted}, skipped: {skipped}")
-        print(
-            f"   AFTER: {after} rows for {book.source_file!r} "
-            f"(table total: {total_after:,}, delta +{total_after - total_before})"
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
         )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            before = conn.execute(
+                "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
+                (book.source_file,),
+            ).fetchone()[0]
+            total_before = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
+            print(f"   BEFORE: {before} rows for {book.source_file!r} (table total: {total_before:,})")
 
-        sample = conn.execute(
-            """SELECT chunk_id, title, char_count, substr(text, 1, 80) AS snippet
-                 FROM textbooks WHERE source_file = ? ORDER BY chunk_id LIMIT 3""",
-            (book.source_file,),
-        ).fetchall()
-        print("\n--- AFTER sample rows ---")
-        for row in sample:
-            print(f"  chunk_id={row[0]}")
-            print(f"    title={row[1]!r}")
-            print(f"    char_count={row[2]}")
-            print(f"    snippet={row[3]!r}")
-    finally:
-        conn.close()
+            inserted, skipped = ingest_lessons(conn, book, lessons, force=force)
+            conn.commit()
 
-    return 0
+            after = conn.execute(
+                "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
+                (book.source_file,),
+            ).fetchone()[0]
+            total_after = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
+            print(f"   inserted: {inserted}, skipped: {skipped}")
+            print(
+                f"   AFTER: {after} rows for {book.source_file!r} "
+                f"(table total: {total_after:,}, delta +{total_after - total_before})"
+            )
+
+            sample = conn.execute(
+                """SELECT chunk_id, title, char_count, substr(text, 1, 80) AS snippet
+                     FROM textbooks WHERE source_file = ? ORDER BY chunk_id LIMIT 3""",
+                (book.source_file,),
+            ).fetchall()
+            print("\n--- AFTER sample rows ---")
+            for row in sample:
+                print(f"  chunk_id={row[0]}")
+                print(f"    title={row[1]!r}")
+                print(f"    char_count={row[2]}")
+                print(f"    snippet={row[3]!r}")
+        finally:
+            conn.close()
+
+        return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -590,6 +616,8 @@ def main(argv: list[str] | None = None) -> int:
         default=DB_PATH,
         help="Override target DB path (testing only).",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args(argv)
 
     slugs = sorted(BOOKS) if args.all else [args.book]
@@ -601,11 +629,15 @@ def main(argv: list[str] | None = None) -> int:
             db_path=args.db,
             dry_run=args.dry_run,
             force=args.force,
-        )
+         db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
         if result != 0:
             rc = result
     return rc
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

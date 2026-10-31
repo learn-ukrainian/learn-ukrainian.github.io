@@ -11,12 +11,13 @@ from __future__ import annotations
 import argparse
 import sqlite3
 import sys
+from contextlib import closing
 from dataclasses import dataclass, field
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
-DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -28,6 +29,16 @@ try:
 except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 class UnmappedTextbookSubjectsError(RuntimeError):
@@ -202,35 +213,55 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Report what would change without writing.",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args(argv)
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update",
+        target=None if args.db is None else ExplicitStoreWriteTarget(args.db, args.db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    args.db = Path(request.location)
 
     if not args.db.exists():
         raise SystemExit(f"Sources DB not found: {args.db}")
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        args.db = binding.path
 
-    try:
-        if not args.dry_run:
-            refuse_writable_corpus_database(str(args.db))
-        with sqlite3.connect(str(args.db)) as conn:
-            status = apply(conn, dry_run=args.dry_run)
-    except UnmappedTextbookSubjectsError as exc:
-        print("ERROR: unmapped textbooks.source_file values:", file=sys.stderr)
-        for source_file in exc.source_files:
-            print(f"  - {source_file}", file=sys.stderr)
-        return 1
+        try:
+            if not args.dry_run:
+                refuse_writable_corpus_database(str(args.db))
+            with closing(sqlite3.connect(binding.sqlite_uri, uri=True)) as conn, conn:
+                status = apply(conn, dry_run=args.dry_run)
+        except UnmappedTextbookSubjectsError as exc:
+            print("ERROR: unmapped textbooks.source_file values:", file=sys.stderr)
+            for source_file in exc.source_files:
+                print(f"  - {source_file}", file=sys.stderr)
+            return 1
 
-    prefix = "[dry-run] " if args.dry_run else ""
-    print(f"{prefix}column_added={status.column_added}")
-    print(f"{prefix}rows_updated={status.rows_updated}")
-    print(
-        f"{prefix}populated_subject={status.populated_subject}/"
-        f"{status.total_rows} (rows with subject / total textbook rows)"
-    )
-    print(f"{prefix}subject_counts:")
-    for subject, count in sorted(status.subject_counts.items()):
-        print(f"{prefix}  {subject}: {count}")
-    print(f"{prefix}all distinct source_file values mapped to subjects.")
-    return 0
+        prefix = "[dry-run] " if args.dry_run else ""
+        print(f"{prefix}column_added={status.column_added}")
+        print(f"{prefix}rows_updated={status.rows_updated}")
+        print(
+            f"{prefix}populated_subject={status.populated_subject}/"
+            f"{status.total_rows} (rows with subject / total textbook rows)"
+        )
+        print(f"{prefix}subject_counts:")
+        for subject, count in sorted(status.subject_counts.items()):
+            print(f"{prefix}  {subject}: {count}")
+        print(f"{prefix}all distinct source_file values mapped to subjects.")
+        return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

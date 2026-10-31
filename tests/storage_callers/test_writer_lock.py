@@ -31,6 +31,19 @@ def test_primary_classification_error_cannot_issue_lockless_binding(stores, monk
     assert result == t.StoreRefusal("sources", "store_unavailable")
 
 
+def test_selector_locality_is_checked_before_writer_lock_can_lift_it(stores, monkeypatch):
+    directory = stores / "data" / t.GENERATIONS_DIRNAME
+    directory.mkdir()
+    generation = directory / "sources.20261031T000000Z-111111111111.db"
+    generation.touch()
+    selector = stores / "data" / t.SELECTOR_NAME
+    selector.unlink()
+    selector.symlink_to(generation.relative_to(selector.parent))
+    monkeypatch.setattr(t, "_store_locality", lambda path: "network" if path == selector else "local")
+    assert t._prepare_store_write_target("sources", stores, intent="update", env={}) == t.StoreRefusal("sources", "locality_network")
+    assert not (stores / "data" / g.WRITER_LOCK_NAME).exists()
+
+
 def test_request_freezes_environment_before_acquisition(stores, tmp_path, monkeypatch):
     request = t._prepare_store_write_target("sources", stores, intent="update", env={})
     other = tmp_path / "other.db"
@@ -40,3 +53,45 @@ def test_request_freezes_environment_before_acquisition(stores, tmp_path, monkey
         result = t.resolve_store_for_write("sources", stores, intent="update", target=request)
     assert isinstance(result, t.WriteStoreBinding)
     assert result.path == stores / "data" / "sources.db"
+
+
+def test_registered_holder_must_name_the_same_frozen_selector(stores):
+    from scripts.lib.readonly_sqlite import register_store_writer, unregister_store_writer
+
+    request = t._prepare_store_write_target("sources", stores, intent="update", env={})
+    other = stores / "data" / "different.db"
+    register_store_writer(other)
+    try:
+        assert t.resolve_store_for_write("sources", stores, intent="update", target=request) == t.StoreRefusal("sources", "not_selected_generation")
+    finally:
+        unregister_store_writer(other)
+
+
+def test_selection_is_resolved_after_acquisition(stores):
+    directory = stores / "data" / t.GENERATIONS_DIRNAME
+    directory.mkdir()
+    first = directory / "sources.20261031T000000Z-111111111111.db"
+    second = directory / "sources.20261031T000001Z-222222222222.db"
+    first.touch()
+    second.touch()
+    selector = stores / "data" / t.SELECTOR_NAME
+    selector.unlink()
+    selector.symlink_to(first.relative_to(selector.parent))
+    request = t._prepare_store_write_target("sources", stores, intent="update", env={})
+    selector.unlink()
+    selector.symlink_to(second.relative_to(selector.parent))
+    with g.store_writer(request.location):
+        binding = t.resolve_store_for_write("sources", stores, intent="update", target=request)
+        assert isinstance(binding, t.WriteStoreBinding)
+        assert binding.path == second
+
+
+def test_busy_lock_refuses_before_connection(stores):
+    import fcntl
+
+    request = t._prepare_store_write_target("sources", stores, intent="update", env={})
+    with (stores / "data" / g.WRITER_LOCK_NAME).open("wb") as descriptor:
+        fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with pytest.raises(g.GenerationError, match="writer_lock_busy"):
+            with g.store_writer(request.location):
+                pytest.fail("busy lock was admitted")

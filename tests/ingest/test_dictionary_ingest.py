@@ -27,7 +27,7 @@ def test_adapter_ingests_fixture_rows(tmp_path: Path, source: str, table: str, e
         db_path,
         dry_run=False,
         force=False,
-    )
+     db_role="staging", create=True)
 
     assert result.parsed == expected
     assert result.inserted == expected
@@ -58,7 +58,7 @@ def test_fts_search_returns_expected_rows(
     expected_column: str,
 ) -> None:
     db_path = tmp_path / "sources.db"
-    ingest(ADAPTERS[source], FIXTURES / f"{source}.txt", db_path, dry_run=False, force=False)
+    ingest(ADAPTERS[source], FIXTURES / f"{source}.txt", db_path, dry_run=False, force=False, db_role="staging", create=True)
 
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
@@ -79,8 +79,8 @@ def test_idempotent_rerun_skips_duplicates(tmp_path: Path) -> None:
     adapter = ADAPTERS["karavansky"]
     fixture = FIXTURES / "karavansky.txt"
 
-    first = ingest(adapter, fixture, db_path, dry_run=False, force=False)
-    second = ingest(adapter, fixture, db_path, dry_run=False, force=False)
+    first = ingest(adapter, fixture, db_path, dry_run=False, force=False, db_role="staging", create=True)
+    second = ingest(adapter, fixture, db_path, dry_run=False, force=False, db_role="staging", create=True)
 
     assert first.inserted == 2
     assert second.inserted == 0
@@ -99,8 +99,8 @@ def test_force_reingest_replaces_target_rows(tmp_path: Path) -> None:
     adapter = ADAPTERS["antonenko"]
     fixture = FIXTURES / "antonenko.txt"
 
-    ingest(adapter, fixture, db_path, dry_run=False, force=False)
-    forced = ingest(adapter, fixture, db_path, dry_run=False, force=True)
+    ingest(adapter, fixture, db_path, dry_run=False, force=False, db_role="staging", create=True)
+    forced = ingest(adapter, fixture, db_path, dry_run=False, force=True, db_role="staging", create=True)
 
     assert forced.inserted == 2
     assert forced.skipped == 0
@@ -122,7 +122,7 @@ def test_dry_run_does_not_create_database(tmp_path: Path) -> None:
         db_path,
         dry_run=True,
         force=False,
-    )
+     db_role="staging", create=True)
 
     assert result.parsed == 2
     assert result.dry_run is True

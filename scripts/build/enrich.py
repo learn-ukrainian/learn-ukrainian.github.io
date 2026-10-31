@@ -370,14 +370,12 @@ def _resolve_textbook_url(title: str) -> str:
 
     # Try to find matching source_file in our textbook_refs module
     try:
-        from pathlib import Path
-
         from build.textbook_refs import _PDF_BASE, _PDF_OVERRIDES, _SHKOLA_OVERRIDES
-        db_path = Path(__file__).resolve().parents[2] / "data" / "sources.db"
+        db_path = _store_path("sources", root=_PROJECT_ROOT)
         if not db_path.exists():
             return ""
 
-        conn = _open_readonly(_store_path('vesum', db_path, required=True))
+        conn = _open_readonly(_store_path('sources', db_path, required=True))
         # Find source_file matching author + grade, prefer ukrmova over ukrlit
         rows = conn.execute(
             "SELECT DISTINCT source_file FROM textbooks "

@@ -806,6 +806,14 @@ def _validate_write_candidate(
                 configured = Path(raw)
                 if not configured.is_absolute():
                     return refuse("relative_override")
+                if not configured.exists():
+                    return refuse("store_missing")
+                if not configured.is_file():
+                    return refuse("not_a_file")
+                if key == ENV_SOURCES_DB and _names_selector(configured):
+                    state = inspect_selector(configured)
+                    if state.layout != "selector":
+                        return refuse(state.reason)
                 active.append(configured)
             for live in active:
                 if path == live or resolved == live or path.resolve() == live.resolve():
@@ -823,6 +831,9 @@ def _validate_write_candidate(
     # Preflight does not select a generation for the caller. That decision is
     # made only by resolve_store_for_write, after store_writer has acquired it.
     if not final and store == "sources" and _names_selector(path):
+        locality = _store_locality(path)
+        if locality != "local":
+            return refuse(f"locality_{locality}")
         return path
     resolved = path.resolve(strict=True)
     if _is_worktree_store_slot(resolved, primary):
@@ -855,8 +866,6 @@ def _prepare_store_write_target(
         return StoreRefusal(store, "invalid_target")
     if store == "sources" and operation == "replace":
         return StoreRefusal(store, "sources_replace_forbidden")
-    if role == "active" and intent == "create":
-        return StoreRefusal(store, f"active_{store}_create_forbidden")
     if role == "staging" and operation == "replace":
         return StoreRefusal(store, "invalid_target")
     try:
@@ -888,6 +897,10 @@ def _prepare_store_write_target(
             if role == "active" or provenance != "explicit":
                 return StoreRefusal(store, "relative_override")
             path = root / path
+        if _is_worktree_store_slot(path, primary) or _is_worktree_store_slot(path.parent.resolve() / path.name, primary):
+            return StoreRefusal(store, "worktree_local_store")
+        if role == "active" and intent == "create":
+            return StoreRefusal(store, f"active_{store}_create_forbidden")
         checked = _validate_write_candidate(store, path, primary, role, intent, operation, environment, final=False)
         if isinstance(checked, StoreRefusal):
             return checked
@@ -923,7 +936,9 @@ def resolve_store_for_write(
             )
 
             ref = store_kind(path)
-            requires_lock = prepared.provenance == "primary_checkout" or _names_selector(path)
+            requires_lock = (prepared.provenance == "primary_checkout"
+                             or path == primary / "data" / STORE_FILES["sources"][0]
+                             or _names_selector(path))
             if requires_lock and (ref.kind not in {"selector", "legacy_live"}
                                   or ref.selector != path or ref.lock_dir != path.parent):
                 return StoreRefusal(store, "store_unavailable")

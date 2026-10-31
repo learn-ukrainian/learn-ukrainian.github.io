@@ -22,6 +22,7 @@ import json
 import sqlite3
 import sys
 from collections.abc import Mapping
+from contextlib import nullcontext
 from pathlib import Path
 
 if __package__ in {None, ""}:
@@ -36,7 +37,17 @@ from scripts.lib.readonly_sqlite import (
 from scripts.wiki.sum20_official import QUARANTINE_COLUMN, ensure_sum20_quarantine_column
 
 REPO = Path(__file__).resolve().parents[2]
-DEFAULT_DB = REPO / "data" / "sources.db"
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreBinding,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store,
+    resolve_store_for_write,
+)
+
+DEFAULT_DB = None
 
 UNVERIFIED_PARSER_VERSION = "v1-official-codification"
 QUARANTINE_REASON = "unverified-provenance: parser v1-official-codification has no ingest code (#9609)"
@@ -87,57 +98,71 @@ def _has_column(conn: sqlite3.Connection) -> bool:
     return QUARANTINE_COLUMN in {str(row[1]) for row in conn.execute("PRAGMA table_info(sum20_articles)")}
 
 
-def quarantine(db_path: Path, *, apply: bool, expected: Mapping[int, str] = EXPECTED_ROWS) -> dict[str, object]:
+def quarantine(db_path: Path | None, *, apply: bool, expected: Mapping[int, str] = EXPECTED_ROWS, db_role: str = "active", create: bool = False) -> dict[str, object]:
     """Check (and with ``apply``, mark) the unverified rows; return a receipt."""
-    if not db_path.is_file():
-        raise QuarantineError(f"database not found: {db_path}")
     if apply:
-        refuse_writable_corpus_database(db_path)
-    conn = sqlite3.connect(db_path, isolation_level=None) if apply else _shared_open_readonly(db_path.resolve())
-    try:
-        conn.execute("PRAGMA busy_timeout = 30000")
-        # Freeze the inspected rows before checking hashes, not only before marking them.
-        conn.execute("BEGIN IMMEDIATE" if apply else "BEGIN")
-        before = _counts(conn)
-        found = _candidates(conn)
-        if found != dict(expected):
-            raise QuarantineError(
-                f"expected {len(expected)} rows {sorted(expected)} with frozen hashes; found {len(found)} "
-                f"{sorted(found)} (hash mismatches: "
-                f"{sorted(w for w in found.keys() & expected.keys() if found[w] != expected[w])})"
-            )
-        receipt: dict[str, object] = {
-            "db": db_path.name,
-            "mode": "apply" if apply else "dry-run",
-            "counts_before": before,
-            "column_present_before": _has_column(conn),
-            "candidates": len(found),
-            "already_quarantined": len(_quarantined(conn)) if _has_column(conn) else 0,
-        }
-        if not apply:
-            receipt["would_mark"] = len(found) - int(receipt["already_quarantined"])
-            return receipt
+        request = _prepare_store_write_target("sources", REPO, intent="create" if create else "update",
+            target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role))
+        if isinstance(request, StoreRefusal):
+            raise QuarantineError(request.reason) from None
+        context = store_writer(request.location)
+    else:
+        context = nullcontext()
+    with context:
+        if apply:
+            binding = resolve_store_for_write("sources", REPO, intent="create" if create else "update", target=request)
+        else:
+            binding = resolve_store("sources", REPO, binding=None if db_path is None else StoreBinding("sources", db_path))
+        if isinstance(binding, StoreRefusal):
+            raise QuarantineError(binding.reason) from None
+        db_path = binding.path
+        if apply:
+            refuse_writable_corpus_database(db_path)
+        conn = sqlite3.connect(binding.sqlite_uri, isolation_level=None, uri=True) if apply else _shared_open_readonly(binding.path)
         try:
-            receipt["column_added"] = ensure_sum20_quarantine_column(conn)
-            marked = conn.execute(
-                f"UPDATE sum20_articles SET {QUARANTINE_COLUMN} = ? "
-                f"WHERE parser_version = ? AND {QUARANTINE_COLUMN} = ''",
-                (QUARANTINE_REASON, UNVERIFIED_PARSER_VERSION),
-            ).rowcount
-            after = _counts(conn)
-            quarantined = _quarantined(conn)
-            if after != before or set(quarantined) != set(expected):
+            conn.execute("PRAGMA busy_timeout = 30000")
+            # Freeze the inspected rows before checking hashes, not only before marking them.
+            conn.execute("BEGIN IMMEDIATE" if apply else "BEGIN")
+            before = _counts(conn)
+            found = _candidates(conn)
+            if found != dict(expected):
                 raise QuarantineError(
-                    f"post-check failed: counts {before} -> {after}; quarantined {sorted(quarantined)}"
+                    f"expected {len(expected)} rows {sorted(expected)} with frozen hashes; found {len(found)} "
+                    f"{sorted(found)} (hash mismatches: "
+                    f"{sorted(w for w in found.keys() & expected.keys() if found[w] != expected[w])})"
                 )
-            conn.execute("COMMIT")
-        except BaseException:
-            conn.execute("ROLLBACK")
-            raise
-        receipt.update({"marked": marked, "counts_after": after, "quarantined": len(quarantined)})
-        return receipt
-    finally:
-        conn.close()
+            receipt: dict[str, object] = {
+                "db": db_path.name,
+                "mode": "apply" if apply else "dry-run",
+                "counts_before": before,
+                "column_present_before": _has_column(conn),
+                "candidates": len(found),
+                "already_quarantined": len(_quarantined(conn)) if _has_column(conn) else 0,
+            }
+            if not apply:
+                receipt["would_mark"] = len(found) - int(receipt["already_quarantined"])
+                return receipt
+            try:
+                receipt["column_added"] = ensure_sum20_quarantine_column(conn)
+                marked = conn.execute(
+                    f"UPDATE sum20_articles SET {QUARANTINE_COLUMN} = ? "
+                    f"WHERE parser_version = ? AND {QUARANTINE_COLUMN} = ''",
+                    (QUARANTINE_REASON, UNVERIFIED_PARSER_VERSION),
+                ).rowcount
+                after = _counts(conn)
+                quarantined = _quarantined(conn)
+                if after != before or set(quarantined) != set(expected):
+                    raise QuarantineError(
+                        f"post-check failed: counts {before} -> {after}; quarantined {sorted(quarantined)}"
+                    )
+                conn.execute("COMMIT")
+            except BaseException:
+                conn.execute("ROLLBACK")
+                raise
+            receipt.update({"marked": marked, "counts_after": after, "quarantined": len(quarantined)})
+            return receipt
+        finally:
+            conn.close()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -148,11 +173,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB, help="sources.db to check (default: data/sources.db)")
     parser.add_argument("--apply", action="store_true", help="write the quarantine marks (default: dry-run)")
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active)")
+    parser.add_argument("--create-db", action="store_true", help="Permit a separate staging/shadow target to be created (default: update)")
     args = parser.parse_args(argv)
     try:
-        receipt = quarantine(args.db, apply=args.apply, expected=EXPECTED_ROWS)
-    except QuarantineError as exc:
-        print(f"REFUSED: {exc}", file=sys.stderr)
+        receipt = quarantine(args.db, apply=args.apply, expected=EXPECTED_ROWS, db_role=args.db_role, create=args.create_db)
+    except (QuarantineError, GenerationError) as exc:
+        print(f"REFUSED: {getattr(exc, 'reason', str(exc))}", file=sys.stderr)
         return 1
     print(json.dumps(receipt, ensure_ascii=False, indent=2))
     return 0

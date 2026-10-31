@@ -38,7 +38,7 @@ from scripts.wiki.slovnyk_me import (
 )
 
 REPO = Path(__file__).resolve().parents[2]
-DEFAULT_DB = REPO / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
 DEFAULT_NOTES = REPO / "docs" / "audits" / "slovnyk-me-ingestion-feasibility.md"
 
 IMPORTER_VERSION = "slovnyk-cache-ingest/2"
@@ -79,6 +79,16 @@ WHERE EXISTS (
       AND e.dictionary_slug = slovnyk_me_lookup_misses.dictionary_slug
 )
 """
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 def _entry_values(row: dict) -> tuple:
@@ -128,7 +138,16 @@ def ingest_words(
     sleep_s: float,
     user_agent: str,
     max_text_chars: int,
+    db_role: str = "active",
+    create: bool = False,
 ) -> int:
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     rows: list[dict] = []
     for index, word in enumerate(words):
         if index and sleep_s > 0:
@@ -154,16 +173,22 @@ def ingest_words(
         print(f"[dry-run] would upsert {len(rows)} row(s) into {db_path}")
         return len(rows)
 
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path))
-    try:
-        ensure_slovnyk_me_schema(conn)
-        with conn:
-            conn.executemany(INSERT_SQL, [_entry_values(row) for row in rows])
-        return len(rows)
-    finally:
-        conn.close()
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        try:
+            ensure_slovnyk_me_schema(conn)
+            with conn:
+                conn.executemany(INSERT_SQL, [_entry_values(row) for row in rows])
+            return len(rows)
+        finally:
+            conn.close()
 
 
 @dataclass
@@ -346,6 +371,8 @@ def _table_count(conn: SQLiteConnection, table: str) -> int:
 def ingest_cache(
     db_path: Path, cache_dir: Path, *, words: list[str], dictionaries: list[str] | None,
     dry_run: bool, max_text_chars: int, backup_dir: Path | None = None,
+    db_role: str = "active",
+    create: bool = False,
 ) -> CacheImportReport:
     """Upsert every cached dictionary lookup (one row per word x dictionary), offline.
 
@@ -362,38 +389,51 @@ def ingest_cache(
     )
     if dry_run:
         return report
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    db_path = Path(request.location)
     if is_network_filesystem_path(db_path):
         raise ValueError("sources.db must stay on local storage")
-    db_path.parent.mkdir(parents=True, exist_ok=True)
     existed = db_path.exists()
-    refuse_writable_corpus_database(str(db_path))
-    conn = sqlite3.connect(str(db_path))
-    backup: Path | None = None
-    try:
-        conn.execute("PRAGMA busy_timeout = 60000")
-        if existed:
-            backup = backup_database(conn, db_path, backup_dir)
-            report.backup_path = backup
-        ensure_slovnyk_me_schema(conn)
-        entries_before = _table_count(conn, "slovnyk_me_entries")
-        misses_before = _table_count(conn, "slovnyk_me_lookup_misses")
-        with conn:
-            conn.executemany(INSERT_SQL, [_entry_values(row) for row in entries])
-            conn.executemany(MISS_INSERT_SQL, [_miss_values(row) for row in misses])
-            conn.execute(MISS_SUPERSEDED_SQL)
-        report.inserted = _table_count(conn, "slovnyk_me_entries") - entries_before
-        report.inserted_misses = _table_count(conn, "slovnyk_me_lookup_misses") - misses_before
-        if backup is not None:
-            backup.unlink(missing_ok=True)
-            report.backup_path = None
-            report.backup_removed = True
-    except BaseException as exc:
-        if backup is not None and report.backup_path is not None:
-            exc.add_note(f"pre-import copy retained at {backup}")
-        raise
-    finally:
-        conn.close()
-    return report
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        db_path = binding.path
+        refuse_writable_corpus_database(str(db_path))
+        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        backup: Path | None = None
+        try:
+            conn.execute("PRAGMA busy_timeout = 60000")
+            if existed:
+                backup = backup_database(conn, db_path, backup_dir)
+                report.backup_path = backup
+            ensure_slovnyk_me_schema(conn)
+            entries_before = _table_count(conn, "slovnyk_me_entries")
+            misses_before = _table_count(conn, "slovnyk_me_lookup_misses")
+            with conn:
+                conn.executemany(INSERT_SQL, [_entry_values(row) for row in entries])
+                conn.executemany(MISS_INSERT_SQL, [_miss_values(row) for row in misses])
+                conn.execute(MISS_SUPERSEDED_SQL)
+            report.inserted = _table_count(conn, "slovnyk_me_entries") - entries_before
+            report.inserted_misses = _table_count(conn, "slovnyk_me_lookup_misses") - misses_before
+            if backup is not None:
+                backup.unlink(missing_ok=True)
+                report.backup_path = None
+                report.backup_removed = True
+        except BaseException as exc:
+            if backup is not None and report.backup_path is not None:
+                exc.add_note(f"pre-import copy retained at {backup}")
+            raise
+        finally:
+            conn.close()
+        return report
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -483,6 +523,8 @@ Related:
         default=DEFAULT_USER_AGENT,
         help=f"HTTP User-Agent for direct-entry requests. Default: {DEFAULT_USER_AGENT}",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); use staging for a separate output")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a staging/shadow database (default: update only)")
     return parser
 
 
@@ -497,7 +539,7 @@ def main(argv: list[str] | None = None) -> int:
             args.db, args.cache_dir, words=words, dictionaries=args.dicts,
             dry_run=args.dry_run, max_text_chars=max(1, args.max_text_chars),
             backup_dir=args.backup_dir,
-        )
+         db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
         print(report.summary())
         if args.dry_run:
             print("[dry-run] nothing written")
@@ -529,10 +571,14 @@ def main(argv: list[str] | None = None) -> int:
         sleep_s=max(0.0, args.sleep),
         user_agent=args.user_agent,
         max_text_chars=max(1, args.max_text_chars),
-    )
+     db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
     print(f"Loaded {loaded} slovnyk.me row(s).")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

@@ -61,9 +61,7 @@ def test_absent_worktree_slot_cannot_be_created(stores, tmp_path, role):
     (worker / "data").mkdir()
     target = t.ExplicitStoreWriteTarget(worker / "data" / "sources.db", role)
     result = t.resolve_store_for_write("sources", worker, intent="create", target=target, env={})
-    # Active creation is refused even before target selection; other roles must
-    # also reject an absent worktree slot rather than creating a local store.
-    assert result == t.StoreRefusal("sources", "active_sources_create_forbidden" if role == "active" else "worktree_local_store")
+    assert result == t.StoreRefusal("sources", "worktree_local_store")
     assert not Path(target.location).exists()
 
 

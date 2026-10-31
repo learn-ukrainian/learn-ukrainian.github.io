@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import sqlite3
 import sys
+from contextlib import closing
 from pathlib import Path as _P
 
 sys.path.insert(0, str(_P(__file__).resolve().parents[2] / 'scripts'))
@@ -47,7 +48,17 @@ except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
+DEFAULT_DB = None  # Selected by the connection owner at call time.
+
+
+
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
+    ExplicitStoreWriteTarget,
+    StoreRefusal,
+    _prepare_store_write_target,
+    resolve_store_for_write,
+)
 
 
 @dataclass
@@ -243,31 +254,51 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Report what would change without writing.",
     )
+    parser.add_argument("--db-role", choices=("active", "staging", "shadow"), default="active", help="Target role (default: active); staging and shadow must be separate outputs.")
+    parser.add_argument("--create-db", action="store_true", help="Permit creation of a separate staging/shadow database (default: update only).")
     args = parser.parse_args(argv)
+    request = _prepare_store_write_target(
+        "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update",
+        target=None if args.db is None else ExplicitStoreWriteTarget(args.db, args.db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    args.db = Path(request.location)
 
     if not args.db.exists():
         raise SystemExit(f"Sources DB not found: {args.db}")
 
-    if not args.dry_run:
-        refuse_writable_corpus_database(str(args.db))
-    with sqlite3.connect(str(args.db)) as conn:
-        status = apply(conn, dry_run=args.dry_run)
+    with store_writer(request.location):
+        binding = resolve_store_for_write(
+            "sources", Path(__file__).resolve().parents[2], intent="create" if args.create_db else "update", target=request,
+        )
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        args.db = binding.path
+        if not args.dry_run:
+            refuse_writable_corpus_database(str(args.db))
+        with closing(sqlite3.connect(binding.sqlite_uri, uri=True)) as conn, conn:
+            status = apply(conn, dry_run=args.dry_run)
 
-    prefix = "[dry-run] " if args.dry_run else ""
-    print(f"{prefix}column_added={status.column_added}")
-    print(f"{prefix}rows_updated={status.rows_updated}")
-    print(
-        f"{prefix}populated_author_uk={status.populated_author_uk}/"
-        f"{status.total_rows} (rows with Cyrillic author_uk / total textbook rows)"
-    )
-    if status.unmapped_authors:
-        print(f"{prefix}WARNING: unmapped Latin authors (no Cyrillic mapping):")
-        for name in sorted(status.unmapped_authors):
-            print(f"{prefix}  - {name}")
-    else:
-        print(f"{prefix}all distinct authors mapped to Cyrillic.")
-    return 0
+        prefix = "[dry-run] " if args.dry_run else ""
+        print(f"{prefix}column_added={status.column_added}")
+        print(f"{prefix}rows_updated={status.rows_updated}")
+        print(
+            f"{prefix}populated_author_uk={status.populated_author_uk}/"
+            f"{status.total_rows} (rows with Cyrillic author_uk / total textbook rows)"
+        )
+        if status.unmapped_authors:
+            print(f"{prefix}WARNING: unmapped Latin authors (no Cyrillic mapping):")
+            for name in sorted(status.unmapped_authors):
+                print(f"{prefix}  - {name}")
+        else:
+            print(f"{prefix}all distinct authors mapped to Cyrillic.")
+        return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (GenerationError, ValueError) as error:
+        print(getattr(error, "reason", str(error)), file=sys.stderr)
+        raise SystemExit(1) from None

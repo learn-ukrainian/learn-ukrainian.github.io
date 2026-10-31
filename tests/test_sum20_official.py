@@ -699,7 +699,7 @@ def test_ingest_reference_stores_only_primary_fields_and_stops_on_malformed(
         return fetch_sum20_wordid(wordid, session=session, **kwargs)
 
     monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", offline_fetch)
-    counts = sum20_official_ingest.ingest_wordids(db_path, limit=1 if valid_reference else 2, delay_s=0, retries=0)
+    counts = sum20_official_ingest.ingest_wordids(db_path, limit=1 if valid_reference else 2, delay_s=0, retries=0, db_role="staging", create=True)
 
     assert requested == [36]
     assert counts["ok"] == int(valid_reference)
@@ -764,7 +764,7 @@ def test_fetch_and_ingest_grouped_reference_preserves_resume_semantics(
 
     monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", offline_fetch)
     stopped = case in {"malformed-461", "terminal-403"}
-    counts = sum20_official_ingest.ingest_wordids(db_path, limit=2 if stopped else 1, delay_s=0, retries=0)
+    counts = sum20_official_ingest.ingest_wordids(db_path, limit=2 if stopped else 1, delay_s=0, retries=0, db_role="staging", create=True)
     expected_status = {
         "cached-461": "ok",
         "malformed-461": "parse_error",
@@ -932,7 +932,7 @@ def test_ingest_keeps_transient_failures_out_of_the_negative_cache(
         limit=2,
         delay_s=0,
         sleep=lambda _seconds: None,
-    )
+     db_role="staging", create=True)
 
     conn = sqlite3.connect(db_path)
     try:
@@ -951,7 +951,7 @@ def test_ingest_keeps_transient_failures_out_of_the_negative_cache(
     assert transient == (failure.status, failure.error_text)
     assert counts.exit_code == exit_code
     monkeypatch.setattr(sum20_official_ingest, "ingest_wordids", lambda *_args, **_kwargs: counts)
-    assert sum20_official_ingest.main(["--db", str(db_path)]) == exit_code
+    assert sum20_official_ingest.main(["--db", str(db_path), "--db-role", "staging", "--create-db"]) == exit_code
 
 
 def _fixture_sources_db(tmp_path: Path, *, include_article: bool, create_schema: bool = True) -> Path:
@@ -1079,7 +1079,7 @@ def test_ingest_cannot_reduce_official_crawl_delay(monkeypatch, tmp_path, reques
     monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", fetch)
     result = sum20_official_ingest.ingest_wordids(
         tmp_path / "staging.db", start_wordid=5, limit=3, delay_s=requested, sleep=sleep
-    )
+    , db_role="staging", create=True)
     assert result["not_found"] == 3
     assert times == [0, expected, expected * 2]
 
@@ -1494,7 +1494,7 @@ def test_marked_reference_ingest_and_consumers(
 
     monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", offline_fetch)
     for repeat in (False, True):
-        counts = sum20_official_ingest.ingest_wordids(db_path, start_wordid=wordid, limit=1, delay_s=0, retries=0)
+        counts = sum20_official_ingest.ingest_wordids(db_path, start_wordid=wordid, limit=1, delay_s=0, retries=0, db_role="staging", create=True)
         assert counts == {
             "ok": int(not repeat),
             "unchanged": int(repeat),

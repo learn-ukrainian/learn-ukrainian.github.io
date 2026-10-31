@@ -13,8 +13,10 @@ def test_config_and_verification_import_do_not_resolve(monkeypatch):
 
     def forbidden(*args, **kwargs):
         pytest.fail("module import resolved a store")
-    monkeypatch.setattr(t, "resolve_store", forbidden)
-    importlib.reload(config)
+    with monkeypatch.context() as scoped:
+        scoped.setattr(t, "resolve_store", forbidden)
+        importlib.reload(config)
+        importlib.reload(vesum)
     importlib.reload(vesum)
 
 

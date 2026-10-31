@@ -213,7 +213,7 @@
     "target_db": "sources.db",
     "reason": "loads ESUM cognate forms",
     "calls": [
-      "sqlite3.connect(db_path)"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -223,7 +223,7 @@
     "target_db": "sources.db",
     "reason": "backfills cognate schema and rows",
     "calls": [
-      "sqlite3.connect(db_path)"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -255,7 +255,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -275,7 +275,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(args.db))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -285,7 +285,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(args.db))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -305,7 +305,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -315,7 +315,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -325,7 +325,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -346,7 +346,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path), timeout=60)"
+      "sqlite3.connect(binding.sqlite_uri, timeout=60, uri=True)"
     ]
   },
   {
@@ -356,8 +356,8 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path), timeout=30.0)",
-      "sqlite3.connect(str(db_path), timeout=30.0)"
+      "sqlite3.connect(binding.sqlite_uri, timeout=30.0, uri=True)",
+      "sqlite3.connect(binding.sqlite_uri, timeout=30.0, uri=True)"
     ]
   },
   {
@@ -367,7 +367,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(args.db))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -377,7 +377,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(db_path)"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -387,7 +387,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(args.db))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -449,8 +449,8 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path))",
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)",
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -482,7 +482,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -492,7 +492,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(db_path, isolation_level=None)"
+      "sqlite3.connect(binding.sqlite_uri, isolation_level=None, uri=True)"
     ]
   },
   {
@@ -512,7 +512,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -522,7 +522,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(db_path)"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -543,7 +543,7 @@
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -760,7 +760,7 @@
     "target_db": "sources.db",
     "reason": "migrates textbook author metadata",
     "calls": [
-      "sqlite3.connect(str(args.db))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -770,7 +770,7 @@
     "target_db": "sources.db",
     "reason": "migrates textbook subjects",
     "calls": [
-      "sqlite3.connect(str(args.db))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -917,7 +917,7 @@
     "target_db": "sources.db",
     "reason": "backfills literary source URLs",
     "calls": [
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -927,7 +927,7 @@
     "target_db": "sources.db",
     "reason": "ingests literary texts and rebuilds FTS",
     "calls": [
-      "sqlite3.connect(str(db_path))"
+      "sqlite3.connect(binding.sqlite_uri, uri=True)"
     ]
   },
   {
@@ -937,7 +937,7 @@
     "target_db": "VESUM shadow DB",
     "reason": "builds shadow store and refuses live VESUM target",
     "calls": [
-      "sqlite3.connect(temporary_path)"
+      "sqlite3.connect(temporary_path.as_uri() + '?mode=rwc', uri=True)"
     ]
   },
   {

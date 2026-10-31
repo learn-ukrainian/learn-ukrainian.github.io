@@ -530,6 +530,9 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
             return ("repo", False)
         if isinstance(node, ast.Attribute):
             return fact(node.value)
+        if isinstance(node, ast.Call) and name(node.func) == "argparse.ArgumentParser":
+            # Help prose cannot taint parsed namespaces as database paths.
+            return (None, False)
         children = [fact(child) for child in syntax.children[node]]
         roots = {root for root, _ in children if root}
         target = is_store(node) or any(store for _, store in children)
