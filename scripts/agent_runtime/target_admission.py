@@ -507,14 +507,15 @@ def resolve_and_admit(
         # lifecycle operations on existing work.
         # Checked against the identities actually selected, so an automatic
         # fallback away from a paused pin (e.g. reviewer selection) proceeds.
-        selected = [target_model or _seat_default_model(recipient, harness) for recipient, target_model, _ in resolved]
         # A new worker dispatch also answers for every model it asked for
-        # (explicit, attached or also_models); reviewer selection only for what it picked.
-        _refuse_paused(
-            selected if review_activity else [*models, *selected],
-            claude_account=claude_account,
-            review=review_activity,
-        )
+        # (explicit, attached or also_models). Headroom belongs to the final seat.
+        if not review_activity:
+            _refuse_paused(models, claude_account=claude_account, check_headroom=False)
+        for recipient, target_model, _ in resolved:
+            _refuse_paused(
+                [target_model or _seat_default_model(recipient, harness)],
+                claude_account=claude_account, review=review_activity, seat=recipient,
+            )
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
 
@@ -556,18 +557,21 @@ def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
 
 
 def _refuse_paused(
-    models: Iterable[str | None], *, claude_account: ClaudeAccount | None, review: bool = False
+    models: Iterable[str | None], *, claude_account: ClaudeAccount | None, review: bool = False,
+    seat: str = "claude", check_headroom: bool = True,
 ) -> None:
     """Operator model pauses and plan-headroom stops (``model_pause``) for new dispatches.
 
     ``claude_account`` is required: the claude lane's headroom is that
-    account's meter (#10619, #10630); None names no account, so the claude
-    lane's usage is unknown and never blocks.
+    account's meter (#10619, #10630). An applicable cap refuses an unknown
+    meter; a non-native seat omits the native plan's cap explicitly.
     """
-    from .model_pause import account_used_pct, refuse_paused_models
+    from .model_pause import account_used_pct, policy_for_seat, refuse_paused_models
 
-    used_pct = account_used_pct(claude_account)
-    refuse_paused_models(models, used_pct=lambda lane: used_pct(lane) if not review or lane == "claude" else None)
+    refuse_paused_models(
+        models, policy=policy_for_seat(seat, review=review, check_headroom=check_headroom),
+        used_pct=account_used_pct(claude_account),
+    )
 
 
 def _refuse_non_review_models(models: Iterable[str | None]) -> None:

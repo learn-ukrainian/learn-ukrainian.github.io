@@ -209,6 +209,21 @@ def account_used_pct(account: ClaudeAccount | None) -> Callable[[str], float | N
     return functools.partial(routing_budget_used_pct, account=account)
 
 
+def policy_for_seat(seat: str, *, review: bool = False, check_headroom: bool = True) -> dict[str, Any]:
+    """Keep pauses and only the headroom entries that fund this seat.
+
+    Review admission protects the native Claude plan only. Structural
+    qualification and checks of unselected models omit headroom explicitly.
+    """
+    policy = load_policy()
+    return {**policy, "headroom": [
+        entry for entry in _entries(policy, "headroom")
+        if check_headroom
+        and (not review or entry.get("lane") == "claude")
+        and (seat == "claude" or entry.get("lane") != "claude")
+    ]}
+
+
 def headroom_stop(
     model: str | None,
     policy: Mapping[str, Any],

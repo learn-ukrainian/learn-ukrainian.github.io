@@ -307,7 +307,8 @@ def headroom_box(tmp_path, monkeypatch):
 
     def build(spec, env):
         launches.append((spec.agent, spec.model, spec.claude_account))
-        return Invocation([sys.executable, "-c", "print('literal final response')"], None, env, None)
+        stdin = json.dumps({"message": {"content": [{"text": "fixture"}]}}).encode() if spec.agent == "agy" else None
+        return Invocation([sys.executable, "-c", "print('literal final response')"], stdin, env, None)
 
     monkeypatch.setattr(providers, "load", lambda _agent: SimpleNamespace(
         build=build, parse=lambda *_a: ParsedResult("literal final response", None, None)
@@ -427,6 +428,18 @@ def test_headroom_stop_refuses_matching_models_only(headroom_box, capsys):
     assert headroom_box.dispatch(model="claude-sonnet-5-5") == 2
     assert "MODEL_HEADROOM: claude-sonnet-5-5" in capsys.readouterr().err
     assert headroom_box.dispatch(agent="codex", model="gpt-6.1-sol") == 0
+    # A Claude model on another route is outside the native plan cap.
+    from scripts.agent_runtime import target_admission
+    from scripts.dispatcher import headroom
+    from scripts.fleet.claude_account_lane import no_claude_account
+
+    for model in ("claude-opus-5-5-high", "claude-sonnet-5-5-high"):
+        assert headroom_box.dispatch(agent="agy", model=model) == 0
+        for review in (False, True):
+            headroom.check_plan("agy", model, {}, review=review)
+            target_admission._refuse_paused(
+                [model], claude_account=no_claude_account(), seat="agy", review=review,
+            )
 
 
 def test_unreadable_usage_refuses_dispatch(headroom_box, capsys):
