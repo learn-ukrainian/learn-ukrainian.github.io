@@ -95,3 +95,38 @@ def test_busy_lock_refuses_before_connection(stores):
         with pytest.raises(g.GenerationError, match="writer_lock_busy"):
             with g.store_writer(request.location):
                 pytest.fail("busy lock was admitted")
+
+
+def test_inherited_lock_is_reused_without_nested_acquisition(stores):
+    import os
+    import subprocess
+    import sys
+
+    from scripts.lib.readonly_sqlite import ENV_STORE_WRITER_FD, ENV_STORE_WRITER_SELECTOR
+
+    directory = stores / "data" / t.GENERATIONS_DIRNAME
+    directory.mkdir()
+    generation = directory / "sources.20261031T000000Z-111111111111.db"
+    generation.touch()
+    selector = stores / "data" / t.SELECTOR_NAME
+    selector.unlink()
+    selector.symlink_to(generation.relative_to(selector.parent))
+    program = '''
+import sys
+from pathlib import Path
+from scripts.storage import topology as t, generations as g
+path = Path(sys.argv[1])
+request = t._prepare_store_write_target("sources", intent="update", target=t.ExplicitStoreWriteTarget(path))
+assert isinstance(request, t.ExplicitStoreWriteTarget), request
+with g.store_writer(request.location):
+    binding = t.resolve_store_for_write("sources", intent="update", target=request)
+    assert isinstance(binding, t.WriteStoreBinding), binding
+    assert binding.path == path.resolve()
+print("inherited binding verified")
+'''
+    with g.writer_lock(selector, lift=True) as held:
+        run = subprocess.run([sys.executable, "-c", program, str(selector)], pass_fds=(held._fd,),
+                             env={**os.environ, ENV_STORE_WRITER_FD: str(held._fd), ENV_STORE_WRITER_SELECTOR: str(selector)},
+                             capture_output=True, text=True, timeout=30)
+        assert run.returncode == 0, run.stderr
+        assert run.stdout == "inherited binding verified\n"

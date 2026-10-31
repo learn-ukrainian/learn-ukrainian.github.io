@@ -163,27 +163,20 @@ def test_branch_content_cannot_choose_agy_host_database_mount(layout, case):
         vesum.rename(saved)
         vesum.symlink_to(saved)
 
-    git.provision_links(primary, worktree)
     relative = "data/vesum.db" if case == "vesum-link" else SOURCES_LINK
     link = worktree / relative
-    invalid_primary = case in {
-        "malformed", "invalid-name", "missing", "generation-link", "generation-directory",
-        "directory-link", "vesum-link",
-    }
-    assert link.is_symlink() is not invalid_primary
-    if invalid_primary:
-        # The boundary must refuse independently of provisioning.
-        link.symlink_to(primary / relative)
-    elif case in {"stale", "direct-generation", "foreign"}:
-        link.unlink()
-        link.symlink_to({"stale": stale, "direct-generation": selected, "foreign": primary / "data/vesum.db"}[case])
-    elif case == "tracked":
-        run_git(worktree, "add", "-f", relative)
-
+    link.parent.mkdir(parents=True, exist_ok=True)
+    assert not link.exists() and not link.is_symlink()
+    if case in {"stale", "direct-generation", "foreign", "tracked"}:
+        link.symlink_to({"stale": stale, "direct-generation": selected,
+                         "foreign": primary / "data/vesum.db", "tracked": selector}[case])
+        if case == "tracked":
+            run_git(worktree, "add", "-f", relative)
     if case in {"selected", "legacy"}:
         expected = selected if case == "selected" else selector
         assert _trusted_database(worktree, primary, relative) == expected
-        assert link.read_text() == "database sentinel"
+        assert expected.read_text() == "database sentinel"
+        assert not link.exists() and not link.is_symlink()
         if case == "selected":
             replacement = generations / "sources.20261030T220000Z-111111111111.db"
             replacement.write_text("new generation")

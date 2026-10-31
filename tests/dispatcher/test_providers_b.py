@@ -730,7 +730,7 @@ def test_agy_scratch_removal_never_follows_a_link_the_sandbox_planted(tmp_path):
 
 
 def test_agy_database_mount_admits_only_the_dispatchers_own_link(tmp_path):
-    """C-3027 F3: branch content never chooses a database mount, and a missing link refuses."""
+    """The primary is readable with no link; every worktree entry refuses."""
     from scripts.dispatcher.agy_sandbox import Refused, _trusted_database
 
     repository, worktree = tmp_path / "repo", tmp_path / "worktree"
@@ -739,19 +739,19 @@ def test_agy_database_mount_admits_only_the_dispatchers_own_link(tmp_path):
     trusted = repository / "data" / "sources.db"
     trusted.write_bytes(b"db")
     link = worktree / "data" / "sources.db"
-    with pytest.raises(Refused, match="missing"):
-        _trusted_database(worktree, repository, "data/sources.db")
+    assert _trusted_database(worktree, repository, "data/sources.db") == trusted
     link.symlink_to(repository / ".env")
     (repository / ".env").write_text("TOKEN=x")
-    with pytest.raises(Refused, match="does not name"):
+    with pytest.raises(Refused, match="worktree_local_store"):
         _trusted_database(worktree, repository, "data/sources.db")
     link.unlink()
     link.write_bytes(b"tracked")
-    with pytest.raises(Refused, match="not the dispatcher's link"):
+    with pytest.raises(Refused, match="worktree_local_store"):
         _trusted_database(worktree, repository, "data/sources.db")
     link.unlink()
     link.symlink_to(trusted)
-    assert _trusted_database(worktree, repository, "data/sources.db") == trusted
+    with pytest.raises(Refused, match="worktree_local_store"):
+        _trusted_database(worktree, repository, "data/sources.db")
 
 
 def _receipt(**changes):
@@ -805,15 +805,20 @@ def _linked_worktree(tmp_path):
     git(repo, "init", "-q", "-b", "main")
     (repo / "README.md").write_text("reviewed\n")
     (repo / "data").mkdir()
+    import sqlite3
+
     for name in ("sources.db", "vesum.db"):
-        (repo / "data" / name).write_bytes(b"database")
+        connection = sqlite3.connect(repo / "data" / name)
+        connection.execute("CREATE TABLE proof(value TEXT)")
+        connection.commit()
+        connection.close()
     git(repo, "add", "README.md")
     git(repo, "-c", "user.email=s@example.invalid", "-c", "user.name=S", "commit", "-q", "-m", "base")
     worktree = tmp_path / "worktree"
     git(repo, "worktree", "add", "-q", "--detach", str(worktree), "main")
     (worktree / "data").mkdir()
     for name in ("sources.db", "vesum.db"):
-        (worktree / "data" / name).symlink_to(repo / "data" / name)
+        assert not (worktree / "data" / name).exists()
     # Keys a sanitized copy must drop; marker values, not credential shapes, so secret scanners stay quiet.
     git(repo, "config", "remote.origin.url", "/canary-remote-marker")
     git(repo, "config", "credential.helper", "canary-helper-marker")
@@ -872,7 +877,7 @@ def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tm
     worktree, head = _linked_worktree(tmp_path)
     if not has_databases:
         for name in ("sources.db", "vesum.db"):
-            (worktree / "data" / name).unlink()
+            assert not (worktree / "data" / name).exists()
             (tmp_path / "repo/data" / name).unlink()
     shared, tasks = read_roots()
     tasks.mkdir(parents=True, exist_ok=True)
