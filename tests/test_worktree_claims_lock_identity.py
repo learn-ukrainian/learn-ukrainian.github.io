@@ -142,7 +142,7 @@ def test_malformed_active_review_contract_fails_closed(tmp_path, contract):
             tasks_dir=tasks,
             repo_root=tmp_path,
         )
-        == "task record review.json unreadable; refusing worktree removal"
+        == f"task record {tasks / 'review.json'} unreadable; refusing worktree removal"
     )
 
 
@@ -223,7 +223,7 @@ def test_non_record_json_beside_the_records_never_blocks_removal_but_a_truncated
     (tasks / "other.json").write_text('{"task_id": "other", "status": "running", "worktree_path": ')
     assert (
         worktree_claims.active_worktree_claim_refusal(tree, tasks_dir=tasks, repo_root=tmp_path)
-        == "task record other.json unreadable; refusing worktree removal"
+        == f"task record {tasks / 'other.json'} unreadable; refusing worktree removal"
     )
 
 
@@ -248,7 +248,7 @@ def test_unreadable_review_record_fails_closed(tmp_path, monkeypatch, unreadable
             tasks_dir=tasks,
             repo_root=tmp_path,
         )
-        == "task record review.json unreadable; refusing worktree removal"
+        == f"task record {tasks / 'review.json'} unreadable; refusing worktree removal"
     )
 
 

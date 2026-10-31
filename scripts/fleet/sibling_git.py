@@ -655,8 +655,14 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
             for state_file in sorted(tasks.iterdir()):
                 if state_file.suffix != ".json" or worktree_claims.is_superseded_record(state_file):
                     continue
-                raw = state_file.read_bytes()
-                state = parse_task_record(state_file, raw)
+                try:
+                    raw = state_file.read_bytes()
+                    state = parse_task_record(state_file, raw)
+                except (OSError, ValueError, RecursionError) as exc:
+                    # One damaged record refuses every removal, so the refusal names it (#12219).
+                    problem = "unreadable" if isinstance(exc, OSError) else "damaged"
+                    reachability_refusal = f"task record {state_file} is {problem}; HEAD reachability is unknown"
+                    return False, reachability_refusal
                 if state is None or not worktree_claims.record_may_claim_worktree(raw, needles):
                     continue
                 if not isinstance(state, dict):
