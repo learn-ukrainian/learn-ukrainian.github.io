@@ -949,7 +949,14 @@ def _evaluate_candidate(
 
     # Catalog validation protects the installed ladders; this independent gate
     # also protects explicit pins and custom candidates before any quality prior.
-    refusal = retired_model_refusal(candidate.concrete_model, _MODEL_CATALOG)
+    refusal = retired_model_refusal(candidate.concrete_model, _MODEL_CATALOG, review_context={
+        "review_mode": review_mode, "review_profile": inputs.review_profile,
+        "transport": candidate.transport, "author_model": inputs.author_model,
+        "author_models": (*inputs.author_models, *inputs.author_task_models), "requested_role": inputs.requested_role,
+    })
+    if (_MODEL_CATALOG["models"].get(resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG), {}).get("red_team_only")
+            and (not inputs.formal_review or inputs.language_lane or is_ukrainian_content_change(inputs))):
+        refusal = "Temporary red-team exception excludes advisory and Ukrainian review"
     model_id = resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG)
     model_family = _MODEL_CATALOG["models"].get(model_id, {}).get("family")
     if candidate.family not in _VALID_CONCRETE_FAMILIES:
@@ -1315,6 +1322,12 @@ def resolve_reviewer(
             fail_closed_reason=(f"unsupported review risk {inputs.risk!r}; expected one of {sorted(VALID_RISKS)}"),
         )
     active_ladder = ladder if ladder is not None else REVIEW_LADDERS[risk]
+    if ladder is None and review_mode == "red_team":
+        # Temporary seats never enter the ordinary cross-family ladders.
+        extra = tuple(candidate for candidate in REVIEW_CANDIDATES.values()
+                      if _MODEL_CATALOG["models"][candidate.concrete_model].get("red_team_only"))
+        if extra:
+            active_ladder = (*active_ladder, extra)
     if inputs.pinned_candidate:
         pinned_definition = REVIEW_CANDIDATES.get(inputs.pinned_candidate)
         if pinned_definition is None:

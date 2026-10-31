@@ -2308,7 +2308,8 @@ def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
 
 
 def _require_formal_reviewer(
-    *, cursor: bool, reported: object, model: str, family: str, native_grok: bool = False
+    *, cursor: bool, reported: object, model: str, family: str, native_grok: bool = False,
+    review_context: Mapping[str, Any] | None = None,
 ) -> None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
 
@@ -2329,7 +2330,7 @@ def _require_formal_reviewer(
     if not admitted:
         raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
     # #9583: a model the catalog gives no review role never approves, on any harness.
-    if refusal := activity_role_refusal(model, REVIEW_ACTIVITY):
+    if refusal := activity_role_refusal(model, REVIEW_ACTIVITY, review_context=review_context):
         raise RecordError(f"reviewer model refused: {refusal}")
 
 
@@ -2363,7 +2364,14 @@ def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
     family = resolve_family(model)
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
-    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
+    _require_formal_reviewer(
+        cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok,
+        review_context={
+            "review_mode": task.get("review_mode"), "review_profile": task.get("review_profile"),
+            "author_model": task.get("review_author_model"),
+            "transport": "native_codex" if task.get("agent") == "codex" else task.get("agent"),
+        },
+    )
     return model, family
 
 

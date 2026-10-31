@@ -1141,9 +1141,10 @@ def test_invoke_refuses_catalog_retired_model_on_every_adapter(tmp_path, agent_n
         patch("agent_runtime.runner.subprocess.Popen", side_effect=_git_only) as mock_popen,
         pytest.raises(
             ValueError,
-            match=re.escape(
-                f"Agent {agent_name!r}: model {model!r} is retired in the model catalog ({model}); use gpt-6.1-sol"
-            ),
+            match=(re.escape(f"Agent {agent_name!r}: model {model!r}") + r" (is restricted to red-team code review|red-team exception expired)"
+                   if model == "gpt-6-astra" else re.escape(
+                       f"Agent {agent_name!r}: model {model!r} is retired in the model catalog ({model}); use gpt-6.1-sol"
+                   )),
         ),
     ):
         invoke(agent_name, "hello", mode=mode, cwd=tmp_path, model=model, tool_config=tool_config)
