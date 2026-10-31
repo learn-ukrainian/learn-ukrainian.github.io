@@ -524,6 +524,41 @@ class StoreRefusal:
     reason: str
 
 
+@dataclass(frozen=True)
+class ExplicitStoreWriteTarget:
+    """Unvalidated input, never a read binding or permission to mutate a store."""
+
+    location: str | Path
+    role: Literal["active", "staging", "shadow"] = "active"
+
+
+@dataclass(frozen=True)
+class _PreparedStoreWriteTarget(ExplicitStoreWriteTarget):
+    provenance: str = "explicit"
+    environment: tuple[tuple[str, str], ...] = ()
+
+
+@dataclass(frozen=True)
+class WriteStoreBinding:
+    """A write location; a live Sources binding is valid only during its lock."""
+
+    store: StoreId
+    path: Path
+    intent: Literal["update", "create"]
+    operation: Literal["sqlite", "replace"]
+    role: Literal["active", "staging", "shadow"]
+    provenance: str
+    sqlite_uri: str | None
+    access_mode: Literal["write"] = "write"
+
+
+def unavailable_store_path(store: StoreId) -> Path:
+    """Import-safe compatibility value, refused by both store boundaries."""
+    if store not in STORE_FILES:
+        raise ValueError("unsupported logical store")
+    return Path("/__learn_ukrainian_unavailable_store__") / store
+
+
 def _store_locality(path: Path) -> Literal["local", "network", "unknown"]:
     """Require filesystem evidence; legacy best-effort detection is unchanged."""
     if _path_looks_like_network(path):
@@ -721,6 +756,203 @@ def resolve_store(
         if locality != "local":
             return StoreRefusal(store, f"locality_{locality}")
         return StoreBinding(store, path, provenance=provenance)
+    except FileNotFoundError:
+        return StoreRefusal(store, "store_missing")
+    except (OSError, RuntimeError, ValueError):
+        return StoreRefusal(store, "store_unavailable")
+
+
+def _is_worktree_store_slot(path: Path, primary: Path) -> bool:
+    if path.name not in {STORE_FILES["sources"][0], STORE_FILES["vesum"][0]} or path.parent.name != "data":
+        return False
+    root = path.parent.parent
+    return root != primary and os.path.lexists(root / ".git")
+
+
+def _validate_write_candidate(
+    store: StoreId, path: Path, primary: Path, role: str, intent: str, operation: str,
+    environment: Mapping[str, str], *, final: bool,
+) -> Path | StoreRefusal:
+    """Validate an already constructed candidate; never open or modify it."""
+    def refuse(reason: str) -> StoreRefusal:
+        return StoreRefusal(store, reason)
+    if path == unavailable_store_path(store):
+        return refuse("store_missing")
+    if _is_worktree_store_slot(path, primary):
+        return refuse("worktree_local_store")
+    if operation == "replace" and path.is_symlink():
+        return refuse("symlink_replace_target")
+    parent = path.parent.resolve(strict=True)
+    if not parent.is_dir():
+        return refuse("parent_missing")
+    resolved = parent / path.name
+    if _is_worktree_store_slot(resolved, primary):
+        return refuse("worktree_local_store")
+    locality = _store_locality(parent)
+    if locality != "local":
+        return refuse(f"locality_{locality}")
+    if role != "active":
+        # Include absent slots, invalid selectors, configured stores and historical
+        # generations. Changing a role cannot turn a live store into an output.
+        for filename, key in (STORE_FILES["sources"], STORE_FILES["vesum"]):
+            canonical = primary / "data" / filename
+            active = [canonical]
+            if key in environment:
+                raw = environment[key]
+                if not raw.strip():
+                    return refuse("empty_override")
+                if raw.lower().startswith("file:"):
+                    return refuse("uri_override")
+                configured = Path(raw)
+                if not configured.is_absolute():
+                    return refuse("relative_override")
+                active.append(configured)
+            for live in active:
+                if path == live or resolved == live or path.resolve() == live.resolve():
+                    return refuse("target_is_active_store")
+                if live.exists() and path.exists() and path.samefile(live):
+                    return refuse("target_is_active_store")
+                if live.exists() and _store_locality(live.resolve()) != "local":
+                    return refuse("locality_" + _store_locality(live.resolve()))
+        if GENERATIONS_DIRNAME in resolved.parts or GENERATIONS_DIRNAME in path.resolve().parts:
+            return refuse("target_is_active_store")
+    if path.is_symlink() and not path.exists():
+        return refuse("store_missing")
+    if not path.exists():
+        return resolved if intent == "create" else refuse("store_missing")
+    # Preflight does not select a generation for the caller. That decision is
+    # made only by resolve_store_for_write, after store_writer has acquired it.
+    if not final and store == "sources" and _names_selector(path):
+        return path
+    resolved = path.resolve(strict=True)
+    if _is_worktree_store_slot(resolved, primary):
+        return refuse("worktree_local_store")
+    if not resolved.is_file():
+        return refuse("not_a_file")
+    locality = _store_locality(resolved)
+    if locality != "local":
+        return refuse(f"locality_{locality}")
+    return resolved
+
+
+def _prepare_store_write_target(
+    store: StoreId, repository_root: Path | None = None, *,
+    intent: Literal["update", "create"], operation: Literal["sqlite", "replace"] = "sqlite",
+    target: ExplicitStoreWriteTarget | None = None, env: Mapping[str, str] | None = None,
+) -> ExplicitStoreWriteTarget | StoreRefusal:
+    """Freeze selection and provenance before locking, without selecting a generation."""
+    if store not in STORE_FILES:
+        raise ValueError("unsupported logical store")
+    if store == "lexdata":
+        return StoreRefusal(store, "unsupported_write_store")
+    if target is not None and not isinstance(target, ExplicitStoreWriteTarget):
+        return StoreRefusal(store, "invalid_binding" if isinstance(target, (StoreBinding, WriteStoreBinding))
+                            else "invalid_target")
+    if intent not in {"update", "create"} or operation not in {"sqlite", "replace"}:
+        return StoreRefusal(store, "invalid_target")
+    role = target.role if target is not None else "active"
+    if role not in {"active", "staging", "shadow"}:
+        return StoreRefusal(store, "invalid_target")
+    if store == "sources" and operation == "replace":
+        return StoreRefusal(store, "sources_replace_forbidden")
+    if role == "active" and intent == "create":
+        return StoreRefusal(store, f"active_{store}_create_forbidden")
+    if role == "staging" and operation == "replace":
+        return StoreRefusal(store, "invalid_target")
+    try:
+        root = default_repository_root(repository_root).resolve()
+        primary = main_checkout_root(root).resolve()
+        filename, key = STORE_FILES[store]
+        own = root / "data" / filename
+        if root != primary and os.path.lexists(own):
+            return StoreRefusal(store, "worktree_local_store")
+        if isinstance(target, _PreparedStoreWriteTarget):
+            environment = dict(target.environment)
+            raw, provenance = str(target.location), target.provenance
+        else:
+            environment = dict(os.environ if env is None else env)
+            if target is not None:
+                raw, provenance = str(target.location), "explicit"
+            elif key in environment:
+                raw, provenance = environment[key], key
+            else:
+                raw, provenance = str(primary / "data" / filename), "primary_checkout"
+        if not raw.strip():
+            return StoreRefusal(store, "empty_override")
+        if raw.lower().startswith("file:"):
+            return StoreRefusal(store, "uri_override")
+        path = Path(raw)
+        if ".." in path.parts:
+            return StoreRefusal(store, "invalid_target")
+        if not path.is_absolute():
+            if role == "active" or provenance != "explicit":
+                return StoreRefusal(store, "relative_override")
+            path = root / path
+        checked = _validate_write_candidate(store, path, primary, role, intent, operation, environment, final=False)
+        if isinstance(checked, StoreRefusal):
+            return checked
+        return _PreparedStoreWriteTarget(path, role, provenance,
+                                         tuple((key, environment[key]) for _, key in STORE_FILES.values()
+                                               if key in environment))
+    except FileNotFoundError:
+        return StoreRefusal(store, "parent_missing")
+    except (OSError, RuntimeError, ValueError):
+        return StoreRefusal(store, "store_unavailable")
+
+
+def resolve_store_for_write(
+    store: StoreId, repository_root: Path | None = None, *,
+    intent: Literal["update", "create"], operation: Literal["sqlite", "replace"] = "sqlite",
+    target: ExplicitStoreWriteTarget | None = None, env: Mapping[str, str] | None = None,
+) -> WriteStoreBinding | StoreRefusal:
+    """Resolve a write location without connection or mutation; Sources needs its owner's lock."""
+    prepared = _prepare_store_write_target(store, repository_root, intent=intent, operation=operation,
+                                          target=target, env=env)
+    if isinstance(prepared, StoreRefusal):
+        return prepared
+    assert isinstance(prepared, _PreparedStoreWriteTarget)
+    try:
+        path = Path(prepared.location)
+        primary = main_checkout_root(default_repository_root(repository_root).resolve()).resolve()
+        if store == "sources":
+            from scripts.lib.readonly_sqlite import (
+                _store_writers,
+                _store_writers_lock,
+                inherited_store_writer,
+                writable_store_refusal,
+            )
+
+            ref = store_kind(path)
+            requires_lock = prepared.provenance == "primary_checkout" or _names_selector(path)
+            if requires_lock and (ref.kind not in {"selector", "legacy_live"}
+                                  or ref.selector != path or ref.lock_dir != path.parent):
+                return StoreRefusal(store, "store_unavailable")
+            if ref.kind == "generation":
+                return StoreRefusal(store, "generation_named_directly")
+            if requires_lock or ref.kind in {"selector", "legacy_live"}:
+                if ref.lock_dir is None:
+                    return StoreRefusal(store, "writer_lock_not_held")
+                with _store_writers_lock:
+                    selector = _store_writers.get(os.path.realpath(ref.lock_dir))
+                if selector is None:
+                    inherited = inherited_store_writer(ref.lock_dir)
+                    selector = None if inherited is None else inherited[1]
+                if selector is None:
+                    return StoreRefusal(store, "writer_lock_not_held")
+                if Path(os.path.abspath(selector)) != Path(os.path.abspath(path)):
+                    return StoreRefusal(store, "not_selected_generation")
+                state = inspect_selector(path)
+                if state.layout not in {"selector", "legacy_file"}:
+                    return StoreRefusal(store, state.reason)
+                if reason := writable_store_refusal(path):
+                    return StoreRefusal(store, reason)
+        checked = _validate_write_candidate(store, path, primary, prepared.role, intent, operation,
+                                            dict(prepared.environment), final=True)
+        if isinstance(checked, StoreRefusal):
+            return checked
+        uri = checked.as_uri() + ("?mode=rwc" if intent == "create" else "?mode=rw")
+        return WriteStoreBinding(store, checked, intent, operation, prepared.role, prepared.provenance,
+                                 uri if operation == "sqlite" else None)
     except FileNotFoundError:
         return StoreRefusal(store, "store_missing")
     except (OSError, RuntimeError, ValueError):

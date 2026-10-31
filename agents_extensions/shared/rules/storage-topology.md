@@ -132,3 +132,58 @@ file rather than using the base-blob shortcut. Joins onto a store filename from
 an unresolved anchor and helpers taking `data` plus a store filename are also
 findings, except paths with test-fixture provenance. Only declared resolver
 functions may build new repository store paths.
+
+## Declared write locations (#9977)
+
+The 88 selected caller identities and frozen additional consumers use declared
+store contracts. Policy identities, the legacy Sources resolver, the mirror
+publisher and the nine explicit-input ingest writers retain their recorded
+#9937 dispositions; this slice does not claim a universal writer migration.
+
+Readers resolve `StoreBinding` at call time with `resolve_store` and open it
+through `open_readonly`. `WriteStoreBinding` is a separate type. Writers call
+`resolve_store_for_write` with explicit intent (`update` or `create`), operation
+(`sqlite` or `replace`) and, for explicit inputs, `ExplicitStoreWriteTarget`.
+An explicit target takes precedence over the environment and primary checkout.
+Invalid inputs never fall back. Resolution opens no connection and creates no
+file, directory, backup or link. Refusals contain only store and reason.
+
+`active` defaults to update and never allows create for Sources or VESUM.
+`staging` admits a separate SQLite target and explicit creation. `shadow` also
+admits whole-file VESUM replacement. Both output roles refuse canonical slots,
+configured active locations and aliases by resolved path or inode. All roles
+refuse conventional store slots in non-primary Git checkouts, even absent slots.
+Relative staging/shadow inputs are anchored to the calling checkout; active and
+environment inputs must be absolute. Parent traversal, network and unknown
+locality are refused. Replacement refuses leaf symlinks. SQLite URIs use only
+`Path.as_uri()` and `mode=rw` or `mode=rwc`.
+
+The connection owner freezes `_prepare_store_write_target` before acquiring
+`generations.store_writer(request.location)`. It resolves the final Sources
+binding inside that context, keeps the lock through commit/rollback and explicit
+connection closure, and never caches a binding beyond that lifetime. The private
+helper selects the unresolved request only. Invalid declarations, slots,
+locality and staging aliases are refused before a live lock is entered.
+Generation selection and validation occur under the lock. Primary and selector
+requests require selector/legacy-live classification and a registered or
+inherited holder for the exact selector and lock directory. Classification
+errors refuse; they cannot fall back to fixture behaviour. Plain fixtures and
+staged copies retain lockless operation. Inherited locks are reused without
+nested acquisition. The existing lock registry is process-wide, including
+threads; bindings are location validation, not OS capabilities.
+
+Sources create with active role returns `active_sources_create_forbidden`;
+VESUM returns `active_vesum_create_forbidden`. Sources replacement returns
+`sources_replace_forbidden`; selection changes only through `publish_generation`.
+`lexdata` returns `unsupported_write_store` before target or environment access.
+Bootstrap and publication require their existing operator maintenance authority.
+
+Dispatchers provision no Sources or VESUM worktree entries. AGY requires an
+empty worktree store slot and one primary trust anchor agreed by Git common-dir
+and `main_checkout_root`. It presents only the selected generation, its existing
+WAL/SHM sidecars read-only, and the exact relative selector symlink, or the
+supported legacy regular file. It exposes no history or receipts. It creates no
+private or writable sidecars and never uses `immutable=1`. The positive canary
+resolves, opens read-only and queries inside the sandbox. If read-only WAL
+access cannot work without sidecars it returns a typed refusal; the Sources
+relay remains available. Existing write-denial, secret and network probes bind.
