@@ -1,0 +1,32 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 0,
+    "notes_count": 0,
+    "standard_count": 1,
+    "texts_count": 3,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 2
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml",
+    "sha256": "34d289bdda9ca3f3a82c7439240fcff001d3e2fa791df097b44a7b2c04fec6b7"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml.lock",
+    "sha256": "866f355a98705f993a2e4fb1cf6d7d3024a8233c77c4b622d85baac8b2a7294a"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "things-have-gender",
+  "status": "ok",
+  "strict": true,
+  "warnings": []
+}
