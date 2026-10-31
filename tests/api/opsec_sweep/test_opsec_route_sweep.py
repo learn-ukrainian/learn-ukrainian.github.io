@@ -154,7 +154,9 @@ _PATH_MUTATION_EVENTS = {
     "shutil.move": (0, 1),
     "shutil.rmtree": (0,),
 }
-_SPAWN_EVENTS = frozenset({"os.exec", "os.fork", "os.forkpty", "os.posix_spawn", "os.spawn", "os.system", "subprocess.Popen"})
+_SPAWN_EVENTS = frozenset(
+    {"os.exec", "os.fork", "os.forkpty", "os.posix_spawn", "os.spawn", "os.system", "subprocess.Popen"}
+)
 
 
 class _MutationSideEffectGuard:
@@ -546,7 +548,9 @@ def _validate_known_leaks(rows: list[dict[str, str]], findings: list[opsec_scan.
         assert row.get("owner"), f"known leak row has no owner: {row['id']}"
         assert row.get("operation"), f"known leak row has no operation: {row['id']}"
         assert row.get("field"), f"known leak row has no field: {row['id']}"
-        tracking_issues.assert_cites_open_issue(f"known leak row {row['id']}", row.get("issue"), row["expiry"], tracking)
+        tracking_issues.assert_cites_open_issue(
+            f"known leak row {row['id']}", row.get("issue"), row["expiry"], tracking
+        )
 
 
 def _load_approved_exemptions() -> list[dict[str, str]]:
@@ -660,6 +664,8 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     records = registry.build_registry(api_main.app)
     assert len(records) == registry.FROZEN_HTTP_OPERATION_COUNT + registry.FROZEN_WEBSOCKET_ROUTE_COUNT
     assert registry.unrecorded_operations(api_main.app, records) == []
+    assert registry.enumerate_framework_exemptions(api_main.app) == tuple(sorted(registry.FRAMEWORK_EXEMPT_OPERATIONS))
+    assert "GET /metrics" in {operation.key for operation in registry.FRAMEWORK_EXEMPT_OPERATIONS}
     assert {record.classification for record in records} >= {"read", "mutation", "stream"}
     by_key = {record.key: record for record in records}
     assert {

@@ -27,6 +27,8 @@ from scripts.api.resilience import TimedSQLiteConnection, resilience_middleware
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
 def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
     app = api_main.create_app(production_context())
 
@@ -283,6 +285,7 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
 
 def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
     """Admin / ops / git-hygiene routes read only the app's MonitorContext."""
+
     @asynccontextmanager
     async def no_lifespan(_app):
         yield
@@ -382,9 +385,7 @@ def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
         assert second_browse["total"] == 1
         assert second_browse["images"][0]["name"] == "second.png"
         assert second_browse["images"][0]["grade"] == "grade-02"
-        assert first_browse["images"][0]["name"] not in {
-            image["name"] for image in second_browse["images"]
-        }
+        assert first_browse["images"][0]["name"] not in {image["name"] for image in second_browse["images"]}
 
         first_stats = first_client.get("/api/sources/stats").json()
         second_stats = second_client.get("/api/sources/stats").json()
@@ -479,11 +480,7 @@ def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
         config = root / "scripts" / "config"
         config.mkdir(parents=True)
         (config / "issue_streams.yaml").write_text(
-            "schema_version: 1\n"
-            "streams:\n"
-            f"  {stream_id}:\n"
-            f"    title: {title}\n"
-            f"    epics: [{epic}]\n",
+            f"schema_version: 1\nstreams:\n  {stream_id}:\n    title: {title}\n    epics: [{epic}]\n",
             encoding="utf-8",
         )
 
@@ -496,12 +493,8 @@ def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
 
     first_ctx = fixture_context(first_root)
     second_ctx = fixture_context(second_root)
-    api_main.seed_manifest_inventory(
-        first_root, store=first_ctx.stores.epics_store, handoff_root=first_root
-    )
-    api_main.seed_manifest_inventory(
-        second_root, store=second_ctx.stores.epics_store, handoff_root=second_root
-    )
+    api_main.seed_manifest_inventory(first_root, store=first_ctx.stores.epics_store, handoff_root=first_root)
+    api_main.seed_manifest_inventory(second_root, store=second_ctx.stores.epics_store, handoff_root=second_root)
     assert first_ctx.stores.work_in_flight is not None
     assert second_ctx.stores.work_in_flight is not None
     first_ctx.stores.work_in_flight["first-only"] = "sentinel"
@@ -670,9 +663,7 @@ def _prometheus_value(body: str, name: str, labels: dict[str, str]) -> float:
     return total
 
 
-def test_metrics_endpoint_counts_requests_and_5xx_errors(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_metrics_endpoint_counts_requests_and_5xx_errors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Request totals and 5xx counters use route templates, never raw paths."""
 
     @asynccontextmanager
@@ -697,9 +688,8 @@ def test_metrics_endpoint_counts_requests_and_5xx_errors(
 
         metrics = client.get("/metrics")
         assert metrics.status_code == 200
-        content_type = metrics.headers["content-type"]
-        assert content_type.startswith("text/plain")
-        assert "version=0.0.4" in content_type
+        pinned_type = "text/plain; version=0.0.4; charset=utf-8"
+        assert metrics.headers["content-type"] == pinned_type
         body = metrics.text
         assert "# TYPE monitor_http_requests_total counter" in body
         assert "# TYPE monitor_http_request_duration_seconds histogram" in body
@@ -718,3 +708,12 @@ def test_metrics_endpoint_counts_requests_and_5xx_errors(
         assert _prometheus_value(body, "monitor_http_responses_5xx_total", missing_labels) == 0
         assert _prometheus_value(body, "monitor_http_request_duration_seconds_count", error_labels) == 1
         assert _prometheus_value(body, "monitor_http_request_duration_seconds_sum", error_labels) >= 0
+
+        for accept in (
+            "application/openmetrics-text; version=1.0.0",
+            "text/plain; version=1.0.0",
+        ):
+            pinned = client.get("/metrics", headers={"Accept": accept})
+            assert pinned.status_code == 200
+            assert pinned.headers["content-type"] == pinned_type
+            assert "# EOF" not in pinned.text

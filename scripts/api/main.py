@@ -1845,8 +1845,9 @@ _HTTP_METHODS = frozenset({"DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", 
 
 def _route_template(scope: Scope) -> str:
     """Return the matched route template, never the request path or query."""
-    if scope.get("method") == "GET" and scope.get("path") == "/metrics":
-        return "/metrics"
+    metrics_path = PrometheusMetricsMiddleware.METRICS_PATH
+    if scope.get("method") == "GET" and scope.get("path") == metrics_path:
+        return metrics_path
     route = scope.get("route")
     path = getattr(route, "path", None)
     if isinstance(path, str) and path.startswith("/") and '"' not in path and "\n" not in path and "\r" not in path:
@@ -1861,12 +1862,38 @@ def _status_class(status_code: int) -> str:
     return "5xx"
 
 
+def _scope_without_accept(scope: Scope) -> Scope:
+    """Return a scope whose ``Accept`` header is absent.
+
+    ``prometheus_client`` negotiates OpenMetrics or Prometheus text 1.0.0 from
+    that header. With it removed, ``make_asgi_app`` stays on Prometheus text
+    0.0.4 (``text/plain; version=0.0.4; charset=utf-8``).
+    """
+    headers = scope.get("headers")
+    if not headers:
+        return scope
+    pinned = [header for header in headers if header[0].lower() != b"accept"]
+    if len(pinned) == len(headers):
+        return scope
+    return {**scope, "headers": pinned}
+
+
 class PrometheusMetricsMiddleware:
     """Record request totals, latency, and 5xx responses, and serve GET /metrics.
 
-    The exposition body comes from ``prometheus_client.make_asgi_app``. The
-    process still binds the existing loopback listener; this adds no socket.
+    Exposition is pinned to Prometheus text 0.0.4
+    (``text/plain; version=0.0.4; charset=utf-8``). ``Accept`` is removed
+    before ``prometheus_client.make_asgi_app`` builds the body, so every
+    response uses that content type. Metric names, labels, and counting are
+    unchanged. The process still binds the existing loopback listener; this
+    adds no socket.
+
+    ``METRICS_PATH`` is the path the route inventory records with FastAPI's
+    framework routes. Those paths are served and are outside the OpenAPI
+    operation count.
     """
+
+    METRICS_PATH = "/metrics"
 
     def __init__(self, app: ASGIApp) -> None:
         registry = CollectorRegistry()
@@ -1906,8 +1933,8 @@ class PrometheusMetricsMiddleware:
             await send(message)
 
         try:
-            if scope.get("method") == "GET" and scope.get("path") == "/metrics":
-                await self._metrics_app(scope, receive, send_wrapper)
+            if scope.get("method") == "GET" and scope.get("path") == self.METRICS_PATH:
+                await self._metrics_app(_scope_without_accept(scope), receive, send_wrapper)
             else:
                 await self.app(scope, receive, send_wrapper)
         finally:

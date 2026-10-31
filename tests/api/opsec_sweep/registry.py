@@ -19,7 +19,7 @@ from datetime import date
 from typing import Any, Literal
 
 from fastapi.routing import APIRoute
-from starlette.routing import Mount, WebSocketRoute
+from starlette.routing import Mount, Route, WebSocketRoute
 
 from scripts.orchestration import thread_handoff
 
@@ -125,6 +125,19 @@ class Operation:
     @property
     def key(self) -> str:
         return f"{self.method} {self.path_template}"
+
+
+# Served paths outside the OpenAPI operation count. The FastAPI entries are
+# ``include_in_schema=False`` framework routes. ``GET /metrics`` is
+# ``PrometheusMetricsMiddleware.METRICS_PATH``, listed with them so the
+# inventory names every such path the operation walk does not.
+FRAMEWORK_EXEMPT_OPERATIONS = (
+    Operation("GET", "/docs"),
+    Operation("GET", "/docs/oauth2-redirect"),
+    Operation("GET", "/metrics"),
+    Operation("GET", "/openapi.json"),
+    Operation("GET", "/redoc"),
+)
 
 
 @dataclass(frozen=True)
@@ -270,6 +283,58 @@ def enumerate_websocket_routes(app: Any) -> tuple[Operation, ...]:
     return tuple(sorted(operations))
 
 
+def _schema_excluded_operations(node: Any, prefix: str = "") -> Iterable[Operation]:
+    """Yield GET/POST-style operations FastAPI serves outside the OpenAPI count.
+
+    Framework routes are Starlette ``Route`` objects with
+    ``include_in_schema=False``. The operation walk skips them because they
+    are not ``APIRoute`` entries.
+    """
+    original_router = getattr(node, "original_router", None)
+    if original_router is not None:
+        context = getattr(node, "include_context", None)
+        included_prefix = getattr(context, "prefix", "") if context is not None else ""
+        yield from _schema_excluded_operations(original_router, _join_path(prefix, included_prefix))
+        return
+
+    if isinstance(node, Mount):
+        mount_prefix = _join_path(prefix, getattr(node, "path", ""))
+        for child in getattr(node, "routes", ()):
+            yield from _schema_excluded_operations(child, mount_prefix)
+        return
+
+    if isinstance(node, APIRoute):
+        return
+
+    if isinstance(node, Route) and not getattr(node, "include_in_schema", True):
+        path = normalize_path_template(_join_path(prefix, node.path))
+        methods = getattr(node, "methods", None) or set()
+        for method in sorted(methods & HTTP_METHODS):
+            yield Operation(method, path)
+        return
+
+    routes = getattr(node, "routes", None)
+    if routes is None:
+        return
+    for child in routes:
+        yield from _schema_excluded_operations(child, prefix)
+
+
+def _middleware_metric_operations(app: Any) -> Iterable[Operation]:
+    """Yield ``GET`` paths served by middleware that publishes ``METRICS_PATH``."""
+    for middleware in getattr(app, "user_middleware", ()):
+        path = getattr(getattr(middleware, "cls", None), "METRICS_PATH", None)
+        if isinstance(path, str) and path.startswith("/"):
+            yield Operation("GET", normalize_path_template(path))
+
+
+def enumerate_framework_exemptions(app: Any) -> tuple[Operation, ...]:
+    """Return the served paths the OpenAPI operation count does not include."""
+    operations = set(_schema_excluded_operations(app))
+    operations.update(_middleware_metric_operations(app))
+    return tuple(sorted(operations))
+
+
 def openapi_operations(app: Any) -> tuple[Operation, ...]:
     """Return OpenAPI's method/template denominator for the cross-check."""
     operations: set[Operation] = set()
@@ -320,6 +385,13 @@ def assert_frozen_denominator(app: Any) -> None:
     assert digest == FROZEN_DENOMINATOR_SHA256, (
         "Monitor API route denominator changed without a registry review: "
         f"sha256={digest} expected={FROZEN_DENOMINATOR_SHA256}"
+    )
+    exemptions = enumerate_framework_exemptions(app)
+    expected_exemptions = tuple(sorted(FRAMEWORK_EXEMPT_OPERATIONS))
+    assert exemptions == expected_exemptions, (
+        "Monitor API framework-path inventory changed: "
+        f"got={[operation.key for operation in exemptions]} "
+        f"expected={[operation.key for operation in expected_exemptions]}"
     )
 
 

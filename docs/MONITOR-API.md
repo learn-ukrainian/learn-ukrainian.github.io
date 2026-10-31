@@ -369,6 +369,27 @@ Related MCP source lookup: `mcp__sources__search_external` searches the chunked 
 
 ---
 
+## Process metrics — `GET /metrics`
+
+`GET /metrics` returns Prometheus text exposition 0.0.4. The content type is
+pinned to `text/plain; version=0.0.4; charset=utf-8`. Every response uses
+that type, including when the caller sends an `Accept` header. The body
+carries the process request total (`monitor_http_requests_total`), the
+latency histogram (`monitor_http_request_duration_seconds`), and the 5xx
+counter (`monitor_http_responses_5xx_total`). Labels are the HTTP method,
+the route template, and the status class. Names, labels, and counting stay
+on that contract.
+
+The endpoint is middleware, so it sits outside the OpenAPI operation count.
+The HTTP route inventory accounts for it in the same exempt set as FastAPI's
+framework paths: `GET /docs`, `GET /docs/oauth2-redirect`, `GET /openapi.json`,
+and `GET /redoc`. That set is `FRAMEWORK_EXEMPT_OPERATIONS` in
+`tests/api/opsec_sweep/registry.py`.
+
+```bash
+curl -sD - -o /dev/null http://localhost:8765/metrics
+```
+
 ## Health & Config — `/api/`
 
 ### `GET /api`
