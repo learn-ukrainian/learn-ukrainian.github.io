@@ -404,14 +404,21 @@ def _agy_follow_up(spec: TaskSpec, record: dict, parsed: ParsedResult, started: 
         named = ", ".join(children)
         return None, replace(parsed, error=f"agy_child_still_running: {named}")
     if resumes >= CONTINUATION_LIMIT or time.monotonic() >= deadline:
-        return None, parsed
+        return None, _agy_unfinished(parsed)
     if not incomplete and not saw_children:
         return None, parsed
     log = spec.final_file.with_suffix(".log")
     conversation = conversation_id(log) if log.is_file() else None
     if not conversation:
-        return None, parsed
+        return None, _agy_unfinished(parsed)
     return conversation, parsed
+
+
+def _agy_unfinished(parsed: ParsedResult) -> ParsedResult:
+    """An interim success is not final when no continuation produced a later result."""
+    if parsed.error:
+        return parsed
+    return replace(parsed, error="agy: incomplete run")
 
 
 # Dispositions that can change once other processes end, the tree is committed or reverted, the work is
@@ -606,6 +613,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         record["runtime_input_sha256"] = hashlib.sha256(invocation.stdin or b"").hexdigest()
         pending_conversation = None
         continuations = 0
+        parsed = None
         try:
             invocation = admission.claude_launch(spec, invocation)
             if spec.agent == "claude" and spec.claude_account not in (None, "a"):
@@ -644,11 +652,16 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 from scripts.dispatcher.providers.agy import continuation
 
                 invocation = continuation(runtime_context.build(spec, child_env(spec)), pending_conversation)
+            # The first launch keeps the timeout the caller passed. Only a continuation
+            # spends what remains of that same deadline, and a spent deadline does not
+            # become the unlimited timeout a zero means.
             launch_hard = hard_timeout
-            if hard_timeout > 0:
+            if pending_conversation and hard_timeout > 0:
                 launch_hard = max(0.0, hard_timeout - (time.monotonic() - started))
-            if pending_conversation and hard_timeout > 0 and launch_hard <= 0:
-                break
+                if launch_hard <= 0 and parsed is not None:
+                    parsed = _agy_unfinished(parsed)
+                    text = parsed.text
+                    break
             with tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdin, stdout_path.open("wb") as out, stderr_path.open(
                 "wb" if pending_conversation else "ab"
             ) as err:
