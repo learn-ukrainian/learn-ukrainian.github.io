@@ -713,8 +713,7 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
         git_runner=SafeGitRunner(_GIT),
     )
     if result.action != "removed":
-        raise Refusal(f"{reachability_refusal or result.reason or 'cleanup policy refused or removal failed'}; "
-                      "local work preserved")
+        raise Refusal(f"{reachability_refusal or 'cleanup policy refused or removal failed'}; local work preserved")
     return {"repo": repo.key, "verb": "worktree-remove", "removed": True}
 
 

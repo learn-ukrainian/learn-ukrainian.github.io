@@ -256,9 +256,9 @@ def replace(record: dict, path: Path | None = None, *, require_existing: bool = 
 def publish_failed_record(record: dict, path: Path) -> None:
     """Recover a damaged supervisor record as failure, never overwrite another run.
 
-    A record that cannot be read cannot prove it is this run's, and one that cannot be written cannot
-    publish the failure: every filesystem error is a typed ``TASK_RECORD_IO_ERROR``. A worktree already
-    reaped keeps its ``removed`` disposition.
+    A deleted record is published again as ``TASK_RECORD_DAMAGED``. Any other read error leaves the
+    record unable to prove it is this run's, and a lock or write error leaves the failure unpublished:
+    each is a typed ``TASK_RECORD_IO_ERROR``. A worktree already reaped keeps its ``removed`` disposition.
     """
     try:
         with task_state_lock(path):
