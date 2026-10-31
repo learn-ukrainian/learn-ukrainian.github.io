@@ -14,6 +14,10 @@ Add to the template's **Target** section:
 - the base ref and merge-base SHA, so the reviewer reviews `merge-base..exact head`;
 - the checks already run, with their results or CI run ids (reviewers do not re-run suites).
 
+For the `ukrainian` profile, identify the contracts in
+[`ukrainian-linguistics.md` §8](../../../rules/ukrainian-linguistics.md#ukrainian-linguistic-principles):
+Every Ukrainian-profile brief identifies these contracts and their applicability, including level, track, workflow, learner state where relevant, and explicit exceptions.
+
 Add a **Reply format** section:
 
 ```text
