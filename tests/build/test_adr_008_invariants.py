@@ -36,14 +36,14 @@ def test_correction_fully_revalidates(tmp_path: Path) -> None:
     module_dir = _module_dir(tmp_path)
     plan_path = tmp_path / "plan.yaml"
     validation_runs: list[list[str]] = []
-    reports = [_report("word_count"), _report()]
+    reports = [_report("formatting_standards"), _report()]
 
     def qg_runner() -> dict:
         validation_runs.append(list(linear_pipeline.PYTHON_QG_GATE_ORDER))
         return reports.pop(0)
 
     def writer_corrector(context: linear_pipeline.CorrectionContext) -> None:
-        assert context.gate == "word_count"
+        assert context.gate == "formatting_standards"
 
     result = linear_pipeline.run_python_qg_with_corrections(
         module_dir,
@@ -59,7 +59,7 @@ def test_correction_fully_revalidates(tmp_path: Path) -> None:
 def test_correction_does_not_regress_passing_gates(tmp_path: Path) -> None:
     module_dir = _module_dir(tmp_path)
     plan_path = tmp_path / "plan.yaml"
-    reports = [_report("word_count"), _report("russianisms_clean")]
+    reports = [_report("formatting_standards"), _report("russianisms_clean")]
 
     def qg_runner() -> dict:
         return reports.pop(0)
@@ -129,7 +129,7 @@ def test_one_attempt_per_gate(tmp_path: Path) -> None:
     attempts = 0
 
     def qg_runner() -> dict:
-        return _report("word_count")
+        return _report("formatting_standards")
 
     def writer_corrector(_context: linear_pipeline.CorrectionContext) -> None:
         nonlocal attempts
@@ -143,4 +143,4 @@ def test_one_attempt_per_gate(tmp_path: Path) -> None:
     )
 
     assert attempts == 1
-    assert result["gates"]["correction_terminal"]["gate"] == "word_count"
+    assert result["gates"]["correction_terminal"]["gate"] == "formatting_standards"

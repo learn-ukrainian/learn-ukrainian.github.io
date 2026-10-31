@@ -1,4 +1,4 @@
-"""Tests for exact authored-word floors plus the retained callout minimum."""
+"""Tests for informational authored-word counts and the retained callout minimum."""
 
 import pytest
 
@@ -7,11 +7,11 @@ from scripts.build.linear_pipeline import (
     _word_count_gate,
 )
 
-# ----- word_count tolerance --------------------------------------------------
+# ----- descriptive word counts -----------------------------------------------
 
 
 def test_word_count_at_target_passes() -> None:
-    """Baseline: count exactly at target passes."""
+    """A count at the legacy target is informational."""
     text = "word " * 1200
     report = _word_count_gate(text, 1200)
     assert report["passed"] is True
@@ -19,19 +19,19 @@ def test_word_count_at_target_passes() -> None:
 
 
 def test_word_count_below_exact_floor_fails() -> None:
-    """A reviewed plan floor is exact; even a small shortfall remains blocked."""
+    """A small shortfall from a legacy target never fails acceptance."""
     text = "word " * 1197
     report = _word_count_gate(text, 1200)
-    assert report["passed"] is False
+    assert report["passed"] is True
     assert report["count"] == 1197
-    assert report["min_with_tolerance"] == 1200
+    assert "min_with_tolerance" not in report
 
 
 def test_word_count_14pct_below_target_fails() -> None:
-    """Regression: gemini-tools 1031 vs A1 target 1200 (14% short) still fails."""
+    """A larger shortfall also remains informational."""
     text = "word " * 1031
     report = _word_count_gate(text, 1200)
-    assert report["passed"] is False
+    assert report["passed"] is True
     assert report["count"] == 1031
 
 
@@ -46,6 +46,7 @@ def test_word_count_excludes_primary_reading_fence() -> None:
     report = _word_count_gate(text, 20)
 
     assert report["count"] == 10
+    assert report["passed"] is True
 
 
 # ----- callout_min ------------------------------------------------------------
