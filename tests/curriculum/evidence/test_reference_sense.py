@@ -1888,7 +1888,11 @@ def test_leak_scan_gates_uncited_or_altered_fixture_row(bound, tmp_path, case):
         elif case == "newline":
             record["note"] = "invented\nconfidential destination"
 
-    extra = {"probe.jsonl": '{"note": "\\u0069nvented confidential destination"}\n{}\n'} if case == "jsonl" else None
+    extra = (
+        {"probe.jsonl": '{"note": "\\u0069nvented confidential destination", "tag": "left\u2028right"}\n{}\n'}
+        if case == "jsonl"
+        else None
+    )
     result = _capture_fixture_scan(
         bound, tmp_path, mutate, escape_notes=case in {"row_extra", "record_extra"}, extra_files=extra
     )

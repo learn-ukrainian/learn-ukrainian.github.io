@@ -13,6 +13,7 @@ from pathlib import Path
 import yaml
 
 from scripts.common import github_client
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
 
 from . import lock, registry, sources
@@ -664,14 +665,15 @@ def leak_scan(
             if Path(path).suffix != ".jsonl":
                 raise ValueError("structured_scan_decode_failed") from error
             roots, offset = [], 0
-            for line in text.splitlines(keepends=True):
+            for line in jsonl_lines(text):
                 if line.strip():
                     try:
                         json.loads(line)
                         roots.append((yaml.compose(line, Loader=loader), offset))
                     except (ValueError, yaml.YAMLError) as error:
                         raise ValueError("structured_scan_decode_failed") from error
-                offset += len(line)
+                end = text.find("\n", offset)
+                offset = len(text) if end == -1 else end + 1
         seen, pending = set(), roots
         while pending:
             node, offset = pending.pop()
