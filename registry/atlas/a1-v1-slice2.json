@@ -267,9 +267,7 @@
     "keys": 12,
     "selected_rows": 19
   },
-  "example_approvals": {
-
-  },
+  "example_approvals": {"wr_b6a442744e10433335755bbde858b04a7a1c0cc9ec82635f6eaae2e0bdc41c11":{"entry_id":425814,"quotation":"Моя школа.","receipt_sha256":"13b8ebcda5f0ac88c0db77dce9673022a129b02880223a280a5faf2d51d32575","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/12190#issuecomment-6537661822","review_result_sha256":"d616e239d5c555d82174c3ed0f6c8501183709663e198fd93143432e8e196b66","reviewed_head":"64521acd0d2c06dba9671248c62b5506b97912a6","reviewer_family":"google","reviewer_model":"gemini-3.8-flash-high","sense_id":"ws_bh5c8d2m67jf","source_sense_key":"vts:школа#1/1","sources_sha256":"0c1b4bd2cceb593f569c8d3e5f091a25413e60e1892b65d59cfd495204bc33ae","span":[617,627],"verdict":"APPROVE"}},
   "field_dependencies": {
     "antonyms": "exact source antonym group and reviewed sense alignment",
     "examples": "independent Gemini approval of exact text, source span, sense and A1 suitability",

@@ -30,7 +30,7 @@ from scripts.atlas.a1_card_receipts import (
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = "registry/atlas/a1-v1-slice2.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice2.json"
-MANIFEST_SHA256 = "2c8b08f3103fccfdbc50ea992dd16775ea01aa79c83cc3d51b787775e4ef3345"
+MANIFEST_SHA256 = "0a1f990cede86d08e3683851883908514296d33a02763e83f5f0852808b7eebc"
 VERSION = "a1-slice2-v1"
 CARD_FIELDS = (*assembly.CARD_FIELDS, "mwe_form", "mwe_frame")
 SENSE_FIELDS = assembly.SENSE_FIELDS
