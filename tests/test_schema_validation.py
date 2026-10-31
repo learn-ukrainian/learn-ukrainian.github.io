@@ -118,12 +118,12 @@ class TestPlanYamlSchemaCheck:
         violations = check_plan_yaml_schema(str(plan_path), "b1", 1)
         assert all(v["severity"] != "error" for v in violations)
 
-    def test_missing_word_target(self, valid_plan_data, tmp_path):
+    def test_missing_word_target_is_not_a_schema_error(self, valid_plan_data, tmp_path):
         del valid_plan_data["word_target"]
         path = _write_yaml(tmp_path, "plans/b1", "test.yaml", valid_plan_data)
         violations = check_plan_yaml_schema(str(path), "b1", 1)
         error_violations = [v for v in violations if v["severity"] == "error"]
-        assert len(error_violations) > 0
+        assert error_violations == []
 
     @pytest.mark.repo_wide
     def test_a2_plans_match_module_schema(self):

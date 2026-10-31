@@ -706,11 +706,16 @@ def _is_positive_integer(value: Any) -> bool:
 
 
 def validate_size_policy_override(plan: Mapping[str, Any]) -> list[str]:
-    """Return deterministic schema errors for an explicit plan size override.
+    """Sizing overrides are deprecated metadata and never accept or refuse a plan."""
+    return []
 
-    An absent ``size_policy`` is intentionally valid: generic dossier/evidence
-    bands remain the policy for legacy plans.  A present policy must be fully
-    reviewed and self-contained before it can replace those bands.
+
+def _legacy_size_policy_shape_errors(plan: Mapping[str, Any]) -> list[str]:
+    """Shape notes for a descriptive override. Callers must not treat these as acceptance.
+
+    An absent ``size_policy`` stays on the generic dossier/evidence record.
+    A present policy is copied into that descriptive record only when it is
+    fully reviewed and self-contained.
     """
     if "size_policy" not in plan:
         return []
@@ -783,10 +788,9 @@ def validate_size_policy_override(plan: Mapping[str, Any]) -> list[str]:
 def explicit_size_policy_override(
     plan: Mapping[str, Any],
 ) -> tuple[SizePolicyOverride | None, list[str]]:
-    """Return a parsed override or the actionable errors that reject it."""
-    errors = validate_size_policy_override(plan)
-    if errors or "size_policy" not in plan:
-        return None, errors
+    """Return a parsed descriptive override. Shape problems are ignored."""
+    if "size_policy" not in plan or _legacy_size_policy_shape_errors(plan):
+        return None, []
 
     policy = plan["size_policy"]
     assert isinstance(policy, Mapping)
