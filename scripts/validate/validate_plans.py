@@ -51,40 +51,6 @@ def validate_plan(plan_path: Path) -> list[dict]:
             'message': f"Section '{dup}' appears multiple times"
         })
 
-    # Check for negative word counts
-    for section in outline:
-        if isinstance(section, dict):
-            words = section.get('words', 0)
-            if isinstance(words, (int, float)) and words < 0:
-                issues.append({
-                    'severity': 'error',
-                    'type': 'NEGATIVE_WORD_COUNT',
-                    'message': f"Section '{section.get('section', 'unknown')}' has negative word count: {words}"
-                })
-
-    # Check word_target exists and is positive
-    word_target = plan.get('word_target', 0)
-    if not word_target or word_target <= 0:
-        issues.append({
-            'severity': 'warning',
-            'type': 'INVALID_WORD_TARGET',
-            'message': f"Invalid word_target: {word_target}"
-        })
-
-    # Check section word counts sum approximately to word_target
-    total_section_words = sum(
-        s.get('words', 0) for s in outline
-        if isinstance(s, dict) and isinstance(s.get('words'), (int, float))
-    )
-    if word_target and total_section_words > 0:
-        ratio = total_section_words / word_target
-        if ratio < 0.5 or ratio > 2.0:
-            issues.append({
-                'severity': 'warning',
-                'type': 'WORD_COUNT_MISMATCH',
-                'message': f"Section words ({total_section_words}) don't match word_target ({word_target})"
-            })
-
     # Check required fields
     required_fields = ['module', 'level', 'title']
     for field in required_fields:

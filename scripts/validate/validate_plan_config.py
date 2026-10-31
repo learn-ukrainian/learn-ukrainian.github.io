@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 """
-Validate plan files against config.py before content generation.
+Validate plan structure before content generation.
 
-IMPORTANT: Run this BEFORE generating content or building modules to catch
-word_target mismatches early.
-
-This script should be integrated into:
-1. Pre-commit hooks
-2. CI/CD pipelines
-3. Module generation workflows
+Sizing metadata (word targets, section word budgets, budget sums, and
+size-policy overrides) is ignored. Objective and content-outline structure
+still fails the plan when it is missing.
 
 Usage:
     .venv/bin/python scripts/validate_plan_config.py                    # Validate all
@@ -29,13 +25,6 @@ import yaml
 # Add scripts directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from audit.config import get_word_target
-from audit.module_size_policy_audit import validate_size_policy_override
-
-# Tolerance for word_target mismatch
-# Under-target: 5% (plans should not be significantly under)
-# Over-target: 15% (outline budgets intentionally overshoot for writer flexibility)
-WORD_TARGET_UNDER_TOLERANCE = 0.05
-WORD_TARGET_OVER_TOLERANCE = 0.15
 
 
 def get_config_target(level: str, sequence: int = 1, focus: str | None = None,
@@ -83,7 +72,11 @@ def get_config_target(level: str, sequence: int = 1, focus: str | None = None,
 
 
 def validate_plan(plan_path: Path, level: str) -> list:
-    """Validate a single plan file. Returns list of errors."""
+    """Validate a single plan file. Returns list of errors.
+
+    ``level`` stays in the signature for existing callers. Acceptance does not
+    use it, and it does not apply a word-count target.
+    """
     errors = []
 
     try:
@@ -95,38 +88,9 @@ def validate_plan(plan_path: Path, level: str) -> list:
     if not plan:
         return ["Empty plan file"]
 
-    # Get targets
-    plan_target = plan.get('word_target', 0)
-    sequence = plan.get('sequence', 1)
-    focus = plan.get('focus')
-    slug = plan.get('slug', plan_path.stem)
-    config_target = get_config_target(level, sequence, focus, slug=slug)
-    size_policy_errors = validate_size_policy_override(plan)
-    errors.extend(size_policy_errors)
-    has_valid_size_policy_override = 'size_policy' in plan and not size_policy_errors
-
-    # Check word_target matches config
-    if plan_target == 0:
-        errors.append(f"Missing word_target (config expects {config_target})")
-    elif (
-        plan_target < config_target * (1 - WORD_TARGET_UNDER_TOLERANCE)
-        and not has_valid_size_policy_override
-    ):
-        # Only flag if plan is UNDER config target (over is allowed - more content is fine)
-        errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
-
-    # Check content_outline sums to word_target
     outline = plan.get('content_outline', [])
     if not outline:
         errors.append("Missing content_outline")
-    else:
-        outline_sum = sum(s.get('words', 0) for s in outline)
-        if outline_sum == 0:
-            errors.append("content_outline has no word budgets")
-        elif outline_sum < plan_target * (1 - WORD_TARGET_UNDER_TOLERANCE):
-            errors.append(f"content_outline sum ({outline_sum}) under word_target ({plan_target})")
-        elif outline_sum > plan_target * (1 + WORD_TARGET_OVER_TOLERANCE):
-            errors.append(f"content_outline sum ({outline_sum}) over word_target ({plan_target})")
 
     # Check required fields
     required_fields = ['module', 'level', 'title', 'objectives']
@@ -239,7 +203,6 @@ def main():
         sys.exit(0)
     else:
         print(f"❌ {total_invalid} plans have errors")
-        print("\nRun: .venv/bin/python scripts/fix_plan_word_targets.py --fix")
         sys.exit(1)
 
 

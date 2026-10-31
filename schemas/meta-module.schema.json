@@ -1,12 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Meta Module Schema v2.0",
-  "description": "Schema for self-contained module specs that enable agent-driven generation",
+  "description": "Schema for self-contained module specs that enable agent-driven generation. word_target and content_outline words are deprecated sizing metadata and are ignored by acceptance.",
   "type": "object",
   "required": [
     "id",
-    "version",
-    "word_target"
+    "version"
   ],
   "properties": {
     "module": {
@@ -165,7 +164,7 @@
     },
     "word_target": {
       "type": "integer",
-      "description": "Target word count for content"
+      "description": "Deprecated total word-count target. Ignored by acceptance."
     },
     "immersion": {
       "type": "string",
@@ -211,7 +210,6 @@
         "type": "object",
         "required": [
           "section",
-          "words",
           "points"
         ],
         "additionalProperties": false,
@@ -220,7 +218,8 @@
             "type": "string"
           },
           "words": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Deprecated section word budget. Ignored by acceptance."
           },
           "points": {
             "type": "array",

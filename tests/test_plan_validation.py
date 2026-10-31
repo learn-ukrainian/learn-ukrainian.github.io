@@ -61,10 +61,10 @@ class TestValidatePlan:
         }
         path = self._write_plan(tmp_path, plan)
         errors = validate_plan(path, 'b1')
-        assert any('Missing word_target' in e for e in errors)
+        assert errors == []
 
-    def test_target_mismatch(self, tmp_path):
-        """Plan target significantly below config = error."""
+    def test_low_word_target_is_ignored(self, tmp_path):
+        """A word target below the old config floor is not an error."""
         config_target = get_config_target('b1')
         plan = {
             'module': 'test-module',
@@ -78,7 +78,7 @@ class TestValidatePlan:
         }
         path = self._write_plan(tmp_path, plan)
         errors = validate_plan(path, 'b1')
-        assert any('word_target under config' in e for e in errors)
+        assert errors == []
 
     def test_valid_reviewed_size_policy_allows_bio_target_below_config(self, tmp_path):
         plan = {
@@ -102,7 +102,7 @@ class TestValidatePlan:
 
         assert not any('word_target under config' in error for error in errors)
 
-    def test_invalid_size_policy_keeps_bio_config_floor_check(self, tmp_path):
+    def test_invalid_size_policy_does_not_fail_the_plan(self, tmp_path):
         plan = {
             'module': 'test-module',
             'level': 'BIO',
@@ -122,9 +122,7 @@ class TestValidatePlan:
 
         errors = validate_plan(self._write_plan(tmp_path, plan), 'bio')
 
-        assert 'size_policy.floor_words (4100) must equal word_target (4200).' in errors
-        assert 'size_policy.basis must be a nonempty string.' in errors
-        assert any('word_target under config' in error for error in errors)
+        assert errors == []
 
     def test_missing_outline(self, tmp_path):
         target = get_config_target('b1')
@@ -139,7 +137,7 @@ class TestValidatePlan:
         errors = validate_plan(path, 'b1')
         assert any('Missing content_outline' in e for e in errors)
 
-    def test_outline_sum_mismatch(self, tmp_path):
+    def test_outline_sum_is_ignored(self, tmp_path):
         target = get_config_target('b1')
         plan = {
             'module': 'test-module',
@@ -153,13 +151,7 @@ class TestValidatePlan:
         }
         path = self._write_plan(tmp_path, plan)
         errors = validate_plan(path, 'b1')
-        # validate_plan's current phrasing is "content_outline sum (X)
-        # under word_target (Y)" / "over word_target (Y)". The earlier
-        # "doesn't match" wording was superseded when the over/under
-        # split was introduced to tolerate content overshoot.
-        assert any("content_outline sum" in e and ("under" in e or "over" in e) for e in errors), (
-            f"expected an outline-sum-mismatch error, got: {errors}"
-        )
+        assert errors == []
 
     def test_empty_plan(self, tmp_path):
         plan_path = tmp_path / "empty.yaml"
