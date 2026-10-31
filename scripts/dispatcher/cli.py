@@ -94,7 +94,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("max-budget-usd", None, "Spend cap in USD for a Claude API-key account, at most its configured amount "
          "(default: that amount)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
-        ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
+        ("output-schema", None, "Codex/AGY JSON object schema: repo-relative or absolute readable file "
+         "(default: existing review findings schema for AGY --require-review-verdict, otherwise none)"),
         ("research-role", None, "Research role metadata (default: none)"),
         ("research-task-family", None, "Research task family metadata (default: none)"),
         ("research-track", None, "Research track metadata (default: none)"),
@@ -136,7 +137,8 @@ def build_parser() -> argparse.ArgumentParser:
         dispatch.add_argument(f"--{flag}", action="append", default=[],
                               help="Excluded review subject, e.g. grok or xai (repeatable; default: none)")
     dispatch.add_argument("--require-review-verdict", action="store_true", default=None,
-                          help="Mark a review as requiring a verdict; read-only, metadata only (default: off)")
+                          help="Require an unambiguous review verdict; AGY uses the existing structured findings "
+                          "schema (read-only; default: off)")
     for flag in ("review-id", "attempt-id", "review-attempt"):
         dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest file for --review-attempt; all three "
                               "required, with a rendered --prompt-file; use --pinned-head, not --branch or --pr; "
@@ -330,8 +332,8 @@ def _dispatch(args) -> int:
         agent == "claude" and args.mode == "workspace-write" and providers.load("claude").model_id(args.model) == "claude-haiku-5-5"
     ):
         raise ValueError("--advisor is supported only for a workspace-write Claude Haiku 5.5 run")
-    if args.output_schema is not None and agent != "codex":
-        raise ValueError("--output-schema is supported only with the effective codex agent")
+    if args.output_schema is not None and agent not in {"codex", "agy"}:
+        raise ValueError("--output-schema is supported only with the effective codex or agy agent")
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent)):
         raise ValueError(refusal)
     deadlines(vars(args))
@@ -390,10 +392,19 @@ def _dispatch(args) -> int:
     prompt_path = _PromptPath(path.with_suffix(".prompt"))
     prompt_path.content = prompt
     options = {key: str(value) for key, value in vars(args).items() if value is not None and key != "prompt"}
-    if args.output_schema is not None:
+    output_schema = args.output_schema
+    if agent == "agy" and args.require_review_verdict and output_schema is None:
+        from scripts.review.review_contract import schema_path
+
+        output_schema = str(schema_path())
+    if output_schema is not None:
         from scripts.dispatcher.output_schema import bind
 
-        options.update(bind(args.output_schema, repo))
+        options.update(bind(output_schema, repo))
+        if agent == "agy":
+            from scripts.dispatcher.providers.agy import schema_argument
+
+            schema_argument(options)
     fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider", "codex_account")}
     spec = TaskSpec(
         task_id,

@@ -180,10 +180,29 @@ def _print_timeout(spec: TaskSpec) -> str:
     return f"{math.ceil(hard_timeout) + PRINT_TIMEOUT_MARGIN_S}s" if hard_timeout > 0 else "0s"
 
 
+def schema_argument(options: dict) -> str | None:
+    """Check the digest-bound schema before putting its JSON in one argv entry."""
+    from scripts.dispatcher.output_schema import load
+
+    schema = load(options)
+    if schema is None:
+        return None
+    try:
+        argument = json.dumps(schema, separators=(",", ":"), allow_nan=False)
+    except ValueError as exc:
+        raise ValueError("agy_output_schema_unsupported: schema must contain finite JSON values") from exc
+    # Linux permits at most 128 KiB including the NUL in one argument. Refuse before spawn.
+    if len(argument.encode("utf-8")) >= 128 * 1024:
+        raise ValueError("agy_output_schema_unsupported: schema exceeds the inline argument limit")
+    return argument
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["agy", "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"]
     argv += ["--model", transport_model(spec.model)]
     argv += ["--dangerously-skip-permissions", "--print-timeout", _print_timeout(spec)]
+    if (argument := schema_argument(spec.options)) is not None:
+        argv += ["--json-schema", argument]
     if spec.mode == "workspace-write":
         argv += ["--log-file", str(spec.final_file.with_suffix(".log"))]
     elif spec.mode == "read-only":
@@ -242,7 +261,9 @@ def continuation(invocation: Invocation, conversation: str) -> Invocation:
     return replace(invocation, argv=argv, stdin=stdin)
 
 
-def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
+def parse(
+    stdout: str, stderr: str, returncode: int, final_text: str | None, *, output_schema: dict | None = None,
+) -> ParsedResult:
     result, error, models = {}, None, set()
     terminal_seen, stream_clean = False, True
     open_steps: set[int] = set()
@@ -316,6 +337,18 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         )
     if returncode:
         error = f"agy: exited with status {returncode}"
+    if output_schema is not None:
+        from scripts.agent_runtime.adapters._output_schema import structured_result
+
+        structured = structured_result(
+            result.get("structured_output"), output_schema, returncode=returncode,
+            terminal_ok=not error and stream_clean and "structured_output" in result and result.get("status") == "SUCCESS",
+        )
+        return ParsedResult(
+            structured.response, usage if isinstance(usage, dict) else None,
+            error or (f"{structured.failure_code}: {structured.stderr_excerpt}" if not structured.ok else None),
+            one_model(models),
+        )
     return ParsedResult(
         text,
         usage if isinstance(usage, dict) else None,
