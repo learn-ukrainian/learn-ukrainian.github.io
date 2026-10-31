@@ -220,7 +220,13 @@ def _enforce_delivery(record: dict) -> None:
     if record["mode"] == "read-only" or record["status"] != "done":
         return
     cause = None
-    owned = record.get("owned_paths")
+    paths = []
+    try:
+        owned = ownership.effective_scope(record)
+    except (ValueError, TypeError) as exc:
+        record.update(status="no_deliverable", error=_verification_cause(exc),
+                      no_deliverable_reason=_verification_cause(exc))
+        return
     # With no commits ahead there is nothing to verify, and the remote branch may never have existed.
     if owned and (record.get("commits_ahead") or 0) > 0:
         try:
@@ -243,8 +249,10 @@ def _enforce_delivery(record: dict) -> None:
     # merged pull request is the evidence; it refuses an outside-owned path the same way.
     if cause and cause.split(":", 1)[0] in MERGE_RESCUABLE and record.get("worktree_dirty_on_exit") is False and (
             merged := git.merged_delivery(record)):
-        cause = _outside_cause(merged["paths"], owned) if owned else None
+        paths = merged["paths"]
+        cause = _outside_cause(paths, owned) if owned else None
         record["delivery_pr"] = f"{merged['repo']}#{merged['number']}"
+    record["owned_path_grants_used"] = ownership.grants_used(record, paths)
     if cause:
         record.update(status="no_deliverable", error=cause, no_deliverable_reason=cause)
 
@@ -613,6 +621,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                                    terminal_observer(stdout_path) if terminal_observer else None, watch)
         if lingered:
             _end_lingering(child, spec)
+        store.begin_settlement(record)
         returncode = child.returncode
         # A provider ended after its terminal result is judged by that result, not by how it was ended.
         exit_code = 0 if lingered else returncode
@@ -683,6 +692,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
                 terminate()
                 returncode = child.returncode
+            if not record.get("settling_at"):
+                store.begin_settlement(record)
             # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
             if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
                 record["read_only_boundary_cleanup"] = residue

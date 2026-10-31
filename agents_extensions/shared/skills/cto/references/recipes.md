@@ -99,10 +99,22 @@ successor's changes.
 `delivered_paths` in `scripts/dispatcher/ownership.py` excludes commits reachable from the
 base and task start, so using the PR branch as base can make the ownership check count newer
 main commits as the worker's changes and refuse the push when the worker brings main into its branch.
+A brief never tells a worker to bring current main into its branch before review: the merge
+queue tests the PR against main at enqueue, so a worker refreshes from main only when GitHub
+reports a conflict or a required check fails because of a change on main, since each refresh
+restarts exact-head CI.
+A dispatch whose task includes review rounds, the merge queue or long authoring
+passes sets `--hard-timeout 14400`, because the dispatcher default is 7200 seconds
+(`scripts/dispatcher/cli.py`) and a running task's deadline cannot be extended.
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
 update the tests that pin the changed behaviour.
+A brief whose change adds or renames tracked files under `registry/` or `docs/` also owns
+`docs/knowledge/catalogue.yaml` and `docs/README.md`, because the docs catalogue check
+requires every tracked file under those roots to be covered by a family glob and, when that
+catalogue changes, the generated family table in `docs/README.md` regenerated
+(`python -m scripts.docs.catalogue readme`).
 Retained evidence, evaluation material and anything a later session needs goes under
 `/home/ops/ops-state/<topic>/` (mode 0700 when private), never a session scratchpad, and the
 brief names that path.

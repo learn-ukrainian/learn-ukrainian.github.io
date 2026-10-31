@@ -33,6 +33,7 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
   or `takeover` or `modernize`, then this skill; or `full-stop` when the brief says so. It lands
   only the change its brief names, within the brief's owned paths. The CTO sets the issue,
   limits and routing and handles exceptions; the worker does the rest, from review to closeout.
+   An approved extra path uses the request-and-grant exchange below, in the same task and worktree.
 - **Follow-up tasks stay inside the brief's cap.** A worker may dispatch follow-up tasks only up
   to the count and within the owned paths its brief sets. Anything outside the brief goes to the
   CTO as an issue proposal through Fleet Comms; the worker never opens issues (rules core P4).
@@ -84,6 +85,10 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
    the reviewer live (never from a family that authored the branch), dispatches it at the
    exact pushed head, keeps the budget and the ledger, and records the verdict. A fix that
    moves the head returns to step 4 for green CI before the next round.
+   Include the author task's `owned_path_grants` and `owned_path_grants_used` entries in the
+   review-of-record brief, reading the current task record even when the author is still
+   running. The reviewer checks each grant's paths against its reason and approval reference;
+   a running author has no settlement usage list yet, so include all grants.
 6. **Watch it** ([pr-watch](references/pr-watch.md)): fix real findings and CI failures
    through the authoring lane, prove each fix, and run a `review-loop` delta for every new
    head once its CI Gate is green. One evidenced rerun for an unrelated CI failure, never more.
@@ -147,6 +152,22 @@ CTO and, for decisions in rules core P6, to the advisors. Reach the operator onl
 operator-only list and for a review dispute unresolved after two replies.
 
 ## Ask the CTO and wait for the answer
+
+For an approved edit outside the original owned paths, send the exact repository-relative
+paths, task id, run nonce, reason and approval reference to `claude-cto` through this exchange.
+The coordinator records the grant, then replies to the task-ID recipient with the JSON receipt:
+
+```bash
+/abs/path/.venv/bin/python scripts/dispatch.py grant-paths TASK --run-nonce NONCE \
+  --owned-path tests/fixture.py --reason 'Approved fixture change' --approval-ref message-id
+```
+
+After claiming, reading and acknowledging the reply, confirm that its grant id, task id and
+nonce match the durable task record, then retry the commit or push in the same session.
+A Fleet reply alone grants no scope. Identical requests return the same grant id. Grants
+are refused for self/descendant callers, sealed envelopes, read-only, terminal or settling
+tasks, invalid paths and sparse-excluded trees. Request a successor from the coordinator
+when a grant is refused; never widen the record yourself or bypass a hook.
 
 A dispatched worker's Fleet recipient is its task id, `$LEARN_UKRAINIAN_DISPATCH_TASK_ID`; the
 coordinator publishes the reply there, and claiming needs no registered seat. Use it as the

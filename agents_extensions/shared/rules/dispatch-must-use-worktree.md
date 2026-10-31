@@ -35,6 +35,14 @@ Sparse exclusions are defined by `SPARSE_EXCLUDE_DEFAULT` in
 required inputs. Owned paths do not re-include sparse files, and there are no
 automatic sparse anchors.
 
+Running write tasks can receive additional exact owned paths through `dispatch.py grant-paths`.
+The coordinator uses the full-send Fleet Comms request-and-grant exchange; the original
+`owned_paths` stays immutable and the record carries append-only grants bound to its run nonce.
+This guards an honest but mistaken worker, not an OS principal: `granted_by` is explicitly
+unauthenticated attribution. Independent exact-head review, CI and the merge queue remain
+the landing backstop. Review briefs include the grants and settlement records which granted
+paths the delivery used. Grants never change sparse checkout or a sealed admission envelope.
+
 ## MANDATORY in every dispatch brief
 
 Every Codex / Gemini / Claude-headless dispatch prompt MUST include

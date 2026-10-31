@@ -327,11 +327,10 @@ files; those are imported only with `import type`, which the compiler erases.
 
 ### History shard
 
-Seven test files are listed in `scripts/ci/history-tests.txt`. Five read old
-commits: `git show`/`git cat-file` of an old SHA, a recorded historical
-commit, a frozen base commit, and `origin/main` ancestry. Two run a
-`--dry-run` `dispatch.py dispatch --worktree`, which fetches `main` from
-GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
+Eight test files are listed in `scripts/ci/history-tests.txt`. All eight read old
+commits: `git ls-tree`/`git show`/`git cat-file` of an old SHA, a recorded historical
+commit, a frozen base commit, and `origin/main` ancestry. On a shallow checkout,
+fetching `main` from GitHub downloads all of main's history, 65-77
 s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out
 with full history (`fetch-depth: 0`), a full clone with every blob (see
@@ -341,7 +340,7 @@ listed file that is no longer tracked fails the split.
 
 The list is measured, not guessed. Run 36654595606 had every shard shallow
 with network git blocked in the pytest step. It was compared test by test with
-the full-history run 36650655215. Only these seven files changed outcome (28
+the full-history run 36650655215. Only seven files changed outcome (28
 tests, passed to failed). The one other change is a `test_ci_split` workflow
 assertion that failed on the experiment's own `GIT_ALLOW_PROTOCOL` edit. None of them skipped:
 each failed loudly, with git exit 128 or a blocked https transport. Without the
@@ -405,8 +404,8 @@ composite's online install fallback handles the miss. The #9062 measurement
 on hosted image `20260920.314` found 3.12.14 already cached, while 3.12.8
 required a download on every shard.
 
-The history shard keeps full Git history: five pinned test files read history
-and two more fetch `main` (listed in `scripts/ci/history-tests.txt`, consumed
+The history shard keeps full Git history: eight pinned test files read history
+(listed in `scripts/ci/history-tests.txt`, consumed
 by `scripts/ci/split_tests.py`).
 Other shards are shallow. #9211 rejected blobless checkout because those
 history readers need the committed blobs as well as the commit graph.
