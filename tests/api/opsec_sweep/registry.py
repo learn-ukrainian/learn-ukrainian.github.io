@@ -3,6 +3,9 @@
 The live FastAPI tree is the denominator.  ``FROZEN_DENOMINATOR_SHA256`` is
 the reviewed snapshot guard: adding an HTTP or WebSocket route changes the
 fingerprint and fails the sweep until a record is deliberately reviewed.
+A schema-hidden APIRoute is part of that HTTP inventory, so the sweep
+exercises it, unless ``FRAMEWORK_EXEMPT_OPERATIONS`` lists it. An exemption
+added for that purpose states its reason in the comment beside the entry.
 Included routers and mounts are walked through their public ``routes`` and
 ``original_router``/``include_context`` attributes; no private FastAPI route
 class is part of the walker contract.
@@ -131,6 +134,8 @@ class Operation:
 # ``include_in_schema=False`` framework routes. ``GET /metrics`` is
 # ``PrometheusMetricsMiddleware.METRICS_PATH``, listed with them so the
 # inventory names every such path the operation walk does not.
+# An APIRoute left out of the schema is swept with the frozen HTTP inventory
+# unless its method and path are listed here. State the reason beside that entry.
 FRAMEWORK_EXEMPT_OPERATIONS = (
     Operation("GET", "/docs"),
     Operation("GET", "/docs/oauth2-redirect"),
@@ -231,9 +236,12 @@ def _walk_routes(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]
             path = normalize_path_template(context_path or getattr(original_route, "path", "/"))
             if isinstance(original_route, WebSocketRoute):
                 yield "websocket", Operation("WEBSOCKET", path)
-            elif isinstance(original_route, APIRoute) and getattr(context, "include_in_schema", True):
-                for method in sorted(getattr(context, "methods", ()) & HTTP_METHODS):
-                    yield "http", Operation(method, path)
+            elif isinstance(original_route, APIRoute):
+                yield from _api_route_operations(
+                    path,
+                    getattr(context, "methods", ()),
+                    include_in_schema=bool(getattr(context, "include_in_schema", True)),
+                )
         return
 
     original_router = getattr(node, "original_router", None)
@@ -255,11 +263,12 @@ def _walk_routes(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]
         return
 
     if isinstance(node, APIRoute):
-        if not getattr(node, "include_in_schema", True):
-            return
         path = normalize_path_template(_join_path(prefix, node.path))
-        for method in sorted(getattr(node, "methods", ()) & HTTP_METHODS):
-            yield "http", Operation(method, path)
+        yield from _api_route_operations(
+            path,
+            getattr(node, "methods", ()),
+            include_in_schema=bool(getattr(node, "include_in_schema", True)),
+        )
         return
 
     routes = getattr(node, "routes", None)
@@ -271,9 +280,38 @@ def _walk_routes(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]
             yield from _walk_routes(child, node_prefix)
 
 
+def _api_route_operations(
+    path: str, methods: Iterable[str] | None, *, include_in_schema: bool
+) -> Iterable[tuple[str, Operation]]:
+    """Yield one HTTP operation per method on an APIRoute.
+
+    ``http-schema-hidden`` marks a route the app serves outside the OpenAPI
+    schema. The HTTP denominator still sweeps it unless the route is listed in
+    ``FRAMEWORK_EXEMPT_OPERATIONS``.
+    """
+    kind = "http" if include_in_schema else "http-schema-hidden"
+    for method in sorted(set(methods or ()) & HTTP_METHODS):
+        yield kind, Operation(method, path)
+
+
+def enumerate_schema_hidden_api_operations(app: Any) -> tuple[Operation, ...]:
+    """Return APIRoute operations the app serves outside the OpenAPI schema."""
+    operations = {operation for kind, operation in _walk_routes(app) if kind == "http-schema-hidden"}
+    return tuple(sorted(operations))
+
+
 def enumerate_http_operations(app: Any) -> tuple[Operation, ...]:
-    """Enumerate the HTTP denominator from the app's route tree."""
-    operations = {operation for kind, operation in _walk_routes(app) if kind == "http"}
+    """Enumerate the HTTP denominator from the app's route tree.
+
+    Schema-hidden APIRoutes are included so the sweep exercises them, except
+    those named by ``FRAMEWORK_EXEMPT_OPERATIONS``.
+    """
+    exempt = set(FRAMEWORK_EXEMPT_OPERATIONS)
+    operations = {
+        operation
+        for kind, operation in _walk_routes(app)
+        if kind == "http" or (kind == "http-schema-hidden" and operation not in exempt)
+    }
     return tuple(sorted(operations))
 
 
@@ -304,6 +342,9 @@ def _schema_excluded_operations(node: Any, prefix: str = "") -> Iterable[Operati
         return
 
     if isinstance(node, APIRoute):
+        # Schema-hidden APIRoutes are named by the operation walk: swept, or
+        # listed in FRAMEWORK_EXEMPT_OPERATIONS. This walk only sees Starlette
+        # routes FastAPI mounts outside APIRoute.
         return
 
     if isinstance(node, Route) and not getattr(node, "include_in_schema", True):
@@ -332,6 +373,8 @@ def enumerate_framework_exemptions(app: Any) -> tuple[Operation, ...]:
     """Return the served paths the OpenAPI operation count does not include."""
     operations = set(_schema_excluded_operations(app))
     operations.update(_middleware_metric_operations(app))
+    exempt = set(FRAMEWORK_EXEMPT_OPERATIONS)
+    operations.update(operation for operation in enumerate_schema_hidden_api_operations(app) if operation in exempt)
     return tuple(sorted(operations))
 
 
@@ -352,13 +395,23 @@ def denominator_digest(http_operations: Iterable[Operation], websocket_routes: I
 
 
 def denominator_diff(app: Any) -> dict[str, list[str]]:
-    """Return route-tree/OpenAPI differences for a useful failure message."""
-    walked = {operation.key for operation in enumerate_http_operations(app)}
-    openapi = {operation.key for operation in openapi_operations(app)}
+    """Return route-tree/OpenAPI differences for a useful failure message.
+
+    Schema-hidden APIRoutes are absent from OpenAPI by design. They show up
+    as ``schema_hidden_swept`` when the sweep exercises them, or as
+    ``schema_hidden_unaccounted`` when they are neither swept nor exempt.
+    """
+    walked = set(enumerate_http_operations(app))
+    openapi = set(openapi_operations(app))
+    hidden = set(enumerate_schema_hidden_api_operations(app))
+    exempt = set(FRAMEWORK_EXEMPT_OPERATIONS)
+    visible = walked - hidden
     websockets = {operation.path_template for operation in enumerate_websocket_routes(app)}
     return {
-        "missing_from_openapi": sorted(walked - openapi),
-        "missing_from_route_tree": sorted(openapi - walked),
+        "missing_from_openapi": sorted(operation.key for operation in visible - openapi),
+        "missing_from_route_tree": sorted(operation.key for operation in openapi - visible),
+        "schema_hidden_swept": sorted(operation.key for operation in walked & hidden),
+        "schema_hidden_unaccounted": sorted(operation.key for operation in hidden - walked - exempt),
         "websockets": sorted(websockets),
     }
 
@@ -369,10 +422,23 @@ def assert_frozen_denominator(app: Any) -> None:
     openapi = openapi_operations(app)
     websockets = enumerate_websocket_routes(app)
     differences = denominator_diff(app)
-    assert len(http_operations) == len(openapi) == FROZEN_HTTP_OPERATION_COUNT, (
+    assert not differences["schema_hidden_unaccounted"], (
+        "schema-hidden API route is neither swept nor exempt: "
+        + ", ".join(differences["schema_hidden_unaccounted"])
+        + "; accept it in the frozen HTTP inventory so the sweep exercises it, "
+        + "or list it in FRAMEWORK_EXEMPT_OPERATIONS with a reason"
+    )
+    swept_hidden = len(differences["schema_hidden_swept"])
+    assert len(http_operations) == FROZEN_HTTP_OPERATION_COUNT, (
         "Monitor API HTTP denominator changed: "
         f"route_tree={len(http_operations)} openapi={len(openapi)} "
+        f"schema_hidden_swept={swept_hidden} "
         f"expected={FROZEN_HTTP_OPERATION_COUNT} diff={differences}"
+    )
+    assert len(openapi) == FROZEN_HTTP_OPERATION_COUNT - swept_hidden, (
+        "OpenAPI operation count does not match the schema-visible route tree: "
+        f"openapi={len(openapi)} schema_visible={FROZEN_HTTP_OPERATION_COUNT - swept_hidden} "
+        f"diff={differences}"
     )
     assert len(websockets) == FROZEN_WEBSOCKET_ROUTE_COUNT, (
         f"Monitor API WebSocket denominator changed: got {len(websockets)}, "
