@@ -456,7 +456,6 @@ def reviewed_binding(
         r"[0-9a-f]{64}", attempt["manifest_sha256"]
     ):
         raise ValueError("review_sources_unproven")
-    _check_lexical_prompt(task, attempt, word, pool)
     try:
         receipts = ledger.records(receipt_path)
     except (OSError, ValueError, ledger.LedgerError) as exc:
@@ -485,6 +484,7 @@ def reviewed_binding(
         for tool in ("verify_words", "query_cefr_level", "check_russian_shadow")
     ):
         raise ValueError("review_sources_unproven")
+    _check_lexical_prompt(task, attempt, word, pool)
     finished = task.get("finished_at", "")
     if not re.match(r"^\d{4}-\d{2}-\d{2}T", finished):
         raise ValueError("review_date_invalid")
