@@ -15,16 +15,15 @@ from scripts.fleet import claude_account_lane
 def check_plan(agent: str, model: str, record: dict, *, review: bool = False) -> None:
     """Read the named account again; pins and host overrides do not bypass policy.
 
-    Unknown/stale usage and missing/invalid policy retain the shared reader's
-    fail-open contract. Reviews protect Claude headroom only; model pauses
-    still apply to every selected model (target_admission.py:553-565).
+    Applicable caps refuse unknown/stale usage. Reviews protect native Claude
+    headroom only; model pauses still apply to every selected model.
     """
     account = claude_account_lane.account_from_record(record, agent=agent)
     if agent == "claude" and account.refusal is not None:
         raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {account.refusal}")
-    used_pct = model_pause.account_used_pct(account)
     model_pause.refuse_paused_models(
-        [model], used_pct=lambda lane: used_pct(lane) if not review or lane == "claude" else None,
+        [model], policy=model_pause.policy_for_seat(agent, review=review),
+        used_pct=model_pause.account_used_pct(account),
     )
 
 

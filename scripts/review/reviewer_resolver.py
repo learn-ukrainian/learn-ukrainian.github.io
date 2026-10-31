@@ -493,7 +493,7 @@ class ResolverInputs:
     claude_account: ClaudeAccount = field(kw_only=True)
     # A structural check that no quota decides (authoring feasibility, verdict
     # qualification). The account still decides: an unresolved one removes the
-    # claude seats. The claude lane's plan-headroom usage reads unknown.
+    # claude seats. Headroom is omitted explicitly; pauses still apply.
     structural: bool = field(default=False, kw_only=True)
 
     def __post_init__(self) -> None:
@@ -679,12 +679,12 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     account = inputs.claude_account
     if candidate.route == "claude" and not account.resolved:
         return f"claude account unresolved: {account.refusal}"
-    from scripts.agent_runtime.model_pause import account_used_pct, refusal_reason
+    from scripts.agent_runtime.model_pause import account_used_pct, policy_for_seat, refusal_reason
 
-    used_pct = account_used_pct(None if inputs.structural else account)
     paused = refusal_reason(
         candidate_dispatch_model(candidate),
-        used_pct=lambda lane: used_pct(lane) if lane == "claude" and candidate.route == "claude" else None,
+        policy=policy_for_seat(candidate.route, review=True, check_headroom=not inputs.structural),
+        used_pct=account_used_pct(account),
     )
     if paused:
         return paused

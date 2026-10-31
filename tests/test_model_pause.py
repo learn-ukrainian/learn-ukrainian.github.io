@@ -40,8 +40,24 @@ def test_headroom_stop_refuses_matching_models_only() -> None:
     mp.refuse_paused_models(["gpt-6.1-sol"], policy=POLICY, now=NOW, used_pct=lambda _l: 99.0)
 
 
-def test_unreadable_usage_does_not_block() -> None:
-    mp.refuse_paused_models(["claude-sonnet-5-5"], policy=POLICY, now=NOW, used_pct=lambda _l: None)
+def test_unreadable_usage_refuses_matching_models_only() -> None:
+    with pytest.raises(mp.ModelPausedRefused, match="MODEL_HEADROOM_USAGE_UNKNOWN"):
+        mp.refuse_paused_models(["claude-sonnet-5-5"], policy=POLICY, now=NOW, used_pct=lambda _l: None)
+    mp.refuse_paused_models(["gpt-6.1-sol"], policy=POLICY, now=NOW, used_pct=lambda _l: None)
+
+
+def test_headroom_refuses_when_usage_is_stale_under_an_active_cap(monkeypatch) -> None:
+    """An active cap must not silently admit capped models when telemetry is stale."""
+    _serve(monkeypatch, {
+        "agents": {"claude": {"status": "hot", "codexbar": {
+            "stale": True, "freshness": "stale_last_good", "weekly_used_pct": 91,
+        }}},
+    })
+    with pytest.raises(mp.ModelPausedRefused, match="MODEL_HEADROOM_USAGE_UNKNOWN"):
+        mp.refuse_paused_models(
+            ["claude-sonnet-5-5"], policy=POLICY, now=NOW,
+            used_pct=mp.account_used_pct(HOST_ACCOUNT),
+        )
 
 
 def test_missing_policy_file_means_no_pauses(tmp_path, monkeypatch) -> None:
@@ -230,7 +246,7 @@ def _serve(monkeypatch, payload: dict) -> None:
 def test_selected_claude_account_reads_only_its_own_fresh_row(monkeypatch, b_row, expected) -> None:
     _serve(monkeypatch, _accounts_payload(b_row))
     assert mp.routing_budget_used_pct("claude", account=account("b")) == expected
-    # The default account keeps the lane row, from any source; other lanes ignore the account.
+    # Without its own row the default account uses the lane probe.
     for default in (HOST_ACCOUNT, account("a"), account("a", "default-file")):
         assert mp.routing_budget_used_pct("claude", account=default) == 84.0
     assert mp.routing_budget_used_pct("codex", account=account("b")) == 30.0
@@ -238,6 +254,13 @@ def test_selected_claude_account_reads_only_its_own_fresh_row(monkeypatch, b_row
     for unnamed in (None, unresolved("claude_account_default_file_invalid")):
         assert mp.routing_budget_used_pct("claude", account=unnamed) is None
         assert mp.routing_budget_used_pct("codex", account=unnamed) == 30.0
+    # An account row wins over a stale lane, including for the default account.
+    if b_row is not None:
+        payload = _accounts_payload(None)
+        payload["agents"]["claude"]["codexbar"].update(stale=True, freshness="stale_last_good")
+        payload["claude_accounts"] = {"claude:a": b_row}
+        _serve(monkeypatch, payload)
+        assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) == expected
 
 
 def test_account_reader_holds_only_on_the_selected_accounts_meter(monkeypatch) -> None:
@@ -248,10 +271,10 @@ def test_account_reader_holds_only_on_the_selected_accounts_meter(monkeypatch) -
     for default in (HOST_ACCOUNT, account("a")):
         held = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(default))
         assert held == "MODEL_HEADROOM: claude-opus-5-5 is held for plan headroom"
-    # An unnamed or unresolved account has no claude meter, so its headroom never holds.
+    # An unnamed or unresolved account has no meter, so an active cap refuses it.
     for unnamed in (None, unresolved("claude_account_binding_missing")):
-        unheld = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(unnamed))
-        assert unheld is None
+        held = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(unnamed))
+        assert held == "MODEL_HEADROOM_USAGE_UNKNOWN: claude-opus-5-5 has no fresh plan usage reading"
 
 
 def test_usage_readers_require_a_named_claude_account(monkeypatch) -> None:
