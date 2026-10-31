@@ -7,6 +7,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 from functools import partial
 from pathlib import Path
 
@@ -24,7 +25,7 @@ MANIFEST = "registry/atlas/a1-v1-slice4.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice4.json"
 INPUTS = "registry/atlas/a1-v1-slice4-inputs.json"
 INPUTS_SHA256 = "c3d85031e708005e8018c097cd35ce83b985f9ceda5e5b1a8659e61706f660e8"
-MANIFEST_SHA256 = "6175243d6950dd7aacb2bc78d5aba32914c701b1031bfdcfe25367b7750504ba"
+MANIFEST_SHA256 = "9d8dc2693765f87adbf01decc72542c8225e942f0c60aa9bed4cdc982d6b38b4"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -164,6 +165,44 @@ def _strings(value):
             yield from _strings(item)
 
 
+def _canonical_grammar(analysis, target):
+    """Distinguish citation readings from syncretic forms of the same entry."""
+    if (analysis.get("entry_id"), analysis.get("lemma"), analysis.get("pos"),
+            analysis.get("word_form")) != (target["entry_id"], target["lemma"],
+                                           target["pos"], target["lemma"]):
+        return False
+    tags = analysis["tags"].split(":")
+    if tags[0] != target["pos"]:
+        return False
+    if target["pos"] == "noun":
+        # Plural-only headwords retain p:...:ns; indeclinables use the
+        # singular nominative reading, not an arbitrary identical case form.
+        return "v_naz" in tags and (("p" in tags) == ("ns" in tags))
+    if target["pos"] == "adj":
+        return "m" in tags and "v_naz" in tags
+    if target["pos"] == "verb":
+        return "inf" in tags
+    return target["pos"] == "adv"
+
+
+def _validate_grammar(claim, record, target):
+    cards.require(record["source_id"] == "vesum", "slice4_grammar_requires_vesum")
+    match = re.fullmatch(r"/clean_analyses/(\d+)/tags", claim["pointer"])
+    cards.require(match is not None, "slice4_grammar_pointer_not_analysis")
+    analyses = record["payload"]["clean_analyses"]
+    candidates = [i for i, analysis in enumerate(analyses) if _canonical_grammar(analysis, target)]
+    cards.require(len(candidates) == 1, "slice4_grammar_canonical_reading_ambiguous")
+    index = int(match[1])
+    cards.require(claim["entry_id"] == target["entry_id"] and index == candidates[0],
+                  "slice4_grammar_not_canonical_headword")
+    analysis = analyses[index]
+    cards.require(claim["span"] == [0, len(analysis["tags"])], "slice4_grammar_partial_tags")
+    required = {(f"/clean_analyses/{index}/{field}", 0, len(analysis[field]))
+                for field in ("word_form", "lemma", "pos")}
+    supplied = {(span["pointer"], *span["span"]) for span in claim.get("supporting_spans", [])}
+    cards.require(required <= supplied, "slice4_grammar_binding_receipts_missing")
+
+
 def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, selection):
     cards.require(digest(inv) == spec["inventory_sha256"] and digest(sources) == spec["sources_sha256"],
                   "slice4_input_drift")
@@ -197,8 +236,17 @@ def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, sele
         if chosen:
             cards.require(sources["records"][chosen["record_key"]]["source_id"] in {"ulif", "sum20"},
                           "slice4_stress_authority")
+    grammar_targets = {}
+    for row in selected:
+        identity = spec["row_card_ids"][row["id"]]
+        target = {key: row["mapping"][key] for key in ("entry_id", "lemma", "pos")}
+        cards.require(grammar_targets.get(identity, target) == target, "slice4_grammar_target_disagreement")
+        grammar_targets[identity] = target
     for claim in claims:
         record = sources["records"][claim["record_key"]]
+        if claim["field"] == "grammatical_label":
+            cards.require(claim["card_id"] in grammar_targets, "slice4_grammar_target_missing")
+            _validate_grammar(claim, record, grammar_targets[claim["card_id"]])
         if claim["field"] == "definition_uk":
             cards.require(record["source_id"] in {"sum20", "vts_busel_slovnyk_me", "ulif"},
                           "slice4_meaning_authority")

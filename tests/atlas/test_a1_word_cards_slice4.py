@@ -124,7 +124,49 @@ def test_slice4_allocation_preserves_prior_ids_and_refuses_remapping():
 
 
 def test_slice4_receipt_replay_refuses_foreign_quotes_and_unapproved_examples(monkeypatch, tmp_path, capsys):
-    """Catch source substitution, wrong spans/senses, unapproved examples and altered CLI output."""
+    """Catch wrong-form grammar, source substitution, wrong spans/senses and unapproved examples."""
+    # Literal historical #11943 counterexample: entry 23312's first analysis
+    # is a dative form; its canonical spelling is at index 3.
+    target = {"entry_id": 23312, "lemma": "бібліотека", "pos": "noun"}
+    record = {"source_id": "vesum", "payload": {"clean_analyses": [
+        {**target, "word_form": form, "tags": tags}
+        for form, tags in (("бібліотеці", "noun:inanim:f:v_dav"),
+                           ("бібліотеко", "noun:inanim:f:v_kly"),
+                           ("бібліотеці", "noun:inanim:f:v_mis"),
+                           ("бібліотека", "noun:inanim:f:v_naz"))]}}
+    historical = {"entry_id": 23312, "pointer": "/clean_analyses/0/tags", "span": [0, 19]}
+    with pytest.raises(Refusal, match="slice4_grammar_not_canonical_headword"):
+        inputs._validate_grammar(historical, record, target)
+    corrected = {**historical, "pointer": "/clean_analyses/3/tags", "supporting_spans": [
+        {"pointer": "/clean_analyses/3/" + field, "span": [0, len(record["payload"]["clean_analyses"][3][field])]}
+        for field in ("word_form", "lemma", "pos")]}
+    inputs._validate_grammar(corrected, record, target)
+    for changed, reason in (({**corrected, "span": [0, 4]}, "slice4_grammar_partial_tags"),
+                            ({**corrected, "supporting_spans": []}, "slice4_grammar_binding_receipts_missing"),
+                            ({**corrected, "entry_id": 17025}, "slice4_grammar_not_canonical_headword"),
+                            ({**corrected, "pointer": "/article"}, "slice4_grammar_pointer_not_analysis")):
+        with pytest.raises(Refusal, match=reason):
+            inputs._validate_grammar(changed, record, target)
+    ambiguous = copy.deepcopy(record)
+    ambiguous["payload"]["clean_analyses"].append(copy.deepcopy(record["payload"]["clean_analyses"][3]))
+    with pytest.raises(Refusal, match="slice4_grammar_canonical_reading_ambiguous"):
+        inputs._validate_grammar(corrected, ambiguous, target)
+    # Equal spelling does not select among case, number, POS or entry readings.
+    for lemma, pos, entry_id, accepted, refused in (
+        ("кафе", "noun", 162570, "noun:inanim:n:v_naz:nv", "noun:inanim:n:v_dav:nv"),
+        ("кафе", "noun", 162570, "noun:inanim:n:v_naz:nv", "noun:inanim:p:v_naz:nv"),
+        ("Карпати", "noun", 161525, "noun:inanim:p:v_naz:ns:prop:geo", "noun:inanim:p:v_kly:ns:prop:geo"),
+        ("готовий", "adj", 82422, "adj:m:v_naz", "adj:m:v_zna:rinanim"),
+        ("зустріти", "verb", 150970, "verb:perf:inf", "verb:perf:impr:s:2"),
+        ("поруч", "adv", 303252, "adv", "prep"),
+    ):
+        identity = {"entry_id": entry_id, "lemma": lemma, "pos": pos}
+        analysis = {**identity, "word_form": lemma, "tags": accepted}
+        assert inputs._canonical_grammar(analysis, identity)
+        assert not inputs._canonical_grammar({**analysis, "tags": refused}, identity)
+        assert not inputs._canonical_grammar({**analysis, "entry_id": entry_id + 1}, identity)
+        assert not inputs._canonical_grammar({**analysis, "pos": "foreign"}, identity)
+        assert not inputs._canonical_grammar({**analysis, "lemma": "foreign"}, identity)
     batch = mechanics.batch.__wrapped__()
     monkeypatch.setattr(inputs, "allocation", lambda base, companion, pins, root:
                         validate_allocation(base, companion, pins))
@@ -141,6 +183,11 @@ def test_slice4_receipt_replay_refuses_foreign_quotes_and_unapproved_examples(mo
     form["supporting_spans"] = [{"pointer": "/clean_analyses/0/tags", "span": [0, 12]}]
     example = mechanics.example_claim(batch)
     pending = cards.build(**batch, batch=context)
+    wrong_grammar = copy.deepcopy(batch)
+    wrong_grammar["manifest"]["claims"].append(mechanics.recipe(
+        "grammatical_label", "vesum", "/clean_analyses/0/tags", "noun:n:v_naz", None))
+    with pytest.raises(Refusal, match="slice4_grammar_canonical_reading_ambiguous"):
+        cards.build(**wrong_grammar, batch=context)
     assert pending["schema_version"] == "atlas-a1-slice4-build.v1"
     assert mechanics.values(pending, "examples", mechanics.SENSE) == []
     assert cards.complete_chains(pending) == []
