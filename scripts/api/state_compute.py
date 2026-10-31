@@ -18,7 +18,6 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.thresholds import REVIEW_PASS_FLOOR
 from research_quality import (
     DIMENSION_SHORT_LABELS,
     assess_research_compat,
@@ -228,13 +227,6 @@ def _get_review_score(track_dir: Path, slug: str) -> dict:
     for vm in re.finditer(r"\*\*Status:\*\*\s*(PASS|FAIL)", text):
         verdict = vm.group(1)
     return {"exists": True, "score": score, "verdict": verdict}
-
-
-def _compute_shippable(audit_status: str, review_score: float | None) -> bool:
-    """Module is shippable if audit PASS + review >= REVIEW_PASS_FLOOR."""
-    if audit_status != "pass":
-        return False
-    return not (review_score is None or review_score < REVIEW_PASS_FLOOR)
 
 
 def _get_stress_issues(orch_dir: Path) -> dict:
@@ -478,7 +470,6 @@ def compute_module_detail(
         },
         "review": _get_review_score(track_dir, slug),
         "friction": _get_friction_data(orch_dir),
-        "shippable": _compute_shippable(audit["status"], _get_review_score(track_dir, slug)["score"]),
         "stress": _get_stress_issues(orch_dir),
         "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
         "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),

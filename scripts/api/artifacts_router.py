@@ -4,13 +4,13 @@ Mounted at /api/artifacts in main.py.
 
 Endpoints:
     GET /api/artifacts/{track}/{slug}   Single-module gate snapshot
-    GET /api/artifacts/ship-ready       Aggregate ship-ready list
+    GET /api/artifacts/ship-ready       Aggregate artifact-gate list
 
 Why this exists (GH #1309): before this router, the only way to ask
-"which modules are ready to ship" was to scrape seven different endpoints
-and cross-reference them. The artifact layer answers that question in
-one call, with the EXACT set of gates defined as a tuple of booleans so
-clients never guess at which combination means "ship-ready".
+which modules pass the internal artifact gates was to scrape seven
+different endpoints and cross-reference them. The artifact layer
+answers that question in one call. The response field is
+``artifact_gates_green``. It is not a merged or published count.
 
 Boundary: this router is about the INTERNAL artifact state. The public
 site (is it up, was the latest build deployed, does the canonical URL
@@ -38,7 +38,7 @@ from .config import LEVELS
 from .docs_router import collect_html_artifacts
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
-from .state_compute import _compute_shippable, _get_review_score
+from .state_compute import _get_review_score
 from .state_helpers import (
     cache_get_or_compute_async,
     ctx_scoped_ttl_key,
@@ -56,10 +56,8 @@ router = APIRouter(tags=["artifacts"])
 _ARTIFACT_LIST_TTL_S = 15.0
 
 
-
-
 # ---------------------------------------------------------------------
-# Gate checks — each returns a bool so ``ship_ready`` is (all gates true).
+# Gate checks — each returns a bool so ``artifact_gates_green`` is (all gates true).
 # ---------------------------------------------------------------------
 
 
@@ -190,7 +188,7 @@ def _compute_artifact_snapshot(track: str, slug: str, ctx: MonitorContext | None
               "final_review_pass": bool,
               "plan_fresh":        bool,
           },
-          "ship_ready": bool,   # every gate green
+          "artifact_gates_green": bool,   # every gate green; not a delivery count
           "audit":       {...},
           "review":      {...},
           "final_review": {...} | null,
@@ -240,18 +238,11 @@ def _compute_artifact_snapshot(track: str, slug: str, ctx: MonitorContext | None
         "plan_fresh": bool(content_path and plan_path) and _plan_not_changed_after_build(plan_path, content_path),
     }
 
-    # ``_compute_shippable`` is the legacy audit+review definition and
-    # does NOT include plan_fresh / frontmatter / final_review. We keep
-    # it in the response for back-compat with existing dashboards, but
-    # ``ship_ready`` is the strict new definition.
-    legacy_shippable = _compute_shippable(audit.get("status", ""), review.get("score"))
-
     return {
         "track": track,
         "slug": slug,
         "gates": gates,
-        "ship_ready": all(gates.values()),
-        "legacy_shippable": legacy_shippable,
+        "artifact_gates_green": all(gates.values()),
         "audit": {
             "status": audit.get("status"),
             "word_count": int(audit.get("word_count") or 0),
@@ -279,14 +270,14 @@ async def module_artifact(track: str, slug: str, ctx: MonitorContext = Depends(g
 # ---------------------------------------------------------------------
 
 
-def _list_ship_ready(track_filter: str | None, ctx: MonitorContext | None = None) -> dict[str, Any]:
-    """Walk every plan and return the modules whose every gate is green.
+def _list_artifact_gates_green(track_filter: str | None, ctx: MonitorContext | None = None) -> dict[str, Any]:
+    """Walk every plan and return the modules whose every artifact gate is green.
 
     ``track_filter`` narrows the scan to one level. Empty tracks or
     missing plan dirs are silently skipped — the response reports what
-    was inspected.
+    was inspected. A green gate list is not merged and not published.
     """
-    ship_ready: list[dict[str, Any]] = []
+    gates_green: list[dict[str, Any]] = []
     inspected = 0
     tracks_scanned: list[str] = []
 
@@ -297,8 +288,8 @@ def _list_ship_ready(track_filter: str | None, ctx: MonitorContext | None = None
         for _, slug in get_plan_slugs(cfg["id"]):
             inspected += 1
             snap = _compute_artifact_snapshot(cfg["id"], slug, ctx=ctx)
-            if snap.get("ship_ready"):
-                ship_ready.append(
+            if snap.get("artifact_gates_green"):
+                gates_green.append(
                     {
                         "track": cfg["id"],
                         "slug": slug,
@@ -311,8 +302,8 @@ def _list_ship_ready(track_filter: str | None, ctx: MonitorContext | None = None
     return {
         "tracks_scanned": tracks_scanned,
         "modules_inspected": inspected,
-        "ship_ready_count": len(ship_ready),
-        "ship_ready": ship_ready,
+        "artifact_gates_green_count": len(gates_green),
+        "artifact_gates_green": gates_green,
     }
 
 
@@ -492,18 +483,19 @@ async def ship_ready(
     ),
     ctx: MonitorContext = Depends(get_ctx),
 ):
-    """Modules that pass EVERY artifact gate — safe to deploy.
+    """Modules whose artifact gates are all green.
 
-    Unknown ``track`` → 404 (consistent with
-    ``/api/artifacts/{track}/{slug}``, which also 404s on unknown
-    tracks — reviewer CONCERN Codex-2 / #1309).
+    This is the internal artifact conjunction (content, frontmatter,
+    word target, audit, final review, plan freshness). It does not
+    mean the module is merged or published. Unknown ``track`` → 404
+    (consistent with ``/api/artifacts/{track}/{slug}``).
     """
     if track is not None and _level_cfg(track) is None:
         return JSONResponse(
             status_code=404,
             content={"error": f"unknown track: {track}"},
         )
-    return await asyncio.to_thread(_list_ship_ready, track, ctx=resolve_context(ctx))
+    return await asyncio.to_thread(_list_artifact_gates_green, track, ctx=resolve_context(ctx))
 
 
 # ---------------------------------------------------------------------
@@ -727,7 +719,9 @@ def _review_snapshot(track: str, slug: str, ctx: MonitorContext | None = None) -
 
     # Style review — separate file, same directory. Empty if absent.
     style_candidates = sorted(review_dir.glob(f"{slug}-style-review*.md")) if review_dir.is_dir() else []
-    style_review = _read_review_file(style_candidates[-1], resolved_ctx.roots.project_root) if style_candidates else None
+    style_review = (
+        _read_review_file(style_candidates[-1], resolved_ctx.roots.project_root) if style_candidates else None
+    )
 
     return {
         "track": track,

@@ -3028,7 +3028,6 @@ async def module_detail_by_slug(
           "audit":  {"status": "pass", "word_count": ..., "word_target": ...},
           "review": {"score": 9.4, "verdict": "PASS"},
           "final_review": {"exists": true, "verdict": "PASS"} | null,
-          "shippable":        true,
           "blocking_issues":  [...],
           "retry_count":      0,
           "worker":           "gemini"
@@ -3117,7 +3116,6 @@ async def module_detail_by_slug(
             if isinstance(final_review, dict) and final_review.get("exists")
             else None
         ),
-        "shippable": bool(full.get("shippable")),
         "blocking_issues": audit.get("blocking_issues") or [],
         "retry_count": retry_count,
         "worker": current_worker,
@@ -3181,6 +3179,8 @@ async def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
         level_cfg,
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
+        project_root=ctx.roots.project_root,
+        git_root=ctx.roots.live_repo_root,
     )
     cache_set(cache_key, result)
     return result
