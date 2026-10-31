@@ -3,6 +3,9 @@ name = "learn-ukrainian"
 version = "1.0.0"
 description = "Ukrainian language learning curriculum generator"
 requires-python = ">=3.12"
+dependencies = [
+    "prometheus-client>=0.26.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
