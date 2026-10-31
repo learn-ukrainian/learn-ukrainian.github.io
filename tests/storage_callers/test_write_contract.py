@@ -107,6 +107,31 @@ def test_output_hardlink_to_historical_sources_generation_is_refused(stores, tmp
     assert selected.read_bytes() == b"selected fixture"
 
 
+def test_write_alias_refused_when_primary_selector_resolves_outside_generations_dir(stores, tmp_path):
+    directory = stores / "data" / t.GENERATIONS_DIRNAME
+    directory.mkdir()
+    historical = directory / "sources.20261031T000000Z-222222222222.db"
+    historical.write_bytes(b"historical fixture")
+    selected = tmp_path / "sources.20261031T010000Z-111111111111.db"
+    selected.write_bytes(b"selected fixture")
+    selector = stores / "data" / "sources.db"
+    selector.unlink()
+    selector.symlink_to(selected)
+    alias = tmp_path / "output.db"
+    alias.hardlink_to(historical)
+
+    assert t.inspect_selector(selector).reason == "selector_target_outside_generations"
+    for role in ("staging", "shadow"):
+        for intent in ("update", "create"):
+            result = t.resolve_store_for_write(
+                "sources", stores, intent=intent,
+                target=t.ExplicitStoreWriteTarget(alias, role), env={},
+            )
+            assert result == t.StoreRefusal("sources", "target_is_active_store")
+    assert historical.read_bytes() == b"historical fixture"
+    assert selected.read_bytes() == b"selected fixture"
+
+
 def test_shadow_replacement_is_distinct_from_staging(stores, tmp_path):
     path = tmp_path / "shadow.db"
     target = t.ExplicitStoreWriteTarget(path, "shadow")
