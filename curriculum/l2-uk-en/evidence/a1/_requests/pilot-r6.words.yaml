@@ -7,9 +7,8 @@ words:
     source: vesum
     entry_id: 51684
   want: new
-  meaning: embroidered shirt
-  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "vyshyvanka"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 26047; see pilot-r6-public-provenance.yaml."
 - lemma: герб
   pos: noun
   entry:
@@ -52,9 +51,8 @@ words:
     source: vesum
     entry_id: 275822
   want: new
-  meaning: Ukrainian Easter egg
-  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "Easter egg"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 8074; see pilot-r6-public-provenance.yaml."
 - lemma: прапор
   pos: noun
   entry:
@@ -97,18 +95,16 @@ words:
     source: vesum
     entry_id: 397247
   want: new
-  meaning: Ukrainian
-  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "male Ukrainian person"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 188; see pilot-r6-public-provenance.yaml."
 - lemma: українка
   pos: noun
   entry:
     source: vesum
     entry_id: 397281
   want: new
-  meaning: Ukrainian
-  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "female Ukrainian"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 3482; see pilot-r6-public-provenance.yaml."
 - lemma: вечір
   pos: noun
   entry:
@@ -178,9 +174,8 @@ words:
     source: vesum
     entry_id: 383748
   want: new
-  meaning: phone
-  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "telephone"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 2099; see pilot-r6-public-provenance.yaml."
 - lemma: шафа
   pos: noun
   entry:
@@ -439,9 +434,8 @@ words:
     source: vesum
     entry_id: 98276
   want: new
-  meaning: good
-  note: 'Pilot #8425 arc r6 position 2; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "well"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 781; see pilot-r6-public-provenance.yaml."
 - lemma: ранок
   pos: noun
   entry:
@@ -502,36 +496,32 @@ words:
     source: vesum
     entry_id: 43968
   want: new
-  meaning: university teacher
-  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "teacher"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 1195; see pilot-r6-public-provenance.yaml."
 - lemma: викладачка
   pos: noun
   entry:
     source: vesum
     entry_id: 43969
   want: new
-  meaning: university teacher
-  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "teacher"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 12968; see pilot-r6-public-provenance.yaml."
 - lemma: лікар
   pos: noun
   entry:
     source: vesum
     entry_id: 187809
   want: new
-  meaning: doctor
-  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "physician"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 882; see pilot-r6-public-provenance.yaml."
 - lemma: лікарка
   pos: noun
   entry:
     source: vesum
     entry_id: 187816
   want: new
-  meaning: doctor
-  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
-    checked through Sources.'
+  meaning: "physician"
+  note: "Public gloss re-derived from Sources dmklinger_uk_en row 15360; see pilot-r6-public-provenance.yaml."
 - lemma: пес
   pos: noun
   entry:
@@ -773,8 +763,7 @@ words:
     entry_id: 98270
   want: new
   meaning: good night
-  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
-    learner state.'
+  note: "Public gloss re-derived from Sources kaikki row W-273; see pilot-r6-public-provenance.yaml."
 - lemma: па-па
   pos: intj
   entry:
@@ -782,8 +771,7 @@ words:
     entry_id: 261286
   want: new
   meaning: bye-bye
-  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
-    learner state.'
+  note: "Public gloss re-derived from Sources kaikki row W-274; see pilot-r6-public-provenance.yaml."
 - lemma: новий
   pos: adj
   entry:

@@ -81,7 +81,7 @@ words:
   - lemma: день
     pos: noun
   want: new
-  note: Hello!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Доброго ранку!
   parts:
@@ -90,7 +90,7 @@ words:
   - lemma: ранок
     pos: noun
   want: new
-  note: Good morning!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Добрий вечір!
   parts:
@@ -99,7 +99,7 @@ words:
   - lemma: вечір
     pos: noun
   want: new
-  note: Good evening!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: До побачення!
   parts:
@@ -108,7 +108,7 @@ words:
   - lemma: побачення
     pos: noun
   want: new
-  note: Goodbye!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Будь ласка!
   parts:
@@ -117,35 +117,35 @@ words:
   - lemma: ласка
     pos: noun
   want: new
-  note: Please!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Дякую!
   parts:
   - lemma: дякувати
     pos: verb
   want: new
-  note: Thank you!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Вибачте!
   parts:
   - lemma: вибачити
     pos: verb
   want: new
-  note: Excuse me!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Бувай!
   parts:
   - lemma: бувати
     pos: verb
   want: new
-  note: Bye!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Вітаю!
   parts:
   - lemma: вітати
     pos: verb
   want: new
-  note: Hello!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Мене звати...
   parts:
@@ -154,7 +154,7 @@ words:
   - lemma: звати
     pos: verb
   want: new
-  note: My name is
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Моє прізвище...
   parts:
@@ -163,7 +163,7 @@ words:
   - lemma: прізвище
     pos: noun
   want: new
-  note: My surname is
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Як вас звати?
   parts:
@@ -174,7 +174,7 @@ words:
   - lemma: звати
     pos: verb
   want: new
-  note: What is your name?
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Хто це?
   parts:
@@ -183,7 +183,7 @@ words:
   - lemma: це
     pos: noun
   want: new
-  note: Who is this?
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Що це?
   parts:
@@ -192,7 +192,7 @@ words:
   - lemma: це
     pos: noun
   want: new
-  note: What is this?
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: У мене є...
   parts:
@@ -203,7 +203,7 @@ words:
   - lemma: бути
     pos: verb
   want: new
-  note: I have
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Що нового?
   parts:
@@ -212,7 +212,7 @@ words:
   - lemma: новий
     pos: adj
   want: new
-  note: What is new?
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Так собі.
   parts:
@@ -221,7 +221,7 @@ words:
   - lemma: себе
     pos: noun
   want: new
-  note: So-so.
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: На жаль.
   parts:
@@ -230,7 +230,7 @@ words:
   - lemma: жаль
     pos: noun
   want: new
-  note: Unfortunately.
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Дуже приємно!
   parts:
@@ -239,7 +239,7 @@ words:
   - lemma: приємно
     pos: adv
   want: new
-  note: Nice to meet you!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Гарного дня!
   parts:
@@ -248,7 +248,7 @@ words:
   - lemma: день
     pos: noun
   want: new
-  note: Have a nice day!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Солодких снів!
   parts:
@@ -257,7 +257,7 @@ words:
   - lemma: сон
     pos: noun
   want: new
-  note: Sweet dreams!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Дати п’ять!
   parts:
@@ -266,7 +266,7 @@ words:
   - lemma: п’ять
     pos: numr
   want: new
-  note: High five!
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
 - kind: formula
   text: Передати привіт.
   parts:
@@ -275,4 +275,4 @@ words:
   - lemma: привіт
     pos: noun
   want: new
-  note: Send regards.
+  note: "Fixed expression; gloss only from the validated public formula-row binding. Unbound expressions remain withheld in pilot-r6-unresolved-formulas.yaml."
