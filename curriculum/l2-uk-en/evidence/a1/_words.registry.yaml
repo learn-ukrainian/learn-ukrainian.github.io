@@ -2249,3 +2249,17 @@
   - form: привіт
     word: W-074
   text: Передати привіт.
+- allocated_at_build: cba11f1f2e3c91cef7103bc65f83f097ee012dff0db8819f9c6e0e79e7128558
+  entry:
+    entry_id: 164624
+    source: vesum
+  id: W-310
+  lemma: київський
+  pos: adj
+- allocated_at_build: cba11f1f2e3c91cef7103bc65f83f097ee012dff0db8819f9c6e0e79e7128558
+  entry:
+    entry_id: 397346
+    source: vesum
+  id: W-311
+  lemma: український
+  pos: adj

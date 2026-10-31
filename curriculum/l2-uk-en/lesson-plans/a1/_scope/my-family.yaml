@@ -1,0 +1,19 @@
+scope_schema: 1
+level: a1
+module: my-family
+letters:
+  count: 5
+  list:
+  - Б
+  - Й
+  - Ї
+  - Ю
+  - Є
+grammar:
+  count: 3
+  ids:
+  - G-a1-019
+  - G-a1-020
+  - G-a1-021
+vocabulary:
+  core_count: 14

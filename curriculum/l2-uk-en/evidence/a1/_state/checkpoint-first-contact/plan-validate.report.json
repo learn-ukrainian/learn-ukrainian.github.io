@@ -1,0 +1,114 @@
+{
+  "activity_report": {
+    "explanation_coverage": "not_available_at_this_stage",
+    "lessons": [
+      {
+        "activities": {
+          "inline": {
+            "by_type": {},
+            "total": 0
+          },
+          "workbook": {
+            "by_type": {
+              "match-up": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "match-up"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "checkpoint",
+        "n": 1
+      }
+    ],
+    "module": {
+      "all_distinct_types": [
+        "match-up"
+      ],
+      "inline_activities": 0,
+      "largest_workbook_type": "match-up",
+      "largest_workbook_type_share": 1.0,
+      "longest_same_type_workbook_run": 1,
+      "longest_same_type_workbook_run_type": "match-up",
+      "non_recap_lessons": 1,
+      "non_recap_lessons_with_workbook": 1,
+      "workbook_activities": 1,
+      "workbook_distinct_types": [
+        "match-up"
+      ],
+      "workbook_presence_complete": true
+    },
+    "module_slug": "checkpoint-first-contact",
+    "rendered": "not_available_at_this_stage",
+    "response_opportunities": "not_available_at_this_stage",
+    "stage": "plan"
+  },
+  "failures": [],
+  "inputs": {
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "637b6f57c854458a98867b9132f9b47ae4c152b8c6a5c7a2f5bccb8f3da9d5b1",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "5349de52580cab7f87f069ffcab17d7621a44eab20378df7b3affc1b7f7c0bd5",
+    "curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml": "1241ca86545fd578d3a17c90e8a4dd683ba1843ec4dfccfa38433cd28a835ae8",
+    "curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml.lock": "7da946b96123c09aaedf8de79296e82dfa438bbeb7b2ecef489c1ec7d536fdea",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/checkpoint-first-contact.yaml": "e695ef74a9ee5af4c8c5af38d3afa6e1071177a9cfaf0e82988d85160abc272c",
+    "curriculum/l2-uk-en/lesson-plans/a1/checkpoint-first-contact.yaml": "78739911efbf64fe7c725d810acbc8a14174a868b778b705de953a05402f7124",
+    "curriculum/l2-uk-en/lesson-plans/a1/first-conversations.yaml": "ef3af5e9a7922477c948011577340397df73a7c05ee52dce4f09e01303b1b636",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "6e4677d46398bb934d189ab2f7b5c2a1afba3afc8daa16563acbf93ceace0d03",
+    "curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml": "06ca976a21cdd9a60053dd8a16ab1d39f655c5523bd7043c27444b46dc3bce3a",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "6607064f306b1180ab6097df32aeb3df2783dd3bee4122962eea088dc928eb03",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "fbd0480f73f10ecadd67efb5a738fb3822c96537bd23f86efc7b132bba01c44e",
+    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "eeeb52c15150be2107d40c1cf5bff30667dafa77bbe97fa0912c1d64ec499ec3",
+    "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
+    "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
+    "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
+    "schemas/arc.schema.json": "af1c1ee66c1e58fda00c975663fe409ad1e2b6033b699c916f36b23fdd5d75b2",
+    "schemas/module-plan-v2.schema.json": "112982f5ff3a7477596a52dce0003e3c7cf9579c98a41eca068a31f6087776e2",
+    "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
+    "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
+    "scripts/curriculum/validate/placement_table.yaml": "b3268a3feae54e4a91f28d5a0858989f291ed3280412345ef07f031075543234"
+  },
+  "level": "a1",
+  "mode": "provisional",
+  "not_checked": [
+    {
+      "code": "minutes_constants_undefined",
+      "lesson": null,
+      "message": "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
+      "step": null
+    },
+    {
+      "code": "arc_has_no_structured_grammar_or_vocabulary",
+      "lesson": null,
+      "message": "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
+      "step": null
+    },
+    {
+      "code": "title_quantities_not_parsed",
+      "lesson": null,
+      "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
+      "step": null
+    },
+    {
+      "code": "pending_promotion",
+      "lesson": null,
+      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 1241ca86545fd578d3a17c90e8a4dd683ba1843ec4dfccfa38433cd28a835ae8; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "step": null
+    }
+  ],
+  "notes": [
+    {
+      "code": "earlier_core_not_recycled",
+      "lesson": null,
+      "message": "41 of 65 core records of earlier positions appear in no recycled list of this module: W-062 'ні' (position 2), W-076 'день' (position 2), W-091 'Ніна' (position 3), W-093 'Іван' (position 3), W-096 'так' (position 2), W-138 \"сім'я\" (position 4), W-158 'син' (position 4), W-183 'Україна' (position 5), W-184 'Київ' (position 5), W-188 'вишиванка' (position 5), W-189 'герб' (position 5), W-191 'калина' (position 5), W-192 'лелека' (position 5), W-193 'писанка' (position 5), W-194 'прапор' (position 5), W-196 'мова' (position 3), W-198 'українець' (position 5), W-199 'українка' (position 5), W-200 'вечір' (position 2), W-202 'дитина' (position 4), W-203 'кіт' (position 4), W-206 'сестра' (position 4), W-217 'дзвінок' (position 5), W-220 'ніч' (position 2), W-229 'донька' (position 4), W-234 'бабуся' (position 4), W-235 'дідусь' (position 4), W-237 'ранок' (position 2), W-239 'брат' (position 4), W-245 'лікар' (position 3), W-246 'лікарка' (position 3), W-274 'па-па' (position 2), W-279 'як' (position 6), W-288 'Доброго ранку!' (position 2), W-289 'Добрий вечір!' (position 2), W-291 'Будь ласка!' (position 2), W-292 'Дякую!' (position 2), W-293 'Вибачте!' (position 2), W-295 'Вітаю!' (position 2), W-310 'київський' (position 5), W-311 'український' (position 5) (#9487 C6)",
+      "step": null
+    }
+  ],
+  "slug": "checkpoint-first-contact",
+  "status": "pass",
+  "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",
+  "waivers": []
+}

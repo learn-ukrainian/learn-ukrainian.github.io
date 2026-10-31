@@ -1,0 +1,266 @@
+built_with:
+  mcp_commit: c7e4971b4866a404564a93624f6403d78225770a
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: e93cdcf9e76336a73809720421f97c89edeec0bc7016411805058e76fa0ba4ee
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+module: a1/things-have-gender
+standard:
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-701
+  lines: 661-662
+  text: '      утворення родових форм присвійних займенників: мій, моя, моє; твій,
+
+    твоя, твоє; наш, наша, наше; ваш, ваша, ваше, їхній, їхня, їхнє;'
+texts:
+- id: T-701
+  quote: '§ 25. Рід іменників. Іменники спільного роду
+
+    Вправа 260
+
+    1. Прочитайте словосполучення.
+
+    парк міський
+
+    мода міська
+
+    свято міське
+
+    2. Чому, на вашу думку, прикметник у цих трьох словосполученнях має
+
+    різні закінчення?
+
+    3. Пригадайте, що ви знаєте про рід іменників.
+
+    Жіночий рід жінка, барва,
+
+    радість
+
+    Існує три роди іменників:
+
+    Чоловічий рід Середній рід
+
+    чоловік, екран,
+
+    кіт
+
+    свято, маля,
+
+    озеро
+
+    Зверніть увагу! До котрогось із родів належать лише
+
+    ті іменники, які мають форму однини. Якщо іменник
+
+    не має форми однини, то й категорія роду йому не
+
+    властива, наприклад: дреди, окуляри, Прилуки.
+
+    Вправа 261
+
+    Запишіть слова в три стовпчики залежно від роду (чоловічий, жіночий
+
+    і середній). Які слова ви не виписали? Чому?
+
+    Родина, фіалка, небо, штани, поду́
+
+    шка, волосся, но-
+
+    жиці, смартфон, мишка, джинси, міль, механік, чипси,
+
+    сорочка, середмістя, Чернівці.
+
+    Вправа 262
+
+    1. Спишіть слова, надпишіть над кожним, до якого роду воно належить.
+
+    Кіт, кішка, кошеня; продавець, продавчиня; дівчина,
+
+    дівчисько, дівча; зал, зала; учень, учениця, учнівство.
+
+    2. Складіть речення з останніми трьома словами.
+
+    § 25. Рід іменників. Іменники спільного роду 129'
+  sha256: d540e4cabbbf0badd03aa16f6d1fc244abf72bc7705b6a4df9f48d0f35620ff0
+  source:
+    author: litvinova
+    chunk_id: 6-klas-ukrmova-litvinova-2023_s0134
+    file: 6-klas-ukrmova-litvinova-2023
+    grade: '6'
+    kind: textbook
+    page: 129
+    row_sha256: d82cb96bee8dc859d6c62adb77aac739a933b950630c491dddcf0c16b067d9a7
+    section_id: 47331
+  supports: Three noun genders apply to singular nouns. Plural-only nouns are excluded from this first classification set.
+- id: T-702
+  quote: 'Присвійні займенники
+
+    Присвійні (від присвоїти) займенники вказують на
+
+    належність когось або чогось певній особі, вони спів-
+
+    відносяться з особовими займенниками.
+
+    Особові Присвійні Особові Присвійні
+
+    я
+
+    мій, моя, моє,
+
+    мої ми
+
+    наш, наша,
+
+    наше, наші
+
+    ти твій, твоя,
+
+    твоє, твої ви ваш, ваша,
+
+    ваше, ваші
+
+    він, воно,
+
+    вона його, її вони їхній, їхня,
+
+    їхнє, їхні
+
+    До будь-якої особи: свій, своя, своє, свої'
+  sha256: 310e69488aec811fa68d3bf62d285c558d9c3801df9dc5107ee6b01dd4a7713e
+  source:
+    author: litvinova
+    chunk_id: 6-klas-ukrmova-litvinova-2023_s0264
+    file: 6-klas-ukrmova-litvinova-2023
+    grade: '6'
+    kind: textbook
+    page: 259
+    row_sha256: c653fb04229d2fd59ea794f4c08ce56b289aac316750276512d7c845d6bcb621
+    section_id: 47460
+  supports: Public singular possessive matrix for my, your, our, polite/plural your and their. The malformed OCR paradigm
+    beneath the matrix is not a form authority; ULIF/VESUM word records supply practised forms.
+- id: T-703
+  quote: '§ 91
+
+    ОСОБЛИВОСТІ ВИЗНАЧЕН-
+
+    НЯ РОЗРЯДУ ЗАЙМЕННИКІВ
+
+    його, її, їх — їхній
+
+    1. Прочитайте словосполучення в колонках і виконайте завдання.
+
+    знайди його
+
+    зачекай її
+
+    його відповідь
+
+    її пенал
+
+    А. Б. У якій колонці займенники відповідають на питання чий? чия? та озна-
+
+    чають належність комусь?
+
+    Доведіть, що займенники першої колонки особові, а другої — присвійні.
+
+    Особові займенники 3-ї особи однини він, вона, воно у формі родового
+
+    відмінка його, її можуть набувати значення присвійних. Порівняймо:
+
+    покликати (кого?) його, не помітити (кого?) її — це особові займенники;
+
+    пісня (чия?) його, зачіска (чия?) її — це присвійні займенники.
+
+    Особовий займенник 3-ї особи множини вони у формі родового та знахідного
+
+    відмінків має форму їх: немає (кого? чого?) їх, знайшли (кого?
+
+    що?) їх. Присвійний займенник, що вказує на належність предмета
+
+    3-й особі, має форму їхній (їхня, їхнє, їхні): відгук (чий?) їхній.
+
+    Зауважте!
+
+    Займенник їхній завжди вживаємо з іменником.
+
+    2. Згрупуйте словосполучення за розрядами займенників у дві колонки:
+
+    1) особові; 2) присвійні (письмово).
+
+    Його автомобіль, помітити його, їхні ефіри, зібрати їх, зустріти її, її
+
+    флешка, їхньої поради, купити їх, її привітати.
+
+    3. Запишіть речення, уживаючи займенники з дужок у потрібній формі.
+
+    1. Усі (він) люблять, усі (він) чекають, а хто подивиться — кожний скривиться
+
+    (Нар. тв.). 2. Річка котилася й котилася, (вона) невгамовна погоня
+
+    заворожувала (Є. Гуцало). 3. «Пригоди Котигорошка та (він) друзів» — серіал,
+
+    створений на основі українських казок (З інтернету). 4. Звуки бувають
+
+    усякі, тільки треба вміти (вони) слухати (Ю. Смолич). 5. Квітка ясенець,
+
+    але ще в давні часи українці називали (вона) неопалимою купиною
+
+    (С. Плачинда). 6. На вулиці було багато дітей. Усюди чулися (вони) голоси
+
+    (З інтернету).
+
+    А. Надпишіть над кожною утвореною формою займенника розряд за зна-
+
+    ченням.
+
+    Б. Визначте, якими членами речення є ці займенники. Підкресліть їх.
+
+    178'
+  sha256: b3b932ef3c4e7acc9a148125ef5e344f226a292db5745dbfa295fc359cff4035
+  source:
+    author: avramenko
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0181
+    file: 6-klas-ukrmova-avramenko-2023
+    grade: '6'
+    kind: textbook
+    page: 178
+    row_sha256: 4afbdc708be8bce3666353febc1c26179f0843061e1a9f2fa9a9c366a2aa3647
+    section_id: 28832
+  supports: His and her possessive uses differ from object-pronoun uses; use only the possessive labels and retain the distinction
+    without teaching an oblique-case system.
+videos:
+- channel: Learn Ukrainian with Vakulenko
+  checked:
+    content_type: text/html
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=Vl5MAW3AYoU
+    http_status: 200
+  id: V-701
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=Vl5MAW3AYoU
+  use: Collected noun-gender video, used as supported listening before identifying familiar belongings. Dictionary records
+    determine the gender of each practised noun. Show the whole video visibly with sound and picture. No verified word-level
+    timing or models.words is claimed.
+- channel: VERBA SCHOOL
+  checked:
+    content_type: text/html
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=LARvKb7D38M
+    http_status: 200
+  id: V-702
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=LARvKb7D38M
+  use: Collected family and possessive video, used for listening and repeated supported family labels, without teaching the
+    full agreement system before position 8. Show the whole video visibly with sound and picture. No verified word-level timing
+    or models.words is claimed.

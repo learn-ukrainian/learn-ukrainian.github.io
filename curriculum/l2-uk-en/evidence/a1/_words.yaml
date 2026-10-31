@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: f46d122c51fda2c6972674a544583c9137efb3ace435256dbe37abf6f8a3e5d3
-  mcp_commit: 7802128ed67bf22aba8109bdb606d46a3f43ed63
+  mcp_commit: c7e4971b4866a404564a93624f6403d78225770a
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
-  sources_db: 3aada3d2b0a58d010015c5459aa414d525542bbdb4ae0fa164dec5826a3fae8e
+  sources_db: d146436ff501d1ea1c1acc5c414c7d87e82e4a91c030e74e84fdb9cb3f1c13c5
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -34103,3 +34103,433 @@ words:
   - form: привіт
     word: W-074
   text: Передати привіт.
+- entry:
+    entry_id: 164624
+    source: vesum
+  forms:
+  - form: київській
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївській
+    tags: adj:f:v_dav
+  - form: київська
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ки́ївська
+    tags: adj:f:v_kly
+  - form: київській
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївській
+    tags: adj:f:v_mis
+  - form: київська
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївська
+    tags: adj:f:v_naz
+  - form: київською
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївською
+    tags: adj:f:v_oru
+  - form: київської
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївської
+    tags: adj:f:v_rod
+  - form: київську
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївську
+    tags: adj:f:v_zna
+  - form: київському
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївському
+    tags: adj:m:v_dav
+  - form: київський
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївський
+    tags: adj:m:v_kly
+  - form: київському
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївському
+    tags: adj:m:v_mis
+  - form: київськім
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївськім
+    tags: adj:m:v_mis
+  - form: київський
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївський
+    tags: adj:m:v_naz
+  - form: київським
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївським
+    tags: adj:m:v_oru
+  - form: київського
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївського
+    tags: adj:m:v_rod
+  - form: київського
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївського
+    tags: adj:m:v_zna:ranim
+  - form: київський
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївський
+    tags: adj:m:v_zna:rinanim
+  - form: київському
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївському
+    tags: adj:n:v_dav
+  - form: київське
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ки́ївське
+    tags: adj:n:v_kly
+  - form: київському
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївському
+    tags: adj:n:v_mis
+  - form: київськім
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївськім
+    tags: adj:n:v_mis
+  - form: київське
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївське
+    tags: adj:n:v_naz
+  - form: київським
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївським
+    tags: adj:n:v_oru
+  - form: київського
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївського
+    tags: adj:n:v_rod
+  - form: київське
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївське
+    tags: adj:n:v_zna
+  - form: київським
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївським
+    tags: adj:p:v_dav
+  - form: київські
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ки́ївські
+    tags: adj:p:v_kly
+  - form: київських
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївських
+    tags: adj:p:v_mis
+  - form: київські
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївські
+    tags: adj:p:v_naz
+  - form: київськими
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївськими
+    tags: adj:p:v_oru
+  - form: київських
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївських
+    tags: adj:p:v_rod
+  - form: київських
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївських
+    tags: adj:p:v_zna:ranim
+  - form: київські
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ки́ївські
+    tags: adj:p:v_zna:rinanim
+  gloss_en: relating to Kyiv and its residents
+  gloss_source: request_meaning
+  id: W-310
+  lemma: київський
+  meaning: relating to Kyiv and its residents
+  note: Public-source English rendering of the definition returned by Sources query_sum20, slovnyk.me newsum mirror entry
+    for київський, retrieved 2026-08-24T19:54:50+00:00, sha256 328c747b11cca25de22ac6df84963b96f8fb8f25fe9c9971acd33ffe221d5d1f.
+    Sources verify_words confirms marker-free adjective analyses; query_ulif_records confirms complete verified entry 96043.
+    Used for the r6 position-5 capitalisation contrast only, without teaching adjective agreement.
+  pos: adj
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - ки́ївський
+    - 1
+    row_sha256: e4b8bbab2cfc71b172e0cc8c65ac4f9944337f24f7c4e078c9eece145e7c16ea
+    source: ulif
+- entry:
+    entry_id: 397346
+    source: vesum
+  forms:
+  - form: українській
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нській
+    tags: adj:f:v_dav:compb
+  - form: українська
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: украї́нська
+    tags: adj:f:v_kly:compb
+  - form: українській
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нській
+    tags: adj:f:v_mis:compb
+  - form: українська
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нська
+    tags: adj:f:v_naz:compb
+  - form: українською
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нською
+    tags: adj:f:v_oru:compb
+  - form: української
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нської
+    tags: adj:f:v_rod:compb
+  - form: українську
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нську
+    tags: adj:f:v_zna:compb
+  - form: українському
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нському
+    tags: adj:m:v_dav:compb
+  - form: український
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нський
+    tags: adj:m:v_kly:compb
+  - form: українському
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нському
+    tags: adj:m:v_mis:compb
+  - form: українськім
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нськім
+    tags: adj:m:v_mis:compb
+  - form: український
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нський
+    tags: adj:m:v_naz:compb
+  - form: українським
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нським
+    tags: adj:m:v_oru:compb
+  - form: українського
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нського
+    tags: adj:m:v_rod:compb
+  - form: українського
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нського
+    tags: adj:m:v_zna:ranim:compb
+  - form: український
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нський
+    tags: adj:m:v_zna:rinanim:compb
+  - form: українському
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нському
+    tags: adj:n:v_dav:compb
+  - form: українське
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: украї́нське
+    tags: adj:n:v_kly:compb
+  - form: українському
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нському
+    tags: adj:n:v_mis:compb
+  - form: українськім
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нськім
+    tags: adj:n:v_mis:compb
+  - form: українське
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нське
+    tags: adj:n:v_naz:compb
+  - form: українським
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нським
+    tags: adj:n:v_oru:compb
+  - form: українського
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нського
+    tags: adj:n:v_rod:compb
+  - form: українське
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нське
+    tags: adj:n:v_zna:compb
+  - form: українським
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нським
+    tags: adj:p:v_dav:compb
+  - form: українські
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: украї́нські
+    tags: adj:p:v_kly:compb
+  - form: українських
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нських
+    tags: adj:p:v_mis:compb
+  - form: українські
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нські
+    tags: adj:p:v_naz:compb
+  - form: українськими
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нськими
+    tags: adj:p:v_oru:compb
+  - form: українських
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нських
+    tags: adj:p:v_rod:compb
+  - form: українських
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нських
+    tags: adj:p:v_zna:ranim:compb
+  - form: українські
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: украї́нські
+    tags: adj:p:v_zna:rinanim:compb
+  gloss_en: relating to Ukraine and Ukrainians
+  gloss_source: request_meaning
+  id: W-311
+  lemma: український
+  meaning: relating to Ukraine and Ukrainians
+  note: Public-source English rendering of the definition returned by Sources query_sum20, slovnyk.me newsum mirror entry
+    for український, retrieved 2026-09-06T02:46:08+00:00, sha256 af4884613e663ca2f207cf9e27a879148d490dced37d4c2b596819ed2ecd8ca1.
+    Sources verify_words and query_ulif_records confirm the adjective identity and forms. Used for the r6 position-5 proper-name
+    versus derived-adjective contrast, without teaching adjective agreement.
+  pos: adj
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - украї́нський
+    - 2
+    row_sha256: 3bf4a696ac5f2ca9b404eb0ad602fc4ec9756b3f9065852fc0950a12cc6cf471
+    source: ulif

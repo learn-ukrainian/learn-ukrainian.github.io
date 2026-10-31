@@ -1,0 +1,238 @@
+request_schema: 1
+module: a1/reading-ukrainian
+texts:
+- id: T-401
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+  span:
+    first_words: Алфавіт На письмі звуки позначаємо буквами. Сукупність букв, розташованих у
+    last_words: й назвати букви, які ви бачите. Назвіть ці букви. 83
+  supports: Fixed alphabet order, naming letters and using an alphabet reference in a real lookup task.
+- id: T-402
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  span:
+    first_words: Букви та звуки В українській мові здебільшого одній букві відповідає
+    last_words: 'до кореня: підземний [п’ідземний] ь М’якість приголосного: день [ден′] 84'
+  supports: The last hushing letter has two sounds; digraphs represent joined sounds in the cited words,
+    with the prefix-boundary qualification retained for the teacher.
+- id: T-403
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0078
+  span:
+    first_words: § 33. Приголосні дзвінкі та глухі § 33. ПРИГОЛОСНІ ДЗВІНКІ
+    last_words: плоди — плоти, дужка — душка, дам — там. 77
+  supports: Complete the voiced/voiceless families g/k, zh/sh, dzh/ch and dz/ts; do not classify sonorants
+    as voiced obstruents.
+- id: T-404
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-litvinova-2023_s0128
+  span:
+    first_words: 4. Назви держав і автономних республік
+    last_words: Штати Америки.
+  supports: The State and country names in the public rule take capitals; the lesson selects the acquired
+    country name.
+- id: T-405
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0063
+  span:
+    first_words: 'Під час творення слів відбуваються такі зміни:'
+    last_words: + -ин (а)
+  supports: The source attests the lowercase derived adjective for Kyiv alongside a proper derived place
+    name; only capitalisation is compared, not word formation.
+videos:
+- id: V-401
+  url: https://www.youtube.com/watch?v=2tEPOopp7-I
+  channel: Red Purple Ukrainian
+  use: Collected handwritten alphabet video, used for listening to names while matching printed and handwritten
+    capital and small forms. Show the whole video visibly with sound and picture. No verified word-level
+    timing or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+- id: V-203
+  url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
+  channel: Speak Ukrainian
+  use: Collected alphabet video, reused as a listening overview alongside teacher modelling of only the
+    staged letters. Show the whole video visibly with sound and picture. No verified word-level timing
+    or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+standard:
+- id: S-401
+  lines: 571-572
+- id: S-402
+  lines: 343-344
+- id: S-403
+  lines: 362-365
+unsupported:
+- claim: An English-speaker description of the sounds Ж, Ш, Ч, Х and Й (an English sound comparison or
+    a typical English-reader difficulty for each). The sources give each Ukrainian sound (primer "Чую
+    [ж]" lines, T-010 to T-014) and a native pronunciation video per letter (V-003, V-010 to V-013), and
+    T-021 shows only that English h is written х in some borrowed words; no textbook record describes
+    these five sounds for an English speaker, so the plan teaches them by the native model and states
+    no English comparison.
+  id: U-001
+  resolved_by: 'Not taught as an English-comparison claim, because no source supports one. The five letters
+    are taught from the native audio models instead: Ж by V-012, Ш by V-013, Ч by V-010, Х by V-011 and
+    Й by V-003 (Ukrainian Lessons "Ukrainian Alphabet: How to pronounce <letter> in Ukrainian").
+
+
+    Current r6 disposition: preserved historical negative search. The replacement plan makes no English
+    sound-equivalence claim; T-402 and T-403 ground Ukrainian distinctions, which the teacher models.
+    V-203 remains whole visible listening exposure without exact target timings.'
+  searches:
+  - query: regex pleasure|measure|vision|shop|church|cheese|Bach|loch|boy|yes|like the English|pronounced
+      like|sounds like near Ж Ш Ч Х Й Г
+    tool: sqlite textbooks (source_file ulp-1..6-00-lesson-notes, anna-ohoiko-1000-words-2nd-ed, anna-ohoiko-500-verbs,
+      pohribnyi-ukrainska-literaturna-vymova-1992, private-teacher-lessons-a)
+  - query: regex ʃ|ʒ|tʃ|[x]|[j]|ɦ|zh|kh|sh|ch|voiced|voiceless|дзвінк|глух
+    tool: sqlite textbooks (ulp, anna-ohoiko, private-teacher)
+  - query: like the English | as in the English | in English words | English sound | Latin letter | English
+      g | English h | [h] | [g]
+    tool: sqlite textbooks (all subjects)
+  - query: шиплячі | [ж] | [ш] | [ч] | [х] | [й] | глотков | задньоязик (hits are OCR-garbled and give
+      no English comparison)
+    tool: sqlite textbooks (pohribnyi-ukrainska-literaturna-vymova-1992)
+  - query: titles Pronunciation|Alphabet|How to pronounce; text pleasure|shop|church|Bach|loch|boy|yes
+      (the per-letter video transcripts hold only example words; the talkukrainian alphabet table of English
+      equivalents is not in the stored text; external_articles is not a T- source table)
+    tool: sqlite external_articles (ulp_youtube, ukrainianlessons.com, talkukrainian.com, opentext.ku.edu)
+  - query: вимова звуків ж ш ч х й для англомовних
+    tool: mcp sources search_sources
+  - query: text like %ronunciation% (Pronunciation Trainer sections cover only the sound и, soft consonants,
+      rolled Р and question words; none covers Ж, Ш, Ч, Х or Й)
+    tool: sqlite textbooks (source_file ulp-1..6-00-lesson-notes)
+- claim: No confirmed free recording covers all exact whole-word choices required by lessons 1 s3/a8,
+    3 s3/a7 and 4 a10. Public letter videos use different example words. V-014 supports W-074, V-004 supports
+    W-081/W-101, and V-015 supports W-118/W-109/W-110; these do not establish the remaining word sets.
+    Lesson 3 a4 also needs exact primer Г/Ґ syllable recordings. Each remaining required word or syllable
+    needs an exact-form recording before a by-ear item can be written.
+  id: U-002
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision;
+    explicitly permitted print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [1, 3, 4]
+
+    records: [''T-001'', ''T-002'', ''T-007'', ''T-009'', ''T-019'', ''T-035'', ''EX-004'']
+
+    words: [''W-074'', ''W-081'', ''W-082'', ''W-101'', ''W-102'', ''W-103'', ''W-106'', ''W-107'', ''W-108'',
+    ''W-109'', ''W-110'', ''W-117'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same
+    teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to
+    learner production offline; no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent
+    playback proof inferred from resolved status.
+
+
+
+    Current r6 disposition: preserved historical missing-recording obligation. Retired by-ear whole-word
+    and primer-syllable tasks are not carried into the replacement. The acquired print is practised with
+    offline teacher read-aloud; no new recording is inferred. T-402/T-403 are print and norm evidence
+    only.'
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md
+      for exact requirements and rejected partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript
+      corpus scan
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md
+      for queries, returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+- claim: No confirmed free recording says either whole primer sentence EX-001 or EX-002 required by lesson
+    5 s3/a7. Printed T-015 and X-003 establish reading material, not recorded speech. V-004 supplies the
+    recap story and questions only.
+  id: U-003
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision;
+    explicitly permitted print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [5]
+
+    records: [''T-036'', ''T-037'', ''EX-001'', ''EX-002'']
+
+    words: [''W-006'', ''W-007'', ''W-061'', ''W-087'', ''W-113'', ''W-114'', ''W-115'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same
+    teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to
+    learner production offline; no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent
+    playback proof inferred from resolved status.
+
+
+
+    Current r6 disposition: preserved historical absence of whole-primer-sentence recordings. The new
+    practical recap selects useful labels and a supported badge, not the retired sentence replay. V-401
+    is the visible handwritten-alphabet listening input, not evidence of those sentences.'
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md
+      for exact requirements and rejected partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript
+      corpus scan
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md
+      for queries, returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+- claim: The complete T-018 and X-002 rows are bound to word records by EX-003 and EX-004. Lesson 2 s3/a5
+    still lacks W-145/W-146/W-147/W-148 in its core/incidental/recycled allowlist, and lesson 3 s2 lacks
+    W-149/W-150/W-151/W-152/W-153. W-035 is the existing base preposition. The pack and word store cannot
+    change the frozen plan allowlists; the plan author must admit all nine new incidental decoding records
+    before the complete rows can pass inventory checks.
+  id: U-004
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision;
+    explicitly permitted print conversion, not evidence that an audio recording exists.
+
+    mode: complete-row word admission
+
+    lessons: [2, 3]
+
+    records: [''T-018'', ''X-002'', ''EX-003'', ''EX-004'']
+
+    words: [''W-145'', ''W-146'', ''W-147'', ''W-148'', ''W-149'', ''W-150'', ''W-151'', ''W-152'', ''W-153'',
+    ''W-035'', ''W-107'', ''W-118'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same
+    teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to
+    learner production offline; no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent
+    playback proof inferred from resolved status.
+
+
+
+    Current r6 disposition: preserved historical complete-row inventory obligation. The replacement does
+    not print or score those complete retired rows. Current selected word records and acquired letters
+    are declared in each new lesson; source theory stays teacher evidence unless an explicit acquired-print
+    selector is declared.'
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md
+      for exact requirements and rejected partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript
+      corpus scan
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md
+      for queries, returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
