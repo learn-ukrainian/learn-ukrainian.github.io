@@ -46,7 +46,7 @@ def test_routine_fallback_and_recon_peer_preserve_envelope_routes():
     assert [row.model_id for row in resolve_role("routine_mechanical", purpose="inspect").candidates] == [HAIKU, "claude-sonnet-5-5"]
     assert [row.model_id for row in resolve_role("readonly_recon", purpose="inspect").candidates] == [HAIKU, "gpt-6-luna"]
     policy = load_model_catalog()["execution_routing"]["sol_advised_bounded"]
-    assert HAIKU not in {policy["preferred_worker"]["model_id"], policy["bounded_fallback_worker"]["model_id"]}
+    assert policy["preferred_worker"]["model_id"] != HAIKU
 
 
 @pytest.mark.parametrize("entrypoint", ["file", "module"])

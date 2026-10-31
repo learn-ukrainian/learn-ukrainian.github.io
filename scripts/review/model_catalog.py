@@ -64,13 +64,12 @@ GLM_ROUTE_FIELDS = (
 )
 VALID_CODEX_EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
 EXECUTION_ROUTE_KEYS = frozenset(
-    {"advisor", "preferred_worker", "bounded_fallback_worker", "autonomous_fallback", "review_boundary"}
+    {"advisor", "preferred_worker", "autonomous_fallback", "review_boundary"}
 )
 ADVISOR_KEYS = frozenset({"model_id", "effort", "role", "output_fields"})
 PREFERRED_WORKER_KEYS = frozenset(
     {"model_id", "effort", "requires", "task_types", "escalate_to", "prohibited_decisions", "escalation_triggers"}
 )
-BOUNDED_FALLBACK_WORKER_KEYS = frozenset({"model_id", "effort", "requires", "non_bounded_task_families"})
 BOUNDED_WORKER_REQUIRES = frozenset({"complete_advisory_envelope", "objective_scope_ceiling"})
 FALLBACK_KEYS = frozenset({"model_id", "effort", "when"})
 REVIEW_BOUNDARY_KEYS = frozenset(
@@ -314,37 +313,10 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
         "execution_routing.sol_advised_bounded.preferred_worker.escalate_to",
     )
 
-    # This section describes the explicit-envelope route (#9275). The narrow
-    # driver-brief route (#10919) is validated separately at dispatch and replay.
-    bounded_fallback = _require_mapping(
-        route["bounded_fallback_worker"],
-        "execution_routing.sol_advised_bounded.bounded_fallback_worker",
-    )
-    _require_exact_keys(
-        bounded_fallback,
-        BOUNDED_FALLBACK_WORKER_KEYS,
-        "execution_routing.sol_advised_bounded.bounded_fallback_worker",
-    )
-    bounded_fallback_model_id = _require_active_execution_model(
-        models,
-        bounded_fallback["model_id"],
-        "execution_routing.sol_advised_bounded.bounded_fallback_worker.model_id",
-    )
-    _require_execution_effort(
-        bounded_fallback["effort"],
-        "execution_routing.sol_advised_bounded.bounded_fallback_worker.effort",
-    )
-    for field in ("requires", "non_bounded_task_families"):
-        _require_string_list(
-            bounded_fallback[field],
-            f"execution_routing.sol_advised_bounded.bounded_fallback_worker.{field}",
-        )
-    if set(bounded_fallback["requires"]) != BOUNDED_WORKER_REQUIRES:
-        raise ModelCatalogError(
-            "execution_routing.sol_advised_bounded.bounded_fallback_worker.requires must bind a complete "
-            "envelope and objective scope ceiling"
-        )
-    if advisor_model_id in {preferred["model_id"], bounded_fallback_model_id}:
+    # This section describes the explicit-envelope route for the preferred worker (#9275).
+    # The narrow driver-brief route (#10919) is validated separately at dispatch and replay.
+    # Gemini 3.8 Flash High is not on this route (#12291).
+    if advisor_model_id == preferred["model_id"]:
         raise ModelCatalogError(
             "execution_routing.sol_advised_bounded.advisor.model_id must not be a bounded worker model"
         )
@@ -1217,8 +1189,6 @@ class BoundedExecutionPolicy:
     advisor_fence: str
     advisor_output_fields: tuple[str, ...]
     bounded_worker_model_id: str
-    bounded_fallback_model_id: str
-    non_bounded_task_families: frozenset[str]
 
 
 def driver_brief_models(catalog: dict[str, Any] | None = None) -> frozenset[str]:
@@ -1236,7 +1206,6 @@ def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedEx
     """The validated bounded-worker policy: who advises, which models need an envelope, and what it holds."""
     catalog = catalog or load_model_catalog()
     route = catalog["execution_routing"]["sol_advised_bounded"]
-    fallback = route["bounded_fallback_worker"]
     envelope = advisory_role_policy(BOUNDED_ADVISORY_ENVELOPE_ROLE, catalog)
     return BoundedExecutionPolicy(
         advisor_model_id=route["advisor"]["model_id"],
@@ -1245,8 +1214,6 @@ def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedEx
         advisor_fence=envelope.fence,
         advisor_output_fields=envelope.output_fields,
         bounded_worker_model_id=route["preferred_worker"]["model_id"],
-        bounded_fallback_model_id=fallback["model_id"],
-        non_bounded_task_families=frozenset(family.strip() for family in fallback["non_bounded_task_families"]),
     )
 
 
