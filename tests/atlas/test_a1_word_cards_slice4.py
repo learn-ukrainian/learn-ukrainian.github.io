@@ -137,12 +137,18 @@ def test_slice4_receipt_replay_refuses_foreign_quotes_and_unapproved_examples(mo
     selection = {"selected_row_ids": [r["id"] for r in rows], "selected_targets": []}
     context = cards.BatchContext(inputs.VERSION, inputs.MANIFEST, inputs.COMPANION, row_cards,
         batch["manifest"]["identity_methods"], partial(inputs.validate_inputs, root=ROOT, selection=selection))
+    form = next(claim for claim in batch["manifest"]["claims"] if claim["field"] == "paradigm")
+    form["supporting_spans"] = [{"pointer": "/clean_analyses/0/tags", "span": [0, 12]}]
     example = mechanics.example_claim(batch)
     pending = cards.build(**batch, batch=context)
     assert pending["schema_version"] == "atlas-a1-slice4-build.v1"
     assert mechanics.values(pending, "examples", mechanics.SENSE) == []
     assert cards.complete_chains(pending) == []
     assert pending["pending_examples"][0]["receipt"]["quotation"] == "An exact cited sentence."
+    target_form = next(a for a in mechanics.target(pending)["assertions"] if a["field"] == "paradigm")
+    receipt_ids = pending["assertion_receipts"][target_form["assertion_id"]]
+    receipts = {r["receipt_id"]: r for r in pending["receipts"]}
+    assert [receipts[rid]["quotation"] for rid in receipt_ids] == ["fixture-form", "noun:n:v_naz"]
     forged = copy.deepcopy(batch)
     forged["sources"]["records"]["vts:яйце"]["payload"]["example"] = "An invented replacement."
     forged["manifest"]["sources_sha256"] = digest(forged["sources"])
