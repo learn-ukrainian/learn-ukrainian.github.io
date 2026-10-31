@@ -1070,7 +1070,7 @@ def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]
     from scripts.review.isolation import ReviewIsolationError
     from scripts.review.prompts.eligibility import pin_refusals
 
-    if manifest.get("kind") not in {"plan", "lesson"}:
+    if manifest.get("kind") not in {"plan", "lesson", "lexical"}:
         raise ReviewIsolationError("attempt_manifest_kind")
     if pin_refusals(manifest, root):
         raise ReviewIsolationError("attempt_manifest_ineligible")

@@ -456,7 +456,11 @@ def reviewed_binding(
         r"[0-9a-f]{64}", attempt["manifest_sha256"]
     ):
         raise ValueError("review_sources_unproven")
-    receipts = ledger.records(receipt_path)
+    _check_lexical_prompt(task, attempt, word, pool)
+    try:
+        receipts = ledger.records(receipt_path)
+    except (OSError, ValueError, ledger.LedgerError) as exc:
+        raise ValueError("review_sources_unproven") from exc
 
     def proves_call(receipt: dict, tool: str) -> bool:
         arguments = receipt.get("arguments", {})
@@ -499,6 +503,46 @@ def reviewed_binding(
             "result_sha256": task["result_sha256"],
         },
     }
+
+
+def _check_lexical_prompt(task: dict, attempt: dict, word: dict, pool: list[dict]) -> None:
+    """Bind the consumer to the admitted lexical render, not just a result's assertions."""
+    from scripts.review.prompts.render import ManifestReader, RenderError, render
+
+    try:
+        contract = task["review_contract"]
+        manifest_path = Path(task["options"]["review_attempt"])
+        manifest_bytes = manifest_path.read_bytes()
+        manifest = yaml.safe_load(manifest_bytes)
+        if (
+            task.get("mode") != "read-only"
+            or hashlib.sha256(manifest_bytes).hexdigest() != attempt["manifest_sha256"]
+            or manifest.get("kind") != "lexical"
+            or manifest.get("word") != word["id"]
+            or contract.get("templates") != ["lexical-review.md.j2"]
+            or any(contract.get(k) != attempt[k] for k in ("review_id", "attempt_id"))
+        ):
+            raise ValueError("review_prompt_unproven")
+        root = Path(contract["input_root"])
+        rendered = render(
+            manifest_path, repo_root=root, review_id=attempt["review_id"], attempt_id=attempt["attempt_id"],
+            review_access=task.get("review_access") or "isolated",
+        )
+        prompt = Path(task["prompt_file"]).read_bytes()
+        if (
+            prompt != rendered.prompt.encode("utf-8")
+            or rendered.prompt_sha256 != task.get("prompt_sha256")
+            or rendered.prompt_sha256 != contract.get("prompt_sha256")
+        ):
+            raise ValueError("review_prompt_unproven")
+        packet = ManifestReader(manifest, root).pin_json("inputs.candidates")
+        if packet != {
+            "word": word["id"], "lemma": word["lemma"], "pos": word["pos"],
+            "candidates_sha256": digest(pool), "candidates": pool,
+        }:
+            raise ValueError("review_subject_stale_or_unapproved")
+    except (OSError, KeyError, TypeError, AttributeError, json.JSONDecodeError, yaml.YAMLError, RenderError) as exc:
+        raise ValueError("review_prompt_unproven") from exc
 
 
 def git(repo: Path, *args: str) -> bytes:

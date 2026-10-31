@@ -68,6 +68,11 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
         raise ValueError(str(exc)) from None
     if not checked.passed:
         raise ValueError("prompt_render_invalid: " + "; ".join(checked.errors))
+    manifest = yaml.safe_load(Path(args.review_attempt).read_bytes())
+    if manifest.get("kind") == "lexical" and (
+        args.review_profile != "ukrainian" or not args.review_author_model or args.effort != "high"
+    ):
+        raise ValueError("lexical_review_identity_required: use Ukrainian profile, author model and high effort")
     check_review_tool_requirements(text, access)
     _check_pins_at_commit(repo, sha, Path(args.review_attempt))
     return contract

@@ -866,6 +866,9 @@ def test_private_output_repository_guard(tmp_path):
 
 @pytest.fixture
 def review_dispatch(tmp_path):
+    from scripts.review.prompts.render import render_prompt
+    from tests.review.test_prompts import _setup_lexical_fixture
+
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     pool = bindings.candidate_list(WORD, [row(["target"])])
@@ -873,18 +876,34 @@ def review_dispatch(tmp_path):
     verdict = {"verdict": "APPROVE", "subject": subject}
     result = tmp_path / "review.result"
     result.write_text(json.dumps(verdict))
+    manifest_path, manifest, _ = _setup_lexical_fixture(tmp_path)
+    packet_path = tmp_path / manifest["inputs"]["candidates"]["path"]
+    packet_path.write_text(json.dumps({"word": WORD["id"], "lemma": WORD["lemma"], "pos": WORD["pos"],
+                                      "candidates": pool, "candidates_sha256": bindings.digest(pool)}))
+    manifest["inputs"]["candidates"]["sha256"] = hashlib.sha256(packet_path.read_bytes()).hexdigest()
+    manifest_path.write_text(yaml.safe_dump(manifest))
+    prompt_file = tmp_path / "review.prompt"
+    _, prompt_sha, _ = render_prompt(manifest_path, repo_root=tmp_path, output_path=prompt_file,
+                                     review_id="review-test", attempt_id="attempt-test", review_access="isolated")
+    manifest_sha = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
     task = {
         "task_id": "review-test",
         "status": "done",
         "review_profile": "ukrainian",
         "review_author_model": "gpt-6.1-sol",
         "effort": "high",
+        "mode": "read-only",
+        "options": {"review_attempt": str(manifest_path)},
+        "prompt_file": str(prompt_file),
+        "prompt_sha256": prompt_sha,
+        "review_contract": {"input_root": str(tmp_path), "templates": ["lexical-review.md.j2"],
+                            "review_id": "review-test", "attempt_id": "attempt-test", "prompt_sha256": prompt_sha},
         "model": "gemini-3.8-flash-high",
         "agent": "agy",
         "finished_at": "2026-10-03T00:00:00Z",
         "result_file": str(result),
         "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
-        "review_attempt": {"review_id": "review-test", "attempt_id": "attempt-test", "manifest_sha256": "a" * 64},
+        "review_attempt": {"review_id": "review-test", "attempt_id": "attempt-test", "manifest_sha256": manifest_sha},
     }
     record = tasks / "review-test.json"
     record.write_text(json.dumps(task))
@@ -894,7 +913,7 @@ def review_dispatch(tmp_path):
         ledger_path,
         review_id="review-test",
         attempt_id="attempt-test",
-        manifest_sha256="a" * 64,
+        manifest_sha256=manifest_sha,
         tool="verify_words",
         server_version="fixture",
         arguments={"words": ["synthetic"]},
@@ -910,7 +929,7 @@ def review_dispatch(tmp_path):
             ledger_path,
             review_id="review-test",
             attempt_id="attempt-test",
-            manifest_sha256="a" * 64,
+            manifest_sha256=manifest_sha,
             tool=tool,
             server_version="fixture",
             arguments=arguments,
@@ -945,6 +964,9 @@ def test_reviewed_binding_derives_identity_and_approving_subject(review_dispatch
         "candidates",
         "verdict",
         "mcp",
+        "prompt",
+        "contract",
+        "ledger",
     ],
 )
 def test_reviewed_binding_rejects_incomplete_unrelated_or_stale(review_dispatch, mutation):
@@ -959,6 +981,14 @@ def test_reviewed_binding_rejects_incomplete_unrelated_or_stale(review_dispatch,
         task["result_sha256"] = "0" * 64
     elif mutation == "mcp":
         task["review_attempt"] = {}
+    elif mutation == "prompt":
+        Path(task["prompt_file"]).write_text("not the exact render")
+        task["prompt_sha256"] = hashlib.sha256(Path(task["prompt_file"]).read_bytes()).hexdigest()
+        task["review_contract"]["prompt_sha256"] = task["prompt_sha256"]
+    elif mutation == "contract":
+        task.pop("review_contract")
+    elif mutation == "ledger":
+        (tasks.parent / "review-receipts/review-test/attempt-test.jsonl").unlink()
     else:
         field = {"word": "word", "row": "row_sha256", "candidates": "candidates_sha256"}.get(mutation, mutation)
         if mutation == "verdict":
@@ -968,7 +998,13 @@ def test_reviewed_binding_rejects_incomplete_unrelated_or_stale(review_dispatch,
         result.write_text(json.dumps(verdict))
         task["result_sha256"] = hashlib.sha256(result.read_bytes()).hexdigest()
     record.write_text(json.dumps(task))
-    with pytest.raises(ValueError):
+    reason = {
+        "failed": "review_not_done_or_unrelated", "running": "review_not_done_or_unrelated",
+        "unrelated": "review_not_done_or_unrelated", "model": "review_family_invalid",
+        "hash": "review_result_changed", "mcp": "review_sources_unproven", "ledger": "review_sources_unproven",
+        "prompt": "review_prompt_unproven", "contract": "review_prompt_unproven",
+    }.get(mutation, "review_subject_stale_or_unapproved")
+    with pytest.raises(ValueError, match=f"^{reason}$"):
         bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol")
 
 
@@ -1095,6 +1131,8 @@ def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
 
 @pytest.mark.parametrize("atom_index", [0, 1])
 def test_bind_cli_candidate_list_and_review(bound, review_dispatch, monkeypatch, capsys, atom_index):
+    from scripts.review.prompts.render import render_prompt
+
     root, api, _b = bound
     # The approving subject must match the API's complete current list.
     tasks, _pool, record, result, task, verdict = review_dispatch
@@ -1103,13 +1141,37 @@ def test_bind_cli_candidate_list_and_review(bound, review_dispatch, monkeypatch,
     verdict["subject"] = {"word": "W-001", "candidates_sha256": bindings.digest(pool), **selected}
     result.write_text(json.dumps(verdict))
     task["result_sha256"] = hashlib.sha256(result.read_bytes()).hexdigest()
+    manifest_path = Path(task["options"]["review_attempt"])
+    manifest = yaml.safe_load(manifest_path.read_text())
+    packet_path = Path(task["review_contract"]["input_root"]) / manifest["inputs"]["candidates"]["path"]
+    packet = json.loads(packet_path.read_text())
+    packet.update(candidates=pool, candidates_sha256=bindings.digest(pool))
+    packet_path.write_text(json.dumps(packet))
+    manifest["inputs"]["candidates"]["sha256"] = hashlib.sha256(packet_path.read_bytes()).hexdigest()
+    manifest_path.write_text(yaml.safe_dump(manifest))
+    _, prompt_sha, _ = render_prompt(manifest_path, repo_root=Path(task["review_contract"]["input_root"]),
+                                     output_path=Path(task["prompt_file"]), review_id="review-test",
+                                     attempt_id="attempt-test", review_access="isolated")
+    task["prompt_sha256"] = task["review_contract"]["prompt_sha256"] = prompt_sha
+    task["review_attempt"]["manifest_sha256"] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+    receipt_path = tasks.parent / "review-receipts/review-test/attempt-test.jsonl"
+    receipts = ledger.records(receipt_path)
+    receipt_path.unlink()
+    receipt_path.with_name(receipt_path.name + ".sha256").unlink()
+    for receipt in receipts:
+        ledger.append(receipt_path, **task["review_attempt"], **{
+            k: receipt[k] for k in ("tool", "server_version", "arguments", "snapshots", "status", "result")
+        })
     record.write_text(json.dumps(task))
     (root / "_words.yaml").write_text(yaml.safe_dump({"level": "a1", "words": [WORD]}))
     monkeypatch.setattr(sources, "Sources", lambda **kw: api)
     monkeypatch.setattr(sense_cli, "tasks_dir", lambda: tasks)
     args = ["a1", "--evidence-dir", str(root), "--word", "W-001"]
     assert sense_cli.main([*args, "--candidates"], command="bind") == 0
-    assert "candidates_sha256" in capsys.readouterr().out
+    assert json.loads(capsys.readouterr().out) == {
+        "word": WORD["id"], "lemma": WORD["lemma"], "pos": WORD["pos"],
+        "candidates_sha256": bindings.digest(pool), "candidates": pool,
+    }
     assert (
         sense_cli.main(
             [
@@ -1255,7 +1317,7 @@ def test_review_role_author_and_sources_provenance_rejected(review_dispatch, mut
         task["agent"] = "cursor"
     elif mutation == "unrelated_sources":
         other = {**WORD, "lemma": "unrelated"}
-        with pytest.raises(ValueError, match="sources_unproven"):
+        with pytest.raises(ValueError, match="review_subject_stale_or_unapproved"):
             bindings.reviewed_binding(other, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol")
         return
     else:

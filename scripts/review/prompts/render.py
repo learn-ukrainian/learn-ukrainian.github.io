@@ -1,7 +1,7 @@
 """Content-addressed reviewer prompt renderer (#8430 Part R2 item 1).
 
 Renders reviewer prompts strictly from the inputs the review attempt manifest names
-and hashes (plan review, lesson review, lesson re-review, or settle). The pinned
+and hashes (plan review, lesson review, lesson re-review, lexical review, or settle). The pinned
 files are found the way the engine records them: any object carrying a ``path`` and
 a ``sha256`` anywhere in the manifest is a pin (``scripts.build.fresh.manifest
 .pinned_entries``), so ``inputs.*``, ``module_digest``, ``diff``,
@@ -43,6 +43,7 @@ PROMPTS_DIR = Path(__file__).resolve().parent
 #: Pins a first-class review needs, by manifest kind; a missing one is refused by name
 #: rather than rendered as an empty section.
 REQUIRED_PINS: dict[str, tuple[str, ...]] = {
+    "lexical": ("inputs.candidates",),
     "lesson": (
         "inputs.plan",
         "inputs.pack",
@@ -78,7 +79,7 @@ REQUIRED_PINS: dict[str, tuple[str, ...]] = {
 #: ``review_id``/``attempt_id`` (#8996): rendering one of these for dispatch requires both, since the
 #: validator matches ledger records by what the seat echoes back in that block, not by a guess.
 TEMPLATES_REQUIRING_ATTEMPT_IDS: frozenset[str] = frozenset(
-    {"plan-review.md.j2", "lesson-review.md.j2", "lesson-rereview.md.j2"}
+    {"plan-review.md.j2", "lesson-review.md.j2", "lesson-rereview.md.j2", "lexical-review.md.j2"}
 )
 
 
@@ -266,6 +267,8 @@ def resolve_template_name(manifest: dict[str, Any], template_name: str | None = 
         return "lesson-rereview.md.j2" if manifest.get("previous_attempt") else "lesson-review.md.j2"
     if kind == "settle":
         return "settle.md.j2"
+    if kind == "lexical":
+        return "lexical-review.md.j2"
 
     raise RenderError(f"unable to infer template for manifest kind: {kind!r}")
 
@@ -453,7 +456,42 @@ def _build_context(
         context.update(_lesson_context(reader, manifest))
     elif kind == "plan":
         context.update(_plan_context(reader, manifest))
+    elif kind == "lexical":
+        context.update(_lexical_context(reader, manifest))
     return context
+
+
+def _lexical_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str, Any]:
+    """The public, single-word candidate export; never a private reference extraction."""
+    packet = reader.pin_json("inputs.candidates")
+    if (
+        not isinstance(packet, dict)
+        or set(packet) != {"word", "lemma", "pos", "candidates_sha256", "candidates"}
+        or packet["word"] != manifest["word"]
+        or not all(isinstance(packet[k], str) and packet[k].strip() for k in ("lemma", "pos"))
+        or not isinstance(packet["candidates"], list)
+        or not packet["candidates"]
+    ):
+        raise RenderError("lexical_candidates_invalid")
+    encoded = json.dumps(packet["candidates"], ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+    if compute_sha256(encoded) != packet["candidates_sha256"]:
+        raise RenderError("lexical_candidates_digest_mismatch")
+    fields = {"table", "id", "row_sha256", "span_index", "atom_index", "span", "labels", "definitions"}
+    for candidate in packet["candidates"]:
+        if (
+            not isinstance(candidate, dict)
+            or set(candidate) != fields
+            or candidate["table"] != "dmklinger_uk_en"
+            or not isinstance(candidate["row_sha256"], str)
+            or not re.fullmatch(r"[0-9a-f]{64}", candidate["row_sha256"])
+            or not all(type(candidate[k]) is int and candidate[k] >= 0 for k in ("id", "span_index", "atom_index"))
+            or not isinstance(candidate["span"], str)
+            or not candidate["span"].strip()
+            or not all(isinstance(candidate[k], list) and all(isinstance(v, str) for v in candidate[k])
+                       for k in ("labels", "definitions"))
+        ):
+            raise RenderError("lexical_candidates_invalid")
+    return {"lexical_packet_text": json.dumps(packet, ensure_ascii=False, indent=2)}
 
 
 #: Context entries that come from the manifest itself, not from the content of a pinned file.
@@ -706,7 +744,7 @@ def main(argv: list[str] | None = None) -> int:
         "--review-id",
         default=None,
         help=(
-            "This attempt's review id (#8996), printed in the attempt block of a plan/lesson/re-review "
+            "This attempt's review id (#8996), printed in the attempt block of a plan/lesson/re-review/lexical "
             "template so the validator can match the seat's return to its receipt ledger. Required for those "
             "kinds; refused by name if missing. Default: None. Example: --review-id rev-20260922-001"
         ),
@@ -716,7 +754,7 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help=(
             "This attempt's attempt id (#8996), printed beside --review-id in the same attempt block. "
-            "Required together with --review-id for plan/lesson/re-review templates. "
+            "Required together with --review-id for plan/lesson/re-review/lexical templates. "
             "Default: None. Example: --attempt-id claude-att-1"
         ),
     )
