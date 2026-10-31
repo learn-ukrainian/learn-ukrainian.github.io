@@ -692,7 +692,9 @@ def publisher(tmp_path, monkeypatch, synthetic_opsec):
             return gh.Response(
                 200, {}, json.dumps({"number": 1, "draft": False, "head": {"sha": HEAD}, "base": {}}).encode()
             )
-        # The #12020 seat read: an exact-head recorded approval (#12031), and the fleet identity.
+        # The #12020 seat read: an exact-head recorded approval (#12031), the PR's files, and the fleet identity.
+        if endpoint.startswith("repos/unit/public/pulls/1/files"):
+            return gh.Response(200, {}, json.dumps([{"filename": "scripts/example.py"}]).encode())
         if endpoint.startswith("repos/unit/public/issues/1/comments"):
             return gh.Response(200, {}, json.dumps([recorded_approval(HEAD)]).encode())
         if endpoint.startswith("user"):
@@ -727,14 +729,15 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         text=True,
     )
     assert result.returncode == 0, result.stderr
-    assert wire.sent[:5] == [
+    assert wire.sent[:6] == [
         ("http", "GET", "repos/unit/public/pulls/1"),
         ("native", "pr", "checks", "1", "--json", "name,bucket,state,workflow", "--repo", "unit/public"),
         ("http", "POST", "graphql"),
         ("http", "GET", "repos/unit/public/issues/1/comments?per_page=100"),
+        ("http", "GET", "repos/unit/public/pulls/1/files?per_page=100"),
         ("http", "GET", "user?per_page=100"),
     ]
-    assert wire.sent[5][:4] == ("native", "pr", "merge", "1") and len(wire.sent) == 6
+    assert wire.sent[6][:4] == ("native", "pr", "merge", "1") and len(wire.sent) == 7
     # The operation ended with the verb: a non-landing verb is refused with its typed reason.
     refused(
         pub.publish(
@@ -748,7 +751,7 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         ),
         "secondary_hold",
     )
-    assert len(wire.sent) == 6
+    assert len(wire.sent) == 7
 
 
 def test_publisher_merge_honours_only_an_authentic_hold_with_its_reason(publisher):

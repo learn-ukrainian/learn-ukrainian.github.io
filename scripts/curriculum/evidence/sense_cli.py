@@ -85,6 +85,51 @@ def select_store(
     return selected, decisions
 
 
+def _select(word: dict, context: bindings.Context, api: sources.Sources):
+    """The selector's gloss for one store record."""
+    payload_row = None if word.get("kind") == "formula" else api.kaikki_rows([word["lemma"]]).raw.get(word["lemma"])
+    return context.select(word, bindings.rows_for(word, api), payload_row)
+
+
+def _cited_gloss(record: dict, word: dict, selection, own_public: set[str]) -> str | None:
+    """The open-dictionary gloss ``record`` holds at its validated location and cites by row, else None.
+
+    The gloss must be an open atom or span of the record's own lemma, with no book
+    or formula basis, so its text is the cited row's.
+    """
+    if (
+        word.get("kind") == "formula"
+        or selection.gloss is None
+        or selection.basis is not None
+        or not isinstance(selection.ref, dict)
+        or record.get("gloss_en") != selection.gloss
+        or record.get("gloss_ref") != selection.ref
+        or record.get("gloss_basis") is not None
+        or matcher.normalize(selection.gloss, word["pos"]) not in own_public
+    ):
+        return None
+    return selection.gloss
+
+
+def _entry_identity(entry: object) -> bool:
+    """A resolved VESUM or ULIF entry, the identity a request shares with the store record built from it."""
+    if not isinstance(entry, dict):
+        return False
+    if entry.keys() == {"source", "entry_id"}:
+        return entry["source"] == "vesum" and type(entry["entry_id"]) is int and entry["entry_id"] >= 1
+    key = entry.get("key")
+    return (
+        entry.keys() == {"source", "key"}
+        and entry["source"] == "ulif"
+        and isinstance(key, list)
+        and len(key) == 2
+        and isinstance(key[0], str)
+        and key[0] != ""
+        and type(key[1]) is int
+        and key[1] >= 1
+    )
+
+
 def _redact_validated_locations(
     content: bytes,
     context: bindings.Context,
@@ -99,9 +144,11 @@ def _redact_validated_locations(
     ``public`` maps a word id to the open-dictionary atoms and spans of that
     record's own lemma. A store gloss equal to one of them, at the location the
     selector validates, is public even when another lemma's private entry shares
-    the English.
+    the English. A ``meaning`` equal to a cited such gloss, in the store record
+    or in the one request record that built it, is that row's text and is
+    redacted with it.
     """
-    if kind not in {"bindings", "words"}:
+    if kind not in {"bindings", "words", "requests"}:
         return content
     try:
         text = content.decode("utf-8")
@@ -120,6 +167,10 @@ def _redact_validated_locations(
                 for child in node.value:
                     reach(child, inner)
             elif isinstance(node, yaml.MappingNode):
+                # A duplicate key anywhere makes the parsed value ambiguous, so nothing is exempt.
+                keys = [key.value for key, _value in node.value if isinstance(key, yaml.ScalarNode)]
+                if len(set(keys)) != len(keys):
+                    raise ValueError("duplicate_keys")
                 for key, value in node.value:
                     reach(key, inner)
                     reach(value, inner)
@@ -134,6 +185,31 @@ def _redact_validated_locations(
                 raise ValueError("duplicate_keys")
             return fields
 
+        cleared = set()
+
+        def exempt(allowed):
+            """Ranges of single-reached scalars holding exactly their allowed value; any other voids the file."""
+            for scalar, value in allowed:
+                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != value or reached[id(scalar)] != 1:
+                    raise ValueError("location_not_exempt")
+                cleared.add(id(scalar))
+                yield scalar.start_mark.index, scalar.end_mark.index
+
+        def same(node, blanked, seen: set[tuple[int, int]]) -> bool:
+            """``blanked`` is ``node`` with only the cleared scalars emptied."""
+            if (id(node), id(blanked)) in seen:
+                return True
+            seen.add((id(node), id(blanked)))
+            if type(node) is not type(blanked):
+                return False
+            if isinstance(node, yaml.ScalarNode):
+                if id(node) in cleared:
+                    return blanked.value == ""
+                return (node.tag, node.value) == (blanked.tag, blanked.value)
+            pairs = node.value if isinstance(node, yaml.SequenceNode) else [p for kv in node.value for p in kv]
+            other = blanked.value if isinstance(node, yaml.SequenceNode) else [p for kv in blanked.value for p in kv]
+            return len(pairs) == len(other) and all(same(a, b, seen) for a, b in zip(pairs, other, strict=True))
+
         nodes = mapping(tree)["bindings" if kind == "bindings" else "words"]
         if not isinstance(nodes, yaml.SequenceNode):
             return content
@@ -142,17 +218,35 @@ def _redact_validated_locations(
         ranges = []
         for entry, node in zip(entries, nodes.value, strict=True):
             fields = mapping(node)
+            if kind == "requests":
+                # A request meaning is public only through the cited gloss of the one store
+                # record built from it; the request itself cites nothing.
+                built = [
+                    w
+                    for w in words.values()
+                    if w.get("kind") != "formula"
+                    and (w["lemma"], w["pos"], w.get("entry"))
+                    == (entry.get("lemma"), entry.get("pos"), entry.get("entry"))
+                ]
+                if (
+                    "meaning" not in fields
+                    or not _entry_identity(entry.get("entry"))
+                    or len(built) != 1
+                    or built[0].get("meaning") != entry.get("meaning")
+                ):
+                    continue
+                word = built[0]
+                cited = _cited_gloss(word, word, _select(word, context, api), (public or {}).get(word["id"], set()))
+                if cited is not None and entry.get("meaning") == cited:
+                    ranges.extend(exempt([(fields["meaning"], cited)]))
+                continue
             wid = entry.get("word" if kind == "bindings" else "id")
             word = words.get(wid)
             binding = context.entries.get(wid)
             own_public = (public or {}).get(wid, set())
             if not word or not (binding or (kind == "words" and own_public)):
                 continue
-            row = bindings.rows_for(word, api)
-            payload_row = (
-                None if word.get("kind") == "formula" else api.kaikki_rows([word["lemma"]]).raw.get(word["lemma"])
-            )
-            selection = context.select(word, row, payload_row)
+            selection = _select(word, context, api)
             if selection.gloss is None:
                 continue
             validated = (
@@ -174,12 +268,17 @@ def _redact_validated_locations(
                 allowed.append((fields["gloss_en"], selection.gloss))
             if allowed and kind == "words" and isinstance(selection.ref, dict) and "span" in selection.ref:
                 allowed.append((mapping(fields["gloss_ref"])["span"], allowed[0][1]))
-            for scalar, value in allowed:
-                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != value or reached[id(scalar)] != 1:
-                    return content
-                ranges.append((scalar.start_mark.index, scalar.end_mark.index))
+            cited = _cited_gloss(entry, word, selection, own_public) if kind == "words" else None
+            if cited is not None and entry.get("meaning") == cited:
+                # The record's copy of the request meaning that its cited row span is spelled as.
+                allowed.append((fields["meaning"], cited))
+            ranges.extend(exempt(allowed))
         for start, end in sorted(ranges, reverse=True):
-            text = text[:start] + " " * (end - start) + text[end:]
+            # Line breaks stay, so a block scalar's lines blank without joining the next record.
+            text = text[:start] + re.sub(r"[^\r\n]", " ", text[start:end]) + text[end:]
+        # The structured scan must still see every other record exactly as committed.
+        if ranges and not same(tree, yaml.compose(text), set()):
+            return content
         return text.encode()
     except (UnicodeError, ValueError, KeyError, TypeError, AttributeError, yaml.YAMLError):
         return content
@@ -428,7 +527,13 @@ def leak_scan(
         full_files += 1
         full_bytes += len(content)
         kind = (
-            "bindings" if path == prefix + bindings.BINDINGS else "words" if path == prefix + "_words.yaml" else "other"
+            "bindings"
+            if path == prefix + bindings.BINDINGS
+            else "words"
+            if path == prefix + "_words.yaml"
+            else "requests"
+            if Path(path).parent == Path(prefix, "_requests") and path.endswith(".words.yaml")
+            else "other"
         )
         scan(
             _redact_validated_locations(content, context, words, api, kind=kind, public=record_public),

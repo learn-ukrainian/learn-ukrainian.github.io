@@ -33,6 +33,14 @@ INFRA = {
 }
 CAP_SECONDS = 600
 TIMEOUT_SECONDS = 480
+# Runner speed variance, measured from the committed record: across the recorded PR
+# runs whose selection ran whole, the wall time reached at most 1.176 times the
+# estimate (343.4 s estimated, 403.8 s wall), and an estimate of 464.9 s was killed
+# at 480 s. The ratio rounds up to 1.18; the safe budget is the timeout divided by it.
+VARIANCE_RATIO = 1.18
+SAFE_SECONDS = math.floor(TIMEOUT_SECONDS / VARIANCE_RATIO)
+BUDGET_REASON = "recorded estimate plus runner-variance margin exceeds 480 second pytest timeout"
+GUARDS_REASON = "guards alone exceed the safe budget under the 480 second pytest timeout"
 # Importing tests fill only half the room the guards and changed tests leave under
 # the cap, and never past the pytest timeout: a selection estimated at the kill limit
 # has no room for runner speed variance. Measured from the mandatory selection, not
@@ -140,14 +148,25 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         or p == "tests/flake_quarantine.yaml"
         for p in changed
     )
+    guard_estimate = 60 + sum(durations.get(p, default) for p in guards)
     reason = (
         "pytest infrastructure changed"
         if infrastructure
         else "recorded estimate exceeds 600 second cap"
         if estimate > CAP_SECONDS
+        else BUDGET_REASON
+        if estimate > SAFE_SECONDS
         else None
     )
     run = set(guards) if reason else set(selected)
+    if reason == BUDGET_REASON:
+        # Over the safe budget: changed tests fill what the guards leave, cheapest
+        # first, so the same rule bounds the mandatory selection and the importers.
+        used = guard_estimate
+        for p in sorted(set(tests) - set(guards), key=lambda p: (durations.get(p, default), p)):
+            if used + durations.get(p, default) <= SAFE_SECONDS:
+                run.add(p)
+                used += durations.get(p, default)
     # Tests for changed code fill the fill budget, cheapest first; the
     # rest defer to merge-group pytest. Infrastructure changes run guards only.
     sources = {p for p in changed if not TEST.fullmatch(p)}
@@ -167,13 +186,13 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
             raise ValueError("invalid recorded duration")
     budget = estimate
-    fill_limit = min(estimate + (CAP_SECONDS - estimate) * FILL_SHARE, TIMEOUT_SECONDS)
+    fill_limit = min(estimate + (CAP_SECONDS - estimate) * FILL_SHARE, SAFE_SECONDS)
     for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
         if budget + durations.get(p, default) <= fill_limit:
             run.add(p)
             budget += durations.get(p, default)
     if set(imported) - run:
-        reason = "recorded estimate exceeds 600 second cap"
+        reason = BUDGET_REASON if fill_limit == SAFE_SECONDS else "recorded estimate exceeds 600 second cap"
     run = sorted(run)
     return {
         "candidate": candidate,
@@ -185,6 +204,8 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         "deferred_files": sorted((set(tests) | set(imported)) - set(run)),
         "reason": reason,
         "estimate_seconds": budget,
+        "safe_budget_seconds": SAFE_SECONDS,
+        "guards_exceed_safe_budget": guard_estimate > SAFE_SECONDS,
         "unknown_duration_files": unknown,
         "deleted_test_files": sorted(
             p for p in changed if p.startswith("tests/") and p.endswith(".py") and p not in entries
@@ -247,6 +268,12 @@ def main() -> int:
         record.update(exit_code=None, reported_cases=None, skipped_cases=None, failed_cases=None,
                       deferred_case_count=None, execution_status="incomplete")
         report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        if record["guards_exceed_safe_budget"] and not args.repo_wide:
+            # Running them would end in the kill with no failed test; say so instead.
+            stage, reason = "safe_budget", "guards_exceed_safe_budget"
+            record["execution_status"] = "not_run_guards_exceed_safe_budget"
+            report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+            raise ValueError(GUARDS_REASON + f" ({SAFE_SECONDS} s); refresh {DURATIONS} or trim the guard list")
         stage, reason = "pytest_execution", "execution_incomplete"
         started = time.monotonic()
         result = subprocess.run(

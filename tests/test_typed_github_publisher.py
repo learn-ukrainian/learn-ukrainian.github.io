@@ -72,10 +72,14 @@ def spy(calls, *, comment_edit=False, merge=False):
                 document = {"login": "unit"} if endpoint == "user" else {"id": 7, "body": "previous", "user": {"login": "unit"}}
                 return subprocess.CompletedProcess(args, 0, json.dumps(document), "")
         if merge and args[:4] == ["gh", "api", "--method", "GET"] and args[4].split("?", 1)[0] in {
-            "repos/unit/public/issues/1/comments", "user"
+            "repos/unit/public/issues/1/comments", "repos/unit/public/pulls/1/files", "user"
         }:
-            # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031).
-            seats = [[recorded_approval("a" * 40)]] if args[4].startswith("repos/") else {"login": "unit"}
+            # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031), and the PR's files.
+            endpoint = args[4].split("?", 1)[0]
+            if endpoint.endswith("/files"):
+                seats = [[{"filename": "scripts/example.py"}]]
+            else:
+                seats = [[recorded_approval("a" * 40)]] if args[4].startswith("repos/") else {"login": "unit"}
             return subprocess.CompletedProcess(args, 0, json.dumps(seats), "")
         if (
             args[:3] == ["gh", "pr", "view"]

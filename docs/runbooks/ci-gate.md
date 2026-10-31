@@ -51,12 +51,18 @@ No green-run receipt skips code checks or publication checks.
 The changed-test subprocess retains its 480-second timeout. The committed
 serial file-duration sum plus 60 seconds for setup and
 collection is the conservative estimate; a selected file with no recorded time
-(a new test file) counts at the median recorded file and still runs. If the
-estimate exceeds 600 seconds or pytest infrastructure changes, all guards still run
-and changed files outside the guards defer to merge-group pytest. Otherwise the
-importing tests fill half of the room the guards and changed tests leave under the cap, never past the 480-second timeout (leaving room for runner variance), cheapest recorded duration first; the
-rest defer with the same reason and are listed in `importing_test_files` and
-`deferred_files`. The recorded estimate includes the importing tests that run, and
+(a new test file) counts at the median recorded file and still runs. The safe budget is the timeout divided by 1.18, the
+largest measured ratio of wall time to estimate across recorded PR runs (1.176; an
+estimate of 464.9 seconds was killed at 480), so 406 seconds. If the estimate exceeds
+600 seconds or pytest infrastructure changes, all guards still run and changed files
+outside the guards defer to merge-group pytest. If it exceeds the safe budget, the guards
+run and changed tests fill the rest of the budget, cheapest recorded duration first; the
+others defer with an explicit reason. Otherwise the importing tests fill half of the room
+the guards and changed tests leave under the cap, never past the safe budget, cheapest
+recorded duration first; the rest defer with the same reason and are listed in
+`importing_test_files` and `deferred_files`. If the guards alone exceed the safe budget,
+the job writes `pr-affected.json` with `execution_status` `not_run_guards_exceed_safe_budget`
+and fails with that reason instead of running to the timeout. The recorded estimate includes the importing tests that run, and
 `unknown_duration_files` includes every importing test with no recorded time. Infrastructure
 includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
@@ -327,12 +333,11 @@ files; those are imported only with `import type`, which the compiler erases.
 
 ### History shard
 
-Seven test files are listed in `scripts/ci/history-tests.txt`. Five read old
-commits: `git show`/`git cat-file` of an old SHA, a recorded historical
-commit, a frozen base commit, and `origin/main` ancestry. Two run a
-`--dry-run` `dispatch.py dispatch --worktree`, which fetches `main` from
-GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
-s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
+Eight test files are listed in `scripts/ci/history-tests.txt`. All eight read old
+commits: `git ls-tree`/`git show`/`git cat-file` of an old SHA, a recorded historical
+commit, a frozen base commit, and `origin/main` ancestry. Fetching `main` from GitHub on a
+shallow checkout downloaded all of main's history, 65-77 s per test instead of
+0.3 s; the dispatch tests that did so were deleted with the legacy delegate. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out
 with full history (`fetch-depth: 0`), a full clone with every blob (see
 "Full-history checkouts are blobless" below). Shards 2..N check out only the tested
@@ -341,12 +346,12 @@ listed file that is no longer tracked fails the split.
 
 The list is measured, not guessed. Run 36654595606 had every shard shallow
 with network git blocked in the pytest step. It was compared test by test with
-the full-history run 36650655215. Only these seven files changed outcome (28
+the full-history run 36650655215. Only seven files changed outcome (28
 tests, passed to failed). The one other change is a `test_ci_split` workflow
 assertion that failed on the experiment's own `GIT_ALLOW_PROTOCOL` edit. None of them skipped:
-each failed loudly, with git exit 128 or a blocked https transport. Without the
-block, the network fetch in the two delegate tests pulled main's history into
-their shard and hid two of the five history files. A new test that needs
+each failed loudly, with git exit 128 or a blocked https transport. Before the block, the
+network fetch in the two delegate tests (no longer listed) pulled main's
+history into their shard and hid two of the five history files then listed. A new test that needs
 history or fetches from GitHub therefore fails on a shallow shard; add its file
 to the list.
 
@@ -405,8 +410,8 @@ composite's online install fallback handles the miss. The #9062 measurement
 on hosted image `20260920.314` found 3.12.14 already cached, while 3.12.8
 required a download on every shard.
 
-The history shard keeps full Git history: five pinned test files read history
-and two more fetch `main` (listed in `scripts/ci/history-tests.txt`, consumed
+The history shard keeps full Git history: eight pinned test files read history
+(listed in `scripts/ci/history-tests.txt`, consumed
 by `scripts/ci/split_tests.py`).
 Other shards are shallow. #9211 rejected blobless checkout because those
 history readers need the committed blobs as well as the commit graph.

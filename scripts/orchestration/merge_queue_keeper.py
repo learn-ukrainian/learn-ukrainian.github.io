@@ -37,9 +37,11 @@ from scripts.orchestration.integration_sweep import (
     COMMENTS_UNAVAILABLE,
     NEEDS_SEAT,
     Verdict,
+    changes_learner_content,
     classify_pr,
     lookup_verdict,
     parse_marker,
+    pr_file_paths,
     verdict_detail,
 )
 from scripts.publish.github import Request, request_run
@@ -242,6 +244,12 @@ class GitHub:
 
     def comments(self, number: int) -> list[dict[str, Any]]:
         return self.paged(Request("read-comments", repo=self.repository, number=number))
+
+    def pr_files(self, number: int) -> list[str]:
+        try:
+            return pr_file_paths(self.paged(Request("read-pr-files", repo=self.repository, number=number)))
+        except ValueError as exc:
+            raise KeeperError(str(exc)) from exc
 
     def checks(self, head: str) -> list[dict[str, Any]]:
         data = self.json(Request("read-checks", repo=self.repository, sha=head))
@@ -994,9 +1002,12 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             queued_now[key] = head
         queue_enabled = snap["queues"].get(pr.get("baseRefName"))
         comment_safe = True
+        # Whether the PR changes learner content, which takes the Ukrainian seats; None when unread.
+        learner_content: bool | None = None
         try:
             comments = gh.comments(number)
-            verdict = lookup_verdict(comments, head, login)
+            learner_content = changes_learner_content(gh.pr_files(number))
+            verdict = lookup_verdict(comments, head, login, learner_content=learner_content)
             check_rows = gh.checks(head)
             checks = _check_state(check_rows, head)
         except KeeperError:
@@ -1089,7 +1100,9 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             else:
                 try:
                     current_comments = gh.comments(number)
-                    current_verdict = lookup_verdict(current_comments, head, login)
+                    if learner_content is None:
+                        learner_content = changes_learner_content(gh.pr_files(number))
+                    current_verdict = lookup_verdict(current_comments, head, login, learner_content=learner_content)
                 except KeeperError:
                     current_comments, current_verdict = [], Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
                     comment_safe = False

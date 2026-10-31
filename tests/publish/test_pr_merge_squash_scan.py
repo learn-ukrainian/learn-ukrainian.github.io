@@ -38,7 +38,10 @@ def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=
         if args[:3] == ["gh", "pr", "checks"]:
             return subprocess.CompletedProcess(args, 0, "[]", "")
         if args[:4] == ["gh", "api", "--method", "GET"]:
-            seats = [[recorded_approval(HEAD)]] if "/issues/1/comments" in args[4] else {"login": "unit"}
+            if "/pulls/1/files" in args[4]:
+                seats = [[{"filename": "scripts/example.py"}]]
+            else:
+                seats = [[recorded_approval(HEAD)]] if "/issues/1/comments" in args[4] else {"login": "unit"}
             return subprocess.CompletedProcess(args, 0, json.dumps(seats), "")
         if args[:5] == ["gh", "api", "--method", "POST", "graphql"]:
             if "mergeQueueEntry" in Path(args[6]).read_text():
@@ -181,7 +184,7 @@ def priority_transport(calls, *, labels, timeline):
     """A queue repository with one recorded approval of HEAD; records either enqueue write."""
     base = transport(calls, queue=True)
     approval = recorded_approval(HEAD, "fleet")
-    pages = {"/comments": [[approval]], "/timeline": [timeline]}
+    pages = {"/comments": [[approval]], "/files": [[{"filename": "scripts/example.py"}]], "/timeline": [timeline]}
 
     def send(args, **kwargs):
         if args[:3] == ["gh", "pr", "view"] and "labels" in args[args.index("--json") + 1]:
