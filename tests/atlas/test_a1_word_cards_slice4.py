@@ -154,6 +154,14 @@ def test_slice4_receipt_replay_refuses_foreign_quotes_and_unapproved_examples(mo
     forged["manifest"]["sources_sha256"] = digest(forged["sources"])
     with pytest.raises(Refusal, match="slice4_quotation_outside_tool_response"):
         cards.build(**forged, batch=context)
+    footer = copy.deepcopy(batch)
+    record = footer["sources"]["records"]["vts:яйце"]
+    response = footer["sources"]["calls"][record["call_key"]]["response"]
+    response["article"] = "Different primary entry.\nДжерело: other dictionary\nA literal definition."
+    record["response_sha256"] = digest(response)
+    footer["manifest"]["sources_sha256"] = digest(footer["sources"])
+    with pytest.raises(Refusal, match="slice4_quotation_outside_tool_response"):
+        cards.build(**footer, batch=context)
     wrong = copy.deepcopy(batch)
     wrong["manifest"]["claims"][-1]["span"] = [0, 9999]
     with pytest.raises(Refusal, match="invalid_span"):

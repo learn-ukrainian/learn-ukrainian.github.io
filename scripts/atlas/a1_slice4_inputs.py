@@ -24,7 +24,7 @@ MANIFEST = "registry/atlas/a1-v1-slice4.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice4.json"
 INPUTS = "registry/atlas/a1-v1-slice4-inputs.json"
 INPUTS_SHA256 = "c3d85031e708005e8018c097cd35ce83b985f9ceda5e5b1a8659e61706f660e8"
-MANIFEST_SHA256 = "4cb31b9d6f59e6d4d851d4e8cb0777e59e9c3b09e9974ecf99a5068d35a3495a"
+MANIFEST_SHA256 = "6175243d6950dd7aacb2bc78d5aba32914c701b1031bfdcfe25367b7750504ba"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -207,8 +207,11 @@ def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, sele
             start, end = span["span"]
             cards.require(type(start) is int and type(end) is int and 0 <= start < end <= len(text), "invalid_span")
             quotation = text[start:end]
-            cards.require(any(quotation in literal for literal in
-                              _strings(sources["calls"][record["call_key"]]["response"])),
+            literals = _strings(sources["calls"][record["call_key"]]["response"])
+            if record["source_id"] == "vts_busel_slovnyk_me":
+                literals = (literal.split("Джерело:", 1)[0].split("Значення в інших", 1)[0]
+                            for literal in literals)
+            cards.require(any(quotation in literal for literal in literals),
                           "slice4_quotation_outside_tool_response")
     return effective, selected
 
