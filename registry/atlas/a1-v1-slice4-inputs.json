@@ -1,1 +1,1015 @@
-{"cap_deferred_targets":599,"eligible_targets":659,"ineligible_row_kinds":{"ambiguous":149,"name":18,"phrase":272,"slash_alternatives":4,"unresolved":20},"join":"remaining_resolved_entry_priority_inventory_order_v1","original_rows":2144,"preferred_plan_sha":"e7a9ac497da8bbeba5531937a4c8543369462942","preferred_targets":0,"preferred_terms":84,"prior_selected_rows":196,"remaining_rows":1948,"schema_version":"atlas-a1-slice4-selection.v1","selected_row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/0","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/5","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/6","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/7","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/9","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/0","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/4","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/5","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/9","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/22","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/23","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/26","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/27","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/28","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/29","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/30","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/32","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/34","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/35","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/36","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/37","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/38","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/39","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/40","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/41","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/42","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/0","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/4","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/5","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/checkpoint-communication/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/checkpoint-communication/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/vocabulary.yaml#/3","curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/39","curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/42","curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/51","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/23","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/36","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/37","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/38","curriculum/l2-uk-en/a1-v1/checkpoint-time-nature/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/emergencies/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/emergencies/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/food-and-drink/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/health/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/health/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/holidays/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/i-want-i-can/vocabulary.yaml#/28","curriculum/l2-uk-en/a1-v1/linking-ideas/vocabulary.yaml#/31","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/0","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/3","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/9","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/22","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/29","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/30","curriculum/l2-uk-en/a1-v1/my-family/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/my-morning/vocabulary.yaml#/30","curriculum/l2-uk-en/a1-v1/my-story/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/23","curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/reading-ukrainian/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/5","curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/22","curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/31","curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/40","curriculum/l2-uk-en/a1-v1/things-have-gender/vocabulary.yaml#/29","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/5","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/23","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/what-happened/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/what-happened/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/what-i-like/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/what-i-like/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/what-is-it-like/vocabulary.yaml#/37","curriculum/l2-uk-en/a1-v1/what-time/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/26","curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/31","curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/32","curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/22","curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/41","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/6","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/9","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/34","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/35","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/5","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/6","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/22","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/23","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/26","curriculum/l2-uk-en/a1-v1/yesterday/vocabulary.yaml#/17"],"selected_targets":[{"entry_id":406467,"first_index":0,"kind":"lemma","lemma":"фінал","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/0"]},{"entry_id":82422,"first_index":1,"kind":"lemma","lemma":"готовий","pos":"adj","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/my-morning/vocabulary.yaml#/30"]},{"entry_id":376940,"first_index":5,"kind":"lemma","lemma":"сувенір","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/5"]},{"entry_id":186992,"first_index":6,"kind":"lemma","lemma":"листівка","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/6","curriculum/l2-uk-en/a1-v1/checkpoint-communication/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/holidays/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/what-is-it-like/vocabulary.yaml#/37"]},{"entry_id":192553,"first_index":7,"kind":"lemma","lemma":"магніт","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/7"]},{"entry_id":163594,"first_index":8,"kind":"lemma","lemma":"квиток","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/checkpoint-communication/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/10"]},{"entry_id":161722,"first_index":9,"kind":"lemma","lemma":"картка","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/9","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/51","curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/18"]},{"entry_id":82385,"first_index":10,"kind":"lemma","lemma":"готель","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/17"]},{"entry_id":188280,"first_index":12,"kind":"lemma","lemma":"лінія","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/12"]},{"entry_id":161650,"first_index":13,"kind":"lemma","lemma":"карта","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/13"]},{"entry_id":180042,"first_index":14,"kind":"lemma","lemma":"круасан","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/14"]},{"entry_id":28683,"first_index":15,"kind":"lemma","lemma":"борщ","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/food-and-drink/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/i-want-i-can/vocabulary.yaml#/28"]},{"entry_id":150970,"first_index":16,"kind":"lemma","lemma":"зустріти","pos":"verb","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/16"]},{"entry_id":292394,"first_index":17,"kind":"lemma","lemma":"познайомитися","pos":"verb","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/vocabulary.yaml#/3"]},{"entry_id":406358,"first_index":18,"kind":"lemma","lemma":"фільм","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/what-happened/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/what-i-like/vocabulary.yaml#/19"]},{"entry_id":288308,"first_index":19,"kind":"lemma","lemma":"повторювати","pos":"verb","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/19"]},{"entry_id":289933,"first_index":20,"kind":"lemma","lemma":"подорожувати","pos":"verb","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/my-story/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/what-i-like/vocabulary.yaml#/16"]},{"entry_id":161525,"first_index":21,"kind":"name","lemma":"Карпати","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/linking-ideas/vocabulary.yaml#/31"]},{"entry_id":422190,"first_index":24,"kind":"lemma","lemma":"чудовий","pos":"adj","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/24"]},{"entry_id":204813,"first_index":26,"kind":"lemma","lemma":"місто","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/0","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/0","curriculum/l2-uk-en/a1-v1/my-family/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/things-have-gender/vocabulary.yaml#/29","curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/9","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/14"]},{"entry_id":70080,"first_index":27,"kind":"lemma","lemma":"вулиця","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/emergencies/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/1","curriculum/l2-uk-en/a1-v1/reading-ukrainian/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/31","curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/8"]},{"entry_id":330413,"first_index":28,"kind":"lemma","lemma":"район","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/2"]},{"entry_id":285033,"first_index":30,"kind":"lemma","lemma":"площа","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/4","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/22","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/13"]},{"entry_id":262017,"first_index":31,"kind":"lemma","lemma":"парк","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/5","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/3","curriculum/l2-uk-en/a1-v1/what-happened/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/26","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/15"]},{"entry_id":378248,"first_index":34,"kind":"lemma","lemma":"супермаркет","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/2"]},{"entry_id":162570,"first_index":35,"kind":"lemma","lemma":"кафе","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/9","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/0","curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/39","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/31","curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/24"]},{"entry_id":334224,"first_index":36,"kind":"lemma","lemma":"ресторан","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/23"]},{"entry_id":10756,"first_index":37,"kind":"lemma","lemma":"аптека","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/health/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/8","curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/5","curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/40","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/21"]},{"entry_id":23312,"first_index":38,"kind":"lemma","lemma":"бібліотека","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/9","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/22"]},{"entry_id":187818,"first_index":39,"kind":"lemma","lemma":"лікарня","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/emergencies/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/health/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/11"]},{"entry_id":17025,"first_index":40,"kind":"lemma","lemma":"банк","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/6","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/19"]},{"entry_id":308350,"first_index":41,"kind":"lemma","lemma":"пошта","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/15","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/20"]},{"entry_id":150918,"first_index":42,"kind":"lemma","lemma":"зупинка","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/26"]},{"entry_id":64973,"first_index":43,"kind":"lemma","lemma":"вокзал","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/16","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/25"]},{"entry_id":371920,"first_index":44,"kind":"lemma","lemma":"станція","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/13"]},{"entry_id":200835,"first_index":45,"kind":"lemma","lemma":"метро","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/18","curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/22","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/2"]},{"entry_id":1559,"first_index":46,"kind":"lemma","lemma":"автобус","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/20","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/19","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/1"]},{"entry_id":389885,"first_index":48,"kind":"lemma","lemma":"трамвай","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/22","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/5"]},{"entry_id":208868,"first_index":49,"kind":"lemma","lemma":"музей","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/23","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/11","curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/12","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/18"]},{"entry_id":382610,"first_index":50,"kind":"lemma","lemma":"театр","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/14","curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/10","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/19"]},{"entry_id":166795,"first_index":51,"kind":"lemma","lemma":"кінотеатр","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/20"]},{"entry_id":371580,"first_index":52,"kind":"lemma","lemma":"стадіон","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/26","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/22"]},{"entry_id":283601,"first_index":53,"kind":"lemma","lemma":"пішки","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/27","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/20"]},{"entry_id":411582,"first_index":54,"kind":"lemma","lemma":"хвилина","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/28","curriculum/l2-uk-en/a1-v1/checkpoint-time-nature/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/what-time/vocabulary.yaml#/1"]},{"entry_id":25953,"first_index":55,"kind":"lemma","lemma":"близько","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/29","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/30","curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/32","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/5"]},{"entry_id":87402,"first_index":56,"kind":"lemma","lemma":"далеко","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/30","curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/29","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/6"]},{"entry_id":99875,"first_index":58,"kind":"lemma","lemma":"додому","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/32","curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/41","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/13","curriculum/l2-uk-en/a1-v1/yesterday/vocabulary.yaml#/17"]},{"entry_id":97787,"first_index":60,"kind":"lemma","lemma":"дістатися","pos":"verb","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/34","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/38","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/19"]},{"entry_id":157054,"first_index":61,"kind":"lemma","lemma":"іти","pos":"verb","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/35","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/36","curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/23","curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/24","curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/25","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/34"]},{"entry_id":157359,"first_index":62,"kind":"lemma","lemma":"їхати","pos":"verb","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/36","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/37","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/17","curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/35","curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/11"]},{"entry_id":303252,"first_index":63,"kind":"lemma","lemma":"поруч","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/37"]},{"entry_id":325891,"first_index":64,"kind":"lemma","lemma":"прямо","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/38","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/21","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/23"]},{"entry_id":222512,"first_index":65,"kind":"lemma","lemma":"направо","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/39","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/24"]},{"entry_id":219768,"first_index":66,"kind":"lemma","lemma":"наліво","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/40","curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/23","curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/25"]},{"entry_id":308917,"first_index":67,"kind":"lemma","lemma":"праворуч","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/41"]},{"entry_id":187623,"first_index":68,"kind":"lemma","lemma":"ліворуч","pos":"adv","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/42"]},{"entry_id":158130,"first_index":70,"kind":"lemma","lemma":"кав'ярня","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/1"]},{"entry_id":199761,"first_index":71,"kind":"lemma","lemma":"меню","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/2","curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/42"]},{"entry_id":128908,"first_index":73,"kind":"lemma","lemma":"замовляти","pos":"verb","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/4"]},{"entry_id":258576,"first_index":74,"kind":"lemma","lemma":"офіціант","pos":"noun","preferred":false,"row_ids":["curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/5"]}],"source_file_sha256":{"registry/atlas/a1-v1-inventory.json":"4cbcb769f0e8379d43a2cd86e48ef353e2328e0b5a895b410f540547cc409a59","registry/atlas/a1-v1-slice2.json":"d8a45ed57a824cf0c7cb94cfd40eb689f50957b64c39d647baeb06521d506015","registry/atlas/a1-v1-slice3-plan-inputs.json":"5d48a9632825f3f110843792214612c733a17fc4bd23a11d2046166f674f3b0d","registry/atlas/a1-v1-slice3.json":"9ff22f62cd50485fe68b1f33504e56c58761d0d352f47ab5a3f64f365438d5fd","registry/atlas/identity/a1-v1-slice2.json":"b1ea5099207618dc3879eb517e28867c174b629126ae2b0e8b9d8629ce564e52","registry/atlas/identity/a1-v1-slice3.json":"f4de91773ffa6e59e953c7ea0645205f06d55a146b88403665cef0fe57647419","registry/atlas/identity/registry.json":"681be77e60edbe621ca68e680db2bffbbd9e99267b011fb0515e090fe8d8a06d"},"source_sha":"0398eb5caa1c6a98dccaf9275520ccb2f978a95c"}
+{
+  "cap_deferred_targets": 599,
+  "eligible_targets": 659,
+  "ineligible_row_kinds": {
+    "ambiguous": 149,
+    "name": 18,
+    "phrase": 272,
+    "slash_alternatives": 4,
+    "unresolved": 20
+  },
+  "join": "remaining_resolved_entry_priority_inventory_order_v1",
+  "original_rows": 2144,
+  "preferred_plan_sha": "e7a9ac497da8bbeba5531937a4c8543369462942",
+  "preferred_targets": 0,
+  "preferred_terms": 84,
+  "prior_selected_rows": 196,
+  "remaining_rows": 1948,
+  "schema_version": "atlas-a1-slice4-selection.v1",
+  "selected_row_ids": [
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/0",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/1",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/2",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/5",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/6",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/7",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/8",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/9",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/12",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/14",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/15",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/17",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/18",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/19",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/20",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/21",
+    "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/24",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/0",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/1",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/2",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/4",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/5",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/8",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/9",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/11",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/12",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/14",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/15",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/17",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/18",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/19",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/20",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/21",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/22",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/23",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/24",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/25",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/26",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/27",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/28",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/29",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/30",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/32",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/34",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/35",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/36",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/37",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/38",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/39",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/40",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/41",
+    "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/42",
+    "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/0",
+    "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/1",
+    "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/2",
+    "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/4",
+    "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/5",
+    "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/20",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-communication/vocabulary.yaml#/14",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-communication/vocabulary.yaml#/17",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/vocabulary.yaml#/3",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/39",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/42",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/51",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/11",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/12",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/17",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/18",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/19",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/20",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/21",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/23",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/36",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/37",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/38",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-time-nature/vocabulary.yaml#/2",
+    "curriculum/l2-uk-en/a1-v1/emergencies/vocabulary.yaml#/12",
+    "curriculum/l2-uk-en/a1-v1/emergencies/vocabulary.yaml#/20",
+    "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/14",
+    "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/17",
+    "curriculum/l2-uk-en/a1-v1/food-and-drink/vocabulary.yaml#/11",
+    "curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/8",
+    "curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/12",
+    "curriculum/l2-uk-en/a1-v1/health/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/health/vocabulary.yaml#/17",
+    "curriculum/l2-uk-en/a1-v1/holidays/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/i-want-i-can/vocabulary.yaml#/28",
+    "curriculum/l2-uk-en/a1-v1/linking-ideas/vocabulary.yaml#/31",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/0",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/1",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/3",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/8",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/9",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/11",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/12",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/14",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/15",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/17",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/18",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/19",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/20",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/22",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/24",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/25",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/29",
+    "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/30",
+    "curriculum/l2-uk-en/a1-v1/my-family/vocabulary.yaml#/14",
+    "curriculum/l2-uk-en/a1-v1/my-morning/vocabulary.yaml#/30",
+    "curriculum/l2-uk-en/a1-v1/my-story/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/23",
+    "curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/24",
+    "curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/25",
+    "curriculum/l2-uk-en/a1-v1/reading-ukrainian/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/2",
+    "curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/5",
+    "curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/18",
+    "curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/22",
+    "curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/31",
+    "curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/40",
+    "curriculum/l2-uk-en/a1-v1/things-have-gender/vocabulary.yaml#/29",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/1",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/2",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/5",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/11",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/12",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/17",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/19",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/23",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/24",
+    "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/25",
+    "curriculum/l2-uk-en/a1-v1/what-happened/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/what-happened/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/what-i-like/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/what-i-like/vocabulary.yaml#/19",
+    "curriculum/l2-uk-en/a1-v1/what-is-it-like/vocabulary.yaml#/37",
+    "curriculum/l2-uk-en/a1-v1/what-time/vocabulary.yaml#/1",
+    "curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/25",
+    "curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/26",
+    "curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/31",
+    "curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/32",
+    "curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/18",
+    "curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/21",
+    "curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/22",
+    "curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/41",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/6",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/8",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/9",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/10",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/11",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/12",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/14",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/15",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/16",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/34",
+    "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/35",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/5",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/6",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/11",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/13",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/14",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/15",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/19",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/20",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/21",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/22",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/23",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/24",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/25",
+    "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/26",
+    "curriculum/l2-uk-en/a1-v1/yesterday/vocabulary.yaml#/17"
+  ],
+  "selected_targets": [
+    {
+      "entry_id": 406467,
+      "first_index": 0,
+      "kind": "lemma",
+      "lemma": "фінал",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/0"
+      ]
+    },
+    {
+      "entry_id": 82422,
+      "first_index": 1,
+      "kind": "lemma",
+      "lemma": "готовий",
+      "pos": "adj",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/1",
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/2",
+        "curriculum/l2-uk-en/a1-v1/my-morning/vocabulary.yaml#/30"
+      ]
+    },
+    {
+      "entry_id": 376940,
+      "first_index": 5,
+      "kind": "lemma",
+      "lemma": "сувенір",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/5"
+      ]
+    },
+    {
+      "entry_id": 186992,
+      "first_index": 6,
+      "kind": "lemma",
+      "lemma": "листівка",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/6",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-communication/vocabulary.yaml#/14",
+        "curriculum/l2-uk-en/a1-v1/holidays/vocabulary.yaml#/13",
+        "curriculum/l2-uk-en/a1-v1/what-is-it-like/vocabulary.yaml#/37"
+      ]
+    },
+    {
+      "entry_id": 192553,
+      "first_index": 7,
+      "kind": "lemma",
+      "lemma": "магніт",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/7"
+      ]
+    },
+    {
+      "entry_id": 163594,
+      "first_index": 8,
+      "kind": "lemma",
+      "lemma": "квиток",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/8",
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/21",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-communication/vocabulary.yaml#/17",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/10"
+      ]
+    },
+    {
+      "entry_id": 161722,
+      "first_index": 9,
+      "kind": "lemma",
+      "lemma": "картка",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/9",
+        "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/20",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/51",
+        "curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/18"
+      ]
+    },
+    {
+      "entry_id": 82385,
+      "first_index": 10,
+      "kind": "lemma",
+      "lemma": "готель",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/17"
+      ]
+    },
+    {
+      "entry_id": 188280,
+      "first_index": 12,
+      "kind": "lemma",
+      "lemma": "лінія",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/12"
+      ]
+    },
+    {
+      "entry_id": 161650,
+      "first_index": 13,
+      "kind": "lemma",
+      "lemma": "карта",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/13"
+      ]
+    },
+    {
+      "entry_id": 180042,
+      "first_index": 14,
+      "kind": "lemma",
+      "lemma": "круасан",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/14"
+      ]
+    },
+    {
+      "entry_id": 28683,
+      "first_index": 15,
+      "kind": "lemma",
+      "lemma": "борщ",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/15",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/food-and-drink/vocabulary.yaml#/11",
+        "curriculum/l2-uk-en/a1-v1/i-want-i-can/vocabulary.yaml#/28"
+      ]
+    },
+    {
+      "entry_id": 150970,
+      "first_index": 16,
+      "kind": "lemma",
+      "lemma": "зустріти",
+      "pos": "verb",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/16"
+      ]
+    },
+    {
+      "entry_id": 292394,
+      "first_index": 17,
+      "kind": "lemma",
+      "lemma": "познайомитися",
+      "pos": "verb",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/17",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/vocabulary.yaml#/3"
+      ]
+    },
+    {
+      "entry_id": 406358,
+      "first_index": 18,
+      "kind": "lemma",
+      "lemma": "фільм",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/18",
+        "curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/8",
+        "curriculum/l2-uk-en/a1-v1/what-happened/vocabulary.yaml#/13",
+        "curriculum/l2-uk-en/a1-v1/what-i-like/vocabulary.yaml#/19"
+      ]
+    },
+    {
+      "entry_id": 288308,
+      "first_index": 19,
+      "kind": "lemma",
+      "lemma": "повторювати",
+      "pos": "verb",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/19"
+      ]
+    },
+    {
+      "entry_id": 289933,
+      "first_index": 20,
+      "kind": "lemma",
+      "lemma": "подорожувати",
+      "pos": "verb",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/20",
+        "curriculum/l2-uk-en/a1-v1/my-story/vocabulary.yaml#/13",
+        "curriculum/l2-uk-en/a1-v1/what-i-like/vocabulary.yaml#/16"
+      ]
+    },
+    {
+      "entry_id": 161525,
+      "first_index": 21,
+      "kind": "name",
+      "lemma": "Карпати",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/21",
+        "curriculum/l2-uk-en/a1-v1/linking-ideas/vocabulary.yaml#/31"
+      ]
+    },
+    {
+      "entry_id": 422190,
+      "first_index": 24,
+      "kind": "lemma",
+      "lemma": "чудовий",
+      "pos": "adj",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/a1-finale/vocabulary.yaml#/24"
+      ]
+    },
+    {
+      "entry_id": 204813,
+      "first_index": 26,
+      "kind": "lemma",
+      "lemma": "місто",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/0",
+        "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/0",
+        "curriculum/l2-uk-en/a1-v1/my-family/vocabulary.yaml#/14",
+        "curriculum/l2-uk-en/a1-v1/things-have-gender/vocabulary.yaml#/29",
+        "curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/18",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/9",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/14"
+      ]
+    },
+    {
+      "entry_id": 70080,
+      "first_index": 27,
+      "kind": "lemma",
+      "lemma": "вулиця",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/1",
+        "curriculum/l2-uk-en/a1-v1/emergencies/vocabulary.yaml#/20",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/1",
+        "curriculum/l2-uk-en/a1-v1/reading-ukrainian/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/31",
+        "curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/21",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/8"
+      ]
+    },
+    {
+      "entry_id": 330413,
+      "first_index": 28,
+      "kind": "lemma",
+      "lemma": "район",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/2"
+      ]
+    },
+    {
+      "entry_id": 285033,
+      "first_index": 30,
+      "kind": "lemma",
+      "lemma": "площа",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/4",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/24",
+        "curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/22",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/13"
+      ]
+    },
+    {
+      "entry_id": 262017,
+      "first_index": 31,
+      "kind": "lemma",
+      "lemma": "парк",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/5",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/13",
+        "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/13",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/3",
+        "curriculum/l2-uk-en/a1-v1/what-happened/vocabulary.yaml#/16",
+        "curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/26",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/15"
+      ]
+    },
+    {
+      "entry_id": 378248,
+      "first_index": 34,
+      "kind": "lemma",
+      "lemma": "супермаркет",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/8",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/11",
+        "curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/2"
+      ]
+    },
+    {
+      "entry_id": 162570,
+      "first_index": 35,
+      "kind": "lemma",
+      "lemma": "кафе",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/9",
+        "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/0",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/39",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/12",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/13",
+        "curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/31",
+        "curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/25",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/12",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/24"
+      ]
+    },
+    {
+      "entry_id": 334224,
+      "first_index": 36,
+      "kind": "lemma",
+      "lemma": "ресторан",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/16",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/12",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/23"
+      ]
+    },
+    {
+      "entry_id": 10756,
+      "first_index": 37,
+      "kind": "lemma",
+      "lemma": "аптека",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/11",
+        "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/17",
+        "curriculum/l2-uk-en/a1-v1/health/vocabulary.yaml#/17",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/8",
+        "curriculum/l2-uk-en/a1-v1/shopping/vocabulary.yaml#/5",
+        "curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/40",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/16",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/21"
+      ]
+    },
+    {
+      "entry_id": 23312,
+      "first_index": 38,
+      "kind": "lemma",
+      "lemma": "бібліотека",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/12",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/9",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/22"
+      ]
+    },
+    {
+      "entry_id": 187818,
+      "first_index": 39,
+      "kind": "lemma",
+      "lemma": "лікарня",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/13",
+        "curriculum/l2-uk-en/a1-v1/emergencies/vocabulary.yaml#/12",
+        "curriculum/l2-uk-en/a1-v1/health/vocabulary.yaml#/16",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/11"
+      ]
+    },
+    {
+      "entry_id": 17025,
+      "first_index": 40,
+      "kind": "lemma",
+      "lemma": "банк",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/14",
+        "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/16",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/14",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/6",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/19"
+      ]
+    },
+    {
+      "entry_id": 308350,
+      "first_index": 41,
+      "kind": "lemma",
+      "lemma": "пошта",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/15",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/16",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/15",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/15",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/20"
+      ]
+    },
+    {
+      "entry_id": 150918,
+      "first_index": 42,
+      "kind": "lemma",
+      "lemma": "зупинка",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/16",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/25",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/11",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/26"
+      ]
+    },
+    {
+      "entry_id": 64973,
+      "first_index": 43,
+      "kind": "lemma",
+      "lemma": "вокзал",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/17",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/17",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/16",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/12",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/14",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/25"
+      ]
+    },
+    {
+      "entry_id": 371920,
+      "first_index": 44,
+      "kind": "lemma",
+      "lemma": "станція",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/18",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/13"
+      ]
+    },
+    {
+      "entry_id": 200835,
+      "first_index": 45,
+      "kind": "lemma",
+      "lemma": "метро",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/19",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/18",
+        "curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml#/22",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/2"
+      ]
+    },
+    {
+      "entry_id": 1559,
+      "first_index": 46,
+      "kind": "lemma",
+      "lemma": "автобус",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/20",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/19",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/1"
+      ]
+    },
+    {
+      "entry_id": 389885,
+      "first_index": 48,
+      "kind": "lemma",
+      "lemma": "трамвай",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/22",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/5"
+      ]
+    },
+    {
+      "entry_id": 208868,
+      "first_index": 49,
+      "kind": "lemma",
+      "lemma": "музей",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/23",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/11",
+        "curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/12",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/18"
+      ]
+    },
+    {
+      "entry_id": 382610,
+      "first_index": 50,
+      "kind": "lemma",
+      "lemma": "театр",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/24",
+        "curriculum/l2-uk-en/a1-v1/euphony/vocabulary.yaml#/14",
+        "curriculum/l2-uk-en/a1-v1/free-time/vocabulary.yaml#/10",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/19"
+      ]
+    },
+    {
+      "entry_id": 166795,
+      "first_index": 51,
+      "kind": "lemma",
+      "lemma": "кінотеатр",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/25",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/20"
+      ]
+    },
+    {
+      "entry_id": 371580,
+      "first_index": 52,
+      "kind": "lemma",
+      "lemma": "стадіон",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/26",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/22"
+      ]
+    },
+    {
+      "entry_id": 283601,
+      "first_index": 53,
+      "kind": "lemma",
+      "lemma": "пішки",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/27",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/20"
+      ]
+    },
+    {
+      "entry_id": 411582,
+      "first_index": 54,
+      "kind": "lemma",
+      "lemma": "хвилина",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/28",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-time-nature/vocabulary.yaml#/2",
+        "curriculum/l2-uk-en/a1-v1/what-time/vocabulary.yaml#/1"
+      ]
+    },
+    {
+      "entry_id": 25953,
+      "first_index": 55,
+      "kind": "lemma",
+      "lemma": "близько",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/29",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/30",
+        "curriculum/l2-uk-en/a1-v1/when-and-where/vocabulary.yaml#/32",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/5"
+      ]
+    },
+    {
+      "entry_id": 87402,
+      "first_index": 56,
+      "kind": "lemma",
+      "lemma": "далеко",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/30",
+        "curriculum/l2-uk-en/a1-v1/my-city/vocabulary.yaml#/29",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/6"
+      ]
+    },
+    {
+      "entry_id": 99875,
+      "first_index": 58,
+      "kind": "lemma",
+      "lemma": "додому",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/32",
+        "curriculum/l2-uk-en/a1-v1/where-from/vocabulary.yaml#/41",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/13",
+        "curriculum/l2-uk-en/a1-v1/yesterday/vocabulary.yaml#/17"
+      ]
+    },
+    {
+      "entry_id": 97787,
+      "first_index": 60,
+      "kind": "lemma",
+      "lemma": "дістатися",
+      "pos": "verb",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/34",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/38",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/19"
+      ]
+    },
+    {
+      "entry_id": 157054,
+      "first_index": 61,
+      "kind": "lemma",
+      "lemma": "іти",
+      "pos": "verb",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/35",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/36",
+        "curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/23",
+        "curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/24",
+        "curriculum/l2-uk-en/a1-v1/please-do-this/vocabulary.yaml#/25",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/34"
+      ]
+    },
+    {
+      "entry_id": 157359,
+      "first_index": 62,
+      "kind": "lemma",
+      "lemma": "їхати",
+      "pos": "verb",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/36",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/37",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/17",
+        "curriculum/l2-uk-en/a1-v1/where-is-it/vocabulary.yaml#/35",
+        "curriculum/l2-uk-en/a1-v1/where-to/vocabulary.yaml#/11"
+      ]
+    },
+    {
+      "entry_id": 303252,
+      "first_index": 63,
+      "kind": "lemma",
+      "lemma": "поруч",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/37"
+      ]
+    },
+    {
+      "entry_id": 325891,
+      "first_index": 64,
+      "kind": "lemma",
+      "lemma": "прямо",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/38",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/21",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/23"
+      ]
+    },
+    {
+      "entry_id": 222512,
+      "first_index": 65,
+      "kind": "lemma",
+      "lemma": "направо",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/39",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/24"
+      ]
+    },
+    {
+      "entry_id": 219768,
+      "first_index": 66,
+      "kind": "lemma",
+      "lemma": "наліво",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/40",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-places/vocabulary.yaml#/23",
+        "curriculum/l2-uk-en/a1-v1/transport/vocabulary.yaml#/25"
+      ]
+    },
+    {
+      "entry_id": 308917,
+      "first_index": 67,
+      "kind": "lemma",
+      "lemma": "праворуч",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/41"
+      ]
+    },
+    {
+      "entry_id": 187623,
+      "first_index": 68,
+      "kind": "lemma",
+      "lemma": "ліворуч",
+      "pos": "adv",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml#/42"
+      ]
+    },
+    {
+      "entry_id": 158130,
+      "first_index": 70,
+      "kind": "lemma",
+      "lemma": "кав'ярня",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/1"
+      ]
+    },
+    {
+      "entry_id": 199761,
+      "first_index": 71,
+      "kind": "lemma",
+      "lemma": "меню",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/2",
+        "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/vocabulary.yaml#/42"
+      ]
+    },
+    {
+      "entry_id": 128908,
+      "first_index": 73,
+      "kind": "lemma",
+      "lemma": "замовляти",
+      "pos": "verb",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/4"
+      ]
+    },
+    {
+      "entry_id": 258576,
+      "first_index": 74,
+      "kind": "lemma",
+      "lemma": "офіціант",
+      "pos": "noun",
+      "preferred": false,
+      "row_ids": [
+        "curriculum/l2-uk-en/a1-v1/at-the-cafe/vocabulary.yaml#/5"
+      ]
+    }
+  ],
+  "source_file_sha256": {
+    "registry/atlas/a1-v1-inventory.json": "4cbcb769f0e8379d43a2cd86e48ef353e2328e0b5a895b410f540547cc409a59",
+    "registry/atlas/a1-v1-slice2.json": "d8a45ed57a824cf0c7cb94cfd40eb689f50957b64c39d647baeb06521d506015",
+    "registry/atlas/a1-v1-slice3-plan-inputs.json": "5d48a9632825f3f110843792214612c733a17fc4bd23a11d2046166f674f3b0d",
+    "registry/atlas/a1-v1-slice3.json": "9ff22f62cd50485fe68b1f33504e56c58761d0d352f47ab5a3f64f365438d5fd",
+    "registry/atlas/identity/a1-v1-slice2.json": "b1ea5099207618dc3879eb517e28867c174b629126ae2b0e8b9d8629ce564e52",
+    "registry/atlas/identity/a1-v1-slice3.json": "f4de91773ffa6e59e953c7ea0645205f06d55a146b88403665cef0fe57647419",
+    "registry/atlas/identity/registry.json": "681be77e60edbe621ca68e680db2bffbbd9e99267b011fb0515e090fe8d8a06d"
+  },
+  "source_sha": "0398eb5caa1c6a98dccaf9275520ccb2f978a95c"
+}
