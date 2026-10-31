@@ -1608,3 +1608,65 @@ def test_store_gloss_is_public_only_as_an_open_atom_of_its_own_lemma(bound, tmp_
     if expected == "failed":
         assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 1}
     assert meaning not in json.dumps(result)
+
+
+def _meaning_scan(bound, tmp_path, *, meaning, request_entry=None, prose=None):
+    """Scan a store record and its request; the private meaning is one word of row 1's open head."""
+    _root, api, _b = bound
+    context = bindings.Context("a1", {}, bindings.public_entries(a1_reference.INVENTORY_PATH))
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": "first"}}
+    entry = {"entry_id": 7, "source": "synthetic"}
+    word = {**WORD, "entry": entry, "forms": [], "meaning": meaning}
+    selection = sense_cli._select(word, context, api)
+    record = {**word, "gloss_en": selection.gloss, "gloss_source": selection.source}
+    if selection.ref is not None:
+        record["gloss_ref"] = selection.ref
+    request = {"lemma": WORD["lemma"], "pos": WORD["pos"], "want": "new", "entry": request_entry or entry}
+    repo = tmp_path / "meaning-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    git(repo, "commit", "--allow-empty", "-qm", "base")
+    level = repo / "curriculum/l2-uk-en/evidence/a1"
+    (level / "_requests").mkdir(parents=True)
+    (level / "_words.yaml").write_bytes(lock_yaml({"words": [record]}))
+    (level / "_requests/probe.words.yaml").write_bytes(
+        lock_yaml({"level": "a1", "words": [{**request, "meaning": meaning}]})
+    )
+    if prose is not None:
+        (level / "notes.yaml").write_text(prose)
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "store")
+    result = sense_cli.leak_scan(repo, private, context, {"words": [record]}, api, base="HEAD^")
+    assert "first" not in json.dumps(result)
+    return selection, result
+
+
+def test_meaning_equal_to_its_cited_gloss_is_public_in_store_and_request(bound, tmp_path):
+    """#12197: a one-word private meaning inside a cited open head is that row's text, not the book's."""
+    selection, result = _meaning_scan(bound, tmp_path, meaning="first translation")
+    assert selection.source == "dmklinger_uk_en" and selection.ref["id"] == 1
+    assert result["status"] == "checked", result
+
+
+@pytest.mark.parametrize(
+    "case,flagged",
+    [
+        ("meaning_alone", {"_words.yaml", "_requests/probe.words.yaml"}),
+        ("request_without_cited_store_record", {"_requests/probe.words.yaml"}),
+        ("free_prose", {"notes.yaml"}),
+    ],
+)
+def test_book_only_meaning_still_fails_beside_a_cited_gloss(bound, tmp_path, case, flagged):
+    meaning = "first" if case == "meaning_alone" else "first translation"
+    _selection, result = _meaning_scan(
+        bound,
+        tmp_path,
+        meaning=meaning,
+        request_entry={"entry_id": 8, "source": "synthetic"} if case == "request_without_cited_store_record" else None,
+        prose="texts:\n- quote: synthetic\n  supports: the first sense\n" if case == "free_prose" else None,
+    )
+    assert result["status"] == "failed", result
+    assert result["signals"]["mapping_copy"] == len(flagged)
+    assert {s["path"].removeprefix("curriculum/l2-uk-en/evidence/a1/") for s in result["suspects"]} == flagged
