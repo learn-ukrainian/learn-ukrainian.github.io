@@ -2,7 +2,8 @@
 
 Luna/Haiku bounded implementation can use the dispatching driver's complete
 brief, owned paths and verify command. Caller attribution is recorded, not
-authenticated. Other Luna work and non-Ukrainian Flash work still need the
+authenticated. Other Luna work, and Flash work that is not a read-only review
+of record or a Ukrainian authoring/review classification, still need the
 catalog advisor envelope. Both admission sources bind the exact brief,
 dispatch arguments and launch, and recheck them before execution.
 
@@ -512,6 +513,27 @@ def exempt_change_problems(paths: Iterable[str], repo_root: Path) -> list[str]:
     return problems
 
 
+def _fallback_review_profiles(model_id: str) -> frozenset[str]:
+    """Profiles the catalog seat of ``model_id`` reviews, the field the resolver already filters on."""
+    from scripts.review.model_catalog import load_model_catalog
+
+    profiles: set[str] = set()
+    for seat in load_model_catalog().get("seats", {}).values():
+        if not isinstance(seat, dict) or seat.get("model_id") != model_id:
+            continue
+        routes = seat.get("routes")
+        if not isinstance(routes, dict):
+            continue
+        for route in routes.values():
+            declared = route.get("review_profiles") if isinstance(route, dict) else None
+            if isinstance(declared, str):
+                declared = [declared]
+            if not isinstance(declared, list):
+                continue
+            profiles.update(item for item in declared if isinstance(item, str) and item)
+    return frozenset(profiles)
+
+
 def bounded_requirement(
     model_id: str | None,
     *,
@@ -527,11 +549,12 @@ def bounded_requirement(
     ``model_id`` is the canonical catalog id of the model the admitted route
     launches, after aliases, ``--force-agent`` and any substitution. Every
     bounded-worker dispatch needs one unless admitted with a driver brief. A Gemini Flash dispatch is the bounded
-    fallback unless it is explicitly classified non-bounded. A read-only
-    ``--review-profile ukrainian`` dispatch (a review of record) is exempt
-    whatever its task family and paths: read-only mode writes nothing, and the
-    other review seat covers the code. Otherwise a Ukrainian authoring or review
-    task family exempts it when nothing contradicts that; missing or conflicting
+    fallback unless it is explicitly classified non-bounded. A read-only review
+    of record is not bounded execution, whatever its research task family and
+    paths: ``--review-profile ukrainian``, or a ``--review-profile`` listed on
+    the fallback seat's catalog review route (the same ``review_profiles`` the
+    resolver uses). Otherwise a Ukrainian authoring or review task family
+    exempts it when nothing contradicts that; missing or conflicting
     classification counts as bounded (fail closed). The family exemption, or a
     ``--review-profile ukrainian`` outside read-only mode, owning a path that is
     not Ukrainian content only in ``repo_root`` (``content_path_problem``)
@@ -546,7 +569,9 @@ def bounded_requirement(
         return f"{model_id} is the bounded worker"
     if model_id != policy.bounded_fallback_model_id:
         return None
-    if review_profile == "ukrainian" and mode == "read-only":
+    if mode == "read-only" and (
+        review_profile == "ukrainian" or review_profile in _fallback_review_profiles(model_id)
+    ):
         return None
     family = _normalized(task_family)
     ukrainian_family = family in policy.non_bounded_task_families
@@ -573,10 +598,11 @@ def bounded_requirement(
             f"{model_id} in {mode} mode with --review-profile ukrainian but no Ukrainian authoring/review "
             "task family is the bounded fallback"
         )
+    admitted_profiles = sorted(_fallback_review_profiles(model_id) | {"ukrainian"})
     return (
         f"{model_id} without a Ukrainian authoring/review classification "
         f"(--research-task-family one of {sorted(policy.non_bounded_task_families)}, or read-only "
-        "--review-profile ukrainian) is the bounded fallback"
+        f"--review-profile one of {admitted_profiles}) is the bounded fallback"
     )
 
 

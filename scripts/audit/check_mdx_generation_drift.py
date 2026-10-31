@@ -197,7 +197,8 @@ def _run_generator(target: ModuleTarget) -> None:
     generator_python = VENV_PYTHON if has_project_venv else Path(sys.executable)
     generator_args = [
         str(generator_python),
-        "scripts/generate_mdx.py",
+        "-m",
+        "scripts.generate_mdx",
         "l2-uk-en",
         target.level,
         str(target.local_num),
