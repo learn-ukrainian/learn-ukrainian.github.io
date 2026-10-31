@@ -1325,6 +1325,22 @@ bindings:
   span_index: 0
   table: dmklinger_uk_en
   word: W-306
+- commitment: 24ada36b76a3e5cf39e6914c1af2a9fd0cd2e9405e734788212b9e1c6d7cb03e
+  gloss: Kyiv
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#40
+  match: book
+  method: ohoiko_reference
+  word: W-310
+- commitment: 78917c420c05c49d01a1175da304017283b11eb03c479af8e7477893ccdc28d5
+  gloss: Ukrainian
+  inventory: registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml
+  key_id: a1-book-1
+  locator: p200 Словничок#72
+  match: dictionary
+  method: ohoiko_reference
+  word: W-311
 bindings_schema: 1
 level: a1
 matcher: reference_sense_v1
