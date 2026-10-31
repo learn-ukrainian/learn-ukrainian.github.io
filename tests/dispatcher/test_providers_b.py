@@ -480,6 +480,19 @@ def test_agy_partial_stderr_rejects_incomplete_runs_with_safe_reason(stderr, err
         assert load("agy").parse("{broken\n" + SUCCESS["agy"], stderr, 0, None).error == "agy: invalid JSON stream"
 
 
+def test_agy_success_while_background_work_is_open_is_incomplete():
+    """Defect class: a SUCCESS result with empty stderr is accepted while a command the run started is still open."""
+    step = {"event": "step_update", "step_update": {"step_index": 4, "state": "ACTIVE", "tool_name": "run_command"}}
+    stdout = "\n".join((
+        '{"event":"init","init":{"model":"gemini-3.8-flash-high"}}',
+        json.dumps(step),
+        '{"event":"result","result":{"status":"SUCCESS","response":"I will pause."}}',
+    ))
+    parsed = load("agy").parse(stdout, "", 0, None)
+    assert parsed.error == "agy: incomplete run"
+    assert parsed.text == "I will pause."
+
+
 @pytest.mark.parametrize(
     ("first", "second", "expected"),
     [
