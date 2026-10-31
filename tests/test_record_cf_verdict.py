@@ -93,7 +93,10 @@ def task(**updates):
 def write_task(root: Path, *, task_id="review-one", reply="VERDICT: APPROVE", **updates):
     root.mkdir(parents=True, exist_ok=True)
     (root / task_id).parent.mkdir(parents=True, exist_ok=True)
-    (root / f"{task_id}.json").write_text(json.dumps(task(**updates)))
+    record = task(**updates)
+    if record.get("schema_version") == 2:
+        record["task_id"] = task_id
+    (root / f"{task_id}.json").write_text(json.dumps(record))
     (root / f"{task_id}.result").write_text(reply)
 
 
@@ -888,7 +891,7 @@ def test_red_team_worktree_prep_publication_guard(monkeypatch, tmp_path, status,
 
 
 @pytest.mark.parametrize(
-    "broken", ["missing", "invalid-json", "non-object", "read-error", "invalid-head", "glob-error"]
+    "broken", ["missing", "invalid-json", "invalid-identity", "read-error", "invalid-head", "glob-error"]
 )
 def test_red_team_unreadable_task_ledger_refuses_publication(monkeypatch, tmp_path, broken):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
@@ -915,17 +918,21 @@ def test_red_team_unreadable_task_ledger_refuses_publication(monkeypatch, tmp_pa
     elif broken == "invalid-head":
         write_task(tasks, task_id="broken", pr=42, status="running", pinned_head=[], worktree_base_sha=None)
     else:
-        (tasks / "broken.json").write_text("{" if broken == "invalid-json" else "[]")
+        (tasks / "broken.json").write_text("{" if broken == "invalid-json" else '{"task_id":null}')
         if broken == "read-error":
-            original = Path.read_text
+            original = Path.read_bytes
 
             def unreadable(path, *args, **kwargs):
                 if path.name == "broken.json":
                     raise OSError("ledger unreadable")
                 return original(path, *args, **kwargs)
 
-            monkeypatch.setattr(Path, "read_text", unreadable)
-    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: task ledger unavailable"):
+            monkeypatch.setattr(Path, "read_bytes", unreadable)
+    expected = (
+        "task record .* unreadable" if broken in {"invalid-json", "invalid-identity", "read-error"}
+        else "RED_TEAM_REFUSED: task ledger unavailable"
+    )
+    with pytest.raises(recorder.RecordError, match=expected):
         recorder.record(
             "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
         )

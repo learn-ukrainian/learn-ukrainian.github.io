@@ -135,7 +135,8 @@ def test_missing_or_unsafe_identity_blocks_copy(checkout, task_id):
     source = artifact(checkout)
     bound_record(checkout, {"task_id": task_id})
     ok, reason, _ = guard(checkout, task_id=task_id)
-    assert not ok and "canonical task attribution" in reason
+    expected = "task identity inventory unreadable" if task_id is None else "canonical task attribution"
+    assert not ok and expected in reason
     assert source.exists()
 
 

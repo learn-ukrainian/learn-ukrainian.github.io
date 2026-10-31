@@ -568,12 +568,12 @@ def test_delegate_adapter_liveness_matrix(tmp_path: Path) -> None:
             "starting",
         ),
         (
-            "live.json",
+            "live-1.json",
             {"task_id": "live-1", "schema_version": 2, "agent": "cursor", "status": "running", "pid": 1, "started_at": now.isoformat()},
             "live",
         ),
         (
-            "zombie.json",
+            "zombie-1.json",
             {
                 "task_id": "zombie-1",
                 "schema_version": 2,

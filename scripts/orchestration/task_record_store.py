@@ -71,7 +71,7 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
     legacy = "schema_version" not in record and (
         any(key in record for key in (
             "run_nonce", "worktree_path", "cwd", "acp_runtime_paths", "worktree_prep",
-            "review_attempt", "review_contract", "worktree_branch"
+            "review_attempt", "review_contract", "worktree_branch", "branch", "authoring_review_admission"
         )) or ("agent" in record and "status" in record)
         or any(record.get(name) not in (None, False, "", []) for name in REVIEW_TASK_FLAG_FIELDS)
         or bool(record.get("review_mode") or record.get("type") == "review")
