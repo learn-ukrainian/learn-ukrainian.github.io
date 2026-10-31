@@ -16,6 +16,8 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
   the system runtime, the AGY binary, the task worktree, its Git metadata and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
   dropped and the root is remounted read-only, so the runtime (which holds TMPDIR) is the only
   writable path;
+* binds each explicit input the dispatch recorded, when there is one, read-only at
+  ``/agy-inputs/<n>``. A file that is missing or whose digest changed is refused before AGY starts;
 * runs the canary as the sandbox's first process and starts AGY only after the launcher has checked
   every probe outcome: EROFS on the worktree, Git metadata and database targets; host credentials,
   control services and sockets unreachable; the scratch positive control succeeded;
@@ -84,6 +86,10 @@ _SOURCES_METHODS = frozenset(
 _MAX_LINE = 8 << 20
 _CANARY_TIMEOUT = 60
 _GIT_TIMEOUT = 120
+# Explicit inputs stay outside the worktree. Each one is one read-only file bind, not a directory.
+INPUT_MOUNT = "/agy-inputs"
+MAX_INPUTS = 8
+MAX_INPUT_BYTES = 8 << 20
 
 
 class Refused(RuntimeError):
@@ -120,11 +126,121 @@ def receipt_file(final_file: Path) -> Path:
 
 def launcher(spec, agy_argv: list[str]) -> list[str]:
     """The argv of every read-only AGY launch: this boundary, which runs ``agy_argv`` inside it."""
-    return [
+    argv = [
         str(project_interpreter()), "-I", "-c", _BOOTSTRAP, str(ROOT),
         "--task-id", spec.task_id, "--worktree", str(spec.worktree), "--scratch", str(scratch(spec.task_id)),
-        "--receipt", str(receipt_file(spec.final_file)), "--", *agy_argv,
+        "--receipt", str(receipt_file(spec.final_file)),
     ]
+    for item in _inputs_from_spec(spec):
+        argv += ["--input", item["path"], "--input-sha256", item["sha256"]]
+    argv += ["--", *agy_argv]
+    return argv
+
+
+def bind_inputs(paths: list[str], *, repo_root: Path) -> list[dict]:
+    """Check explicit inputs and return the task-record fields. Raises ``ValueError`` before spawn.
+
+    Nothing is skipped: the first path that cannot be mounted refuses the whole set.
+    """
+    if len(paths) > MAX_INPUTS:
+        raise ValueError(f"agy_input_refused: more than {MAX_INPUTS} inputs")
+    root, home = repo_root.resolve(), Path.home()
+    return [_bind_one(index, raw, root, home) for index, raw in enumerate(paths)]
+
+
+def confirm_inputs(items: list[dict], *, repo_root: Path) -> list[dict]:
+    """Re-read every recorded input. A missing file or a new digest refuses the launch."""
+    if not items:
+        return []
+    try:
+        fresh = bind_inputs([item["path"] for item in items], repo_root=repo_root)
+    except ValueError as exc:
+        raise Refused(str(exc)) from exc
+    for old, new in zip(items, fresh, strict=True):
+        if (old.get("sha256"), old.get("mount")) != (new["sha256"], new["mount"]):
+            raise Refused("agy_input_refused: digest changed before start")
+    return fresh
+
+
+def _inputs_from_spec(spec) -> list[dict]:
+    raw = getattr(spec, "options", {}).get("inputs")
+    if not raw:
+        return []
+    try:
+        items = json.loads(raw)
+    except ValueError as exc:
+        raise ValueError("agy_input_refused: input record invalid") from exc
+    if not isinstance(items, list) or not all(
+        isinstance(item, dict) and isinstance(item.get("path"), str) and isinstance(item.get("sha256"), str)
+        for item in items
+    ):
+        raise ValueError("agy_input_refused: input record invalid")
+    return items
+
+
+def _under_credential(path: Path, home: Path) -> bool:
+    for relative in _HOST_SECRETS:
+        secret = home / relative
+        if path == secret or path.is_relative_to(secret):
+            return True
+    return False
+
+
+def _bind_one(index: int, raw: str, root: Path, home: Path) -> dict:
+    candidate = Path(raw).expanduser()
+    if not candidate.is_absolute():
+        candidate = Path.cwd() / candidate
+    candidate = Path(os.path.abspath(candidate))
+    if candidate.is_symlink():
+        raise ValueError("agy_input_refused: symlink")
+    try:
+        info = candidate.lstat()
+    except OSError as exc:
+        raise ValueError("agy_input_refused: not a readable regular file") from exc
+    if not stat.S_ISREG(info.st_mode):
+        raise ValueError("agy_input_refused: not a regular file")
+    try:
+        resolved = candidate.resolve(strict=True)
+    except OSError as exc:
+        raise ValueError("agy_input_refused: not a readable regular file") from exc
+    if resolved != candidate:
+        raise ValueError("agy_input_refused: symlink")
+    if info.st_size > MAX_INPUT_BYTES:
+        raise ValueError(f"agy_input_refused: larger than {MAX_INPUT_BYTES} bytes")
+    if _under_credential(resolved, home):
+        raise ValueError("agy_input_refused: path is under a credential directory")
+    if resolved == root or resolved.is_relative_to(root):
+        raise ValueError("agy_input_refused: path is inside the primary checkout")
+    try:
+        data = resolved.read_bytes()
+    except OSError as exc:
+        raise ValueError("agy_input_refused: not a readable regular file") from exc
+    if len(data) != info.st_size or len(data) > MAX_INPUT_BYTES:
+        raise ValueError("agy_input_refused: not a readable regular file")
+    return {
+        "bytes": len(data), "index": index, "mount": f"{INPUT_MOUNT}/{index}",
+        "path": str(resolved), "sha256": hashlib.sha256(data).hexdigest(),
+    }
+
+
+def _input_proof(items: list[dict]) -> list[dict]:
+    return [{"bytes": item["bytes"], "mount": item["mount"], "sha256": item["sha256"]} for item in items]
+
+
+def _input_mismatch(record: dict, receipt: dict) -> str | None:
+    options = record.get("options")
+    raw = options.get("inputs") if isinstance(options, dict) else None
+    if not raw:
+        return None
+    try:
+        expected = json.loads(raw)
+    except ValueError:
+        return "agy_read_only_boundary: input digest mismatch"
+    if not isinstance(expected, list):
+        return "agy_read_only_boundary: input digest mismatch"
+    if receipt.get("inputs") != _input_proof(expected):
+        return "agy_read_only_boundary: input digest mismatch"
+    return None
 
 
 def discard(task_id: str) -> str | None:
@@ -169,6 +285,8 @@ def verify(final_file: Path, task_id: str, record: dict) -> tuple[dict, int | No
         return summary, None, "review_input_drift: the reviewed worktree changed or left the dispatched head"
     sources = receipt.get("sources") if isinstance(receipt.get("sources"), dict) else {}
     count = sources.get("completed")
+    if mismatch := _input_mismatch(record, receipt):
+        return summary, None, mismatch
     return summary, count if type(count) is int and count >= 0 else None, None
 
 
@@ -574,6 +692,18 @@ class _Boundary:
         self.base = Path(args.scratch)
         self.relay = self.egress = self.process = self.fixture = None
         self.created = False
+        self.confirmed_inputs: list[dict] = []
+
+    def _requested_inputs(self) -> list[dict]:
+        paths, digests = self.args.input or [], self.args.input_sha256 or []
+        if len(paths) != len(digests):
+            raise Refused("agy_input_refused: input digest missing")
+        if len(paths) > MAX_INPUTS:
+            raise Refused(f"agy_input_refused: more than {MAX_INPUTS} inputs")
+        return [
+            {"mount": f"{INPUT_MOUNT}/{index}", "path": path, "sha256": digest}
+            for index, (path, digest) in enumerate(zip(paths, digests, strict=True))
+        ]
 
     def run(self) -> int:
         from scripts.agent_runtime.attempt_boundary import full_review_reads, runtime_files
@@ -584,6 +714,17 @@ class _Boundary:
         from scripts.dispatcher.git import DATABASE_LINKS
         from scripts.review.isolation import prepare_host_sandbox, wrap_argv_with_sandbox
 
+        requested = self._requested_inputs()
+        if requested:
+            # Before bubblewrap and before AGY: a changed or missing file never starts the sandbox.
+            common = Path(_git(
+                self.worktree, "rev-parse", "--path-format=absolute", "--git-common-dir",
+            ).strip()).resolve(strict=True)
+            repository = common.parent
+            if main_checkout_root(self.worktree).resolve(strict=True) != repository:
+                raise Refused("store_primary_disagreement")
+            self.confirmed_inputs = confirm_inputs(requested, repo_root=repository)
+            self.receipt["inputs"] = _input_proof(self.confirmed_inputs)
         if reason := unavailable():
             raise Refused(reason)
         command = self.args.command[1:] if self.args.command[:1] == ["--"] else self.args.command
@@ -688,6 +829,19 @@ class _Boundary:
         for path in sidecars:
             probes.extend([{"op": "write_open", "path": str(path), "expect": _write_error(path)},
                            {"op": "chmod", "path": str(path), "expect": "EROFS"}])
+        for item in self.confirmed_inputs:
+            host = Path(item["path"])
+            probes.extend([
+                {"op": "stat", "path": item["mount"], "expect": "OK"},
+                {"op": "write_open", "path": item["mount"], "expect": _write_error(host)},
+                {"op": "chmod", "path": item["mount"], "expect": "EROFS"},
+            ])
+        if self.confirmed_inputs:
+            absent = f"{INPUT_MOUNT}/not-provided"
+            probes.extend([
+                {"op": "stat", "path": absent, "expect": "ENOENT"},
+                {"op": "create", "path": absent, "expect": "EROFS"},
+            ])
         self.receipt["canary"] = {"targets": sorted({probe["path"] for probe in probes}), "passed": False}
 
         env_keep = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "TMPDIR") if name in os.environ}
@@ -714,8 +868,15 @@ class _Boundary:
             if primary != target:
                 # Present inspect_selector's exact layout without mounting over the host link.
                 masks += ["--symlink", str(target.relative_to(primary.parent)), str(primary)]
+        input_mounts = []
+        if self.confirmed_inputs:
+            # The directory is created on the empty root. Only the named file is bound into it.
+            input_mounts += ["--dir", INPUT_MOUNT]
+            for item in self.confirmed_inputs:
+                input_mounts += ["--ro-bind", item["path"], item["mount"]]
         argv[-len(inner):-len(inner)] = [
-            *masks, "--ro-bind", str(boundary / "passwd"), "/etc/passwd", "--ro-bind", str(boundary / "group"),
+            *masks, *input_mounts, "--ro-bind", str(boundary / "passwd"), "/etc/passwd",
+            "--ro-bind", str(boundary / "group"),
             "/etc/group", "--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(self.worktree),
             # Last: the empty root becomes read-only, leaving the runtime bind as the only writable path.
             "--remount-ro", "/",
@@ -859,6 +1020,8 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--worktree", required=True)
     parser.add_argument("--scratch", required=True)
     parser.add_argument("--receipt", required=True)
+    parser.add_argument("--input", action="append", help="Host path of one recorded input")
+    parser.add_argument("--input-sha256", action="append", help="SHA-256 recorded for the matching --input")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args(argv)
     receipt = {"schema": SCHEMA, "task_id": args.task_id, "status": "refused", "started_at": _now()}
