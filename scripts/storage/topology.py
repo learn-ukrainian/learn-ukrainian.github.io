@@ -524,6 +524,41 @@ class StoreRefusal:
     reason: str
 
 
+@dataclass(frozen=True)
+class ExplicitStoreWriteTarget:
+    """Unvalidated writer request, distinct from a read or write binding."""
+
+    location: str | Path
+    role: Literal["active", "staging", "shadow"] = "active"
+
+
+@dataclass(frozen=True)
+class _PreparedStoreWriteTarget(ExplicitStoreWriteTarget):
+    provenance: str = "explicit"
+    environment: tuple[tuple[str, str], ...] = ()
+
+
+@dataclass(frozen=True)
+class WriteStoreBinding:
+    """Validated write location; a live Sources binding lasts only under its lock."""
+
+    store: StoreId
+    path: Path
+    intent: Literal["update", "create"]
+    operation: Literal["sqlite", "replace"]
+    role: Literal["active", "staging", "shadow"]
+    provenance: str
+    sqlite_uri: str | None
+    access_mode: Literal["write"] = "write"
+
+
+def unavailable_store_path(store: StoreId) -> Path:
+    """Import-safe Path compatibility value. Its missing parent is never created."""
+    if store not in STORE_FILES:
+        raise ValueError("unsupported logical store")
+    return Path("/__learn_ukrainian_unavailable_store__") / store
+
+
 def _store_locality(path: Path) -> Literal["local", "network", "unknown"]:
     """Require filesystem evidence; legacy best-effort detection is unchanged."""
     if _path_looks_like_network(path):
