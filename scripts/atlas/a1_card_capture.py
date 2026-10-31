@@ -7,7 +7,8 @@ from pathlib import Path
 
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_meanings as meanings
-from scripts.atlas.a1_card_receipts import Refusal, digest, selected_rows
+from scripts.atlas import word_card_sources as source_rules
+from scripts.atlas.a1_card_receipts import Refusal, digest, require_lemma_call, selected_rows
 from scripts.common.repo_root import main_checkout_root
 from scripts.storage.topology import StoreRefusal, resolve_store, store_data_dir
 from scripts.wiki.sum20_mirror import served_rows
@@ -42,6 +43,8 @@ def capture(tool_dir: Path, inventory: dict, root: Path) -> dict:
     with ExitStack() as stack:
         connection = foundation.readonly(stack, binding.path)
         for index, word in enumerate(words):
+            for suffix in ("ulif", "vesum", "vts", "sum20", "cefr", "frequency", "heritage"):
+                require_lemma_call(calls[f"{index}-{suffix}"], word)
             ulif_call = calls[f"{index}-ulif"]
             entries = json.loads(response_text(ulif_call))["records"][0]["entries"]
             if len(entries) != 1 or not entries[0]["verified"]:
@@ -49,10 +52,14 @@ def capture(tool_dir: Path, inventory: dict, root: Path) -> dict:
             entry = entries[0]
             if not entry["identity_from_raw"].get("stored_matches_raw"):
                 raise Refusal("ulif_raw_identity_mismatch")
+            if source_rules.norm_v1(entry["canonical_headword"].replace(source_rules.ACUTE, "")) != word:
+                raise Refusal("ulif_lemma_mismatch")
             add(f"ulif:{word}", f"{index}-ulif", "ulif", entry,
                 locator=f"ulif:entry:{entry['entry_id']}", url="https://lcorp.ulif.org.ua/dictua",
                 fetched=entry["retrieved_at"], content=entry["content_sha256"], parser=entry["parser_version"])
             inspection = json.loads(response_text(calls[f"{index}-vesum"]).split("- Raw payload: ", 1)[1])
+            if inspection["lemma"] != word:
+                raise Refusal("vesum_lemma_mismatch")
             if inspection["pipeline_identity"] != inventory["sources"]["vesum_pipeline_identity"]:
                 raise Refusal("vesum_import_drift")
             add(f"vesum:{word}", f"{index}-vesum", "vesum", inspection,

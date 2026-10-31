@@ -9,6 +9,7 @@ import json
 import re
 import sys
 from collections import Counter, defaultdict
+from itertools import pairwise
 from pathlib import Path
 
 from scripts.atlas import word_card_assembly as assembly
@@ -20,6 +21,7 @@ from scripts.atlas.a1_card_receipts import (
     canonical,
     digest,
     make_receipt,
+    require_lemma_call,
     selected_rows,
     validate_allocation,
     verify_receipt,
@@ -28,7 +30,7 @@ from scripts.atlas.a1_card_receipts import (
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = "registry/atlas/a1-v1-slice2.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice2.json"
-MANIFEST_SHA256 = "84c97c25c7d3a6f1416db5da4aea15e892000c7eb914e2e8c1eee5b168897424"
+MANIFEST_SHA256 = "2c8b08f3103fccfdbc50ea992dd16775ea01aa79c83cc3d51b787775e4ef3345"
 VERSION = "a1-slice2-v1"
 CARD_FIELDS = (*assembly.CARD_FIELDS, "mwe_form", "mwe_frame")
 SENSE_FIELDS = assembly.SENSE_FIELDS
@@ -103,6 +105,34 @@ def _supporting_receipts(claim, records):
             for item in claim.get("supporting_spans", [])]
 
 
+def _lexeme(claim, receipt, record, lemma):
+    if record["source_id"] not in {"balla", "textbooks"}:
+        require(claim["record_key"].rsplit(":", 1)[-1] == lemma, "record_lemma_mismatch")
+        require_lemma_call(record, lemma)
+    if record["source_id"] == "vesum":
+        for item in [claim, *claim.get("alternative_forms", []), *claim.get("supporting_spans", [])]:
+            match = re.match(r"/clean_analyses/(0|[1-9][0-9]*)/", item["pointer"])
+            require(match is not None, "form_pointer_not_analysis")
+            analysis = record["payload"]["clean_analyses"][int(match[1])]
+            require(analysis["entry_id"] == claim["entry_id"], "form_entry_mismatch")
+    if claim["field"] == "stress":
+        require(source_rules.norm_v1(receipt["quotation"].replace(source_rules.ACUTE, "")) == lemma,
+                "stress_lemma_mismatch")
+
+
+def _definition_scopes(manifest):
+    spans = defaultdict(list)
+    for claim in manifest["claims"]:
+        if claim["field"] == "definition_uk":
+            scope = manifest["scopes"][claim["scope_key"]]
+            require(scope["span"] == claim["span"], "outside_sense_span")
+            spans[claim["record_key"], claim["pointer"]].append(claim["span"])
+    for group in spans.values():
+        ordered = sorted(group)
+        require(all(left[1] <= right[0] for left, right in pairwise(ordered)),
+                "overlapping_definition_spans")
+
+
 def _claim_value(claim, receipt, record):
     value = receipt["quotation"]
     if claim["field"] == "register" and claim.get("segments"):
@@ -152,13 +182,24 @@ def _scope(claim, manifest, receipt):
     if field in {"gloss_en", "english_gloss"}:
         require(claim.get("translation_direction") == "en-uk" and bool(claim.get("usage_pair")),
                 "bilingual_direction_or_pair_unresolved")
+        pair = claim["usage_pair"]
+        supports = claim.get("supporting_spans", [])
+        require(isinstance(pair, dict) and pair in supports, "bilingual_pair_not_receipted")
+        hit = re.fullmatch(r"(/hits/(?:0|[1-9][0-9]*))/word", claim["pointer"])
+        require(hit is not None and all(s["pointer"] == hit[1] + "/definition" for s in supports),
+                "bilingual_pair_outside_hit")
     if field in {"definition_uk", "register", "sense_label", "examples", "gloss_en", "synonyms", "antonyms", "collocations"}:
         scope = manifest["scopes"].get(claim.get("scope_key"))
         require(scope is not None, "sense_scope_missing")
         require(scope["record_key"] == claim["record_key"]
                 and scope["source_sense_key"] == claim["source_sense_key"], "sense_scope_mismatch")
+        require(scope["pointer"] == claim["pointer"], "scope_pointer_mismatch")
         a, b = receipt["span"]
-        require(scope["span"][0] <= a < b <= scope["span"][1], "outside_sense_span")
+        if field == "register" and "label_spans" in scope:
+            require(all({"pointer": item["pointer"], "span": item["span"]} in scope["label_spans"]
+                        for item in [claim, *claim.get("segments", [])]), "outside_label_span")
+        else:
+            require(scope["span"][0] <= a < b <= scope["span"][1], "outside_sense_span")
         require(scope["card_id"] == claim["card_id"] and scope["sense_id"] == claim["sense_id"], "scope_subject_mismatch")
     if field == "definition_uk":
         require(receipt["source_id"] in {"sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me"}, "meaning_source_invalid")
@@ -168,8 +209,10 @@ def _scope(claim, manifest, receipt):
 def build(inventory, base, companion, manifest, sources, pins, register):
     """Pure assembly from independently frozen inputs; identity allocation is never performed here."""
     effective, selected = _inputs(inventory, base, companion, manifest, sources, pins)
+    _definition_scopes(manifest)
     records = sources["records"]
     entry_by_card = {r["mapping"]["pilot"]["card_id"]: r["mapping"]["entry_id"] for r in selected}
+    lemma_by_card = {r["mapping"]["pilot"]["card_id"]: r["mapping"]["lemma"] for r in selected}
     row_ids = defaultdict(list)
     for row in selected:
         row_ids[row["mapping"]["pilot"]["card_id"]].append(row["id"])
@@ -214,6 +257,7 @@ def build(inventory, base, companion, manifest, sources, pins, register):
         require(subject_id == card_id or subject_id in {s["sense_id"] for s in cards[card_id]["senses"]}, "unallocated_sense")
         record = records[claim["record_key"]]
         receipt = _receipt_for(claim, records)
+        _lexeme(claim, receipt, record, lemma_by_card[card_id])
         _scope(claim, manifest, receipt)
         _form_stress(claim, receipt, sources, manifest)
         if claim["field"] == "examples":
@@ -305,6 +349,7 @@ def build(inventory, base, companion, manifest, sources, pins, register):
 
 def verify(result, sources, manifest):
     """Check delivered bytes against receipts and conservation, without rebuilding cards."""
+    _definition_scopes(manifest)
     require(len(result["rows"]) == 2144 and len({r["inventory_row_id"] for r in result["rows"]}) == 2144, "row_conservation")
     require(sum(r["state"] == "card_produced" for r in result["rows"]) == 19, "row_selection_mismatch")
     require(sorted(c["card_id"] for c in result["cards"]) == manifest["card_ids"], "card_conservation")
@@ -317,8 +362,10 @@ def verify(result, sources, manifest):
         if claim:
             claims.append(claim)
     expected, expected_pending = {}, []
+    lemmas = {c["card_id"]: c["key_at_creation"]["spelling"] for c in result["cards"]}
     for claim in claims:
         receipt = _receipt_for(claim, sources["records"])
+        _lexeme(claim, receipt, sources["records"][claim["record_key"]], lemmas[claim["card_id"]])
         _scope(claim, manifest, receipt)
         _form_stress(claim, receipt, sources, manifest)
         if claim["field"] == "examples" and receipt["receipt_id"] not in manifest["example_approvals"]:
@@ -415,6 +462,9 @@ Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
         assembly.require_host_only([args.output])
         if args.check:
             result = load(args.output)
+            rebuilt = build(inventory, base, companion, manifest, sources, manifest["allocation_pins"],
+                            foundation.load_register(ROOT / "docs/sources/permissions-register.yaml"))
+            require(args.output.read_bytes() == canonical(rebuilt) + b"\n", "delivered_output_mismatch")
         else:
             result = build(inventory, base, companion, manifest, sources, manifest["allocation_pins"],
                            foundation.load_register(ROOT / "docs/sources/permissions-register.yaml"))

@@ -72,7 +72,9 @@ def pinned_union(base, companion):
     return {"base_sha256": sha(base), "companion_sha256": sha(companion), "combined_sha256": sha(effective)}
 
 
-def recipe(field, record_key="vts", pointer="/article", text="A literal definition.", sense_id=SENSE):
+def recipe(field, record_key="vts:яйце", pointer="/article", text="A literal definition.", sense_id=SENSE):
+    if record_key in {"vts", "ulif", "vesum", "sum20", "mirror"}:
+        record_key += ":яйце"
     claim = {"card_id": TARGET, "entry_id": 436914, "field": field, "record_key": record_key,
              "pointer": pointer, "span": [0, len(text)]}
     if sense_id is not None:
@@ -101,23 +103,26 @@ def batch():
                                     "event": mint(index, "sense_mint", sense_id, evidence)})
     sources = {"inventory_sha256": sha(inventory), "calls": {}, "records": {}}
     literal = {
-        "vts": (VTS, "query_slovnyk_me", "served_dictionary", {
+        "vts:яйце": (VTS, "query_slovnyk_me", "served_dictionary", {
             "source_entry_id": 77, "homonym": 1,
             "article": "A literal definition.\nadjacent label\nДжерело: fixture footer",
             "example": "An exact cited sentence.", "register": "formal", "synonym": "paired-term",
             "antonym": "opposite-term", "collocation": "paired phrase"}),
-        "ulif": ("ulif", "query_ulif_records", "official", {"entry_id": 8077, "headword": "unit1" + ACUTE}),
-        "vesum": ("vesum", "inspect_lemma", "official", {"clean_analyses": [
+        "ulif:яйце": ("ulif", "query_ulif_records", "official", {"entry_id": 8077, "headword": "яйце" + ACUTE}),
+        "vesum:яйце": ("vesum", "inspect_lemma", "official", {"clean_analyses": [
             {"entry_id": 436914, "word_form": "fixture-form", "tags": "noun:n:v_naz"}]}),
-        "sum20": ("sum20", "query_sum20", "official", {"headword": "unit2" + ACUTE}),
-        "mirror": ("sum20_slovnyk_mirror", "query_sum20", "mirror", {"headword": "unit3" + ACUTE,
+        "sum20:яйце": ("sum20", "query_sum20", "official", {"headword": "яйце" + ACUTE}),
+        "mirror:яйце": ("sum20_slovnyk_mirror", "query_sum20", "mirror", {"headword": "яйце" + ACUTE,
                                                                  "article": "A mirror definition."}),
         "balla": ("balla", "translate_en_uk", "dictionary", {
-            "direction": "en-uk", "english": "English fixture gloss", "usage_pair": "fixture-pair"}),
+            "direction": "en-uk", "hits": [{"word": "English fixture gloss", "definition": "fixture-pair"}]}),
     }
     source_record_ids = {}
     for index, (key, (source, tool, role, payload)) in enumerate(literal.items(), 10):
-        arguments = {"query": "fixture", "dictionary": source}
+        arguments = ({"words": ["яйце"]} if tool == "query_ulif_records" else
+                     {"lemma": "яйце"} if tool == "inspect_lemma" else
+                     {"word": "яйце"} if tool in {"query_slovnyk_me", "query_sum20"} else
+                     {"query": "fixture"})
         sources["calls"][key] = {"tool": tool, "arguments": arguments, "response": copy.deepcopy(payload)}
         record = {"source_id": source, "snapshot_id": f"fixture:{key}:snapshot:1", "locator": f"fixture:{key}:row:77",
                   "source_url": f"https://example.invalid/{key}/77", "retrieved_at": "2026-01-01T00:00:00Z",
@@ -136,7 +141,7 @@ def batch():
     definition = recipe("definition_uk")
     form = recipe("paradigm", "vesum", "/clean_analyses/0/word_form", "fixture-form", None)
     form["slot"] = "noun:n:v_naz"
-    stress = recipe("stress", "ulif", "/headword", "unit1" + ACUTE, None)
+    stress = recipe("stress", "ulif", "/headword", "яйце" + ACUTE, None)
     manifest = {"card_ids": card_ids, "denominator": {"all_rows": 2144, "selected_rows": 19},
         "inventory_sha256": sha(inventory), "sources_sha256": sha(sources), "claims": [definition, form],
         "stress_attempts": {card: [{"source_id": source, "state": "not_found"} for source in
@@ -172,6 +177,8 @@ def values(result, field, sense_id=None):
 
 
 def refresh(batch, key):
+    if key in {"vts", "ulif", "vesum", "sum20", "mirror"}:
+        key += ":яйце"
     record = batch["sources"]["records"][key]
     batch["sources"]["calls"][record["call_key"]]["response"] = copy.deepcopy(record["payload"])
     record["response_sha256"] = sha(record["payload"])
@@ -180,7 +187,7 @@ def refresh(batch, key):
 
 
 def set_stress(batch, source, text):
-    key = "vts" if source == VTS else source
+    key = ("vts" if source == VTS else source) + ":яйце"
     batch["sources"]["records"][key]["payload"]["headword"] = text
     refresh(batch, key)
     claim = recipe("stress", key, "/headword", text, None)
@@ -278,6 +285,33 @@ def test_rejects_wrong_lexeme_sense_span_and_source_role(batch):
     assert values(valid, "definition_uk", SENSE) == ["A literal definition."]
     assert account(valid, "definition_uk", OTHER_SENSE)["state"] == "empty"
     assert account(valid, "definition_uk", OTHER_SENSE)["reason"] == "source_sense_claim_unresolved"
+    wrong_record = copy.deepcopy(batch)
+    wrong_record["manifest"]["stress_attempts"][TARGET][0]["claim"]["record_key"] = "sum20:яйце"
+    wrong_record["sources"]["records"]["sum20:яйце"]["arguments"]["word"] = "foreign"
+    refresh(wrong_record, "sum20")
+    with pytest.raises(Refusal, match="lemma_query_mismatch"):
+        assemble(wrong_record)
+    for field, member, literal in (("spelling", "lemma", "foreign"), ("pos", "pos", "noun"),
+                                   ("gender", "gender", "n")):
+        bad = copy.deepcopy(batch)
+        bad["sources"]["records"]["vesum:яйце"]["payload"]["clean_analyses"].append(
+            {"entry_id": 425814, "lemma": "foreign", "pos": "noun", "gender": "n"})
+        refresh(bad, "vesum")
+        bad["manifest"]["claims"].append(recipe(field, "vesum", "/clean_analyses/1/" + member,
+                                                literal, None))
+        with pytest.raises(Refusal, match="form_entry_mismatch"):
+            assemble(bad)
+    bad_pointer = copy.deepcopy(batch)
+    bad_pointer["manifest"]["scopes"]["definition_uk"]["pointer"] = "/example"
+    with pytest.raises(Refusal, match="scope_pointer_mismatch"):
+        assemble(bad_pointer)
+    overlap = copy.deepcopy(batch)
+    duplicate = copy.deepcopy(overlap["manifest"]["claims"][0])
+    duplicate.update(sense_id=OTHER_SENSE, source_sense_key="fixture:sense:2", scope_key="other")
+    overlap["manifest"]["claims"].append(duplicate)
+    add_scope(overlap["manifest"], duplicate)
+    with pytest.raises(Refusal, match="overlapping_definition_spans"):
+        assemble(overlap)
     for kind, reason in (("lexeme", "claim_lexeme_mismatch"), ("sense", "scope_subject_mismatch"),
                          ("adjacent", "outside_sense_span"), ("whole_article", "outside_sense_span"),
                          ("hash", "source_snapshot_drift"), ("footer", "dictionary_footer")):
@@ -290,22 +324,22 @@ def test_rejects_wrong_lexeme_sense_span_and_source_role(batch):
         elif kind == "adjacent":
             claim["span"] = [22, 36]
         elif kind == "whole_article":
-            claim["span"][1] = len(bad["sources"]["records"]["vts"]["payload"]["article"])
+            claim["span"][1] = len(bad["sources"]["records"]["vts:яйце"]["payload"]["article"])
         elif kind == "hash":
-            bad["sources"]["records"]["vts"]["content_sha256"] = "f" * 64
+            bad["sources"]["records"]["vts:яйце"]["content_sha256"] = "f" * 64
         else:
-            claim["span"] = [37, len(bad["sources"]["records"]["vts"]["payload"]["article"])]
+            claim["span"] = [37, len(bad["sources"]["records"]["vts:яйце"]["payload"]["article"])]
             bad["manifest"]["scopes"]["definition_uk"]["span"] = claim["span"][:]
         with pytest.raises(Refusal, match=reason):
             assemble(bad)
     mirror = copy.deepcopy(batch)
     claim = mirror["manifest"]["claims"][0]
-    claim.update(record_key="mirror", span=[0, 20])
+    claim.update(record_key="mirror:яйце", span=[0, 20])
     add_scope(mirror["manifest"], claim)
     mirror_result = assemble(mirror)
     assert values(mirror_result, "definition_uk", SENSE) == ["A mirror definition."]
     assert next(a for a in target(mirror_result)["assertions"] if a["field"] == "definition_uk")["source_id"] == "sum20_slovnyk_mirror"
-    mirror["sources"]["records"]["mirror"]["source_role"] = "official"
+    mirror["sources"]["records"]["mirror:яйце"]["source_role"] = "official"
     mirror["manifest"]["sources_sha256"] = sha(mirror["sources"])
     with pytest.raises(Refusal):
         assemble(mirror)
@@ -329,7 +363,7 @@ def test_rejects_wrong_lexeme_sense_span_and_source_role(batch):
 
 def test_stress_fallback_and_forms_require_independent_receipts(batch):
     """Catch skipped stress authorities, discarded doublets and foreign-entry or unreceipted accented forms."""
-    for source, text in (("ulif", "unit1" + ACUTE), ("sum20", "unit2" + ACUTE), (VTS, "unit3" + ACUTE)):
+    for source, text in (("ulif", "яйце" + ACUTE), ("sum20", "яйце" + ACUTE), (VTS, "яйце" + ACUTE)):
         case = copy.deepcopy(batch)
         chosen = set_stress(case, source, text)
         result = assemble(case)
@@ -343,13 +377,18 @@ def test_stress_fallback_and_forms_require_independent_receipts(batch):
     precedence = copy.deepcopy(batch)
     attempts = precedence["manifest"]["stress_attempts"][TARGET]
     attempts[1].update(state="supported", claim={"sentinel": "lower authority"})
-    assert values(assemble(precedence), "stress") == ["unit1" + ACUTE]
+    assert values(assemble(precedence), "stress") == ["яйце" + ACUTE]
     variants = copy.deepcopy(batch)
-    set_stress(variants, "ulif", "unit1" + ACUTE + "unit2" + ACUTE)
-    assert values(assemble(variants), "stress") == [["unit1" + ACUTE + "unit2", "unit1unit2" + ACUTE]]
+    # Synthetic doublet payload tests receipt mechanics, not the word's normative stress.
+    set_stress(variants, "ulif", "я" + ACUTE + "йце" + ACUTE)
+    assert values(assemble(variants), "stress") == [["я" + ACUTE + "йце", "яйце" + ACUTE]]
+    foreign_stress = copy.deepcopy(batch)
+    set_stress(foreign_stress, "ulif", "foreign" + ACUTE)
+    with pytest.raises(Refusal, match="stress_lemma_mismatch"):
+        assemble(foreign_stress)
     for state in ("ambiguous", "conflict"):
         case = copy.deepcopy(batch)
-        set_stress(case, VTS, "unit3" + ACUTE)
+        set_stress(case, VTS, "яйце" + ACUTE)
         case["manifest"]["stress_attempts"][TARGET][0]["state"] = state
         result = assemble(case)
         assert values(result, "stress") == []
@@ -358,7 +397,7 @@ def test_stress_fallback_and_forms_require_independent_receipts(batch):
     for kind, reason in (("entry", "form_entry_mismatch"), ("slot", "form_slot_mismatch"),
                          ("accent", "accented_form_requires_stress")):
         case = copy.deepcopy(batch)
-        analysis = case["sources"]["records"]["vesum"]["payload"]["clean_analyses"][0]
+        analysis = case["sources"]["records"]["vesum:яйце"]["payload"]["clean_analyses"][0]
         if kind == "entry":
             analysis["entry_id"] = 425814
         elif kind == "slot":
@@ -370,21 +409,21 @@ def test_stress_fallback_and_forms_require_independent_receipts(batch):
         with pytest.raises(Refusal, match=reason):
             assemble(case)
     accented = copy.deepcopy(batch)
-    accented["sources"]["records"]["vesum"]["payload"]["clean_analyses"][0]["word_form"] = "form1" + ACUTE
+    accented["sources"]["records"]["vesum:яйце"]["payload"]["clean_analyses"][0]["word_form"] = "form1" + ACUTE
     accented["manifest"]["claims"][1].update(span=[0, 6], stress_receipt="wr_" + "0" * 64)
     refresh(accented, "vesum")
     with pytest.raises(Refusal):
         assemble(accented)
     supported = copy.deepcopy(batch)
-    stress_claim = set_stress(supported, "ulif", "form1" + ACUTE)
-    stress_receipt = make_receipt("ulif", supported["sources"]["records"]["ulif"], "/headword", [0, 6], 436914)
-    supported["sources"]["records"]["vesum"]["payload"]["clean_analyses"][0]["word_form"] = "form1" + ACUTE
-    supported["manifest"]["claims"][1].update(span=[0, 6], stress_receipt=stress_receipt["receipt_id"])
+    stress_claim = set_stress(supported, "ulif", "яйце" + ACUTE)
+    stress_receipt = make_receipt("ulif:яйце", supported["sources"]["records"]["ulif:яйце"], "/headword", [0, 5], 436914)
+    supported["sources"]["records"]["vesum:яйце"]["payload"]["clean_analyses"][0]["word_form"] = "яйце" + ACUTE
+    supported["manifest"]["claims"][1].update(span=[0, 5], stress_receipt=stress_receipt["receipt_id"])
     refresh(supported, "vesum")
     result = assemble(supported)
-    assert values(result, "paradigm") == [{"slot": "noun:n:v_naz", "forms": ["form1" + ACUTE],
+    assert values(result, "paradigm") == [{"slot": "noun:n:v_naz", "forms": ["яйце" + ACUTE],
                                            "entry_id": 436914, "tags": "noun:n:v_naz"}]
-    assert values(result, "stress") == ["form1" + ACUTE]
+    assert values(result, "stress") == ["яйце" + ACUTE]
     form_receipts = account(result, "paradigm")["receipt_ids"]
     stress_receipts = account(result, "stress")["receipt_ids"]
     assert stress_receipts == [stress_receipt["receipt_id"]]
@@ -404,7 +443,7 @@ def test_unreviewed_examples_and_unaligned_rich_fields_stay_empty(batch):
     batch["manifest"]["field_residuals"]["examples"] = "independent_a1_review_pending"
     rich = {"register": ("/register", "formal"), "synonyms": ("/synonym", "paired-term"),
             "antonyms": ("/antonym", "opposite-term"), "collocations": ("/collocation", "paired phrase"),
-            "gloss_en": ("/english", "English fixture gloss")}
+            "gloss_en": ("/hits/0/word", "English fixture gloss")}
     for field in rich:
         batch["manifest"]["field_residuals"][field] = "source_sense_alignment_unresolved"
         batch["manifest"]["field_dependencies"][field] = "reviewed correspondence for fixture:sense:1"
@@ -429,14 +468,16 @@ def test_unreviewed_examples_and_unaligned_rich_fields_stay_empty(batch):
         with pytest.raises(Refusal, match="example_review_binding_mismatch"):
             assemble(bad)
     rewritten = copy.deepcopy(batch)
-    rewritten["sources"]["records"]["vts"]["payload"]["example"] = "An invented replacement."
+    rewritten["sources"]["records"]["vts:яйце"]["payload"]["example"] = "An invented replacement."
     refresh(rewritten, "vts")
     assert values(assemble(rewritten), "examples", SENSE) == []
     aligned = copy.deepcopy(batch)
     for field, (pointer, literal) in rich.items():
         candidate = recipe(field, "balla" if field == "gloss_en" else "vts", pointer, literal)
         if field == "gloss_en":
-            candidate.update(translation_direction="en-uk", usage_pair="fixture-pair")
+            candidate.update(translation_direction="en-uk",
+                usage_pair={"pointer": "/hits/0/definition", "span": [0, 12]},
+                supporting_spans=[{"pointer": "/hits/0/definition", "span": [0, 12]}])
         aligned["manifest"]["claims"].append(candidate)
         add_scope(aligned["manifest"], candidate)
     accepted = assemble(aligned)
@@ -451,6 +492,16 @@ def test_unreviewed_examples_and_unaligned_rich_fields_stay_empty(batch):
     reversed_pair["manifest"]["claims"][-1]["translation_direction"] = "uk-en"
     with pytest.raises(Refusal):
         assemble(reversed_pair)
+    unreceipted_pair = copy.deepcopy(aligned)
+    unreceipted_pair["manifest"]["claims"][-1]["usage_pair"] = {"pointer": "/missing", "span": [0, 1]}
+    with pytest.raises(Refusal, match="bilingual_pair_not_receipted"):
+        assemble(unreceipted_pair)
+    other_hit = copy.deepcopy(aligned)
+    gloss = other_hit["manifest"]["claims"][-1]
+    gloss["supporting_spans"][0]["pointer"] = "/hits/1/definition"
+    gloss["usage_pair"]["pointer"] = "/hits/1/definition"
+    with pytest.raises(Refusal, match="bilingual_pair_outside_hit"):
+        assemble(other_hit)
 
 
 def test_replay_is_deterministic_and_refuses_input_drift(batch, tmp_path, monkeypatch, capsys):
@@ -477,9 +528,22 @@ def test_replay_is_deterministic_and_refuses_input_drift(batch, tmp_path, monkey
     assert values(json.loads(first.read_bytes()), "definition_uk", SENSE) == ["A literal definition."]
     assert cards.main(["--sources", str(source_path), "--output", str(first), "--check"]) == 0
     capsys.readouterr()
+    for kind in ("field_state", "row_mapping", "receipt_ids"):
+        tampered = json.loads(first.read_bytes())
+        row = next(row for row in tampered["accounting"] if row["state"] == "empty")
+        if kind == "field_state":
+            row["state"] = "supported"
+        elif kind == "receipt_ids":
+            row["receipt_ids"] = ["wr_" + "0" * 64]
+        else:
+            tampered["rows"][0]["mapping"] = {"kind": "unresolved"}
+        rejected.write_bytes(encoded(tampered) + b"\n")
+        assert cards.main(["--sources", str(source_path), "--output", str(rejected), "--check"]) == 1
+        assert "delivered_output_mismatch" in capsys.readouterr().err
+    rejected.unlink()
     assert {relative: (fixture_root / relative).read_bytes() for relative in paths} == before
     changed = copy.deepcopy(batch["sources"])
-    changed["records"]["vts"]["payload"]["article"] = "Changed consumed bytes."
+    changed["records"]["vts:яйце"]["payload"]["article"] = "Changed consumed bytes."
     source_path.write_bytes(encoded(changed) + b"\n")
     source_after_drift = source_path.read_bytes()
     accepted_before = first.read_bytes()

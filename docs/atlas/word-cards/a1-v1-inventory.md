@@ -120,9 +120,11 @@ The output bundle has separate `.cards.json`, `.receipts.json`, `.rows.json`
 and `.residuals.json` projections beside it. Each applicable field has an
 accounting row. An unsupported field stays empty with its reason, dependency
 and owner. Counts distinguish assertions, distinct receipts per field and
-distinct receipts across the batch. The verifier checks the delivered values,
+distinct receipts across the batch. The receipt verifier checks the delivered values,
 subjects, source identities, sense scopes and field resolutions against the
-frozen extraction recipes without rebuilding the cards.
+frozen extraction recipes. The CLI's `--check` also rebuilds from the frozen
+inputs and requires the supplied output bytes to match, including every row
+mapping, review reference and residual state.
 
 Examples stay empty until independent Ukrainian review approves the exact
 quotation, source span, sense and A1 suitability. The approved evidence must

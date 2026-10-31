@@ -45,6 +45,17 @@ def selected_rows(inventory) -> list:
             and row["mapping"].get("pilot", {}).get("card_id") is not None]
 
 
+def require_lemma_call(call, lemma):
+    """Bind a saved lemma lookup to the query it actually made."""
+    keys = {"query_ulif_records": "words", "inspect_lemma": "lemma",
+            "query_slovnyk_me": "word", "query_sum20": "word",
+            "query_cefr_level": "query", "query_grac": "query", "search_heritage": "query"}
+    key = keys.get(call["tool"])
+    _require(key is not None, "lemma_query_tool_mismatch")
+    expected = [lemma] if key == "words" else lemma
+    _require(call["arguments"].get(key) == expected, "lemma_query_mismatch")
+
+
 def _unique(values, reason):
     _require(len(values) == len(set(values)), reason)
 
