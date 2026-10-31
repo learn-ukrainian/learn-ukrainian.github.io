@@ -202,6 +202,37 @@ def test_nonregular_build_output_is_refused(checkout):
 
 
 @pytest.mark.parametrize(
+    "filename,valid",
+    [
+        ("package-lock.json", '{"lockfileVersion": 3}\n'),
+        ("uv.lock", 'version = 1\n[[package]]\nname = "pytest"\nversion = "8.4.2"\n'),
+        ("poetry.lock", '[[package]]\nname = "pytest"\nversion = "8.4.2"\n'),
+        ("requirements.txt", "pytest==8.4.2\n"),
+        ("requirements.lock", "pytest==8.4.2\n"),
+    ],
+)
+def test_regenerable_proof_refuses_unparseable_lockfile(checkout, filename, valid):
+    """Defect class: malformed tracked dependency inputs admitted ignored environment output."""
+    repo = checkout[0]
+    (repo / ".gitignore").write_text("node_modules/\n.venv/\n")
+    name = "node_modules/package/index.js" if filename == "package-lock.json" else ".venv/lib/package.py"
+    fixtures.artifact(checkout, name, b"dependency output")
+    if filename != "package-lock.json":
+        fixtures.artifact(checkout, ".venv/pyvenv.cfg", b"home = toolchain\n")
+    lock = repo / filename
+    for content, expected in [(valid, True), ("not lockfile content [\n", False)]:
+        lock.write_text(content)
+        repo_fixtures._run(["git", "add", ".gitignore", filename], cwd=repo)
+        repo_fixtures._run(
+            ["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+             "commit", "-m", "dependency input"], cwd=repo,
+        )
+        assert patterns.is_regenerable_ignored_path(
+            name, worktree=repo, tracked={filename}, ignored={name}
+        ) is expected
+
+
+@pytest.mark.parametrize(
     "remaining",
     [
         None,

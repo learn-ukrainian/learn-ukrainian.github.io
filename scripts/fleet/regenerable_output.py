@@ -10,11 +10,14 @@ import os
 import re
 import stat
 import subprocess
+import tomllib
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+
+from packaging.requirements import Requirement
 
 from scripts.common.nofollow_walk import ComponentOpenError
 from scripts.orchestration.worktree_artifacts import REGENERABLE_CACHE_DIRECTORIES
@@ -482,6 +485,23 @@ def _compare_external_copy(run: CopyProofRun, worktree: Path, relative: Path, ca
         return False
 
 
+def _parse_dependency_input(filename: str, payload: bytes) -> None:
+    """Parse dependency inputs using their format's parser; invalid input raises ValueError."""
+    text = payload.decode("utf-8")
+    if filename == "package-lock.json":
+        if not isinstance(json.loads(text), dict):
+            raise ValueError("package lock must be a JSON object")
+    elif filename in {"uv.lock", "poetry.lock"}:
+        tomllib.loads(text)
+    else:
+        # Only public PEP 508 parsing proves these inputs. Unsupported pip
+        # constructs remain gated rather than borrowing an existence proof.
+        for line in text.splitlines():
+            requirement = line.strip()
+            if requirement and not requirement.startswith("#"):
+                Requirement(requirement)
+
+
 def _venv_is_rebuildable(worktree: Path, prefix: Path, tracked: set[str]) -> bool:
     """Require local venv metadata and an unchanged committed dependency input.
 
@@ -503,6 +523,7 @@ def _venv_is_rebuildable(worktree: Path, prefix: Path, tracked: set[str]) -> boo
                 ["cat-file", "blob", f"HEAD:{lock.as_posix()}"], cwd=worktree,
                 env=artifacts._safe_git_env(), capture_output=True, check=True, timeout=30,
             ).stdout
+            _parse_dependency_input(filename, blob)
             artifacts.safe_git(
                 ["diff", "--cached", "--quiet", "HEAD", "--", lock.as_posix()], cwd=worktree,
                 env=artifacts._safe_git_env(), capture_output=True, check=True, timeout=30,
@@ -524,7 +545,7 @@ def is_regenerable_ignored_path(
 ) -> bool:
     """Classify regenerable output without traversing any symbolic link.
 
-    A lockfile must be tracked and a local regular file. Environment contents
+    A lockfile must be tracked, parseable and a local regular file. Environment contents
     without that proof remain output, including caches inside those environments.
     """
     relative = Path(path)
@@ -611,11 +632,19 @@ def _matches_regenerable_pattern(
         if not (stat.S_ISDIR(status.st_mode) or stat.S_ISREG(status.st_mode)):
             return False
         if not site_tree and part == DEPENDENCY_DIRECTORY and stat.S_ISDIR(status.st_mode):
+            from scripts.orchestration import worktree_artifacts as artifacts
+
             lock = Path(*relative.parts[:index]) / "package-lock.json"
             # No traversal into dependency trees (which normally contain links).
             try:
-                return lock.as_posix() in tracked and stat.S_ISREG((worktree / lock).lstat().st_mode)
-            except FileNotFoundError:
+                if lock.as_posix() not in tracked:
+                    return False
+                content = artifacts._read_preserved_bytes(worktree / lock, root=worktree)
+                if content.file_type != "regular":
+                    return False
+                _parse_dependency_input(lock.name, content.payload)
+                return True
+            except (OSError, ValueError, ComponentOpenError):
                 return False
         elif not site_tree and part in REGENERABLE_CACHE_DIRECTORIES and stat.S_ISDIR(status.st_mode):
             return True

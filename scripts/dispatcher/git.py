@@ -510,7 +510,7 @@ def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | Non
     Only the URL recorded at dispatch is read, in a private Git namespace, so neither the worktree's
     mutable origin nor a configured URL rewrite can redirect the proof. A merged branch may since have
     been deleted, so head also counts as published when a pull-request head ref advertises it exactly
-    (GitHub keeps refs/pull/N/head after a squash merge), when, fetched commits-only, main contains it,
+    (GitHub keeps refs/pull/N/head after a squash merge), when, fetched commits-only, a live branch contains it,
     or when the final head of a merged pull request carrying the task's delivery contains it
     (_merged_pr_contains).
     """
@@ -525,8 +525,8 @@ def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | Non
         if any(sha == head and PULL_HEAD.fullmatch(name) for sha, name in advertised):
             return tip, True
         run("fetch", "--no-tags", "--no-write-fetch-head", "--filter=tree:0", "--", "origin",
-            f"+{MAIN_REF}:{MAIN_REF}", timeout=VERIFICATION_FETCH_TIMEOUT)
-        if head in run("rev-list", MAIN_REF).split():
+            "+refs/heads/*:refs/heads/*", timeout=VERIFICATION_FETCH_TIMEOUT)
+        if head in run("rev-list", "--branches").split():
             return tip, True
         return tip, _merged_pr_contains(record, run, {name: sha for sha, name in advertised}, head)
 
