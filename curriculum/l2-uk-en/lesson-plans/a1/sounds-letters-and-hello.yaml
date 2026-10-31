@@ -35,7 +35,7 @@ arc_ref:
   position: 2
 evidence_ref:
   path: curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml
-  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  sha256: 'a2569cbf77d3cca46d7a7e99ba5ee4dd7df93c1c8063ce1378a7661eea02358e'
 lessons:
 - n: 1
   slug: hello-and-alphabet

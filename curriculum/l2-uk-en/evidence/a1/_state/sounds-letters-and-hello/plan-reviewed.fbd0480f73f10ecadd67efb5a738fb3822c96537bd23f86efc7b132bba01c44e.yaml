@@ -1,0 +1,1153 @@
+plan_schema: 2
+module: sounds-letters-and-hello
+level: a1
+sequence: 2
+slug: sounds-letters-and-hello
+version: '11.0'
+title: Привіт!
+subtitle: Useful spoken greetings, staged sound-letter links, stress and speech melody
+focus: Adult first encounters with English scaffolding; full alphabet overview, twelve acquired letters,
+  fixed oral greetings and courtesy, and supported recognition of acquired print. V-102, V-103 and V-104
+  are whole visible exposure only, not verified word-level listening models. Timed pronunciation evidence
+  for their withdrawn words remains a residual owned by claude-cto; teacher-led oral rehearsal is explicit
+  and is never claimed as a recording.
+objectives:
+- Choose and say a suitable greeting, courtesy chunk and farewell for a real recipient.
+- Distinguish hearing a sound from reading a letter, using the full alphabet as an overview while acquiring
+  only the declared twelve letters.
+- Recognise acquired capital/small-letter forms and read a familiar greeting after all of its letters
+  are available.
+- Use source-modelled stress and statement, question and exclamation contours in familiar speech.
+connects_to:
+- who-am-i
+prerequisites:
+- introduction-to-ukrainian
+register: neutral
+changelog:
+- '10.0 (2026-10-30): Independently authored replacement under #8425 and A1 arc r6; supersedes the exact-byte
+  retired position-1 plan without using its lesson content.'
+- '11.0 (2026-10-31): Apply CTO C20 disposition; whole visible videos retained, unverified word-model
+  claims withdrawn and listed as residuals; declare teacher modelling of acquired letters, move speaker-reference
+  introduction after its letter, and remove word ids used as pack ids. Add publisher-linked standalone
+  word recordings with measured full-file intervals as the audio models; retain the whole videos for exposure.'
+arc_ref:
+  level: a1
+  position: 2
+evidence_ref:
+  path: curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: hello-and-alphabet
+  title: Привіт!
+  kind: teach
+  job: Greet a familiar peer by ear and recognise the first four staged letters while using a full-alphabet
+    overview.
+  rationale: 'A whole alphabet overview is a navigation aid, not acquired reading. A useful first spoken
+    turn anchors sound before print. All instructions, meanings and feedback are in English; no printed
+    greeting is scored before its letters are acquired. Withdrawing an unverified video model does not
+    prove the word is heard there: timed evidence for V-102..V-104 remains a named residual. Dedicated
+    publisher-linked word recordings supply the verified audio models; the whole videos remain visible
+    exposure. Teacher rehearsal is supplementary.'
+  inventory:
+    phonetics:
+      letters:
+      - А
+      - І
+      - Я
+      - М
+      sounds: []
+    grammar:
+    - id: G-a1-012
+      point: An audible sound and a visible letter are different units; an alphabet overview does not
+        make every displayed letter acquired.
+      evidence:
+      - T-101
+      - T-106
+      - V-103
+    vocabulary:
+      core:
+      - lemma: привіт
+        evidence: W-074
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: я
+        evidence: W-001
+        forms:
+        - noun:anim:s:v_naz:pron:pers:1
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - T-101
+    - T-106
+    - V-103
+    - V-105
+    practice:
+    - a1
+    needs: []
+    teach: Hear the familiar greeting in the whole visible recording, repeat it, and distinguish hearing
+      a sound from seeing its letter. Use the speaker-reference word as a fixed word, without a pronoun
+      system.
+    introduces:
+      letters: []
+      grammar:
+      - G-a1-012
+      vocabulary:
+      - W-074
+  - id: s2
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - T-101
+    - T-102
+    - S-103
+    - V-101
+    practice:
+    - a2
+    needs: []
+    teach: View the complete 33-letter chart with printed and handwritten models; acquire only this lesson’s
+      four letters by connecting their shapes and source sounds. The teacher models А, І, Я, М before
+      the learner repeats each sound and connects it to the printed shape; the whole video remains visible
+      exposure, without an unverified letter-recording claim.
+    introduces:
+      letters:
+      - А
+      - І
+      - Я
+      - М
+      grammar: []
+      vocabulary:
+      - W-001
+  - id: s3
+    kind: practice
+    uses:
+      grammar:
+      - G-a1-012
+      vocabulary:
+      - W-074
+      - W-001
+    evidence:
+    - T-101
+    - V-105
+    practice:
+    - a3
+    - a4
+    needs: []
+  consolidation:
+  - a3
+  - a4
+  activities:
+  - id: a1
+    type: watch-and-repeat
+    placement: inline
+    focus: Watch the entire visible V-103, then repeat its familiar greeting for a peer. The picture and
+      sound remain together. Treat the remaining expressions as listening exposure, with no acquisition
+      claim. The whole video is unscored exposure. Use the separate dedicated word recordings linked in
+      the step for the exact target pronunciation, then rehearse with the teacher. No unverified timed
+      segment is assigned to a YouTube video.
+    targets:
+    - W-074
+    learner_reads: []
+  - id: a2
+    type: image-to-letter
+    placement: inline
+    focus: Recognise this lesson’s acquired capital and small letter forms in an adult name-badge context.
+      Use glyph choices only; do not ask the learner to decode the full chart.
+    targets: []
+    learner_reads: []
+  - id: a3
+    type: match-up
+    placement: workbook
+    focus: Pair the acquired capital and small letter shapes. Explain in English how recognising the pair
+      helps locate an initial on a name badge. These are glyph pairs, not dictionary-form pairs.
+    targets: []
+    learner_reads: []
+  - id: a4
+    type: odd-one-out
+    placement: workbook
+    focus: Compare groups of acquired glyphs and identify the one whose capital/small-letter pair does
+      not match. Every group has one clear mismatch; do not use an untaught glyph as the distractor.
+    targets: []
+    learner_reads: []
+  videos:
+  - evidence: V-101
+    use: 'Lesson 1 s2: whole visible listening preview next to the full alphabet chart, with only four
+      letters acquired.'
+  - evidence: V-103
+    use: 'Lesson 1 s1/a1: familiar peer greeting heard in the collected video, then repeated aloud.'
+  - evidence: V-105
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []
+- n: 2
+  slug: vowels-and-first-words
+  title: Голосні звуки
+  kind: teach
+  job: Distinguish the six heard vowel sounds, acquire the next four letters, and recognise time-of-day
+    meanings in spoken greeting chunks.
+  rationale: 'Hearing vowel differences precedes decoding every vowel spelling. The vowel sound whose
+    letter belongs to position 3 is heard but its letter is not acquired here. The four time words are
+    met through their recorded greeting forms, without case rules or word-division drills. Withdrawing
+    an unverified video model does not prove the word is heard there: timed evidence for V-102..V-104
+    remains a named residual. Dedicated publisher-linked word recordings supply the verified audio models;
+    the whole videos remain visible exposure. Teacher rehearsal is supplementary.'
+  inventory:
+    phonetics:
+      letters:
+      - Е
+      - И
+      - О
+      - Т
+      sounds: []
+    grammar:
+    - id: G-a1-013
+      point: Six Ukrainian vowel sounds are distinguished by hearing; the staged vowel letters connect
+        heard sounds to print.
+      evidence:
+      - T-102
+      - V-101
+    vocabulary:
+      core:
+      - lemma: ти
+        evidence: W-002
+        forms:
+        - noun:anim:s:v_naz:pron:pers:2
+      - lemma: день
+        evidence: W-076
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: ранок
+        evidence: W-237
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: вечір
+        evidence: W-200
+        forms:
+        - noun:inanim:m:v_naz
+      - lemma: ніч
+        evidence: W-220
+        forms:
+        - noun:inanim:f:v_naz
+      - lemma: так
+        evidence: W-096
+        forms:
+        - part
+      incidental: []
+      recycled:
+      - W-001
+  steps:
+  - id: s1
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - T-102
+    - V-101
+    practice:
+    - a1
+    needs: []
+    teach: Hear and say the six vowel sounds from the full visible alphabet model; connect only the four
+      newly acquired letter shapes to print. The teacher models Е, И, О, Т before the learner repeats
+      each sound and connects it to the printed shape; the whole video remains visible exposure, without
+      an unverified letter-recording claim.
+    introduces:
+      letters:
+      - Е
+      - И
+      - О
+      - Т
+      grammar:
+      - G-a1-013
+      vocabulary: []
+  - id: s2
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - V-102
+    - T-106
+    - V-106
+    - V-110
+    - V-108
+    - V-109
+    - V-107
+    practice:
+    - a2
+    needs: []
+    teach: Notice morning, day, evening and night meanings in the whole visible V-102; treat the greeting
+      forms as fixed sounds. Learn the peer-reference word and the yes/no response tokens as lexical chunks,
+      without a pronoun or case paradigm.
+    introduces:
+      letters: []
+      grammar: []
+      vocabulary:
+      - W-002
+      - W-076
+      - W-237
+      - W-200
+      - W-220
+      - W-096
+  - id: s3
+    kind: practice
+    uses:
+      grammar:
+      - G-a1-013
+      vocabulary:
+      - W-001
+      - W-002
+      - W-076
+      - W-237
+      - W-200
+      - W-220
+      - W-096
+    evidence:
+    - T-102
+    - V-102
+    - V-106
+    - V-110
+    - V-108
+    - V-109
+    - V-107
+    practice:
+    - a3
+    - a4
+    needs: []
+  consolidation:
+  - a3
+  - a4
+  activities:
+  - id: a1
+    type: watch-and-repeat
+    placement: inline
+    focus: Watch V-101 whole and visible, repeating the vowel models. Hearing is not a claim to read the
+      whole chart; no new letters beyond the declared four are scored. The whole video is unscored exposure.
+      Use the separate dedicated word recordings linked in the step for the exact target pronunciation,
+      then rehearse with the teacher. No unverified timed segment is assigned to a YouTube video.
+    targets: []
+    learner_reads: []
+  - id: a2
+    type: observe
+    placement: inline
+    focus: Watch V-102 whole and visible. Use English time-of-day illustrations to notice its morning,
+      daytime and evening greetings. The teacher supplies the night meaning from the sourced night record;
+      do not claim that every dictionary form is spoken in the recording.
+    targets:
+    - W-076
+    - W-237
+    - W-200
+    - W-220
+    - W-096
+    learner_reads: []
+  - id: a3
+    type: match-up
+    placement: workbook
+    focus: Pair the now-decodable speaker and peer reference words with an English speaker/recipient cue.
+      Use the literal source forms of the two pronoun records; no other Ukrainian words or inflections
+      are printed.
+    targets:
+    - W-001
+    - W-002
+    learner_reads: []
+  - id: a4
+    type: quiz
+    placement: workbook
+    focus: For an English role cue, choose the decodable word referring to the speaker or to the familiar
+      recipient. Both source words are plausible options; swap the relationship between items. The stem
+      describes the situation without translating the answer.
+    targets:
+    - W-001
+    - W-002
+    learner_reads: []
+    options:
+    - я
+    - ти
+  videos:
+  - evidence: V-101
+    use: 'Lesson 2 s1/a1: whole visible vowel listening model, keeping acquired print separate.'
+  - evidence: V-102
+    use: 'Lesson 2 s2/a2: whole visible time-of-day greeting and response listening input.'
+  - evidence: V-106
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-107
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-108
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-109
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-110
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []
+- n: 3
+  slug: greetings-in-print
+  title: Букви і слова
+  kind: teach
+  job: Read the familiar peer greeting after acquiring its remaining letters, and choose a casual or neutral
+    spoken greeting for a real recipient.
+  rationale: 'The printed greeting is introduced only now, when all its letters are acquired. Neutral
+    and casual alternatives remain oral where they contain later letters. The learner reads useful small
+    words rather than a primer story. Withdrawing an unverified video model does not prove the word is
+    heard there: timed evidence for V-102..V-104 remains a named residual. Dedicated publisher-linked
+    word recordings supply the verified audio models; the whole videos remain visible exposure. Teacher
+    rehearsal is supplementary.'
+  inventory:
+    phonetics:
+      letters:
+      - Н
+      - В
+      - П
+      - Р
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - lemma: Вітаю!
+        evidence: W-295
+        forms: []
+      - lemma: Бувай!
+        evidence: W-294
+        forms: []
+      - lemma: па-па
+        evidence: W-274
+        forms:
+        - intj
+      - lemma: ні
+        evidence: W-062
+        forms:
+        - part
+      incidental: []
+      recycled:
+      - W-074
+      - W-001
+      - W-002
+  steps:
+  - id: s1
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary:
+      - W-074
+    evidence:
+    - T-101
+    - T-102
+    - V-103
+    - V-105
+    practice:
+    - a1
+    needs: []
+    teach: Connect the remaining four staged letters to source sounds, then read the already familiar
+      greeting as a whole meaningful word. The teacher models Н, В, П, Р before the learner repeats each
+      sound and connects it to the printed shape; the whole video remains visible exposure, without an
+      unverified letter-recording claim.
+    introduces:
+      letters:
+      - Н
+      - В
+      - П
+      - Р
+      grammar: []
+      vocabulary: []
+  - id: s2
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - T-106
+    - X-101
+    - V-103
+    - V-113
+    - V-112
+    - V-111
+    practice:
+    - a2
+    needs: []
+    teach: Use the neutral greeting and casual farewells as fixed spoken chunks, chosen for a peer or
+      a new acquaintance; do not analyse verb endings. The collected V-103 models the neutral greeting;
+      the other chunks are sourced teacher models, not claimed recording bindings. Learn the negative-response
+      token only now that its spelling is decodable.
+    introduces:
+      letters: []
+      grammar: []
+      vocabulary:
+      - W-295
+      - W-294
+      - W-274
+      - W-062
+  - id: s3
+    kind: practice
+    uses:
+      grammar: []
+      vocabulary:
+      - W-074
+      - W-001
+      - W-002
+      - W-062
+      - W-295
+      - W-294
+      - W-274
+    evidence:
+    - X-101
+    - V-105
+    - V-113
+    - V-112
+    - V-111
+    practice:
+    - a3
+    - a4
+    - a5
+    needs: []
+  consolidation:
+  - a3
+  - a4
+  - a5
+  activities:
+  - id: a1
+    type: letter-grid
+    placement: inline
+    focus: Find the greeting’s acquired letters in an uncluttered adult study-note grid, then read the
+      verified greeting. No new word inventory or untaught letter choices.
+    targets:
+    - W-074
+    learner_reads: []
+  - id: a2
+    type: watch-and-repeat
+    placement: inline
+    focus: Watch the whole visible V-103, repeat the familiar and neutral greeting, and choose one for
+      a peer versus a new acquaintance. Rehearse the sourced casual farewells after the teacher; no scored
+      listening item claims an unverified recording. The whole video is unscored exposure. Use the separate
+      dedicated word recordings linked in the step for the exact target pronunciation, then rehearse with
+      the teacher. No unverified timed segment is assigned to a YouTube video.
+    targets:
+    - W-074
+    - W-295
+    - W-294
+    - W-274
+    learner_reads: []
+  - id: a3
+    type: anagram
+    placement: workbook
+    focus: Reassemble the source spelling of the now-decodable greeting from its letter tiles, then say
+      it to a chosen peer. The task checks orthographic recognition rather than a list of unrelated nouns.
+    targets:
+    - W-074
+    learner_reads: []
+  - id: a4
+    type: quiz
+    placement: workbook
+    focus: Choose a printed opening for a familiar peer, or a negative response to a clear English situation.
+      The two source words are both decodable, with one defensible answer per item; do not translate the
+      correct option in the stem.
+    targets:
+    - W-074
+    - W-062
+    learner_reads: []
+    options:
+    - привіт
+    - ні
+  - id: a5
+    type: match-up
+    placement: workbook
+    focus: Pair the three decodable source words with distinct English speaker-reference, negative-response
+      and greeting situations. Read the Ukrainian to decide; no school-subject recall.
+    targets:
+    - W-001
+    - W-062
+    - W-074
+    learner_reads: []
+  videos:
+  - evidence: V-103
+    use: 'Lesson 3 s1-s2/a2: whole visible familiar and neutral greeting model; print recognition is restricted
+      to acquired letters.'
+  - evidence: V-105
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-111
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-112
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-113
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []
+- n: 4
+  slug: stress-and-speech-melody
+  title: Наголос та інтонація
+  kind: teach
+  job: Repeat a greeting or courtesy chunk with audible stress and distinguish statement, question and
+    exclamation contours.
+  rationale: 'Prosody has been heard from the first turn and is now made explicit in English. Written
+    stress is shown only on the already decodable familiar greeting; other courtesy chunks stay oral and
+    fixed. No grammatical case or imperative system is explained. Withdrawing an unverified video model
+    does not prove the word is heard there: timed evidence for V-102..V-104 remains a named residual.
+    Dedicated publisher-linked word recordings supply the verified audio models; the whole videos remain
+    visible exposure. Teacher rehearsal is supplementary.'
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar:
+    - id: G-a1-014
+      point: A word has an audible stressed syllable; statements, questions and exclamations have source-modelled
+        speech contours.
+      evidence:
+      - T-103
+      - T-104
+      - T-105
+      - S-101
+      - S-102
+      - V-103
+    vocabulary:
+      core:
+      - lemma: Будь ласка!
+        evidence: W-291
+        forms: []
+      - lemma: Дякую!
+        evidence: W-292
+        forms: []
+      - lemma: Вибачте!
+        evidence: W-293
+        forms: []
+      incidental: []
+      recycled:
+      - W-074
+  steps:
+  - id: s1
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary:
+      - W-074
+    evidence:
+    - T-103
+    - T-104
+    - T-105
+    - S-101
+    - S-102
+    - V-103
+    - V-105
+    practice:
+    - a1
+    needs: []
+    teach: Use source-modelled oral prominence and statement, question and exclamation contours with already
+      familiar language; only now connect an annotated written stress to the decodable greeting.
+    introduces:
+      letters: []
+      grammar:
+      - G-a1-014
+      vocabulary: []
+  - id: s2
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - V-104
+    - T-106
+    - X-101
+    - V-114
+    - V-115
+    - V-116
+    practice:
+    - a2
+    needs: []
+    teach: Hear and rehearse thanks, please and excuse-me as courtesy chunks in the whole visible V-104.
+      Choose one for a small real situation, without analysing its verb form.
+    introduces:
+      letters: []
+      grammar: []
+      vocabulary:
+      - W-291
+      - W-292
+      - W-293
+  - id: s3
+    kind: practice
+    uses:
+      grammar:
+      - G-a1-014
+      vocabulary:
+      - W-074
+      - W-291
+      - W-292
+      - W-293
+    evidence:
+    - T-103
+    - X-102
+    - V-104
+    - V-105
+    - V-114
+    - V-115
+    - V-116
+    practice:
+    - a3
+    - a4
+    needs: []
+  consolidation:
+  - a3
+  - a4
+  activities:
+  - id: a1
+    type: watch-and-repeat
+    placement: inline
+    focus: Repeat the familiar greeting after V-103 with its sourced stress, then model a statement, question
+      and exclamation in a familiar exchange. Keep videos whole and visible; no hidden sound player. The
+      whole video is unscored exposure. Use the separate dedicated word recordings linked in the step
+      for the exact target pronunciation, then rehearse with the teacher. No unverified timed segment
+      is assigned to a YouTube video.
+    targets:
+    - W-074
+    learner_reads: []
+  - id: a2
+    type: watch-and-repeat
+    placement: inline
+    focus: Watch V-104 whole and visible; select and rehearse only its excuse-me, please and thanks chunks.
+      Other vocabulary is exposure, with English framing and no acquisition claim. The whole video is
+      unscored exposure. Use the separate dedicated word recordings linked in the step for the exact target
+      pronunciation, then rehearse with the teacher. No unverified timed segment is assigned to a YouTube
+      video.
+    targets:
+    - W-291
+    - W-292
+    - W-293
+    learner_reads: []
+  - id: a3
+    type: quiz
+    placement: workbook
+    focus: On the already decodable greeting, choose which of its two source vowels carries the stronger
+      spoken beat. The engine supplies sourced stress; no hand-written stressed form. For contour items
+      choose among English statement, question and exclamation labels after a modelled known utterance.
+      Distractors name the other vowel or other two contours, never an answer translated in the prompt.
+    targets:
+    - W-074
+    learner_reads: []
+    options: []
+    model: X-102
+  - id: a4
+    type: observe
+    placement: workbook
+    focus: 'Use three English adult role cards: accidental interruption, receiving help, and making a
+      courteous request. Choose and say the appropriate learned chunk, then rehearse the actual response.
+      This is unscored spoken rehearsal with the source model available, not a fabricated recording comprehension
+      test.'
+    targets:
+    - W-291
+    - W-292
+    - W-293
+    learner_reads: []
+    model: X-101
+  videos:
+  - evidence: V-103
+    use: 'Lesson 4 s1: whole visible familiar greeting for audible word stress.'
+  - evidence: V-104
+    use: 'Lesson 4 s2/a2: whole visible courtesy listening model; only the bound chunks are targets.'
+  - evidence: V-105
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-114
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-115
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-116
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []
+- n: 5
+  slug: greeting-and-leaving
+  title: Добрий день!
+  kind: teach
+  job: Choose a time-appropriate greeting and farewell for an adult peer or receptionist, and take a short
+    spoken turn.
+  rationale: 'The time words already have meanings; this lesson combines them as unanalysed formulas.
+    Greetings containing later letters remain by ear. The workbook reuses the acquired printed greeting
+    and negative token, with distinct operations and no requirement to read unacquired print. Withdrawing
+    an unverified video model does not prove the word is heard there: timed evidence for V-102..V-104
+    remains a named residual. Dedicated publisher-linked word recordings supply the verified audio models;
+    the whole videos remain visible exposure. Teacher rehearsal is supplementary.'
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - lemma: Добрий день!
+        evidence: W-287
+        forms: []
+      - lemma: Доброго ранку!
+        evidence: W-288
+        forms: []
+      - lemma: Добрий вечір!
+        evidence: W-289
+        forms: []
+      - lemma: До побачення!
+        evidence: W-290
+        forms: []
+      incidental: []
+      recycled:
+      - W-076
+      - W-237
+      - W-200
+      - W-220
+      - W-074
+      - W-062
+      - W-291
+      - W-292
+      - W-293
+  steps:
+  - id: s1
+    kind: teach
+    uses:
+      grammar: []
+      vocabulary:
+      - W-076
+      - W-237
+      - W-200
+      - W-220
+    evidence:
+    - V-102
+    - T-106
+    - X-101
+    - V-106
+    - V-108
+    - V-109
+    - V-107
+    - V-117
+    - V-118
+    - V-119
+    - V-120
+    practice:
+    - a1
+    needs: []
+    teach: Learn the morning, general day and evening greetings and the neutral farewell as fixed spoken
+      formulas in the whole visible V-102; choose by time and relationship, not by a case-ending rule.
+    introduces:
+      letters: []
+      grammar: []
+      vocabulary:
+      - W-287
+      - W-288
+      - W-289
+      - W-290
+  - id: s2
+    kind: practice
+    uses:
+      grammar: []
+      vocabulary:
+      - W-074
+      - W-062
+      - W-287
+      - W-288
+      - W-289
+      - W-290
+      - W-291
+      - W-292
+      - W-293
+    evidence:
+    - X-101
+    - V-102
+    - V-105
+    - V-117
+    - V-118
+    - V-119
+    - V-120
+    - V-114
+    - V-115
+    - V-116
+    practice:
+    - a2
+    - a3
+    - a4
+    needs: []
+  consolidation:
+  - a3
+  - a4
+  activities:
+  - id: a1
+    type: watch-and-repeat
+    placement: inline
+    focus: Watch V-102 whole and visible. Rehearse the four bound greeting/farewell chunks; choose the
+      time-appropriate one for the imagined adult encounter. Do not decode or analyse the new printed
+      phrases. The whole video is unscored exposure. Use the separate dedicated word recordings linked
+      in the step for the exact target pronunciation, then rehearse with the teacher. No unverified timed
+      segment is assigned to a YouTube video.
+    targets:
+    - W-287
+    - W-288
+    - W-289
+    - W-290
+    learner_reads: []
+  - id: a2
+    type: observe
+    placement: inline
+    focus: 'Rehearse an English-framed peer or reception encounter aloud: choose an opening, respond,
+      and leave politely. Use learned source chunks and keep the recording available as a whole visible
+      model; no newly invented Ukrainian dialogue lines.'
+    targets:
+    - W-074
+    - W-287
+    - W-288
+    - W-289
+    - W-290
+    - W-291
+    - W-292
+    - W-293
+    learner_reads: []
+    model: X-101
+  - id: a3
+    type: match-up
+    placement: workbook
+    focus: Match the decodable greeting and negative-response words to distinct short English interlocutor
+      cues. Revisit the words in a different personal setting; do not print later-letter formulas.
+    targets:
+    - W-074
+    - W-062
+    learner_reads: []
+  - id: a4
+    type: odd-one-out
+    placement: workbook
+    focus: Inspect groups of the acquired greeting’s glyphs; identify the single source spelling mismatch,
+      then read the correct word and use it for a chosen recipient. Wrong variants remain visibly labelled
+      letter-tile puzzles, never taught as Ukrainian words.
+    targets:
+    - W-074
+    learner_reads: []
+  videos:
+  - evidence: V-102
+    use: 'Lesson 5 s1/a1: whole visible recorded time-of-day greetings, thanks and neutral farewell.'
+  - evidence: V-105
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-106
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-107
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-108
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-109
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-114
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-115
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-116
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-117
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-118
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-119
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-120
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []
+- n: 6
+  slug: my-first-spoken-encounter
+  title: Моя розмова
+  kind: recap
+  job: Choose and carry out a first spoken encounter with a peer or receptionist, then use the acquired
+    print as a useful study reminder.
+  rationale: 'The learner chooses a real context and an appropriate greeting, courtesy response and farewell.
+    No new vocabulary, grammar or letters are introduced, and no separate workbook set replaces the practical
+    task. Withdrawing an unverified video model does not prove the word is heard there: timed evidence
+    for V-102..V-104 remains a named residual. Dedicated publisher-linked word recordings supply the verified
+    audio models; the whole videos remain visible exposure. Teacher rehearsal is supplementary.'
+  inventory:
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled:
+      - W-074
+      - W-001
+      - W-002
+      - W-076
+      - W-237
+      - W-200
+      - W-220
+      - W-096
+      - W-062
+      - W-295
+      - W-294
+      - W-274
+      - W-291
+      - W-292
+      - W-293
+      - W-287
+      - W-288
+      - W-289
+      - W-290
+  steps:
+  - id: s1
+    kind: recap
+    uses:
+      grammar:
+      - G-a1-012
+      - G-a1-013
+      - G-a1-014
+      vocabulary:
+      - W-074
+      - W-001
+      - W-002
+      - W-076
+      - W-237
+      - W-200
+      - W-220
+      - W-096
+      - W-062
+      - W-295
+      - W-294
+      - W-274
+      - W-291
+      - W-292
+      - W-293
+      - W-287
+      - W-288
+      - W-289
+      - W-290
+    evidence:
+    - T-106
+    - X-101
+    - V-102
+    - V-103
+    - V-104
+    - V-105
+    - V-106
+    - V-110
+    - V-108
+    - V-109
+    - V-107
+    - V-113
+    - V-117
+    - V-118
+    - V-119
+    - V-120
+    - V-114
+    - V-115
+    - V-116
+    - V-112
+    - V-111
+    practice: []
+    needs: []
+    task:
+      id: chosen-first-encounter
+      action: select_for_context
+      context_en: Choose a familiar peer or an unfamiliar receptionist, and a real time of day. Decide
+        what would make the exchange useful and courteous.
+      instruction_en: Speak a short encounter using the greetings, courtesy chunks and farewell you have
+        learned. Make a choice for your chosen recipient and situation, and give a suitable response.
+        Then read the familiar greeting from your study reminder. Explain your choices in English if needed.
+        Replay the whole visible source video when you need a model; no new phrase or full-alphabet reading
+        is required.
+      response_mode: spoken
+      success_criteria_en:
+      - The opening fits the learner’s chosen relationship and time of day.
+      - The learner processes and says learned Ukrainian chunks with a suitable response and farewell,
+        rather than naming English activity labels.
+      - The learner recognises the already decodable familiar greeting and uses sourced audible stress;
+        no unacquired printed formula is scored.
+      learner_reads: []
+  consolidation: []
+  activities: []
+  videos:
+  - evidence: V-102
+    use: Optional whole visible model for the chosen time-of-day encounter.
+  - evidence: V-103
+    use: Optional whole visible familiar/neutral greeting model.
+  - evidence: V-104
+    use: Optional whole visible courtesy model.
+  - evidence: V-105
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-106
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-107
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-108
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-109
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-110
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-111
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-112
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-113
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-114
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-115
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-116
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-117
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-118
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-119
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  - evidence: V-120
+    use: Listen to the complete short word recording as the pronunciation model, then rehearse it in this
+      lesson’s adult encounter. Whole videos are additional visible listening input.
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []
