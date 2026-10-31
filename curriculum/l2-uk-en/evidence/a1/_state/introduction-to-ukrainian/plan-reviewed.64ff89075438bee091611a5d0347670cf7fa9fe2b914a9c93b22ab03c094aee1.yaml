@@ -1,0 +1,195 @@
+plan_schema: 2
+module: introduction-to-ukrainian
+level: a1
+sequence: 1
+slug: introduction-to-ukrainian
+version: '1.0'
+title: Українська мова
+subtitle: An English orientation to the language and your own study routine
+focus: Language identity, a brief literary milestone, use in Ukraine and the diaspora, the alphabet as an overview,
+  and practical study choices. All explanation and responses are in English; no Ukrainian production or decoding
+  is required.
+objectives:
+- Recognise Ukrainian as a language in its own right, in the Slavic group of the Indo-European family.
+- Distinguish a milestone of the literary language from the origin of the spoken language.
+- Identify Ukraine and documented diaspora contexts as places where Ukrainian is used.
+- Distinguish listening and speaking from reading and writing, and choose a balanced personal learning routine.
+connects_to:
+- sounds-letters-and-hello
+prerequisites: []
+register: neutral
+changelog:
+- '1.0 (2026-10-30): Independently authored under #8425 from arc r6 and Sources evidence; English orientation with
+  no acquired inventory.'
+arc_ref:
+  level: a1
+  position: 1
+evidence_ref:
+  path: curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: language-and-learning
+  title: Українська мова
+  kind: teach
+  job: Choose a realistic first reason to use Ukrainian and distinguish the oral and written parts of learning it.
+  rationale: An adult can begin without decoding Cyrillic. English explains language identity and a short history
+    before the learner chooses a practical goal; facts are not turned into a school history examination. The alphabet
+    is an overview, with acquired sound-letter work beginning at position 2.
+  inventory: &id006
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: Ukrainian is a Slavic language in the Indo-European family, used in Ukraine and in diaspora communities
+      including the United States and Canada.
+    introduces:
+      letters: &id001 []
+      grammar: &id002 []
+      vocabulary: &id003 []
+    uses:
+      grammar: &id004 []
+      vocabulary: &id005 []
+    evidence:
+    - T-001
+    - T-003
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: teach
+    teach: Kotliarevskyi's 1798 publication is a literary milestone; it does not mean that spoken Ukrainian began
+      in that year.
+    introduces:
+      letters: *id001
+      grammar: *id002
+      vocabulary: *id003
+    uses:
+      grammar: *id004
+      vocabulary: *id005
+    evidence:
+    - T-002
+    practice:
+    - a2
+    needs: []
+  - id: s3
+    kind: teach
+    teach: The alphabet has 33 letters; hearing and saying sounds differ from seeing and writing letters.
+    introduces:
+      letters: *id001
+      grammar: *id002
+      vocabulary: *id003
+    uses:
+      grammar: *id004
+      vocabulary: *id005
+    evidence:
+    - T-004
+    - T-005
+    - X-001
+    - V-001
+    practice:
+    - a3
+    - a4
+    needs: []
+  consolidation:
+  - a5
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: Use an English-labelled map to connect Ukraine and the documented diaspora settings to a personal reason
+      for studying. The learner chooses a relevant setting, without memorising population or geography trivia.
+    targets: []
+    learner_reads: []
+  - id: a2
+    type: quiz
+    placement: inline
+    focus: 'English-only choice: decide what a literary publication date can establish. Contrast a milestone in
+      writing with the incorrect claims that the spoken language was invented then or that no one spoke before printing.
+      The stem does not identify its answer.'
+    targets: []
+    learner_reads: []
+    options: []
+  - id: a3
+    type: observe
+    placement: inline
+    focus: Listen to the collected alphabet video in full with sound and picture visible, as an optional listening
+      preview. Notice the difference between heard sounds and visible letter shapes; no Ukrainian repetition, recognition
+      test or acquired-letter claim.
+    targets: []
+    learner_reads: []
+  - id: a4
+    type: match-up
+    placement: workbook
+    focus: 'Pair English descriptions of observable study actions with listening, speaking, reading or writing:
+      hearing a recorded voice, saying a phrase aloud, decoding visible letters, and writing a label. Use text descriptions
+      rather than new Cyrillic; the descriptions identify operations, not generic phrases. State a reason for each
+      pair. Adapt the reflection of X-001 rather than its school setting.'
+    targets: []
+    learner_reads: []
+    model: X-001
+  - id: a5
+    type: odd-one-out
+    placement: workbook
+    focus: 'English-only scenario: a learner wants oral practice and chooses among listening to a whole video, repeating
+      what the speaker says, rehearsing a spoken response, or silently copying printed letters. Choose the action
+      that does not meet the stated immediate goal and explain why. No option vaguely says learning phrases; every
+      operation is explicit.'
+    targets: []
+    learner_reads: []
+  videos:
+  - evidence: V-001
+    use: 'Lesson 1, step s3, activity a3: optional whole-video listening input and alphabet overview. Sound and
+      picture remain visible together. The learner notices sound versus print without decoding or acquiring the
+      displayed alphabet.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []
+- n: 2
+  slug: my-study-plan
+  title: Мій план навчання
+  kind: recap
+  job: Make an English study plan that fits a real situation in which you want to use Ukrainian.
+  rationale: The closing task uses the orientation to make a personal decision. It is a brief planning workshop,
+    not a second factual lesson or a Ukrainian production test. There is no mapped v1 orientation module and no
+    inherited workbook quota.
+  inventory: *id006
+  steps:
+  - id: s1
+    kind: recap
+    uses:
+      grammar: *id004
+      vocabulary: *id005
+    evidence:
+    - T-005
+    - X-001
+    practice: []
+    needs: []
+    task:
+      id: personal-study-routine
+      action: personalize
+      context_en: You have one regular study opportunity and a specific reason to use Ukrainian. Choose a real person
+        or situation that matters to you, such as speaking with a colleague or reading a familiar label.
+      instruction_en: Write or say your plan in English. Choose a personal goal, a time you can use, one listening
+        or speaking action and one reading or writing action. Explain how each action helps your chosen goal. You
+        may use the whole-video listening preview as a resource.
+      response_mode: spoken_or_written
+      success_criteria_en:
+      - The goal refers to a real situation chosen by the learner.
+      - The plan includes an observable oral action and an observable written-language action, each connected to
+        the goal.
+      - The learner selects a feasible study opportunity and explains their choices in English; no Ukrainian production
+        is required.
+      learner_reads: []
+  consolidation: []
+  activities: []
+  videos: []
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []

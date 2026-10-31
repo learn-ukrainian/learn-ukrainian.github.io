@@ -84,19 +84,25 @@ describe('production arc route rendering', () => {
     await expect(renderPage('retired', 'intro')).rejects.toThrow('unrecorded arc_slug "intro"');
   });
 
-  it('renders all 55 active landing positions as planned', async () => {
+  it('renders all 55 active landing positions with their recorded states', async () => {
     const html = await renderPage('landing');
     expect(arc.positions).toHaveLength(55);
-    expect(html.match(/data-state="planned"/g)).toHaveLength(55);
+    const doc = new Window().document;
+    doc.write(html);
+    expect(doc.querySelectorAll('[data-state]')).toHaveLength(55);
+    for (const { slug, state } of arc.positions) {
+      expect(doc.querySelector(`a[href="/a1/${slug}/"] [data-state]`)?.getAttribute('data-state')).toBe(state);
+    }
     expect(html).not.toContain('data-arc-state="retired"');
     preserveRender('a1', html);
   });
 
-  it.each(arc.positions.slice(0, 10).map(({ slug }) => slug))('renders current active module %s as planned', async (slug) => {
+  it.each(arc.positions.slice(0, 10))('renders current active module $slug with its recorded state', async ({ slug, state }) => {
     const html = await renderPage('module', slug);
-    expect(html).toContain('data-state="planned"');
+    const doc = new Window().document;
+    doc.write(html);
+    expect(doc.querySelector(`[data-arc-module="${slug}"] [data-state]`)?.getAttribute('data-state')).toBe(state);
     expect(html).not.toContain('data-arc-state="retired"');
-    expect(html).not.toContain('data-state="plan_reviewed"');
     preserveRender(slug, html);
   });
 });

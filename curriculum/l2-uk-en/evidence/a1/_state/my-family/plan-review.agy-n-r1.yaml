@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "a1-my-family-n-r1"
+  attempt_id: "agy-n-r1"
+  manifest_sha256: "b3ed0e7dd07f429fd89a3eb2e6c75b30c2f8f4aa0a8d2590124a1f36b8b88c0b"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gemini-3.8-flash-high"
+  harness: "agy"
+  family: "gemini"
+  prompt_sha256: "3ced03f523070370e32a2ecb94f636e1d68625bae09e6c06972dea1ff7027215"
+checks:
+  closing_shape: clean # Dedicated recap lesson 4 (my-chosen-circle) provides practical recap closure under D4 and R-03 matching the 4-lesson arc estimate for position 4
+  title_describes_job: clean # Title "родина" and subtitle describe chosen family photo, supported labels, and apostrophe (R-07); all prose fields are monolingual with quoted Cyrillic elements restricted to taught targets
+  title_quantities: clean # No inventory noun quantities in titles or subtitles; conforms to scope sidecar
+  quoted_forms: clean # verify_words мама,тато,родина,мій,твій,сім’я,дитина,син,донька,сестра,брат,бабуся,дідусь,кіт receipt: rr-5bd111d1bc7de6fe62a2; verify_words твоя,моя,мама receipt: rr-b4e4af9c8d0a6d2ab72f; verify_word твоя receipt: rr-2d26690b01d6f548e640; verify_word моя receipt: rr-135fa6923bf66cdd39f4; verify_word сім'я receipt: rr-9fe8b56e0606cd84b354; verify_stress мама receipt: rr-3cfcc6ccde111606b14b; verify_stress родина receipt: rr-d7736882b86b2aa4cf99; verify_stress сім'я receipt: rr-c719bef415ff36f1f7b3
+  sequencing: clean # Reachable from positions 1-3 (21 letters acquired; 5 letters Б,Й,Ї,Ю,Є introduced in lesson 1); apostrophe introduced in lesson 2 (query_pravopys § 7 receipt: rr-47d46bf74ce57ab1af8b); б-п voice pair in lesson 3 (search_text 5-klas-ukrmova-avramenko-2022_s0078 receipt: rr-9d5bb759221256de7806); possessives handled strictly as unanalysed chunks without gender agreement
+  sizing: clean # 4 lessons balanced across ~30-45 minutes total learner work each; 4-5 core vocabulary items per instructional lesson; no cramming or dragging
+  inventory: clean # 14 core lemmas grounded in OHO Unit 1-2 and Revision r6; core words verified (verify_words receipt: rr-5bd111d1bc7de6fe62a2); query_sum20 headword родина receipt: rr-bb3b94b7ddd082497777; style-guide check for родина receipt: rr-e963be018962fa3ab9e6; style-guide check for сім'я receipt: rr-d09b4f0d43108404a4d2; 0 incidental words
+  activities: clean # Rotating workbook types (match-up, quiz, match-up) serve progression from recognition to discrimination without dull fill-in/true-false runs (R-19); reduction from v1's 67 repetitive drill items to focused communicative tasks and capstone personalisation is pedagogically justified for early A1 literacy; search_resources video 796 receipt: rr-ea1d7810ebec50ba88ac
+  evidence_fit: clean # search_text 5-klas-ukrmova-avramenko-2022_s0133 for T-301 receipt: rr-b363333f46677985ee0b; search_text 5-klas-ukrmova-zabolotnyi-2023_s0063 for T-302 receipt: rr-26bae62e997bb6a54117; search_text 1-klas-bukvar-zaharijchuk-2025-2_s0099 for T-303 receipt: rr-604fcf7108974d30b591; search_text 6-klas-ukrmova-litvinova-2023_s0264 for T-304 receipt: rr-ec199d4013c1cc386d7e; search_text 5-klas-ukrmova-avramenko-2022_s0078 for T-305 receipt: rr-9d5bb759221256de7806
+  standard_and_ulp: clean # All Position 4 duties to Arc Specification and State Standard (letters Б,Й,Ї,Ю,Є, apostrophe, б-п voice pair, supported possessives in photo captions, Li/S/W skills) are served; early possessive chunks follow ULP S1 / OHO Unit 2; search_resources video 796 receipt: rr-ea1d7810ebec50ba88ac
+findings: []

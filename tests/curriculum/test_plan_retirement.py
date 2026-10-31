@@ -1,6 +1,8 @@
 """Exact-byte retirement refuses old plans without exempting replacements (#10108)."""
 
 import hashlib
+import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -106,17 +108,29 @@ def test_discovery_without_record_and_cross_checks_remain_strict(tmp_path):
     assert cross.load_level_plans(tmp_path).by_position[1][0] == "ordinary"
 
 
-def test_real_three_exact_plan_hashes_are_retired():
-    directory = Path(__file__).resolve().parents[2] / "curriculum/l2-uk-en/lesson-plans/a1"
+def test_real_three_exact_plan_hashes_are_retired(tmp_path):
+    root = Path(__file__).resolve().parents[2]
+    directory = root / "curriculum/l2-uk-en/lesson-plans/a1"
     record = retirement_record(directory)
     assert [(entry["slug"], entry["old_position"]) for entry in record["plans"]] == [
         ("sounds-letters-and-hello", 1),
         ("reading-ukrainian", 2),
         ("special-signs", 3),
     ]
-    assert active_plan_paths(directory) == []
+    arc = json.loads((root / "site/src/data/arc-a1.json").read_text())
+    assert active_plan_paths(directory) == sorted(
+        directory / f"{position['slug']}.yaml"
+        for position in arc["positions"]
+        if position["lessons"] is not None
+    )
+    # Historical bytes stay reproducible in shallow CI checkouts, alongside live replacements.
+    shutil.copyfile(directory / "_retired.yaml", tmp_path / "_retired.yaml")
+    fixtures = Path(__file__).parent / "fixtures/retired_plans"
     for entry in record["plans"]:
         path = directory / f"{entry['slug']}.yaml"
+        if entry["slug"] in {"reading-ukrainian", "sounds-letters-and-hello"}:
+            path = tmp_path / path.name
+            shutil.copyfile(fixtures / path.name, path)
         assert hashlib.sha256(path.read_bytes()).hexdigest() == entry["sha256"]
         with pytest.raises(PlanError, match="plan_retired"):
             load_plan(path)
@@ -142,8 +156,8 @@ def produced_retirement_codes(root):
 
 
 PROTECTED_INPUT_SHA256 = {
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/lessons.lock.yaml": "f54156c716bf0657759ac40305e4843a951c63a98bc7fb22ef8f0e5301d2c1b0",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/lessons.lock.yaml.lock": "9c029bd58ed9064e3638d9adc0c22ee4eae81cf9b5dd360ebe646d2b0ea419e1",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/lessons.lock.yaml": "b39547bcf582e9eaab9b3764c50b5063ce0b012e1d3423c56122390b3dd2fd30",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/lessons.lock.yaml.lock": "97a61d6c4f1c64818b014c1a8a5daa3836cd4cbc3e84dcadb116ceeba358a01f",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/manifests/plan/04c9d62ce9d531ad500655c298430dde61621a6aa6312ecf787055ec46822fe0.yaml": "04c9d62ce9d531ad500655c298430dde61621a6aa6312ecf787055ec46822fe0",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/manifests/plan/217c19ca26cde45cf340e624d8b422df5b92d029d29ffbc706e6f5f9a2da94d9.yaml": "217c19ca26cde45cf340e624d8b422df5b92d029d29ffbc706e6f5f9a2da94d9",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/manifests/plan/2d7833af151c3d6260f3de91f2e0bee8f2e0776f400f8cd92753d5bbbde28631.yaml": "2d7833af151c3d6260f3de91f2e0bee8f2e0776f400f8cd92753d5bbbde28631",
@@ -156,8 +170,8 @@ PROTECTED_INPUT_SHA256 = {
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/manifests/plan/b99c63c4c8e89bb7ceb64fcac9796e0fb7cc7732a679ee98ec03f30c9b8f8a79.yaml": "b99c63c4c8e89bb7ceb64fcac9796e0fb7cc7732a679ee98ec03f30c9b8f8a79",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/manifests/plan/c298055284d815ba561a42cb9ba9f076ac2efe34f5d2a88fe385572ace1ac1ba.yaml": "c298055284d815ba561a42cb9ba9f076ac2efe34f5d2a88fe385572ace1ac1ba",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/manifests/plan/ea42b1a02a08eb379ad1528e7cc67f5e403cd884ace6f6f8d39255a39a3fccff.yaml": "ea42b1a02a08eb379ad1528e7cc67f5e403cd884ace6f6f8d39255a39a3fccff",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/pack-verify.report.json": "69188f7ffe16b226194d9533ded64f1f94ddddd2bf30672d13e6e5694c7d2dc6",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-promotion.yaml": "b8164da7b539b09e366d1cd83fa5ba5291db775771330a497eff7d45181e86be",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/pack-verify.report.json": "e2cd4e1862a0fdeb774feff9a641969ca2895632096be1f2f136bc634473a9ac",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-promotion.yaml": "7cc46432caacc2a78629976a6abcc291249b97529ec477d85ded62f1185bbf48",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.agy-att-7.yaml": "76d44a5ec11b53e58aff2edb23aef5cca59e7ca6d3125367ef0d05d6bb6c429e",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.claude-full-att-1.yaml": "11a0e10a8b159c96c12a94d16260c4ee05406399070aa17825c08587bdaea154",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.claude-full-att-2.yaml": "f793b0d64f6326d8d708e33d17a96b0c89385f2348240dacd09631dcf5054ff5",
@@ -165,18 +179,18 @@ PROTECTED_INPUT_SHA256 = {
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.claude-full-att-4.yaml": "47c018f26bf538ed88ea43e997a555288c92cafbce7c265c1d6f07bbe2921027",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.claude-full-att-5.yaml": "b4312d31ac5f29481bcc904551ee69cade1b92429f3c7ac2b0b4949a43e39f19",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.claude-full-att-6.yaml": "197b0714a69b38100658a79f92245a126db088467c946ca7842a86a2aa4e49cb",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.learner-state.yaml": "6bfcaf585064f0bb081b933489fc892c3659b0925164733290655a507c4403b4",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.learner-state.yaml.lock": "15f4cb56bd6fa0e9986c2e5851fed46c98635c17f7eef98ba13adb521bde2e6d",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.manifest.sha256": "43e17dae2e3add4020eb8f8a358009075299ef0c163e0bfcce852d8f202687fa",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.manifest.yaml": "ad4d7af6852c5cfd453eb663d37c078a5ece41fa8f78d5b5413e246c63a38055",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.v1-totals.yaml": "1d302580ee29f3c02ce1457740d1edd0e1f8514790658a7eadb12aac77e9ec2f",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.v1-totals.yaml.lock": "4ae44fee0ab738688f22f9dc29afd34d8adeef5123449f4605d1b71532ca3d3d",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.yaml": "a39842f8673ef94b97d288224e4f1adb52a777da6981e762431ca336665b9e9d",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.learner-state.yaml": "fe923ca0a983aeff55f5faa96d7d09a3d98455ddb7538f6de281a776c586ac89",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.learner-state.yaml.lock": "0a32b6e829cada554df6159164006e84b073864a935ab04448e07c08f7112fac",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.manifest.sha256": "e9e58755671eed89cfba21e3fe7ba666a31841e0a6ce46bef3e8ad6343ff9025",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.manifest.yaml": "7e2529759a000649024e2183980f741baccee07164f9cccb45ef562cf7dc6b37",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.v1-totals.yaml": "a3b2cbd4fb83fd71dc465ecae6c79c35feac9a40d69d924473984c5f961bb975",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.v1-totals.yaml.lock": "f165f3204317f4c82578c495eb26a2d12f1c28ac2c39cd7e24a1c357d10ff304",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.yaml": "76879b402fb37eaafd92e00979279dd48249d181380cfe217d4eb87fe558228b",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-reviewed.3b12728c103f6fe941ead28f3b00c6514d5c3424d0e504f8669b918863b1565e.yaml": "3b12728c103f6fe941ead28f3b00c6514d5c3424d0e504f8669b918863b1565e",
     "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-reviewed.e85078ff74306ad85e42d2a0db191513a9b8883e13b2a0c9dc1568bf4662efe7.yaml": "e85078ff74306ad85e42d2a0db191513a9b8883e13b2a0c9dc1568bf4662efe7",
-    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-validate.report.json": "9532b142348f0698cf56ab771fe164b3c3f4ea3bc693a21908d05e6bf31e55f2",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lessons.lock.yaml": "b6824eb167850cc654e6a8c9afee81ca3e34ed388a07920ec60ae717a9186dfc",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lessons.lock.yaml.lock": "7d1cb227da798acf6f78c5c81fb5a3320126e3f46dfba03146877017da236353",
+    "curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-validate.report.json": "bdce9371f0746af6c68f59a383557b24d9e846c917e08a116513b733a523b561",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lessons.lock.yaml": "c1bb703e882791ff8a9cd2244ed30ce5a055c09825615446e8b5e7d0d4aaed5b",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/lessons.lock.yaml.lock": "aae7f0d6c84db3910c0bc677364dad75344e9613159a3e6484e719d0d3b0c069",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/manifests/plan/03bf9e3e73f6c9be72fde6530b1078eb7453dc294934c036485a220bcece4477.yaml": "03bf9e3e73f6c9be72fde6530b1078eb7453dc294934c036485a220bcece4477",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/manifests/plan/03f8910ceb574d4f32928bedc81ff96fbddf7ad99bd782909a0910c96a7eea78.yaml": "03f8910ceb574d4f32928bedc81ff96fbddf7ad99bd782909a0910c96a7eea78",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/manifests/plan/1f04ea3a45a34201ff475c1c0f9461b31eccd2384b45ecb2a3a980cc21e8de3a.yaml": "1f04ea3a45a34201ff475c1c0f9461b31eccd2384b45ecb2a3a980cc21e8de3a",
@@ -188,8 +202,8 @@ PROTECTED_INPUT_SHA256 = {
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/manifests/plan/c14b18e42a2b0895b519461d4a0afab278a29554ef7bd8b941446fa45691a553.yaml": "c14b18e42a2b0895b519461d4a0afab278a29554ef7bd8b941446fa45691a553",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/manifests/plan/cb29a001f4f073fcb7ff117391cab61ca09c4ae1a02878db7bdc4631fa9694e3.yaml": "cb29a001f4f073fcb7ff117391cab61ca09c4ae1a02878db7bdc4631fa9694e3",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/manifests/plan/ea374d74991a27029ae5500a101e9afada2ae94f468f219c024a75f597787418.yaml": "ea374d74991a27029ae5500a101e9afada2ae94f468f219c024a75f597787418",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/pack-verify.report.json": "25f38d4217dc7e491f34987bba8644895d3ec5480df32682b909f91854d3496a",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-promotion.yaml": "95dc4c6e5a6f8f6db82b0422486584c57fcde584c8a5d0125803bc3bb1c17b1d",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/pack-verify.report.json": "00ff1a021aa9afbb16b46299af8a33fbad46c6bf0cf1f5f5f3be4edac79d5068",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-promotion.yaml": "b72cd74210041266f7304b1f965ee1a9472eef672eba5700bb077c8eaabf07ed",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.claude-att-7.yaml": "6f44fba4d6aa271a74d5b1259fe926b3c32b3996172220592c80f96bcdb9a636",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.claude-full-att-2.yaml": "57e47a13a2b187e796f3dda9551e4d7adb356975071a0d8fdbe642c00f8be35a",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.claude-full-att-3.yaml": "e55e1a932030fa886de0d2d7f14887d7a22d90f0dd1f0ae4c9a093d8ffef100d",
@@ -197,16 +211,16 @@ PROTECTED_INPUT_SHA256 = {
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.claude-full-att-5.yaml": "f70854b76dcb75c3935644e7c4600cde629d5baa5040e9e5747ff73d51f084c5",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.claude-full-att-6.yaml": "d9413b0967371d0f0ac992a585b679b61e1f59ba5522aa1659502e02975efcbd",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.claude-full-att-7.yaml": "9497d619d3850f517d5f08221396eeb1d5e3a7b0a45c045c15f4d56e0584ec2a",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.learner-state.yaml": "18b03829e85dd5534ae9113be6924c96d3ff4f3a08db037bf1e97595507da4e1",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.learner-state.yaml.lock": "8d52766e293af36e38167aec76f2ba6f265b097fda9eade388d4a6a3491f3796",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.manifest.sha256": "a3ee31cb18a402cbf71011ffb5891b524a3f8d3c2eb5c5f80580048281721d29",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.manifest.yaml": "45286920a4e48b41bf7f24d95b96f123df5ca4bfa6fb791c39178d31b04a9123",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.v1-totals.yaml": "ce21f46eb70afc1065182264f86918c8e453984f1da3f4bbc0b7bb2e9a126824",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.v1-totals.yaml.lock": "d35b5e074c737cbd450bd1612797b3d908e8e53e8112da01d1a85fe86eefe6aa",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.yaml": "f11da6474fffa39583dea5bbd0e4282bb8ffededc862285271fdfe6be8fb1f57",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.learner-state.yaml": "e75f5e34427005985409b7cedb45ffd872cdc1c67769bd59ebfbc3f1528dc70e",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.learner-state.yaml.lock": "24ba83f3764478ced2620eb6e248e98011af95e1a3254b8bd9977b7ff3210551",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.manifest.sha256": "84c715ade17828427e3ba6c745269d3b9e450eda1fc0f738a607e48dcc3e021b",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.manifest.yaml": "dcb02bfb8ee53b4db2179acaad5284ef219cb836eaa14c096eb8ca3a5fd5ba75",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.v1-totals.yaml": "df4ed68204a5c9c57319c81cd45b0fc1dfe14914a79d87ff081542923f7b76bf",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.v1-totals.yaml.lock": "ce96822b057d975a79e870c2ad8f1a00fded87c496a174b36a927a8c39467fef",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-review.yaml": "7fe972b5abb3870529d5e6d9161966a5f394df90a5c0511abc86ae74aeecd455",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-reviewed.2edb695b8b8c5978f34d35b0ab71f1773cfaccf711a60a30e750a796a9fdf9c1.yaml": "2edb695b8b8c5978f34d35b0ab71f1773cfaccf711a60a30e750a796a9fdf9c1",
     "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-reviewed.6397a2eef6ed23f2f2b381925b7d282fda3d7b70bd9d34ef8bbd63fa5edad832.yaml": "6397a2eef6ed23f2f2b381925b7d282fda3d7b70bd9d34ef8bbd63fa5edad832",
-    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-validate.report.json": "2281b806d99faab625d6e1aab610e5d5dcebb9bba24952216bc07d79144bb97c",
+    "curriculum/l2-uk-en/evidence/a1/_state/sounds-letters-and-hello/plan-validate.report.json": "22596011ef62e0fc4ac9f9ae6fc67c766571fc2e9aa7fcc954e1c146b7f5b57e",
     "curriculum/l2-uk-en/evidence/a1/_state/special-signs/lessons.lock.yaml": "126f76094f1044d4c281af2d25c1987d563323b8d8eedfdac9453f80c1c62fbc",
     "curriculum/l2-uk-en/evidence/a1/_state/special-signs/lessons.lock.yaml.lock": "70eba4dacf72c58f44dd3f10375b7f1b196ad6ceaeb8ce7e8dc41203217d706d",
     "curriculum/l2-uk-en/evidence/a1/_state/special-signs/manifests/plan/0e35c96d7287920ddaaafaaef7d7969a9d1bec9f46778f1b19b9d50e4499ea5c.yaml": "0e35c96d7287920ddaaafaaef7d7969a9d1bec9f46778f1b19b9d50e4499ea5c",
@@ -238,14 +252,14 @@ PROTECTED_INPUT_SHA256 = {
     "curriculum/l2-uk-en/evidence/a1/_state/special-signs/plan-reviewed.9526417c496b4ac2e1439ee60c1b54af9e3c79281b5e2888b2a7ab3b4c44ccc0.yaml": "9526417c496b4ac2e1439ee60c1b54af9e3c79281b5e2888b2a7ab3b4c44ccc0",
     "curriculum/l2-uk-en/evidence/a1/_state/special-signs/plan-reviewed.d681cdf794325c92c75da01bcf1fc102df6011d0c1d21110eb7201a6f2067898.yaml": "d681cdf794325c92c75da01bcf1fc102df6011d0c1d21110eb7201a6f2067898",
     "curriculum/l2-uk-en/evidence/a1/_state/special-signs/plan-validate.report.json": "64cfb6950d3424284608320d318646badd32c621f62383587c54a04dd0cdd825",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "ecdee196660cea92a45863dc3f5d0030f5e6b9dd960f3de5342405ff53c972cc",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "b78431b72e66063e678e721af28a40a4ba7858f81f81b4678d6378f3ffd87a8c",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "a2569cbf77d3cca46d7a7e99ba5ee4dd7df93c1c8063ce1378a7661eea02358e",
     "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "bd896925b2a8f4f09fb0d9f6206be87f2b326ce321dde08bd9638ffea83e7f54",
-    "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "1b46ecf105e05dbbdac324abb563529420f5daeddb6e061bfdad6b0e0a73d5c7",
-    "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "84e7dcdc47f03ceea16a51811d2c327b1b84a57e0df6d88f57a751e1efeb8455",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "c3c82c346c13fffcd14f630136b28416d2c8ba64dcaa09fc08eb5db63a2c68be",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "f5ca4e8e8fc3e8555a4d7f8f0cc9ecee9b8b555f39ef65269beed5ca9f67b6c4",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml": "5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "d7561a1505d84ad0646574c25999442e95a4657318350a61d77726a298269309",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "6081fd6d636e7bf7cadd534159f1abe6ebfa9d7091c4c2f411ae3f20deb84f15",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "e5e29a1eb7142cf8307359c618dad9775aae4710d782d982b2bdc916819bfddb",
     "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "74f2fca8de73eecf402c0795b19c93bbb8a9f59d9b1cad431cc389ffcfdcf373",
 }
 

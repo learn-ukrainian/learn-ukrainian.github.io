@@ -1,0 +1,54 @@
+inputs:
+  arc:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml
+    sha256: 9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe
+  arc_source:
+    path: docs/epics/fresh-build-a1-arc.md
+    sha256: 03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d
+  decisions:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml
+    sha256: 9608ea4b8bc86bff2fd327196f28f9bc126b310ad08d5f2f0ce19f862d9b061d
+  grammar:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml
+    sha256: cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334
+  learner_state:
+    path: curriculum/l2-uk-en/evidence/a1/_state/who-am-i/plan-review.learner-state.yaml
+    sha256: 655827a2d86df20651c955ea99670f82947f4df153e4415291add9d229f327db
+  pack:
+    path: curriculum/l2-uk-en/evidence/a1/who-am-i.yaml
+    sha256: 58384afe8da0c643fd941dab5db62fcd209301ebe2d4f3e74d394c4c456af2c6
+  pack_lock:
+    path: curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock
+    sha256: 1b697e54c2558479d6c38974f77fb5c631737cca76c9799b7e7815a9eb7c51fd
+  pack_verify_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/who-am-i/pack-verify.report.json
+    sha256: f030fa736663a8a398f0158aedd843b016cf1f42761ec25a738765ab1dda598e
+  plan:
+    path: curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml
+    sha256: eeeb52c15150be2107d40c1cf5bff30667dafa77bbe97fa0912c1d64ec499ec3
+  requirements:
+    path: docs/epics/fresh-build-requirements.md
+    sha256: d0d5008aefd21a34fa5cea307254bbd9b044ac9c3eef3db1d1e6e9a3d02d629f
+  scope:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_scope/who-am-i.yaml
+    sha256: 9b7692cbd53886f2eb6d8f0e5c5f27c9dc81f4d7248d8608c3a60b4c45517012
+  v1_totals:
+    path: curriculum/l2-uk-en/evidence/a1/_state/who-am-i/plan-review.v1-totals.yaml
+    sha256: d3c9373cb5925bf59aebedc57559a289ec22b14fc1ea9c0071e4310b119a7721
+  validate_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/who-am-i/plan-validate.report.json
+    sha256: d6c61b02bd200910ecdf9a13e3fce7ec2b27753947b6b5f141912ecfe0c998fc
+  words:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml
+    sha256: 8ff6f38e34eedc3151bf15f3c622ed318113a5d7e94eb2880c7b14e2ba86f761
+  words_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
+    sha256: 0581c149864df57af58f0b8675a88924869a212d4f21ddaa6103d3223213aa40
+kind: plan
+learner_state:
+  sha256: f8d5fffc5f791e186b59d414d5fc7ef5b0b0be579d29b561c9fa406ecb9a89ba
+  source: planned_state
+level: a1
+manifest_schema: 1
+position: 3
+slug: who-am-i

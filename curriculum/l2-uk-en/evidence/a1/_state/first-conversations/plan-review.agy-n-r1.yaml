@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "a1-first-conversations-n-r1"
+  attempt_id: "agy-n-r1"
+  manifest_sha256: "97c962b02b4cc2ff5cd3dc61f385442bf119e963c2892b5171aa6440339f108a"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gemini-3.8-flash-high"
+  harness: "agy"
+  family: "google"
+  prompt_sha256: "0159cd38f341728058bd696bd52bf0a68484d6a171a1317b172a5030b0d549d8"
+checks:
+  closing_shape: clean  # Shape (a) selected: 3 teach lessons closed by Lesson 4 recap per R-03 and D4; shape (b) is not used.
+  title_describes_job: clean  # R-07; module title in Ukrainian, subtitle in English; lesson titles in Ukrainian; all prose fields are strictly monolingual with quoted items being the taught objects.
+  title_quantities: clean  # No inventory nouns or quantities stated in module or lesson titles/subtitles.
+  quoted_forms: clean  # inspect_words (rr-86a32f74b0d78da6a2e5) confirms all 15 quoted words are clean and marker-free in VESUM; verify_words (rr-cb0457bbd1436190d4a8); verify_stress for добраніч (rr-8f11b80529cb736d408b), приємно (rr-4080c3a7a0ddada1373c), чудово (rr-279207797faa6df8f9ac), добре (rr-f8d93884fea2c9ee2c14); check_russian_shadow clean (rr-7193c85e7558c090ed58); heritage verified in slovnyk_me and Grinchenko (rr-b55dcfd658945d0f6103, rr-b2786b232cc170294e88).
+  sequencing: clean  # R-27; reachable from positions 1-5 (full 33-letter alphabet decoded, greetings, identity, family, belongings acquired); phonetics G-a1-026 owned; conversational chunks unanalysed.
+  sizing: clean  # R-01, R-04; 8 core vocabulary items across 3 teach lessons (4 in L1, 3 in L2, 1 in L3) plus Lesson 4 recap; well proportioned for ~45 min learner work without cramming or dragging.
+  inventory: clean  # PULS CEFR confirms A1 level for чудово (rr-773b8bcf4884c3ca1ff1), добре (rr-78735041b1c0f9d6fcdf), як as adverb (rr-84a8b8cd0429f82c1c9a); добраніч mandated by State Standard line 459 and Arc r6; communicative formulas grounded in OHO Unit 2; 0 incidental items; systematic recycling of pos 2-5.
+  activities: clean  # R-19 workbook rotation across lessons (L1 order, L2 quiz, L3 match-up; distinct=3, max_run=1, share=0.33); task operations vary (order sequence, choose response, match situations, personalize); mapped v1 module comparison notes no_mapped_v1_module (new slug first-conversations in Arc r6, no reduction).
+  evidence_fit: clean  # T-501 (Zabolotnyi 5th gr p. 100 s0076, rr-4b11ac9da009ddc06f97) supports unstressed e/i; T-502 and T-505 (Avramenko 6th gr p. 8 s0007, rr-6ec17d02ef3e59c9daa6) support etiquette formulas and 5-6 turn dialogues; T-503 (Zakharijchuk 1st gr Bukvar p. 102 s0099, rr-5b477f503aab5fca3f53) supports family labels; T-504 (Litvinova 6th gr p. 259 s0264, rr-80f3fbdd80b85623178d) supports possessives; V-501 (rr-77652dccef7cdc2abf0d) and V-502 (rr-ea2c2c106959cf6a2b45) support listening.
+  standard_and_ulp: clean  # Fulfills State Standard 2024 lines 459, 239-243, 268-270, 410-432, 578-579; aligns with OHO Unit 2 conversational prerequisites under Arc Revision r6.
+findings: []

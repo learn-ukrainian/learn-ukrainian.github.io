@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.curriculum.evidence import codes, lock, sources, verify, words
+from scripts.curriculum.evidence import codes, lock, sense_bindings, sources, verify, words
 
 
 def row(row_id, translations, word="synthetic", pos="noun"):
@@ -173,12 +173,35 @@ def a1_source_capture():
     return records, captured
 
 
-def test_current_a1_selection_and_source_span_property(a1_source_capture):
+@pytest.fixture(scope="module")
+def a1_formula_context():
+    root = Path(__file__).resolve().parents[3]
+    return sense_bindings.Context.read("a1", root / "curriculum/l2-uk-en/evidence/a1")
+
+
+def test_current_a1_selection_and_source_span_property(a1_source_capture, a1_formula_context):
     records, captured = a1_source_capture
     assert {w["id"] for w in records} == set(captured)
-    rows = {(entry["lemma"], entry["pos"]): entry["rows"] for entry in captured.values()}
-    kaikki = {entry["lemma"]: entry["kaikki"] for entry in captured.values()}
+    lexical = [entry for entry in captured.values() if entry.get("kind") != "formula"]
+    rows = {(entry["lemma"], entry["pos"]): entry["rows"] for entry in lexical}
+    kaikki = {entry["lemma"]: entry["kaikki"] for entry in lexical}
     for word in records:
+        if word.get("kind") == "formula":
+            c = captured[word["id"]]
+            assert (c["kind"], c["text"]) == ("formula", word["text"])
+            builder = a1_formula_context.select(word, c["rows"], c["kaikki"])
+            assert builder.gloss == word.get("gloss_en"), word["id"]
+            if builder.gloss is None:
+                assert builder.reason == "formula_binding_missing", word["id"]
+            else:
+                assert builder.reason is None
+                assert sources.is_learner_gloss(builder.gloss), word["id"]
+                assert builder.gloss == builder.ref["span"]
+                assert builder.ref == word["gloss_ref"], word["id"]
+                cited = next(r for r in c["rows"] if r["id"] == builder.ref["id"])
+                assert builder.ref["row_sha256"] == sources.row_digest(cited)
+                assert any(builder.gloss in span for span in json.loads(cited["translations"])), word["id"]
+            continue
         matched = rows[word["lemma"], word["pos"]]
         builder = sources.select_gloss(
             word, matched, kaikki[word["lemma"]], ulif_entries=captured[word["id"]]["ulif_entries"]
@@ -204,24 +227,37 @@ def test_current_a1_selection_and_source_span_property(a1_source_capture):
         assert sources.select_gloss(word, rows[lemma, pos], kaikki[lemma]).gloss == expected
 
 
-def test_all_187_records_are_glossed_unless_no_source_row_aligns(a1_source_capture):
-    """Nothing is withheld for polysemy or homonymy; only a missing learner head withholds."""
+def test_all_records_are_glossed_unless_no_source_row_aligns(a1_source_capture, a1_formula_context):
+    """Lexical gaps need a missing learner head; formulas need an exact row binding."""
     records, captured = a1_source_capture
-    assert len(records) == len(captured) == 187
+    assert len(records) == len(captured)
     withheld = []
+    withheld_formulas = set()
     for word in records:
         c = captured[word["id"]]
+        if word.get("kind") == "formula":
+            result = a1_formula_context.select(word, c["rows"], c["kaikki"])
+            if result.gloss is None:
+                assert result.reason == "formula_binding_missing", word["id"]
+                assert word.get("gloss_en") is None, word["id"]
+                withheld_formulas.add(word["id"])
+            else:
+                assert result.reason is None
+                assert result.gloss == word["gloss_en"], word["id"]
+            continue
         result = sources.select_gloss(word, c["rows"], c["kaikki"], ulif_entries=c["ulif_entries"])
         pronoun = any("pron" in f.get("tags", "").split(":") for f in word.get("forms", []))
         rows = sources.filter_pronominal_gloss_rows(c["rows"], word["lemma"], word["pos"], pronoun)
         aligned, _ = sources.aligned_kaikki_senses(c["kaikki"], word["pos"], pronoun)
         if result.gloss is None:
             withheld.append(word["id"])
+            assert result.reason, word["id"]
             # No aligned row, or only non-learner spans ("a female given name, ...").
             assert not any(sources.is_learner_gloss(c["gloss"]) for c in result.candidates), word["id"]
             assert rows or not aligned, (word["id"], result.reason)
         assert result.reason != codes.GLOSS_SENSE_UNRESOLVED
     assert len(withheld) <= 28
+    assert withheld_formulas == {"W-297", "W-298", "W-299", "W-301", "W-302", "W-307", "W-308", "W-309"}
 
 
 @pytest.mark.parametrize("provider", ["dmk", "kaikki"])

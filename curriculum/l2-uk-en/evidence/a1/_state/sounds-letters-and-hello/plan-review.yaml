@@ -1,8 +1,8 @@
 access: full
-attempt_id: claude-full-att-7
-harness: claude
-manifest_sha256: 45286920a4e48b41bf7f24d95b96f123df5ca4bfa6fb791c39178d31b04a9123
-reviewer_family: anthropic
-reviewer_model: claude-opus-5-5
-validated_at: '2026-10-02T04:49:29+00:00'
+attempt_id: agy-n-r1
+harness: agy
+manifest_sha256: dcb02bfb8ee53b4db2179acaad5284ef219cb836eaa14c096eb8ca3a5fd5ba75
+reviewer_family: google
+reviewer_model: gemini-3.8-flash-high
+validated_at: '2026-10-31T04:31:21+00:00'
 verdict: APPROVE

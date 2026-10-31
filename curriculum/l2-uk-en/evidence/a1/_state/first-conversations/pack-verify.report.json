@@ -1,0 +1,32 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 0,
+    "notes_count": 0,
+    "standard_count": 5,
+    "texts_count": 5,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 2
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/first-conversations.yaml",
+    "sha256": "d8afd475d303a0d364d8c73f3c52267f3ec964c8d857c2861b741e4373a72fc7"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/first-conversations.yaml.lock",
+    "sha256": "3acfab1128843c4a411307251eefdc801654eae08c10f452d08a74ab327e79a2"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "first-conversations",
+  "status": "ok",
+  "strict": true,
+  "warnings": []
+}

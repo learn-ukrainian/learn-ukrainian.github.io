@@ -1,0 +1,10 @@
+attempt_id: agy-n-r1
+harness: agy
+manifest_sha256: 02a1246ca6ab583660604033294b7b7c8eed3680ab5f6ab76e5d01effa3f2818
+pack_sha256: 58384afe8da0c643fd941dab5db62fcd209301ebe2d4f3e74d394c4c456af2c6
+promoted_at: '2026-10-31T04:39:56+00:00'
+promoted_plan_sha256: d2294865c0c383e9c1ac2bf18922aeed4219d07b9a19f7d7579e6cd451386ba7
+review_access: full
+reviewed_plan_sha256: eeeb52c15150be2107d40c1cf5bff30667dafa77bbe97fa0912c1d64ec499ec3
+reviewer_family: google
+reviewer_model: gemini-3.8-flash-high

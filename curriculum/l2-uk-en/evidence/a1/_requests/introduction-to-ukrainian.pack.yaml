@@ -1,0 +1,65 @@
+request_schema: 1
+module: a1/introduction-to-ukrainian
+texts:
+- id: T-001
+  source:
+    table: textbooks
+    chunk_id: uni-ukrmova-prof-haluzynska-2006_s0007
+  span:
+    first_words: Українська мова належить
+    last_words: (східнослов'янська підгрупа).
+  supports: Ukrainian is a Slavic language in the Indo-European family; this is language identity, not
+    a comparison with Russian.
+- id: T-002
+  source:
+    table: textbooks
+    chunk_id: uni-ukrmova-prof-haluzynska-2006_s0009
+  span:
+    first_words: 1798 рік
+    last_words: народну мову
+  supports: The 1798 publication of the first three parts of Kotliarevskyi's Eneida is a milestone of
+    the new literary language, not the birth of spoken Ukrainian.
+- id: T-003
+  source:
+    table: textbooks
+    chunk_id: uni-ukrmova-sociolinguistics-masenko-2010_s0030
+  span:
+    first_words: Це передусім праці Юрія
+    last_words: українську на різних структурних рівнях мови.
+  supports: «Українсько-англійські міжмовні відносини. Українська мова у США і Канаді» (1964)
+- id: T-004
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+  span:
+    first_words: На письмі звуки
+    last_words: В українському алфавіті 33 букви.
+  supports: An alphabet is an ordered set of letters; Ukrainian has 33. The overview creates no acquired
+    letter inventory.
+- id: T-005
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+  span:
+    first_words: Звуки ми чуємо
+    last_words: пишемо­ .
+  supports: Listening and speaking operate on sounds; reading and writing operate on visible letters.
+    This distinction guides a balanced personal study plan, without prescribing one mandatory daily order.
+exercises:
+- id: X-001
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+  span:
+    first_words: '196. І. Поміркуйте:'
+    last_words: можна обійтися?
+  pattern: Explain the practical purpose of an alphabet; adapt the reflection to an adult choosing how
+    to study, with all instructions and responses in English.
+videos:
+- id: V-001
+  url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
+  channel: Speak Ukrainian
+  use: Optional whole-video listening preview of Ukrainian letter sounds with the picture visible; no
+    acquired letters, word learning, decoding or pronunciation test.
+standard: []
+unsupported: []

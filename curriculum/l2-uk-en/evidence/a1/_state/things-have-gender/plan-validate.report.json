@@ -1,0 +1,255 @@
+{
+  "activity_report": {
+    "explanation_coverage": "not_available_at_this_stage",
+    "lessons": [
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "observe": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "group-sort": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "group-sort",
+          "observe"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 1
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "phrase-table": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "phrase-table",
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 2
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "phrase-table": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "match-up": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "match-up",
+          "phrase-table"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 3
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "observe": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "observe",
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 4
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {},
+            "total": 0
+          },
+          "workbook": {
+            "by_type": {},
+            "total": 0
+          }
+        },
+        "distinct_types": [],
+        "has_workbook": false,
+        "is_recap": true,
+        "kind": "recap",
+        "n": 5
+      }
+    ],
+    "module": {
+      "all_distinct_types": [
+        "group-sort",
+        "match-up",
+        "observe",
+        "phrase-table",
+        "quiz"
+      ],
+      "inline_activities": 4,
+      "largest_workbook_type": "quiz",
+      "largest_workbook_type_share": 0.5,
+      "longest_same_type_workbook_run": 1,
+      "longest_same_type_workbook_run_type": "group-sort",
+      "non_recap_lessons": 4,
+      "non_recap_lessons_with_workbook": 4,
+      "workbook_activities": 4,
+      "workbook_distinct_types": [
+        "group-sort",
+        "match-up",
+        "quiz"
+      ],
+      "workbook_presence_complete": true
+    },
+    "module_slug": "things-have-gender",
+    "rendered": "not_available_at_this_stage",
+    "response_opportunities": "not_available_at_this_stage",
+    "stage": "plan"
+  },
+  "failures": [],
+  "inputs": {
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "8ff6f38e34eedc3151bf15f3c622ed318113a5d7e94eb2880c7b14e2ba86f761",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "0581c149864df57af58f0b8675a88924869a212d4f21ddaa6103d3223213aa40",
+    "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml": "34d289bdda9ca3f3a82c7439240fcff001d3e2fa791df097b44a7b2c04fec6b7",
+    "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml.lock": "866f355a98705f993a2e4fb1cf6d7d3024a8233c77c4b622d85baac8b2a7294a",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/things-have-gender.yaml": "b697c683313a31bf06c5c952101d5f3c5e437c2eed663596b7258c869c66ed93",
+    "curriculum/l2-uk-en/lesson-plans/a1/checkpoint-first-contact.yaml": "5c84620020a7f67411756537edc4330a28ba6336128db4dfcd1cee91027cf12a",
+    "curriculum/l2-uk-en/lesson-plans/a1/first-conversations.yaml": "64bf9edd04bd28925871f0d2aa854f58d7c657c4c4289d6efe1981d9c41eb60a",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "7fff0950d868daf93fe15d89b0ff10dd7b4f8f4bea71ab45f76e415d8a275002",
+    "curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml": "416a649be45428bd790c35101d0ca7df4246ab35c6e605aa06b63f57606c905e",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "6081fd6d636e7bf7cadd534159f1abe6ebfa9d7091c4c2f411ae3f20deb84f15",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "e5e29a1eb7142cf8307359c618dad9775aae4710d782d982b2bdc916819bfddb",
+    "curriculum/l2-uk-en/lesson-plans/a1/things-have-gender.yaml": "976046ddf164f8f28668fd4838a84e66525f239265f034cb575d9cb7dd433f0b",
+    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "d2294865c0c383e9c1ac2bf18922aeed4219d07b9a19f7d7579e6cd451386ba7",
+    "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
+    "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
+    "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
+    "schemas/arc.schema.json": "af1c1ee66c1e58fda00c975663fe409ad1e2b6033b699c916f36b23fdd5d75b2",
+    "schemas/module-plan-v2.schema.json": "112982f5ff3a7477596a52dce0003e3c7cf9579c98a41eca068a31f6087776e2",
+    "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
+    "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
+    "scripts/curriculum/validate/placement_table.yaml": "b3268a3feae54e4a91f28d5a0858989f291ed3280412345ef07f031075543234"
+  },
+  "level": "a1",
+  "mode": "provisional",
+  "not_checked": [
+    {
+      "code": "minutes_constants_undefined",
+      "lesson": null,
+      "message": "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
+      "step": null
+    },
+    {
+      "code": "arc_has_no_structured_grammar_or_vocabulary",
+      "lesson": null,
+      "message": "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
+      "step": null
+    },
+    {
+      "code": "title_quantities_not_parsed",
+      "lesson": null,
+      "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
+      "step": null
+    },
+    {
+      "code": "pending_promotion",
+      "lesson": null,
+      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 34d289bdda9ca3f3a82c7439240fcff001d3e2fa791df097b44a7b2c04fec6b7; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "step": null
+    }
+  ],
+  "notes": [
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 3,
+      "message": "core lemma 'рюкзак' (W-211) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 3,
+      "message": "core lemma 'ноутбук' (W-262) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "earlier_core_not_recycled",
+      "lesson": null,
+      "message": "61 of 65 core records of earlier positions appear in no recycled list of this module: W-001 'я' (position 2), W-002 'ти' (position 2), W-062 'ні' (position 2), W-074 'привіт' (position 2), W-076 'день' (position 2), W-081 'мама' (position 4), W-091 'Ніна' (position 3), W-093 'Іван' (position 3), W-096 'так' (position 2), W-101 'тато' (position 4), W-138 \"сім'я\" (position 4), W-158 'син' (position 4), W-183 'Україна' (position 5), W-184 'Київ' (position 5), W-188 'вишиванка' (position 5), W-189 'герб' (position 5), W-191 'калина' (position 5), W-192 'лелека' (position 5), W-193 'писанка' (position 5), W-194 'прапор' (position 5), W-195 'Канада' (position 3), W-196 'мова' (position 3), W-198 'українець' (position 5), W-199 'українка' (position 5), W-200 'вечір' (position 2), W-202 'дитина' (position 4), W-203 'кіт' (position 4), W-205 'родина' (position 4), W-206 'сестра' (position 4), W-217 'дзвінок' (position 5), W-220 'ніч' (position 2), W-226 'студент' (position 3), W-227 'студентка' (position 3), W-229 'донька' (position 4), W-234 'бабуся' (position 4), W-235 'дідусь' (position 4), W-236 'добре' (position 6), W-237 'ранок' (position 2), W-238 'чудово' (position 6), W-239 'брат' (position 4), W-245 'лікар' (position 3), W-246 'лікарка' (position 3), W-273 'добраніч' (position 6), W-274 'па-па' (position 2), W-279 'як' (position 6), W-287 'Добрий день!' (position 2), W-288 'Доброго ранку!' (position 2), W-289 'Добрий вечір!' (position 2), W-290 'До побачення!' (position 2), W-291 'Будь ласка!' (position 2), W-292 'Дякую!' (position 2), W-293 'Вибачте!' (position 2), W-294 'Бувай!' (position 2), W-295 'Вітаю!' (position 2), W-296 'Мене звати...' (position 3), W-303 'Так собі.' (position 6), W-304 'На жаль.' (position 6), W-305 'Дуже приємно!' (position 6), W-306 'Гарного дня!' (position 6), W-310 'київський' (position 5), W-311 'український' (position 5) (#9487 C6)",
+      "step": null
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 1,
+      "message": "C29: W-003 він: closed_class_a1 source attestation",
+      "step": "s1"
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 1,
+      "message": "C29: W-004 вона: closed_class_a1 source attestation",
+      "step": "s1"
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 1,
+      "message": "C29: W-005 воно: closed_class_a1 source attestation",
+      "step": "s1"
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 3,
+      "message": "C29: W-015 їхній: closed_class_a1 source attestation",
+      "step": "s1"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 3,
+      "message": "C29: W-262 ноутбук: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
+      "step": "s1"
+    }
+  ],
+  "slug": "things-have-gender",
+  "status": "pass",
+  "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",
+  "waivers": []
+}

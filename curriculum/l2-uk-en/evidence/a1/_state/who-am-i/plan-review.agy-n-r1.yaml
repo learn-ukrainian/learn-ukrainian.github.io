@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "a1-who-am-i-n-r1"
+  attempt_id: "agy-n-r1"
+  manifest_sha256: "02a1246ca6ab583660604033294b7b7c8eed3680ab5f6ab76e5d01effa3f2818"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gemini-3.8-flash-high"
+  harness: "agy"
+  family: "gemini"
+  prompt_sha256: "e9d3252c056d8994925321dd2c101c9158602794a5490bfc0d995d03bc120754"
+checks:
+  closing_shape: clean # Shape (a) used: lesson 5 is a dedicated recap lesson (kind: recap); shape (b) not used.
+  title_describes_job: clean # Module title and subtitle describe lesson jobs (R-07); all prose fields are strictly monolingual.
+  title_quantities: clean # No inventory quantities stated in module or lesson titles.
+  quoted_forms: clean # tool: verify_words, locator: VESUM, receipt: rr-a5ff5b276e5580f66072; tool: inspect_words, locator: VESUM, receipt: rr-e45aff8b020515bc12ea; tool: verify_stress, locator: ULIF/trie, receipts: rr-e26c644ec52cebcaa9da, rr-d0393e985853d4d3a4e0, rr-8846d137fc9141b020ed, rr-c3bda1b5cd0a246e0f6b, rr-a35d4078e1f878a3336c
+  sequencing: clean # All lessons reachable from 12-letter prior planned learner state; phonetics follow arc r6/r4.1; small theory to practice (R-27); chunks unanalyzed.
+  sizing: clean # Lessons sized appropriately for ~45 minutes learner work; no cramming or dragging across 5 focused lessons.
+  inventory: clean # tool: query_cefr_level, locator: PULS, receipts: rr-e73373ffe0e72b9e02f3, rr-a302d15d3910e71e067c, rr-760d3d1078f0d914d9fc; tool: query_sum20, locator: СУМ-20, receipts: rr-0d7bd25def52caf3b161, rr-bfe26a0416179e6fd995; tool: search_style_guide, locator: Антоненко-Давидович, receipt: rr-7dd256f3201a475397d2; tool: search_heritage, locator: Грінченко/Голоскевич/ЕСУМ, receipt: rr-4d651cad663d4d593da1; tool: check_russian_shadow, receipt: rr-d40b42e95468b064855c; tool: search_ua_gec_errors, receipts: rr-3a5e8a54f550490456e9, rr-58fbfc16f14339583cad
+  activities: clean # 4 distinct workbook types (match-up, quiz, pick-syllables, odd-one-out; 25% share each, no consecutive repeats); engaging R-19 models; workbook count reduction vs v1 justified by eliminating mechanical fill-in/translate drills in favor of focused per-lesson workbooks and a communicative recap task per Decision D4 / Revision r3.1 (#10105).
+  evidence_fit: clean # tool: search_text, locators: 5-klas-ukrmova-avramenko-2022_s0076, 5-klas-ukrmova-zabolotnyi-2023_s0059, 5-klas-ukrmova-avramenko-2022_s0085, 5-klas-ukrmova-avramenko-2022_s0078, receipts: rr-dcc76932c23e8300ea19, rr-1065c78d9c0565804223, rr-c525bf13ca686de08866, rr-8ee21d12a315af20d276; tool: query_pravopys, locator: § 26, receipt: rr-1efbaef01e99402ae6a7
+  standard_and_ulp: clean # State Standard 2024 lines 485 and 588 covered; early origin chunk grounded in ULP 1-04 (V-204); tool: search_resources, receipt: rr-a402b37d33d835f007f4
+findings: []

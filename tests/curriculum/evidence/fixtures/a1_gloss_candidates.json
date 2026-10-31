@@ -5966,6 +5966,3617 @@
           "homonym_index": 1
         }
       ]
+    },
+    "W-188": {
+      "lemma": "вишиванка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 26047,
+          "word": "виши́ва́нка",
+          "pos": "noun",
+          "translations": "[\"vyshyvanka (traditional Ukrainian and Belarusian clothing)\"]",
+          "text": "виши́ва́нка (noun): vyshyvanka (traditional Ukrainian and Belarusian clothing)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "vyshyvanka"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 39217,
+          "canonical_headword": "виши́ва́нка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-189": {
+      "lemma": "герб",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5518,
+          "word": "герб",
+          "pos": "noun",
+          "translations": "[\"coat of arms (hereditary design depicted on an escutcheon)\", \"national emblem (official emblem of a nation or country)\"]",
+          "text": "герб (noun): coat of arms (hereditary design depicted on an escutcheon); national emblem (official emblem of a nation or country)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "coat of arms"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 51345,
+          "canonical_headword": "герб",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-190": {
+      "lemma": "ім'я",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 17839,
+          "word": "ім'я́",
+          "pos": "noun",
+          "translations": "[\"name (word or phrase indicating a particular person, place, class or thing)\", \"name (given name)\", \"given name (name chosen for a child by its parents)\"]",
+          "text": "ім'я́ (noun): name (word or phrase indicating a particular person, place, class or thing); name (given name); given name (name chosen for a child by its parents)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "name (given name)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 89864,
+          "canonical_headword": "ім'я́",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-191": {
+      "lemma": "калина",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8315,
+          "word": "кали́на",
+          "pos": "noun",
+          "translations": "[\"viburnum (plants of the genus Viburnum)\", \"(uncountable) guelder rose, snowball tree, viburnum\"]",
+          "text": "кали́на (noun): viburnum (plants of the genus Viburnum); (uncountable) guelder rose, snowball tree, viburnum",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "guelder rose, snowball tree, viburnum"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 92312,
+          "canonical_headword": "Ка́ли́на",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 92313,
+          "canonical_headword": "Кали́на",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        },
+        {
+          "id": 92314,
+          "canonical_headword": "кали́на",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 3
+        }
+      ]
+    },
+    "W-192": {
+      "lemma": "лелека",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 12602,
+          "word": "леле́ка",
+          "pos": "noun",
+          "translations": "[\"stork (large wading bird of the family Ciconiidae)\"]",
+          "text": "леле́ка (noun): stork (large wading bird of the family Ciconiidae)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "stork"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 109068,
+          "canonical_headword": "леле́ка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-193": {
+      "lemma": "писанка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8074,
+          "word": "пи́санка",
+          "pos": "noun",
+          "translations": "[\"Easter egg (a dyed or decorated egg)\", \"Easter egg, usually a painted and/or decorated one\", \"pysanka (Easter egg decorated with intricate designs)\", \"(figuratively) beautiful, nice thing\", \"(figuratively) pretty girl or woman\", \"(Can we verify this sense?) (figuratively, derogatory) gaudily dressed woman or girl\"]",
+          "text": "пи́санка (noun): Easter egg (a dyed or decorated egg); Easter egg, usually a painted and/or decorated one; pysanka (Easter egg decorated with intricate designs); (figuratively) beautiful, nice thing; (figuratively) pretty girl or woman",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "Easter egg, usually a painted and/or decorated one",
+          "beautiful, nice thing",
+          "pretty girl or woman"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 162208,
+          "canonical_headword": "Пи́санка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 162209,
+          "canonical_headword": "пи́санка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-194": {
+      "lemma": "прапор",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1899,
+          "word": "пра́пор",
+          "pos": "noun",
+          "translations": "[\"flag (piece of cloth or often its representation)\", \"banner (flag)\"]",
+          "text": "пра́пор (noun): flag (piece of cloth or often its representation); banner (flag)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "flag"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 184609,
+          "canonical_headword": "пра́пор",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-195": {
+      "lemma": "Канада",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2251,
+          "word": "Кана́да",
+          "pos": "noun",
+          "translations": "[\"Canada (country in North America) (proper noun)\", \"Canada (a country in North America) (proper noun)\"]",
+          "text": "Кана́да (noun): Canada (country in North America) (proper noun); Canada (a country in North America) (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 92925,
+          "canonical_headword": "Кана́да",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-196": {
+      "lemma": "мова",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 119,
+          "word": "мо́ва",
+          "pos": "noun",
+          "translations": "[\"computer language\", \"language (system of communication using words or symbols)\", \"speech (vocal communication)\", \"(grammar) speech\", \"language (nonverbal communication)\", \"language (body of words used as a form of communication)\"]",
+          "text": "мо́ва (noun): computer language; language (system of communication using words or symbols); speech (vocal communication); (grammar) speech; language (nonverbal communication)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "language (system of communication using words or symbols)",
+          "speech"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 45166,
+          "canonical_headword": "мо́ва",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-197": {
+      "lemma": "Польща",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 596,
+          "word": "По́льща",
+          "pos": "noun",
+          "translations": "[\"Poland (European country) (proper noun)\", \"Poland (a country in Central Europe) (proper noun)\"]",
+          "text": "По́льща (noun): Poland (European country) (proper noun); Poland (a country in Central Europe) (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 175835,
+          "canonical_headword": "По́льща",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-198": {
+      "lemma": "українець",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 188,
+          "word": "украї́нець",
+          "pos": "noun",
+          "translations": "[\"citizen of Ukraine or a person of Ukrainian ethnicity\", \"male Ukrainian person\"]",
+          "text": "украї́нець (noun): citizen of Ukraine or a person of Ukrainian ethnicity; male Ukrainian person",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "male Ukrainian person"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 241960,
+          "canonical_headword": "Украї́нець",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 241961,
+          "canonical_headword": "украї́нець",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-199": {
+      "lemma": "українка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3482,
+          "word": "украї́нка",
+          "pos": "noun",
+          "translations": "[\"citizen of Ukraine or a person of Ukrainian ethnicity\", \"female Ukrainian (native of Ukraine)\"]",
+          "text": "украї́нка (noun): citizen of Ukraine or a person of Ukrainian ethnicity; female Ukrainian (native of Ukraine)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "female Ukrainian (native of Ukraine)",
+          "Ukrainka (a city in Kyiv Oblast, Ukraine)",
+          "a feminine surname, Ukrainka, equivalent to English English"
+        ],
+        "pos": [
+          "name",
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 241976,
+          "canonical_headword": "Украї́нка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        },
+        {
+          "id": 241977,
+          "canonical_headword": "украї́нка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-200": {
+      "lemma": "вечір",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1751,
+          "word": "ве́чір",
+          "pos": "noun",
+          "translations": "[\"evening (time of day between dusk and night)\", \"evening (time of day between the approximate time of midwinter dusk and midnight)\"]",
+          "text": "ве́чір (noun): evening (time of day between dusk and night); evening (time of day between the approximate time of midwinter dusk and midnight)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "evening"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 33722,
+          "canonical_headword": "ве́чір",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-201": {
+      "lemma": "дим",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6404,
+          "word": "дим",
+          "pos": "noun",
+          "translations": "[\"smoke (visible particles and vapour given off by burning material)\"]",
+          "text": "дим (noun): smoke (visible particles and vapour given off by burning material)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "smoke"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 60801,
+          "canonical_headword": "дим",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-202": {
+      "lemma": "дитина",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 613,
+          "word": "дити́на",
+          "pos": "noun",
+          "translations": "[\"baby (very young human being)\", \"child (a male or female child, a son or daughter)\", \"infant (very young human being)\", \"kid (child (colloq.))\", \"child (a minor)\", \"child; daughter, son, someone's child\"]",
+          "text": "дити́на (noun): baby (very young human being); child (a male or female child, a son or daughter); infant (very young human being); kid (child (colloq.)); child (a minor)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "child (a male or female child, a son or daughter)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 61243,
+          "canonical_headword": "дити́на",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-203": {
+      "lemma": "кіт",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5719,
+          "word": "кіт",
+          "pos": "noun",
+          "translations": "[\"cat (domestic species)\", \"tomcat (domestic feline; member of Felidae family)\", \"tom (male cat)\"]",
+          "text": "кіт (noun): cat (domestic species); tomcat (domestic feline; member of Felidae family); tom (male cat)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "male cat, tomcat (domestic feline; member of Felidae family)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 97224,
+          "canonical_headword": "Кіт",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 97225,
+          "canonical_headword": "кіт",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-204": {
+      "lemma": "книжка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 622,
+          "word": "кни́жка",
+          "pos": "noun",
+          "translations": "[\"book (collection of sheets of paper bound together containing printed or written material)\", \"omasum (the third part of the stomach of a ruminant)\"]",
+          "text": "кни́жка (noun): book (collection of sheets of paper bound together containing printed or written material); omasum (the third part of the stomach of a ruminant)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "book"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 98158,
+          "canonical_headword": "кни́жка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-205": {
+      "lemma": "родина",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 869,
+          "word": "роди́на",
+          "pos": "noun",
+          "translations": "[\"family (group of people related by blood, marriage, law, or custom)\", \"family (rank in a taxonomic classification, above both genus and species)\"]",
+          "text": "роди́на (noun): family (group of people related by blood, marriage, law, or custom); family (rank in a taxonomic classification, above both genus and species)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "family",
+          "relative",
+          "homeland",
+          "lineage, clan, tribe, family"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 201164,
+          "canonical_headword": "роди́на",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-206": {
+      "lemma": "сестра",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2248,
+          "word": "сестра́",
+          "pos": "noun",
+          "translations": "[\"sister (woman or girl having the same parents)\", \"nurse (person trained to provide care for the sick)\", \"(colloquial) nurse\", \"sister (a nun; a female member of a religious community)\"]",
+          "text": "сестра́ (noun): sister (woman or girl having the same parents); nurse (person trained to provide care for the sick); (colloquial) nurse; sister (a nun; a female member of a religious community)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "sister",
+          "nurse"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 214378,
+          "canonical_headword": "Сестра́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 214379,
+          "canonical_headword": "сестра́",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-207": {
+      "lemma": "телефон",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2099,
+          "word": "телефо́н",
+          "pos": "noun",
+          "translations": "[\"telephone (a device used for two-way talking with other people)\", \"(colloquial) telephone number\"]",
+          "text": "телефо́н (noun): telephone (a device used for two-way talking with other people); (colloquial) telephone number",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "telephone",
+          "telephone number"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 232709,
+          "canonical_headword": "телефо́н",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-208": {
+      "lemma": "шафа",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 7057,
+          "word": "ша́фа",
+          "pos": "noun",
+          "translations": "[\"closet (furniture)\", \"cabinet, cupboard\", \"wardrobe (movable furniture for storing clothes)\", \"wardrobe, closet\", \"cupboard (enclosed storage)\"]",
+          "text": "ша́фа (noun): closet (furniture); cabinet, cupboard; wardrobe (movable furniture for storing clothes); wardrobe, closet; cupboard (enclosed storage)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "cabinet, cupboard",
+          "wardrobe, closet"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 261058,
+          "canonical_headword": "ша́фа",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-209": {
+      "lemma": "комп'ютер",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2491,
+          "word": "комп'ю́тер",
+          "pos": "noun",
+          "translations": "[\"computer (programmable electronic device that performs mathematical calculations and logical operations, especially one that can process, store and retrieve large amounts of data very quickly)\", \"computer (a programmable device)\"]",
+          "text": "комп'ю́тер (noun): computer (programmable electronic device that performs mathematical calculations and logical operations, especially one that can process, store and retrieve large amounts of data very quickly); computer (a programmable device)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "computer (a programmable device)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 100382,
+          "canonical_headword": "комп'ю́тер",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-210": {
+      "lemma": "мати",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3017,
+          "word": "ма́ти",
+          "pos": "noun",
+          "translations": "[\"mother (one's female parent)\", \"mother (female (human) who parents a child, gives birth to a baby, or is pregnant)\"]",
+          "text": "ма́ти (noun): mother (one's female parent); mother (female (human) who parents a child, gives birth to a baby, or is pregnant)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "mother",
+          "to have",
+          "to have to; to be obliged (to do something)"
+        ],
+        "pos": [
+          "noun",
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 116337,
+          "canonical_headword": "ма́ти",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        },
+        {
+          "id": 116338,
+          "canonical_headword": "ма́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-211": {
+      "lemma": "рюкзак",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 10435,
+          "word": "рюкза́к",
+          "pos": "noun",
+          "translations": "[\"backpack (worn on a person's back, e.g., for hiking)\", \"backpack, rucksack\"]",
+          "text": "рюкза́к (noun): backpack (worn on a person's back, e.g., for hiking); backpack, rucksack",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "backpack, rucksack"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 209256,
+          "canonical_headword": "рюкза́к",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-212": {
+      "lemma": "Франція",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 720,
+          "word": "Фра́нція",
+          "pos": "noun",
+          "translations": "[\"France (country) (proper noun)\", \"France (a country in Western Europe) (proper noun)\"]",
+          "text": "Фра́нція (noun): France (country) (proper noun); France (a country in Western Europe) (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 249559,
+          "canonical_headword": "Фра́нція",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-213": {
+      "lemma": "юрист",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1973,
+          "word": "юри́ст",
+          "pos": "noun",
+          "translations": "[\"attorney (lawyer)\", \"jurist (expert of law)\", \"lawyer (professional person authorized to practice law)\"]",
+          "text": "юри́ст (noun): attorney (lawyer); jurist (expert of law); lawyer (professional person authorized to practice law)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "lawyer (professional person qualified to practise law)",
+          "jurist (expert of law)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 267121,
+          "canonical_headword": "юри́ст",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-214": {
+      "lemma": "юристка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 19144,
+          "word": "юри́стка",
+          "pos": "noun",
+          "translations": "[\"attorney (lawyer)\", \"lawyer (professional person authorized to practice law)\"]",
+          "text": "юри́стка (noun): attorney (lawyer); lawyer (professional person authorized to practice law)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 267123,
+          "canonical_headword": "юри́стка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-215": {
+      "lemma": "юшка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 10206,
+          "word": "ю́шка",
+          "pos": "noun",
+          "translations": "[\"soup (dish)\", \"soup (especially fish soup)\", \"soup made from broth\"]",
+          "text": "ю́шка (noun): soup (dish); soup (especially fish soup); soup made from broth",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "soup, (especially fish soup)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 267303,
+          "canonical_headword": "Ю́шка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 267304,
+          "canonical_headword": "ю́шка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-216": {
+      "lemma": "ґудзик",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 10898,
+          "word": "ґу́дзик",
+          "pos": "noun",
+          "translations": "[\"button (knob or small disc serving as a fastener)\", \"button (a raised pavement marker)\"]",
+          "text": "ґу́дзик (noun): button (knob or small disc serving as a fastener); button (a raised pavement marker)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "button (knob or small disc serving as a fastener)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 56948,
+          "canonical_headword": "ґу́дзик",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-217": {
+      "lemma": "дзвінок",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 14348,
+          "word": "дзвіно́к",
+          "pos": "noun",
+          "translations": "[\"sounding of a bell as a signal\", \"Diminutive of дзвін: bell (ringing device)\", \"doorbell (device on or adjacent to an outer door for announcing one's presence)\", \"bell (audible signal)\", \"ring (telephone call)\", \"(telephony) call, bell\", \"bell (informal: telephone call)\"]",
+          "text": "дзвіно́к (noun): sounding of a bell as a signal; Diminutive of дзвін: bell (ringing device); doorbell (device on or adjacent to an outer door for announcing one's presence); bell (audible signal); ring (telephone call)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "bell (ringing device)",
+          "bell (audible signal)",
+          "call, bell"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 60340,
+          "canonical_headword": "дзвіно́к",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-218": {
+      "lemma": "дзеркало",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3218,
+          "word": "дзе́ркало",
+          "pos": "noun",
+          "translations": "[\"mirror (smooth reflecting surface)\", \"mirror, looking glass\"]",
+          "text": "дзе́ркало (noun): mirror (smooth reflecting surface); mirror, looking glass",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "mirror, looking glass"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 60408,
+          "canonical_headword": "дзе́ркало",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-219": {
+      "lemma": "жук",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8166,
+          "word": "жук",
+          "pos": "noun",
+          "translations": "[\"beetle (insect)\", \"(colloquial) rogue, crook\"]",
+          "text": "жук (noun): beetle (insect); (colloquial) rogue, crook",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "beetle",
+          "rogue, crook"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 71358,
+          "canonical_headword": "Жук",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 71359,
+          "canonical_headword": "жук",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 2
+        },
+        {
+          "id": 71360,
+          "canonical_headword": "жук",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 3
+        }
+      ]
+    },
+    "W-220": {
+      "lemma": "ніч",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1705,
+          "word": "ніч",
+          "pos": "noun",
+          "translations": "[\"night (period between sunset and sunrise)\"]",
+          "text": "ніч (noun): night (period between sunset and sunrise)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "night, nighttime (period of time from sundown to sunup)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 138100,
+          "canonical_headword": "ніч",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-221": {
+      "lemma": "ручка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6366,
+          "word": "ру́чка",
+          "pos": "noun",
+          "translations": "[\"pen (writing tool)\", \"pen (writing implement)\", \"ballpoint pen (pen)\", \"handle (part of an object held in the hand when used or moved)\", \"hilt (of a sword)\", \"Diminutive of рука́: (small hand, arm)\"]",
+          "text": "ру́чка (noun): pen (writing tool); pen (writing implement); ballpoint pen (pen); handle (part of an object held in the hand when used or moved); hilt (of a sword)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "pen (writing implement)",
+          "handle",
+          "hilt (of a sword)",
+          "(small hand, arm)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 209221,
+          "canonical_headword": "Ру́чка",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 209222,
+          "canonical_headword": "ру́чка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        },
+        {
+          "id": 209223,
+          "canonical_headword": "ру́чка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 3
+        }
+      ]
+    },
+    "W-222": {
+      "lemma": "батько",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 15983,
+          "word": "ба́тько",
+          "pos": "noun",
+          "translations": "[\"parent (person from whom one is descended)\", \"father (male parent)\", \"(plural only) parents\"]",
+          "text": "ба́тько (noun): parent (person from whom one is descended); father (male parent); (plural only) parents",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "father (male parent)",
+          "parents"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 22698,
+          "canonical_headword": "ба́тько",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-223": {
+      "lemma": "булька",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "blab, bubble"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 29820,
+          "canonical_headword": "бу́лька",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-224": {
+      "lemma": "лампа",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8184,
+          "word": "ла́мпа",
+          "pos": "noun",
+          "translations": "[\"light bulb (evacuated glass bulb containing a metal filament that produces light)\", \"lamp (device producing light)\"]",
+          "text": "ла́мпа (noun): light bulb (evacuated glass bulb containing a metal filament that produces light); lamp (device producing light)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "lamp",
+          "vacuum tube"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 107933,
+          "canonical_headword": "ла́мпа",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-225": {
+      "lemma": "стіл",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1204,
+          "word": "стіл",
+          "pos": "noun",
+          "translations": "[\"table (item of furniture)\", \"(historical, ancient Rus) princely throne\", \"desk (table for writing and reading)\"]",
+          "text": "стіл (noun): table (item of furniture); (historical, ancient Rus) princely throne; desk (table for writing and reading)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "table (item of furniture)",
+          "princely throne"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 179748,
+          "canonical_headword": "стіл",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 226339,
+          "canonical_headword": "стіл",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-226": {
+      "lemma": "студент",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 416,
+          "word": "студе́нт",
+          "pos": "noun",
+          "translations": "[\"student (person who studies a subject)\", \"male student (in university or college)\"]",
+          "text": "студе́нт (noun): student (person who studies a subject); male student (in university or college)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "male student (in university or college)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 227974,
+          "canonical_headword": "студе́нт",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-227": {
+      "lemma": "студентка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 7355,
+          "word": "студе́нтка",
+          "pos": "noun",
+          "translations": "[\"student (person who studies a subject)\", \"female equivalent of студе́нт: student\"]",
+          "text": "студе́нтка (noun): student (person who studies a subject); female equivalent of студе́нт: student",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "female equivalent of студе́нт (studént): student"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 227977,
+          "canonical_headword": "студе́нтка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-228": {
+      "lemma": "гаманець",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5887,
+          "word": "гамане́ць",
+          "pos": "noun",
+          "translations": "[\"purse (small bag for carrying money)\", \"purse, wallet\", \"wallet (case for keeping money)\"]",
+          "text": "гамане́ць (noun): purse (small bag for carrying money); purse, wallet; wallet (case for keeping money)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "purse, wallet"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 50060,
+          "canonical_headword": "гамане́ць",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-229": {
+      "lemma": "донька",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2803,
+          "word": "до́нька",
+          "pos": "noun",
+          "translations": "[\"daughter (female offspring)\"]",
+          "text": "до́нька (noun): daughter (female offspring)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "daughter"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 63971,
+          "canonical_headword": "до́нька",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-230": {
+      "lemma": "олівець",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 7658,
+          "word": "оліве́ць",
+          "pos": "noun",
+          "translations": "[\"pencil (graphite writing-instrument)\"]",
+          "text": "оліве́ць (noun): pencil (graphite writing-instrument)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "pencil"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 147317,
+          "canonical_headword": "оліве́ць",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-231": {
+      "lemma": "стілець",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5444,
+          "word": "стіле́ць",
+          "pos": "noun",
+          "translations": "[\"chair (furniture)\", \"stool, chair (item of furniture)\", \"stool (a seat)\"]",
+          "text": "стіле́ць (noun): chair (furniture); stool, chair (item of furniture); stool (a seat)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "stool, chair (item of furniture)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 226340,
+          "canonical_headword": "стіле́ць",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-232": {
+      "lemma": "його",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 27,
+          "word": "його́",
+          "pos": "pronoun",
+          "translations": "[\"him (accusative / direct object)\", \"(possessive) his, its - genitive of він and воно́ ; his, its\"]",
+          "text": "його́ (pronoun): him (accusative / direct object); (possessive) his, its - genitive of він and воно́ ; his, its",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 19644,
+          "word": "його́",
+          "pos": "particle",
+          "translations": "[\"its (belonging to it) (determiner)\", \"his (attributive: belonging to him) (determiner)\"]",
+          "text": "його́ (particle): its (belonging to it) (determiner); his (attributive: belonging to him) (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "of him",
+          "him",
+          "of it",
+          "it",
+          "his",
+          "its"
+        ],
+        "pos": [
+          "pron"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 245217,
+          "canonical_headword": "його",
+          "grammatical_label": "",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-233": {
+      "lemma": "чоловік",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 495,
+          "word": "чолові́к",
+          "pos": "noun",
+          "translations": "[\"adult male human\", \"man (male human)\", \"spouse (person in a marriage or marital relationship)\", \"human being (person)\", \"man, human\", \"male (human of masculine sex or gender)\", \"person (individual)\", \"husband (male partner in marriage)\"]",
+          "text": "чолові́к (noun): adult male human; man (male human); spouse (person in a marriage or marital relationship); human being (person); man, human",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "man (male human)",
+          "husband",
+          "man, human"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 258973,
+          "canonical_headword": "чолові́к",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-234": {
+      "lemma": "бабуся",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2433,
+          "word": "бабу́ся",
+          "pos": "noun",
+          "translations": "[\"grandmother (mother of someone's parent)\", \"grandma (grandmother (informal))\", \"granny (colloquial: grandmother)\"]",
+          "text": "бабу́ся (noun): grandmother (mother of someone's parent); grandma (grandmother (informal)); granny (colloquial: grandmother)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "grandmother (mother of someone’s parent)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 3705,
+          "canonical_headword": "Бабу́ся",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 20444,
+          "canonical_headword": "бабу́ся",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-235": {
+      "lemma": "дідусь",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4736,
+          "word": "діду́сь",
+          "pos": "noun",
+          "translations": "[\"grandfather (from either side)\", \"diminutive of дід\", \"grandfather, grandpa, old man\", \"the ceremonial sheaf of grain, сніп, at Christmas Eve\", \"gramps (grandfather)\", \"one of the mummers in a Malánka group at New Year's\", \"old man (elderly man)\", \"grandpa (grandfather (informal))\", \"a person who pours wax/visk for healing purposes (віск зливати, )\", \"the burning snip after Christmas (magúlia)\"]",
+          "text": "діду́сь (noun): grandfather (from either side); diminutive of дід; grandfather, grandpa, old man; the ceremonial sheaf of grain, сніп, at Christmas Eve; gramps (grandfather)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "endearing form of дід (did, “grandfather”)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 61659,
+          "canonical_headword": "діду́сь",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-236": {
+      "lemma": "добре",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 781,
+          "word": "до́бре",
+          "pos": "adverb",
+          "translations": "[\"right (in a correct manner)\", \"fine (expression of agreement)\", \"(colloquial) very much, a lot (used with verbs)\", \"well (accurately; competently)\", \"(nominalised) B (academic grade)\"]",
+          "text": "до́бре (adverb): right (in a correct manner); fine (expression of agreement); (colloquial) very much, a lot (used with verbs); well (accurately; competently); (nominalised) B (academic grade)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "well",
+          "very much, a lot (used with verbs)",
+          "B (academic grade)",
+          "OK, all right"
+        ],
+        "pos": [
+          "adj",
+          "adv",
+          "intj"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 62125,
+          "canonical_headword": "До́бре",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 62126,
+          "canonical_headword": "до́бре",
+          "grammatical_label": "прислівник",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-237": {
+      "lemma": "ранок",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 18647,
+          "word": "ра́нок",
+          "pos": "noun",
+          "translations": "[\"morning (part of the day between dawn and midday)\", \"morrow (morning)\", \"morning (the part of the day after midnight and before midday)\"]",
+          "text": "ра́нок (noun): morning (part of the day between dawn and midday); morrow (morning); morning (the part of the day after midnight and before midday)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "morning"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 197443,
+          "canonical_headword": "ра́нок",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-238": {
+      "lemma": "чудово",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 2344,
+          "word": "чудо́во",
+          "pos": "adverb",
+          "translations": "[\"wonderfully, marvellously\"]",
+          "text": "чудо́во (adverb): wonderfully, marvellously",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "wonderfully, marvellously",
+          "wonderful, marvellous, great"
+        ],
+        "pos": [
+          "adj",
+          "adv"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 259927,
+          "canonical_headword": "чудо́во",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-239": {
+      "lemma": "брат",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1591,
+          "word": "брат",
+          "pos": "noun",
+          "translations": "[\"brother (male sibling)\", \"brother (biological sibling)\", \"brother (member of the Christian brotherhood)\", \"pal, mate\"]",
+          "text": "брат (noun): brother (male sibling); brother (biological sibling); brother (member of the Christian brotherhood); pal, mate",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "brother (biological sibling)",
+          "brother (member of the Christian brotherhood)",
+          "pal, mate"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 28520,
+          "canonical_headword": "брат",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-240": {
+      "lemma": "дружина",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 965,
+          "word": "дружи́на",
+          "pos": "noun",
+          "translations": "[\"wife (married woman)\", \"band, troop\", \"husband, spouse\", \"prince regular military force in Rus\", \"retinue (comitatus)\", \"(poetic) husband\", \"spouse (person in a marriage or marital relationship)\", \"woman, wife\", \"wife, spouse\"]",
+          "text": "дружи́на (noun): wife (married woman); band, troop; husband, spouse; prince regular military force in Rus; retinue (comitatus)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "band, troop",
+          "prince regular military force in Rus",
+          "wife",
+          "husband"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 65844,
+          "canonical_headword": "дружи́на",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        },
+        {
+          "id": 65845,
+          "canonical_headword": "дружи́на",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        },
+        {
+          "id": 65846,
+          "canonical_headword": "дружи́на",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 3
+        }
+      ]
+    },
+    "W-241": {
+      "lemma": "книга",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 599,
+          "word": "кни́га",
+          "pos": "noun",
+          "translations": "[\"book (collection of sheets of paper bound together containing printed or written material)\", \"book (elevated)\", \"volume (single book of a publication issued in multi-book format, such as an encyclopedia)\"]",
+          "text": "кни́га (noun): book (collection of sheets of paper bound together containing printed or written material); book (elevated); volume (single book of a publication issued in multi-book format, such as an encyclopedia)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "book (elevated)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 85317,
+          "canonical_headword": "кни́га",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-242": {
+      "lemma": "булава",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6891,
+          "word": "булава́",
+          "pos": "noun",
+          "translations": "[\"mace (weapon)\", \"mace (heavy fighting club)\"]",
+          "text": "булава́ (noun): mace (weapon); mace (heavy fighting club)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "mace (heavy fighting club)",
+          "ceremonial bulawa",
+          "juggling club"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 6721,
+          "canonical_headword": "булава́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-243": {
+      "lemma": "викладач",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1195,
+          "word": "виклада́ч",
+          "pos": "noun",
+          "translations": "[\"teacher (person who teaches)\", \"lecturer (teacher in post-secondary education)\", \"lecturer (member of university or college)\"]",
+          "text": "виклада́ч (noun): teacher (person who teaches); lecturer (teacher in post-secondary education); lecturer (member of university or college)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "lecturer (teacher in post-secondary education)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 35593,
+          "canonical_headword": "виклада́ч",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-244": {
+      "lemma": "викладачка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 12968,
+          "word": "виклада́чка",
+          "pos": "noun",
+          "translations": "[\"teacher (female who teaches)\", \"female equivalent of виклада́ч: lecturer\", \"lecturer (member of university or college)\"]",
+          "text": "виклада́чка (noun): teacher (female who teaches); female equivalent of виклада́ч: lecturer; lecturer (member of university or college)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "female equivalent of виклада́ч (vykladáč): lecturer"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 35594,
+          "canonical_headword": "виклада́чка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-245": {
+      "lemma": "лікар",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 882,
+          "word": "лі́кар",
+          "pos": "noun",
+          "translations": "[\"leech (paganism: a healer)\", \"(medicine) doctor (physician)\", \"physician (medical doctor)\"]",
+          "text": "лі́кар (noun): leech (paganism: a healer); (medicine) doctor (physician); physician (medical doctor)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "doctor (physician)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 110423,
+          "canonical_headword": "лі́кар",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-246": {
+      "lemma": "лікарка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 15360,
+          "word": "лі́карка",
+          "pos": "noun",
+          "translations": "[\"leech (paganism: a healer)\", \"(medicine) female equivalent of лі́кар: doctor, physician\", \"physician (a female medical doctor)\"]",
+          "text": "лі́карка (noun): leech (paganism: a healer); (medicine) female equivalent of лі́кар: doctor, physician; physician (a female medical doctor)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "female equivalent of лі́кар (líkar): doctor, physician"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 110431,
+          "canonical_headword": "лі́карка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-247": {
+      "lemma": "пес",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6439,
+          "word": "пес",
+          "pos": "noun",
+          "translations": "[\"dog (animal)\", \"dog (male canine)\"]",
+          "text": "пес (noun): dog (animal); dog (male canine)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "dog (male canine)",
+          "dog (someone who is cowardly, worthless, or morally reprehensible)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 161476,
+          "canonical_headword": "пес",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-248": {
+      "lemma": "ліжко",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4838,
+          "word": "лі́жко",
+          "pos": "noun",
+          "translations": "[\"bed (piece of furniture)\", \"bed (piece of furniture or a place to sleep)\", \"bed as general place or concept\"]",
+          "text": "лі́жко (noun): bed (piece of furniture); bed (piece of furniture or a place to sleep); bed as general place or concept",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "bed (piece of furniture or a place to sleep)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 110380,
+          "canonical_headword": "лі́жко",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-249": {
+      "lemma": "папір",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1124,
+          "word": "папі́р",
+          "pos": "noun",
+          "translations": "[\"paper (sheet material)\", \"(uncountable) paper (material for writing on)\", \"(countable) paper, document\"]",
+          "text": "папі́р (noun): paper (sheet material); (uncountable) paper (material for writing on); (countable) paper, document",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "paper (material for writing on, absorption, etc.)",
+          "paper, document"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 153614,
+          "canonical_headword": "папі́р",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 153615,
+          "canonical_headword": "папі́р",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-250": {
+      "lemma": "сон",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2333,
+          "word": "сон",
+          "pos": "noun",
+          "translations": "[\"dream (imaginary events seen while sleeping)\", \"(uncountable) pasque flower\", \"sleeping (state or act of being asleep)\", \"sleep (state of reduced consciousness)\"]",
+          "text": "сон (noun): dream (imaginary events seen while sleeping); (uncountable) pasque flower; sleeping (state or act of being asleep); sleep (state of reduced consciousness)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "sleep",
+          "dream",
+          "pasque flower"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 221497,
+          "canonical_headword": "сон",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 221498,
+          "canonical_headword": "сон",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-251": {
+      "lemma": "вікно",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2043,
+          "word": "вікно́",
+          "pos": "noun",
+          "translations": "[\"window (opening for light and air)\", \"window (area on a computer screen)\", \"window (period of time)\"]",
+          "text": "вікно́ (noun): window (opening for light and air); window (area on a computer screen); window (period of time)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "window",
+          "Vikno (a town in Ukraine)"
+        ],
+        "pos": [
+          "name",
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 9796,
+          "canonical_headword": "Вікно́",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 43403,
+          "canonical_headword": "вікно́",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-252": {
+      "lemma": "підручник",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1788,
+          "word": "підру́чник",
+          "pos": "noun",
+          "translations": "[\"textbook (formal manual of instruction)\", \"textbook, coursebook, manual\"]",
+          "text": "підру́чник (noun): textbook (formal manual of instruction); textbook, coursebook, manual",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "textbook, coursebook, manual"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 165153,
+          "canonical_headword": "підру́чник",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-253": {
+      "lemma": "дуб",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4070,
+          "word": "дуб",
+          "pos": "noun",
+          "translations": "[\"oak (tree or shrub of the genus Quercus)\", \"oak (tree of the genus Quercus, and its wood)\"]",
+          "text": "дуб (noun): oak (tree or shrub of the genus Quercus); oak (tree of the genus Quercus, and its wood)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "oak (tree of the genus Quercus and its wood)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 65954,
+          "canonical_headword": "Дуб",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 65955,
+          "canonical_headword": "дуб",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-254": {
+      "lemma": "диван",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6817,
+          "word": "дива́н",
+          "pos": "noun",
+          "translations": "[\"sofa (upholstered seat)\", \"(furniture) sofa, couch, divan\", \"divan (collection of poems)\", \"(historical) divan, diwan (the council of state in a Muslim country)\", \"divan (council)\", \"divan (sofa)\", \"carpet (a fabric used as a floor covering)\", \"couch (furniture for seating of more than one person)\"]",
+          "text": "дива́н (noun): sofa (upholstered seat); (furniture) sofa, couch, divan; divan (collection of poems); (historical) divan, diwan (the council of state in a Muslim country); divan (council)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "sofa, couch, divan",
+          "divan, diwan (the council of state in a Muslim country)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 60540,
+          "canonical_headword": "дива́н",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-255": {
+      "lemma": "зошит",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 7195,
+          "word": "зо́шит",
+          "pos": "noun",
+          "translations": "[\"notebook (empty book able to be used for notes)\", \"textbook, exercise book, notebook\", \"exercise book (booklet for students)\"]",
+          "text": "зо́шит (noun): notebook (empty book able to be used for notes); textbook, exercise book, notebook; exercise book (booklet for students)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "exercise book, notebook"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 87918,
+          "canonical_headword": "зо́шит",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-256": {
+      "lemma": "словник",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3617,
+          "word": "словни́к",
+          "pos": "noun",
+          "translations": "[\"dictionary (publication that explains the meanings of an ordered list of words)\", \"(countable) dictionary\", \"associative array (An array-like data structure)\", \"(uncountable) vocabulary\", \"vocabulary (words of a language collectively)\", \"vocabulary (set of words a person knows)\"]",
+          "text": "словни́к (noun): dictionary (publication that explains the meanings of an ordered list of words); (countable) dictionary; associative array (An array-like data structure); (uncountable) vocabulary; vocabulary (words of a language collectively)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "dictionary",
+          "vocabulary"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 219415,
+          "canonical_headword": "словни́к",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-257": {
+      "lemma": "дошка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3901,
+          "word": "до́шка",
+          "pos": "noun",
+          "translations": "[\"board (long, wide and thin piece of wood or other material)\", \"board, plank\", \"chalkboard (slate board for writing on with chalk)\", \"whiteboard (large vertical writing area)\", \"plate\", \"blackboard (a surface that can be written upon with chalk)\", \"plank (long, broad and thick piece of timber)\", \"short for blackboard, whiteboard, etc.\"]",
+          "text": "до́шка (noun): board (long, wide and thin piece of wood or other material); board, plank; chalkboard (slate board for writing on with chalk); whiteboard (large vertical writing area); plate",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "board, plank",
+          "blackboard",
+          "plate"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 65130,
+          "canonical_headword": "До́шка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 65131,
+          "canonical_headword": "до́шка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-258": {
+      "lemma": "незручність",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8804,
+          "word": "незру́чність",
+          "pos": "noun",
+          "translations": "[\"inconvenience (something inconvenient or bothering)\", \"discomfort\"]",
+          "text": "незру́чність (noun): inconvenience (something inconvenient or bothering); discomfort",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "inconvenience",
+          "discomfort"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 133978,
+          "canonical_headword": "незру́чність",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-259": {
+      "lemma": "айтівець",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 23401,
+          "word": "айті́вець",
+          "pos": "noun",
+          "translations": "[\"(neologism) IT specialist, information technologist\"]",
+          "text": "айті́вець (noun): (neologism) IT specialist, information technologist",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "IT specialist, information technologist"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": []
+    },
+    "W-260": {
+      "lemma": "інженер",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2320,
+          "word": "інжене́р",
+          "pos": "noun",
+          "translations": "[\"person engaged in designing, constructing, or maintaining engines or machinery; (more generally) a person qualified or professionally engaged in any branch of engineering, or studying to do so\"]",
+          "text": "інжене́р (noun): person engaged in designing, constructing, or maintaining engines or machinery; (more generally) a person qualified or professionally engaged in any branch of engineering, or studying to do so",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "engineer"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 90170,
+          "canonical_headword": "інжене́р",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-261": {
+      "lemma": "дизайнер",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4704,
+          "word": "диза́йнер",
+          "pos": "noun",
+          "translations": "[\"designer (person who designs)\"]",
+          "text": "диза́йнер (noun): designer (person who designs)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "designer"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 60660,
+          "canonical_headword": "диза́йнер",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-262": {
+      "lemma": "ноутбук",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 9366,
+          "word": "ноутбу́к",
+          "pos": "noun",
+          "translations": "[\"(computing) laptop, notebook computer\", \"computing: a laptop computer\"]",
+          "text": "ноутбу́к (noun): (computing) laptop, notebook computer; computing: a laptop computer",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "laptop, notebook computer"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 139355,
+          "canonical_headword": "ноутбу́к",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-263": {
+      "lemma": "вибачити",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 4254,
+          "word": "ви́бачити",
+          "pos": "verb",
+          "translations": "[\"excuse (forgive, pardon)\", \"(transitive) to excuse, to pardon, to forgive\"]",
+          "text": "ви́бачити (verb): excuse (forgive, pardon); (transitive) to excuse, to pardon, to forgive",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to excuse, to pardon, to forgive"
+        ],
+        "pos": [
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 34062,
+          "canonical_headword": "ви́бачити",
+          "grammatical_label": "дієслово доконаного виду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-264": {
+      "lemma": "дякувати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 3130,
+          "word": "дя́кувати",
+          "pos": "verb",
+          "translations": "[\"thank (to express gratitude or appreciation to someone)\", \"(intransitive) to thank\"]",
+          "text": "дя́кувати (verb): thank (to express gratitude or appreciation to someone); (intransitive) to thank",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to thank"
+        ],
+        "pos": [
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 66678,
+          "canonical_headword": "дя́кувати",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        },
+        {
+          "id": 66679,
+          "canonical_headword": "дякува́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-265": {
+      "lemma": "бувати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 964,
+          "word": "бува́ти",
+          "pos": "verb",
+          "translations": "[\"(usually imperative) Clipping of бува́ти здоро́в\", \"haunt (to inhabit, or visit frequently)\", \"to occur, to happen\", \"to be at, to visit, to stay with\"]",
+          "text": "бува́ти (verb): (usually imperative) Clipping of бува́ти здоро́в; haunt (to inhabit, or visit frequently); to occur, to happen; to be at, to visit, to stay with",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to occur, to happen (of situations, circumstances)",
+          "to be (often with a focus on multiple instances or examples that could be found)",
+          "to be at, to visit, to stay with (temporarily)"
+        ],
+        "pos": [
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 29339,
+          "canonical_headword": "бува́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-266": {
+      "lemma": "вітати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 2833,
+          "word": "віта́ти",
+          "pos": "verb",
+          "translations": "[\"welcome (affirm or greet the arrival of someone)\", \"to greet, to hail, to salute\", \"greet (to address with salutations or expressions of kind wishes)\", \"to welcome\", \"to congratulate\"]",
+          "text": "віта́ти (verb): welcome (affirm or greet the arrival of someone); to greet, to hail, to salute; greet (to address with salutations or expressions of kind wishes); to welcome; to congratulate",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to greet, to hail, to salute",
+          "to welcome",
+          "to congratulate"
+        ],
+        "pos": [
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 44152,
+          "canonical_headword": "віта́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-267": {
+      "lemma": "бути",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 6,
+          "word": "бу́ти",
+          "pos": "verb",
+          "translations": "[\"be (occupy a place)\", \"to be\", \"there be (to exist)\", \"(auxiliary, future tense) used to form the future tense of imperfect verbs\", \"used to indicate that the subject has the qualities described by a noun or noun phrase\", \"(auxiliary, past tense) used to form the pluperfect tense\", \"used to connect a noun to an adjective that describes it\", \"be (used to indicate that the values on either side of an equation are the same)\", \"be (used to indicate that the subject and object are the same)\", \"elliptical form of \\\"be here\\\", or similar\"]",
+          "text": "бу́ти (verb): be (occupy a place); to be; there be (to exist); (auxiliary, future tense) used to form the future tense of imperfect verbs; used to indicate that the subject has the qualities described by a noun or noun phrase",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to be",
+          "used to form the future tense of imperfect verbs",
+          "used to form the pluperfect tense"
+        ],
+        "pos": [
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 30317,
+          "canonical_headword": "Бу́ти",
+          "grammatical_label": "множинний іменник",
+          "homonym_index": 1
+        },
+        {
+          "id": 30318,
+          "canonical_headword": "бу́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-268": {
+      "lemma": "ласка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2990,
+          "word": "ла́ска",
+          "pos": "noun",
+          "translations": "[\"least weasel, Mustela nivalis\", \"weasel (mammal, Mustela nivalis)\", \"caress, endearment\", \"caress (endearment)\", \"petting\", \"weasel (any mammal of the genus Mustela)\", \"in expressions\"]",
+          "text": "ла́ска (noun): least weasel, Mustela nivalis; weasel (mammal, Mustela nivalis); caress, endearment; caress (endearment); petting",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "weasel (mammal, Mustela nivalis)",
+          "caress, endearment",
+          "petting",
+          "in expressions"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 108232,
+          "canonical_headword": "ла́ска",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 108233,
+          "canonical_headword": "ла́ска",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-269": {
+      "lemma": "побачення",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 7229,
+          "word": "поба́чення",
+          "pos": "noun",
+          "translations": "[\"date (meeting with a lover or potential lover; a person so met)\", \"appointment (meeting by arrangement)\", \"date (romantic meeting by arrangement)\", \"visit (meeting with a prisoner, patient etc.)\"]",
+          "text": "поба́чення (noun): date (meeting with a lover or potential lover; a person so met); appointment (meeting by arrangement); date (romantic meeting by arrangement); visit (meeting with a prisoner, patient etc.)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "appointment (meeting by arrangement)",
+          "date (romantic meeting by arrangement)",
+          "visit (meeting with a prisoner, patient etc.)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 168639,
+          "canonical_headword": "поба́чення",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-270": {
+      "lemma": "звати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 5225,
+          "word": "зва́ти",
+          "pos": "verb",
+          "translations": "[\"call (to request, summon, or beckon)\", \"(transitive, intransitive, reflexive) to call\", \"(transitive, intransitive) to summon\", \"(transitive, intransitive) to invite (for a visit, wedding, guest etc.)\"]",
+          "text": "зва́ти (verb): call (to request, summon, or beckon); (transitive, intransitive, reflexive) to call; (transitive, intransitive) to summon; (transitive, intransitive) to invite (for a visit, wedding, guest etc.)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to call",
+          "to summon",
+          "to invite (for a visit, wedding, guest etc.)"
+        ],
+        "pos": [
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 82753,
+          "canonical_headword": "зва́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-271": {
+      "lemma": "прізвище",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1472,
+          "word": "прі́звище",
+          "pos": "noun",
+          "translations": "[\"surname (name that indicates family)\"]",
+          "text": "прі́звище (noun): surname (name that indicates family)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "surname"
+        ],
+        "pos": [
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 189393,
+          "canonical_headword": "прі́звище",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-272": {
+      "lemma": "приємно",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 2992,
+          "word": "приє́мно",
+          "pos": "adverb",
+          "translations": "[\"pleasantly, pleasingly, agreeably, nicely\"]",
+          "text": "приє́мно (adverb): pleasantly, pleasingly, agreeably, nicely",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "pleasantly, pleasingly, agreeably, nicely",
+          "pleasant, nice"
+        ],
+        "pos": [
+          "adj",
+          "adv"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 186104,
+          "canonical_headword": "приє́мно",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-273": {
+      "lemma": "добраніч",
+      "pos": "intj",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "good night"
+        ],
+        "pos": [
+          "intj"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 62121,
+          "canonical_headword": "добра́ніч",
+          "grammatical_label": "вигук",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-274": {
+      "lemma": "па-па",
+      "pos": "intj",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "bye-bye"
+        ],
+        "pos": [
+          "intj"
+        ]
+      },
+      "ulif_entries": []
+    },
+    "W-275": {
+      "lemma": "новий",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 28,
+          "word": "нови́й",
+          "pos": "adjective",
+          "translations": "[\"new\"]",
+          "text": "нови́й (adjective): new",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "new"
+        ],
+        "pos": [
+          "adj"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 8,
+          "canonical_headword": "Но́вий",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 138231,
+          "canonical_headword": "нови́й",
+          "grammatical_label": "прикметник",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-276": {
+      "lemma": "дуже",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 56,
+          "word": "ду́же",
+          "pos": "adverb",
+          "translations": "[\"very (to a high degree)\", \"very, much, very much\", \"way too (all too, much too, to a degree that is very excessive)\", \"so (slang: very much)\", \"so (very)\"]",
+          "text": "ду́же (adverb): very (to a high degree); very, much, very much; way too (all too, much too, to a degree that is very excessive); so (slang: very much); so (very)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "very, much, very much"
+        ],
+        "pos": [
+          "adj",
+          "adv"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 7,
+          "canonical_headword": "ду́же",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-277": {
+      "lemma": "гарний",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 1397,
+          "word": "га́рний",
+          "pos": "adjective",
+          "translations": "[\"handsome (of man: attractive)\", \"beautiful, pretty, handsome\", \"pretty (especially of women and children: pleasant, attractive)\", \"good, nice, pleasant\", \"cute (attractive or pleasing in a youthful, dainty, quaint or fun-spirited way)\", \"admirable\", \"beautiful (possessing charm and attractive)\", \"(about a person), good, ethical\", \"acting in the interest of good; ethical good intentions\", \"(colloquial) large, considerable, sizeable\"]",
+          "text": "га́рний (adjective): handsome (of man: attractive); beautiful, pretty, handsome; pretty (especially of women and children: pleasant, attractive); good, nice, pleasant; cute (attractive or pleasing in a youthful, dainty, quaint or fun-spirited way)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "beautiful, pretty, handsome",
+          "good, nice, pleasant",
+          "admirable",
+          "good, ethical",
+          "large, considerable, sizeable"
+        ],
+        "pos": [
+          "adj"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 50430,
+          "canonical_headword": "га́рний",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-278": {
+      "lemma": "її",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 17858,
+          "word": "її́",
+          "pos": "pronoun",
+          "translations": "[\"hers (that which belongs to her)\", \"(possessive) her, hers\"]",
+          "text": "її́ (pronoun): hers (that which belongs to her); (possessive) her, hers",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 19319,
+          "word": "її́",
+          "pos": "particle",
+          "translations": "[\"its (belonging to it) (determiner)\", \"her (belonging to) (determiner)\"]",
+          "text": "її́ (particle): its (belonging to it) (determiner); her (belonging to) (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "her, its (attributive)"
+        ],
+        "pos": [
+          "pron"
+        ]
+      },
+      "ulif_entries": []
+    },
+    "W-279": {
+      "lemma": "як",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 18,
+          "word": "як",
+          "pos": "adverb",
+          "translations": "[\"as (to such an extent or degree)\", \"how (in what state)\", \"as, like\", \"how (in what manner)\", \"how (to what degree)\", \"as (varying through time to the same proportion that)\", \"as (in the same way that)\"]",
+          "text": "як (adverb): as (to such an extent or degree); how (in what state); as, like; how (in what manner); how (to what degree)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "how",
+          "as, like",
+          "than",
+          "if, in case",
+          "yak"
+        ],
+        "pos": [
+          "adv",
+          "conj",
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 267645,
+          "canonical_headword": "як",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        },
+        {
+          "id": 267646,
+          "canonical_headword": "як",
+          "grammatical_label": "прислівник",
+          "homonym_index": 2
+        },
+        {
+          "id": 267647,
+          "canonical_headword": "як",
+          "grammatical_label": "сполучник",
+          "homonym_index": 3
+        },
+        {
+          "id": 267648,
+          "canonical_headword": "як",
+          "grammatical_label": "частка",
+          "homonym_index": 4
+        }
+      ]
+    },
+    "W-280": {
+      "lemma": "жаль",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 597,
+          "word": "жаль",
+          "pos": "noun",
+          "translations": "[\"regret (instance of such an emotion)\", \"regret, grief, sorrow, pity\", \"grief (sadness)\", \"pity (feeling of sympathy)\", \"pity (something regrettable)\"]",
+          "text": "жаль (noun): regret (instance of such an emotion); regret, grief, sorrow, pity; grief (sadness); pity (feeling of sympathy); pity (something regrettable)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "regret, grief, sorrow (emotional pain on account of something done or experienced in the past, with a wish that it had been different)",
+          "pity",
+          "a pity",
+          "(one) feels sorry (for), pities"
+        ],
+        "pos": [
+          "adj",
+          "noun"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 70120,
+          "canonical_headword": "жаль",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 70121,
+          "canonical_headword": "жаль",
+          "grammatical_label": "присудкове слово",
+          "homonym_index": 2
+        }
+      ]
+    },
+    "W-281": {
+      "lemma": "солодкий",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 4213,
+          "word": "соло́дкий",
+          "pos": "adjective",
+          "translations": "[\"sweet (having a pleasant taste)\", \"sugary (covered with or containing a large amount of sugar)\", \"sweet (having a taste of sugar)\"]",
+          "text": "соло́дкий (adjective): sweet (having a pleasant taste); sugary (covered with or containing a large amount of sugar); sweet (having a taste of sugar)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "sweet (having a pleasant taste)"
+        ],
+        "pos": [
+          "adj"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 221163,
+          "canonical_headword": "соло́дкий",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-282": {
+      "lemma": "дати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 169,
+          "word": "да́ти",
+          "pos": "verb",
+          "translations": "[\"give (transfer the possession of something to someone else)\", \"to give\", \"to organize\", \"to let, to allow\", \"(colloquial) to beat, to hit, to pound\", \"(colloquial) to estimate someone's age by their looks\", \"(slang) to put out, to consent to sex\", \"(colloquial) to betroth\"]",
+          "text": "да́ти (verb): give (transfer the possession of something to someone else); to give; to organize; to let, to allow; (colloquial) to beat, to hit, to pound",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to give",
+          "to organize",
+          "to let, to allow",
+          "to beat, to hit, to pound",
+          "to estimate someone's age by their looks",
+          "to put out, to consent to sex"
+        ],
+        "pos": [
+          "noun",
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 57465,
+          "canonical_headword": "да́ти",
+          "grammatical_label": "дієслово доконаного виду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-283": {
+      "lemma": "п'ять",
+      "pos": "numr",
+      "rows": [
+        {
+          "id": 715,
+          "word": "п'ять",
+          "pos": "numeral",
+          "translations": "[\"five (cardinal number)\", \"five (5)\"]",
+          "text": "п'ять (numeral): five (cardinal number); five (5)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "five (5)"
+        ],
+        "pos": [
+          "num"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 196249,
+          "canonical_headword": "п'ять",
+          "grammatical_label": "числівник кількісний",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-284": {
+      "lemma": "передати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 1319,
+          "word": "переда́ти",
+          "pos": "verb",
+          "translations": "[\"broadcast (to transmit a message or signal through radio waves or electronic means)\", \"(transitive) to hand over, to deliver, to give, to pass, to pass on, to transfer\", \"hand down (transmit in succession)\", \"(transitive) to hand down, to pass down, to bequeath (transmit in succession)\", \"pass (to move or be moved from one place to another)\", \"(transitive) to communicate, to convey (:information, message etc.)\", \"(transitive, chiefly telecommunications) to broadcast, to transmit\", \"(transitive) to render (express in words or visually)\", \"(intransitive) to give too much, to overgive\"]",
+          "text": "переда́ти (verb): broadcast (to transmit a message or signal through radio waves or electronic means); (transitive) to hand over, to deliver, to give, to pass, to pass on, to transfer; hand down (transmit in succession); (transitive) to hand down, to pass down, to bequeath (transmit in succession); pass (to move or be moved from one place to another)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to hand over, to deliver, to give, to pass, to pass on, to transfer",
+          "to hand down, to pass down, to bequeath (transmit in succession)",
+          "to communicate, to convey (:information, message etc.)",
+          "to broadcast, to transmit",
+          "to render (express in words or visually)",
+          "to give too much, to overgive"
+        ],
+        "pos": [
+          "verb"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 156850,
+          "canonical_headword": "переда́ти",
+          "grammatical_label": "дієслово доконаного виду",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-285": {
+      "lemma": "так",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 50,
+          "word": "так",
+          "pos": "adverb",
+          "translations": "[\"as (to such an extent or degree)\", \"so, thus\", \"thus (in this way or manner)\", \"sic (thus, thus written)\", \"so (slang: very much)\", \"so (in a particular manner)\", \"so (to a particular extent)\", \"that (to a great extent or degree, very)\", \"that (to a given extent or degree)\"]",
+          "text": "так (adverb): as (to such an extent or degree); so, thus; thus (in this way or manner); sic (thus, thus written); so (slang: very much)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "so, thus",
+          "yes"
+        ],
+        "pos": [
+          "adv",
+          "intj"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 230946,
+          "canonical_headword": "так",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        },
+        {
+          "id": 230947,
+          "canonical_headword": "так",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        },
+        {
+          "id": 230948,
+          "canonical_headword": "так",
+          "grammatical_label": "сполучник",
+          "homonym_index": 3
+        }
+      ]
+    },
+    "W-286": {
+      "lemma": "це",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 707,
+          "word": "це",
+          "pos": "pronoun",
+          "translations": "[\"it (subject — inanimate thing)\", \"(demonstrative) this, it\", \"this (the thing, item, etc. being indicated)\", \"that\", \"it (subject of impersonal statement)\"]",
+          "text": "це (pronoun): it (subject — inanimate thing); (demonstrative) this, it; this (the thing, item, etc. being indicated); that; it (subject of impersonal statement)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "this, it (proximal demonstrative)"
+        ],
+        "pos": [
+          "det",
+          "pron"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 254610,
+          "canonical_headword": "це",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-287": {
+      "kind": "formula",
+      "text": "Добрий день!",
+      "rows": [
+        {
+          "id": 27082,
+          "word": "до́брий день",
+          "pos": "phrase",
+          "translations": "[\"good day (greeting between sunrise and sunset)\", \"good afternoon (greeting said in the afternoon)\"]",
+          "text": "до́брий день (phrase): good day (greeting between sunrise and sunset); good afternoon (greeting said in the afternoon)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 27796,
+          "word": "до́брий де́нь",
+          "pos": "particle",
+          "translations": "[\"hello, good day, g'day, good afternoon (interjection)\"]",
+          "text": "до́брий де́нь (particle): hello, good day, g'day, good afternoon (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-288": {
+      "kind": "formula",
+      "text": "Доброго ранку!",
+      "rows": [
+        {
+          "id": 28779,
+          "word": "до́брого ра́нку",
+          "pos": "particle",
+          "translations": "[\"good morning (when seeing someone for the first time in the morning) (interjection)\", \"good morning (interjection)\"]",
+          "text": "до́брого ра́нку (particle): good morning (when seeing someone for the first time in the morning) (interjection); good morning (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-289": {
+      "kind": "formula",
+      "text": "Добрий вечір!",
+      "rows": [
+        {
+          "id": 28348,
+          "word": "до́брий ве́чір",
+          "pos": "particle",
+          "translations": "[\"good evening (greeting said in the evening) (interjection)\", \"good evening (interjection)\"]",
+          "text": "до́брий ве́чір (particle): good evening (greeting said in the evening) (interjection); good evening (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-290": {
+      "kind": "formula",
+      "text": "До побачення!",
+      "rows": [
+        {
+          "id": 27794,
+          "word": "до поба́чення",
+          "pos": "particle",
+          "translations": "[\"goodbye (farewell) (interjection)\", \"goodbye, see you later, until we meet again (interjection)\"]",
+          "text": "до поба́чення (particle): goodbye (farewell) (interjection); goodbye, see you later, until we meet again (interjection)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 27795,
+          "word": "до поба́чення",
+          "pos": "phrase",
+          "translations": "[\"see you later (goodbye)\"]",
+          "text": "до поба́чення (phrase): see you later (goodbye)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-291": {
+      "kind": "formula",
+      "text": "Будь ласка!",
+      "rows": [
+        {
+          "id": 25998,
+          "word": "будь ла́ска",
+          "pos": "adverb",
+          "translations": "[\"please (interjection to make a polite request)\"]",
+          "text": "будь ла́ска (adverb): please (interjection to make a polite request)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 25999,
+          "word": "будь ла́ска",
+          "pos": "phrase",
+          "translations": "[\"you're welcome (reply to thanks)\", \"please\", \"here you are (said when handing something over)\", \"don't mention it (it is too trivial to warrant thanks)\"]",
+          "text": "будь ла́ска (phrase): you're welcome (reply to thanks); please; here you are (said when handing something over); don't mention it (it is too trivial to warrant thanks)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 26000,
+          "word": "будь ла́ска",
+          "pos": "particle",
+          "translations": "[\"not at all (conventional reply to expression of gratitude) (interjection)\", \"my pleasure (a polite reaction to receiving thanks) (interjection)\"]",
+          "text": "будь ла́ска (particle): not at all (conventional reply to expression of gratitude) (interjection); my pleasure (a polite reaction to receiving thanks) (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-292": {
+      "kind": "formula",
+      "text": "Дякую!",
+      "rows": [
+        {
+          "id": 20168,
+          "word": "дя́кую",
+          "pos": "particle",
+          "translations": "[\"thank you (an expression of gratitude) (interjection)\", \"thank you (interjection)\", \"thanks (used to express appreciation or gratitude) (interjection)\"]",
+          "text": "дя́кую (particle): thank you (an expression of gratitude) (interjection); thank you (interjection); thanks (used to express appreciation or gratitude) (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-293": {
+      "kind": "formula",
+      "text": "Вибачте!",
+      "rows": [
+        {
+          "id": 22212,
+          "word": "ви́бачте",
+          "pos": "particle",
+          "translations": "[\"sorry (expression of regret or sorrow) (interjection)\", \"excuse me (interjection)\"]",
+          "text": "ви́бачте (particle): sorry (expression of regret or sorrow) (interjection); excuse me (interjection)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 22213,
+          "word": "ви́бачте",
+          "pos": "phrase",
+          "translations": "[\"excuse me (sorry, as apology)\"]",
+          "text": "ви́бачте (phrase): excuse me (sorry, as apology)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-294": {
+      "kind": "formula",
+      "text": "Бувай!",
+      "rows": [
+        {
+          "id": 20063,
+          "word": "бува́й",
+          "pos": "particle",
+          "translations": "[\"cheers (informal: goodbye) (interjection)\"]",
+          "text": "бува́й (particle): cheers (informal: goodbye) (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-295": {
+      "kind": "formula",
+      "text": "Вітаю!",
+      "rows": [
+        {
+          "id": 20112,
+          "word": "віта́ю",
+          "pos": "particle",
+          "translations": "[\"hello (interjection)\", \"congratulations (interjection)\"]",
+          "text": "віта́ю (particle): hello (interjection); congratulations (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-296": {
+      "kind": "formula",
+      "text": "Мене звати...",
+      "rows": [
+        {
+          "id": 25195,
+          "word": "мене звати",
+          "pos": "phrase",
+          "translations": "[\"my name is (a way to identify oneself)\"]",
+          "text": "мене звати (phrase): my name is (a way to identify oneself)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-297": {
+      "kind": "formula",
+      "text": "Моє прізвище...",
+      "rows": [],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-298": {
+      "kind": "formula",
+      "text": "Як вас звати?",
+      "rows": [],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-299": {
+      "kind": "formula",
+      "text": "Хто це?",
+      "rows": [],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-300": {
+      "kind": "formula",
+      "text": "Що це?",
+      "rows": [
+        {
+          "id": 20645,
+          "word": "що́ це",
+          "pos": "phrase",
+          "translations": "[\"what is that?\"]",
+          "text": "що́ це (phrase): what is that?",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-301": {
+      "kind": "formula",
+      "text": "У мене є...",
+      "rows": [],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-302": {
+      "kind": "formula",
+      "text": "Що нового?",
+      "rows": [],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-303": {
+      "kind": "formula",
+      "text": "Так собі.",
+      "rows": [
+        {
+          "id": 24334,
+          "word": "так собі́",
+          "pos": "adverb",
+          "translations": "[\"so-so, middling, fairly\"]",
+          "text": "так собі́ (adverb): so-so, middling, fairly",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-304": {
+      "kind": "formula",
+      "text": "На жаль.",
+      "rows": [
+        {
+          "id": 22643,
+          "word": "на жа́ль",
+          "pos": "adverb",
+          "translations": "[\"unfortunately (happening through bad luck)\"]",
+          "text": "на жа́ль (adverb): unfortunately (happening through bad luck)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-305": {
+      "kind": "formula",
+      "text": "Дуже приємно!",
+      "rows": [
+        {
+          "id": 28352,
+          "word": "ду́же приє́мно",
+          "pos": "phrase",
+          "translations": "[\"pleased to meet you (polite formula used when being introduced to somebody)\", \"pleased to meet you, nice to meet you\"]",
+          "text": "ду́же приє́мно (phrase): pleased to meet you (polite formula used when being introduced to somebody); pleased to meet you, nice to meet you",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-306": {
+      "kind": "formula",
+      "text": "Гарного дня!",
+      "rows": [
+        {
+          "id": 27024,
+          "word": "га́рного дня",
+          "pos": "phrase",
+          "translations": "[\"have a nice day (goodbye)\"]",
+          "text": "га́рного дня (phrase): have a nice day (goodbye)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-307": {
+      "kind": "formula",
+      "text": "Солодких снів!",
+      "rows": [],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-308": {
+      "kind": "formula",
+      "text": "Дати п’ять!",
+      "rows": [],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-309": {
+      "kind": "formula",
+      "text": "Передати привіт.",
+      "rows": [],
+      "kaikki": null,
+      "ulif_entries": []
+    },
+    "W-310": {
+      "lemma": "київський",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 328,
+          "word": "ки́ївський",
+          "pos": "adjective",
+          "translations": "[\"Kyivan (of or associated with the city of Kyiv)\", \"(relational) Kyiv/Kiev, Kyivan/Kievan, Kyivite\"]",
+          "text": "ки́ївський (adjective): Kyivan (of or associated with the city of Kyiv); (relational) Kyiv/Kiev, Kyivan/Kievan, Kyivite",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "Kyiv/Kiev, Kyivan/Kievan, Kyivite"
+        ],
+        "pos": [
+          "adj"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 96043,
+          "canonical_headword": "ки́ївський",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        }
+      ]
+    },
+    "W-311": {
+      "lemma": "український",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 22,
+          "word": "украї́нський",
+          "pos": "adjective",
+          "translations": "[\"Ukrainian (relating to Ukraine or its people)\"]",
+          "text": "украї́нський (adjective): Ukrainian (relating to Ukraine or its people)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "Ukrainian"
+        ],
+        "pos": [
+          "adj"
+        ]
+      },
+      "ulif_entries": [
+        {
+          "id": 242009,
+          "canonical_headword": "Украї́нський",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 242010,
+          "canonical_headword": "украї́нський",
+          "grammatical_label": "прикметник",
+          "homonym_index": 2
+        }
+      ]
     }
   }
 }

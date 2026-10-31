@@ -1,0 +1,65 @@
+level: a1
+slug: my-family
+totals:
+  all:
+    activities:
+      by_type:
+        fill-in: 4
+        group-sort: 1
+        match-up: 2
+        quiz: 2
+        translate: 1
+      total: 10
+    response_opportunities:
+      by_type:
+        fill-in: 28
+        group-sort: 10
+        match-up: 12
+        quiz: 12
+        translate: 5
+      total: 67
+    uncounted_activities:
+      by_type: {}
+      total: 0
+  inline:
+    activities:
+      by_type:
+        fill-in: 2
+        match-up: 1
+        quiz: 1
+      total: 4
+    response_opportunities:
+      by_type:
+        fill-in: 16
+        match-up: 8
+        quiz: 6
+      total: 30
+    uncounted_activities:
+      by_type: {}
+      total: 0
+  workbook:
+    activities:
+      by_type:
+        fill-in: 2
+        group-sort: 1
+        match-up: 1
+        quiz: 1
+        translate: 1
+      total: 6
+    response_opportunities:
+      by_type:
+        fill-in: 12
+        group-sort: 10
+        match-up: 4
+        quiz: 6
+        translate: 5
+      total: 37
+    uncounted_activities:
+      by_type: {}
+      total: 0
+v1_module:
+  path: curriculum/l2-uk-en/a1-v1/my-family/activities.yaml
+  sha256: c3795b9cd1db6c601fd72fd164bd4363bd350baf498a7c263364cf1ac9b14050
+  shape: inline/workbook keys
+  status: present
+v1_totals_schema: 1

@@ -6,11 +6,10 @@ totals:
       by_type:
         count-syllables: 1
         divide-words: 1
-        error-correction: 1
         group-sort: 1
         match-up: 2
         odd-one-out: 1
-        quiz: 1
+        quiz: 2
         true-false: 1
         watch-and-repeat: 1
       total: 10
@@ -18,11 +17,10 @@ totals:
       by_type:
         count-syllables: 6
         divide-words: 6
-        error-correction: 4
         group-sort: 8
         match-up: 11
         odd-one-out: 4
-        quiz: 3
+        quiz: 7
         true-false: 4
         watch-and-repeat: 0
       total: 46
@@ -34,15 +32,15 @@ totals:
       by_type:
         count-syllables: 1
         divide-words: 1
-        error-correction: 1
         match-up: 1
+        quiz: 1
       total: 4
     response_opportunities:
       by_type:
         count-syllables: 6
         divide-words: 6
-        error-correction: 4
         match-up: 6
+        quiz: 4
       total: 22
     uncounted_activities:
       by_type: {}
@@ -71,7 +69,7 @@ totals:
       total: 0
 v1_module:
   path: curriculum/l2-uk-en/a1-v1/reading-ukrainian/activities.yaml
-  sha256: ba87450e8370d148577e8ed19adfbbc83c17607e3d412647cb2a4138738eee14
+  sha256: 85d205aa217ad9783f79566803944a66ca6255ff461d508a2de16747e28d03f9
   shape: inline/workbook keys
   status: present
 v1_totals_schema: 1
