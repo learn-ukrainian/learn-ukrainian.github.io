@@ -445,6 +445,7 @@ launcher_defaults() {
   LC_MODEL_CLI=0
   LC_FORWARD_ARGS=()
   LC_CALLER_PROMPT_ARGS=()
+  LC_CALLER_PROMPT_INDICES=()
   LC_PROVIDER_ARGS=()
   LC_UNSEPARATED_PROVIDER_ARGS=0
 }
@@ -573,6 +574,7 @@ launcher_parse() {
         if [ "$LC_MODE" = "driver" ] && [ -z "$LC_EPIC" ]; then
           LC_EPIC="$1"
         else
+          LC_CALLER_PROMPT_INDICES+=("${#LC_FORWARD_ARGS[@]}")
           LC_FORWARD_ARGS+=("$1")
           LC_CALLER_PROMPT_ARGS+=("$1")
         fi
@@ -1437,6 +1439,68 @@ launcher_bind_drive_epic() {
     # Grok has no SessionStart hook to inject the lane handoff (#10835); the
     # file name is shared with every provider.
     LC_DRIVER_PROMPT+=" Grok has no SessionStart hook, so after DB render/check read .claude/${SESSION_EPIC:-$LC_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md for supplemental context; reconcile its housekeeping and in-flight lines against the newest full-content DB handoff_note before acting. Session health is the Grok canary (.venv/bin/python -m scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill); end on FAIL-HANDOFF below 8/10."
+  fi
+  local caller arg index=0 caller_index=0 is_caller value_mode=''
+  if [ "${#LC_CALLER_PROMPT_ARGS[@]}" -gt 0 ]; then
+    local -a forwarded=() callers=()
+    # Indices distinguish prompt text from identical option values. Wrappers
+    # prepend their fixed provider arguments after parsing.
+    for arg in "${LC_FORWARD_ARGS[@]}"; do
+      is_caller=0
+      if [ "$caller_index" -lt "${#LC_CALLER_PROMPT_INDICES[@]}" ] \
+        && [ "$index" -eq "$((LC_CALLER_PROMPT_INDICES[caller_index] + ${#LC_WRAPPER_PROVIDER_ARGS[@]}))" ]; then
+        is_caller=1
+        caller_index=$((caller_index + 1))
+      fi
+      if [ "$value_mode" = one ] || { [ -n "$value_mode" ] && [[ "$arg" != -* ]]; }; then
+        forwarded+=("$arg")
+        if [ "$value_mode" != many ]; then value_mode=''; fi
+      elif [ "$is_caller" = 1 ]; then
+        callers+=("$arg")
+      else
+        forwarded+=("$arg")
+        value_mode=''
+        # Resolve option arity only now: a later --harness can change it
+        # (Codex -c takes a value; Claude -c is boolean). Arguments after
+        # `--` have no caller indices and retain their original boundaries.
+        case "$LC_PROVIDER:$LC_HARNESS" in
+          codex:codex)
+            case "$arg" in
+              -c|--config|--enable|--disable|--remote|--remote-auth-token-env|--local-provider|-p|--profile|-s|--sandbox|-C|--cd|--add-dir|-a|--ask-for-approval) value_mode=one ;;
+              -i|--image) value_mode=many ;;
+            esac
+            ;;
+          claude:claude-code|codex:claude-code)
+            case "$arg" in
+              --agent|--agents|--append-system-prompt|--append-system-prompt-file|--autocompact|--debug-file|--environment|--fallback-model|--input-format|--json-schema|--max-budget-usd|-n|--name|--output-format|--permission-mode|--permission-prompts|--plugin-dir|--plugin-url|--remote-control-session-name-prefix|--session-id|--setting-sources|--settings|--system-prompt|--system-prompt-file|--system-prompt-snapshot) value_mode=one ;;
+              --add-dir|--allowedTools|--allowed-tools|--betas|--disallowedTools|--disallowed-tools|--file|--mcp-config|--tools) value_mode=many ;;
+              --cloud|-d|--debug|--from-pr|--prompt-suggestions|--remote-control|-r|--resume|--teleport|-w|--worktree) value_mode=optional ;;
+            esac
+            ;;
+          cursor:cursor-agent)
+            case "$arg" in
+              --api-key|-H|--header|-e|--endpoint|--output-format|--mode|--sandbox|--workspace|--add-dir|--plugin-dir|--worktree-base) value_mode=one ;;
+              --resume|-w|--worktree) value_mode=optional ;;
+            esac
+            ;;
+          gemini:agy)
+            case "$arg" in
+              --add-dir|--agent|--conversation|-i|--input-format|--json-schema|--log-file|--mode|--new-project|--output-format|-p|--print|--print-timeout|--project|--prompt|--prompt-interactive|--settings) value_mode=one ;;
+            esac
+            ;;
+        esac
+      fi
+      index=$((index + 1))
+    done
+    LC_FORWARD_ARGS=("${forwarded[@]}")
+    if [ "${#callers[@]}" -gt 0 ]; then
+      LC_DRIVER_PROMPT+=$'\n\nCaller instructions:'
+      for caller in "${callers[@]}"; do
+        LC_DRIVER_PROMPT+=$'\n'"$caller"
+      done
+    fi
+    # The shared binding owns caller text now; adapters must not prepend it.
+    LC_CALLER_PROMPT_ARGS=()
   fi
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")

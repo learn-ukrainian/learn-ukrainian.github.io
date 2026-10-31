@@ -79,7 +79,9 @@ def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str, tmp_p
     lane = "devops" if selector == "infra.devops" else selector
     binding_start = f"First run lu-driver-state render --lane {lane}, then lu-driver-state check --lane {lane}."
     assert prompt.count(binding_start) == 1
-    assert prompt.startswith(" ".join(prompts) + ("\n\n" if prompts else "") + binding_start)
+    assert prompt.startswith(binding_start)
+    if prompts:
+        assert prompt.endswith("\n\nCaller instructions:\n" + "\n".join(prompts))
     assert "do not claim, renew, or reopen the lease" in prompt
 
 
