@@ -99,6 +99,10 @@ successor's changes.
 `delivered_paths` in `scripts/dispatcher/ownership.py` excludes commits reachable from the
 base and task start, so using the PR branch as base can make the ownership check count newer
 main commits as the worker's changes and refuse the push when the worker brings main into its branch.
+A brief never tells a worker to bring current main into its branch before review: the merge
+queue tests the PR against main at enqueue, so a worker refreshes from main only when GitHub
+reports a conflict or a required check fails because of a change on main, since each refresh
+restarts exact-head CI.
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
