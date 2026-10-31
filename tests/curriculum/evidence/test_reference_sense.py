@@ -578,28 +578,36 @@ def test_head_blob_reader_path_filter_and_nonblob(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "meaning,content,name,expected",
+    "meaning,content,name,expected,open_lemma",
     [
-        ("confidential", "An unrelated confidential note", "note.txt", False),
-        ("confidential", "synthetic: confidential", "note.txt", True),
-        ("confidential", "form-alias: confidential", "note.txt", True),
-        ("confidential", "lemma: synthetic\nmeaning: confidential\n", "note.yaml", True),
-        ("confidential", '{"lemma": "synthetic",\n"meaning": "confidential"}', "note.json", True),
-        ("confidential", r'{"lemma": "\u0073ynthetic", "meaning": "\u0063onfidential"}', "note.json", True),
-        ("confidential", "- lemma: synthetic\n- meaning: confidential\n", "note.yaml", False),
-        ("target", "synthetic: target", "note.txt", False),
-        ("invented private destination", "INVENTED  PRIVATE\nDESTINATION", "note.txt", True),
-        ("open dictionary destination", "open dictionary destination", "note.txt", False),
-        ("target (an intended destination)", "target (an intended destination)", "note.txt", False),
+        ("confidential", "An unrelated confidential note", "note.txt", False, "synthetic"),
+        ("confidential", "synthetic: confidential", "note.txt", True, "synthetic"),
+        ("confidential", "form-alias: confidential", "note.txt", True, "synthetic"),
+        ("confidential", "lemma: synthetic\nmeaning: confidential\n", "note.yaml", True, "synthetic"),
+        ("confidential", '{"lemma": "synthetic",\n"meaning": "confidential"}', "note.json", True, "synthetic"),
+        ("confidential", r'{"lemma": "\u0073ynthetic", "meaning": "\u0063onfidential"}', "note.json", True, "synthetic"),
+        ("confidential", "- lemma: synthetic\n- meaning: confidential\n", "note.yaml", False, "synthetic"),
+        ("target", "synthetic: target", "note.txt", False, "synthetic"),
+        ("invented private destination", "INVENTED  PRIVATE\nDESTINATION", "note.txt", True, "synthetic"),
+        ("open dictionary destination", "synthetic: open dictionary destination", "note.txt", False, "synthetic"),
+        ("target (an intended destination)", "synthetic: target (an intended destination)", "note.txt", False, "synthetic"),
+        (
+            "target (an intended destination) confidential",
+            "synthetic: target (an intended destination) confidential",
+            "note.txt",
+            True,
+            "synthetic",
+        ),
+        ("target (an intended destination)", "synthetic: target (an intended destination)", "note.txt", True, "outsider"),
     ],
 )
-def test_leak_signals_mapping_wording_and_public_exceptions(bound, tmp_path, meaning, content, name, expected):
+def test_leak_signals_mapping_wording_and_public_exceptions(bound, tmp_path, meaning, content, name, expected, open_lemma):
     root, api, _b = bound
     api.close()
     with sqlite3.connect(api.sources_db) as db:
         db.execute(
-            "UPDATE dmklinger_uk_en SET translations=? WHERE id=1",
-            (json.dumps(["open dictionary destination", "target (an intended destination)"]),),
+            "UPDATE dmklinger_uk_en SET translations=?, word=? WHERE id=1",
+            (json.dumps(["open dictionary destination", "target (an intended destination)"]), open_lemma),
         )
     repo = tmp_path / "scan-probe"
     repo.mkdir()
@@ -615,6 +623,8 @@ def test_leak_signals_mapping_wording_and_public_exceptions(bound, tmp_path, mea
     store = {"words": [{**WORD, "forms": [{"form": "form-alias"}]}]}
     result = sense_cli.leak_scan(repo, private, context, store, api, base="HEAD^")
     assert (result["status"] == "failed") == expected, result
+    if expected and content.startswith("synthetic:"):
+        assert result["signals"]["mapping_copy"] == 1
     assert result["tracked_files"] == 1
     assert result["tracked_bytes"] == len(content.encode())
     assert meaning not in json.dumps(result)

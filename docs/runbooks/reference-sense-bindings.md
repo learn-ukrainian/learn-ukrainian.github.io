@@ -185,9 +185,12 @@ The scan distinguishes two signals after NFC, casefold and whitespace
 normalization: distinctive private wording (at least three word tokens, equal
 to no open-dictionary atom or span for that lemma), and a non-public private
 lemma–meaning mapping appearing on one line or in one YAML/JSON record. Store
-forms also identify the lemma. A meaning equal to an open-dictionary atom for
-that lemma is public data and never counts; an unrelated common one-word
-meaning alone never counts. Validated binding `span` and store `gloss_en`
+forms also identify the lemma. A meaning equal to an open-dictionary atom or
+whole span for that lemma is public data and never counts for either signal.
+The comparison uses the same normalization as the existing atom exemption;
+a span must match in full and belong to the same lemma. Private extensions
+receive no span exemption. An unrelated common one-word meaning alone never
+counts. Validated binding `span` and store `gloss_en`
 locations retain their scalar exemptions; so does a meaning exactly equal to
 its record's exempt gloss cited from an open-dictionary row, in the store or
 in the one request record (same lemma, POS and entry) that built it.

@@ -628,12 +628,12 @@ def leak_scan(
         entry = entries[locator]
         lemma = sources.unstressed_headword(entry["lemma"])
         meaning = matcher.normalize(row["meaning"], entry.get("pos", "noun"))
-        if meaning in public_atoms.get(lemma, set()):
+        if meaning in public_atoms.get(lemma, set()) or meaning in public_spans.get(lemma, set()):
             continue
         mapping_meanings.setdefault(meaning, set()).add(locator)
         for form in {_scan_normalize(lemma), _scan_normalize(entry.get("stressed", lemma)), *forms.get(lemma, set())}:
             mapping_forms.setdefault(form, set()).add(locator)
-        if len(re.findall(r"\b\w+\b", meaning)) >= 3 and meaning not in public_spans.get(lemma, set()):
+        if len(re.findall(r"\b\w+\b", meaning)) >= 3:
             distinctive.setdefault(meaning, set()).add(locator)
     wording_pattern, wording_prefixes = _scan_pattern(set(distinctive))
     mapping_pattern, mapping_prefixes = _scan_pattern(set(mapping_meanings) | set(mapping_forms))
