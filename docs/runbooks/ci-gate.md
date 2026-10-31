@@ -329,9 +329,9 @@ files; those are imported only with `import type`, which the compiler erases.
 
 Eight test files are listed in `scripts/ci/history-tests.txt`. All eight read old
 commits: `git ls-tree`/`git show`/`git cat-file` of an old SHA, a recorded historical
-commit, a frozen base commit, and `origin/main` ancestry. On a shallow checkout,
-fetching `main` from GitHub downloads all of main's history, 65-77
-s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
+commit, a frozen base commit, and `origin/main` ancestry. Fetching `main` from GitHub on a
+shallow checkout downloaded all of main's history, 65-77 s per test instead of
+0.3 s, which is why the dispatch tests that did so left the list. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out
 with full history (`fetch-depth: 0`), a full clone with every blob (see
 "Full-history checkouts are blobless" below). Shards 2..N check out only the tested
@@ -343,9 +343,9 @@ with network git blocked in the pytest step. It was compared test by test with
 the full-history run 36650655215. Only seven files changed outcome (28
 tests, passed to failed). The one other change is a `test_ci_split` workflow
 assertion that failed on the experiment's own `GIT_ALLOW_PROTOCOL` edit. None of them skipped:
-each failed loudly, with git exit 128 or a blocked https transport. Without the
-block, the network fetch in the two delegate tests pulled main's history into
-their shard and hid two of the five history files. A new test that needs
+each failed loudly, with git exit 128 or a blocked https transport. Before the block, the
+network fetch in the two delegate tests (no longer listed) pulled main's
+history into their shard and hid two of the five history files then listed. A new test that needs
 history or fetches from GitHub therefore fails on a shallow shard; add its file
 to the list.
 
