@@ -98,7 +98,7 @@ def test_pins_and_custom_ladders_admit_grok(profile, risk, name):
 
 def test_closeout_cli_selects_cursor_grok_with_a_durable_receipt(tmp_path, capsys):
     snapshot = tmp_path / "routing.json"
-    snapshot.write_text(json.dumps({"claude": "unhealthy"}))
+    snapshot.write_text(json.dumps({"claude": "unhealthy", "agy": "unhealthy"}))
     state = tmp_path / "state.json"
     code = closeout_cli.main(["--state-file", str(state), "resolve-reviewer", "--author-model", "gpt-6.1-sol", "--review-profile", "code", "--owned-path", "site/src/app.ts", "--risk", "critical", "--routing-snapshot-file", str(snapshot)])
     payload = json.loads(capsys.readouterr().out)
@@ -116,7 +116,7 @@ def test_catalog_admits_cursor_grok_directly_after_opus(risk):
     catalog = load_model_catalog()
     ladder = [name for rung in catalog["review_ladders"][risk] for name in rung]
     opus = ladder.index("claude-opus-5-5")
-    assert ladder[opus + 1:opus + 2] == list(GROK_SEATS)
+    assert ladder[opus:opus + 3] == ["claude-opus-5-5", "claude-opus-5-5-agy", *GROK_SEATS]
     for name in GROK_SEATS:
         candidate = catalog["review_candidates"][name]
         assert candidate.get("last_resort", False) is False

@@ -1097,13 +1097,13 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "9fab692ab2d3d8e831b04181542e65d4fb59a4b492372450c0680257f47884ff"),
-        ("claude-opus-5-5", "low", "ordinary.py", "5007c0c64051006d4b6e5305c3ed14e69d4fd020763dc9c30bb2d2e34973adc2"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "eb6272953531b099b16d34012de05a6f685e7ee9e343373e658801649490cf12"),
+        ("claude-opus-5-5", "low", "ordinary.py", "fd761143b017fe0fdde1ff97c1bb8f79505e4a78d818fd6b22c40737e9475770"),
         (
             "gpt-6.1-sol",
             "low",
             "scripts/agent_runtime/target_admission.py",
-            "677129727293fbb4bc95db4ceb2bd43be3f8a7ad4fb1f611fdd39412e0a2d67b",
+            "c3d81093d6ca5d3fde36502dc5eba5bb1b434ed668d4232278add2a2f42c0599",
         ),
     ],
 )

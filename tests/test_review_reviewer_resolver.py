@@ -462,7 +462,7 @@ def test_critical_review_never_falls_back_to_fable(author):
         ResolverInputs(
             author_model=author,
             risk="critical",
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "cursor": "healthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"claude": "unhealthy", "agy": "unhealthy", "codex": "unhealthy", "cursor": "healthy"}, claude_account=HOST_ACCOUNT,
         )
     )
     assert resolution.selected.concrete_model == "grok-4.7"
@@ -927,7 +927,7 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practica
 
 def test_dispatch_capacity_exclusions_do_not_change_normal_resolver_selection():
     snapshot = {
-        "agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "cool"}},
+        "agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "cool"}, "agy": {"status": "unhealthy"}},
         "diagnostics": {"stale": False},
         "review_capacity_exclusions": {OPENAI_FRONTIER.name: "weekly deficit"},
     }
@@ -1085,20 +1085,22 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 def test_ladders_place_cursor_grok_directly_after_opus(risk):
     ladder = REVIEW_LADDERS[risk]
     # No Claude model reviews through Cursor (D-129, #10464): Grok's Cursor route is the last frontier rung.
-    assert [rung[0].name for rung in ladder[:3]] == [
+    assert [rung[0].name for rung in ladder[:4]] == [
         "openai_frontier",
         "claude-opus-5-5",
+        "claude-opus-5-5-agy",
         "grok-4.7-cursor-fallback",
     ]
     if risk == "critical":
-        assert len(ladder) == 3
+        assert len(ladder) == 4
     elif risk == "high":
-        assert len(ladder) == 3
+        assert len(ladder) == 4
         assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
     else:
-        assert ladder[3][0].name == "claude-sonnet-5-5"
-        assert ladder[4][0].name == "gemini-3.8-flash-high"
-        assert len(ladder) == 5
+        assert ladder[4][0].name == "claude-sonnet-5-5"
+        assert ladder[5][0].name == "claude-sonnet-5-5-agy"
+        assert ladder[6][0].name == "gemini-3.8-flash-high"
+        assert len(ladder) == 7
         assert "muse" not in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
@@ -1211,7 +1213,7 @@ def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy
             author_model="codex:gpt-6.1-sol",
             domain="infra",
             risk="medium",
-            routing_snapshot={"claude": "unhealthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"claude": "unhealthy", "agy": "unhealthy"}, claude_account=HOST_ACCOUNT,
         ),
         ladder=(*REVIEW_LADDERS["high"], (GROK_4_7_CURSOR_FALLBACK,)),
     )
@@ -1224,7 +1226,7 @@ def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy
             author_model="codex:gpt-6.1-sol",
             domain="infra",
             risk="medium",
-            routing_snapshot={"claude": "unhealthy"},
+            routing_snapshot={"claude": "unhealthy", "agy": "unhealthy"},
             owned_paths=("scripts/agent_runtime/adapters/grok_build.py",), claude_account=HOST_ACCOUNT,
         ),
         ladder=(*REVIEW_LADDERS["high"], (GROK_4_7_CURSOR_FALLBACK,)),
@@ -1681,6 +1683,7 @@ _SOL_OPUS_GROK = {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
 _HIGH_SEATS = {
     "openai_frontier",
     "claude-opus-5-5",
+    "claude-opus-5-5-agy",
     "grok-4.7-cursor-fallback",
 }
 _SOL_UNAVAILABLE = {"codex": "unhealthy"}
@@ -1722,7 +1725,7 @@ def test_high_risk_resolves_to_sol_opus_or_grok(key):
     assert resolution.selected is not None
     assert resolution.selected.concrete_model == expected
     assert resolution.selected.concrete_model in _SOL_OPUS_GROK
-    assert resolution.selected.transport in {"native_codex", "native_claude", "native_grok", "cursor"}
+    assert resolution.selected.transport in {"native_codex", "native_claude", "native_grok", "cursor", "agy"}
 
 
 _HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol, claude-opus-5-5"
@@ -1815,7 +1818,7 @@ def test_security_qualified_reviewer_unavailable_refuses_without_downgrade(launc
             author_model="gpt-6.1-sol",
             risk="low",
             changed_paths=(launcher_path,),
-            routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"claude": "unhealthy", "agy": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
     assert result.resolved_risk == "critical"
