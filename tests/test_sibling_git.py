@@ -489,6 +489,29 @@ def test_remove_unreadable_reachability_retains_tree(world, managed, monkeypatch
         assert snapshot(world[1]) == before
 
 
+def test_worktree_remove_names_record_damaged_between_probe_and_claim_scan(world, managed, monkeypatch):
+    """Defect class: a refusal caused by a damaged task record loses the locator the operator needs."""
+    primary, _, _ = world
+    damaged = primary / "batch_state/tasks/zeroed.json"
+    original = wc.active_worktree_claim_refusal
+
+    def damage_between_probe_and_claim(*args, **kwargs):
+        damaged.write_bytes(b"\x00")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(wc, "active_worktree_claim_refusal", damage_between_probe_and_claim)
+    try:
+        code, _, err = invoke("worktree-remove", managed)
+        locator = "batch_state/tasks/zeroed.json"
+        assert code == 2 and locator in err and "local work preserved" in err
+        assert str(damaged) not in err
+        assert "unreadable" not in err and "refusing worktree removal" not in err
+        assert "artifact preservation" not in err and "permission denied" not in err
+        assert managed.exists()
+    finally:
+        damaged.unlink(missing_ok=True)
+
+
 def test_remove_recorded_base_proof_matching_preserves_primaries(world, managed):
     # Equivalent to #9742's matching-base case: a finished record forces the
     # identity lookup to populate a cold cache unless publication is disabled.
