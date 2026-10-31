@@ -30,14 +30,7 @@ def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatc
     )
     monkeypatch.setattr(model_pause, "account_used_pct", lambda account: lambda lane: 90)
     native = REVIEW_CANDIDATES["claude-opus-5-5"]
-    agy = replace(
-        GEMINI,
-        name="agy-opus",
-        concrete_model="claude-opus-5-5-high",
-        family=native.family,
-        model_roles=native.model_roles,
-        suitability_roles=native.suitability_roles,
-    )
+    agy = REVIEW_CANDIDATES["claude-opus-5-5-agy"]
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="low", claude_account=HOST_ACCOUNT)
 
     native_result = evaluate_candidate(native, inputs)
@@ -134,11 +127,13 @@ def test_gemini_independence_and_unhealthy_route():
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
-def test_automatic_ladder_can_use_gemini_when_other_routes_unavailable(risk):
+def test_automatic_ladder_uses_qualified_agy_model_when_other_routes_unavailable(risk):
     snapshot = {route: "unhealthy" for route in {candidate.route for candidate in REVIEW_CANDIDATES.values()}}
     snapshot["agy"] = "healthy"
     result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
-    assert (result.selected.name if result.selected else None) == (GEMINI.name if risk in {"low", "medium"} else None)
+    assert result.selected.name == (
+        "claude-sonnet-5-5-agy" if risk in {"low", "medium"} else "claude-opus-5-5-agy"
+    )
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
@@ -221,7 +216,7 @@ def test_red_team_pin_cannot_override_outside_family_preference():
             author_model="gpt-6.1-sol",
             risk="critical",
             subject_seats=frozenset({"codex"}),
-            routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"claude": "unhealthy", "agy": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}, claude_account=HOST_ACCOUNT,
         ),
     ],
 )
@@ -321,7 +316,7 @@ SONNET = REVIEW_CANDIDATES["claude-sonnet-5-5"]
 RISKS = ("low", "medium", "high", "critical")
 D129_AUTHORS = ("claude-opus-5-5", "gpt-6.1-sol", "grok-4.7", "claude-sonnet-5-5")
 SECURITY_PATH = "scripts/review/reviewer_resolver.py"
-FRONTIER_DOWN = {"codex": "unhealthy", "claude": "unhealthy"}
+FRONTIER_DOWN = {"codex": "unhealthy", "claude": "unhealthy", "agy": "unhealthy"}
 
 
 def claude_on_cursor(row):

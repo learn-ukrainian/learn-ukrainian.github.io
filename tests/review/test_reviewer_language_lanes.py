@@ -151,7 +151,7 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
 
 
 def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
-    """#10073 admits native AGY code review only; infra keeps a qualified fallback."""
+    """Gemini stays excluded from infra; AGY Claude supplies a qualified fallback."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -162,7 +162,8 @@ def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
         ),
     )
     assert resolution.selected is not None
-    assert resolution.selected.concrete_model == "grok-4.7"
+    assert resolution.selected.concrete_model == "claude-sonnet-5-5"
+    assert resolution.selected.route == "agy"
     assert all(item.status == "excluded" for item in resolution.trace if item.family == "google")
     assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7-cursor-fallback"]
     dark = resolve_reviewer(

@@ -15,9 +15,11 @@ from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 def snapshot(*, remaining=54, short=96, stale=False, **lane):
+    """Isolate the native Claude meter with its separate AGY alternative unavailable."""
     return {
         "diagnostics": {"stale": stale, "records_loaded": 5},
         "agents": {
+            "agy": {"status": "unhealthy"},
             "claude": {
                 "status": "hot",
                 "status_source": "weekly_pace",

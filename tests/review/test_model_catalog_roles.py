@@ -82,12 +82,13 @@ def test_authorities_have_one_native_holder_per_family():
     assert [(row.model_id, row.family, row.transport) for row in result.candidates] == [
         ("gpt-6.1-sol", "openai", "native_codex"),
         ("claude-opus-5-5", "anthropic", "native_claude"),
+        ("claude-opus-5-5", "anthropic", "agy"),
     ]
     assert all(row.decision_reference and row.qualification_reference is None for row in result.candidates)
 
 
 def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_pins(catalog):
-    """Opus has native and AGY wire IDs; its authority seat remains native-only."""
+    """Opus has native and AGY review routes, and neither uses Cursor."""
     result = resolve_role("legacy_reviewers", purpose="launch", transport="cursor")
     (cursor,) = (row for row in result.candidates if row.seat == "xai_reviewer")
     assert catalog["models"]["grok-4.7"]["routing_wire_ids"] == {
@@ -97,13 +98,12 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_p
     assert not cursor.exclusion_reasons
     assert cursor.argv[-1] == cursor.wire_id
     assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"].get("last_resort", False) is False
-    (opus,) = resolve_role("anthropic_authority_reviewer", purpose="launch", transport="cursor").candidates
-    assert (opus.wire_id, opus.transport, opus.exclusion_reasons) == (
-        "claude-opus-5-5",
-        "native_claude",
-        ("transport_mismatch",),
-    )
-    assert set(catalog["seats"]["anthropic_authority"]["routes"]) == {"native"}
+    opus_routes = resolve_role("anthropic_authority_reviewer", purpose="launch", transport="cursor").candidates
+    assert [(row.wire_id, row.transport, row.exclusion_reasons) for row in opus_routes] == [
+        ("claude-opus-5-5", "native_claude", ("transport_mismatch",)),
+        ("claude-opus-5-5-high", "agy", ("transport_mismatch",)),
+    ]
+    assert list(catalog["seats"]["anthropic_authority"]["routes"]) == ["native", "agy"]
     assert catalog["models"]["claude-opus-5-5"]["routing_wire_ids"] == {
         "native_claude": "claude-opus-5-5",
         "agy": "claude-opus-5-5-high",
@@ -181,10 +181,11 @@ def test_family_capability_isolation_subject_and_explicit_pin_exclusions():
         "excluded_seats": ["anthropic_authority"], "excluded_families": ["anthropic"],
         "pinned_model": "gpt-6.1-sol",
     })
-    (opus,) = result.candidates
-    assert {"family_mismatch", "subject_seat_excluded", "subject_family_excluded",
-            "required_capability_missing", "explicit_pin_mismatch"} <= set(opus.exclusion_reasons)
-    assert "isolation_required" not in opus.exclusion_reasons
+    assert [row.route_name for row in result.candidates] == ["native", "agy"]
+    for opus in result.candidates:
+        assert {"family_mismatch", "subject_seat_excluded", "subject_family_excluded",
+                "required_capability_missing", "explicit_pin_mismatch"} <= set(opus.exclusion_reasons)
+        assert ("isolation_required" in opus.exclusion_reasons) == (opus.route_name == "agy")
     result = resolve_role("legacy_reviewers", purpose="inspect", family="openai", context={
         "required_capabilities": ["unsupported"], "isolation_required": True,
         "excluded_seats": ["xai_reviewer"], "excluded_families": ["xai"],
