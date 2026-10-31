@@ -262,6 +262,52 @@ _FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
 _JSON_VALUE_START_RE = re.compile(r" {0,3}[\[{]")
 
 
+class _UnreadableFindings(ValueError):
+    """A findings envelope is present but cannot be read completely."""
+
+
+def _looks_like_findings(source: str) -> bool:
+    """Read only valid root-object keys before the first broken key or value."""
+    source = source.lstrip(" \t\r\n")
+    if not source.startswith("{"):
+        return False
+    decoder = json.JSONDecoder()
+    position = 1
+    while position < len(source):
+        position += len(source[position:]) - len(source[position:].lstrip(" \t\r\n"))
+        try:
+            key, position = decoder.raw_decode(source, position)
+        except json.JSONDecodeError as exc:
+            if exc.msg.startswith("Unterminated string"):
+                # A cut inside the key itself may still name the whole field.
+                token = re.split(r"[\r\n]", source[position:], maxsplit=1)[0]
+                try:
+                    return json.loads(token + '"') in _FINDINGS_ENVELOPE_KEYS
+                except ValueError:
+                    pass
+            return False
+        except ValueError:
+            return False
+        if not isinstance(key, str):
+            return False
+        if key in _FINDINGS_ENVELOPE_KEYS:
+            return True
+        position += len(source[position:]) - len(source[position:].lstrip(" \t\r\n"))
+        if source[position : position + 1] != ":":
+            return False
+        position += 1
+        position += len(source[position:]) - len(source[position:].lstrip(" \t\r\n"))
+        try:
+            _, position = decoder.raw_decode(source, position)
+        except ValueError:
+            return False
+        position += len(source[position:]) - len(source[position:].lstrip(" \t\r\n"))
+        if source[position : position + 1] != ",":
+            return False
+        position += 1
+    return False
+
+
 def _top_level_json_values(response: str) -> Iterator[Any]:
     """Decoded JSON of each top-level block: a ``json`` or bare fence, or a value that starts a paragraph line.
 
@@ -282,7 +328,13 @@ def _top_level_json_values(response: str) -> Iterator[Any]:
             try:
                 value = json.loads(token.content)
             except ValueError:
+                if _looks_like_findings(token.content):
+                    raise _UnreadableFindings("inconclusive: findings JSON cannot be decoded") from None
                 continue
+            if isinstance(value, dict) and _FINDINGS_ENVELOPE_KEYS & value.keys():
+                start, end = token.map
+                if end - 1 <= start or not _closes_code_fence(lines[end - 1], token.markup):
+                    raise _UnreadableFindings("inconclusive: findings fence is unclosed")
             yield value
         elif token.type in {"paragraph_open", "heading_open"} and token.map:
             for number in range(*token.map):
@@ -292,6 +344,8 @@ def _top_level_json_values(response: str) -> Iterator[Any]:
                 try:
                     value, consumed = decoder.raw_decode(text, starts[number] + match.end() - 1)
                 except ValueError:
+                    if _looks_like_findings(text[starts[number] + match.end() - 1 :]):
+                        raise _UnreadableFindings("inconclusive: findings JSON cannot be decoded") from None
                     continue
                 yield value
 
@@ -313,9 +367,101 @@ def invalid_findings_block(response: str, *, stated: str | None = None) -> str |
                 checked_findings_payload(payload, stated=stated)
             except (ContractError, ReviewPublicationError) as exc:
                 return f"top-level findings block fails validation: {exc}"
+    except _UnreadableFindings as exc:
+        return str(exc)
     except RecursionError:
         return "top-level blocks cannot be decided"
     return None
+
+
+# These are declarations by the reviewer about its own unfinished work, not
+# general uses of "incomplete" in findings about the code under review.
+_INCOMPLETE_REVIEW_RE = re.compile(
+    r"(?:^|[.!?:]\s+)(?:(?:however|unfortunately),?\s+)?(?:"
+    r"(?:I|we)\s+(?:(?:could|can|did|have)\s+not|cannot|couldn't|can't|didn't|haven't|"
+    r"(?:am|are|was|were)\s+unable\s+to)\s+"
+    r"(?:finish(?:ed)?|complete(?:d)?)\s+(?:(?:the|this|my|our|full|entire)\s+)*"
+    r"(?:review(?:ing)?|check(?:ing)?|audit(?:ing)?)\b"
+    r"|(?:(?:the|this|my|our)\s+)?review\s+"
+    r"(?:(?:is|was|remains?)\s+(?:incomplete|unfinished|not\s+(?:complete|completed|finished))|"
+    r"(?:did\s+not|didn't|has\s+not|hasn't)\s+(?:finish(?:ed)?|complete(?:d)?))\b)",
+    re.IGNORECASE,
+)
+
+
+def _without_inline_json(text: str) -> str:
+    """Leave own prose around decoded JSON, whose explanation is read separately."""
+    parts: list[str] = []
+    cursor = offset = 0
+    for line in _commonmark_lines(text, keepends=True):
+        match = _JSON_VALUE_START_RE.match(line)
+        start = offset + match.end() - 1 if match else -1
+        offset += len(line)
+        if match is None or start < cursor:
+            continue
+        try:
+            _, end = json.JSONDecoder().raw_decode(text, start)
+        except ValueError:
+            continue
+        parts.extend((text[cursor:start], "\n"))
+        cursor = end
+    return "".join((*parts, text[cursor:]))
+
+
+def _completion_prose(response: str) -> list[str]:
+    """Own paragraphs, with verdict/score metadata separated from their prose."""
+    from markdown_it import MarkdownIt
+
+    visible = _without_inline_json(_without_code_fences(response, keep_unclosed=False))
+    prose = []
+    for token in MarkdownIt("commonmark").parse(visible):
+        if token.type == "inline":
+            rendered = "".join(
+                "\n" if child.type in {"softbreak", "hardbreak"} else " " if child.type == "code_inline" else child.content
+                for child in token.children or []
+            )
+            lines = []
+            continuations = []
+            for line in _commonmark_lines(rendered):
+                metadata = False
+                while True:
+                    candidate = line.lstrip(" \t.!?:;") if metadata else line
+                    match = _REVIEW_VERDICT_LINE_RE.match(candidate) or _REVIEW_SCORE_LINE_RE.match(candidate)
+                    if match is None:
+                        break
+                    # Render emphasis first, then consume the whole leading
+                    # metadata sequence so a score cannot hide its explanation.
+                    metadata = True
+                    line = candidate[match.end():]
+                if metadata:
+                    lines.append("\n" + candidate + "\n")
+                    # A metadata tail can also be own prose continued by a
+                    # soft wrap, rather than an annotation before a new sentence.
+                    continuations.append("\n" + candidate)
+                else:
+                    lines.append(line)
+                    continuations.append(line)
+            for paragraphs in (lines, continuations):
+                prose.extend(
+                    paragraph.replace("\n", " ").strip()
+                    for paragraph in re.split(r"\n[ \t]*\n", "\n".join(paragraphs))
+                )
+    return prose
+
+
+def declares_incomplete_review(response: str) -> bool:
+    """Whether own prose or a findings explanation declares the review unfinished.
+
+    Quoted blocks, code and inline examples are not reviewer declarations.
+    No new completion field is required of existing complete replies.
+    """
+    prose = _completion_prose(response)
+    for payload in _top_level_json_values(response):
+        if isinstance(payload, dict) and _FINDINGS_ENVELOPE_KEYS & payload.keys():
+            overall = payload.get("overall")
+            if isinstance(overall, dict) and isinstance(overall.get("explanation"), str):
+                prose.extend(_completion_prose(overall["explanation"]))
+    return any(_INCOMPLETE_REVIEW_RE.search(text) for text in prose)
 
 
 def declares_missing_capabilities(response: str) -> bool:

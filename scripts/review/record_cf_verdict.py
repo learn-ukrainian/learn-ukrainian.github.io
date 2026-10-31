@@ -100,6 +100,7 @@ from scripts.review.verdict_parser import (
     _findings_json_verdicts,
     _without_code_fences,
     checked_findings_payload,
+    declares_incomplete_review,
     declares_missing_capabilities,
     invalid_findings_block,
     recognized_verdicts,
@@ -157,6 +158,8 @@ def _normalize_verdict(reply: str) -> str:
     if reason := invalid_findings_block(reply, stated=stated):
         beside = " beside a verdict line" if verdict_line else ""
         raise RecordError(f"reply carries an invalid findings block{beside}: {reason}")
+    if declares_incomplete_review(reply):
+        raise RecordError("inconclusive: reviewer declares an incomplete review")
     if verdict_line:
         findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply, stated=stated)}
         offset = 0
@@ -199,6 +202,8 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
             raise RecordError(f"structured review verdict or findings invalid: {exc}") from None
         except ReviewPublicationError:
             raise RecordError("structured review verdict or findings invalid") from None
+        if declares_incomplete_review(reply):
+            raise RecordError("inconclusive: reviewer declares an incomplete review")
         return verdict, len(evidence.findings) if evidence is not None else "unknown"
     return normalize_verdict(reply), "unknown"
 
