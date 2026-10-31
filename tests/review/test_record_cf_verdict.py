@@ -884,3 +884,21 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
     assert marker["coverage"] == []
     assert marker["denominator"] == ["card-a", "card-b"]
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_COVERAGE
+
+    hidden = reply.replace(
+        '"quote": "немає"',
+        '"finding": "Frozen input quote: \\"немає\\"."',
+    )
+    write_task(
+        tasks,
+        task_id="review-hidden",
+        reply=hidden,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-hidden", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    hidden_marker = sweep.parse_marker(comments[1]["body"])
+    assert hidden_marker["void"] == "quote-mismatch"
+    assert hidden_marker["coverage"] == []

@@ -815,3 +815,11 @@ def test_item_coverage_gate():
     ).replace("Coverage: card-a,card-b\n", "Coverage: card-a,card-b\nChunk void: quote-mismatch\n")
     assert sweep.parse_marker(voided["body"])["void"] == "quote-mismatch"
     assert sweep.lookup_verdict([voided], SHA, "fleet").state == sweep.NEEDS_COVERAGE
+
+    code_profile = _covered("code-chunk", ("card-b",))
+    code_profile["body"] = code_profile["body"].replace(" review_profile=ukrainian", "").replace(
+        "Review profile: ukrainian\n", ""
+    ).replace(" sources_calls=3", "").replace("Sources MCP calls: 3\n", "")
+    assert "review_profile" not in sweep.parse_marker(code_profile["body"])
+    mixed = [_covered("uk-partial", ("card-a",)), code_profile]
+    assert sweep.lookup_verdict(mixed, SHA, "fleet").state == sweep.NEEDS_COVERAGE

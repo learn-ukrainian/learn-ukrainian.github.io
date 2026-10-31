@@ -443,7 +443,12 @@ def _coverage_decision(
     approvals = [item for item in active if item[2]["verdict"] not in REJECTED]
     by_family: dict[str, set[str]] = {}
     for _, _, marker in approvals:
-        if not marker.get("denominator") or marker.get("review_mode", "cross_family") != "cross_family":
+        # A code-profile chunk of the same family must not finish a Ukrainian seat (#12257).
+        if (
+            not marker.get("denominator")
+            or marker.get("review_mode", "cross_family") != "cross_family"
+            or not is_ukrainian_review(marker)
+        ):
             continue
         by_family.setdefault(marker["family"], set()).update(marker.get("coverage") or ())
     union: set[str] = set().union(*by_family.values()) if by_family else set()
@@ -480,8 +485,9 @@ def lookup_verdict(
     carries a Ukrainian-profile approval or, by ``learner_content``, changes
     learner content (``changes_learner_content``), even with no Ukrainian verdict yet.
     When a marker declares an item denominator, approval also needs each required
-    seat's non-void APPROVE coverage to equal it (#12257). A voided chunk and a
-    marker that names no denominator add no items.
+    seat's non-void Ukrainian-profile APPROVE coverage to equal it (#12257). A
+    voided chunk, a code-profile chunk and a marker that names no denominator add
+    no items.
     A malformed marker poisons this SHA unless it is attributable to another head; see
     the module docstring for the threat model (#11127).
     """

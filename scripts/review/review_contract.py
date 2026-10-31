@@ -1014,33 +1014,49 @@ def parse_item_packet(text: str) -> dict[str, Any]:
 
 
 def load_frozen_item_packet(task: Mapping[str, Any]) -> dict[str, Any] | None:
-    """The packet frozen in the task's brief, or None when the brief declares no denominator.
+    """The packet frozen in the task's brief, or None when that brief declares no denominator.
 
-    A brief that contains a packet must still match the task's prompt digest. A drifted
-    file is not the frozen input.
+    A task that names a brief must still be readable, and a stored prompt digest must
+    match the bytes on disk, before the absence of a packet means there is no
+    denominator. A missing, unreadable or drifted brief is not an unchunked review.
     """
     path = task.get("prompt_file")
     if not isinstance(path, str) or not path:
         return None
     try:
         raw = Path(path).read_bytes()
-    except OSError:
-        return None
+    except OSError as exc:
+        raise ContractError("FROZEN_BRIEF_UNREADABLE: the frozen review brief cannot be read") from exc
     try:
         text = raw.decode("utf-8")
     except UnicodeError as exc:
         raise ContractError("FROZEN_BRIEF_UNREADABLE: review brief is not utf-8") from exc
     digest = task.get("prompt_sha256")
-    matches = isinstance(digest, str) and hashlib.sha256(raw).hexdigest() == digest
+    if isinstance(digest, str) and digest and hashlib.sha256(raw).hexdigest() != digest:
+        raise ContractError("FROZEN_BRIEF_MISMATCH: the item packet is not the brief the task froze")
     if "```ukrainian-item-packet" not in text:
         return None
-    if not matches:
+    if not (isinstance(digest, str) and digest):
         raise ContractError("FROZEN_BRIEF_MISMATCH: the item packet is not the brief the task froze")
     return parse_item_packet(text)
 
 
 def reply_has_item_judgments(reply: str) -> bool:
     return "```ukrainian-item-judgments" in reply
+
+
+_PRESENTED_QUOTE = re.compile(r"«([^»]+)»|\"([^\"\n]+)\"|“([^”]+)”")
+_CYRILLIC = re.compile(r"[А-Яа-яІіЇїЄєҐґ]")
+
+
+def _presented_quotes(text: str) -> list[str]:
+    """Ukrainian spans ``text`` puts in quotes. An English aside is not a quote of the frozen item."""
+    found: list[str] = []
+    for match in _PRESENTED_QUOTE.finditer(text):
+        span = next((group for group in match.groups() if group), "")
+        if _CYRILLIC.search(span):
+            found.append(span)
+    return found
 
 
 def _quote_spans(row: Mapping[str, Any]) -> list[str] | None:
@@ -1072,7 +1088,10 @@ def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> I
 
     The reply's only payload is per-item verdict, finding and Sources evidence, keyed by the
     packet's item id. Offsets, counts, pointers, tables and a coverage set void it as
-    reviewer bookkeeping and do not count. A quote mismatch voids it the same way.
+    reviewer bookkeeping and do not count. A quote of the frozen item, in the quote fields
+    or as a Ukrainian quotation in the finding, the Sources evidence or the reply, must be
+    a literal substring. On an approval that mismatch voids the chunk. It does not erase a
+    rejection verdict.
     """
     bodies = _fenced(reply, "ukrainian-item-judgments")
     if len(bodies) != 1:
@@ -1088,9 +1107,8 @@ def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> I
         raise ContractError("ITEM_JUDGMENTS_MALFORMED: judgments need at least one item")
     frozen = {row["id"]: row["text"] for row in packet["items"]}
     allowed = set(packet["coverage"])
-    void: str | None = None
-    if set(payload) - {"schema", "items"}:
-        void = VOID_REVIEWER_BOOKKEEPING
+    bookkeeping = bool(set(payload) - {"schema", "items"})
+    quote_bad = False
     judged: list[str] = []
     verdicts: list[str] = []
     for row in rows:
@@ -1102,17 +1120,36 @@ def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> I
         if item_id in judged:
             raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: duplicate judgment {item_id}")
         verdict = _JUDGMENT_VERDICT.get(row.get("verdict"))
-        if verdict is None or not isinstance(row.get("finding"), str) or not isinstance(row.get("sources"), str):
+        finding = row.get("finding")
+        sources = row.get("sources")
+        if verdict is None or not isinstance(finding, str) or not isinstance(sources, str):
             raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: {item_id} needs a verdict, finding and sources")
-        extra = set(row) - _JUDGMENT_KEYS - _QUOTE_KEYS
+        if set(row) - _JUDGMENT_KEYS - _QUOTE_KEYS:
+            bookkeeping = True
         spans = _quote_spans(row)
-        if spans is None or any(not span or span not in frozen[item_id] for span in spans):
-            void = VOID_QUOTE_MISMATCH
-        elif extra and void != VOID_QUOTE_MISMATCH:
-            void = VOID_REVIEWER_BOOKKEEPING
+        item_text = frozen[item_id]
+        presented = _presented_quotes(finding) + _presented_quotes(sources)
+        if spans is None or any(not span or span not in item_text for span in spans):
+            quote_bad = True
+        if any(span not in item_text for span in presented):
+            quote_bad = True
         judged.append(item_id)
         verdicts.append(verdict)
-    if _rollup(verdicts) != stated:
+    outside = reply
+    for body in bodies:
+        outside = outside.replace(body, "", 1)
+    item_texts = tuple(frozen.values())
+    if any(all(span not in text for text in item_texts) for span in _presented_quotes(outside)):
+        quote_bad = True
+    rollup = _rollup(verdicts)
+    if rollup != stated:
         raise ContractError("VERDICT_ITEM_MISMATCH: the verdict line does not match the item judgments")
+    # A mismatched quote drops an approval's coverage. It must not hide a rejection.
+    if quote_bad and rollup == "APPROVED":
+        void: str | None = VOID_QUOTE_MISMATCH
+    elif bookkeeping:
+        void = VOID_REVIEWER_BOOKKEEPING
+    else:
+        void = None
     covered = () if void else tuple(sorted(judged))
     return ItemChunk(tuple(packet["denominator"]), covered, void)
