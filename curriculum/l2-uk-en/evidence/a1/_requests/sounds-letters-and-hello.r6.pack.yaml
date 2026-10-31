@@ -8,8 +8,8 @@ texts:
   span:
     first_words: На письмі звуки
     last_words: В українському алфавіті 33 букви.
-  supports: Sound and letter are different units; the alphabet overview shows 33 letters
-    without claiming acquired decoding.
+  supports: Sound and letter are different units; the alphabet overview shows 33 letters without claiming
+    acquired decoding.
 - id: T-102
   source:
     table: textbooks
@@ -17,8 +17,8 @@ texts:
   span:
     first_words: 'Мовні звуки: голосні та приголосні'
     last_words: Який у тебе сьогодні настрій? Вибери.
-  supports: Begin with hearing and saying a sound, then connect it with its visible
-    letter; adapt the operation to adult communication.
+  supports: Begin with hearing and saying a sound, then connect it with its visible letter; adapt the
+    operation to adult communication.
 - id: T-103
   source:
     table: textbooks
@@ -26,8 +26,8 @@ texts:
   span:
     first_words: Вимову одного
     last_words: називають наголошеним,
-  supports: Stress is audible prominence; first model it by ear, and display stress
-    marking only after the target word is decodable.
+  supports: Stress is audible prominence; first model it by ear, and display stress marking only after
+    the target word is decodable.
 - id: T-104
   source:
     table: textbooks
@@ -35,8 +35,8 @@ texts:
   span:
     first_words: 403. А. Прочитайте
     last_words: питальних.
-  supports: The same spoken material can convey a statement or question through its
-    contour; no sentence analysis is taught.
+  supports: The same spoken material can convey a statement or question through its contour; no sentence
+    analysis is taught.
 - id: T-105
   source:
     table: textbooks
@@ -44,8 +44,8 @@ texts:
   span:
     first_words: Окличні речення виражають
     last_words: речення ставимо знак оклику.
-  supports: An exclamation conveys emotion with a distinct speech contour; the plan
-    uses already familiar greetings rather than the source's literary sentences.
+  supports: An exclamation conveys emotion with a distinct speech contour; the plan uses already familiar
+    greetings rather than the source's literary sentences.
 - id: T-106
   source:
     table: textbooks
@@ -53,8 +53,8 @@ texts:
   span:
     first_words: Успішному діалогові
     last_words: 'прощання: Добрий день! Щиро дякую! До побачення!'
-  supports: A useful exchange has a greeting, a purpose and a farewell, with courtesy
-    appropriate to the relationship.
+  supports: A useful exchange has a greeting, a purpose and a farewell, with courtesy appropriate to the
+    relationship.
 exercises:
 - id: X-101
   source:
@@ -63,8 +63,8 @@ exercises:
   span:
     first_words: 2. Визначте етикетні
     last_words: На все добре!
-  pattern: Choose a greeting, thanks or farewell for a real interlocutor; adapt the
-    school setting to an adult peer or receptionist.
+  pattern: Choose a greeting, thanks or farewell for a real interlocutor; adapt the school setting to
+    an adult peer or receptionist.
 - id: X-102
   source:
     table: textbooks
@@ -72,58 +72,220 @@ exercises:
   span:
     first_words: Що «зайве»?
     last_words: наголошений склад.
-  pattern: Notice the stronger vowel in source-verified familiar spoken words; no
-    written syllable division or line breaking at this position.
+  pattern: Notice the stronger vowel in source-verified familiar spoken words; no written syllable division
+    or line breaking at this position.
 videos:
 - id: V-101
   url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
   channel: Speak Ukrainian
-  use: Whole visible video as a listening preview alongside the full alphabet chart;
-    only the plan's staged letters enter acquired inventory. No claim that the video
-    models every letter or a scored greeting.
+  use: Whole visible video as a listening preview alongside the full alphabet chart; only the plan's staged
+    letters enter acquired inventory. No claim that the video models every letter or a scored greeting.
 - id: V-102
   url: https://www.youtube.com/watch?v=GMcB5rsb3HM
   channel: Ukrainian Lessons
-  use: 'Whole visible ULP 1-02 listening input for morning, day and evening greetings,
-    thanks and farewell; repeat only the selected fixed chunks, without analysing
-    pronouns or cases from the rest. Corpus listening witness: ext-ulp_youtube-302.'
+  use: Whole visible Ukrainian Lessons video, with its picture and sound together, for unscored listening
+    exposure and repetition. No bounded word model is claimed without verified timings; separate linked
+    word recordings supply those models.
   models:
     letters: []
-    words:
-    - W-287
-    - W-288
-    - W-289
-    - W-290
-    - W-291
-    - W-292
-    - W-096
+    words: []
     segment: null
 - id: V-103
   url: https://www.youtube.com/watch?v=dtufctJhBrY
   channel: Ukrainian Lessons
-  use: 'Whole visible FMU 1-50 listening input for the familiar greeting and the neutral
-    greeting formula; other playful expressions are exposure only. Corpus listening
-    witness: ext-ulp_youtube-64.'
+  use: Whole visible Ukrainian Lessons video, with its picture and sound together, for unscored listening
+    exposure and repetition. No bounded word model is claimed without verified timings; separate linked
+    word recordings supply those models.
   models:
     letters: []
-    words:
-    - W-074
-    - W-295
+    words: []
     segment: null
 - id: V-104
   url: https://www.youtube.com/watch?v=_w8gRvkBFB4
   channel: Ukrainian Lessons
-  use: 'Whole visible ULP 1-17 models the excuse-me, please and thanks chunks; the
-    learner does not learn directions or case grammar from its incidental context.
-    Corpus listening witness: ext-ulp_youtube-287.'
+  use: Whole visible Ukrainian Lessons video, with its picture and sound together, for unscored listening
+    exposure and repetition. No bounded word model is claimed without verified timings; separate linked
+    word recordings supply those models.
+  models:
+    letters: []
+    words: []
+    segment: null
+- id: V-105
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/2_pryvit.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-074
+    segment: 0–0.711678
+- id: V-106
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/88_den.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-076
+    segment: 0–0.900476
+- id: V-107
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/90_ranok.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-237
+    segment: 0–1.016689
+- id: V-108
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/91_vechir.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-200
+    segment: 0–0.987642
+- id: V-109
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/89_nich.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-220
+    segment: 0–1.016667
+- id: V-110
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/5_tak.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-096
+    segment: 0–0.595488
+- id: V-111
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/7.-vitaju.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/greetings/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-295
+    segment: 0–1.310227
+- id: V-112
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/2.-buvaj.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/goodbye-in-ukrainian/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-294
+    segment: 0–0.987710
+- id: V-113
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/8.-pa-pa.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/goodbye-in-ukrainian/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-274
+    segment: 0–0.967551
+- id: V-114
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/8_bud_laska.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-291
+    segment: 0–1.016667
+- id: V-115
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/9_diakuiu.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-292
+    segment: 0–0.813333
+- id: V-116
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/7_vybachte.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
   models:
     letters: []
     words:
     - W-293
-    - W-291
-    - W-292
-    - W-096
-    segment: null
+    segment: 0–0.973107
+- id: V-117
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/1_dobryi_den.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-287
+    segment: 0–1.278118
+- id: V-118
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/3_dobroho_ranku.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-288
+    segment: 0–1.249070
+- id: V-119
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/4_dobryi_vechir.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-289
+    segment: 0–1.016689
+- id: V-120
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/23_do_pobachennia.mp3
+  channel: Ukrainian Lessons
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube
+    audio.
+  models:
+    letters: []
+    words:
+    - W-290
+    segment: 0–1.190975
 standard:
 - id: S-101
   lines: 586-586

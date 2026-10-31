@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: 701b5f7b4b9a730dc20913840ed61a95d7cd937a
+  mcp_commit: a85312625e72fa37db15ae6d883ee4ffca1670f5
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
   sources_db: 304c32137a3e2ffa436dd9aadafd66004e63098e4748ba106436ab8d3e484f4e
@@ -291,17 +291,10 @@ videos:
   models:
     letters: []
     segment: null
-    words:
-    - W-287
-    - W-288
-    - W-289
-    - W-290
-    - W-291
-    - W-292
-    - W-096
+    words: []
   url: https://www.youtube.com/watch?v=GMcB5rsb3HM
-  use: 'Whole visible ULP 1-02 listening input for morning, day and evening greetings, thanks and farewell; repeat only the
-    selected fixed chunks, without analysing pronouns or cases from the rest. Corpus listening witness: ext-ulp_youtube-302.'
+  use: Whole visible Ukrainian Lessons video, with its picture and sound together, for unscored listening exposure and repetition.
+    No bounded word model is claimed without verified timings; separate linked word recordings supply those models.
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
@@ -312,12 +305,10 @@ videos:
   models:
     letters: []
     segment: null
-    words:
-    - W-074
-    - W-295
+    words: []
   url: https://www.youtube.com/watch?v=dtufctJhBrY
-  use: 'Whole visible FMU 1-50 listening input for the familiar greeting and the neutral greeting formula; other playful expressions
-    are exposure only. Corpus listening witness: ext-ulp_youtube-64.'
+  use: Whole visible Ukrainian Lessons video, with its picture and sound together, for unscored listening exposure and repetition.
+    No bounded word model is claimed without verified timings; separate linked word recordings supply those models.
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
@@ -328,11 +319,247 @@ videos:
   models:
     letters: []
     segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=_w8gRvkBFB4
+  use: Whole visible Ukrainian Lessons video, with its picture and sound together, for unscored listening exposure and repetition.
+    No bounded word model is claimed without verified timings; separate linked word recordings supply those models.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/2_pryvit.mp3
+    http_status: 200
+  id: V-105
+  models:
+    letters: []
+    segment: 0–0.711678
+    words:
+    - W-074
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/2_pryvit.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/88_den.mp3
+    http_status: 200
+  id: V-106
+  models:
+    letters: []
+    segment: 0–0.900476
+    words:
+    - W-076
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/88_den.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/90_ranok.mp3
+    http_status: 200
+  id: V-107
+  models:
+    letters: []
+    segment: 0–1.016689
+    words:
+    - W-237
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/90_ranok.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/91_vechir.mp3
+    http_status: 200
+  id: V-108
+  models:
+    letters: []
+    segment: 0–0.987642
+    words:
+    - W-200
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/91_vechir.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/89_nich.mp3
+    http_status: 200
+  id: V-109
+  models:
+    letters: []
+    segment: 0–1.016667
+    words:
+    - W-220
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/89_nich.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/5_tak.mp3
+    http_status: 200
+  id: V-110
+  models:
+    letters: []
+    segment: 0–0.595488
+    words:
+    - W-096
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/5_tak.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/7.-vitaju.mp3
+    http_status: 200
+  id: V-111
+  models:
+    letters: []
+    segment: 0–1.310227
+    words:
+    - W-295
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/7.-vitaju.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/greetings/. The
+    complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/2.-buvaj.mp3
+    http_status: 200
+  id: V-112
+  models:
+    letters: []
+    segment: 0–0.987710
+    words:
+    - W-294
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/2.-buvaj.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/goodbye-in-ukrainian/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/8.-pa-pa.mp3
+    http_status: 200
+  id: V-113
+  models:
+    letters: []
+    segment: 0–0.967551
+    words:
+    - W-274
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2019/09/8.-pa-pa.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/goodbye-in-ukrainian/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/8_bud_laska.mp3
+    http_status: 200
+  id: V-114
+  models:
+    letters: []
+    segment: 0–1.016667
+    words:
+    - W-291
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/8_bud_laska.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/9_diakuiu.mp3
+    http_status: 200
+  id: V-115
+  models:
+    letters: []
+    segment: 0–0.813333
+    words:
+    - W-292
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/9_diakuiu.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/7_vybachte.mp3
+    http_status: 200
+  id: V-116
+  models:
+    letters: []
+    segment: 0–0.973107
     words:
     - W-293
-    - W-291
-    - W-292
-    - W-096
-  url: https://www.youtube.com/watch?v=_w8gRvkBFB4
-  use: 'Whole visible ULP 1-17 models the excuse-me, please and thanks chunks; the learner does not learn directions or case
-    grammar from its incidental context. Corpus listening witness: ext-ulp_youtube-287.'
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/7_vybachte.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/1_dobryi_den.mp3
+    http_status: 200
+  id: V-117
+  models:
+    letters: []
+    segment: 0–1.278118
+    words:
+    - W-287
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/1_dobryi_den.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/3_dobroho_ranku.mp3
+    http_status: 200
+  id: V-118
+  models:
+    letters: []
+    segment: 0–1.249070
+    words:
+    - W-288
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/3_dobroho_ranku.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/4_dobryi_vechir.mp3
+    http_status: 200
+  id: V-119
+  models:
+    letters: []
+    segment: 0–1.016689
+    words:
+    - W-289
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/4_dobryi_vechir.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: audio/mpeg
+    date: '2026-10-31'
+    final_url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/23_do_pobachennia.mp3
+    http_status: 200
+  id: V-120
+  models:
+    letters: []
+    segment: 0–1.190975
+    words:
+    - W-290
+  url: https://e786f826.delivery.rocketcdn.me/wp-content/uploads/2022/04/23_do_pobachennia.mp3
+  use: Dedicated public word or phrase recording linked by the publisher at https://www.ukrainianlessons.com/ph-essential/.
+    The complete file is the verified listening model; use no hidden YouTube player or separated YouTube audio.
