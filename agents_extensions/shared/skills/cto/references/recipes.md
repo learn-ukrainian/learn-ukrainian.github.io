@@ -9,6 +9,9 @@ file only points there and adds what the CTO seat learned on top.
   `workflow.md` § Public GitHub publishing; CI recovery follows `docs/runbooks/ci-gate.md`.
 - The merge-queue keeper usually enqueues on its own; check its log before enqueueing by
   hand.
+- When the CTO rules that a PR must not land yet (for example until a review covers every item), it applies a hold the merge-queue keeper reads,
+  the `hold` label (`HOLD_LABELS`) or the `[hold]` title marker (`HOLD_TITLE`) in `scripts/orchestration/merge_queue_keeper.py`, in the same action
+  as the ruling, and names the condition for removing it. An instruction to a lane alone does not stop the keeper.
 
 ## Publish orders
 
