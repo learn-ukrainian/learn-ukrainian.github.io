@@ -1,0 +1,54 @@
+inputs:
+  arc:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml
+    sha256: 9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe
+  arc_source:
+    path: docs/epics/fresh-build-a1-arc.md
+    sha256: 03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d
+  decisions:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml
+    sha256: 9608ea4b8bc86bff2fd327196f28f9bc126b310ad08d5f2f0ce19f862d9b061d
+  grammar:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml
+    sha256: cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334
+  learner_state:
+    path: curriculum/l2-uk-en/evidence/a1/_state/my-family/plan-review.learner-state.yaml
+    sha256: 8afa91d457be999490b76b2c6d70f89d852a1c145ac95e680213854e41f56ec0
+  pack:
+    path: curriculum/l2-uk-en/evidence/a1/my-family.yaml
+    sha256: 720a3f6489ecd51c127b9855c25531a7bc261cc85b07e812dd04b174b0093db2
+  pack_lock:
+    path: curriculum/l2-uk-en/evidence/a1/my-family.yaml.lock
+    sha256: 153d1edc214cc5b0f908ddbd39167347c108a181c5617653a5f2e5a53dd8ea1a
+  pack_verify_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/my-family/pack-verify.report.json
+    sha256: e17ac3ceef2640c93160e1aaa947c1d2ae50277f64c16a777e85b84d983ea584
+  plan:
+    path: curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml
+    sha256: 06ca976a21cdd9a60053dd8a16ab1d39f655c5523bd7043c27444b46dc3bce3a
+  requirements:
+    path: docs/epics/fresh-build-requirements.md
+    sha256: d0d5008aefd21a34fa5cea307254bbd9b044ac9c3eef3db1d1e6e9a3d02d629f
+  scope:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_scope/my-family.yaml
+    sha256: c7d2d1db80de4c11acb1ac7cfd0c23c3bdf1c688adc40f67b52c780a957f7090
+  v1_totals:
+    path: curriculum/l2-uk-en/evidence/a1/_state/my-family/plan-review.v1-totals.yaml
+    sha256: 58df15eb511a9f4c59ca63630fa4c748bb6b4c50324343d25604726bed192335
+  validate_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/my-family/plan-validate.report.json
+    sha256: d0ec5219d5aefd7cd2d078b8187892ba1ba63db27c7de841d851bb066963e28a
+  words:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml
+    sha256: 8ff6f38e34eedc3151bf15f3c622ed318113a5d7e94eb2880c7b14e2ba86f761
+  words_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
+    sha256: 0581c149864df57af58f0b8675a88924869a212d4f21ddaa6103d3223213aa40
+kind: plan
+learner_state:
+  sha256: afd1b4dae3476da8157cb39ae3cf6a44cd1eea7274b043b3ffcdd73efbae65aa
+  source: planned_state
+level: a1
+manifest_schema: 1
+position: 4
+slug: my-family
