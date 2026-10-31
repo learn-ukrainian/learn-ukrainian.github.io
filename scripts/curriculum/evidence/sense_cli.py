@@ -313,14 +313,17 @@ def _scan_pattern(terms: set[str]) -> tuple[re.Pattern, dict[str, list[str]]]:
     return re.compile(r"(?<!\w)(?=(" + (expression(trie) if terms else r"(?!)") + r")(?!\w))"), prefixes
 
 
-def _record_texts(value: object, ancestors: frozenset[int] = frozenset()):
-    """Yield individual YAML/JSON mappings, never aggregate sibling records."""
-    if id(value) in ancestors:
+def _record_texts(value: object, ancestors: frozenset[int] = frozenset(), path: tuple = (), skip=frozenset()):
+    """Yield individual YAML/JSON mappings, never aggregate sibling records.
+
+    A record at a structural path in ``skip``, and every record inside it, is not yielded.
+    """
+    if id(value) in ancestors or path in skip:
         return
     ancestors = ancestors | {id(value)}
     if isinstance(value, list):
-        for item in value:
-            yield from _record_texts(item, ancestors)
+        for i, item in enumerate(value):
+            yield from _record_texts(item, ancestors, (*path, ("index", i)), skip)
     elif isinstance(value, dict):
         parts = []
         for key, child in value.items():
@@ -333,30 +336,28 @@ def _record_texts(value: object, ancestors: frozenset[int] = frozenset()):
                 parts.extend(str(v) for v in child if isinstance(v, (str, int, float, bool)))
                 if key == "forms":
                     parts.extend(str(v.get("form", "")) for v in child if isinstance(v, dict))
-            yield from _record_texts(child, ancestors)
+            yield from _record_texts(child, ancestors, (*path, ("key", key)), skip)
         if parts:
             yield "\n".join(parts)
 
 
-def _blank_unchanged_records(text: str, base_text: str) -> tuple[str, list[tuple[int, int]]]:
-    """Empty every YAML/JSON mapping identical to the merge-base record at its structural path.
-
-    Returns the emptied text and the emptied source spans.
+def _unchanged_records(text: str, base_text: str) -> tuple[list[tuple[int, int]], set[tuple]]:
+    """Source spans and structural paths of YAML/JSON mappings identical to the merge-base record.
 
     A record's identity is its structural path from the document root (mapping
-    keys with their tags, sequence indices) plus its parsed value; its source
-    span must also be unchanged, so an added comment is never emptied. A moved or
-    reordered record is compared with whatever the base holds at its new path.
-    Anything ambiguous (a parse error, several documents, an alias, a duplicate
-    or non-scalar key, a blanked text that parses differently) empties nothing,
-    so every record still gates.
+    keys, sequence indices) plus its parsed value; its source span must also be
+    unchanged, so an added comment never joins it. A moved or reordered record is
+    compared with whatever the base holds at its new path. Only the outermost
+    unchanged mapping is returned. Anything ambiguous (a parse error, several
+    documents, an alias, a duplicate or non-scalar key) returns nothing, so every
+    record still gates.
     """
     try:
         head, prior = yaml.compose(text), yaml.compose(base_text)
     except yaml.YAMLError:
-        return text, []
+        return [], set()
     if head is None or prior is None:
-        return text, []
+        return [], set()
 
     def index(node, path: tuple, nodes: dict, seen: set[int]) -> None:
         if id(node) in seen:
@@ -367,29 +368,23 @@ def _blank_unchanged_records(text: str, base_text: str) -> tuple[str, list[tuple
             for i, child in enumerate(node.value):
                 index(child, (*path, ("index", i)), nodes, seen)
         elif isinstance(node, yaml.MappingNode):
-            keys = [(key.tag, key.value) for key, _value in node.value if isinstance(key, yaml.ScalarNode)]
+            keys = [key.value for key, _value in node.value if isinstance(key, yaml.ScalarNode)]
             if len(keys) != len(node.value) or len(set(keys)) != len(keys):
                 raise ValueError("ambiguous_key")
             for key, value in node.value:
                 if id(key) in seen:
                     raise ValueError("alias")
                 seen.add(id(key))
-                index(value, (*path, ("key", key.tag, key.value)), nodes, seen)
+                index(value, (*path, ("key", key.value)), nodes, seen)
 
-    def same(a, b, emptied: frozenset[int] = frozenset()) -> bool:
-        if type(a) is not type(b):
+    def same(a, b) -> bool:
+        if type(a) is not type(b) or a.tag != b.tag:
             return False
-        if id(a) in emptied:
-            return not b.value
         if isinstance(a, yaml.ScalarNode):
-            return (a.tag, a.value) == (b.tag, b.value)
+            return a.value == b.value
         pairs = a.value if isinstance(a, yaml.SequenceNode) else [p for kv in a.value for p in kv]
         other = b.value if isinstance(b, yaml.SequenceNode) else [p for kv in b.value for p in kv]
-        return (
-            a.tag == b.tag
-            and len(pairs) == len(other)
-            and all(same(x, y, emptied) for x, y in zip(pairs, other, strict=True))
-        )
+        return len(pairs) == len(other) and all(same(x, y) for x, y in zip(pairs, other, strict=True))
 
     def span(node, source: str) -> str:
         return source[node.start_mark.index : node.end_mark.index]
@@ -399,35 +394,52 @@ def _blank_unchanged_records(text: str, base_text: str) -> tuple[str, list[tuple
         index(head, (), head_nodes, set())
         index(prior, (), base_nodes, set())
     except ValueError:
-        return text, []
-    emptied, covered = [], set()
+        return [], set()
+    spans, paths = [], set()
     for path, node in head_nodes.items():
         other = base_nodes.get(path)
         if (
             isinstance(node, yaml.MappingNode)
-            and not any(path[:i] in covered for i in range(len(path)))
+            and not any(path[:i] in paths for i in range(len(path)))
             and other is not None
             and same(node, other)
             and span(node, text) == span(other, base_text)
         ):
-            covered.add(path)
-            emptied.append(node)
-    spans = sorted((n.start_mark.index, n.end_mark.index) for n in emptied)
-    blanked = text
-    for start, end in reversed(spans):
-        # An empty mapping replaces the record; line breaks stay, so no two lines join.
-        chars = list(re.sub(r"[^\r\n]", " ", text[start:end]))
-        close = next((i for i, char in enumerate(chars) if i and char not in "\r\n"), None)
-        if close is None:
-            return text, []
-        chars[0], chars[close] = "{", "}"
-        blanked = blanked[:start] + "".join(chars) + blanked[end:]
-    try:
-        if spans and same(head, yaml.compose(blanked), frozenset(id(n) for n in emptied)):
-            return blanked, spans
-    except yaml.YAMLError:
-        pass
-    return text, []
+            paths.add(path)
+            spans.append((node.start_mark.index, node.end_mark.index))
+    return spans, paths
+
+
+def _located(pattern: re.Pattern, prefixes: dict[str, list[str]], text: str, offset: int = 0):
+    """Each scan match as (term, raw start, raw end) in ``text``, or None when positions are unknown.
+
+    Scan normalization is rebuilt per base character with its combining marks, so
+    every normalized character keeps the source extent it came from.
+    """
+    chars, extents = [], []
+    for token in re.finditer(r"\S+", text):
+        if chars:
+            chars.append(" ")
+            extents.append((token.start(), token.start()))
+        i, raw = 0, token[0]
+        while i < len(raw):
+            j = i + 1
+            while j < len(raw) and unicodedata.combining(raw[j]):
+                j += 1
+            piece = unicodedata.normalize("NFC", raw[i:j]).casefold()
+            chars.extend(piece)
+            extents.extend([(token.start() + i, token.start() + j)] * len(piece))
+            i = j
+    normalized = "".join(chars)
+    if normalized != _scan_normalize(text):
+        return None
+    found = []
+    for match in pattern.finditer(normalized):
+        start = match.start(1)
+        for term in prefixes[match[1]]:
+            covered = extents[start : start + len(term)]
+            found.append((term, offset + min(a for a, _ in covered), offset + max(b for _, b in covered)))
+    return found
 
 
 def _head_blobs(repo: Path, paths: set[str] | None = None):
@@ -583,12 +595,12 @@ def leak_scan(
                 forms.update(mapping_forms.get(term, ()))
         return meanings & forms
 
-    def detect(text: str, path: str, lines: list[str] | None = None) -> dict[str, Counter]:
+    def detect(text: str, path: str) -> dict[str, Counter]:
         wording = Counter()
         for match in wording_pattern.finditer(_scan_normalize(text)):
             for term in wording_prefixes[match[1]]:
                 wording.update(distinctive[term])
-        pairs = set().union(*(mapping_ids(line) for line in (text.splitlines() if lines is None else lines)))
+        pairs = set().union(*(mapping_ids(line) for line in text.splitlines()))
         # Parse only structured files with a possible cross-line pair. Sibling
         # YAML/JSON records cannot lend each other a lemma or a meaning.
         if Path(path).suffix in {".yaml", ".yml", ".json", ".jsonl"} and (
@@ -603,6 +615,40 @@ def leak_scan(
                 pass
         return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
 
+    def attribute(text: str, spans: list[tuple[int, int]], records: list[str]) -> dict[str, Counter] | None:
+        """Matches not wholly inside one unchanged record, or None when positions are unknown."""
+
+        def within(extents: list[tuple[int, int]]) -> bool:
+            return any(all(start <= a and b <= end for a, b in extents) for start, end in spans)
+
+        located = _located(wording_pattern, wording_prefixes, text)
+        if located is None:
+            return None
+        wording = Counter()
+        for term, a, b in located:
+            if not within([(a, b)]):
+                wording.update(distinctive[term])
+        pairs, offset = set(), 0
+        for line in text.splitlines(keepends=True):
+            located = _located(mapping_pattern, mapping_prefixes, line, offset)
+            offset += len(line)
+            if located is None:
+                return None
+            meanings, forms = {}, {}
+            for term, a, b in located:
+                for locator in mapping_meanings.get(term, ()):
+                    meanings.setdefault(locator, []).append((a, b))
+                for locator in mapping_forms.get(term, ()):
+                    forms.setdefault(locator, []).append((a, b))
+            # A one-line pair is pre-existing only when both halves sit inside the same unchanged record.
+            pairs.update(
+                locator for locator in meanings.keys() & forms.keys() if not within(meanings[locator] + forms[locator])
+            )
+        # Changed records are scanned whole, including the fields of unchanged records nested in them.
+        for record in records:
+            pairs.update(mapping_ids(record))
+        return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
+
     def scan(content: bytes, path: str, category: str, *, gate: bool = True, base_path: str | None = None):
         text = content.decode("utf-8", errors="replace")
         found = detect(text, path)
@@ -611,19 +657,12 @@ def leak_scan(
             # A suspect only inside records identical at the merge-base is reported, not gated.
             try:
                 prior = bindings.git(repo, "cat-file", "blob", f"{merge_base}:{base_path}").decode("utf-8")
-                blanked, spans = _blank_unchanged_records(content.decode("utf-8"), prior)
-            except (subprocess.CalledProcessError, UnicodeError):
-                spans = []
-            if spans:
-                # A line shared with anything outside an unchanged record keeps its line signal.
-                lines, offset = [], 0
-                for line in text.splitlines(keepends=True):
-                    first = offset + len(line) - len(line.lstrip())
-                    last = offset + len(line.rstrip())
-                    offset += len(line)
-                    if not any(start <= first and last <= end for start, end in spans):
-                        lines.append(line)
-                gated = detect(blanked, path, lines)
+                spans, paths = _unchanged_records(content.decode("utf-8"), prior)
+                if spans:
+                    doc = yaml.load(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader))
+                    gated = attribute(text, spans, list(_record_texts(doc, skip=paths))) or found
+            except (subprocess.CalledProcessError, UnicodeError, yaml.YAMLError):
+                gated = found
         for signal, matches in found.items():
             count = sum(gated[signal].values())
             if gate and count:
