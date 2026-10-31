@@ -32,6 +32,9 @@ from pathlib import Path
 from typing import Any
 
 ARCHIVE_DIR_NAME = "archive"
+REVIEW_TASK_FLAG_FIELDS = (
+    "pr", "review_attempt", "require_review_verdict", "review_profile", "review_author_model", "review_risk",
+)
 # Lock-file inodes each thread holds through task_state_lock.
 _HELD_TASK_LOCKS = threading.local()
 _REDISPATCH_ARCHIVED_STEM_RE = re.compile(r"^(?P<base>.+)\.(?P<tag>\d{8}T\d{6}\d*Z(?:\.\d+)?)\.archived$")
@@ -64,6 +67,8 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
             "run_nonce", "worktree_path", "cwd", "acp_runtime_paths", "worktree_prep",
             "review_attempt", "review_contract", "worktree_branch"
         )) or ("agent" in record and "status" in record)
+        or any(record.get(name) not in (None, False, "", []) for name in REVIEW_TASK_FLAG_FIELDS)
+        or bool(record.get("review_mode") or record.get("type") == "review")
     )
     receipt = ("schema" in record and "schema_version" not in record
                and isinstance(task_id, str) and not candidate_task_record_names(task_id, (path.name,)))

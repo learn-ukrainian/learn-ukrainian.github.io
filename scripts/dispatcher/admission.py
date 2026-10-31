@@ -11,6 +11,7 @@ from pathlib import Path
 
 from scripts.common import test_slots
 from scripts.orchestration import dispatch_isolation
+from scripts.orchestration.task_record_store import REVIEW_TASK_FLAG_FIELDS
 
 # Slots a Codex read-only review holds for its reviewer: the review bound of two test workers (cto-10744).
 REVIEW_TEST_SLOTS = 2
@@ -24,9 +25,7 @@ def review_typed(record: dict) -> bool:
     """
     return any(
         record.get(name) not in (None, False, "", [])
-        for name in (
-            "pr", "review_attempt", "require_review_verdict", "review_profile", "review_author_model", "review_risk",
-        )
+        for name in REVIEW_TASK_FLAG_FIELDS
     )
 
 

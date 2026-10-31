@@ -67,6 +67,25 @@ def test_receipt_marker_cannot_hide_legacy_review_claim(tmp_path, monkeypatch):
     assert [row["task_id"] for row in store.list_tasks(include_archive=True, strict=True)] == ["legacy-review"]
 
 
+@pytest.mark.parametrize(("marker", "value"), [
+    ("pr", 12192),
+    ("review_attempt", {"review_id": "legacy"}),
+    ("require_review_verdict", True),
+    ("review_profile", "infra"),
+    ("review_author_model", "gpt-6.1-sol"),
+    ("review_risk", "high"),
+    ("review_mode", "cross_family"),
+    ("type", "review"),
+])
+def test_legacy_review_flags_remain_visible_to_lineage(tmp_path, marker, value):
+    """Every established review flag retains a legacy row in lineage inventory."""
+    (tmp_path / "legacy-review.json").write_text(json.dumps({"repository": "org/repo", marker: value}))
+
+    assert [path.name for path, _ in review_lineage.review_records(tmp_path, repository="org/repo")] == [
+        "legacy-review.json"
+    ]
+
+
 @pytest.mark.parametrize("damaged", [
     b'{"schema_version":2,"task_id":"damaged",',
     b'{"schema_version":3,"task_id":"damaged"}',
