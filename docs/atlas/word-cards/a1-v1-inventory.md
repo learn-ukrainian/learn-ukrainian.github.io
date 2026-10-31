@@ -162,7 +162,10 @@ Missing lemma mappings are never inferred from vocabulary keys.
 The source is the specified reviewed-plan fallback commit
 `e7a9ac497da8bbeba5531937a4c8543369462942`. That eight-plan edition was
 not merged at the start of this slice. The manifest pins every consumed
-plan file and the word registry. The frozen selection contains 177 rows,
+plan file and the word registry. A [verbatim input snapshot](../../../registry/atlas/a1-v1-slice3-plan-inputs.json)
+retains all ten approved Git blobs with an independent digest. Selection
+rechecks the existing per-file hashes without requiring Git history,
+including in shallow checkouts. The frozen selection contains 177 rows,
 74 inventory keys and 45 targets: 41 lexemes and four proper names.
 All fit the 60-card cap. The row ledger separately records the 19 rows
 delivered by slice 2 and the other 1,948 deferred rows.

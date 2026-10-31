@@ -7,7 +7,6 @@ import argparse
 import copy
 import hashlib
 import json
-import subprocess
 import unicodedata
 from functools import partial
 from pathlib import Path
@@ -21,6 +20,8 @@ from scripts.atlas.a1_card_receipts import digest, selected_rows, validate_alloc
 PLAN_SHA = "e7a9ac497da8bbeba5531937a4c8543369462942"
 MANIFEST = "registry/atlas/a1-v1-slice3.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice3.json"
+PLAN_INPUTS = "registry/atlas/a1-v1-slice3-plan-inputs.json"
+PLAN_INPUTS_SHA256 = "bdaaab21adf8aa678921fa785f24fb9075f7e037fab22508d62c94791d85b91a"
 MANIFEST_SHA256 = "b59e14203ef9656e51a2d878b6a77296397b5651f1c013931e7adf0ce91ad454"
 VERSION = "a1-slice3-v1"
 JOIN = "reviewed_plan_vocabulary_to_inventory_mapping_lemma_v1"
@@ -68,18 +69,23 @@ def select(inventory, arc, plans, words):
 
 
 def frozen_selection(root):
-    """Read only the approved immutable Git objects, checking their independently pinned bytes."""
-    def git(path):
-        return subprocess.check_output(["git", "-C", str(root), "show", PLAN_SHA + ":" + path], timeout=30)
-    arc = json.loads(git("site/src/data/arc-a1.json"))
+    """Read verbatim approved Git inputs without depending on checkout history."""
+    snapshot = cards.load(root / PLAN_INPUTS)
+    cards.require(digest(snapshot) == PLAN_INPUTS_SHA256, "reviewed_plan_inputs_digest_mismatch")
+    cards.require(snapshot["plan_sha"] == PLAN_SHA, "reviewed_plan_input_revision_mismatch")
+
+    def frozen(path):
+        return snapshot["files"][path].encode("utf-8")
+
+    arc = json.loads(frozen("site/src/data/arc-a1.json"))
     plans, pins = {}, {}
     for item in arc["positions"][:8]:
         path = "curriculum/l2-uk-en/lesson-plans/a1/" + item["slug"] + ".yaml"
-        raw = git(path)
+        raw = frozen(path)
         plans[item["slug"]] = yaml.safe_load(raw)
         pins[path] = hashlib.sha256(raw).hexdigest()
     word_path = "curriculum/l2-uk-en/evidence/a1/_words.registry.yaml"
-    raw = git(word_path)
+    raw = frozen(word_path)
     pins[word_path] = hashlib.sha256(raw).hexdigest()
     inventory = cards.load(root / "registry/atlas/a1-v1-inventory.json")
     return inventory, select(inventory, arc, plans, yaml.safe_load(raw)), pins
@@ -186,7 +192,7 @@ Related: #11943, scripts.atlas.a1_word_cards --batch slice3
         print(json.dumps({"plan_sha": PLAN_SHA, "join": JOIN, "rows": len(context.row_card_ids),
                           "cards": len(set(context.row_card_ids.values()))}, sort_keys=True))
         return 0
-    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, KeyError, TypeError) as error:
         print("A1 slice3 refused: " + str(error))
         return 1
 

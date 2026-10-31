@@ -3,6 +3,8 @@
 import copy
 import importlib.util
 import json
+import shutil
+import subprocess
 from collections import Counter
 from dataclasses import replace
 from functools import partial
@@ -46,7 +48,7 @@ def fixture_context(batch):
     return cards.BatchContext("a1-slice3-v1", inputs.MANIFEST, inputs.COMPANION, row_card_ids, methods, validator)
 
 
-def test_reviewed_plan_join_freezes_177_rows_and_45_targets(monkeypatch, capsys):
+def test_reviewed_plan_join_freezes_177_rows_and_45_targets(monkeypatch, capsys, tmp_path):
     """Catch selection drift, lost proper names, pilot reuse and changed pinned plan bytes."""
     assert inputs.PLAN_SHA == "e7a9ac497da8bbeba5531937a4c8543369462942"
     assert inputs.main(["--check-selection"]) == 0
@@ -74,15 +76,30 @@ def test_reviewed_plan_join_freezes_177_rows_and_45_targets(monkeypatch, capsys)
     assert len(previous) == 19
     assert set(selection["slice2_row_ids"]) == previous
     assert previous.isdisjoint(selection["row_ids"])
-    original = inputs.subprocess.check_output
+    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True, timeout=30)
+    absent = subprocess.run(["git", "-C", str(tmp_path), "cat-file", "-e", inputs.PLAN_SHA],
+                            capture_output=True, timeout=30)
+    assert absent.returncode != 0
+    for relative in (inputs.MANIFEST, inputs.COMPANION, inputs.PLAN_INPUTS,
+                     "registry/atlas/a1-v1-inventory.json", "registry/atlas/identity/registry.json"):
+        destination = tmp_path / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT / relative, destination)
+    with monkeypatch.context() as portable:
+        portable.setattr(inputs, "__file__", str(tmp_path / "scripts/atlas/a1_slice3_inputs.py"))
+        assert inputs.main(["--check-selection"]) == 0
+        assert json.loads(capsys.readouterr().out) == {
+            "plan_sha": "e7a9ac497da8bbeba5531937a4c8543369462942",
+            "join": "reviewed_plan_vocabulary_to_inventory_mapping_lemma_v1", "rows": 177, "cards": 45}
 
-    def changed_plan(command, *args, **kwargs):
-        raw = original(command, *args, **kwargs)
-        if command[-1].endswith("/my-family.yaml"):
-            return raw + b"\n# changed pinned plan bytes\n"
-        return raw
-
-    monkeypatch.setattr(inputs.subprocess, "check_output", changed_plan)
+    altered = cards.load(ROOT / inputs.PLAN_INPUTS)
+    altered["files"]["curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml"] += "\n# changed pinned plan bytes\n"
+    altered_path = tmp_path / "altered-plan-inputs.json"
+    altered_path.write_bytes(canonical(altered) + b"\n")
+    monkeypatch.setattr(inputs, "PLAN_INPUTS", altered_path)
+    assert inputs.main(["--check-selection"]) == 1
+    assert "reviewed_plan_inputs_digest_mismatch" in capsys.readouterr().out
+    monkeypatch.setattr(inputs, "PLAN_INPUTS_SHA256", digest(altered))
     assert inputs.main(["--check-selection"]) == 1
     assert "slice3_selection_drift" in capsys.readouterr().out
 
