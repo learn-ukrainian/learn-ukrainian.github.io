@@ -254,19 +254,28 @@ def replace(record: dict, path: Path | None = None, *, require_existing: bool = 
 
 
 def publish_failed_record(record: dict, path: Path) -> None:
-    """Recover a damaged supervisor record as failure, never overwrite another run."""
-    with task_state_lock(path):
-        try:
-            current = json.loads(path.read_text())
-        except (FileNotFoundError, ValueError, RecursionError):
-            current = None
-        if (isinstance(current, dict) and isinstance(current.get("run_nonce"), str)
-                and current["run_nonce"] != record["run_nonce"]):
-            raise TaskRecordError("TASK_RECORD_REPLACED: run nonce mismatch")
-        record.update(status="cancelled" if record.get("status") == "cancelled" else "crashed",
-                      error="TASK_RECORD_DAMAGED", finished_at=now(),
-                      worktree_disposition="retained", worktree_disposition_reason="task_record_damaged")
-        _write_atomic(path, record, exclusive=False)
+    """Recover a damaged supervisor record as failure, never overwrite another run.
+
+    A deleted record is published again as ``TASK_RECORD_DAMAGED``. Any other read error leaves the
+    record unable to prove it is this run's, and a lock or write error leaves the failure unpublished:
+    each is a typed ``TASK_RECORD_IO_ERROR``. A worktree already reaped keeps its ``removed`` disposition.
+    """
+    try:
+        with task_state_lock(path):
+            try:
+                current = json.loads(path.read_text())
+            except (FileNotFoundError, ValueError, RecursionError):
+                current = None
+            if (isinstance(current, dict) and isinstance(current.get("run_nonce"), str)
+                    and current["run_nonce"] != record["run_nonce"]):
+                raise TaskRecordError("TASK_RECORD_REPLACED: run nonce mismatch")
+            record.update(status="cancelled" if record.get("status") == "cancelled" else "crashed",
+                          error="TASK_RECORD_DAMAGED", finished_at=now())
+            if record.get("worktree_disposition") != "removed":
+                record.update(worktree_disposition="retained", worktree_disposition_reason="task_record_damaged")
+            _write_atomic(path, record, exclusive=False)
+    except OSError as exc:
+        raise TaskRecordError(f"TASK_RECORD_IO_ERROR: {type(exc).__name__}") from exc
 
 
 def _grant_paths_validated(root: Path, paths: list[str]) -> list[str]:

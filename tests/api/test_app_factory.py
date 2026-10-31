@@ -31,13 +31,15 @@ def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
     app = api_main.create_app(production_context())
 
     assert [(entry.cls, entry.args) for entry in app.user_middleware] == [
+        (api_main.PrometheusMetricsMiddleware, ()),
         (BaseHTTPMiddleware, ()),
         (BaseHTTPMiddleware, ()),
         (CORSMiddleware, ()),
     ]
-    assert app.user_middleware[0].kwargs["dispatch"] is opsec_path_sanitizer_middleware
-    assert app.user_middleware[1].kwargs["dispatch"] is resilience_middleware
-    assert app.user_middleware[2].kwargs == {
+    assert app.user_middleware[0].kwargs == {}
+    assert app.user_middleware[1].kwargs["dispatch"] is opsec_path_sanitizer_middleware
+    assert app.user_middleware[2].kwargs["dispatch"] is resilience_middleware
+    assert app.user_middleware[3].kwargs == {
         "allow_origins": ["*"],
         "allow_credentials": True,
         "allow_methods": ["*"],
@@ -618,3 +620,101 @@ def test_broker_reads_use_guarded_timed_readonly_context(tmp_path: Path) -> None
     context = replace(context, stores=replace(context.stores, message_db=replace(handle, path=outside)))
     with pytest.raises(ValueError, match="escapes"):
         dashboard_comms.get_broker_db(context)
+
+
+def _prometheus_samples(body: str) -> list[tuple[str, dict[str, str], float]]:
+    """Parse Prometheus text exposition into name, labels, and value."""
+    samples: list[tuple[str, dict[str, str], float]] = []
+    for line in body.splitlines():
+        if not line or line.startswith("#"):
+            continue
+        name, sep, rest = line.partition("{")
+        if sep:
+            labels_raw, sep, value_raw = rest.rpartition("}")
+            if not sep:
+                continue
+            labels: dict[str, str] = {}
+            cursor = 0
+            while cursor < len(labels_raw):
+                if labels_raw[cursor] in {",", " "}:
+                    cursor += 1
+                    continue
+                equals = labels_raw.find("=", cursor)
+                key = labels_raw[cursor:equals]
+                cursor = equals + 2  # opening quote
+                chars: list[str] = []
+                while cursor < len(labels_raw):
+                    char = labels_raw[cursor]
+                    if char == "\\":
+                        chars.append(labels_raw[cursor + 1])
+                        cursor += 2
+                        continue
+                    if char == '"':
+                        cursor += 1
+                        break
+                    chars.append(char)
+                    cursor += 1
+                labels[key] = "".join(chars)
+            samples.append((name, labels, float(value_raw.strip().split()[0])))
+        else:
+            metric_name, value_raw = name.split()
+            samples.append((metric_name, {}, float(value_raw)))
+    return samples
+
+
+def _prometheus_value(body: str, name: str, labels: dict[str, str]) -> float:
+    total = 0.0
+    for sample_name, sample_labels, value in _prometheus_samples(body):
+        if sample_name == name and sample_labels == labels:
+            total += value
+    return total
+
+
+def test_metrics_endpoint_counts_requests_and_5xx_errors(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Request totals and 5xx counters use route templates, never raw paths."""
+
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    app = api_main.create_app(fixture_context(tmp_path), lifespan=no_lifespan)
+    with TestClient(app, raise_server_exceptions=False) as client:
+        redirect = client.get("/api", follow_redirects=False)
+        assert redirect.status_code == 307
+
+        raw_path = "/opsec-raw-path-should-not-be-labelled"
+        missing = client.get(raw_path, params={"token": "should-not-appear"})
+        assert missing.status_code == 404
+
+        def explode(*_args, **_kwargs):
+            raise RuntimeError("metrics probe")
+
+        monkeypatch.setattr(api_main, "RedirectResponse", explode)
+        failed = client.get("/api", follow_redirects=False)
+        assert failed.status_code == 500
+
+        metrics = client.get("/metrics")
+        assert metrics.status_code == 200
+        content_type = metrics.headers["content-type"]
+        assert content_type.startswith("text/plain")
+        assert "version=0.0.4" in content_type
+        body = metrics.text
+        assert "# TYPE monitor_http_requests_total counter" in body
+        assert "# TYPE monitor_http_request_duration_seconds histogram" in body
+        assert "# TYPE monitor_http_responses_5xx_total counter" in body
+        assert raw_path not in body
+        assert "should-not-appear" not in body
+
+        ok_labels = {"method": "GET", "route": "/api", "status": "3xx"}
+        missing_labels = {"method": "GET", "route": "/{path:path}", "status": "4xx"}
+        error_labels = {"method": "GET", "route": "/api", "status": "5xx"}
+        assert _prometheus_value(body, "monitor_http_requests_total", ok_labels) == 1
+        assert _prometheus_value(body, "monitor_http_requests_total", missing_labels) == 1
+        assert _prometheus_value(body, "monitor_http_requests_total", error_labels) == 1
+        assert _prometheus_value(body, "monitor_http_responses_5xx_total", error_labels) == 1
+        assert _prometheus_value(body, "monitor_http_responses_5xx_total", ok_labels) == 0
+        assert _prometheus_value(body, "monitor_http_responses_5xx_total", missing_labels) == 0
+        assert _prometheus_value(body, "monitor_http_request_duration_seconds_count", error_labels) == 1
+        assert _prometheus_value(body, "monitor_http_request_duration_seconds_sum", error_labels) >= 0

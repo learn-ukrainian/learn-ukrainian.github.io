@@ -142,6 +142,7 @@ playwright==1.59.0
 pluggy==1.6.0
 portalocker==3.2.0
 pre_commit==4.6.0
+prometheus-client==0.26.0
 prompt-toolkit==3.0.53
 propcache==0.5.2
 protobuf==7.36.2

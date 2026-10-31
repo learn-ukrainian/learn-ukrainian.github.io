@@ -16,7 +16,7 @@ schema_version: 1
 streams:
   epics:
     title: "Epic coordination"
-    epics: [10453]
+    epics: [10453, 12239]  # #12239 overflow epic for the existing stream (#10453 is at GitHub's 100 native sub-issue limit)
   atlas-practice:
     title: "Word Atlas + Practice Hub product"
     epics: [4387, 12166]  # umbrella (closed #4700 UX-quality + intake #4220/#4378/#5224 folded into #4387; closed #5331 removed); #12166 overflow epic for the existing stream (#4387 is at GitHub's 100 native sub-issue limit)

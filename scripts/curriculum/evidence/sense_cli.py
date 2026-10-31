@@ -13,6 +13,7 @@ from pathlib import Path
 import yaml
 
 from scripts.common import github_client
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
 
 from . import lock, registry, sources
@@ -148,7 +149,7 @@ def _redact_validated_locations(
     or in the one request record that built it, is that row's text and is
     redacted with it.
     """
-    if kind not in {"bindings", "words", "requests"}:
+    if kind not in {"bindings", "words", "requests", "capture"}:
         return content
     try:
         text = content.decode("utf-8")
@@ -190,7 +191,14 @@ def _redact_validated_locations(
         def exempt(allowed):
             """Ranges of single-reached scalars holding exactly their allowed value; any other voids the file."""
             for scalar, value in allowed:
-                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != value or reached[id(scalar)] != 1:
+                if not isinstance(scalar, yaml.ScalarNode):
+                    raise ValueError("location_not_exempt")
+                actual = (
+                    json.loads(text[scalar.start_mark.index : scalar.end_mark.index])
+                    if kind == "capture"
+                    else scalar.value
+                )
+                if actual != value or reached[id(scalar)] != 1:
                     raise ValueError("location_not_exempt")
                 cleared.add(id(scalar))
                 yield scalar.start_mark.index, scalar.end_mark.index
@@ -210,14 +218,61 @@ def _redact_validated_locations(
             other = blanked.value if isinstance(node, yaml.SequenceNode) else [p for kv in blanked.value for p in kv]
             return len(pairs) == len(other) and all(same(a, b, seen) for a, b in zip(pairs, other, strict=True))
 
-        nodes = mapping(tree)["bindings" if kind == "bindings" else "words"]
-        if not isinstance(nodes, yaml.SequenceNode):
-            return content
-        payload = yaml.safe_load(text)
-        entries = payload.get("bindings" if kind == "bindings" else "words", [])
+        payload = json.loads(text) if kind == "capture" else yaml.safe_load(text)
+        if kind == "capture":
+            nodes = mapping(mapping(tree)["records"])
+            entries = [(wid, entry, nodes[wid]) for wid, entry in payload["records"].items()]
+        else:
+            key = "bindings" if kind == "bindings" else "words"
+            nodes = mapping(tree)[key]
+            if not isinstance(nodes, yaml.SequenceNode):
+                return content
+            entries = ((None, entry, node) for entry, node in zip(payload.get(key, []), nodes.value, strict=True))
         ranges = []
-        for entry, node in zip(entries, nodes.value, strict=True):
+        for wid, entry, node in entries:
             fields = mapping(node)
+            if kind == "capture":
+                word = words.get(wid)
+                if not word:
+                    continue
+                if word.get("kind") == "formula":
+                    if (entry.get("kind"), entry.get("text")) != ("formula", word["text"]):
+                        continue
+                    headwords = {
+                        bindings.formulas.printed_headword(word["text"]),
+                        *(bindings.formulas.headword(alias) for alias in word.get("aliases", [])),
+                    }
+                else:
+                    if (entry.get("lemma"), entry.get("pos")) != (word["lemma"], word["pos"]):
+                        continue
+                    headwords = {sources.unstressed_headword(word["lemma"])}
+                rows = fields.get("rows")
+                if not isinstance(rows, yaml.SequenceNode):
+                    continue
+                for row, row_node in zip(entry.get("rows", []), rows.value, strict=True):
+                    if not isinstance(row, dict) or type(row.get("id")) is not int:
+                        continue
+                    cited = api._db().execute("SELECT * FROM dmklinger_uk_en WHERE id=?", (row["id"],)).fetchone()
+                    if cited is None:
+                        continue
+                    cited = dict(cited)
+                    if (
+                        cited.get("source") != "dmklinger UK→EN"
+                        or (
+                            bindings.formulas.headword(cited["word"])
+                            if word.get("kind") == "formula"
+                            else sources.unstressed_headword(cited["word"])
+                        )
+                        not in headwords
+                        or any(
+                            key not in row or type(row[key]) is not type(value) or row[key] != value
+                            for key, value in cited.items()
+                        )
+                    ):
+                        continue
+                    row_fields = mapping(row_node)
+                    ranges.extend(exempt([(row_fields[key], cited[key]) for key in ("translations", "text")]))
+                continue
             if kind == "requests":
                 # A request meaning is public only through the cited gloss of the one store
                 # record built from it; the request itself cites nothing.
@@ -599,27 +654,94 @@ def leak_scan(
                 forms.update(mapping_forms.get(term, ()))
         return meanings & forms
 
-    def detect(text: str, path: str) -> dict[str, Counter]:
+    def wording_ids(text: str) -> Counter:
         wording = Counter()
         for match in wording_pattern.finditer(_scan_normalize(text)):
             for term in wording_prefixes[match[1]]:
                 wording.update(distinctive[term])
+        return wording
+
+    def documents(text: str, path: str):
+        try:
+            return list(yaml.load_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)))
+        except yaml.YAMLError:
+            try:
+                return list(yaml.load_all(text, Loader=yaml.BaseLoader))
+            except yaml.YAMLError:
+                if Path(path).suffix != ".jsonl":
+                    raise
+                return [yaml.load(line, Loader=yaml.BaseLoader) for line in jsonl_lines(text) if line.strip()]
+
+    def decoded_wording(text: str, path: str):
+        """Decoded-only matches and their scalar extents, for detection and attribution."""
+        if "\\" not in text:
+            return
+        loader = getattr(yaml, "CBaseLoader", yaml.BaseLoader)
+
+        def compose(value):
+            try:
+                return list(yaml.compose_all(value, Loader=loader))
+            except yaml.YAMLError:
+                # libyaml rejects JSON surrogate escapes that the Python loader accepts.
+                return list(yaml.compose_all(value, Loader=yaml.BaseLoader))
+
+        try:
+            roots = [(node, 0) for node in compose(text)]
+        except yaml.YAMLError as error:
+            if Path(path).suffix != ".jsonl":
+                raise ValueError("structured_scan_decode_failed") from error
+            roots, offset = [], 0
+            for line in jsonl_lines(text):
+                if line.strip():
+                    try:
+                        json.loads(line)
+                        roots.extend((node, offset) for node in compose(line))
+                    except (ValueError, yaml.YAMLError) as error:
+                        raise ValueError("structured_scan_decode_failed") from error
+                end = text.find("\n", offset)
+                offset = len(text) if end == -1 else end + 1
+        seen, pending = set(), roots
+        while pending:
+            node, offset = pending.pop()
+            if node is None or id(node) in seen:
+                continue
+            seen.add(id(node))
+            if isinstance(node, yaml.ScalarNode):
+                start, end = offset + node.start_mark.index, offset + node.end_mark.index
+                literal, value = text[start:end], node.value
+                try:
+                    decoded = json.loads(literal)
+                    if isinstance(decoded, str):
+                        value = decoded
+                except ValueError:
+                    pass
+                matches = wording_ids(value) - wording_ids(literal)
+                if matches:
+                    yield matches, start, end
+            elif isinstance(node, yaml.SequenceNode):
+                pending.extend((child, offset) for child in node.value)
+            elif isinstance(node, yaml.MappingNode):
+                pending.extend((child, offset) for pair in node.value for child in pair)
+
+    def detect(text: str, path: str) -> dict[str, Counter]:
+        wording = wording_ids(text)
         pairs = set().union(*(mapping_ids(line) for line in text.splitlines()))
         # Parse only structured files with a possible cross-line pair. Sibling
         # YAML/JSON records cannot lend each other a lemma or a meaning.
-        if Path(path).suffix in {".yaml", ".yml", ".json", ".jsonl"} and (
-            mapping_ids(text) - pairs or any(escape in text for escape in (r"\u", r"\U", r"\x", r"\N"))
-        ):
+        if Path(path).suffix in {".yaml", ".yml", ".json", ".jsonl"} and (mapping_ids(text) - pairs or "\\" in text):
+            for matches, _start, _end in decoded_wording(text, path):
+                wording.update(matches)
             try:
-                for doc in yaml.load_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)):
+                for doc in documents(text, path):
                     for record in _record_texts(doc):
-                        pairs.update(mapping_ids(record))
+                        # BaseLoader leaves JSON UTF-16 pairs as surrogate code points.
+                        pairs.update(mapping_ids(json.loads(json.dumps(record))))
             except yaml.YAMLError:
                 # Invalid structured data still receives the literal line scan.
                 pass
         return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
 
-    def attribute(text: str, spans: list[tuple[int, int]], records: list[str]) -> dict[str, Counter] | None:
+    def attribute(text: str, spans: list[tuple[int, int]], records: list[str], path: str) -> dict[str, Counter] | None:
         """Matches not wholly inside one unchanged record, or None when positions are unknown."""
 
         def within(extents: list[tuple[int, int]]) -> bool:
@@ -632,6 +754,9 @@ def leak_scan(
         for term, a, b in located:
             if not within([(a, b)]):
                 wording.update(distinctive[term])
+        for matches, a, b in decoded_wording(text, path):
+            if not within([(a, b)]):
+                wording.update(matches)
         pairs, offset = set(), 0
         for line in text.splitlines(keepends=True):
             located = _located(mapping_pattern, mapping_prefixes, line, offset)
@@ -650,12 +775,20 @@ def leak_scan(
             )
         # Changed records are scanned whole, including the fields of unchanged records nested in them.
         for record in records:
-            pairs.update(mapping_ids(record))
+            pairs.update(mapping_ids(json.loads(json.dumps(record))))
         return {"distinctive_wording": wording, "mapping_copy": Counter({p: 1 for p in pairs})}
 
     def scan(content: bytes, path: str, category: str, *, gate: bool = True, base_path: str | None = None):
         text = content.decode("utf-8", errors="replace")
-        found = detect(text, path)
+        try:
+            found = detect(text, path)
+        except ValueError as error:
+            if gate or str(error) != "structured_scan_decode_failed":
+                raise
+            full_counts[category] += 1
+            full_signals["structured_scan_decode_failed"] += 1
+            full_suspects.append({"path": path, "signal": "structured_scan_decode_failed", "locators": [], "count": 1})
+            return
         gated = found
         if gate and base_path is not None and any(found.values()):
             # A suspect only inside records identical at the merge-base is reported, not gated.
@@ -663,8 +796,8 @@ def leak_scan(
                 prior = bindings.git(repo, "cat-file", "blob", f"{merge_base}:{base_path}").decode("utf-8")
                 spans, paths = _unchanged_records(content.decode("utf-8"), prior)
                 if spans:
-                    doc = yaml.load(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader))
-                    gated = attribute(text, spans, list(_record_texts(doc, skip=paths))) or found
+                    doc = documents(text, path)[0]
+                    gated = attribute(text, spans, list(_record_texts(doc, skip=paths)), path) or found
             except (subprocess.CalledProcessError, UnicodeError, yaml.YAMLError):
                 gated = found
         for signal, matches in found.items():
@@ -698,6 +831,8 @@ def leak_scan(
             if path == prefix + "_words.yaml"
             else "requests"
             if Path(path).parent == Path(prefix, "_requests") and path.endswith(".words.yaml")
+            else "capture"
+            if path == f"tests/curriculum/evidence/fixtures/{context.level}_gloss_candidates.json"
             else "other"
         )
         scan(
@@ -1005,6 +1140,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
         # Parse/SQLite/ledger errors can contain private input. Only controlled
         # reason codes are safe to report; never print an arbitrary exception.
         safe_codes = {
+            "structured_scan_decode_failed",
             "sense_bindings_invalid",
             "word_missing",
             "review_arguments_required",

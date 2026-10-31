@@ -32,7 +32,9 @@ from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from prometheus_client import CollectorRegistry, Counter, Histogram, make_asgi_app
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 import scripts.github_rest_cache as github_rest
 from scripts.common.jsonl import physical_lines
@@ -1838,6 +1840,91 @@ async def serve_static(path: str, ctx: MonitorContext = Depends(get_ctx)):
     raise HTTPException(status_code=404)
 
 
+_HTTP_METHODS = frozenset({"DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"})
+
+
+def _route_template(scope: Scope) -> str:
+    """Return the matched route template, never the request path or query."""
+    if scope.get("method") == "GET" and scope.get("path") == "/metrics":
+        return "/metrics"
+    route = scope.get("route")
+    path = getattr(route, "path", None)
+    if isinstance(path, str) and path.startswith("/") and '"' not in path and "\n" not in path and "\r" not in path:
+        return path
+    return "unmatched"
+
+
+def _status_class(status_code: int) -> str:
+    hundred = status_code // 100
+    if 1 <= hundred <= 5:
+        return f"{hundred}xx"
+    return "5xx"
+
+
+class PrometheusMetricsMiddleware:
+    """Record request totals, latency, and 5xx responses, and serve GET /metrics.
+
+    The exposition body comes from ``prometheus_client.make_asgi_app``. The
+    process still binds the existing loopback listener; this adds no socket.
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        registry = CollectorRegistry()
+        self.app = app
+        self._requests = Counter(
+            "monitor_http_requests_total",
+            "HTTP requests handled by the Monitor API.",
+            labelnames=("method", "route", "status"),
+            registry=registry,
+        )
+        self._errors = Counter(
+            "monitor_http_responses_5xx_total",
+            "HTTP responses whose status class is 5xx.",
+            labelnames=("method", "route", "status"),
+            registry=registry,
+        )
+        self._latency = Histogram(
+            "monitor_http_request_duration_seconds",
+            "HTTP request latency in seconds.",
+            labelnames=("method", "route", "status"),
+            registry=registry,
+        )
+        self._metrics_app = make_asgi_app(registry=registry, disable_compression=True)
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope.get("type") != "http":
+            await self.app(scope, receive, send)
+            return
+
+        started = time.perf_counter()
+        status_code = 500
+
+        async def send_wrapper(message: Message) -> None:
+            nonlocal status_code
+            if message["type"] == "http.response.start":
+                status_code = int(message["status"])
+            await send(message)
+
+        try:
+            if scope.get("method") == "GET" and scope.get("path") == "/metrics":
+                await self._metrics_app(scope, receive, send_wrapper)
+            else:
+                await self.app(scope, receive, send_wrapper)
+        finally:
+            self._record(scope, status_code, time.perf_counter() - started)
+
+    def _record(self, scope: Scope, status_code: int, elapsed: float) -> None:
+        method = scope.get("method")
+        if method not in _HTTP_METHODS:
+            method = "OTHER"
+        status = _status_class(status_code)
+        labels = {"method": method, "route": _route_template(scope), "status": status}
+        self._requests.labels(**labels).inc()
+        self._latency.labels(**labels).observe(max(elapsed, 0.0))
+        if status == "5xx":
+            self._errors.labels(**labels).inc()
+
+
 def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     """Build a fresh Ops API app bound to one context."""
     factory_lifespan = _lifespan if lifespan is None else lifespan
@@ -1868,6 +1955,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     )
     factory_app.middleware("http")(resilience_middleware)
     factory_app.middleware("http")(opsec_path_sanitizer_middleware)
+    factory_app.add_middleware(PrometheusMetricsMiddleware)
     factory_app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     factory_app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
     factory_app.add_exception_handler(Exception, global_exception_handler)

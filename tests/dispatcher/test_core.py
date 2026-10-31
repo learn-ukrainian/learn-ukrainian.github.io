@@ -732,6 +732,55 @@ def test_settlement_ignores_setup_links_and_regenerable_caches_and_records_unkno
     assert recorded == (["unknown-output/artifact"] if unknown else [])
 
 
+@pytest.mark.parametrize("output", ["dependencies", "unique-output", "missing-lockfile"])
+def test_scheduled_settlement_does_not_retain_regenerable_dependencies_as_unique_output(sandbox, monkeypatch, output):
+    """Defect class: hourly settlement counts lockfile-backed dependencies as unique ignored output."""
+    from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+
+    (sandbox.repo / ".gitignore").write_text("site/node_modules/\n.cache/\n")
+    if output != "missing-lockfile":
+        (sandbox.repo / "site").mkdir()
+        (sandbox.repo / "site/package-lock.json").write_text('{"lockfileVersion": 3}\n')
+        run_git(sandbox.repo, "add", "site/package-lock.json")
+    run_git(sandbox.repo, "add", ".gitignore")
+    run_git(sandbox.repo, "commit", "-m", "dependency inputs")
+    run_git(sandbox.repo, "push", "origin", "main")
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    tree = Path(record["worktree_path"])
+    dependency = tree / "site/node_modules/package/index.js"
+    dependency.parent.mkdir(parents=True)
+    with dependency.open("wb") as stream:
+        stream.truncate(git.SALVAGE_IGNORED_LIMIT + 1)
+    if output == "unique-output":
+        unique = tree / ".cache/unique-evidence.bin"
+        unique.parent.mkdir()
+        with unique.open("wb") as stream:
+            stream.write(b"unpublished evidence")
+            stream.truncate(git.SALVAGE_IGNORED_LIMIT + 1)
+
+    successor = run_git(tree, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m", "successor publication")
+    run_git(tree, "push", str(sandbox.remote), f"{successor}:refs/heads/successor")
+    assert run_git(sandbox.remote, "show", "successor:delivered.txt") == "literal delivered value"
+    in_process_repo(sandbox, monkeypatch)
+    (sandbox.repo / "batch_state").mkdir()
+    (sandbox.repo / "batch_state/tasks").symlink_to(sandbox.tasks, target_is_directory=True)
+    report = cleanup.settle_terminal_worktrees(sandbox.repo, apply=True, github=cleanup.GitHubReads())
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert report["complete"] and report["error"] is None
+    if output == "dependencies":
+        assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
+        assert not tree.exists() and report["trees"] == []
+        assert run_git(sandbox.remote, "show", f"salvage/{record['task_id']}:delivered.txt") == "literal delivered value"
+    else:
+        assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("retained", "large_ignored_output")
+        assert dependency.stat().st_size == git.SALVAGE_IGNORED_LIMIT + 1
+        assert report["trees"][0]["reason"] == "large_ignored_output"
+        if output == "unique-output":
+            with unique.open("rb") as stream:
+                assert stream.read(20) == b"unpublished evidence"
+
+
 def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_salvage_ref(sandbox, monkeypatch):
     """#12043 AC-06a: a finished task's dirty tree stayed forever; a failed salvage push must still keep it."""
     record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)

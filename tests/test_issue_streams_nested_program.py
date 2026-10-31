@@ -63,14 +63,14 @@ def test_registry_lists_both_epics_in_one_stream_and_no_epic_in_two_streams():
     assert registry["devops"] == [5703, 10844]
     assert registry["monitor"] == [7919]
     assert registry["seminars-bio"] == [4431, 4215]
-    assert registry["epics"] == [LIVE]
+    assert registry["epics"] == [LIVE, 12239]
     audit = load_registry(REGISTRY_PATH, audit_only=True)
     assert STREAM not in audit
     assert "docs-knowledge" not in audit
     assert "devops" not in audit
     assert "monitor" not in audit
     assert audit["seminars-bio"] == [4431]
-    assert audit["epics"] == [LIVE]
+    assert audit["epics"] == [LIVE, 12239]
     audit_roots = {epic for epics in audit.values() for epic in epics}
     assert set(CLOSED).isdisjoint(audit_roots)
     all_epics = [epic for epics in registry.values() for epic in epics]

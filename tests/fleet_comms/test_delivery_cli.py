@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import os
 import subprocess
@@ -10,7 +11,7 @@ import sys
 
 import pytest
 
-from scripts.fleet_comms.authority import AuthorityService
+from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_NOT_FOUND, EXIT_OK, main
 
 
@@ -29,6 +30,37 @@ def publish(root, *, kind="message"):
             sender="operator", body="private body sentinel", recipients=("codex",),
             kind=kind, idempotency_key="delivery-cli-test",
         )
+
+
+def test_path_only_report_would_be_lost_when_its_file_is_deleted(plane, capsys, monkeypatch):
+    path = plane.parent / "report.txt"
+    path.write_text("Report content belongs in the message body.")
+    body = f" \t{path}:12\n"
+    assert main(["channel", "create", "reports"]) == EXIT_OK
+    capsys.readouterr()
+    monkeypatch.setattr("sys.stdin", io.StringIO(body))
+    assert main([
+        "channel", "publish", "reports", "-", "--sender", "operator", "--source", "test",
+        "--recipient", "codex", "--idempotency-key", "path-only-report",
+    ]) == EXIT_ERROR
+    output = capsys.readouterr()
+    assert "message_body_path_only: put the content in the message body" in output.err
+    with AuthorityService(root=plane) as service:
+        with pytest.raises(AuthorityServiceError, match="message_body_path_only"):
+            service.publish_message(sender="operator", body=body, recipients=("codex",))
+        assert service.store.connection.execute("SELECT COUNT(*) FROM comms_messages").fetchone()[0] == 0
+        assert service.claim_next_delivery("codex", "seat-1") is None
+
+    report = f" \nReport complete; evidence is in {path}:12.\n"
+    monkeypatch.setattr("sys.stdin", io.StringIO(report))
+    assert main([
+        "channel", "publish", "reports", "-", "--sender", "operator", "--source", "test",
+        "--recipient", "codex", "--idempotency-key", "report-with-citation",
+    ]) == EXIT_OK
+    capsys.readouterr()
+    path.unlink()
+    delivery = claim(capsys)
+    assert read_body(capsys, delivery)["body"] == report
 
 
 def invoke(capsys, *args, expected=EXIT_OK):
