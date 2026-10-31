@@ -259,7 +259,6 @@ def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list
 
 # A top-level JSON object carrying any of these keys is offered as a findings envelope.
 _FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
-_JSON_KEY_RE = re.compile(r'("(?:\\.|[^"\\])*")\s*(?::|$)')
 _JSON_VALUE_START_RE = re.compile(r" {0,3}[\[{]")
 
 
@@ -268,15 +267,44 @@ class _UnreadableFindings(ValueError):
 
 
 def _looks_like_findings(source: str) -> bool:
-    if not re.match(r"\s*\{", source):
+    """Read only valid root-object keys before the first broken key or value."""
+    source = source.lstrip(" \t\r\n")
+    if not source.startswith("{"):
         return False
-    for match in _JSON_KEY_RE.finditer(source):
+    decoder = json.JSONDecoder()
+    position = 1
+    while position < len(source):
+        position += len(source[position:]) - len(source[position:].lstrip(" \t\r\n"))
         try:
-            key = json.loads(match[1])
+            key, position = decoder.raw_decode(source, position)
+        except json.JSONDecodeError as exc:
+            if exc.msg.startswith("Unterminated string"):
+                # A cut inside the key itself may still name the whole field.
+                token = re.split(r"[\r\n]", source[position:], maxsplit=1)[0]
+                try:
+                    return json.loads(token + '"') in _FINDINGS_ENVELOPE_KEYS
+                except ValueError:
+                    pass
+            return False
         except ValueError:
-            continue
+            return False
+        if not isinstance(key, str):
+            return False
         if key in _FINDINGS_ENVELOPE_KEYS:
             return True
+        position += len(source[position:]) - len(source[position:].lstrip(" \t\r\n"))
+        if source[position : position + 1] != ":":
+            return False
+        position += 1
+        position += len(source[position:]) - len(source[position:].lstrip(" \t\r\n"))
+        try:
+            _, position = decoder.raw_decode(source, position)
+        except ValueError:
+            return False
+        position += len(source[position:]) - len(source[position:].lstrip(" \t\r\n"))
+        if source[position : position + 1] != ",":
+            return False
+        position += 1
     return False
 
 
@@ -380,27 +408,43 @@ def _without_inline_json(text: str) -> str:
     return "".join((*parts, text[cursor:]))
 
 
-def declares_incomplete_review(response: str) -> bool:
-    """Whether own prose or a findings explanation declares the review unfinished.
-
-    Quoted blocks, code and inline examples are not reviewer declarations.
-    No new completion field is required of existing complete replies.
-    """
+def _completion_prose(response: str) -> list[str]:
+    """Own paragraphs, with verdict/score metadata separated from their prose."""
     from markdown_it import MarkdownIt
 
     visible = _without_inline_json(_without_code_fences(response, keep_unclosed=False))
     prose = []
     for token in MarkdownIt("commonmark").parse(visible):
         if token.type == "inline":
-            prose.append("".join(
-                " " if child.type in {"softbreak", "hardbreak", "code_inline"} else child.content
+            rendered = "".join(
+                "\n" if child.type in {"softbreak", "hardbreak"} else " " if child.type == "code_inline" else child.content
                 for child in token.children or []
-            ))
+            )
+            lines = []
+            for line in _commonmark_lines(rendered):
+                for pattern in (_REVIEW_VERDICT_LINE_RE, _REVIEW_SCORE_LINE_RE):
+                    if match := pattern.match(line):
+                        # Render emphasis first so removing metadata leaves no
+                        # closing markers in front of its own explanation.
+                        line = "\n" + line[match.end():] + "\n"
+                        break
+                lines.append(line)
+            prose.extend(paragraph.replace("\n", " ").strip() for paragraph in re.split(r"\n[ \t]*\n", "\n".join(lines)))
+    return prose
+
+
+def declares_incomplete_review(response: str) -> bool:
+    """Whether own prose or a findings explanation declares the review unfinished.
+
+    Quoted blocks, code and inline examples are not reviewer declarations.
+    No new completion field is required of existing complete replies.
+    """
+    prose = _completion_prose(response)
     for payload in _top_level_json_values(response):
         if isinstance(payload, dict) and _FINDINGS_ENVELOPE_KEYS & payload.keys():
             overall = payload.get("overall")
             if isinstance(overall, dict) and isinstance(overall.get("explanation"), str):
-                prose.append(overall["explanation"])
+                prose.extend(_completion_prose(overall["explanation"]))
     return any(_INCOMPLETE_REVIEW_RE.search(text) for text in prose)
 
 
