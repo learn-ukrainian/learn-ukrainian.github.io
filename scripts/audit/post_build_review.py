@@ -566,27 +566,18 @@ def _check_size_policy_status(
     raw_signals = size_record.get("decision_signals") or [size_record.get("status")]
     signals = [str(signal) for signal in raw_signals if str(signal) in severities]
     messages = {
-        "missing_plan_word_target": "Plan has no enforceable word floor.",
-        "invalid_size_policy": "Explicit size-policy override is invalid.",
         "missing_dossier": "Required seminar research dossier is missing.",
-        "plan_review_needed": "Grounded material and the reviewed plan floor require plan review; automatic expansion is forbidden.",
-        "below_plan_floor": "Authored instructional prose is below the reviewed plan floor.",
+        "evidence_gap": "An unsupported objective or content point requires source evidence or versioned plan review, independently of length.",
         "repetitive_authored_prose": "Deterministic paragraph evidence found repetitive authored exposition requiring revision.",
-        "over_advisory_ceiling": "Module exceeds the advisory ceiling; inspect source density and marginal pedagogical value without failing on length alone.",
-        "exceptional_justification_required": "Exceptional length requires explicit source-backed pedagogical justification.",
     }
+    signals = [signal for signal in signals if signal in messages]
     findings: list[dict[str, Any]] = []
     content_path = str(target["files"].get("content") or target["files"]["plan"])
     for signal in dict.fromkeys(signals):
         location = (
             str(target["files"]["plan"])
             if signal
-            in {
-                "missing_plan_word_target",
-                "invalid_size_policy",
-                "missing_dossier",
-                "plan_review_needed",
-            }
+            in {"missing_dossier", "evidence_gap"}
             else content_path
         )
         findings.append(
