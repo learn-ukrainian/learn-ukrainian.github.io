@@ -109,7 +109,7 @@
       "card_id": "wc_3xqwne5jgn63",
       "entry_id": 258577,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:офіціантка",
       "span": [
         10,
@@ -593,17 +593,6 @@
       "span": [
         0,
         17
-      ]
-    },
-    {
-      "card_id": "wc_krh1w0gwn5w2",
-      "entry_id": 17542,
-      "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
-      "record_key": "vesum:бариста",
-      "span": [
-        10,
-        11
       ]
     },
     {
@@ -1705,7 +1694,7 @@
       "card_id": "wc_jc5hm24xj9g8",
       "entry_id": 82409,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:готівка",
       "span": [
         12,
@@ -2180,7 +2169,7 @@
       "card_id": "wc_7edehzqd24wz",
       "entry_id": 82239,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/14/tags",
       "record_key": "vesum:гострий",
       "span": [
         4,
@@ -3424,7 +3413,7 @@
       "card_id": "wc_5ac8vftv3pey",
       "entry_id": 387389,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:тістечко",
       "span": [
         12,
@@ -3888,7 +3877,7 @@
       "card_id": "wc_rn7hfetva0ve",
       "entry_id": 260007,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/5/tags",
       "record_key": "vesum:пакетик",
       "span": [
         12,
@@ -4382,7 +4371,7 @@
       "card_id": "wc_62djjmfxk1c8",
       "entry_id": 365855,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:соломинка",
       "span": [
         12,
@@ -4832,7 +4821,7 @@
       "card_id": "wc_f3w4ga64h4y1",
       "entry_id": 83682,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:гривня",
       "span": [
         12,
@@ -5307,7 +5296,7 @@
       "card_id": "wc_9e056tqtgkgf",
       "entry_id": 97867,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:дія",
       "span": [
         12,
@@ -5782,7 +5771,7 @@
       "card_id": "wc_s5y8rpjnn3x0",
       "entry_id": 155892,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:інфінітив",
       "span": [
         12,
@@ -22731,7 +22720,7 @@
       "card_id": "wc_33qv20nmgm94",
       "entry_id": 415172,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:хто",
       "span": [
         10,
@@ -23330,7 +23319,7 @@
       "card_id": "wc_vvbq92wwxskh",
       "entry_id": 265588,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:перевірка",
       "span": [
         12,
@@ -23780,7 +23769,7 @@
       "card_id": "wc_7cq5e13zagb0",
       "entry_id": 369058,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/4/tags",
       "record_key": "vesum:спілкування",
       "span": [
         12,
@@ -24277,7 +24266,7 @@
       "card_id": "wc_3ytmbxews4cg",
       "entry_id": 381796,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:Тарас",
       "span": [
         10,
@@ -24792,7 +24781,7 @@
       "card_id": "wc_qp5msqsb9fzq",
       "entry_id": 105869,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/5/tags",
       "record_key": "vesum:друг",
       "span": [
         10,
@@ -28229,7 +28218,7 @@
       "card_id": "wc_pnye70yqdqxy",
       "entry_id": 283856,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:плакат",
       "span": [
         12,
@@ -28769,7 +28758,7 @@
       "card_id": "wc_v7385p2vfmd7",
       "entry_id": 222139,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:напій",
       "span": [
         12,
@@ -29309,7 +29298,7 @@
       "card_id": "wc_9cv96acr1frj",
       "entry_id": 373932,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:стілець",
       "span": [
         12,
@@ -29878,7 +29867,7 @@
       "card_id": "wc_y4mfsa75a8dq",
       "entry_id": 310873,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/4/tags",
       "record_key": "vesum:привітання",
       "span": [
         12,
@@ -30448,7 +30437,7 @@
       "card_id": "wc_39m7asavdtt3",
       "entry_id": 124518,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/11/tags",
       "record_key": "vesum:зайнятий",
       "span": [
         4,
@@ -31431,7 +31420,7 @@
       "card_id": "wc_tabtj29yne4z",
       "entry_id": 153660,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/7/tags",
       "record_key": "vesum:ім'я",
       "span": [
         12,
@@ -32048,7 +32037,7 @@
       "card_id": "wc_qx6g6av4pwne",
       "entry_id": 317122,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/4/tags",
       "record_key": "vesum:прізвище",
       "span": [
         12,
@@ -32545,7 +32534,7 @@
       "card_id": "wc_t5mkqe7v31x3",
       "entry_id": 147514,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/4/tags",
       "record_key": "vesum:знайомство",
       "span": [
         12,
@@ -33042,7 +33031,7 @@
       "card_id": "wc_1z714m00t0wn",
       "entry_id": 324665,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:професія",
       "span": [
         12,
@@ -33517,7 +33506,7 @@
       "card_id": "wc_hbtnjcpx6vxd",
       "entry_id": 226078,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:національність",
       "span": [
         12,
@@ -34021,7 +34010,7 @@
       "card_id": "wc_yx5tjedf0xte",
       "entry_id": 307328,
       "field": "gender",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/4/tags",
       "record_key": "vesum:походження",
       "span": [
         12,
@@ -34518,7 +34507,8 @@
     "transliteration": "Atlas supplies literal qualified source evidence and entry/sense correspondence"
   },
   "field_residual_owners": {
-    "examples": "independent Ukrainian reviewer"
+    "examples": "independent Ukrainian reviewer",
+    "wc_krh1w0gwn5w2/wc_krh1w0gwn5w2/gender": "Atlas"
   },
   "field_residuals": {
     "antonyms": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
@@ -34544,7 +34534,8 @@
     "spelling_variants": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
     "stress": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
     "synonyms": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
-    "transliteration": "no_approved_derivation"
+    "transliteration": "no_approved_derivation",
+    "wc_krh1w0gwn5w2/wc_krh1w0gwn5w2/gender": "canonical_VESUM_gender_conflict: entry_17542/noun/бариста; clean_analyses/3=f, clean_analyses/10=m; scalar_requires_qualified_source_adjudication"
   },
   "held_units": [
     {
