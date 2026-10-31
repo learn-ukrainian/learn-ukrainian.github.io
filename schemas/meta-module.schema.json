@@ -163,8 +163,7 @@
       "description": "Legacy field - use focus instead"
     },
     "word_target": {
-      "type": "integer",
-      "description": "Deprecated total word-count target. Ignored by acceptance."
+      "description": "Deprecated total word-count target. Ignored by acceptance, including when blank."
     },
     "immersion": {
       "type": "string",
@@ -218,8 +217,7 @@
             "type": "string"
           },
           "words": {
-            "type": "integer",
-            "description": "Deprecated section word budget. Ignored by acceptance."
+            "description": "Deprecated section word budget. Ignored by acceptance, including when blank."
           },
           "points": {
             "type": "array",

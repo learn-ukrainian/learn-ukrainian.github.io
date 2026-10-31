@@ -103,8 +103,7 @@
             "description": "Section title (will become H2 header)"
           },
           "words": {
-            "type": "integer",
-            "description": "Deprecated section word budget. Ignored by acceptance."
+            "description": "Deprecated section word budget. Ignored by acceptance, including when blank."
           },
           "subsections": {
             "type": "array",
@@ -132,12 +131,10 @@
       "minItems": 1
     },
     "word_target": {
-      "type": "integer",
-      "description": "Deprecated total word-count target. Ignored by acceptance."
+      "description": "Deprecated total word-count target. Ignored by acceptance, including when blank."
     },
     "word_tolerance": {
-      "type": "number",
-      "description": "Deprecated sizing tolerance. Ignored by acceptance."
+      "description": "Deprecated sizing tolerance. Ignored by acceptance, including when blank."
     },
     "vocabulary": {
       "type": "object",
