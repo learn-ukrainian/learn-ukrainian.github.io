@@ -20,6 +20,7 @@ import argparse
 import contextlib
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from dataclasses import asdict, dataclass, field
@@ -556,6 +557,8 @@ def collect_criterion_receipts(repo_root: Path, pr: PullRequestInfo, *, repo: st
     namespace = hashlib.sha256(slug.encode()).hexdigest()[:16]
     reports = []
     for path in sorted((primary / ".agent/task-lifecycle" / namespace).glob("issue-*.json")):
+        if not re.fullmatch(r"issue-\d+\.json", path.name):
+            continue
         try:
             with lifecycle_observation.repository_context(repo_root), tl.lifecycle_lock(path):
                 ledger = tl.load_lifecycle(path)
