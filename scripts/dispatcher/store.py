@@ -5,9 +5,10 @@ import json
 import os
 import re
 import subprocess
+import unicodedata
 import uuid
 from datetime import UTC, datetime
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 from scripts.common.git_context import validate_plain_branch_name
 from scripts.common.task_store_paths import tasks_dir
@@ -154,7 +155,23 @@ def record_path(task_id: str) -> Path:
     return tasks_dir() / f"{task_id}.json"
 
 
-def _write(path: Path, record: dict, exclusive: bool = False) -> None:
+def _write(path: Path, record: dict, exclusive: bool = False, *, grant: dict | None = None) -> None:
+    # Reentrant: settlement, create and grant_paths already hold this same inode lock.
+    with task_state_lock(path):
+        if not exclusive and path.exists():
+            current = json.loads(path.read_text())
+            if current.get("run_nonce") != record.get("run_nonce"):
+                raise ValueError("run nonce mismatch")
+            if "owned_path_grants" in current:
+                record["owned_path_grants"] = current["owned_path_grants"]
+            if current.get("settling_at"):
+                record["settling_at"] = current["settling_at"]
+        if grant is not None:
+            record["owned_path_grants"] = [*record.get("owned_path_grants", []), grant]
+        _write_atomic(path, record, exclusive)
+
+
+def _write_atomic(path: Path, record: dict, exclusive: bool) -> None:
     # A PID transfers the slot to the supervisor. Every terminal path releases it.
     if record.get("pid") is not None or record.get("status") not in ACTIVE:
         record.pop("admission_hold", None)
@@ -212,6 +229,103 @@ def read(task_id: str, nonce: str | None = None, *, missing_ok=False) -> dict | 
 
 def replace(record: dict, path: Path | None = None) -> None:
     _write(path or record_path(record["task_id"]), record)
+
+
+def _grant_paths_validated(root: Path, paths: list[str]) -> list[str]:
+    """Literal relative paths inside the existing worktree; no sparse checkout changes."""
+    from scripts.dispatcher import ownership, scope
+
+    def validate(raw: str) -> str:
+        if (not isinstance(raw, str) or not raw or raw != raw.strip() or "\\" in raw
+                or PureWindowsPath(raw).drive or raw.startswith("/") or any(c in raw for c in "*?:")
+                or any(unicodedata.category(c) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for c in raw)
+                or any(part in {"", ".", ".."} for part in raw.rstrip("/").split("/"))):
+            raise ValueError("grant paths must be literal repository-relative paths without traversal or wildcards")
+        path = raw.rstrip("/")
+        try:
+            resolved = (root / path).resolve()
+        except (OSError, RuntimeError) as exc:
+            raise ValueError("grant path cannot be resolved inside the worktree") from exc
+        if not path or not resolved.is_relative_to(root):
+            raise ValueError("grant path escapes the worktree or names its root")
+        return path
+
+    paths = sorted(set(validate(path) for path in paths))
+    expanded, _ = scope.with_generated_outputs(paths)
+    paths = list(dict.fromkeys(validate(path) for path in expanded))
+    run = ownership._local_git(root)
+    sparse = subprocess.run(["git", "-C", str(root), "config", "--bool", "core.sparseCheckout"],
+                            capture_output=True, text=True, check=False, timeout=30)
+    if sparse.returncode not in {0, 1}:
+        raise OSError("cannot inspect sparse checkout")
+    if sparse.stdout.strip() == "true":
+        accepted = subprocess.run(["git", "-C", str(root), "sparse-checkout", "check-rules", "-z"],
+                                  input="\0".join(paths) + "\0", capture_output=True, text=True,
+                                  check=True, timeout=30).stdout.split("\0")
+        excluded = set(paths) - set(accepted)
+        # A directory above an excluded tree would otherwise quietly grant that tree too.
+        excluded.update(path[2:] for path in run("ls-files", "-t", "-z", strip=False).split("\0")
+                        if path.startswith("S ") and not ownership.outside_owned([path[2:]], paths))
+        if excluded:
+            raise ValueError("grant path is sparse-excluded: " + ", ".join(sorted(excluded)[:10]))
+    return paths
+
+
+def grant_paths(task_id: str, run_nonce: str, paths: list[str], reason: str, approval_ref: str) -> dict:
+    """Append attributable approval for an honest worker; caller identity is unauthenticated."""
+    from scripts.dispatcher import ownership
+
+    if not reason.strip() or not approval_ref.strip() or not paths:
+        raise ValueError("paths, reason and approval-ref must be nonempty")
+    caller = os.environ.get(ownership.TASK_ID_ENV)
+    ancestor, seen = caller, set()
+    while ancestor:
+        if ancestor == task_id:
+            raise ValueError("self or descendant task cannot grant its own scope")
+        if ancestor in seen:
+            raise ValueError("caller task ancestry contains a cycle")
+        seen.add(ancestor)
+        parent = read(ancestor)
+        ancestor = parent.get("parent_task_id")
+    path = record_path(task_id)
+    with task_state_lock(path):
+        record = read(task_id, run_nonce)
+        if record.get("schema_version") != 2 or record.get("status") != "running" or record.get("settling_at"):
+            raise ValueError("grants require a running v2 task that is not settling")
+        sealed = ("review_attempt", "advisory_envelope", "advisory_binding_sha256", "advisory_binding",
+                  "advisory_role", "advisory_task", "driver_brief", "bounded", "bounded_implementation")
+        options = record.get("options") or {}
+        if (record.get("mode") != "workspace-write"
+                or any(record.get(key) is not None for key in sealed)
+                or any(options.get(key) not in (None, "None", False, "False", "") for key in sealed)
+                or record.get("research_task_family") in {"bounded", "bounded_implementation"}):
+            raise ValueError("grants are refused for sealed envelopes and read-only tasks")
+        root = Path(record["worktree_path"]).resolve(strict=True)
+        normalized = _grant_paths_validated(root, paths)
+        ownership.effective_scope(record)
+        request = dict(task_id=task_id, run_nonce=run_nonce, owned_paths=normalized,
+                       reason=reason, approval_ref=approval_ref)
+        grant = next((old for old in record.get("owned_path_grants", [])
+                      if all(old.get(key) == value for key, value in request.items())), None)
+        if grant is None:
+            grant = dict(request, schema_version=1, grant_id=uuid.uuid4().hex,
+                         repository_id=record.get("repository_id"), granted_at=now(),
+                         granted_by=caller or os.environ.get("SESSION_HANDOFF_AGENT") or "unknown-seat",
+                         granted_by_authenticated=False)
+            _write(path, record, grant=grant)
+        return dict(task_id=task_id, run_nonce=run_nonce, grant_id=grant["grant_id"],
+                    owned_paths=normalized, effective_scope=ownership.effective_scope(record), grant=grant)
+
+
+def begin_settlement(record: dict) -> None:
+    """Close grants and refresh them before delivery evidence is collected."""
+    path = record_path(record["task_id"])
+    with task_state_lock(path):
+        current = read(record["task_id"], record["run_nonce"])
+        current["settling_at"] = current.get("settling_at") or now()
+        replace(current, path)
+        record["settling_at"] = current["settling_at"]
+        record["owned_path_grants"] = current.get("owned_path_grants", [])
 
 
 def list_tasks(status: str | None = None, include_archive=False, *, strict=False) -> list[dict]:

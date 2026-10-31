@@ -3,7 +3,9 @@
 Settlement (``worker._enforce_delivery``) is the authority: it refuses a delivery whose commits
 touch a path outside the task's owned paths. The commit and push hooks run the same rule early,
 so the worker learns of an outside path while it can still drop it (#12113). The hooks never
-replace settlement and never widen the owned paths.
+replace settlement. Coordinator grants add attributable scope for an honest but mistaken
+worker; they do not authenticate a principal. Exact-head independent review, CI and the
+merge queue remain the landing backstop.
 
 Usage from the tracked hooks, with the dispatched task's id in ``LEARN_UKRAINIAN_DISPATCH_TASK_ID``::
 
@@ -22,6 +24,35 @@ from pathlib import Path
 
 TASK_ID_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 _ZERO = frozenset("0")
+
+
+def effective_scope(record: dict) -> list[str]:
+    """Original scope plus grants bound to this exact task run, using the shared matcher."""
+    owned = list(record.get("owned_paths") or [])
+    grants = record.get("owned_path_grants", [])
+    if not isinstance(grants, list):
+        raise ValueError("invalid owned-path grants")
+    for grant in grants:
+        if (not isinstance(grant, dict) or grant.get("task_id") != record.get("task_id")
+                or grant.get("run_nonce") != record.get("run_nonce") or not grant.get("grant_id")
+                or not isinstance(grant.get("owned_paths"), list) or not grant["owned_paths"]
+                or any(not isinstance(path, str) or not path for path in grant["owned_paths"])):
+            raise ValueError("invalid owned-path grant binding")
+        owned.extend(grant["owned_paths"])
+    # An empty original scope has always meant unrestricted delivery; an addition cannot narrow it.
+    return list(dict.fromkeys(owned)) if record.get("owned_paths") else []
+
+
+def grants_used(record: dict, paths: Iterable[str]) -> list[dict]:
+    """Each delivered path owned only through a grant, with its approval evidence."""
+    from scripts.guardrails.delegate_ownership import path_is_owned
+
+    effective_scope(record)  # Refuse malformed grants even when no path needs one.
+    if not record.get("owned_paths"):
+        return []
+    return [dict(path=path, grant_id=grant["grant_id"])
+            for path in sorted(set(paths)) if path and not path_is_owned(path, record.get("owned_paths") or [])
+            for grant in record.get("owned_path_grants", []) if path_is_owned(path, grant["owned_paths"])]
 
 
 def outside_owned(paths: Iterable[str], owned: Sequence[str]) -> list[str]:
@@ -128,11 +159,11 @@ def _refusal(stage: str, record: dict, outside: list[str]) -> str:
         "Its commits change paths outside the task's owned paths:",
         *(f"  - {shown(path)}" for path in outside[:50]),
         *([f"  ... and {len(outside) - 50} more"] if len(outside) > 50 else []),
-        "Owned paths: " + ", ".join(shown(path) for path in record["owned_paths"]),
+        "Effective owned paths: " + ", ".join(shown(path) for path in effective_scope(record)),
         "Settlement refuses any delivery that touches these paths. Resolve it one of two ways:",
         f"  1. Drop the change: {drop}.",
-        "  2. Stop and report the path you need to the coordinator that dispatched this task. It can answer, "
-        "or start a new task with wider owned paths; it cannot widen this one.",
+        "  2. Request an exact-path grant from the coordinator through Fleet Comms. Include the task id, "
+        "run nonce, paths, reason and approval reference; wait for its durable grant before retrying.",
         "Never widen the owned paths yourself or bypass this hook.",
     ]
     if stage == "push":
@@ -154,7 +185,7 @@ def main(argv: list[str] | None = None) -> int:
         run = _local_git(args.worktree)
         paths = (_staged_paths(run) if args.stage == "staged" else
                  _pushed_paths(run, record, sys.stdin.read()))
-        outside = outside_owned(paths, record["owned_paths"])
+        outside = outside_owned(paths, effective_scope(record))
     except (OSError, ValueError, KeyError, TypeError, IndexError, subprocess.SubprocessError) as exc:
         # Settlement stays the authority, so an early check that cannot run never blocks the work.
         print(f"owned-path check skipped ({failure_detail(exc)}); settlement still checks the delivery.",

@@ -53,6 +53,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.dispatcher.cli dispatch --agent sol --model gpt-6.1-sol --prompt 'Explain X'\n"
         "  .venv/bin/python scripts/dispatch.py wait TASK --run-nonce NONCE --timeout 60\n"
+        "  .venv/bin/python scripts/dispatch.py grant-paths TASK --run-nonce NONCE --owned-path tests/fix.py "
+        "--reason 'Approved fixture change' --approval-ref message-id\n"
         "Outputs: task JSON, prompt, result and logs; new branch/worktree on dispatch.\n"
         "Exit codes: 0 success, 1 terminal failure, 2 invalid/refused request,\n"
         "  3 host admission refused (retryable), 4 worktree disk full, 124 client timeout.\n"
@@ -169,6 +171,25 @@ def build_parser() -> argparse.ArgumentParser:
     )
     for flag in ("owned-path", "research-owned-path"):
         dispatch.add_argument(f"--{flag}", action="append", default=[], help="Path label (repeatable; default: empty)")
+    grant = subs.add_parser(
+        "grant-paths", help="Grant exact additional owned paths to a running task",
+        description="Append an attributable owned-path grant to a running write task.\n"
+        "Coordinator use only; refuses self/descendants, sealed envelopes and settling tasks.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py grant-paths TASK --run-nonce NONCE "
+        "--owned-path tests/fix.py --reason 'Approved fixture change' --approval-ref message-id\n"
+        "Outputs: JSON receipt with task, nonce, grant id, paths and effective scope.\n"
+        "Side effects: appends a grant to the canonical task record; never changes sparse checkout.\n"
+        "Exit codes: 0 durable grant or identical retry, 1 operational failure, 2 invalid/refused request.\n"
+        "Related: agents_extensions/shared/skills/full-send/SKILL.md (owned-path exchange).",
+    )
+    grant.add_argument("task_id", help="Exact dispatch task ID, e.g. worker-42")
+    grant.add_argument("--run-nonce", required=True, help="Exact run nonce returned by dispatch")
+    grant.add_argument("--owned-path", action="append", required=True,
+                       help="Literal repository-relative path, e.g. tests/fix.py (repeatable; no wildcards)")
+    grant.add_argument("--reason", required=True, help="Nonempty reason for the approved scope addition")
+    grant.add_argument("--approval-ref", required=True,
+                       help="Fleet Comms message ID or comment URL; stored as given, never fetched")
     for name in ("wait", "status", "cancel", "list"):
         sub = subs.add_parser(name, help=f"{name.capitalize()} task records")
         if name == "list":
@@ -514,6 +535,14 @@ def main(argv=None) -> int:
             return _status_or_fail(args)
         if args.command == "dispatch":
             return _dispatch(args)
+        if args.command == "grant-paths":
+            try:
+                result = store.grant_paths(args.task_id, args.run_nonce, args.owned_path, args.reason, args.approval_ref)
+            except (OSError, subprocess.SubprocessError) as exc:
+                print(f"dispatcher: grant failed ({type(exc).__name__})", file=sys.stderr)
+                return 1
+            print(json.dumps(result, indent=2))
+            return 0
         code = 0
         if args.command == "worktrees":
             result = _worktrees(args.repo, args.all)
