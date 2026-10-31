@@ -1,0 +1,80 @@
+request_schema: 1
+module: a1/first-conversations
+texts:
+- id: T-501
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0076
+  span:
+    first_words: 230. А. Вимовте вголос слова, звертаючи увагу на місце наголосу.
+    last_words: 'не можна переві- рити наголосом, то користуємося такими правилами: 97'
+  supports: Stressed and unstressed e/i pronunciation; the text distinguishes root-vowel approximation
+    from clear endings. No spelling-rule system is taught.
+- id: T-502
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0007
+  span:
+    first_words: Привіт! Вітаю! Доброго
+    last_words: Моє вам шанування!
+  supports: Attested familiar greetings and farewells; only the acquired expressions are selected for
+    learner print.
+- id: T-503
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0099
+  span:
+    first_words: — Доброго ранку! Ти не бачило мою маму? — А
+    last_words: Пухнастику? Які слова він сказав, коли зустрів свою маму? 100
+  supports: Recycle acquired family labels in a conversation without introducing the source story or its
+    complex clauses.
+- id: T-504
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-litvinova-2023_s0264
+  span:
+    first_words: 2. Що цікавого щодо займенників ви помітили в реченнях? 3.
+    last_words: § 54. Розряди займенників за значенням та особливості відмінювання 259
+  supports: Previously supported possessive labels identify a belonging; agreement remains a fixed model
+    until position 8.
+- id: T-505
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0007
+  span:
+    first_words: 1. Складіть і розіграйте діалог
+    last_words: біля супермаркету.
+  supports: Purposeful five-to-six-turn dialogues are modelled for different interlocutors, including
+    an adult sport-club administrator; the plan adapts the purpose to acquired first-contact language.
+videos:
+- id: V-501
+  url: https://www.youtube.com/watch?v=3zZWCCS7igw
+  channel: Ukrainian with Olha
+  use: Collected first-introduction video, used as supported listening input before a live adult introduction.
+    Untaught words remain exposure. Show the whole video visibly with sound and picture. No verified word-level
+    timing or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+- id: V-502
+  url: https://www.youtube.com/watch?v=LARvKb7D38M
+  channel: VERBA SCHOOL
+  use: Collected family and possessive video, used for listening and repeated supported family labels,
+    without teaching the full agreement system before position 8. Show the whole video visibly with sound
+    and picture. No verified word-level timing or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+standard:
+- id: S-501
+  lines: 459-459
+- id: S-502
+  lines: 239-243
+- id: S-503
+  lines: 268-270
+- id: S-504
+  lines: 410-432
+- id: S-505
+  lines: 578-579

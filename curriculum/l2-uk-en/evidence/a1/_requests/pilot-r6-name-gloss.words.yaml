@@ -1,0 +1,13 @@
+request_schema: 1
+level: a1
+words:
+- lemma: Ніна
+  pos: noun
+  entry:
+    entry_id: 239577
+    source: vesum
+  want: W-091
+  note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058);
+    taught letters only. English name checked with Sources translate_en_uk: balla_en_uk row 43984; VESUM
+    entry 239577; ULIF entry 137993 confirms feminine personal-name identity.'
+  meaning: Nina

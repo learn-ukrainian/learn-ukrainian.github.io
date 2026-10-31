@@ -1,0 +1,25 @@
+issue: 8425
+owner: claude-cto
+status: unresolved
+disposition: <!-- VERIFY --> Timed segments for V-102..V-104. Keep whole visible listening and unscored
+  repetition; withdraw claims that these videos supply bounded audio for listed words. No invented timings
+  or audio-only hidden player. Human teacher rehearsal is distinct from a verified recording.
+words_with_models_withdrawn:
+- W-074
+- W-096
+- W-287
+- W-288
+- W-289
+- W-290
+- W-291
+- W-292
+- W-293
+- W-295
+sources:
+- ext-ulp_youtube-302
+- ext-ulp_youtube-64
+- ext-ulp_youtube-287
+evidence: Sources chunk_start_ts/chunk_end_ts null; public subtitle fetch refused.
+teaching_disposition: All required oral-first words in this plan now have separate dedicated publisher-linked
+  recordings in pilot-r6-word-audio-provenance.yaml. The remaining YouTube timing residual does not assert
+  an audio gap for those words.

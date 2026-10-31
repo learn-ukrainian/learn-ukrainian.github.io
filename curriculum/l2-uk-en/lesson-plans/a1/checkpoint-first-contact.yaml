@@ -1,0 +1,175 @@
+plan_schema: 2
+module: checkpoint-first-contact
+level: a1
+sequence: 7
+slug: checkpoint-first-contact
+version: '1.0'
+title: привіт
+subtitle: First-contact checkpoint with acquired language
+focus: Complete an integrated first-contact task with previously introduced language Adult or teen situations
+  retain English support. Private-book wording is not teaching material. Unresolved formula ids remain
+  withheld from teaching and scoring.
+objectives:
+- Integrate listening, speaking, supported reading and writing in a purposeful adult first meeting.
+- Choose register, relevant details and a suitable close without introducing new inventory.
+connects_to:
+- things-have-gender
+prerequisites:
+- first-conversations
+register: neutral
+changelog:
+- '1.0 (2026-10-31): Independently authored for #8425 steps 1-4 under the approved r6 arc. Plans only;
+  no lesson builds.'
+arc_ref:
+  level: a1
+  position: 7
+evidence_ref:
+  path: curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: first-contact-integration
+  title: привіт
+  kind: checkpoint
+  job: Complete an integrated first-contact task using acquired language.
+  rationale: Use acquired language to accomplish a chosen adult purpose. The learner makes meaningful
+    choices, then checks the result against the stated criteria. This task replaces a second exercise
+    set; it introduces nothing.
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled:
+      - W-001
+      - W-002
+      - W-074
+      - W-287
+      - W-290
+      - W-294
+      - W-296
+      - W-195
+      - W-226
+      - W-227
+      - W-205
+      - W-081
+      - W-101
+      - W-010
+      - W-011
+      - W-218
+      - W-216
+      - W-238
+      - W-236
+      - W-305
+      - W-303
+      - W-304
+      - W-306
+      - W-273
+  steps:
+  - id: s1
+    kind: practice
+    uses:
+      grammar: []
+      vocabulary:
+      - W-074
+      - W-287
+      - W-290
+      - W-294
+      - W-296
+      - W-305
+      - W-306
+      - W-273
+    evidence:
+    - T-601
+    - V-601
+    practice:
+    - a1
+    needs: []
+  - id: s2
+    kind: practice
+    uses:
+      grammar: []
+      vocabulary:
+      - W-001
+      - W-002
+      - W-074
+      - W-287
+      - W-290
+      - W-294
+      - W-296
+      - W-195
+      - W-226
+      - W-227
+      - W-205
+      - W-081
+      - W-101
+      - W-010
+      - W-011
+      - W-218
+      - W-216
+      - W-238
+      - W-236
+      - W-305
+      - W-303
+      - W-304
+      - W-306
+      - W-273
+    evidence:
+    - T-601
+    - T-602
+    - V-601
+    practice: []
+    needs: []
+    task:
+      id: first-contact-integration-task
+      action: personalize
+      context_en: You arrive at a community event and meet someone new. Select a sourced fictional profile
+        or your own details, and choose a family photo, trusted circle or acquired belonging as an optional
+        conversation focus.
+      instruction_en: Listen to your partner’s opening and choose an appropriate reply. Sustain a four-to-six-turn
+        meeting with a name and a relevant detail, using a photo or object label when useful. Read the
+        partner’s supported badge or caption and identify its intended person or object. Write a short
+        follow-up message with a suitable close. Change the recipient and adapt the exchange. Use the
+        complete alphabet reference for a supported name or surname.
+      response_mode: spoken_or_written
+      success_criteria_en:
+      - A partner can identify the selected person and relevant detail.
+      - The exchange contains four to six connected turns and responds to the partner.
+      - The register and closing fit the chosen relationship and time.
+      - The read badge or caption matches the intended person or object.
+      - The written follow-up communicates a chosen detail.
+      - No new word, grammatical system or letter is required.
+      learner_reads:
+      - ref: T-602
+        words:
+        - твоя мама
+        - моя мама
+  consolidation: []
+  activities:
+  - id: a1
+    type: match-up
+    placement: workbook
+    focus: Match acquired greeting, introduction and closing replies to distinct adult first-contact contexts,
+      then use a different reply in your own purposeful exchange. Bind each form side to its record and
+      give a reason; no new word or formula is introduced.
+    targets:
+    - W-074
+    - W-287
+    - W-290
+    - W-294
+    - W-296
+    - W-305
+    - W-306
+    - W-273
+    learner_reads: []
+  videos:
+  - evidence: V-601
+    use: 'Lesson 1 s1: revisit the collected whole visible video as familiar listening before the practical
+      task. No new inventory is acquired or tested from it.'
+  practice:
+    vocabulary: core
+    stress: []
+    patterns: []

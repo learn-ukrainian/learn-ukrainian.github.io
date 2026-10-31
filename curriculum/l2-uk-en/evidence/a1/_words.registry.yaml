@@ -1307,3 +1307,959 @@
   id: W-187
   lemma: м'який
   pos: adj
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 51684
+    source: vesum
+  id: W-188
+  lemma: вишиванка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 75545
+    source: vesum
+  id: W-189
+  lemma: герб
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 153660
+    source: vesum
+  id: W-190
+  lemma: ім'я
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 158856
+    source: vesum
+  id: W-191
+  lemma: калина
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 185777
+    source: vesum
+  id: W-192
+  lemma: лелека
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 275822
+    source: vesum
+  id: W-193
+  lemma: писанка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 309206
+    source: vesum
+  id: W-194
+  lemma: прапор
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 159689
+    source: vesum
+  id: W-195
+  lemma: Канада
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 205716
+    source: vesum
+  id: W-196
+  lemma: мова
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 295702
+    source: vesum
+  id: W-197
+  lemma: Польща
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 397247
+    source: vesum
+  id: W-198
+  lemma: українець
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 397281
+    source: vesum
+  id: W-199
+  lemma: українка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 39972
+    source: vesum
+  id: W-200
+  lemma: вечір
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 95644
+    source: vesum
+  id: W-201
+  lemma: дим
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 96584
+    source: vesum
+  id: W-202
+  lemma: дитина
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 167171
+    source: vesum
+  id: W-203
+  lemma: кіт
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 168709
+    source: vesum
+  id: W-204
+  lemma: книжка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 337323
+    source: vesum
+  id: W-205
+  lemma: родина
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 356837
+    source: vesum
+  id: W-206
+  lemma: сестра
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 383748
+    source: vesum
+  id: W-207
+  lemma: телефон
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 423467
+    source: vesum
+  id: W-208
+  lemma: шафа
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 172123
+    source: vesum
+  id: W-209
+  lemma: комп'ютер
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 197296
+    source: vesum
+  id: W-210
+  lemma: мати
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 348457
+    source: vesum
+  id: W-211
+  lemma: рюкзак
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 409441
+    source: vesum
+  id: W-212
+  lemma: Франція
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 436286
+    source: vesum
+  id: W-213
+  lemma: юрист
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 436287
+    source: vesum
+  id: W-214
+  lemma: юристка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 436547
+    source: vesum
+  id: W-215
+  lemma: юшка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 87007
+    source: vesum
+  id: W-216
+  lemma: ґудзик
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 94856
+    source: vesum
+  id: W-217
+  lemma: дзвінок
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 94974
+    source: vesum
+  id: W-218
+  lemma: дзеркало
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 117237
+    source: vesum
+  id: W-219
+  lemma: жук
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 239760
+    source: vesum
+  id: W-220
+  lemma: ніч
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 348397
+    source: vesum
+  id: W-221
+  lemma: ручка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 18184
+    source: vesum
+  id: W-222
+  lemma: батько
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 32022
+    source: vesum
+  id: W-223
+  lemma: булька
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 184106
+    source: vesum
+  id: W-224
+  lemma: лампа
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 373931
+    source: vesum
+  id: W-225
+  lemma: стіл
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 376091
+    source: vesum
+  id: W-226
+  lemma: студент
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 376093
+    source: vesum
+  id: W-227
+  lemma: студентка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 72658
+    source: vesum
+  id: W-228
+  lemma: гаманець
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 101943
+    source: vesum
+  id: W-229
+  lemma: донька
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 252996
+    source: vesum
+  id: W-230
+  lemma: олівець
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 373932
+    source: vesum
+  id: W-231
+  lemma: стілець
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 157469
+    source: vesum
+  id: W-232
+  lemma: його
+  pos: adj
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 421109
+    source: vesum
+  id: W-233
+  lemma: чоловік
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 14322
+    source: vesum
+  id: W-234
+  lemma: бабуся
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 97383
+    source: vesum
+  id: W-235
+  lemma: дідусь
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 98276
+    source: vesum
+  id: W-236
+  lemma: добре
+  pos: adv
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 330855
+    source: vesum
+  id: W-237
+  lemma: ранок
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 422198
+    source: vesum
+  id: W-238
+  lemma: чудово
+  pos: adv
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 29314
+    source: vesum
+  id: W-239
+  lemma: брат
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 105932
+    source: vesum
+  id: W-240
+  lemma: дружина
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 168631
+    source: vesum
+  id: W-241
+  lemma: книга
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 31824
+    source: vesum
+  id: W-242
+  lemma: булава
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 43968
+    source: vesum
+  id: W-243
+  lemma: викладач
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 43969
+    source: vesum
+  id: W-244
+  lemma: викладачка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 187809
+    source: vesum
+  id: W-245
+  lemma: лікар
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 187816
+    source: vesum
+  id: W-246
+  lemma: лікарка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 274609
+    source: vesum
+  id: W-247
+  lemma: пес
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 187738
+    source: vesum
+  id: W-248
+  lemma: ліжко
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 261345
+    source: vesum
+  id: W-249
+  lemma: папір
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 366185
+    source: vesum
+  id: W-250
+  lemma: сон
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 59992
+    source: vesum
+  id: W-251
+  lemma: вікно
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 280719
+    source: vesum
+  id: W-252
+  lemma: підручник
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 106125
+    source: vesum
+  id: W-253
+  lemma: дуб
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 95277
+    source: vesum
+  id: W-254
+  lemma: диван
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 149755
+    source: vesum
+  id: W-255
+  lemma: зошит
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 363533
+    source: vesum
+  id: W-256
+  lemma: словник
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 104629
+    source: vesum
+  id: W-257
+  lemma: дошка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 232061
+    source: vesum
+  id: W-258
+  lemma: незручність
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 4714
+    source: vesum
+  id: W-259
+  lemma: айтівець
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 154301
+    source: vesum
+  id: W-260
+  lemma: інженер
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 95481
+    source: vesum
+  id: W-261
+  lemma: дизайнер
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 241414
+    source: vesum
+  id: W-262
+  lemma: ноутбук
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 40876
+    source: vesum
+  id: W-263
+  lemma: вибачити
+  pos: verb
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 107353
+    source: vesum
+  id: W-264
+  lemma: дякувати
+  pos: verb
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 31043
+    source: vesum
+  id: W-265
+  lemma: бувати
+  pos: verb
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 61178
+    source: vesum
+  id: W-266
+  lemma: вітати
+  pos: verb
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 32902
+    source: vesum
+  id: W-267
+  lemma: бути
+  pos: verb
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 184490
+    source: vesum
+  id: W-268
+  lemma: ласка
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 285608
+    source: vesum
+  id: W-269
+  lemma: побачення
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 141291
+    source: vesum
+  id: W-270
+  lemma: звати
+  pos: verb
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 317122
+    source: vesum
+  id: W-271
+  lemma: прізвище
+  pos: noun
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 311786
+    source: vesum
+  id: W-272
+  lemma: приємно
+  pos: adv
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 98270
+    source: vesum
+  id: W-273
+  lemma: добраніч
+  pos: intj
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 261286
+    source: vesum
+  id: W-274
+  lemma: па-па
+  pos: intj
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 239967
+    source: vesum
+  id: W-275
+  lemma: новий
+  pos: adj
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 106559
+    source: vesum
+  id: W-276
+  lemma: дуже
+  pos: adv
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 73502
+    source: vesum
+  id: W-277
+  lemma: гарний
+  pos: adj
+- allocated_at_build: 161d9a6394da922300fda5ece0bcf845ee5c2faf4d399150c9a2de629114596c
+  entry:
+    entry_id: 157322
+    source: vesum
+  id: W-278
+  lemma: її
+  pos: adj
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    entry_id: 436942
+    source: vesum
+  id: W-279
+  lemma: як
+  pos: adv
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    entry_id: 115096
+    source: vesum
+  id: W-280
+  lemma: жаль
+  pos: noun
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    entry_id: 365798
+    source: vesum
+  id: W-281
+  lemma: солодкий
+  pos: adj
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    entry_id: 87938
+    source: vesum
+  id: W-282
+  lemma: дати
+  pos: verb
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    entry_id: 328909
+    source: vesum
+  id: W-283
+  lemma: п'ять
+  pos: numr
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    entry_id: 266376
+    source: vesum
+  id: W-284
+  lemma: передати
+  pos: verb
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    entry_id: 381081
+    source: vesum
+  id: W-285
+  lemma: так
+  pos: adv
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    entry_id: 415958
+    source: vesum
+  id: W-286
+  lemma: це
+  pos: noun
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-287
+  kind: formula
+  parts:
+  - form: Добрий
+    word: W-075
+  - form: день
+    word: W-076
+  text: Добрий день!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-288
+  kind: formula
+  parts:
+  - form: Доброго
+    word: W-075
+  - form: ранку
+    word: W-237
+  text: Доброго ранку!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-289
+  kind: formula
+  parts:
+  - form: Добрий
+    word: W-075
+  - form: вечір
+    word: W-200
+  text: Добрий вечір!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-290
+  kind: formula
+  parts:
+  - form: До
+    word: W-026
+  - form: побачення
+    word: W-269
+  text: До побачення!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-291
+  kind: formula
+  parts:
+  - form: Будь
+    word: W-267
+  - form: ласка
+    word: W-268
+  text: Будь ласка!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-292
+  kind: formula
+  parts:
+  - form: Дякую
+    word: W-264
+  text: Дякую!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-293
+  kind: formula
+  parts:
+  - form: Вибачте
+    word: W-263
+  text: Вибачте!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-294
+  kind: formula
+  parts:
+  - form: Бувай
+    word: W-265
+  text: Бувай!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-295
+  kind: formula
+  parts:
+  - form: Вітаю
+    word: W-266
+  text: Вітаю!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-296
+  kind: formula
+  parts:
+  - form: Мене
+    word: W-001
+  - form: звати
+    word: W-270
+  text: Мене звати...
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-297
+  kind: formula
+  parts:
+  - form: Моє
+    word: W-010
+  - form: прізвище
+    word: W-271
+  text: Моє прізвище...
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-298
+  kind: formula
+  parts:
+  - form: Як
+    word: W-279
+  - form: вас
+    word: W-007
+  - form: звати
+    word: W-270
+  text: Як вас звати?
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-299
+  kind: formula
+  parts:
+  - form: Хто
+    word: W-162
+  - form: це
+    word: W-286
+  text: Хто це?
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-300
+  kind: formula
+  parts:
+  - form: Що
+    word: W-164
+  - form: це
+    word: W-286
+  text: Що це?
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-301
+  kind: formula
+  parts:
+  - form: У
+    word: W-018
+  - form: мене
+    word: W-001
+  - form: є
+    word: W-267
+  text: У мене є...
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-302
+  kind: formula
+  parts:
+  - form: Що
+    word: W-164
+  - form: нового
+    word: W-275
+  text: Що нового?
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-303
+  kind: formula
+  parts:
+  - form: Так
+    word: W-285
+  - form: собі
+    word: W-009
+  text: Так собі.
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-304
+  kind: formula
+  parts:
+  - form: На
+    word: W-025
+  - form: жаль
+    word: W-280
+  text: На жаль.
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-305
+  kind: formula
+  parts:
+  - form: Дуже
+    word: W-276
+  - form: приємно
+    word: W-272
+  text: Дуже приємно!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-306
+  kind: formula
+  parts:
+  - form: Гарного
+    word: W-277
+  - form: дня
+    word: W-076
+  text: Гарного дня!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-307
+  kind: formula
+  parts:
+  - form: Солодких
+    word: W-281
+  - form: снів
+    word: W-250
+  text: Солодких снів!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-308
+  kind: formula
+  parts:
+  - form: Дати
+    word: W-282
+  - form: п’ять
+    word: W-283
+  text: Дати п’ять!
+- allocated_at_build: 4b2f90c8596a63e79c94146eedb5094498c0f7325c1e15dded6112defb29327c
+  entry:
+    source: formula
+  id: W-309
+  kind: formula
+  parts:
+  - form: Передати
+    word: W-284
+  - form: привіт
+    word: W-074
+  text: Передати привіт.
+- allocated_at_build: cba11f1f2e3c91cef7103bc65f83f097ee012dff0db8819f9c6e0e79e7128558
+  entry:
+    entry_id: 164624
+    source: vesum
+  id: W-310
+  lemma: київський
+  pos: adj
+- allocated_at_build: cba11f1f2e3c91cef7103bc65f83f097ee012dff0db8819f9c6e0e79e7128558
+  entry:
+    entry_id: 397346
+    source: vesum
+  id: W-311
+  lemma: український
+  pos: adj

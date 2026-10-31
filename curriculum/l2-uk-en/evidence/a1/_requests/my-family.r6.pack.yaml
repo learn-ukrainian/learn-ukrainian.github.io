@@ -1,0 +1,60 @@
+request_schema: 1
+module: a1/my-family
+texts:
+- id: T-301
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0133
+  span:
+    first_words: § 57–58. Апостроф § 57–58. АПОСТРОФ 1. Чітко вимовте слова
+    last_words: 'я, ю, є при злитій вимові: Вязьма, Мягков, Рєпін. 131'
+  supports: The apostrophe marks separate pronunciation, including the exact family word in the source;
+    advanced spelling conditions are not taught.
+- id: T-302
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  span:
+    first_words: Букви та звуки В українській мові здебільшого одній букві відповідає
+    last_words: 'до кореня: підземний [п’ідземний] ь М’якість приголосного: день [ден′] 84'
+  supports: Iotated vowels and the always-two-sound letter; stage the new letters through meaningful family
+    labels.
+- id: T-303
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0099
+  span:
+    first_words: — Доброго ранку! Ти не бачило мою маму? — А
+    last_words: Пухнастику? Які слова він сказав, коли зустрів свою маму? 100
+  supports: Attested mother and supported possessive-label chunks; animal-story plot and complex clauses
+    are not learner input.
+- id: T-304
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-litvinova-2023_s0264
+  span:
+    first_words: 2. Що цікавого щодо займенників ви помітили в реченнях? 3.
+    last_words: § 54. Розряди займенників за значенням та особливості відмінювання 259
+  supports: The public possessive table grounds fixed family-label chunks. Position 8 owns systematic
+    singular-gender agreement.
+- id: T-305
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0078
+  span:
+    first_words: § 33. Приголосні дзвінкі та глухі § 33. ПРИГОЛОСНІ ДЗВІНКІ
+    last_words: плоди — плоти, дужка — душка, дам — там. 77
+  supports: The b/p family is rehearsed with the newly acquired b letter; no unrelated pair families are
+    introduced.
+videos:
+- id: V-301
+  url: https://www.youtube.com/watch?v=LARvKb7D38M
+  channel: VERBA SCHOOL
+  use: Collected family and possessive video, used for listening and repeated supported family labels,
+    without teaching the full agreement system before position 8. Show the whole video visibly with sound
+    and picture. No verified word-level timing or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+standard: []

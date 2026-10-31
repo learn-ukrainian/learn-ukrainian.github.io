@@ -1,0 +1,8 @@
+access: full
+attempt_id: agy-3
+harness: agy
+manifest_sha256: eb9e089d3c3f9119d724ebc71adf0536220a37730e322b62cf83f5df03b5814f
+reviewer_family: google
+reviewer_model: gemini-3.8-flash-high
+validated_at: '2026-10-31T01:28:22+00:00'
+verdict: APPROVE

@@ -1,0 +1,296 @@
+{
+  "activity_report": {
+    "explanation_coverage": "not_available_at_this_stage",
+    "lessons": [
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "image-to-letter": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "match-up": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "image-to-letter",
+          "match-up"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 1
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "observe": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "observe",
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 2
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "count-syllables": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "pick-syllables": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "count-syllables",
+          "pick-syllables"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 3
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "watch-and-repeat": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "odd-one-out": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "odd-one-out",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 4
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {},
+            "total": 0
+          },
+          "workbook": {
+            "by_type": {},
+            "total": 0
+          }
+        },
+        "distinct_types": [],
+        "has_workbook": false,
+        "is_recap": true,
+        "kind": "recap",
+        "n": 5
+      }
+    ],
+    "module": {
+      "all_distinct_types": [
+        "count-syllables",
+        "image-to-letter",
+        "match-up",
+        "observe",
+        "odd-one-out",
+        "pick-syllables",
+        "quiz",
+        "watch-and-repeat"
+      ],
+      "inline_activities": 4,
+      "largest_workbook_type": "match-up",
+      "largest_workbook_type_share": 0.25,
+      "longest_same_type_workbook_run": 1,
+      "longest_same_type_workbook_run_type": "match-up",
+      "non_recap_lessons": 4,
+      "non_recap_lessons_with_workbook": 4,
+      "workbook_activities": 4,
+      "workbook_distinct_types": [
+        "match-up",
+        "odd-one-out",
+        "pick-syllables",
+        "quiz"
+      ],
+      "workbook_presence_complete": true
+    },
+    "module_slug": "who-am-i",
+    "rendered": "not_available_at_this_stage",
+    "response_opportunities": "not_available_at_this_stage",
+    "stage": "plan"
+  },
+  "failures": [],
+  "inputs": {
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "8ff6f38e34eedc3151bf15f3c622ed318113a5d7e94eb2880c7b14e2ba86f761",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "0581c149864df57af58f0b8675a88924869a212d4f21ddaa6103d3223213aa40",
+    "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml": "58384afe8da0c643fd941dab5db62fcd209301ebe2d4f3e74d394c4c456af2c6",
+    "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock": "1b697e54c2558479d6c38974f77fb5c631737cca76c9799b7e7815a9eb7c51fd",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/who-am-i.yaml": "9b7692cbd53886f2eb6d8f0e5c5f27c9dc81f4d7248d8608c3a60b4c45517012",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "6e4677d46398bb934d189ab2f7b5c2a1afba3afc8daa16563acbf93ceace0d03",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "fbd0480f73f10ecadd67efb5a738fb3822c96537bd23f86efc7b132bba01c44e",
+    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "eeeb52c15150be2107d40c1cf5bff30667dafa77bbe97fa0912c1d64ec499ec3",
+    "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
+    "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
+    "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
+    "schemas/arc.schema.json": "af1c1ee66c1e58fda00c975663fe409ad1e2b6033b699c916f36b23fdd5d75b2",
+    "schemas/module-plan-v2.schema.json": "112982f5ff3a7477596a52dce0003e3c7cf9579c98a41eca068a31f6087776e2",
+    "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
+    "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
+    "scripts/curriculum/validate/placement_table.yaml": "b3268a3feae54e4a91f28d5a0858989f291ed3280412345ef07f031075543234"
+  },
+  "level": "a1",
+  "mode": "provisional",
+  "not_checked": [
+    {
+      "code": "minutes_constants_undefined",
+      "lesson": null,
+      "message": "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
+      "step": null
+    },
+    {
+      "code": "arc_has_no_structured_grammar_or_vocabulary",
+      "lesson": null,
+      "message": "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
+      "step": null
+    },
+    {
+      "code": "title_quantities_not_parsed",
+      "lesson": null,
+      "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
+      "step": null
+    },
+    {
+      "code": "pending_promotion",
+      "lesson": null,
+      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 58384afe8da0c643fd941dab5db62fcd209301ebe2d4f3e74d394c4c456af2c6; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "step": null
+    },
+    {
+      "code": "mechanical_rule_not_checked",
+      "lesson": null,
+      "message": "gate M5 was not checked: core word records carry no CEFR level: W-091, W-093, W-195, W-296",
+      "step": null
+    }
+  ],
+  "notes": [
+    {
+      "code": "step_letter_not_practised",
+      "lesson": 2,
+      "message": "step s1 introduces the letter З, but no activity in its practice (a1) names З in its focus; the focus may describe the practice without the glyph, so the plan review confirms it (gate M1)",
+      "step": "s1"
+    },
+    {
+      "code": "step_letter_not_practised",
+      "lesson": 2,
+      "message": "step s1 introduces the letter У, but no activity in its practice (a1) names У in its focus; the focus may describe the practice without the glyph, so the plan review confirms it (gate M1)",
+      "step": "s1"
+    },
+    {
+      "code": "step_letter_not_practised",
+      "lesson": 2,
+      "message": "step s1 introduces the letter Х, but no activity in its practice (a1) names Х in its focus; the focus may describe the practice without the glyph, so the plan review confirms it (gate M1)",
+      "step": "s1"
+    },
+    {
+      "code": "step_letter_not_practised",
+      "lesson": 2,
+      "message": "step s1 introduces the letter Г, but no activity in its practice (a1) names Г in its focus; the focus may describe the practice without the glyph, so the plan review confirms it (gate M1)",
+      "step": "s1"
+    },
+    {
+      "code": "earlier_core_not_recycled",
+      "lesson": null,
+      "message": "15 of 19 core records of earlier positions appear in no recycled list of this module: W-062 'ні' (position 2), W-076 'день' (position 2), W-200 'вечір' (position 2), W-220 'ніч' (position 2), W-237 'ранок' (position 2), W-274 'па-па' (position 2), W-287 'Добрий день!' (position 2), W-288 'Доброго ранку!' (position 2), W-289 'Добрий вечір!' (position 2), W-290 'До побачення!' (position 2), W-291 'Будь ласка!' (position 2), W-292 'Дякую!' (position 2), W-293 'Вибачте!' (position 2), W-294 'Бувай!' (position 2), W-295 'Вітаю!' (position 2) (#9487 C6)",
+      "step": null
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 1,
+      "message": "step s1 introduces Д, which no recording the lesson cites models (V-201, V-203); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 1,
+      "message": "step s1 introduces К, which no recording the lesson cites models (V-201, V-203); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 1,
+      "message": "step s1 introduces Л, which no recording the lesson cites models (V-201, V-203); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 1,
+      "message": "step s1 introduces С, which no recording the lesson cites models (V-201, V-203); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 2,
+      "message": "step s1 introduces З, which no recording the lesson cites models (V-201, V-203, V-204); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 2,
+      "message": "step s1 introduces У, which no recording the lesson cites models (V-201, V-203, V-204); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 2,
+      "message": "step s1 introduces Х, which no recording the lesson cites models (V-201, V-203, V-204); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 2,
+      "message": "step s1 introduces ь, which no recording the lesson cites models (V-201, V-203, V-204); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    },
+    {
+      "code": "letter_teacher_modeled_only",
+      "lesson": 2,
+      "message": "step s1 introduces Г, which no recording the lesson cites models (V-201, V-203, V-204); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "step": "s1"
+    }
+  ],
+  "slug": "who-am-i",
+  "status": "pass",
+  "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",
+  "waivers": []
+}

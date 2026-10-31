@@ -1,0 +1,94 @@
+request_schema: 1
+module: a1/who-am-i
+texts:
+- id: T-201
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0076
+  span:
+    first_words: § 32. Приголосні тверді, м’які й пом’якшені § 32. ПРИГОЛОСНІ
+    last_words: по- треби в транскрипції використовувати риску для позначення м’якості. 75
+  supports: Hard and soft articulation; adapt the listening-and-comparison operation to adult names and
+    professions, without printing untaught source vocabulary.
+- id: T-202
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0078
+  span:
+    first_words: § 33. Приголосні дзвінкі та глухі § 33. ПРИГОЛОСНІ ДЗВІНКІ
+    last_words: плоди — плоти, дужка — душка, дам — там. 77
+  supports: Voice and noise versus noise alone; only the d/t, z/s and h/kh families are taught at this
+    position.
+- id: T-203
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0085
+  span:
+    first_words: Склад — це частина слова,
+    last_words: ра-дість два склади, перший — відкритий, а дру- гий — закритий.
+  supports: A vowel forms a spoken syllable. Only pronunciation and rhythm are used; line breaking remains
+    deferred.
+- id: T-204
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0061
+  span:
+    first_words: — Привіт! Мене звати
+    last_words: Фунтик. Я живу на фермі.
+  supports: Attested self-introduction frame; the fictional dog context and later constructions are not
+    reproduced.
+- id: T-205
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0007
+  span:
+    first_words: РОЗВИТОК МОВЛЕННЯ § 3 СКЛАДАННЯ ДІАЛОГІВ ВІДПОВІДНО ДО СИТУАЦІЇ СПІЛКУВАННЯ
+    last_words: (усно). Вико- ристайте по три-чотири репліки до кожного сюжету. 8
+  supports: An introduction is a purposeful exchange; adapt the adult sport-club situation and retain
+    only acquired language.
+- id: T-206
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0059
+  span:
+    first_words: Культура мовлення ПРАВИЛЬНО НЕПРАВИЛЬНО ПРАВИЛЬНО НЕПРАВИЛЬНО [ч]исто [ч]ипси [ч]ашка
+      [шч]астя
+    last_words: дзвінкі приголосні на парні їм глухі. Які слова утворилися? 79
+  supports: The source contrasts hard and incorrect soft pronunciation before e, including the displayed
+    theatre and sector examples; this is teacher evidence, not learner print.
+videos:
+- id: V-201
+  url: https://www.youtube.com/watch?v=3zZWCCS7igw
+  channel: Ukrainian with Olha
+  use: Collected first-introduction video, used as supported listening input before a live adult introduction.
+    Untaught words remain exposure. Show the whole video visibly with sound and picture. No verified word-level
+    timing or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+- id: V-203
+  url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
+  channel: Speak Ukrainian
+  use: Collected alphabet video, reused as a listening overview alongside teacher modelling of only the
+    staged letters. Show the whole video visibly with sound and picture. No verified word-level timing
+    or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+- id: V-204
+  url: https://www.youtube.com/watch?v=Ziw9g5jCpFM
+  channel: Ukrainian Lessons
+  use: 'Public ULP 1-04 source, ext-ulp_youtube-300: listen to the whole visible video for its origin
+    construction, then teacher-model the dictionary-verified country substitution as an unanalyzed chunk.
+    No exact timed models.words claim.'
+  models:
+    letters: []
+    words: []
+    segment: null
+standard:
+- id: S-201
+  lines: 588-588
+- id: S-202
+  lines: 485-485

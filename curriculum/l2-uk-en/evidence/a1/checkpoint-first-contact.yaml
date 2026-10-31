@@ -1,0 +1,191 @@
+built_with:
+  mcp_commit: c7e4971b4866a404564a93624f6403d78225770a
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: 7a123613fe1f8296a3b1e43498f55854aabfd0cf4438efbd2a058e41d9af7ee8
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+module: a1/checkpoint-first-contact
+texts:
+- id: T-601
+  quote: 'РОЗВИТОК
+
+    МОВЛЕННЯ
+
+    § 3
+
+    СКЛАДАННЯ ДІАЛОГІВ
+
+    ВІДПОВІДНО ДО
+
+    СИТУАЦІЇ СПІЛКУВАННЯ
+
+    1. Складіть і розіграйте діалог у трьох групах із використанням етикетних
+
+    формул (по п’ять-шість реплік).
+
+    1-ша група — вітання з адміністратором спортклубу та з’ясування
+
+    основ­ них правил поводження в залі.
+
+    2-га група — знайомство з однолітками в таборі відпочинку й розмова
+
+    про плани на літо.
+
+    3-тя група — пропозиція допомогти літній людині з важким пакунком
+
+    біля супермаркету.
+
+    Етикетні формули
+
+    вітання знайомство допомога
+
+    Привіт! Вітаю! Доброго
+
+    ранку! Добрий
+
+    день! Добрий вечір!
+
+    Бувай (бувайте)! До
+
+    побачення! Моє вам
+
+    шанування! Скільки
+
+    літ! Вітаннячко!
+
+    Дозвольте представитися.
+
+    Хочу познайомити вас із … .
+
+    Дуже приємно.
+
+    Як тебе (вас) звати?
+
+    Приємно було познайомитися.
+
+    Як ся маєш? Як ваші справи?
+
+    Чим я можу вам допомогти?
+
+    Ви мені дуже допомогли.
+
+    Будьте ласкаві … .
+
+    Якщо ваша ласка … .
+
+    Радий (рада) вам допомогти!
+
+    2. Складіть і розіграйте в парах діалог за однією із ситуацій (безпека спіл-
+
+    кування).
+
+    1. вам телефонує незнайома людина й просить сказати, де працюють
+
+    ваші батьки й коли повертаються з роботи додому.
+
+    2. вам написала в інстаграмі незнайома людина про те, що ви виграли
+
+    приз (мобільний телефон) і треба прийти за вказаною адресою, щоб забрати
+
+    його.
+
+    3. Розглянувши комікс, складіть і розіграйте діалог у парах (усно). Вико-
+
+    ристайте по три-чотири репліки до кожного сюжету.
+
+    8'
+  sha256: fab661906e98d00337458423fe49e2017481c149c68f22ef218cdd9924838628
+  source:
+    author: avramenko
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0007
+    file: 6-klas-ukrmova-avramenko-2023
+    grade: '6'
+    kind: textbook
+    page: 8
+    row_sha256: 348ae03ef66d40ffd9bb6bdcdd70019249522c6963aba3b7e75007ca81397ebb
+    section_id: 28663
+  supports: A purposeful first-contact exchange; checkpoint uses only inventory acquired in positions 2-6.
+- id: T-602
+  quote: '— Доброго ранку! Ти не бачило
+
+    мою маму?
+
+    — А яка твоя мама?
+
+    — Моя мама найкраща! Вона добра
+
+    й ласкава. У неї гарний голос.
+
+    — Ось твоя мама!
+
+    — Ні, це не моя мама!
+
+    — Я знаю, де твоя мама! Ідемо,
+
+    покажу.
+
+    — Ось твоя мама!
+
+    Пухнастик так злякався великої білої
+
+    свині, що кинувся тікати. Його побачив
+
+    Барвистий Метелик.
+
+    — Біжи за мною. Я приведу тебе
+
+    до мами.
+
+    Pidruchnyk.com.ua
+
+    — Матусю! Я дуже радий тебе ба-
+
+    чити! Ти найкраща, наймиліша, най-
+
+    добріша мама у світі! (за Юлією Карпен-
+
+    ко).
+
+    Яка пригода сталася з кошеням? До кого
+
+    воно зверталося за допомогою? Чому всі зві-
+
+    рята приводили його до своїх мам? Хто до-
+
+    поміг Пухнастику? Які слова він сказав, коли
+
+    зустрів свою маму?
+
+    100'
+  sha256: 862eab57781013abddcaa3c256fac24249a6f3be211011b4362d8d745710d0ab
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0099
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 102
+    row_sha256: 090bdf75a8a0484dab81ccf6b55269d8cfbf32bc0bb0fefe4778b43c1e3f484b
+    section_id: 13161
+  supports: Previously acquired family labels used for an optional photograph or fictional profile.
+videos:
+- channel: Ukrainian with Olha
+  checked:
+    content_type: text/html
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=3zZWCCS7igw
+    http_status: 200
+  id: V-601
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=3zZWCCS7igw
+  use: Collected first-introduction video, used as supported listening input before a live adult introduction. Untaught words
+    remain exposure. Show the whole video visibly with sound and picture. No verified word-level timing or models.words is
+    claimed.

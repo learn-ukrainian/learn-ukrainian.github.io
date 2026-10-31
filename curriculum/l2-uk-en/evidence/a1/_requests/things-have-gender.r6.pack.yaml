@@ -1,0 +1,55 @@
+request_schema: 1
+module: a1/things-have-gender
+texts:
+- id: T-701
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-litvinova-2023_s0134
+  span:
+    first_words: § 25. Рід іменників. Іменники спільного роду Вправа 260 1.
+    last_words: трьома словами. § 25. Рід іменників. Іменники спільного роду 129
+  supports: Three noun genders apply to singular nouns. Plural-only nouns are excluded from this first
+    classification set.
+- id: T-702
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-litvinova-2023_s0264
+  span:
+    first_words: Присвійні займенники Присвійні (від присвоїти) займенники вказують на
+    last_words: 'До будь-якої особи: свій, своя, своє, свої'
+  supports: Public singular possessive matrix for my, your, our, polite/plural your and their. The malformed
+    OCR paradigm beneath the matrix is not a form authority; ULIF/VESUM word records supply practised
+    forms.
+- id: T-703
+  source:
+    table: textbooks
+    chunk_id: 6-klas-ukrmova-avramenko-2023_s0181
+  span:
+    first_words: § 91 ОСОБЛИВОСТІ ВИЗНАЧЕН- НЯ РОЗРЯДУ ЗАЙМЕННИКІВ його, її, їх
+    last_words: Визначте, якими членами речення є ці займенники. Підкресліть їх. 178
+  supports: His and her possessive uses differ from object-pronoun uses; use only the possessive labels
+    and retain the distinction without teaching an oblique-case system.
+videos:
+- id: V-701
+  url: https://www.youtube.com/watch?v=Vl5MAW3AYoU
+  channel: Learn Ukrainian with Vakulenko
+  use: Collected noun-gender video, used as supported listening before identifying familiar belongings.
+    Dictionary records determine the gender of each practised noun. Show the whole video visibly with
+    sound and picture. No verified word-level timing or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+- id: V-702
+  url: https://www.youtube.com/watch?v=LARvKb7D38M
+  channel: VERBA SCHOOL
+  use: Collected family and possessive video, used for listening and repeated supported family labels,
+    without teaching the full agreement system before position 8. Show the whole video visibly with sound
+    and picture. No verified word-level timing or models.words is claimed.
+  models:
+    letters: []
+    words: []
+    segment: null
+standard:
+- id: S-701
+  lines: 661-662

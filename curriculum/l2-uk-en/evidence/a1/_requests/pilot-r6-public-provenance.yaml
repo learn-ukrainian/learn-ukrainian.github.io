@@ -1,0 +1,95 @@
+version: 1
+issue: 8425
+method: Independent public Sources retrieval; no private wording used for these request meanings.
+lexical:
+- word: W-188
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 26047
+    row_sha256: 452682c649df3fb171c71c8efe93a3fb767aa743c6dae65c87c19b94705d8430
+- word: W-193
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 8074
+    row_sha256: 61e4e79a8a1628a75aad21b84c5cdc93d6e1d2751f8ba29ebf36c09e40316fb0
+- word: W-198
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 188
+    row_sha256: 508afe07d2723b8c85def55a00b62e9a2235b8ec03fe8909e8a139e49b529ac6
+- word: W-199
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 3482
+    row_sha256: 7859032591e82c83f0d87bc89ca9dbe412cd9cdd57ace49d5957e81cd4c78fc5
+- word: W-207
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 2099
+    row_sha256: 329c6be9a5ada083bfd63a92a1672e6798d1062c4f997868e3dc83357ff8ab0a
+- word: W-236
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 781
+    row_sha256: fe8dd3695b861fd64a78bb46cc5910620a28520f966c04138bfdcc2012ba2151
+- word: W-243
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 1195
+    row_sha256: 4d0327c06de3caf9deb19672579f5aea02411c16a455d180f7be567a883021c7
+- word: W-244
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 12968
+    row_sha256: 885aaa8080d1f75e7ff10c1f775624ea9675946f2846bb3a4d09cfae61ed0f05
+- word: W-245
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 882
+    row_sha256: f453fbdba0f3a3ea04a0cbf5e7d48a7f1dd9f622085f6e40484f3a2b3fb1bdb1
+- word: W-246
+  public_gloss_ref:
+    table: dmklinger_uk_en
+    id: 15360
+    row_sha256: eb5257741c6e8ccdce6871c966cac094c198e47f0b693700010b88a9753efa2c
+- word: W-273
+  public_gloss_ref:
+    table: kaikki
+    headword_ref: W-273
+    row_sha256: fa13e0d596ba9eb1eb2c0da45a1e6b817a9f550f8b4c178aade980b876addc3d
+- word: W-274
+  public_gloss_ref:
+    table: kaikki
+    headword_ref: W-274
+    row_sha256: 1d309e9c082bb9c4dfe62e6061505782f082f72bcdd9b080c6ab6c546b2f7a3a
+normative_verification:
+  tools:
+  - verify_words
+  - verify_stresses
+  - query_sum20
+  - query_ulif_records
+  - query_slovnyk_me
+  sum20_role: Retrieved rows were explicitly labelled mirror_only, not official verification.
+  sum20_mirror_urls:
+  - https://slovnyk.me/dict/newsum/вишиванка
+  - https://slovnyk.me/dict/newsum/писанка
+  - https://slovnyk.me/dict/newsum/українець
+  - https://slovnyk.me/dict/newsum/українка
+  - https://slovnyk.me/dict/newsum/телефон
+  - https://slovnyk.me/dict/newsum/викладач
+  - https://slovnyk.me/dict/newsum/викладачка
+  - https://slovnyk.me/dict/newsum/лікар
+  - https://slovnyk.me/dict/newsum/лікарка
+  additional_public_sources:
+  - https://slovnyk.me/dict/vts/добре
+formulas:
+  rule: Request notes carry no translation. Selected glosses retain validated public formula-row citations;
+    unresolved formulas stay withheld.
+  public_attestation_chunks:
+  - 6-klas-ukrmova-avramenko-2023_s0007
+  - 7-klas-ukrmova-avramenko-2024_s0010
+orientation_pack:
+  rule: Public source quotes and publisher metadata stay exact; they are not private glossary mappings.
+  requeried_public_chunks:
+  - uni-ukrmova-prof-haluzynska-2006_s0007
+  - uni-ukrmova-sociolinguistics-masenko-2010_s0030
