@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sqlite3
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -1879,6 +1880,12 @@ class AuthorityService:
     ) -> AuthorityMessage:
         if not isinstance(body, str):
             raise AuthorityServiceError("message_body_must_be_text")
+        if re.fullmatch(
+            r"""(?:/|~/)\S*|(?:"(?:/|~/)[^"]*"|'(?:/|~/)[^']*'|`(?:/|~/)[^`]*`)"""
+            r"(?::\d+(?::\d+)?)?",
+            body.strip(),
+        ):
+            raise AuthorityServiceError("message_body_path_only: put the content in the message body")
         sender_name = _nonempty(sender, field="sender")
         kind_name = _nonempty(kind, field="kind")
         key = _nonempty(idempotency_key, field="idempotency_key")
