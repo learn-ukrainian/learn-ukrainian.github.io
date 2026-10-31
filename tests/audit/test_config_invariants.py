@@ -47,5 +47,5 @@ def test_folk_resolves_to_seminar_thresholds_not_a1() -> None:
         "thresholds are not being applied."
     )
     assert cfg["min_vocab"] == LEVEL_CONFIG["FOLK"]["min_vocab"] == 24
-    assert cfg["target_words"] == 4000
+    assert "target_words" not in cfg
     assert cfg["min_types_unique"] == 4
