@@ -3508,7 +3508,10 @@ def test_section_gate_passes_when_section_below_min_but_present() -> None:
     assert report["passed"] is True, (
         "Section counts must not steer or fail the module"
     )
-    assert "word_budgets" not in report
+    assert report["word_budgets"] == [
+        {"section": "Діалоги", "count": 50},
+        {"section": "Підсумок", "count": 500},
+    ]
     assert report["outcomes"] == []
 
 

@@ -38,7 +38,7 @@ Legacy `word_target`, section `words` and size-policy fields in the plan are ign
 
 Section coverage checklist: teach these points with the explanation, worked examples and practice the learner needs.
 
-{SECTION_COVERAGE}
+{SECTION_WORD_BUDGETS}
 
 {WRITER_SPECIFIC_DIRECTIVES}
 

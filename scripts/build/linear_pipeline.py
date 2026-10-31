@@ -3930,7 +3930,7 @@ def writer_context(
         "SIZE_POLICY": render_writer_size_policy(
             build_size_policy_for_plan(plan, plan_path=plan_path)
         ),
-        "SECTION_COVERAGE": _render_section_coverage(plan),
+        "SECTION_WORD_BUDGETS": _render_section_coverage(plan),
         "WRITER_SPECIFIC_DIRECTIVES": _writer_specific_directives(writer),
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
@@ -10976,6 +10976,13 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         "missing_headings": missing,
         "empty_sections": empty,
         "duplicate_headings": duplicate_headings,
+        # Legacy diagnostic key; no target, floor, bounds or length verdict.
+        "word_budgets": [
+            {"section": section["section"], "count": _writer_draft_countable_words(
+                _extract_section_text(text, section["section"], archetype_key=archetype_id),
+            )}
+            for section in plan["content_outline"]
+        ],
         "archetype": archetype_id,
         "outcomes": [
             {"outcome": "UNSUPPORTED_OBJECTIVE", "section": title,
