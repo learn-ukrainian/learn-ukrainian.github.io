@@ -340,7 +340,10 @@ def build(inventory, base, companion, manifest, sources, pins, register, *, batc
         resolver._recompute(card)
         card["build"] = {"build_id": version + "@sha256:" + digest(build_inputs), "rules_version": version,
                          "inputs": copy.deepcopy(build_inputs), "card_version": resolver.card_version(card)}
-        for subject, names in [(card, CARD_FIELDS)] + [(s, SENSE_FIELDS) for s in card["senses"]]:
+        subjects = [(card, CARD_FIELDS)] + [(s, SENSE_FIELDS) for s in card["senses"]]
+        if batch is not None and not card["senses"]:
+            subjects.append((card, SENSE_FIELDS))
+        for subject, names in subjects:
             sid = subject.get("sense_id", card_id)
             for field in names:
                 resolution = subject["fields"].get(field, {})
@@ -443,7 +446,10 @@ def verify(result, sources, manifest, *, batch=None):
         require(card["fields"] == projected["fields"]
                 and all(a["fields"] == b["fields"] for a, b in zip(card["senses"], projected["senses"], strict=True)),
                 "field_resolution_mismatch")
-        for subject, fields in [(card, CARD_FIELDS)] + [(s, SENSE_FIELDS) for s in card["senses"]]:
+        subjects = [(card, CARD_FIELDS)] + [(s, SENSE_FIELDS) for s in card["senses"]]
+        if batch is not None and not card["senses"]:
+            subjects.append((card, SENSE_FIELDS))
+        for subject, fields in subjects:
             for field in fields:
                 row = accounts.get((card["card_id"], subject.get("sense_id"), field))
                 require(row is not None, "field_accounting_missing")
