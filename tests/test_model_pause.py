@@ -298,6 +298,8 @@ def test_usage_readers_require_a_named_claude_account(monkeypatch) -> None:
     ("caller_failure", "MODEL_ROLE_POLICY_INVALID"), ("forged_source", "MODEL_ROLE_POLICY_INVALID"),
     ("wrong_model", "MODEL_ROLE_POLICY_INVALID"), ("alias", "MODEL_ROLE_BANNED"),
     ("unknown_model", "MODEL_ROLE_POLICY_INVALID"),
+    ("review_flags_ban", "MODEL_ROLE_BANNED"),
+    ("review_flags_trial", "MODEL_ROLE_TRIAL_SHADOW_REQUIRED"),
 ])
 def test_role_policy_validation_and_expiry(tmp_path, monkeypatch, case, expected):
     tasks = tmp_path / "tasks"
@@ -339,8 +341,24 @@ def test_role_policy_validation_and_expiry(tmp_path, monkeypatch, case, expected
         model = "opus[1m]"
     elif case == "unknown_model":
         entry["model"] = "unknown-model"
+    elif case == "review_flags_trial":
+        policy = {"bans": [], "trials": [entry]}
     path = tmp_path / "model-roles.json"
     path.write_text(json.dumps(policy))
     monkeypatch.setenv("LU_MODEL_ROLES_FILE", str(path))
     reason = mp.role_refusal_reason(model, roles, now=NOW, shadow=shadow)
     assert (reason.split(":", 1)[0] if reason else None) == expected
+    if case.startswith("review_flags_"):
+        # A non-review research role must not hide review activity at either admission boundary.
+        for field, value in [
+            ("review_mode", "cross_family"), ("review_mode", "red_team"), ("type", "review"),
+            ("pr", 42), ("review_attempt", {"review_id": "r1"}), ("require_review_verdict", True),
+            ("review_profile", "code"), ("review_author_model", "gpt-6.1-sol"),
+            ("risk", "critical"), ("review_risk", "critical"), ("language_lane", "ukrainian"),
+            ("subject_seat", ["codex"]), ("subject_family", ["openai"]),
+            ("review_subject_seats", ["codex"]), ("review_subject_families", ["openai"]),
+        ]:
+            inferred = mp.dispatch_roles({"research_role": "authoring", "mode": "read-only", field: value})
+            reason = mp.role_refusal_reason(model, inferred, now=NOW)
+            assert (reason.split(":", 1)[0] if reason else None) == expected, (field, value)
+        assert mp.dispatch_roles({"research_role": "authoring", "mode": "read-only"}) == {"authoring"}

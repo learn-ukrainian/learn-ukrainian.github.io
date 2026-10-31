@@ -42,6 +42,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
+from scripts.orchestration.task_record_store import REVIEW_TASK_FLAG_FIELDS
 
 if TYPE_CHECKING:
     from scripts.fleet.claude_account_lane import ClaudeAccount
@@ -74,7 +75,10 @@ def normalize_role(role: str) -> str:
 def dispatch_roles(record: Mapping[str, Any], *, review: bool = False) -> frozenset[str]:
     """Infer activity as well as keeping the explicitly named role."""
     roles = {normalize_role(str(record["research_role"]))} if record.get("research_role") else set()
-    if review:
+    if review or record.get("type") == "review" or any(record.get(field) for field in (
+        *REVIEW_TASK_FLAG_FIELDS, "review_mode", "risk", "language_lane", "subject_seat", "subject_family",
+        "review_subject_seats", "review_subject_families",
+    )):
         roles.add("review")
     if record.get("advisory_role"):
         roles.add("advice")
