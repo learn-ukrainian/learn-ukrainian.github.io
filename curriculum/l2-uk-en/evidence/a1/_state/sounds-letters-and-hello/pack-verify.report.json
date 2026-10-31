@@ -14,10 +14,7 @@
   "errors": [],
   "kind": "pack-verify",
   "level": "a1",
-  "not_checked": [
-    "W-076:private_commitment",
-    "W-096:private_commitment"
-  ],
+  "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml",
     "sha256": "a2569cbf77d3cca46d7a7e99ba5ee4dd7df93c1c8063ce1378a7661eea02358e"
@@ -29,10 +26,7 @@
   "report_schema": 1,
   "reports": [],
   "slug": "sounds-letters-and-hello",
-  "status": "warning",
+  "status": "ok",
   "strict": true,
-  "warnings": [
-    "a1/sounds-letters-and-hello W-076: unverifiable in CI (local receipt required)",
-    "a1/sounds-letters-and-hello W-096: unverifiable in CI (local receipt required)"
-  ]
+  "warnings": []
 }
