@@ -269,10 +269,10 @@ def _schema_refusal(stderr: str) -> str | None:
             continue
         message = [line.removeprefix("Error: ").removesuffix("\r")]
         for detail in lines[index + 1:]:
-            if not detail.startswith((" ", "\t")) or not detail.strip():
+            if detail.startswith(("Usage of ", "Usage:")):
                 break
             message.append(detail.removesuffix("\r"))
-        return "agy_output_schema_unsupported: " + "\n".join(message)
+        return "agy_output_schema_unsupported: " + "\n".join(message).rstrip()
     return None
 
 

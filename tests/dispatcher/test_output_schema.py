@@ -223,7 +223,8 @@ def test_agy_schema_rejection_is_typed_before_model_init(phase):
     """Defect class: a native schema refusal loses its reason or is misclassified after initialization."""
     from scripts.review.review_contract import load_schema
 
-    message = "invalid --json-schema: unsupported regular expression\n    - unsupported Perl syntax: `(?!`"
+    message = ("invalid --json-schema: standard validation failed\n\n"
+               "- at schema: invalid regular expression\n    - unsupported Perl syntax: `(?!`")
     stderr = f"Error: {message}\n\nUsage of agy:\n  --json-schema Optional schema\n"
     payload = {"schema_version": "code-review-findings.v1", "findings": [],
                "overall": {"correctness": "correct", "explanation": "No defect found.", "confidence": 0.9}}
