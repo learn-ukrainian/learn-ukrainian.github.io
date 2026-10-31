@@ -206,3 +206,63 @@ verification compares all projection bytes with the verified main bundle;
 the inherited CLI `--check` verifies only the main bundle. The default
 `--batch slice2` keeps the original denominator, pins and behavior. This
 batch does not publish cards, enable practice or close AC-07 through AC-09.
+
+## Slice 4: the next 60 remaining entry-qualified targets
+
+The [slice-4 selection inputs](../../../registry/atlas/a1-v1-slice4-inputs.json)
+freeze source revision `0398eb5caa1c6a98dccaf9275520ccb2f978a95c` and join
+`remaining_resolved_entry_priority_inventory_order_v1`. The input bytes are the
+seven unchanged checked-in inventory, prior manifests, plan snapshot and identity
+files named there. Independent raw-byte pins in `a1_slice4_inputs.py` and repeated
+manifest pins verify those bytes without requiring historical Git objects. The
+whole selection has its own independent canonical digest; the builder recomputes
+and compares every selected target and row. Duplicate JSON keys refuse replay.
+
+The [manifest](../../../registry/atlas/a1-v1-slice4.json) selects exactly 191
+original occurrences for 60 VESUM entries. It excludes the disjoint 19 slice-2
+and 177 slice-3 rows. The reviewed first-eight-plan snapshot has 84 normalized
+terms and no preferred remaining target. Selection therefore uses the original
+inventory order, with entry ID as the final tie-break. Whole formula references
+remain whole. Of 1,948 remaining rows, 1,294 belong to the other 599 eligible
+targets; 463 are ineligible: 272 phrase, 149 ambiguous, 18 name, 20 unresolved
+and four slash-alternative rows. Every original occurrence remains in the ledger.
+
+The [allocation companion](../../../registry/atlas/identity/a1-v1-slice4.json)
+adds 58 cards to the unchanged base-plus-slice-2-plus-slice-3 registry. It reuses
+`wc_yd5ekty2j7kb` for VESUM `422190`, ULIF `259921`, and
+`wc_xbw7msqev2mz` for VESUM `17025`, common-noun ULIF `21977`. Their earlier
+unsplit senses, spelling-only predecessors and the separate proper-name `Банк`
+remain intact. Curator correspondences preserve the original pilot matcher's
+unresolved results and source form alternatives. Independent exact-head Ukrainian
+adjudication remains required. Assembly reads the allocation and never mints IDs.
+
+Slice 4 retains the slice-3 authority map. Unsupported fields stay empty, with
+reason, dependency and owner at every card and allocated sense. Each consumed
+quotation must occur in its saved actual Sources response and its recorded
+Unicode interval. Qualified ULIF supplies stress first; official СУМ-20 is the
+fallback. Mirrors and ВТС never supply stress. The explicit ULIF animacy conflict
+for `круасан` is retained and its stress stays empty. Missing cached numeric GRAC
+attestation stays unknown. Pending examples belong to the independent reviewer;
+missing sources and later curation belong to Atlas.
+
+The current bundle holds the exact candidate quotation «Столиця України — місто
+Київ.» from Большакова, Ukrainian language, grade 2, part 2, 2019, page 32. It
+remains pending until independent Gemini/AGY Sources review approves its exact
+quotation, span, settlement sense and A1 suitability. A pending candidate does
+not establish a complete chain.
+
+```sh
+.venv/bin/python -m scripts.atlas.a1_slice4_inputs --check-selection
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice4 \
+  --sources batch_state/a1-slice4/sources.json --output batch_state/a1-slice4/batch.json
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice4 \
+  --sources batch_state/a1-slice4/sources.json --output batch_state/a1-slice4/batch.json \
+  --check --require-chain
+```
+
+The host-only Sources bundle and generated output remain in durable artifact
+custody. Delivery compares all four sibling projections with the verified main
+bundle; the inherited CLI checks only the main bundle. F5–F8 remain Atlas-owned
+P3 follow-ups, with this batch's actual stress references, literal quotation
+containment and sibling comparisons recorded separately. This slice does not
+close #11943, satisfy the issue-wide 50-card held-out requirement or publish a site.
