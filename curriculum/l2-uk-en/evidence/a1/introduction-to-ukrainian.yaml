@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: 25db4e1d2a3ea735751c32c787bb4332460dec85
+  mcp_commit: 2cc87076e63df2781675f07df0020ff61e9742ad
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
   sources_db: e9f9da3ca796cd1d6aab403c96bc02c0e2fcd36e3d4650cb4537d366b94e85f1
@@ -88,8 +88,7 @@ texts:
     page: 18
     row_sha256: 73fe2b115c0f2f0df7521e8f7e8b03c5b9aac1cd8e3254f89ac025c99b5acabb
     section_id: 53873
-  supports: Ukrainian is also used in diaspora communities, with the United States and Canada as documented examples; no current
-    population statistics.
+  supports: «Українсько-англійські міжмовні відносини. Українська мова у США і Канаді» (1964)
 - id: T-004
   quote: 'На письмі звуки позначаємо буквами.
 
@@ -127,7 +126,7 @@ videos:
 - channel: Speak Ukrainian
   checked:
     content_type: text/html
-    date: '2026-10-30'
+    date: '2026-10-31'
     final_url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
     http_status: 200
   id: V-001
