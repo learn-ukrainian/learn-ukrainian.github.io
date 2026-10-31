@@ -701,8 +701,15 @@ def test_cited_formula_record_renders_in_the_writer_prompt(sample_plan_entry, sa
         "parts": [{"word": "W-001", "form": "mama"}, {"word": "W-003", "form": "doma"}],
     }
     cited = {**sample_cited_records, "W-002": formula}
+    # The formula's part W-003 is not cited by the lesson; naming a part's id would trip the uncited-id guard.
+    plan = {**sample_plan_entry, "inventory": {**sample_plan_entry["inventory"]}}
+    plan["inventory"]["vocabulary"] = {
+        "core": [*sample_plan_entry["inventory"]["vocabulary"]["core"], {"lemma": "mama doma!", "evidence": "W-002"}],
+        "incidental": [],
+        "recycled": [],
+    }
     prompt = render_lesson_prompt(
-        sample_plan_entry,
+        plan,
         cited_records=cited,
         learner_state=sample_learner_state,
         word_store=SAMPLE_WORD_STORE,
@@ -712,7 +719,8 @@ def test_cited_formula_record_renders_in_the_writer_prompt(sample_plan_entry, sa
         lesson_n=1,
         style_card_path=CARDS_DIR / "a1.md",
     )
-    assert "### Record `W-002`\n- Kind: word\n- Formula: mama doma!\n- Parts: mama (W-001), doma (W-003)\n" in prompt
+    assert "### Record `W-002`\n- Kind: word\n- Formula: mama doma!\n- Parts: mama, doma\n" in prompt
+    assert _check(prompt, plan, sample_learner_state).errors == []
     with pytest.raises(ValueError, match=r"cited_record_invalid.*W-002.*parts"):
         cited_record_views({"W-002": {key: value for key, value in formula.items() if key != "parts"}})
 

@@ -5,7 +5,7 @@
 - Kind: {{ r.kind }}
 {%- if r.kind == "word" and r.record.get("kind") == "formula" %}
 - Formula: {{ r.record.text }}
-- Parts: {% for part in r.record.parts %}{{ part.form }} ({{ part.word }}){{ ", " if not loop.last }}{% endfor %}
+- Parts: {% for part in r.record.parts %}{{ part.form }}{{ ", " if not loop.last }}{% endfor %}
 {%- if r.record.get("gloss") %}
 - Gloss: {{ r.record.gloss }}
 {%- endif %}
