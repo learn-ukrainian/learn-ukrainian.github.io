@@ -1463,27 +1463,35 @@ launcher_bind_drive_epic() {
         # Resolve option arity only now: a later --harness can change it
         # (Codex -c takes a value; Claude -c is boolean). Arguments after
         # `--` have no caller indices and retain their original boundaries.
+        # An unclassified provider option must not relabel its following token
+        # as caller text: doing so leaves the option valueless and lets it take
+        # the appended binding as its value. Keep that token adjacent instead.
         case "$LC_PROVIDER:$LC_HARNESS" in
           codex:codex)
+            value_mode=optional
             case "$arg" in
               -c|--config|--enable|--disable|--remote|--remote-auth-token-env|--local-provider|-p|--profile|-s|--sandbox|-C|--cd|--add-dir|-a|--ask-for-approval) value_mode=one ;;
               -i|--image) value_mode=many ;;
             esac
             ;;
           claude:claude-code|codex:claude-code)
+            value_mode=optional
             case "$arg" in
               --agent|--agents|--append-system-prompt|--append-system-prompt-file|--autocompact|--debug-file|--environment|--fallback-model|--input-format|--json-schema|--max-budget-usd|-n|--name|--output-format|--permission-mode|--permission-prompts|--plugin-dir|--plugin-url|--remote-control-session-name-prefix|--session-id|--setting-sources|--settings|--system-prompt|--system-prompt-file|--system-prompt-snapshot) value_mode=one ;;
               --add-dir|--allowedTools|--allowed-tools|--betas|--disallowedTools|--disallowed-tools|--file|--mcp-config|--tools) value_mode=many ;;
+              -c|--continue) value_mode='' ;;
               --cloud|-d|--debug|--from-pr|--prompt-suggestions|--remote-control|-r|--resume|--teleport|-w|--worktree) value_mode=optional ;;
             esac
             ;;
           cursor:cursor-agent)
+            value_mode=optional
             case "$arg" in
               --api-key|-H|--header|-e|--endpoint|--output-format|--mode|--sandbox|--workspace|--add-dir|--plugin-dir|--worktree-base) value_mode=one ;;
               --resume|-w|--worktree) value_mode=optional ;;
             esac
             ;;
           gemini:agy)
+            value_mode=optional
             case "$arg" in
               --add-dir|--agent|--conversation|-i|--input-format|--json-schema|--log-file|--mode|--new-project|--output-format|-p|--print|--print-timeout|--project|--prompt|--prompt-interactive|--settings) value_mode=one ;;
             esac
