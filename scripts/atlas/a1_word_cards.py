@@ -1,6 +1,6 @@
-"""Assemble the approved 11-card A1 receipt batch, with complete row and field accounting.
+"""Assemble an approved fixed A1 receipt batch, with complete row and field accounting.
 
-Use for #11943 slice 2, never for certification, publication or expanding its denominator.
+Use for #11943 slices 2 and 3, never for certification, publication or expanding their denominators.
 """
 
 import argparse
@@ -9,6 +9,8 @@ import json
 import re
 import sys
 from collections import Counter, defaultdict
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
 from itertools import pairwise
 from pathlib import Path
 
@@ -35,6 +37,18 @@ VERSION = "a1-slice2-v1"
 CARD_FIELDS = (*assembly.CARD_FIELDS, "mwe_form", "mwe_frame")
 SENSE_FIELDS = assembly.SENSE_FIELDS
 STRESS_ORDER = ("ulif", "sum20", "vts_busel_slovnyk_me")
+
+
+@dataclass(frozen=True)
+class BatchContext:
+    """Bind a separately approved batch to its fixed inputs and identities."""
+
+    version: str
+    manifest_ref: str
+    companion_ref: str
+    row_card_ids: Mapping[str, str]
+    identity_methods: Mapping[str, str]
+    validate_inputs: Callable[[dict, dict, dict, dict, dict, dict], tuple[dict, list[dict]]]
 
 
 def require(condition, reason):
@@ -116,7 +130,7 @@ def _lexeme(claim, receipt, record, lemma):
             analysis = record["payload"]["clean_analyses"][int(match[1])]
             require(analysis["entry_id"] == claim["entry_id"], "form_entry_mismatch")
     if claim["field"] == "stress":
-        require(source_rules.norm_v1(receipt["quotation"].replace(source_rules.ACUTE, "")) == lemma,
+        require(source_rules.norm_v1(receipt["quotation"].replace(source_rules.ACUTE, "")) == source_rules.norm_v1(lemma),
                 "stress_lemma_mismatch")
 
 
@@ -177,7 +191,7 @@ def _form_stress(claim, receipt, sources, manifest):
             "accented_form_requires_stress")
 
 
-def _scope(claim, manifest, receipt):
+def _scope(claim, manifest, receipt, *, batch=None, record=None):
     field = claim["field"]
     if field in {"gloss_en", "english_gloss"}:
         require(claim.get("translation_direction") == "en-uk" and bool(claim.get("usage_pair")),
@@ -202,23 +216,38 @@ def _scope(claim, manifest, receipt):
             require(scope["span"][0] <= a < b <= scope["span"][1], "outside_sense_span")
         require(scope["card_id"] == claim["card_id"] and scope["sense_id"] == claim["sense_id"], "scope_subject_mismatch")
     if field == "definition_uk":
-        require(receipt["source_id"] in {"sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me"}, "meaning_source_invalid")
+        if receipt["source_id"] == "ulif":
+            require(batch is not None and batch.version == "a1-slice3-v1", "meaning_source_invalid")
+            require(record is not None and receipt["payload_pointer"] == "/sense_gloss"
+                    and isinstance(record["payload"].get("sense_gloss"), str)
+                    and receipt["span"] == [0, len(record["payload"]["sense_gloss"])]
+                    and receipt["quotation"] == record["payload"]["sense_gloss"], "ulif_definition_not_exact")
+        else:
+            require(receipt["source_id"] in {"sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me"}, "meaning_source_invalid")
         require("Джерело:" not in receipt["quotation"] and "Значення в інших" not in receipt["quotation"], "dictionary_footer")
 
 
-def build(inventory, base, companion, manifest, sources, pins, register):
+def build(inventory, base, companion, manifest, sources, pins, register, *, batch=None):
     """Pure assembly from independently frozen inputs; identity allocation is never performed here."""
-    effective, selected = _inputs(inventory, base, companion, manifest, sources, pins)
+    validate_inputs = _inputs if batch is None else batch.validate_inputs
+    effective, selected = validate_inputs(inventory, base, companion, manifest, sources, pins)
+    version = VERSION if batch is None else batch.version
+    manifest_ref = MANIFEST if batch is None else batch.manifest_ref
+    companion_ref = COMPANION if batch is None else batch.companion_ref
+    batch_name = version.removeprefix("a1-").removesuffix("-v1")
+    row_card_ids = ({r["id"]: r["mapping"]["pilot"]["card_id"] for r in selected}
+                    if batch is None else batch.row_card_ids)
     _definition_scopes(manifest)
     records = sources["records"]
-    entry_by_card = {r["mapping"]["pilot"]["card_id"]: r["mapping"]["entry_id"] for r in selected}
-    lemma_by_card = {r["mapping"]["pilot"]["card_id"]: r["mapping"]["lemma"] for r in selected}
+    entry_by_card = {row_card_ids[r["id"]]: r["mapping"]["entry_id"] for r in selected}
+    lemma_by_card = {row_card_ids[r["id"]]: r["mapping"]["lemma"] for r in selected}
     row_ids = defaultdict(list)
     for row in selected:
-        row_ids[row["mapping"]["pilot"]["card_id"]].append(row["id"])
+        row_ids[row_card_ids[row["id"]]].append(row["id"])
     allocated = {e["card_id"]: e for e in effective["entries"]}
-    pilot_matches = {r["mapping"]["pilot"]["card_id"]: next(c["match"] for c in r["mapping"]["pilot"]["candidates"]
-                    if c["card_id"] == r["mapping"]["pilot"]["card_id"]) for r in selected}
+    identity_methods = ({row_card_ids[r["id"]]: next(c["match"]["method"] for c in r["mapping"]["pilot"]["candidates"]
+                        if c["card_id"] == row_card_ids[r["id"]]) for r in selected}
+                        if batch is None else batch.identity_methods)
     source_ids = {(r["source_id"], c["snapshot_id"], c["locator"]): r for r in effective["source_records"]
                   for c in r["correspondence"] if c["status"] == "unique"}
     register_sources = {s["id"]: s for s in register["sources"]}
@@ -232,12 +261,12 @@ def build(inventory, base, companion, manifest, sources, pins, register):
             evidence = additions.get(sense["sense_id"])
             senses.append({**sense, "merged_into": None, "fields": {}, "sense_map": [] if evidence is None else [{
                 "source_id": evidence["source_id"], "source_sense_key": evidence["source_sense_key"],
-                "mapped_by": VERSION}], **({"seeded_from": evidence["source_id"]} if evidence else {})})
+                "mapped_by": version}], **({"seeded_from": evidence["source_id"]} if evidence else {})})
         cards[card_id] = {
             "schema_version": "1", "card_id": card_id, "card_kind": entry["card_kind"], "state": "active",
             "merged_into": None, "split_into": None, "key_at_creation": copy.deepcopy(entry["key_at_creation"]),
-            "identity": {"confidence": "high", "method": pilot_matches[card_id]["method"],
-                         "decided_by": "rules:" + VERSION, "source_keys": copy.deepcopy(entry["key_at_creation"]["source_keys"])},
+            "identity": {"confidence": "high", "method": identity_methods[card_id],
+                         "decided_by": "rules:" + version, "source_keys": copy.deepcopy(entry["key_at_creation"]["source_keys"])},
             "senses": senses, "links": [], "fields": {}, "assertions": [], "overlay_applied": [],
             "quality": {"identity_confidence": "high", "extraction_confidence_min": "high",
                         "linguistic_review": {"status": "none"}, "practice_eligibility": []}, "build": {},
@@ -258,7 +287,7 @@ def build(inventory, base, companion, manifest, sources, pins, register):
         record = records[claim["record_key"]]
         receipt = _receipt_for(claim, records)
         _lexeme(claim, receipt, record, lemma_by_card[card_id])
-        _scope(claim, manifest, receipt)
+        _scope(claim, manifest, receipt, batch=batch, record=record)
         _form_stress(claim, receipt, sources, manifest)
         if claim["field"] == "examples":
             approval = manifest["example_approvals"].get(receipt["receipt_id"])
@@ -277,13 +306,13 @@ def build(inventory, base, companion, manifest, sources, pins, register):
         require(sr is not None, "source_record_unallocated")
         subject = {"kind": "card" if subject_id == card_id else "sense", "id": subject_id}
         assertion_id = resolver.aid(source, record["snapshot_id"], receipt["locator"] + receipt["payload_pointer"]
-                                    + ":" + ":".join(map(str, receipt["span"])), subject, claim["field"], norm, VERSION)
+                                    + ":" + ":".join(map(str, receipt["span"])), subject, claim["field"], norm, version)
         assertion = {
             "assertion_id": assertion_id, "subject": subject, "field": claim["field"], "value": value,
             "value_norm": norm, "source_id": source, "snapshot_id": record["snapshot_id"],
             "locator": receipt["locator"] + receipt["payload_pointer"] + ":" + ":".join(map(str, receipt["span"])),
-            "extraction_version": VERSION, "extraction_confidence": "high",
-            "producer": {"kind": "source_extract", "name": "A1 fixed-batch extractor", "version": VERSION},
+            "extraction_version": version, "extraction_confidence": "high",
+            "producer": {"kind": "source_extract", "name": "A1 fixed-batch extractor", "version": version},
             "review": {"status": "none"}, "licence_ref": {"register_source_id": source,
                 "register_version": register["schema_version"], "appears_in": register_sources[source].get("appears_in", [])},
             "independence_group": group, "tier": tier, "status": "active",
@@ -302,14 +331,14 @@ def build(inventory, base, companion, manifest, sources, pins, register):
     build_inputs = {
         "S": {"batch": {"ref": "host-only Sources bundle", "content_sha256": digest(sources)}},
         "V": {"vesum": {"ref": "AC-01 VESUM import", "content_sha256": digest(inventory["sources"]["vesum_pipeline_identity"])}},
-        "I": {"allocation": {"ref": COMPANION, "content_sha256": pins["combined_sha256"]}},
-        "O": {"batch": {"ref": MANIFEST, "content_sha256": digest(manifest)}},
-        "R": {"extractor": {"ref": "scripts/atlas/a1_word_cards.py", "version": VERSION},
+        "I": {"allocation": {"ref": companion_ref, "content_sha256": pins["combined_sha256"]}},
+        "O": {"batch": {"ref": manifest_ref, "content_sha256": digest(manifest)}},
+        "R": {"extractor": {"ref": "scripts/atlas/a1_word_cards.py", "version": version},
               "register": {"ref": "docs/sources/permissions-register.yaml", "content_sha256": digest(register)}}}
     for card_id, card in cards.items():
         card["assertions"].sort(key=lambda a: a["assertion_id"])
         resolver._recompute(card)
-        card["build"] = {"build_id": VERSION + "@sha256:" + digest(build_inputs), "rules_version": VERSION,
+        card["build"] = {"build_id": version + "@sha256:" + digest(build_inputs), "rules_version": version,
                          "inputs": copy.deepcopy(build_inputs), "card_version": resolver.card_version(card)}
         for subject, names in [(card, CARD_FIELDS)] + [(s, SENSE_FIELDS) for s in card["senses"]]:
             sid = subject.get("sense_id", card_id)
@@ -335,23 +364,28 @@ def build(inventory, base, companion, manifest, sources, pins, register):
                     manifest["field_dependencies"].get(field, "exact source claim and reviewed sense correspondence"),
                     "owner": None if state == "supported" else "Atlas coordinator"})
     selected_ids = {r["id"] for r in selected}
+    previous_ids = {r["id"] for r in selected_rows(inventory)} if batch is not None else set()
     rows = [{"inventory_row_id": r["id"], "mapping": copy.deepcopy(r["mapping"]),
-             "state": "card_produced" if r["id"] in selected_ids else "deferred_outside_slice2",
-             "card_id": r["mapping"].get("pilot", {}).get("card_id") if r["id"] in selected_ids else None,
+             "state": "card_produced" if r["id"] in selected_ids else
+             "delivered_slice2" if r["id"] in previous_ids else "deferred_outside_" + batch_name,
+             "card_id": row_card_ids[r["id"]] if r["id"] in selected_ids else
+             r["mapping"]["pilot"]["card_id"] if r["id"] in previous_ids else None,
              "owner": "Atlas coordinator"} for r in inventory["rows"]]
-    result = {"schema_version": "atlas-a1-slice2-build.v1", "cards": list(cards.values()),
+    result = {"schema_version": "atlas-" + version.removesuffix("-v1") + "-build.v1", "cards": list(cards.values()),
               "receipts": list(receipts.values()), "assertion_receipts": assertion_receipts,
               "accounting": accounting, "rows": rows, "pending_examples": pending,
               "held_units": manifest["held_units"], "inputs_sha256": digest(build_inputs)}
-    verify(result, sources, manifest)
+    verify(result, sources, manifest, batch=batch)
     return result
 
 
-def verify(result, sources, manifest):
+def verify(result, sources, manifest, *, batch=None):
     """Check delivered bytes against receipts and conservation, without rebuilding cards."""
     _definition_scopes(manifest)
+    version = VERSION if batch is None else batch.version
+    selected_count = 19 if batch is None else len(batch.row_card_ids)
     require(len(result["rows"]) == 2144 and len({r["inventory_row_id"] for r in result["rows"]}) == 2144, "row_conservation")
-    require(sum(r["state"] == "card_produced" for r in result["rows"]) == 19, "row_selection_mismatch")
+    require(sum(r["state"] == "card_produced" for r in result["rows"]) == selected_count, "row_selection_mismatch")
     require(sorted(c["card_id"] for c in result["cards"]) == manifest["card_ids"], "card_conservation")
     receipts = {r["receipt_id"]: r for r in result["receipts"]}
     accounts = {(r["card_id"], r["sense_id"], r["field"]): r for r in result["accounting"]}
@@ -366,7 +400,7 @@ def verify(result, sources, manifest):
     for claim in claims:
         receipt = _receipt_for(claim, sources["records"])
         _lexeme(claim, receipt, sources["records"][claim["record_key"]], lemmas[claim["card_id"]])
-        _scope(claim, manifest, receipt)
+        _scope(claim, manifest, receipt, batch=batch, record=sources["records"][claim["record_key"]])
         _form_stress(claim, receipt, sources, manifest)
         if claim["field"] == "examples" and receipt["receipt_id"] not in manifest["example_approvals"]:
             expected_pending.append(receipt["receipt_id"])
@@ -374,7 +408,7 @@ def verify(result, sources, manifest):
         value, norm = _claim_value(claim, receipt, sources["records"][claim["record_key"]])
         subject = {"kind": "sense" if "sense_id" in claim else "card", "id": claim.get("sense_id", claim["card_id"])}
         locator = receipt["locator"] + receipt["payload_pointer"] + ":" + ":".join(map(str, receipt["span"]))
-        aid = resolver.aid(receipt["source_id"], receipt["snapshot_id"], locator, subject, claim["field"], norm, VERSION)
+        aid = resolver.aid(receipt["source_id"], receipt["snapshot_id"], locator, subject, claim["field"], norm, version)
         require(aid not in expected, "duplicate_claim")
         expected[aid] = (claim, receipt, value, norm, subject, locator)
     require(sorted(r["receipt"]["receipt_id"] for r in result["pending_examples"]) == sorted(expected_pending),
@@ -440,10 +474,13 @@ def main(argv=None):
         epilog="""Examples:
   .venv/bin/python -m scripts.atlas.a1_word_cards --sources batch_state/a1/sources.json --output batch_state/a1/cards.json
   .venv/bin/python -m scripts.atlas.a1_word_cards --sources batch_state/a1/sources.json --output batch_state/a1/cards.json --check
+  .venv/bin/python -m scripts.atlas.a1_word_cards --batch slice3 --sources batch_state/a1/slice3-sources.json --output batch_state/a1/slice3-cards.json
 Outputs: host-only card/receipt/accounting bundle; no source-store writes, allocation, certification or deploy.
 Exit codes: 0 verified output; 1 refused input or evidence; 2 usage error.
 Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
 """)
+    parser.add_argument("--batch", choices=("slice2", "slice3"), default="slice2",
+                        help="Approved fixed batch to assemble or check (default: slice2), e.g. slice3")
     parser.add_argument("--sources", type=Path, required=True, help="Frozen host-only Sources bundle, e.g. batch_state/a1/sources.json")
     parser.add_argument("--output", type=Path, required=True, help="Ignored output JSON inside this worktree, e.g. batch_state/a1/cards.json")
     parser.add_argument("--check", action="store_true", help="Verify an existing output without rewriting it (default: off)")
@@ -451,24 +488,31 @@ Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
                         help="Refuse unless an actual card has meaning, stress, VESUM forms and an approved example (default: off)")
     args = parser.parse_args(argv)
     try:
-        manifest = load(ROOT / MANIFEST)
-        require(digest(manifest) == MANIFEST_SHA256, "reviewed_manifest_digest_mismatch")
-        inventory = load(ROOT / "registry/atlas/a1-v1-inventory.json")
-        base = load(ROOT / "registry/atlas/identity/registry.json")
-        companion = load(ROOT / COMPANION)
+        batch = None
+        if args.batch == "slice3":
+            from scripts.atlas.a1_slice3_inputs import load_batch
+
+            manifest, inventory, base, companion, batch = load_batch(ROOT)
+        else:
+            manifest = load(ROOT / MANIFEST)
+            require(digest(manifest) == MANIFEST_SHA256, "reviewed_manifest_digest_mismatch")
+            inventory = load(ROOT / "registry/atlas/a1-v1-inventory.json")
+            base = load(ROOT / "registry/atlas/identity/registry.json")
+            companion = load(ROOT / COMPANION)
         sources = load(args.sources)
-        effective, _ = _inputs(inventory, base, companion, manifest, sources, manifest["allocation_pins"])
+        validate_inputs = _inputs if batch is None else batch.validate_inputs
+        effective, _ = validate_inputs(inventory, base, companion, manifest, sources, manifest["allocation_pins"])
         foundation.registry_check(effective)
         assembly.require_host_only([args.output])
         if args.check:
             result = load(args.output)
             rebuilt = build(inventory, base, companion, manifest, sources, manifest["allocation_pins"],
-                            foundation.load_register(ROOT / "docs/sources/permissions-register.yaml"))
+                            foundation.load_register(ROOT / "docs/sources/permissions-register.yaml"), batch=batch)
             require(args.output.read_bytes() == canonical(rebuilt) + b"\n", "delivered_output_mismatch")
         else:
             result = build(inventory, base, companion, manifest, sources, manifest["allocation_pins"],
-                           foundation.load_register(ROOT / "docs/sources/permissions-register.yaml"))
-        counts = verify(result, sources, manifest)
+                           foundation.load_register(ROOT / "docs/sources/permissions-register.yaml"), batch=batch)
+        counts = verify(result, sources, manifest, batch=batch)
         for card in result["cards"]:
             foundation.schema(card, "word-card-v1.schema.json")
         counts["complete_chain_cards"] = complete_chains(result)

@@ -146,3 +146,54 @@ This command refuses unless one actual card has a sourced meaning, stress,
 VESUM forms and an approved example together. A draft build without that chain
 is partial engineering evidence. Neither command publishes, grants practice
 eligibility, changes the public preview or satisfies AC-07 through AC-09.
+
+## Slice 3: cards for the first eight reviewed plans
+
+The [slice-3 manifest](../../../registry/atlas/a1-v1-slice3.json) freezes
+`reviewed_plan_vocabulary_to_inventory_mapping_lemma_v1`. It joins explicit
+core, incidental and recycled vocabulary in reviewed positions 1–8 to
+non-null inventory `mapping.lemma` values. W-ID references resolve through
+the same revision's word registry; formulas retain their complete text.
+The join normalizes NFC, removes combining acute, strips edge whitespace
+and casefolds. It preserves original spelling, proper/common identity,
+VESUM entry IDs and every repeated or inflected inventory occurrence.
+Missing lemma mappings are never inferred from vocabulary keys.
+
+The source is the specified reviewed-plan fallback commit
+`e7a9ac497da8bbeba5531937a4c8543369462942`. That eight-plan edition was
+not merged at the start of this slice. The manifest pins every consumed
+plan file and the word registry. The frozen selection contains 177 rows,
+74 inventory keys and 45 targets: 41 lexemes and four proper names.
+All fit the 60-card cap. The row ledger separately records the 19 rows
+delivered by slice 2 and the other 1,948 deferred rows.
+
+The [slice-3 allocation](../../../registry/atlas/identity/a1-v1-slice3.json)
+appends to the exact base-plus-slice-2 union. It preserves existing IDs,
+including the three source-adjudicated pilot candidates, and never changes
+the pilot matcher or frozen inventory. Allocation creation is separate
+from assembly. The builder consumes the reviewed allocation; it never
+regenerates its IDs. Source disagreements, held source units and unsupported
+fields retain their dependencies and Atlas coordinator ownership.
+
+Slice 3 admits meanings from official СУМ-20, admitted ВТС or a qualified
+ULIF sense gloss. It admits stress from qualified ULIF forms or an official
+СУМ-20 accented headword. Mirrors, СУМ-11 and ВТС stress do not supply these
+fields. Forms retain their VESUM entry, exact tags and source alternatives.
+Examples remain empty until exact quotation, span, sense and A1 suitability
+receive independent Gemini/AGY Sources approval.
+
+```sh
+.venv/bin/python -m scripts.atlas.a1_slice3_inputs --check-selection
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice3 \
+  --sources batch_state/a1-slice3/sources.json --output batch_state/a1-slice3/batch.json
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice3 \
+  --sources batch_state/a1-slice3/sources.json --output batch_state/a1-slice3/batch.json \
+  --check --require-chain
+```
+
+The Sources bundle is a pinned, host-only replay input retained in artifact
+custody. The command writes the same four projections as slice 2. Delivery
+verification compares all projection bytes with the verified main bundle;
+the inherited CLI `--check` verifies only the main bundle. The default
+`--batch slice2` keeps the original denominator, pins and behavior. This
+batch does not publish cards, enable practice or close AC-07 through AC-09.
