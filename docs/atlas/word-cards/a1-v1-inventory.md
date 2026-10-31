@@ -182,6 +182,12 @@ fields. Forms retain their VESUM entry, exact tags and source alternatives.
 Examples remain empty until exact quotation, span, sense and A1 suitability
 receive independent Gemini/AGY Sources approval.
 
+The approved batch contains one complete chain for `мама`
+(`wc_ea2fvbcb6p3k`): VESUM forms, ULIF stress, the ВТС maternal
+sense and the exact textbook quotation «Моя мама найкраща!». Its
+[example review](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/12221#issuecomment-6541516724)
+binds the quotation, source span and sense. Other examples remain empty.
+
 ```sh
 .venv/bin/python -m scripts.atlas.a1_slice3_inputs --check-selection
 .venv/bin/python -m scripts.atlas.a1_word_cards --batch slice3 \
