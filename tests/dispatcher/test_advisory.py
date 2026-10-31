@@ -106,12 +106,18 @@ def test_non_bounded_model_needs_no_advisory(launch, model):
     ("read-only", "ukrainian", "ukrainian-review", "scripts/audit/generate_practice_deck.py", True),
     ("read-only", "ukrainian", "practice", "docs/example.md", True),
     ("workspace-write", "ukrainian", "ukrainian-review", "scripts/audit/generate_practice_deck.py", False),
-    ("read-only", "code", "practice", "scripts/audit/generate_practice_deck.py", False),
+    ("read-only", "code", "practice", "scripts/audit/generate_practice_deck.py", True),
 ])
 def test_flash_ukrainian_review_of_record_is_admitted_only_read_only(
     launch, capsys, tmp_path, mode, profile, family, path, admitted,
 ):
-    """Defect class: a read-only Ukrainian review of a mixed PR is refused for naming its real family or code paths."""
+    """Defect class: a read-only review of record is refused for its family or for naming code paths.
+
+    Ukrainian read-only reviews stay admitted. A read-only code review listed on
+    the fallback seat's review route is admitted the same way, whatever the
+    research family or path. A write-mode Ukrainian profile that owns code is
+    still the bounded fallback.
+    """
     (tmp_path / "scripts/audit").mkdir(parents=True)
     launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
     launch[launch.index("--owned-path") + 1] = path

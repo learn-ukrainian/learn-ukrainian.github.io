@@ -319,9 +319,11 @@ execution_routing:
     # Every dispatch to a bounded worker (preferred_worker, or the Gemini Flash
     # fallback below unless it carries a Ukrainian authoring/review
     # classification) needs a complete advisory envelope from the advisor above,
-    # supplied by the driver; dispatch v2 does not inject or enforce it. A
-    # read-only --review-profile ukrainian Flash dispatch (a review of record)
-    # is exempt whatever its task family and paths, since it writes nothing; a
+    # supplied by the driver; dispatch v2 does not inject or enforce it.
+    # Bounded execution is not review authority. A read-only review of record
+    # is exempt without that classification and without research metadata:
+    # --review-profile ukrainian, or a --review-profile on this fallback seat's
+    # review route (the same review_profiles the resolver uses; code). A
     # family exemption or a write-mode Ukrainian profile must own only Ukrainian
     # content paths.
     bounded_fallback_worker:
