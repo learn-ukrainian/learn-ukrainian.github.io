@@ -1045,23 +1045,49 @@ def reply_has_item_judgments(reply: str) -> bool:
     return "```ukrainian-item-judgments" in reply
 
 
-# Paired quotation marks, including the single, low, curly and backtick forms. An
-# apostrophe inside a word (м'ясо) is not a pair. Double quotes may span lines.
-_PRESENTED_QUOTE = re.compile(
-    r"«([^»]+?)»"
-    r"|„([^“”\"]+?)[“”\"]"
-    r"|“([^”]+?)”"
-    r"|\"([^\"]+?)\""
-    r"|‘([^’]+?)’"
-    r"|(?<![\w])'([^'\n]+?)'(?![\w])"
-    r"|`([^`\n]+?)`",
-    re.DOTALL,
-)
+# Opener to the marks that can close it. An apostrophe between two letters is part of
+# the word (м'ясо, п’ять), not a boundary, so a pair can contain one.
+_QUOTE_CLOSERS = {
+    "«": ("»",),
+    "„": ("“", "”", '"'),
+    "“": ("”",),
+    '"': ('"',),
+    "‘": ("’",),
+    "'": ("'",),
+    "`": ("`",),
+}
+_APOSTROPHES = frozenset({"'", "’"})
 
 
 def _presented_quotes(text: str) -> list[str]:
-    """Spans ``text`` presents as quotations of the frozen input, in any of the paired marks."""
-    return [span for match in _PRESENTED_QUOTE.finditer(text) if (span := next((group for group in match.groups() if group), ""))]
+    """Complete paired quotations in ``text``. An interior word apostrophe stays inside the pair."""
+    spans: list[str] = []
+    index = 0
+    length = len(text)
+    while index < length:
+        mark = text[index]
+        closers = _QUOTE_CLOSERS.get(mark)
+        if closers is None or _interior_apostrophe(text, index):
+            index += 1
+            continue
+        end = index + 1
+        while end < length:
+            if text[end] in closers and not _interior_apostrophe(text, end):
+                span = text[index + 1 : end]
+                if span.strip():
+                    spans.append(span)
+                index = end
+                break
+            end += 1
+        index += 1
+    return spans
+
+
+def _interior_apostrophe(text: str, index: int) -> bool:
+    mark = text[index]
+    if mark not in _APOSTROPHES or index == 0 or index + 1 == len(text):
+        return False
+    return text[index - 1].isalpha() and text[index + 1].isalpha()
 
 
 def _quote_spans(row: Mapping[str, Any]) -> list[str] | None:
@@ -1140,9 +1166,13 @@ def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> I
             quote_bad = True
         judged.append(item_id)
         verdicts.append(verdict)
-    outside = reply
-    for body in bodies:
-        outside = outside.replace(body, "", 1)
+    outside = re.sub(
+        r"^```ukrainian-item-judgments[ \t]*\n.*?\n```[ \t]*\n?",
+        "",
+        reply,
+        count=1,
+        flags=re.M | re.S,
+    )
     item_texts = tuple(frozen.values())
     if any(all(span not in text for text in item_texts) for span in _presented_quotes(outside)):
         quote_bad = True
