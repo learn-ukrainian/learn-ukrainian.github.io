@@ -24,7 +24,7 @@ from typing import Any, NoReturn
 from urllib.parse import parse_qs, unquote, urlparse
 
 import pytest
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.testclient import TestClient
 from starlette.requests import Request
@@ -704,6 +704,94 @@ def _assert_unlisted_schema_hidden_route_fails_the_denominator(monkeypatch: pyte
     registry.assert_frozen_denominator(api_main.app)
 
 
+def _assert_hidden_methods_outside_openapi_fail_the_denominator() -> None:
+    """HEAD, OPTIONS, TRACE, CONNECT, and PROPFIND stay in the HTTP inventory."""
+    methods = ("HEAD", "OPTIONS", "TRACE", "CONNECT", "PROPFIND")
+    original_routes = list(api_main.app.router.routes)
+    probe = APIRouter()
+    for method in methods:
+        probe.add_api_route(
+            f"/opsec-hidden-{method.lower()}",
+            lambda: {"ok": True},
+            methods=[method],
+            include_in_schema=False,
+        )
+    api_main.app.include_router(probe)
+    try:
+        swept = {operation.key for operation in registry.enumerate_http_operations(api_main.app)}
+        for method in methods:
+            key = f"{method} /opsec-hidden-{method.lower()}"
+            assert key in swept
+        with pytest.raises(AssertionError, match="opsec-hidden-head"):
+            registry.assert_frozen_denominator(api_main.app)
+    finally:
+        api_main.app.router.routes[:] = original_routes
+
+    registry.assert_frozen_denominator(api_main.app)
+
+
+def _assert_mounted_hidden_route_keeps_the_mount_prefix() -> None:
+    """A hidden route under a mount is inventoried at the path the app serves."""
+    mount_path = "/opsec-review-mount"
+    key = f"GET {mount_path}/docs"
+    original_routes = list(api_main.app.router.routes)
+    child = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+    probe = APIRouter()
+
+    @probe.get("/docs", include_in_schema=False)
+    def opsec_mounted_hidden_docs() -> dict[str, bool]:
+        return {"ok": True}
+
+    child.include_router(probe)
+    api_main.app.mount(mount_path, child)
+    try:
+        hidden = {operation.key for operation in registry.enumerate_schema_hidden_api_operations(api_main.app)}
+        swept = {operation.key for operation in registry.enumerate_http_operations(api_main.app)}
+        exempt = {operation.key for operation in registry.enumerate_framework_exemptions(api_main.app)}
+        assert key in hidden
+        assert key in swept
+        assert key not in exempt
+        with pytest.raises(AssertionError, match="opsec-review-mount/docs"):
+            registry.assert_frozen_denominator(api_main.app)
+    finally:
+        api_main.app.router.routes[:] = original_routes
+
+    registry.assert_frozen_denominator(api_main.app)
+
+
+def _assert_filtered_walk_still_fails_the_denominator(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Dropping schema-hidden kinds from the sweep walk leaves the denominator red."""
+    path = "/opsec-schema-hidden-filter-probe"
+    key = f"GET {path}"
+    original_routes = list(api_main.app.router.routes)
+    real_walk = registry._walk_routes
+    probe = APIRouter()
+
+    @probe.get(path, include_in_schema=False)
+    def opsec_schema_hidden_filter_probe() -> dict[str, bool]:
+        return {"ok": True}
+
+    def drop_schema_hidden(node: Any, prefix: str = "") -> Any:
+        for kind, operation in real_walk(node, prefix):
+            if kind != "http-schema-hidden":
+                yield kind, operation
+
+    api_main.app.include_router(probe)
+    monkeypatch.setattr(registry, "_walk_routes", drop_schema_hidden)
+    try:
+        swept = {operation.key for operation in registry.enumerate_http_operations(api_main.app)}
+        census = {operation.key for operation in registry.census_schema_hidden_api_operations(api_main.app)}
+        assert key not in swept
+        assert key in census
+        with pytest.raises(AssertionError, match="opsec-schema-hidden-filter-probe"):
+            registry.assert_frozen_denominator(api_main.app)
+    finally:
+        monkeypatch.setattr(registry, "_walk_routes", real_walk)
+        api_main.app.router.routes[:] = original_routes
+
+    registry.assert_frozen_denominator(api_main.app)
+
+
 def test_route_registry_matches_openapi_and_classifies_every_operation(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -715,9 +803,13 @@ def test_route_registry_matches_openapi_and_classifies_every_operation(
     hidden = set(registry.enumerate_schema_hidden_api_operations(api_main.app))
     swept = set(registry.enumerate_http_operations(api_main.app))
     exempt = set(registry.FRAMEWORK_EXEMPT_OPERATIONS)
+    assert hidden == set(registry.census_schema_hidden_api_operations(api_main.app))
     assert hidden <= swept | exempt
     assert not (swept & exempt)
     _assert_unlisted_schema_hidden_route_fails_the_denominator(monkeypatch)
+    _assert_hidden_methods_outside_openapi_fail_the_denominator()
+    _assert_mounted_hidden_route_keeps_the_mount_prefix()
+    _assert_filtered_walk_still_fails_the_denominator(monkeypatch)
     assert {record.classification for record in records} >= {"read", "mutation", "stream"}
     by_key = {record.key: record for record in records}
     assert {

@@ -4,8 +4,10 @@ The live FastAPI tree is the denominator.  ``FROZEN_DENOMINATOR_SHA256`` is
 the reviewed snapshot guard: adding an HTTP or WebSocket route changes the
 fingerprint and fails the sweep until a record is deliberately reviewed.
 A schema-hidden APIRoute is part of that HTTP inventory, so the sweep
-exercises it, unless ``FRAMEWORK_EXEMPT_OPERATIONS`` lists it. An exemption
-added for that purpose states its reason in the comment beside the entry.
+exercises every method it serves, unless ``FRAMEWORK_EXEMPT_OPERATIONS``
+lists that method and path. A mount prefix stays on the path before
+exemption matching. An exemption added for that purpose states its reason
+in the comment beside the entry.
 Included routers and mounts are walked through their public ``routes`` and
 ``original_router``/``include_context`` attributes; no private FastAPI route
 class is part of the walker contract.
@@ -221,7 +223,17 @@ def normalize_path_template(path: str) -> str:
 
 
 def _walk_routes(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]:
-    """Yield routes from an app/router/mount using public route attributes."""
+    """Yield routes from an app/router/mount using public route attributes.
+
+    The sweep's public entry point. The denominator's hidden-route census
+    calls ``_iter_route_operations`` directly so a wrapper here cannot drop
+    schema-hidden APIRoutes and stay green.
+    """
+    yield from _iter_route_operations(node, prefix)
+
+
+def _iter_route_operations(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]:
+    """Walk one node. Recursive calls stay on this function, not ``_walk_routes``."""
     effective_contexts = getattr(node, "effective_route_contexts", None)
     if callable(effective_contexts):
         for context in effective_contexts():
@@ -233,7 +245,7 @@ def _walk_routes(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]
                 # the correctly prefixed Starlette route.
                 starlette_route = getattr(context, "starlette_route", None)
                 context_path = getattr(starlette_route, "path", None)
-            path = normalize_path_template(context_path or getattr(original_route, "path", "/"))
+            path = _prefixed_path(prefix, context_path or getattr(original_route, "path", "/"))
             if isinstance(original_route, WebSocketRoute):
                 yield "websocket", Operation("WEBSOCKET", path)
             elif isinstance(original_route, APIRoute):
@@ -248,13 +260,13 @@ def _walk_routes(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]
     if original_router is not None:
         context = getattr(node, "include_context", None)
         included_prefix = getattr(context, "prefix", "") if context is not None else ""
-        yield from _walk_routes(original_router, _join_path(prefix, included_prefix))
+        yield from _iter_route_operations(original_router, _join_path(prefix, included_prefix))
         return
 
     if isinstance(node, Mount):
         mount_prefix = _join_path(prefix, getattr(node, "path", ""))
         for child in getattr(node, "routes", ()):
-            yield from _walk_routes(child, mount_prefix)
+            yield from _iter_route_operations(child, mount_prefix)
         return
 
     if isinstance(node, WebSocketRoute):
@@ -277,7 +289,12 @@ def _walk_routes(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]
         if node_prefix == "" and node is not None and not hasattr(node, "openapi"):
             node_prefix = _join_path(prefix, getattr(node, "prefix", ""))
         for child in routes:
-            yield from _walk_routes(child, node_prefix)
+            yield from _iter_route_operations(child, node_prefix)
+
+
+def _prefixed_path(prefix: str, path: str) -> str:
+    """Join a mount or include prefix onto one route template."""
+    return normalize_path_template(_join_path(prefix, path) if prefix else path)
 
 
 def _api_route_operations(
@@ -285,19 +302,40 @@ def _api_route_operations(
 ) -> Iterable[tuple[str, Operation]]:
     """Yield one HTTP operation per method on an APIRoute.
 
-    ``http-schema-hidden`` marks a route the app serves outside the OpenAPI
-    schema. The HTTP denominator still sweeps it unless the route is listed in
-    ``FRAMEWORK_EXEMPT_OPERATIONS``.
+    Schema-visible routes keep ``HTTP_METHODS`` so the OpenAPI cross-check
+    stays aligned with the methods OpenAPI records. Every other method on a
+    served APIRoute, and every method on a schema-hidden APIRoute, is
+    ``http-schema-hidden``: the sweep exercises it unless
+    ``FRAMEWORK_EXEMPT_OPERATIONS`` lists that method and path.
     """
-    kind = "http" if include_in_schema else "http-schema-hidden"
-    for method in sorted(set(methods or ()) & HTTP_METHODS):
-        yield kind, Operation(method, path)
+    raw = set(methods or ())
+    if include_in_schema:
+        for method in sorted(raw & HTTP_METHODS):
+            yield "http", Operation(method, path)
+        hidden_methods = raw - HTTP_METHODS
+    else:
+        hidden_methods = raw
+    for method in sorted(hidden_methods):
+        yield "http-schema-hidden", Operation(method, path)
+
+
+def _schema_hidden_from(walk: Iterable[tuple[str, Operation]]) -> tuple[Operation, ...]:
+    operations = {operation for kind, operation in walk if kind == "http-schema-hidden"}
+    return tuple(sorted(operations))
 
 
 def enumerate_schema_hidden_api_operations(app: Any) -> tuple[Operation, ...]:
-    """Return APIRoute operations the app serves outside the OpenAPI schema."""
-    operations = {operation for kind, operation in _walk_routes(app) if kind == "http-schema-hidden"}
-    return tuple(sorted(operations))
+    """Return APIRoute operations the sweep walk sees outside the OpenAPI schema."""
+    return _schema_hidden_from(_walk_routes(app))
+
+
+def census_schema_hidden_api_operations(app: Any) -> tuple[Operation, ...]:
+    """Return schema-hidden APIRoutes from the route tree, not from ``_walk_routes``.
+
+    ``assert_frozen_denominator`` uses this census. Filtering ``http-schema-hidden``
+    out of ``_walk_routes`` still leaves those routes unaccounted.
+    """
+    return _schema_hidden_from(_iter_route_operations(app))
 
 
 def enumerate_http_operations(app: Any) -> tuple[Operation, ...]:
@@ -404,6 +442,7 @@ def denominator_diff(app: Any) -> dict[str, list[str]]:
     walked = set(enumerate_http_operations(app))
     openapi = set(openapi_operations(app))
     hidden = set(enumerate_schema_hidden_api_operations(app))
+    census = set(census_schema_hidden_api_operations(app))
     exempt = set(FRAMEWORK_EXEMPT_OPERATIONS)
     visible = walked - hidden
     websockets = {operation.path_template for operation in enumerate_websocket_routes(app)}
@@ -411,7 +450,7 @@ def denominator_diff(app: Any) -> dict[str, list[str]]:
         "missing_from_openapi": sorted(operation.key for operation in visible - openapi),
         "missing_from_route_tree": sorted(operation.key for operation in openapi - visible),
         "schema_hidden_swept": sorted(operation.key for operation in walked & hidden),
-        "schema_hidden_unaccounted": sorted(operation.key for operation in hidden - walked - exempt),
+        "schema_hidden_unaccounted": sorted(operation.key for operation in census - walked - exempt),
         "websockets": sorted(websockets),
     }
 
