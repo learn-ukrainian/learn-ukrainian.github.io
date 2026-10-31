@@ -496,7 +496,7 @@ def _parse_dependency_input(filename: str, payload: bytes, *, worktree: Path) ->
     else:
         from pip._internal.exceptions import PipError
         from pip._internal.req.constructors import parse_req_from_line
-        from pip._internal.req.req_file import get_line_parser, preprocess
+        from pip._internal.req.req_file import OptionParsingError, get_line_parser, preprocess
         from pip._internal.vcs.versioncontrol import is_url
 
         parse_line = get_line_parser(None)
@@ -513,8 +513,12 @@ def _parse_dependency_input(filename: str, payload: bytes, *, worktree: Path) ->
                 except InvalidRequirement:
                     if not is_url(requirement):
                         requirement = str(worktree / requirement)
-                parse_req_from_line(requirement, None)
-        except PipError as exc:
+                parsed = parse_req_from_line(requirement, None)
+                if parsed.link is not None and parsed.link.is_file:
+                    local = Path(parsed.link.file_path)
+                    if not (local.is_file() or local.is_dir()):
+                        raise ValueError("local requirement input is unavailable")
+        except (PipError, OptionParsingError) as exc:
             raise ValueError("invalid requirements input") from exc
 
 
