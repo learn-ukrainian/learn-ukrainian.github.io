@@ -820,6 +820,14 @@ def _validate_write_candidate(
                     return refuse("target_is_active_store")
                 if live.exists() and path.exists() and path.samefile(live):
                     return refuse("target_is_active_store")
+                if filename == STORE_FILES["sources"][0] and path.exists():
+                    try:
+                        generations = tuple((live.parent / GENERATIONS_DIRNAME).iterdir())
+                    except FileNotFoundError:
+                        generations = ()
+                    for generation in generations:
+                        if is_generation_name(generation.name) and path.samefile(generation):
+                            return refuse("target_is_active_store")
                 if live.exists() and _store_locality(live.resolve()) != "local":
                     return refuse("locality_" + _store_locality(live.resolve()))
         if GENERATIONS_DIRNAME in resolved.parts or GENERATIONS_DIRNAME in path.resolve().parts:
