@@ -1045,18 +1045,23 @@ def reply_has_item_judgments(reply: str) -> bool:
     return "```ukrainian-item-judgments" in reply
 
 
-_PRESENTED_QUOTE = re.compile(r"«([^»]+)»|\"([^\"\n]+)\"|“([^”]+)”")
-_CYRILLIC = re.compile(r"[А-Яа-яІіЇїЄєҐґ]")
+# Paired quotation marks, including the single, low, curly and backtick forms. An
+# apostrophe inside a word (м'ясо) is not a pair. Double quotes may span lines.
+_PRESENTED_QUOTE = re.compile(
+    r"«([^»]+?)»"
+    r"|„([^“”\"]+?)[“”\"]"
+    r"|“([^”]+?)”"
+    r"|\"([^\"]+?)\""
+    r"|‘([^’]+?)’"
+    r"|(?<![\w])'([^'\n]+?)'(?![\w])"
+    r"|`([^`\n]+?)`",
+    re.DOTALL,
+)
 
 
 def _presented_quotes(text: str) -> list[str]:
-    """Ukrainian spans ``text`` puts in quotes. An English aside is not a quote of the frozen item."""
-    found: list[str] = []
-    for match in _PRESENTED_QUOTE.finditer(text):
-        span = next((group for group in match.groups() if group), "")
-        if _CYRILLIC.search(span):
-            found.append(span)
-    return found
+    """Spans ``text`` presents as quotations of the frozen input, in any of the paired marks."""
+    return [span for match in _PRESENTED_QUOTE.finditer(text) if (span := next((group for group in match.groups() if group), ""))]
 
 
 def _quote_spans(row: Mapping[str, Any]) -> list[str] | None:
@@ -1089,7 +1094,7 @@ def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> I
     The reply's only payload is per-item verdict, finding and Sources evidence, keyed by the
     packet's item id. Offsets, counts, pointers, tables and a coverage set void it as
     reviewer bookkeeping and do not count. A quote of the frozen item, in the quote fields
-    or as a Ukrainian quotation in the finding, the Sources evidence or the reply, must be
+    or as a quoted span in the finding, the Sources evidence or the reply, must be
     a literal substring. On an approval that mismatch voids the chunk. It does not erase a
     rejection verdict.
     """
