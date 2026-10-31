@@ -1046,6 +1046,10 @@ assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "399cf15d4a
 _V2_BASELINE = json.loads(gzip.decompress(_V2_BASELINE_PATH.read_bytes()))
 CURRENT_BASELINE = _V2_BASELINE["baseline"]
 CURRENT_INPUTS = _V2_BASELINE["inputs"]
+# Gemini 3.8 Flash High is a general worker (#12291). The gzip fixture stays
+# byte-identical; the loaded catalog drops the retired fallback block so frozen
+# compares and re-validation match the live route keys.
+CURRENT_BASELINE["catalog"]["execution_routing"]["sol_advised_bounded"].pop("bounded_fallback_worker")
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",

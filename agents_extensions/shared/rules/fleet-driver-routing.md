@@ -202,16 +202,13 @@ Other bounded work retains the existing envelope flow:
 ```
 
 This is the catalog `execution_routing.sol_advised_bounded` route. Outside the #10919
-driver-brief exception, Luna dispatches and the `gemini-3.8-flash-high` fallback
-unless classified Ukrainian authoring or review need a complete envelope from a finished
-`gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `dispatch.py` refuses it
+driver-brief exception, Luna dispatches need a complete envelope from a finished
+`gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `dispatch.py` refuses that Luna dispatch
 otherwise (`BOUNDED_ENVELOPE_REQUIRED`), including after a budget substitution, and fails
 the worker at finalize when it exceeds the envelope ceilings (a completion gate checked after
-the worker exits, not a limit on what it does while running). A second completion gate
-fails a Ukrainian-classified `gemini-3.8-flash-high` write worker whose changes include a
-code file or a path outside the Ukrainian content roots (`advisory_exempt_code_change`),
-because admission can only classify the files its owned paths held then. The envelope's `owned_paths`
-must equal the worker's `--owned-path` set. Outside the #10919 exception, a brief
+the worker exits, not a limit on what it does while running). The envelope's `owned_paths`
+must equal the worker's `--owned-path` set. `gemini-3.8-flash-high` on AGY is a general
+read-only and workspace-write worker and does not take an advisory task (#12291). Outside the #10919 exception, a brief
 that is not a Sol envelope does not admit a bounded worker (the packet path used to be "Fable or Astra"; it is now the catalog
 advisor route only). Routine lockfile, pointer and smoke tasks take
 no advisory seat, so they go to a non-bounded worker (for example `claude-sonnet-5-5`)

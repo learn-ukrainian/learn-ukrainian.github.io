@@ -184,7 +184,7 @@ review_scheduler:
       # #10073: direct exact-head worktree review; no parent ACP MCP dependency.
       formal_review_eligible: true
       models:
-      - {role: bounded_fallback}
+      - {role: legacy_reviewers, seat: google_bounded}
       - {role: anthropic_authority_reviewer}
       - {role: legacy_reviewers, seat: anthropic_practical}
       participant: agy
@@ -315,22 +315,12 @@ execution_routing:
         - unresolved_consequential_ambiguity
         - broader_integration
         - final_disposition
-    # Operator decision 2026-09-30 (#9275): there is no direct bounded dispatch.
-    # Every dispatch to a bounded worker (preferred_worker, or the Gemini Flash
-    # fallback below unless it carries a Ukrainian authoring/review
-    # classification) needs a complete advisory envelope from the advisor above,
-    # supplied by the driver; dispatch v2 does not inject or enforce it.
-    # Bounded execution is not review authority. A read-only review of record
-    # is exempt without that classification and without research metadata:
-    # --review-profile ukrainian, or a --review-profile on this fallback seat's
-    # review route (the same review_profiles the resolver uses; code). A
-    # family exemption or a write-mode Ukrainian profile must own only Ukrainian
-    # content paths.
-    bounded_fallback_worker:
-      model_id: {role: bounded_fallback}
-      effort: high
-      requires: [complete_advisory_envelope, objective_scope_ceiling]
-      non_bounded_task_families: [ukrainian-authoring, ukrainian-review]
+    # Operator decision 2026-09-30 (#9275): there is no direct bounded dispatch
+    # for the preferred worker. Luna needs a complete advisory envelope from the
+    # advisor above, supplied by the driver, unless a driver brief admits it.
+    # Dispatch does not inject the envelope. Bounded execution is not review
+    # authority. Gemini 3.8 Flash High on AGY is a general worker and is not
+    # on this route (#12291).
     autonomous_fallback:
       model_id: {role: openai_frontier_coder}
       effort: high
@@ -1264,9 +1254,9 @@ orchestrator_seats:
     fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
     note: native grok-4.7; Cursor explicit grok-4.7 if native dark (not a quality escalate)
   agy:
-    model_id: {role: bounded_fallback}
+    model_id: {role: legacy_reviewers, seat: google_bounded}
     effort: high
-    escalate_model_id: {role: bounded_fallback}
+    escalate_model_id: {role: legacy_reviewers, seat: google_bounded}
     escalate_effort: high
     escalate_when: n/a_same_sku
     note: >-
@@ -1335,7 +1325,7 @@ formal_cf_defaults:
     fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
   agy:
     # #10073: native low/medium code review; Ukrainian review needs Sources MCP.
-    model_id: {role: bounded_fallback}
+    model_id: {role: legacy_reviewers, seat: google_bounded}
     effort: high
     formal_review_eligible: true
 
@@ -1547,7 +1537,6 @@ seats:
   google_bounded:
     model_id: gemini-3.8-flash-high
     bindings:
-    - bounded_fallback
     - legacy_review_candidate
     priority: 100
     decision_reference: scripts/config/model_catalog.yaml#execution_routing
@@ -1584,8 +1573,6 @@ roles:
     seat: bounded_worker
     required_model_roles:
     - bounded_investigation
-  bounded_fallback:
-    seat: google_bounded
   autonomous_fallback:
     role: openai_frontier_coder
   designated_authorities:
