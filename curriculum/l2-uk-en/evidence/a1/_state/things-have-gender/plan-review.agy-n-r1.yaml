@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "a1-things-have-gender-n-r1"
+  attempt_id: "agy-n-r1"
+  manifest_sha256: "65cca187e2ce39bddd19ce60625d5e74b6a3ecf63327da7f83e334ab8c33ee93"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "<model>"
+  harness: "<harness>"
+  family: "<family>"
+  prompt_sha256: "3c29e7cdbd42ab3298cb101026df65a6bf21bd6a25918d08aabc2b813af1af6e"
+checks:
+  closing_shape: clean # Dedicated recap lesson 5 (kind: recap) implements standard R-03 / D4 shape (a); embedded shape (b) not requested.
+  title_describes_job: clean # Module title and subtitle accurately describe the jobs of lessons 1-5; single-language prose enforced throughout; search_style_guide: rr-e550c03127e7611285ca, search_heritage: rr-d64b2ee260d3ff5fccef
+  title_quantities: clean # No numeric inventory quantities in module or lesson titles.
+  quoted_forms: clean # verify_words: rr-19e8f12d88a1e7a553f4 (30/30 forms clean), inspect_words: rr-5b61a67c4d66b07dad56 (0 markers), query_pravopys § 110: rr-5388f69927a8d9454e74
+  sequencing: clean # Step progression adheres to R-27 (s1 theory -> a1 inline -> s2 practice -> a2 workbook); reachable from pos 1-7; no plural agreement, demonstratives or oblique case systems taught early.
+  sizing: clean # 5 lessons (4 teach + 1 recap), 19 core lemmas (~4.75 new words/lesson), 4 grammar points (1 per teach lesson); sized for ~45 min learner work without cramming or dragging.
+  inventory: clean # Core words level-appropriate; PULS A2 items W-211 'рюкзак' (rr-e7323ab1726691e1dedc) and W-262 'ноутбук' (rr-cca082eefd79159fb65b) are explicitly assigned to position 8 under Arc Revision r6 (OHO) §12(a),(g); W-204 'книжка' A1 (rr-14567a9541453ab7bfd8).
+  activities: clean # 3 distinct workbook types (group-sort, quiz, match-up), longest same-type run 1; task operations differ (sort, choose form, match, invariant vs agreeing choice, produce); reduction from 5 v1 workbook activities to 4 + 1 communicative practical recap task (our-shared-space-task) is pedagogically justified by eliminating dull fill-in drills in favor of authentic production.
+  evidence_fit: clean # Citations T-701, T-702, T-703, S-701, V-701, V-702 directly support cited points; verify_stress: книжка rr-16a4044ff3cb5207354c, телефон rr-9413292a9dc4ce19b746, вікно rr-053c9661becc34cd71a6, їхній rr-1b09eb101fb5b0a587dd, олівець rr-fdc2b05e2182d76246b3.
+  standard_and_ulp: clean # Fulfills State Standard lines 661-662 for singular possessive pronoun gender paradigms; no unauthorized early teaching.
+findings: []
