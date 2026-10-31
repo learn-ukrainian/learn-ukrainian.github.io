@@ -26,7 +26,7 @@ arc_ref:
   position: 3
 evidence_ref:
   path: curriculum/l2-uk-en/evidence/a1/who-am-i.yaml
-  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  sha256: '58384afe8da0c643fd941dab5db62fcd209301ebe2d4f3e74d394c4c456af2c6'
 lessons:
 - n: 1
   slug: names-and-professions
