@@ -3,6 +3,7 @@
 import re
 import shutil
 import subprocess
+from dataclasses import replace
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -14,6 +15,110 @@ from scripts.dispatcher.types import TaskSpec
 from scripts.review.model_catalog import advisory_role_policy, canonical_model_id
 
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
+
+
+def check_trial_shadow(agent: str, model: str, record: dict) -> dict:
+    """Bind a read-only trial to a successful qualified task on identical input."""
+    from scripts.agent_runtime import model_pause
+    from scripts.dispatcher.admission import review_typed
+    from scripts.review.model_catalog import activity_role_refusal, load_model_catalog
+
+    role, task_id = record.get("trial_role"), record.get("trial_qualified_task")
+    if not role and not task_id and not record.get("trial_label"):
+        return {}
+
+    def refuse():
+        raise model_pause.ModelRoleRefused("MODEL_ROLE_TRIAL_REFUSED: a labelled, qualified matching shadow is required")
+
+    if not role or not task_id or record.get("mode") != "read-only":
+        refuse()
+    if record.get("schema_version") == 2 and record.get("trial_label") != "trial":
+        refuse()
+    if any(record.get(key) for key in ("require_review_verdict", "review_attempt", "advisory_role", "advisory_binding")):
+        refuse()
+    role = model_pause.normalize_role(role)
+    roles = model_pause.dispatch_roles(record, review=review_typed(record) or bool(record.get("risk")))
+    if roles != {role}:
+        refuse()
+    policy = model_pause.load_role_policy()
+    now = model_pause.datetime.now(model_pause.UTC)
+    if not any(model_pause._names(model).intersection(model_pause._names(entry["model"]))
+               and role in {model_pause.normalize_role(item) for item in entry["roles"]}
+               and model_pause._utc(entry["start"]) <= now < model_pause._utc(entry["review_date"])
+               for entry in policy["trials"]):
+        refuse()
+    qualified = store.read(task_id, missing_ok=True)
+    if (not qualified or qualified.get("status") != "done"
+            or any(qualified.get(key) for key in ("trial_label", "trial_role", "trial_qualified_task"))
+            or qualified.get("task_id") == record.get("task_id")):
+        refuse()
+    head = record.get("worktree_base_sha") or record.get("pinned_head")
+    if (not isinstance(head, str) or not re.fullmatch(r"[0-9a-f]{40}", head)
+            or qualified.get("worktree_base_sha") != head
+            or not record.get("prompt_sha256")
+            or qualified.get("prompt_sha256") != record["prompt_sha256"]
+            or not record.get("repository_id") or qualified.get("repository_id") != record["repository_id"]
+            or not qualified.get("run_nonce")
+            or record.get("trial_qualified_nonce", qualified["run_nonce"]) != qualified["run_nonce"]):
+        refuse()
+    if role not in model_pause.dispatch_roles(qualified, review=review_typed(qualified)):
+        refuse()
+    identity = canonical_model_id(qualified.get("model"))
+    trial_identity = canonical_model_id(model)
+    catalog = load_model_catalog()["models"]
+    if (not identity or not trial_identity or catalog[identity]["lifecycle"] != "active"
+            or catalog[trial_identity]["lifecycle"] != "active" or identity == trial_identity):
+        refuse()
+    model_pause.refuse_model_roles(identity, {role})
+    # A completed task alone confers no catalog authority for a role.
+    allowed = {"authoring": {"coding", "implementation", "agentic_coding", "document_authoring"},
+               "driving": {"orchestration"}}
+    for participant in (identity, trial_identity):
+        if role in {"review", "advice"}:
+            if activity_role_refusal(participant, "review" if role == "review" else "consult"):
+                refuse()
+        elif not set(catalog[participant]["roles"]).intersection(allowed.get(role, {role})):
+            refuse()
+    if role == "review":
+        from scripts.fleet.claude_account_lane import account_from_record
+        from scripts.review.record_cf_verdict import (
+            collect_branch_review_facts,
+            default_branch_review_base,
+        )
+        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, evaluate_candidate
+
+        for key in ("review_author_model", "review_profile", "review_mode"):
+            if qualified.get(key) != record.get(key):
+                refuse()
+        risk = record.get("review_risk") or record.get("risk")
+        if not risk or qualified.get("review_risk") != risk:
+            refuse()
+        repo, info = git.resolve_repo(qualified.get("repo"))
+        tip, base = default_branch_review_base(repo, head)
+        facts = collect_branch_review_facts(
+            repository=info["github"], repo_root=repo, base_tip_sha=base, head_sha=head,
+            task_root=store.tasks_dir(), authorship_exclude_sha=tip,
+            owned_paths=tuple(record.get("owned_paths") or record.get("owned_path") or ()),
+            subject_seats=record.get("review_subject_seats") or record.get("subject_seat") or (),
+            subject_families=record.get("review_subject_families") or record.get("subject_family") or (),
+        )
+        inputs = facts.resolver_inputs(
+            author_model=qualified.get("review_author_model") or "", risk=risk,
+            review_profile=qualified.get("review_profile") or "code", structural=True,
+            claude_account=account_from_record(qualified, agent=qualified["agent"]),
+        )
+        if not any(candidate.route == qualified["agent"]
+                   and canonical_model_id(candidate.concrete_model) == identity
+                   and evaluate_candidate(candidate, inputs).status == "eligible"
+                   for candidate in REVIEW_CANDIDATES.values()):
+            refuse()
+        # Advisory evaluation retains the risk and capability filters; it cannot fill a formal seat.
+        if not any(candidate.route == agent
+                   and canonical_model_id(candidate.concrete_model) == trial_identity
+                   and evaluate_candidate(candidate, replace(inputs, formal_review=False)).status == "eligible"
+                   for candidate in REVIEW_CANDIDATES.values()):
+            refuse()
+    return {"trial_label": "trial", "trial_qualified_nonce": qualified["run_nonce"]}
 
 
 def advisory_binding(args, prompt: bytes) -> tuple[dict, str, str]:

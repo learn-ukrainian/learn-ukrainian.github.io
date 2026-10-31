@@ -679,7 +679,13 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     account = inputs.claude_account
     if candidate.route == "claude" and not account.resolved:
         return f"claude account unresolved: {account.refusal}"
-    from scripts.agent_runtime.model_pause import account_used_pct, policy_for_seat, refusal_reason
+    from scripts.agent_runtime.model_pause import account_used_pct, policy_for_seat, refusal_reason, role_refusal_reason
+
+    if restricted := role_refusal_reason(
+        candidate_dispatch_model(candidate), {"review", inputs.requested_role or "review"},
+        shadow=not inputs.formal_review,
+    ):
+        return restricted
 
     paused = refusal_reason(
         candidate_dispatch_model(candidate),

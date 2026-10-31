@@ -109,6 +109,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget grant ruling digest "
          "(default: none)"),
         ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
+        ("trial-role", None, "Shadow trial role, e.g. review; read-only, with --trial-qualified-task and --pinned-head (default: none)"),
+        ("trial-qualified-task", None, "Successful qualified non-trial task on the same input, head and role, e.g. qualified-42 (default: none)"),
     ):
         dispatch.add_argument(f"--{flag}", default=default, required=flag in {"agent", "model"}, help=help_text)
     dispatch.add_argument(
@@ -355,8 +357,12 @@ def _dispatch(args) -> int:
         # Crash recovery: finish settling this dispatcher's earlier tasks before creating a worktree.
         worker.settle_left_worktrees()
     host_admission.precheck(args.mode, force_reason=args.force_admission)
+    role_record = {**vars(args), **account_fields, "prompt_sha256": store.digest(prompt),
+                   "repository_id": info.get("github")}
+    trial_fields = checks.check_trial_shadow(agent, args.model, role_record)
+    role_record.update(trial_fields)
     try:
-        headroom.check_plan(agent, args.model, account_fields,
+        headroom.check_plan(agent, args.model, role_record,
                             review=admission.review_typed(vars(args)) or bool(args.risk))
     except headroom.model_pause.ModelPausedRefused as exc:
         raise host_admission.Refused(f"❌ {exc}", 2) from None
@@ -469,7 +475,7 @@ def _dispatch(args) -> int:
             record["worktree_remote_url"] = publish_remote
         if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
             raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
-        record.update(advisory_fields, **account_fields)
+        record.update(advisory_fields, **account_fields, **trial_fields)
         record["pool_shadow"] = pool_selector.shadow_decision(record)
         if agent == "muse":
             record["contributor_mode"] = spec.options.get("contributor_mode", "off")

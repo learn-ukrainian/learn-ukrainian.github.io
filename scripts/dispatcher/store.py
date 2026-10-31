@@ -123,6 +123,9 @@ def new_record(
     record["options"] = spec.options
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")
     record.update({name: metadata.get(name) for name in metadata_fields})
+    for name in ("trial_role", "trial_qualified_task"):
+        if metadata.get(name) is not None:
+            record[name] = metadata[name]
     for name in ("output_schema_path", "output_schema_sha256", "review_write_root"):
         if name in spec.options:
             record[name] = spec.options[name]

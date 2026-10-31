@@ -34,6 +34,7 @@ import http.client
 import json
 import math
 import os
+import re
 import urllib.request
 from collections.abc import Callable, Iterable, Mapping
 from datetime import UTC, datetime
@@ -41,6 +42,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
+from scripts.orchestration.task_record_store import REVIEW_TASK_FLAG_FIELDS
 
 if TYPE_CHECKING:
     from scripts.fleet.claude_account_lane import ClaudeAccount
@@ -50,6 +52,171 @@ DEFAULT_POLICY = Path("~/.config/learn-ukrainian/model-pause.json")
 
 class ModelPausedRefused(MechanicalAdmissionRefused):
     """A requested model is paused by operator policy or out of plan headroom."""
+
+
+class ModelRoleRefused(ModelPausedRefused):
+    """A role ban, unpaired trial or invalid CTO role policy refused admission."""
+
+
+def role_policy_path() -> Path:
+    return Path(os.environ.get("LU_MODEL_ROLES_FILE") or policy_path().with_name("model-roles.json")).expanduser()
+
+
+def normalize_role(role: str) -> str:
+    value = role.strip().lower()
+    return {
+        "implementation": "authoring", "author": "authoring", "coding": "authoring",
+        "driver": "driving", "orchestration": "driving", "orchestrator": "driving",
+        "advisory": "advice", "advisor": "advice", "consult": "advice",
+        "reviewer": "review", "critique": "review",
+    }.get(value, value)
+
+
+def dispatch_roles(record: Mapping[str, Any], *, review: bool = False) -> frozenset[str]:
+    """Infer activity as well as keeping the explicitly named role."""
+    roles = {normalize_role(str(record["research_role"]))} if record.get("research_role") else set()
+    if review or record.get("type") == "review" or any(record.get(field) for field in (
+        *REVIEW_TASK_FLAG_FIELDS, "review_mode", "risk", "language_lane", "subject_seat", "subject_family",
+        "review_subject_seats", "review_subject_families",
+    )):
+        roles.add("review")
+    if record.get("advisory_role"):
+        roles.add("advice")
+    if record.get("mode") == "workspace-write":
+        roles.add("authoring")
+    return frozenset(roles)
+
+
+def load_role_policy(path: Path | None = None) -> dict[str, Any]:
+    """Missing means no role controls; unreadable or malformed fails closed."""
+    try:
+        raw = (path or role_policy_path()).read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return {"bans": [], "trials": []}
+    except OSError:
+        raise ModelRoleRefused("MODEL_ROLE_POLICY_INVALID: role policy cannot be read") from None
+    try:
+        return _validate_role_policy(json.loads(raw))
+    except (OSError, ValueError, TypeError, KeyError):
+        raise ModelRoleRefused("MODEL_ROLE_POLICY_INVALID: role policy cannot be validated") from None
+
+
+def _validate_role_policy(data: Any) -> dict[str, Any]:
+    if not isinstance(data, dict) or set(data) != {"bans", "trials"}:
+        raise ValueError("invalid role policy")
+    for kind in ("bans", "trials"):
+        if not isinstance(data[kind], list):
+            raise ValueError("invalid role entries")
+        for entry in data[kind]:
+            _validate_role_entry(entry)
+    return data
+
+
+def _validate_role_entry(entry: Any) -> None:
+    from scripts.review.model_catalog import canonical_model_id
+
+    if not isinstance(entry, dict):
+        raise ValueError("invalid role entry")
+    for key in ("model", "reason", "decided_by"):
+        if not isinstance(entry.get(key), str) or not entry[key].strip():
+            raise ValueError("missing role decision field")
+    if any(char in entry["model"] for char in "*?[]"):
+        raise ValueError("role decisions name concrete models")
+    if canonical_model_id(entry["model"]) != entry["model"]:
+        raise ValueError("role decisions name concrete catalog identities")
+    roles = entry.get("roles")
+    if not isinstance(roles, list) or not roles or any(
+        not isinstance(role, str) or not re.fullmatch(r"[a-z][a-z0-9_-]*", role) for role in roles
+    ):
+        raise ValueError("invalid roles")
+    start, review = _utc(entry.get("start")), _utc(entry.get("review_date"))
+    if start is None or review is None or start >= review:
+        raise ValueError("invalid role decision dates")
+    evidence = entry.get("evidence")
+    if not isinstance(evidence, dict):
+        raise ValueError("missing dispatch evidence")
+    begin, end = _utc(evidence.get("window_start")), _utc(evidence.get("window_end"))
+    if begin is None or end is None or begin > end or end > start:
+        raise ValueError("invalid evidence window")
+    runs = evidence.get("dispatch_records")
+    if not isinstance(runs, list):
+        raise ValueError("missing dispatch records")
+    for run in runs:
+        if not isinstance(run, dict) or not isinstance(run.get("task_id"), str) or not run["task_id"]:
+            raise ValueError("invalid dispatch reference")
+        if run["task_id"] not in entry["reason"]:
+            raise ValueError("reason must cite dispatch records")
+        if run.get("status") not in {
+            "done", "failed", "timeout", "rate_limited", "cancelled", "crashed", "no_deliverable",
+        }:
+            raise ValueError("invalid dispatch status")
+        duration = run.get("duration_s")
+        if isinstance(duration, bool) or not isinstance(duration, int | float) or not math.isfinite(duration) or duration < 0:
+            raise ValueError("invalid dispatch duration")
+        if run.get("timeout_source") not in {"caller", "watchdog", "provider", "none", "unknown"}:
+            raise ValueError("missing timeout source")
+        if not isinstance(run.get("cause"), str) or not run["cause"].strip():
+            raise ValueError("missing dispatch cause")
+        if not isinstance(run.get("model_failure"), bool):
+            raise ValueError("missing failure attribution")
+        if run["model_failure"] and run["timeout_source"] in {"caller", "unknown"}:
+            raise ValueError("caller limits and unknown causes do not establish model failure")
+        recorded = role_dispatch_evidence(run["task_id"])
+        if any(run.get(key) != recorded[key] for key in recorded):
+            raise ValueError("dispatch evidence differs from its record")
+        from scripts.dispatcher import store
+
+        task = store.read(run["task_id"])
+        started = _utc(task.get("started_at"))
+        if (not _names(entry["model"]).intersection(_names(str(task.get("model") or "")))
+                or started is None or not begin <= started <= end):
+            raise ValueError("dispatch evidence is outside this model's window")
+
+
+def role_dispatch_evidence(task_id: str) -> dict[str, Any]:
+    """Build evidence from the canonical dispatch record, including archived runs."""
+    from scripts.dispatcher import store
+
+    task = store.read(task_id)
+    source = "none"
+    if task.get("status") == "timeout":
+        source = {"hard_timeout": "caller", "stdout_silence_timeout": "watchdog",
+                  "initial_response_timeout": "watchdog"}.get(task.get("kill_reason"), "unknown")
+        if task.get("error") == "process deadline exceeded":
+            source = "caller"
+    elif task.get("status") == "cancelled":
+        source = "caller"
+    return {"task_id": task_id, "status": task.get("status"), "duration_s": task.get("duration_s"),
+            "timeout_source": source, "cause": task.get("error") or str(task.get("status"))}
+
+
+def role_refusal_reason(
+    model: str | None, roles: Iterable[str], *, policy: Mapping[str, Any] | None = None,
+    now: datetime | None = None, shadow: bool = False,
+) -> str | None:
+    """Role controls only restrict; a shadow never acquires gate authority."""
+    try:
+        policy = load_role_policy() if policy is None else _validate_role_policy(policy)
+    except (OSError, ModelRoleRefused, ValueError, TypeError, KeyError):
+        return "MODEL_ROLE_POLICY_INVALID: role policy cannot be validated"
+    now = now or datetime.now(UTC)
+    wanted = {normalize_role(role) for role in roles}
+    for kind in ("bans", "trials"):
+        for entry in policy[kind]:
+            if (model and _names(model).intersection(_names(entry["model"]))
+                    and _utc(entry["start"]) <= now < _utc(entry["review_date"])):
+                if not wanted:
+                    return f"MODEL_ROLE_REQUIRED: {model} needs an explicit dispatch role"
+                matching = wanted.intersection(normalize_role(role) for role in entry["roles"])
+                if matching and (kind == "bans" or not shadow):
+                    code = "MODEL_ROLE_BANNED" if kind == "bans" else "MODEL_ROLE_TRIAL_SHADOW_REQUIRED"
+                    return f"{code}: {model} is restricted for {','.join(sorted(matching))}"
+    return None
+
+
+def refuse_model_roles(model: str | None, roles: Iterable[str], *, shadow: bool = False) -> None:
+    if reason := role_refusal_reason(model, roles, shadow=shadow):
+        raise ModelRoleRefused(reason)
 
 
 def policy_path() -> Path:
