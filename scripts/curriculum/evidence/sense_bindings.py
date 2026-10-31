@@ -512,7 +512,7 @@ def _check_lexical_packet(task: dict, word: dict, pool: list[dict]) -> None:
     The sources proof also compares the lemma, so this check has to run first. A caller that
     asks about a different lemma otherwise looks like a missing ledger.
     """
-    from scripts.review.prompts.render import ManifestReader
+    from scripts.review.prompts.render import ManifestReader, RenderError
 
     try:
         manifest_path = Path(task["options"]["review_attempt"])
@@ -525,7 +525,10 @@ def _check_lexical_packet(task: dict, word: dict, pool: list[dict]) -> None:
             "candidates_sha256": digest(pool), "candidates": pool,
         }:
             raise ValueError("review_subject_stale_or_unapproved")
-    except (OSError, KeyError, TypeError, AttributeError, json.JSONDecodeError, yaml.YAMLError) as exc:
+    except (
+        OSError, KeyError, TypeError, AttributeError, json.JSONDecodeError, yaml.YAMLError,
+        UnicodeError, RenderError,
+    ) as exc:
         raise ValueError("review_prompt_unproven") from exc
 
 
