@@ -149,7 +149,7 @@ def test_legacy_writer_precheck_cannot_get_expansion_permission_from_counts(
     events: list[dict] = []
 
     def fail_if_invoked(*_args, **_kwargs):
-        raise AssertionError("writer should not be invoked when size policy blocks expansion")
+        raise AssertionError("writer must not auto-expand from word counts")
 
     result = linear_pipeline.run_writer_draft_length_precheck(
         plan=plan,
@@ -161,17 +161,15 @@ def test_legacy_writer_precheck_cannot_get_expansion_permission_from_counts(
     )
 
     assert result["applied"] is False
-    assert result["patch_status"] == "policy_mismatch"
-    assert result["policy_mismatch"] is True
+    assert result["patch_status"] == "informational"
+    assert result["outcomes"] == []
+    assert result["before"]["passed"] is True
     assert result["size_policy"]["status"] == "advisory_ok"
     assert events == [
         {
             "event": "writer_draft_length_precheck",
-            "status": "policy_mismatch",
+            "status": "informational",
             "count": 5501,
-            "target": 6000,
-            "short_section_count": 0,
-            "size_policy_status": "advisory_ok",
         }
     ]
 
@@ -200,7 +198,7 @@ def test_writer_precheck_honors_explicit_evidence_gap_without_invocation(
     plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), encoding="utf-8")
 
     def fail_if_invoked(*_args, **_kwargs):
-        raise AssertionError("writer must not auto-expand a mismatch-marked draft")
+        raise AssertionError("writer must not auto-expand a draft with an evidence gap")
 
     result = linear_pipeline.run_writer_draft_length_precheck(
         plan=plan,
@@ -211,8 +209,13 @@ def test_writer_precheck_honors_explicit_evidence_gap_without_invocation(
     )
 
     assert result["applied"] is False
-    assert result["patch_status"] == "policy_mismatch"
-    assert result["policy_mismatch"] is True
+    assert result["patch_status"] == "informational"
+    assert result["before"]["passed"] is False
+    assert {
+        "outcome": "EVIDENCE_GAP",
+        "detail": "objective=explain the concept; missing evidence=source support",
+        "route": "source_research_or_versioned_plan_review",
+    } in result["outcomes"]
     assert result["size_policy"]["evidence_gap"] is True
     assert result["size_policy"]["status"] == "evidence_gap"
     assert result["size_policy"]["decision_signals"] == ("evidence_gap",)
