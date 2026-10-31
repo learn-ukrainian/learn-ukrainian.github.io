@@ -508,8 +508,10 @@ file, directory, backup or link. Refusals contain only store and reason.
 `active` defaults to update and never allows create for Sources or VESUM.
 `staging` admits a separate SQLite target and explicit creation. `shadow` also
 admits whole-file VESUM replacement. Both output roles refuse canonical slots,
-configured active locations and aliases by resolved path or inode. All roles
-refuse conventional store slots in non-primary Git checkouts, even absent slots.
+configured active locations, Sources generation history and their aliases by
+resolved path or inode. VESUM rollback copies retain their #9937 disposition.
+All roles refuse conventional store slots in non-primary Git checkouts, even
+absent slots.
 Relative staging/shadow inputs are anchored to the calling checkout; active and
 environment inputs must be absolute. Parent traversal, network and unknown
 locality are refused. Replacement refuses leaf symlinks. SQLite URIs use only
