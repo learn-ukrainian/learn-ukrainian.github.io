@@ -18,7 +18,7 @@ def response_text(call):
     return "\n".join(c["text"] for c in call["response"]["content"] if c["type"] == "text")
 
 
-def capture(tool_dir, inventory, targets, ulif_ids, root):
+def capture(tool_dir, inventory, targets, ulif_ids, root, *, call_overrides=None):
     """Retain actual calls and rederive every consumed payload from its source response/witness."""
     calls = {p.stem: json.loads(p.read_text()) for p in sorted(tool_dir.glob("*.json"))}
     records, held = {}, []
@@ -76,15 +76,22 @@ def capture(tool_dir, inventory, targets, ulif_ids, root):
                 else:
                     if hashlib.sha256(text.encode()).hexdigest() != row["content_sha256"]:
                         raise Refusal("vts_tool_witness_mismatch:" + word)
-                    call_key = f"{index}-vts"
-                    witness = response_text(calls[call_key])
+                    original_witness = response_text(calls[f"{index}-vts"])
+                    call_key = (call_overrides or {}).get("vts:" + word, f"{index}-vts")
+                    call = calls[call_key]
+                    if call["tool"] == "search_slovnyk_me":
+                        if call["arguments"] != {"query": word, "dictionaries": ["vts"], "live": False, "limit": 1}:
+                            raise Refusal("cached_vts_call_mismatch")
+                    elif call["tool"] != "query_slovnyk_me" or call["arguments"] != {"dict": "vts", "word": word}:
+                        raise Refusal("vts_call_mismatch")
+                    witness = response_text(call)
                     if row["source_url"] not in witness:
                         held.append({"lemma": word, "source": "vts", "reason": "tool_admitted_locator_disagreement"})
                     else:
                         add("vts:" + word, call_key, "vts_busel_slovnyk_me", {"row": row, "text": text},
                             f"vts:slovnyk_me_entries:{row['id']}", url=row["source_url"],
                             fetched=row["fetched_at"], content=row["content_sha256"], parser=row["importer_version"])
-                        if text not in witness:
+                        if text not in original_witness:
                             held.append({"lemma": word, "source": "vts", "reason": "only_tool_quoted_spans_admissible"})
             else:
                 held.append({"lemma": word, "source": "vts", "reason": "no_unique_admitted_witness"})

@@ -21,7 +21,7 @@ from scripts.atlas.a1_card_receipts import digest, selected_rows, validate_alloc
 PLAN_SHA = "e7a9ac497da8bbeba5531937a4c8543369462942"
 MANIFEST = "registry/atlas/a1-v1-slice3.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice3.json"
-MANIFEST_SHA256 = "8ccf24ff578936ec792dbf736253d992427d17fd1e251a8d223cea00c802b9ca"
+MANIFEST_SHA256 = "b647bc34cf27eeb5ad57edc5c8cc356eb73a191ba22c53aabca06d4fa9050bfc"
 VERSION = "a1-slice3-v1"
 JOIN = "reviewed_plan_vocabulary_to_inventory_mapping_lemma_v1"
 

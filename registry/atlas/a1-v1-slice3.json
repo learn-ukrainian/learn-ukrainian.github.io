@@ -1146,7 +1146,22 @@
     {"card_id":"wc_wmqrn30c224z","entry_id":348397,"field":"paradigm","record_key":"vesum:ручка","pointer":"/clean_analyses/12/word_form","span":[0,5],"slot":"noun:inanim:p:v_rod","supporting_spans":[{"pointer":"/clean_analyses/12/tags","span":[0,19]}]},
     {"card_id":"wc_wmqrn30c224z","entry_id":348397,"field":"paradigm","record_key":"vesum:ручка","pointer":"/clean_analyses/13/word_form","span":[0,5],"slot":"noun:inanim:p:v_zna","supporting_spans":[{"pointer":"/clean_analyses/13/tags","span":[0,19]}]},
     {"card_id":"wc_wmqrn30c224z","entry_id":348397,"field":"cefr","record_key":"cefr:ручка","pointer":"/hits/0/level","span":[0,2]},
-    {"card_id":"wc_wmqrn30c224z","entry_id":348397,"field":"definition_uk","record_key":"vts:ручка","pointer":"/text","span":[190,209],"sense_id":"ws_zmxma85nvp1z","source_sense_key":"vts:ручка#3/1","scope_key":"definition:vts:ручка#3/1"}
+    {"card_id":"wc_wmqrn30c224z","entry_id":348397,"field":"definition_uk","record_key":"vts:ручка","pointer":"/text","span":[190,209],"sense_id":"ws_zmxma85nvp1z","source_sense_key":"vts:ручка#3/1","scope_key":"definition:vts:ручка#3/1"},
+    {"card_id":"wc_nyb2hw5v8fpn","entry_id":239112,"field":"definition_uk","record_key":"vts:ні","pointer":"/text","span":[25,98],"sense_id":"ws_8webf8g7ess6","source_sense_key":"vts:ні#I/1","scope_key":"definition:vts:ні#I/1"},
+    {"card_id":"wc_m3nfhh9bzsdj","entry_id":187816,"field":"definition_uk","record_key":"vts:лікарка","pointer":"/text","span":[24,36],"sense_id":"ws_vvxyvdrwdks2","source_sense_key":"vts:лікарка#1/1","scope_key":"definition:vts:лікарка#1/1"},
+    {"card_id":"wc_xk5x9nbt53hf","entry_id":376093,"field":"definition_uk","record_key":"vts:студентка","pointer":"/text","span":[25,41],"sense_id":"ws_2jqxspqpg519","source_sense_key":"vts:студентка#1/1","scope_key":"definition:vts:студентка#1/1"},
+    {"card_id":"wc_c2wqq0y4tdf3","entry_id":202885,"field":"definition_uk","record_key":"vts:мій","pointer":"/text","span":[17,37],"sense_id":"ws_5vrr7t7yeadd","source_sense_key":"vts:мій#1/1","scope_key":"definition:vts:мій#1/1"},
+    {"card_id":"wc_4m61x36fvpyg","entry_id":382533,"field":"definition_uk","record_key":"vts:твій","pointer":"/text","span":[20,39],"sense_id":"ws_yw1aqb3br3fz","source_sense_key":"vts:твій#1/1","scope_key":"definition:vts:твій#1/1"},
+    {"card_id":"wc_npespt2997q4","entry_id":101943,"field":"definition_uk","record_key":"vts:донька","pointer":"/text","span":[29,47],"sense_id":"ws_12gbg8v29spe","source_sense_key":"vts:донька#1/1","scope_key":"definition:vts:донька#1/1"},
+    {"card_id":"wc_a4ndp7w0v8dq","entry_id":14322,"field":"definition_uk","record_key":"vts:бабуся","pointer":"/text","span":[22,46],"sense_id":"ws_n2jq0wyw6qhq","source_sense_key":"vts:бабуся#1/1","scope_key":"definition:vts:бабуся#1/1"},
+    {"card_id":"wc_q3a3vqef00h0","entry_id":397247,"field":"definition_uk","record_key":"vts:українець","pointer":"/text","span":[21,35],"sense_id":"ws_dnd6hs6qneme","source_sense_key":"vts:українець#1/1","scope_key":"definition:vts:українець#1/1"},
+    {"card_id":"wc_kejkzc45p460","entry_id":397281,"field":"definition_uk","record_key":"vts:українка","pointer":"/text","span":[19,33],"sense_id":"ws_ft35mw3pykgg","source_sense_key":"vts:українка#1/1","scope_key":"definition:vts:українка#1/1"},
+    {"card_id":"wc_kpafsy0mfg2a","entry_id":397346,"field":"definition_uk","record_key":"vts:український","pointer":"/text","span":[48,78],"sense_id":"ws_fkyx00tmh8ff","source_sense_key":"vts:український#1/1","scope_key":"definition:vts:український#1/1"},
+    {"card_id":"wc_ej8v791n10g9","entry_id":98276,"field":"definition_uk","record_key":"vts:добре","pointer":"/text","span":[16,47],"sense_id":"ws_xd4qsrpa3tq9","source_sense_key":"vts:добре#1/1","scope_key":"definition:vts:добре#1/1"},
+    {"card_id":"wc_4653n4fkgz2n","entry_id":436942,"field":"definition_uk","record_key":"vts:як","pointer":"/text","span":[327,387],"sense_id":"ws_t3t4e5w469pr","source_sense_key":"vts:як#II/1","scope_key":"definition:vts:як#II/1"},
+    {"card_id":"wc_f88pcfwnvwr4","entry_id":187738,"field":"definition_uk","record_key":"vts:ліжко","pointer":"/text","span":[20,122],"sense_id":"ws_8zn1gk8brxdq","source_sense_key":"vts:ліжко#1/1","scope_key":"definition:vts:ліжко#1/1"},
+    {"card_id":"wc_gsawj9bsnmxf","entry_id":382151,"field":"register","record_key":"vts:тато","pointer":"/text","span":[19,24],"sense_id":"ws_5d6bsg0eak48","source_sense_key":"vts:тато#unnumbered/1","scope_key":"definition:vts:тато#unnumbered/1"},
+    {"card_id":"wc_npespt2997q4","entry_id":101943,"field":"register","record_key":"vts:донька","pointer":"/text","span":[23,28],"sense_id":"ws_12gbg8v29spe","source_sense_key":"vts:донька#1/1","scope_key":"definition:vts:донька#1/1"}
   ],
   "scopes": {
     "definition:vts:\u044f#1/1": {
@@ -1268,7 +1283,10 @@
         25,
         47
       ],
-      "source_sense_key": "vts:тато#unnumbered/1"
+      "source_sense_key": "vts:тато#unnumbered/1",
+      "label_spans": [
+        {"pointer":"/text","span":[19,24]}
+      ]
     },
     "definition:vts:\u0440\u043e\u0434\u0438\u043d\u0430#1/1": {
       "card_id": "wc_nmyn89e5gcd4",
@@ -1478,6 +1496,152 @@
         209
       ],
       "source_sense_key": "vts:ручка#3/1"
+    },
+    "definition:vts:\u043d\u0456#I/1": {
+      "card_id": "wc_nyb2hw5v8fpn",
+      "sense_id": "ws_8webf8g7ess6",
+      "record_key": "vts:ні",
+      "pointer": "/text",
+      "span": [
+        25,
+        98
+      ],
+      "source_sense_key": "vts:ні#I/1"
+    },
+    "definition:vts:\u043b\u0456\u043a\u0430\u0440\u043a\u0430#1/1": {
+      "card_id": "wc_m3nfhh9bzsdj",
+      "sense_id": "ws_vvxyvdrwdks2",
+      "record_key": "vts:лікарка",
+      "pointer": "/text",
+      "span": [
+        24,
+        36
+      ],
+      "source_sense_key": "vts:лікарка#1/1"
+    },
+    "definition:vts:\u0441\u0442\u0443\u0434\u0435\u043d\u0442\u043a\u0430#1/1": {
+      "card_id": "wc_xk5x9nbt53hf",
+      "sense_id": "ws_2jqxspqpg519",
+      "record_key": "vts:студентка",
+      "pointer": "/text",
+      "span": [
+        25,
+        41
+      ],
+      "source_sense_key": "vts:студентка#1/1"
+    },
+    "definition:vts:\u043c\u0456\u0439#1/1": {
+      "card_id": "wc_c2wqq0y4tdf3",
+      "sense_id": "ws_5vrr7t7yeadd",
+      "record_key": "vts:мій",
+      "pointer": "/text",
+      "span": [
+        17,
+        37
+      ],
+      "source_sense_key": "vts:мій#1/1"
+    },
+    "definition:vts:\u0442\u0432\u0456\u0439#1/1": {
+      "card_id": "wc_4m61x36fvpyg",
+      "sense_id": "ws_yw1aqb3br3fz",
+      "record_key": "vts:твій",
+      "pointer": "/text",
+      "span": [
+        20,
+        39
+      ],
+      "source_sense_key": "vts:твій#1/1"
+    },
+    "definition:vts:\u0434\u043e\u043d\u044c\u043a\u0430#1/1": {
+      "card_id": "wc_npespt2997q4",
+      "sense_id": "ws_12gbg8v29spe",
+      "record_key": "vts:донька",
+      "pointer": "/text",
+      "span": [
+        29,
+        47
+      ],
+      "source_sense_key": "vts:донька#1/1",
+      "label_spans": [
+        {"pointer":"/text","span":[23,28]}
+      ]
+    },
+    "definition:vts:\u0431\u0430\u0431\u0443\u0441\u044f#1/1": {
+      "card_id": "wc_a4ndp7w0v8dq",
+      "sense_id": "ws_n2jq0wyw6qhq",
+      "record_key": "vts:бабуся",
+      "pointer": "/text",
+      "span": [
+        22,
+        46
+      ],
+      "source_sense_key": "vts:бабуся#1/1"
+    },
+    "definition:vts:\u0443\u043a\u0440\u0430\u0457\u043d\u0435\u0446\u044c#1/1": {
+      "card_id": "wc_q3a3vqef00h0",
+      "sense_id": "ws_dnd6hs6qneme",
+      "record_key": "vts:українець",
+      "pointer": "/text",
+      "span": [
+        21,
+        35
+      ],
+      "source_sense_key": "vts:українець#1/1"
+    },
+    "definition:vts:\u0443\u043a\u0440\u0430\u0457\u043d\u043a\u0430#1/1": {
+      "card_id": "wc_kejkzc45p460",
+      "sense_id": "ws_ft35mw3pykgg",
+      "record_key": "vts:українка",
+      "pointer": "/text",
+      "span": [
+        19,
+        33
+      ],
+      "source_sense_key": "vts:українка#1/1"
+    },
+    "definition:vts:\u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0438\u0439#1/1": {
+      "card_id": "wc_kpafsy0mfg2a",
+      "sense_id": "ws_fkyx00tmh8ff",
+      "record_key": "vts:український",
+      "pointer": "/text",
+      "span": [
+        48,
+        78
+      ],
+      "source_sense_key": "vts:український#1/1"
+    },
+    "definition:vts:\u0434\u043e\u0431\u0440\u0435#1/1": {
+      "card_id": "wc_ej8v791n10g9",
+      "sense_id": "ws_xd4qsrpa3tq9",
+      "record_key": "vts:добре",
+      "pointer": "/text",
+      "span": [
+        16,
+        47
+      ],
+      "source_sense_key": "vts:добре#1/1"
+    },
+    "definition:vts:\u044f\u043a#II/1": {
+      "card_id": "wc_4653n4fkgz2n",
+      "sense_id": "ws_t3t4e5w469pr",
+      "record_key": "vts:як",
+      "pointer": "/text",
+      "span": [
+        327,
+        387
+      ],
+      "source_sense_key": "vts:як#II/1"
+    },
+    "definition:vts:\u043b\u0456\u0436\u043a\u043e#1/1": {
+      "card_id": "wc_f88pcfwnvwr4",
+      "sense_id": "ws_8zn1gk8brxdq",
+      "record_key": "vts:ліжко",
+      "pointer": "/text",
+      "span": [
+        20,
+        122
+      ],
+      "source_sense_key": "vts:ліжко#1/1"
     }
   },
   "stress_attempts": {
@@ -1816,21 +1980,22 @@
     {"lemma":"ручка","source":"ulif","entry_id":209221,"reason":"other_homonym_or_unresolved_correspondence"},
     {"lemma":"ручка","source":"ulif","entry_id":209222,"reason":"other_homonym_or_unresolved_correspondence"},
     {"lemma":"ручка","source":"sum20","reason":"mirror_not_admitted_for_slice3","call_key":"44-sum20"},
-    {"lemma":"ні","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"лікарка","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"студентка","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"мій","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"твій","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"донька","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"бабуся","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"українець","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"українка","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"український","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"добре","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"як","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"},
-    {"lemma":"ліжко","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span"}
+    {"lemma":"ні","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"лікарка","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"студентка","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"мій","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"твій","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"донька","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"бабуся","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"українець","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"українка","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"український","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"добре","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"як","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"},
+    {"lemma":"ліжко","source":"vts","reason":"no_complete_exact_tool_quoted_definition_span","state":"resolved","resolution":"exact_tool_quoted_span_selected"}
   ],
   "source_record_ids": {"vesum:я":"sr_t9jtatxzp7p9","ulif:я":"sr_ehnsh0gcsc2a","vts:я":"sr_k51jjma4be88","cefr:я":"sr_f8zrkc7z3mcr","frequency:я":"sr_52g3y647jqmb","heritage:я":"sr_xxdwq64tb9ys","balla:я":"sr_ebmrgyf2vpa1","vesum:ти":"sr_51fytqpydarq","ulif:ти":"sr_9hyq50gbj0tp","vts:ти":"sr_9tm9pnr2qwgr","cefr:ти":"sr_wh40hxg0vk2s","frequency:ти":"sr_svbrh6ct7cpm","heritage:ти":"sr_sp0t08a14wz0","balla:ти":"sr_p175ws2mdjnb","vesum:день":"sr_1sn3qwap8393","ulif:день":"sr_tnfx5kp156kh","vts:день":"sr_ndw2325qmxn9","cefr:день":"sr_asb2230r7fma","frequency:день":"sr_f7rreche9ytt","heritage:день":"sr_x615wmsjtnmz","balla:день":"sr_z9ksnvvxvg86","vesum:вечір":"sr_g5gdbp6es77t","ulif:вечір":"sr_4fzrf44fq70d","vts:вечір":"sr_nh241m6cmpn4","cefr:вечір":"sr_304c2jmy1s5n","frequency:вечір":"sr_rfa6s20chax0","heritage:вечір":"sr_qmqcgsy9swqq","balla:вечір":"sr_sr34fpgfe1f1","vesum:ніч":"sr_jenxe9b7qbcd","ulif:ніч":"sr_bxtgr3g1jvvc","vts:ніч":"sr_dbjqhgsstnkq","cefr:ніч":"sr_dvhxd07ks6qh","frequency:ніч":"sr_pb0swvt71j77","heritage:ніч":"sr_73nhcbx12566","balla:ніч":"sr_6hf93tpqh1je","vesum:так":"sr_wc6vsyg6xv3f","ulif:так":"sr_sypa3dw238ma","vts:так":"sr_g72nrj9hk508","cefr:так":"sr_87nvex89dapc","frequency:так":"sr_849s3rf89swg","heritage:так":"sr_tgdf0zsr0yr7","balla:так":"sr_18wmqtga56v9","vesum:ні":"sr_d3v544qk0yqt","ulif:ні":"sr_5sgah2p8yjtn","vts:ні":"sr_7y1rw8cz8nq1","cefr:ні":"sr_tbpb3nq8cfej","frequency:ні":"sr_pyv4k4e2dmdw","heritage:ні":"sr_cph202b2gtdk","balla:ні":"sr_xf3dnb2pzv7a","vesum:лікар":"sr_b0cesgjkc7tt","ulif:лікар":"sr_jtzdpjfnv12v","vts:лікар":"sr_9w2bvyt2tzvp","cefr:лікар":"sr_1jwd7sa2prsq","frequency:лікар":"sr_x3vrcmnpvpf6","heritage:лікар":"sr_4ka9xk9meh55","balla:лікар":"sr_d4vvahzdjtmn","vesum:лікарка":"sr_7739vkfk8r48","ulif:лікарка":"sr_gb1t2cryrsy5","vts:лікарка":"sr_5q0hp7zqnf8h","cefr:лікарка":"sr_6v4xkqekks2v","frequency:лікарка":"sr_agbrpx3jzre5","heritage:лікарка":"sr_722hdm5q32ja","balla:лікарка":"sr_gmnjz9pmc6j2","vesum:Іван":"sr_7sbe5d6js22q","ulif:Іван":"sr_64d6abhpg8dc","cefr:Іван":"sr_4cb7a4gat7yp","frequency:Іван":"sr_zzmc3n8pc1g3","heritage:Іван":"sr_zxzjh5wffnnz","balla:Іван":"sr_hywh4vpwg72f","vesum:Канада":"sr_1w38e6hz1090","ulif:Канада":"sr_ff6y9ay92my9","cefr:Канада":"sr_xr902cdzt6g6","frequency:Канада":"sr_vqscngxhx1km","heritage:Канада":"sr_60m0tzx47dz5","balla:Канада":"sr_1fdckp1jxjap","vesum:студент":"sr_mxjvw30mjgcb","ulif:студент":"sr_v0tehnp7p2td","vts:студент":"sr_s7xe0w4st7v4","cefr:студент":"sr_tm26jka6hqf1","frequency:студент":"sr_mgb4th0nkzkx","heritage:студент":"sr_29fj9209ykmr","balla:студент":"sr_q0k5vnktc3ys","vesum:студентка":"sr_svmbpvqny3wc","ulif:студентка":"sr_wpgk42amfnh3","vts:студентка":"sr_12sb1jqrqwwm","cefr:студентка":"sr_chbd7m07tchj","frequency:студентка":"sr_900170sb8nyp","heritage:студентка":"sr_fwhh49r048yx","balla:студентка":"sr_s1ppmqfzxcc5","vesum:мама":"sr_zba9zryg7ncd","ulif:мама":"sr_21s90q2j7p7h","vts:мама":"sr_fv6czzj55092","cefr:мама":"sr_2be9cwq3a34m","frequency:мама":"sr_q12hmvcmyv0v","heritage:мама":"sr_a10dd5ednnad","balla:мама":"sr_nf25jpyj1mad","vesum:тато":"sr_a9mb8jbxkkfe","ulif:тато":"sr_ddwsa6h70hdj","vts:тато":"sr_wd29nyb9jtr6","cefr:тато":"sr_mwhd9r5957sq","frequency:тато":"sr_rvk6xerap1n6","heritage:тато":"sr_mcq2jfxe7zw7","balla:тато":"sr_f9cnabyhnz23","vesum:родина":"sr_qhvq4aa8wham","ulif:родина":"sr_5t3sp5ygde7r","vts:родина":"sr_b566hcda91fb","cefr:родина":"sr_29dtr41d5c91","frequency:родина":"sr_e97zbcghrzrn","heritage:родина":"sr_jtg6yq6jnvtd","balla:родина":"sr_648ec21gn96h","vesum:мій":"sr_348k9pn2p8p0","ulif:мій":"sr_5jxcnfkr5akm","vts:мій":"sr_frwk7wp34jh0","cefr:мій":"sr_c0sk3c8gq6a2","frequency:мій":"sr_jtkfxpqt9pgx","heritage:мій":"sr_h6729bry2bgd","balla:мій":"sr_7a8ngnajjddx","vesum:твій":"sr_81qbxhakqyrz","ulif:твій":"sr_bx4bsr9rq3gh","vts:твій":"sr_t51j85k29d8x","cefr:твій":"sr_q4qd1w8phwms","frequency:твій":"sr_qs7aq9gx9vmd","heritage:твій":"sr_8h4xk2vxhc1s","balla:твій":"sr_vk5kpa02xc62","vesum:дитина":"sr_h025mda7cwc6","ulif:дитина":"sr_9tnh4fe9xcbm","vts:дитина":"sr_xb3jy6at9w75","cefr:дитина":"sr_p998cqhnqfsz","frequency:дитина":"sr_v2xrvgbmbdxr","heritage:дитина":"sr_y4y0df2ptyw8","balla:дитина":"sr_03yxwr16466e","vesum:син":"sr_m2j3xws4ftmh","ulif:син":"sr_vpa9t8w67kke","vts:син":"sr_9bxvdf36z4ev","cefr:син":"sr_6swa1wfwvwnb","frequency:син":"sr_5p3rsv307f16","heritage:син":"sr_d7426xggat4z","balla:син":"sr_fzz0vpy0xs5f","vesum:донька":"sr_sgcccemm976c","ulif:донька":"sr_85cwnxf0d4r1","vts:донька":"sr_gwh3096kmsza","cefr:донька":"sr_h67frshngrvt","frequency:донька":"sr_1sep2j2z0qr9","heritage:донька":"sr_tg0250e62w63","balla:донька":"sr_62gm0csrxwzv","vesum:сестра":"sr_ymaq4qxgaafj","ulif:сестра":"sr_8xa3hd0shthc","vts:сестра":"sr_mvtnpwv0v352","cefr:сестра":"sr_pg06rzt061ps","frequency:сестра":"sr_a9ht464vr86p","heritage:сестра":"sr_vp30cp4m0e95","balla:сестра":"sr_tkwhrpbgh6e4","vesum:брат":"sr_67kwh0r4693f","ulif:брат":"sr_zhy2w3re4w21","vts:брат":"sr_jp5cdw87gdz1","cefr:брат":"sr_pajg3pdgades","frequency:брат":"sr_ecemdhsx0w0p","heritage:брат":"sr_kh5q9wb3x7hf","balla:брат":"sr_vhk8w2sgmjgn","vesum:бабуся":"sr_t2fs4n13zqe2","ulif:бабуся":"sr_bwx39e3jkmrc","vts:бабуся":"sr_hry1s2sw9v4c","cefr:бабуся":"sr_xa8nrpj5k7cp","frequency:бабуся":"sr_5c9z3w02aj8n","heritage:бабуся":"sr_b2jsgedws9hx","balla:бабуся":"sr_q2y69js5nyd6","vesum:дідусь":"sr_9x5gn5a81sq8","ulif:дідусь":"sr_4ntqky9yg6em","vts:дідусь":"sr_b7p2qz5byfm3","cefr:дідусь":"sr_cw4pt20tn49p","frequency:дідусь":"sr_h7k5kqjx751p","heritage:дідусь":"sr_bn73xvr037f1","balla:дідусь":"sr_djbd1rebkn29","vesum:вишиванка":"sr_mm56m6mj0101","ulif:вишиванка":"sr_37b3a6xqf1k8","vts:вишиванка":"sr_cykxa0bd14jc","cefr:вишиванка":"sr_qa2vt4va8h99","frequency:вишиванка":"sr_gfhrakbym6gw","heritage:вишиванка":"sr_jpsekz1xrjgn","balla:вишиванка":"sr_t3n89fz57dn8","vesum:писанка":"sr_s950zpv867wr","ulif:писанка":"sr_8z3x63bqbh7g","vts:писанка":"sr_b76k2zwxjq59","cefr:писанка":"sr_h5y2ef2mdjak","frequency:писанка":"sr_8qrmghxjmhga","heritage:писанка":"sr_4gdkf3qm84g4","balla:писанка":"sr_matnskmgm54v","vesum:дзеркало":"sr_7ftrxrgpc7en","ulif:дзеркало":"sr_2zjstzq23raz","vts:дзеркало":"sr_snrkem9rk8gz","cefr:дзеркало":"sr_8wngd3pjejth","frequency:дзеркало":"sr_ajkgr09xwxg4","heritage:дзеркало":"sr_6jvnf9c2590g","balla:дзеркало":"sr_rs4wfr1kvdvc","vesum:Україна":"sr_hv1xt7x5mx9t","ulif:Україна":"sr_9rcjh8ehdkkh","cefr:Україна":"sr_m3ak3t4a0a2p","frequency:Україна":"sr_prvjje3kp9c9","heritage:Україна":"sr_sqx9k9g6q50v","balla:Україна":"sr_334zjsetxq7r","vesum:Київ":"sr_wpn916jwdym1","ulif:Київ":"sr_n734565c1xq1","cefr:Київ":"sr_h677rqy4fk7m","frequency:Київ":"sr_78jbp1wqrkfj","heritage:Київ":"sr_33j8nadetpgw","balla:Київ":"sr_wexd4ctgz8zs","vesum:українець":"sr_vjgfq9gezh2x","ulif:українець":"sr_edk17wgec4ex","vts:українець":"sr_atqqk7fr0cfg","cefr:українець":"sr_3dy9vhynamjz","frequency:українець":"sr_fbrsdb3d28kx","heritage:українець":"sr_45bnt4fn87fz","balla:українець":"sr_5jrjt5h2r4fw","vesum:українка":"sr_bd8rxqk3jkn9","ulif:українка":"sr_5dqtj7a5xt31","vts:українка":"sr_adhsr61y0ezc","cefr:українка":"sr_rg7r3xra4rxn","frequency:українка":"sr_ptz8p68zvrsr","heritage:українка":"sr_w75cms4z35zt","balla:українка":"sr_jt5hh01qhfsm","vesum:український":"sr_jva8beqd9fgk","ulif:український":"sr_1y83s7qepekp","vts:український":"sr_cwn790zg646p","cefr:український":"sr_0kq2jnv5jq1t","frequency:український":"sr_f8x3pvcra1g4","heritage:український":"sr_wp5499fghb9f","balla:український":"sr_zekfawkh2dpw","vesum:добре":"sr_v9cdkyqgqvat","ulif:добре":"sr_abb8g1fxrvay","vts:добре":"sr_en43wwsbvkpt","cefr:добре":"sr_7dm3vhb2f7ab","frequency:добре":"sr_313fqpra29yz","heritage:добре":"sr_9h3789m3m1gj","balla:добре":"sr_5nfse08ewjc4","vesum:як":"sr_fwcmxfqta586","ulif:як":"sr_0p7c0cem0w3m","vts:як":"sr_d264wjvf9tcy","cefr:як":"sr_v4sqx0sd7sd3","frequency:як":"sr_7b4e997krh62","heritage:як":"sr_9acjvdvph7jm","balla:як":"sr_kwbwztemsmec","vesum:книжка":"sr_mhepkcftw8by","ulif:книжка":"sr_14wt5kfegwes","vts:книжка":"sr_dcq9mq0xn0qv","cefr:книжка":"sr_vn6b2dk2dbsj","frequency:книжка":"sr_bqx8e6qat0ny","heritage:книжка":"sr_503zq0pwpgwa","balla:книжка":"sr_dwrt90rwxg4j","vesum:телефон":"sr_0xy77eram850","ulif:телефон":"sr_qj123ydfhdf3","vts:телефон":"sr_ygvvwb7ahs3m","cefr:телефон":"sr_59zxd10g0mda","frequency:телефон":"sr_fa0wrh50a9e6","heritage:телефон":"sr_qcgvewd9gytv","balla:телефон":"sr_czme97wa1s95","vesum:вікно":"sr_0247a2casq26","ulif:вікно":"sr_r91g7x9k1amb","vts:вікно":"sr_vqthygfy2b55","cefr:вікно":"sr_e51nx1qw48y1","frequency:вікно":"sr_m72m83d58tqm","heritage:вікно":"sr_1gaj70c6bhyn","balla:вікно":"sr_wn676r855950","vesum:він":"sr_seqfkyztf7t7","vts:він":"sr_hwzckjn0akn6","cefr:він":"sr_5zzpt5qpgj6b","frequency:він":"sr_x7c6by7xn5pc","heritage:він":"sr_cs80mm5ba41p","balla:він":"sr_13d5zsv2r8zb","vesum:вона":"sr_hfa6bzcxk9f8","vts:вона":"sr_chbvvft6ck7j","cefr:вона":"sr_xntms013gavg","frequency:вона":"sr_6rwhsy2gy7x7","heritage:вона":"sr_24smx3nbeg1b","balla:вона":"sr_0k7mrdxypa40","vesum:воно":"sr_yb7ntf7jdf1k","vts:воно":"sr_mxs1dst9fsm1","cefr:воно":"sr_cqc71tgf5mpw","frequency:воно":"sr_2s93yyrpx35h","heritage:воно":"sr_wcnz3bpxnj9c","balla:воно":"sr_8ftzx7w8ez5h","vesum:стіл":"sr_qbtgencdmzx4","ulif:стіл":"sr_6adr5g2shp4g","vts:стіл":"sr_5s92fxbq33t5","cefr:стіл":"sr_2xc5z2gragnj","frequency:стіл":"sr_q4k8e1asar07","heritage:стіл":"sr_0ta03nf54xa7","balla:стіл":"sr_y4w34mjxtqs4","vesum:лампа":"sr_xygh22mzrh7q","ulif:лампа":"sr_28gm1wmw3mkn","vts:лампа":"sr_dcf8zfpj88jw","cefr:лампа":"sr_8b9vwm0k1pgf","frequency:лампа":"sr_wjgtx46sy2dk","heritage:лампа":"sr_e8gjyc6f1jxh","balla:лампа":"sr_44p5yk1xrtd1","vesum:ліжко":"sr_xn8k7z4yy3r4","ulif:ліжко":"sr_6tzfftk072en","vts:ліжко":"sr_5fzcawdqyhy9","cefr:ліжко":"sr_mdnmjbadkh4z","frequency:ліжко":"sr_xcxqgv1m6m4q","heritage:ліжко":"sr_f5zekc1b9rpx","balla:ліжко":"sr_wft5w61w5gqp","vesum:ручка":"sr_920am87chyyr","ulif:ручка":"sr_837ybw7nfvrv","vts:ручка":"sr_scdc9ckd72a2","cefr:ручка":"sr_ze7x146qe2yz","frequency:ручка":"sr_8w8evxbstq5p","heritage:ручка":"sr_gzh9zpjvnrsp","balla:ручка":"sr_t09d3pbnkzsm","textbook:context-mama":"sr_4w4fmfs4y37d"},
-  "sources_sha256": "17841eff63deb02d2bb42659a03e2b5153953fb116c23397395ea9d82ad56201",
-  "allocation_pins": {"base_sha256":"a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a","consumed_sha256":"0a95b6e0431ed6e16d860126f0144dbab51343ab74ca2d3c39978d4c7be8ea57","companion_sha256":"4805c1de03d51416c56cd7c19d0bb3719f4ba9ea90c4ac057433c10f2131842b","combined_sha256":"04a34349ca7072abc9c8adf80889f9f3cdceae04d6140c9d3fb3233ab3671990"}
+  "sources_sha256": "4c049c492296a4f3bffea566179cf684c284f94002fa0589e3272dc0f7329116",
+  "allocation_pins": {"base_sha256":"a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a","consumed_sha256":"0a95b6e0431ed6e16d860126f0144dbab51343ab74ca2d3c39978d4c7be8ea57","companion_sha256":"1217b8f71a011733a9df701f67f4a70dc7e84f4c8ae8b218e96d1611d64a321c","combined_sha256":"3ee11d9d0535068c5ccf372a56b4b9e99176b81c484104d3007ac6663c2c92d4"},
+  "capture_call_overrides": {"vts:добре":"33-vts-cache","vts:донька":"20-vts-cache","vts:студентка":"12-vts-cache","vts:українець":"30-vts-cache","vts:українка":"31-vts-cache"}
 }
