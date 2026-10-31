@@ -97,6 +97,32 @@ def repo(tmp_path):
     return repo
 
 
+def test_docs_only_branch_preserves_local_review_risk(repo, capsys):
+    document = repo / "agents_extensions/shared/agents/curriculum-writer.md"
+    document.parent.mkdir(parents=True)
+    document.write_text("Original guidance.\n", encoding="utf-8")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-qm", "base")
+    base = _git(repo, "rev-parse", "HEAD").strip()
+    document.write_text("Updated guidance.\n", encoding="utf-8")
+    resolved_risks = []
+    for mode in ("local", "branch"):
+        if mode == "branch":
+            _git(repo, "commit", "-qam", "docs update\n\nX-Agent: codex/gpt-6.1-sol")
+        state = repo.parent / f"{mode}.json"
+        target_args = ["target", "--mode", mode, "--repo-root", str(repo)]
+        if mode == "branch":
+            target_args += ["--branch", "HEAD", "--base", base]
+        assert main(["--state-file", str(state), *target_args]) == 0
+        capsys.readouterr()
+        assert main([
+            "--state-file", str(state), "resolve-reviewer", "--author-model", "gpt-6.1-sol",
+            "--risk", "medium", "--repository", "learn-ukrainian/learn-ukrainian.github.io",
+        ]) == 0
+        resolved_risks.append(json.loads(capsys.readouterr().out)["resolved_risk"])
+    assert resolved_risks == ["medium", "medium"]
+
+
 @pytest.mark.parametrize("operation", ["rename-out", "rename-in", "delete", "newline-rename"])
 @pytest.mark.parametrize("mode", ["commit", "local"])
 def test_git_and_cli_classify_both_rename_names_and_deletions(repo, capsys, operation, mode):
