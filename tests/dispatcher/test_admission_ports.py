@@ -429,10 +429,13 @@ def test_headroom_stop_refuses_matching_models_only(headroom_box, capsys):
     assert headroom_box.dispatch(agent="codex", model="gpt-6.1-sol") == 0
 
 
-def test_unreadable_usage_does_not_block(headroom_box):
-    """Ported from tests/test_model_pause.py::test_unreadable_usage_does_not_block."""
+def test_unreadable_usage_refuses_dispatch(headroom_box, capsys):
+    """A matching active cap refuses admission without a usable meter."""
     headroom_box.meter(a_used=None, b_used=None)
-    assert headroom_box.dispatch() == 0
+    assert headroom_box.dispatch() == 2
+    assert "MODEL_HEADROOM_USAGE_UNKNOWN" in capsys.readouterr().err
+    assert headroom_box.launches == []
+    assert list(headroom_box.tasks.glob("*.json")) == []
 
 
 def test_pause_lifts_by_itself_after_until(headroom_box):

@@ -679,12 +679,22 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     account = inputs.claude_account
     if candidate.route == "claude" and not account.resolved:
         return f"claude account unresolved: {account.refusal}"
-    from scripts.agent_runtime.model_pause import account_used_pct, refusal_reason
+    from scripts.agent_runtime.model_pause import account_used_pct, load_policy, refusal_reason
 
-    used_pct = account_used_pct(None if inputs.structural else account)
+    policy = load_policy()
+    if inputs.structural:
+        # Qualification of a completed review is not dispatch admission.
+        policy = {**policy, "headroom": []}
+    elif candidate.route != "claude" and isinstance(policy.get("headroom"), list):
+        # The native Claude plan does not fund seats on other routes.
+        policy = {**policy, "headroom": [
+            entry for entry in policy["headroom"]
+            if not isinstance(entry, dict) or entry.get("lane") != "claude"
+        ]}
     paused = refusal_reason(
         candidate_dispatch_model(candidate),
-        used_pct=lambda lane: used_pct(lane) if lane == "claude" and candidate.route == "claude" else None,
+        policy=policy,
+        used_pct=account_used_pct(account),
     )
     if paused:
         return paused
