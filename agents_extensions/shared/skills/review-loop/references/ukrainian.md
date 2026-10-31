@@ -30,10 +30,10 @@ cards, dataset rows). What blocks, reporting by class and evidence stay in
 
 ## Findings
 
-- A finding changes content only after a Sources MCP / VESUM check confirms it, chosen by
-  facet (§4) and cited in the ledger. An alleged blocker without a tool check stays blocking:
-  the review is INCONCLUSIVE (`BLOCKED`, §8) until a tool check confirms or refutes it, and no
-  content changes before that check. Only an unverified non-blocking note is advisory.
+- Every Ukrainian error in added or edited text blocks, with a Sources/VESUM citation. Existing §8 coverage, facet-specific verification and escalation remain unchanged. Unverified alleged blockers remain INCONCLUSIVE/BLOCKED pending verification; pedagogy findings cite their governing contract rather than requiring dictionary evidence.
+- A breach of an applicable binding pedagogy contract blocks. Contracts include approved learning goals and CEFR scope; authoritative language-role and immersion rules, including A1 English scaffolding and applicable bilingual instructions; adopted ULP presentation requirements within their stated scope and adaptations; and the applicable level/track activity allowlist and placement rules. Advisory percentages and attributed observations alone are not blocking thresholds. CEFR judgments preserve expressly permitted incidental constructs. Each blocker identifies the applicable clause, affected learner-facing evidence and demonstrated contradiction; material contract ambiguity escalates.
+- Wording or style choices among correct, contract-compliant alternatives stay non-blocking notes. A "nit" that is a learner-visible error is an error and blocks.
+- A language-error finding changes content only after a Sources MCP / VESUM check confirms it, chosen by facet (§4) and cited in the ledger. No content changes before that check. Only an unverified non-blocking note is advisory.
 - Measured on 27 tool-verified planted errors plus 2 clean passages (CTO grading 2026-10-27):
   Gemini 27/27 (1 disputed), Sol 25, Grok 25 (Sources tools reachable), Opus 25 (8
   unverified), Muse 26 (all 29 of its findings unverified). One small set, to be replicated before the pairs change.

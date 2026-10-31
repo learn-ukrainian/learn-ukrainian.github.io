@@ -138,12 +138,15 @@ capability failure for the run instead of a verdict
 
 ## Severity
 
-- Severity follows impact on behaviour or readers, ranked by impact and likelihood.
-  P0 and P1 block (`in_scope_blocker`). Uncertainty about a material failure also blocks.
-- Speculative or bounded edge cases, pre-existing defects off the changed paths, wording and
-  P2/P3 findings are follow-ups. The driver sends follow-ups to the CTO through Fleet Comms
-  (only the CTO opens issues). A follow-up with the same outcome may be tracked on the parent
-  issue instead (`workflow.md` § Work intake). A non-blocking follow-up never holds the merge.
+Severity follows impact on behaviour or readers, ranked by impact and likelihood.
+
+1. P0, P1, and uncertainty about a material failure keep blocking.
+2. A demonstrated, unintended loss of previously correct behavior or of an existing refusal guarantee introduced by the PR blocks regardless of priority. Cite the pinned base and head, the same triggering inputs and preconditions, the contract violated, and a reproducer or complete code-path proof. An intentionally approved contract change, preference, or speculative difference is not a regression. An omitted or bounded trigger does not exempt a demonstrated regression. Disputed material contract applicability escalates.
+3. Every other confirmed P2 defect is fixed in the PR or tracked before enqueue on an OPEN issue covering that finding. The worker or driver reports it through Fleet Comms; the CTO searches for and updates a matching open issue, or creates one under Work intake. The enqueue owner verifies its open state and coverage, and records the issue link, stable finding ID and owner in the ledger. A report awaiting CTO disposition is insufficient. Tracking alone requires no additional review round.
+4. P3 findings that do not meet item 2, nits, and preferences remain non-blocking and never alone justify another review round.
+
+No change to review budgets, seats, recorder or approval semantics. Reviewers explicitly reject unresolved blocking regressions without inflating priority. Existing round limits, elevation eligibility, new-head rejection clearance and exact-head approval requirements remain unchanged. A P2/P3 blocker grants no additional round; exhaustion escalates and never implies approval. Filing or linking an issue consumes no review round. These procedural obligations are not new automatic recorder checks.
+
 - `SECURITY_VERDICT FAIL` always blocks and is never downgraded to a follow-up.
 - INCONCLUSIVE (`BLOCKED` on the verdict line, naming the missing capability), a timeout, an
   error or no reply is never approval.
