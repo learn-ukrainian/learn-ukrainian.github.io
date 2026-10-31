@@ -30,6 +30,7 @@ from scripts.orchestration import worktree_claims
 from scripts.orchestration.execution_safe_git import LOCAL_COMMANDS, SafeGitRunner
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.fleet_repos import load_fleet_repos, resolve_fleet_repo
+from scripts.orchestration.task_record_store import parse_task_record
 
 _GIT = "/usr/bin/git"
 _FETCH_REMOTE = "sibling-git-canonical"
@@ -655,9 +656,9 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
                 if state_file.suffix != ".json" or worktree_claims.is_superseded_record(state_file):
                     continue
                 raw = state_file.read_bytes()
-                if not worktree_claims.record_may_claim_worktree(raw, needles):
+                state = parse_task_record(state_file, raw)
+                if state is None or not worktree_claims.record_may_claim_worktree(raw, needles):
                     continue
-                state = json.loads(raw)
                 if not isinstance(state, dict):
                     return False, reachability_refusal
                 claimed = state.get("worktree_path")

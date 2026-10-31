@@ -58,7 +58,7 @@ from scripts.orchestration.integration_sweep import (
     lookup_verdict,
     parse_marker,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
 from scripts.publish.github import CfVerdictRecord, Request, request_run
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT, listing_app_bot_login, verified_app_bot_login
 from scripts.review.language_lane import is_ukrainian_review
@@ -1343,9 +1343,9 @@ def admitted_unknown_history(
         raise BranchFactsError(FACTS_AUTHORSHIP_UNKNOWN, "RED_TEAM_REFUSED: task ledger unavailable") from exc
     for path in paths:
         try:
-            task = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            continue
+            task = read_task_record(path)
+        except (OSError, ValueError) as exc:
+            raise BranchFactsError(FACTS_AUTHORSHIP_UNKNOWN, f"task record {path} unreadable") from exc
         if not isinstance(task, dict) or task.get("status") == "dry_run":
             continue
         receipt = task.get("authoring_review_admission")
@@ -2180,9 +2180,9 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
         # both an unreadable directory and a failed glob refuse this guard.
         list(task_root.iterdir())
         for path in sorted(path for path in task_root.glob("*.json") if path.is_file()):
-            task = json.loads(path.read_text(encoding="utf-8"))
-            if not isinstance(task, dict):
-                raise ValueError("task record is not an object")
+            task = read_task_record(path)
+            if task is None:
+                continue
             prep = task.get("worktree_prep")
             prep_sha = prep.get("base_sha") if isinstance(prep, dict) else None
             prep_matches = (

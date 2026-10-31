@@ -95,8 +95,8 @@ PullPager = Callable[[str, int], list[dict[str, Any]]]
 def _read_state_json(path: Path) -> dict[str, Any] | None:
     """Read legacy JSON without hydrating snapshot sidecars."""
     try:
-        loaded = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+        loaded = task_record_store.read_task_record(path)
+    except (OSError, ValueError):
         return None
     return loaded if isinstance(loaded, dict) else None
 
@@ -876,7 +876,7 @@ def _read_pinned(path: Path) -> tuple[dict[str, Any] | None, os.stat_result]:
         stat = os.fstat(handle.fileno())
         raw = handle.read()
     try:
-        record = json.loads(raw)
+        record = task_record_store.parse_task_record(path, raw)
     except (ValueError, RecursionError):
         return None, stat
     return (record if isinstance(record, dict) else None), stat

@@ -537,7 +537,7 @@ def load_write_success_stats(
                 # A record is rewritten when it settles, so an older file holds no attempt in the window.
                 if path.stat().st_mtime < oldest:
                     continue
-                record = json.loads(path.read_bytes())
+                record = task_record_store.read_task_record(path)
             except (OSError, ValueError):
                 continue
             if isinstance(record, dict):

@@ -1030,7 +1030,7 @@ def iter_active_records(tasks_dir: Path) -> Iterator[tuple[Path, dict[str, Any]]
         if not any(marker in raw for marker in _ACTIVE_STATUS_MARKERS):
             continue
         try:
-            state = json.loads(raw)
+            state = task_record_store.parse_task_record(path, raw)
         except ValueError:
             continue
         if isinstance(state, dict) and state.get("status") in ACTIVE_STATUSES:

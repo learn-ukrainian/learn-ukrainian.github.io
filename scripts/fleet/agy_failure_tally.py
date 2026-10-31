@@ -35,6 +35,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 
 from scripts.agent_runtime.adapters.agy import parse_agy_provider_fault
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
+from scripts.orchestration.task_record_store import read_task_record
 
 CAUSE_LABELS: tuple[str, ...] = (
     "cancellation",
@@ -125,8 +126,11 @@ def load_task_records(tasks_dir: Path) -> tuple[list[dict[str, Any]], int]:
         if not path.is_file():
             continue
         try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeError, json.JSONDecodeError):
+            payload = read_task_record(path)
+            if payload is None:
+                skipped += 1
+                continue
+        except (OSError, ValueError):
             skipped += 1
             continue
         if isinstance(payload, dict):

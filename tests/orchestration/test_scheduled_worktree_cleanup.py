@@ -1948,14 +1948,14 @@ def test_rescue_read_errors_reach_caller_without_crashing(rescue_repo, monkeypat
     if failure == "recursion":
         task.write_text("[" * 10000 + "]" * 10000)
     if failure == "read":
-        real_read = Path.read_text
+        real_read = Path.read_bytes
 
         def read(path, *args, **kwargs):
             if path == task:
                 raise PermissionError("synthetic read refusal")
             return real_read(path, *args, **kwargs)
 
-        monkeypatch.setattr(Path, "read_text", read)
+        monkeypatch.setattr(Path, "read_bytes", read)
     if failure == "git":
         monkeypatch.setattr(cleanup, "safe_git", lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError()))
     monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())

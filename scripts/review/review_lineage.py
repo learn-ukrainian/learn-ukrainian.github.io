@@ -22,7 +22,6 @@ login is outside it.
 from __future__ import annotations
 
 import hashlib
-import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -39,7 +38,7 @@ from scripts.orchestration.integration_sweep import (
     lookup_verdict,
     parse_marker,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
 from scripts.review import capability_failure
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.capability_failure import run_started as _started
@@ -122,7 +121,7 @@ def review_records(task_root: Path, *, repository: str) -> list[tuple[Path, dict
     records = []
     for path in paths:
         try:
-            record = json.loads(path.read_text(encoding="utf-8"))
+            record = read_task_record(path)
         except (OSError, ValueError) as exc:
             raise LineageRefused(f"task record {path.name} unreadable: {exc}") from None
         if (

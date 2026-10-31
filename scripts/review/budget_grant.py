@@ -58,7 +58,7 @@ from scripts.agent_runtime.bounded_advisory import (
 )
 from scripts.opsec.prepublish import normalize_repository
 from scripts.orchestration.integration_sweep import REJECTED, lookup_verdict
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.model_catalog import REVIEW_BUDGET_ELEVATION_ROLE, advisory_role_policy, canonical_model_id
 from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
@@ -152,10 +152,7 @@ def _grant_records(task_root: Path) -> list[tuple[str, Path, dict[str, Any]]]:
         raise GrantRefused(APPROVAL, f"task ledger unavailable: {exc}") from None
     for path in paths:
         try:
-            text = path.read_text(encoding="utf-8")
-            if REVIEW_BUDGET_ELEVATION_ROLE not in text:
-                continue
-            record = json.loads(text)
+            record = read_task_record(path)
         except (OSError, UnicodeDecodeError, ValueError) as exc:
             raise GrantRefused(APPROVAL, f"task record {path.name} unreadable: {exc}") from None
         if isinstance(record, dict) and record.get("advisory_role") == REVIEW_BUDGET_ELEVATION_ROLE:

@@ -38,7 +38,7 @@ def ledger(tmp_path):
     for source, records in fixture.items():
         root = tmp_path / "archive" if source == "archive" else tmp_path
         for i, record in enumerate(records):
-            _write(root, record, filename=f"{i:02}.json")
+            _write(root, record, filename=f"{record['task_id']}.20261028T000000Z.{i}.archived.json")
     return tmp_path
 
 
@@ -200,9 +200,9 @@ def test_incomplete_ledger_and_window_boundaries_are_visible(tmp_path, capsys):
     assert report["coverage"] == {
         "hot_records": 10,
         "archive_records": 0,
-        "excluded_legacy": 2,
+        "excluded_legacy": 1,
         "excluded_dry_run": 1,
-        "invalid_records": 2,
+        "invalid_records": 3,
         "undated_records": 1,
         "outside_window": 2,
         "duplicate_runs": 0,
