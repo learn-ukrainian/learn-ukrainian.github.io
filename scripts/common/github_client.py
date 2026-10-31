@@ -48,7 +48,6 @@ from typing import Any
 from urllib.parse import quote, quote_plus, urlencode, urlsplit
 
 from scripts.common import github_usage
-from scripts.github_check_rollup import bind_workflow_runs, project_check_runs
 
 CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
 CACHE_MAX_BYTES = 64 * 1024 * 1024
@@ -2057,6 +2056,9 @@ def _read_command(client, kind, action, options, positional, *, timeout, fresh):
             # REST check runs carry no workflow; gh's rollup does. Bind each
             # Actions row to its exact-head run so two same-name runs of one
             # workflow collapse to the latest. Unproven rows stay partial.
+            # Imported here: sparse CI jobs check out this module without it.
+            from scripts.github_check_rollup import bind_workflow_runs, project_check_runs
+
             runs = []
 
             def get_run(run_id):
