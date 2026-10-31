@@ -42,6 +42,10 @@ class Refusal(ValueError):
     """Privacy-safe refusal: never interpolate paths or Git diagnostics."""
 
 
+# The claim scan's unreadable-record refusal. The path is the locator; the rest stays private (#12230).
+_CLAIM_SCAN_DAMAGED_RECORD = re.compile(r"^task record (?P<path>.+) unreadable; refusing worktree removal$")
+
+
 def _plain_path(path: Path, *, exists: bool = True) -> Path:
     if any(unicodedata.category(c) in {"Cc", "Cf", "Zl", "Zp"} for c in str(path)):
         raise Refusal("path contains control or formatting characters")
@@ -612,6 +616,28 @@ def status(repo: Repository, git: Git) -> dict:
     }
 
 
+def _claim_scan_damaged_record_locator(reason: str, primary: Path) -> str | None:
+    """Return a repository-relative task-record path, or the task id when the path is outside the checkout.
+
+    A record damaged after the reachability probe is named only by the claim scan.
+    Sibling stderr keeps that locator and nothing else from the scan's diagnostic.
+    """
+    match = _CLAIM_SCAN_DAMAGED_RECORD.fullmatch(reason)
+    if match is None:
+        return None
+    record = Path(match.group("path"))
+    try:
+        relative = record.relative_to(primary)
+    except ValueError:
+        relative = None
+    if relative is not None and relative.parts and ".." not in relative.parts and not relative.is_absolute():
+        return relative.as_posix()
+    task_id = record.name[:-5] if record.name.endswith(".json") else ""
+    if task_id and "/" not in task_id and "\\" not in task_id and ".." not in task_id:
+        return task_id
+    return None
+
+
 def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict:
     target = _plain_path(Path(raw))
     dispatch = repo.checkout / ".worktrees/dispatch"
@@ -713,6 +739,10 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
         git_runner=SafeGitRunner(_GIT),
     )
     if result.action != "removed":
+        # The probe names its own blocker. Only a later damaged-record refusal adds a locator.
+        locator = None if reachability_refusal else _claim_scan_damaged_record_locator(result.reason, primary)
+        if locator:
+            raise Refusal(f"task record {locator} is damaged; local work preserved")
         raise Refusal(f"{reachability_refusal or 'cleanup policy refused or removal failed'}; local work preserved")
     return {"repo": repo.key, "verb": "worktree-remove", "removed": True}
 
