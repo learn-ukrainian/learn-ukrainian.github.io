@@ -103,6 +103,33 @@ def test_queries_cover_each_lesson_word_and_letter(curation):
         assert entries[index]["candidates"] == []
 
 
+def test_formula_records_are_formula_requirements(curation):
+    """A `kind: formula` record has `text` and `parts`, no `lemma`; it is searched by its printed text (#12185)."""
+    plan, words, src = curation
+    store = yaml.safe_load(words.read_text())
+    store["words"] += [
+        {
+            "id": "W-004",
+            "kind": "formula",
+            "text": "synthetic reused!",
+            "parts": [{"word": "W-001", "form": "synthetic"}],
+        },
+        {"id": "W-005", "kind": "formula", "text": "reused synthetic!", "parts": [{"word": "W-003", "form": "reused"}]},
+    ]
+    words.write_text(yaml.safe_dump(store))
+    document = yaml.safe_load(plan.read_text())
+    vocabulary = document["lessons"][0]["inventory"]["vocabulary"]
+    vocabulary["core"].append({"lemma": "synthetic reused!", "evidence": "W-004"})
+    vocabulary["recycled"] += ["W-005", "W-099"]
+    plan.write_text(yaml.safe_dump(document))
+    entries = {(q["evidence"], q["requirement_kind"]): q for q in catalogue.request_report(plan, words, src)["queries"]}
+    assert entries[("W-004", "formula")]["query"] == "synthetic reused!"
+    assert entries[("W-005", "formula")]["query"] == "reused synthetic!"
+    assert entries[("W-001", "word")]["query"] == "synthetic"
+    assert entries[("W-099", "word")]["note"] == {"code": "catalogue_word_unresolved"}
+    assert all(q["status"] == "ok" for key, q in entries.items() if key[1] == "formula")
+
+
 @pytest.mark.parametrize("query", ["я", "і", "у", "в", "з", "о", "а", "й"])
 def test_one_letter_word_requirement_uses_text_and_letter_requirement_uses_index(curation, query):
     plan, words, src = curation

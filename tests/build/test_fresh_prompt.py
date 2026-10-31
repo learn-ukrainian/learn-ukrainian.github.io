@@ -692,6 +692,52 @@ def test_render_fails_when_a_state_id_has_no_lemma_or_point(
         )
 
 
+def test_cited_formula_record_renders_in_the_writer_prompt(sample_plan_entry, sample_learner_state, sample_cited_records):
+    """A cited `kind: formula` record has `text` and `parts`, no `lemma` or `pos`; the prompt prints it (#12185)."""
+    formula = {
+        "id": "W-002",
+        "kind": "formula",
+        "text": "mama doma!",
+        "parts": [{"word": "W-001", "form": "mama"}, {"word": "W-003", "form": "doma"}],
+    }
+    cited = {**sample_cited_records, "W-002": formula}
+    # The formula's part W-003 is not cited by the lesson; naming a part's id would trip the uncited-id guard.
+    plan = {**sample_plan_entry, "inventory": {**sample_plan_entry["inventory"]}}
+    plan["inventory"]["vocabulary"] = {
+        "core": [*sample_plan_entry["inventory"]["vocabulary"]["core"], {"lemma": "mama doma!", "evidence": "W-002"}],
+        "incidental": [],
+        "recycled": [],
+    }
+    prompt = render_lesson_prompt(
+        plan,
+        cited_records=cited,
+        learner_state=sample_learner_state,
+        word_store=SAMPLE_WORD_STORE,
+        immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+        style_card_path=CARDS_DIR / "a1.md",
+    )
+    assert "### Record `W-002`\n- Kind: word\n- Formula: mama doma!\n- Parts: mama, doma\n" in prompt
+    assert _check(prompt, plan, sample_learner_state).errors == []
+    with pytest.raises(ValueError, match=r"cited_record_invalid.*W-002.*parts"):
+        cited_record_views({"W-002": {key: value for key, value in formula.items() if key != "parts"}})
+
+
+def test_learner_state_view_prints_formula_text(full_learner_state):
+    """A taught formula record has `text` and `parts`, no `lemma`; the writer reads its printed text (#12185)."""
+    formula = {
+        "id": "W-3",
+        "kind": "formula",
+        "text": "Добрий день!",
+        "parts": [{"word": "W-4", "form": "Добрий"}, {"word": "W-11", "form": "день"}],
+    }
+    store = {"words": [formula, *(row for row in STATE_WORD_STORE["words"] if row["id"] != "W-3")]}
+    view = learner_state_view(full_learner_state, store, STATE_GRAMMAR)
+    assert {"id": "W-3", "lemma": "Добрий день!"} in view["core"]
+
+
 def _state_errors(prompt, plan_entry, state, **sources):
     return check_rendered_prompt(prompt, plan_entry, CARDS_DIR / "a1.md", learner_state=state, **sources).errors
 

@@ -3,7 +3,13 @@
 
 ### Record `{{ r.id }}`
 - Kind: {{ r.kind }}
-{%- if r.kind == "word" %}
+{%- if r.kind == "word" and r.record.get("kind") == "formula" %}
+- Formula: {{ r.record.text }}
+- Parts: {% for part in r.record.parts %}{{ part.form }}{{ ", " if not loop.last }}{% endfor %}
+{%- if r.record.get("gloss") %}
+- Gloss: {{ r.record.gloss }}
+{%- endif %}
+{%- elif r.kind == "word" %}
 - Lemma: {{ r.record.lemma }}
 - Part of Speech: {{ r.record.pos }}
 {%- if r.record.get("gloss") %}
