@@ -2181,15 +2181,6 @@
     },
     {
       "build_id": "a1-slice5-allocation@sha256:584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14",
-      "event_id": "ie_1728",
-      "evidence": "{\"locator\":\"puls:query:читати\",\"snapshot_id\":\"puls@sha256:b0c0768d3a49da5b081ac12d43164cde3eca93fbda162d6d0f6ccff006d7d511\",\"source_id\":\"puls\"}",
-      "kind": "source_record_mint",
-      "to": [
-        "sr_maex6qx0471g"
-      ]
-    },
-    {
-      "build_id": "a1-slice5-allocation@sha256:584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14",
       "event_id": "ie_1729",
       "evidence": "{\"locator\":\"puls:query:інфінітив\",\"snapshot_id\":\"puls@sha256:eec22d544f7888c5012f20e252337f725be14ed2c7d7396d83232730d85896b2\",\"source_id\":\"puls\"}",
       "kind": "source_record_mint",
@@ -2681,15 +2672,6 @@
       "kind": "source_record_mint",
       "to": [
         "sr_3b5map68q738"
-      ]
-    },
-    {
-      "build_id": "a1-slice5-allocation@sha256:584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14",
-      "event_id": "ie_1784",
-      "evidence": "{\"locator\":\"ulif:entry:258655\",\"snapshot_id\":\"ulif@sha256:35382c7b622260acbc325f546b5db08d3b26d8a2486b5a6cb6f443635a17ea41\",\"source_id\":\"ulif\"}",
-      "kind": "source_record_mint",
-      "to": [
-        "sr_gaq6mex0ef0p"
       ]
     },
     {
@@ -5379,25 +5361,6 @@
     {
       "aliases": [
         {
-          "key": "puls:query:читати",
-          "kind": "uid",
-          "snapshot_id": "puls@sha256:b0c0768d3a49da5b081ac12d43164cde3eca93fbda162d6d0f6ccff006d7d511"
-        }
-      ],
-      "correspondence": [
-        {
-          "locator": "puls:query:читати",
-          "matched_by": "actual_Sources_tool_response",
-          "snapshot_id": "puls@sha256:b0c0768d3a49da5b081ac12d43164cde3eca93fbda162d6d0f6ccff006d7d511",
-          "status": "unique"
-        }
-      ],
-      "source_id": "puls",
-      "source_record_id": "sr_maex6qx0471g"
-    },
-    {
-      "aliases": [
-        {
           "key": "puls:query:інфінітив",
           "kind": "uid",
           "snapshot_id": "puls@sha256:eec22d544f7888c5012f20e252337f725be14ed2c7d7396d83232730d85896b2"
@@ -6439,25 +6402,6 @@
       ],
       "source_id": "ulif",
       "source_record_id": "sr_3b5map68q738"
-    },
-    {
-      "aliases": [
-        {
-          "key": "ulif:entry:258655",
-          "kind": "uid",
-          "snapshot_id": "ulif@sha256:35382c7b622260acbc325f546b5db08d3b26d8a2486b5a6cb6f443635a17ea41"
-        }
-      ],
-      "correspondence": [
-        {
-          "locator": "ulif:entry:258655",
-          "matched_by": "actual_Sources_tool_response",
-          "snapshot_id": "ulif@sha256:35382c7b622260acbc325f546b5db08d3b26d8a2486b5a6cb6f443635a17ea41",
-          "status": "unique"
-        }
-      ],
-      "source_id": "ulif",
-      "source_record_id": "sr_gaq6mex0ef0p"
     },
     {
       "aliases": [

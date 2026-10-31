@@ -1,8 +1,8 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "ec9108096b65b882c49bc199d1b92d18ac1996b5823cb2a8efd4a364928c93e4",
-    "companion_sha256": "22b4663c4ddd44d82c375228612001844ae6d7bb0f1ad36f3926ddb2339a50bf",
+    "combined_sha256": "c808de273887310a153d1726b8548bce9c8c08c4b2d815ea90aad5690148fe57",
+    "companion_sha256": "bffccab5f9d85943e660641b72e2baf9782b05e5fe6c881ea2846987757e3738",
     "consumed_sha256": "1da304956bb6a345e40da1bc969b7a0766f0f93b756bb8f04e083090c397bfd8",
     "slice2_companion_sha256": "a4251320c43ab9f780bdcecf3e4aed1060123558e55600375e589aa0268f1293",
     "slice3_companion_sha256": "1217b8f71a011733a9df701f67f4a70dc7e84f4c8ae8b218e96d1611d64a321c",
@@ -37587,7 +37587,7 @@
     "cefr:тут": "sr_m10drmvstbq9",
     "cefr:хотіти": "sr_1b6xxnv1kygw",
     "cefr:хто": "sr_h1hpchbjb9vs",
-    "cefr:читати": "sr_maex6qx0471g",
+    "cefr:читати": "sr_jfdn257pg283",
     "cefr:інфінітив": "sr_ntj2z4z3mvg8",
     "textbook:reading": "sr_jbganrd77ya0",
     "ulif:Тарас": "sr_20x5c9x8rnw2",
@@ -37643,7 +37643,7 @@
     "ulif:тістечко": "sr_frrpwr31703k",
     "ulif:хотіти": "sr_wk9hp2g4s0es",
     "ulif:чайові": "sr_3b5map68q738",
-    "ulif:читати": "sr_gaq6mex0ef0p",
+    "ulif:читати": "sr_bkdj52zw8ez7",
     "ulif:ім'я": "sr_72hbyfw6qhqn",
     "ulif:інфінітив": "sr_za3hbp1dbv7q",
     "vesum:Тарас": "sr_k69t0t37jew0",
@@ -37752,7 +37752,21 @@
     "vts:чайові": "sr_b3swzqh3ywxk",
     "vts:читати": "sr_5d7zs7en0d9s"
   },
-  "sources_sha256": "1d452659f912388c7e12604fedbcd6864966f4225eb0e82aae5456db84414ed3",
+  "source_record_reuses": {
+    "cefr:читати": {
+      "canonical_row_sha256": "79978f3b0da250c767e1a7eb91e14f0f0d108ad6348514a2c9bb19ad2d7205e9",
+      "locator": "puls:puls_cefr:id:204",
+      "snapshot_id": "selected-row@sha256:79978f3b0da250c767e1a7eb91e14f0f0d108ad6348514a2c9bb19ad2d7205e9",
+      "source_record_id": "sr_jfdn257pg283"
+    },
+    "ulif:читати": {
+      "canonical_row_sha256": "ddaae6079b79e134df494c369782fecac754c50f2643f8270afacc4b35161acb",
+      "locator": "ulif:ulif_dictua_entries:id:258655",
+      "snapshot_id": "selected-row@sha256:ddaae6079b79e134df494c369782fecac754c50f2643f8270afacc4b35161acb",
+      "source_record_id": "sr_bkdj52zw8ez7"
+    }
+  },
+  "sources_sha256": "8c6d96caf45dfcf5c93c2f588914461ea2aabe861c5795721dbeec9e66808569",
   "stress_attempts": {
     "wc_043h3npd7ed4": [
       {

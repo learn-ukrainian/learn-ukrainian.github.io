@@ -294,7 +294,9 @@ through VESUM entry `420694` and ULIF entry `258655`, preserving its original
 unsplit sense and the separate spelling-only predecessor. The companion appends
 49 source-local senses and preserves every earlier identity, source
 record, and history event. Independent Ukrainian adjudication of the reuse
-remains required. Assembly reads the companion and never allocates identities.
+remains required. Assembly reads the companion and never allocates identities. The unchanged pilot
+ULIF and PULS rows retain their original source-record IDs after complete
+canonical-row comparison with the captured replies.
 
 Literal runtime Sources replies supply VESUM forms, ULIF stress, ВТС meanings,
 and PULS levels. Each consumed payload is rederived from its captured response.

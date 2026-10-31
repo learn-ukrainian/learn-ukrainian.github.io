@@ -25,7 +25,7 @@ MANIFEST = "registry/atlas/a1-v1-slice5.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice5.json"
 INPUTS = "registry/atlas/a1-v1-slice5-inputs.json"
 INPUTS_SHA256 = "584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14"
-MANIFEST_SHA256 = "488fddc742cca6e0ec0288b027267f0a614ea2d32dedc15bfc320c65778967af"
+MANIFEST_SHA256 = "78fa6a4a484550dad6ef3b9868a439e4199f27479392ff6511142cc2a3741a58"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -186,7 +186,8 @@ def response_payload(record, call):
         return json.loads(text.split("- Raw payload: ", 1)[1])
     if source == "ulif":
         entries = json.loads(text)["records"][0]["entries"]
-        matches = [e for e in entries if record["locator"] == f"ulif:entry:{e['entry_id']}"]
+        matches = [e for e in entries if record["locator"] in {
+            f"ulif:entry:{e['entry_id']}", f"ulif:ulif_dictua_entries:id:{e['entry_id']}"}]
         cards.require(len(matches) == 1, "slice5_ulif_locator_mismatch")
         return matches[0]
     if source == "vts_busel_slovnyk_me":
@@ -221,6 +222,26 @@ def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, sele
         cards.require(call["runtime_tool"] == "mcp__sources__" + call["tool"]
                       and not call["response"].get("isError"), "slice5_runtime_call_mismatch")
         cards.require(response_payload(record, call) == record["payload"], "slice5_payload_outside_response")
+        if "canonical_row_witness" in record:
+            witness = record["canonical_row_witness"]
+            if record["source_id"] == "ulif":
+                observed = dict(record["payload"])
+                observed["id"] = observed["entry_id"]
+                observed["normalized_query"] = json.loads(response_text(call))["records"][0]["normalized_query"]
+            else:
+                cards.require(record["source_id"] == "puls", "slice5_row_witness_source_mismatch")
+                observed = record["payload"]["hits"][0]
+            row = {field: observed[field] for field in witness["raw_row"]}
+            cards.require(row == witness["raw_row"] and record["snapshot_id"] == "selected-row@sha256:" + digest(row),
+                          "slice5_original_source_row_drift")
+            originals = [r for r in registry["source_records"]
+                         if r["source_record_id"] == witness["source_record_id"]]
+            cards.require(len(originals) == 1, "slice5_original_source_identity_missing")
+            original = originals[0]
+            cards.require(original["source_id"] == record["source_id"] and any(
+                c["snapshot_id"] == record["snapshot_id"] and c["locator"] == record["locator"]
+                and c["status"] == "unique" for c in original["correspondence"]),
+                "slice5_original_source_identity_mismatch")
     for card_id, adjudication in spec["identity_adjudications"].items():
         entry = next(e for e in effective["entries"] if e["card_id"] == card_id)
         ulif = sources["records"][adjudication["ulif_record"]]["payload"]
