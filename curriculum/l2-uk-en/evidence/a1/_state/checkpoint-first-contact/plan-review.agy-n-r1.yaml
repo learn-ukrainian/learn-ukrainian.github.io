@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "a1-checkpoint-first-contact-n-r1"
+  attempt_id: "agy-n-r1"
+  manifest_sha256: "3c812eba3e7855642ed5ae4140deb693fcbb43465490898408a47a268d677e3d"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "<model>"
+  harness: "<harness>"
+  family: "<family>"
+  prompt_sha256: "e83a4afc36086fcba8d75944e360696abd3dc766959f6f704249530d398037e5"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean # inspect_words: rr-daaa6b3cfb7927308fad; verify_words: rr-b77ab2539b20ae3895a3; verify_stress: rr-df3990a405ceaf3d1617, rr-acef40a8f87c4b816eac; query_sum20: rr-33a128432bc2034b3e4f
+  sequencing: clean
+  sizing: clean
+  inventory: clean
+  activities: clean
+  evidence_fit: clean # search_text: T-601 rr-9f339928822db7439bdc, T-602 rr-1104630981fd02c4a608; search_resources: V-601 rr-575f9ed8c6350f066753
+  standard_and_ulp: clean
+findings: []

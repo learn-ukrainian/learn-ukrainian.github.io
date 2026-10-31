@@ -25,7 +25,7 @@ arc_ref:
   position: 7
 evidence_ref:
   path: curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml
-  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  sha256: '1241ca86545fd578d3a17c90e8a4dd683ba1843ec4dfccfa38433cd28a835ae8'
 lessons:
 - n: 1
   slug: first-contact-integration
