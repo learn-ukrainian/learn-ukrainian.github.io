@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from scripts.orchestration import task_record_store as store
 
@@ -20,6 +21,24 @@ def test_iter_task_records_yields_hot_then_archive(tmp_path):
     hot = [path.name for path in store.iter_task_records(tasks, include_archive=False)]
     assert hot == ["a.json", "b.json"]
     assert list(store.iter_task_records(tmp_path / "missing", include_archive=True)) == []
+
+
+def test_inventory_enumeration_does_not_read_payloads(tmp_path, monkeypatch):
+    tasks = tmp_path / "tasks"
+    (tasks / "archive").mkdir(parents=True)
+    for path in (tasks / "current.json", tasks / "archive" / "prior.json"):
+        path.write_text(json.dumps({"schema_version": 2, "task_id": path.stem}))
+    original_open = Path.open
+
+    def deny_payload(path, *args, **kwargs):
+        if path.parent in {tasks, tasks / "archive"}:
+            raise AssertionError("candidate enumeration must not read task payloads")
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", deny_payload)
+    assert [str(path.relative_to(tasks)) for path in store.iter_task_records(tasks, include_archive=True)] == [
+        "current.json", "archive/prior.json"
+    ]
 
 
 def test_locate_prefers_the_hot_record(tmp_path):

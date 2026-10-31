@@ -51,11 +51,17 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
     a record claim and fails closed.
     """
     try:
-        record = json.loads(raw.decode("utf-8"))
+        decoded = raw.decode("utf-8")
+        record = json.loads(decoded)
     except RecursionError as exc:
         raise ValueError(f"task record {path} exceeds JSON parser nesting") from exc
     except ValueError as exc:
-        if isinstance(exc, UnicodeDecodeError) or raw.lstrip().removeprefix(b"\xef\xbb\xbf").startswith(b"{"):
+        if isinstance(exc, UnicodeDecodeError):
+            raise
+        prefix = 0
+        while prefix < len(decoded) and (decoded[prefix].isspace() or decoded[prefix] in "\ufeff\x00"):
+            prefix += 1
+        if decoded.startswith("{", prefix):
             raise
         record = None
     if not isinstance(record, dict):
@@ -138,12 +144,13 @@ def locate_task_record(tasks_dir: Path, task_id: str) -> Path | None:
 
 
 def iter_task_records(tasks_dir: Path, *, include_archive: bool) -> Iterator[Path]:
-    """Yield task record files: the hot directory sorted by name, then the archive.
+    """Yield candidate JSON paths: the hot directory sorted by name, then the archive.
 
     ``include_archive=False`` is the hot directory alone, the view every active
     reader needs. A task id re-dispatched after its old record was archived has
     one record in each place; both are yielded because they are two runs. A
-    directory that is missing or unreadable yields nothing.
+    directory that is missing or unreadable yields nothing. Readers classify at
+    their own read, after their mtime, status-byte or fingerprint prefilters.
     """
     directories = [tasks_dir, tasks_dir / ARCHIVE_DIR_NAME] if include_archive else [tasks_dir]
     for directory in directories:
@@ -151,15 +158,7 @@ def iter_task_records(tasks_dir: Path, *, include_archive: bool) -> Iterator[Pat
             paths = sorted(path for path in directory.glob("*.json") if path.is_file())
         except OSError:
             continue
-        for path in paths:
-            try:
-                if read_task_record(path) is None:
-                    continue
-            except (OSError, ValueError):
-                # The caller owns its refusal/unknown policy. Never filter a
-                # damaged record out of an admission, quota or cleanup scan.
-                pass
-            yield path
+        yield from paths
 
 
 def relocated_result_file(record_path: Path, result_file: str | None) -> str | None:

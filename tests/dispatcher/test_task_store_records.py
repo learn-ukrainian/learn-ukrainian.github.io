@@ -93,6 +93,10 @@ def test_legacy_review_flags_remain_visible_to_lineage(tmp_path, marker, value):
     b'{"schema_version":2,"task_id":"forged"}',
     '{"schema_version":2,"task_id":"damaged"}'.encode("utf-16"),
     b'\xef\xbb\xbf{"schema_version":2,"task_id":"damaged"}',
+    b'\xef\xbb\xbf\n{"schema_version":2,"task_id":"damaged"}',
+    b'\xef\xbb\xbf\t  {"schema_version":2,"task_id":"damaged"}',
+    '\ufeff\u00a0{"schema_version":2,"task_id":"damaged"}'.encode("utf-8"),
+    b'\x00\x00{"schema_version":2,"task_id":"damaged"}',
 ])
 def test_damaged_record_still_refuses_admission(tmp_path, monkeypatch, damaged):
     """Corruption or forged identity must not disappear from admission scans."""
