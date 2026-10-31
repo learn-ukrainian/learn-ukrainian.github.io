@@ -610,6 +610,8 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
             if name in {"comments", "timeline"}:
                 return [item for page in value for item in page]
             if name == "pr-files":
+                if not isinstance(value, list) or not all(isinstance(page, list) for page in value):
+                    raise ValueError("PR files pagination incomplete")
                 return pr_file_paths([item for page in value for item in page])
             if name == "jobs":
                 return [job for page in value for job in page["jobs"]]

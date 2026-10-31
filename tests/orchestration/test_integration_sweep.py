@@ -168,13 +168,16 @@ def gemini_seat():
         ([{"filename": "site/src/data/lexicon-practice-deck.pointer.json"}], False, "APPROVED"),
         ([{"filename": "scripts/moved.md", "previous_filename": "curriculum/moved.md"}], False, sweep.NEEDS_SEAT),
         ([{"filename": "curriculum/l2-uk-en/a1/example.md"}], True, "APPROVED"),
-        ([{"filename": "scripts/example.py"}] * sweep.PR_FILES_LIMIT, False, None),
+        ([{"filename": "scripts/example.py"}] * sweep.PR_FILES_LIMIT, False, "partial"),
+        ([{"filename": "scripts/moved.md", "status": "renamed"}], False, "malformed"),
+        ([{"filename": "scripts/moved.md", "status": "renamed", "previous_filename": ""}], False, "malformed"),
+        ([{"filename": "scripts/moved.md", "status": "renamed", "previous_filename": None}], False, "malformed"),
     ],
 )
 def test_learner_content_needs_its_ukrainian_seats_without_a_ukrainian_verdict(rows, seated, state):
     # #12181: the changed paths, not the recorded verdicts, decide that the seats are needed.
-    if state is None:
-        with pytest.raises(ValueError, match="partial"):
+    if state in {"partial", "malformed"}:
+        with pytest.raises(ValueError, match=state):
             sweep.pr_file_paths(rows)
         return
     content = sweep.changes_learner_content(sweep.pr_file_paths(rows))

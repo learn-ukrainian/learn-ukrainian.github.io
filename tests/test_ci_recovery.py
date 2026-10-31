@@ -66,6 +66,7 @@ class Transport:
         self.pull_reads = 0
         self.writes = []
         self.queued = False
+        self.files = [[{"filename": "scripts/example.py"}]]
         self.compare_rows = {"base_commit": {"sha": "d" * 40}, "merge_base_commit": {"sha": "d" * 40}, "status": "ahead", "files": [{"filename": "scripts/earlier-pr.py"}, {"filename": "scripts/this-pr.py"}]}
         self.candidate_record = {"base_sha": "d" * 40, "head_sha": TESTED, "head_ref": "refs/heads/gh-readonly-queue/main/pr-42-" + "e" * 40, "run_id": 123, "run_attempt": 1}
 
@@ -173,7 +174,7 @@ class Transport:
                     )
                 data = [comments]
             elif endpoint.endswith("/files"):
-                data = [[{"filename": "scripts/example.py"}]]
+                data = self.files
             elif endpoint.endswith("/timeline"):
                 data = (
                     [[{"id": 987, "event": "removed_from_merge_queue", "created_at": "2026-10-09T11:00:00Z"}]]
@@ -393,6 +394,15 @@ def test_invalid_live_evidence_refuses(setup, action, cause):
     else:
         recover(setup, action)
         assert len(transport.writes) == 1
+
+
+def test_malformed_file_evidence_refuses_recovery(setup):
+    # #12181: a page that is not a list is unknown file evidence, never an empty code-only list.
+    _, transport = setup
+    transport.files = [{}]
+    with pytest.raises(gate.PublishBlocked, match="RECOVERY_LOOKUP_UNKNOWN"):
+        recover(setup, "run-rerun")
+    assert transport.writes == []
 
 
 def test_failed_transport_does_not_refund(setup):

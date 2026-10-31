@@ -316,7 +316,8 @@ def parse_marker(body: str) -> dict[str, Any] | None:
 def pr_file_paths(rows: object) -> list[str]:
     """Every path a pull request's file list names, the old path of a rename included.
 
-    Raises ``ValueError`` when the list is malformed or may be cut short.
+    Raises ``ValueError`` when the list is malformed (a rename without its old path
+    included) or may be cut short.
     """
     if not isinstance(rows, list) or len(rows) >= PR_FILES_LIMIT:
         raise ValueError("PR file list partial or malformed")
@@ -325,8 +326,12 @@ def pr_file_paths(rows: object) -> list[str]:
         if not isinstance(row, Mapping) or not isinstance(row.get("filename"), str) or not row["filename"]:
             raise ValueError("PR file list malformed")
         paths.append(row["filename"])
-        if isinstance(row.get("previous_filename"), str):
-            paths.append(row["previous_filename"])
+        # A rename names its old path, which may be learner content; a rename that does not is unknown.
+        previous = row.get("previous_filename")
+        if isinstance(previous, str) and previous:
+            paths.append(previous)
+        elif previous is not None or row.get("status") == "renamed":
+            raise ValueError("PR file list malformed")
     return paths
 
 
