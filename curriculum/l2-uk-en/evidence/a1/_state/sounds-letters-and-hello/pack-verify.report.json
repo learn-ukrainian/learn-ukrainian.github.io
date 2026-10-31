@@ -16,7 +16,10 @@
   "level": "a1",
   "not_checked": [
     "W-076:private_commitment",
-    "W-096:private_commitment"
+    "W-096:private_commitment",
+    "W-200:private_commitment",
+    "W-220:private_commitment",
+    "W-237:private_commitment"
   ],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml",
@@ -33,6 +36,9 @@
   "strict": true,
   "warnings": [
     "a1/sounds-letters-and-hello W-076: unverifiable in CI (local receipt required)",
-    "a1/sounds-letters-and-hello W-096: unverifiable in CI (local receipt required)"
+    "a1/sounds-letters-and-hello W-096: unverifiable in CI (local receipt required)",
+    "a1/sounds-letters-and-hello W-200: unverifiable in CI (local receipt required)",
+    "a1/sounds-letters-and-hello W-220: unverifiable in CI (local receipt required)",
+    "a1/sounds-letters-and-hello W-237: unverifiable in CI (local receipt required)"
   ]
 }

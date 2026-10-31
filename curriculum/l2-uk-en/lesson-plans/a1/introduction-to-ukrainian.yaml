@@ -26,7 +26,7 @@ arc_ref:
   position: 1
 evidence_ref:
   path: curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml
-  sha256: 'a960f2b776f249d13de286f88aaa67f084fbb5ccf96f37c1f71c70506b4aa5a9'
+  sha256: '0a78fbdec4b52213a020f177c29c7c002ffc6fd1399c7bbfda575c9594b2da98'
 lessons:
 - n: 1
   slug: language-and-learning

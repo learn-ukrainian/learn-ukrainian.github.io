@@ -1,9 +1,9 @@
-attempt_id: agy-3
+attempt_id: agy-m-r1
 harness: agy
-manifest_sha256: eb9e089d3c3f9119d724ebc71adf0536220a37730e322b62cf83f5df03b5814f
-pack_sha256: a960f2b776f249d13de286f88aaa67f084fbb5ccf96f37c1f71c70506b4aa5a9
-promoted_at: '2026-10-31T01:28:39+00:00'
-promoted_plan_sha256: 6e4677d46398bb934d189ab2f7b5c2a1afba3afc8daa16563acbf93ceace0d03
+manifest_sha256: bec0f2ee31f32ea07b1bf0420e1afd187db7c54a430361cfe1c1dda327c249f9
+pack_sha256: 0a78fbdec4b52213a020f177c29c7c002ffc6fd1399c7bbfda575c9594b2da98
+promoted_at: '2026-10-31T03:57:50+00:00'
+promoted_plan_sha256: 7fff0950d868daf93fe15d89b0ff10dd7b4f8f4bea71ab45f76e415d8a275002
 review_access: full
 reviewed_plan_sha256: 6e4677d46398bb934d189ab2f7b5c2a1afba3afc8daa16563acbf93ceace0d03
 reviewer_family: google
