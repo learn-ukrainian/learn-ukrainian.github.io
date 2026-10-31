@@ -1,802 +1,99 @@
 built_with:
-  mcp_commit: 269b57bbc9ba4061fd4d6197470fee33e20d4aa5
+  mcp_commit: 701b5f7b4b9a730dc20913840ed61a95d7cd937a
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
-  russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 0ff01184650749c1553aa7cfd993a6ff8c1de2485a2968ef8a314953bdf59d0b
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: 304c32137a3e2ffa436dd9aadafd66004e63098e4748ba106436ab8d3e484f4e
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
   ulif_forms: pending
   vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
 evidence_schema: 1
 exercises:
-- id: X-001
+- id: X-101
   items_sample:
-  - "Here is the practice exercise from the podcast.                 Ukrainian Lessons Podcast Lesson Notes will\n       \
-    \                                                         always contain a bonus exercise for you to practice.\nWhat do\
-    \ you say if I say to you:\n                                                                I will include the answers\
-    \ in the next episode’s\n 1         Приві́т!                                             lesson notes.\n             \
-    \                                                   Fill in the blanks. Feel free to use the dictionary\n            \
-    \                                                    or the bonus vocabulary below to get some new\n 2         Як спра́ви?\
-    \                                          and useful words:\n\n                                                     \
-    \               Олег:        ____________________________\n 3         Ра́да тебе́ ба́чити!"
-  pattern: Hear a greeting prompt and give the matching spoken response before reading it.
-  quote: "Here is the practice exercise from the podcast.                 Ukrainian Lessons Podcast Lesson Notes will\n  \
-    \                                                              always contain a bonus exercise for you to practice.\n\
-    What do you say if I say to you:\n                                                                I will include the answers\
-    \ in the next episode’s\n 1         Приві́т!                                             lesson notes.\n             \
-    \                                                   Fill in the blanks. Feel free to use the dictionary\n            \
-    \                                                    or the bonus vocabulary below to get some new\n 2         Як спра́ви?\
-    \                                          and useful words:\n\n                                                     \
-    \               Олег:        ____________________________\n 3         Ра́да тебе́ ба́чити!"
-  sha256: 0f366a5c01745c9827255f0c3c1033142ba7ace32fe8dad0ca98d21c8ef0126f
+  - '2. Визначте етикетні формули ділового спілкування (усно).
+
+    Вітання: Привіт! Доброго ранку! Вітаннячко! Добрий день!
+
+    Подяка: Вельми вдячний! Щиро дякую! Красненько дякую!
+
+    Прощання: До побачення! Бувайте! Щасливо! На все добре!'
+  pattern: Choose a greeting, thanks or farewell for a real interlocutor; adapt the school setting to an adult peer or receptionist.
+  quote: '2. Визначте етикетні формули ділового спілкування (усно).
+
+    Вітання: Привіт! Доброго ранку! Вітаннячко! Добрий день!
+
+    Подяка: Вельми вдячний! Щиро дякую! Красненько дякую!
+
+    Прощання: До побачення! Бувайте! Щасливо! На все добре!'
+  sha256: cd4cb48e3eda039199568cd8ec75639f7fdbe2d1bbcc76a41f12883388b5edb0
   source:
-    author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0001_w005
-    file: ulp-1-00-lesson-notes
-    grade: ''
-    kind: textbook
-    page: null
-    row_sha256: c879dc54dcca458d0b30938154b360c61c9ceed871f4c4db1467510f2cced0c5
-    section_id: null
-- id: X-002
-  items_sample:
-  - 'Вимов перший звук у словах — назвах предметів.
-
-    Який це звук? Голосний звук позначаємо так: [•].'
-  pattern: Say and identify the first sound before choosing its sound class.
-  quote: 'Вимов перший звук у словах — назвах предметів.
-
-    Який це звук? Голосний звук позначаємо так: [•].'
-  sha256: 6d8f915d4bb16fe9fac4106e4eb9419010ef7f935dadef70cf47669285e2828c
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 15
-    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
-    section_id: 12963
-- id: X-003
-  items_sample:
-  - 'ма
-
-    мо
-
-    му
-
-    ми
-
-    а
-
-    о
-
-    у
-
-    и
-
-    М
-
-    ам
-
-    ом
-
-    ум
-
-    им'
-  pattern: Read and copy a consonant-vowel table followed by a vowel-consonant table.
-  quote: 'ма
-
-    мо
-
-    му
-
-    ми
-
-    а
-
-    о
-
-    у
-
-    и
-
-    М
-
-    ам
-
-    ом
-
-    ум
-
-    им'
-  sha256: ce5ad31f40c19876d4f0767cb7eb21ed9e9ef52c04d96df25835e29334c4892d
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0044
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 48
-    row_sha256: 140cf00d173a65981c4d56e6883aaa986cee1be10923f07307db5cd13d171952
-    section_id: 12995
-- id: X-004
-  items_sample:
-  - 'Відшукай «загублений» склад у словах — на-
-
-    звах намальованих предметів.
-
-    ма- __ -на -ли-, ми-, -лим
-
-    со- __ ма-, -ва, -ла
-
-    __ -ва -ни, ва-, сли-'
-  pattern: Pick a missing syllable from a bounded list to complete a known word.
-  quote: 'Відшукай «загублений» склад у словах — на-
-
-    звах намальованих предметів.
-
-    ма- __ -на -ли-, ми-, -лим
-
-    со- __ ма-, -ва, -ла
-
-    __ -ва -ни, ва-, сли-'
-  sha256: b85f9636b69a7252ef084475204431f107ca76fa43c20082b81b2d98eede861c
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
+    author: avramenko
+    chunk_id: 8-klas-ukrmova-avramenko-2025_s0104
+    file: 8-klas-ukrmova-avramenko-2025
+    grade: '8'
     kind: textbook
     page: 81
-    row_sha256: 2a4c2b840e2a5bc794451ea9a284196148f90f875721779a18a163fed2d8447e
-    section_id: 13028
-- id: X-005
+    row_sha256: 7a48b7e65003358760f05ee6d1307bbf7f4b5c091fe42efb244a59b70b85a44a
+    section_id: 33812
+- id: X-102
   items_sample:
-  - 'Перепиши в зошит.
+  - 'Що «зайве»? Поділи слова на склади. Визнач
 
-    Поліна помила коси.
+    наголошений склад.'
+  pattern: Notice the stronger vowel in source-verified familiar spoken words; no written syllable division or line breaking
+    at this position.
+  quote: 'Що «зайве»? Поділи слова на склади. Визнач
 
-    Панас ловив лини.'
-  pattern: Copy printed model words or short lines into a notebook; the fresh lesson uses only its own taught-letter models.
-  quote: 'Перепиши в зошит.
-
-    Поліна помила коси.
-
-    Панас ловив лини.'
-  sha256: 8499c3ee33395e1722e77fc60b6f852e22383e299dae5abdb7d3100473e0e7cb
+    наголошений склад.'
+  sha256: 72989374a8a8e17178b8d94812211addae863d317cd6456d128c545a389907b0
   source:
     author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0008
     file: 1-klas-bukvar-zaharijchuk-2025-1
     grade: '1'
     kind: textbook
-    page: 81
-    row_sha256: 2a4c2b840e2a5bc794451ea9a284196148f90f875721779a18a163fed2d8447e
-    section_id: 13028
-- id: X-006
-  items_sample:
-  - 'Хто неправильно поділив слово — назву нама-
-
-    льованого предмета на склади?'
-  pattern: Find an incorrect language-mechanics analysis, then select its correction against the taught source model.
-  quote: 'Хто неправильно поділив слово — назву нама-
-
-    льованого предмета на склади?'
-  sha256: 50fc289cbafd0d73cc1eca3c144537d19cb9c965244eee51c92509b59c9b8c41
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 17
-    row_sha256: 26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8
-    section_id: 12965
+    page: 11
+    row_sha256: 5b276c070cc93e24320f37882a830e089f271ac22a0c481922797a2e0517eb83
+    section_id: 12959
 module: a1/sounds-letters-and-hello
 standard:
 - file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  id: S-001
-  lines: 342-344
-  text: "      1.3.1.1. Особа вміє:\n      написати власне прізвище та ім’я, а також імена і прізвища знайомих чи\nвідомих\
-    \ людей;"
+  id: S-101
+  lines: 586-586
+  text: '     4.1.5. Наголос.'
 - file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  id: S-002
-  lines: 348-350
-  text: '      написати чи переписати з друкованого зразка короткі, прості тексти на
-
-    листівці чи в смс-повідомленні, наприклад привітання зі святом, вітання з місця
-
-    перебування, побажання, висловлення вдячності: Вітаю. Бажаю успіху.'
+  id: S-102
+  lines: 596-596
+  text: '     4.1.8. Інтонація (розповідна, питальна, оклична).'
 - file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  id: S-003
-  lines: 420-421
-  text: '      вживати стандартні мовні формули привітання, прощання, подяки,
+  id: S-103
+  lines: 571-572
+  text: '      4.1.1. Український алфавіт. Друковані та писані літери. Великі і малі
 
-    вибачення і побажання;'
+    літери: Київ, київський, Олена, олівець, Україна, українець.'
 texts:
-- id: T-001
-  quote: 'Мовні звуки: голосні та приголосні
+- id: T-101
+  quote: 'На письмі звуки позначаємо буквами.
 
-    Вимов перший звук у словах — назвах предметів.
+    Сукупність букв, розташованих у встановленому для
 
-    Який це звук? Голосний звук позначаємо так: [•].'
-  sha256: a1737ee43bb1f3c4bbbafb8083aaa892340506e6c5fe5369b370dc94ffca34cb
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 15
-    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
-    section_id: 12963
-  supports: Hear and say the initial sound before naming vowel and consonant classes; primer printed page 13.
-- id: T-002
-  quote: "The basic informal “Hi!” in Ukrainian is:\nfriends in Shevchenko park in Ки́їв; we had\nsome ice cream — моро́зиво.\
-    \ Here is how our                                             Приві́т!\nconversations started:                       \
-    \                 We use this word very often to greet our friends,\n                                                \
-    \              close family, and people we work with without any\n                                                   \
-    \           superiority between.\n   Анна: Приві́т!                                             You do not usually say\
-    \ Приві́т! to your boss or a\n                                                              cashier."
-  sha256: 76143aba6f44c7f1dcf13ac8272f9253f681738dd3c3323de088190aaea944b8
-  source:
-    author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0001_w001
-    file: ulp-1-00-lesson-notes
-    grade: ''
-    kind: textbook
-    page: null
-    row_sha256: fdeae961eb4af3a1eed4bbb3ee94a23cf39126e488a7822c14a10ca7c6836c78
-    section_id: null
-  supports: Adult L2 informal greeting chunk and familiar-peer use versus formal boss/cashier situations; learned by ear without
-    parsing; ULP Season 1 lesson 1.
-- id: T-003
-  quote: "The most typical greeting that you can use at any\n                                                            \
-    \     time of the day is:\n\n                                                                                      До́брий\
-    \ день!"
-  sha256: 9f4fd61b1d95242a3edb1bab7facee26ca0d999b8a8dc729e8e375018a186e1f
-  source:
-    author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0002_w002
-    file: ulp-1-00-lesson-notes
-    grade: ''
-    kind: textbook
-    page: null
-    row_sha256: 512edd684d21769cbe302f5cf25cdac7bf1aae69f2c5dd60c05b45332d0a7b34
-    section_id: null
-  supports: Time-of-day suitability of the intact greeting; formal register is established separately by T-041.
-- id: T-004
-  quote: "Here are the three piece of advice I gave during\n                                                             \
-    \     4.    вій – вий –\nthe podcast for learning how to pronounce и:\n 1. In the English language, we can compare the\
-    \                   5.    рив – рів –\n    и sound to the short i in words like a bit, a                 6.    він – він\
-    \ +\n    little. In Ukrainian, it is very similar but a little\n                                                     \
-    \             7.    дим – дім –\n    longer and deeper:\n                                                            \
-    \      8.    мій – мий –\n                    оди́н три ми\n 2. My second suggestion is to think about и as\n    the sound\
-    \ between і and у. Say iii and try to"
-  sha256: 13ca376384e18cca5548fe58c6de65e458a769a4eb8e69c1b0229e68c44e1c9e
-  source:
-    author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0005_w003
-    file: ulp-1-00-lesson-notes
-    grade: ''
-    kind: textbook
-    page: null
-    row_sha256: 48b85cf51525e14be84b0b0447e25c7a1d147f8b22397f9390de6b503b3c0bf9
-    section_id: null
-  supports: Adult L2 И sound and comparison with І for English speakers; ULP Season 1 lesson 5 trainer.
-- id: T-005
-  quote: "Here is my story about я і моя́ сім’я́ from the lesson.\n\n                                          Я і моя сім’я\n\
-    Приві́т! Як спра́ви? У ме́не — чудо́во. Мене́ зва́ти Hi! How are you? I am great. My name is Anna\nА́нна Ого́йко, я вчи́телька\
-    \ украї́нської мо́ви.      Ohoiko. I am a Ukrainian teacher.\n\nМоя́ ма́ма — теж вчи́телька. Вчи́телька літерату́ри. \
-    \               My mom is also a teacher. A literature teacher."
-  sha256: 993fedc5e36ba2d36a2c36ff46a178ac7a0772eb293b006bbd4062775998a9f8
-  source:
-    author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0010_w001
-    file: ulp-1-00-lesson-notes
-    grade: ''
-    kind: textbook
-    page: null
-    row_sha256: 8e20831c40bd3220377f8938974d54137be1eead194837919a1a3a35c79d982e
-    section_id: null
-  supports: 'ULP review shape: first-person Ukrainian story aligned with English, then questions.'
-- id: T-006
-  quote: Бачу А, а. Чую [а].
-  sha256: d7fe7cbfa10891b1b2bd8900232bf7998c5c30c9e13099af0f34ce2975cdb3b3
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0028
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 32
-    row_sha256: f9fff508eae04b848fb619e7ec56f7ab6baa40b8620a6805bb486067f53aedc4
-    section_id: 12979
-  supports: 'Primer printed page 30: А letter and its heard sound; see before read.'
-- id: T-007
-  quote: Бачу О, о. Чую [о].
-  sha256: 27a1a69cd3715cfda28ca1c2cf6f096d1cb37fb183ccefd68facc7e527368638
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0032
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 36
-    row_sha256: f41569c855b3ad6197c38705081cc4963a5363633e4beb1a90aa268f8fa807e8
-    section_id: 12983
-  supports: 'Primer printed page 34: О after А.'
-- id: T-008
-  quote: Бачу У, у. Чую [у].
-  sha256: 11d40e2fb2c31ac2e70719c01ed65b760c569efadf2ba654cc3217fab1743ab1
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0036
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 40
-    row_sha256: 8ed71d88a83c82eaee8d33848c08c43f4d204d314d5b9b2a12c5de3142626a0a
-    section_id: 12987
-  supports: 'Primer printed page 38: У after О.'
-- id: T-009
-  quote: Бачу И, и. Чую [и].
-  sha256: 9f30e11e37ec1c7996e9f638993238bf190fae4efd4eba1985a8ae20abb3a68c
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0040
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 44
-    row_sha256: 8cbe87e65296572d403da1a44aae67c72e399cbca43cfe74ba4edaa4a4b80a4a
-    section_id: 12991
-  supports: 'Primer printed page 42: И after У, with heard sound before written symbol.'
-- id: T-010
-  quote: Бачу М, м (ем). Чую [м].
-  sha256: f5b25a5f5cb1535482172ff461a2fe9edb0501aacf3d24b9e51d1b97b7d73b6d
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0044
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 48
-    row_sha256: 140cf00d173a65981c4d56e6883aaa986cee1be10923f07307db5cd13d171952
-    section_id: 12995
-  supports: 'Primer printed page 46: first consonant М and sound-letter correspondence.'
-- id: T-011
-  quote: Бачу І, і. Чую [і].
-  sha256: 049c1aedf7bc3c2283797b6fa169bf87b514ce42cfda29eca6d1893734a9dabb
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0048
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 52
-    row_sha256: 4467f04dd445110aef7abe8d80d9851f2c6ced95d9a5e0b55eaf291bbd85c679
-    section_id: 12999
-  supports: 'Primer printed page 50: І after М; contrast with previously heard И.'
-- id: T-012
-  quote: Бачу Н, н (ен). Чую [н], [н' ].
-  sha256: fbf61901bb5d47a2219d6488a90e672fde6286f8a3f390ed719c2b26ca046584
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0052
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 56
-    row_sha256: 26e8454975ac9ca9b04fad2fc00edb615219d5b98f5969073ae6a47c328006ef
-    section_id: 13003
-  supports: 'Primer printed page 54: Н and first CV and VC tables.'
-- id: T-013
-  quote: Бачу В, в (ве). Чую [в].
-  sha256: dbf972792f03e46ad1b40d8886d93145be0b0097d7d480c4b003caa329ec8b54
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0056
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 60
-    row_sha256: 196b5ea837c32d6f3f1efb922eb71384cd672bcd7ebb2adce3cd835abee53f08
-    section_id: 13007
-  supports: 'Primer printed page 58: В after Н; adult Latin-shape interference is checked against this sound.'
-- id: T-014
-  quote: Бачу Л, л (ел). Чую [л], [л' ].
-  sha256: c48b4b8f02f4fac170aa50aa2a8691486c585ea84a17f915fa96ad70ccad4e28
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0060
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 64
-    row_sha256: 8cacea6f9e89c0db972ca89747132a11b2ae2df7f352aeb48f72463a23889092
-    section_id: 13011
-  supports: 'Primer printed page 62: Л after В, CV and VC tables.'
-- id: T-015
-  quote: Бачу С, с (ес). Чую [с], [с' ].
-  sha256: e79793d7f4bd7f35d45e2730647fda7847964a48a9474f19cd50d964890f3783
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0064
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 68
-    row_sha256: 6831aef94e5fee8504aacb3ffd49ffca2f52de980a1b16bef2f48fa357472ebc
-    section_id: 13015
-  supports: 'Primer printed page 66: С after Л; sound mapping and short syllables.'
-- id: T-016
-  quote: Бачу К, к (ка). Чую [к].
-  sha256: e9758791906c56853d53adced0357aa43c49951f6775b89f5c198c0c2aab1e4c
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0068
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 72
-    row_sha256: 3584721af83e7666dcd56df3e076fb357e66e1c11b07765c967c9908cfa83bf4
-    section_id: 13019
-  supports: 'Primer printed page 70: К after С; syllables become short connected text.'
-- id: T-017
-  quote: Бачу П, п (пе). Чую [п].
-  sha256: b7d7d789422d406981b9f17d32903c32abe4680b70e07f9bb970aeeb9bf9dfbe
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0072
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 76
-    row_sha256: 70d576bba7247b5042ce303c633e74218bc49104f6c401903d2a5790812c7d76
-    section_id: 13023
-  supports: 'Primer printed page 74: П after К; CV/VC reading and a short exchange.'
-- id: T-018
-  quote: Бачу Р, р (ер). Чую [р], [р'].
-  sha256: 429a83e98919c5cc9e58a5e05ca69bc8b53746133ead112d18df138832995576
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0080
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 84
-    row_sha256: 79a7aded6a89dd72ffd48a0d0342f3bc43c87866cb15e6af43efa0e889efe219
-    section_id: 13031
-  supports: 'Primer printed page 82: Р after П; adult Latin-shape interference is checked against this sound.'
-- id: T-019
-  quote: 'Прочитай імена дітей. Допоможи дітям від-
+    певної мови порядку, називають алфавітом (азбукою, абет-
 
-    шукати їхніх друзів серед тварин.
-
-    Іван Вова Ніна Нонна'
-  sha256: 063f8f7afb04210ac7e2307bac3ed2611b541a6c7db529329b7a75fcb94d75f8
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0058
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 62
-    row_sha256: e635252ed2329a8b5e60594a9fd48b953ebdd1bf8e4d1b8ac9a8194815fa1712
-    section_id: 13009
-  supports: 'Primer printed page 60: decodable personal names using taught letters.'
-- id: T-020
-  quote: 'Our dialogue is happening at the готе́ль — hotel,                It means “good, nice, kind”.
-
-    between a receptionist and a guest.'
-  sha256: af6cd872e97ae3bb77141774dbb67f329b5c67ce4195f63ac7d63e406d3fe2a8
-  source:
-    author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0002_w001
-    file: ulp-1-00-lesson-notes
-    grade: ''
-    kind: textbook
-    page: null
-    row_sha256: 11ce1c1713a5d69c5a60504d3830c97b76c7b0ad1608bbc816e3d5c66a3a7702
-    section_id: null
-  supports: Adult L2 formal greeting dialogue setting between a receptionist and a guest; ULP Season 1 lesson 2.
-- id: T-021
-  quote: 'Here is the most common way to say goodbye in
-
-    a formal situation (to your colleague, teacher, or in'
-  sha256: 1706f81d451de21b4e82ab036fd91402776f547dd9c51a5051ae79eb8370e711
-  source:
-    author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0002_w002
-    file: ulp-1-00-lesson-notes
-    grade: ''
-    kind: textbook
-    page: null
-    row_sha256: 512edd684d21769cbe302f5cf25cdac7bf1aae69f2c5dd60c05b45332d0a7b34
-    section_id: null
-  supports: Adult L2 formal social situation (teacher); ULP Season 1 lesson 2.
-- id: T-022
-  quote: А а
-  sha256: 1cde4efb0b1f662356daba1769544cb8f096ae13eac7396b41a0fcf6fe24a0a1
+    кою). В українському алфавіті 33 букви.'
+  sha256: bd613df3f806a03de3b47139b2364a1ee69ef484f27a23f507725bb5f618ebd2
   source:
     author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
     file: 5-klas-ukrmova-zabolotnyi-2023
     grade: '5'
     kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter А; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-023
-  quote: О о
-  sha256: 053fd620bd7a4c5a28e715deb2c853e0cc19f8863a5bdb2a0648c6599b9f51b1
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter О; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-024
-  quote: У у
-  sha256: 9d55471f60921fce35c451c20f83e2ba54099f69758b98f6576fede2ba16dece
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter У; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-025
-  quote: И и
-  sha256: 91a55c62ff0832655b8477eeefe281ece97f2e0770c5e6eec274457159a1e021
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter И; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-026
-  quote: М м
-  sha256: 2c7879a3e890c26d533810734d039e8a4eb2e3f7ac94d11740e15814a2126622
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter М; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-027
-  quote: І і
-  sha256: 41aec2c0d0887738618c58c0779ed7e7dab17400144bf0a4b405c8e495b43195
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter І; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-028
-  quote: Н н
-  sha256: 346641ff75854e87a84abf531b7038de8b8227cb8b55aeaf8be8e4d60c92e7dc
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter Н; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-029
-  quote: В в
-  sha256: 89ad85cb298df4accf4f8da7871772c1b986b6e15bdc50980bc61de61fd890df
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter В; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-030
-  quote: Л л
-  sha256: 67a6405328bbe370818dc7e49b77ed840305693ad05350bc565d2ba475393ef4
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter Л; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-031
-  quote: С с
-  sha256: 2cac322e6c39a77820df70a3eeaf9a2ff2deb1b96db0ba83f28e415900a51b61
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter С; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-032
-  quote: К к
-  sha256: e4124620b6ce780031df3a98bcb0ca21fee6f2bb5b8743e6b193334c16306768
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter К; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-033
-  quote: П п
-  sha256: ddee7056f881bd994a43f0df10f081998dfab252f2cefd1c6f263e76a5bdffe4
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter П; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-034
-  quote: Р р
-  sha256: cbc0a8c8bd5c6c9023abd0000f782dd7105d158a8e389da8a30a42685a1132f6
-  source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
-    grade: '5'
-    kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: Exact capital/small heading for taught letter Р; listening target and visible-glyph discrimination only, not a
-    whole-word recording.
-- id: T-035
-  quote: '— Привіт,
-
-    дівчата!
-
-    — Привіт,
-
-    Михайле!'
-  sha256: 225df95187ede4cbf6cb1c4a08d6bcae9511ade3b5910a191d9a259397ff0d7b
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0027
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 31
-    row_sha256: 4c2d8261c4c7d79a81c0b7196f74574141165b6af3450cb308f1c933546d9376
-    section_id: 12978
-  supports: 'Primer printed p.29 (chunk title p.31): attested peer greeting exchange; grounding only for the planned dialogue,
-    never a reading/copy task at lesson 1.'
-- id: T-036
-  quote: 'Ко-ло сли-ви ма-ма, Пав-лик і По-лі-на.
-
-    Пав-лик:
-
-    — Ма-мо, он слив-ка! Во-на ки-сла?
-
-    Ма-ма:
-
-    — Ні, си-ну!'
-  sha256: cc6c188940ae13fbfb17f05fd1ca6bead45bb80a0450d67e815d74e482c47fb1
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0072
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 76
-    row_sha256: 70d576bba7247b5042ce303c633e74218bc49104f6c401903d2a5790812c7d76
-    section_id: 13023
-  supports: 'Primer printed p.74 (chunk title p.76): source situation and complete turns for the recap planned dialogue; syllable-hyphenated
-    source is grounding only, not a literal dialogue block or scored quote.'
-- id: T-037
-  quote: 'ма
-
-    мо
-
-    му
-
-    ми
-
-    а
-
-    о
-
-    у
-
-    и
-
-    М
-
-    ам
-
-    ом
-
-    ум
-
-    им'
-  sha256: ce5ad31f40c19876d4f0767cb7eb21ed9e9ef52c04d96df25835e29334c4892d
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0044
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 48
-    row_sha256: 140cf00d173a65981c4d56e6883aaa986cee1be10923f07307db5cd13d171952
-    section_id: 12995
-  supports: Complete sourced М CV/VC row for printed syllable discrimination, read aloud offline with teacher modeling; no
-    recording claim.
-- id: T-038
-  quote: 'Хто неправильно поділив слово — назву нама-
-
-    льованого предмета на склади?'
-  sha256: 50fc289cbafd0d73cc1eca3c144537d19cb9c965244eee51c92509b59c9b8c41
-  source:
-    author: zaharijchuk
-    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
-    file: 1-klas-bukvar-zaharijchuk-2025-1
-    grade: '1'
-    kind: textbook
-    page: 17
-    row_sha256: 26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8
-    section_id: 12965
-  supports: 'Primer printed p.15: find the incorrect analysis and repair it. Model methodology only; the fresh tasks correct
-    source-symbol assignments or vowel counts, never invent misspelled Ukrainian words or untaught cluster boundaries.'
-- id: T-039
+    page: 86
+    row_sha256: 5d17fe32ef3fdc0d31a28d84f995bac352ce6b7f9ca47cdc1c742a8a016caf50
+    section_id: 38992
+  supports: Sound and letter are different units; the alphabet overview shows 33 letters without claiming acquired decoding.
+- id: T-102
   quote: 'Мовні звуки: голосні та приголосні
 
     Вимов перший звук у словах — назвах предметів.
@@ -809,8 +106,22 @@ texts:
 
     тів. Який це звук? Приголосний звук позначає-
 
-    мо так: [–].'
-  sha256: 0976d573b9cdc32474b06b65fb98b6dc08596efad61cf10cd47ba99f700adf85
+    мо так: [–].
+
+    [ – ] [ – ] [ – ]
+
+    [ – ]
+
+    Вимов голосні звуки в словах — назвах предме-
+
+    тів.
+
+    Вимов приголосні звуки в словах — назвах
+
+    предметів.
+
+    Який у тебе сьогодні настрій? Вибери.'
+  sha256: ce6ced60129acbab50e73f9e4852775b8874d16ce765ddd090e547834fbd159a
   source:
     author: zaharijchuk
     chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
@@ -820,35 +131,104 @@ texts:
     page: 15
     row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
     section_id: 12963
-  supports: Full source statement of both sound classes and their [•]/[–] symbols; original line-end typesetting wraps are
-    retained, not OCR word damage.
-- id: T-040
-  quote: Добрий день!
-  sha256: f905560bbf423ddad80d2db6886b4831d7f1ae2a6d27ecc9ee8e23c6565f85e0
+  supports: Begin with hearing and saying a sound, then connect it with its visible letter; adapt the operation to adult communication.
+- id: T-103
+  quote: 'Вимову одного зі складів з більшою силою голосу нази-
+
+    вають наголосом.
+
+    Склад, на який падає наголос, називають наголошеним,'
+  sha256: 6747dccfc9b5491671fd95949035b75c6675b88332815090890d5cdf217668af
   source:
-    author: zharkova
-    chunk_id: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1_s0020
-    file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1
-    grade: '1'
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0069
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
     kind: textbook
-    page: 25
-    row_sha256: d3de9c9b5d8bf5c60135dbad59eea37888162a12def12902cad42f72da891114
-    section_id: 49863
-  supports: Public grade-1 polite-greeting spelling model, not a teacher speaker or a formal/informal contrast. T-041 explains
-    register; T-021 supports the teacher addressee only.
-- id: T-041
-  quote: "This time formal ways to say “Hello”. It differs depending on the time of\n                          the day."
-  sha256: a037be4305638ddc518d1522752c45c7c7375c2f0ff743d92c6360de93df5906
+    page: 93
+    row_sha256: 5557d7503bbea31ceeed9be516362f9a35ea1792ffd2201fa70149dbc598665e
+    section_id: 38999
+  supports: Stress is audible prominence; first model it by ear, and display stress marking only after the target word is
+    decodable.
+- id: T-104
+  quote: '403. А. Прочитайте речення вголос з відповідною
+
+    інтонацією. Від чого вона залежить?
+
+    1. Діти читають сучасні художні твори.
+
+    2. Діти читають сучасні художні твори?
+
+    3. Діти, читайте сучасні художні твори.
+
+    Б. У якому реченні розповідають про читання, у якому – закликають
+
+    читати, а в якому – запитують про читання?
+
+    В. Зробіть висновок про те, чим розповідні речення відрізняються від
+
+    питальних.'
+  sha256: 89ebfb29362aa8f49545eb3993ccf11e9a88ab0aa64a38971b7239c7afdfa279
   source:
-    author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0002_w001
-    file: ulp-1-00-lesson-notes
-    grade: ''
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0134
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
     kind: textbook
-    page: null
-    row_sha256: 11ce1c1713a5d69c5a60504d3830c97b76c7b0ad1608bbc816e3d5c66a3a7702
-    section_id: null
-  supports: Explicit formal-register description of the greeting lesson; explains only, premium notes never quoted.
+    page: 166
+    row_sha256: c08f53195545178c64911796118d0c86a492441611e24284bbab4ddee4958d45
+    section_id: 39064
+  supports: The same spoken material can convey a statement or question through its contour; no sentence analysis is taught.
+- id: T-105
+  quote: 'Окличні речення виражають сильні емоції – радість,
+
+    здивування, захоплення, біль, сум, відчай, страх, обурення
+
+    тощо. НАПРИКЛАД: 1. Яка розкішна цьогоріч зима! Стільки
+
+    снігу намело!.. (Дара Корній). 2. Вода?! Вода!
+
+    –
+
+    закричав
+
+    Остап.
+
+    –
+
+    Дарино, вода! (Т. Поставна).
+
+    В усному мовленні окличні речення вимовляємо з оклич-
+
+    ною інтонацією, тон підвищуємо на початку й у кінці речення.
+
+    На письмі в кінці окличного речення ставимо знак оклику.'
+  sha256: 6d103fcc6edb1a7282d84dd4a86804b581fd39ab513a140147e124486254ba78
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0136
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 168
+    row_sha256: a0025c7561cc84d35d2556e8558e0b22ceb4516f256a42bf91ae00405371582b
+    section_id: 39066
+  supports: An exclamation conveys emotion with a distinct speech contour; the plan uses already familiar greetings rather
+    than the source's literary sentences.
+- id: T-106
+  quote: 'Успішному діалогові сприяє використання етикетних формул, а саме: вітання, дяки, прощання: Добрий день! Щиро дякую!
+    До побачення!'
+  sha256: ec3330c280f36276f500f15fd53a3efb2a461806ab4efecaaa2b19bedfeb300e
+  source:
+    author: avramenko
+    chunk_id: 8-klas-ukrmova-avramenko-2025_s0104
+    file: 8-klas-ukrmova-avramenko-2025
+    grade: '8'
+    kind: textbook
+    page: 81
+    row_sha256: 7a48b7e65003358760f05ee6d1307bbf7f4b5c091fe42efb244a59b70b85a44a
+    section_id: 33812
+  supports: A useful exchange has a greeting, a purpose and a farewell, with courtesy appropriate to the relationship.
 unsupported:
 - claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and
     lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish their named
@@ -874,7 +254,13 @@ unsupported:
     remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
     inferred from resolved status.
 
-    '
+
+    Current r6 disposition under #8425: retained historical missing-audio obligation. The retired primer CV/VC/CVC and before-I
+    contrast tasks are not carried into the r6 position-2 plan. T-101 grounds sound versus letter, T-103 audible stress, and
+    T-106/X-101 courtesy situations. V-102, V-103 and V-104 bind only the explicitly listed recorded greeting/courtesy chunks;
+    V-101 is an unscored whole-video preview. No current scored activity requires an unattested primer combination or contrast
+    recording. The historical recording search remains negative, not proof of audio availability. Source locators and the
+    earlier resolution above remain preserved for audit.'
   searches:
   - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
       and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
@@ -885,231 +271,68 @@ unsupported:
     tool: sources.search_external + tracked docs/resources catalogs (round 2)
   status: resolved
 videos:
-- channel: Ukrainian Lessons Podcast
+- channel: Speak Ukrainian
   checked:
     content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.ukrainianlessons.com/episode1/
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
     http_status: 200
-  id: V-001
+  id: V-101
+  url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
+  use: Whole visible video as a listening preview alongside the full alphabet chart; only the plan's staged letters enter
+    acquired inventory. No claim that the video models every letter or a scored greeting.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=GMcB5rsb3HM
+    http_status: 200
+  id: V-102
   models:
     letters: []
-    segment: 05:23–05:26
+    segment: null
+    words:
+    - W-287
+    - W-288
+    - W-289
+    - W-290
+    - W-291
+    - W-292
+    - W-096
+  url: https://www.youtube.com/watch?v=GMcB5rsb3HM
+  use: 'Whole visible ULP 1-02 listening input for morning, day and evening greetings, thanks and farewell; repeat only the
+    selected fixed chunks, without analysing pronouns or cases from the rest. Corpus listening witness: ext-ulp_youtube-302.'
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=dtufctJhBrY
+    http_status: 200
+  id: V-103
+  models:
+    letters: []
+    segment: null
     words:
     - W-074
-  url: https://www.ukrainianlessons.com/episode1/
-  use: Intact informal greeting in ULP 1-01, publisher repeat-after-me excerpt 05:23–05:26. Source transcript ext-ulp_youtube-303
-    establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt,
-    never the whole episode as the greeting model.
-- channel: Ukrainian Lessons Podcast
+    - W-295
+  url: https://www.youtube.com/watch?v=dtufctJhBrY
+  use: 'Whole visible FMU 1-50 listening input for the familiar greeting and the neutral greeting formula; other playful expressions
+    are exposure only. Corpus listening witness: ext-ulp_youtube-64.'
+- channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.ukrainianlessons.com/episode2/
+    date: '2026-10-31'
+    final_url: https://www.youtube.com/watch?v=_w8gRvkBFB4
     http_status: 200
-  id: V-002
+  id: V-104
   models:
     letters: []
-    segment: 04:35–04:39
+    segment: null
     words:
-    - W-075
-    - W-076
-  url: https://www.ukrainianlessons.com/episode2/
-  use: Intact formal greeting in ULP 1-02, publisher repeat-after-me excerpt 04:35–04:39. Source transcript ext-ulp_youtube-302
-    establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt,
-    never the whole episode as the greeting model.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-    http_status: 200
-  id: V-004
-  models:
-    letters:
-    - А
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-  use: Pronunciation model for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=gJFxRIPRZbI
-    http_status: 200
-  id: V-005
-  models:
-    letters:
-    - О
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=gJFxRIPRZbI
-  use: Pronunciation model for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
-    http_status: 200
-  id: V-006
-  models:
-    letters:
-    - У
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=VB1O6PmtYRU
-  use: Pronunciation model for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=W-1rCu0indE
-    http_status: 200
-  id: V-007
-  models:
-    letters:
-    - И
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=W-1rCu0indE
-  use: Pronunciation model for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
-    http_status: 200
-  id: V-008
-  models:
-    letters:
-    - М
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=Ez95H4ibuJo
-  use: Pronunciation model for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-    http_status: 200
-  id: V-009
-  models:
-    letters:
-    - І
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-  use: Pronunciation model for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=vNUfiKHPYaU
-    http_status: 200
-  id: V-010
-  models:
-    letters:
-    - Н
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=vNUfiKHPYaU
-  use: Pronunciation model for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-    http_status: 200
-  id: V-011
-  models:
-    letters:
-    - В
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-  use: Pronunciation model for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    http_status: 200
-  id: V-012
-  models:
-    letters:
-    - Л
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=v6-3Xg52Buk
-  use: Pronunciation model for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
-    http_status: 200
-  id: V-013
-  models:
-    letters:
-    - С
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=7UsFBgSL91E
-  use: Pronunciation model for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
-    http_status: 200
-  id: V-014
-  models:
-    letters:
-    - К
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=J7sGEI4-xJo
-  use: Pronunciation model for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
-    http_status: 200
-  id: V-015
-  models:
-    letters:
-    - П
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=JksSjjxyW5Y
-  use: Pronunciation model for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
-- channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-02'
-    final_url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-    http_status: 200
-  id: V-016
-  models:
-    letters:
-    - Р
-    segment: null
-    words: []
-  url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-  use: Pronunciation model for Р. Pronunciation model for consonant Р. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.
+    - W-293
+    - W-291
+    - W-292
+    - W-096
+  url: https://www.youtube.com/watch?v=_w8gRvkBFB4
+  use: 'Whole visible ULP 1-17 models the excuse-me, please and thanks chunks; the learner does not learn directions or case
+    grammar from its incidental context. Corpus listening witness: ext-ulp_youtube-287.'

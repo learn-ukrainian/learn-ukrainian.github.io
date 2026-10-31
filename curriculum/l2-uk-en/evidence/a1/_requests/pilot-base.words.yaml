@@ -466,8 +466,10 @@ words:
 - lemma: ні
   pos: part
   want: W-062
+  meaning: 'no'
   note: 'closed class: negative/responsive particle; taught at position 19 (questions:
-    negate)'
+    negate). Sources verification: VESUM part; query_sum20 ні sense 2 (negative
+    reply), slovnyk.me newsum mirror; translate_en_uk no, Балла EN→UK.'
   entry:
     source: vesum
     entry_id: 239112

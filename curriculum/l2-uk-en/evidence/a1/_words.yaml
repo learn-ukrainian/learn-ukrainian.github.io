@@ -1,7 +1,7 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: f46d122c51fda2c6972674a544583c9137efb3ace435256dbe37abf6f8a3e5d3
-  mcp_commit: 22b8a99261b7807e6987d08225de7cf834ab0c23
+  mcp_commit: 701b5f7b4b9a730dc20913840ed61a95d7cd937a
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
   sources_db: be9ac234667dc2cb9fd6e8622f663163e49a131eeb7e5134ae47ab1d6a1fc35c
@@ -4268,9 +4268,13 @@ words:
     stress_source: none
     stressed: ні
     tags: part
+  gloss_en: 'no'
+  gloss_source: request_meaning
   id: W-062
   lemma: ні
-  note: 'closed class: negative/responsive particle; taught at position 19 (questions: negate)'
+  meaning: 'no'
+  note: 'closed class: negative/responsive particle; taught at position 19 (questions: negate). Sources verification: VESUM
+    part; query_sum20 ні sense 2 (negative reply), slovnyk.me newsum mirror; translate_en_uk no, Балла EN→UK.'
   pos: part
   shadow:
     russian_shadow: false

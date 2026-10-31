@@ -52,7 +52,7 @@ texts:
     chunk_id: 8-klas-ukrmova-avramenko-2025_s0104
   span:
     first_words: Успішному діалогові
-    last_words: До побачення!
+    last_words: 'прощання: Добрий день! Щиро дякую! До побачення!'
   supports: A useful exchange has a greeting, a purpose and a farewell, with courtesy
     appropriate to the relationship.
 exercises:
