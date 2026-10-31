@@ -692,6 +692,19 @@ def test_render_fails_when_a_state_id_has_no_lemma_or_point(
         )
 
 
+def test_learner_state_view_prints_formula_text(full_learner_state):
+    """A taught formula record has `text` and `parts`, no `lemma`; the writer reads its printed text (#12185)."""
+    formula = {
+        "id": "W-3",
+        "kind": "formula",
+        "text": "Добрий день!",
+        "parts": [{"word": "W-4", "form": "Добрий"}, {"word": "W-11", "form": "день"}],
+    }
+    store = {"words": [formula, *(row for row in STATE_WORD_STORE["words"] if row["id"] != "W-3")]}
+    view = learner_state_view(full_learner_state, store, STATE_GRAMMAR)
+    assert {"id": "W-3", "lemma": "Добрий день!"} in view["core"]
+
+
 def _state_errors(prompt, plan_entry, state, **sources):
     return check_rendered_prompt(prompt, plan_entry, CARDS_DIR / "a1.md", learner_state=state, **sources).errors
 

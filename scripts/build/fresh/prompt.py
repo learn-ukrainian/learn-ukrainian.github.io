@@ -41,6 +41,7 @@ from scripts.build.fresh.draft_schema import (
     activity_payload_schema,
 )
 from scripts.build.fresh.immersion import ImmersionPayload, compute_immersion_payload
+from scripts.curriculum.evidence.word_records import printed
 from scripts.curriculum.learner_state.planned import PlannedState
 from scripts.curriculum.validate.registry import load_registry
 
@@ -344,12 +345,12 @@ def learner_state_view(
     """The complete planned state before this lesson, as the writer reads it (#9182).
 
     Built from the ``to_dict()`` document the lesson reviewer receives and ``learner_state_sha256``
-    hashes; it only adds each word's lemma from the word store and each grammar id's point from the
+    hashes; it only adds each word's lemma (a formula's printed text) from the word store and each grammar id's point from the
     grammar registry. An id with no lemma or point fails the render: the writer must see the whole state.
     """
     state = _state_dict(learner_state)
     lemmas = {
-        rec["id"]: rec.get("lemma")
+        rec["id"]: printed(rec)
         for rec in (word_store or {}).get("words") or []
         if isinstance(rec, dict) and "id" in rec
     }

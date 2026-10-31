@@ -11,6 +11,11 @@ from scripts.curriculum.validate.loader import read_plan_text, retirement_record
 from scripts.ingest.resource_catalogue_ingest import MAX_HITS, ResourceCatalogueMissingError
 
 from .sources import Sources
+from .word_records import is_formula, printed
+
+
+def _kind(record: dict | None) -> str:
+    return "formula" if is_formula(record) else "word"
 
 
 def request_report(plan_path: Path, words_path: Path, source: Sources) -> dict[str, Any]:
@@ -36,17 +41,21 @@ def request_report(plan_path: Path, words_path: Path, source: Sources) -> dict[s
     if not isinstance(plan, dict) or not isinstance(plan.get("lessons"), list):
         raise ValueError("catalogue_plan_invalid: expected lesson plan with lessons list")
     words = yaml.safe_load(words_path.read_text(encoding="utf-8")) if words_path.is_file() else {}
-    lemmas = {w["id"]: w["lemma"] for w in (words or {}).get("words", [])}
+    records = {w["id"]: w for w in (words or {}).get("words", [])}
     unavailable = None
     for lesson in plan["lessons"]:
         inventory = lesson.get("inventory") or {}
         vocabulary = inventory.get("vocabulary") or {}
+        # A formula is a requirement of its own kind, queried by its printed text.
         requirements = [
-            ("word", item["lemma"], item.get("evidence"))
+            (_kind(records.get(item.get("evidence"))), item["lemma"], item.get("evidence"))
             for group in ("core", "incidental")
             for item in vocabulary.get(group, [])
         ]
-        requirements.extend(("word", lemmas.get(ref), ref) for ref in vocabulary.get("recycled", []))
+        requirements.extend(
+            (_kind(records.get(ref)), printed(records[ref]) if ref in records else None, ref)
+            for ref in vocabulary.get("recycled", [])
+        )
         requirements.extend(
             ("letter", letter, None) for letter in (inventory.get("phonetics") or {}).get("letters", [])
         )
