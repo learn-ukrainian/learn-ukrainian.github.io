@@ -105,11 +105,34 @@
       "card_id": "wc_wan2nqn6vk04",
       "entry_id": 406467,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:фінал",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -524,11 +547,34 @@
       "card_id": "wc_d7h0hpjer9vn",
       "entry_id": 82422,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/14/tags",
       "record_key": "vesum:готовий",
       "span": [
         0,
         11
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/14/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/14/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/14/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -1447,11 +1493,34 @@
       "card_id": "wc_1p9kn1hp3xkw",
       "entry_id": 376940,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:сувенір",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -1877,11 +1946,34 @@
       "card_id": "wc_54p08hqyn4xf",
       "entry_id": 186992,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:листівка",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -2240,11 +2332,34 @@
       "card_id": "wc_1yzz2t6w3bts",
       "entry_id": 192553,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:магніт",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -2659,11 +2774,34 @@
       "card_id": "wc_ycr0jrc7823x",
       "entry_id": 163594,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/5/tags",
       "record_key": "vesum:квиток",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/5/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/5/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/5/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -3089,11 +3227,34 @@
       "card_id": "wc_dth7czyfjmea",
       "entry_id": 161722,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:картка",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -3452,11 +3613,34 @@
       "card_id": "wc_gfj772dsjrj6",
       "entry_id": 82385,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:готель",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -3882,11 +4066,34 @@
       "card_id": "wc_y80dbz6xjmfm",
       "entry_id": 188280,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:лінія",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -4245,11 +4452,34 @@
       "card_id": "wc_w540mrackgay",
       "entry_id": 161650,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:карта",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -4608,11 +4838,34 @@
       "card_id": "wc_21rpwhsdp9xm",
       "entry_id": 180042,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:круасан",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -5038,11 +5291,34 @@
       "card_id": "wc_p4r6ndg6y331",
       "entry_id": 28683,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:борщ",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -5468,11 +5744,34 @@
       "card_id": "wc_8syxw71fkym0",
       "entry_id": 150970,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/10/tags",
       "record_key": "vesum:зустріти",
       "span": [
         0,
-        18
+        13
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/10/word_form",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/10/lemma",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/10/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -5859,11 +6158,34 @@
       "card_id": "wc_jzn5f3w88gz6",
       "entry_id": 292394,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/15/tags",
       "record_key": "vesum:познайомитися",
       "span": [
         0,
-        22
+        17
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/15/word_form",
+          "span": [
+            0,
+            13
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/15/lemma",
+          "span": [
+            0,
+            13
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/15/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -6459,11 +6781,34 @@
       "card_id": "wc_j2q1dhp7e7gx",
       "entry_id": 406358,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:фільм",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -6889,11 +7234,34 @@
       "card_id": "wc_8c9yzekq4n31",
       "entry_id": 288308,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/11/tags",
       "record_key": "vesum:повторювати",
       "span": [
         0,
-        20
+        15
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/11/word_form",
+          "span": [
+            0,
+            11
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/11/lemma",
+          "span": [
+            0,
+            11
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/11/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -7443,11 +7811,34 @@
       "card_id": "wc_1mh9dbb9ab1j",
       "entry_id": 289933,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/10/tags",
       "record_key": "vesum:подорожувати",
       "span": [
         0,
-        20
+        15
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/10/word_form",
+          "span": [
+            0,
+            12
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/10/lemma",
+          "span": [
+            0,
+            12
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/10/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -7976,11 +8367,34 @@
       "card_id": "wc_4ykc55b9hn1n",
       "entry_id": 161525,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:Карпати",
       "span": [
         0,
         31
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -8170,11 +8584,34 @@
       "card_id": "wc_yd5ekty2j7kb",
       "entry_id": 422190,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/14/tags",
       "record_key": "vesum:чудовий",
       "span": [
         0,
         17
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/14/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/14/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/14/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -9093,11 +9530,34 @@
       "card_id": "wc_ahfex5jz3eb1",
       "entry_id": 204813,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:місто",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -9537,11 +9997,34 @@
       "card_id": "wc_prm2xskze7gs",
       "entry_id": 70080,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:вулиця",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -9900,11 +10383,34 @@
       "card_id": "wc_ecmfacpw1qwr",
       "entry_id": 330413,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:район",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -10330,11 +10836,34 @@
       "card_id": "wc_qy7beytbbd3g",
       "entry_id": 285033,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/4/tags",
       "record_key": "vesum:площа",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/4/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/4/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/4/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -10716,11 +11245,34 @@
       "card_id": "wc_j05amz5bncmy",
       "entry_id": 262017,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/5/tags",
       "record_key": "vesum:парк",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/5/word_form",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/5/lemma",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/5/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -11125,11 +11677,34 @@
       "card_id": "wc_n2m7cvpfktaw",
       "entry_id": 378248,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:супермаркет",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            11
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            11
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -11555,11 +12130,34 @@
       "card_id": "wc_tjwe015jd9zr",
       "entry_id": 162570,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:кафе",
       "span": [
         0,
         22
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -11918,11 +12516,34 @@
       "card_id": "wc_4r15bhx0tzq9",
       "entry_id": 334224,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:ресторан",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -12348,11 +12969,34 @@
       "card_id": "wc_8zw060wac5qa",
       "entry_id": 10756,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:аптека",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -12711,11 +13355,34 @@
       "card_id": "wc_9ph0a8218wp1",
       "entry_id": 23312,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:бібліотека",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            10
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            10
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -13074,11 +13741,34 @@
       "card_id": "wc_674sq3vqjaq7",
       "entry_id": 187818,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:лікарня",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -13437,11 +14127,34 @@
       "card_id": "wc_xbw7msqev2mz",
       "entry_id": 17025,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/5/tags",
       "record_key": "vesum:банк",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/5/word_form",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/5/lemma",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/5/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -13846,11 +14559,34 @@
       "card_id": "wc_dw09kw717k9v",
       "entry_id": 308350,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:пошта",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -14209,11 +14945,34 @@
       "card_id": "wc_qaydrgk69gnq",
       "entry_id": 150918,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:зупинка",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -14572,11 +15331,34 @@
       "card_id": "wc_0nrnjzb8y2hr",
       "entry_id": 64973,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:вокзал",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -15002,11 +15784,34 @@
       "card_id": "wc_cw9xb6p6y5ab",
       "entry_id": 371920,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:станція",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -15365,11 +16170,34 @@
       "card_id": "wc_pjpsnj7c7ctd",
       "entry_id": 200835,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:метро",
       "span": [
         0,
         22
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -15728,11 +16556,34 @@
       "card_id": "wc_h7wrwbz8j9wv",
       "entry_id": 1559,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:автобус",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -16179,11 +17030,34 @@
       "card_id": "wc_5gwdm0yb49w1",
       "entry_id": 389885,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:трамвай",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -16609,11 +17483,34 @@
       "card_id": "wc_53j9factb4yn",
       "entry_id": 208868,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:музей",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -17039,11 +17936,34 @@
       "card_id": "wc_d7ry67zc2hd1",
       "entry_id": 382610,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:театр",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -17469,11 +18389,34 @@
       "card_id": "wc_5ry3h88g44jk",
       "entry_id": 166795,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:кінотеатр",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            9
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            9
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -17899,11 +18842,34 @@
       "card_id": "wc_fgy7j6amz988",
       "entry_id": 371580,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:стадіон",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -18334,6 +19300,29 @@
       "span": [
         0,
         3
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -18408,11 +19397,34 @@
       "card_id": "wc_cjrys6b2wy58",
       "entry_id": 411582,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:хвилина",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -18776,6 +19788,29 @@
       "span": [
         0,
         9
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -18855,6 +19890,29 @@
       "span": [
         0,
         16
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -18934,6 +19992,29 @@
       "span": [
         0,
         3
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -19008,11 +20089,34 @@
       "card_id": "wc_g59eyf8q3f8b",
       "entry_id": 97787,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/15/tags",
       "record_key": "vesum:дістатися",
       "span": [
         0,
-        22
+        17
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/15/word_form",
+          "span": [
+            0,
+            9
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/15/lemma",
+          "span": [
+            0,
+            9
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/15/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -19597,11 +20701,34 @@
       "card_id": "wc_fvm1n8sbx652",
       "entry_id": 157054,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/12/tags",
       "record_key": "vesum:іти",
       "span": [
         0,
-        20
+        15
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/12/word_form",
+          "span": [
+            0,
+            3
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/12/lemma",
+          "span": [
+            0,
+            3
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/12/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -20142,11 +21269,34 @@
       "card_id": "wc_5fxp3178p3cz",
       "entry_id": 157359,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/10/tags",
       "record_key": "vesum:їхати",
       "span": [
         0,
-        20
+        15
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/10/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/10/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/10/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -20680,6 +21830,29 @@
       "span": [
         0,
         3
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -20759,6 +21932,29 @@
       "span": [
         0,
         9
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            5
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -20838,6 +22034,29 @@
       "span": [
         0,
         3
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -20917,6 +22136,29 @@
       "span": [
         0,
         3
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            6
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -20996,6 +22238,29 @@
       "span": [
         0,
         3
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -21075,6 +22340,29 @@
       "span": [
         0,
         3
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/0/word_form",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/lemma",
+          "span": [
+            0,
+            7
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/0/pos",
+          "span": [
+            0,
+            3
+          ]
+        }
       ]
     },
     {
@@ -21149,11 +22437,34 @@
       "card_id": "wc_xhzws68qph50",
       "entry_id": 158130,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:кав'ярня",
       "span": [
         0,
         19
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -21487,11 +22798,34 @@
       "card_id": "wc_d0xg7qef12zs",
       "entry_id": 199761,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/3/tags",
       "record_key": "vesum:меню",
       "span": [
         0,
         22
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/3/word_form",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/lemma",
+          "span": [
+            0,
+            4
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/3/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -21850,11 +23184,34 @@
       "card_id": "wc_9whseb1sqhjh",
       "entry_id": 128908,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/10/tags",
       "record_key": "vesum:замовляти",
       "span": [
         0,
-        20
+        15
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/10/word_form",
+          "span": [
+            0,
+            9
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/10/lemma",
+          "span": [
+            0,
+            9
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/10/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {
@@ -22383,11 +23740,34 @@
       "card_id": "wc_e4k85rw13arn",
       "entry_id": 258576,
       "field": "grammatical_label",
-      "pointer": "/clean_analyses/0/tags",
+      "pointer": "/clean_analyses/6/tags",
       "record_key": "vesum:офіціант",
       "span": [
         0,
         17
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/clean_analyses/6/word_form",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/lemma",
+          "span": [
+            0,
+            8
+          ]
+        },
+        {
+          "pointer": "/clean_analyses/6/pos",
+          "span": [
+            0,
+            4
+          ]
+        }
       ]
     },
     {

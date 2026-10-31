@@ -41,7 +41,6 @@ EXPECTED_COT_FIELDS = frozenset(
 
 CONTENT_DIMS: tuple[str, ...] = (
     "immersion",
-    "word count",
     "naturalness",
     "activity quality",
     "vocabulary",
@@ -50,7 +49,6 @@ CONTENT_DIMS: tuple[str, ...] = (
 
 CONTENT_WEIGHTS: dict[str, float] = {
     "immersion": 0.25,
-    "word count": 0.15,
     "naturalness": 0.20,
     "activity quality": 0.15,
     "vocabulary": 0.10,
@@ -800,38 +798,15 @@ def content_dim_values(data: BakeoffData) -> dict[str, dict[str, float]]:
             if dim_scores:
                 values[writer][dim] = round(mean(dim_scores), 2)
 
-        if "word count" not in values[writer]:
-            deterministic = word_count_score(data.writer_data[writer], data.plan)
-            if deterministic is not None:
-                values[writer]["word count"] = deterministic
     return values
-
-
-def word_count_score(writer: WriterData, plan: PlanInfo) -> float | None:
-    target = plan.word_target
-    if not target or writer.word_count <= 0:
-        return None
-    return round(min(10.0, writer.word_count / target * 10.0), 2)
 
 
 def content_weighted_scores(data: BakeoffData) -> dict[str, float | None]:
     values = content_dim_values(data)
-    raw_scores = review_scores(data)
-    summary_scores = review_summary_scores(data)
     weighted: dict[str, float | None] = {}
     for writer in data.writers:
-        observed_content_dims = {
-            dim
-            for reviewer_scores in raw_scores.get(writer, {}).values()
-            for dim in reviewer_scores
-            if dim in CONTENT_DIMS
-        }
-        if not observed_content_dims:
-            summaries = list(summary_scores.get(writer, {}).values())
-            if summaries:
-                weighted[writer] = round(mean(summaries), 2)
-                continue
-
+        # Historical summary scores can include length credit. Recompute only
+        # from observed non-length dimensions, renormalizing their weights.
         present = {dim: values[writer][dim] for dim in CONTENT_DIMS if dim in values[writer]}
         if present:
             total_weight = sum(CONTENT_WEIGHTS[dim] for dim in present)

@@ -62,7 +62,7 @@ def _module_with_sections(context: str, poetics: str) -> str:
     return f"# Sample\n\n## Context\n\n{context}\n\n## Poetics\n\n{poetics}\n"
 
 
-def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path: Path) -> None:
+def test_writer_draft_length_precheck_never_expands_from_a_short_count(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()
     initial = _module_with_sections(
@@ -71,22 +71,15 @@ def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path:
     )
     (module_dir / "module.md").write_text(initial, encoding="utf-8")
     plan_path = tmp_path / "plan.yaml"
-    # Core track (not folk/seminar): the size-policy dossier gate added in
-    # ff0b647667 only blocks auto-expansion for SEMINAR_TRACKS without a
-    # discoverable research dossier. This test targets the generic
-    # short-draft-triggers-a-reprompt mechanism, which the dedicated
-    # tests/test_writer_size_policy.py suite already covers for dossier-gated
-    # tracks.
+    # Core track (not folk/seminar). A short draft used to trigger a targeted
+    # writer reprompt that rewarded the word count. Under #12256 AC-02 length is
+    # informational: the precheck reports the shortfall, never invokes the
+    # writer, and v7_build treats the resulting policy_mismatch as advisory
+    # because it only reads `applied`, which stays False.
     plan_path.write_text("level: a1\nsequence: 1\nslug: sample\n", encoding="utf-8")
-    prompts: list[str] = []
 
     def corrector(context: linear_pipeline.CorrectionContext) -> str:
-        prompts.append(context.prompt)
-        patched = _module_with_sections(
-            "one two three four five six seven eight",
-            "three four five six seven eight nine ten",
-        )
-        return f"```markdown file=module.md\n{patched}```"
+        raise AssertionError("a word shortfall must not invoke the writer")
 
     result = linear_pipeline.run_writer_draft_length_precheck(
         plan={**_length_plan(word_target=16), "level": "a1"},
@@ -95,11 +88,13 @@ def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path:
         writer_corrector=corrector,
     )
 
-    assert result["applied"] is True
-    assert result["patch_status"] == "module_patch"
-    assert "Context: 6 words short of 8" in prompts[0]
-    assert "Keep ALL existing content" in prompts[0]
-    assert result["after"]["passed"] is True
+    assert result["applied"] is False
+    assert result["patch_status"] == "policy_mismatch"
+    assert result["policy_mismatch"] is True
+    assert result["before"]["passed"] is False
+    assert result["after"] == result["before"]
+    assert result["size_policy"]["status"] == "advisory_ok"
+    assert (module_dir / "module.md").read_text(encoding="utf-8") == initial
 
 
 def test_writer_draft_length_precheck_skips_when_at_or_over_target(tmp_path: Path) -> None:

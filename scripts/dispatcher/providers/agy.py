@@ -3,6 +3,8 @@
 import json
 import math
 import re
+from dataclasses import replace
+from pathlib import Path
 
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher import agy_sandbox
@@ -159,6 +161,18 @@ def terminal_result_observer(stdout_path):
 # task's own hard timeout plus this margin: the supervisor's deadline, which settles a cut run as ``timeout``,
 # always comes first, and a task with no hard timeout leaves AGY unbounded too.
 PRINT_TIMEOUT_MARGIN_S = 60
+# A model that answers "I will wait" ends the print-mode turn. Resume that same
+# conversation a bounded number of times; the adapter's ``--conversation`` flag
+# is how AGY continues a session. Past this, the run is abandoned.
+CONTINUATION_LIMIT = 3
+_COMMAND_OPEN = frozenset({"ACTIVE", "RUNNING"})
+_COMMAND_CLOSED = frozenset({"DONE", "ERROR", "FAILED", "CANCELLED", "CANCELED"})
+_CONTINUE_TEXT = (
+    "Continue the same task from where the previous turn closed. "
+    "A command or child task you started was still running, or has since finished. "
+    "Read its result and finish the task. "
+    "Do not end the turn while a command or child task you started is still running."
+)
 
 
 def _print_timeout(spec: TaskSpec) -> str:
@@ -186,9 +200,53 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     return Invocation(argv, stdin, env, None)
 
 
+def _open_commands(event: dict, open_steps: set[int]) -> None:
+    """Track ``run_command`` steps the way the stream reports them.
+
+    AGY moves a command still running after ``WaitMsBeforeAsync`` to a background
+    task and can then emit SUCCESS while that step is still ACTIVE. A later
+    terminal state for the same ``step_index`` closes it.
+    """
+    step = event.get("step_update")
+    if event.get("event") != "step_update" or not isinstance(step, dict):
+        return
+    index = step.get("step_index")
+    if isinstance(index, bool) or not isinstance(index, int):
+        return
+    state = step.get("state")
+    if step.get("tool_name") == "run_command" and state in _COMMAND_OPEN:
+        open_steps.add(index)
+    elif state in _COMMAND_CLOSED:
+        open_steps.discard(index)
+
+
+def conversation_id(log_file: Path) -> str | None:
+    """The conversation the AGY log bound, using the adapter's own reader."""
+    from scripts.agent_runtime.adapters.agy import _conversation_id_from_log
+    from scripts.agent_runtime.attempt_safe_read import AttemptReadError
+
+    try:
+        return _conversation_id_from_log(log_file)
+    except AttemptReadError:
+        return None
+
+
+def continuation(invocation: Invocation, conversation: str) -> Invocation:
+    """The same launch, continued on the conversation the adapter already resumes."""
+    argv = list(invocation.argv)
+    if not any(argument.startswith("--conversation=") for argument in argv):
+        argv.append(f"--conversation={conversation}")
+    message = json.loads(invocation.stdin or b"{}")
+    message["message"]["content"][0]["text"] = _CONTINUE_TEXT
+    stdin = (json.dumps(message) + "\n").encode("utf-8")
+    return replace(invocation, argv=argv, stdin=stdin)
+
+
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     result, error, models = {}, None, set()
     terminal_seen, stream_clean = False, True
+    open_steps: set[int] = set()
+    open_at_result: set[int] | None = None
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -206,7 +264,11 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             # Anything after the terminal result makes a capacity classification untrustworthy.
             stream_clean = False
         models.update(_init_models(event))
+        if not terminal_seen:
+            _open_commands(event, open_steps)
         if event.get("event") == "result":
+            if open_at_result is None:
+                open_at_result = set(open_steps)
             if terminal_seen:
                 error = error or "agy: duplicate terminal result"
                 continue
@@ -226,7 +288,8 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
     text = text if isinstance(text, str) and text.strip() else None
     usage = result.get("usage")
     incomplete = bool(
-        _PRINT_TIMEOUT_PARTIAL_RE.search(stderr)
+        open_at_result
+        or _PRINT_TIMEOUT_PARTIAL_RE.search(stderr)
         or any(int(match["count"]) > 0 for match in _BACKGROUND_TERMINATED_RE.finditer(stderr))
     )
     if incomplete:

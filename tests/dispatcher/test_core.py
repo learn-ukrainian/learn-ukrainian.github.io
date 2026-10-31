@@ -3197,6 +3197,53 @@ def test_a_run_settling_while_a_task_it_dispatched_still_runs_names_that_task(sa
     assert "orphaned_child_tasks" not in sandbox.settle(child)
 
 
+def test_agy_write_run_does_not_settle_while_its_child_is_running(sandbox, monkeypatch):
+    """Defect class: an AGY workspace-write run that exits 0 on an interim reply while a child task is still active settles done or no_deliverable."""
+    from scripts.dispatcher.providers import agy
+    from scripts.dispatcher.types import Invocation
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
+    code = (
+        "import json\n"
+        "print(json.dumps({'event': 'init', 'init': {'model': 'gemini-3.8-flash-high'}}), flush=True)\n"
+        "print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', "
+        "'response': 'I will pause to await the review verdict.'}}), flush=True)\n"
+    )
+    monkeypatch.setattr(agy, "build", lambda _spec, env: Invocation(
+        [sys.executable, "-c", code],
+        b'{"event":"user","message":{"role":"user","content":[{"type":"text","text":""}]}}\n', env, None))
+    head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    remote = {"key": "public", "github": str(sandbox.remote)}
+    spec = TaskSpec("agy-write-child", "agy", "gemini-3.8-flash-high", None, "workspace-write", sandbox.repo,
+                    sandbox.repo / "agy-write-child.prompt", sandbox.tasks / "agy-write-child.result")
+    spec.prompt_file.write_bytes(b"literal parent request")
+    record = store.new_record(spec, remote, "main", head, {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "agy-write-child.prompt")
+    path = store.create(record, b"literal parent request")
+    child_spec = TaskSpec("agy-write-review", "sol", "blocked", None, "read-only", sandbox.repo,
+                          sandbox.repo / "agy-write-review.prompt", sandbox.tasks / "agy-write-review.result")
+    child_spec.prompt_file.write_bytes(b"literal child request")
+    child = store.new_record(child_spec, remote, "main", head, {"research_owned_path": []})
+    child["prompt_file"] = str(sandbox.tasks / "agy-write-review.prompt")
+    child_path = store.create(child, b"literal child request")
+    child = json.loads(child_path.read_text())
+    child.update(status="running", parent_task_id="agy-write-child")
+    store.replace(child, child_path, require_existing=True)
+    (sandbox.tasks / "logs").mkdir()
+
+    started = time.monotonic()
+    worker.supervise(path, {}, 2)
+    elapsed = time.monotonic() - started
+
+    result = json.loads(path.read_text())
+    assert result["status"] not in {"done", "no_deliverable"}
+    assert "agy-write-review" in (result.get("error") or "")
+    assert elapsed < 8
+
+
 @pytest.mark.parametrize(("inherited", "parent"), [("dispatching-run", "dispatching-run"), ("self-run", None),
                                                     (None, None)])
 def test_dispatch_records_the_run_it_was_dispatched_from_never_itself(sandbox, inherited, parent):

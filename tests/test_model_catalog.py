@@ -47,8 +47,6 @@ from tests.claude_route_accounts import HOST_ACCOUNT
     ("google_bounded", "native", "dispatch.py", "agy", "gemini-3.8-flash-high", "high"),
 ])
 def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, launcher, agent, model, effort):
-    from scripts.review.role_resolution import resolve_role
-
     catalog = load_model_catalog()
     template = catalog["seats"][seat]["routes"][route]["invocation"]
     argv = shlex.split(template.format(wire_id=model))
@@ -62,9 +60,6 @@ def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, laun
         "--worktree", "--mode", "read-only", "--task-id", "catalog-review", "--prompt-file", "prompt.md",
     ])
     assert (args.agent, args.model, args.effort, args.task_id) == (agent, model, effort, "catalog-review")
-    if seat == "google_bounded":
-        candidate = resolve_role("bounded_fallback", purpose="inspect").candidates[0]
-        assert list(candidate.argv) == expected
 
 
 @pytest.mark.parametrize("value", [None, "grok-4.7-build", [], [""], [" "], [1], ["grok-4.7-build", None]])
@@ -657,34 +652,10 @@ def test_catalog_rejects_luna_safety_set_member_removal(field, member):
     [
         ("advisor", "model_id", "set", "missing-model", "advisor.model_id references unknown model"),
         ("preferred_worker", "model_id", "set", "poolside/laguna-m.1", "preferred_worker.model_id must reference an active model"),
-        (
-            "bounded_fallback_worker",
-            "model_id",
-            "set",
-            "missing-model",
-            "bounded_fallback_worker.model_id references unknown model",
-        ),
-        ("bounded_fallback_worker", "model_id", "set", "gpt-6.1-sol", "must not be a bounded worker model"),
-        (
-            "bounded_fallback_worker",
-            "requires",
-            "set",
-            ["objective_scope_ceiling"],
-            "bounded_fallback_worker.requires must bind",
-        ),
-        (
-            "bounded_fallback_worker",
-            "non_bounded_task_families",
-            "set",
-            [],
-            "non_bounded_task_families must be a non-empty list",
-        ),
-        ("bounded_fallback_worker", "requires", "delete", None, "bounded_fallback_worker must define exactly"),
         ("autonomous_fallback", "model_id", "set", "missing-model", "autonomous_fallback.model_id references unknown model"),
         ("preferred_worker", "escalate_to", "set", "missing-model", "preferred_worker.escalate_to references unknown model"),
         ("advisor", "effort", "set", "ultra", "advisor.effort must be one of"),
         ("preferred_worker", "effort", "set", "ultra", "preferred_worker.effort must be one of"),
-        ("bounded_fallback_worker", "effort", "set", "ultra", "bounded_fallback_worker.effort must be one of"),
         ("autonomous_fallback", "effort", "set", "ultra", "autonomous_fallback.effort must be one of"),
         ("advisor", "role", "set", "unbounded", "advisor.role must be"),
         (

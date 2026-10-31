@@ -6,7 +6,7 @@ Prevents semantic drift between planned structure and actual content.
 
 LEVEL 1 (Structural - implemented here):
 - Section headers in .md match content_outline sections
-- Word count per section within reasonable tolerance (±30%)
+- Empty planned sections reported as evidence gaps
 - All outline sections are present
 
 LEVEL 2 (Semantic - future enhancement):
@@ -31,7 +31,7 @@ def extract_markdown_sections(md_path: Path) -> dict[str, dict[str, any]]:
     """
     Extract section headers and word counts from markdown file.
 
-    Returns dict mapping section name → {header, words, line_num}
+    Returns dict mapping section name → {header, words, line_num, content}
 
     Example:
         {
@@ -45,6 +45,7 @@ def extract_markdown_sections(md_path: Path) -> dict[str, dict[str, any]]:
     sections = {}
     current_section = None
     current_words = 0
+    current_content = []
     current_line = 0
 
     # Split into lines for processing
@@ -72,7 +73,7 @@ def extract_markdown_sections(md_path: Path) -> dict[str, dict[str, any]]:
         header_match = re.match(r"^#{1,2}\s+(.+)$", line)
         if header_match:
             # Skip the very first H1 header (likely the module Title)
-            if not sections and line.strip().startswith("# "):
+            if not sections and current_section is None and line.strip().startswith("# "):
                 continue
 
             # Save previous section
@@ -81,6 +82,7 @@ def extract_markdown_sections(md_path: Path) -> dict[str, dict[str, any]]:
                     "header": current_section,
                     "words": current_words,
                     "line_num": current_line,
+                    "content": "\n".join(current_content),
                 }
 
             # Start new section
@@ -89,6 +91,7 @@ def extract_markdown_sections(md_path: Path) -> dict[str, dict[str, any]]:
             # current_section = re.sub(r"\s+[—–-]\s+.*$", "", current_section)
             current_section = re.sub(r"[📚🎯💡🔍]", "", current_section).strip()
             current_words = 0
+            current_content = []
             current_line = idx + 1
         else:
             # Count words in non-header lines
@@ -109,12 +112,16 @@ def extract_markdown_sections(md_path: Path) -> dict[str, dict[str, any]]:
                         continue
 
                 # Count Ukrainian and English words
+                current_content.append(text_to_count)
                 words = re.findall(r"[а-яіїєґА-ЯІЇЄҐA-Za-z]+", text_to_count)
                 current_words += len(words)
 
     # Save last section
     if current_section:
-        sections[current_section] = {"header": current_section, "words": current_words, "line_num": current_line}
+        sections[current_section] = {
+            "header": current_section, "words": current_words,
+            "line_num": current_line, "content": "\n".join(current_content),
+        }
 
     return sections
 
@@ -309,9 +316,9 @@ def check_outline_compliance(
     if not md_sections:
         violations.append(
             {
-                "type": "NO_SECTIONS_FOUND",
+                "type": "EVIDENCE_GAP",
                 "message": (
-                    "No sections found in markdown, but content_outline exists in meta YAML.\n"
+                    "No teaching sections found for the planned objectives/content points.\n"
                     "  Expected sections:\n" + "\n".join(f"    - {s.get('section') or s.get('title', '?')}" for s in outline)
                 ),
                 "severity": "error",
@@ -324,7 +331,7 @@ def check_outline_compliance(
     matched_outline_sections = set()
 
     # Sections that are handled by sidecars/Site and don't need to be in MD
-    # OR if they are in MD, they shouldn't trigger word count/existence errors
+    # OR if they are in MD, they shouldn't trigger coverage errors
     # (Template-mandatory sections are implicit and don't need dynamic outline tracking)
     EXEMPT_SECTIONS = {
         "Словник",
@@ -342,19 +349,9 @@ def check_outline_compliance(
         "Summary",
     }
 
-    # Calculate total word counts for smart enforcement
-    # Rule: If module meets overall word target, don't enforce individual section minimums
-    total_md_words = sum(s["words"] for s in md_sections.values())
-    expected_total_words = sum(s.get("words", 0) for s in outline)
-    skip_section_enforcement = total_md_words >= expected_total_words
-
-    # Debug output
-    # print(f"  [DEBUG] Total MD words: {total_md_words}, Expected: {expected_total_words}, Skip enforcement: {skip_section_enforcement}")
-
     # Check each outline section exists in markdown
     for outline_sec in outline:
         section_name = outline_sec.get("section") or outline_sec.get("title", "")
-        expected_words = outline_sec.get("words", 0)
 
         # Skip exempt sections if they are missing from markdown
         # (They are allowed to be in the outline for planning, but missing from MD for Clean MD architecture)
@@ -371,47 +368,35 @@ def check_outline_compliance(
 
             violations.append(
                 {
-                    "type": "MISSING_OUTLINE_SECTION",
+                    "type": "UNSUPPORTED_OBJECTIVE",
                     "message": (
                         f"Section '{section_name}' defined in outline but not found in markdown.\n"
-                        f"  Expected word count: {expected_words}\n"
-                        f"  Add section to markdown with ## header"
+                        "  Evidence gap: the planned objectives/content points have no teaching section.\n"
+                        "  Supply the missing explanation, worked examples and aligned practice."
                     ),
                     "severity": "error",
                 }
             )
             continue
 
-        # Section found - check word count
+        # Section presence is structural evidence, not proof of semantic coverage.
         matched_outline_sections.add(md_match)
-        actual_words = md_sections[md_match]["words"]
         line_num = md_sections[md_match]["line_num"]
 
-        # Skip word count check for exempt sections
         if is_exempt:
             continue
 
-        # Calculate deviation
-        diff = actual_words - expected_words
-        diff_pct = abs(diff) / expected_words if expected_words > 0 else 0
-
-        # Only check if UNDER target (diff < 0)
-        # Tolerance: -10% warning, -20% error
-        # RULE: If module meets overall word target, skip individual section enforcement
-        if diff < 0 and diff_pct >= 0.10 and not skip_section_enforcement:
-            severity = "warning" if diff_pct < 0.20 else "error"
-
+        visible_content = re.sub(r"<!--.*?-->", "", md_sections[md_match]["content"], flags=re.DOTALL)
+        if not visible_content.strip():
             violations.append(
                 {
-                    "type": "SECTION_LENGTH_MISMATCH",
+                    "type": "EVIDENCE_GAP",
                     "message": (
-                        f"Section '{section_name}' is under target word count.\n"
-                        f"  Expected: ~{expected_words} words (minimum -10%)\n"
-                        f"  Actual: {actual_words} words\n"
-                        f"  Deviation: {diff:+d} words ({diff_pct * 100:.0f}%)\n"
+                        f"Section '{section_name}' has a heading but no teaching content.\n"
+                        "  Supply evidence and explanation for its planned objectives/content points.\n"
                         f"  Location: line {line_num} in markdown"
                     ),
-                    "severity": severity,
+                    "severity": "error",
                 }
             )
 
@@ -444,112 +429,41 @@ def check_outline_compliance(
 
 
 # =============================================================================
-# SECTION SUMMARY FOR HYDRATION GUIDANCE
+# DESCRIPTIVE SECTION COUNTS
 # =============================================================================
 
 
 def get_section_word_summary(file_path: str) -> dict | None:
-    """
-    Get section-level word count summary for hydration guidance.
-
-    Returns dict with:
-        - 'sections': list of {name, expected, actual, diff, status}
-        - 'total_expected': sum of outline words
-        - 'total_actual': sum of actual words
-        - 'hydrated': True if outline exists
-
-    Returns None if no outline exists.
-    """
+    """Describe section counts without reading deprecated section word budgets."""
     md_path = Path(file_path)
     outline = load_content_outline(md_path)
-
     if not outline:
         return None
 
     md_sections = extract_markdown_sections(md_path)
-
     sections = []
-    total_expected = 0
-    total_actual = 0
-
     for outline_sec in outline:
         section_name = outline_sec.get("section") or outline_sec.get("title", "")
-        expected = outline_sec["words"]
-        total_expected += expected
-
-        # Find matching section
         matched, md_match, _ = fuzzy_match_section(section_name, list(md_sections.keys()))
-
         actual = md_sections[md_match]["words"] if matched else 0
+        sections.append({"name": section_name, "actual": actual, "status": "info"})
 
-        total_actual += actual
-        diff = actual - expected
-
-        # Determine status
-        if actual == 0:
-            status = "missing"
-        elif diff >= 0 or abs(diff) / expected < 0.10:
-            status = "ok"
-        elif abs(diff) / expected < 0.20:
-            status = "warning"
-        else:
-            status = "error"
-
-        sections.append({"name": section_name, "expected": expected, "actual": actual, "diff": diff, "status": status})
-
-    return {"sections": sections, "total_expected": total_expected, "total_actual": total_actual, "hydrated": True}
+    return {"sections": sections, "total_actual": sum(s["actual"] for s in sections), "hydrated": True}
 
 
-def print_section_summary(file_path: str, word_target: int | None = None) -> None:
-    """Print section word summary table to stdout."""
+def print_section_summary(file_path: str) -> None:
+    """Print informational section counts, with no length verdicts."""
     summary = get_section_word_summary(file_path)
-
     if not summary:
-        print("  📋 No content_outline found - run /architect to hydrate")
+        print("  📋 No content_outline found")
         return
 
-    # Check if outline sums to word_target
-    if word_target and summary["total_expected"] < word_target * 0.95:
-        print(f"\n  🔴 HYDRATION ERROR: Outline sums to {summary['total_expected']}, but word_target is {word_target}")
-        print(f"     Missing {word_target - summary['total_expected']} words in outline budget!")
-        print("     → Run /architect to fix content_outline")
-    elif word_target and summary["total_expected"] > word_target:
-        print(f"\n  ⚠️ HYDRATION NOTE: Outline sums to {summary['total_expected']}, exceeding word_target {word_target}")
-        print(f"     Additional {summary['total_expected'] - word_target} words (allowed for content depth)")
-
-    print("\n  📊 Section Word Analysis:")
-
-    # Find max name length for alignment
+    print("\n  📊 Section Word Counts (informational only):")
     max_name = max(len(s["name"]) for s in summary["sections"])
-
     for sec in summary["sections"]:
-        name = sec["name"].ljust(max_name)
-        actual = sec["actual"]
-        expected = sec["expected"]
-        diff = sec["diff"]
-
-        # Status icon
-        if sec["status"] == "missing":
-            icon = "❌"
-        elif sec["status"] == "ok":
-            icon = "✅"
-        elif sec["status"] == "warning":
-            icon = "⚠️"
-        else:
-            icon = "❌"
-
-        # Format diff
-        diff_str = f"({diff:+d})" if diff != 0 else ""
-
-        print(f"     {name}  {actual:4d} / {expected:4d}  {icon} {diff_str}")
-
-    # Total
-    total_diff = summary["total_actual"] - summary["total_expected"]
-    total_icon = "✅" if total_diff >= 0 else "❌"
-    print(f"     {'─' * (max_name + 25)}")
-    print(
-        f"     {'TOTAL'.ljust(max_name)}  {summary['total_actual']:4d} / {summary['total_expected']:4d}  {total_icon} ({total_diff:+d})"
-    )
+        print(f"     {sec['name'].ljust(max_name)}  {sec['actual']:4d} words")
+    print(f"     {'─' * (max_name + 15)}")
+    print(f"     {'TOTAL'.ljust(max_name)}  {summary['total_actual']:4d} words")
 
 
 # =============================================================================

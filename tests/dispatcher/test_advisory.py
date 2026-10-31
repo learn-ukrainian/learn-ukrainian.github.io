@@ -26,7 +26,7 @@ def launch(tmp_path, monkeypatch):
             "--prompt", "Inspect the assigned document", "--owned-path", "docs/example.md"]
 
 
-@pytest.mark.parametrize("model", ["gpt-6-luna", "openai/gpt-6-luna-high", "gemini-3.8-flash-high"])
+@pytest.mark.parametrize("model", ["gpt-6-luna", "openai/gpt-6-luna-high"])
 def test_missing_envelope_refuses_before_side_effects(launch, capsys, tmp_path, model):
     """Defect class: bounded catalog routes bypass advice and start paid execution."""
     launch[launch.index("--model") + 1] = model
@@ -37,7 +37,7 @@ def test_missing_envelope_refuses_before_side_effects(launch, capsys, tmp_path, 
     assert not (tmp_path / "tasks").exists()
 
 
-@pytest.mark.parametrize("model", ["gpt-6-luna", "gemini-3.8-flash-high"])
+@pytest.mark.parametrize("model", ["gpt-6-luna"])
 @pytest.mark.parametrize("defect,reason", [
     (None, None), ("incomplete", "ADVISORY_ENVELOPE_INCOMPLETE"),
     ("binding", "ADVISORY_BINDING_MISMATCH"), ("seal", "ADVISORY_SEAL_MISMATCH"),
@@ -91,28 +91,42 @@ def test_sealed_envelope_admission_and_record(launch, capsys, tmp_path, defect, 
 
 
 @pytest.mark.parametrize("model", ["gpt-6.1-sol", "gemini-3.8-flash-high"])
-def test_non_bounded_model_needs_no_advisory(launch, model):
-    """Defect class: bounded admission accidentally refuses Sol or exempt Ukrainian Flash work."""
+def test_non_bounded_model_needs_no_advisory(launch, capsys, model):
+    """Defect class: bounded admission refuses Sol, or Gemini without an advisory task."""
     launch[launch.index("--model") + 1] = model
-    if model == "gemini-3.8-flash-high":
-        launch = [*launch[:-2], "--research-task-family", "ukrainian-authoring"]
-    else:
-        launch = launch[:-2]  # owned paths on a read-only non-review task are refused (#12141)
+    launch = launch[:-2]  # owned paths on a read-only non-review task are refused (#12141)
     assert cli.main(launch) == 0
     assert "advisory_envelope" not in store.read("worker")
+    if model == "gemini-3.8-flash-high":
+        refused = launch.copy()
+        refused[refused.index("--task-id") + 1] = "worker-flag"
+        assert cli.main([*refused, "--advisory-task", "advisor"]) == 2
+        assert "ADVISORY_FLAG_CONFLICT" in capsys.readouterr().err
+        assert not store.record_path("worker-flag").exists()
 
 
 @pytest.mark.parametrize("mode,profile,family,path,admitted", [
     ("read-only", "ukrainian", "ukrainian-review", "scripts/audit/generate_practice_deck.py", True),
     ("read-only", "ukrainian", "practice", "docs/example.md", True),
-    ("workspace-write", "ukrainian", "ukrainian-review", "scripts/audit/generate_practice_deck.py", False),
-    ("read-only", "code", "practice", "scripts/audit/generate_practice_deck.py", False),
+    ("workspace-write", "ukrainian", "ukrainian-review", "scripts/audit/generate_practice_deck.py", True),
+    ("read-only", "code", "practice", "scripts/audit/generate_practice_deck.py", True),
 ])
 def test_flash_ukrainian_review_of_record_is_admitted_only_read_only(
     launch, capsys, tmp_path, mode, profile, family, path, admitted,
 ):
-    """Defect class: a read-only Ukrainian review of a mixed PR is refused for naming its real family or code paths."""
+    """Defect class: a read-only review of record is refused for its family or for naming code paths.
+
+    Ukrainian and code read-only reviews stay admitted. A workspace-write Gemini
+    launch is a general worker and is admitted without an advisory task.
+    """
     (tmp_path / "scripts/audit").mkdir(parents=True)
+    if mode == "workspace-write":
+        # Owned-path writes require a canonical origin. The envelope is not that gate.
+        subprocess.run(["git", "-C", str(tmp_path), "init", "--initial-branch=main"], check=True, capture_output=True, timeout=30)
+        subprocess.run(
+            ["git", "-C", str(tmp_path), "remote", "add", "origin", "https://github.com/example/public.git"],
+            check=True, capture_output=True, timeout=30,
+        )
     launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
     launch[launch.index("--owned-path") + 1] = path
     launch += ["--mode", mode, "--review-profile", profile, "--research-task-family", family]
@@ -201,14 +215,13 @@ def test_worker_seals_an_advisory_decision_as_written(tmp_path):
     assert advisory.SEAL_FIELD not in unknown and unknown["advisory_seal_error"].startswith("KeyError")
 
 
-def test_envelope_role_is_dispatched_sealed_and_admits_a_bounded_flash_worker(launch, capsys):
+def test_envelope_role_is_dispatched_sealed_and_admits_a_bounded_worker(launch, capsys):
     """Defect: the catalog dropped the role the envelope loader needs, so the documented advisor dispatch was refused.
 
     The advisor is dispatched with the documented flags, its worker seals the result it wrote, and
-    a bounded Flash dispatch is admitted with ``--advisory-task``: dispatch, seal and load all read
-    the one catalog ``advisory_roles`` entry.
+    a bounded Luna dispatch is admitted with ``--advisory-task``. Gemini 3.8 Flash High is not on
+    this route (#12291). Dispatch, seal and load all read the one catalog ``advisory_roles`` entry.
     """
-    launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
     assert cli.main([*launch, "--print-advisory-binding"]) == 0
     binding = capsys.readouterr().out.strip()
     role = "bounded_advisory_envelope"

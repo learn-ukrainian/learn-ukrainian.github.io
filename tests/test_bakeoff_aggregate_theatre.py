@@ -6,7 +6,10 @@ from typing import Any
 
 from scripts.audit import bakeoff_aggregate
 
-CONTENT_DIMS = bakeoff_aggregate.CONTENT_DIMS
+# Historical telemetry includes the retired word-count score.
+CONTENT_DIMS = (
+    "immersion", "word count", "naturalness", "activity quality", "vocabulary", "plan adherence",
+)
 
 
 def _write_jsonl(path: Path, events: list[dict[str, Any]]) -> None:

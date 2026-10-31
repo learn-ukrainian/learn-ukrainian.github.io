@@ -27,7 +27,7 @@ from .checks.outline_compliance import (
     print_section_summary,
 )
 from .cleaners import extract_core_content
-from .config import get_level_config, get_word_target
+from .config import get_level_config
 from .gates import GateResult, evaluate_structure
 
 # Re-export for backward compatibility (used by tests)
@@ -86,7 +86,7 @@ def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) 
     if meta_data and plan_data:
         print(f"  \U0001f4cb Loaded Plan from: plans/{plan_data.get('level', '').lower()}/{os.path.basename(file_path).replace('.md', '.yaml')}")
         PLAN_FIELDS_TO_MERGE = [
-            'title', 'subtitle', 'content_outline', 'word_target',
+            'title', 'subtitle', 'content_outline',
             'vocabulary_hints', 'activity_hints', 'focus', 'pedagogy',
             'prerequisites', 'connects_to', 'objectives', 'learning_outcomes',
             'grammar', 'module_type', 'sources', 'immersion', 'register', 'phase'
@@ -143,13 +143,7 @@ def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) 
 
     print(f"\n\U0001f4cb Auditing: {display_level} M{module_num:02d} \u2014 {module_title}")
 
-    target = get_word_target(level_code, module_num, module_focus)
-    if meta_data and 'word_target' in meta_data:
-        target = int(meta_data['word_target'])
-    elif plan_data and 'word_target' in plan_data:
-        target = int(plan_data['word_target'])
-
-    print(f"   File: {file_path} | Target: {target} words")
+    print(f"   File: {file_path}")
 
     # Only validate required metadata for embedded frontmatter (old format).
     # V6 modules use plan data as metadata — different field structure, no
@@ -211,7 +205,7 @@ def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) 
         plan_data=plan_data, vocab_data=vocab_data, vocab_error=vocab_error,
         level_code=level_code, module_num=module_num, track_code=track_code,
         display_level=display_level, module_focus=module_focus,
-        module_title=module_title, target=target, config=config,
+        module_title=module_title, target=0, config=config,
         section_map=section_map, core_content=core_content, phase=phase,
         pedagogy=pedagogy, skip_activities=skip_activities,
         skip_review=skip_review, yaml_activities=yaml_activities,
@@ -279,6 +273,16 @@ def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateRe
     """Check outline compliance, structure, tone, checkpoints, fill-in options."""
     # Outline compliance
     outline_violations = check_outline_compliance(ctx.file_path, ctx.level_code, ctx.module_num)
+    for kind, detail in re.findall(
+        r'<!--\s*(UNSUPPORTED_OBJECTIVE|EVIDENCE_GAP)\s*:\s*(.*?)-->',
+        ctx.body, re.IGNORECASE | re.DOTALL,
+    ):
+        outline_violations.append({
+            'type': kind.upper(),
+            'message': detail.strip() or 'Identify the objective and its missing teaching evidence.',
+            'severity': 'error',
+        })
+    outline_errors = [v for v in outline_violations if v['severity'] == 'error']
     if outline_violations:
         error_count = sum(1 for v in outline_violations if v['severity'] == 'error')
         warning_count = sum(1 for v in outline_violations if v['severity'] == 'warning')
@@ -289,7 +293,7 @@ def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateRe
         if error_count > 0:
             state.fail(f"{error_count} Outline Compliance Errors")
 
-    print_section_summary(ctx.file_path, word_target=ctx.target)
+    print_section_summary(ctx.file_path)
 
     tone_errors = validate_tone(ctx.content)
     if tone_errors:
@@ -330,6 +334,10 @@ def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateRe
         is_a2_plus=is_clean_md_standard,
         vocab_error=ctx.vocab_error,
     )
+
+    if outline_errors:
+        coverage_messages = '; '.join(f"{v['type']}: {v['message']}" for v in outline_errors)
+        structure_gate = GateResult('FAIL', '❌', f"{structure_gate.msg} | {coverage_messages}")
 
     if structure_gate.status == 'FAIL':
         print(f"\u274c Structure check failed: {structure_gate.msg}")
