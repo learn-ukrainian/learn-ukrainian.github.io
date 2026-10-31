@@ -173,8 +173,7 @@ Explicit scouting and bounded repeatable routes use **GPT-6 Luna @ high** (max o
 hard scouting task). Read-only recon/classification and workspace-write bounded implementation accept the #10919 driver brief;
 other Luna work needs the complete Sol envelope (#9275; see below). **Operator 2026-09-29 (#9230), advisory effort set to high 2026-09-30 (#9360):** GPT-6.1 Sol is the only Sol and also holds
 the former GPT-6 Astra advisory seat. Review, critique and design input use
-**Opus 5.5 / Sol 6.1**; Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. The former Astra seat holds no advisory, approval or
-review role (operator decision 2026-10-03, #9583). `gpt-6-sol` and `gpt-6-astra` are not routable.
+**Opus 5.5 / Sol 6.1**; Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. Astra (`gpt-6-astra`) has only the time-boxed Codex red-team code-review exception for Sol-authored PRs under workflow.md § Merge policy, #10437, operator decision 2026-10-31 recorded by the CTO. It expires at 2026-11-04T00:00Z and requires the resolver to find no eligible outside-family reviewer. It is labelled `review_mode=red_team`, never cross-family review, and grants no Ukrainian review, security final sign-off, advice, approval, design, implementation or driver role. Author-task/model refusals, toolful exact-head binding, risk floors, CI and merge-queue gates stay unchanged. `gpt-6-sol` remains retired.
 Token prices under
 272K are Sol $2/$10 and Luna $0.10/$0.50 per million input/output tokens.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable. Review selection
@@ -213,8 +212,7 @@ only Grok 4.7. Historical Composer identities retain Moonshot attribution.
 layout, process or policy decision is approved by the operator, or when two frontier families
 agree through `claude-opus-5-5` and `gpt-6.1-sol`: when one of them authored the proposal, the
 other's approval completes it; a proposal by any other agent (Gemini, Grok, Kimi or another seat)
-needs both; if they disagree, the operator decides. Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. The former Astra seat holds no advisory, approval, review or critique
-role and are not a last resort for any of them.
+needs both; if they disagree, the operator decides. Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. Astra holds no advisory, approval, design or driver role. Its sole review exception is the Sol-authored code red-team seat under #10437, operator decision 2026-10-31 recorded by the CTO, expiring 2026-11-04T00:00Z, with the limits above.
 
 **Claude interactive default: Sonnet 5.5 with Opus 5.5 advisor (#10083):**
 

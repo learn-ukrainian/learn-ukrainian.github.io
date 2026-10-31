@@ -11,9 +11,38 @@ import yaml
 from scripts.agent_runtime import bounded_advisory as advisory
 from scripts.dispatcher import git, store
 from scripts.dispatcher.types import TaskSpec
-from scripts.review.model_catalog import advisory_role_policy, canonical_model_id
+from scripts.review.model_catalog import (
+    advisory_role_policy,
+    canonical_model_id,
+    load_model_catalog,
+    retired_model_refusal,
+)
 
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
+
+
+def check_model_admission(agent: str, model: str, mode: str, options: dict, prompt: bytes) -> None:
+    """Keep the temporary reviewer exception closed at admission and again at spawn."""
+    catalog = load_model_catalog()
+    identity = canonical_model_id(model, catalog)
+    if not catalog["models"].get(identity, {}).get("red_team_only"):
+        return
+    context = {key: options.get(key) for key in ("review_mode", "review_profile", "requested_role")}
+    context.update(author_model=options.get("review_author_model"),
+                   transport="native_codex" if agent == "codex" and model == identity else agent)
+    if refusal := retired_model_refusal(model, catalog, review_context=context):
+        raise ValueError(refusal)
+    if (mode != "read-only" or options.get("language_lane") or options.get("advisory_role")
+            or options.get("advisory_task") or options.get("advisory_binding")
+            or str(options.get("research_track") or "").startswith("l2-uk")
+            or options.get("research_task_family") not in (None, "review", "code-review", "review-routing")
+            or options.get("research_role") not in (None, "review")
+            or not options.get("branch") or not options.get("pr")
+            or not re.fullmatch(r"[0-9a-f]{40}", str(options.get("pinned_head") or ""))
+            or options.get("require_review_verdict") not in (True, "True")
+            or options.get("risk") not in {"low", "medium"}
+            or not re.search(rb"\bred[-_ ]team\b", prompt, re.IGNORECASE)):
+        raise ValueError("Temporary reviewer exception requires a fresh, branch-pinned red-team code review, with no other role (#10437)")
 
 
 def advisory_binding(args, prompt: bytes) -> tuple[dict, str, str]:
@@ -136,9 +165,13 @@ def _model_families() -> dict[str, str | None]:
     return families
 
 
-def check_review_family(author_model: str | None, reviewer_model: str) -> None:
+def check_review_family(author_model: str | None, reviewer_model: str, *, review_mode: str | None = None) -> None:
     if author_model is None:
         return
+    if review_mode == "red_team" and load_model_catalog()["models"].get(
+        canonical_model_id(reviewer_model), {},
+    ).get("red_team_only"):
+        return  # The scoped admission and complete branch facts both still bind.
     families = _model_families()
     author, reviewer = families.get(author_model), families.get(reviewer_model)
     if not author or not reviewer or author == reviewer:
@@ -188,6 +221,34 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
     if not facts.existing_families:
         raise ValueError("review independence: the reviewed range has no attributed author commits")
     if red_team:
+        if load_model_catalog()["models"].get(canonical_model_id(reviewer_model), {}).get("red_team_only"):
+            from scripts.fleet import claude_account_lane, credit_lane
+            from scripts.review.record_cf_verdict import (
+                GitHubAdapter,
+                require_no_outside_rejection,
+                require_no_outside_review_in_flight,
+            )
+            from scripts.review.reviewer_resolver import resolve_reviewer, review_task_id_comparison_keys
+
+            reviewer_ids = review_task_id_comparison_keys(args.task_id or "", agent=args.agent)
+            if any(reviewer_ids & review_task_id_comparison_keys(task) for task in facts.author_task_ids):
+                raise ValueError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+            inputs = facts.resolver_inputs(
+                risk=args.risk, review_profile=args.review_profile, author_model=args.review_author_model,
+                routing_snapshot=credit_lane.read_routing_budget(),
+                claude_account=claude_account_lane.account_from_record(vars(args), agent=args.agent),
+            )
+            from dataclasses import replace
+
+            inputs = replace(inputs, language_lane=args.language_lane, owned_paths=(*inputs.owned_paths, *args.owned_path))
+            resolution = resolve_reviewer(inputs, review_mode="red_team")
+            if resolution.selected is None or resolution.selected.concrete_model != canonical_model_id(reviewer_model):
+                raise ValueError("RED_TEAM_REFUSED: temporary reviewer is ineligible or an eligible outside-family reviewer takes precedence")
+            try:
+                require_no_outside_rejection(GitHubAdapter(repo).comments(repository["github"], args.pr), head_sha)
+                require_no_outside_review_in_flight(store.tasks_dir(), repository["github"], head_sha)
+            except RecordError as exc:
+                raise ValueError(str(exc)) from None
         return
     reviewer = _model_families().get(reviewer_model)
     if not reviewer or reviewer in facts.excluded_families:

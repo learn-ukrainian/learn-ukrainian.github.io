@@ -1102,6 +1102,15 @@ def assert_frozen_surfaces(actual, *, surfaces):
     for surface in surfaces:
         value = deepcopy(actual[surface])
         if surface == "catalog":
+            # Assert the entire operator-approved exception before comparing every other field.
+            if "red_team_only" in value["models"]["gpt-6-astra"]:
+                assert hashlib.sha256(encode(value["models"]["gpt-6-astra"])).hexdigest() == "80bcd99f8ecf8e25423683302239e2cdb26e0ea48abdbcb5e7848d31e6a690a6"
+                exception = value["review_candidates"].pop("openai_red_team_exception")
+                assert hashlib.sha256(encode(exception)).hexdigest() == "ba9c4c63a08db1d9173ace99f6f6da2735f4e5c5402f305d24300c29fbde4a5c"
+                endpoint = value["review_scheduler"]["endpoints"]["codex"]
+                assert endpoint["models"] == ["gpt-6.1-sol", "gpt-6-astra"]
+                endpoint["models"] = ["gpt-6.1-sol"]
+                value["models"]["gpt-6-astra"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gpt-6-astra"])
             # Carbon is held inventory only; every prior seat and route stays frozen.
             carbon = value["models"].pop("gemini-4-carbon")
             assert hashlib.sha256(encode(carbon)).hexdigest() == "5e7dd56ff656759fae9e85e0120c0eb74ae49ea78122db95c288ad3631c960b7"
