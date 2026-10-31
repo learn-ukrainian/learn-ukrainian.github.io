@@ -22,7 +22,6 @@ from fastapi import APIRouter, Depends, HTTPException
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.config import ACTIVITY_COMPLEXITY, ACTIVITY_RESTRICTIONS, LEVEL_CONFIG, VALID_ACTIVITY_TYPES
-from common.thresholds import REVIEW_PASS_FLOOR
 
 from .config import LEVELS, SEMINAR_TRACK_IDS
 from .dashboard_comms import (
@@ -73,8 +72,6 @@ router = APIRouter(tags=["dashboard"])
 logger = logging.getLogger(__name__)
 
 
-
-
 DASHBOARD_STATE_SUMMARY_TTL_S = 60.0
 DASHBOARD_OVERVIEW_CACHE_KEY = "dashboard_overview"
 DASHBOARD_OVERVIEW_TTL_S = 60.0
@@ -85,7 +82,6 @@ _OVERVIEW_TOTAL_KEYS = (
     "fail",
     "unaudited",
     "missing",
-    "shippable",
     "total",
     "published_mdx",
 )
@@ -401,9 +397,7 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
         if not track_modules:
             continue
 
-        track_data = scan_track_summary_cached(
-            track_id, level_cfg["path"], track_modules, ctx=resolved
-        )
+        track_data = scan_track_summary_cached(track_id, level_cfg["path"], track_modules, ctx=resolved)
         track_data["stats"] = compute_track_stats(track_data["modules"], track_id)
         summary_stats = state_tracks.get(track_id, {})
         s = track_data["stats"]
@@ -732,12 +726,6 @@ async def module_detail(track_id: str, slug: str, ctx: MonitorContext = Depends(
     result["review_score"] = review_info["review_score"]
     result["review_verdict"] = review_info["review_verdict"]
     result["plan_review_verdict"] = review_info["plan_review_verdict"]
-
-    # Shippable = audit pass + review >= REVIEW_PASS_FLOOR (#971)
-    audit_status = result.get("status", {})
-    overall = audit_status.get("overall", {}).get("status") if isinstance(audit_status, dict) else None
-    r_score = review_info["review_score"]
-    result["shippable"] = overall == "pass" and r_score is not None and r_score >= REVIEW_PASS_FLOOR
 
     # Friction from friction.yaml (#970)
     orch_dir = safe_join(track_dir, "orchestration", slug)

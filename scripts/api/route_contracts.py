@@ -270,7 +270,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "/api/artifacts",
         "prefix",
         "http",
-        "Artifact classification, ship-ready checks, report listing, drift, and force-preview evidence.",
+        "Artifact classification, artifact-gate checks, report listing, drift, and force-preview evidence.",
         "Plans, generated curriculum files, site MDX, review/audit docs, docs/audit reports.",
         "No route cache; live filesystem reads.",
         ("artifacts.html", "agents", "docs"),

@@ -73,7 +73,7 @@ def test_module_by_slug_compact_default(monkeypatch):
     assert body["retry_count"] == 2
     assert body["worker"] == "claude"
     assert body["review"]["score"] == 9.4
-    assert body["shippable"] is True
+    assert "shippable" not in body
     # Compact projection must NOT leak the full phases payload.
     assert "phases" not in body
 

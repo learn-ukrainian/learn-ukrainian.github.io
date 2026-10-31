@@ -7,6 +7,7 @@ aggregation. All functions are sync and designed for asyncio.to_thread().
 from __future__ import annotations
 
 import json
+import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -17,8 +18,7 @@ except ImportError:
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
-from .config import LEVELS
-from .state_compute import _compute_shippable, _get_review_score
+from .config import LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
 from .state_helpers import (
     V5_PHASE_ORDER,
     detect_pipeline_version,
@@ -278,7 +278,6 @@ def compute_module_range_status(
     if end < start:
         raise ValueError("end must be greater than or equal to start")
 
-
     plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
     selected = [(num, slug) for num, slug in plan_slugs if start <= num <= end]
     track_dir = curriculum_root / level_cfg["path"]
@@ -310,25 +309,125 @@ def compute_module_range_status(
     }
 
 
+# Delivery stages already recorded on disk. Each count names that record.
+_BUILT_SOURCE = (
+    "curriculum/l2-uk-en/{track}/orchestration/{slug}/state.json "
+    "phase write (v6), content (v5), or v3-B (v3) status=complete"
+)
+_FINAL_REVIEW_SOURCE = (
+    "curriculum/l2-uk-en/{track}/review/{slug}-final-review.md ===VERDICT=== APPROVE ===END_VERDICT==="
+)
+_ENRICHMENT_SOURCE = "curriculum/l2-uk-en/plans/{track}/{slug}.yaml non-empty plan_fixes"
+_PUBLISHED_SOURCE = "site/src/content/docs/{track}/{slug}.mdx or site/src/content/docs/{track}/{slug}/index.mdx"
+_MERGED_SOURCE = (
+    "git ls-tree origin/main -- site/src/content/docs/{track}/{slug}.mdx "
+    "or site/src/content/docs/{track}/{slug}/index.mdx"
+)
+
+
+def _stage_count(count: int, total: int, source: str) -> dict:
+    return {
+        "count": count,
+        "pct": round(count / total * 100) if total else 0,
+        "source": source,
+    }
+
+
+def _published_mdx_exists(project_root: Path, track_id: str, slug: str) -> bool:
+    """True when the learner page for this module is on the site tree.
+
+    Seminars are one flat ``{slug}.mdx``. Core lessons are ``{slug}/index.mdx``.
+    """
+    candidates = (
+        ("site", "src", "content", "docs", track_id, f"{slug}.mdx"),
+        ("site", "src", "content", "docs", track_id, slug, "index.mdx"),
+    )
+    for parts in candidates:
+        try:
+            path = safe_join(project_root, *parts)
+        except ValueError:
+            return False
+        if path.is_file():
+            return True
+    return False
+
+
+def _origin_main_mdx_slugs(git_root: Path, track_id: str) -> set[str] | None:
+    """Slugs whose module MDX blob is in origin/main. None when git cannot answer."""
+    if not track_id or "/" in track_id or track_id in {".", ".."}:
+        return None
+    prefix = f"site/src/content/docs/{track_id}/"
+    try:
+        proc = subprocess.run(
+            [
+                "git",
+                "--no-optional-locks",
+                "-C",
+                str(git_root),
+                "ls-tree",
+                "-r",
+                "--name-only",
+                "origin/main",
+                "--",
+                prefix,
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+    except (OSError, subprocess.SubprocessError, AssertionError):
+        # A refused or failed git process cannot answer. The route sweep
+        # refuses subprocess with AssertionError; that is unavailable, not a 500.
+        return None
+    if proc.returncode != 0:
+        return None
+    slugs: set[str] = set()
+    for line in proc.stdout.splitlines():
+        name = line.strip()
+        if not name.startswith(prefix) or not name.endswith(".mdx"):
+            continue
+        rel = name[len(prefix) :]
+        if rel.endswith("/index.mdx"):
+            slug = rel[: -len("/index.mdx")]
+            if slug and "/" not in slug:
+                slugs.add(slug)
+            continue
+        if "/" in rel or not rel.endswith(".mdx"):
+            continue
+        slug = rel[: -len(".mdx")]
+        if slug:
+            slugs.add(slug)
+    return slugs
+
+
 def compute_track_health(
     track_id: str,
     level_cfg: dict,
     *,
     curriculum_root: Path,
     plans_root: Path | None = None,
+    project_root: Path | None = None,
+    git_root: Path | None = None,
 ) -> dict:
-    """Compute track health summary."""
+    """Compute track health summary from the records each stage already has."""
     if plans_root is None:
         plans_root = curriculum_root / "plans"
+    if project_root is None:
+        project_root = PROJECT_ROOT
+    if git_root is None:
+        git_root = LIVE_REPO_ROOT
     plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
     track_dir = curriculum_root / level_cfg["path"]
     plan_dir = plans_root / track_id
     total = len(plan_slugs)
 
-    built = audit_pass = audit_fail = enriched = final_reviewed = final_approved = shippable = 0
+    built = audit_pass = audit_fail = enriched = final_reviewed = final_approved = 0
+    published = merged = 0
     word_ratios = []
     attention = []
     completion_times = []
+    merged_slugs = _origin_main_mdx_slugs(git_root, track_id)
 
     for num, slug in plan_slugs:
         b, ct = _check_build_phase(safe_join(track_dir / "orchestration", slug))
@@ -347,11 +446,6 @@ def compute_track_health(
         if wt > 0 and wc > 0:
             word_ratios.append(wc / wt)
 
-        # Shippable = audit PASS + review >= 8.0 (#971)
-        review_data = _get_review_score(track_dir, slug)
-        if _compute_shippable(audit["status"], review_data["score"]):
-            shippable += 1
-
         if plan_has_revision_log(plan_dir / f"{slug}.yaml"):
             enriched += 1
 
@@ -361,23 +455,42 @@ def compute_track_health(
         if fr_att:
             attention.append(fr_att)
 
+        if _published_mdx_exists(project_root, track_id, slug):
+            published += 1
+        if merged_slugs is not None and slug in merged_slugs:
+            merged += 1
+
     remaining = total - built
     eta_minutes = compute_eta(completion_times, remaining)
     avg_word_ratio = round(sum(word_ratios) / len(word_ratios), 2) if word_ratios else None
     attention.sort(key=lambda x: 0 if "fail" in x["reason"] else 1)
+    if merged_slugs is None:
+        merged_stage = {"count": None, "pct": None, "source": _MERGED_SOURCE, "available": False}
+    else:
+        merged_stage = {**_stage_count(merged, total, _MERGED_SOURCE), "available": True}
 
     return {
         "track": track_id,
         "total": total,
-        "build": {"done": built, "pct": round(built / total * 100) if total else 0},
+        "build": {
+            "content_phase_complete": built,
+            "pct": round(built / total * 100) if total else 0,
+            "source": _BUILT_SOURCE,
+        },
         "audit": {"passing": audit_pass, "failing": audit_fail, "pct": round(audit_pass / total * 100) if total else 0},
-        "shippable": {"count": shippable, "pct": round(shippable / total * 100) if total else 0},
-        "enrichment": {"done": enriched, "pct": round(enriched / total * 100) if total else 0},
+        "enrichment": {
+            "with_revision_log": enriched,
+            "pct": round(enriched / total * 100) if total else 0,
+            "source": _ENRICHMENT_SOURCE,
+        },
         "final_review": {
             "reviewed": final_reviewed,
             "approved": final_approved,
             "approval_rate": f"{round(final_approved / final_reviewed * 100)}%" if final_reviewed else "N/A",
+            "source": _FINAL_REVIEW_SOURCE,
         },
+        "published": _stage_count(published, total, _PUBLISHED_SOURCE),
+        "merged": merged_stage,
         "words": {"avg_ratio": f"{avg_word_ratio}x" if avg_word_ratio else "N/A"},
         "eta": {
             "remaining": remaining,

@@ -31,12 +31,7 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 def _valid_mdx(path: Path, body: str = "Learners greet each other.") -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        "---\n"
-        "title: Hello\n"
-        "description: Greetings\n"
-        "---\n\n"
-        "# Hello\n\n"
-        + (body + " ") * 200,
+        "---\ntitle: Hello\ndescription: Greetings\n---\n\n# Hello\n\n" + (body + " ") * 200,
         encoding="utf-8",
     )
 
@@ -58,10 +53,18 @@ def _set_env(tmp_path: Path, monkeypatch):
     return curr / "a1", plans
 
 
-def _stub_gates(monkeypatch, *, audit_status="pass", word_count=1200, word_target=1200,
-                review_score=9.2, final_verdict: str | None = "PASS"):
+def _stub_gates(
+    monkeypatch,
+    *,
+    audit_status="pass",
+    word_count=1200,
+    word_target=1200,
+    review_score=9.2,
+    final_verdict: str | None = "PASS",
+):
     monkeypatch.setattr(
-        artifacts_router, "get_audit_status",
+        artifacts_router,
+        "get_audit_status",
         lambda *_a, **_kw: {
             "status": audit_status,
             "word_count": word_count,
@@ -70,18 +73,18 @@ def _stub_gates(monkeypatch, *, audit_status="pass", word_count=1200, word_targe
         },
     )
     monkeypatch.setattr(
-        artifacts_router, "_get_review_score",
+        artifacts_router,
+        "_get_review_score",
         lambda *_a, **_kw: {"exists": True, "score": review_score, "verdict": "PASS"},
     )
     monkeypatch.setattr(
-        artifacts_router, "get_final_review_info",
-        lambda *_a, **_kw: (
-            {"exists": True, "verdict": final_verdict, "score": review_score}
-            if final_verdict else None
-        ),
+        artifacts_router,
+        "get_final_review_info",
+        lambda *_a, **_kw: {"exists": True, "verdict": final_verdict, "score": review_score} if final_verdict else None,
     )
     monkeypatch.setattr(
-        artifacts_router, "get_word_target_from_plan",
+        artifacts_router,
+        "get_word_target_from_plan",
         lambda *_a, **_kw: word_target,
     )
 
@@ -95,19 +98,23 @@ def test_module_artifact_all_gates_green(tmp_path, monkeypatch):
 
     # Make the plan OLDER than the content so plan_fresh is True.
     import os
+
     older = content_path.stat().st_mtime - 60
     os.utime(plan_path, (older, older))
 
     _stub_gates(monkeypatch)
     monkeypatch.setattr(
-        artifacts_router, "find_content_file",
+        artifacts_router,
+        "find_content_file",
         lambda _track_dir, slug: content_path if slug == "hello" else None,
     )
 
     resp = client.get("/api/artifacts/a1/hello")
     assert resp.status_code == 200
     body = resp.json()
-    assert body["ship_ready"] is True
+    assert body["artifact_gates_green"] is True
+    assert "ship_ready" not in body
+    assert "legacy_shippable" not in body
     assert all(body["gates"].values()), body["gates"]
 
 
@@ -120,18 +127,20 @@ def test_module_artifact_flags_stale_plan(tmp_path, monkeypatch):
 
     # Plan is NEWER than content — rebuild required before shipping.
     import os
+
     newer = content_path.stat().st_mtime + 60
     os.utime(plan_path, (newer, newer))
 
     _stub_gates(monkeypatch)
     monkeypatch.setattr(
-        artifacts_router, "find_content_file",
+        artifacts_router,
+        "find_content_file",
         lambda _track_dir, slug: content_path if slug == "hello" else None,
     )
 
     body = client.get("/api/artifacts/a1/hello").json()
     assert body["gates"]["plan_fresh"] is False
-    assert body["ship_ready"] is False
+    assert body["artifact_gates_green"] is False
 
 
 def test_module_artifact_flags_missing_frontmatter(tmp_path, monkeypatch):
@@ -144,13 +153,14 @@ def test_module_artifact_flags_missing_frontmatter(tmp_path, monkeypatch):
 
     _stub_gates(monkeypatch)
     monkeypatch.setattr(
-        artifacts_router, "find_content_file",
+        artifacts_router,
+        "find_content_file",
         lambda _track_dir, slug: content_path if slug == "hello" else None,
     )
 
     body = client.get("/api/artifacts/a1/hello").json()
     assert body["gates"]["frontmatter_valid"] is False
-    assert body["ship_ready"] is False
+    assert body["artifact_gates_green"] is False
 
 
 def test_module_artifact_404_on_unknown_track(tmp_path, monkeypatch):
@@ -168,13 +178,14 @@ def test_module_artifact_fails_when_final_review_missing(tmp_path, monkeypatch):
 
     _stub_gates(monkeypatch, final_verdict=None)
     monkeypatch.setattr(
-        artifacts_router, "find_content_file",
+        artifacts_router,
+        "find_content_file",
         lambda _track_dir, slug: content_path if slug == "hello" else None,
     )
 
     body = client.get("/api/artifacts/a1/hello").json()
     assert body["gates"]["final_review_pass"] is False
-    assert body["ship_ready"] is False
+    assert body["artifact_gates_green"] is False
 
 
 # ---------------------------------------------------------------------
@@ -188,21 +199,21 @@ def test_ship_ready_aggregates(monkeypatch):
     monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
 
     monkeypatch.setattr(
-        artifacts_router, "get_plan_slugs",
+        artifacts_router,
+        "get_plan_slugs",
         lambda _track: [(1, "ready"), (2, "stale-plan")],
     )
 
     def fake_snapshot(track, slug, *args, **kwargs):
         if slug == "ready":
             return {
-                "ship_ready": True,
+                "artifact_gates_green": True,
                 "track": track,
                 "slug": slug,
                 "review": {"score": 9.5},
                 "audit": {"word_count": 1300, "word_target": 1200},
             }
-        return {"ship_ready": False, "track": track, "slug": slug,
-                "review": {"score": 9.0}, "audit": {}}
+        return {"artifact_gates_green": False, "track": track, "slug": slug, "review": {"score": 9.0}, "audit": {}}
 
     monkeypatch.setattr(artifacts_router, "_compute_artifact_snapshot", fake_snapshot)
 
@@ -210,9 +221,10 @@ def test_ship_ready_aggregates(monkeypatch):
     assert resp.status_code == 200
     body = resp.json()
     assert body["modules_inspected"] == 2
-    assert body["ship_ready_count"] == 1
-    assert body["ship_ready"][0]["slug"] == "ready"
-    assert body["ship_ready"][0]["review_score"] == 9.5
+    assert body["artifact_gates_green_count"] == 1
+    assert "ship_ready" not in body
+    assert body["artifact_gates_green"][0]["slug"] == "ready"
+    assert body["artifact_gates_green"][0]["review_score"] == 9.5
 
 
 # ---------------------------------------------------------------------
@@ -285,6 +297,7 @@ def test_site_run_swallows_missing_binary(monkeypatch):
     Regression for #1309 final review: a fresh machine without the
     gh CLI installed would 500 on /api/site/deployments.
     """
+
     def raises_not_found(*_a, **_kw):
         raise FileNotFoundError("gh not in PATH")
 
@@ -304,7 +317,9 @@ def test_module_artifact_404_on_unknown_slug(tmp_path, monkeypatch):
     """
     _set_env(tmp_path, monkeypatch)
     monkeypatch.setattr(
-        artifacts_router, "find_content_file", lambda *_a, **_kw: None,
+        artifacts_router,
+        "find_content_file",
+        lambda *_a, **_kw: None,
     )
     resp = client.get("/api/artifacts/a1/does-not-exist")
     assert resp.status_code == 404

@@ -1,4 +1,5 @@
 """Tests for dashboard data generation and HTML validation."""
+
 from __future__ import annotations
 
 import re
@@ -16,9 +17,11 @@ sys.path.insert(0, str(ROOT / "scripts" / "generate_mdx"))
 
 # ── Data parsing tests ──────────────────────────────────────────
 
+
 class TestParseWordCount:
     def setup_method(self):
         from generate_playground_data import parse_word_count
+
         self.parse = parse_word_count
 
     def test_standard_format(self):
@@ -28,6 +31,7 @@ class TestParseWordCount:
 
 
 # ── HTML validation tests ───────────────────────────────────────
+
 
 class TestHtmlValidation:
     """Validate dashboard HTML files have valid structure."""
@@ -49,6 +53,7 @@ class TestHtmlValidation:
 
 
 # ── API endpoint coverage ───────────────────────────────────────
+
 
 class TestApiEndpoints:
     """Verify dashboard API endpoints are defined in the API server."""
@@ -98,10 +103,10 @@ class TestApiEndpoints:
             route_relative = "/" + "/".join(segments[3:]) if len(segments) > 3 else "/" + last_segment
 
             path_variants = [
-                endpoint,                    # /api/state/summary
-                route_relative,              # /summary or /enrichment-status
-                f'"{route_relative}"',       # quoted in decorator
-                f'"/{last_segment}"',        # just the last segment quoted
+                endpoint,  # /api/state/summary
+                route_relative,  # /summary or /enrichment-status
+                f'"{route_relative}"',  # quoted in decorator
+                f'"/{last_segment}"',  # just the last segment quoted
                 last_segment.replace("-", "_"),  # function name convention
             ]
             found = any(v in router_text for v in path_variants)
@@ -128,6 +133,7 @@ class TestApiEndpoints:
 
 # ── Dashboard inventory ─────────────────────────────────────────
 
+
 class TestDashboardInventory:
     """Verify expected dashboards exist."""
 
@@ -144,6 +150,7 @@ class TestDashboardInventory:
 
 
 # ── #7024 overview last-good honesty ─────────────────────────────
+
 
 def _published_summary(*, total: int = 80, published_mdx: int = 55, research_done: int = 40) -> dict:
     return {
@@ -246,7 +253,6 @@ class TestOverviewLastGoodHonesty:
                         "content_complete": 0,
                         "fail": 0,
                         "unaudited": 0,
-                        "shippable": 0,
                         "research": {"total": 40},
                     },
                 }
@@ -259,7 +265,6 @@ class TestOverviewLastGoodHonesty:
                 "content_complete": 0,
                 "fail": 0,
                 "unaudited": 0,
-                "shippable": 0,
             },
             "meta": {"track_scan": "hit", "source": "fs:dashboard-summary+state-summary"},
             "timestamp": "2026-08-18T16:21:47Z",

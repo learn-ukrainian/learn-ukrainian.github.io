@@ -19,7 +19,6 @@ from .monitor_context import MonitorContext
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
-from common.thresholds import REVIEW_PASS_FLOOR
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
@@ -34,9 +33,6 @@ from .state_helpers import ctx_cache_scope, detect_pipeline_version, get_plan_sl
 _track_cache: dict[str, tuple[float, dict]] = {}
 _TRACK_CACHE_TTL = 30.0  # seconds
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
-
-
-
 
 
 def _track_cache_key(track_id: str, ctx: MonitorContext) -> str:
@@ -223,10 +219,6 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
         except Exception:
             pass
 
-    # Shippable = audit PASS + review >= REVIEW_PASS_FLOOR
-    r_score = review_info["review_score"]
-    is_shippable = overall_status == "pass" and r_score is not None and r_score >= REVIEW_PASS_FLOOR
-
     return {
         "slug": slug,
         "num": num,
@@ -237,7 +229,6 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
         "word_target": word_target,
         "deferred_count": deferred_count,
         "gates": gates,
-        "shippable": is_shippable,
         "files": {
             "plan": has_plan,
             "meta": has_meta,
@@ -286,7 +277,7 @@ def stats_from_state_summary(summary_stats: dict, *, is_seminar: bool) -> dict:
     """Map cached ``/api/state/summary`` counts onto overview track stats.
 
     This is the cheap request-path shape: no per-module status/orchestration
-    walk. ``fail`` / ``shippable`` / plan-review verdicts are not in the
+    walk. ``fail`` and plan-review verdicts are not in the
     summary snapshot, so they stay 0 until a background full scan fills
     last-good. Research totals follow the same seminar-vs-core key as
     ``overview()`` historically used.
@@ -313,7 +304,6 @@ def stats_from_state_summary(summary_stats: dict, *, is_seminar: bool) -> dict:
         "fail": 0,
         "unaudited": max(0, generated_md - audit_passing - audit_stale),
         "missing": max(0, total - present),
-        "shippable": 0,
         "reviewed": int(summary_stats.get("reviewed") or 0),
         "final_review": int(summary_stats.get("final_review_done") or 0),
         "plan_reviewed": int(summary_stats.get("prompt_reviewed") or 0),
@@ -338,14 +328,15 @@ def compute_track_stats(modules: list, track_id: str) -> dict:
         "fail": sum(1 for m in modules if m["status"] == "fail"),
         "unaudited": sum(1 for m in modules if m["status"] == "unaudited"),
         "missing": sum(1 for m in modules if m["status"] == "missing"),
-        "shippable": sum(1 for m in modules if m.get("shippable")),
         "reviewed": sum(1 for m in modules if m.get("has_review")),
         "final_review": sum(1 for m in modules if m.get("has_final_review")),
         "plan_reviewed": sum(1 for m in modules if m.get("has_plan_review")),
         "plan_pass": sum(1 for m in modules if m.get("plan_review_verdict") == "PASS"),
         "plan_needs_fixes": sum(1 for m in modules if m.get("plan_review_verdict") == "NEEDS FIXES"),
         "plan_fail": sum(1 for m in modules if m.get("plan_review_verdict") == "FAIL"),
-        "stale_status": sum(1 for m in modules if m.get("is_fresh") is False and m.get("status") not in {"missing", "unaudited"}),
+        "stale_status": sum(
+            1 for m in modules if m.get("is_fresh") is False and m.get("status") not in {"missing", "unaudited"}
+        ),
     }
 
     rubric_name = get_rubric(track_id)

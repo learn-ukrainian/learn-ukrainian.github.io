@@ -1139,7 +1139,6 @@ Returns:
 - `research` — exists, quality score (0-10). Detects both research files and knowledge packets
 - `review` — exists, **score** (numeric, e.g. 8.7), **verdict** (PASS/FAIL) *(#971)*
 - `friction` — **active** count, **resolved** count, **items** list with id/type/description *(#970/#971)*
-- `shippable` — **true/false** (audit PASS + review >= 8.0) *(#971)*
 - `stress` — **mismatches** count, **unknown** count, **details** (from D.0 screen cache) *(#971)*
 - `prompt_review` — whether `/prompt-review` has been run (bool, checks `audit/{slug}-prompt-review.md`)
 - `content_review` — whether `/content-review` has been run (bool, checks `audit/{slug}-content-review.md`)
@@ -1175,7 +1174,7 @@ Returns:
 
 ### `GET /api/state/track-health/{track}`
 
-**One call to know everything about a track.** Build progress, audit, enrichment, final review, word quality, ETA, and attention list — all in one response.
+**One call to know everything about a track.** Each delivery stage is a separate count from its own record, with `source` naming that record. Audit pass is not one of those stages.
 
 ```bash
 curl -s http://localhost:8765/api/state/track-health/a1 | python3 -m json.tool
@@ -1185,17 +1184,36 @@ Returns:
 ```json
 {
   "track": "a1", "total": 44,
-  "build": {"done": 15, "pct": 34},
+  "build": {
+    "content_phase_complete": 15, "pct": 34,
+    "source": "curriculum/l2-uk-en/{track}/orchestration/{slug}/state.json phase write (v6), content (v5), or v3-B (v3) status=complete"
+  },
   "audit": {"passing": 40, "failing": 0, "pct": 91},
-  "enrichment": {"done": 44, "pct": 100},
-  "final_review": {"reviewed": 40, "approved": 37, "approval_rate": "92%"},
+  "enrichment": {
+    "with_revision_log": 44, "pct": 100,
+    "source": "curriculum/l2-uk-en/plans/{track}/{slug}.yaml non-empty plan_fixes"
+  },
+  "final_review": {
+    "reviewed": 40, "approved": 37, "approval_rate": "92%",
+    "source": "curriculum/l2-uk-en/{track}/review/{slug}-final-review.md ===VERDICT=== APPROVE ===END_VERDICT==="
+  },
+  "published": {
+    "count": 12, "pct": 27,
+    "source": "site/src/content/docs/{track}/{slug}.mdx or site/src/content/docs/{track}/{slug}/index.mdx"
+  },
+  "merged": {
+    "count": 12, "pct": 27, "available": true,
+    "source": "git ls-tree origin/main -- site/src/content/docs/{track}/{slug}.mdx or site/src/content/docs/{track}/{slug}/index.mdx"
+  },
   "words": {"avg_ratio": "1.31x"},
   "eta": {"remaining": 29, "minutes": 142, "display": "~142min (2h22m)"},
   "attention": [{"num": 27, "slug": "colors-and-clothing", "reason": "final_review_NEEDS_WORK", "detail": "10 issues"}]
 }
 ```
 
-ETA is calculated from the rate of recent Phase B completions. Cache TTL: 30 seconds.
+`published.count` is how many plan slugs have a learner page on the monitor project tree. Seminars use `{slug}.mdx`. Core lessons use `{slug}/index.mdx`. `merged.count` is how many of those same paths are blobs in `origin/main`. When git cannot answer, `merged.count` is null and `merged.available` is false; that is not a zero. `final_review.approved` counts the APPROVE verdict only. `build.content_phase_complete` counts the content phase in orchestration state. None of these fields is an audit-pass total.
+
+ETA is calculated from the rate of recent content-phase completions. Cache TTL: 30 seconds.
 
 ---
 
@@ -3192,9 +3210,11 @@ The following legacy endpoints and route aliases have been completely retired an
 
 Two routers with an **explicit boundary**:
 
-- `/api/artifacts/*` answers "are the internal artifacts ready to
-  ship?" — MDX exists, frontmatter valid, word target met, audit
-  passes, final review approved, plan not changed after build.
+- `/api/artifacts/*` answers whether the internal artifact gates are
+  green — content exists, frontmatter present, word target met, audit
+  passes, final review recorded as PASS, plan not changed after build.
+  `artifact_gates_green` is that conjunction. It is not merged and not
+  published.
 - `/api/site/*` answers "is the public site actually up?" —
   reachability, freshness, recent GH Pages deploys.
 
@@ -3203,9 +3223,10 @@ the split keeps each router's purpose obvious.
 
 ### `GET /api/artifacts/{track}/{slug}`
 
-Per-module gate snapshot. Returns `ship_ready` (bool — true iff every
+Per-module gate snapshot. Returns `artifact_gates_green` (bool — true iff every
 named gate is green) plus the individual gates so clients can surface
-exactly which check failed.
+exactly which check failed. The flag does not mean the module is merged
+or published.
 
 ```json
 {
@@ -3218,29 +3239,26 @@ exactly which check failed.
     "final_review_pass": true,
     "plan_fresh":        true
   },
-  "ship_ready": true,
-  "legacy_shippable": true,
+  "artifact_gates_green": true,
   "audit": {"status": "pass", "word_count": 1230, "word_target": 1200, ...},
   "review": {"score": 9.4, "verdict": "PASS"},
   "final_review": {"exists": true, "verdict": "PASS", ...}
 }
 ```
 
-`legacy_shippable` is the older audit+review combined check (still
-used by existing dashboards). `ship_ready` is the strict new check
-that also covers frontmatter + final review + plan freshness.
-
 ### `GET /api/artifacts/ship-ready[?track=a1]`
 
 Aggregate list — walks every plan and returns the modules whose
-every gate is green. Narrow to one track with `?track=`.
+every artifact gate is green. Narrow to one track with `?track=`.
+The path is unchanged. The body field is `artifact_gates_green`.
+It is not a merged count and not a published count.
 
 ```json
 {
   "tracks_scanned": ["a1", "a2", "b1"],
   "modules_inspected": 155,
-  "ship_ready_count": 27,
-  "ship_ready": [
+  "artifact_gates_green_count": 27,
+  "artifact_gates_green": [
     {"track": "a1", "slug": "hello-who-are-you", "review_score": 9.4,
      "word_count": 1230, "word_target": 1200}
   ]
@@ -3501,7 +3519,7 @@ full payload.
   "audit": {"status": "pass", "word_count": 1300, "word_target": 1200},
   "review": {"score": 9.4, "verdict": "PASS"},
   "final_review": {"exists": true, "verdict": "PASS"},
-  "shippable": true, "blocking_issues": [],
+  "blocking_issues": [],
   "retry_count": 0, "worker": "claude"
 }
 ```
