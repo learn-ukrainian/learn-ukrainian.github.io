@@ -1,7 +1,7 @@
 """
 Gate evaluation audit phases.
 
-Handles evaluation of core gates (words, activities, engagement, vocab,
+Handles descriptive word counts and core gates (activities, engagement, vocab,
 structure, persona, lint), immersion, grammar/naturalness, activity quality,
 content-heavy modules, and transliteration policy.
 """
@@ -39,6 +39,7 @@ from .cleaners import (
 from .config import get_a1_immersion_range, get_a2_immersion_range, get_b1_immersion_range
 from .gates import (
     GateResult,
+    describe_word_count,
     evaluate_activity_count,
     evaluate_activity_quality,
     evaluate_audio,
@@ -54,7 +55,6 @@ from .gates import (
     evaluate_richness,
     evaluate_unique_types,
     evaluate_vocab,
-    evaluate_word_count,
 )
 from .lint import run_lint_checks
 from .parsing import AuditContext, AuditState
@@ -109,13 +109,11 @@ def count_words_and_engagement(ctx: AuditContext, state: AuditState) -> None:
 
 
 def evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: GateResult) -> set:
-    """Evaluate word count, activity, engagement, vocab, structure, persona, lint gates."""
+    """Report word counts; evaluate activity, engagement, vocab, structure, persona, lint gates."""
     config = ctx.config
     vocab_target = config.get('min_vocab', 25)
 
-    state.results['words'] = evaluate_word_count(state.total_words, ctx.target, state.raw_words)
-    if state.results['words'].status == 'FAIL':
-        state.has_critical_failure = True
+    state.results['words'] = describe_word_count(state.total_words, state.raw_words)
 
     if ctx.skip_activities:
         deferred = GateResult('INFO', '\u23f3', "Deferred (content-only audit)")

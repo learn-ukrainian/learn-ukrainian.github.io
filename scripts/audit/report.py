@@ -155,7 +155,7 @@ def _report_header(file_path: str, shown_level: str, module_num: int | None,
     meta_line = f"**Level:** {shown_level}"
     if module_num is not None:
         meta_line += f" | **Module:** M{module_num:02d}"
-    meta_line += f" | **Phase:** {phase} | **Pedagogy:** {pedagogy} | **Target:** {target}"
+    meta_line += f" | **Phase:** {phase} | **Pedagogy:** {pedagogy}"
     lines.append(meta_line)
 
     if naturalness:
@@ -185,7 +185,6 @@ def _report_config_section(config: dict, level_code: str, target: int,
     if module_focus:
         config_type += f"-{module_focus}"
     lines.append(f"**Type:** {config_type}")
-    lines.append(f"**Word Target:** {target} words")
 
     min_act = config.get('min_activities', 0)
     max_act = config.get('max_activities', min_act + 4)

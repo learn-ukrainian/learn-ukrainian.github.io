@@ -1,7 +1,7 @@
 """
 Gate evaluation logic for module auditing.
 
-Evaluates various quality gates (word count, activities, density, etc.)
+Evaluates quality gates (activities, density, etc.) and descriptive counts
 and computes recommendations based on violations.
 """
 
@@ -18,29 +18,13 @@ class GateResult:
     msg: str
 
 
-def evaluate_word_count(total_words: int, target: int, raw_words: int = 0) -> GateResult:
-    """Evaluate word count gate.
-
-    - PASS: at or above target (no upper limit - we love words!)
-    - WARN: below target but within margin
-    - FAIL: more than word_count_fail_pct% below target
-    """
-    fail_pct = AUDIT_THRESHOLDS["word_count_fail_pct"]
-    min_words = int(target * (1 - fail_pct / 100))
-
-    msg = f"{total_words}/{target}"
+def describe_word_count(total_words: int, raw_words: int = 0) -> GateResult:
+    """Report word counts without judging teaching adequacy by length."""
+    msg = f"{total_words} words (informational only)"
     if raw_words > total_words:
         msg += f" (raw: {raw_words})"
 
-    if total_words >= target:
-        return GateResult('PASS', '✅', msg)
-    elif total_words >= min_words:
-        # Below target but within tolerance - warn but don't fail
-        shortfall = target - total_words
-        return GateResult('WARN', '⚠️', f"{msg} ({shortfall} short)")
-    else:
-        # More than {fail_pct}% below target - fail
-        return GateResult('FAIL', '❌', msg)
+    return GateResult('INFO', 'ℹ️', msg)
 
 
 def evaluate_activity_count(count: int, target: int) -> GateResult:
