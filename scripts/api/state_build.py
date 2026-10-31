@@ -376,7 +376,9 @@ def _origin_main_mdx_slugs(git_root: Path, track_id: str) -> set[str] | None:
             text=True,
             timeout=15,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, subprocess.SubprocessError, AssertionError):
+        # A refused or failed git process cannot answer. The route sweep
+        # refuses subprocess with AssertionError; that is unavailable, not a 500.
         return None
     if proc.returncode != 0:
         return None
