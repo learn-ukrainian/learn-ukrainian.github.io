@@ -1804,11 +1804,11 @@ def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evalua
 
 
 @pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
-def test_security_owned_paths_only_add_coverage(launcher_path):
+def test_changed_paths_take_precedence_over_security_owned_paths(launcher_path):
     inputs = ResolverInputs(
         author_model="gpt-6.1-sol", risk="low", changed_paths=("site/src/app.ts",), owned_paths=(launcher_path,), claude_account=HOST_ACCOUNT
     )
-    assert resolve_reviewer(inputs).resolved_risk == "critical"
+    assert resolve_reviewer(inputs).resolved_risk == "low"
 
 
 @pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])

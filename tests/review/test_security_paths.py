@@ -1,4 +1,4 @@
-"""#9125: literal changed paths and an additive, tracked security inventory."""
+"""Literal changed paths and a conservative owned-scope fallback."""
 
 from __future__ import annotations
 
@@ -46,7 +46,7 @@ def test_every_security_glob_matches_a_tracked_file(pattern):
         ((), (), False),
         (("docs/readme.md", "site/src/app.ts"), (), False),
         (("docs/readme.md", "scripts/ocr/_credentials.py"), ("site/src/app.ts",), True),
-        (("site/src/app.ts",), ("scripts/ocr/_credentials.py",), True),
+        (("site/src/app.ts",), ("scripts/ocr/_credentials.py",), False),
         (("scripts/ocr/_credentials.py",), ("!scripts/ocr/_credentials.py",), True),
         (("./scripts/delegate.py",), (), True),
         ((), ("./scripts/delegate.py",), True),
@@ -69,7 +69,7 @@ def test_every_security_glob_matches_a_tracked_file(pattern):
         ((), ("docs/",), False),
     ],
 )
-def test_classifier_and_risk_are_additive(paths, owned, expected):
+def test_changed_paths_are_authoritative_with_owned_scope_fallback(paths, owned, expected):
     assert is_security_sensitive_change(paths, owned) is expected
     for risk in ("low", "medium", "high", "critical"):
         assert effective_review_risk(risk, paths, owned) == ("critical" if expected else risk)
@@ -95,6 +95,32 @@ def repo(tmp_path):
     _git(repo, "config", "user.email", "test@example.com")
     _git(repo, "config", "core.hooksPath", "/dev/null")
     return repo
+
+
+def test_docs_only_branch_preserves_local_review_risk(repo, capsys):
+    document = repo / "agents_extensions/shared/agents/curriculum-writer.md"
+    document.parent.mkdir(parents=True)
+    document.write_text("Original guidance.\n", encoding="utf-8")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-qm", "base")
+    base = _git(repo, "rev-parse", "HEAD").strip()
+    document.write_text("Updated guidance.\n", encoding="utf-8")
+    resolved_risks = []
+    for mode in ("local", "branch"):
+        if mode == "branch":
+            _git(repo, "commit", "-qam", "docs update\n\nX-Agent: codex/gpt-6.1-sol")
+        state = repo.parent / f"{mode}.json"
+        target_args = ["target", "--mode", mode, "--repo-root", str(repo)]
+        if mode == "branch":
+            target_args += ["--branch", "HEAD", "--base", base]
+        assert main(["--state-file", str(state), *target_args]) == 0
+        capsys.readouterr()
+        assert main([
+            "--state-file", str(state), "resolve-reviewer", "--author-model", "gpt-6.1-sol",
+            "--risk", "medium", "--repository", "learn-ukrainian/learn-ukrainian.github.io",
+        ]) == 0
+        resolved_risks.append(json.loads(capsys.readouterr().out)["resolved_risk"])
+    assert resolved_risks == ["medium", "medium"]
 
 
 @pytest.mark.parametrize("operation", ["rename-out", "rename-in", "delete", "newline-rename"])
