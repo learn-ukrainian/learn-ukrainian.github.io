@@ -507,14 +507,9 @@ def _score_v6_knowledge_packet(text: str) -> dict:
     else:
         dims["source_verification"] = {"score": 0, "max": 2, "detail": f"only {source_count} sources"}
 
-    # claim_grounding → Ukrainian terms in text (max 2)
-    uk_terms = len(re.findall(r"[а-яіїєґ]{3,}", text))
-    if uk_terms >= 500:
-        dims["claim_grounding"] = {"score": 2, "max": 2, "detail": f"{uk_terms} Ukrainian terms"}
-    elif uk_terms >= 100:
-        dims["claim_grounding"] = {"score": 1, "max": 2, "detail": f"{uk_terms} terms"}
-    else:
-        dims["claim_grounding"] = {"score": 0, "max": 2, "detail": f"only {uk_terms} terms"}
+    # Grounding uses distinct cited examples, as in the other core format.
+    # Raw Ukrainian word occurrences reward repeated prose rather than evidence.
+    dims["claim_grounding"] = _score_claim_grounding(text)
 
     # discovery_integration → N/A for V6 (max 1)
     dims["discovery_integration"] = {"score": 1, "max": 1, "detail": "N/A for V6"}
