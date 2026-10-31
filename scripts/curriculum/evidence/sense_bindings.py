@@ -456,6 +456,7 @@ def reviewed_binding(
         r"[0-9a-f]{64}", attempt["manifest_sha256"]
     ):
         raise ValueError("review_sources_unproven")
+    _check_lexical_packet(task, word, pool)
     try:
         receipts = ledger.records(receipt_path)
     except (OSError, ValueError, ledger.LedgerError) as exc:
@@ -503,6 +504,29 @@ def reviewed_binding(
             "result_sha256": task["result_sha256"],
         },
     }
+
+
+def _check_lexical_packet(task: dict, word: dict, pool: list[dict]) -> None:
+    """Refuse a candidate packet that is not the word under review, before the sources proof.
+
+    The sources proof also compares the lemma, so this check has to run first. A caller that
+    asks about a different lemma otherwise looks like a missing ledger.
+    """
+    from scripts.review.prompts.render import ManifestReader
+
+    try:
+        manifest_path = Path(task["options"]["review_attempt"])
+        manifest = yaml.safe_load(manifest_path.read_bytes())
+        if manifest.get("kind") != "lexical" or manifest.get("word") != word["id"]:
+            raise ValueError("review_prompt_unproven")
+        packet = ManifestReader(manifest, Path(task["review_contract"]["input_root"])).pin_json("inputs.candidates")
+        if packet != {
+            "word": word["id"], "lemma": word["lemma"], "pos": word["pos"],
+            "candidates_sha256": digest(pool), "candidates": pool,
+        }:
+            raise ValueError("review_subject_stale_or_unapproved")
+    except (OSError, KeyError, TypeError, AttributeError, json.JSONDecodeError, yaml.YAMLError) as exc:
+        raise ValueError("review_prompt_unproven") from exc
 
 
 def _check_lexical_prompt(task: dict, attempt: dict, word: dict, pool: list[dict]) -> None:
