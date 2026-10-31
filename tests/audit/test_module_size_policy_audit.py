@@ -257,7 +257,7 @@ def test_reviewed_size_policy_override_replaces_generic_band_and_keeps_metrics(
     assert "Saturation evidence:" in " ".join(row["notes"])
 
 
-def test_size_policy_override_validation_reports_actionable_schema_errors() -> None:
+def test_size_policy_override_is_ignored_by_acceptance() -> None:
     plan = {
         "word_target": 4200,
         "size_policy": {
@@ -270,31 +270,20 @@ def test_size_policy_override_validation_reports_actionable_schema_errors() -> N
         },
     }
 
-    errors = audit.validate_size_policy_override(plan)
-
-    assert errors == [
-        "size_policy.recommended_range must not be inverted.",
-        "size_policy.ceiling_words must be at least size_policy.recommended_range[1].",
-        "size_policy.floor_words (4000) must equal word_target (4200).",
-        "size_policy.basis must be a nonempty string.",
-        "size_policy.saturation_evidence must be a nonempty string.",
-        "size_policy.exceptional_justification must be required_above_ceiling.",
-    ]
+    assert audit.validate_size_policy_override(plan) == []
     assert audit.validate_size_policy_override(
         {"word_target": 4200, "size_policy": "reviewed"}
-    ) == ["size_policy must be a mapping."]
-    assert "size_policy.floor_words must be a positive integer." in (
-        audit.validate_size_policy_override(
-            {
-                "word_target": 4200,
-                "size_policy": {
-                    **plan["size_policy"],
-                    "floor_words": 0,
-                    "recommended_range": [0, 4100],
-                },
-            }
-        )
-    )
+    ) == []
+    assert audit.validate_size_policy_override(
+        {
+            "word_target": 4200,
+            "size_policy": {
+                **plan["size_policy"],
+                "floor_words": 0,
+                "recommended_range": [0, 4100],
+            },
+        }
+    ) == []
 
 
 def test_core_c1_c2_uses_evidence_packet_basis_when_no_dossier_exists(

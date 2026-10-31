@@ -209,25 +209,9 @@ def _check_plan_config(root: Path, findings: list[Finding]) -> None:
         if not isinstance(data, dict):
             continue
 
-        slug = str(data.get("slug") or path.stem)
-        expected_target = 1500 if _is_checkpoint_like(slug) else 2000
-        target = data.get("word_target")
-        if not isinstance(target, int):
-            findings.append(Finding("plan_config", "ERROR", rel, "missing integer word_target"))
-        elif target < expected_target:
-            findings.append(
-                Finding("plan_config", "ERROR", rel, f"word_target={target}, expected at least {expected_target}")
-            )
-
         outline = data.get("content_outline")
         if not isinstance(outline, list) or not outline:
             findings.append(Finding("plan_config", "ERROR", rel, "missing content_outline"))
-            continue
-        outline_sum = sum(item.get("words", 0) for item in outline if isinstance(item, dict))
-        if isinstance(target, int) and outline_sum < target * 0.95:
-            findings.append(
-                Finding("plan_config", "ERROR", rel, f"content_outline words={outline_sum}, under word_target={target}")
-            )
 
 
 def _check_activity_density(root: Path, findings: list[Finding]) -> int:

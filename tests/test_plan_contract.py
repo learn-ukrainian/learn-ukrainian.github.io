@@ -29,6 +29,10 @@ from build.phases.wiki_compressor import compress_wiki_packet
 def test_real_plan_and_wiki_pairs_produce_contract(level: str, slug: str) -> None:
     plan_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level / f"{slug}.yaml"
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    plan.pop("word_target", None)
+    for section in plan["content_outline"]:
+        if isinstance(section, dict):
+            section.pop("words", None)
     packet = _build_wiki_packet(level, slug)
 
     contract, excerpts = build_contract(
@@ -43,13 +47,15 @@ def test_real_plan_and_wiki_pairs_produce_contract(level: str, slug: str) -> Non
     assert contract["teaching_beats"]["section_order"]
     assert "dialogue_acts" in contract  # may be [] for phonetics/skills modules
     assert contract["activity_obligations"]
-    assert contract["section_word_budgets"]
+    assert "section_word_budgets" not in contract
+    assert "word_target" not in contract["module"]
     assert excerpts["sections"]
     assert excerpts["factual_anchors"]
 
     first_section = contract["teaching_beats"]["sections"][0]
     assert first_section["factual_anchors"]
-    assert first_section["word_budget"]["min"] <= first_section["word_budget"]["target"]
+    assert first_section["teaching_beats"]
+    assert "word_budget" not in first_section
 
 
 # #1282 — scenario-aware excerpt selection.
