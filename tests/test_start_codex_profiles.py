@@ -206,7 +206,8 @@ def _launch(
     printf 'rollover_agent=%s\n' "${CODEX_LAUNCHER_ROLLOVER_AGENT:-}"
     printf 'lineage=%s\n' "${CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID:-}"
     printf 'rollover=%s\n' "${CODEX_LAUNCHER_ROLLOVER_ID:-}"
-    printf 'arg=%s\n' "$@"
+    printf '\\0'
+    printf '%s\\0' "$@"
 } > "$CODEX_LAUNCHER_TEST_CAPTURE"
 """,
     )
@@ -255,9 +256,9 @@ def _launch(
     if not expect_success:
         return {}, [], result, primary, linked
 
-    lines = capture.read_text(encoding="utf-8").splitlines()
-    values = dict(line.split("=", 1) for line in lines if not line.startswith("arg="))
-    forwarded = [line.removeprefix("arg=") for line in lines if line.startswith("arg=")]
+    metadata, arguments = capture.read_bytes().decode("utf-8").split("\0", 1)
+    values = dict(line.split("=", 1) for line in metadata.splitlines())
+    forwarded = arguments.split("\0")[:-1]
     return values, forwarded, result, primary, linked
 
 
@@ -314,7 +315,9 @@ def test_launcher_binds_epic_and_strips_private_flag(tmp_path: Path) -> None:
 
     assert values["epic"] == "hramatka"
     assert values["handoff_agent"] == "codex-hramatka"
-    assert "orchestrate this epic" in forwarded
+    assert forwarded[-1].startswith("First run lu-driver-state render --lane hramatka")
+    assert forwarded[-1].endswith("\n\nCaller instructions:\norchestrate this epic")
+    assert sum("orchestrate this epic" in arg for arg in forwarded) == 1
     assert "--epic" not in forwarded
     assert any("already claimed the hramatka lease" in arg for arg in forwarded)
 
