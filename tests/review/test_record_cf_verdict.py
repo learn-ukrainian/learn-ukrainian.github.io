@@ -286,17 +286,19 @@ def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_pat
     resolved_fence = prefix + "```\nF2 resolved? scripts/example.py:20 still open.\n```\n"
     resolved_indent = prefix + "\n    F2 resolved? scripts/example.py:20 still open.\n"
     nested_resolved = prefix + ">> ```\n>> F2 resolved? scripts/example.py:20 still open.\n>> ```\n"
-    for ambiguous in (resolved_fence, resolved_indent, nested_resolved):
-        reading = recorder.p3_reading(ambiguous)
-        assert reading.ids is None and reading.reason is None
+    for closed in (resolved_fence, resolved_indent, nested_resolved):
+        reading = recorder.p3_reading(closed)
+        assert reading.reason == recorder.FINDING_WITHOUT_PRIORITY and reading.ids is None
     nested_example = prefix + ">> ```\n>> F2 [P3] scripts/example.py:20 an example, not an open finding.\n>> ```\n"
     clear_resolved = prefix + "```\nF2: resolved scripts/example.py:20 the example is closed.\n```\n"
     assert recorder.p3_reading(nested_example).ids == ("F1",)
     assert recorder.p3_reading(clear_resolved).ids == ("F1",)
 
 
-def _clause_reply(body: str, kind: str) -> str:
+def _prose_reply(body: str | None, kind: str) -> str:
     prefix = "VERDICT: REQUEST_CHANGES\nF1 [P3] scripts/example.py:10 count is high.\n"
+    if body is None:
+        return prefix
     if kind == "visible":
         return prefix + body + "\n"
     if kind == "fenced":
@@ -308,26 +310,37 @@ def _clause_reply(body: str, kind: str) -> str:
     raise AssertionError(kind)
 
 
-_LONG_OPEN = "F2 resolved after checking the patch? scripts/example.py:20 still open."
+_RESOLUTION_LINES = (
+    "F2 resolved after checking the patch? scripts/example.py:20 still open.",
+    "F2 fixed after checking the patch? scripts/example.py:20 still open.",
+    "F2 resolved after checking the patch, not actually fixed.",
+    "F2 resolved after checking the patch ? scripts/example.py:20 still open.",
+    "F2 resolved. This is not a blocker.",
+    "F2 resolved, i.e. not actually fixed.",
+    "F2 fixed, e.g. not actually fixed.",
+    "F2 resolved in e.g. scripts/example.py:20, but not actually fixed.",
+    "F2 resolved **successfully.** This is not a blocker.",
+)
+_RESOLUTION_CASES = [
+    (kind, body, False)
+    for kind in ("visible", "fenced", "quoted", "indented")
+    for body in _RESOLUTION_LINES
+] + [
+    ("visible", "F2 [P0] resolved, i.e. not actually fixed.", False),
+    ("visible", "F2 [P1] resolved, i.e. not actually fixed.", False),
+    ("visible", "F2 [P2] resolved, i.e. not actually fixed.", False),
+    ("visible", None, True),
+]
 
 
-@pytest.mark.parametrize(("kind", "body", "approved"), [
-    ("fenced", _LONG_OPEN, False),
-    ("quoted", _LONG_OPEN, False),
-    ("indented", _LONG_OPEN, False),
-    ("fenced", "F2 fixed after checking the patch? scripts/example.py:20 still open.", False),
-    ("fenced", "F2 resolved after checking the patch, not actually fixed.", False),
-    ("fenced", "F2 resolved after checking the patch ? scripts/example.py:20 still open.", False),
-    ("fenced", "F2 resolved. This is not a blocker.", True),
-    ("visible", _LONG_OPEN, False),
-])
-def test_resolution_clause_is_judged_in_full(kind, body, approved):
-    """The resolution sentence is judged in full, in a code span and on a visible line."""
-    reading = recorder.p3_reading(_clause_reply(body, kind))
+@pytest.mark.parametrize(("kind", "body", "approved"), _RESOLUTION_CASES)
+def test_prose_does_not_close_a_blocking_finding(kind, body, approved):
+    """A resolved or fixed word does not close a prose finding. An all-P3 reply still approves."""
+    reading = recorder.p3_reading(_prose_reply(body, kind))
     if approved:
         assert reading.ids == ("F1",)
     else:
-        assert reading.ids is None and reading.reason is None
+        assert reading.ids is None
 
 
 @pytest.mark.parametrize(("deep", "reason"), [

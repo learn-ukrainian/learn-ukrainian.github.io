@@ -228,8 +228,6 @@ _PROSE_FINDING_LINE = re.compile(
     rf"(?P<rest>(?:\s*[:\u2014\u2013-]+)?(?:\s*(?i:still|remains?)\s+open\s*[:\u2014\u2013-]?)?"
     rf"(?:\s*(?:\[(P[0-3])\]|\((P[0-3])\)))?.*)$"
 )
-_PROSE_RESOLVED = re.compile(r"^(?:\s*[:\u2014\u2013-]+)?\s*(?i:resolved|fixed)\b")
-_RESOLVED_AMBIGUOUS = re.compile(r"(?i)\b(?:no|not|incorrectly|unresolved|still\s+open|remains?\s+open)\b|\?")
 _BLOCKING_PRIORITY = re.compile(r"(?i)(?<![A-Za-z0-9])p[0-2](?![A-Za-z0-9])")
 _SECURITY_VERDICT = re.compile(
     r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*"
@@ -243,32 +241,6 @@ TRUNCATION_FLAG = "[Review reply truncated to fit GitHub's comment limit.]"
 REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
 FINDING_WITHOUT_PRIORITY = "finding-without-priority"
 SECURITY_VERDICT_NOT_PASS = "security-verdict-not-pass"
-
-
-def _resolution_clause(rest: str) -> str:
-    """The resolved or fixed sentence, including its closing mark.
-
-    A later sentence is not part of the clause. A dot inside a token, such as
-    ``.py``, does not end the sentence. With no closing mark, the whole line is
-    the clause.
-    """
-    head = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b", rest)
-    if head is None:
-        return rest
-    index = head.end()
-    while index < len(rest):
-        mark = rest[index]
-        if mark in "?!":
-            return rest[: index + 1]
-        if mark == "." and (index + 1 == len(rest) or rest[index + 1].isspace()):
-            return rest[: index + 1]
-        index += 1
-    return rest
-
-
-def _ambiguous_resolution(rest: str) -> bool:
-    """True when the resolution clause itself is uncertain or contradicted."""
-    return _RESOLVED_AMBIGUOUS.search(_resolution_clause(rest)) is not None
 
 
 @dataclass(frozen=True)
@@ -295,9 +267,8 @@ def _hidden_unprioritized_finding(reply: str) -> P3Reading | None:
 
     The scan uses the parser's code-token content, so a blockquote prefix on the
     source line does not hide the finding. An unprioritized finding names its
-    reason. An ambiguous resolved clause aborts the reading, and a clear resolution
-    is skipped. A priority inside the span stays an example. An unreadable
-    CommonMark map fails closed.
+    reason. The words resolved and fixed do not close it. A priority inside the
+    span stays an example. An unreadable CommonMark map fails closed.
     """
     from markdown_it import MarkdownIt
 
@@ -317,12 +288,6 @@ def _hidden_unprioritized_finding(reply: str) -> P3Reading | None:
             match = _PROSE_FINDING_LINE.match(line)
             if match is None:
                 continue
-            rest = match.group("rest") or ""
-            if _PROSE_RESOLVED.match(rest):
-                # Only the resolution clause is judged. A later sentence may say "not".
-                if _ambiguous_resolution(rest):
-                    return P3Reading()
-                continue
             if (match.group(3) or match.group(4)) is None:
                 return P3Reading(reason=FINDING_WITHOUT_PRIORITY)
     return None
@@ -337,9 +302,10 @@ def p3_reading(reply: str) -> P3Reading:
     empty reading. A finding with no priority, including one inside a fence or an
     indented code block whose source line still has a blockquote prefix, and a
     security line whose value is not exactly PASS, name the cause and do not
-    approve. An ambiguous resolved clause in that span does not approve. An empty
-    open set does not approve: a changes request with no findings stays a
-    changes request.
+    approve. Prose does not close a finding: resolved, fixed, and the words
+    around them leave a P0, P1, or P2 entry open, and a line with no priority
+    still names that cause. An empty open set does not approve: a changes
+    request with no findings stays a changes request.
     """
     if not isinstance(reply, str):
         return P3Reading()
@@ -389,12 +355,6 @@ def p3_reading(reply: str) -> P3Reading:
             continue
         finding_id = match.group(1)
         priority = match.group(3) or match.group(4)
-        rest = match.group("rest") or ""
-        if _PROSE_RESOLVED.match(rest):
-            # Only the resolution clause is judged. A later sentence may say "not".
-            if finding_id in findings or _ambiguous_resolution(rest):
-                return P3Reading()
-            continue
         if priority is None:
             return P3Reading(reason=FINDING_WITHOUT_PRIORITY)
         if structured and finding_id not in structured:
