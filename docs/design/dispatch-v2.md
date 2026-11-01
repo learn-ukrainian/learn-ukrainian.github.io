@@ -17,15 +17,13 @@ gets `worktree_disposition` (`removed`, `retained` or `error`) with a
 `worktree_disposition_detail`. The reasons are listed in
 [Worktree cleanup](../runbooks/worktree-cleanup.md).
 
-A retained tree whose reason can clear later (`worker.RETRY_REASONS`, which
-covers every reason except `borrowed_worktree`) is settled again by
-`worker.settle_left_worktrees`. This happens each time a dispatch starts and
-each time a task settles, just before that task's record turns terminal, so the
-supervisor exits as soon as its own tree is settled and a tree the task borrowed
-is retried on the next pass. A retry
-uses the same proofs as the first settlement, so a tree that still holds
-uncommitted or unpublished work, or a nested repository with unpushed commits,
-stays. A retry never forces a removal.
+Each worker settles only its own task. The hourly hygiene run calls
+`worker.settle_left_worktrees(salvage=True)` to recover crashed supervisors
+and retry retained trees with a reason in `worker.RETRY_REASONS`.
+Dispatch admission and worker exit do not sweep earlier records. A retry uses
+the same proofs as the first settlement, so a tree that still holds uncommitted
+or unpublished work, or a nested repository with unpushed commits, stays.
+A retry never forces a removal.
 
 The chokepoint refuses while an unfinished task record claims the tree, and
 it refuses when a candidate record cannot be read or parsed. A file in the

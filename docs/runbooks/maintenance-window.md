@@ -145,8 +145,9 @@ Service restarts by `needrestart` are superseded by the reboot. The host's
     has a `watch ctx_pct=` line for every lane.
 11. **Per lane.** Each lane drains its Fleet Comms inbox, re-arms its waits
     from the handoff, and runs `.venv/bin/python scripts/dispatch.py status`.
-    The next dispatch settles worktrees that dead tasks left behind; remove
-    any that remain with
+    Each worker settles its own task. The hourly scheduled cleanup retries
+    worktrees left by dead tasks under the existing removal proofs. For manual
+    removal, use
     `.venv/bin/python -m scripts.orchestration.worktree_claims remove <path> --owner-task-id <id>`.
     A per-lane dispatch dry run is **NOT CHECKED**.
 
