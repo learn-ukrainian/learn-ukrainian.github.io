@@ -28,6 +28,13 @@ _STATUS_CHARS = 40
 _ERROR_DETAIL_CHARS = 300
 # AGY's terminal error when --model names a model this account is not offered (live probe 2026-11-01).
 _MODEL_SELECTION_REFUSAL = "invalid model selection"
+_WITHHELD = "[withheld: the text held a credential-shaped value]"
+# A credential name followed by a value, or a bearer value. The redactor misses some of these
+# forms (YAML-style `secret: value`), so their presence alone withholds the excerpt.
+_CREDENTIAL_SHAPE_RE = re.compile(
+    r"(?i)(?:authorization|cookie|passw(?:or)?d|secret|token|api[_-]?key|credential|private[_-]?key)s?[\"']?\s*[:=]"
+    r"|\bbearer\s+\S"
+)
 
 
 def _stderr_capacity(stderr: str) -> bool:
@@ -283,23 +290,23 @@ def _schema_refusal(stderr: str) -> str | None:
 
 
 def _excerpt(text: str) -> str:
-    """One bounded line of AGY's error for the task record, with secrets redacted and the home path masked.
+    """One bounded line of AGY's error for the task record, or a withheld marker. Fails closed.
 
-    The redactor reads the original text: flattening first could move code punctuation onto an
-    assignment line and exempt it. Control characters become spaces only after redaction.
+    Partial masking cannot be trusted here: the shared redactor is line-based, and flattening or
+    re-splitting a partly masked value can expose its remainder. So the text is kept only when the
+    redactor masks nothing in any reading of it: the original, every logical line boundary
+    (U+000B, U+000C, U+001C-U+001E, U+0085, U+2028, U+2029, CR) as LF, and the flattened line;
+    and only when no credential name is followed by a value. Otherwise the whole excerpt is withheld.
     """
     from scripts.secret_redactor import redact_text
 
-    # Three passes; a pass only adds masks, so each keeps what the earlier ones masked.
-    # 1. The original text, as the redactor reads any other text.
-    # 2. Every logical line boundary (U+000B, U+000C, U+001C-U+001E, U+0085, U+2028, U+2029, CR)
-    #    as LF: the redactor ends an unquoted assignment only at CR or LF.
-    # 3. The lines joined by spaces, so a quoted value that spans a line boundary is one match.
-    redacted = redact_text(text) or ""
-    redacted = redact_text("\n".join(redacted.splitlines())) or ""
-    redacted = redact_text(" ".join(redacted.splitlines())) or ""
-    printable = "".join(character if character.isprintable() else " " for character in redacted)
-    return " ".join(printable.split()).replace(str(Path.home()), "~")[:_ERROR_DETAIL_CHARS]
+    printable = "".join(character if character.isprintable() else " " for character in text)
+    line = " ".join(printable.split())
+    if _CREDENTIAL_SHAPE_RE.search(line) or any(
+        redact_text(reading) != reading for reading in (text, "\n".join(text.splitlines()), line)
+    ):
+        return _WITHHELD
+    return line.replace(str(Path.home()), "~")[:_ERROR_DETAIL_CHARS]
 
 
 def _unsuccessful(result: dict) -> str:

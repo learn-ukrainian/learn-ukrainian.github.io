@@ -64,7 +64,7 @@ A new id becomes usable only after every step below has passed, in order. A list
 
    The printed argv must carry `--model <listed id>` inside the read-only boundary launcher. Then run one live read-only canary, which must settle `done` with an attested model of the right family and a boundary receipt whose canary passed. A failed canary keeps the model on `hold`.
 
-A terminal failure from AGY keeps AGY's own status and error in the task record, for example `agy: terminal result unsuccessful (ERROR): API error …: EOF`. Read that text to tell a transport fault from a model-output fault.
+A terminal failure from AGY keeps AGY's own status and error in the task record, for example `agy: terminal result unsuccessful (ERROR): API error …: EOF`. Read that text to tell a transport fault from a model-output fault. When the text holds a credential-shaped value, the whole excerpt is withheld rather than partly masked.
 
 ## Substitute formal CF
 
