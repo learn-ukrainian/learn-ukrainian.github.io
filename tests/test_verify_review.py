@@ -376,6 +376,13 @@ def test_empty_input_is_incomplete():
         "non-object",
         "unclosed",
         "nested-block",
+        "cr-duplicate-verdict",
+        "cr-duplicate-score",
+        "decorated-verdict",
+        "lowercase-score",
+        "deep-markdown",
+        "deep-json",
+        "invalid-duplicate-verdict",
     ],
 )
 def test_review_loop_envelope_contract(tmp_path, case):
@@ -421,6 +428,20 @@ def test_review_loop_envelope_contract(tmp_path, case):
         raw = raw.removesuffix("```\n")
     elif case == "nested-block":
         raw = raw.replace("```json\n", "> ```json\n> ").replace("\n```\n", "\n> ```\n")
+    elif case == "cr-duplicate-verdict":
+        raw = (raw + "VERDICT: REQUEST_CHANGES\n").replace("\n", "\r")
+    elif case == "cr-duplicate-score":
+        raw = (raw + "SCORE: 8/10\n").replace("\n", "\r")
+    elif case == "decorated-verdict":
+        raw += "**verdict:** REQUEST_CHANGES\n"
+    elif case == "lowercase-score":
+        raw += "score: 8/10\n"
+    elif case == "deep-markdown":
+        raw += "- " * 10 + "x\n\n"
+    elif case == "deep-json":
+        raw = raw.replace(block, "[" * 10000 + "0" + "]" * 10000)
+    elif case == "invalid-duplicate-verdict":
+        raw += "VERDICT: INVALID\n"
     review_file = tmp_path / "review.txt"
     review_file.write_bytes(raw.encode())
     assert verify_review_cli._read_review(None, False, review_file) == raw

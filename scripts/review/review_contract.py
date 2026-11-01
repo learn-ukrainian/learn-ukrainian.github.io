@@ -135,7 +135,10 @@ def parse_reviewer_json(raw: str) -> dict[str, Any]:
     if not text:
         raise ContractError("empty_review_input", exit_code=EXIT_INCOMPLETE)
     if text.startswith("VERDICT:"):
-        return _parse_review_loop_envelope(text)
+        try:
+            return _parse_review_loop_envelope(text)
+        except (ValueError, RecursionError) as exc:
+            raise ContractError(f"review_envelope_unreadable:{type(exc).__name__}") from exc
     if _looks_like_legacy_text(text) and not text.lstrip().startswith("{"):
         raise ContractError(
             f"legacy_FINDING_text_removed: use schema_version {SCHEMA_VERSION!r} JSON (see docs/review-protocol.md)",
@@ -158,6 +161,8 @@ def _parse_review_loop_envelope(text: str) -> dict[str, Any]:
 
     from scripts.fleet_comms.review_publication import ReviewPublicationError
     from scripts.review.verdict_parser import (
+        _REVIEW_SCORE_LABEL_RE,
+        _REVIEW_VERDICT_LINE_RE,
         _closes_code_fence,
         _commonmark_lines,
         _without_code_fences,
@@ -170,8 +175,11 @@ def _parse_review_loop_envelope(text: str) -> dict[str, Any]:
     if verdict is None or score is None:
         raise ContractError("review_envelope_invalid_headers")
     visible = _without_code_fences(text, keep_unclosed=False)
-    for label in ("VERDICT", "SCORE"):
-        if len(re.findall(rf"(?m)^[ \t]*{label}:", visible)) != 1:
+    for label, pattern in (("VERDICT", _REVIEW_VERDICT_LINE_RE), ("SCORE", _REVIEW_SCORE_LABEL_RE)):
+        if sum(
+            bool(pattern.match(line) or re.match(rf"^[ \t]*{label}:", line, re.IGNORECASE))
+            for line in _commonmark_lines(visible)
+        ) != 1:
             raise ContractError(f"review_envelope_duplicate_{label.lower()}")
     blocks = [token for token in MarkdownIt("commonmark").parse(text) if token.type == "fence"]
     if len(blocks) != 1:
