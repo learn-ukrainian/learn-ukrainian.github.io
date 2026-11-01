@@ -453,6 +453,11 @@ def _dispatch(args) -> int:
 
             schema_argument(options)
     fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider", "codex_account")}
+    if agent == "opencode":
+        from scripts.dispatcher.providers import opencode
+
+        # The endpoint is explicit on the task record, the default included (#12376).
+        fields["provider"] = opencode.endpoint(fields["provider"])
     spec = TaskSpec(
         task_id,
         agent,
@@ -463,6 +468,9 @@ def _dispatch(args) -> int:
         **fields,
     )
     checks.check_private_input(spec, info["key"])
+    # Before any worktree or task record: an endpoint without access or funds is refused, never switched.
+    if agent == "opencode" and (refusal := opencode.endpoint_refusal(spec.provider)):
+        raise ValueError(refusal)
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
         raise ValueError(refusal)
     # A bound attempt is admitted before anything exists: its prompt is the exact render of its manifest

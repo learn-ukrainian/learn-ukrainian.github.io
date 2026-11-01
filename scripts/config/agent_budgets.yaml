@@ -46,9 +46,13 @@ glm:
   # LOCAL-ONLY credential file ~/.secret/zai.key or ZAI_API_KEY.
 
 # Prepaid USD routing thresholds; independent of the subscription cost ledger.
+# dispatch_floor_usd: an opencode DeepSeek dispatch on that endpoint is refused before spawn
+# below this balance (CTO decision 2026-11-01, #12376); near_cap_usd stays a status threshold.
 deepseek:
   near_cap_usd: 5
   warm_usd: 20
+  dispatch_floor_usd: 1.00
 openrouter:
   near_cap_usd: 5
   warm_usd: 20
+  dispatch_floor_usd: 1.00
