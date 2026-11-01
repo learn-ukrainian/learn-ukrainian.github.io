@@ -16,8 +16,9 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
   the system runtime, the AGY binary, the task worktree, its Git metadata and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
   dropped and the root is remounted read-only, so the runtime (which holds TMPDIR) is the only
   writable path;
-* binds each explicit input the dispatch recorded, when there is one, read-only at
-  ``/agy-inputs/<n>``. A file that is missing or whose digest changed is refused before AGY starts;
+* copies each explicit input's hashed bytes into the private scratch and bind-mounts that
+  copy read-only at ``/agy-inputs/<n>``. The host path is not mounted. A file that is missing or
+  whose digest changed is refused before AGY starts;
 * runs the canary as the sandbox's first process and starts AGY only after the launcher has checked
   every probe outcome: EROFS on the worktree, Git metadata and database targets; host credentials,
   control services and sockets unreachable; the scratch positive control succeeded;
@@ -34,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import errno
 import hashlib
 import json
 import os
@@ -137,15 +139,20 @@ def launcher(spec, agy_argv: list[str]) -> list[str]:
     return argv
 
 
-def bind_inputs(paths: list[str], *, repo_root: Path) -> list[dict]:
+def bind_inputs(paths: list[str], *, repo_root: Path, keep_bytes: bool = False) -> list[dict]:
     """Check explicit inputs and return the task-record fields. Raises ``ValueError`` before spawn.
 
-    Nothing is skipped: the first path that cannot be mounted refuses the whole set.
+    Nothing is skipped: the first path that cannot be mounted refuses the whole set. ``keep_bytes``
+    retains the hashed payload for the private scratch copy. The task record never stores it.
     """
     if len(paths) > MAX_INPUTS:
         raise ValueError(f"agy_input_refused: more than {MAX_INPUTS} inputs")
-    root, home = repo_root.resolve(), Path.home()
-    return [_bind_one(index, raw, root, home) for index, raw in enumerate(paths)]
+    root, home = repo_root.resolve(), Path.home().resolve()
+    items = [_bind_one(index, raw, root, home) for index, raw in enumerate(paths)]
+    if not keep_bytes:
+        for item in items:
+            item.pop("data", None)
+    return items
 
 
 def confirm_inputs(items: list[dict], *, repo_root: Path) -> list[dict]:
@@ -153,7 +160,7 @@ def confirm_inputs(items: list[dict], *, repo_root: Path) -> list[dict]:
     if not items:
         return []
     try:
-        fresh = bind_inputs([item["path"] for item in items], repo_root=repo_root)
+        fresh = bind_inputs([item["path"] for item in items], repo_root=repo_root, keep_bytes=True)
     except ValueError as exc:
         raise Refused(str(exc)) from exc
     for old, new in zip(items, fresh, strict=True):
@@ -181,7 +188,10 @@ def _inputs_from_spec(spec) -> list[dict]:
 def _under_credential(path: Path, home: Path) -> bool:
     for relative in _HOST_SECRETS:
         secret = home / relative
-        if path == secret or path.is_relative_to(secret):
+        candidates = [secret]
+        with contextlib.suppress(OSError):
+            candidates.append(secret.resolve(strict=True))
+        if any(path == item or path.is_relative_to(item) for item in candidates):
             return True
     return False
 
@@ -194,33 +204,51 @@ def _bind_one(index: int, raw: str, root: Path, home: Path) -> dict:
     if candidate.is_symlink():
         raise ValueError("agy_input_refused: symlink")
     try:
-        info = candidate.lstat()
+        descriptor = os.open(candidate, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
     except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError("agy_input_refused: symlink") from exc
         raise ValueError("agy_input_refused: not a readable regular file") from exc
-    if not stat.S_ISREG(info.st_mode):
-        raise ValueError("agy_input_refused: not a regular file")
     try:
-        resolved = candidate.resolve(strict=True)
-    except OSError as exc:
-        raise ValueError("agy_input_refused: not a readable regular file") from exc
-    if resolved != candidate:
-        raise ValueError("agy_input_refused: symlink")
-    if info.st_size > MAX_INPUT_BYTES:
-        raise ValueError(f"agy_input_refused: larger than {MAX_INPUT_BYTES} bytes")
-    if _under_credential(resolved, home):
-        raise ValueError("agy_input_refused: path is under a credential directory")
-    if resolved == root or resolved.is_relative_to(root):
-        raise ValueError("agy_input_refused: path is inside the primary checkout")
-    try:
-        data = resolved.read_bytes()
-    except OSError as exc:
-        raise ValueError("agy_input_refused: not a readable regular file") from exc
-    if len(data) != info.st_size or len(data) > MAX_INPUT_BYTES:
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode):
+            raise ValueError("agy_input_refused: not a regular file")
+        try:
+            resolved = candidate.resolve(strict=True)
+        except OSError as exc:
+            raise ValueError("agy_input_refused: not a readable regular file") from exc
+        if resolved != candidate:
+            raise ValueError("agy_input_refused: symlink")
+        if info.st_size > MAX_INPUT_BYTES:
+            raise ValueError(f"agy_input_refused: larger than {MAX_INPUT_BYTES} bytes")
+        if _under_credential(resolved, home):
+            raise ValueError("agy_input_refused: path is under a credential directory")
+        if resolved == root or resolved.is_relative_to(root):
+            raise ValueError("agy_input_refused: path is inside the primary checkout")
+        data = _read_exact(descriptor, info.st_size)
+    finally:
+        os.close(descriptor)
+    if len(data) > MAX_INPUT_BYTES:
         raise ValueError("agy_input_refused: not a readable regular file")
     return {
-        "bytes": len(data), "index": index, "mount": f"{INPUT_MOUNT}/{index}",
+        "bytes": len(data), "data": data, "index": index, "mount": f"{INPUT_MOUNT}/{index}",
         "path": str(resolved), "sha256": hashlib.sha256(data).hexdigest(),
     }
+
+
+def _read_exact(descriptor: int, size: int) -> bytes:
+    chunks = []
+    remaining = size
+    while remaining:
+        block = os.read(descriptor, remaining)
+        if not block:
+            break
+        chunks.append(block)
+        remaining -= len(block)
+    data = b"".join(chunks)
+    if len(data) != size or os.read(descriptor, 1):
+        raise ValueError("agy_input_refused: not a readable regular file")
+    return data
 
 
 def _input_proof(items: list[dict]) -> list[dict]:
@@ -705,6 +733,24 @@ class _Boundary:
             for index, (path, digest) in enumerate(zip(paths, digests, strict=True))
         ]
 
+    def _stage_input_copies(self) -> None:
+        """Write the hashed bytes into the scratch and drop them from memory.
+
+        The copy sits beside the boundary directory, not inside it, so the runtime read list does
+        not publish it. Bubblewrap then bind-mounts the copy, not the caller's path.
+        """
+        if not self.confirmed_inputs:
+            return
+        store = self.base / "inputs"
+        store.mkdir(mode=0o700)
+        for item in self.confirmed_inputs:
+            data = item.pop("data", None)
+            if not isinstance(data, bytes) or hashlib.sha256(data).hexdigest() != item["sha256"]:
+                raise Refused("agy_input_refused: input digest missing")
+            dest = store / str(item["index"])
+            _write_private(dest, data, 0o644)
+            item["copy"] = str(dest)
+
     def run(self) -> int:
         from scripts.agent_runtime.attempt_boundary import full_review_reads, runtime_files
         from scripts.agent_runtime.attempt_network import AttemptEgress, load_allowlist
@@ -746,6 +792,7 @@ class _Boundary:
 
         self.base.mkdir(mode=0o700)  # exclusive: an existing scratch is never reused or removed
         self.created = True
+        self._stage_input_copies()
         boundary, runtime = self.base / "boundary", self.base / "runtime"
         boundary.mkdir(mode=0o700)
         runtime.mkdir(mode=0o700)
@@ -830,10 +877,10 @@ class _Boundary:
             probes.extend([{"op": "write_open", "path": str(path), "expect": _write_error(path)},
                            {"op": "chmod", "path": str(path), "expect": "EROFS"}])
         for item in self.confirmed_inputs:
-            host = Path(item["path"])
+            # The staged copy is owner-writable. The mount is read-only, so open fails with EROFS.
             probes.extend([
                 {"op": "stat", "path": item["mount"], "expect": "OK"},
-                {"op": "write_open", "path": item["mount"], "expect": _write_error(host)},
+                {"op": "write_open", "path": item["mount"], "expect": "EROFS"},
                 {"op": "chmod", "path": item["mount"], "expect": "EROFS"},
             ])
         if self.confirmed_inputs:
@@ -870,10 +917,10 @@ class _Boundary:
                 masks += ["--symlink", str(target.relative_to(primary.parent)), str(primary)]
         input_mounts = []
         if self.confirmed_inputs:
-            # The directory is created on the empty root. Only the named file is bound into it.
+            # The directory is created on the empty root. Only the private copy is bound into it.
             input_mounts += ["--dir", INPUT_MOUNT]
             for item in self.confirmed_inputs:
-                input_mounts += ["--ro-bind", item["path"], item["mount"]]
+                input_mounts += ["--ro-bind", item["copy"], item["mount"]]
         argv[-len(inner):-len(inner)] = [
             *masks, *input_mounts, "--ro-bind", str(boundary / "passwd"), "/etc/passwd",
             "--ro-bind", str(boundary / "group"),

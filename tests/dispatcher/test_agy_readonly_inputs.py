@@ -6,6 +6,7 @@ import os
 import shlex
 import subprocess
 import sys
+import time
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -260,6 +261,7 @@ def test_ro_bind_records_digest(tmp_path, monkeypatch, capsys):
     bound = agy_sandbox.bind_inputs([str(packet)], repo_root=repo)
     mount = f"{agy_sandbox.INPUT_MOUNT}/0"
     script = (
+        f"sleep 0.4; "
         f"test ! -e {shlex.quote(str(packet.resolve()))} || exit 3; "
         f"test ! -e {agy_sandbox.INPUT_MOUNT}/not-provided || exit 4; "
         f'test "$(ls -A {agy_sandbox.INPUT_MOUNT})" = 0 || exit 7; '
@@ -269,12 +271,21 @@ def test_ro_bind_records_digest(tmp_path, monkeypatch, capsys):
     )
     task_id = "agy-ro-input"
     argv, env = _launch(tmp_path, worktree, task_id, ["/bin/sh", "-c", script], bound)
-    run = subprocess.run(argv, env=env, capture_output=True, timeout=120, check=False, cwd=worktree)
+    run = subprocess.Popen(argv, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=worktree)
+    copy = tmp_path / f"scratch-{task_id}" / "inputs" / "0"
+    deadline = time.time() + 30
+    while time.time() < deadline and not copy.is_file() and run.poll() is None:
+        time.sleep(0.05)
+    assert copy.is_file()
+    assert copy.read_bytes() == data
+    assert copy.stat().st_ino != packet.stat().st_ino
+    packet.write_bytes(b"mutated-after-copy\n")
+    stdout, stderr = run.communicate(timeout=90)
     receipt_path = agy_sandbox.receipt_file(tmp_path / f"{task_id}.result")
     receipt = json.loads(receipt_path.read_text())
-    assert (run.returncode, receipt["status"]) == (0, "ran"), (receipt.get("reason"), run.stderr.decode()[-800:])
-    assert run.stdout == data
-    assert packet.read_bytes() == data
+    assert (run.returncode, receipt["status"]) == (0, "ran"), (receipt.get("reason"), stderr.decode()[-800:])
+    assert stdout == data
+    assert packet.read_bytes() == b"mutated-after-copy\n"
     assert receipt["canary"]["passed"] is True
     assert receipt["inputs"] == [{"bytes": len(data), "mount": mount, "sha256": digest}]
     head = receipt["input"]["start"]["head"]
