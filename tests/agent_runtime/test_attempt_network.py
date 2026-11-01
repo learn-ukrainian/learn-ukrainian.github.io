@@ -213,7 +213,17 @@ def test_resolver_hang_and_cancellation_reap_child(proxy, monkeypatch):
                 real_exit, returncode = exit_notification[0]
                 real_exit(returncode)
 
-        proxy.loop.call_soon_threadsafe(release_exit, 10)
+        real_stop = proxy.loop.stop
+        release_started = False
+
+        def stop_with_exit_pending():
+            nonlocal release_started
+            real_stop()
+            if not release_started:
+                release_started = True
+                proxy.loop.call_soon(release_exit, 10)
+
+        monkeypatch.setattr(proxy.loop, "stop", stop_with_exit_pending)
         proxy.cleanup()
         assert len(children) == 2 and all(p.returncode is not None for p in children)
     finally:
