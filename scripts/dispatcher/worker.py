@@ -423,9 +423,8 @@ def _agy_unfinished(parsed: ParsedResult) -> ParsedResult:
 
 # Dispositions that can change once other processes end, the tree is committed or reverted, the work is
 # published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
-# clears; every later dispatch and every settlement settles these again, and still removes
-# only with the proof. A tree that is still dirty is kept again, so only a changed tree is removed.
-# The hourly hygiene run's salvage reasons retry the same way. A public-push refusal
+# clears; the scheduled cleanup retries these under the same removal proofs.
+# Admission and worker exit never retry unrelated tasks. A public-push refusal
 # (opsec_refused) and an owner retention hold (retention_hold) are absent on purpose:
 # automation must not retry either.
 RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
@@ -468,9 +467,10 @@ def _unsettled(record: dict) -> bool:
 
 
 def settle_left_worktrees(salvage: bool = False) -> None:
-    """Settle worktrees of finished tasks whose supervisor ended before settling them.
+    """Retry finished tasks' worktrees during scheduled cleanup, including crash recovery.
 
-    The hourly hygiene run passes salvage (git.settle_worktree) for the trees settlement keeps.
+    Admission and worker exit do not call this store-wide sweep. Each worker settles only
+    its own task. The hourly hygiene run passes salvage for the trees settlement keeps.
     """
     records = []
     for record in store.list_tasks():
@@ -824,11 +824,6 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if source:
                 record.update(_stream_attestation(source, resolved_model))
             record["provider_pgid"] = child.pid if child else None
-            # Settling a task first retries the trees earlier settlements kept for a cause that may have
-            # cleared, under the same proofs. It runs before this task's record turns terminal, holding no
-            # record lock, so the supervisor exits as soon as its own tree is settled.
-            with contextlib.suppress(Exception):
-                settle_left_worktrees()
             # The removal chokepoint releases a tree only to a finished owner record, so publish it, then
             # settle; wait() reads a terminal record under this lock and never sees the tree mid-removal.
             with store.task_state_lock(path):

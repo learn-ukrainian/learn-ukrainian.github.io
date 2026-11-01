@@ -255,10 +255,11 @@ and records `worktree_disposition: retained` with one of these reasons:
 - `retention_hold`: an owner set the per-task hold. The tree stays, untouched.
 
 A failed removal is recorded as `error` (`worktree_remove_failed` with
-`worktree_disposition_detail`, or `settlement_failed`). Every later dispatch and
-every task settlement retries the reasons in `worker.RETRY_REASONS`
-(`worker.settle_left_worktrees`). `borrowed_worktree`, `opsec_refused` and
-`retention_hold` are not among them. Retries run
+`worktree_disposition_detail`, or `settlement_failed`). Each worker settles only
+its own task. Dispatch admission and worker exit do not sweep earlier tasks.
+The hourly hygiene run retries the reasons in `worker.RETRY_REASONS`
+(`worker.settle_left_worktrees`), including tasks left by a crashed supervisor.
+`borrowed_worktree`, `opsec_refused` and `retention_hold` are not among them. Retries run
 under the same proofs: a tree that is still dirty or unpublished stays for its
 owner. The hourly hygiene run (`scheduled_worktree_cleanup.py --apply`) runs
 the same retry with salvage: after the provider, borrower and worktree-claim
