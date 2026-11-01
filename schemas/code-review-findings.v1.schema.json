@@ -18,6 +18,15 @@
       "items": {
         "$ref": "#/$defs/finding"
       }
+    },
+    "missing_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["sources-mcp", "test-execution", "shell", "browser", "checkout-data"]
+      }
     }
   },
   "$defs": {

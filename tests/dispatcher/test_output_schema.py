@@ -198,6 +198,31 @@ def test_agy_schema_argument_too_large_refused(dispatch, capsys):
     assert "agy_output_schema_unsupported" in capsys.readouterr().err
 
 
+def test_agy_structured_missing_capability_preserved():
+    """Defect class: native schema erases an existing capability-failure declaration."""
+    from scripts.review.review_contract import load_schema
+    from scripts.review.verdict_parser import recognized_verdicts
+
+    payload = {"schema_version": "code-review-findings.v1", "findings": [],
+               "overall": {"correctness": "uncertain", "explanation": "Required capability unavailable.",
+                           "confidence": 1}}
+    schema = load_schema()
+    for capability in ("sources-mcp", "test-execution", "shell", "browser", "checkout-data"):
+        payload["missing_capabilities"] = [capability]
+        stream = json.dumps({"event": "result", "result": {"status": "SUCCESS", "structured_output": payload}})
+        parsed = agy.parse(stream, "", 0, None, output_schema=schema)
+        assert parsed.error is None
+        assert json.loads(parsed.text)["missing_capabilities"] == [capability]
+        assert recognized_verdicts(parsed.text) == ["BLOCKED"]
+    for declaration in ([], ["shell", "shell"], ["unknown"], "shell", None, [1]):
+        payload["missing_capabilities"] = declaration
+        stream = json.dumps({"event": "result", "result": {"status": "SUCCESS", "structured_output": payload}})
+        parsed = agy.parse(stream, "", 0, None, output_schema=schema)
+        assert parsed.error is not None
+        assert "structured_output_invalid" in parsed.error
+        assert not parsed.text
+
+
 def test_review_path_pattern_portable_equivalence():
     """Defect class: a portable-schema rewrite changes which repository paths are accepted."""
     from scripts.review.review_contract import load_schema
