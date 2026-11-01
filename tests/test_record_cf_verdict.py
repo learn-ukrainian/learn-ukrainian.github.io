@@ -316,7 +316,7 @@ def test_missing_or_ambiguous_verdict_refused(reply):
             "VERDICT: APPROVE",
             "is not a formal reviewer on this harness",
         ),
-        ({"agent": "codex", "model": "gpt-6-astra"}, "VERDICT: APPROVE", "retired in the model catalog"),
+        ({"agent": "codex", "model": "gpt-6-astra"}, "VERDICT: APPROVE", "restricted to red-team code review|red-team exception expired"),
     ],
 )
 def test_task_refusals_before_network(tmp_path, updates, reply, reason):

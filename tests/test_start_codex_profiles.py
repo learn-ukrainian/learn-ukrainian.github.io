@@ -395,7 +395,7 @@ def test_launcher_rejects_old_native_model_before_provider_or_lease(tmp_path: Pa
         expect_success=False,
     )
     assert result.returncode == 2
-    assert "is retired in the model catalog" in result.stderr
+    assert ("red-team" if model == "gpt-6-astra" else "is retired in the model catalog") in result.stderr
     assert model in result.stderr
     assert not (tmp_path / "capture.txt").exists()
     assert not order.exists()
