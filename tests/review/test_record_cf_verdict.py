@@ -1008,6 +1008,38 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
     assert spaces_marker["coverage"] == []
 
 
+def test_block_only_ukrainian_reply_records_full_coverage(monkeypatch, tmp_path):
+    """Defect class (#12417): a contract-only judgment block with a frozen packet is refused for lack of a verdict line."""
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_bytes(render_item_packet(packet).encode())
+    items = [
+        {"id": item_id, "verdict": "APPROVE", "finding": "", "sources": "VESUM", "quote": text}
+        for item_id, text in (("card-a", "привіт"), ("card-b", "друг"))
+    ]
+    reply = (
+        "```ukrainian-item-judgments\n"
+        + json.dumps({"schema": "ukrainian-item-judgments.v1", "items": items}, ensure_ascii=False)
+        + "\n```\n"
+    )
+    write_task(
+        tasks,
+        reply=reply,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert result["verdict"] == marker["verdict"] == "APPROVED"
+    assert marker["denominator"] == marker["coverage"] == ["card-a", "card-b"]
+    assert marker.get("void") is None
+
+
 def test_item_judgments_unknown_verdict_leaves_coverage_incomplete(monkeypatch, tmp_path):
     """An item with verdict 'unknown' is unreviewed and does not count as coverage."""
     from scripts.review.review_contract import build_item_packet, render_item_packet

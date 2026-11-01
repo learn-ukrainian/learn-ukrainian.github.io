@@ -1976,3 +1976,20 @@ def judge_item_reply(
         void = None
     covered = () if void else tuple(sorted(judged))
     return ItemChunk(tuple(packet["denominator"]), covered, void)
+
+
+def item_judgments_verdict(packet: Mapping[str, Any], reply: str) -> str:
+    """The verdict a reply's valid Ukrainian judgment block carries for ``packet``.
+
+    The contract with an item denominator has the reviewer return only the block, so
+    its item rollup is the reply's verdict. An invalid block raises its ContractError.
+    """
+    for stated in ("APPROVED", "CHANGES_REQUESTED", "BLOCKED"):
+        try:
+            judge_item_reply(packet, reply, stated=stated, ukrainian=True)
+        except ContractError as exc:
+            if not str(exc).startswith("VERDICT_ITEM_MISMATCH"):
+                raise
+            continue
+        return stated
+    raise ContractError("ITEM_JUDGMENTS_MALFORMED: the item judgments carry no verdict")
