@@ -520,9 +520,10 @@ def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary:
     Tracked files survive in Git; directories are not evidence inventories.
     A name stands for the file the filesystem resolves it to: a target inside
     the checkout is inventoried under its resolved path, because removal
-    destroys it. A target reached through a link out of the checkout is not
-    copied and does not refuse removal: removal deletes the link, not the
-    target. Backticks/quotes and Markdown links support spaced paths.
+    destroys it. A non-regular file inside the checkout refuses removal.
+    A target reached through a link out of the checkout is not copied and
+    does not refuse removal: removal deletes the link, not the target.
+    Backticks/quotes and Markdown links support spaced paths.
     """
     root = worktree.resolve()
     files: set[str] = set()
@@ -553,7 +554,12 @@ def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary:
         if found is None:
             continue
         resolved, status = found
-        if not stat.S_ISREG(status.st_mode) or not status.st_size:
+        if not stat.S_ISREG(status.st_mode):
+            # Directories are not inventories. Any other in-checkout file refuses removal.
+            if resolved.is_relative_to(root) and not stat.S_ISDIR(status.st_mode):
+                raise ValueError("a named artifact path is not a regular file and cannot be preserved")
+            continue
+        if not status.st_size:
             continue
         if not resolved.is_relative_to(root):
             # The outside file is not inventory. Removal deletes the in-checkout link.
