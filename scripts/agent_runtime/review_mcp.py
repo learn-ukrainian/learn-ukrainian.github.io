@@ -565,14 +565,16 @@ class ReviewMcpPlan:
 
 
 def review_tools_allowed_csv(harness: str, review_access: str = "isolated") -> str | None:
-    """Return the Claude Code ``--allowedTools`` names for the sources server.
+    """Return Claude's shared review tools and this contract's Sources grants.
 
     Only Claude Code understands these names.
     """
     if harness.lower().strip() != "claude":
         return None
+    from scripts.dispatcher.review_tools import review_allow_csv
+
     tools = review_tools(review_access)
-    return ",".join(f"mcp__sources__{name}" for name in sorted(tools))
+    return review_allow_csv(tools)
 
 
 def codex_review_home_path(config_path: Path | str) -> Path:
@@ -602,7 +604,8 @@ def agy_review_settings(
     """Grant the review contract and explicitly deny the other Sources tools.
 
     checkout_root grants recursive native file reads only inside that directory.
-    Omit it only for a sources-only staging home before the attempt boundary.
+    Omit it for a staging home before the attempt boundary supplies its checkout.
+    Shell execution uses the shared worker guards and mutation deny patterns.
     Non-receipt Ukrainian reviews use REVIEW_TOOLS too. Full attempts retain
     their existing contract's search_resources grant. Read the launched server
     afresh so an unavailable inventory cannot yield a partial deny profile.
@@ -622,14 +625,16 @@ def agy_review_settings(
             raise ValueError("agy_review_permissions_unsafe_checkout")
         file_grants.append(f"read_file({root})")
     readers, writers = sources_tool_sets.__wrapped__(sources_server_launch()[1])
+    from scripts.dispatcher.review_tools import shell_denies
+
     tools = review_tools(review_access or "isolated")
     if not set(readers) >= tools:
         raise ValueError("review_contract_contains_non_read_only_sources_tool")
     return {
         "permissions": {
-            "allow": [*file_grants, *[f"mcp(sources/{name})" for name in sorted(tools)]],
+            "allow": [*file_grants, "command(*)", *[f"mcp(sources/{name})" for name in sorted(tools)]],
             "deny": [
-                "command(*)",
+                *[f"command({pattern})" for pattern in shell_denies()],
                 "write_file(*)",
                 *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - tools)],
             ],
@@ -708,8 +713,11 @@ def _populate_agy_review_home(
         app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
         _create_file(config_parts[2], config_fd, config_bytes)
         from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
+        from scripts.dispatcher.review_tools import hooks
 
-        _create_file("hooks.json", config_fd, json.dumps({GUARD_NAME: guard_registration()}).encode())
+        _create_file("hooks.json", config_fd, json.dumps({
+            GUARD_NAME: guard_registration(), "dispatch-review-guards": hooks(harness="agy", review=True),
+        }).encode())
         access = json.loads(config_bytes)["mcpServers"]["sources"].get("env", {}).get("LU_REVIEW_ACCESS")
         _create_file(
             "settings.json", app_data_fd, json.dumps(agy_review_settings(access, checkout_root=checkout_root)).encode()

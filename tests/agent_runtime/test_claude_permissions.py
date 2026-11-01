@@ -859,10 +859,7 @@ def test_full_review_access_keeps_review_tool_set(tmp_path: Path) -> None:
     (tmp_path / ".mcp.json").write_text("{", encoding="utf-8")  # never read for formal attempts
     attempt = tmp_path / "attempt.json"
     cmd = _reviewer_plan(tmp_path, mcp_config_path=str(attempt), strict_mcp_config=True, review_access="full")
-    assert _granted(cmd) == [
-        *REVIEWER_PERMISSION_PROFILE["allow"],
-        *review_tools_allowed_csv("claude", "full").split(","),
-    ]
+    assert _granted(cmd) == review_tools_allowed_csv("claude", "full").split(",")
     # Deny wins over the formal allow list: a writer added to it stays denied.
     assert _denied(cmd) == [*REVIEWER_PERMISSION_PROFILE["deny"], *WRITER_DENIES]
     # The formal attempt's own harness-written config is the only one loaded.

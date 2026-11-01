@@ -688,6 +688,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     })
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     slots = None
+    tool_configs = {}
     resolved_model = sources_calls = source = None
     started = time.monotonic()
     cancel_requested = interruptible = False
@@ -764,6 +765,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 status, error = "failed", "output schema binding invalid"
                 return
         provider = providers.load(spec.agent)
+        from scripts.dispatcher import review_tools
+
+        tool_configs = review_tools.prepare(spec)
         invocation = runtime_context.build(spec, child_env(spec))
         record["runtime_input_sha256"] = hashlib.sha256(invocation.stdin or b"").hexdigest()
         pending_conversation = None
@@ -981,6 +985,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 if residue := agy_sandbox.discard(spec.task_id):
                     record["read_only_boundary_cleanup"] = residue
             _discard_read_only_scratch(record)
+            if tool_configs:
+                from scripts.dispatcher.review_tools import restore
+
+                restore(spec.worktree, tool_configs)
             if slots is not None:
                 # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
                 # keep their slots shared until they exit (test_slots).

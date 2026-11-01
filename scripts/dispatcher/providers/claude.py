@@ -6,29 +6,17 @@ import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 
+from scripts.agent_runtime.adapters.claude import REVIEWER_PERMISSION_PROFILE
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.jsonl import jsonl_lines
+from scripts.dispatcher.review_tools import hooks, sources_config
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 from scripts.lib import rules_core
 
-# Static permission profile from adapters/claude.py; account env belongs to core.
-# Read-only grants no blanket Bash: under dontAsk only Claude Code's built-in read-only commands
-# (ls, cat, grep, find, read-only git forms) and the gh reads below run, every other command is
-# denied, and an output redirect is checked against the Edit deny like a direct write
-# (https://code.claude.com/docs/en/permissions, "Read-only commands" and "Redirections").
-# Its OS sandbox would allow tests too, but it needs socat on Linux and refuses to start without it.
-# dontAsk still runs anything a loaded settings file pre-approves, and a worktree loads the main
-# checkout's local settings file, so read-only runs --restricted: Claude Code then reads no
-# user, project or local settings file (managed settings and --settings still apply) and drops every
-# code-running tool and WebFetch that --tools does not name (https://code.claude.com/docs/en/cli-reference,
-# "--restricted"; settings, "Lists merge instead of overriding"). The rules below are the whole policy
-# once ``managed_policy`` finds no managed source. --restricted also skips CLAUDE.md, so the rules
-# core that ``require_core`` checks is appended to the system prompt instead.
+# Reuse the adapter's shell-capable reviewer policy and the workers' tracked guards.
+# Restricted settings keep reviewed configuration out; explicit --settings supplies the guards.
 _READ_TOOLSET = "Read,Grep,Glob,Bash,WebFetch,WebSearch"
-_READ_TOOLS = (
-    "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
-    "Bash(gh issue view *),Bash(gh run view *)"
-)
+_READ_TOOLS = ",".join(REVIEWER_PERMISSION_PROFILE["allow"])
 # Every run, read-only or workspace-write, gets the Sources MCP server explicitly: from the dispatcher's
 # own checkout, never the task's worktree, whose .mcp.json the change in it could turn into a command,
 # and alone, as --strict-mcp-config drops every other server (#10074); --restricted would skip the
@@ -37,23 +25,13 @@ _READ_TOOLS = (
 # entries (sources_read_only.sources_tool_sets) are denied by name.
 _SOURCES_SERVER = "sources"
 _WRITE_TOOLS = "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
-_READ_DENIES = (
-    "Edit,Write,NotebookEdit,Bash(git push *),Bash(git commit *),Bash(git merge *),"
-    "Bash(git rebase *),Bash(git reset *),Bash(git tag *),Bash(git branch -D *),"
-    "Bash(gh pr merge *),Bash(gh pr create *),Bash(gh pr comment *),Bash(gh pr review *),"
-    "Bash(gh pr edit *),Bash(gh pr close *),Bash(gh pr reopen *),Bash(gh issue create *),"
-    "Bash(gh issue comment *),Bash(gh issue edit *),Bash(gh issue close *),Bash(gh issue reopen *),"
-    "Bash(gh api -X *),Bash(gh api --method *),Bash(gh release *),Bash(gh api -f *),"
-    "Bash(gh api -F *),Bash(gh api --field *),Bash(gh api --raw-field *),Bash(gh api --input *),"
-    "Bash(gh workflow run *)"
-)
+_READ_DENIES = ",".join(REVIEWER_PERMISSION_PROFILE["deny"])
 # Print mode ends with its final turn; no work may remain scheduled after it.
 _BACKGROUND_DENIES = "Monitor,ScheduleWakeup,CronCreate,Workflow"
 # A non-default account loads none of its login directory's user settings (hooks, permission rules,
 # MCP servers, plugins; #10619): adapters/claude.py LABELLED_ACCOUNT_SETTING_SOURCES. The launch
 # guard and ``claude auth status`` read the run's ``--settings``, so a labelled run always carries one.
 _LABELLED_SETTING_SOURCES = "project,local"
-_LABELLED_SETTINGS = json.dumps({"permissions": {"deny": _BACKGROUND_DENIES.split(",")}}, separators=(",", ":"))
 _BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
 _ADVISOR_OFF_ENV = {"CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1"}
 # Opus 5.5 advises headless workspace-write workers on Sonnet 5.5, and on Haiku 5.5 only when the dispatch
@@ -115,8 +93,7 @@ def managed_policy(env: Mapping[str, str]) -> str | None:
 
 
 def _sources_mcp_config() -> str:
-    servers = json.loads(rules_core.source_path(".mcp.json").read_text(encoding="utf-8"))["mcpServers"]
-    return json.dumps({"mcpServers": {_SOURCES_SERVER: servers[_SOURCES_SERVER]}}, separators=(",", ":"))
+    return json.dumps(sources_config(), separators=(",", ":"))
 
 
 def model_id(model: str) -> str | None:
@@ -220,8 +197,12 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     denies = ",".join([denies, *(f"mcp__{_SOURCES_SERVER}__{name}" for name in writers)])
     argv += ["--allowedTools", allowed_tools]
     argv += ["--disallowedTools", denies]
+    argv += ["--settings", json.dumps({
+        "hooks": hooks(harness="claude", review=spec.mode == "read-only"),
+        "permissions": {"deny": _BACKGROUND_DENIES.split(",")},
+    }, separators=(",", ":"))]
     if spec.claude_account not in (None, "a"):
-        argv += ["--settings", _LABELLED_SETTINGS, "--setting-sources", _LABELLED_SETTING_SOURCES]
+        argv += ["--setting-sources", _LABELLED_SETTING_SOURCES]
     env = {**env, **_BACKGROUND_ENV}
     if advisor_enabled(spec):
         argv += ["--advisor", _ADVISOR_MODEL]
