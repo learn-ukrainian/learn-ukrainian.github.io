@@ -35,6 +35,9 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   review out to helper agents. Learner-facing Ukrainian is the exception: its profile seats the
   independent reviewers named in `references/ukrainian.md`, § Seats. The advisory second reader in `review-loop` is not a reviewer
   and adds no round.
+- **Optional DeepSeek pre-check is not a review.** The optional DeepSeek author pre-check
+  (DS-PRECHECK-1101) is never a review of record, opens no round, and never satisfies or waives
+  the cross-family review gate; no round budget, risk floor, or reviewer selection changes.
 - **The end of the budget is never approval.** The author splits the PR, changes the
   approach, or escalates to the CTO and the advisors (rules core P6).
 - **One repair-verification round per lineage, outside the budget.** When a PR approved at its
@@ -161,6 +164,8 @@ Review budgets, seats, ladders, and exact-head binding are unchanged. A P0, P1, 
 - A moved head needs a delta review and a fresh exact-head approval before enqueue.
 - The red-team exception in `workflow.md` § Merge policy is unchanged and is labelled
   `review_mode=red_team`, never cross-family.
+- The optional DeepSeek author pre-check (DS-PRECHECK-1101) is never a review of record and
+  never satisfies or waives this gate.
 
 ## Declines and disputes
 
