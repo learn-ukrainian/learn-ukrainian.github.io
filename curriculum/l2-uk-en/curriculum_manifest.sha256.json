@@ -1394,7 +1394,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-prepositions-source/activities.yaml",
-      "sha256": "113f21f48859b71e38f04fadc5a0c51ab732740e7404a6389cc88c9984ccbda5"
+      "sha256": "60a09970e160aa5901b68dcaa74a739e383bb8ed7e4a31012fcb0106a5198264"
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-prepositions-source/module.md",
@@ -14318,7 +14318,7 @@
     },
     {
       "path": "site/src/content/docs/a2/genitive-prepositions-source.mdx",
-      "sha256": "378967dd6f255d51453e622681f17e54ba43b4bb414334a0a81b529d20cbebbb"
+      "sha256": "d79678afaa1af028626d54481c33f634a33521da0a19d67822c173260e937ef3"
     },
     {
       "path": "site/src/content/docs/a2/home-and-daily-life.mdx",
