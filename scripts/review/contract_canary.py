@@ -143,7 +143,9 @@ def build_receipt(record: Mapping[str, Any], result: str, *, pr: int, head: str,
         (record.get("mode") == "read-only", "task is not read-only"),
         (record.get("require_review_verdict") is True and record.get("schema_version") == 2,
          "task did not require a review verdict"),
-        (record.get("head_sha") == head and record.get("pinned_head") == head, "task was not pinned to the PR head"),
+        # The worktree started at the PR head and was still there when the task settled.
+        (record.get("worktree_start_sha") == head and record.get("head_sha") == head,
+         "task did not review the PR head"),
         # A canary is never a review of record: a branch- or PR-pinned task could be recorded as one.
         (not record.get("review_branch") and not record.get("pr"), "task is branch- or PR-pinned"),
     )

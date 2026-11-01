@@ -54,7 +54,7 @@ def task(route: str, head: str, **changes: object) -> dict:
         "require_review_verdict": True,
         "schema_version": 2,
         "head_sha": head,
-        "pinned_head": head,
+        "worktree_start_sha": head,
         "review_branch": None,
         "pr": None,
         "agent": route,
@@ -97,7 +97,8 @@ def test_contract_change_is_refused_until_every_route_has_a_receipt(repo) -> Non
 @pytest.mark.parametrize(
     ("changes", "why"),
     [
-        ({"head_sha": "f" * 40}, "not pinned to the PR head"),
+        ({"head_sha": "f" * 40}, "did not review the PR head"),
+        ({"worktree_start_sha": "f" * 40}, "did not review the PR head"),
         ({"review_branch": "claude/x"}, "branch- or PR-pinned"),
         ({"pr": 1}, "branch- or PR-pinned"),
         ({"status": "failed"}, "did not settle done"),
