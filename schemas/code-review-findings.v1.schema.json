@@ -29,6 +29,23 @@
       }
     }
   },
+  "if": {
+    "properties": {
+      "overall": {
+        "properties": {
+          "correctness": {"const": "uncertain"}
+        }
+      }
+    }
+  },
+  "else": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {},
+      "overall": {},
+      "findings": {}
+    }
+  },
   "$defs": {
     "nonempty": {
       "type": "string",

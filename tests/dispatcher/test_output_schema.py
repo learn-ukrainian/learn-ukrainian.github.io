@@ -221,6 +221,13 @@ def test_agy_structured_missing_capability_preserved():
         assert parsed.error is not None
         assert "structured_output_invalid" in parsed.error
         assert not parsed.text
+    payload["missing_capabilities"] = ["shell"]
+    payload["overall"]["correctness"] = "correct"
+    stream = json.dumps({"event": "result", "result": {"status": "SUCCESS", "structured_output": payload}})
+    parsed = agy.parse(stream, "", 0, None, output_schema=schema)
+    assert parsed.error is not None
+    assert "additionalProperties" in parsed.error
+    assert not parsed.text
 
 
 def test_review_path_pattern_portable_equivalence():
