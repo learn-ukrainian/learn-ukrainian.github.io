@@ -71,15 +71,23 @@ except ImportError:  # pragma: no cover
 DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S = 25.0
 
 # CodexBar snapshots are operator-facing capacity, not per-request truth.
-# The scheduler sleeps the interval after each pass. A row stays fresh only
-# while its age is below the cache TTL, so equal defaults expire every healthy
-# cycle for the length of the next pass (age = interval + that pass).
-# Per-account Claude probes run in parallel and each is capped at
-# claude_account_usage.PROBE_TIMEOUT_S (60s). One healthy full scheduler pass
+# A row stays fresh only while its age is below the cache TTL. For a Claude
+# account row with no CodexBar updatedAt, age is counted from the probe start
+# (claude_account_usage.probe_account). The account loop starts each probe one
+# interval after the previous probe started, and the next probe replaces the
+# row only when it finishes, so the age at replacement is one interval plus
+# the part of that next probe after its source time. Sleeping the whole
+# interval after the probe would add both probes and expire two cap-length
+# ones (60 + 720 + 60 = 840).
+# Per-account Claude probes run in parallel. The CLI itself is capped at
+# claude_account_usage.PROBE_TIMEOUT_S (60s); sandbox setup and parsing sit
+# outside that cap and after the source time. One healthy full scheduler pass
 # on 2026-11-01 took about 6s. A Claude CLI probe measured 2026-08-04 took
-# about 17s. The TTL is the 12-minute interval plus that 60s cap plus 30s so a
-# probe that runs to the timeout cannot trip age >= ttl. Override with
-# CODEXBAR_CACHE_TTL_S / CODEXBAR_REFRESH_INTERVAL_S.
+# about 17s. The TTL is the 12-minute interval plus the 60s cap plus 30s
+# (810), which is above one interval plus one cap-length CLI probe (780). The
+# 30s is the room for the work outside the CLI cap. An explicit
+# CODEXBAR_CACHE_TTL_S or CODEXBAR_REFRESH_INTERVAL_S replaces its default
+# exactly; the TTL default does not follow an interval override.
 _CLAUDE_ACCOUNT_PROBE_BUDGET_S = 60.0
 _CLAUDE_ACCOUNT_TTL_SLACK_S = 30.0
 DEFAULT_CODEXBAR_REFRESH_INTERVAL_S = 720.0
@@ -253,7 +261,12 @@ def _codexbar_cache_ttl_s() -> float:
 
 
 def _codexbar_refresh_interval_s() -> float:
-    """Background scheduler period. Defaults to the same 12-minute TTL."""
+    """Background scheduler period. Defaults to 12 minutes.
+
+    The cache TTL default is that same default plus the Claude probe cap and
+    30s of slack, so the two are not equal. An explicit CODEXBAR_CACHE_TTL_S
+    replaces the TTL default exactly and does not grow with this interval.
+    """
     return _env_positive_float("CODEXBAR_REFRESH_INTERVAL_S", DEFAULT_CODEXBAR_REFRESH_INTERVAL_S)
 
 
@@ -3153,11 +3166,23 @@ def trigger_claude_account_refresh() -> None:
 
 
 def _claude_account_periodic_loop(interval_s: float, run_immediately: bool) -> None:
-    """Keep per-account Claude rows warm. Does not share the other lanes' pass."""
-    if run_immediately:
+    """Keep per-account Claude rows warm on a start-to-start cadence.
+
+    The next probe starts one interval after the previous one started. Age at
+    replacement is one interval plus the part of the next probe after its
+    source time. The cache TTL covers that when the CLI stays inside its cap
+    and the remaining work fits in the slack. Sleeping the whole interval
+    after the probe would add both durations. This loop does not share the
+    other lanes' pass.
+    """
+    if not run_immediately and _scheduler_stop.wait(timeout=interval_s):
+        return
+    while not _scheduler_stop.is_set():
+        started = time.monotonic()
         _run_claude_account_refresh(wait=True)
-    while not _scheduler_stop.wait(timeout=interval_s):
-        _run_claude_account_refresh(wait=True)
+        remaining = interval_s - (time.monotonic() - started)
+        if remaining > 0 and _scheduler_stop.wait(timeout=remaining):
+            return
 
 
 def _scheduler_is_running() -> bool:
