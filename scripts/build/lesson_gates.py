@@ -1317,8 +1317,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         block("item exemptions require reasons")
     provenance = ly.get("provenance") or []
     for L in lessons:
-        if not L.get("title") or L.get("minutes") != 60 or not isinstance(L.get("word_target"), int) or L["word_target"] < 550:
-            block(f"lesson {L.get('n')}: title, 60 minutes and word_target >=550 required")
+        if not L.get("title") or L.get("minutes") != 60:
+            block(f"lesson {L.get('n')}: title and 60 minutes required")
         target = L.get("activities", {})
         if target.get("inline") != [4, 6] or target.get("workbook") != [6, 9] or target.get("total", 0) < 10:
             block(f"lesson {L.get('n')}: invalid activity targets")
@@ -1404,9 +1404,6 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(f"lesson {n}: workbook count {len(workbook)} outside 6–9")
         if len(inline) + len(workbook) < 10:
             block(f"lesson {n}: total activities {len(inline)+len(workbook)} < 10")
-        minimum_words = max(550, L["word_target"])
-        if prose_tokens < minimum_words:
-            block(f"lesson {n}: prose tokens {prose_tokens} < {minimum_words} minimum")
         for placement, lst in (("inline", inline), ("workbook", workbook)):
             for a in lst:
                 aid, typ = a.get("id"), a.get("type")
@@ -1563,8 +1560,6 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                          "vocab": len(lemmas), "lemma_list": lemmas, "resources": len(res),
                          "unverified_stress": len(u_stress),
                          "unverified_lemmas": len(u_lem), "est_minutes": round(est)}
-        if not 45 <= est <= 75:
-            warn(f"lesson {n}: pacing estimate {est:.0f} min outside 45–75 (heuristic)")
     report["facts"]["lessons"] = per_lesson
 
     # cross-lesson invariants
@@ -1582,8 +1577,6 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(f"lesson {n}: duplicate vocabulary lemmas in one lesson: {dups}")
     total = sum(v["prose_tokens"] for v in per_lesson.values())
     report["facts"]["total_prose_tokens"] = total
-    if total < 2000:
-        block(f"total prose tokens {total} < 2000")
 
     # prose preservation: verbatim (modulo stress), exactly once overall, in the mapped lesson, comments excluded
     hay = {n: norm_md(t) for n, t in lesson_md_clean.items()}

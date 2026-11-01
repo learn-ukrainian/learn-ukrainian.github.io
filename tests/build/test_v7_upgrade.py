@@ -57,7 +57,13 @@ def test_upgrade_dry_run_saves_full_prompt_without_writer(upgrade_root, monkeypa
     assert linear_pipeline._prompt_module_ref(prompt) == "a1/things-have-gender"
     for name in linear_pipeline.WRITER_ARTIFACTS:
         assert (upgrade_root / ORIGINAL / name).read_text() in prompt
-    assert len(yaml.safe_load((output / "lessons.yaml").read_text())["lessons"]) == 3
+    mapping = yaml.safe_load((output / "lessons.yaml").read_text())
+    assert [lesson["sections"] for lesson in mapping["lessons"]] == [
+        ["Діалоги"], ["Він, вона, воно"], ["Предмети навколо"],
+        ["Підсумок", "Імена, пастки й самоперевірка"],
+    ]
+    assert all("word_target" not in lesson for lesson in mapping["lessons"])
+    assert "word_target:" not in prompt
     forbidden.assert_not_called()
 
 
@@ -90,11 +96,19 @@ def test_upgrade_invokes_existing_writer_per_lesson_then_review_then_annotation(
     from scripts.build import lesson_gates
     from scripts.pipeline import stress_annotator
 
+    # Existing reviewed lesson ownership remains reusable with blank sizing.
+    output = upgrade_root / UPGRADED
+    output.mkdir(parents=True, exist_ok=True)
+    mapping = yaml.safe_load(fixture_text("gold", f"{UPGRADED}/lessons.yaml"))
+    for lesson, value in zip(mapping["lessons"], (None, "", 100000), strict=True):
+        lesson["word_target"] = value
+    (output / "lessons.yaml").write_text(yaml.safe_dump(mapping, allow_unicode=True))
     events = []
     def invoke(prompt, selected_writer, **kwargs):
         n = len([e for e in events if e.startswith("writer")]) + 1
         assert selected_writer == writer
         assert f"Your current published unit: lesson {n}" in prompt
+        assert "word_target:" not in prompt
         # #7994: the MCP runtime gate must not depend on prompt regexes.
         assert kwargs["module"] == "a1/things-have-gender"
         assert kwargs["sections"]
@@ -105,6 +119,11 @@ def test_upgrade_invokes_existing_writer_per_lesson_then_review_then_annotation(
     def review(**kwargs):
         events.append("coherence" if kwargs.get("content_override") else "review")
         assert "lesson_split" in kwargs["review_context"]
+        assert "worked examples" in kwargs["review_context"]
+        assert "practice with feedback" in kwargs["review_context"]
+        assert "word_target" not in kwargs["review_context"]
+        assert "word_target" not in kwargs["plan"]
+        assert all("words" not in s for s in kwargs["plan"]["content_outline"])
         return {"passed": True}
 
     monkeypatch.setattr(linear_pipeline, "invoke_writer", invoke)
@@ -114,7 +133,7 @@ def test_upgrade_invokes_existing_writer_per_lesson_then_review_then_annotation(
     monkeypatch.setattr(lesson_gates, "run_lesson_gates", lambda *a, **kw: {"passed": quality_passes})
     monkeypatch.setattr(linear_pipeline, "run_mdx_render_gate", lambda mdx: {"passed": True})
     extra = ["--reviewer", "agy-tools"] if writer == "codex-tools" else []
-    args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", writer, *extra])
+    args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--reuse-lesson-map", "--writer", writer, *extra])
     assert v7_build._run(args) == (0 if quality_passes else 1)
     assert events[:10] == [
         "writer1", "review", "review",
@@ -142,8 +161,16 @@ def test_reviewed_map_keeps_gold_declarations_and_rejects_changed_ownership(upgr
     derived = derive_lesson_map(plan, (upgrade_root / ORIGINAL / "module.md").read_text(),
                                 yaml.safe_load((upgrade_root / ORIGINAL / "activities.yaml").read_text()))
     path = upgrade_root / "reviewed.yaml"
-    path.write_text(fixture_text("gold", f"{UPGRADED}/lessons.yaml"))
-    declared = v7_build._upgrade_declared_map(derived, str(path))
+    gold = yaml.safe_load(fixture_text("gold", f"{UPGRADED}/lessons.yaml"))
+    declarations = json.loads(json.dumps(derived))
+    declarations["proper_names"] = gold["proper_names"]
+    declarations["lessons"][0]["unverified_stress"] = gold["lessons"][0]["unverified_stress"]
+    for value in (None, "", 549, 100000):
+        for lesson in declarations["lessons"]:
+            lesson["word_target"] = value
+        path.write_text(yaml.safe_dump(declarations, allow_unicode=True))
+        declared = v7_build._upgrade_declared_map(derived, str(path))
+        assert all(lesson["word_target"] == value for lesson in declared["lessons"])
     assert declared["lessons"][0]["unverified_stress"]
     assert declared["proper_names"]
     declared["provenance"][0]["lesson"] = 2
@@ -190,6 +217,9 @@ def test_resume_binds_actual_writer_and_reviewer_identity(upgrade_root, monkeypa
     from scripts.build import lesson_gates
     from scripts.pipeline import stress_annotator
 
+    module_dir = upgrade_root / UPGRADED
+    module_dir.mkdir(parents=True, exist_ok=True)
+    (module_dir / "lessons.yaml").write_text(fixture_text("gold", f"{UPGRADED}/lessons.yaml"))
     calls, review_prompts = [], []
     def invoke(prompt, writer, **kwargs):
         calls.append(writer)
@@ -206,7 +236,7 @@ def test_resume_binds_actual_writer_and_reviewer_identity(upgrade_root, monkeypa
     monkeypatch.setattr(linear_pipeline, "run_mdx_render_gate", lambda mdx: {"passed": True})
     _skip_mdx_assembly(monkeypatch)
     for writer, reviewer in (("gemini-tools", "codex-tools"), ("codex-tools", "gemini-tools"), ("codex-tools", "gemini-tools")):
-        args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", writer, "--reviewer", reviewer])
+        args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--reuse-lesson-map", "--writer", writer, "--reviewer", reviewer])
         assert v7_build._run(args) == 0
     assert calls == ["gemini-tools"] * 3 + ["codex-tools"] * 3
     assert any("self_reviewer" in prompt for prompt in review_prompts)
@@ -340,6 +370,7 @@ def _run_upgrade_with_old_edition(upgrade_root, monkeypatch, *, alphabet: bool, 
 
     module_dir = upgrade_root / UPGRADED
     _seed_previous_edition(module_dir)
+    (module_dir / "lessons.yaml").write_text(fixture_text("gold", f"{UPGRADED}/lessons.yaml"))
     seen: list[bool] = []
 
     def invoke(prompt, selected_writer, **kwargs):
@@ -361,7 +392,7 @@ def _run_upgrade_with_old_edition(upgrade_root, monkeypatch, *, alphabet: bool, 
     monkeypatch.setattr(lesson_gates, "run_lesson_gates", lambda *a, **kw: {"passed": True})
     monkeypatch.setattr(linear_pipeline, "run_mdx_render_gate", lambda mdx: {"passed": True})
     _skip_mdx_assembly(monkeypatch)
-    argv = ["a1", "things-have-gender", "--upgrade", "--writer", "gemini-tools"]
+    argv = ["a1", "things-have-gender", "--upgrade", "--reuse-lesson-map", "--writer", "gemini-tools"]
     assert v7_build._run(v7_build.parse_args(argv + (["--dry-run"] if dry_run else []))) == 0
     return module_dir, seen
 

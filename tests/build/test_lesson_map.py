@@ -28,9 +28,18 @@ def baseline():
 def test_derivation_matches_held_out_gold_sections_and_provenance(baseline):
     gold = yaml.safe_load(fixture_text("gold", "curriculum/l2-uk-en/a1/things-have-gender/lessons.yaml"))
     result = derive_lesson_map(*baseline)
-    assert [lesson["sections"] for lesson in result["lessons"]] == [lesson["sections"] for lesson in gold["lessons"]]
-    assert result["closes_module"] == gold["closes_module"]
-    assert result["provenance"] == gold["provenance"]
+    assert [lesson["sections"] for lesson in result["lessons"]] == [
+        ["Діалоги"], ["Він, вона, воно"], ["Предмети навколо"],
+        ["Підсумок", "Імена, пастки й самоперевірка"],
+    ]
+    assert [s for lesson in result["lessons"] for s in lesson["sections"]] == [
+        s for lesson in gold["lessons"] for s in lesson["sections"]
+    ]
+    assert result["closes_module"] == 4
+    assert [row["lesson"] for row in result["provenance"]] == [1, 1, 2, 2, 3, 4, 1, 2, 3, 4, 4]
+    assert [{k: v for k, v in row.items() if k != "lesson"} for row in result["provenance"]] == [
+        {k: v for k, v in row.items() if k != "lesson"} for row in gold["provenance"]
+    ]
     assert {item["id"] for item in result["items_min_exempt"]} == {item["id"] for item in gold["items_min_exempt"]}
     assert "__intro__" in source_sections(baseline[1])
     assert result == derive_lesson_map(*baseline)
@@ -44,8 +53,8 @@ def test_generic_ordered_packing_and_workbook_allocation():
                                 [("First", 280), ("Second", 280), ("Third", 400), ("Close", 200)]]}
     prose = "Intro\n## First\nA\n## Second\nB\n## Third\nC\n## Close\nD\n## Extra\nE\n"
     result = derive_lesson_map(plan, prose, {"workbook": [{"type": "quiz"} for _ in range(5)]})
-    assert [lesson["sections"] for lesson in result["lessons"]] == [["First", "Second"], ["Third"], ["Close", "Extra"]]
-    assert [row["lesson"] for row in result["provenance"]] == [1, 2, 2, 3, 3]
+    assert [lesson["sections"] for lesson in result["lessons"]] == [["First"], ["Second"], ["Third"], ["Close", "Extra"]]
+    assert [row["lesson"] for row in result["provenance"]] == [1, 2, 3, 4, 4]
     assert [row["new_id"] for row in result["provenance"]] == [f"act-w{n}" for n in range(1, 6)]
 
 
@@ -56,7 +65,6 @@ def test_acute_normalization_and_fenced_headings():
 
 
 @pytest.mark.parametrize("mutation", [
-    lambda m: m["lessons"][0].update(word_target=549),
     lambda m: m.update(closes_module=1),
     lambda m: m["lessons"][1]["sections"].append(m["lessons"][0]["sections"][0]),
     lambda m: m["provenance"][0].update(lesson=99),
@@ -89,11 +97,10 @@ def test_mismatched_outline_packs_source_headings():
     activities = {"inline": [{"id": "act-1", "type": "quiz", "items": [{}] * 6}],
                   "workbook": [{"type": "quiz"} for _ in range(6)]}
     result = derive_lesson_map(plan, prose, activities)
-    assert len(result["lessons"]) == 3
-    assert result["lessons"][0]["sections"] == ["Sound First", "Vowels", "Consonants"]
-    assert result["lessons"][1]["sections"] == ["Conversation"]
-    assert result["lessons"][2]["sections"] == ["Close"]
-    assert result["closes_module"] == 3
+    assert [lesson["sections"] for lesson in result["lessons"]] == [
+        ["Sound First"], ["Vowels"], ["Consonants"], ["Conversation"], ["Close"],
+    ]
+    assert result["closes_module"] == 5
     assert all(L["activities"]["total"] >= 10 for L in result["lessons"])
 
 
@@ -109,9 +116,10 @@ def test_source_heading_pack_can_exceed_three_lessons():
     activities = {"inline": [{"id": "act-1", "type": "quiz", "items": [{}] * 6}],
                   "workbook": [{"type": "quiz"} for _ in range(8)]}
     result = derive_lesson_map(plan, prose, activities)
-    assert len(result["lessons"]) >= 4
+    assert len(result["lessons"]) == 6
     assert result["closes_module"] == len(result["lessons"])
     assert result["lessons"][-1]["sections"] == ["F"]
+    assert derive_lesson_map(plan, prose.replace(filler, "Brief explanation."), activities) == result
 
 
 def test_list_activities_split_by_inject_markers():
@@ -159,11 +167,23 @@ def test_missing_inline_marker_fails(baseline):
 
 
 @pytest.mark.parametrize("words", [0, -1, True, "300"])
-def test_invalid_final_outline_budget_fails(baseline, words):
+def test_legacy_outline_budget_is_ignored(baseline, words):
     plan, prose, activities = baseline
+    expected = derive_lesson_map(plan, prose, activities)
     plan["content_outline"][-1]["words"] = words
-    with pytest.raises(ValueError, match="positive integer"):
-        derive_lesson_map(plan, prose, activities)
+    assert derive_lesson_map(plan, prose, activities) == expected
+    for section in plan["content_outline"]:
+        section.pop("words", None)
+    assert derive_lesson_map(plan, prose, activities) == expected
+    for value in (None, "", 549, 100000):
+        for section in plan["content_outline"]:
+            section["words"] = value
+        assert derive_lesson_map(plan, prose, activities) == expected
+        mapping = copy.deepcopy(expected)
+        for lesson in mapping["lessons"]:
+            lesson["word_target"] = value
+        validate_lesson_map(mapping)
+    assert all("word_target" not in lesson for lesson in expected["lessons"])
 
 
 def test_all_held_out_fixture_hashes_and_denominator():
