@@ -415,3 +415,111 @@ def test_critical_cursor_grok_is_selected_when_frontier_is_ineligible():
         )
     )
     assert fallback.selected.name == "grok-4.7-cursor-fallback"
+
+
+@pytest.mark.parametrize("stage", ["resolver", "dispatcher", "spawn", "recorder", "generic"])
+@pytest.mark.parametrize("case", [
+    "admitted", "at_expiry", "after_expiry", "cross_family", "infra", "ukrainian",
+    "different_author", "same_model", "wrong_transport", "advice", "security", "high_risk",
+])
+def test_astra_exception_role_or_expiry_escape(monkeypatch, tmp_path, stage, case):
+    """The operator exception never admits Astra outside its seat or at/after expiry."""
+    from datetime import UTC, datetime, timedelta
+
+    from scripts.dispatcher import checks
+    from scripts.dispatcher.providers import codex
+    from scripts.dispatcher.types import TaskSpec
+    from scripts.review import model_catalog, record_cf_verdict
+
+    expiry = datetime(2026, 11, 4, tzinfo=UTC)
+    clock = expiry if case == "at_expiry" else expiry + timedelta(seconds=1) if case == "after_expiry" else expiry - timedelta(microseconds=1)
+
+    class Clock(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return clock
+
+    monkeypatch.setattr(model_catalog, "datetime", Clock)
+    # Loading the catalog after expiry must preserve every other route.
+    model_catalog.validate_catalog(model_catalog.load_model_catalog())
+    candidate = REVIEW_CANDIDATES["openai_red_team_exception"]
+    options = dict(review_mode="red_team", review_profile="code", review_author_model="gpt-6.1-sol",
+                   risk="medium", branch="codex/author", pinned_head="a" * 40, pr=42,
+                   require_review_verdict=True)
+    agent = "codex"
+    if case == "cross_family":
+        options["review_mode"] = "cross_family"
+    elif case in {"infra", "ukrainian"}:
+        options["review_profile"] = case
+    elif case in {"different_author", "same_model"}:
+        options["review_author_model"] = "claude-opus-5-5" if case == "different_author" else "gpt-6-astra"
+    elif case == "wrong_transport":
+        agent = "cursor"
+    elif case == "advice":
+        options["requested_role"] = "consequential_advisory"
+    elif case in {"security", "high_risk"}:
+        options["risk"] = "critical" if case == "security" else "high"
+    allowed = case == "admitted"
+    if stage == "resolver":
+        inputs = ResolverInputs(author_model=options["review_author_model"], review_profile=options["review_profile"],
+                                risk=options["risk"], requested_role=options.get("requested_role"), claude_account=HOST_ACCOUNT)
+        candidate = replace(candidate, transport="cursor") if agent != "codex" else candidate
+        assert (evaluate_candidate(candidate, inputs, review_mode=options["review_mode"]).status == "eligible") == allowed
+        selected = resolve_reviewer(inputs, ladder=((candidate,),), review_mode=options["review_mode"]).selected
+        assert (selected is not None) == allowed
+        if allowed:
+            # An available outside-family reviewer always outranks the exception.
+            outside = REVIEW_CANDIDATES["claude-opus-5-5"]
+            resolution = resolve_reviewer(inputs, ladder=((candidate,), (outside,)), review_mode="red_team")
+            assert resolution.selected.concrete_model == "claude-opus-5-5"
+            assert evaluate_candidate(candidate, replace(inputs, formal_review=False), review_mode="red_team").status == "excluded"
+            assert evaluate_candidate(candidate, replace(inputs, author_models=("gpt-6-astra",)), review_mode="red_team").status == "excluded"
+    elif stage in {"dispatcher", "spawn"}:
+        prompt = tmp_path / "red-team.md"
+        prompt.write_text("Toolful red-team code review of this exact head.")
+        if stage == "dispatcher":
+            def call():
+                return checks.check_model_admission(agent, "gpt-6-astra", "read-only", options, prompt.read_bytes())
+        else:
+            spec = TaskSpec("reviewer", agent, "gpt-6-astra", "high", "read-only", tmp_path,
+                            prompt, tmp_path / "result", options={key: str(value) for key, value in options.items()})
+            def call():
+                return codex.build(spec, {})
+        if allowed:
+            call()
+            with pytest.raises(ValueError):
+                if stage == "dispatcher":
+                    checks.check_model_admission(agent, "gpt-6-astra", "workspace-write", options, prompt.read_bytes())
+                else:
+                    codex.build(replace(spec, mode="workspace-write"), {})
+        else:
+            with pytest.raises(ValueError):
+                call()
+    elif stage == "recorder":
+        task = dict(agent=agent, model="gpt-6-astra", **options)
+        # Final qualification independently enforces risk and requested-role gates.
+        if case in {"advice", "security", "high_risk"}:
+            facts = record_cf_verdict.BranchReviewFacts(
+                repository="example/repo", base_tip_sha="b" * 40, head_sha="a" * 40,
+                merge_base_sha="b" * 40, commits=(), existing_families=frozenset({"openai"}),
+                incoming_writer=None, incoming_family=None, changed_paths=(), owned_paths=(),
+                subject_seats=frozenset(), subject_families=frozenset(), subject_evidence=(),
+            )
+            task["review_risk"] = options["risk"]
+            if case == "advice":
+                # A context-free advice activity stays refused even when review flags are supplied.
+                assert model_catalog.activity_role_refusal("gpt-6-astra", "consult")
+            else:
+                with pytest.raises(record_cf_verdict.RecordError):
+                    record_cf_verdict._require_qualified_reviewer(facts, task=task, model="gpt-6-astra", family="openai", review_mode="red_team")
+        elif allowed:
+            assert record_cf_verdict.reviewer_identity(task) == ("gpt-6-astra", "openai")
+        else:
+            with pytest.raises(record_cf_verdict.RecordError):
+                record_cf_verdict.reviewer_identity(task)
+    else:
+        assert model_catalog.retired_model_refusal("gpt-6-astra")
+        assert model_catalog.activity_role_refusal("gpt-6-astra", "review")
+        assert model_catalog.activity_role_refusal("gpt-6-astra", "consult")
+        with pytest.raises(model_catalog.ModelCatalogError):
+            model_catalog.require_execution_model("gpt-6-astra", transport="native_codex")

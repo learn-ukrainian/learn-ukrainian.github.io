@@ -170,7 +170,7 @@ review_scheduler:
       capacity_weight: 1.0
     codex:
       formal_review_eligible: true
-      models: [{role: openai_frontier_coder}]
+      models: [{role: openai_frontier_coder}, gpt-6-astra]
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
@@ -466,15 +466,25 @@ models:
   gpt-6-astra:
     family: openai
     tier: frontier_authority
-    lifecycle: retired
-    replaced_by: gpt-6.1-sol
-    roles: [bounded_advisory_envelope, architecture, consequential_advisory]
-    transports: []
+    lifecycle: fallback
+    roles: [standard_review]
+    transports: [native_codex]
+    routing_wire_ids:
+      native_codex: gpt-6-astra
+    red_team_only:
+      review_mode: red_team
+      review_profile: code
+      transport: native_codex
+      role: standard_review
+      expires_at: '2026-11-04T00:00:00Z'
+      author_model: gpt-6.1-sol
     strengths: [agentic_coding, frontier_technical_judgment]
     weaknesses: [not_independent_from_openai_authors]
     notes: >-
-      Historical records only. Operator 2026-09-29 (#9230): gpt-6.1-sol took
-      the advisory seat. Not routable.
+      Operator decision 2026-10-31, recorded by CTO, under #10437: Codex
+      red-team code review of Sol-authored PRs only until 2026-11-04T00:00Z.
+      No outside-family credit, Ukrainian review, security sign-off, advice,
+      approval, design, implementation or driver role. Existing risk floors apply.
     sources:
       - https://developers.openai.com/api/docs/models/gpt-6-astra
   gpt-6-sol:
@@ -1190,6 +1200,7 @@ models:
       - https://platform.claude.com/docs/en/about-claude/models/overview
 
 review_candidates:
+  openai_red_team_exception: {role: legacy_reviewers, seat: openai_red_team_exception, route_name: native, field: candidate}
   muse: {role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: candidate}
   openai_frontier: {role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: candidate}
   grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
@@ -1426,6 +1437,20 @@ seats:
         - sealed_evidence
         advisory_only_for_author_families:
         - openai
+  openai_red_team_exception:
+    model_id: gpt-6-astra
+    bindings: [legacy_review_candidate]
+    priority: 20
+    decision_reference: operator:2026-10-31#10437
+    routes:
+      native:
+        legacy_name: openai_red_team_exception
+        effort: high
+        route: codex
+        transport: native_codex
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent codex --model {wire_id} --effort high
+        review_profiles: [code]
+        capabilities: [code_review, isolation, sealed_evidence]
   xai_reviewer:
     model_id: grok-4.7
     bindings:

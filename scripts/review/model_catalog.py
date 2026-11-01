@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import date
+from datetime import UTC, date, datetime
 from functools import lru_cache
 from pathlib import Path
 from shlex import split as shell_split
@@ -512,7 +512,11 @@ def _validate_activity_role_holders(catalog: dict[str, Any]) -> None:
         for model_id in allowed
     ]
     for label, model_id in references:
-        if refusal := activity_role_refusal(model_id, REVIEW_ACTIVITY, catalog):
+        # Structural validation must still load after a temporary seat expires.
+        if "red_team_only" in catalog["models"][model_id]:
+            if not set(catalog["models"][model_id]["roles"]) & set(scheduler["activity_roles"][REVIEW_ACTIVITY]):
+                raise ModelCatalogError(f"{label}: model holds no review role")
+        elif refusal := activity_role_refusal(model_id, REVIEW_ACTIVITY, catalog):
             raise ModelCatalogError(f"{label}: {refusal}")
 
 
@@ -810,6 +814,22 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
         if "mechanical_only" in model["roles"] and not set(model["roles"]) <= MECHANICAL_ROLES:
             raise ModelCatalogError(f"models.{model_id}: mechanical-only seats cannot hold code, language, review, design or driver roles")
+        if "red_team_only" in model:
+            restriction = _require_mapping(model["red_team_only"], f"models.{model_id}.red_team_only")
+            _require_exact_keys(restriction, frozenset({"expires_at", "author_model", "review_mode", "review_profile", "transport", "role"}), f"models.{model_id}.red_team_only")
+            try:
+                expiry = datetime.fromisoformat(_require_string(restriction["expires_at"], "red_team_only.expires_at").replace("Z", "+00:00"))
+            except ValueError as exc:
+                raise ModelCatalogError("red_team_only.expires_at must be a UTC timestamp") from exc
+            if expiry.utcoffset() != UTC.utcoffset(None):
+                raise ModelCatalogError("red_team_only.expires_at must be a UTC timestamp")
+            if (lifecycle != "fallback" or restriction["review_mode"] != "red_team"
+                    or restriction["review_profile"] != "code" or restriction["transport"] != "native_codex"
+                    or restriction["role"] != "standard_review" or model["roles"] != [restriction["role"]]
+                    or model["transports"] != [restriction["transport"]]
+                    or restriction["author_model"] not in models
+                    or models[restriction["author_model"]]["family"] != model["family"]):
+                raise ModelCatalogError("red_team_only admits only an expiring same-family code-review seat")
         if lifecycle == "retired" and model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must be empty for retired models")
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
@@ -1330,7 +1350,9 @@ def runtime_model_matches_requested(
     return bool(model_id and runtime_model in catalog["models"][model_id].get("runtime_model_ids", []))
 
 
-def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
+def retired_model_refusal(
+    model: Any, catalog: dict[str, Any] | None = None, *, review_context: Mapping[str, Any] | None = None,
+) -> str | None:
     """Refuse retired ids using the same canonical identity as review admission.
 
     Delegate, the runner and adapter model guards call this before side effects.
@@ -1342,14 +1364,41 @@ def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> 
     catalog = catalog or load_model_catalog()
     models = catalog["models"]
     model_id = resolve_catalog_model_id(text, catalog)
-    if model_id is None or models[model_id]["lifecycle"] != "retired":
+    if model_id is None:
+        return None
+    entry = models[model_id]
+    if restriction := entry.get("red_team_only"):
+        expiry = datetime.fromisoformat(restriction["expires_at"].replace("Z", "+00:00"))
+        if datetime.now(UTC) >= expiry:
+            return f"model {text!r} red-team exception expired at {restriction['expires_at']}"
+        context = review_context or {}
+        author_values = context.get("author_models", ())
+        if isinstance(author_values, (str, bytes)) or author_values is None:
+            author_values = (author_values,)
+        # A missing, non-catalog, or model-less author is not the restricted
+        # author. Dropping it would admit a branch that is not shown to be
+        # that author's. A verified app bot has no model, so it is a gap too.
+        author_gap = any(
+            resolve_catalog_model_id(value, catalog) != restriction["author_model"] for value in author_values
+        ) or bool(context.get("unknown_history")) or bool(context.get("app_bot_commits"))
+        if (context.get("review_mode") != restriction["review_mode"] or context.get("review_profile") != restriction["review_profile"]
+                or context.get("transport") != restriction["transport"]
+                or resolve_catalog_model_id(context.get("author_model"), catalog) != restriction["author_model"]
+                or author_gap
+                or context.get("requested_role") not in (None, "", restriction["role"])):
+            return f"model {text!r} is restricted to red-team code review of {restriction['author_model']}-authored PRs through {restriction['transport']} (#10437)"
+        return None
+    if entry["lifecycle"] != "retired":
         return None
     replacement = models[model_id].get("replaced_by")
     advice = f"use {replacement}" if replacement else "use an active catalog model"
     return f"model {text!r} is retired in the model catalog ({model_id}); {advice}"
 
 
-def activity_role_refusal(model: Any, activity: str, catalog: dict[str, Any] | None = None) -> str | None:
+def activity_role_refusal(
+    model: Any, activity: str, catalog: dict[str, Any] | None = None, *,
+    review_context: Mapping[str, Any] | None = None,
+) -> str | None:
     """Refuse a model pin whose catalog ``roles`` admit no ``activity`` (#9583).
 
     ``activity`` is ``review`` (a review, critique or approval of record) or
@@ -1365,7 +1414,9 @@ def activity_role_refusal(model: Any, activity: str, catalog: dict[str, Any] | N
     model_id = resolve_catalog_model_id(text, catalog)
     if model_id is None:
         return None
-    if refusal := retired_model_refusal(model_id, catalog):
+    if refusal := retired_model_refusal(
+        model_id, catalog, review_context=review_context if activity == REVIEW_ACTIVITY else None,
+    ):
         return refusal
     activity_roles = catalog["review_scheduler"]["activity_roles"]
     admitted = set(activity_roles[REVIEW_ACTIVITY])

@@ -96,7 +96,7 @@ def test_one_holder_edit_moves_all_consumer_references(seat, new_id):
         assert policy.advisor_model_id == new_id
         assert result["execution_routing"]["sol_advised_bounded"]["preferred_worker"]["escalate_to"] == new_id
         assert result["formal_cf_defaults"]["codex"]["model_id"] == new_id
-        assert result["review_scheduler"]["endpoints"]["codex"]["models"] == [new_id]
+        assert result["review_scheduler"]["endpoints"]["codex"]["models"] == [new_id, "gpt-6-astra"]
         assert result["budget_substitution_models"]["codex"][old_id] == new_id
     if seat == "xai_reviewer":
         assert cursor_pinned_models(result)[0] == new_id

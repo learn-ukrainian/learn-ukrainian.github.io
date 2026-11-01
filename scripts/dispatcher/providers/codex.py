@@ -13,6 +13,9 @@ _OUT_OF_CAPACITY = frozenset({"rate_limited", "provider_overloaded"})
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    from scripts.dispatcher.checks import check_model_admission
+
+    check_model_admission(spec.agent, spec.model, spec.mode, spec.options, spec.prompt_file.read_bytes())
     argv = ["codex", "exec", "--json", "-C", str(spec.worktree), "-m", spec.model, "-o", str(spec.final_file)]
     if spec.options.get("output_schema_path") is not None:
         from scripts.dispatcher.output_schema import load
