@@ -131,6 +131,11 @@ def build_parser() -> argparse.ArgumentParser:
         default="read-only",
         help="Mode (default: read-only)",
     )
+    dispatch.add_argument(
+        "--input", action="append", default=[], metavar="PATH",
+        help="Regular file mounted read-only for an AGY read-only task at /agy-inputs/<n> "
+             "(repeatable, at most 8, each at most 8 MiB; default: none)",
+    )
     dispatch.add_argument("--worktree", nargs="?", const="", help="Dispatch path (default: automatic)")
     dispatch.add_argument("--pr", type=int, help="Reviewed PR number, e.g. 42 (default: none; use --branch for identity)")
     for flag in ("subject-seat", "subject-family"):
@@ -334,6 +339,14 @@ def _dispatch(args) -> int:
         raise ValueError("--advisor is supported only for a workspace-write Claude Haiku 5.5 run")
     if args.output_schema is not None and agent not in {"codex", "agy"}:
         raise ValueError("--output-schema is supported only with the effective codex or agy agent")
+    # Checked before admission and before any worker starts. A path that cannot be mounted is not dropped.
+    bound_inputs = []
+    if args.input:
+        if agent != "agy" or args.mode != "read-only":
+            raise ValueError("agy_input_refused: --input requires --agent agy and --mode read-only")
+        from scripts.dispatcher.agy_sandbox import bind_inputs
+
+        bound_inputs = bind_inputs(args.input, repo_root=git.resolve_repo(args.repo)[0])
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent)):
         raise ValueError(refusal)
     deadlines(vars(args))
@@ -391,7 +404,10 @@ def _dispatch(args) -> int:
         raise ValueError("pinned head must be a full commit SHA")
     prompt_path = _PromptPath(path.with_suffix(".prompt"))
     prompt_path.content = prompt
-    options = {key: str(value) for key, value in vars(args).items() if value is not None and key != "prompt"}
+    options = {key: str(value) for key, value in vars(args).items()
+               if value is not None and key not in {"prompt", "input"}}
+    if bound_inputs:
+        options["inputs"] = json.dumps(bound_inputs, separators=(",", ":"), sort_keys=True)
     output_schema = args.output_schema
     if agent == "agy" and args.require_review_verdict and output_schema is None:
         from scripts.review.review_contract import schema_path

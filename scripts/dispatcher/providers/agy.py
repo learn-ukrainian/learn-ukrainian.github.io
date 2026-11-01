@@ -211,6 +211,8 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         if refusal := read_only_refusal("agy"):
             raise ValueError(refusal)
         argv += ["--add-dir", str(spec.worktree), "--log-file", str(agy_sandbox.log_file(spec.task_id))]
+        if spec.options.get("inputs"):
+            argv += ["--add-dir", agy_sandbox.INPUT_MOUNT]
         argv = agy_sandbox.launcher(spec, argv)
     else:
         raise ValueError(f"agy: unsupported mode {spec.mode!r}")

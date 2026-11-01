@@ -857,6 +857,7 @@ PACKET_SCHEMA = "ukrainian-item-packet.v1"
 JUDGMENT_SCHEMA = "ukrainian-item-judgments.v1"
 MAX_CHUNK_ROWS = 250
 _JUDGMENT_KEYS = frozenset({"id", "verdict", "finding", "sources"})
+_UKRAINIAN_JUDGMENT_KEYS = frozenset({"id", "verdict", "finding", "sources", "evidence", "_approval_void"})
 _QUOTE_KEYS = frozenset({"quote", "quotes"})
 _JUDGMENT_VERDICT = {
     "APPROVE": "APPROVED",
@@ -864,7 +865,358 @@ _JUDGMENT_VERDICT = {
     "REQUEST_CHANGES": "CHANGES_REQUESTED",
     "CHANGES_REQUESTED": "CHANGES_REQUESTED",
     "BLOCKED": "BLOCKED",
+    "unknown": "UNKNOWN",
+    "UNKNOWN": "UNKNOWN",
 }
+
+
+@dataclass(frozen=True)
+class ClaimsValidationResult:
+    claims_total: int
+    claims_unsupported: int
+    unknown_items: int
+    dropped_claims: tuple[dict[str, Any], ...]
+
+
+def validate_item_claims(
+    payload: Mapping[str, Any],
+    ledger_path: Path | None = None,
+    binding: Mapping[str, Any] | None = None,
+) -> tuple[dict[str, Any], ClaimsValidationResult]:
+    """Validate item claims against the attempt receipt ledger, dropping unsupported references.
+
+    A claim must cite an existing receipt in this attempt's ledger (matching review_id,
+    attempt_id, manifest_sha256) and provide a non-empty quote that is a literal substring
+    of that receipt's stored result. Unsupported and foreign-attempt citations are dropped,
+    recorded with reasons for audit, and counted.
+    """
+    from scripts.review.receipts import ledger
+
+    indexed: dict[str, dict[str, Any]] = {}
+    foreign: dict[str, dict[str, Any]] = {}
+    if ledger_path is not None and Path(ledger_path).exists():
+        try:
+            records = ledger.records(Path(ledger_path))
+        except Exception:
+            records = []
+        for record in records:
+            rid = record.get("receipt_id")
+            if not isinstance(rid, str):
+                continue
+            if binding is not None:
+                record_identity = (
+                    record.get("review_id"),
+                    record.get("attempt_id"),
+                    record.get("manifest_sha256"),
+                )
+                expected_identity = (
+                    binding.get("review_id"),
+                    binding.get("attempt_id"),
+                    binding.get("manifest_sha256"),
+                )
+                if record_identity == expected_identity:
+                    indexed[rid] = record
+                else:
+                    foreign[rid] = record
+            else:
+                indexed[rid] = record
+
+    if binding is not None:
+        try:
+            from scripts.dispatcher import store
+
+            root = store.receipts_root()
+            if root and root.exists():
+                this_path = Path(ledger_path).resolve() if ledger_path else None
+                for other_file in root.rglob("*.jsonl"):
+                    if this_path and other_file.resolve() == this_path:
+                        continue
+                    try:
+                        other_records = ledger.records(other_file)
+                    except Exception:
+                        continue
+                    for o_rec in other_records:
+                        o_rid = o_rec.get("receipt_id")
+                        if isinstance(o_rid, str) and o_rid not in indexed:
+                            foreign[o_rid] = o_rec
+        except Exception:
+            pass
+
+    claims_total = 0
+    claims_unsupported = 0
+    unknown_items = 0
+    dropped: list[dict[str, Any]] = []
+
+    def _validate_claim(
+        claim: Any,
+        item_id: str | None = None,
+        *,
+        require_quote: bool = True,
+    ) -> tuple[bool, str | None]:
+        if not isinstance(claim, dict):
+            return False, "malformed_claim"
+        receipt = claim.get("receipt") or claim.get("receipt_id")
+        quote = claim.get("quote")
+        claim_keys = set(claim) - {"category", "outcome"}
+
+        if require_quote:
+            if claim_keys != {"receipt", "quote"} and claim_keys != {"receipt_id", "quote"}:
+                return False, "malformed_claim"
+            if not isinstance(receipt, str) or not receipt.strip():
+                return False, "malformed_receipt"
+            if not isinstance(quote, str) or not quote.strip():
+                return False, "empty_quote"
+            if receipt in foreign:
+                return False, "foreign_attempt_receipt"
+            if receipt not in indexed:
+                return False, "receipt_not_found"
+            rec = indexed[receipt]
+            stored_result = rec.get("result")
+            if not isinstance(stored_result, str) or quote not in stored_result:
+                return False, "quote_not_in_result"
+            return True, None
+
+        # require_quote is False (for YAML findings, etc.)
+        has_quote = "quote" in claim
+        if has_quote:
+            if claim_keys != {"receipt", "quote"} and claim_keys != {"receipt_id", "quote"}:
+                return False, "malformed_claim"
+            if not isinstance(quote, str) or not quote.strip():
+                return False, "empty_quote"
+        else:
+            if claim_keys != {"receipt"} and claim_keys != {"receipt_id"}:
+                return False, "malformed_claim"
+
+        if not isinstance(receipt, str) or not receipt.strip():
+            return False, "malformed_receipt"
+        if receipt in foreign:
+            return False, "foreign_attempt_receipt"
+        if receipt not in indexed:
+            return False, "receipt_not_found"
+
+        if has_quote:
+            rec = indexed[receipt]
+            stored_result = rec.get("result")
+            if not isinstance(stored_result, str) or quote not in stored_result:
+                return False, "quote_not_in_result"
+
+        return True, None
+
+    updated_items = []
+    for item in payload.get("items", []):
+        if not isinstance(item, dict):
+            updated_items.append(item)
+            continue
+        item_copy = dict(item)
+        verdict = _JUDGMENT_VERDICT.get(item_copy.get("verdict"))
+        if verdict == "UNKNOWN":
+            unknown_items += 1
+
+        evidence = item_copy.get("evidence")
+        if evidence is not None:
+            was_dict = isinstance(evidence, dict)
+            claims_list = [evidence] if was_dict else (list(evidence) if isinstance(evidence, list) else [evidence])
+            valid_claims = []
+            has_dropped = False
+            for claim in claims_list:
+                claims_total += 1
+                ok, reason = _validate_claim(claim, item_copy.get("id"), require_quote=True)
+                if not ok:
+                    claims_unsupported += 1
+                    has_dropped = True
+                    dropped.append({
+                        "item_id": item_copy.get("id"),
+                        "claim": claim,
+                        "reason": reason,
+                    })
+                else:
+                    valid_claims.append(claim)
+
+            if was_dict:
+                if valid_claims:
+                    item_copy["evidence"] = valid_claims[0]
+                else:
+                    item_copy.pop("evidence", None)
+            else:
+                item_copy["evidence"] = valid_claims
+
+            if has_dropped and verdict == "APPROVED":
+                item_copy["_approval_void"] = True
+
+        updated_items.append(item_copy)
+
+    updated_evidence = None
+    if "evidence" in payload:
+        evidence = payload["evidence"]
+        was_dict = isinstance(evidence, dict)
+        claims_list = [evidence] if was_dict else (list(evidence) if isinstance(evidence, list) else [evidence])
+        valid_claims = []
+        for claim in claims_list:
+            claims_total += 1
+            ok, reason = _validate_claim(claim, None, require_quote=False)
+            if not ok:
+                claims_unsupported += 1
+                dropped.append({
+                    "item_id": None,
+                    "claim": claim,
+                    "reason": reason,
+                })
+            else:
+                valid_claims.append(claim)
+        updated_evidence = (valid_claims[0] if valid_claims else None) if was_dict else valid_claims
+
+    updated_broadened = None
+    if "broadened_searches" in payload:
+        broadened = payload["broadened_searches"]
+        if isinstance(broadened, list):
+            valid_searches = []
+            for claim in broadened:
+                claims_total += 1
+                ok, reason = _validate_claim(claim, None, require_quote=True)
+                if not ok:
+                    claims_unsupported += 1
+                    dropped.append({
+                        "item_id": None,
+                        "claim": claim,
+                        "reason": reason,
+                    })
+                else:
+                    valid_searches.append(claim)
+            updated_broadened = valid_searches
+        else:
+            updated_broadened = broadened
+
+    updated_findings = None
+    if "findings" in payload:
+        findings = payload["findings"]
+        if isinstance(findings, list):
+            updated_findings = []
+            for finding in findings:
+                if not isinstance(finding, dict):
+                    updated_findings.append(finding)
+                    continue
+                f_copy = dict(finding)
+                f_id = f_copy.get("id")
+                valid_receipt_ids: list[str] = []
+
+                if "evidence" in f_copy:
+                    ev = f_copy["evidence"]
+                    was_dict = isinstance(ev, dict)
+                    claims_list = [ev] if was_dict else (list(ev) if isinstance(ev, list) else [ev])
+                    valid_ev = []
+                    for claim in claims_list:
+                        claims_total += 1
+                        ok, reason = _validate_claim(claim, f_id, require_quote=False)
+                        if not ok:
+                            claims_unsupported += 1
+                            dropped.append({
+                                "item_id": f_id,
+                                "claim": claim,
+                                "reason": reason,
+                            })
+                        else:
+                            valid_ev.append(claim)
+                            r_id = claim.get("receipt") or claim.get("receipt_id")
+                            if isinstance(r_id, str):
+                                valid_receipt_ids.append(r_id)
+                    if was_dict:
+                        if valid_ev:
+                            f_copy["evidence"] = valid_ev[0]
+                        else:
+                            f_copy.pop("evidence", None)
+                    else:
+                        f_copy["evidence"] = valid_ev
+
+                if "source_conflict" in f_copy and isinstance(f_copy["source_conflict"], dict):
+                    sc = dict(f_copy["source_conflict"])
+                    for side in ("a", "b"):
+                        if side in sc and isinstance(sc[side], dict):
+                            claims_total += 1
+                            ok, reason = _validate_claim(sc[side], f_id, require_quote=False)
+                            if not ok:
+                                claims_unsupported += 1
+                                dropped.append({
+                                    "item_id": f_id,
+                                    "claim": sc[side],
+                                    "reason": reason,
+                                })
+                                sc.pop(side, None)
+                            else:
+                                r_id = sc[side].get("receipt") or sc[side].get("receipt_id")
+                                if isinstance(r_id, str):
+                                    valid_receipt_ids.append(r_id)
+                    f_copy["source_conflict"] = sc
+
+                if "unsupported_by_source" in f_copy and isinstance(f_copy["unsupported_by_source"], dict):
+                    ubs = dict(f_copy["unsupported_by_source"])
+                    if "searches" in ubs and isinstance(ubs["searches"], list):
+                        valid_searches = []
+                        for s in ubs["searches"]:
+                            claims_total += 1
+                            ok, reason = _validate_claim(s, f_id, require_quote=False)
+                            if not ok:
+                                claims_unsupported += 1
+                                dropped.append({
+                                    "item_id": f_id,
+                                    "claim": s,
+                                    "reason": reason,
+                                })
+                            else:
+                                valid_searches.append(s)
+                                r_id = s.get("receipt") or s.get("receipt_id")
+                                if isinstance(r_id, str):
+                                    valid_receipt_ids.append(r_id)
+                        ubs["searches"] = valid_searches
+                    f_copy["unsupported_by_source"] = ubs
+
+                if "expected" in f_copy:
+                    expected = f_copy["expected"]
+                    claims_total += 1
+                    ok = False
+                    reason = None
+                    if not isinstance(expected, str) or not expected.strip():
+                        reason = "empty_quote"
+                    else:
+                        stored_results = []
+                        for rid in valid_receipt_ids:
+                            rec = indexed.get(rid)
+                            if isinstance(rec, dict) and isinstance(rec.get("result"), str):
+                                stored_results.append(rec["result"])
+                        if not stored_results or not any(expected in res for res in stored_results):
+                            reason = "quote_not_in_result"
+                        else:
+                            ok = True
+
+                    if not ok:
+                        claims_unsupported += 1
+                        dropped.append({
+                            "item_id": f_id,
+                            "claim": {"expected": expected},
+                            "reason": reason,
+                        })
+                        f_copy.pop("expected", None)
+
+                updated_findings.append(f_copy)
+
+    updated_payload = dict(payload)
+    if "items" in payload:
+        updated_payload["items"] = updated_items
+    if "evidence" in payload:
+        if updated_evidence is not None:
+            updated_payload["evidence"] = updated_evidence
+        else:
+            updated_payload.pop("evidence", None)
+    if updated_broadened is not None:
+        updated_payload["broadened_searches"] = updated_broadened
+    if updated_findings is not None:
+        updated_payload["findings"] = updated_findings
+
+    return updated_payload, ClaimsValidationResult(
+        claims_total=claims_total,
+        claims_unsupported=claims_unsupported,
+        unknown_items=unknown_items,
+        dropped_claims=tuple(dropped),
+    )
 
 
 @dataclass(frozen=True)
@@ -1114,7 +1466,9 @@ def _rollup(verdicts: Sequence[str]) -> str:
     return "APPROVED"
 
 
-def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> ItemChunk:
+def judge_item_reply(
+    packet: Mapping[str, Any], reply: str, *, stated: str, ukrainian: bool = False
+) -> ItemChunk:
     """Coverage of one chunk. A quote that is not a literal substring of its item voids the chunk.
 
     The reply's only payload is per-item verdict, finding and Sources evidence, keyed by the
@@ -1140,6 +1494,7 @@ def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> I
     allowed = set(packet["coverage"])
     bookkeeping = bool(set(payload) - {"schema", "items"})
     quote_bad = False
+    seen_ids: set[str] = set()
     judged: list[str] = []
     verdicts: list[str] = []
     for row in rows:
@@ -1148,14 +1503,16 @@ def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> I
         item_id = row.get("id")
         if not isinstance(item_id, str) or item_id not in allowed:
             raise ContractError("ITEM_OUTSIDE_CHUNK: a judgment names an item this chunk was not given")
-        if item_id in judged:
+        if item_id in seen_ids:
             raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: duplicate judgment {item_id}")
+        seen_ids.add(item_id)
         verdict = _JUDGMENT_VERDICT.get(row.get("verdict"))
         finding = row.get("finding")
         sources = row.get("sources")
         if verdict is None or not isinstance(finding, str) or not isinstance(sources, str):
             raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: {item_id} needs a verdict, finding and sources")
-        if set(row) - _JUDGMENT_KEYS - _QUOTE_KEYS:
+        allowed_keys = _UKRAINIAN_JUDGMENT_KEYS if ukrainian else _JUDGMENT_KEYS
+        if set(row) - allowed_keys - _QUOTE_KEYS:
             bookkeeping = True
         spans = _quote_spans(row)
         item_text = frozen[item_id]
@@ -1164,7 +1521,8 @@ def judge_item_reply(packet: Mapping[str, Any], reply: str, *, stated: str) -> I
             quote_bad = True
         if any(span not in item_text for span in presented):
             quote_bad = True
-        judged.append(item_id)
+        if verdict != "UNKNOWN" and not row.get("_approval_void"):
+            judged.append(item_id)
         verdicts.append(verdict)
     outside = re.sub(
         r"^```ukrainian-item-judgments[ \t]*\n.*?\n```[ \t]*\n?",

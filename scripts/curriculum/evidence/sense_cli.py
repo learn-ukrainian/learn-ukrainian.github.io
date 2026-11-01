@@ -974,7 +974,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                                         "definition_sha256": word["definition_sha256"],
                                     }
                                     if word.get("kind") == "formula"
-                                    else {}
+                                    else {"lemma": word["lemma"], "pos": word["pos"]}
                                 ),
                             },
                             ensure_ascii=False,
