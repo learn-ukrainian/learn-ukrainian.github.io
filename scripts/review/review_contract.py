@@ -319,6 +319,19 @@ def _effective_verdict(payload: Mapping[str, Any]) -> str | None:
     return verdict
 
 
+def _explanation_rejections(payload: Mapping[str, Any]) -> set[str]:
+    """Rejection tokens written in an explanation, even when the object is not yet valid."""
+    overall = payload.get("overall")
+    if not isinstance(overall, Mapping):
+        return set()
+    explanation = overall.get("explanation")
+    if not isinstance(explanation, str):
+        return set()
+    from scripts.fleet_comms.review_publication import _stated_verdicts
+
+    return _stated_verdicts(explanation) - {"APPROVED"}
+
+
 def _findings_candidate(payload: dict[str, Any]) -> bool:
     if payload.get("schema_version") == SCHEMA_VERSION:
         return True
@@ -382,8 +395,19 @@ def same_decision(lock: Mapping[str, Any], payload: Mapping[str, Any]) -> bool:
             return False
     if isinstance(prior, Mapping):
         prior_verdict = _effective_verdict(prior)
-        if prior_verdict is not None and _effective_verdict(payload) != prior_verdict:
+        later_verdict = _effective_verdict(payload)
+        if prior_verdict is not None and later_verdict != prior_verdict:
             return False
+        # A missing required field can hide a rejection the explanation already states.
+        # Filling the field cannot turn that rejection into an approval.
+        if prior_verdict is None and (rejections := _explanation_rejections(prior)):
+            allowed = set()
+            if rejections & {"CHANGES_REQUESTED", "REQUEST_CHANGES"}:
+                allowed.add("CHANGES_REQUESTED")
+            if "BLOCKED" in rejections:
+                allowed.add("BLOCKED")
+            if later_verdict not in allowed:
+                return False
     return stated
 
 

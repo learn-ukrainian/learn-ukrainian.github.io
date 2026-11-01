@@ -1509,7 +1509,9 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
     assert json.loads(sandbox.cli("list", "--status", record["status"]).stdout)[0]["task_id"] == task[0]
 
 
-@pytest.mark.parametrize("second", ["kept", "changed", "invalid", "ambiguous", "quoted", "meaning"])
+@pytest.mark.parametrize(
+    "second", ["kept", "changed", "invalid", "ambiguous", "quoted", "meaning", "unconfident"]
+)
 def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
     """Case 3: a Cursor reply with no recognised VERDICT line gets one format correction.
 
@@ -1534,6 +1536,14 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
         first = "Example only, not my review:\n> " + findings
     elif second == "meaning":
         first = "The change is sound.\n" + conflict
+    elif second == "unconfident":
+        first = (
+            "The change is sound.\n"
+            '{"schema_version":"code-review-findings.v1",'
+            '"overall":{"correctness":"correct",'
+            '"explanation":"VERDICT: REQUEST_CHANGES. Cannot approve this change."},'
+            '"findings":[]}'
+        )
     elif second == "changed":
         first = "The change is sound.\n" + findings
         reply = other
@@ -1589,11 +1599,14 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
     if launches == 2:
         correction = prompts.read_text().split("\n---\n", 1)[1]
         assert "Keep the same verdict" in correction
-        assert findings in correction or conflict in correction
+        if second == "unconfident":
+            assert "REQUEST_CHANGES" in correction
+        else:
+            assert findings in correction or conflict in correction
     if second == "kept":
         assert record["status"] == "done"
         assert json.loads(record["result_file"] and Path(record["result_file"]).read_text())["overall"]["correctness"] == "correct"
-    elif second in {"changed", "meaning"}:
+    elif second in {"changed", "meaning", "unconfident"}:
         assert record["status"] == "failed"
         assert record["error"] == "review_ambiguous_verdict"
     elif second == "ambiguous":
