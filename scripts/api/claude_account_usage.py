@@ -57,6 +57,7 @@ timestamp, never frozen into a stored payload.
 
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import errno
 import hashlib
@@ -1012,6 +1013,24 @@ def routing_budget_fields() -> dict[str, Any]:
     """Additive routing-budget keys, aged now: per-account rows and the balancing hint."""
     rows = claude_accounts_snapshot()
     return {"claude_accounts": rows, "preferred_claude_account": preferred_claude_account(rows)}
+
+
+async def revalidated_routing_budget_fields(*, timeout_s: float = 1.0) -> dict[str, Any]:
+    """Resolve a routine binding-file rewrite before HTTP publishes its rows.
+
+    The stat-only snapshot starts the existing single-flight revalidation.
+    Waiting for it off the event loop lets a same-account metadata rewrite
+    keep its original measurement and TTL. One second leaves room inside
+    admission's three-second HTTP timeout; a slow or refused revalidation
+    still publishes the current unknown row. No usage probe is started here.
+    """
+    fields = routing_budget_fields()
+    thread = _revalidation
+    if thread is not None and any(row["reason"] == "not_probed" for row in fields["claude_accounts"].values()):
+        with contextlib.suppress(TimeoutError):
+            await asyncio.wait_for(asyncio.to_thread(thread.join, timeout=timeout_s), timeout=timeout_s)
+        return routing_budget_fields()
+    return fields
 
 
 def _reset_for_tests() -> None:
