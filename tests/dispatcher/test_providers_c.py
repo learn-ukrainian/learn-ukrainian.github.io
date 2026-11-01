@@ -316,6 +316,22 @@ def test_cursor_keeps_the_verdict_on_its_own_line_when_result_concatenates_messa
     assert recognized_verdicts(parsed.text) == ["APPROVE"]
 
 
+def test_cursor_reply_is_the_final_turn_after_the_last_tool_call():
+    """#12390 stream shape: narration, tool calls, then the findings object as the final message."""
+    narration = "I'll match the findings schema and return one JSON object with the same verdict."
+    reply = '{"schema_version":"code-review-findings.v1","findings":[]}'
+    events = [
+        {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"},
+        _assistant(narration),
+        {"type": "tool_call", "subtype": "started"},
+        {"type": "tool_call", "subtype": "completed"},
+        _assistant(reply),
+        {"type": "result", "subtype": "success", "is_error": False, "result": narration + reply},
+    ]
+    parsed = cursor.parse(stream(*events), "", 0, None)
+    assert (parsed.text, parsed.error) == (reply, None)
+
+
 def test_cursor_falls_back_to_the_result_when_no_assistant_text_was_captured():
     events = [{"type": "result", "subtype": "success", "result": "Finished.\n\nVERDICT: APPROVE"}]
     parsed = cursor.parse(stream(*events), "", 0, None)

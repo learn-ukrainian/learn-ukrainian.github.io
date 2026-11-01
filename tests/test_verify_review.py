@@ -351,6 +351,32 @@ def test_non_json_chatter_fails_closed():
         parse_reviewer_json('Here is my review:\n{"schema_version": "x"}\nThanks!')
 
 
+@pytest.mark.parametrize("info", ["json", ""])
+def test_reply_that_is_one_json_fence_parses_as_bare_json(info):
+    """#12390: a Cursor Grok reply that is only a fenced findings object is a receipt."""
+    payload = {"schema_version": "code-review-findings.v1", "findings": []}
+    bare = json.dumps(payload, indent=2)
+    assert parse_reviewer_json(f"```{info}\n{bare}\n```\n") == parse_reviewer_json(bare) == payload
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        'Here is the review:\n```json\n{"findings": []}\n```',
+        '```json\n{"findings": []}\n```\n```json\n{"findings": []}\n```',
+        '```json\n{"findings": []}',
+        '> ```json\n> {"findings": []}\n> ```',
+        '```python\n{"findings": []}\n```',
+        '```json\n{"findings": []}\n```\nThanks.',
+        '~~~\nVERDICT: APPROVE\nSCORE: 9/10\n```json\n{"findings": []}\n```\n~~~',
+    ],
+    ids=["prose", "two-fences", "unclosed", "blockquote", "python", "trailing-text", "fenced-envelope"],
+)
+def test_fence_with_prose_or_extra_blocks_still_fails_closed(raw):
+    with pytest.raises(ContractError):
+        parse_reviewer_json(raw)
+
+
 def test_empty_input_is_incomplete():
     with pytest.raises(ContractError) as exc:
         parse_reviewer_json("   ")
