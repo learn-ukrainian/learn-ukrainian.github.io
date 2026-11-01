@@ -81,6 +81,8 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
    every fix is a new head and restarts the wait. **No budgeted review round starts until
    the `CI Gate` is green on the head to be reviewed**: a round spent on a head that then
    changes for a CI failure is wasted budget.
+   Before step 5, the author may optionally run the DeepSeek author pre-check
+   ([below](#optional-deepseek-author-pre-check-ds-precheck-1101)) on the pinned green head.
 5. **Review with `review-loop`**, which you run yourself, at that green head. It resolves
    the reviewer live (never from a family that authored the branch), dispatches it at the
    exact pushed head, keeps the budget and the ledger, and records the verdict. A fix that
@@ -137,6 +139,35 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
     evidence and owner and resolve it safely, never with `--force`.
 11. **Dispose of the linked issues.** A worker does this before it ends its run. Close each named issue as completed with evidence on the
     merged SHA, or comment what remains, its owner and what it waits on (rules core P4).
+
+## Optional DeepSeek author pre-check (DS-PRECHECK-1101)
+
+An optional, explicitly chosen, read-only DeepSeek pre-check may be run by the author before the
+first review of record, at most **one per PR lineage**.
+
+- **Scope:** only for low or medium risk **public** code. Never on private repositories, high or
+  critical risk, security-class paths, or Ukrainian content. Everything sent to it must be public
+  and free of secrets.
+- **Trigger:** nothing invokes it automatically, it has no retries, and it does not repeat after
+  the head changes. It runs on a pinned pushed head before the first review of record.
+- **Credit check:** execution is skipped when remaining DeepSeek credit is unknown or exhausted.
+  Query the Monitor routing-budget endpoint (`http://127.0.0.1:8765/api/state/routing-budget`,
+  field `api_accounts.deepseek.total_balance`); skip when the field is missing or below the
+  credit floor of $0.10.
+- **Execution:** run with a hard timeout of 900 seconds:
+
+  ```bash
+  "$PY" scripts/dispatch.py dispatch \
+    --agent opencode --model deepseek-v4.1-flash --mode read-only \
+    --hard-timeout 900 --worktree --task-id "$PRECHECK_TASK" \
+    --prompt-file "$PRECHECK_PROMPT" --branch "$BRANCH" --pinned-head "$HEAD_SHA" --pr "$PR"
+  ```
+
+- **Findings and status:** findings go only to the author. A failed run never blocks review. Any
+  usable findings it returned need a disposition in the PR body (fixed, or rejected with a reason),
+  and confirmed defects follow the existing review-loop severity policy.
+- **Non-record status:** it is never a review of record and never satisfies or waives the
+  cross-family gate. No change to reviewer choice, risk floors, or round budgets.
 
 ## Stop and escalate
 
