@@ -1687,11 +1687,15 @@ def test_multiple_removals_do_not_persist_obsolete_bindings(tmp_path: Path, monk
         for event_id in (987, 988)
     ]
     path = tmp_path / "state.json"
-    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
+    path.write_text(json.dumps({
+        "queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:02Z",
+        "undiagnosed": {f"42:{HEAD_A}": "2026-09-23T00:00:00Z"},
+    }))
     run(fake, path, monkeypatch)
     state = json.loads(path.read_text())
     assert "drop_events" not in state
     assert state["drops"][f"42:{HEAD_A}"] == 2
+    assert f"42:{HEAD_B}" not in state["drops"]
 
 
 def test_cycle_ejections_are_counted_once_and_never_readded(tmp_path: Path) -> None:

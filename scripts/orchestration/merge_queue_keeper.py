@@ -660,8 +660,10 @@ def _comment_once(
 def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]) -> None:
     """Count timeline removals independently of membership and failure diagnosis."""
     key = str(number)
+    dropped_head = previous["queued"].get(key, head)
+    drop_key = f"{number}:{dropped_head}"
     cursor = previous.get("last_removal", {}).get(key, {
-        "created_at": previous.get("observed", ""), "id": 0,
+        "created_at": previous.get("undiagnosed", {}).get(drop_key, previous.get("observed", "")), "id": 0,
     })
 
     def position(stamp: str, event_id: int) -> tuple[datetime, int]:
@@ -681,8 +683,6 @@ def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]
         for item in gh.timeline(number)
         if item.get("event") == "removed_from_merge_queue"
     })
-    dropped_head = previous["queued"].get(key, head)
-    drop_key = f"{number}:{dropped_head}"
     for stamp, event_id in events:
         if (stamp, event_id) <= after:
             continue
