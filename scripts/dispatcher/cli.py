@@ -260,7 +260,7 @@ def build_parser() -> argparse.ArgumentParser:
         "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --clear\n"
         "Outputs: JSON with task_id and worktree_retention_hold. Writes the task record only.\n"
         "Side effects: --set stores the hold and a non-retry retained disposition; --clear removes the "
-        "hold and, when the disposition reason is retention_hold, drops that disposition. Neither pushes "
+        "hold and any retention_hold or retention_hold_invalid disposition. Neither pushes "
         "nor removes the worktree.\n"
         "Exit codes: 0 hold updated, 2 missing record or invalid request.\n"
         "Related: docs/runbooks/worktree-cleanup.md.",
@@ -594,7 +594,7 @@ def _retain_worktree(task_id: str, *, hold: bool) -> dict:
         else:
             # False, not absence: a stale copy must not put the hold back.
             record["worktree_retention_hold"] = False
-            if record.get("worktree_disposition_reason") == "retention_hold":
+            if record.get("worktree_disposition_reason") in {"retention_hold", "retention_hold_invalid"}:
                 record.pop("worktree_disposition", None)
                 record.pop("worktree_disposition_reason", None)
                 record.pop("worktree_disposition_detail", None)
