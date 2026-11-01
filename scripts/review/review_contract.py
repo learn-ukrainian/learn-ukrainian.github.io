@@ -1128,7 +1128,7 @@ def validate_item_claims(
                         continue
                     if finding and path == "location" and field in {"path", "start_line", "end_line", "claim_type"}:
                         continue
-                    if reference and field in {"receipt", "receipt_id", "category", "outcome"}:
+                    if reference and field in {"receipt", "receipt_id"}:
                         continue
                     if not path and finding and field == "expected":
                         continue

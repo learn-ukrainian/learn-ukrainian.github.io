@@ -1175,9 +1175,11 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
 
 @pytest.mark.parametrize("capture", ["agy", "codex", "claude", "bound"])
 @pytest.mark.parametrize("finding", ["Appropriate activity.", "Вправа правильно перевіряє форму", "Вправа передає сум"])
-@pytest.mark.parametrize("bad_quote", ["uncaptured quote", "Rule 8"])
+@pytest.mark.parametrize("bad_quote", ["uncaptured quote", "Rule 8", "category: Rule 8", "outcome: Rule 8"])
 def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, capture, finding, bad_quote):
     """A supported exact-head review must not be over-rejected, including quoted source output."""
+    import yaml
+
     from scripts.dispatcher import store
     from scripts.review.receipts import ledger
     from scripts.review.review_contract import build_item_packet, render_item_packet, validate_ukrainian_reply_claims
@@ -1200,11 +1202,19 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
         rejected["findings"][0].update(
             priority="P3", body=claim, sources=["none"], evidence={"receipt": receipt, "quote": bad_quote},
         )
-        sanitized, checked = validate_ukrainian_reply_claims(
-            "```json\n" + json.dumps(rejected) + "\n```", ledger_path=path, binding=binding,
-        )
-        assert checked.claims_unsupported == 2
-        assert "evidence" not in json.loads(sanitized.split("```json\n")[1].split("\n```")[0])["findings"][0]
+        metadata = bad_quote.split(": ", 1) if ": " in bad_quote else None
+        if metadata:
+            rejected["findings"][0]["evidence"].update(quote=claim, **{metadata[0]: metadata[1]})
+        tag = "yaml" if metadata else "json"
+        candidate = ("VERDICT: APPROVE\n" if metadata else "") + f"```{tag}\n" + json.dumps(rejected) + "\n```"
+        sanitized, checked = validate_ukrainian_reply_claims(candidate, ledger_path=path, binding=binding)
+        assert checked.claims_unsupported == (1 if metadata else 2)
+        body = sanitized.split(f"```{tag}\n")[1].split("\n```")[0]
+        sanitized_finding = (yaml.safe_load(body) if metadata else json.loads(body))["findings"][0]
+        if metadata:
+            assert sanitized_finding["evidence"][metadata[0]] == metadata[1]
+        else:
+            assert "evidence" not in sanitized_finding
         write_task(tasks, reply=sanitized, review_profile="ukrainian", sources_mcp_call_count=1,
                    review_attempt=binding, claims_unsupported=checked.claims_unsupported,
                    dropped_claims=list(checked.dropped_claims))
@@ -1214,7 +1224,7 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
             guarded.setattr(recorder, "_pr", no_network)
             with pytest.raises(recorder.RecordError, match="UKRAINIAN_CLAIMS_UNSUPPORTED") as refused:
                 recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-        assert bad_quote in str(refused.value)
+        assert (metadata[1] if metadata else bad_quote) in str(refused.value)
         assert comments == [] and calls == {"posts": 0, "statuses": 0}
     else:
         captured_source_trace(tasks, output=claim)
