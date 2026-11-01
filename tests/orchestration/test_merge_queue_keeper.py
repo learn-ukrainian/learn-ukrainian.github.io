@@ -1036,6 +1036,7 @@ def test_runs_incomplete_or_unsplittable_response_is_error(tmp_path, monkeypatch
 
 def test_drop_lookup_error_is_not_reported_as_unknown(tmp_path, monkeypatch) -> None:
     fake = FakeGitHub()
+    fake.events = [{"id": 987, "event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
 
@@ -1048,6 +1049,7 @@ def test_drop_lookup_error_is_not_reported_as_unknown(tmp_path, monkeypatch) -> 
     assert "diagnosis lookup failed: merge_group run page incomplete" in comments[0]
     assert "diagnosis unknown" not in comments[0]
     assert f"42:{HEAD_A}" in json.loads(path.read_text())["undiagnosed"]
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
 
 
 def test_drop_without_matching_run_is_unknown() -> None:
@@ -1688,7 +1690,60 @@ def test_multiple_removals_do_not_persist_obsolete_bindings(tmp_path: Path, monk
     run(fake, path, monkeypatch)
     state = json.loads(path.read_text())
     assert "drop_events" not in state
-    assert state["drops"][f"42:{HEAD_A}"] == 1
+    assert state["drops"][f"42:{HEAD_A}"] == 2
+
+
+def test_cycle_ejections_are_counted_once_and_never_readded(tmp_path: Path) -> None:
+    """Stale snapshots must neither re-add an ejected head nor hide repeated drops."""
+    head = "7137d11c9eb84ed577f4f21b5da04fd88a48a64f"
+    path = tmp_path / "state.json"
+    initial = {"queued": {"12225": head}, "drops": {}, "observed": "2026-11-01T01:00:00Z"}
+    path.write_text(json.dumps(initial))
+    fake = FakeGitHub(pr(number=12225, headRefOid=head, isInMergeQueue=True))
+    fake.fresh["isInMergeQueue"] = False  # GitHub ejects it after the snapshot.
+    removals = [
+        {"id": event_id, "event": "removed_from_merge_queue", "created_at": stamp}
+        for event_id, stamp in (
+            (34807756672, "2026-11-01T01:23:10Z"),
+            (34808557793, "2026-11-01T01:47:04Z"),
+            (34809537764, "2026-11-01T02:17:13Z"),
+        )
+    ]
+    for count, removal in enumerate(removals, 1):
+        fake.events.append(removal)
+        for _ in range(2):  # Reading the same timeline again must not add drops.
+            _lines, failed = keeper.run(fake, path, apply=True)
+            assert not failed
+            assert json.loads(path.read_text())["drops"][f"12225:{head}"] == count
+            assert not any(kind in {"enqueue", "cleanup"} for kind, _ in fake.actions)
+    fake.row["isInMergeQueue"] = False
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed and "reason=third-drop" in lines[0]
+    assert not any(kind in {"enqueue", "cleanup"} for kind, _ in fake.actions)
+
+    # All three removals can also arrive between two observations.
+    path.write_text(json.dumps(initial))
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed and "reason=third-drop" in lines[0]
+    assert json.loads(path.read_text())["drops"][f"12225:{head}"] == 3
+    assert not any(kind in {"enqueue", "cleanup"} for kind, _ in fake.actions)
+
+    queued = FakeGitHub(pr(isInMergeQueue=True))
+    _lines, failed = keeper.run(queued, tmp_path / "queued.json", apply=True)
+    assert not failed
+    assert queued.actions == [("squash-read", (42, HEAD_A))]
+
+    # A keeper CF revocation is already charged before its timeline event arrives.
+    revoked_path = tmp_path / "revoked.json"
+    queued.comments_rows = []
+    keeper.run(queued, revoked_path, apply=True)
+    assert json.loads(revoked_path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+    revoked = FakeGitHub()
+    revoked.events = [{"id": 1, "event": "removed_from_merge_queue", "created_at": datetime.now(UTC).isoformat()}]
+    for _ in range(2):
+        _lines, failed = keeper.run(revoked, revoked_path, apply=True)
+        assert not failed
+        assert json.loads(revoked_path.read_text())["drops"][f"42:{HEAD_A}"] == 1
 
 
 @pytest.mark.parametrize(
@@ -1735,6 +1790,7 @@ def test_unobserved_current_head_removal_needs_no_recovery_evidence(tmp_path, mo
     lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
     assert not failed and "reason=ready" in lines[0]
     assert "enqueue" in mutations(fake)
+    assert json.loads((tmp_path / "state.json").read_text())["drops"][f"42:{HEAD_A}"] == 1
 
 
 def test_removal_read_failure_does_not_block_initial_keeper_enqueue(tmp_path, monkeypatch):
