@@ -176,6 +176,35 @@ def retention_hold_error(record: dict) -> str | None:
     return None
 
 
+def retention_hold_disposition(record: dict, *, tasks_root: Path | None = None) -> dict | None:
+    """Classify either copy's hold, refusing unreadable or malformed records.
+
+    Inventory readers pass their control plane's task directory.
+    Settlement reads the current durable record by task ID, even for a stale copy.
+    """
+    def retained(reason: str, detail: str | None = None) -> dict:
+        result = {"worktree_disposition": "retained", "worktree_disposition_reason": reason}
+        if detail is not None:
+            result["worktree_disposition_detail"] = detail
+        return result
+
+    try:
+        task_id = record.get("task_id")
+        if not isinstance(task_id, str):
+            raise ValueError("missing task id")
+        disk = read(task_id) if tasks_root is None else read(task_id, tasks_root=tasks_root)
+        if not isinstance(disk, dict):
+            raise ValueError("not an object")
+    except (OSError, ValueError, RecursionError):
+        return retained("task_record_damaged", "retention decision requires a readable on-disk task record")
+    for copy in (record, disk):
+        if detail := retention_hold_error(copy):
+            return retained("retention_hold_invalid", detail)
+    if record.get("worktree_retention_hold") is True or disk.get("worktree_retention_hold") is True:
+        return retained("retention_hold")
+    return None
+
+
 def _write(path: Path, record: dict, exclusive: bool = False, *, grant: dict | None = None,
            require_existing: bool = False) -> None:
     # Reentrant: settlement, create and grant_paths already hold this same inode lock.
@@ -251,8 +280,10 @@ def create(record: dict, prompt: bytes) -> Path:
     return path
 
 
-def read(task_id: str, nonce: str | None = None, *, missing_ok=False) -> dict | None:
+def read(task_id: str, nonce: str | None = None, *, missing_ok=False, tasks_root: Path | None = None) -> dict | None:
     path = record_path(task_id)
+    if tasks_root is not None:
+        path = tasks_root / path.name
     if locate_task_record:
         path = locate_task_record(path.parent, task_id)
     elif not path.exists():

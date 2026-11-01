@@ -43,6 +43,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.common import github_client
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
+from scripts.dispatcher.store import retention_hold_disposition
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.maintenance.claude_session_scratch import sweep_sessions
 from scripts.orchestration import backup_failure_alert, disk_watermark_alert, worktree_git
@@ -541,7 +542,10 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
                 continue
             row["task_id"] = record.get("task_id") or path.stem
             row["worktree_path"] = worktree.relative_to(root).as_posix()
-            if record.get("worktree_retention_hold") is True:
+            hold = retention_hold_disposition(record, tasks_root=tasks_dir)
+            if hold is not None:
+                if hold["worktree_disposition_reason"] == "task_record_damaged":
+                    raise ValueError(hold["worktree_disposition_detail"])
                 continue
 
             dirty = len(

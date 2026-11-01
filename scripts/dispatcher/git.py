@@ -763,19 +763,12 @@ def _retention_held(record: dict) -> bool:
     """
     from scripts.dispatcher import store
 
-    try:
-        task_id = record.get("task_id")
-        if not isinstance(task_id, str):
-            raise ValueError("missing task id")
-        disk = store.read(task_id)
-        if not isinstance(disk, dict):
-            raise ValueError("not an object")
-    except (OSError, ValueError, RecursionError):
-        raise _Kept("task_record_damaged", "retention decision requires a readable on-disk task record") from None
-    for copy in (record, disk):
-        if detail := store.retention_hold_error(copy):
-            raise _Kept("retention_hold_invalid", detail)
-    return record.get("worktree_retention_hold") is True or disk.get("worktree_retention_hold") is True
+    hold = store.retention_hold_disposition(record)
+    if hold is None:
+        return False
+    if hold["worktree_disposition_reason"] == "retention_hold":
+        return True
+    raise _Kept(hold["worktree_disposition_reason"], hold["worktree_disposition_detail"])
 
 
 def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
