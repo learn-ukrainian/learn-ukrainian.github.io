@@ -135,14 +135,68 @@ meaning.
 
 ## Reviewed remainder
 
+Use the supported `lexical` manifest kind. Export only public dictionary
+candidates into the module's state directory in the dispatch worktree:
+
+```bash
+.venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --candidates \
+  > curriculum/l2-uk-en/evidence/a1/_state/MODULE/lexical-W-001.candidates.json
+sha256sum curriculum/l2-uk-en/evidence/a1/_state/MODULE/lexical-W-001.candidates.json
+```
+
+The export contains `word`, `lemma`, `pos`, `candidates_sha256` and the complete
+`candidates` list. Pin its printed SHA-256 in this manifest, replacing `MODULE`
+with the module slug and `CANDIDATE_FILE_SHA256` with that hash:
+
+```yaml
+lexical_schema: 1
+kind: lexical
+level: a1
+slug: MODULE
+word: W-001
+inputs:
+  candidates:
+    path: curriculum/l2-uk-en/evidence/a1/_state/MODULE/lexical-W-001.candidates.json
+    sha256: CANDIDATE_FILE_SHA256
+```
+
+Save it as `lexical-W-001.manifest.yaml` beside the export. The candidate file
+must be committed at the dispatch head, as for every bound review input. Never
+add private reference text to either file. Choose the cross-family Ukrainian
+seat under the `review-loop` Ukrainian profile; an OpenAI author uses the
+eligible Google seat. Set `REVIEW_AGENT` and `REVIEW_MODEL` to that seat's
+catalogued harness and model, and `AUTHOR_MODEL` to the concrete author model.
+Use new `REVIEW_ID`, `ATTEMPT_ID` and `REVIEW_TASK` tokens for each attempt.
+The exact render and dispatch commands are:
+
+```bash
+.venv/bin/python -m scripts.review.prompts.render \
+  curriculum/l2-uk-en/evidence/a1/_state/MODULE/lexical-W-001.manifest.yaml \
+  --output lexical-prompt.md --review-id "$REVIEW_ID" --attempt-id "$ATTEMPT_ID" \
+  --review-access isolated
+.venv/bin/python scripts/dispatch.py dispatch \
+  --agent "$REVIEW_AGENT" --model "$REVIEW_MODEL" --effort high \
+  --mode read-only --worktree --task-id "$REVIEW_TASK" \
+  --prompt-file lexical-prompt.md --pinned-head "$(git rev-parse HEAD)" \
+  --review-profile ukrainian --review-author-model "$AUTHOR_MODEL" \
+  --review-id "$REVIEW_ID" --attempt-id "$ATTEMPT_ID" \
+  --review-attempt curriculum/l2-uk-en/evidence/a1/_state/MODULE/lexical-W-001.manifest.yaml \
+  --review-access isolated
+.venv/bin/python scripts/dispatch.py wait "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE" --timeout 1800
+```
+
+Use the run nonce returned by dispatch as `REVIEW_NONCE`. Do not pass an output
+schema, `--branch`, `--pr` or `--require-review-verdict`. The bound path admits
+only the exact server-rendered prompt and provisions the attempt's Sources
+ledger. Its bare JSON result goes directly to `sense-bind`, rather than the
+plan/lesson return recorder. Use the approved subject's coordinates:
+
 ```bash
 .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --candidates
 .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 \
   --row-id 1 --span-index 0 --atom-index 0 --review-task REVIEW_TASK --author-model gpt-6.1-sol
 ```
 
-Send the complete public candidate list and its `candidates_sha256` to a
-cross-family Ukrainian review dispatch with the sources MCP receipt ledger and recorded `review_author_model`.
 The dispatch's result is a JSON object with `verdict: APPROVE` and `subject`:
 `word`, `candidates_sha256`, `table`, `id`, `row_sha256`, `span_index`,
 `atom_index`, `span`, `labels` and `definitions`.
@@ -154,6 +208,12 @@ verify and contain successful `verify_words`, `query_cefr_level`, and
 model, family, harness, author identity and date from that record; it accepts no reviewer identity
 flags or free-text gloss. Changed candidates, failed/incomplete dispatches,
 unrelated subjects and non-approving verdicts are refused.
+`review_subject_stale_or_unapproved` identifies a wrong subject;
+`review_sources_unproven` identifies missing, corrupt or unrelated ledger evidence;
+`review_prompt_unproven` identifies an absent lexical admission contract, changed
+manifest or non-exact saved prompt. Keep the manifest, pinned export, saved prompt
+and task evidence available until the binding is written. None of these steps
+changes publication eligibility for words supported only by private evidence.
 
 ## Key management, verification and replacement
 
