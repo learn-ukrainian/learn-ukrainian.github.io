@@ -7,6 +7,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 from functools import partial
 from pathlib import Path
 
@@ -26,7 +27,7 @@ MANIFEST = "registry/atlas/a1-v1-slice6.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice6.json"
 INPUTS = "registry/atlas/a1-v1-slice6-inputs.json"
 INPUTS_SHA256 = "05542e67e4f80c716a787558c36d8cfffce82992f2b5b065c581ae3548d10197"
-MANIFEST_SHA256 = "d484b73264b56ebe3f623e984c5584ef8bd0ad222651fd4bfc17bb2babdcd02e"
+MANIFEST_SHA256 = "06773a597ac30e2ffad06b2d5a5580265029e4b6f1637ecb77e3048053959cab"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -35,9 +36,9 @@ FILE_SHA256 = {
     "registry/atlas/a1-v1-slice3-plan-inputs.json": "5d48a9632825f3f110843792214612c733a17fc4bd23a11d2046166f674f3b0d",
     "registry/atlas/a1-v1-slice3.json": "9ff22f62cd50485fe68b1f33504e56c58761d0d352f47ab5a3f64f365438d5fd",
     "registry/atlas/a1-v1-slice4-inputs.json": "046f2fcbdfcb1fd53d8f4e50b643b89641d1f216d1a451501a7f9fa6a1df1fe0",
-    "registry/atlas/a1-v1-slice4.json": "cc96b91315c9922d836ddbff3b18a5254be199b200f847dd7dec242006915c77",
+    "registry/atlas/a1-v1-slice4.json": "6714055fe6cd9ff08b4c5db596ef16b24ff46992369a158eb48513f506adb149",
     "registry/atlas/a1-v1-slice5-inputs.json": "846d858cbc5024061e5e291b75ba516a9af3fd3825dba0a2b49f9411cf687837",
-    "registry/atlas/a1-v1-slice5.json": "7cd877e9ea30f42e0f3443997840ea36e8d2a4786c6ec7490b5f574d6df213bd",
+    "registry/atlas/a1-v1-slice5.json": "eeccc2e366430ff36616f866755eef410c3112fb6e08c2670d4fb9677b98e5e0",
     "registry/atlas/identity/a1-v1-slice2.json": "b1ea5099207618dc3879eb517e28867c174b629126ae2b0e8b9d8629ce564e52",
     "registry/atlas/identity/a1-v1-slice3.json": "f4de91773ffa6e59e953c7ea0645205f06d55a146b88403665cef0fe57647419",
     "registry/atlas/identity/a1-v1-slice4.json": "4ce137435bf6c3d59100a8acd2e5afac7540e4dda7303cd50635a9a5a531f663",
@@ -211,6 +212,43 @@ def response_payload(record, call):
     return call["response"].get("structuredContent") or {"text": text}
 
 
+def _canonical_morphology(analysis, target):
+    """Use the landed citation rules, including nominative numeral readings."""
+    if target["pos"] != "numr":
+        return slice4_inputs._canonical_grammar(analysis, target)
+    tags = analysis["tags"].split(":")
+    return ((analysis.get("entry_id"), analysis.get("lemma"), analysis.get("pos"),
+             analysis.get("word_form")) == (target["entry_id"], target["lemma"], "numr", target["lemma"])
+            and tags[0] == "numr" and "v_naz" in tags)
+
+
+def _validate_morphology(claim, record, target):
+    """Bind scalar morphology and its identity receipts to one citation analysis."""
+    cards.require(record["source_id"] == "vesum", "slice6_morphology_requires_vesum")
+    match = re.fullmatch(r"/clean_analyses/(\d+)/tags", claim["pointer"])
+    cards.require(match is not None, "slice6_morphology_pointer_not_analysis")
+    analyses = record["payload"]["clean_analyses"]
+    candidates = [i for i, analysis in enumerate(analyses) if _canonical_morphology(analysis, target)]
+    cards.require(len(candidates) == 1, "slice6_morphology_canonical_reading_ambiguous")
+    index = int(match[1])
+    cards.require(claim["entry_id"] == target["entry_id"] and index == candidates[0],
+                  "slice6_morphology_not_canonical_headword")
+    analysis = analyses[index]
+    if claim["field"] == "grammatical_label":
+        expected = [0, len(analysis["tags"])]
+    else:
+        pattern = r"(?<=:)[mfn](?=:|$)" if claim["field"] == "gender" else r"(?<=:)(?:imperf|perf)(?=:|$)"
+        tokens = list(re.finditer(pattern, analysis["tags"]))
+        cards.require(len(tokens) == 1 and (claim["field"] != "aspect" or target["pos"] == "verb"),
+                      "slice6_morphology_scalar_ambiguous")
+        expected = list(tokens[0].span())
+    cards.require(claim["span"] == expected, "slice6_morphology_tag_span_mismatch")
+    required = {(f"/clean_analyses/{index}/{field}", 0, len(analysis[field]))
+                for field in ("word_form", "lemma", "pos")}
+    supplied = {(span["pointer"], *span["span"]) for span in claim.get("supporting_spans", [])}
+    cards.require(required <= supplied, "slice6_morphology_binding_receipts_missing")
+
+
 def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, selection):
     cards.require(digest(inv) == spec["inventory_sha256"] and digest(sources) == spec["sources_sha256"],
                   "slice6_input_drift")
@@ -310,14 +348,10 @@ def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, sele
                           "slice6_stress_authority")
     for claim in claims:
         record = sources["records"][claim["record_key"]]
-        if claim["field"] in {"gender", "grammatical_label"} and record["source_id"] == "vesum":
-            index = int(claim["pointer"].split("/")[2])
-            analysis = record["payload"]["clean_analyses"][index]
-            target = next(t for t in selection["selected_targets"] if t["entry_id"] == claim["entry_id"])
-            cards.require(analysis["entry_id"] == target["entry_id"]
-                          and analysis["pos"] == target["pos"]
-                          and analysis["word_form"] == analysis["lemma"] == target["lemma"],
-                          "slice6_label_not_canonical_form")
+        if claim["field"] in {"gender", "aspect", "grammatical_label"}:
+            target = next((t for t in selection["selected_targets"] if t["entry_id"] == claim["entry_id"]), None)
+            cards.require(target is not None, "slice6_morphology_entry_missing")
+            _validate_morphology(claim, record, target)
         if claim["field"] == "definition_uk":
             cards.require(record["source_id"] in {"sum20", "vts_busel_slovnyk_me"},
                           "slice6_meaning_authority")
