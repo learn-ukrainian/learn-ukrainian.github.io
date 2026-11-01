@@ -688,6 +688,120 @@ def build_receipt(
     return receipt
 
 
+def build_ukrainian_behavior_receipt(
+    *,
+    behavior_proof: dict[str, Any],
+    frozen_intended_behavior: str,
+    comments: Sequence[Mapping[str, Any]],
+    authenticated_login: str,
+    head_sha: str,
+    author_attributions: Sequence[Mapping[str, str]],
+    target: Mapping[str, Any],
+    input_sha256: str,
+    issue_ref: str,
+    scope: Mapping[str, Any],
+    tests: Mapping[str, Any],
+    isolation_attestation_validator: Callable[[dict[str, Any], ReviewTarget], bool] | None = None,
+    review_target: ReviewTarget | None = None,
+) -> dict[str, Any]:
+    """Receipt for a frozen ukrainian proof carrier.
+
+    Reviewer identity is the recorded seat chunks. Caller reviewer flags and
+    code-review findings are not inputs. The singular reviewer key is omitted.
+    """
+    from scripts.orchestration.integration_sweep import contributing_ukrainian_chunks
+
+    provenance = contributing_ukrainian_chunks(
+        comments,
+        head_sha,
+        authenticated_login,
+        learner_content=True,
+    )
+    if provenance["refused"]:
+        raise ContractError(
+            f"ukrainian_seat_quorum_refused:{provenance['refused']}",
+            exit_code=EXIT_INCOMPLETE,
+        )
+    by_model: dict[str, str] = {}
+    for item in author_attributions:
+        model = str(item.get("model") or "")
+        harness = str(item.get("harness") or "")
+        if not model or not harness or _is_placeholder(model) or _is_placeholder(harness):
+            raise ContractError("author_attribution_unresolved", exit_code=EXIT_INCOMPLETE)
+        previous = by_model.get(model)
+        if previous is not None and previous != harness:
+            raise ContractError("author_attribution_conflict", exit_code=EXIT_INCOMPLETE)
+        by_model[model] = harness
+    if tuple(sorted(by_model)) != tuple(provenance["author_models"]):
+        raise ContractError("author_attribution_conflict", exit_code=EXIT_INCOMPLETE)
+    incomplete, failures = _tests_envelope_status(dict(tests))
+    if incomplete or failures:
+        raise ContractError("tests_envelope_invalid", exit_code=EXIT_INCOMPLETE)
+    proof_target = review_target or ReviewTarget(
+        mode=str(target.get("mode") or "local"),
+        base_sha=target.get("base_sha"),
+        head_sha=target.get("head_sha"),
+        changed_paths=tuple(target.get("changed_paths") or ()),
+        non_test_loc=int(target.get("non_test_loc") or 0),
+        clean_tree=bool(target.get("clean_tree")),
+        description=str(target.get("description") or "ukrainian behavior proof"),
+    )
+    proof_incomplete, proof_failures = _behavior_proof_envelope_status(
+        behavior_proof,
+        target_input_sha256=input_sha256,
+        frozen_intended_behavior=frozen_intended_behavior,
+        isolation_attestation_validator=isolation_attestation_validator,
+        target=proof_target,
+    )
+    if proof_incomplete or proof_failures:
+        raise ContractError(
+            "behavior_proof_invalid:" + ",".join([*proof_incomplete, *proof_failures]),
+            exit_code=EXIT_INCOMPLETE,
+        )
+    author_models = list(provenance["author_models"])
+    author_families = list(provenance["author_families"])
+    harnesses = sorted(set(by_model.values()))
+    author: dict[str, Any] = {
+        "models": author_models,
+        "families": author_families,
+        "harnesses": harnesses,
+        "selection_reason": "implementation-author",
+        "selection_reason_source": "commit-x-agent",
+    }
+    if len(author_models) == 1 and len(author_families) == 1 and len(harnesses) == 1:
+        author["model"] = author_models[0]
+        author["family"] = author_families[0]
+        author["harness"] = harnesses[0]
+    seats = [dict(seat) for seat in provenance["seats"]]
+    seat_names = [f"{seat['family']}:{chunk['model']}" for seat in seats for chunk in seat["chunks"]]
+    return {
+        "schema_version": RECEIPT_SCHEMA_VERSION,
+        "review_profile": "ukrainian",
+        "issue_ref": issue_ref,
+        "scope": dict(scope),
+        "author": author,
+        "ukrainian_seat_verdicts": seats,
+        "target": {
+            "mode": proof_target.mode,
+            "base_sha": proof_target.base_sha,
+            "head_sha": head_sha,
+            "changed_paths": list(proof_target.changed_paths),
+            "non_test_loc": proof_target.non_test_loc,
+            "clean_tree": proof_target.clean_tree,
+            "description": proof_target.description,
+            "input_sha256": input_sha256,
+        },
+        "tests": dict(tests),
+        "behavior_proof": _render_behavior_proof(behavior_proof),
+        "final_disposition": "clean",
+        "exit_code": EXIT_CLEAN,
+        "error": None,
+        "routing_lineage": {
+            "implementation_agents": ",".join(author_models),
+            "accountable_seats": ",".join(seat_names),
+        },
+    }
+
 def _render_behavior_proof(behavior_proof: dict[str, Any]) -> dict[str, Any]:
     """Make declared-but-unenforced source-blind proof explicit in receipts."""
     rendered = deepcopy(behavior_proof)

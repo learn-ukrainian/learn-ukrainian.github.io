@@ -1,6 +1,6 @@
 """Assemble an approved fixed A1 receipt batch, with complete row and field accounting.
 
-Use for #11943 slices 2–5, never for certification, publication or expanding their denominators.
+Use for #11943 slices 2–6, never for certification, publication or expanding their denominators.
 """
 
 import argparse
@@ -494,8 +494,8 @@ Outputs: host-only card/receipt/accounting bundle; no source-store writes, alloc
 Exit codes: 0 verified output; 1 refused input or evidence; 2 usage error.
 Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
 """)
-    parser.add_argument("--batch", choices=("slice2", "slice3", "slice4", "slice5"), default="slice2",
-                        help="Approved fixed batch to assemble or check (default: slice2), e.g. slice5")
+    parser.add_argument("--batch", choices=("slice2", "slice3", "slice4", "slice5", "slice6"), default="slice2",
+                        help="Approved fixed batch to assemble or check (default: slice2), e.g. slice6")
     parser.add_argument("--sources", type=Path, required=True, help="Frozen host-only Sources bundle, e.g. batch_state/a1/sources.json")
     parser.add_argument("--output", type=Path, required=True, help="Ignored output JSON inside this worktree, e.g. batch_state/a1/cards.json")
     parser.add_argument("--check", action="store_true", help="Verify an existing output without rewriting it (default: off)")
@@ -504,7 +504,11 @@ Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
     args = parser.parse_args(argv)
     try:
         batch = None
-        if args.batch == "slice5":
+        if args.batch == "slice6":
+            from scripts.atlas.a1_slice6_inputs import load_batch
+
+            manifest, inventory, base, companion, batch = load_batch(ROOT)
+        elif args.batch == "slice5":
             from scripts.atlas.a1_slice5_inputs import load_batch
 
             manifest, inventory, base, companion, batch = load_batch(ROOT)
@@ -538,6 +542,10 @@ Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
         counts = verify(result, sources, manifest, batch=batch)
         if args.check and args.batch == "slice5":
             from scripts.atlas.a1_slice5_inputs import verify_projections
+
+            verify_projections(args.output, result)
+        if args.check and args.batch == "slice6":
+            from scripts.atlas.a1_slice6_inputs import verify_projections
 
             verify_projections(args.output, result)
         for card in result["cards"]:

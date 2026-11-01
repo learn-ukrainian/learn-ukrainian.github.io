@@ -258,6 +258,23 @@ and is never the only durable proof path. Prefer stdout or `--receipt-path`.
 | 4 | `stale` | Head SHA or target-input fingerprint mismatch |
 | 5 | `unverifiable` | `quote_missing`, `line_mismatch`, or `out_of_scope` on any finding |
 
+A frozen `ukrainian` closeout is a behavior-proof carrier, not a reviewer
+selection. `closeout_cli freeze --review-profile ukrainian` stores that
+profile. `resolve-reviewer` still refuses it. After both surfaces are recorded
+on a pull-request target, `closeout_cli behavior-proof receipt` reads the live
+pull-request comments and the authenticated login and writes the receipt beside
+the state file. The receipt keeps `code-review-receipt.v1` and both proof
+surfaces, omits `reviewer` and `reviewer_payload`, and records
+`ukrainian_seat_verdicts`: one entry per required family from the recorded
+comments, each entry the union of that family's non-void cross-family chunks.
+One partial chunk does not complete a seat, and conflicting denominators are
+refused. Author models come from those comments; author harness comes from the
+implementation commits. Caller reviewer flags, findings JSON, and caller
+lineage are refused. A learner-content diff does not reconcile a receipt that
+lacks this profile.
+The receipt target SHA stays the PR head after merge. Running the learner
+page on a local merge of that head is a separate observation.
+
 For typed lifecycle behavior evidence, `error` must be null. The receipt must
 be either `clean` / exit 0, or `actionable` / exit 1 with all of:
 

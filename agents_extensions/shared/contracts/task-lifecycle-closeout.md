@@ -79,7 +79,27 @@ evidence requirement. That evidence never copies a prose status. Its
 receipt's target-input fingerprint, and binds the receipt's exact target SHA to
 the evidence subject/current PR head. Reconciliation reads the receipt and
 requires a clean outside-family closeout plus its target-bound
-`behavior-proof.v1` source-aware/source-blind surfaces. Prefer a shared
+`behavior-proof.v1` source-aware/source-blind surfaces. A frozen
+`review_profile: ukrainian` receipt is the same schema with no singular
+reviewer: `ukrainian_seat_verdicts` lists every required seat, and each seat
+lists every non-void contributing comment (URL, task, model, head, verdict,
+coverage). After both surfaces are recorded,
+`closeout_cli behavior-proof receipt` fetches the live pull-request comments
+and the authenticated login, then writes
+`<state-file stem>.ukrainian-behavior-proof-receipt.json` beside the state
+file. The closeout observation keeps each comment's `user`,
+`author_association`, `created_at` and `updated_at`, and sets
+`authenticated_login` from that same login. Reconciliation recomputes the
+chunk set from those comments and accepts the receipt only when the families,
+models, task ids, coverage, and comment URLs match. A non-cross-family marker
+is not a contributing chunk, and chunks that disagree on the denominator are
+refused. When the observation's changed paths are learner content, a receipt
+without `review_profile: ukrainian` is refused. The receipt target SHA is
+`pr.head_sha` before and after merge.
+Each contributing comment also has its own review evidence record. Executing
+the learner page on a local merge of that head is separate evidence; it does
+not replace the head binding, and this receipt is not a review of record.
+Prefer a shared
 `.agent/review-closeout/` receipt path so rollover and worktree cleanup do not
 discard the proof.
 

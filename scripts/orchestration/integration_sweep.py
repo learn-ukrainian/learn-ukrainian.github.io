@@ -61,6 +61,7 @@ from scripts.publish.github import CF_VERDICT_MARKER_PREFIX, Request, request_ru
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.ukrainian_seats import (
     UKRAINIAN_SEAT_FAMILIES,
+    UKRAINIAN_SEAT_ROUTES,
     attested_author_families,
     required_ukrainian_seats,
 )
@@ -619,6 +620,147 @@ def lookup_verdict(
         superseded_markers=tuple(superseded),
         ukrainian_seats=seats,
     )
+
+
+def _comment_page_url(comment: Mapping[str, Any]) -> str:
+    for key in ("url", "html_url"):
+        value = comment.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return ""
+
+
+def _seat_harness(family: str) -> str | None:
+    matches = sorted({harness for harness, seat_family in UKRAINIAN_SEAT_ROUTES if seat_family == family})
+    if len(matches) != 1:
+        return None
+    return matches[0]
+
+
+def contributing_ukrainian_chunks(
+    comments: Sequence[Mapping[str, Any]] | None,
+    sha: str,
+    authenticated_login: str | None,
+    *,
+    learner_content: bool = True,
+) -> dict[str, Any]:
+    """Every non-void chunk that makes this head an APPROVED Ukrainian quorum.
+
+    ``lookup_verdict`` stays the keeper's one-winner result. This reader admits
+    candidates with that same function, then keeps each contributing comment.
+    A partial chunk does not complete a seat. One seat is enough only when
+    ``required_ukrainian_seats`` names that family alone.
+    """
+    verdict = lookup_verdict(
+        comments,
+        sha,
+        authenticated_login,
+        learner_content=learner_content,
+    )
+    if verdict.state != "APPROVED":
+        return {"refused": verdict.state, "author_models": (), "author_families": (), "seats": ()}
+    if not isinstance(comments, Sequence) or isinstance(comments, (str, bytes)):
+        return {"refused": COMMENTS_UNAVAILABLE, "author_models": (), "author_families": (), "seats": ()}
+
+    admitted: list[dict[str, Any]] = []
+    for comment in comments:
+        if not isinstance(comment, Mapping):
+            continue
+        body = comment.get("body")
+        if not isinstance(body, str) or MARKER_PREFIX not in body:
+            continue
+        marker = parse_marker(body)
+        if marker is None or marker.get("sha") != sha or marker.get("void"):
+            continue
+        if not is_ukrainian_review(marker) or marker.get("verdict") in REJECTED:
+            continue
+        login = _author_login(comment)
+        association = _field(comment, "author_association", "authorAssociation")
+        if login != authenticated_login or association not in TRUSTED_ASSOCIATIONS or _edited(comment):
+            continue
+        # The keeper counts only cross-family chunks. A red-team marker of the
+        # same family must not appear as a contributing chunk.
+        if marker.get("review_mode", "cross_family") != "cross_family":
+            continue
+        if marker.get("family") not in set(verdict.ukrainian_seats):
+            continue
+        url = _comment_page_url(comment)
+        if not url:
+            return {"refused": "chunk-url-missing", "author_models": (), "author_families": (), "seats": ()}
+        admitted.append({**marker, "comment_url": url})
+
+    if not admitted:
+        return {"refused": "chunks-missing", "author_models": (), "author_families": (), "seats": ()}
+
+    model_sets = {tuple(sorted(marker.get("author_models") or ())) for marker in admitted}
+    if len(model_sets) != 1:
+        return {"refused": "author-models-conflict", "author_models": (), "author_families": (), "seats": ()}
+    author_models = model_sets.pop()
+    if not author_models or not all(isinstance(model, str) and model for model in author_models):
+        return {"refused": "author-models-unresolved", "author_models": (), "author_families": (), "seats": ()}
+    families = attested_author_families(admitted)
+    from learn_ukrainian_v4_runtime.identity import (
+        UNKNOWN_AUTHOR_FAMILY,
+        UNRESOLVED_AUTHOR_FAMILIES,
+    )
+
+    if not families or not families.isdisjoint(UNRESOLVED_AUTHOR_FAMILIES | {UNKNOWN_AUTHOR_FAMILY}):
+        return {"refused": "author-models-unresolved", "author_models": (), "author_families": (), "seats": ()}
+    required = required_ukrainian_seats(families)
+    if not required <= set(verdict.ukrainian_seats):
+        return {"refused": "seat-quorum", "author_models": (), "author_families": (), "seats": ()}
+
+    seats: list[dict[str, Any]] = []
+    for family in sorted(required):
+        family_chunks = [marker for marker in admitted if marker.get("family") == family]
+        if not family_chunks:
+            return {"refused": "seat-quorum", "author_models": (), "author_families": (), "seats": ()}
+        harness = _seat_harness(family)
+        if harness is None:
+            return {"refused": "seat-harness", "author_models": (), "author_families": (), "seats": ()}
+        denominators = {tuple(marker.get("denominator") or ()) for marker in family_chunks}
+        if len(denominators) != 1:
+            return {
+                "refused": DENOMINATOR_MISMATCH,
+                "author_models": (),
+                "author_families": (),
+                "seats": (),
+            }
+        coverage: list[str] = sorted({item for marker in family_chunks for item in (marker.get("coverage") or ())})
+        raw_denominator = denominators.pop()
+        denominator = sorted(raw_denominator) if raw_denominator else []
+        if denominator and set(coverage) != set(denominator):
+            return {"refused": NEEDS_COVERAGE, "author_models": (), "author_families": (), "seats": ()}
+        chunks = [
+            {
+                "comment_url": marker["comment_url"],
+                "task": marker.get("task"),
+                "model": marker.get("model"),
+                "sha": marker.get("sha"),
+                "verdict": marker.get("verdict"),
+                "coverage": list(marker.get("coverage") or ()),
+                "started": marker.get("started"),
+            }
+            for marker in sorted(family_chunks, key=lambda item: (str(item.get("task")), item["comment_url"]))
+        ]
+        seats.append(
+            {
+                "family": family,
+                "harness": harness,
+                "harness_source": "ukrainian-seat-route",
+                "selection_reason": "required-ukrainian-seat",
+                "selection_reason_source": "required-ukrainian-seat",
+                "denominator": denominator,
+                "coverage": coverage,
+                "chunks": chunks,
+            }
+        )
+    return {
+        "refused": None,
+        "author_models": tuple(sorted(author_models)),
+        "author_families": tuple(sorted(families)),
+        "seats": tuple(seats),
+    }
 
 
 # Only the CTO seat applies this label, to a machinery fix that should land first (#12019).

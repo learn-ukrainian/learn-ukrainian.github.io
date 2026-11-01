@@ -1065,6 +1065,9 @@ def test_hostile_agents_cannot_change_isolation_tool_config(tmp_path: Path) -> N
 
 
 def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Defect class: transport drops BLOCKED metadata or widens non-BLOCKED envelopes."""
+    from jsonschema import Draft202012Validator, ValidationError
+
     fake = tmp_path / "claude"
     fake.write_text("#!/bin/sh\n", encoding="utf-8")
     fake.chmod(fake.stat().st_mode | stat.S_IXUSR)
@@ -1109,7 +1112,16 @@ def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.Mon
     assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(write / "empty-mcp.json")
     output_schema = json.loads(plan.cmd[plan.cmd.index("--json-schema") + 1])
     assert "$schema" not in output_schema
-    assert set(output_schema["properties"]) == {"schema_version", "overall", "findings"}
+    assert set(output_schema["properties"]) == {"schema_version", "overall", "findings", "missing_capabilities"}
+    validator = Draft202012Validator(output_schema)
+    payload = {"schema_version": "code-review-findings.v1", "findings": [], "missing_capabilities": ["shell"],
+               "overall": {"correctness": "uncertain", "explanation": "Required capability unavailable.",
+                           "confidence": 1}}
+    validator.validate(payload)
+    for correctness in ("correct", "incorrect"):
+        payload["overall"]["correctness"] = correctness
+        with pytest.raises(ValidationError, match="Additional properties"):
+            validator.validate(payload)
     assert output_schema["$defs"]["location"]["properties"]["path"] == {"$ref": "#/$defs/repo_relative_path"}
     assert plan.metadata == {"claude_home": str(write / "home")}
 
