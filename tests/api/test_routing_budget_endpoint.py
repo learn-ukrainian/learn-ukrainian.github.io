@@ -22,6 +22,32 @@ from scripts.api.monitor_context import fixture_context
 from scripts.fleet import reset_reserve
 
 
+@pytest.fixture(autouse=True)
+def _isolate_routing_budget_test_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    boundary = tmp_path.resolve()
+
+    def inside_git(path: Path) -> bool:
+        resolved = path.resolve()
+        if resolved.is_relative_to(boundary):
+            return any(
+                claude_account_usage._git_tree(directory)
+                for directory in (resolved, *resolved.parents)
+                if directory.is_relative_to(boundary)
+            )
+        return any(claude_account_usage._git_tree(directory) for directory in (resolved, *resolved.parents))
+
+    def no_provider(_token: str) -> tuple[str, object]:
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
+
+    state_helpers.cache_invalidate()
+    claude_account_usage._reset_for_tests()
+    monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", no_provider)
+    monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
+    yield
+    state_helpers.cache_invalidate()
+    claude_account_usage._reset_for_tests()
+
+
 def _write_budget_config(tmp_path: Path) -> Path:
     path = tmp_path / "agent_budgets.yaml"
     path.write_text(
@@ -393,7 +419,9 @@ def test_task_rewrite_serves_warm_snapshot_while_recompute_is_blocked(monkeypatc
                 again = await asyncio.wait_for(client.get("/api/state/routing-budget"), timeout=3)
                 assert again.json()["in_flight"] == {"codex": 1}
                 assert again.json()["diagnostics"] == {
-                    "data_age_s": 12.0, "stale": True, "stale_threshold_s": 900,
+                    "data_age_s": 12.0,
+                    "stale": True,
+                    "stale_threshold_s": 900,
                 }
                 assert len(calls) == 2
             finally:
@@ -422,7 +450,8 @@ def test_task_directory_aba_during_compute_never_marks_in_compute_counts_fresh(m
     def compute_with_transient_task(**kwargs):
         transient = tasks / "transient.json"
         transient.write_text(
-            '{"task_id":"transient","agent":"codex","status":"spawning"}', encoding="utf-8",
+            '{"task_id":"transient","agent":"codex","status":"spawning"}',
+            encoding="utf-8",
         )
         os.utime(transient, ns=(newest + 1, newest + 1))
         try:
