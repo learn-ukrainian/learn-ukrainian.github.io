@@ -799,6 +799,25 @@ def _venv() -> Path:
     return project_interpreter().parent.parent.resolve(strict=True)
 
 
+def _venv_reads() -> list[Path]:
+    """The venv plus the directory of every hop of its ``bin/python`` link chain outside it.
+
+    Read roots are bound canonically, so an intermediate link (a uv venv's ``python`` pointing at a
+    base install's ``python3``, itself a link to ``python3.12``) is reachable only when its
+    directory is bound too.
+    """
+    root = _venv()
+    reads, link = [root], root / "bin" / "python"
+    for _ in range(40):
+        if not link.is_symlink():
+            return reads
+        hop = link.parent / os.readlink(link)
+        link = hop.parent.resolve(strict=True) / hop.name
+        if not link.parent.is_relative_to(root) and link.parent not in reads:
+            reads.append(link.parent)
+    raise ValueError("the project interpreter link chain is too long")
+
+
 def _link_interpreter(worktree: Path) -> bool:
     """Expose the project venv as the worktree's ``.venv``; return whether this call created the link.
 
@@ -1005,7 +1024,7 @@ class _Boundary:
         self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
         sandbox = prepare_host_sandbox(
             engine="agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
-            runtime_reads=[*runtime_files(agy), _venv(), *reads, *(target for _, target in databases), *sidecars,
+            runtime_reads=[*runtime_files(agy), *_venv_reads(), *reads, *(target for _, target in databases), *sidecars,
                            *runtime_context.read_roots(), boundary],
             network_allowed=False,
         )
