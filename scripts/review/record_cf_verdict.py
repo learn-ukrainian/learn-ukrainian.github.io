@@ -221,25 +221,14 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
     return normalize_verdict(reply), "unknown"
 
 
-# A ledger line may carry a slug after F1 (`F1-seed-recharges-...: resolved`).
-_PROSE_FINDING_ID = r"F[1-9][0-9]{0,3}(?:-[A-Za-z0-9][A-Za-z0-9._:-]{0,80})?"
-_PROSE_FINDING_LINE = re.compile(
-    rf"^\s*(?:[-*]\s+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])\**"
-    rf"(?P<rest>(?:\s*[:\u2014\u2013-]+)?(?:\s*(?i:still|remains?)\s+open\s*[:\u2014\u2013-]?)?"
-    rf"(?:\s*(?:\[(P[0-3])\]|\((P[0-3])\)))?.*)$"
-)
-_BLOCKING_PRIORITY = re.compile(r"(?i)(?<![A-Za-z0-9])p[0-2](?![A-Za-z0-9])")
 _SECURITY_VERDICT = re.compile(
     r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*"
 )
 _SECURITY_PASS = re.compile(r"(?i)\*{0,2}PASS\*{0,2}\.?\s*(?:\n|$)")
-_FINDING_LIKE = re.compile(
-    rf"(?im)^[ \t]*(?:#{{1,6}}[ \t]+|[-*+][ \t]+|\d+\.[ \t]+|>[ \t]+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])"
-)
 _RESIDUAL_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}\Z")
 TRUNCATION_FLAG = "[Review reply truncated to fit GitHub's comment limit.]"
 REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
-FINDING_WITHOUT_PRIORITY = "finding-without-priority"
+UNSTRUCTURED_P3_DOWNGRADE = "unstructured reply: P3-only downgrade needs typed priorities"
 SECURITY_VERDICT_NOT_PASS = "security-verdict-not-pass"
 
 
@@ -262,58 +251,23 @@ def _security_verdict_blocks(reply: str) -> bool:
     return any(_SECURITY_PASS.match(reply, match.end()) is None for match in _SECURITY_VERDICT.finditer(reply))
 
 
-def _hidden_unprioritized_finding(reply: str) -> P3Reading | None:
-    """A code span's reading, or None when the span does not block an all-P3 approval.
-
-    The scan uses the parser's code-token content, so a blockquote prefix on the
-    source line does not hide the finding. An unprioritized finding names its
-    reason. The words resolved and fixed do not close it. A priority inside the
-    span stays an example. An unreadable CommonMark map fails closed.
-    """
-    from markdown_it import MarkdownIt
-
-    lines = _commonmark_lines(reply)
-    for token in MarkdownIt("commonmark").parse("\n".join(lines)):
-        if token.type not in {"fence", "code_block"}:
-            continue
-        source_map = token.map
-        if not isinstance(source_map, (list, tuple)) or len(source_map) != 2:
-            raise ValueError("CommonMark verdict visibility map unavailable")
-        start, end = source_map
-        if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
-            raise ValueError("CommonMark verdict visibility map invalid")
-        if not isinstance(token.content, str):
-            raise ValueError("CommonMark code span content unavailable")
-        for line in _commonmark_lines(token.content):
-            match = _PROSE_FINDING_LINE.match(line)
-            if match is None:
-                continue
-            if (match.group(3) or match.group(4)) is None:
-                return P3Reading(reason=FINDING_WITHOUT_PRIORITY)
-    return None
-
-
 def p3_reading(reply: str) -> P3Reading:
     """Open P3 ids, or a typed reason the all-P3 approval does not apply.
 
-    An empty ``ids`` and an empty ``reason`` keep the reply's own verdict. A P0, P1,
-    or P2 token anywhere in the reply, an incomplete review, a malformed findings
-    block, a truncated body, or a repair round whose mapping was withheld is that
-    empty reading. A finding with no priority, including one inside a fence or an
-    indented code block whose source line still has a blockquote prefix, and a
-    security line whose value is not exactly PASS, name the cause and do not
-    approve. Prose does not close a finding: resolved, fixed, and the words
-    around them leave a P0, P1, or P2 entry open, and a line with no priority
-    still names that cause. An empty open set does not approve: a changes
-    request with no findings stays a changes request.
+    The downgrade applies only to a structured findings object whose typed
+    priorities are all P3. An empty ``ids`` and an empty ``reason`` keep the
+    reply's own verdict: a P0, P1, or P2 entry, an empty findings list, an
+    incomplete review, a malformed findings block, a truncated body, or a repair
+    round whose mapping was withheld. A reply with no findings object names
+    why the downgrade does not apply. A security line whose value is not exactly
+    PASS names that cause. An empty open set does not approve: a changes request
+    with no findings stays a changes request.
     """
     if not isinstance(reply, str):
         return P3Reading()
     if _security_verdict_blocks(reply):
         return P3Reading(reason=SECURITY_VERDICT_NOT_PASS)
     if TRUNCATION_FLAG in reply or REPAIR_WITHHELD in reply:
-        return P3Reading()
-    if _BLOCKING_PRIORITY.search(reply):
         return P3Reading()
     if "BLOCKED" in {token.upper() for token in recognized_verdicts(reply)}:
         return P3Reading()
@@ -322,7 +276,7 @@ def p3_reading(reply: str) -> P3Reading:
     if invalid_findings_block(reply):
         return P3Reading()
     findings: dict[str, str] = {}
-    structured: set[str] = set()
+    saw_findings = False
     try:
         payloads = list(_top_level_json_values(reply))
     except _UnreadableFindings:
@@ -336,36 +290,14 @@ def p3_reading(reply: str) -> P3Reading:
             return P3Reading()
         if evidence is None:
             continue
+        saw_findings = True
         for finding in evidence.findings:
             previous = findings.get(finding.finding_id)
             if previous is not None and previous != finding.priority:
                 return P3Reading()
             findings[finding.finding_id] = finding.priority
-            structured.add(finding.finding_id)
-    try:
-        hidden = _hidden_unprioritized_finding(reply)
-        if hidden is not None:
-            return hidden
-        visible = _without_code_fences(reply, keep_unclosed=False)
-    except (ValueError, ImportError):
-        return P3Reading()
-    for line in _commonmark_lines(visible):
-        match = _PROSE_FINDING_LINE.match(line)
-        if match is None:
-            continue
-        finding_id = match.group(1)
-        priority = match.group(3) or match.group(4)
-        if priority is None:
-            return P3Reading(reason=FINDING_WITHOUT_PRIORITY)
-        if structured and finding_id not in structured:
-            return P3Reading()
-        previous = findings.get(finding_id)
-        if previous is not None and previous != priority:
-            return P3Reading()
-        findings[finding_id] = priority
-    for line in reply.splitlines():
-        if _FINDING_LIKE.match(line) and _PROSE_FINDING_LINE.match(line) is None:
-            return P3Reading()
+    if not saw_findings:
+        return P3Reading(reason=UNSTRUCTURED_P3_DOWNGRADE)
     if not findings or any(priority != "P3" for priority in findings.values()):
         return P3Reading()
     if any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in findings):

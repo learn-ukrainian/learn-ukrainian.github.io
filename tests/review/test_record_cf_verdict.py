@@ -271,10 +271,10 @@ def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_pat
     fenced = visible + "```\nF2 scripts/example.py:20 the example has no priority.\n```\n"
     indented = visible + "\n    F2 scripts/example.py:20 the example has no priority.\n"
     prioritized = visible + "```\nF2 [P3] scripts/example.py:20 an example, not an open finding.\n```\n"
-    assert recorder.p3_reading(fenced).reason == recorder.FINDING_WITHOUT_PRIORITY
+    assert recorder.p3_reading(fenced).reason == recorder.UNSTRUCTURED_P3_DOWNGRADE
     assert recorder.p3_residuals(fenced) is None
-    assert recorder.p3_reading(indented).reason == recorder.FINDING_WITHOUT_PRIORITY
-    assert recorder.p3_reading(prioritized).ids == ("F1",)
+    assert recorder.p3_reading(indented).reason == recorder.UNSTRUCTURED_P3_DOWNGRADE
+    assert recorder.p3_reading(prioritized).reason == recorder.UNSTRUCTURED_P3_DOWNGRADE
     assert recorder.p3_reading(reply).reason == recorder.SECURITY_VERDICT_NOT_PASS
     prefix = "VERDICT: REQUEST_CHANGES\nF1 [P3] scripts/example.py:10 count is high.\n"
     nested_fence = prefix + ">> ```\n>> F2 scripts/example.py:20 missing priority.\n>> ```\n"
@@ -282,17 +282,17 @@ def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_pat
     quoted_fence = prefix + "> ```\n> F2 scripts/example.py:20 missing priority.\n> ```\n"
     for hidden in (nested_fence, nested_indent, quoted_fence):
         reading = recorder.p3_reading(hidden)
-        assert reading.reason == recorder.FINDING_WITHOUT_PRIORITY and reading.ids is None
+        assert reading.reason == recorder.UNSTRUCTURED_P3_DOWNGRADE and reading.ids is None
     resolved_fence = prefix + "```\nF2 resolved? scripts/example.py:20 still open.\n```\n"
     resolved_indent = prefix + "\n    F2 resolved? scripts/example.py:20 still open.\n"
     nested_resolved = prefix + ">> ```\n>> F2 resolved? scripts/example.py:20 still open.\n>> ```\n"
     for closed in (resolved_fence, resolved_indent, nested_resolved):
         reading = recorder.p3_reading(closed)
-        assert reading.reason == recorder.FINDING_WITHOUT_PRIORITY and reading.ids is None
+        assert reading.reason == recorder.UNSTRUCTURED_P3_DOWNGRADE and reading.ids is None
     nested_example = prefix + ">> ```\n>> F2 [P3] scripts/example.py:20 an example, not an open finding.\n>> ```\n"
     clear_resolved = prefix + "```\nF2: resolved scripts/example.py:20 the example is closed.\n```\n"
-    assert recorder.p3_reading(nested_example).ids == ("F1",)
-    assert recorder.p3_reading(clear_resolved).ids == ("F1",)
+    assert recorder.p3_reading(nested_example).reason == recorder.UNSTRUCTURED_P3_DOWNGRADE
+    assert recorder.p3_reading(clear_resolved).reason == recorder.UNSTRUCTURED_P3_DOWNGRADE
 
 
 def _prose_reply(body: str | None, kind: str) -> str:
@@ -320,27 +320,29 @@ _RESOLUTION_LINES = (
     "F2 fixed, e.g. not actually fixed.",
     "F2 resolved in e.g. scripts/example.py:20, but not actually fixed.",
     "F2 resolved **successfully.** This is not a blocker.",
+    "F2: resolved, i.e. not actually fixed.",
+    "F2: fixed, e.g. not actually fixed.",
+    "F2: scripts/example.py:20 missing priority.",
 )
-_RESOLUTION_CASES = [
-    (kind, body, False)
-    for kind in ("visible", "fenced", "quoted", "indented")
-    for body in _RESOLUTION_LINES
-] + [
-    ("visible", "F2 [P0] resolved, i.e. not actually fixed.", False),
-    ("visible", "F2 [P1] resolved, i.e. not actually fixed.", False),
-    ("visible", "F2 [P2] resolved, i.e. not actually fixed.", False),
-    ("visible", None, True),
-]
+_DOWNGRADE_CASES = [
+    (kind, body) for kind in ("visible", "fenced", "quoted", "indented") for body in _RESOLUTION_LINES
+] + [("structured", "P3"), ("structured", "P1")]
 
 
-@pytest.mark.parametrize(("kind", "body", "approved"), _RESOLUTION_CASES)
-def test_prose_does_not_close_a_blocking_finding(kind, body, approved):
-    """A resolved or fixed word does not close a prose finding. An all-P3 reply still approves."""
+@pytest.mark.parametrize(("kind", "body"), _DOWNGRADE_CASES)
+def test_p3_downgrade_needs_typed_priorities(kind, body):
+    """Prose stays a rejection. Structured priorities decide the downgrade."""
+    if kind == "structured":
+        payload = structured_review(1)
+        payload["findings"][0]["priority"] = body
+        reading = recorder.p3_reading(json.dumps(payload))
+        if body == "P3":
+            assert reading.ids == ("F1",) and reading.reason is None
+        else:
+            assert reading.ids is None and reading.reason is None
+        return
     reading = recorder.p3_reading(_prose_reply(body, kind))
-    if approved:
-        assert reading.ids == ("F1",)
-    else:
-        assert reading.ids is None
+    assert reading.ids is None and reading.reason == recorder.UNSTRUCTURED_P3_DOWNGRADE
 
 
 @pytest.mark.parametrize(("deep", "reason"), [
