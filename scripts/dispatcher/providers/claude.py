@@ -182,12 +182,17 @@ def executor_failure(spec: TaskSpec, stdout: str) -> tuple[str | None, str | Non
 
 
 def schema_argument(options: dict) -> str | None:
-    """Check the digest-bound schema before putting its JSON in one argv entry."""
+    """Check the digest-bound schema before putting its JSON in one argv entry.
+
+    Claude Code refuses a top-level draft 2020-12 ``$schema`` meta-schema reference, so the
+    argument is a copy without it. The canonical document, its digest and validation are unchanged.
+    """
     from scripts.dispatcher.output_schema import load
 
     schema = load(options)
     if schema is None:
         return None
+    schema = {key: value for key, value in schema.items() if key != "$schema"}
     try:
         argument = json.dumps(schema, separators=(",", ":"), allow_nan=False)
     except ValueError as exc:

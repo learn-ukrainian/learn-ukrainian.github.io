@@ -161,6 +161,9 @@ def test_claude_review_binds_findings_schema(dispatch):
     assert record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
     argv = claude.build(spec, {}).argv
     schema = json.loads(argv[argv.index("--json-schema") + 1])
+    canonical = json.loads(Path(record["output_schema_path"]).read_text(encoding="utf-8"))
+    assert "$schema" in canonical and "$schema" not in schema  # Claude Code refuses the meta-schema reference
+    assert schema == {key: value for key, value in canonical.items() if key != "$schema"}
     assert schema["properties"]["schema_version"]["const"] == "code-review-findings.v1"
     assert schema["required"] == ["schema_version", "overall", "findings"]
     with pytest.raises(ContractError, match="review_envelope_requires_one_json_block"):
