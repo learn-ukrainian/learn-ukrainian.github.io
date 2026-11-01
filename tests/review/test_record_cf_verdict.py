@@ -295,6 +295,41 @@ def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_pat
     assert recorder.p3_reading(clear_resolved).ids == ("F1",)
 
 
+def _clause_reply(body: str, kind: str) -> str:
+    prefix = "VERDICT: REQUEST_CHANGES\nF1 [P3] scripts/example.py:10 count is high.\n"
+    if kind == "visible":
+        return prefix + body + "\n"
+    if kind == "fenced":
+        return prefix + "```\n" + body + "\n```\n"
+    if kind == "quoted":
+        return prefix + ">> ```\n>> " + body + "\n>> ```\n"
+    if kind == "indented":
+        return prefix + "\n    " + body + "\n"
+    raise AssertionError(kind)
+
+
+_LONG_OPEN = "F2 resolved after checking the patch? scripts/example.py:20 still open."
+
+
+@pytest.mark.parametrize(("kind", "body", "approved"), [
+    ("fenced", _LONG_OPEN, False),
+    ("quoted", _LONG_OPEN, False),
+    ("indented", _LONG_OPEN, False),
+    ("fenced", "F2 fixed after checking the patch? scripts/example.py:20 still open.", False),
+    ("fenced", "F2 resolved after checking the patch, not actually fixed.", False),
+    ("fenced", "F2 resolved after checking the patch ? scripts/example.py:20 still open.", False),
+    ("fenced", "F2 resolved. This is not a blocker.", True),
+    ("visible", _LONG_OPEN, False),
+])
+def test_resolution_clause_is_judged_in_full(kind, body, approved):
+    """The resolution sentence is judged in full, in a code span and on a visible line."""
+    reading = recorder.p3_reading(_clause_reply(body, kind))
+    if approved:
+        assert reading.ids == ("F1",)
+    else:
+        assert reading.ids is None and reading.reason is None
+
+
 @pytest.mark.parametrize(("deep", "reason"), [
     (False, "contradicting a verdict line"),
     (True, "invalid findings block beside a verdict line: top-level blocks cannot be decided"),

@@ -245,6 +245,32 @@ FINDING_WITHOUT_PRIORITY = "finding-without-priority"
 SECURITY_VERDICT_NOT_PASS = "security-verdict-not-pass"
 
 
+def _resolution_clause(rest: str) -> str:
+    """The resolved or fixed sentence, including its closing mark.
+
+    A later sentence is not part of the clause. A dot inside a token, such as
+    ``.py``, does not end the sentence. With no closing mark, the whole line is
+    the clause.
+    """
+    head = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b", rest)
+    if head is None:
+        return rest
+    index = head.end()
+    while index < len(rest):
+        mark = rest[index]
+        if mark in "?!":
+            return rest[: index + 1]
+        if mark == "." and (index + 1 == len(rest) or rest[index + 1].isspace()):
+            return rest[: index + 1]
+        index += 1
+    return rest
+
+
+def _ambiguous_resolution(rest: str) -> bool:
+    """True when the resolution clause itself is uncertain or contradicted."""
+    return _RESOLVED_AMBIGUOUS.search(_resolution_clause(rest)) is not None
+
+
 @dataclass(frozen=True)
 class P3Reading:
     """Open P3 finding ids, or a typed reason that reading does not apply."""
@@ -294,8 +320,7 @@ def _hidden_unprioritized_finding(reply: str) -> P3Reading | None:
             rest = match.group("rest") or ""
             if _PROSE_RESOLVED.match(rest):
                 # Only the resolution clause is judged. A later sentence may say "not".
-                clause = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b.{0,24}", rest)
-                if _RESOLVED_AMBIGUOUS.search(clause.group(0) if clause else rest[:40]):
+                if _ambiguous_resolution(rest):
                     return P3Reading()
                 continue
             if (match.group(3) or match.group(4)) is None:
@@ -367,8 +392,7 @@ def p3_reading(reply: str) -> P3Reading:
         rest = match.group("rest") or ""
         if _PROSE_RESOLVED.match(rest):
             # Only the resolution clause is judged. A later sentence may say "not".
-            clause = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b.{0,24}", rest)
-            if finding_id in findings or _RESOLVED_AMBIGUOUS.search(clause.group(0) if clause else rest[:40]):
+            if finding_id in findings or _ambiguous_resolution(rest):
                 return P3Reading()
             continue
         if priority is None:
