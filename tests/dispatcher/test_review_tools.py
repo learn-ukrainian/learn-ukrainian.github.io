@@ -43,6 +43,18 @@ def test_review_shell_policy_reuses_worker_denies(tmp_path, route):
         else:
             assert result.returncode == 2, result.stderr
             assert "review_mutation_denied" in result.stderr
+    if route == "agy":
+        primary = tmp_path / "primary"
+        primary.mkdir()
+        subprocess.run(["git", "init", "-q", "-b", "main", str(primary)], check=True, timeout=10)
+        payload = {"toolCall": {"name": "run_command", "args": {
+            "CommandLine": "touch review-cwd-guard-probe", "Cwd": str(primary),
+        }}, "cwd": str(tmp_path)}
+        for review in (True, False):
+            command = shlex.split(review_tools.hook_command(harness=route, review=review))
+            result = subprocess.run(command, input=json.dumps(payload), capture_output=True, text=True, timeout=20)
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)["permission"] == "deny"
 
 
 @pytest.mark.parametrize("route", ROUTES)

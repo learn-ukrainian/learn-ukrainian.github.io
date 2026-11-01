@@ -304,7 +304,13 @@ def main() -> int:
             from scripts.agent_runtime.secret_print_hook import extract_command
 
             command = extract_command("agy", payload)
-            payload = {"tool_name": "Bash" if command is not None else "", "tool_input": {"command": command},
+            call = payload.get("toolCall")
+            inputs = call.get("args") if isinstance(call, dict) else payload.get("tool_input")
+            inputs = dict(inputs) if isinstance(inputs, dict) else {}
+            if "Cwd" in inputs:
+                inputs["cwd"] = inputs.pop("Cwd")
+            inputs["command"] = command
+            payload = {"tool_name": "Bash" if command is not None else "", "tool_input": inputs,
                        "cwd": payload.get("cwd", os.getcwd())}
         reason = check(payload, review=mode == "review")
     except Exception:
