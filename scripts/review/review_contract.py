@@ -10,7 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -883,10 +883,11 @@ _CITED_FACT = re.compile(
     r"\b(?:VESUM|ULIF|PULS|SUM-20|Pravopys|Zabolotnyi|Bolshakova|Prystinska|"
     r"Antonenko|Grinchenko|ESUM|GRAC|CEFR|dictionar\w*|slovnyk|"
     r"(?:verify|query|search|inspect|check|translate|vet|get)_\w+|rules?|tags?|paradigms?|according to|cites?|"
+    r"(?:noun|adj|verb|adv|numr|pron|prep|conj|part|intj|predic|insert|onomat|noninfl)(?::\w+)+|"
     r"(?:sources?|citations?|references?)\s*[:=]\s*\S|mcp\w*sources\w*|pages?\s*\d+|"
     r"soft[ -]group|hard[ -]group|pp?\.?\s*\d+)\b|§|"
-    r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|СУМ(?:-\d+)?|ЕСУМ|Грінченк\w*|Антоненк\w*|"
-    r"Горох\w*|Караванськ\w*|словник\w*|сторінк\w*|правил\w*|тег\w*|с\.\s*\d+)\b",
+    r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|(?-i:СУМ)(?:-\d+)?|сум-\d+|ЕСУМ|Грінченк\w*|Антоненк\w*|"
+    r"Горох\w*|Караванськ\w*|словник\w*|сторінк\w*|правил(?:о|а|у|і|ом|ам|ах|ами)?|тег\w*|с\.\s*\d+)\b",
     re.IGNORECASE,
 )
 
@@ -898,6 +899,10 @@ def _cited_fact_clauses(text: str, *, sources: bool) -> list[str]:
         if clause.strip().casefold() not in {"", "none", "n/a", "no sources"}
         and (sources or _CITED_FACT.search(clause))
     ]
+
+
+def _claim_matches(claim: str, output: str) -> bool:
+    return re.search(r"(?<!\w)" + re.escape(claim) + r"(?!\w)", output) is not None
 
 
 def _captured_output(value: Any) -> str | None:
@@ -983,8 +988,11 @@ def validate_ukrainian_reply_claims(
         if tag:
             raise ContractError("CLAIM_PAYLOAD_MALFORMED: review payload is not readable") from exc
         payload = None
-    structured = isinstance(payload, dict) and any(key in payload for key in ("items", "findings", "evidence"))
+    structured = isinstance(payload, dict)
     if not structured:
+        if tag:
+            decoded = yaml.safe_dump(payload, allow_unicode=True) if payload is not None else body
+            outside += "\n" + decoded
         payload = {}
     elif not tag:
         outside = ""
@@ -1086,7 +1094,8 @@ def validate_item_claims(
     unknown_items = 0
     dropped: list[dict[str, Any]] = []
 
-    def text_claims(row: Mapping[str, Any]) -> bool:
+    def text_claims(row: Mapping[str, Any], *, item: bool = False, finding: bool = False,
+                    children_handled: bool = False) -> bool:
         nonlocal claims_total, claims_unsupported
         unsupported = False
         candidates = list(indexed.values())
@@ -1098,14 +1107,35 @@ def validate_item_claims(
                 if _validate_claim(claim, require_quote=False)[0]
             }
             candidates = [event for rid, event in indexed.items() if rid in receipts]
-        for claim_field in ("sources", "finding", "claim", "summary", "body", "explanation", "why_wrong",
-                            "title", "smallest_fix"):
-            text = row.get(claim_field)
-            if claim_field == "sources" and isinstance(text, list):
-                text = ";".join(part for part in text if isinstance(part, str))
-            if not isinstance(text, str):
-                continue
-            for claim in _cited_fact_clauses(text, sources=claim_field == "sources"):
+        reference_roots = ["evidence"]
+        if children_handled:
+            reference_roots.append("broadened_searches")
+        if finding:
+            reference_roots.extend(("source_conflict.a", "source_conflict.b", "unsupported_by_source.searches"))
+
+        def leaves(value: Any, path: str = "") -> Iterator[tuple[str, str]]:
+            if isinstance(value, str):
+                yield path, value
+            elif isinstance(value, Mapping):
+                for field, part in value.items():
+                    if field in {"id", "verdict", "schema", "schema_version", "priority", "category", "location",
+                                 "claim_type", "receipt", "receipt_id", "outcome", "_approval_void"}:
+                        continue
+                    if not path and finding and field == "expected":
+                        continue
+                    if field in {"quote", "quotes"} and (
+                        (item and not path) or any(path == root or path.startswith(root + ".") for root in reference_roots)
+                    ):
+                        continue
+                    if children_handled and not path and field in {"items", "findings"}:
+                        continue
+                    yield from leaves(part, f"{path}.{field}" if path else str(field))
+            elif isinstance(value, list):
+                for part in value:
+                    yield from leaves(part, path)
+
+        for claim_field, text in leaves(row):
+            for claim in _cited_fact_clauses(text, sources=claim_field.rsplit(".", 1)[-1] == "sources"):
                 claims_total += 1
                 matches = [
                     event for event in candidates
@@ -1114,7 +1144,7 @@ def validate_item_claims(
                     and isinstance(event.get("tool"), str)
                     and isinstance(event.get("arguments"), Mapping)
                     and event.get("status", "ok") == "ok"
-                    and claim in event["result"]
+                    and _claim_matches(claim, event["result"])
                 ]
                 if matches:
                     continue
@@ -1164,7 +1194,7 @@ def validate_item_claims(
         stored_result = rec.get("result")
         if not isinstance(stored_result, str) or not stored_result.strip():
             return False, "uncaptured_output"
-        if has_quote and quote not in stored_result:
+        if has_quote and (quote not in stored_result or (_CITED_FACT.search(quote) and not _claim_matches(quote, stored_result))):
             return False, "quote_not_in_result"
         return True, None
 
@@ -1209,7 +1239,7 @@ def validate_item_claims(
             if has_dropped and verdict == "APPROVED":
                 item_copy["_approval_void"] = True
 
-        if text_claims(item_copy) and verdict == "APPROVED":
+        if text_claims(item_copy, item=True) and verdict == "APPROVED":
             item_copy["_approval_void"] = True
         updated_items.append(item_copy)
 
@@ -1265,7 +1295,7 @@ def validate_item_claims(
                     continue
                 f_copy = dict(finding)
                 f_id = f_copy.get("id")
-                text_claims(f_copy)
+                text_claims(f_copy, finding=True)
                 valid_receipt_ids: list[str] = []
 
                 if "evidence" in f_copy:
@@ -1351,7 +1381,8 @@ def validate_item_claims(
                             rec = indexed.get(rid)
                             if isinstance(rec, dict) and isinstance(rec.get("result"), str):
                                 stored_results.append(rec["result"])
-                        if not stored_results or not any(expected in res for res in stored_results):
+                        if not any(expected in res and (not _CITED_FACT.search(expected) or _claim_matches(expected, res))
+                                   for res in stored_results):
                             reason = "quote_not_in_result"
                         else:
                             ok = True
@@ -1367,9 +1398,7 @@ def validate_item_claims(
 
                 updated_findings.append(f_copy)
 
-    text_claims(payload)
-    if isinstance(payload.get("overall"), Mapping):
-        text_claims(payload["overall"])
+    text_claims(payload, children_handled=True)
     updated_payload = dict(payload)
     if "items" in payload:
         updated_payload["items"] = updated_items

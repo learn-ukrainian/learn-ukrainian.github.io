@@ -1064,8 +1064,13 @@ def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
     ("СУМ-20 подає цю форму як нормативну, с. 45", "VESUM", "finding"),
     ("verify_stress returned stress on the second syllable", "VESUM", "finding"),
     ("с. 45", "VESUM", "finding"),
-], ids=["source-page", "rule", "tag", "check", "missing-output", "ukrainian-source", "tool-name", "ukrainian-page"])
-@pytest.mark.parametrize("reply_format", ["items", "overall", "finding", "title", "smallest_fix", "body", "prose"])
+    ("Example Reference page 7", "Example Reference page 75", "sources"),
+    ("Rule 8", "Rule 81", "finding"),
+    ("noun:inanim:f:v_naz", "noun:anim:f:v_naz", "finding"),
+], ids=["source-page", "rule", "tag", "check", "missing-output", "ukrainian-source", "tool-name", "ukrainian-page",
+        "page-prefix", "rule-prefix", "bare-tag"])
+@pytest.mark.parametrize("reply_format", ["items", "overall", "finding", "title", "smallest_fix", "body", "prose",
+                                         "verbatim", "nested", "top-notes", "fenced-summary", "fenced-quote", "fenced-list"])
 def test_unbound_ukrainian_source_claims_refused_before_publication(
     monkeypatch, tmp_path, claim, output, placement, reply_format,
 ):
@@ -1082,7 +1087,28 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
         "schema": "ukrainian-item-judgments.v1", "items": [row],
     }) + "\n```\n"
     audit_id, audit_field = "item-a", placement
-    if reply_format == "prose":
+    audit_claim = claim
+    if reply_format in {"fenced-summary", "fenced-quote", "fenced-list"}:
+        field = "quote" if reply_format == "fenced-quote" else "summary"
+        body = "- " + claim if reply_format == "fenced-list" else json.dumps({field: claim})
+        tag = "yaml" if reply_format == "fenced-list" else "json"
+        reply = f"VERDICT: APPROVE\n```{tag}\n{body}\n```\n"
+        if reply_format == "fenced-list":
+            audit_id, audit_field = "review-prose", "finding"
+            audit_claim = "VERDICT: APPROVE\n\n\n" + body
+        else:
+            audit_id, audit_field = None, field
+    elif reply_format in {"nested", "top-notes"}:
+        row[placement] = "none"
+        payload = {"schema": "ukrainian-item-judgments.v1", "items": [row]}
+        if reply_format == "nested":
+            row["extra"] = {"notes": [claim]}
+            audit_id, audit_field = "item-a", "extra.notes"
+        else:
+            payload["notes"] = claim
+            audit_id, audit_field = None, "notes"
+        reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps(payload) + "\n```\n"
+    elif reply_format == "prose":
         row[placement] = "none"
         reply = claim + ";\nVERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
             "schema": "ukrainian-item-judgments.v1", "items": [row],
@@ -1093,7 +1119,7 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
         payload["overall"]["correctness"] = "correct"
         if reply_format == "overall":
             payload["overall"]["explanation"] = claim
-            audit_id, audit_field = None, "explanation"
+            audit_id, audit_field = None, "overall.explanation"
         else:
             payload["overall"]["explanation"] = "Appropriate activity."
             payload["findings"][0].update(priority="P3", body="Advisory wording.", sources=["none"])
@@ -1114,7 +1140,7 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     audit = json.loads(str(refused.value).split(": ", 1)[1])
     assert audit[0]["item_id"] == audit_id
-    assert audit[0]["claim"] == {audit_field: claim}
+    assert audit[0]["claim"] == {audit_field: audit_claim}
     assert audit[0]["reason"] == "claim_not_in_captured_output"
     assert audit[0]["captured_event_ids"] == ["step-4"]
     assert audit[0]["uncaptured_event_ids"] == (["step-4"] if output is None else [])
@@ -1123,7 +1149,9 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
 
 
 @pytest.mark.parametrize("capture", ["agy", "codex", "claude", "bound"])
-def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, capture):
+@pytest.mark.parametrize("finding", ["Appropriate activity.", "Вправа правильно перевіряє форму", "Вправа передає сум"])
+@pytest.mark.parametrize("bad_quote", ["uncaptured quote", "Rule 8"])
+def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, capture, finding, bad_quote):
     """A supported exact-head review must not be over-rejected, including quoted source output."""
     from scripts.dispatcher import store
     from scripts.review.receipts import ledger
@@ -1141,11 +1169,11 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
         monkeypatch.setattr(store, "receipts_root", lambda: root)
         path = root / "review" / "attempt.jsonl"
         receipt = ledger.append(path, **binding, tool="verify_word", arguments={"word": "example"},
-                                result=claim, server_version="test", snapshots={}, status="ok")
+                                result=claim + "; Rule 81", server_version="test", snapshots={}, status="ok")
         rejected = structured_review(1)
         rejected["overall"].update(correctness="correct", explanation="Appropriate activity.")
         rejected["findings"][0].update(
-            priority="P3", body=claim, sources=["none"], evidence={"receipt": receipt, "quote": "uncaptured quote"},
+            priority="P3", body=claim, sources=["none"], evidence={"receipt": receipt, "quote": bad_quote},
         )
         sanitized, checked = validate_ukrainian_reply_claims(
             "```json\n" + json.dumps(rejected) + "\n```", ledger_path=path, binding=binding,
@@ -1161,7 +1189,7 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
             guarded.setattr(recorder, "_pr", no_network)
             with pytest.raises(recorder.RecordError, match="UKRAINIAN_CLAIMS_UNSUPPORTED") as refused:
                 recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-        assert "uncaptured quote" in str(refused.value)
+        assert bad_quote in str(refused.value)
         assert comments == [] and calls == {"posts": 0, "statuses": 0}
     else:
         captured_source_trace(tasks, output=claim)
@@ -1186,7 +1214,7 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
             receipt = "runtime-0"
     reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
         "schema": "ukrainian-item-judgments.v1", "items": [{
-            "id": "item-a", "verdict": "APPROVE", "finding": "Appropriate activity.",
+            "id": "item-a", "verdict": "APPROVE", "finding": finding,
             "sources": claim, "evidence": [{"receipt": receipt, "quote": claim}],
         }],
     }) + "\n```\n"
