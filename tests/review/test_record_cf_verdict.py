@@ -1062,7 +1062,10 @@ def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
     ("check_russian_shadow for example returned confidence 0.0", "check_russian_shadow for other returned 0.0", "sources"),
     ("Example Reference page 7", None, "sources"),
 ], ids=["source-page", "rule", "tag", "check", "missing-output"])
-def test_unbound_ukrainian_source_claims_refused_before_publication(monkeypatch, tmp_path, claim, output, placement):
+@pytest.mark.parametrize("reply_format", ["items", "overall", "finding"])
+def test_unbound_ukrainian_source_claims_refused_before_publication(
+    monkeypatch, tmp_path, claim, output, placement, reply_format,
+):
     """An unbound review must not publish a source assertion missing from its own outputs."""
     from scripts.review.review_contract import build_item_packet, render_item_packet
 
@@ -1075,6 +1078,18 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(monkeypatch,
     reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
         "schema": "ukrainian-item-judgments.v1", "items": [row],
     }) + "\n```\n"
+    audit_id, audit_field = "item-a", placement
+    if reply_format != "items":
+        payload = structured_review(0 if reply_format == "overall" else 1)
+        payload["overall"]["correctness"] = "correct"
+        if reply_format == "overall":
+            payload["overall"]["explanation"] = claim
+            audit_id, audit_field = None, "explanation"
+        else:
+            payload["overall"]["explanation"] = "Appropriate activity."
+            payload["findings"][0].update(priority="P3", body="Advisory wording.", sources=[claim])
+            audit_id, audit_field = "F1", "sources"
+        reply = json.dumps(payload)
     captured_source_trace(tasks, arguments={"query": claim}, output=output)
     write_task(tasks, reply=reply, review_profile="ukrainian", sources_mcp_call_count=75,
                prompt_file=str(prompt), prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
@@ -1087,8 +1102,8 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(monkeypatch,
     with pytest.raises(recorder.RecordError, match="UKRAINIAN_CLAIMS_UNSUPPORTED") as refused:
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     audit = json.loads(str(refused.value).split(": ", 1)[1])
-    assert audit[0]["item_id"] == "item-a"
-    assert audit[0]["claim"] == {placement: claim}
+    assert audit[0]["item_id"] == audit_id
+    assert audit[0]["claim"] == {audit_field: claim}
     assert audit[0]["reason"] == "claim_not_in_captured_output"
     assert audit[0]["captured_event_ids"] == ["step-4"]
     assert audit[0]["uncaptured_event_ids"] == (["step-4"] if output is None else [])

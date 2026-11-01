@@ -963,7 +963,7 @@ def validate_ukrainian_reply_claims(
     """The same claim check at execution and publication, including prose outside the payload."""
     import yaml
 
-    tag = next((name for name in ("ukrainian-item-judgments", "yaml", "yml") if _fenced(reply, name)), None)
+    tag = next((name for name in ("ukrainian-item-judgments", "yaml", "yml", "json") if _fenced(reply, name)), None)
     outside = reply
     if tag:
         bodies = _fenced(reply, tag)
@@ -999,7 +999,7 @@ def validate_ukrainian_reply_claims(
         sanitized.pop("items")
     if not structured:
         return reply, result
-    rendered = (json.dumps(sanitized, ensure_ascii=False, indent=2) if tag == "ukrainian-item-judgments"
+    rendered = (json.dumps(sanitized, ensure_ascii=False, indent=2) if tag in {"ukrainian-item-judgments", "json"}
                 else yaml.safe_dump(sanitized, allow_unicode=True, sort_keys=False).rstrip())
     if not tag:
         return rendered + "\n", result
@@ -1086,8 +1086,10 @@ def validate_item_claims(
     def text_claims(row: Mapping[str, Any]) -> bool:
         nonlocal claims_total, claims_unsupported
         unsupported = False
-        for claim_field in ("sources", "finding", "claim", "summary"):
+        for claim_field in ("sources", "finding", "claim", "summary", "body", "explanation", "why_wrong"):
             text = row.get(claim_field)
+            if claim_field == "sources" and isinstance(text, list):
+                text = ";".join(part for part in text if isinstance(part, str))
             if not isinstance(text, str):
                 continue
             for claim in _cited_fact_clauses(text, sources=claim_field == "sources"):
@@ -1353,6 +1355,8 @@ def validate_item_claims(
                 updated_findings.append(f_copy)
 
     text_claims(payload)
+    if isinstance(payload.get("overall"), Mapping):
+        text_claims(payload["overall"])
     updated_payload = dict(payload)
     if "items" in payload:
         updated_payload["items"] = updated_items
