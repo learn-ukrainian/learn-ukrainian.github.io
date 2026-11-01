@@ -947,34 +947,59 @@ def validate_item_claims(
     unknown_items = 0
     dropped: list[dict[str, Any]] = []
 
-    def _validate_claim(claim: Any, item_id: str | None = None) -> tuple[bool, str | None]:
+    def _validate_claim(
+        claim: Any,
+        item_id: str | None = None,
+        *,
+        require_quote: bool = True,
+    ) -> tuple[bool, str | None]:
         if not isinstance(claim, dict):
             return False, "malformed_claim"
         receipt = claim.get("receipt") or claim.get("receipt_id")
         quote = claim.get("quote")
-        expected = claim.get("expected")
-        claim_keys = set(claim) - {"category", "outcome", "expected"}
-        if not (
-            claim_keys == {"receipt", "quote"}
-            or claim_keys == {"receipt_id", "quote"}
-            or claim_keys == {"receipt"}
-            or claim_keys == {"receipt_id"}
-        ):
-            return False, "malformed_claim"
+        claim_keys = set(claim) - {"category", "outcome"}
+
+        if require_quote:
+            if claim_keys != {"receipt", "quote"} and claim_keys != {"receipt_id", "quote"}:
+                return False, "malformed_claim"
+            if not isinstance(receipt, str) or not receipt.strip():
+                return False, "malformed_receipt"
+            if not isinstance(quote, str) or not quote.strip():
+                return False, "empty_quote"
+            if receipt in foreign:
+                return False, "foreign_attempt_receipt"
+            if receipt not in indexed:
+                return False, "receipt_not_found"
+            rec = indexed[receipt]
+            stored_result = rec.get("result")
+            if not isinstance(stored_result, str) or quote not in stored_result:
+                return False, "quote_not_in_result"
+            return True, None
+
+        # require_quote is False (for YAML findings, etc.)
+        has_quote = "quote" in claim
+        if has_quote:
+            if claim_keys != {"receipt", "quote"} and claim_keys != {"receipt_id", "quote"}:
+                return False, "malformed_claim"
+            if not isinstance(quote, str) or not quote.strip():
+                return False, "empty_quote"
+        else:
+            if claim_keys != {"receipt"} and claim_keys != {"receipt_id"}:
+                return False, "malformed_claim"
+
         if not isinstance(receipt, str) or not receipt.strip():
             return False, "malformed_receipt"
-        eval_quote = quote if quote is not None else expected
-        if eval_quote is not None and (not isinstance(eval_quote, str) or not eval_quote.strip()):
-            return False, "empty_quote"
         if receipt in foreign:
             return False, "foreign_attempt_receipt"
         if receipt not in indexed:
             return False, "receipt_not_found"
-        if eval_quote is not None:
+
+        if has_quote:
             rec = indexed[receipt]
             stored_result = rec.get("result")
-            if not isinstance(stored_result, str) or eval_quote not in stored_result:
+            if not isinstance(stored_result, str) or quote not in stored_result:
                 return False, "quote_not_in_result"
+
         return True, None
 
     updated_items = []
@@ -995,7 +1020,7 @@ def validate_item_claims(
             has_dropped = False
             for claim in claims_list:
                 claims_total += 1
-                ok, reason = _validate_claim(claim, item_copy.get("id"))
+                ok, reason = _validate_claim(claim, item_copy.get("id"), require_quote=True)
                 if not ok:
                     claims_unsupported += 1
                     has_dropped = True
@@ -1028,7 +1053,7 @@ def validate_item_claims(
         valid_claims = []
         for claim in claims_list:
             claims_total += 1
-            ok, reason = _validate_claim(claim, None)
+            ok, reason = _validate_claim(claim, None, require_quote=False)
             if not ok:
                 claims_unsupported += 1
                 dropped.append({
@@ -1047,7 +1072,7 @@ def validate_item_claims(
             valid_searches = []
             for claim in broadened:
                 claims_total += 1
-                ok, reason = _validate_claim(claim, None)
+                ok, reason = _validate_claim(claim, None, require_quote=True)
                 if not ok:
                     claims_unsupported += 1
                     dropped.append({
@@ -1072,6 +1097,8 @@ def validate_item_claims(
                     continue
                 f_copy = dict(finding)
                 f_id = f_copy.get("id")
+                valid_receipt_ids: list[str] = []
+
                 if "evidence" in f_copy:
                     ev = f_copy["evidence"]
                     was_dict = isinstance(ev, dict)
@@ -1079,7 +1106,7 @@ def validate_item_claims(
                     valid_ev = []
                     for claim in claims_list:
                         claims_total += 1
-                        ok, reason = _validate_claim(claim, f_id)
+                        ok, reason = _validate_claim(claim, f_id, require_quote=False)
                         if not ok:
                             claims_unsupported += 1
                             dropped.append({
@@ -1089,6 +1116,9 @@ def validate_item_claims(
                             })
                         else:
                             valid_ev.append(claim)
+                            r_id = claim.get("receipt") or claim.get("receipt_id")
+                            if isinstance(r_id, str):
+                                valid_receipt_ids.append(r_id)
                     if was_dict:
                         if valid_ev:
                             f_copy["evidence"] = valid_ev[0]
@@ -1102,7 +1132,7 @@ def validate_item_claims(
                     for side in ("a", "b"):
                         if side in sc and isinstance(sc[side], dict):
                             claims_total += 1
-                            ok, reason = _validate_claim(sc[side], f_id)
+                            ok, reason = _validate_claim(sc[side], f_id, require_quote=False)
                             if not ok:
                                 claims_unsupported += 1
                                 dropped.append({
@@ -1111,6 +1141,10 @@ def validate_item_claims(
                                     "reason": reason,
                                 })
                                 sc.pop(side, None)
+                            else:
+                                r_id = sc[side].get("receipt") or sc[side].get("receipt_id")
+                                if isinstance(r_id, str):
+                                    valid_receipt_ids.append(r_id)
                     f_copy["source_conflict"] = sc
 
                 if "unsupported_by_source" in f_copy and isinstance(f_copy["unsupported_by_source"], dict):
@@ -1119,7 +1153,7 @@ def validate_item_claims(
                         valid_searches = []
                         for s in ubs["searches"]:
                             claims_total += 1
-                            ok, reason = _validate_claim(s, f_id)
+                            ok, reason = _validate_claim(s, f_id, require_quote=False)
                             if not ok:
                                 claims_unsupported += 1
                                 dropped.append({
@@ -1129,8 +1163,38 @@ def validate_item_claims(
                                 })
                             else:
                                 valid_searches.append(s)
+                                r_id = s.get("receipt") or s.get("receipt_id")
+                                if isinstance(r_id, str):
+                                    valid_receipt_ids.append(r_id)
                         ubs["searches"] = valid_searches
                     f_copy["unsupported_by_source"] = ubs
+
+                if "expected" in f_copy:
+                    expected = f_copy["expected"]
+                    claims_total += 1
+                    ok = False
+                    reason = None
+                    if not isinstance(expected, str) or not expected.strip():
+                        reason = "empty_quote"
+                    else:
+                        stored_results = []
+                        for rid in valid_receipt_ids:
+                            rec = indexed.get(rid)
+                            if isinstance(rec, dict) and isinstance(rec.get("result"), str):
+                                stored_results.append(rec["result"])
+                        if not stored_results or not any(expected in res for res in stored_results):
+                            reason = "quote_not_in_result"
+                        else:
+                            ok = True
+
+                    if not ok:
+                        claims_unsupported += 1
+                        dropped.append({
+                            "item_id": f_id,
+                            "claim": {"expected": expected},
+                            "reason": reason,
+                        })
+                        f_copy.pop("expected", None)
 
                 updated_findings.append(f_copy)
 

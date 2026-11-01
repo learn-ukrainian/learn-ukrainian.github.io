@@ -638,3 +638,142 @@ def test_manifest_bound_ukrainian_review_two_items_one_void_preserves_valid_item
     assert chunk.coverage == ("card-1",)
     assert "card-2" not in chunk.coverage
     assert chunk.void is None
+
+
+def test_manifest_bound_ukrainian_review_yaml_finding_fabricated_expected_dropped_and_counted(
+    attempt, tmp_path, monkeypatch
+):
+    """A YAML finding with valid evidence receipt but fabricated sibling expected text drops expected."""
+    import yaml
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```yaml\n"
+        + yaml.safe_dump({
+            "review_schema": 1,
+            "kind": "lesson",
+            "findings": [
+                {
+                    "id": "F-1",
+                    "claim": "Spelling issue",
+                    "expected": "fabricated expected text",
+                    "evidence": {
+                        "receipt": "rr-supported1111111111",
+                    },
+                }
+            ],
+        })
+        + "```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 2
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["item_id"] == "F-1"
+    assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
+    assert "fabricated expected text" not in final_text
+    # Receipt itself was valid and retained
+    assert "rr-supported1111111111" in final_text
+
+
+def test_manifest_bound_ukrainian_review_yaml_finding_valid_expected_retained(
+    attempt, tmp_path, monkeypatch
+):
+    """A YAML finding with valid evidence receipt and matching expected text retains both."""
+    import yaml
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```yaml\n"
+        + yaml.safe_dump({
+            "review_schema": 1,
+            "kind": "lesson",
+            "findings": [
+                {
+                    "id": "F-1",
+                    "claim": "Spelling issue",
+                    "expected": "attested in VESUM",
+                    "evidence": {
+                        "receipt": "rr-supported1111111111",
+                    },
+                }
+            ],
+        })
+        + "```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 2
+    assert done["claims_unsupported"] == 0
+    assert len(done["dropped_claims"]) == 0
+    assert "attested in VESUM" in final_text
+    assert "rr-supported1111111111" in final_text
+
+
+def test_manifest_bound_ukrainian_review_per_item_receipt_only_rejected_as_malformed_claim(
+    attempt, tmp_path, monkeypatch
+):
+    """Per-item evidence containing only receipt without quote is rejected as malformed_claim."""
+    from scripts.review.review_contract import build_item_packet, judge_item_reply
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "card-1",
+                    "verdict": "APPROVE",
+                    "finding": "Attested word",
+                    "sources": "VESUM",
+                    "quote": "паляниця",
+                    "evidence": [{"receipt": "rr-supported1111111111"}],
+                },
+            ],
+        })
+        + "\n```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 1
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["item_id"] == "card-1"
+    assert done["dropped_claims"][0]["reason"] == "malformed_claim"
+
+    packet = build_item_packet([{"id": "card-1", "text": "паляниця"}])
+    chunk = judge_item_reply(packet, final_text, stated="APPROVED", ukrainian=True)
+    assert chunk.denominator == ("card-1",)
+    assert chunk.coverage == ()
