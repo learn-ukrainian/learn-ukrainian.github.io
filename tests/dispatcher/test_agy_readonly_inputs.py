@@ -79,7 +79,7 @@ def _launch(
 
 
 def test_refuses_unusable_input_before_spawn(tmp_path, monkeypatch, capsys):
-    """Defect class: a bad input is dropped or the task still starts."""
+    """Defect class: denied aliases or failed identity checks still start the task."""
     tasks = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     checkout = tmp_path / "checkout"
@@ -189,6 +189,76 @@ def test_refuses_unusable_input_before_spawn(tmp_path, monkeypatch, capsys):
     secret.write_text("x")
     monkeypatch.setattr(agy_sandbox.Path, "home", staticmethod(lambda: home))
     refuse(["--input", str(secret)], "agy_input_refused: path is under a credential directory", "credential")
+    # Hard links must not let denied bytes enter through an allowed name.
+    alias = tmp_path / "credential-alias.bin"
+    alias.hardlink_to(secret)
+    refuse(["--input", str(alias)], "agy_input_refused: hard link", "credential-hardlink")
+    checkout_alias = tmp_path / "checkout-alias.bin"
+    checkout_alias.hardlink_to(inside)
+    refuse(["--input", str(checkout_alias)], "agy_input_refused: hard link", "checkout-hardlink")
+    ordinary = tmp_path / "ordinary.bin"
+    ordinary.write_bytes(b"ordinary\n")
+    recorded = agy_sandbox.bind_inputs([str(ordinary)], repo_root=checkout)
+    ordinary_alias = tmp_path / "ordinary-alias.bin"
+    ordinary_alias.hardlink_to(ordinary)
+    refuse(["--input", str(ordinary_alias)], "agy_input_refused: hard link", "ordinary-hardlink")
+    with pytest.raises(agy_sandbox.Refused, match="agy_input_refused: hard link"):
+        agy_sandbox.confirm_inputs(recorded, repo_root=checkout)
+
+    late_packet = tmp_path / "late.bin"
+    late_packet.write_bytes(b"late\n")
+    original_read_exact = agy_sandbox._read_exact
+
+    def linked_during_read(descriptor, size):
+        data = original_read_exact(descriptor, size)
+        (tmp_path / "late-alias.bin").hardlink_to(late_packet)
+        return data
+
+    with monkeypatch.context() as branch:
+        branch.setattr(agy_sandbox, "_read_exact", linked_during_read)
+        with pytest.raises(ValueError, match="agy_input_refused: hard link"):
+            agy_sandbox.bind_inputs([str(late_packet)], repo_root=checkout)
+
+    # F6: each identity lookup failure refuses before payload reads or spawn.
+    original_read = os.read
+    with monkeypatch.context() as branch:
+        read = Mock(wraps=original_read)
+        branch.setattr(os, "read", read)
+        for target, message in (
+            ("relative.bin", "path changed before read"),
+            (str(packet) + " (deleted)", "path changed before read"),
+            (str(secret), "path is under a credential directory"),
+            (str(inside), "path is inside the primary checkout"),
+        ):
+            branch.setattr(os, "readlink", lambda _descriptor, target=target: target)
+            with pytest.raises(ValueError, match="agy_input_refused: " + message):
+                agy_sandbox.bind_inputs([str(packet)], repo_root=checkout)
+        branch.setattr(os, "readlink", Mock(side_effect=OSError("unavailable")))
+        with pytest.raises(ValueError, match="agy_input_refused: not a readable regular file"):
+            agy_sandbox.bind_inputs([str(packet)], repo_root=checkout)
+        read.assert_not_called()
+
+    original_stat = os.stat
+    stat_calls = 0
+
+    def failed_identity_stat(path, *args, **kwargs):
+        nonlocal stat_calls
+        if path == packet:
+            stat_calls += 1
+            # Path.resolve(strict=True) performs the first stat; the bind performs the second.
+            if stat_calls == 2:
+                raise OSError("unavailable")
+        return original_stat(path, *args, **kwargs)
+
+    with monkeypatch.context() as branch:
+        read = Mock(wraps=original_read)
+        branch.setattr(os, "read", read)
+        branch.setattr(os, "stat", failed_identity_stat)
+        with pytest.raises(ValueError, match="agy_input_refused: not a readable regular file"):
+            agy_sandbox.bind_inputs([str(packet)], repo_root=checkout)
+        assert stat_calls == 2
+        read.assert_not_called()
+
     original_readlink = os.readlink
     monkeypatch.setattr(os, "readlink", lambda _descriptor: "/different/path")
     with pytest.raises(ValueError, match="agy_input_refused: path changed before read"):
@@ -204,6 +274,7 @@ def test_refuses_unusable_input_before_spawn(tmp_path, monkeypatch, capsys):
             st_ino = info.st_ino + 1
             st_dev = info.st_dev
             st_size = info.st_size
+            st_nlink = info.st_nlink
 
         return _Stat()
 

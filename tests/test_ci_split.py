@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import statistics
 import subprocess
 import sys
 from pathlib import Path
@@ -906,13 +907,22 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert deferred['reason'] == 'recorded estimate exceeds 600 second cap'
     del weights['tests/test_new.py']
     (repo / affected.DURATIONS).write_text(json.dumps(weights))
-    # A new test file with no recorded duration is weighted at the median and still runs.
+    # A new test file with no recorded duration is costed conservatively (95th percentile) and still runs.
     unrecorded = affected.plan(base, candidate)
     assert unrecorded['unknown_duration_files'] == ['tests/test_new.py']
     assert unrecorded['reason'] is None
     assert unrecorded['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
     assert unrecorded['deferred_files'] == []
     assert unrecorded['estimate_seconds'] == 67
+    # Varied weights verify the conservative 95th percentile rather than median.
+    varied_weights = {p: (i + 1) * 10 for i, p in enumerate([*guards, 'tests/test_space name.py'])}
+    (repo / affected.DURATIONS).write_text(json.dumps(varied_weights))
+    varied_unrecorded = affected.plan(base, candidate)
+    assert varied_unrecorded['unknown_duration_files'] == ['tests/test_new.py']
+    expected_default = statistics.quantiles(list(varied_weights.values()), n=20)[18]
+    assert expected_default == 66.5
+    assert varied_unrecorded['estimate_seconds'] == 60 + sum(varied_weights.values()) + expected_default
+    (repo / affected.DURATIONS).write_text(json.dumps(weights))
     weights['tests/test_new.py'] = -1
     (repo / affected.DURATIONS).write_text(json.dumps(weights))
     with pytest.raises(ValueError, match='invalid recorded duration'):

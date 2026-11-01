@@ -213,6 +213,8 @@ def _bind_one(index: int, raw: str, root: Path, home: Path) -> dict:
         info = os.fstat(descriptor)
         if not stat.S_ISREG(info.st_mode):
             raise ValueError("agy_input_refused: not a regular file")
+        if info.st_nlink > 1:
+            raise ValueError("agy_input_refused: hard link")
         try:
             resolved = candidate.resolve(strict=True)
         except OSError as exc:
@@ -250,6 +252,8 @@ def _bind_one(index: int, raw: str, root: Path, home: Path) -> dict:
         if fd_path != resolved:
             raise ValueError("agy_input_refused: path changed before read")
         data = _read_exact(descriptor, info.st_size)
+        if os.fstat(descriptor).st_nlink > 1:
+            raise ValueError("agy_input_refused: hard link")
     finally:
         os.close(descriptor)
     if len(data) > MAX_INPUT_BYTES:

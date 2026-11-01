@@ -110,6 +110,11 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_p
     }
     assert expanded_legacy_view(catalog)["review_candidates"] == {
         **APPROVED_BASELINE["catalog"]["review_candidates"], "muse": MUSE_REVIEW_CANDIDATE,
+        "openai_red_team_exception": {
+            "model_id": "gpt-6-astra", "route": "codex", "transport": "native_codex",
+            "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent codex --model gpt-6-astra --effort high",
+            "review_profiles": ["code"], "capabilities": ["code_review", "isolation", "sealed_evidence"],
+        },
     }
 
 
@@ -117,6 +122,7 @@ def test_launch_explicitly_pins_current_review_models():
     launched = resolve_role("legacy_reviewers", purpose="launch")
     assert {row.model_id for row in launched.candidates} == {
         "gpt-6.1-sol",
+        "gpt-6-astra",
         "grok-4.7",
         "claude-opus-5-5",
         "claude-sonnet-5-5",
@@ -251,7 +257,8 @@ def test_invalid_extension_versions_or_empty_sections(catalog, field, value):
 @pytest.mark.parametrize("model", ["unregistered", "gpt-6-astra", "qwen/qwen3.6-plus", "gpt-6.1-sol-high"])
 def test_holder_requires_concrete_registered_routable_identity(catalog, model):
     catalog["seats"]["bounded_worker"]["model_id"] = model
-    with pytest.raises(ModelCatalogError, match=r"unknown concrete|unroutable"):
+    reason = "duplicate expanded routes" if model == "gpt-6-astra" else r"unknown concrete|unroutable"
+    with pytest.raises(ModelCatalogError, match=reason):
         validate_catalog(catalog)
 
 
