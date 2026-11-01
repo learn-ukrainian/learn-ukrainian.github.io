@@ -6,7 +6,9 @@ argument-hint: "[local | commit <sha> | branch <branch> <base> | pr <number>]"
 
 # Closeout Review: $ARGUMENTS
 
-This skill supports only `code` and `infra` review profiles. A normal BIO
+This skill supports only `code` and `infra` review profiles. `freeze` may
+store `ukrainian` as a behavior-proof carrier and still selects no reviewer
+here. A normal BIO
 learner-content request routes to `$curriculum-lifecycle` (or directly to
 `$track-completion` for one module), which owns the single bounded
 `$post-build-review` gate. `resolve-reviewer` fails before route selection for

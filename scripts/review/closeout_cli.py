@@ -193,8 +193,13 @@ def _cmd_target(args: argparse.Namespace) -> int:
     return 0
 
 
+# code and infra select a reviewer. ukrainian only freezes a behavior-proof carrier.
+PROOF_CARRIER_PROFILES = VALID_REVIEW_PROFILES | {"ukrainian"}
+
+
 def _cmd_freeze(args: argparse.Namespace) -> int:
-    if args.review_profile.strip().casefold() not in VALID_REVIEW_PROFILES:
+    profile = args.review_profile.strip().casefold()
+    if profile not in PROOF_CARRIER_PROFILES:
         print(
             json.dumps(
                 {
@@ -208,6 +213,7 @@ def _cmd_freeze(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
+    args.review_profile = profile
     state = _load_state(args.state_file)
     if state.get("baseline"):
         print(
@@ -805,7 +811,10 @@ def _build_parser() -> argparse.ArgumentParser:
     p_freeze.add_argument(
         "--review-profile",
         default="code",
-        help="Closeout profile. Default: code. Example: code or infra",
+        help=(
+            "Closeout profile. Default: code. code and infra are review profiles. "
+            "ukrainian freezes a behavior-proof carrier and does not select a reviewer."
+        ),
     )
     p_freeze.add_argument(
         "--risk",

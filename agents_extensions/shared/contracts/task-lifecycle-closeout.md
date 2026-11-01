@@ -79,7 +79,17 @@ evidence requirement. That evidence never copies a prose status. Its
 receipt's target-input fingerprint, and binds the receipt's exact target SHA to
 the evidence subject/current PR head. Reconciliation reads the receipt and
 requires a clean outside-family closeout plus its target-bound
-`behavior-proof.v1` source-aware/source-blind surfaces. Prefer a shared
+`behavior-proof.v1` source-aware/source-blind surfaces. A frozen
+`review_profile: ukrainian` receipt is the same schema with no singular
+reviewer: `ukrainian_seat_verdicts` lists every required seat, and each seat
+lists every non-void contributing comment (URL, task, model, head, verdict,
+coverage). Reconciliation recomputes that set from the PR comments and accepts
+the receipt only when the families, models, task ids, coverage, and comment
+URLs match. The receipt target SHA is `pr.head_sha` before and after merge.
+Each contributing comment also has its own review evidence record. Executing
+the learner page on a local merge of that head is separate evidence; it does
+not replace the head binding, and this receipt is not a review of record.
+Prefer a shared
 `.agent/review-closeout/` receipt path so rollover and worktree cleanup do not
 discard the proof.
 

@@ -28,6 +28,11 @@ cards, dataset rows). What blocks, reporting by class and evidence stay in
   Muse is advisory only, never a seat, until it can call the Sources tools.
 - `closeout_cli resolve-reviewer` refuses content profiles, so this table is the seat source.
   Dispatch each seat with `--review-profile ukrainian` and record each verdict.
+  `freeze --review-profile ukrainian` only stores a behavior-proof carrier. The
+  receipt copies this table's recorded chunks; it does not select a reviewer and
+  it is not the review of record. A seat is complete only when its chunk union
+  equals the denominator. The receipt target SHA is the PR head. Learner-page
+  execution on a local merge of that head is recorded separately.
 
 ## Findings
 
