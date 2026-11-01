@@ -1053,8 +1053,8 @@ CURRENT_BASELINE["catalog"]["execution_routing"]["sol_advised_bounded"].pop("bou
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
-    "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
-    "review_profiles": ["code"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
+    "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high --contributor-mode off",
+    "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
 }
 def _pop_budget_elevation_role(catalog):
     """Remove the elevated-tier grant role (cto-7923-adv-clog-sol, item 3b) and return what it added."""

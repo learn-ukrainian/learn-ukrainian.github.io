@@ -551,7 +551,6 @@ class CandidateResult:
     health: str | None
     capacity: ReviewCapacity | None = None
     suitability_rank: int | None = None
-    seat_priority: int = 100
     # Pure deterministic balancing receipt for eligible candidates. The tuple
     # is deliberately opaque-but-stable so ledger callers can persist the
     # exact decision without this resolver acquiring storage authority.
@@ -1249,7 +1248,6 @@ def _evaluate_candidate(
         health=health,
         capacity=capacity,
         suitability_rank=suitability_rank,
-        seat_priority=candidate.seat_priority,
         credit=credit,
     )
 
@@ -1690,7 +1688,6 @@ def resolve_reviewer(
             health=best.health,
             capacity=best.capacity,
             suitability_rank=best.suitability_rank,
-            seat_priority=best.seat_priority,
             selection_score=best.selection_score,
             credit=best.credit,
         )
@@ -1714,7 +1711,9 @@ def resolve_reviewer(
             for candidate in rung
         )
         prioritized_selection = (
-            selected.seat_priority < 10
+            inputs.pinned_candidate is None
+            and candidate is not None
+            and candidate.seat_priority < 10
             and inputs.risk in {"low", "medium"}
             and selected.health == "healthy"
             and (selected.capacity is None or not selected.capacity.near_cap)
