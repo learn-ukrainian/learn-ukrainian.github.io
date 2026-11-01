@@ -2747,6 +2747,7 @@ def record(
         comment_fields["residuals"] = None
         comment = build_comment(**comment_fields)
     destination = normalize_repository(repository)
+    withheld_comment = False
     try:
         check_texts(destination, [comment], environment={})
     except PublishBlocked as exc:
@@ -2762,6 +2763,7 @@ def record(
             comment_fields["residuals"] = None
         comment = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=finding_count)
         check_texts(destination, [comment], environment={})
+        withheld_comment = True
     posted = False
     with pr_lock(repository, number, lock_root):
         # The PR may move while an earlier recorder owns the lock.
@@ -2813,7 +2815,8 @@ def record(
         )
         # A repair head stays changes-requested unless the reply attests that the delta is only the repair.
         # The note is written even when the mapping was already dropped, so lookup cannot approve the body later.
-        if repaired is not None and stated != "APPROVED":
+        # A withheld skeleton stays withheld: rebuilding from the original fields would put the blocked text back.
+        if repaired is not None and stated != "APPROVED" and not withheld_comment:
             try:
                 require_repair_verified(reply, repaired)
             except RepairRefused:
