@@ -29,10 +29,8 @@ gemini:
 # For lanes without numeric cap here, status="unknown" (data lives in user's external CodexBar snapshot).
 grok:
   # Native grok CLI seat (canonical). Historical alias: grok-build (dual-READ in
-  # usage aggregation). Appears in CodexBar (5h windows). Distinct from the
-  # demoted Hermes path (grok-hermes) — do not merge budget accounting.
+  # usage aggregation). Appears in CodexBar (5h windows).
   # cap value not duplicated here to avoid drift with user's live tracking.
-# grok-hermes is API/Hermes-path and intentionally ABSENT from subscription caps.
 cursor:
   # Cursor Ultra 20× — monthly Auto + API pools (not 5h/weekly). Burn/status tracks Auto;
   # ``--model auto`` spends Auto allocation, and runs only a well-defined coding dispatch

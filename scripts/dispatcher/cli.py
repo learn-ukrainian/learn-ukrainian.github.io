@@ -34,7 +34,7 @@ from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
 
 # Grok runs through Cursor's TUI: --agent cursor --model grok-4.7-high (grok-build is the separate Grok TUI).
-ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes")
+ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode")
 
 
 class _PromptPath(type(Path())):
