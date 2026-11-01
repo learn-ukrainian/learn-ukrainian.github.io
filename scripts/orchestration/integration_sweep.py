@@ -482,6 +482,9 @@ def lookup_verdict(
     """Resolve one SHA's verdict; malformed or edited evidence for it poisons it.
 
     A valid rejection stands for this exact SHA regardless of later approvals.
+    A CHANGES_REQUESTED record whose open findings are all P3 is an approval with
+    those residuals, not a standing rejection. P0, P1, P2, BLOCKED, and a reply
+    whose severity cannot be read stay rejections.
     A head is approved only once its Ukrainian seats have approved it when it
     carries a Ukrainian-profile approval or, by ``learner_content``, changes
     learner content (``changes_learner_content``), even with no Ukrainian verdict yet.
@@ -567,9 +570,16 @@ def lookup_verdict(
             return unknown(REVIEWER_UNATTESTED, index, comment)
         if _edited(comment):
             return unknown(MARKER_EDITED, index, comment)
+        recorded = marker
+        if marker["verdict"] == "CHANGES_REQUESTED":
+            # The same reading record_cf_verdict uses when it posts the status.
+            from scripts.review.record_cf_verdict import p3_residuals
+
+            if p3_residuals(body) is not None:
+                recorded = {**marker, "verdict": "APPROVED"}
         # An unedited comment has a parseable creation time; list order breaks same-second ties.
         posted = (_timestamp(_field(comment, "created_at", "createdAt")), index)
-        candidates.append((_timestamp(marker["started"]), posted, marker))
+        candidates.append((_timestamp(marker["started"]), posted, recorded))
     if not candidates:
         state = "CF-unrecorded" if legacy else "CF-stale" if other_head else "needs-CF"
         return Verdict(state, untrusted_markers=tuple(untrusted), superseded_markers=tuple(superseded))
