@@ -204,6 +204,19 @@ def test_only_fresh_probe_readings_count(monkeypatch) -> None:
     assert agy(_agy_window_payload(10.0, present=False)) is None
     assert agy(_agy_window_payload(None)) is None
 
+    def unusable(weekly: dict) -> float | None:
+        payload = _agy_window_payload(10.0)
+        gemini = payload["agents"]["gemini"]
+        gemini["claude_gpt_windows"]["weekly"] = weekly
+        gemini["codexbar"]["claude_gpt_windows"]["weekly"] = weekly
+        return agy(payload)
+
+    plausible = {"remaining_pct": 90}
+    for used in (float("nan"), float("inf"), True, None, 10**400):
+        assert unusable({"used_pct": used, **plausible}) is None
+    assert unusable({"used_pct": 10, "remaining_pct": 90, "freshness": None}) is None
+    assert unusable({"used_pct": 10, "remaining_pct": 90, "freshness": False}) is None
+
 
 def test_aggregate_snapshot_staleness_does_not_hide_a_fresh_lane(monkeypatch) -> None:
     fresh = {"stale": False, "freshness": "fresh", "weekly_used_pct": 91}

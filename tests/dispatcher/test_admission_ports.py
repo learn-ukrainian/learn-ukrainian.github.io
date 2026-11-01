@@ -331,9 +331,12 @@ def headroom_box(tmp_path, monkeypatch):
             }},
         }
         if agy_weekly is not None:
+            weekly = agy_weekly if isinstance(agy_weekly, dict) else {
+                "used_pct": agy_weekly, "remaining_pct": 100 - agy_weekly,
+            }
             windows = {
                 "five_hour": {"used_pct": agy_five_hour, "remaining_pct": 100 - agy_five_hour},
-                "weekly": {"used_pct": agy_weekly, "remaining_pct": 100 - agy_weekly},
+                "weekly": weekly,
             }
             payload["agents"]["gemini"] = {
                 "status": "hot",
@@ -469,6 +472,9 @@ def test_headroom_stop_refuses_matching_models_only(headroom_box, capsys, monkey
     assert "MODEL_HEADROOM_USAGE_UNKNOWN" in capsys.readouterr().err
     headroom_box.meter(agy_weekly=100.0)
     assert headroom_box.dispatch(agent="agy", model="gemini-3.8-flash-high") == 0
+    headroom_box.meter(agy_weekly={"used_pct": float("nan"), "remaining_pct": 90})
+    assert headroom_box.dispatch(agent="agy", model="claude-opus-5-5-high") == 2
+    assert "MODEL_HEADROOM_USAGE_UNKNOWN" in capsys.readouterr().err
 
 
 def test_unreadable_usage_refuses_dispatch(headroom_box, capsys):

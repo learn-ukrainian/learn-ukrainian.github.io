@@ -353,7 +353,10 @@ def _fresh_probe_record(info: Mapping[str, Any] | None) -> Mapping[str, Any] | N
 def _finite_pct(value: object) -> float | None:
     if isinstance(value, bool) or not isinstance(value, int | float):
         return None
-    number = float(value)
+    try:
+        number = float(value)
+    except (OverflowError, ValueError):
+        return None
     if not math.isfinite(number):
         return None
     return number
@@ -362,25 +365,30 @@ def _finite_pct(value: object) -> float | None:
 def _window_used_pct(block: object) -> float | None:
     """Used percent for one window, or None when that window has no fresh number.
 
-    A remaining percent at or below zero is exhaustion. A window that carries
-    its own stale or freshness flag uses the same fresh-probe rule.
+    A remaining percent at or below zero is exhaustion. A present ``used_pct``
+    that is not a finite number makes the window unusable; remaining does not
+    replace it. A present freshness value other than the string ``fresh`` does
+    the same. A window that carries its own stale flag uses the fresh-probe rule.
     """
     if not isinstance(block, Mapping):
         return None
     if block.get("stale") is True:
         return None
-    freshness = block.get("freshness")
-    if isinstance(freshness, str) and freshness != "fresh":
+    if "freshness" in block and block.get("freshness") != "fresh":
         return None
     remaining = _finite_pct(block.get("remaining_pct"))
-    if remaining is not None and remaining <= 0:
-        return 100.0
-    used = _finite_pct(block.get("used_pct"))
-    if used is not None:
+    if "used_pct" in block:
+        used = _finite_pct(block.get("used_pct"))
+        if used is None:
+            return None
+        if remaining is not None and remaining <= 0:
+            return 100.0
         return used
-    if remaining is not None:
-        return 100.0 - remaining
-    return None
+    if remaining is None:
+        return None
+    if remaining <= 0:
+        return 100.0
+    return 100.0 - remaining
 
 
 def _agy_claude_windows_used_pct(view: Mapping[str, Any]) -> float | None:

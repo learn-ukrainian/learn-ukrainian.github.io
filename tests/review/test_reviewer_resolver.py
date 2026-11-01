@@ -83,6 +83,28 @@ def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatc
     serve(10.0, stale=True)
     stale = evaluate_candidate(agy, inputs)
     assert stale.status == "excluded" and "MODEL_HEADROOM_USAGE_UNKNOWN" in stale.reason
+    windows = {
+        "five_hour": {"used_pct": 10, "remaining_pct": 90},
+        "weekly": {"used_pct": float("nan"), "remaining_pct": 90},
+    }
+    payload = {
+        "agents": {
+            "claude": {"status": "hot", "codexbar": {"stale": False, "freshness": "fresh", "weekly_used_pct": 90}},
+            "gemini": {
+                "status": "hot",
+                "codexbar": {
+                    "stale": False,
+                    "freshness": "fresh",
+                    "weekly_used_pct": 22,
+                    "claude_gpt_windows": windows,
+                },
+                "claude_gpt_windows": windows,
+            },
+        }
+    }
+    monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *_a, **_k: io.StringIO(json.dumps(payload)))
+    malformed = evaluate_candidate(agy, inputs)
+    assert malformed.status == "excluded" and "MODEL_HEADROOM_USAGE_UNKNOWN" in malformed.reason
 
 
 @pytest.mark.parametrize(
