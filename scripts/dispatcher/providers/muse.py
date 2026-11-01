@@ -3,8 +3,8 @@
 Native help exposes permission profiles independently of shell sandboxing.
 Write mode uses --permission-profile :unrestricted for file edits, native
 shell commands, commits and network pushes without approval prompts. Native
-profiles cannot combine with --sandbox-network. Read-only uses :read-only,
---disable-write and --disable-shell. No toolset override removes shell tools.
+profiles cannot combine with --sandbox-network. Reviews retain shell tools and
+network access, deny native writes and apply the shared worker mutation guards.
 """
 
 from __future__ import annotations
@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 
 from scripts.common.jsonl import jsonl_lines
+from scripts.dispatcher.review_tools import hooks, native_sources
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 
@@ -25,7 +26,9 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.mode == "workspace-write":
         argv += ["--permission-profile", ":unrestricted"]
     else:
-        argv += ["--permission-profile", ":read-only", "--disable-write", "--disable-shell"]
+        argv += ["--approval-mode", "never", "--approval-judge", "off", "--sandbox-network", "enabled", "--disable-write"]
+    argv += ["-c", "mcpServers.sources=" + json.dumps(native_sources("muse"), separators=(",", ":")),
+             "-c", "hooks=" + json.dumps(hooks(harness="muse", review=spec.mode == "read-only"), separators=(",", ":"))]
     return Invocation(argv, None, {**env, "MUSE_NO_AUTO_UPDATE": "1"}, None)
 
 

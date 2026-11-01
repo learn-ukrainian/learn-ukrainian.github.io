@@ -1073,8 +1073,7 @@ class AgyAdapter:
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
         cmd: list[str] = [agy_bin]
-        if not review_route:
-            cmd.extend(["--mode", "auto"])
+        cmd.extend(["--mode", "auto"])
         cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
 
         final_prompt = prompt

@@ -10,8 +10,8 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
   client, the namespace's passwd and group files, the canary plan and both sockets;
 * serves Sources through a parent-owned relay that forwards only the tools the server annotates
   read-only (``sources_read_only``) and counts completed calls by matching call and result ids;
-* lets AGY reach the network only through the CONNECT-only egress proxy of formal review attempts
-  (exact allowlisted hosts; host and loopback addresses refused);
+* lets AGY reach public HTTPS through the CONNECT-only egress proxy of formal review attempts
+  (host and loopback addresses refused);
 * runs AGY under bubblewrap (``review.isolation``). The root is empty except for read-only binds of
   the system runtime, the AGY binary, the task worktree, its Git metadata and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
   dropped and the root is remounted read-only, so the runtime (which holds TMPDIR) is the only
@@ -832,12 +832,14 @@ class _Boundary:
             item["copy"] = str(dest)
 
     def run(self) -> int:
+        from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
         from scripts.agent_runtime.attempt_boundary import full_review_reads, runtime_files
         from scripts.agent_runtime.attempt_network import AttemptEgress, load_allowlist
-        from scripts.agent_runtime.review_mcp import _real_agy_token
+        from scripts.agent_runtime.review_mcp import _real_agy_token, agy_review_settings
         from scripts.agent_runtime.sources_read_only import sources_tool_sets
         from scripts.dispatcher import runtime_context
         from scripts.dispatcher.git import DATABASE_LINKS
+        from scripts.dispatcher.review_tools import guard_runtime_reads, hooks
         from scripts.review.isolation import prepare_host_sandbox, wrap_argv_with_sandbox
 
         requested = self._requested_inputs()
@@ -910,14 +912,19 @@ class _Boundary:
             digest.update(name.encode() + b"\0" + hashlib.sha256(projected[name]).digest())
         self.receipt["wrapper_sha256"] = digest.hexdigest()
         interpreter = project_interpreter().resolve(strict=True)
-        readers, writers = sources_tool_sets()
+        readers, _ = sources_tool_sets()
         _write_private(config / "mcp_config.json", json.dumps({"mcpServers": {"sources": {
             "command": str(interpreter), "args": [str(boundary / "stdio.py"), str(boundary / "sources.sock")],
         }}}).encode())
         # Defense in depth only: the relay is what refuses these tools.
-        _write_private(app / "settings.json", json.dumps({"permissions": {
-            "deny": [f"mcp(sources/{name})" for name in writers],
-        }}).encode())
+        settings = agy_review_settings("full", checkout_root=self.worktree)
+        settings["permissions"]["allow"] += [f"read_file({root})" for root in runtime_context.read_roots()]
+        if self.confirmed_inputs:
+            settings["permissions"]["allow"].append(f"read_file({INPUT_MOUNT})")
+        _write_private(app / "settings.json", json.dumps(settings).encode())
+        _write_private(config / "hooks.json", json.dumps({
+            GUARD_NAME: guard_registration(), "dispatch-review-guards": hooks(harness="agy", review=True),
+        }).encode())
         uid, gid = os.getuid(), os.getgid()
         _write_private(boundary / "passwd", f"review:x:{uid}:{gid}:Review seat:{home}:/bin/bash\n".encode(), 0o444)
         _write_private(boundary / "group", f"review:x:{gid}:\n".encode(), 0o444)
@@ -973,10 +980,11 @@ class _Boundary:
 
         env_keep = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "TMPDIR") if name in os.environ}
         self.relay = SourcesRelay(boundary / "sources.sock", frozenset(readers), env_keep)
-        self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
+        self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"), public_internet=True)
         sandbox = prepare_host_sandbox(
             engine="agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
-            runtime_reads=[*runtime_files(agy), *reads, *(target for _, target in databases), *sidecars,
+            runtime_reads=[*runtime_files(agy), *guard_runtime_reads(),
+                           *reads, *(target for _, target in databases), *sidecars,
                            *runtime_context.read_roots(), boundary],
             network_allowed=False,
         )

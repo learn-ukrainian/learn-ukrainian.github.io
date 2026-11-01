@@ -4,25 +4,23 @@ from __future__ import annotations
 
 import json
 
+from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.jsonl import jsonl_lines
+from scripts.dispatcher.review_tools import native_sources, shell_denies
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 # OpenCode allows edits and every shell command by default and has no OS sandbox, so read-only
 # carries its own permission rules (https://opencode.ai/docs/permissions/): ``edit`` covers the
-# edit, write and patch tools, and for bash the last matching pattern wins. Only read-only git
-# forms run; a redirect, or an option that writes a file or starts an external diff program, stays
-# denied (a redirect is not a separate command, so ``git log *`` alone would admit ``> file``). OpenCode
-# merges ``OPENCODE_PERMISSION`` over the loaded config's ``permission``.
+# edit, write and patch tools, and for bash the last matching pattern wins. Reviews retain shell
+# execution with the shared deny patterns and worker guards. OpenCode merges
+# ``OPENCODE_PERMISSION`` over the loaded config's ``permission``.
 _READ_ONLY_PERMISSION = json.dumps(
     {
         "edit": "deny",
         "task": "deny",
         "bash": {
-            "*": "deny",
-            **{f"git {verb}{rest}": "allow" for verb in ("diff", "log", "show", "status") for rest in ("", " *")},
-            "* --output*": "deny",
-            "* --ext-diff*": "deny",
-            "*>*": "deny",
+            "*": "allow",
+            **{pattern: "deny" for pattern in shell_denies()},
         },
     },
     separators=(",", ":"),
@@ -32,12 +30,17 @@ _READ_ONLY_PERMISSION = json.dumps(
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["opencode", "run", "--model", "deepseek/deepseek-flash", "--format", "json", "--variant", "high"]
     child_env = env.copy()
+    config = {"mcp": {"sources": native_sources("opencode")},
+              "tools": {f"sources_{name}": False for name in sources_tool_sets()[1]}}
     if spec.mode == "workspace-write":
         argv.append("--auto")
     elif spec.mode == "read-only":
         child_env["OPENCODE_PERMISSION"] = _READ_ONLY_PERMISSION
+        argv.append("--auto")
+        config["plugin"] = [(spec.worktree / ".agent/dispatch-tools/review-guards.mjs").as_uri()]
     else:
         raise ValueError(f"opencode: unsupported mode {spec.mode!r}")
+    child_env["OPENCODE_CONFIG_CONTENT"] = json.dumps(config, separators=(",", ":"))
     argv += ["--", spec.prompt_file.read_text(encoding="utf-8")]
     return Invocation(argv, None, child_env, None)
 

@@ -68,8 +68,11 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    and `requires_silence_timeout`. Exit 1 is fail-closed: no eligible reviewer means escalate
    to the CTO, or use the red-team exception (`workflow.md` § Merge policy) exactly as written
    there. Never review your own work.
-3. **Dispatch the reviewer read-only at the exact pushed head**, passing the same
-   `$REVIEW_PROFILE`. The dispatcher removes the review worktree when the task settles.
+3. **Dispatch the reviewer at the exact pushed head with review tools**, passing the same
+   `$REVIEW_PROFILE`. The `read-only` task mode denies publication and shared-state mutation.
+   It still grants shell execution, the project interpreter, named tests and probes, Sources
+   MCP, and internet access inside the review checkout. Name bounded checks in the brief.
+   The dispatcher removes the review worktree when the task settles.
 
    For bound Contract 1 plan or Contract 2 lesson attempts using `--review-id`, `--attempt-id`
    and `--review-attempt`, follow [Running a bound attempt](../../../../docs/runbooks/formal-review-attempt-isolation.md#running-a-bound-attempt)

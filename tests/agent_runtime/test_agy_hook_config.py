@@ -455,7 +455,10 @@ def test_review_provisioner_writes_absolute_guard_and_keeps_command_denial(tmp_p
     assert config.check_hook_config((path,)).passed
     settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())
     assert settings == agy_review_settings("full")
-    assert "command(*)" in settings["permissions"]["deny"]
+    assert "command(*)" in settings["permissions"]["allow"]
+    assert "command(git push *)" in settings["permissions"]["deny"]
+    assert "command(git commit *)" in settings["permissions"]["deny"]
+    assert "write_file(*)" in settings["permissions"]["deny"]
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
@@ -479,4 +482,5 @@ def test_review_registration_pass_does_not_certify_hook_execution(tmp_path, acce
     result = config.check_hook_config(config.hook_locations(tmp_path / "workspace", tmp_path / "home", home))
     assert asdict(result) == {"status": "PASS", "reason": "guard_registered"}
     settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())
-    assert settings["permissions"]["deny"][:2] == ["command(*)", "write_file(*)"]
+    assert "command(*)" in settings["permissions"]["allow"]
+    assert {"command(git push *)", "command(git commit *)", "write_file(*)"} <= set(settings["permissions"]["deny"])
