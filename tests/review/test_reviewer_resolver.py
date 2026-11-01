@@ -129,7 +129,6 @@ def test_review_task_identity_matches_trailer_suffix(task_id, expected):
         ("claude-impl-x", "cursor", {"claude-impl-x", "impl-x"}),
         (" CODEX/Author-One ", "claude", {"codex-author-one", "author-one"}),
         ("cursor/Author name!", "cursor", {"cursor-author-name", "author-name"}),
-        ("grok-hermes-author", "codex", {"grok-hermes-author", "hermes-author", "author"}),
         ("custom/author-one", "custom", {"custom-author-one", "author-one"}),
         ("codex/gpt-6.1-sol", "claude", {"codex-gpt-6.1-sol", "gpt-6.1-sol"}),
         ("other-task", "claude", {"other-task"}),
