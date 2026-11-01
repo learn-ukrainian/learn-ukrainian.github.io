@@ -507,6 +507,14 @@ def test_agy_success_while_background_work_is_open_is_incomplete():
             ParsedResult("Finished.", None, "agy: terminal result unsuccessful (ERROR): unclassified error; its text is in the task's retained stream"),
         ),
         (
+            '{"event":"result","result":{"status":"FORGED_VALUE","response":"Finished.","error":"failed"}}',
+            SUCCESS["agy"],
+            ParsedResult("Finished.", None, (
+                "agy: terminal result unsuccessful (unrecognized): "
+                "unclassified error; its text is in the task's retained stream"
+            )),
+        ),
+        (
             '{"event":"result","result":null}',
             SUCCESS["agy"],
             ParsedResult(None, None, "agy: invalid terminal result"),

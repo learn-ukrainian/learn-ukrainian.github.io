@@ -29,7 +29,8 @@ _MODEL_SELECTION_REFUSAL = "invalid model selection"
 # The record never copies AGY's error text: provider text can hold any value, and no redactor
 # recognizes every secret form. It carries the terminal status enum and, where AGY's error starts
 # with a known prefix, a fixed class name. The full text stays in the task's retained stream.
-_STATUS_RE = re.compile(r"[A-Z][A-Z_]{0,39}")
+# Every terminal status seen in retained AGY streams; any other value records as unrecognized.
+_TERMINAL_STATUSES = frozenset({"SUCCESS", "ERROR"})
 _ERROR_CLASSES = (("API error", "transport"), (_MODEL_SELECTION_REFUSAL, "model_selection"))
 
 
@@ -288,13 +289,13 @@ def _schema_refusal(stderr: str) -> str | None:
 def _unsuccessful(result: dict) -> str:
     """The failure with AGY's terminal status and error class, so a transport fault is told from a model one.
 
-    Only fixed vocabulary reaches the record: a status that is not an upper-case enum becomes
+    Only fixed vocabulary reaches the record: a status outside ``_TERMINAL_STATUSES`` becomes
     ``unrecognized``, and an error with no known prefix becomes ``unclassified``.
     """
     status, detail = result.get("status"), result.get("error")
     message = "agy: terminal result unsuccessful"
     if isinstance(status, str) and status:
-        message += f" ({status if _STATUS_RE.fullmatch(status) else 'unrecognized'})"
+        message += f" ({status if status in _TERMINAL_STATUSES else 'unrecognized'})"
     if isinstance(detail, str) and detail.strip():
         kind = next((name for prefix, name in _ERROR_CLASSES if detail.startswith(prefix)), "unclassified")
         message += f": {kind} error; its text is in the task's retained stream"
