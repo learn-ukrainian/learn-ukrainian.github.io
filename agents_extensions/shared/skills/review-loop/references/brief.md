@@ -18,18 +18,40 @@ For the `ukrainian` profile, identify the contracts in
 [`ukrainian-linguistics.md` §8](../../../rules/ukrainian-linguistics.md#ukrainian-linguistic-principles):
 Every Ukrainian-profile brief identifies these contracts and their applicability, including level, track, workflow, learner state where relevant, and explicit exceptions.
 
-Add a **Reply format** section:
+## Reply format
+
+Every brief includes this **Reply format** section, including the literal first two lines
+below. This is the single reply-format contract for both reference templates. The reply
+starts with those lines as plain text, outside any fence or quotation; the reviewer replaces
+the placeholders with one verdict and an integer score. A prose approval or a JSON object
+does not replace either line. For `BLOCKED`, the verdict line also names the missing capability.
 
 ```text
-VERDICT: <one of APPROVE, REQUEST_CHANGES, or BLOCKED plus the missing capability>
+VERDICT: <APPROVE|REQUEST_CHANGES|BLOCKED>
 SCORE: <n>/10 <one-line rationale>
 F1 [P0|P1|P2|P3] <path>:<line> <demonstrated failure>. Impact: <impact>. Required behaviour: <behaviour>.
 ```
 
-A reviewer replying in the structured `code-review-findings.v1` form that stops for a missing
-capability replies `uncertain` with no findings and adds a `missing_capabilities` list
-(`sources-mcp`, `test-execution`, `shell`, `browser`, `checkout-data`) beside them, so the run can
-be recorded as a capability failure ([policy](policy.md#a-blocked-that-only-lacked-a-capability)).
+The default reply is text only: finding lines and supporting evidence follow the first two
+lines, or a statement that there are no findings. No JSON findings block is requested or
+added by default.
+
+When the caller needs structured findings, the brief explicitly asks for one fenced `json`
+object after the same first two lines and links the exact shape in
+[`schemas/code-review-findings.v1.schema.json`](../../../../../schemas/code-review-findings.v1.schema.json).
+The reviewer reads that schema at the exact review head and uses its field names, required
+fields, allowed values and nested definitions without additions. The brief carries this
+repository-relative schema path, or an exact shape generated from that file; it never carries
+a hand-written schema copy or merely asks for the format by name. If the reviewer cannot
+read the schema, the reply is text-only `BLOCKED` naming `checkout-data`.
+The object and verdict line agree. An improvised or malformed findings block is refused even
+beside a valid verdict line.
+
+A structured capability-only `BLOCKED` follows the same schema with `uncertain` and no
+findings. The recorder's `missing_capabilities` extension and the permitted capabilities are
+defined by [the capability-failure policy](policy.md#a-blocked-that-only-lacked-a-capability)
+and `scripts/review/verdict_parser.py`; the extension is not a schema field. The literal
+verdict and score lines remain required.
 
 Ids are stable: a later round reuses `F1` rather than renaming it. Paths are
 repository-relative with line suffixes. The `SCORE` line uses the council's anchored rubric

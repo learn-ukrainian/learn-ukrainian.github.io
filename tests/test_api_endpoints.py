@@ -53,7 +53,7 @@ class TestHealthEndpoint:
         assert "serving_sha" in instance
         assert "codexbar" in data
         assert "scheduler_running" in data["codexbar"]
-        assert data["codexbar"]["cache_ttl_s"] == 720.0
+        assert data["codexbar"]["cache_ttl_s"] == 810.0
 
     def test_health_respects_lu_monitor_host_id(self, monkeypatch):
         monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-explicit")

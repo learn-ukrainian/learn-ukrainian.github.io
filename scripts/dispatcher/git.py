@@ -757,21 +757,25 @@ def _salvage(record: dict, tree: Path, head: str, changed: list[str]) -> tuple[s
 
 
 def _retention_held(record: dict) -> bool:
-    """Whether this record or the copy on disk is an owner hold.
+    """Whether either copy holds the tree; refuse an unreadable or malformed copy.
 
     A supervisor can still be holding the record from before the hold was set.
     """
-    if record.get("worktree_retention_hold") is True:
-        return True
-    task_id = record.get("task_id")
-    if not isinstance(task_id, str):
-        return False
+    from scripts.dispatcher import store
+
     try:
-        from scripts.dispatcher import store
+        task_id = record.get("task_id")
+        if not isinstance(task_id, str):
+            raise ValueError("missing task id")
         disk = store.read(task_id)
+        if not isinstance(disk, dict):
+            raise ValueError("not an object")
     except (OSError, ValueError, RecursionError):
-        return False
-    return isinstance(disk, dict) and disk.get("worktree_retention_hold") is True
+        raise _Kept("task_record_damaged", "retention decision requires a readable on-disk task record") from None
+    for copy in (record, disk):
+        if detail := store.retention_hold_error(copy):
+            raise _Kept("retention_hold_invalid", detail)
+    return record.get("worktree_retention_hold") is True or disk.get("worktree_retention_hold") is True
 
 
 def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
@@ -797,8 +801,11 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
 
     # An owner hold is decided before any Git read, push, or removal. The disk
     # record wins when this copy is stale.
-    if _retention_held(record):
-        return disposition("retained", "retention_hold")
+    try:
+        if _retention_held(record):
+            return disposition("retained", "retention_hold")
+    except _Kept as kept:
+        return disposition("retained", kept.reason, kept.detail)
     if record.get("options", {}).get("cwd"):
         return disposition("retained", "borrowed_worktree")
     try:

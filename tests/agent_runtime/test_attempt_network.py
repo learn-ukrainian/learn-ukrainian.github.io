@@ -173,13 +173,24 @@ def test_success_is_byte_only_and_logs_no_payload(proxy, monkeypatch):
 
 
 def test_resolver_hang_and_cancellation_reap_child(proxy, monkeypatch):
+    """Defect class: shutdown repeats cancellation while a resolver child is being reaped."""
     children = []
+    exit_ready = threading.Event()
+    exit_notification = []
     real_spawn = asyncio.create_subprocess_exec
 
     async def hung(*args, **kwargs):
         # Keep the real killable subprocess path; simulate a libc DNS hang.
         proc = await real_spawn(args[0], "-c", "import time; time.sleep(60)", **kwargs)
         children.append(proc)
+        if len(children) == 2:
+            real_exit = proc._transport._process_exited
+
+            def hold_exit(returncode):
+                exit_notification.append((real_exit, returncode))
+                exit_ready.set()
+
+            monkeypatch.setattr(proc._transport, "_process_exited", hold_exit)
         return proc
 
     monkeypatch.setattr(asyncio, "create_subprocess_exec", hung)
@@ -192,6 +203,26 @@ def test_resolver_hang_and_cancellation_reap_child(proxy, monkeypatch):
         deadline = time.monotonic() + LIVENESS_SECONDS
         while len(children) < 2 and time.monotonic() < deadline:
             time.sleep(.01)
+        assert exit_ready.wait(LIVENESS_SECONDS)
+
+        def release_exit(turns):
+            if turns:
+                proxy.loop.call_soon(release_exit, turns - 1)
+            else:
+                real_exit, returncode = exit_notification[0]
+                real_exit(returncode)
+
+        real_stop = proxy.loop.stop
+        release_started = False
+
+        def stop_with_exit_pending():
+            nonlocal release_started
+            real_stop()
+            if not release_started:
+                release_started = True
+                proxy.loop.call_soon(release_exit, 10)
+
+        monkeypatch.setattr(proxy.loop, "stop", stop_with_exit_pending)
         proxy.cleanup()
         assert len(children) == 2 and all(p.returncode is not None for p in children)
     finally:
