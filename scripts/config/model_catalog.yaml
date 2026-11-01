@@ -1403,7 +1403,7 @@ seats:
   meta_reviewer:
     model_id: muse-wonder-full-1.0
     bindings: [legacy_review_candidate]
-    priority: 110
+    priority: 5
     decision_reference: agents_extensions/shared/rules/model-assignment.md
     routes:
       native:
@@ -1615,6 +1615,7 @@ roles:
     order_by: priority
   code_review_low:
     routes:
+    - meta_reviewer/native
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
@@ -1622,11 +1623,11 @@ roles:
     - anthropic_practical/native
     - anthropic_practical/agy
     - google_bounded/native
-    - meta_reviewer/native
     cardinality: many
     risk: low
   code_review_medium:
     routes:
+    - meta_reviewer/native
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
@@ -1634,7 +1635,6 @@ roles:
     - anthropic_practical/native
     - anthropic_practical/agy
     - google_bounded/native
-    - meta_reviewer/native
     cardinality: many
     risk: medium
   code_review_high:

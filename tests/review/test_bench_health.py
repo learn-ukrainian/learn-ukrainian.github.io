@@ -75,7 +75,7 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     critical = check_bench_health(routing_snapshot=snapshot, data_egress_policy="local_interactive", risk="critical")
     assert critical["anthropic"] == ["openai_frontier", GROK]
     assert len(critical["anthropic"]) >= bench_health.MIN_ELIGIBLE_SEATS
-    automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive", claude_account=HOST_ACCOUNT))
+    automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
     assert automatic.selected.name == "muse"
     assert "glm-5.3" not in {entry.name for entry in automatic.trace}
 

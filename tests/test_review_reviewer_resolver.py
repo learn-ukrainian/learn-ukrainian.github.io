@@ -394,7 +394,7 @@ def test_critical_uses_authority_while_routine_uses_practical_defaults():
         assert resolution.selected.name == "claude-opus-5-5", risk
     for risk in ("medium", "low"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk, claude_account=HOST_ACCOUNT))
-        assert resolution.selected.name == "muse", risk
+        assert resolution.selected.name == "claude-sonnet-5-5", risk
 
 
 @pytest.mark.parametrize("author_model", ("gpt-6.1-sol", "grok-4.7"))
@@ -495,7 +495,7 @@ def test_opus_keeps_native_claude_when_native_health_is_degraded():
 
 def test_medium_risk_uses_sonnet_and_omits_retired_pool():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", claude_account=HOST_ACCOUNT))
-    assert resolution.selected.name == "muse"
+    assert resolution.selected.name == "claude-sonnet-5-5"
     assert "pool" not in {entry.name for entry in resolution.trace}
 
 
@@ -630,7 +630,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
         )
     )
     missing = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", claude_account=HOST_ACCOUNT))
-    assert unknown.selected.name == missing.selected.name == "muse"
+    assert unknown.selected.name == missing.selected.name == "claude-sonnet-5-5"
     assert unknown.substitution_note is None
 
 
@@ -1417,6 +1417,50 @@ def test_muse_formal_review_eligibility_must_stay_limited_to_low_medium_code_rev
         assert resolve_reviewer(refused).selected is None
 
 
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_low_medium_resolves_to_muse_when_healthy(risk, profile):
+    inputs = ResolverInputs(
+        author_model="claude-opus-5-5",
+        risk=risk,
+        review_profile=profile,
+        routing_snapshot={"agents": {"muse": {"status": "healthy"}}},
+        claude_account=HOST_ACCOUNT,
+    )
+    result = resolve_reviewer(inputs)
+    assert result.selected is not None
+    assert result.selected.name == "muse"
+    assert result.selected.concrete_model == "muse-wonder-full-1.0"
+    assert result.selected.family == "meta"
+    assert result.substitution_note == "selected muse by operator decision 2026-11-01 ahead of higher-tier seats"
+
+
+def test_muse_not_selected_when_health_is_unknown_or_unhealthy():
+    unknown = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5",
+            risk="medium",
+            review_profile="code",
+            routing_snapshot=None,
+            claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert unknown.selected.name != "muse"
+    assert unknown.selected.family == "openai"
+
+    unhealthy = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5",
+            risk="medium",
+            review_profile="code",
+            routing_snapshot={"agents": {"muse": {"status": "unhealthy"}}},
+            claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert unhealthy.selected.name != "muse"
+    assert unhealthy.selected.family == "openai"
+
+
 @pytest.mark.parametrize(
     "normalize,value,message",
     [
@@ -1588,10 +1632,8 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
         expected = (
             "gpt-6.1-sol" if family == "anthropic" or (family != "openai" and profile == "code") else "claude-opus-5-5"
         )
-    elif family == "meta":
-        expected = "gpt-6.1-sol"
     else:
-        expected = "muse-wonder-full-1.0"
+        expected = "claude-sonnet-5-5" if family == "openai" else "gpt-6.1-sol"
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile, claude_account=HOST_ACCOUNT))
     assert resolution.fail_closed_reason is None
     assert resolution.selected.concrete_model == expected
@@ -1632,8 +1674,6 @@ def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallba
         else:
             # Cursor's allowlist-union independence excludes Moonshot authors.
             expected = None if author == "kimi-code/k3" else "grok-4.7-cursor-fallback"
-    elif risk in {"low", "medium"}:
-        expected = "muse"
     elif author in {"claude-opus-5-5", "claude-sonnet-5-5"}:
         expected = "openai_frontier"
     elif risk == "critical" or (risk == "high" and (author == "gpt-6.1-sol" or profile == "infra")):
@@ -2105,10 +2145,8 @@ def test_complete_author_set_excludes_every_member_not_only_the_latest():
     )
     complete = _complete({"anthropic", "openai"}, author_model="gpt-6.1-sol")
 
-    assert latest_only.selected.name == "muse"
-    assert complete.selected.name == "muse"
-    complete_meta = _complete({"anthropic", "openai", "meta"}, author_model="gpt-6.1-sol")
-    assert complete_meta.selected.name == "gemini-3.8-flash-high"
+    assert latest_only.selected.family == "anthropic"
+    assert complete.selected.name == "gemini-3.8-flash-high"
     reasons = {entry.name: entry.reason for entry in complete.trace}
     assert "same family as author (anthropic)" in reasons["claude-opus-5-5"]
     # Grok reviews at every risk (#9769); an xAI member removes it too.
@@ -2143,7 +2181,7 @@ def test_cursor_auto_member_keeps_cursor_transport_restrictions():
     resolution = _complete({"openai", "cursor"})
     reasons = {entry.name: entry.reason for entry in resolution.trace}
     assert "Cursor-authored work" in reasons["grok-4.7-cursor-fallback"]
-    assert resolution.selected.family in {"meta", "anthropic"}
+    assert resolution.selected.family == "anthropic"
 
 
 @pytest.mark.parametrize("candidate", [SONNET_5_5, OPENAI_FRONTIER, GROK_4_7_CURSOR_FALLBACK])
@@ -2174,7 +2212,7 @@ def test_unknown_committed_author_does_not_hide_incoming_cursor_family():
     inputs = ResolverInputs(author_model="cursor:auto", author_families=frozenset({"unknown", "cursor"}), claude_account=HOST_ACCOUNT)
     assert evaluate_candidate(GROK_4_7_CURSOR_FALLBACK, inputs).status == "excluded"
     selected = resolve_reviewer(inputs).selected
-    assert selected is not None and selected.family in {"meta", "anthropic", "openai"}
+    assert selected is not None and selected.family in {"anthropic", "openai"}
 
 
 @pytest.mark.parametrize("authors", [{"unknown"}, {"anthropic"}])

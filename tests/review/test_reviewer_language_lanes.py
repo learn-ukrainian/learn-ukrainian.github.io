@@ -158,7 +158,7 @@ def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "muse": "healthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
     assert resolution.selected is not None
