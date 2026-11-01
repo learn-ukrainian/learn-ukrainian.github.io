@@ -38,7 +38,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["cursor-agent", "-p", "--model", spec.model, "--output-format", "stream-json", "--trust"]
     argv += ["--workspace", str(spec.worktree)]
     if spec.mode == "read-only":
-        argv += ["--approve-mcps", "--sandbox", "enabled", "--force"]
+        argv += ["--mode", "ask"]
     elif spec.mode == "workspace-write":
         argv += ["--approve-mcps", "--sandbox", "disabled", "--force"]
     else:
