@@ -64,8 +64,8 @@ and pass the same `REVIEW_PROFILE` (`code` or `infra`, derived from the target a
 `requires_silence_timeout` is boolean; if true, use documented seat/runtime seconds,
 pass `--silence-timeout <seconds>` explicitly (default 3600), and confirm `silence_timeout`
 in the task record. Never infer duration or reuse stale routing. `REVIEW_BRIEF` names branch/SHA
-and requests toolful code/infra review with findings under `_dispatch_wrappers.py`
-and `schemas/code-review-findings.v1.schema.json`.
+and requests toolful code/infra review using the review brief template below, including its
+linked Reply format section.
 Dispatch v2 resolves the locally available branch or explicit SHA. It does not fetch or freeze
 the live remote branch; verify the pushed tip before launch and again before publishing the verdict.
 
@@ -194,6 +194,10 @@ read-only dispatch (#8703, above).
    names the capability; it still blocks.
 6. **Breakers** — the review budget and `local-code-review` checklist
    Step 6 apply, even when the outstanding-finding count shrinks.
+7. **Reply format** — the complete section from
+   [`review-loop`'s Reply format](../../review-loop/references/brief.md#reply-format),
+   included verbatim in the brief. That section alone defines the literal reply lines and
+   how a structured findings request refers to the canonical schema.
 
 Every review brief requires the verdict and supporting evidence in the result text.
 Workers write additional artifacts under their own worktrees. Dispatch v2 does not
