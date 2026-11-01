@@ -160,7 +160,7 @@ first review of record, at most **one per PR lineage**.
   "$PY" scripts/dispatch.py dispatch \
     --agent opencode --model deepseek-v4.1-flash --mode read-only \
     --hard-timeout 900 --worktree --task-id "$PRECHECK_TASK" \
-    --prompt-file "$PRECHECK_PROMPT" --branch "$BRANCH" --pinned-head "$HEAD_SHA" --pr "$PR"
+    --prompt-file "$PRECHECK_PROMPT" --pinned-head "$HEAD_SHA"
   ```
 
 - **Findings and status:** findings go only to the author. A failed run never blocks review. Any
