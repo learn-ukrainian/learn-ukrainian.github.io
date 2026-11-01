@@ -18,7 +18,7 @@ import shlex
 import shutil
 import subprocess
 import tempfile
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, datetime
@@ -1258,7 +1258,84 @@ def _ledger_projection_material(ledger: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _behavior_proof_reference_error(record: Mapping[str, Any], *, head_sha: str | None) -> str | None:
+def _seat_identity(seats: Any) -> tuple:
+    if not isinstance(seats, (list, tuple)):
+        return ()
+    rows = []
+    for seat in seats:
+        if not isinstance(seat, Mapping):
+            return ()
+        chunks = tuple(
+            sorted(
+                (
+                    chunk.get("comment_url"),
+                    chunk.get("task"),
+                    chunk.get("model"),
+                    chunk.get("sha"),
+                    tuple(chunk.get("coverage") or ()),
+                    chunk.get("verdict"),
+                )
+                for chunk in seat.get("chunks") or []
+                if isinstance(chunk, Mapping)
+            )
+        )
+        rows.append(
+            (
+                seat.get("family"),
+                seat.get("harness"),
+                tuple(seat.get("denominator") or ()),
+                tuple(seat.get("coverage") or ()),
+                chunks,
+            )
+        )
+    return tuple(sorted(rows, key=lambda row: str(row[0])))
+
+
+def _ukrainian_behavior_proof_error(
+    receipt: Mapping[str, Any],
+    *,
+    head_sha: str | None,
+    comments: Sequence[Mapping[str, Any]] | None,
+    authenticated_login: str | None,
+    review_urls: set[str],
+) -> str | None:
+    if "reviewer" in receipt or "reviewer_payload" in receipt:
+        return "ukrainian behavior-proof receipt carries a singular reviewer"
+    if not isinstance(comments, Sequence) or not authenticated_login:
+        return "ukrainian behavior-proof receipt has no authoritative PR comments"
+    from scripts.orchestration.integration_sweep import contributing_ukrainian_chunks
+
+    provenance = contributing_ukrainian_chunks(
+        comments, str(head_sha or ""), authenticated_login, learner_content=True,
+    )
+    if provenance["refused"]:
+        return f"ukrainian behavior-proof seat quorum is not approved: {provenance['refused']}"
+    if _seat_identity(receipt.get("ukrainian_seat_verdicts")) != _seat_identity(provenance["seats"]):
+        return "ukrainian behavior-proof receipt does not match the recorded seat chunks"
+    author = receipt.get("author") if isinstance(receipt.get("author"), Mapping) else {}
+    if list(author.get("models") or []) != list(provenance["author_models"]):
+        return "ukrainian behavior-proof author models do not match the recorded comments"
+    if list(author.get("families") or []) != list(provenance["author_families"]):
+        return "ukrainian behavior-proof author families do not match the recorded comments"
+    chunk_urls = [
+        chunk["comment_url"]
+        for seat in provenance["seats"]
+        for chunk in seat["chunks"]
+    ]
+    if any(url not in review_urls for url in chunk_urls):
+        return "ukrainian behavior-proof chunks lack separate review evidence"
+    return None
+
+
+def _behavior_proof_reference_error(
+    record: Mapping[str, Any],
+    *,
+    head_sha: str | None,
+    comments: Sequence[Mapping[str, Any]] | None = None,
+    authenticated_login: str | None = None,
+    review_urls: set[str] | None = None,
+    changed_paths: Sequence[str] | None = None,
+) -> str | None:
     try:
         reference = _validate_behavior_proof_reference_shape(record["details"])
     except LifecycleError as exc:
@@ -1308,12 +1385,34 @@ def _behavior_proof_reference_error(record: Mapping[str, Any], *, head_sha: str 
         )
     if "error" not in receipt or receipt["error"] is not None or not (clean or approved_nonblocking):
         return "behavior-proof receipt is not a clean or approved non-blocking canonical closeout"
-    author = receipt.get("author") or {}
-    reviewer = receipt.get("reviewer") or {}
-    if not author.get("family") or not reviewer.get("family"):
-        return "behavior-proof receipt lacks concrete author/reviewer families"
-    if str(author["family"]).lower() == str(reviewer["family"]).lower():
-        return "behavior-proof receipt is not outside the author model family"
+    if changed_paths is not None:
+        if (
+            not isinstance(changed_paths, Sequence)
+            or isinstance(changed_paths, (str, bytes))
+            or not all(isinstance(path, str) for path in changed_paths)
+        ):
+            return "behavior-proof learner-content file list is unreadable"
+        from scripts.orchestration.integration_sweep import changes_learner_content
+
+        if changes_learner_content(changed_paths) and receipt.get("review_profile") != "ukrainian":
+            return "learner-content change requires a ukrainian behavior-proof receipt"
+    if receipt.get("review_profile") == "ukrainian":
+        seat_error = _ukrainian_behavior_proof_error(
+            receipt,
+            head_sha=head_sha,
+            comments=comments,
+            authenticated_login=authenticated_login,
+            review_urls=review_urls or set(),
+        )
+        if seat_error:
+            return seat_error
+    else:
+        author = receipt.get("author") or {}
+        reviewer = receipt.get("reviewer") or {}
+        if not author.get("family") or not reviewer.get("family"):
+            return "behavior-proof receipt lacks concrete author/reviewer families"
+        if str(author["family"]).lower() == str(reviewer["family"]).lower():
+            return "behavior-proof receipt is not outside the author model family"
     proof = receipt.get("behavior_proof")
     if not isinstance(proof, dict) or proof.get("schema_version") != "behavior-proof.v1":
         return "behavior-proof receipt lacks the canonical behavior-proof.v1 envelope"
@@ -1340,6 +1439,9 @@ def _evidence_status(
     *,
     head_sha: str | None,
     comment_urls: set[str],
+    comments: Sequence[Mapping[str, Any]] | None = None,
+    authenticated_login: str | None = None,
+    changed_paths: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     """Validate rows independently, then retire errors only at valid chain tips."""
     valid: dict[str, set[str]] = {}
@@ -1351,7 +1453,19 @@ def _evidence_status(
             errors[record["id"]] = f"{record['ac_id']}: {kind} evidence is not bound to current PR head"
             continue
         if kind == "behavior_proof":
-            reference_error = _behavior_proof_reference_error(record, head_sha=head_sha)
+            review_urls = {
+                str(item["url"])
+                for item in ledger["evidence"]
+                if item["type"] == "review" and item.get("url")
+            }
+            reference_error = _behavior_proof_reference_error(
+                record,
+                head_sha=head_sha,
+                comments=comments,
+                authenticated_login=authenticated_login,
+                review_urls=review_urls,
+                changed_paths=changed_paths,
+            )
             if reference_error:
                 errors[record["id"]] = f"{record['ac_id']}: {reference_error}"
                 continue
@@ -1535,12 +1649,18 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
 
     expected_pr = ledger["pr"]["number"]
     head_sha = pr.get("head_sha") if isinstance(pr, Mapping) else None
-    comment_urls = {
-        str(comment.get("url"))
-        for comment in github.get("comments") or []
-        if isinstance(comment, Mapping) and comment.get("url")
-    }
-    evidence_status = _evidence_status(ledger, head_sha=head_sha, comment_urls=comment_urls)
+    raw_comments = [comment for comment in github.get("comments") or [] if isinstance(comment, Mapping)]
+    comment_urls = {str(comment.get("url")) for comment in raw_comments if comment.get("url")}
+    login = github.get("authenticated_login")
+    changed_paths = pr.get("files") if isinstance(pr, Mapping) and "files" in pr else None
+    evidence_status = _evidence_status(
+        ledger,
+        head_sha=head_sha,
+        comment_urls=comment_urls,
+        comments=raw_comments,
+        authenticated_login=login if isinstance(login, str) else None,
+        changed_paths=changed_paths,
+    )
     valid_evidence = evidence_status["valid_evidence"]
     valid_evidence_ids = evidence_status["valid_evidence_ids"]
     hard.extend(evidence_status["invalid_evidence"])

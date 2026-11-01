@@ -187,7 +187,8 @@ def _load_behavior_proof_state(
         for field, expected_value in stable_target_fields.items()
     ):
         raise ContractError("behavior_proof_state_target_mismatch", exit_code=EXIT_INVALID)
-    return proof, intended_behavior
+    profile = str(baseline.get("review_profile") or "").strip().casefold()
+    return proof, intended_behavior, profile
 
 
 def _post_summary(issue: int, receipt: dict) -> None:
@@ -332,6 +333,23 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _ukrainian_proof_override(args: argparse.Namespace, *, raw: str, routing_lineage: dict) -> str:
+    """Caller identity cannot stand in for the recorded Ukrainian seat chunks."""
+    reviewer_flags = (
+        args.reviewer_model,
+        args.reviewer_family,
+        args.reviewer_harness,
+        args.reviewer_selection_reason,
+    )
+    if any(str(flag or "").strip() for flag in reviewer_flags):
+        return "ukrainian_behavior_proof_refuses_reviewer_flags"
+    if args.review_file is not None or args.from_stdin or raw.strip():
+        return "ukrainian_behavior_proof_refuses_review_file"
+    if routing_lineage:
+        return "ukrainian_behavior_proof_refuses_routing_lineage"
+    return ""
+
+
 def _resolve_target(args: argparse.Namespace):
     repo_root = Path(args.repo_root).resolve()
     try:
@@ -432,7 +450,7 @@ def main(argv: list[str] | None = None) -> int:
                     "behavior_proof_source_conflict: use exactly one of --behavior-proof-json or --behavior-proof-state-file",
                     exit_code=EXIT_INVALID,
                 )
-            behavior_proof, frozen_intended_behavior = _load_behavior_proof_state(
+            behavior_proof, frozen_intended_behavior, review_profile = _load_behavior_proof_state(
                 args.behavior_proof_state_file,
                 target=target,
             )
@@ -441,6 +459,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.behavior_proof_json or None, label="--behavior-proof-json"
             )
             frozen_intended_behavior = ""
+            review_profile = ""
     except ContractError as exc:
         print(
             json.dumps(
@@ -449,6 +468,19 @@ def main(argv: list[str] | None = None) -> int:
                     "final_disposition": "invalid",
                     "exit_code": EXIT_INVALID,
                 },
+                ensure_ascii=False,
+            ),
+            file=sys.stderr,
+        )
+        return EXIT_INVALID
+
+    if review_profile == "ukrainian":
+        refused = _ukrainian_proof_override(args, raw=raw, routing_lineage=routing_lineage)
+        if not refused:
+            refused = "ukrainian_behavior_proof_requires_recorded_seat_comments"
+        print(
+            json.dumps(
+                {"error": refused, "final_disposition": "invalid", "exit_code": EXIT_INVALID},
                 ensure_ascii=False,
             ),
             file=sys.stderr,

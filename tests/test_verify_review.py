@@ -1583,7 +1583,7 @@ def test_behavior_proof_state_checks_stable_target_identity_not_description(tmp_
         ),
         encoding="utf-8",
     )
-    loaded_proof, claim = verify_review_cli._load_behavior_proof_state(state_file, target=target)
+    loaded_proof, claim, _profile = verify_review_cli._load_behavior_proof_state(state_file, target=target)
     assert loaded_proof == proof
     assert claim == "test intended behavior"
 
@@ -1633,3 +1633,319 @@ def test_verify_review_read_review_timeout_exits_invalid(
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+def _ukrainian_comments(head: str, *, author_models: list[str], seats: list[tuple[str, str, tuple[str, ...]]]):
+    from scripts.review.record_cf_verdict import build_comment
+
+    comments = []
+    for index, (family, model, coverage) in enumerate(seats):
+        denominator = ("card-a", "card-b") if coverage else None
+        body = build_comment(
+            sha=head,
+            task_id=f"seat-{family}-{index}",
+            started="2026-07-16T09:00:00.000000Z",
+            verdict="APPROVED",
+            model=model,
+            family=family,
+            reply=f"VERDICT: APPROVED\n{family} seat",
+            review_profile="ukrainian",
+            sources_mcp_call_count=3,
+            author_models=author_models,
+            denominator=denominator,
+            coverage=coverage or None,
+        )
+        comments.append(
+            {
+                "url": f"https://github.com/org/repo/pull/77#issuecomment-{index + 1}",
+                "body": body,
+                "user": {"login": "fleet"},
+                "author_association": "MEMBER",
+                "created_at": "2026-07-16T10:00:00Z",
+                "updated_at": "2026-07-16T10:00:00Z",
+            }
+        )
+    return comments
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "two_seat_target_freeze_both_surfaces",
+        "one_seat_openai_author",
+        "one_seat_google_author",
+        "missing_required_seat",
+        "reviewer_flags_refused",
+        "findings_json_refused",
+        "chunked_seat_keeps_every_contributing_comment",
+        "partial_chunk_alone_not_clean",
+        "red_team_chunk_excluded",
+        "conflicting_denominators_refused",
+    ],
+)
+def test_ukrainian_seat_verdicts_bind_behavior_proof_receipt(tmp_path, case, capsys):
+    """A clean receipt comes from the recorded chunked seat quorum, not caller identity."""
+    from scripts.orchestration.integration_sweep import lookup_verdict
+    from scripts.review.closeout_cli import main as closeout_main
+    from scripts.review.review_contract import ContractError, build_ukrainian_behavior_receipt
+    from tests.test_review_closeout_cli import _freeze_kwargs, _git, _init_repo
+
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "feature")
+    state_file = tmp_path / "state.json"
+
+    def run_closeout(*args: str) -> int:
+        return closeout_main(["--state-file", str(state_file), *args])
+
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert run_closeout("target", "--mode", "commit", "--repo-root", str(repo), "--commit", head) == 0
+    assert run_closeout("freeze", "--review-profile", "ukrainian", *_freeze_kwargs("#12316")[1:]) == 0
+    common = (
+        "--status",
+        "pass",
+        "--command",
+        ".venv/bin/python -m scripts.review.closeout_cli --help",
+        "--cwd",
+        str(repo),
+        "--exit-code",
+        "0",
+        "--observation",
+        "command completed and printed help",
+        "--evidence-ref",
+        "test:ukrainian-proof",
+    )
+    assert run_closeout("behavior-proof", "record", "--surface", "source_aware", *common) == 0
+    assert run_closeout("behavior-proof", "record", "--surface", "source_blind", *common) == 0
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    head = state["baseline"]["target"]["head_sha"]
+    proof = state["behavior_proof"]
+    author_models = ["claude-opus-5-5"]
+    seats = [
+        ("google", "gemini-3.8-flash-high", ()),
+        ("openai", "gpt-6.1-sol", ()),
+    ]
+    if case == "one_seat_openai_author":
+        author_models = ["gpt-6.1-sol"]
+        seats = [("google", "gemini-3.8-flash-high", ())]
+    elif case == "one_seat_google_author":
+        author_models = ["gemini-3.8-flash-high"]
+        seats = [("openai", "gpt-6.1-sol", ())]
+    elif case == "missing_required_seat":
+        seats = [("google", "gemini-3.8-flash-high", ())]
+    elif case == "chunked_seat_keeps_every_contributing_comment":
+        author_models = ["gemini-3.8-flash-high"]
+        seats = [
+            ("openai", "gpt-6.1-sol", ("card-a",)),
+            ("openai", "gpt-6.1-sol", ("card-b",)),
+        ]
+    elif case == "partial_chunk_alone_not_clean":
+        author_models = ["gemini-3.8-flash-high"]
+        seats = [("openai", "gpt-6.1-sol", ("card-a",))]
+    elif case == "red_team_chunk_excluded":
+        author_models = ["gemini-3.8-flash-high"]
+        seats = [
+            ("openai", "gpt-6.1-sol", ("card-a",)),
+            ("openai", "gpt-6.1-sol", ("card-b",)),
+        ]
+    comments = _ukrainian_comments(head, author_models=author_models, seats=seats)
+    if case == "red_team_chunk_excluded":
+        from scripts.review.record_cf_verdict import build_comment
+
+        red_body = build_comment(
+            sha=head,
+            task_id="seat-openai-red",
+            started="2026-07-16T09:00:00.000000Z",
+            verdict="APPROVED",
+            model="gpt-6.1-sol",
+            family="openai",
+            reply="VERDICT: APPROVED\nred team",
+            review_mode="red_team",
+            review_profile="ukrainian",
+            sources_mcp_call_count=3,
+            author_models=author_models,
+        )
+        comments.append(
+            {
+                "url": "https://github.com/org/repo/pull/77#issuecomment-red",
+                "body": red_body,
+                "user": {"login": "fleet"},
+                "author_association": "MEMBER",
+                "created_at": "2026-07-16T10:00:00Z",
+                "updated_at": "2026-07-16T10:00:00Z",
+            }
+        )
+    elif case == "conflicting_denominators_refused":
+        from scripts.review.record_cf_verdict import build_comment
+
+        comments = []
+        for index, denominator in enumerate((("card-a",), ("card-b",))):
+            body = build_comment(
+                sha=head,
+                task_id=f"seat-openai-{index}",
+                started="2026-07-16T09:00:00.000000Z",
+                verdict="APPROVED",
+                model="gpt-6.1-sol",
+                family="openai",
+                reply="VERDICT: APPROVED\nopenai seat",
+                review_profile="ukrainian",
+                sources_mcp_call_count=3,
+                author_models=["gemini-3.8-flash-high"],
+                denominator=denominator,
+                coverage=denominator,
+            )
+            comments.append(
+                {
+                    "url": f"https://github.com/org/repo/pull/77#issuecomment-{index + 1}",
+                    "body": body,
+                    "user": {"login": "fleet"},
+                    "author_association": "MEMBER",
+                    "created_at": "2026-07-16T10:00:00Z",
+                    "updated_at": "2026-07-16T10:00:00Z",
+                }
+            )
+
+    if case in {"reviewer_flags_refused", "findings_json_refused"}:
+        review_file = tmp_path / "review.json"
+        review_file.write_text('{"schema_version":"code-review-findings.v1","findings":[]}\n', encoding="utf-8")
+        argv = [
+            "--review-file",
+            str(review_file),
+            "--mode",
+            "commit",
+            "--commit",
+            head,
+            "--repo-root",
+            str(repo),
+            "--behavior-proof-state-file",
+            str(state_file),
+            "--tests-json",
+            '{"commands":["pytest"],"passed":true}',
+        ]
+        if case == "reviewer_flags_refused":
+            argv.extend(
+                ["--reviewer-model", "gpt-6.1-sol", "--reviewer-family", "openai", "--reviewer-harness", "codex"]
+            )
+        code = verify_review_cli.main(argv)
+        assert code == EXIT_INVALID
+        err = capsys.readouterr().err
+        if case == "reviewer_flags_refused":
+            assert "ukrainian_behavior_proof_refuses_reviewer_flags" in err
+        else:
+            assert "ukrainian_behavior_proof_refuses_review_file" in err
+        return
+
+    def build():
+        return build_ukrainian_behavior_receipt(
+            behavior_proof=proof,
+            frozen_intended_behavior=state["baseline"]["intended_behavior"],
+            comments=comments,
+            authenticated_login="fleet",
+            head_sha=head,
+            author_attributions=[{"model": model, "harness": "claude"} for model in author_models],
+            target=state["baseline"]["target"],
+            input_sha256=proof["source_aware"]["clauses"][0]["target_input_sha256"],
+            issue_ref="#12316",
+            scope={"owner_boundary": "repo root"},
+            tests={"commands": ["pytest"], "passed": True},
+        )
+
+    if case in {"missing_required_seat", "partial_chunk_alone_not_clean", "conflicting_denominators_refused"}:
+        with pytest.raises(ContractError):
+            build()
+        if case == "conflicting_denominators_refused":
+            from scripts.orchestration.integration_sweep import contributing_ukrainian_chunks
+
+            refused = contributing_ukrainian_chunks(comments, head, "fleet", learner_content=True)["refused"]
+            assert refused in {"unknown", "denominator-mismatch"}
+        return
+
+    receipt = build()
+    assert "reviewer" not in receipt and "reviewer_payload" not in receipt
+    assert receipt["review_profile"] == "ukrainian"
+    assert receipt["behavior_proof"]["source_aware"]["status"] == "pass"
+    assert receipt["behavior_proof"]["source_blind"]["status"] == "pass"
+    assert receipt["final_disposition"] == "clean"
+    recorded = [chunk["comment_url"] for seat in receipt["ukrainian_seat_verdicts"] for chunk in seat["chunks"]]
+    counted = [comment for comment in comments if "issuecomment-red" not in comment["url"]]
+    assert recorded == [comment["url"] for comment in counted]
+    if case == "two_seat_target_freeze_both_surfaces":
+        assert {seat["family"] for seat in receipt["ukrainian_seat_verdicts"]} == {"google", "openai"}
+    elif case == "one_seat_openai_author":
+        assert [seat["family"] for seat in receipt["ukrainian_seat_verdicts"]] == ["google"]
+    elif case == "one_seat_google_author":
+        assert [seat["family"] for seat in receipt["ukrainian_seat_verdicts"]] == ["openai"]
+    elif case == "red_team_chunk_excluded":
+        assert [seat["family"] for seat in receipt["ukrainian_seat_verdicts"]] == ["openai"]
+        assert receipt["ukrainian_seat_verdicts"][0]["denominator"] == ["card-a", "card-b"]
+        assert "https://github.com/org/repo/pull/77#issuecomment-red" not in recorded
+    else:
+        assert len(receipt["ukrainian_seat_verdicts"][0]["chunks"]) == 2
+        winner = lookup_verdict(comments, head, "fleet", learner_content=True)
+        assert winner.state == "APPROVED"
+        assert winner.task in {"seat-openai-0", "seat-openai-1"}
+
+
+def test_ukrainian_behavior_proof_cli_writes_receipt_from_pr_comments(tmp_path, monkeypatch):
+    """The closeout command writes the receipt from live PR comments, not a caller file."""
+    from scripts.review.closeout_cli import main as closeout_main
+    from tests.test_review_closeout_cli import _freeze_kwargs, _git, _init_repo
+
+    repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/org/repo.git")
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "feature\n\nX-Agent: claude/claude-opus-5-5")
+    state_file = tmp_path / "state.json"
+
+    def run_closeout(*args: str) -> int:
+        return closeout_main(["--state-file", str(state_file), *args])
+
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert run_closeout("target", "--mode", "commit", "--repo-root", str(repo), "--commit", head) == 0
+    assert run_closeout("freeze", "--review-profile", "ukrainian", *_freeze_kwargs("#12316")[1:]) == 0
+    common = (
+        "--status",
+        "pass",
+        "--command",
+        ".venv/bin/python -m scripts.review.closeout_cli --help",
+        "--cwd",
+        str(repo),
+        "--exit-code",
+        "0",
+        "--observation",
+        "command completed and printed help",
+        "--evidence-ref",
+        "test:ukrainian-proof",
+    )
+    assert run_closeout("behavior-proof", "record", "--surface", "source_aware", *common) == 0
+    assert run_closeout("behavior-proof", "record", "--surface", "source_blind", *common) == 0
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    state["target_args"]["pr"] = 77
+    state_file.write_text(json.dumps(state), encoding="utf-8")
+    head = state["baseline"]["target"]["head_sha"]
+    comments = _ukrainian_comments(
+        head,
+        author_models=["claude-opus-5-5"],
+        seats=[
+            ("google", "gemini-3.8-flash-high", ()),
+            ("openai", "gpt-6.1-sol", ()),
+        ],
+    )
+
+    def fake_comments(repo_root, repository, pr_number):
+        assert pr_number == 77
+        assert repository == "org/repo"
+        return comments, "fleet"
+
+    monkeypatch.setattr("scripts.review.closeout_cli.load_pull_request_comments", fake_comments)
+    assert run_closeout("behavior-proof", "receipt") == 0
+    receipt_path = tmp_path / "state.ukrainian-behavior-proof-receipt.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["review_profile"] == "ukrainian"
+    assert "reviewer" not in receipt and "reviewer_payload" not in receipt
+    assert receipt["behavior_proof"]["source_aware"]["status"] == "pass"
+    assert receipt["behavior_proof"]["source_blind"]["status"] == "pass"
+    assert receipt["target"]["head_sha"] == head
+    assert {seat["family"] for seat in receipt["ukrainian_seat_verdicts"]} == {"google", "openai"}
