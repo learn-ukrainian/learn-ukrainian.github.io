@@ -1936,7 +1936,8 @@ def judge_item_reply(
         if item_id in seen_ids:
             raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: duplicate judgment {item_id}")
         seen_ids.add(item_id)
-        verdict = _JUDGMENT_VERDICT.get(row.get("verdict"))
+        raw_verdict = row.get("verdict")
+        verdict = _JUDGMENT_VERDICT.get(raw_verdict) if isinstance(raw_verdict, str) else None
         finding = row.get("finding")
         sources = row.get("sources")
         if verdict is None or not isinstance(finding, str) or not isinstance(sources, str):
