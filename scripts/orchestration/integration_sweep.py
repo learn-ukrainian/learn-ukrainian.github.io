@@ -55,6 +55,7 @@ from typing import Any
 
 from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.common.github_client import GitHubRateLimited, timer
+from scripts.common.repo_root import main_checkout_root
 from scripts.deploy.auto_deploy_eligibility import CONTENT_PATH_PREFIXES, SITE_CODE_PATH_EXCEPTIONS
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.publish.github import CF_VERDICT_MARKER_PREFIX, Request, request_run
@@ -475,14 +476,17 @@ def _repair_receipt_blocks(body: str, sha: str) -> bool:
     """True when this head has a repair receipt and the body does not attest its delta.
 
     An unreadable receipt fails closed. A missing receipt directory means no repair round.
+    The directory is the recorder's receipt helper, and the attestation line is the
+    repair round's own pattern.
     """
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.review.repair_round import RECEIPT_DIR
+    from scripts.review.record_cf_verdict import _repair_receipts
+    from scripts.review.repair_round import REPAIR_VERIFIED
 
-    root = main_checkout_root(Path(__file__).resolve().parents[2]) / "batch_state" / RECEIPT_DIR
+    task_root = main_checkout_root(Path(__file__).resolve().parents[2]) / "batch_state" / "tasks"
+    root = _repair_receipts(task_root)
     if not root.is_dir():
         return False
-    attested = re.findall(r"(?m)^\s*REPAIR_VERIFIED:\s*([0-9a-f]{64})\s*$", body)
+    attested = REPAIR_VERIFIED.findall(body)
     for path in root.glob("*.json"):
         try:
             data = json.loads(path.read_text(encoding="utf-8"))

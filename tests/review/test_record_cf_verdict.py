@@ -258,10 +258,24 @@ def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_pat
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     body = comments[0]["body"]
     assert result["verdict"] == "CHANGES_REQUESTED" and "residuals" not in result
+    assert result["p3_block_reason"] == recorder.SECURITY_VERDICT_NOT_PASS
     assert "Residuals:" not in body and reply in body
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "CHANGES_REQUESTED"
     assert statuses[0]["state"] == "failure" and statuses[0]["context"] == "fleet/cross-family-review"
     assert statuses[0]["description"] == "VERDICT: CHANGES_REQUESTED openai review-one"
+    visible = (
+        "VERDICT: REQUEST_CHANGES\n"
+        "F1 [P3] scripts/example.py:10 the count is high. Impact: one extra hold. "
+        "Required behaviour: count each removal once.\n"
+    )
+    fenced = visible + "```\nF2 scripts/example.py:20 the example has no priority.\n```\n"
+    indented = visible + "\n    F2 scripts/example.py:20 the example has no priority.\n"
+    prioritized = visible + "```\nF2 [P3] scripts/example.py:20 an example, not an open finding.\n```\n"
+    assert recorder.p3_reading(fenced).reason == recorder.FINDING_WITHOUT_PRIORITY
+    assert recorder.p3_residuals(fenced) is None
+    assert recorder.p3_reading(indented).reason == recorder.FINDING_WITHOUT_PRIORITY
+    assert recorder.p3_reading(prioritized).ids == ("F1",)
+    assert recorder.p3_reading(reply).reason == recorder.SECURITY_VERDICT_NOT_PASS
 
 
 @pytest.mark.parametrize(("deep", "reason"), [

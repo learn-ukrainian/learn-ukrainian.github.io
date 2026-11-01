@@ -241,6 +241,16 @@ _FINDING_LIKE = re.compile(
 _RESIDUAL_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}\Z")
 TRUNCATION_FLAG = "[Review reply truncated to fit GitHub's comment limit.]"
 REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
+FINDING_WITHOUT_PRIORITY = "finding-without-priority"
+SECURITY_VERDICT_NOT_PASS = "security-verdict-not-pass"
+
+
+@dataclass(frozen=True)
+class P3Reading:
+    """Open P3 finding ids, or a typed reason that reading does not apply."""
+
+    ids: tuple[str, ...] | None = None
+    reason: str | None = None
 
 
 def _security_verdict_blocks(reply: str) -> bool:
@@ -254,52 +264,85 @@ def _security_verdict_blocks(reply: str) -> bool:
     return any(_SECURITY_PASS.match(reply, match.end()) is None for match in _SECURITY_VERDICT.finditer(reply))
 
 
-def p3_residuals(reply: str) -> tuple[str, ...] | None:
-    """Open finding ids when every one of them is P3, or None when that reading does not apply.
+def _hidden_unprioritized_finding(reply: str) -> bool:
+    """True when a fence or indented code block holds a finding id and no priority token.
 
-    None keeps the reply's own verdict. A P0, P1, or P2 token anywhere in the reply,
-    a security verdict that is not an unambiguous pass, an incomplete review, a malformed
-    findings block, a finding with no readable priority, a truncated body, or a repair
-    round whose mapping was withheld is None. An empty open set is None: a changes
-    request with no findings is not an approval.
+    A priority inside that span stays an example. A P0, P1, or P2 token is already
+    refused by the raw-reply scan. An unreadable CommonMark map fails closed.
     """
-    if not isinstance(reply, str) or _security_verdict_blocks(reply):
-        return None
+    from markdown_it import MarkdownIt
+
+    lines = _commonmark_lines(reply)
+    for token in MarkdownIt("commonmark").parse("\n".join(lines)):
+        if token.type not in {"fence", "code_block"}:
+            continue
+        source_map = token.map
+        if not isinstance(source_map, (list, tuple)) or len(source_map) != 2:
+            raise ValueError("CommonMark verdict visibility map unavailable")
+        start, end = source_map
+        if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
+            raise ValueError("CommonMark verdict visibility map invalid")
+        for line in lines[start:end]:
+            match = _PROSE_FINDING_LINE.match(line)
+            if match is None or _PROSE_RESOLVED.match(match.group("rest") or ""):
+                continue
+            if (match.group(3) or match.group(4)) is None:
+                return True
+    return False
+
+
+def p3_reading(reply: str) -> P3Reading:
+    """Open P3 ids, or a typed reason the all-P3 approval does not apply.
+
+    An empty ``ids`` and an empty ``reason`` keep the reply's own verdict. A P0, P1,
+    or P2 token anywhere in the reply, an incomplete review, a malformed findings
+    block, a truncated body, or a repair round whose mapping was withheld is that
+    empty reading. A finding with no priority, including one inside a fence or an
+    indented code block, and a security line whose value is not exactly PASS, name
+    the cause and do not approve. An empty open set does not approve: a changes
+    request with no findings stays a changes request.
+    """
+    if not isinstance(reply, str):
+        return P3Reading()
+    if _security_verdict_blocks(reply):
+        return P3Reading(reason=SECURITY_VERDICT_NOT_PASS)
     if TRUNCATION_FLAG in reply or REPAIR_WITHHELD in reply:
-        return None
+        return P3Reading()
     if _BLOCKING_PRIORITY.search(reply):
-        return None
+        return P3Reading()
     if "BLOCKED" in {token.upper() for token in recognized_verdicts(reply)}:
-        return None
+        return P3Reading()
     if declares_incomplete_review(reply) or declares_missing_capabilities(reply):
-        return None
+        return P3Reading()
     if invalid_findings_block(reply):
-        return None
+        return P3Reading()
     findings: dict[str, str] = {}
     structured: set[str] = set()
     try:
         payloads = list(_top_level_json_values(reply))
     except _UnreadableFindings:
-        return None
+        return P3Reading()
     for payload in payloads:
         if not isinstance(payload, dict) or not (_FINDINGS_ENVELOPE_KEYS & payload.keys()):
             continue
         try:
             _verdict, evidence = checked_findings_payload(payload)
         except (ContractError, ReviewPublicationError):
-            return None
+            return P3Reading()
         if evidence is None:
             continue
         for finding in evidence.findings:
             previous = findings.get(finding.finding_id)
             if previous is not None and previous != finding.priority:
-                return None
+                return P3Reading()
             findings[finding.finding_id] = finding.priority
             structured.add(finding.finding_id)
     try:
+        if _hidden_unprioritized_finding(reply):
+            return P3Reading(reason=FINDING_WITHOUT_PRIORITY)
         visible = _without_code_fences(reply, keep_unclosed=False)
     except (ValueError, ImportError):
-        return None
+        return P3Reading()
     for line in _commonmark_lines(visible):
         match = _PROSE_FINDING_LINE.match(line)
         if match is None:
@@ -311,24 +354,29 @@ def p3_residuals(reply: str) -> tuple[str, ...] | None:
             # Only the resolution clause is judged. A later sentence may say "not".
             clause = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b.{0,24}", rest)
             if finding_id in findings or _RESOLVED_AMBIGUOUS.search(clause.group(0) if clause else rest[:40]):
-                return None
+                return P3Reading()
             continue
         if priority is None:
-            return None
+            return P3Reading(reason=FINDING_WITHOUT_PRIORITY)
         if structured and finding_id not in structured:
-            return None
+            return P3Reading()
         previous = findings.get(finding_id)
         if previous is not None and previous != priority:
-            return None
+            return P3Reading()
         findings[finding_id] = priority
     for line in reply.splitlines():
         if _FINDING_LIKE.match(line) and _PROSE_FINDING_LINE.match(line) is None:
-            return None
+            return P3Reading()
     if not findings or any(priority != "P3" for priority in findings.values()):
-        return None
+        return P3Reading()
     if any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in findings):
-        return None
-    return tuple(findings)
+        return P3Reading()
+    return P3Reading(tuple(findings))
+
+
+def p3_residuals(reply: str) -> tuple[str, ...] | None:
+    """Open finding ids when every one of them is P3, or None when that reading does not apply."""
+    return p3_reading(reply).ids
 
 
 def _require_sources_mcp_calls(task: dict[str, Any]) -> None:
@@ -2716,7 +2764,8 @@ def record(
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
     chunk = _item_chunk(task, reply, stated)
     # The reply stays REQUEST_CHANGES. All-P3 open findings are an approval with residuals.
-    residuals = p3_residuals(reply) if stated == "CHANGES_REQUESTED" else None
+    reading = p3_reading(reply) if stated == "CHANGES_REQUESTED" else P3Reading()
+    residuals = reading.ids
     verdict = "APPROVED" if residuals else stated
     comment_fields = dict(
         sha=sha,
@@ -2947,6 +2996,8 @@ def record(
     }
     if residuals:
         result["residuals"] = list(residuals)
+    elif reading.reason:
+        result["p3_block_reason"] = reading.reason
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
     if chunk is not None:
