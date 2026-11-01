@@ -514,34 +514,18 @@ def _resolve_named(root: Path, parts: tuple[str, ...]) -> tuple[Path, os.stat_re
     raise ValueError(f"a named artifact path cannot be resolved ({kind})")
 
 
-def _leaves_through_link(root: Path, parts: tuple[str, ...]) -> bool:
-    """Whether resolving ``parts`` leaves the checkout through a link inside it.
-
-    Climbing out of the root with ``..`` is not a checkout name; removal
-    cannot take what such a name reaches.
-    """
-    current = root
-    for part in parts:
-        inside = current.is_relative_to(root)
-        current = current.parent if part == ".." else Path(os.path.realpath(current / part))
-        if part != ".." and inside and not current.is_relative_to(root):
-            return True
-    return False
-
-
 def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary: Path) -> set[str]:
     """Inventory only explicitly named, non-empty ignored files outside caches.
 
     Tracked files survive in Git; directories are not evidence inventories.
     A name stands for the file the filesystem resolves it to: a target inside
     the checkout is inventoried under its resolved path, because removal
-    destroys it; a target file reached through a link out of the checkout
-    cannot be preserved here and refuses removal, unless it already lives
-    under the primary's batch_state. Backticks/quotes and Markdown links
-    support spaced paths.
+    destroys it. A non-regular file inside the checkout refuses removal.
+    A target reached through a link out of the checkout is not copied and
+    does not refuse removal: removal deletes the link, not the target.
+    Backticks/quotes and Markdown links support spaced paths.
     """
     root = worktree.resolve()
-    shared_state = primary / "batch_state"
     files: set[str] = set()
     text = str(record.get("response") or "")
     result_file = record.get("result_file")
@@ -570,12 +554,20 @@ def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary:
         if found is None:
             continue
         resolved, status = found
-        if not stat.S_ISREG(status.st_mode) or not status.st_size:
+        if not stat.S_ISREG(status.st_mode):
+            # Directories are not inventories. A disposable path stays disposable.
+            # Any other in-checkout file refuses removal.
+            if (
+                resolved.is_relative_to(root)
+                and not stat.S_ISDIR(status.st_mode)
+                and not is_disposable_path(resolved.relative_to(root), worktree=worktree, primary=primary)
+            ):
+                raise ValueError("a named artifact path is not a regular file and cannot be preserved")
+            continue
+        if not status.st_size:
             continue
         if not resolved.is_relative_to(root):
-            # Never copied: following an outbound link would read outside the checkout.
-            if not resolved.is_relative_to(shared_state) and _leaves_through_link(root, parts):
-                raise ValueError(f"named artifact {path.as_posix()} links outside the checkout and cannot be preserved")
+            # The outside file is not inventory. Removal deletes the in-checkout link.
             continue
         relative = resolved.relative_to(root)
         if is_disposable_path(relative, worktree=worktree, primary=primary):

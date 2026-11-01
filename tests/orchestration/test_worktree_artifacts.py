@@ -495,15 +495,15 @@ def test_batch_state_link_loop_is_preserved_without_resolving(checkout):
 
 
 @pytest.mark.parametrize(
-    ("reference", "refused"),
+    "reference",
     [
-        ("../outside.txt", False),
-        ("absolute", False),
-        ("ignored/sub/../../link", True),
-        ("ignored/dir/../../link", True),
+        "../outside.txt",
+        "absolute",
+        "ignored/sub/../../link",
+        "ignored/dir/../../link",
     ],
 )
-def test_outbound_refusal_needs_a_link_inside_the_checkout(checkout, tmp_path, reference, refused):
+def test_outbound_link_inside_the_checkout_does_not_block_removal(checkout, tmp_path, reference):
     outside = tmp_path / "outside.txt"
     outside.write_bytes(b"lives outside the checkout")
     (checkout[0] / "ignored/sub").mkdir(parents=True)
@@ -511,15 +511,10 @@ def test_outbound_refusal_needs_a_link_inside_the_checkout(checkout, tmp_path, r
     (checkout[0] / "link").symlink_to(outside)
     reference = str(outside) if reference == "absolute" else reference
     ok, reason, metadata = guard(checkout, record={"response": f"Read `{reference}`."})
-    assert ok is not refused
-    if refused:
-        assert metadata["retention_disposition"] == "retained"
-    else:
-        assert ok and metadata["count"] == 1
-        assert metadata["paths"][0]["type"] == "symlink"
-        assert metadata["paths"][0]["path"] == "ignored/dir"
-        assert metadata["paths"][0]["target"] == "sub"
-    assert (links.REFUSAL in reason) is refused
+    assert ok and not reason and metadata["count"] == 1
+    assert metadata["paths"][0]["type"] == "symlink"
+    assert metadata["paths"][0]["path"] == "ignored/dir"
+    assert metadata["paths"][0]["target"] == "sub"
     assert outside.read_bytes() == b"lives outside the checkout"
 
 
@@ -582,7 +577,7 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
         assert not ok and links.REFUSALS[scenario] in reason
         assert links.REFUSALS[scenario] in saved["artifact_preservation_error"]
         assert "\x00" not in reason and "x" * 300 not in reason
-    elif scenario == "outbound_batch_state":
+    elif scenario in {"outbound", "outbound_batch_state"}:
         assert ok and not reason and metadata["count"] == 1
         entry = metadata["paths"][0]
         assert entry["type"] == "symlink" and entry["path"] == "ignored/link" and entry["target"] == str(target)
