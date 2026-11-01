@@ -1538,11 +1538,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/liudyna-i-stosunky/activities.yaml",
-      "sha256": "42f4eb8958c849fe96f224452636e2b6ac27dbb0bda40ea3fc68cc181a17939d"
+      "sha256": "6ad4ec0574f45b2c4442f538d699e7df934eb3037fc174c9d3224e506b005375"
     },
     {
       "path": "curriculum/l2-uk-en/a2/liudyna-i-stosunky/module.md",
-      "sha256": "b3d468dd06dd630f68b50a00b4dead98f40b8ccaf677c1b9f3d2048b813f727e"
+      "sha256": "ad38b7cdaf64f8a4e7b4c437f1e34f0e639087b378c1228d58a690e24cd9643b"
     },
     {
       "path": "curriculum/l2-uk-en/a2/liudyna-i-stosunky/resources.yaml",
@@ -6206,7 +6206,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/liudyna-i-stosunky.yaml",
-      "sha256": "bf4f5fedb1dbceea80fb763fe880ba87f6ef61dd1d1f4c341af5a08a715f1aeb"
+      "sha256": "48c0691e1276f4540c52b16d786e5018c48bca49e1f74ea9fb7f83a6edc190ae"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/locative-expanded.yaml",
@@ -14358,7 +14358,7 @@
     },
     {
       "path": "site/src/content/docs/a2/liudyna-i-stosunky.mdx",
-      "sha256": "5c6c543f5dbfafa28d850cb8f93f231c0da83f74a74603440a3a2f0bb84b7e3b"
+      "sha256": "3967a18a77d6f62bdfd302e041896e8906b30c5e0a2a0baa6cce27a86326e554"
     },
     {
       "path": "site/src/content/docs/a2/locative-expanded.mdx",
