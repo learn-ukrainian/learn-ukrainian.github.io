@@ -25,7 +25,9 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
 * compares the worktree head and status before and after the run.
 
 The receipt it writes beside the task record (outside the sandbox) is the run's only source of
-sandbox evidence and Sources call count; ``verify`` checks it for the worker. Any setup or canary
+sandbox evidence and Sources call count; ``verify`` checks it for the worker. Before the scratch
+is removed, each saved Sources tool body is copied out with the adapter's existing inliner so the
+worker can put that body, or a missing-body reason, on the retained stream. Any setup or canary
 failure refuses the run, which never falls back to an unsandboxed AGY. A read-only bind is a live
 view of host files, not a snapshot: input drift is detected by the before/after comparison, not
 prevented.
@@ -124,6 +126,18 @@ def log_file(task_id: str) -> Path:
 
 def receipt_file(final_file: Path) -> Path:
     return final_file.with_suffix(RECEIPT_SUFFIX)
+
+
+def tool_results_file(final_file: Path) -> Path:
+    """Private export of saved tool bodies, beside the task result and outside the scratch."""
+    return final_file.with_suffix(".tool-results.json")
+
+
+def _tool_results_from_receipt(receipt: Path) -> Path:
+    suffix = ".sandbox.json"
+    if not receipt.name.endswith(suffix):
+        raise ValueError("agy tool results: receipt name is not the boundary receipt")
+    return receipt.with_name(receipt.name[: -len(suffix)] + ".tool-results.json")
 
 
 def launcher(spec, agy_argv: list[str]) -> list[str]:
@@ -309,6 +323,44 @@ def discard(task_id: str) -> str | None:
     except (OSError, ValueError) as exc:
         return f"{type(exc).__name__}: {exc}"[:300]
     return None
+
+
+def apply_tool_results(stdout_path: Path, final_file: Path, task_id: str) -> tuple[int, int]:
+    """Write exported Sources bodies onto the retained stream, then drop the export.
+
+    If the launcher could not export before deleting the scratch, read the files
+    that are still there. The read is the adapter's inliner either way.
+    """
+    from scripts.agent_runtime.adapters.agy import export_saved_step_outputs, merge_saved_step_outputs
+
+    export = tool_results_file(final_file)
+    saved: list[dict] = []
+    if export.is_file():
+        try:
+            payload = json.loads(export.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            payload = None
+        if (
+            isinstance(payload, dict)
+            and payload.get("schema") == "agy-tool-results.v1"
+            and isinstance(payload.get("calls"), list)
+        ):
+            saved = payload["calls"]
+    if not saved:
+        app = scratch(task_id) / "runtime" / "home" / ".gemini" / "antigravity-cli"
+        if app.is_dir():
+            saved = export_saved_step_outputs(app)
+    if not stdout_path.is_file():
+        return 0, 0
+    text = stdout_path.read_text(encoding="utf-8", errors="replace")
+    merged, retained, missing = merge_saved_step_outputs(text, saved)
+    if merged != text:
+        temporary = stdout_path.with_name(f".{stdout_path.name}.{uuid.uuid4().hex}")
+        temporary.write_text(merged, encoding="utf-8")
+        os.replace(temporary, stdout_path)
+    if export.is_file():
+        export.unlink()
+    return retained, missing
 
 
 def verify(final_file: Path, task_id: str, record: dict) -> tuple[dict, int | None, str | None]:
@@ -1075,11 +1127,30 @@ class _Boundary:
                 self.fixture.unlink()
         if "start" in self.receipt.get("input", {}):
             self.receipt["input"]["end"] = _input_state(self.worktree)
+        exported = False
         if self.created:
+            try:
+                self._export_tool_results()
+                exported = True
+            except (OSError, ValueError):
+                # Leave the scratch so the worker can still read the files, then discard it.
+                self.receipt["tool_results"] = "export_failed"
+        if self.created and exported:
             try:
                 _remove(self.base)
             except OSError as exc:  # the worker's discard retries; residue never voids the run's evidence
                 self.receipt["cleanup"] = f"residue: {type(exc).__name__}"
+
+    def _export_tool_results(self) -> None:
+        """Copy saved step bodies out with the existing inliner, before ``_remove`` deletes them."""
+        from scripts.agent_runtime.adapters.agy import export_saved_step_outputs
+
+        app = self.base / "runtime" / "home" / ".gemini" / "antigravity-cli"
+        payload = {"schema": "agy-tool-results.v1", "calls": export_saved_step_outputs(app)}
+        _write_private(
+            _tool_results_from_receipt(Path(self.args.receipt)),
+            json.dumps(payload, ensure_ascii=False).encode(),
+        )
 
 
 def main(argv: list[str]) -> int:

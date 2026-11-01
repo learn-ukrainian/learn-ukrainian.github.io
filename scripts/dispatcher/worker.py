@@ -791,8 +791,21 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 except store.TaskRecordError as exc:
                     status, error = "crashed", exc.code
             # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
-            if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
-                record["read_only_boundary_cleanup"] = residue
+            if spec.agent == "agy" and spec.mode == "read-only":
+                # A bound attempt already counted its Sources bodies and replaced the stream with
+                # that trace. The stream merger only understands step updates, so running it here
+                # would replace the attempt's counts with zeros.
+                if not record.get("review_attempt"):
+                    # The launcher exports saved tool bodies before it deletes the scratch. Fold them
+                    # into the retained stream first; discard then removes whatever scratch remains.
+                    try:
+                        retained, missing = agy_sandbox.apply_tool_results(stdout_path, spec.final_file, spec.task_id)
+                        record["sources_bodies_retained"] = retained
+                        record["sources_bodies_missing"] = missing
+                    except (OSError, ValueError):
+                        record["sources_bodies_missing"] = None
+                if residue := agy_sandbox.discard(spec.task_id):
+                    record["read_only_boundary_cleanup"] = residue
             _discard_read_only_scratch(record)
             if slots is not None:
                 # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight

@@ -2869,20 +2869,35 @@ def _attach_tool_result(call: dict[str, Any], result_text: str) -> dict[str, Any
     return call
 
 
-def _mcp_result_text(
+class _SavedToolBody(NamedTuple):
+    text: str
+    missing_reason: str | None
+
+
+def _mcp_result_body(
     event: Mapping[str, Any],
     *,
     transcript_path: Path,
     trusted_root: Path = Path("/"),
     app_data_alias: Path | None = None,
-) -> str:
+) -> _SavedToolBody:
     result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
-    return _inline_saved_tool_result_pointer(
+    return _read_saved_tool_result(
         result_text,
         transcript_path=transcript_path,
         trusted_root=trusted_root,
         app_data_alias=app_data_alias,
     )
+
+
+def _store_mcp_result(call: dict[str, Any], body: _SavedToolBody) -> dict[str, Any]:
+    """Keep the response body, or mark the call when the saved file could not be read."""
+    if body.missing_reason:
+        call["output_missing"] = body.missing_reason
+        call["output_summary"] = ""
+        call.pop("result", None)
+        return call
+    return _attach_tool_result(call, body.text)
 
 
 def _pair_transcript_fifo(
@@ -2901,9 +2916,9 @@ def _pair_transcript_fifo(
             continue
         call = pending.pop(0)
         calls.append(
-            _attach_tool_result(
+            _store_mcp_result(
                 call,
-                _mcp_result_text(
+                _mcp_result_body(
                     event,
                     transcript_path=transcript_path,
                     trusted_root=trusted_root,
@@ -2967,7 +2982,7 @@ def _pair_transcript_by_step_index(
             pending_keys.add(key)
         if event.get("type") != "MCP_TOOL":
             continue
-        result_text = _mcp_result_text(
+        body = _mcp_result_body(
             event,
             transcript_path=transcript_path,
             trusted_root=trusted_root,
@@ -2976,10 +2991,10 @@ def _pair_transcript_by_step_index(
         if pending:
             call = pending.pop(0)
             pending_keys.discard(_intent_dedupe_key(call))
-            calls.append(_attach_tool_result(call, result_text))
+            calls.append(_store_mcp_result(call, body))
         else:
             orphan_results += 1
-            calls.append(_attach_tool_result(_result_only_call(), result_text))
+            calls.append(_store_mcp_result(_result_only_call(), body))
 
     if orphan_results:
         _logger.warning(
@@ -3033,9 +3048,9 @@ def _pair_transcript_generic_results(
         _, call = pending.pop(0)
         if call is not None:
             calls.append(
-                _attach_tool_result(
+                _store_mcp_result(
                     call,
-                    _mcp_result_text(
+                    _mcp_result_body(
                         event,
                         transcript_path=transcript_path,
                         trusted_root=trusted_root,
@@ -3239,13 +3254,34 @@ def _inline_saved_tool_result_pointer(
     app_data_alias: Path | None = None,
 ) -> str:
     """Inline agy's safe ``file://.../steps/.../output.txt`` tool-result pointer."""
+    return _read_saved_tool_result(
+        text,
+        transcript_path=transcript_path,
+        trusted_root=trusted_root,
+        app_data_alias=app_data_alias,
+    ).text
+
+
+def _read_saved_tool_result(
+    text: str,
+    *,
+    transcript_path: Path,
+    trusted_root: Path = Path("/"),
+    app_data_alias: Path | None = None,
+) -> _SavedToolBody:
+    """Read one saved tool body, or name why it is not the response.
+
+    A text with no saved-file pointer is the body itself. A pointer outside the
+    conversation steps directories, or a file that is already gone, does not
+    become a body: ``missing_reason`` says which.
+    """
     match = _SAVED_OUTPUT_POINTER_RE.search(text)
     if not match:
-        return text
+        return _SavedToolBody(text, None)
 
     parsed = urllib.parse.urlparse(match.group("uri"))
     if parsed.scheme != "file" or not parsed.path:
-        return text
+        return _SavedToolBody(text, None)
 
     path = Path(urllib.parse.unquote(parsed.path))
     if app_data_alias is not None and _is_relative_to(path, app_data_alias):
@@ -3255,13 +3291,13 @@ def _inline_saved_tool_result_pointer(
     allowed_roots = _allowed_tool_result_roots(transcript_path)
     if not any(_is_relative_to(path, root) for root in allowed_roots):
         _logger.warning("agy refused unsafe tool result pointer")
-        return text
+        return _SavedToolBody(text, "outside_allowed_roots")
     try:
         # Steps roots constrain names only; the seat can replace their ancestors.
         raw = safe_read_attempt_file(path, trusted_root=trusted_root)
     except FileNotFoundError:
         _logger.warning("agy tool result pointer missing")
-        return text
+        return _SavedToolBody(text, "file_removed")
     size = len(raw)
 
     truncated = len(raw) > _MAX_INLINE_TOOL_RESULT_BYTES
@@ -3279,7 +3315,7 @@ def _inline_saved_tool_result_pointer(
             "agy inlined tool result pointer (%s bytes)",
             size,
         )
-    return text[: match.start()] + inline + text[match.end() :]
+    return _SavedToolBody(text[: match.start()] + inline + text[match.end() :], None)
 
 
 def _allowed_tool_result_roots(transcript_path: Path) -> tuple[Path, ...]:
@@ -3300,6 +3336,153 @@ def _is_relative_to(path: Path, root: Path) -> bool:
     except ValueError:
         return False
     return True
+
+
+def export_saved_step_outputs(app_data: Path) -> list[dict[str, Any]]:
+    """Read each saved step body with the existing inliner, before the scratch is removed.
+
+    Only a regular ``output.txt`` under a conversation's ``steps`` directory is
+    read. The OAuth token and the rest of the app-data tree are not.
+    """
+    brain = app_data / "brain"
+    if not app_data.is_absolute() or not brain.is_dir():
+        return []
+    saved: list[dict[str, Any]] = []
+    seen: set[tuple[str, int]] = set()
+    for conversation in sorted(brain.iterdir(), key=lambda path: path.name):
+        if conversation.is_symlink() or not re.fullmatch(_AGY_UUID, conversation.name):
+            continue
+        for relative in ((".system_generated", "steps"), ("steps",)):
+            steps = conversation.joinpath(*relative)
+            if steps.is_symlink() or not steps.is_dir():
+                continue
+            for step_dir in sorted(steps.iterdir(), key=lambda path: path.name):
+                # Unicode digits such as superscripts pass isdigit() and then make int() raise,
+                # which would abandon every other saved body. Only ASCII step names are readable.
+                if (
+                    step_dir.is_symlink()
+                    or not step_dir.is_dir()
+                    or not step_dir.name.isascii()
+                    or not step_dir.name.isdigit()
+                ):
+                    continue
+                step_index = int(step_dir.name)
+                key = (conversation.name, step_index)
+                if key in seen:
+                    continue
+                output = step_dir / "output.txt"
+                if output.is_symlink():
+                    saved.append(
+                        {
+                            "conversation_id": conversation.name,
+                            "step_index": step_index,
+                            "output_missing": "unreadable",
+                        }
+                    )
+                    seen.add(key)
+                    continue
+                transcript = conversation / ".system_generated" / "logs" / "transcript.jsonl"
+                pointer = f"The output was large and was saved to: {output.as_uri()}"
+                try:
+                    body = _read_saved_tool_result(pointer, transcript_path=transcript, trusted_root=app_data)
+                except AttemptReadError:
+                    saved.append(
+                        {
+                            "conversation_id": conversation.name,
+                            "step_index": step_index,
+                            "output_missing": "unreadable",
+                        }
+                    )
+                    seen.add(key)
+                    continue
+                item: dict[str, Any] = {"conversation_id": conversation.name, "step_index": step_index}
+                if body.missing_reason:
+                    item["output_missing"] = body.missing_reason
+                else:
+                    item["output"] = body.text
+                saved.append(item)
+                seen.add(key)
+    return saved
+
+
+def _sources_step(event: Mapping[str, Any]) -> tuple[str, int] | None:
+    """The conversation and step of one completed Sources ``call_mcp_tool``, if this event is one."""
+    step = event.get("step_update")
+    if not isinstance(step, Mapping) or step.get("state") != "DONE" or step.get("tool_name") != "call_mcp_tool":
+        return None
+    info = step.get("tool_info")
+    if not isinstance(info, Mapping):
+        return None
+    parameters = info.get("parameters")
+    if isinstance(parameters, str):
+        parameters = _decode_jsonish(parameters)
+    if not isinstance(parameters, Mapping):
+        return None
+    server = parameters.get("ServerName")
+    if not isinstance(server, str) or server.strip().strip('"') != "sources":
+        return None
+    conversation = step.get("conversation_id")
+    index = step.get("step_index")
+    if not isinstance(conversation, str) or isinstance(index, bool) or not isinstance(index, int):
+        return None
+    return conversation, index
+
+
+def merge_saved_step_outputs(stdout: str, saved: list[dict[str, Any]]) -> tuple[str, int, int]:
+    """Put each saved body, or a missing-body reason, on the matching completed Sources event."""
+    index: dict[tuple[str, int], Mapping[str, Any]] = {}
+    for item in saved:
+        if not isinstance(item, Mapping):
+            continue
+        conversation = item.get("conversation_id")
+        step_index = item.get("step_index")
+        if isinstance(conversation, str) and isinstance(step_index, int) and not isinstance(step_index, bool):
+            index[(conversation, step_index)] = item
+    retained = missing = 0
+    lines: list[str] = []
+    for line in jsonl_lines(stdout):
+        if not line.strip():
+            lines.append(line)
+            continue
+        try:
+            event = json.loads(line)
+        except ValueError:
+            lines.append(line)
+            continue
+        if not isinstance(event, dict):
+            lines.append(line)
+            continue
+        key = _sources_step(event)
+        if key is None:
+            lines.append(line)
+            continue
+        info = event["step_update"]["tool_info"]
+        if not isinstance(info, dict):
+            lines.append(line)
+            continue
+        existing = info.get("output")
+        # A saved-file pointer is not a body. Expand it from the export, or mark it missing.
+        if (
+            isinstance(existing, str)
+            and existing.strip()
+            and _SAVED_OUTPUT_POINTER_RE.search(existing) is None
+        ):
+            retained += 1
+            lines.append(line)
+            continue
+        found = index.get(key)
+        output = found.get("output") if isinstance(found, Mapping) else None
+        if isinstance(output, str) and output.strip() and _SAVED_OUTPUT_POINTER_RE.search(output) is None:
+            info["output"] = output
+            info.pop("output_missing", None)
+            retained += 1
+        else:
+            reason = found.get("output_missing") if isinstance(found, Mapping) else None
+            info.pop("output", None)
+            info["output_missing"] = reason if isinstance(reason, str) and reason else "file_removed"
+            missing += 1
+        lines.append(json.dumps(event, ensure_ascii=False, separators=(",", ":")))
+    return "\n".join(lines), retained, missing
 
 
 def _coerce_args(value: Any) -> dict[str, Any]:

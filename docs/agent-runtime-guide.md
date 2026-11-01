@@ -1063,8 +1063,11 @@ required instructions and relevant source locators in the brief.
 A read-only AGY run executes inside the dispatcher's bubblewrap boundary
 (`scripts/dispatcher/agy_sandbox.py`): a read-only root, a private scratch home
 and a dispatcher-owned Sources relay that forwards only the read-only tools.
-Dispatch refuses it with `read_only_unenforceable` only on a host that cannot
-start that boundary. Research flags and owned paths record metadata; write-path claim
+Before that scratch is removed, the launcher copies each saved Sources tool
+body out with the adapter's existing inliner. The worker writes the body, or
+an `output_missing` reason, onto the completed Sources event in the retained
+stream. A body is not dropped silently. Dispatch refuses the run with
+`read_only_unenforceable` only on a host that cannot start that boundary. Research flags and owned paths record metadata; write-path claim
 admission and overlap overrides are retired.
 
 A read-only Codex run gets a per-task writable scratch and nothing else writable.
