@@ -212,7 +212,15 @@ class AttemptEgress:
                 if proc.returncode is None:
                     with contextlib.suppress(ProcessLookupError):
                         proc.kill()
-                await proc.wait()
+                cancelled = None
+                while True:
+                    try:
+                        await proc.wait()
+                        break
+                    except asyncio.CancelledError as exc:
+                        cancelled = exc
+                if cancelled is not None:
+                    raise cancelled
 
     async def _connect(self, addresses):
         for address in addresses:
