@@ -144,7 +144,8 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
         assert calls[0][2]["tool_config"]["cursor_mode"] == "plan"
         assert calls[0][2]["tool_config"]["cursor_workspace"] == str(tmp_path.resolve())
     else:
-        assert calls[0][2]["tool_config"]["hermes_mcp_servers"] == ["sources"]
+        sources_cfg = calls[0][2]["tool_config"]["mcp_servers"]["sources"]
+        assert sources_cfg["url"].endswith("/mcp")
 
 
 @pytest.mark.parametrize(

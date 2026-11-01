@@ -552,27 +552,6 @@ def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
     assert events[1][1]["registered"] == []
 
 
-@pytest.mark.parametrize("writer", ["deepseek-tools"])
-def test_runtime_tool_config_hermes_tools_emits_resolution_event_success(
-    writer: str,
-) -> None:
-    events: list[tuple[str, dict[str, Any]]] = []
-
-    config = linear_pipeline._runtime_tool_config(
-        writer,
-        workspace_dir=linear_pipeline.PROJECT_ROOT,
-        event_sink=lambda event, **fields: events.append((event, fields)),
-    )
-
-    assert config["output_format"] == "stream-json"
-    assert config["hermes_mcp_servers"] == ["sources"]
-    assert events[0][0] == "mcp_config_resolved"
-    assert events[0][1]["writer"] == writer
-    assert events[0][1]["config_path"] == str(Path.home() / ".hermes" / "config.yaml")
-    assert events[0][1]["resolution_status"] == "ok"
-    assert events[0][1]["resolved_servers"] == ["sources"]
-
-
 def test_invoke_writer_refuses_tool_less_codex_before_invoker(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
