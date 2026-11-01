@@ -17,13 +17,23 @@ def check_plan(agent: str, model: str, record: dict, *, review: bool = False) ->
 
     Applicable caps refuse unknown or stale usage. Reviews protect native Claude
     headroom only. An AGY launch uses the same stop for that seat's Claude
-    window. Model pauses still apply to every selected model.
+    window. Model pauses still apply to every selected model. An API-key
+    account has no plan meter: its per-dispatch spend cap must resolve
+    instead, and the claude plan entries do not apply to it.
     """
     account = claude_account_lane.account_from_record(record, agent=agent)
     if agent == "claude" and account.refusal is not None:
         raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {account.refusal}")
+    api_key = agent == "claude" and account.api_key
+    if api_key:
+        from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, resolve_claude_budget_usd
+
+        try:
+            resolve_claude_budget_usd(account.label, record.get("max_budget_usd"))
+        except ClaudeAccountRefused as exc:
+            raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {exc.code}") from None
     model_pause.refuse_paused_models(
-        [model], policy=model_pause.policy_for_seat(agent, review=review),
+        [model], policy=model_pause.policy_for_seat(agent, review=review, plan_metered=not api_key),
         used_pct=model_pause.account_used_pct(account),
     )
     from scripts.dispatcher import checks
