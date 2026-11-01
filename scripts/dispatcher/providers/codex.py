@@ -31,7 +31,6 @@ OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = frozenset({
     "maxProperties",
     "uniqueItems",
 })
-_STDERR_EXCERPT = 500
 
 
 def _provider_literal_type(value: object) -> str:
@@ -215,9 +214,6 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         return ParsedResult(text, usage, f"codex: {capacity}", rate_limited=True)
     if returncode:
         error = f"codex: exited with status {returncode}"
-        excerpt = " ".join(stderr.split())
-        if excerpt:
-            error = f"{error}: {excerpt[:_STDERR_EXCERPT]}"
     return ParsedResult(
         text, usage, error or (None if completed and text else "codex: missing completion or final text")
     )

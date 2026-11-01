@@ -210,10 +210,6 @@ def test_claude_review_binds_findings_schema(dispatch):
     with pytest.raises(ValidationError, match="missing_capabilities"):
         Draft202012Validator(receipt_schema).validate(refused)
     Draft202012Validator(receipt_schema).validate(receipt)
-    failed_codex = codex.parse("", "HTTP 400 schema.if is not permitted when strict is true", 1, None)
-    assert failed_codex.error == (
-        "codex: exited with status 1: HTTP 400 schema.if is not permitted when strict is true"
-    )
 
 
 def test_agy_review_binds_findings_schema(dispatch):
