@@ -381,7 +381,7 @@ def parse(
         stream_clean
         and terminal_seen
         and not models
-        and result.get("num_turns") == 0
+        and type(result.get("num_turns")) is int and result["num_turns"] == 0
         and error == _unsuccessful(result)
         and isinstance(quota_message, str)
         and quota_message.startswith(_MODEL_SELECTION_REFUSAL)
