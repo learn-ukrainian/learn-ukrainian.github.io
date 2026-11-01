@@ -212,7 +212,7 @@ def _post_summary(issue: int, receipt: dict) -> None:
     ):
         lines.append(f"- {name}: {counts.get(name, 0)}")
     for note in receipt.get("unverified_follow_up_notes") or []:
-        lines.append(f"- unverified follow-up {note['id']}: {note['outcome']}: {note['detail']}")
+        lines.append(f"- unverified follow-up {note['id']}: {note['outcome']}")
     _run(Request("issue-comment", number=int(str(issue)), body="\n".join(lines)))
 
 
