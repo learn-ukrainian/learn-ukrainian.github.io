@@ -460,18 +460,17 @@ jobs:
           snapshot=ci-artifacts/pytest-file-durations.json
           durations=$(python3 -m scripts.ci.split_tests duration-source \
             --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
+          # Temporary #12310 instrumentation, removed before implementation review.
+          if [ "$SHARD" = 12 ]; then
+            export PYTEST_PLUGINS="${PYTEST_PLUGINS:+${PYTEST_PLUGINS},}scripts.ci.pytest_worker_diagnostics"
+          fi
           # The shard's weights go into its artifact: pytest report divides out this
           # runner's speed before recording durations (hosted runners differ ~1.6x).
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
             | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
               --durations "$durations" --weights-out "ci-artifacts/pytest-shard-${SHARD}-weights.json" \
               > "$LU_PYTEST_SHARD_FILES"
-          # Temporary #12310 instrumentation, removed before implementation review.
-          diagnostics=()
-          if [ "$SHARD" = 12 ]; then
-            diagnostics=(-p scripts.ci.pytest_worker_diagnostics)
-          fi
-          .venv/bin/python -m pytest tests "${diagnostics[@]}" -n logical --dist=worksteal --max-worker-restart=0 \
+          .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
             --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
             --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
           # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.

@@ -77,6 +77,14 @@ def pytest_configure(config):
     global FATAL_STREAM
     import pytest_timeout
 
+    if hasattr(config, "workerinput"):
+        # Nested fixture pytest processes must not inherit this branch's plugin.
+        plugins = [name for name in os.environ.get("PYTEST_PLUGINS", "").split(",")
+                   if name and name != __name__]
+        if plugins:
+            os.environ["PYTEST_PLUGINS"] = ",".join(plugins)
+        else:
+            os.environ.pop("PYTEST_PLUGINS", None)
     DIRECTORY.mkdir(parents=True, exist_ok=True)
     FATAL_STREAM = (DIRECTORY / f"fatal-{os.getpid()}.log").open("a")
     # This registers fatal-signal output only. No native watchdog is armed.
