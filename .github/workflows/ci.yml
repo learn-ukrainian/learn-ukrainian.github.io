@@ -460,10 +460,6 @@ jobs:
           snapshot=ci-artifacts/pytest-file-durations.json
           durations=$(python3 -m scripts.ci.split_tests duration-source \
             --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
-          # Temporary #12310 instrumentation, removed before implementation review.
-          if [ "$SHARD" = 12 ]; then
-            export PYTEST_PLUGINS="${PYTEST_PLUGINS:+${PYTEST_PLUGINS},}scripts.ci.pytest_worker_diagnostics"
-          fi
           # The shard's weights go into its artifact: pytest report divides out this
           # runner's speed before recording durations (hosted runners differ ~1.6x).
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
@@ -506,7 +502,6 @@ jobs:
             ci-artifacts/pytest-shard-*-needs-artifact.txt
             ci-artifacts/pytest-shard-*-weights.json
             ci-artifacts/pytest-shard-*-breadcrumbs/
-            ci-artifacts/pytest-shard-12-diagnostics/
           if-no-files-found: error
           retention-days: 14
 
@@ -732,146 +727,3 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
         run: '"$PYTHON_BIN" scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"'
-
-  # Temporary #12310 controlled reproduction, removed before implementation review.
-  pytest-original-shard-12:
-    name: pytest (original shard 12 diagnostic)
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    env:
-      LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
-      LU_PYTEST_TMP_BUDGET_GB: '5'
-      PYTEST_BREADCRUMB_DIR: ci-artifacts/pytest-original-shard-12-breadcrumbs
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      with:
-        persist-credentials: false
-        fetch-depth: 1
-    - run: bash scripts/ci/test_env.sh start postgres
-    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
-      with:
-        python-version-file: .python-version
-    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
-      with:
-        node-version: '22'
-        cache: npm
-        cache-dependency-path: package-lock.json
-    - run: bash scripts/ci/test_env.sh start npm
-    - name: Python CI environment
-      uses: ./.github/actions/python-ci-env
-    - run: bash scripts/ci/test_env.sh wait
-      timeout-minutes: 5
-    - name: Reproduce original shard 12 cohort
-      run: |
-        set -euo pipefail
-        mkdir -p ci-artifacts
-        export LU_PYTEST_SHARD_FILES=ci-artifacts/pytest-original-shard-12-files.txt
-        export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED=ci-artifacts/pytest-original-shard-12-needs-artifact.txt
-        export GIT_ALLOW_PROTOCOL=file
-        export PYTEST_PLUGINS="${PYTEST_PLUGINS:+${PYTEST_PLUGINS},}scripts.ci.pytest_worker_diagnostics"
-        cat > "$LU_PYTEST_SHARD_FILES" <<'ORIGINAL_SHARD_FILES'
-        tests/agent_runtime/test_acpx_provider_failures.py
-        tests/agent_runtime/test_agy_hook_config.py
-        tests/agent_runtime/test_grok_stop_reasons.py
-        tests/agent_runtime/test_runner_failover.py
-        tests/ai_agent_bridge/test_agy_review_profile.py
-        tests/ai_agent_bridge/test_claude_advisory_routing.py
-        tests/api/opsec_sweep/test_opsec_route_sweep.py
-        tests/api/opsec_sweep/test_opsec_sanitize.py
-        tests/api/test_delegate_router_cache.py
-        tests/api/test_manifest_config_import.py
-        tests/api/test_monitor_speed_usefulness.py
-        tests/api/test_occupancy.py
-        tests/build/test_fresh_e3b2.py
-        tests/build/test_v7_build_mdx_terminal.py
-        tests/ci/test_components.py
-        tests/common/test_jsonl_readers_eval.py
-        tests/curriculum/evidence/test_base_request.py
-        tests/curriculum/evidence/test_linkcheck.py
-        tests/curriculum/test_plan_validate_review_gates.py
-        tests/curriculum/validate/test_activity_report.py
-        tests/dispatcher/test_agy_canary.py
-        tests/dispatcher/test_providers_b.py
-        tests/eval/test_uk_behaviour_proof.py
-        tests/eval/test_uk_preamble_dispatch.py
-        tests/fleet/test_grok_product_usage.py
-        tests/fleet_comms/test_cto_recipient.py
-        tests/mcp/test_sources_tool_side_effects.py
-        tests/orchestration/test_interrupted_caller_matrix.py
-        tests/projects/open_model_data/test_v4_dataset_quality_evaluation.py
-        tests/projects/open_model_data/test_v5_mine_kyivan_rus_epigraphy.py
-        tests/review/test_review_lineage_supersession.py
-        tests/review/test_routing_baseline_bytecode.py
-        tests/review/test_verdict_parser.py
-        tests/storage/test_test_baseline.py
-        tests/test_admit_teacher_table.py
-        tests/test_agent_runtime_log_redaction_adapters.py
-        tests/test_aggregate_findings.py
-        tests/test_anchor_curation_worksheet.py
-        tests/test_ask_cursor.py
-        tests/test_atlas_source_entry_count.py
-        tests/test_audit_helpers.py
-        tests/test_batch_fix_mode.py
-        tests/test_batch_http_status_regressions.py
-        tests/test_branch_sweep.py
-        tests/test_check_agent_inbox_hook.py
-        tests/test_check_text.py
-        tests/test_citation_resolution_gate.py
-        tests/test_citation_resolve.py
-        tests/test_delegate_ownership_repository.py
-        tests/test_derivational_morphology.py
-        tests/test_dispose_published_records.py
-        tests/test_docs_catalogue.py
-        tests/test_docs_catalogue_coverage.py
-        tests/test_extract_book_headword_inventory.py
-        tests/test_fleet_comms_review_publisher.py
-        tests/test_frontend_ci_build_reuse.py
-        tests/test_gemini_adapter_auth.py
-        tests/test_generate_mdx.py
-        tests/test_github_client_lint.py
-        tests/test_goroh_etymology_ingest.py
-        tests/test_grok_integration.py
-        tests/test_lane_disk_retention.py
-        tests/test_lexicon_fill_from_content.py
-        tests/test_lint_fleet_roster.py
-        tests/test_llm_qg_demote.py
-        tests/test_mcp_sources_v4_invocation_recording.py
-        tests/test_migrations.py
-        tests/test_monitor_api_telemetry.py
-        tests/test_opsec_prepublish.py
-        tests/test_plan_drift_integration.py
-        tests/test_plan_reference_match_gate.py
-        tests/test_session_router_path_safety.py
-        tests/test_sum11_sovietization_scan.py
-        tests/test_trail_certification.py
-        tests/test_ulp_lesson_notes_ingest.py
-        tests/test_vendor_atlas_tree.py
-        tests/test_verify_manifest.py
-        tests/test_vocab_coverage.py
-        tests/test_vocab_progression.py
-        tests/test_wiki_compile_citation_alignment.py
-        tests/test_worktree_claims_lock_identity.py
-        tests/typesafe/test_semantic_find.py
-        tests/wiki/test_retrieval_bakeoff_9233_v61.py
-        ORIGINAL_SHARD_FILES
-        printf '%s  %s\n' 'c67dc134675dc679473014cfe9942b8c2c9d36a683f694cc9e802dc12b433fd3' "$LU_PYTEST_SHARD_FILES" | sha256sum --check
-        .venv/bin/python -m pytest tests -n 4 --dist=worksteal --max-worker-restart=0 \
-          --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
-          --override-ini addopts=-q --durations=25 --junitxml=ci-artifacts/pytest-original-shard-12.xml
-        .venv/bin/python -m scripts.ci.pg_skip_guard ci-artifacts/pytest-original-shard-12.xml \
-          --title 'pytest (original shard 12)' | tee -a "$GITHUB_STEP_SUMMARY"
-    - name: Upload pytest JUnit report
-      if: ${{ always() }}
-      timeout-minutes: 2
-      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
-      with:
-        name: pytest-original-shard-12-diagnostic
-        overwrite: true
-        path: |
-          ci-artifacts/pytest-original-shard-12*
-          ci-artifacts/pytest-shard-12-diagnostics/
-        if-no-files-found: error
-        retention-days: 14
