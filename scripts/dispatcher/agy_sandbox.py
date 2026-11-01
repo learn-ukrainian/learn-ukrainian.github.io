@@ -225,6 +225,14 @@ def _bind_one(index: int, raw: str, root: Path, home: Path) -> dict:
             raise ValueError("agy_input_refused: path is under a credential directory")
         if resolved == root or resolved.is_relative_to(root):
             raise ValueError("agy_input_refused: path is inside the primary checkout")
+        # The policy checks name `resolved`. The bytes come from the descriptor. Refuse when
+        # those are not the same file, which a parent-directory swap between the two can cause.
+        try:
+            checked = os.stat(resolved)
+        except OSError as exc:
+            raise ValueError("agy_input_refused: not a readable regular file") from exc
+        if (checked.st_dev, checked.st_ino) != (info.st_dev, info.st_ino):
+            raise ValueError("agy_input_refused: path changed before read")
         data = _read_exact(descriptor, info.st_size)
     finally:
         os.close(descriptor)
