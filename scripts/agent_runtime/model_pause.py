@@ -21,9 +21,11 @@ entry is inert, so the pause lifts by itself at the reset.
 ``headroom``: a model matching ``pattern`` is refused while the lane's weekly
 plan usage (routing-budget) is at or above ``max_weekly_used_pct``. The
 ``claude`` lane's usage is the meter of the account the claude seat runs as,
-which every reader names (``account_used_pct``, #10619, #10630). Unknown or
-stale usage refuses models matching a headroom entry; a missing or invalid
-policy file means no pauses.
+which every reader names (``account_used_pct``, #10619, #10630). An AGY seat
+also stops ``claude-*`` models on ``agents.gemini.claude_gpt_windows`` (the
+five-hour window and the weekly window). Unknown or stale usage refuses
+models matching a headroom entry; a missing or invalid policy file means no
+pauses.
 """
 
 from __future__ import annotations
@@ -324,20 +326,89 @@ def _monitor_base() -> str:
     return (os.environ.get("DELEGATE_MONITOR_API") or DEFAULT_BASE_URL).rstrip("/")
 
 
-def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> float | None:
-    """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None.
+# AGY publishes on the gemini lane. Claude models on that seat draw
+# claude_gpt_windows, not Gemini's own weekly percent and not the native plan.
+AGY_CLAUDE_WINDOW_LANE = "agy_claude"
+_AGY_CLAUDE_PROBE_LANE = "gemini"
+_AGY_CLAUDE_WINDOW_KEYS = ("five_hour", "weekly")
+_AGY_CLAUDE_WINDOW_CAP = 100
 
-    ``account`` is required: the ``claude`` lane is that account's meter
-    (``claude_account_lane.account_weekly_used_pct``), and None (no account
-    named, for a structural check) reads the ``claude`` lane as unknown. Other
-    lanes ignore it. Only a fresh probe reading counts.
+
+def _fresh_probe_record(info: Mapping[str, Any] | None) -> Mapping[str, Any] | None:
+    """The lane's codexbar block when the probe is fresh, else None.
+
+    Missing, unknown, stale, or any freshness other than fresh is not a usable
+    meter. This is the same rule as the weekly plan reading.
+    """
+    if not info or info.get("status") == "unknown":
+        return None
+    codexbar = info.get("codexbar")
+    if not isinstance(codexbar, Mapping):
+        return None
+    if codexbar.get("stale") is not False or codexbar.get("freshness") != "fresh":
+        return None
+    return codexbar
+
+
+def _finite_pct(value: object) -> float | None:
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        return None
+    number = float(value)
+    if not math.isfinite(number):
+        return None
+    return number
+
+
+def _window_used_pct(block: object) -> float | None:
+    """Used percent for one window, or None when that window has no fresh number.
+
+    A remaining percent at or below zero is exhaustion. A window that carries
+    its own stale or freshness flag uses the same fresh-probe rule.
+    """
+    if not isinstance(block, Mapping):
+        return None
+    if block.get("stale") is True:
+        return None
+    freshness = block.get("freshness")
+    if isinstance(freshness, str) and freshness != "fresh":
+        return None
+    remaining = _finite_pct(block.get("remaining_pct"))
+    if remaining is not None and remaining <= 0:
+        return 100.0
+    used = _finite_pct(block.get("used_pct"))
+    if used is not None:
+        return used
+    if remaining is not None:
+        return 100.0 - remaining
+    return None
+
+
+def _agy_claude_windows_used_pct(view: Mapping[str, Any]) -> float | None:
+    """The stricter fresh AGY Claude window, or None when the reading is unusable.
+
+    Both the five-hour window and the weekly window must be fresh numbers.
+    The headroom stop then compares that used percent with its cap.
     """
     from scripts.fleet import claude_account_lane
 
-    if account is not None:
-        claude_account_lane.require_account(account)
-    elif lane == "claude":
+    info = claude_account_lane.other_lane_record(view, _AGY_CLAUDE_PROBE_LANE)
+    if _fresh_probe_record(info) is None:
         return None
+    windows = info.get("claude_gpt_windows")
+    if not isinstance(windows, Mapping):
+        probe = info.get("codexbar")
+        windows = probe.get("claude_gpt_windows") if isinstance(probe, Mapping) else None
+    if not isinstance(windows, Mapping):
+        return None
+    readings = [_window_used_pct(windows.get(key)) for key in _AGY_CLAUDE_WINDOW_KEYS]
+    if any(reading is None for reading in readings):
+        return None
+    return max(readings)
+
+
+def _bound_routing_view(account: ClaudeAccount | None) -> Mapping[str, Any] | None:
+    from scripts.fleet import claude_account_lane
+
     base = _monitor_base()
     try:
         with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
@@ -347,18 +418,36 @@ def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> floa
     if not isinstance(data, dict):
         return None
     # Bound where it enters (#10770): the claude lane is only ever ``account``'s meter; with no account, none.
-    view = claude_account_lane.bind_snapshot(data, account=account or claude_account_lane.no_claude_account())
+    return claude_account_lane.bind_snapshot(data, account=account or claude_account_lane.no_claude_account())
+
+
+def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> float | None:
+    """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None.
+
+    ``account`` is required: the ``claude`` lane is that account's meter
+    (``claude_account_lane.account_weekly_used_pct``), and None (no account
+    named, for a structural check) reads the ``claude`` lane as unknown. Other
+    lanes ignore it. ``agy_claude`` reads the fresh AGY Claude windows on the
+    gemini lane. Only a fresh probe reading counts.
+    """
+    from scripts.fleet import claude_account_lane
+
+    if account is not None:
+        claude_account_lane.require_account(account)
+    elif lane == "claude":
+        return None
+    view = _bound_routing_view(account)
+    if view is None:
+        return None
     if lane == "claude" and account is not None:
         return claude_account_lane.account_weekly_used_pct(view, account=account)
+    if lane == AGY_CLAUDE_WINDOW_LANE:
+        return _agy_claude_windows_used_pct(view)
     info = claude_account_lane.other_lane_record(view, lane)
-    if not info or info.get("status") == "unknown":
-        return None  # missing, or withdrawn as stale by Monitor
-    codexbar = info.get("codexbar")
-    if not isinstance(codexbar, dict):
+    probe = _fresh_probe_record(info)
+    if probe is None:
         return None
-    if codexbar.get("stale") is not False or codexbar.get("freshness") != "fresh":
-        return None  # only a fresh probe reading may block a dispatch
-    value = codexbar.get("weekly_used_pct")
+    value = probe.get("weekly_used_pct")
     if isinstance(value, int | float) and not isinstance(value, bool):
         return float(value)
     return None
@@ -379,16 +468,24 @@ def account_used_pct(account: ClaudeAccount | None) -> Callable[[str], float | N
 def policy_for_seat(seat: str, *, review: bool = False, check_headroom: bool = True) -> dict[str, Any]:
     """Keep pauses and only the headroom entries that fund this seat.
 
-    Review admission protects the native Claude plan only. Structural
+    Review admission protects the native Claude plan only. An AGY seat also
+    stops ``claude-*`` models on that seat's Claude windows. Structural
     qualification and checks of unselected models omit headroom explicitly.
     """
     policy = load_policy()
-    return {**policy, "headroom": [
+    headroom = [
         entry for entry in _entries(policy, "headroom")
         if check_headroom
         and (not review or entry.get("lane") == "claude")
         and (seat == "claude" or entry.get("lane") != "claude")
-    ]}
+    ]
+    if check_headroom and seat == "agy":
+        headroom.append({
+            "lane": AGY_CLAUDE_WINDOW_LANE,
+            "pattern": "claude-*",
+            "max_weekly_used_pct": _AGY_CLAUDE_WINDOW_CAP,
+        })
+    return {**policy, "headroom": headroom}
 
 
 def headroom_stop(

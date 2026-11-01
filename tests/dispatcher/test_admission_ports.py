@@ -314,7 +314,7 @@ def headroom_box(tmp_path, monkeypatch):
         build=build, parse=lambda *_a: ParsedResult("literal final response", None, None)
     ))
 
-    def meter(a_used=84.0, b_used=11.0, codex_used=30.0):
+    def meter(a_used=84.0, b_used=11.0, codex_used=30.0, agy_weekly=None, agy_five_hour=0.0, agy_stale=False):
         import io
 
         window = dict(left_pct=None, resets_at=None, pace=None, pace_delta_pct=None, leftover_pct=None)
@@ -330,6 +330,21 @@ def headroom_box(tmp_path, monkeypatch):
                 "updated": None, "age_s": 60.0, "stale": False, "status": "ok", "reason": None,
             }},
         }
+        if agy_weekly is not None:
+            windows = {
+                "five_hour": {"used_pct": agy_five_hour, "remaining_pct": 100 - agy_five_hour},
+                "weekly": {"used_pct": agy_weekly, "remaining_pct": 100 - agy_weekly},
+            }
+            payload["agents"]["gemini"] = {
+                "status": "hot",
+                "codexbar": {
+                    "stale": agy_stale,
+                    "freshness": "stale_last_good" if agy_stale else "fresh",
+                    "weekly_used_pct": 22.0,
+                    "claude_gpt_windows": windows,
+                },
+                "claude_gpt_windows": windows,
+            }
         monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *_a, **_k: io.StringIO(json.dumps(payload)))
 
     def set_policy(value):
@@ -423,16 +438,16 @@ def test_invoke_rate_limit_short_circuit(headroom_box, monkeypatch):
     assert headroom_box.launches == []
 
 
-def test_headroom_stop_refuses_matching_models_only(headroom_box, capsys):
+def test_headroom_stop_refuses_matching_models_only(headroom_box, capsys, monkeypatch):
     """Ported from tests/test_model_pause.py::test_headroom_stop_refuses_matching_models_only."""
+    from scripts.agent_runtime import model_pause, target_admission
+    from scripts.dispatcher import headroom
+    from scripts.fleet.claude_account_lane import no_claude_account
+
     assert headroom_box.dispatch(model="claude-sonnet-5-5") == 2
     assert "MODEL_HEADROOM: claude-sonnet-5-5" in capsys.readouterr().err
     assert headroom_box.dispatch(agent="codex", model="gpt-6.1-sol") == 0
     # A Claude model on another route is outside the native plan cap.
-    from scripts.agent_runtime import target_admission
-    from scripts.dispatcher import headroom
-    from scripts.fleet.claude_account_lane import no_claude_account
-
     for model in ("claude-opus-5-5-high", "claude-sonnet-5-5-high"):
         assert headroom_box.dispatch(agent="agy", model=model) == 0
         for review in (False, True):
@@ -440,6 +455,20 @@ def test_headroom_stop_refuses_matching_models_only(headroom_box, capsys):
             target_admission._refuse_paused(
                 [model], claude_account=no_claude_account(), seat="agy", review=review,
             )
+    real = getattr(model_pause.routing_budget_used_pct, "__wrapped__", model_pause.routing_budget_used_pct)
+    monkeypatch.setattr(model_pause, "routing_budget_used_pct", real)
+    headroom_box.meter(agy_weekly=10.0)
+    assert headroom_box.dispatch(agent="agy", model="claude-opus-5-5-high") == 0
+    headroom_box.meter(agy_weekly=100.0)
+    assert headroom_box.dispatch(agent="agy", model="claude-opus-5-5-high") == 2
+    assert "MODEL_HEADROOM: claude-opus-5-5-high" in capsys.readouterr().err
+    headroom_box.meter(agy_weekly=10.0, agy_five_hour=100.0)
+    assert headroom_box.dispatch(agent="agy", model="claude-sonnet-5-5-high") == 2
+    headroom_box.meter(agy_weekly=10.0, agy_stale=True)
+    assert headroom_box.dispatch(agent="agy", model="claude-opus-5-5-high") == 2
+    assert "MODEL_HEADROOM_USAGE_UNKNOWN" in capsys.readouterr().err
+    headroom_box.meter(agy_weekly=100.0)
+    assert headroom_box.dispatch(agent="agy", model="gemini-3.8-flash-high") == 0
 
 
 def test_unreadable_usage_refuses_dispatch(headroom_box, capsys):
