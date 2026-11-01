@@ -522,7 +522,7 @@ def test_dirty_worktree_is_retried_and_removed_once_its_changes_are_gone(sandbox
     assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
     assert record["worktree_disposition_detail"]
     tree = Path(record["worktree_path"])
-    sandbox.settle(sandbox.dispatch())  # the retry finds the same change and keeps the tree
+    sandbox.sweep()  # scheduled recovery finds the same change and keeps the tree
     kept = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert (kept["worktree_disposition"], kept["worktree_disposition_reason"]) == ("retained", "dirty")
     assert tree.is_dir()
@@ -531,7 +531,7 @@ def test_dirty_worktree_is_retried_and_removed_once_its_changes_are_gone(sandbox
     (tree / ".pytest_cache").mkdir()
     (tree / ".pytest_cache/ignored.txt").write_text("ignored output\n")
     (sandbox.repo / ".git/info/exclude").write_text("/.pytest_cache/\n")
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert "worktree_disposition_detail" not in settled
