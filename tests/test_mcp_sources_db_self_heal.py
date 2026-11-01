@@ -623,6 +623,8 @@ def test_reopen_failure_with_a_persistent_error_is_a_typed_error_in_privacy_mode
     server, sdb, db, tmp_path, monkeypatch
 ):
     _add_dictionary_tables(db)
+    healthy, is_error, _ = _dispatch(server, "search_style_guide", {"query": "участь"})
+    assert is_error is False and "Приймати участь" in healthy[0].text
     damaged = _cache_a_damaged_connection(server, sdb, db, monkeypatch, failures=None)
 
     def path_missing():
