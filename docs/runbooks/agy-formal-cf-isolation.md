@@ -53,7 +53,7 @@ A new id becomes usable only after every step below has passed, in order. A list
 3. **Adapter selector.** Add the listed id to `_AGY_GENERAL_MODEL_SLUGS` (Gemini) in `scripts/agent_runtime/adapters/agy.py`. Claude ids go in `_AGY_MODEL_SLUGS` and `_AGY_CLAUDE_SLUGS` instead. Without this step, `check-model` reports the id as unrecognized.
 4. **Runtime attestation.** Every run attests its model from AGY's `init` event. `identity_failure` (`providers/agy.py`) settles a run whose attested family differs from the catalog family as `agy_model_identity_unverified`, so the catalog `family` must be correct.
 5. **Health and quota.** Before launch, `headroom.check_plan` and `headroom.check_runtime` (`scripts/dispatcher/headroom.py`) read model pauses and recent rate limits for `(agy, <id>)`. The new id shares the `agy` quota bucket of the AGY endpoint. A quota refusal settles as `rate_limited` with AGY's reset hint.
-6. **Availability (region, account).** If an id is listed in the catalog but AGY does not offer it to this account, AGY refuses it before any turn. That run settles as the typed refusal `agy_model_unavailable: <AGY's text>`, never as a bare exit status. Treat that refusal as the provider's availability answer. Do not retry it, and do not reroute to it.
+6. **Availability (region, account).** If an id is listed in the catalog but AGY does not offer it to this account, AGY refuses it before any turn. That run settles as the typed refusal `agy_model_unavailable: AGY does not offer the requested model to this account`, never as a bare exit status. Treat that refusal as the provider's availability answer. Do not retry it, and do not reroute to it.
 7. **Resolver eligibility.** Run `closeout_cli resolve-reviewer` (see the `review-loop` skill) for each profile the approval names. Confirm that the id appears only where its catalog `roles` and `review_profiles` allow.
 8. **Dry run, then one live canary.** First run the dry run below, which creates nothing:
 
@@ -64,7 +64,7 @@ A new id becomes usable only after every step below has passed, in order. A list
 
    The printed argv must carry `--model <listed id>` inside the read-only boundary launcher. Then run one live read-only canary, which must settle `done` with an attested model of the right family and a boundary receipt whose canary passed. A failed canary keeps the model on `hold`.
 
-A terminal failure from AGY keeps AGY's own status and error in the task record, for example `agy: terminal result unsuccessful (ERROR): API error …: EOF`. Read that text to tell a transport fault from a model-output fault. When the text holds a credential-shaped value, the whole excerpt is withheld rather than partly masked.
+A terminal failure from AGY records AGY's terminal status and a fixed error class (`transport`, `model_selection` or `unclassified`) in the task record, for example `agy: terminal result unsuccessful (ERROR): transport error; its text is in the task's retained stream`. The record never copies AGY's error text, because provider text can hold any value. Read the text from the task's retained stream to tell a transport fault from a model-output fault.
 
 ## Substitute formal CF
 

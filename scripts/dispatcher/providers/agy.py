@@ -24,17 +24,13 @@ _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in pr
 _AGY_ERROR_PREFIX = "AGY_ERROR:"
 _CAPACITY_STATUSES = frozenset({"RESOURCE_EXHAUSTED", "UNAVAILABLE"})
 _CAPACITY_CODES = frozenset({429, 529})
-_STATUS_CHARS = 40
-_ERROR_DETAIL_CHARS = 300
 # AGY's terminal error when --model names a model this account is not offered (live probe 2026-11-01).
 _MODEL_SELECTION_REFUSAL = "invalid model selection"
-_WITHHELD = "[withheld: the text held a credential-shaped value]"
-# A credential name followed by a value, or a bearer value. The redactor misses some of these
-# forms (YAML-style `secret: value`), so their presence alone withholds the excerpt.
-_CREDENTIAL_SHAPE_RE = re.compile(
-    r"(?i)(?:authorization|cookie|passw(?:or)?d|secret|token|api[_-]?key|credential|private[_-]?key)s?[\"']?\s*[:=]"
-    r"|\bbearer\s+\S"
-)
+# The record never copies AGY's error text: provider text can hold any value, and no redactor
+# recognizes every secret form. It carries the terminal status enum and, where AGY's error starts
+# with a known prefix, a fixed class name. The full text stays in the task's retained stream.
+_STATUS_RE = re.compile(r"[A-Z][A-Z_]{0,39}")
+_ERROR_CLASSES = (("API error", "transport"), (_MODEL_SELECTION_REFUSAL, "model_selection"))
 
 
 def _stderr_capacity(stderr: str) -> bool:
@@ -289,34 +285,19 @@ def _schema_refusal(stderr: str) -> str | None:
     return None
 
 
-def _excerpt(text: str) -> str:
-    """One bounded line of AGY's error for the task record, or a withheld marker. Fails closed.
-
-    Partial masking cannot be trusted here: the shared redactor is line-based, and flattening or
-    re-splitting a partly masked value can expose its remainder. So the text is kept only when the
-    redactor masks nothing in any reading of it: the original, every logical line boundary
-    (U+000B, U+000C, U+001C-U+001E, U+0085, U+2028, U+2029, CR) as LF, and the flattened line;
-    and only when no credential name is followed by a value. Otherwise the whole excerpt is withheld.
-    """
-    from scripts.secret_redactor import redact_text
-
-    printable = "".join(character if character.isprintable() else " " for character in text)
-    line = " ".join(printable.split())
-    if _CREDENTIAL_SHAPE_RE.search(line) or any(
-        redact_text(reading) != reading for reading in (text, "\n".join(text.splitlines()), line)
-    ):
-        return _WITHHELD
-    return line.replace(str(Path.home()), "~")[:_ERROR_DETAIL_CHARS]
-
-
 def _unsuccessful(result: dict) -> str:
-    """The failure with AGY's own terminal status and error, so a transport fault is told from a model one."""
+    """The failure with AGY's terminal status and error class, so a transport fault is told from a model one.
+
+    Only fixed vocabulary reaches the record: a status that is not an upper-case enum becomes
+    ``unrecognized``, and an error with no known prefix becomes ``unclassified``.
+    """
     status, detail = result.get("status"), result.get("error")
     message = "agy: terminal result unsuccessful"
     if isinstance(status, str) and status:
-        message += f" ({_excerpt(status)[:_STATUS_CHARS]})"
+        message += f" ({status if _STATUS_RE.fullmatch(status) else 'unrecognized'})"
     if isinstance(detail, str) and detail.strip():
-        message += ": " + _excerpt(detail)
+        kind = next((name for prefix, name in _ERROR_CLASSES if detail.startswith(prefix)), "unclassified")
+        message += f": {kind} error; its text is in the task's retained stream"
     return message
 
 
@@ -411,7 +392,7 @@ def parse(
     ):
         # AGY refused the --model before any init or turn: the model is not offered to this
         # account (an unlisted id, or one withheld in its region). A typed refusal, not a run failure.
-        return ParsedResult(None, None, "agy_model_unavailable: " + _excerpt(quota_message))
+        return ParsedResult(None, None, "agy_model_unavailable: AGY does not offer the requested model to this account")
     if returncode:
         unsuccessful = error == _unsuccessful(result) and error != "agy: terminal result unsuccessful"
         # The exit status leads; AGY's own terminal status and error stay readable after it.

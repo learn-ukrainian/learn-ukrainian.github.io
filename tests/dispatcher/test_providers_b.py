@@ -504,7 +504,7 @@ def test_agy_success_while_background_work_is_open_is_incomplete():
         (
             ERROR["agy"],
             SUCCESS["agy"],
-            ParsedResult("Finished.", None, "agy: terminal result unsuccessful (ERROR): failed"),
+            ParsedResult("Finished.", None, "agy: terminal result unsuccessful (ERROR): unclassified error; its text is in the task's retained stream"),
         ),
         (
             '{"event":"result","result":null}',
@@ -612,10 +612,10 @@ def test_agy_quota_error_settles_rate_limited_and_a_real_failure_stays_failed():
         assert (result.rate_limited, result.error) == (True, f"agy: {_AGY_QUOTA}")
     ordinary = load("agy").parse(ERROR["agy"] + "\n", "boom\n", 3, None)
     assert (ordinary.rate_limited, ordinary.error) == (
-        False, "agy: exited with status 3; terminal result unsuccessful (ERROR): failed",
+        False, "agy: exited with status 3; terminal result unsuccessful (ERROR): unclassified error; its text is in the task's retained stream",
     )
     prose = load("agy").parse(stdout, f"error: {_AGY_QUOTA}\n", 0, None)
-    assert (prose.rate_limited, prose.error) == (False, f"agy: terminal result unsuccessful (ERROR): {_AGY_QUOTA}")
+    assert (prose.rate_limited, prose.error) == (False, "agy: terminal result unsuccessful (ERROR): unclassified error; its text is in the task's retained stream")
     dirty = load("agy").parse(stdout + "not json\n", stderr, 0, None)
     assert dirty.rate_limited is False
     boolean_code = stderr.replace('"error_code": 429', '"error_code": true')
@@ -635,10 +635,15 @@ def test_agy_unoffered_model_settles_typed_unavailable():
         "status": "ERROR", "response": "", "error": refusal, "num_turns": 0, "finished_reason": "error",
     }}
     unoffered = load("agy").parse(json.dumps(terminal) + "\n", f"error: {refusal}\n", 1, None)
-    assert (unoffered.rate_limited, unoffered.error) == (False, f"agy_model_unavailable: {refusal}")
+    assert (unoffered.rate_limited, unoffered.error) == (
+        False, "agy_model_unavailable: AGY does not offer the requested model to this account",
+    )
     started = '{"event":"init","init":{"model":"gemini-3.8-flash-high"}}\n' + json.dumps(terminal) + "\n"
     ordinary = load("agy").parse(started, f"error: {refusal}\n", 1, None)
-    assert ordinary.error == f"agy: exited with status 1; terminal result unsuccessful (ERROR): {refusal}"
+    assert ordinary.error == (
+        "agy: exited with status 1; terminal result unsuccessful (ERROR): "
+        "model_selection error; its text is in the task's retained stream"
+    )
 
 # --- AGY read-only boundary (C-3027) -------------------------------------------------------------
 
