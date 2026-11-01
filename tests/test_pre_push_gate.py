@@ -1244,6 +1244,132 @@ def test_overlays_outside_exact_node_modules_directories_remain_refused(
     assert relative in raised.value.detail
 
 
+DEPLOY_ROOTS_IGNORED = ".claude/\n.agent/*\n.codex/\n.agents/\n.gemini/\n"
+DEPLOYED_HOOK = "import sys\nsys.exit(0)\n"
+
+
+def _commit_deploy_source(repo: Path, source: str, text: str = DEPLOYED_HOOK) -> None:
+    _write(repo, ".gitignore", DEPLOY_ROOTS_IGNORED)
+    _write(repo, source, text)
+    _commit(repo, "deploy source", ".gitignore", source)
+
+
+@pytest.mark.parametrize(
+    ("source", "deployed"),
+    [
+        ("agents_extensions/shared/hooks/guard.py", ".claude/hooks/guard.py"),
+        ("agents_extensions/shared/hooks/guard.py", ".agent/hooks/guard.py"),
+        ("agents_extensions/shared/hooks/guard.py", ".codex/hooks/guard.py"),
+        ("agents_extensions/codex/hooks/guard.py", ".codex/hooks/guard.py"),
+        ("agents_extensions/shared/skills/s/run.py", ".agents/skills/s/run.py"),
+        ("agents_extensions/shared/skills/s/run.py", ".gemini/skills/s/run.py"),
+        ("agents_extensions/agy/hooks/guard.py", ".agents/hooks/guard.py"),
+        ("gemini_extensions/hooks/guard.py", ".gemini/hooks/guard.py"),
+    ],
+)
+def test_deployed_copies_identical_to_the_commit_are_not_validation_overlays(
+    repo: Path, source: str, deployed: str
+) -> None:
+    _commit_deploy_source(repo, source)
+    _write(repo, deployed, DEPLOYED_HOOK)
+
+    assert gate.reject_untracked_inputs(repo) is None
+
+
+def test_a_deployed_copy_that_differs_from_its_committed_source_is_refused(repo: Path) -> None:
+    _commit_deploy_source(repo, "agents_extensions/shared/hooks/guard.py")
+    _write(repo, ".claude/hooks/guard.py", DEPLOYED_HOOK + "# stale or edited\n")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert ".claude/hooks/guard.py" in raised.value.detail
+    assert "npm run agents:deploy" in raised.value.detail
+
+
+@pytest.mark.parametrize(
+    "deployed",
+    [".claude/hooks/extra.py", ".claude/guard.py", ".gemini/rules/guard.py", ".agents/guard.py"],
+)
+def test_a_file_under_a_deploy_root_with_no_committed_source_is_refused(repo: Path, deployed: str) -> None:
+    _commit_deploy_source(repo, "agents_extensions/shared/hooks/guard.py")
+    _write(repo, deployed, DEPLOYED_HOOK)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert deployed in raised.value.detail
+
+
+def test_a_symlinked_deployed_copy_is_refused(repo: Path) -> None:
+    source = "agents_extensions/shared/hooks/guard.py"
+    _commit_deploy_source(repo, source)
+    (repo / ".claude/hooks").mkdir(parents=True)
+    (repo / ".claude/hooks/guard.py").symlink_to(repo / source)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert ".claude/hooks/guard.py" in raised.value.detail
+
+
+DEPLOY_INPUTS = (
+    ".gitignore",
+    ".gemini",
+    "agents_extensions",
+    "gemini_extensions",
+    "scripts/check_rules_deployment.sh",
+    "scripts/deploy",
+    "scripts/deploy_orphan_paths.sh",
+    "scripts/deploy_prompts.sh",
+    "scripts/lib",
+    "scripts/lint",
+    "scripts/lint_prompts.py",
+)
+
+
+def test_the_deploy_of_the_committed_tree_leaves_no_validation_overlays(tmp_path: Path) -> None:
+    """DEPLOYED_COPY_SOURCES restates the deploy's targets; a drift between them fails here (#12387)."""
+    root = tmp_path / "deployed"
+    root.mkdir()
+    archive = subprocess.run(
+        [GIT, "archive", "--format=tar", "HEAD", "--", *DEPLOY_INPUTS],
+        capture_output=True,
+        check=True,
+        cwd=REPO_ROOT,
+        env=_env(),
+        timeout=60,
+    )
+    subprocess.run(["tar", "-x", "-C", str(root)], input=archive.stdout, check=True, timeout=60)
+    _git(root, "init", "-b", "main")
+    _git(root, "config", "user.email", "gate@example.invalid")
+    _git(root, "config", "user.name", "Gate Test")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "deploy inputs")
+    interpreter = root / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
+    interpreter.chmod(0o755)
+
+    deploy = subprocess.run(
+        ["bash", "scripts/deploy_prompts.sh"],
+        capture_output=True,
+        check=False,
+        cwd=root,
+        env=_env(),
+        text=True,
+        timeout=300,
+    )
+    assert deploy.returncode == 0, deploy.stdout[-4000:] + deploy.stderr[-4000:]
+    deployed = _git(root, "ls-files", "-z", "--others", "--", *gate.OVERLAY_PATHSPECS).stdout.split("\0")
+    assert any(path.startswith(".claude/hooks/") for path in deployed)  # the scan below is not vacuous
+
+    assert gate.reject_untracked_inputs(root) is None
+
+
 def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(repo: Path) -> None:
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green test", "tests/test_new.py")

@@ -92,6 +92,19 @@ OVERLAY_PATHSPECS = (
     ":(glob)**/setup.cfg",
     ":(glob)**/pyproject.toml",
 )
+# Where scripts/deploy_prompts.sh writes its ignored copies, and the committed trees it copies them from
+# (#12387). A copy byte-identical to the outgoing commit's blob at one of its source paths is fixed by
+# the commit the receipt binds, so it is not an overlay. Keep in parity with the deploy's rsync targets.
+DEPLOYED_COPY_SOURCES = (
+    (".claude/", ("agents_extensions/shared/",)),
+    (".agent/", ("agents_extensions/shared/",)),
+    (".codex/", ("agents_extensions/shared/", "agents_extensions/codex/")),
+    (".agents/", ("agents_extensions/agy/",)),
+    (".agents/skills/", ("agents_extensions/shared/skills/",)),
+    (".gemini/", ("gemini_extensions/",)),
+    (".gemini/skills/", ("agents_extensions/shared/skills/",)),
+    (".gemini/rules/", ("agents_extensions/shared/rules/",)),
+)
 
 
 class GateOutcome(Exception):
@@ -318,8 +331,61 @@ def is_regenerable_dependency_input(path: str, *, root: Path, tracked: set[str])
     return False
 
 
+def deployed_copy_sources(path: str) -> list[str]:
+    """The committed paths ``DEPLOYED_COPY_SOURCES`` says the deploy may have copied ``path`` from."""
+    return [
+        source + path.removeprefix(target)
+        for target, sources in DEPLOYED_COPY_SOURCES
+        if path.startswith(target)
+        for source in sources
+    ]
+
+
+def blob_id(data: bytes, object_format: str) -> str:
+    """Git's object id for a blob holding ``data``, in the repository's object format."""
+    return hashlib.new(object_format, b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def committed_deployed_copies(paths: list[str], *, root: Path) -> set[str]:
+    """The ``paths`` that are regular files byte-identical to HEAD's blob at a deploy source path.
+
+    Anything Git cannot answer, a symlink or other non-regular leaf, or a mismatch stays an overlay.
+    """
+    sources = {path: deployed_copy_sources(path) for path in paths}
+    wanted = sorted({source for listed in sources.values() for source in listed})
+    if not wanted:
+        return set()
+    object_format = (git_ok("rev-parse", "--show-object-format", cwd=root) or "").strip()
+    records = git_records("--literal-pathspecs", "ls-tree", "-z", "HEAD", "--", *wanted, cwd=root)
+    if object_format not in ("sha1", "sha256") or records is None:
+        return set()
+    blobs: dict[str, str] = {}
+    for record in records:
+        meta, _, name = record.partition("\t")
+        fields = meta.split(" ")
+        if len(fields) == 3 and fields[1] == "blob" and fields[0] in ("100644", "100755"):
+            blobs[name] = fields[2]
+    proven = set()
+    for path, listed in sources.items():
+        try:
+            descriptor = os.open(root / path, os.O_RDONLY | os.O_NOFOLLOW)
+        except OSError:
+            continue
+        with os.fdopen(descriptor, "rb") as handle:
+            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                continue
+            digest = blob_id(handle.read(), object_format)
+        if any(blobs.get(source) == digest for source in listed):
+            proven.add(path)
+    return proven
+
+
 def reject_untracked_inputs(root: Path) -> None:
-    """Refuse when untracked or ignored Python/config files could change the run but not the receipt."""
+    """Refuse when untracked or ignored Python/config files could change the run but not the receipt.
+
+    Two derived sets are not overlays: dependency directories proven by their lockfile, and copies the
+    deploy wrote that are byte-identical to the outgoing commit's sources (#12387).
+    """
     listing = git_ok("ls-files", "-z", "--others", "--", *OVERLAY_PATHSPECS, cwd=root)
     if listing is None:
         raise GateOutcome("state_unavailable", "cannot list untracked validation inputs", incomplete=True)
@@ -330,15 +396,20 @@ def reject_untracked_inputs(root: Path) -> None:
         if tracked_listing is None:
             raise GateOutcome("state_unavailable", "cannot list tracked dependency inputs", incomplete=True)
         tracked = set(tracked_listing.split("\0"))
-    overlays = sorted(
-        path for path in candidates if not is_regenerable_dependency_input(path, root=root, tracked=tracked)
-    )
+    overlays = [path for path in candidates if not is_regenerable_dependency_input(path, root=root, tracked=tracked)]
+    copies = committed_deployed_copies(overlays, root=root)
+    overlays = sorted(path for path in overlays if path not in copies)
     if overlays:
         shown = ", ".join(overlays[:10]) + (f" (+{len(overlays) - 10} more)" if len(overlays) > 10 else "")
+        stale = (
+            "Deployed agent copies must match the commit: rerun `npm run agents:deploy` after committing. "
+            if any(deployed_copy_sources(path) for path in overlays)
+            else ""
+        )
         raise GateOutcome(
             "untracked_inputs",
             f"untracked or ignored files outside the outgoing commit could change the validation run: {shown}; "
-            "commit them or remove them first. "
+            f"commit them or remove them first. {stale}"
             "For agent task artifacts, use the preserved task evidence directory ($LU_TASK_EVIDENCE_DIR).",
         )
 
