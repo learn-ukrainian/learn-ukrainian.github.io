@@ -36,7 +36,7 @@ Legacy `word_target`, section `words` and size-policy fields in the plan are ign
 
 {SIZE_POLICY}
 
-Section coverage checklist: teach these points with the explanation, worked examples and practice the learner needs.
+Section checklist: teach each section's content points from the full plan, with no length quota.
 
 {SECTION_WORD_BUDGETS}
 

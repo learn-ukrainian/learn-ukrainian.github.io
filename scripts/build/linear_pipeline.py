@@ -3810,9 +3810,9 @@ def _seminar_folk_writer_rules(level: str, context: Mapping[str, Any]) -> str:
 
 
 def _render_section_coverage(plan: Mapping[str, Any]) -> str:
-    """Render content points without using deprecated section sizing metadata."""
+    """List sections; the full plan carries their authoritative teaching points."""
     return "\n".join(
-        f"- {section['section']}: " + "; ".join(section.get("points", []))
+        f"- {section['section']}"
         for section in plan.get("content_outline", [])
         if isinstance(section, Mapping) and section.get("section")
     )
@@ -10459,7 +10459,6 @@ def _contract_yaml(plan: Mapping[str, Any]) -> str:
         "sections": [
             {
                 "title": section["section"],
-                "points": section.get("points", []),
             }
             for section in plan.get("content_outline", [])
         ],
