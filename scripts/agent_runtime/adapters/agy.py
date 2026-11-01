@@ -3441,13 +3441,12 @@ def merge_saved_step_outputs(stdout: str, saved: list[dict[str, Any]]) -> tuple[
             index[(conversation, step_index)] = item
     retained = missing = 0
     lines: list[str] = []
-    for line in stdout.splitlines(keepends=True):
-        stripped = line.strip()
-        if not stripped:
+    for line in jsonl_lines(stdout):
+        if not line.strip():
             lines.append(line)
             continue
         try:
-            event = json.loads(stripped)
+            event = json.loads(line)
         except ValueError:
             lines.append(line)
             continue
@@ -3476,9 +3475,8 @@ def merge_saved_step_outputs(stdout: str, saved: list[dict[str, Any]]) -> tuple[
             reason = found.get("output_missing") if isinstance(found, Mapping) else None
             info["output_missing"] = reason if isinstance(reason, str) and reason else "file_removed"
             missing += 1
-        newline = "\n" if line.endswith("\n") else ""
-        lines.append(json.dumps(event, ensure_ascii=False, separators=(",", ":")) + newline)
-    return "".join(lines), retained, missing
+        lines.append(json.dumps(event, ensure_ascii=False, separators=(",", ":")))
+    return "\n".join(lines), retained, missing
 
 
 def _coerce_args(value: Any) -> dict[str, Any]:
