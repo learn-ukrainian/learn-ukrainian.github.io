@@ -441,8 +441,9 @@ def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
 
     A fallback child started from inside this scope stays in it. Stopping the
     scope would cancel that task. Membership that cannot be read counts too,
-    so the stop is skipped and the liveness check keeps the tree. A child that
-    has its own scope is not a member here and does not block the stop.
+    and so does a task record or task directory that cannot be read, so the
+    stop is skipped and the liveness check keeps the tree. A child that has
+    its own scope is not a member here and does not block the stop.
     """
     from scripts.orchestration import worker_leftovers
 
@@ -454,7 +455,11 @@ def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
         return False
     task_id = record.get("task_id")
     try:
-        others = store.list_tasks()
+        root = store.tasks_dir()
+        if not root.is_dir():
+            return True
+        next(root.iterdir(), None)
+        others = store.list_tasks(strict=True)
     except (OSError, ValueError):
         return True
     protected: set[int] = set()
