@@ -418,15 +418,26 @@ def _agy_claude_windows_used_pct(view: Mapping[str, Any]) -> float | None:
     return max(readings)
 
 
+class MonitorUnavailable(Exception):
+    """The Monitor routing-budget did not answer: a transport failure, not a missing usage reading."""
+
+
 def _bound_routing_view(account: ClaudeAccount | None) -> Mapping[str, Any] | None:
+    """The routing-budget bound to ``account``; None when the answer has no readable snapshot.
+
+    Raises :class:`MonitorUnavailable` when the Monitor is unreachable, times
+    out, fails the request or truncates its answer.
+    """
     from scripts.fleet import claude_account_lane
 
     base = _monitor_base()
     try:
         with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
             data = json.load(resp)
-    except (OSError, ValueError, http.client.HTTPException):
-        return None  # unreachable, unreadable or truncated: no usable reading
+    except (OSError, http.client.HTTPException):
+        raise MonitorUnavailable from None
+    except ValueError:
+        return None  # answered, but not a readable snapshot: no usable reading
     if not isinstance(data, dict):
         return None
     # Bound where it enters (#10770): the claude lane is only ever ``account``'s meter; with no account, none.
@@ -440,7 +451,8 @@ def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> floa
     (``claude_account_lane.account_weekly_used_pct``), and None (no account
     named, for a structural check) reads the ``claude`` lane as unknown. Other
     lanes ignore it. ``agy_claude`` reads the fresh AGY Claude windows on the
-    gemini lane. Only a fresh probe reading counts.
+    gemini lane. Only a fresh probe reading counts. A Monitor that does not
+    answer raises :class:`MonitorUnavailable` instead of reading as unknown.
     """
     from scripts.fleet import claude_account_lane
 
@@ -540,7 +552,10 @@ def refusal_reason(
     # Public-safe codes only: reasons, times and usage stay in the private policy.
     if active_pause(model, policy, now):
         return f"MODEL_PAUSED: {model} is paused by operator policy"
-    stop = headroom_stop(model, policy, used_pct)
+    try:
+        stop = headroom_stop(model, policy, used_pct)
+    except MonitorUnavailable:
+        return f"MODEL_HEADROOM_MONITOR_UNAVAILABLE: {model} usage was not read because the Monitor did not answer"
     if stop is not None and stop["used_pct"] is None:
         return f"MODEL_HEADROOM_USAGE_UNKNOWN: {model} has no fresh plan usage reading"
     if stop is not None:

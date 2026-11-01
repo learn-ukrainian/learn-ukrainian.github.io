@@ -243,7 +243,32 @@ def test_truncated_response_is_unavailable(monkeypatch) -> None:
         raise http.client.IncompleteRead(b"{")
 
     monkeypatch.setattr(mp.urllib.request, "urlopen", boom)
-    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
+    with pytest.raises(mp.MonitorUnavailable):
+        mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT)
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 90}]}
+    reason = mp.refusal_reason("claude-opus-5-5", policy=policy, used_pct=mp.account_used_pct(HOST_ACCOUNT))
+    assert reason and reason.startswith("MODEL_HEADROOM_MONITOR_UNAVAILABLE:")
+
+
+def test_monitor_timeout_is_a_typed_transport_refusal(monkeypatch) -> None:
+    """Defect (#12384): a Monitor timeout was reported as a missing plan usage reading."""
+    import io
+
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 90}]}
+
+    def reason() -> str | None:
+        return mp.refusal_reason("claude-opus-5-5", policy=policy, used_pct=mp.account_used_pct(HOST_ACCOUNT))
+
+    def slow(*_a, **_k):
+        raise TimeoutError("timed out")
+
+    monkeypatch.setattr(mp.urllib.request, "urlopen", slow)
+    assert reason() == (
+        "MODEL_HEADROOM_MONITOR_UNAVAILABLE: claude-opus-5-5 usage was not read because the Monitor did not answer"
+    )
+    # Control: a Monitor that answers without a fresh reading is still unknown usage.
+    monkeypatch.setattr(mp.urllib.request, "urlopen", lambda *_a, **_k: io.StringIO('{"agents": {}}'))
+    assert reason() == "MODEL_HEADROOM_USAGE_UNKNOWN: claude-opus-5-5 has no fresh plan usage reading"
 
 
 def test_native_claude_alias_is_paused_with_its_family() -> None:
