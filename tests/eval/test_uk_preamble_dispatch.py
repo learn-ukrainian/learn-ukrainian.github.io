@@ -525,7 +525,10 @@ def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fre
     assert accepted["task_id"] == "retry-seat-attempt-2" and accepted["accepted"] is True
     assert accepted["identity_problem"] is None and accepted["condition_problem"] is None
     assert len({read_json(tasks_dir / f"{tid}.json")["run_nonce"] for tid in started}) == 3
-    # Only the settlement outcome is added to the failed record; nothing else is rewritten.
+    assert read_json(tasks_dir / f"{task.task_id}.json") == original
+    assert read_json(tasks_dir / "retry-seat-attempt-1.json") == previous
+    worker.settle_left_worktrees()
+    # Only explicit scheduled settlement adds a disposition to the failed record.
     settled = dict(worktree_disposition="retained", worktree_disposition_reason="provider_liveness_unknown")
     assert read_json(tasks_dir / f"{task.task_id}.json") == {**original, **settled}
     assert raw_path(results, task.task_id).read_bytes() == original_raw
