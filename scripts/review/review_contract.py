@@ -202,7 +202,7 @@ def _whole_reply_fence(text: str) -> str:
         or not _closes_code_fence(lines[-1], block.markup)
     ):
         return text
-    content = block.content.strip()
+    content = "\n".join(lines[1:-1]).strip()
     return content if content.startswith("{") else text
 
 

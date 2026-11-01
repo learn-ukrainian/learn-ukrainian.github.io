@@ -369,8 +369,9 @@ def test_reply_that_is_one_json_fence_parses_as_bare_json(info):
         '```python\n{"findings": []}\n```',
         '```json\n{"findings": []}\n```\nThanks.',
         '~~~\nVERDICT: APPROVE\nSCORE: 9/10\n```json\n{"findings": []}\n```\n~~~',
+        '```json\n{"findings": [], "overall": {"explanation": "a\x00b"}}\n```',
     ],
-    ids=["prose", "two-fences", "unclosed", "blockquote", "python", "trailing-text", "fenced-envelope"],
+    ids=["prose", "two-fences", "unclosed", "blockquote", "python", "trailing-text", "fenced-envelope", "nul"],
 )
 def test_fence_with_prose_or_extra_blocks_still_fails_closed(raw):
     with pytest.raises(ContractError):
