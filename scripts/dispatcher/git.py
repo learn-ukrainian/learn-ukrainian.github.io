@@ -127,7 +127,8 @@ def _private_remote_git(task_id: str, remote: str):
     try:
         run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir, credential_remote=remote)
         run("init", "--bare", "--template=")
-        for key, value in (("remote.origin.url", remote), ("remote.origin.promisor", "true"),
+        for key, value in (("maintenance.auto", "false"),
+                           ("remote.origin.url", remote), ("remote.origin.promisor", "true"),
                            ("remote.origin.partialCloneFilter", "blob:none"),
                            ("extensions.partialClone", "origin")):
             run("config", key, value)
