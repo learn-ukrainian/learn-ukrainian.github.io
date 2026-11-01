@@ -206,12 +206,18 @@ def pr(**updates):
 
 
 def test_p3_only_changes_requested_marker_is_approval():
-    """A standing CHANGES_REQUESTED marker whose only open finding is P3 reads as APPROVED."""
-    reply = (
-        "VERDICT: REQUEST_CHANGES\n"
-        "F1 [P3] scripts/example.py:10 the count is high. Impact: one extra hold. "
-        "Required behaviour: count each removal once.\n"
-    )
+    """A standing CHANGES_REQUESTED marker whose structured findings are all P3 reads as APPROVED."""
+    reply = json.dumps({
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": "incorrect", "explanation": "one residual", "confidence": 0.9},
+        "findings": [{
+            "id": "F1", "title": "Synthetic finding", "body": "Synthetic finding body.",
+            "priority": "P3", "confidence": 0.9, "category": "correctness",
+            "location": {"path": "scripts/example.py", "start_line": 10, "end_line": 10, "claim_type": "present"},
+            "verbatim": "value = shared_state", "why_wrong": "The state is not reset.",
+            "smallest_fix": "Rebuild the state for every call.", "sources": ["none"],
+        }],
+    })
     body = build_comment(
         sha=SHA, task_id="review-one", started=START, verdict="CHANGES_REQUESTED",
         model="gpt-6.1-sol", family="openai", reply=reply,
