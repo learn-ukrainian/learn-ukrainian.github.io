@@ -1171,9 +1171,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                             previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
                 elif reason == "ready" and queued is True:
-                    gh.enqueue(number, head)
                     lines.append(f"#{number} remains queued")
-                    estimated_remaining -= 30
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             elif reason == "ready":

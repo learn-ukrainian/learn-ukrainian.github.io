@@ -308,7 +308,7 @@ def test_queued_with_cf_at_head_is_kept(tmp_path: Path) -> None:
     lines, failed = keeper.run(fake, path, apply=True)
     assert not failed
     assert mutations(fake) == []
-    assert ("cleanup", (42, HEAD_A)) in fake.actions
+    assert ("cleanup", (42, HEAD_A)) not in fake.actions
     assert "reason=ready" in lines[0]
     assert not any("revoked" in line for line in lines)
     assert json.loads(path.read_text())["queued"]["42"] == HEAD_A
@@ -556,7 +556,7 @@ def test_queued_approval_then_unknown_marker_revokes(tmp_path: Path) -> None:
     path = tmp_path / "state.json"
     keeper.run(fake, path, apply=True)
     assert mutations(fake) == []
-    assert ("cleanup", (42, HEAD_A)) in fake.actions
+    assert ("cleanup", (42, HEAD_A)) not in fake.actions
     fake.comments_rows[0]["updated_at"] = "2026-09-23T13:00:01Z"
     keeper.run(fake, path, apply=True)
     assert ("dequeue", "PR_node_42") in fake.actions
