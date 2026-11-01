@@ -172,6 +172,13 @@ launcher_error() {
   printf 'Error: %s\n' "$*" >&2
 }
 
+launcher_refuse_unclassified_provider_option() {
+  # Driver mode cannot tell an unclassified option's value from caller text.
+  # Guessing either way either gives the option the binding as its value or
+  # sends the caller as a second prompt, so fail closed.
+  launcher_error "unclassified provider option '$1' before '--'; put provider options after -- or attach its value as '$1=VALUE'."
+}
+
 # Project interpreter for helper modules: the .venv of the helper root that
 # launcher_resolve_roots validated (#9118, #9121), so an operator-named Codex
 # primary serves the adapters too. Call after launcher_resolve_roots; callers
@@ -448,6 +455,7 @@ launcher_defaults() {
   LC_CALLER_PROMPT_INDICES=()
   LC_PROVIDER_ARGS=()
   LC_UNSEPARATED_PROVIDER_ARGS=0
+  LC_POST_SEPARATOR_INDEX=-1
 }
 
 launcher_need_value() {
@@ -497,6 +505,7 @@ launcher_parse() {
         exit 0
         ;;
       --)
+        LC_POST_SEPARATOR_INDEX="${#LC_FORWARD_ARGS[@]}"
         shift
         while [ "$#" -gt 0 ]; do
           LC_FORWARD_ARGS+=("$1")
@@ -1440,7 +1449,10 @@ launcher_bind_drive_epic() {
     # file name is shared with every provider.
     LC_DRIVER_PROMPT+=" Grok has no SessionStart hook, so after DB render/check read .claude/${SESSION_EPIC:-$LC_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md for supplemental context; reconcile its housekeeping and in-flight lines against the newest full-content DB handoff_note before acting. Session health is the Grok canary (.venv/bin/python -m scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill); end on FAIL-HANDOFF below 8/10."
   fi
-  local caller arg index=0 caller_index=0 is_caller value_mode=''
+  local caller arg index=0 caller_index=0 is_caller value_mode='' post_separator=999999
+  if [ "${LC_POST_SEPARATOR_INDEX:--1}" -ge 0 ]; then
+    post_separator=$((LC_POST_SEPARATOR_INDEX + ${#LC_WRAPPER_PROVIDER_ARGS[@]}))
+  fi
   if [ "${#LC_CALLER_PROMPT_ARGS[@]}" -gt 0 ]; then
     local -a forwarded=() callers=()
     # Indices distinguish prompt text from identical option values. Wrappers
@@ -1462,41 +1474,43 @@ launcher_bind_drive_epic() {
         value_mode=''
         # Resolve option arity only now: a later --harness can change it
         # (Codex -c takes a value; Claude -c is boolean). Arguments after
-        # `--` have no caller indices and retain their original boundaries.
-        # An unclassified provider option must not relabel its following token
-        # as caller text: doing so leaves the option valueless and lets it take
-        # the appended binding as its value. Keep that token adjacent instead.
-        case "$LC_PROVIDER:$LC_HARNESS" in
-          codex:codex)
-            value_mode=optional
-            case "$arg" in
-              -c|--config|--enable|--disable|--remote|--remote-auth-token-env|--local-provider|-p|--profile|-s|--sandbox|-C|--cd|--add-dir|-a|--ask-for-approval) value_mode=one ;;
-              -i|--image) value_mode=many ;;
-            esac
-            ;;
-          claude:claude-code|codex:claude-code)
-            value_mode=optional
-            case "$arg" in
-              --agent|--agents|--append-system-prompt|--append-system-prompt-file|--autocompact|--debug-file|--environment|--fallback-model|--input-format|--json-schema|--max-budget-usd|-n|--name|--output-format|--permission-mode|--permission-prompts|--plugin-dir|--plugin-url|--remote-control-session-name-prefix|--session-id|--setting-sources|--settings|--system-prompt|--system-prompt-file|--system-prompt-snapshot) value_mode=one ;;
-              --add-dir|--allowedTools|--allowed-tools|--betas|--disallowedTools|--disallowed-tools|--file|--mcp-config|--tools) value_mode=many ;;
-              -c|--continue) value_mode='' ;;
-              --cloud|-d|--debug|--from-pr|--prompt-suggestions|--remote-control|-r|--resume|--teleport|-w|--worktree) value_mode=optional ;;
-            esac
-            ;;
-          cursor:cursor-agent)
-            value_mode=optional
-            case "$arg" in
-              --api-key|-H|--header|-e|--endpoint|--output-format|--mode|--sandbox|--workspace|--add-dir|--plugin-dir|--worktree-base) value_mode=one ;;
-              --resume|-w|--worktree) value_mode=optional ;;
-            esac
-            ;;
-          gemini:agy)
-            value_mode=optional
-            case "$arg" in
-              --add-dir|--agent|--conversation|-i|--input-format|--json-schema|--log-file|--mode|--new-project|--output-format|-p|--print|--print-timeout|--project|--prompt|--prompt-interactive|--settings) value_mode=one ;;
-            esac
-            ;;
-        esac
+        # `--` keep their original boundaries and need no classification.
+        # An unclassified option cannot be told apart from caller text, so
+        # it fails closed rather than letting the caller or the binding
+        # become a second prompt.
+        if [ "$index" -lt "$post_separator" ] && [[ "$arg" == -* ]] && [[ "$arg" != *=* ]]; then
+          case "$LC_PROVIDER:$LC_HARNESS" in
+            codex:codex)
+              case "$arg" in
+                -c|--config|--enable|--disable|--remote|--remote-auth-token-env|--local-provider|-p|--profile|-s|--sandbox|-C|--cd|--add-dir|-a|--ask-for-approval) value_mode=one ;;
+                -i|--image) value_mode=many ;;
+                *) launcher_refuse_unclassified_provider_option "$arg"; exit 2 ;;
+              esac
+              ;;
+            claude:claude-code|codex:claude-code)
+              case "$arg" in
+                --agent|--agents|--append-system-prompt|--append-system-prompt-file|--autocompact|--debug-file|--environment|--fallback-model|--input-format|--json-schema|--max-budget-usd|-n|--name|--output-format|--permission-mode|--permission-prompts|--plugin-dir|--plugin-url|--remote-control-session-name-prefix|--session-id|--setting-sources|--settings|--system-prompt|--system-prompt-file|--system-prompt-snapshot) value_mode=one ;;
+                --add-dir|--allowedTools|--allowed-tools|--betas|--disallowedTools|--disallowed-tools|--file|--mcp-config|--tools) value_mode=many ;;
+                -c|--continue) value_mode='' ;;
+                --cloud|-d|--debug|--from-pr|--prompt-suggestions|--remote-control|-r|--resume|--teleport|-w|--worktree) value_mode=optional ;;
+                *) launcher_refuse_unclassified_provider_option "$arg"; exit 2 ;;
+              esac
+              ;;
+            cursor:cursor-agent)
+              case "$arg" in
+                --api-key|-H|--header|-e|--endpoint|--output-format|--mode|--sandbox|--workspace|--add-dir|--plugin-dir|--worktree-base) value_mode=one ;;
+                --resume|-w|--worktree) value_mode=optional ;;
+                *) launcher_refuse_unclassified_provider_option "$arg"; exit 2 ;;
+              esac
+              ;;
+            gemini:agy)
+              case "$arg" in
+                --add-dir|--agent|--conversation|-i|--input-format|--json-schema|--log-file|--mode|--new-project|--output-format|-p|--print|--print-timeout|--project|--prompt|--prompt-interactive|--settings) value_mode=one ;;
+                *) launcher_refuse_unclassified_provider_option "$arg"; exit 2 ;;
+              esac
+              ;;
+          esac
+        fi
       fi
       index=$((index + 1))
     done
