@@ -436,13 +436,46 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
 SETTLE_PATIENCE = 10
 
 
+def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
+    """Whether another still-active task has its supervisor or provider in ``cgroup``.
+
+    A fallback child started from inside this scope stays in it. Stopping the
+    scope would cancel that task. Membership that cannot be read counts too,
+    so the stop is skipped and the liveness check keeps the tree. A child that
+    has its own scope is not a member here and does not block the stop.
+    """
+    from scripts.orchestration import worker_leftovers
+
+    try:
+        members = worker_leftovers.ProcFsReader().cgroup_procs(cgroup)
+    except worker_leftovers.ScanUnknown:
+        return True
+    if not members:
+        return False
+    task_id = record.get("task_id")
+    try:
+        others = store.list_tasks()
+    except (OSError, ValueError):
+        return True
+    protected: set[int] = set()
+    for other in others:
+        if other.get("task_id") == task_id or other.get("status") not in store.ACTIVE:
+            continue
+        for key in ("pid", "provider_pgid"):
+            value = other.get(key)
+            if type(value) is int and value > 0:
+                protected.add(value)
+    return any(pid in protected for pid in members)
+
+
 def _end_own_scope(record: dict) -> None:
     """End processes left in this finished task's own scope.
 
     A scope stays alive while any member remains. Settlement used to read those
     members as a live provider and keep the worktree. The stop reaches only the
     unit ``dispatch_isolation`` derives for this task and nonce: a recorded
-    cgroup that is not that unit's scope is left alone, the caller and its
+    cgroup that is not that unit's scope is left alone, another active task's
+    supervisor or provider in this cgroup is left alone, the caller and its
     ancestors are not signalled, and a fallback launch is not a scope. A stop
     that cannot be proven leaves the processes for the liveness check, which
     keeps the tree.
@@ -460,6 +493,8 @@ def _end_own_scope(record: dict) -> None:
     recorded = record.get("launch_cgroup")
     # A recorded boundary that is not this unit's scope is not ours to stop.
     if isinstance(recorded, str) and recorded and recorded != cgroup:
+        return
+    if _cgroup_holds_other_active_task(record, cgroup):
         return
     scope = worker_leftovers.WorkerScope(
         task_id=task_id, launch_mode=dispatch_isolation.LAUNCH_SCOPE, unit=unit, cgroup=cgroup, run_nonce=nonce)
