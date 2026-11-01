@@ -127,6 +127,7 @@ split-or-justify rule in [workflow.md § Merge policy](../../../rules/workflow.m
 ```
 
 A takeover or any worker pushing to an existing PR branch is dispatched with `--branch <PR head branch>`.
+A workspace-write dispatch uses `--base origin/main` with that branch, and the PR's files as owned paths. Any other `--base`, including a commit SHA, is refused at dispatch by the same origin-base rule settlement uses. Read-only dispatches still accept a SHA base.
 
 Dispatch v2 has no budget substitution guard. Choose the lane explicitly from
 live capacity evidence and record substitutions. Verify the task record's actual

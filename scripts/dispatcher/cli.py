@@ -416,6 +416,16 @@ def _dispatch(args) -> int:
             raise host_admission.Refused("❌ --force-admission requires a non-empty reason", 2)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
+    # Settlement can verify only an origin/<branch> base. Refuse anything else before a
+    # workspace-write task is created, so a SHA does not run and then settle no_deliverable (#12420).
+    if args.mode == "workspace-write":
+        try:
+            git.verifiable_origin_base(args.base)
+        except git.OriginBaseRequired:
+            raise ValueError(
+                "workspace_write_base_unverified: settlement cannot verify this --base; "
+                "use --base origin/main --branch <PR head branch>, with the PR's files as owned paths"
+            ) from None
     start = args.pinned_head or args.branch or args.base
     publish_remote = None
     if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
