@@ -1074,11 +1074,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/checkpoint-foundations/activities.yaml",
-      "sha256": "43c092908e1850bcf53581935e688fc4fb572db97bdc1ea97620fe7568a688a1"
+      "sha256": "badcbaed52a75b2c5cb01138ba728de0aeef10846d1c807dbf654a764d0c372a"
     },
     {
       "path": "curriculum/l2-uk-en/a2/checkpoint-foundations/module.md",
-      "sha256": "4ab7065b6de0b15f71a90393d327d20ceb6572867eadf9e210627ef860503a45"
+      "sha256": "a37eac4f82058aa7c24dfa5162f3985d0654e90c38c8459aa889565624f6e4f3"
     },
     {
       "path": "curriculum/l2-uk-en/a2/checkpoint-foundations/resources.yaml",
@@ -6090,7 +6090,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/checkpoint-foundations.yaml",
-      "sha256": "3f5464d654644f6eddbab616ec32604dc81d60567f221b10cc41aa7370c98b1c"
+      "sha256": "1ae83b256db2113db81a15370ef01937009a44f48e1bc0f7d0b9e21801671a48"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/checkpoint-genitive.yaml",
@@ -14238,7 +14238,7 @@
     },
     {
       "path": "site/src/content/docs/a2/checkpoint-foundations.mdx",
-      "sha256": "ac22fe29435ead000db3aba4f323799ea103163c5e00089fbe61b81f5a4f85a5"
+      "sha256": "7016a88f42bb4dc4b69052f14dd9268634f3032266373e6e6757ca474f5b8593"
     },
     {
       "path": "site/src/content/docs/a2/checkpoint-genitive.mdx",
