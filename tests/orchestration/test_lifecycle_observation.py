@@ -561,8 +561,10 @@ def test_observation_counts_only_task_history(observation_case, operation, histo
     local = tl._latest_premerge_local(ledger)
     assert [commit["sha"] for commit in local["commits"]] == [head, first]
     assert local["changed_paths"] == ["change", "second-change"]
-    recorded = ledger["observation_receipts"][-1]["observation"]["github"]["pr"]["files"]
-    assert recorded == ["change", "second-change"]
+    github = ledger["observation_receipts"][-1]["observation"]["github"]
+    assert "pr" not in github
+    assert "local capture only" in github["error"]
+    assert "authoritative PR does not match the lifecycle binding" in ledger["observation_receipts"][-1]["hard_blockers"]
     assert tl._local_readiness(local) == []
 
 

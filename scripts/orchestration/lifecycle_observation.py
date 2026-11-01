@@ -82,44 +82,10 @@ def _local_paths(repo_root: Path, local: Mapping[str, Any]) -> dict[str, Any]:
     return result
 
 
-def _record_changed_paths(
-    github: dict[str, Any],
-    local: Mapping[str, Any],
-    ledger: Mapping[str, Any] | None = None,
-    *,
-    create: bool = False,
-) -> None:
-    """Record the git changed-path list on the observation reconciliation reads.
-
-    ``github.pr.files`` is that list when a GitHub observation supplied it.
-    A local capture has no file list of its own until this copy. The bound
-    pull-request number travels with the copy so the binding check does not
-    treat a path list as a different pull request.
-    """
-    paths = local.get("changed_paths")
-    if not isinstance(paths, list) or any(not isinstance(path, str) or not path for path in paths):
-        return
-    recorded = list(paths)
-    pr = github.get("pr")
-    if isinstance(pr, dict):
-        if "files" not in pr:
-            pr["files"] = recorded
-        return
-    if not create or "pr" in github:
-        return
-    created: dict[str, Any] = {"files": recorded}
-    bound = (ledger or {}).get("pr")
-    if isinstance(bound, Mapping) and bound.get("number") is not None:
-        created["number"] = bound.get("number")
-        created["url"] = bound.get("url")
-    github["pr"] = created
-
-
 def _append(path: Path, ledger: Mapping[str, Any], local: Mapping[str, Any], now: str):
     github: dict[str, Any] = {
         "error": "local capture only; reconcile with current GitHub authority before closure",
     }
-    _record_changed_paths(github, local, ledger, create=True)
     observation = {
         "schema_version": tl.OBSERVATION_SCHEMA_VERSION,
         "observed_at": now,
@@ -754,8 +720,6 @@ def merged_run_evidence(
         )} for job in jobs],
     }
     github = observation["github"]
-    local_facts = observation.get("local") if isinstance(observation.get("local"), Mapping) else {}
-    _record_changed_paths(github, local_facts)
     # Preserve the branch-head rollup while evaluating the verified merged run.
     github["pr"]["branch_checks"] = github["pr"].get("checks", [])
     github["pr"]["checks"] = [{

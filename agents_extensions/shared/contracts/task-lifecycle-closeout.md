@@ -96,9 +96,10 @@ chunk set from those comments and accepts the receipt only when the families,
 models, task ids, coverage, and comment URLs match. A non-cross-family marker
 is not a contributing chunk, and chunks that disagree on the denominator are
 refused. A lifecycle observation records its git changed-path list on
-`local.changed_paths` and, when the GitHub observation did not supply one, on
-`github.pr.files`. Reconciliation uses `github.pr.files` when that list is
-present and otherwise the recorded local list. When those paths are learner
+`local.changed_paths`. A local capture does not copy that list, or the
+ledger's pull request, onto `github`. Reconciliation uses `github.pr.files`
+when a GitHub observation supplied that list, and otherwise the recorded
+local list. When those paths are learner
 content, a receipt without `review_profile: ukrainian` is refused. The receipt target SHA is
 `pr.head_sha` before and after merge.
 Each contributing comment also has its own review evidence record. Executing
