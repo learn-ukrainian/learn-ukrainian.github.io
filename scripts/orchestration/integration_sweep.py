@@ -678,6 +678,10 @@ def contributing_ukrainian_chunks(
         association = _field(comment, "author_association", "authorAssociation")
         if login != authenticated_login or association not in TRUSTED_ASSOCIATIONS or _edited(comment):
             continue
+        # The keeper counts only cross-family chunks. A red-team marker of the
+        # same family must not appear as a contributing chunk.
+        if marker.get("review_mode", "cross_family") != "cross_family":
+            continue
         if marker.get("family") not in set(verdict.ukrainian_seats):
             continue
         url = _comment_page_url(comment)
@@ -715,8 +719,16 @@ def contributing_ukrainian_chunks(
         if harness is None:
             return {"refused": "seat-harness", "author_models": (), "author_families": (), "seats": ()}
         denominators = {tuple(marker.get("denominator") or ()) for marker in family_chunks}
+        if len(denominators) != 1:
+            return {
+                "refused": DENOMINATOR_MISMATCH,
+                "author_models": (),
+                "author_families": (),
+                "seats": (),
+            }
         coverage: list[str] = sorted({item for marker in family_chunks for item in (marker.get("coverage") or ())})
-        denominator = sorted(denominators.pop()) if len(denominators) == 1 and denominators != {()} else []
+        raw_denominator = denominators.pop()
+        denominator = sorted(raw_denominator) if raw_denominator else []
         if denominator and set(coverage) != set(denominator):
             return {"refused": NEEDS_COVERAGE, "author_models": (), "author_families": (), "seats": ()}
         chunks = [

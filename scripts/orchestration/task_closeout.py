@@ -160,6 +160,31 @@ def project_closeout_checks(rollup: list[Any]) -> list[Any]:
     return checks
 
 
+def _flatten_github_pages(payload: Any) -> list[Any]:
+    """One list of rows, whether the read returned a page or a list of pages."""
+    if not isinstance(payload, list):
+        raise task_lifecycle.LifecycleError("GitHub page response is not a list")
+    if payload and all(isinstance(page, list) for page in payload):
+        return [row for page in payload for row in page]
+    return payload
+
+
+def _project_comment(item: Mapping[str, Any], *, kind: str, created_at: Any) -> dict[str, Any]:
+    """Keep the fields the Ukrainian quorum reader trusts, and nothing thinner."""
+    user = item.get("user") if isinstance(item.get("user"), Mapping) else None
+    login = user.get("login") if isinstance(user, Mapping) else None
+    return {
+        "url": item.get("html_url"),
+        "body": item.get("body") or "",
+        "author": login if isinstance(login, str) else None,
+        "user": {"login": login} if isinstance(login, str) and login else None,
+        "author_association": item.get("author_association"),
+        "created_at": created_at,
+        "updated_at": item.get("updated_at"),
+        "kind": kind,
+    }
+
+
 class GhGitHubAdapter:
     """Authoritative GitHub reads and the three explicitly allowed mutations."""
 
@@ -337,29 +362,36 @@ class GhGitHubAdapter:
             "closing_issue_numbers": sorted(set(closing_issue_numbers)),
         }
 
+    def _authenticated_login(self) -> str:
+        payload = self._json(Request("read-identity"))
+        login = payload.get("login", "").strip() if isinstance(payload, dict) else ""
+        if not login:
+            raise task_lifecycle.LifecycleError("authenticated gh identity unavailable")
+        return login
+
+    def _changed_paths(self, repository: str, pr_number: int) -> list[str]:
+        from scripts.orchestration.integration_sweep import pr_file_paths
+
+        payload = self._json(Request("read-pr-files", repo=repository, number=pr_number, paginate=True))
+        rows = _flatten_github_pages(payload)
+        try:
+            return pr_file_paths(rows)
+        except ValueError as exc:
+            raise task_lifecycle.LifecycleError(str(exc)) from exc
+
     def _comments(self, repository: str, pr_number: int) -> list[dict[str, Any]]:
         issue_comments = self._json(Request("read-comments", repo=repository, number=pr_number, paginate=True))
         native_reviews = self._json(Request("read-reviews", repo=repository, number=pr_number, paginate=True))
         if not isinstance(issue_comments, list) or not isinstance(native_reviews, list):
             raise task_lifecycle.LifecycleError("GitHub PR comments response is not a list")
         comments = [
-            {
-                "url": item.get("html_url"),
-                "body": item.get("body") or "",
-                "author": (item.get("user") or {}).get("login"),
-                "created_at": item.get("created_at"),
-                "kind": "issue_comment",
-            }
+            _project_comment(item, kind="issue_comment", created_at=item.get("created_at"))
             for item in issue_comments
             if isinstance(item, dict)
         ]
         comments.extend(
-            {
-                "url": item.get("html_url"),
-                "body": item.get("body") or "",
-                "author": (item.get("user") or {}).get("login"),
-                "created_at": item.get("submitted_at"),
-                "kind": "pull_request_review",
+            _project_comment(item, kind="pull_request_review", created_at=item.get("submitted_at"))
+            | {
                 "state": str(item.get("state") or "").upper(),
                 "commit_id": item.get("commit_id"),
             }
@@ -450,13 +482,16 @@ class GhGitHubAdapter:
         }
         comments: list[dict[str, Any]] = []
         deployments: list[dict[str, Any]] = []
+        authenticated_login = self._authenticated_login()
         if pr_number is not None:
             pr = self._read_pr(repository, pr_number)
+            pr["files"] = self._changed_paths(repository, pr_number)
             comments = self._comments(repository, pr_number)
             if ledger["terminal_goal"] in {"deploy", "certify"}:
                 deployments = self._deployments(repository, pr.get("merge_sha") or pr.get("head_sha"))
         return {
             "repository": repository,
+            "authenticated_login": authenticated_login,
             "registered_stream_epics": registered_epics,
             "membership_audit": membership_audit,
             "issue": issue,

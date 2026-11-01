@@ -1334,6 +1334,7 @@ def _behavior_proof_reference_error(
     comments: Sequence[Mapping[str, Any]] | None = None,
     authenticated_login: str | None = None,
     review_urls: set[str] | None = None,
+    changed_paths: Sequence[str] | None = None,
 ) -> str | None:
     try:
         reference = _validate_behavior_proof_reference_shape(record["details"])
@@ -1384,6 +1385,17 @@ def _behavior_proof_reference_error(
         )
     if "error" not in receipt or receipt["error"] is not None or not (clean or approved_nonblocking):
         return "behavior-proof receipt is not a clean or approved non-blocking canonical closeout"
+    if changed_paths is not None:
+        if (
+            not isinstance(changed_paths, Sequence)
+            or isinstance(changed_paths, (str, bytes))
+            or not all(isinstance(path, str) for path in changed_paths)
+        ):
+            return "behavior-proof learner-content file list is unreadable"
+        from scripts.orchestration.integration_sweep import changes_learner_content
+
+        if changes_learner_content(changed_paths) and receipt.get("review_profile") != "ukrainian":
+            return "learner-content change requires a ukrainian behavior-proof receipt"
     if receipt.get("review_profile") == "ukrainian":
         seat_error = _ukrainian_behavior_proof_error(
             receipt,
@@ -1429,6 +1441,7 @@ def _evidence_status(
     comment_urls: set[str],
     comments: Sequence[Mapping[str, Any]] | None = None,
     authenticated_login: str | None = None,
+    changed_paths: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     """Validate rows independently, then retire errors only at valid chain tips."""
     valid: dict[str, set[str]] = {}
@@ -1451,6 +1464,7 @@ def _evidence_status(
                 comments=comments,
                 authenticated_login=authenticated_login,
                 review_urls=review_urls,
+                changed_paths=changed_paths,
             )
             if reference_error:
                 errors[record["id"]] = f"{record['ac_id']}: {reference_error}"
@@ -1638,12 +1652,14 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     raw_comments = [comment for comment in github.get("comments") or [] if isinstance(comment, Mapping)]
     comment_urls = {str(comment.get("url")) for comment in raw_comments if comment.get("url")}
     login = github.get("authenticated_login")
+    changed_paths = pr.get("files") if isinstance(pr, Mapping) and "files" in pr else None
     evidence_status = _evidence_status(
         ledger,
         head_sha=head_sha,
         comment_urls=comment_urls,
         comments=raw_comments,
         authenticated_login=login if isinstance(login, str) else None,
+        changed_paths=changed_paths,
     )
     valid_evidence = evidence_status["valid_evidence"]
     valid_evidence_ids = evidence_status["valid_evidence_ids"]

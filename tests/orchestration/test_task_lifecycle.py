@@ -2932,3 +2932,84 @@ def test_ukrainian_behavior_proof_reconciles_recorded_seat_quorum(tmp_path: Path
     else:
         assert "behavior_proof" not in result["valid_evidence"].get("AC-IMPL", set())
         assert "behavior-proof" in blockers or "ukrainian" in blockers or "not bound to current PR head" in blockers
+
+
+def test_closeout_observation_keeps_comment_trust_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A stock closeout observation keeps the comment fields the quorum reader trusts."""
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    created = "2026-07-16T10:00:00Z"
+
+    def fake_json(args, stdin=None):
+        verb = getattr(args, "verb", "")
+        if verb == "read-comments":
+            return [{
+                "html_url": "https://github.com/org/repo/pull/77#issuecomment-1",
+                "body": "seat",
+                "user": {"login": "fleet", "id": 9},
+                "author_association": "MEMBER",
+                "created_at": created,
+                "updated_at": created,
+            }]
+        if verb == "read-reviews":
+            return [{
+                "html_url": "https://github.com/org/repo/pull/77#pullrequestreview-2",
+                "body": "review",
+                "user": {"login": "fleet"},
+                "author_association": "OWNER",
+                "submitted_at": created,
+                "state": "APPROVED",
+                "commit_id": "a" * 40,
+            }]
+        if verb == "read-identity":
+            return {"login": "fleet"}
+        if verb == "read-pr-files":
+            return [{"filename": "curriculum/l2-uk-en/a2/lesson.mdx", "status": "modified"}]
+        raise AssertionError(verb)
+
+    monkeypatch.setattr(adapter, "_json", fake_json)
+    monkeypatch.setattr(
+        adapter,
+        "read_issue",
+        lambda repo, number: {
+            "number": 42,
+            "state": "OPEN",
+            "body": "",
+            "url": "https://github.com/org/repo/issues/42",
+            "closed_at": None,
+            "parent_epic": 10,
+            "parent_repository": "org/repo",
+        },
+    )
+    monkeypatch.setattr(adapter, "registered_stream_epics", lambda repository=None: [10])
+    monkeypatch.setattr(
+        adapter,
+        "_read_pr",
+        lambda repo, number: {"number": 77, "head_sha": "a" * 40, "checks": [], "state": "OPEN"},
+    )
+    github = adapter._github_observation(task_lifecycle.validate_lifecycle(_ledger()))
+    comment, review = github["comments"]
+    assert comment["author_association"] == "MEMBER"
+    assert comment["created_at"] == created
+    assert comment["updated_at"] == created
+    assert comment["user"] == {"login": "fleet"}
+    assert review["author_association"] == "OWNER"
+    assert review["user"]["login"] == "fleet"
+    assert github["authenticated_login"] == "fleet"
+    assert github["pr"]["files"] == ["curriculum/l2-uk-en/a2/lesson.mdx"]
+
+
+def test_learner_content_diff_refuses_code_behavior_receipt(tmp_path: Path) -> None:
+    """A learner-content diff does not reconcile a code-profile behavior receipt."""
+    reference = _behavior_receipt_reference(tmp_path)
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL",
+        "behavior_proof",
+        details=reference,
+    )
+    observation = _observation(_body())
+    observation["github"]["pr"]["files"] = ["curriculum/l2-uk-en/a2/liudyna-i-stosunky.mdx"]
+    result = task_lifecycle.evaluate(ledger, observation)
+    blockers = " ".join(result["hard_blockers"])
+    assert "ukrainian" in blockers
+    assert "behavior_proof" not in result["valid_evidence"].get("AC-IMPL", set())

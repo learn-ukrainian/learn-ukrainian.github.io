@@ -393,7 +393,8 @@ Record each surface through the canonical closeout state; do not hand-author
 `--behavior-proof-json`. This binds the proof to the frozen target and derives
 its clause claim from the frozen `intended_behavior`. `freeze --review-profile
 ukrainian` stores a proof carrier for learner-content closeout and does not
-make this skill review learner content.
+make this skill review learner content. `behavior-proof receipt` writes that
+carrier's receipt from the live pull-request comments.
 
 ```bash
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \

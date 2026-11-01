@@ -633,6 +633,10 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
             payload = [{"state": "success", "environment_url": "https://prod"}]
         elif endpoint in {"repos/org/repo/issues/77/comments?per_page=100", "repos/org/repo/pulls/77/reviews?per_page=100"}:
             payload = []
+        elif endpoint == "user?per_page=100":
+            payload = {"login": "fleet"}
+        elif endpoint == "repos/org/repo/pulls/77/files?per_page=100":
+            payload = [{"filename": "scripts/example.py", "status": "modified"}]
         else:
             raise AssertionError(f"unexpected request: {method} {endpoint}")
         return Response(200, {}, json.dumps(payload).encode())
@@ -782,6 +786,8 @@ def test_github_observation_skips_audit_when_primary_and_follow_up_are_native(
     monkeypatch.setattr(adapter, "registered_stream_epics", lambda repository: [10, 20])
     monkeypatch.setattr(adapter, "_read_pr", lambda repository, pr_number: {"number": pr_number, "checks": []})
     monkeypatch.setattr(adapter, "_comments", lambda repository, pr_number: [])
+    monkeypatch.setattr(adapter, "_authenticated_login", lambda: "fleet")
+    monkeypatch.setattr(adapter, "_changed_paths", lambda repository, pr_number: [])
 
     github = adapter._github_observation(ledger)
 
@@ -832,6 +838,8 @@ def test_github_observation_fetches_audit_when_either_relevant_issue_lacks_nativ
     monkeypatch.setattr(adapter, "registered_stream_epics", lambda repository: [10, 20])
     monkeypatch.setattr(adapter, "_read_pr", lambda repository, pr_number: {"number": pr_number, "checks": []})
     monkeypatch.setattr(adapter, "_comments", lambda repository, pr_number: [])
+    monkeypatch.setattr(adapter, "_authenticated_login", lambda: "fleet")
+    monkeypatch.setattr(adapter, "_changed_paths", lambda repository, pr_number: [])
 
     github = adapter._github_observation(ledger)
 
