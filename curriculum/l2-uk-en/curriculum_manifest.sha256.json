@@ -1078,7 +1078,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/checkpoint-foundations/module.md",
-      "sha256": "a37eac4f82058aa7c24dfa5162f3985d0654e90c38c8459aa889565624f6e4f3"
+      "sha256": "c5f2368eba2f357deadc5f728ffdee368e5aab70387de0dbbbe7d91ad7c0be9b"
     },
     {
       "path": "curriculum/l2-uk-en/a2/checkpoint-foundations/resources.yaml",
@@ -14238,7 +14238,7 @@
     },
     {
       "path": "site/src/content/docs/a2/checkpoint-foundations.mdx",
-      "sha256": "7016a88f42bb4dc4b69052f14dd9268634f3032266373e6e6757ca474f5b8593"
+      "sha256": "9569d66af43189f506291e2bc5d79da3153f41797a6cf3c5d6bb6a23dd152f08"
     },
     {
       "path": "site/src/content/docs/a2/checkpoint-genitive.mdx",
