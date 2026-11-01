@@ -276,6 +276,23 @@ def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_pat
     assert recorder.p3_reading(indented).reason == recorder.FINDING_WITHOUT_PRIORITY
     assert recorder.p3_reading(prioritized).ids == ("F1",)
     assert recorder.p3_reading(reply).reason == recorder.SECURITY_VERDICT_NOT_PASS
+    prefix = "VERDICT: REQUEST_CHANGES\nF1 [P3] scripts/example.py:10 count is high.\n"
+    nested_fence = prefix + ">> ```\n>> F2 scripts/example.py:20 missing priority.\n>> ```\n"
+    nested_indent = prefix + ">>\n>>     F2 scripts/example.py:20 missing priority.\n"
+    quoted_fence = prefix + "> ```\n> F2 scripts/example.py:20 missing priority.\n> ```\n"
+    for hidden in (nested_fence, nested_indent, quoted_fence):
+        reading = recorder.p3_reading(hidden)
+        assert reading.reason == recorder.FINDING_WITHOUT_PRIORITY and reading.ids is None
+    resolved_fence = prefix + "```\nF2 resolved? scripts/example.py:20 still open.\n```\n"
+    resolved_indent = prefix + "\n    F2 resolved? scripts/example.py:20 still open.\n"
+    nested_resolved = prefix + ">> ```\n>> F2 resolved? scripts/example.py:20 still open.\n>> ```\n"
+    for ambiguous in (resolved_fence, resolved_indent, nested_resolved):
+        reading = recorder.p3_reading(ambiguous)
+        assert reading.ids is None and reading.reason is None
+    nested_example = prefix + ">> ```\n>> F2 [P3] scripts/example.py:20 an example, not an open finding.\n>> ```\n"
+    clear_resolved = prefix + "```\nF2: resolved scripts/example.py:20 the example is closed.\n```\n"
+    assert recorder.p3_reading(nested_example).ids == ("F1",)
+    assert recorder.p3_reading(clear_resolved).ids == ("F1",)
 
 
 @pytest.mark.parametrize(("deep", "reason"), [

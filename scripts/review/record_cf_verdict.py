@@ -264,11 +264,14 @@ def _security_verdict_blocks(reply: str) -> bool:
     return any(_SECURITY_PASS.match(reply, match.end()) is None for match in _SECURITY_VERDICT.finditer(reply))
 
 
-def _hidden_unprioritized_finding(reply: str) -> bool:
-    """True when a fence or indented code block holds a finding id and no priority token.
+def _hidden_unprioritized_finding(reply: str) -> P3Reading | None:
+    """A code span's reading, or None when the span does not block an all-P3 approval.
 
-    A priority inside that span stays an example. A P0, P1, or P2 token is already
-    refused by the raw-reply scan. An unreadable CommonMark map fails closed.
+    The scan uses the parser's code-token content, so a blockquote prefix on the
+    source line does not hide the finding. An unprioritized finding names its
+    reason. An ambiguous resolved clause aborts the reading, and a clear resolution
+    is skipped. A priority inside the span stays an example. An unreadable
+    CommonMark map fails closed.
     """
     from markdown_it import MarkdownIt
 
@@ -282,13 +285,22 @@ def _hidden_unprioritized_finding(reply: str) -> bool:
         start, end = source_map
         if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
             raise ValueError("CommonMark verdict visibility map invalid")
-        for line in lines[start:end]:
+        if not isinstance(token.content, str):
+            raise ValueError("CommonMark code span content unavailable")
+        for line in _commonmark_lines(token.content):
             match = _PROSE_FINDING_LINE.match(line)
-            if match is None or _PROSE_RESOLVED.match(match.group("rest") or ""):
+            if match is None:
+                continue
+            rest = match.group("rest") or ""
+            if _PROSE_RESOLVED.match(rest):
+                # Only the resolution clause is judged. A later sentence may say "not".
+                clause = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b.{0,24}", rest)
+                if _RESOLVED_AMBIGUOUS.search(clause.group(0) if clause else rest[:40]):
+                    return P3Reading()
                 continue
             if (match.group(3) or match.group(4)) is None:
-                return True
-    return False
+                return P3Reading(reason=FINDING_WITHOUT_PRIORITY)
+    return None
 
 
 def p3_reading(reply: str) -> P3Reading:
@@ -298,9 +310,11 @@ def p3_reading(reply: str) -> P3Reading:
     or P2 token anywhere in the reply, an incomplete review, a malformed findings
     block, a truncated body, or a repair round whose mapping was withheld is that
     empty reading. A finding with no priority, including one inside a fence or an
-    indented code block, and a security line whose value is not exactly PASS, name
-    the cause and do not approve. An empty open set does not approve: a changes
-    request with no findings stays a changes request.
+    indented code block whose source line still has a blockquote prefix, and a
+    security line whose value is not exactly PASS, name the cause and do not
+    approve. An ambiguous resolved clause in that span does not approve. An empty
+    open set does not approve: a changes request with no findings stays a
+    changes request.
     """
     if not isinstance(reply, str):
         return P3Reading()
@@ -338,8 +352,9 @@ def p3_reading(reply: str) -> P3Reading:
             findings[finding.finding_id] = finding.priority
             structured.add(finding.finding_id)
     try:
-        if _hidden_unprioritized_finding(reply):
-            return P3Reading(reason=FINDING_WITHOUT_PRIORITY)
+        hidden = _hidden_unprioritized_finding(reply)
+        if hidden is not None:
+            return hidden
         visible = _without_code_fences(reply, keep_unclosed=False)
     except (ValueError, ImportError):
         return P3Reading()
