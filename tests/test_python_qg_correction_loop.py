@@ -40,16 +40,15 @@ def _writer_artifacts(module_text: str, *, activity_prompt: str = "state") -> di
 
 def _qg_report(
     *,
-    word_count: bool = True,
+    formatting_standards: bool = True,
     plan_sections: bool = True,
     vesum_missing: list[str] | None = None,
 ) -> dict[str, Any]:
     missing = vesum_missing or []
     gates = {
-        "word_count": {
-            "passed": word_count,
-            "count": 120 if word_count else 90,
-            "minimum": 120,
+        "formatting_standards": {
+            "passed": formatting_standards,
+            "violations": [] if formatting_standards else ["unclosed component"],
         },
         "plan_sections": {
             "passed": plan_sections,
@@ -84,11 +83,11 @@ def test_python_qg_seminar_advances_through_rotating_wall(
         nonlocal qg_calls
         qg_calls += 1
         module_text = (module_dir / "module.md").read_text(encoding="utf-8")
-        if "WORD_FIXED" in module_text:
+        if "FORMAT_FIXED" in module_text:
             return _qg_report_from_gates(
                 {
                     "activity_schema": {"passed": True, "violations": []},
-                    "word_count": {"passed": True, "count": 120, "minimum": 120},
+                    "formatting_standards": {"passed": True, "violations": []},
                     "vesum_verified": {"passed": False, "missing": ["**Дебат"]},
                 }
             )
@@ -96,7 +95,7 @@ def test_python_qg_seminar_advances_through_rotating_wall(
             return _qg_report_from_gates(
                 {
                     "activity_schema": {"passed": True, "violations": []},
-                    "word_count": {"passed": False, "count": 90, "minimum": 120},
+                    "formatting_standards": {"passed": False, "violations": ["unclosed component"]},
                     "vesum_verified": {"passed": False, "missing": ["**Дебат"]},
                 }
             )
@@ -116,8 +115,8 @@ def test_python_qg_seminar_advances_through_rotating_wall(
                 "SCHEMA_FIXED\n",
                 activity_prompt="schema fixed",
             )
-        if context.gate == "word_count":
-            return _writer_artifacts("WORD_FIXED\n", activity_prompt="word count fixed")
+        if context.gate == "formatting_standards":
+            return _writer_artifacts("FORMAT_FIXED\n", activity_prompt="formatting fixed")
         raise AssertionError(f"unexpected correction gate: {context.gate}")
 
     report = linear_pipeline._run_python_qg_with_bounded_corrections(
@@ -129,15 +128,15 @@ def test_python_qg_seminar_advances_through_rotating_wall(
     )
 
     assert qg_calls == 3
-    assert corrected_gates == ["activity_schema", "word_count"]
+    assert corrected_gates == ["activity_schema", "formatting_standards"]
     assert report["gates"]["activity_schema"]["passed"] is True
-    assert report["gates"]["word_count"]["passed"] is True
+    assert report["gates"]["formatting_standards"]["passed"] is True
     assert report["gates"]["vesum_verified"]["missing"] == ["**Дебат"]
-    assert (module_dir / "module.md").read_text(encoding="utf-8") == "WORD_FIXED\n"
+    assert (module_dir / "module.md").read_text(encoding="utf-8") == "FORMAT_FIXED\n"
     restored_activities = yaml.safe_load(
         (module_dir / "activities.yaml").read_text(encoding="utf-8")
     )
-    assert restored_activities[0]["prompt"] == "word count fixed"
+    assert restored_activities[0]["prompt"] == "formatting fixed"
 
     loop = json.loads(
         (module_dir / "python_qg_correction_loop.json").read_text(encoding="utf-8")
@@ -149,7 +148,7 @@ def test_python_qg_seminar_advances_through_rotating_wall(
     assert [item["violation_count"] for item in loop["rounds"]] == [1, 2, 1]
     assert [item["frontier_gate"] for item in loop["rounds"]] == [
         "activity_schema",
-        "word_count",
+        "formatting_standards",
         "vesum_verified",
     ]
     assert loop["rounds"][1]["frontier"] > loop["rounds"][0]["frontier"]
@@ -172,7 +171,7 @@ def test_python_qg_best_round_prefers_frontier_then_violation_count() -> None:
             "report": _qg_report_from_gates(
                 {
                     "activity_schema": {"passed": True, "violations": []},
-                    "word_count": {"passed": False, "violations": ["a", "b"]},
+                    "formatting_standards": {"passed": False, "violations": ["a", "b"]},
                 }
             ),
             "violation_count": 2,
@@ -181,7 +180,7 @@ def test_python_qg_best_round_prefers_frontier_then_violation_count() -> None:
             "report": _qg_report_from_gates(
                 {
                     "activity_schema": {"passed": True, "violations": []},
-                    "word_count": {"passed": False, "violations": ["a"]},
+                    "formatting_standards": {"passed": False, "violations": ["a"]},
                 }
             ),
             "violation_count": 1,
@@ -194,7 +193,7 @@ def test_python_qg_best_round_prefers_frontier_then_violation_count() -> None:
 def test_python_qg_frontier_does_not_rank_unmapped_failure_as_pass() -> None:
     report = _qg_report_from_gates(
         {
-            "word_count": {"passed": True, "count": 120, "minimum": 120},
+            "formatting_standards": {"passed": True, "violations": []},
             "future_unmapped_gate": {"passed": False, "violations": ["hidden"]},
         }
     )
@@ -211,13 +210,13 @@ def test_python_qg_frontier_does_not_rank_unmapped_failure_as_pass() -> None:
 def test_previous_regression_scans_actual_gate_key_union() -> None:
     before = _qg_report_from_gates(
         {
-            "word_count": {"passed": False, "count": 90, "minimum": 120},
+            "formatting_standards": {"passed": False, "violations": ["unclosed component"]},
             "future_unmapped_gate": {"passed": True},
         }
     )
     after = _qg_report_from_gates(
         {
-            "word_count": {"passed": True, "count": 120, "minimum": 120},
+            "formatting_standards": {"passed": True, "violations": []},
             "future_unmapped_gate": {"passed": False, "violations": ["hidden"]},
         }
     )
@@ -238,10 +237,10 @@ def test_python_qg_plan_reference_regression_restores_non_regressed_round(
         nonlocal qg_calls
         qg_calls += 1
         module_text = (module_dir / "module.md").read_text(encoding="utf-8")
-        if "WORD_FIXED_BAD_REF" in module_text:
+        if "FORMAT_FIXED_BAD_REF" in module_text:
             return _qg_report_from_gates(
                 {
-                    "word_count": {"passed": True, "count": 120, "minimum": 120},
+                    "formatting_standards": {"passed": True, "violations": []},
                     "plan_reference_match": {
                         "passed": False,
                         "missing_plan_references": ["FOLK-1"],
@@ -250,16 +249,16 @@ def test_python_qg_plan_reference_regression_restores_non_regressed_round(
             )
         return _qg_report_from_gates(
             {
-                "word_count": {"passed": False, "count": 90, "minimum": 120},
+                "formatting_standards": {"passed": False, "violations": ["unclosed component"]},
                 "plan_reference_match": {"passed": True, "missing_plan_references": []},
             }
         )
 
     def writer_corrector(context: linear_pipeline.CorrectionContext) -> dict[str, str]:
-        assert context.gate == "word_count"
+        assert context.gate == "formatting_standards"
         return _writer_artifacts(
-            "WORD_FIXED_BAD_REF\n",
-            activity_prompt="word count fixed but references regressed",
+            "FORMAT_FIXED_BAD_REF\n",
+            activity_prompt="formatting fixed but references regressed",
         )
 
     report = linear_pipeline.run_python_qg_with_corrections(
@@ -270,7 +269,7 @@ def test_python_qg_plan_reference_regression_restores_non_regressed_round(
     )
 
     assert qg_calls == 3
-    assert report["gates"]["word_count"]["passed"] is False
+    assert report["gates"]["formatting_standards"]["passed"] is False
     assert report["gates"]["plan_reference_match"]["passed"] is True
     assert (module_dir / "module.md").read_text(encoding="utf-8") == "STATE0\n"
     loop = json.loads(
@@ -293,7 +292,7 @@ def test_python_qg_seminar_breaks_immediately_on_pass(tmp_path: Path) -> None:
 
     def qg_runner() -> dict[str, Any]:
         module_text = (module_dir / "module.md").read_text(encoding="utf-8")
-        return _qg_report() if "PASS" in module_text else _qg_report(word_count=False)
+        return _qg_report() if "PASS" in module_text else _qg_report(formatting_standards=False)
 
     def writer_corrector(context: linear_pipeline.CorrectionContext) -> dict[str, str]:
         corrected_gates.append(context.gate)
@@ -307,7 +306,7 @@ def test_python_qg_seminar_breaks_immediately_on_pass(tmp_path: Path) -> None:
     )
 
     assert report["gates"]["passed"] is True
-    assert corrected_gates == ["word_count"]
+    assert corrected_gates == ["formatting_standards"]
     assert (module_dir / "module.md").read_text(encoding="utf-8") == "PASS\n"
     loop = json.loads(
         (module_dir / "python_qg_correction_loop.json").read_text(encoding="utf-8")
@@ -326,10 +325,10 @@ def test_python_qg_core_uses_legacy_single_correction_path(tmp_path: Path) -> No
         nonlocal qg_calls
         qg_calls += 1
         module_text = (module_dir / "module.md").read_text(encoding="utf-8")
-        return _qg_report() if "PASS" in module_text else _qg_report(word_count=False)
+        return _qg_report() if "PASS" in module_text else _qg_report(formatting_standards=False)
 
     def writer_corrector(context: linear_pipeline.CorrectionContext) -> dict[str, str]:
-        assert context.gate == "word_count"
+        assert context.gate == "formatting_standards"
         return _writer_artifacts("PASS\n", activity_prompt="core pass")
 
     report = linear_pipeline.run_python_qg_with_corrections(

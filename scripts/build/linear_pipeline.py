@@ -93,7 +93,6 @@ from scripts.build.module_size_policy import (
     build_size_policy_for_plan,
     render_reviewer_size_policy,
     render_writer_size_policy,
-    size_policy_allows_auto_expansion,
     size_policy_summary,
 )
 from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_prompt
@@ -120,7 +119,6 @@ PLAN_REQUIRED_KEYS = {
     "title",
     "subtitle",
     "content_outline",
-    "word_target",
     "references",
 }
 
@@ -204,7 +202,7 @@ PYTHON_QG_GATE_ORDER = (
     "activity_schema",
     "quiz_translate_explanations",
     "error_correction_options",
-    "word_count",
+    "objective_evidence",
     "vocab_count",
     "vocab_floor",
     "plan_sections",
@@ -254,7 +252,6 @@ WRITER_CORRECTION_GATES = frozenset(
         "activity_schema",
         "strict_json_parse",
         "tool_theatre",
-        "word_count",
         "plan_sections",
         "formatting_standards",
         "mdx_render",
@@ -298,6 +295,7 @@ PIPELINE_INSERT_GATES = frozenset({"inject_activity_ids"})
 TERMINAL_ZERO_RETRY_GATES = frozenset(
     {
         "component_props",
+        "objective_evidence",
         "previously_passed_regression",
         "quiz_translate_explanations",
         "bad_form_heritage",
@@ -1334,8 +1332,6 @@ def validate_plan(plan: Mapping[str, Any]) -> None:
 
     if not isinstance(plan["sequence"], int) or plan["sequence"] <= 0:
         raise LinearPipelineError("Plan sequence must be a positive integer")
-    if not isinstance(plan["word_target"], int) or plan["word_target"] <= 0:
-        raise LinearPipelineError("Plan word_target must be a positive integer")
 
     sections = plan["content_outline"]
     if not isinstance(sections, list) or not sections:
@@ -1345,8 +1341,6 @@ def validate_plan(plan: Mapping[str, Any]) -> None:
             raise LinearPipelineError(f"Plan section {index} must be a mapping")
         if not isinstance(section.get("section"), str) or not section["section"].strip():
             raise LinearPipelineError(f"Plan section {index} missing section title")
-        if not isinstance(section.get("words"), int) or section["words"] < 0:
-            raise LinearPipelineError(f"Plan section {section['section']!r} has invalid words")
         points = section.get("points")
         if not isinstance(points, list) or not all(isinstance(p, str) for p in points):
             raise LinearPipelineError(f"Plan section {section['section']!r} must have string points")
@@ -3801,12 +3795,12 @@ SEMINAR_FOLK_WRITER_RULES_PATH = (
 def _seminar_folk_writer_rules(level: str, context: Mapping[str, Any]) -> str:
     """Seminar/FOLK-only writer rules, gated OUT of core (a1-c2) prompts.
 
-    The folk/seminar source-discipline, word-count floor, primary-text
+    The folk/seminar source-discipline, coverage, primary-text
     embedding, regional-vocabulary, and experiential-layer rules apply only to
     ``SEMINAR_LEVELS``. Rendering them into every core level's prompt is pure
     overhead — an A1 letter module needs no folk-coinage examples — and it
     pushed the A1 writer prompt over ``WRITER_PROMPT_CEILING_BYTES``. Returns
-    ``""`` for non-seminar levels; the block's inner ``{WORD_TARGET}`` token is
+    ``""`` for non-seminar levels; nested prompt tokens are
     resolved here so ``render_phase_prompt``'s single outer pass stays correct.
     """
     if str(level).lower() not in SEMINAR_LEVELS:
@@ -3815,31 +3809,13 @@ def _seminar_folk_writer_rules(level: str, context: Mapping[str, Any]) -> str:
     return _inline_prompt_tokens(block, context)
 
 
-def _render_section_word_budgets(plan: Mapping[str, Any]) -> str:
-    """Render plan section word budgets as a compact writer checklist."""
-    outline = plan.get("content_outline")
-    if not isinstance(outline, list):
-        return "- No `content_outline` section budgets found."
-
-    lines: list[str] = []
-    running_total = 0
-    for index, section in enumerate(outline, start=1):
-        if not isinstance(section, Mapping):
-            continue
-        title = str(section.get("section") or "").strip()
-        words = section.get("words")
-        if not title or words is None:
-            continue
-        try:
-            budget = int(words)
-        except (TypeError, ValueError):
-            continue
-        running_total += budget
-        lines.append(f"{index}. {title}: {budget} words (running total {running_total})")
-
-    if not lines:
-        return "- No valid `content_outline[].section` + `words` budgets found."
-    return "\n".join(lines)
+def _render_section_coverage(plan: Mapping[str, Any]) -> str:
+    """List sections; the full plan carries their authoritative teaching points."""
+    return "\n".join(
+        f"- {section['section']}"
+        for section in plan.get("content_outline", [])
+        if isinstance(section, Mapping) and section.get("section")
+    )
 
 
 WRITER_PLAN_OMIT_KEYS = frozenset({
@@ -3951,11 +3927,10 @@ def writer_context(
         "MODULE_SLUG": str(plan["slug"]),
         "TOPIC_TITLE": str(plan["title"]),
         "PHASE": str(plan.get("phase", "")),
-        "WORD_TARGET": str(plan["word_target"]),
         "SIZE_POLICY": render_writer_size_policy(
             build_size_policy_for_plan(plan, plan_path=plan_path)
         ),
-        "SECTION_WORD_BUDGETS": _render_section_word_budgets(plan),
+        "SECTION_WORD_BUDGETS": _render_section_coverage(plan),
         "WRITER_SPECIFIC_DIRECTIVES": _writer_specific_directives(writer),
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
@@ -3981,7 +3956,7 @@ def writer_context(
     }
     # Seminar/FOLK-only writer rules: gated out of core (a1-c2) prompts so the
     # A1 letter module stays under WRITER_PROMPT_CEILING_BYTES. Resolved after
-    # the dict so its inner {WORD_TARGET} token interpolates against context.
+    # the dict so its nested tokens interpolate against context.
     context["SEMINAR_FOLK_WRITER_RULES"] = _seminar_folk_writer_rules(level, context)
     if use_generator:
         # V7.2 Step 5: inject the registry-composed writer-rules block + the
@@ -4705,7 +4680,7 @@ def parse_writer_correction_module_only(response: str) -> str | None:
     containing code blocks", using ≥4 backticks to disambiguate from the
     inner triple-backticks), peel one wrapper layer before parsing. This
     was observed 2026-05-19 from deepseek-v4-pro xhigh on a2/aspect-concept
-    word_count correction: model emitted ````` ```` markdown\\n```markdown
+    writer correction: model emitted ````` ```` markdown\\n```markdown
     file=module.md\\n...\\n```\\n``` ````` and the strict 3-backtick split
     parser returned 5 parts instead of 3. Peeling one wrapper layer recovers
     the inner fence.
@@ -5016,7 +4991,6 @@ def review_context(
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
-        "WORD_TARGET": str(plan["word_target"]),
         "SIZE_POLICY": render_reviewer_size_policy(
             build_size_policy_for_plan(
                 plan,
@@ -5119,7 +5093,6 @@ def wiki_coverage_review_context(
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
-        "WORD_TARGET": str(plan["word_target"]),
         "PLAN_CONTENT": _plan_content_for_prompt(plan, plan_content),
         "GENERATED_CONTENT": generated_content,
         "WIKI_MANIFEST": manifest_text,
@@ -5167,7 +5140,6 @@ def wiki_coverage_correction_context(
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
-        "WORD_TARGET": str(plan["word_target"]),
         "FAILURE_GROUP_KEY": failure_group_key,
         "FIX_PROPOSALS_YAML": yaml.safe_dump(
             list(fix_proposals),
@@ -5218,7 +5190,6 @@ def wiki_coverage_narrow_correction_context(
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
-        "WORD_TARGET": str(plan.get("word_target", "")),
         "OBLIGATION_ID": str(fix_proposal.get("obligation_id") or ""),
         "OBLIGATION_TYPE": str(fix_proposal.get("obligation_type") or ""),
         "FAILURE_REASON": str(fix_proposal.get("failure_reason") or ""),
@@ -5587,19 +5558,6 @@ def _render_vesum_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
     )
 
 
-def _render_word_count_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
-    current_count = _gate_int(gate_report, "count", "actual")
-    target_min = _gate_int(gate_report, "min_with_tolerance", "minimum", "target", default=current_count)
-    target_max = _gate_int(gate_report, "target_max", "max", "target", default=target_min)
-    delta = max(0, target_min - current_count)
-    return (
-        f"Current: {current_count} words. Target: {target_min}-{target_max}. "
-        f"Delta to floor: {delta} words. Append a NEW short section (2-3 sentences) "
-        f"or extend the existing 'Підсумок' / final section with {delta}+10 words. "
-        "Do NOT modify the existing prose, vocab, or dialogues. ONLY append."
-    )
-
-
 def _render_engagement_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
     current_callouts = _gate_int(gate_report, "callout_count", "current_callouts")
     min_callouts = _gate_int(gate_report, "callout_min", "min_callouts", default=1)
@@ -5688,7 +5646,6 @@ def _render_default_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
 
 GATE_SPECIFIC_INSTRUCTION_RENDERERS: dict[str, Callable[[Mapping[str, Any]], str]] = {
     "vesum_verified": _render_vesum_surgical_instruction,
-    "word_count": _render_word_count_surgical_instruction,
     "plan_sections": _render_plan_sections_surgical_instruction,
     "engagement_floor": _render_engagement_surgical_instruction,
     "russianisms_strict": _render_russianisms_surgical_instruction,
@@ -9481,7 +9438,7 @@ def run_python_qg(
         "error_correction_options",
         _error_correction_options_gate(activities, level=level),
     )
-    record("word_count", _word_count_gate(module_text, int(plan["word_target"])))
+    record("objective_evidence", _objective_evidence_gate(module_text, plan))
     record("plan_sections", _section_gate(module_text, plan))
     record("formatting_standards", _formatting_standards_gate(module_text))
     record("scaffolding_leak", _scaffolding_leak_gate(module_text))
@@ -10502,11 +10459,6 @@ def _contract_yaml(plan: Mapping[str, Any]) -> str:
         "sections": [
             {
                 "title": section["section"],
-                "word_budget": {
-                    "target": section["words"],
-                    "min": int(section["words"] * 0.9),
-                    "max": int(section["words"] * 1.1),
-                },
             }
             for section in plan.get("content_outline", [])
         ],
@@ -10854,10 +10806,6 @@ def _word_count(text: str) -> int:
     return len(_WORD_RE.findall(text))
 
 
-# Reviewed plan word targets are exact minimums. A short draft is revised with
-# grounded material or routed to plan review through SIZE_POLICY_MISMATCH; the
-# gate never lowers the floor by a percentage tolerance.
-_WORD_COUNT_TOLERANCE_BELOW = 0.0
 _PRIMARY_READING_BLOCK_RE = re.compile(
     r"(?:<!--\s*PRIMARY-READING\s*-->.*?<!--\s*/PRIMARY-READING\s*-->|^:::primary-reading(?:\s*\{[^\n]*\})?\s*\n.*?\n:::\s*$)",
     re.IGNORECASE | re.DOTALL | re.MULTILINE,
@@ -10868,66 +10816,33 @@ def _strip_primary_reading_blocks(text: str) -> str:
     return _PRIMARY_READING_BLOCK_RE.sub("", text)
 
 
-def _word_count_gate(text: str, target: int) -> dict[str, Any]:
-    count = markdown_module_evidence(text)[0].authored_instructional_words
-    min_with_tolerance = int(target * (1 - _WORD_COUNT_TOLERANCE_BELOW))
-    return {
-        "passed": count >= min_with_tolerance,
-        "count": count,
-        "target": target,
-        "min_with_tolerance": min_with_tolerance,
-        "tolerance_below_pct": _WORD_COUNT_TOLERANCE_BELOW * 100,
-    }
-
-
-_WRITER_DRAFT_SECTION_FLOOR_RATIO = 0.85
+def _word_count_gate(text: str, target: int | None = None) -> dict[str, Any]:
+    """Legacy descriptive helper; counts never decide acceptance or correction."""
+    return {"passed": True, "count": _writer_draft_countable_words(text)}
 
 
 def _writer_draft_countable_words(text: str) -> int:
     return markdown_module_evidence(text)[0].authored_instructional_words
 
 
-def _writer_draft_section_length_report(
-    plan: Mapping[str, Any],
-    module_text: str,
-    *,
-    section_floor_ratio: float = _WRITER_DRAFT_SECTION_FLOOR_RATIO,
-) -> list[dict[str, Any]]:
-    outline = plan.get("content_outline")
-    if not isinstance(outline, list):
-        return []
+_OBJECTIVE_EVIDENCE_RE = re.compile(
+    r"<!--\s*(UNSUPPORTED_OBJECTIVE|EVIDENCE_GAP)\s*:(.*?)-->",
+    re.IGNORECASE | re.DOTALL,
+)
 
-    archetype = resolve_module_archetype(
-        str(plan.get("level") or ""),
-        int(plan.get("sequence") or 0),
-    )
-    archetype_id = str(archetype.get("id") or "")
-    reports: list[dict[str, Any]] = []
-    for section in outline:
-        if not isinstance(section, Mapping):
-            continue
-        title = str(section.get("section") or "").strip()
-        if not title:
-            continue
-        try:
-            budget = int(section["words"])
-        except (KeyError, TypeError, ValueError):
-            continue
-        section_text = _extract_section_text(module_text, title, archetype_key=archetype_id)
-        count = _writer_draft_countable_words(section_text)
-        floor = int(budget * section_floor_ratio)
-        reports.append(
-            {
-                "section": title,
-                "count": count,
-                "budget": budget,
-                "floor": floor,
-                "floor_ratio": section_floor_ratio,
-                "shortfall": max(0, budget - count),
-                "passed": count >= floor,
-            }
-        )
-    return reports
+
+def _objective_evidence_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Surface declared gaps and absent teaching independently of draft length."""
+    outcomes = [
+        {
+            "outcome": match.group(1).upper(),
+            "detail": match.group(2).strip(),
+            "route": "source_research_or_versioned_plan_review",
+        }
+        for match in _OBJECTIVE_EVIDENCE_RE.finditer(text)
+    ]
+    outcomes.extend(_section_gate(text, plan)["outcomes"])
+    return {"passed": not outcomes, "outcomes": outcomes}
 
 
 def writer_draft_length_report(
@@ -10935,107 +10850,15 @@ def writer_draft_length_report(
     module_text: str,
     *,
     plan_path: Path | None = None,
-    section_floor_ratio: float = _WRITER_DRAFT_SECTION_FLOOR_RATIO,
 ) -> dict[str, Any]:
-    target = int(plan["word_target"])
-    count = _writer_draft_countable_words(module_text)
-    size_policy = build_size_policy_for_plan(
-        plan,
-        plan_path=plan_path,
-        actual_words=count,
-        module_text=module_text,
-    )
-    section_reports = _writer_draft_section_length_report(
-        plan,
-        module_text,
-        section_floor_ratio=section_floor_ratio,
-    )
-    short_sections = [section for section in section_reports if section["passed"] is False]
-    total_shortfall = max(0, target - count)
+    """Keep V7's report entry point without targets, floors or shortfalls."""
     return {
-        "passed": total_shortfall == 0 and not short_sections,
-        "count": count,
-        "target": target,
-        "total_shortfall": total_shortfall,
-        "section_floor_ratio": section_floor_ratio,
-        "sections": section_reports,
-        "short_sections": short_sections,
-        "size_policy": size_policy_summary(size_policy),
+        **_objective_evidence_gate(module_text, plan),
+        "count": _writer_draft_countable_words(module_text),
+        "size_policy": size_policy_summary(build_size_policy_for_plan(
+            plan, plan_path=plan_path, module_text=module_text,
+        )),
     }
-
-
-def _writer_draft_shortfall_lines(report: Mapping[str, Any]) -> list[str]:
-    lines: list[str] = []
-    total_shortfall = int(report.get("total_shortfall") or 0)
-    if total_shortfall > 0:
-        lines.append(
-            f"- Overall draft is {total_shortfall} words short of "
-            f"{int(report.get('target') or 0)} (counted {int(report.get('count') or 0)})."
-        )
-    for section in report.get("short_sections") or []:
-        if not isinstance(section, Mapping):
-            continue
-        lines.append(
-            "- "
-            f"{section.get('section')}: {int(section.get('shortfall') or 0)} words short "
-            f"of {int(section.get('budget') or 0)} "
-            f"(counted {int(section.get('count') or 0)}; "
-            f"85% floor {int(section.get('floor') or 0)})."
-        )
-    return lines or ["- No shortfalls."]
-
-
-def render_writer_draft_length_expansion_prompt(
-    *,
-    plan: Mapping[str, Any],
-    module_text: str,
-    length_report: Mapping[str, Any],
-    plan_path: Path | None = None,
-) -> str:
-    shortfall_lines = "\n".join(_writer_draft_shortfall_lines(length_report))
-    diagnostic = _yaml_inline(length_report)
-    size_policy = build_size_policy_for_plan(
-        plan,
-        plan_path=plan_path,
-        actual_words=int(length_report.get("count") or 0),
-        module_text=module_text,
-    )
-    return "\n".join(
-        [
-            "# Writer Draft Length Pre-check",
-            "",
-            "The deterministic first-draft length pre-check failed before the full Python QG loop.",
-            "Gate-counted authored words exclude Markdown comments, directive/component syntax, URLs, and `:::primary-reading` source text.",
-            "",
-            "## Size policy",
-            render_writer_size_policy(size_policy),
-            "",
-            "## Required expansion",
-            shortfall_lines,
-            "",
-            "Expand the named short sections only with source-backed analytic/textual substance: deeper close-reading, richer source comparison, more cultural context from the provided material, and clearer explanation of examples.",
-            "Do NOT add padding, filler transitions, meta-narration, invented citations, or new uncited claims.",
-            "Keep ALL existing content, citations, headings, activities, vocabulary, resources, and `:::primary-reading` blocks verbatim.",
-            "Do not edit text inside any `:::primary-reading` block. Add explanatory prose around those blocks instead.",
-            "Return the FULL patched `module.md`; do not return the other writer artifacts.",
-            "",
-            "## Output contract",
-            "Return exactly one fenced markdown block and nothing else:",
-            "```markdown file=module.md",
-            "... full patched module.md content ...",
-            "```",
-            "",
-            "## Length diagnostic",
-            "```yaml",
-            diagnostic,
-            "```",
-            "",
-            "## Current module.md",
-            "```markdown",
-            module_text,
-            "```",
-        ]
-    )
 
 
 def run_writer_draft_length_precheck(
@@ -11048,101 +10871,23 @@ def run_writer_draft_length_precheck(
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
-    """Run one targeted writer expansion before the full Python QG loop."""
-    module_path = module_dir / "module.md"
-    before_text = _read_required(module_path)
-    before = writer_draft_length_report(plan, before_text, plan_path=plan_path)
-    if before.get("passed") is True:
-        _emit(
-            event_sink,
-            "writer_draft_length_precheck",
-            status="skipped",
-            count=before["count"],
-            target=before["target"],
-            short_section_count=0,
-        )
-        return {"applied": False, "before": before, "after": before}
+    """Compatibility wrapper for V7; never invoke a writer based on length.
 
-    size_policy = build_size_policy_for_plan(
-        plan,
-        plan_path=plan_path,
-        actual_words=int(before["count"]),
-        module_text=before_text,
+    Explicit source/coverage gaps are retained here and enforced by Python QG's
+    zero-retry objective_evidence outcome, since V7 reads only ``applied``.
+    """
+    report = writer_draft_length_report(
+        plan, _read_required(module_dir / "module.md"), plan_path=plan_path,
     )
-    if not size_policy_allows_auto_expansion(size_policy):
-        _emit(
-            event_sink,
-            "writer_draft_length_precheck",
-            status="policy_mismatch",
-            count=before["count"],
-            target=before["target"],
-            short_section_count=len(before["short_sections"]),
-            size_policy_status=size_policy.status,
-        )
-        return {
-            "applied": False,
-            "kind": "writer_draft_length_precheck",
-            "patch_status": "policy_mismatch",
-            "policy_mismatch": True,
-            "before": before,
-            "after": before,
-            "size_policy": size_policy_summary(size_policy),
-        }
-
-    prompt = render_writer_draft_length_expansion_prompt(
-        plan=plan,
-        plan_path=plan_path,
-        module_text=before_text,
-        length_report=before,
-    )
-    context = CorrectionContext(
-        gate="writer_draft_length_precheck",
-        gate_report=before,
-        module_dir=module_dir,
-        plan_path=plan_path,
-        qg_report={"gates": {"writer_draft_length_precheck": before}},
-        prompt=prompt,
-    )
-    if writer_corrector is None:
-        response: str | Mapping[str, str] | None = invoke_writer(
-            prompt,
-            writer=writer,
-            cwd=module_dir,
-            invoker=invoker,
-        )
-    else:
-        response = writer_corrector(context)
-
-    applied = "unparseable"
-    if isinstance(response, Mapping):
-        write_writer_artifacts(module_dir, response)
-        applied = "writer_artifacts_mapping"
-    elif isinstance(response, str):
-        patched = parse_writer_correction_module_only(response)
-        if patched is not None:
-            module_path.write_text(patched, encoding="utf-8")
-            applied = "module_patch"
-
-    after_text = _read_required(module_path)
-    after = writer_draft_length_report(plan, after_text, plan_path=plan_path)
-    _emit(
-        event_sink,
-        "writer_draft_length_precheck",
-        status="applied" if applied != "unparseable" else "unparseable",
-        applied=applied,
-        count_before=before["count"],
-        count_after=after["count"],
-        target=before["target"],
-        short_section_count=len(before["short_sections"]),
-    )
+    _emit(event_sink, "writer_draft_length_precheck", status="informational", count=report["count"])
     return {
-        "applied": applied != "unparseable",
+        "applied": False,
         "kind": "writer_draft_length_precheck",
-        "prompt": prompt,
-        "response": dict(response) if isinstance(response, Mapping) else response,
-        "patch_status": applied,
-        "before": before,
-        "after": after,
+        "patch_status": "informational",
+        "before": report,
+        "after": report,
+        "outcomes": report["outcomes"],
+        "size_policy": report["size_policy"],
     }
 
 
@@ -11198,6 +10943,7 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         raw_heading = match.group(1).strip()
         headings_by_key.setdefault(_section_heading_key(raw_heading), []).append(raw_heading)
     missing = []
+    empty = []
     duplicate_headings = []
     seen_keys: set[str] = set()
     for section in plan["content_outline"]:
@@ -11214,7 +10960,11 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         ]
         if not matching_headings:
             missing.append(title)
-        elif len(matching_headings) > 1:
+        elif len(matching_headings) == 1 and not _strip_comments(
+            _extract_section_text(text, title, archetype_key=archetype_id),
+        ).strip():
+            empty.append(title)
+        if len(matching_headings) > 1:
             duplicate_headings.append(
                 {
                     "section": title,
@@ -11222,56 +10972,30 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
                     "count": len(matching_headings),
                 }
             )
-    budgets = []
-    for section in plan["content_outline"]:
-        title = section["section"]
-        target = int(section["words"])
-        section_text = _extract_section_text(text, title, archetype_key=archetype_id)
-        count = _word_count(_strip_comments(section_text))
-        min_words = int(target * 0.9)
-        # Per user direction (2026-05-17, reaffirmed 2026-05-23): word targets
-        # are MINIMUMS. Overshoot is welcome, never an error. We retain `min`
-        # and `max` fields in the output for diagnostic visibility — they feed
-        # the writer correction prompt as targeting guidance — but they do
-        # NOT fail the gate. The 2026-05-23 reaffirmation is specifically:
-        # "the section wordcount is a guidance for the writer, it is not a
-        # reason to drop an error. The important is that the whole content
-        # is a whole and not less than the planned word count." The total
-        # `word_count` gate enforces the only hard floor; per-section budgets
-        # surface as advisory diagnostics. The 2026-05-21 a1/my-morning
-        # build #13 cascade — where word_count r1 correction balanced the
-        # total but left Діалоги (257/270) and Мій ранок (265/270) under
-        # their per-section min and triggered a terminal halt — is the
-        # canonical failure pattern this relaxation prevents.
-        max_words = int(target * 1.1)  # diagnostic-only
-        budgets.append(
-            {
-                "section": title,
-                "count": count,
-                "min": min_words,
-                "max": max_words,
-                # `passed` is retained on every per-section budget for backward
-                # compatibility with diagnostic consumers (writer correction
-                # render, telemetry dashboards). It marks per-section min
-                # adherence, NOT a build-fail signal — see gate-level `passed`
-                # below.
-                "passed": count >= min_words,
-                "under_min": count < min_words,
-                "over_max": count > max_words,
-            }
-        )
     return {
-        # Gate-level `passed` reflects ONLY missing headings: every contracted
-        # section must EXIST as a level-2 heading in the module. Per-section
-        # word budgets are advisory (see comment in budgets construction
-        # above). A future stricter mode could surface per-section under-min
-        # as a separate `plan_sections_balance` advisory gate, but the build
-        # halt no longer fires on it.
-        "passed": not missing and not duplicate_headings,
+        "passed": not missing and not empty and not duplicate_headings,
         "missing_headings": missing,
+        "empty_sections": empty,
         "duplicate_headings": duplicate_headings,
+        # Legacy diagnostic key; no target, floor, bounds or length verdict.
+        "word_budgets": [
+            {"section": section["section"], "count": _writer_draft_countable_words(
+                _extract_section_text(text, section["section"], archetype_key=archetype_id),
+            )}
+            for section in plan["content_outline"]
+        ],
         "archetype": archetype_id,
-        "word_budgets": budgets,
+        "outcomes": [
+            {"outcome": "UNSUPPORTED_OBJECTIVE", "section": title,
+             "detail": "Planned section is absent; its content points are untaught.",
+             "route": "source_research_or_versioned_plan_review"}
+            for title in missing
+        ] + [
+            {"outcome": "EVIDENCE_GAP", "section": title,
+             "detail": "Planned section has no visible teaching evidence.",
+             "route": "source_research_or_versioned_plan_review"}
+            for title in empty
+        ],
     }
 
 
@@ -16473,7 +16197,6 @@ def _engagement_floor_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]
         "callout_min": callout_min,
         "meta_narration_hits": meta_hits,
         "issues": issues,
-        "_plan_word_target": int(plan.get("word_target", 0)),
     }
 
 

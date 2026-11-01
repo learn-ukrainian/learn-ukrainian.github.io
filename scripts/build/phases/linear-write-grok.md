@@ -330,11 +330,11 @@ The deterministic wiki-coverage gate hard-fails when any phonetic_rule has
 - Phase: {PHASE}
 - Teaching criterion: complete coverage and sufficient explanation; no length target.
 
-## Module Size Policy — dossier/evidence-led expansion control (#4801)
+## Coverage and teaching adequacy
 
 {SIZE_POLICY}
 
-Legacy size metadata below is retained as runtime context only. Numeric floors, ceilings and ranges have no teaching authority. Complete the supported objectives; identify each unsupported objective or evidence gap for source research or versioned plan review. Never invent depth or pad. Runtime length gates and plan-data migration remain separate work under #12256 AC-02 and AC-03.
+Legacy `word_target`, section `words` and size-policy fields in the plan are ignored metadata. Teach every supported objective and content point. If coverage is deficient, emit `<!-- UNSUPPORTED_OBJECTIVE: objective=<objective or content point>; missing teaching=<explanation, examples or practice needed> -->`. For missing source support, emit `<!-- EVIDENCE_GAP: objective=<objective or content point>; missing evidence=<needed source support> -->`. These explicit outcomes route to source research or versioned plan review, without a length-driven retry. Never invent depth or pad.
 
 Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 
