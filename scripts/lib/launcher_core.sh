@@ -1422,6 +1422,69 @@ launcher_inject_driver_agent() {
   fi
 }
 
+launcher_provider_option_arity() {
+  # Set LC_OPTION_ARITY to one, many, optional or boolean for the final route.
+  # Return 1 when the option is unclassified on a route with a table.
+  LC_OPTION_ARITY=''
+  case "$LC_PROVIDER:$LC_HARNESS" in
+    codex:codex)
+      case "$1" in
+        -c|--config|--enable|--disable|--remote|--remote-auth-token-env|--local-provider|-p|--profile|-s|--sandbox|-C|--cd|--add-dir|-a|--ask-for-approval) LC_OPTION_ARITY=one ;;
+        -i|--image) LC_OPTION_ARITY=many ;;
+        *) return 1 ;;
+      esac
+      ;;
+    claude:claude-code|codex:claude-code)
+      case "$1" in
+        --agent|--agents|--append-system-prompt|--append-system-prompt-file|--autocompact|--debug-file|--environment|--fallback-model|--input-format|--json-schema|--max-budget-usd|-n|--name|--output-format|--permission-mode|--permission-prompts|--plugin-dir|--plugin-url|--remote-control-session-name-prefix|--session-id|--setting-sources|--settings|--system-prompt|--system-prompt-file|--system-prompt-snapshot) LC_OPTION_ARITY=one ;;
+        --add-dir|--allowedTools|--allowed-tools|--betas|--disallowedTools|--disallowed-tools|--file|--mcp-config|--tools) LC_OPTION_ARITY=many ;;
+        -c|--continue) LC_OPTION_ARITY=boolean ;;
+        --cloud|-d|--debug|--from-pr|--prompt-suggestions|--remote-control|-r|--resume|--teleport|-w|--worktree) LC_OPTION_ARITY=optional ;;
+        *) return 1 ;;
+      esac
+      ;;
+    cursor:cursor-agent)
+      case "$1" in
+        --api-key|-H|--header|-e|--endpoint|--output-format|--mode|--sandbox|--workspace|--add-dir|--plugin-dir|--worktree-base) LC_OPTION_ARITY=one ;;
+        --resume|-w|--worktree) LC_OPTION_ARITY=optional ;;
+        *) return 1 ;;
+      esac
+      ;;
+    gemini:agy)
+      case "$1" in
+        --add-dir|--agent|--conversation|-i|--input-format|--json-schema|--log-file|--mode|--new-project|--output-format|-p|--print|--print-timeout|--project|--prompt|--prompt-interactive|--settings) LC_OPTION_ARITY=one ;;
+        *) return 1 ;;
+      esac
+      ;;
+    *)
+      # Routes without a table keep their own adapter refusal (Grok, Muse and
+      # Hermes) and their existing forwarding.
+      LC_OPTION_ARITY=none
+      ;;
+  esac
+  return 0
+}
+
+launcher_validate_provider_option_arity() {
+  # Run before any lease, canary, import or seed side effect so a refused
+  # launch cannot strand a claimed stream lease. No caller text means no
+  # ambiguity, so the no-caller forwarding contract is unchanged.
+  [ "${#LC_CALLER_PROMPT_ARGS[@]}" -gt 0 ] || return 0
+  local index=0 arg post_separator=999999
+  if [ "${LC_POST_SEPARATOR_INDEX:--1}" -ge 0 ]; then
+    post_separator=$((LC_POST_SEPARATOR_INDEX + ${#LC_WRAPPER_PROVIDER_ARGS[@]}))
+  fi
+  for arg in "${LC_FORWARD_ARGS[@]}"; do
+    if [ "$index" -lt "$post_separator" ] && [[ "$arg" == -* ]] && [[ "$arg" != *=* ]]; then
+      if ! launcher_provider_option_arity "$arg"; then
+        launcher_refuse_unclassified_provider_option "$arg"
+        return 1
+      fi
+    fi
+    index=$((index + 1))
+  done
+}
+
 launcher_bind_drive_epic() {
   local fleet_clause
   if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
@@ -1475,40 +1538,19 @@ launcher_bind_drive_epic() {
         # Resolve option arity only now: a later --harness can change it
         # (Codex -c takes a value; Claude -c is boolean). Arguments after
         # `--` keep their original boundaries and need no classification.
-        # An unclassified option cannot be told apart from caller text, so
-        # it fails closed rather than letting the caller or the binding
-        # become a second prompt.
+        # The pre-claim validation has already refused unclassified options.
+        # This composition keeps the classified value boundaries and repeats
+        # the refusal as a guard for direct callers of this function.
         if [ "$index" -lt "$post_separator" ] && [[ "$arg" == -* ]] && [[ "$arg" != *=* ]]; then
-          case "$LC_PROVIDER:$LC_HARNESS" in
-            codex:codex)
-              case "$arg" in
-                -c|--config|--enable|--disable|--remote|--remote-auth-token-env|--local-provider|-p|--profile|-s|--sandbox|-C|--cd|--add-dir|-a|--ask-for-approval) value_mode=one ;;
-                -i|--image) value_mode=many ;;
-                *) launcher_refuse_unclassified_provider_option "$arg"; exit 2 ;;
-              esac
-              ;;
-            claude:claude-code|codex:claude-code)
-              case "$arg" in
-                --agent|--agents|--append-system-prompt|--append-system-prompt-file|--autocompact|--debug-file|--environment|--fallback-model|--input-format|--json-schema|--max-budget-usd|-n|--name|--output-format|--permission-mode|--permission-prompts|--plugin-dir|--plugin-url|--remote-control-session-name-prefix|--session-id|--setting-sources|--settings|--system-prompt|--system-prompt-file|--system-prompt-snapshot) value_mode=one ;;
-                --add-dir|--allowedTools|--allowed-tools|--betas|--disallowedTools|--disallowed-tools|--file|--mcp-config|--tools) value_mode=many ;;
-                -c|--continue) value_mode='' ;;
-                --cloud|-d|--debug|--from-pr|--prompt-suggestions|--remote-control|-r|--resume|--teleport|-w|--worktree) value_mode=optional ;;
-                *) launcher_refuse_unclassified_provider_option "$arg"; exit 2 ;;
-              esac
-              ;;
-            cursor:cursor-agent)
-              case "$arg" in
-                --api-key|-H|--header|-e|--endpoint|--output-format|--mode|--sandbox|--workspace|--add-dir|--plugin-dir|--worktree-base) value_mode=one ;;
-                --resume|-w|--worktree) value_mode=optional ;;
-                *) launcher_refuse_unclassified_provider_option "$arg"; exit 2 ;;
-              esac
-              ;;
-            gemini:agy)
-              case "$arg" in
-                --add-dir|--agent|--conversation|-i|--input-format|--json-schema|--log-file|--mode|--new-project|--output-format|-p|--print|--print-timeout|--project|--prompt|--prompt-interactive|--settings) value_mode=one ;;
-                *) launcher_refuse_unclassified_provider_option "$arg"; exit 2 ;;
-              esac
-              ;;
+          if ! launcher_provider_option_arity "$arg"; then
+            launcher_refuse_unclassified_provider_option "$arg"
+            exit 2
+          fi
+          case "$LC_OPTION_ARITY" in
+            one) value_mode=one ;;
+            many) value_mode=many ;;
+            optional) value_mode=optional ;;
+            *) value_mode='' ;;
           esac
         fi
       fi
@@ -1696,6 +1738,11 @@ launcher_main() {
   # shellcheck disable=SC1090
   source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate
+  # Refuse an unclassified provider option before deploy, import, lease,
+  # canary or seed can leave side effects behind a failed launch.
+  if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "0" ]; then
+    launcher_validate_provider_option_arity || exit 2
+  fi
   launcher_adapter_preflight
 
   if [ "$LC_DRY_RUN" != "1" ]; then

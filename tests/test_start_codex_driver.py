@@ -393,10 +393,7 @@ def test_codex_driver_rejects_unknown_selector_in_default_and_governor_modes(
 
 
 def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None:
-    result = run_launcher(
-        "start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol",
-        "--foo=bar", "--", "--verbose",
-    )
+    result = run_launcher("start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol", "--verbose", "--foo=bar")
     assert result.returncode == 0, result.stderr
     assert "would claim lease" in result.stdout
     argv = _would_exec_argv(result)
@@ -415,6 +412,7 @@ def test_unclassified_provider_option_refused_before_caller() -> None:
     assert result.returncode == 2
     assert "unclassified provider option '--verbose'" in result.stderr
     assert "put provider options after --" in result.stderr
+    assert "would claim lease" not in result.stdout
     assert "would exec" not in result.stdout
 
 
