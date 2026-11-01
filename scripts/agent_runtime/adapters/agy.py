@@ -3357,7 +3357,14 @@ def export_saved_step_outputs(app_data: Path) -> list[dict[str, Any]]:
             if steps.is_symlink() or not steps.is_dir():
                 continue
             for step_dir in sorted(steps.iterdir(), key=lambda path: path.name):
-                if step_dir.is_symlink() or not step_dir.is_dir() or not step_dir.name.isdigit():
+                # Unicode digits such as superscripts pass isdigit() and then make int() raise,
+                # which would abandon every other saved body. Only ASCII step names are readable.
+                if (
+                    step_dir.is_symlink()
+                    or not step_dir.is_dir()
+                    or not step_dir.name.isascii()
+                    or not step_dir.name.isdigit()
+                ):
                     continue
                 step_index = int(step_dir.name)
                 key = (conversation.name, step_index)
@@ -3421,14 +3428,6 @@ def _sources_step(event: Mapping[str, Any]) -> tuple[str, int] | None:
     return conversation, index
 
 
-def _completed_sources_output(info: Mapping[str, Any]) -> str | None:
-    """``retained``, ``missing``, or ``None`` when this event is not a completed Sources call."""
-    output = info.get("output")
-    if isinstance(output, str) and output.strip():
-        return "retained"
-    return "missing"
-
-
 def merge_saved_step_outputs(stdout: str, saved: list[dict[str, Any]]) -> tuple[str, int, int]:
     """Put each saved body, or a missing-body reason, on the matching completed Sources event."""
     index: dict[tuple[str, int], Mapping[str, Any]] = {}
@@ -3461,18 +3460,25 @@ def merge_saved_step_outputs(stdout: str, saved: list[dict[str, Any]]) -> tuple[
         if not isinstance(info, dict):
             lines.append(line)
             continue
-        if _completed_sources_output(info) == "retained":
+        existing = info.get("output")
+        # A saved-file pointer is not a body. Expand it from the export, or mark it missing.
+        if (
+            isinstance(existing, str)
+            and existing.strip()
+            and _SAVED_OUTPUT_POINTER_RE.search(existing) is None
+        ):
             retained += 1
             lines.append(line)
             continue
         found = index.get(key)
         output = found.get("output") if isinstance(found, Mapping) else None
-        if isinstance(output, str) and output.strip():
+        if isinstance(output, str) and output.strip() and _SAVED_OUTPUT_POINTER_RE.search(output) is None:
             info["output"] = output
             info.pop("output_missing", None)
             retained += 1
         else:
             reason = found.get("output_missing") if isinstance(found, Mapping) else None
+            info.pop("output", None)
             info["output_missing"] = reason if isinstance(reason, str) and reason else "file_removed"
             missing += 1
         lines.append(json.dumps(event, ensure_ascii=False, separators=(",", ":")))

@@ -236,27 +236,40 @@ def test_missing_saved_tool_result_is_marked_file_removed(tmp_path: Path) -> Non
 def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
     """A completed Sources call with no stream output receives the step file through the inliner."""
     app_data = (tmp_path / "antigravity-cli").resolve()
-    output = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "steps" / "34" / "output.txt"
+    steps = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "steps"
+    output = steps / "34" / "output.txt"
     output.parent.mkdir(parents=True)
     output.write_text("kept body", encoding="utf-8")
+    pointed = steps / "50" / "output.txt"
+    pointed.parent.mkdir()
+    pointed.write_text("expanded body", encoding="utf-8")
+    # A Unicode digit name must not abort the export of the real step files.
+    (steps / "²").mkdir()
     saved = agy_module.export_saved_step_outputs(app_data)
-    event = {
-        "event": "step_update",
-        "step_update": {
-            "conversation_id": CONVERSATION_ID,
-            "state": "DONE",
-            "step_index": 34,
-            "tool_name": "call_mcp_tool",
-            "tool_info": {
-                "parameters": {"ServerName": "sources", "ToolName": "search_text", "Arguments": "{}"},
+
+    def event(step: int, body: str | None) -> dict:
+        info: dict = {"parameters": {"ServerName": "sources", "ToolName": "search_text", "Arguments": "{}"}}
+        if body is not None:
+            info["output"] = body
+        return {
+            "event": "step_update",
+            "step_update": {
+                "conversation_id": CONVERSATION_ID,
+                "state": "DONE",
+                "step_index": step,
+                "tool_name": "call_mcp_tool",
+                "tool_info": info,
             },
-        },
-    }
-    merged, retained, missing = agy_module.merge_saved_step_outputs(json.dumps(event) + "\n", saved)
-    parsed = json.loads(merged)
-    assert parsed["step_update"]["tool_info"]["output"] == "kept body"
-    assert "output_missing" not in parsed["step_update"]["tool_info"]
-    assert retained == 1
+        }
+
+    pointer = f"The output was large and was saved to: {pointed.as_uri()}"
+    stdout = json.dumps(event(34, None)) + "\n" + json.dumps(event(50, pointer)) + "\n"
+    merged, retained, missing = agy_module.merge_saved_step_outputs(stdout, saved)
+    parsed = [json.loads(line) for line in merged.splitlines()]
+    assert parsed[0]["step_update"]["tool_info"]["output"] == "kept body"
+    assert parsed[1]["step_update"]["tool_info"]["output"] == "expanded body"
+    assert "saved to:" not in merged
+    assert retained == 2
     assert missing == 0
 
 

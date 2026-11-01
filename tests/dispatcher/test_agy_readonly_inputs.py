@@ -424,6 +424,7 @@ def test_tool_results_survive_scratch_delete(tmp_path: Path) -> None:
     kept.parent.mkdir(parents=True)
     kept.write_text("kept body", encoding="utf-8")
     (app / "brain" / conversation / ".system_generated" / "steps" / "44").mkdir()
+    (app / "brain" / conversation / ".system_generated" / "steps" / "²").mkdir()
     final = tmp_path / "task.result"
     boundary = agy_sandbox._Boundary.__new__(agy_sandbox._Boundary)
     boundary.args = SimpleNamespace(receipt=str(agy_sandbox.receipt_file(final)), scratch=str(scratch))
