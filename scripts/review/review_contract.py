@@ -276,6 +276,49 @@ def _json_objects(text: str) -> list[dict[str, Any]]:
         index = max(end, start + 1)
 
 
+def _outside_blockquotes(text: str) -> str:
+    """Drop CommonMark blockquotes so an example object cannot lock a decision."""
+    from markdown_it import MarkdownIt
+
+    from scripts.review.verdict_parser import _commonmark_lines
+
+    raw_lines = _commonmark_lines(text, keepends=True)
+    lines = _commonmark_lines(text)
+    parser = MarkdownIt("commonmark")
+    spans: list[tuple[int, int]] = []
+    for token in parser.parse("\n".join(lines)):
+        if token.type != "blockquote_open":
+            continue
+        source_map = token.map
+        if not isinstance(source_map, (list, tuple)) or len(source_map) != 2:
+            raise ValueError("CommonMark blockquote map unavailable")
+        start, end = source_map
+        if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
+            raise ValueError("CommonMark blockquote map invalid")
+        spans.append((start, end))
+    parts: list[str] = []
+    cursor = 0
+    for start, end in sorted(spans):
+        if end <= cursor:
+            continue
+        parts.extend(raw_lines[cursor:start])
+        parts.append("\n")
+        cursor = end
+    parts.extend(raw_lines[cursor:])
+    return "".join(parts)
+
+
+def _effective_verdict(payload: Mapping[str, Any]) -> str | None:
+    """The verdict the receipt's evidence states, when the payload can be read."""
+    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
+
+    try:
+        verdict, _evidence = resolve_verdict_and_evidence(payload)
+    except ReviewPublicationError:
+        return None
+    return verdict
+
+
 def _findings_candidate(payload: dict[str, Any]) -> bool:
     if payload.get("schema_version") == SCHEMA_VERSION:
         return True
@@ -292,9 +335,13 @@ def decision_lock(raw: str) -> dict[str, Any]:
     """
     from scripts.review.verdict_parser import recognized_verdicts
 
+    try:
+        visible = _outside_blockquotes(raw)
+    except ValueError:
+        return {"ambiguous": True, "verdicts": [], "payload": None}
     objects: list[dict[str, Any]] = []
     seen: set[str] = set()
-    for payload in _json_objects(raw):
+    for payload in _json_objects(visible):
         if not _findings_candidate(payload):
             continue
         key = json.dumps(payload, sort_keys=True, default=str)
@@ -332,6 +379,10 @@ def same_decision(lock: Mapping[str, Any], payload: Mapping[str, Any]) -> bool:
         overall = payload.get("overall")
         got = overall.get("correctness") if isinstance(overall, Mapping) else None
         if expected is None or got != expected:
+            return False
+    if isinstance(prior, Mapping):
+        prior_verdict = _effective_verdict(prior)
+        if prior_verdict is not None and _effective_verdict(payload) != prior_verdict:
             return False
     return stated
 

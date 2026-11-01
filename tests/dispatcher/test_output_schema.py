@@ -164,6 +164,31 @@ def test_claude_review_binds_findings_schema(dispatch):
     assert schema["required"] == ["schema_version", "overall", "findings"]
     with pytest.raises(ContractError, match="review_envelope_requires_one_json_block"):
         canonical_receipt_payload("VERDICT: APPROVE\nSCORE: 9/10 No defects.\nNo findings.\n")
+    receipt = {
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": "correct", "explanation": "No defects.", "confidence": 0.9},
+        "findings": [],
+    }
+    bound = json.dumps({
+        "type": "result", "subtype": "success", "is_error": False,
+        "result": "", "structured_output": receipt,
+    })
+    parsed = claude.parse(bound, "", 0, None, output_schema=schema)
+    assert parsed.error is None
+    assert json.loads(parsed.text) == receipt
+    preamble = json.dumps({
+        "type": "result", "subtype": "success", "is_error": False,
+        "result": "VERDICT: APPROVE", "structured_output": receipt,
+    })
+    parsed = claude.parse(preamble, "", 0, None, output_schema=schema)
+    assert json.loads(parsed.text) == receipt
+    missing = claude.parse(
+        json.dumps({"type": "result", "subtype": "success", "is_error": False, "result": "VERDICT: APPROVE"}),
+        "", 0, None, output_schema=schema,
+    )
+    assert missing.error == "claude: missing structured output"
+    failed = claude.parse(bound, "", 1, None, output_schema=schema)
+    assert failed.error == "claude: exited with status 1"
     codex_spec, codex_record = dispatch.invoke(path=None, agent="sol", review=True, task_id="codex-schema")
     assert codex_record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
     assert codex.build(codex_spec, {}).argv.count("--output-schema") == 1

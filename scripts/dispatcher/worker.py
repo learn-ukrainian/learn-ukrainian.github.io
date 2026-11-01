@@ -644,6 +644,25 @@ def _format_correction(record: dict, schema: dict | None, text: str | None, laun
     return _correction_stdin(text), lock
 
 
+def _receipt_failure(record: dict, text: str | None) -> str | None:
+    """A code review settles only when the reply is a canonical receipt.
+
+    A verdict line alone is not a receipt. Ukrainian reviews do not use this
+    object, so they keep the verdict gate.
+    """
+    if record.get("schema_version") != 2 or record.get("require_review_verdict") is not True:
+        return None
+    from scripts.review.review_contract import ContractError, canonical_receipt_payload, schema_path
+
+    if schema_path(profile=record.get("review_profile"), task=record) is None:
+        return None
+    try:
+        canonical_receipt_payload(text or "")
+    except ContractError:
+        return _verdict_failure(record, text) or "review_gate_error"
+    return None
+
+
 def _corrected_reply_refusal(lock: dict, text: str | None) -> str | None:
     """Refuse a correction that is still not a receipt, or that changes the locked decision."""
     from scripts.review.review_contract import ContractError, canonical_receipt_payload, same_decision
@@ -852,7 +871,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             final = invocation.final_file
             final_text = final.read_text(errors="replace") if final and final.exists() else None
             stdout = stdout_path.read_text(errors="replace")
-            parse_options = {"output_schema": schema} if spec.agent == "agy" and schema is not None else {}
+            parse_options = (
+                {"output_schema": schema} if spec.agent in {"agy", "claude"} and schema is not None else {}
+            )
             parsed = provider.parse(stdout, stderr_path.read_text(errors="replace"), exit_code, final_text, **parse_options)
             text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
             # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
@@ -914,6 +935,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 if attested[1]:
                     status, error = "failed", attested[1]
         if status == "done" and locked is not None and (refusal := _corrected_reply_refusal(locked, text)):
+            status, error = "failed", refusal
+        if status == "done" and (refusal := _receipt_failure(record, text)):
             status, error = "failed", refusal
         if status == "done" and (refusal := _verdict_failure(record, text)):
             status, error = "failed", refusal

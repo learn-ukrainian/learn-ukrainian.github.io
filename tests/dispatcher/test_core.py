@@ -1509,7 +1509,7 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
     assert json.loads(sandbox.cli("list", "--status", record["status"]).stdout)[0]["task_id"] == task[0]
 
 
-@pytest.mark.parametrize("second", ["kept", "changed", "invalid"])
+@pytest.mark.parametrize("second", ["kept", "changed", "invalid", "ambiguous", "quoted", "meaning"])
 def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
     """Case 3: a Cursor reply with no recognised VERDICT line gets one format correction.
 
@@ -1522,13 +1522,26 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
         '"overall":{"correctness":"correct","explanation":"No defects.","confidence":0.9},'
         '"findings":[]}'
     )
-    first = "The change is sound.\n" + findings
-    if second == "kept":
-        reply = findings
+    other = findings.replace('"correctness":"correct"', '"correctness":"incorrect"', 1)
+    conflict = findings.replace(
+        '"explanation":"No defects."',
+        '"explanation":"VERDICT: REQUEST_CHANGES. Cannot approve this change."',
+    )
+    reply = findings
+    if second == "ambiguous":
+        first = "VERDICT: APPROVE\n" + findings + "\n" + other
+    elif second == "quoted":
+        first = "Example only, not my review:\n> " + findings
+    elif second == "meaning":
+        first = "The change is sound.\n" + conflict
     elif second == "changed":
-        reply = findings.replace('"correctness":"correct"', '"correctness":"incorrect"', 1)
-    else:
+        first = "The change is sound.\n" + findings
+        reply = other
+    elif second == "invalid":
+        first = "The change is sound.\n" + findings
         reply = "Still commentary without a verdict."
+    else:
+        first = "The change is sound.\n" + findings
     binary_dir = sandbox.repo.parent / "bin"
     binary_dir.mkdir()
     count = binary_dir / "launches"
@@ -1571,16 +1584,21 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
         "--review-author-model", "claude-opus-5-5",
     )
     record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if second == "kept" else 1)
-    assert int(count.read_text()) == 2
-    correction = prompts.read_text().split("\n---\n", 1)[1]
-    assert "Keep the same verdict" in correction
-    assert findings in correction
+    launches = 1 if second in {"ambiguous", "quoted"} else 2
+    assert int(count.read_text()) == launches
+    if launches == 2:
+        correction = prompts.read_text().split("\n---\n", 1)[1]
+        assert "Keep the same verdict" in correction
+        assert findings in correction or conflict in correction
     if second == "kept":
         assert record["status"] == "done"
         assert json.loads(record["result_file"] and Path(record["result_file"]).read_text())["overall"]["correctness"] == "correct"
-    elif second == "changed":
+    elif second in {"changed", "meaning"}:
         assert record["status"] == "failed"
         assert record["error"] == "review_ambiguous_verdict"
+    elif second == "ambiguous":
+        assert record["status"] == "failed"
+        assert record["error"] == "review_gate_error"
     else:
         assert record["status"] == "failed"
         assert record["error"] == "review_missing_verdict_line"

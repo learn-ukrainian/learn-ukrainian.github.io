@@ -241,7 +241,9 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     return Invocation(argv, spec.prompt_file.read_bytes(), env, None)
 
 
-def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
+def parse(
+    stdout: str, stderr: str, returncode: int, final_text: str | None, output_schema: dict | None = None,
+) -> ParsedResult:
     result, error, overloaded = {}, None, False
     stream_clean, terminals = True, 0
     # Runtime evidence for Ukrainian reviews: Sources tool calls whose result came back without error.
@@ -285,6 +287,16 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         return ParsedResult(None, None, f"claude: {result['result']}", rate_limited=True)
     if returncode:
         error = f"claude: exited with status {returncode}"
+    elif output_schema is not None and error is None and result.get("subtype") == "success" and result.get("is_error") is not True:
+        # A schema-bound run returns the receipt on structured_output. The result
+        # string can be empty or a preamble; neither one is the receipt.
+        structured = result.get("structured_output") if "structured_output" in result else None
+        if isinstance(structured, str) and structured.strip():
+            text = structured
+        elif isinstance(structured, dict):
+            text = json.dumps(structured)
+        else:
+            text, error = None, "claude: missing structured output"
     return ParsedResult(
         text, usage if isinstance(usage, dict) else None, error or (None if text else "claude: missing final text"),
         sources_mcp_call_count=len(sources_calls & completed),
