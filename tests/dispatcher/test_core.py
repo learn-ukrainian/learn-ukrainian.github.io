@@ -1833,9 +1833,48 @@ def test_scope_verification_failure_only_rejects_success(delivery_settle, monkey
             raise subprocess.CalledProcessError(1, ["git", command])
         return original(path, *args, **kwargs)
     monkeypatch.setattr(git, "_verification_git", broken)
+    failures = []
+    original_cause = worker._verification_cause
+
+    def diagnostic_cause(exc):
+        origins = []
+        frame = exc.__traceback__
+        while frame is not None:
+            origins.append((Path(frame.tb_frame.f_code.co_filename).name,
+                            frame.tb_frame.f_code.co_name, frame.tb_lineno))
+            frame = frame.tb_next
+        failures.append({"type": type(exc).__name__, "origins": origins,
+                         "filename": getattr(exc, "filename", None),
+                         "filename2": getattr(exc, "filename2", None)})
+        return original_cause(exc)
+
+    monkeypatch.setattr(worker, "_verification_cause", diagnostic_cause)
     worker._enforce_delivery(record)
-    assert record["status"] == ("no_deliverable" if status == "done" else status)
-    assert record["error"] == (f"owned_paths_verification_failed: git {command} failed" if status == "done" else "original cause")
+    assert record["status"] == ("no_deliverable" if status == "done" else status), failures
+    assert record["error"] == (f"owned_paths_verification_failed: git {command} failed" if status == "done" else "original cause"), failures
+
+
+def test_private_ownership_git_does_not_start_background_maintenance(delivery_settle, monkeypatch, tmp_path):
+    """Defect class: a disposable Git namespace starts writers that outlive its fetch."""
+    _, settle = delivery_settle
+    record = settle("pushed")
+    trace = tmp_path / "verification-trace.json"
+    original_run = subprocess.run
+
+    def traced_run(argv, *args, **kwargs):
+        if argv[0] == git.GIT_BINARY and any(str(arg).startswith("--git-dir=") for arg in argv):
+            kwargs["env"] = {**kwargs["env"], "GIT_TRACE2_EVENT": str(trace)}
+        return original_run(argv, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", traced_run)
+    with git.ownership_git(record) as run:
+        assert run("rev-parse", "refs/heads/delivery") == record["head_sha"]
+    complete, _, _ = trace.read_text().rpartition("\n")
+    events = [json.loads(line) for line in complete.splitlines()]
+    assert any(event.get("event") == "start" and "fetch" in event.get("argv", []) for event in events)
+    maintenance = [event["argv"] for event in events
+                   if event.get("event") == "child_start" and "maintenance" in event.get("argv", [])]
+    assert maintenance == []
 
 
 @pytest.mark.parametrize("history", ["conflict", "no-commit", "unrelated", "parentless", "clean"])
