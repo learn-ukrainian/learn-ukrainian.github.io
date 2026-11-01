@@ -194,7 +194,11 @@ def test_claude_review_binds_findings_schema(dispatch):
     assert codex_record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
     codex_argv = codex.build(codex_spec, {}).argv
     assert codex_argv.count("--output-schema") == 1
-    bound = json.loads(Path(codex_argv[codex_argv.index("--output-schema") + 1]).read_text())
+    bound_path = Path(codex_argv[codex_argv.index("--output-schema") + 1])
+    assert bound_path.parent.name == ".codex-schemas"
+    assert bound_path.parent.parent == codex_spec.final_file.parent
+    assert codex_spec.options.get("provider_output_schema_sha256") is not None
+    bound = json.loads(bound_path.read_text())
     assert "if" not in bound and "oneOf" not in json.dumps(bound) and "not" not in bound
     assert "missing_capabilities" not in bound.get("properties", {})
     assert bound["properties"]["schema_version"]["type"] == "string"
@@ -210,6 +214,33 @@ def test_claude_review_binds_findings_schema(dispatch):
     with pytest.raises(ValidationError, match="missing_capabilities"):
         Draft202012Validator(receipt_schema).validate(refused)
     Draft202012Validator(receipt_schema).validate(receipt)
+
+    from scripts.dispatcher.types import TaskSpec
+
+    dry_spec = TaskSpec(
+        "codex-dry-schema", "sol", "gpt-6.1-sol", None, "read-only",
+        codex_spec.worktree, codex_spec.prompt_file, codex_spec.final_file,
+        options={**codex_spec.options, "dry_run": "True"},
+    )
+    dry_argv = codex.build(dry_spec, {}).argv
+    dry_path = Path(dry_argv[dry_argv.index("--output-schema") + 1])
+    assert not dry_path.exists()
+
+    name_map_schema = {
+        "type": "object",
+        "properties": {
+            "const": {"type": "string"},
+            "if": {"type": "integer"},
+            "not": {"type": "boolean"},
+        },
+        "required": ["const", "if", "not"],
+    }
+    projected = codex.openai_strict_schema(name_map_schema)
+    assert "const" in projected["properties"]
+    assert "if" in projected["properties"]
+    assert "not" in projected["properties"]
+    assert projected["properties"]["const"]["type"] == "string"
+    assert codex._needs_openai_strict(name_map_schema) is False
 
 
 def test_agy_review_binds_findings_schema(dispatch):

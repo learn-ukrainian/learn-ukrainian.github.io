@@ -1,36 +1,27 @@
 """Codex exec flags and JSONL output, extracted from the existing adapter."""
 
 import copy
+import hashlib
 import json
+import os
+import time
 from collections.abc import Mapping
-from pathlib import Path
 
 from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
 from scripts.agent_runtime.adapters.codex_events import classify_provider_message
+from scripts.agent_runtime.attempt_safe_read import safe_read_attempt_file
 from scripts.agent_runtime.read_only_tmp import dispatch_lease
+from scripts.audit.post_build_review import (
+    OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS as _POST_BUILD_FORBIDDEN_KEYWORDS,
+)
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+
+OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = _POST_BUILD_FORBIDDEN_KEYWORDS | frozenset({"$schema", "$id"})
 
 # Failure codes (agent_runtime) for a provider that cannot take the run now: usage limits and no capacity.
 _OUT_OF_CAPACITY = frozenset({"rate_limited", "provider_overloaded"})
 
-OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = frozenset({
-    "$schema",
-    "$id",
-    "allOf",
-    "oneOf",
-    "not",
-    "if",
-    "then",
-    "else",
-    "dependentRequired",
-    "dependentSchemas",
-    "propertyNames",
-    "patternProperties",
-    "minProperties",
-    "maxProperties",
-    "uniqueItems",
-})
 
 
 def _provider_literal_type(value: object) -> str:
@@ -56,7 +47,11 @@ def _normalize_provider_schema_types(value: object) -> None:
         return
     if not isinstance(value, dict):
         return
-    for item in value.values():
+    for key, item in list(value.items()):
+        if key in {"properties", "$defs"} and isinstance(item, Mapping):
+            for subschema in item.values():
+                _normalize_provider_schema_types(subschema)
+            continue
         _normalize_provider_schema_types(item)
     if "type" in value:
         return
@@ -103,9 +98,16 @@ def _normalize_codex_strict_node(value: object) -> None:
 
 def _needs_openai_strict(node: object) -> bool:
     if isinstance(node, dict):
-        return bool(OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS & node.keys()) or any(
-            _needs_openai_strict(value) for value in node.values()
-        )
+        if bool(OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS & node.keys()):
+            return True
+        for key, value in node.items():
+            if key in {"properties", "$defs"} and isinstance(value, Mapping):
+                if any(_needs_openai_strict(subschema) for subschema in value.values()):
+                    return True
+                continue
+            if _needs_openai_strict(value):
+                return True
+        return False
     if isinstance(node, list):
         return any(_needs_openai_strict(value) for value in node)
     return False
@@ -131,12 +133,34 @@ def openai_strict_schema(document: dict) -> dict:
 
 
 def _strict_schema_path(spec: TaskSpec, document: dict) -> str:
-    from scripts.common.scratch import resolve_scratch_root
-
-    directory = Path(resolve_scratch_root()) / "learn-ukrainian" / "codex-schemas"
-    directory.mkdir(parents=True, exist_ok=True)
+    directory = spec.final_file.parent / ".codex-schemas"
     path = directory / f"{spec.task_id}.json"
-    path.write_text(json.dumps(openai_strict_schema(document)), encoding="utf-8")
+    content = json.dumps(openai_strict_schema(document), separators=(",", ":")).encode("utf-8")
+    derived_digest = hashlib.sha256(content).hexdigest()
+    spec.options["provider_output_schema_sha256"] = derived_digest
+    if spec.options.get("dry_run") == "True":
+        return str(path)
+    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+    flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        fd = os.open(str(path), flags, 0o600)
+    except FileExistsError:
+        path.unlink(missing_ok=True)
+        fd = os.open(str(path), flags, 0o600)
+    try:
+        os.write(fd, content)
+    finally:
+        os.close(fd)
+    verified = safe_read_attempt_file(path, trusted_root=directory)
+    if hashlib.sha256(verified).hexdigest() != derived_digest:
+        raise ValueError("codex strict output schema verification failed")
+    try:
+        now = time.time()
+        for stale in directory.glob("*.json"):
+            if stale != path and stale.stat().st_mtime < now - 3600:
+                stale.unlink(missing_ok=True)
+    except OSError:
+        pass
     return str(path)
 
 
