@@ -179,7 +179,13 @@ SETTLE_LOCATIONS: _Table = {
 }
 
 #: The one table per manifest kind. A kind without a table is refused.
-LOCATIONS: dict[str, _Table] = {"lesson": LESSON_LOCATIONS, "plan": PLAN_LOCATIONS, "settle": SETTLE_LOCATIONS}
+LEXICAL_LOCATIONS: _Table = {
+    "inputs.candidates": lambda m, e: f"{m.state}/lexical-W-[0-9]+\\.candidates\\.json",
+}
+
+LOCATIONS: dict[str, _Table] = {
+    "lesson": LESSON_LOCATIONS, "plan": PLAN_LOCATIONS, "settle": SETTLE_LOCATIONS, "lexical": LEXICAL_LOCATIONS,
+}
 
 #: The re-review's own pins: its diff base (inside the pinned diff) and its previous findings.
 RE_REVIEW_LOCATIONS = frozenset({"diff", "previous_attempt.review", "previous_attempt.ledger"})
@@ -283,6 +289,27 @@ def _validator(kind: str) -> Draft202012Validator:
 def schema_refusals(manifest: dict[str, Any]) -> list[Refusal]:
     """Each way the manifest departs from its schema, so a required pin cannot simply be left out."""
     kind = manifest.get("kind")
+    if kind == "lexical":
+        inputs = manifest.get("inputs")
+        candidate = inputs.get("candidates") if isinstance(inputs, dict) else None
+        valid = (
+            set(manifest) == {"lexical_schema", "kind", "level", "slug", "word", "inputs"}
+            and type(manifest.get("lexical_schema")) is int
+            and manifest["lexical_schema"] == 1
+            and isinstance(manifest.get("word"), str)
+            and bool(re.fullmatch(r"W-[0-9]*[1-9][0-9]*", manifest["word"]))
+            and isinstance(inputs, dict)
+            and set(inputs) == {"candidates"}
+            and isinstance(candidate, dict)
+            and set(candidate) == {"path", "sha256"}
+            and isinstance(candidate.get("path"), str)
+            and candidate["path"].endswith(f"/lexical-{manifest['word']}.candidates.json")
+            and isinstance(candidate.get("sha256"), str)
+            and bool(re.fullmatch(r"[0-9a-f]{64}", candidate["sha256"]))
+        )
+        return [] if valid else [Refusal(
+            MANIFEST_SCHEMA_INVALID, "manifest", "lexical", "lexical task fields or candidate pin are missing or malformed"
+        )]
     if kind == "settle":
         # Preserve the per-pin refusal when a manifest of another kind merely claims to be
         # settle. Its disallowed pins are the useful error; genuine settle manifests below

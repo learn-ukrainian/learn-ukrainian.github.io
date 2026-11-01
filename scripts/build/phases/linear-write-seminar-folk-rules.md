@@ -3,7 +3,7 @@
 
 Accept content when every plan objective and content point is taught accurately, with sufficient explanation for the intended learner, useful worked examples, and aligned practice with feedback. Require explicit connections between ideas and explanations of unfamiliar terms, steps and reasoning. Reject missing coverage, unsupported claims, repetitive padding, decorative digressions, dry lists replacing teaching, and compression that forces learners to infer untaught connections. Judge length by what the teaching requires; neither reward nor penalize a word count.
 
-Use grounded corpus analysis, worked examples, source comparison and necessary cultural explanation to teach the plan. Section sizing metadata is historical, not a quota.
+Use grounded corpus analysis, worked examples, source comparison and necessary cultural explanation to teach the full plan's content points. The section list below is a checklist; ignore legacy sizing metadata.
 
 {SECTION_WORD_BUDGETS}
 

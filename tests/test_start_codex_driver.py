@@ -325,6 +325,25 @@ def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> No
     assert result.stdout.index("would mint and bootstrap") < result.stdout.index("would bind drive-epic")
 
 
+def test_driver_launch_with_caller_prompt_passes_one_positional_prompt(tmp_path: Path) -> None:
+    argv_path = tmp_path / "argv"
+    baseline = run_launcher(
+        "start-codex-driver.sh", "--epic", "devops",
+        env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path)},
+    )
+    assert baseline.returncode == 0, baseline.stderr
+    baseline_argv = argv_path.read_bytes().decode().split("\0")[:-1]
+    caller = 'Caller instructions\nKeep "quotes" and --epic atlas literal.'
+    result = run_launcher(
+        "start-codex-driver.sh", "--epic", "devops", caller,
+        env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path)},
+    )
+    assert result.returncode == 0, result.stderr
+    argv = argv_path.read_bytes().decode().split("\0")[:-1]
+    assert baseline_argv[-1].startswith("First run lu-driver-state render --lane devops")
+    assert argv == [*baseline_argv[:-1], baseline_argv[-1] + "\n\nCaller instructions:\n" + caller]
+
+
 @pytest.mark.rules_core_absent
 def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> None:
     result = run_launcher(
@@ -383,6 +402,18 @@ def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None
     # Mutation guard: dropping the resolved selector from the injected binding
     # would launch a provider process without an auditable epic association.
     assert any("already claimed the devops lease" in argument for argument in argv)
+
+
+def test_unclassified_provider_option_refused_before_caller() -> None:
+    result = run_launcher(
+        "start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6.1-sol",
+        "--verbose", "CALLER TEXT must not become a second prompt",
+    )
+    assert result.returncode == 2
+    assert "unclassified provider option '--verbose'" in result.stderr
+    assert "put provider options after --" in result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would exec" not in result.stdout
 
 
 def test_governor_refuses_degraded_transport_before_exec(tmp_path: Path) -> None:

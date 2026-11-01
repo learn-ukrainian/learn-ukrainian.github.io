@@ -50,6 +50,7 @@ LC_HARNESS=codex
 LC_EPIC=infra
 LC_DRY_RUN=1
 LC_FORWARD_ARGS=()
+LC_CALLER_PROMPT_ARGS=()
 launcher_bind_drive_epic
 printf '%s\n' "$LC_DRIVER_PROMPT"
 '''

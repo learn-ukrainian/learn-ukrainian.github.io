@@ -269,9 +269,27 @@ jobs:
       - name: Install site toolchain
         working-directory: site
         run: npm ci --prefer-offline --no-audit --no-fund
+      - name: Cache Playwright browser binaries
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('site/package-lock.json') }}
       - name: Install Chromium for browser-backed unit tests
         working-directory: site
-        run: npx --no-install playwright install --with-deps --only-shell chromium
+        timeout-minutes: 3
+        run: |
+          set -euo pipefail
+          for attempt in 1 2; do
+            if [ "$attempt" -gt 1 ]; then
+              echo "Retrying Playwright Chromium install (attempt $attempt)..."
+              sleep 5
+            fi
+            if timeout 90s npx --no-install playwright install --only-shell chromium; then
+              exit 0
+            fi
+          done
+          echo "::error::Playwright Chromium install failed after 2 attempts" >&2
+          exit 1
       # Required even when the full frontend build is outside the changed-path scope.
       # Include tests/build/, normally excluded by pytest default traversal.
       - name: Real MDX compiler regressions

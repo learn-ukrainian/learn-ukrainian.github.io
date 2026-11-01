@@ -425,7 +425,9 @@ def _agy_unfinished(parsed: ParsedResult) -> ParsedResult:
 # published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
 # clears; every later dispatch and every settlement settles these again, and still removes
 # only with the proof. A tree that is still dirty is kept again, so only a changed tree is removed.
-# The hourly hygiene run's salvage reasons retry the same way.
+# The hourly hygiene run's salvage reasons retry the same way. A public-push refusal
+# (opsec_refused) and an owner retention hold (retention_hold) are absent on purpose:
+# automation must not retry either.
 RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
                            "unpublished", "remote_mismatch", "unknown", "removal_refused",
                            "worktree_remove_failed", "settlement_failed",

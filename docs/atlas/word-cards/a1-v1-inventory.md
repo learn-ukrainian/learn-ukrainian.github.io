@@ -266,3 +266,73 @@ bundle; the inherited CLI checks only the main bundle. F5–F8 remain Atlas-owne
 P3 follow-ups, with this batch's actual stress references, literal quotation
 containment and sibling comparisons recorded separately. This slice does not
 close #11943, satisfy the issue-wide 50-card held-out requirement or publish a site.
+
+
+## Slice 5: the next 60 allocated entry targets
+
+The [slice-5 inputs](../../../registry/atlas/a1-v1-slice5-inputs.json)
+preserve the approved proposal verbatim. Its canonical SHA-256 is
+`584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14`.
+The selector replays the original inventory and first-eight-plan join, excludes
+prior allocations, and compares every selected target and occurrence with that
+proposal. Independent raw-byte pins cover the unchanged inputs. Selection and
+allocation do not certify earlier cards. All slice-4 review approvals remain
+invalid until the required audit and independent review establish new evidence.
+
+The [slice-5 manifest](../../../registry/atlas/a1-v1-slice5.json) selects
+289 original rows for 60 entries. The complete row ledger preserves
+2144 occurrences: 19 slice-2 rows, 177 slice-3 rows,
+191 allocated and unreviewed slice-4 rows, 289 slice-5 rows,
+1005 deferred eligible rows, and 463 ineligible rows.
+The unchanged ineligible dispositions are 272 phrases, 149 ambiguous rows,
+18 name rows, 20 unresolved rows, and four slash-alternative rows.
+There are no preferred remaining targets in the original eight-plan join.
+
+The [allocation companion](../../../registry/atlas/identity/a1-v1-slice5.json)
+adds 59 cards. The existing `читати` card `wc_043h3npd7ed4` is reused
+through VESUM entry `420694` and ULIF entry `258655`, preserving its original
+unsplit sense and the separate spelling-only predecessor. The companion appends
+49 source-local senses and preserves every earlier identity, source
+record, and history event. Independent Ukrainian adjudication of the reuse
+remains required. Assembly reads the companion and never allocates identities. The unchanged pilot
+ULIF and PULS rows retain their original source-record IDs after complete
+canonical-row comparison with the captured replies.
+
+Literal runtime Sources replies supply VESUM forms, ULIF stress, ВТС meanings,
+and PULS levels. Each consumed payload is rederived from its captured response.
+Source-local Unicode intervals and response digests bind every quotation.
+The official СУМ-20 reply for `прокидатися` remains available for adjudication
+because its printed figurative labels conflict with the literal waking sense.
+The separate ВТС waking sense is retained. СУМ-20 mirrors and historical evidence
+remain contextual. No СУМ-11 field is asserted.
+
+The malformed ULIF `хто` identity and duplicated wording in the ВТС `хто`
+definition remain named gaps. Reference-only definitions and source misses stay
+empty. Every empty field retains a reason, dependency, and owner. Missing numeric
+GRAC evidence remains unknown. Missing source evidence belongs to Atlas.
+
+The candidate example for `читати` is an exact original line from Савченко,
+Ukrainian language, grade 4, part 2, 2021, page 93. Its source-local interval
+is computed from the captured chunk. The example stays pending and its displayed
+field stays empty until independent Sources review approves its exact version,
+reading sense, and A1 suitability. No complete receipt chain is approved.
+
+```sh
+.venv/bin/python -m scripts.atlas.a1_slice5_inputs --check-selection
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice5 \
+  --sources batch_state/a1-slice5/sources.json --output batch_state/a1-slice5/cards.json
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice5 \
+  --sources batch_state/a1-slice5/sources.json --output batch_state/a1-slice5/cards.json --check
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch slice5 \
+  --sources batch_state/a1-slice5/sources.json --output batch_state/a1-slice5/cards.json --check --require-chain
+```
+
+Slice-5 `--check` compares the rebuilt main bundle and all four sibling
+projections. `--require-chain` refuses with
+`reviewed_full_receipt_chain_pending` while no actual example has independent
+approval. The governed source bundle, raw calls, per-card versions, projections,
+and mandatory-row review packet remain in durable Fleet custody. Replays use
+those frozen source bytes. Fresh source acquisition requires a new freeze.
+This authoring slice does not close #11943 or its nine acceptance criteria,
+fulfill the parent held-out and browser obligations, publish a site, or establish
+independent semantic approval.

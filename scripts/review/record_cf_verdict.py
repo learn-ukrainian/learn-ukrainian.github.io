@@ -2458,7 +2458,7 @@ def _item_chunk(task: Mapping[str, Any], reply: str, verdict: str) -> ItemChunk 
             raise ContractError(
                 "ITEM_JUDGMENTS_WITHOUT_DENOMINATOR: item judgments need the brief's frozen item packet"
             )
-        return judge_item_reply(packet, reply, stated=verdict)
+        return judge_item_reply(packet, reply, stated=verdict, ukrainian=is_ukrainian_review(task))
     except ContractError as exc:
         raise RecordError(str(exc)) from None
 
