@@ -21,6 +21,9 @@ GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
 
 def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatch):
     """A hold for one plan must not remove seats running on another quota."""
+    import io
+    import json
+
     from scripts.agent_runtime import model_pause
 
     monkeypatch.setattr(
@@ -28,9 +31,11 @@ def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatc
         "load_policy",
         lambda: {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]},
     )
+    real_account = model_pause.account_used_pct
     monkeypatch.setattr(model_pause, "account_used_pct", lambda account: lambda lane: 90)
     native = REVIEW_CANDIDATES["claude-opus-5-5"]
     agy = REVIEW_CANDIDATES["claude-opus-5-5-agy"]
+    gemini = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="low", claude_account=HOST_ACCOUNT)
 
     native_result = evaluate_candidate(native, inputs)
@@ -38,6 +43,68 @@ def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatc
     assert "MODEL_HEADROOM" in native_result.reason
     agy_result = evaluate_candidate(agy, inputs)
     assert agy_result.status == "eligible", agy_result.reason
+
+    real_used = getattr(model_pause.routing_budget_used_pct, "__wrapped__", model_pause.routing_budget_used_pct)
+    monkeypatch.setattr(model_pause, "routing_budget_used_pct", real_used)
+    monkeypatch.setattr(model_pause, "account_used_pct", real_account)
+
+    def serve(weekly, *, five_hour=1.0, stale=False):
+        windows = {
+            "five_hour": {"used_pct": five_hour, "remaining_pct": 100 - five_hour},
+            "weekly": {"used_pct": weekly, "remaining_pct": 100 - weekly},
+        }
+        payload = {
+            "agents": {
+                "claude": {"status": "hot", "codexbar": {"stale": False, "freshness": "fresh", "weekly_used_pct": 90}},
+                "gemini": {
+                    "status": "hot",
+                    "codexbar": {
+                        "stale": stale,
+                        "freshness": "stale_last_good" if stale else "fresh",
+                        "weekly_used_pct": 22,
+                        "claude_gpt_windows": windows,
+                    },
+                    "claude_gpt_windows": windows,
+                },
+            }
+        }
+        monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *_a, **_k: io.StringIO(json.dumps(payload)))
+
+    serve(100.0)
+    exhausted = evaluate_candidate(agy, inputs)
+    assert exhausted.status == "excluded"
+    assert "MODEL_HEADROOM" in exhausted.reason
+    assert evaluate_candidate(gemini, inputs).status == "eligible"
+    serve(10.0, five_hour=100.0)
+    five_hour = evaluate_candidate(agy, inputs)
+    assert five_hour.status == "excluded" and "MODEL_HEADROOM" in five_hour.reason
+    serve(10.0)
+    assert evaluate_candidate(agy, inputs).status == "eligible"
+    serve(10.0, stale=True)
+    stale = evaluate_candidate(agy, inputs)
+    assert stale.status == "excluded" and "MODEL_HEADROOM_USAGE_UNKNOWN" in stale.reason
+    windows = {
+        "five_hour": {"used_pct": 10, "remaining_pct": 90},
+        "weekly": {"used_pct": float("nan"), "remaining_pct": 90},
+    }
+    payload = {
+        "agents": {
+            "claude": {"status": "hot", "codexbar": {"stale": False, "freshness": "fresh", "weekly_used_pct": 90}},
+            "gemini": {
+                "status": "hot",
+                "codexbar": {
+                    "stale": False,
+                    "freshness": "fresh",
+                    "weekly_used_pct": 22,
+                    "claude_gpt_windows": windows,
+                },
+                "claude_gpt_windows": windows,
+            },
+        }
+    }
+    monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *_a, **_k: io.StringIO(json.dumps(payload)))
+    malformed = evaluate_candidate(agy, inputs)
+    assert malformed.status == "excluded" and "MODEL_HEADROOM_USAGE_UNKNOWN" in malformed.reason
 
 
 @pytest.mark.parametrize(

@@ -994,7 +994,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/aspect-in-vocabulary/activities.yaml",
-      "sha256": "a4b34ecdbc86d94359e17aa05eb01cbec3436106c383ae3cb1d3cf8792e81246"
+      "sha256": "16638b968f961e082dd52e76069a8d2605502366dbd446fa0698a3eb7cb80648"
     },
     {
       "path": "curriculum/l2-uk-en/a2/aspect-in-vocabulary/module.md",
@@ -6070,7 +6070,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/aspect-in-vocabulary.yaml",
-      "sha256": "a46b231b454714a10b76b7447777697dc3a0d59cfe7f2d2d56a039bd7613e6aa"
+      "sha256": "092012a1336512cc9f5759656989e26b6b8efc3b3c363bfbd1a8e0206d77d485"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/aspect-mastery.yaml",
@@ -14218,7 +14218,7 @@
     },
     {
       "path": "site/src/content/docs/a2/aspect-in-vocabulary.mdx",
-      "sha256": "1291f89b4b824e3f0cd0088b22626dee01c97db57c337210cd664504e8a4d18e"
+      "sha256": "c0cde3fdf7dea2f9ac72c52790068298fd8bdecaf62d42714811a7feb0684543"
     },
     {
       "path": "site/src/content/docs/a2/aspect-mastery.mdx",

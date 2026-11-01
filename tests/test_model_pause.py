@@ -38,6 +38,17 @@ def test_headroom_stop_refuses_matching_models_only() -> None:
     with pytest.raises(mp.ModelPausedRefused, match="MODEL_HEADROOM"):
         mp.refuse_paused_models(["claude-sonnet-5-5"], policy=POLICY, now=NOW, used_pct=lambda _l: 87.0)
     mp.refuse_paused_models(["gpt-6.1-sol"], policy=POLICY, now=NOW, used_pct=lambda _l: 99.0)
+    agy = mp.policy_for_seat("agy", review=True)
+    assert any(entry.get("lane") == mp.AGY_CLAUDE_WINDOW_LANE for entry in agy["headroom"])
+    with pytest.raises(mp.ModelPausedRefused, match="MODEL_HEADROOM"):
+        mp.refuse_paused_models(["claude-opus-5-5-high"], policy=agy, now=NOW, used_pct=lambda _lane: 100.0)
+    mp.refuse_paused_models(["gemini-3.8-flash-high"], policy=agy, now=NOW, used_pct=lambda _lane: 100.0)
+    mp.refuse_paused_models(["claude-opus-5-5"], policy=agy, now=NOW, used_pct=lambda _lane: 99.0)
+    with pytest.raises(mp.ModelPausedRefused, match="MODEL_HEADROOM_USAGE_UNKNOWN"):
+        mp.refuse_paused_models(["claude-sonnet-5-5-agy"], policy=agy, now=NOW, used_pct=lambda _lane: None)
+    assert mp.policy_for_seat("agy", check_headroom=False)["headroom"] == []
+    native = mp.policy_for_seat("claude", review=True)["headroom"]
+    assert all(entry.get("lane") != mp.AGY_CLAUDE_WINDOW_LANE for entry in native)
 
 
 def test_unreadable_usage_refuses_matching_models_only() -> None:
@@ -137,6 +148,28 @@ def test_every_dispatch_admission_caller_opts_in() -> None:
         assert all(len(call.args) == 3 and any(k.arg == "review" for k in call.keywords) for call in calls), name
 
 
+def _agy_window_payload(weekly, five_hour=1.0, *, stale=False, freshness="fresh", status="hot", present=True):
+    probe = {"stale": stale, "freshness": freshness, "weekly_used_pct": 22.0}
+
+    def block(used):
+        if used is None:
+            return {"used_pct": None, "remaining_pct": None}
+        return {"used_pct": used, "remaining_pct": max(0.0, 100.0 - used)}
+
+    info = {"status": status, "codexbar": probe}
+    if present:
+        windows = {"five_hour": block(five_hour), "weekly": block(weekly)}
+        info["claude_gpt_windows"] = windows
+        probe["claude_gpt_windows"] = windows
+    return {
+        "diagnostics": {"stale": True},
+        "agents": {
+            "gemini": info,
+            "claude": {"status": "hot", "codexbar": {"stale": False, "freshness": "fresh", "weekly_used_pct": 90}},
+        },
+    }
+
+
 def _budget(monkeypatch, payload: dict) -> float | None:
     import io
 
@@ -154,6 +187,35 @@ def test_only_fresh_probe_readings_count(monkeypatch) -> None:
         {**ok, "agents": {"claude": {"status": "unknown", "codexbar": fresh}}},
     ):
         assert _budget(monkeypatch, bad) is None
+    monkeypatch.setattr(
+        mp, "routing_budget_used_pct", getattr(mp.routing_budget_used_pct, "__wrapped__", mp.routing_budget_used_pct),
+    )
+
+    def agy(payload) -> float | None:
+        _serve(monkeypatch, payload)
+        return mp.routing_budget_used_pct(mp.AGY_CLAUDE_WINDOW_LANE, account=HOST_ACCOUNT)
+
+    assert agy(_agy_window_payload(100.0)) == 100.0
+    assert agy(_agy_window_payload(10.0, five_hour=100.0)) == 100.0
+    assert agy(_agy_window_payload(10.0, five_hour=1.0)) == 10.0
+    assert agy(_agy_window_payload(10.0, stale=True)) is None
+    assert agy(_agy_window_payload(10.0, freshness="stale_last_good")) is None
+    assert agy(_agy_window_payload(10.0, status="unknown")) is None
+    assert agy(_agy_window_payload(10.0, present=False)) is None
+    assert agy(_agy_window_payload(None)) is None
+
+    def unusable(weekly: dict) -> float | None:
+        payload = _agy_window_payload(10.0)
+        gemini = payload["agents"]["gemini"]
+        gemini["claude_gpt_windows"]["weekly"] = weekly
+        gemini["codexbar"]["claude_gpt_windows"]["weekly"] = weekly
+        return agy(payload)
+
+    plausible = {"remaining_pct": 90}
+    for used in (float("nan"), float("inf"), True, None, 10**400):
+        assert unusable({"used_pct": used, **plausible}) is None
+    assert unusable({"used_pct": 10, "remaining_pct": 90, "freshness": None}) is None
+    assert unusable({"used_pct": 10, "remaining_pct": 90, "freshness": False}) is None
 
 
 def test_aggregate_snapshot_staleness_does_not_hide_a_fresh_lane(monkeypatch) -> None:

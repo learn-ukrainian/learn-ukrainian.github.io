@@ -15,8 +15,9 @@ from scripts.fleet import claude_account_lane
 def check_plan(agent: str, model: str, record: dict, *, review: bool = False) -> None:
     """Read the named account again; pins and host overrides do not bypass policy.
 
-    Applicable caps refuse unknown/stale usage. Reviews protect native Claude
-    headroom only; model pauses still apply to every selected model.
+    Applicable caps refuse unknown or stale usage. Reviews protect native Claude
+    headroom only. An AGY launch uses the same stop for that seat's Claude
+    window. Model pauses still apply to every selected model.
     """
     account = claude_account_lane.account_from_record(record, agent=agent)
     if agent == "claude" and account.refusal is not None:
