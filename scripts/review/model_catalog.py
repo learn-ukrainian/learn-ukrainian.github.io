@@ -1375,11 +1375,12 @@ def retired_model_refusal(
         author_values = context.get("author_models", ())
         if isinstance(author_values, (str, bytes)) or author_values is None:
             author_values = (author_values,)
-        # A missing or non-catalog author is not the restricted author. Dropping
-        # it would admit a branch that is not shown to be that author's.
+        # A missing, non-catalog, or model-less author is not the restricted
+        # author. Dropping it would admit a branch that is not shown to be
+        # that author's. A verified app bot has no model, so it is a gap too.
         author_gap = any(
             resolve_catalog_model_id(value, catalog) != restriction["author_model"] for value in author_values
-        ) or bool(context.get("unknown_history"))
+        ) or bool(context.get("unknown_history")) or bool(context.get("app_bot_commits"))
         if (context.get("review_mode") != restriction["review_mode"] or context.get("review_profile") != restriction["review_profile"]
                 or context.get("transport") != restriction["transport"]
                 or resolve_catalog_model_id(context.get("author_model"), catalog) != restriction["author_model"]

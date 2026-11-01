@@ -816,6 +816,7 @@ class BranchReviewFacts:
         overrides.setdefault("domain", review_profile)
         overrides.setdefault("author_model", "")
         overrides.setdefault("unknown_history", self.unknown_history)
+        overrides.setdefault("app_bot_commits", self.app_bot_commits)
         return ResolverInputs(
             author_families=self.excluded_families,
             author_models=self.author_models,
