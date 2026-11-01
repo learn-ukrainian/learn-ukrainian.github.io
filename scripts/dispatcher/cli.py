@@ -133,8 +133,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dispatch.add_argument(
         "--input", action="append", default=[], metavar="PATH",
-        help="Regular file mounted read-only for an AGY read-only task at /agy-inputs/<n> "
-             "(repeatable, at most 8, each at most 8 MiB; default: none)",
+        help="Regular file, e.g. ~/notes.txt, mounted read-only at /agy-inputs/<n>; "
+             "requires --agent agy and --mode read-only "
+             "(repeatable, at most 8, each at most 8 MiB; default: none). "
+             "Refuses excess inputs, oversized files, symlinks, hard links, unreadable or "
+             "non-regular files, paths under credential directories or inside the primary "
+             "checkout, paths changed before read, invalid input records, and missing "
+             "digests or digests changed before start.",
     )
     dispatch.add_argument("--worktree", nargs="?", const="", help="Dispatch path (default: automatic)")
     dispatch.add_argument("--pr", type=int, help="Reviewed PR number, e.g. 42 (default: none; use --branch for identity)")
