@@ -881,13 +881,14 @@ class ClaimsValidationResult:
 
 _CITED_FACT = re.compile(
     r"\b(?:VESUM|ULIF|PULS|SUM-20|Pravopys|Zabolotnyi|Bolshakova|Prystinska|"
-    r"Antonenko|Grinchenko|ESUM|GRAC|CEFR|dictionar\w*|slovnyk|"
+    r"Antonenko|Grinchenko|ESUM|GRAC|CEFR|Wikipedia|dictionar\w*|slovnyk|"
     r"(?:verify|query|search|inspect|check|translate|vet|get)_\w+|rules?|tags?|paradigms?|according to|cites?|"
     r"(?:noun|adj|verb|adv|numr|pron|prep|conj|part|intj|predic|insert|onomat|noninfl)(?::\w+)+|"
     r"(?:sources?|citations?|references?)\s*[:=]\s*\S|mcp\w*sources\w*|pages?\s*\d+|"
     r"soft[ -]group|hard[ -]group|pp?\.?\s*\d+)\b|§|"
-    r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|(?-i:СУМ)(?:-\d+)?|сум-\d+|ЕСУМ|Грінченк\w*|Антоненк\w*|"
-    r"Горох\w*|Караванськ\w*|словник\w*|сторінк\w*|правил(?:о|а|у|і|ом|ам|ах|ами)?|тег\w*|с\.\s*\d+)\b",
+    r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|(?-i:СУМ)(?:-\d+)?|сум-\d+|ЕСУМ|ВТС|Вікіпеді\w*|"
+    r"Грінченк\w*|Антоненк\w*|Заболотн\w*|Большаков\w*|Пристінськ\w*|"
+    r"Горох\w*|Караванськ\w*|словник\w*|сторінк\w*|правил(?:о|а|у|і|ом|ам|ах|ами)?|тег\w*|(?:с|стор)\.\s*\d+)\b",
     re.IGNORECASE,
 )
 
@@ -994,7 +995,7 @@ def validate_ukrainian_reply_claims(
             decoded = yaml.safe_dump(payload, allow_unicode=True) if payload is not None else body
             outside += "\n" + decoded
         payload = {}
-    elif not tag:
+    elif not tag and (reply.lstrip().startswith("{") or any(key in payload for key in ("items", "findings", "evidence"))):
         outside = ""
     rows = payload.get("items", [])
     if not isinstance(rows, list):
@@ -1118,18 +1119,29 @@ def validate_item_claims(
                 yield path, value
             elif isinstance(value, Mapping):
                 for field, part in value.items():
-                    if field in {"id", "verdict", "schema", "schema_version", "priority", "category", "location",
-                                 "claim_type", "receipt", "receipt_id", "outcome", "_approval_void"}:
+                    field_path = f"{path}.{field}" if path else str(field)
+                    yield field_path + ".__key__", str(field)
+                    reference = any(path == root or path.startswith(root + ".") for root in reference_roots)
+                    if not path and (item or finding) and field == "id":
+                        continue
+                    if not path and finding and field == "priority" and part in ("P0", "P1", "P2", "P3"):
+                        continue
+                    if finding and path == "location" and field in {"path", "start_line", "end_line", "claim_type"}:
+                        continue
+                    if reference and field in {"receipt", "receipt_id", "category", "outcome"}:
                         continue
                     if not path and finding and field == "expected":
                         continue
                     if field in {"quote", "quotes"} and (
-                        (item and not path) or any(path == root or path.startswith(root + ".") for root in reference_roots)
+                        (item and not path) or reference
                     ):
                         continue
                     if children_handled and not path and field in {"items", "findings"}:
+                        for child in part if isinstance(part, list) else [part]:
+                            if not isinstance(child, Mapping):
+                                yield from leaves(child, field_path)
                         continue
-                    yield from leaves(part, f"{path}.{field}" if path else str(field))
+                    yield from leaves(part, field_path)
             elif isinstance(value, list):
                 for part in value:
                     yield from leaves(part, path)

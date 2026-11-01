@@ -1067,10 +1067,16 @@ def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
     ("Example Reference page 7", "Example Reference page 75", "sources"),
     ("Rule 8", "Rule 81", "finding"),
     ("noun:inanim:f:v_naz", "noun:anim:f:v_naz", "finding"),
+    ("ВТС подає це значення як основне", "VESUM", "finding"),
+    ("стор. 45", "VESUM", "finding"),
+    ("Заболотний подає цю форму", "VESUM", "finding"),
+    ("Вікіпедія подає цю форму", "VESUM", "finding"),
+    ("Wikipedia reports this form", "VESUM", "finding"),
 ], ids=["source-page", "rule", "tag", "check", "missing-output", "ukrainian-source", "tool-name", "ukrainian-page",
-        "page-prefix", "rule-prefix", "bare-tag"])
+        "page-prefix", "rule-prefix", "bare-tag", "vts", "page-abbreviation", "author-cyrillic", "wikipedia-uk", "wikipedia-en"])
 @pytest.mark.parametrize("reply_format", ["items", "overall", "finding", "title", "smallest_fix", "body", "prose",
-                                         "verbatim", "nested", "top-notes", "fenced-summary", "fenced-quote", "fenced-list"])
+                                         "verbatim", "nested", "top-notes", "fenced-summary", "fenced-quote", "fenced-list",
+                                         "key-json", "plain-mapping", "nested-control", "non-row-item"])
 def test_unbound_ukrainian_source_claims_refused_before_publication(
     monkeypatch, tmp_path, claim, output, placement, reply_format,
 ):
@@ -1088,7 +1094,22 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
     }) + "\n```\n"
     audit_id, audit_field = "item-a", placement
     audit_claim = claim
-    if reply_format in {"fenced-summary", "fenced-quote", "fenced-list"}:
+    if reply_format == "key-json":
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps({claim: "Uncited wording."}) + "\n```\n"
+        audit_id, audit_field = None, claim + ".__key__"
+    elif reply_format == "plain-mapping":
+        reply = "VERDICT: APPROVE\n" + claim + ": Uncited wording.\n"
+        audit_id, audit_field = "review-prose", "finding"
+        audit_claim = "VERDICT: APPROVE\n" + claim + ": Uncited wording."
+    elif reply_format == "nested-control":
+        payload = {"notes": {"category": claim, "outcome": claim, "id": claim,
+                             "location": {"path": claim}, "receipt_id": claim}}
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = None, "notes.category"
+    elif reply_format == "non-row-item":
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps({"items": [claim]}) + "\n```\n"
+        audit_id, audit_field = None, "items"
+    elif reply_format in {"fenced-summary", "fenced-quote", "fenced-list"}:
         field = "quote" if reply_format == "fenced-quote" else "summary"
         body = "- " + claim if reply_format == "fenced-list" else json.dumps({field: claim})
         tag = "yaml" if reply_format == "fenced-list" else "json"
@@ -1144,6 +1165,10 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
     assert audit[0]["reason"] == "claim_not_in_captured_output"
     assert audit[0]["captured_event_ids"] == ["step-4"]
     assert audit[0]["uncaptured_event_ids"] == (["step-4"] if output is None else [])
+    if reply_format == "nested-control":
+        assert {next(iter(entry["claim"])) for entry in audit} == {
+            "notes.category", "notes.outcome", "notes.id", "notes.location.path", "notes.receipt_id",
+        }
     assert comments == [] and calls == {"posts": 0, "statuses": 0}
     assert (tasks / "review-one.result").read_bytes() == raw
 
