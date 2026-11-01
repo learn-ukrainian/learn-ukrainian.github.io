@@ -1087,6 +1087,15 @@ def validate_item_claims(
     def text_claims(row: Mapping[str, Any]) -> bool:
         nonlocal claims_total, claims_unsupported
         unsupported = False
+        candidates = list(indexed.values())
+        if "evidence" in row:
+            references = row["evidence"]
+            references = references if isinstance(references, list) else [references]
+            receipts = {
+                claim.get("receipt") or claim.get("receipt_id") for claim in references
+                if _validate_claim(claim, require_quote=False)[0]
+            }
+            candidates = [event for rid, event in indexed.items() if rid in receipts]
         for claim_field in ("sources", "finding", "claim", "summary", "body", "explanation", "why_wrong"):
             text = row.get(claim_field)
             if claim_field == "sources" and isinstance(text, list):
@@ -1096,7 +1105,7 @@ def validate_item_claims(
             for claim in _cited_fact_clauses(text, sources=claim_field == "sources"):
                 claims_total += 1
                 matches = [
-                    event for event in indexed.values()
+                    event for event in candidates
                     if isinstance(event.get("result"), str)
                     and event["result"].strip()
                     and isinstance(event.get("tool"), str)
@@ -1112,7 +1121,7 @@ def validate_item_claims(
                     "item_id": row.get("id"),
                     "claim": {claim_field: claim},
                     "reason": "claim_not_in_captured_output",
-                    "captured_event_ids": [event.get("receipt_id") for event in indexed.values()],
+                    "captured_event_ids": [event.get("receipt_id") for event in candidates],
                     "uncaptured_event_ids": [
                         event.get("receipt_id") for event in indexed.values()
                         if not isinstance(event.get("result"), str) or not event["result"].strip()

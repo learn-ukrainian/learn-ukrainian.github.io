@@ -507,9 +507,12 @@ def test_manifest_bound_ukrainian_review_fabricated_quote_dropped_and_counted(
         attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
     )
     assert done["claims_total"] == 2
-    assert done["claims_unsupported"] == 1
+    assert done["claims_unsupported"] == 2
     assert done["unknown_items"] == 0
-    assert len(done["dropped_claims"]) == 1
+    assert len(done["dropped_claims"]) == 2
+    assert done["dropped_claims"][1]["claim"] == {"sources": "VESUM"}
+    assert done["dropped_claims"][1]["reason"] == "claim_not_in_captured_output"
+    assert done["dropped_claims"][1]["captured_event_ids"] == []
     assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
     assert "fabricated quote never returned" not in final_text
     assert "_approval_void" in final_text
@@ -687,8 +690,11 @@ def test_manifest_bound_ukrainian_review_two_items_one_void_preserves_valid_item
         attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
     )
     assert done["claims_total"] == 4
-    assert done["claims_unsupported"] == 1
-    assert len(done["dropped_claims"]) == 1
+    assert done["claims_unsupported"] == 2
+    assert len(done["dropped_claims"]) == 2
+    assert done["dropped_claims"][1]["claim"] == {"sources": "VESUM"}
+    assert done["dropped_claims"][1]["reason"] == "claim_not_in_captured_output"
+    assert done["dropped_claims"][1]["captured_event_ids"] == []
     assert done["dropped_claims"][0]["item_id"] == "card-2"
     assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
 
@@ -831,8 +837,11 @@ def test_manifest_bound_ukrainian_review_per_item_receipt_only_rejected_as_malfo
         attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
     )
     assert done["claims_total"] == 2
-    assert done["claims_unsupported"] == 1
-    assert len(done["dropped_claims"]) == 1
+    assert done["claims_unsupported"] == 2
+    assert len(done["dropped_claims"]) == 2
+    assert done["dropped_claims"][1]["claim"] == {"sources": "VESUM"}
+    assert done["dropped_claims"][1]["reason"] == "claim_not_in_captured_output"
+    assert done["dropped_claims"][1]["captured_event_ids"] == []
     assert done["dropped_claims"][0]["item_id"] == "card-1"
     assert done["dropped_claims"][0]["reason"] == "malformed_claim"
 
@@ -854,6 +863,7 @@ def test_ukrainian_claim_text_cannot_hide_behind_valid_receipt_quote(attempt, tm
         "manifest_sha256": store.digest(b"inputs: []\n"), "tool": "verify_word",
         "arguments": {"word": "example"}, "result": output,
     }
+    unrelated = {**rec, "receipt_id": "rr-other-event", "arguments": {"word": "other"}, "result": claim}
     reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
         "schema": "ukrainian-item-judgments.v1", "items": [{
             "id": "card-1", "verdict": "APPROVE", "finding": "Appropriate activity.",
@@ -861,12 +871,13 @@ def test_ukrainian_claim_text_cannot_hide_behind_valid_receipt_quote(attempt, tm
         }],
     }) + "\n```\n"
     done, final_text, _ = _run_manifest_ukrainian_attempt(
-        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec],
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec, unrelated],
     )
     assert done["claims_total"] == 2
     assert done["claims_unsupported"] == 1
     assert done["dropped_claims"][0]["claim"] == {"sources": claim}
     assert done["dropped_claims"][0]["reason"] == "claim_not_in_captured_output"
+    assert done["dropped_claims"][0]["captured_event_ids"] == ["rr-same-attempt"]
     row = json.loads(final_text.split("```ukrainian-item-judgments\n")[1].split("\n```")[0])["items"][0]
     assert row["_approval_void"] is True
     assert row["evidence"] == [{"receipt": rec["receipt_id"], "quote": output}]
