@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.audit.gates import (
     GateResult,
     compute_recommendation,
+    describe_word_count,
     evaluate_activity_count,
     evaluate_audio,
     evaluate_content_heavy,
@@ -30,38 +31,39 @@ from scripts.audit.gates import (
     evaluate_structure,
     evaluate_unique_types,
     evaluate_vocab,
-    evaluate_word_count,
 )
 
 # =============================================================================
-# TEST: evaluate_word_count
+# TEST: descriptive word counts
 # =============================================================================
 
 class TestEvaluateWordCount:
     def test_pass_at_target(self):
-        result = evaluate_word_count(3000, 3000)
-        assert result.status == 'PASS'
-        assert '3000/3000' in result.msg
+        result = describe_word_count(3000)
+        assert result.status == 'INFO'
+        assert result.msg == '3000 words (informational only)'
 
     def test_pass_above_target(self):
-        result = evaluate_word_count(3500, 3000)
-        assert result.status == 'PASS'
+        result = describe_word_count(3500)
+        assert result.status == 'INFO'
+        assert result.msg == '3500 words (informational only)'
 
     def test_warn_slightly_below(self):
-        result = evaluate_word_count(2950, 3000)
-        assert result.status == 'WARN'
-        assert '50 short' in result.msg
+        result = describe_word_count(2950)
+        assert result.status == 'INFO'
+        assert result.msg == '2950 words (informational only)'
 
     def test_fail_far_below(self):
-        result = evaluate_word_count(2600, 3000)
-        assert result.status == 'FAIL'
+        result = describe_word_count(2600)
+        assert result.status == 'INFO'
+        assert result.msg == '2600 words (informational only)'
 
     def test_raw_words_displayed(self):
-        result = evaluate_word_count(2500, 3000, raw_words=2800)
+        result = describe_word_count(2500, raw_words=2800)
         assert 'raw: 2800' in result.msg
 
     def test_raw_words_not_shown_when_equal(self):
-        result = evaluate_word_count(3000, 3000, raw_words=3000)
+        result = describe_word_count(3000, raw_words=3000)
         assert 'raw' not in result.msg
 
 

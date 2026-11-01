@@ -2,7 +2,7 @@
 
 **Use this template for every figure researched in BIO Phase 1** — both the original roster (R1a-R5, issues #2317-#2322 under epic #2309) and the 2026-06-29 **+77 expansion** roster (umbrella #2535; first dossiers tracked as new sub-issues, NOT retrofits of #2317-#2322).
 
-Provide enough sourced evidence and explanation to support the dossier requirements. Do not pad or omit necessary detail to meet a length target. The existing runtime dossier word-count gate remains active.
+Provide enough sourced evidence and explanation to support the dossier requirements. Do not pad or omit necessary detail to meet a length target.
 **File location:** `docs/research/bio/{slug}.md`
 **SSOT for module ordering / slugs:** `curriculum/l2-uk-en/curriculum.yaml` (`levels.bio.modules`; derive the live slug count from the manifest rather than hard-coding it).
 **Slug source (by roster):**

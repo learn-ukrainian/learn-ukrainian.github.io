@@ -48,6 +48,8 @@ from scripts.opsec.prepublish import (
 )
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.integration_sweep import (
+    CHUNK_VOIDS,
+    ITEM_ID_RE,
     MARKER_PREFIX,
     NEEDS_SEAT,
     REJECTED,
@@ -68,7 +70,13 @@ from scripts.review.model_catalog import (
     load_model_catalog,
     resolve_catalog_model_id,
 )
-from scripts.review.review_contract import ContractError
+from scripts.review.review_contract import (
+    ContractError,
+    ItemChunk,
+    judge_item_reply,
+    load_frozen_item_packet,
+    reply_has_item_judgments,
+)
 from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_MODELS,
     REVIEW_CANDIDATES,
@@ -1499,6 +1507,37 @@ def pr_lock(repository: str, number: int, lock_root: Path):
             fcntl.flock(lock_file, fcntl.LOCK_UN)
 
 
+def _coverage_tokens(
+    denominator: Iterable[str] | None,
+    coverage: Iterable[str] | None,
+    void: str | None,
+) -> tuple[str, str, str] | None:
+    """Marker tokens for a chunk, or None when this verdict declares no item denominator."""
+    if denominator is None and coverage is None and void is None:
+        return None
+    if denominator is None or coverage is None:
+        raise RecordError("item coverage requires both a denominator and a coverage set")
+    if void is not None and void not in CHUNK_VOIDS:
+        raise RecordError("unknown chunk void reason")
+    declared = tuple(denominator)
+    covered = tuple(coverage)
+    if not declared or declared != tuple(sorted(set(declared))):
+        raise RecordError("denominator must be sorted, unique and non-empty")
+    if any(ITEM_ID_RE.fullmatch(item) is None for item in declared):
+        raise RecordError("item id is not a marker token")
+    if void is not None:
+        if covered:
+            raise RecordError("a voided chunk covers no items")
+        return ",".join(declared), "-", void
+    if covered != tuple(sorted(set(covered))) or not set(covered) <= set(declared):
+        raise RecordError("coverage must be a sorted unique subset of the denominator")
+    if not covered:
+        raise RecordError("a chunk verdict with no covered items needs a void reason")
+    if any(ITEM_ID_RE.fullmatch(item) is None for item in covered):
+        raise RecordError("item id is not a marker token")
+    return ",".join(declared), ",".join(covered), ""
+
+
 def build_comment(
     *,
     sha: str,
@@ -1516,6 +1555,9 @@ def build_comment(
     app_bot: bool = False,
     score: int | None = None,
     author_models: Iterable[str | None] = (),
+    denominator: Iterable[str] | None = None,
+    coverage: Iterable[str] | None = None,
+    void: str | None = None,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1534,12 +1576,23 @@ def build_comment(
     _require_sources_mcp_calls({"review_profile": review_profile, "sources_mcp_call_count": sources_mcp_call_count})
     profile_field = " review_profile=ukrainian" if ukrainian else ""
     sources_field = f" sources_calls={sources_mcp_call_count}" if sources_mcp_call_count is not None else ""
+    tokens = _coverage_tokens(denominator, coverage, void)
+    coverage_field = ""
+    coverage_lines = ""
+    if tokens is not None:
+        declared_token, covered_token, void_token = tokens
+        coverage_field = f" denominator={declared_token} coverage={covered_token}"
+        coverage_lines = f"Denominator: {declared_token}\nCoverage: {covered_token}\n"
+        if void_token:
+            coverage_field += f" void={void_token}"
+            coverage_lines += f"Chunk void: {void_token}\n"
     # The score is advisory (C-3020): stored for calibration, never read by a gate.
     score_text = f"{score}/10" if score is not None else "absent"
     authors = sorted({author for author in author_models if author})
     marker = (
         f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
-        f"model={model} family={family}{mode_field}{history_field}{authorship_field}{profile_field}{sources_field} -->"
+        f"model={model} family={family}{mode_field}{history_field}{authorship_field}{profile_field}{sources_field}"
+        f"{coverage_field} -->"
     )
     prefix = (
         ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
@@ -1558,7 +1611,9 @@ def build_comment(
         f"Reviewer model: {model}\n"
         f"Review score: {score_text}\n"
         + (f"Authored by: {', '.join(authors)}\n" if authors else "")
-        + f"Task id: {task_id}\n\n"
+        + f"Task id: {task_id}\n"
+        + coverage_lines
+        + "\n"
     )
     if withheld_findings is not None:
         return prefix + f"Withheld findings: {withheld_findings}\n" + "Findings are held privately.\n\n" + marker
@@ -2001,8 +2056,9 @@ def require_review_round_within_budget(
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
     A round is one reviewed head: trusted verdicts on this PR are counted
-    across heads, and more verdicts at an already reviewed head (a quorum seat
-    or a retried publication) open no new round. A round is spent when its
+    across heads, and more verdicts at an already reviewed head (a quorum seat,
+    a later chunk of the same review, or a retried publication) open no new round.
+    A round is spent when its
     reviewer is dispatched, so the head of every review run on record counts
     too, its verdict recorded or not (``review_lineage.dispatched_rounds``,
     #12098): ``dispatched_heads`` returns those heads other than ``sha``, read
@@ -2392,6 +2448,21 @@ def _post_verdict(repository: str, number: int, comment: str, login: str) -> dic
     return readback
 
 
+def _item_chunk(task: Mapping[str, Any], reply: str, verdict: str) -> ItemChunk | None:
+    """Coverage declared by the frozen brief, or None when the brief has no item denominator."""
+    try:
+        packet = load_frozen_item_packet(task)
+        if packet is None and not reply_has_item_judgments(reply):
+            return None
+        if packet is None:
+            raise ContractError(
+                "ITEM_JUDGMENTS_WITHOUT_DENOMINATOR: item judgments need the brief's frozen item packet"
+            )
+        return judge_item_reply(packet, reply, stated=verdict, ukrainian=is_ukrainian_review(task))
+    except ContractError as exc:
+        raise RecordError(str(exc)) from None
+
+
 @publication_boundary(RecordError)
 def record(
     task_id: str,
@@ -2498,6 +2569,7 @@ def record(
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
+    chunk = _item_chunk(task, reply, verdict)
     comment_fields = dict(
         sha=sha,
         task_id=task_id,
@@ -2513,6 +2585,9 @@ def record(
         app_bot=bool(facts.app_bot_commits),
         score=review_score(reply),
         author_models=facts.author_models,
+        denominator=None if chunk is None else chunk.denominator,
+        coverage=None if chunk is None else chunk.coverage,
+        void=None if chunk is None else chunk.void,
     )
     comment = build_comment(**comment_fields)
     destination = normalize_repository(repository)
@@ -2579,6 +2654,9 @@ def record(
                         or marker.get("authorship") != (VERIFIED_APP_BOT if facts.app_bot_commits else None)
                         or marker.get("review_profile", "code") != ("ukrainian" if ukrainian else "code")
                         or marker.get("sources_calls") != sources_count
+                        or list(marker.get("denominator") or ()) != list(chunk.denominator if chunk else ())
+                        or list(marker.get("coverage") or ()) != list(chunk.coverage if chunk else ())
+                        or marker.get("void") != (chunk.void if chunk else None)
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
@@ -2609,11 +2687,13 @@ def record(
             )
         state = "failure"
         pending_reason = ""
-        if verdict == "APPROVED":
+        if verdict == "APPROVED" or (chunk is not None and chunk.void):
             # Success is the keeper's own reading of the head with this record, never this
-            # approval alone: another Ukrainian seat may still be missing (#12020).
+            # approval alone: another Ukrainian seat may still be missing (#12020), and a
+            # declared item denominator may still be short (#12257). A voided chunk does not
+            # count, so its own verdict does not decide the status.
             current = lookup_verdict(comments, sha, login)
-            state = "success" if current.state == "APPROVED" else "pending"
+            state = "success" if current.state == "APPROVED" else "failure" if current.state in REJECTED else "pending"
             if current.state == NEEDS_SEAT:
                 profiled = [
                     marker
@@ -2667,6 +2747,11 @@ def record(
     }
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
+    if chunk is not None:
+        result["denominator"] = list(chunk.denominator)
+        result["coverage"] = list(chunk.coverage)
+        if chunk.void:
+            result["void"] = chunk.void
     result.update(budget_receipt)
     return result
 

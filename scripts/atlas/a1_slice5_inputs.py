@@ -7,6 +7,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 from functools import partial
 from pathlib import Path
 
@@ -25,7 +26,7 @@ MANIFEST = "registry/atlas/a1-v1-slice5.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice5.json"
 INPUTS = "registry/atlas/a1-v1-slice5-inputs.json"
 INPUTS_SHA256 = "584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14"
-MANIFEST_SHA256 = "78fa6a4a484550dad6ef3b9868a439e4199f27479392ff6511142cc2a3741a58"
+MANIFEST_SHA256 = "ac7792ee75bc5f5fb8bde700076279d2d368dde9cc5a91971a4a2cd1024be6b1"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -34,7 +35,7 @@ FILE_SHA256 = {
     "registry/atlas/a1-v1-slice3-plan-inputs.json": "5d48a9632825f3f110843792214612c733a17fc4bd23a11d2046166f674f3b0d",
     "registry/atlas/a1-v1-slice3.json": "9ff22f62cd50485fe68b1f33504e56c58761d0d352f47ab5a3f64f365438d5fd",
     "registry/atlas/a1-v1-slice4-inputs.json": "046f2fcbdfcb1fd53d8f4e50b643b89641d1f216d1a451501a7f9fa6a1df1fe0",
-    "registry/atlas/a1-v1-slice4.json": "cc96b91315c9922d836ddbff3b18a5254be199b200f847dd7dec242006915c77",
+    "registry/atlas/a1-v1-slice4.json": "6714055fe6cd9ff08b4c5db596ef16b24ff46992369a158eb48513f506adb149",
     "registry/atlas/identity/a1-v1-slice2.json": "b1ea5099207618dc3879eb517e28867c174b629126ae2b0e8b9d8629ce564e52",
     "registry/atlas/identity/a1-v1-slice3.json": "f4de91773ffa6e59e953c7ea0645205f06d55a146b88403665cef0fe57647419",
     "registry/atlas/identity/a1-v1-slice4.json": "4ce137435bf6c3d59100a8acd2e5afac7540e4dda7303cd50635a9a5a531f663",
@@ -200,6 +201,34 @@ def response_payload(record, call):
     return call["response"].get("structuredContent") or {"text": text}
 
 
+def _validate_morphology(claim, record, target):
+    """Bind scalar morphology to one source-qualified citation analysis."""
+    cards.require(record["source_id"] == "vesum", "slice5_morphology_requires_vesum")
+    match = re.fullmatch(r"/clean_analyses/(\d+)/tags", claim["pointer"])
+    cards.require(match is not None, "slice5_morphology_pointer_not_analysis")
+    analyses = record["payload"]["clean_analyses"]
+    candidates = [i for i, analysis in enumerate(analyses)
+                  if previous._canonical_grammar(analysis, target)]
+    cards.require(len(candidates) == 1, "slice5_morphology_canonical_reading_ambiguous")
+    index = int(match[1])
+    cards.require(claim["entry_id"] == target["entry_id"] and index == candidates[0],
+                  "slice5_morphology_not_canonical_headword")
+    analysis = analyses[index]
+    if claim["field"] == "grammatical_label":
+        expected = [0, len(analysis["tags"])]
+    else:
+        pattern = r"(?<=:)[mfn](?=:|$)" if claim["field"] == "gender" else r"(?<=:)(?:imperf|perf)(?=:|$)"
+        tokens = list(re.finditer(pattern, analysis["tags"]))
+        cards.require(len(tokens) == 1 and (claim["field"] != "aspect" or target["pos"] == "verb"),
+                      "slice5_morphology_scalar_ambiguous")
+        expected = list(tokens[0].span())
+    cards.require(claim["span"] == expected, "slice5_morphology_tag_span_mismatch")
+    required = {(f"/clean_analyses/{index}/{field}", 0, len(analysis[field]))
+                for field in ("word_form", "lemma", "pos")}
+    supplied = {(span["pointer"], *span["span"]) for span in claim.get("supporting_spans", [])}
+    cards.require(required <= supplied, "slice5_morphology_binding_receipts_missing")
+
+
 def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, selection):
     cards.require(digest(inv) == spec["inventory_sha256"] and digest(sources) == spec["sources_sha256"],
                   "slice5_input_drift")
@@ -267,8 +296,13 @@ def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, sele
         if chosen:
             cards.require(sources["records"][chosen["record_key"]]["source_id"] in cards.STRESS_ORDER,
                           "slice5_stress_authority")
+    morphology_targets = {spec["row_card_ids"][target["row_ids"][0]]: target
+                          for target in selection["selected_targets"]}
     for claim in claims:
         record = sources["records"][claim["record_key"]]
+        if claim["field"] in {"grammatical_label", "gender", "aspect"}:
+            cards.require(claim["card_id"] in morphology_targets, "slice5_morphology_target_missing")
+            _validate_morphology(claim, record, morphology_targets[claim["card_id"]])
         if claim["field"] == "definition_uk":
             cards.require(record["source_id"] in {"sum20", "vts_busel_slovnyk_me"},
                           "slice5_meaning_authority")

@@ -121,6 +121,54 @@ def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, mon
     assert not (tmp_path / "tasks").exists()
 
 
+def test_lexical_render_admission_rejects_tampering(tmp_path, monkeypatch):
+    """Defect class: lexical admission refuses valid renders or accepts altered prompts/identity/schema."""
+    import subprocess
+    from functools import partial
+    from pathlib import Path
+
+    from scripts.agent_runtime import attempt_boundary, review_mcp
+    from scripts.dispatcher import review_attempt
+    from scripts.review.prompts.render import render_prompt
+    from tests.review.test_prompts import _setup_lexical_fixture
+
+    manifest_path, manifest, _ = _setup_lexical_fixture(tmp_path)
+    prompt_file = tmp_path / "lexical.prompt"
+    prompt, _, _ = render_prompt(manifest_path, repo_root=tmp_path, output_path=prompt_file,
+                                 review_id="review", attempt_id="attempt", review_access="isolated")
+    args = cli.build_parser().parse_args([
+        "dispatch", "--agent", "agy", "--model", "gemini-3.8-flash-high", "--effort", "high",
+        "--mode", "read-only", "--review-profile", "ukrainian", "--review-author-model", "gpt-6.1-sol",
+        "--review-id", "review", "--attempt-id", "attempt", "--review-attempt", str(manifest_path),
+        "--prompt-file", str(prompt_file), "--review-access", "isolated",
+    ])
+    binding = store.review_binding(vars(args))
+    for command in (["git", "init", "-q"], ["git", "add", manifest["inputs"]["candidates"]["path"]],
+                    ["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+                     "commit", "-qm", "Public candidate fixture"]):
+        subprocess.run(command, cwd=tmp_path, check=True, capture_output=True, timeout=30)
+    sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=tmp_path, timeout=30).decode().strip()
+    # Exercise the real server contract against the checkout containing this change.
+    checkout = Path(__file__).resolve().parents[2]
+    monkeypatch.setattr(review_mcp, "check_review_contract",
+                        partial(review_mcp.check_review_contract, server_checkout=checkout))
+    contract = review_attempt.admit(args, prompt.encode(), binding, tmp_path, sha)
+    assert contract["templates"] == ["lexical-review.md.j2"]
+    assert attempt_boundary.authorized_closure(manifest, tmp_path) == {
+        manifest["inputs"]["candidates"]["path"]: (tmp_path / manifest["inputs"]["candidates"]["path"]).read_bytes()
+    }
+    with pytest.raises(ValueError, match="review_render_record_stale"):
+        review_attempt.admit(args, (prompt + "altered").encode(), binding, tmp_path, sha)
+    for name, invalid in (("review_profile", "code"), ("review_author_model", None), ("effort", "low"),
+                          ("output_schema", "override.json")):
+        original = getattr(args, name)
+        setattr(args, name, invalid)
+        reason = "attempt_output_schema_unsupported" if name == "output_schema" else "lexical_review_identity_required"
+        with pytest.raises(ValueError, match=reason):
+            review_attempt.admit(args, prompt.encode(), binding, tmp_path, sha)
+        setattr(args, name, original)
+
+
 def test_bound_attempt_cannot_spend_an_exhausted_branch_pr_budget(attempt, tmp_path, monkeypatch, capsys):
     """Defect class: a bound attempt is charged to a branch's ordinary PR review budget (#12216)."""
     from scripts.dispatcher import review_attempt
@@ -280,3 +328,500 @@ def test_concurrent_admissions_claim_one_pair_for_different_tasks(attempt, tmp_p
     with ThreadPoolExecutor(2) as pool:
         assert sorted(pool.map(admit, ["first", "second"])) == ["admitted", "spent"]
     assert len(store.list_tasks()) == 1
+
+
+def _run_manifest_ukrainian_attempt(
+    attempt, tmp_path, monkeypatch, reply: str, *, ledger_records=(), foreign_records=()
+):
+    from types import SimpleNamespace
+
+    from scripts.agent_runtime import attempt_boundary, review_mcp, runner
+    from scripts.dispatcher import headroom
+    from scripts.review.receipts.ledger import dumps
+
+    args = cli.build_parser().parse_args([
+        "dispatch",
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.8-flash-high",
+        *attempt,
+        "--review-profile",
+        "ukrainian",
+    ])
+    binding = store.review_binding(vars(args))
+    rendered = b"Rendered review prompt\nattempt: review/attempt\n"
+    prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
+    prompt.content = rendered
+    workspace = tmp_path / "checkout"
+    workspace.mkdir(exist_ok=True)
+    spec = TaskSpec(
+        "task",
+        "agy",
+        "gemini-3.8-flash-high",
+        "high",
+        "read-only",
+        workspace,
+        prompt,
+        tmp_path / "tasks" / "task.result",
+        options=dict(review_attempt=str(tmp_path / "manifest.yaml")),
+    )
+    record = store.new_record(
+        spec,
+        dict(key="public", github="example/public"),
+        "agy/task",
+        "a" * 40,
+        dict(vars(args), research_owned_path=[]),
+        binding=binding,
+    )
+    record["review_contract"] = dict(input_root=str(tmp_path))
+    path = store.create(record, rendered)
+
+    for name in ("check_plan", "check_runtime"):
+        monkeypatch.setattr(headroom, name, lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "settle_left_worktrees", lambda *_a, **_k: None)
+    monkeypatch.setattr(git, "snapshot_delivery", lambda *_a: {})
+    monkeypatch.setattr(attempt_boundary, "verify_full_review_tree", lambda *a: None)
+    receipts = tmp_path / "review-receipts" / "review"
+    receipts.mkdir(parents=True, exist_ok=True)
+    ledger_file = receipts / "attempt.jsonl"
+
+    if foreign_records:
+        foreign_receipts = tmp_path / "review-receipts" / "foreign_review"
+        foreign_receipts.mkdir(parents=True, exist_ok=True)
+        foreign_file = foreign_receipts / "attempt.jsonl"
+        foreign_lines = b"".join(dumps(r).encode() + b"\n" for r in foreign_records)
+        foreign_file.write_bytes(foreign_lines)
+        (foreign_receipts / "attempt.jsonl.sha256").write_text(store.digest(foreign_lines) + "\n")
+
+    def prepare(review_id, attempt_id, manifest, harness, **kwargs):
+        config = receipts / "attempt.mcp.json"
+        config.write_text("{}")
+        ledger_lines = b"".join(dumps(r).encode() + b"\n" for r in ledger_records)
+        ledger_file.write_bytes(ledger_lines)
+        (receipts / "attempt.jsonl.sha256").write_text(store.digest(ledger_lines) + "\n")
+        return review_mcp.ReviewMcpPlan(
+            config,
+            {},
+            ledger_file,
+            receipts / "attempt.jsonl.sha256",
+            binding["manifest_sha256"],
+            review_id,
+            attempt_id,
+            harness,
+        )
+
+    monkeypatch.setattr(review_mcp, "prepare_review_attempt", prepare)
+    monkeypatch.setattr(review_mcp, "review_attempt_tool_config", lambda *a, **k: {})
+
+    def invoke_runtime(agent, text, **kwargs):
+        return SimpleNamespace(
+            ok=True,
+            response=reply,
+            identity_state="observed",
+            observed_model="gemini-3.8-flash-high",
+            observed_model_source="provider",
+            failure_code=None,
+            stderr_excerpt=None,
+        )
+
+    monkeypatch.setattr(runner, "invoke", invoke_runtime)
+    worker.supervise(path, {}, 60)
+    done = store.read("task")
+    return done, spec.final_file.read_text(), binding
+
+
+def test_manifest_bound_ukrainian_review_supported_claim_accepted(attempt, tmp_path, monkeypatch):
+    """A valid receipt quote in this attempt's ledger is accepted and counted in claims_total."""
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "card-1",
+                    "verdict": "APPROVE",
+                    "finding": "Attested word",
+                    "sources": "VESUM",
+                    "evidence": [{"receipt": "rr-supported1111111111", "quote": "attested in VESUM"}],
+                }
+            ],
+        })
+        + "\n```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 1
+    assert done["claims_unsupported"] == 0
+    assert done["unknown_items"] == 0
+    assert done["dropped_claims"] == []
+    assert "rr-supported1111111111" in final_text
+    assert "_approval_void" not in final_text
+
+
+def test_manifest_bound_ukrainian_review_fabricated_quote_dropped_and_counted(
+    attempt, tmp_path, monkeypatch
+):
+    """A fabricated quote not present in the receipt result is dropped and counts as unsupported."""
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "card-1",
+                    "verdict": "APPROVE",
+                    "finding": "Attested word",
+                    "sources": "VESUM",
+                    "evidence": [{"receipt": "rr-supported1111111111", "quote": "fabricated quote never returned"}],
+                }
+            ],
+        })
+        + "\n```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 1
+    assert done["claims_unsupported"] == 1
+    assert done["unknown_items"] == 0
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
+    assert "fabricated quote never returned" not in final_text
+    assert "_approval_void" in final_text
+
+
+def test_manifest_bound_ukrainian_review_foreign_attempt_receipt_dropped(attempt, tmp_path, monkeypatch):
+    """A citation referencing a receipt from another attempt is dropped and counted as unsupported."""
+    foreign_rec = {
+        "receipt_id": "rr-foreign99999999999",
+        "review_id": "other_review",
+        "attempt_id": "other_attempt",
+        "manifest_sha256": "f" * 64,
+        "tool": "verify_words",
+        "result": "some foreign result",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "card-1",
+                    "verdict": "APPROVE",
+                    "finding": "Foreign citation",
+                    "sources": "VESUM",
+                    "evidence": [{"receipt": "rr-foreign99999999999", "quote": "some foreign result"}],
+                }
+            ],
+        })
+        + "\n```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, foreign_records=[foreign_rec]
+    )
+    assert done["claims_total"] == 1
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["reason"] == "foreign_attempt_receipt"
+    assert "rr-foreign99999999999" not in final_text
+
+
+def test_manifest_bound_ukrainian_review_unknown_item_leaves_denominator_incomplete(
+    attempt, tmp_path, monkeypatch
+):
+    """An item marked unknown is counted in unknown_items and leaves denominator coverage incomplete."""
+    from scripts.review.review_contract import build_item_packet, judge_item_reply
+
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "card-1",
+                    "verdict": "APPROVE",
+                    "finding": "Known good",
+                    "sources": "VESUM",
+                },
+                {
+                    "id": "card-2",
+                    "verdict": "unknown",
+                    "finding": "Inconclusive evidence",
+                    "sources": "none",
+                },
+            ],
+        })
+        + "\n```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(attempt, tmp_path, monkeypatch, reply)
+    assert done["unknown_items"] == 1
+    assert done["claims_total"] == 0
+    assert done["claims_unsupported"] == 0
+
+    packet = build_item_packet([{"id": "card-1", "text": "тест"}, {"id": "card-2", "text": "приклад"}])
+    chunk = judge_item_reply(packet, final_text, stated="APPROVED", ukrainian=True)
+    assert chunk.denominator == ("card-1", "card-2")
+    assert chunk.coverage == ("card-1",)
+    assert "card-2" not in chunk.coverage
+
+
+def test_manifest_bound_ukrainian_review_yaml_fabricated_quote_dropped_and_counted(
+    attempt, tmp_path, monkeypatch
+):
+    """A YAML return with fabricated quote is validated, dropped, and counted in claims_unsupported."""
+    import yaml
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```yaml\n"
+        + yaml.safe_dump({
+            "review_schema": 1,
+            "kind": "settle",
+            "evidence": [
+                {
+                    "receipt": "rr-supported1111111111",
+                    "quote": "fabricated quote not in result",
+                }
+            ],
+        })
+        + "```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 1
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
+    assert "fabricated quote not in result" not in final_text
+
+
+def test_manifest_bound_ukrainian_review_two_items_one_void_preserves_valid_item(
+    attempt, tmp_path, monkeypatch
+):
+    """An unsupported claim on one item voids only that item, preserving unrelated valid items."""
+    from scripts.review.review_contract import build_item_packet, judge_item_reply
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "card-1",
+                    "verdict": "APPROVE",
+                    "finding": "Attested word",
+                    "sources": "VESUM",
+                    "quote": "паляниця",
+                    "evidence": [{"receipt": "rr-supported1111111111", "quote": "attested in VESUM"}],
+                },
+                {
+                    "id": "card-2",
+                    "verdict": "APPROVE",
+                    "finding": "Fabricated quote",
+                    "sources": "VESUM",
+                    "quote": "хліб",
+                    "evidence": [{"receipt": "rr-supported1111111111", "quote": "fake quote"}],
+                },
+            ],
+        })
+        + "\n```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 2
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["item_id"] == "card-2"
+    assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
+
+    packet = build_item_packet([{"id": "card-1", "text": "паляниця"}, {"id": "card-2", "text": "хліб"}])
+    chunk = judge_item_reply(packet, final_text, stated="APPROVED", ukrainian=True)
+    assert chunk.denominator == ("card-1", "card-2")
+    assert chunk.coverage == ("card-1",)
+    assert "card-2" not in chunk.coverage
+    assert chunk.void is None
+
+
+def test_manifest_bound_ukrainian_review_yaml_finding_fabricated_expected_dropped_and_counted(
+    attempt, tmp_path, monkeypatch
+):
+    """A YAML finding with valid evidence receipt but fabricated sibling expected text drops expected."""
+    import yaml
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```yaml\n"
+        + yaml.safe_dump({
+            "review_schema": 1,
+            "kind": "lesson",
+            "findings": [
+                {
+                    "id": "F-1",
+                    "claim": "Spelling issue",
+                    "expected": "fabricated expected text",
+                    "evidence": {
+                        "receipt": "rr-supported1111111111",
+                    },
+                }
+            ],
+        })
+        + "```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 2
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["item_id"] == "F-1"
+    assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
+    assert "fabricated expected text" not in final_text
+    # Receipt itself was valid and retained
+    assert "rr-supported1111111111" in final_text
+
+
+def test_manifest_bound_ukrainian_review_yaml_finding_valid_expected_retained(
+    attempt, tmp_path, monkeypatch
+):
+    """A YAML finding with valid evidence receipt and matching expected text retains both."""
+    import yaml
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```yaml\n"
+        + yaml.safe_dump({
+            "review_schema": 1,
+            "kind": "lesson",
+            "findings": [
+                {
+                    "id": "F-1",
+                    "claim": "Spelling issue",
+                    "expected": "attested in VESUM",
+                    "evidence": {
+                        "receipt": "rr-supported1111111111",
+                    },
+                }
+            ],
+        })
+        + "```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 2
+    assert done["claims_unsupported"] == 0
+    assert len(done["dropped_claims"]) == 0
+    assert "attested in VESUM" in final_text
+    assert "rr-supported1111111111" in final_text
+
+
+def test_manifest_bound_ukrainian_review_per_item_receipt_only_rejected_as_malformed_claim(
+    attempt, tmp_path, monkeypatch
+):
+    """Per-item evidence containing only receipt without quote is rejected as malformed_claim."""
+    from scripts.review.review_contract import build_item_packet, judge_item_reply
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "card-1",
+                    "verdict": "APPROVE",
+                    "finding": "Attested word",
+                    "sources": "VESUM",
+                    "quote": "паляниця",
+                    "evidence": [{"receipt": "rr-supported1111111111"}],
+                },
+            ],
+        })
+        + "\n```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 1
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["item_id"] == "card-1"
+    assert done["dropped_claims"][0]["reason"] == "malformed_claim"
+
+    packet = build_item_packet([{"id": "card-1", "text": "паляниця"}])
+    chunk = judge_item_reply(packet, final_text, stated="APPROVED", ukrainian=True)
+    assert chunk.denominator == ("card-1",)
+    assert chunk.coverage == ()

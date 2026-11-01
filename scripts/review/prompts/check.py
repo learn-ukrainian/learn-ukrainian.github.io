@@ -139,7 +139,7 @@ JINJA_TAG = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
 
 #: Top-level keys that mark a fenced block as a return schema: a review (plan, lesson, re-review) names its
 #: ids under ``attempt``; a settle names them at the top level.
-RETURN_SCHEMA_KEYS = ("review_schema", "settle_schema")
+RETURN_SCHEMA_KEYS = ("review_schema", "settle_schema", "lexical_schema")
 #: A plain (unfenced) ``attempt`` key line and its indented continuation — the fallback for a prompt that has
 #: no fenced return schema (a hand-written or custom prompt).
 ATTEMPT_ENTRY = re.compile(r"""(?m)^["']?attempt["']?[ \t]*:[^\n]*\n?(?:^[ \t]+\S[^\n]*\n?)*""")
@@ -244,7 +244,7 @@ def _fenced_blocks(prompt_text: str) -> list[tuple[int, int, str, str]]:
 
 
 def _schema_ids(schema: dict[str, Any]) -> tuple[str, str]:
-    if "review_schema" in schema:
+    if "review_schema" in schema or "lexical_schema" in schema:
         return _ids_from(schema.get("attempt"), "the return schema's attempt block")
     return _ids_from(schema, "the settle return schema")
 

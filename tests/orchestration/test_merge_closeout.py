@@ -9,7 +9,9 @@ from typing import Any
 import pytest
 
 from scripts.orchestration import merge_closeout as mc
+from scripts.orchestration import task_lifecycle as tl
 from scripts.orchestration import worktree_git as rw
+from tests.orchestration.test_task_lifecycle import NOW, _identity
 
 _REAL_RUN = subprocess.run
 
@@ -932,6 +934,36 @@ def test_cleanup_report_keeps_criterion_eligibility_separate(tmp_path, monkeypat
     assert mc._result_to_dict(result)["criterion_receipts"] == [report]
     assert '"closure_ready": false' in mc._format_text(result)
     assert mc.run_merge_closeout(repo, 77, apply=False).criterion_receipts == []
+
+
+def test_criterion_receipts_skip_non_ledger_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(tl, "canonical_state_root", lambda _: tmp_path)
+    snapshot = tl.build_ac_snapshot(
+        "- [x] **AC-ONE** — Done.\n",
+        {"AC-ONE": {"due_state": "MERGED", "required_evidence": ["github"]}},
+        finalized_at=NOW,
+    )
+    ledger = tl.build_lifecycle(
+        _identity(), author_family="codex", ac_snapshot=snapshot,
+        required_checks=["CI Gate"], now=NOW, pr_number=12345,
+    )
+    path = tl.lifecycle_path(tmp_path, ledger["identity"])
+    tl.write_lifecycle(path, ledger)
+    path.with_name("issue-12345-behavior-proof.json").write_text(
+        json.dumps({"receipt": "not a lifecycle ledger"}), encoding="utf-8",
+    )
+    path.with_name("issue-\u0661\u0662\u0663\u0664\u0665.json").write_text(
+        json.dumps({"receipt": "unicode digits are not a ledger name"}), encoding="utf-8",
+    )
+    path.with_name("issue-12345\u0666.json").write_text(
+        json.dumps({"receipt": "mixed digits are not a ledger name"}), encoding="utf-8",
+    )
+
+    reports = mc.collect_criterion_receipts(
+        tmp_path, mc.PullRequestInfo(77, "MERGED", "codex/branch", "a" * 40), repo="org/repo",
+    )
+
+    assert reports == []
 
 
 def test_text_report_renders_cleanup_and_criterion_residuals():

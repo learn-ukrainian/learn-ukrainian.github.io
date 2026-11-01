@@ -333,7 +333,7 @@ def check_required_fields(plan: dict) -> list[PlanIssue]:
     """Check that all required fields are present."""
     issues = []
     required = ["module", "slug", "version", "level", "sequence", "title",
-                "word_target", "content_outline", "vocabulary_hints", "phase"]
+                "content_outline", "vocabulary_hints", "phase"]
     if str(plan.get("level", "")).upper() == "B2":
         # B2 rebuild readiness treats these as legacy source-plan metadata.
         required = [field for field in required if field not in {"vocabulary_hints", "phase"}]
@@ -344,19 +344,11 @@ def check_required_fields(plan: dict) -> list[PlanIssue]:
 
 
 def check_word_budgets(plan: dict) -> list[PlanIssue]:
-    """Check section word budgets sum to >= word_target."""
-    issues = []
-    target = plan.get("word_target", 0)
+    """Require a content outline. Section word budgets are ignored."""
     sections = plan.get("content_outline", [])
     if not sections:
-        issues.append(PlanIssue("BUDGET", "ERROR", "No content_outline sections"))
-        return issues
-
-    total = sum(s.get("words", 0) for s in sections if isinstance(s, dict))
-    if total < target:
-        issues.append(PlanIssue("BUDGET", "ERROR",
-                                f"Section budgets sum to {total}w, target is {target}w (short by {target - total}w)"))
-    return issues
+        return [PlanIssue("BUDGET", "ERROR", "No content_outline sections")]
+    return []
 
 
 def check_no_stress_marks(plan: dict) -> list[PlanIssue]:

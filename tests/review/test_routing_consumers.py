@@ -107,7 +107,9 @@ def test_one_holder_edit_moves_all_consumer_references(seat, new_id):
     if seat == "bounded_worker":
         assert bounded_execution_policy(result).bounded_worker_model_id == new_id
     if seat == "google_bounded":
-        assert bounded_execution_policy(result).bounded_fallback_model_id == new_id
+        assert result["orchestrator_seats"]["agy"]["model_id"] == new_id
+        assert result["orchestrator_seats"]["agy"]["escalate_model_id"] == new_id
+        assert result["formal_cf_defaults"]["agy"]["model_id"] == new_id
     assert (
         resolve_routing_reference({"role": "legacy_reviewers", "seat": "xai_reviewer"}, result)
         == result["orchestrator_seats"]["cursor"]["model_id"]

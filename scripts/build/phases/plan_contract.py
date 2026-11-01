@@ -199,16 +199,6 @@ def _extract_terms(points: list[str], plan: dict, *, limit: int = 8) -> list[str
     return required_terms
 
 
-def _word_budget_entry(words: int) -> dict[str, int]:
-    lower = max(1, round(words * 0.9))
-    upper = max(lower, round(words * 1.1))
-    return {
-        "target": words,
-        "min": lower,
-        "max": upper,
-    }
-
-
 def build_contract(
     plan: dict,
     wiki_packet: str,
@@ -223,26 +213,17 @@ def build_contract(
     # An empty list produces dialogue_acts: [] in the contract, which is valid.
     dialogue_situations = plan.get("dialogue_situations") or []
     activity_hints = _require_non_empty(plan, "activity_hints")
-    word_target = plan.get("word_target")
-    if isinstance(word_target, bool) or not isinstance(word_target, (int, float)) or word_target <= 0:
-        raise ContractBuildError("Plan missing numeric word_target for contract stage")
 
     compression = compress_wiki_packet(plan, wiki_packet)
     sections: list[dict] = []
-    section_word_budgets: dict[str, dict[str, int]] = {}
     for index, section in enumerate(outline, start=1):
         name = str(section.get("section", "")).strip()
         if not name:
             raise ContractBuildError("content_outline entry missing section title")
-        words = int(section.get("words") or 0)
-        if words <= 0:
-            raise ContractBuildError(f"content_outline section '{name}' missing positive words budget")
-        section_word_budgets[name] = _word_budget_entry(words)
         section_anchors = compression["anchors_by_section"].get(name, [])
         sections.append({
             "order": index,
             "name": name,
-            "word_budget": section_word_budgets[name],
             "teaching_beats": [str(point) for point in (section.get("points") or [])],
             "required_terms": _extract_terms(
                 [str(point) for point in (section.get("points") or [])],
@@ -276,7 +257,6 @@ def build_contract(
             "module_num": module_num,
             "title": plan.get("title", slug),
             "phase": plan.get("phase", ""),
-            "word_target": int(word_target),
         },
         "teaching_beats": {
             "section_order": [section["name"] for section in sections],
@@ -312,7 +292,6 @@ def build_contract(
             }
             for index, hint in enumerate(activity_hints, start=1)
         ],
-        "section_word_budgets": section_word_budgets,
         "artifacts": {
             "wiki_excerpt_file": "wiki-excerpts.yaml",
         },

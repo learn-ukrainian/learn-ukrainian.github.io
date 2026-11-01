@@ -55,6 +55,9 @@ def sandbox(tmp_path, hermetic_monitor):
     resolver = repo / "scripts/common/repo_root.py"
     with resolver.open("a") as stream:
         stream.write(f"\n\ndef project_interpreter(root=None):\n    return Path({sys.executable!r})\n")
+    audit = repo / "scripts/audit"
+    audit.mkdir(parents=True)
+    shutil.copy(SOURCE / "scripts/audit/lint_opsec_leaks.py", audit / "lint_opsec_leaks.py")
     shutil.copy(SOURCE / "scripts/dispatch.py", repo / "scripts/dispatch.py")
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     (repo / "scripts/fleet").mkdir()
@@ -802,8 +805,13 @@ def test_scheduled_settlement_does_not_retain_regenerable_dependencies_as_unique
                 assert stream.read(20) == b"unpublished evidence"
 
 
-def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_salvage_ref(sandbox, monkeypatch):
-    """#12043 AC-06a: a finished task's dirty tree stayed forever; a failed salvage push must still keep it."""
+def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_salvage_ref(
+        sandbox, monkeypatch, synthetic_opsec):
+    """#12043 AC-06a: a finished task's dirty tree stayed forever; a failed salvage push must still keep it.
+
+    The synthetic matcher lets the push scan run where the private install is absent, so a refused
+    push is still salvage_failed rather than a scan that could not start.
+    """
     record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
     assert record["worktree_disposition_reason"] == "dirty"
     tree, ref = Path(record["worktree_path"]), f"refs/heads/salvage/{record['task_id']}"
@@ -833,6 +841,145 @@ def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_sal
     assert run_git(sandbox.remote, "rev-parse", f"{salvaged}^") == record["head_sha"]
     assert run_git(sandbox.remote, "show", f"{salvaged}:delivered.txt") == "uncommitted delivery"
     assert run_git(sandbox.remote, "show", f"{salvaged}:notes.txt") == "untracked note"
+
+
+def _salvage_ref(record):
+    return f"refs/heads/salvage/{record['task_id']}"
+
+
+def test_salvage_keeps_a_tree_when_the_push_scan_refuses(sandbox, monkeypatch, synthetic_opsec):
+    """Defect class: salvage pushes a range the OPSEC push scan would refuse because hooksPath is /dev/null."""
+    from scripts.orchestration.scheduled_worktree_cleanup import SAFETY_STOP_REASONS
+    from tests.opsec_fixtures import TOKEN
+
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    tree, ref = Path(record["worktree_path"]), _salvage_ref(record)
+    run_git(tree, "-c", "core.hooksPath=/dev/null", "commit", "--allow-empty", "-m", f"note {TOKEN}")
+    in_process_repo(sandbox, monkeypatch)
+
+    def settled():
+        return json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+
+    worker.settle_left_worktrees(salvage=True)
+    first = settled()
+    assert (first["worktree_disposition"], first["worktree_disposition_reason"]) == ("retained", "opsec_refused")
+    assert first["worktree_disposition_reason"] not in worker.RETRY_REASONS
+    assert first["worktree_disposition_reason"] in SAFETY_STOP_REASONS
+    assert first["worktree_disposition_detail"] == git.OPSEC_REFUSAL_DETAIL
+    assert TOKEN not in json.dumps(first)
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+    worker.settle_left_worktrees(salvage=True)
+    assert settled()["worktree_disposition_reason"] == "opsec_refused"
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+
+
+def test_salvage_still_publishes_a_range_the_push_scan_accepts(sandbox, monkeypatch, synthetic_opsec):
+    """Defect class: regression of clean public salvage. A range the push scan accepts is still published."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    tree, ref = Path(record["worktree_path"]), _salvage_ref(record)
+    head = run_git(tree, "rev-parse", "HEAD")
+    in_process_repo(sandbox, monkeypatch)
+    worker.settle_left_worktrees(salvage=True)
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
+    assert not tree.exists()
+    assert run_git(sandbox.remote, "rev-parse", ref) == head
+
+
+def test_retention_hold_blocks_settlement_salvage_and_cleanup(sandbox, monkeypatch, synthetic_opsec):
+    """Defect class: an unpublished tree has no owner hold, so salvage retries it."""
+    from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    tree, ref = Path(record["worktree_path"]), _salvage_ref(record)
+    sandbox.cli("retain-worktree", record["task_id"], "--set")
+    held = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert held["worktree_retention_hold"] is True
+    assert held["worktree_disposition_reason"] == "retention_hold"
+    assert "retention_hold" not in worker.RETRY_REASONS
+    in_process_repo(sandbox, monkeypatch)
+    assert git.settle_worktree(held) == {
+        "worktree_disposition": "retained", "worktree_disposition_reason": "retention_hold",
+    }
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+    worker.settle_left_worktrees(salvage=True)
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+    (sandbox.repo / "batch_state").mkdir()
+    (sandbox.repo / "batch_state/tasks").symlink_to(sandbox.tasks, target_is_directory=True)
+    report = cleanup.settle_terminal_worktrees(sandbox.repo, apply=True, github=cleanup.GitHubReads())
+    assert report["complete"] and report["error"] is None
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+    listed = report["trees"][0]
+    assert listed["reason"] == "retention_hold" and listed["safety_stop"] is False
+    sandbox.cli("retain-worktree", record["task_id"], "--clear")
+    cleared = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert "worktree_retention_hold" not in cleared
+    assert "worktree_disposition" not in cleared
+    worker.settle_left_worktrees(salvage=True)
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
+    assert not tree.exists()
+    assert run_git(sandbox.remote, "rev-parse", ref)
+
+
+def test_salvage_uses_the_trusted_linter_when_the_worktree_copy_exits_clean(sandbox, monkeypatch, synthetic_opsec):
+    """Defect: a worktree can replace its blob linter with a script that exits 0 and salvage will push."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    tree, ref = Path(record["worktree_path"]), _salvage_ref(record)
+    (tree / "scripts/audit/lint_opsec_leaks.py").write_text("raise SystemExit(0)\n")
+    (tree / "notes.txt").write_text(".".join(("10", "1", "2", "3")) + "\n")
+    in_process_repo(sandbox, monkeypatch)
+    worker.settle_left_worktrees(salvage=True)
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("retained", "opsec_refused")
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+
+
+def test_retention_hold_survives_a_stale_record_write_and_skips_inspection(sandbox, monkeypatch):
+    """Defect: a supervisor write from an older copy drops the hold, and the old-tree report still reads Git."""
+    from datetime import UTC, datetime, timedelta
+
+    from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    tree = Path(record["worktree_path"])
+    sandbox.cli("retain-worktree", record["task_id"], "--set")
+    path = sandbox.tasks / f"{record['task_id']}.json"
+    stale = json.loads(path.read_text())
+    stale.pop("worktree_retention_hold")
+    stale["worktree_disposition"] = "removed"
+    stale["worktree_disposition_reason"] = "clean"
+    in_process_repo(sandbox, monkeypatch)
+    store.replace(stale, path)
+    kept = json.loads(path.read_text())
+    assert kept["worktree_retention_hold"] is True
+    assert kept["worktree_disposition_reason"] == "retention_hold"
+    naked = dict(record)
+    naked.pop("worktree_retention_hold", None)
+    assert git.settle_worktree(naked)["worktree_disposition_reason"] == "retention_hold"
+    assert tree.is_dir()
+    kept["finished_at"] = (datetime.now(UTC) - timedelta(hours=7)).isoformat()
+    path.write_text(json.dumps(kept))
+    (sandbox.repo / "batch_state").mkdir()
+    (sandbox.repo / "batch_state/tasks").symlink_to(sandbox.tasks, target_is_directory=True)
+    monkeypatch.setattr(cleanup.worktree_git, "control_plane_root", lambda root: sandbox.repo)
+
+    def refused(*args, **kwargs):
+        raise AssertionError("held tree was inspected")
+
+    monkeypatch.setattr(cleanup, "_inspect_terminal_git", refused)
+    report = cleanup.report_terminal_worktrees(sandbox.repo)
+    assert report["tasks"] == []
+    sandbox.cli("retain-worktree", record["task_id"], "--clear")
+    cleared = json.loads(path.read_text())
+    assert "worktree_retention_hold" not in cleared
+    cleared["worktree_disposition"] = "removed"
+    cleared["worktree_disposition_reason"] = "clean"
+    store.replace(cleared, path)
+    assert "worktree_retention_hold" not in json.loads(path.read_text())
 
 
 @pytest.mark.parametrize("pull_ref,disposition", [(True, ("removed", "clean")), (False, ("retained", "unpublished"))])
@@ -1424,6 +1571,28 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
             git.snapshot_delivery(probe, record)["push_state"]
             == "unknown"
         )
+
+
+def test_delivery_snapshot_does_not_execute_worker_git_config(sandbox):
+    """The supervisor must not execute worker-controlled Git configuration."""
+    worktree = sandbox.repo.parent / "worker"
+    head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    run_git(sandbox.repo, "worktree", "add", "-b", "delivery", str(worktree), head)
+    run_git(worktree, "push", "origin", "delivery")
+    run_git(sandbox.repo, "config", "extensions.worktreeConfig", "true")
+    marker = sandbox.repo.parent / "fsmonitor-executed"
+    run_git(worktree, "config", "--worktree", "core.fsmonitor", f'touch "{marker}"')
+    probe = TaskSpec("snapshot", "codex", "echo", None, "workspace-write", worktree,
+                     worktree / "prompt", worktree / "result")
+    observed = git.snapshot_delivery(probe, {
+        "task_id": "snapshot", "worktree_base_sha": head, "worktree_branch": "delivery",
+        "worktree_remote_url": str(sandbox.remote),
+    })
+    assert not marker.exists(), "the supervisor executed the worker's fsmonitor command"
+    assert observed["push_state"] == "pushed"
+    assert observed["head_sha"] == observed["remote_head_sha"] == head
+    assert observed["commits_ahead"] == 0
+    assert observed["worktree_dirty_on_exit"] is False
 
 
 @pytest.mark.parametrize("model,mode,owned,state,cause", [
@@ -3195,6 +3364,53 @@ def test_a_run_settling_while_a_task_it_dispatched_still_runs_names_that_task(sa
 
     (sandbox.tasks / f"{child[0]}.release").touch()
     assert "orphaned_child_tasks" not in sandbox.settle(child)
+
+
+def test_agy_write_run_does_not_settle_while_its_child_is_running(sandbox, monkeypatch):
+    """Defect class: an AGY workspace-write run that exits 0 on an interim reply while a child task is still active settles done or no_deliverable."""
+    from scripts.dispatcher.providers import agy
+    from scripts.dispatcher.types import Invocation
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
+    code = (
+        "import json\n"
+        "print(json.dumps({'event': 'init', 'init': {'model': 'gemini-3.8-flash-high'}}), flush=True)\n"
+        "print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', "
+        "'response': 'I will pause to await the review verdict.'}}), flush=True)\n"
+    )
+    monkeypatch.setattr(agy, "build", lambda _spec, env: Invocation(
+        [sys.executable, "-c", code],
+        b'{"event":"user","message":{"role":"user","content":[{"type":"text","text":""}]}}\n', env, None))
+    head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    remote = {"key": "public", "github": str(sandbox.remote)}
+    spec = TaskSpec("agy-write-child", "agy", "gemini-3.8-flash-high", None, "workspace-write", sandbox.repo,
+                    sandbox.repo / "agy-write-child.prompt", sandbox.tasks / "agy-write-child.result")
+    spec.prompt_file.write_bytes(b"literal parent request")
+    record = store.new_record(spec, remote, "main", head, {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "agy-write-child.prompt")
+    path = store.create(record, b"literal parent request")
+    child_spec = TaskSpec("agy-write-review", "sol", "blocked", None, "read-only", sandbox.repo,
+                          sandbox.repo / "agy-write-review.prompt", sandbox.tasks / "agy-write-review.result")
+    child_spec.prompt_file.write_bytes(b"literal child request")
+    child = store.new_record(child_spec, remote, "main", head, {"research_owned_path": []})
+    child["prompt_file"] = str(sandbox.tasks / "agy-write-review.prompt")
+    child_path = store.create(child, b"literal child request")
+    child = json.loads(child_path.read_text())
+    child.update(status="running", parent_task_id="agy-write-child")
+    store.replace(child, child_path, require_existing=True)
+    (sandbox.tasks / "logs").mkdir()
+
+    started = time.monotonic()
+    worker.supervise(path, {}, 2)
+    elapsed = time.monotonic() - started
+
+    result = json.loads(path.read_text())
+    assert result["status"] not in {"done", "no_deliverable"}
+    assert "agy-write-review" in (result.get("error") or "")
+    assert elapsed < 8
 
 
 @pytest.mark.parametrize(("inherited", "parent"), [("dispatching-run", "dispatching-run"), ("self-run", None),

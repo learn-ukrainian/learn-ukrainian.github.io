@@ -172,6 +172,13 @@ launcher_error() {
   printf 'Error: %s\n' "$*" >&2
 }
 
+launcher_refuse_unclassified_provider_option() {
+  # Driver mode cannot tell an unclassified option's value from caller text.
+  # Guessing either way either gives the option the binding as its value or
+  # sends the caller as a second prompt, so fail closed.
+  launcher_error "unclassified provider option '$1' before '--'; put provider options after -- or attach its value as '$1=VALUE'."
+}
+
 # Project interpreter for helper modules: the .venv of the helper root that
 # launcher_resolve_roots validated (#9118, #9121), so an operator-named Codex
 # primary serves the adapters too. Call after launcher_resolve_roots; callers
@@ -445,8 +452,10 @@ launcher_defaults() {
   LC_MODEL_CLI=0
   LC_FORWARD_ARGS=()
   LC_CALLER_PROMPT_ARGS=()
+  LC_CALLER_PROMPT_INDICES=()
   LC_PROVIDER_ARGS=()
   LC_UNSEPARATED_PROVIDER_ARGS=0
+  LC_POST_SEPARATOR_INDEX=-1
 }
 
 launcher_need_value() {
@@ -496,6 +505,7 @@ launcher_parse() {
         exit 0
         ;;
       --)
+        LC_POST_SEPARATOR_INDEX="${#LC_FORWARD_ARGS[@]}"
         shift
         while [ "$#" -gt 0 ]; do
           LC_FORWARD_ARGS+=("$1")
@@ -573,6 +583,7 @@ launcher_parse() {
         if [ "$LC_MODE" = "driver" ] && [ -z "$LC_EPIC" ]; then
           LC_EPIC="$1"
         else
+          LC_CALLER_PROMPT_INDICES+=("${#LC_FORWARD_ARGS[@]}")
           LC_FORWARD_ARGS+=("$1")
           LC_CALLER_PROMPT_ARGS+=("$1")
         fi
@@ -1411,6 +1422,69 @@ launcher_inject_driver_agent() {
   fi
 }
 
+launcher_provider_option_arity() {
+  # Set LC_OPTION_ARITY to one, many, optional or boolean for the final route.
+  # Return 1 when the option is unclassified on a route with a table.
+  LC_OPTION_ARITY=''
+  case "$LC_PROVIDER:$LC_HARNESS" in
+    codex:codex)
+      case "$1" in
+        -c|--config|--enable|--disable|--remote|--remote-auth-token-env|--local-provider|-p|--profile|-s|--sandbox|-C|--cd|--add-dir|-a|--ask-for-approval) LC_OPTION_ARITY=one ;;
+        -i|--image) LC_OPTION_ARITY=many ;;
+        *) return 1 ;;
+      esac
+      ;;
+    claude:claude-code|codex:claude-code)
+      case "$1" in
+        --agent|--agents|--append-system-prompt|--append-system-prompt-file|--autocompact|--debug-file|--environment|--fallback-model|--input-format|--json-schema|--max-budget-usd|-n|--name|--output-format|--permission-mode|--permission-prompts|--plugin-dir|--plugin-url|--remote-control-session-name-prefix|--session-id|--setting-sources|--settings|--system-prompt|--system-prompt-file|--system-prompt-snapshot) LC_OPTION_ARITY=one ;;
+        --add-dir|--allowedTools|--allowed-tools|--betas|--disallowedTools|--disallowed-tools|--file|--mcp-config|--tools) LC_OPTION_ARITY=many ;;
+        -c|--continue) LC_OPTION_ARITY=boolean ;;
+        --cloud|-d|--debug|--from-pr|--prompt-suggestions|--remote-control|-r|--resume|--teleport|-w|--worktree) LC_OPTION_ARITY=optional ;;
+        *) return 1 ;;
+      esac
+      ;;
+    cursor:cursor-agent)
+      case "$1" in
+        --api-key|-H|--header|-e|--endpoint|--output-format|--mode|--sandbox|--workspace|--add-dir|--plugin-dir|--worktree-base) LC_OPTION_ARITY=one ;;
+        --resume|-w|--worktree) LC_OPTION_ARITY=optional ;;
+        *) return 1 ;;
+      esac
+      ;;
+    gemini:agy)
+      case "$1" in
+        --add-dir|--agent|--conversation|-i|--input-format|--json-schema|--log-file|--mode|--new-project|--output-format|-p|--print|--print-timeout|--project|--prompt|--prompt-interactive|--settings) LC_OPTION_ARITY=one ;;
+        *) return 1 ;;
+      esac
+      ;;
+    *)
+      # Routes without a table keep their own adapter refusal (Grok, Muse and
+      # Hermes) and their existing forwarding.
+      LC_OPTION_ARITY=none
+      ;;
+  esac
+  return 0
+}
+
+launcher_validate_provider_option_arity() {
+  # Run before any lease, canary, import or seed side effect so a refused
+  # launch cannot strand a claimed stream lease. No caller text means no
+  # ambiguity, so the no-caller forwarding contract is unchanged.
+  [ "${#LC_CALLER_PROMPT_ARGS[@]}" -gt 0 ] || return 0
+  local index=0 arg post_separator=999999
+  if [ "${LC_POST_SEPARATOR_INDEX:--1}" -ge 0 ]; then
+    post_separator=$((LC_POST_SEPARATOR_INDEX + ${#LC_WRAPPER_PROVIDER_ARGS[@]}))
+  fi
+  for arg in "${LC_FORWARD_ARGS[@]}"; do
+    if [ "$index" -lt "$post_separator" ] && [[ "$arg" == -* ]] && [[ "$arg" != *=* ]]; then
+      if ! launcher_provider_option_arity "$arg"; then
+        launcher_refuse_unclassified_provider_option "$arg"
+        return 1
+      fi
+    fi
+    index=$((index + 1))
+  done
+}
+
 launcher_bind_drive_epic() {
   local fleet_clause
   if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
@@ -1437,6 +1511,60 @@ launcher_bind_drive_epic() {
     # Grok has no SessionStart hook to inject the lane handoff (#10835); the
     # file name is shared with every provider.
     LC_DRIVER_PROMPT+=" Grok has no SessionStart hook, so after DB render/check read .claude/${SESSION_EPIC:-$LC_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md for supplemental context; reconcile its housekeeping and in-flight lines against the newest full-content DB handoff_note before acting. Session health is the Grok canary (.venv/bin/python -m scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill); end on FAIL-HANDOFF below 8/10."
+  fi
+  local caller arg index=0 caller_index=0 is_caller value_mode='' post_separator=999999
+  if [ "${LC_POST_SEPARATOR_INDEX:--1}" -ge 0 ]; then
+    post_separator=$((LC_POST_SEPARATOR_INDEX + ${#LC_WRAPPER_PROVIDER_ARGS[@]}))
+  fi
+  if [ "${#LC_CALLER_PROMPT_ARGS[@]}" -gt 0 ]; then
+    local -a forwarded=() callers=()
+    # Indices distinguish prompt text from identical option values. Wrappers
+    # prepend their fixed provider arguments after parsing.
+    for arg in "${LC_FORWARD_ARGS[@]}"; do
+      is_caller=0
+      if [ "$caller_index" -lt "${#LC_CALLER_PROMPT_INDICES[@]}" ] \
+        && [ "$index" -eq "$((LC_CALLER_PROMPT_INDICES[caller_index] + ${#LC_WRAPPER_PROVIDER_ARGS[@]}))" ]; then
+        is_caller=1
+        caller_index=$((caller_index + 1))
+      fi
+      if [ "$value_mode" = one ] || { [ -n "$value_mode" ] && [[ "$arg" != -* ]]; }; then
+        forwarded+=("$arg")
+        if [ "$value_mode" != many ]; then value_mode=''; fi
+      elif [ "$is_caller" = 1 ]; then
+        callers+=("$arg")
+      else
+        forwarded+=("$arg")
+        value_mode=''
+        # Resolve option arity only now: a later --harness can change it
+        # (Codex -c takes a value; Claude -c is boolean). Arguments after
+        # `--` keep their original boundaries and need no classification.
+        # The pre-claim validation has already refused unclassified options.
+        # This composition keeps the classified value boundaries and repeats
+        # the refusal as a guard for direct callers of this function.
+        if [ "$index" -lt "$post_separator" ] && [[ "$arg" == -* ]] && [[ "$arg" != *=* ]]; then
+          if ! launcher_provider_option_arity "$arg"; then
+            launcher_refuse_unclassified_provider_option "$arg"
+            exit 2
+          fi
+          case "$LC_OPTION_ARITY" in
+            one) value_mode=one ;;
+            many) value_mode=many ;;
+            optional) value_mode=optional ;;
+            *) value_mode='' ;;
+          esac
+        fi
+      fi
+      index=$((index + 1))
+    done
+    LC_FORWARD_ARGS=("${forwarded[@]}")
+    if [ "${#callers[@]}" -gt 0 ]; then
+      LC_DRIVER_PROMPT+=$'\n\nCaller instructions:'
+      for caller in "${callers[@]}"; do
+        LC_DRIVER_PROMPT+=$'\n'"$caller"
+      done
+    fi
+    # The shared binding owns caller text now; adapters must not prepend it.
+    LC_CALLER_PROMPT_ARGS=()
   fi
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
@@ -1610,6 +1738,11 @@ launcher_main() {
   # shellcheck disable=SC1090
   source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate
+  # Refuse an unclassified provider option before deploy, import, lease,
+  # canary or seed can leave side effects behind a failed launch.
+  if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "0" ]; then
+    launcher_validate_provider_option_arity || exit 2
+  fi
   launcher_adapter_preflight
 
   if [ "$LC_DRY_RUN" != "1" ]; then

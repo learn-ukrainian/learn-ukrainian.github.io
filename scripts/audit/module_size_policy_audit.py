@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Measure evidence-led module size and deterministic anti-bloat signals.
 
-Plan floors remain binding. Advisory ceilings describe review pressure, while
-Markdown-aware authored/quoted counts and paragraph repetition evidence make
-the policy useful across core and seminar tracks without treating raw markup as
-instructional prose.
+Legacy size metadata and Markdown-aware authored/quoted counts are descriptive
+only. Missing source support and paragraph repetition remain actionable across
+core and seminar tracks.
 """
 
 from __future__ import annotations
@@ -96,7 +95,7 @@ _ACTIVITY_HEADING_RE = re.compile(
     r"вправи|вправа|завдання|самоперевірка|робочий зошит)$",
     re.IGNORECASE,
 )
-_SIZE_POLICY_MISMATCH_RE = re.compile(r"\bSIZE_POLICY_MISMATCH\b")
+_EVIDENCE_GAP_RE = re.compile(r"<!--\s*(?:UNSUPPORTED_OBJECTIVE|EVIDENCE_GAP)\s*:", re.IGNORECASE)
 _LEGACY_PRIMARY_OPEN_RE = re.compile(
     r"^<!--\s*PRIMARY-READING\s*-->$", re.IGNORECASE
 )
@@ -220,7 +219,7 @@ class SizePolicyRecord:
     metrics: DensityMetrics | None
     content_metrics: MarkdownWordMetrics | None = None
     repetition: RepetitionEvidence | None = None
-    size_policy_mismatch: bool = False
+    evidence_gap: bool = False
     legacy_raw_whitespace_words: int | None = None
     decision_signals: tuple[str, ...] = ()
 
@@ -398,10 +397,10 @@ def detect_authored_repetition(
 def markdown_module_evidence(
     text: str,
 ) -> tuple[MarkdownWordMetrics, RepetitionEvidence, bool]:
-    """Extract Markdown-aware counts, repetition evidence, and mismatch marker."""
+    """Extract Markdown-aware counts, repetition evidence, and source-gap markers."""
     text = unicodedata.normalize("NFC", text)
     raw_whitespace_tokens = len(_WORD_RE.findall(text))
-    has_mismatch_marker = bool(_SIZE_POLICY_MISMATCH_RE.search(text))
+    has_evidence_gap_marker = bool(_EVIDENCE_GAP_RE.search(text))
     visible_text, excluded = _strip_nonvisible_regions(text)
     directive_stack: list[str] = []
     current_heading: str | None = None
@@ -562,7 +561,7 @@ def markdown_module_evidence(
         excluded_markup_directive_url_tokens=excluded,
         raw_whitespace_tokens=raw_whitespace_tokens,
     )
-    return metrics, detect_authored_repetition(paragraphs), has_mismatch_marker
+    return metrics, detect_authored_repetition(paragraphs), has_evidence_gap_marker
 
 
 def module_content_evidence(
@@ -572,7 +571,7 @@ def module_content_evidence(
 
 
 def word_count(path: Path) -> int:
-    """Return canonical authored instructional words for floor enforcement."""
+    """Return descriptive authored instructional word counts."""
     metrics, _, _ = module_content_evidence(path)
     return metrics.authored_instructional_words
 
@@ -707,11 +706,16 @@ def _is_positive_integer(value: Any) -> bool:
 
 
 def validate_size_policy_override(plan: Mapping[str, Any]) -> list[str]:
-    """Return deterministic schema errors for an explicit plan size override.
+    """Sizing overrides are deprecated metadata and never accept or refuse a plan."""
+    return []
 
-    An absent ``size_policy`` is intentionally valid: generic dossier/evidence
-    bands remain the policy for legacy plans.  A present policy must be fully
-    reviewed and self-contained before it can replace those bands.
+
+def _legacy_size_policy_shape_errors(plan: Mapping[str, Any]) -> list[str]:
+    """Shape notes for a descriptive override. Callers must not treat these as acceptance.
+
+    An absent ``size_policy`` stays on the generic dossier/evidence record.
+    A present policy is copied into that descriptive record only when it is
+    fully reviewed and self-contained.
     """
     if "size_policy" not in plan:
         return []
@@ -784,10 +788,9 @@ def validate_size_policy_override(plan: Mapping[str, Any]) -> list[str]:
 def explicit_size_policy_override(
     plan: Mapping[str, Any],
 ) -> tuple[SizePolicyOverride | None, list[str]]:
-    """Return a parsed override or the actionable errors that reject it."""
-    errors = validate_size_policy_override(plan)
-    if errors or "size_policy" not in plan:
-        return None, errors
+    """Return a parsed descriptive override. Shape problems are ignored."""
+    if "size_policy" not in plan or _legacy_size_policy_shape_errors(plan):
+        return None, []
 
     policy = plan["size_policy"]
     assert isinstance(policy, Mapping)
@@ -820,48 +823,18 @@ def build_explicit_size_policy_record(
     override: SizePolicyOverride,
     content_metrics: MarkdownWordMetrics | None = None,
     repetition: RepetitionEvidence | None = None,
-    size_policy_mismatch: bool = False,
+    evidence_gap: bool = False,
 ) -> SizePolicyRecord:
     """Build the effective record for a valid, reviewed plan override."""
-    notes = [
-        "A reviewed explicit plan size policy override replaces generic density-band limits.",
+    status, notes, signals = _status_and_notes(
+        track=track, dossier_path=Path(dossier_path) if dossier_path else None,
+        repetition=repetition, evidence_gap=evidence_gap,
+    )
+    notes.extend([
+        "Legacy size-policy override is descriptive metadata only.",
         f"Review basis: {override.basis}",
         f"Saturation evidence: {override.saturation_evidence}",
-        (
-            "Above the explicit advisory ceiling, exceptional justification is "
-            "required."
-        ),
-    ]
-    signals: list[str] = []
-    if size_policy_mismatch:
-        signals.append("plan_review_needed")
-        notes.append(
-            "SIZE_POLICY_MISMATCH declares exhausted grounded material; stop automatic expansion and route to plan review."
-        )
-    if actual_words is not None and actual_words < override.floor_words:
-        signals.append("below_plan_floor")
-        notes.append("Built module is below the current plan floor.")
-    elif actual_words is not None and actual_words > override.ceiling_words:
-        signals.append("over_advisory_ceiling")
-        notes.append(
-            "Built module exceeds the explicit advisory ceiling; review sourced pedagogy without failing on length alone."
-        )
-    if repetition is not None and repetition.matches:
-        signals.append("repetitive_authored_prose")
-        notes.append(
-            f"Detected {len(repetition.matches)} actionable exact/near-duplicate authored paragraph pair(s)."
-        )
-
-    if "plan_review_needed" in signals:
-        status = "plan_review_needed"
-    elif "below_plan_floor" in signals:
-        status = "below_plan_floor"
-    elif "repetitive_authored_prose" in signals:
-        status = "repetitive_authored_prose"
-    elif "over_advisory_ceiling" in signals:
-        status = "over_advisory_ceiling"
-    else:
-        status = "explicit_override"
+    ])
 
     return SizePolicyRecord(
         track=track,
@@ -876,14 +849,14 @@ def build_explicit_size_policy_record(
         density_band="reviewed_plan_override",
         band_min=override.recommended_min,
         band_max=override.recommended_max,
-        effective_min=override.floor_words,
+        effective_min=None,
         advisory_ceiling=override.ceiling_words,
         status=status,
         notes=notes,
         metrics=metrics,
         content_metrics=content_metrics,
         repetition=repetition,
-        size_policy_mismatch=size_policy_mismatch,
+        evidence_gap=evidence_gap,
         legacy_raw_whitespace_words=(
             content_metrics.raw_whitespace_tokens if content_metrics else None
         ),
@@ -947,108 +920,58 @@ def _dossier_path(track: str, slug: str, plan: dict[str, Any]) -> Path | None:
 def _status_and_notes(
     *,
     track: str,
-    plan_floor: int | None,
-    actual_words: int | None,
-    band: str,
-    band_max: int | None,
-    advisory_ceiling: int | None,
     dossier_path: Path | None,
     repetition: RepetitionEvidence | None = None,
-    size_policy_mismatch: bool = False,
+    evidence_gap: bool = False,
 ) -> tuple[str, list[str], tuple[str, ...]]:
-    notes: list[str] = []
+    notes = ["Word counts and legacy sizing metadata are informational only."]
     signals: list[str] = []
-
-    if plan_floor is None:
-        return (
-            "missing_plan_word_target",
-            ["Plan has no numeric word_target."],
-            ("missing_plan_word_target",),
-        )
-
-    if size_policy_mismatch:
-        signals.append("plan_review_needed")
+    if evidence_gap:
+        signals.append("evidence_gap")
         notes.append(
-            "SIZE_POLICY_MISMATCH declares exhausted grounded material; stop automatic expansion and route to plan review."
+            "An explicit unsupported-objective or evidence-gap marker requires "
+            "source research or versioned plan review, independently of length."
         )
-
     if track.lower() in SEMINAR_TRACKS and dossier_path is None:
         signals.append("missing_dossier")
         notes.append("Seminar module has no discoverable research dossier.")
-
-    if band == "sparse":
-        notes.append(
-            "Sparse classification is not permission to underbuild; require source-saturation evidence before lowering a plan."
-        )
-    if band.startswith("core_"):
-        notes.append(
-            "Core A1-C2 uses a pedagogy/evidence-packet basis; do not apply seminar dossier ceilings mechanically."
-        )
-
-    if band_max is not None and plan_floor > band_max:
-        if "plan_review_needed" not in signals:
-            signals.append("plan_review_needed")
-        notes.append(
-            "Plan floor exceeds the dossier/evidence advisory ceiling; review the plan before asking writers to expand."
-        )
-
-    if actual_words is not None:
-        if actual_words < plan_floor:
-            signals.append("below_plan_floor")
-            if "plan_review_needed" in signals:
-                notes.append(
-                    "Built module is below the current plan floor, but the plan floor already exceeds the advisory ceiling; review the plan before expanding."
-                )
-            else:
-                notes.append("Built module is below the current plan floor.")
-        elif advisory_ceiling is not None and actual_words > advisory_ceiling:
-            signals.append("over_advisory_ceiling")
-            notes.append(
-                "Built module exceeds the advisory ceiling; expansion should be justified by sourced pedagogy."
-            )
-        if actual_words >= MODULE_SIZE_BANDS["exceptional"][0]:
-            signals.append("exceptional_justification_required")
-            notes.append("Modules at 8000+ words require explicit justification.")
-
     if repetition is not None and repetition.matches:
         signals.append("repetitive_authored_prose")
         notes.append(
             f"Detected {len(repetition.matches)} actionable exact/near-duplicate authored paragraph pair(s)."
         )
-
-    priority = (
-        "missing_plan_word_target",
-        "missing_dossier",
-        "plan_review_needed",
-        "below_plan_floor",
-        "repetitive_authored_prose",
-        "exceptional_justification_required",
-        "over_advisory_ceiling",
-    )
-    status = next((signal for signal in priority if signal in signals), "advisory_ok")
-    return status, notes, tuple(dict.fromkeys(signals))
+    return next(iter(signals), "advisory_ok"), notes, tuple(signals)
 
 
 def build_record(track: str, plan_path: Path) -> SizePolicyRecord:
-    plan = read_yaml(plan_path)
+    return build_record_for_plan(track, plan_path, read_yaml(plan_path))
+
+
+def build_record_for_plan(
+    track: str, plan_path: Path, plan: Mapping[str, Any],
+    *, actual_words: int | None = None, module_text: str | None = None,
+) -> SizePolicyRecord:
+    """Report counts without turning legacy size metadata into decisions."""
     slug = str(plan.get("slug") or plan_path.stem)
     plan_floor = _as_int(plan.get("word_target"))
     plan_outline_words = _sum_outline_words(plan.get("content_outline"))
     module_path = _module_path(track, slug)
     content_metrics: MarkdownWordMetrics | None = None
     repetition: RepetitionEvidence | None = None
-    size_policy_mismatch = False
-    if module_path.exists():
-        content_metrics, repetition, size_policy_mismatch = module_content_evidence(
+    evidence_gap = False
+    if module_text is not None:
+        content_metrics, repetition, evidence_gap = markdown_module_evidence(module_text)
+    elif module_path.exists():
+        content_metrics, repetition, evidence_gap = module_content_evidence(
             module_path
         )
     actual_words = (
-        content_metrics.authored_instructional_words if content_metrics else None
+        content_metrics.authored_instructional_words if content_metrics else actual_words
     )
     dossier_path = _dossier_path(track, slug, plan)
 
     metrics = dossier_metrics(dossier_path) if dossier_path else None
-    override, override_errors = explicit_size_policy_override(plan)
+    override, _ = explicit_size_policy_override(plan)
     displayed_plan_path = display_path(plan_path) or str(plan_path)
     displayed_dossier_path = display_path(dossier_path)
     displayed_module_path = display_path(module_path) if module_path.exists() else None
@@ -1066,7 +989,7 @@ def build_record(track: str, plan_path: Path) -> SizePolicyRecord:
             override=override,
             content_metrics=content_metrics,
             repetition=repetition,
-            size_policy_mismatch=size_policy_mismatch,
+            evidence_gap=evidence_gap,
         )
 
     if metrics is not None:
@@ -1080,31 +1003,15 @@ def build_record(track: str, plan_path: Path) -> SizePolicyRecord:
         band = "sparse"
 
     band_min, band_max = band_limits(band)
-    effective_min = plan_floor
+    effective_min = None
     advisory_ceiling = None
     if plan_floor is not None:
         advisory_ceiling = max(plan_floor, band_max) if band_max is not None else None
 
     status, notes, decision_signals = _status_and_notes(
-        track=track,
-        plan_floor=plan_floor,
-        actual_words=actual_words,
-        band=band,
-        band_max=band_max,
-        advisory_ceiling=advisory_ceiling,
-        dossier_path=dossier_path,
-        repetition=repetition,
-        size_policy_mismatch=size_policy_mismatch,
+        track=track, dossier_path=dossier_path,
+        repetition=repetition, evidence_gap=evidence_gap,
     )
-    if override_errors:
-        status = "invalid_size_policy"
-        decision_signals = ("invalid_size_policy", *decision_signals)
-        notes.extend(
-            [
-                "Explicit size_policy is invalid and cannot replace generic density-band limits.",
-                *override_errors,
-            ]
-        )
 
     return SizePolicyRecord(
         track=track,
@@ -1126,7 +1033,7 @@ def build_record(track: str, plan_path: Path) -> SizePolicyRecord:
         metrics=metrics,
         content_metrics=content_metrics,
         repetition=repetition,
-        size_policy_mismatch=size_policy_mismatch,
+        evidence_gap=evidence_gap,
         legacy_raw_whitespace_words=(
             content_metrics.raw_whitespace_tokens if content_metrics else None
         ),
@@ -1248,7 +1155,7 @@ def print_summary(records: list[SizePolicyRecord]) -> None:
         print("  ".join(value.ljust(widths[index]) for index, value in enumerate(row)))
     print()
     print(
-        "Advisory only: this command reports policy pressure and returns 0; it does not change build gates."
+        "Informational counts only; evidence gaps and repetition remain review signals."
     )
 
 

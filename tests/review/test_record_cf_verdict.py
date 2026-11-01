@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -838,3 +839,198 @@ def test_recorded_round_stores_score_with_reviewer_and_author_models(scanned_rec
     ) in body
     marker = sweep.parse_marker(body)
     assert (marker["verdict"], marker["model"], marker["family"]) == ("CHANGES_REQUESTED", "gpt-6.1-sol", "openai")
+
+
+def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
+    """A quote that is not a literal substring of the frozen item does not count as coverage."""
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_bytes(render_item_packet(packet).encode())
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps(
+            {
+                "schema": "ukrainian-item-judgments.v1",
+                "items": [
+                    {
+                        "id": "card-a",
+                        "verdict": "APPROVE",
+                        "finding": "",
+                        "sources": "VESUM",
+                        "quote": "немає",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        )
+        + "\n```\n"
+    )
+    assert "немає" not in packet["items"][0]["text"]
+    write_task(
+        tasks,
+        reply=reply,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert marker["void"] == "quote-mismatch"
+    assert marker["coverage"] == []
+    assert marker["denominator"] == ["card-a", "card-b"]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_COVERAGE
+
+    hidden = reply.replace(
+        '"quote": "немає"',
+        '"finding": "Frozen input quote: \\"немає\\"."',
+    )
+    write_task(
+        tasks,
+        task_id="review-hidden",
+        reply=hidden,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-hidden", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    hidden_marker = sweep.parse_marker(comments[1]["body"])
+    assert hidden_marker["void"] == "quote-mismatch"
+    assert hidden_marker["coverage"] == []
+
+    single = reply.replace(
+        '"quote": "немає"',
+        '"finding": "Frozen input quote: \'немає\'."',
+    )
+    write_task(
+        tasks,
+        task_id="review-single",
+        reply=single,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-single", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    single_marker = sweep.parse_marker(comments[2]["body"])
+    assert single_marker["void"] == "quote-mismatch"
+    assert single_marker["coverage"] == []
+
+    apostrophe = reply.replace(
+        '"quote": "немає"',
+        '"finding": "Frozen input quote: \'м\'ясо\'."',
+    )
+    write_task(
+        tasks,
+        task_id="review-apostrophe",
+        reply=apostrophe,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-apostrophe", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    apostrophe_marker = sweep.parse_marker(comments[3]["body"])
+    assert apostrophe_marker["void"] == "quote-mismatch"
+    assert apostrophe_marker["coverage"] == []
+
+    spaces = reply.replace(
+        '"quote": "немає"',
+        '"finding": "Frozen input quote: \' \'. "',
+    )
+    write_task(
+        tasks,
+        task_id="review-spaces",
+        reply=spaces,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-spaces", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    spaces_marker = sweep.parse_marker(comments[4]["body"])
+    assert spaces_marker["void"] == "quote-mismatch"
+    assert spaces_marker["coverage"] == []
+
+
+def test_item_judgments_unknown_verdict_leaves_coverage_incomplete(monkeypatch, tmp_path):
+    """An item with verdict 'unknown' is unreviewed and does not count as coverage."""
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_bytes(render_item_packet(packet).encode())
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps(
+            {
+                "schema": "ukrainian-item-judgments.v1",
+                "items": [
+                    {
+                        "id": "card-a",
+                        "verdict": "APPROVE",
+                        "finding": "",
+                        "sources": "VESUM",
+                        "quote": "привіт",
+                    },
+                    {
+                        "id": "card-b",
+                        "verdict": "unknown",
+                        "finding": "Evidence inconclusive",
+                        "sources": "none",
+                    },
+                ],
+            },
+            ensure_ascii=False,
+        )
+        + "\n```\n"
+    )
+    write_task(
+        tasks,
+        reply=reply,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert marker["denominator"] == ["card-a", "card-b"]
+    assert marker["coverage"] == ["card-a"]
+    assert "card-b" not in marker["coverage"]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_COVERAGE
+
+
+def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
+    """Code profile rejects evidence in item judgments as reviewer bookkeeping, returning empty coverage."""
+    from scripts.review.review_contract import VOID_REVIEWER_BOOKKEEPING, build_item_packet, judge_item_reply
+
+    packet = build_item_packet([{"id": "item-1", "text": "def test(): pass"}])
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "item-1",
+                    "verdict": "APPROVE",
+                    "finding": "Looks good",
+                    "sources": "none",
+                    "quote": "def test(): pass",
+                    "evidence": [{"receipt": "rr-1", "quote": "pass"}],
+                }
+            ],
+        })
+        + "\n```\n"
+    )
+    chunk = judge_item_reply(packet, reply, stated="APPROVED", ukrainian=False)
+    assert chunk.void == VOID_REVIEWER_BOOKKEEPING
+    assert chunk.coverage == ()

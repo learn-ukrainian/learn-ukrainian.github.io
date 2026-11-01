@@ -408,6 +408,27 @@ def _setup_plan_fixture(
 
 
 # ---------------------------------------------------------------------------
+def _setup_lexical_fixture(root: Path, monkeypatch=None) -> tuple[Path, dict, str]:
+    from scripts.curriculum.evidence import sense_bindings as bindings
+
+    packet = {
+        "word": "W-001", "lemma": "synthetic", "pos": "noun",
+        "candidates": [{"table": "dmklinger_uk_en", "id": 1, "row_sha256": "b" * 64,
+                        "span_index": 0, "atom_index": 0, "span": "target", "labels": [], "definitions": []}],
+    }
+    packet["candidates_sha256"] = bindings.digest(packet["candidates"])
+    rel = "curriculum/l2-uk-en/evidence/a1/_state/fixture-module/lexical-W-001.candidates.json"
+    path = root / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(packet))
+    doc = {"lexical_schema": 1, "kind": "lexical", "level": "a1", "slug": "fixture-module", "word": "W-001",
+           "inputs": {"candidates": {"path": rel, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}}}
+    manifest_path = path.with_name("lexical-W-001.manifest.yaml")
+    manifest_path.write_text(yaml.safe_dump(doc))
+    _write_module_manifest(root, "fixture-module")
+    return manifest_path, doc, hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+
+
 # Acceptance 1: Real fixture prompt rendering & check passing
 # ---------------------------------------------------------------------------
 
@@ -1517,7 +1538,8 @@ def test_the_renderer_serves_only_the_fixed_template_set_and_records_each_templa
 
 @pytest.mark.parametrize(
     "fixture_name, template",
-    [("_setup_lesson_fixture", "lesson-review.md.j2"), ("_setup_plan_fixture", "plan-review.md.j2")],
+    [("_setup_lesson_fixture", "lesson-review.md.j2"), ("_setup_plan_fixture", "plan-review.md.j2"),
+     ("_setup_lexical_fixture", "lexical-review.md.j2")],
 )
 def test_render_prints_the_given_review_and_attempt_ids(tmp_path, monkeypatch, fixture_name, template):
     manifest_path, _doc, _ = globals()[fixture_name](tmp_path, monkeypatch)

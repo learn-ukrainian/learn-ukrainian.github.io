@@ -2,9 +2,9 @@
 
 Luna/Haiku bounded implementation can use the dispatching driver's complete
 brief, owned paths and verify command. Caller attribution is recorded, not
-authenticated. Other Luna work and non-Ukrainian Flash work still need the
-catalog advisor envelope. Both admission sources bind the exact brief,
-dispatch arguments and launch, and recheck them before execution.
+authenticated. Other Luna work still needs the catalog advisor envelope.
+Gemini 3.8 Flash High does not. Both Luna admission sources bind the exact
+brief, dispatch arguments and launch, and recheck them before execution.
 
 Threat model (advisor decision on #9275): the rule is cooperative. It stops
 omitted advice, stale or foreign bindings, accidental prompt drift and scope
@@ -42,8 +42,6 @@ provider, harness, PR opening) with what it is about to run, and with the bound
 dispatch arguments that set them, before any provider call.
 
 Completion validators check measured changes against the envelope ceilings.
-The content exemption classifies changed paths via ``exempt_change_problems``
-and refuses code changes or changes that cannot be read.
 
 This module is pure validation: it reads task records, results and the
 repository tree, and raises ``AdvisoryRefused`` with a typed code.
@@ -53,10 +51,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import re
 import shlex
-import subprocess
 import unicodedata
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -85,29 +81,6 @@ _GLOB_CHARS = frozenset("*?[")
 # Repo roots a bounded worker never owns: git metadata, dispatch worktrees,
 # interpreter and dependency trees, and delegate's own task state.
 _FORBIDDEN_ROOTS = frozenset({".git", ".worktrees", ".venv", "node_modules", "batch_state"})
-# The only roots a Ukrainian authoring or review dispatch may own and stay
-# exempt. Anything else — code roots, repo-root files, unresolvable or
-# root-level-glob paths — makes the classification contradictory (fail closed).
-_UKRAINIAN_CONTENT_ROOTS = frozenset({"curriculum", "wiki", "docs", "data", "plans"})
-# File suffixes that are code wherever they live.
-_CODE_SUFFIXES = frozenset(
-    {
-        ".py", ".pyi", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".astro", ".vue", ".svelte",
-        ".sh", ".bash", ".css", ".scss", ".html", ".sql", ".toml", ".ini", ".cfg",
-    }
-)  # fmt: skip
-# Git attributes that mark a file as code wherever it lives: a programming-language
-# diff driver, or a linguist language other than these content formats.
-_CODE_DIFF_DRIVERS = frozenset(
-    {
-        "ada", "bash", "cpp", "csharp", "css", "dts", "elixir", "fortran", "golang", "html", "java",
-        "kotlin", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "rust", "scheme",
-    }
-)  # fmt: skip
-_CONTENT_LINGUIST_LANGUAGES = frozenset({"markdown", "mdx", "yaml", "json", "text", "csv", "tsv"})
-# A glob is content-only when its last segment ends in a literal extension.
-_LITERAL_EXTENSION_RE = re.compile(r"\.([A-Za-z0-9_-]+)$")
-_GIT_TIMEOUT_S = 60
 SEAL_FIELD = "advisory_seal"
 # Harnesses an advisory_roles decision runs on: each runs the model it records, so the seal names it.
 ADVISORY_AGENTS = frozenset({"codex", "claude"})
@@ -134,6 +107,7 @@ ADVISOR_ROUTE_REFUSED = "ADVISORY_ROLE_REFUSED"
 EXECUTION_MISMATCH = "BOUNDED_EXECUTION_MISMATCH"
 CEILING_EXCEEDED = "advisory_ceiling_exceeded"
 CEILING_UNMEASURED = "advisory_ceiling_unmeasured"
+# Kept so historical task records still classify. Nothing raises them now.
 EXEMPT_CODE_CHANGE = "advisory_exempt_code_change"
 EXEMPT_CHANGES_UNMEASURED = "advisory_exempt_changes_unmeasured"
 DRIVER_BRIEF_REFUSED = "BOUNDED_DRIVER_BRIEF_REFUSED"
@@ -267,10 +241,6 @@ def seal_advisor_result(response: str, *, model: str | None, run_nonce: str | No
     }
 
 
-def _normalized(value: Any) -> str | None:
-    text = str(value).strip() if value is not None else ""
-    return text or None
-
 
 def _as_list(value: Any) -> list[str]:
     if value is None:
@@ -279,237 +249,6 @@ def _as_list(value: Any) -> list[str]:
         return [value]
     return [str(item) for item in value]
 
-
-def _path_segments(path: Any) -> list[str] | None:
-    """``path`` resolved lexically to repo-relative segments (``./``, ``..``, repeated and trailing ``/``, ``\\``).
-
-    None when it is blank, absolute, home-relative, climbs above the repository,
-    or climbs after a glob (``**`` may match any depth, so ``..`` there has no
-    lexical meaning).
-    """
-    text = str(path).strip().replace("\\", "/") if path is not None else ""
-    if not text or text.startswith(("/", "~")):
-        return None
-    segments: list[str] = []
-    for segment in text.split("/"):
-        if segment in {"", "."}:
-            continue
-        if segment == "..":
-            if not segments or any(_GLOB_CHARS & set(kept) for kept in segments):
-                return None
-            segments.pop()
-            continue
-        segments.append(segment)
-    return segments or None
-
-
-def _git(repo_root: Path, *args: str, stdin: bytes | None = None) -> bytes:
-    """``git --literal-pathspecs <args>`` in ``repo_root``; raises ``RuntimeError`` when it fails."""
-    try:
-        proc = subprocess.run(
-            ["git", "--literal-pathspecs", *args],
-            cwd=repo_root,
-            input=stdin,
-            capture_output=True,
-            check=False,
-            timeout=_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.SubprocessError) as exc:
-        raise RuntimeError(f"git {args[0]}: {exc}") from None
-    if proc.returncode != 0:
-        detail = proc.stderr.decode("utf-8", "replace").strip() or f"exit {proc.returncode}"
-        raise RuntimeError(f"git {args[0]}: {detail}")
-    return proc.stdout
-
-
-def _tracked_entries(repo_root: Path, base: str) -> dict[str, str]:
-    """``path -> git file mode`` for every file git tracks at or under ``base``, sparse or not."""
-    entries: dict[str, str] = {}
-    for record in _git(repo_root, "ls-files", "-s", "-z", "--", base).split(b"\0"):
-        if record:
-            meta, _, path = record.partition(b"\t")
-            entries[path.decode("utf-8", "surrogateescape")] = meta.split()[0].decode("ascii")
-    return entries
-
-
-def _content_root_of(resolved: Path, root: Path) -> str | None:
-    """The Ukrainian content root a resolved path lies under, or None."""
-    try:
-        parts = resolved.relative_to(root).parts
-    except ValueError:
-        return None
-    return parts[0] if parts and parts[0] in _UKRAINIAN_CONTENT_ROOTS else None
-
-
-def _disk_files(repo_root: Path, base: str) -> tuple[list[str], str | None]:
-    """Files on disk at or under ``base``, following symlinked directories, and the first directory outside content.
-
-    The walk stops at a directory whose real path leaves the Ukrainian content
-    roots (returned second), so a symlink out of content is never walked.
-    """
-    root = repo_root.resolve()
-    top = repo_root / base
-    if not top.is_dir():
-        return ([base] if top.exists() or top.is_symlink() else []), None
-    files: list[str] = []
-    seen: set[str] = set()
-    for directory, subdirs, names in os.walk(top, followlinks=True):
-        rel_dir = Path(directory).relative_to(repo_root).as_posix()
-        real = Path(os.path.realpath(directory))
-        if _content_root_of(real, root) is None:
-            return files, rel_dir
-        if str(real) in seen:
-            subdirs[:] = []
-            continue
-        seen.add(str(real))
-        subdirs.sort()
-        files.extend(f"{rel_dir}/{name}" for name in sorted(names))
-    return files, None
-
-
-def _code_by_attributes(repo_root: Path, files: Sequence[str]) -> list[str]:
-    """Files that git attributes mark as code (a code diff driver or a non-content linguist language)."""
-    if not files:
-        return []
-    stdin = b"".join(name.encode("utf-8", "surrogateescape") + b"\0" for name in files)
-    fields = _git(repo_root, "check-attr", "-z", "--stdin", "diff", "linguist-language", stdin=stdin).split(b"\0")
-    code: set[str] = set()
-    for index in range(0, len(fields) - 2, 3):
-        name, attribute, value = (field.decode("utf-8", "surrogateescape") for field in fields[index : index + 3])
-        value = value.casefold()
-        if value in {"unspecified", "unset", "set"}:
-            continue
-        if (attribute == "diff" and value in _CODE_DIFF_DRIVERS) or (
-            attribute == "linguist-language" and value not in _CONTENT_LINGUIST_LANGUAGES
-        ):
-            code.add(name)
-    return sorted(code)
-
-
-def _non_content_files(repo_root: Path, files: Sequence[str], *, symlinks: Iterable[str] = ()) -> list[tuple[str, str]]:
-    """``(file, reason)`` for each of ``files`` that is not Ukrainian content, judged by the file and its target.
-
-    A file is not content when it is a symlink that does not resolve
-    (``symlinks`` names those git tracks as links, sparse or not), its resolved
-    target leaves the content roots, the file or its resolved target has a code
-    extension, or git attributes mark the file or its resolved target as code.
-    Raises ``RuntimeError`` when git attributes cannot be read.
-    """
-    root = repo_root.resolve()
-    links = set(symlinks)
-    problems: dict[str, str] = {}
-    queried: dict[str, list[str]] = {}  # path whose attributes are read -> the files it classifies
-    for rel in files:
-        target = repo_root / rel
-        queried.setdefault(rel, []).append(rel)
-        if (rel in links or target.is_symlink()) and not target.exists():
-            problems[rel] = "is a symlink that cannot be resolved in this tree"
-            continue
-        resolved = target.resolve()
-        if PurePosixPath(rel).suffix.lower() in _CODE_SUFFIXES or resolved.suffix.lower() in _CODE_SUFFIXES:
-            problems[rel] = "is a code file"
-            continue
-        if _content_root_of(resolved, root) is None:
-            problems[rel] = "resolves outside the Ukrainian content roots"
-            continue
-        resolved_rel = resolved.relative_to(root).as_posix()
-        if resolved_rel != rel:
-            queried.setdefault(resolved_rel, []).append(rel)
-    for code_path in _code_by_attributes(repo_root, sorted(queried)):
-        for rel in queried[code_path]:
-            via = "" if code_path == rel else f" (its target {code_path!r})"
-            problems.setdefault(rel, f"git attributes mark as code{via}")
-    return sorted(problems.items())
-
-
-def content_path_problem(path: Any, repo_root: Path) -> str | None:
-    """Why ``path`` is not Ukrainian content only in ``repo_root``; None when every file it can match is.
-
-    The path is normalized first (``././scripts``, ``curriculum/../scripts`` and
-    ``scripts/`` classify like ``scripts``) and must start inside a Ukrainian
-    content root. A glob must pin a literal non-code extension in its last
-    segment and use no character class, so ``docs/**/*.p[y]``, ``docs/**/*.p?``
-    and ``docs/**/*`` are code-capable. Then every file the path owns, as
-    dispatch ownership reads it (``owned_path_matcher``), is enumerated from
-    git's index and from disk, symlinks followed: each must resolve under a
-    content root, and neither it nor its resolved target may be code by
-    extension or by git attributes (``_non_content_files``). A directory is
-    judged by the files it holds now; files a worker adds later are judged by
-    the completion gate (``exempt_change_problems``). An unreadable tree is a
-    problem (fail closed).
-    """
-    from scripts.guardrails.delegate_ownership import owned_path_matcher
-
-    segments = _path_segments(path)
-    if segments is None:
-        return "is not a repository-relative path inside the repository"
-    if segments[-1] == "**" and len(segments) > 1:
-        segments = segments[:-1]  # ``dir/**`` owns the subtree, exactly as ``dir/`` does
-    static: list[str] = []
-    for segment in segments:
-        if _GLOB_CHARS & set(segment):
-            break
-        static.append(segment)
-    if not static or static[0] not in _UKRAINIAN_CONTENT_ROOTS:
-        return "is outside the Ukrainian content roots"
-    if PurePosixPath(segments[-1]).suffix.lower() in _CODE_SUFFIXES:
-        return "names a code file"
-    normalized = "/".join(segments)
-    if len(static) < len(segments):
-        if "[" in normalized:
-            return "uses a character class, which can match a code file"
-        extension = _LITERAL_EXTENSION_RE.search(segments[-1])
-        if extension is None or f".{extension.group(1).lower()}" in _CODE_SUFFIXES:
-            return "is a glob without a literal non-code extension, which can match a code file"
-    matcher = owned_path_matcher(normalized)
-    if matcher is None:
-        return "owns no file"
-    root = repo_root.resolve()
-    base = "/".join(static)
-    if _content_root_of((repo_root / base).resolve(), root) is None:
-        return f"resolves outside the Ukrainian content roots ({base!r})"
-    try:
-        tracked = _tracked_entries(repo_root, base)
-        on_disk, outside = _disk_files(repo_root, base)
-    except (OSError, RuntimeError) as exc:
-        return f"cannot be resolved in {repo_root} ({exc})"
-    if outside is not None:
-        return f"reaches directory {outside!r}, which resolves outside the Ukrainian content roots"
-    files = sorted(rel for rel in {*tracked, *on_disk} if matcher(rel))
-    try:
-        problems = _non_content_files(
-            repo_root, files, symlinks={rel for rel, mode in tracked.items() if mode == "120000"}
-        )
-    except RuntimeError as exc:
-        return f"cannot be checked for code attributes in {repo_root} ({exc})"
-    if problems:
-        rel, reason = problems[0]
-        return f"covers {rel!r}, which {reason}"
-    return None
-
-
-def exempt_change_problems(paths: Iterable[str], repo_root: Path) -> list[str]:
-    """Why each path a content-exempt worker changed is not Ukrainian content; empty when every one is.
-
-    The completion gate of a Ukrainian exemption: admission classifies the
-    files an owned directory or glob holds then, not the ones a worker adds
-    later. A changed path fails when it lies outside the content roots, is a
-    ``.gitattributes`` file, or is not content as ``_non_content_files``
-    judges it (resolved through symlinks). Deleted paths are judged by name.
-    Raises ``RuntimeError`` when git attributes cannot be read.
-    """
-    problems: list[str] = []
-    content: list[str] = []
-    for rel in sorted({str(path) for path in paths}):
-        segments = _path_segments(rel)
-        if segments is None or segments[0] not in _UKRAINIAN_CONTENT_ROOTS:
-            problems.append(f"{rel!r}, which is outside the Ukrainian content roots")
-        elif segments[-1] == ".gitattributes":
-            problems.append(f"{rel!r}, which changes git attributes")
-        else:
-            content.append(rel)
-    problems.extend(f"{rel!r}, which {reason}" for rel, reason in _non_content_files(repo_root, content))
-    return problems
 
 
 def bounded_requirement(
@@ -525,18 +264,14 @@ def bounded_requirement(
     """Why this launch needs an advisory envelope, or None when it does not.
 
     ``model_id`` is the canonical catalog id of the model the admitted route
-    launches, after aliases, ``--force-agent`` and any substitution. Every
-    bounded-worker dispatch needs one unless admitted with a driver brief. A Gemini Flash dispatch is the bounded
-    fallback unless it is explicitly classified non-bounded. A read-only
-    ``--review-profile ukrainian`` dispatch (a review of record) is exempt
-    whatever its task family and paths: read-only mode writes nothing, and the
-    other review seat covers the code. Otherwise a Ukrainian authoring or review
-    task family exempts it when nothing contradicts that; missing or conflicting
-    classification counts as bounded (fail closed). The family exemption, or a
-    ``--review-profile ukrainian`` outside read-only mode, owning a path that is
-    not Ukrainian content only in ``repo_root`` (``content_path_problem``)
-    conflicts.
+    launches, after aliases, ``--force-agent`` and any substitution. The
+    preferred bounded worker needs an envelope unless a driver brief admits it.
+    Gemini 3.8 Flash High is a general worker and never needs one. ``mode``,
+    ``review_profile``, ``owned_paths`` and ``repo_root`` stay in the signature
+    because dispatch classifies every launch with them; they do not select an
+    envelope.
     """
+    del mode, review_profile, owned_paths, repo_root
     policy = policy or bounded_execution_policy()
     if model_id is None:
         return None
@@ -544,40 +279,7 @@ def bounded_requirement(
         model_id in driver_brief_models() and task_family in {"bounded_implementation", "readonly_recon", "mechanical_classification"}
     ):
         return f"{model_id} is the bounded worker"
-    if model_id != policy.bounded_fallback_model_id:
-        return None
-    if review_profile == "ukrainian" and mode == "read-only":
-        return None
-    family = _normalized(task_family)
-    ukrainian_family = family in policy.non_bounded_task_families
-    conflicts: list[str] = []
-    if ukrainian_family and review_profile == "code":
-        conflicts.append(f"task family {family!r} with --review-profile code")
-    if review_profile == "ukrainian" and family is not None and not ukrainian_family:
-        conflicts.append(f"--review-profile ukrainian with non-Ukrainian task family {family!r}")
-    if ukrainian_family or review_profile == "ukrainian":
-        problems = sorted(
-            f"{path!r} {problem}"
-            for path in {str(path) for path in owned_paths}
-            if (problem := content_path_problem(path, repo_root)) is not None
-        )
-        if problems:
-            claim = f"task family {family!r}" if ukrainian_family else "--review-profile ukrainian"
-            conflicts.append(f"{claim} owning code or non-content paths ({'; '.join(problems)})")
-    if conflicts:
-        return f"{model_id} with an ambiguous classification ({'; '.join(conflicts)}) is the bounded fallback"
-    if ukrainian_family:
-        return None
-    if review_profile == "ukrainian":
-        return (
-            f"{model_id} in {mode} mode with --review-profile ukrainian but no Ukrainian authoring/review "
-            "task family is the bounded fallback"
-        )
-    return (
-        f"{model_id} without a Ukrainian authoring/review classification "
-        f"(--research-task-family one of {sorted(policy.non_bounded_task_families)}, or read-only "
-        "--review-profile ukrainian) is the bounded fallback"
-    )
+    return None
 
 
 def validate_owned_path(path: Any, repo_root: Path) -> str:
@@ -960,43 +662,6 @@ def _require_digest(admitted: Mapping[str, Any], field: str) -> str:
     return value
 
 
-def _verify_exemption(
-    record: Mapping[str, Any],
-    exemption: Mapping[str, Any],
-    *,
-    model_id: str,
-    mode: str,
-    repo_root: Path,
-    policy: BoundedExecutionPolicy,
-) -> None:
-    """The recorded Ukrainian exemption still classifies this launch as non-bounded in ``repo_root``."""
-    classified = exemption.get("classified_paths")
-    if not isinstance(classified, list) or not all(isinstance(path, str) for path in classified):
-        raise AdvisoryRefused(ADMISSION_INVALID, "the recorded exemption has no classified path list")
-    owned = record.get("owned_paths") or []
-    if (
-        exemption.get("model_id") != model_id
-        or exemption.get("mode") != mode
-        or exemption.get("review_profile") != record.get("review_profile")
-        or not isinstance(owned, list)
-        or not set(map(str, owned)) <= set(classified)
-    ):
-        raise AdvisoryRefused(
-            ADMISSION_INVALID, "the recorded exemption does not describe this task's model, mode, profile or paths"
-        )
-    requirement = bounded_requirement(
-        model_id,
-        mode=mode,
-        task_family=exemption.get("task_family"),
-        review_profile=exemption.get("review_profile"),
-        owned_paths=classified,
-        repo_root=repo_root,
-        policy=policy,
-    )
-    if requirement is not None:
-        raise AdvisoryRefused(ENVELOPE_REQUIRED, f"{requirement}; the recorded exemption does not hold")
-
-
 # Stands in for the brief when the dispatcher blocks around it are rebuilt; a
 # NUL byte never occurs in a dispatcher block.
 _BRIEF_PLACEHOLDER = "\0bounded-advisory-brief\0"
@@ -1152,9 +817,6 @@ def verify_worker_admission(
     paths), and ``prompt`` is the envelope-bound brief
     inside exactly the blocks ``compose_prompt(brief, envelope, args)``
     rebuilds. The record's own prompt digests are never trusted for that.
-    A Gemini Flash launch runs either with such an admission or with a
-    recorded Ukrainian exemption that still classifies as non-bounded in
-    ``cwd``.
 
     ``execution`` holds the remaining ``EXECUTION_FIELDS`` values the worker
     is about to run (effort, timeouts, budget, provider, harness, PR opening).
@@ -1167,7 +829,7 @@ def verify_worker_admission(
     if set(actual) != set(EXECUTION_FIELDS):
         raise ValueError(f"agent, model_id, mode, cwd and execution must give exactly {list(EXECUTION_FIELDS)}")
     direct_models = driver_brief_models()
-    if model_id not in {*direct_models, policy.bounded_fallback_model_id}:
+    if model_id not in direct_models:
         return None
     if model_id in direct_models - {policy.bounded_worker_model_id} and mode not in {"read-only", "workspace-write"}:
         raise AdvisoryRefused(ADMISSION_INVALID, "mechanical-only seats cannot bypass the workspace sandbox")
@@ -1204,11 +866,6 @@ def verify_worker_admission(
             prompt, prompt_sha256=prompt_sha256, compose=lambda brief: compose_prompt(brief, None, args)
         )
     admitted = record.get("advisory_envelope")
-    if admitted is None and model_id == policy.bounded_fallback_model_id:
-        exemption = record.get("advisory_exemption")
-        if isinstance(exemption, dict):
-            _verify_exemption(record, exemption, model_id=model_id, mode=mode, repo_root=cwd, policy=policy)
-            return None
     if not isinstance(admitted, dict):
         raise AdvisoryRefused(
             ADMISSION_MISSING, f"{model_id} is a bounded model and its task record carries no advisory admission"

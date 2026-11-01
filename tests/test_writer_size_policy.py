@@ -39,7 +39,7 @@ def _write_dossier(root: Path, track: str, slug: str, words: int) -> None:
     )
 
 
-def test_size_policy_blocks_auto_expansion_when_plan_floor_exceeds_sparse_ceiling(
+def test_size_policy_never_authorizes_expansion_from_counts(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -55,13 +55,14 @@ def test_size_policy_blocks_auto_expansion_when_plan_floor_exceeds_sparse_ceilin
 
     record = build_size_policy_for_plan(plan, actual_words=5500)
 
-    assert record.status == "plan_review_needed"
+    assert record.status == "advisory_ok"
     assert size_policy_allows_auto_expansion(record) is False
     block = render_writer_size_policy(record)
-    assert "Expansion permission: plan_policy_review_required" in block
+    assert "neither reward nor penalize word counts" in block
+    assert record.decision_signals == ()
 
 
-def test_reviewed_size_policy_override_allows_expansion_below_generic_track_floor(
+def test_reviewed_size_policy_override_is_descriptive_only(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -85,14 +86,14 @@ def test_reviewed_size_policy_override_allows_expansion_below_generic_track_floo
 
     record = build_size_policy_for_plan(plan, actual_words=4300)
 
-    assert record.status == "explicit_override"
+    assert record.status == "advisory_ok"
     assert record.advisory_ceiling == 4800
     assert record.metrics is not None
-    assert size_policy_allows_auto_expansion(record) is True
-    assert "Review basis:" in render_writer_size_policy(record)
+    assert size_policy_allows_auto_expansion(record) is False
+    assert "Plan floor words:" not in render_writer_size_policy(record)
 
 
-def test_invalid_size_policy_override_blocks_writer_expansion(
+def test_invalid_size_policy_metadata_does_not_become_a_finding(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -112,16 +113,18 @@ def test_invalid_size_policy_override_blocks_writer_expansion(
         },
     }
 
+    _write_dossier(tmp_path, "bio", "unreviewed-person", 900)
     record = build_size_policy_for_plan(plan, actual_words=2100)
 
-    assert record.status == "invalid_size_policy"
+    assert record.status == "advisory_ok"
+    assert record.decision_signals == ()
     assert size_policy_allows_auto_expansion(record) is False
     block = render_writer_size_policy(record)
-    assert "Expansion permission: blocked_until_size_policy_is_valid" in block
-    assert "must equal word_target" in block
+    assert "neither reward nor penalize word counts" in block
+    assert "must equal word_target" not in block
 
 
-def test_writer_length_precheck_returns_policy_mismatch_without_invoking_writer(
+def test_legacy_writer_precheck_cannot_get_expansion_permission_from_counts(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -146,7 +149,7 @@ def test_writer_length_precheck_returns_policy_mismatch_without_invoking_writer(
     events: list[dict] = []
 
     def fail_if_invoked(*_args, **_kwargs):
-        raise AssertionError("writer should not be invoked when size policy blocks expansion")
+        raise AssertionError("writer must not auto-expand from word counts")
 
     result = linear_pipeline.run_writer_draft_length_precheck(
         plan=plan,
@@ -158,22 +161,20 @@ def test_writer_length_precheck_returns_policy_mismatch_without_invoking_writer(
     )
 
     assert result["applied"] is False
-    assert result["patch_status"] == "policy_mismatch"
-    assert result["policy_mismatch"] is True
-    assert result["size_policy"]["status"] == "plan_review_needed"
+    assert result["patch_status"] == "informational"
+    assert result["outcomes"] == []
+    assert result["before"]["passed"] is True
+    assert result["size_policy"]["status"] == "advisory_ok"
     assert events == [
         {
             "event": "writer_draft_length_precheck",
-            "status": "policy_mismatch",
+            "status": "informational",
             "count": 5501,
-            "target": 6000,
-            "short_section_count": 0,
-            "size_policy_status": "plan_review_needed",
         }
     ]
 
 
-def test_writer_precheck_honors_embedded_mismatch_marker_without_invocation(
+def test_writer_precheck_honors_explicit_evidence_gap_without_invocation(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -188,7 +189,7 @@ def test_writer_precheck_honors_embedded_mismatch_marker_without_invocation(
     module_dir = tmp_path / "module"
     module_dir.mkdir()
     (module_dir / "module.md").write_text(
-        "<!-- SIZE_POLICY_MISMATCH: plan floor exceeds sourced evidence -->\n"
+        "<!-- EVIDENCE_GAP: objective=explain the concept; missing evidence=source support -->\n"
         "# Огляд\n\n"
         + " ".join(["слово"] * 50),
         encoding="utf-8",
@@ -197,7 +198,7 @@ def test_writer_precheck_honors_embedded_mismatch_marker_without_invocation(
     plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), encoding="utf-8")
 
     def fail_if_invoked(*_args, **_kwargs):
-        raise AssertionError("writer must not auto-expand a mismatch-marked draft")
+        raise AssertionError("writer must not auto-expand a draft with an evidence gap")
 
     result = linear_pipeline.run_writer_draft_length_precheck(
         plan=plan,
@@ -208,10 +209,13 @@ def test_writer_precheck_honors_embedded_mismatch_marker_without_invocation(
     )
 
     assert result["applied"] is False
-    assert result["patch_status"] == "policy_mismatch"
-    assert result["policy_mismatch"] is True
-    assert result["size_policy"]["size_policy_mismatch"] is True
-    assert result["size_policy"]["decision_signals"] == (
-        "plan_review_needed",
-        "below_plan_floor",
-    )
+    assert result["patch_status"] == "informational"
+    assert result["before"]["passed"] is False
+    assert {
+        "outcome": "EVIDENCE_GAP",
+        "detail": "objective=explain the concept; missing evidence=source support",
+        "route": "source_research_or_versioned_plan_review",
+    } in result["outcomes"]
+    assert result["size_policy"]["evidence_gap"] is True
+    assert result["size_policy"]["status"] == "evidence_gap"
+    assert result["size_policy"]["decision_signals"] == ("evidence_gap",)

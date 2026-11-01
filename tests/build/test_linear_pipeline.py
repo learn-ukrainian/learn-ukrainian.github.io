@@ -62,7 +62,7 @@ def _module_with_sections(context: str, poetics: str) -> str:
     return f"# Sample\n\n## Context\n\n{context}\n\n## Poetics\n\n{poetics}\n"
 
 
-def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path: Path) -> None:
+def test_writer_draft_length_precheck_never_expands_from_a_short_count(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()
     initial = _module_with_sections(
@@ -71,22 +71,11 @@ def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path:
     )
     (module_dir / "module.md").write_text(initial, encoding="utf-8")
     plan_path = tmp_path / "plan.yaml"
-    # Core track (not folk/seminar): the size-policy dossier gate added in
-    # ff0b647667 only blocks auto-expansion for SEMINAR_TRACKS without a
-    # discoverable research dossier. This test targets the generic
-    # short-draft-triggers-a-reprompt mechanism, which the dedicated
-    # tests/test_writer_size_policy.py suite already covers for dossier-gated
-    # tracks.
+    # A short draft never invokes the writer or produces a length failure.
     plan_path.write_text("level: a1\nsequence: 1\nslug: sample\n", encoding="utf-8")
-    prompts: list[str] = []
 
     def corrector(context: linear_pipeline.CorrectionContext) -> str:
-        prompts.append(context.prompt)
-        patched = _module_with_sections(
-            "one two three four five six seven eight",
-            "three four five six seven eight nine ten",
-        )
-        return f"```markdown file=module.md\n{patched}```"
+        raise AssertionError("a word shortfall must not invoke the writer")
 
     result = linear_pipeline.run_writer_draft_length_precheck(
         plan={**_length_plan(word_target=16), "level": "a1"},
@@ -95,11 +84,13 @@ def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path:
         writer_corrector=corrector,
     )
 
-    assert result["applied"] is True
-    assert result["patch_status"] == "module_patch"
-    assert "Context: 6 words short of 8" in prompts[0]
-    assert "Keep ALL existing content" in prompts[0]
-    assert result["after"]["passed"] is True
+    assert result["applied"] is False
+    assert result["patch_status"] == "informational"
+    assert result["outcomes"] == []
+    assert result["before"]["passed"] is True
+    assert result["after"] == result["before"]
+    assert result["size_policy"]["status"] == "advisory_ok"
+    assert (module_dir / "module.md").read_text(encoding="utf-8") == initial
 
 
 def test_writer_draft_length_precheck_skips_when_at_or_over_target(tmp_path: Path) -> None:
@@ -3493,45 +3484,11 @@ def test_contract_yaml_handles_list_shape_vocabulary_hints() -> None:
     assert "ремарка" in out
 
 
-# ---------------------------------------------------------------------------
-# Gate relaxations (2026-05-23) — user-direction enforcement
-# ---------------------------------------------------------------------------
-#
-# Two surgical relaxations were applied to the `plan_sections` and
-# `vesum_verified` gates after the 2026-05-21 a1/my-morning build #13
-# terminal cascade exposed two structural false-positive patterns:
-#
-# 1. `plan_sections` failed on per-section min/max bounds when the writer's
-#    word_count correction rebalanced total but left one section ~5% short.
-#    User direction: "the section wordcount is a guidance for the writer,
-#    it is not a reason to drop an error. The important is that the whole
-#    content is a whole and not less than the planned word count."
-#
-# 2. `vesum_verified` failed on legitimate hyphenated multi-word
-#    constructions like `літера-в-літеру` ("letter by letter") which VESUM
-#    only indexes by single lemma. User direction: "there are many of these
-#    kind of constructions in the Ukrainian language, do not drop [an]
-#    error if VESUM is not supporting it but we need to be able to check
-#    if they are correct with another tool."
-#
-# The tests below pin those relaxations against regression.
+# Section presence and Ukrainian verification remain independent of length.
 
 
 def test_section_gate_passes_when_section_below_min_but_present() -> None:
-    """Per-section under-min does NOT fail the gate (advisory only).
-
-    Reflects user direction 2026-05-23: per-section word counts are
-    GUIDANCE for the writer, not a build-fail trigger. The gate-level
-    `passed` reflects only missing headings. Per-section budgets are
-    retained as diagnostics so the writer correction prompt can use them
-    for targeting guidance, but they do NOT halt the build.
-
-    The 2026-05-21 a1/my-morning build #13 cascade — where the writer's
-    word_count r1 correction landed total at 1200 but left Діалоги
-    (257/270 = 95%) and Мій ранок (265/270 = 98%) under their per-section
-    min while Підсумок overshot, triggering terminal halt — is the
-    canonical failure pattern this relaxation prevents.
-    """
+    """Present sections never fail or steer corrections on a word budget."""
     plan = {
         "content_outline": [
             {"section": "Діалоги", "words": 300, "points": ["p1"]},
@@ -3549,23 +3506,19 @@ def test_section_gate_passes_when_section_below_min_but_present() -> None:
     )
     report = linear_pipeline._section_gate(text, plan)
     assert report["passed"] is True, (
-        "Per-section under-min must not fail the gate per user direction "
-        "2026-05-23"
+        "Section counts must not steer or fail the module"
     )
-    # Diagnostic budgets still reflect the per-section state.
-    budgets = {item["section"]: item for item in report["word_budgets"]}
-    assert budgets["Діалоги"]["under_min"] is True
-    assert budgets["Діалоги"]["passed"] is False  # per-section advisory marker
-    assert budgets["Підсумок"]["over_max"] is True
-    assert budgets["Підсумок"]["under_min"] is False
+    assert report["word_budgets"] == [
+        {"section": "Діалоги", "count": 50},
+        {"section": "Підсумок", "count": 500},
+    ]
+    assert report["outcomes"] == []
 
 
 def test_section_gate_fails_on_missing_heading() -> None:
     """A contracted section absent from module.md still fails the gate.
 
-    Missing headings remain a hard fail — the writer must emit every
-    section the plan contracted for. Only per-section word counts were
-    relaxed by the 2026-05-23 change.
+    Missing headings still expose untaught plan sections independently of length.
     """
     plan = {
         "content_outline": [

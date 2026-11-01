@@ -208,7 +208,7 @@ def test_role_reference_with_missing_holder_is_lint_error(tmp_path: Path):
     issues = lint_fleet_roster(catalog_path=catalog)
     assert len(issues) == 1
     assert issues[0].kind == "authority"
-    assert "orchestrator_seats.claude.model_id: cannot resolve role reference" in issues[0].message
+    assert "orchestrator_seats.agy.model_id: cannot resolve role reference" in issues[0].message
     assert "missing-holder" in issues[0].message
 
 

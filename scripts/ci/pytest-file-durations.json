@@ -178,7 +178,6 @@
   "tests/audit/test_bio_lit_cross_reference.py": 0.185,
   "tests/audit/test_bio_readiness_ledger.py": 1.805,
   "tests/audit/test_certify_module.py": 0.868,
-  "tests/audit/test_check_dossier_wordcount.py": 0.419,
   "tests/audit/test_check_mdx_source_parity.py": 1.883,
   "tests/audit/test_check_module_continuity.py": 0.275,
   "tests/audit/test_check_tmp_usability.py": 0.329,

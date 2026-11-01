@@ -1,16 +1,12 @@
 """#9275 envelope integrity and #10919 driver-brief admission and replay.
 
-Outside #10919 recon/classification and bounded implementation, every ``gpt-6-luna`` dispatch and every Gemini
-Flash dispatch without an explicit Ukrainian authoring/review classification,
-needs an envelope issued by a finished ``gpt-6.1-sol`` advisory task and bound
-to this dispatch's arguments. Test names carry the frozen acceptance-matrix row
-(M1–M18) they prove.
+Outside #10919 recon/classification and bounded implementation, every ``gpt-6-luna``
+dispatch needs an envelope issued by a finished ``gpt-6.1-sol`` advisory task and
+bound to this dispatch's arguments. Gemini 3.8 Flash High does not (#12291).
 """
 
 from __future__ import annotations
 
-import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -54,9 +50,6 @@ from scripts.agent_runtime import bounded_advisory
 # --- M9 -------------------------------------------------------------------
 
 
-# --- M10 / M15 / M16 / M17: the Gemini Flash bounded fallback ---------------
-
-
 # --- M11 / M18: admitted Gemini Flash dispatches ---------------------------
 
 
@@ -67,10 +60,6 @@ from scripts.agent_runtime import bounded_advisory
 
 
 # --- M12 / M13 at finalize: the envelope ceilings ------------------------------
-
-
-def _git(*args: str, cwd: Path) -> None:
-    subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, timeout=30)
 
 
 # The launch a worker admitted by ``_admitted_worker`` runs: what ``_start_worker`` passes.
@@ -103,76 +92,6 @@ def test_numstat_parser_and_test_path_classifier():
 
 
 # --- Round 2: B2 classification of normalized owned paths ------------------------
-
-
-@pytest.fixture
-def content_repo(tmp_path, monkeypatch):
-    """A git repository with Ukrainian content, code, and symlinks and attributes that cross between them."""
-    for key in tuple(os.environ):
-        if key.startswith("GIT_"):
-            monkeypatch.delenv(key, raising=False)
-    repo = tmp_path / "repo"
-    (repo / "scripts").mkdir(parents=True)
-    (repo / "scripts" / "gate.py").write_text("ALLOW = False\n")
-    (repo / "docs" / "lessons").mkdir(parents=True)
-    (repo / "docs" / "lessons" / "one.md").write_text("# Урок\n")
-    (repo / "docs" / "linked-code").symlink_to("../scripts", target_is_directory=True)
-    (repo / "docs" / "lessons" / "notes.md").symlink_to("../../scripts/gate.py")
-    (repo / "docs" / "empty-link").symlink_to("../scripts/none", target_is_directory=True)
-    (repo / "docs" / "attributed").mkdir()
-    (repo / "docs" / "attributed" / "runner.txt").write_text("print('x')\n")
-    (repo / "docs" / "attributed" / "readme.txt").write_text("text\n")
-    (repo / "docs" / "aliased").mkdir()
-    (repo / "docs" / "aliased" / "lesson.md").symlink_to("../attributed/runner.txt")
-    (repo / ".gitattributes").write_text("docs/attributed/runner.txt diff=python\n")
-    _git("init", "--initial-branch=main", str(repo), cwd=tmp_path)
-    _git("add", "-A", cwd=repo)
-    _git("-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-m", "base", cwd=repo)
-    return repo
-
-
-@pytest.mark.parametrize(
-    ("path", "reason"),
-    [
-        ("docs/linked-code/", "outside the Ukrainian content roots"),
-        ("docs/linked-code/gate.py", "names a code file"),
-        ("docs/lessons/", "covers 'docs/lessons/notes.md', which is a code file"),
-        ("docs/lessons/notes.md", "outside the Ukrainian content roots"),
-        ("docs/**/*.md", "reaches directory 'docs/linked-code'"),
-        ("docs/empty-link", "outside the Ukrainian content roots"),
-        ("docs/attributed/", "git attributes mark as code"),
-        ("docs/attributed/runner.txt", "git attributes mark as code"),
-        ("docs/aliased/lesson.md", "git attributes mark as code (its target 'docs/attributed/runner.txt')"),
-        ("docs/aliased/", "git attributes mark as code (its target 'docs/attributed/runner.txt')"),
-        ("docs/aliased/*.md", "git attributes mark as code (its target 'docs/attributed/runner.txt')"),
-    ],
-)
-def test_b2_symlinks_into_code_and_code_attributes_are_not_content(content_repo, path, reason):
-    """Acceptance 5: ownership is judged by resolved files, symlinks followed, and by git attributes."""
-    problem = bounded_advisory.content_path_problem(path, content_repo)
-    assert problem is not None and reason in problem, problem
-
-
-@pytest.mark.parametrize("path", ["docs/lessons/one.md", "docs/attributed/readme.txt", "docs/new-lessons/"])
-def test_b2_content_only_files_beside_the_probes_stay_eligible(content_repo, path):
-    assert bounded_advisory.content_path_problem(path, content_repo) is None
-
-
-@pytest.mark.parametrize("inside_git_dir", [False, True], ids=["plain", "git-dir"])
-def test_b2_an_unreadable_tree_fails_closed(tmp_path, monkeypatch, inside_git_dir):
-    for key in tuple(os.environ):
-        if key.startswith("GIT_"):
-            monkeypatch.delenv(key, raising=False)
-    root = tmp_path
-    if inside_git_dir:
-        enclosing = tmp_path / "enclosing"
-        _git("init", "--initial-branch=main", str(enclosing), cwd=tmp_path)
-        root = enclosing / ".git" / "unreadable"
-    (root / "docs").mkdir(parents=True)
-    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(root.parent))
-    problem = bounded_advisory.content_path_problem("docs/", root)
-    assert problem is not None and "cannot be resolved" in problem
-    assert "not a git repository" in problem
 
 
 # --- Round 2: B3 the finish-time seal --------------------------------------------

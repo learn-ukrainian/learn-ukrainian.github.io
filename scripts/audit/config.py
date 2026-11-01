@@ -216,7 +216,6 @@ VESUM_MIN_WORD_LENGTH = 3
 # read-only view derived from there so existing AUDIT_THRESHOLDS[...] call
 # sites keep working without duplicating numbers.
 AUDIT_THRESHOLDS = {
-    "word_count_fail_pct": 12,  # FAIL if more than this % below target
     "immersion_tolerance_pct": 3,  # ±% tolerance before FAIL
     "naturalness_min_score": {
         **{level: thr.naturalness_min for level, thr in LEVEL_THRESHOLDS.items()},
@@ -1381,6 +1380,8 @@ EXCLUDE_KEYWORDS = ["activities", "activity", "production", "vocabulary", "check
 #     ``TOTAL_TARGET`` / plan ``activity_hints`` — those drive the writer.
 #     Per-level audit floors can be raised in future units once we know they
 #     match field reality on existing passing modules.
+# Legacy target_words entries remain for external callers of get_word_target.
+# get_level_config excludes them from active audit requirements.
 LEVEL_CONFIG = {
     "A1": {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (1200).
@@ -2776,8 +2777,8 @@ def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
     return shared_get_immersion_range("b1", module_num)
 
 
-def get_level_config(level_code: str, module_focus: str | None = None) -> dict:
-    """Get configuration for a specific level, optionally with focus."""
+def _legacy_level_config(level_code: str, module_focus: str | None = None) -> dict:
+    """Resolve the legacy table, including sizing data used by external callers."""
     resolved = base_level(level_code)
     if resolved != level_code.lower():
         level_code = resolved.upper()
@@ -2794,7 +2795,13 @@ def get_level_config(level_code: str, module_focus: str | None = None) -> dict:
     return LEVEL_CONFIG.get(config_key, LEVEL_CONFIG["A1"])
 
 
+def get_level_config(level_code: str, module_focus: str | None = None) -> dict:
+    """Get active audit requirements without the deprecated module word floor."""
+    return {key: value for key, value in _legacy_level_config(level_code, module_focus).items()
+            if key != "target_words"}
+
+
 def get_word_target(level_code: str, _module_num: int | None = None, module_focus: str | None = None) -> int:
-    """Get word target for a level. Word targets are MINIMUMS."""
-    config = get_level_config(level_code, module_focus)
+    """Return legacy sizing data for external callers; the module audit does not use it."""
+    config = _legacy_level_config(level_code, module_focus)
     return config["target_words"]
