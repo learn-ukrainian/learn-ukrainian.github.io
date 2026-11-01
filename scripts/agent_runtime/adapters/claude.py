@@ -803,8 +803,8 @@ class ClaudeAdapter:
         explicit_allowed_tools = tc.get("allowed_tools") is not None
         reviewer_guard = mode == "read-only" and not explicit_allowed_tools and tc.get("reviewer_tools") is True
         # Caller tool restrictions take precedence. Reviewer-only protections
-        # apply to the default profile and harness-provisioned formal attempts.
-        # Other callers' explicit Bash grants keep their existing contract.
+        # are scoped to the default profile so an explicit Bash grant is not
+        # silently narrowed by the publish hook or push rewrite.
         ordinary_reviewer = reviewer_guard and not discussion_readonly and not review_isolation
         review_write_root: Path | None = None
         if review_isolation:
@@ -880,16 +880,7 @@ class ClaudeAdapter:
         # review isolation receives the settings flag too, but its existing
         # --safe-mode suppresses hooks and shell/write tools; the isolated OS
         # sandbox does not mount the checkout's tracked hook paths.
-        formal_reviewer = mode == "read-only" and not review_isolation and (
-            tc.get("review_attempt_boundary") is not None
-            or (tc.get("strict_mcp_config") and tc.get("mcp_config_path") and tc.get("mcp_server_names") == ["sources"])
-        )
-        worker_settings = _headless_worker_settings(publish_guard=bool(reviewer_guard or formal_reviewer) and not review_isolation)
-        if tc.get("review_attempt_boundary"):
-            from scripts.dispatcher.review_tools import hooks
-
-            worker_settings = json.dumps({"hooks": hooks(harness="claude", review=True),
-                                          "permissions": {"deny": list(HEADLESS_BACKGROUND_TOOL_DENIES)}})
+        worker_settings = _headless_worker_settings(publish_guard=reviewer_guard and not review_isolation)
         cmd.extend(["--settings", worker_settings])
         if account_login_dir is not None:
             # A labelled account loads no user-scope settings (#10619).
@@ -1029,11 +1020,7 @@ class ClaudeAdapter:
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
             cmd.extend(["--disallowedTools", ",".join(denied)])
         elif mode == "read-only" and sources_writers:
-            denied = _sources_writer_denies(sources_writers)
-            if formal_reviewer:
-                cmd.extend(["--permission-mode", REVIEWER_PERMISSION_PROFILE["mode"]])
-                denied = [*REVIEWER_PERMISSION_PROFILE["deny"], *denied]
-            cmd.extend(["--disallowedTools", ",".join(denied)])
+            cmd.extend(["--disallowedTools", ",".join(_sources_writer_denies(sources_writers))])
         elif mode == "workspace-write" and not review_isolation:
             cmd.extend(["--permission-mode", WORKSPACE_WRITE_PERMISSION_MODE])
             if not explicit_allowed_tools:

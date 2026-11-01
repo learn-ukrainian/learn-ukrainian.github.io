@@ -486,10 +486,6 @@ class CodexAdapter:
             # Parent runner owns the manifest filesystem boundary. Keeping a
             # nested read-only sandbox cancels the authorized stdio sources.
             cmd.append("--dangerously-bypass-approvals-and-sandbox")
-            from scripts.dispatcher.review_tools import hooks, toml
-
-            cmd.extend(["-c", "hooks=" + toml(hooks(harness="codex", review=True)),
-                        "-c", "features.hooks=true", "--dangerously-bypass-hook-trust"])
         elif read_only_tmp_root is not None:
             cmd.extend(_read_only_tmp_flags(read_only_tmp_root))
         elif has_session_to_resume and mode == "read-only":

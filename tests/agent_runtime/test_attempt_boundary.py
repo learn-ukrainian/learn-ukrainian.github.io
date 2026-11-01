@@ -596,9 +596,7 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
         if os.environ.get("LU_REVIEW_HOST_PROBES") != "1":
             # CI has no authenticated provider CLIs. Keep the real adapter
             # planning and sandbox seam, using a native executable fixture.
-            real_which = shutil.which
-            monkeypatch.setattr(shutil, "which", lambda name: "/bin/true" if Path(name).name in {"agy", "codex"}
-                                else real_which(name))
+            monkeypatch.setattr(shutil, "which", lambda name: "/bin/true")
             monkeypatch.setattr(
                 "scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None
             )
@@ -607,10 +605,8 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
                 (Path(boundary.tool_config["agy_home_override"]) / ".gemini/antigravity-cli/settings.json").read_text()
             )["permissions"]
             assert [r for r in settings["allow"] if r.startswith("read_file(")] == [f"read_file({boundary.workspace})"]
-            assert "command(*)" in settings["allow"]
-            assert not any(r.startswith("write_file(") for r in settings["allow"])
-            assert "command(git push *)" in settings["deny"]
-            assert "command(git commit *)" in settings["deny"] and "write_file(*)" in settings["deny"]
+            assert not any(r.startswith(("command(", "write_file(")) for r in settings["allow"])
+            assert "command(*)" in settings["deny"] and "write_file(*)" in settings["deny"]
             monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
         plan = adapter.build_invocation(
             prompt="probe",
@@ -623,27 +619,6 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
             effort="high",
         )
         assert plan.cwd == boundary.workspace
-        probe = boundary.workspace / "execution_probe.py"
-        probe.write_text("import pytest\nprint('bound-interpreter-ok')\n")
-        wrapped, probe_env = boundary.wrap(["/bin/bash", "-c", ".venv/bin/python execution_probe.py"], {})
-        observed = subprocess.run(wrapped, env=probe_env, capture_output=True, text=True, timeout=30)
-        assert observed.returncode == 0, observed.stderr
-        assert observed.stdout == "bound-interpreter-ok\n"
-        probe.unlink()
-        import shlex
-
-        from scripts.dispatcher.review_tools import hook_command
-
-        command = shlex.split(hook_command(harness="codex", review=True))
-        wrapped, hook_env = boundary.wrap(["/bin/bash", "-c", shlex.join(command)], {})
-        event = {"tool_name": "Bash", "tool_input": {"command": ".venv/bin/python execution_probe.py"},
-                 "cwd": str(boundary.workspace)}
-        allowed = subprocess.run(wrapped, env=hook_env, input=json.dumps(event), capture_output=True, text=True, timeout=30)
-        assert allowed.returncode == 0, allowed.stderr
-        event["tool_input"]["command"] = "git push origin HEAD"
-        refused = subprocess.run(wrapped, env=hook_env, input=json.dumps(event), capture_output=True, text=True, timeout=30)
-        assert refused.returncode == 2 and "review_mutation_denied" in refused.stderr
-        assert boundary.egress.public_internet is True
         if agent == "agy":
             assert Path(plan.env_overrides["HOME"]).is_relative_to(boundary.write_root)
             assert plan.liveness_paths[0].is_relative_to(boundary.write_root)

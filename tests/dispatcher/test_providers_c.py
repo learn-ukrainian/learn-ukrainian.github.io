@@ -4,18 +4,14 @@ from __future__ import annotations
 
 import json
 import os
-import shlex
 import subprocess
 import sys
 from dataclasses import replace
 
 import pytest
 
-from scripts.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
-from scripts.common.repo_root import project_interpreter
 from scripts.dispatcher.providers import cursor, hermes, load, muse, opencode
 from scripts.dispatcher.types import TaskSpec
-from scripts.lib import rules_core
 from scripts.review.verdict_parser import recognized_verdicts
 
 MODELS = ("muse-spark-1.3", "muse-wonder-1.0", "muse-wonder-full-1.0")
@@ -100,15 +96,7 @@ def test_muse_argv(spec, stub_env, model, mode, effort, contributor):
     if mode == "workspace-write":
         expected += ["--permission-profile", ":unrestricted"]
     else:
-        expected += ["--approval-mode", "never", "--approval-judge", "off", "--sandbox-network", "enabled", "--disable-write"]
-    expected_hooks = {"PreToolUse": [{"matcher": "*", "hooks": [{
-        "type": "command", "command": shlex.join([
-            str(project_interpreter()), "-I", str(rules_core.source_path("scripts/dispatcher/review_tools.py")),
-            "muse", "review" if mode == "read-only" else "work",
-        ]), "timeout": 180,
-    }]}]}
-    expected += ["-c", "mcpServers.sources=" + json.dumps(dict(isolated_sources_mcp_config(*sources_server_launch())["mcpServers"]["sources"], mode="required"), separators=(",", ":")),
-                 "-c", "hooks=" + json.dumps(expected_hooks, separators=(",", ":"))]
+        expected += ["--permission-profile", ":read-only", "--disable-write", "--disable-shell"]
     assert run_stub(invocation, spec) == expected
     assert invocation.env["MUSE_NO_AUTO_UPDATE"] == "1"
     assert "MUSE_NO_AUTO_UPDATE" not in stub_env
@@ -119,7 +107,8 @@ def test_muse_argv(spec, stub_env, model, mode, effort, contributor):
 def test_opencode_argv(spec, stub_env, mode, model):
     spec = replace(spec, agent="opencode", model=model, mode=mode, effort="high")
     expected = ["run", "--model", "deepseek/deepseek-flash", "--format", "json", "--variant", "high"]
-    expected += ["--auto"]
+    if mode == "workspace-write":
+        expected += ["--auto"]
     assert run_stub(opencode.build(spec, stub_env), spec) == [*expected, "--", PROMPT]
 
 

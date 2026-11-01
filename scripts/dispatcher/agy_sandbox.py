@@ -10,10 +10,11 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
   client, the namespace's passwd and group files, the canary plan and both sockets;
 * serves Sources through a parent-owned relay that forwards only the tools the server annotates
   read-only (``sources_read_only``) and counts completed calls by matching call and result ids;
-* lets AGY reach public HTTPS through the CONNECT-only egress proxy of formal review attempts
-  (host and loopback addresses refused);
+* lets AGY reach the network only through the CONNECT-only egress proxy of formal review attempts
+  (exact allowlisted hosts; host and loopback addresses refused);
 * runs AGY under bubblewrap (``review.isolation``). The root is empty except for read-only binds of
-  the system runtime, the AGY binary, the task worktree, its Git metadata and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
+  the system runtime, the AGY binary, the task worktree, its Git metadata, the project virtual environment
+  (exposed as the worktree's ignored ``.venv`` link so reviews can run the interpreter and tests) and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
   dropped and the root is remounted read-only, so the runtime (which holds TMPDIR) is the only
   writable path;
 * copies each explicit input's hashed bytes into the private scratch and bind-mounts that
@@ -793,7 +794,30 @@ def _write_error(path: Path) -> str:
     return "EROFS" if os.access(path, os.W_OK) else "EACCES"
 
 
+def _venv() -> Path:
+    """The project virtual environment, mounted read-only so a review can run the interpreter and tests."""
+    return project_interpreter().parent.parent.resolve(strict=True)
+
+
+def _link_interpreter(worktree: Path) -> bool:
+    """Expose the project venv as the worktree's ``.venv``; return whether this call created the link.
+
+    Shell and interpreter run only inside this boundary (decision REVIEW-BOUNDARY-1101, #12378). An
+    existing ``.venv`` is kept only when it already links to the project venv, so the reviewed
+    checkout cannot substitute its own interpreter.
+    """
+    local, target = worktree / ".venv", _venv()
+    if os.path.lexists(local):
+        if not local.is_symlink() or local.resolve(strict=True) != target:
+            raise ValueError("the worktree's .venv is not the project interpreter")
+        return False
+    local.symlink_to(target, target_is_directory=True)
+    return True
+
+
 class _Boundary:
+    created_interpreter = False  # set by run() once it links the project venv into the worktree
+
     def __init__(self, args: argparse.Namespace, receipt: dict):
         self.args, self.receipt = args, receipt
         self.worktree = Path(args.worktree).resolve(strict=True)
@@ -832,14 +856,12 @@ class _Boundary:
             item["copy"] = str(dest)
 
     def run(self) -> int:
-        from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
         from scripts.agent_runtime.attempt_boundary import full_review_reads, runtime_files
         from scripts.agent_runtime.attempt_network import AttemptEgress, load_allowlist
-        from scripts.agent_runtime.review_mcp import _real_agy_token, agy_review_settings
+        from scripts.agent_runtime.review_mcp import _real_agy_token
         from scripts.agent_runtime.sources_read_only import sources_tool_sets
         from scripts.dispatcher import runtime_context
         from scripts.dispatcher.git import DATABASE_LINKS
-        from scripts.dispatcher.review_tools import guard_runtime_reads, hooks
         from scripts.review.isolation import prepare_host_sandbox, wrap_argv_with_sandbox
 
         requested = self._requested_inputs()
@@ -864,6 +886,11 @@ class _Boundary:
         self.receipt["input"] = {"start": start}
         if not start["clean"]:
             raise Refused("the worktree differs from its head before launch")
+        try:
+            # Ignored by the repository's .gitignore, so the head and status comparison is unchanged.
+            self.created_interpreter = _link_interpreter(self.worktree)
+        except (OSError, ValueError) as exc:
+            raise Refused("the project interpreter cannot be exposed in the worktree") from exc
         git_dir = Path(_git(self.worktree, "rev-parse", "--absolute-git-dir").strip()).resolve(strict=True)
         common = Path(_git(self.worktree, "rev-parse", "--path-format=absolute", "--git-common-dir").strip()).resolve(
             strict=True)
@@ -912,19 +939,14 @@ class _Boundary:
             digest.update(name.encode() + b"\0" + hashlib.sha256(projected[name]).digest())
         self.receipt["wrapper_sha256"] = digest.hexdigest()
         interpreter = project_interpreter().resolve(strict=True)
-        readers, _ = sources_tool_sets()
+        readers, writers = sources_tool_sets()
         _write_private(config / "mcp_config.json", json.dumps({"mcpServers": {"sources": {
             "command": str(interpreter), "args": [str(boundary / "stdio.py"), str(boundary / "sources.sock")],
         }}}).encode())
         # Defense in depth only: the relay is what refuses these tools.
-        settings = agy_review_settings("full", checkout_root=self.worktree)
-        settings["permissions"]["allow"] += [f"read_file({root})" for root in runtime_context.read_roots()]
-        if self.confirmed_inputs:
-            settings["permissions"]["allow"].append(f"read_file({INPUT_MOUNT})")
-        _write_private(app / "settings.json", json.dumps(settings).encode())
-        _write_private(config / "hooks.json", json.dumps({
-            GUARD_NAME: guard_registration(), "dispatch-review-guards": hooks(harness="agy", review=True),
-        }).encode())
+        _write_private(app / "settings.json", json.dumps({"permissions": {
+            "deny": [f"mcp(sources/{name})" for name in writers],
+        }}).encode())
         uid, gid = os.getuid(), os.getgid()
         _write_private(boundary / "passwd", f"review:x:{uid}:{gid}:Review seat:{home}:/bin/bash\n".encode(), 0o444)
         _write_private(boundary / "group", f"review:x:{gid}:\n".encode(), 0o444)
@@ -980,11 +1002,10 @@ class _Boundary:
 
         env_keep = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "TMPDIR") if name in os.environ}
         self.relay = SourcesRelay(boundary / "sources.sock", frozenset(readers), env_keep)
-        self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"), public_internet=True)
+        self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
         sandbox = prepare_host_sandbox(
             engine="agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
-            runtime_reads=[*runtime_files(agy), *guard_runtime_reads(),
-                           *reads, *(target for _, target in databases), *sidecars,
+            runtime_reads=[*runtime_files(agy), _venv(), *reads, *(target for _, target in databases), *sidecars,
                            *runtime_context.read_roots(), boundary],
             network_allowed=False,
         )
@@ -1133,6 +1154,9 @@ class _Boundary:
         if self.fixture is not None:
             with contextlib.suppress(FileNotFoundError):
                 self.fixture.unlink()
+        if self.created_interpreter:
+            with contextlib.suppress(OSError):
+                (self.worktree / ".venv").unlink()
         if "start" in self.receipt.get("input", {}):
             self.receipt["input"]["end"] = _input_state(self.worktree)
         exported = False

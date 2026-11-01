@@ -7,7 +7,7 @@ import os
 import time
 from collections.abc import Mapping
 
-from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags, _sources_read_only_flags
+from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
 from scripts.agent_runtime.adapters.codex_events import classify_provider_message
 from scripts.agent_runtime.attempt_safe_read import safe_read_attempt_file
 from scripts.agent_runtime.read_only_tmp import dispatch_lease
@@ -15,7 +15,6 @@ from scripts.audit.post_build_review import (
     OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS as _POST_BUILD_FORBIDDEN_KEYWORDS,
 )
 from scripts.common.jsonl import jsonl_lines
-from scripts.dispatcher.review_tools import hooks, native_sources, toml
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = _POST_BUILD_FORBIDDEN_KEYWORDS | frozenset({"$schema", "$id"})
@@ -169,8 +168,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     from scripts.dispatcher.checks import check_model_admission
 
     check_model_admission(spec.agent, spec.model, spec.mode, spec.options, spec.prompt_file.read_bytes())
-    argv = ["codex", "exec", "--json", "-C", str(spec.worktree), "-m", spec.model, "-o", str(spec.final_file),
-            "--ignore-user-config"]
+    argv = ["codex", "exec", "--json", "-C", str(spec.worktree), "-m", spec.model, "-o", str(spec.final_file)]
     if spec.options.get("output_schema_path") is not None:
         from scripts.dispatcher.output_schema import load
 
@@ -188,11 +186,6 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         argv += ["--dangerously-bypass-approvals-and-sandbox"]
     else:
         raise ValueError(f"codex: unsupported mode {spec.mode!r}")
-    argv += ["-c", "mcp_servers.sources=" + toml(native_sources("codex")), *_sources_read_only_flags()]
-    argv += ["-c", "hooks=" + toml(hooks(harness="codex", review=spec.mode == "read-only")),
-             "-c", "features.hooks=true", "--dangerously-bypass-hook-trust"]
-    if spec.mode == "read-only":
-        argv += ["-c", 'permissions.lu_review.network.domains={"*"="allow"}']
     return Invocation(argv, spec.prompt_file.read_bytes(), env, spec.final_file)
 
 

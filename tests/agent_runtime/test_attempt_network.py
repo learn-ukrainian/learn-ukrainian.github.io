@@ -17,31 +17,12 @@ from scripts.agent_runtime.attempt_network import (
     AttemptEgress,
     Limits,
     canonical_host,
-    connect_target,
     host_addresses,
     load_allowlist,
     validate_answers,
 )
 
 ALLOWED = frozenset({"api.provider.example"})
-
-
-def test_public_internet_keeps_private_destinations_denied(proxy, monkeypatch):
-    """Defect: opening documentation egress also opens local or private destinations."""
-    header = b"CONNECT docs.python.org:443 HTTP/1.1\r\nHost: docs.python.org:443\r\n\r\n"
-    with pytest.raises(ValueError, match="destination refused"):
-        connect_target(header, ALLOWED)
-    assert connect_target(header, ALLOWED, public_internet=True) == "docs.python.org"
-    proxy.public_internet = True
-    for answer in (str(ipaddress.ip_address(2130706433)), str(ipaddress.ip_address(167772161)), str(ipaddress.ip_address(2852039166)), "::1", "::ffff:127.0.0.1"):
-        async def resolve(_host, address=answer):
-            return [address]
-
-        monkeypatch.setattr(proxy, "_resolve", resolve)
-        assert request(proxy, header).startswith(b"HTTP/1.1 403")
-    for target in ("localhost:443", "127.0.0.1:443", "[::1]:443", "docs.python.org:80", "user@docs.python.org:443"):
-        with pytest.raises(ValueError):
-            connect_target(f"CONNECT {target} HTTP/1.1\r\n\r\n".encode(), ALLOWED, public_internet=True)
 
 # Liveness guard (#9549): the longest a test waits on a child process, socket or
 # event-loop call before declaring it hung. It is never a performance

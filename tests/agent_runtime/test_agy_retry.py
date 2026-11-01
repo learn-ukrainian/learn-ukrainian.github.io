@@ -81,8 +81,7 @@ def test_agy_recorded_file_denial_is_refused_before_probe_without_widening(tmp_p
     )
     permissions = json.loads(settings.read_text())["permissions"]
     assert [rule for rule in permissions["allow"] if rule.startswith("read_file(")] == [f"read_file({workspace})"]
-    assert "command(*)" in permissions["allow"]
-    assert {"command(git push *)", "command(git commit *)"} <= set(permissions["deny"])
+    assert "command(*)" in permissions["deny"]
     assert "write_file(*)" in permissions["deny"]
     assert "--sandbox" in plan.cmd
     assert "--dangerously-skip-permissions" not in plan.cmd

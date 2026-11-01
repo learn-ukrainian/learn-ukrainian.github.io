@@ -66,25 +66,22 @@ Freeze sections 2 to 4 of the template from round 1; do not edit them. Section 1
 The reviewer marks every earlier id `resolved` or `still open: <reason>`, reviews only the
 delta scope in [policy](policy.md#delta-scope), and replies in the round 1 reply format.
 
-## Tools available to every reviewer
+## Commands a read-only reviewer can run
 
-The reviewer has a shell, `.venv/bin/python`, named test files and probe scripts in its
-own checkout, Sources MCP, and internet access for documentation. The brief names each
-required test or probe and its expected observation. Run only those files or a bounded
-check needed to investigate a finding. Report the command, exact head and actual output.
-Keep test artifacts in the task scratch directory when the checkout is mounted read-only.
+The reviewer's worktree is already checked out at the exact head and the base ref is present, so
+the brief says no fetch is needed (`git fetch` writes refs and is not a read-only command). A
+compound line runs only when every part is read-only, so one denied part denies the whole line
+(https://code.claude.com/docs/en/permissions, "Read-only commands"). The brief tells the reviewer
+to run read-only git commands one per call (`git rev-parse HEAD`, `git diff <merge-base>..HEAD`,
+`git log`), that `gh pr view`, `gh pr diff` and `gh pr checks` are allowed, and that after a
+denial it retries once with a simple literal read-only form before it replies BLOCKED.
 
-The checkout already holds the exact head and base ref, so no fetch is needed. Git reads
-such as `git rev-parse HEAD`, `git diff <merge-base>..HEAD` and `git log`, and GitHub reads
-such as `gh pr view`, `gh pr diff` and `gh pr checks`, remain available. Reviewers must not
-push, commit to shared refs, publish PRs, issues or comments, merge, change the queue, or
-write to the primary checkout. The existing worker guards and review deny list enforce
-the ordinary command forms. A shell is execution capability, not publication authority.
-
-Use Sources for Ukrainian judgments. If Sources cannot attach, a review touching
-Ukrainian text is refused with a typed reason. P8 still governs internet access and
-private data. After a tool denial, retry once with a simple literal command. An actual
-missing capability is reported as `BLOCKED` with the missing capability and evidence.
+A review gets a shell and the project interpreter only inside an OS boundary (decision
+REVIEW-BOUNDARY-1101, #12378). Today that is a read-only AGY dispatch: it runs in bubblewrap with
+a read-only checkout, scratch-only writes and provider-allowlisted egress, so its brief may name
+`.venv/bin/python` probes and test files (for example
+`.venv/bin/python -m pytest -q -p no:cacheprovider tests/x.py`) and ask for their actual output.
+That route has no public internet. Every other route keeps the read-only command set above.
 
 ## Wording that read-only admission accepts
 

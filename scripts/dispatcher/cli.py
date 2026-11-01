@@ -130,8 +130,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--mode",
         choices=("read-only", "workspace-write"),
         default="read-only",
-        help="Mode (default: read-only). Review mode permits shell, the project interpreter, named tests "
-             "and probes, Sources MCP and internet access; publishing and shared-state mutations stay denied.",
+        help="Mode (default: read-only)",
     )
     dispatch.add_argument(
         "--input", action="append", default=[], metavar="PATH",
@@ -359,10 +358,6 @@ def _dispatch(args) -> int:
         aliases = ", ".join(f"{name}={target}" for name, target in ALIASES.items())
         raise ValueError(f"unknown agent {args.agent!r}; supported agents: {', '.join(providers.PROVIDERS)} "
                          f"(aliases: {aliases}); dispatch Grok as --agent cursor --model grok-4.7-high")
-    if agent in {"claude", "codex", "agy", "cursor", "muse", "opencode"}:
-        from scripts.dispatcher.review_tools import sources_config
-
-        sources_config()  # A missing trusted Sources runtime refuses before any task or worktree is created.
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.advisor is not None and not (

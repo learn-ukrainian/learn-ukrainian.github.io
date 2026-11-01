@@ -1245,7 +1245,6 @@ class AttemptBoundary:
         self.temp = tempfile.TemporaryDirectory(prefix="attempt-", dir=temporary_parent)
         self.connection = None
         self.egress = None
-        self.created_interpreter = False
         self.agent = agent
         try:
             if platform.system() != "Linux":
@@ -1262,10 +1261,6 @@ class AttemptBoundary:
                 destination = self.workspace / name
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_bytes(content)
-            from scripts.dispatcher.review_tools import checkout_interpreter
-
-            self.created_interpreter = not os.path.lexists(self.workspace / ".venv")
-            checkout_interpreter(self.workspace)
             home = self.write_root / "home"
             (self.write_root / "tmp").mkdir()
             self.env = build_agent_env(provider=agent)
@@ -1290,7 +1285,7 @@ class AttemptBoundary:
             self.endpoint = endpoint
             self.connection = SourcesConnection(endpoint, server)
             self.egress_endpoint = self.write_root / "egress.sock"
-            self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent), public_internet=True)
+            self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent))
             self.forwarder = self.write_root / "forwarder.py"
             self.forwarder.write_bytes(Path(__file__).with_name("attempt_forwarder.py").read_bytes())
             proxy_server = {
@@ -1318,8 +1313,6 @@ class AttemptBoundary:
                 self.tool_config["codex_home_override"] = str(codex_home)
                 self.tool_config["attempt_os_sandbox"] = True
             elif agent == "agy":
-                from scripts.dispatcher.review_tools import hooks
-
                 from .agy_hook_config import GUARD_NAME, guard_registration
                 from .review_mcp import (
                     _create_file,
@@ -1341,9 +1334,7 @@ class AttemptBoundary:
                 try:
                     gemini_fd = _open_owned_dir(".gemini", dir_fd=home_fd)
                     config_fd = _open_owned_dir("config", dir_fd=gemini_fd)
-                    _create_file("hooks.json", config_fd, json.dumps({
-                        GUARD_NAME: guard_registration(), "dispatch-review-guards": hooks(harness="agy", review=True),
-                    }).encode())
+                    _create_file("hooks.json", config_fd, json.dumps({GUARD_NAME: guard_registration()}).encode())
                 finally:
                     for descriptor in (config_fd, gemini_fd, home_fd):
                         if descriptor is not None:
@@ -1356,15 +1347,12 @@ class AttemptBoundary:
                 self.env["AGY_APP_DATA_DIR"] = str(target.parent)
             else:
                 if not self.full:
-                    from .review_mcp import review_tools_allowed_csv
-
-                    self.tool_config["allowed_tools"] = review_tools_allowed_csv("claude", access)
+                    self.tool_config["allowed_tools"] = "Read,Glob,Grep," + str(tool_config.get("allowed_tools", ""))
         except BaseException:
             self.cleanup()
             raise
 
     def wrap(self, cmd: list[str], env_overrides: dict[str, str]) -> tuple[list[str], dict[str, str]]:
-        from scripts.dispatcher.review_tools import guard_runtime_reads
         from scripts.review.isolation import ReviewIsolationError, prepare_host_sandbox, wrap_argv_with_sandbox
 
         binary = Path(shutil.which(cmd[0]) or cmd[0]).resolve(strict=True)
@@ -1378,7 +1366,7 @@ class AttemptBoundary:
             snapshot_root=self.workspace,
             write_root=self.write_root,
             reject_root=Path(self.tool_config["review_input_root"]),
-            runtime_reads=[*runtime, *full_reads, *guard_runtime_reads(), self.endpoint],
+            runtime_reads=[*runtime, *full_reads, self.endpoint],
             network_allowed=False,
         )
         if self.egress is None or not self.egress.thread.is_alive():
@@ -1468,8 +1456,6 @@ class AttemptBoundary:
                 if self.connection is not None:
                     self.connection.cleanup()
             finally:
-                if self.created_interpreter and hasattr(self, "workspace"):
-                    (self.workspace / ".venv").unlink(missing_ok=True)
                 self.temp.cleanup()
 
 

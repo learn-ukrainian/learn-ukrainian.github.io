@@ -91,14 +91,14 @@ def validate_answers(answers: list[str], local: frozenset) -> list:
     return list(dict.fromkeys(addresses))
 
 
-def connect_target(header: bytes, allowlist: frozenset[str], *, public_internet: bool = False) -> str:
+def connect_target(header: bytes, allowlist: frozenset[str]) -> str:
     """RFC 9110 CONNECT authority, deliberately narrower than general HTTP."""
     lines = header.decode("ascii").split("\r\n")
     method, target, version = lines[0].split(" ")
     if method != "CONNECT" or version not in {"HTTP/1.0", "HTTP/1.1"}:
         raise ValueError("CONNECT required")
     host, port = target.split(":")
-    if port != "443" or not canonical_host(host) or (not public_internet and host not in allowlist):
+    if port != "443" or not canonical_host(host) or host not in allowlist:
         raise ValueError("destination refused")
     seen_host = False
     for line in lines[1:-2]:
@@ -132,10 +132,8 @@ DEFAULT_LIMITS = Limits()
 class AttemptEgress:
     """Bounded asyncio proxy with killable DNS processes and numeric connects."""
 
-    def __init__(self, endpoint: Path, allowlist: frozenset[str], *, limits: Limits = DEFAULT_LIMITS,
-                 public_internet: bool = False):
+    def __init__(self, endpoint: Path, allowlist: frozenset[str], *, limits: Limits = DEFAULT_LIMITS):
         self.endpoint, self.allowlist, self.limits = endpoint, allowlist, limits
-        self.public_internet = public_internet
         self.local_addresses = host_addresses()
         self.records: list[dict] = []  # destination + byte count only; no payloads or addresses
         self.ready = threading.Event()
@@ -263,7 +261,7 @@ class AttemptEgress:
             header = await asyncio.wait_for(reader.readuntil(b"\r\n\r\n"), self.limits.header_seconds)
             if len(header) > self.limits.header_bytes:
                 raise ValueError("header too large")
-            host = connect_target(header, self.allowlist, public_internet=self.public_internet)
+            host = connect_target(header, self.allowlist)
             record = {"destination": f"{host}:443", "bytes": 0}
             # One aggregate per allowed destination keeps logs bounded as well.
             existing = next((r for r in self.records if r["destination"] == record["destination"]), None)

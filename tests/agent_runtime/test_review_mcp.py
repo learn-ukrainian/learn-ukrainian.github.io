@@ -21,7 +21,7 @@ import pytest
 
 import scripts.agent_runtime.review_mcp as review_mcp_module
 import scripts.common.safe_open as safe_open_module
-from scripts.agent_runtime.adapters.claude import REVIEWER_PERMISSION_PROFILE, ClaudeAdapter
+from scripts.agent_runtime.adapters.claude import ClaudeAdapter
 from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.adapters.cursor import CursorAdapter
 from scripts.agent_runtime.review_mcp import (
@@ -101,7 +101,7 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
     }
     if harness == "claude":
         if access == "isolated":
-            expected["allowed_tools"] = ",".join([*REVIEWER_PERMISSION_PROFILE["allow"], *[f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)]])
+            expected["allowed_tools"] = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
         else:
             expected["reviewer_tools"] = True
     if harness == "agy":
@@ -243,15 +243,15 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
     settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
     readers, writers = sources_tool_sets()
     assert settings["permissions"]["allow"] == [
-        f"read_file({tmp_path.resolve()})", "command(*)",
+        f"read_file({tmp_path.resolve()})",
         *[f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)],
     ]
     assert settings["permissions"]["deny"] == [
-        *[f"command({rule[5:-1]})" for rule in REVIEWER_PERMISSION_PROFILE["deny"] if rule.startswith("Bash(")],
+        "command(*)",
         "write_file(*)",
         *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - REVIEW_TOOLS)],
     ]
-    assert [rule for rule in settings["permissions"]["allow"] if "*" in rule] == ["command(*)"]
+    assert not any("*" in rule for rule in settings["permissions"]["allow"])
     assert not set(settings["permissions"]["allow"]) & {f"mcp(sources/{name})" for name in writers}
     assert (home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token").resolve() == (
         fake_agy_user_home / "antigravity-oauth-token"
@@ -303,9 +303,9 @@ def test_receipt_attempt_allow_contract_includes_approved_facet_authorities(mani
         names.append("search_resources")
     expected = {
         "permissions": {
-            "allow": [f"read_file({tmp_path.resolve()})", "command(*)", *[f"mcp(sources/{name})" for name in sorted(names)]],
+            "allow": [f"read_file({tmp_path.resolve()})", *[f"mcp(sources/{name})" for name in sorted(names)]],
             "deny": [
-                *[f"command({rule[5:-1]})" for rule in REVIEWER_PERMISSION_PROFILE["deny"] if rule.startswith("Bash(")],
+                "command(*)",
                 "write_file(*)",
                 *[f"mcp(sources/{name})" for name in sorted(set().union(*sources_tool_sets()) - set(names))],
             ],
@@ -423,10 +423,9 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
         "mcp_server_names": ["sources"],
     }
     if harness == "claude":
-        expected_options["allowed_tools"] = ",".join([
-            *REVIEWER_PERMISSION_PROFILE["allow"],
-            *[f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS - {"search_resources"})],
-        ])
+        expected_options["allowed_tools"] = ",".join(
+            f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS - {"search_resources"})
+        )
     if harness == "codex":
         expected_options["codex_home_override"] = str(plan.config_path.parent / f"{attempt_id}.codex-home")
         expected_options["review_access"] = "isolated"
@@ -525,8 +524,8 @@ def test_claude_adapter_command_line_contains_review_grant(
     assert plan.cmd[idx : idx + 3] == ["--strict-mcp-config", "--mcp-config", str(review_plan.config_path)]
     assert plan.cmd.count("--allowedTools") == 1
     allowed = set(plan.cmd[plan.cmd.index("--allowedTools") + 1].split(","))
-    assert allowed == set(REVIEWER_PERMISSION_PROFILE["allow"]) | {f"mcp__sources__{name}" for name in REVIEW_TOOLS - {"search_resources"}}
-    assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
+    assert allowed == {f"mcp__sources__{name}" for name in REVIEW_TOOLS - {"search_resources"}}
+    assert "--permission-mode" not in plan.cmd
 
 
 def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> None:

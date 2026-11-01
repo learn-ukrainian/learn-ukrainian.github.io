@@ -200,17 +200,11 @@ def schema_argument(options: dict) -> str | None:
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["agy", "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"]
     argv += ["--model", transport_model(spec.model)]
-    argv += ["--print-timeout", _print_timeout(spec)]
+    argv += ["--dangerously-skip-permissions", "--print-timeout", _print_timeout(spec)]
     if (argument := schema_argument(spec.options)) is not None:
         argv += ["--json-schema", argument]
     if spec.mode == "workspace-write":
-        argv += ["--dangerously-skip-permissions"]
         argv += ["--log-file", str(spec.final_file.with_suffix(".log"))]
-        original_home = Path(env.get("HOME", str(Path.home())))
-        home = spec.worktree / ".agent/dispatch-tools/agy-home"
-        env = {**env, "HOME": str(home), "AGY_APP_DATA_DIR": str(home / ".gemini/antigravity-cli"),
-               "GIT_CONFIG_GLOBAL": str(original_home / ".gitconfig"),
-               "GH_CONFIG_DIR": env.get("GH_CONFIG_DIR", str(original_home / ".config/gh"))}
     elif spec.mode == "read-only":
         # AGY has no write lock of its own: read-only runs only inside the dispatcher's bubblewrap
         # boundary, which is the argv returned here, so no caller can launch it unwrapped (C-3027).

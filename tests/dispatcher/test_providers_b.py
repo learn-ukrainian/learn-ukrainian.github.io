@@ -2,7 +2,6 @@
 
 import json
 import os
-import shlex
 import subprocess
 import sys
 from dataclasses import replace
@@ -10,14 +9,11 @@ from pathlib import Path
 
 import pytest
 
-from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags, _sources_read_only_flags
+from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
 from scripts.agent_runtime.read_only_tmp import dispatch_lease
-from scripts.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
-from scripts.common.repo_root import project_interpreter
 from scripts.dispatcher import runtime_context
 from scripts.dispatcher.providers import load
-from scripts.dispatcher.review_tools import toml
 from scripts.dispatcher.runtime_context import read_roots
 from scripts.dispatcher.types import ParsedResult, TaskSpec
 from scripts.lib import rules_core
@@ -49,7 +45,7 @@ UNKNOWN = {
 }
 # The project's Sources server as .mcp.json declares it; read-only Claude loads only this server.
 SOURCES_MCP_CONFIG = json.dumps(
-    isolated_sources_mcp_config(*sources_server_launch()),
+    {"mcpServers": {"sources": json.loads(rules_core.source_path(".mcp.json").read_text())["mcpServers"]["sources"]}},
     separators=(",", ":"),
 )
 STUB = """import json, os, pathlib, sys
@@ -149,7 +145,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     original_env = env.copy()
     invocation = load(provider).build(spec, env)
     expected = {
-        "codex": ["exec", "--json", "-C", str(worktree), "-m", "explicit-model", "-o", str(final), "--ignore-user-config"],
+        "codex": ["exec", "--json", "-C", str(worktree), "-m", "explicit-model", "-o", str(final)],
         "claude": ["-p", "--model", "explicit-model"],
         "cursor": [
             "-p",
@@ -172,12 +168,6 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
             "explicit-model",
         ],
     }[provider]
-    native_hooks = {"PreToolUse": [{"matcher": "*", "hooks": [{
-        "type": "command", "command": shlex.join([
-            str(project_interpreter()), "-I", str(rules_core.source_path("scripts/dispatcher/review_tools.py")),
-            provider, "review" if mode == "read-only" else "work",
-        ]), "timeout": 180,
-    }]}]}
     if provider == "codex":
         if effort:
             expected += ["-c", "model_reasoning_effort=high"]
@@ -186,11 +176,6 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
             if mode == "read-only"
             else ["--dangerously-bypass-approvals-and-sandbox"]
         )
-        expected += ["-c", "mcp_servers.sources=" + toml(dict(json.loads(SOURCES_MCP_CONFIG)["mcpServers"]["sources"], required=True)),
-                     *_sources_read_only_flags(), "-c", "hooks=" + toml(native_hooks),
-                     "-c", "features.hooks=true", "--dangerously-bypass-hook-trust"]
-        if mode == "read-only":
-            expected += ["-c", 'permissions.lu_review.network.domains={"*"="allow"}']
     elif provider == "claude":
         if effort:
             expected += ["--effort", "high"]
@@ -201,7 +186,8 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         expected += ["--mcp-config", SOURCES_MCP_CONFIG, "--strict-mcp-config", "--allowedTools"]
         expected += [
             (
-                "Read,Grep,Glob,LS,Bash,WebFetch,WebSearch,"
+                "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
+                "Bash(gh issue view *),Bash(gh run view *),"
                 if mode == "read-only"
                 else "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch,"
             )
@@ -221,13 +207,12 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
                 "Bash(gh api -F *),Bash(gh api --field *),Bash(gh api --raw-field *),Bash(gh api --input *),"
                 "Bash(gh workflow run *)," + denies
             )
-        expected += ["--disallowedTools", denies, "--settings", json.dumps({
-            "hooks": native_hooks, "permissions": {"deny": ["Monitor", "ScheduleWakeup", "CronCreate", "Workflow"]},
-        }, separators=(",", ":"))]
+        expected += ["--disallowedTools", denies]
     elif provider == "cursor":
-        expected += ["--approve-mcps", "--sandbox", "enabled" if mode == "read-only" else "disabled", "--force"]
+        expected += ["--mode", "ask"] if mode == "read-only" else ["--approve-mcps", "--sandbox", "disabled", "--force"]
     else:
-        expected += ["--print-timeout", "7260s", "--dangerously-skip-permissions", "--log-file", str(final.with_suffix(".log"))]
+        expected += ["--dangerously-skip-permissions"]
+        expected += ["--print-timeout", "7260s", "--log-file", str(final.with_suffix(".log"))]
     proc = subprocess.run(
         invocation.argv, input=invocation.stdin, env=invocation.env, cwd=worktree, capture_output=True, timeout=10
     )
@@ -255,8 +240,6 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         ).encode()
     assert bytes.fromhex(capture["stdin"]) == expected_stdin
     assert capture["account"] == env["CLAUDE_CONFIG_DIR"]
-    if provider == "agy":
-        assert invocation.env["HOME"] == str(worktree / ".agent/dispatch-tools/agy-home")
     assert capture["marker"] == "kept"
     assert env == original_env
     assert invocation.final_file == (final if provider == "codex" else None)
@@ -282,7 +265,7 @@ def test_claude_task_exposes_only_the_trusted_sources_mcp_readers(tmp_path, mode
     spec = TaskSpec("uk-review", "claude", "claude-opus-5-5", "high", mode, tmp_path, prompt, tmp_path / "f")
     argv = load("claude").build(spec, {}).argv
     config = json.loads(argv[argv.index("--mcp-config") + 1])
-    assert config == isolated_sources_mcp_config(*sources_server_launch())
+    assert config == {"mcpServers": {"sources": {"type": "streamable-http", "url": "http://127.0.0.1:8766/mcp"}}}
     assert "--strict-mcp-config" in argv
     assert ("--restricted" in argv) is (mode == "read-only")
     readers, writers = sources_tool_sets()
