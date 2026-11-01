@@ -189,6 +189,11 @@ def test_refuses_unusable_input_before_spawn(tmp_path, monkeypatch, capsys):
     secret.write_text("x")
     monkeypatch.setattr(agy_sandbox.Path, "home", staticmethod(lambda: home))
     refuse(["--input", str(secret)], "agy_input_refused: path is under a credential directory", "credential")
+    original_readlink = os.readlink
+    monkeypatch.setattr(os, "readlink", lambda _descriptor: "/different/path")
+    with pytest.raises(ValueError, match="agy_input_refused: path changed before read"):
+        agy_sandbox.bind_inputs([str(packet)], repo_root=checkout)
+    monkeypatch.setattr(os, "readlink", original_readlink)
     original = os.fstat
 
     def mismatched(fd):

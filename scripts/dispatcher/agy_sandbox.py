@@ -233,6 +233,22 @@ def _bind_one(index: int, raw: str, root: Path, home: Path) -> dict:
             raise ValueError("agy_input_refused: not a readable regular file") from exc
         if (checked.st_dev, checked.st_ino) != (info.st_dev, info.st_ino):
             raise ValueError("agy_input_refused: path changed before read")
+        # `stat` looks the caller's path up again, so a later parent swap can make it
+        # name the descriptor's file while `resolved` still names a different path.
+        # The descriptor's own kernel path is the file the bytes come from.
+        try:
+            linked = os.readlink(f"/proc/self/fd/{descriptor}")
+        except OSError as exc:
+            raise ValueError("agy_input_refused: not a readable regular file") from exc
+        fd_path = Path(linked)
+        if not fd_path.is_absolute() or linked.endswith(" (deleted)"):
+            raise ValueError("agy_input_refused: path changed before read")
+        if _under_credential(fd_path, home):
+            raise ValueError("agy_input_refused: path is under a credential directory")
+        if fd_path == root or fd_path.is_relative_to(root):
+            raise ValueError("agy_input_refused: path is inside the primary checkout")
+        if fd_path != resolved:
+            raise ValueError("agy_input_refused: path changed before read")
         data = _read_exact(descriptor, info.st_size)
     finally:
         os.close(descriptor)
