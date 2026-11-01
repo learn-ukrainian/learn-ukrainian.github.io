@@ -850,7 +850,8 @@ def _cmd_behavior_proof_receipt(args: argparse.Namespace) -> int:
     except ContractError as exc:
         print(json.dumps({"error": str(exc)}), file=sys.stderr)
         return 1
-    receipt_path = args.state_file.with_name(f"{args.state_file.stem}.ukrainian-behavior-proof-receipt.json")
+    # Resolve once, here, so a relative --state-file still prints a path reconciliation accepts.
+    receipt_path = args.state_file.with_name(f"{args.state_file.stem}.ukrainian-behavior-proof-receipt.json").resolve()
     receipt_bytes = (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
     receipt_path.write_bytes(receipt_bytes)
     print(

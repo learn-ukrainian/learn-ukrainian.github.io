@@ -482,8 +482,11 @@ class GhGitHubAdapter:
         }
         comments: list[dict[str, Any]] = []
         deployments: list[dict[str, Any]] = []
-        authenticated_login = self._authenticated_login()
+        # The login is only meaningful beside pull-request comments. A closeout
+        # with no pull request must not depend on the identity read.
+        authenticated_login = None
         if pr_number is not None:
+            authenticated_login = self._authenticated_login()
             pr = self._read_pr(repository, pr_number)
             pr["files"] = self._changed_paths(repository, pr_number)
             comments = self._comments(repository, pr_number)
