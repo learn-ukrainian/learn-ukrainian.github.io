@@ -20,45 +20,38 @@ Every Ukrainian-profile brief identifies these contracts and their applicability
 
 ## Reply format
 
-Every brief includes this **Reply format** section, including the literal first two lines
-below. This is the single reply-format contract for both reference templates. The reply
-starts with those lines as plain text, outside any fence or quotation; the reviewer replaces
-the placeholders with one verdict and an integer score. A prose approval or a JSON object
-does not replace either line. For `BLOCKED`, the verdict line also names the missing capability.
+Every code or infra brief includes this **Reply format** section. It is the reply contract
+`verify_review` and the verdict recorder both accept. The reply is one JSON object and
+nothing else. The object matches
+[`schemas/code-review-findings.v1.schema.json`](../../../../../schemas/code-review-findings.v1.schema.json)
+at the exact review head: the reviewer uses that file's field names, required fields,
+allowed values and nested definitions, and adds none. `overall` includes `correctness`,
+`explanation` and `confidence`. Each finding includes `confidence` and `verbatim` with the
+schema's other required fields. `overall.correctness` is `correct` to approve, `incorrect`
+to request changes, and `uncertain` for `BLOCKED`.
 
-```text
-VERDICT: <APPROVE|REQUEST_CHANGES|BLOCKED>
-SCORE: <n>/10 <one-line rationale>
-F1 [P0|P1|P2|P3] <path>:<line> <demonstrated failure>. Impact: <impact>. Required behaviour: <behaviour>.
-```
+The brief carries this repository-relative schema path, or an exact shape generated from
+that file. It never carries a hand-written schema copy or asks for the format by name
+alone. If the reviewer cannot read the schema, the reply is a schema-valid object with
+`overall.correctness` of `uncertain`, no findings, and `missing_capabilities` naming
+`checkout-data`. A prose approval or a verdict line does not replace the object. An
+improvised or malformed findings block is refused even beside a valid verdict line.
 
-The default reply is text only: finding lines and supporting evidence follow the first two
-lines, or a statement that there are no findings. No JSON findings block is requested or
-added by default.
-
-When the caller needs structured findings, the brief explicitly asks for one fenced `json`
-object after the same first two lines and links the exact shape in
-[`schemas/code-review-findings.v1.schema.json`](../../../../../schemas/code-review-findings.v1.schema.json).
-The reviewer reads that schema at the exact review head and uses its field names, required
-fields, allowed values and nested definitions without additions. The brief carries this
-repository-relative schema path, or an exact shape generated from that file; it never carries
-a hand-written schema copy or merely asks for the format by name. If the reviewer cannot
-read the schema, the reply is text-only `BLOCKED` naming `checkout-data`.
-The object and verdict line agree. An improvised or malformed findings block is refused even
-beside a valid verdict line.
-
-A structured capability-only `BLOCKED` follows the same schema with `uncertain` and no
-findings. The recorder's `missing_capabilities` extension and the permitted capabilities are
-defined by [the capability-failure policy](policy.md#a-blocked-that-only-lacked-a-capability)
-and `scripts/review/verdict_parser.py`; the extension is not a schema field. The literal
-verdict and score lines remain required.
+A capability-only `BLOCKED` uses `uncertain`, no findings, and `missing_capabilities`.
+The recorder's extension and the permitted capabilities are defined by
+[the capability-failure policy](policy.md#a-blocked-that-only-lacked-a-capability) and
+`scripts/review/verdict_parser.py`. `missing_capabilities` is allowed only where the schema
+already allows it.
 
 Ids are stable: a later round reuses `F1` rather than renaming it. Paths are
-repository-relative with line suffixes. The `SCORE` line uses the council's anchored rubric
+repository-relative with line suffixes. A `SCORE` line is not part of this reply. The
+council's anchored rubric
 ([decision report](../../drive-epic/references/decision-report.md#council-optional-independent-panel),
-"Findings and score"); it never gates a merge. The recorder stores it with the verdict, or
-records it as absent when it is missing or malformed, and `scripts/fleet/agent_success.py`
-reports it per reviewer and author model.
+"Findings and score") never gates a merge. The recorder stores a score when a reply still
+carries a well-formed one, or records it as absent.
+
+A Ukrainian-profile review does not use this object. It returns the
+`ukrainian-item-judgments` block named in [ukrainian](ukrainian.md).
 
 ## Delta rounds (round 2 and later)
 
@@ -71,8 +64,7 @@ Freeze sections 2 to 4 of the template from round 1; do not edit them. Section 1
 - the budget state (`round 2 of 3`, or `round 4 of 5` with the open blocker id that justifies it).
 
 The reviewer marks every earlier id `resolved` or `still open: <reason>`, reviews only the
-delta scope in [policy](policy.md#delta-scope), and replies in the round 1 reply format,
-`SCORE` line included.
+delta scope in [policy](policy.md#delta-scope), and replies in the round 1 reply format.
 
 ## Commands a read-only reviewer can run
 

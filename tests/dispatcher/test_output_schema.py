@@ -27,9 +27,9 @@ def dispatch(tmp_path, monkeypatch):
     schema = tmp_path / "schema.json"
     schema.write_text('{"type":"object","required":["verdict"]}')
 
-    def invoke(path="schema.json", agent="sol", expected=0, review=False, review_profile="code"):
-        model = "gemini-3.8-flash-high" if agent == "agy" else "gpt-6.1-sol"
-        args = ["dispatch", "--agent", agent, "--model", model, "--task-id", "schema", "--prompt", "Review"]
+    def invoke(path="schema.json", agent="sol", expected=0, review=False, review_profile="code", task_id="schema"):
+        model = {"agy": "gemini-3.8-flash-high", "claude": "claude-opus-5-5"}.get(agent, "gpt-6.1-sol")
+        args = ["dispatch", "--agent", agent, "--model", model, "--task-id", task_id, "--prompt", "Review"]
         if agent == "agy" and review_profile is not None:
             args += ["--review-profile", review_profile]
         if path is not None:
@@ -42,7 +42,7 @@ def dispatch(tmp_path, monkeypatch):
             git.create_worktree.assert_not_called()
             assert not (tmp_path / "tasks").exists()
             return None
-        return start.call_args.args[0], store.read("schema")
+        return start.call_args.args[0], store.read(task_id)
 
     return SimpleNamespace(invoke=invoke, schema=schema)
 
@@ -64,10 +64,10 @@ def test_schema_loss_record_and_real_codex_argv(dispatch, absolute, agent):
         provider.build(spec, {})
 
 
-@pytest.mark.parametrize("agent", ["claude", "cursor", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["cursor", "muse", "opencode", "hermes"])
 def test_unsupported_schema_refused_before_launch(dispatch, capsys, agent):
     dispatch.invoke(agent=agent, expected=2)
-    assert "--output-schema is supported only with the effective codex or agy agent" in capsys.readouterr().err
+    assert "--output-schema is supported only with the effective codex, agy, or claude agent" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("kind", ["missing", "non-json", "non-object", "invalid-schema", "symlink", "relative-escape"])
@@ -145,6 +145,53 @@ def test_invalid_schema_result_cannot_settle_done(dispatch, monkeypatch, output,
     assert settled["status"] == status
     if status == "failed":
         assert "structured_output_invalid" in settled["error"]
+
+
+def test_claude_review_binds_findings_schema(dispatch):
+    """Case 4: a native Claude code review must bind the findings schema.
+
+    A VERDICT-only reply still cannot become a receipt.
+    """
+    from scripts.dispatcher.providers import claude
+    from scripts.review.review_contract import ContractError, canonical_receipt_payload
+
+    spec, record = dispatch.invoke(path=None, agent="claude", review=True, task_id="claude-schema")
+    assert record["require_review_verdict"] is True
+    assert record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
+    argv = claude.build(spec, {}).argv
+    schema = json.loads(argv[argv.index("--json-schema") + 1])
+    assert schema["properties"]["schema_version"]["const"] == "code-review-findings.v1"
+    assert schema["required"] == ["schema_version", "overall", "findings"]
+    with pytest.raises(ContractError, match="review_envelope_requires_one_json_block"):
+        canonical_receipt_payload("VERDICT: APPROVE\nSCORE: 9/10 No defects.\nNo findings.\n")
+    receipt = {
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": "correct", "explanation": "No defects.", "confidence": 0.9},
+        "findings": [],
+    }
+    bound = json.dumps({
+        "type": "result", "subtype": "success", "is_error": False,
+        "result": "", "structured_output": receipt,
+    })
+    parsed = claude.parse(bound, "", 0, None, output_schema=schema)
+    assert parsed.error is None
+    assert json.loads(parsed.text) == receipt
+    preamble = json.dumps({
+        "type": "result", "subtype": "success", "is_error": False,
+        "result": "VERDICT: APPROVE", "structured_output": receipt,
+    })
+    parsed = claude.parse(preamble, "", 0, None, output_schema=schema)
+    assert json.loads(parsed.text) == receipt
+    missing = claude.parse(
+        json.dumps({"type": "result", "subtype": "success", "is_error": False, "result": "VERDICT: APPROVE"}),
+        "", 0, None, output_schema=schema,
+    )
+    assert missing.error == "claude: missing structured output"
+    failed = claude.parse(bound, "", 1, None, output_schema=schema)
+    assert failed.error == "claude: exited with status 1"
+    codex_spec, codex_record = dispatch.invoke(path=None, agent="sol", review=True, task_id="codex-schema")
+    assert codex_record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
+    assert codex.build(codex_spec, {}).argv.count("--output-schema") == 1
 
 
 def test_agy_review_binds_findings_schema(dispatch):
