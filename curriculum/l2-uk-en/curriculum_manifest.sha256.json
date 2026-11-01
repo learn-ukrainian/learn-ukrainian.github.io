@@ -962,11 +962,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/aspect-concept/activities.yaml",
-      "sha256": "c3023306dd75a8a8eb21e7c12c8a943eb8e0068bb93376ae668682b1d89f73d4"
+      "sha256": "598efcc1142c73cc32e28c460a95111899d1863f806a1304bd2a360b0de7e968"
     },
     {
       "path": "curriculum/l2-uk-en/a2/aspect-concept/module.md",
-      "sha256": "bd48c85aba19aa9c457a508b3f4136a79fd900176b14484b640c82ab2dd9e165"
+      "sha256": "2a14dce38c77149c6d2a835c6923aa088c9bbdc28c449dfd0d2131982fc78816"
     },
     {
       "path": "curriculum/l2-uk-en/a2/aspect-concept/resources.yaml",
@@ -14210,7 +14210,7 @@
     },
     {
       "path": "site/src/content/docs/a2/aspect-concept.mdx",
-      "sha256": "c507f7388ba89e239c850ec2d1489b34e538fc160f57441f032bbf4e7c599612"
+      "sha256": "3b76d4f79bd2519e0ea7111e8cd6c231ef05aade7893903d6f0f074344603a34"
     },
     {
       "path": "site/src/content/docs/a2/aspect-in-past.mdx",
