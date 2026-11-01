@@ -130,28 +130,85 @@ def _canonical_family(value: str) -> str:
 
 
 def parse_reviewer_json(raw: str) -> dict[str, Any]:
-    """Parse reviewer stdout as a single JSON object. Fail closed on chatter."""
+    """Parse bare JSON or the approved review-loop envelope, without prose extraction."""
     text = raw.strip()
     if not text:
         raise ContractError("empty_review_input", exit_code=EXIT_INCOMPLETE)
+    if text.startswith("VERDICT:"):
+        try:
+            return _parse_review_loop_envelope(text)
+        except (ValueError, RecursionError) as exc:
+            raise ContractError(f"review_envelope_unreadable:{type(exc).__name__}") from exc
     if _looks_like_legacy_text(text) and not text.lstrip().startswith("{"):
         raise ContractError(
-            "legacy_FINDING_text_removed: use schema_version "
-            f"{SCHEMA_VERSION!r} JSON (see docs/review-protocol.md)",
+            f"legacy_FINDING_text_removed: use schema_version {SCHEMA_VERSION!r} JSON (see docs/review-protocol.md)",
             exit_code=EXIT_INVALID,
         )
-    # Reject non-JSON wrapper chatter: entire payload must be one JSON value.
     try:
         payload = json.loads(text)
     except json.JSONDecodeError as exc:
-        # Also try: JSON embedded only if the whole stripped text is JSON —
-        # no fence stripping, no prose extraction (fail closed).
         raise ContractError(
             f"non_json_or_chatter:{exc.msg}",
             exit_code=EXIT_INVALID,
         ) from exc
     if not isinstance(payload, dict):
         raise ContractError("review_root_must_be_object", exit_code=EXIT_INVALID)
+    return payload
+
+
+def _parse_review_loop_envelope(text: str) -> dict[str, Any]:
+    from markdown_it import MarkdownIt
+
+    from scripts.fleet_comms.review_publication import ReviewPublicationError
+    from scripts.review.verdict_parser import (
+        _REVIEW_SCORE_LABEL_RE,
+        _REVIEW_VERDICT_LINE_RE,
+        _closes_code_fence,
+        _commonmark_lines,
+        _without_code_fences,
+        checked_findings_payload,
+    )
+
+    lines = _commonmark_lines(text)
+    verdict = re.fullmatch(r"VERDICT: (APPROVE|REQUEST_CHANGES|BLOCKED)(?:[ \t]+[^\r\n]+)?", lines[0])
+    score = re.fullmatch(r"[ \t]*SCORE: (?:[1-9]|10)/10(?:[ \t]+[^\r\n]+|[.,;:!?)](?:[ \t]+[^\r\n]+)?)?", lines[1]) if len(lines) > 1 else None
+    if verdict is None or score is None:
+        raise ContractError("review_envelope_invalid_headers")
+    visible = _without_code_fences(text, keep_unclosed=False)
+    for label, pattern in (("VERDICT", _REVIEW_VERDICT_LINE_RE), ("SCORE", _REVIEW_SCORE_LABEL_RE)):
+        if sum(
+            bool(pattern.match(line) or re.match(rf"^[ \t]*{label}:", line, re.IGNORECASE))
+            for line in _commonmark_lines(visible)
+        ) != 1:
+            raise ContractError(f"review_envelope_duplicate_{label.lower()}")
+    blocks = [token for token in MarkdownIt("commonmark").parse(text) if token.type == "fence"]
+    if len(blocks) != 1:
+        raise ContractError("review_envelope_requires_one_json_block")
+    block = blocks[0]
+    if (
+        block.level != 0
+        or block.info.strip() not in {"", "json"}
+        or not _closes_code_fence(lines[block.map[1] - 1], block.markup)
+    ):
+        raise ContractError("review_envelope_invalid_json_fence")
+    try:
+        payload = json.loads(block.content)
+    except json.JSONDecodeError as exc:
+        raise ContractError(f"review_envelope_invalid_json:{exc.msg}") from exc
+    if not isinstance(payload, dict):
+        raise ContractError("review_root_must_be_object")
+    stated = verdict.group(1)
+    expected = {"APPROVE": "correct", "REQUEST_CHANGES": "incorrect", "BLOCKED": "uncertain"}[stated]
+    validate_reviewer_payload(payload)
+    if payload["overall"]["correctness"] != expected:
+        raise ContractError("review_envelope_verdict_mismatch")
+    canonical = {"APPROVE": "APPROVED", "REQUEST_CHANGES": "CHANGES_REQUESTED", "BLOCKED": "BLOCKED"}[stated]
+    try:
+        derived, _ = checked_findings_payload(payload, stated=canonical)
+    except ReviewPublicationError as exc:
+        raise ContractError(f"review_envelope_invalid_verdict:{exc}") from exc
+    if derived != canonical:
+        raise ContractError("review_envelope_verdict_mismatch")
     return payload
 
 
@@ -911,13 +968,20 @@ def verify_review(
 
     validations: list[FindingValidation] = []
     for finding in findings:
+        disp = ctx.dispositions.get(finding["id"], {})
+        rationale = disp.get("rationale") if isinstance(disp, dict) else None
         check: EvidenceCheckResult = verify_finding_evidence(
             finding,
             repo_root=ctx.repo_root,
             target=ctx.target,
             changed_lines=line_map,
+            allow_unchanged_follow_up=(
+                isinstance(disp, dict)
+                and disp.get("disposition") == "follow_up"
+                and isinstance(rationale, str)
+                and bool(rationale.strip())
+            ),
         )
-        disp = ctx.dispositions.get(finding["id"], {})
         validations.append(
             FindingValidation(
                 id=finding["id"],

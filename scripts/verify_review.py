@@ -17,7 +17,7 @@ Two-stage usage (target freshness):
      pass ``--expected-input-sha256`` (target-input fingerprint from step 1)
      plus identity/scope/tests/behavior-proof/lineage envelope fields.
      ``input_sha256`` on the receipt is the recomputed target fingerprint;
-     ``reviewer_output_sha256`` records the reviewer JSON separately.
+     ``reviewer_output_sha256`` records the whole raw reviewer reply separately.
 
 Exit codes (stable):
   0 clean valid review
@@ -90,7 +90,7 @@ def _read_review(issue: int | None, from_stdin: bool, review_file: Path | None) 
     if from_stdin:
         return sys.stdin.read()
     if review_file is not None:
-        return review_file.read_text(encoding="utf-8")
+        return review_file.read_bytes().decode("utf-8")
     if issue is None:
         raise SystemExit("one of --from-stdin, --review-file, or --issue is required")
     data = json.loads(_run(["gh", "issue", "view", str(issue), "--json", "comments"]))
@@ -217,9 +217,18 @@ def _post_summary(issue: int, receipt: dict) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Verify structured code-review JSON against an exact target, "
-            "or emit a source-blind target manifest/fingerprint."
-        )
+            "Verify bare review JSON or a review-loop reply against an exact target.\n"
+            "Use after review to produce a receipt, or before review to emit a target fingerprint."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/verify_review.py --emit-target-manifest --mode commit --commit HEAD
+  .venv/bin/python scripts/verify_review.py --review-file reply.txt --mode commit --commit HEAD
+
+Outputs: receipt JSON on stdout; --receipt-path writes a file; --post-comment opts into GitHub posting.
+Exit codes: 0 clean; 1 actionable; 2 invalid; 3 incomplete; 4 stale; 5 unverifiable.
+Related: docs/review-protocol.md; schemas/code-review-findings.v1.schema.json; issue #12338.
+""",
     )
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--issue", type=int, help="Read latest issue comment as review JSON")
@@ -227,7 +236,7 @@ def build_parser() -> argparse.ArgumentParser:
     source.add_argument(
         "--review-file",
         type=Path,
-        help="Read review JSON from a local file",
+        help="Read bare JSON or a review-loop reply from a UTF-8 file, preserving its raw-byte digest",
     )
     source.add_argument(
         "--emit-target-manifest",

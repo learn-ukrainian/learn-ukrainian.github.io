@@ -227,6 +227,15 @@ blocks or escalates when it exposes a material defect. Later rounds apply the
 review budget. Reviewers keep their own
 independent adversarial cases; the author's matrix narrows nothing.
 
+For `verify_review.py`, a structured reply may use bare schema-valid JSON or
+the review-loop envelope: one leading `VERDICT:` line, one `SCORE:` line and
+exactly one fenced JSON object. Other prose is not evidence. The header must
+agree with `overall.correctness`; the digest covers the whole raw reply.
+An unchanged-file `follow_up` with a nonempty runner rationale is checked
+against a regular Git file at the exact head. Blocking findings outside the
+diff, missing head files and symlinks remain refused. See
+[`docs/review-protocol.md`](../../../../docs/review-protocol.md) for the contract.
+
 ---
 
 ## Step 5: Record and adjudicate findings — nothing dropped, nothing "as-is"

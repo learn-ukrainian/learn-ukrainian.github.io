@@ -3,8 +3,19 @@
 > **Canonical contract (v1):** versioned JSON schema
 > `schemas/code-review-findings.v1.schema.json`, validated by
 > `scripts/verify_review.py`. Legacy loose `FINDING:` text is **removed** as a
-> dual source of truth (issue #5284). Reviewers must emit **only** schema-valid
-> JSON — no prose wrapper, no markdown fences around the payload.
+> dual source of truth (issue #5284). The verifier accepts bare schema-valid
+> JSON or the review-loop reply envelope described below.
+
+The review-loop envelope starts with one `VERDICT:` line, then one `SCORE:`
+line. Leading whitespace is allowed. Verdicts are `APPROVE`, `REQUEST_CHANGES`
+and `BLOCKED`; scores are integers from 1 through 10 followed by `/10`, with
+an optional rationale. Exactly one closed, top-level fenced block contains
+the JSON object, with info string `json` or empty. Other prose supplies no
+verdict or findings. Duplicate header declarations, absent or multiple fenced
+blocks, invalid schema and header/correctness disagreement fail closed.
+`APPROVE` requires `correct`, `REQUEST_CHANGES` requires `incorrect`, and
+`BLOCKED` requires `uncertain`. The recorder's shared findings validation
+also applies. No reviewer payload is synthesized from prose.
 
 ## Evidence requirement — NON-NEGOTIABLE
 
@@ -19,7 +30,7 @@ Every finding MUST include:
 5. **Source citation(s)** or explicit `["none"]`.
 
 Unknown fields, missing required fields, unsafe paths, invalid enums/ranges,
-and non-JSON chatter **fail closed**.
+and text outside either accepted input form **fail closed**.
 
 ## Hallucination guards
 
@@ -32,9 +43,14 @@ and non-JSON chatter **fail closed**.
    `git diff $(git merge-base <base> <head>)...<head>`). **Never** use two-dot
    `git diff <base-tip>..<head>` against a moved base tip — that invents
    deletions of files main gained after the fork and produces confident-but-false
-   BLOCK verdicts. Formal accept refuses out-of-surface paths.
+   BLOCK verdicts. A runner-dispositioned `follow_up` with a nonempty rationale
+   may cite a regular file outside the changed paths when it exists in Git at
+   `target.head_sha`. Its quote and range are checked against that head blob,
+   never the working copy. Blocking dispositions, absent head files, directories
+   and symlinks remain refused.
 3. **Primary location on the change**: for `claim_type: "present"`, the
-   primary line range must land on a **changed line** of the frozen target.
+   primary line range must land on a **changed line** of the frozen target,
+   except for the unchanged-file follow-up above.
    Missing-code claims use contextual evidence and must not invent a diff line
    for code that is not there.
 4. **No invented line numbers**: every location must resolve on the exact
@@ -44,7 +60,7 @@ and non-JSON chatter **fail closed**.
    ranges that intersect unrelated changed lines). On mismatch, report the
    deterministic first actual match and `line_mismatch`.
 5. **Path safety**: no absolute paths, no `..`, no drive paths, no symlink
-   escapes, no paths outside the reviewed changed surface.
+   escapes. Paths outside the changed surface require the follow-up exception above.
 6. **Decode/read failures** become a stable fail-closed evidence outcome
    (`quote_missing` with detail), never an uncaught exception.
 
@@ -119,7 +135,9 @@ surface. It **must** change when a local source, the changed-path set,
 base/head, or committed content changes. Display-only target descriptions and
 equivalent ref spellings do not affect the fingerprint.
 
-Reviewer JSON is hashed separately as `reviewer_output_sha256`.
+The whole raw reviewer reply is hashed separately as `reviewer_output_sha256`,
+including headers, fences and surrounding prose. UTF-8 file input preserves
+line endings so a historical result can be replayed without changing its digest.
 
 ### Two-stage runner usage
 

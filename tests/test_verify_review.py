@@ -355,6 +355,201 @@ def test_empty_input_is_incomplete():
     assert exc.value.exit_code == EXIT_INCOMPLETE
 
 
+@pytest.mark.parametrize(
+    "case",
+    [
+        "valid",
+        "bare",
+        "trailing-prose",
+        "crlf",
+        "empty-info",
+        "request-changes",
+        "blocked",
+        "mismatch",
+        "missing-json",
+        "duplicate-verdict",
+        "duplicate-score",
+        "multiple-blocks",
+        "bad-score",
+        "leading-chatter",
+        "schema",
+        "non-object",
+        "unclosed",
+        "nested-block",
+        "cr-duplicate-verdict",
+        "cr-duplicate-score",
+        "decorated-verdict",
+        "lowercase-score",
+        "deep-markdown",
+        "deep-json",
+        "invalid-duplicate-verdict",
+    ],
+)
+def test_review_loop_envelope_contract(tmp_path, case):
+    """The recorder's reply must yield a receipt without rewriting its bytes."""
+    repo = _init_repo(tmp_path)
+    target = resolve_local_target(repo)
+    payload = _clean_payload()
+    verdict = "APPROVE"
+    if case == "request-changes":
+        verdict = "REQUEST_CHANGES"
+        payload["overall"]["correctness"] = "incorrect"
+    if case == "blocked":
+        verdict = "BLOCKED"
+        payload["overall"]["correctness"] = "uncertain"
+        payload["missing_capabilities"] = ["shell"]
+    if case == "mismatch":
+        payload["overall"]["correctness"] = "incorrect"
+    if case == "schema":
+        payload["unexpected"] = True
+    block = json.dumps([] if case == "non-object" else payload)
+    raw = f"VERDICT: {verdict}\nSCORE: 9/10 Checked.\n\n```json\n{block}\n```\n"
+    if case == "bare":
+        raw = json.dumps(payload)
+    elif case == "trailing-prose":
+        raw += "Follow-up discussion is not review evidence.\n"
+    elif case == "crlf":
+        raw = raw.replace("\n", "\r\n")
+    elif case == "empty-info":
+        raw = raw.replace("```json", "```")
+    elif case == "missing-json":
+        raw = "VERDICT: APPROVE\nSCORE: 9/10 Checked.\n"
+    elif case == "duplicate-verdict":
+        raw += "VERDICT: APPROVE\n"
+    elif case == "duplicate-score":
+        raw += "SCORE: 9/10\n"
+    elif case == "multiple-blocks":
+        raw += f"\n```json\n{block}\n```\n"
+    elif case == "bad-score":
+        raw = raw.replace("9/10", "90/10")
+    elif case == "leading-chatter":
+        raw = "Here is the review.\n" + raw
+    elif case == "unclosed":
+        raw = raw.removesuffix("```\n")
+    elif case == "nested-block":
+        raw = raw.replace("```json\n", "> ```json\n> ").replace("\n```\n", "\n> ```\n")
+    elif case == "cr-duplicate-verdict":
+        raw = (raw + "VERDICT: REQUEST_CHANGES\n").replace("\n", "\r")
+    elif case == "cr-duplicate-score":
+        raw = (raw + "SCORE: 8/10\n").replace("\n", "\r")
+    elif case == "decorated-verdict":
+        raw += "**verdict:** REQUEST_CHANGES\n"
+    elif case == "lowercase-score":
+        raw += "score: 8/10\n"
+    elif case == "deep-markdown":
+        raw += "- " * 10 + "x\n\n"
+    elif case == "deep-json":
+        raw = raw.replace(block, "[" * 10000 + "0" + "]" * 10000)
+    elif case == "invalid-duplicate-verdict":
+        raw += "VERDICT: INVALID\n"
+    review_file = tmp_path / "review.txt"
+    review_file.write_bytes(raw.encode())
+    assert verify_review_cli._read_review(None, False, review_file) == raw
+    result = verify_review(raw, _ctx(repo, target, raw))
+    expected = {
+        "valid": EXIT_CLEAN,
+        "bare": EXIT_CLEAN,
+        "trailing-prose": EXIT_CLEAN,
+        "crlf": EXIT_CLEAN,
+        "empty-info": EXIT_CLEAN,
+        "request-changes": EXIT_ACTIONABLE,
+        "blocked": EXIT_INCOMPLETE,
+    }.get(case, EXIT_INVALID)
+    assert result.exit_code == expected
+    assert result.receipt["reviewer_output_sha256"] == sha256_text(raw)
+    if expected == EXIT_INVALID:
+        assert result.error
+    else:
+        assert result.payload == payload
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "matching",
+        "dirty-copy",
+        "forged-quote",
+        "wrong-line",
+        "inflated-range",
+        "absent",
+        "symlink",
+        "blocking",
+        "escalate",
+        "invalid-disposition",
+        "missing-disposition",
+        "missing-rationale",
+        "no-head",
+    ],
+)
+def test_unchanged_follow_up_evidence_uses_exact_head(tmp_path, case):
+    """Only a justified follow-up may cite a regular unchanged file at the head."""
+    repo = _init_repo(tmp_path)
+    (repo / "context.py").write_text("context = 1\n", encoding="utf-8")
+    (repo / "link.py").symlink_to("context.py")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-q", "-m", "context")
+    (repo / "app.py").write_text("value = 2\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-q", "-m", "change")
+    target = resolve_commit_target(repo, _git(repo, "rev-parse", "HEAD").stdout.strip())
+    finding = _finding(path="context.py", start=1, verbatim="context = 1", priority="P3")
+    disposition = {"disposition": "follow_up", "rationale": "Nonblocking existing context."}
+    dispositions = {"F001": disposition}
+    if case == "dirty-copy":
+        (repo / "context.py").write_text("context = 99\n", encoding="utf-8")
+    elif case == "forged-quote":
+        finding["verbatim"] = "context = 99"
+    elif case == "wrong-line":
+        finding["location"].update(start_line=2, end_line=2)
+    elif case == "inflated-range":
+        finding["location"]["end_line"] = 2
+    elif case == "absent":
+        finding["location"]["path"] = "untracked.py"
+        (repo / "untracked.py").write_text("context = 1\n", encoding="utf-8")
+    elif case == "symlink":
+        finding["location"]["path"] = "link.py"
+    elif case in {"blocking", "escalate", "invalid-disposition"}:
+        disposition["disposition"] = {
+            "blocking": "in_scope_blocker",
+            "escalate": "stop_and_escalate",
+            "invalid-disposition": "invalid",
+        }[case]
+    elif case == "missing-disposition":
+        dispositions = {}
+    elif case == "missing-rationale":
+        disposition["rationale"] = " "
+    elif case == "no-head":
+        target = replace(target, head_sha=None)
+        check = verify_finding_evidence(
+            finding, repo_root=repo, target=target, changed_lines={}, allow_unchanged_follow_up=True
+        )
+        assert check.outcome == OUTCOME_OUT_OF_SCOPE
+        return
+    payload = _clean_payload()
+    payload["findings"] = [finding]
+    raw = json.dumps(payload)
+    result = verify_review(raw, _ctx(repo, target, raw, dispositions=dispositions))
+    if case in {"matching", "dirty-copy"}:
+        assert result.exit_code == EXIT_ACTIONABLE
+        assert result.receipt["findings"][0]["outcome"] == OUTCOME_VERIFIED
+        receipt_path = tmp_path / "receipt.json"
+        receipt_path.write_text(json.dumps(result.receipt))
+        record = {
+            "details": {
+                "behavior_proof_receipt": {
+                    "receipt_path": str(receipt_path),
+                    "receipt_sha256": "sha256:" + sha256_text(receipt_path.read_text()),
+                    "input_sha256": result.receipt["target"]["input_sha256"],
+                    "target_sha": target.head_sha,
+                }
+            }
+        }
+        assert task_lifecycle._behavior_proof_reference_error(record, head_sha=target.head_sha) is None
+    else:
+        assert result.exit_code == EXIT_UNVERIFIABLE
+        assert result.receipt["findings"][0]["outcome"] != OUTCOME_VERIFIED
+
+
 # --- target modes ------------------------------------------------------------
 
 
