@@ -1378,11 +1378,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-prepositions-purpose/activities.yaml",
-      "sha256": "20a008e09fc128aea92df5be7f1d87ee76c78ebb9a7282fa949f2979c74c267f"
+      "sha256": "d9179673f8111675ac2e9cf7b84c5f2a5103983ecd2798d1dc8d06106eda2b5e"
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-prepositions-purpose/module.md",
-      "sha256": "611bfaae988df5fde7c5e503dfdebb95b62fd251033af5fa358c0ee5e05bf48e"
+      "sha256": "4d12e32f3308bd76390f1db05ed3bc1fc60e11308509c3da5ae27ee57b7926ee"
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-prepositions-purpose/resources.yaml",
@@ -6166,7 +6166,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/genitive-prepositions-purpose.yaml",
-      "sha256": "2a00735a9fdccb319bfeeb3844455ee4754e3eb41599dcb18d1924523b173d45"
+      "sha256": "5d36fee54277f0f8b951aa4de6d9db0c0faddbea90ab9b82a024113a8fbddbbe"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/genitive-prepositions-source.yaml",
@@ -14314,7 +14314,7 @@
     },
     {
       "path": "site/src/content/docs/a2/genitive-prepositions-purpose.mdx",
-      "sha256": "4c0409677c00b6d0518fe6ea6ffee150279541d9872271456a0c8bb425069697"
+      "sha256": "08be3a2642852ea2d88433d16fe2488e5de8ca55a54757dbf6da2a5acdc50d9b"
     },
     {
       "path": "site/src/content/docs/a2/genitive-prepositions-source.mdx",
