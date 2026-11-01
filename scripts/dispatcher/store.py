@@ -167,6 +167,15 @@ def record_path(task_id: str) -> Path:
     return tasks_dir() / f"{task_id}.json"
 
 
+def retention_hold_error(record: dict) -> str | None:
+    """Describe a malformed hold without treating false-like values as booleans."""
+    if "worktree_retention_hold" in record:
+        value = record["worktree_retention_hold"]
+        if not isinstance(value, bool):
+            return f"worktree_retention_hold must be a boolean; got {value!r}"
+    return None
+
+
 def _write(path: Path, record: dict, exclusive: bool = False, *, grant: dict | None = None,
            require_existing: bool = False) -> None:
     # Reentrant: settlement, create and grant_paths already hold this same inode lock.
@@ -186,15 +195,19 @@ def _write(path: Path, record: dict, exclusive: bool = False, *, grant: dict | N
                 record["owned_path_grants"] = current["owned_path_grants"]
             if current.get("settling_at"):
                 record["settling_at"] = current["settling_at"]
-            # An owner hold outranks a stale supervisor copy. False is an intentional clear;
-            # absence leaves a hold that is already on disk in place.
+            # A hold or malformed hold outranks a stale supervisor copy. False is an
+            # intentional clear; absence cannot discard a durable retention refusal.
+            hold_error = retention_hold_error(current)
             if record.get("worktree_retention_hold") is False:
                 record.pop("worktree_retention_hold", None)
-            elif current.get("worktree_retention_hold") is True:
-                record["worktree_retention_hold"] = True
+            elif current.get("worktree_retention_hold") is True or hold_error:
+                record["worktree_retention_hold"] = current["worktree_retention_hold"]
                 record["worktree_disposition"] = "retained"
-                record["worktree_disposition_reason"] = "retention_hold"
-                record.pop("worktree_disposition_detail", None)
+                record["worktree_disposition_reason"] = "retention_hold_invalid" if hold_error else "retention_hold"
+                if hold_error:
+                    record["worktree_disposition_detail"] = hold_error
+                else:
+                    record.pop("worktree_disposition_detail", None)
         if grant is not None:
             record["owned_path_grants"] = [*record.get("owned_path_grants", []), grant]
         _write_atomic(path, record, exclusive)

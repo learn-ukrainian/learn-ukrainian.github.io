@@ -920,6 +920,73 @@ def test_salvage_still_publishes_a_range_the_push_scan_accepts(sandbox, monkeypa
     assert run_git(sandbox.remote, "rev-parse", ref) == head
 
 
+@pytest.mark.parametrize("salvage", [False, True])
+@pytest.mark.parametrize("damage", ["missing", "unreadable", "json", "non-object", "encoding"])
+def test_retention_refuses_unreadable_durable_record(tmp_path, monkeypatch, damage, salvage):
+    """F3: a damaged durable record must not fall back to a stale unheld copy."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    tree = tmp_path / "tree"
+    tree.mkdir()
+    record = {"task_id": "retention-refusal", "worktree_path": str(tree), "worktree_retention_hold": False}
+    path = tmp_path / "retention-refusal.json"
+    if damage != "missing":
+        path.write_bytes({"json": b"{", "non-object": b"[]", "encoding": b"\xff"}.get(
+            damage, json.dumps(record).encode()))
+    original_read = Path.read_text
+
+    def read_text(self, *args, **kwargs):
+        if self == path and damage == "unreadable":
+            raise PermissionError("record cannot be read")
+        return original_read(self, *args, **kwargs)
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("retention refusal reached Git inspection, push or removal")
+
+    monkeypatch.setattr(Path, "read_text", read_text)
+    monkeypatch.setattr(git, "_tree_changes", forbidden)
+    monkeypatch.setattr(git, "_git", forbidden)
+    monkeypatch.setattr(git, "_salvage", forbidden)
+    result = git.settle_worktree(record, salvage=salvage)
+    assert result == {
+        "worktree_disposition": "retained",
+        "worktree_disposition_reason": "task_record_damaged",
+        "worktree_disposition_detail": "retention decision requires a readable on-disk task record",
+    }
+    assert tree.is_dir()
+
+
+@pytest.mark.parametrize("salvage", [False, True])
+@pytest.mark.parametrize("source", ["disk", "memory"])
+@pytest.mark.parametrize("value", [None, "true", "false", 1, 0, [], {}, 1.0])
+def test_retention_refuses_non_boolean_hold(tmp_path, monkeypatch, value, source, salvage):
+    """F4: malformed holds must retain the tree and survive stale record writes."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    tree = tmp_path / "tree"
+    tree.mkdir()
+    record = {"task_id": "retention-refusal", "run_nonce": "same-run", "worktree_path": str(tree)}
+    disk = dict(record)
+    (disk if source == "disk" else record)["worktree_retention_hold"] = value
+    path = tmp_path / "retention-refusal.json"
+    path.write_text(json.dumps(disk))
+    if source == "disk":
+        store.replace(dict(record), path)
+        assert json.loads(path.read_text())["worktree_retention_hold"] == value
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("retention refusal reached Git inspection, push or removal")
+
+    monkeypatch.setattr(git, "_tree_changes", forbidden)
+    monkeypatch.setattr(git, "_git", forbidden)
+    monkeypatch.setattr(git, "_salvage", forbidden)
+    result = git.settle_worktree(record, salvage=salvage)
+    assert result == {
+        "worktree_disposition": "retained",
+        "worktree_disposition_reason": "retention_hold_invalid",
+        "worktree_disposition_detail": f"worktree_retention_hold must be a boolean; got {value!r}",
+    }
+    assert tree.is_dir()
+
+
 def test_retention_hold_blocks_settlement_salvage_and_cleanup(sandbox, monkeypatch, synthetic_opsec):
     """Defect class: an unpublished tree has no owner hold, so salvage retries it."""
     from scripts.orchestration import scheduled_worktree_cleanup as cleanup
@@ -950,6 +1017,8 @@ def test_retention_hold_blocks_settlement_salvage_and_cleanup(sandbox, monkeypat
     cleared = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert "worktree_retention_hold" not in cleared
     assert "worktree_disposition" not in cleared
+    cleared["worktree_retention_hold"] = False
+    (sandbox.tasks / f"{record['task_id']}.json").write_text(json.dumps(cleared))
     worker.settle_left_worktrees(salvage=True)
     settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
