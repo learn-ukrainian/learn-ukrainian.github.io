@@ -309,6 +309,45 @@ def test_agy_ukrainian_review_preserves_item_judgments_and_refuses_malformed(cas
             judge_item_reply(packet, parsed.text, stated="APPROVED", ukrainian=True)
 
 
+def _item_review_record(tmp_path, profile="ukrainian"):
+    import hashlib
+
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    brief = tmp_path / "brief.prompt"
+    brief.write_text("Review.\n\n" + render_item_packet(build_item_packet([{"id": "item-1", "text": "слово"}])))
+    return {"schema_version": 2, "require_review_verdict": True, "review_profile": profile,
+            "prompt_file": str(brief), "prompt_sha256": hashlib.sha256(brief.read_bytes()).hexdigest()}
+
+
+def test_verdict_gate_accepts_ukrainian_item_judgments_block(tmp_path):
+    """Defect class (#12417): a contract-only Ukrainian item-judgments reply fails the verdict gate."""
+    reply = (
+        "```ukrainian-item-judgments\n"
+        '{"schema": "ukrainian-item-judgments.v1", "items": [{"id": "item-1", "verdict": "APPROVE", '
+        '"finding": "", "sources": "VESUM", "quote": "слово"}]}\n'
+        "```\n"
+    )
+    assert worker._verdict_failure(_item_review_record(tmp_path), reply) is None
+
+
+def test_verdict_gate_refuses_ukrainian_reply_without_block_or_verdict(tmp_path):
+    """Defect class (#12417): a Ukrainian reply with neither a valid block nor a verdict passes the gate."""
+    reply = "```ukrainian-item-judgments\n{not valid json\n```\n"
+    assert worker._verdict_failure(_item_review_record(tmp_path), reply) == "review_missing_verdict_line"
+
+
+def test_verdict_gate_code_review_without_verdict_still_fails(tmp_path):
+    """Defect class (#12417): the item-judgments path leaks into code-review profiles."""
+    reply = (
+        "```ukrainian-item-judgments\n"
+        '{"schema": "ukrainian-item-judgments.v1", "items": [{"id": "item-1", "verdict": "APPROVE", '
+        '"finding": "", "sources": "VESUM", "quote": "слово"}]}\n'
+        "```\n"
+    )
+    assert worker._verdict_failure(_item_review_record(tmp_path, "code"), reply) == "review_missing_verdict_line"
+
+
 @pytest.mark.parametrize("case", ["valid", "conflicting-response", "missing", "null", "invalid",
                                  "terminal-error", "duplicate-terminal", "exit-failure"])
 def test_agy_structured_terminal_not_response(case):

@@ -74,6 +74,7 @@ from scripts.review.model_catalog import (
 from scripts.review.review_contract import (
     ContractError,
     ItemChunk,
+    item_judgments_verdict,
     judge_item_reply,
     load_frozen_item_packet,
     reply_has_item_judgments,
@@ -2536,7 +2537,7 @@ def _task_verdict(task: dict[str, Any], reply: str) -> _TaskVerdict:
     if task.get("pinned_head") is not None and task["pinned_head"] != sha:
         raise RecordError("reviewed SHA conflicts with pinned head")
     model, family = reviewer_identity(task)
-    verdict, finding_count = _review_verdict_and_count(reply)
+    verdict, finding_count = _item_judgments_or_review_verdict(task, reply)
     _require_sources_mcp_calls(task)
     sources_count = task.get("sources_mcp_call_count")
     if type(sources_count) is not int or sources_count < 0:
@@ -2589,6 +2590,32 @@ def _post_verdict(repository: str, number: int, comment: str, login: str) -> dic
     ):
         raise RecordError("comment readback mismatch; publication state unknown")
     return readback
+
+
+def _item_judgments_or_review_verdict(task: Mapping[str, Any], reply: str) -> tuple[str, int | Literal["unknown"]]:
+    """The verdict of a Ukrainian reply that returns only its judgment block, else the reply's verdict.
+
+    With a frozen item denominator the contract asks for the block alone, so a reply
+    with no verdict token takes the block's item rollup.
+    """
+    if not is_ukrainian_review(task) or recognized_verdicts(reply):
+        return _review_verdict_and_count(reply)
+    try:
+        packet = load_frozen_item_packet(task)
+        if packet is None:
+            return _review_verdict_and_count(reply)
+        verdict = item_judgments_verdict(packet, reply)
+    except ContractError as exc:
+        raise RecordError(str(exc)) from None
+    if reason := invalid_findings_block(reply, stated=None):
+        raise RecordError(f"reply carries an invalid findings block: {reason}")
+    if declares_incomplete_review(reply):
+        raise RecordError("inconclusive: reviewer declares an incomplete review")
+    if verdict != "BLOCKED" and declares_missing_capabilities(reply):
+        raise RecordError(
+            f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may"
+        )
+    return verdict, "unknown"
 
 
 def _item_chunk(task: Mapping[str, Any], reply: str, verdict: str) -> ItemChunk | None:
