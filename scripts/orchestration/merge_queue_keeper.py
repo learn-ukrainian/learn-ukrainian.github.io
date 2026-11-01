@@ -1211,7 +1211,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         approved_before,
                         verdict_lookup_ok,
                         queued=queued is True,
-                        canary=canary if verdict_lookup_ok else None,
+                        canary=canary,
                     )
                     if fresh
                     else None

@@ -33,6 +33,23 @@ def _git(repo: Path, *args: str) -> str:
     ).stdout.strip()
 
 
+TASKS: dict[str, tuple[dict, str]] = {}
+
+
+@pytest.fixture(autouse=True)
+def tasks(monkeypatch: pytest.MonkeyPatch) -> dict[str, tuple[dict, str]]:
+    """The settled task records receipts name, in place of the dispatcher store."""
+    TASKS.clear()
+
+    def load(task_id: str) -> tuple[dict, str]:
+        if task_id not in TASKS:
+            raise ValueError("task not found")
+        return TASKS[task_id]
+
+    monkeypatch.setattr(canary, "_load_task", load)
+    return TASKS
+
+
 @pytest.fixture
 def repo(tmp_path: Path) -> tuple[Path, str]:
     root = tmp_path / "repo"
@@ -68,7 +85,9 @@ def task(route: str, head: str, **changes: object) -> dict:
 
 def write_all(root: Path, head: str) -> None:
     for route in canary.required_routes():
-        receipt = canary.build_receipt(task(route, head), RECEIPT, pr=1, head=head, root=root)
+        record = task(route, head)
+        TASKS[record["task_id"]] = (record, RECEIPT)
+        receipt = canary.build_receipt(record, RECEIPT, pr=1, head=head, root=root)
         path = canary.receipt_root(root) / head / f"{route}.json"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(receipt), encoding="utf-8")
@@ -138,6 +157,23 @@ def test_receipts_bound_to_other_contract_bytes_or_routes_refuse(repo) -> None:
     (root / CONTRACT_FILE).write_text("CONTRACT = 2\n", encoding="utf-8")
     _git(root, "commit", "-qam", "change")
     assert canary.refusal([CONTRACT_FILE], _git(root, "rev-parse", "HEAD"), root).startswith("missing: ")
+
+
+def test_a_receipt_must_still_match_its_settled_task(repo, tasks) -> None:
+    root, head = repo
+    write_all(root, head)
+    record, _ = tasks.pop("contract-canary-1-codex")
+    assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: task behind the receipt for codex"
+    tasks["contract-canary-1-codex"] = ({**record, "status": "failed"}, RECEIPT)
+    assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: task behind the receipt for codex"
+    tasks["contract-canary-1-codex"] = (record, RECEIPT)
+    path = canary.receipt_root(root) / head / "codex.json"
+    path.write_text(json.dumps({**json.loads(path.read_text()), "model": "gpt-6-astra"}))
+    assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: receipt for codex does not match its task"
+
+
+def test_the_gate_itself_is_a_contract_path() -> None:
+    assert canary.touches_contract(["scripts/review/contract_canary.py"])
 
 
 def test_a_change_outside_the_contract_needs_no_canary(repo) -> None:

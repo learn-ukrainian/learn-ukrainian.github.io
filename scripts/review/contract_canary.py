@@ -31,6 +31,7 @@ if __package__ in (None, ""):
 # The one declaration of the review output contract: bound schemas, the receipt gate, the
 # verdict parser, the recorder, settlement, and each reviewer provider's schema or reply handling.
 CONTRACT_PATHS: tuple[str, ...] = (
+    "scripts/review/contract_canary.py",  # this gate: a change to it is proven on live routes too
     "schemas/code-review-findings.v1.schema.json",
     "scripts/review/review_contract.py",
     "scripts/review/verdict_parser.py",
@@ -184,8 +185,9 @@ def refusal(paths: Iterable[str], head: str, root: Path | None = None) -> str | 
     """None when the change may queue; otherwise the typed detail of ``REASON``.
 
     A change outside ``CONTRACT_PATHS`` needs nothing. A contract change needs a valid
-    receipt for every required route at ``head``. An unknown route list, an unreadable
-    tree or receipt, and a receipt bound to other contract bytes all refuse.
+    receipt for every required route at ``head``, and each receipt must still be what its
+    settled task record and reply build. An unknown route list, an unreadable tree, receipt
+    or task, and a receipt bound to other contract bytes all refuse.
     """
     if not touches_contract(paths):
         return None
@@ -209,6 +211,14 @@ def refusal(paths: Iterable[str], head: str, root: Path | None = None) -> str | 
             return f"unverifiable: receipt for {route}"
         if receipt.get("contract_fingerprint") != fingerprint:
             return f"stale: receipt for {route} is bound to other contract bytes"
+        try:
+            # The file is a claim; the settled task it names is the evidence.
+            task, result = _load_task(str(receipt.get("task_id")))
+            rebuilt = build_receipt(task, result, pr=receipt.get("pr"), head=head, root=root)
+        except Exception:
+            return f"unverifiable: task behind the receipt for {route}"
+        if rebuilt != receipt:
+            return f"unverifiable: receipt for {route} does not match its task"
     return f"missing: {','.join(missing)}" if missing else None
 
 
@@ -222,15 +232,21 @@ def _pr_head(pr: int) -> str:
     return out
 
 
-def record(task_id: str, pr: int, root: Path | None = None) -> Path:
-    """Write the receipt for one settled canary task at the PR's live head."""
+def _load_task(task_id: str) -> tuple[dict, str]:
+    """A dispatcher task record and its reply text."""
     from scripts.dispatcher import store
 
     task = store.read(task_id)
     result_file = task.get("result_file")
     if not isinstance(result_file, str):
         raise CanaryError("task has no result")
-    receipt = build_receipt(task, Path(result_file).read_text(encoding="utf-8"), pr=pr, head=_pr_head(pr), root=root)
+    return task, Path(result_file).read_text(encoding="utf-8")
+
+
+def record(task_id: str, pr: int, root: Path | None = None) -> Path:
+    """Write the receipt for one settled canary task at the PR's live head."""
+    task, result = _load_task(task_id)
+    receipt = build_receipt(task, result, pr=pr, head=_pr_head(pr), root=root)
     path = _receipt_path(receipt["head"], receipt["route"], root)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
