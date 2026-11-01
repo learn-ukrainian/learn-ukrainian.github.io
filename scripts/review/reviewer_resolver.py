@@ -1566,6 +1566,12 @@ def resolve_reviewer(
             if result.status == "advisory_only":
                 advisory.append(result)
             elif result.status == "eligible":
+                if (
+                    candidate.seat_priority < 10
+                    and inputs.pinned_candidate is None
+                    and (result.health != "healthy" or result.capacity.near_cap)
+                ):
+                    continue
                 prioritized = (
                     candidate.seat_priority < 10
                     and inputs.risk in {"low", "medium"}

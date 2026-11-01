@@ -1460,6 +1460,52 @@ def test_muse_not_selected_when_health_is_unknown_or_unhealthy():
     assert unhealthy.selected.name != "muse"
     assert unhealthy.selected.family == "openai"
 
+    exhausted = resolve_reviewer(
+        ResolverInputs(
+            author_model="gemini-3.8-flash-high",
+            risk="low",
+            review_profile="infra",
+            structural=True,
+            routing_snapshot={
+                "diagnostics": {"stale": False},
+                "agents": {
+                    "codex": {"status": "unhealthy"},
+                    "cursor": {"status": "unhealthy"},
+                    "claude": {"status": "unhealthy"},
+                    "grok": {"status": "unhealthy"},
+                    "agy": {"status": "unhealthy"},
+                    "gemini": {"status": "unhealthy"},
+                    "muse": {"status": "unavailable"},
+                },
+            },
+            claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert exhausted.selected is None
+
+    near_cap = resolve_reviewer(
+        ResolverInputs(
+            author_model="gemini-3.8-flash-high",
+            risk="low",
+            review_profile="infra",
+            structural=True,
+            routing_snapshot={
+                "diagnostics": {"stale": False},
+                "agents": {
+                    "codex": {"status": "unhealthy"},
+                    "cursor": {"status": "unhealthy"},
+                    "claude": {"status": "unhealthy"},
+                    "grok": {"status": "unhealthy"},
+                    "agy": {"status": "unhealthy"},
+                    "gemini": {"status": "unhealthy"},
+                    "muse": {"status": "healthy", "health": {"healthy": True}, "remaining_pct": 5},
+                },
+            },
+            claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert near_cap.selected is None
+
 
 @pytest.mark.parametrize(
     "normalize,value,message",
