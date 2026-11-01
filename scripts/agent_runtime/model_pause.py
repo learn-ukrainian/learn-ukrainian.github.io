@@ -368,15 +368,19 @@ def _window_used_pct(block: object) -> float | None:
     A remaining percent at or below zero is exhaustion. A present ``used_pct``
     that is not a finite number makes the window unusable; remaining does not
     replace it. A present freshness value other than the string ``fresh`` does
-    the same. A window that carries its own stale flag uses the fresh-probe rule.
+    the same, as does a present ``remaining_pct`` that is not a finite number.
+    A window that carries its own stale flag uses the fresh-probe rule: only
+    ``stale`` exactly ``False`` is fresh.
     """
     if not isinstance(block, Mapping):
         return None
-    if block.get("stale") is True:
+    if "stale" in block and block.get("stale") is not False:
         return None
     if "freshness" in block and block.get("freshness") != "fresh":
         return None
     remaining = _finite_pct(block.get("remaining_pct"))
+    if "remaining_pct" in block and remaining is None:
+        return None
     if "used_pct" in block:
         used = _finite_pct(block.get("used_pct"))
         if used is None:
@@ -473,12 +477,16 @@ def account_used_pct(account: ClaudeAccount | None) -> Callable[[str], float | N
     return functools.partial(routing_budget_used_pct, account=account)
 
 
-def policy_for_seat(seat: str, *, review: bool = False, check_headroom: bool = True) -> dict[str, Any]:
+def policy_for_seat(
+    seat: str, *, review: bool = False, check_headroom: bool = True, plan_metered: bool = True
+) -> dict[str, Any]:
     """Keep pauses and only the headroom entries that fund this seat.
 
     Review admission protects the native Claude plan only. An AGY seat also
     stops ``claude-*`` models on that seat's Claude windows. Structural
     qualification and checks of unselected models omit headroom explicitly.
+    ``plan_metered=False`` (a claude seat on an API-key account, which has no
+    plan meter) omits the ``claude`` plan entries; its spend cap guards it.
     """
     policy = load_policy()
     headroom = [
@@ -486,6 +494,7 @@ def policy_for_seat(seat: str, *, review: bool = False, check_headroom: bool = T
         if check_headroom
         and (not review or entry.get("lane") == "claude")
         and (seat == "claude" or entry.get("lane") != "claude")
+        and (plan_metered or entry.get("lane") != "claude")
     ]
     if check_headroom and seat == "agy":
         headroom.append({

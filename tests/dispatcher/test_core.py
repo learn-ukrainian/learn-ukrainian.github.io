@@ -1421,6 +1421,7 @@ def test_agy_stream_from_another_model_family_settles_as_a_failure(sandbox):
         )
     finally:
         server.shutdown()
+        server.server_close()
 
 
 @pytest.mark.parametrize(
