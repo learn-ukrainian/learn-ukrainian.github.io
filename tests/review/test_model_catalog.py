@@ -1125,6 +1125,16 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # route or review ranking. It replaced the retired budget extension role.
             elevation = _pop_budget_elevation_role(value)
             assert hashlib.sha256(encode(elevation)).hexdigest() == "4a395379ef040f47f69be6badd96376bcbc1041d8698ff0703bc9209e399592d"
+            # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off
+            if ["muse"] in value["review_ladders"]["low"]:
+                value["review_ladders"]["low"] = [m for m in value["review_ladders"]["low"] if m != ["muse"]]
+            if ["muse"] in value["review_ladders"]["medium"]:
+                value["review_ladders"]["medium"] = [m for m in value["review_ladders"]["medium"] if m != ["muse"]]
+            muse_cand = value["review_candidates"]["muse"]
+            assert "--contributor-mode off" in muse_cand["invocation"]
+            assert "infra" in muse_cand["review_profiles"]
+            value["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])
+            value["models"]["muse-wonder-full-1.0"]["notes"] = CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"]["notes"]
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

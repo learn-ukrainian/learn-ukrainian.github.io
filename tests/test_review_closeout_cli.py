@@ -117,10 +117,10 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     reviewer_proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
     assert reviewer_proc.returncode == 0, reviewer_proc.stderr
     resolution = json.loads(reviewer_proc.stdout)
-    # The default OpenAI formal CF catalog seat resolves to Astra.
-    assert resolution["selected"]["name"] == "openai_frontier"
-    assert resolution["selected"]["concrete_model"] == "gpt-6.1-sol"
-    assert resolution["selected"]["route"] == "codex"
+    # The low-risk infra review resolves to Muse ahead of frontier seats (#12375).
+    assert resolution["selected"]["name"] == "muse"
+    assert resolution["selected"]["concrete_model"] == "muse-wonder-full-1.0"
+    assert resolution["selected"]["route"] == "muse"
     assert resolution["policy_version"] == "deterministic-formal-routing.v2"
     assert resolution["resolved_risk"] == "medium"
 
@@ -182,9 +182,9 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     state = json.loads(state_file.read_text(encoding="utf-8"))
     resolution = state["resolved_reviewer"]
     selected = resolution["selected"]
-    assert selected["concrete_model"] == "gpt-6.1-sol"
-    assert selected["family"] == "openai"
-    assert selected["route"] == "codex"
+    assert selected["concrete_model"] == "muse-wonder-full-1.0"
+    assert selected["family"] == "meta"
+    assert selected["route"] == "muse"
     assert resolution["policy_version"] == "deterministic-formal-routing.v2"
     # On-disk receipt matches the stdout payload exactly.
     assert resolution == json.loads(proc.stdout)
@@ -228,7 +228,8 @@ def test_reviewer_with_owned_path_preserves_security_floor(tmp_path, profile, ow
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
     assert payload["resolved_risk"] == risk
-    assert payload["selected"]["concrete_model"] == "gpt-6.1-sol"
+    expected_model = "muse-wonder-full-1.0" if risk == "low" else "gpt-6.1-sol"
+    assert payload["selected"]["concrete_model"] == expected_model
     assert json.loads(state.read_text(encoding="utf-8"))["resolved_reviewer"] == payload
 
 
@@ -797,8 +798,9 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
     payload = json.loads(medium.stdout)
 
     # The latest author alone (GPT) would select Opus; the earlier Claude author excludes it.
+    # Muse is selected as the top low/medium reviewer outside anthropic and openai (#12375).
     assert medium.returncode == 0, medium.stdout
-    assert payload["selected"]["name"] == "gemini-3.8-flash-high"
+    assert payload["selected"]["name"] == "muse"
     assert payload["branch_facts"]["existing_families"] == ["anthropic", "openai"]
     trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
     assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
@@ -934,7 +936,7 @@ def test_resolve_reviewer_attributes_only_the_branch_after_main_is_merged(tmp_pa
     payload = json.loads(result.stdout)
     assert payload["branch_facts"]["existing_families"] == ["anthropic"]
     assert payload["branch_facts"]["commits"] == 2
-    assert payload["selected"]["name"] == "gemini-3.8-flash-high"
+    assert payload["selected"]["name"] == "muse"
     trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
     assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
     assert squash != head
@@ -1084,7 +1086,7 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
     )
     body = json.loads(result.stdout)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert body["selected"]["name"] == "gemini-3.8-flash-high"
+    assert body["selected"]["name"] == "muse"
     if excluded:
         assert body["branch_facts"]["existing_families"] == ["anthropic"]
     else:
@@ -1097,8 +1099,8 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "eb6272953531b099b16d34012de05a6f685e7ee9e343373e658801649490cf12"),
-        ("claude-opus-5-5", "low", "ordinary.py", "fd761143b017fe0fdde1ff97c1bb8f79505e4a78d818fd6b22c40737e9475770"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "696f4eec03260900f5a1e517b8f645256ac786df174106739d905a51829751fb"),
+        ("claude-opus-5-5", "low", "ordinary.py", "2893045f81b526cbac78ede3359e5ca0b4ec4791f54f5bf057354de2ffb8b9d9"),
         (
             "gpt-6.1-sol",
             "low",
