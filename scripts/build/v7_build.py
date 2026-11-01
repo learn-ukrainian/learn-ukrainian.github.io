@@ -2017,6 +2017,11 @@ def _upgrade_review_context(lesson_map: Mapping[str, Any], lesson: int | None) -
         "on the last lesson, not Module completion), no named narrator, marked attributed "
         "quotations with Resources entries, no ```text learner examples, and side-by-side English "
         "support for added A1 Ukrainian passages of three or more sentences. "
+        "Across the module, require every plan objective and content point to be taught accurately, with sufficient "
+        "explanation, explicit connections, useful worked examples and aligned practice with feedback. "
+        "For one lesson, assess its assigned teaching and progression toward those objectives. "
+        "Reject unsupported claims, repetitive padding, decorative digressions, dry lists replacing "
+        "teaching and compression that leaves connections untaught. Never reward or penalize a word count. "
         "SOURCES AUDIT: VESUM/`sources` is why the Ukrainian is trustworthy (gender, government, "
         "real examples — not Russian calques). This corpus trains a Ukrainian LLM and tests whether "
         "the sources tools actually get used. No tool calls = fail. Ungrounded morphology = fail. "
@@ -2043,8 +2048,6 @@ def _upgrade_declared_map(derived: dict, raw: str | None) -> dict:
         for key in ("n", "sections", "minutes", "activities"):
             if expected[key] != actual[key]:
                 raise linear_pipeline.LinearPipelineError(f"Reviewed map changes deterministic lesson {key}")
-        if actual["word_target"] < expected["word_target"]:
-            raise linear_pipeline.LinearPipelineError("Reviewed map lowers word target")
     if {item["id"] for item in declared["items_min_exempt"]} != {item["id"] for item in derived["items_min_exempt"]}:
         raise linear_pipeline.LinearPipelineError("Reviewed map changes original-item exemptions")
     return declared
@@ -2253,6 +2256,16 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             lesson_map = _upgrade_reuse_lesson_map(args.slug, lesson_map)
         else:
             lesson_map = _upgrade_declared_map(lesson_map, getattr(args, "lesson_map", None))
+        # Deprecated sizing must not become instructions in writer or review prompts.
+        lesson_map = dict(lesson_map, lessons=[
+            {key: value for key, value in lesson.items() if key != "word_target"}
+            for lesson in lesson_map["lessons"]
+        ])
+        plan = {key: value for key, value in plan.items() if key not in {"word_target", "word_tolerance", "size_policy"}}
+        plan["content_outline"] = [
+            {key: value for key, value in section.items() if key != "words"}
+            for section in plan["content_outline"]
+        ]
         module_dir.mkdir(parents=True, exist_ok=True)
         import yaml
 
@@ -2337,7 +2350,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             if n == lesson_map["lessons"][0]["n"]:
                 _land_overview_or_fail(module_dir, source_dir, plan, parsed)
             phase = "llm_qg"
-            lesson_plan = dict(plan, word_target=lesson["word_target"], content_outline=[
+            lesson_plan = dict(plan, content_outline=[
                 section for section in plan["content_outline"] if section["section"] in lesson["sections"]
             ])
             review = _upgrade_gemini_adjust_then_astra(
