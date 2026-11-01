@@ -982,20 +982,36 @@ def test_scheduler_running_skips_on_demand_refresh(monkeypatch):
 
 def test_periodic_refresh_runs_immediately_then_stops(monkeypatch):
     runs = threading.Event()
+    release = threading.Event()
+    claude_ran = threading.Event()
 
     def fake_run() -> None:
         runs.set()
+        release.wait(timeout=2.0)
+
+    def fake_claude() -> None:
+        claude_ran.set()
 
     monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
     monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "30")
     monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", fake_run)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", fake_claude)
     monkeypatch.setattr(subscription_usage_mod, "_scheduler_thread", None)
+    monkeypatch.setattr(subscription_usage_mod, "_claude_account_scheduler_thread", None)
     try:
         codexbar_usage_mod.start_periodic_refresh(run_immediately=True)
+        assert claude_ran.wait(timeout=1.0)
         assert runs.wait(timeout=1.0)
+        # The account probe is not waiting on the still-blocked provider pass.
+        assert claude_ran.is_set()
         assert codexbar_usage_mod.scheduler_status()["scheduler_running"] is True
-        assert codexbar_usage_mod.scheduler_status()["cache_ttl_s"] == 720.0
+        assert codexbar_usage_mod.scheduler_status()["cache_ttl_s"] == 810.0
+        assert subscription_usage_mod.DEFAULT_CODEXBAR_CACHE_TTL_S == 810.0
+        assert subscription_usage_mod.DEFAULT_CODEXBAR_CACHE_TTL_S > (
+            subscription_usage_mod.DEFAULT_CODEXBAR_REFRESH_INTERVAL_S + 60.0
+        )
     finally:
+        release.set()
         codexbar_usage_mod.stop_periodic_refresh(join_timeout_s=1.0)
     assert codexbar_usage_mod.scheduler_status()["scheduler_running"] is False
 
@@ -1011,10 +1027,15 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
         release.wait(timeout=1.0)
         return {}
 
+    claude_calls: list[str] = []
     monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", lambda: None)
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_refresh_claude_accounts_live",
+        lambda: claude_calls.append("claude"),
+    )
     monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
     worker = threading.Thread(target=subscription_usage_mod._run_all_refreshes, daemon=True)
     worker.start()
@@ -1023,6 +1044,7 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
     release.set()
     worker.join(timeout=1.0)
     assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)]
+    assert claude_calls == []
 
 
 OPENROUTER_KEY_FIXTURE = {
