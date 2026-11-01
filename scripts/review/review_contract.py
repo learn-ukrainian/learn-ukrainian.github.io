@@ -16,6 +16,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.orchestration.integration_sweep import (
     ITEM_ID_RE,
     VOID_QUOTE_MISMATCH,
@@ -920,7 +921,7 @@ def captured_sources_events(trace: str) -> tuple[dict[str, Any], ...]:
 
     events = []
     captured = []
-    for line in trace.splitlines():
+    for line in jsonl_lines(trace):
         try:
             event = json.loads(line)
         except json.JSONDecodeError:
