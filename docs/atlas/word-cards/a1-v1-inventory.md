@@ -424,9 +424,8 @@ in durable Fleet custody. Replays use the exact sealed source bytes.
 
 `--check` compares the rebuilt main bundle and all four sibling projections.
 `--require-chain` refuses with `reviewed_full_receipt_chain_pending` until a
-real example has independent approval. The PR remains held on the slice-5
-branch while that predecessor is unmerged. Review and landing also require
-the review infrastructure gate, the full slice-4 audit, explicit release,
-current-head CI, and independent review of all 60 entries.
+real example has independent approval. Slices 4 and 5 are merged, and this PR
+now targets `main`. It remains held pending the review infrastructure gate,
+explicit release, current-head CI, and independent review of all 60 entries.
 #11943 and all nine parent criteria remain open. This slice supplies no
 publication, browser acceptance, or independent held-out proof.
