@@ -386,16 +386,18 @@ def reject_untracked_inputs(root: Path) -> None:
     Two derived sets are not overlays: dependency directories proven by their lockfile, and copies the
     deploy wrote that are byte-identical to the outgoing commit's sources (#12387).
     """
-    listing = git_ok("ls-files", "-z", "--others", "--", *OVERLAY_PATHSPECS, cwd=root)
+    # Names stay byte for byte (``git_records``): a text-mode read turns CR and CRLF into LF, so the
+    # deployed-copy proof would hash a different, committed-identical file than the one Git listed.
+    listing = git_records("ls-files", "-z", "--others", "--", *OVERLAY_PATHSPECS, cwd=root)
     if listing is None:
         raise GateOutcome("state_unavailable", "cannot list untracked validation inputs", incomplete=True)
-    candidates = [path for path in listing.split("\0") if path]
+    candidates = [path for path in listing if path]
     tracked: set[str] = set()
     if any("node_modules" in Path(path).parts for path in candidates):
-        tracked_listing = git_ok("ls-files", "-z", "--cached", cwd=root)
+        tracked_listing = git_records("ls-files", "-z", "--cached", cwd=root)
         if tracked_listing is None:
             raise GateOutcome("state_unavailable", "cannot list tracked dependency inputs", incomplete=True)
-        tracked = set(tracked_listing.split("\0"))
+        tracked = set(tracked_listing)
     overlays = [path for path in candidates if not is_regenerable_dependency_input(path, root=root, tracked=tracked)]
     copies = committed_deployed_copies(overlays, root=root)
     overlays = sorted(path for path in overlays if path not in copies)

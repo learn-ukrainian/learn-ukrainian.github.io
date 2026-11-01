@@ -1183,14 +1183,14 @@ def test_dependency_input_predicate_matches_reaper(
     # Git does not descend directory symlinks. Supply that enumerated path to
     # also prove the scan applies its predicate if such an input is returned.
     if state.startswith("symlink_") and state != "symlink_lock":
-        original_git_ok = gate.git_ok
+        original_git_records = gate.git_records
 
-        def listing(*args: str, cwd: Path) -> str | None:
+        def listing(*args: str, cwd: Path) -> list[str] | None:
             if "--others" in args:
-                return relative + "\0"
-            return original_git_ok(*args, cwd=cwd)
+                return [relative]
+            return original_git_records(*args, cwd=cwd)
 
-        monkeypatch.setattr(gate, "git_ok", listing)
+        monkeypatch.setattr(gate, "git_records", listing)
     if expected or state == "tracked_input":
         assert gate.reject_untracked_inputs(repo) is None
     else:
@@ -1203,7 +1203,9 @@ def test_dependency_input_predicate_matches_reaper(
 def test_dependency_input_scan_fails_closed_when_tracked_listing_is_unavailable(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    monkeypatch.setattr(gate, "git_ok", lambda *args, **kwargs: "site/node_modules/x.py\0" if "--others" in args else None)
+    monkeypatch.setattr(
+        gate, "git_records", lambda *args, **kwargs: ["site/node_modules/x.py"] if "--others" in args else None
+    )
     with pytest.raises(gate.GateOutcome) as raised:
         gate.reject_untracked_inputs(tmp_path)
     assert raised.value.reason == "state_unavailable"
@@ -1301,6 +1303,21 @@ def test_a_file_under_a_deploy_root_with_no_committed_source_is_refused(repo: Pa
 
     assert raised.value.reason == "untracked_inputs"
     assert deployed in raised.value.detail
+
+
+def test_a_deployed_copy_name_with_a_carriage_return_is_refused(repo: Path) -> None:
+    _commit_deploy_source(repo, "agents_extensions/shared/hooks/guard\n.py")
+    _write(repo, ".claude/hooks/guard\n.py", DEPLOYED_HOOK)
+    for name in ("guard\r.py", "guard\r\n.py"):
+        _write(repo, f".claude/hooks/{name}", "raise SystemExit(0)\n")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert ".claude/hooks/guard\r.py" in raised.value.detail
+    assert ".claude/hooks/guard\r\n.py" in raised.value.detail
+    assert ".claude/hooks/guard\n.py" not in raised.value.detail
 
 
 def test_a_symlinked_deployed_copy_is_refused(repo: Path) -> None:
