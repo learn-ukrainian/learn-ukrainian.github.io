@@ -1356,7 +1356,7 @@ Parses `review/*-review.md` to extract `Overall Score: X/10` and `Status: PASS|F
 
 ### `GET /api/state/routing-budget` — per-account Claude rows
 
-A response is the last complete snapshot. While that snapshot is inside its 15-second TTL, or still inside the 900-second stale threshold after the TTL, the handler returns it and lets at most one refresh run off the request path. Past the stale threshold the same snapshot is returned and no longer authorizes a lane. A refresh parses a task file again only when its fingerprint changes: name, modification time, change time, size, or inode. Unchanged files are not read again. Payload fields, `diagnostics.stale`, `diagnostics.data_age_s`, and the stale threshold are unchanged.
+A response is the last complete snapshot. While that snapshot is inside its 15-second TTL, or still inside the 900-second stale threshold after the TTL, the handler returns it and lets at most one refresh run off the request path. Past the stale threshold the same snapshot is returned and no longer authorizes a lane. A refresh parses a task file again only when its fingerprint changes: name, modification time, change time, size, or inode. This covers the active-task summary and the lane-health scan. Unchanged files are not read again. Payload fields, `diagnostics.stale`, `diagnostics.data_age_s`, and the stale threshold are unchanged.
 
 `agents.claude` remains the default-account lane, and every routing decision still reads only that lane. Two additive top-level keys give the per-account view (#10630):
 
