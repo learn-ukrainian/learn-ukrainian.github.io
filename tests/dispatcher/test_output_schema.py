@@ -2,6 +2,7 @@
 
 import json
 import re
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -191,7 +192,28 @@ def test_claude_review_binds_findings_schema(dispatch):
     assert failed.error == "claude: exited with status 1"
     codex_spec, codex_record = dispatch.invoke(path=None, agent="sol", review=True, task_id="codex-schema")
     assert codex_record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
-    assert codex.build(codex_spec, {}).argv.count("--output-schema") == 1
+    codex_argv = codex.build(codex_spec, {}).argv
+    assert codex_argv.count("--output-schema") == 1
+    bound = json.loads(Path(codex_argv[codex_argv.index("--output-schema") + 1]).read_text())
+    assert "if" not in bound and "oneOf" not in json.dumps(bound) and "not" not in bound
+    assert "missing_capabilities" not in bound.get("properties", {})
+    assert bound["properties"]["schema_version"]["type"] == "string"
+    from scripts.audit.post_build_review import validate_codex_output_schema
+
+    validate_codex_output_schema(bound)
+    receipt_schema = json.loads(Path(codex_record["output_schema_path"]).read_text())
+    assert "if" in receipt_schema
+    refused = {**receipt, "missing_capabilities": ["shell"]}
+    from jsonschema import Draft202012Validator
+    from jsonschema.exceptions import ValidationError
+
+    with pytest.raises(ValidationError, match="missing_capabilities"):
+        Draft202012Validator(receipt_schema).validate(refused)
+    Draft202012Validator(receipt_schema).validate(receipt)
+    failed_codex = codex.parse("", "HTTP 400 schema.if is not permitted when strict is true", 1, None)
+    assert failed_codex.error == (
+        "codex: exited with status 1: HTTP 400 schema.if is not permitted when strict is true"
+    )
 
 
 def test_agy_review_binds_findings_schema(dispatch):
