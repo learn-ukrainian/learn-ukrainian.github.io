@@ -1653,6 +1653,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     comment_urls = {str(comment.get("url")) for comment in raw_comments if comment.get("url")}
     login = github.get("authenticated_login")
     changed_paths = pr.get("files") if isinstance(pr, Mapping) and "files" in pr else None
+    if changed_paths is None and isinstance(local, Mapping) and isinstance(local.get("changed_paths"), list):
+        changed_paths = local.get("changed_paths")
     evidence_status = _evidence_status(
         ledger,
         head_sha=head_sha,

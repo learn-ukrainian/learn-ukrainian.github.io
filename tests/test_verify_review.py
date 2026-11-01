@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from contextlib import redirect_stdout
 from dataclasses import asdict, replace
+from io import StringIO
 from pathlib import Path
 
 import pytest
@@ -2135,8 +2137,24 @@ def test_ukrainian_behavior_proof_cli_writes_receipt_from_pr_comments(tmp_path, 
         return comments, "fleet"
 
     monkeypatch.setattr("scripts.review.closeout_cli.load_pull_request_comments", fake_comments)
-    assert run_closeout("behavior-proof", "receipt") == 0
-    receipt_path = tmp_path / "state.ukrainian-behavior-proof-receipt.json"
+    monkeypatch.chdir(tmp_path)
+    printed_out = StringIO()
+    with redirect_stdout(printed_out):
+        assert closeout_main(["--state-file", "state.json", "behavior-proof", "receipt"]) == 0
+    printed = json.loads(printed_out.getvalue())
+    assert Path(printed["receipt_path"]).is_absolute()
+    receipt_path = Path(printed["receipt_path"])
+    assert receipt_path == (tmp_path / "state.ukrainian-behavior-proof-receipt.json").resolve()
+    task_lifecycle._validate_behavior_proof_reference_shape(
+        {
+            "behavior_proof_receipt": {
+                "receipt_path": printed["receipt_path"],
+                "receipt_sha256": printed["receipt_sha256"],
+                "input_sha256": "c" * 64,
+                "target_sha": head,
+            }
+        }
+    )
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     assert receipt["review_profile"] == "ukrainian"
     assert "reviewer" not in receipt and "reviewer_payload" not in receipt

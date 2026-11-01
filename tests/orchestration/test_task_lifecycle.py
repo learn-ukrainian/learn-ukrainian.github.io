@@ -2939,8 +2939,13 @@ def test_closeout_observation_keeps_comment_trust_fields(tmp_path: Path, monkeyp
     adapter = task_closeout.GhGitHubAdapter(tmp_path)
     created = "2026-07-16T10:00:00Z"
 
+    identity_reads = {"n": 0}
+
     def fake_json(args, stdin=None):
         verb = getattr(args, "verb", "")
+        if verb == "read-identity":
+            identity_reads["n"] += 1
+            return {"login": "fleet"}
         if verb == "read-comments":
             return [{
                 "html_url": "https://github.com/org/repo/pull/77#issuecomment-1",
@@ -2960,8 +2965,6 @@ def test_closeout_observation_keeps_comment_trust_fields(tmp_path: Path, monkeyp
                 "state": "APPROVED",
                 "commit_id": "a" * 40,
             }]
-        if verb == "read-identity":
-            return {"login": "fleet"}
         if verb == "read-pr-files":
             return [{"filename": "curriculum/l2-uk-en/a2/lesson.mdx", "status": "modified"}]
         raise AssertionError(verb)
@@ -2995,7 +2998,16 @@ def test_closeout_observation_keeps_comment_trust_fields(tmp_path: Path, monkeyp
     assert review["author_association"] == "OWNER"
     assert review["user"]["login"] == "fleet"
     assert github["authenticated_login"] == "fleet"
+    assert identity_reads["n"] == 1
     assert github["pr"]["files"] == ["curriculum/l2-uk-en/a2/lesson.mdx"]
+    unbound = task_lifecycle.validate_lifecycle(_ledger())
+    unbound["pr"] = {"number": None, "url": None}
+    unbound = task_lifecycle.validate_lifecycle(unbound)
+    identity_reads["n"] = 0
+    without_pr = adapter._github_observation(unbound)
+    assert identity_reads["n"] == 0
+    assert without_pr["authenticated_login"] is None
+    assert without_pr["comments"] == []
 
 
 def test_learner_content_diff_refuses_code_behavior_receipt(tmp_path: Path) -> None:
@@ -3013,3 +3025,10 @@ def test_learner_content_diff_refuses_code_behavior_receipt(tmp_path: Path) -> N
     blockers = " ".join(result["hard_blockers"])
     assert "ukrainian" in blockers
     assert "behavior_proof" not in result["valid_evidence"].get("AC-IMPL", set())
+    local_only = _observation(_body())
+    local_only["github"]["pr"].pop("files", None)
+    local_only["local"]["changed_paths"] = ["curriculum/l2-uk-en/a2/liudyna-i-stosunky.mdx"]
+    local_result = task_lifecycle.evaluate(ledger, local_only)
+    local_blockers = " ".join(local_result["hard_blockers"])
+    assert "ukrainian" in local_blockers
+    assert "behavior_proof" not in local_result["valid_evidence"].get("AC-IMPL", set())

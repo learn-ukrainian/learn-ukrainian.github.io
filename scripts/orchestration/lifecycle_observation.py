@@ -83,10 +83,13 @@ def _local_paths(repo_root: Path, local: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _append(path: Path, ledger: Mapping[str, Any], local: Mapping[str, Any], now: str):
+    github: dict[str, Any] = {
+        "error": "local capture only; reconcile with current GitHub authority before closure",
+    }
     observation = {
         "schema_version": tl.OBSERVATION_SCHEMA_VERSION,
         "observed_at": now,
-        "github": {"error": "local capture only; reconcile with current GitHub authority before closure"},
+        "github": github,
         "local": dict(local),
     }
     updated, receipt, replayed = tl.reconcile(ledger, observation, now=now)

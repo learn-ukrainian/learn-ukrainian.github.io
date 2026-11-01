@@ -87,14 +87,20 @@ coverage). After both surfaces are recorded,
 `closeout_cli behavior-proof receipt` fetches the live pull-request comments
 and the authenticated login, then writes
 `<state-file stem>.ukrainian-behavior-proof-receipt.json` beside the state
-file. The closeout observation keeps each comment's `user`,
+file. The printed `receipt_path` is absolute, resolved once when that file is
+written. The closeout reads the authenticated login only when a pull request
+is bound. The closeout observation keeps each comment's `user`,
 `author_association`, `created_at` and `updated_at`, and sets
 `authenticated_login` from that same login. Reconciliation recomputes the
 chunk set from those comments and accepts the receipt only when the families,
 models, task ids, coverage, and comment URLs match. A non-cross-family marker
 is not a contributing chunk, and chunks that disagree on the denominator are
-refused. When the observation's changed paths are learner content, a receipt
-without `review_profile: ukrainian` is refused. The receipt target SHA is
+refused. A lifecycle observation records its git changed-path list on
+`local.changed_paths`. A local capture does not copy that list, or the
+ledger's pull request, onto `github`. Reconciliation uses `github.pr.files`
+when a GitHub observation supplied that list, and otherwise the recorded
+local list. When those paths are learner
+content, a receipt without `review_profile: ukrainian` is refused. The receipt target SHA is
 `pr.head_sha` before and after merge.
 Each contributing comment also has its own review evidence record. Executing
 the learner page on a local merge of that head is separate evidence; it does
