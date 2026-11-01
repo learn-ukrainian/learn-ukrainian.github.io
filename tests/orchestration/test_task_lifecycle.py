@@ -1042,6 +1042,70 @@ def test_approved_nonblocking_behavior_receipt_preserves_findings_and_snapshot(t
     assert path.read_bytes() == original_bytes
 
 
+@pytest.mark.parametrize("outcome", ["quote_missing", "line_mismatch", "out_of_scope"])
+def test_unverified_follow_up_closeout_reports_each_note(tmp_path: Path, outcome: str) -> None:
+    """Accepted unverified notes remain visible with original details in closeout reports."""
+    receipt = _approved_actionable_receipt()
+    note = receipt["findings"][1]
+    note.update(outcome=outcome, detail="Original exact-quote/range failure")
+    receipt["unverified_follow_up_notes"] = [deepcopy(note)]
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
+    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+    original_bytes = path.read_bytes()
+    ledger = _add(_ready_evidence(_ledger(behavior_proof=True)), "AC-IMPL", "behavior_proof", details=reference)
+    original_ledger = deepcopy(ledger)
+    updated, report, _ = task_lifecycle.reconcile(ledger, _observation(_body()), now=NOW)
+    assert report["state"] == "CI_PASSED"
+    assert not report["hard_blockers"]
+    assert report["observation"]["projection"]["unverified_follow_up_notes"] == [{
+        "ac_id": "AC-IMPL", "evidence_id": ledger["evidence"][-1]["id"], **note,
+    }]
+    assert ledger == original_ledger
+    assert updated["evidence"] == original_ledger["evidence"]
+    assert path.read_bytes() == original_bytes
+
+
+@pytest.mark.parametrize("case", [
+    "missing-list", "empty-list", "altered-detail", "verified-label", "extra-note",
+    "malformed", "blocking", "escalate", "invalid-disposition", "blank-rationale", "clean-label",
+])
+def test_unverified_follow_up_closeout_refuses_forged_note_list(tmp_path: Path, case: str) -> None:
+    """Missing or altered notes and forbidden outcome/disposition pairs cannot close out."""
+    receipt = _approved_actionable_receipt()
+    note = receipt["findings"][1]
+    note.update(outcome="quote_missing", detail="verbatim_not_found")
+    receipt["unverified_follow_up_notes"] = [deepcopy(note)]
+    if case == "missing-list":
+        del receipt["unverified_follow_up_notes"]
+    elif case == "empty-list":
+        receipt["unverified_follow_up_notes"] = []
+    elif case == "altered-detail":
+        receipt["unverified_follow_up_notes"][0]["detail"] = "verified"
+    elif case == "verified-label":
+        receipt["unverified_follow_up_notes"][0]["outcome"] = "verified"
+    elif case == "extra-note":
+        receipt["unverified_follow_up_notes"].append(deepcopy(note))
+    elif case == "clean-label":
+        receipt.update(final_disposition="clean", exit_code=0)
+    else:
+        if case == "malformed":
+            note["outcome"] = "malformed"
+        elif case == "blank-rationale":
+            note["disposition_rationale"] = " "
+        else:
+            note["disposition"] = {
+                "blocking": "in_scope_blocker", "escalate": "stop_and_escalate",
+                "invalid-disposition": "invalid",
+            }[case]
+        receipt["unverified_follow_up_notes"] = [deepcopy(note)]
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
+    ledger = _add(_ready_evidence(_ledger(behavior_proof=True)), "AC-IMPL", "behavior_proof", details=reference)
+    report = task_lifecycle.evaluate(ledger, _observation(_body()))
+    assert report["state"] == "BLOCKED_WITH_RECEIPT"
+    assert report["unverified_follow_up_notes"] == []
+    assert any("behavior-proof" in blocker for blocker in report["hard_blockers"])
+
+
 @pytest.mark.parametrize(
     ("field_path", "value"),
     [
