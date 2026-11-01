@@ -214,6 +214,56 @@ def test_approve_reply_with_one_p3_finding_records_approve_with_score(scanned_re
     assert result["score"] == 9 and "VERDICT: APPROVED\n" in body and "Review score: 9/10\n" in body
 
 
+def test_changes_requested_with_only_p3_findings_records_approval(scanned_recorder, tmp_path, monkeypatch):
+    """REQUEST_CHANGES whose open findings are all P3 records as APPROVED, status success, reply verbatim."""
+    tasks, comments, _, sent, _ = scanned_recorder
+    payload = structured_review(1)
+    payload["overall"].update(
+        correctness="incorrect",
+        explanation="VERDICT: REQUEST_CHANGES. SCORE: 6/10. The only open finding is a P3 regression.",
+    )
+    payload["findings"][0]["priority"] = "P3"
+    reply = json.dumps(payload)
+    write_task(tasks, reply=reply)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields))
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    body = comments[0]["body"]
+    assert reply in body and "Residuals: F1 (P3)" in body
+    assert result["verdict"] == "APPROVED" and result["residuals"] == ["F1"]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+    assert statuses == [{
+        "repository": "owner/repo",
+        "head_sha": SHA,
+        "state": "success",
+        "context": "fleet/cross-family-review",
+        "description": "VERDICT: APPROVED openai review-one",
+    }]
+    assert sent == [body]
+
+
+def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_path, monkeypatch):
+    """SECURITY_VERDICT FAIL with only P3 findings stays CHANGES_REQUESTED and status failure."""
+    tasks, comments, _, _, _ = scanned_recorder
+    reply = (
+        "VERDICT: REQUEST_CHANGES\n"
+        "SCORE: 4/10 the security verdict stands.\n"
+        "SECURITY_VERDICT FAIL\n"
+        "F1 [P3] scripts/example.py:10 the check is skipped. Impact: a refused input is accepted. "
+        "Required behaviour: the refusal stays.\n"
+    )
+    write_task(tasks, reply=reply)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields))
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    body = comments[0]["body"]
+    assert result["verdict"] == "CHANGES_REQUESTED" and "residuals" not in result
+    assert "Residuals:" not in body and reply in body
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "CHANGES_REQUESTED"
+    assert statuses[0]["state"] == "failure" and statuses[0]["context"] == "fleet/cross-family-review"
+    assert statuses[0]["description"] == "VERDICT: CHANGES_REQUESTED openai review-one"
+
+
 @pytest.mark.parametrize(("deep", "reason"), [
     (False, "contradicting a verdict line"),
     (True, "invalid findings block beside a verdict line: top-level blocks cannot be decided"),

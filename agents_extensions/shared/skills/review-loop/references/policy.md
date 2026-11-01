@@ -141,15 +141,15 @@ capability failure for the run instead of a verdict
 Severity follows impact on behaviour or readers, ranked by impact and likelihood.
 
 1. P0, P1, and uncertainty about a material failure keep blocking.
-2. A demonstrated, unintended loss of previously correct behavior or of an existing refusal guarantee introduced by the PR blocks regardless of priority. Cite the pinned base and head, the same triggering inputs and preconditions, the contract violated, and a reproducer or complete code-path proof. An intentionally approved contract change, preference, or speculative difference is not a regression. An omitted or bounded trigger does not exempt a demonstrated regression. Disputed material contract applicability escalates.
+2. A demonstrated, unintended loss of previously correct behavior or of an existing refusal guarantee introduced by the PR blocks when its priority is P0, P1, or P2. Cite the pinned base and head, the same triggering inputs and preconditions, the contract violated, and a reproducer or complete code-path proof. An intentionally approved contract change, preference, or speculative difference is not a regression. An omitted or bounded trigger does not exempt a demonstrated P0, P1, or P2 regression. Disputed material contract applicability escalates. A P3 regression does not block.
 3. Every other confirmed P2 defect is fixed in the PR or tracked before enqueue on an OPEN issue covering that finding. The worker or driver reports it through Fleet Comms; the CTO searches for and updates a matching open issue, or creates one under Work intake. The enqueue owner verifies its open state and coverage, and records the issue link, stable finding ID and owner in the ledger. A report awaiting CTO disposition is insufficient. Tracking alone requires no additional review round.
-4. P3 findings that do not meet item 2, nits, and preferences remain non-blocking and never alone justify another review round.
+4. P3 findings, including a P3 regression, nits, and preferences, never block and never open a review round. They are recorded as residuals on an open issue. A reply whose verdict is REQUEST_CHANGES and whose open findings are all P3 is recorded as an approval with those residuals listed: the findings stay verbatim and visible, and the `fleet/cross-family-review` status is success. The recorder reads the priority the reply already carries.
 
-No change to review budgets, seats, recorder or approval semantics. Reviewers explicitly reject unresolved blocking regressions without inflating priority. Existing round limits, elevation eligibility, new-head rejection clearance and exact-head approval requirements remain unchanged. A P2/P3 blocker grants no additional round; exhaustion escalates and never implies approval. Filing or linking an issue consumes no review round. These procedural obligations are not new automatic recorder checks.
+Review budgets, seats, ladders, and exact-head binding are unchanged. A P0, P1, or P2 finding, and a demonstrated regression at those priorities, keeps the handling in items 1 to 3. Round exhaustion does not turn that rejection into approval and grants no extra round. Reviewers keep the priority the impact supports: they do not raise a P3 to force another round, and they do not lower a P0, P1, or P2 to clear it. Filing or linking the residual issue consumes no review round.
 
-- `SECURITY_VERDICT FAIL` always blocks and is never downgraded to a follow-up.
+- `SECURITY_VERDICT FAIL` always blocks and is never downgraded to a follow-up or a residual. A security verdict whose value is not exactly pass is the same refusal, including a conditional pass. A reply that does not fit in the record stays a rejection. A repair round whose reply does not attest that the delta is only the repair stays a rejection, including a marker posted earlier on that head.
 - INCONCLUSIVE (`BLOCKED` on the verdict line, naming the missing capability), a timeout, an
-  error or no reply is never approval.
+  error, a malformed findings block, or no reply is never approval.
   A capability-only BLOCKED may be recorded as a capability failure
   ([above](#a-blocked-that-only-lacked-a-capability)).
 
@@ -166,7 +166,9 @@ No change to review budgets, seats, recorder or approval semantics. Reviewers ex
 
 - An author may decline a finding with file:line or test evidence.
 - A dispute still unresolved after two replies on the same finding goes to the operator.
-- A decline never clears a blocking verdict; only an APPROVE at a new head does.
+- A decline never clears a blocking verdict; only an APPROVE at a new head does. A blocking
+  verdict is a P0, P1, or P2 finding, a `SECURITY_VERDICT FAIL`, or `BLOCKED`. A P3-only
+  REQUEST_CHANGES is not one: the recorder stores it as an approval with the residuals listed.
 
 ## Breakers that still apply
 

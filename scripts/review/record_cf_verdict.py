@@ -102,10 +102,13 @@ from scripts.review.ukrainian_seats import (
     required_ukrainian_seats,
 )
 from scripts.review.verdict_parser import (
+    _FINDINGS_ENVELOPE_KEYS,
     _REVIEW_VERDICT_LINE_RE,
     MISSING_CAPABILITIES_FIELD,
     _commonmark_lines,
     _findings_json_verdicts,
+    _top_level_json_values,
+    _UnreadableFindings,
     _without_code_fences,
     checked_findings_payload,
     declares_incomplete_review,
@@ -190,7 +193,9 @@ def _normalize_verdict(reply: str) -> str:
     verdict = tokens.pop()
     # A reviewer that reports missing capabilities cannot approve, wherever the reply declares them.
     if verdict != "BLOCKED" and declares_missing_capabilities(reply):
-        raise RecordError(f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may")
+        raise RecordError(
+            f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may"
+        )
     return verdict
 
 
@@ -214,6 +219,116 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
             raise RecordError("inconclusive: reviewer declares an incomplete review")
         return verdict, len(evidence.findings) if evidence is not None else "unknown"
     return normalize_verdict(reply), "unknown"
+
+
+# A ledger line may carry a slug after F1 (`F1-seed-recharges-...: resolved`).
+_PROSE_FINDING_ID = r"F[1-9][0-9]{0,3}(?:-[A-Za-z0-9][A-Za-z0-9._:-]{0,80})?"
+_PROSE_FINDING_LINE = re.compile(
+    rf"^\s*(?:[-*]\s+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])\**"
+    rf"(?P<rest>(?:\s*[:\u2014\u2013-]+)?(?:\s*(?i:still|remains?)\s+open\s*[:\u2014\u2013-]?)?"
+    rf"(?:\s*(?:\[(P[0-3])\]|\((P[0-3])\)))?.*)$"
+)
+_PROSE_RESOLVED = re.compile(r"^(?:\s*[:\u2014\u2013-]+)?\s*(?i:resolved|fixed)\b")
+_RESOLVED_AMBIGUOUS = re.compile(r"(?i)\b(?:no|not|incorrectly|unresolved|still\s+open|remains?\s+open)\b|\?")
+_BLOCKING_PRIORITY = re.compile(r"(?i)(?<![A-Za-z0-9])p[0-2](?![A-Za-z0-9])")
+_SECURITY_VERDICT = re.compile(
+    r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*"
+)
+_SECURITY_PASS = re.compile(r"(?i)\*{0,2}PASS\*{0,2}\.?\s*(?:\n|$)")
+_FINDING_LIKE = re.compile(
+    rf"(?im)^[ \t]*(?:#{{1,6}}[ \t]+|[-*+][ \t]+|\d+\.[ \t]+|>[ \t]+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])"
+)
+_RESIDUAL_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}\Z")
+TRUNCATION_FLAG = "[Review reply truncated to fit GitHub's comment limit.]"
+REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
+
+
+def _security_verdict_blocks(reply: str) -> bool:
+    """True when a security verdict is present and the whole value is not PASS.
+
+    The key is ``SECURITY`` plus ``_``, ``-`` or a space, then ``VERDICT``.
+    A pass is the token ``PASS``, optional closing emphasis or a period, and
+    then only whitespace to the end of the line. ``PASS_WITH_CONDITIONS``,
+    ``PASS?`` and ``PASS (pending F1)`` are not a pass.
+    """
+    return any(_SECURITY_PASS.match(reply, match.end()) is None for match in _SECURITY_VERDICT.finditer(reply))
+
+
+def p3_residuals(reply: str) -> tuple[str, ...] | None:
+    """Open finding ids when every one of them is P3, or None when that reading does not apply.
+
+    None keeps the reply's own verdict. A P0, P1, or P2 token anywhere in the reply,
+    a security verdict that is not an unambiguous pass, an incomplete review, a malformed
+    findings block, a finding with no readable priority, a truncated body, or a repair
+    round whose mapping was withheld is None. An empty open set is None: a changes
+    request with no findings is not an approval.
+    """
+    if not isinstance(reply, str) or _security_verdict_blocks(reply):
+        return None
+    if TRUNCATION_FLAG in reply or REPAIR_WITHHELD in reply:
+        return None
+    if _BLOCKING_PRIORITY.search(reply):
+        return None
+    if "BLOCKED" in {token.upper() for token in recognized_verdicts(reply)}:
+        return None
+    if declares_incomplete_review(reply) or declares_missing_capabilities(reply):
+        return None
+    if invalid_findings_block(reply):
+        return None
+    findings: dict[str, str] = {}
+    structured: set[str] = set()
+    try:
+        payloads = list(_top_level_json_values(reply))
+    except _UnreadableFindings:
+        return None
+    for payload in payloads:
+        if not isinstance(payload, dict) or not (_FINDINGS_ENVELOPE_KEYS & payload.keys()):
+            continue
+        try:
+            _verdict, evidence = checked_findings_payload(payload)
+        except (ContractError, ReviewPublicationError):
+            return None
+        if evidence is None:
+            continue
+        for finding in evidence.findings:
+            previous = findings.get(finding.finding_id)
+            if previous is not None and previous != finding.priority:
+                return None
+            findings[finding.finding_id] = finding.priority
+            structured.add(finding.finding_id)
+    try:
+        visible = _without_code_fences(reply, keep_unclosed=False)
+    except (ValueError, ImportError):
+        return None
+    for line in _commonmark_lines(visible):
+        match = _PROSE_FINDING_LINE.match(line)
+        if match is None:
+            continue
+        finding_id = match.group(1)
+        priority = match.group(3) or match.group(4)
+        rest = match.group("rest") or ""
+        if _PROSE_RESOLVED.match(rest):
+            # Only the resolution clause is judged. A later sentence may say "not".
+            clause = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b.{0,24}", rest)
+            if finding_id in findings or _RESOLVED_AMBIGUOUS.search(clause.group(0) if clause else rest[:40]):
+                return None
+            continue
+        if priority is None:
+            return None
+        if structured and finding_id not in structured:
+            return None
+        previous = findings.get(finding_id)
+        if previous is not None and previous != priority:
+            return None
+        findings[finding_id] = priority
+    for line in reply.splitlines():
+        if _FINDING_LIKE.match(line) and _PROSE_FINDING_LINE.match(line) is None:
+            return None
+    if not findings or any(priority != "P3" for priority in findings.values()):
+        return None
+    if any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in findings):
+        return None
+    return tuple(findings)
 
 
 def _require_sources_mcp_calls(task: dict[str, Any]) -> None:
@@ -1560,6 +1675,8 @@ def build_comment(
     denominator: Iterable[str] | None = None,
     coverage: Iterable[str] | None = None,
     void: str | None = None,
+    residuals: Iterable[str] | None = None,
+    repair_withheld: bool = False,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1617,15 +1734,23 @@ def build_comment(
         + coverage_lines
         + "\n"
     )
+    residual_ids = tuple(residuals or ())
+    if any(_RESIDUAL_ID.fullmatch(item) is None for item in residual_ids):
+        raise RecordError("residual finding id is not a marker token")
+    # Listed after the reply so the record prefix stays the marker's fixed lines.
+    residual_line = ""
+    if residual_ids:
+        residual_line = "Residuals: " + ", ".join(f"{item} (P3)" for item in residual_ids) + "\n\n"
     if withheld_findings is not None:
         return prefix + f"Withheld findings: {withheld_findings}\n" + "Findings are held privately.\n\n" + marker
     prefix += "<details><summary>Reviewer's reply</summary>\n\n"
-    suffix = f"\n\n</details>\n\n{marker}"
+    repair_note = f"{REPAIR_WITHHELD}\n\n" if repair_withheld else ""
+    suffix = f"\n\n</details>\n\n{residual_line}{repair_note}{marker}"
     available = MAX_COMMENT_BYTES - len((prefix + suffix).encode())
     if available < 0:
         raise RecordError("comment metadata exceeds GitHub limit")
     if len(reply.encode()) > available:
-        flag = "\n\n[Review reply truncated to fit GitHub's comment limit.]"
+        flag = f"\n\n{TRUNCATION_FLAG}"
         available -= len(flag.encode())
         if available < 0:
             raise RecordError("comment metadata exceeds GitHub limit")
@@ -2310,7 +2435,12 @@ def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
 
 
 def _require_formal_reviewer(
-    *, cursor: bool, reported: object, model: str, family: str, native_grok: bool = False,
+    *,
+    cursor: bool,
+    reported: object,
+    model: str,
+    family: str,
+    native_grok: bool = False,
     review_context: Mapping[str, Any] | None = None,
 ) -> None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
@@ -2367,9 +2497,14 @@ def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
     _require_formal_reviewer(
-        cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok,
+        cursor=cursor,
+        reported=reported,
+        model=model,
+        family=family,
+        native_grok=native_grok,
         review_context={
-            "review_mode": task.get("review_mode"), "review_profile": task.get("review_profile"),
+            "review_mode": task.get("review_mode"),
+            "review_profile": task.get("review_profile"),
             "author_model": task.get("review_author_model"),
             "transport": "native_codex" if task.get("agent") == "codex" else task.get("agent"),
         },
@@ -2512,7 +2647,7 @@ def record(
         raise RecordError("red-team prompt requires review_mode=red_team")
     review = _task_verdict(task, reply)
     repository, branch, sha = review.repository, review.branch, review.sha
-    model, family, verdict, finding_count = review.model, review.family, review.verdict, review.finding_count
+    model, family, stated, finding_count = review.model, review.family, review.verdict, review.finding_count
     ukrainian, sources_count, started = review.ukrainian, review.sources_count, review.started
     pr = _pr(repository, branch, pr_number)
     if pr.get("headRefName") != branch:
@@ -2579,7 +2714,10 @@ def record(
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
-    chunk = _item_chunk(task, reply, verdict)
+    chunk = _item_chunk(task, reply, stated)
+    # The reply stays REQUEST_CHANGES. All-P3 open findings are an approval with residuals.
+    residuals = p3_residuals(reply) if stated == "CHANGES_REQUESTED" else None
+    verdict = "APPROVED" if residuals else stated
     comment_fields = dict(
         sha=sha,
         task_id=task_id,
@@ -2598,9 +2736,18 @@ def record(
         denominator=None if chunk is None else chunk.denominator,
         coverage=None if chunk is None else chunk.coverage,
         void=None if chunk is None else chunk.void,
+        residuals=residuals,
     )
     comment = build_comment(**comment_fields)
+    # A cut reply is not verbatim, so it cannot become an approval.
+    if residuals is not None and TRUNCATION_FLAG in comment:
+        residuals = None
+        verdict = stated
+        comment_fields["verdict"] = stated
+        comment_fields["residuals"] = None
+        comment = build_comment(**comment_fields)
     destination = normalize_repository(repository)
+    withheld_comment = False
     try:
         check_texts(destination, [comment], environment={})
     except PublishBlocked as exc:
@@ -2608,8 +2755,15 @@ def record(
         # and publication failures retain their existing refusal behavior.
         if exc.indices != frozenset({0}):
             raise
+        # Hidden findings cannot be listed, so the reply keeps its own verdict.
+        if residuals is not None:
+            residuals = None
+            verdict = stated
+            comment_fields["verdict"] = stated
+            comment_fields["residuals"] = None
         comment = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=finding_count)
         check_texts(destination, [comment], environment={})
+        withheld_comment = True
     posted = False
     with pr_lock(repository, number, lock_root):
         # The PR may move while an earlier recorder owns the lock.
@@ -2627,6 +2781,16 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
+        if residuals is not None:
+            reading = lookup_verdict(comments, sha, login)
+            # A standing P0/P1/P2 or BLOCKED rejection, or an unknown head, keeps today's record.
+            if reading.state in REJECTED or reading.state == "unknown":
+                residuals = None
+                verdict = stated
+                comment_fields["verdict"] = stated
+                comment_fields["residuals"] = None
+                comment = build_comment(**comment_fields)
+                check_texts(destination, [comment], environment={})
         budget_receipt = budget_admission(
             repository=repository,
             number=number,
@@ -2638,6 +2802,31 @@ def record(
             task_root=task_root,
             review_root=review_root,
         )
+        from scripts.review.repair_round import (
+            RepairRefused,
+            receipt_at,
+            record_admission,
+            require_repair_verified,
+        )
+
+        repair = budget_receipt.get("repair_round")
+        repaired = repair or receipt_at(
+            _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
+        )
+        # A repair head stays changes-requested unless the reply attests that the delta is only the repair.
+        # The note is written even when the mapping was already dropped, so lookup cannot approve the body later.
+        # A withheld skeleton stays withheld: rebuilding from the original fields would put the blocked text back.
+        if repaired is not None and stated != "APPROVED" and not withheld_comment:
+            try:
+                require_repair_verified(reply, repaired)
+            except RepairRefused:
+                if residuals is not None:
+                    residuals = None
+                    verdict = stated
+                    comment_fields["verdict"] = stated
+                    comment_fields["residuals"] = None
+                comment = build_comment(**comment_fields, repair_withheld=True)
+                check_texts(destination, [comment], environment={})
         existing = None
         for item in comments:
             body = item.get("body")
@@ -2656,7 +2845,6 @@ def record(
                 ):
                     if (
                         marker["started"] != started
-                        or marker["verdict"] != verdict
                         or marker["model"] != model
                         or marker["family"] != family
                         or marker.get("review_mode", "cross_family") != review_mode
@@ -2670,16 +2858,15 @@ def record(
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
-                    existing = item
-                    break
+                    if marker["verdict"] == verdict:
+                        existing = item
+                        break
+                    # The same reply recorded before P3 findings were accepted as residuals.
+                    if residuals is not None and marker["verdict"] == "CHANGES_REQUESTED":
+                        continue
+                    raise RecordError("existing verdict marker was edited or conflicts with task")
         require_no_same_head_rejection(comments, sha, login, verdict)
-        from scripts.review.repair_round import receipt_at, record_admission, require_repair_verified
-
-        repair = budget_receipt.get("repair_round")
-        repaired = repair or receipt_at(
-            _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
-        )
-        if repaired is not None and verdict == "APPROVED":
+        if repaired is not None and stated == "APPROVED":
             # The non-author reviewer, not the recorder, verifies that the delta is only the repair.
             require_repair_verified(reply, repaired)
         if repair is not None:
@@ -2711,7 +2898,10 @@ def record(
                     if isinstance(item.get("body"), str)
                     and (marker := parse_marker(item["body"])) is not None
                     and marker.get("sha") == sha
-                    and marker.get("verdict") not in REJECTED
+                    and (
+                        marker.get("verdict") not in REJECTED
+                        or (marker.get("verdict") == "CHANGES_REQUESTED" and p3_residuals(item["body"]) is not None)
+                    )
                     and is_ukrainian_review(marker)
                 ]
                 open_seats = sorted(
@@ -2755,6 +2945,8 @@ def record(
         "comment": "posted" if posted else "existing",
         "status": status,
     }
+    if residuals:
+        result["residuals"] = list(residuals)
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
     if chunk is not None:
@@ -2837,7 +3029,21 @@ def budget_check(
 def _open_pr_number(repository: str, branch: str) -> int | None:
     """The number of the one open PR whose head is ``branch``, None when it has none."""
     matches = _run_json(
-        ["gh", "pr", "list", "--repo", repository, "--state", "open", "--head", branch, "--limit", "2", "--json", "number"]
+        [
+            "gh",
+            "pr",
+            "list",
+            "--repo",
+            repository,
+            "--state",
+            "open",
+            "--head",
+            branch,
+            "--limit",
+            "2",
+            "--json",
+            "number",
+        ]
     )
     if not isinstance(matches, list) or len(matches) > 1:
         raise RecordError("branch must identify at most one open PR; pass --pr N")
