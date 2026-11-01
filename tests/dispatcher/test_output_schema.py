@@ -27,11 +27,11 @@ def dispatch(tmp_path, monkeypatch):
     schema = tmp_path / "schema.json"
     schema.write_text('{"type":"object","required":["verdict"]}')
 
-    def invoke(path="schema.json", agent="sol", expected=0, review=False):
+    def invoke(path="schema.json", agent="sol", expected=0, review=False, review_profile="code"):
         model = "gemini-3.8-flash-high" if agent == "agy" else "gpt-6.1-sol"
         args = ["dispatch", "--agent", agent, "--model", model, "--task-id", "schema", "--prompt", "Review"]
-        if agent == "agy":
-            args += ["--review-profile", "code"]
+        if agent == "agy" and review_profile is not None:
+            args += ["--review-profile", review_profile]
         if path is not None:
             args += ["--output-schema", str(path)]
         if review:
@@ -156,6 +156,58 @@ def test_agy_review_binds_findings_schema(dispatch):
     schema = json.loads(argv[argv.index("--json-schema") + 1])
     assert schema["properties"]["schema_version"]["const"] == "code-review-findings.v1"
     assert schema["required"] == ["schema_version", "overall", "findings"]
+
+
+def test_agy_ukrainian_review_omits_findings_schema(dispatch):
+    """Defect class: Ukrainian review is forced to bind the code-review findings schema."""
+    spec, record = dispatch.invoke(path=None, agent="agy", review=True, review_profile="ukrainian")
+    assert record["require_review_verdict"] is True
+    assert record.get("output_schema_path") is None
+    assert record.get("output_schema_sha256") is None
+    argv = agy.build(spec, {}).argv
+    assert "--json-schema" not in argv
+
+
+@pytest.mark.parametrize("case", ["valid", "missing-block", "malformed-json", "wrong-schema"])
+def test_agy_ukrainian_review_preserves_item_judgments_and_refuses_malformed(case):
+    """Defect class: Ukrainian item judgments are dropped by schema enforcement, or invalid blocks are accepted."""
+    from scripts.review.review_contract import ContractError, build_item_packet, judge_item_reply
+
+    packet = build_item_packet([{"id": "item-1", "text": "слово"}])
+    if case == "valid":
+        reply = (
+            "VERDICT: APPROVE\n\n"
+            "```ukrainian-item-judgments\n"
+            '{"schema": "ukrainian-item-judgments.v1", "items": [{"id": "item-1", "verdict": "APPROVE", "finding": "", "sources": "VESUM", "quote": "слово"}]}\n'
+            "```\n"
+        )
+    elif case == "missing-block":
+        reply = "VERDICT: APPROVE\n\nNo item judgments block provided."
+    elif case == "malformed-json":
+        reply = "VERDICT: APPROVE\n\n```ukrainian-item-judgments\n{not valid json\n```\n"
+    elif case == "wrong-schema":
+        reply = (
+            "VERDICT: APPROVE\n\n"
+            "```ukrainian-item-judgments\n"
+            '{"schema": "code-review-findings.v1", "items": [{"id": "item-1", "verdict": "APPROVE"}]}\n'
+            "```\n"
+        )
+
+    stream = json.dumps({"event": "result", "result": {"status": "SUCCESS", "response": reply}}) + "\n"
+    parsed = agy.parse(stream, "", 0, reply, output_schema=None)
+    assert parsed.error is None
+    assert parsed.text == reply
+
+    if case == "valid":
+        chunk = judge_item_reply(packet, parsed.text, stated="APPROVED", ukrainian=True)
+        assert chunk.coverage == ("item-1",)
+        assert chunk.void is None
+    elif case == "missing-block":
+        with pytest.raises(ContractError, match="ITEM_JUDGMENTS_MISSING"):
+            judge_item_reply(packet, parsed.text, stated="APPROVED", ukrainian=True)
+    else:
+        with pytest.raises(ContractError, match="ITEM_JUDGMENTS_MALFORMED"):
+            judge_item_reply(packet, parsed.text, stated="APPROVED", ukrainian=True)
 
 
 @pytest.mark.parametrize("case", ["valid", "conflicting-response", "missing", "null", "invalid",

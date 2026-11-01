@@ -88,13 +88,37 @@ def package_repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def schema_path(tooling_root: Path | None = None) -> Path:
+def schema_path(
+    tooling_root: Path | None = None,
+    *,
+    profile: str | None = None,
+    task: Mapping[str, Any] | None = None,
+) -> Path | None:
+    """Select the structured findings schema for a review target, or None when unstructured.
+
+    Code and infra reviews bind the canonical code-review findings schema. Ukrainian content
+    reviews use item-judgment envelopes parsed from free-text blocks and do not bind a
+    top-level JSON schema.
+    """
+    from scripts.review.language_lane import is_ukrainian_review
+
+    if profile is not None and profile.strip().casefold() == "ukrainian":
+        return None
+    if task is not None and is_ukrainian_review(task):
+        return None
     root = tooling_root or package_repo_root()
     return root / SCHEMA_RELATIVE_PATH
 
 
-def load_schema(tooling_root: Path | None = None) -> dict[str, Any]:
-    path = schema_path(tooling_root)
+def load_schema(
+    tooling_root: Path | None = None,
+    *,
+    profile: str | None = None,
+    task: Mapping[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    path = schema_path(tooling_root, profile=profile, task=task)
+    if path is None:
+        return None
     try:
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
