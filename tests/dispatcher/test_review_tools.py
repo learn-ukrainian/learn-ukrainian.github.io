@@ -53,6 +53,8 @@ _CASES = {
     "granted-shell-scratch": (True, "echo ok > \"$TMPDIR/probe\" && cat \"$TMPDIR/probe\""),
     "granted-interpreter": (True, f"{_PY} -c \"import pytest; print('interpreter-ok')\""),
     "granted-named-test": (True, f"{_PY} -m pytest -q -p no:cacheprovider test_probe.py"),
+    "granted-project-scratch": (True, f"{_PY} -c \"import os, tempfile; "
+                                      "tempfile.TemporaryDirectory(dir=os.environ['LU_SCRATCH_ROOT']).cleanup()\""),
 }
 
 

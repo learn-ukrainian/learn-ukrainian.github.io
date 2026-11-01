@@ -1043,6 +1043,9 @@ class _Boundary:
             "LANG": os.environ.get("LANG", "C.UTF-8"), "USER": "review", "LOGNAME": "review", "SHELL": "/bin/bash",
             "AGY_APP_DATA_DIR": str(app), **{name: os.environ[name] for name in _AGY_AUTH if name in os.environ},
             "LU_TASKS_DIR": str(runtime_context.read_roots()[1]),
+            # The project's scratch root (scripts.common.scratch) defaults to a host path that is
+            # read-only here; tests and probes run by a review write their scratch under TMPDIR.
+            "LU_SCRATCH_ROOT": str(tmp),
         }
         try:
             self.process = subprocess.Popen(argv, env=env, cwd=self.worktree, pass_fds=(report_write, go_read))
