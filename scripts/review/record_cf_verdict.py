@@ -229,18 +229,39 @@ _PROSE_FINDING_LINE = re.compile(
     rf"(?:\s*(?:\[(P[0-3])\]|\((P[0-3])\)))?.*)$"
 )
 _PROSE_RESOLVED = re.compile(r"^(?:\s*[:\u2014\u2013-]+)?\s*(?i:resolved|fixed)\b")
-_SECURITY_VERDICT_FAIL = re.compile(r"SECURITY_VERDICT\s*:?\s*FAIL\b")
+_RESOLVED_AMBIGUOUS = re.compile(r"(?i)\b(?:no|not|incorrectly|unresolved|still\s+open|remains?\s+open)\b|\?")
+_BLOCKING_PRIORITY = re.compile(r"(?i)(?<![A-Za-z0-9])p[0-2](?![A-Za-z0-9])")
+_SECURITY_VERDICT = re.compile(
+    r"(?i)\*{0,2}security_verdict\*{0,2}\s*[:\u2014\u2013\-]?\s*\*{0,2}\s*([A-Za-z]+)?"
+)
+_FINDING_LIKE = re.compile(
+    rf"(?im)^[ \t]*(?:#{{1,6}}[ \t]+|[-*+][ \t]+|\d+\.[ \t]+|>[ \t]+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])"
+)
 _RESIDUAL_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}\Z")
+TRUNCATION_FLAG = "[Review reply truncated to fit GitHub's comment limit.]"
+REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
+
+
+def _security_verdict_blocks(reply: str) -> bool:
+    """True when a security verdict is present and is not an unambiguous pass."""
+    mentions = list(_SECURITY_VERDICT.finditer(reply))
+    return any((match.group(1) or "").upper() != "PASS" for match in mentions)
 
 
 def p3_residuals(reply: str) -> tuple[str, ...] | None:
     """Open finding ids when every one of them is P3, or None when that reading does not apply.
 
-    None keeps the reply's own verdict. A P0, P1, or P2 finding, ``SECURITY_VERDICT FAIL``,
-    an incomplete review, a malformed findings block, or a finding with no readable priority
-    is None. An empty open set is None: a changes request with no findings is not an approval.
+    None keeps the reply's own verdict. A P0, P1, or P2 token anywhere in the reply,
+    a security verdict that is not an unambiguous pass, an incomplete review, a malformed
+    findings block, a finding with no readable priority, a truncated body, or a repair
+    round whose mapping was withheld is None. An empty open set is None: a changes
+    request with no findings is not an approval.
     """
-    if not isinstance(reply, str) or _SECURITY_VERDICT_FAIL.search(reply):
+    if not isinstance(reply, str) or _security_verdict_blocks(reply):
+        return None
+    if TRUNCATION_FLAG in reply or REPAIR_WITHHELD in reply:
+        return None
+    if _BLOCKING_PRIORITY.search(reply):
         return None
     if "BLOCKED" in {token.upper() for token in recognized_verdicts(reply)}:
         return None
@@ -249,6 +270,7 @@ def p3_residuals(reply: str) -> tuple[str, ...] | None:
     if invalid_findings_block(reply):
         return None
     findings: dict[str, str] = {}
+    structured: set[str] = set()
     try:
         payloads = list(_top_level_json_values(reply))
     except _UnreadableFindings:
@@ -267,6 +289,7 @@ def p3_residuals(reply: str) -> tuple[str, ...] | None:
             if previous is not None and previous != finding.priority:
                 return None
             findings[finding.finding_id] = finding.priority
+            structured.add(finding.finding_id)
     try:
         visible = _without_code_fences(reply, keep_unclosed=False)
     except (ValueError, ImportError):
@@ -279,15 +302,22 @@ def p3_residuals(reply: str) -> tuple[str, ...] | None:
         priority = match.group(3) or match.group(4)
         rest = match.group("rest") or ""
         if _PROSE_RESOLVED.match(rest):
-            if finding_id in findings:
+            # Only the resolution clause is judged. A later sentence may say "not".
+            clause = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b.{0,24}", rest)
+            if finding_id in findings or _RESOLVED_AMBIGUOUS.search(clause.group(0) if clause else rest[:40]):
                 return None
             continue
         if priority is None:
+            return None
+        if structured and finding_id not in structured:
             return None
         previous = findings.get(finding_id)
         if previous is not None and previous != priority:
             return None
         findings[finding_id] = priority
+    for line in reply.splitlines():
+        if _FINDING_LIKE.match(line) and _PROSE_FINDING_LINE.match(line) is None:
+            return None
     if not findings or any(priority != "P3" for priority in findings.values()):
         return None
     if any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in findings):
@@ -1640,6 +1670,7 @@ def build_comment(
     coverage: Iterable[str] | None = None,
     void: str | None = None,
     residuals: Iterable[str] | None = None,
+    repair_withheld: bool = False,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1707,12 +1738,13 @@ def build_comment(
     if withheld_findings is not None:
         return prefix + f"Withheld findings: {withheld_findings}\n" + "Findings are held privately.\n\n" + marker
     prefix += "<details><summary>Reviewer's reply</summary>\n\n"
-    suffix = f"\n\n</details>\n\n{residual_line}{marker}"
+    repair_note = f"{REPAIR_WITHHELD}\n\n" if repair_withheld else ""
+    suffix = f"\n\n</details>\n\n{residual_line}{repair_note}{marker}"
     available = MAX_COMMENT_BYTES - len((prefix + suffix).encode())
     if available < 0:
         raise RecordError("comment metadata exceeds GitHub limit")
     if len(reply.encode()) > available:
-        flag = "\n\n[Review reply truncated to fit GitHub's comment limit.]"
+        flag = f"\n\n{TRUNCATION_FLAG}"
         available -= len(flag.encode())
         if available < 0:
             raise RecordError("comment metadata exceeds GitHub limit")
@@ -2755,6 +2787,28 @@ def record(
             task_root=task_root,
             review_root=review_root,
         )
+        from scripts.review.repair_round import (
+            RepairRefused,
+            receipt_at,
+            record_admission,
+            require_repair_verified,
+        )
+
+        repair = budget_receipt.get("repair_round")
+        repaired = repair or receipt_at(
+            _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
+        )
+        # A repair head stays changes-requested unless the reply attests that the delta is only the repair.
+        if repaired is not None and residuals is not None:
+            try:
+                require_repair_verified(reply, repaired)
+            except RepairRefused:
+                residuals = None
+                verdict = stated
+                comment_fields["verdict"] = stated
+                comment_fields["residuals"] = None
+                comment = build_comment(**comment_fields, repair_withheld=True)
+                check_texts(destination, [comment], environment={})
         existing = None
         for item in comments:
             body = item.get("body")
@@ -2794,12 +2848,6 @@ def record(
                         continue
                     raise RecordError("existing verdict marker was edited or conflicts with task")
         require_no_same_head_rejection(comments, sha, login, verdict)
-        from scripts.review.repair_round import receipt_at, record_admission, require_repair_verified
-
-        repair = budget_receipt.get("repair_round")
-        repaired = repair or receipt_at(
-            _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
-        )
         if repaired is not None and stated == "APPROVED":
             # The non-author reviewer, not the recorder, verifies that the delta is only the repair.
             require_repair_verified(reply, repaired)
