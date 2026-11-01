@@ -24,6 +24,10 @@ _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in pr
 _AGY_ERROR_PREFIX = "AGY_ERROR:"
 _CAPACITY_STATUSES = frozenset({"RESOURCE_EXHAUSTED", "UNAVAILABLE"})
 _CAPACITY_CODES = frozenset({429, 529})
+_STATUS_CHARS = 40
+_ERROR_DETAIL_CHARS = 300
+# AGY's terminal error when --model names a model this account is not offered (live probe 2026-11-01).
+_MODEL_SELECTION_REFUSAL = "invalid model selection"
 
 
 def _stderr_capacity(stderr: str) -> bool:
@@ -278,6 +282,25 @@ def _schema_refusal(stderr: str) -> str | None:
     return None
 
 
+def _excerpt(text: str) -> str:
+    """One bounded line of AGY's error for the task record, with secrets redacted and the home path masked."""
+    from scripts.secret_redactor import redact_text
+
+    line = " ".join(text.split()).replace(str(Path.home()), "~")
+    return (redact_text(line) or "")[:_ERROR_DETAIL_CHARS]
+
+
+def _unsuccessful(result: dict) -> str:
+    """The failure with AGY's own terminal status and error, so a transport fault is told from a model one."""
+    status, detail = result.get("status"), result.get("error")
+    message = "agy: terminal result unsuccessful"
+    if isinstance(status, str) and status:
+        message += f" ({_excerpt(status)[:_STATUS_CHARS]})"
+    if isinstance(detail, str) and detail.strip():
+        message += ": " + _excerpt(detail)
+    return message
+
+
 def parse(
     stdout: str, stderr: str, returncode: int, final_text: str | None, *, output_schema: dict | None = None,
 ) -> ParsedResult:
@@ -320,7 +343,7 @@ def parse(
                 continue
             result = terminal
             if result.get("status") != "SUCCESS" or result.get("error"):
-                error = error or "agy: terminal result unsuccessful"
+                error = error or _unsuccessful(result)
         elif event.get("event") == "error":
             error = error or "agy: terminal error"
             stream_clean = False
@@ -340,7 +363,7 @@ def parse(
         and terminal_seen
         and not incomplete
         and result.get("status") != "SUCCESS"
-        and error == "agy: terminal result unsuccessful"
+        and error == _unsuccessful(result)
         and isinstance(quota_message, str)
         and quota_message.strip()
         and _stderr_capacity(stderr)
@@ -354,8 +377,22 @@ def parse(
             one_model(models),
             rate_limited=True,
         )
+    if (
+        stream_clean
+        and terminal_seen
+        and not models
+        and result.get("num_turns") == 0
+        and error == _unsuccessful(result)
+        and isinstance(quota_message, str)
+        and quota_message.startswith(_MODEL_SELECTION_REFUSAL)
+    ):
+        # AGY refused the --model before any init or turn: the model is not offered to this
+        # account (an unlisted id, or one withheld in its region). A typed refusal, not a run failure.
+        return ParsedResult(None, None, "agy_model_unavailable: " + _excerpt(quota_message))
     if returncode:
-        error = f"agy: exited with status {returncode}"
+        unsuccessful = error == _unsuccessful(result) and error != "agy: terminal result unsuccessful"
+        # The exit status leads; AGY's own terminal status and error stay readable after it.
+        error = f"agy: exited with status {returncode}" + (f"; {error.removeprefix('agy: ')}" if unsuccessful else "")
     if output_schema is not None:
         from scripts.agent_runtime.adapters._output_schema import structured_result
 
