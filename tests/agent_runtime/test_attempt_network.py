@@ -191,7 +191,6 @@ def test_resolver_hang_and_cancellation_reap_child(proxy, monkeypatch):
                 exit_ready.set()
 
             monkeypatch.setattr(proc._transport, "_process_exited", hold_exit)
-            asyncio.get_running_loop().call_soon(asyncio.current_task().cancel)
         return proc
 
     monkeypatch.setattr(asyncio, "create_subprocess_exec", hung)
