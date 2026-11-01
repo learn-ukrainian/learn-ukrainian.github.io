@@ -1027,8 +1027,9 @@ async def revalidated_routing_budget_fields(*, timeout_s: float = 1.0) -> dict[s
     fields = routing_budget_fields()
     thread = _revalidation
     if thread is not None and any(row["reason"] == "not_probed" for row in fields["claude_accounts"].values()):
-        with contextlib.suppress(TimeoutError):
-            await asyncio.wait_for(asyncio.to_thread(thread.join, timeout=timeout_s), timeout=timeout_s)
+        if thread.is_alive():
+            with contextlib.suppress(TimeoutError):
+                await asyncio.wait_for(asyncio.to_thread(thread.join, timeout=timeout_s), timeout=timeout_s)
         return routing_budget_fields()
     return fields
 
