@@ -418,7 +418,10 @@ def test_agy_schema_rejection_is_typed_before_model_init(phase):
         stdout += json.dumps({"event": "result", "result": {"status": "SUCCESS", "structured_output": payload}})
     parsed = agy.parse(stdout, stderr, 0 if phase == "success" else 1, None, output_schema=load_schema())
     if phase == "before-init":
-        assert parsed.error == "agy_output_schema_unsupported: " + message
+        assert parsed.error == (
+            "agy_output_schema_unsupported: AGY rejected the --json-schema argument; "
+            "its text is in the task's retained stream"
+        )
         assert parsed.text is None and parsed.resolved_model is None
     elif phase == "after-init":
         assert parsed.error == "agy: exited with status 1"

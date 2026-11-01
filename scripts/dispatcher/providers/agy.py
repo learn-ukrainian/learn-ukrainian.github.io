@@ -24,13 +24,32 @@ _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in pr
 _AGY_ERROR_PREFIX = "AGY_ERROR:"
 _CAPACITY_STATUSES = frozenset({"RESOURCE_EXHAUSTED", "UNAVAILABLE"})
 _CAPACITY_CODES = frozenset({429, 529})
+# Provider output is never copied into the record (#12408): provider text can hold any value, and no
+# redactor recognizes every secret form. Each field the record takes from AGY's output is a member of a
+# closed set below or a validated typed value; the full text stays in the task's retained stream.
+UNRECOGNIZED = "unrecognized"
+# Every terminal status seen in retained AGY streams; any other value records as unrecognized.
+_TERMINAL_STATUSES = frozenset({"SUCCESS", "ERROR"})
+# AGY's terminal error when --model names a model this account is not offered (live probe 2026-11-01).
+_MODEL_SELECTION_REFUSAL = "invalid model selection"
+# A known error-text prefix and the fixed class name the record carries for it; anything else is unclassified.
+_ERROR_CLASSES = (("API error", "transport"), (_MODEL_SELECTION_REFUSAL, "model_selection"))
+# The usage keys every retained AGY terminal result carries; only non-negative integers are kept.
+_USAGE_KEYS = frozenset({"input_tokens", "output_tokens", "thinking_tokens", "cache_read_tokens", "total_tokens"})
+_USAGE_MAX = 2**63 - 1
+_BARE_UNSUCCESSFUL = "agy: terminal result unsuccessful"
+_SCHEMA_REFUSAL = (
+    "agy_output_schema_unsupported: AGY rejected the --json-schema argument; its text is in the task's retained stream"
+)
+_MODEL_UNAVAILABLE = "agy_model_unavailable: AGY does not offer the requested model to this account"
 
 
-def _stderr_capacity(stderr: str) -> bool:
-    """True when stderr has exactly one AGY_ERROR naming a quota or capacity limit.
+def _stderr_capacity(stderr: str) -> str | None:
+    """The fixed quota class when stderr has exactly one AGY_ERROR naming a quota or capacity limit.
 
     A missing line, a malformed line, or more than one line is not that signal.
-    Prose on stderr is never read: only this structured diagnostic classifies.
+    Prose on stderr is never read: only this structured diagnostic classifies. The class is
+    built from the closed status and code sets, never from the diagnostic's text.
     """
     payloads = []
     # Newline only. str.splitlines() also breaks on U+2028/U+2029/U+0085, which
@@ -43,20 +62,45 @@ def _stderr_capacity(stderr: str) -> bool:
         try:
             payload = json.loads(line[len(_AGY_ERROR_PREFIX) :].strip())
         except ValueError:
-            return False
+            return None
         if not isinstance(payload, dict):
-            return False
+            return None
         payloads.append(payload)
     if len(payloads) != 1:
-        return False
+        return None
     status, code = payloads[0].get("status"), payloads[0].get("error_code")
     # bool is an int. A true/false code is malformed even when the status name
     # is a capacity status, so it must not classify.
     if isinstance(code, bool):
-        return False
-    if isinstance(status, str) and status in _CAPACITY_STATUSES:
-        return True
-    return isinstance(code, int) and code in _CAPACITY_CODES
+        return None
+    named = [status] if isinstance(status, str) and status in _CAPACITY_STATUSES else []
+    if type(code) is int and code in _CAPACITY_CODES:
+        named.append(str(code))
+    return ", ".join(named) or None
+
+
+def _usage(value: object) -> dict | None:
+    """The known usage counters that are non-negative integers; every other key and value is dropped."""
+    if not isinstance(value, dict):
+        return None
+    kept = {
+        key: count for key, count in value.items()
+        if key in _USAGE_KEYS and type(count) is int and 0 <= count <= _USAGE_MAX
+    }
+    return kept or None
+
+
+def _agy_model_ids() -> frozenset[str]:
+    """Every catalog identifier of a model that has an AGY wire id."""
+    from scripts.review.model_catalog import load_model_catalog
+
+    ids = set()
+    for model_id, spec in load_model_catalog()["models"].items():
+        wire = spec.get("routing_wire_ids", {}).get("agy")
+        if not isinstance(wire, str) or not wire:
+            continue
+        ids.update((model_id, wire, *spec.get("aliases", []), *spec.get("runtime_model_ids", [])))
+    return frozenset(name for name in ids if isinstance(name, str) and name)
 
 
 def transport_model(model: str) -> str:
@@ -89,7 +133,10 @@ def transport_model(model: str) -> str:
 
 
 def _init_models(event: object) -> tuple[str, ...]:
-    """Model strings an ``init`` event reports. No other event attests one."""
+    """Models an ``init`` event reports. No other event attests one.
+
+    A reported string that is not a catalog AGY model id attests ``unrecognized``, never itself.
+    """
     if not isinstance(event, dict) or event.get("event") != "init":
         return ()
     reported = []
@@ -99,7 +146,7 @@ def _init_models(event: object) -> tuple[str, ...]:
             continue
         model = metadata.get("model")
         if isinstance(model, str) and model.strip():
-            reported.append(model)
+            reported.append(model if model in _agy_model_ids() else UNRECOGNIZED)
     return tuple(reported)
 
 
@@ -263,27 +310,35 @@ def continuation(invocation: Invocation, conversation: str) -> Invocation:
     return replace(invocation, argv=argv, stdin=stdin)
 
 
-def _schema_refusal(stderr: str) -> str | None:
-    """The native CLI's schema error, before it initializes a model turn."""
-    lines = stderr.split("\n")
-    for index, line in enumerate(lines):
-        if not line.startswith("Error: invalid --json-schema:"):
-            continue
-        message = [line.removeprefix("Error: ").removesuffix("\r")]
-        for detail in lines[index + 1:]:
-            if detail.startswith(("Usage of ", "Usage:")):
-                break
-            message.append(detail.removesuffix("\r"))
-        return "agy_output_schema_unsupported: " + "\n".join(message).rstrip()
-    return None
+def _schema_refused(stderr: str) -> bool:
+    """True when the native CLI rejected the schema before it initialized a model turn."""
+    return any(line.startswith("Error: invalid --json-schema:") for line in stderr.split("\n"))
+
+
+def _unsuccessful(result: dict) -> str:
+    """The failure with AGY's terminal status and error class, so a transport fault is told from a model one.
+
+    Only fixed vocabulary reaches the record: a status outside ``_TERMINAL_STATUSES`` becomes
+    ``unrecognized``, and an error with no known prefix becomes ``unclassified``.
+    """
+    status, detail = result.get("status"), result.get("error")
+    message = _BARE_UNSUCCESSFUL
+    if isinstance(status, str) and status:
+        message += f" ({status if status in _TERMINAL_STATUSES else UNRECOGNIZED})"
+    if isinstance(detail, str) and detail.strip():
+        kind = next((name for prefix, name in _ERROR_CLASSES if detail.startswith(prefix)), "unclassified")
+        message += f": {kind} error; its text is in the task's retained stream"
+    return message
 
 
 def parse(
     stdout: str, stderr: str, returncode: int, final_text: str | None, *, output_schema: dict | None = None,
 ) -> ParsedResult:
-    if returncode and not stdout.strip() and (refusal := _schema_refusal(stderr)):
-        return ParsedResult(None, None, refusal)
+    if returncode and not stdout.strip() and _schema_refused(stderr):
+        return ParsedResult(None, None, _SCHEMA_REFUSAL)
     result, error, models = {}, None, set()
+    started = False  # any event besides the terminal result: AGY began the run, whatever it attested
+    terminal_failed = False  # error is the terminal result's own failure
     terminal_seen, stream_clean = False, True
     open_steps: set[int] = set()
     open_at_result: set[int] | None = None
@@ -304,6 +359,8 @@ def parse(
             # Anything after the terminal result makes a capacity classification untrustworthy.
             stream_clean = False
         models.update(_init_models(event))
+        if event.get("event") != "result":
+            started = True
         if not terminal_seen:
             _open_commands(event, open_steps)
         if event.get("event") == "result":
@@ -319,14 +376,14 @@ def parse(
                 stream_clean = False
                 continue
             result = terminal
-            if result.get("status") != "SUCCESS" or result.get("error"):
-                error = error or "agy: terminal result unsuccessful"
+            if (result.get("status") != "SUCCESS" or result.get("error")) and error is None:
+                error, terminal_failed = _unsuccessful(result), True
         elif event.get("event") == "error":
             error = error or "agy: terminal error"
             stream_clean = False
     text = result.get("response")
     text = text if isinstance(text, str) and text.strip() else None
-    usage = result.get("usage")
+    usage = _usage(result.get("usage"))
     incomplete = bool(
         open_at_result
         or _PRINT_TIMEOUT_PARTIAL_RE.search(stderr)
@@ -334,28 +391,43 @@ def parse(
     )
     if incomplete:
         error = error or "agy: incomplete run"
-    quota_message = result.get("error")
+    terminal_error = result.get("error")
+    terminal_error = terminal_error if isinstance(terminal_error, str) and terminal_error.strip() else None
     if (
         stream_clean
         and terminal_seen
         and not incomplete
         and result.get("status") != "SUCCESS"
-        and error == "agy: terminal result unsuccessful"
-        and isinstance(quota_message, str)
-        and quota_message.strip()
-        and _stderr_capacity(stderr)
+        and terminal_failed
+        and terminal_error is not None
+        and (capacity := _stderr_capacity(stderr))
     ):
-        # Before the exit-status overwrite, as Claude and Codex do. The terminal
-        # error is the provider's reset hint; the AGY_ERROR line is the classification.
+        # Before the exit-status overwrite, as Claude and Codex do. The AGY_ERROR line is the
+        # classification; the provider's message and reset hint stay in the retained stream.
         return ParsedResult(
             None,
-            usage if isinstance(usage, dict) else None,
-            f"agy: {quota_message}",
+            usage,
+            f"agy: quota or capacity limit ({capacity}); its text and reset hint are in the task's retained stream",
             one_model(models),
             rate_limited=True,
         )
+    if (
+        stream_clean
+        and terminal_seen
+        and not started
+        and not incomplete
+        and terminal_failed
+        and type(result.get("num_turns")) is int and result["num_turns"] == 0
+        and terminal_error is not None
+        and terminal_error.startswith(_MODEL_SELECTION_REFUSAL)
+    ):
+        # AGY refused the --model before any init or turn: the model is not offered to this
+        # account (an unlisted id, or one withheld in its region). A typed refusal, not a run failure.
+        return ParsedResult(None, None, _MODEL_UNAVAILABLE)
     if returncode:
-        error = f"agy: exited with status {returncode}"
+        # The exit status leads; AGY's own terminal status and error class stay readable after it.
+        detail = terminal_failed and error != _BARE_UNSUCCESSFUL
+        error = f"agy: exited with status {returncode}" + (f"; {error.removeprefix('agy: ')}" if detail else "")
     if output_schema is not None:
         from scripts.agent_runtime.adapters._output_schema import structured_result
 
@@ -364,13 +436,8 @@ def parse(
             terminal_ok=not error and stream_clean and "structured_output" in result and result.get("status") == "SUCCESS",
         )
         return ParsedResult(
-            structured.response, usage if isinstance(usage, dict) else None,
+            structured.response, usage,
             error or (f"{structured.failure_code}: {structured.stderr_excerpt}" if not structured.ok else None),
             one_model(models),
         )
-    return ParsedResult(
-        text,
-        usage if isinstance(usage, dict) else None,
-        error or (None if text else "agy: missing final text"),
-        one_model(models),
-    )
+    return ParsedResult(text, usage, error or (None if text else "agy: missing final text"), one_model(models))
