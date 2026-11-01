@@ -817,16 +817,28 @@ def test_writer_prompt_is_not_a_learner_attribution_surface(gold):
     assert any("unattributed reference-name" in d for d in leaked["warnings"])
 
 
-def test_configured_word_target_is_enforced(gold):
+def test_configured_word_target_is_ignored(gold):
     module, source, plan = gold
     path = module / "lessons.yaml"
     lesson_map = yaml.safe_load(path.read_text())
-    observed = len(gates.strip_comments((module / "lesson-1/module.md").read_text()).split())
-    assert observed >= 550
-    lesson_map["lessons"][0]["word_target"] = observed + 1
+    for lesson in lesson_map["lessons"]:
+        lesson.pop("word_target", None)
+        # Length alone is not a defect; the other gates still diagnose the
+        # coverage and practice lost in this deliberately incomplete artifact.
+        (module / f"lesson-{lesson['n']}/module.md").write_text("## Teaching\nAn explanation.\n")
     path.write_text(yaml.safe_dump(lesson_map, allow_unicode=True))
-    report = gates.run_lesson_gates(module, source, plan)
-    assert f"lesson 1: prose tokens {observed} < {observed + 1} minimum" in report["diagnostics"]
+    before = gates.run_lesson_gates(module, source, plan)
+    assert before["facts"]["lessons"][1]["prose_tokens"] == 4
+    assert before["facts"]["total_prose_tokens"] == 12
+    assert not any("prose tokens" in d or "word_target" in d for d in before["diagnostics"])
+    assert any("original paragraph not preserved" in d for d in before["diagnostics"])
+    assert any("no INJECT_ACTIVITY" in d for d in before["diagnostics"])
+    for value in (None, "", 549, 100000):
+        for lesson in lesson_map["lessons"]:
+            lesson["word_target"] = value
+        path.write_text(yaml.safe_dump(lesson_map, allow_unicode=True))
+        report = gates.run_lesson_gates(module, source, plan)
+        assert report["diagnostics"] == before["diagnostics"]
 
 
 # ── alphabet-module machinery (#8237) ────────────────────────────────────────

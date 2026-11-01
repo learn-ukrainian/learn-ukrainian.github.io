@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from contextlib import redirect_stdout
 from dataclasses import asdict, replace
+from io import StringIO
 from pathlib import Path
 
 import pytest
@@ -355,7 +357,293 @@ def test_empty_input_is_incomplete():
     assert exc.value.exit_code == EXIT_INCOMPLETE
 
 
+@pytest.mark.parametrize(
+    "case",
+    [
+        "valid",
+        "bare",
+        "trailing-prose",
+        "crlf",
+        "empty-info",
+        "request-changes",
+        "blocked",
+        "mismatch",
+        "missing-json",
+        "duplicate-verdict",
+        "duplicate-score",
+        "multiple-blocks",
+        "bad-score",
+        "leading-chatter",
+        "schema",
+        "non-object",
+        "unclosed",
+        "nested-block",
+        "cr-duplicate-verdict",
+        "cr-duplicate-score",
+        "decorated-verdict",
+        "lowercase-score",
+        "deep-markdown",
+        "deep-json",
+        "invalid-duplicate-verdict",
+    ],
+)
+def test_review_loop_envelope_contract(tmp_path, case):
+    """The recorder's reply must yield a receipt without rewriting its bytes."""
+    repo = _init_repo(tmp_path)
+    target = resolve_local_target(repo)
+    payload = _clean_payload()
+    verdict = "APPROVE"
+    if case == "request-changes":
+        verdict = "REQUEST_CHANGES"
+        payload["overall"]["correctness"] = "incorrect"
+    if case == "blocked":
+        verdict = "BLOCKED"
+        payload["overall"]["correctness"] = "uncertain"
+        payload["missing_capabilities"] = ["shell"]
+    if case == "mismatch":
+        payload["overall"]["correctness"] = "incorrect"
+    if case == "schema":
+        payload["unexpected"] = True
+    block = json.dumps([] if case == "non-object" else payload)
+    raw = f"VERDICT: {verdict}\nSCORE: 9/10 Checked.\n\n```json\n{block}\n```\n"
+    if case == "bare":
+        raw = json.dumps(payload)
+    elif case == "trailing-prose":
+        raw += "Follow-up discussion is not review evidence.\n"
+    elif case == "crlf":
+        raw = raw.replace("\n", "\r\n")
+    elif case == "empty-info":
+        raw = raw.replace("```json", "```")
+    elif case == "missing-json":
+        raw = "VERDICT: APPROVE\nSCORE: 9/10 Checked.\n"
+    elif case == "duplicate-verdict":
+        raw += "VERDICT: APPROVE\n"
+    elif case == "duplicate-score":
+        raw += "SCORE: 9/10\n"
+    elif case == "multiple-blocks":
+        raw += f"\n```json\n{block}\n```\n"
+    elif case == "bad-score":
+        raw = raw.replace("9/10", "90/10")
+    elif case == "leading-chatter":
+        raw = "Here is the review.\n" + raw
+    elif case == "unclosed":
+        raw = raw.removesuffix("```\n")
+    elif case == "nested-block":
+        raw = raw.replace("```json\n", "> ```json\n> ").replace("\n```\n", "\n> ```\n")
+    elif case == "cr-duplicate-verdict":
+        raw = (raw + "VERDICT: REQUEST_CHANGES\n").replace("\n", "\r")
+    elif case == "cr-duplicate-score":
+        raw = (raw + "SCORE: 8/10\n").replace("\n", "\r")
+    elif case == "decorated-verdict":
+        raw += "**verdict:** REQUEST_CHANGES\n"
+    elif case == "lowercase-score":
+        raw += "score: 8/10\n"
+    elif case == "deep-markdown":
+        raw += "- " * 10 + "x\n\n"
+    elif case == "deep-json":
+        raw = raw.replace(block, "[" * 10000 + "0" + "]" * 10000)
+    elif case == "invalid-duplicate-verdict":
+        raw += "VERDICT: INVALID\n"
+    review_file = tmp_path / "review.txt"
+    review_file.write_bytes(raw.encode())
+    assert verify_review_cli._read_review(None, False, review_file) == raw
+    result = verify_review(raw, _ctx(repo, target, raw))
+    expected = {
+        "valid": EXIT_CLEAN,
+        "bare": EXIT_CLEAN,
+        "trailing-prose": EXIT_CLEAN,
+        "crlf": EXIT_CLEAN,
+        "empty-info": EXIT_CLEAN,
+        "request-changes": EXIT_ACTIONABLE,
+        "blocked": EXIT_INCOMPLETE,
+    }.get(case, EXIT_INVALID)
+    assert result.exit_code == expected
+    assert result.receipt["reviewer_output_sha256"] == sha256_text(raw)
+    if expected == EXIT_INVALID:
+        assert result.error
+    else:
+        assert result.payload == payload
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "matching",
+        "dirty-copy",
+        "forged-quote",
+        "wrong-line",
+        "inflated-range",
+        "absent",
+        "symlink",
+        "blocking",
+        "escalate",
+        "invalid-disposition",
+        "missing-disposition",
+        "missing-rationale",
+        "no-head",
+    ],
+)
+def test_unchanged_follow_up_evidence_uses_exact_head(tmp_path, case):
+    """Only a justified follow-up may cite a regular unchanged file at the head."""
+    repo = _init_repo(tmp_path)
+    (repo / "context.py").write_text("context = 1\n", encoding="utf-8")
+    (repo / "link.py").symlink_to("context.py")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-q", "-m", "context")
+    (repo / "app.py").write_text("value = 2\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-q", "-m", "change")
+    target = resolve_commit_target(repo, _git(repo, "rev-parse", "HEAD").stdout.strip())
+    finding = _finding(path="context.py", start=1, verbatim="context = 1", priority="P3")
+    disposition = {"disposition": "follow_up", "rationale": "Nonblocking existing context."}
+    dispositions = {"F001": disposition}
+    if case == "dirty-copy":
+        (repo / "context.py").write_text("context = 99\n", encoding="utf-8")
+    elif case == "forged-quote":
+        finding["verbatim"] = "context = 99"
+    elif case == "wrong-line":
+        finding["location"].update(start_line=2, end_line=2)
+    elif case == "inflated-range":
+        finding["location"]["end_line"] = 2
+    elif case == "absent":
+        finding["location"]["path"] = "untracked.py"
+        (repo / "untracked.py").write_text("context = 1\n", encoding="utf-8")
+    elif case == "symlink":
+        finding["location"]["path"] = "link.py"
+    elif case in {"blocking", "escalate", "invalid-disposition"}:
+        disposition["disposition"] = {
+            "blocking": "in_scope_blocker",
+            "escalate": "stop_and_escalate",
+            "invalid-disposition": "invalid",
+        }[case]
+    elif case == "missing-disposition":
+        dispositions = {}
+    elif case == "missing-rationale":
+        disposition["rationale"] = " "
+    elif case == "no-head":
+        target = replace(target, head_sha=None)
+        check = verify_finding_evidence(
+            finding, repo_root=repo, target=target, changed_lines={}, allow_unchanged_follow_up=True
+        )
+        assert check.outcome == OUTCOME_OUT_OF_SCOPE
+        return
+    payload = _clean_payload()
+    payload["findings"] = [finding]
+    raw = json.dumps(payload)
+    result = verify_review(raw, _ctx(repo, target, raw, dispositions=dispositions))
+    if case in {"matching", "dirty-copy", "forged-quote", "wrong-line", "inflated-range", "absent", "symlink"}:
+        assert result.exit_code == EXIT_ACTIONABLE
+        if case in {"matching", "dirty-copy"}:
+            assert result.receipt["findings"][0]["outcome"] == OUTCOME_VERIFIED
+            assert result.receipt["unverified_follow_up_notes"] == []
+        else:
+            assert result.receipt["findings"][0]["outcome"] != OUTCOME_VERIFIED
+            assert result.receipt["unverified_follow_up_notes"] == result.receipt["findings"]
+        receipt_path = tmp_path / "receipt.json"
+        receipt_path.write_text(json.dumps(result.receipt))
+        record = {
+            "details": {
+                "behavior_proof_receipt": {
+                    "receipt_path": str(receipt_path),
+                    "receipt_sha256": "sha256:" + sha256_text(receipt_path.read_text()),
+                    "input_sha256": result.receipt["target"]["input_sha256"],
+                    "target_sha": target.head_sha,
+                }
+            }
+        }
+        assert task_lifecycle._behavior_proof_reference_error(record, head_sha=target.head_sha) is None
+    else:
+        assert result.exit_code == EXIT_UNVERIFIABLE
+        assert result.receipt["findings"][0]["outcome"] != OUTCOME_VERIFIED
+
+
 # --- target modes ------------------------------------------------------------
+
+
+@pytest.mark.parametrize("outcome", ["quote_missing", "line_mismatch", "out_of_scope"])
+def test_approved_unverified_follow_up_retains_evidence_failure(tmp_path, outcome):
+    """APPROVE retains exact evidence failures rather than refusing or verifying notes."""
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\n    value = 2\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    finding = _finding(verbatim="    value = 2", priority="P3")
+    if outcome == "quote_missing":
+        finding["verbatim"] = "value = 2"
+    elif outcome == "line_mismatch":
+        finding["location"]["end_line"] = 3
+    else:
+        finding.update(verbatim="print('v1')")
+        finding["location"].update(start_line=1, end_line=1)
+    payload = _clean_payload()
+    payload["findings"] = [finding]
+    raw = "VERDICT: APPROVE\nSCORE: 9/10\n```json\n" + json.dumps(payload) + "\n```\n"
+    result = verify_review(raw, _ctx(repo, target, raw, dispositions={
+        "F001": {"disposition": "follow_up", "rationale": "CTO owns this nonblocking note."},
+    }))
+    assert result.exit_code == EXIT_ACTIONABLE
+    assert result.error is None
+    assert result.final_disposition == "actionable"
+    assert result.payload == payload
+    check = verify_finding_evidence(finding, repo_root=repo, target=target,
+                                    changed_lines=changed_lines_map(repo, target))
+    note = result.receipt["unverified_follow_up_notes"][0]
+    assert note == result.receipt["findings"][0]
+    assert note["outcome"] == check.outcome == outcome
+    assert note["detail"] == check.detail
+    assert result.receipt["reviewer_output_sha256"] == sha256_text(raw)
+
+
+@pytest.mark.parametrize("case", [
+    "blocking", "escalate", "incorrect", "uncertain", "unsafe-path", "schema",
+    "header-disagreement", "missing-disposition", "invalid-disposition", "blank-rationale",
+    "stale-head", "stale-input", "same-family", "missing-lineage", "failed-proof", "failed-tests",
+])
+def test_unverified_follow_up_never_bypasses_refusals(tmp_path, case):
+    """Unverified notes cannot turn failed approval, provenance or proof gates into approval."""
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-qm", "change")
+    target = resolve_commit_target(repo, _git(repo, "rev-parse", "HEAD").stdout.strip())
+    payload = _clean_payload()
+    payload["findings"] = [_finding(verbatim="not in the target", priority="P3")]
+    dispositions = {"F001": {"disposition": "follow_up", "rationale": "CTO owns this note."}}
+    env = _full_envelope_kwargs(repo, target, dispositions=dispositions)
+    if case in {"blocking", "escalate", "invalid-disposition"}:
+        dispositions["F001"]["disposition"] = {
+            "blocking": "in_scope_blocker", "escalate": "stop_and_escalate",
+            "invalid-disposition": "invalid",
+        }[case]
+    elif case in {"incorrect", "uncertain"}:
+        payload["overall"]["correctness"] = case
+    elif case == "unsafe-path":
+        payload["findings"][0]["location"]["path"] = "../app.py"
+    elif case == "schema":
+        payload["findings"][0]["priority"] = "P9"
+    elif case == "missing-disposition":
+        dispositions.clear()
+    elif case == "blank-rationale":
+        dispositions["F001"]["rationale"] = " "
+    elif case == "stale-head":
+        env["expected_head"] = "a" * 40
+    elif case == "stale-input":
+        env["expected_input_sha256"] = "a" * 64
+    elif case == "same-family":
+        env["reviewer"].family = env["author"].family
+    elif case == "missing-lineage":
+        env["routing_lineage"] = {}
+    elif case == "failed-proof":
+        env["behavior_proof"]["source_blind"]["status"] = "fail"
+    elif case == "failed-tests":
+        env["tests"]["passed"] = False
+    raw = json.dumps(payload)
+    if case == "header-disagreement":
+        raw = "VERDICT: REQUEST_CHANGES\nSCORE: 5/10\n```json\n" + raw + "\n```"
+    result = verify_review(raw, _ctx(repo, target, raw, **env))
+    assert result.exit_code != EXIT_CLEAN
+    assert result.exit_code != EXIT_ACTIONABLE or result.error is not None
+    if result.payload:
+        assert result.payload["findings"] == payload["findings"]
 
 
 def test_local_target_verified_and_clean(tmp_path):
@@ -1149,7 +1437,7 @@ def test_correct_with_nonblocking_findings_stays_actionable_and_passes_lifecycle
         ({"F001": {"disposition": "follow_up"}}, "value = 2", EXIT_INCOMPLETE),
         ({"F001": {"disposition": "follow_up", "rationale": " "}}, "value = 2", EXIT_INCOMPLETE),
         ({"F001": {"disposition": "invalid", "rationale": "Present."}}, "value = 2", EXIT_INVALID),
-        ({"F001": {"disposition": "follow_up", "rationale": "Present."}}, "forged = 99", EXIT_UNVERIFIABLE),
+        ({"F001": {"disposition": "follow_up", "rationale": "Present."}}, "forged = 99", EXIT_ACTIONABLE),
     ],
     ids=["missing-disposition", "missing-rationale", "blank-rationale", "invalid-disposition", "forged-correct"],
 )
@@ -1169,7 +1457,14 @@ def test_correct_verdict_does_not_override_invalid_finding_evidence(
     result = verify_review(raw, _ctx(repo, target, raw, dispositions=dispositions))
 
     assert result.exit_code == expected_exit
-    assert result.final_disposition not in {"clean", "actionable"}
+    if expected_exit == EXIT_ACTIONABLE:
+        assert result.final_disposition == "actionable"
+        assert result.error is None
+        assert result.receipt["unverified_follow_up_notes"] == result.receipt["findings"]
+        assert result.receipt["findings"][0]["outcome"] == OUTCOME_QUOTE_MISSING
+        assert result.receipt["findings"][0]["detail"] == "verbatim_not_found"
+    else:
+        assert result.final_disposition not in {"clean", "actionable"}
     assert result.receipt["reviewer_payload"]["overall"]["correctness"] == "correct"
     assert len(result.receipt["findings"]) == 1
 
@@ -1583,7 +1878,7 @@ def test_behavior_proof_state_checks_stable_target_identity_not_description(tmp_
         ),
         encoding="utf-8",
     )
-    loaded_proof, claim = verify_review_cli._load_behavior_proof_state(state_file, target=target)
+    loaded_proof, claim, _profile = verify_review_cli._load_behavior_proof_state(state_file, target=target)
     assert loaded_proof == proof
     assert claim == "test intended behavior"
 
@@ -1633,3 +1928,335 @@ def test_verify_review_read_review_timeout_exits_invalid(
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+def _ukrainian_comments(head: str, *, author_models: list[str], seats: list[tuple[str, str, tuple[str, ...]]]):
+    from scripts.review.record_cf_verdict import build_comment
+
+    comments = []
+    for index, (family, model, coverage) in enumerate(seats):
+        denominator = ("card-a", "card-b") if coverage else None
+        body = build_comment(
+            sha=head,
+            task_id=f"seat-{family}-{index}",
+            started="2026-07-16T09:00:00.000000Z",
+            verdict="APPROVED",
+            model=model,
+            family=family,
+            reply=f"VERDICT: APPROVED\n{family} seat",
+            review_profile="ukrainian",
+            sources_mcp_call_count=3,
+            author_models=author_models,
+            denominator=denominator,
+            coverage=coverage or None,
+        )
+        comments.append(
+            {
+                "url": f"https://github.com/org/repo/pull/77#issuecomment-{index + 1}",
+                "body": body,
+                "user": {"login": "fleet"},
+                "author_association": "MEMBER",
+                "created_at": "2026-07-16T10:00:00Z",
+                "updated_at": "2026-07-16T10:00:00Z",
+            }
+        )
+    return comments
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "two_seat_target_freeze_both_surfaces",
+        "one_seat_openai_author",
+        "one_seat_google_author",
+        "missing_required_seat",
+        "reviewer_flags_refused",
+        "findings_json_refused",
+        "chunked_seat_keeps_every_contributing_comment",
+        "partial_chunk_alone_not_clean",
+        "red_team_chunk_excluded",
+        "conflicting_denominators_refused",
+    ],
+)
+def test_ukrainian_seat_verdicts_bind_behavior_proof_receipt(tmp_path, case, capsys):
+    """A clean receipt comes from the recorded chunked seat quorum, not caller identity."""
+    from scripts.orchestration.integration_sweep import lookup_verdict
+    from scripts.review.closeout_cli import main as closeout_main
+    from scripts.review.review_contract import ContractError, build_ukrainian_behavior_receipt
+    from tests.test_review_closeout_cli import _freeze_kwargs, _git, _init_repo
+
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "feature")
+    state_file = tmp_path / "state.json"
+
+    def run_closeout(*args: str) -> int:
+        return closeout_main(["--state-file", str(state_file), *args])
+
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert run_closeout("target", "--mode", "commit", "--repo-root", str(repo), "--commit", head) == 0
+    assert run_closeout("freeze", "--review-profile", "ukrainian", *_freeze_kwargs("#12316")[1:]) == 0
+    common = (
+        "--status",
+        "pass",
+        "--command",
+        ".venv/bin/python -m scripts.review.closeout_cli --help",
+        "--cwd",
+        str(repo),
+        "--exit-code",
+        "0",
+        "--observation",
+        "command completed and printed help",
+        "--evidence-ref",
+        "test:ukrainian-proof",
+    )
+    assert run_closeout("behavior-proof", "record", "--surface", "source_aware", *common) == 0
+    assert run_closeout("behavior-proof", "record", "--surface", "source_blind", *common) == 0
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    head = state["baseline"]["target"]["head_sha"]
+    proof = state["behavior_proof"]
+    author_models = ["claude-opus-5-5"]
+    seats = [
+        ("google", "gemini-3.8-flash-high", ()),
+        ("openai", "gpt-6.1-sol", ()),
+    ]
+    if case == "one_seat_openai_author":
+        author_models = ["gpt-6.1-sol"]
+        seats = [("google", "gemini-3.8-flash-high", ())]
+    elif case == "one_seat_google_author":
+        author_models = ["gemini-3.8-flash-high"]
+        seats = [("openai", "gpt-6.1-sol", ())]
+    elif case == "missing_required_seat":
+        seats = [("google", "gemini-3.8-flash-high", ())]
+    elif case == "chunked_seat_keeps_every_contributing_comment":
+        author_models = ["gemini-3.8-flash-high"]
+        seats = [
+            ("openai", "gpt-6.1-sol", ("card-a",)),
+            ("openai", "gpt-6.1-sol", ("card-b",)),
+        ]
+    elif case == "partial_chunk_alone_not_clean":
+        author_models = ["gemini-3.8-flash-high"]
+        seats = [("openai", "gpt-6.1-sol", ("card-a",))]
+    elif case == "red_team_chunk_excluded":
+        author_models = ["gemini-3.8-flash-high"]
+        seats = [
+            ("openai", "gpt-6.1-sol", ("card-a",)),
+            ("openai", "gpt-6.1-sol", ("card-b",)),
+        ]
+    comments = _ukrainian_comments(head, author_models=author_models, seats=seats)
+    if case == "red_team_chunk_excluded":
+        from scripts.review.record_cf_verdict import build_comment
+
+        red_body = build_comment(
+            sha=head,
+            task_id="seat-openai-red",
+            started="2026-07-16T09:00:00.000000Z",
+            verdict="APPROVED",
+            model="gpt-6.1-sol",
+            family="openai",
+            reply="VERDICT: APPROVED\nred team",
+            review_mode="red_team",
+            review_profile="ukrainian",
+            sources_mcp_call_count=3,
+            author_models=author_models,
+        )
+        comments.append(
+            {
+                "url": "https://github.com/org/repo/pull/77#issuecomment-red",
+                "body": red_body,
+                "user": {"login": "fleet"},
+                "author_association": "MEMBER",
+                "created_at": "2026-07-16T10:00:00Z",
+                "updated_at": "2026-07-16T10:00:00Z",
+            }
+        )
+    elif case == "conflicting_denominators_refused":
+        from scripts.review.record_cf_verdict import build_comment
+
+        comments = []
+        for index, denominator in enumerate((("card-a",), ("card-b",))):
+            body = build_comment(
+                sha=head,
+                task_id=f"seat-openai-{index}",
+                started="2026-07-16T09:00:00.000000Z",
+                verdict="APPROVED",
+                model="gpt-6.1-sol",
+                family="openai",
+                reply="VERDICT: APPROVED\nopenai seat",
+                review_profile="ukrainian",
+                sources_mcp_call_count=3,
+                author_models=["gemini-3.8-flash-high"],
+                denominator=denominator,
+                coverage=denominator,
+            )
+            comments.append(
+                {
+                    "url": f"https://github.com/org/repo/pull/77#issuecomment-{index + 1}",
+                    "body": body,
+                    "user": {"login": "fleet"},
+                    "author_association": "MEMBER",
+                    "created_at": "2026-07-16T10:00:00Z",
+                    "updated_at": "2026-07-16T10:00:00Z",
+                }
+            )
+
+    if case in {"reviewer_flags_refused", "findings_json_refused"}:
+        review_file = tmp_path / "review.json"
+        review_file.write_text('{"schema_version":"code-review-findings.v1","findings":[]}\n', encoding="utf-8")
+        argv = [
+            "--review-file",
+            str(review_file),
+            "--mode",
+            "commit",
+            "--commit",
+            head,
+            "--repo-root",
+            str(repo),
+            "--behavior-proof-state-file",
+            str(state_file),
+            "--tests-json",
+            '{"commands":["pytest"],"passed":true}',
+        ]
+        if case == "reviewer_flags_refused":
+            argv.extend(
+                ["--reviewer-model", "gpt-6.1-sol", "--reviewer-family", "openai", "--reviewer-harness", "codex"]
+            )
+        code = verify_review_cli.main(argv)
+        assert code == EXIT_INVALID
+        err = capsys.readouterr().err
+        if case == "reviewer_flags_refused":
+            assert "ukrainian_behavior_proof_refuses_reviewer_flags" in err
+        else:
+            assert "ukrainian_behavior_proof_refuses_review_file" in err
+        return
+
+    def build():
+        return build_ukrainian_behavior_receipt(
+            behavior_proof=proof,
+            frozen_intended_behavior=state["baseline"]["intended_behavior"],
+            comments=comments,
+            authenticated_login="fleet",
+            head_sha=head,
+            author_attributions=[{"model": model, "harness": "claude"} for model in author_models],
+            target=state["baseline"]["target"],
+            input_sha256=proof["source_aware"]["clauses"][0]["target_input_sha256"],
+            issue_ref="#12316",
+            scope={"owner_boundary": "repo root"},
+            tests={"commands": ["pytest"], "passed": True},
+        )
+
+    if case in {"missing_required_seat", "partial_chunk_alone_not_clean", "conflicting_denominators_refused"}:
+        with pytest.raises(ContractError):
+            build()
+        if case == "conflicting_denominators_refused":
+            from scripts.orchestration.integration_sweep import contributing_ukrainian_chunks
+
+            refused = contributing_ukrainian_chunks(comments, head, "fleet", learner_content=True)["refused"]
+            assert refused in {"unknown", "denominator-mismatch"}
+        return
+
+    receipt = build()
+    assert "reviewer" not in receipt and "reviewer_payload" not in receipt
+    assert receipt["review_profile"] == "ukrainian"
+    assert receipt["behavior_proof"]["source_aware"]["status"] == "pass"
+    assert receipt["behavior_proof"]["source_blind"]["status"] == "pass"
+    assert receipt["final_disposition"] == "clean"
+    recorded = [chunk["comment_url"] for seat in receipt["ukrainian_seat_verdicts"] for chunk in seat["chunks"]]
+    counted = [comment for comment in comments if "issuecomment-red" not in comment["url"]]
+    assert recorded == [comment["url"] for comment in counted]
+    if case == "two_seat_target_freeze_both_surfaces":
+        assert {seat["family"] for seat in receipt["ukrainian_seat_verdicts"]} == {"google", "openai"}
+    elif case == "one_seat_openai_author":
+        assert [seat["family"] for seat in receipt["ukrainian_seat_verdicts"]] == ["google"]
+    elif case == "one_seat_google_author":
+        assert [seat["family"] for seat in receipt["ukrainian_seat_verdicts"]] == ["openai"]
+    elif case == "red_team_chunk_excluded":
+        assert [seat["family"] for seat in receipt["ukrainian_seat_verdicts"]] == ["openai"]
+        assert receipt["ukrainian_seat_verdicts"][0]["denominator"] == ["card-a", "card-b"]
+        assert "https://github.com/org/repo/pull/77#issuecomment-red" not in recorded
+    else:
+        assert len(receipt["ukrainian_seat_verdicts"][0]["chunks"]) == 2
+        winner = lookup_verdict(comments, head, "fleet", learner_content=True)
+        assert winner.state == "APPROVED"
+        assert winner.task in {"seat-openai-0", "seat-openai-1"}
+
+
+def test_ukrainian_behavior_proof_cli_writes_receipt_from_pr_comments(tmp_path, monkeypatch):
+    """The closeout command writes the receipt from live PR comments, not a caller file."""
+    from scripts.review.closeout_cli import main as closeout_main
+    from tests.test_review_closeout_cli import _freeze_kwargs, _git, _init_repo
+
+    repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/org/repo.git")
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "feature\n\nX-Agent: claude/claude-opus-5-5")
+    state_file = tmp_path / "state.json"
+
+    def run_closeout(*args: str) -> int:
+        return closeout_main(["--state-file", str(state_file), *args])
+
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert run_closeout("target", "--mode", "commit", "--repo-root", str(repo), "--commit", head) == 0
+    assert run_closeout("freeze", "--review-profile", "ukrainian", *_freeze_kwargs("#12316")[1:]) == 0
+    common = (
+        "--status",
+        "pass",
+        "--command",
+        ".venv/bin/python -m scripts.review.closeout_cli --help",
+        "--cwd",
+        str(repo),
+        "--exit-code",
+        "0",
+        "--observation",
+        "command completed and printed help",
+        "--evidence-ref",
+        "test:ukrainian-proof",
+    )
+    assert run_closeout("behavior-proof", "record", "--surface", "source_aware", *common) == 0
+    assert run_closeout("behavior-proof", "record", "--surface", "source_blind", *common) == 0
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    state["target_args"]["pr"] = 77
+    state_file.write_text(json.dumps(state), encoding="utf-8")
+    head = state["baseline"]["target"]["head_sha"]
+    comments = _ukrainian_comments(
+        head,
+        author_models=["claude-opus-5-5"],
+        seats=[
+            ("google", "gemini-3.8-flash-high", ()),
+            ("openai", "gpt-6.1-sol", ()),
+        ],
+    )
+
+    def fake_comments(repo_root, repository, pr_number):
+        assert pr_number == 77
+        assert repository == "org/repo"
+        return comments, "fleet"
+
+    monkeypatch.setattr("scripts.review.closeout_cli.load_pull_request_comments", fake_comments)
+    monkeypatch.chdir(tmp_path)
+    printed_out = StringIO()
+    with redirect_stdout(printed_out):
+        assert closeout_main(["--state-file", "state.json", "behavior-proof", "receipt"]) == 0
+    printed = json.loads(printed_out.getvalue())
+    assert Path(printed["receipt_path"]).is_absolute()
+    receipt_path = Path(printed["receipt_path"])
+    assert receipt_path == (tmp_path / "state.ukrainian-behavior-proof-receipt.json").resolve()
+    task_lifecycle._validate_behavior_proof_reference_shape(
+        {
+            "behavior_proof_receipt": {
+                "receipt_path": printed["receipt_path"],
+                "receipt_sha256": printed["receipt_sha256"],
+                "input_sha256": "c" * 64,
+                "target_sha": head,
+            }
+        }
+    )
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["review_profile"] == "ukrainian"
+    assert "reviewer" not in receipt and "reviewer_payload" not in receipt
+    assert receipt["behavior_proof"]["source_aware"]["status"] == "pass"
+    assert receipt["behavior_proof"]["source_blind"]["status"] == "pass"
+    assert receipt["target"]["head_sha"] == head
+    assert {seat["family"] for seat in receipt["ukrainian_seat_verdicts"]} == {"google", "openai"}

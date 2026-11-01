@@ -1158,3 +1158,69 @@ def test_resolver_cli_threads_red_team_and_labels_limitation(tmp_path, outside_a
     assert payload["selected"]["family"] == ("anthropic" if outside_available else "openai")
     assert payload["review_mode"] == "red_team"
     assert "does not attest cross-family review" in payload["limitation"]
+
+
+def test_freeze_refuses_profile_outside_code_infra_and_ukrainian(tmp_path):
+    """A profile other than code, infra, or ukrainian is not a proof carrier."""
+    repo = _init_repo(tmp_path)
+    state_file = tmp_path / "state.json"
+    assert _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
+    refused = _run_cli(
+        state_file,
+        "freeze",
+        "--review-profile",
+        "content",
+        *_freeze_kwargs()[1:],
+    )
+    assert refused.returncode != 0
+    assert "unsupported local-code-review profile" in refused.stderr
+
+
+def test_load_pull_request_comments_reads_identity_and_flattens_pages(tmp_path, monkeypatch):
+    """The live fetch fails closed on identity and comments, and flattens paged comments."""
+    from types import SimpleNamespace
+
+    from scripts.publish import github
+    from scripts.review.closeout_cli import CloseoutStateError, load_pull_request_comments
+
+    seen: list[str] = []
+
+    def install(responses: dict[str, tuple[int, str]]) -> None:
+        seen.clear()
+
+        def fake_run(request, **kwargs):
+            seen.append(request.verb)
+            assert kwargs["cwd"] == tmp_path
+            if request.verb == "read-comments":
+                assert request.fields == {"repo": "org/repo", "number": 77, "paginate": True, "slurp": True}
+            code, stdout = responses[request.verb]
+            return SimpleNamespace(returncode=code, stdout=stdout)
+
+        monkeypatch.setattr(github, "request_run", fake_run)
+
+    install({"read-identity": (1, "")})
+    with pytest.raises(CloseoutStateError, match="ukrainian_behavior_proof_comments_unavailable"):
+        load_pull_request_comments(tmp_path, "org/repo", 77)
+    assert seen == ["read-identity"]
+
+    install({"read-identity": (0, json.dumps({"login": "  "}))})
+    with pytest.raises(CloseoutStateError, match="ukrainian_behavior_proof_identity_unavailable"):
+        load_pull_request_comments(tmp_path, "org/repo", 77)
+    assert seen == ["read-identity"]
+
+    install({
+        "read-identity": (0, json.dumps({"login": "fleet"})),
+        "read-comments": (1, ""),
+    })
+    with pytest.raises(CloseoutStateError, match="ukrainian_behavior_proof_comments_unavailable"):
+        load_pull_request_comments(tmp_path, "org/repo", 77)
+    assert seen == ["read-identity", "read-comments"]
+
+    install({
+        "read-identity": (0, json.dumps({"login": " fleet "})),
+        "read-comments": (0, json.dumps([[{"html_url": "https://example.test/1"}], [{"html_url": "https://example.test/2"}]])),
+    })
+    rows, login = load_pull_request_comments(tmp_path, "org/repo", 77)
+    assert login == "fleet"
+    assert [row["html_url"] for row in rows] == ["https://example.test/1", "https://example.test/2"]
+    assert seen == ["read-identity", "read-comments"]

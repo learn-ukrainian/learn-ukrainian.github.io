@@ -17,7 +17,7 @@ Two-stage usage (target freshness):
      pass ``--expected-input-sha256`` (target-input fingerprint from step 1)
      plus identity/scope/tests/behavior-proof/lineage envelope fields.
      ``input_sha256`` on the receipt is the recomputed target fingerprint;
-     ``reviewer_output_sha256`` records the reviewer JSON separately.
+     ``reviewer_output_sha256`` records the whole raw reviewer reply separately.
 
 Exit codes (stable):
   0 clean valid review
@@ -90,7 +90,7 @@ def _read_review(issue: int | None, from_stdin: bool, review_file: Path | None) 
     if from_stdin:
         return sys.stdin.read()
     if review_file is not None:
-        return review_file.read_text(encoding="utf-8")
+        return review_file.read_bytes().decode("utf-8")
     if issue is None:
         raise SystemExit("one of --from-stdin, --review-file, or --issue is required")
     data = json.loads(_run(["gh", "issue", "view", str(issue), "--json", "comments"]))
@@ -187,7 +187,8 @@ def _load_behavior_proof_state(
         for field, expected_value in stable_target_fields.items()
     ):
         raise ContractError("behavior_proof_state_target_mismatch", exit_code=EXIT_INVALID)
-    return proof, intended_behavior
+    profile = str(baseline.get("review_profile") or "").strip().casefold()
+    return proof, intended_behavior, profile
 
 
 def _post_summary(issue: int, receipt: dict) -> None:
@@ -210,15 +211,26 @@ def _post_summary(issue: int, receipt: dict) -> None:
         "out_of_scope",
     ):
         lines.append(f"- {name}: {counts.get(name, 0)}")
+    for note in receipt.get("unverified_follow_up_notes") or []:
+        lines.append(f"- unverified follow-up {note['id']}: {note['outcome']}: {note['detail']}")
     _run(Request("issue-comment", number=int(str(issue)), body="\n".join(lines)))
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Verify structured code-review JSON against an exact target, "
-            "or emit a source-blind target manifest/fingerprint."
-        )
+            "Verify bare review JSON or a review-loop reply against an exact target.\n"
+            "Use after review to produce a receipt, or before review to emit a target fingerprint."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/verify_review.py --emit-target-manifest --mode commit --commit HEAD
+  .venv/bin/python scripts/verify_review.py --review-file reply.txt --mode commit --commit HEAD
+
+Outputs: receipt JSON on stdout; --receipt-path writes a file; --post-comment opts into GitHub posting.
+Exit codes: 0 clean; 1 actionable; 2 invalid; 3 incomplete; 4 stale; 5 unverifiable.
+Related: docs/review-protocol.md; schemas/code-review-findings.v1.schema.json; issue #12338.
+""",
     )
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--issue", type=int, help="Read latest issue comment as review JSON")
@@ -226,7 +238,7 @@ def build_parser() -> argparse.ArgumentParser:
     source.add_argument(
         "--review-file",
         type=Path,
-        help="Read review JSON from a local file",
+        help="Read bare JSON or a review-loop reply from a UTF-8 file, preserving its raw-byte digest",
     )
     source.add_argument(
         "--emit-target-manifest",
@@ -332,6 +344,23 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _ukrainian_proof_override(args: argparse.Namespace, *, raw: str, routing_lineage: dict) -> str:
+    """Caller identity cannot stand in for the recorded Ukrainian seat chunks."""
+    reviewer_flags = (
+        args.reviewer_model,
+        args.reviewer_family,
+        args.reviewer_harness,
+        args.reviewer_selection_reason,
+    )
+    if any(str(flag or "").strip() for flag in reviewer_flags):
+        return "ukrainian_behavior_proof_refuses_reviewer_flags"
+    if args.review_file is not None or args.from_stdin or raw.strip():
+        return "ukrainian_behavior_proof_refuses_review_file"
+    if routing_lineage:
+        return "ukrainian_behavior_proof_refuses_routing_lineage"
+    return ""
+
+
 def _resolve_target(args: argparse.Namespace):
     repo_root = Path(args.repo_root).resolve()
     try:
@@ -432,7 +461,7 @@ def main(argv: list[str] | None = None) -> int:
                     "behavior_proof_source_conflict: use exactly one of --behavior-proof-json or --behavior-proof-state-file",
                     exit_code=EXIT_INVALID,
                 )
-            behavior_proof, frozen_intended_behavior = _load_behavior_proof_state(
+            behavior_proof, frozen_intended_behavior, review_profile = _load_behavior_proof_state(
                 args.behavior_proof_state_file,
                 target=target,
             )
@@ -441,6 +470,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.behavior_proof_json or None, label="--behavior-proof-json"
             )
             frozen_intended_behavior = ""
+            review_profile = ""
     except ContractError as exc:
         print(
             json.dumps(
@@ -449,6 +479,19 @@ def main(argv: list[str] | None = None) -> int:
                     "final_disposition": "invalid",
                     "exit_code": EXIT_INVALID,
                 },
+                ensure_ascii=False,
+            ),
+            file=sys.stderr,
+        )
+        return EXIT_INVALID
+
+    if review_profile == "ukrainian":
+        refused = _ukrainian_proof_override(args, raw=raw, routing_lineage=routing_lineage)
+        if not refused:
+            refused = "ukrainian_behavior_proof_requires_recorded_seat_comments"
+        print(
+            json.dumps(
+                {"error": refused, "final_disposition": "invalid", "exit_code": EXIT_INVALID},
                 ensure_ascii=False,
             ),
             file=sys.stderr,

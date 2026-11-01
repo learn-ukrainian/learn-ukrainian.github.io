@@ -188,6 +188,91 @@ def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -
     assert result.tool_calls[0]["output_summary"] == ('[{"text": "inline result from agy steps file", "type": "text"}]')
 
 
+def test_missing_saved_tool_result_is_marked_file_removed(tmp_path: Path) -> None:
+    """A transcript pointer whose file is already gone is not stored as the body."""
+    app_data = tmp_path / "antigravity-cli"
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(
+        f"I0521 printmode.go:130] Print mode: conversation={CONVERSATION_ID}, sending message\n",
+        encoding="utf-8",
+    )
+    conversation_root = app_data / "brain" / CONVERSATION_ID
+    output_file = conversation_root / "steps" / "103" / "output.txt"
+    output_file.parent.mkdir(parents=True)
+    output_file.write_text("gone before read", encoding="utf-8")
+    output_file.unlink()
+    transcript = conversation_root / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text(
+        "\n".join(
+            [
+                (
+                    '{"created_at":"2026-05-21T14:12:12Z",'
+                    '"tool_calls":[{"name":"call_mcp_tool","args":{'
+                    '"ServerName":"\\"sources\\"",'
+                    '"ToolName":"\\"search_text\\"",'
+                    '"Arguments":"{\\"query\\":\\"ранок\\"}"}}]}'
+                ),
+                (f'{{"type":"MCP_TOOL","content":"The output was large and was saved to: {output_file.as_uri()}"}}'),
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    result = AgyAdapter().parse_response(
+        stdout="Final response.",
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=_plan(tmp_path, log_file=log_file, app_data=app_data),
+    )
+
+    call = result.tool_calls[0]
+    assert call["output_missing"] == "file_removed"
+    assert "result" not in call
+    assert "saved to:" not in json.dumps(call)
+
+
+def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
+    """A completed Sources call with no stream output receives the step file through the inliner."""
+    app_data = (tmp_path / "antigravity-cli").resolve()
+    steps = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "steps"
+    output = steps / "34" / "output.txt"
+    output.parent.mkdir(parents=True)
+    output.write_text("kept body", encoding="utf-8")
+    pointed = steps / "50" / "output.txt"
+    pointed.parent.mkdir()
+    pointed.write_text("expanded body", encoding="utf-8")
+    # A Unicode digit name must not abort the export of the real step files.
+    (steps / "²").mkdir()
+    saved = agy_module.export_saved_step_outputs(app_data)
+
+    def event(step: int, body: str | None) -> dict:
+        info: dict = {"parameters": {"ServerName": "sources", "ToolName": "search_text", "Arguments": "{}"}}
+        if body is not None:
+            info["output"] = body
+        return {
+            "event": "step_update",
+            "step_update": {
+                "conversation_id": CONVERSATION_ID,
+                "state": "DONE",
+                "step_index": step,
+                "tool_name": "call_mcp_tool",
+                "tool_info": info,
+            },
+        }
+
+    pointer = f"The output was large and was saved to: {pointed.as_uri()}"
+    stdout = json.dumps(event(34, None)) + "\n" + json.dumps(event(50, pointer)) + "\n"
+    merged, retained, missing = agy_module.merge_saved_step_outputs(stdout, saved)
+    parsed = [json.loads(line) for line in merged.splitlines()]
+    assert parsed[0]["step_update"]["tool_info"]["output"] == "kept body"
+    assert parsed[1]["step_update"]["tool_info"]["output"] == "expanded body"
+    assert "saved to:" not in merged
+    assert retained == 2
+    assert missing == 0
+
+
 @pytest.mark.parametrize("attempt", [False, True], ids=["ordinary", "attempt"])
 @pytest.mark.parametrize("shape", ["fifo", "step_index", "generic"])
 @pytest.mark.parametrize("steps_dir", ["steps", ".system_generated/steps"])
@@ -269,8 +354,13 @@ def test_saved_result_with_unresolved_app_data_ancestor(
             agy_module._parse_transcript_tool_calls(plan)
     else:
         calls = agy_module._parse_transcript_tool_calls(plan)
-        expected = pointer if attempt else "own saved result"
-        assert calls[0]["result"] == [{"type": "text", "text": expected}]
+        if attempt:
+            # The attempt does not translate the alias, so the pointer is outside the
+            # allowed steps roots. The call is marked; the pointer text is not a body.
+            assert calls[0]["output_missing"] == "outside_allowed_roots"
+            assert "result" not in calls[0]
+        else:
+            assert calls[0]["result"] == [{"type": "text", "text": "own saved result"}]
         assert "FORBIDDEN_SAVED_RESULT" not in str(calls)
 
 

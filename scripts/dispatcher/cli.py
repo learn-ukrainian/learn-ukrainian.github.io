@@ -95,7 +95,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("max-budget-usd", None, "Spend cap in USD for a Claude API-key account, at most its configured amount "
          "(default: that amount)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
-        ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
+        ("output-schema", None, "Codex/AGY JSON object schema: repo-relative or absolute readable file "
+         "(default: existing review findings schema for AGY --require-review-verdict, otherwise none)"),
         ("research-role", None, "Research role metadata (default: none)"),
         ("research-task-family", None, "Research task family metadata (default: none)"),
         ("research-track", None, "Research track metadata (default: none)"),
@@ -133,8 +134,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dispatch.add_argument(
         "--input", action="append", default=[], metavar="PATH",
-        help="Regular file mounted read-only for an AGY read-only task at /agy-inputs/<n> "
-             "(repeatable, at most 8, each at most 8 MiB; default: none)",
+        help="Regular file, e.g. notes.txt, mounted read-only at /agy-inputs/<n>; "
+             "requires --agent agy and --mode read-only "
+             "(repeatable, at most 8, each at most 8 MiB; default: none). "
+             "Refuses excess inputs, oversized files, symlinks, hard links, unreadable or "
+             "non-regular files, paths under credential directories or inside the primary "
+             "checkout, paths changed before read, invalid input records, and missing "
+             "digests or digests changed before start.",
     )
     dispatch.add_argument("--worktree", nargs="?", const="", help="Dispatch path (default: automatic)")
     dispatch.add_argument("--pr", type=int, help="Reviewed PR number, e.g. 42 (default: none; use --branch for identity)")
@@ -142,7 +148,8 @@ def build_parser() -> argparse.ArgumentParser:
         dispatch.add_argument(f"--{flag}", action="append", default=[],
                               help="Excluded review subject, e.g. grok or xai (repeatable; default: none)")
     dispatch.add_argument("--require-review-verdict", action="store_true", default=None,
-                          help="Mark a review as requiring a verdict; read-only, metadata only (default: off)")
+                          help="Require an unambiguous review verdict; AGY uses the existing structured findings "
+                          "schema (read-only; default: off)")
     for flag in ("review-id", "attempt-id", "review-attempt"):
         dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest file for --review-attempt; all three "
                               "required, with a rendered --prompt-file; use --pinned-head, not --branch or --pr; "
@@ -253,7 +260,7 @@ def build_parser() -> argparse.ArgumentParser:
         "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --clear\n"
         "Outputs: JSON with task_id and worktree_retention_hold. Writes the task record only.\n"
         "Side effects: --set stores the hold and a non-retry retained disposition; --clear removes the "
-        "hold and, when the disposition reason is retention_hold, drops that disposition. Neither pushes "
+        "hold and any retention_hold or retention_hold_invalid disposition. Neither pushes "
         "nor removes the worktree.\n"
         "Exit codes: 0 hold updated, 2 missing record or invalid request.\n"
         "Related: docs/runbooks/worktree-cleanup.md.",
@@ -357,8 +364,8 @@ def _dispatch(args) -> int:
         agent == "claude" and args.mode == "workspace-write" and providers.load("claude").model_id(args.model) == "claude-haiku-5-5"
     ):
         raise ValueError("--advisor is supported only for a workspace-write Claude Haiku 5.5 run")
-    if args.output_schema is not None and agent != "codex":
-        raise ValueError("--output-schema is supported only with the effective codex agent")
+    if args.output_schema is not None and agent not in {"codex", "agy"}:
+        raise ValueError("--output-schema is supported only with the effective codex or agy agent")
     # Checked before admission and before any worker starts. A path that cannot be mounted is not dropped.
     bound_inputs = []
     if args.input:
@@ -388,9 +395,6 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
-    if not args.dry_run:
-        # Crash recovery: finish settling this dispatcher's earlier tasks before creating a worktree.
-        worker.settle_left_worktrees()
     host_admission.precheck(args.mode, force_reason=args.force_admission)
     role_record = {**vars(args), **account_fields, "prompt_sha256": store.digest(prompt),
                    "repository_id": info.get("github")}
@@ -429,10 +433,19 @@ def _dispatch(args) -> int:
                if value is not None and key not in {"prompt", "input"}}
     if bound_inputs:
         options["inputs"] = json.dumps(bound_inputs, separators=(",", ":"), sort_keys=True)
-    if args.output_schema is not None:
+    output_schema = args.output_schema
+    if agent == "agy" and args.require_review_verdict and output_schema is None:
+        from scripts.review.review_contract import schema_path
+
+        output_schema = str(schema_path())
+    if output_schema is not None:
         from scripts.dispatcher.output_schema import bind
 
-        options.update(bind(args.output_schema, repo))
+        options.update(bind(output_schema, repo))
+        if agent == "agy":
+            from scripts.dispatcher.providers.agy import schema_argument
+
+            schema_argument(options)
     fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider", "codex_account")}
     spec = TaskSpec(
         task_id,
@@ -581,7 +594,7 @@ def _retain_worktree(task_id: str, *, hold: bool) -> dict:
         else:
             # False, not absence: a stale copy must not put the hold back.
             record["worktree_retention_hold"] = False
-            if record.get("worktree_disposition_reason") == "retention_hold":
+            if record.get("worktree_disposition_reason") in {"retention_hold", "retention_hold_invalid"}:
                 record.pop("worktree_disposition", None)
                 record.pop("worktree_disposition_reason", None)
                 record.pop("worktree_disposition_detail", None)

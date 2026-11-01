@@ -542,11 +542,16 @@ def is_regenerable_ignored_path(
     tracked: set[str],
     ignored: set[str] | None = None,
     release_pins: Mapping[str, tuple[int, str]] | None = None,
+    dependency_locks: dict[str, bool] | None = None,
 ) -> bool:
     """Classify regenerable output without traversing any symbolic link.
 
     A lockfile must be tracked, parseable and a local regular file. Environment contents
     without that proof remain output, including caches inside those environments.
+
+    ``dependency_locks`` is one inventory's verdict per lock file (``True`` or a refusal), so
+    every file below a dependency directory reuses a single read and parse of its lock. The
+    caller owns the dict and discards it with the inventory; ``None`` validates on every call.
     """
     relative = Path(path)
     if relative.is_absolute() or ".." in relative.parts or ".git" in relative.parts or not relative.parts:
@@ -561,13 +566,33 @@ def is_regenerable_ignored_path(
         return False
     # Cheap established rebuild proofs avoid hashing dependency/build files.
     # Stores and arbitrary output still require an external byte comparison.
-    if _matches_regenerable_pattern(relative, worktree, tracked, release_pins):
+    if _matches_regenerable_pattern(relative, worktree, tracked, release_pins, dependency_locks):
         return True
     return _external_copy_matches(worktree, relative)
 
 
+def _dependency_lock_is_valid(worktree: Path, lock: Path, tracked: set[str]) -> bool:
+    """Prove a dependency directory's lock: tracked, a local regular file and valid format."""
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    try:
+        if lock.as_posix() not in tracked:
+            return False
+        content = artifacts._read_preserved_bytes(worktree / lock, root=worktree)
+        if content.file_type != "regular":
+            return False
+        _parse_dependency_input(lock.name, content.payload)
+        return True
+    except (OSError, ValueError, ComponentOpenError):
+        return False
+
+
 def _matches_regenerable_pattern(
-    relative: Path, worktree: Path, tracked: set[str], release_pins: Mapping[str, tuple[int, str]] | None,
+    relative: Path,
+    worktree: Path,
+    tracked: set[str],
+    release_pins: Mapping[str, tuple[int, str]] | None,
+    dependency_locks: dict[str, bool] | None = None,
 ) -> bool:
     # A dependency/environment directory cannot prove local database content.
     if _DATABASE_SUFFIXES.intersection(suffix.casefold() for suffix in relative.suffixes):
@@ -632,20 +657,15 @@ def _matches_regenerable_pattern(
         if not (stat.S_ISDIR(status.st_mode) or stat.S_ISREG(status.st_mode)):
             return False
         if not site_tree and part == DEPENDENCY_DIRECTORY and stat.S_ISDIR(status.st_mode):
-            from scripts.orchestration import worktree_artifacts as artifacts
-
             lock = Path(*relative.parts[:index]) / "package-lock.json"
-            # No traversal into dependency trees (which normally contain links).
-            try:
-                if lock.as_posix() not in tracked:
-                    return False
-                content = artifacts._read_preserved_bytes(worktree / lock, root=worktree)
-                if content.file_type != "regular":
-                    return False
-                _parse_dependency_input(lock.name, content.payload)
-                return True
-            except (OSError, ValueError, ComponentOpenError):
-                return False
+            # No traversal into dependency trees (which normally contain links). The lock proof
+            # depends only on this directory, so it is made once and shared by every file below it.
+            key = lock.as_posix()
+            if dependency_locks is None:
+                return _dependency_lock_is_valid(worktree, lock, tracked)
+            if key not in dependency_locks:
+                dependency_locks[key] = _dependency_lock_is_valid(worktree, lock, tracked)
+            return dependency_locks[key]
         elif not site_tree and part in REGENERABLE_CACHE_DIRECTORIES and stat.S_ISDIR(status.st_mode):
             return True
     # Directories must still be inventoried: a descendant can be a symlink,

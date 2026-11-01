@@ -13,7 +13,7 @@ import hashlib
 import json
 import re
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from scripts.common.git_context import sanitized_git_env
@@ -25,6 +25,10 @@ OUTCOME_LINE_MISMATCH = "line_mismatch"
 OUTCOME_QUOTE_MISSING = "quote_missing"
 OUTCOME_MALFORMED = "malformed"
 OUTCOME_OUT_OF_SCOPE = "out_of_scope"
+
+UNVERIFIED_FOLLOW_UP_OUTCOMES = frozenset(
+    {OUTCOME_QUOTE_MISSING, OUTCOME_LINE_MISMATCH, OUTCOME_OUT_OF_SCOPE}
+)
 
 EVIDENCE_OUTCOMES = frozenset(
     {
@@ -403,6 +407,7 @@ def verify_finding_evidence(
     repo_root: Path,
     target: ReviewTarget,
     changed_lines: dict[str, set[int]],
+    allow_unchanged_follow_up: bool = False,
 ) -> EvidenceCheckResult:
     """Validate one schema-valid finding against the frozen target."""
     location = finding.get("location") or {}
@@ -428,14 +433,23 @@ def verify_finding_evidence(
     except EvidenceError as exc:
         return EvidenceCheckResult(OUTCOME_MALFORMED, detail=str(exc))
 
-    if path not in target.changed_paths:
+    unchanged_follow_up = path not in target.changed_paths and allow_unchanged_follow_up
+    if path not in target.changed_paths and not unchanged_follow_up:
         return EvidenceCheckResult(
             OUTCOME_OUT_OF_SCOPE,
             detail=f"path_not_in_changed_paths:{path}",
         )
 
     try:
-        file_text = load_file_text(repo_root, path, target)
+        evidence_target = target
+        if unchanged_follow_up:
+            if not target.head_sha:
+                return EvidenceCheckResult(OUTCOME_OUT_OF_SCOPE, detail="unchanged_follow_up_requires_head")
+            entry = _run_git(["ls-tree", target.head_sha, "--", path], repo_root)
+            if entry.returncode != 0 or not entry.stdout.startswith(("100644 blob ", "100755 blob ")):
+                return EvidenceCheckResult(OUTCOME_OUT_OF_SCOPE, detail=f"not_regular_file_at_head:{path}")
+            evidence_target = replace(target, mode="commit")
+        file_text = load_file_text(repo_root, path, evidence_target)
     except EvidenceError as exc:
         return EvidenceCheckResult(OUTCOME_QUOTE_MISSING, detail=str(exc))
     except (UnicodeDecodeError, OSError) as exc:
@@ -505,15 +519,12 @@ def verify_finding_evidence(
     # present: primary location must land on a changed line.
     # missing: contextual evidence may sit on an unchanged line; do not invent
     # a diff line for the absent code.
-    if claim_type == "present" and not primary_lines & path_changed:
+    if claim_type == "present" and not unchanged_follow_up and not primary_lines & path_changed:
         return EvidenceCheckResult(
             OUTCOME_OUT_OF_SCOPE,
             matched_line=matched_line,
             matched_text=matched_text,
-            detail=(
-                f"primary_location_not_on_changed_line:"
-                f"{path}:{start_line}-{end_line}"
-            ),
+            detail=(f"primary_location_not_on_changed_line:{path}:{start_line}-{end_line}"),
         )
 
     return EvidenceCheckResult(

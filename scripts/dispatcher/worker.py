@@ -423,9 +423,8 @@ def _agy_unfinished(parsed: ParsedResult) -> ParsedResult:
 
 # Dispositions that can change once other processes end, the tree is committed or reverted, the work is
 # published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
-# clears; every later dispatch and every settlement settles these again, and still removes
-# only with the proof. A tree that is still dirty is kept again, so only a changed tree is removed.
-# The hourly hygiene run's salvage reasons retry the same way. A public-push refusal
+# clears; the scheduled cleanup retries these under the same removal proofs.
+# Admission and worker exit never retry unrelated tasks. A public-push refusal
 # (opsec_refused) and an owner retention hold (retention_hold) are absent on purpose:
 # automation must not retry either.
 RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
@@ -468,9 +467,10 @@ def _unsettled(record: dict) -> bool:
 
 
 def settle_left_worktrees(salvage: bool = False) -> None:
-    """Settle worktrees of finished tasks whose supervisor ended before settling them.
+    """Retry finished tasks' worktrees during scheduled cleanup, including crash recovery.
 
-    The hourly hygiene run passes salvage (git.settle_worktree) for the trees settlement keeps.
+    Admission and worker exit do not call this store-wide sweep. Each worker settles only
+    its own task. The hourly hygiene run passes salvage for the trees settlement keeps.
     """
     records = []
     for record in store.list_tasks():
@@ -710,7 +710,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             final = invocation.final_file
             final_text = final.read_text(errors="replace") if final and final.exists() else None
             stdout = stdout_path.read_text(errors="replace")
-            parsed = provider.parse(stdout, stderr_path.read_text(errors="replace"), exit_code, final_text)
+            parse_options = {"output_schema": schema} if spec.agent == "agy" and schema is not None else {}
+            parsed = provider.parse(stdout, stderr_path.read_text(errors="replace"), exit_code, final_text, **parse_options)
             text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
             # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
             resolved_model = parsed.resolved_model
@@ -734,7 +735,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             # Before the schema check, which would record the same terminal failure as invalid output.
             status, error = "rate_limited", parsed.error
             return
-        if schema is not None:
+        if schema is not None and spec.agent != "agy":
             from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
 
             result = structured_result(json_value(text), schema, returncode=exit_code, terminal_ok=not parsed.error)
@@ -790,8 +791,21 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 except store.TaskRecordError as exc:
                     status, error = "crashed", exc.code
             # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
-            if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
-                record["read_only_boundary_cleanup"] = residue
+            if spec.agent == "agy" and spec.mode == "read-only":
+                # A bound attempt already counted its Sources bodies and replaced the stream with
+                # that trace. The stream merger only understands step updates, so running it here
+                # would replace the attempt's counts with zeros.
+                if not record.get("review_attempt"):
+                    # The launcher exports saved tool bodies before it deletes the scratch. Fold them
+                    # into the retained stream first; discard then removes whatever scratch remains.
+                    try:
+                        retained, missing = agy_sandbox.apply_tool_results(stdout_path, spec.final_file, spec.task_id)
+                        record["sources_bodies_retained"] = retained
+                        record["sources_bodies_missing"] = missing
+                    except (OSError, ValueError):
+                        record["sources_bodies_missing"] = None
+                if residue := agy_sandbox.discard(spec.task_id):
+                    record["read_only_boundary_cleanup"] = residue
             _discard_read_only_scratch(record)
             if slots is not None:
                 # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
@@ -824,11 +838,6 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if source:
                 record.update(_stream_attestation(source, resolved_model))
             record["provider_pgid"] = child.pid if child else None
-            # Settling a task first retries the trees earlier settlements kept for a cause that may have
-            # cleared, under the same proofs. It runs before this task's record turns terminal, holding no
-            # record lock, so the supervisor exits as soon as its own tree is settled.
-            with contextlib.suppress(Exception):
-                settle_left_worktrees()
             # The removal chokepoint releases a tree only to a finished owner record, so publish it, then
             # settle; wait() reads a terminal record under this lock and never sees the tree mid-removal.
             with store.task_state_lock(path):

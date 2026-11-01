@@ -71,12 +71,29 @@ except ImportError:  # pragma: no cover
 DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S = 25.0
 
 # CodexBar snapshots are operator-facing capacity, not per-request truth.
-# 12 minutes sits in the 10–15 min window: long enough that a ~17s Claude
-# probe cannot saturate the API, short enough that dispatch still sees
-# current allotment. Override with CODEXBAR_CACHE_TTL_S /
-# CODEXBAR_REFRESH_INTERVAL_S.
-DEFAULT_CODEXBAR_CACHE_TTL_S = 720.0
+# A row stays fresh only while its age is below the cache TTL. For a Claude
+# account row with no CodexBar updatedAt, age is counted from the probe start
+# (claude_account_usage.probe_account). The account loop starts each probe one
+# interval after the previous probe started, and the next probe replaces the
+# row only when it finishes, so the age at replacement is one interval plus
+# the part of that next probe after its source time. Sleeping the whole
+# interval after the probe would add both probes and expire two cap-length
+# ones (60 + 720 + 60 = 840).
+# Per-account Claude probes run in parallel. The CLI itself is capped at
+# claude_account_usage.PROBE_TIMEOUT_S (60s); sandbox setup and parsing sit
+# outside that cap and after the source time. One healthy full scheduler pass
+# on 2026-11-01 took about 6s. A Claude CLI probe measured 2026-08-04 took
+# about 17s. The TTL is the 12-minute interval plus the 60s cap plus 30s
+# (810), which is above one interval plus one cap-length CLI probe (780). The
+# 30s is the room for the work outside the CLI cap. An explicit
+# CODEXBAR_CACHE_TTL_S or CODEXBAR_REFRESH_INTERVAL_S replaces its default
+# exactly; the TTL default does not follow an interval override.
+_CLAUDE_ACCOUNT_PROBE_BUDGET_S = 60.0
+_CLAUDE_ACCOUNT_TTL_SLACK_S = 30.0
 DEFAULT_CODEXBAR_REFRESH_INTERVAL_S = 720.0
+DEFAULT_CODEXBAR_CACHE_TTL_S = (
+    DEFAULT_CODEXBAR_REFRESH_INTERVAL_S + _CLAUDE_ACCOUNT_PROBE_BUDGET_S + _CLAUDE_ACCOUNT_TTL_SLACK_S
+)
 
 # Native Cursor login + dashboard probe can exceed routing.html's 5s timeout.
 # Cache HTTP reads for 10 minutes; background refresh keeps snapshots warm.
@@ -124,6 +141,10 @@ _refresh_thread: threading.Thread | None = None
 _scheduler_lock = threading.Lock()
 _scheduler_stop = threading.Event()
 _scheduler_thread: threading.Thread | None = None
+_claude_account_scheduler_thread: threading.Thread | None = None
+_claude_account_refresh_lock = threading.Lock()
+_claude_account_oneshot_lock = threading.Lock()
+_claude_account_oneshot_thread: threading.Thread | None = None
 _last_refresh_started_at: float | None = None
 _last_refresh_finished_at: float | None = None
 _cursor_last_good: tuple[float, dict[str, Any]] | None = None
@@ -240,7 +261,12 @@ def _codexbar_cache_ttl_s() -> float:
 
 
 def _codexbar_refresh_interval_s() -> float:
-    """Background scheduler period. Defaults to the same 12-minute TTL."""
+    """Background scheduler period. Defaults to 12 minutes.
+
+    The cache TTL default is that same default plus the Claude probe cap and
+    30s of slack, so the two are not equal. An explicit CODEXBAR_CACHE_TTL_S
+    replaces the TTL default exactly and does not grow with this interval.
+    """
     return _env_positive_float("CODEXBAR_REFRESH_INTERVAL_S", DEFAULT_CODEXBAR_REFRESH_INTERVAL_S)
 
 
@@ -3070,18 +3096,22 @@ def trigger_background_refresh() -> None:
     """Start one bounded parallel refresh without making an API request wait."""
     global _refresh_thread
     with _refresh_lock:
-        if _refresh_thread is not None and _refresh_thread.is_alive():
-            return
-        _refresh_thread = threading.Thread(
-            target=_run_all_refreshes,
-            name="codexbar-refresh",
-            daemon=True,
-        )
-        _refresh_thread.start()
+        if _refresh_thread is None or not _refresh_thread.is_alive():
+            _refresh_thread = threading.Thread(
+                target=_run_all_refreshes,
+                name="codexbar-refresh",
+                daemon=True,
+            )
+            _refresh_thread.start()
+    trigger_claude_account_refresh()
 
 
 def _run_all_refreshes() -> None:
-    """Refresh every subscription lane. Overlapping callers no-op."""
+    """Refresh subscription lanes other than the per-account Claude rows.
+
+    Those rows have their own scheduler, started first. A slow or failing lane
+    here must not delay or skip them. Overlapping callers no-op.
+    """
     global _last_refresh_started_at, _last_refresh_finished_at
     if not _refresh_in_flight.acquire(blocking=False):
         return
@@ -3095,7 +3125,6 @@ def _run_all_refreshes() -> None:
         refresh_provider_usage_data(SUBSCRIPTION_LANES_WITHOUT_CURSOR)
         _refresh_cursor_usage_live()
         _refresh_api_accounts_live()
-        _refresh_claude_accounts_live()
     finally:
         _last_refresh_finished_at = time.monotonic()
         _refresh_in_flight.release()
@@ -3110,6 +3139,50 @@ def _refresh_claude_accounts_live() -> None:
     from scripts.api.claude_account_usage import refresh_claude_account_usage  # noqa: PLC0415, I001  # lazy-ok: import cycle
 
     refresh_claude_account_usage()
+
+
+def _run_claude_account_refresh(*, wait: bool = False) -> None:
+    """Probe Claude accounts once. A non-waiting caller no-ops if one probe is in flight."""
+    if not _claude_account_refresh_lock.acquire(blocking=wait):
+        return
+    try:
+        _refresh_claude_accounts_live()
+    finally:
+        _claude_account_refresh_lock.release()
+
+
+def trigger_claude_account_refresh() -> None:
+    """Start one Claude-account probe without waiting on any other lane."""
+    global _claude_account_oneshot_thread
+    with _claude_account_oneshot_lock:
+        if _claude_account_oneshot_thread is not None and _claude_account_oneshot_thread.is_alive():
+            return
+        _claude_account_oneshot_thread = threading.Thread(
+            target=_run_claude_account_refresh,
+            name="claude-account-refresh",
+            daemon=True,
+        )
+        _claude_account_oneshot_thread.start()
+
+
+def _claude_account_periodic_loop(interval_s: float, run_immediately: bool) -> None:
+    """Keep per-account Claude rows warm on a start-to-start cadence.
+
+    The next probe starts one interval after the previous one started. Age at
+    replacement is one interval plus the part of the next probe after its
+    source time. The cache TTL covers that when the CLI stays inside its cap
+    and the remaining work fits in the slack. Sleeping the whole interval
+    after the probe would add both durations. This loop does not share the
+    other lanes' pass.
+    """
+    if not run_immediately and _scheduler_stop.wait(timeout=interval_s):
+        return
+    while not _scheduler_stop.is_set():
+        started = time.monotonic()
+        _run_claude_account_refresh(wait=True)
+        remaining = interval_s - (time.monotonic() - started)
+        if remaining > 0 and _scheduler_stop.wait(timeout=remaining):
+            return
 
 
 def _scheduler_is_running() -> bool:
@@ -3127,9 +3200,11 @@ def _periodic_loop(interval_s: float, run_immediately: bool) -> None:
 def start_periodic_refresh(*, run_immediately: bool = True) -> None:
     """Keep CodexBar snapshots warm on a 12-minute timer.
 
+    Claude account rows start first, on their own thread, so a restart's unknown
+    window is one account probe and another lane cannot delay the next sample.
     Idempotent. No-ops when disabled (pytest, or CODEXBAR_PERIODIC_REFRESH=0).
     """
-    global _scheduler_thread
+    global _scheduler_thread, _claude_account_scheduler_thread
     if not _periodic_refresh_enabled():
         return
     with _scheduler_lock:
@@ -3137,6 +3212,13 @@ def start_periodic_refresh(*, run_immediately: bool = True) -> None:
             return
         _scheduler_stop.clear()
         interval_s = _codexbar_refresh_interval_s()
+        _claude_account_scheduler_thread = threading.Thread(
+            target=_claude_account_periodic_loop,
+            args=(interval_s, run_immediately),
+            name="claude-account-scheduler",
+            daemon=True,
+        )
+        _claude_account_scheduler_thread.start()
         _scheduler_thread = threading.Thread(
             target=_periodic_loop,
             args=(interval_s, run_immediately),
@@ -3147,12 +3229,16 @@ def start_periodic_refresh(*, run_immediately: bool = True) -> None:
 
 
 def stop_periodic_refresh(*, join_timeout_s: float = 1.0) -> None:
-    """Stop the background scheduler. Safe to call when it was never started."""
-    global _scheduler_thread
+    """Stop the background schedulers. Safe to call when they were never started."""
+    global _scheduler_thread, _claude_account_scheduler_thread
     _scheduler_stop.set()
     with _scheduler_lock:
         thread = _scheduler_thread
+        claude_thread = _claude_account_scheduler_thread
         _scheduler_thread = None
+        _claude_account_scheduler_thread = None
+    if claude_thread is not None and claude_thread.is_alive():
+        claude_thread.join(timeout=join_timeout_s)
     if thread is not None and thread.is_alive():
         thread.join(timeout=join_timeout_s)
 

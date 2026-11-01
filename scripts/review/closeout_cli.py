@@ -14,10 +14,12 @@ formatters, generators, or any other mutating command.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
 import sys
+from collections.abc import Mapping
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -193,8 +195,13 @@ def _cmd_target(args: argparse.Namespace) -> int:
     return 0
 
 
+# code and infra select a reviewer. ukrainian only freezes a behavior-proof carrier.
+PROOF_CARRIER_PROFILES = VALID_REVIEW_PROFILES | {"ukrainian"}
+
+
 def _cmd_freeze(args: argparse.Namespace) -> int:
-    if args.review_profile.strip().casefold() not in VALID_REVIEW_PROFILES:
+    profile = args.review_profile.strip().casefold()
+    if profile not in PROOF_CARRIER_PROFILES:
         print(
             json.dumps(
                 {
@@ -208,6 +215,7 @@ def _cmd_freeze(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
+    args.review_profile = profile
     state = _load_state(args.state_file)
     if state.get("baseline"):
         print(
@@ -699,6 +707,165 @@ def _cmd_behavior_proof(args: argparse.Namespace) -> int:
     return 0
 
 
+def _flatten_comment_pages(payload: Any) -> list[dict[str, Any]]:
+    if isinstance(payload, list) and payload and all(isinstance(page, list) for page in payload):
+        rows = [row for page in payload for row in page]
+    elif isinstance(payload, list):
+        rows = payload
+    else:
+        raise CloseoutStateError("ukrainian_behavior_proof_comments_unavailable")
+    if not all(isinstance(row, dict) for row in rows):
+        raise CloseoutStateError("ukrainian_behavior_proof_comments_unavailable")
+    return rows
+
+
+def load_pull_request_comments(
+    repo_root: Path, repository: str, pr_number: int
+) -> tuple[list[dict[str, Any]], str]:
+    """Live issue comments and the authenticated login. Callers cannot supply either."""
+    from scripts.publish.github import Request, request_run
+
+    def run(request: Any) -> Any:
+        completed = request_run(
+            request,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+        )
+        if completed.returncode:
+            raise CloseoutStateError("ukrainian_behavior_proof_comments_unavailable")
+        try:
+            return json.loads(completed.stdout or "null")
+        except json.JSONDecodeError as exc:
+            raise CloseoutStateError("ukrainian_behavior_proof_comments_unavailable") from exc
+
+    identity = run(Request("read-identity"))
+    login = identity.get("login", "").strip() if isinstance(identity, dict) else ""
+    if not login:
+        raise CloseoutStateError("ukrainian_behavior_proof_identity_unavailable")
+    payload = run(Request("read-comments", repo=repository, number=pr_number, paginate=True, slurp=True))
+    return _flatten_comment_pages(payload), login
+
+
+def _proof_author_attributions(repo_root: Path, target: Mapping[str, Any]) -> list[dict[str, str]]:
+    """Model and harness pairs from the frozen range's X-Agent trailers."""
+    from scripts.review.record_cf_verdict import RecordError, _attribute_trailer
+
+    head = target.get("head_sha")
+    base = target.get("base_sha")
+    if not isinstance(head, str) or not head:
+        raise CloseoutStateError("ukrainian_behavior_proof_requires_head_sha")
+    if isinstance(base, str) and base and base != head:
+        listed = _checkout_git(repo_root, "rev-list", "--reverse", f"{base}..{head}")
+        shas = [sha for sha in listed.split() if sha]
+    else:
+        shas = []
+    if not shas:
+        shas = [head]
+    repository = _checkout_repository(repo_root)
+    task_root = _checkout_task_root(repo_root)
+    pairs: dict[str, str] = {}
+    for sha in shas:
+        message = _checkout_git(repo_root, "log", "-1", "--format=%B", sha)
+        trailers = re.findall(r"(?m)^X-Agent:\s*(\S+)\s*$", message)
+        if len(trailers) != 1 or "/" not in trailers[0]:
+            raise CloseoutStateError("ukrainian_behavior_proof_author_trailer_missing")
+        trailer = trailers[0]
+        harness = trailer.split("/", 1)[0]
+        try:
+            attribution = _attribute_trailer(sha, trailer, repository=repository, task_root=task_root)
+        except RecordError as exc:
+            raise CloseoutStateError("ukrainian_behavior_proof_author_model_unresolved") from exc
+        models = [model for model in attribution.author_models if isinstance(model, str) and model]
+        if not models:
+            raise CloseoutStateError("ukrainian_behavior_proof_author_model_unresolved")
+        for model in models:
+            previous = pairs.get(model)
+            if previous is not None and previous != harness:
+                raise CloseoutStateError("ukrainian_behavior_proof_author_harness_conflict")
+            pairs[model] = harness
+    return [{"model": model, "harness": pairs[model]} for model in sorted(pairs)]
+
+
+def _cmd_behavior_proof_receipt(args: argparse.Namespace) -> int:
+    """Write the Ukrainian receipt from the frozen proof and the live PR comments."""
+    from scripts.review.review_contract import ContractError, build_ukrainian_behavior_receipt
+
+    state = _load_state(args.state_file)
+    if state.get("baseline") is None:
+        print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
+        return 1
+    baseline = _baseline_from_state(state)
+    if baseline.review_profile != "ukrainian":
+        print(json.dumps({"error": "ukrainian_behavior_proof_requires_profile"}), file=sys.stderr)
+        return 1
+    proof = state.get("behavior_proof")
+    if not isinstance(proof, dict) or "source_aware" not in proof or "source_blind" not in proof:
+        print(json.dumps({"error": "ukrainian_behavior_proof_requires_both_surfaces"}), file=sys.stderr)
+        return 1
+    target_args = _target_args_from_state(state)
+    repo_root_raw = target_args.get("repo_root")
+    pr_number = target_args.get("pr")
+    if not isinstance(repo_root_raw, str) or not repo_root_raw:
+        print(json.dumps({"error": "frozen target has no repository root"}), file=sys.stderr)
+        return 1
+    if not isinstance(pr_number, int) or isinstance(pr_number, bool) or pr_number < 1:
+        print(json.dumps({"error": "ukrainian_behavior_proof_requires_pull_request"}), file=sys.stderr)
+        return 1
+    repo_root = Path(repo_root_raw)
+    target = baseline.target
+    if not isinstance(target.head_sha, str) or not target.head_sha:
+        print(json.dumps({"error": "ukrainian_behavior_proof_requires_head_sha"}), file=sys.stderr)
+        return 1
+    try:
+        repository = _checkout_repository(repo_root)
+        comments, login = load_pull_request_comments(repo_root, repository, pr_number)
+        attributions = _proof_author_attributions(repo_root, asdict(target))
+        input_sha256 = compute_target_input_fingerprint(repo_root, target)
+    except CloseoutStateError as exc:
+        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+        return 1
+    commands = [
+        clause["command"]
+        for surface_name in ("source_aware", "source_blind")
+        for clause in (proof.get(surface_name) or {}).get("clauses") or []
+        if isinstance(clause, dict) and isinstance(clause.get("command"), str) and clause["command"].strip()
+    ]
+    try:
+        receipt = build_ukrainian_behavior_receipt(
+            behavior_proof=proof,
+            frozen_intended_behavior=baseline.intended_behavior,
+            comments=comments,
+            authenticated_login=login,
+            head_sha=target.head_sha,
+            author_attributions=attributions,
+            target=asdict(target),
+            input_sha256=input_sha256,
+            issue_ref=baseline.issue_ref,
+            scope={"owner_boundary": baseline.owner_boundary},
+            tests={"commands": commands, "passed": True},
+        )
+    except ContractError as exc:
+        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+        return 1
+    # Resolve once, here, so a relative --state-file still prints a path reconciliation accepts.
+    receipt_path = args.state_file.with_name(f"{args.state_file.stem}.ukrainian-behavior-proof-receipt.json").resolve()
+    receipt_bytes = (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
+    receipt_path.write_bytes(receipt_bytes)
+    print(
+        json.dumps(
+            {
+                "receipt_path": str(receipt_path),
+                "receipt_sha256": "sha256:" + hashlib.sha256(receipt_bytes).hexdigest(),
+            },
+            indent=2,
+        )
+    )
+    return 0
+
+
 _CLOSEOUT_EPILOG = """\
 Examples:
   .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
@@ -805,7 +972,10 @@ def _build_parser() -> argparse.ArgumentParser:
     p_freeze.add_argument(
         "--review-profile",
         default="code",
-        help="Closeout profile. Default: code. Example: code or infra",
+        help=(
+            "Closeout profile. Default: code. code and infra are review profiles. "
+            "ukrainian freezes a behavior-proof carrier and does not select a reviewer."
+        ),
     )
     p_freeze.add_argument(
         "--risk",
@@ -1083,6 +1253,14 @@ def _build_parser() -> argparse.ArgumentParser:
     behavior_record.set_defaults(func=_cmd_behavior_proof)
     behavior_emit = behavior_sub.add_parser("emit", help="Print recorded proof JSON for verify_review")
     behavior_emit.set_defaults(func=_cmd_behavior_proof)
+    behavior_receipt = behavior_sub.add_parser(
+        "receipt",
+        help=(
+            "Write the Ukrainian behavior-proof receipt from the frozen carrier and the live "
+            "pull-request comments. Selects no reviewer."
+        ),
+    )
+    behavior_receipt.set_defaults(func=_cmd_behavior_proof_receipt)
 
     return parser
 

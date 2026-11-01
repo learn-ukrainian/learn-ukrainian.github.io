@@ -23,10 +23,8 @@ from scripts.orchestration.integration_sweep import (
     VOID_REVIEWER_BOOKKEEPING,
 )
 from scripts.review.evidence import (
-    OUTCOME_LINE_MISMATCH,
     OUTCOME_MALFORMED,
-    OUTCOME_OUT_OF_SCOPE,
-    OUTCOME_QUOTE_MISSING,
+    UNVERIFIED_FOLLOW_UP_OUTCOMES,
     EvidenceCheckResult,
     EvidenceError,
     changed_lines_map,
@@ -131,28 +129,85 @@ def _canonical_family(value: str) -> str:
 
 
 def parse_reviewer_json(raw: str) -> dict[str, Any]:
-    """Parse reviewer stdout as a single JSON object. Fail closed on chatter."""
+    """Parse bare JSON or the approved review-loop envelope, without prose extraction."""
     text = raw.strip()
     if not text:
         raise ContractError("empty_review_input", exit_code=EXIT_INCOMPLETE)
+    if text.startswith("VERDICT:"):
+        try:
+            return _parse_review_loop_envelope(text)
+        except (ValueError, RecursionError) as exc:
+            raise ContractError(f"review_envelope_unreadable:{type(exc).__name__}") from exc
     if _looks_like_legacy_text(text) and not text.lstrip().startswith("{"):
         raise ContractError(
-            "legacy_FINDING_text_removed: use schema_version "
-            f"{SCHEMA_VERSION!r} JSON (see docs/review-protocol.md)",
+            f"legacy_FINDING_text_removed: use schema_version {SCHEMA_VERSION!r} JSON (see docs/review-protocol.md)",
             exit_code=EXIT_INVALID,
         )
-    # Reject non-JSON wrapper chatter: entire payload must be one JSON value.
     try:
         payload = json.loads(text)
     except json.JSONDecodeError as exc:
-        # Also try: JSON embedded only if the whole stripped text is JSON —
-        # no fence stripping, no prose extraction (fail closed).
         raise ContractError(
             f"non_json_or_chatter:{exc.msg}",
             exit_code=EXIT_INVALID,
         ) from exc
     if not isinstance(payload, dict):
         raise ContractError("review_root_must_be_object", exit_code=EXIT_INVALID)
+    return payload
+
+
+def _parse_review_loop_envelope(text: str) -> dict[str, Any]:
+    from markdown_it import MarkdownIt
+
+    from scripts.fleet_comms.review_publication import ReviewPublicationError
+    from scripts.review.verdict_parser import (
+        _REVIEW_SCORE_LABEL_RE,
+        _REVIEW_VERDICT_LINE_RE,
+        _closes_code_fence,
+        _commonmark_lines,
+        _without_code_fences,
+        checked_findings_payload,
+    )
+
+    lines = _commonmark_lines(text)
+    verdict = re.fullmatch(r"VERDICT: (APPROVE|REQUEST_CHANGES|BLOCKED)(?:[ \t]+[^\r\n]+)?", lines[0])
+    score = re.fullmatch(r"[ \t]*SCORE: (?:[1-9]|10)/10(?:[ \t]+[^\r\n]+|[.,;:!?)](?:[ \t]+[^\r\n]+)?)?", lines[1]) if len(lines) > 1 else None
+    if verdict is None or score is None:
+        raise ContractError("review_envelope_invalid_headers")
+    visible = _without_code_fences(text, keep_unclosed=False)
+    for label, pattern in (("VERDICT", _REVIEW_VERDICT_LINE_RE), ("SCORE", _REVIEW_SCORE_LABEL_RE)):
+        if sum(
+            bool(pattern.match(line) or re.match(rf"^[ \t]*{label}:", line, re.IGNORECASE))
+            for line in _commonmark_lines(visible)
+        ) != 1:
+            raise ContractError(f"review_envelope_duplicate_{label.lower()}")
+    blocks = [token for token in MarkdownIt("commonmark").parse(text) if token.type == "fence"]
+    if len(blocks) != 1:
+        raise ContractError("review_envelope_requires_one_json_block")
+    block = blocks[0]
+    if (
+        block.level != 0
+        or block.info.strip() not in {"", "json"}
+        or not _closes_code_fence(lines[block.map[1] - 1], block.markup)
+    ):
+        raise ContractError("review_envelope_invalid_json_fence")
+    try:
+        payload = json.loads(block.content)
+    except json.JSONDecodeError as exc:
+        raise ContractError(f"review_envelope_invalid_json:{exc.msg}") from exc
+    if not isinstance(payload, dict):
+        raise ContractError("review_root_must_be_object")
+    stated = verdict.group(1)
+    expected = {"APPROVE": "correct", "REQUEST_CHANGES": "incorrect", "BLOCKED": "uncertain"}[stated]
+    validate_reviewer_payload(payload)
+    if payload["overall"]["correctness"] != expected:
+        raise ContractError("review_envelope_verdict_mismatch")
+    canonical = {"APPROVE": "APPROVED", "REQUEST_CHANGES": "CHANGES_REQUESTED", "BLOCKED": "BLOCKED"}[stated]
+    try:
+        derived, _ = checked_findings_payload(payload, stated=canonical)
+    except ReviewPublicationError as exc:
+        raise ContractError(f"review_envelope_invalid_verdict:{exc}") from exc
+    if derived != canonical:
+        raise ContractError("review_envelope_verdict_mismatch")
     return payload
 
 
@@ -608,6 +663,31 @@ def _check_stale(ctx: VerifyContext) -> str | None:
     return None
 
 
+def finding_supports_approval(finding: Mapping[str, Any]) -> bool:
+    disposition = finding.get("disposition")
+    rationale = finding.get("disposition_rationale")
+    if (
+        not isinstance(disposition, str)
+        or disposition not in ALLOWED_DISPOSITIONS - {"stop_and_escalate"}
+        or not isinstance(rationale, str)
+        or not rationale.strip()
+    ):
+        return False
+    outcome = finding.get("outcome")
+    return outcome == "verified" or (
+        disposition == "follow_up"
+        and isinstance(outcome, str)
+        and outcome in UNVERIFIED_FOLLOW_UP_OUTCOMES
+    )
+
+
+def unverified_follow_up_notes(findings: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        dict(finding) for finding in findings
+        if finding.get("outcome") != "verified" and finding_supports_approval(finding)
+    ]
+
+
 def _classify_exit(
     payload: dict[str, Any],
     validations: list[FindingValidation],
@@ -621,12 +701,11 @@ def _classify_exit(
     outcomes = {v.outcome for v in validations}
     if OUTCOME_MALFORMED in outcomes:
         return EXIT_INVALID, EXIT_NAMES[EXIT_INVALID]
-    bad_evidence = outcomes & {
-        OUTCOME_QUOTE_MISSING,
-        OUTCOME_LINE_MISMATCH,
-        OUTCOME_OUT_OF_SCOPE,
-    }
-    if bad_evidence:
+    bad_evidence = outcomes & UNVERIFIED_FOLLOW_UP_OUTCOMES
+    approved_follow_ups = payload["overall"]["correctness"] == "correct" and all(
+        finding_supports_approval(validation.to_dict()) for validation in validations
+    )
+    if bad_evidence and not approved_follow_ups:
         return EXIT_UNVERIFIABLE, EXIT_NAMES[EXIT_UNVERIFIABLE]
 
     overall = payload["overall"]
@@ -672,6 +751,7 @@ def build_receipt(
         },
         "reviewer_output_sha256": ctx.reviewer_output_sha256,
         "findings": [v.to_dict() for v in validations],
+        "unverified_follow_up_notes": unverified_follow_up_notes([v.to_dict() for v in validations]),
         "tests": ctx.tests,
         "behavior_proof": _render_behavior_proof(ctx.behavior_proof),
         "final_disposition": final_disposition,
@@ -688,6 +768,120 @@ def build_receipt(
         }
     return receipt
 
+
+def build_ukrainian_behavior_receipt(
+    *,
+    behavior_proof: dict[str, Any],
+    frozen_intended_behavior: str,
+    comments: Sequence[Mapping[str, Any]],
+    authenticated_login: str,
+    head_sha: str,
+    author_attributions: Sequence[Mapping[str, str]],
+    target: Mapping[str, Any],
+    input_sha256: str,
+    issue_ref: str,
+    scope: Mapping[str, Any],
+    tests: Mapping[str, Any],
+    isolation_attestation_validator: Callable[[dict[str, Any], ReviewTarget], bool] | None = None,
+    review_target: ReviewTarget | None = None,
+) -> dict[str, Any]:
+    """Receipt for a frozen ukrainian proof carrier.
+
+    Reviewer identity is the recorded seat chunks. Caller reviewer flags and
+    code-review findings are not inputs. The singular reviewer key is omitted.
+    """
+    from scripts.orchestration.integration_sweep import contributing_ukrainian_chunks
+
+    provenance = contributing_ukrainian_chunks(
+        comments,
+        head_sha,
+        authenticated_login,
+        learner_content=True,
+    )
+    if provenance["refused"]:
+        raise ContractError(
+            f"ukrainian_seat_quorum_refused:{provenance['refused']}",
+            exit_code=EXIT_INCOMPLETE,
+        )
+    by_model: dict[str, str] = {}
+    for item in author_attributions:
+        model = str(item.get("model") or "")
+        harness = str(item.get("harness") or "")
+        if not model or not harness or _is_placeholder(model) or _is_placeholder(harness):
+            raise ContractError("author_attribution_unresolved", exit_code=EXIT_INCOMPLETE)
+        previous = by_model.get(model)
+        if previous is not None and previous != harness:
+            raise ContractError("author_attribution_conflict", exit_code=EXIT_INCOMPLETE)
+        by_model[model] = harness
+    if tuple(sorted(by_model)) != tuple(provenance["author_models"]):
+        raise ContractError("author_attribution_conflict", exit_code=EXIT_INCOMPLETE)
+    incomplete, failures = _tests_envelope_status(dict(tests))
+    if incomplete or failures:
+        raise ContractError("tests_envelope_invalid", exit_code=EXIT_INCOMPLETE)
+    proof_target = review_target or ReviewTarget(
+        mode=str(target.get("mode") or "local"),
+        base_sha=target.get("base_sha"),
+        head_sha=target.get("head_sha"),
+        changed_paths=tuple(target.get("changed_paths") or ()),
+        non_test_loc=int(target.get("non_test_loc") or 0),
+        clean_tree=bool(target.get("clean_tree")),
+        description=str(target.get("description") or "ukrainian behavior proof"),
+    )
+    proof_incomplete, proof_failures = _behavior_proof_envelope_status(
+        behavior_proof,
+        target_input_sha256=input_sha256,
+        frozen_intended_behavior=frozen_intended_behavior,
+        isolation_attestation_validator=isolation_attestation_validator,
+        target=proof_target,
+    )
+    if proof_incomplete or proof_failures:
+        raise ContractError(
+            "behavior_proof_invalid:" + ",".join([*proof_incomplete, *proof_failures]),
+            exit_code=EXIT_INCOMPLETE,
+        )
+    author_models = list(provenance["author_models"])
+    author_families = list(provenance["author_families"])
+    harnesses = sorted(set(by_model.values()))
+    author: dict[str, Any] = {
+        "models": author_models,
+        "families": author_families,
+        "harnesses": harnesses,
+        "selection_reason": "implementation-author",
+        "selection_reason_source": "commit-x-agent",
+    }
+    if len(author_models) == 1 and len(author_families) == 1 and len(harnesses) == 1:
+        author["model"] = author_models[0]
+        author["family"] = author_families[0]
+        author["harness"] = harnesses[0]
+    seats = [dict(seat) for seat in provenance["seats"]]
+    seat_names = [f"{seat['family']}:{chunk['model']}" for seat in seats for chunk in seat["chunks"]]
+    return {
+        "schema_version": RECEIPT_SCHEMA_VERSION,
+        "review_profile": "ukrainian",
+        "issue_ref": issue_ref,
+        "scope": dict(scope),
+        "author": author,
+        "ukrainian_seat_verdicts": seats,
+        "target": {
+            "mode": proof_target.mode,
+            "base_sha": proof_target.base_sha,
+            "head_sha": head_sha,
+            "changed_paths": list(proof_target.changed_paths),
+            "non_test_loc": proof_target.non_test_loc,
+            "clean_tree": proof_target.clean_tree,
+            "description": proof_target.description,
+            "input_sha256": input_sha256,
+        },
+        "tests": dict(tests),
+        "behavior_proof": _render_behavior_proof(behavior_proof),
+        "final_disposition": "clean",
+        "exit_code": EXIT_CLEAN,
+        "error": None,
+        "routing_lineage": {
+            "implementation_agents": ",".join(author_models),
+            "accountable_seats": ",".join(seat_names),
+        },
+    }
 
 def _render_behavior_proof(behavior_proof: dict[str, Any]) -> dict[str, Any]:
     """Make declared-but-unenforced source-blind proof explicit in receipts."""
@@ -798,13 +992,20 @@ def verify_review(
 
     validations: list[FindingValidation] = []
     for finding in findings:
+        disp = ctx.dispositions.get(finding["id"], {})
+        rationale = disp.get("rationale") if isinstance(disp, dict) else None
         check: EvidenceCheckResult = verify_finding_evidence(
             finding,
             repo_root=ctx.repo_root,
             target=ctx.target,
             changed_lines=line_map,
+            allow_unchanged_follow_up=(
+                isinstance(disp, dict)
+                and disp.get("disposition") == "follow_up"
+                and isinstance(rationale, str)
+                and bool(rationale.strip())
+            ),
         )
-        disp = ctx.dispositions.get(finding["id"], {})
         validations.append(
             FindingValidation(
                 id=finding["id"],

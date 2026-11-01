@@ -131,6 +131,13 @@ def sandbox(tmp_path, hermetic_monitor):
             time.sleep(0.02)
         return record
 
+    def sweep():
+        result = subprocess.run(
+            [sys.executable, "-c", "from scripts.dispatcher.worker import settle_left_worktrees; settle_left_worktrees()"],
+            cwd=repo, env=env, text=True, capture_output=True, timeout=30,
+        )
+        assert result.returncode == 0, (result.stdout, result.stderr)
+
     def review_models(*models):
         """File the stub reviewer ``models`` under OpenAI in the sandbox catalog copy only."""
         catalog = yaml.safe_load((config / "model_catalog.yaml").read_text())
@@ -148,7 +155,7 @@ def sandbox(tmp_path, hermetic_monitor):
         return "--base", "main", "--pinned-head", head
 
     box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle,
-                          review_models=review_models, review_target=review_target)
+                          sweep=sweep, review_models=review_models, review_target=review_target)
     try:
         yield box
     finally:
@@ -515,7 +522,7 @@ def test_dirty_worktree_is_retried_and_removed_once_its_changes_are_gone(sandbox
     assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
     assert record["worktree_disposition_detail"]
     tree = Path(record["worktree_path"])
-    sandbox.settle(sandbox.dispatch())  # the retry finds the same change and keeps the tree
+    sandbox.sweep()  # scheduled recovery finds the same change and keeps the tree
     kept = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert (kept["worktree_disposition"], kept["worktree_disposition_reason"]) == ("retained", "dirty")
     assert tree.is_dir()
@@ -524,7 +531,7 @@ def test_dirty_worktree_is_retried_and_removed_once_its_changes_are_gone(sandbox
     (tree / ".pytest_cache").mkdir()
     (tree / ".pytest_cache/ignored.txt").write_text("ignored output\n")
     (sandbox.repo / ".git/info/exclude").write_text("/.pytest_cache/\n")
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert "worktree_disposition_detail" not in settled
@@ -579,31 +586,56 @@ def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_g
     while worker._provider_alive(record):
         assert time.monotonic() < deadline, "grandchild survived SIGKILL"
         time.sleep(0.02)
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert not Path(record["worktree_path"]).exists()
 
 
-def settled_by_next_task(sandbox, retained_id, before_release=lambda _kept: None):
-    """Run one task to its end and return the retained record as that task's settlement retried it.
+def test_dispatch_and_worker_exit_leave_unrelated_retained_worktrees_unchanged(sandbox):
+    """Defect: unrelated admission and exit repeatedly rewrite and retry retained worktrees."""
+    record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
+    record_file = sandbox.tasks / f"{record['task_id']}.json"
+    tree = Path(record["worktree_path"])
+    with record_file.open("rb") as retained:
+        before = retained.read()
+        inode = os.fstat(retained.fileno()).st_ino
+        task = sandbox.dispatch()
+        assert record_file.read_bytes() == before
+        assert record_file.stat().st_ino == inode, "admission retried an unrelated retained worktree"
+        own = sandbox.settle(task)
+        assert record_file.read_bytes() == before
+        assert record_file.stat().st_ino == inode, "worker exit retried an unrelated retained worktree"
+        assert (tree / "delivered.txt").read_text() == "uncommitted delivery\n"
+        assert own["worktree_disposition"] == "removed"
+        assert not Path(own["worktree_path"]).exists()
+        sandbox.sweep()
+        assert record_file.stat().st_ino != inode, "scheduled settlement did not retry the retained worktree"
+    retried = json.loads(record_file.read_text())
+    assert (retried["worktree_disposition"], retried["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert tree.is_dir()
+    assert (tree / "delivered.txt").read_text() == "uncommitted delivery\n"
+    assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
-    ``before_release`` sees the record as the dispatch's own retry left it; the settlement retry
-    rewrites the record file before the task turns terminal.
+
+def settled_by_scheduled_sweep(sandbox, retained_id, before_release=lambda _kept: None):
+    """Retry a retained tree explicitly, as scheduled cleanup does.
+
+    ``before_release`` sees the first sweep's retained record. A second sweep retries it
+    after the callback has had the opportunity to clear the cause.
     """
     record_file = sandbox.tasks / f"{retained_id}.json"
-    task = sandbox.dispatch("blocked")
-    await_file(sandbox.tasks / f"{task[0]}.started")
-    before = record_file.stat().st_ino
-    before_release(json.loads(record_file.read_text()))
-    (sandbox.tasks / f"{task[0]}.release").touch()
-    sandbox.settle(task)
-    assert record_file.stat().st_ino != before, "settlement never retried the retained worktree"
+    sandbox.sweep()
+    with record_file.open("rb") as retained:
+        before = os.fstat(retained.fileno()).st_ino
+        before_release(json.loads(retained.read()))
+        sandbox.sweep()
+        assert record_file.stat().st_ino != before, "scheduled settlement never retried the retained worktree"
     return json.loads(record_file.read_text())
 
 
 def test_settlement_removes_a_transient_retained_worktree_once_its_cause_is_gone(sandbox):
-    """Defect: a tree kept for a transient cause waited for the next dispatch; any settlement now retries it."""
+    """Scheduled recovery releases a retained tree once its transient cause has cleared."""
     task = sandbox.dispatch("tree")
     grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
     (sandbox.tasks / f"{task[0]}.release").touch()
@@ -611,14 +643,14 @@ def test_settlement_removes_a_transient_retained_worktree_once_its_cause_is_gone
     assert record["worktree_disposition_reason"] == "provider_processes_alive"
 
     def end_the_cause(kept):
-        assert kept["worktree_disposition_reason"] == "provider_processes_alive"  # the dispatch's retry kept it
+        assert kept["worktree_disposition_reason"] == "provider_processes_alive"
         os.kill(grandchild, signal.SIGKILL)
         deadline = time.monotonic() + 10
         while worker._provider_alive(record):
             assert time.monotonic() < deadline, "grandchild survived SIGKILL"
             time.sleep(0.02)
 
-    settled = settled_by_next_task(sandbox, task[0], end_the_cause)
+    settled = settled_by_scheduled_sweep(sandbox, task[0], end_the_cause)
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert not Path(record["worktree_path"]).exists()
 
@@ -628,14 +660,14 @@ def test_settlement_retry_keeps_a_worktree_that_still_holds_content(sandbox, mod
     """The retry removes only with settlement's proofs: uncommitted or unpublished work stays."""
     record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"), expected=1)
     assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", reason)
-    retried = settled_by_next_task(sandbox, record["task_id"])
+    retried = settled_by_scheduled_sweep(sandbox, record["task_id"])
     assert (retried["worktree_disposition"], retried["worktree_disposition_reason"]) == ("retained", reason)
     tree = Path(record["worktree_path"])
     assert (tree / "delivered.txt").exists()
     assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
 
-def test_next_dispatch_settles_terminal_task_left_by_crash(sandbox):
+def test_scheduled_recovery_settles_terminal_task_left_by_crash(sandbox):
     """Defect: a supervisor killed before settlement left its worktree behind for good."""
     task = sandbox.dispatch("blocked")
     provider = int(await_file(sandbox.tasks / f"{task[0]}.started"))
@@ -647,7 +679,7 @@ def test_next_dispatch_settles_terminal_task_left_by_crash(sandbox):
         time.sleep(0.02)
     os.killpg(provider, signal.SIGKILL)
     assert Path(record["worktree_path"]).is_dir()
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     crashed = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
     assert crashed["status"] == "crashed"
     assert not Path(record["worktree_path"]).exists()
@@ -888,6 +920,73 @@ def test_salvage_still_publishes_a_range_the_push_scan_accepts(sandbox, monkeypa
     assert run_git(sandbox.remote, "rev-parse", ref) == head
 
 
+@pytest.mark.parametrize("salvage", [False, True])
+@pytest.mark.parametrize("damage", ["missing", "unreadable", "json", "non-object", "encoding"])
+def test_retention_refuses_unreadable_durable_record(tmp_path, monkeypatch, damage, salvage):
+    """F3: a damaged durable record must not fall back to a stale unheld copy."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    tree = tmp_path / "tree"
+    tree.mkdir()
+    record = {"task_id": "retention-refusal", "worktree_path": str(tree), "worktree_retention_hold": False}
+    path = tmp_path / "retention-refusal.json"
+    if damage != "missing":
+        path.write_bytes({"json": b"{", "non-object": b"[]", "encoding": b"\xff"}.get(
+            damage, json.dumps(record).encode()))
+    original_read = Path.read_text
+
+    def read_text(self, *args, **kwargs):
+        if self == path and damage == "unreadable":
+            raise PermissionError("record cannot be read")
+        return original_read(self, *args, **kwargs)
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("retention refusal reached Git inspection, push or removal")
+
+    monkeypatch.setattr(Path, "read_text", read_text)
+    monkeypatch.setattr(git, "_tree_changes", forbidden)
+    monkeypatch.setattr(git, "_git", forbidden)
+    monkeypatch.setattr(git, "_salvage", forbidden)
+    result = git.settle_worktree(record, salvage=salvage)
+    assert result == {
+        "worktree_disposition": "retained",
+        "worktree_disposition_reason": "task_record_damaged",
+        "worktree_disposition_detail": "retention decision requires a readable on-disk task record",
+    }
+    assert tree.is_dir()
+
+
+@pytest.mark.parametrize("salvage", [False, True])
+@pytest.mark.parametrize("source", ["disk", "memory"])
+@pytest.mark.parametrize("value", [None, "true", "false", 1, 0, [], {}, 1.0])
+def test_retention_refuses_non_boolean_hold(tmp_path, monkeypatch, value, source, salvage):
+    """F4: malformed holds must retain the tree and survive stale record writes."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    tree = tmp_path / "tree"
+    tree.mkdir()
+    record = {"task_id": "retention-refusal", "run_nonce": "same-run", "worktree_path": str(tree)}
+    disk = dict(record)
+    (disk if source == "disk" else record)["worktree_retention_hold"] = value
+    path = tmp_path / "retention-refusal.json"
+    path.write_text(json.dumps(disk))
+    if source == "disk":
+        store.replace(dict(record), path)
+        assert json.loads(path.read_text())["worktree_retention_hold"] == value
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("retention refusal reached Git inspection, push or removal")
+
+    monkeypatch.setattr(git, "_tree_changes", forbidden)
+    monkeypatch.setattr(git, "_git", forbidden)
+    monkeypatch.setattr(git, "_salvage", forbidden)
+    result = git.settle_worktree(record, salvage=salvage)
+    assert result == {
+        "worktree_disposition": "retained",
+        "worktree_disposition_reason": "retention_hold_invalid",
+        "worktree_disposition_detail": f"worktree_retention_hold must be a boolean; got {value!r}",
+    }
+    assert tree.is_dir()
+
+
 def test_retention_hold_blocks_settlement_salvage_and_cleanup(sandbox, monkeypatch, synthetic_opsec):
     """Defect class: an unpublished tree has no owner hold, so salvage retries it."""
     from scripts.orchestration import scheduled_worktree_cleanup as cleanup
@@ -918,6 +1017,8 @@ def test_retention_hold_blocks_settlement_salvage_and_cleanup(sandbox, monkeypat
     cleared = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert "worktree_retention_hold" not in cleared
     assert "worktree_disposition" not in cleared
+    cleared["worktree_retention_hold"] = False
+    (sandbox.tasks / f"{record['task_id']}.json").write_text(json.dumps(cleared))
     worker.settle_left_worktrees(salvage=True)
     settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
@@ -993,7 +1094,7 @@ def test_recovery_removes_squash_merged_write_task_only_when_a_pull_ref_holds_it
     if pull_ref:
         run_git(tree, "push", str(sandbox.remote), "HEAD:refs/pull/7/head")
     run_git(tree, "push", str(sandbox.remote), f":refs/heads/{branch}")
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == disposition
     assert tree.exists() is not pull_ref
@@ -1022,7 +1123,7 @@ def test_continuation_records_sharing_a_landed_tree_resolve_to_the_creator_and_t
                             worktree_disposition="retained", worktree_disposition_reason="borrowed_worktree",
                             options=dict(creator["options"], cwd=str(tree), task_id=f"{record['task_id']}{suffix}"))
         (sandbox.tasks / f"{continuation['task_id']}.json").write_text(json.dumps(continuation))
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     settled = json.loads(creator_file.read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert not tree.exists()
@@ -1043,7 +1144,7 @@ def test_crash_recovery_keeps_worktree_while_the_orphaned_provider_runs(sandbox)
     while worker._identity(record["pid"]) == record["process_start"]:
         assert time.monotonic() < deadline, "supervisor survived SIGKILL"
         time.sleep(0.02)
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     crashed = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
     assert crashed["status"] == "crashed"
     assert (crashed["worktree_disposition"], crashed["worktree_disposition_reason"]) == (
@@ -1054,7 +1155,7 @@ def test_crash_recovery_keeps_worktree_while_the_orphaned_provider_runs(sandbox)
     while worker._provider_alive(crashed):
         assert time.monotonic() < deadline, "provider survived SIGKILL"
         time.sleep(0.02)
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert not Path(record["worktree_path"]).exists()
@@ -1080,7 +1181,7 @@ def test_settlement_keeps_a_worktree_that_a_live_task_borrowed(sandbox, borrower
         while worker._identity(supervisor["pid"]) == supervisor["process_start"]:
             assert time.monotonic() < deadline, "supervisor survived SIGKILL"
             time.sleep(0.02)
-        sandbox.settle(sandbox.dispatch())  # crash recovery records the borrower as crashed
+        sandbox.sweep()  # scheduled recovery records the borrower as crashed
         assert json.loads((sandbox.tasks / f"{borrower[0]}.json").read_text())["status"] == "crashed"
     (sandbox.tasks / f"{owner[0]}.release").touch()
     record = sandbox.settle(owner)
@@ -1096,7 +1197,7 @@ def test_settlement_keeps_a_worktree_that_a_live_task_borrowed(sandbox, borrower
     else:
         (sandbox.tasks / f"{borrower[0]}.release").touch()
         assert sandbox.settle(borrower)["worktree_disposition_reason"] == "borrowed_worktree"
-    sandbox.settle(sandbox.dispatch())
+    sandbox.sweep()
     assert json.loads((sandbox.tasks / f"{owner[0]}.json").read_text())["worktree_disposition"] == "removed"
     assert not tree.exists()
 
@@ -1732,9 +1833,48 @@ def test_scope_verification_failure_only_rejects_success(delivery_settle, monkey
             raise subprocess.CalledProcessError(1, ["git", command])
         return original(path, *args, **kwargs)
     monkeypatch.setattr(git, "_verification_git", broken)
+    failures = []
+    original_cause = worker._verification_cause
+
+    def diagnostic_cause(exc):
+        origins = []
+        frame = exc.__traceback__
+        while frame is not None:
+            origins.append((Path(frame.tb_frame.f_code.co_filename).name,
+                            frame.tb_frame.f_code.co_name, frame.tb_lineno))
+            frame = frame.tb_next
+        failures.append({"type": type(exc).__name__, "origins": origins,
+                         "filename": getattr(exc, "filename", None),
+                         "filename2": getattr(exc, "filename2", None)})
+        return original_cause(exc)
+
+    monkeypatch.setattr(worker, "_verification_cause", diagnostic_cause)
     worker._enforce_delivery(record)
-    assert record["status"] == ("no_deliverable" if status == "done" else status)
-    assert record["error"] == (f"owned_paths_verification_failed: git {command} failed" if status == "done" else "original cause")
+    assert record["status"] == ("no_deliverable" if status == "done" else status), failures
+    assert record["error"] == (f"owned_paths_verification_failed: git {command} failed" if status == "done" else "original cause"), failures
+
+
+def test_private_ownership_git_does_not_start_background_maintenance(delivery_settle, monkeypatch, tmp_path):
+    """Defect class: a disposable Git namespace starts writers that outlive its fetch."""
+    _, settle = delivery_settle
+    record = settle("pushed")
+    trace = tmp_path / "verification-trace.json"
+    original_run = subprocess.run
+
+    def traced_run(argv, *args, **kwargs):
+        if argv[0] == git.GIT_BINARY and any(str(arg).startswith("--git-dir=") for arg in argv):
+            kwargs["env"] = {**kwargs["env"], "GIT_TRACE2_EVENT": str(trace)}
+        return original_run(argv, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", traced_run)
+    with git.ownership_git(record) as run:
+        assert run("rev-parse", "refs/heads/delivery") == record["head_sha"]
+    complete, _, _ = trace.read_text().rpartition("\n")
+    events = [json.loads(line) for line in complete.splitlines()]
+    assert any(event.get("event") == "start" and "fetch" in event.get("argv", []) for event in events)
+    maintenance = [event["argv"] for event in events
+                   if event.get("event") == "child_start" and "maintenance" in event.get("argv", [])]
+    assert maintenance == []
 
 
 @pytest.mark.parametrize("history", ["conflict", "no-commit", "unrelated", "parentless", "clean"])

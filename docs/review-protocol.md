@@ -3,8 +3,19 @@
 > **Canonical contract (v1):** versioned JSON schema
 > `schemas/code-review-findings.v1.schema.json`, validated by
 > `scripts/verify_review.py`. Legacy loose `FINDING:` text is **removed** as a
-> dual source of truth (issue #5284). Reviewers must emit **only** schema-valid
-> JSON — no prose wrapper, no markdown fences around the payload.
+> dual source of truth (issue #5284). The verifier accepts bare schema-valid
+> JSON or the review-loop reply envelope described below.
+
+The review-loop envelope starts with one `VERDICT:` line, then one `SCORE:`
+line. Leading whitespace is allowed. Verdicts are `APPROVE`, `REQUEST_CHANGES`
+and `BLOCKED`; scores are integers from 1 through 10 followed by `/10`, with
+an optional rationale. Exactly one closed, top-level fenced block contains
+the JSON object, with info string `json` or empty. Other prose supplies no
+verdict or findings. Duplicate header declarations, absent or multiple fenced
+blocks, invalid schema and header/correctness disagreement fail closed.
+`APPROVE` requires `correct`, `REQUEST_CHANGES` requires `incorrect`, and
+`BLOCKED` requires `uncertain`. The recorder's shared findings validation
+also applies. No reviewer payload is synthesized from prose.
 
 ## Evidence requirement — NON-NEGOTIABLE
 
@@ -19,7 +30,7 @@ Every finding MUST include:
 5. **Source citation(s)** or explicit `["none"]`.
 
 Unknown fields, missing required fields, unsafe paths, invalid enums/ranges,
-and non-JSON chatter **fail closed**.
+and text outside either accepted input form **fail closed**.
 
 ## Hallucination guards
 
@@ -32,9 +43,14 @@ and non-JSON chatter **fail closed**.
    `git diff $(git merge-base <base> <head>)...<head>`). **Never** use two-dot
    `git diff <base-tip>..<head>` against a moved base tip — that invents
    deletions of files main gained after the fork and produces confident-but-false
-   BLOCK verdicts. Formal accept refuses out-of-surface paths.
+   BLOCK verdicts. A runner-dispositioned `follow_up` with a nonempty rationale
+   may cite a regular file outside the changed paths when it exists in Git at
+   `target.head_sha`. Its quote and range are checked against that head blob,
+   never the working copy. Blocking dispositions, absent head files, directories
+   and symlinks remain refused.
 3. **Primary location on the change**: for `claim_type: "present"`, the
-   primary line range must land on a **changed line** of the frozen target.
+   primary line range must land on a **changed line** of the frozen target,
+   except for the unchanged-file follow-up above.
    Missing-code claims use contextual evidence and must not invent a diff line
    for code that is not there.
 4. **No invented line numbers**: every location must resolve on the exact
@@ -44,7 +60,7 @@ and non-JSON chatter **fail closed**.
    ranges that intersect unrelated changed lines). On mismatch, report the
    deterministic first actual match and `line_mismatch`.
 5. **Path safety**: no absolute paths, no `..`, no drive paths, no symlink
-   escapes, no paths outside the reviewed changed surface.
+   escapes. Paths outside the changed surface require the follow-up exception above.
 6. **Decode/read failures** become a stable fail-closed evidence outcome
    (`quote_missing` with detail), never an uncaught exception.
 
@@ -119,7 +135,9 @@ surface. It **must** change when a local source, the changed-path set,
 base/head, or committed content changes. Display-only target descriptions and
 equivalent ref spellings do not affect the fingerprint.
 
-Reviewer JSON is hashed separately as `reviewer_output_sha256`.
+The whole raw reviewer reply is hashed separately as `reviewer_output_sha256`,
+including headers, fences and surrounding prose. UTF-8 file input preserves
+line endings so a historical result can be replayed without changing its digest.
 
 ### Two-stage runner usage
 
@@ -252,26 +270,56 @@ and is never the only durable proof path. Prefer stdout or `--receipt-path`.
 | Code | Name | Meaning |
 | --- | --- | --- |
 | 0 | `clean` | Valid JSON, overall correct, no findings, evidence OK, complete envelope + target fingerprint |
-| 1 | `actionable` | Valid review with findings or overall `incorrect` (evidence OK + complete envelope) |
+| 1 | `actionable` | Valid review with findings or overall `incorrect`; complete envelope, with the approved unverified follow-up exception below |
 | 2 | `invalid` | Non-JSON, legacy text, schema violation, unsafe/malformed structure |
 | 3 | `incomplete` | Empty input, overall `uncertain` with no findings, or incomplete envelope / missing expected fingerprint |
 | 4 | `stale` | Head SHA or target-input fingerprint mismatch |
-| 5 | `unverifiable` | `quote_missing`, `line_mismatch`, or `out_of_scope` on any finding |
+| 5 | `unverifiable` | `quote_missing`, `line_mismatch`, or `out_of_scope`, except approved unverified follow-up notes below |
+
+A frozen `ukrainian` closeout is a behavior-proof carrier, not a reviewer
+selection. `closeout_cli freeze --review-profile ukrainian` stores that
+profile. `resolve-reviewer` still refuses it. After both surfaces are recorded
+on a pull-request target, `closeout_cli behavior-proof receipt` reads the live
+pull-request comments and the authenticated login and writes the receipt beside
+the state file. The receipt keeps `code-review-receipt.v1` and both proof
+surfaces, omits `reviewer` and `reviewer_payload`, and records
+`ukrainian_seat_verdicts`: one entry per required family from the recorded
+comments, each entry the union of that family's non-void cross-family chunks.
+One partial chunk does not complete a seat, and conflicting denominators are
+refused. Author models come from those comments; author harness comes from the
+implementation commits. Caller reviewer flags, findings JSON, and caller
+lineage are refused. A learner-content diff does not reconcile a receipt that
+lacks this profile.
+The receipt target SHA stays the PR head after merge. Running the learner
+page on a local merge of that head is a separate observation.
 
 For typed lifecycle behavior evidence, `error` must be null. The receipt must
 be either `clean` / exit 0, or `actionable` / exit 1 with all of:
 
 - `reviewer_payload.overall.correctness` is `correct`;
 - receipt finding IDs equal `reviewer_payload.finding_ids`;
-- every finding outcome is `verified`;
+- every finding outcome is `verified`, or is `quote_missing`, `line_mismatch`
+  or `out_of_scope` with runner disposition `follow_up`;
 - every finding has a disposition and a non-empty rationale;
 - no finding has disposition `stop_and_escalate`.
+- `unverified_follow_up_notes` lists every unverified note, preserving its
+  original outcome, detail, disposition and rationale. Lifecycle closeout
+  reports name those notes with their AC and evidence IDs.
 
 This accepts the reviewer's non-blocking judgment without removing findings or
 changing the receipt. An `in_scope_blocker` disposition is not itself a refusal:
 the reviewer's `correct` verdict carries the blocking judgment. All other
 lifecycle checks, including receipt digest, exact head, target-input fingerprint,
 reviewer independence, and passing behavior surfaces, still apply.
+
+An APPROVE with these unverified follow-up notes remains `actionable` / exit 1.
+It is approved, never evidentially clean. Exact quotes and line ranges still
+produce their original failures, with no whitespace normalization, severity
+change or automatic disposition change. Non-APPROVE verdicts, schema and
+malformed-path failures, header/JSON disagreement, missing or invalid
+dispositions or rationale, stale target or provenance, failed behavior proof
+and missing outside-family approval remain refused. This exception permits
+unverified notes; it does not verify absent files or other out-of-scope evidence.
 
 ## Deterministic receipt (runner-built)
 
@@ -284,6 +332,7 @@ The **runner** — not the reviewer — emits a receipt
   **target-input** `input_sha256`;
 - separate `reviewer_output_sha256`;
 - per-finding validation outcome (and disposition/rationale when supplied);
+- visible `unverified_follow_up_notes`, with each original outcome and detail;
 - tests and source-aware / source-blind behavior proof;
 - final disposition and exit code;
 - routing lineage **only when the runner supplies it** (never hardcoded

@@ -190,11 +190,25 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
             )
         except ContractError as exc:
             ok, error = False, f"review_claim_validation_refused: {exc}"
-    # Which tools the seat called with which arguments (no outputs): the evidence of its context reads.
+    # The seat's Sources calls, with each retained body or the reason it is missing.
     calls = getattr(result, "tool_calls", None) or ()
-    trace = [_redacted(json.loads(json.dumps({key: call.get(key) for key in ("name", "arguments", "timestamp")},
-                                             default=str)))
-             for call in calls]
+    retained_bodies = missing_bodies = 0
+    trace = []
+    for call in calls:
+        name = str(call.get("name") or "")
+        if name.startswith("mcp__sources__"):
+            if call.get("output_missing") or not call.get("result"):
+                missing_bodies += 1
+            else:
+                retained_bodies += 1
+        entry = {key: call.get(key) for key in ("name", "arguments", "timestamp")}
+        if call.get("output_missing"):
+            entry["output_missing"] = call["output_missing"]
+        elif call.get("result") is not None:
+            entry["result"] = call["result"]
+        trace.append(_redacted(json.loads(json.dumps(entry, default=str))))
+    record["sources_bodies_retained"] = retained_bodies
+    record["sources_bodies_missing"] = missing_bodies
     return Outcome("done" if ok else "failed", error, response_text if ok else None,
                    _ledger_count(ledger, plan.ledger_path), identity, trace)
 

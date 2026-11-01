@@ -127,7 +127,8 @@ def _private_remote_git(task_id: str, remote: str):
     try:
         run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir, credential_remote=remote)
         run("init", "--bare", "--template=")
-        for key, value in (("remote.origin.url", remote), ("remote.origin.promisor", "true"),
+        for key, value in (("maintenance.auto", "false"),
+                           ("remote.origin.url", remote), ("remote.origin.promisor", "true"),
                            ("remote.origin.partialCloneFilter", "blob:none"),
                            ("extensions.partialClone", "origin")):
             run("config", key, value)
@@ -629,10 +630,12 @@ def _salvage_hold(tree: Path, primary: Path, untracked: list[str]) -> tuple[str,
             return "nested_repository_unpushed", name
     tracked = set(_git(tree, "ls-files", "-z", "--cached", isolate=True, strip=False).split("\0"))
     ignored_names = set(ignored)
+    dependency_locks: dict[str, bool] = {}  # one lock verdict per dependency directory, not per file
     total = 0
     for name in ignored:
         if not is_disposable_path(Path(name), worktree=tree, primary=primary) and not is_regenerable_ignored_path(
-                name, worktree=tree, tracked=tracked, ignored=ignored_names, release_pins={}):
+                name, worktree=tree, tracked=tracked, ignored=ignored_names, release_pins={},
+                dependency_locks=dependency_locks):
             total += os.lstat(tree / name).st_size
             if total > SALVAGE_IGNORED_LIMIT:
                 return "large_ignored_output", f"over {SALVAGE_IGNORED_LIMIT} bytes outside caches"
@@ -757,21 +760,18 @@ def _salvage(record: dict, tree: Path, head: str, changed: list[str]) -> tuple[s
 
 
 def _retention_held(record: dict) -> bool:
-    """Whether this record or the copy on disk is an owner hold.
+    """Whether either copy holds the tree; refuse an unreadable or malformed copy.
 
     A supervisor can still be holding the record from before the hold was set.
     """
-    if record.get("worktree_retention_hold") is True:
+    from scripts.dispatcher import store
+
+    hold = store.retention_hold_disposition(record)
+    if hold is None:
+        return False
+    if hold["worktree_disposition_reason"] == "retention_hold":
         return True
-    task_id = record.get("task_id")
-    if not isinstance(task_id, str):
-        return False
-    try:
-        from scripts.dispatcher import store
-        disk = store.read(task_id)
-    except (OSError, ValueError, RecursionError):
-        return False
-    return isinstance(disk, dict) and disk.get("worktree_retention_hold") is True
+    raise _Kept(hold["worktree_disposition_reason"], hold["worktree_disposition_detail"])
 
 
 def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
@@ -797,8 +797,11 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
 
     # An owner hold is decided before any Git read, push, or removal. The disk
     # record wins when this copy is stale.
-    if _retention_held(record):
-        return disposition("retained", "retention_hold")
+    try:
+        if _retention_held(record):
+            return disposition("retained", "retention_hold")
+    except _Kept as kept:
+        return disposition("retained", kept.reason, kept.detail)
     if record.get("options", {}).get("cwd"):
         return disposition("retained", "borrowed_worktree")
     try:

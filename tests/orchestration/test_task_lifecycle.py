@@ -1042,6 +1042,70 @@ def test_approved_nonblocking_behavior_receipt_preserves_findings_and_snapshot(t
     assert path.read_bytes() == original_bytes
 
 
+@pytest.mark.parametrize("outcome", ["quote_missing", "line_mismatch", "out_of_scope"])
+def test_unverified_follow_up_closeout_reports_each_note(tmp_path: Path, outcome: str) -> None:
+    """Accepted unverified notes remain visible with original details in closeout reports."""
+    receipt = _approved_actionable_receipt()
+    note = receipt["findings"][1]
+    note.update(outcome=outcome, detail="Original exact-quote/range failure")
+    receipt["unverified_follow_up_notes"] = [deepcopy(note)]
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
+    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+    original_bytes = path.read_bytes()
+    ledger = _add(_ready_evidence(_ledger(behavior_proof=True)), "AC-IMPL", "behavior_proof", details=reference)
+    original_ledger = deepcopy(ledger)
+    updated, report, _ = task_lifecycle.reconcile(ledger, _observation(_body()), now=NOW)
+    assert report["state"] == "CI_PASSED"
+    assert not report["hard_blockers"]
+    assert report["observation"]["projection"]["unverified_follow_up_notes"] == [{
+        "ac_id": "AC-IMPL", "evidence_id": ledger["evidence"][-1]["id"], **note,
+    }]
+    assert ledger == original_ledger
+    assert updated["evidence"] == original_ledger["evidence"]
+    assert path.read_bytes() == original_bytes
+
+
+@pytest.mark.parametrize("case", [
+    "missing-list", "empty-list", "altered-detail", "verified-label", "extra-note",
+    "malformed", "blocking", "escalate", "invalid-disposition", "blank-rationale", "clean-label",
+])
+def test_unverified_follow_up_closeout_refuses_forged_note_list(tmp_path: Path, case: str) -> None:
+    """Missing or altered notes and forbidden outcome/disposition pairs cannot close out."""
+    receipt = _approved_actionable_receipt()
+    note = receipt["findings"][1]
+    note.update(outcome="quote_missing", detail="verbatim_not_found")
+    receipt["unverified_follow_up_notes"] = [deepcopy(note)]
+    if case == "missing-list":
+        del receipt["unverified_follow_up_notes"]
+    elif case == "empty-list":
+        receipt["unverified_follow_up_notes"] = []
+    elif case == "altered-detail":
+        receipt["unverified_follow_up_notes"][0]["detail"] = "verified"
+    elif case == "verified-label":
+        receipt["unverified_follow_up_notes"][0]["outcome"] = "verified"
+    elif case == "extra-note":
+        receipt["unverified_follow_up_notes"].append(deepcopy(note))
+    elif case == "clean-label":
+        receipt.update(final_disposition="clean", exit_code=0)
+    else:
+        if case == "malformed":
+            note["outcome"] = "malformed"
+        elif case == "blank-rationale":
+            note["disposition_rationale"] = " "
+        else:
+            note["disposition"] = {
+                "blocking": "in_scope_blocker", "escalate": "stop_and_escalate",
+                "invalid-disposition": "invalid",
+            }[case]
+        receipt["unverified_follow_up_notes"] = [deepcopy(note)]
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
+    ledger = _add(_ready_evidence(_ledger(behavior_proof=True)), "AC-IMPL", "behavior_proof", details=reference)
+    report = task_lifecycle.evaluate(ledger, _observation(_body()))
+    assert report["state"] == "BLOCKED_WITH_RECEIPT"
+    assert report["unverified_follow_up_notes"] == []
+    assert any("behavior-proof" in blocker for blocker in report["hard_blockers"])
+
+
 @pytest.mark.parametrize(
     ("field_path", "value"),
     [
@@ -2773,3 +2837,262 @@ def test_9794_resolved_root_allows_unresolved_descendant_reporting():
     )
     assert result["valid"] is True
     assert result["method"] == "body"
+
+
+def _ukrainian_receipt(
+    tmp_path: Path, *, head: str, comments: list[dict], author_model: str = "claude-opus-5-5"
+) -> dict:
+    from scripts.review.review_contract import build_ukrainian_behavior_receipt
+
+    binding = "c" * 64
+    clause = {
+        "claim": "add feature",
+        "target_input_sha256": binding,
+        "command": "learner-page",
+        "cwd": "/repo",
+        "exit_code": 0,
+        "observation": "both surfaces passed",
+        "evidence_ref": "local:learner-page",
+    }
+    proof = {
+        "schema_version": "behavior-proof.v1",
+        "source_aware": {"status": "pass", "clauses": [clause]},
+        "source_blind": {"status": "pass", "blind_enforced": False, "clauses": [dict(clause)]},
+    }
+    receipt = build_ukrainian_behavior_receipt(
+        behavior_proof=proof,
+        frozen_intended_behavior="add feature",
+        comments=comments,
+        authenticated_login="fleet",
+        head_sha=head,
+        author_attributions=[{"model": author_model, "harness": "claude"}],
+        target={
+            "mode": "local",
+            "head_sha": head,
+            "changed_paths": ["lesson.html"],
+            "non_test_loc": 1,
+            "clean_tree": True,
+            "description": "lesson",
+        },
+        input_sha256=binding,
+        issue_ref="#12316",
+        scope={"owner_boundary": "lesson"},
+        tests={"commands": ["learner-page"], "passed": True},
+    )
+    path = (tmp_path / "ukrainian-behavior-proof-receipt.json").resolve()
+    receipt_bytes = (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
+    path.write_bytes(receipt_bytes)
+    return {
+        "behavior_proof_receipt": {
+            "receipt_path": str(path),
+            "receipt_sha256": "sha256:" + hashlib.sha256(receipt_bytes).hexdigest(),
+            "input_sha256": binding,
+            "target_sha": HEAD,
+        }
+    }
+
+
+def _seat_comment(family: str, url: str, *, author_model: str = "claude-opus-5-5") -> dict:
+    from scripts.review.record_cf_verdict import build_comment
+
+    body = build_comment(
+        sha=HEAD,
+        task_id=f"seat-{family}",
+        started="2026-07-16T09:00:00.000000Z",
+        verdict="APPROVED",
+        model="gemini-3.8-flash-high" if family == "google" else "gpt-6.1-sol",
+        family=family,
+        reply="VERDICT: APPROVED",
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        author_models=[author_model],
+    )
+    return {
+        "url": url,
+        "body": body,
+        "user": {"login": "fleet"},
+        "author_association": "MEMBER",
+        "created_at": NOW,
+        "updated_at": NOW,
+    }
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "open_pr_head_sha",
+        "merged_pr_same_head_sha",
+        "merge_commit_sha_rejected",
+        "missing_separate_review_evidence",
+        "singular_reviewer_without_chunks",
+        "chunk_identity_mismatch",
+        "stale_head",
+    ],
+)
+def test_ukrainian_behavior_proof_reconciles_recorded_seat_quorum(tmp_path: Path, case: str) -> None:
+    """Reconciliation accepts the chunked seat set bound to pr.head_sha, and nothing thinner."""
+    google_url = "https://github.com/org/repo/pull/77#issuecomment-11"
+    openai_url = "https://github.com/org/repo/pull/77#issuecomment-12"
+    comments = [
+        {
+            "url": REVIEW_URL,
+            "body": "PASS",
+            "created_at": NOW,
+            "updated_at": NOW,
+            "user": {"login": "fleet"},
+            "author_association": "MEMBER",
+        },
+        _seat_comment("google", google_url),
+        _seat_comment("openai", openai_url),
+    ]
+    if case == "singular_reviewer_without_chunks":
+        reference = _behavior_receipt_reference(
+            tmp_path,
+            receipt_updates={
+                "review_profile": "ukrainian",
+                "reviewer": {"family": "deepseek", "model": "placeholder"},
+            },
+        )
+    else:
+        reference = _ukrainian_receipt(tmp_path, head=HEAD, comments=comments[1:])
+        if case in {"chunk_identity_mismatch", "merge_commit_sha_rejected"}:
+            path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+            receipt = json.loads(path.read_text(encoding="utf-8"))
+            if case == "merge_commit_sha_rejected":
+                receipt["target"]["head_sha"] = MERGE
+            else:
+                receipt["ukrainian_seat_verdicts"][0]["chunks"][0]["model"] = "other-model"
+            receipt_bytes = (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
+            path.write_bytes(receipt_bytes)
+            reference["behavior_proof_receipt"]["receipt_sha256"] = (
+                "sha256:" + hashlib.sha256(receipt_bytes).hexdigest()
+            )
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL",
+        "behavior_proof",
+        details=reference,
+    )
+    if case != "missing_separate_review_evidence":
+        for url, family in ((google_url, "google"), (openai_url, "openai")):
+            ledger = _add(
+                ledger,
+                "AC-REVIEW",
+                "review",
+                url=url,
+                details={"author_family": "codex", "reviewer_family": family, "verdict": "pass"},
+            )
+    observation = _observation(_body(), pr_state="MERGED" if case == "merged_pr_same_head_sha" else "OPEN")
+    observation["github"]["comments"] = comments
+    observation["github"]["authenticated_login"] = "fleet"
+    if case == "stale_head":
+        observation["github"]["pr"]["head_sha"] = "d" * 40
+    result = task_lifecycle.evaluate(ledger, observation)
+    blockers = " ".join(result["hard_blockers"])
+    if case in {"open_pr_head_sha", "merged_pr_same_head_sha"}:
+        assert "behavior_proof" in result["valid_evidence"]["AC-IMPL"]
+        assert "behavior-proof" not in blockers
+        assert "ukrainian" not in blockers
+    else:
+        assert "behavior_proof" not in result["valid_evidence"].get("AC-IMPL", set())
+        assert "behavior-proof" in blockers or "ukrainian" in blockers or "not bound to current PR head" in blockers
+
+
+def test_closeout_observation_keeps_comment_trust_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A stock closeout observation keeps the comment fields the quorum reader trusts."""
+    adapter = task_closeout.GhGitHubAdapter(tmp_path)
+    created = "2026-07-16T10:00:00Z"
+
+    identity_reads = {"n": 0}
+
+    def fake_json(args, stdin=None):
+        verb = getattr(args, "verb", "")
+        if verb == "read-identity":
+            identity_reads["n"] += 1
+            return {"login": "fleet"}
+        if verb == "read-comments":
+            return [{
+                "html_url": "https://github.com/org/repo/pull/77#issuecomment-1",
+                "body": "seat",
+                "user": {"login": "fleet", "id": 9},
+                "author_association": "MEMBER",
+                "created_at": created,
+                "updated_at": created,
+            }]
+        if verb == "read-reviews":
+            return [{
+                "html_url": "https://github.com/org/repo/pull/77#pullrequestreview-2",
+                "body": "review",
+                "user": {"login": "fleet"},
+                "author_association": "OWNER",
+                "submitted_at": created,
+                "state": "APPROVED",
+                "commit_id": "a" * 40,
+            }]
+        if verb == "read-pr-files":
+            return [{"filename": "curriculum/l2-uk-en/a2/lesson.mdx", "status": "modified"}]
+        raise AssertionError(verb)
+
+    monkeypatch.setattr(adapter, "_json", fake_json)
+    monkeypatch.setattr(
+        adapter,
+        "read_issue",
+        lambda repo, number: {
+            "number": 42,
+            "state": "OPEN",
+            "body": "",
+            "url": "https://github.com/org/repo/issues/42",
+            "closed_at": None,
+            "parent_epic": 10,
+            "parent_repository": "org/repo",
+        },
+    )
+    monkeypatch.setattr(adapter, "registered_stream_epics", lambda repository=None: [10])
+    monkeypatch.setattr(
+        adapter,
+        "_read_pr",
+        lambda repo, number: {"number": 77, "head_sha": "a" * 40, "checks": [], "state": "OPEN"},
+    )
+    github = adapter._github_observation(task_lifecycle.validate_lifecycle(_ledger()))
+    comment, review = github["comments"]
+    assert comment["author_association"] == "MEMBER"
+    assert comment["created_at"] == created
+    assert comment["updated_at"] == created
+    assert comment["user"] == {"login": "fleet"}
+    assert review["author_association"] == "OWNER"
+    assert review["user"]["login"] == "fleet"
+    assert github["authenticated_login"] == "fleet"
+    assert identity_reads["n"] == 1
+    assert github["pr"]["files"] == ["curriculum/l2-uk-en/a2/lesson.mdx"]
+    unbound = task_lifecycle.validate_lifecycle(_ledger())
+    unbound["pr"] = {"number": None, "url": None}
+    unbound = task_lifecycle.validate_lifecycle(unbound)
+    identity_reads["n"] = 0
+    without_pr = adapter._github_observation(unbound)
+    assert identity_reads["n"] == 0
+    assert without_pr["authenticated_login"] is None
+    assert without_pr["comments"] == []
+
+
+def test_learner_content_diff_refuses_code_behavior_receipt(tmp_path: Path) -> None:
+    """A learner-content diff does not reconcile a code-profile behavior receipt."""
+    reference = _behavior_receipt_reference(tmp_path)
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL",
+        "behavior_proof",
+        details=reference,
+    )
+    observation = _observation(_body())
+    observation["github"]["pr"]["files"] = ["curriculum/l2-uk-en/a2/liudyna-i-stosunky.mdx"]
+    result = task_lifecycle.evaluate(ledger, observation)
+    blockers = " ".join(result["hard_blockers"])
+    assert "ukrainian" in blockers
+    assert "behavior_proof" not in result["valid_evidence"].get("AC-IMPL", set())
+    local_only = _observation(_body())
+    local_only["github"]["pr"].pop("files", None)
+    local_only["local"]["changed_paths"] = ["curriculum/l2-uk-en/a2/liudyna-i-stosunky.mdx"]
+    local_result = task_lifecycle.evaluate(ledger, local_only)
+    local_blockers = " ".join(local_result["hard_blockers"])
+    assert "ukrainian" in local_blockers
+    assert "behavior_proof" not in local_result["valid_evidence"].get("AC-IMPL", set())
