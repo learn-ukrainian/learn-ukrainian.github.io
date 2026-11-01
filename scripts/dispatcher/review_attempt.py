@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -119,6 +120,14 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     manifest = Path(record["options"]["review_attempt"])
     workspace = Path(record["worktree_path"])
     unknown = dict(resolved_model="unknown", resolved_model_known=False, resolved_model_source="unobserved")
+    from scripts.review.language_lane import is_ukrainian_review
+
+    ukrainian = is_ukrainian_review(record)
+    if ukrainian:
+        record.setdefault("claims_total", 0)
+        record.setdefault("claims_unsupported", 0)
+        record.setdefault("unknown_items", 0)
+        record.setdefault("dropped_claims", [])
     try:
         if access == "full":
             verify_full_review_tree(manifest, workspace)
@@ -161,12 +170,50 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     )
     ok = result.ok and bool(result.response.strip())
     error = None if ok else (result.failure_code or result.stderr_excerpt or "provider returned no successful response")
+    response_text = result.response if ok else None
+    if ukrainian and ok and response_text:
+        from scripts.review.review_contract import (
+            _fenced,
+            reply_has_item_judgments,
+            validate_item_claims,
+        )
+
+        if reply_has_item_judgments(response_text):
+            bodies = _fenced(response_text, "ukrainian-item-judgments")
+            if len(bodies) == 1:
+                try:
+                    payload = json.loads(bodies[0])
+                    if isinstance(payload, dict):
+                        sanitized, val_res = validate_item_claims(
+                            payload,
+                            ledger_path=plan.ledger_path,
+                            binding=binding,
+                        )
+                        record["claims_total"] = val_res.claims_total
+                        record["claims_unsupported"] = val_res.claims_unsupported
+                        record["unknown_items"] = val_res.unknown_items
+                        record["dropped_claims"] = [dict(c) for c in val_res.dropped_claims]
+                        clean_block = (
+                            "```ukrainian-item-judgments\n"
+                            + json.dumps(sanitized, indent=2, ensure_ascii=False)
+                            + "\n```"
+                        )
+                        pattern = r"^```ukrainian-item-judgments[ \t]*\n.*?\n```[ \t]*$"
+                        response_text = re.sub(
+                            pattern,
+                            lambda _: clean_block,
+                            response_text,
+                            count=1,
+                            flags=re.M | re.S,
+                        )
+                except Exception:
+                    pass
     # Which tools the seat called with which arguments (no outputs): the evidence of its context reads.
     calls = getattr(result, "tool_calls", None) or ()
     trace = [_redacted(json.loads(json.dumps({key: call.get(key) for key in ("name", "arguments", "timestamp")},
                                              default=str)))
              for call in calls]
-    return Outcome("done" if ok else "failed", error, result.response if ok else None,
+    return Outcome("done" if ok else "failed", error, response_text if ok else None,
                    _ledger_count(ledger, plan.ledger_path), identity, trace)
 
 
