@@ -283,11 +283,16 @@ def _schema_refusal(stderr: str) -> str | None:
 
 
 def _excerpt(text: str) -> str:
-    """One bounded line of AGY's error for the task record, with secrets redacted and the home path masked."""
+    """One bounded line of AGY's error for the task record, with secrets redacted and the home path masked.
+
+    The redactor reads the original text: flattening first could move code punctuation onto an
+    assignment line and exempt it. Control characters become spaces only after redaction.
+    """
     from scripts.secret_redactor import redact_text
 
-    line = " ".join(text.split()).replace(str(Path.home()), "~")
-    return (redact_text(line) or "")[:_ERROR_DETAIL_CHARS]
+    redacted = redact_text(text) or ""
+    printable = "".join(character if character.isprintable() else " " for character in redacted)
+    return " ".join(printable.split()).replace(str(Path.home()), "~")[:_ERROR_DETAIL_CHARS]
 
 
 def _unsuccessful(result: dict) -> str:
@@ -307,6 +312,7 @@ def parse(
     if returncode and not stdout.strip() and (refusal := _schema_refusal(stderr)):
         return ParsedResult(None, None, refusal)
     result, error, models = {}, None, set()
+    started = False  # any event besides the terminal result: AGY began the run, whatever it attested
     terminal_seen, stream_clean = False, True
     open_steps: set[int] = set()
     open_at_result: set[int] | None = None
@@ -327,6 +333,8 @@ def parse(
             # Anything after the terminal result makes a capacity classification untrustworthy.
             stream_clean = False
         models.update(_init_models(event))
+        if event.get("event") != "result":
+            started = True
         if not terminal_seen:
             _open_commands(event, open_steps)
         if event.get("event") == "result":
@@ -380,7 +388,8 @@ def parse(
     if (
         stream_clean
         and terminal_seen
-        and not models
+        and not started
+        and not incomplete
         and type(result.get("num_turns")) is int and result["num_turns"] == 0
         and error == _unsuccessful(result)
         and isinstance(quota_message, str)
