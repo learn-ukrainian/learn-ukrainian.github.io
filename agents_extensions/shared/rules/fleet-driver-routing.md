@@ -37,7 +37,7 @@ and ≥2 tiers for 14 consecutive days. A review does not expire the standing ru
 review seat and, since operator 2026-09-29 (#9230), took over the former Astra advisory seat at `high`.
 Ordinary advice uses Opus 5.5 / Sol 6.1; Fable and the former Astra seat hold no advisory role (#9583).
 Luna @ `high` handles routine bounded work and scouting under the driver-brief or Sol-envelope contract (§2).
-`gpt-6-sol` and `gpt-6-astra` are not routable. Designated approval remains separate
+`gpt-6-sol` remains retired and is not routable. Astra (`gpt-6-astra`) is routable only for the Codex red-team code-review exception for Sol-authored PRs until 2026-11-04T00:00Z (#10437). Designated approval remains separate
 from ordinary advice; do not spend advisory turns on ordinary implementation or review.
 
 **Standing routing preference (#9583, operator decision 2026-10-03):** advice, critique, review and
