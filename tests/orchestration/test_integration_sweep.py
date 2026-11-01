@@ -206,12 +206,18 @@ def pr(**updates):
 
 
 def test_p3_only_changes_requested_marker_is_approval():
-    """A standing CHANGES_REQUESTED marker whose only open finding is P3 reads as APPROVED."""
-    reply = (
-        "VERDICT: REQUEST_CHANGES\n"
-        "F1 [P3] scripts/example.py:10 the count is high. Impact: one extra hold. "
-        "Required behaviour: count each removal once.\n"
-    )
+    """A standing CHANGES_REQUESTED marker whose reply is one all-P3 findings object reads as APPROVED."""
+    reply = json.dumps({
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": "incorrect", "explanation": "One P3 residual.", "confidence": 0.9},
+        "findings": [{
+            "id": "F1", "title": "Count is high", "body": "One extra hold.", "priority": "P3",
+            "confidence": 0.9, "category": "correctness",
+            "location": {"path": "scripts/example.py", "start_line": 10, "end_line": 10, "claim_type": "present"},
+            "verbatim": "count += 1", "why_wrong": "Each removal is counted twice.",
+            "smallest_fix": "Count each removal once.", "sources": ["none"],
+        }],
+    })
     body = build_comment(
         sha=SHA, task_id="review-one", started=START, verdict="CHANGES_REQUESTED",
         model="gpt-6.1-sol", family="openai", reply=reply,

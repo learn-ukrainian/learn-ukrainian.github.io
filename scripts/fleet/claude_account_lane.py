@@ -125,6 +125,13 @@ class ClaudeAccount:
     def resolved(self) -> bool:
         return self.label is not None
 
+    @property
+    def api_key(self) -> bool:
+        """An Anthropic API-key account: billed per token under its spend cap, with no plan meter."""
+        from scripts.agent_runtime.attempt_boundary import CLAUDE_API_KEY_ACCOUNT_LABELS
+
+        return self.label in CLAUDE_API_KEY_ACCOUNT_LABELS
+
 
 def require_account(account: object) -> ClaudeAccount:
     """``account`` when it is a :class:`ClaudeAccount`; anything else (a bare label, None) raises ``TypeError``."""

@@ -37,8 +37,11 @@ DEFAULT_COUNTS = {
 
 
 # #10073 adds a native low/medium seat outside Google-authored work.
-DEFAULT_COUNTS = {family: seats + (["gemini-3.8-flash-high"] if family != "google" else [])
-                  for family, seats in DEFAULT_COUNTS.items()}
+# #12375 adds Muse as the first low/medium seat.
+DEFAULT_COUNTS = {
+    family: ["muse", *seats, *(["gemini-3.8-flash-high"] if family != "google" else [])]
+    for family, seats in DEFAULT_COUNTS.items()
+}
 
 
 def retired_candidate(name):
@@ -59,7 +62,7 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     snapshot = {
         "agents": {
             name: {"status": "cool", "health": {"healthy": True}}
-            for name in ("claude", "codex", "gemini", "grok", "glm", "cursor", "pool")
+            for name in ("claude", "codex", "gemini", "grok", "glm", "cursor", "pool", "muse")
         }
     }
     results = check_bench_health(routing_snapshot=snapshot, data_egress_policy="local_interactive")
@@ -72,8 +75,8 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     critical = check_bench_health(routing_snapshot=snapshot, data_egress_policy="local_interactive", risk="critical")
     assert critical["anthropic"] == ["openai_frontier", GROK]
     assert len(critical["anthropic"]) >= bench_health.MIN_ELIGIBLE_SEATS
-    automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive", claude_account=HOST_ACCOUNT))
-    assert automatic.selected.name == "openai_frontier"
+    automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
+    assert automatic.selected.name == "muse"
     assert "glm-5.3" not in {entry.name for entry in automatic.trace}
 
 
@@ -219,7 +222,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     results = check_bench_health(routing_snapshot={}, data_egress_policy=policy)
     assert all("glm-5.3" not in seats for seats in results.values())
     assert all("openai_frontier" not in seats for seats in results.values())
-    assert results["anthropic"] == [GROK, "gemini-3.8-flash-high"]
+    assert results["anthropic"] == ["muse", GROK, "gemini-3.8-flash-high"]
     pinned = evaluate_candidate(
         retired_candidate("glm-5.3"),
         ResolverInputs(
@@ -261,7 +264,7 @@ def test_bench_health_preserves_capacity_gate(status, reason, route, names, caps
             if REVIEW_CANDIDATES[name].family != finding["author_family"]:
                 assert finding["excluded_seats"][name] == reason
     assert results["anthropic"] == (
-        [GROK, "gemini-3.8-flash-high"] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"]
+        ["muse", GROK, "gemini-3.8-flash-high"] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"]
     )
     # Check exclusion reasons even when Grok admission prevents a CLI shortfall.
     _, excluded = bench_health._bench_inventory(
@@ -336,6 +339,7 @@ def test_bench_health_main_returns_one_when_unhealthy(capsys):
             "grok": {"status": "unhealthy", "health": {"healthy": False}},
             "glm": {"status": "unhealthy", "health": {"healthy": False}},
             "cursor": {"status": "unhealthy", "health": {"healthy": False}},
+            "muse": {"status": "unhealthy", "health": {"healthy": False}},
         }
     }
     assert main(["--data-egress-policy", "local_interactive"], routing_snapshot=mock_snapshot) == 1

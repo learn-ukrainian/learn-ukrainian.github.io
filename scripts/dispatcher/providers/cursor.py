@@ -69,6 +69,9 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
                 error = "cursor: terminal result unsuccessful"
         elif event.get("type") == "error":
             error = "cursor: terminal error"
+        elif event.get("type") == "tool_call":
+            # Text before a tool call narrates the work; the reply is the turn after the last one.
+            parts, messages = [""], []
         elif event.get("type") == "text" and isinstance(event.get("content"), str):
             parts[-1] += event["content"]
         elif event.get("role") == "assistant" or event.get("type") == "assistant":
@@ -85,6 +88,7 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
                 parts.extend([content, ""])
     # The terminal result concatenates the run's assistant messages with no separator, gluing
     # a trailing "VERDICT:" line onto the previous sentence; the separate messages keep it.
+    # Only messages of the final turn remain, so narration before a tool call is not the reply.
     text = "\n\n".join(messages)
     if not text:
         text = result.get("result")

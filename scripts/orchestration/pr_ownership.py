@@ -64,6 +64,23 @@ _HEAD_TASK = re.compile(
 class OwnershipError(RuntimeError):
     """Evidence needed for a decision is missing or contradictory."""
 
+    code: str | None = None
+
+
+class PublishBranchRequired(OwnershipError):
+    """A workspace-write task accepted a PR head it was not dispatched to publish.
+
+    Settlement fetches ``publish_branch`` or else the task's own worktree branch.
+    A takeover that pushes an existing PR branch must be dispatched with
+    ``--branch`` so that name is recorded. Unrecorded remote names stay ignored.
+    """
+
+    code = "publish_branch_required"
+
+    def __init__(self, head: str) -> None:
+        self.head = head
+        super().__init__("publish_branch is not the PR head branch; re-dispatch with --branch " + head)
+
 
 def state_path() -> Path:
     return tasks_dir().parent / "pr_ownership" / "state.json"
@@ -79,6 +96,29 @@ def _empty() -> dict[str, Any]:
 
 def _single_line(value: object) -> bool:
     return isinstance(value, str) and bool(value) and value == value.strip() and "\n" not in value and "\r" not in value
+
+
+def _require_publish_branch(record: Mapping[str, Any] | None, pr: Mapping[str, Any]) -> None:
+    """Refuse a workspace-write accept that would settle against a branch nobody pushed.
+
+    ``record`` is the task named by ``LEARN_UKRAINIAN_DISPATCH_TASK_ID``. A missing
+    record, or any mode other than workspace-write, is not this gate. Driver custody
+    never reaches it.
+    """
+    if not isinstance(record, Mapping) or record.get("mode") != "workspace-write":
+        return
+    head = pr.get("headRefName")
+    if isinstance(head, str) and head and record.get("publish_branch") == head:
+        return
+    shown = head if isinstance(head, str) and head else "<head>"
+    raise PublishBranchRequired(shown)
+
+
+def _refused(exc: OwnershipError) -> str:
+    body: dict[str, Any] = {"accepted": False, "reason": str(exc)}
+    if isinstance(exc.code, str) and exc.code:
+        body["code"] = exc.code
+    return json.dumps(body)
 
 
 def decision_custody(handoff: Mapping[str, Any] | None) -> bool:
@@ -664,13 +704,23 @@ def accept(
 
     Who owns the PR follows the owner check exactly (repository, legacy records, forks,
     accepted handoffs), so a same-named branch elsewhere never counts.
+
+    Inside a dispatched workspace-write task, the task id the dispatcher exports
+    (``LEARN_UKRAINIAN_DISPATCH_TASK_ID``) must already record ``publish_branch`` as
+    this PR's head branch. Otherwise settlement would fetch a branch that never
+    reaches the remote. Coordinator custody does not call ``accept``.
     """
     live = live or liveness
     if pr.get("state") != "OPEN":
         raise OwnershipError(f"PR is {pr.get('state')}, not open")
+    by_id = {record.get("task_id"): record for record in records}
+    # The exported id is the running task. A record that is not in this snapshot
+    # is not treated as workspace-write: the liveness check below still fails closed.
+    task_id = os.environ.get(TASK_ENV)
+    if task_id:
+        _require_publish_branch(by_id.get(task_id), pr)
     if predecessor and not custody:
         raise OwnershipError("--from names a live predecessor and needs --custody")
-    by_id = {record.get("task_id"): record for record in records}
     if (state := live(by_id.get(successor))) is not True:
         raise OwnershipError(f"successor {successor} is {'unknown' if state is None else 'not live'}")
     key = pr_key(repo, number)
@@ -952,7 +1002,7 @@ def main(argv: list[str] | None = None) -> int:
                         repos=load_fleet_repos(),
                     )
                 except OwnershipError as exc:
-                    print(json.dumps({"accepted": False, "reason": str(exc)}))
+                    print(_refused(exc))
                     return 1
             print(json.dumps({"accepted": True, "pr": pr_key(repo, args.pr), **receipt,
                               "review_budget": "carried by the PR's review ledger; read it before acting"}))

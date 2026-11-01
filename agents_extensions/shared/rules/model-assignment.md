@@ -23,9 +23,9 @@ Operator decision 2026-10-25 (C-1949): Grok 4.7 may give critical-risk final sig
 Cursor under those attestation, cross-family and subject-seat limits. Opus 5.5 and Sol 6.1 remain
 eligible. Security final sign-off (catalog `security_review` role) stays Opus 5.5 or Sol 6.1.
 Designated approval remains Opus 5.5 + Sol 6.1. Kimi models are retired (OO-58, #11327).
-Muse Wonder Full may be chosen explicitly as the formal reviewer for low-risk or medium-risk code review.
-It has no critical, security, Ukrainian or driver authority and is not in the automatic review ladders yet.
-Private inputs require contributor mode off (C-2401).
+Operator decision 2026-11-01: Muse Wonder Full (`muse-wonder-full-1.0`) is the formal reviewer for low-risk and medium-risk code and infra reviews, placed ahead of the frontier seats in the low and medium review ladders when eligible and healthy.
+It has no high, critical, security-final, Ukrainian, design or driver authority (AC-02).
+Private inputs require contributor mode off (operator order C-2401).
 The 2026-10-08 approval admits Gemini as a formal reviewer of low-risk and medium-risk code, and of
 Ukrainian work when the reviewer uses the Sources MCP. High-risk and critical review use Opus 5.5,
 Sol 6.1, or Grok 4.7. Gemini code review runs directly through native AGY in the exact-head dispatch

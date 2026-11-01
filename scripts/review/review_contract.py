@@ -152,10 +152,14 @@ def _canonical_family(value: str) -> str:
 
 
 def parse_reviewer_json(raw: str) -> dict[str, Any]:
-    """Parse bare JSON or the approved review-loop envelope, without prose extraction."""
+    """Parse bare JSON or the approved review-loop envelope, without prose extraction.
+
+    A reply that is nothing but one closed ``json`` (or untagged) code fence is bare JSON.
+    """
     text = raw.strip()
     if not text:
         raise ContractError("empty_review_input", exit_code=EXIT_INCOMPLETE)
+    text = _whole_reply_fence(text)
     if text.startswith("VERDICT:"):
         try:
             return _parse_review_loop_envelope(text)
@@ -176,6 +180,30 @@ def parse_reviewer_json(raw: str) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ContractError("review_root_must_be_object", exit_code=EXIT_INVALID)
     return payload
+
+
+def _whole_reply_fence(text: str) -> str:
+    """The content of a reply that is exactly one closed top-level json fence, else ``text``."""
+    if not text.startswith(("```", "~~~")):
+        return text
+    from markdown_it import MarkdownIt
+
+    from scripts.review.verdict_parser import _closes_code_fence, _commonmark_lines
+
+    lines = _commonmark_lines(text)
+    tokens = MarkdownIt("commonmark").parse(text)
+    if len(tokens) != 1 or tokens[0].type != "fence":
+        return text
+    block = tokens[0]
+    if (
+        block.info.strip() not in {"", "json"}
+        or block.map != [0, len(lines)]
+        or len(lines) < 2
+        or not _closes_code_fence(lines[-1], block.markup)
+    ):
+        return text
+    content = "\n".join(lines[1:-1]).strip()
+    return content if content.startswith("{") else text
 
 
 def _parse_review_loop_envelope(text: str) -> dict[str, Any]:

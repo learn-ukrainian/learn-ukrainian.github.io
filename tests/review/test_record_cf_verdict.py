@@ -217,20 +217,22 @@ def test_approve_reply_with_one_p3_finding_records_approve_with_score(scanned_re
 def test_changes_requested_with_only_p3_findings_records_approval(scanned_recorder, tmp_path, monkeypatch):
     """REQUEST_CHANGES whose open findings are all P3 records as APPROVED, status success, reply verbatim."""
     tasks, comments, _, sent, _ = scanned_recorder
-    payload = structured_review(1)
+    payload = structured_review(2)
     payload["overall"].update(
         correctness="incorrect",
-        explanation="VERDICT: REQUEST_CHANGES. SCORE: 6/10. The only open finding is a P3 regression.",
+        explanation="VERDICT: REQUEST_CHANGES. SCORE: 6/10. The only open findings are P3 regressions.",
     )
-    payload["findings"][0]["priority"] = "P3"
+    for finding in payload["findings"]:
+        finding["priority"] = "P3"
     reply = json.dumps(payload)
     write_task(tasks, reply=reply)
     statuses = []
     monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields))
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     body = comments[0]["body"]
-    assert reply in body and "Residuals: F1 (P3)" in body
-    assert result["verdict"] == "APPROVED" and result["residuals"] == ["F1"]
+    assert reply in body and "Residuals: F1 (P3), F2 (P3)" in body
+    assert result["verdict"] == "APPROVED" and result["residuals"] == ["F1", "F2"]
+    assert "p3_downgrade_refused" not in result
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
     assert statuses == [{
         "repository": "owner/repo",
@@ -240,6 +242,26 @@ def test_changes_requested_with_only_p3_findings_records_approval(scanned_record
         "description": "VERDICT: APPROVED openai review-one",
     }]
     assert sent == [body]
+
+
+@pytest.mark.parametrize("blocking", ["P0", "P1", "P2"])
+def test_pure_findings_object_with_a_blocking_entry_records_rejection(scanned_recorder, tmp_path, monkeypatch, blocking):
+    """One P0 to P2 entry beside P3 entries keeps REQUEST_CHANGES and names why (#12409)."""
+    tasks, comments, _, _, _ = scanned_recorder
+    payload = structured_review(2)
+    payload["overall"]["explanation"] = "VERDICT: REQUEST_CHANGES. One finding blocks."
+    payload["findings"][0]["priority"] = "P3"
+    payload["findings"][1]["priority"] = blocking
+    write_task(tasks, reply=json.dumps(payload))
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields))
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    body = comments[0]["body"]
+    assert result["verdict"] == "CHANGES_REQUESTED" and "residuals" not in result
+    assert result["p3_downgrade_refused"] == recorder.P3_BLOCKING_FINDING
+    assert "Residuals:" not in body
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "CHANGES_REQUESTED"
+    assert statuses[0]["state"] == "failure"
 
 
 def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_path, monkeypatch):
@@ -262,6 +284,78 @@ def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_pat
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "CHANGES_REQUESTED"
     assert statuses[0]["state"] == "failure" and statuses[0]["context"] == "fleet/cross-family-review"
     assert statuses[0]["description"] == "VERDICT: CHANGES_REQUESTED openai review-one"
+
+
+def _all_p3_object(*, indent=None):
+    payload = structured_review(1)
+    payload["overall"]["explanation"] = "One P3 residual."
+    payload["findings"][0]["priority"] = "P3"
+    return json.dumps(payload, indent=indent)
+
+
+_P3_PREFIX = "VERDICT: REQUEST_CHANGES\nF1 [P3] scripts/example.py:10 count is high.\n"
+_P3_OBJECT = _all_p3_object()
+_P3_FENCED = "```json\n" + _all_p3_object(indent=2) + "\n```\n"
+# A plain decoder keeps the last "findings" key, which would hide the P1 list before it.
+_P3_DUPLICATE = _P3_OBJECT.replace(
+    '"findings": ', '"findings": ' + json.dumps(structured_review(1)["findings"]).replace("P2", "P1") + ', "findings": ', 1
+)
+# Every reply form that hid an open P0 to P2 finding from PR #12379's prose matchers (rounds 2 to 6).
+_P3_REFUSED = {
+    "prose-only": _P3_PREFIX,
+    "r2-nested-quoted-fence": _P3_PREFIX + ">> ```\n>> F2 scripts/example.py:20 missing priority.\n>> ```\n",
+    "r2-nested-quoted-indent": _P3_PREFIX + ">>\n>>     F2 scripts/example.py:20 missing priority.\n",
+    "r2-quoted-fence": _P3_PREFIX + "> ```\n> F2 scripts/example.py:20 missing priority.\n> ```\n",
+    "r2-fenced-resolved-question": _P3_PREFIX + "```\nF2 resolved? scripts/example.py:20 still open.\n```\n",
+    "r2-indented-resolved-question": _P3_PREFIX + "\n    F2 resolved? scripts/example.py:20 still open.\n",
+    "r3-long-resolution-window": (
+        _P3_PREFIX + "```\nF2 resolved after checking the patch? scripts/example.py:20 still open.\n```\n"
+    ),
+    "r3-fixed-long-window": _P3_PREFIX + "F2 fixed after checking the patch? scripts/example.py:20 still open.\n",
+    "r3-later-negation": _P3_PREFIX + "F2 resolved after checking the patch, not actually fixed.\n",
+    "r3-padded-question": _P3_PREFIX + "F2 resolved after checking the patch ? scripts/example.py:20 still open.\n",
+    "r3-next-sentence": _P3_PREFIX + "F2 resolved. This is not a blocker.\n",
+    "r4-i.e.": _P3_PREFIX + "F2 resolved, i.e. not actually fixed.\n",
+    "r4-e.g.": _P3_PREFIX + "F2 fixed, e.g. not actually fixed.\n",
+    "r4-e.g.-mid-clause": _P3_PREFIX + "F2 resolved in e.g. scripts/example.py:20, but not actually fixed.\n",
+    "r4-emphasis": _P3_PREFIX + "F2 resolved **successfully.** This is not a blocker.\n",
+    "r5-colon-i.e.": _P3_PREFIX + "```\nF2: resolved, i.e. not actually fixed.\n```\n",
+    "r5-colon-e.g.": _P3_PREFIX + "F2: fixed, e.g. not actually fixed.\n",
+    "r5-colon-unprioritized": _P3_PREFIX + "    F2: scripts/example.py:20 missing priority.\n",
+    "r6-verdict-line-p1-prose-fenced-object": (
+        "VERDICT: REQUEST_CHANGES\nF2 [P1] scripts/a.py:3 auth bypass, blocker.\n\n" + _P3_FENCED
+    ),
+    "r6-unprioritized-prose-fenced-object": "VERDICT: REQUEST_CHANGES\nF2 scripts/a.py:3 auth bypass.\n\n" + _P3_FENCED,
+    "r6-p0-prose-bare-object": "VERDICT: REQUEST_CHANGES\nF2 [P0] scripts/a.py:3 data loss.\n\n" + _P3_OBJECT,
+    "r6-verdict-line-only-object": "VERDICT: REQUEST_CHANGES\n\n" + _P3_OBJECT,
+    "fenced-object-alone": _P3_FENCED,
+    "object-then-prose": _P3_OBJECT + "\n\nF2 [P2] scripts/a.py:3 still open.\n",
+    "two-objects": _P3_OBJECT + "\n" + _P3_OBJECT,
+    "duplicate-findings-key": _P3_DUPLICATE,
+    "nan-confidence": _P3_OBJECT.replace('"confidence": 0.9', '"confidence": NaN', 1),
+    "infinity-confidence": _P3_OBJECT.replace('"confidence": 0.9', '"confidence": Infinity', 1),
+    "escaped-security-fail": _P3_OBJECT.replace("One P3 residual.", "\\u0053ECURITY_VERDICT: FAIL"),
+    "escaped-security-underscore": _P3_OBJECT.replace("One P3 residual.", "SECURITY\\u005fVERDICT: FAIL"),
+}
+_P3_REASONS = {
+    "duplicate-findings-key": recorder.P3_DUPLICATE_KEY,
+    "escaped-security-fail": recorder.P3_SECURITY_NOT_PASS,
+    "escaped-security-underscore": recorder.P3_SECURITY_NOT_PASS,
+}
+
+
+@pytest.mark.parametrize("name", list(_P3_REFUSED))
+def test_p3_downgrade_refuses_every_reply_but_one_findings_object(name):
+    """Only a whole-reply findings object is read for P3 residuals; prose keeps the rejection (#12409)."""
+    reply = _P3_REFUSED[name]
+    reading = recorder.p3_reading(reply)
+    assert reading == recorder.P3Reading(reason=_P3_REASONS.get(name, recorder.P3_NOT_ONE_OBJECT))
+    body = recorder.build_comment(
+        sha=SHA, task_id="review-one", started="2026-09-23T12:00:00+00:00", verdict="CHANGES_REQUESTED",
+        model="gpt-6.1-sol", family="openai", reply=reply,
+    )
+    assert sweep.recorded_p3_residuals(body) is None
+    assert sweep.recorded_p3_residuals(body.replace(reply, _P3_OBJECT)) == ("F1",)
 
 
 @pytest.mark.parametrize(("deep", "reason"), [
