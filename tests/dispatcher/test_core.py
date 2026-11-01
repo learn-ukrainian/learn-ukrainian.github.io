@@ -87,6 +87,9 @@ def sandbox(tmp_path, hermetic_monitor):
     )
     shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
     shutil.copy(SOURCE / "scripts/config/credit_lanes.yaml", config / "credit_lanes.yaml")
+    schema_dir = repo / "schemas"
+    schema_dir.mkdir()
+    shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
@@ -1336,9 +1339,12 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
                    f"authored change\n\nX-Agent: cursor/{author[0]}")
     run_git(sandbox.repo, "branch", "review-source", head)
     run_git(sandbox.repo, "push", "origin", "review-source")
-    review = sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "VERDICT: APPROVE",
-                         "--require-review-verdict", "--mode", "read-only", "--branch", "review-source",
-                         expected=0 if attested else 2)
+    review = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt",
+        '{"schema_version":"code-review-findings.v1","overall":{"correctness":"correct","explanation":"No defects.","confidence":0.9},"findings":[]}',
+        "--require-review-verdict", "--mode", "read-only", "--branch", "review-source",
+        expected=0 if attested else 2,
+    )
     if attested:
         assert sandbox.settle(review.stdout.splitlines())["status"] == "done"
     else:
@@ -1471,14 +1477,14 @@ def test_prompt_over_pipe_buffer_reaches_late_reading_child_complete(sandbox):
     assert record["result_sha256"] == hashlib.sha256(prompt).hexdigest()
 
 
+_SCHEMA_REJECTED = "structured_output_invalid: structured output is not valid JSON"
 @pytest.mark.parametrize("text,model,required,error", [
-    ("\nReview details\nVERDICT: APPROVE\n  \t", "file", True, None),
-    ("VERDICT: REQUEST_CHANGES", "echo", True, None),
-    ("VERDICT: APPROVE\nVERDICT: APPROVE", "echo", True, None),
-    ("Review has no decision", "echo", True, "review_missing_verdict_line"),
-    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "echo", True, "review_ambiguous_verdict"),
-    ("> VERDICT: APPROVE\nI might report VERDICT: APPROVE later", "echo", True,
-     "review_missing_verdict_line"),
+    ("\nReview details\nVERDICT: APPROVE\n  \t", "file", True, _SCHEMA_REJECTED),
+    ("VERDICT: REQUEST_CHANGES", "echo", True, _SCHEMA_REJECTED),
+    ("VERDICT: APPROVE\nVERDICT: APPROVE", "echo", True, _SCHEMA_REJECTED),
+    ("Review has no decision", "echo", True, _SCHEMA_REJECTED),
+    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "echo", True, _SCHEMA_REJECTED),
+    ("> VERDICT: APPROVE\nI might report VERDICT: APPROVE later", "echo", True, _SCHEMA_REJECTED),
     ("VERDICT: APPROVE", "fail", True, "provider exited unsuccessfully"),
     ("Review has no decision", "fail", True, "provider exited unsuccessfully"),
     ("Review has no decision", "echo", False, None),
@@ -1503,6 +1509,83 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
     assert json.loads(sandbox.cli("list", "--status", record["status"]).stdout)[0]["task_id"] == task[0]
 
 
+@pytest.mark.parametrize("second", ["kept", "changed", "invalid"])
+def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
+    """Case 3: a Cursor reply with no recognised VERDICT line gets one format correction.
+
+    The second reply is accepted only when it is valid findings JSON and keeps the
+    first reply's decision. A changed or still-invalid second reply fails closed,
+    and there is no third launch.
+    """
+    findings = (
+        '{"schema_version":"code-review-findings.v1",'
+        '"overall":{"correctness":"correct","explanation":"No defects.","confidence":0.9},'
+        '"findings":[]}'
+    )
+    first = "The change is sound.\n" + findings
+    if second == "kept":
+        reply = findings
+    elif second == "changed":
+        reply = findings.replace('"correctness":"correct"', '"correctness":"incorrect"', 1)
+    else:
+        reply = "Still commentary without a verdict."
+    binary_dir = sandbox.repo.parent / "bin"
+    binary_dir.mkdir()
+    count = binary_dir / "launches"
+    count.write_text("0")
+    prompts = binary_dir / "prompts"
+    executable = binary_dir / "cursor-agent"
+    executable.write_text(
+        f"#!{sys.executable}\n"
+        "import json, pathlib, sys\n"
+        f"count = pathlib.Path({str(count)!r})\n"
+        f"prompts = pathlib.Path({str(prompts)!r})\n"
+        "n = int(count.read_text()) + 1\n"
+        "count.write_text(str(n))\n"
+        "prompt = sys.stdin.read()\n"
+        "prompts.write_text(prompts.read_text() + '\\n---\\n' + prompt if prompts.exists() else prompt)\n"
+        f"reply = {first!r} if n == 1 else {reply!r}\n"
+        "events = [\n"
+        '    {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"},\n'
+        '    {"type": "assistant", "message": {"content": [{"type": "text", "text": reply}]}},\n'
+        '    {"type": "result", "subtype": "success", "result": reply},\n'
+        "]\n"
+        "print('\\n'.join(json.dumps(event) for event in events))\n"
+    )
+    executable.chmod(0o755)
+    schema_dir = sandbox.repo / "schemas"
+    schema_dir.mkdir(exist_ok=True)
+    shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)
+    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+    sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
+    head = run_git(
+        sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
+        "authored change\n\nX-Agent: claude/claude-opus-5-5",
+    )
+    run_git(sandbox.repo, "branch", "review-source", head)
+    run_git(sandbox.repo, "push", "origin", "review-source")
+    dispatched = sandbox.cli(
+        "dispatch", "--agent", "cursor", "--model", "grok-4.7-high",
+        "--prompt", "Review the change", "--mode", "read-only",
+        "--branch", "review-source", "--require-review-verdict", "--review-profile", "code",
+        "--review-author-model", "claude-opus-5-5",
+    )
+    record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if second == "kept" else 1)
+    assert int(count.read_text()) == 2
+    correction = prompts.read_text().split("\n---\n", 1)[1]
+    assert "Keep the same verdict" in correction
+    assert findings in correction
+    if second == "kept":
+        assert record["status"] == "done"
+        assert json.loads(record["result_file"] and Path(record["result_file"]).read_text())["overall"]["correctness"] == "correct"
+    elif second == "changed":
+        assert record["status"] == "failed"
+        assert record["error"] == "review_ambiguous_verdict"
+    else:
+        assert record["status"] == "failed"
+        assert record["error"] == "review_missing_verdict_line"
+
+
 def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     """Defect class: scanner exceptions lose terminal failure or expose exception contents."""
     review = sandbox.repo / "scripts/review"
@@ -1513,14 +1596,22 @@ def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     parser.write_text(
         parser.read_text() + "\n\ndef recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
     )
+    receipt = (
+        '{"schema_version":"code-review-findings.v1","overall":{"correctness":"correct",'
+        '"explanation":"No defects.","confidence":0.9},"findings":[]}'
+    )
     record = sandbox.settle(
-        sandbox.dispatch("echo", "--require-review-verdict", *sandbox.review_target("echo")), expected=1
+        sandbox.cli(
+            "dispatch", "--agent", "sol", "--model", "echo", "--prompt", receipt,
+            "--require-review-verdict", *sandbox.review_target("echo"),
+        ).stdout.splitlines(),
+        expected=1,
     )
     assert record["status"] == "failed"
     assert record["error"] == "review_gate_error"
     assert record["returncode"] == 0
     assert record["finished_at"] is not None
-    assert Path(record["result_file"]).read_text() == "literal final response"
+    assert json.loads(Path(record["result_file"]).read_text()) == json.loads(receipt)
     assert "sensitive scanner diagnostic" not in json.dumps(record)
 
 

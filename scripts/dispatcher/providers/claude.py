@@ -181,6 +181,23 @@ def executor_failure(spec: TaskSpec, stdout: str) -> tuple[str | None, str | Non
             f"claude_advisor_executor_unverified: approved {approved}, reported {', '.join(reported) or 'none'}")
 
 
+def schema_argument(options: dict) -> str | None:
+    """Check the digest-bound schema before putting its JSON in one argv entry."""
+    from scripts.dispatcher.output_schema import load
+
+    schema = load(options)
+    if schema is None:
+        return None
+    try:
+        argument = json.dumps(schema, separators=(",", ":"), allow_nan=False)
+    except ValueError as exc:
+        raise ValueError("claude_output_schema_unsupported: schema must contain finite JSON values") from exc
+    # Linux permits at most 128 KiB including the NUL in one argument. Refuse before spawn.
+    if len(argument.encode("utf-8")) >= 128 * 1024:
+        raise ValueError("claude_output_schema_unsupported: schema exceeds the inline argument limit")
+    return argument
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     from scripts.agent_runtime.attempt_boundary import resolve_claude_budget_usd
 
@@ -219,6 +236,8 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         argv += ["--max-budget-usd", f"{budget:.2f}"]
         if spec.mode == "workspace-write":
             env["CLAUDE_CODE_PROMPT_CACHE_TTL"] = "1h"
+    if (argument := schema_argument(spec.options)) is not None:
+        argv += ["--json-schema", argument]
     return Invocation(argv, spec.prompt_file.read_bytes(), env, None)
 
 

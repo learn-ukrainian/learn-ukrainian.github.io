@@ -86,7 +86,12 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
 
    The dispatcher refuses a review past the PR's round budget, counting every review dispatched
    for the PR whether or not its verdict was recorded ([policy](references/policy.md#budget)).
-   Stdout is two lines: the task id, then the run nonce. Record both.
+   For a code or infra review, `--require-review-verdict` binds
+   `schemas/code-review-findings.v1.schema.json` on a provider that accepts a schema. The
+   brief asks for that object ([brief](references/brief.md#reply-format)). A provider that
+   cannot take a schema gets one format correction in the same task before it settles; the
+   correction cannot change the verdict, the findings, or their meaning. A Ukrainian review
+   does not bind that schema. Stdout is two lines: the task id, then the run nonce. Record both.
 4. **Wait on that task and nonce.** Never re-dispatch.
 
    ```bash

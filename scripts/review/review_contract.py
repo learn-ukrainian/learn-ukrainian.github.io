@@ -234,6 +234,108 @@ def _parse_review_loop_envelope(text: str) -> dict[str, Any]:
     return payload
 
 
+_CORRECTNESS_FOR_VERDICT = {
+    "APPROVE": "correct",
+    "APPROVED": "correct",
+    "REQUEST_CHANGES": "incorrect",
+    "CHANGES_REQUESTED": "incorrect",
+    "BLOCKED": "uncertain",
+}
+
+
+def canonical_receipt_payload(raw: str) -> dict[str, Any]:
+    """Return the findings object when the reply can build a canonical receipt.
+
+    A verdict line without the one JSON block, and a JSON object that misses
+    ``confidence`` or ``verbatim``, still fail here. This does not accept a
+    reply the recorder or ``verify_review`` would refuse.
+    """
+    text = raw.strip()
+    payload = parse_reviewer_json(text)
+    if not text.startswith("VERDICT:"):
+        validate_reviewer_payload(payload)
+    return payload
+
+
+def _json_objects(text: str) -> list[dict[str, Any]]:
+    """JSON objects in ``text``, including one that follows commentary."""
+    found: list[dict[str, Any]] = []
+    decoder = json.JSONDecoder()
+    index = 0
+    while True:
+        start = text.find("{", index)
+        if start < 0:
+            return found
+        try:
+            payload, end = decoder.raw_decode(text, start)
+        except (json.JSONDecodeError, RecursionError):
+            index = start + 1
+            continue
+        if isinstance(payload, dict):
+            found.append(payload)
+        index = max(end, start + 1)
+
+
+def _findings_candidate(payload: dict[str, Any]) -> bool:
+    if payload.get("schema_version") == SCHEMA_VERSION:
+        return True
+    return isinstance(payload.get("overall"), dict) or isinstance(payload.get("findings"), list)
+
+
+def decision_lock(raw: str) -> dict[str, Any]:
+    """Freeze a reply's verdict and findings before one format correction.
+
+    Not an approval path. ``ambiguous`` is true when the reply carries more
+    than one verdict or more than one findings object. ``payload`` is set
+    only when exactly one findings object is readable, even if it does not
+    yet validate.
+    """
+    from scripts.review.verdict_parser import recognized_verdicts
+
+    objects: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for payload in _json_objects(raw):
+        if not _findings_candidate(payload):
+            continue
+        key = json.dumps(payload, sort_keys=True, default=str)
+        if key not in seen:
+            seen.add(key)
+            objects.append(payload)
+    verdicts = list(dict.fromkeys(recognized_verdicts(raw)))
+    return {
+        "ambiguous": len(objects) > 1 or len(verdicts) > 1,
+        "verdicts": verdicts,
+        "payload": objects[0] if len(objects) == 1 else None,
+    }
+
+
+def same_decision(lock: Mapping[str, Any], payload: Mapping[str, Any]) -> bool:
+    """Whether a corrected reply kept the locked verdict and findings."""
+    if lock.get("ambiguous"):
+        return False
+    stated = False
+    prior = lock.get("payload")
+    if isinstance(prior, Mapping):
+        prior_overall = prior.get("overall")
+        later = payload.get("overall")
+        later_correctness = later.get("correctness") if isinstance(later, Mapping) else None
+        if isinstance(prior_overall, Mapping) and "correctness" in prior_overall:
+            stated = True
+            if prior_overall.get("correctness") != later_correctness:
+                return False
+        if "findings" in prior and prior.get("findings") != payload.get("findings"):
+            return False
+    verdicts = list(lock.get("verdicts") or [])
+    if len(verdicts) == 1:
+        stated = True
+        expected = _CORRECTNESS_FOR_VERDICT.get(str(verdicts[0]).upper())
+        overall = payload.get("overall")
+        got = overall.get("correctness") if isinstance(overall, Mapping) else None
+        if expected is None or got != expected:
+            return False
+    return stated
+
+
 def validate_reviewer_payload(
     payload: dict[str, Any],
     *,
