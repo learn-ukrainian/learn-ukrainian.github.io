@@ -1350,31 +1350,71 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
 
 def test_agy_stream_from_another_model_family_settles_as_a_failure(sandbox):
     """Defect: a silently substituted model was credited as the requested one."""
-    binary_dir = sandbox.repo.parent / "bin"
-    binary_dir.mkdir()
-    events = [
-        {"event": "init", "init": {"model": "gemini-3.8-flash-high"}},
-        {"event": "result", "result": {"status": "SUCCESS", "response": "done"}},
-    ]
-    stdout = "\n".join(json.dumps(event) for event in events) + "\n"
-    executable = binary_dir / "agy"
-    executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r}, end='')\n")
-    executable.chmod(0o755)
-    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
-    dispatched = sandbox.cli(
-        "dispatch", "--agent", "agy", "--model", "claude-sonnet-5-5", "--prompt", "Reply with one word.",
-        "--mode", "workspace-write",
-    )
-    record = sandbox.settle(dispatched.stdout.splitlines(), expected=1)
-    assert record["status"] == "failed"
-    assert record["model"] == "claude-sonnet-5-5-high"
-    assert record["resolved_model"] == "gemini-3.8-flash-high"
-    assert record["resolved_model_known"] is True
-    assert record["resolved_model_source"] == "agy-stream-json"
-    assert record["error"] == (
-        "agy_model_identity_unverified: "
-        "requested claude-sonnet-5-5-high (anthropic), attested gemini-3.8-flash-high (google)"
-    )
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    windows = {
+        "five_hour": {"used_pct": 1.0, "remaining_pct": 99.0},
+        "weekly": {"used_pct": 10.0, "remaining_pct": 90.0},
+    }
+    body = json.dumps({
+        "agents": {"gemini": {
+            "status": "hot",
+            "codexbar": {
+                "stale": False, "freshness": "fresh", "weekly_used_pct": 22.0,
+                "claude_gpt_windows": windows,
+            },
+            "claude_gpt_windows": windows,
+        }},
+    }).encode()
+
+    class _Budget(BaseHTTPRequestHandler):
+        def do_GET(self):
+            if self.path.split("?", 1)[0] != "/api/state/routing-budget":
+                self.send_response(404)
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *_args):
+            return
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), _Budget)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    sandbox.env["DELEGATE_MONITOR_API"] = f"http://127.0.0.1:{server.server_address[1]}"
+    try:
+        binary_dir = sandbox.repo.parent / "bin"
+        binary_dir.mkdir()
+        events = [
+            {"event": "init", "init": {"model": "gemini-3.8-flash-high"}},
+            {"event": "result", "result": {"status": "SUCCESS", "response": "done"}},
+        ]
+        stdout = "\n".join(json.dumps(event) for event in events) + "\n"
+        executable = binary_dir / "agy"
+        executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r}, end='')\n")
+        executable.chmod(0o755)
+        sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+        dispatched = sandbox.cli(
+            "dispatch", "--agent", "agy", "--model", "claude-sonnet-5-5", "--prompt", "Reply with one word.",
+            "--mode", "workspace-write",
+        )
+        record = sandbox.settle(dispatched.stdout.splitlines(), expected=1)
+        assert record["status"] == "failed"
+        assert record["model"] == "claude-sonnet-5-5-high"
+        assert record["resolved_model"] == "gemini-3.8-flash-high"
+        assert record["resolved_model_known"] is True
+        assert record["resolved_model_source"] == "agy-stream-json"
+        assert record["error"] == (
+            "agy_model_identity_unverified: "
+            "requested claude-sonnet-5-5-high (anthropic), attested gemini-3.8-flash-high (google)"
+        )
+    finally:
+        server.shutdown()
 
 
 @pytest.mark.parametrize(
