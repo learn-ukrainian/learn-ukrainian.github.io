@@ -536,7 +536,105 @@ def test_manifest_bound_ukrainian_review_unknown_item_leaves_denominator_incompl
     assert done["claims_unsupported"] == 0
 
     packet = build_item_packet([{"id": "card-1", "text": "тест"}, {"id": "card-2", "text": "приклад"}])
-    chunk = judge_item_reply(packet, final_text, stated="APPROVED")
+    chunk = judge_item_reply(packet, final_text, stated="APPROVED", ukrainian=True)
     assert chunk.denominator == ("card-1", "card-2")
     assert chunk.coverage == ("card-1",)
     assert "card-2" not in chunk.coverage
+
+
+def test_manifest_bound_ukrainian_review_yaml_fabricated_quote_dropped_and_counted(
+    attempt, tmp_path, monkeypatch
+):
+    """A YAML return with fabricated quote is validated, dropped, and counted in claims_unsupported."""
+    import yaml
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```yaml\n"
+        + yaml.safe_dump({
+            "review_schema": 1,
+            "kind": "settle",
+            "evidence": [
+                {
+                    "receipt": "rr-supported1111111111",
+                    "quote": "fabricated quote not in result",
+                }
+            ],
+        })
+        + "```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 1
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
+    assert "fabricated quote not in result" not in final_text
+
+
+def test_manifest_bound_ukrainian_review_two_items_one_void_preserves_valid_item(
+    attempt, tmp_path, monkeypatch
+):
+    """An unsupported claim on one item voids only that item, preserving unrelated valid items."""
+    from scripts.review.review_contract import build_item_packet, judge_item_reply
+
+    manifest_sha = store.digest(b"inputs: []\n")
+    rec = {
+        "receipt_id": "rr-supported1111111111",
+        "review_id": "review",
+        "attempt_id": "attempt",
+        "manifest_sha256": manifest_sha,
+        "tool": "verify_words",
+        "result": "паляниця: attested in VESUM as noun",
+    }
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "card-1",
+                    "verdict": "APPROVE",
+                    "finding": "Attested word",
+                    "sources": "VESUM",
+                    "quote": "паляниця",
+                    "evidence": [{"receipt": "rr-supported1111111111", "quote": "attested in VESUM"}],
+                },
+                {
+                    "id": "card-2",
+                    "verdict": "APPROVE",
+                    "finding": "Fabricated quote",
+                    "sources": "VESUM",
+                    "quote": "хліб",
+                    "evidence": [{"receipt": "rr-supported1111111111", "quote": "fake quote"}],
+                },
+            ],
+        })
+        + "\n```\n"
+    )
+    done, final_text, _ = _run_manifest_ukrainian_attempt(
+        attempt, tmp_path, monkeypatch, reply, ledger_records=[rec]
+    )
+    assert done["claims_total"] == 2
+    assert done["claims_unsupported"] == 1
+    assert len(done["dropped_claims"]) == 1
+    assert done["dropped_claims"][0]["item_id"] == "card-2"
+    assert done["dropped_claims"][0]["reason"] == "quote_not_in_result"
+
+    packet = build_item_packet([{"id": "card-1", "text": "паляниця"}, {"id": "card-2", "text": "хліб"}])
+    chunk = judge_item_reply(packet, final_text, stated="APPROVED", ukrainian=True)
+    assert chunk.denominator == ("card-1", "card-2")
+    assert chunk.coverage == ("card-1",)
+    assert "card-2" not in chunk.coverage
+    assert chunk.void is None

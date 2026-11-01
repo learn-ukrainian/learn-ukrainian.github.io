@@ -1006,3 +1006,31 @@ def test_item_judgments_unknown_verdict_leaves_coverage_incomplete(monkeypatch, 
     assert marker["coverage"] == ["card-a"]
     assert "card-b" not in marker["coverage"]
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_COVERAGE
+
+
+def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
+    """Code profile rejects evidence in item judgments as reviewer bookkeeping, returning empty coverage."""
+    from scripts.review.review_contract import VOID_REVIEWER_BOOKKEEPING, build_item_packet, judge_item_reply
+
+    packet = build_item_packet([{"id": "item-1", "text": "def test(): pass"}])
+    reply = (
+        "VERDICT: APPROVE\n"
+        "```ukrainian-item-judgments\n"
+        + json.dumps({
+            "schema": "ukrainian-item-judgments.v1",
+            "items": [
+                {
+                    "id": "item-1",
+                    "verdict": "APPROVE",
+                    "finding": "Looks good",
+                    "sources": "none",
+                    "quote": "def test(): pass",
+                    "evidence": [{"receipt": "rr-1", "quote": "pass"}],
+                }
+            ],
+        })
+        + "\n```\n"
+    )
+    chunk = judge_item_reply(packet, reply, stated="APPROVED", ukrainian=False)
+    assert chunk.void == VOID_REVIEWER_BOOKKEEPING
+    assert chunk.coverage == ()

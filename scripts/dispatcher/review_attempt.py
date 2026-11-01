@@ -172,6 +172,8 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     error = None if ok else (result.failure_code or result.stderr_excerpt or "provider returned no successful response")
     response_text = result.response if ok else None
     if ukrainian and ok and response_text:
+        import yaml
+
         from scripts.review.review_contract import (
             _fenced,
             reply_has_item_judgments,
@@ -182,7 +184,10 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
             bodies = _fenced(response_text, "ukrainian-item-judgments")
             if len(bodies) == 1:
                 try:
-                    payload = json.loads(bodies[0])
+                    try:
+                        payload = json.loads(bodies[0])
+                    except Exception:
+                        payload = yaml.safe_load(bodies[0])
                     if isinstance(payload, dict):
                         sanitized, val_res = validate_item_claims(
                             payload,
@@ -206,6 +211,53 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
                             count=1,
                             flags=re.M | re.S,
                         )
+                except Exception:
+                    pass
+        else:
+            yaml_bodies = _fenced(response_text, "yaml") or _fenced(response_text, "yml")
+            fence_tag = "yaml" if _fenced(response_text, "yaml") else "yml"
+            if len(yaml_bodies) == 1:
+                try:
+                    payload = yaml.safe_load(yaml_bodies[0])
+                    if isinstance(payload, dict):
+                        sanitized, val_res = validate_item_claims(
+                            payload,
+                            ledger_path=plan.ledger_path,
+                            binding=binding,
+                        )
+                        record["claims_total"] = val_res.claims_total
+                        record["claims_unsupported"] = val_res.claims_unsupported
+                        record["unknown_items"] = val_res.unknown_items
+                        record["dropped_claims"] = [dict(c) for c in val_res.dropped_claims]
+                        clean_block = (
+                            f"```{fence_tag}\n"
+                            + yaml.safe_dump(sanitized, allow_unicode=True, sort_keys=False)
+                            + "```"
+                        )
+                        pattern = rf"^```{fence_tag}[ \t]*\n.*?\n```(?:{fence_tag})?[ \t]*$"
+                        response_text = re.sub(
+                            pattern,
+                            lambda _: clean_block,
+                            response_text,
+                            count=1,
+                            flags=re.M | re.S,
+                        )
+                except Exception:
+                    pass
+            else:
+                try:
+                    payload = yaml.safe_load(response_text)
+                    if isinstance(payload, dict):
+                        sanitized, val_res = validate_item_claims(
+                            payload,
+                            ledger_path=plan.ledger_path,
+                            binding=binding,
+                        )
+                        record["claims_total"] = val_res.claims_total
+                        record["claims_unsupported"] = val_res.claims_unsupported
+                        record["unknown_items"] = val_res.unknown_items
+                        record["dropped_claims"] = [dict(c) for c in val_res.dropped_claims]
+                        response_text = yaml.safe_dump(sanitized, allow_unicode=True, sort_keys=False)
                 except Exception:
                     pass
     # Which tools the seat called with which arguments (no outputs): the evidence of its context reads.
