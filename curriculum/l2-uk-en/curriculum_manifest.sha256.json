@@ -1318,7 +1318,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-dates-numbers/module.md",
-      "sha256": "7fcb9d39ba67e3ceb9ad72abbd1e41ef21512b48595430b28c5408ef92b04913"
+      "sha256": "716fe7086b2bffc733650ce84b9469c512bbb2fd1598f5ca049c214a6b92da0e"
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-dates-numbers/resources.yaml",
@@ -6150,7 +6150,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/genitive-dates-numbers.yaml",
-      "sha256": "bd7e9d4f9362b99f7de600c2dd969156ebe2d7cbc3ab5bc02b5c37d946c01780"
+      "sha256": "f255ef50cbdab4cfa8789ee01fa130de546393834eebeb6f750d16cdb822ae3a"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/genitive-intro.yaml",
@@ -14298,7 +14298,7 @@
     },
     {
       "path": "site/src/content/docs/a2/genitive-dates-numbers.mdx",
-      "sha256": "40f20d393f8373ace851a7723f51d0bf8be5a4fc56472692f45a9b92990987d6"
+      "sha256": "9048840a4c4fb795a7c3a22a2738883eb6934237d04fcc25f08ef920bef9bdc3"
     },
     {
       "path": "site/src/content/docs/a2/genitive-intro.mdx",
