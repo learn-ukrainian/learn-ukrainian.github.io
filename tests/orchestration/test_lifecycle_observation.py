@@ -557,9 +557,12 @@ def test_observation_counts_only_task_history(observation_case, operation, histo
     else:
         git(repo, "worktree", "remove", str(worktree))
         lo.recover(repo, state_file=state_file, task_file=task_file, manifest_file=manifest, push_file=push_file, now=NOW)
-    local = tl._latest_premerge_local(tl.load_lifecycle(state_file))
+    ledger = tl.load_lifecycle(state_file)
+    local = tl._latest_premerge_local(ledger)
     assert [commit["sha"] for commit in local["commits"]] == [head, first]
     assert local["changed_paths"] == ["change", "second-change"]
+    recorded = ledger["observation_receipts"][-1]["observation"]["github"]["pr"]["files"]
+    assert recorded == ["change", "second-change"]
     assert tl._local_readiness(local) == []
 
 
