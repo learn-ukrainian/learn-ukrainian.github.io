@@ -436,15 +436,91 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
 SETTLE_PATIENCE = 10
 
 
+def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
+    """Whether another still-active task has its supervisor or provider in ``cgroup``.
+
+    A fallback child started from inside this scope stays in it. Stopping the
+    scope would cancel that task. Membership that cannot be read counts too,
+    and so does a task record or task directory that cannot be read, so the
+    stop is skipped and the liveness check keeps the tree. A child that has
+    its own scope is not a member here and does not block the stop.
+    """
+    from scripts.orchestration import worker_leftovers
+
+    try:
+        members = worker_leftovers.ProcFsReader().cgroup_procs(cgroup)
+    except worker_leftovers.ScanUnknown:
+        return True
+    if not members:
+        return False
+    task_id = record.get("task_id")
+    try:
+        root = store.tasks_dir()
+        if not root.is_dir():
+            return True
+        next(root.iterdir(), None)
+        others = store.list_tasks(strict=True)
+    except (OSError, ValueError):
+        return True
+    protected: set[int] = set()
+    for other in others:
+        if other.get("task_id") == task_id or other.get("status") not in store.ACTIVE:
+            continue
+        for key in ("pid", "provider_pgid"):
+            value = other.get(key)
+            if type(value) is int and value > 0:
+                protected.add(value)
+    return any(pid in protected for pid in members)
+
+
+def _end_own_scope(record: dict) -> None:
+    """End processes left in this finished task's own scope.
+
+    A scope stays alive while any member remains. Settlement used to read those
+    members as a live provider and keep the worktree. The stop reaches only the
+    unit ``dispatch_isolation`` derives for this task and nonce: a recorded
+    cgroup that is not that unit's scope is left alone, another active task's
+    supervisor or provider in this cgroup is left alone, the caller and its
+    ancestors are not signalled, and a fallback launch is not a scope. A stop
+    that cannot be proven leaves the processes for the liveness check, which
+    keeps the tree.
+    """
+    if record.get("launch_mode") != "scope":
+        return
+    task_id, unit, nonce = record.get("task_id"), record.get("launch_unit"), record.get("run_nonce")
+    if not all(isinstance(value, str) and value for value in (task_id, unit, nonce)):
+        return
+    from scripts.orchestration import dispatch_isolation, worker_leftovers
+
+    if not dispatch_isolation.scope_unit_matches(unit, task_id=task_id, run_nonce=nonce):
+        return
+    cgroup = dispatch_isolation.scope_cgroup(unit, uid=os.getuid())
+    recorded = record.get("launch_cgroup")
+    # A recorded boundary that is not this unit's scope is not ours to stop.
+    if isinstance(recorded, str) and recorded and recorded != cgroup:
+        return
+    if _cgroup_holds_other_active_task(record, cgroup):
+        return
+    scope = worker_leftovers.WorkerScope(
+        task_id=task_id, launch_mode=dispatch_isolation.LAUNCH_SCOPE, unit=unit, cgroup=cgroup, run_nonce=nonce)
+    try:
+        worker_leftovers.stop_leftovers(scope, reader=worker_leftovers.ProcFsReader())
+    except (OSError, ValueError, worker_leftovers.ScanUnknown):
+        return
+
+
 def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> None:
     """Record the task worktree's disposition; never changes the task's execution status.
 
     The worktree goes only once the provider's whole process tree is proven gone; liveness that
-    cannot be proven either way keeps it. With salvage (git.settle_worktree), that proof is taken
-    again with the borrower check, before the salvage push and under the removal lock.
+    cannot be proven either way keeps it. A finished scope launch first ends whatever that scope
+    still holds, so a stray descendant cannot keep a published tree. With salvage
+    (git.settle_worktree), that proof is taken again with the borrower check, before the salvage
+    push and under the removal lock.
     """
     deadline = time.monotonic() + patience
     record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
+    _end_own_scope(record)
     while (alive := _provider_alive(record)) and time.monotonic() < deadline:
         time.sleep(0.05)
     if alive is not False:
