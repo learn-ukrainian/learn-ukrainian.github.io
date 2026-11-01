@@ -878,10 +878,140 @@ class ClaimsValidationResult:
     dropped_claims: tuple[dict[str, Any], ...]
 
 
+_CITED_FACT = re.compile(
+    r"\b(?:VESUM|ULIF|PULS|SUM-20|Pravopys|Zabolotnyi|Bolshakova|Prystinska|"
+    r"Antonenko|slovnyk|check_\w+|rules?|tags?|paradigms?|according to|cites?|"
+    r"(?:sources?|citations?|references?)\s*[:=]\s*\S|mcp\w*sources\w*|pages?\s*\d|"
+    r"soft[ -]group|hard[ -]group|pp?\.?\s*\d)\b|§|"
+    r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|правил\w*|тег\w*)\b",
+    re.IGNORECASE,
+)
+
+
+def _cited_fact_clauses(text: str, *, sources: bool) -> list[str]:
+    """Uncited pedagogy is free prose; cited facts must be extractive, never inferred."""
+    return [
+        clause.strip() for clause in text.split(";")
+        if clause.strip().casefold() not in {"", "none", "n/a", "no sources"}
+        and (sources or _CITED_FACT.search(clause))
+    ]
+
+
+def _captured_output(value: Any) -> str | None:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, Mapping):
+        if value.get("isError"):
+            return None
+        if "content" in value:
+            return _captured_output(value["content"])
+        return json.dumps(value, ensure_ascii=False)
+    if isinstance(value, list):
+        return "\n".join(
+            part["text"] for part in value
+            if isinstance(part, Mapping) and isinstance(part.get("text"), str)
+        ) or None
+    return None
+
+
+def captured_sources_events(trace: str) -> tuple[dict[str, Any], ...]:
+    """Sources results in this dispatch's trace, without summary or call-count fallbacks."""
+    from scripts.agent_runtime.tool_calls import normalize_tool_calls
+
+    events = []
+    captured = []
+    for line in trace.splitlines():
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, dict):
+            continue
+        events.append(event)
+        step = event.get("step_update", {})
+        if not isinstance(step, dict) or step.get("state") != "DONE":
+            continue
+        info = step.get("tool_info", {})
+        if not isinstance(info, dict) or info.get("name") != "call_mcp_tool":
+            continue
+        params = info.get("parameters", {})
+        if not isinstance(params, dict) or params.get("ServerName") != "sources":
+            continue
+        captured.append({
+            "receipt_id": f"step-{step.get('step_index')}",
+            "tool": params.get("ToolName"),
+            "arguments": params.get("Arguments"),
+            "result": _captured_output(info.get("output")),
+        })
+    for index, call in enumerate(normalize_tool_calls(events)):
+        name = call.get("name", "")
+        if name.startswith(("mcp__sources__", "mcp_sources_")):
+            captured.append({
+                "receipt_id": f"runtime-{index}",
+                "tool": re.sub(r"^mcp(?:__sources__|_sources_)", "", name),
+                "arguments": call.get("arguments"),
+                "result": _captured_output(call.get("result")),
+            })
+    return tuple(captured)
+
+
+def validate_ukrainian_reply_claims(
+    reply: str, *, ledger_path: Path | None = None,
+    binding: Mapping[str, Any] | None = None,
+    tool_events: Sequence[Mapping[str, Any]] = (),
+) -> tuple[str, ClaimsValidationResult]:
+    """The same claim check at execution and publication, including prose outside the payload."""
+    import yaml
+
+    tag = next((name for name in ("ukrainian-item-judgments", "yaml", "yml") if _fenced(reply, name)), None)
+    outside = reply
+    if tag:
+        bodies = _fenced(reply, tag)
+        if len(bodies) != 1:
+            raise ContractError("CLAIM_PAYLOAD_COUNT: expected one review payload")
+        body = bodies[0]
+        pattern = rf"^```{tag}[ \t]*\n.*?\n```[ \t]*$"
+        outside = re.sub(pattern, "", reply, count=1, flags=re.M | re.S)
+    else:
+        body = reply
+    try:
+        payload = yaml.safe_load(body)
+    except yaml.YAMLError as exc:
+        if tag:
+            raise ContractError("CLAIM_PAYLOAD_MALFORMED: review payload is not readable") from exc
+        payload = None
+    structured = isinstance(payload, dict) and any(key in payload for key in ("items", "findings", "evidence"))
+    if not structured:
+        payload = {}
+    elif not tag:
+        outside = ""
+    rows = payload.get("items", [])
+    if not isinstance(rows, list):
+        raise ContractError("CLAIM_PAYLOAD_MALFORMED: items must be a list")
+    working = {**payload, "items": [*rows, {
+        "id": "review-prose", "verdict": "APPROVE", "finding": outside, "sources": "none",
+    }]}
+    sanitized, result = validate_item_claims(
+        working, ledger_path=ledger_path, binding=binding, tool_events=tool_events,
+    )
+    sanitized["items"] = sanitized["items"][:-1]
+    if "items" not in payload:
+        sanitized.pop("items")
+    if not structured:
+        return reply, result
+    rendered = (json.dumps(sanitized, ensure_ascii=False, indent=2) if tag == "ukrainian-item-judgments"
+                else yaml.safe_dump(sanitized, allow_unicode=True, sort_keys=False).rstrip())
+    if not tag:
+        return rendered + "\n", result
+    return re.sub(pattern, lambda _: f"```{tag}\n{rendered}\n```", reply, count=1, flags=re.M | re.S), result
+
+
 def validate_item_claims(
     payload: Mapping[str, Any],
     ledger_path: Path | None = None,
     binding: Mapping[str, Any] | None = None,
+    *,
+    tool_events: Sequence[Mapping[str, Any]] = (),
 ) -> tuple[dict[str, Any], ClaimsValidationResult]:
     """Validate item claims against the attempt receipt ledger, dropping unsupported references.
 
@@ -921,6 +1051,12 @@ def validate_item_claims(
             else:
                 indexed[rid] = record
 
+    if binding is None:
+        for event in tool_events:
+            rid = event.get("receipt_id")
+            if isinstance(rid, str):
+                indexed[rid] = dict(event)
+
     if binding is not None:
         try:
             from scripts.dispatcher import store
@@ -947,6 +1083,40 @@ def validate_item_claims(
     unknown_items = 0
     dropped: list[dict[str, Any]] = []
 
+    def text_claims(row: Mapping[str, Any]) -> bool:
+        nonlocal claims_total, claims_unsupported
+        unsupported = False
+        for claim_field in ("sources", "finding", "claim", "summary"):
+            text = row.get(claim_field)
+            if not isinstance(text, str):
+                continue
+            for claim in _cited_fact_clauses(text, sources=claim_field == "sources"):
+                claims_total += 1
+                matches = [
+                    event for event in indexed.values()
+                    if isinstance(event.get("result"), str)
+                    and event["result"].strip()
+                    and isinstance(event.get("tool"), str)
+                    and isinstance(event.get("arguments"), Mapping)
+                    and event.get("status", "ok") == "ok"
+                    and claim in event["result"]
+                ]
+                if matches:
+                    continue
+                unsupported = True
+                claims_unsupported += 1
+                dropped.append({
+                    "item_id": row.get("id"),
+                    "claim": {claim_field: claim},
+                    "reason": "claim_not_in_captured_output",
+                    "captured_event_ids": [event.get("receipt_id") for event in indexed.values()],
+                    "uncaptured_event_ids": [
+                        event.get("receipt_id") for event in indexed.values()
+                        if not isinstance(event.get("result"), str) or not event["result"].strip()
+                    ],
+                })
+        return unsupported
+
     def _validate_claim(
         claim: Any,
         item_id: str | None = None,
@@ -959,47 +1129,28 @@ def validate_item_claims(
         quote = claim.get("quote")
         claim_keys = set(claim) - {"category", "outcome"}
 
-        if require_quote:
-            if claim_keys != {"receipt", "quote"} and claim_keys != {"receipt_id", "quote"}:
-                return False, "malformed_claim"
-            if not isinstance(receipt, str) or not receipt.strip():
-                return False, "malformed_receipt"
-            if not isinstance(quote, str) or not quote.strip():
-                return False, "empty_quote"
-            if receipt in foreign:
-                return False, "foreign_attempt_receipt"
-            if receipt not in indexed:
-                return False, "receipt_not_found"
-            rec = indexed[receipt]
-            stored_result = rec.get("result")
-            if not isinstance(stored_result, str) or quote not in stored_result:
-                return False, "quote_not_in_result"
-            return True, None
-
-        # require_quote is False (for YAML findings, etc.)
         has_quote = "quote" in claim
-        if has_quote:
-            if claim_keys != {"receipt", "quote"} and claim_keys != {"receipt_id", "quote"}:
-                return False, "malformed_claim"
-            if not isinstance(quote, str) or not quote.strip():
-                return False, "empty_quote"
-        else:
-            if claim_keys != {"receipt"} and claim_keys != {"receipt_id"}:
-                return False, "malformed_claim"
-
+        allowed = ({"receipt", "quote"}, {"receipt_id", "quote"})
+        if not require_quote and not has_quote:
+            allowed = ({"receipt"}, {"receipt_id"})
+        if claim_keys not in allowed:
+            return False, "malformed_claim"
         if not isinstance(receipt, str) or not receipt.strip():
             return False, "malformed_receipt"
+        if has_quote and (not isinstance(quote, str) or not quote.strip()):
+            return False, "empty_quote"
         if receipt in foreign:
             return False, "foreign_attempt_receipt"
         if receipt not in indexed:
             return False, "receipt_not_found"
-
-        if has_quote:
-            rec = indexed[receipt]
-            stored_result = rec.get("result")
-            if not isinstance(stored_result, str) or quote not in stored_result:
-                return False, "quote_not_in_result"
-
+        rec = indexed[receipt]
+        if rec.get("status", "ok") != "ok":
+            return False, "event_not_successful"
+        stored_result = rec.get("result")
+        if not isinstance(stored_result, str) or not stored_result.strip():
+            return False, "uncaptured_output"
+        if has_quote and quote not in stored_result:
+            return False, "quote_not_in_result"
         return True, None
 
     updated_items = []
@@ -1043,6 +1194,8 @@ def validate_item_claims(
             if has_dropped and verdict == "APPROVED":
                 item_copy["_approval_void"] = True
 
+        if text_claims(item_copy) and verdict == "APPROVED":
+            item_copy["_approval_void"] = True
         updated_items.append(item_copy)
 
     updated_evidence = None
@@ -1097,6 +1250,7 @@ def validate_item_claims(
                     continue
                 f_copy = dict(finding)
                 f_id = f_copy.get("id")
+                text_claims(f_copy)
                 valid_receipt_ids: list[str] = []
 
                 if "evidence" in f_copy:
@@ -1198,6 +1352,7 @@ def validate_item_claims(
 
                 updated_findings.append(f_copy)
 
+    text_claims(payload)
     updated_payload = dict(payload)
     if "items" in payload:
         updated_payload["items"] = updated_items
@@ -1467,7 +1622,8 @@ def _rollup(verdicts: Sequence[str]) -> str:
 
 
 def judge_item_reply(
-    packet: Mapping[str, Any], reply: str, *, stated: str, ukrainian: bool = False
+    packet: Mapping[str, Any], reply: str, *, stated: str, ukrainian: bool = False,
+    source_claims_validated: bool = False,
 ) -> ItemChunk:
     """Coverage of one chunk. A quote that is not a literal substring of its item voids the chunk.
 
@@ -1516,7 +1672,11 @@ def judge_item_reply(
             bookkeeping = True
         spans = _quote_spans(row)
         item_text = frozen[item_id]
-        presented = _presented_quotes(finding) + _presented_quotes(sources)
+        # Ukrainian Sources excerpts quote tool output, not the frozen learner item.
+        # Publication checks those excerpts against the captured event separately.
+        presented = _presented_quotes(finding)
+        if not (ukrainian and source_claims_validated):
+            presented += _presented_quotes(sources)
         if spans is None or any(not span or span not in item_text for span in spans):
             quote_bad = True
         if any(span not in item_text for span in presented):

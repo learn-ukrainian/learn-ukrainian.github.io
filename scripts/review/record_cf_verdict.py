@@ -73,9 +73,11 @@ from scripts.review.model_catalog import (
 from scripts.review.review_contract import (
     ContractError,
     ItemChunk,
+    captured_sources_events,
     judge_item_reply,
     load_frozen_item_packet,
     reply_has_item_judgments,
+    validate_ukrainian_reply_claims,
 )
 from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_MODELS,
@@ -2458,7 +2460,9 @@ def _post_verdict(repository: str, number: int, comment: str, login: str) -> dic
     return readback
 
 
-def _item_chunk(task: Mapping[str, Any], reply: str, verdict: str) -> ItemChunk | None:
+def _item_chunk(
+    task: Mapping[str, Any], reply: str, verdict: str, *, source_claims_validated: bool = False,
+) -> ItemChunk | None:
     """Coverage declared by the frozen brief, or None when the brief has no item denominator."""
     try:
         packet = load_frozen_item_packet(task)
@@ -2468,9 +2472,46 @@ def _item_chunk(task: Mapping[str, Any], reply: str, verdict: str) -> ItemChunk 
             raise ContractError(
                 "ITEM_JUDGMENTS_WITHOUT_DENOMINATOR: item judgments need the brief's frozen item packet"
             )
-        return judge_item_reply(packet, reply, stated=verdict, ukrainian=is_ukrainian_review(task))
+        return judge_item_reply(
+            packet, reply, stated=verdict, ukrainian=is_ukrainian_review(task),
+            source_claims_validated=source_claims_validated,
+        )
     except ContractError as exc:
         raise RecordError(str(exc)) from None
+
+
+def _require_ukrainian_claim_support(
+    task: Mapping[str, Any], reply: str, task_id: str, task_root: Path,
+) -> None:
+    """Recheck the sealed reply against its own captured outputs before any publication."""
+    from scripts.dispatcher import store
+
+    binding = task.get("review_attempt")
+    ledger_path = None
+    events = ()
+    if binding is not None:
+        if not isinstance(binding, dict) or any(
+            not isinstance(binding.get(key), str) or not TASK_ID.fullmatch(binding[key])
+            for key in ("review_id", "attempt_id")
+        ):
+            raise RecordError("UKRAINIAN_CLAIMS_UNSUPPORTED: invalid review-attempt binding")
+        ledger_path = store.receipts_root() / binding["review_id"] / f"{binding['attempt_id']}.jsonl"
+    else:
+        path = _hot_or_archived(task_root, f"logs/{task_id}.stdout.log")
+        try:
+            events = captured_sources_events(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError):
+            events = ()
+    try:
+        _, checked = validate_ukrainian_reply_claims(
+            reply, ledger_path=ledger_path, binding=binding, tool_events=events,
+        )
+    except ContractError as exc:
+        raise RecordError(str(exc)) from None
+    if checked.claims_unsupported:
+        raise RecordError("UKRAINIAN_CLAIMS_UNSUPPORTED: " + json.dumps(
+            list(checked.dropped_claims), ensure_ascii=False,
+        ))
 
 
 @publication_boundary(RecordError)
@@ -2514,6 +2555,8 @@ def record(
     repository, branch, sha = review.repository, review.branch, review.sha
     model, family, verdict, finding_count = review.model, review.family, review.verdict, review.finding_count
     ukrainian, sources_count, started = review.ukrainian, review.sources_count, review.started
+    if ukrainian and verdict == "APPROVED":
+        _require_ukrainian_claim_support(task, reply, task_id, task_root)
     pr = _pr(repository, branch, pr_number)
     if pr.get("headRefName") != branch:
         raise RecordError("review branch does not match PR head ref")
@@ -2579,7 +2622,7 @@ def record(
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
-    chunk = _item_chunk(task, reply, verdict)
+    chunk = _item_chunk(task, reply, verdict, source_claims_validated=ukrainian and verdict == "APPROVED")
     comment_fields = dict(
         sha=sha,
         task_id=task_id,
