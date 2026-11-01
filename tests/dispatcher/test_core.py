@@ -1764,9 +1764,25 @@ def test_scope_verification_failure_only_rejects_success(delivery_settle, monkey
             raise subprocess.CalledProcessError(1, ["git", command])
         return original(path, *args, **kwargs)
     monkeypatch.setattr(git, "_verification_git", broken)
+    failures = []
+    original_cause = worker._verification_cause
+
+    def diagnostic_cause(exc):
+        origins = []
+        frame = exc.__traceback__
+        while frame is not None:
+            origins.append((Path(frame.tb_frame.f_code.co_filename).name,
+                            frame.tb_frame.f_code.co_name, frame.tb_lineno))
+            frame = frame.tb_next
+        failures.append({"type": type(exc).__name__, "origins": origins,
+                         "filename": getattr(exc, "filename", None),
+                         "filename2": getattr(exc, "filename2", None)})
+        return original_cause(exc)
+
+    monkeypatch.setattr(worker, "_verification_cause", diagnostic_cause)
     worker._enforce_delivery(record)
-    assert record["status"] == ("no_deliverable" if status == "done" else status)
-    assert record["error"] == (f"owned_paths_verification_failed: git {command} failed" if status == "done" else "original cause")
+    assert record["status"] == ("no_deliverable" if status == "done" else status), failures
+    assert record["error"] == (f"owned_paths_verification_failed: git {command} failed" if status == "done" else "original cause"), failures
 
 
 @pytest.mark.parametrize("history", ["conflict", "no-commit", "unrelated", "parentless", "clean"])
