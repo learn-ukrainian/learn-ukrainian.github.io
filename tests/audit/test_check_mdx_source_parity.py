@@ -429,3 +429,76 @@ def test_main_single_file_regen_env_var(mock_env, mock_subprocess, mock_legacy_l
 
     exit_code = main(["--changed-vs-base", "origin/main"])
     assert exit_code == 1
+
+
+def test_files_mode_accepts_staged_mdx_when_source_changed_earlier_on_branch(tmp_path, monkeypatch):
+    """Pre-commit parity check accepts staged MDX when module source changed in an earlier commit on branch."""
+    from scripts.audit import check_mdx_source_parity as parity
+
+    repo_dir = tmp_path / "repo"
+    repo_dir.mkdir()
+    subprocess.run(["git", "init", "-b", "main"], cwd=repo_dir, check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "config", "user.email", "test@test.com"], cwd=repo_dir, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo_dir, check=True, timeout=30)
+    (repo_dir / "init.txt").write_text("init\n")
+    subprocess.run(["git", "add", "."], cwd=repo_dir, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "update-ref", "refs/remotes/origin/main", "HEAD"], cwd=repo_dir, check=True, timeout=30)
+
+    subprocess.run(["git", "checkout", "-b", "feature"], cwd=repo_dir, check=True, capture_output=True, timeout=30)
+
+    # Commit 1: module source file changes
+    source_file = repo_dir / "curriculum/l2-uk-en/a2/01-test/source.yaml"
+    source_file.parent.mkdir(parents=True)
+    source_file.write_text("title: Test\n")
+    subprocess.run(["git", "add", "."], cwd=repo_dir, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "update source"], cwd=repo_dir, check=True, capture_output=True, timeout=30)
+
+    # Commit 2: MDX is staged
+    mdx_file = repo_dir / "site/src/content/docs/a2/01-test.mdx"
+    mdx_file.parent.mkdir(parents=True)
+    mdx_file.write_text("---\ntitle: Test\n---\nHello world\n")
+    subprocess.run(["git", "add", "site/src/content/docs/a2/01-test.mdx"], cwd=repo_dir, check=True, timeout=30)
+
+    monkeypatch.chdir(repo_dir)
+    monkeypatch.setattr(parity, "PROJECT_ROOT", repo_dir)
+    monkeypatch.setattr(parity, "MDX_DIR", repo_dir / "site/src/content/docs")
+    monkeypatch.setattr(parity, "SOURCE_DIR", repo_dir / "curriculum/l2-uk-en")
+
+    exit_code = parity.main(["--files", str(mdx_file)])
+    assert exit_code == 0
+
+
+def test_files_mode_refuses_staged_mdx_when_no_source_change_on_branch(tmp_path, monkeypatch, capsys):
+    """Pre-commit parity check refuses staged MDX when neither staged files nor branch commits touched module source."""
+    from scripts.audit import check_mdx_source_parity as parity
+
+    repo_dir = tmp_path / "repo"
+    repo_dir.mkdir()
+    subprocess.run(["git", "init", "-b", "main"], cwd=repo_dir, check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "config", "user.email", "test@test.com"], cwd=repo_dir, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo_dir, check=True, timeout=30)
+    (repo_dir / "init.txt").write_text("init\n")
+    subprocess.run(["git", "add", "."], cwd=repo_dir, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "update-ref", "refs/remotes/origin/main", "HEAD"], cwd=repo_dir, check=True, timeout=30)
+
+    subprocess.run(["git", "checkout", "-b", "feature"], cwd=repo_dir, check=True, capture_output=True, timeout=30)
+
+    # Only MDX is staged; branch has no source change for that module
+    mdx_file = repo_dir / "site/src/content/docs/a2/02-control.mdx"
+    mdx_file.parent.mkdir(parents=True)
+    mdx_file.write_text("---\ntitle: Control\n---\nControl body\n")
+    subprocess.run(["git", "add", "site/src/content/docs/a2/02-control.mdx"], cwd=repo_dir, check=True, timeout=30)
+
+    monkeypatch.chdir(repo_dir)
+    monkeypatch.setattr(parity, "PROJECT_ROOT", repo_dir)
+    monkeypatch.setattr(parity, "MDX_DIR", repo_dir / "site/src/content/docs")
+    monkeypatch.setattr(parity, "SOURCE_DIR", repo_dir / "curriculum/l2-uk-en")
+
+    exit_code = parity.main(["--files", str(mdx_file)])
+    assert exit_code == 1
+
+    captured = capsys.readouterr()
+    assert "MDX file changed but no source files changed" in captured.out
+    assert "curriculum/l2-uk-en/a2/02-control/" in captured.out
