@@ -437,7 +437,9 @@ def _dispatch(args) -> int:
     if agent == "agy" and args.require_review_verdict and output_schema is None:
         from scripts.review.review_contract import schema_path
 
-        output_schema = str(schema_path())
+        selected = schema_path(profile=args.review_profile, task=vars(args))
+        if selected is not None:
+            output_schema = str(selected)
     if output_schema is not None:
         from scripts.dispatcher.output_schema import bind
 
