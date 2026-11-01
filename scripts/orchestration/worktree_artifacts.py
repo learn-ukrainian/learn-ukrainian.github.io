@@ -555,8 +555,13 @@ def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary:
             continue
         resolved, status = found
         if not stat.S_ISREG(status.st_mode):
-            # Directories are not inventories. Any other in-checkout file refuses removal.
-            if resolved.is_relative_to(root) and not stat.S_ISDIR(status.st_mode):
+            # Directories are not inventories. A disposable path stays disposable.
+            # Any other in-checkout file refuses removal.
+            if (
+                resolved.is_relative_to(root)
+                and not stat.S_ISDIR(status.st_mode)
+                and not is_disposable_path(resolved.relative_to(root), worktree=worktree, primary=primary)
+            ):
                 raise ValueError("a named artifact path is not a regular file and cannot be preserved")
             continue
         if not status.st_size:
