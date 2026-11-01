@@ -27,11 +27,14 @@ def _isolate_routing_budget_test_state(tmp_path: Path, monkeypatch: pytest.Monke
     boundary = tmp_path.resolve()
 
     def inside_git(path: Path) -> bool:
-        return any(
-            claude_account_usage._git_tree(directory)
-            for directory in (path, *path.parents)
-            if directory.is_relative_to(boundary)
-        )
+        resolved = path.resolve()
+        if resolved.is_relative_to(boundary):
+            return any(
+                claude_account_usage._git_tree(directory)
+                for directory in (resolved, *resolved.parents)
+                if directory.is_relative_to(boundary)
+            )
+        return any(claude_account_usage._git_tree(directory) for directory in (resolved, *resolved.parents))
 
     def no_provider(_token: str) -> tuple[str, object]:
         raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
