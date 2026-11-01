@@ -126,6 +126,8 @@ NEEDS_COVERAGE = "needs-coverage"
 RECORD_HEADINGS = ("### Cross-family review\n", "### Adversarial red-team review\n")
 # Every recorder opens the reviewer's reply with this line, right after the record's lines.
 REPLY_OPENER = "<details><summary>Reviewer's reply</summary>\n\n"
+# ...and closes it with this line, before the residual and repair lines and the trailer.
+REPLY_CLOSER = "\n\n</details>\n\n"
 # Since #11127 the publisher posts only the recorder's typed record, which never carries a
 # raw APPROVE trailer, so only a comment GitHub created before then can be such a legacy record.
 LEGACY_TRAILER_CUTOFF = datetime(2026, 10, 20, 6, 0, 20, tzinfo=UTC)
@@ -471,6 +473,22 @@ def _coverage_decision(
     return (state, winner[2], seats, None, winner[1][1], winner[0])
 
 
+def recorded_p3_residuals(body: str) -> tuple[str, ...] | None:
+    """The P3 residual ids of a recorded CHANGES_REQUESTED body, or None when it keeps its verdict.
+
+    The recorder's reading (#12409) is applied to the reviewer's reply alone, between the
+    opener and the last closer, so the record's own lines never count as prose beside the
+    findings object. A body with no reply, or whose repair mapping was withheld, keeps its verdict.
+    """
+    from scripts.review.record_cf_verdict import REPAIR_WITHHELD, p3_residuals
+
+    _, opened, rest = body.partition(REPLY_OPENER)
+    reply, closed, tail = rest.rpartition(REPLY_CLOSER)
+    if not opened or not closed or REPAIR_WITHHELD in tail:
+        return None
+    return p3_residuals(reply)
+
+
 def _repair_receipt_blocks(body: str, sha: str) -> bool:
     """True when this head has a repair receipt and the body does not attest its delta.
 
@@ -596,12 +614,12 @@ def lookup_verdict(
         if _edited(comment):
             return unknown(MARKER_EDITED, index, comment)
         recorded = marker
-        if marker["verdict"] == "CHANGES_REQUESTED":
-            # The same reading record_cf_verdict uses when it posts the status.
-            from scripts.review.record_cf_verdict import p3_residuals
-
-            if p3_residuals(body) is not None and not _repair_receipt_blocks(body, marker["sha"]):
-                recorded = {**marker, "verdict": "APPROVED"}
+        if (
+            marker["verdict"] == "CHANGES_REQUESTED"
+            and recorded_p3_residuals(body) is not None
+            and not _repair_receipt_blocks(body, marker["sha"])
+        ):
+            recorded = {**marker, "verdict": "APPROVED"}
         # An unedited comment has a parseable creation time; list order breaks same-second ties.
         posted = (_timestamp(_field(comment, "created_at", "createdAt")), index)
         candidates.append((_timestamp(marker["started"]), posted, recorded))
