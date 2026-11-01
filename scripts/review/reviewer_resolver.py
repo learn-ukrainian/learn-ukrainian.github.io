@@ -743,6 +743,8 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
                 or candidate.sealed_executable != "scripts/dispatch.py"
             ):
                 return "native Muse review endpoint identity is invalid"
+            if "--contributor-mode off" not in candidate.invocation:
+                return "Muse review requires contributor mode off (operator order C-2401)"
         elif candidate.adapter_transport != "acp":
             return "formal-review candidate is not bound to the ACP adapter transport"
         if not native_review and candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
@@ -1545,8 +1547,16 @@ def resolve_reviewer(
             if result.status == "advisory_only":
                 advisory.append(result)
             elif result.status == "eligible":
+                muse_prioritized = (
+                    candidate.name == "muse"
+                    and inputs.risk in {"low", "medium"}
+                    and result.health in {None, "healthy"}
+                    and not result.capacity.near_cap
+                    and "--contributor-mode off" in candidate.invocation
+                )
                 fit_key = (
                     candidate.last_resort,
+                    0 if muse_prioritized else 1,
                     result.suitability_rank or 0,
                     tier_for_candidate[candidate.name],
                     result.credit is not None,
@@ -1675,12 +1685,15 @@ def resolve_reviewer(
             f"last resort selected {selected.name}: no eligible primary remained or an explicit pin was requested"
         )
     if selected is not None and selected_rung_index is not None:
-        higher_quality_tier_exists = any(
-            _suitability_rank(candidate, inputs) == selected.suitability_rank
-            and _MODEL_CATALOG["quality_tiers"][candidate.quality_tier]
-            < _MODEL_CATALOG["quality_tiers"][selected.quality_tier]
-            for rung in active_ladder
-            for candidate in rung
+        higher_quality_tier_exists = (
+            selected.name != "muse"
+            and any(
+                _suitability_rank(candidate, inputs) == selected.suitability_rank
+                and _MODEL_CATALOG["quality_tiers"][candidate.quality_tier]
+                < _MODEL_CATALOG["quality_tiers"][selected.quality_tier]
+                for rung in active_ladder
+                for candidate in rung
+            )
         )
         if higher_quality_tier_exists:
             substitution_notes.append(
