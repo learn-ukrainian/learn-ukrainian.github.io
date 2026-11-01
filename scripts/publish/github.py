@@ -483,7 +483,9 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
     outside the recorder's regime and is not refused here, unless the head's own rollup
     carries the recorder's status: then its record was removed or rewritten, and the
     status alone is unverifiable. A PR whose files change learner content takes its
-    Ukrainian seats even with no Ukrainian verdict recorded yet (#12181).
+    Ukrainian seats even with no Ukrainian verdict recorded yet (#12181). A change to the
+    review output contract is refused until its canary evidence covers every reviewer route
+    (``scripts.review.contract_canary``, #12399).
     """
     from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
     from scripts.orchestration.integration_sweep import (
@@ -518,7 +520,8 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
             raise ValueError
         if not isinstance(login, str) or not re.fullmatch(r"\S+", login):
             raise ValueError
-        content = changes_learner_content(pr_file_paths([item for page in files for item in page]))
+        paths = pr_file_paths([item for page in files for item in page])
+        content = changes_learner_content(paths)
         state = lookup_verdict([item for page in pages for item in page], head, login, learner_content=content).state
     except github_client.GitHubRateLimited:
         raise
@@ -532,6 +535,11 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
         raise gate.PublishBlocked(
             f"OPSEC: merge refused: no cross-family APPROVE from scripts/review/record_cf_verdict.py is recorded at {head}."
         )
+    from scripts.review import contract_canary
+
+    # A review-contract change also needs live canary evidence on every reviewer route (#12399).
+    if (canary := contract_canary.refusal(paths, head)) is not None:
+        raise gate.PublishBlocked(f"OPSEC: merge refused: {contract_canary.REASON}: {canary}.")
     if state == "needs-CF":
         from scripts.publish.merge_guard import _rollup_name
 

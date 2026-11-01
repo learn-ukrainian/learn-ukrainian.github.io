@@ -276,6 +276,18 @@ def test_learner_content_with_only_a_code_approval_is_not_enqueued(tmp_path: Pat
     assert "state=needs-seat reason=needs-CF" in lines[0]
 
 
+def test_review_contract_change_without_canary_evidence_is_not_enqueued(tmp_path: Path) -> None:
+    # #12399: an approved green contract change waits for a live canary on every reviewer route.
+    fake = FakeGitHub()
+    fake.files = ["scripts/example.py", "scripts/review/review_contract.py"]
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=needs-contract-canary" in lines[0]
+    assert "canary=(unverifiable: contract tree unreadable at head)" in lines[0]
+
+
 def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) -> None:
     fake = FakeGitHub()
     item = recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", review_mode="red_team")

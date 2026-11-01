@@ -97,6 +97,28 @@ def _observe(record: dict) -> dict:
     return record
 
 
+def _dispatcher_code() -> dict:
+    """The checkout whose dispatcher settles this task: its HEAD and whether its code is unmodified.
+
+    A review-contract canary binds its receipt to this identity (#12399). An unreadable checkout
+    records ``head`` None, which no canary accepts.
+    """
+    from scripts.common.git_context import sanitized_git_env
+
+    root = Path(__file__).resolve().parents[2]
+
+    def git_out(*args: str) -> str | None:
+        try:
+            return subprocess.run(["git", *args], cwd=root, env=sanitized_git_env(), capture_output=True,
+                                  text=True, check=True, timeout=30).stdout
+        except (OSError, subprocess.SubprocessError):
+            return None
+
+    head = (git_out("rev-parse", "HEAD") or "").strip() or None
+    status = git_out("status", "--porcelain", "--", "scripts", "schemas")
+    return {"root": str(root), "head": head, "clean": status == ""}
+
+
 def _discard_read_only_scratch(record: dict) -> None:
     """Remove a dispatched Codex read-only task's scratch; residue is recorded, never raised."""
     if record["agent"] == "codex" and record["mode"] == "read-only" and (
@@ -1001,6 +1023,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             )
             if sources_calls is not None:
                 record["sources_mcp_call_count"] = sources_calls
+            if record.get("require_review_verdict") is True:
+                record["dispatcher_code"] = _dispatcher_code()
             record.update(git.snapshot_delivery(spec, record))
             if error and error.startswith("TASK_RECORD_"):
                 record.update(worktree_disposition="retained", worktree_disposition_reason="task_record_damaged")

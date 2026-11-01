@@ -368,6 +368,15 @@ Multi-finding validation order is deterministic: sort by
      output; re-run after correcting structure, freshness, or evidence — do not
      treat bad evidence or incomplete provenance as a green closeout.
 
+## Changing this contract
+
+A change to the review output contract (the paths in
+`scripts/review/contract_canary.py` `CONTRACT_PATHS`) cannot be queued until a live
+read-only canary review on every required reviewer route settles `done` with a canonical
+receipt on its exact head, under the candidate's dispatcher. The keeper and `pr-merge`
+refuse it with `needs-contract-canary` until then. Canary evidence is never a review of
+record. Recipe: [`docs/runbooks/review-contract-canary.md`](runbooks/review-contract-canary.md).
+
 ## Reviewer selection trace
 
 `closeout_cli resolve-reviewer` applies hard exclusions before ranking. Its
