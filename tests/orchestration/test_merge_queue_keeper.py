@@ -1478,6 +1478,7 @@ def test_keeper_manual_dequeue_then_fix_reenqueues_without_ci_failure_proof(tmp_
     assert ("enqueue", (42, HEAD_A)) in fixed.actions
     assert not recovery.ledger_path(fixed.root).exists()
     assert not json.loads(path.read_text()).get("requeued")
+    assert json.loads(path.read_text())["drops"].get(f"42:{HEAD_A}", 0) == 0
 
 
 def test_gate_state_is_pruned_to_open_prs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1781,6 +1782,8 @@ def test_publisher_allows_new_head_after_unbound_or_revoked_removal(tmp_path, mo
     assert not failed
     assert "enqueue" in mutations(fresh)
     assert recovery.first_attempt(recovery.ledger_path(fresh.root), fresh.repository, 42, HEAD_B) is None
+    if cause in {"red-checks", "changed-verdict", "hold-label", "blocked-squash"}:
+        assert json.loads(path.read_text())["drops"].get(f"42:{HEAD_B}", 0) == 0
 
 
 def test_unobserved_current_head_removal_needs_no_recovery_evidence(tmp_path, monkeypatch):

@@ -665,12 +665,19 @@ def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]
     })
 
     def position(stamp: str, event_id: int) -> tuple[datetime, int]:
-        when = datetime.fromisoformat(stamp.replace("Z", "+00:00")) if stamp else datetime.min.replace(tzinfo=UTC)
+        if not isinstance(stamp, str) or not stamp or type(event_id) is not int:
+            raise KeeperError("queue removal position malformed")
+        try:
+            when = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise KeeperError("queue removal timestamp invalid") from exc
+        if when.tzinfo is None:
+            raise KeeperError("queue removal timestamp has no timezone")
         return when, event_id
 
-    after = position(cursor["created_at"], cursor["id"])
+    after = position(cursor["created_at"], cursor["id"]) if cursor["created_at"] else (datetime.min.replace(tzinfo=UTC), 0)
     events = sorted({
-        position(item["created_at"], item.get("id", 0))
+        position(item.get("created_at"), item.get("id", 0))
         for item in gh.timeline(number)
         if item.get("event") == "removed_from_merge_queue"
     })
@@ -679,11 +686,11 @@ def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]
     for stamp, event_id in events:
         if (stamp, event_id) <= after:
             continue
-        # CF revocation is charged when dequeue succeeds. Its later timeline
-        # confirmation advances the cursor without charging the removal again.
-        pending = cursor.get("precounted", 0)
+        # Keeper dequeues are handled at mutation. Their timeline confirmation
+        # must not charge them again or attribute them to a later head.
+        pending = cursor.get("keeper_dequeues", 0)
         if pending:
-            cursor["precounted"] = pending - 1
+            cursor["keeper_dequeues"] = pending - 1
         else:
             previous["drops"][drop_key] = int(previous["drops"].get(drop_key, 0)) + 1
         cursor["created_at"], cursor["id"] = stamp.isoformat(), event_id
@@ -1059,10 +1066,10 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         try:
             _count_removals(gh, number, head, previous)
         except KeeperError as exc:
-            removal_error = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
+            removal_error = display_text(str(exc), DISPLAY_REASON_LIMIT)
         drops = int(previous["drops"].get(drop_key, 0))
         dropped = key in previous["queued"] and queued is False
-        detail = removal_error
+        detail = ""
         failed_jobs: list[str] = []
         failed_tests: dict[str, list[str]] = {}
         failed_run: int | None = None
@@ -1099,6 +1106,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             f"#{number} head={head[:12]} state={state} reason={reason} queued={queued} armed={armed}"
             + verdict_detail(verdict.reason, verdict.comment_id, verdict.superseded_markers)
         )
+        if removal_error:
+            lines.append(f"#{number} queue removal count unknown: {removal_error}")
         if not apply:
             continue
         if not budget:
@@ -1193,6 +1202,10 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 if revoke is not None:
                     if queued is True:
                         gh.dequeue(node_id)
+                        cursor = previous.setdefault("last_removal", {}).setdefault(key, {
+                            "created_at": previous.get("observed", ""), "id": 0,
+                        })
+                        cursor["keeper_dequeues"] = cursor.get("keeper_dequeues", 0) + 1
                     else:
                         gh.disarm(number)
                     lines.append(f"#{number} revoked: {revoke}" + _cf_unknown_detail(revoke, current_verdict))
@@ -1203,10 +1216,6 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     if queued is True and verdict_lookup_ok and current_verdict.state in MISSING_CF_STATES:
                         # Count the removal even when another blocker is the stated reason.
                         previous["drops"][drop_key] = int(previous["drops"].get(drop_key, 0)) + 1
-                        cursor = previous.setdefault("last_removal", {}).setdefault(key, {
-                            "created_at": previous.get("observed", ""), "id": 0,
-                        })
-                        cursor["precounted"] = cursor.get("precounted", 0) + 1
                         if revoke == "needs-CF":
                             previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
