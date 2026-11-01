@@ -881,10 +881,12 @@ class ClaimsValidationResult:
 
 _CITED_FACT = re.compile(
     r"\b(?:VESUM|ULIF|PULS|SUM-20|Pravopys|Zabolotnyi|Bolshakova|Prystinska|"
-    r"Antonenko|slovnyk|check_\w+|rules?|tags?|paradigms?|according to|cites?|"
-    r"(?:sources?|citations?|references?)\s*[:=]\s*\S|mcp\w*sources\w*|pages?\s*\d|"
-    r"soft[ -]group|hard[ -]group|pp?\.?\s*\d)\b|§|"
-    r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|правил\w*|тег\w*)\b",
+    r"Antonenko|Grinchenko|ESUM|GRAC|CEFR|dictionar\w*|slovnyk|"
+    r"(?:verify|query|search|inspect|check|translate|vet|get)_\w+|rules?|tags?|paradigms?|according to|cites?|"
+    r"(?:sources?|citations?|references?)\s*[:=]\s*\S|mcp\w*sources\w*|pages?\s*\d+|"
+    r"soft[ -]group|hard[ -]group|pp?\.?\s*\d+)\b|§|"
+    r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|СУМ(?:-\d+)?|ЕСУМ|Грінченк\w*|Антоненк\w*|"
+    r"Горох\w*|Караванськ\w*|словник\w*|сторінк\w*|правил\w*|тег\w*|с\.\s*\d+)\b",
     re.IGNORECASE,
 )
 
@@ -1096,7 +1098,8 @@ def validate_item_claims(
                 if _validate_claim(claim, require_quote=False)[0]
             }
             candidates = [event for rid, event in indexed.items() if rid in receipts]
-        for claim_field in ("sources", "finding", "claim", "summary", "body", "explanation", "why_wrong"):
+        for claim_field in ("sources", "finding", "claim", "summary", "body", "explanation", "why_wrong",
+                            "title", "smallest_fix"):
             text = row.get(claim_field)
             if claim_field == "sources" and isinstance(text, list):
                 text = ";".join(part for part in text if isinstance(part, str))

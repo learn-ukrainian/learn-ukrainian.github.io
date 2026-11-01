@@ -2490,6 +2490,10 @@ def _require_ukrainian_claim_support(
     ledger_path = None
     events = ()
     if binding is not None:
+        if task.get("claims_unsupported"):
+            raise RecordError("UKRAINIAN_CLAIMS_UNSUPPORTED: " + json.dumps(
+                task.get("dropped_claims") or [{"reason": "attempt_claims_unsupported"}], ensure_ascii=False,
+            ))
         if not isinstance(binding, dict) or any(
             not isinstance(binding.get(key), str) or not TASK_ID.fullmatch(binding[key])
             for key in ("review_id", "attempt_id")
