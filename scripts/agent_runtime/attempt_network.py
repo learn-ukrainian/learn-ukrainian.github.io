@@ -159,7 +159,8 @@ class AttemptEgress:
         finally:
             pending = asyncio.all_tasks(self.loop)
             for task in pending:
-                task.cancel()
+                if not task.cancelling():
+                    task.cancel()
             self.loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
             self.loop.run_until_complete(self.loop.shutdown_asyncgens())
             self.loop.close()
