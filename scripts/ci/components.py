@@ -218,7 +218,11 @@ def scan_runtime_edges(path: str, nodes: Sequence[ast.AST], bindings: dict, know
             unresolved.add((path, line, reason))
 
     for node in nodes:
-        if isinstance(node, (ast.Attribute, ast.Name)) and canonical(node).startswith("sys.path"):
+        if isinstance(node, ast.Name):
+            if aliases.get(node.id, node.id).startswith("sys.path"):
+                unresolved.add((path, node.lineno, "sys-path"))
+            continue
+        if isinstance(node, ast.Attribute) and canonical(node).startswith("sys.path"):
             # Even a literal path can change precedence or expose an external tree.
             unresolved.add((path, node.lineno, "sys-path"))
         if not isinstance(node, ast.Call):
@@ -265,21 +269,40 @@ def scan_runtime_edges(path: str, nodes: Sequence[ast.AST], bindings: dict, know
 
 
 def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
-    """Keep dependency syntax in ast.walk order without walking terminal leaves.
+    """Keep imports, bindings and calls in breadth-first order.
 
     Parsed constants, import aliases, operators and contexts cannot contain
     dependencies. Retain every other subtree, including defaults and decorators.
+    Standalone names only matter to the sys.path alias check.
     """
     relevant = {ast.Assign, ast.AnnAssign, ast.Import, ast.ImportFrom,
-                ast.FunctionDef, ast.AsyncFunctionDef, ast.Call, ast.Attribute, ast.Name}
+                ast.FunctionDef, ast.AsyncFunctionDef, ast.Call, ast.Attribute}
+    terminal = (ast.Import, ast.ImportFrom)
+    ignored = (ast.Name, ast.Constant, ast.alias)
     pending = deque([tree])
     nodes = []
+    include_names = False
     while pending:
         node = pending.popleft()
         if type(node) in relevant:
             nodes.append(node)
-        pending.extend(child for child in ast.iter_child_nodes(node)
-                       if child._fields and not isinstance(child, (ast.Constant, ast.alias)))
+            if isinstance(node, ast.Import):
+                include_names |= any(alias.name.startswith("sys.path") for alias in node.names)
+            elif isinstance(node, ast.ImportFrom):
+                include_names |= any(f"{node.module}.{alias.name}".startswith("sys.path")
+                                     for alias in node.names)
+        if isinstance(node, terminal):
+            continue
+        for field in node._fields:
+            value = getattr(node, field)
+            if isinstance(value, list):
+                pending.extend(child for child in value
+                               if isinstance(child, ast.AST) and child._fields
+                               and not isinstance(child, ignored))
+            elif isinstance(value, ast.AST) and value._fields and not isinstance(value, ignored):
+                pending.append(value)
+    if include_names:
+        nodes.extend(node for node in ast.walk(tree) if isinstance(node, ast.Name))
     return nodes
 
 
