@@ -222,16 +222,6 @@ def refusal(paths: Iterable[str], head: str, root: Path | None = None) -> str | 
     return f"missing: {','.join(missing)}" if missing else None
 
 
-def _pr_head(pr: int) -> str:
-    out = subprocess.run(
-        ["gh", "pr", "view", str(pr), "--json", "headRefOid", "-q", ".headRefOid"],
-        capture_output=True, text=True, check=True, timeout=60,
-    ).stdout.strip()
-    if not SHA.fullmatch(out):
-        raise CanaryError("PR head unreadable")
-    return out
-
-
 def _load_task(task_id: str) -> tuple[dict, str]:
     """A dispatcher task record and its reply text."""
     from scripts.dispatcher import store
@@ -244,9 +234,13 @@ def _load_task(task_id: str) -> tuple[dict, str]:
 
 
 def record(task_id: str, pr: int, root: Path | None = None) -> Path:
-    """Write the receipt for one settled canary task at the PR's live head."""
+    """Write the receipt for one settled canary task at the head it reviewed.
+
+    The keeper and ``pr-merge`` read receipts only at the PR's live head, so a receipt
+    for any other head never admits anything.
+    """
     task, result = _load_task(task_id)
-    receipt = build_receipt(task, result, pr=pr, head=_pr_head(pr), root=root)
+    receipt = build_receipt(task, result, pr=pr, head=str(task.get("head_sha")), root=root)
     path = _receipt_path(receipt["head"], receipt["route"], root)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")

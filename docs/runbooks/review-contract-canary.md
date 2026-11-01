@@ -62,9 +62,10 @@ each task settles `done`, record it:
 ```
 
 `record` refuses a task that did not settle `done`, was not read-only and verdict-bound, was not
-pinned to the live PR head, was branch- or PR-pinned, was not supervised by a clean dispatcher at
+run on a worktree that started and settled at one head, was branch- or PR-pinned, was not supervised by a clean dispatcher at
 that head, ran on a route or model outside the catalog's formal set, or whose reply is not a
-canonical receipt. Check the head before enqueueing:
+canonical receipt. The receipt is keyed by that head; the gate reads only the PR's live head, so
+receipts for an older head admit nothing. Check the head before enqueueing:
 
 ```bash
 "$PY" -m scripts.review.contract_canary check --head "$HEAD_SHA" $(gh pr diff "$PR" --name-only)
