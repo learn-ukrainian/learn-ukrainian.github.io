@@ -744,12 +744,6 @@
       ]
     },
     {
-      "path": ".opencode/",
-      "components": [
-        "harness"
-      ]
-    },
-    {
       "path": "agents_extensions/",
       "components": [
         "harness"
