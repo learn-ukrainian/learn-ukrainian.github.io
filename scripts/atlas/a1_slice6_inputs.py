@@ -246,7 +246,7 @@ def _validate_morphology(claim, record, target):
     required = {(f"/clean_analyses/{index}/{field}", 0, len(analysis[field]))
                 for field in ("word_form", "lemma", "pos")}
     supplied = {(span["pointer"], *span["span"]) for span in claim.get("supporting_spans", [])}
-    cards.require(required <= supplied, "slice6_morphology_binding_receipts_missing")
+    cards.require(required == supplied, "slice6_morphology_binding_receipts_mismatch")
 
 
 def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, selection):
