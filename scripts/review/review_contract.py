@@ -22,10 +22,8 @@ from scripts.orchestration.integration_sweep import (
     VOID_REVIEWER_BOOKKEEPING,
 )
 from scripts.review.evidence import (
-    OUTCOME_LINE_MISMATCH,
     OUTCOME_MALFORMED,
-    OUTCOME_OUT_OF_SCOPE,
-    OUTCOME_QUOTE_MISSING,
+    UNVERIFIED_FOLLOW_UP_OUTCOMES,
     EvidenceCheckResult,
     EvidenceError,
     changed_lines_map,
@@ -664,6 +662,31 @@ def _check_stale(ctx: VerifyContext) -> str | None:
     return None
 
 
+def finding_supports_approval(finding: Mapping[str, Any]) -> bool:
+    disposition = finding.get("disposition")
+    rationale = finding.get("disposition_rationale")
+    if (
+        not isinstance(disposition, str)
+        or disposition not in ALLOWED_DISPOSITIONS - {"stop_and_escalate"}
+        or not isinstance(rationale, str)
+        or not rationale.strip()
+    ):
+        return False
+    outcome = finding.get("outcome")
+    return outcome == "verified" or (
+        disposition == "follow_up"
+        and isinstance(outcome, str)
+        and outcome in UNVERIFIED_FOLLOW_UP_OUTCOMES
+    )
+
+
+def unverified_follow_up_notes(findings: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        dict(finding) for finding in findings
+        if finding.get("outcome") != "verified" and finding_supports_approval(finding)
+    ]
+
+
 def _classify_exit(
     payload: dict[str, Any],
     validations: list[FindingValidation],
@@ -677,12 +700,11 @@ def _classify_exit(
     outcomes = {v.outcome for v in validations}
     if OUTCOME_MALFORMED in outcomes:
         return EXIT_INVALID, EXIT_NAMES[EXIT_INVALID]
-    bad_evidence = outcomes & {
-        OUTCOME_QUOTE_MISSING,
-        OUTCOME_LINE_MISMATCH,
-        OUTCOME_OUT_OF_SCOPE,
-    }
-    if bad_evidence:
+    bad_evidence = outcomes & UNVERIFIED_FOLLOW_UP_OUTCOMES
+    approved_follow_ups = payload["overall"]["correctness"] == "correct" and all(
+        finding_supports_approval(validation.to_dict()) for validation in validations
+    )
+    if bad_evidence and not approved_follow_ups:
         return EXIT_UNVERIFIABLE, EXIT_NAMES[EXIT_UNVERIFIABLE]
 
     overall = payload["overall"]
@@ -728,6 +750,7 @@ def build_receipt(
         },
         "reviewer_output_sha256": ctx.reviewer_output_sha256,
         "findings": [v.to_dict() for v in validations],
+        "unverified_follow_up_notes": unverified_follow_up_notes([v.to_dict() for v in validations]),
         "tests": ctx.tests,
         "behavior_proof": _render_behavior_proof(ctx.behavior_proof),
         "final_disposition": final_disposition,

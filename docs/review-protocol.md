@@ -270,11 +270,11 @@ and is never the only durable proof path. Prefer stdout or `--receipt-path`.
 | Code | Name | Meaning |
 | --- | --- | --- |
 | 0 | `clean` | Valid JSON, overall correct, no findings, evidence OK, complete envelope + target fingerprint |
-| 1 | `actionable` | Valid review with findings or overall `incorrect` (evidence OK + complete envelope) |
+| 1 | `actionable` | Valid review with findings or overall `incorrect`; complete envelope, with the approved unverified follow-up exception below |
 | 2 | `invalid` | Non-JSON, legacy text, schema violation, unsafe/malformed structure |
 | 3 | `incomplete` | Empty input, overall `uncertain` with no findings, or incomplete envelope / missing expected fingerprint |
 | 4 | `stale` | Head SHA or target-input fingerprint mismatch |
-| 5 | `unverifiable` | `quote_missing`, `line_mismatch`, or `out_of_scope` on any finding |
+| 5 | `unverifiable` | `quote_missing`, `line_mismatch`, or `out_of_scope`, except approved unverified follow-up notes below |
 
 A frozen `ukrainian` closeout is a behavior-proof carrier, not a reviewer
 selection. `closeout_cli freeze --review-profile ukrainian` stores that
@@ -298,15 +298,28 @@ be either `clean` / exit 0, or `actionable` / exit 1 with all of:
 
 - `reviewer_payload.overall.correctness` is `correct`;
 - receipt finding IDs equal `reviewer_payload.finding_ids`;
-- every finding outcome is `verified`;
+- every finding outcome is `verified`, or is `quote_missing`, `line_mismatch`
+  or `out_of_scope` with runner disposition `follow_up`;
 - every finding has a disposition and a non-empty rationale;
 - no finding has disposition `stop_and_escalate`.
+- `unverified_follow_up_notes` lists every unverified note, preserving its
+  original outcome, detail, disposition and rationale. Lifecycle closeout
+  reports name those notes with their AC and evidence IDs.
 
 This accepts the reviewer's non-blocking judgment without removing findings or
 changing the receipt. An `in_scope_blocker` disposition is not itself a refusal:
 the reviewer's `correct` verdict carries the blocking judgment. All other
 lifecycle checks, including receipt digest, exact head, target-input fingerprint,
 reviewer independence, and passing behavior surfaces, still apply.
+
+An APPROVE with these unverified follow-up notes remains `actionable` / exit 1.
+It is approved, never evidentially clean. Exact quotes and line ranges still
+produce their original failures, with no whitespace normalization, severity
+change or automatic disposition change. Non-APPROVE verdicts, schema and
+malformed-path failures, header/JSON disagreement, missing or invalid
+dispositions or rationale, stale target or provenance, failed behavior proof
+and missing outside-family approval remain refused. This exception permits
+unverified notes; it does not verify absent files or other out-of-scope evidence.
 
 ## Deterministic receipt (runner-built)
 
@@ -319,6 +332,7 @@ The **runner** — not the reviewer — emits a receipt
   **target-input** `input_sha256`;
 - separate `reviewer_output_sha256`;
 - per-finding validation outcome (and disposition/rationale when supplied);
+- visible `unverified_follow_up_notes`, with each original outcome and detail;
 - tests and source-aware / source-blind behavior proof;
 - final disposition and exit code;
 - routing lineage **only when the runner supplies it** (never hardcoded

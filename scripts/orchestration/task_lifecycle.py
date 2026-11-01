@@ -29,7 +29,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.orchestration import issue_stream_audit, task_identity
-from scripts.review.review_contract import ALLOWED_DISPOSITIONS
+from scripts.review.review_contract import finding_supports_approval, unverified_follow_up_notes
 
 SCHEMA_VERSION = "task-lifecycle.v1"
 AC_SCHEMA_VERSION = "acceptance-criteria.v1"
@@ -1335,6 +1335,7 @@ def _behavior_proof_reference_error(
     authenticated_login: str | None = None,
     review_urls: set[str] | None = None,
     changed_paths: Sequence[str] | None = None,
+    accepted_notes: list[dict[str, Any]] | None = None,
 ) -> str | None:
     try:
         reference = _validate_behavior_proof_reference_shape(record["details"])
@@ -1375,13 +1376,10 @@ def _behavior_proof_reference_error(
             and all(isinstance(finding, dict) and "id" in finding for finding in findings)
             and [finding["id"] for finding in findings] == payload.get("finding_ids")
             and all(
-                finding.get("outcome") == "verified"
-                and isinstance(finding.get("disposition"), str)
-                and finding.get("disposition") in (ALLOWED_DISPOSITIONS - {"stop_and_escalate"})
-                and isinstance(finding.get("disposition_rationale"), str)
-                and bool(finding["disposition_rationale"].strip())
+                finding_supports_approval(finding)
                 for finding in findings
             )
+            and receipt.get("unverified_follow_up_notes", []) == unverified_follow_up_notes(findings)
         )
     if "error" not in receipt or receipt["error"] is not None or not (clean or approved_nonblocking):
         return "behavior-proof receipt is not a clean or approved non-blocking canonical closeout"
@@ -1431,6 +1429,8 @@ def _behavior_proof_reference_error(
                 for clause in clauses
             ):
                 return f"behavior-proof receipt {surface_name} clauses are not target-bound"
+    if accepted_notes is not None and approved_nonblocking:
+        accepted_notes.extend(unverified_follow_up_notes(receipt["findings"]))
     return None
 
 
@@ -1446,6 +1446,7 @@ def _evidence_status(
     """Validate rows independently, then retire errors only at valid chain tips."""
     valid: dict[str, set[str]] = {}
     errors: dict[str, str] = {}
+    notes_by_evidence: dict[str, list[dict[str, Any]]] = {}
     for record in ledger["evidence"]:
         kind = record["type"]
         commit = record["subject"]["commit"]
@@ -1453,6 +1454,7 @@ def _evidence_status(
             errors[record["id"]] = f"{record['ac_id']}: {kind} evidence is not bound to current PR head"
             continue
         if kind == "behavior_proof":
+            notes: list[dict[str, Any]] = []
             review_urls = {
                 str(item["url"])
                 for item in ledger["evidence"]
@@ -1465,10 +1467,15 @@ def _evidence_status(
                 authenticated_login=authenticated_login,
                 review_urls=review_urls,
                 changed_paths=changed_paths,
+                accepted_notes=notes,
             )
             if reference_error:
                 errors[record["id"]] = f"{record['ac_id']}: {reference_error}"
                 continue
+            notes_by_evidence[record["id"]] = [
+                {"evidence_id": record["id"], "ac_id": record["ac_id"], **note}
+                for note in notes
+            ]
         if kind == "review" and (not record["url"] or record["url"] not in comment_urls):
             errors[record["id"]] = f"{record['ac_id']}: review receipt URL is absent from authoritative PR comments"
             continue
@@ -1497,6 +1504,10 @@ def _evidence_status(
         "invalid_evidence": [error for record_id, error in errors.items() if record_id not in retired],
         "superseded_evidence_ids": [record["id"] for record in ledger["evidence"] if record["id"] in superseders],
         "retired_evidence_errors": retired,
+        "unverified_follow_up_notes": [
+            note for record_id, notes in notes_by_evidence.items()
+            if record_id in valid_ids for note in notes
+        ],
     }
 
 
@@ -1903,6 +1914,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         "valid_evidence": {key: sorted(value) for key, value in valid_evidence.items()},
         "superseded_evidence_ids": evidence_status["superseded_evidence_ids"],
         "retired_evidence_errors": evidence_status["retired_evidence_errors"],
+        "unverified_follow_up_notes": evidence_status["unverified_follow_up_notes"],
         "preclose_missing_evidence": preclose_missing,
         "preclose_unchecked": preclose_unchecked,
         "goal_reached": goal_reached,
@@ -1934,6 +1946,7 @@ def reconcile(
                 "last_success_state": result["last_success_state"],
                 "goal_reached": result["goal_reached"],
                 "valid_evidence": result["valid_evidence"],
+                "unverified_follow_up_notes": result["unverified_follow_up_notes"],
                 "membership": result["membership"],
             },
         },
@@ -1946,6 +1959,7 @@ def reconcile(
                 key: receipt_material[key]
                 for key in ("state", "disposition", "hard_blockers", "waiting", "next_actions")
             },
+            "unverified_follow_up_notes": result["unverified_follow_up_notes"],
         }
     )
     for existing in ledger["observation_receipts"]:

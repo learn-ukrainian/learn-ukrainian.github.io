@@ -529,9 +529,14 @@ def test_unchanged_follow_up_evidence_uses_exact_head(tmp_path, case):
     payload["findings"] = [finding]
     raw = json.dumps(payload)
     result = verify_review(raw, _ctx(repo, target, raw, dispositions=dispositions))
-    if case in {"matching", "dirty-copy"}:
+    if case in {"matching", "dirty-copy", "forged-quote", "wrong-line", "inflated-range", "absent", "symlink"}:
         assert result.exit_code == EXIT_ACTIONABLE
-        assert result.receipt["findings"][0]["outcome"] == OUTCOME_VERIFIED
+        if case in {"matching", "dirty-copy"}:
+            assert result.receipt["findings"][0]["outcome"] == OUTCOME_VERIFIED
+            assert result.receipt["unverified_follow_up_notes"] == []
+        else:
+            assert result.receipt["findings"][0]["outcome"] != OUTCOME_VERIFIED
+            assert result.receipt["unverified_follow_up_notes"] == result.receipt["findings"]
         receipt_path = tmp_path / "receipt.json"
         receipt_path.write_text(json.dumps(result.receipt))
         record = {
@@ -551,6 +556,92 @@ def test_unchanged_follow_up_evidence_uses_exact_head(tmp_path, case):
 
 
 # --- target modes ------------------------------------------------------------
+
+
+@pytest.mark.parametrize("outcome", ["quote_missing", "line_mismatch", "out_of_scope"])
+def test_approved_unverified_follow_up_retains_evidence_failure(tmp_path, outcome):
+    """APPROVE retains exact evidence failures rather than refusing or verifying notes."""
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\n    value = 2\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    finding = _finding(verbatim="    value = 2", priority="P3")
+    if outcome == "quote_missing":
+        finding["verbatim"] = "value = 2"
+    elif outcome == "line_mismatch":
+        finding["location"]["end_line"] = 3
+    else:
+        finding.update(verbatim="print('v1')")
+        finding["location"].update(start_line=1, end_line=1)
+    payload = _clean_payload()
+    payload["findings"] = [finding]
+    raw = "VERDICT: APPROVE\nSCORE: 9/10\n```json\n" + json.dumps(payload) + "\n```\n"
+    result = verify_review(raw, _ctx(repo, target, raw, dispositions={
+        "F001": {"disposition": "follow_up", "rationale": "CTO owns this nonblocking note."},
+    }))
+    assert result.exit_code == EXIT_ACTIONABLE
+    assert result.error is None
+    assert result.final_disposition == "actionable"
+    assert result.payload == payload
+    check = verify_finding_evidence(finding, repo_root=repo, target=target,
+                                    changed_lines=changed_lines_map(repo, target))
+    note = result.receipt["unverified_follow_up_notes"][0]
+    assert note == result.receipt["findings"][0]
+    assert note["outcome"] == check.outcome == outcome
+    assert note["detail"] == check.detail
+    assert result.receipt["reviewer_output_sha256"] == sha256_text(raw)
+
+
+@pytest.mark.parametrize("case", [
+    "blocking", "escalate", "incorrect", "uncertain", "unsafe-path", "schema",
+    "header-disagreement", "missing-disposition", "invalid-disposition", "blank-rationale",
+    "stale-head", "stale-input", "same-family", "missing-lineage", "failed-proof", "failed-tests",
+])
+def test_unverified_follow_up_never_bypasses_refusals(tmp_path, case):
+    """Unverified notes cannot turn failed approval, provenance or proof gates into approval."""
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-qm", "change")
+    target = resolve_commit_target(repo, _git(repo, "rev-parse", "HEAD").stdout.strip())
+    payload = _clean_payload()
+    payload["findings"] = [_finding(verbatim="not in the target", priority="P3")]
+    dispositions = {"F001": {"disposition": "follow_up", "rationale": "CTO owns this note."}}
+    env = _full_envelope_kwargs(repo, target, dispositions=dispositions)
+    if case in {"blocking", "escalate", "invalid-disposition"}:
+        dispositions["F001"]["disposition"] = {
+            "blocking": "in_scope_blocker", "escalate": "stop_and_escalate",
+            "invalid-disposition": "invalid",
+        }[case]
+    elif case in {"incorrect", "uncertain"}:
+        payload["overall"]["correctness"] = case
+    elif case == "unsafe-path":
+        payload["findings"][0]["location"]["path"] = "../app.py"
+    elif case == "schema":
+        payload["findings"][0]["priority"] = "P9"
+    elif case == "missing-disposition":
+        dispositions.clear()
+    elif case == "blank-rationale":
+        dispositions["F001"]["rationale"] = " "
+    elif case == "stale-head":
+        env["expected_head"] = "a" * 40
+    elif case == "stale-input":
+        env["expected_input_sha256"] = "a" * 64
+    elif case == "same-family":
+        env["reviewer"].family = env["author"].family
+    elif case == "missing-lineage":
+        env["routing_lineage"] = {}
+    elif case == "failed-proof":
+        env["behavior_proof"]["source_blind"]["status"] = "fail"
+    elif case == "failed-tests":
+        env["tests"]["passed"] = False
+    raw = json.dumps(payload)
+    if case == "header-disagreement":
+        raw = "VERDICT: REQUEST_CHANGES\nSCORE: 5/10\n```json\n" + raw + "\n```"
+    result = verify_review(raw, _ctx(repo, target, raw, **env))
+    assert result.exit_code != EXIT_CLEAN
+    assert result.exit_code != EXIT_ACTIONABLE or result.error is not None
+    if result.payload:
+        assert result.payload["findings"] == payload["findings"]
 
 
 def test_local_target_verified_and_clean(tmp_path):
@@ -1344,7 +1435,7 @@ def test_correct_with_nonblocking_findings_stays_actionable_and_passes_lifecycle
         ({"F001": {"disposition": "follow_up"}}, "value = 2", EXIT_INCOMPLETE),
         ({"F001": {"disposition": "follow_up", "rationale": " "}}, "value = 2", EXIT_INCOMPLETE),
         ({"F001": {"disposition": "invalid", "rationale": "Present."}}, "value = 2", EXIT_INVALID),
-        ({"F001": {"disposition": "follow_up", "rationale": "Present."}}, "forged = 99", EXIT_UNVERIFIABLE),
+        ({"F001": {"disposition": "follow_up", "rationale": "Present."}}, "forged = 99", EXIT_ACTIONABLE),
     ],
     ids=["missing-disposition", "missing-rationale", "blank-rationale", "invalid-disposition", "forged-correct"],
 )
@@ -1364,7 +1455,14 @@ def test_correct_verdict_does_not_override_invalid_finding_evidence(
     result = verify_review(raw, _ctx(repo, target, raw, dispositions=dispositions))
 
     assert result.exit_code == expected_exit
-    assert result.final_disposition not in {"clean", "actionable"}
+    if expected_exit == EXIT_ACTIONABLE:
+        assert result.final_disposition == "actionable"
+        assert result.error is None
+        assert result.receipt["unverified_follow_up_notes"] == result.receipt["findings"]
+        assert result.receipt["findings"][0]["outcome"] == OUTCOME_QUOTE_MISSING
+        assert result.receipt["findings"][0]["detail"] == "verbatim_not_found"
+    else:
+        assert result.final_disposition not in {"clean", "actionable"}
     assert result.receipt["reviewer_payload"]["overall"]["correctness"] == "correct"
     assert len(result.receipt["findings"]) == 1
 
