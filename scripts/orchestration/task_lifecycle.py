@@ -1362,7 +1362,10 @@ def _behavior_proof_reference_error(
         return "behavior-proof receipt target SHA does not match the evidence reference"
     if target.get("input_sha256") != reference["input_sha256"]:
         return "behavior-proof receipt target-input fingerprint does not match the reference"
-    clean = receipt.get("final_disposition") == "clean" and receipt.get("exit_code") == 0
+    clean = (
+        receipt.get("final_disposition") == "clean" and receipt.get("exit_code") == 0
+        and not receipt.get("findings") and not receipt.get("unverified_follow_up_notes")
+    )
     approved_nonblocking = False
     if receipt.get("final_disposition") == "actionable" and receipt.get("exit_code") == 1:
         payload = receipt.get("reviewer_payload")

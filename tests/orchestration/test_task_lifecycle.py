@@ -1067,7 +1067,7 @@ def test_unverified_follow_up_closeout_reports_each_note(tmp_path: Path, outcome
 
 @pytest.mark.parametrize("case", [
     "missing-list", "empty-list", "altered-detail", "verified-label", "extra-note",
-    "malformed", "blocking", "escalate", "invalid-disposition", "blank-rationale",
+    "malformed", "blocking", "escalate", "invalid-disposition", "blank-rationale", "clean-label",
 ])
 def test_unverified_follow_up_closeout_refuses_forged_note_list(tmp_path: Path, case: str) -> None:
     """Missing or altered notes and forbidden outcome/disposition pairs cannot close out."""
@@ -1085,6 +1085,8 @@ def test_unverified_follow_up_closeout_refuses_forged_note_list(tmp_path: Path, 
         receipt["unverified_follow_up_notes"][0]["outcome"] = "verified"
     elif case == "extra-note":
         receipt["unverified_follow_up_notes"].append(deepcopy(note))
+    elif case == "clean-label":
+        receipt.update(final_disposition="clean", exit_code=0)
     else:
         if case == "malformed":
             note["outcome"] = "malformed"
