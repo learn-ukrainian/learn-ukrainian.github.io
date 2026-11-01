@@ -1076,7 +1076,8 @@ def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
         "page-prefix", "rule-prefix", "bare-tag", "vts", "page-abbreviation", "author-cyrillic", "wikipedia-uk", "wikipedia-en"])
 @pytest.mark.parametrize("reply_format", ["items", "overall", "finding", "title", "smallest_fix", "body", "prose",
                                          "verbatim", "nested", "top-notes", "fenced-summary", "fenced-quote", "fenced-list",
-                                         "key-json", "plain-mapping", "nested-control", "non-row-item"])
+                                         "key-json", "plain-mapping", "nested-control", "non-row-item", "invalid-control-types",
+                                         "dotted-reference"])
 def test_unbound_ukrainian_source_claims_refused_before_publication(
     monkeypatch, tmp_path, claim, output, placement, reply_format,
 ):
@@ -1109,6 +1110,15 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
     elif reply_format == "non-row-item":
         reply = "VERDICT: APPROVE\n```json\n" + json.dumps({"items": [claim]}) + "\n```\n"
         audit_id, audit_field = None, "items"
+    elif reply_format == "invalid-control-types":
+        payload = {"items": [{"id": {"claim": claim}, "quote": {"claim": claim}}],
+                   "findings": [{"location": {"path": {"claim": claim}}}]}
+        reply = "VERDICT: APPROVE\n```yaml\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = {"claim": claim}, "id.claim"
+    elif reply_format == "dotted-reference":
+        payload = {"findings": [{"source_conflict.a": {"quote": claim, "receipt_id": "step-4"}}]}
+        reply = "VERDICT: APPROVE\n```yaml\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = None, "source_conflict.a.quote"
     elif reply_format in {"fenced-summary", "fenced-quote", "fenced-list"}:
         field = "quote" if reply_format == "fenced-quote" else "summary"
         body = "- " + claim if reply_format == "fenced-list" else json.dumps({field: claim})
@@ -1175,7 +1185,8 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
 
 @pytest.mark.parametrize("capture", ["agy", "codex", "claude", "bound"])
 @pytest.mark.parametrize("finding", ["Appropriate activity.", "Вправа правильно перевіряє форму", "Вправа передає сум"])
-@pytest.mark.parametrize("bad_quote", ["uncaptured quote", "Rule 8", "category: Rule 8", "outcome: Rule 8"])
+@pytest.mark.parametrize("bad_quote", ["uncaptured quote", "Rule 8", "category: Rule 8", "outcome: Rule 8",
+                                      "category nested: Rule 8", "outcome nested: Rule 8"])
 def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, capture, finding, bad_quote):
     """A supported exact-head review must not be over-rejected, including quoted source output."""
     import yaml
@@ -1203,16 +1214,19 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
             priority="P3", body=claim, sources=["none"], evidence={"receipt": receipt, "quote": bad_quote},
         )
         metadata = bad_quote.split(": ", 1) if ": " in bad_quote else None
+        nested = bool(metadata and metadata[0].endswith(" nested"))
         if metadata:
-            rejected["findings"][0]["evidence"].update(quote=claim, **{metadata[0]: metadata[1]})
+            metadata[0] = metadata[0].removesuffix(" nested")
+            metadata_value = {"quote": metadata[1], "receipt_id": metadata[1]} if nested else metadata[1]
+            rejected["findings"][0]["evidence"].update(quote=claim, **{metadata[0]: metadata_value})
         tag = "yaml" if metadata else "json"
         candidate = ("VERDICT: APPROVE\n" if metadata else "") + f"```{tag}\n" + json.dumps(rejected) + "\n```"
         sanitized, checked = validate_ukrainian_reply_claims(candidate, ledger_path=path, binding=binding)
-        assert checked.claims_unsupported == (1 if metadata else 2)
+        assert checked.claims_unsupported == (2 if nested or not metadata else 1)
         body = sanitized.split(f"```{tag}\n")[1].split("\n```")[0]
         sanitized_finding = (yaml.safe_load(body) if metadata else json.loads(body))["findings"][0]
         if metadata:
-            assert sanitized_finding["evidence"][metadata[0]] == metadata[1]
+            assert sanitized_finding["evidence"][metadata[0]] == metadata_value
         else:
             assert "evidence" not in sanitized_finding
         write_task(tasks, reply=sanitized, review_profile="ukrainian", sources_mcp_call_count=1,

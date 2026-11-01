@@ -1108,32 +1108,35 @@ def validate_item_claims(
                 if _validate_claim(claim, require_quote=False)[0]
             }
             candidates = [event for rid, event in indexed.items() if rid in receipts]
-        reference_roots = ["evidence"]
+        reference_roots = [("evidence",)]
         if children_handled:
-            reference_roots.append("broadened_searches")
+            reference_roots.append(("broadened_searches",))
         if finding:
-            reference_roots.extend(("source_conflict.a", "source_conflict.b", "unsupported_by_source.searches"))
+            reference_roots.extend((("source_conflict", "a"), ("source_conflict", "b"),
+                                    ("unsupported_by_source", "searches")))
 
-        def leaves(value: Any, path: str = "") -> Iterator[tuple[str, str]]:
+        def leaves(value: Any, path: tuple[str, ...] = ()) -> Iterator[tuple[tuple[str, ...], str]]:
             if isinstance(value, str):
                 yield path, value
             elif isinstance(value, Mapping):
                 for field, part in value.items():
-                    field_path = f"{path}.{field}" if path else str(field)
-                    yield field_path + ".__key__", str(field)
-                    reference = any(path == root or path.startswith(root + ".") for root in reference_roots)
-                    if not path and (item or finding) and field == "id":
+                    field_path = (*path, str(field))
+                    yield (*field_path, "__key__"), str(field)
+                    reference = path in reference_roots
+                    if not path and (item or finding) and field == "id" and isinstance(part, str):
                         continue
                     if not path and finding and field == "priority" and part in ("P0", "P1", "P2", "P3"):
                         continue
-                    if finding and path == "location" and field in {"path", "start_line", "end_line", "claim_type"}:
+                    if finding and path == ("location",) and field == "path" and isinstance(part, str):
                         continue
                     if reference and field in {"receipt", "receipt_id"}:
                         continue
-                    if not path and finding and field == "expected":
+                    if not path and finding and field == "expected" and isinstance(part, str):
                         continue
                     if field in {"quote", "quotes"} and (
-                        (item and not path) or reference
+                        (item and not path and (isinstance(part, str) or (
+                            field == "quotes" and isinstance(part, list) and all(isinstance(quote, str) for quote in part)
+                        ))) or (reference and isinstance(part, str))
                     ):
                         continue
                     if children_handled and not path and field in {"items", "findings"}:
@@ -1146,8 +1149,9 @@ def validate_item_claims(
                 for part in value:
                     yield from leaves(part, path)
 
-        for claim_field, text in leaves(row):
-            for claim in _cited_fact_clauses(text, sources=claim_field.rsplit(".", 1)[-1] == "sources"):
+        for path, text in leaves(row):
+            claim_field = ".".join(path)
+            for claim in _cited_fact_clauses(text, sources=path[-1] == "sources"):
                 claims_total += 1
                 matches = [
                     event for event in candidates
