@@ -211,8 +211,11 @@ def test_near_cap_sol_precedes_agy_and_grok_for_claude_author(risk):
             risk=risk,
             routing_snapshot={
                 "agents": {
-                    route: {"status": "near_cap", "remaining_pct": 5, "health": {"healthy": True}}
-                    for route in ("claude", "codex")
+                    **{
+                        route: {"status": "near_cap", "remaining_pct": 5, "health": {"healthy": True}}
+                        for route in ("claude", "codex")
+                    },
+                    "muse": {"status": "unhealthy", "health": {"healthy": False}},
                 },
                 "diagnostics": {"stale": False},
             }, claude_account=HOST_ACCOUNT,

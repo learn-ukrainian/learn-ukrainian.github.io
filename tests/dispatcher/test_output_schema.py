@@ -2,6 +2,7 @@
 
 import json
 import re
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -160,6 +161,9 @@ def test_claude_review_binds_findings_schema(dispatch):
     assert record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
     argv = claude.build(spec, {}).argv
     schema = json.loads(argv[argv.index("--json-schema") + 1])
+    canonical = json.loads(Path(record["output_schema_path"]).read_text(encoding="utf-8"))
+    assert "$schema" in canonical and "$schema" not in schema  # Claude Code refuses the meta-schema reference
+    assert schema == {key: value for key, value in canonical.items() if key != "$schema"}
     assert schema["properties"]["schema_version"]["const"] == "code-review-findings.v1"
     assert schema["required"] == ["schema_version", "overall", "findings"]
     with pytest.raises(ContractError, match="review_envelope_requires_one_json_block"):
@@ -191,7 +195,55 @@ def test_claude_review_binds_findings_schema(dispatch):
     assert failed.error == "claude: exited with status 1"
     codex_spec, codex_record = dispatch.invoke(path=None, agent="sol", review=True, task_id="codex-schema")
     assert codex_record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
-    assert codex.build(codex_spec, {}).argv.count("--output-schema") == 1
+    codex_argv = codex.build(codex_spec, {}).argv
+    assert codex_argv.count("--output-schema") == 1
+    bound_path = Path(codex_argv[codex_argv.index("--output-schema") + 1])
+    assert bound_path.parent.name == ".codex-schemas"
+    assert bound_path.parent.parent == codex_spec.final_file.parent
+    assert codex_spec.options.get("provider_output_schema_sha256") is not None
+    bound = json.loads(bound_path.read_text())
+    assert "if" not in bound and "oneOf" not in json.dumps(bound) and "not" not in bound
+    assert "missing_capabilities" not in bound.get("properties", {})
+    assert bound["properties"]["schema_version"]["type"] == "string"
+    from scripts.audit.post_build_review import validate_codex_output_schema
+
+    validate_codex_output_schema(bound)
+    receipt_schema = json.loads(Path(codex_record["output_schema_path"]).read_text())
+    assert "if" in receipt_schema
+    refused = {**receipt, "missing_capabilities": ["shell"]}
+    from jsonschema import Draft202012Validator
+    from jsonschema.exceptions import ValidationError
+
+    with pytest.raises(ValidationError, match="missing_capabilities"):
+        Draft202012Validator(receipt_schema).validate(refused)
+    Draft202012Validator(receipt_schema).validate(receipt)
+
+    from scripts.dispatcher.types import TaskSpec
+
+    dry_spec = TaskSpec(
+        "codex-dry-schema", "sol", "gpt-6.1-sol", None, "read-only",
+        codex_spec.worktree, codex_spec.prompt_file, codex_spec.final_file,
+        options={**codex_spec.options, "dry_run": "True"},
+    )
+    dry_argv = codex.build(dry_spec, {}).argv
+    dry_path = Path(dry_argv[dry_argv.index("--output-schema") + 1])
+    assert not dry_path.exists()
+
+    name_map_schema = {
+        "type": "object",
+        "properties": {
+            "const": {"type": "string"},
+            "if": {"type": "integer"},
+            "not": {"type": "boolean"},
+        },
+        "required": ["const", "if", "not"],
+    }
+    projected = codex.openai_strict_schema(name_map_schema)
+    assert "const" in projected["properties"]
+    assert "if" in projected["properties"]
+    assert "not" in projected["properties"]
+    assert projected["properties"]["const"]["type"] == "string"
+    assert codex._needs_openai_strict(name_map_schema) is False
 
 
 def test_agy_review_binds_findings_schema(dispatch):

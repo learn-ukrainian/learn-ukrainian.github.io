@@ -753,6 +753,7 @@ def test_red_team_admission_known_author_with_unknown_history(monkeypatch, expli
             "grok": "unhealthy",
             "cursor": "unhealthy",
             "agy": "unhealthy",
+            "muse": "unhealthy",
         },
     )
     if explicit in {"claude-opus-5-5", "unlisted-model"}:
