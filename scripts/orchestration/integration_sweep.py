@@ -471,6 +471,30 @@ def _coverage_decision(
     return (state, winner[2], seats, None, winner[1][1], winner[0])
 
 
+def _repair_receipt_blocks(body: str, sha: str) -> bool:
+    """True when this head has a repair receipt and the body does not attest its delta.
+
+    An unreadable receipt fails closed. A missing receipt directory means no repair round.
+    """
+    from scripts.common.repo_root import main_checkout_root
+    from scripts.review.repair_round import RECEIPT_DIR
+
+    root = main_checkout_root(Path(__file__).resolve().parents[2]) / "batch_state" / RECEIPT_DIR
+    if not root.is_dir():
+        return False
+    attested = re.findall(r"(?m)^\s*REPAIR_VERIFIED:\s*([0-9a-f]{64})\s*$", body)
+    for path in root.glob("*.json"):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, ValueError):
+            return True
+        if not isinstance(data, dict) or data.get("candidate_head") != sha:
+            continue
+        if attested != [data.get("delta_sha256")]:
+            return True
+    return False
+
+
 def lookup_verdict(
     comments: Sequence[Mapping[str, Any]] | None,
     sha: str,
@@ -483,7 +507,8 @@ def lookup_verdict(
 
     A valid rejection stands for this exact SHA regardless of later approvals.
     A CHANGES_REQUESTED record whose open findings are all P3 is an approval with
-    those residuals, not a standing rejection. P0, P1, P2, BLOCKED, and a reply
+    those residuals, not a standing rejection, unless this head has a repair-round
+    receipt and the reply does not attest that delta. P0, P1, P2, BLOCKED, and a reply
     whose severity cannot be read stay rejections.
     A head is approved only once its Ukrainian seats have approved it when it
     carries a Ukrainian-profile approval or, by ``learner_content``, changes
@@ -575,7 +600,7 @@ def lookup_verdict(
             # The same reading record_cf_verdict uses when it posts the status.
             from scripts.review.record_cf_verdict import p3_residuals
 
-            if p3_residuals(body) is not None:
+            if p3_residuals(body) is not None and not _repair_receipt_blocks(body, marker["sha"]):
                 recorded = {**marker, "verdict": "APPROVED"}
         # An unedited comment has a parseable creation time; list order breaks same-second ties.
         posted = (_timestamp(_field(comment, "created_at", "createdAt")), index)

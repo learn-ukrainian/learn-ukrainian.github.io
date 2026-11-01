@@ -147,7 +147,7 @@ Severity follows impact on behaviour or readers, ranked by impact and likelihood
 
 Review budgets, seats, ladders, and exact-head binding are unchanged. A P0, P1, or P2 finding, and a demonstrated regression at those priorities, keeps the handling in items 1 to 3. Round exhaustion does not turn that rejection into approval and grants no extra round. Reviewers keep the priority the impact supports: they do not raise a P3 to force another round, and they do not lower a P0, P1, or P2 to clear it. Filing or linking the residual issue consumes no review round.
 
-- `SECURITY_VERDICT FAIL` always blocks and is never downgraded to a follow-up or a residual. A security verdict whose value is not an unambiguous pass is the same refusal. A truncated reply, or a repair round whose reply does not attest that the delta is only the repair, stays a rejection.
+- `SECURITY_VERDICT FAIL` always blocks and is never downgraded to a follow-up or a residual. A security verdict whose value is not exactly pass is the same refusal, including a conditional pass. A reply that does not fit in the record stays a rejection. A repair round whose reply does not attest that the delta is only the repair stays a rejection, including a marker posted earlier on that head.
 - INCONCLUSIVE (`BLOCKED` on the verdict line, naming the missing capability), a timeout, an
   error, a malformed findings block, or no reply is never approval.
   A capability-only BLOCKED may be recorded as a capability failure

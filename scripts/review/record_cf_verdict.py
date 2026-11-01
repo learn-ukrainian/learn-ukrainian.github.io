@@ -232,8 +232,9 @@ _PROSE_RESOLVED = re.compile(r"^(?:\s*[:\u2014\u2013-]+)?\s*(?i:resolved|fixed)\
 _RESOLVED_AMBIGUOUS = re.compile(r"(?i)\b(?:no|not|incorrectly|unresolved|still\s+open|remains?\s+open)\b|\?")
 _BLOCKING_PRIORITY = re.compile(r"(?i)(?<![A-Za-z0-9])p[0-2](?![A-Za-z0-9])")
 _SECURITY_VERDICT = re.compile(
-    r"(?i)\*{0,2}security_verdict\*{0,2}\s*[:\u2014\u2013\-]?\s*\*{0,2}\s*([A-Za-z]+)?"
+    r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*"
 )
+_SECURITY_PASS = re.compile(r"(?i)\*{0,2}PASS\*{0,2}\.?\s*(?:\n|$)")
 _FINDING_LIKE = re.compile(
     rf"(?im)^[ \t]*(?:#{{1,6}}[ \t]+|[-*+][ \t]+|\d+\.[ \t]+|>[ \t]+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])"
 )
@@ -243,9 +244,14 @@ REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
 
 
 def _security_verdict_blocks(reply: str) -> bool:
-    """True when a security verdict is present and is not an unambiguous pass."""
-    mentions = list(_SECURITY_VERDICT.finditer(reply))
-    return any((match.group(1) or "").upper() != "PASS" for match in mentions)
+    """True when a security verdict is present and the whole value is not PASS.
+
+    The key is ``SECURITY`` plus ``_``, ``-`` or a space, then ``VERDICT``.
+    A pass is the token ``PASS``, optional closing emphasis or a period, and
+    then only whitespace to the end of the line. ``PASS_WITH_CONDITIONS``,
+    ``PASS?`` and ``PASS (pending F1)`` are not a pass.
+    """
+    return any(_SECURITY_PASS.match(reply, match.end()) is None for match in _SECURITY_VERDICT.finditer(reply))
 
 
 def p3_residuals(reply: str) -> tuple[str, ...] | None:
@@ -2733,6 +2739,13 @@ def record(
         residuals=residuals,
     )
     comment = build_comment(**comment_fields)
+    # A cut reply is not verbatim, so it cannot become an approval.
+    if residuals is not None and TRUNCATION_FLAG in comment:
+        residuals = None
+        verdict = stated
+        comment_fields["verdict"] = stated
+        comment_fields["residuals"] = None
+        comment = build_comment(**comment_fields)
     destination = normalize_repository(repository)
     try:
         check_texts(destination, [comment], environment={})
@@ -2799,14 +2812,16 @@ def record(
             _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
         )
         # A repair head stays changes-requested unless the reply attests that the delta is only the repair.
-        if repaired is not None and residuals is not None:
+        # The note is written even when the mapping was already dropped, so lookup cannot approve the body later.
+        if repaired is not None and stated != "APPROVED":
             try:
                 require_repair_verified(reply, repaired)
             except RepairRefused:
-                residuals = None
-                verdict = stated
-                comment_fields["verdict"] = stated
-                comment_fields["residuals"] = None
+                if residuals is not None:
+                    residuals = None
+                    verdict = stated
+                    comment_fields["verdict"] = stated
+                    comment_fields["residuals"] = None
                 comment = build_comment(**comment_fields, repair_withheld=True)
                 check_texts(destination, [comment], environment={})
         existing = None
