@@ -75,6 +75,7 @@ from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
 from . import preparation_state, state_helpers
+from .claude_account_usage import revalidated_routing_budget_fields
 from .claude_account_usage import routing_budget_fields as claude_account_routing_fields
 from .codexbar_usage import (
     compute_weekly_pace_delta_pct,
@@ -2191,7 +2192,9 @@ def compute_routing_budget(
     return budget
 
 
-def _aged_routing_budget(payload: object, age_s: float, *, stale: bool = True) -> object:
+def _aged_routing_budget(
+    payload: object, age_s: float, *, stale: bool = True, claude_fields: dict[str, Any] | None = None,
+) -> object:
     """Publish the real age of a stored routing snapshot without adding keys.
 
     Within the stale threshold the recommendation stays. Past
@@ -2201,7 +2204,7 @@ def _aged_routing_budget(payload: object, age_s: float, *, stale: bool = True) -
     """
     if not isinstance(payload, dict):
         return payload
-    served = {**payload, **claude_account_routing_fields()}
+    served = {**payload, **(claude_account_routing_fields() if claude_fields is None else claude_fields)}
     diagnostics = payload.get("diagnostics")
     threshold = ROUTING_BUDGET_MAX_AGE_S
     reported_age = age_s
@@ -2386,13 +2389,17 @@ async def routing_budget(
 
         schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute, should_refresh=_needs_refresh)
         value = await _with_live_lane_errors(value, tasks_dir, cache_key)
+        claude_fields = await revalidated_routing_budget_fields()
         return _aged_routing_budget(
             value, state_helpers._ttl_clock() - observed.started_at,
             stale=age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set(),
+            claude_fields=claude_fields,
         )
     observed, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
+    claude_fields = await revalidated_routing_budget_fields()
     return _aged_routing_budget(
         value, state_helpers._ttl_clock() - observed.started_at, stale=observed.invalidated.is_set(),
+        claude_fields=claude_fields,
     )
 
 
