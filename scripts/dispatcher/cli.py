@@ -133,7 +133,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dispatch.add_argument(
         "--input", action="append", default=[], metavar="PATH",
-        help="Regular file, e.g. ~/notes.txt, mounted read-only at /agy-inputs/<n>; "
+        help="Regular file, e.g. notes.txt, mounted read-only at /agy-inputs/<n>; "
              "requires --agent agy and --mode read-only "
              "(repeatable, at most 8, each at most 8 MiB; default: none). "
              "Refuses excess inputs, oversized files, symlinks, hard links, unreadable or "
