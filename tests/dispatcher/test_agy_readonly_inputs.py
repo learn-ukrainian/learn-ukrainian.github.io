@@ -8,6 +8,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
@@ -412,3 +413,53 @@ def test_refuses_when_digest_changes_before_start(tmp_path, monkeypatch):
     assert receipt["reason"] == "agy_input_refused: digest changed before start"
     assert not marker.exists()
     assert not (tmp_path / f"scratch-{task_id}").exists()
+
+
+def test_tool_results_survive_scratch_delete(tmp_path: Path) -> None:
+    """The export is written before scratch removal, and a missing file is marked file_removed."""
+    conversation = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
+    scratch = tmp_path / "scratch"
+    app = scratch / "runtime" / "home" / ".gemini" / "antigravity-cli"
+    kept = app / "brain" / conversation / ".system_generated" / "steps" / "34" / "output.txt"
+    kept.parent.mkdir(parents=True)
+    kept.write_text("kept body", encoding="utf-8")
+    (app / "brain" / conversation / ".system_generated" / "steps" / "44").mkdir()
+    final = tmp_path / "task.result"
+    boundary = agy_sandbox._Boundary.__new__(agy_sandbox._Boundary)
+    boundary.args = SimpleNamespace(receipt=str(agy_sandbox.receipt_file(final)), scratch=str(scratch))
+    boundary.receipt = {}
+    boundary.base = scratch
+    boundary.created = True
+    boundary.process = boundary.relay = boundary.egress = boundary.fixture = None
+    boundary.cleanup()
+
+    assert not scratch.exists()
+    export = agy_sandbox.tool_results_file(final)
+    payload = json.loads(export.read_text(encoding="utf-8"))
+    by_step = {item["step_index"]: item for item in payload["calls"]}
+    assert payload["schema"] == "agy-tool-results.v1"
+    assert by_step[34]["output"] == "kept body"
+    assert by_step[44]["output_missing"] == "file_removed"
+
+    def event(step: int) -> dict:
+        return {
+            "event": "step_update",
+            "step_update": {
+                "conversation_id": conversation,
+                "state": "DONE",
+                "step_index": step,
+                "tool_name": "call_mcp_tool",
+                "tool_info": {
+                    "parameters": {"ServerName": "sources", "ToolName": "search_text", "Arguments": "{}"},
+                },
+            },
+        }
+
+    stdout = tmp_path / "stdout.log"
+    stdout.write_text(json.dumps(event(34)) + "\n" + json.dumps(event(44)) + "\n", encoding="utf-8")
+    retained, missing = agy_sandbox.apply_tool_results(stdout, final, "i12339-tool-results")
+    lines = [json.loads(line) for line in stdout.read_text(encoding="utf-8").splitlines()]
+    assert (retained, missing) == (1, 1)
+    assert lines[0]["step_update"]["tool_info"]["output"] == "kept body"
+    assert lines[1]["step_update"]["tool_info"]["output_missing"] == "file_removed"
+    assert not export.exists()
