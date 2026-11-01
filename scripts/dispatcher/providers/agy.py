@@ -290,7 +290,9 @@ def _excerpt(text: str) -> str:
     """
     from scripts.secret_redactor import redact_text
 
-    redacted = redact_text(text) or ""
+    # The redactor ends a line only at CR or LF. Every other logical line boundary (U+000B, U+000C,
+    # U+001C-U+001E, U+0085, U+2028, U+2029) becomes LF first, so no assignment runs past it.
+    redacted = redact_text("\n".join(text.splitlines())) or ""
     printable = "".join(character if character.isprintable() else " " for character in redacted)
     return " ".join(printable.split()).replace(str(Path.home()), "~")[:_ERROR_DETAIL_CHARS]
 
