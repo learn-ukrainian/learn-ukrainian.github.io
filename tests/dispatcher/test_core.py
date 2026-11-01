@@ -4062,6 +4062,40 @@ def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp
         assert "CLAUDE_CODE_PROMPT_CACHE_TTL" not in invocation.env
 
 
+def _plan_headroom_policy(tmp_path, monkeypatch, used, **extra):
+    from scripts.dispatcher import headroom
+
+    path = tmp_path / "model-pause.json"
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 90}], **extra}
+    path.write_text(json.dumps(policy), encoding="utf-8")
+    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(path))
+    monkeypatch.setattr(headroom.model_pause, "routing_budget_used_pct", lambda _lane, *, account: used)
+    return headroom
+
+
+def test_check_plan_judges_an_api_key_account_by_its_spend_cap(tmp_path, monkeypatch):
+    """Defect (#12356): an API-key account has no plan meter, so the plan cap refused it as unknown usage."""
+    headroom = _plan_headroom_policy(tmp_path, monkeypatch, None)
+    record = {"claude_account": "kk", "mode": "read-only"}
+    headroom.check_plan("claude", "claude-opus-5-5", record)
+    with pytest.raises(ValueError, match=r"^CLAUDE_ACCOUNT_REFUSED: claude_account_budget_cap_invalid$"):
+        headroom.check_plan("claude", "claude-opus-5-5", {**record, "max_budget_usd": "1000"})
+    _plan_headroom_policy(tmp_path, monkeypatch, None, pauses=[{"pattern": "claude-*", "until": "2999-01-01T00:00:00Z"}])
+    with pytest.raises(headroom.model_pause.ModelPausedRefused, match="MODEL_PAUSED"):
+        headroom.check_plan("claude", "claude-opus-5-5", record)
+
+
+@pytest.mark.parametrize(("used", "reason"), [(95.0, "MODEL_HEADROOM:"), (None, "MODEL_HEADROOM_USAGE_UNKNOWN:")])
+def test_check_plan_keeps_subscription_plan_headroom(tmp_path, monkeypatch, used, reason):
+    """Control (#12356): a subscription account is still judged by its plan meter."""
+    headroom = _plan_headroom_policy(tmp_path, monkeypatch, used)
+    for label in ("a", "b"):
+        with pytest.raises(headroom.model_pause.ModelPausedRefused, match=f"^{reason}"):
+            headroom.check_plan("claude", "claude-opus-5-5", {"claude_account": label, "mode": "read-only"})
+    _plan_headroom_policy(tmp_path, monkeypatch, 50.0)
+    headroom.check_plan("claude", "claude-opus-5-5", {"claude_account": "a", "mode": "read-only"})
+
+
 @pytest.mark.parametrize(
     ("model", "mode", "options", "advised"),
     [

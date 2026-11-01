@@ -218,6 +218,18 @@ def test_only_fresh_probe_readings_count(monkeypatch) -> None:
     assert unusable({"used_pct": 10, "remaining_pct": 90, "freshness": False}) is None
 
 
+def test_window_used_pct_requires_false_stale_and_finite_remaining() -> None:
+    """Defect (#12367): a non-false stale flag or a non-finite remaining percent was read as usage."""
+    for stale in (None, "false", "true", 0):
+        assert mp._window_used_pct({"used_pct": 10, "remaining_pct": 90, "stale": stale}) is None
+    for remaining in (float("nan"), float("inf"), "90", None):
+        assert mp._window_used_pct({"used_pct": 10, "remaining_pct": remaining}) is None
+    # Control: valid readings keep today's result.
+    assert mp._window_used_pct({"used_pct": 10, "remaining_pct": 90, "stale": False}) == 10.0
+    assert mp._window_used_pct({"used_pct": 10}) == 10.0
+    assert mp._window_used_pct({"remaining_pct": 0, "stale": False}) == 100.0
+
+
 def test_aggregate_snapshot_staleness_does_not_hide_a_fresh_lane(monkeypatch) -> None:
     fresh = {"stale": False, "freshness": "fresh", "weekly_used_pct": 91}
     payload = {"diagnostics": {"stale": True}, "agents": {"claude": {"status": "hot", "codexbar": fresh}}}
