@@ -1343,6 +1343,8 @@ def _ignored_output_files(
     ignored = set(names)
     tracked = set(artifacts._git_paths(worktree, "--cached"))
     release_pins = committed_release_pins(worktree, tracked)
+    # One verdict per dependency lock for this inventory, shared by both classification passes.
+    dependency_locks: dict[str, bool] = {}
     if not tracked:
         # --no-checkout leaves an empty index and no on-disk .gitignore.
         # Unignored scratch can be task output too; inventory both classes.
@@ -1357,7 +1359,8 @@ def _ignored_output_files(
         source = worktree / relative
         try:
             if is_regenerable_ignored_path(
-                name, worktree=worktree, tracked=tracked, ignored=ignored, release_pins=release_pins
+                name, worktree=worktree, tracked=tracked, ignored=ignored, release_pins=release_pins,
+                dependency_locks=dependency_locks,
             ):
                 continue
             status = source.lstat()
@@ -1387,7 +1390,8 @@ def _ignored_output_files(
         for name in files
         if not artifacts.is_disposable_path(Path(name), worktree=worktree, primary=primary)
         and not is_regenerable_ignored_path(
-            name, worktree=worktree, tracked=tracked, ignored=ignored, release_pins=release_pins
+            name, worktree=worktree, tracked=tracked, ignored=ignored, release_pins=release_pins,
+            dependency_locks=dependency_locks,
         )
     )
 

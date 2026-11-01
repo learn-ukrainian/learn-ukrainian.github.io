@@ -232,6 +232,81 @@ def test_regenerable_proof_refuses_unparseable_lockfile(checkout, filename, vali
         ) is expected
 
 
+def _commit_dependency_lock(repo, content):
+    (repo / ".gitignore").write_text("node_modules/\n")
+    (repo / "package-lock.json").write_text(content)
+    repo_fixtures._run(["git", "add", ".gitignore", "package-lock.json"], cwd=repo)
+    repo_fixtures._run(
+        ["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+         "commit", "-m", "dependency input"], cwd=repo,
+    )
+
+
+def _count_lock_parses(monkeypatch):
+    calls = []
+    original = patterns._parse_dependency_input
+    monkeypatch.setattr(
+        patterns, "_parse_dependency_input", lambda filename, payload: (calls.append(filename), original(filename, payload))[1]
+    )
+    return calls
+
+
+def test_dependency_lock_validated_once_per_inventory(checkout, monkeypatch):
+    """Defect class: every file under node_modules re-read and re-parsed the lock (#12345)."""
+    repo = checkout[0]
+    _commit_dependency_lock(repo, '{"lockfileVersion": 3}\n')
+    names = [f"node_modules/package-{index}/index.js" for index in range(5)]
+    for name in names:
+        fixtures.artifact(checkout, name, b"dependency output")
+    calls = _count_lock_parses(monkeypatch)
+    verdicts: dict[str, bool] = {}
+    assert all(
+        patterns.is_regenerable_ignored_path(
+            name, worktree=repo, tracked={"package-lock.json"}, ignored=set(names), dependency_locks=verdicts
+        )
+        for name in names
+    )
+    assert calls == ["package-lock.json"]
+    assert verdicts == {"package-lock.json": True}
+
+
+@pytest.mark.parametrize("refusal", ["untracked", "invalid"])
+def test_refused_dependency_lock_keeps_every_file_as_output(checkout, monkeypatch, refusal):
+    """Defect class: a shared lock verdict must not turn a failed proof into acceptance."""
+    repo = checkout[0]
+    _commit_dependency_lock(repo, "not lockfile content [\n" if refusal == "invalid" else '{"lockfileVersion": 3}\n')
+    names = [f"node_modules/package-{index}/index.js" for index in range(3)]
+    for name in names:
+        fixtures.artifact(checkout, name, b"dependency output")
+    calls = _count_lock_parses(monkeypatch)
+    verdicts: dict[str, bool] = {}
+    tracked = set() if refusal == "untracked" else {"package-lock.json"}
+    assert not any(
+        patterns.is_regenerable_ignored_path(
+            name, worktree=repo, tracked=tracked, ignored=set(names), dependency_locks=verdicts
+        )
+        for name in names
+    )
+    assert verdicts == {"package-lock.json": False}
+    assert len(calls) == (0 if refusal == "untracked" else 1)
+
+
+def test_database_file_under_dependency_directory_stays_output(checkout):
+    """Defect class: the shared lock verdict must not exempt per-file database content."""
+    repo = checkout[0]
+    _commit_dependency_lock(repo, '{"lockfileVersion": 3}\n')
+    code, database = "node_modules/package/index.js", "node_modules/package/cache.sqlite"
+    for name in (code, database):
+        fixtures.artifact(checkout, name, b"dependency output")
+    verdicts: dict[str, bool] = {}
+    arguments = {
+        "worktree": repo, "tracked": {"package-lock.json"}, "ignored": {code, database}, "dependency_locks": verdicts,
+    }
+    assert patterns.is_regenerable_ignored_path(code, **arguments)
+    assert verdicts == {"package-lock.json": True}
+    assert not patterns.is_regenerable_ignored_path(database, **arguments)
+
+
 @pytest.mark.parametrize(
     "remaining",
     [
