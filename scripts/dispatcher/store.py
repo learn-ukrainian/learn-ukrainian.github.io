@@ -186,6 +186,15 @@ def _write(path: Path, record: dict, exclusive: bool = False, *, grant: dict | N
                 record["owned_path_grants"] = current["owned_path_grants"]
             if current.get("settling_at"):
                 record["settling_at"] = current["settling_at"]
+            # An owner hold outranks a stale supervisor copy. False is an intentional clear;
+            # absence leaves a hold that is already on disk in place.
+            if record.get("worktree_retention_hold") is False:
+                record.pop("worktree_retention_hold", None)
+            elif current.get("worktree_retention_hold") is True:
+                record["worktree_retention_hold"] = True
+                record["worktree_disposition"] = "retained"
+                record["worktree_disposition_reason"] = "retention_hold"
+                record.pop("worktree_disposition_detail", None)
         if grant is not None:
             record["owned_path_grants"] = [*record.get("owned_path_grants", []), grant]
         _write_atomic(path, record, exclusive)

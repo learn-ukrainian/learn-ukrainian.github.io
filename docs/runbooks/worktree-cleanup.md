@@ -249,11 +249,16 @@ and records `worktree_disposition: retained` with one of these reasons:
 - `removal_refused`: the `worktree_claims` chokepoint refused (lock busy,
   another unfinished record claims the tree, or artifact preservation failed);
   `worktree_disposition_detail` carries its reason.
+- `opsec_refused`: salvage's push would send a range the public push gate refuses
+  (the same message scan and commit-range blob scan). The tree stays, the push
+  does not happen, and the detail is a fixed phrase. This reason is not retried;
+- `retention_hold`: an owner set the per-task hold. The tree stays, untouched.
 
 A failed removal is recorded as `error` (`worktree_remove_failed` with
 `worktree_disposition_detail`, or `settlement_failed`). Every later dispatch and
-every task settlement retries settlement for every reason except
-`borrowed_worktree` (`worker.RETRY_REASONS`, `worker.settle_left_worktrees`),
+every task settlement retries the reasons in `worker.RETRY_REASONS`
+(`worker.settle_left_worktrees`). `borrowed_worktree`, `opsec_refused` and
+`retention_hold` are not among them. Retries run
 under the same proofs: a tree that is still dirty or unpublished stays for its
 owner. The hourly hygiene run (`scheduled_worktree_cleanup.py --apply`) runs
 the same retry with salvage: after the provider, borrower and worktree-claim
@@ -265,7 +270,14 @@ a nested repository with unpushed or uncommitted work
 (`nested_repository_unpushed`) and more than 100 MB of meaningful ignored
 output (`large_ignored_output`); a publication read that the shared GitHub
 client's admission refused keeps a tree as `github_deferred` in any
-settlement. The run's private receipt lists every
+settlement. A range the public push gate refuses stays as `opsec_refused`
+and is not pushed or retried; the hourly alert names it with the other safety
+stops. An owner sets or clears a hold with
+`scripts/dispatch.py retain-worktree TASK --set` or `--clear`. While the hold
+is set, settlement, salvage and this run leave the worktree untouched
+(`retention_hold`). A later write of the task record does not drop the hold,
+and the old-tree report does not inspect a held checkout. Clearing the hold
+does not push or remove the tree; the next settlement decides. The run's private receipt lists every
 finished task's tree still on disk with its reason; the summary carries
 `retained_count`, `retained_safety_stops` and `retained_complete`.
 The same run prunes the nightly data-tier job's abandoned checkouts
