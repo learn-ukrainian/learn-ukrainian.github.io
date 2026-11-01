@@ -332,15 +332,24 @@ _P3_REFUSED = {
     "object-then-prose": _P3_OBJECT + "\n\nF2 [P2] scripts/a.py:3 still open.\n",
     "two-objects": _P3_OBJECT + "\n" + _P3_OBJECT,
     "duplicate-findings-key": _P3_DUPLICATE,
+    "nan-confidence": _P3_OBJECT.replace('"confidence": 0.9', '"confidence": NaN', 1),
+    "infinity-confidence": _P3_OBJECT.replace('"confidence": 0.9', '"confidence": Infinity', 1),
+    "escaped-security-fail": _P3_OBJECT.replace("One P3 residual.", "\\u0053ECURITY_VERDICT: FAIL"),
+    "escaped-security-underscore": _P3_OBJECT.replace("One P3 residual.", "SECURITY\\u005fVERDICT: FAIL"),
+}
+_P3_REASONS = {
+    "duplicate-findings-key": recorder.P3_DUPLICATE_KEY,
+    "escaped-security-fail": recorder.P3_SECURITY_NOT_PASS,
+    "escaped-security-underscore": recorder.P3_SECURITY_NOT_PASS,
 }
 
 
-@pytest.mark.parametrize("reply", list(_P3_REFUSED.values()), ids=list(_P3_REFUSED))
-def test_p3_downgrade_refuses_every_reply_but_one_findings_object(reply):
+@pytest.mark.parametrize("name", list(_P3_REFUSED))
+def test_p3_downgrade_refuses_every_reply_but_one_findings_object(name):
     """Only a whole-reply findings object is read for P3 residuals; prose keeps the rejection (#12409)."""
+    reply = _P3_REFUSED[name]
     reading = recorder.p3_reading(reply)
-    expected = recorder.P3_DUPLICATE_KEY if reply is _P3_DUPLICATE else recorder.P3_NOT_ONE_OBJECT
-    assert reading == recorder.P3Reading(reason=expected)
+    assert reading == recorder.P3Reading(reason=_P3_REASONS.get(name, recorder.P3_NOT_ONE_OBJECT))
     body = recorder.build_comment(
         sha=SHA, task_id="review-one", started="2026-09-23T12:00:00+00:00", verdict="CHANGES_REQUESTED",
         model="gpt-6.1-sol", family="openai", reply=reply,
