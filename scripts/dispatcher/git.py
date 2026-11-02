@@ -140,6 +140,22 @@ def _private_remote_git(task_id: str, remote: str):
             scratch.preserve()
 
 
+class OriginBaseRequired(ValueError):
+    """``ref`` is not the ``origin/<branch>`` form ownership verification accepts."""
+
+
+def verifiable_origin_base(ref: str) -> str:
+    """The base ownership verification accepts: ``refs/remotes/`` stripped, then ``origin/<branch>``.
+
+    A commit SHA, a local branch name, and any other ref raise ``OriginBaseRequired``.
+    Dispatch refuses a workspace-write ``--base`` with this check instead of copying it.
+    """
+    base = ref.removeprefix("refs/remotes/")
+    if not base.startswith("origin/"):
+        raise OriginBaseRequired("ownership verification requires an origin base")
+    return base
+
+
 @contextmanager
 def ownership_git(record: dict):
     """Walk trusted remote objects in a private config/ref namespace.
@@ -162,9 +178,7 @@ def ownership_git(record: dict):
     remote = record["worktree_remote_url"]
     if verification_origin(Path(record["worktree_path"])) != remote:
         raise ValueError("origin URL changed since dispatch")
-    base = record["worktree_base_ref"].removeprefix("refs/remotes/")
-    if not base.startswith("origin/"):
-        raise ValueError("ownership verification requires an origin base")
+    base = verifiable_origin_base(record["worktree_base_ref"])
     task_base = record.get("worktree_start_sha", record["worktree_base_sha"])
     if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", task_base):
         raise ValueError("task base must be a full object name")

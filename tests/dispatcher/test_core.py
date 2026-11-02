@@ -2399,6 +2399,30 @@ def test_branch_write_refuses_local_outside_commit_after_remote_branch_deleted(s
     assert not (sandbox.repo / ".worktrees/dispatch/codex/missing-remote").exists()
 
 
+def test_workspace_write_sha_base_is_refused_at_dispatch(sandbox):
+    """A commit SHA is not an origin base, so settlement would record no_deliverable."""
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    result = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "literal final response",
+        "--task-id", "sha-base-write", "--mode", "workspace-write", "--base", sha,
+        expected=2,
+    )
+    assert "workspace_write_base_unverified:" in result.stderr
+    assert "--base origin/main --branch <PR head branch>" in result.stderr
+    assert "with the PR's files as owned paths" in result.stderr
+    assert not (sandbox.tasks / "sha-base-write.json").exists()
+    assert not (sandbox.repo / ".worktrees/dispatch/codex/sha-base-write").exists()
+
+
+def test_read_only_sha_base_is_still_admitted(sandbox):
+    """Read-only reviews keep a commit SHA as --base; settlement does not verify it."""
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    record = sandbox.settle(sandbox.dispatch("echo", "--task-id", "sha-base-read", "--mode", "read-only", "--base", sha))
+    assert record["status"] == "done"
+    assert record["mode"] == "read-only"
+    assert record["worktree_base_ref"] == sha
+
+
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")
