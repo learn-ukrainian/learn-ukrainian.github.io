@@ -162,7 +162,7 @@ def test_review_boundary_refuses_bypass_classes_and_keeps_execution(tmp_path, ro
         assert "egress" not in receipt
         assert (worktree / ".venv").resolve() == project_interpreter().parent.parent.resolve()
         assert set(agy_sandbox.ensure_scratch_root().glob("claude-shell-*")) <= scratches  # removed with the command
-        if case.startswith("F1-gh-"):
+        if "-gh-" in case:  # the relay itself refused, not gh failing afterwards (cf-12521-sol-r2 F2)
             assert receipt["gh"][0]["refused"] and "review boundary: " in run.stderr
         if granted:
             assert cwd_file.read_text().strip() == str(worktree.resolve())
