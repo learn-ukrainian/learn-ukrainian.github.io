@@ -312,6 +312,7 @@ def admit_grant_round(
     login: str,
     task_root: Path,
     head: str,
+    recording_run: tuple[str, str] | None = None,
 ) -> dict[str, Any] | None:
     """The receipt of a grant admitting this round; None when the PR has no grant, or a refusal."""
     grants: list[Grant] = []
@@ -331,7 +332,7 @@ def admit_grant_round(
         try:
             receipts.append(_admit(
                 grant, repository=repository, branch=branch, changed_paths=changed_paths, comments=comments, login=login,
-                task_root=task_root, head=head,
+                task_root=task_root, head=head, recording_run=recording_run,
             ))
         except GrantRefused as exc:
             refusals.append(exc)
@@ -352,6 +353,7 @@ def _admit(
     login: str,
     task_root: Path,
     head: str,
+    recording_run: tuple[str, str] | None,
 ) -> dict[str, Any]:
     """This one grant's receipt for the round, or why it does not apply."""
     request = grant.request
@@ -366,7 +368,8 @@ def _admit(
         raise GrantRefused(SCOPE, f"grant {grant.task_id!r} does not cover changed paths {outside}")
     withheld_receipt = {}
     if request["blocker_class"] == WITHHELD_CAPABILITY:
-        withheld_receipt = _withheld_round(grant, comments=comments, login=login, task_root=task_root, head=head)
+        withheld_receipt = _withheld_round(grant, comments=comments, login=login, task_root=task_root, head=head,
+                                          recording_run=recording_run)
         cited = withheld_receipt["cited_verdict_head"]
     else:
         cited = open_blocker_cited(comments, login, request["finding_id"])
@@ -390,7 +393,8 @@ def _admit(
 
 
 def _withheld_round(
-    grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, task_root: Path, head: str
+    grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, task_root: Path, head: str,
+    recording_run: tuple[str, str] | None,
 ) -> dict[str, Any]:
     # The sealed advisor attests that each complete finding excerpt describes a corrected
     # defect awaiting verification only, and that the probe excerpt demonstrates capability.
@@ -450,7 +454,7 @@ def _withheld_round(
                 raise GrantRefused(BLOCKER, f"{marker['task']}: a substantive rejection intervened")
         for run in runs:
             started = lineage._started(run.record)
-            if run.record.get("worktree_base_sha") == head:
+            if recording_run is not None and (run.task_id, run.record.get("run_nonce")) == recording_run:
                 continue
             if started is None:
                 raise GrantRefused(EVIDENCE, f"{run.task_id}: review start unavailable")

@@ -2311,6 +2311,7 @@ def budget_admission(
     review_root: Path,
     fetch: bool = True,
     dispatched: Callable[[], dict[str, list[str]]] | None = None,
+    recording_run: tuple[str, str] | None = None,
 ) -> dict[str, Any]:
     """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``.
 
@@ -2349,6 +2350,7 @@ def budget_admission(
             login=login,
             task_root=task_root,
             head=sha,
+            recording_run=recording_run,
         )
         if budget < ELEVATED_REVIEW_ROUNDS
         else None,
@@ -2835,6 +2837,7 @@ def record(
             login=login,
             task_root=task_root,
             review_root=review_root,
+            recording_run=(task_id, task["run_nonce"]) if isinstance(task.get("run_nonce"), str) else None,
         )
         granted_route = budget_receipt.get("budget_grant", {}).get("retry_route")
         if granted_route is not None and {

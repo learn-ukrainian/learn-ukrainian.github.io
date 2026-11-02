@@ -4102,7 +4102,7 @@ def withheld_grant_case(monkeypatch, tmp_path, *, duplicate=False, reply=WITHHEL
              "reply_sha256": hashlib.sha256(probe_reply.encode()).hexdigest(), "capability_evidence": probe_reply}
     write_task(tasks, task_id="retry-probe", reply=probe_reply, schema_version=2, review_branch=BRANCH,
                mode="read-only", run_nonce=probe["run_nonce"], result_sha256=probe["reply_sha256"])
-    write_task(tasks, mode="read-only")
+    write_task(tasks, schema_version=2, review_branch=BRANCH, pr=42, mode="read-only", run_nonce="current-nonce")
     request = {**GRANT_REQUEST, "blocker_class": "withheld-capability",
                "withheld_capability": {"capability": "shell", "runs": bindings, "retry_probe": probe}}
     return tasks, comments, calls, request
@@ -4150,7 +4150,7 @@ def test_withheld_capability_two_runs_at_one_head_credit_one_round(monkeypatch, 
 
 
 @pytest.mark.parametrize("defect", ["substantive-latest", "new-p0", "new-p1", "new-named-p0", "new-named-p1",
-                                  "substantive-intervening"])
+                                  "substantive-intervening", "same-head-substantive"])
 def test_withheld_capability_substantive_rejection_or_new_p0_p1_refused(monkeypatch, tmp_path, defect):
     reply = WITHHELD_REPLY
     if defect.startswith("new-p"):
@@ -4160,9 +4160,10 @@ def test_withheld_capability_substantive_rejection_or_new_p0_p1_refused(monkeypa
     tasks, comments, calls, request = withheld_grant_case(monkeypatch, tmp_path, reply=reply)
     if defect == "substantive-latest":
         comments.append(verdict_with_reply("4" * 40, "CHANGES_REQUESTED", OPEN_F2, task_id="later"))
-    elif defect == "substantive-intervening":
-        write_task(tasks, task_id="intervening", reply=OPEN_F2, type="review", pr=42,
-                   worktree_base_sha="2" * 40, started_at="2026-09-23T11:00:01+00:00")
+    elif defect in {"substantive-intervening", "same-head-substantive"}:
+        write_task(tasks, task_id="intervening", reply=OPEN_F2, type="review", pr=42, mode="read-only",
+                   worktree_base_sha=SHA if defect == "same-head-substantive" else "2" * 40,
+                   started_at="2026-09-23T11:00:01+00:00")
     write_grant(tasks, request)
     with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[blocker\]"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
