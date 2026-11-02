@@ -2,13 +2,18 @@
 
 Expired local report-only branches are archived from this same command: one thin
 bundle (history already on origin/main stays out), a receipt line that is re-read
-before use, then one compare-and-delete of those local refs. Remote refs and old
-bundles stay.
+before use, then one compare-and-delete of those local refs. Remote refs stay.
+
+Bundles at least 30 days old can then be aged out with ``--age-out-bundles``: copied
+to ``<bulk root>/branch-archive/``, checked by sha256 and ``git bundle verify``, recorded
+in ``stale-local-receipts.jsonl``, and only then removed locally. No marker-valid bulk
+root means nothing is removed. ``--restore-bundle`` copies one back.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
 import contextvars
 import fcntl
 import hashlib
@@ -38,6 +43,7 @@ from scripts.orchestration import worktree_git as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
 from scripts.orchestration.task_record_store import read_task_record
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
+from scripts.storage import topology as storage_topology
 
 AGENTS = frozenset({"codex", "claude", "grok", "agy", "kimi", "cursor", "deepseek", "gemini", "glm"})
 PROTECTED = frozenset({"main", "master", "gh-pages", "production"})
@@ -57,6 +63,9 @@ DEFAULT_ARCHIVE_AFTER_DAYS = 7
 # Archival waits. Patch-id deletion and the other dispositions do not.
 RECENT_RELEASED_TASK_DAYS = DEFAULT_ARCHIVE_AFTER_DAYS
 BUNDLE_REVIEW_DAYS = 90
+# OO-RETENTION-1102: bundles this old move to the bulk mirror (#12531).
+BUNDLE_AGE_OUT_DAYS = 30
+BULK_ARCHIVE_DIR = "branch-archive"
 # main() keeps sweep(repo, apply=...) so wrappers of that signature keep working.
 # The CLI threshold is installed for that call; an explicit argument still wins.
 _ARCHIVE_AFTER_DAYS: contextvars.ContextVar[int | None] = contextvars.ContextVar(
@@ -1973,6 +1982,237 @@ def _review_bundle_decisions(repo: Path) -> list[Decision]:
     return listed
 
 
+@dataclass(frozen=True)
+class AgeOutResult:
+    """What the bundle age-out did, or would do, for one archive bundle."""
+
+    bundle: str
+    status: Literal["would-age-out", "aged-out", "retained"]
+    reason: str
+    age_days: int
+    size_bytes: int
+    sha256: str | None = None
+    locator: str | None = None
+
+
+def _bundle_name_ok(name: str) -> bool:
+    return bool(name) and name == Path(name).name and name.endswith(".bundle") and not name.startswith(".")
+
+
+def _age_out_candidates(directory: Path, *, now: float, min_days: int) -> list[tuple[Path, int, int]]:
+    """Regular ``*.bundle`` files at least ``min_days`` old by mtime: (path, age_days, size)."""
+    try:
+        info = os.lstat(directory)
+    except FileNotFoundError:
+        return []
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        raise RuntimeError("archive path is not a plain directory")
+    found: list[tuple[Path, int, int]] = []
+    for path in sorted(directory.iterdir(), key=lambda item: item.name):
+        child = os.lstat(path)
+        if stat.S_ISLNK(child.st_mode) or not stat.S_ISREG(child.st_mode) or not _bundle_name_ok(path.name):
+            continue
+        age_days = max(0, int(now - child.st_mtime) // 86400)
+        if age_days >= min_days:
+            found.append((path, age_days, child.st_size))
+    return found
+
+
+def _bulk_archive_dir(resolution: storage_topology.BulkRootResolution, *, create: bool) -> Path:
+    """``<bulk root>/branch-archive``. Only a marker-valid root resolved by the topology module counts."""
+    if not resolution.available or resolution.path is None:
+        raise RuntimeError(f"bulk root unavailable ({resolution.reason}); nothing was changed")
+    directory = resolution.path / BULK_ARCHIVE_DIR
+    if create:
+        with contextlib.suppress(FileExistsError):
+            os.mkdir(directory, 0o700)
+    info = os.lstat(directory)
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        raise RuntimeError("bulk branch-archive path is not a plain directory")
+    return directory
+
+
+def _copy_no_replace(source: Path, destination: Path) -> None:
+    """Stream ``source`` to a private temporary name beside ``destination``, flush, then publish.
+
+    The caller holds the archive lock and has seen ``destination`` absent.
+    """
+    temporary = destination.with_name(f".{destination.name}.{os.getpid()}.tmp")
+    src = os.open(source, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        dst = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
+        try:
+            while chunk := os.read(src, 1024 * 1024):
+                _write_all(dst, chunk)
+            os.fsync(dst)
+        finally:
+            os.close(dst)
+        if os.path.lexists(destination):
+            raise RuntimeError("bulk destination appeared during the copy; refusing to replace it")
+        os.rename(temporary, destination)
+    except BaseException:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(temporary)
+        raise
+    finally:
+        os.close(src)
+
+
+def _relocation_records(repo: Path) -> list[dict[str, object]]:
+    path = _controlled_file(repo, RECEIPT_PATH, refusal="archive path contains a symlink")
+    if not os.path.lexists(path):
+        return []
+    rows = _parse_archive_receipts(_read_from(path, 0))
+    return [row for row in rows if row.get("event") == "bundle-relocated"]
+
+
+def _record_relocation(repo: Path, name: str, checksum: str, size: int, source: str) -> None:
+    """Append the relocation record and re-read it. No local file goes before this is durable."""
+    for row in _relocation_records(repo):
+        if row.get("bundle") == name and row.get("sha256") == checksum:
+            return
+    path = _controlled_file(repo, RECEIPT_PATH, refusal="archive path contains a symlink")
+    offset = os.lstat(path).st_size if os.path.lexists(path) else 0
+    payload: dict[str, object] = {
+        "at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "bulk_locator": f"{BULK_ARCHIVE_DIR}/{name}",
+        "bulk_source": source,
+        "bundle": name,
+        "event": "bundle-relocated",
+        "restore": f"python -m scripts.hygiene.branch_sweep --restore-bundle {shlex.quote(name)}",
+        "sha256": checksum,
+        "size_bytes": size,
+    }
+    _append_ledger_line(repo, payload, relative=RECEIPT_PATH)
+    if _parse_archive_receipts(_read_from(path, offset)) != [payload]:
+        raise RuntimeError("relocation record does not match what was written")
+
+
+def _age_out_one(
+    repo: Path,
+    path: Path,
+    bulk_directory: Path,
+    resolution: storage_topology.BulkRootResolution,
+    *,
+    min_days: int,
+    now: float,
+) -> AgeOutResult:
+    child = os.lstat(path)
+    age_days = max(0, int(now - child.st_mtime) // 86400)
+    name = path.name
+    relative = (ARCHIVE_DIR / name).as_posix()
+    if stat.S_ISLNK(child.st_mode) or not stat.S_ISREG(child.st_mode) or age_days < min_days:
+        return AgeOutResult(relative, "retained", "bundle changed since it was listed", age_days, child.st_size)
+    checksum = _bundle_sha256(path)
+    destination = bulk_directory / name
+    if os.path.lexists(destination):
+        if stat.S_ISLNK(os.lstat(destination).st_mode) or _bundle_sha256(destination) != checksum:
+            return AgeOutResult(
+                relative, "retained", "bulk copy exists with different content; kept local", age_days, child.st_size
+            )
+    else:
+        _copy_no_replace(path, destination)
+    if _bundle_sha256(destination) != checksum or os.lstat(destination).st_size != child.st_size:
+        return AgeOutResult(
+            relative, "retained", "bulk copy sha256 or size differs; kept local", age_days, child.st_size
+        )
+    _verify_bundle_heads(repo, destination, {})
+    _record_relocation(repo, name, checksum, child.st_size, resolution.source)
+    _unlink_unverified(path)
+    directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
+    return AgeOutResult(
+        relative,
+        "aged-out",
+        "copied, sha256 and bundle verify passed, record written",
+        age_days,
+        child.st_size,
+        checksum,
+        f"{BULK_ARCHIVE_DIR}/{name}",
+    )
+
+
+def age_out_bundles(
+    repo: Path,
+    *,
+    apply: bool,
+    resolution: storage_topology.BulkRootResolution | None = None,
+    min_days: int = BUNDLE_AGE_OUT_DAYS,
+    now: float | None = None,
+) -> list[AgeOutResult]:
+    """Move bundles at least ``min_days`` old to the bulk mirror. Fail closed without a bulk root.
+
+    Dry run lists them. ``apply`` copies, checks sha256 and ``git bundle verify`` on the copy, records the
+    locator in ``stale-local-receipts.jsonl`` and only then removes the local file. Any failure keeps it.
+    """
+    stamp = datetime.now(UTC).timestamp() if now is None else now
+    directory = _controlled_file(repo, ARCHIVE_DIR, refusal="archive path contains a symlink")
+    candidates = _age_out_candidates(directory, now=stamp, min_days=min_days)
+    resolved = storage_topology.resolve_bulk_root() if resolution is None else resolution
+    if not candidates:
+        return []
+    if not resolved.available or resolved.path is None:
+        reason = f"bulk root unavailable ({resolved.reason}); nothing removed"
+        return [AgeOutResult((ARCHIVE_DIR / p.name).as_posix(), "retained", reason, a, s) for p, a, s in candidates]
+    if not apply:
+        return [
+            AgeOutResult((ARCHIVE_DIR / p.name).as_posix(), "would-age-out", "dry run", a, s) for p, a, s in candidates
+        ]
+    results: list[AgeOutResult] = []
+    with _archive_lock(repo):
+        bulk_directory = _bulk_archive_dir(resolved, create=True)
+        for path, age_days, size in candidates:
+            try:
+                results.append(_age_out_one(repo, path, bulk_directory, resolved, min_days=min_days, now=stamp))
+            except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+                results.append(
+                    AgeOutResult((ARCHIVE_DIR / path.name).as_posix(), "retained", f"kept local: {exc}", age_days, size)
+                )
+    return results
+
+
+def restore_bundle(
+    repo: Path,
+    name: str,
+    *,
+    destination: Path | None = None,
+    resolution: storage_topology.BulkRootResolution | None = None,
+) -> Path:
+    """Copy a relocated bundle back from the bulk mirror and prove it. Never replaces a file, never deletes."""
+    if not _bundle_name_ok(name):
+        raise RuntimeError("bundle name must be a plain *.bundle file name")
+    records = [row for row in _relocation_records(repo) if row.get("bundle") == name]
+    if not records:
+        raise RuntimeError(f"no bundle-relocated record for {name}")
+    checksum = records[-1].get("sha256")
+    if not isinstance(checksum, str):
+        raise RuntimeError("relocation record has no sha256")
+    resolved = storage_topology.resolve_bulk_root() if resolution is None else resolution
+    source = _bulk_archive_dir(resolved, create=False) / name
+    info = os.lstat(source)
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode) or _bundle_sha256(source) != checksum:
+        raise RuntimeError("bulk copy is missing or its sha256 differs from the ledger")
+    _verify_bundle_heads(repo, source, {})
+    target_directory = (
+        _controlled_file(repo, ARCHIVE_DIR, refusal="archive path contains a symlink")
+        if destination is None
+        else destination
+    )
+    _ensure_ledger_directory(target_directory)
+    target = target_directory / name
+    if os.path.lexists(target):
+        raise RuntimeError(f"{name} already exists at the destination; not replaced")
+    _copy_no_replace(source, target)
+    if _bundle_sha256(target) != checksum:
+        os.unlink(target)
+        raise RuntimeError("restored copy sha256 differs from the ledger; removed it")
+    _verify_bundle_heads(repo, target, {})
+    return target
+
+
 def _archive_after_days_arg(value: str) -> int:
     try:
         parsed = int(value)
@@ -1988,7 +2228,8 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "List stale agent and scratch branches, including landed work proven by patch-id or a merged pull request.\n"
             "Use after dispatch cleanup. Dry run is the default; --apply deletes proved-safe branches and archives\n"
-            "expired local report-only branches. Do not use it to delete remote branches or archive bundles."
+            "expired local report-only branches. Do not use it to delete remote branches. Bundles leave the local\n"
+            "archive only through --age-out-bundles, after a verified copy on the bulk mirror."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -2006,7 +2247,12 @@ def build_parser() -> argparse.ArgumentParser:
             "The receipt is re-read, every guard is checked again, and one compare-and-delete then removes\n"
             "only those local refs. Any failure keeps the whole batch. Remote refs stay.\n"
             "Any native operation in any registered worktree refuses the sweep, even on an unrelated branch.\n"
-            "Bundles at least 90 days old are listed as review-bundle and are never deleted.\n"
+            "Bundles at least 90 days old are listed as review-bundle by a sweep; a sweep never deletes them.\n"
+            "--age-out-bundles lists bundles at least 30 days old (--bundle-age-days N); with --apply it copies each\n"
+            "to <bulk root>/branch-archive/, checks sha256 and git bundle verify, appends a bundle-relocated record\n"
+            "to stale-local-receipts.jsonl, then removes the local file. Without a marker-valid bulk root (see\n"
+            "docs/runbooks/storage-topology.md) nothing is removed and apply exits 1. It does not sweep branches.\n"
+            "--restore-bundle NAME [--restore-to DIR] copies a relocated bundle back after the same checks.\n"
             "Exit codes: 0 = sweep succeeded; 1 = repository or probe failure; 2 = invalid arguments.\n"
             "Related: issue #9129; issue #9909; issue #10532; docs/runbooks/worktree-cleanup.md; drive-epic §7a."
         ),
@@ -2027,6 +2273,29 @@ def build_parser() -> argparse.ArgumentParser:
             "--apply writes one verified bundle and receipt, then deletes only the local ref."
         ),
     )
+    parser.add_argument(
+        "--age-out-bundles",
+        action="store_true",
+        help="Instead of a sweep: list (or with --apply, move) archive bundles at least --bundle-age-days old to the bulk mirror.",
+    )
+    parser.add_argument(
+        "--bundle-age-days",
+        type=_archive_after_days_arg,
+        default=BUNDLE_AGE_OUT_DAYS,
+        metavar="N",
+        help="Bundle age in whole days for --age-out-bundles (default: 30).",
+    )
+    parser.add_argument(
+        "--restore-bundle",
+        metavar="NAME",
+        help="Instead of a sweep: copy a relocated NAME.bundle back from the bulk mirror, verified against the ledger.",
+    )
+    parser.add_argument(
+        "--restore-to",
+        type=Path,
+        metavar="DIR",
+        help="Directory for --restore-bundle (default: batch_state/branch-archive/ on the control plane).",
+    )
     parser.add_argument("--json", action="store_true", help="Print JSON decisions; default is one readable line each.")
     return parser
 
@@ -2035,8 +2304,32 @@ def _format_decision(item: Decision) -> str:
     return f"{item.classification}: {item.branch} ({item.reason}; age_days={item.age_days})"
 
 
+def _main_bundles(args: argparse.Namespace) -> int:
+    try:
+        repo = reaper.resolve_repo_root()
+        if args.restore_bundle:
+            restored = restore_bundle(repo, args.restore_bundle, destination=args.restore_to)
+            print(json.dumps({"ok": True, "restored": str(restored)}) if args.json else f"restored: {restored}")
+            return 0
+        results = age_out_bundles(repo, apply=args.apply, min_days=args.bundle_age_days)
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        print(json.dumps({"ok": False, "error": str(exc)}) if args.json else f"branch_sweep: {exc}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps({"ok": True, "apply": args.apply, "results": [asdict(r) for r in results]}, indent=2))
+    else:
+        for r in results:
+            print(f"{r.status}: {r.bundle} ({r.reason}; age_days={r.age_days}; bytes={r.size_bytes})")
+    # A requested move that kept a bundle local is a failure the caller must see.
+    return 1 if args.apply and any(r.status == "retained" for r in results) else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.age_out_bundles and args.restore_bundle:
+        build_parser().error("--age-out-bundles and --restore-bundle cannot be combined")
+    if args.age_out_bundles or args.restore_bundle:
+        return _main_bundles(args)
     token = _ARCHIVE_AFTER_DAYS.set(args.archive_after_days)
     try:
         try:
