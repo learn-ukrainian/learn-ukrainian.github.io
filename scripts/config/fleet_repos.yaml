@@ -36,3 +36,18 @@ repos:
     transport: ssh
     role: private-product
     verdict_recorder: false
+  # kube-dojo (#12499, plan approved under #12239). Both are public repositories, so their roles
+  # deliberately avoid "public-monorepo" (learn-ukrainian-only audits, Kimi and DeepSeek admission)
+  # and any "private" spelling (private-input and OPSEC private-repo handling).
+  kube-dojo:
+    github: kube-dojo/kube-dojo.github.io
+    local_name: kube-dojo
+    transport: https
+    role: public-content
+    verdict_recorder: true
+  kubedojo-labs:
+    github: kube-dojo/kubedojo-labs
+    local_name: kubedojo-labs
+    transport: https
+    role: public-labs
+    verdict_recorder: true

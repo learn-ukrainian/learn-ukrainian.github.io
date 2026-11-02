@@ -66,7 +66,12 @@ launcher_usage() {
     *) example_three="./start-${LC_PROVIDER}-driver.sh --epic devops" ;;
   esac
   case "$name" in
-    start-claude-cto.sh) example_three='./start-claude-cto.sh --epic epics --model claude-opus-5-5 --effort high' ;;
+    start-claude-cto.sh)
+      example_three='./start-claude-cto.sh --epic epics --model claude-opus-5-5 --effort high'
+      driver_mode="  driver       Validates a certified model and the epics lane, claims its lease,
+               runs a semantic canary where available (otherwise reports not run),
+               then injects the CTO binding (lu-driver-state --lane cto, cto skill)."
+      ;;
     start-codex-cto.sh) example_three='./start-codex-cto.sh --epic epics --effort high' ;;
   esac
   cat <<EOF
@@ -837,6 +842,12 @@ launcher_prepare_driver_identity() {
   LC_DRIVER_HARNESS="$harness"
   export SESSION_EPIC="$LC_EPIC"
   export SESSION_HANDOFF_AGENT="$LC_DRIVER_HANDOFF"
+  # SessionStart prints the CTO binding instead of the lane-driver banner (#12496).
+  if [ "${0##*/}" = start-claude-cto.sh ]; then
+    export SESSION_SEAT=cto
+  else
+    unset SESSION_SEAT
+  fi
   # Pinned per-epic driver state (scripts/driver_state.py). Harness hooks
   # re-inject it every model call so compaction cannot drop the epic binding.
   export LU_DRIVER_STATE_FILE="$LC_ROOT/.claude/${LC_EPIC}-epic/DRIVER-STATE.md"
@@ -1390,6 +1401,13 @@ launcher_validate_provider_option_arity() {
 
 launcher_bind_drive_epic() {
   local fleet_clause
+  # The CTO seat holds the epics lease, but its state lane is cto and its entry
+  # point is the cto skill, not drive-epic (#12496).
+  local state_lane="$LC_EPIC" entry_skill=drive-epic
+  local work_clause=' Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both.'
+  if [ "${0##*/}" = start-claude-cto.sh ]; then
+    state_lane=cto entry_skill=cto work_clause=''
+  fi
   if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
     # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
     source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
@@ -1399,14 +1417,14 @@ launcher_bind_drive_epic() {
     export FLEET_COMMS_PLANE_MODE="${FLEET_COMMS_PLANE_MODE:-$(fleet_comms_resolve_plane_mode)}"
   fi
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
-    fleet_clause="$(fleet_comms_cold_clause)"
+    fleet_clause="$(fleet_comms_cold_clause "$entry_skill")"
   else
     fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6). PRs may open so CI runs; enqueue only after independent exact-head cross-family APPROVE and same-head green CI Gate. The worker that owns the brief (or the driver, when no brief owns the PR) enqueues through the merge queue and runs closeout; authority mode is durable state and ACP is provider transport.'
   fi
   local canary_status='not run'
   # A successful hook alone is no execution evidence; dry runs never run a probe.
   if [ "${LC_PROVIDER_CANARY_RAN:-0}" = 1 ] && [ "$LC_DRY_RUN" != 1 ]; then canary_status='ran'; fi
-  LC_DRIVER_PROMPT="First run lu-driver-state render --lane ${LC_EPIC}, then lu-driver-state check --lane ${LC_EPIC}. Read the newest full-content DB handoff_note as authority for goals, tasks, decisions and handoff state. Load agents_extensions/shared/skills/drive-epic/SKILL.md before continuing. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review. The .claude/${LC_EPIC}-epic/DRIVER-STATE.md pointer holds only pinned provider/stream facts and DB render instructions; keep it under 4 KiB and do not update it when a goal lands. After any compaction or doubt, first repeat lu-driver-state render --lane ${LC_EPIC} and lu-driver-state check --lane ${LC_EPIC}; use .venv/bin/python -m scripts.driver_state whoami only as a pinned-identity diagnostic. For each handoff, write exactly one full-content DB handoff_note carrying rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed."
+  LC_DRIVER_PROMPT="First run lu-driver-state render --lane ${state_lane}, then lu-driver-state check --lane ${state_lane}. Read the newest full-content DB handoff_note as authority for goals, tasks, decisions and handoff state. Load agents_extensions/shared/skills/${entry_skill}/SKILL.md before continuing. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause}${work_clause} Obtain independent cross-family review. The .claude/${LC_EPIC}-epic/DRIVER-STATE.md pointer holds only pinned provider/stream facts and DB render instructions; keep it under 4 KiB and do not update it when a goal lands. After any compaction or doubt, first repeat lu-driver-state render --lane ${state_lane} and lu-driver-state check --lane ${state_lane}; use .venv/bin/python -m scripts.driver_state whoami only as a pinned-identity diagnostic. For each handoff, write exactly one full-content DB handoff_note carrying rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed."
   if [ "${LC_PROVIDER:-}" = codex ]; then
     LC_DRIVER_PROMPT+=" Hand off after the fourth compaction and before the eighth; native automatic compaction remains enabled."
   fi
@@ -1472,7 +1490,7 @@ launcher_bind_drive_epic() {
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then
-    printf 'launcher: would bind drive-epic after lease; provider canary: %s\n' "$canary_status"
+    printf 'launcher: would bind %s after lease; provider canary: %s\n' "$entry_skill" "$canary_status"
   fi
 }
 

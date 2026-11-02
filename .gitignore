@@ -242,7 +242,6 @@ docs/damage-report-*.csv
 # Codex interactive worktree (start-codex.sh)
 .worktrees/
 !.prettierrc
-!jest.config.js
 !eslint.config.mjs
 
 # Fresh lesson transaction mutexes are local runtime files, not evidence.
