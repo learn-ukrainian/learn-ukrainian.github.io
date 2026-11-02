@@ -59,7 +59,9 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   envelope, with no repeated key) that no longer lists it, since a prose entry never closes a
   finding; no verdict is BLOCKED, carries a security FAIL, or is edited, withheld or unreadable;
   and every other review run of the PR, at the candidate head too, is terminal with its verdict
-  published, so pushing before a verdict is recorded earns no credit. A lineage whose closing
+  published, so pushing before a verdict is recorded earns no credit, except that a run its
+  seat superseded ([below](#an-unpublished-verdict-that-its-seat-superseded)) stops refusing
+  while its findings, BLOCKED or security FAIL still count in the ledger checks above. A lineage whose closing
   issues are linked to any other PR, open or closed, is refused, because earlier PRs' ledgers
   are not read. It permits round 4 only, never round 5. The dispatcher spends it when it admits
   the reviewer, and the recorder again before posting, in a durable receipt under the PR, its
