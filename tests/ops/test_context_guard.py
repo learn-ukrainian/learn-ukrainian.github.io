@@ -619,6 +619,20 @@ def test_nothing_is_stopped_when_the_scope_record_cannot_be_saved(tmp_path: Path
     assert any("error OSError" in line for line in h.logs)
 
 
+def test_a_reused_pid_never_lends_its_scope_to_the_predecessor(tmp_path: Path) -> None:
+    """The agent exits between the snapshot and the cgroup read and another process takes its pid."""
+    h = stuck_exit_harness(tmp_path)
+
+    def reuse_pid() -> None:
+        h.pane("cto").agent_start = "Fri Oct 16 12:20:00 2026"  # same pid, a different process
+
+    before_call(h.guard.tmux, "cat", reuse_pid)
+    h.tick("cto")
+    assert systemctl(h, "stop") == [] and respawns(h) == []
+    assert "predecessor_scope" not in h.state["cto"]
+    assert any("pid was reused" in line for line in h.logs)
+
+
 def test_scope_that_stays_active_at_the_pending_retry_blocks_it(tmp_path: Path) -> None:
     h = relaunched(tmp_path)
     refuse(h)
@@ -1188,11 +1202,11 @@ REPLACED = "Fri Oct 16 12:09:00 2026"  # ps lstart of a pane shell started durin
 
 
 def before_call(tmux: cg.Tmux, command: str, change: Callable[[], None], nth: int = 1) -> None:
-    """Run ``change`` right before the ``nth`` ``command`` call (``ps`` or a tmux command) from now on."""
+    """Run ``change`` right before the ``nth`` ``command`` call (``ps``, ``cat``, ``systemctl`` or a tmux command) from now on."""
     run, seen = tmux.run, [0]
 
     def wrapped(argv: list[str]) -> subprocess.CompletedProcess:
-        if (argv[1] if argv[0] == "tmux" else "ps") == command:
+        if (argv[1] if argv[0] == "tmux" else ("ps" if "ps" in argv[:3] else argv[0])) == command:
             seen[0] += 1
             if seen[0] == nth:
                 change()

@@ -1002,6 +1002,13 @@ class Guard:
         """
         if snap.agent is not None:
             unit = self.tmux.agent_scope(snap.agent)
+            if not self.tmux.process_exists(snap.agent):
+                # A pid is only unique while its process lives: the cgroup just read may be another process's.
+                self.log(
+                    f"{lane.name} relaunch ctx_pct={pct}: agent {snap.agent} exited or its pid was reused while "
+                    "its scope was read; nothing recorded or stopped, retry next tick"
+                )
+                return None
             if unit is None:
                 self._predecessor_alert(
                     lane, s, f"agent {snap.agent} is not in a lu-driver scope, so it cannot be ended safely"
