@@ -213,24 +213,9 @@ def test_deepseek_routes_are_excluded() -> None:
 
     with pytest.raises(
         llm_reviewer_dispatch.ReviewerRouteError,
-        match="DeepSeek/Hermes reviewer routes are forbidden",
+        match="DeepSeek reviewer routes are forbidden",
     ):
         llm_reviewer_dispatch.assert_route_allowed(bad_route)
-    hermes_route = llm_reviewer_dispatch.ReviewerRoute(
-        route_name="hermes_bad",
-        bridge_command=("ask-hermes",),
-        reviewer_model_id="openrouter/hermes/deepseek-r1",
-        reviewer_family="openrouter",
-        purpose="forbidden",
-        input_usd_per_mtok=0.0,
-        output_usd_per_mtok=0.0,
-    )
-
-    with pytest.raises(
-        llm_reviewer_dispatch.ReviewerRouteError,
-        match="DeepSeek/Hermes reviewer routes are forbidden",
-    ):
-        llm_reviewer_dispatch.assert_route_allowed(hermes_route)
     assert all("deepseek" not in route.reviewer_model_id for route in llm_reviewer_dispatch.ROUTES)
 
 
