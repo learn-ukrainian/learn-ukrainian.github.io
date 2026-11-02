@@ -97,6 +97,9 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         LEARN_UKRAINIAN_DISPATCH_TASK_ID=spec.task_id,
         LEARN_UKRAINIAN_DISPATCH_AGENT=spec.agent,
         LU_TASKS_DIR=str(tasks_dir().resolve()),
+        # eslint, tsc and prettier call module.enableCompileCache(), which writes a copy of its cache into
+        # os.tmpdir()/node-compile-cache for every new worktree path and is never removed (#12474).
+        NODE_DISABLE_COMPILE_CACHE="1",
     )
     if spec.agent == "codex" and spec.mode == "read-only":
         # Its sandbox leaves no writable temp, so git, gh and pytest need this lease; the worker creates it.

@@ -2468,6 +2468,116 @@ def test_read_only_sha_base_is_still_admitted(sandbox):
     assert record["worktree_base_ref"] == sha
 
 
+def test_stale_local_ref_never_yields_read_only_checkout_at_stale_commit(sandbox):
+    """Defect (#12441): a branch-pinned read-only dispatch ran at a stale local ref, ignoring --base."""
+    sandbox.review_models("echo")
+    stale = run_git(sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
+                    "stale authored change\n\nX-Agent: claude/claude-opus-5-5")
+    run_git(sandbox.repo, "branch", "review-stale", stale)
+    run_git(sandbox.repo, "push", "origin", "review-stale")
+    remote_head = run_git(sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", stale, "-m",
+                          "newer authored change\n\nX-Agent: claude/claude-opus-5-5")
+    run_git(sandbox.repo, "push", "origin", f"{remote_head}:refs/heads/review-stale")
+    assert run_git(sandbox.repo, "rev-parse", "refs/heads/review-stale") == stale
+    record = sandbox.settle(sandbox.dispatch(
+        "echo", "--task-id", "stale-local-ref", "--mode", "read-only",
+        "--branch", "review-stale", "--base", remote_head,
+    ))
+    assert record["status"] == "done"
+    assert record["worktree_start_sha"] == remote_head
+    assert record["pinned_head"] == remote_head
+    assert record["head_sha"] == remote_head
+    # The fix never moves the primary checkout's local branch ref.
+    assert run_git(sandbox.repo, "rev-parse", "refs/heads/review-stale") == stale
+    refused = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "review",
+        "--task-id", "stale-local-ref-mismatch", "--mode", "read-only",
+        "--branch", "review-stale", "--base", stale, expected=2,
+    )
+    assert "read_only_branch_base_mismatch:" in refused.stderr
+    assert not (sandbox.tasks / "stale-local-ref-mismatch.json").exists()
+    # Git accepts unique abbreviations from four characters; they refuse the same way.
+    short = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "review",
+        "--task-id", "stale-local-ref-short", "--mode", "read-only",
+        "--branch", "review-stale", "--base", stale[:6], expected=2,
+    )
+    assert "read_only_branch_base_mismatch:" in short.stderr
+    assert not (sandbox.tasks / "stale-local-ref-short.json").exists()
+
+
+def _published_branch(sandbox, name):
+    """Push ``name`` to origin at a commit that is not the local ``name`` (if any)."""
+    remote_head = run_git(sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m", "remote pr head")
+    run_git(sandbox.repo, "push", "origin", f"{remote_head}:refs/heads/{name}")
+    return remote_head
+
+
+def _write_branch_plan(sandbox, branch, *extra):
+    result = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "takeover", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--branch", branch, "--dry-run", *extra,
+    )
+    assert not sandbox.tasks.exists()
+    return json.loads(result.stdout)
+
+
+def test_write_branch_dry_run_without_local_ref_starts_at_remote_head(sandbox):
+    """Defect (#12468): a write --branch preview rev-parsed a missing local ref and died as CalledProcessError."""
+    remote_head = _published_branch(sandbox, "takeover-no-local")
+    assert not run_git(sandbox.repo, "branch", "--list", "takeover-no-local")
+    assert _write_branch_plan(sandbox, "takeover-no-local")["start_sha"] == remote_head
+    assert not run_git(sandbox.repo, "branch", "--list", "takeover-no-local")
+
+
+def test_write_branch_dry_run_ignores_stale_local_ref(sandbox):
+    """Defect (#12468): a stale local refs/heads/<branch> must never set the start of a takeover."""
+    stale = run_git(sandbox.repo, "rev-parse", "HEAD")
+    run_git(sandbox.repo, "branch", "takeover-stale", stale)
+    remote_head = _published_branch(sandbox, "takeover-stale")
+    assert _write_branch_plan(sandbox, "takeover-stale")["start_sha"] == remote_head
+    assert run_git(sandbox.repo, "rev-parse", "refs/heads/takeover-stale") == stale
+    refused = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "takeover", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--branch", "takeover-missing", "--dry-run", expected=2,
+    )
+    assert "branch_absent_on_remote:" in refused.stderr and "takeover-missing" in refused.stderr
+def test_failed_git_call_reports_its_operation_and_a_constant_summary_without_secrets(capsys, monkeypatch):
+    """Defect (#12468): a failed git call printed only the exception class name.
+
+    Nothing user-controlled is printed: the subcommand and a summary chosen from the first stderr line, both
+    constants. Every disclosure probe from the review of the first attempt must end in them.
+    """
+    def fail(command, stderr):
+        error = subprocess.CalledProcessError(128, [command[0], "-C", "/home/ops/private", *command[1:]], stderr=stderr)
+        monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=error))
+        assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
+        return capsys.readouterr().err
+
+    assert fail(["git", "rev-parse", "--verify", "topic^{commit}"], "fatal: Needed a single revision") == (
+        "dispatcher: CalledProcessError: git rev-parse exited 128: needed a single revision\n")
+    assert fail(["git", "fetch", "--", "https://user:token@example.com/org/repo.git", "abc"],
+                "fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n") == (
+        "dispatcher: CalledProcessError: git fetch exited 128: remote not reachable\n")
+    assert fail(["curl", "https://example.com"], "secret") == "dispatcher: CalledProcessError: external command exited 128\n"
+    assert fail(["/usr/bin/git", "fetch"], "fatal: could not read from x") == (
+        "dispatcher: CalledProcessError: git fetch exited 128: remote not reachable\n")
+    assert fail(["git", "--git-dir", "/synthetic/x", "fetch"], "fatal: denied") == (
+        "dispatcher: CalledProcessError: git fetch exited 128: unrecognized git error\n")
+    summaries = {text for _pattern, text in cli._GIT_FAILURES} | {cli.UNRECOGNIZED_GIT_FAILURE}
+    for command, stderr, leaked in (
+        (["git", "fetch"], "remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
+        (["git", "fetch"], "remote: Password: shallow branch denied object", "shallow"),
+        (["git", "fetch"], "fatal: cannot open '/synthetic/Acme Open Access Client/repo': denied", "Access"),
+        (["git", "fetch"], "fatal: Unable to create '/synthetic/private directory/worktree/index.lock': denied", "worktree"),
+        (["git", "worktree", "add", "--no-checkout", "worktree", "status"], "remote: secret", "worktree status"),
+        (["git", "fetch", "user:syntheticsecret"], "fatal: denied", "syntheticsecret"),
+    ):
+        message = fail(command, stderr)
+        assert message.rstrip("\n").rsplit(": ", 1)[1] in summaries
+        assert leaked not in message and "synthetic" not in message.lower() and "/home/ops/private" not in message
+
+
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")
@@ -3556,7 +3666,9 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
         assert {"--disable-write", "--disable-shell"} <= set(argv)
     elif agent == "claude":
         assert argv[argv.index("--permission-mode") + 1] == "dontAsk"
-        assert "Bash" not in argv[argv.index("--allowedTools") + 1].split(",")
+        # Bash is allowed only behind the review boundary: every command goes through its shell prefix (#12378).
+        assert "Bash" in argv[argv.index("--allowedTools") + 1].split(",")
+        assert invocation.env["CLAUDE_CODE_SHELL_PREFIX"] == str(agy_sandbox.SHELL_PREFIX)
         assert {"Edit", "Write", "NotebookEdit"} <= set(argv[argv.index("--disallowedTools") + 1].split(","))
         # dontAsk still runs what a loaded settings file allows, and a worktree loads the main checkout's
         # local file (Grok F4). Lists merge across sources, so no source's write allow may take effect.
@@ -4076,6 +4188,19 @@ def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeyp
     monkeypatch.setenv(test_slots.SESSION_ENV, "/s")
     env = child_env(dataclasses.replace(spec, agent="codex"))
     assert test_slots.HOLDER_ENV not in env and test_slots.SESSION_ENV not in env
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode"])
+def test_worker_env_disables_the_node_compile_cache(spec, monkeypatch, tmp_path, agent, mode):
+    """#12474: a worker's lint or tsc run must not add to the shared on-disk Node compile cache."""
+    monkeypatch.setenv("NODE_COMPILE_CACHE", str(tmp_path / "shared-cache"))
+    monkeypatch.delenv("NODE_DISABLE_COMPILE_CACHE", raising=False)
+
+    env = child_env(dataclasses.replace(spec, agent=agent, mode=mode))
+
+    assert env["NODE_DISABLE_COMPILE_CACHE"] == "1"
+    assert "NODE_COMPILE_CACHE" not in env
 
 
 @pytest.mark.parametrize(

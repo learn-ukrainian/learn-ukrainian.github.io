@@ -502,7 +502,7 @@ def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_pat
     assert serialized["ok"] is False and serialized["status"] == "failed"
     assert serialized["failure_reason"] == "review_unsupported_verdict_token"
     assert serialized["stderr_excerpt"] == (
-        f"review_unsupported_verdict_token: unsupported verdict identifier {token!r}; "
+        f"unsupported verdict identifier {token!r}; "
         "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
     )
 
@@ -518,20 +518,20 @@ def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_pat
         (
             "VERDICT: ghp_SYNTHETIC10598TOKENabcdefghij\n",
             "ghp_SYNTHETIC10598TOKENabcdefghij",
-            "review_unsupported_verdict_token: unsupported verdict identifier '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+            "unsupported verdict identifier '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
         ),
         (
             "VERDICT: CHANGES\n",
             "CHANGES",
-            "review_unsupported_verdict_token: unsupported verdict identifier 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+            "unsupported verdict identifier 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
         ),
         (
             "Verdict: Looks good to me overall.", "Looks",
-            "review_unsupported_verdict_token: unsupported verdict identifier 'Looks'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+            "unsupported verdict identifier 'Looks'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
         ),
         (
             "**Verdict:** I approve this change.", "I",
-            "review_unsupported_verdict_token: unsupported verdict identifier 'I'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+            "unsupported verdict identifier 'I'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
         ),
     ],
     ids=["sensitive", "benign", "prose-looks", "prose-i"],

@@ -242,6 +242,7 @@ def test_truncated_response_is_unavailable(monkeypatch) -> None:
     def boom(*_a, **_k):
         raise http.client.IncompleteRead(b"{")
 
+    monkeypatch.setattr(mp, "_MONITOR_READY_WAIT_S", 0.0)
     monkeypatch.setattr(mp.urllib.request, "urlopen", boom)
     with pytest.raises(mp.MonitorUnavailable):
         mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT)
@@ -262,6 +263,7 @@ def test_monitor_timeout_is_a_typed_transport_refusal(monkeypatch) -> None:
     def slow(*_a, **_k):
         raise TimeoutError("timed out")
 
+    monkeypatch.setattr(mp, "_MONITOR_READY_WAIT_S", 0.0)
     monkeypatch.setattr(mp.urllib.request, "urlopen", slow)
     assert reason() == (
         "MODEL_HEADROOM_MONITOR_UNAVAILABLE: claude-opus-5-5 usage was not read because the Monitor did not answer"
@@ -461,3 +463,84 @@ def test_role_policy_validation_and_expiry(tmp_path, monkeypatch, case, expected
             reason = mp.role_refusal_reason(model, inferred, now=NOW)
             assert (reason.split(":", 1)[0] if reason else None) == expected, (field, value)
         assert mp.dispatch_roles({"research_role": "authoring", "mode": "read-only"}) == {"authoring"}
+
+
+def test_reading_with_a_past_resets_at_is_not_used_as_headroom(monkeypatch) -> None:
+    """#12467: a fresh-flagged reading from before its window reset is the old window's, so it reads unknown."""
+    monkeypatch.setattr(
+        mp, "routing_budget_used_pct", getattr(mp.routing_budget_used_pct, "__wrapped__", mp.routing_budget_used_pct),
+    )
+    now = datetime(2026, 11, 2, 7, 21, tzinfo=UTC)
+    before, after = "2026-11-02T07:00:00Z", "2026-11-09T07:00:00Z"
+
+    def probe(resets_at: object) -> dict:
+        return {"stale": False, "freshness": "fresh", "weekly_used_pct": 99, "weekly_resets_at": resets_at}
+
+    def read(lane: str, payload: dict, account=HOST_ACCOUNT) -> float | None:
+        _serve(monkeypatch, payload)
+        return mp.routing_budget_used_pct(lane, account=account, now=now)
+
+    def lanes(resets_at: object) -> dict:
+        return {"agents": {"claude": {"status": "hot", "codexbar": probe(resets_at)},
+                           "codex": {"status": "hot", "codexbar": probe(resets_at)}}}
+
+    # lane probe (the default account's fallback, and a non-claude lane), ISO string and epoch seconds
+    epoch = int(datetime(2026, 11, 2, 7, 0, tzinfo=UTC).timestamp())
+    for resets_at in (before, "2026-11-02T07:00:00", epoch, epoch * 1000):
+        assert read("claude", lanes(resets_at)) is None
+        assert read("codex", lanes(resets_at)) is None
+    assert read("claude", lanes(after)) == 99.0
+    assert read("codex", lanes(None)) == 99.0  # no resets_at is no evidence
+    assert read("codex", lanes("soon")) == 99.0
+    assert read("codex", lanes(10**400)) == 99.0  # overflowing numbers are unparseable, not an error
+
+    # the account's own row
+    for resets_at, expected in ((before, None), (after, 11.0)):
+        row = _account(89.0)
+        row["weekly"]["resets_at"] = resets_at
+        assert read("claude", _accounts_payload(row), account("b")) == expected
+
+    # AGY Claude windows: either window past its reset
+    fresh = _agy_window_payload(10.0)
+    windows = fresh["agents"]["gemini"]["claude_gpt_windows"]
+    for key in ("five_hour", "weekly"):
+        windows[key]["resets_at"] = after
+    assert read(mp.AGY_CLAUDE_WINDOW_LANE, fresh) == 10.0
+    windows["five_hour"]["resets_at"] = before
+    assert read(mp.AGY_CLAUDE_WINDOW_LANE, fresh) is None
+
+
+def test_headroom_read_right_after_startup_returns_reading_or_typed_unknown(monkeypatch) -> None:
+    """#12512 (cold-start read timeout): a read issued while the Monitor is still filling waits, bounded.
+
+    First attempts time out as a restarting Monitor does; the read then gets a
+    reading. A Monitor that never answers still raises the typed unavailable
+    error within the bound, never an admit.
+    """
+    import io
+
+    monkeypatch.setattr(mp, "_monitor_wait_spent_at", None)
+    payload = {"agents": {}}
+    attempts = {"n": 0}
+
+    def cold_then_ready(*_a, **_k):
+        attempts["n"] += 1
+        if attempts["n"] < 3:
+            raise TimeoutError("timed out")
+        return io.StringIO(json.dumps(payload))
+
+    monkeypatch.setattr(mp, "_MONITOR_RETRY_PAUSE_S", 0.0)
+    monkeypatch.setattr(mp.urllib.request, "urlopen", cold_then_ready)
+    assert mp.routing_budget_used_pct("codex", account=HOST_ACCOUNT) is None  # a reading, not unavailable
+    assert attempts["n"] == 3
+
+    attempts["n"] = -10**9  # never ready
+    monkeypatch.setattr(mp, "_MONITOR_READY_WAIT_S", 0.05)
+    monkeypatch.setattr(mp, "_MONITOR_RETRY_PAUSE_S", 0.01)
+    with pytest.raises(mp.MonitorUnavailable):
+        mp.routing_budget_used_pct("codex", account=HOST_ACCOUNT)
+    # A second read in the same walk (another reviewer candidate) must not wait again.
+    spent = attempts["n"]
+    with pytest.raises(mp.MonitorUnavailable):
+        mp.routing_budget_used_pct("codex", account=HOST_ACCOUNT)
+    assert attempts["n"] == spent + 1

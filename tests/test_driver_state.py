@@ -258,6 +258,41 @@ def test_hook_shell_normal_path(state, tmp_path, monkeypatch, mode):
     assert proc.stderr == ""
 
 
+@pytest.mark.parametrize("event", ["SessionStart", "UserPromptSubmit"])
+def test_claude_banner_for_cto_state_never_says_update_pointer_when_goal_lands(tmp_path, monkeypatch, event):
+    path = tmp_path / ".claude" / "epics-epic" / "DRIVER-STATE.md"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        "---\nstream: coordinator\ndriver: claude-cto\nnote: pointer only; state is in the DB\n---\n\n"
+        "# CTO state: read the tracker first\n\nRun `lu-driver-state render --lane cto` first.\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv(driver_state.STATE_ENV, str(path))
+    monkeypatch.setenv("SESSION_EPIC", "epics")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-epics")
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", str(tmp_path))
+    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
+    proc = subprocess.run(
+        ["sh", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), "claude-hook"],
+        input=json.dumps({"hook_event_name": event, "session_id": "s1", "cwd": str(tmp_path)}),
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+        timeout=60,
+        check=True,
+    )
+    output = json.loads(proc.stdout)["hookSpecificOutput"]
+    assert output["hookEventName"] == event
+    banner = output["additionalContext"]
+    assert banner.startswith("PINNED DRIVER STATE (pinned facts only")
+    assert "CTO state: read the tracker first" in banner
+    assert "never in this file" in banner
+    lowered = banner.lower()
+    assert "update the file when a goal lands" not in lowered
+    assert "you are the driver for the epic" not in lowered
+    assert "delegate.py" not in lowered
+
+
 def test_agy_hooks_json_wires_all_driver_hooks():
     config = json.loads((REPO / "agents_extensions" / "agy" / "hooks.json").read_text(encoding="utf-8"))
     commands = {

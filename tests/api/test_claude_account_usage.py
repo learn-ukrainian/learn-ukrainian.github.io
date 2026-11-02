@@ -25,6 +25,7 @@ import pytest
 from scripts.agent_runtime import attempt_boundary, env_sanitize
 from scripts.agent_runtime.attempt_boundary import ClaudeAccountBinding
 from scripts.api import claude_account_usage as cau
+from scripts.api import subscription_usage
 
 # Shape of ``codexbar usage --json --provider claude``; identity values are synthetic.
 # Each label's fixture reports its own email, as two distinct accounts would.
@@ -36,6 +37,17 @@ _FAKE_ACCOUNT_ID = "0f0e0d0c-0b0a-4908-8706-050403020100"
 _ACCOUNT_A = "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a"
 _ACCOUNT_B = "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b"
 _MARKER = "SYNTHETIC_PRIVATE_MARKER"
+
+
+@pytest.fixture(autouse=True)
+def _scheduler_owns_probes(monkeypatch):
+    """These tests stand in for the Monitor scheduler, the only process that probes (#12542).
+
+    ``test_claude_account_probe_ownership.py`` covers the refusal for any other process.
+    """
+    monkeypatch.setattr(cau, "_is_probe_owner", lambda: True)
+
+
 def _iso(moment: datetime) -> str:
     return moment.astimezone(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
 
@@ -323,17 +335,30 @@ def test_failed_or_timed_out_account_is_unknown_and_the_other_still_published(fa
     assert row_b["session5h"]["left_pct"] is None
 
 
-def test_failure_after_a_good_sample_is_stale_with_last_numbers(fake_probe):
+def test_failure_after_a_fresh_reading_keeps_it_usable_within_ttl(fake_probe):
+    """A probe failure records itself beside a reading that is still inside its TTL."""
+    from scripts.agent_runtime.model_pause import refusal_reason
+    from scripts.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
+
     outputs, _ = fake_probe
     cau.refresh_claude_account_usage()
     outputs["b"] = cau._ProbeFailed("exit_nonzero")
     cau.refresh_claude_account_usage()
 
-    row_b = _row(cau.claude_accounts_snapshot(), "b")
-    assert row_b["status"] == "stale"
-    assert row_b["stale"] is True
+    rows = cau.claude_accounts_snapshot()
+    row_b = _row(rows, "b")
+    assert row_b["status"] == "ok"
+    assert row_b["stale"] is False
     assert row_b["reason"] == "exit_nonzero"
     assert row_b["weekly"] == EXPECTED_B["weekly"]
+    used = account_weekly_used_pct({"claude_accounts": rows}, account=ClaudeAccount("b", "record"))
+    assert used == 20.0
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 87}]}
+    for model in ("claude-opus", "claude-sonnet"):
+        assert (
+            refusal_reason(model, policy=policy, used_pct=lambda lane, used=used: used if lane == "claude" else None)
+            is None
+        )
 
 
 def test_sample_past_the_ttl_is_stale(fake_probe):
@@ -342,6 +367,71 @@ def test_sample_past_the_ttl_is_stale(fake_probe):
     assert row["status"] == "stale"
     assert row["reason"] == "expired"
     assert row["weekly"] == EXPECTED_A["weekly"]
+
+
+def test_past_ttl_reading_is_unknown(fake_probe):
+    """A reading past its own TTL is not a headroom reading."""
+    from scripts.agent_runtime.model_pause import refusal_reason
+    from scripts.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
+
+    cau.refresh_claude_account_usage()
+    rows = cau.claude_accounts_snapshot(ttl_s=0.0)
+    assert account_weekly_used_pct({"claude_accounts": rows}, account=ClaudeAccount("a", "record")) is None
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 87}]}
+    for model in ("claude-opus", "claude-sonnet"):
+        reason = refusal_reason(model, policy=policy, used_pct=lambda _lane: None)
+        assert reason is not None
+        assert reason.startswith("MODEL_HEADROOM_USAGE_UNKNOWN")
+
+
+def test_rate_limit_failure_backs_off_the_next_probe(fake_probe, account_dirs, tmp_path):
+    """A rate-limited probe is classified from its output and is not retried until the backoff ends."""
+    from scripts.agent_runtime.model_pause import refusal_reason
+    from scripts.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
+
+    message = "Claude OAuth usage endpoint is rate limited by Anthropic right now"
+    for body in (
+        f"sys.stderr.write({message!r} + '\\n'); sys.exit(3)",
+        f"sys.stdout.write({message!r} + '\\n'); sys.exit(3)",
+    ):
+        with pytest.raises(cau._ProbeFailed) as exc:
+            _REAL_RUN_CODEXBAR(_fake_codexbar(tmp_path, body), {}, timeout_s=30, max_bytes=65536)
+        assert exc.value.code == "rate_limited"
+
+    outputs, calls = fake_probe
+
+    def _probes(label: str) -> int:
+        path = str(account_dirs[label])
+        return sum(1 for env in calls if env.get("CLAUDE_CONFIG_DIR") == path)
+
+    cau.refresh_claude_account_usage()
+    outputs["a"] = cau._ProbeFailed("rate_limited")
+    cau.refresh_claude_account_usage()
+    after_failure = _probes("a")
+    rows = cau.claude_accounts_snapshot()
+    row = _row(rows, "a")
+    assert row["status"] == "ok"
+    assert row["stale"] is False
+    assert row["reason"] == "rate_limited"
+    assert row["weekly"] == EXPECTED_A["weekly"]
+    used = account_weekly_used_pct({"claude_accounts": rows}, account=ClaudeAccount("a", "record"))
+    assert used == 74.0
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 87}]}
+    for model in ("claude-opus", "claude-sonnet"):
+        assert (
+            refusal_reason(model, policy=policy, used_pct=lambda lane, used=used: used if lane == "claude" else None)
+            is None
+        )
+
+    cau.refresh_claude_account_usage()
+    assert _probes("a") == after_failure
+    assert _probes("b") == after_failure + 1
+
+    cau._probe_not_before["a"] = 0.0
+    outputs["a"] = _payload_a
+    cau.refresh_claude_account_usage()
+    assert _probes("a") == after_failure + 1
+    assert _row(cau.claude_accounts_snapshot(), "a")["reason"] is None
 
 
 def test_unexpected_probe_defect_does_not_break_refresh(fake_probe):
@@ -1427,6 +1517,41 @@ def test_restored_binding_is_rearmed_by_revalidation(bound, monkeypatch):
     assert _row(cau.claude_accounts_snapshot(), "b")["status"] == "ok"
 
 
+def test_a_skipped_startup_probe_serves_the_reproved_restored_reading_never_not_probed(
+    bound, provider, monkeypatch, tmp_path
+):
+    """A restart that skips its first probe serves the persisted readings at once (#12483).
+
+    Each binding validates again to its generation, the rows carry the measured
+    time and numbers the previous process served, and no account is probed.
+    """
+    monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
+    monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "720")
+    monkeypatch.setattr(cau, "_samples_path", lambda: tmp_path / "claude_account_samples.json")
+    cau.refresh_claude_account_usage()
+    before = cau.routing_budget_fields()
+    assert {row["status"] for row in before["claude_accounts"].values()} == {"ok"}
+    probes = bound.calls
+
+    cau._reset_for_tests()  # a restart: every in-memory reading is gone, the file stays
+    try:
+        wait_s = subscription_usage._claude_account_startup_wait_s(720.0)
+        assert wait_s is not None
+        assert 0.0 < wait_s <= 720.0
+        after = cau.routing_budget_fields()
+    finally:
+        subscription_usage._claude_account_probe_started_at = None
+
+    assert bound.calls == probes  # the startup probe was skipped
+    assert after["preferred_claude_account"] == before["preferred_claude_account"]
+    for key, row in after["claude_accounts"].items():
+        served = before["claude_accounts"][key]
+        assert (row["status"], row["reason"]) == ("ok", None)
+        assert row["updated"] == served["updated"]
+        assert row["age_s"] >= served["age_s"]
+        assert (row["session5h"], row["weekly"]) == (served["session5h"], served["weekly"])
+
+
 def test_binding_generation_and_fingerprints_are_never_published(bound, caplog):
     cau.refresh_claude_account_usage()
     accounts = cau._last_good["b"].accounts
@@ -1491,8 +1616,8 @@ def test_unidentified_default_beside_a_bound_account_is_withheld(bound):
     assert _row(fields["claude_accounts"], "b")["status"] == "ok"
 
 
-def test_binding_check_defect_never_publishes_ok(bound, monkeypatch):
-    """Serving never runs the binding check; a refresh that hits a defect in it marks rows stale."""
+def test_binding_check_defect_keeps_a_fresh_reading(bound, monkeypatch):
+    """Serving never runs the binding check; a refresh defect is recorded beside the fresh reading."""
     cau.refresh_claude_account_usage()
 
     def broken(label, **_kwargs):
@@ -1504,8 +1629,9 @@ def test_binding_check_defect_never_publishes_ok(bound, monkeypatch):
     fields = cau.routing_budget_fields()
     for label in ("a", "b"):
         row = _row(fields["claude_accounts"], label)
-        assert (row["status"], row["reason"]) == ("stale", "probe_error")
-    assert fields["preferred_claude_account"] is None
+        assert (row["status"], row["stale"], row["reason"]) == ("ok", False, "probe_error")
+        assert row["weekly"]["left_pct"] is not None
+    assert fields["preferred_claude_account"] == "b"
     assert _MARKER not in json.dumps(fields)
 
 

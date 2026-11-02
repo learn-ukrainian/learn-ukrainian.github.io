@@ -66,10 +66,11 @@ def safe_text(value: str) -> str:
     return ABSOLUTE_PATH.sub("<host-path>", value)
 
 
-def command(argv: list[str], *, cwd: Path, timeout: int = 120) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False)
+def command(argv: list[str], *, cwd: Path, timeout: int = 120, text: bool = True) -> subprocess.CompletedProcess:
+    result = subprocess.run(argv, cwd=cwd, capture_output=True, text=text, timeout=timeout, check=False)
     if result.returncode:
-        raise DataTierError(f"{argv[0]} failed ({result.returncode}): {safe_text(result.stderr.strip())}")
+        stderr = result.stderr if text else result.stderr.decode(errors="replace")
+        raise DataTierError(f"{argv[0]} failed ({result.returncode}): {safe_text(stderr.strip())}")
     return result
 
 
@@ -230,6 +231,43 @@ def remove_test_worktree(primary: Path, checkout: Path) -> worktree_claims.Workt
     return removal
 
 
+def discard_run_output(checkout: Path) -> dict[str, int]:
+    """Delete the ignored and untracked files this run put in its own checkout (#12528).
+
+    The checkout is created fresh from ``origin/main`` by :func:`make_test_worktree` and verified clean, so
+    every ignored or untracked file in it was written by this run: the Atlas snapshot, the provisioned host
+    files, hydrated artifacts and anything the tests wrote. That is the run's declared disposable output.
+    Left in place, the guarded remover would see an unrecorded checkout it cannot attribute and copy the
+    bytes (about 1.3 GB) into ``batch_state/preserved/`` every night. The test report, log and summary the
+    run needs for diagnosis live in ``batch_state/data-tier/``, outside the checkout, and are kept.
+    Returns the file count and byte total discarded, for the run summary.
+    """
+    # ``git clean -n`` quotes and escapes non-ASCII names and has no ``-z`` form, so list the same set
+    # (everything untracked or ignored) with ``ls-files -z``, whose NUL-delimited names are never quoted.
+    # A nested repository is listed as one ``name/`` entry, which the directory walk below counts.
+    # Read it as bytes: text mode would reject non-UTF-8 names and turn CR into LF. ``fsdecode`` round-trips them.
+    listing = command(["git", "ls-files", "-z", "--others"], cwd=checkout, timeout=300, text=False).stdout
+    if isinstance(listing, str):  # callers that substitute ``command`` with text output
+        listing = os.fsencode(listing)
+    names = [os.fsdecode(name) for name in listing.split(b"\0") if name]
+    total = 0
+    count = 0
+    for name in names:
+        target = checkout / name
+        if target.is_symlink() or not target.is_dir():
+            count += 1
+            with contextlib.suppress(OSError):
+                total += target.lstat().st_size
+            continue
+        for member in target.rglob("*"):
+            if member.is_file() or member.is_symlink():
+                count += 1
+                with contextlib.suppress(OSError):
+                    total += member.lstat().st_size
+    command(["git", "clean", "-ffdx"], cwd=checkout, timeout=900)
+    return {"files": count, "bytes": total}
+
+
 def stop_scope(unit: str) -> None:
     result = subprocess.run(
         ["systemctl", "--user", "show", "-p", "LoadState", unit],
@@ -309,7 +347,19 @@ def snapshot_databases(primary: Path, checkout: Path, snapshots: Path, *, only: 
 PROVISION_SKIPPED_PARTS = frozenset({".git"})
 
 
+# Single gitignored files the audited tests read from the checkout. The Atlas release manifest is
+# restored from its pinned release asset on the host; the conformance test refuses to run without it
+# (#9981 turned its skip into a failure) and checks its hash against the committed pointer itself.
+PROVISIONED_HOST_FILES = ("site/src/data/lexicon-manifest.json",)
+
+
 def provision_host_files(primary: Path, checkout: Path) -> None:
+    for relative in PROVISIONED_HOST_FILES:
+        source = primary / relative
+        destination = checkout / relative
+        if source.is_file() and not source.is_symlink() and not destination.exists():
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
     for relative in (
         "data/ua-gec",
         "data/literary_texts",
@@ -762,6 +812,11 @@ def run(args: argparse.Namespace) -> int:
                 scope_stopped = False
                 summary["runner_errors"].append(f"scope cleanup failed: {safe_text(str(error))}")
         if checkout and scope_stopped:
+            try:
+                summary["discarded_output"] = discard_run_output(checkout)
+            except Exception as error:
+                # The guarded remover below then keeps whatever is left in a verified copy.
+                summary["runner_errors"].append(f"output discard failed: {safe_text(str(error))}")
             try:
                 remove_test_worktree(primary, checkout)
             except Exception as error:

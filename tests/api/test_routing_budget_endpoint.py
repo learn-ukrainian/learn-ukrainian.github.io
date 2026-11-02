@@ -18,6 +18,7 @@ from fastapi.testclient import TestClient
 
 from scripts.analytics.cost_report import CostRecord
 from scripts.api import claude_account_usage, state_helpers, state_router
+from scripts.api import subscription_usage as subscription_usage_mod
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet import reset_reserve
 
@@ -43,6 +44,8 @@ def _isolate_routing_budget_test_state(tmp_path: Path, monkeypatch: pytest.Monke
     claude_account_usage._reset_for_tests()
     monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", no_provider)
     monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
+    # These tests stand in for the Monitor scheduler, the only prober (#12542).
+    monkeypatch.setattr(claude_account_usage, "_is_probe_owner", lambda: True)
     yield
     state_helpers.cache_invalidate()
     claude_account_usage._reset_for_tests()
@@ -1081,6 +1084,174 @@ def test_http_fresh_codexbar_kicks_background_and_does_not_block(monkeypatch, tm
     assert data["diagnostics"]["fresh_codexbar_blocking"] is False
 
 
+def test_repeated_fresh_requests_within_interval_start_one_claude_probe(monkeypatch, tmp_path):
+    """On-demand fresh reads share one Claude account probe until the interval elapses.
+
+    The endpoint still returns the cached snapshot. A second fresh request,
+    after the first probe has finished and while every reading is inside TTL,
+    must not start another probe.
+    """
+    _configure(monkeypatch, tmp_path, [])
+    probes: list[str] = []
+    started = threading.Event()
+
+    def _probe() -> None:
+        probes.append("probe")
+        started.set()
+
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", _probe)
+    monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", lambda: None)
+    subscription_usage_mod._claude_account_probe_started_at = None
+
+    app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
+    app.include_router(state_router.router, prefix="/api/state")
+    client = TestClient(app)
+    try:
+        first = client.get("/api/state/routing-budget?fresh_codexbar=true")
+        assert first.status_code == 200
+        assert first.json()["diagnostics"]["fresh_codexbar_requested"] is True
+        assert first.json()["diagnostics"]["fresh_codexbar_blocking"] is False
+        assert started.wait(timeout=2)
+        thread = subscription_usage_mod._claude_account_oneshot_thread
+        assert thread is not None
+        thread.join(timeout=2)
+        assert not thread.is_alive()
+        assert probes == ["probe"]
+
+        second = client.get("/api/state/routing-budget?fresh_codexbar=true")
+        assert second.status_code == 200
+        assert second.json()["diagnostics"]["fresh_codexbar_requested"] is True
+        assert second.json()["diagnostics"]["fresh_codexbar_blocking"] is False
+        follow_up = subscription_usage_mod._claude_account_oneshot_thread
+        if follow_up is not None:
+            follow_up.join(timeout=2)
+        assert probes == ["probe"]
+    finally:
+        thread = subscription_usage_mod._claude_account_oneshot_thread
+        if thread is not None:
+            thread.join(timeout=2)
+        subscription_usage_mod._claude_account_probe_started_at = None
+
+
+def _persist_account_readings(monkeypatch, tmp_path: Path, *, age_s: float, generation: bytes = b"g" * 32) -> None:
+    """Record a good reading for every account, as a probe would, so it reaches the persisted file."""
+    monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
+    monkeypatch.setattr(claude_account_usage, "_samples_path", lambda: tmp_path / "claude_account_samples.json")
+    measured = datetime.fromtimestamp(time.time() - age_s, UTC).isoformat().replace("+00:00", "Z")
+    window = {"left_pct": 80.0, "resets_at": None, "pace": None, "pace_delta_pct": None, "leftover_pct": None}
+    row = {"updated": measured, "session5h": dict(window), "weekly": dict(window)}
+    watch = claude_account_usage._Watch(roots=(), entries=(), generation=generation, credentials=(1, 2))
+    # Every sample's attribution holds its bound account; the fake bindings below bind "acct".
+    bound = frozenset({claude_account_usage._fingerprint("account_id", "acct")})
+    accounts = claude_account_usage._Accounts(watch=watch, fingerprints=bound, named=False)
+    for label in claude_account_usage.CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS:
+        claude_account_usage._record(label, row, None, accounts=accounts)
+
+
+def _restart_scheduler(monkeypatch, *, bound_generation: bytes) -> tuple[list[str], threading.Event]:
+    """Forget every in-memory reading and probe clock, as a service restart does, then start the scheduler."""
+    probes: list[str] = []
+    probed = threading.Event()
+
+    def _probe() -> None:
+        probes.append("probe")
+        probed.set()
+
+    @contextlib.contextmanager
+    def _binding(_label, *, verified=None):
+        yield claude_account_usage._Binding(Path("/nonexistent"), "acct", claude_account_usage._Watch(roots=(), entries=(), generation=bound_generation, credentials=None))
+
+    claude_account_usage._reset_for_tests()
+    subscription_usage_mod._claude_account_probe_started_at = None
+    monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "720")
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", _probe)
+    monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_scheduler_thread", None)
+    monkeypatch.setattr(subscription_usage_mod, "_claude_account_scheduler_thread", None)
+    monkeypatch.setattr(claude_account_usage, "account_binding", _binding)
+    subscription_usage_mod.start_periodic_refresh(run_immediately=True)
+    return probes, probed
+
+
+def test_restart_with_reading_younger_than_interval_starts_no_probe(monkeypatch, tmp_path):
+    """A restart with a persisted reading younger than the interval starts no account probe (#12483)."""
+    _persist_account_readings(monkeypatch, tmp_path, age_s=60.0)
+    probes, probed = _restart_scheduler(monkeypatch, bound_generation=b"g" * 32)
+    try:
+        assert not probed.wait(timeout=1.0)
+        assert not subscription_usage_mod._claude_account_startup_pending
+        # An on-demand kick right after the restart honours the same clock.
+        subscription_usage_mod.trigger_claude_account_refresh()
+        thread = subscription_usage_mod._claude_account_oneshot_thread
+        assert thread is None or not thread.is_alive()
+        assert not probed.wait(timeout=0.5)
+        assert probes == []
+        # The re-proved restored readings are the cached samples again (#12483).
+        assert set(claude_account_usage._last_good) == set(claude_account_usage.CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS)
+    finally:
+        subscription_usage_mod.stop_periodic_refresh(join_timeout_s=2.0)
+        subscription_usage_mod._claude_account_probe_started_at = None
+
+
+@pytest.mark.parametrize(
+    ("age_s", "bound_generation"),
+    [(5000.0, b"g" * 32), (60.0, b"x" * 32)],
+    ids=["older-than-interval", "binding-changed"],
+)
+def test_restart_probes_when_persisted_reading_is_old_or_its_binding_changed(
+    monkeypatch, tmp_path, age_s, bound_generation
+):
+    _persist_account_readings(monkeypatch, tmp_path, age_s=age_s)
+    probes, probed = _restart_scheduler(monkeypatch, bound_generation=bound_generation)
+    try:
+        assert probed.wait(timeout=5.0)
+        assert probes
+    finally:
+        subscription_usage_mod.stop_periodic_refresh(join_timeout_s=2.0)
+        subscription_usage_mod._claude_account_probe_started_at = None
+
+
+def test_restart_startup_wait_ends_at_the_cache_ttl_and_counts_validation_time(monkeypatch, tmp_path):
+    """The first probe is never held past the TTL, and time spent validating bindings is not lost."""
+    _persist_account_readings(monkeypatch, tmp_path, age_s=30.0)
+    monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "720")
+    monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "60")
+    # Seconds each binding validation takes on a fake clock.
+    real_time, offset, validation_s = time.time, [0.0], [0.0]
+    monkeypatch.setattr(claude_account_usage.time, "time", lambda: real_time() + offset[0])
+
+    @contextlib.contextmanager
+    def _binding(_label, *, verified=None):
+        offset[0] += validation_s[0]
+        yield claude_account_usage._Binding(Path("/nonexistent"), "acct", verified)
+
+    monkeypatch.setattr(claude_account_usage, "account_binding", _binding)
+    wait_s = subscription_usage_mod._claude_account_startup_wait_s(720.0)
+    assert wait_s is not None
+    assert 25.0 < wait_s <= 30.0  # TTL 60 minus an age of about 30, not the interval's 690
+
+    # The readings are inside the TTL when the check starts; validating the bindings
+    # takes them past it, so nothing is restored and the probe runs now.
+    claude_account_usage._reset_for_tests()
+    offset[0], validation_s[0] = 0.0, 16.0
+    assert subscription_usage_mod._claude_account_startup_wait_s(720.0) is None
+    assert claude_account_usage._last_good == {}
+    subscription_usage_mod._claude_account_probe_started_at = None
+
+
+def test_restart_probes_when_no_reading_was_persisted(monkeypatch, tmp_path):
+    monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
+    monkeypatch.setattr(claude_account_usage, "_samples_path", lambda: tmp_path / "claude_account_samples.json")
+    probes, probed = _restart_scheduler(monkeypatch, bound_generation=b"g" * 32)
+    try:
+        assert probed.wait(timeout=5.0)
+        assert probes
+    finally:
+        subscription_usage_mod.stop_periodic_refresh(join_timeout_s=2.0)
+        subscription_usage_mod._claude_account_probe_started_at = None
+
+
 def test_compute_routing_budget_computes_in_flight_once(monkeypatch, tmp_path):
     """compute_routing_budget must scan in-flight tasks once, not per subscription lane (#7596)."""
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
@@ -1436,9 +1607,11 @@ def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
     warm = client.get("/api/state/routing-budget").json()
 
     assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
-    assert warm["claude_accounts"]["claude:b"]["status"] == "stale"
-    assert warm["claude_accounts"]["claude:b"]["reason"] == "timeout"
-    assert warm["preferred_claude_account"] is None
+    row_b = warm["claude_accounts"]["claude:b"]
+    assert row_b["status"] == "ok"
+    assert row_b["stale"] is False
+    assert row_b["reason"] == "timeout"
+    assert warm["preferred_claude_account"] == "b"
 
 
 # Fails on e75cb7e113: a warm routing snapshot kept serving b's row ``ok`` and
@@ -1523,3 +1696,25 @@ def test_account_rows_refuse_a_scratch_root_inside_a_git_checkout(monkeypatch, t
     rows = _routing_client(tmp_path).get("/api/state/routing-budget").json()["claude_accounts"]
 
     assert {(row["status"], row["reason"]) for row in rows.values()} == {("unknown", "sandbox_unavailable")}
+
+
+def test_startup_warmup_fills_dispatch_routing_budget_key_cold_start_timeout(monkeypatch, tmp_path):
+    """#12512 (cold-start read timeout): the startup warmup must leave the dispatch key warm.
+
+    A dispatch launch right after a Monitor restart read a cold routing-budget
+    and timed out; the warmup now fills the exact key that read uses.
+    """
+    ctx = fixture_context(tmp_path)
+    (ctx.roots.batch_state_dir / "tasks").mkdir(parents=True)
+    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **_kw: {"agents": {}})
+    monkeypatch.setattr(state_router, "_compute_pipeline_versions_payload", lambda *_a: {})
+    monkeypatch.setattr(state_router, "_compute_weak_points_payload", lambda *_a: {})
+    monkeypatch.setattr(state_router, "compute_summary", lambda **_kw: {})
+    monkeypatch.setattr(state_router, "compute_research_coverage", lambda **_kw: {})
+
+    key = state_router._ctx_cache_key(ctx, "routing-budget", "dispatch", 0)
+    assert state_helpers.cache_get(key, state_router.ROUTING_BUDGET_TTL_S) is None
+
+    state_router._run_state_scan_warmup(ctx)
+
+    assert state_helpers.cache_get(key, state_router.ROUTING_BUDGET_TTL_S) is not None

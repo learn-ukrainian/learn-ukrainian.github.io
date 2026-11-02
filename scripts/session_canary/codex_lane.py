@@ -34,7 +34,8 @@ def _epic_dir(repo: Path, epic: str) -> Path:
 
 
 def _load_ranked(repo: Path, epic: str) -> list[handoff_select.LoadedCandidate]:
-    return handoff_select.load_codex_candidates(repo, epic)
+    """The newest driver-state handoff_note first, then markdown handoffs (#12567)."""
+    return handoff_select.load_codex_mint_candidates(repo, epic)
 
 
 def _handoff_candidates(repo: Path, epic: str) -> list[Path]:

@@ -320,7 +320,39 @@ def test_grok_monitor_is_a_dedicated_slot_and_muse_monitor_stays_locked() -> Non
     assert gate.returncode == 0, gate.stderr
 
 
-REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "practice", "folk", "bio", "corpus", "hramatka")
+REGISTERED_SELECTORS = (
+    "infra",
+    "devops",
+    "monitor",
+    "open-model-data",
+    "atlas",
+    "practice",
+    "folk",
+    "bio",
+    "corpus",
+    "hramatka",
+    "kube-dojo",
+)
+
+
+def test_kube_dojo_wrapper_dry_run_binds_its_claude_lane() -> None:
+    """The kube-dojo lane wrapper claims its own stream and slot on Sonnet 5.5 (#12553)."""
+    result = subprocess.run(
+        [str(REPO / "scripts" / "start-kube-dojo-driver.sh")],
+        cwd=REPO,
+        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    stream = stream_anchor_id("kube-dojo", REPO)
+    assert f"would claim lease stream={stream} agent=claude" in result.stdout
+    assert "session epic=kube-dojo slot=claude-kube-dojo handoff=" in result.stdout
+    assert "would select agent infra-orchestrator for lane kube-dojo" in result.stdout
+    assert "--model claude-sonnet-5-5" in result.stdout
+    assert "drive kube-dojo/kube-dojo.github.io epic #2272" in result.stdout
 
 
 @pytest.mark.parametrize("provider", ["claude", "codex"])
@@ -521,3 +553,30 @@ def test_muse_identity_refuses_other_streams(selector: str) -> None:
     result = _bash('source "$1"; handoff_identity_for_muse_epic "$2"', str(HANDOFF_IDENTITY), selector)
     assert result.returncode == 1
     assert result.stdout == ""
+
+
+@pytest.mark.parametrize(
+    "caller_epic",
+    [
+        ("--epic", "devops"),
+        ("--epic=devops",),
+        ("--governor", "devops"),
+        # `--` here is the --endpoint value, not the separator, so --epic is still a launcher flag.
+        ("--endpoint", "--", "--epic", "devops"),
+        ("--endpoint", "--", "--epic=devops"),
+    ],
+)
+def test_kube_dojo_wrapper_refuses_a_caller_lane(caller_epic: tuple[str, ...]) -> None:
+    """A caller --epic must not move the kube-dojo work onto another lane's lease (#12553)."""
+    result = subprocess.run(
+        [str(REPO / "scripts" / "start-kube-dojo-driver.sh"), *caller_epic],
+        cwd=REPO,
+        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "fixes the lane 'kube-dojo'; refusing the caller's lane 'devops'" in result.stderr
+    assert "would claim" not in result.stdout

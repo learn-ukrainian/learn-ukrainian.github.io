@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lib.readonly_sqlite import open_readonly
+from scripts.projects.open_model_data import v4_reproduce_deliverables
 from scripts.projects.open_model_data.v4_reproduce_deliverables import (
     _get_language_usage_masks,
     assert_file_no_private_host_paths,
@@ -30,6 +31,19 @@ DATASET_DIR = Path("data/projects/open_model_data/dataset")
 DELIVERY_DIR = Path("registry/projects/open_model_data/delivery")
 RECORDS_PATH = DATASET_DIR / "v4_human_source_dataset_records_v1.jsonl"
 DELIVERY_RECEIPT_PATH = DELIVERY_DIR / "v4_delivery_reproduction_receipt_v1.json"
+
+
+def _seal_study_verification(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Isolate the delivery-level checks from the sealed learning-study step.
+
+    Since #9607 (0a6ff7e38e04) ``verify_study`` refuses every old-plan study
+    artifact (quarantined by path and by hash), so a positive delivery
+    verification can no longer pass through it. These tests exercise the
+    delivery-level checks (digests, schemas, host paths, record custody), so
+    the sealed study step is stubbed. The refusal itself is covered by
+    ``test_quarantine.py``.
+    """
+    monkeypatch.setattr(v4_reproduce_deliverables, "_get_verify_study", lambda: lambda *_args, **_kwargs: True)
 
 
 def _has_full_sources_db() -> bool:
@@ -137,8 +151,9 @@ def test_delivery5_custody_and_zero_host_paths() -> None:
     "open_model_other_indexes",
     "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
 )
-def test_verify_delivery_clean_pass() -> None:
+def test_verify_delivery_clean_pass(monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify delivery verification passes on intact deliverables."""
+    _seal_study_verification(monkeypatch)
     assert verify_delivery(Path.cwd(), DELIVERY_RECEIPT_PATH) is True
 
 
@@ -185,9 +200,11 @@ def test_verify_delivery_detects_tampered_artifact(tmp_path: Path) -> None:
     "open_model_other_indexes",
     "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
 )
-def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
+def test_verify_delivery_detects_tampered_document(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify delivery verification detects tampered or leaked deliverable documents."""
     import shutil
+
+    _seal_study_verification(monkeypatch)
 
     # Create a mock repo root with a copied structure
     mock_root = tmp_path / "mock_repo"
@@ -738,8 +755,11 @@ def test_verify_delivery_rejects_tampered_or_missing_records_header(tmp_path: Pa
     "open_model_other_indexes",
     "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
 )
-def test_verify_delivery_succeeds_with_partial_or_missing_sources_db(tmp_path: Path) -> None:
+def test_verify_delivery_succeeds_with_partial_or_missing_sources_db(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Verify delivery passes when sources.db lacks literary_texts table (e.g. CI runner)."""
+    _seal_study_verification(monkeypatch)
     # Create mock repo
     fake_repo = tmp_path / "mock_repo"
     fake_repo.mkdir()

@@ -9,7 +9,11 @@ for arg in "$@"; do
     --) break ;;
     --force) launcher_error "CTO launchers reject --force; run --help."; exit 2 ;;
     -h|--help)
-      printf 'CTO defaults: --epic epics --model claude-sonnet-5-5 --effort high. --force is refused.\n'
+      # The supported host start (lu-start-cto) always passes --model claude-opus-5-5;
+      # without --model the cap guard keeps this wrapper on Sonnet (#12496).
+      printf 'CTO defaults (these replace the generic driver defaults below): --epic epics --effort high;\n'
+      printf '  --model claude-sonnet-5-5 unless --model is given. lu-start-cto passes --model claude-opus-5-5.\n'
+      printf '  --force is refused.\n'
       ;;
   esac
 done

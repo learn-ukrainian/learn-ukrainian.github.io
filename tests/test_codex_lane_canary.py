@@ -10,6 +10,12 @@ import pytest
 from scripts.session_canary import codex_lane
 
 
+@pytest.fixture(autouse=True)
+def _no_host_driver_state(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep the Codex canary off a host's driver-state database (#12567)."""
+    monkeypatch.setenv("LU_DRIVER_STATE_CLI", "")
+
+
 @pytest.mark.parametrize("epic", ["../../tmp/evil", "/absolute/evil", "bad_name", "-infra", "infra-"])
 def test_bootstrap_rejects_unsafe_epic_before_writing(tmp_path, epic):
     if epic == "/absolute/evil":

@@ -651,7 +651,7 @@ describe("AtlasDataSource runtime shards (real DB, optional)", () => {
       });
       const slugs = [...new Set(["прапор", "файний", "будь-ласка", "доконаний-вид", "ілля", "іване", ...byType])];
 
-      let differing = 0;
+      const differing = 0;
       for (const slug of slugs) {
         const left = await sqlite.getEntry(slug);
         const right = await http.getEntry(slug);
@@ -670,7 +670,6 @@ describe("AtlasDataSource runtime shards (real DB, optional)", () => {
           manifestVersion: cache.manifestVersion,
         });
         if (sqliteHtml !== httpHtml) {
-          differing += 1;
           throw new Error(`render parity failed for ${slug}`);
         }
       }

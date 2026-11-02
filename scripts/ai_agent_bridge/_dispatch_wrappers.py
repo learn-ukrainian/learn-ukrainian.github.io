@@ -536,8 +536,10 @@ def run_ask_review_dispatch(
         if unsupported and (
             completed or state.get("error") == "review_missing_verdict_line" or state.get("failure_reason") == failure
         ):
+            # The reason code travels in ``failure_reason``. A ``<code>: `` prefix would
+            # read as a secret-named key-value pair to ``redact_text`` and mask the text.
             detail = (
-                f"{failure}: unsupported verdict identifier {unsupported[-1]!r}; "
+                f"unsupported verdict identifier {unsupported[-1]!r}; "
                 f"accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
             )
             state["stderr_excerpt"] = redact_text(detail) or ""

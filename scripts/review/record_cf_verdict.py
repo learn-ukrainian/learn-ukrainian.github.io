@@ -2351,6 +2351,7 @@ def budget_admission(
             task_root=task_root,
             head=sha,
             recording_run=recording_run,
+            repo_root=review_root,
         )
         if budget < ELEVATED_REVIEW_ROUNDS
         else None,
@@ -2844,24 +2845,30 @@ def record(
             "agent": task.get("agent"), "model": model, "mode": task.get("mode")
         } != granted_route:
             raise RecordError("BUDGET_GRANT_REFUSED[capability]: retry route differs from demonstrated route")
-        from scripts.review.repair_round import (
-            RepairRefused,
-            receipt_at,
-            record_admission,
-            require_repair_verified,
-        )
+        from scripts.review.budget_grant import p2_round_at, record_p2_round, require_p2_verified
+        from scripts.review.repair_round import receipt_at, record_admission, require_repair_verified
 
+        # The lineage's p2 fix round is spent before its verdict exists, whatever that verdict is (#12548).
+        p2_round = budget_receipt.get("budget_grant", {}).get("p2_fix_round")
+        if p2_round is not None:
+            record_p2_round(task_root, p2_round)
+        p2_held = p2_round or p2_round_at(task_root, repository=repository, number=number, branch=branch, head=sha)
         repair = budget_receipt.get("repair_round")
         repaired = repair or receipt_at(
             _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
         )
-        # A repair head stays changes-requested unless the reply attests that the delta is only the repair.
+        verify = (
+            partial(require_repair_verified, reply, repaired) if repaired is not None
+            else partial(require_p2_verified, reply, p2_held) if p2_held is not None
+            else None
+        )
+        # A repair or p2 fix head stays changes-requested unless the reply attests its delta.
         # The note is written even when the mapping was already dropped, so lookup cannot approve the body later.
         # A withheld skeleton stays withheld: rebuilding from the original fields would put the blocked text back.
-        if repaired is not None and stated != "APPROVED" and not withheld_comment:
+        if verify is not None and stated != "APPROVED" and not withheld_comment:
             try:
-                require_repair_verified(reply, repaired)
-            except RepairRefused:
+                verify()
+            except RecordError:
                 if residuals is not None:
                     residuals, p3_refused = None, P3_REPAIR_WITHHELD
                     verdict = stated
@@ -2908,9 +2915,9 @@ def record(
                         continue
                     raise RecordError("existing verdict marker was edited or conflicts with task")
         require_no_same_head_rejection(comments, sha, login, verdict)
-        if repaired is not None and stated == "APPROVED":
-            # The non-author reviewer, not the recorder, verifies that the delta is only the repair.
-            require_repair_verified(reply, repaired)
+        if verify is not None and stated == "APPROVED":
+            # The non-author reviewer, not the recorder, verifies the delta its attestation names.
+            verify()
         if repair is not None:
             # The admission receipt is durable before the verdict exists, so the round is spent even if posting fails.
             record_admission(_repair_receipts(task_root), repair)

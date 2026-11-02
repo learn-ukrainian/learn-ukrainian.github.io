@@ -3749,7 +3749,8 @@ def write_grant(tasks, request=GRANT_REQUEST, *, task_id="grant-approval", decis
     from scripts.agent_runtime import bounded_advisory
 
     digest = bounded_advisory.canonical_sha256(request)
-    typed = {"decision": "APPROVE", **request, "request_sha256": digest, **dict(decision)}
+    typed = {"decision": "APPROVE", **request, "admission_exclusion_attestation": None,
+             "request_sha256": digest, **dict(decision)}
     text = f"VERDICT: APPROVE\n\n```budget-elevation\n{json.dumps(typed)}\n```\n"
     path = tasks / f"{task_id}.json"
     data = {
@@ -3797,6 +3798,9 @@ def grant_case(monkeypatch, tmp_path, *, last_reply=OPEN_F2, last_verdict="CHANG
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     comments.extend(recorded_verdict(sha, "CHANGES_REQUESTED", task_id=f"round-{sha[0]}") for sha in ("1" * 40, "2" * 40))
     comments.append(verdict_with_reply("3" * 40, last_verdict, last_reply, task_id="round-3"))
+    # The cited round's run: a grant reads the reply format from it (#12549); no output schema keeps the ledger.
+    write_task(tasks, task_id="round-3", reply=last_reply, worktree_base_sha="3" * 40, pr=42,
+               started_at="2026-09-23T11:00:00.000001+00:00")
     return tasks, comments, calls
 
 
@@ -3804,7 +3808,7 @@ def test_elevated_grant_admits_rounds_four_and_five_only(monkeypatch, tmp_path):
     tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
     write_grant(tasks)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    write_task(tasks, reply=OPEN_F2.replace("Impact", "Still open: the retry path. Impact"))
+    write_task(tasks, reply=OPEN_F2.replace("Impact", "Still open: the retry path. Impact"), pr=42)
     receipt = recorder.record("review-one", **kwargs)["budget_grant"]
     assert receipt["grant_task"] == "grant-approval" and receipt["advisor_model"] == "gpt-6.1-sol"
     assert receipt["finding_id"] == "F2" and receipt["cited_verdict_head"] == "3" * 40
@@ -4167,4 +4171,157 @@ def test_withheld_capability_substantive_rejection_or_new_p0_p1_refused(monkeypa
     write_grant(tasks, request)
     with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[blocker\]"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+EXCLUSION_ATTESTATION = {
+    "complete_reply_execution_obstruction_only": True,
+    "no_substantive_defect": True,
+    "no_security_fail": True,
+}
+
+
+def exclusion_grant_case(monkeypatch, tmp_path, *, explanation="The brief's probe program is absent; execution is obstructed."):
+    tasks, comments, calls, request = withheld_grant_case(monkeypatch, tmp_path)
+    reply = json.dumps({"schema_version": "code-review-findings.v1",
+                        "overall": {"correctness": "uncertain", "explanation": explanation, "confidence": 0.9},
+                        "findings": []})
+    evidence = {"task_id": "review-one", "run_nonce": "excluded-nonce", "reviewed_sha": SHA,
+                "reply_sha256": hashlib.sha256(reply.encode()).hexdigest()}
+    write_task(tasks, reply=reply, schema_version=2, type="review", review_branch=BRANCH, pr=42, mode="read-only",
+               started_at="2026-09-23T11:30:00+00:00", run_nonce=evidence["run_nonce"],
+               result_sha256=evidence["reply_sha256"])
+    request["withheld_capability"]["admission_exclusion"] = evidence
+    return tasks, comments, calls, request
+
+
+def write_exclusion_grant(tasks, request, *, attestation=EXCLUSION_ATTESTATION, task_id="grant-exclusion"):
+    write_grant(tasks, request, task_id=task_id, decision={"admission_exclusion_attestation": attestation})
+
+
+def write_replacement(tasks, **updates):
+    reply = "VERDICT: APPROVE"
+    write_task(tasks, task_id="replacement", reply=reply, schema_version=2, type="review", review_branch=BRANCH,
+               pr=42, mode="read-only", run_nonce="replacement-nonce", result_sha256=hashlib.sha256(reply.encode()).hexdigest(),
+               **updates)
+
+
+@pytest.mark.parametrize("defect", [None, "seat", "head", "earlier", "nonce"])
+def test_sealed_exclusion_admits_only_exact_later_same_seat_same_head_replacement(monkeypatch, tmp_path, defect):
+    tasks, comments, calls, request = exclusion_grant_case(monkeypatch, tmp_path)
+    write_exclusion_grant(tasks, request)
+    before = recorder.budget_check(REPOSITORY, 42, task_root=tasks)
+    assert before["admitted"] is True
+    assert before["budget_grant"]["excluded_run"] == request["withheld_capability"]["admission_exclusion"]
+    assert before["budget_grant"]["replacement_run"] is None
+    assert before["budget_grant"]["round_allowance"] == 4
+    from scripts.review.review_lineage import dispatched_rounds, lineage_runs
+
+    runs = lineage_runs(tasks, repository=REPOSITORY, number=42, branch=BRANCH)
+    assert dispatched_rounds(runs=runs, comments=comments, login="fleet")[SHA] == ["review-one"]
+    assert calls == {"posts": 0, "statuses": 0}
+    updates = {"review_profile": "ukrainian"} if defect == "seat" else (
+        {"worktree_base_sha": OTHER} if defect == "head" else (
+            {"started_at": "2026-09-23T11:00:00+00:00"} if defect == "earlier" else {}))
+    write_replacement(tasks, **updates)
+    if defect in {"nonce", "seat"}:
+        from scripts.review.budget_grant import admit_grant_round
+
+        with pytest.raises(recorder.RecordError, match=r"replacement run is missing|same-seat"):
+            admit_grant_round(repository=REPOSITORY, number=42, branch=BRANCH, changed_paths=["docs/readme.md"],
+                              comments=comments, login="fleet", task_root=tasks, head=SHA,
+                              recording_run=("replacement", "wrong-nonce" if defect == "nonce" else "replacement-nonce"))
+    elif defect:
+        with pytest.raises(recorder.RecordError, match=r"same-seat|head moved|worktree HEAD"):
+            recorder.record("replacement", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    else:
+        receipt = recorder.record("replacement", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["budget_grant"]
+        assert receipt["replacement_run"] == {"task_id": "replacement", "run_nonce": "replacement-nonce",
+                                              "reviewed_sha": SHA,
+                                              "reply_sha256": hashlib.sha256(b"VERDICT: APPROVE").hexdigest()}
+        assert receipt["excluded_run"] == request["withheld_capability"]["admission_exclusion"]
+        assert receipt["qualifying_heads"] == ["3" * 40]
+        assert receipt["admission_exclusion_attestation"] == EXCLUSION_ATTESTATION
+        assert calls == {"posts": 1, "statuses": 1}
+    # The exclusion never publishes an approval or resolves the earlier finding.
+    assert "SECURITY_VERDICT: FAIL" in comments[2]["body"]
+
+
+@pytest.mark.parametrize("field", ["task_id", "run_nonce", "reviewed_sha", "reply_sha256", "repository", "lineage", "pr"])
+def test_sealed_exclusion_mismatched_run_binding_refused(monkeypatch, tmp_path, field):
+    tasks, _comments, calls, request = exclusion_grant_case(monkeypatch, tmp_path)
+    if field in {"repository", "lineage", "pr"}:
+        path = tasks / "review-one.json"
+        data = json.loads(path.read_text())
+        data[{"lineage": "review_branch"}.get(field, field)] = 43 if field == "pr" else "other/repo"
+        path.write_text(json.dumps(data))
+    else:
+        request["withheld_capability"]["admission_exclusion"][field] = {
+            "task_id": "other-task", "run_nonce": "other-nonce", "reviewed_sha": OTHER, "reply_sha256": "e" * 64,
+        }[field]
+    write_exclusion_grant(tasks, request)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[evidence\]"):
+        recorder.budget_check(REPOSITORY, 42, task_root=tasks)
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("defect", ["prose-defect", "security-fail", "finding", "priority-in-prose", "prose-reply", "unsealed"])
+def test_sealed_exclusion_prose_defect_or_any_finding_refused_even_with_zero_parser_findings(monkeypatch, tmp_path, defect):
+    explanation = {"prose-defect": "Authentication is bypassed because the token is never checked.",
+                   "security-fail": "SECURITY_VERDICT: FAIL", "priority-in-prose": "P3: a spelling defect."}.get(defect,
+                    "The probe program is absent; execution is obstructed.")
+    tasks, _comments, calls, request = exclusion_grant_case(monkeypatch, tmp_path, explanation=explanation)
+    attestation = dict(EXCLUSION_ATTESTATION)
+    if defect == "prose-defect":
+        # The trusted advisor must judge the full prose, not infer semantics from a zero count.
+        assert recorder._review_verdict_and_count((tasks / "review-one.result").read_text()) == ("BLOCKED", 0)
+        attestation["no_substantive_defect"] = False
+    elif defect == "unsealed":
+        attestation = None
+    elif defect in {"finding", "prose-reply"}:
+        reply = "VERDICT: BLOCKED (missing capability: shell)" if defect == "prose-reply" else json.dumps({
+            "schema_version": "code-review-findings.v1",
+            "overall": {"correctness": "uncertain", "explanation": explanation, "confidence": 0.9},
+            "findings": [{"id": "F3", "title": "Spelling", "body": "Typo.", "priority": "P3", "confidence": 0.9,
+                          "category": "docs", "location": {"path": "docs/readme.md", "start_line": 3, "end_line": 3,
+                                                           "claim_type": "present"},
+                          "verbatim": "typo", "why_wrong": "Misspelt.", "smallest_fix": "Correct spelling.", "sources": ["none"]}],
+        })
+        (tasks / "review-one.result").write_text(reply)
+        path = tasks / "review-one.json"
+        data = json.loads(path.read_text())
+        data["result_sha256"] = hashlib.sha256(reply.encode()).hexdigest()
+        path.write_text(json.dumps(data))
+        request["withheld_capability"]["admission_exclusion"]["reply_sha256"] = data["result_sha256"]
+    write_exclusion_grant(tasks, request, attestation=attestation)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[(?:approval|blocker|evidence)\]"):
+        recorder.budget_check(REPOSITORY, 42, task_root=tasks)
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("defect", ["second-grant", "failed-retry", "two-exclusions"])
+def test_sealed_exclusion_second_exclusion_or_failed_retry_refused(monkeypatch, tmp_path, defect):
+    from copy import deepcopy
+
+    tasks, _comments, calls, request = exclusion_grant_case(monkeypatch, tmp_path)
+    write_exclusion_grant(tasks, request)
+    second = deepcopy(request)
+    if defect == "two-exclusions":
+        second["withheld_capability"]["admission_exclusion"] = [second["withheld_capability"]["admission_exclusion"]] * 2
+        from scripts.review.budget_grant import parse_request
+
+        with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[request\]"):
+            parse_request(second, "ruling")
+        return
+    else:
+        reply = (tasks / "review-one.result").read_text()
+        evidence = {**request["withheld_capability"]["admission_exclusion"], "task_id": "failed-retry", "run_nonce": "failed-nonce"}
+        write_task(tasks, task_id="failed-retry", reply=reply, schema_version=2, review_branch=BRANCH, pr=42,
+                   mode="read-only", type="review", run_nonce="failed-nonce", result_sha256=evidence["reply_sha256"],
+                   started_at="2026-09-23T12:01:00+00:00")
+        if defect == "second-grant":
+            second["withheld_capability"]["admission_exclusion"] = evidence
+    write_exclusion_grant(tasks, second, task_id="second-grant")
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[(?:request|binding|blocker)\]"):
+        recorder.budget_check(REPOSITORY, 42, task_root=tasks)
     assert calls == {"posts": 0, "statuses": 0}

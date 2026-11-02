@@ -184,9 +184,14 @@ def test_space_collapse_audit_appends_idempotently(tmp_path) -> None:
 def test_ulp_taught_leftovers_heritage_holds(requires_vesum_db, requires_sources_db) -> None:
     from scripts.lexicon.heritage_classifier import classify_lemma
 
-    for lemma in ("переключити", "кримчанин", "просвітитель"):
+    # переключити is a curated calque (registry/lexicon/heritage_pairs.yaml, 27cf6fb803e0);
+    # since 7829e74b6031 (#7985) a curated calque takes the "calque" label instead of
+    # "russianism". кримчанин and просвітитель stay Russianisms.
+    expected_labels = {"переключити": "calque", "кримчанин": "russianism", "просвітитель": "russianism"}
+    for lemma, label in expected_labels.items():
         hs = classify_lemma(lemma)
-        assert hs.get("is_russianism") is True or hs.get("classification") == "russianism"
+        assert hs.get("classification") == label
+        assert hs.get("is_russianism") is (label == "russianism")
         assert paired_split.classify_split_leg(lemma) == "single_word_heritage_flag"
 
 
@@ -256,19 +261,24 @@ def test_live_curated_unit_a_leftovers_census_invariants(requires_vesum_db) -> N
         manifest_path=manifest_path,
         atlas_db_path=atlas_db_path,
     )
-    assert res["total_keys"] == 250
-    assert res["bucket_counts"]["words_1000_pair_keys"] == 213
+    # Manifest pinned at 81c695cdd5a5 (9bfad2355443, #8014) replaced the 2026-09-06 basis
+    # (dc1d73a434e2): it carries no "проєк" entry (now a pair key) and admits the three
+    # ULP leftovers (переключити, кримчанин, просвітитель).
+    assert res["total_keys"] == 251
+    assert res["bucket_counts"]["words_1000_pair_keys"] == 214
     assert res["bucket_counts"]["verbs_500_trailing_comma"] == 31
     assert res["bucket_counts"]["clean_tokens"] == 3
     assert res["bucket_counts"]["ulp_leftovers"] == 3
     assert res["promote_candidate_count"] == 0
     assert res["leg_disposition_counts"]["already_in_atlas"] == 406
     assert res["leg_disposition_counts"]["multiword_after_split"] == 15
-    assert res["leg_disposition_counts"]["single_word_vesum_absent"] == 1
+    assert res["leg_disposition_counts"]["single_word_vesum_absent"] == 2
     assert res["leg_disposition_counts"]["hold(trailing_comma_canonical_in_atlas)"] == 31
-    assert res["leg_disposition_counts"]["hold(heritage_russianism)"] == 3
+    # переключити is a curated calque since 7829e74b6031 (#7985); the other two stay Russianisms.
+    assert res["leg_disposition_counts"]["hold(heritage_russianism)"] == 2
+    assert res["leg_disposition_counts"]["hold(heritage_calque)"] == 1
     if atlas_db_path and atlas_db_path.exists():
-        assert res["atlas_db_articles"] == 19785
+        assert res["atlas_db_articles"] == 27128
 
 
 def test_classify_taught_candidate(requires_vesum_db) -> None:
@@ -300,10 +310,11 @@ def test_classify_taught_candidate(requires_vesum_db) -> None:
     assert r_pair["category"] in categories
 
     # heritage_hold
-    for held_word in ("переключити", "кримчанин", "просвітитель"):
+    # переключити is held as a curated calque since 7829e74b6031 (#7985).
+    for held_word, label in (("переключити", "calque"), ("кримчанин", "russianism"), ("просвітитель", "russianism")):
         r_hold = paired_split.classify_taught_candidate(held_word, atlas_keys=set())
         assert r_hold["category"] == "heritage_hold"
-        assert "russianism" in r_hold["disposition"]
+        assert label in r_hold["disposition"]
         assert r_hold["category"] in categories
 
     # vesum_unrecognized
@@ -331,18 +342,19 @@ def test_live_taught_residual_census_invariants(requires_vesum_db) -> None:
     assert summary["total_taught_records"] == sum(u["records"] for u in source_units.values())
     assert summary["total_taught_records"] == 5938
     assert summary["total_taught_unique_keys"] == 5934
-    assert summary["taught_present_in_atlas"] == 5684
-    assert summary["residual_missing_candidates"] == 250
+    # Manifest 81c695cdd5a5 (#8014) admits the three ULP leftovers; "проєк" is no longer in it.
+    assert summary["taught_present_in_atlas"] == 5686
+    assert summary["residual_missing_candidates"] == 248
     assert summary["p1_admit_count"] == 0
     assert summary["p1_admit_candidates"] == []
 
     # Source unit breakdowns computed live
     assert source_units["ohoiko-1000-words"]["records"] == 1073
     assert source_units["ohoiko-1000-words"]["unique"] == 1072
-    assert source_units["ohoiko-1000-words"]["in_atlas"] == 856
-    assert source_units["ohoiko-1000-words"]["missing"] == 216
+    assert source_units["ohoiko-1000-words"]["in_atlas"] == 855
+    assert source_units["ohoiko-1000-words"]["missing"] == 217
     assert source_units["ohoiko-1000-words"]["category_breakdown"] == {
-        "pair_key": 213,
+        "pair_key": 214,
         "already_in_atlas": 2,
         "ocr": 1,
     }
@@ -357,39 +369,37 @@ def test_live_taught_residual_census_invariants(requires_vesum_db) -> None:
 
     assert source_units["ulp-seasons-1-6"]["records"] == 3906
     assert source_units["ulp-seasons-1-6"]["unique"] == 3906
-    assert source_units["ulp-seasons-1-6"]["in_atlas"] == 3903
-    assert source_units["ulp-seasons-1-6"]["missing"] == 3
-    assert source_units["ulp-seasons-1-6"]["category_breakdown"] == {
-        "heritage_hold": 3,
-    }
+    assert source_units["ulp-seasons-1-6"]["in_atlas"] == 3906
+    assert source_units["ulp-seasons-1-6"]["missing"] == 0
+    assert source_units["ulp-seasons-1-6"]["category_breakdown"] == {}
 
-    # 6 standard categories for the 250 candidates
+    # 6 standard categories for the 251 candidates (the 3 held ULP leftovers stay candidates)
     cand_cats = summary["candidate_category_counts"]
     assert cand_cats["already_in_atlas"] == 33
-    assert cand_cats["pair_key"] == 213
+    assert cand_cats["pair_key"] == 214
     assert cand_cats["ocr"] == 1
     assert cand_cats["heritage_hold"] == 3
     assert cand_cats["vesum_unrecognized"] == 0
     assert cand_cats["p1_admit"] == 0
-    assert sum(cand_cats.values()) == 250
+    assert sum(cand_cats.values()) == 251
 
-    # Leg-level counts for the 213 pair keys (423 total legs)
+    # Leg-level counts for the 214 pair keys (424 total legs)
     leg_cats = summary["pair_key_leg_counts"]
     assert leg_cats["already_in_atlas"] == 406
     assert leg_cats["ocr"] == 16
-    assert leg_cats["vesum_unrecognized"] == 1
+    assert leg_cats["vesum_unrecognized"] == 2
     assert leg_cats["heritage_hold"] == 0
     assert leg_cats["p1_admit"] == 0
-    assert sum(leg_cats.values()) == 423
+    assert sum(leg_cats.values()) == 424
 
     # Documented heritage holds
     held_lemmas = {h["lemma"] for h in summary["heritage_holds"]}
     assert held_lemmas == {"переключити", "кримчанин", "просвітитель"}
 
     # Manifest and DB invariants
-    assert census["manifest_entries"] == 20121
+    assert census["manifest_entries"] == 27472
     if atlas_db_path and atlas_db_path.exists():
-        assert census["atlas_db_articles"] == 19785
+        assert census["atlas_db_articles"] == 27128
 
 
 def test_taught_residual_census_fails_if_source_files_change(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

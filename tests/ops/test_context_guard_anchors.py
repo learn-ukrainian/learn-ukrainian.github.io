@@ -33,7 +33,8 @@ CONFLICTING_STREAM = [
 NEXT_THREE = "\n".join(f"{index}. anchor-check next item {index}" for index in range(1, 4))
 HANDS_TWO = "\n".join(f"- anchor-check hands-off rule {index}" for index in range(1, 3))
 SENDER = "codex-atlas"
-LANE = "atlas"
+LANE = "codex-atlas"  # The tmux session the atlas Codex lane runs in.
+EPIC = "atlas"
 LAUNCHER_EXIT_RC1 = (
     "lane-relaunch: launcher started id={occurrence}\n"
     "booting codex lane\n"
@@ -59,6 +60,12 @@ def lane_repo(tmp_path: Path, text: str | None) -> Path:
     if text is not None:
         (epic / "CODEX-DRIVER-HANDOFF.md").write_text(text, encoding="utf-8")
     return repo
+
+
+@pytest.fixture(autouse=True)
+def _no_host_driver_state(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep the guard's anchor check off a host's driver-state database (#12567)."""
+    monkeypatch.setenv(handoff_select.DRIVER_STATE_CLI_ENV, "")
 
 
 @pytest.fixture
@@ -118,6 +125,28 @@ def test_valid_handoff_still_exits(tmp_path: Path, launcher_stream: None) -> Non
     h.tick(LANE)
     assert h.fake.typed(LANE) == ["/quit"]
     assert alerts(h) == []
+
+
+def test_db_handoff_note_lets_a_lane_with_stale_markdown_exit(
+    tmp_path: Path, launcher_stream: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#12567: the guard reads the lane's newest DB handoff_note first, as the launcher's mint does."""
+    lane_repo(tmp_path, handoff_text(next_heading=False, hands_off_heading=False))
+    note = {
+        "id": "C-4170", "kind": "handoff_note", "lane": "atlas", "owner": SENDER, "status": "open",
+        "created_utc": "2026-11-02 20:23:39+00:00", "source_ref": "message_0123456789abcdef",
+        "statement": "1. Render then check first.\n2. Settle the held review.\n3. Dispatch the next worker.\n",
+        "done_when": "The successor verifies the exact lineage.",
+    }
+    reads: list[tuple[str, str]] = []
+    monkeypatch.setattr(handoff_select, "_driver_state_cli", lambda: "lu-driver-state")
+    monkeypatch.setattr(handoff_select, "fetch_newest_handoff_note", lambda lane, owner: reads.append((lane, owner)) or note)
+    h = Harness(tmp_path, **{LANE: codex_pane(40)})
+    enter_handoff(h)
+    h.tick(LANE)
+    assert h.fake.typed(LANE) == ["/quit"]
+    assert alerts(h) == []
+    assert reads and set(reads) == {("atlas", SENDER)}
 
 
 @pytest.mark.parametrize(
@@ -307,7 +336,7 @@ def launcher_selection(repo: Path):
         epic="atlas",
         stream_id="lane-test",
         stream_entries=list(STREAM),
-        candidates=handoff_select.load_codex_candidates(repo, "atlas"),
+        candidates=handoff_select.load_codex_mint_candidates(repo, "atlas", slot=SENDER),
     )
 
 
@@ -319,7 +348,7 @@ def test_shared_verdict_agrees_with_the_launcher_selector(tmp_path: Path, launch
     verdict = grok_lane.check_handoff_anchors(
         repo=repo,
         epic="atlas",
-        candidates=handoff_select.load_codex_candidates(repo, "atlas"),
+        candidates=handoff_select.load_codex_mint_candidates(repo, "atlas", slot=SENDER),
         stream_id="lane-test",
         stream_entries=STREAM,
     )
@@ -353,7 +382,7 @@ def test_absent_handoff_is_reported_as_no_handoff_for_the_fail_open_path(tmp_pat
     verdict = grok_lane.check_handoff_anchors(
         repo=repo,
         epic="atlas",
-        candidates=handoff_select.load_codex_candidates(repo, "atlas"),
+        candidates=handoff_select.load_codex_mint_candidates(repo, "atlas", slot=SENDER),
         stream_id="lane-test",
         stream_entries=STREAM,
     )
@@ -365,10 +394,10 @@ def test_absent_handoff_is_reported_as_no_handoff_for_the_fail_open_path(tmp_pat
 def test_launcher_stream_ignores_a_conflicting_ambient_session_stream(monkeypatch: pytest.MonkeyPatch) -> None:
     """Defect class: the guard's stream drifts from the launcher's shell selector via SESSION_STREAM_ID."""
     ambient = shell_stream("open-model-data")
-    assert ambient != shell_stream(LANE)
+    assert ambient != shell_stream(EPIC)
     monkeypatch.setenv("SESSION_STREAM_ID", ambient)
-    assert grok_lane.launcher_stream_id(LANE) == shell_stream(LANE)
-    assert grok_lane.resolve_stream_id(LANE) == ambient
+    assert grok_lane.launcher_stream_id(EPIC) == shell_stream(EPIC)
+    assert grok_lane.resolve_stream_id(EPIC) == ambient
 
 
 def test_ambient_session_stream_from_another_lane_cannot_exit_a_short_handoff(
@@ -383,21 +412,21 @@ def test_ambient_session_stream_from_another_lane_cannot_exit_a_short_handoff(
     """
     repo = lane_repo(tmp_path, handoff_text(next_heading=False))
     ambient = shell_stream("open-model-data")
-    assert ambient != shell_stream(LANE)
+    assert ambient != shell_stream(EPIC)
     monkeypatch.setenv("SESSION_STREAM_ID", ambient)
 
     def entries(stream_id: str, **_kwargs) -> list[dict[str, str]]:
         return list(CONFLICTING_STREAM) if stream_id == ambient else []
 
     monkeypatch.setattr(grok_lane, "_load_stream_entries", entries)
-    lane_stream = shell_stream(LANE)
+    lane_stream = shell_stream(EPIC)
     launcher_ok = bool(
         grok_lane.select_handoff(
             repo=repo,
-            epic=LANE,
+            epic=EPIC,
             stream_id=lane_stream,
             stream_entries=entries(lane_stream),
-            candidates=handoff_select.load_codex_candidates(repo, LANE),
+            candidates=handoff_select.load_codex_mint_candidates(repo, EPIC, slot=SENDER),
         ).reason
     )
     assert not launcher_ok

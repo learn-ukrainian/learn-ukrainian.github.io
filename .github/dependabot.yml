@@ -83,6 +83,14 @@ updates:
     labels:
       - "dependencies"
     open-pull-requests-limit: 5
+    # psycopg and psycopg-binary must stay at the same version: the C
+    # implementation is loaded by the Python package, and a `--no-deps` install
+    # ignores the [binary] extra. Bump them in one PR (#12476).
+    groups:
+      psycopg:
+        patterns:
+          - "psycopg"
+          - "psycopg-binary"
     # Block constrained transitive bumps that requirements-lock.txt (a flat,
     # fully-pinned lock) lets Dependabot propose past their parent's pin,
     # producing structurally un-mergeable PRs. See issue #2716.

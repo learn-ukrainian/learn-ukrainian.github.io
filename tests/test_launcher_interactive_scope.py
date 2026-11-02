@@ -111,6 +111,7 @@ DRIVERS = {
     "start-grok-driver.sh": ("grok", "devops"),
     "start-claude-cto.sh": ("claude", "epics"),
     "start-codex-cto.sh": ("codex", "epics"),
+    "scripts/start-kube-dojo-driver.sh": ("claude", "kube-dojo"),
 }
 _EVENT = """lu_test_event() {
   local line cg=""
@@ -381,7 +382,8 @@ def _argv(env: dict[str, str]) -> list[str]:
 def _case_args(wrapper: str) -> tuple[str, ...]:
     if wrapper in INTERACTIVE:
         return ("prompt text", "--", *TRICKY)
-    if wrapper.endswith("-cto.sh"):
+    # Lane wrappers fix their own --epic.
+    if wrapper.endswith("-cto.sh") or wrapper == "scripts/start-kube-dojo-driver.sh":
         return ("--", *TRICKY)
     return ("--epic", "devops", "--", *TRICKY)
 
@@ -434,11 +436,13 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
     if mode == "driver":
         assert names.count("lease-open") == names.count("lease-close") == names.count("rollover-import") == 1
         assert names.index("lease-open") < names.index("provider xdist=2") < names.index("lease-close")
-        # Caller arguments, then the drive-epic binding (a lane agent may lead).
+        # Caller arguments, then the driver binding (a lane agent may lead). The
+        # Claude CTO seat holds the epics lease but its state lane is cto (#12496).
         forward = _argv(env)
         assert forward[-1 - len(TRICKY) : -1] == list(TRICKY)
+        state_lane = "cto" if Path(wrapper).name == "start-claude-cto.sh" else label
         assert forward[-1].startswith(
-            f"First run lu-driver-state render --lane {label}, then lu-driver-state check --lane {label}."
+            f"First run lu-driver-state render --lane {state_lane}, then lu-driver-state check --lane {state_lane}."
         )
     else:
         assert not [name for name in names if name.startswith(("lease-", "rollover-", "canary", "publish"))]

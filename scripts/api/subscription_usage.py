@@ -145,6 +145,12 @@ _claude_account_scheduler_thread: threading.Thread | None = None
 _claude_account_refresh_lock = threading.Lock()
 _claude_account_oneshot_lock = threading.Lock()
 _claude_account_oneshot_thread: threading.Thread | None = None
+# Monotonic time when the last Claude-account probe batch started. The
+# scheduler and an on-demand kick share it: both probe every account together.
+_claude_account_probe_started_at: float | None = None
+# True from scheduler start until the startup gate has looked at the persisted
+# readings; an on-demand kick waits so it cannot probe ahead of the gate.
+_claude_account_startup_pending = False
 _last_refresh_started_at: float | None = None
 _last_refresh_finished_at: float | None = None
 _cursor_last_good: tuple[float, dict[str, Any]] | None = None
@@ -3143,19 +3149,54 @@ def _refresh_claude_accounts_live() -> None:
 
 def _run_claude_account_refresh(*, wait: bool = False) -> None:
     """Probe Claude accounts once. A non-waiting caller no-ops if one probe is in flight."""
+    global _claude_account_probe_started_at
     if not _claude_account_refresh_lock.acquire(blocking=wait):
         return
+    # Start-to-start, same clock as the scheduler. A caller that loses the lock
+    # has not started a probe.
+    _claude_account_probe_started_at = time.monotonic()
     try:
         _refresh_claude_accounts_live()
     finally:
         _claude_account_refresh_lock.release()
 
 
+def _claude_account_probe_in_flight() -> bool:
+    """True while the scheduler or an on-demand kick is inside a probe."""
+    if _claude_account_refresh_lock.locked():
+        return True
+    thread = _claude_account_oneshot_thread
+    return thread is not None and thread.is_alive()
+
+
+def _claude_account_reading_past_ttl() -> bool:
+    """True when any cached account row is older than the cache TTL.
+
+    ``claude_accounts_snapshot`` only lstats and never starts a probe. An
+    unknown row is not past TTL: a missing reading is not a stale one.
+    """
+    from scripts.api.claude_account_usage import claude_accounts_snapshot  # noqa: PLC0415, I001  # lazy-ok: import cycle
+
+    rows = claude_accounts_snapshot()
+    return any(bool(row.get("stale")) for row in rows.values() if isinstance(row, dict))
+
+
 def trigger_claude_account_refresh() -> None:
-    """Start one Claude-account probe without waiting on any other lane."""
+    """Start one Claude-account probe without waiting on any other lane.
+
+    On-demand only. The scheduler calls ``_run_claude_account_refresh`` on
+    its own cadence. A kick starts a probe when the last one started more
+    than the scheduler interval ago, or a reading is past the cache TTL,
+    and never while a probe is already in flight. Every account is probed
+    together, so that start time is each account's last probe start.
+    """
     global _claude_account_oneshot_thread
     with _claude_account_oneshot_lock:
-        if _claude_account_oneshot_thread is not None and _claude_account_oneshot_thread.is_alive():
+        if _claude_account_startup_pending or _claude_account_probe_in_flight():
+            return
+        started = _claude_account_probe_started_at
+        interval_elapsed = started is None or (time.monotonic() - started) > _codexbar_refresh_interval_s()
+        if not interval_elapsed and not _claude_account_reading_past_ttl():
             return
         _claude_account_oneshot_thread = threading.Thread(
             target=_run_claude_account_refresh,
@@ -3163,6 +3204,37 @@ def trigger_claude_account_refresh() -> None:
             daemon=True,
         )
         _claude_account_oneshot_thread.start()
+
+
+def _claude_account_startup_wait_s(interval_s: float) -> float | None:
+    """Seconds until the first probe is due when the persisted readings are served again, else ``None``.
+
+    A restart forgets the in-memory readings and probe clock. When every
+    account's persisted reading re-proves its binding and is still fresh, it is
+    served again with its own measured time (``restore_claude_account_samples``)
+    and the clock is rebuilt from the oldest of them: no probe starts until one
+    interval after that reading, or when it reaches the cache TTL if that comes
+    first. In every other case nothing is restored and the probe runs now, so a
+    row is never left unknown for longer than a probe.
+    """
+    global _claude_account_probe_started_at, _claude_account_startup_pending
+    # The per-account module reads this module's CodexBar helpers, so a top-level import is a cycle.
+    from scripts.api import claude_account_usage  # noqa: PLC0415  # lazy-ok: import cycle
+
+    try:
+        age = claude_account_usage.restore_claude_account_samples()
+        if age is None:
+            return None
+        wait_s = min(interval_s, _codexbar_cache_ttl_s()) - age
+        if wait_s <= 0:
+            return None
+        with _claude_account_oneshot_lock:
+            _claude_account_probe_started_at = time.monotonic() - age
+        return wait_s
+    except Exception:  # an unreadable file means probe now, as before
+        return None
+    finally:
+        _claude_account_startup_pending = False
 
 
 def _claude_account_periodic_loop(interval_s: float, run_immediately: bool) -> None:
@@ -3174,8 +3246,13 @@ def _claude_account_periodic_loop(interval_s: float, run_immediately: bool) -> N
     and the remaining work fits in the slack. Sleeping the whole interval
     after the probe would add both durations. This loop does not share the
     other lanes' pass.
+
+    The first probe is skipped when the persisted readings are served again
+    (``_claude_account_startup_wait_s``); the loop then waits out the rest of
+    that interval first.
     """
-    if not run_immediately and _scheduler_stop.wait(timeout=interval_s):
+    first_wait_s = _claude_account_startup_wait_s(interval_s) if run_immediately else interval_s
+    if first_wait_s is not None and _scheduler_stop.wait(timeout=first_wait_s):
         return
     while not _scheduler_stop.is_set():
         started = time.monotonic()
@@ -3204,13 +3281,14 @@ def start_periodic_refresh(*, run_immediately: bool = True) -> None:
     window is one account probe and another lane cannot delay the next sample.
     Idempotent. No-ops when disabled (pytest, or CODEXBAR_PERIODIC_REFRESH=0).
     """
-    global _scheduler_thread, _claude_account_scheduler_thread
+    global _scheduler_thread, _claude_account_scheduler_thread, _claude_account_startup_pending
     if not _periodic_refresh_enabled():
         return
     with _scheduler_lock:
         if _scheduler_thread is not None and _scheduler_thread.is_alive():
             return
         _scheduler_stop.clear()
+        _claude_account_startup_pending = run_immediately
         interval_s = _codexbar_refresh_interval_s()
         _claude_account_scheduler_thread = threading.Thread(
             target=_claude_account_periodic_loop,
@@ -3230,8 +3308,9 @@ def start_periodic_refresh(*, run_immediately: bool = True) -> None:
 
 def stop_periodic_refresh(*, join_timeout_s: float = 1.0) -> None:
     """Stop the background schedulers. Safe to call when they were never started."""
-    global _scheduler_thread, _claude_account_scheduler_thread
+    global _scheduler_thread, _claude_account_scheduler_thread, _claude_account_startup_pending
     _scheduler_stop.set()
+    _claude_account_startup_pending = False
     with _scheduler_lock:
         thread = _scheduler_thread
         claude_thread = _claude_account_scheduler_thread

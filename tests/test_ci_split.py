@@ -703,7 +703,8 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
         'tests/agent_runtime/test_lane_probe.py',
         'tests/common/test_jsonl_splitlines_guard.py', 'tests/test_review_reviewer_resolver.py',
     ]
-    assert (_REPO_ROOT / affected.GUARDS).read_text().splitlines() == guards
+    pinned = 'tests/dispatcher/test_core.py::test_read_only_mode_denies_edits_on_every_provider'
+    assert (_REPO_ROOT / affected.GUARDS).read_text().splitlines() == [*guards, pinned]
     repo = tmp_path / 'candidate'
     repo.mkdir()
     _git(repo, 'init', '-q', '-b', 'fixture-base')
@@ -989,6 +990,88 @@ def test_pr_importing_tests_fill_only_to_the_fill_budget(
     assert selected['estimate_seconds'] == 265
     assert selected['reason'] == 'recorded estimate exceeds 600 second cap'
     assert affected.CAP_SECONDS == 600
+
+
+def test_pr_provider_module_change_selects_the_registry_driven_dispatcher_test(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A test file too heavy for the cap is deferred whole, but its pinned guard id still runs."""
+    from scripts.ci import pr_affected_tests as affected
+
+    heavy = 'tests/dispatcher/test_core.py'
+    pinned = f'{heavy}::test_read_only_mode_denies_edits_on_every_provider'
+    repo = tmp_path / 'pinned'
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / 'scripts/dispatcher/providers').mkdir(parents=True)
+    (repo / 'tests/dispatcher').mkdir(parents=True)
+    (repo / heavy).write_text(
+        'def test_read_only_mode_denies_edits_on_every_provider():\n    pass\n'
+        'class TestA:\n    def test_m(self):\n        pass\n')
+    (repo / 'scripts/dispatcher/providers/claude.py').write_text('X = 1\n')
+    (repo / affected.GUARDS).write_text(pinned + '\n')
+    (repo / affected.DURATIONS).write_text(json.dumps({heavy: 1151.436, **{f'tests/test_o{n}.py': 1 for n in range(200)}}))
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    _git(repo, 'init', '-q', '-b', 'main')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    (repo / 'scripts/dispatcher/providers/claude.py').write_text('X = 2\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'change a provider')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    monkeypatch.chdir(repo)
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: [heavy])
+    selected = affected.plan(base, candidate)
+    assert selected['run_files'] == [pinned]
+    assert selected['deferred_files'] == [heavy]
+    assert selected['unknown_duration_files'] == []
+    assert not selected['guards_exceed_safe_budget']
+    # Whole-file selection subsumes the pinned id.
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: [])
+    monkeypatch.setattr(affected, 'CAP_SECONDS', 5000)
+    monkeypatch.setattr(affected, 'SAFE_SECONDS', 5000)
+    (repo / heavy).write_text((repo / heavy).read_text() + '# touched\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'touch the test')
+    assert affected.plan(base, _git(repo, 'rev-parse', 'HEAD'))['run_files'] == [heavy]
+    monkeypatch.undo()
+    monkeypatch.chdir(repo)
+    for bad in (f'{heavy}::test_absent', f'{heavy}::TestA::test_m_absent', f'{heavy}::Missing::test_m',
+                f'{heavy}::test_read_only_mode_denies_edits_on_every_provider[codex]',
+                f'{heavy}::test_a;rm', f'{heavy}::TestA::test_m::deep'):
+        (repo / affected.GUARDS).write_text(bad + '\n')
+        with pytest.raises(ValueError):
+            affected.plan(base, candidate)
+    (repo / affected.GUARDS).write_text(f'{heavy}::TestA::test_m\n')
+    assert affected.plan(base, candidate)['run_files'] == [f'{heavy}::TestA::test_m']
+
+
+def test_pinned_test_whose_file_is_already_selected_adds_no_estimate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A pinned id costs nothing when its whole file is already selected."""
+    from scripts.ci import pr_affected_tests as affected
+
+    whole, other = 'tests/test_whole.py', 'tests/test_other.py'
+    repo = tmp_path / 'pinned'
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / 'tests').mkdir()
+    for name in (whole, other):
+        (repo / name).write_text('def test_x():\n    pass\n')
+    (repo / affected.GUARDS).write_text(f'{whole}\n{whole}::test_x\n')
+    (repo / affected.DURATIONS).write_text(json.dumps({whole: 10, other: 10}))
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    _git(repo, 'init', '-q', '-b', 'main')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    (repo / other).write_text('def test_x():\n    assert True\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'change')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    monkeypatch.chdir(repo)
+    # 60 s reserve + 10 s whole guard + 10 s changed file; the pinned id adds nothing.
+    assert affected.plan(base, candidate)['estimate_seconds'] == 80
 
 
 def test_pr_selection_estimated_just_under_the_timeout_is_deferred_not_run_to_the_kill(
