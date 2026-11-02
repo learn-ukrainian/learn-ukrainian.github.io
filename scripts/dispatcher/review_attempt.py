@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -177,94 +176,20 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     error = None if ok else (result.failure_code or result.stderr_excerpt or "provider returned no successful response")
     response_text = result.response if ok else None
     if ukrainian and ok and response_text:
-        import yaml
+        from scripts.review.review_contract import ContractError, validate_ukrainian_reply_claims
 
-        from scripts.review.review_contract import (
-            _fenced,
-            reply_has_item_judgments,
-            validate_item_claims,
-        )
-
-        if reply_has_item_judgments(response_text):
-            bodies = _fenced(response_text, "ukrainian-item-judgments")
-            if len(bodies) == 1:
-                try:
-                    try:
-                        payload = json.loads(bodies[0])
-                    except Exception:
-                        payload = yaml.safe_load(bodies[0])
-                    if isinstance(payload, dict):
-                        sanitized, val_res = validate_item_claims(
-                            payload,
-                            ledger_path=plan.ledger_path,
-                            binding=binding,
-                        )
-                        record["claims_total"] = val_res.claims_total
-                        record["claims_unsupported"] = val_res.claims_unsupported
-                        record["unknown_items"] = val_res.unknown_items
-                        record["dropped_claims"] = [dict(c) for c in val_res.dropped_claims]
-                        clean_block = (
-                            "```ukrainian-item-judgments\n"
-                            + json.dumps(sanitized, indent=2, ensure_ascii=False)
-                            + "\n```"
-                        )
-                        pattern = r"^```ukrainian-item-judgments[ \t]*\n.*?\n```[ \t]*$"
-                        response_text = re.sub(
-                            pattern,
-                            lambda _: clean_block,
-                            response_text,
-                            count=1,
-                            flags=re.M | re.S,
-                        )
-                except Exception:
-                    pass
-        else:
-            yaml_bodies = _fenced(response_text, "yaml") or _fenced(response_text, "yml")
-            fence_tag = "yaml" if _fenced(response_text, "yaml") else "yml"
-            if len(yaml_bodies) == 1:
-                try:
-                    payload = yaml.safe_load(yaml_bodies[0])
-                    if isinstance(payload, dict):
-                        sanitized, val_res = validate_item_claims(
-                            payload,
-                            ledger_path=plan.ledger_path,
-                            binding=binding,
-                        )
-                        record["claims_total"] = val_res.claims_total
-                        record["claims_unsupported"] = val_res.claims_unsupported
-                        record["unknown_items"] = val_res.unknown_items
-                        record["dropped_claims"] = [dict(c) for c in val_res.dropped_claims]
-                        clean_block = (
-                            f"```{fence_tag}\n"
-                            + yaml.safe_dump(sanitized, allow_unicode=True, sort_keys=False)
-                            + "```"
-                        )
-                        pattern = rf"^```{fence_tag}[ \t]*\n.*?\n```(?:{fence_tag})?[ \t]*$"
-                        response_text = re.sub(
-                            pattern,
-                            lambda _: clean_block,
-                            response_text,
-                            count=1,
-                            flags=re.M | re.S,
-                        )
-                except Exception:
-                    pass
-            else:
-                try:
-                    payload = yaml.safe_load(response_text)
-                    if isinstance(payload, dict):
-                        sanitized, val_res = validate_item_claims(
-                            payload,
-                            ledger_path=plan.ledger_path,
-                            binding=binding,
-                        )
-                        record["claims_total"] = val_res.claims_total
-                        record["claims_unsupported"] = val_res.claims_unsupported
-                        record["unknown_items"] = val_res.unknown_items
-                        record["dropped_claims"] = [dict(c) for c in val_res.dropped_claims]
-                        response_text = yaml.safe_dump(sanitized, allow_unicode=True, sort_keys=False)
-                except Exception:
-                    pass
+        try:
+            response_text, validation = validate_ukrainian_reply_claims(
+                response_text, ledger_path=plan.ledger_path, binding=binding,
+            )
+            record.update(
+                claims_total=validation.claims_total,
+                claims_unsupported=validation.claims_unsupported,
+                unknown_items=validation.unknown_items,
+                dropped_claims=[dict(claim) for claim in validation.dropped_claims],
+            )
+        except ContractError as exc:
+            ok, error = False, f"review_claim_validation_refused: {exc}"
     # The seat's Sources calls, with each retained body or the reason it is missing.
     calls = getattr(result, "tool_calls", None) or ()
     retained_bodies = missing_bodies = 0

@@ -22,6 +22,19 @@ from scripts.review.ukrainian_seats import (
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
 
 
+def captured_source_trace(tasks, *, task_id="review-one", tool="verify_word", arguments=None, output="VESUM"):
+    """A provider's completed Sources event, separate from the reviewer's reply."""
+    path = tasks / "logs" / f"{task_id}.stdout.log"
+    path.parent.mkdir(exist_ok=True)
+    path.write_text(json.dumps({"event": "step_update", "step_update": {
+        "state": "DONE", "step_index": 4, "step_type": "tool", "tool_name": "call_mcp_tool",
+        "tool_info": {"name": "call_mcp_tool", "parameters": {
+            "ServerName": "sources", "ToolName": tool, "Arguments": arguments or {"word": "example"},
+        }, **({"output": output} if output is not None else {})},
+    }}) + "\n")
+
+
+
 @pytest.mark.parametrize("marker", ["trial_label", "trial_role", "trial_qualified_task"])
 def test_trial_never_becomes_review_of_record(tmp_path, monkeypatch, marker):
     from scripts.review.review_lineage import review_records
@@ -990,6 +1003,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
     from scripts.review.review_contract import build_item_packet, render_item_packet
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    captured_source_trace(tasks)
     packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
     prompt = tmp_path / "brief.md"
     prompt.write_bytes(render_item_packet(packet).encode())
@@ -1042,6 +1056,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks, task_id="review-hidden")
     recorder.record("review-hidden", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     hidden_marker = sweep.parse_marker(comments[1]["body"])
     assert hidden_marker["void"] == "quote-mismatch"
@@ -1060,6 +1075,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks, task_id="review-single")
     recorder.record("review-single", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     single_marker = sweep.parse_marker(comments[2]["body"])
     assert single_marker["void"] == "quote-mismatch"
@@ -1078,6 +1094,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks, task_id="review-apostrophe")
     recorder.record("review-apostrophe", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     apostrophe_marker = sweep.parse_marker(comments[3]["body"])
     assert apostrophe_marker["void"] == "quote-mismatch"
@@ -1096,6 +1113,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks, task_id="review-spaces")
     recorder.record("review-spaces", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     spaces_marker = sweep.parse_marker(comments[4]["body"])
     assert spaces_marker["void"] == "quote-mismatch"
@@ -1127,6 +1145,7 @@ def test_block_only_ukrainian_reply_records_full_coverage(monkeypatch, tmp_path)
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks)
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     marker = sweep.parse_marker(comments[0]["body"])
     assert result["verdict"] == marker["verdict"] == "APPROVED"
@@ -1139,6 +1158,7 @@ def test_item_judgments_unknown_verdict_leaves_coverage_incomplete(monkeypatch, 
     from scripts.review.review_contract import build_item_packet, render_item_packet
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    captured_source_trace(tasks)
     packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
     prompt = tmp_path / "brief.md"
     prompt.write_bytes(render_item_packet(packet).encode())
@@ -1210,3 +1230,226 @@ def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
     chunk = judge_item_reply(packet, reply, stated="APPROVED", ukrainian=False)
     assert chunk.void == VOID_REVIEWER_BOOKKEEPING
     assert chunk.coverage == ()
+
+
+@pytest.mark.parametrize("claim,output,placement", [
+    ("Example Reference page 7", "Different Reference page 2", "sources"),
+    ("Rule 8 classifies this suffix as soft-group.", "Rule 8 classifies this suffix as hard-group.", "finding"),
+    ("VESUM tag noun:inanim:f:v_naz for example", "VESUM tag noun:anim:f:v_naz for example", "sources"),
+    ("check_russian_shadow for example returned confidence 0.0", "check_russian_shadow for other returned 0.0", "sources"),
+    ("Example Reference page 7", None, "sources"),
+    ("СУМ-20 подає цю форму як нормативну, с. 45", "VESUM", "finding"),
+    ("verify_stress returned stress on the second syllable", "VESUM", "finding"),
+    ("с. 45", "VESUM", "finding"),
+    ("Example Reference page 7", "Example Reference page 75", "sources"),
+    ("Rule 8", "Rule 81", "finding"),
+    ("noun:inanim:f:v_naz", "noun:anim:f:v_naz", "finding"),
+    ("ВТС подає це значення як основне", "VESUM", "finding"),
+    ("стор. 45", "VESUM", "finding"),
+    ("Заболотний подає цю форму", "VESUM", "finding"),
+    ("Вікіпедія подає цю форму", "VESUM", "finding"),
+    ("Wikipedia reports this form", "VESUM", "finding"),
+], ids=["source-page", "rule", "tag", "check", "missing-output", "ukrainian-source", "tool-name", "ukrainian-page",
+        "page-prefix", "rule-prefix", "bare-tag", "vts", "page-abbreviation", "author-cyrillic", "wikipedia-uk", "wikipedia-en"])
+@pytest.mark.parametrize("reply_format", ["items", "overall", "finding", "title", "smallest_fix", "body", "prose",
+                                         "verbatim", "nested", "top-notes", "fenced-summary", "fenced-quote", "fenced-list",
+                                         "key-json", "plain-mapping", "nested-control", "non-row-item", "invalid-control-types",
+                                         "dotted-reference"])
+def test_unbound_ukrainian_source_claims_refused_before_publication(
+    monkeypatch, tmp_path, claim, output, placement, reply_format,
+):
+    """An unbound review must not publish a source assertion missing from its own outputs."""
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    packet = build_item_packet([{"id": "item-a", "text": "example"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_text(render_item_packet(packet))
+    row = {"id": "item-a", "verdict": "APPROVE", "finding": "Appropriate activity.", "sources": "none"}
+    row[placement] = claim
+    reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
+        "schema": "ukrainian-item-judgments.v1", "items": [row],
+    }) + "\n```\n"
+    audit_id, audit_field = "item-a", placement
+    audit_claim = claim
+    if reply_format == "key-json":
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps({claim: "Uncited wording."}) + "\n```\n"
+        audit_id, audit_field = None, claim + ".__key__"
+    elif reply_format == "plain-mapping":
+        reply = "VERDICT: APPROVE\n" + claim + ": Uncited wording.\n"
+        audit_id, audit_field = "review-prose", "finding"
+        audit_claim = "VERDICT: APPROVE\n" + claim + ": Uncited wording."
+    elif reply_format == "nested-control":
+        payload = {"notes": {"category": claim, "outcome": claim, "id": claim,
+                             "location": {"path": claim}, "receipt_id": claim}}
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = None, "notes.category"
+    elif reply_format == "non-row-item":
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps({"items": [claim]}) + "\n```\n"
+        audit_id, audit_field = None, "items"
+    elif reply_format == "invalid-control-types":
+        payload = {"items": [{"id": {"claim": claim}, "quote": {"claim": claim}}],
+                   "findings": [{"location": {"path": {"claim": claim}}}]}
+        reply = "VERDICT: APPROVE\n```yaml\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = {"claim": claim}, "id.claim"
+    elif reply_format == "dotted-reference":
+        payload = {"findings": [{"source_conflict.a": {"quote": claim, "receipt_id": "step-4"}}]}
+        reply = "VERDICT: APPROVE\n```yaml\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = None, "source_conflict.a.quote"
+    elif reply_format in {"fenced-summary", "fenced-quote", "fenced-list"}:
+        field = "quote" if reply_format == "fenced-quote" else "summary"
+        body = "- " + claim if reply_format == "fenced-list" else json.dumps({field: claim})
+        tag = "yaml" if reply_format == "fenced-list" else "json"
+        reply = f"VERDICT: APPROVE\n```{tag}\n{body}\n```\n"
+        if reply_format == "fenced-list":
+            audit_id, audit_field = "review-prose", "finding"
+            audit_claim = "VERDICT: APPROVE\n\n\n" + body
+        else:
+            audit_id, audit_field = None, field
+    elif reply_format in {"nested", "top-notes"}:
+        row[placement] = "none"
+        payload = {"schema": "ukrainian-item-judgments.v1", "items": [row]}
+        if reply_format == "nested":
+            row["extra"] = {"notes": [claim]}
+            audit_id, audit_field = "item-a", "extra.notes"
+        else:
+            payload["notes"] = claim
+            audit_id, audit_field = None, "notes"
+        reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps(payload) + "\n```\n"
+    elif reply_format == "prose":
+        row[placement] = "none"
+        reply = claim + ";\nVERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
+            "schema": "ukrainian-item-judgments.v1", "items": [row],
+        }) + "\n```\n"
+        audit_id, audit_field = "review-prose", "finding"
+    elif reply_format != "items":
+        payload = structured_review(0 if reply_format == "overall" else 1)
+        payload["overall"]["correctness"] = "correct"
+        if reply_format == "overall":
+            payload["overall"]["explanation"] = claim
+            audit_id, audit_field = None, "overall.explanation"
+        else:
+            payload["overall"]["explanation"] = "Appropriate activity."
+            payload["findings"][0].update(priority="P3", body="Advisory wording.", sources=["none"])
+            audit_field = "sources" if reply_format == "finding" else reply_format
+            payload["findings"][0][audit_field] = [claim] if audit_field == "sources" else claim
+            audit_id = "F1"
+        reply = json.dumps(payload)
+    captured_source_trace(tasks, arguments={"query": claim}, output=output)
+    write_task(tasks, reply=reply, review_profile="ukrainian", sources_mcp_call_count=75,
+               prompt_file=str(prompt), prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    raw = (tasks / "review-one.result").read_bytes()
+
+    def no_network(*args, **kwargs):
+        pytest.fail("Unsupported review reached the publication/network boundary")
+
+    monkeypatch.setattr(recorder, "_pr", no_network)
+    with pytest.raises(recorder.RecordError, match="UKRAINIAN_CLAIMS_UNSUPPORTED") as refused:
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    audit = json.loads(str(refused.value).split(": ", 1)[1])
+    assert audit[0]["item_id"] == audit_id
+    assert audit[0]["claim"] == {audit_field: audit_claim}
+    assert audit[0]["reason"] == "claim_not_in_captured_output"
+    assert audit[0]["captured_event_ids"] == ["step-4"]
+    assert audit[0]["uncaptured_event_ids"] == (["step-4"] if output is None else [])
+    if reply_format == "nested-control":
+        assert {next(iter(entry["claim"])) for entry in audit} == {
+            "notes.category", "notes.outcome", "notes.id", "notes.location.path", "notes.receipt_id",
+        }
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    assert (tasks / "review-one.result").read_bytes() == raw
+
+
+@pytest.mark.parametrize("capture", ["agy", "codex", "claude", "bound"])
+@pytest.mark.parametrize("finding", ["Appropriate activity.", "Вправа правильно перевіряє форму", "Вправа передає сум"])
+@pytest.mark.parametrize("bad_quote", ["uncaptured quote", "Rule 8", "category: Rule 8", "outcome: Rule 8",
+                                      "category nested: Rule 8", "outcome nested: Rule 8"])
+def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, capture, finding, bad_quote):
+    """A supported exact-head review must not be over-rejected, including quoted source output."""
+    import yaml
+
+    from scripts.dispatcher import store
+    from scripts.review.receipts import ledger
+    from scripts.review.review_contract import build_item_packet, render_item_packet, validate_ukrainian_reply_claims
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    claim = 'VESUM reports "attested" for the example.'
+    packet = build_item_packet([{"id": "item-a", "text": "example"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_text(render_item_packet(packet))
+    binding = None
+    if capture == "bound":
+        binding = {"review_id": "review", "attempt_id": "attempt", "manifest_sha256": "a" * 64}
+        root = tmp_path / "review-receipts"
+        monkeypatch.setattr(store, "receipts_root", lambda: root)
+        path = root / "review" / "attempt.jsonl"
+        receipt = ledger.append(path, **binding, tool="verify_word", arguments={"word": "example"},
+                                result=claim + "; Rule 81", server_version="test", snapshots={}, status="ok")
+        rejected = structured_review(1)
+        rejected["overall"].update(correctness="correct", explanation="Appropriate activity.")
+        rejected["findings"][0].update(
+            priority="P3", body=claim, sources=["none"], evidence={"receipt": receipt, "quote": bad_quote},
+        )
+        metadata = bad_quote.split(": ", 1) if ": " in bad_quote else None
+        nested = bool(metadata and metadata[0].endswith(" nested"))
+        if metadata:
+            metadata[0] = metadata[0].removesuffix(" nested")
+            metadata_value = {"quote": metadata[1], "receipt_id": metadata[1]} if nested else metadata[1]
+            rejected["findings"][0]["evidence"].update(quote=claim, **{metadata[0]: metadata_value})
+        tag = "yaml" if metadata else "json"
+        candidate = ("VERDICT: APPROVE\n" if metadata else "") + f"```{tag}\n" + json.dumps(rejected) + "\n```"
+        sanitized, checked = validate_ukrainian_reply_claims(candidate, ledger_path=path, binding=binding)
+        assert checked.claims_unsupported == (2 if nested or not metadata else 1)
+        body = sanitized.split(f"```{tag}\n")[1].split("\n```")[0]
+        sanitized_finding = (yaml.safe_load(body) if metadata else json.loads(body))["findings"][0]
+        if metadata:
+            assert sanitized_finding["evidence"][metadata[0]] == metadata_value
+        else:
+            assert "evidence" not in sanitized_finding
+        write_task(tasks, reply=sanitized, review_profile="ukrainian", sources_mcp_call_count=1,
+                   review_attempt=binding, claims_unsupported=checked.claims_unsupported,
+                   dropped_claims=list(checked.dropped_claims))
+        with monkeypatch.context() as guarded:
+            def no_network(*args, **kwargs):
+                pytest.fail("Sanitized unsupported attempt reached publication")
+            guarded.setattr(recorder, "_pr", no_network)
+            with pytest.raises(recorder.RecordError, match="UKRAINIAN_CLAIMS_UNSUPPORTED") as refused:
+                recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert (metadata[1] if metadata else bad_quote) in str(refused.value)
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    else:
+        captured_source_trace(tasks, output=claim)
+        receipt = "step-4"
+        if capture != "agy":
+            path = tasks / "logs" / "review-one.stdout.log"
+            if capture == "codex":
+                events = [{"type": "response_item", "payload": {
+                    "type": "function_call", "call_id": "call-1", "name": "mcp__sources__verify_word",
+                    "arguments": json.dumps({"word": "example"}),
+                }}, {"type": "response_item", "payload": {
+                    "type": "function_call_output", "call_id": "call-1", "output": claim,
+                }}]
+            else:
+                events = [{"type": "assistant", "message": {"content": [{
+                    "type": "tool_use", "id": "call-1", "name": "mcp__sources__verify_word",
+                    "input": {"word": "example"},
+                }]}}, {"type": "user", "message": {"content": [{
+                    "type": "tool_result", "tool_use_id": "call-1", "content": claim,
+                }]}}]
+            path.write_text("\n".join(json.dumps(event) for event in events) + "\n")
+            receipt = "runtime-0"
+    reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
+        "schema": "ukrainian-item-judgments.v1", "items": [{
+            "id": "item-a", "verdict": "APPROVE", "finding": finding,
+            "sources": claim, "evidence": [{"receipt": receipt, "quote": claim}],
+        }],
+    }) + "\n```\n"
+    write_task(tasks, reply=reply, review_profile="ukrainian", sources_mcp_call_count=1,
+               prompt_file=str(prompt), prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+               **({"review_attempt": binding} if binding else {}))
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "APPROVED"
+    assert calls == {"posts": 1, "statuses": 1}
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert marker["coverage"] == marker["denominator"] == ["item-a"]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
