@@ -133,3 +133,34 @@ def test_writer_dedup_self_heals_a_missing_blob(store: ArtifactStore) -> None:
     assert again.artifact_id == rec.artifact_id
     assert rec.blob_path.is_file()
     assert store.read_bytes(rec.artifact_id) == data
+
+
+def test_referenced_blob_of_open_delivery_is_never_removed(tmp_path: Path) -> None:
+    """#12530 (pre-approved). Defect class: retention removing bytes a live
+    reader still needs (the body of a queued delivery). The acknowledged
+    control loses only its blob, never its message row or digest."""
+    from datetime import UTC, datetime, timedelta
+
+    from scripts.fleet_comms.artifacts import ArtifactExpiredError
+    from scripts.fleet_comms.authority import AuthorityService
+
+    with ArtifactStore(root=tmp_path / "plane") as store:
+        service = AuthorityService(store=store)
+        done = service.publish_message(sender="codex", body="acknowledged body", recipients=("claude-cto",))
+        lease = service.claim_next_delivery("claude-cto", "worker")
+        assert lease is not None and lease.delivery.message_id == done.message_id
+        service.acknowledge_delivery(
+            lease.delivery.delivery_id, worker_id="worker", fence_token=lease.fence_token
+        )
+        pending = service.publish_message(sender="codex", body="open body", recipients=("claude-cto",))
+
+        report = store.expire_message_blobs(apply=True, now=datetime.now(UTC) + timedelta(days=60))
+
+        assert (report.candidates, report.removed) == (1, 1)
+        assert store.get(pending.body_artifact_id).blob_path.is_file()
+        assert service.read_message_body(pending.message_id) == "open body"
+        done_record = store.get(done.body_artifact_id)
+        assert not done_record.blob_path.is_file()
+        assert service.get_message(done.message_id).content_sha256 == done.content_sha256
+        with pytest.raises(ArtifactExpiredError):
+            service.read_message_body(done.message_id)

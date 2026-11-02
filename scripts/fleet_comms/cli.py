@@ -13,6 +13,7 @@ Usage::
     .venv/bin/python -m scripts.fleet_comms fleet broker-report --days 7
     .venv/bin/python -m scripts.fleet_comms github-metrics
     .venv/bin/python -m scripts.fleet_comms authority-import --legacy-db /path/to/messages.db --source legacy-broker
+    .venv/bin/python -m scripts.fleet_comms retention [--older-than-days 30] [--apply]
 
 ``formal-job accept`` is post-review glue (create/reuse job + sealed
 verdict accept; sealed review-pr was removed in #8520). Optional ``--publish`` posts GitHub comment/status via PR-G.
@@ -1135,6 +1136,29 @@ def cmd_requests_requeue_stale(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def cmd_retention(args: argparse.Namespace) -> int:
+    """Message-blob retention (#12530): dry run unless ``--apply``."""
+    from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
+
+    root = Path(args.root).expanduser() if args.root else None
+    try:
+        # A dry run opens read-only: it never migrates or writes the store.
+        store = ArtifactStore(root=root) if args.apply else ArtifactStore.open_readonly(root=root)
+        with store:
+            report = store.expire_message_blobs(
+                older_than_days=args.older_than_days,
+                grace_seconds=args.grace_seconds,
+                apply=args.apply,
+            )
+    except (ArtifactStoreError, sqlite3.Error) as exc:
+        raise FleetCommsCliError(f"retention refused: {exc}") from exc
+    payload = report.to_dict()
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["content_included"] = False
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.fleet_comms",
@@ -1201,6 +1225,38 @@ def build_parser() -> argparse.ArgumentParser:
         help="Staleness floor; default sits at the adapter hard-timeout ceiling",
     )
     requeue.set_defaults(func=cmd_requests_requeue_stale)
+
+    retention = sub.add_parser(
+        "retention",
+        help="Remove blobs of finished messages older than N days (dry run unless --apply)",
+        description=(
+            "Remove the blob files of artifacts linked only to messages older than the "
+            "cutoff with no open delivery, pending request or open ACP discussion. "
+            "Artifacts named by jobs, receipts, channel context or formal reviews, and "
+            "every retention class other than message-body, historical-message, "
+            "acpx-discussion and default, are kept. Message rows and artifact rows "
+            "(sha256, bytes) are never deleted."
+        ),
+    )
+    retention.add_argument("--root", default=None, help="Plane root override")
+    retention.add_argument(
+        "--older-than-days",
+        type=int,
+        default=30,
+        help="Age floor for every message linking the blob (default: 30)",
+    )
+    retention.add_argument(
+        "--grace-seconds",
+        type=int,
+        default=3600,
+        help="Skip blobs reused within this window (default: 3600)",
+    )
+    retention.add_argument(
+        "--apply",
+        action="store_true",
+        help="Remove the candidates (default: report only, read-only open)",
+    )
+    retention.set_defaults(func=cmd_retention)
 
     fleet = sub.add_parser(
         "fleet",

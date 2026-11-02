@@ -15,6 +15,10 @@ with the DSN could not read back. Default authority stays ``sqlite`` (today's
 file-backed store, unchanged). ``is_referenced``/
 ``garbage_collect_unreferenced`` remain sqlite-only in this slice;
 ``reference`` is dialect-aware (request-execute slice, #605 follow-on).
+
+Retention (#12530): ``expire_message_blobs`` removes the blob files of
+finished messages past an age floor while keeping every row and digest
+(``python -m scripts.fleet_comms retention``; dry run unless ``--apply``).
 """
 
 from __future__ import annotations
@@ -28,7 +32,7 @@ import shutil
 import sqlite3
 import tempfile
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -66,6 +70,114 @@ _PG_BLOB_TABLE = PG_BLOB_TABLE
 # its own tighter 4 MiB cap.
 MAX_ARTIFACT_BYTES = 64 * 1024 * 1024
 
+# #12530 (OO-RETENTION-1102): message-blob retention. Only blobs whose producer
+# asked for no special retention are collectable; any other class (evidence,
+# review, audit, snapshot, verdict, checkpoint, handoff, channel context, ...)
+# is a producer-declared hold and is never collected by this rule.
+RETENTION_COLLECTABLE_CLASSES = frozenset(
+    {"message-body", "historical-message", "acpx-discussion", "default"}
+)
+# Marker prefixed to ``artifacts.retention_class`` when retention removed the
+# blob. The row, its sha256 and its byte count stay, so history keeps proof
+# that the body existed and what it hashed to.
+RETENTION_EXPIRED_PREFIX = "expired:"
+RETENTION_DEFAULT_DAYS = 30
+RETENTION_GRACE_SECONDS = 3600
+_OPEN_DELIVERY_STATES = ("queued", "running")
+_OPEN_REQUEST_STATES = ("queued", "running")
+# Every artifact column outside message links. An artifact named here is kept
+# whole: job payloads and results (idempotent replay, Kimi admission reads),
+# delivery receipts, channel context and formal-review snapshots/verdicts.
+_NON_MESSAGE_REFERENCES = (
+    ("authority_context_revisions", "artifact_id"),
+    ("authority_jobs", "payload_artifact_id"),
+    ("authority_jobs", "result_artifact_id"),
+    ("authority_deliveries", "acknowledgment_artifact_id"),
+    ("authority_delivery_attempts", "artifact_id"),
+    ("delivery_attempts", "raw_capture_artifact_id"),
+    ("formal_review_jobs", "snapshot_artifact_id"),
+    ("formal_review_jobs", "sealed_verdict_artifact_id"),
+    ("formal_review_attempts", "raw_capture_artifact_id"),
+    ("formal_review_snapshot_seals", "snapshot_artifact_id"),
+)
+
+
+def _retention_candidate_sql(*, single: bool) -> str:
+    """Artifacts whose blob the retention rule may remove (sqlite).
+
+    Named parameters: ``:cutoff`` and ``:now`` (ISO-Z), plus ``:artifact_id``
+    when ``single`` (the per-artifact re-check under the writer lock, which
+    narrows every set to that artifact). An artifact qualifies only when it
+    is linked to at least one message, its class is collectable or already
+    expired, nothing outside message links names it, and EVERY message that
+    links it is older than the cutoff with no open delivery, no pending
+    request and no open ACP discussion. Set-based on purpose: the reference
+    columns carry no artifact index, so per-row correlated scans cost
+    minutes on the live store.
+    """
+    only = " AND {column} = :artifact_id" if single else ""
+    classes = ", ".join(f"'{name}'" for name in sorted(RETENTION_COLLECTABLE_CLASSES))
+    deliveries = ", ".join(f"'{state}'" for state in _OPEN_DELIVERY_STATES)
+    requests = ", ".join(f"'{state}'" for state in _OPEN_REQUEST_STATES)
+    held = "\n      UNION ALL ".join(
+        f"SELECT {column} FROM {table} WHERE {column} IS NOT NULL"
+        + only.format(column=column)
+        for table, column in _NON_MESSAGE_REFERENCES
+    )
+    return f"""
+WITH links(message_id, artifact_id) AS (
+  SELECT message_id, artifact_id FROM message_artifacts
+   WHERE 1 = 1{only.format(column="artifact_id")}
+  UNION ALL
+  SELECT message_id, body_artifact_id FROM comms_messages
+   WHERE body_artifact_id IS NOT NULL{only.format(column="body_artifact_id")}
+),
+open_messages(message_id) AS (
+  SELECT m.message_id FROM comms_messages m
+   WHERE m.message_id IN (SELECT message_id FROM links) AND m.created_at >= :cutoff
+  UNION SELECT d.message_id FROM authority_deliveries d
+   WHERE d.message_id IN (SELECT message_id FROM links) AND d.state IN ({deliveries})
+  UNION SELECT r.request_message_id FROM requests r
+   WHERE r.request_message_id IN (SELECT message_id FROM links) AND r.state IN ({requests})
+  UNION SELECT m.message_id FROM comms_messages m
+   JOIN acp_conversations c ON c.conversation_id = m.conversation_id
+   WHERE m.message_id IN (SELECT message_id FROM links) AND c.deadline_at > :now
+)
+SELECT a.artifact_id, a.sha256, a.bytes, a.retention_class
+FROM artifacts a
+WHERE (a.retention_class IN ({classes})
+       OR a.retention_class LIKE '{RETENTION_EXPIRED_PREFIX}%')
+  AND a.created_at < :cutoff{only.format(column="a.artifact_id")}
+  AND a.artifact_id IN (SELECT artifact_id FROM links)
+  AND a.artifact_id NOT IN (
+      {held})
+  AND a.artifact_id NOT IN (
+      SELECT l.artifact_id FROM links l JOIN open_messages o ON o.message_id = l.message_id)
+ORDER BY a.created_at, a.artifact_id
+"""
+
+
+@dataclass(frozen=True, slots=True)
+class RetentionReport:
+    """Outcome of one ``expire_message_blobs`` run (metadata only)."""
+
+    applied: bool
+    older_than_days: int
+    cutoff: str
+    candidates: int
+    candidate_bytes: int
+    already_expired: int
+    present_blobs: int
+    present_bytes: int
+    removed: int
+    removed_bytes: int
+    skipped_recent_use: int
+    skipped_changed: int
+    by_class: dict[str, dict[str, int]]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
 
 def _utc_now() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -101,6 +213,10 @@ class ArtifactRecord:
 
 class ArtifactStoreError(RuntimeError):
     """Artifact store refused an operation."""
+
+
+class ArtifactExpiredError(ArtifactStoreError):
+    """The blob was removed by the retention rule; row and digest remain."""
 
 
 class ArtifactStore:
@@ -306,9 +422,7 @@ class ArtifactStore:
             "SELECT * FROM artifacts WHERE sha256 = ?", (digest,)
         ).fetchone()
         if existing is not None:
-            if not dest.exists():
-                self._write_blob_atomic(dest, data)
-            return self._row_to_record(existing)
+            return self._reuse_existing_blob(existing, dest, data, commit=commit)
 
         aid = artifact_id or new_id("artifact")
         created = _utc_now()
@@ -346,6 +460,59 @@ class ArtifactStore:
         ).fetchone()
         if row is None:
             raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
+        return self._row_to_record(row)
+
+    def _reuse_existing_blob(
+        self,
+        existing: sqlite3.Row,
+        dest: Path,
+        data: bytes,
+        *,
+        commit: bool,
+    ) -> ArtifactRecord:
+        """Return a deduplicated row with its blob present and marked in use.
+
+        #12530: touching the blob's mtime opens the retention grace window,
+        so a caller that links this artifact to a new message soon after
+        cannot lose the bytes to a concurrent retention run (the run re-checks
+        mtime under the write lock). A blob already removed by retention is
+        rewritten from ``data`` and its class marker restored under the write
+        lock, so the row never claims "expired" while the bytes are back.
+        """
+        retention_class = str(existing["retention_class"])
+        if not retention_class.startswith(RETENTION_EXPIRED_PREFIX):
+            try:
+                os.utime(dest)
+            except FileNotFoundError:
+                self._write_blob_atomic(dest, data)
+            except PermissionError:
+                # Not our file to touch; the bytes are present, which is all
+                # the pre-#12530 contract promised.
+                pass
+            return self._row_to_record(existing)
+        own_transaction = commit and not self._conn.in_transaction
+        if own_transaction:
+            self._conn.execute("BEGIN IMMEDIATE")
+        try:
+            self._write_blob_atomic(dest, data)
+            self._conn.execute(
+                """UPDATE artifacts SET retention_class = ?
+                   WHERE artifact_id = ? AND retention_class = ?""",
+                (
+                    retention_class[len(RETENTION_EXPIRED_PREFIX):],
+                    str(existing["artifact_id"]),
+                    retention_class,
+                ),
+            )
+            if own_transaction:
+                self._conn.commit()
+        except Exception:
+            if own_transaction:
+                self._conn.rollback()
+            raise
+        row = self._conn.execute(
+            "SELECT * FROM artifacts WHERE artifact_id = ?", (str(existing["artifact_id"]),)
+        ).fetchone()
         return self._row_to_record(row)
 
     def _store_bytes_pg(
@@ -554,6 +721,11 @@ class ArtifactStore:
             return data
         rec = self.get(artifact_id)
         if not rec.blob_path.is_file():
+            if rec.retention_class.startswith(RETENTION_EXPIRED_PREFIX):
+                raise ArtifactExpiredError(
+                    f"blob for {artifact_id} (sha256={rec.sha256}) was removed by "
+                    "the message retention rule (#12530); the row and digest remain"
+                )
             raise ArtifactStoreError(
                 f"missing blob for {artifact_id} (sha256={rec.sha256}) — integrity failure"
             )
@@ -743,6 +915,134 @@ class ArtifactStore:
                 if self._unlink_if_unreferenced(digest):
                     reclaimed.append(digest)
         return reclaimed
+
+    def expire_message_blobs(
+        self,
+        *,
+        older_than_days: int = RETENTION_DEFAULT_DAYS,
+        grace_seconds: int = RETENTION_GRACE_SECONDS,
+        apply: bool = False,
+        now: datetime | None = None,
+    ) -> RetentionReport:
+        """Remove blobs of finished messages older than the cutoff (#12530).
+
+        Dry run unless ``apply``. Only the blob file goes; the ``artifacts``
+        row keeps its sha256 and byte count, its class gains
+        ``RETENTION_EXPIRED_PREFIX``, and every message row stays. Each removal
+        re-evaluates the full rule and the blob's mtime inside one
+        ``BEGIN IMMEDIATE`` transaction (the store's writer lock, which
+        authority writes and new artifact rows also take), then marks the
+        row, unlinks and commits. A
+        crash before the commit leaves an unmarked row without its blob;
+        the next run marks it again. Sqlite only.
+        """
+        if older_than_days < 1:
+            raise ArtifactStoreError("older_than_days must be at least 1")
+        if apply:
+            self._refuse_readonly_write("expire_message_blobs")
+        if self._authority is Authority.PG:
+            raise ArtifactStoreError(
+                "expire_message_blobs() is not implemented for "
+                "fleet_comms authority=pg in this slice"
+            )
+        moment = now or datetime.now(UTC)
+        stamp = moment.strftime("%Y-%m-%dT%H:%M:%SZ")
+        cutoff = (moment - timedelta(days=older_than_days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        params = {"cutoff": cutoff, "now": stamp}
+        rows = self._conn.execute(_retention_candidate_sql(single=False), params).fetchall()
+        if not apply and self._conn.in_transaction:
+            self._conn.commit()
+        by_class: dict[str, dict[str, int]] = {}
+        candidate_bytes = present_blobs = present_bytes = 0
+        removed = removed_bytes = skipped_recent = skipped_changed = 0
+        mtime_floor = moment.timestamp() - max(0, grace_seconds)
+        candidates = already_expired = 0
+        for row in rows:
+            size = int(row["bytes"])
+            klass = str(row["retention_class"])
+            present = self.blob_path_for(str(row["sha256"])).is_file()
+            if not present and klass.startswith(RETENTION_EXPIRED_PREFIX):
+                already_expired += 1
+                continue
+            base_class = klass.removeprefix(RETENTION_EXPIRED_PREFIX)
+            bucket = by_class.setdefault(
+                base_class, {"candidates": 0, "bytes": 0, "present_blobs": 0, "present_bytes": 0}
+            )
+            candidates += 1
+            candidate_bytes += size
+            bucket["candidates"] += 1
+            bucket["bytes"] += size
+            if present:
+                present_blobs += 1
+                present_bytes += size
+                bucket["present_blobs"] += 1
+                bucket["present_bytes"] += size
+            if not apply:
+                continue
+            outcome = self._expire_one_blob(str(row["artifact_id"]), params, mtime_floor)
+            if outcome == "removed":
+                removed += 1
+                removed_bytes += size
+            elif outcome == "recent":
+                skipped_recent += 1
+            elif outcome == "changed":
+                skipped_changed += 1
+        return RetentionReport(
+            applied=apply,
+            older_than_days=older_than_days,
+            cutoff=cutoff,
+            candidates=candidates,
+            candidate_bytes=candidate_bytes,
+            already_expired=already_expired,
+            present_blobs=present_blobs,
+            present_bytes=present_bytes,
+            removed=removed,
+            removed_bytes=removed_bytes,
+            skipped_recent_use=skipped_recent,
+            skipped_changed=skipped_changed,
+            by_class=dict(sorted(by_class.items())),
+        )
+
+    def _expire_one_blob(
+        self,
+        artifact_id: str,
+        params: dict[str, str],
+        mtime_floor: float,
+    ) -> str:
+        """Re-check one candidate under the writer lock, then mark and unlink.
+
+        Returns ``removed`` (blob unlinked, or already gone and now marked),
+        ``recent`` (blob touched inside the grace window) or ``changed`` (no
+        longer a candidate: a new link, an open delivery or a revived row).
+        """
+        self._conn.execute("BEGIN IMMEDIATE")
+        try:
+            row = self._conn.execute(
+                _retention_candidate_sql(single=True),
+                {**params, "artifact_id": artifact_id},
+            ).fetchone()
+            if row is None:
+                self._conn.rollback()
+                return "changed"
+            path = self.blob_path_for(str(row["sha256"]))
+            try:
+                if path.stat().st_mtime > mtime_floor:
+                    self._conn.rollback()
+                    return "recent"
+            except FileNotFoundError:
+                pass
+            klass = str(row["retention_class"])
+            if not klass.startswith(RETENTION_EXPIRED_PREFIX):
+                self._conn.execute(
+                    "UPDATE artifacts SET retention_class = ? WHERE artifact_id = ?",
+                    (RETENTION_EXPIRED_PREFIX + klass, artifact_id),
+                )
+            path.unlink(missing_ok=True)
+        except Exception:
+            self._conn.rollback()
+            raise
+        self._conn.commit()
+        return "removed"
 
     # --- V4 canonical authority store (PR #7662 repair 6/7) ----------------
     #
