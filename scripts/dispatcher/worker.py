@@ -98,10 +98,11 @@ def _observe(record: dict) -> dict:
 
 
 def _dispatcher_code() -> dict:
-    """The checkout whose dispatcher settles this task: its HEAD and whether its code is unmodified.
+    """The checkout whose dispatcher supervises this task: its HEAD and whether its code is unmodified.
 
-    A review-contract canary binds its receipt to this identity (#12399). An unreadable checkout
-    records ``head`` None, which no canary accepts.
+    Recorded when the supervisor starts and again when it settles. A review-contract canary
+    needs both to be the same clean checkout at the head it reviewed (#12399). An unreadable
+    checkout records ``head`` None, which no canary accepts.
     """
     from scripts.common.git_context import sanitized_git_env
 
@@ -701,6 +702,9 @@ def _corrected_reply_refusal(lock: dict, text: str | None) -> str | None:
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
+    if record.get("require_review_verdict") is True:
+        # The code this supervisor loaded; settlement records it again (#12399).
+        record["dispatcher_code_start"] = _dispatcher_code()
     spec = _spec(record, options or {})
     options = spec.options
     hard_timeout, silence_timeout, initial_response_timeout = deadlines({

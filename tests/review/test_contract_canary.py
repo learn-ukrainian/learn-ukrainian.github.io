@@ -79,8 +79,15 @@ def task(route: str, head: str, **changes: object) -> dict:
         "agent": route,
         "model": MODELS[route],
         "dispatcher_code": {"root": "/candidate", "head": head, "clean": True},
+        "dispatcher_code_start": {"root": "/candidate", "head": head, "clean": True},
         "result_sha256": hashlib.sha256(RECEIPT.encode()).hexdigest(),
     }
+    # The providers that attest the model from their own stream, as the live records show.
+    if route == "cursor":
+        record.update(resolved_model="Grok 4.7 256K High", resolved_model_known=True,
+                      resolved_model_source="cursor-stream-json")
+    elif route == "agy":
+        record.update(resolved_model=MODELS["agy"], resolved_model_known=True, resolved_model_source="agy-stream-json")
     record.update(changes)
     return record
 
@@ -129,7 +136,9 @@ def test_contract_change_is_refused_until_every_route_has_a_receipt(repo) -> Non
         ({"dispatcher_code": None}, "candidate's clean dispatcher"),
         ({"agent": "kimi"}, "not a required reviewer route"),
         ({"model": "claude-fable-5-1"}, "not a formal reviewer"),
-        ({"resolved_model_known": False}, "did not attest the model"),
+        ({"language_lane": True}, "did not settle through the receipt gate"),
+        ({"dispatcher_code_start": {"root": "/other", "head": "f" * 40, "clean": True}}, "candidate's clean dispatcher"),
+        ({"dispatcher_code_start": None}, "candidate's clean dispatcher"),
         ({"result_sha256": "0" * 64}, "does not match"),
     ],
 )
@@ -137,6 +146,22 @@ def test_record_refuses_a_task_that_is_not_canary_evidence(repo, changes: dict, 
     _, head = repo
     with pytest.raises(canary.CanaryError, match=why):
         canary.build_receipt(task("claude", head, **changes), RECEIPT, head=head)
+
+
+@pytest.mark.parametrize(
+    ("route", "changes"),
+    [
+        ("cursor", {"resolved_model": "Claude Fable 5.1"}),
+        ("cursor", {"resolved_model_known": False}),
+        ("agy", {"resolved_model": "claude-fable-5-1"}),
+        ("agy", {"resolved_model_known": False}),
+    ],
+)
+def test_record_refuses_a_route_whose_attested_model_is_not_formal(repo, route: str, changes: dict) -> None:
+    _, head = repo
+    canary.build_receipt(task(route, head), RECEIPT, head=head)  # the attested formal model passes
+    with pytest.raises(canary.CanaryError, match="did not attest a formal reviewer"):
+        canary.build_receipt(task(route, head, **changes), RECEIPT, head=head)
 
 
 def test_a_verdict_line_is_not_a_canonical_receipt(repo) -> None:

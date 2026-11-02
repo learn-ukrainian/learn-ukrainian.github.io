@@ -99,6 +99,37 @@ def _route_models(candidates: Sequence[Any]) -> set[str]:
     return names
 
 
+def _receipt_gated(record: Mapping[str, Any]) -> bool:
+    """Whether the dispatcher's canonical receipt gate decided this task's settlement."""
+    from scripts.review.review_contract import schema_path
+
+    return (
+        record.get("require_review_verdict") is True
+        and record.get("schema_version") == 2
+        and record.get("review_profile") in {"code", "infra"}
+        and not record.get("review_attempt")
+        and schema_path(profile=record.get("review_profile"), task=record) is not None
+    )
+
+
+def _attested_model(record: Mapping[str, Any]) -> object:
+    """The model that ran, by the verdict recorder's attestation rules where they apply.
+
+    A provider that reports its model from its own stream must have named a permitted one;
+    Cursor's display names map to catalog ids as the recorder maps them.
+    """
+    from scripts.review.record_cf_verdict import reviewer_identity
+
+    if record.get("agent") in {"cursor", "grok", "grok-build"}:
+        try:
+            return reviewer_identity(record)[0]
+        except Exception:  # unattested, unknown or unreadable: no executor
+            return None
+    if "resolved_model_known" in record:
+        return record.get("resolved_model") if record["resolved_model_known"] is True else None
+    return record.get("model")
+
+
 def _root() -> Path:
     from scripts.common.repo_root import main_checkout_root
 
@@ -129,11 +160,9 @@ def _settled_receipt(record: Mapping[str, Any], result: str, *, head: str) -> di
     checks = (
         (record.get("status") == "done", "task did not settle done"),
         (record.get("mode") == "read-only", "task is not read-only"),
-        # Only a verdict-bound code or infra task outside a bound review attempt settles through the
-        # dispatcher's canonical receipt gate (worker._receipt_failure).
-        (record.get("require_review_verdict") is True and record.get("schema_version") == 2
-         and record.get("review_profile") in {"code", "infra"} and not record.get("review_attempt"),
-         "task did not settle through the receipt gate"),
+        # Only a verdict-bound code or infra task outside a bound review attempt, and not classified
+        # Ukrainian, settles through the dispatcher's canonical receipt gate (worker._receipt_failure).
+        (_receipt_gated(record), "task did not settle through the receipt gate"),
         # The worktree started at the PR head and was still there when the task settled.
         (record.get("worktree_start_sha") == head and record.get("head_sha") == head,
          "task did not review the PR head"),
@@ -144,17 +173,22 @@ def _settled_receipt(record: Mapping[str, Any], result: str, *, head: str) -> di
         if not ok:
             raise CanaryError(why)
     code = record.get("dispatcher_code")
-    if not isinstance(code, Mapping) or code.get("head") != head or code.get("clean") is not True:
+    if (
+        not isinstance(code, Mapping)
+        or code.get("head") != head
+        or code.get("clean") is not True
+        or record.get("dispatcher_code_start") != code
+    ):
         raise CanaryError("task was not supervised by the candidate's clean dispatcher")
     route = record.get("agent")
     candidates = _formal_candidates()
     if route not in candidates:
         raise CanaryError(f"route {route!r} is not a required reviewer route")
-    if record.get("model") not in _route_models(candidates[route]):
+    permitted = _route_models(candidates[route])
+    if record.get("model") not in permitted:
         raise CanaryError(f"model {record.get('model')!r} is not a formal reviewer on route {route}")
-    # A provider that attests its model from its own stream must have named one.
-    if "resolved_model_known" in record and record["resolved_model_known"] is not True:
-        raise CanaryError(f"route {route} did not attest the model that ran")
+    if _attested_model(record) not in permitted:
+        raise CanaryError(f"route {route} did not attest a formal reviewer as the model that ran")
     if record.get("result_sha256") != hashlib.sha256(result.encode()).hexdigest():
         raise CanaryError("result does not match the task record")
     return {
