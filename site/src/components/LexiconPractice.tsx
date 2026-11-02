@@ -248,7 +248,7 @@ async function resolveDeckKeyMetadata(
   if (unresolved.length === 0) return resolutions;
 
   let rows: SearchRow[] = [];
-  let needsFullIndexFallback = false;
+  let needsFullIndexFallback: boolean;
   try {
     const manifest = await getShardJson<SearchShardManifest>('/lexicon/search-shards.json', cache);
     const shardPaths = Array.from(
@@ -4330,7 +4330,7 @@ function LexiconPracticeIsland({
 
   function handleMatchingComplete() {
     if (!selection) return;
-    let outcome: CompletionOutcome | null = null;
+    let outcome: CompletionOutcome | null;
     if (sessionCompleted === 0) {
       const rating = matchedSelectedRatingRef.current || 'good';
       matchedSelectedRatingRef.current = null;

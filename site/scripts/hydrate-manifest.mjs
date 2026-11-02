@@ -148,7 +148,7 @@ function downloadUrl(pointer, attempt) {
 }
 
 async function downloadGzip(pointer) {
-  let gzBytes = null;
+  let gzBytes;
   let actualGzSha = "";
   let lastError = null;
   let lastFailure = "";

@@ -1,4 +1,3 @@
-/* eslint-env node */
 /* global console, process */
 
 import Database from 'better-sqlite3';

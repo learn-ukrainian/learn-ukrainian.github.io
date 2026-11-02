@@ -571,7 +571,7 @@ async function hydrateDurableLog(storage: ReviewEventStorageLike): Promise<void>
   durableHydratePromise = (async () => {
     const clientId = getReviewEventClientId(storage);
     const driver = resolveIdbDriver();
-    let idbLog: ReviewEventLog | null = null;
+    let idbLog: ReviewEventLog | null;
     try {
       idbLog = parseLogFromUnknown(await driver.getRaw(), clientId);
     } catch {
@@ -653,7 +653,7 @@ export async function migrateReviewEventsLocalStorageToIdb(
 
   const clientId = getReviewEventClientId(storage);
   const legacy = loadLogFromStorageLike(storage);
-  let idbLog: ReviewEventLog | null = null;
+  let idbLog: ReviewEventLog | null;
   try {
     idbLog = parseLogFromUnknown(await driver.getRaw(), clientId);
   } catch {
