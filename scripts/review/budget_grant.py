@@ -34,7 +34,7 @@ from scripts.agent_runtime.bounded_advisory import (
     load_sealed_result,
 )
 from scripts.opsec.prepublish import normalize_repository
-from scripts.orchestration.integration_sweep import REJECTED, lookup_verdict
+from scripts.orchestration.integration_sweep import REJECTED, REPLY_CLOSER, REPLY_OPENER, lookup_verdict
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.model_catalog import REVIEW_BUDGET_ELEVATION_ROLE, advisory_role_policy, canonical_model_id
@@ -296,6 +296,13 @@ def finding_is_open(entry: str) -> bool:
     return not any(not any(start <= match.start() < end for start, end in opened) for match in _CLOSED.finditer(entry))
 
 
+def recorded_reply(body: Any) -> str:
+    """The reviewer's reply a recorded verdict comment publishes; empty when it publishes none."""
+    if not isinstance(body, str) or REPLY_OPENER not in body:
+        return ""
+    return body.partition(REPLY_OPENER)[2].rpartition(REPLY_CLOSER)[0]
+
+
 def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, finding_id: str) -> str | None:
     """The head of the latest recorded verdict when it is a trusted rejection leaving ``finding_id`` an open P0/P1.
 
@@ -314,8 +321,7 @@ def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, findin
     comment = comments[index]
     if comment.get("created_at") != comment.get("updated_at"):
         return None
-    body = comment.get("body")
-    entries = finding_entries(body.partition("<details>")[2] if isinstance(body, str) else "", finding_id)
+    entries = finding_entries(recorded_reply(comment.get("body")), finding_id)
     severities = [severity for severity, _ in entries if severity]
     if not entries or not severities or severities[-1] not in BLOCKING_SEVERITIES:
         return None
@@ -526,7 +532,8 @@ def _withheld_round(
             critical = [severity for severity, _ in entries if severity in BLOCKING_SEVERITIES]
             prior = [severity for index, old in recorder._trusted_markers(comments, login)
                      if old["started"] < marker["started"]
-                     for severity, _ in finding_entries(comments[index]["body"], request["finding_id"])
+                     for severity, _ in finding_entries(recorded_reply(comments[index]["body"]),
+                                                       request["finding_id"])
                      if severity]
             if critical and (not prior or min(critical) < prior[-1]):
                 raise GrantRefused(BLOCKER, f"{run.task_id}: a new P0/P1 finding was raised")

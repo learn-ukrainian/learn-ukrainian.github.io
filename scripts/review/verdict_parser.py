@@ -592,11 +592,44 @@ _LEDGER_ENTRY_START = re.compile(
 _LEDGER_ENTRY_END = re.compile(r"^\s*$|^\s*(?:VERDICT|SCORE):")
 
 
+def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    keys = [key for key, _ in pairs]
+    if len(set(keys)) != len(keys):
+        raise ValueError("duplicate key")
+    return dict(pairs)
+
+
+def _structured_findings(reply: str) -> tuple[Any, ...] | None:
+    """The validated findings of a reply that is exactly one JSON object; None for any other reply.
+
+    A reply that is a JSON object but not a valid ``code-review-findings.v1`` payload
+    (unreadable, a duplicate key, a schema failure) has no findings: it fails closed.
+    """
+    from scripts.fleet_comms.review_publication import ReviewPublicationError
+    from scripts.review.review_contract import ContractError, _whole_reply_fence
+
+    text = _whole_reply_fence(reply.strip())
+    if not text.startswith("{"):
+        return None
+    try:
+        payload = json.loads(text, object_pairs_hook=_unique_object)
+        _, evidence = checked_findings_payload(payload) if isinstance(payload, dict) else (None, None)
+    except (ValueError, RecursionError, ContractError, ReviewPublicationError):
+        return ()
+    return evidence.findings if evidence is not None else ()
+
+
 def finding_entries(reply: str, finding_id: str) -> list[tuple[str | None, str]]:
     """Every ledger entry for ``finding_id`` in a reviewer reply, in order: its severity and its full text.
 
-    The severity is None when the entry states none; consumers decide what that means.
+    The severity is None when the entry states none; consumers decide what that means. A
+    ``code-review-findings.v1`` reply yields each finding with that id: its typed priority,
+    and its title and body as the text (#12549).
     """
+    structured = _structured_findings(reply)
+    if structured is not None:
+        return [(finding.priority, f"{finding.title}\n{finding.body}")
+                for finding in structured if finding.finding_id == finding_id]
     entries: list[tuple[str, str | None, list[str]]] = []
     for line in _commonmark_lines(reply):
         start = _LEDGER_ENTRY_START.match(line)
