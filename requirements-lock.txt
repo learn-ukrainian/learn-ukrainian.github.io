@@ -229,7 +229,7 @@ trec-car-tools==2.6
 truststore==0.10.4
 typer==0.27.2
 typer-slim==0.24.0
-typesafe-sdk==0.7.2
+typesafe-sdk==0.7.5
 typing_extensions==4.16.0
 typing-inspection==0.4.4
 tzlocal==5.4.5
