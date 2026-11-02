@@ -1,26 +1,8 @@
 """Best-effort secret redaction for agent egress paths.
 
-This is a security control, so the unquoted-assignment gate fails CLOSED: a
-secret-named key is redacted unless the value is *unambiguously* a code
-expression. The only pass-through is a *spaced* assignment (``key = value``,
-code / INI style) whose value carries call/subscript/collection punctuation
-(``( ) [ ] { }`` or a comma) — exactly what corrupted reviewed diffs in the
-2026-07-12 burn (function calls, comprehensions, set/list literals). A *tight*
-assignment (``KEY=value`` with no whitespace around ``=`` — env / shell / .env /
-docker-compose style) is ALWAYS redacted, because env dumps are the canonical
-place real secrets leak and are virtually never PEP8-spaced.
-
-Two accepted, deliberate gaps (both err toward NOT leaking secrets):
-
-- Spaced bare identifiers / dotted refs assigned to a secret-named key
-  (``token_fn = vesum_gate.check_tokens``) stay REDACTED — they lack code
-  punctuation, so they fail closed. A rare mangled code line is acceptable; a
-  leaked secret is not.
-- Spaced INI-style secret values (``password = hunter2``) are redacted. That is
-  the correct side of the trade for a security control.
-
-Quoted (``key = 'secret'``) and JSON (``{"key": "secret"}``) forms are always
-covered, unconditionally.
+Values assigned to recognized secret names are always redacted, including YAML
+pairs and spaced code expressions. Punctuation cannot establish that a value
+is safe to publish.
 """
 
 from __future__ import annotations
@@ -36,20 +18,16 @@ REDACTION = "[REDACTED_SECRET]"
 
 _KEY_NAME = r"[A-Za-z_][A-Za-z0-9_]*"
 
-_ASSIGNMENT_PATTERNS = (
-    re.compile(
-        rf"(?P<prefix>\b(?P<key>{_KEY_NAME})\b\s*=\s*)(?P<quote>['\"])(?P<value>.*?)(?P=quote)",
-        re.IGNORECASE,
-    ),
-    re.compile(
-        rf"(?P<prefix>\b(?P<key>{_KEY_NAME})\b\s*=\s*)(?P<value>[^\r\n]+)",
-        re.IGNORECASE,
-    ),
-    re.compile(
-        rf"(?P<prefix>['\"](?P<key>{_KEY_NAME})['\"]\s*:\s*)(?P<quote>['\"])(?P<value>.*?)(?P=quote)",
-        re.IGNORECASE,
-    ),
+_ASSIGNMENT_PREFIX = re.compile(
+    rf"(?<!\w)(?P<key_quote>['\"]?)(?P<key>{_KEY_NAME})(?P=key_quote)\s*(?P<separator>[:=])\s*",
+    re.IGNORECASE,
 )
+_QUOTED_VALUES = {
+    '"': re.compile(r'"(?:\\[\s\S]|[^"\\])*"'),
+    "'": re.compile(r"'(?:''|[^'])*'"),
+}
+_SINGLE_QUOTED_EQUALS_VALUE = re.compile(r"'(?:\\[\s\S]|''|[^'\\])*'")
+_LINE_END = re.compile(r"[\r\n]")
 
 _BLOCK_PATTERNS = (
     re.compile(
@@ -57,19 +35,6 @@ _BLOCK_PATTERNS = (
         re.DOTALL,
     ),
 )
-
-# Code-shape VETO for the UNQUOTED assignment pattern only. `_ASSIGNMENT_PATTERNS[1]`
-# matches any `key = <rest of line>`, so a secret-*named* LHS identifier
-# (token_verdicts, secret_keys, ...) used to nuke a benign RHS such as
-# `vesum_gate.check_tokens(sentence)` or `[t for t in words if len(t) > 1]`,
-# corrupting reviewed diffs and producing bogus "blocking" review findings
-# (2026-07-12 burn). We do NOT allowlist secret-*shaped* values — that under-
-# redacted real env secrets carrying `@`, `$`, `!`, or trailing comments (the
-# PR #5047 regression). Instead we redact by default and veto only a *spaced*
-# assignment whose value carries these call/subscript/collection characters,
-# which is exactly what function calls, comprehensions, and set/list/dict
-# literals — and virtually no env-dump secret value — contain.
-_CODE_EXPRESSION_CHARS = frozenset("()[]{},")
 
 _TOKEN_PATTERNS = (
     re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}\b"),
@@ -198,11 +163,7 @@ def redact_text(value: str | None) -> str | None:
     text = "".join(parts)
     for pattern in _BLOCK_PATTERNS:
         text = pattern.sub(REDACTION, text)
-    for pattern in _ASSIGNMENT_PATTERNS:
-        text = pattern.sub(
-            _redact_assignment_match,
-            text,
-        )
+    text = _redact_assignments(text)
     for pattern in _TOKEN_PATTERNS:
         text = pattern.sub(REDACTION, text)
     text = _OPAQUE_TOKEN_PATTERN.sub(_redact_opaque_token_match, text)
@@ -243,11 +204,6 @@ def _is_secret_key(key: str) -> bool:
     return bool(parts and parts[-1] == "APIKEY")
 
 
-def _is_code_expression(value: str) -> bool:
-    """True when an unquoted RHS carries call/subscript/collection punctuation."""
-    return any(char in _CODE_EXPRESSION_CHARS for char in value)
-
-
 def _shannon_entropy(value: str) -> float:
     """Return the per-character Shannon entropy for an ASCII token candidate."""
     length = len(value)
@@ -275,19 +231,42 @@ def _redact_opaque_token_match(match: re.Match[str]) -> str:
     return REDACTION if _looks_like_opaque_secret(match.group("value")) else match.group(0)
 
 
-def _redact_assignment_match(match: re.Match[str]) -> str:
-    if not _is_secret_key(match.group("key")):
-        return match.group(0)
-
-    quote = match.groupdict().get("quote") or ""
-    if not quote:
-        # Unquoted assignment. Read the spacing around `=` off the prefix group,
-        # which captured `key\s*=\s*` — no line re-scan needed. A tight `KEY=value`
-        # (no surrounding whitespace) is env / shell / .env / compose style and is
-        # ALWAYS redacted. A spaced `key = value` is code / INI style: redact by
-        # default, veto only when the value is unambiguously a code expression.
-        spaced = bool(re.search(r"\s", match.group("prefix")))
-        if spaced and _is_code_expression(match.group("value")):
-            return match.group(0)
-
-    return f"{match.group('prefix')}{quote}{REDACTION}{quote}"
+def _redact_assignments(text: str) -> str:
+    parts = []
+    cursor = 0
+    authorities = iter(
+        (match.start() + start, match.start() + end)
+        for match in iter_url_matches(text)
+        for start, end in (_url_authority_bounds(match.group()),)
+    )
+    authority = next(authorities, (len(text), len(text)))
+    for match in _ASSIGNMENT_PREFIX.finditer(text):
+        if match.start() < cursor or not _is_secret_key(match.group("key")):
+            continue
+        while match.start() >= authority[1]:
+            authority = next(authorities, (len(text), len(text)))
+        if (match.group("separator") == ":"
+                and authority[0] <= match.start() < match.end() < authority[1]):
+            tail = text[match.end():authority[1]]
+            if (tail.isascii() and tail.isdecimal()) or tail.startswith(REDACTION + "@"):
+                continue
+        start = match.end()
+        if start == len(text):
+            continue
+        quote = text[start] if text[start] in _QUOTED_VALUES else ""
+        if quote:
+            pattern = _QUOTED_VALUES[quote]
+            if quote == "'" and match.group("separator") == "=":
+                pattern = _SINGLE_QUOTED_EQUALS_VALUE
+            value = pattern.match(text, start)
+            end = value.end() if value else len(text)
+            closing = quote if value else ""
+        else:
+            newline = _LINE_END.search(text, start)
+            end = newline.start() if newline else len(text)
+            closing = ""
+        parts.append(text[cursor:match.start()])
+        parts.append(match.group() + quote + REDACTION + closing)
+        cursor = end
+    parts.append(text[cursor:])
+    return "".join(parts)
