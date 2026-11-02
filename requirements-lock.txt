@@ -186,7 +186,7 @@ python-docx==1.2.0
 python-dotenv==1.2.3
 python-multipart==0.0.32
 PyYAML==6.0.3
-qdrant-client==1.17.0
+qdrant-client==1.20.0
 RapidFuzz==3.14.6
 referencing==0.37.0
 regex==2026.5.9
