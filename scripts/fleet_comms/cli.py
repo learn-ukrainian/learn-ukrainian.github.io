@@ -1137,26 +1137,65 @@ def cmd_requests_requeue_stale(args: argparse.Namespace) -> int:
 
 
 def cmd_retention(args: argparse.Namespace) -> int:
-    """Message-blob retention (#12530): dry run unless ``--apply``."""
-    from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
+    """Blob retention (#12530, #12574): dry run unless ``--apply``."""
+    from scripts.fleet_comms.artifacts import (
+        UNREFERENCED_DEFAULT_DAYS,
+        ArtifactStore,
+        ArtifactStoreError,
+        CitationSources,
+    )
 
     root = Path(args.root).expanduser() if args.root else None
     backup_dir = Path(args.backup_dir) if args.backup_dir else None
     if backup_dir is not None and not args.apply:
         raise FleetCommsCliError("retention refused: --backup-dir requires --apply")
+    declared = (args.cited_from_tasks, args.cited_from_docs, args.cited_from_github)
+    unreferenced = all(declared)
+    if (any(declared) or args.unreferenced_days is not None) and not unreferenced:
+        raise FleetCommsCliError(
+            "retention refused: the unreferenced rule needs all of --cited-from-tasks, "
+            "--cited-from-docs and --cited-from-github"
+        )
+    if unreferenced and args.apply and backup_dir is None:
+        raise FleetCommsCliError("retention refused: the unreferenced rule needs --backup-dir with --apply")
     try:
         # A dry run opens read-only: it never migrates or writes the store.
         store = ArtifactStore(root=root) if args.apply else ArtifactStore.open_readonly(root=root)
         with store:
+            # Verify every citation source BEFORE either rule computes a
+            # candidate; a failed source raises here and nothing is removed.
+            citations = (
+                store.scan_citations(
+                    CitationSources(
+                        tasks_dir=Path(args.cited_from_tasks).expanduser(),
+                        docs_dir=Path(args.cited_from_docs).expanduser(),
+                        github_dump=Path(args.cited_from_github).expanduser(),
+                    )
+                )
+                if unreferenced
+                else None
+            )
             report = store.expire_message_blobs(
                 older_than_days=args.older_than_days,
                 grace_seconds=args.grace_seconds,
                 apply=args.apply,
                 backup_dir=backup_dir,
             )
+            unreferenced_report = (
+                store.expire_unreferenced_blobs(
+                    citations=citations,
+                    older_than_days=args.unreferenced_days or UNREFERENCED_DEFAULT_DAYS,
+                    grace_seconds=args.grace_seconds,
+                    apply=args.apply,
+                    backup_dir=backup_dir,
+                ).to_dict()
+                if citations is not None
+                else {"skipped": "no citation sources declared"}
+            )
     except (ArtifactStoreError, sqlite3.Error, OSError) as exc:
         raise FleetCommsCliError(f"retention refused: {exc}") from exc
     payload = report.to_dict()
+    payload["unreferenced"] = unreferenced_report
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     payload["content_included"] = False
     sys.stdout.write(_json_dump(payload))
@@ -1232,15 +1271,25 @@ def build_parser() -> argparse.ArgumentParser:
 
     retention = sub.add_parser(
         "retention",
-        help="Remove blobs of finished messages older than N days (dry run unless --apply)",
+        help="Remove blobs of finished messages and of old uncited unreferenced artifacts (dry run unless --apply)",
         description=(
-            "Remove the blob files of artifacts linked only to messages older than the "
-            "cutoff with no open delivery, pending request or open ACP discussion. "
-            "Artifacts named by jobs, receipts, channel context or formal reviews, and "
-            "every retention class other than message-body, historical-message, "
-            "acpx-discussion and default, are kept. Message rows and artifact rows "
-            "(sha256, bytes) are never deleted."
+            "Message rule (#12530): remove the blob files of artifacts linked only to messages "
+            "older than the cutoff with no open delivery, pending request or open ACP discussion. "
+            "Artifacts named by jobs, receipts, channel context or formal reviews, and every "
+            "retention class other than message-body, historical-message, acpx-discussion and "
+            "default, are kept.\n"
+            "Unreferenced rule (#12574): runs only when all three --cited-from-* sources are "
+            "given. It removes the blob of an artifact that no row names, in an expiring class, "
+            "older than --unreferenced-days and cited by none of: message text and linked blobs, "
+            "the tasks directory, the docs tree and a fresh GitHub dump. Any missing, empty, "
+            "stale, truncated or unreadable source refuses the whole run before any candidate. "
+            "Message rows and artifact rows (sha256, bytes) are never deleted.\n"
+            "GitHub dump (.jsonl): line 1 {\"kind\": \"header\", \"fetched_at\": \"<UTC ISO-Z>\"}, "
+            "then one object per line with kind issue, pull_request, issue_comment or "
+            "pr_review_comment (each kind at least once), then a last line "
+            "{\"kind\": \"footer\", \"records\": <count>}; fetched_at must be under 24 h old."
         ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     retention.add_argument("--root", default=None, help="Plane root override")
     retention.add_argument(
@@ -1256,6 +1305,27 @@ def build_parser() -> argparse.ArgumentParser:
         help="Skip blobs reused within this window (default: 3600)",
     )
     retention.add_argument(
+        "--unreferenced-days",
+        type=int,
+        default=None,
+        help="Age floor for unreferenced artifacts (default: 90; needs all --cited-from-*)",
+    )
+    retention.add_argument(
+        "--cited-from-tasks",
+        default=None,
+        help="Tasks directory (batch_state/tasks) scanned for cited artifact ids and sha256",
+    )
+    retention.add_argument(
+        "--cited-from-docs",
+        default=None,
+        help="Repository docs tree scanned for citations (checkout root; standard exclusions)",
+    )
+    retention.add_argument(
+        "--cited-from-github",
+        default=None,
+        help="Fresh GitHub dump (.jsonl, format above) of issues, PRs and their comments",
+    )
+    retention.add_argument(
         "--apply",
         action="store_true",
         help="Remove the candidates (default: report only, read-only open)",
@@ -1265,7 +1335,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "With --apply: copy each blob here (sha256-verified, with manifest.jsonl) "
-            "under the writer lock before removing it; must be outside the plane root"
+            "under the writer lock before removing it; must be outside the plane root; "
+            "required for the unreferenced rule"
         ),
     )
     retention.set_defaults(func=cmd_retention)

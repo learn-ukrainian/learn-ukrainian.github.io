@@ -12,13 +12,17 @@ Byte-plane slice (private #603, Phase 0b): when ``fleet_comms`` authority is
 in Postgres (``BYTEA``, content-addressed by sha256) in a small dedicated
 table — never in a host-local ``blobs/sha256/...`` file that a second host
 with the DSN could not read back. Default authority stays ``sqlite`` (today's
-file-backed store, unchanged). ``is_referenced``/
-``garbage_collect_unreferenced`` remain sqlite-only in this slice;
-``reference`` is dialect-aware (request-execute slice, #605 follow-on).
+file-backed store, unchanged). ``is_referenced`` remains sqlite-only in
+this slice; ``reference`` is dialect-aware (request-execute slice, #605
+follow-on).
 
 Retention (#12530): ``expire_message_blobs`` removes the blob files of
 finished messages past an age floor while keeping every row and digest
 (``python -m scripts.fleet_comms retention``; dry run unless ``--apply``).
+
+Unreferenced artifacts (#12574): ``expire_unreferenced_blobs`` owns artifacts
+that no row names. It expires only an allow-listed class past a long window
+and never an artifact a declared citation source names (``scan_citations``).
 """
 
 from __future__ import annotations
@@ -30,6 +34,7 @@ import mimetypes
 import os
 import re
 import sqlite3
+import stat
 import tempfile
 import time
 from dataclasses import asdict, dataclass
@@ -100,6 +105,53 @@ _NON_MESSAGE_REFERENCES = (
     ("formal_review_attempts", "raw_capture_artifact_id"),
     ("formal_review_snapshot_seals", "snapshot_artifact_id"),
 )
+# Every column that names an artifact: message links plus the non-message
+# columns above. An artifact named by none of them is "unreferenced" (#12574).
+_MESSAGE_REFERENCES = (
+    ("message_artifacts", "artifact_id"),
+    ("comms_messages", "body_artifact_id"),
+)
+_ALL_REFERENCES = _MESSAGE_REFERENCES + _NON_MESSAGE_REFERENCES
+# #12574: unreferenced artifacts expire only after a long window, only in these
+# base classes, and never when a declared source cites them. Every other class
+# (retained-evidence, handoff, checkpoint, sealed-verdict, formal-review-snapshot,
+# channel-context, raw-capture, any unknown class) is pinned and fails closed.
+UNREFERENCED_EXPIRING_CLASSES = frozenset(
+    {
+        "default",
+        "review",
+        "evidence",
+        "task-evidence",
+        "task_evidence",
+        "review-evidence",
+        "review_evidence",
+        "audit",
+        "authority-result",
+        "authority-job-payload",
+        "rejected-review-response",
+        "message-body",
+        "historical-message",
+        "acpx-discussion",
+    }
+)
+UNREFERENCED_DEFAULT_DAYS = 90
+GITHUB_DUMP_MAX_AGE_SECONDS = 24 * 3600
+GITHUB_DUMP_KINDS = frozenset({"issue", "pull_request", "issue_comment", "pr_review_comment"})
+_CITE_ID = re.compile(rb"artifact_[0-9a-f]{32}")
+# A sha256 is a citation only as a token of its own. The tasks source holds
+# checkout snapshots that list every ignored file, including each blob path
+# ``blobs/sha256/<aa>/<digest>``; a digest after ``/`` there is a directory
+# listing, not a citation, and would hold every artifact that existed then.
+_CITE_SHA = re.compile(rb"(?<![0-9a-f])([0-9a-f]{64})")
+_CITE_SHA_NOT_PATH = re.compile(rb"(?<![0-9a-f/])([0-9a-f]{64})")
+_SCAN_CHUNK = 8 * 1024 * 1024
+_SCAN_OVERLAP = 96
+_DOC_SUFFIXES = frozenset(
+    {".md", ".txt", ".rst", ".yaml", ".yml", ".json", ".jsonl", ".toml", ".py"}
+)
+_DOC_EXCLUDED_DIRS = frozenset(
+    {".git", "node_modules", ".venv", ".worktrees", "batch_state", "data", "__pycache__", ".pytest_cache"}
+)
 
 
 def _retention_candidate_sql(*, single: bool) -> str:
@@ -157,6 +209,35 @@ ORDER BY a.created_at, a.artifact_id
 """
 
 
+def _unreferenced_candidate_sql(*, single: bool) -> str:
+    """Artifacts nothing names whose blob the unreferenced rule may remove.
+
+    Named parameters: ``:cutoff`` (ISO-Z) and, when ``single``, ``:artifact_id``
+    (the per-artifact re-check under the writer lock). An artifact qualifies
+    only when no column in ``_ALL_REFERENCES`` names it, its base class (the
+    ``expired:`` prefix stripped, so the allow-list is never bypassed) is in
+    ``UNREFERENCED_EXPIRING_CLASSES`` and it is older than the cutoff. Citation
+    is judged by the caller from its scanned sources, not here.
+    """
+    only = " AND {column} = :artifact_id" if single else ""
+    classes = ", ".join(f"'{name}'" for name in sorted(UNREFERENCED_EXPIRING_CLASSES))
+    held = "\n      UNION ALL ".join(
+        f"SELECT {column} FROM {table} WHERE {column} IS NOT NULL" + only.format(column=column)
+        for table, column in _ALL_REFERENCES
+    )
+    offset = len(RETENTION_EXPIRED_PREFIX) + 1
+    return f"""
+SELECT a.artifact_id, a.sha256, a.bytes, a.retention_class
+FROM artifacts a
+WHERE CASE WHEN a.retention_class LIKE '{RETENTION_EXPIRED_PREFIX}%'
+           THEN substr(a.retention_class, {offset}) ELSE a.retention_class END IN ({classes})
+  AND a.created_at < :cutoff{only.format(column="a.artifact_id")}
+  AND a.artifact_id NOT IN (
+      {held})
+ORDER BY a.created_at, a.artifact_id
+"""
+
+
 @dataclass(frozen=True, slots=True)
 class RetentionReport:
     """Outcome of one ``expire_message_blobs`` run (metadata only)."""
@@ -178,6 +259,84 @@ class RetentionReport:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+@dataclass(frozen=True, slots=True)
+class UnreferencedReport:
+    """Outcome of one ``expire_unreferenced_blobs`` run (metadata only)."""
+
+    applied: bool
+    older_than_days: int
+    cutoff: str
+    candidates: int
+    candidate_bytes: int
+    held_cited: int
+    held_cited_bytes: int
+    already_expired: int
+    present_blobs: int
+    present_bytes: int
+    removed: int
+    removed_bytes: int
+    skipped_recent_use: int
+    skipped_changed: int
+    by_class: dict[str, dict[str, int]]
+    sources: list[dict[str, Any]]
+    backup_dir: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True, slots=True)
+class CitationSources:
+    """The declared outside-the-store places that may cite an artifact (#12574).
+
+    All three are required: the unreferenced rule never runs on a partial set.
+    """
+
+    tasks_dir: Path
+    docs_dir: Path
+    github_dump: Path
+
+
+@dataclass(frozen=True, slots=True)
+class CitationScan:
+    """Artifacts a verified scan found cited, plus per-source coverage."""
+
+    cited: frozenset[str]
+    coverage: tuple[dict[str, Any], ...]
+
+
+class _ScanState:
+    """Accumulates cited artifact ids while a scan streams bytes."""
+
+    def __init__(self, known_ids: frozenset[bytes], sha_to_id: dict[bytes, str]) -> None:
+        self.known_ids = known_ids
+        self.sha_to_id = sha_to_id
+        self.cited: set[str] = set()
+        self.sha_pattern = _CITE_SHA
+
+    def feed(self, data: bytes) -> None:
+        for token in _CITE_ID.findall(data):
+            if token in self.known_ids:
+                self.cited.add(token.decode("ascii"))
+        for token in self.sha_pattern.findall(data):
+            artifact_id = self.sha_to_id.get(token)
+            if artifact_id is not None:
+                self.cited.add(artifact_id)
+
+    def feed_stream(self, handle: Any) -> int:
+        """Scan an open binary handle end to end; returns the bytes read."""
+        tail = b""
+        total = 0
+        while True:
+            chunk = handle.read(_SCAN_CHUNK)
+            if not chunk:
+                break
+            total += len(chunk)
+            self.feed(tail + chunk)
+            tail = chunk[-_SCAN_OVERLAP:]
+        return total
 
 
 def _fsync_directory(path: Path) -> None:
@@ -813,73 +972,18 @@ class ArtifactStore:
             raise
 
     def is_referenced(self, artifact_id: str) -> bool:
+        """True when any column in ``_ALL_REFERENCES`` names the artifact."""
         if self._authority is Authority.PG:
             raise ArtifactStoreError(
                 "is_referenced() is not implemented for fleet_comms authority=pg in this slice"
             )
-        row = self._conn.execute(
-            "SELECT 1 FROM message_artifacts WHERE artifact_id = ? LIMIT 1",
-            (artifact_id,),
-        ).fetchone()
-        if row:
-            return True
-        row = self._conn.execute(
-            "SELECT 1 FROM delivery_attempts WHERE raw_capture_artifact_id = ? LIMIT 1",
-            (artifact_id,),
-        ).fetchone()
-        if row:
-            return True
-        # Authority-mode metadata shares this artifact store.  These checks
-        # keep queued payloads, immutable context revisions, delivery receipts,
-        # and sealed formal-review snapshots alive through garbage collection.
-        for query in (
-            "SELECT 1 FROM authority_context_revisions WHERE artifact_id = ? LIMIT 1",
-            "SELECT 1 FROM authority_jobs WHERE payload_artifact_id = ? LIMIT 1",
-            "SELECT 1 FROM authority_jobs WHERE result_artifact_id = ? LIMIT 1",
-            "SELECT 1 FROM authority_deliveries WHERE acknowledgment_artifact_id = ? LIMIT 1",
-            "SELECT 1 FROM authority_delivery_attempts WHERE artifact_id = ? LIMIT 1",
-            "SELECT 1 FROM formal_review_snapshot_seals WHERE snapshot_artifact_id = ? LIMIT 1",
-        ):
-            row = self._conn.execute(query, (artifact_id,)).fetchone()
+        for table, column in _ALL_REFERENCES:
+            row = self._conn.execute(
+                f"SELECT 1 FROM {table} WHERE {column} = ? LIMIT 1", (artifact_id,)
+            ).fetchone()
             if row:
                 return True
         return False
-
-    def garbage_collect_unreferenced(self, *, grace_seconds: int = 3600) -> list[str]:
-        """Delete unreferenced artifacts older than grace. Returns deleted artifact_ids."""
-        self._refuse_readonly_write("garbage_collect_unreferenced")
-        if self._authority is Authority.PG:
-            raise ArtifactStoreError(
-                "garbage_collect_unreferenced() is not implemented for "
-                "fleet_comms authority=pg in this slice"
-            )
-        cutoff = (datetime.now(UTC) - timedelta(seconds=grace_seconds)).strftime(
-            "%Y-%m-%dT%H:%M:%SZ"
-        )
-        rows = self._conn.execute(
-            "SELECT artifact_id, sha256, created_at FROM artifacts"
-        ).fetchall()
-        deleted: list[str] = []
-        unlink_candidates: list[str] = []
-        for row in rows:
-            aid = str(row["artifact_id"])
-            if self.is_referenced(aid):
-                continue
-            if str(row["created_at"]) > cutoff:
-                continue
-            digest = str(row["sha256"])
-            self._conn.execute("DELETE FROM artifacts WHERE artifact_id = ?", (aid,))
-            unlink_candidates.append(digest)
-            deleted.append(aid)
-        # #7484 (Sol 1.6): COMMIT the row deletions BEFORE touching any file.
-        # The old unlink-then-commit order could crash into rows that pointed
-        # at deleted bytes — the exact failure the module docstring rules out.
-        # The inverse window (committed rows gone, files still present) is
-        # recoverable garbage: reclaim_orphan_blobs() sweeps it.
-        self._conn.commit()
-        for digest in unlink_candidates:
-            self._unlink_if_unreferenced(digest)
-        return deleted
 
     def _unlink_if_unreferenced(self, digest: str) -> bool:
         """Atomically re-check and unlink one blob (#7484 CF r1).
@@ -947,6 +1051,92 @@ class ArtifactStore:
                     reclaimed.append(digest)
         return reclaimed
 
+    def _prepare_backup_dir(self, backup_dir: Path | None, apply: bool) -> Path | None:
+        """Validate and persist the backup directory before any removal."""
+        if backup_dir is None:
+            return None
+        if not apply:
+            raise ArtifactStoreError("backup_dir is only meaningful with apply")
+        backup_dir = backup_dir.expanduser().resolve()
+        if backup_dir.is_relative_to(self.root.resolve()):
+            raise ArtifactStoreError("backup_dir must be outside the plane root")
+        self._prepare_private_dir(backup_dir)
+        # Persist backup_dir's entry in every ancestor up to the root on
+        # every apply, before any source can go (#12530 F4). Existence
+        # does not prove durability: an earlier failed or interrupted
+        # setup can leave directories whose entries were never synced.
+        # Any failure raises here, before the first removal.
+        child = backup_dir
+        while child.parent != child:
+            _fsync_directory(child.parent)
+            child = child.parent
+        return backup_dir
+
+    def _expire_rows(
+        self,
+        rows: list[sqlite3.Row],
+        *,
+        single_sql: str,
+        params: dict[str, str],
+        mtime_floor: float,
+        apply: bool,
+        backup_dir: Path | None,
+        cited: frozenset[str] = frozenset(),
+    ) -> dict[str, Any]:
+        """Tally candidate rows and, when ``apply``, expire each one."""
+        by_class: dict[str, dict[str, int]] = {}
+        n = dict.fromkeys(
+            (
+                "candidates", "candidate_bytes", "already_expired", "present_blobs",
+                "present_bytes", "removed", "removed_bytes", "recent", "changed",
+                "held_cited", "held_cited_bytes",
+            ),
+            0,
+        )
+        for row in rows:
+            size = int(row["bytes"])
+            klass = str(row["retention_class"])
+            if str(row["artifact_id"]) in cited:
+                n["held_cited"] += 1
+                n["held_cited_bytes"] += size
+                continue
+            present = self.blob_path_for(str(row["sha256"])).is_file()
+            if not present and klass.startswith(RETENTION_EXPIRED_PREFIX):
+                n["already_expired"] += 1
+                continue
+            base_class = klass.removeprefix(RETENTION_EXPIRED_PREFIX)
+            bucket = by_class.setdefault(
+                base_class, {"candidates": 0, "bytes": 0, "present_blobs": 0, "present_bytes": 0}
+            )
+            n["candidates"] += 1
+            n["candidate_bytes"] += size
+            bucket["candidates"] += 1
+            bucket["bytes"] += size
+            if present:
+                n["present_blobs"] += 1
+                n["present_bytes"] += size
+                bucket["present_blobs"] += 1
+                bucket["present_bytes"] += size
+            if not apply:
+                continue
+            outcome = self._expire_one_blob(
+                str(row["artifact_id"]),
+                params,
+                mtime_floor,
+                backup_dir=backup_dir,
+                single_sql=single_sql,
+                cited=cited,
+            )
+            if outcome == "removed":
+                n["removed"] += 1
+                n["removed_bytes"] += size
+            elif outcome == "recent":
+                n["recent"] += 1
+            elif outcome == "changed":
+                n["changed"] += 1
+        n["by_class"] = dict(sorted(by_class.items()))
+        return n
+
     def expire_message_blobs(
         self,
         *,
@@ -976,22 +1166,7 @@ class ArtifactStore:
         """
         if older_than_days < 1:
             raise ArtifactStoreError("older_than_days must be at least 1")
-        if backup_dir is not None:
-            if not apply:
-                raise ArtifactStoreError("backup_dir is only meaningful with apply")
-            backup_dir = backup_dir.expanduser().resolve()
-            if backup_dir.is_relative_to(self.root.resolve()):
-                raise ArtifactStoreError("backup_dir must be outside the plane root")
-            self._prepare_private_dir(backup_dir)
-            # Persist backup_dir's entry in every ancestor up to the root on
-            # every apply, before any source can go (#12530 F4). Existence
-            # does not prove durability: an earlier failed or interrupted
-            # setup can leave directories whose entries were never synced.
-            # Any failure raises here, before the first removal.
-            child = backup_dir
-            while child.parent != child:
-                _fsync_directory(child.parent)
-                child = child.parent
+        backup_dir = self._prepare_backup_dir(backup_dir, apply)
         if apply:
             self._refuse_readonly_write("expire_message_blobs")
         if self._authority is Authority.PG:
@@ -1006,57 +1181,95 @@ class ArtifactStore:
         rows = self._conn.execute(_retention_candidate_sql(single=False), params).fetchall()
         if not apply and self._conn.in_transaction:
             self._conn.commit()
-        by_class: dict[str, dict[str, int]] = {}
-        candidate_bytes = present_blobs = present_bytes = 0
-        removed = removed_bytes = skipped_recent = skipped_changed = 0
-        mtime_floor = moment.timestamp() - max(0, grace_seconds)
-        candidates = already_expired = 0
-        for row in rows:
-            size = int(row["bytes"])
-            klass = str(row["retention_class"])
-            present = self.blob_path_for(str(row["sha256"])).is_file()
-            if not present and klass.startswith(RETENTION_EXPIRED_PREFIX):
-                already_expired += 1
-                continue
-            base_class = klass.removeprefix(RETENTION_EXPIRED_PREFIX)
-            bucket = by_class.setdefault(
-                base_class, {"candidates": 0, "bytes": 0, "present_blobs": 0, "present_bytes": 0}
-            )
-            candidates += 1
-            candidate_bytes += size
-            bucket["candidates"] += 1
-            bucket["bytes"] += size
-            if present:
-                present_blobs += 1
-                present_bytes += size
-                bucket["present_blobs"] += 1
-                bucket["present_bytes"] += size
-            if not apply:
-                continue
-            outcome = self._expire_one_blob(
-                str(row["artifact_id"]), params, mtime_floor, backup_dir=backup_dir
-            )
-            if outcome == "removed":
-                removed += 1
-                removed_bytes += size
-            elif outcome == "recent":
-                skipped_recent += 1
-            elif outcome == "changed":
-                skipped_changed += 1
+        n = self._expire_rows(
+            rows,
+            single_sql=_retention_candidate_sql(single=True),
+            params=params,
+            mtime_floor=moment.timestamp() - max(0, grace_seconds),
+            apply=apply,
+            backup_dir=backup_dir,
+        )
         return RetentionReport(
             applied=apply,
             older_than_days=older_than_days,
             cutoff=cutoff,
-            candidates=candidates,
-            candidate_bytes=candidate_bytes,
-            already_expired=already_expired,
-            present_blobs=present_blobs,
-            present_bytes=present_bytes,
-            removed=removed,
-            removed_bytes=removed_bytes,
-            skipped_recent_use=skipped_recent,
-            skipped_changed=skipped_changed,
-            by_class=dict(sorted(by_class.items())),
+            candidates=n["candidates"],
+            candidate_bytes=n["candidate_bytes"],
+            already_expired=n["already_expired"],
+            present_blobs=n["present_blobs"],
+            present_bytes=n["present_bytes"],
+            removed=n["removed"],
+            removed_bytes=n["removed_bytes"],
+            skipped_recent_use=n["recent"],
+            skipped_changed=n["changed"],
+            by_class=n["by_class"],
+            backup_dir=str(backup_dir) if backup_dir is not None else None,
+        )
+
+    def expire_unreferenced_blobs(
+        self,
+        *,
+        citations: CitationScan,
+        older_than_days: int = UNREFERENCED_DEFAULT_DAYS,
+        grace_seconds: int = RETENTION_GRACE_SECONDS,
+        apply: bool = False,
+        now: datetime | None = None,
+        backup_dir: Path | None = None,
+    ) -> UnreferencedReport:
+        """Remove blobs of unreferenced, uncited artifacts past the window (#12574).
+
+        Same two-phase, locked, row-keeping expiry as ``expire_message_blobs``.
+        A candidate is named by no column in ``_ALL_REFERENCES``, has an
+        allow-listed base class (``UNREFERENCED_EXPIRING_CLASSES``; every other
+        class is pinned), is older than ``older_than_days`` and is absent from
+        ``citations``, the verified scan of the declared sources
+        (``scan_citations``). A citation appearing after that scan is the one
+        residual; ``backup_dir`` (required with ``apply``) is the recovery.
+        """
+        if older_than_days < 1:
+            raise ArtifactStoreError("older_than_days must be at least 1")
+        if apply and backup_dir is None:
+            raise ArtifactStoreError("unreferenced retention requires backup_dir with apply")
+        backup_dir = self._prepare_backup_dir(backup_dir, apply)
+        if apply:
+            self._refuse_readonly_write("expire_unreferenced_blobs")
+        if self._authority is Authority.PG:
+            raise ArtifactStoreError(
+                "expire_unreferenced_blobs() is not implemented for "
+                "fleet_comms authority=pg in this slice"
+            )
+        moment = now or datetime.now(UTC)
+        cutoff = (moment - timedelta(days=older_than_days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        params = {"cutoff": cutoff}
+        rows = self._conn.execute(_unreferenced_candidate_sql(single=False), params).fetchall()
+        if not apply and self._conn.in_transaction:
+            self._conn.commit()
+        n = self._expire_rows(
+            rows,
+            single_sql=_unreferenced_candidate_sql(single=True),
+            params=params,
+            mtime_floor=moment.timestamp() - max(0, grace_seconds),
+            apply=apply,
+            backup_dir=backup_dir,
+            cited=citations.cited,
+        )
+        return UnreferencedReport(
+            applied=apply,
+            older_than_days=older_than_days,
+            cutoff=cutoff,
+            candidates=n["candidates"],
+            candidate_bytes=n["candidate_bytes"],
+            held_cited=n["held_cited"],
+            held_cited_bytes=n["held_cited_bytes"],
+            already_expired=n["already_expired"],
+            present_blobs=n["present_blobs"],
+            present_bytes=n["present_bytes"],
+            removed=n["removed"],
+            removed_bytes=n["removed_bytes"],
+            skipped_recent_use=n["recent"],
+            skipped_changed=n["changed"],
+            by_class=n["by_class"],
+            sources=[dict(entry) for entry in citations.coverage],
             backup_dir=str(backup_dir) if backup_dir is not None else None,
         )
 
@@ -1066,6 +1279,8 @@ class ArtifactStore:
         params: dict[str, str],
         mtime_floor: float,
         *,
+        single_sql: str,
+        cited: frozenset[str] = frozenset(),
         backup_dir: Path | None = None,
     ) -> str:
         """Expire one candidate in two locked phases (#12530).
@@ -1090,7 +1305,7 @@ class ArtifactStore:
         locked = {**params, "artifact_id": artifact_id}
         self._conn.execute("BEGIN IMMEDIATE")
         try:
-            row = self._conn.execute(_retention_candidate_sql(single=True), locked).fetchone()
+            row = self._candidate_row(single_sql, locked, cited)
             outcome = self._grace_outcome(row, mtime_floor)
             if outcome is None:
                 klass = str(row["retention_class"])
@@ -1107,7 +1322,7 @@ class ArtifactStore:
             return outcome
         self._conn.execute("BEGIN IMMEDIATE")
         try:
-            row = self._conn.execute(_retention_candidate_sql(single=True), locked).fetchone()
+            row = self._candidate_row(single_sql, locked, cited)
             outcome = self._grace_outcome(row, mtime_floor)
             if outcome is None and not str(row["retention_class"]).startswith(
                 RETENTION_EXPIRED_PREFIX
@@ -1125,6 +1340,15 @@ class ArtifactStore:
             raise
         self._conn.commit()
         return outcome or "removed"
+
+    def _candidate_row(
+        self, single_sql: str, locked: dict[str, str], cited: frozenset[str]
+    ) -> sqlite3.Row | None:
+        """Re-run the rule for one artifact; a cited artifact is never one."""
+        row = self._conn.execute(single_sql, locked).fetchone()
+        if row is not None and str(row["artifact_id"]) in cited:
+            return None
+        return row
 
     def _grace_outcome(self, row: sqlite3.Row | None, mtime_floor: float) -> str | None:
         """``changed`` for a non-candidate, ``recent`` inside grace, else None."""
@@ -1194,6 +1418,225 @@ class ArtifactStore:
             handle.flush()
             os.fsync(handle.fileno())
         _fsync_directory(backup_dir)
+
+    def scan_citations(
+        self, sources: CitationSources, *, now: datetime | None = None
+    ) -> CitationScan:
+        """Verify and scan every declared citation source (#12574).
+
+        Returns the artifacts any source names (by ``artifact_<id>`` or by
+        sha256) plus per-source coverage. It raises ``ArtifactStoreError``
+        unless EVERY source is present, non-empty for its kind, fresh and
+        readable end to end, so the unreferenced rule cannot start on a
+        partial or blind scan. Coverage is evidence; the refusal is the
+        protection. Sources: the store itself (message text, message-linked
+        blobs), the tasks directory, the repository docs tree and a GitHub
+        dump (``_scan_github``).
+        """
+        if self._authority is Authority.PG:
+            raise ArtifactStoreError(
+                "scan_citations() is not implemented for fleet_comms authority=pg in this slice"
+            )
+        known = self._conn.execute("SELECT artifact_id, sha256 FROM artifacts").fetchall()
+        state = _ScanState(
+            frozenset(str(r["artifact_id"]).encode("ascii") for r in known),
+            {str(r["sha256"]).encode("ascii"): str(r["artifact_id"]) for r in known},
+        )
+        coverage = [
+            self._scan_store(state),
+            self._scan_tree("tasks", sources.tasks_dir, state, required_suffix=".json", sha_after_slash=False),
+            self._scan_tree(
+                "docs",
+                sources.docs_dir,
+                state,
+                required_suffix=".md",
+                suffixes=_DOC_SUFFIXES,
+                excluded=_DOC_EXCLUDED_DIRS,
+            ),
+            self._scan_github(sources.github_dump, state, now or datetime.now(UTC)),
+        ]
+        if self._conn.in_transaction:
+            self._conn.commit()
+        return CitationScan(frozenset(state.cited), tuple(coverage))
+
+    def _scan_store(self, state: _ScanState) -> dict[str, Any]:
+        """Scan message text and the blobs of message-linked artifacts."""
+        state.sha_pattern = _CITE_SHA
+        records = 0
+        for row in self._conn.execute("SELECT body_inline, metadata_json FROM comms_messages"):
+            records += 1
+            for text in (row["body_inline"], row["metadata_json"]):
+                if text:
+                    state.feed(str(text).encode("utf-8"))
+        linked = self._conn.execute(
+            """SELECT sha256 FROM artifacts WHERE artifact_id IN (
+                   SELECT artifact_id FROM message_artifacts
+                   UNION SELECT body_artifact_id FROM comms_messages
+                         WHERE body_artifact_id IS NOT NULL)"""
+        ).fetchall()
+        files = scanned = missing = 0
+        for row in linked:
+            path = self.blob_path_for(str(row["sha256"]))
+            try:
+                with open(path, "rb") as handle:
+                    scanned += state.feed_stream(handle)
+            except FileNotFoundError:
+                missing += 1  # expired by retention: nothing left to cite from
+                continue
+            except OSError as exc:
+                raise ArtifactStoreError(f"citation scan cannot read blob {path}: {exc}") from exc
+            files += 1
+        return {
+            "source": "store",
+            "messages": records,
+            "blobs": files,
+            "blobs_missing": missing,
+            "bytes": scanned,
+        }
+
+    @staticmethod
+    def _scan_tree(
+        name: str,
+        root: Path,
+        state: _ScanState,
+        *,
+        required_suffix: str,
+        suffixes: frozenset[str] | None = None,
+        excluded: frozenset[str] = frozenset(),
+        sha_after_slash: bool = True,
+    ) -> dict[str, Any]:
+        """Scan every regular file under ``root`` end to end, or raise.
+
+        ``sha_after_slash=False`` ignores a digest that follows ``/`` (a path
+        listing), see ``_CITE_SHA_NOT_PATH``.
+        """
+        state.sha_pattern = _CITE_SHA if sha_after_slash else _CITE_SHA_NOT_PATH
+
+        def fail_walk(exc: OSError) -> None:
+            raise ArtifactStoreError(f"citation source {name}: cannot list {exc.filename}: {exc}")
+
+        root = Path(root)
+        if not root.is_dir():
+            raise ArtifactStoreError(f"citation source {name}: {root} is not a directory")
+        files = required = vanished = total = 0
+        digest = hashlib.sha256()
+        for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=fail_walk):
+            dirnames[:] = sorted(d for d in dirnames if d not in excluded)
+            for filename in sorted(filenames):
+                path = Path(dirpath) / filename
+                if suffixes is not None and path.suffix not in suffixes:
+                    continue
+                try:
+                    if not stat.S_ISREG(os.lstat(path).st_mode):
+                        continue
+                    with open(path, "rb") as handle:
+                        size = state.feed_stream(handle)
+                except FileNotFoundError:
+                    vanished += 1  # a live directory: removed between listing and open
+                    continue
+                except OSError as exc:
+                    raise ArtifactStoreError(
+                        f"citation source {name}: cannot read {path}: {exc}"
+                    ) from exc
+                files += 1
+                total += size
+                required += path.suffix == required_suffix
+                digest.update(f"{path.relative_to(root)}\0{size}\n".encode())
+        if required < 1:
+            raise ArtifactStoreError(
+                f"citation source {name}: {root} holds no {required_suffix} file; "
+                "refusing an empty or wrong tree"
+            )
+        return {
+            "source": name,
+            "path": str(root),
+            "files": files,
+            "bytes": total,
+            "vanished": vanished,
+            "digest": digest.hexdigest(),
+        }
+
+    @staticmethod
+    def _scan_github(path: Path, state: _ScanState, now: datetime) -> dict[str, Any]:
+        """Scan a GitHub dump: a ``.jsonl`` of one JSON object per line.
+
+        Line 1 is ``{"kind": "header", "fetched_at": "<ISO-Z>"}``, no older
+        than 24 hours. Then one record per line whose ``kind`` is ``issue``,
+        ``pull_request``, ``issue_comment`` or ``pr_review_comment``; each
+        kind must occur at least once. The last line is
+        ``{"kind": "footer", "records": N}`` with N the record count, which
+        exposes a truncated write. Any other line is a failure.
+        """
+        name = "github"
+        state.sha_pattern = _CITE_SHA
+        counts: dict[str, int] = {}
+        header: dict[str, Any] | None = None
+        footer: dict[str, Any] | None = None
+        total = 0
+        try:
+            handle = open(path, "rb")  # noqa: SIM115 - closed in the finally below
+        except OSError as exc:
+            raise ArtifactStoreError(f"citation source {name}: cannot open {path}: {exc}") from exc
+        try:
+            for number, line in enumerate(handle, 1):
+                total += len(line)
+                if not line.strip():
+                    continue
+                if footer is not None:
+                    raise ArtifactStoreError(f"citation source {name}: line {number} follows the footer")
+                try:
+                    record = json.loads(line)
+                except ValueError as exc:
+                    raise ArtifactStoreError(
+                        f"citation source {name}: line {number} is not JSON: {exc}"
+                    ) from exc
+                kind = record.get("kind") if isinstance(record, dict) else None
+                if header is None:
+                    if kind != "header":
+                        raise ArtifactStoreError(f"citation source {name}: first line is not the header")
+                    header = record
+                elif kind == "footer":
+                    footer = record
+                elif kind in GITHUB_DUMP_KINDS:
+                    counts[kind] = counts.get(kind, 0) + 1
+                    state.feed(line)
+                else:
+                    raise ArtifactStoreError(
+                        f"citation source {name}: line {number} has unknown kind {kind!r}"
+                    )
+        except OSError as exc:
+            raise ArtifactStoreError(f"citation source {name}: cannot read {path}: {exc}") from exc
+        finally:
+            handle.close()
+        if header is None or footer is None:
+            raise ArtifactStoreError(f"citation source {name}: header or footer missing (truncated?)")
+        try:
+            fetched = datetime.strptime(str(header.get("fetched_at")), "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=UTC
+            )
+        except ValueError as exc:
+            raise ArtifactStoreError(f"citation source {name}: header has no valid fetched_at") from exc
+        age = (now - fetched).total_seconds()
+        if age > GITHUB_DUMP_MAX_AGE_SECONDS or age < -300:
+            raise ArtifactStoreError(
+                f"citation source {name}: dump fetched_at {header['fetched_at']} is not within "
+                f"{GITHUB_DUMP_MAX_AGE_SECONDS // 3600} h of now"
+            )
+        missing = sorted(GITHUB_DUMP_KINDS - set(counts))
+        if missing:
+            raise ArtifactStoreError(f"citation source {name}: no records of kind {missing}")
+        if footer.get("records") != sum(counts.values()):
+            raise ArtifactStoreError(
+                f"citation source {name}: footer says {footer.get('records')} records, "
+                f"read {sum(counts.values())}"
+            )
+        return {
+            "source": name,
+            "path": str(path),
+            "records": dict(sorted(counts.items())),
+            "bytes": total,
+            "fetched_at": header["fetched_at"],
+        }
 
     # --- V4 canonical authority store (PR #7662 repair 6/7) ----------------
     #

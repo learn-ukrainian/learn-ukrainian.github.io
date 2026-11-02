@@ -74,8 +74,7 @@ closes the NO-GO: a pg metadata row can no longer point at a blob file that
 only exists on the writer's host — a second process with the DSN and no
 local `blobs/sha256/...` tree still reads bytes back correctly. Default
 authority stays sqlite (today's file-backed content-addressed store,
-unchanged). `reference` / `is_referenced` / `garbage_collect_unreferenced`
-remain sqlite-only in this slice (out of scope; they hang off the sqlite
+unchanged). `reference` / `is_referenced` remain sqlite-only in this slice (out of scope; they hang off the sqlite
 `comms_messages` / authority tables that don't exist under `pg` here).
 
 Authority efficiency metrics, backlog, and dead-letter collectors use the same

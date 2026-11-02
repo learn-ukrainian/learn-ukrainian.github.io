@@ -2,17 +2,22 @@
 
 from __future__ import annotations
 
+import json
 import os
 import time
 import uuid
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 from scripts.fleet_comms.artifacts import (
     MAX_ARTIFACT_BYTES,
+    ArtifactExpiredError,
     ArtifactStore,
     ArtifactStoreError,
+    CitationScan,
+    CitationSources,
 )
 
 pytestmark = pytest.mark.repo_invariant
@@ -38,33 +43,55 @@ def test_size_cap_rejects_before_storing(store: ArtifactStore) -> None:
     assert store._conn.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0] == 0
 
 
-def test_gc_commits_rows_before_unlinking(
-    store: ArtifactStore, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """#7484 (1.6): a crash during unlink must never leave rows pointing at
-    deleted bytes — rows are already committed gone; files become orphans."""
-    rec = store.store_bytes(_payload(), producer="t")
-    old = time.time() - 7200
-    os.utime(rec.blob_path, (old, old))
+def _age(store: ArtifactStore, artifact_id: str, created_at: str = "2000-01-01T00:00:00Z") -> None:
     store._conn.execute(
-        "UPDATE artifacts SET created_at = '2000-01-01T00:00:00Z' WHERE artifact_id = ?",
-        (rec.artifact_id,),
+        "UPDATE artifacts SET created_at = ? WHERE artifact_id = ?", (created_at, artifact_id)
     )
     store._conn.commit()
+
+
+_LATER = datetime.now(UTC) + timedelta(days=1)
+_NO_CITATIONS = CitationScan(frozenset(), ())
+
+
+def test_unreferenced_expiry_crash_keeps_rows_and_marker(
+    store: ArtifactStore, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#7484 (1.6), migrated to retention (#12574): a crash during the unlink
+    must never leave a row without bytes or without its marker. The row, its
+    digest and byte count are kept; a re-run finishes the removal."""
+    data = _payload()
+    rec = store.store_bytes(data, producer="t")
+    _age(store, rec.artifact_id)
 
     def crash_unlink(self, missing_ok=False):
         raise OSError("induced crash during unlink")
 
     monkeypatch.setattr(Path, "unlink", crash_unlink)
     with pytest.raises(OSError, match="induced crash"):
-        store.garbage_collect_unreferenced(grace_seconds=60)
+        store.expire_unreferenced_blobs(
+            citations=_NO_CITATIONS, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
+        )
     monkeypatch.undo()
-    # Rows are gone (committed before the unlink attempt)...
-    assert store._conn.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0] == 0
-    # ...the surviving file is an orphan the sweep reclaims.
+    row = store._conn.execute(
+        "SELECT sha256, bytes, retention_class FROM artifacts WHERE artifact_id = ?",
+        (rec.artifact_id,),
+    ).fetchone()
+    assert (row["sha256"], row["bytes"], row["retention_class"]) == (
+        rec.sha256,
+        rec.bytes,
+        "expired:default",
+    )
     assert rec.blob_path.is_file()
-    assert store.reclaim_orphan_blobs(grace_seconds=60) == [rec.sha256]
+    report = store.expire_unreferenced_blobs(
+        citations=_NO_CITATIONS, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
+    )
+    assert (report.removed, report.removed_bytes) == (1, rec.bytes)
     assert not rec.blob_path.is_file()
+    assert store.get(rec.artifact_id).sha256 == rec.sha256
+    assert (tmp_path / "backup" / rec.sha256[:2] / rec.sha256).read_bytes() == data
+    with pytest.raises(ArtifactExpiredError):
+        store.read_bytes(rec.artifact_id)
 
 
 def test_orphan_sweep_respects_grace(store: ArtifactStore) -> None:
@@ -230,3 +257,193 @@ def test_acknowledgment_racing_retention_refuses_expired_marker(tmp_path: Path, 
         assert boundary.begins == 2
         assert report.removed == 1
         assert not store.get(done.body_artifact_id).blob_path.is_file()
+
+
+def test_unreferenced_blob_in_window_referenced_or_pinned_is_never_removed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#12574 T1 (CTO-approved). Defect class: retention removes an
+    unreferenced blob that is inside the window, newly referenced between the
+    two expiry phases, or in a pinned or unknown class. The old, unreferenced,
+    allow-listed control loses only its blob; its row, digest and size stay."""
+    window_edge = (_LATER - timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    with ArtifactStore(root=tmp_path / "plane") as store:
+        old = store.store_bytes(_payload(), producer="t")
+        fresh = store.store_bytes(_payload(), producer="t")
+        pinned = store.store_bytes(_payload(), producer="t", retention_class="retained-evidence")
+        unknown = store.store_bytes(_payload(), producer="t", retention_class="mystery-class")
+        for rec in (old, pinned, unknown):
+            _age(store, rec.artifact_id)
+        _age(store, fresh.artifact_id, window_edge)
+
+        report = store.expire_unreferenced_blobs(
+            citations=_NO_CITATIONS, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
+        )
+
+        assert (report.candidates, report.removed, report.held_cited) == (1, 1, 0)
+        assert not old.blob_path.is_file()
+        assert store.get(old.artifact_id).retention_class == "expired:default"
+        assert (store.get(old.artifact_id).sha256, store.get(old.artifact_id).bytes) == (old.sha256, old.bytes)
+        for kept in (fresh, pinned, unknown):
+            assert kept.blob_path.is_file()
+            assert not store.get(kept.artifact_id).retention_class.startswith("expired:")
+        with pytest.raises(ArtifactExpiredError):
+            store.read_bytes(old.artifact_id)
+
+    with ArtifactStore(root=tmp_path / "plane2") as store:
+        racer = store.store_bytes(_payload(), producer="t")
+        _age(store, racer.artifact_id)
+        connection = store._conn
+
+        class BetweenPhases:
+            begins = 0
+
+            def __getattr__(self, name):
+                return getattr(connection, name)
+
+            def execute(self, sql, *args):
+                if sql == "BEGIN IMMEDIATE":
+                    self.begins += 1
+                    if self.begins == 2:
+                        # Phase 1 has marked and committed; phase 2 has not locked.
+                        assert store.get(racer.artifact_id).retention_class == "expired:default"
+                        store.reference("message_racer", racer.artifact_id)
+                return connection.execute(sql, *args)
+
+        boundary = BetweenPhases()
+        monkeypatch.setattr(store, "_conn", boundary)
+        report = store.expire_unreferenced_blobs(
+            citations=_NO_CITATIONS, apply=True, now=_LATER, backup_dir=tmp_path / "backup2"
+        )
+        assert boundary.begins == 2
+        assert (report.removed, report.skipped_changed) == (0, 1)
+        assert racer.blob_path.is_file()
+        assert store.get(racer.artifact_id).retention_class == "default"
+
+
+@pytest.mark.parametrize(
+    ("table", "column"),
+    [
+        ("comms_messages", "body_artifact_id"),
+        ("formal_review_jobs", "snapshot_artifact_id"),
+        ("formal_review_jobs", "sealed_verdict_artifact_id"),
+        ("formal_review_attempts", "raw_capture_artifact_id"),
+    ],
+)
+def test_artifact_named_only_by_one_reference_column_is_referenced_and_kept(
+    tmp_path: Path, table: str, column: str
+) -> None:
+    """#12574 T2 (CTO-approved). Defect class: deleting an artifact named only
+    by one formal-review column (or the message body column), which the old
+    ``is_referenced`` missed. Each column alone must keep the artifact."""
+    with ArtifactStore(root=tmp_path / "plane") as store:
+        rec = store.store_bytes(_payload(), producer="t")
+        _age(store, rec.artifact_id)
+        control = store.store_bytes(_payload(), producer="t")
+        _age(store, control.artifact_id)
+        connection = store._conn
+        connection.execute("PRAGMA foreign_keys = OFF")
+        columns, values = [], []
+        for _cid, name, kind, notnull, default, pk in connection.execute(f"PRAGMA table_info('{table}')"):
+            if name == column:
+                columns.append(name)
+                values.append(rec.artifact_id)
+            elif (notnull and default is None) or pk:
+                columns.append(name)
+                values.append(0 if "INT" in kind.upper() else f"{table}-{name}")
+        connection.execute(
+            f"INSERT INTO {table}({', '.join(columns)}) VALUES({', '.join('?' * len(values))})", values
+        )
+        connection.commit()
+
+        assert store.is_referenced(rec.artifact_id)
+        assert not store.is_referenced(control.artifact_id)
+        report = store.expire_unreferenced_blobs(
+            citations=_NO_CITATIONS, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
+        )
+
+        assert (report.candidates, report.removed) == (1, 1)
+        assert rec.blob_path.is_file()
+        assert not control.blob_path.is_file()
+
+
+def _sources(
+    tmp_path: Path,
+    *,
+    cite_in_github: str = "",
+    cite_in_tasks: str = "",
+    fetched_at: datetime | None = None,
+    kinds: tuple[str, ...] = ("issue", "pull_request", "issue_comment", "pr_review_comment"),
+    footer: int | None = None,
+) -> CitationSources:
+    tasks, docs = tmp_path / "tasks", tmp_path / "docs"
+    tasks.mkdir(parents=True)
+    docs.mkdir()
+    (tasks / "task.json").write_text(json.dumps({"note": cite_in_tasks}))
+    (docs / "readme.md").write_text("no citation here\n")
+    stamp = (fetched_at or datetime.now(UTC)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    lines = [{"kind": "header", "fetched_at": stamp}]
+    lines += [{"kind": kind, "body": cite_in_github if kind == "issue" else ""} for kind in kinds]
+    lines.append({"kind": "footer", "records": len(kinds) if footer is None else footer})
+    dump = tmp_path / "github.jsonl"
+    dump.write_text("".join(json.dumps(line) + "\n" for line in lines))
+    return CitationSources(tasks_dir=tasks, docs_dir=docs, github_dump=dump)
+
+
+def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(tmp_path: Path) -> None:
+    """#12574 T3 (CTO-approved). Defect class: the unreferenced rule starts or
+    removes with a missing, empty, stale, incomplete or unreadable citation
+    source, or removes a cited artifact."""
+    with ArtifactStore(root=tmp_path / "plane") as store:
+        by_id = store.store_bytes(_payload(), producer="t")
+        by_sha = store.store_bytes(_payload(), producer="t")
+        uncited = store.store_bytes(_payload(), producer="t")
+        for rec in (by_id, by_sha, uncited):
+            _age(store, rec.artifact_id)
+        now = datetime.now(UTC)
+
+        def refuses(sources: CitationSources, match: str) -> None:
+            with pytest.raises(ArtifactStoreError, match=match):
+                store.scan_citations(sources, now=now)
+            assert all(r.blob_path.is_file() for r in (by_id, by_sha, uncited))
+
+        good = _sources(
+            tmp_path / "good",
+            cite_in_github=f"see {by_id.artifact_id}",
+            # A bare digest cites; a digest in a blob path listing (a checkout
+            # snapshot) does not, so the uncited control is still removed.
+            cite_in_tasks=f"{by_sha.sha256} blobs/sha256/{uncited.sha256[:2]}/{uncited.sha256}",
+        )
+        empty = _sources(tmp_path / "empty")
+        for jsonfile in empty.tasks_dir.glob("*.json"):
+            jsonfile.unlink()
+        refuses(empty, "no .json file")
+        nodocs = _sources(tmp_path / "nodocs")
+        (nodocs.docs_dir / "readme.md").unlink()
+        refuses(nodocs, "no .md file")
+        refuses(_sources(tmp_path / "missingkind", kinds=("issue", "pull_request", "issue_comment")), "no records of kind")
+        refuses(_sources(tmp_path / "stale", fetched_at=now - timedelta(hours=25)), "not within 24 h")
+        refuses(_sources(tmp_path / "badfooter", footer=2), "footer says")
+        truncated = _sources(tmp_path / "truncated")
+        text = truncated.github_dump.read_text().splitlines(keepends=True)
+        truncated.github_dump.write_text("".join(text[:-1]))
+        refuses(truncated, "header or footer missing")
+        missing = _sources(tmp_path / "gone")
+        missing.github_dump.unlink()
+        refuses(missing, "cannot open")
+        if os.geteuid() != 0:
+            locked = _sources(tmp_path / "locked")
+            (locked.tasks_dir / "secret.json").write_text("{}")
+            (locked.tasks_dir / "secret.json").chmod(0)
+            refuses(locked, "cannot read")
+
+        scan = store.scan_citations(good, now=now)
+        assert scan.cited == frozenset({by_id.artifact_id, by_sha.artifact_id})
+        report = store.expire_unreferenced_blobs(
+            citations=scan, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
+        )
+        assert (report.candidates, report.removed, report.held_cited) == (1, 1, 2)
+        assert {entry["source"] for entry in report.sources} == {"store", "tasks", "docs", "github"}
+        assert by_id.blob_path.is_file() and by_sha.blob_path.is_file()
+        assert not uncited.blob_path.is_file()
+        assert store.read_bytes(by_id.artifact_id)
