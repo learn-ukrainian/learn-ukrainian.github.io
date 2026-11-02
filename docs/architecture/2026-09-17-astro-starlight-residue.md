@@ -131,7 +131,7 @@ the configuration silently does nothing.
 | `site/tests/unit/HashTabSync.test.tsx:20-26` | Fixture builds a `<starlight-tabs>` element that the shim never renders. See U1. |
 | `site/tests/unit/build-renders.test.ts:119-135` | Title says "renders Starlight tabs". The `not.toContain('starlight-tab-item')` assertion is still a valid raw-marker guard, but the test returns early because `a1/weather` is no longer published, so it asserts nothing today. |
 | `tests/workflow/scenarios/b2-hist-m41-full-pipeline.md:138`, `tests/workflow/specs/b2-hist-m41-full-pipeline.yaml:44` | Expected output `docusaurus/docs/hist/…`. |
-| `scripts/debug/debug_module_json.js:5`, `scripts/legacy/typescript/generate-mdx.ts`, `scripts/assets/scripts-deprecated/README.md` | Docusaurus-era legacy code, already in `legacy`/`deprecated` trees. Archive-or-delete decision belongs to #5540, not here. |
+| `scripts/debug/debug_module_json.js:5` | Docusaurus-era legacy code. Archive-or-delete decision belongs to #5540, not here. (Two further legacy trees listed here earlier were deleted in #12532.) |
 
 ### Class 1 — stale current documentation
 
