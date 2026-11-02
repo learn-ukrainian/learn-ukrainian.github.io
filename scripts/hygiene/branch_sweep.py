@@ -2024,36 +2024,49 @@ def _bulk_archive_dir(resolution: storage_topology.BulkRootResolution, *, create
         raise RuntimeError(f"bulk root unavailable ({resolution.reason}); nothing was changed")
     directory = resolution.path / BULK_ARCHIVE_DIR
     if create:
-        with contextlib.suppress(FileExistsError):
+        try:
             os.mkdir(directory, 0o700)
+        except FileExistsError:
+            pass
+        else:
+            _fsync_path(resolution.path, directory=True)
     info = os.lstat(directory)
     if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
         raise RuntimeError("bulk branch-archive path is not a plain directory")
     return directory
 
 
-def _copy_no_replace(source: Path, destination: Path) -> None:
-    """Stream ``source`` to a private temporary name beside ``destination``, flush, then publish.
+def _fsync_path(path: Path, *, directory: bool = False) -> None:
+    """Flush a file or a directory entry to disk. A failure propagates, so the caller keeps the local bundle."""
+    flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | (os.O_DIRECTORY if directory else 0)
+    descriptor = os.open(path, flags)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
 
-    The caller holds the archive lock and has seen ``destination`` absent.
+
+def _copy_no_replace(source: Path, destination: Path) -> None:
+    """Create ``destination`` exclusively, stream ``source`` into it, then flush the file and its directory.
+
+    ``O_EXCL`` makes an existing name, from any writer, a refusal instead of a replacement, and works on
+    network filesystems that cannot hard link. Our own partial file is removed on failure. A crash can leave
+    one behind: the next run sees a different sha256 and keeps the local bundle.
     """
-    temporary = destination.with_name(f".{destination.name}.{os.getpid()}.tmp")
     src = os.open(source, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
     try:
-        dst = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
+        dst = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
         try:
             while chunk := os.read(src, 1024 * 1024):
                 _write_all(dst, chunk)
             os.fsync(dst)
-        finally:
+        except BaseException:
             os.close(dst)
-        if os.path.lexists(destination):
-            raise RuntimeError("bulk destination appeared during the copy; refusing to replace it")
-        os.rename(temporary, destination)
-    except BaseException:
-        with contextlib.suppress(FileNotFoundError):
-            os.unlink(temporary)
-        raise
+            with contextlib.suppress(FileNotFoundError):
+                os.unlink(destination)
+            raise
+        os.close(dst)
+        _fsync_path(destination.parent, directory=True)
     finally:
         os.close(src)
 
@@ -2068,10 +2081,13 @@ def _relocation_records(repo: Path) -> list[dict[str, object]]:
 
 def _record_relocation(repo: Path, name: str, checksum: str, size: int, source: str) -> None:
     """Append the relocation record and re-read it. No local file goes before this is durable."""
+    path = _controlled_file(repo, RECEIPT_PATH, refusal="archive path contains a symlink")
     for row in _relocation_records(repo):
         if row.get("bundle") == name and row.get("sha256") == checksum:
+            # An earlier run may have failed to flush this line. Flush it before the caller unlinks.
+            _fsync_path(path)
+            _fsync_path(path.parent, directory=True)
             return
-    path = _controlled_file(repo, RECEIPT_PATH, refusal="archive path contains a symlink")
     offset = os.lstat(path).st_size if os.path.lexists(path) else 0
     payload: dict[str, object] = {
         "at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -2106,10 +2122,18 @@ def _age_out_one(
     checksum = _bundle_sha256(path)
     destination = bulk_directory / name
     if os.path.lexists(destination):
-        if stat.S_ISLNK(os.lstat(destination).st_mode) or _bundle_sha256(destination) != checksum:
+        copy = os.lstat(destination)
+        if os.path.samestat(copy, child) or os.path.samestat(os.lstat(bulk_directory), os.lstat(path.parent)):
+            return AgeOutResult(
+                relative, "retained", "bulk destination is the local bundle itself; kept local", age_days, child.st_size
+            )
+        if stat.S_ISLNK(copy.st_mode) or _bundle_sha256(destination) != checksum:
             return AgeOutResult(
                 relative, "retained", "bulk copy exists with different content; kept local", age_days, child.st_size
             )
+        # A copy left by an earlier run may not have been flushed. Flush it before trusting it.
+        _fsync_path(destination)
+        _fsync_path(bulk_directory, directory=True)
     else:
         _copy_no_replace(path, destination)
     if _bundle_sha256(destination) != checksum or os.lstat(destination).st_size != child.st_size:
