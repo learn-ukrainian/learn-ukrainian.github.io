@@ -22,9 +22,8 @@
 # - Failovers are never silent: the runner emits the
 #   AGENT_RUNTIME_FAILOVER_SUBSTITUTION marker and persists the substitution
 #   in the usage record + telemetry event.
-# - After editing a chain, re-validate with a live forced-failure probe
-#   (scripts/agent_runtime/probe_fallback.py) against an isolated
-#   HERMES_HOME, with AGENT_RUNTIME_FAILOVER_CONFIG and
+# - After editing a chain, re-validate with the runner failover tests,
+#   with AGENT_RUNTIME_FAILOVER_CONFIG and
 #   AGENT_RUNTIME_FAILOVER_COOLDOWN_DB pointed at throwaway copies — never
 #   the live cooldown DB.
 #
@@ -42,6 +41,6 @@
 # so no chains are declared. On a lane fault the ORCHESTRATOR reroutes BY
 # SEAT per model-assignment.md (review stall -> the next resolve-reviewer pick,
 # including attested native or Cursor Grok, #9769; deepseek fault -> grok/codex), never by silently burning API credit.
-# The chain machinery itself stays (tests + probe cover it) for any future
+# The chain machinery itself stays (tests cover it) for any future
 # chain the user explicitly approves.
 chains: {}

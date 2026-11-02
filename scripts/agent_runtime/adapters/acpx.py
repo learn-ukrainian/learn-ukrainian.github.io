@@ -141,7 +141,6 @@ ACPX_CLI_COMPATIBILITY_CONTRACT = "json-one-shot-v1"
 CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT = "installed>=0.64.2<1"
 AGY_CLI_COMPATIBILITY_CONTRACT = "text-plan-sandbox-v1"
 OPENCODE_CLI_COMPATIBILITY_CONTRACT = "native-acp-pure-v1"
-HERMES_CLI_COMPATIBILITY_CONTRACT = "text-oneshot-isolated-v1"
 # Sealed reviewers retain their deliberately constrained baseline unless their
 # adapter derives a reviewed evidence-reading budget. Ordinary advisory asks
 # need enough turns for a model to consult and return a complete response.
@@ -179,12 +178,6 @@ _AGY_REQUIRED_FLAGS: tuple[str, ...] = (
     "--log-file",
 )
 _OPENCODE_REQUIRED_ACP_FLAGS: tuple[str, ...] = ("--pure",)
-_HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
-    "--ignore-rules",
-    "--oneshot",
-    "--model",
-    "--provider",
-)
 AGY_ACP_MODEL = "gemini-3.8-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
 # Opus 5.5 is the Claude authority pin for advice and review; Fable holds no
@@ -234,7 +227,6 @@ _ACPX_BINARY = _DEFAULT_ACPX_BINARY
 _NODE_HOST_BIN_DIRS = (
     Path("/opt/homebrew/bin"),
     Path("/usr/local/bin"),
-    Path.home() / ".hermes" / "node" / "bin",
 )
 # ``node --version`` prints a single line like ``v22.23.2``.
 _NODE_VERSION_LINE_RE = re.compile(r"^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:[-+][0-9A-Za-z.-]+)?$")
@@ -244,7 +236,7 @@ _CLAUDE_ACP_MAX_VERSION = (1, 0, 0)
 _CLAUDE_ACP_MANIFEST_LIMIT_BYTES = 64 * 1024
 _STRICT_SEMVER_RE = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
 _TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
-_TEXT_AGENT_SHA256 = "9c3cb3868496dcebaa774191d71cabe1642b836eb6fc002d62a26798638bddee"
+_TEXT_AGENT_SHA256 = "9e594e4fc448198f696a6b51162533d30929e70ed0b5e36a21313f0fe3360ced"
 _OPENCODE_DENY_ALL_CONFIG = json.dumps(
     {"permission": {"*": "deny"}, "tools": {"*": False}},
     separators=(",", ":"),
@@ -670,7 +662,7 @@ ACPX_TOOL_CALL_LIMIT = 2048
 
 # Leaked provider tool syntax is not an answer. Match complete outer blocks,
 # rather than searching for tokens that legitimate prose may quote. XML-like
-# formats cover DeepSeek DSML, Claude antml, and GLM/Hermes; special-token
+# formats cover DeepSeek DSML, Claude antml, and GLM; special-token
 # formats cover Kimi, Gemma, and DeepSeek's earlier tool-call encoding.
 _TOOL_CALL_MARKUP = re.compile(
     r"<(?P<xml_tag>｜DSML｜(?:function_calls|tool_calls|invoke)"
@@ -1096,7 +1088,7 @@ def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
         raise AcpxShadowRefusalError(
             f"{adapter_label}: no Node {required_major}.x binary found on PATH or "
             f"fixed host install locations (Homebrew node@{required_major} keg, "
-            "/opt/homebrew/bin, /usr/local/bin, ~/.hermes/node/bin); each candidate "
+            "/opt/homebrew/bin, /usr/local/bin); each candidate "
             "must report a Node semver via --version matching .nvmrc "
             f"(required major {required_major}); required by the project-local acpx "
             "``#!/usr/bin/env node`` shim (#6953)",
@@ -2637,7 +2629,6 @@ def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
 _PROVIDER_VERSION_PATTERNS = {
     "agy": re.compile(r"^\s*(\d+\.\d+\.\d+)\s*$", re.MULTILINE),
     "opencode": re.compile(r"^\s*(\d+\.\d+\.\d+)\s*$", re.MULTILINE),
-    "hermes": re.compile(r"^\s*Hermes Agent v(\d+\.\d+\.\d+)(?:\s|$)", re.MULTILINE),
 }
 
 
@@ -2676,10 +2667,6 @@ def _probe_participant_cli_compatibility(
         help_text = _probe_cli_help(binary, "acp")
         required = _OPENCODE_REQUIRED_ACP_FLAGS
         label = "acp"
-    elif executable == "hermes":
-        help_text = _probe_cli_help(binary)
-        required = _HERMES_REQUIRED_FLAGS
-        label = "root help"
     else:  # pragma: no cover - internal callers pass the closed set above
         return version, ("unsupported executable",)
     if not help_text:
@@ -2690,7 +2677,6 @@ def _probe_participant_cli_compatibility(
 _PARTICIPANT_COMPATIBILITY_CONTRACTS = {
     "agy": AGY_CLI_COMPATIBILITY_CONTRACT,
     "opencode": OPENCODE_CLI_COMPATIBILITY_CONTRACT,
-    "hermes": HERMES_CLI_COMPATIBILITY_CONTRACT,
 }
 
 # Actionable remediation for a missing provider CLI (#6805): a bare "not found
@@ -2699,24 +2685,6 @@ _PARTICIPANT_COMPATIBILITY_CONTRACTS = {
 # and the documented fallback substitution so the caller can degrade instead
 # of dying.
 _MISSING_BINARY_REMEDIATION: dict[str, str] = {
-    # Hermes is permanently removed from this host (operator order
-    # 2026-08-16) — there is no reinstall path. The DeepSeek seat routes
-    # first-party via opencode: bridge asks use `ask-deepseek` (or the
-    # `ask-hermes` alias) on the acpx-deepseek-shadow ACP seat; direct
-    # one-shot review/research runs `opencode run --model
-    # deepseek/deepseek-flash --variant high`; tool-heavy work goes
-    # to `scripts/dispatch.py dispatch --agent deepseek --model deepseek/deepseek-flash`.
-    "hermes": (
-        "Remediation: Hermes was permanently removed from this host "
-        "(operator order 2026-08-16) — do not reinstall. The DeepSeek seat "
-        "routes first-party via opencode as the standing path: bridge asks "
-        "use `ask-deepseek` (or the `ask-hermes` alias), direct one-shot "
-        "review/research runs `opencode run --model "
-        "deepseek/deepseek-flash --variant high`, and tool-heavy "
-        "work goes to `scripts/dispatch.py dispatch --agent deepseek --model deepseek/deepseek-flash`. See "
-        "docs/runbooks/agent-seat-onboarding.md 'Reviewer-seat transport "
-        "recovery'."
-    ),
     "opencode": (
         "Remediation: reinstall the opencode CLI on this host and verify "
         "`opencode --version`; see docs/runbooks/agent-seat-onboarding.md "
@@ -2733,7 +2701,7 @@ _MISSING_BINARY_REMEDIATION: dict[str, str] = {
 # Seats reached through an ACPX built-in (codex/grok/claude/kimi/cursor/pool)
 # resolve no external provider binary here and are not probed by this map.
 # DeepSeek rides the same native ``opencode acp --pure`` transport as GLM and
-# Gemma since the Hermes removal (operator order 2026-08-16, #6805).
+# Gemma.
 _PARTICIPANT_PROVIDER_BINARIES: dict[str, str] = {
     "agy": "agy",
     "glm": "opencode",
@@ -3858,9 +3826,7 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
     """Native OpenCode ACP participant pinned to first-party DeepSeek (#6805).
 
     Same confined shape as the GLM seat (``opencode acp --pure`` with the
-    deny-all OpenCode config). The previous Hermes text-agent route is
-    retired: Hermes was permanently removed from this host (operator order
-    2026-08-16) and the documented standing route is first-party
+    deny-all OpenCode config). The documented standing route is first-party
     ``deepseek/deepseek-flash --variant high`` via opencode.
     First-party DeepSeek is China-hosted, so CI runs are refused — same
     guard as the dispatch adapter.

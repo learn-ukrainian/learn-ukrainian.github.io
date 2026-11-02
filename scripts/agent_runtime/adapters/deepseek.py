@@ -1,15 +1,14 @@
 """DeepSeekAdapter — wraps opencode CLI for first-party DeepSeek (deepseek).
 
 Operator 2026-08-13: DeepSeek dispatch routes through OpenCode to first-party
-``api.deepseek.com`` with ``--variant high`` by default, replacing the Hermes
-dispatch default so runs get native Entire capture. ``deepseek-v4.1-flash`` is
-the default. Superseded Pro and Flash pins are retired and refused before
-invocation; historical records retain their original identities. The first-party
-OpenCode alias is ``deepseek/deepseek-flash``. The Hermes adapter remains
-available for legacy bridge compatibility.
+``api.deepseek.com`` with ``--variant high`` by default so runs get native
+Entire capture. ``deepseek-v4.1-flash`` is the default. Superseded Pro and
+Flash pins are retired and refused before invocation; historical records
+retain their original identities. The first-party OpenCode alias is
+``deepseek/deepseek-flash``.
 
-LOCAL-ONLY: prompt data egresses to China — forbidden in CI (same guard as
-the Hermes route, via ``scripts.agent_runtime.routes``).
+LOCAL-ONLY: prompt data egresses to China — forbidden in CI (guard in
+``scripts.agent_runtime.routes``).
 """
 
 from __future__ import annotations
