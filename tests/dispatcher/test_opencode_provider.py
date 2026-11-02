@@ -5,19 +5,18 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import replace
-from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-import yaml
 
 from scripts.api import subscription_usage as usage
 from scripts.dispatcher import checks, cli, git, store, worker
 from scripts.dispatcher.providers import opencode
 from scripts.dispatcher.types import TaskSpec
 
-CATALOG = Path(__file__).resolve().parents[2] / "scripts" / "config" / "model_catalog.yaml"
+OPENROUTER_MODEL = "openrouter/deepseek/deepseek-v4.1-flash"
+US_PROVIDERS = ["fireworks/us", "baseten/us", "inference-net/us"]  # CTO allow-list, model-assignment.md
 
 
 @pytest.fixture
@@ -77,16 +76,15 @@ def dispatch(tmp_path, monkeypatch):
 
 
 def test_openrouter_build_pins_v41_flash_and_allow_list(spec, funded, dispatch):
-    entry = yaml.safe_load(CATALOG.read_text(encoding="utf-8"))["models"]["deepseek-v4.1-flash"]
     invocation = opencode.build(replace(spec, provider="openrouter"), {})
     argv = invocation.argv
-    assert argv[argv.index("--model") + 1] == entry["openrouter_alias"] == "openrouter/deepseek/deepseek-v4.1-flash"
+    assert argv[argv.index("--model") + 1] == OPENROUTER_MODEL
     config = json.loads(invocation.env["OPENCODE_CONFIG_CONTENT"])
-    assert config["small_model"] == entry["openrouter_alias"]  # the title call never reaches another model
+    assert config["small_model"] == OPENROUTER_MODEL  # the title call never reaches another model
     models = config["provider"]["openrouter"]["models"]
     assert list(models) == ["deepseek/deepseek-v4.1-flash"]
     routing = models["deepseek/deepseek-v4.1-flash"]["options"]["provider"]
-    assert routing == {"only": entry["openrouter_providers"], "allow_fallbacks": False, "data_collection": "deny"}
+    assert routing == {"only": US_PROVIDERS, "allow_fallbacks": False, "data_collection": "deny"}
     assert json.loads(invocation.env["OPENCODE_PERMISSION"])["edit"] == "deny"  # read-only lock unchanged
     assert dispatch("--provider", "openrouter")["provider"] == "openrouter"
 
