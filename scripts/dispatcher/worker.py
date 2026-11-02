@@ -493,6 +493,8 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
 SETTLE_PATIENCE = 10
 # Extra fallback scans, 0.2 s apart, before an unreadable one keeps the worktree.
 FALLBACK_SCAN_RETRIES = 10
+# Ancestry walks of one candidate, restarted when an ancestor exits during the walk.
+ANCESTRY_ATTEMPTS = 5
 
 
 def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
@@ -542,12 +544,33 @@ def _is_own_descendant(pid: int) -> bool:
 
     A client that inherited the task's marker, or a task this one dispatched, is not the task's descendant.
     ``stop_leftovers`` asks this of each candidate as it is listed and again after its pidfd is open, so a
-    process that appears mid-stop is judged at that moment.
+    process that appears mid-stop is judged at that moment. An ancestor that exits during the walk has just
+    reparented the candidate to the supervisor, so the walk starts again; ancestry that stays unresolved or
+    unreadable raises ``ScanUnknown`` (the stop is then not ok) and is never read as "not a descendant".
     """
-    try:
-        return any(parent.pid == os.getpid() for parent in psutil.Process(pid).parents())
-    except psutil.Error:
-        return False
+    from scripts.orchestration import worker_leftovers
+
+    me = os.getpid()
+    for _ in range(ANCESTRY_ATTEMPTS):
+        current, settled = pid, True
+        for _ in range(64):
+            try:
+                parent = psutil.Process(current).ppid()
+            except psutil.NoSuchProcess:
+                if current == pid:
+                    return False  # the candidate itself has exited
+                settled = False
+                break
+            except psutil.Error as exc:
+                raise worker_leftovers.ScanUnknown(f"ancestry of {pid} unreadable: {exc}") from None
+            if parent == me:
+                return True
+            if parent <= 1:
+                return False
+            current = parent
+        if settled:
+            return False
+    raise worker_leftovers.ScanUnknown(f"ancestry of {pid} kept changing")
 
 
 def _stop_fallback_tree(task_id: str, nonce: str):

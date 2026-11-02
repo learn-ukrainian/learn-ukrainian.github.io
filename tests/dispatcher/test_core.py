@@ -1754,6 +1754,36 @@ def test_stop_never_signals_a_marked_non_descendant_that_appears_mid_stop():
         child.wait(timeout=30)
 
 
+def test_unresolved_ancestry_is_unknown_never_a_non_descendant(monkeypatch):
+    """Defect (#12520, review F5): an ancestor that exits mid-walk, or an unreadable ancestry, hid a live
+    descendant from the sweep as if it were a stranger."""
+    from scripts.orchestration import worker_leftovers
+
+    me = os.getpid()
+    parents = {5_000_001: 5_000_002, 5_000_002: me}  # a sleeper whose parent is a provider the supervisor adopts
+    calls = []
+
+    class Process:
+        def __init__(self, pid):
+            self.pid = pid
+
+        def ppid(self):
+            calls.append(self.pid)
+            if self.pid == 5_000_002 and calls.count(5_000_002) == 1:
+                raise worker.psutil.NoSuchProcess(self.pid)  # the provider exits mid-walk; the sleeper reparents
+            if self.pid == 5_000_001 and 5_000_002 in calls:
+                return me
+            if self.pid == 9_000_001:
+                raise worker.psutil.AccessDenied(self.pid)
+            return parents.get(self.pid, 1)
+
+    monkeypatch.setattr(worker.psutil, "Process", Process)
+    assert worker._is_own_descendant(5_000_001) is True
+    assert worker._is_own_descendant(5_000_777) is False  # a proven stranger: its parent is init
+    with pytest.raises(worker_leftovers.ScanUnknown):
+        worker._is_own_descendant(9_000_001)
+
+
 @pytest.mark.parametrize("libc", [SimpleNamespace(prctl=lambda *_args: -1), SimpleNamespace()],
                          ids=["refused", "unavailable"])
 def test_fallback_run_fails_before_any_provider_when_orphan_adoption_fails(sandbox, monkeypatch, libc):
