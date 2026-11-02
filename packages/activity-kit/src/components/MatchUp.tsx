@@ -105,8 +105,9 @@ export default function MatchUp({
   disabled = false,
 }: MatchUpProps) {
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
-  const [matched, setMatched] = useState<Set<number>>(new Set());
-  const matchedRef = useRef<Set<number>>(new Set());
+  const [matched, setMatched] = useState<Map<number, number>>(new Map());
+  const matchedRef = useRef<Map<number, number>>(new Map());
+  const matchedRight = new Map(Array.from(matched, ([left, right]) => [right, left]));
   const [matchedOrder, setMatchedOrder] = useState<Map<number, number>>(new Map());
   const matchedOrderRef = useRef<Map<number, number>>(new Map());
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
@@ -120,8 +121,8 @@ export default function MatchUp({
   // Reset state when pairs change (attempt counting resets between boards)
   useEffect(() => {
     setSelectedLeft(null);
-    setMatched(new Set());
-    matchedRef.current = new Set();
+    setMatched(new Map());
+    matchedRef.current = new Map();
     setMatchedOrder(new Map());
     matchedOrderRef.current = new Map();
     setWrongPair(null);
@@ -132,8 +133,8 @@ export default function MatchUp({
   }, [pairs]);
 
   // Right side: fresh random order after hydration (and whenever the board
-  // resets for new pairs). Entries carry their authored pair index, so matching
-  // still compares against the original pair.
+  // resets for new pairs). Entries carry their authored pair index to identify
+  // each individual right tile, including tiles with identical labels.
   const rightEntries = useMemo(
     () => pairs.map((pair, originalIndex) => ({ right: pair.right, originalIndex })),
     [pairs],
@@ -152,20 +153,26 @@ export default function MatchUp({
   };
 
   const handleRightClick = (originalIndex: number) => {
-    if (disabled || selectedLeft === null || matchedRef.current.has(originalIndex) || wrongPair)
+    if (
+      disabled ||
+      selectedLeft === null ||
+      matchedRef.current.has(selectedLeft) ||
+      Array.from(matchedRef.current.values()).includes(originalIndex) ||
+      wrongPair
+    )
       return;
 
-    if (selectedLeft === originalIndex) {
+    if (pairs[selectedLeft].right === pairs[originalIndex].right) {
       // Correct match
-      matchedRef.current.add(originalIndex);
+      matchedRef.current.set(selectedLeft, originalIndex);
       const nextOrder = matchedRef.current.size;
-      matchedOrderRef.current = new Map(matchedOrderRef.current).set(originalIndex, nextOrder);
+      matchedOrderRef.current = new Map(matchedOrderRef.current).set(selectedLeft, nextOrder);
 
       const currentMisses = misses[selectedLeft] || 0;
       const rating = currentMisses === 0 ? 'good' : currentMisses === 1 ? 'hard' : 'again';
       onMatch?.(selectedLeft, rating);
 
-      setMatched(new Set(matchedRef.current));
+      setMatched(new Map(matchedRef.current));
       setMatchedOrder(new Map(matchedOrderRef.current));
       setSelectedLeft(null);
       setWrongPairWhy(undefined);
@@ -206,10 +213,12 @@ export default function MatchUp({
     originalIndex: number,
     side: 'left' | 'right',
   ): string | undefined => {
-    if (matchedPairCoding !== 'semantic-four' || !matched.has(originalIndex)) return undefined;
-    const pair = pairs[originalIndex];
+    const leftIndex = side === 'left' ? originalIndex : matchedRight.get(originalIndex);
+    if (matchedPairCoding !== 'semantic-four' || leftIndex === undefined || !matched.has(leftIndex))
+      return undefined;
+    const pair = pairs[leftIndex];
     if (!pair) return undefined;
-    const order = matchedOrder.get(originalIndex);
+    const order = matchedOrder.get(leftIndex);
     const tag = order ? circledNumber(order) : '';
     const partner = side === 'left' ? pair.right : pair.left;
     if (isUkrainian) {
@@ -322,45 +331,43 @@ export default function MatchUp({
           ))}
         </div>
         <div className="matchColumn" data-activity="match-right-column">
-          {shuffledRight.map((originalIndex, displayIndex) => (
-            <button
-              key={`right-${displayIndex}`}
-              className={`matchItem ${matched.has(originalIndex) ? 'matched' : ''} ${
-                wrongPair?.right === originalIndex ? 'wrong' : ''
-              } ${
-                matchedPairCoding === 'semantic-four' && matched.has(originalIndex)
-                  ? PAIR_CODING_CLASS
-                  : ''
-              }`}
-              data-activity="match-right-tile"
-              data-matched={matched.has(originalIndex) ? 'true' : 'false'}
-              data-original-index={originalIndex}
-              data-pair-color={
-                matched.has(originalIndex) ? originalIndex % MATCH_PAIR_COLOR_COUNT : undefined
-              }
-              data-pair-coding={matchedPairCoding}
-              data-pair-token={
-                matchedPairCoding === 'semantic-four'
-                  ? originalIndex % SEMANTIC_FOUR_TOKENS.length
-                  : undefined
-              }
-              style={
-                matchedPairCoding === 'semantic-four'
-                  ? getSemanticTokenStyle(originalIndex)
-                  : getMatchedPairStyle(originalIndex, matched.has(originalIndex))
-              }
-              aria-label={pairAccessibleName(originalIndex, 'right')}
-              onClick={() => handleRightClick(originalIndex)}
-              disabled={disabled || matched.has(originalIndex)}
-            >
-              {parseMarkdown(pairs[originalIndex].right)}
-              {matchedPairCoding === 'semantic-four' && pairTag(originalIndex) ? (
-                <span className="matchPairTag" aria-hidden="true">
-                  {pairTag(originalIndex)}
-                </span>
-              ) : null}
-            </button>
-          ))}
+          {shuffledRight.map((originalIndex, displayIndex) => {
+            const isMatched = matchedRight.has(originalIndex);
+            const leftIndex = matchedRight.get(originalIndex) ?? originalIndex;
+            return (
+              <button
+                key={`right-${displayIndex}`}
+                className={`matchItem ${isMatched ? 'matched' : ''} ${
+                  wrongPair?.right === originalIndex ? 'wrong' : ''
+                } ${matchedPairCoding === 'semantic-four' && isMatched ? PAIR_CODING_CLASS : ''}`}
+                data-activity="match-right-tile"
+                data-matched={isMatched ? 'true' : 'false'}
+                data-original-index={originalIndex}
+                data-pair-color={isMatched ? leftIndex % MATCH_PAIR_COLOR_COUNT : undefined}
+                data-pair-coding={matchedPairCoding}
+                data-pair-token={
+                  matchedPairCoding === 'semantic-four'
+                    ? leftIndex % SEMANTIC_FOUR_TOKENS.length
+                    : undefined
+                }
+                style={
+                  matchedPairCoding === 'semantic-four'
+                    ? getSemanticTokenStyle(leftIndex)
+                    : getMatchedPairStyle(leftIndex, isMatched)
+                }
+                aria-label={pairAccessibleName(originalIndex, 'right')}
+                onClick={() => handleRightClick(originalIndex)}
+                disabled={disabled || isMatched}
+              >
+                {parseMarkdown(pairs[originalIndex].right)}
+                {matchedPairCoding === 'semantic-four' && isMatched && pairTag(leftIndex) ? (
+                  <span className="matchPairTag" aria-hidden="true">
+                    {pairTag(leftIndex)}
+                  </span>
+                ) : null}
+              </button>
+            );
+          })}
         </div>
       </div>
       {!allMatched && wrongPairWhy && (
@@ -378,7 +385,9 @@ export default function MatchUp({
           className={`${styles.feedback} ${styles.feedbackCorrect}`}
           data-activity="match-feedback"
           data-correct="true"
-          {...(pairs.some((p) => p.why) ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
+          {...(pairs.some((p) => p.why)
+            ? { role: 'status' as const, 'aria-live': 'polite' as const }
+            : {})}
         >
           {successLabel}
         </div>
