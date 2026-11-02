@@ -840,6 +840,47 @@ def test_scheduled_settlement_does_not_retain_regenerable_dependencies_as_unique
                 assert stream.read(20) == b"unpublished evidence"
 
 
+@pytest.mark.parametrize("unique_output", [False, True])
+def test_salvage_release_pins_remove_published_tracked_work_but_retain_unique_output(
+        sandbox, monkeypatch, synthetic_opsec, unique_output):
+    """Defect class: salvage ignores committed release pins and retains published tracked work."""
+    from scripts.common import github_client
+    from tests.fleet.test_regenerable_release_output import pinned_checkout
+
+    pinned_checkout((sandbox.repo, sandbox.repo, sandbox.tasks))
+    run_git(sandbox.repo, "push", "origin", "main")
+    assets = (sandbox.repo.parent / "release-store.json").read_text()
+    monkeypatch.setattr(github_client, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
+        args, 0, json.dumps({"assets": json.loads(assets)})))
+    monkeypatch.setattr(git, "SALVAGE_IGNORED_LIMIT", 1)
+    record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
+    tree = Path(record["worktree_path"])
+    # Copy only the ignored release outputs; pointers and hydrators came from the committed base.
+    for name in ("site/src/data/lexicon-manifest.json", "site/public/lexicon/practice-index.A1.json"):
+        (tree / name).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(sandbox.repo / name, tree / name)
+    run_git(tree, "add", "delivered.txt")
+    published = run_git(tree, "commit-tree", run_git(tree, "write-tree"), "-p", "HEAD", "-m", "published PR head")
+    run_git(tree, "push", "origin", f"{published}:refs/pull/12424/head")
+    assert run_git(sandbox.remote, "show", f"{published}:delivered.txt") == "uncommitted delivery"
+    assert run_git(tree, "status", "--porcelain") == "M  delivered.txt"
+    if unique_output:
+        (tree / "ignored").mkdir()
+        (tree / "ignored/evidence.bin").write_bytes(b"unpublished evidence")
+
+    in_process_repo(sandbox, monkeypatch)
+    worker.settle_left_worktrees(salvage=True)
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    if unique_output:
+        assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == (
+            "retained", "large_ignored_output")
+        assert (tree / "ignored/evidence.bin").read_bytes() == b"unpublished evidence"
+        assert run_git(sandbox.remote, "for-each-ref", f"refs/heads/salvage/{record['task_id']}") == ""
+    else:
+        assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "salvaged")
+        assert not tree.exists()
+
+
 def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_salvage_ref(
         sandbox, monkeypatch, synthetic_opsec):
     """#12043 AC-06a: a finished task's dirty tree stayed forever; a failed salvage push must still keep it.
