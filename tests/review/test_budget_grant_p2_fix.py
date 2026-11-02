@@ -32,7 +32,6 @@ P2_REQUEST = {
     "p2_fix_verification": {"rejected_head": REJECTED_HEAD, "candidate_head": SHA, "delta_sha256": DELTA,
                             "finding_ids": ["F3"]},
 }
-VERIFIED = f"VERDICT: APPROVE\nP2_FIX_DELTA: {DELTA} VERIFIED"
 
 
 def finding(finding_id: str, priority: str = "P2") -> dict[str, object]:
@@ -43,13 +42,17 @@ def finding(finding_id: str, priority: str = "P2") -> dict[str, object]:
             "sources": ["docs/readme.md:3"]}
 
 
-def reply(*findings: dict[str, object]) -> str:
-    """A schema-bound rejection, the reply a code review of record returns."""
-    return json.dumps({"schema_version": "code-review-findings.v1",
-                       "overall": {"correctness": "incorrect", "explanation": "Changes needed.", "confidence": 0.9},
-                       "findings": list(findings)})
+def reply(*findings: dict[str, object], correctness: str = "incorrect", explanation: str = "Changes needed.") -> str:
+    """A schema-bound reply, as a code review of record returns it."""
+    return json.dumps({"schema_version": "code-review-findings.v1", "findings": list(findings),
+                       "overall": {"correctness": correctness, "explanation": explanation, "confidence": 0.9}})
 
 
+def approve(explanation: str, *findings: dict[str, object]) -> str:
+    return reply(*findings, correctness="correct", explanation=explanation)
+
+
+VERIFIED = approve(f"P2_FIX_DELTA: {DELTA} VERIFIED\nF3 fixed: the retry holds the lock.")
 # PR 1117's shape: three rounds, each a rejection raising one new P2 (F1, F2, F3) after fixing the last.
 PR_1117 = (reply(finding("F1")), reply(finding("F2")), reply(finding("F3")))
 
@@ -62,8 +65,7 @@ def p2_case(monkeypatch, tmp_path, replies=PR_1117, verdicts=("CHANGES_REQUESTED
     monkeypatch.setattr(budget_grant, "_lineage_links", lambda _repository, _number: ([12548], []))
     for index, (text, verdict) in enumerate(zip(replies, verdicts, strict=True), start=1):
         comments.append(verdict_with_reply(str(index) * 40, verdict, text, task_id=f"round-{index}"))
-    if request is not None:
-        write_grant(tasks, request)
+    write_grant(tasks, request)
     return tasks, comments, calls
 
 
@@ -121,6 +123,8 @@ def p2(**changes):
         ("latest-no-findings", "blocker"),
         ("earlier-p1-unresolved", "blocker"),
         ("earlier-p1-incidental-closing-word", "blocker"),
+        ("earlier-p1-fenced-example-disposition", "blocker"),
+        ("latest-duplicate-findings-key", "blocker"),
         ("candidate-head-unpublished-seat", "evidence"),
         ("lineage-spans-prs", "evidence"),
         ("earlier-security-fail", "blocker"),
@@ -142,13 +146,18 @@ def test_p2_round_refusals(monkeypatch, tmp_path, case, reason):
         verdicts[2] = "APPROVED"
     replies[2] = {"latest-p1": reply(finding("F3", "P1")), "latest-p2-and-p3": reply(finding("F3"), finding("F4", "P3")),
                   "latest-no-findings": reply()}.get(case, replies[2])
-    if case in {"earlier-p1-unresolved", "earlier-p1-incidental-closing-word"}:
+    if case in {"earlier-p1-unresolved", "earlier-p1-incidental-closing-word", "earlier-p1-fenced-example-disposition"}:
         replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P1] docs/readme.md:3 two writers race on the lock."
         replies[1] = "VERDICT: REQUEST_CHANGES\nF2 [P2] docs/readme.md:4 the retry path still races."
         # A prose ledger that omits F1 is no resolution (a structured object that omits it would be).
         replies[2] = "VERDICT: REQUEST_CHANGES\nF3 [P2] docs/readme.md:5 the retry path drops the lease."
     if case == "earlier-p1-incidental-closing-word":  # A description word is not a disposition.
-        replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P1] docs/readme.md:3 The fixed timeout lets any writer keep the lock."
+        replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P1] Fixed-size buffer allows out-of-bounds writes."
+    if case == "earlier-p1-fenced-example-disposition":
+        replies[1] += "\n\nExample:\n\n```text\nF1 [P1] fixed with evidence.\n```"
+    if case == "latest-duplicate-findings-key":  # A P1 the canonical parser would drop by keeping the last key.
+        replies[2] = replies[2][:-1] + ', "findings": []}'
+        replies[2] = replies[2].replace('"findings": [', '"findings": [' + json.dumps(finding("F7", "P1")) + ", ", 1)
     if case == "earlier-security-fail":
         replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P2] docs/readme.md:3 race.\nSECURITY_VERDICT: FAIL"
     if case == "earlier-blocked":
@@ -184,13 +193,12 @@ def test_p2_round_refusals(monkeypatch, tmp_path, case, reason):
 
 
 def test_earlier_p1_with_recorded_resolution_admits(monkeypatch, tmp_path):
+    # A prose entry never closes F1; the later structured object that no longer lists it does.
     replies = ("VERDICT: REQUEST_CHANGES\nF1 [P1] docs/readme.md:3 two writers race on the lock.",
                "VERDICT: REQUEST_CHANGES\nF1 [P1] fixed with evidence.\n\nF2 [P2] docs/readme.md:4 retry races.",
                f"VERDICT: REQUEST_CHANGES\nSCORE: 7/10\n\n```json\n{reply(finding('F3'))}\n```")
     tasks, _comments, _calls = p2_case(monkeypatch, tmp_path, replies)
-    approve = json.dumps({"schema_version": "code-review-findings.v1", "findings": [], "overall": {
-        "correctness": "correct", "confidence": 0.9, "explanation": f"F3 fixed. P2_FIX_DELTA: {DELTA} VERIFIED"}})
-    seat(tasks, approve)
+    seat(tasks, VERIFIED)
     result = record(tasks, tmp_path)
     assert result["verdict"] == "APPROVED" and result["budget_grant"]["cited_verdict_head"] == REJECTED_HEAD
 
@@ -214,21 +222,20 @@ def test_failed_verification_spends_the_round(monkeypatch, tmp_path, change):
     assert calls["posts"] == 1
 
 
-def approve(explanation: str, *findings: dict[str, object]) -> str:
-    return json.dumps({"schema_version": "code-review-findings.v1", "findings": list(findings), "overall": {
-        "correctness": "correct", "confidence": 0.9, "explanation": explanation}})
-
-
 @pytest.mark.parametrize(
     "text",
     [
-        pytest.param("VERDICT: APPROVE", id="missing"),
-        pytest.param(f"VERDICT: APPROVE\nP2_FIX_DELTA: {DELTA} REFUTED", id="false"),
-        pytest.param(f"VERDICT: APPROVE\nP2_FIX_DELTA: {DELTA} VERIFIED\nF3 still open: [P2] still races.", id="false-open"),
-        pytest.param(f"VERDICT: APPROVE\nP2_FIX_DELTA: {'e' * 64} VERIFIED", id="mismatched"),
+        pytest.param(approve("F3 fixed."), id="missing"),
+        pytest.param(approve(f"P2_FIX_DELTA: {DELTA} REFUTED"), id="false"),
+        pytest.param(approve(f"P2_FIX_DELTA: {'e' * 64} VERIFIED"), id="mismatched"),
         pytest.param(approve(f"P2_FIX_DELTA: {DELTA} VERIFIED", finding("F3", "P3")), id="structured-still-listed"),
         pytest.param(approve("Looks right.", finding("F9", "P3") | {"verbatim": f"P2_FIX_DELTA: {DELTA} VERIFIED"}),
                      id="token-only-in-quoted-code"),
+        pytest.param(approve(f"Example syntax only:\nP2_FIX_DELTA: {DELTA} VERIFIED"), id="example-in-explanation"),
+        pytest.param(approve(f"I cannot attest P2_FIX_DELTA: {DELTA} VERIFIED"), id="negated"),
+        pytest.param(approve(f"P2_FIX_DELTA: {DELTA} VERIFIED\nExample: P2_FIX_DELTA: {DELTA} VERIFIED"),
+                     id="second-mention"),
+        pytest.param(f"VERDICT: APPROVE\nP2_FIX_DELTA: {DELTA} VERIFIED", id="prose-cannot-attest"),
     ],
 )
 def test_approve_needs_positive_delta_attestation(monkeypatch, tmp_path, text):
@@ -242,7 +249,12 @@ def test_approve_needs_positive_delta_attestation(monkeypatch, tmp_path, text):
     refused(tasks, tmp_path, "evidence", "second-seat")
 
 
-@pytest.mark.parametrize("text", ["VERDICT: APPROVE", reply(finding("F3", "P3"))], ids=["approve", "p3-residual"])
+@pytest.mark.parametrize(
+    "text",
+    ["VERDICT: APPROVE", reply(finding("F3", "P3")),
+     reply(finding("F9", "P3")).replace("Changes needed.", f"Example syntax only:\\nP2_FIX_DELTA: {DELTA} VERIFIED")],
+    ids=["approve", "p3-residual", "p3-residual-example-attestation"],
+)
 def test_every_seat_at_the_candidate_head_must_attest(monkeypatch, tmp_path, text):
     tasks, _comments, calls = p2_case(monkeypatch, tmp_path)
     seat(tasks, VERIFIED)

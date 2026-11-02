@@ -55,11 +55,10 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   dispatcher admit it only when, across the PR's whole ledger: the default three rounds are
   spent; the latest recorded verdict is a trusted REJECT at the rejected head whose open
   findings are exactly the sealed ids, nonempty and all P2; every earlier P0/P1 finding was
-  later closed, by a prose entry whose disposition (`resolved`, `fixed`, `declined`,
-  `withdrawn`, `closed`, `superseded`) directly follows its id and severity, or by a structured
-  findings object, bare, fenced or in a `VERDICT`/`SCORE` envelope, that no longer lists it;
-  no verdict is BLOCKED, carries a security FAIL, or is edited, withheld or unreadable; and
-  every other review run of the PR, at the candidate head too, is terminal with its verdict
+  closed by a later structured findings object (bare, fenced or in a `VERDICT`/`SCORE`
+  envelope, with no repeated key) that no longer lists it, since a prose entry never closes a
+  finding; no verdict is BLOCKED, carries a security FAIL, or is edited, withheld or unreadable;
+  and every other review run of the PR, at the candidate head too, is terminal with its verdict
   published, so pushing before a verdict is recorded earns no credit. A lineage whose closing
   issues are linked to any other PR, open or closed, is refused, because earlier PRs' ledgers
   are not read. It permits round 4 only, never round 5. The dispatcher spends it when it admits
@@ -67,10 +66,10 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   head branch and every issue it closes; a failed verification, a reissued grant, another
   reviewer, a replacement PR or a new branch never replenishes it. The reviewer covers the
   [delta scope](#delta-scope) and only the changes needed to correct the named findings,
-  including their tests. An APPROVE at that head, from any seat, and a P3-only reply that would
-  become one, needs exactly one `P2_FIX_DELTA: <delta_sha256> VERIFIED`: in a structured
-  reply's `overall.explanation`, otherwise on its own line. No sealed finding may stay listed
-  or open. A missing, `REFUTED` or mismatched attestation refuses the APPROVE: a false or
+  including their tests. An APPROVE at that head from any seat, or a P3-only reply that would
+  become one, must be a structured reply whose `overall.explanation` begins with the line
+  `P2_FIX_DELTA: <delta_sha256> VERIFIED`, which mentions `P2_FIX_DELTA` nowhere else and lists
+  no sealed finding; prose cannot attest. Otherwise the recorder refuses the APPROVE: a false or
   unverifiable delta claim is a rejection, and no other seat can approve that head. Security
   failures and the breakers still apply.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
