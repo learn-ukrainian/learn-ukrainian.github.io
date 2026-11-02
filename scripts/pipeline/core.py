@@ -1884,26 +1884,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         attempt_suffix = "" if attempt == 1 else f"-r{attempt}"
         task_suffix = "" if attempt == 1 else f"-r{attempt}"
 
-        if attempt > 1 and content_path.exists():
-            current_text = content_path.read_text(encoding="utf-8")
-            current_words = len(current_text.split())
-            # Skip expand if content already meets or exceeds word target
-            if current_words >= ctx.word_target:
-                log(f"  content: word count {current_words} >= target {ctx.word_target}, skipping expand")
-                return True
-            deficit = ctx.word_target - current_words
-            had_truncation = last_friction and "TOKEN_LIMIT_TRUNCATION" in last_friction
-            if had_truncation:
-                log(f"  content: Adjusting expansion target to {ctx.word_target}w (1.0x) due to previous truncation")
-            expand_prompt = _build_phase2_expansion_prompt(
-                ctx, current_text, current_words, deficit, had_truncation
-            )
-            expand_prompt_file = ctx.orch_dir / f"content-expand-{attempt}.md"
-            expand_prompt_file.write_text(expand_prompt, encoding="utf-8")
-            dispatch_file = expand_prompt_file
-            log(f"  content: Retry {attempt}/{MAX_P2_ATTEMPTS} — expanding {current_words}w → {ctx.word_target}w target")
-        else:
-            dispatch_file = prompt_file
+        dispatch_file = prompt_file
 
         # Safety check: save the final prompt Gemini will see
         final_prompt_path = ctx.orch_dir / "content-prompt-final.md"
@@ -1996,8 +1977,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         (ctx.orch_dir / f"content-output-{attempt}.md").write_text(content_text, encoding="utf-8")
         save_gemini_session(ctx.orch_dir, label=f"content-attempt-{attempt}")
         total_words = len(content_text.split())
-        pct = total_words * 100 // max(ctx.word_target, 1)
-        log(f"  content: {total_words} words written ({pct}% of {ctx.word_target} target)")
+        log(f"  content: {total_words} words written (informational; no length gate)")
 
         # Full-build mode: extract activities + vocabulary from same response
         if getattr(ctx, "full_build", False) and raw:
@@ -2015,11 +1995,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     (ctx.orch_dir / orch_name).write_text(text, "utf-8")
                     log(f"  content: {label} extracted from full-build → {target.name}")
 
-        if total_words >= ctx.word_target * 0.75:
-            return True
-        log(f"  content: Too thin — {total_words}w vs {ctx.word_target}w target (attempt {attempt})")
+        # Acceptance is by coverage, not length: missing objectives and source
+        # gaps surface downstream as UNSUPPORTED_OBJECTIVE / EVIDENCE_GAP.
+        return True
 
-    log(f"  content: FAIL — exhausted {MAX_P2_ATTEMPTS} attempts, content still under 50% of target")
+    log(f"  content: FAIL — exhausted {MAX_P2_ATTEMPTS} attempts, no usable content extracted")
     return False
 
 

@@ -28,7 +28,7 @@ import yaml
 @dataclass
 class QuickVerifyError:
     """A single verification failure."""
-    check: str        # e.g. "STRUCTURE", "WORD_COUNT", "TOXIC", "VOCABULARY"
+    check: str        # e.g. "STRUCTURE", "TOXIC", "VOCABULARY"
     severity: str     # "ERROR" or "WARNING"
     message: str
 
@@ -100,44 +100,6 @@ def _check_structure(content: str, plan: dict) -> list[QuickVerifyError]:
                 severity="ERROR",
                 message=f"Missing section heading: '{title}'",
             ))
-
-    return errors
-
-
-def _check_word_count(content: str, plan: dict) -> list[QuickVerifyError]:
-    """Check word count is within ±15% of target."""
-    errors = []
-    target = plan.get("word_target", 1200)
-
-    # Count words (exclude markdown syntax, exercise blocks, meta-notes)
-    # Strip ALL fenced blocks (:::anything ... :::) — exercise placeholders AND filled DSL
-    text = re.sub(
-        r"^:::.*?^:::",
-        "",
-        content,
-        flags=re.DOTALL | re.MULTILINE,
-    )
-    # Strip "Content notes" / meta-notes section at end (LLM self-audit artifact)
-    # The --- separator before content notes must NOT eat the whole file.
-    # Only strip --- followed by "Content notes" or similar meta-sections.
-    text = re.sub(r"\*\*Content notes:\*\*.*$", "", text, flags=re.DOTALL)
-    text = re.sub(r"\n---\s*\n\*\*(?:Content|Note|Meta).*$", "", text, flags=re.DOTALL)
-    # Strip markdown headings, links, images, tables
-    text = re.sub(r"^#+\s+.*$", "", text, flags=re.MULTILINE)
-    text = re.sub(r"^\|.*\|$", "", text, flags=re.MULTILINE)  # table rows
-    text = re.sub(r"!\[.*?\]\(.*?\)", "", text)
-    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
-
-    words = len(text.split())
-    lower = int(target * 0.85)
-
-    if words < lower:
-        errors.append(QuickVerifyError(
-            check="WORD_COUNT",
-            severity="ERROR",
-            message=f"Too short: {words} words (target: {target}, minimum: {lower})",
-        ))
-    # No upper ceiling — word targets are MINIMUMS. More content is always acceptable.
 
     return errors
 
@@ -416,7 +378,6 @@ def quick_verify(content: str, plan: dict) -> list[QuickVerifyError]:
     """
     errors = []
     errors.extend(_check_structure(content, plan))
-    errors.extend(_check_word_count(content, plan))
     errors.extend(_check_toxic_tokens(content))
     errors.extend(_check_vocabulary(content, plan))
     errors.extend(_check_exercise_items(content, plan))
