@@ -823,6 +823,7 @@ def test_pr_target(tmp_path, monkeypatch):
             stdout = json.dumps(
                 {
                     "number": 99,
+                    "state": "OPEN",
                     "baseRefName": "trunk",
                     "baseRefOid": base,
                     "headRefName": "feature",
