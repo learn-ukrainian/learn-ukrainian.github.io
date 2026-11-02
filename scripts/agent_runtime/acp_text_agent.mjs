@@ -6,9 +6,7 @@
  *
  * The server accepts exactly one text prompt per ACP session and returns one
  * text response. Provider CLIs run in a fresh temporary directory with no
- * repository files. AGY uses plan+sandbox mode without permission bypasses;
- * Hermes uses an isolated config with an explicit empty CLI toolset, no
- * fallbacks, no MCP, no plugins, and no injected project rules.
+ * repository files. AGY uses plan+sandbox mode without permission bypasses.
  *
  * After handlers are installed and the stdin read loop is running, the
  * process writes `acp-text-agent ready` to stderr. Stdout stays NDJSON.
@@ -17,8 +15,8 @@
 import * as acp from '@agentclientprotocol/sdk';
 import { spawn } from 'node:child_process';
 import { writeSync } from 'node:fs';
-import { mkdtemp, mkdir, rm, symlink, writeFile } from 'node:fs/promises';
-import { homedir, tmpdir } from 'node:os';
+import { mkdtemp, mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Readable, Writable } from 'node:stream';
 
@@ -52,7 +50,7 @@ function parseArgs(argv) {
     }
     values[flag.slice(2)] = value;
   }
-  if (!['agy', 'deepseek'].includes(values.provider)) {
+  if (!['agy'].includes(values.provider)) {
     throw new Error(`unsupported provider ${JSON.stringify(values.provider)}`);
   }
   if (!values.model || !values.binary) {
@@ -79,14 +77,6 @@ function textPrompt(blocks) {
     throw new Error(`prompt exceeds the ${MAX_PROMPT_BYTES}-byte limit`);
   }
   return `${CONFINEMENT_NOTICE}\n\n${prompt}`;
-}
-
-async function linkIfPresent(source, destination) {
-  try {
-    await symlink(source, destination);
-  } catch (error) {
-    if (error?.code !== 'ENOENT') throw error;
-  }
 }
 
 function childBaseEnv() {
@@ -223,49 +213,6 @@ async function runAgy(options, prompt, session, workRoot) {
   );
 }
 
-async function runDeepSeek(options, prompt, session, workRoot) {
-  const hermesHome = join(workRoot, 'hermes-home');
-  await mkdir(hermesHome, { recursive: true });
-  await writeFile(
-    join(hermesHome, 'config.yaml'),
-    [
-      'model:',
-      '  provider: deepseek',
-      `  default: ${options.model}`,
-      'platform_toolsets:',
-      '  cli: []',
-      'fallback_providers: []',
-      'mcp_servers: {}',
-      'plugins:',
-      '  enabled: []',
-      '  disabled: []',
-      'hooks: []',
-      '',
-    ].join('\n'),
-    { encoding: 'utf8', mode: 0o600 },
-  );
-
-  const sourceHome = join(homedir(), '.hermes');
-  for (const name of ['.env', 'auth.json', 'auth.lock']) {
-    await linkIfPresent(join(sourceHome, name), join(hermesHome, name));
-  }
-
-  return runChild(
-    options.binary,
-    ['--ignore-rules', '-z', prompt, '-m', options.model, '--provider', 'deepseek'],
-    {
-      cwd: workRoot,
-      env: {
-        ...childBaseEnv(),
-        HERMES_HOME: hermesHome,
-        HERMES_SAFE_MODE: '1',
-        HERMES_IGNORE_RULES: '1',
-      },
-      session,
-    },
-  );
-}
-
 const options = parseArgs(process.argv.slice(2));
 const sessions = new Map();
 
@@ -294,10 +241,7 @@ acp
     const prompt = textPrompt(context.params.prompt);
     const workRoot = await mkdtemp(join(tmpdir(), `lu-acp-${options.provider}-`));
     try {
-      const response =
-        options.provider === 'agy'
-          ? await runAgy(options, prompt, session, workRoot)
-          : await runDeepSeek(options, prompt, session, workRoot);
+      const response = await runAgy(options, prompt, session, workRoot);
       await context.client.notify(acp.methods.client.session.update, {
         sessionId: context.params.sessionId,
         update: {

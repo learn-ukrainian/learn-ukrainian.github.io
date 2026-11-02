@@ -7,12 +7,11 @@ Positive diagnostic provenance (no paid CLI calls):
 * Gemini: test_gemini_adapter_auth.py::TestRateLimitMarkersFromCodexReview;
   scripts/etymology/bulk_ocr_gemini.py's captured TerminalQuotaError.
 * SDK formats: installed Kimi bundle's GaxiosError.extractAPIErrorFromResponse
-  and installed Hermes openai/_base_client.py::_make_status_error.
+  and the installed openai SDK's _base_client.py::_make_status_error.
 * AGY: installed binary embeds googleapi's "googleapi: Error %d:" formatter.
 * Gemini retry prefix: upstream packages/core/src/utils/retry.ts::logRetryAttempt,
   corroborating the review's Gaxios retry block; the SDK exception is installed in Kimi.
-* HTTP/transport: test_runner_failover.py::_TRIGGER_CASES and
-  adapters/test_hermes_deepseek_adapter.py's captured in-band errors.
+* HTTP/transport: test_runner_failover.py::_TRIGGER_CASES.
 """
 
 from __future__ import annotations

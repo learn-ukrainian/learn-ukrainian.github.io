@@ -4,7 +4,6 @@ Provider syntax references:
 https://github.com/MoonshotAI/Kimi-K2/blob/main/docs/tool_call_guidance.md
 https://ai.google.dev/gemma/docs/capabilities/text/function-calling-gemma4
 https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma
-https://github.com/NousResearch/Hermes-Function-Calling/blob/main/prompt_assets/sys_prompt.yml
 """
 
 from __future__ import annotations
@@ -47,7 +46,7 @@ MARKUP_REPLIES = (
         id="claude-antml",
     ),
     pytest.param('<antml:invoke name="search"></antml:invoke>', id="claude-antml-invoke"),
-    pytest.param('<tool_call>{"name":"search","arguments":{"query":"needle"}}</tool_call>', id="hermes-xml"),
+    pytest.param('<tool_call>{"name":"search","arguments":{"query":"needle"}}</tool_call>', id="tool-call-xml"),
     pytest.param(
         "<tool_call>search<arg_key>query</arg_key><arg_value>needle</arg_value></tool_call>",
         id="glm-xml",

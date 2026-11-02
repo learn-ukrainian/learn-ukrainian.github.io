@@ -3,8 +3,7 @@
 Operator 2026-08-13: DeepSeek dispatch routes through opencode to
 first-party ``deepseek/*`` (api.deepseek.com) with ``--variant high`` by
 default (#8514: provider id ``deepseek``, not the retired ``deepseek-direct``).
-The Hermes adapter remains for ``ask-hermes`` only and must not appear in the
-default dispatch command. First-party DeepSeek is China-hosted → CI refused.
+First-party DeepSeek is China-hosted → CI refused.
 """
 
 from __future__ import annotations
@@ -45,7 +44,7 @@ def _build(prompt: str, tmp_path: Path, **kw):
 
 def test_default_dispatch_plan_is_opencode_first_party_flash_at_high(tmp_path):
     """Omitted --model/--effort → opencode run --model
-    deepseek/deepseek-flash --variant high; no hermes anywhere."""
+    deepseek/deepseek-flash --variant high."""
     plan = _build("Review this diff.", tmp_path)
 
     assert plan.cmd[0] == FAKE_OPENCODE
@@ -58,7 +57,6 @@ def test_default_dispatch_plan_is_opencode_first_party_flash_at_high(tmp_path):
     assert plan.cmd[plan.cmd.index("--variant") + 1] == "high"
     assert plan.cmd[-2] == "--"
     assert plan.cmd[-1] == "Review this diff."
-    assert "hermes" not in " ".join(plan.cmd).lower()
     assert plan.env_overrides.get("OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX") == "131072"
 
 
@@ -166,7 +164,7 @@ def test_trail_isolation_is_refused(tmp_path):
 
 
 def test_ci_refusal_for_first_party_route(tmp_path, monkeypatch):
-    """The same first-party CI refuse as the Hermes route must hold."""
+    """The first-party CI refusal must hold."""
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
     monkeypatch.setenv("GITHUB_ACTIONS", "true")
 

@@ -567,7 +567,7 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     from .agent_identity import is_native_grok_seat
 
     if is_native_grok_seat(agent_name):
-        # Native `grok` CLI — NOT hermes-backed; probe it directly.
+        # Native `grok` CLI — probe it directly.
         return _probe_version_at(("grok",), probe_cwd)
     if agent_name == "deepseek":
         prefix = (plan.cmd[0],) if plan is not None and plan.cmd else ("opencode",)
