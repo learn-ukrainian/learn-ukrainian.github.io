@@ -1140,7 +1140,9 @@ def _persist_account_readings(monkeypatch, tmp_path: Path, *, age_s: float, gene
     window = {"left_pct": 80.0, "resets_at": None, "pace": None, "pace_delta_pct": None, "leftover_pct": None}
     row = {"updated": measured, "session5h": dict(window), "weekly": dict(window)}
     watch = claude_account_usage._Watch(roots=(), entries=(), generation=generation, credentials=(1, 2))
-    accounts = claude_account_usage._Accounts(watch=watch, fingerprints=frozenset(), named=False)
+    # Every sample's attribution holds its bound account; the fake bindings below bind "acct".
+    bound = frozenset({claude_account_usage._fingerprint("account_id", "acct")})
+    accounts = claude_account_usage._Accounts(watch=watch, fingerprints=bound, named=False)
     for label in claude_account_usage.CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS:
         claude_account_usage._record(label, row, None, accounts=accounts)
 
@@ -1183,10 +1185,8 @@ def test_restart_with_reading_younger_than_interval_starts_no_probe(monkeypatch,
         assert thread is None or not thread.is_alive()
         assert not probed.wait(timeout=0.5)
         assert probes == []
-        # The restored reading is only a gate: the served row stays unknown until a real probe.
-        assert all(
-            row["status"] == "unknown" for row in claude_account_usage.claude_accounts_snapshot().values()
-        )
+        # The re-proved restored readings are the cached samples again (#12483).
+        assert set(claude_account_usage._last_good) == set(claude_account_usage.CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS)
     finally:
         subscription_usage_mod.stop_periodic_refresh(join_timeout_s=2.0)
         subscription_usage_mod._claude_account_probe_started_at = None
@@ -1215,9 +1215,13 @@ def test_restart_startup_wait_ends_at_the_cache_ttl_and_counts_validation_time(m
     _persist_account_readings(monkeypatch, tmp_path, age_s=30.0)
     monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "720")
     monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "60")
+    # Seconds each binding validation takes on a fake clock.
+    real_time, offset, validation_s = time.time, [0.0], [0.0]
+    monkeypatch.setattr(claude_account_usage.time, "time", lambda: real_time() + offset[0])
 
     @contextlib.contextmanager
     def _binding(_label, *, verified=None):
+        offset[0] += validation_s[0]
         yield claude_account_usage._Binding(Path("/nonexistent"), "acct", verified)
 
     monkeypatch.setattr(claude_account_usage, "account_binding", _binding)
@@ -1225,10 +1229,12 @@ def test_restart_startup_wait_ends_at_the_cache_ttl_and_counts_validation_time(m
     assert wait_s is not None
     assert 25.0 < wait_s <= 30.0  # TTL 60 minus an age of about 30, not the interval's 690
 
-    # Validation that carries a reading to its limit leaves nothing to wait for.
-    real_time = time.time
-    monkeypatch.setattr(claude_account_usage.time, "time", lambda: real_time() + 31.0)
+    # The readings are inside the TTL when the check starts; validating the bindings
+    # takes them past it, so nothing is restored and the probe runs now.
+    claude_account_usage._reset_for_tests()
+    offset[0], validation_s[0] = 0.0, 16.0
     assert subscription_usage_mod._claude_account_startup_wait_s(720.0) is None
+    assert claude_account_usage._last_good == {}
     subscription_usage_mod._claude_account_probe_started_at = None
 
 

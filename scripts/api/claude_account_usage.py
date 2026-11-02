@@ -45,10 +45,13 @@ Serving: every read, parse and provider question runs in the background. Each
 sample keeps the cheap stat facts of every file its validation read (type,
 device and inode; for files also mode, owner, size and change times), with its
 generation and private fingerprints of its account, none of them published or
-logged. The fingerprints and stat facts stay in memory. Only the generation
-digest and the credentials' stat facts go to a private file beside each good
-reading (``_persist_sample``), so a restart can re-prove the binding and time
-its first probe; that file is never served. Serving only ``lstat``s those paths: any difference
+logged. The other stat facts stay in memory. The generation digest, the
+credentials' stat facts and the attribution (fingerprints, digests only) go to
+a private file beside each good reading (``_persist_sample``). After a restart
+a reading from that file is served again only when every label's binding
+validates again to its generation and every reading is still fresh
+(``restore_claude_account_samples``); otherwise the scheduler probes at once.
+Serving only ``lstat``s those paths: any difference
 withholds the row as ``not_probed`` and schedules one background revalidation,
 which re-arms the sample when the binding still validates to the same
 generation (asking the provider again only about changed credentials) and
@@ -191,7 +194,7 @@ class _Binding:
 
 @dataclass(frozen=True)
 class _Accounts:
-    """What a sample is attributed to; never published, logged or serialised."""
+    """What a sample is attributed to; never published or logged, persisted only to the private samples file."""
 
     watch: _Watch = field(repr=False)  # the validation it is served under
     fingerprints: frozenset[bytes] = field(repr=False)  # the bound and the named accounts
@@ -894,6 +897,7 @@ def _record(
             # Hold this label for one scheduler interval so they cannot retry sooner.
             _probe_not_before[label] = time.time() + _codexbar_refresh_interval_s()
 
+
 # One entry per label, overwritten by each good probe, beside provider_lkg.json.
 _SAMPLES_FILE = "claude_account_samples.json"
 
@@ -911,22 +915,27 @@ def _read_samples(path: Path) -> dict[str, Any]:
 
 
 def _persist_sample(label: str, sample: _Sample) -> None:
-    """Keep the label's last good reading on disk so a restart can tell how old it is.
+    """Keep the label's last good reading on disk so a restart can serve it again.
 
-    Only the measured numbers, their time, and the binding's generation digest
-    and credential stat facts are written, to a private file. Nothing here is
-    served: ``claude_accounts_snapshot`` reads ``_last_good`` alone, so a row
-    stays unknown until a real probe. Written only where the periodic scheduler
-    runs, since only it reads the file. A failed write is logged, never raised.
+    Written to a private file: the measured numbers and their time, the
+    binding's generation digest and credential stat facts, and the sample's
+    attribution (``named`` and the account fingerprints, digests only). The
+    file is never served as is: ``restore_claude_account_samples`` serves an
+    entry only after its binding validates again. Written only where the
+    periodic scheduler runs, since only it reads the file. A failed write is
+    logged, never raised.
     """
     if not _periodic_refresh_enabled():
         return
-    watch = sample.accounts.watch
+    accounts = sample.accounts
+    watch = accounts.watch
     entry = {
         "source_at": sample.source_at,
         "windows": sample.windows,
         "generation": watch.generation.hex(),
         "credentials": None if watch.credentials is None else list(watch.credentials),
+        "named": accounts.named,
+        "fingerprints": sorted(fingerprint.hex() for fingerprint in accounts.fingerprints),
     }
     try:
         path = _samples_path()
@@ -941,55 +950,141 @@ def _persist_sample(label: str, sample: _Sample) -> None:
         _log.warning("claude account sample not persisted", exc_info=True)
 
 
-def _restored_source_at(label: str, entry: Any, now: float, limit_s: float) -> float | None:
-    """Measured time of a persisted reading, when it is younger than ``limit_s`` and its binding still holds."""
-    if not isinstance(entry, dict):
+def _restored_windows(raw: Any) -> dict[str, dict[str, Any]] | None:
+    """The persisted windows, only when each is exactly what ``_window_row`` builds; ``None`` otherwise.
+
+    Nothing is coerced: every number is finite and in its domain, the projected
+    leftover is a whole percentage, the reset time is in the canonical form, and
+    the pace text is the one its delta derives.
+    """
+    if not isinstance(raw, dict) or set(raw) != {name for _key, name in _WINDOWS}:
         return None
-    source_at, generation, credentials = entry.get("source_at"), entry.get("generation"), entry.get("credentials")
-    if isinstance(source_at, bool) or not isinstance(source_at, int | float) or not isinstance(generation, str):
+    windows: dict[str, dict[str, Any]] = {}
+    for _key, name in _WINDOWS:
+        window = raw[name]
+        if not isinstance(window, dict) or set(window) != set(_WINDOW_FIELDS):
+            return None
+        left, delta, leftover = window["left_pct"], window["pace_delta_pct"], window["leftover_pct"]
+        if any(value is not None and _number(value) is None for value in (left, delta)):
+            return None  # a value that is not a finite number
+        if left is not None and not 0 <= left <= 100:
+            return None
+        if delta is not None and not -100 <= delta <= 100:  # the difference of two percentages
+            return None
+        if leftover is not None and (type(leftover) is not int or not 0 <= leftover <= 100):
+            return None
+        resets_at = window["resets_at"]
+        if resets_at is not None:
+            moment = _timestamp(resets_at) if isinstance(resets_at, str) else None
+            if moment is None or _iso(moment) != resets_at:
+                return None
+        if window["pace"] != _pace_label(delta):
+            return None
+        windows[name] = {field: window[field] for field in _WINDOW_FIELDS}
+    return windows
+
+
+# Every field ``_persist_sample`` writes; an entry with any other set is refused.
+_ENTRY_FIELDS = frozenset({"source_at", "windows", "generation", "credentials", "named", "fingerprints"})
+
+
+def _digest(value: Any) -> bytes | None:
+    """A SHA-256 digest from exactly the lowercase hex ``_persist_sample`` writes; ``None`` for anything else.
+
+    ``bytes.fromhex`` skips whitespace, so the decoded digest must also encode
+    back to the same text: no whitespace, no other case, no other length.
+    """
+    if not isinstance(value, str):
+        return None
+    try:
+        digest = bytes.fromhex(value)
+    except ValueError:
+        return None
+    return digest if len(digest) == hashlib.sha256().digest_size and digest.hex() == value else None
+
+
+def _restored_sample(label: str, entry: Any, now: float, limit_s: float) -> _Sample | None:
+    """A persisted reading, attributed again, when it is younger than ``limit_s`` and its binding still holds.
+
+    The binding must validate again, to the generation the reading was taken
+    under. Unchanged credentials are not put to the provider again; changed ones
+    must be proven the bound account's, as for a probe. The sample is served
+    under that new validation, so the serve-time stat check guards it as it
+    guards a probed sample.
+
+    The entry is refused, never repaired: an entry written before attribution
+    was persisted, any field outside ``_ENTRY_FIELDS``, or attribution that is
+    not the non-empty set of digests a sample holds, including its bound
+    account, means probe.
+    """
+    if not isinstance(entry, dict) or set(entry) != _ENTRY_FIELDS:
+        return None
+    source_at, credentials, named = entry["source_at"], entry["credentials"], entry["named"]
+    generation = _digest(entry["generation"])
+    fingerprints = entry["fingerprints"]
+    if isinstance(source_at, bool) or not isinstance(source_at, int | float) or generation is None:
+        return None
+    if not isinstance(named, bool) or not isinstance(fingerprints, list) or not fingerprints:
+        return None
+    digests = [_digest(fingerprint) for fingerprint in fingerprints]
+    persisted = frozenset(digest for digest in digests if digest is not None)
+    if len(persisted) < len(digests):
+        return None  # a value that is not a digest
+    if credentials is not None and not (
+        isinstance(credentials, list) and all(type(fact) is int for fact in credentials)
+    ):
         return None
     if not 0.0 <= now - float(source_at) < limit_s:
         return None
+    windows = _restored_windows(entry.get("windows"))
+    if windows is None:
+        return None
     try:
-        if credentials is not None and not (
-            isinstance(credentials, list) and all(type(fact) is int for fact in credentials)
-        ):
-            return None
         proof = _Watch(
             roots=(),
             entries=(),
-            generation=bytes.fromhex(generation),
+            generation=generation,
             credentials=None if credentials is None else tuple(credentials),
         )
-        # The binding must validate again, to the generation the reading was taken under.
-        # Unchanged credentials are not put to the provider again; changed ones must be
-        # proven the bound account's, as for a probe.
         with account_binding(label, verified=proof) as binding:
-            return float(source_at) if binding.generation == proof.generation else None
+            # Every sample's attribution holds its bound account, proven again here.
+            if binding.generation != generation or _fingerprint("account_id", binding.account) not in persisted:
+                return None
+            accounts = _Accounts(binding.watch, persisted, named=named)
+            return _Sample(float(source_at), windows, accounts)
     except Exception:  # an unprovable binding means no reuse, never a startup failure
         return None
 
 
-def restored_probe_age_s(*, now: float | None = None) -> float | None:
-    """Age of the oldest persisted reading, only if every label has one that gates a probe.
+def restore_claude_account_samples(*, now: float | None = None) -> float | None:
+    """Serve the persisted readings again when every label has one; return the oldest one's age.
 
-    A label with no entry, an entry past the cache TTL or the scheduler interval,
-    or a binding that no longer validates gives ``None``: probe. The age is read
-    after the bindings were validated, so the time that took is not lost, and it
-    is ``None`` again if validation carried a reading past that limit. Background
-    only (it validates bindings); never probes, never serves a row.
+    A restart loses the in-memory readings. When every label's persisted
+    reading is younger than the scheduler interval and the cache TTL and its
+    binding validates again (``_restored_sample``), those readings become the
+    served samples with their own measured time, exactly as the previous process
+    served them, and the age gates the first probe. Otherwise nothing is served
+    from the file and ``None`` means probe now. The age is read after the
+    bindings were validated, so the time that took is not lost. Background only
+    (it validates bindings); never probes.
     """
     limit_s = min(_codexbar_refresh_interval_s(), _codexbar_cache_ttl_s())
     entries = _read_samples(_samples_path())
     moment = time.time() if now is None else now
-    measured = [
-        _restored_source_at(label, entries.get(label), moment, limit_s) for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS
-    ]
-    if not measured or any(source_at is None for source_at in measured):
+    restored = {
+        label: _restored_sample(label, entries.get(label), moment, limit_s)
+        for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS
+    }
+    samples = {label: sample for label, sample in restored.items() if sample is not None}
+    if not restored or len(samples) < len(restored):
         return None
-    oldest = min(source_at for source_at in measured if source_at is not None)
-    age = (time.time() if now is None else now) - oldest
-    return age if 0.0 <= age < limit_s else None
+    age = (time.time() if now is None else now) - min(sample.source_at for sample in samples.values())
+    if not 0.0 <= age < limit_s:
+        return None
+    with _lock:
+        for label, sample in samples.items():
+            _last_good.setdefault(label, sample)  # a reading recorded meanwhile is newer
+    return age
 
 
 def _refresh_one(label: str, timeout_s: float) -> None:

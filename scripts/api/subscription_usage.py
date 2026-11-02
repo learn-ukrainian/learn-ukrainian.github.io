@@ -3207,19 +3207,22 @@ def trigger_claude_account_refresh() -> None:
 
 
 def _claude_account_startup_wait_s(interval_s: float) -> float | None:
-    """Seconds until the first probe is due when a persisted reading is still fresh, else ``None``.
+    """Seconds until the first probe is due when the persisted readings are served again, else ``None``.
 
-    A restart forgets the in-memory probe clock. The persisted readings keep
-    their own times, so the clock is rebuilt from the oldest of them: no probe
-    starts until one interval after that reading, or when it reaches the cache
-    TTL if that comes first.
+    A restart forgets the in-memory readings and probe clock. When every
+    account's persisted reading re-proves its binding and is still fresh, it is
+    served again with its own measured time (``restore_claude_account_samples``)
+    and the clock is rebuilt from the oldest of them: no probe starts until one
+    interval after that reading, or when it reaches the cache TTL if that comes
+    first. In every other case nothing is restored and the probe runs now, so a
+    row is never left unknown for longer than a probe.
     """
     global _claude_account_probe_started_at, _claude_account_startup_pending
     # The per-account module reads this module's CodexBar helpers, so a top-level import is a cycle.
-    from scripts.api.claude_account_usage import restored_probe_age_s  # noqa: PLC0415  # lazy-ok: import cycle
+    from scripts.api import claude_account_usage  # noqa: PLC0415  # lazy-ok: import cycle
 
     try:
-        age = restored_probe_age_s()
+        age = claude_account_usage.restore_claude_account_samples()
         if age is None:
             return None
         wait_s = min(interval_s, _codexbar_cache_ttl_s()) - age
@@ -3244,8 +3247,9 @@ def _claude_account_periodic_loop(interval_s: float, run_immediately: bool) -> N
     after the probe would add both durations. This loop does not share the
     other lanes' pass.
 
-    The first probe is skipped when a persisted reading is younger than the
-    interval; the loop then waits out the rest of that interval first.
+    The first probe is skipped when the persisted readings are served again
+    (``_claude_account_startup_wait_s``); the loop then waits out the rest of
+    that interval first.
     """
     first_wait_s = _claude_account_startup_wait_s(interval_s) if run_immediately else interval_s
     if first_wait_s is not None and _scheduler_stop.wait(timeout=first_wait_s):

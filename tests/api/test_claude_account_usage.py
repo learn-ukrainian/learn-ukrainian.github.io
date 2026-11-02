@@ -25,6 +25,7 @@ import pytest
 from scripts.agent_runtime import attempt_boundary, env_sanitize
 from scripts.agent_runtime.attempt_boundary import ClaudeAccountBinding
 from scripts.api import claude_account_usage as cau
+from scripts.api import subscription_usage
 
 # Shape of ``codexbar usage --json --provider claude``; identity values are synthetic.
 # Each label's fixture reports its own email, as two distinct accounts would.
@@ -1505,6 +1506,41 @@ def test_restored_binding_is_rearmed_by_revalidation(bound, monkeypatch):
     assert _row(cau.claude_accounts_snapshot(), "b")["reason"] == "not_probed"  # its file was rewritten
     cau.revalidate_claude_accounts()
     assert _row(cau.claude_accounts_snapshot(), "b")["status"] == "ok"
+
+
+def test_a_skipped_startup_probe_serves_the_reproved_restored_reading_never_not_probed(
+    bound, provider, monkeypatch, tmp_path
+):
+    """A restart that skips its first probe serves the persisted readings at once (#12483).
+
+    Each binding validates again to its generation, the rows carry the measured
+    time and numbers the previous process served, and no account is probed.
+    """
+    monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
+    monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "720")
+    monkeypatch.setattr(cau, "_samples_path", lambda: tmp_path / "claude_account_samples.json")
+    cau.refresh_claude_account_usage()
+    before = cau.routing_budget_fields()
+    assert {row["status"] for row in before["claude_accounts"].values()} == {"ok"}
+    probes = bound.calls
+
+    cau._reset_for_tests()  # a restart: every in-memory reading is gone, the file stays
+    try:
+        wait_s = subscription_usage._claude_account_startup_wait_s(720.0)
+        assert wait_s is not None
+        assert 0.0 < wait_s <= 720.0
+        after = cau.routing_budget_fields()
+    finally:
+        subscription_usage._claude_account_probe_started_at = None
+
+    assert bound.calls == probes  # the startup probe was skipped
+    assert after["preferred_claude_account"] == before["preferred_claude_account"]
+    for key, row in after["claude_accounts"].items():
+        served = before["claude_accounts"][key]
+        assert (row["status"], row["reason"]) == ("ok", None)
+        assert row["updated"] == served["updated"]
+        assert row["age_s"] >= served["age_s"]
+        assert (row["session5h"], row["weekly"]) == (served["session5h"], served["weekly"])
 
 
 def test_binding_generation_and_fingerprints_are_never_published(bound, caplog):
