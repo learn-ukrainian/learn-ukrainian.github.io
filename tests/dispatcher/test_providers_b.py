@@ -345,7 +345,13 @@ def test_failure_cannot_become_success_from_final_prose(provider, failure):
         stdout, "private diagnostic must not be echoed", 9 if failure == "nonzero" else 0, "Finished."
     )
     assert result.error
-    assert "private diagnostic" not in result.error
+    if provider == "codex" and failure == "nonzero":
+        excerpt = result.error.removeprefix("codex: exited with status 9: ")
+        assert excerpt == "private diagnostic must not be echoed"
+        assert len(excerpt) <= 500
+        assert excerpt == " ".join(excerpt.split())
+    else:
+        assert "private diagnostic" not in result.error
 
 
 @pytest.mark.parametrize("provider", SUCCESS)
