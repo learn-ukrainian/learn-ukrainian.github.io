@@ -134,21 +134,20 @@ UNREFERENCED_EXPIRING_CLASSES = frozenset(
         "acpx-discussion",
     }
 )
+# The approved window is a floor: the flag may lengthen it, never shorten it.
 UNREFERENCED_DEFAULT_DAYS = 90
+UNREFERENCED_MIN_DAYS = 90
 GITHUB_DUMP_MAX_AGE_SECONDS = 24 * 3600
 GITHUB_DUMP_KINDS = frozenset({"issue", "pull_request", "issue_comment", "pr_review_comment"})
 _CITE_ID = re.compile(rb"artifact_[0-9a-f]{32}")
-# A sha256 is a citation only as a token of its own. The tasks source holds
-# checkout snapshots that list every ignored file, including each blob path
-# ``blobs/sha256/<aa>/<digest>``; a digest after ``/`` there is a directory
-# listing, not a citation, and would hold every artifact that existed then.
-_CITE_SHA = re.compile(rb"(?<![0-9a-f])([0-9a-f]{64})")
-_CITE_SHA_NOT_PATH = re.compile(rb"(?<![0-9a-f/])([0-9a-f]{64})")
+# A sha256 is a citation only as a token of its own: not part of a longer hex run.
+_CITE_SHA = re.compile(rb"(?<![0-9a-f])([0-9a-f]{64})(?![0-9a-f])")
 _SCAN_CHUNK = 8 * 1024 * 1024
 _SCAN_OVERLAP = 96
-_DOC_SUFFIXES = frozenset(
-    {".md", ".txt", ".rst", ".yaml", ".yml", ".json", ".jsonl", ".toml", ".py"}
-)
+# The dispatcher writes a full inventory of the checkout, every ignored blob path
+# included, before and after a read-only task. That file is generated output, not
+# a citation; every other file in a snapshot directory is scanned.
+_INVENTORY_SNAPSHOT_FILES = frozenset({"read_only_checkout_pre.json", "read_only_checkout_post.json"})
 _DOC_EXCLUDED_DIRS = frozenset(
     {".git", "node_modules", ".venv", ".worktrees", "batch_state", "data", "__pycache__", ".pytest_cache"}
 )
@@ -314,13 +313,12 @@ class _ScanState:
         self.known_ids = known_ids
         self.sha_to_id = sha_to_id
         self.cited: set[str] = set()
-        self.sha_pattern = _CITE_SHA
 
     def feed(self, data: bytes) -> None:
         for token in _CITE_ID.findall(data):
             if token in self.known_ids:
                 self.cited.add(token.decode("ascii"))
-        for token in self.sha_pattern.findall(data):
+        for token in _CITE_SHA.findall(data):
             artifact_id = self.sha_to_id.get(token)
             if artifact_id is not None:
                 self.cited.add(artifact_id)
@@ -1226,8 +1224,10 @@ class ArtifactStore:
         (``scan_citations``). A citation appearing after that scan is the one
         residual; ``backup_dir`` (required with ``apply``) is the recovery.
         """
-        if older_than_days < 1:
-            raise ArtifactStoreError("older_than_days must be at least 1")
+        if older_than_days < UNREFERENCED_MIN_DAYS:
+            raise ArtifactStoreError(
+                f"older_than_days must be at least {UNREFERENCED_MIN_DAYS} for unreferenced artifacts"
+            )
         if apply and backup_dir is None:
             raise ArtifactStoreError("unreferenced retention requires backup_dir with apply")
         backup_dir = self._prepare_backup_dir(backup_dir, apply)
@@ -1444,14 +1444,11 @@ class ArtifactStore:
         )
         coverage = [
             self._scan_store(state),
-            self._scan_tree("tasks", sources.tasks_dir, state, required_suffix=".json", sha_after_slash=False),
             self._scan_tree(
-                "docs",
-                sources.docs_dir,
-                state,
-                required_suffix=".md",
-                suffixes=_DOC_SUFFIXES,
-                excluded=_DOC_EXCLUDED_DIRS,
+                "tasks", sources.tasks_dir, state, required_suffix=".json", skip_inventories=True
+            ),
+            self._scan_tree(
+                "docs", sources.docs_dir, state, required_suffix=".md", excluded=_DOC_EXCLUDED_DIRS
             ),
             self._scan_github(sources.github_dump, state, now or datetime.now(UTC)),
         ]
@@ -1460,8 +1457,12 @@ class ArtifactStore:
         return CitationScan(frozenset(state.cited), tuple(coverage))
 
     def _scan_store(self, state: _ScanState) -> dict[str, Any]:
-        """Scan message text and the blobs of message-linked artifacts."""
-        state.sha_pattern = _CITE_SHA
+        """Scan message text and the blobs of message-linked artifacts.
+
+        A blob that retention already removed (its row carries the expired
+        marker) has nothing left to cite from; any other missing or unreadable
+        linked blob is an incomplete scan and refuses the run.
+        """
         records = 0
         for row in self._conn.execute("SELECT body_inline, metadata_json FROM comms_messages"):
             records += 1
@@ -1469,20 +1470,24 @@ class ArtifactStore:
                 if text:
                     state.feed(str(text).encode("utf-8"))
         linked = self._conn.execute(
-            """SELECT sha256 FROM artifacts WHERE artifact_id IN (
+            """SELECT sha256, retention_class FROM artifacts WHERE artifact_id IN (
                    SELECT artifact_id FROM message_artifacts
                    UNION SELECT body_artifact_id FROM comms_messages
                          WHERE body_artifact_id IS NOT NULL)"""
         ).fetchall()
-        files = scanned = missing = 0
+        files = scanned = expired = 0
         for row in linked:
             path = self.blob_path_for(str(row["sha256"]))
             try:
                 with open(path, "rb") as handle:
                     scanned += state.feed_stream(handle)
-            except FileNotFoundError:
-                missing += 1  # expired by retention: nothing left to cite from
-                continue
+            except FileNotFoundError as exc:
+                if str(row["retention_class"]).startswith(RETENTION_EXPIRED_PREFIX):
+                    expired += 1
+                    continue
+                raise ArtifactStoreError(
+                    f"citation source store: linked blob {path} is missing, so it cannot be scanned"
+                ) from exc
             except OSError as exc:
                 raise ArtifactStoreError(f"citation scan cannot read blob {path}: {exc}") from exc
             files += 1
@@ -1490,7 +1495,7 @@ class ArtifactStore:
             "source": "store",
             "messages": records,
             "blobs": files,
-            "blobs_missing": missing,
+            "blobs_expired": expired,
             "bytes": scanned,
         }
 
@@ -1501,16 +1506,17 @@ class ArtifactStore:
         state: _ScanState,
         *,
         required_suffix: str,
-        suffixes: frozenset[str] | None = None,
         excluded: frozenset[str] = frozenset(),
-        sha_after_slash: bool = True,
+        skip_inventories: bool = False,
     ) -> dict[str, Any]:
-        """Scan every regular file under ``root`` end to end, or raise.
+        """Scan every file under ``root`` end to end, or raise.
 
-        ``sha_after_slash=False`` ignores a digest that follows ``/`` (a path
-        listing), see ``_CITE_SHA_NOT_PATH``.
+        Complete or refused: a symlink, a non-regular entry, an unreadable
+        or vanished file or directory, or a tree with no ``required_suffix``
+        file raises. Only declared skips are allowed and all are counted in
+        the coverage: ``excluded`` directory names, and (``skip_inventories``)
+        the generated checkout inventories in ``*.snapshots`` directories.
         """
-        state.sha_pattern = _CITE_SHA if sha_after_slash else _CITE_SHA_NOT_PATH
 
         def fail_walk(exc: OSError) -> None:
             raise ArtifactStoreError(f"citation source {name}: cannot list {exc.filename}: {exc}")
@@ -1518,22 +1524,42 @@ class ArtifactStore:
         root = Path(root)
         if not root.is_dir():
             raise ArtifactStoreError(f"citation source {name}: {root} is not a directory")
-        files = required = vanished = total = 0
+        files = required = total = skipped_excluded = skipped_inventory = 0
         digest = hashlib.sha256()
         for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=fail_walk):
-            dirnames[:] = sorted(d for d in dirnames if d not in excluded)
+            kept = []
+            for dirname in sorted(dirnames):
+                if os.path.islink(os.path.join(dirpath, dirname)):
+                    raise ArtifactStoreError(
+                        f"citation source {name}: {dirpath}/{dirname} is a symlink; "
+                        "refusing an incompletely scanned tree"
+                    )
+                if dirname in excluded:
+                    skipped_excluded += 1
+                else:
+                    kept.append(dirname)
+            dirnames[:] = kept
             for filename in sorted(filenames):
                 path = Path(dirpath) / filename
-                if suffixes is not None and path.suffix not in suffixes:
+                if (
+                    skip_inventories
+                    and path.parent.name.endswith(".snapshots")
+                    and filename in _INVENTORY_SNAPSHOT_FILES
+                ):
+                    skipped_inventory += 1
                     continue
                 try:
                     if not stat.S_ISREG(os.lstat(path).st_mode):
-                        continue
+                        raise ArtifactStoreError(
+                            f"citation source {name}: {path} is not a regular file; "
+                            "refusing an incompletely scanned tree"
+                        )
                     with open(path, "rb") as handle:
                         size = state.feed_stream(handle)
-                except FileNotFoundError:
-                    vanished += 1  # a live directory: removed between listing and open
-                    continue
+                except FileNotFoundError as exc:
+                    raise ArtifactStoreError(
+                        f"citation source {name}: {path} vanished during the scan; run again"
+                    ) from exc
                 except OSError as exc:
                     raise ArtifactStoreError(
                         f"citation source {name}: cannot read {path}: {exc}"
@@ -1552,7 +1578,8 @@ class ArtifactStore:
             "path": str(root),
             "files": files,
             "bytes": total,
-            "vanished": vanished,
+            "skipped_excluded_dirs": skipped_excluded,
+            "skipped_inventory_files": skipped_inventory,
             "digest": digest.hexdigest(),
         }
 
@@ -1568,7 +1595,6 @@ class ArtifactStore:
         exposes a truncated write. Any other line is a failure.
         """
         name = "github"
-        state.sha_pattern = _CITE_SHA
         counts: dict[str, int] = {}
         header: dict[str, Any] | None = None
         footer: dict[str, Any] | None = None

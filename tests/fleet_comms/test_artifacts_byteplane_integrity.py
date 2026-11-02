@@ -281,6 +281,8 @@ def test_unreferenced_blob_in_window_referenced_or_pinned_is_never_removed(
         )
 
         assert (report.candidates, report.removed, report.held_cited) == (1, 1, 0)
+        with pytest.raises(ArtifactStoreError, match="at least 90"):
+            store.expire_unreferenced_blobs(citations=_NO_CITATIONS, older_than_days=1)
         assert not old.blob_path.is_file()
         assert store.get(old.artifact_id).retention_class == "expired:default"
         assert (store.get(old.artifact_id).sha256, store.get(old.artifact_id).bytes) == (old.sha256, old.bytes)
@@ -390,30 +392,25 @@ def _sources(
     return CitationSources(tasks_dir=tasks, docs_dir=docs, github_dump=dump)
 
 
-def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(tmp_path: Path) -> None:
+def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """#12574 T3 (CTO-approved). Defect class: the unreferenced rule starts or
     removes with a missing, empty, stale, incomplete or unreadable citation
     source, or removes a cited artifact."""
     with ArtifactStore(root=tmp_path / "plane") as store:
-        by_id = store.store_bytes(_payload(), producer="t")
-        by_sha = store.store_bytes(_payload(), producer="t")
-        uncited = store.store_bytes(_payload(), producer="t")
-        for rec in (by_id, by_sha, uncited):
+        names = ("by_id", "by_sha", "by_path", "by_doc", "uncited", "padded", "inventory")
+        recs = {name: store.store_bytes(_payload(), producer="t") for name in names}
+        for rec in recs.values():
             _age(store, rec.artifact_id)
         now = datetime.now(UTC)
+        blob_path = lambda rec: f"blobs/sha256/{rec.sha256[:2]}/{rec.sha256}"  # noqa: E731
 
         def refuses(sources: CitationSources, match: str) -> None:
             with pytest.raises(ArtifactStoreError, match=match):
                 store.scan_citations(sources, now=now)
-            assert all(r.blob_path.is_file() for r in (by_id, by_sha, uncited))
+            assert all(r.blob_path.is_file() for r in recs.values())
 
-        good = _sources(
-            tmp_path / "good",
-            cite_in_github=f"see {by_id.artifact_id}",
-            # A bare digest cites; a digest in a blob path listing (a checkout
-            # snapshot) does not, so the uncited control is still removed.
-            cite_in_tasks=f"{by_sha.sha256} blobs/sha256/{uncited.sha256[:2]}/{uncited.sha256}",
-        )
         empty = _sources(tmp_path / "empty")
         for jsonfile in empty.tasks_dir.glob("*.json"):
             jsonfile.unlink()
@@ -421,7 +418,10 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(tmp_p
         nodocs = _sources(tmp_path / "nodocs")
         (nodocs.docs_dir / "readme.md").unlink()
         refuses(nodocs, "no .md file")
-        refuses(_sources(tmp_path / "missingkind", kinds=("issue", "pull_request", "issue_comment")), "no records of kind")
+        refuses(
+            _sources(tmp_path / "missingkind", kinds=("issue", "pull_request", "issue_comment")),
+            "no records of kind",
+        )
         refuses(_sources(tmp_path / "stale", fetched_at=now - timedelta(hours=25)), "not within 24 h")
         refuses(_sources(tmp_path / "badfooter", footer=2), "footer says")
         truncated = _sources(tmp_path / "truncated")
@@ -431,19 +431,63 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(tmp_p
         missing = _sources(tmp_path / "gone")
         missing.github_dump.unlink()
         refuses(missing, "cannot open")
+        linked_file = _sources(tmp_path / "linkfile")
+        (linked_file.tasks_dir / "link.json").symlink_to(linked_file.tasks_dir / "task.json")
+        refuses(linked_file, "not a regular file")
+        linked_dir = _sources(tmp_path / "linkdir")
+        (linked_dir.docs_dir / "alias").symlink_to(linked_dir.tasks_dir, target_is_directory=True)
+        refuses(linked_dir, "is a symlink")
+        vanishing = _sources(tmp_path / "vanishing")
+        (vanishing.tasks_dir / "gone.json").write_text("{}")
+        real_lstat = os.lstat
+
+        def lstat_then_vanish(path, *args, **kwargs):
+            if str(path).endswith("gone.json"):
+                raise FileNotFoundError(path)
+            return real_lstat(path, *args, **kwargs)
+
+        monkeypatch.setattr(os, "lstat", lstat_then_vanish)
+        refuses(vanishing, "vanished during the scan")
+        monkeypatch.undo()
         if os.geteuid() != 0:
             locked = _sources(tmp_path / "locked")
             (locked.tasks_dir / "secret.json").write_text("{}")
             (locked.tasks_dir / "secret.json").chmod(0)
             refuses(locked, "cannot read")
 
+        good = _sources(
+            tmp_path / "good",
+            cite_in_github=f"see {recs['by_id'].artifact_id}",
+            # A bare digest cites; so does a digest in a path in a task note;
+            # a 65-character hex run is no token of its own.
+            cite_in_tasks=f"{recs['by_sha'].sha256} {blob_path(recs['by_path'])} {recs['padded'].sha256}0",
+        )
+        (good.docs_dir / "page.mdx").write_text(recs["by_doc"].artifact_id)
+        # The dispatcher's generated checkout inventory lists every blob path:
+        # it is skipped (and counted), unlike any other snapshot file.
+        snapshots = good.tasks_dir / "job.snapshots"
+        snapshots.mkdir()
+        (snapshots / "read_only_checkout_pre.json").write_text(blob_path(recs["inventory"]))
         scan = store.scan_citations(good, now=now)
-        assert scan.cited == frozenset({by_id.artifact_id, by_sha.artifact_id})
+        assert scan.cited == frozenset(
+            recs[name].artifact_id for name in ("by_id", "by_sha", "by_path", "by_doc")
+        )
+        assert [e["skipped_inventory_files"] for e in scan.coverage if e["source"] == "tasks"] == [1]
         report = store.expire_unreferenced_blobs(
             citations=scan, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
         )
-        assert (report.candidates, report.removed, report.held_cited) == (1, 1, 2)
+        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 4)
         assert {entry["source"] for entry in report.sources} == {"store", "tasks", "docs", "github"}
-        assert by_id.blob_path.is_file() and by_sha.blob_path.is_file()
-        assert not uncited.blob_path.is_file()
-        assert store.read_bytes(by_id.artifact_id)
+        for name in ("by_id", "by_sha", "by_path", "by_doc"):
+            assert recs[name].blob_path.is_file()
+        for name in ("uncited", "padded", "inventory"):
+            assert not recs[name].blob_path.is_file()
+        assert store.read_bytes(recs["by_id"].artifact_id)
+
+        # A linked blob that is gone without the expired marker cannot be scanned.
+        linked = store.store_bytes(_payload(), producer="t")
+        store.reference("message_linked", linked.artifact_id)
+        linked.blob_path.unlink()
+        refuses_after = pytest.raises(ArtifactStoreError, match="is missing")
+        with refuses_after:
+            store.scan_citations(good, now=now)

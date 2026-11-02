@@ -1140,6 +1140,7 @@ def cmd_retention(args: argparse.Namespace) -> int:
     """Blob retention (#12530, #12574): dry run unless ``--apply``."""
     from scripts.fleet_comms.artifacts import (
         UNREFERENCED_DEFAULT_DAYS,
+        UNREFERENCED_MIN_DAYS,
         ArtifactStore,
         ArtifactStoreError,
         CitationSources,
@@ -1149,6 +1150,13 @@ def cmd_retention(args: argparse.Namespace) -> int:
     backup_dir = Path(args.backup_dir) if args.backup_dir else None
     if backup_dir is not None and not args.apply:
         raise FleetCommsCliError("retention refused: --backup-dir requires --apply")
+    # Validate every argument before anything is opened, scanned or removed.
+    if args.older_than_days < 1:
+        raise FleetCommsCliError("retention refused: --older-than-days must be at least 1")
+    if args.unreferenced_days is not None and args.unreferenced_days < UNREFERENCED_MIN_DAYS:
+        raise FleetCommsCliError(
+            f"retention refused: --unreferenced-days must be at least {UNREFERENCED_MIN_DAYS}"
+        )
     declared = (args.cited_from_tasks, args.cited_from_docs, args.cited_from_github)
     unreferenced = all(declared)
     if (any(declared) or args.unreferenced_days is not None) and not unreferenced:
@@ -1184,7 +1192,11 @@ def cmd_retention(args: argparse.Namespace) -> int:
             unreferenced_report = (
                 store.expire_unreferenced_blobs(
                     citations=citations,
-                    older_than_days=args.unreferenced_days or UNREFERENCED_DEFAULT_DAYS,
+                    older_than_days=(
+                        UNREFERENCED_DEFAULT_DAYS
+                        if args.unreferenced_days is None
+                        else args.unreferenced_days
+                    ),
                     grace_seconds=args.grace_seconds,
                     apply=args.apply,
                     backup_dir=backup_dir,
@@ -1308,7 +1320,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--unreferenced-days",
         type=int,
         default=None,
-        help="Age floor for unreferenced artifacts (default: 90; needs all --cited-from-*)",
+        help="Age floor for unreferenced artifacts (default and minimum: 90; needs all --cited-from-*)",
     )
     retention.add_argument(
         "--cited-from-tasks",
@@ -1318,7 +1330,7 @@ def build_parser() -> argparse.ArgumentParser:
     retention.add_argument(
         "--cited-from-docs",
         default=None,
-        help="Repository docs tree scanned for citations (checkout root; standard exclusions)",
+        help="Repository docs tree scanned for citations (every file; .git, node_modules, .venv, .worktrees, batch_state and data are skipped and counted)",
     )
     retention.add_argument(
         "--cited-from-github",
