@@ -968,6 +968,8 @@ def _restored_windows(raw: Any) -> dict[str, dict[str, Any]] | None:
         left, delta, leftover = numbers["left_pct"], numbers["pace_delta_pct"], numbers["leftover_pct"]
         if any(value is not None and not 0 <= value <= 100 for value in (left, leftover)):
             return None
+        if delta is not None and not -100 <= delta <= 100:  # the difference of two percentages
+            return None
         windows[name] = {
             "left_pct": left,
             "resets_at": None if resets_at is None else _iso(resets_at),
@@ -978,6 +980,20 @@ def _restored_windows(raw: Any) -> dict[str, dict[str, Any]] | None:
     return windows
 
 
+# Every field ``_persist_sample`` writes; an entry with any other set is refused.
+_ENTRY_FIELDS = frozenset({"source_at", "windows", "generation", "credentials", "named", "fingerprints"})
+
+
+def _digest(value: Any) -> bytes | None:
+    """A SHA-256 digest from its hex form, as ``_persist_sample`` writes it; ``None`` for anything else."""
+    if not isinstance(value, str) or len(value) != 2 * hashlib.sha256().digest_size:
+        return None
+    try:
+        return bytes.fromhex(value)
+    except ValueError:
+        return None
+
+
 def _restored_sample(label: str, entry: Any, now: float, limit_s: float) -> _Sample | None:
     """A persisted reading, attributed again, when it is younger than ``limit_s`` and its binding still holds.
 
@@ -986,38 +1002,46 @@ def _restored_sample(label: str, entry: Any, now: float, limit_s: float) -> _Sam
     must be proven the bound account's, as for a probe. The sample is served
     under that new validation, so the serve-time stat check guards it as it
     guards a probed sample.
+
+    The entry is refused, never repaired: an entry written before attribution
+    was persisted, any field outside ``_ENTRY_FIELDS``, or attribution that is
+    not the non-empty set of digests a sample holds, including its bound
+    account, means probe.
     """
-    if not isinstance(entry, dict):
+    if not isinstance(entry, dict) or set(entry) != _ENTRY_FIELDS:
         return None
-    source_at, generation, credentials = entry.get("source_at"), entry.get("generation"), entry.get("credentials")
-    named, fingerprints = entry.get("named"), entry.get("fingerprints")
-    if isinstance(source_at, bool) or not isinstance(source_at, int | float) or not isinstance(generation, str):
+    source_at, credentials, named = entry["source_at"], entry["credentials"], entry["named"]
+    generation = _digest(entry["generation"])
+    fingerprints = entry["fingerprints"]
+    if isinstance(source_at, bool) or not isinstance(source_at, int | float) or generation is None:
         return None
-    if not isinstance(named, bool) or not isinstance(fingerprints, list):
-        return None  # written before attribution was persisted: probe
+    if not isinstance(named, bool) or not isinstance(fingerprints, list) or not fingerprints:
+        return None
+    digests = [_digest(fingerprint) for fingerprint in fingerprints]
+    persisted = frozenset(digest for digest in digests if digest is not None)
+    if len(persisted) < len(digests):
+        return None  # a value that is not a digest
+    if credentials is not None and not (
+        isinstance(credentials, list) and all(type(fact) is int for fact in credentials)
+    ):
+        return None
     if not 0.0 <= now - float(source_at) < limit_s:
         return None
     windows = _restored_windows(entry.get("windows"))
     if windows is None:
         return None
     try:
-        if credentials is not None and not (
-            isinstance(credentials, list) and all(type(fact) is int for fact in credentials)
-        ):
-            return None
-        persisted = frozenset(bytes.fromhex(fingerprint) for fingerprint in fingerprints)
         proof = _Watch(
             roots=(),
             entries=(),
-            generation=bytes.fromhex(generation),
+            generation=generation,
             credentials=None if credentials is None else tuple(credentials),
         )
         with account_binding(label, verified=proof) as binding:
-            if binding.generation != proof.generation:
+            # Every sample's attribution holds its bound account, proven again here.
+            if binding.generation != generation or _fingerprint("account_id", binding.account) not in persisted:
                 return None
-            # The bound account is proven again now; the account CodexBar named comes from the reading.
-            bound = _fingerprint("account_id", binding.account)
-            accounts = _Accounts(binding.watch, persisted | {bound}, named=named)
+            accounts = _Accounts(binding.watch, persisted, named=named)
             return _Sample(float(source_at), windows, accounts)
     except Exception:  # an unprovable binding means no reuse, never a startup failure
         return None
