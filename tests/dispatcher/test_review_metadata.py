@@ -137,7 +137,7 @@ def test_unpublishable_language_subject_review_refused_before_launch(dispatch, c
 @pytest.mark.parametrize("flags", [("--review-profile", "code"), ("--subject-seat", "grok"),
                                   ("--subject-family", "xai")])
 def test_ambiguous_provider_refused_for_review_only(dispatch, capsys, flags):
-    dispatch("--owned-path", "scripts/dispatcher/providers/hermes.py", *flags, expected=2)
+    dispatch("--owned-path", "scripts/dispatcher/providers/unknown.py", *flags, expected=2)
     assert "ambiguous review subject path" in capsys.readouterr().err
 
 

@@ -229,8 +229,8 @@ def main() -> int:
         "Use this tool to verify repository structural health, case parity, and findings status.\n"
         "Do NOT use this tool for mutating curriculum data or running LLM tasks.",
         epilog="Examples:\n"
-        "  .venv/bin/python scripts/audit/hermes_nightly_audit.py\n"
-        "  .venv/bin/python scripts/audit/hermes_nightly_audit.py --tracks a1\n\n"
+        "  .venv/bin/python scripts/audit/nightly_audit.py\n"
+        "  .venv/bin/python scripts/audit/nightly_audit.py --tracks a1\n\n"
         "Outputs:\n"
         "  batch_state/nightly_audit/audit_YYYYMMDD_HHMMSS.md   - Markdown report of findings.\n"
         "  batch_state/nightly_audit/audit_YYYYMMDD_HHMMSS.json - Machine-readable JSON sidecar.\n"
