@@ -105,3 +105,18 @@ def test_malformed_yaml_and_missing_file_raise_fleet_repo_error(tmp_path: Path):
         load_fleet_repos(malformed)
     with pytest.raises(FleetRepoError, match="catalog unreadable"):
         load_fleet_repos(tmp_path / "absent.yaml")
+
+
+def test_every_registered_repository_resolves_to_a_sibling_checkout_path(tmp_path: Path):
+    """Every registry row maps to its own distinct sibling directory beside the primary (#12499)."""
+    primary = tmp_path / "learn-ukrainian"
+    primary.mkdir()
+    catalog = load_fleet_repos()
+    seen: dict[Path, str] = {}
+    for key, row in catalog.items():
+        _, checkout = resolve_fleet_repo(key, primary_root=primary, repos=catalog, require_checkout=False)
+        expected = primary.resolve() if row.default else (tmp_path / row.local_name).resolve()
+        assert checkout == expected, key
+        assert checkout not in seen, f"{key} and {seen.get(checkout)} share a checkout"
+        seen[checkout] = key
+    assert {"kube-dojo", "kubedojo-labs"} <= set(catalog)
