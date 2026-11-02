@@ -21,6 +21,7 @@ publishing under another identity, as in bounded_advisory.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from collections.abc import Mapping, Sequence
@@ -47,6 +48,7 @@ from scripts.review.verdict_parser import (
     checked_findings_payload,
     finding_entries,
     recognized_verdicts,
+    structured_finding_entries,
 )
 
 # The CTO seat's stable Fleet Comms identity; session-specific slots are not issuers.
@@ -332,13 +334,35 @@ def finding_is_open(entry: str) -> bool:
     return not any(not any(start <= match.start() < end for start, end in opened) for match in _CLOSED.finditer(entry))
 
 
-def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, finding_id: str) -> str | None:
+def _findings_schema_bound(record: Mapping[str, Any]) -> bool | None:
+    """Whether a review run was bound to ``code-review-findings.v1``; None when it was bound to anything else."""
+    from scripts.review.review_contract import SCHEMA_RELATIVE_PATH, package_repo_root
+
+    path = record.get("output_schema_path")
+    if path is None:
+        return False
+    expected = hashlib.sha256((package_repo_root() / SCHEMA_RELATIVE_PATH).read_bytes()).hexdigest()
+    if (not isinstance(path, str) or not Path(path).as_posix().endswith("/" + SCHEMA_RELATIVE_PATH)
+            or record.get("output_schema_sha256") != expected):
+        return None
+    return True
+
+
+def open_blocker_cited(
+    comments: Sequence[Mapping[str, Any]], login: str, finding_id: str, runs: Sequence[Any] | None = None
+) -> str | None:
     """The head of the latest recorded verdict when it is a trusted rejection leaving ``finding_id`` an open P0/P1.
 
     The keeper must read that head as rejected (an edited or unattested
     marker reads as unknown), and the finding's last entry in the reply
     decides its disposition (:func:`finding_is_open`), and its last stated
     severity must be P0 or P1. Withheld findings are no evidence.
+
+    The reply format comes from the recorded run, never from the reply text (#12549). With
+    ``runs`` (the PR's review runs), the marker must name exactly one run (task and start). A run
+    bound to the ``code-review-findings.v1`` schema is read only from its sealed reply through
+    the structured parser, and any failure refuses. A run with no output schema is read as a markdown
+    ledger, and a run bound to another schema refuses. Without ``runs``, only the markdown ledger is read.
     """
     markers = recorder._trusted_markers(comments, login)
     if not markers:
@@ -351,7 +375,22 @@ def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, findin
     if comment.get("created_at") != comment.get("updated_at"):
         return None
     body = comment.get("body")
-    entries = finding_entries(body.partition("<details>")[2] if isinstance(body, str) else "", finding_id)
+    published = body.partition("<details>")[2] if isinstance(body, str) else ""
+    bound = False
+    if runs is not None:
+        from scripts.review.capability_failure import run_started
+
+        matches = [run for run in runs if run.task_id == marker["task"] and run_started(run.record) == marker["started"]]
+        bound = _findings_schema_bound(matches[0].record) if len(matches) == 1 else None
+        if bound is None:
+            return None
+    if bound:
+        reply = matches[0].reply
+        entries = structured_finding_entries(reply, finding_id) if published and isinstance(reply, str) else None
+        if entries is None:
+            return None
+    else:
+        entries = finding_entries(published, finding_id)
     severities = [severity for severity, _ in entries if severity]
     if not entries or not severities or severities[-1] not in BLOCKING_SEVERITIES:
         return None
@@ -442,7 +481,14 @@ def _admit(
                                          repo_root=repo_root, recording_run=recording_run)
         cited = withheld_receipt["cited_verdict_head"]
     else:
-        cited = open_blocker_cited(comments, login, request["finding_id"])
+        from scripts.review import review_lineage as lineage
+
+        try:
+            runs = lineage.lineage_runs(task_root, repository=request["repository"], number=request["pr"],
+                                        branch=request["lineage_id"])
+        except lineage.LineageRefused as exc:
+            raise GrantRefused(EVIDENCE, f"grant {grant.task_id!r}: review runs unreadable: {exc}") from None
+        cited = open_blocker_cited(comments, login, request["finding_id"], runs)
     if cited is None:
         raise GrantRefused(
             BLOCKER,
