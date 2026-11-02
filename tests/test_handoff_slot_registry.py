@@ -320,7 +320,39 @@ def test_grok_monitor_is_a_dedicated_slot_and_muse_monitor_stays_locked() -> Non
     assert gate.returncode == 0, gate.stderr
 
 
-REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "practice", "folk", "bio", "corpus", "hramatka")
+REGISTERED_SELECTORS = (
+    "infra",
+    "devops",
+    "monitor",
+    "open-model-data",
+    "atlas",
+    "practice",
+    "folk",
+    "bio",
+    "corpus",
+    "hramatka",
+    "kube-dojo",
+)
+
+
+def test_kube_dojo_wrapper_dry_run_binds_its_claude_lane() -> None:
+    """The kube-dojo lane wrapper claims its own stream and slot on Sonnet 5.5 (#12553)."""
+    result = subprocess.run(
+        [str(REPO / "scripts" / "start-kube-dojo-driver.sh")],
+        cwd=REPO,
+        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    stream = stream_anchor_id("kube-dojo", REPO)
+    assert f"would claim lease stream={stream} agent=claude" in result.stdout
+    assert "session epic=kube-dojo slot=claude-kube-dojo handoff=" in result.stdout
+    assert "would select agent infra-orchestrator for lane kube-dojo" in result.stdout
+    assert "--model claude-sonnet-5-5" in result.stdout
+    assert "drive kube-dojo/kube-dojo.github.io epic #2272" in result.stdout
 
 
 @pytest.mark.parametrize("provider", ["claude", "codex"])

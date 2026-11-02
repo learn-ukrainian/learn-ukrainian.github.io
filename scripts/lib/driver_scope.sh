@@ -23,7 +23,7 @@ driver_scope_entrypoint() {
     start-glm.sh) row='glm interactive glm' ;;
     start-glmcc.sh) row='glm interactive glmcc' ;;
     scripts/start-bio-driver.sh) row='claude interactive bio' ;;
-    start-claude-driver.sh|start-claude-cto.sh) row='claude driver -' ;;
+    start-claude-driver.sh|start-claude-cto.sh|scripts/start-kube-dojo-driver.sh) row='claude driver -' ;;
     start-codex-driver.sh|start-codex-cto.sh) row='codex driver -' ;;
     start-cursor-driver.sh) row='cursor driver -' ;;
     start-gemini-driver.sh) row='gemini driver -' ;;
