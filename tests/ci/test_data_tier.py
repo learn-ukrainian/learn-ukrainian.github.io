@@ -1410,3 +1410,36 @@ def test_nightly_invalid_external_override_is_not_ignored(nightly, monkeypatch, 
     assert nightly.snapshots == []
     assert not nightly.scratch_root.exists()
     assert invalid.read_text() == "keep"
+
+
+def test_finished_data_tier_run_leaves_no_preserved_copy(tmp_path):
+    """#12528: the run discards its own ignored output, so the guarded remover has nothing to copy."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@example.invalid"]
+    subprocess.run([*git, "init", "-q", "-b", "main"], cwd=primary, check=True, timeout=30)
+    (primary / ".gitignore").write_text("data/\nsite/public/\n")
+    (primary / "README.md").write_text("tracked\n")
+    subprocess.run([*git, "add", "."], cwd=primary, check=True, timeout=30)
+    subprocess.run([*git, "commit", "-q", "-m", "base"], cwd=primary, check=True, timeout=30)
+    parent = primary / ".worktrees" / "data-tier"
+    parent.mkdir(parents=True)
+    checkout = parent / f"run-{'0123456789abcdef' * 2}"
+    subprocess.run([*git, "worktree", "add", "-q", "--detach", str(checkout)], cwd=primary, check=True, timeout=30)
+    (checkout / "data").mkdir()
+    (checkout / "data" / "atlas.db").write_bytes(b"x" * 4096)
+    (checkout / "data" / "ua-gec").mkdir()
+    (checkout / "data" / "ua-gec" / "part.txt").write_text("copy")
+    (checkout / "site" / "public").mkdir(parents=True)
+    (checkout / "site" / "public" / "lexicon.json").write_text("{}")
+
+    discarded = data_tier.discard_run_output(checkout)
+    assert discarded["files"] == 3
+    assert discarded["bytes"] >= 4096
+    assert (checkout / "README.md").is_file()
+
+    removal = data_tier.remove_test_worktree(primary, checkout)
+    assert removal.action == "removed"
+    assert not removal.preserved_artifacts
+    assert not checkout.exists()
+    assert not (primary / "batch_state" / "preserved").exists()

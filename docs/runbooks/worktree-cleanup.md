@@ -281,8 +281,14 @@ and the old-tree report does not inspect a held checkout. Clearing the hold
 does not push or remove the tree; the next settlement decides. The run's private receipt lists every
 finished task's tree still on disk with its reason; the summary carries
 `retained_count`, `retained_safety_stops` and `retained_complete`.
+A finished data-tier run discards its own checkout output first (`discard_run_output` in
+`scripts/ci/data_tier.py`; the file and byte totals go in the run summary's `discarded_output`).
+The checkout is a fresh `origin/main` worktree, so everything ignored in it is the run's own
+snapshot, provisioned copy or test output, and the test report, log and summary a failed run needs
+stay in `batch_state/data-tier/`. A finished run therefore leaves nothing to preserve (#12528).
 The same run prunes the nightly data-tier job's abandoned checkouts
-(`.worktrees/data-tier/run-*`), which no task record names: the remover removes
+(`.worktrees/data-tier/run-*`), which no task record names (a run killed before its cleanup):
+the remover removes
 one only after its ignored output is in a verified copy under
 `batch_state/preserved/data-tier-run-<id>/` (up to 4 GiB), and the receipt's
 `unrecorded` list gives each checkout's path, the copy's size and its locator.
