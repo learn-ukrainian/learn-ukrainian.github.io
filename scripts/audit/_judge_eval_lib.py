@@ -794,8 +794,7 @@ def _render_evidence_section(evidence: dict[str, Any]) -> str:
 def build_judge_prompt_h2(target_text: str, evidence: dict[str, Any]) -> str:
     """H2 evidence-rich judge prompt with cite-or-forbid + UA-GEC + Antonenko prose.
 
-    Differences vs ``build_judge_prompt`` (baseline preserved on
-    ``main``/``grok_judge_calibration.py``):
+    Differences vs ``build_judge_prompt`` (baseline preserved on ``main``):
 
     1. Six evidence channels (was: only Antonenko headwords).
     2. Cite-or-forbid: every issue must include ``evidence_type`` ∈
@@ -968,7 +967,7 @@ def judgment_row_from_case(
     verdict: dict[str, Any],
     score: dict[str, Any],
 ) -> dict[str, Any]:
-    """Build the legacy judgment row written by ``grok_judge_calibration.py``."""
+    """Build the legacy judgment row written by the standalone calibration harnesses."""
     return {
         "prompt_id": case["prompt_id"],
         "model": model,
@@ -993,7 +992,7 @@ def render_grok_report(
     report_lines = [
         f"# Grok 4.3 Russianism judge calibration — {time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())}",
         "",
-        f"Model: `{model}` via Hermes OAuth (`api.x.ai/v1`)",
+        f"Model: `{model}`",
         f"Cases: {agg['n']} (from `{calibration_blob}` on `{ref}`)",
         "",
         "## Aggregate",

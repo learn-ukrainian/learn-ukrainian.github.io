@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """Calibrate qwen3.7-max (via opencode + OpenRouter) as a Russianism judge.
 
-Sibling of ``scripts/audit/qwen_judge_calibration.py``. Difference: routes
-through the ``opencode run`` CLI instead of ``hermes -z``, so the judge runs
-inside opencode's coder-agent runtime. This is the **deployment-realistic**
+Routes through the ``opencode run`` CLI, so the judge runs inside
+opencode's coder-agent runtime. This is the **deployment-realistic**
 shape for qwen3.7-max as a 2nd-judge candidate (PR-D1 wired the bridge
 via ``ab ask-opencode`` 2026-05-23, default model ``openrouter/qwen/qwen3.7-max``).
 
-Confound vs hermes route: opencode injects a substantial coder-agent system
-prompt (~13K tokens measured on smoke). For apples-to-apples comparison
-against the 2026-05-15 leaderboard (which used near-empty system context)
-prefer the hermes route. For "how does qwen3.7-max behave as a judge IF we
-wire it into the V7 pipeline via opencode" prefer this route.
+Confound: opencode injects a substantial coder-agent system prompt
+(~13K tokens measured on smoke). The 2026-05-15 leaderboard used near-empty
+system context, so account for that when comparing scores; for "how does
+qwen3.7-max behave as a judge IF we wire it into the V7 pipeline via
+opencode" this route is the right one.
 
 User direction 2026-05-23: "you should use qwen3.7-max with opencode
 against openrouter".
@@ -192,7 +191,7 @@ def main() -> int:
             scores.append(score)
             row = judgment_row_from_case(case=case, model=args.model, verdict=verdict, score=score)
             fh.write(json.dumps(row, ensure_ascii=False) + "\n")
-            fh.flush()  # survive mid-run kills (lesson from hermes cal SIGTERM)
+            fh.flush()  # survive mid-run kills (lesson from an earlier calibration SIGTERM)
             tag = "PASS" if score["case_acc"] else "FAIL"
             print(f"{tag} verdict={verdict.get('verdict')} dur={row['duration_s']}s")
 
