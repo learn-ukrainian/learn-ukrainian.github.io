@@ -230,3 +230,23 @@ def test_refresh_keeps_configured_hooks_and_contains_registry_trouble(sandbox, m
         fcntl.flock(held, fcntl.LOCK_EX)
         outcome = git.settle_worktree(record)
     assert outcome["worktree_disposition_reason"] == "dirty" and outcome["worktree_registry"].startswith("failed: TimeoutError")
+
+
+def test_a_home_relative_hooks_path_keeps_its_guards(sandbox, monkeypatch, tmp_path):  # noqa: F811
+    from scripts.dispatcher import git
+
+    primary, registry, _ = declared_repo(sandbox)
+    home = tmp_path / "home"
+    (home / "hooks").mkdir(parents=True)
+    guard = home / "hooks/pre-commit"
+    guard.write_text("#!/bin/sh\nexit 1\n")
+    guard.chmod(0o755)
+    monkeypatch.setenv("HOME", str(home))
+    run_git(primary, "config", "core.hooksPath", "~/hooks")
+    sha = run_git(primary, "rev-parse", "HEAD")
+    tree = primary / ".worktrees/dispatch/codex/tilde"
+    git.create_worktree(primary, tree, "codex/tilde", sha,
+                        registration=dict(registry=registry, agent="codex", task_id="tilde", initiator=None, purpose="p"))
+    refused = git.subprocess.run(["git", "-C", str(tree), "-c", "user.name=S", "-c", "user.email=s@example.invalid",
+                                  "commit", "--allow-empty", "-m", "x"], capture_output=True)
+    assert refused.returncode != 0, "the guard behind ~/hooks must still run"

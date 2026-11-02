@@ -522,8 +522,8 @@ def _install_refresh_hooks(path: Path, registry: Path) -> None:
         def where(*args):
             return Path(_git(path, "rev-parse", "--path-format=absolute", *args, isolate=True))
         try:
-            # Git resolves a relative core.hooksPath against the worktree's top level.
-            chain = Path(path) / _git(path, "config", "--get", "core.hooksPath", isolate=True)
+            # Git expands a leading ~ and resolves a relative core.hooksPath against the worktree top level.
+            chain = Path(path) / _git(path, "config", "--path", "--get", "core.hooksPath", isolate=True)
         except subprocess.CalledProcessError:
             chain = where("--git-path", "hooks")
         hooks = where("--git-path", "dispatch-hooks")
