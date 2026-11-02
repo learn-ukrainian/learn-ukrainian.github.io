@@ -845,6 +845,7 @@ def test_salvage_release_pins_remove_published_tracked_work_but_retain_unique_ou
         sandbox, monkeypatch, synthetic_opsec, unique_output):
     """Defect class: salvage ignores committed release pins and retains published tracked work."""
     from scripts.common import github_client
+    from scripts.fleet.regenerable_output import committed_release_pins
     from tests.fleet.test_regenerable_release_output import pinned_checkout
 
     pinned_checkout((sandbox.repo, sandbox.repo, sandbox.tasks))
@@ -853,7 +854,8 @@ def test_salvage_release_pins_remove_published_tracked_work_but_retain_unique_ou
     monkeypatch.setattr(github_client, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
         args, 0, json.dumps({"assets": json.loads(assets)})))
     monkeypatch.setattr(git, "SALVAGE_IGNORED_LIMIT", 1)
-    record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
+    record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write",
+                                            "--sparse-include", "site/src/data"), expected=1)
     tree = Path(record["worktree_path"])
     # Copy only the ignored release outputs; pointers and hydrators came from the committed base.
     for name in ("site/src/data/lexicon-manifest.json", "site/public/lexicon/practice-index.A1.json"):
@@ -869,6 +871,8 @@ def test_salvage_release_pins_remove_published_tracked_work_but_retain_unique_ou
         (tree / "ignored/evidence.bin").write_bytes(b"unpublished evidence")
 
     in_process_repo(sandbox, monkeypatch)
+    assert set(committed_release_pins(tree, set(run_git(tree, "ls-files").splitlines()))) == {
+        "site/src/data/lexicon-manifest.json", "site/public/lexicon/practice-index.A1.json"}
     worker.settle_left_worktrees(salvage=True)
     settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
     if unique_output:
