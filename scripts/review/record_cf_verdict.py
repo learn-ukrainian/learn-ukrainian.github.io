@@ -22,6 +22,8 @@ from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 from typing import Any, Literal
 
+import yaml
+
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -141,6 +143,8 @@ NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
 # a security-sensitive change gets the elevated budget.
 DEFAULT_REVIEW_ROUNDS = 3
 ELEVATED_REVIEW_ROUNDS = 5
+# A target repository whose own review policy sets another automatic budget declares it here (#12584).
+REVIEW_BUDGET_POLICY = Path(__file__).resolve().parents[2] / "scripts" / "config" / "review_budget_policy.yaml"
 
 
 class RecordError(RuntimeError):
@@ -2026,17 +2030,45 @@ def require_no_same_head_rejection(comments: Sequence[Mapping[str, Any]], sha: s
         )
 
 
+def repository_review_rounds(repository: str, policy: Path = REVIEW_BUDGET_POLICY) -> int:
+    """The automatic round budget the target repository's own review policy declares (#12584).
+
+    It is the repository's ``review_rounds`` in ``scripts/config/review_budget_policy.yaml``.
+    A repository the file does not list gets ``DEFAULT_REVIEW_ROUNDS``. An unreadable or
+    malformed file, a repository listed twice, or a value that is not an integer from 1 to
+    ``ELEVATED_REVIEW_ROUNDS`` refuses.
+    """
+    try:
+        document = yaml.safe_load(policy.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        raise RecordError("review budget unavailable: the review budget policy is unreadable") from None
+    listed = document.get("repositories") if isinstance(document, Mapping) and document.get("version") == 1 else None
+    if not isinstance(listed, Mapping):
+        raise RecordError("review budget unavailable: the review budget policy is malformed")
+    wanted = normalize_repository(repository)
+    rows = [row for name, row in listed.items() if wanted != "unknown" and normalize_repository(str(name)) == wanted]
+    if not rows:
+        return DEFAULT_REVIEW_ROUNDS
+    declared = rows[0].get("review_rounds") if len(rows) == 1 and isinstance(rows[0], Mapping) else None
+    if type(declared) is not int or not 1 <= declared <= ELEVATED_REVIEW_ROUNDS:
+        raise RecordError(
+            f"review budget unavailable: {repository} needs one review_rounds integer from 1 to {ELEVATED_REVIEW_ROUNDS}"
+        )
+    return declared
+
+
 def review_round_budget(facts: BranchReviewFacts) -> int:
-    """Rounds one PR may spend: 5 on a security-sensitive change, else 3 (C-2902).
+    """Rounds one PR may spend: 5 on a security-sensitive change, else its repository's budget (C-2902, #12584).
 
     The tier comes from the branch's own changed paths, the shared rule that
     raises a security-sensitive target to critical. The review task's
     caller-supplied risk never raises it: the dispatcher of a review can be
-    the author.
+    the author. Otherwise the budget is the one the target repository declares
+    (:func:`repository_review_rounds`), 3 when it declares none.
     """
     if is_security_sensitive_change(facts.changed_paths, facts.scope_paths):
         return ELEVATED_REVIEW_ROUNDS
-    return DEFAULT_REVIEW_ROUNDS
+    return repository_review_rounds(facts.repository)
 
 
 def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[int, dict[str, Any]]]:
@@ -3115,10 +3147,10 @@ def dispatch_budget_check(
     (``review_lineage.dispatched_rounds``). A dispatch that names only one of PR and branch has
     the other read from GitHub first, so runs recorded under either count; with no review run of
     the repository on record, no round has been spent and nothing more is read. A head that
-    already has a run opens no round, and while the other dispatched heads stay under the default
-    budget the round is admitted. From there the recorder's own decision at the PR's current head
-    applies (:func:`budget_check`), so the PR's tier, a clean base merge, a designated grant or the
-    lineage's repair round may still admit it. A branch with no open PR gets the default budget.
+    already has a run opens no round, and while the other dispatched heads stay under the
+    repository's budget (:func:`repository_review_rounds`) the round is admitted. From there the
+    recorder's own decision at the PR's current head applies (:func:`budget_check`), so the PR's
+    tier, a clean base merge, a designated grant or the lineage's repair round may still admit it. A branch with no open PR gets the repository's budget.
     """
     from scripts.review.review_lineage import dispatched_rounds, lineage_runs, review_records
 
@@ -3131,12 +3163,13 @@ def dispatch_budget_check(
         branch = _pr(repository, "", number)["headRefName"]
     runs = lineage_runs(task_root, repository=repository, number=number, branch=branch, records=records)
     heads = dispatched_rounds(runs=runs, comments=(), login="")
-    if head in heads or len(heads) < DEFAULT_REVIEW_ROUNDS:
+    budget = repository_review_rounds(repository)
+    if head in heads or len(heads) < budget:
         return None
     if number is None:
         raise RecordError(
             f"REVIEW_BUDGET_EXHAUSTED: branch {branch} has review dispatches at {len(heads)} heads and no open PR; "
-            f"its budget is {DEFAULT_REVIEW_ROUNDS} rounds; budget end is never approval, escalate instead"
+            f"its budget is {budget} rounds; budget end is never approval, escalate instead"
         )
     return budget_check(repository, number, task_root=task_root, head=head)
 
