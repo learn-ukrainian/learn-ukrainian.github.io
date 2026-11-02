@@ -43,7 +43,7 @@ def msg_db(tmp_path):
         if quote or variant in {"plain", "embedded_quote", "trailing_backslash"}
     ],
 )
-@pytest.mark.parametrize("prefix", ["", "status: pending "])
+@pytest.mark.parametrize("prefix", ["", "status: pending ", "https://"])
 def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote, prefix, variant):
     value = _OPAQUE_TOKEN[:12]
     if variant == "embedded_quote":

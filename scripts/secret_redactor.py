@@ -244,7 +244,8 @@ def _redact_assignments(text: str) -> str:
             continue
         while match.start() >= authority[1]:
             authority = next(authorities, (len(text), len(text)))
-        if match.group("separator") == ":" and authority[0] <= match.start() < authority[1]:
+        if (match.group("separator") == ":"
+                and authority[0] <= match.start() < match.end() <= authority[1]):
             continue
         start = match.end()
         if start == len(text):
