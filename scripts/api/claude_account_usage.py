@@ -951,7 +951,12 @@ def _persist_sample(label: str, sample: _Sample) -> None:
 
 
 def _restored_windows(raw: Any) -> dict[str, dict[str, Any]] | None:
-    """The persisted windows rebuilt from their numbers, as ``_window_row`` builds them; ``None`` if malformed."""
+    """The persisted windows, only when each is exactly what ``_window_row`` builds; ``None`` otherwise.
+
+    Nothing is coerced: every number is finite and in its domain, the projected
+    leftover is a whole percentage, the reset time is in the canonical form, and
+    the pace text is the one its delta derives.
+    """
     if not isinstance(raw, dict) or set(raw) != {name for _key, name in _WINDOWS}:
         return None
     windows: dict[str, dict[str, Any]] = {}
@@ -959,24 +964,23 @@ def _restored_windows(raw: Any) -> dict[str, dict[str, Any]] | None:
         window = raw[name]
         if not isinstance(window, dict) or set(window) != set(_WINDOW_FIELDS):
             return None
-        numbers = {key: _number(window[key]) for key in ("left_pct", "pace_delta_pct", "leftover_pct")}
-        resets_at = _timestamp(window["resets_at"]) if isinstance(window["resets_at"], str) else None
-        if any(window[key] is not None and value is None for key, value in numbers.items()):
+        left, delta, leftover = window["left_pct"], window["pace_delta_pct"], window["leftover_pct"]
+        if any(value is not None and _number(value) is None for value in (left, delta)):
             return None  # a value that is not a finite number
-        if window["resets_at"] is not None and resets_at is None:
-            return None
-        left, delta, leftover = numbers["left_pct"], numbers["pace_delta_pct"], numbers["leftover_pct"]
-        if any(value is not None and not 0 <= value <= 100 for value in (left, leftover)):
+        if left is not None and not 0 <= left <= 100:
             return None
         if delta is not None and not -100 <= delta <= 100:  # the difference of two percentages
             return None
-        windows[name] = {
-            "left_pct": left,
-            "resets_at": None if resets_at is None else _iso(resets_at),
-            "pace": _pace_label(delta),  # derived from the number, never stored text
-            "pace_delta_pct": delta,
-            "leftover_pct": None if leftover is None else round(leftover),
-        }
+        if leftover is not None and (type(leftover) is not int or not 0 <= leftover <= 100):
+            return None
+        resets_at = window["resets_at"]
+        if resets_at is not None:
+            moment = _timestamp(resets_at) if isinstance(resets_at, str) else None
+            if moment is None or _iso(moment) != resets_at:
+                return None
+        if window["pace"] != _pace_label(delta):
+            return None
+        windows[name] = {field: window[field] for field in _WINDOW_FIELDS}
     return windows
 
 
@@ -985,13 +989,18 @@ _ENTRY_FIELDS = frozenset({"source_at", "windows", "generation", "credentials", 
 
 
 def _digest(value: Any) -> bytes | None:
-    """A SHA-256 digest from its hex form, as ``_persist_sample`` writes it; ``None`` for anything else."""
-    if not isinstance(value, str) or len(value) != 2 * hashlib.sha256().digest_size:
+    """A SHA-256 digest from exactly the lowercase hex ``_persist_sample`` writes; ``None`` for anything else.
+
+    ``bytes.fromhex`` skips whitespace, so the decoded digest must also encode
+    back to the same text: no whitespace, no other case, no other length.
+    """
+    if not isinstance(value, str):
         return None
     try:
-        return bytes.fromhex(value)
+        digest = bytes.fromhex(value)
     except ValueError:
         return None
+    return digest if len(digest) == hashlib.sha256().digest_size and digest.hex() == value else None
 
 
 def _restored_sample(label: str, entry: Any, now: float, limit_s: float) -> _Sample | None:
