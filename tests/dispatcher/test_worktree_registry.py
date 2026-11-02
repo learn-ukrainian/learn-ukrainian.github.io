@@ -136,3 +136,49 @@ def test_noncanonical_spelling_and_live_path(sandbox):  # noqa: F811
     else:
         raise AssertionError("a live path must not be re-registered")
     assert json.loads(registry.read_text())["worktrees"][canonical] == before
+
+
+def test_a_commit_refreshes_the_record_and_a_retained_tree_keeps_its_final_head(sandbox, monkeypatch):  # noqa: F811
+    from scripts.dispatcher import git, store
+
+    monkeypatch.setattr(store, "retention_hold_disposition", lambda _record: None)  # no on-disk task record here
+
+    primary, registry, other = declared_repo(sandbox)
+    sha = run_git(primary, "rev-parse", "HEAD")
+    tree = primary / ".worktrees/dispatch/codex/live"
+    registration = dict(registry=registry, agent="codex", task_id="live", initiator=None, purpose="p")
+    # The repository's own hook keeps running beside the refresh hooks.
+    own = primary / ".git/hooks/post-commit"
+    own.write_text(f"#!/bin/sh\ntouch {primary}/own-hook-ran\n")
+    own.chmod(0o755)
+    monkeypatch.setattr(git, "resolve_repo", lambda _key=None: (primary, dict(worktree_registry=REGISTRY)))
+    git.create_worktree(primary, tree, "codex/live", sha, registration=registration)
+
+    def entry():
+        return json.loads(registry.read_text())["worktrees"][str(tree.resolve())]
+    assert entry()["head"] == sha
+    # Plain git commits, so the hooks really fire; the second is an amend (post-rewrite).
+    run_git(tree, "-c", "user.name=S", "-c", "user.email=s@example.invalid", "commit", "--allow-empty", "-m", "one")
+    first = run_git(tree, "rev-parse", "HEAD")
+    assert entry()["head"] == first != sha
+    run_git(tree, "-c", "user.name=S", "-c", "user.email=s@example.invalid", "commit", "--amend", "--allow-empty",
+            "-m", "one again")
+    second = run_git(tree, "rev-parse", "HEAD")
+    assert entry()["head"] == second != first and entry()["branch"] == "codex/live"
+    assert (primary / "own-hook-ran").exists()
+
+    # Settlement of a tree it keeps records that final head; the other records stay as they were.
+    (tree / "README").write_text("uncommitted\n")
+    run_git(tree, "add", "README")
+    record = dict(task_id="live", repo="declared", worktree_path=str(tree), worktree_branch="codex/live",
+                  worktree_base_sha=sha, mode="workspace-write", options={})
+    registry_before = json.loads(registry.read_text())
+    stale = {**registry_before["worktrees"][str(tree.resolve())], "head": sha}
+    registry.write_text(json.dumps({**registry_before, "worktrees": {**registry_before["worktrees"],
+                                                                        str(tree.resolve()): stale}}))
+    outcome = git.settle_worktree(record)
+    assert (outcome["worktree_disposition"], outcome["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert outcome["worktree_registry"] == "refreshed"
+    data = json.loads(registry.read_text())
+    assert (data["worktrees"][str(tree.resolve())]["head"], data["worktrees"][str(tree.resolve())]["state"]) == (second, "active")
+    assert data["worktrees"]["/elsewhere"] == other and data["artifacts"] == {"/scratch/a": {"keep": 1}}
