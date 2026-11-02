@@ -429,7 +429,9 @@ def _dispatch(args) -> int:
     start = args.pinned_head or args.branch or args.base
     publish_remote = None
     exact = False
-    if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
+    if args.mode == "workspace-write" and args.branch and not args.pinned_head:
+        # A dry-run resolves the same start as the real run: worktree_plan would otherwise
+        # rev-parse a local refs/heads/<branch> that may be absent or stale (#12468).
         start, publish_remote = git.publish_start(repo, info, args.branch, task_id)
         exact = True
     elif args.mode == "read-only" and args.branch and not args.pinned_head and not args.cwd:
@@ -533,7 +535,7 @@ def _dispatch(args) -> int:
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
         invocation = runtime_context.build(spec, child_env(spec))
-        plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
+        plan = dict(worktree=str(worktree), start_sha=sha, argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
