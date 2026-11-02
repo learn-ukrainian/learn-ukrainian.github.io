@@ -129,8 +129,11 @@ def _settled_receipt(record: Mapping[str, Any], result: str, *, head: str) -> di
     checks = (
         (record.get("status") == "done", "task did not settle done"),
         (record.get("mode") == "read-only", "task is not read-only"),
-        (record.get("require_review_verdict") is True and record.get("schema_version") == 2,
-         "task did not require a review verdict"),
+        # Only a verdict-bound code or infra task outside a bound review attempt settles through the
+        # dispatcher's canonical receipt gate (worker._receipt_failure).
+        (record.get("require_review_verdict") is True and record.get("schema_version") == 2
+         and record.get("review_profile") in {"code", "infra"} and not record.get("review_attempt"),
+         "task did not settle through the receipt gate"),
         # The worktree started at the PR head and was still there when the task settled.
         (record.get("worktree_start_sha") == head and record.get("head_sha") == head,
          "task did not review the PR head"),
