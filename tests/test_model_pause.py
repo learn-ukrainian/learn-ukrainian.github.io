@@ -519,6 +519,7 @@ def test_headroom_read_right_after_startup_returns_reading_or_typed_unknown(monk
     """
     import io
 
+    monkeypatch.setattr(mp, "_monitor_wait_spent_at", None)
     payload = {"agents": {}}
     attempts = {"n": 0}
 
@@ -535,5 +536,11 @@ def test_headroom_read_right_after_startup_returns_reading_or_typed_unknown(monk
 
     attempts["n"] = -10**9  # never ready
     monkeypatch.setattr(mp, "_MONITOR_READY_WAIT_S", 0.05)
+    monkeypatch.setattr(mp, "_MONITOR_RETRY_PAUSE_S", 0.01)
     with pytest.raises(mp.MonitorUnavailable):
         mp.routing_budget_used_pct("codex", account=HOST_ACCOUNT)
+    # A second read in the same walk (another reviewer candidate) must not wait again.
+    spent = attempts["n"]
+    with pytest.raises(mp.MonitorUnavailable):
+        mp.routing_budget_used_pct("codex", account=HOST_ACCOUNT)
+    assert attempts["n"] == spent + 1
