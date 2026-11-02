@@ -59,9 +59,13 @@ clear_codex_launcher_rollover_env() {
   unset CODEX_LAUNCHER_ROLLOVER_ID
 }
 
+# resolve_codex_pending_rollover <project-dir> <handoff-agent> [<stream-id>]
+# The stream defaults to SESSION_STREAM_ID. The launcher's pre-lease call runs
+# before the lease exports that variable, so it passes the stream explicitly.
 resolve_codex_pending_rollover() {
   local project_dir="$1"
   local handoff_agent="$2"
+  local stream_id="${3-${SESSION_STREAM_ID:-}}"
   local python_bin="$project_dir/.venv/bin/python"
   local handoff_script="$project_dir/scripts/orchestration/thread_handoff.py"
   local detect_output=""
@@ -74,6 +78,7 @@ resolve_codex_pending_rollover() {
   local native_title_supported=""
   local title_state=""
   local replacement_task_id=""
+  local leftovers=""
   local runner=()
   local parser_runner=()
 
@@ -95,12 +100,12 @@ resolve_codex_pending_rollover() {
   if [ -n "${THREAD_ROLLOVER_COMMAND_RUNNER:-}" ]; then
     detect_output="$(
       "${runner[@]}" "$python_bin" "$handoff_script" --repo-root "$project_dir" \
-        detect --agent "$handoff_agent" --stream "${SESSION_STREAM_ID:-}" --format json 2>&1
+        detect --agent "$handoff_agent" --stream "$stream_id" --format json 2>&1
     )" || detect_rc=$?
   else
     detect_output="$(
       "$python_bin" "$handoff_script" --repo-root "$project_dir" \
-        detect --agent "$handoff_agent" --stream "${SESSION_STREAM_ID:-}" --format json 2>&1
+        detect --agent "$handoff_agent" --stream "$stream_id" --format json 2>&1
     )" || detect_rc=$?
   fi
   if [ "$detect_rc" -ne 0 ]; then
@@ -120,9 +125,24 @@ import re
 import sys
 
 payload = json.load(sys.stdin)
+# Packets detect left alone are reported on a second line; nothing deletes them.
+reasons = {
+    "skipped_stale": "older than the lane handoff",
+    "skipped_foreign": "other stream",
+    "skipped_fallback": "bare provider namespace",
+    "skipped_superseded": "superseded",
+    "excluded_terminal": "terminal",
+}
+counts = [
+    f"{len(payload[key])} {label}"
+    for key, label in reasons.items()
+    if isinstance(payload.get(key), list) and payload[key]
+]
+leftovers = ", ".join(counts)
 status = payload.get("status")
 if status == "none":
     print("none")
+    print(leftovers)
     raise SystemExit(0)
 if status not in {"pending_start", "resumed"}:
     raise SystemExit(f"unexpected rollover status: {status!r}")
@@ -172,6 +192,7 @@ print(
         ]
     )
 )
+print(leftovers)
 '
   )"; then
     printf 'Error: Codex rollover preflight returned malformed state.\n' >&2
@@ -179,8 +200,14 @@ print(
     return 1
   fi
 
-  IFS=$'\t' read -r status packet_agent lineage_id rollover_id \
-    native_title_supported title_state replacement_task_id <<< "$parsed"
+  {
+    IFS=$'\t' read -r status packet_agent lineage_id rollover_id \
+      native_title_supported title_state replacement_task_id
+    IFS= read -r leftovers || true
+  } <<< "$parsed"
+  if [ -n "$leftovers" ]; then
+    printf 'Rollover preflight: left unchanged (never deleted): %s.\n' "$leftovers"
+  fi
   if [ "$status" = "none" ]; then
     printf 'Rollover preflight: no pending packet for %s; starting a fresh task.\n' \
       "$handoff_agent"

@@ -4062,9 +4062,11 @@ def test_session_start_lists_multiple_pending_without_formatting_failure(tmp_pat
 
     monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    # The bare-namespace packet is prepared last: an older one would stand aside
+    # for the lane's own packet (#12567) instead of making detect ambiguous.
     packets = {
         owner: _prepare_stream_packet(tmp_path, capsys, owner=owner, thread_id=f"old-{owner}")
-        for owner in ("codex", "codex-atlas")
+        for owner in ("codex-atlas", "codex")
     }
     monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: _EmptyBundleList())
 

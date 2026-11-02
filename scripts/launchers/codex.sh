@@ -163,9 +163,20 @@ launcher_adapter_prelease() {
   if [ "$LC_HARNESS" != codex ] || [ "${LC_DRIVER_LEASE_ENABLED:-1}" != 1 ]; then
     return 0
   fi
+  # The lease (which exports SESSION_STREAM_ID) is claimed after this check,
+  # so pass the launcher's stream explicitly. Without it, every packet under
+  # the bare `codex` namespace was skipped and the lane cold-started (#12567).
+  local stream
+  stream="$(launcher_selector_stream "$LC_EPIC")" || return 1
   # shellcheck source=scripts/lib/thread_rollover_link.sh
   source "$LC_ROOT/scripts/lib/thread_rollover_link.sh"
-  resolve_codex_pending_rollover "$LC_CODEX_CANONICAL_ROOT" "$SESSION_HANDOFF_AGENT"
+  if [ "$LC_DRY_RUN" = 1 ]; then
+    # detect is read-only; a dry run reports the packet it would bind.
+    resolve_codex_pending_rollover "$LC_CODEX_CANONICAL_ROOT" "$SESSION_HANDOFF_AGENT" "$stream" \
+      || echo 'LAUNCHER_DRY_RUN=1: rollover preflight would refuse launch (exit 1)'
+    return 0
+  fi
+  resolve_codex_pending_rollover "$LC_CODEX_CANONICAL_ROOT" "$SESSION_HANDOFF_AGENT" "$stream"
 }
 launcher_adapter_canary() {
   local py stream

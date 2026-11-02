@@ -1702,10 +1702,11 @@ launcher_main() {
       # packet scan: every driver must see an imported packet at cold start.
       launcher_import_rollover_bundle
     fi
-    if [ "$LC_DRY_RUN" != "1" ] && declare -F launcher_adapter_prelease >/dev/null 2>&1; then
+    if declare -F launcher_adapter_prelease >/dev/null 2>&1; then
       # Continuity refusal (rollover ambiguity / already-resumed packet) is the
       # legacy public exit 1 — NOT 5, which is reserved for transport
-      # degradation (#5958 CI fix; e2e callers pin this contract).
+      # degradation (#5958 CI fix; e2e callers pin this contract). Under a dry
+      # run the adapter only reports its read-only rollover check (#12567).
       launcher_adapter_prelease || exit 1
     fi
     if [ "${LC_DRIVER_LEASE_ENABLED:-1}" != "1" ]; then
