@@ -490,6 +490,7 @@ def test_reading_with_a_past_resets_at_is_not_used_as_headroom(monkeypatch) -> N
     assert read("claude", lanes(after)) == 99.0
     assert read("codex", lanes(None)) == 99.0  # no resets_at is no evidence
     assert read("codex", lanes("soon")) == 99.0
+    assert read("codex", lanes(10**400)) == 99.0  # overflowing numbers are unparseable, not an error
 
     # the account's own row
     for resets_at, expected in ((before, None), (after, 11.0)):

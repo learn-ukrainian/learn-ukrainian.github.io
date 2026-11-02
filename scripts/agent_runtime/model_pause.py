@@ -427,8 +427,8 @@ def _reset_instant(value: object) -> datetime | None:
     if isinstance(value, bool):
         return None
     if isinstance(value, int | float):
-        seconds = float(value) / 1000.0 if value > 1e12 else float(value)
         try:
+            seconds = float(value) / 1000.0 if value > 1e12 else float(value)
             return datetime.fromtimestamp(seconds, UTC)
         except (OverflowError, OSError, ValueError):
             return None
