@@ -1697,6 +1697,36 @@ def test_settling_a_task_terminates_a_descendant_in_another_process_group(sandbo
     assert worker._identity(daemon) is None
 
 
+def test_fallback_survivor_recorded_by_a_failed_stop_keeps_the_tree_until_it_exits(sandbox):
+    """Defect (#12520): a descendant that left the provider's group and survived the stop was forgotten, so a
+    later retry saw the group gone and released the tree under it."""
+    ended = subprocess.Popen(["true"])
+    ended.wait(timeout=30)
+    survivor = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"], start_new_session=True)
+    try:
+        record = {"launch_mode": "popen-fallback", "provider_pgid": ended.pid,
+                  "fallback_survivors": {str(survivor.pid): worker._identity(survivor.pid)}}
+        assert worker._provider_alive(record) is True
+        survivor.kill()
+        survivor.wait(timeout=30)
+        assert worker._provider_alive(record) is False
+    finally:
+        survivor.kill()
+        survivor.wait(timeout=30)
+
+
+def test_failed_fallback_stop_retains_the_worktree_without_settling_it(monkeypatch):
+    """Defect (#12520): a scan that could not be completed was read as no descendant, and the tree went."""
+    from scripts.orchestration import worker_leftovers
+
+    monkeypatch.setattr(worker, "_end_own_scope", lambda _record: worker_leftovers.StopResult(ok=False, error="x"))
+    monkeypatch.setattr(worker.git, "settle_worktree", Mock(side_effect=AssertionError("settled under a live scan")))
+    record = {"task_id": "t", "launch_mode": "popen-fallback", "provider_pgid": None}
+    worker._reap_settled(record)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == (
+        "retained", "provider_liveness_unknown")
+
+
 def test_deadline_settles_as_timeout(sandbox):
     task = sandbox.dispatch("blocked", "--hard-timeout", "0.2")
     record = sandbox.settle(task, expected=1)
@@ -2299,7 +2329,7 @@ def test_branch_fix_round_ownership_starts_after_preexisting_commits(sandbox, at
     result = sandbox.settle(task, expected=1 if outside else 0)
     if attach != "cwd":
         # Settlement removed the published worktree; re-attach it at its head for the recheck below.
-        assert result["worktree_disposition"] == "removed"
+        assert (result["worktree_disposition"], result.get("worktree_disposition_reason")) == ("removed", "clean")
         run_git(sandbox.repo, "worktree", "add", "-b", result["worktree_branch"], result["cwd"], result["head_sha"])
     # Recheck the reported defect's record shape: base is main, start is the branch tip.
     # Keep the actual start captured at dispatch, independent of the configured base.
@@ -3884,9 +3914,6 @@ def test_dispatch_records_the_run_it_was_dispatched_from_never_itself(sandbox, i
     if inherited is not None:
         sandbox.env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = inherited
     task = sandbox.dispatch("echo", "--task-id", "self-run")
-    # The waiting client is not part of the task: it must not carry the task's own marker, which settlement
-    # reads as the task's descendants.
-    sandbox.env.pop("LEARN_UKRAINIAN_DISPATCH_TASK_ID", None)
     assert sandbox.settle(task).get("parent_task_id") == parent
 
 
