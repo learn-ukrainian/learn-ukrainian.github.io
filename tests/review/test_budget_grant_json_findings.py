@@ -101,7 +101,7 @@ def test_whole_fenced_json_reply_admits() -> None:
           for index, (prefix, member) in enumerate(
               (prefix, member) for prefix in ("", "Review follows.\n```\n")
               for member in ('"findings": []', '"overall": null', '"schema_version": "invalid"',
-                             '"\\u0066indings": []')
+                             '"\\u0066indings": []', '"find\nings": []', '"find\r\nings": []')
           )),
     ],
 )
