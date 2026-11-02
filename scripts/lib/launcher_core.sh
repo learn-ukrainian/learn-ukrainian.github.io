@@ -8,9 +8,12 @@
 # agent). A wrapper sets them after sourcing this file. Scope re-entry and
 # supervisory successors replay the caller's argv alone, so the wrapper adds
 # them exactly once (#9624). Sourcing resets them; arrays are never inherited.
-unset LC_WRAPPER_LAUNCHER_ARGS LC_WRAPPER_PROVIDER_ARGS
+unset LC_WRAPPER_LAUNCHER_ARGS LC_WRAPPER_PROVIDER_ARGS LC_WRAPPER_FIXED_EPIC
 LC_WRAPPER_LAUNCHER_ARGS=()
 LC_WRAPPER_PROVIDER_ARGS=()
+# A lane wrapper may also name its fixed selector here; after parsing, any other
+# lane is refused before side effects, whatever option spelling reached it (#12553).
+LC_WRAPPER_FIXED_EPIC=''
 
 launcher_usage() {
   if [ "$LC_PROVIDER" = muse ]; then
@@ -1607,6 +1610,10 @@ launcher_main() {
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse ${LC_WRAPPER_LAUNCHER_ARGS[@]+"${LC_WRAPPER_LAUNCHER_ARGS[@]}"} "$@"
+  if [ -n "$LC_WRAPPER_FIXED_EPIC" ] && [ "$LC_EPIC" != "$LC_WRAPPER_FIXED_EPIC" ]; then
+    launcher_error "${0##*/} fixes the lane '$LC_WRAPPER_FIXED_EPIC'; refusing the caller's lane '$LC_EPIC'."
+    exit 2
+  fi
   LC_FORWARD_ARGS=(
     ${LC_WRAPPER_PROVIDER_ARGS[@]+"${LC_WRAPPER_PROVIDER_ARGS[@]}"}
     ${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}

@@ -120,6 +120,32 @@ exit 36
     assert result.stdout.splitlines() == ["--epic", "fixture", "literal $(false) argument"]
 
 
+def test_kube_dojo_lane_wrapper_is_its_own_supervisory_successor(tmp_path: Path) -> None:
+    """The successor replays the lane wrapper, which re-adds its fixed lane (#12553)."""
+    helper = Path(__file__).resolve().parents[1] / "scripts/lib/session_supervisor.sh"
+    for relative, marker in (("start-claude-driver.sh", "generic"), ("scripts/start-kube-dojo-driver.sh", "lane")):
+        entry = tmp_path / relative
+        entry.parent.mkdir(parents=True, exist_ok=True)
+        entry.write_text(f"#!/usr/bin/env bash\nprintf '%s\\n' {marker} \"$@\"\n", encoding="utf-8")
+        entry.chmod(0o755)
+    script = f"""
+set -euo pipefail
+source {shlex.quote(str(helper))}
+LC_ROOT={shlex.quote(str(tmp_path))}
+LC_PROVIDER=claude
+LC_SUPERVISORY_DELIVERY=fixture-delivery
+LC_DRIVER_ORIGINAL_ARGS=('caller text')
+LC_DRIVER_LEASE_CLOSED=1
+export SESSION_STREAM_ID=epic:9999
+session_supervisor_exec_successor
+exit 36
+"""
+    wrapper = str(tmp_path / "scripts" / "start-kube-dojo-driver.sh")
+    result = subprocess.run(["bash", "-c", script, wrapper], capture_output=True, text=True, timeout=15)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.splitlines() == ["lane", "caller text"]
+
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
 

@@ -582,6 +582,8 @@ session_supervisor_exec_successor() {
   local entrypoint="start-${LC_PROVIDER}-driver.sh"
   case "${0##*/}" in
     start-codex-cto.sh) entrypoint="${0##*/}" ;;
+    # A lane wrapper adds its fixed lane and instruction to the caller argv (#12553).
+    start-kube-dojo-driver.sh) entrypoint="scripts/${0##*/}" ;;
   esac
   exec "$LC_ROOT/$entrypoint" "${LC_DRIVER_ORIGINAL_ARGS[@]}"
 }
