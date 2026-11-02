@@ -21,6 +21,7 @@ OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = _POST_BUILD_FORBIDDEN_KEYWORDS | f
 
 # Failure codes (agent_runtime) for a provider that cannot take the run now: usage limits and no capacity.
 _OUT_OF_CAPACITY = frozenset({"rate_limited", "provider_overloaded"})
+_STDERR_EXCERPT = 500
 
 
 
@@ -238,6 +239,12 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         return ParsedResult(text, usage, f"codex: {capacity}", rate_limited=True)
     if returncode:
         error = f"codex: exited with status {returncode}"
+        from scripts.orchestration.dispatch_admission import redact_paths
+        from scripts.secret_redactor import redact_text
+
+        excerpt = " ".join(redact_paths(redact_text(stderr) or "").split())
+        if excerpt:
+            error = f"{error}: {excerpt[:_STDERR_EXCERPT]}"
     return ParsedResult(
         text, usage, error or (None if completed and text else "codex: missing completion or final text")
     )

@@ -217,6 +217,10 @@ def test_claude_review_binds_findings_schema(dispatch):
     with pytest.raises(ValidationError, match="missing_capabilities"):
         Draft202012Validator(receipt_schema).validate(refused)
     Draft202012Validator(receipt_schema).validate(receipt)
+    failed_codex = codex.parse("", "HTTP 400 schema.if is not permitted when strict is true", 1, None)
+    assert failed_codex.error == (
+        "codex: exited with status 1: HTTP 400 schema.if is not permitted when strict is true"
+    )
 
     from scripts.dispatcher.types import TaskSpec
 
@@ -244,6 +248,18 @@ def test_claude_review_binds_findings_schema(dispatch):
     assert "not" in projected["properties"]
     assert projected["properties"]["const"]["type"] == "string"
     assert codex._needs_openai_strict(name_map_schema) is False
+
+
+def test_codex_stderr_excerpt_redacts_secret_and_home_path():
+    secret = "key_" + "aB09" * 16
+    home_path = "/home/fixture/.codex/config.toml"
+    failed = codex.parse("", f"open {home_path} failed\nwith {secret}  rejected", 1, None)
+    assert failed.error is not None
+    assert secret not in failed.error
+    assert home_path not in failed.error
+    assert "/home/" not in failed.error
+    assert failed.error.startswith("codex: exited with status 1: ")
+    assert len(failed.error) <= len("codex: exited with status 1: ") + 500
 
 
 def test_agy_review_binds_findings_schema(dispatch):
