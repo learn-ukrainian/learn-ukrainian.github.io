@@ -66,10 +66,11 @@ def safe_text(value: str) -> str:
     return ABSOLUTE_PATH.sub("<host-path>", value)
 
 
-def command(argv: list[str], *, cwd: Path, timeout: int = 120) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False)
+def command(argv: list[str], *, cwd: Path, timeout: int = 120, text: bool = True) -> subprocess.CompletedProcess:
+    result = subprocess.run(argv, cwd=cwd, capture_output=True, text=text, timeout=timeout, check=False)
     if result.returncode:
-        raise DataTierError(f"{argv[0]} failed ({result.returncode}): {safe_text(result.stderr.strip())}")
+        stderr = result.stderr if text else result.stderr.decode(errors="replace")
+        raise DataTierError(f"{argv[0]} failed ({result.returncode}): {safe_text(stderr.strip())}")
     return result
 
 
@@ -241,8 +242,14 @@ def discard_run_output(checkout: Path) -> dict[str, int]:
     run needs for diagnosis live in ``batch_state/data-tier/``, outside the checkout, and are kept.
     Returns the file count and byte total discarded, for the run summary.
     """
-    listing = command(["git", "clean", "-ffdxn"], cwd=checkout, timeout=300).stdout
-    names = [line.removeprefix("Would remove ") for line in listing.splitlines() if line.startswith("Would remove ")]
+    # ``git clean -n`` quotes and escapes non-ASCII names and has no ``-z`` form, so list the same set
+    # (everything untracked or ignored) with ``ls-files -z``, whose NUL-delimited names are never quoted.
+    # A nested repository is listed as one ``name/`` entry, which the directory walk below counts.
+    # Read it as bytes: text mode would reject non-UTF-8 names and turn CR into LF. ``fsdecode`` round-trips them.
+    listing = command(["git", "ls-files", "-z", "--others"], cwd=checkout, timeout=300, text=False).stdout
+    if isinstance(listing, str):  # callers that substitute ``command`` with text output
+        listing = os.fsencode(listing)
+    names = [os.fsdecode(name) for name in listing.split(b"\0") if name]
     total = 0
     count = 0
     for name in names:

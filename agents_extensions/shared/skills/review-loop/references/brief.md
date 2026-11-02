@@ -77,11 +77,13 @@ to run read-only git commands one per call (`git rev-parse HEAD`, `git diff <mer
 denial it retries once with a simple literal read-only form before it replies BLOCKED.
 
 A review gets a shell and the project interpreter only inside an OS boundary (decision
-REVIEW-BOUNDARY-1101, #12378). Today that is a read-only AGY dispatch: it runs in bubblewrap with
-a read-only checkout, scratch-only writes and provider-allowlisted egress, so its brief may name
-`.venv/bin/python` probes and test files (for example
+REVIEW-BOUNDARY-1101, #12378). Today there are two such routes. A read-only AGY dispatch runs
+whole in bubblewrap with a read-only checkout, scratch-only writes and provider-allowlisted
+egress. A read-only native Claude dispatch runs each shell command in the same boundary with no
+network; its `gh pr view`, `gh pr diff`, `gh pr checks`, `gh issue view` and `gh run view` still
+work. Either brief may name `.venv/bin/python` probes and test files (for example
 `.venv/bin/python -m pytest -q -p no:cacheprovider tests/x.py`) and ask for their actual output.
-That route has no public internet. Every other route keeps the read-only command set above.
+Neither route has public internet from its shell. Every other route keeps the read-only command set above.
 
 ## Wording that read-only admission accepts
 
