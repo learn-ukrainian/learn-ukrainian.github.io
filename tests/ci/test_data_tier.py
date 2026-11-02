@@ -1443,3 +1443,20 @@ def test_finished_data_tier_run_leaves_no_preserved_copy(tmp_path):
     assert not removal.preserved_artifacts
     assert not checkout.exists()
     assert not (primary / "batch_state" / "preserved").exists()
+
+
+def test_discarded_non_ascii_file_is_counted_with_its_real_byte_size(tmp_path):
+    """#12537: a discarded file with a non-ASCII name is counted with its real byte size."""
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@example.invalid"]
+    subprocess.run([*git, "init", "-q", "-b", "main"], cwd=tmp_path, check=True, timeout=30)
+    (tmp_path / ".gitignore").write_text("data/\n")
+    (tmp_path / "README.md").write_text("tracked\n")
+    subprocess.run([*git, "add", "."], cwd=tmp_path, check=True, timeout=30)
+    subprocess.run([*git, "commit", "-q", "-m", "base"], cwd=tmp_path, check=True, timeout=30)
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "слово.db").write_bytes(b"x" * 4096)
+    (tmp_path / "привіт.txt").write_bytes(b"y" * 100)
+
+    assert data_tier.discard_run_output(tmp_path) == {"files": 2, "bytes": 4196}
+    assert not (tmp_path / "привіт.txt").exists()
+    assert not (tmp_path / "data").exists()

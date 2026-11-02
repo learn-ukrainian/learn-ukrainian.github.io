@@ -241,8 +241,11 @@ def discard_run_output(checkout: Path) -> dict[str, int]:
     run needs for diagnosis live in ``batch_state/data-tier/``, outside the checkout, and are kept.
     Returns the file count and byte total discarded, for the run summary.
     """
-    listing = command(["git", "clean", "-ffdxn"], cwd=checkout, timeout=300).stdout
-    names = [line.removeprefix("Would remove ") for line in listing.splitlines() if line.startswith("Would remove ")]
+    # ``git clean -n`` quotes and escapes non-ASCII names and has no ``-z`` form, so list the same set
+    # (everything untracked or ignored) with ``ls-files -z``, whose NUL-delimited names are never quoted.
+    # A nested repository is listed as one ``name/`` entry, which the directory walk below counts.
+    listing = command(["git", "ls-files", "-z", "--others"], cwd=checkout, timeout=300).stdout
+    names = [name for name in listing.split("\0") if name]
     total = 0
     count = 0
     for name in names:
