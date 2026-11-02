@@ -6,6 +6,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -34,6 +35,14 @@ _LANES = (
     (glm_lane, "GLM-DRIVER-HANDOFF.md"),
     (grok_lane, "GROK-DRIVER-HANDOFF.md"),
 )
+
+
+@pytest.fixture(autouse=True)
+def _no_host_driver_state(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep the Codex canary off a host's driver-state database (#12567)."""
+    monkeypatch.setenv(handoff_select.DRIVER_STATE_CLI_ENV, "")
+    for name in ("SESSION_HANDOFF_AGENT", "SESSION_EPIC"):
+        monkeypatch.delenv(name, raising=False)
 
 
 def _write(path: Path, text: str, *, mtime: int) -> None:
@@ -892,3 +901,153 @@ def test_kimi_bootstrap_auto_mint_uses_the_boards_stream_limit(
     assert "claude-sentinel" in (epic / "canary" / "facts.json").read_text(encoding="utf-8")
     board = (epic / "KIMI-COLD-START.md").read_text(encoding="utf-8")
     assert "**Handoff dual-write:** `.claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md`" in board
+
+
+# --- Codex canary reads the newest driver-state handoff_note first (#12567) ---
+
+_NOTE_STATEMENT = (
+    "FINAL FULL-CONTENT DB HANDOFF for the atlas lane.\n\n"
+    "1. Render then check the newest handoff_note before any work.\n"
+    "2. Settle the open review round on the held atlas pull request.\n"
+    "3. Dispatch the next ready atlas worker within budget.\n"
+    "\nPrevious note, preserved in full:\n"
+    "1. An older next action that the snapshot must not use.\n"
+)
+
+
+def _note(note_id: str, created: str, **extra: object) -> dict[str, object]:
+    return {
+        "alias": None,
+        "created_utc": created,
+        "done_when": "The successor verifies the exact lineage and continues the recorded chains.",
+        "id": note_id,
+        "kind": "handoff_note",
+        "lane": "atlas",
+        "owner": "codex-atlas",
+        "source_ref": "message_0123456789abcdef",
+        "statement": _NOTE_STATEMENT,
+        "status": "open",
+        **extra,
+    }
+
+
+_SHORT_STREAM = [
+    {"type": "binding_order", "body": f"Binding order {i} forbids shortcuts in this lane."} for i in range(1, 4)
+] + [
+    {"type": "negative_constraint", "body": "Never commit directly to main from a driver."},
+    {"type": "negative_constraint", "body": "Never merge without an independent cross-family review."},
+]
+
+_EMPTY_SECTIONS = "# Interim handoff\n\n## Next drive order\n\n## Hands-off\n"
+
+
+def _fake_driver_state_cli(tmp_path: Path, payload: object, *, exit_code: int = 0) -> tuple[Path, Path]:
+    argv_file = tmp_path / "cli-argv.json"
+    script = tmp_path / "bin" / "lu-driver-state"
+    script.parent.mkdir(parents=True, exist_ok=True)
+    script.write_text(
+        f"#!{sys.executable}\n"
+        "import json, sys\n"
+        f"open({str(argv_file)!r}, 'w').write(json.dumps(sys.argv[1:]))\n"
+        f"print({json.dumps(payload)!r})\n"
+        f"raise SystemExit({exit_code})\n",
+        encoding="utf-8",
+    )
+    script.chmod(0o755)
+    return script, argv_file
+
+
+def test_fetch_newest_handoff_note_reads_one_lane_and_owner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    notes = [
+        _note("C-0001", "2026-11-01 10:00:00+00:00"),
+        _note("C-0003", "2026-11-03 10:00:00+00:00", status="dropped"),
+        _note("C-0004", "2026-11-04 10:00:00+00:00", owner="claude-atlas"),
+        _note("C-0005", "2026-11-05 10:00:00+00:00", lane="infra"),
+        _note("C-0002", "2026-11-02 20:23:39.965370+00:00"),
+    ]
+    script, argv_file = _fake_driver_state_cli(tmp_path, notes)
+    monkeypatch.setenv(handoff_select.DRIVER_STATE_CLI_ENV, str(script))
+
+    note = handoff_select.fetch_newest_handoff_note("atlas", "codex-atlas")
+
+    assert note is not None and note["id"] == "C-0002"
+    assert json.loads(argv_file.read_text(encoding="utf-8")) == [
+        "list", "--lane", "atlas", "--kind", "handoff_note", "--owner", "codex-atlas", "--all", "--json",
+    ]
+
+
+@pytest.mark.parametrize(("payload", "exit_code"), [([], 0), ("not a list", 0), ([_note("C-1", "2026-11-02")], 2)])
+def test_fetch_newest_handoff_note_falls_back_on_absent_or_failed_reads(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, payload: object, exit_code: int
+) -> None:
+    script, _ = _fake_driver_state_cli(tmp_path, payload, exit_code=exit_code)
+    monkeypatch.setenv(handoff_select.DRIVER_STATE_CLI_ENV, str(script))
+    assert handoff_select.fetch_newest_handoff_note("atlas", "codex-atlas") is None
+
+
+def _lane_note(monkeypatch: pytest.MonkeyPatch, note: dict[str, object] | None) -> list[tuple[str, str]]:
+    """Launcher environment plus a database that returns ``note``; records each read."""
+    reads: list[tuple[str, str]] = []
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-atlas")
+    monkeypatch.setenv("SESSION_EPIC", "atlas")
+    monkeypatch.setattr(handoff_select, "_driver_state_cli", lambda: "lu-driver-state")
+
+    def fetch(lane: str, owner: str) -> dict[str, object] | None:
+        reads.append((lane, owner))
+        return note
+
+    monkeypatch.setattr(handoff_select, "fetch_newest_handoff_note", fetch)
+    return reads
+
+
+def test_codex_mint_derives_anchors_from_the_newest_db_handoff_note(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _patch_mint(monkeypatch)
+    monkeypatch.setattr(grok_lane, "_load_stream_entries", lambda *_args, **_kwargs: list(_SHORT_STREAM))
+    epic = _epic(tmp_path)
+    _write(epic / "INTERIM-DRIVER-HANDOFF.md", _EMPTY_SECTIONS, mtime=9_000)
+    reads = _lane_note(monkeypatch, _note("C-4170", "2026-11-02 20:23:39+00:00"))
+
+    assert _mint(codex_lane, tmp_path) == 0
+
+    assert reads == [("atlas", "codex-atlas")]
+    meta = json.loads((tmp_path / "canary" / "mint_meta.json").read_text(encoding="utf-8"))
+    assert meta["handoff"] == ".claude/atlas-epic/canary/driver-state-handoff-note.md"
+    assert meta["n_anchors"] == 10
+    answers = _answers(tmp_path)
+    assert "C-4170" in answers
+    assert "Render then check the newest handoff_note" in answers
+    assert "older next action" not in answers
+    snapshot = (epic / "canary" / "driver-state-handoff-note.md").read_text(encoding="utf-8")
+    assert "lu-driver-state show C-4170" in snapshot
+
+
+def test_codex_mint_without_a_db_note_keeps_the_markdown_shortfall(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _patch_mint(monkeypatch)
+    monkeypatch.setattr(grok_lane, "_load_stream_entries", lambda *_args, **_kwargs: list(_SHORT_STREAM))
+    _write(_epic(tmp_path) / "INTERIM-DRIVER-HANDOFF.md", _EMPTY_SECTIONS, mtime=9_000)
+    _lane_note(monkeypatch, None)
+
+    assert _mint(codex_lane, tmp_path) == 1
+    assert "could only derive 7/10 durable anchors" in capsys.readouterr().err
+
+
+def test_codex_mint_falls_back_to_markdown_when_the_db_note_is_short(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _patch_mint(monkeypatch)
+    # Identity plus three stream entries: the full markdown reaches 10, the
+    # note without next actions reaches 7.
+    monkeypatch.setattr(grok_lane, "_load_stream_entries", lambda *_args, **_kwargs: list(_SHORT_STREAM[:3]))
+    epic = _epic(tmp_path)
+    _write(epic / "INTERIM-DRIVER-HANDOFF.md", _full("interim-sentinel", session="2026-11-01"), mtime=9_000)
+    _lane_note(monkeypatch, _note("C-4170", "2026-11-02 20:23:39+00:00", statement="No numbered list."))
+
+    assert _mint(codex_lane, tmp_path) == 0
+
+    meta = json.loads((tmp_path / "canary" / "mint_meta.json").read_text(encoding="utf-8"))
+    assert meta["handoff"] == ".claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md"
+    assert "interim-sentinel" in _answers(tmp_path)

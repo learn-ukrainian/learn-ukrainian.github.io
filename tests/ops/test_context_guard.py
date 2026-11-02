@@ -390,21 +390,21 @@ def test_lane_in_handoff_is_listed_for_keepalive_suppression(tmp_path: Path) -> 
 
 
 def test_codex_quit_is_retried_when_the_first_is_swallowed(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"atlas": codex_pane(40)})
-    h.tick("atlas")
+    h = Harness(tmp_path, **{"codex-atlas": codex_pane(40)})
+    h.tick("codex-atlas")
     h.posted["codex-atlas"] = cg.iso(h.moment)
     h.advance(5)
-    h.tick("atlas")  # watch: HANDOFF-DONE posted -> handoff (done)
+    h.tick("codex-atlas")  # watch: HANDOFF-DONE posted -> handoff (done)
     h.advance(5)
-    h.tick("atlas")
-    assert h.fake.typed("atlas") == ["/quit"]
+    h.tick("codex-atlas")
+    assert h.fake.typed("codex-atlas") == ["/quit"]
     h.advance(5)
-    h.tick("atlas")
-    assert h.fake.typed("atlas") == ["/quit"]  # 5 minutes: not yet
+    h.tick("codex-atlas")
+    assert h.fake.typed("codex-atlas") == ["/quit"]  # 5 minutes: not yet
     h.advance(5)
-    h.tick("atlas")
-    assert h.fake.typed("atlas") == ["/quit", "/quit"]
-    assert h.state["atlas"]["quit_attempts"] == 2
+    h.tick("codex-atlas")
+    assert h.fake.typed("codex-atlas") == ["/quit", "/quit"]
+    assert h.state["codex-atlas"]["quit_attempts"] == 2
 
 
 def test_agent_surviving_two_exits_after_handoff_done_is_relaunched(tmp_path: Path) -> None:

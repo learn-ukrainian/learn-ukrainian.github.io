@@ -16,7 +16,10 @@ from scripts.ops.driver_lanes import PANE_SCRIPT, Registry, load_local_config, l
 from tests.ops._fake_tmux import FakePane, FakeTmux
 
 REPO = Path(__file__).resolve().parents[2]
-SESSIONS = ["infra-muse", "devops-muse", "harness", "atlas", "practice", "open-model-data", "kube-dojo", "cto"]
+SESSIONS = [
+    "infra-muse", "devops-muse", "harness", "codex-atlas", "codex-core", "practice", "open-model-data", "kube-dojo",
+    "cto",
+]
 
 
 def run(fake: FakeTmux, tmp_path: Path, registry: Registry | None = None, **kwargs) -> list[lr.Outcome]:
@@ -53,10 +56,10 @@ def test_relaunch_creates_every_lane_with_cto_last_and_second_run_is_noop(tmp_pa
 
 
 def test_existing_session_is_skipped_and_never_typed_into(tmp_path: Path) -> None:
-    fake = FakeTmux(sessions={"atlas": FakePane(agent="codex")}, clients=[("atlas", int(1e6))])
+    fake = FakeTmux(sessions={"codex-atlas": FakePane(agent="codex")}, clients=[("codex-atlas", int(1e6))])
     outcomes = run(fake, tmp_path)
-    assert "atlas" not in created(fake)
-    assert {o.session: o.status for o in outcomes}["atlas"] == "exists"
+    assert "codex-atlas" not in created(fake)
+    assert {o.session: o.status for o in outcomes}["codex-atlas"] == "exists"
     assert not any("=atlas" in call for call in fake.calls if call[1] not in {"has-session", "capture-pane"})
 
 
@@ -81,7 +84,7 @@ def test_codex_lanes_get_shims_first_and_repo_root_cwd(tmp_path: Path) -> None:
     fake = FakeTmux()
     run(fake, tmp_path)
     by_session = {c[c.index("-s") + 1]: c for c in fake.calls if c[:2] == ["tmux", "new-session"]}
-    for session in ("harness", "atlas", "open-model-data"):
+    for session in ("harness", "codex-atlas", "open-model-data"):
         call = by_session[session]
         assert call[call.index("-c") + 1] == str(tmp_path)
         assert call[call.index("-e") + 1].startswith(f"PATH={tmp_path / 'scripts/agent_runtime/shims'}:")
@@ -128,7 +131,7 @@ def test_dry_run_prints_full_plan_and_starts_nothing(tmp_path: Path) -> None:
 
 
 def test_main_exit_code_reports_failed_lanes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    fake = FakeTmux(exit_on_create={"atlas": 1})
+    fake = FakeTmux(exit_on_create={"codex-atlas": 1})
     real = cg.Tmux
     monkeypatch.setattr(lr, "Tmux", lambda: real(run=fake.run, sleep=fake.sleep, clock=fake.clock))
     monkeypatch.setenv("LU_DRIVER_LANES_LOCAL", str(tmp_path / "absent.json"))
@@ -139,7 +142,7 @@ def test_main_exit_code_reports_failed_lanes(tmp_path: Path, monkeypatch: pytest
 # ---- refused or unreadable lanes (review of 69264fbb, #10814) ----------------------
 def refusing_local(tmp_path: Path) -> Path:
     local = tmp_path / "lanes.local.json"
-    local.write_text(json.dumps({"lanes": {"atlas": {"wrapper": "printf expected; printf INJECTED"}}}), encoding="utf-8")
+    local.write_text(json.dumps({"lanes": {"codex-atlas": {"wrapper": "printf expected; printf INJECTED"}}}), encoding="utf-8")
     local.chmod(0o600)
     return local
 
@@ -155,9 +158,9 @@ def test_refused_wrapper_lane_is_logged_and_not_started(tmp_path: Path) -> None:
         log=logs.append,
         settle_s=2,
     )
-    assert created(fake) == [s for s in SESSIONS if s != "atlas"]
-    assert {o.session: o.status for o in outcomes}["atlas"] == "config-refused"
-    assert any(line.startswith("atlas: not started, local lane config: atlas: wrapper word") for line in logs)
+    assert created(fake) == [s for s in SESSIONS if s != "codex-atlas"]
+    assert {o.session: o.status for o in outcomes}["codex-atlas"] == "config-refused"
+    assert any(line.startswith("codex-atlas: not started, local lane config: codex-atlas: wrapper word") for line in logs)
     assert not any("INJECTED" in arg for call in fake.calls for arg in call)
 
 
