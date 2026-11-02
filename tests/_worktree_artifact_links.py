@@ -7,7 +7,7 @@ names the returned path in the worker result and asserts the expectation:
 * ``parent_link``: ``ignored/dir`` -> ``ignored/real`` (preserved);
 * ``dotdot_after_link``: ``ignored/dir`` -> ``real/sub`` named as
   ``ignored/dir/../report.bin``, i.e. ``ignored/real/report.bin`` (preserved);
-* ``outbound``: ``ignored/link`` -> a file outside the checkout (refused);
+* ``outbound``: ``ignored/link`` -> a file outside the checkout (link record only; payload not copied);
 * ``outbound_batch_state``: ``ignored/link`` -> primary ``batch_state`` (link record only; payload not copied);
 * ``link_loop``: a self-referencing link (refused);
 * ``permission_denied``: a name inside a mode-000 directory (refused; the file may exist);
@@ -42,9 +42,7 @@ IGNORED_LINK = {
     "parent_link": ("ignored/dir", "real"),
     "dotdot_after_link": ("ignored/dir", "real/sub"),
 }
-REFUSAL = "links outside the checkout"
 REFUSALS = {
-    "outbound": REFUSAL,
     "link_loop": "cannot be resolved (symlink loop)",
     "permission_denied": "cannot be resolved (EACCES)",
 }
