@@ -3798,6 +3798,9 @@ def grant_case(monkeypatch, tmp_path, *, last_reply=OPEN_F2, last_verdict="CHANG
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     comments.extend(recorded_verdict(sha, "CHANGES_REQUESTED", task_id=f"round-{sha[0]}") for sha in ("1" * 40, "2" * 40))
     comments.append(verdict_with_reply("3" * 40, last_verdict, last_reply, task_id="round-3"))
+    # The cited round's run: a grant reads the reply format from it (#12549); no output schema keeps the ledger.
+    write_task(tasks, task_id="round-3", reply=last_reply, worktree_base_sha="3" * 40, pr=42,
+               started_at="2026-09-23T11:00:00.000001+00:00")
     return tasks, comments, calls
 
 
@@ -3805,7 +3808,7 @@ def test_elevated_grant_admits_rounds_four_and_five_only(monkeypatch, tmp_path):
     tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
     write_grant(tasks)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    write_task(tasks, reply=OPEN_F2.replace("Impact", "Still open: the retry path. Impact"))
+    write_task(tasks, reply=OPEN_F2.replace("Impact", "Still open: the retry path. Impact"), pr=42)
     receipt = recorder.record("review-one", **kwargs)["budget_grant"]
     assert receipt["grant_task"] == "grant-approval" and receipt["advisor_model"] == "gpt-6.1-sol"
     assert receipt["finding_id"] == "F2" and receipt["cited_verdict_head"] == "3" * 40
