@@ -607,8 +607,6 @@ def _end_own_scope(record: dict):
     if launch_mode == "popen-fallback":
         if not (isinstance(task_id, str) and task_id and isinstance(nonce, str) and nonce):
             return None
-        from scripts.orchestration import worker_leftovers
-
         if record.get("pid") != os.getpid():
             # Only the supervisor knows the cgroup its jobs keep, which a closed environment is judged by (#9514);
             # a later sweep from another process cannot bound the scan, so it leaves the task's processes alone.
