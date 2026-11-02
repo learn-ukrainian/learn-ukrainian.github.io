@@ -238,10 +238,10 @@ own worker count.
 ## CPU-time containment
 
 **Status: APPLIED (#10735), 2026-11-02.** The CTO brief for #10735 approved the
-ceiling after workers `cto-0ad2-i12502-sonnet` left 16 busy loops running and the
-host load reached 28-30 on 16 CPUs. `packaging/systemd/dropins/lu.slice.d/20-cpu.conf`
-carries the keys. No script installs it; installation is the manual step below.
-The hogs, like every worker, ran in the user manager's
+ceiling after orphaned busy loops from one worker starved dispatch admission.
+`packaging/systemd/dropins/lu.slice.d/20-cpu.conf` carries the keys. No script
+installs it; installation is the manual step below.
+Such loops, like every worker, run in the user manager's
 `lu.slice/lu-dispatch.slice/lu-worker-<task>-<nonce>.scope`. Reparenting to PID 1
 does not change a process's cgroup, so the quota on `lu.slice` holds them. (The
 system manager's `lu.slice` and `lu-dispatch.slice` are empty placeholders: always
@@ -313,11 +313,10 @@ snapshot recorded before the change. Then read the slice's cgroup: `cpu.max` is
 `cpu.weight` must read `50`. On this host's systemd, `show` prints no `CPUAccounting`
 line; a readable `cpu.stat` in the slice cgroup is the accounting check.
 
-Containment proof, 2026-11-02: sixteen `timeout 30 python3 -c 'while True: pass'` loops
-in a transient unit under `lu-dispatch.slice` held `lu.slice` to 11.35 CPU-seconds per
-second over 32 s (twelve without the live workers' share would be the ceiling; sixteen
-loops alone would have used sixteen), with `nr_throttled` +293 and Monitor
-`/api/health` at 14-26 ms. The unit was inactive and no loop survived.
+Containment proof, 2026-11-02: a bounded set of busy loops, more than the quota allows,
+ran in a transient unit under `lu-dispatch.slice`. `lu.slice` stayed below its ceiling in
+`cpu.stat`, `nr_throttled` grew, and Monitor `/api/health` stayed responsive. The unit was
+inactive and no loop survived. Measurements stay in the private operations notes.
 
 ### Observe
 
