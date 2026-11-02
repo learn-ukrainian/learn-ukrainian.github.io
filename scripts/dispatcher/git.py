@@ -631,7 +631,7 @@ def _salvage_hold(tree: Path, primary: Path, untracked: list[str]) -> tuple[str,
     commit pointer), so one with commits that are on none of its remotes, or with uncommitted work,
     keeps the tree. So does meaningful ignored output past SALVAGE_IGNORED_LIMIT.
     """
-    from scripts.fleet.regenerable_output import is_regenerable_ignored_path
+    from scripts.fleet.regenerable_output import committed_release_pins, is_regenerable_ignored_path
     from scripts.orchestration.worktree_artifacts import is_disposable_path
 
     ignored = [name for name in _git(tree, "ls-files", "-z", "--others", "--ignored", "--exclude-standard",
@@ -644,11 +644,12 @@ def _salvage_hold(tree: Path, primary: Path, untracked: list[str]) -> tuple[str,
             return "nested_repository_unpushed", name
     tracked = set(_git(tree, "ls-files", "-z", "--cached", isolate=True, strip=False).split("\0"))
     ignored_names = set(ignored)
+    release_pins = committed_release_pins(tree, tracked)
     dependency_locks: dict[str, bool] = {}  # one lock verdict per dependency directory, not per file
     total = 0
     for name in ignored:
         if not is_disposable_path(Path(name), worktree=tree, primary=primary) and not is_regenerable_ignored_path(
-                name, worktree=tree, tracked=tracked, ignored=ignored_names, release_pins={},
+                name, worktree=tree, tracked=tracked, ignored=ignored_names, release_pins=release_pins,
                 dependency_locks=dependency_locks):
             total += os.lstat(tree / name).st_size
             if total > SALVAGE_IGNORED_LIMIT:
