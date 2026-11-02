@@ -76,7 +76,6 @@ def seed_artifacts(root: Path, *, level: str = "a1", slug: str = "foo") -> None:
     for name, content in {
         "writer_prompt.md": "prompt\n",
         "writer_output.raw.md": "raw\n",
-        "hermes.write.jsonl": "{}\n",
         "writer_tool_calls.json": "[]\n",
         "knowledge_packet.md": "packet\n",
         "implementation_map.json": "{}\n",

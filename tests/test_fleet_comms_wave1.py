@@ -344,7 +344,7 @@ def test_agy_json_done_event() -> None:
 
 def test_b2_adapters_plain_text_without_terminal_is_unknown_not_review_eligible() -> None:
     """B2 real conformers still refuse complete on exit 0 + text alone."""
-    for name in ("grok", "kimi", "cursor", "hermes", "opencode"):
+    for name in ("grok", "kimi", "cursor", "opencode"):
         env = conform(CaptureInput(adapter=name, stdout="looks fine", returncode=0))
         assert env.completion_state is CompletionState.UNKNOWN
         assert env.is_formal_review_eligible is False

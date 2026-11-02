@@ -183,7 +183,7 @@ def test_worktree_persists_artifacts_on_success(
     """Build artifacts MUST be committed to the build branch on success.
 
     Per MEMORY.md #M-10, build artifacts (writer_prompt, writer_output.raw,
-    hermes.write.jsonl, writer_tool_calls.json, knowledge_packet, etc.) are
+    writer_tool_calls.json, knowledge_packet, etc.) are
     load-bearing for diagnosis and the self-correction loop. v7_build writes
     them to the worktree filesystem but does NOT commit them — without this
     persist step, ``git worktree remove`` silently destroys forensic
