@@ -12,7 +12,6 @@ import subprocess
 import sys
 import tempfile
 import time
-from collections.abc import Collection
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -538,32 +537,17 @@ def _own_tree() -> set[int]:
     return {child.pid for child in psutil.Process().children(recursive=True)}
 
 
-class _MarkedButNotOwned(Collection):
-    """The processes that carry the task's marker but are not in the supervisor's tree, read afresh on each use.
+def _is_own_descendant(pid: int) -> bool:
+    """Whether ``pid`` is in the supervisor's process tree now, which the marker alone does not prove.
 
-    The marker alone is not ownership: a client that inherited it, or a task this one dispatched, is not the
-    task's descendant. ``stop_leftovers`` rescans before each signal and while it waits, so a snapshot would
-    let a client that appears after the first scan be signalled; this answers for every scan.
+    A client that inherited the task's marker, or a task this one dispatched, is not the task's descendant.
+    ``stop_leftovers`` asks this of each candidate as it is listed and again after its pidfd is open, so a
+    process that appears mid-stop is judged at that moment.
     """
-
-    def __init__(self, scope, reader, owned=_own_tree):
-        self._scope, self._reader, self._owned = scope, reader, owned
-
-    def _pids(self) -> list[int]:
-        from scripts.orchestration import worker_leftovers
-
-        owned = self._owned()
-        return [proc.pid for proc in worker_leftovers.find_leftovers(self._scope, reader=self._reader)
-                if proc.pid not in owned]
-
-    def __iter__(self):
-        return iter(self._pids())
-
-    def __len__(self):
-        return len(self._pids())
-
-    def __contains__(self, pid):
-        return pid in self._pids()
+    try:
+        return any(parent.pid == os.getpid() for parent in psutil.Process(pid).parents())
+    except psutil.Error:
+        return False
 
 
 def _stop_fallback_tree(task_id: str, nonce: str):
@@ -574,8 +558,7 @@ def _stop_fallback_tree(task_id: str, nonce: str):
     try:
         scope = worker_leftovers.worker_scope_at_exit(
             task_id=task_id, launch_mode="popen-fallback", launch_unit=None, run_nonce=nonce, reader=reader)
-        # The marker alone is not ownership: see ``_MarkedButNotOwned``.
-        stopped = worker_leftovers.stop_leftovers(scope, reader=reader, exclude=_MarkedButNotOwned(scope, reader))
+        stopped = worker_leftovers.stop_leftovers(scope, reader=reader, owned=_is_own_descendant)
         for pid in _own_tree():
             # An adopted descendant stays a zombie in its old process group until reaped, which the group
             # liveness check would read as a live provider.

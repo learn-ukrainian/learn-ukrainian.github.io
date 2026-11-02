@@ -1727,18 +1727,31 @@ def test_failed_fallback_stop_retains_the_worktree_without_settling_it(monkeypat
         "retained", "provider_liveness_unknown")
 
 
-def test_not_owned_exclusion_is_recomputed_on_every_scan():
-    """Defect (#12520, review F1): the sweep rescans before each signal, so an unrelated client that carries the
-    task's marker and appears after the first scan must still be left alone."""
-    from tests.worker_leftovers_fakes import FAKE_PID_BASE, TASK_ID, FakeProc, FakeProcs, scope_of
+def test_stop_never_signals_a_marked_non_descendant_that_appears_mid_stop():
+    """Defect (#12520, review F1): the sweep takes the task's marker for ownership, so an unrelated client that
+    inherits it, and appears after an earlier ownership scan, must still be left alone."""
+    from scripts.orchestration import worker_leftovers
+    from tests.worker_leftovers_fakes import FAKE_PID_BASE, TASK_ID, FakeProc, FakeProcs, scope_of, stop_kwargs
 
-    table = FakeProcs()
-    owned, client = FAKE_PID_BASE + 1, FAKE_PID_BASE + 2
-    table.procs[owned] = FakeProc(task=TASK_ID)
-    excluded = worker._MarkedButNotOwned(scope_of(), table, owned=lambda: {owned})
-    assert list(excluded) == []
-    table.procs[client] = FakeProc(task=TASK_ID)
-    assert list(excluded) == [client] and client in excluded and len(excluded) == 1
+    class LateClient(FakeProcs):
+        def pids(self):
+            listed = super().pids()
+            self.procs.setdefault(FAKE_PID_BASE + 2, FakeProc(task=TASK_ID))  # appears between two listings
+            return listed
+
+    table = LateClient()
+    mine, client = FAKE_PID_BASE + 1, FAKE_PID_BASE + 2
+    table.procs[mine] = FakeProc(task=TASK_ID)
+    result = worker_leftovers.stop_leftovers(scope_of(), reader=table, owned=lambda pid: pid == mine,
+                                             **stop_kwargs(table))
+    assert result.ok and table.signalled() == {mine} and client in table.procs
+    # The supervisor's own tree is judged live: a child is its descendant, its parent is not.
+    child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
+    try:
+        assert worker._is_own_descendant(child.pid) and not worker._is_own_descendant(os.getppid())
+    finally:
+        child.kill()
+        child.wait(timeout=30)
 
 
 @pytest.mark.parametrize("libc", [SimpleNamespace(prctl=lambda *_args: -1), SimpleNamespace()],
