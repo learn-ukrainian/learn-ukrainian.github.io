@@ -16,7 +16,7 @@ from scripts.ops.driver_lanes import PANE_SCRIPT, Registry, load_local_config, l
 from tests.ops._fake_tmux import FakePane, FakeTmux
 
 REPO = Path(__file__).resolve().parents[2]
-SESSIONS = ["infra-muse", "devops-muse", "harness", "atlas", "practice", "open-model-data", "cto"]
+SESSIONS = ["infra-muse", "devops-muse", "harness", "atlas", "practice", "open-model-data", "kube-dojo", "cto"]
 
 
 def run(fake: FakeTmux, tmp_path: Path, registry: Registry | None = None, **kwargs) -> list[lr.Outcome]:
@@ -44,11 +44,11 @@ def test_relaunch_creates_every_lane_with_cto_last_and_second_run_is_noop(tmp_pa
     fake = FakeTmux(server_running=False)
     first = run(fake, tmp_path)
     assert created(fake) == SESSIONS
-    assert [o.status for o in first] == ["started"] * 7
+    assert [o.status for o in first] == ["started"] * len(SESSIONS)
     fake.calls.clear()
     second = run(fake, tmp_path)
     assert created(fake) == []
-    assert [o.status for o in second] == ["exists"] * 7
+    assert [o.status for o in second] == ["exists"] * len(SESSIONS)
     assert not any(call[:2] == ["tmux", "send-keys"] for call in fake.calls)
 
 
@@ -164,5 +164,5 @@ def test_refused_wrapper_lane_is_logged_and_not_started(tmp_path: Path) -> None:
 def test_unreadable_new_pane_is_unverified_and_relaunch_moves_on(tmp_path: Path) -> None:
     fake = FakeTmux(override={"capture-pane": subprocess.CompletedProcess([], 1, "", "can't find pane")})
     outcomes = run(fake, tmp_path)
-    assert [o.status for o in outcomes] == ["unverified"] * 7
+    assert [o.status for o in outcomes] == ["unverified"] * len(SESSIONS)
     assert created(fake) == SESSIONS
