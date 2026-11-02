@@ -16,6 +16,8 @@ import sqlite3
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from tests.backup_data_script._support import (
     _completed_run_ids,
     _real_restic_complete_snapshot,
@@ -140,15 +142,21 @@ def _hardlinked_alias(project: Path, alias: Path, scratch: Path) -> sqlite3.Conn
     return connection
 
 
+@pytest.mark.parametrize("alias_name", ["alias.db", "alias.bin"])
 def test_hardlinked_database_name_is_refused(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
+    alias_name: str,
 ) -> None:
-    """An allowlisted *.db hard link must not be published without its WAL."""
+    """A hard link to a WAL database must not be published without its WAL.
+
+    The magic check is not limited to database-looking names: a SQLite file
+    under any name is refused when it has a second link.
+    """
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
     project = source.parent
-    alias = project / "data" / "datasets" / "alias.db"
+    alias = project / "data" / "datasets" / alias_name
     connection = _hardlinked_alias(project, alias, tmp_path)
     try:
         backed_up = _run(environment, "backup", "--execute")
@@ -156,5 +164,5 @@ def test_hardlinked_database_name_is_refused(
         connection.close()
 
     assert backed_up.returncode != 0
-    assert "Refusing hard-linked SQLite database data/datasets/alias.db" in backed_up.stderr
+    assert f"Refusing hard-linked SQLite database data/datasets/{alias_name}" in backed_up.stderr
     assert _completed_run_ids(environment) == []

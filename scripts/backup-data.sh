@@ -141,6 +141,12 @@ DB_ARCHIVES_USED=()
 declare -A CLASSIFIED_SQLITE_RELATIVE=()
 declare -A ARCHIVED_DB_STAT=()
 declare -A ARCHIVED_DB_ARCHIVE=()
+# File count and byte total of every backup root, filled in one batched pass by
+# collect_source_root_stats. The selection printout and the receipt inventory
+# read these instead of forking a subshell, a find and a jq for each root.
+declare -A ROOT_STAT_FILES=()
+declare -A ROOT_STAT_BYTES=()
+BACKUP_SOURCE_PATH=""
 LINUX_BASE_SNAPSHOT=""
 LINUX_PATCH_SNAPSHOT=""
 # Both Linux receipt snapshots (pending, then completion) carry this time, so
@@ -1522,9 +1528,8 @@ list_sqlite_sources() {
   local relative absolute base
 
   for relative in "${STAGED_CANDIDATES[@]+"${STAGED_CANDIDATES[@]}"}"; do
-    absolute="$PROJECT_ROOT/$relative"
-    is_ephemeral_home_path "$absolute" && continue
-    [[ "$relative" == */__pycache__/* ]] && continue
+    # The name test comes first: the ephemeral-home test loops over every home,
+    # so running it on all staged candidates costs minutes in a large tree.
     base=${relative##*/}
     case "$base" in
       *.db|*.sqlite|*.sqlite3|*.sqlite*) ;;
@@ -1533,6 +1538,9 @@ list_sqlite_sources() {
     case "$base" in
       *-wal|*-shm|*-journal) continue ;;
     esac
+    absolute="$PROJECT_ROOT/$relative"
+    is_ephemeral_home_path "$absolute" && continue
+    [[ "$relative" == */__pycache__/* ]] && continue
     is_sqlite_database "$absolute" && printf '%s\0' "$absolute"
   done
 }
@@ -1553,22 +1561,36 @@ is_transient_sqlite_path() {
 # Sidecars are named beside the path SQLite opened, not beside every hard
 # link of the inode. Publishing the other name stores the main file and drops
 # committed WAL rows. Refuse before any snapshot is written.
+#
+# The magic check forks three processes, so it runs only on files that have
+# more than one link, which is the only case that can fail. The link counts of
+# every candidate come from a few batched find processes, not one fork per file.
+# The ephemeral-home test loops over every home, so it is applied to those few
+# multi-link files only.
 refuse_hardlinked_sqlite_aliases() {
   local relative absolute links
+  local -a considered=()
 
   for relative in "${STAGED_CANDIDATES[@]+"${STAGED_CANDIDATES[@]}"}"; do
-    absolute="$PROJECT_ROOT/$relative"
-    [[ -f "$absolute" && ! -L "$absolute" ]] || continue
-    is_ephemeral_home_path "$absolute" && continue
     [[ "$relative" == */__pycache__/* ]] && continue
+    absolute="$PROJECT_ROOT/$relative"
     is_transient_sqlite_path "$absolute" && continue
+    considered+=("$absolute")
+  done
+  ((${#considered[@]} > 0)) || return 0
+  # Regular files only (find does not follow a symlink named on its command
+  # line); a file that vanished is skipped, as the old per-file test did.
+  while IFS= read -r -d '' absolute; do
+    is_ephemeral_home_path "$absolute" && continue
     is_sqlite_database "$absolute" || continue
+    relative=${absolute#"$PROJECT_ROOT"/}
     links="$(file_link_count "$absolute")" ||
       die "Could not read the link count of SQLite database: $relative"
     if ((links > 1)); then
       die "Refusing hard-linked SQLite database $relative (link count ${links}). Remove the extra name and retry; sidecars follow the path SQLite opened, so this alias would omit committed WAL rows."
     fi
-  done
+  done < <(printf '%s\0' "${considered[@]}" |
+    xargs -0 sh -c 'find "$@" -maxdepth 0 -type f -links +1 -print0' sh 2>/dev/null)
 }
 
 # Read NAME.tar.zst.manifest files from DB_ARCHIVE_DIR. Format:
@@ -1693,7 +1715,22 @@ unreadable_backup_paths() {
   local relative root found path
   for relative in "${BACKUP_PATHS[@]}"; do
     [[ "$relative" == GIT-WORKTREE.patch || "$relative" == BACKUP-RECEIPT.json ]] && continue
-    root="$(source_for_backup_path "$relative")"
+    set_backup_source_path "$relative"
+    root=$BACKUP_SOURCE_PATH
+    if [[ ! -d "$root" || -L "$root" ]]; then
+      # A file root is tested in the shell; a find per root would fork tens of
+      # thousands of times. A root that cannot be examined at all (vanished, or
+      # behind an unsearchable directory) is reported as the root itself,
+      # which is what find's non-permission error path did.
+      if [[ -L "$root" ]]; then
+        :
+      elif [[ -f "$root" ]]; then
+        [[ -r "$root" ]] || printf '%s\n' "$root"
+      elif [[ ! -e "$root" ]]; then
+        printf '%s\n' "$root"
+      fi
+      continue
+    fi
     # Prune inaccessible directories so find can continue through other roots.
     # Capture any remaining permission errors without propagating find's status
     # into the caller's command substitution under set -e.
@@ -2015,14 +2052,19 @@ build_restic_excludes() {
   fi
 }
 
-source_for_backup_path() {
-  local relative=$1
-
-  if [[ "$relative" == "data" ]]; then
-    printf '%s\n' "$SOURCE"
+# Sets BACKUP_SOURCE_PATH. Loops over every backup root call this directly:
+# command substitution around source_for_backup_path forks once per root.
+set_backup_source_path() {
+  if [[ "$1" == "data" ]]; then
+    BACKUP_SOURCE_PATH=$SOURCE
   else
-    printf '%s/%s\n' "$PROJECT_ROOT" "$relative"
+    BACKUP_SOURCE_PATH="$PROJECT_ROOT/$1"
   fi
+}
+
+source_for_backup_path() {
+  set_backup_source_path "$1"
+  printf '%s\n' "$BACKUP_SOURCE_PATH"
 }
 
 tree_file_stats() {
@@ -2046,22 +2088,60 @@ tree_file_stats() {
   printf '%s %s\n' "$total" "$count"
 }
 
+# True when a regular file under a backup root counts toward the Linux totals.
+source_tree_counts_file() {
+  local file=$1 relative
+
+  is_ephemeral_home_path "$file" && return 1
+  relative=${file#"$PROJECT_ROOT"/}
+  case "$relative" in
+    */qdrant/*|*/__pycache__/*|*/.DS_Store|*.db-wal|*.db-shm|*.db-journal|*.sqlite*-wal|*.sqlite*-shm|*.sqlite*-journal) return 1 ;;
+  esac
+  snapshot_path_is_excluded "$relative" && return 1
+  [[ "$relative" != batch_state/tasks/*.lock ]]
+}
+
 source_tree_stats() {
-  local tree=$1 total=0 count=0 file relative size
+  local tree=$1 total=0 count=0 file size
   while IFS= read -r -d '' file && IFS= read -r -d '' size; do
-    is_ephemeral_home_path "$file" && continue
-    relative=${file#"$PROJECT_ROOT"/}
-    case "$relative" in
-      */qdrant/*|*/__pycache__/*|*/.DS_Store|*.db-wal|*.db-shm|*.db-journal|*.sqlite*-wal|*.sqlite*-shm|*.sqlite*-journal) continue ;;
-    esac
-    snapshot_path_is_excluded "$relative" && continue
-    if [[ "$relative" == batch_state/tasks/*.lock ]]; then
-      continue
-    fi
+    source_tree_counts_file "$file" || continue
     total=$((total + size))
     count=$((count + 1))
   done < <(allowlist_find "$tree" -type f -printf '%p\0%s\0')
   printf '%s %s\n' "$total" "$count"
+}
+
+# Fill ROOT_STAT_FILES and ROOT_STAT_BYTES for every backup root in the
+# source_tree_stats terms. A directory root is walked by source_tree_stats; the
+# tens of thousands of single-file roots are measured by a few batched stat
+# processes, so the cost is not one subshell, find and jq per root. A root that
+# is missing, a symlink or not a regular file stays absent: zero files.
+collect_source_root_stats() {
+  local relative file kind size bytes files
+  local -a file_roots=()
+
+  ROOT_STAT_FILES=()
+  ROOT_STAT_BYTES=()
+  for relative in "${BACKUP_PATHS[@]+"${BACKUP_PATHS[@]}"}"; do
+    [[ "$relative" != "GIT-WORKTREE.patch" && "$relative" != "BACKUP-RECEIPT.json" ]] || continue
+    set_backup_source_path "$relative"
+    if [[ -d "$BACKUP_SOURCE_PATH" && ! -L "$BACKUP_SOURCE_PATH" ]]; then
+      read -r bytes files < <(source_tree_stats "$BACKUP_SOURCE_PATH")
+      ROOT_STAT_BYTES[$relative]=$bytes
+      ROOT_STAT_FILES[$relative]=$files
+    else
+      file_roots+=("$BACKUP_SOURCE_PATH")
+    fi
+  done
+  ((${#file_roots[@]} > 0)) || return 0
+  while IFS= read -r -d '' kind && IFS= read -r -d '' size && IFS= read -r -d '' file; do
+    [[ "$kind" == regular* ]] || continue
+    source_tree_counts_file "$file" || continue
+    relative=${file#"$PROJECT_ROOT"/}
+    ROOT_STAT_BYTES[$relative]=$size
+    ROOT_STAT_FILES[$relative]=1
+  done < <(printf '%s\0' "${file_roots[@]}" |
+    xargs -0 stat --printf='%F\0%s\0%n\0' -- 2>/dev/null)
 }
 
 backup_tree_size_bytes() {
@@ -2076,16 +2156,21 @@ backup_tree_size_bytes() {
 }
 
 print_backup_selection() {
-  local relative source_path bytes files
+  local relative bytes files linux=0
   local missing_seed="$PROJECT_ROOT/.claude/atlas-epic/plans/curated-seed"
 
+  [[ "$(uname -s)" != Linux ]] || linux=1
   info "Recovery roots selected (repo-local sole copies first):"
+  if ((linux)); then
+    collect_source_root_stats
+  fi
   for relative in "${BACKUP_PATHS[@]}"; do
-    source_path="$(source_for_backup_path "$relative")"
-    if [[ "$(uname -s)" == Linux ]]; then
-      read -r bytes files < <(source_tree_stats "$source_path")
+    if ((linux)); then
+      bytes=${ROOT_STAT_BYTES[$relative]:-0}
+      files=${ROOT_STAT_FILES[$relative]:-0}
     else
-      read -r bytes files < <(tree_file_stats "$source_path")
+      set_backup_source_path "$relative"
+      read -r bytes files < <(tree_file_stats "$BACKUP_SOURCE_PATH")
     fi
     printf '  %s files=%s bytes=%s\n' "$relative" "$files" "$bytes"
   done
@@ -2119,22 +2204,34 @@ write_backup_receipt() {
   local exclusions_file="$STAGE_DIR/exclusions.jsonl"
   local archives_file="$STAGE_DIR/database-archives.jsonl"
   local relative bytes files git_sha git_dirty untracked_count
-  local known_missing created_at
+  local known_missing created_at escaped_path
 
-  : > "$inventory_file"
-  for relative in "${BACKUP_PATHS[@]}"; do
-    if [[ "$LINUX_MODE" -eq 1 && "$relative" != "GIT-WORKTREE.patch" ]]; then
-      read -r bytes files < <(source_tree_stats "$(source_for_backup_path "$relative")")
-    else
-      read -r bytes files < <(tree_file_stats "$STAGED_ROOT/$relative")
-    fi
-    jq -cn \
-      --arg path "$relative" \
-      --argjson files "$files" \
-      --argjson bytes "$bytes" \
-      '{path: $path, files: $files, bytes: $bytes}' \
-      >> "$inventory_file"
-  done
+  # One jq reads one line per root (path, files, bytes; tab separated, with the
+  # path's backslashes and newlines escaped) instead of a jq per root.
+  if [[ "$LINUX_MODE" -eq 1 ]]; then
+    collect_source_root_stats
+  fi
+  {
+    for relative in "${BACKUP_PATHS[@]}"; do
+      if [[ "$LINUX_MODE" -eq 1 && "$relative" != "GIT-WORKTREE.patch" ]]; then
+        bytes=${ROOT_STAT_BYTES[$relative]:-0}
+        files=${ROOT_STAT_FILES[$relative]:-0}
+      else
+        read -r bytes files < <(tree_file_stats "$STAGED_ROOT/$relative")
+      fi
+      escaped_path=${relative//\\/\\\\}
+      escaped_path=${escaped_path//$'\n'/\\n}
+      printf '%s\t%s\t%s\n' "$escaped_path" "$files" "$bytes"
+    done
+  } | jq -cR '
+    split("\t") as $field
+    | {
+        path: ($field[:-2] | join("\t")
+          | gsub("\\\\(?<escaped>[\\\\n])"; if .escaped == "n" then "\n" else "\\" end)),
+        files: ($field[-2] | tonumber),
+        bytes: ($field[-1] | tonumber)
+      }' > "$inventory_file" ||
+    die "Could not write the path inventory."
 
   git_sha="$(git_command -C "$PROJECT_ROOT" rev-parse HEAD)"
   git_dirty=false

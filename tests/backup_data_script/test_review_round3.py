@@ -104,6 +104,25 @@ def test_twelve_hundred_task_records_publish_a_completion_marker(
     _assert_task_inventory_completed(environment, relatives, argv_log)
 
 
+def test_inventory_round_trips_a_root_name_with_newline_backslash_and_tab(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    """The batched inventory escapes a path instead of passing it as a jq argument."""
+    environment, source, _staging, _legacy = backup_environment
+    project = source.parent
+    tasks = project / "batch_state" / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    odd = "batch_state/tasks/a\nb\\nc\td.json"
+    (project / odd).write_text("{}\n", encoding="utf-8")
+
+    result = _run_backup(environment)
+
+    assert result.returncode == 0, result.stderr
+    receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
+    entry = next(entry for entry in receipt["paths"] if entry["path"] == odd)
+    assert entry == {"path": odd, "files": 1, "bytes": 3}
+
+
 def _sqlite_mirror(source: Path) -> tuple[Path, Path, bytes]:
     mirror = source / "lexicon" / "runner-mirror" / "run-20k"
     mirror.mkdir(parents=True)
