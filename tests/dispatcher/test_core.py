@@ -2496,6 +2496,14 @@ def test_stale_local_ref_never_yields_read_only_checkout_at_stale_commit(sandbox
     )
     assert "read_only_branch_base_mismatch:" in refused.stderr
     assert not (sandbox.tasks / "stale-local-ref-mismatch.json").exists()
+    # Git accepts unique abbreviations from four characters; they refuse the same way.
+    short = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "review",
+        "--task-id", "stale-local-ref-short", "--mode", "read-only",
+        "--branch", "review-stale", "--base", stale[:6], expected=2,
+    )
+    assert "read_only_branch_base_mismatch:" in short.stderr
+    assert not (sandbox.tasks / "stale-local-ref-short.json").exists()
 
 
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):

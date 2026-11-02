@@ -300,7 +300,7 @@ def review_branch_start(repo: Path, repository: dict, branch: str, task_id: str,
     the review's base ref and does not name the checkout commit.
     """
     sha, _remote = publish_start(repo, repository, branch, task_id, label="review branch")
-    if base and re.fullmatch(r"[0-9a-fA-F]{7,64}", base):
+    if base and re.fullmatch(r"[0-9a-fA-F]{4,64}", base):
         if len(base) in (40, 64):
             resolved = base.lower()
         else:
