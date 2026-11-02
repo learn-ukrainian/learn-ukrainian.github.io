@@ -3696,6 +3696,51 @@ def test_detect_ignores_completed_started_rollovers_for_status_none(tmp_path: Pa
     assert json.loads(capsys.readouterr().out) == {"agent": "codex", "status": "none"}
 
 
+@pytest.mark.parametrize("old_status", ["pending_start", "resumed"])
+def test_detect_omits_packet_superseded_by_later_confirmed_rollover(
+    tmp_path: Path, capsys, monkeypatch, old_status: str
+) -> None:
+    """#12496: an unconfirmed packet the lineage moved past is not a live candidate."""
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    old = _prepare_stream_packet(tmp_path, capsys, owner="claude", thread_id="old-a", family="cto-coordination")
+    newer = _prepare_stream_packet(tmp_path, capsys, owner="claude", thread_id="old-b", family="cto-coordination")
+    old_path = tmp_path / ".agent/thread-rollovers/claude" / old["lineage_id"] / "lease.json"
+    newer_path = tmp_path / ".agent/thread-rollovers/claude" / newer["lineage_id"] / "lease.json"
+    if old_status == "resumed":
+        state = json.loads(old_path.read_text(encoding="utf-8"))
+        state["replacement"]["status"] = "resumed"
+        state["replacement"]["resumed_thread_id"] = "replacement-a"
+        th.write_json_atomic(old_path, state)
+    # The newer packet was resumed and confirmed: its lease is now "started".
+    state = json.loads(newer_path.read_text(encoding="utf-8"))
+    state["replacement"]["status"] = "started"
+    state["replacement"]["prepared_at"] = "2999-01-01T00:00:00Z"
+    th.write_json_atomic(newer_path, state)
+    old_bytes = old_path.read_bytes()
+    args = ["--repo-root", str(tmp_path), "detect", "--agent", "claude", "--stream", "epic:1001"]
+
+    assert th.main(args) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "none"
+    assert [item["lineage_id"] for item in result["skipped_superseded"]] == [old["lineage_id"]]
+    assert result["skipped_superseded"][0]["superseded_by"]["lineage_id"] == newer["lineage_id"]
+    assert th.main([*args, "--format", "session-start"]) == 0
+    context = capsys.readouterr().out
+    assert "MULTIPLE LIVE PENDING ROLLOVERS" not in context
+    assert "1 older packet(s) superseded by a later confirmed rollover; left unchanged." in context
+    assert old_path.read_bytes() == old_bytes
+
+    # A packet prepared after the newest confirmed rollover stays live.
+    state = json.loads(newer_path.read_text(encoding="utf-8"))
+    state["replacement"]["prepared_at"] = "2000-01-01T00:00:00Z"
+    th.write_json_atomic(newer_path, state)
+    assert th.main(args) == 0
+    live = json.loads(capsys.readouterr().out)
+    assert live["status"] == old_status
+    assert live["lineage_id"] == old["lineage_id"]
+    assert "skipped_superseded" not in live
+
+
 @pytest.mark.parametrize("mutation", ["schema", "agent", "lineage", "rollover", "ambiguous"])
 def test_detect_rejects_bad_or_ambiguous_engine_leases(tmp_path: Path, capsys, monkeypatch, mutation: str):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))

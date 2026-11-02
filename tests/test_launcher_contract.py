@@ -1238,6 +1238,61 @@ launcher_close_driver_lease
     assert "-m\nscripts.session_supervisor\nclose\n--role\ndriver\n" in body
 
 
+def test_cto_wrapper_start_builds_cto_prompt_not_lane_driver_prompt(tmp_path: Path) -> None:
+    """#12496: the CTO seat holds the epics lease but binds lane cto and the cto skill."""
+    argv_file = tmp_path / "cto-argv"
+    cto = run_launcher(
+        "start-claude-cto.sh",
+        "--epic",
+        "epics",
+        "--model",
+        "claude-opus-5-5",
+        "KICK",
+        env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file)},
+    )
+    assert cto.returncode == 0, cto.stderr
+    assert "launcher: would bind cto after lease" in cto.stdout
+    prompt = argv_file.read_bytes().decode().removesuffix("\0").split("\0")[-1]
+    assert prompt.startswith("First run lu-driver-state render --lane cto, then lu-driver-state check --lane cto.")
+    assert "agents_extensions/shared/skills/cto/SKILL.md" in prompt
+    assert "The launcher already claimed the epics lease" in prompt
+    assert "first repeat lu-driver-state render --lane cto and lu-driver-state check --lane cto" in prompt
+    assert "drive-epic" not in prompt
+    assert "--lane epics" not in prompt
+    assert prompt.endswith("Caller instructions:\nKICK")
+
+    # The same lane through the lane-driver launcher keeps the drive-epic binding.
+    lane = run_launcher("start-claude-driver.sh", "--epic", "epics")
+    assert lane.returncode == 0, lane.stderr
+    assert "launcher: would bind drive-epic after lease" in lane.stdout
+    lane_prompt = shlex.split(lane.stdout.split("would exec ", 1)[1])[-1]
+    assert lane_prompt.startswith(
+        "First run lu-driver-state render --lane epics, then lu-driver-state check --lane epics."
+    )
+    assert "agents_extensions/shared/skills/drive-epic/SKILL.md" in lane_prompt
+
+
+def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
+    """#12496: only the CTO seat names another skill; the lane-driver clause is unchanged."""
+    script = (
+        'source "$1"; printf "%s\\0%s\\0%s" '
+        '"$(fleet_comms_cold_clause)" "$(fleet_comms_cold_clause drive-epic)" "$(fleet_comms_cold_clause cto)"'
+    )
+    result = subprocess.run(
+        ["bash", "-c", script, "bash", str(REPO / "scripts/lib/fleet_comms_cold_start.sh")],
+        env={**os.environ, "FLEET_COMMS_PLANE_MODE": "authority", "PROJECT_DIR": str(REPO), "LC_ROOT": str(REPO)},
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    default, lane, cto = result.stdout.split("\0")
+    assert default == lane
+    assert "Method playbook: load skill drive-epic (provider drivers inject the binding after lease + canary). " in lane
+    assert cto == lane.replace("load skill drive-epic", "load skill cto")
+
+
 def test_compat_kimicc_rejects_harness_override() -> None:
     result = run_launcher("start-kimicc.sh", "--harness", "kimi-code")
     assert result.returncode == 2

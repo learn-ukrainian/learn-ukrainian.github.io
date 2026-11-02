@@ -241,6 +241,7 @@ def _loaded_module(*parts: str):
 SESSION_IDENTITY_ENV_VARS = (
     # Launcher driver identity (scripts/lib/launcher_core.sh).
     "SESSION_EPIC",
+    "SESSION_SEAT",
     "SESSION_HANDOFF_AGENT",
     "LU_DRIVER_STATE_FILE",
     # Verified driver scope re-entry identity (scripts/lib/driver_scope.sh).
