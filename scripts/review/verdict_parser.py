@@ -603,11 +603,11 @@ def _not_json_constant(token: str) -> Any:
     raise ValueError(f"non-JSON constant {token}")
 
 
-# A reply that opens with a code fence, names the findings schema, or holds a brace anywhere (so any
-# JSON object, valid, broken or escaped alike) is a structured reply. It is never read as a markdown
-# ledger, so text beside an object cannot add findings; a ledger reply with a brace therefore gives no
-# grant evidence, which fails closed.
-_STRUCTURED_REPLY_RE = re.compile(r"\A\s*(?:```|~~~)|\{|code-review-findings")
+# A reply that opens with a code fence, names the findings schema, or holds anywhere a brace or a
+# quoted member name (``"findings": …``, escaped or not) is a structured reply: any JSON object or
+# object fragment, valid, broken or escaped alike. It is never read as a markdown ledger, so text
+# beside an object cannot add findings; a ledger reply with such text gives no grant evidence (fails closed).
+_STRUCTURED_REPLY_RE = re.compile(r"\A\s*(?:```|~~~)|\{|\"[^\"\n]*\"\s*:|code-review-findings")
 
 
 def _structured_findings(reply: str) -> tuple[Any, ...] | None:
