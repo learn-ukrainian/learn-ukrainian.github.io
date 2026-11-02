@@ -92,6 +92,20 @@
       "path_prepend": ["scripts/agent_runtime/shims"]
     },
     {
+      "session": "kube-dojo",
+      "name": "kube-dojo",
+      "kind": "claude",
+      "epic": "kube-dojo",
+      "sender": "claude-kube-dojo",
+      "goal": ".claude/kube-dojo-epic/DRIVER-STATE.md",
+      "launcher": "scripts/start-kube-dojo-driver.sh",
+      "model": "claude-sonnet-5-5",
+      "effort": "high",
+      "account_env": ["CLAUDE_CONFIG_DIR"],
+      "kick": "Resume as the kube-dojo driver from the NEWEST HANDOFF at the top of .claude/kube-dojo-epic/DRIVER-STATE.md. Consume your claude-kube-dojo Fleet inbox first, adopt the in-flight workers listed in the handoff (do not restart them), then continue the recorded chains on kube-dojo/kube-dojo.github.io epic #2272, dispatching every kube-dojo worker with scripts/dispatch.py --repo kube-dojo. Never /compact; hand off before 70% context.",
+      "provider_args": ["--dangerously-skip-permissions"]
+    },
+    {
       "session": "cto",
       "name": "cto",
       "kind": "claude",
