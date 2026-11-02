@@ -654,6 +654,53 @@ def _status_or_fail(args: argparse.Namespace) -> int:
     return 1
 
 
+# A failed git call prints only constants (#12468): the subcommand from this set and a summary the first stderr
+# line selects from the table below (first match wins). A value, a path or a secret cannot be told from a plain
+# word by its shape, so no operand, flag or stderr byte is ever printed.
+_GIT_SUBCOMMANDS = frozenset(
+    [
+        "add", "cat-file", "check-ref-format", "commit-tree", "config", "fetch", "init", "ls-files", "ls-remote",
+        "merge-base", "push", "reset", "rev-list", "rev-parse", "show", "sparse-checkout", "status",
+        "symbolic-ref", "update-ref", "worktree", "write-tree",
+    ]
+)
+_GIT_FAILURES = tuple((re.compile(pattern, re.IGNORECASE), text) for pattern, text in (
+    (r"needed a single revision", "needed a single revision"),
+    (r"unknown revision|bad revision|ambiguous argument", "unknown revision"),
+    (r"bad object|invalid object name|not a valid object", "bad object name"),
+    (r"authentication failed|could not read (username|password)|publickey|invalid username or password",
+     "authentication failed"),
+    (r"could not resolve host|unable to access|could not read from|connection (refused|timed out)|unreachable",
+     "remote not reachable"),
+    (r"index\.lock|another git process|\.lock'", "lock file conflict"),
+    (r"already exists", "target already exists"),
+    (r"not a git repository", "not a git repository"),
+    (r"find remote ref|repository not found|does not appear to be a git repository",
+     "remote ref or repository not found"),
+    (r"permission denied", "permission denied"),
+    (r"timed out", "timed out"),
+))
+UNRECOGNIZED_GIT_FAILURE = "unrecognized git error"
+
+
+def _failed_operation(exc: subprocess.CalledProcessError) -> str:
+    """``CalledProcessError: git <subcommand> exited <rc>: <summary>``, nothing user-controlled (#12468)."""
+    words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
+    if not words or words[0] != "git":
+        return f"CalledProcessError: external command exited {exc.returncode}"
+    rest, subcommand = iter(words[1:]), None
+    for word in rest:
+        if word in {"-C", "-c"}:
+            next(rest, None)
+        elif not word.startswith("-"):
+            subcommand = word if word in _GIT_SUBCOMMANDS else None
+            break
+    stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
+    first = next((line for line in stderr.splitlines() if line.strip()), "")
+    summary = next((text for pattern, text in _GIT_FAILURES if pattern.search(first)), UNRECOGNIZED_GIT_FAILURE)
+    return f"CalledProcessError: git{f' {subcommand}' if subcommand else ''} exited {exc.returncode}: {summary}"
+
+
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
@@ -693,7 +740,12 @@ def main(argv=None) -> int:
         print(str(exc), file=sys.stderr)
         return exc.code
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
-        message = str(exc).splitlines()[0] if isinstance(exc, ValueError) else type(exc).__name__
+        if isinstance(exc, ValueError):
+            message = str(exc).splitlines()[0]
+        elif isinstance(exc, subprocess.CalledProcessError):
+            message = _failed_operation(exc)
+        else:
+            message = type(exc).__name__
         print(f"dispatcher: {message}", file=sys.stderr)
         return 2
 
