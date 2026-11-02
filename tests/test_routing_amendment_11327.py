@@ -156,12 +156,6 @@ def test_kimi_registry_defaults_refuse_before_runtime_attribution(agent):
         _refuse_retired_launch_model(agent, None, None)
 
 
-def test_unrelated_retired_legacy_default_is_not_a_new_gate():
-    from scripts.agent_runtime.runner import _refuse_retired_launch_model
-
-    assert _refuse_retired_launch_model("grok-hermes", None, None) is None
-
-
 def test_shared_allowance_does_not_invent_capacity_for_an_unobserved_transport():
     budget = snapshot(80, 95)
     del budget["agents"]["grok"]

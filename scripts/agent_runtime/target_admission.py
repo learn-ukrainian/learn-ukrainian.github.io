@@ -52,7 +52,6 @@ COMPAT_TARGETS: dict[str, str] = {
     "codex": "codex",
     "agy": "agy",
     "gemini": "agy",
-    "hermes": "deepseek",
     "deepseek": "deepseek",
     "pool": "pool",
     "glm": "glm",
