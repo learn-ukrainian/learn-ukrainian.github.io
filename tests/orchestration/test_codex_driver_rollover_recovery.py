@@ -177,18 +177,17 @@ def _prepare(root, capsys, agent, thread):
 def _launcher_prelease(root, slot, stream):
     """The launcher's pre-lease call: explicit stream, no SESSION_STREAM_ID yet."""
     python = root / ".venv/bin/python"
-    if not python.exists():
-        python.parent.mkdir(parents=True)
-        python.write_text(f"#!/bin/sh\nexec {shlex.quote(sys.executable)} \"$@\"\n")
-        python.chmod(0o755)
-        script = root / "scripts/orchestration/thread_handoff.py"
-        script.parent.mkdir(parents=True)
-        script.write_text(
-            "import sys\n"
-            f"sys.path.insert(0, {str(REPO)!r})\n"
-            "from scripts.orchestration.thread_handoff import main\n"
-            "raise SystemExit(main())\n"
-        )
+    python.parent.mkdir(parents=True, exist_ok=True)
+    python.write_text(f"#!/bin/sh\nexec {shlex.quote(sys.executable)} \"$@\"\n")
+    python.chmod(0o755)
+    script = root / "scripts/orchestration/thread_handoff.py"
+    script.parent.mkdir(parents=True, exist_ok=True)
+    script.write_text(
+        "import sys\n"
+        f"sys.path.insert(0, {str(REPO)!r})\n"
+        "from scripts.orchestration.thread_handoff import main\n"
+        "raise SystemExit(main())\n"
+    )
     env = {key: value for key, value in os.environ.items() if not key.startswith(("GIT_", "SESSION_"))}
     return subprocess.run(
         ["bash", "-c", 'source "$1"; resolve_codex_pending_rollover "$2" "$3" "$4"; rc=$?; '
