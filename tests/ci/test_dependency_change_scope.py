@@ -326,8 +326,8 @@ def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> N
 def _exact_pins(path: Path) -> dict[str, str]:
     pins: dict[str, str] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
-        spec = re.split(r"\s+#", line, maxsplit=1)[0].strip()
-        if not spec or spec.startswith("-") or spec.startswith("."):
+        spec = re.split(r"\s+#", line.strip(), maxsplit=1)[0]
+        if not spec or spec.startswith(("#", "-", ".")):
             continue
         req = Requirement(spec)
         for item in req.specifier:
