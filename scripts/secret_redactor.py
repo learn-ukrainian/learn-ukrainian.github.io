@@ -28,7 +28,11 @@ _ASSIGNMENT_PATTERNS = (
         re.IGNORECASE,
     ),
     re.compile(
-        rf"(?P<prefix>(?<![\w'\"])(?P<key_quote>['\"]?)(?P<key>{_KEY_NAME})(?P=key_quote)\s*:\s*)(?P<quote>['\"])(?P<value>.*?)(?P=quote)",
+        rf"(?P<prefix>(?<![\w'\"])(?P<key_quote>['\"]?)(?P<key>{_KEY_NAME})(?P=key_quote)\s*:\s*)(?P<quote>\")(?P<value>(?:\\[^\r\n]|[^\"\\\r\n])*)(?P=quote)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        rf"(?P<prefix>(?<![\w'\"])(?P<key_quote>['\"]?)(?P<key>{_KEY_NAME})(?P=key_quote)\s*:\s*)(?P<quote>')(?P<value>(?:''|[^'\r\n])*)(?P=quote)",
         re.IGNORECASE,
     ),
     re.compile(

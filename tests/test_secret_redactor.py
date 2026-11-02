@@ -35,8 +35,13 @@ def msg_db(tmp_path):
 @pytest.mark.parametrize("key", ["PASSWORD", "PASS", "SECRET_KEY", "API_TOKEN", "ACCESS_KEY", "API_KEY"])
 @pytest.mark.parametrize("key_quote", ["", "'", '"'])
 @pytest.mark.parametrize("quote", ["", "'", '"'])
-def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote):
+@pytest.mark.parametrize("variant", ["plain", "embedded_quote", "trailing_backslash"])
+def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote, variant):
     value = _OPAQUE_TOKEN[:12]
+    if variant == "embedded_quote":
+        value += ("''" if quote == "'" else '\\"') + _OPAQUE_TOKEN[:12]
+    elif variant == "trailing_backslash":
+        value += "\\\\" if quote == '"' else "\\"
     prefix = f"{key_quote}{key}{key_quote}: "
     assert redact_text(f"{prefix}{quote}{value}{quote}") == f"{prefix}{quote}{REDACTION}{quote}"
 
