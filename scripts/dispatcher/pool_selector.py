@@ -318,7 +318,12 @@ def pool_exhausted(message: str) -> bool:
 
 
 def _provider_exhausted(record: dict) -> bool:
-    if pool_exhausted(str(record.get("error") or "")):
+    message = str(record.get("error") or "")
+    # A Codex exit-status error contains untrusted stderr after the prefix.
+    # Provider terminal messages and legacy errors remain eligible signals.
+    if record.get("agent") == "codex" and re.match(r"codex: exited with status -?\d+(?::|$)", message):
+        message = ""
+    if pool_exhausted(message):
         return True
     # Existing parsers can retain only a generic failure. Inspect provider error
     # events, never assistant/tool text or a whole transcript substring search.

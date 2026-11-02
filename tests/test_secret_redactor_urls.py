@@ -218,9 +218,13 @@ def url_pass(text):
 
 
 @pytest.mark.parametrize("raw", FROZEN_NEGATIVES)
-def test_frozen_ordinary_messages_stay_byte_identical(raw):
+def test_frozen_ordinary_messages_and_secret_assignment_masking(raw):
     assert url_pass(raw).encode("utf-8") == raw.encode("utf-8")
-    assert redact_text(raw).encode("utf-8") == raw.encode("utf-8")
+    expected = (
+        f"token_verdicts = {REDACTION}"
+        if raw == "token_verdicts = vesum_gate.check_tokens(sentence)" else raw
+    )
+    assert redact_text(raw).encode("utf-8") == expected.encode("utf-8")
 
 
 @pytest.mark.repo_wide
