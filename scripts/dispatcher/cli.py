@@ -680,17 +680,20 @@ _GIT_FAILURES = tuple((re.compile(pattern, re.IGNORECASE), text) for pattern, te
     (r"permission denied", "permission denied"),
     (r"timed out", "timed out"),
 ))
+# Global options whose next word is their value, not the subcommand (the ``--opt=value`` form is one word).
+_GIT_VALUED_GLOBALS = frozenset(["-C", "-c", "--git-dir", "--work-tree", "--namespace", "--super-prefix",
+                                 "--config-env", "--attr-source"])
 UNRECOGNIZED_GIT_FAILURE = "unrecognized git error"
 
 
 def _failed_operation(exc: subprocess.CalledProcessError) -> str:
     """``CalledProcessError: git <subcommand> exited <rc>: <summary>``, nothing user-controlled (#12468)."""
     words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
-    if not words or words[0] != "git":
+    if not words or os.path.basename(words[0]) != "git":
         return f"CalledProcessError: external command exited {exc.returncode}"
     rest, subcommand = iter(words[1:]), None
     for word in rest:
-        if word in {"-C", "-c"}:
+        if word in _GIT_VALUED_GLOBALS:
             next(rest, None)
         elif not word.startswith("-"):
             subcommand = word if word in _GIT_SUBCOMMANDS else None
