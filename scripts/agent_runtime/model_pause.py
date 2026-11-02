@@ -419,12 +419,17 @@ def _agy_claude_windows_used_pct(view: Mapping[str, Any]) -> float | None:
 
 
 def _reset_instant(value: object) -> datetime | None:
-    """A window ``resets_at`` as an instant: an ISO-8601 string or epoch seconds, else None."""
+    """A window ``resets_at`` as an instant, or None.
+
+    Accepts what the Monitor producers emit (``subscription_usage._parse_resets_at_any``):
+    an ISO-8601 string (no offset means UTC) or epoch seconds or milliseconds.
+    """
     if isinstance(value, bool):
         return None
     if isinstance(value, int | float):
+        seconds = float(value) / 1000.0 if value > 1e12 else float(value)
         try:
-            return datetime.fromtimestamp(value, UTC)
+            return datetime.fromtimestamp(seconds, UTC)
         except (OverflowError, OSError, ValueError):
             return None
     if isinstance(value, str):
@@ -432,7 +437,7 @@ def _reset_instant(value: object) -> datetime | None:
             parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
         except ValueError:
             return None
-        return parsed if parsed.tzinfo is not None else None
+        return parsed.replace(tzinfo=UTC) if parsed.tzinfo is None else parsed
     return None
 
 

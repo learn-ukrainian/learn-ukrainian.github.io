@@ -483,11 +483,13 @@ def test_reading_with_a_past_resets_at_is_not_used_as_headroom(monkeypatch) -> N
                            "codex": {"status": "hot", "codexbar": probe(resets_at)}}}
 
     # lane probe (the default account's fallback, and a non-claude lane), ISO string and epoch seconds
-    for resets_at in (before, int(datetime(2026, 11, 2, 7, 0, tzinfo=UTC).timestamp())):
+    epoch = int(datetime(2026, 11, 2, 7, 0, tzinfo=UTC).timestamp())
+    for resets_at in (before, "2026-11-02T07:00:00", epoch, epoch * 1000):
         assert read("claude", lanes(resets_at)) is None
         assert read("codex", lanes(resets_at)) is None
     assert read("claude", lanes(after)) == 99.0
     assert read("codex", lanes(None)) == 99.0  # no resets_at is no evidence
+    assert read("codex", lanes("soon")) == 99.0
 
     # the account's own row
     for resets_at, expected in ((before, None), (after, 11.0)):
