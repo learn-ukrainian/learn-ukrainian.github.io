@@ -88,6 +88,11 @@ def test_whole_fenced_json_reply_admits() -> None:
           for fence, tag in (("```", "json"), ("```", ""), ("~~~", ""))),
         pytest.param("```json\n{\"schema_version\": 1}\n```\n" + LEDGER, id="invalid-fence-then-ledger"),
         pytest.param("Prose first.\n\n" + _reply(_finding(priority="P2")) + "\n\n" + LEDGER, id="prose-json-ledger"),
+        *(pytest.param(f"Review follows.\n{fence}{tag}\n{body}\n{fence}\n{LEDGER}", id=f"prose-fence{fence}{tag}-{name}")
+          for fence, tag in (("```", "json"), ("```", ""), ("~~~", ""))
+          for name, body in (("findings", '{"findings": []}'), ("escaped", '{"\\u0066indings": []}'),
+                             ("broken", '{"overall": {"correctness": '))),
+        pytest.param('Example:\n\n> {"\\u006fverall": {}}\n\n' + LEDGER, id="quoted-escaped-envelope"),
     ],
 )
 def test_json_reply_refuses_without_an_open_p1(reply: str) -> None:
