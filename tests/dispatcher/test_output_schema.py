@@ -262,6 +262,32 @@ def test_codex_stderr_excerpt_redacts_secret_and_home_path():
     assert len(failed.error) <= len("codex: exited with status 1: ") + 500
 
 
+@pytest.mark.parametrize("character", ["\x00", "\x1b", "\x7f", "\x85", "\u200b", "\u202e", "\u2066", "\ufeff"])
+def test_control_format_characters_removed_from_stderr_excerpt(character):
+    secret = "key_" + "aB09" * 16
+    obfuscated = secret[:8] + character + secret[8:]
+    parsed = codex.parse("", f"before{character}after {obfuscated}", 1, None)
+    assert character not in parsed.error
+    assert "beforeafter" in parsed.error or "before after" in parsed.error
+    assert secret[8:] not in parsed.error
+    assert "[REDACTED_SECRET]" in parsed.error
+
+
+@pytest.mark.parametrize("signal", ["credit balance is too low", "insufficient_quota", "billing error 429"])
+@pytest.mark.parametrize("structured", [False, True])
+def test_stderr_text_alone_cannot_mark_pool_exhausted(tmp_path, monkeypatch, signal, structured):
+    from scripts.dispatcher import pool_selector
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    task_id = "stderr-pool"
+    path = store.record_path(task_id).parent / "logs" / f"{task_id}.stdout.log"
+    path.parent.mkdir(parents=True)
+    stdout = json.dumps({"type": "turn.failed", "error": {"message": signal}}) if structured else ""
+    path.write_text(stdout)
+    parsed = codex.parse(stdout, signal, 1, None)
+    assert pool_selector._provider_exhausted({"task_id": task_id, "agent": "codex", "error": parsed.error}) is structured
+
+
 def test_agy_review_binds_findings_schema(dispatch):
     """Defect class: review dispatch silently omits its structured verdict schema."""
     spec, record = dispatch.invoke(path=None, agent="agy", review=True)

@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import time
+import unicodedata
 from collections.abc import Mapping
 
 from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
@@ -242,7 +243,11 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         from scripts.orchestration.dispatch_admission import redact_paths
         from scripts.secret_redactor import redact_text
 
-        excerpt = " ".join(redact_paths(redact_text(stderr) or "").split())
+        sanitized = "".join(
+            char for char in stderr if unicodedata.category(char) not in {"Cc", "Cf"}
+            or char in "\t\r\n"
+        )
+        excerpt = " ".join(redact_paths(redact_text(sanitized) or "").split())
         if excerpt:
             error = f"{error}: {excerpt[:_STDERR_EXCERPT]}"
     return ParsedResult(
