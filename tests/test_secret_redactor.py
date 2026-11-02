@@ -34,22 +34,37 @@ def msg_db(tmp_path):
 
 @pytest.mark.parametrize("key", ["PASSWORD", "PASS", "SECRET_KEY", "API_TOKEN", "ACCESS_KEY", "API_KEY"])
 @pytest.mark.parametrize("key_quote", ["", "'", '"'])
-@pytest.mark.parametrize("quote", ["", "'", '"'])
-@pytest.mark.parametrize("variant", ["plain", "embedded_quote", "trailing_backslash"])
-def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote, variant):
+@pytest.mark.parametrize(
+    ("quote", "variant"),
+    [
+        (quote, variant)
+        for quote in ("", "'", '"')
+        for variant in ("plain", "embedded_quote", "trailing_backslash", "multiline", "continued", "unterminated")
+        if quote or variant in {"plain", "embedded_quote", "trailing_backslash"}
+    ],
+)
+@pytest.mark.parametrize("prefix", ["", "status: pending "])
+def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote, prefix, variant):
     value = _OPAQUE_TOKEN[:12]
     if variant == "embedded_quote":
         value += ("''" if quote == "'" else '\\"') + _OPAQUE_TOKEN[:12]
     elif variant == "trailing_backslash":
         value += "\\\\" if quote == '"' else "\\"
-    prefix = f"{key_quote}{key}{key_quote}: "
-    assert redact_text(f"{prefix}{quote}{value}{quote}") == f"{prefix}{quote}{REDACTION}{quote}"
+    elif variant in {"multiline", "continued"}:
+        value = value[:6] + ("\\" if variant == "continued" else "") + "\n" + value[6:]
+    closing = "" if variant == "unterminated" else quote
+    prefix += f"{key_quote}{key}{key_quote}: "
+    raw = f"{prefix}{quote}{value}{closing}"
+    expected = f"{prefix}{quote}{REDACTION}{closing}"
+    assert redact_text(raw) == expected
 
 
 @pytest.mark.parametrize("punctuation", ["()", "[]", "{}", ","])
-def test_spaced_assignment_with_code_punctuation_masked(punctuation):
+@pytest.mark.parametrize("prefix", ["", "count = 1 ", "'", '"'])
+def test_spaced_assignment_with_code_punctuation_masked(punctuation, prefix):
     value = punctuation[0] + _OPAQUE_TOKEN[:12] + punctuation[-1]
-    assert redact_text(f"PASS = {value}") == f"PASS = {REDACTION}"
+    closing = prefix if prefix in {"'", '"'} else ""
+    assert redact_text(f"{prefix}PASS = {value}{closing}") == f"{prefix}PASS = {REDACTION}"
 
 
 @pytest.mark.parametrize("text", ["Warning: provider failed", "The lesson: ordinary prose.", "status: pending", "time: 12:30"])

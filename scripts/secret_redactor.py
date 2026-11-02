@@ -18,28 +18,16 @@ REDACTION = "[REDACTED_SECRET]"
 
 _KEY_NAME = r"[A-Za-z_][A-Za-z0-9_]*"
 
-_ASSIGNMENT_PATTERNS = (
-    re.compile(
-        rf"(?P<prefix>\b(?P<key>{_KEY_NAME})\b\s*=\s*)(?P<quote>['\"])(?P<value>.*?)(?P=quote)",
-        re.IGNORECASE,
-    ),
-    re.compile(
-        rf"(?P<prefix>\b(?P<key>{_KEY_NAME})\b\s*=\s*)(?P<value>[^\r\n]+)",
-        re.IGNORECASE,
-    ),
-    re.compile(
-        rf"(?P<prefix>(?<![\w'\"])(?P<key_quote>['\"]?)(?P<key>{_KEY_NAME})(?P=key_quote)\s*:\s*)(?P<quote>\")(?P<value>(?:\\[^\r\n]|[^\"\\\r\n])*)(?P=quote)",
-        re.IGNORECASE,
-    ),
-    re.compile(
-        rf"(?P<prefix>(?<![\w'\"])(?P<key_quote>['\"]?)(?P<key>{_KEY_NAME})(?P=key_quote)\s*:\s*)(?P<quote>')(?P<value>(?:''|[^'\r\n])*)(?P=quote)",
-        re.IGNORECASE,
-    ),
-    re.compile(
-        rf"(?P<prefix>(?<![\w'\"])(?P<key_quote>['\"]?)(?P<key>{_KEY_NAME})(?P=key_quote)\s*:\s*)(?P<value>[^'\"\s\r\n][^\r\n]*)",
-        re.IGNORECASE,
-    ),
+_ASSIGNMENT_PREFIX = re.compile(
+    rf"(?<!\w)(?P<key_quote>['\"]?)(?P<key>{_KEY_NAME})(?P=key_quote)\s*(?P<separator>[:=])\s*",
+    re.IGNORECASE,
 )
+_QUOTED_VALUES = {
+    '"': re.compile(r'"(?:\\[\s\S]|[^"\\])*"'),
+    "'": re.compile(r"'(?:''|[^'])*'"),
+}
+_SINGLE_QUOTED_EQUALS_VALUE = re.compile(r"'(?:\\[\s\S]|''|[^'\\])*'")
+_LINE_END = re.compile(r"[\r\n]")
 
 _BLOCK_PATTERNS = (
     re.compile(
@@ -175,11 +163,7 @@ def redact_text(value: str | None) -> str | None:
     text = "".join(parts)
     for pattern in _BLOCK_PATTERNS:
         text = pattern.sub(REDACTION, text)
-    for pattern in _ASSIGNMENT_PATTERNS:
-        text = pattern.sub(
-            _redact_assignment_match,
-            text,
-        )
+    text = _redact_assignments(text)
     for pattern in _TOKEN_PATTERNS:
         text = pattern.sub(REDACTION, text)
     text = _OPAQUE_TOKEN_PATTERN.sub(_redact_opaque_token_match, text)
@@ -247,9 +231,38 @@ def _redact_opaque_token_match(match: re.Match[str]) -> str:
     return REDACTION if _looks_like_opaque_secret(match.group("value")) else match.group(0)
 
 
-def _redact_assignment_match(match: re.Match[str]) -> str:
-    if not _is_secret_key(match.group("key")):
-        return match.group(0)
-
-    quote = match.groupdict().get("quote") or ""
-    return f"{match.group('prefix')}{quote}{REDACTION}{quote}"
+def _redact_assignments(text: str) -> str:
+    parts = []
+    cursor = 0
+    authorities = iter(
+        (match.start(), match.start() + _url_authority_bounds(match.group())[1])
+        for match in iter_url_matches(text)
+    )
+    authority = next(authorities, (len(text), len(text)))
+    for match in _ASSIGNMENT_PREFIX.finditer(text):
+        if match.start() < cursor or not _is_secret_key(match.group("key")):
+            continue
+        while match.start() >= authority[1]:
+            authority = next(authorities, (len(text), len(text)))
+        if match.group("separator") == ":" and authority[0] <= match.start() < authority[1]:
+            continue
+        start = match.end()
+        if start == len(text):
+            continue
+        quote = text[start] if text[start] in _QUOTED_VALUES else ""
+        if quote:
+            pattern = _QUOTED_VALUES[quote]
+            if quote == "'" and match.group("separator") == "=":
+                pattern = _SINGLE_QUOTED_EQUALS_VALUE
+            value = pattern.match(text, start)
+            end = value.end() if value else len(text)
+            closing = quote if value else ""
+        else:
+            newline = _LINE_END.search(text, start)
+            end = newline.start() if newline else len(text)
+            closing = ""
+        parts.append(text[cursor:match.start()])
+        parts.append(match.group() + quote + REDACTION + closing)
+        cursor = end
+    parts.append(text[cursor:])
+    return "".join(parts)

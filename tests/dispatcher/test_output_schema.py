@@ -262,15 +262,28 @@ def test_codex_stderr_excerpt_redacts_secret_and_home_path():
     assert len(failed.error) <= len("codex: exited with status 1: ") + 500
 
 
-@pytest.mark.parametrize("character", ["\x00", "\x1b", "\x7f", "\x85", "\u200b", "\u202e", "\u2066", "\ufeff"])
-def test_control_format_characters_removed_from_stderr_excerpt(character):
+@pytest.mark.parametrize("character", ["\x00", "\x1b", "\x7f", "\x85", "\u200b", "\u202e", "\u2066", "\ufeff", "\t", "\r", "\n", "\r\n"])
+@pytest.mark.parametrize("placement", ["split_token", "split_key", "separated", "trailing"])
+def test_control_format_characters_removed_from_stderr_excerpt(character, placement):
     secret = "key_" + "aB09" * 16
-    obfuscated = secret[:8] + character + secret[8:]
-    parsed = codex.parse("", f"before{character}after {obfuscated}", 1, None)
+    if placement == "split_token":
+        raw = "notice" + character + secret[:8] + character + secret[8:]
+    elif placement == "split_key":
+        raw = "notice" + character + "PASS" + character + "WORD: " + secret[4:12]
+    elif placement == "separated":
+        raw = "notice" + character + "PASSWORD: " + secret[4:12] + character + "TOKEN: " + secret[4:12]
+    else:
+        raw = "notice " + secret + character
+    parsed = codex.parse("", raw, 1, None)
+    if placement == "trailing" and character in {"\t", "\r", "\n", "\r\n", "\x85"}:
+        expected = "codex: exited with status 1: notice [REDACTED_SECRET]"
+    else:
+        expected = "codex: exited with status 1: [stderr excerpt withheld: control or format characters]"
+    assert parsed.error == expected
     assert character not in parsed.error
-    assert "beforeafter" in parsed.error or "before after" in parsed.error
+    assert secret[:8] not in parsed.error
     assert secret[8:] not in parsed.error
-    assert "[REDACTED_SECRET]" in parsed.error
+    assert secret[4:12] not in parsed.error
 
 
 @pytest.mark.parametrize("signal", ["credit balance is too low", "insufficient_quota", "billing error 429"])

@@ -243,11 +243,11 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         from scripts.orchestration.dispatch_admission import redact_paths
         from scripts.secret_redactor import redact_text
 
-        sanitized = "".join(
-            char for char in stderr if unicodedata.category(char) not in {"Cc", "Cf"}
-            or char in "\t\r\n"
-        )
-        excerpt = " ".join(redact_paths(redact_text(sanitized) or "").split())
+        sanitized = stderr.strip()
+        if any(unicodedata.category(char) in {"Cc", "Cf"} for char in sanitized):
+            excerpt = "[stderr excerpt withheld: control or format characters]"
+        else:
+            excerpt = " ".join(redact_paths(redact_text(sanitized) or "").split())
         if excerpt:
             error = f"{error}: {excerpt[:_STDERR_EXCERPT]}"
     return ParsedResult(
