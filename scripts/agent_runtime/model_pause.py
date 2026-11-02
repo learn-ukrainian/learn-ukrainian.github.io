@@ -37,6 +37,7 @@ import json
 import math
 import os
 import re
+import time
 import urllib.request
 from collections.abc import Callable, Iterable, Mapping
 from datetime import UTC, datetime
@@ -480,6 +481,11 @@ def _reading_window_passed(view: Mapping[str, Any], lane: str, account: ClaudeAc
     return _window_reset_passed({"resets_at": probe.get("weekly_resets_at")}, now)
 
 
+_MONITOR_READ_TIMEOUT_S = 5.0
+_MONITOR_READY_WAIT_S = 30.0  # covers the cold first routing-budget fill after a restart (~15 s measured)
+_MONITOR_RETRY_PAUSE_S = 1.0
+
+
 class MonitorUnavailable(Exception):
     """The Monitor routing-budget did not answer: a transport failure, not a missing usage reading."""
 
@@ -493,13 +499,21 @@ def _bound_routing_view(account: ClaudeAccount | None) -> Mapping[str, Any] | No
     from scripts.fleet import claude_account_lane
 
     base = _monitor_base()
-    try:
-        with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
-            data = json.load(resp)
-    except (OSError, http.client.HTTPException):
-        raise MonitorUnavailable from None
-    except ValueError:
-        return None  # answered, but not a readable snapshot: no usable reading
+    # A Monitor that has just restarted may refuse, time out or answer 5xx while its first
+    # routing-budget snapshot fills (#12512). Wait a bounded time for readiness; past the
+    # bound the read is still MonitorUnavailable, so an unknown reading never admits.
+    deadline = time.monotonic() + _MONITOR_READY_WAIT_S
+    while True:
+        try:
+            with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=_MONITOR_READ_TIMEOUT_S) as resp:
+                data = json.load(resp)
+            break
+        except (OSError, http.client.HTTPException):
+            if time.monotonic() + _MONITOR_RETRY_PAUSE_S >= deadline:
+                raise MonitorUnavailable from None
+            time.sleep(_MONITOR_RETRY_PAUSE_S)
+        except ValueError:
+            return None  # answered, but not a readable snapshot: no usable reading
     if not isinstance(data, dict):
         return None
     # Bound where it enters (#10770): the claude lane is only ever ``account``'s meter; with no account, none.

@@ -242,6 +242,7 @@ def test_truncated_response_is_unavailable(monkeypatch) -> None:
     def boom(*_a, **_k):
         raise http.client.IncompleteRead(b"{")
 
+    monkeypatch.setattr(mp, "_MONITOR_READY_WAIT_S", 0.0)
     monkeypatch.setattr(mp.urllib.request, "urlopen", boom)
     with pytest.raises(mp.MonitorUnavailable):
         mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT)
@@ -262,6 +263,7 @@ def test_monitor_timeout_is_a_typed_transport_refusal(monkeypatch) -> None:
     def slow(*_a, **_k):
         raise TimeoutError("timed out")
 
+    monkeypatch.setattr(mp, "_MONITOR_READY_WAIT_S", 0.0)
     monkeypatch.setattr(mp.urllib.request, "urlopen", slow)
     assert reason() == (
         "MODEL_HEADROOM_MONITOR_UNAVAILABLE: claude-opus-5-5 usage was not read because the Monitor did not answer"
@@ -506,3 +508,32 @@ def test_reading_with_a_past_resets_at_is_not_used_as_headroom(monkeypatch) -> N
     assert read(mp.AGY_CLAUDE_WINDOW_LANE, fresh) == 10.0
     windows["five_hour"]["resets_at"] = before
     assert read(mp.AGY_CLAUDE_WINDOW_LANE, fresh) is None
+
+
+def test_headroom_read_right_after_startup_returns_reading_or_typed_unknown(monkeypatch) -> None:
+    """#12512 (cold-start read timeout): a read issued while the Monitor is still filling waits, bounded.
+
+    First attempts time out as a restarting Monitor does; the read then gets a
+    reading. A Monitor that never answers still raises the typed unavailable
+    error within the bound, never an admit.
+    """
+    import io
+
+    payload = {"agents": {}}
+    attempts = {"n": 0}
+
+    def cold_then_ready(*_a, **_k):
+        attempts["n"] += 1
+        if attempts["n"] < 3:
+            raise TimeoutError("timed out")
+        return io.StringIO(json.dumps(payload))
+
+    monkeypatch.setattr(mp, "_MONITOR_RETRY_PAUSE_S", 0.0)
+    monkeypatch.setattr(mp.urllib.request, "urlopen", cold_then_ready)
+    assert mp.routing_budget_used_pct("codex", account=HOST_ACCOUNT) is None  # a reading, not unavailable
+    assert attempts["n"] == 3
+
+    attempts["n"] = -10**9  # never ready
+    monkeypatch.setattr(mp, "_MONITOR_READY_WAIT_S", 0.05)
+    with pytest.raises(mp.MonitorUnavailable):
+        mp.routing_budget_used_pct("codex", account=HOST_ACCOUNT)
