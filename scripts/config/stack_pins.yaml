@@ -52,11 +52,11 @@ pins:
     review_by: "2026-11-16"
     note: CI reads this via python-version-file. pyproject.toml requires-python is >=3.12.
   - name: node
-    pinned: "22"
+    pinned: "22.23.4"
     source: .nvmrc
     owner: DevOps
     review_by: "2026-11-16"
-    note: package.json engines is 22.x. Most workflows pass node-version 22; validate-yaml.yml schema-check passes 20.
+    note: package.json engines is 22.23.4. Workflows read .nvmrc via node-version-file. validate-yaml.yml schema-check passes 20.
   - name: sqlite
     pinned: unknown
     source: host
