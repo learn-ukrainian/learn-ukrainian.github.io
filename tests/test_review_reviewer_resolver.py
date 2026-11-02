@@ -154,7 +154,6 @@ def test_family_resolution_across_model_and_harness_aliases():
         "gemma-4-31b-it": "google",
         "grok": "xai",
         "grok-build": "xai",
-        "grok-hermes": "xai",
         "grok-4.6": "xai",
         "deepseek-v4.1-flash": "deepseek",
         "deepseek-v4-pro": "deepseek",
@@ -1634,7 +1633,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "scripts/agent_runtime/codex_hook_probe.py": "codex",
         "agents_extensions/codex/hooks.json": "codex",
         "agents_extensions/shared/hooks/guard-reviewer-publish.py": None,
-        "scripts/agent_runtime/hermes_hooks/log_tool_call.sh": None,
     }
     for rel, seat in hooks.items():
         assert (repo / rel).is_file(), rel

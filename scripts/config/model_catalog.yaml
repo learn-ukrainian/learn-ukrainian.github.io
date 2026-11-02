@@ -51,7 +51,7 @@ policy:
       verdicts require runtime model attestation and exclude xAI-authored changes.
       Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
-      Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
+      OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
     - >-
       Kimi models are retired (OO-58, #11327, 2026-10-21; unused since
       2026-10-13, reconfirmed 2026-10-18 and 2026-10-21). Dispatch refuses
@@ -274,8 +274,7 @@ review_scheduler:
       formal_review_exclusion_reason: text-only child cannot consume parent-owned sealed-review MCP
       participant: deepseek
       adapter_transport: acp
-      # Native opencode ACP transport since the Hermes removal (operator order
-      # 2026-08-16, #6805) — mirrors the glm/gemma seats.
+      # Native opencode ACP transport; mirrors the glm/gemma seats (#6805).
       catalog_transport: opencode
       sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: deepseek
@@ -874,10 +873,9 @@ models:
     tier: frontier_practical
     lifecycle: retired
     # Retired as the sanctioned grok pin by operator order 2026-08-16 (#6865)
-    # in favor of grok-4.6; kept here (not deleted) only so the disabled
-    # grok-hermes registry seat's frozen default_model still resolves against
-    # the catalog. Never referenced by any active review_candidate, ladder,
-    # orchestrator_seat, or formal_cf_default — live routes use grok-4.7.
+    # in favor of grok-4.6. Historical model identity only, with no executable
+    # transport. Never referenced by an active review_candidate, ladder,
+    # orchestrator_seat, or formal_cf_default; live routes use grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: []
     strengths: [strong_coding, sharp_review, agentic_work]

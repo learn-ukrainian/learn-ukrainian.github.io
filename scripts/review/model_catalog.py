@@ -834,8 +834,6 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError("red_team_only admits only an expiring same-family code-review seat")
         if lifecycle == "retired" and model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must be empty for retired models")
-        if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
-            raise ModelCatalogError(f"models.{model_id}.transports must not route GPT/Grok families through Hermes")
         aliases = model.get("aliases", [])
         if "runtime_model_ids" in model:
             _require_string_list(model["runtime_model_ids"], f"models.{model_id}.runtime_model_ids")

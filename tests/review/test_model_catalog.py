@@ -1054,6 +1054,10 @@ CURRENT_BASELINE["catalog"]["execution_routing"]["sol_advised_bounded"].pop("bou
 # byte-identical; the loaded catalog drops the retired transport so frozen
 # compares match the live route.
 CURRENT_BASELINE["catalog"]["models"]["deepseek-v4.1-flash"]["transports"].remove("hermes")
+# Drop only the removed transport's ban wording from the historical receipt.
+_catalog_notes = CURRENT_BASELINE["catalog"]["policy"]["notes"]
+assert _catalog_notes[2].count("Hermes and OpenRouter") == 1
+_catalog_notes[2] = _catalog_notes[2].replace("Hermes and OpenRouter", "OpenRouter")
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
@@ -1186,7 +1190,7 @@ def test_deepseek_flash_execution_requires_opencode():
     catalog = load_model_catalog()
     assert require_execution_model("deepseek-v4.1-flash", transport="opencode", catalog=catalog) == "deepseek-v4.1-flash"
     with pytest.raises(ModelCatalogError, match="requires the opencode transport"):
-        require_execution_model("deepseek-v4.1-flash", transport="hermes", catalog=catalog)
+        require_execution_model("deepseek-v4.1-flash", transport="native_codex", catalog=catalog)
 
 
 @pytest.mark.parametrize("model_id", ["deepseek-v4-pro", "deepseek-v4-flash", "deepseek-other"])

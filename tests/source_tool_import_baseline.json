@@ -98,7 +98,6 @@
       "scripts/audit/grounding_shadow_compare.py",
       "scripts/audit/grow_lexicon_from_lemmas.py",
       "scripts/audit/grow_lexicon_from_sources.py",
-      "scripts/audit/hermes_nightly_audit.py",
       "scripts/audit/immersion_gate_calibration.py",
       "scripts/audit/ingest_ua_gec_gold.py",
       "scripts/audit/judge_calibration_matrix.py",
@@ -127,6 +126,7 @@
       "scripts/audit/module_quality_audit.py",
       "scripts/audit/module_size_policy_audit.py",
       "scripts/audit/naturalness_check.py",
+      "scripts/audit/nightly_audit.py",
       "scripts/audit/opencode_judge_calibration.py",
       "scripts/audit/paronym_residual_audit.py",
       "scripts/audit/plan_references_audit.py",
@@ -402,7 +402,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "4caacf5535c1808a46029f1fc7d4c5b173d2499d243c92f64f330836ab810a7b"
+    "cli_paths_sha256": "9946c14f0863aa5f7ad76c44b42184d7ba9e81c382b4f9fb433706c5be031bbc"
   },
   "failures": [
     {
