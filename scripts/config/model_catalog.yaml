@@ -352,7 +352,7 @@ advisory_roles:
     fence: budget-elevation
     # For an admission_exclusion, attest after reading the complete bound reply:
     # {complete_reply_execution_obstruction_only: true, no_substantive_defect: true, no_security_fail: true}; otherwise null.
-    output_fields: [decision, repository, pr, lineage_id, scope_paths, finding_id, blocker_class, issuer, issuer_model, issued_at, withheld_capability, admission_exclusion_attestation, request_sha256]
+    output_fields: [decision, repository, pr, lineage_id, scope_paths, finding_id, blocker_class, issuer, issuer_model, issued_at, withheld_capability, p2_fix_verification, admission_exclusion_attestation, request_sha256]
 
 models:
   muse-wonder-full-1.0:
