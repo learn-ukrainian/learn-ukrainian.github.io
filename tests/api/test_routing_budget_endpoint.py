@@ -18,6 +18,7 @@ from fastapi.testclient import TestClient
 
 from scripts.analytics.cost_report import CostRecord
 from scripts.api import claude_account_usage, state_helpers, state_router
+from scripts.api import subscription_usage as subscription_usage_mod
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet import reset_reserve
 
@@ -1079,6 +1080,56 @@ def test_http_fresh_codexbar_kicks_background_and_does_not_block(monkeypatch, tm
     assert kicked == ["kick"]
     assert data["diagnostics"]["fresh_codexbar_requested"] is True
     assert data["diagnostics"]["fresh_codexbar_blocking"] is False
+
+
+def test_repeated_fresh_requests_within_interval_start_one_claude_probe(monkeypatch, tmp_path):
+    """On-demand fresh reads share one Claude account probe until the interval elapses.
+
+    The endpoint still returns the cached snapshot. A second fresh request,
+    after the first probe has finished and while every reading is inside TTL,
+    must not start another probe.
+    """
+    _configure(monkeypatch, tmp_path, [])
+    probes: list[str] = []
+    started = threading.Event()
+
+    def _probe() -> None:
+        probes.append("probe")
+        started.set()
+
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", _probe)
+    monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", lambda: None)
+    subscription_usage_mod._claude_account_probe_started_at = None
+
+    app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
+    app.include_router(state_router.router, prefix="/api/state")
+    client = TestClient(app)
+    try:
+        first = client.get("/api/state/routing-budget?fresh_codexbar=true")
+        assert first.status_code == 200
+        assert first.json()["diagnostics"]["fresh_codexbar_requested"] is True
+        assert first.json()["diagnostics"]["fresh_codexbar_blocking"] is False
+        assert started.wait(timeout=2)
+        thread = subscription_usage_mod._claude_account_oneshot_thread
+        assert thread is not None
+        thread.join(timeout=2)
+        assert not thread.is_alive()
+        assert probes == ["probe"]
+
+        second = client.get("/api/state/routing-budget?fresh_codexbar=true")
+        assert second.status_code == 200
+        assert second.json()["diagnostics"]["fresh_codexbar_requested"] is True
+        assert second.json()["diagnostics"]["fresh_codexbar_blocking"] is False
+        follow_up = subscription_usage_mod._claude_account_oneshot_thread
+        if follow_up is not None:
+            follow_up.join(timeout=2)
+        assert probes == ["probe"]
+    finally:
+        thread = subscription_usage_mod._claude_account_oneshot_thread
+        if thread is not None:
+            thread.join(timeout=2)
+        subscription_usage_mod._claude_account_probe_started_at = None
 
 
 def test_compute_routing_budget_computes_in_flight_once(monkeypatch, tmp_path):
