@@ -17,10 +17,10 @@ from tests._host_path_guard import assert_no_host_facts
 REPO = Path(__file__).resolve().parents[2]
 
 
-def test_registry_holds_the_seven_lanes_with_generic_launchers() -> None:
+def test_registry_holds_the_eight_lanes_with_generic_launchers() -> None:
     registry = dl.load_registry()
     assert [lane.session for lane in registry.lanes] == [
-        "infra-muse", "devops-muse", "harness", "atlas", "practice", "open-model-data", "cto",
+        "infra-muse", "devops-muse", "harness", "atlas", "practice", "open-model-data", "kube-dojo", "cto",
     ]
     assert [lane.session for lane in registry.lanes if lane.lead] == ["cto"]
     for lane in registry.lanes:

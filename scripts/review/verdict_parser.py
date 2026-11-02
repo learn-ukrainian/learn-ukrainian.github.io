@@ -607,3 +607,38 @@ def finding_entries(reply: str, finding_id: str) -> list[tuple[str | None, str]]
         elif entries and entries[-1][0]:
             entries[-1][2].append(line)
     return [(severity, "\n".join(lines)) for found, severity, lines in entries if found == finding_id]
+
+
+def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    if len({key for key, _ in pairs}) != len(pairs):
+        raise ValueError("duplicate key")
+    return dict(pairs)
+
+
+def _not_json_constant(token: str) -> Any:
+    raise ValueError(f"non-JSON constant {token}")
+
+
+def structured_finding_entries(reply: str, finding_id: str) -> list[tuple[str, str]] | None:
+    """Each finding with ``finding_id`` in a schema-bound reply: its typed priority, and its title and body.
+
+    The caller has already decided, from the run's recorded output schema, that the reply is
+    bound to ``code-review-findings.v1``; the text is never sniffed (#12549). None when the
+    reply is not exactly one valid object (bare or one whole fence): unreadable JSON, a
+    non-JSON constant, a duplicate key, a schema failure or any text beside the object.
+    """
+    from scripts.fleet_comms.review_publication import ReviewPublicationError
+    from scripts.review.review_contract import ContractError, _whole_reply_fence
+
+    try:
+        payload = json.loads(
+            _whole_reply_fence(reply.strip()), object_pairs_hook=_unique_object, parse_constant=_not_json_constant
+        )
+        if not isinstance(payload, dict):
+            return None
+        _, evidence = checked_findings_payload(payload)
+    except (ValueError, RecursionError, ContractError, ReviewPublicationError):
+        return None
+    findings = evidence.findings if evidence is not None else ()
+    return [(finding.priority, f"{finding.title}\n{finding.body}") for finding in findings
+            if finding.finding_id == finding_id]
