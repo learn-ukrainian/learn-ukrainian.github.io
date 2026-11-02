@@ -114,6 +114,52 @@ def _read_run(path: Path, record: Mapping[str, Any]) -> ReviewRun:
     return ReviewRun(task_id, record, reply)
 
 
+def require_run_binding(
+    evidence: Mapping[str, Any], record: Mapping[str, Any], *, repository: str, number: int | None, branch: str
+) -> None:
+    """Require all sealed run identifiers, never accepting a missing task-record value."""
+    for field, recorded in (("run_nonce", "run_nonce"), ("reviewed_sha", "worktree_base_sha"),
+                            ("reply_sha256", "result_sha256")):
+        if not record.get(recorded) or evidence.get(field) != record[recorded]:
+            raise LineageRefused(f"{evidence['task_id']}: missing or mismatched {field}")
+    if (record.get("status") != "done" or record.get("task_id") != evidence["task_id"]
+            or (number is not None and record.get("pr") != number) or record.get("repository") != repository
+            or recorder._review_branch(dict(record)) != branch
+            or record.get("pinned_head") not in (None, evidence["reviewed_sha"])):
+        raise LineageRefused(f"{evidence['task_id']}: run does not match repository, PR, lineage or pinned head")
+
+
+def bound_published_run(
+    evidence: Mapping[str, Any], *, runs: Sequence[ReviewRun], comments: Sequence[Mapping[str, Any]],
+    login: str, repository: str, number: int, branch: str,
+) -> tuple[ReviewRun, Mapping[str, Any]]:
+    """A sealed run binding and its intact, verbatim recorded publication, or refusal."""
+    matches = [run for run in runs if run.task_id == evidence["task_id"]
+               and run.record.get("run_nonce") == evidence["run_nonce"]]
+    if len(matches) != 1:
+        raise LineageRefused(f"{evidence['task_id']}: missing or ambiguous run nonce")
+    run = matches[0]
+    require_run_binding(evidence, run.record, repository=repository, number=number, branch=branch)
+    derived = _finished_verdict(run)
+    if derived is None:
+        raise LineageRefused(f"{run.task_id}: no finished attested review")
+    sha, verdict, _, model, family, started = derived
+    markers = [marker for _, marker in _trusted_markers(comments, login)
+               if marker["task"] == run.task_id and marker["started"] == started]
+    if not markers or any((m["sha"], m["verdict"], m["model"], m["family"]) != (sha, verdict, model, family)
+                          for m in markers):
+        raise LineageRefused(f"{run.task_id}: publication missing or conflicts with recorded run")
+    for comment in comments:
+        body = comment.get("body", "")
+        marker = parse_marker(body)
+        if marker in markers:
+            published = body.partition("<details><summary>Reviewer's reply</summary>\n\n")[2]
+            expected = run.reply.replace(MARKER_PREFIX, "&lt;" + MARKER_PREFIX[1:])
+            if not published.startswith(expected + "\n\n</details>"):
+                raise LineageRefused(f"{run.task_id}: published reply differs from bound result")
+    return run, markers[-1]
+
+
 def review_records(task_root: Path, *, repository: str) -> list[tuple[Path, dict[str, Any]]]:
     """Every hot and archived review task record of this repository, with its path."""
     try:

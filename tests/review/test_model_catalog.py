@@ -1128,7 +1128,7 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # The elevated-tier grant role is a consult role held by Sol and Opus; it moves no seat,
             # route or review ranking. It replaced the retired budget extension role.
             elevation = _pop_budget_elevation_role(value)
-            assert hashlib.sha256(encode(elevation)).hexdigest() == "4a395379ef040f47f69be6badd96376bcbc1041d8698ff0703bc9209e399592d"
+            assert hashlib.sha256(encode(elevation)).hexdigest() == "93341b46cb0124d6b9abe158daac053fa13237bfc924e8b34deface29ccd1b88"
             # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off
             if value["review_ladders"]["low"] and value["review_ladders"]["low"][-1] == ["muse"]:
                 assert value["review_ladders"]["low"].pop() == ["muse"]

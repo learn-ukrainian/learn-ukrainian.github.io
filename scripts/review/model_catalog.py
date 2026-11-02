@@ -104,6 +104,7 @@ ADVISORY_ROLE_SHAPES = {
             "issuer",
             "issuer_model",
             "issued_at",
+            "withheld_capability",
             "request_sha256",
         ],
         2,

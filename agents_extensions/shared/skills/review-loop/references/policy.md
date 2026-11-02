@@ -29,6 +29,23 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   `resolved`, `fixed` or `declined`, refuses the round. A grant never
   resets the rounds already counted, never covers a path outside its scope, and five rounds
   stay the total.
+- **Withheld-capability recovery.** A sealed grant with `blocker_class: withheld-capability`
+  uses the same ruling and approval machinery and names the finding awaiting verification,
+  at any severity. Its `withheld_capability` object names the missing `capability`, cites
+  `runs` by `task_id`, `run_nonce`, `reviewed_sha` and `reply_sha256`, and includes each
+  run's complete `verification_only_evidence` finding excerpt. The designated advisor must
+  confirm that these excerpts establish the defect is corrected and only verification is
+  missing. Every cited run must have an intact trusted BLOCKED publication naming the missing
+  capability, matching its recorded reply and lineage, with no new P0/P1 or substantive blocker.
+  The latest rejection must remain one of these capability-only runs, with no substantive or
+  unknown review intervening. `retry_probe` seals the same run identifiers plus a literal
+  `capability_evidence` excerpt demonstrating the capability on the retry route at the new
+  head; the recorder refuses a retry on a different route. Other classes set
+  `withheld_capability` to null; their existing sealed grants remain valid. Credits count
+  distinct already charged heads, deduplicated
+  across runs, retries and grants: each grant permits at most `min(5, 3 + qualifying_heads)`
+  total rounds. It never resets spent rounds, reclassifies a capability failure, or clears a
+  security FAIL; a fresh probe-backed review must clear the rejection.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
