@@ -73,6 +73,7 @@ is the single source of truth for membership (auditor:
 | seminars-bio | #4431, #4215 (#4215 closed) | BIO readiness + builds |
 | seminars-cross | #3120, #3079 | Cross-seminar gates |
 | hramatka | #4542 | Teacher lesson service, production-path qualification, and teacher-ready release |
+| kube-dojo | #12556 | Coordinating stream for the kube-dojo lane; the work is kube-dojo/kube-dojo.github.io#2272 (evidence-backed KubeDojo content upgrade), driven by `scripts/start-kube-dojo-driver.sh` (#12553) |
 
 The `eval-harness` and `a1-upgrade` launcher streams were retired on 2026-09-24. Closed #4913's residual was folded into #6943 and #6321 per #8305; #7995 closed with no sub-issues.
 
@@ -110,6 +111,7 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | seminars-bio | *(operator to set)* | *(VACANT — driver to set from #4431)* | — |
 | seminars-cross | *(operator to set)* | *(VACANT — driver to set from #3120/#3079)* | — |
 | hramatka | ACTIVE *(proposed)* | Lesson QUALITY floor (gate calibration #5254) *(driver to confirm — exact threshold, sample size, and run id belong on #5254)* | A soak run identified by run-id whose ready-lesson rate meets the #5254 bar at its declared sample size |
+| kube-dojo | ACTIVE | kube-dojo#2272 pages upgraded in learner order *(driver to confirm)* | kube-dojo#2272 is complete, or the CTO retires the lane |
 
 Row states: a row contradicted by its epic board is edited or marked `STALE` by the
 next driver who notices — never silently deleted; `VACANT` means the stream has no set

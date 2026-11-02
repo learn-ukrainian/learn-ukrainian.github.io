@@ -118,3 +118,10 @@ areas:
     epics:
       - number: 4542
         name: "Hramatka teacher lesson service (user-gated)"
+  kube-dojo:
+    id: kube-dojo
+    aliases:
+      - kube-dojo
+    epics:
+      - number: 12556
+        name: "kube-dojo lane (coordinating stream for kube-dojo/kube-dojo.github.io#2272)"

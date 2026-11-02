@@ -111,6 +111,7 @@ DRIVERS = {
     "start-grok-driver.sh": ("grok", "devops"),
     "start-claude-cto.sh": ("claude", "epics"),
     "start-codex-cto.sh": ("codex", "epics"),
+    "scripts/start-kube-dojo-driver.sh": ("claude", "kube-dojo"),
 }
 _EVENT = """lu_test_event() {
   local line cg=""
@@ -381,7 +382,8 @@ def _argv(env: dict[str, str]) -> list[str]:
 def _case_args(wrapper: str) -> tuple[str, ...]:
     if wrapper in INTERACTIVE:
         return ("prompt text", "--", *TRICKY)
-    if wrapper.endswith("-cto.sh"):
+    # Lane wrappers fix their own --epic.
+    if wrapper.endswith("-cto.sh") or wrapper == "scripts/start-kube-dojo-driver.sh":
         return ("--", *TRICKY)
     return ("--epic", "devops", "--", *TRICKY)
 
