@@ -2544,45 +2544,42 @@ def test_write_branch_dry_run_ignores_stale_local_ref(sandbox):
     assert "branch_absent_on_remote:" in refused.stderr and "takeover-missing" in refused.stderr
 
 
-def test_failed_git_call_reports_its_operation_and_first_stderr_line_without_secrets(capsys, monkeypatch):
-    """Defect (#12468): a failed git call printed only the exception class name."""
-    error = subprocess.CalledProcessError(
-        128, ["git", "-C", "/home/ops/private", "fetch", "--", "https://user:token@example.com/org/repo.git", "abc"],
-        stderr="fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n",
-    )
-    monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=error))
-    assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
-    message = capsys.readouterr().err
-    assert message.startswith("dispatcher: CalledProcessError: git fetch -- ")
-    assert "exited 128: fatal: could not read from" in message
-    assert "second line" not in message
-    assert "token" not in message and "/home/ops/private" not in message
-    # Each leaks if a shape rule or a pattern list were the defence: only words from closed constant sets print.
+def test_failed_git_call_reports_its_operation_and_a_constant_summary_without_secrets(capsys, monkeypatch):
+    """Defect (#12468): a failed git call printed only the exception class name.
+
+    The stderr never reaches the output: it selects a constant. Every disclosure probe from review rounds 1 to 4
+    must therefore end in a constant, whatever words it contains.
+    """
+    def fail(command, stderr):
+        error = subprocess.CalledProcessError(128, [command[0], "-C", "/home/ops/private", *command[1:]], stderr=stderr)
+        monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=error))
+        assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
+        return capsys.readouterr().err
+
+    assert fail(["git", "rev-parse", "--verify", "topic^{commit}"], "fatal: Needed a single revision") == (
+        "dispatcher: CalledProcessError: git rev-parse --verify <operand> exited 128: needed a single revision\n")
+    assert fail(["git", "fetch", "--", "https://user:token@example.com/org/repo.git", "abc"],
+                "fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n") == (
+        "dispatcher: CalledProcessError: git fetch -- <operand> <operand> exited 128: remote not reachable\n")
+    summaries = {text for _pattern, text in cli._GIT_FAILURES} | {cli.UNRECOGNIZED_GIT_FAILURE}
     for command, stderr, leaked in (
         (["git", "fetch"], "remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
         (["git", "fetch"], "remote: API Key: SYNTHETIC_VALUE", "SYNTHETIC_VALUE"),
+        (["git", "fetch"], "remote: Password: shallow branch denied object", "shallow"),
         (["git", "fetch"], "remote: " + "a1b2c3d4e5" * 4, "a1b2c3d4e5"),
         (["git", "fetch"], "remote: rejected SYNTHETICVALUE 4815162342", "SYNTHETICVALUE"),
         (["git", "fetch"], "remote: " + "abcdef" * 7, "abcdef"),
-        (["git", "fetch"], "fatal: cannot open '/synthetic/Acme Client Records/repo': Permission denied", "Client"),
-        (["git", "worktree", "add", "synthetic/clientrecords"], "fatal: denied", "clientrecords"),
-        (["git", "fetch", "user:syntheticsecret"], "fatal: denied", "syntheticsecret"),
-        (["git", "fetch"], "fatal: Unable to create '/synthetic/private directory/worktree/index.lock': denied", "worktree"),
+        (["git", "fetch"], "fatal: cannot open '/synthetic/Acme Open Access Client/repo': denied", "Access"),
         (["git", "fetch"], "fatal: cannot open '/synthetic/it's dir/sub/file': denied", "sub"),
+        (["git", "fetch"], "fatal: Unable to create '/synthetic/private directory/worktree/index.lock': denied", "worktree"),
+        (["git", "worktree", "add", "synthetic/clientrecords"], "fatal: Needed a single revision", "clientrecords"),
         (["git", "worktree", "add", "/synthetic/private directory/worktree"], "fatal: denied", "directory"),
+        (["git", "fetch", "user:syntheticsecret"], "fatal: denied", "syntheticsecret"),
     ):
-        monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=subprocess.CalledProcessError(
-            128, [command[0], "-C", "/home/ops/private", *command[1:]], stderr=stderr)))
-        assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
-        message = capsys.readouterr().err
+        message = fail(command, stderr)
         assert message.startswith(f"dispatcher: CalledProcessError: {command[0]} {command[1]}")
-        assert leaked not in message and "synthetic" not in message.lower()
-    monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=subprocess.CalledProcessError(
-        128, ["git", "-C", "/home/ops/private", "rev-parse", "--verify", "topic^{commit}"],
-        stderr="fatal: Needed a single revision")))
-    assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
-    assert capsys.readouterr().err == (
-        "dispatcher: CalledProcessError: git rev-parse --verify <operand> exited 128: fatal: Needed a single revision\n")
+        assert message.rstrip("\n").rsplit(": ", 1)[1] in summaries
+        assert leaked not in message and "synthetic" not in message.lower() and "/home/ops/private" not in message
 
 
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):

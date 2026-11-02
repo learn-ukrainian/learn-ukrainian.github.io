@@ -654,8 +654,8 @@ def _status_or_fail(args: argparse.Namespace) -> int:
     return 1
 
 
-# A failed git call prints only words from these closed sets (#12468). A value, a path or a secret cannot be
-# told from a plain word by its shape, so nothing outside a constant is ever printed.
+# A failed git call prints only constants (#12468): the command words below and a summary chosen by the stderr.
+# A value, a path or a secret cannot be told from a plain word by its shape, so no input text is ever printed.
 _GIT_WORDS = frozenset(
     [
         "git", "add", "cat-file", "check-ref-format", "commit-tree", "config", "fetch", "init", "ls-files",
@@ -667,34 +667,36 @@ _GIT_WORDS = frozenset(
         "--no-track", "--porcelain", "--hard", "--cached",
     ]
 )
-_STDERR_WORDS = frozenset(
-    [
-        "fatal", "error", "warning", "remote", "a", "an", "the", "is", "are", "was", "not", "no", "could",
-        "couldn't", "cannot", "can", "unable", "to", "of", "from", "in", "on", "at", "for", "and", "or",
-        "by", "with", "access", "create", "open", "read", "write", "lock", "resolve", "connect", "host",
-        "repository", "object", "ref", "reference", "revision", "single", "needed", "bad", "invalid",
-        "unknown", "ambiguous", "argument", "path", "file", "directory", "exists", "already", "permission",
-        "denied", "failed", "failure", "rejected", "refused", "timed", "out", "missing", "found", "find",
-        "branch", "commit", "tree", "index", "pack", "shallow", "update", "fetch", "push", "authentication",
-        "unauthorized", "forbidden",
-    ]
-)
+# The stderr of a failed git call never reaches the output. It selects one of these constants (first match wins).
+_GIT_FAILURES = tuple((re.compile(pattern, re.IGNORECASE), text) for pattern, text in (
+    (r"needed a single revision", "needed a single revision"),
+    (r"unknown revision|bad revision|ambiguous argument", "unknown revision"),
+    (r"bad object|invalid object name|not a valid object", "bad object name"),
+    (r"authentication failed|could not read (username|password)|publickey|invalid username or password",
+     "authentication failed"),
+    (r"could not resolve host|unable to access|could not read from|connection (refused|timed out)|unreachable",
+     "remote not reachable"),
+    (r"index\.lock|another git process|\.lock'", "lock file conflict"),
+    (r"already exists", "target already exists"),
+    (r"not a git repository", "not a git repository"),
+    (r"find remote ref|repository not found|does not appear to be a git repository", "remote ref or repository not found"),
+    (r"permission denied", "permission denied"),
+    (r"timed out", "timed out"),
+))
+UNRECOGNIZED_GIT_FAILURE = "unrecognized git error"
 
 
-def _diagnostic_stderr(line: str) -> str:
-    """One stderr line with every word outside :data:`_STDERR_WORDS` replaced by ``<redacted>``."""
-    words = []
-    for word in line.split():
-        core = word.rstrip(":,.;")
-        words.append(word if core.lower() in _STDERR_WORDS else "<redacted>" + word[len(core):])
-    return re.sub(r"(<redacted>[:,.;]* ?)+", "<redacted> ", " ".join(words)).strip()
+def _git_failure_summary(stderr: str) -> str:
+    """A constant describing the first stderr line; no byte of the line itself is printed."""
+    first = next((line for line in stderr.splitlines() if line.strip()), "")
+    return next((text for pattern, text in _GIT_FAILURES if pattern.search(first)), UNRECOGNIZED_GIT_FAILURE)
 
 
 def _failed_operation(exc: subprocess.CalledProcessError) -> str:
     """``CalledProcessError: <command> exited <rc>: <first stderr line>``, without secrets (#12468).
 
     The command drops ``-C <path>`` and ``-c <key=value>``; every word outside :data:`_GIT_WORDS` is
-    ``<operand>``. Only the first stderr line is kept, filtered by :func:`_diagnostic_stderr`.
+    ``<operand>``. The first stderr line only selects a constant from :data:`_GIT_FAILURES`.
     """
     words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
     kept, skip = [], False
@@ -706,9 +708,7 @@ def _failed_operation(exc: subprocess.CalledProcessError) -> str:
         else:
             kept.append(word if word in _GIT_WORDS else "<operand>")
     stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
-    first = next((line.strip() for line in stderr.splitlines() if line.strip()), "")
-    detail = f": {_diagnostic_stderr(first)}" if first else ""
-    return f"CalledProcessError: {' '.join(kept)} exited {exc.returncode}{detail}"
+    return f"CalledProcessError: {' '.join(kept)} exited {exc.returncode}: {_git_failure_summary(stderr)}"
 
 
 def main(argv=None) -> int:
