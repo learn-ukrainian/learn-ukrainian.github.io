@@ -19,6 +19,8 @@ Commands::
     .venv/bin/python -m scripts.driver_state agy-hook          # AGY PreInvocation hook
     .venv/bin/python -m scripts.driver_state agy-stop-hook     # AGY Stop hook
     .venv/bin/python -m scripts.driver_state agy-pretool-hook  # AGY PreToolUse(ask_question)
+    .venv/bin/python -m scripts.driver_state claude-hook       # Claude Code SessionStart/UserPromptSubmit
+    .venv/bin/python -m scripts.driver_state claude-stop-hook  # Claude Code Stop
 
 The ``agy-hook`` command implements the AGY ``PreInvocation`` contract: it
 reads the hook payload on stdin and prints ``{"injectSteps": [{"ephemeralMessage":
@@ -39,6 +41,15 @@ Exhaustion and counter storage errors return ``decision: allow`` with a visible
 gate failure and record their typed cause when storage permits.
 ``agy-pretool-hook`` denies the interactive
 ``ask_question`` tool for driver sessions: nobody answers it in a driver pane.
+
+``claude-hook`` and ``claude-stop-hook`` are the Claude Code adapter. On
+``SessionStart`` and ``UserPromptSubmit`` the pinned pointer is returned as
+``hookSpecificOutput.additionalContext``, so it is re-read on every prompt and
+after compaction. ``Stop`` applies the same policy, worker target and
+continuation cap as ``agy-stop-hook`` and answers ``{"decision": "block",
+"reason": ...}`` to keep the turn going; gate failures allow the stop with a
+visible ``systemMessage``. Both act only in the launcher's driver session:
+the Claude project directory must be the checkout that owns the state file.
 Uses the shared project interpreter and its installed CommonMark parser.
 """
 
@@ -95,7 +106,7 @@ MAX_ENVELOPE_CHARS = 9_381
 
 TEMPLATE = """# Driver state: {epic}
 
-<!-- Pinned facts pointer. Re-injected before every model call (AGY hook).
+<!-- Pinned facts pointer. Re-injected by the harness hooks (AGY, Claude Code).
      Keep this file under 4 KiB. Do not update it when a goal lands. -->
 
 ## Epic
@@ -211,25 +222,42 @@ def render_injection(text: str, path: Path) -> str:
 def _payload(stdin_text: str) -> dict:
     try:
         payload = json.loads(stdin_text) if stdin_text.strip() else {}
-    except json.JSONDecodeError:
+    except (ValueError, RecursionError):
+        # Malformed JSON, integer-digit limits and deep nesting are untrusted input, not driver errors.
         return {}
     return payload if isinstance(payload, dict) else {}
 
 
-def _driver_session(payload: dict) -> Path | None:
-    """State path when this hook runs inside the launcher's driver session."""
+def _session_in(workspace: object) -> Path | None:
+    """State path when ``workspace`` is the launcher's driver checkout."""
     path = state_path() if os.environ.get(STATE_ENV, "").strip() else None
     if path is None or not path.is_file() or not os.environ.get("SESSION_HANDOFF_AGENT", "").strip():
         return None
-    workspaces = payload.get("workspacePaths")
-    if not isinstance(workspaces, list) or len(workspaces) != 1 or not isinstance(workspaces[0], str):
+    if not isinstance(workspace, str) or not workspace.strip():
         return None
     try:
-        if not workspaces[0].strip() or Path(workspaces[0]).resolve() != _state_root(path):
+        if Path(workspace).resolve() != _state_root(path):
             return None
     except (OSError, RuntimeError, ValueError):
         return None
     return path
+
+
+def _driver_session(payload: dict) -> Path | None:
+    """State path when this AGY hook runs inside the launcher's driver session."""
+    workspaces = payload.get("workspacePaths")
+    if not isinstance(workspaces, list) or len(workspaces) != 1:
+        return None
+    return _session_in(workspaces[0])
+
+
+def _claude_session(payload: dict) -> Path | None:
+    """State path when this Claude Code hook runs inside the launcher's driver session.
+
+    The project directory is fixed for the session; workers in other checkouts
+    inherit the launcher environment but have another project directory.
+    """
+    return _session_in(os.environ.get("CLAUDE_PROJECT_DIR", "").strip() or payload.get("cwd"))
 
 
 def cmd_agy_hook(stdin_text: str) -> dict:
@@ -245,6 +273,30 @@ def cmd_agy_hook(stdin_text: str) -> dict:
             path, str(payload.get("conversationId") or ""), "state_envelope_oversized", str(exc), hook="agy-hook"
         )
     return {"injectSteps": [{"ephemeralMessage": message}]}
+
+
+CLAUDE_INJECT_EVENTS = frozenset({"SessionStart", "UserPromptSubmit"})
+
+
+def _claude_conversation(payload: dict) -> str:
+    return "claude-" + str(payload.get("session_id") or "")
+
+
+def cmd_claude_hook(stdin_text: str) -> dict:
+    payload = _payload(stdin_text)
+    event = payload.get("hook_event_name")
+    if not isinstance(event, str) or event not in CLAUDE_INJECT_EVENTS:
+        return {}
+    path = _claude_session(payload)
+    if path is None:
+        return {}
+    try:
+        message = render_injection(_read_state(path), path)
+    except ValueError as exc:
+        return _gate_failure(
+            path, _claude_conversation(payload), "state_envelope_oversized", str(exc), hook="claude-hook", event=event
+        )
+    return {"hookSpecificOutput": {"hookEventName": event, "additionalContext": message}}
 
 
 _QUESTION_RE = re.compile(
@@ -511,7 +563,9 @@ def _reset_counter(state: Path, conversation_id: str) -> None:
         _write_counter_record(directory_fd, path, b"0")
 
 
-def _gate_failure(state: Path, conversation: str, code: str, reason: str, *, hook: str = "agy-stop-hook") -> dict:
+def _gate_failure(
+    state: Path, conversation: str, code: str, reason: str, *, hook: str = "agy-stop-hook", event: str = ""
+) -> dict:
     """Persist a typed failure and return the hook's visible protocol result.
 
     Counter mutation belongs exclusively to Stop, never PreInvocation.
@@ -532,6 +586,10 @@ def _gate_failure(state: Path, conversation: str, code: str, reason: str, *, hoo
         print(json.dumps(failure), file=sys.stderr)
     if hook == "agy-hook":
         return {"injectSteps": [{"ephemeralMessage": reason}]}
+    if hook == "claude-hook":
+        return {"hookSpecificOutput": {"hookEventName": event or "UserPromptSubmit", "additionalContext": reason}}
+    if hook == "claude-stop-hook":
+        return {"systemMessage": reason}
     return {"decision": "allow" if hook == "agy-stop-hook" else "deny", "reason": reason}
 
 
@@ -547,10 +605,40 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
             _reset_counter(path, conversation)
         return {"decision": "allow"}  # errors, limits and user cancels are not policy decisions
     text = last_model_text(payload.get("transcriptPath"))
+    verdict = _stop_policy(path, conversation, text, fully_idle=payload.get("fullyIdle") is True, hook="agy-stop-hook")
+    if verdict is None:
+        return {"decision": "allow"}
+    if isinstance(verdict, str):
+        return {"decision": "continue", "reason": verdict}
+    return verdict
+
+
+def cmd_claude_stop_hook(stdin_text: str) -> dict:
+    payload = _payload(stdin_text)
+    path = _claude_session(payload)
+    if path is None:
+        return {}
+    text = payload.get("last_assistant_message")
+    verdict = _stop_policy(
+        path,
+        _claude_conversation(payload),
+        text if isinstance(text, str) else "",
+        fully_idle=False,
+        hook="claude-stop-hook",
+    )
+    if verdict is None:
+        return {}
+    if isinstance(verdict, str):
+        return {"decision": "block", "reason": verdict}
+    return verdict
+
+
+def _stop_policy(path: Path, conversation: str, text: str, *, fully_idle: bool, hook: str) -> str | dict | None:
+    """Shared Stop policy: None allows, a string is the continuation reason, a dict is a gate failure."""
     if text.strip().startswith(ESCALATION_MARKER) and _message_prose(text).startswith(ESCALATION_MARKER):
         with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
             _reset_counter(path, conversation)
-        return {"decision": "allow"}
+        return None
     reasons = []
     seat = os.environ.get("SESSION_HANDOFF_AGENT", "").strip()
     minimum = minimum_workers()
@@ -562,14 +650,14 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
     why = ends_on_question_or_plan(text)
     if why:
         reasons.append(f"{why}; decide per the policy and execute it now")
-    if not reasons and payload.get("fullyIdle") is True:
+    if not reasons and fully_idle:
         reasons.append(
             "nothing is armed to wake you; start a background `scripts/dispatch.py wait` or set a `schedule` timer, then end the turn"
         )
     if not reasons:
         with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
             _reset_counter(path, conversation)
-        return {"decision": "allow"}
+        return None
     try:
         if _bump_counter(path, conversation) > MAX_CONSECUTIVE_CONTINUES:
             with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
@@ -579,6 +667,7 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
                 conversation,
                 "corrective_retry_budget_exhausted",
                 "DRIVER-GATE-FAILED: corrective retry budget exhausted.",
+                hook=hook,
             )
     except COUNTER_STORAGE_ERRORS:
         return _gate_failure(
@@ -586,8 +675,9 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
             conversation,
             "continuation_counter_unavailable",
             "DRIVER-GATE-FAILED: continuation counter unavailable. " + _continuation_reason(reasons),
+            hook=hook,
         )
-    return {"decision": "continue", "reason": _continuation_reason(reasons)}
+    return _continuation_reason(reasons)
 
 
 def _continuation_reason(reasons: list[str]) -> str:
@@ -651,6 +741,7 @@ def main(argv: list[str] | None = None) -> int:
   .venv/bin/python -m scripts.driver_state init --epic infra
   .venv/bin/python -m scripts.driver_state packet --epic infra
   .venv/bin/python -m scripts.driver_state agy-stop-hook < hook-payload.json
+  .venv/bin/python -m scripts.driver_state claude-hook < hook-payload.json
 Outputs: init writes private driver state; hooks emit JSON and private failure/counter records.
 Exit codes: 0 success (hooks report failures in JSON); 1 invalid epic, missing state or refused overwrite.
 Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
@@ -670,6 +761,8 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
     sub.add_parser("agy-hook", help="AGY PreInvocation hook: stdin payload -> injectSteps JSON.")
     sub.add_parser("agy-stop-hook", help="AGY Stop hook: continue when the turn ends against policy.")
     sub.add_parser("agy-pretool-hook", help="AGY PreToolUse hook: deny ask_question for drivers.")
+    sub.add_parser("claude-hook", help="Claude Code SessionStart/UserPromptSubmit hook: additionalContext JSON.")
+    sub.add_parser("claude-stop-hook", help="Claude Code Stop hook: block when the turn ends against policy.")
     args = parser.parse_args(argv)
     if getattr(args, "epic", None) is not None:
         try:
@@ -678,27 +771,36 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
             print(f"driver_state: {exc}", file=sys.stderr)
             return 1
 
-    hooks = {"agy-hook": cmd_agy_hook, "agy-stop-hook": cmd_agy_stop_hook, "agy-pretool-hook": cmd_agy_pretool_hook}
+    hooks = {
+        "agy-hook": cmd_agy_hook,
+        "agy-stop-hook": cmd_agy_stop_hook,
+        "agy-pretool-hook": cmd_agy_pretool_hook,
+        "claude-hook": cmd_claude_hook,
+        "claude-stop-hook": cmd_claude_stop_hook,
+    }
     if args.cmd in hooks:
         stdin_text = sys.stdin.read()
         try:
             result = hooks[args.cmd](stdin_text)
         except Exception:  # keep the hook protocol valid and expose driver errors
             payload = _payload(stdin_text)
-            path = _driver_session(payload)
+            claude = args.cmd.startswith("claude-")
+            path = _claude_session(payload) if claude else _driver_session(payload)
+            conversation = _claude_conversation(payload) if claude else str(payload.get("conversationId") or "")
             if path is not None:
-                if args.cmd == "agy-stop-hook":
+                if args.cmd in {"agy-stop-hook", "claude-stop-hook"}:
                     with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
-                        _reset_counter(path, str(payload.get("conversationId") or ""))
+                        _reset_counter(path, conversation)
                 result = _gate_failure(
                     path,
-                    str(payload.get("conversationId") or ""),
+                    conversation,
                     "hook_error",
                     "DRIVER-GATE-FAILED: driver-state hook error.",
                     hook=args.cmd,
+                    event=str(payload.get("hook_event_name") or ""),
                 )
             else:
-                result = {} if args.cmd == "agy-hook" else {"decision": "allow"}
+                result = {} if args.cmd in {"agy-hook", "claude-hook", "claude-stop-hook"} else {"decision": "allow"}
         sys.stdout.write(json.dumps(result))
         return 0
     if args.cmd == "whoami":
