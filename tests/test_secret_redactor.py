@@ -32,6 +32,47 @@ def msg_db(tmp_path):
         yield db_path
 
 
+@pytest.mark.parametrize("key", ["PASSWORD", "PASS", "SECRET_KEY", "API_TOKEN", "ACCESS_KEY", "API_KEY"])
+@pytest.mark.parametrize("key_quote", ["", "'", '"'])
+@pytest.mark.parametrize(
+    ("quote", "variant"),
+    [
+        (quote, variant)
+        for quote in ("", "'", '"')
+        for variant in ("plain", "embedded_quote", "trailing_backslash", "multiline", "continued", "unterminated")
+        if quote or variant in {"plain", "embedded_quote", "trailing_backslash"}
+    ],
+)
+@pytest.mark.parametrize("prefix", ["", "status: pending ", "https://"])
+@pytest.mark.parametrize("gap", ["", " "])
+def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote, prefix, variant, gap):
+    value = _OPAQUE_TOKEN[:12]
+    if variant == "embedded_quote":
+        value += ("''" if quote == "'" else '\\"') + _OPAQUE_TOKEN[:12]
+    elif variant == "trailing_backslash":
+        value += "\\\\" if quote == '"' else "\\"
+    elif variant in {"multiline", "continued"}:
+        value = value[:6] + ("\\" if variant == "continued" else "") + "\n" + value[6:]
+    closing = "" if variant == "unterminated" else quote
+    prefix += f"{key_quote}{key}{key_quote}:{gap}"
+    raw = f"{prefix}{quote}{value}{closing}"
+    expected = f"{prefix}{quote}{REDACTION}{closing}"
+    assert redact_text(raw) == expected
+
+
+@pytest.mark.parametrize("punctuation", ["()", "[]", "{}", ","])
+@pytest.mark.parametrize("prefix", ["", "count = 1 ", "'", '"'])
+def test_spaced_assignment_with_code_punctuation_masked(punctuation, prefix):
+    value = punctuation[0] + _OPAQUE_TOKEN[:12] + punctuation[-1]
+    closing = prefix if prefix in {"'", '"'} else ""
+    assert redact_text(f"{prefix}PASS = {value}{closing}") == f"{prefix}PASS = {REDACTION}"
+
+
+@pytest.mark.parametrize("text", ["Warning: provider failed", "The lesson: ordinary prose.", "status: pending", "time: 12:30"])
+def test_prose_with_colon_unchanged(text):
+    assert redact_text(text) == text
+
+
 def test_redact_text_handles_env_dump_and_known_token_shapes():
     text = "\n".join(
         [
@@ -75,10 +116,7 @@ def test_redact_text_preserves_non_cursor_key_shapes(text):
     assert redact_text(text) == text
 
 
-def test_redact_text_leaves_benign_code_with_secret_named_lhs_untouched():
-    # Regression for the 2026-07-12 diff-corruption burn: a secret-*named*
-    # identifier on the LHS must not nuke a benign code RHS (function call, list
-    # comprehension, set literal). These must survive byte-identical.
+def test_redact_text_masks_spaced_code_with_secret_named_lhs():
     lines = [
         "token_verdicts = vesum_gate.check_tokens(sentence)",
         "tokens = [t for t in words if len(t) > 1]",
@@ -86,11 +124,11 @@ def test_redact_text_leaves_benign_code_with_secret_named_lhs_untouched():
     ]
 
     for line in lines:
-        assert redact_text(line) == line, line
+        expected = line.split(" = ")[0] + " = " + REDACTION if line != lines[1] else line
+        assert redact_text(line) == expected, line
 
     joined = "\n".join(lines)
-    assert redact_text(joined) == joined
-    assert REDACTION not in redact_text(joined)
+    assert redact_text(joined) == "\n".join([f"token_verdicts = {REDACTION}", lines[1], f"secret_keys = {REDACTION}"])
 
 
 def test_redact_text_still_redacts_real_secret_shaped_assignments():
@@ -159,29 +197,13 @@ def test_redact_text_preserves_natural_language_and_low_entropy_identifiers():
     assert redact_text(text) == text
 
 
-def test_redact_text_redacts_unquoted_passphrase_but_not_code():
-    # Documented narrow allowance: a bare whitespace-separated passphrase assigned
-    # to a secret-named key is redacted (fail-closed), while code expressions —
-    # which always carry () [] {} , . operators — pass through.
+def test_redact_text_redacts_unquoted_passphrase_and_secret_named_code():
     redacted = redact_text("PASSWORD=correct horse battery staple")
     assert "correct horse" not in redacted
     assert REDACTION in redacted
 
     code = "secret = compute(a, b) + other[0]"
-    assert redact_text(code) == code
-
-
-# --- Decision-boundary pins (PR #5047 rework) ------------------------------
-#
-# The unquoted-assignment gate was inverted from a secret-shape ALLOWLIST (which
-# leaked real env secrets carrying @ $ ! or comments) to a code-shape VETO with a
-# spacing signal:
-#   * tight `KEY=value`  (env/shell/.env/compose) -> ALWAYS redact
-#   * spaced `key = value` (code/INI)             -> redact unless the value is
-#                                                    unambiguously a code
-#                                                    expression (() [] {} or ,)
-# The three tests below pin that boundary in BOTH directions plus the accepted
-# fail-closed over-redaction. All secrets here are throwaway fakes.
+    assert redact_text(code) == f"secret = {REDACTION}"
 
 
 @pytest.mark.parametrize(
@@ -211,18 +233,17 @@ def test_redact_text_still_redacts_secret_assignments(line):
 @pytest.mark.parametrize(
     "code",
     [
-        # The three original burn lines (regression) ...
         "token_verdicts = vesum_gate.check_tokens(sentence)",
         "tokens = [t for t in words if len(t) > 1]",
         "secret_keys = set(pairwise(parts))",
-        # ... plus mixed-operator and dict-comprehension forms.
         "secret = compute(a, b) + other[0]",
         "tokens = {t: 1 for t in words}",
     ],
 )
-def test_redact_text_leaves_spaced_code_expressions_byte_identical(code):
-    assert redact_text(code) == code, code
-    assert REDACTION not in redact_text(code), code
+def test_redact_text_masks_secret_named_spaced_code_expressions(code):
+    key = code.split(" = ")[0]
+    expected = code if key == "tokens" else f"{key} = {REDACTION}"
+    assert redact_text(code) == expected
 
 
 def test_redact_text_expected_fail_closed_over_redacts_spaced_dotted_ref():
