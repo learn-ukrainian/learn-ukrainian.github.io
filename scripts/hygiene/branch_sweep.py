@@ -2024,12 +2024,10 @@ def _bulk_archive_dir(resolution: storage_topology.BulkRootResolution, *, create
         raise RuntimeError(f"bulk root unavailable ({resolution.reason}); nothing was changed")
     directory = resolution.path / BULK_ARCHIVE_DIR
     if create:
-        try:
+        with contextlib.suppress(FileExistsError):
             os.mkdir(directory, 0o700)
-        except FileExistsError:
-            pass
-        else:
-            _fsync_path(resolution.path, directory=True)
+        # Flush the parent on every call: an earlier run may have created the directory and failed to flush it.
+        _fsync_path(resolution.path, directory=True)
     info = os.lstat(directory)
     if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
         raise RuntimeError("bulk branch-archive path is not a plain directory")

@@ -426,8 +426,10 @@ under the archive lock:
 1. The bulk root comes only from `scripts.storage.topology.resolve_bulk_root()` (marker-valid
    `literary_texts/` and `textbook_chunks/`; see `storage-topology.md`). With none, nothing is
    removed and the command exits 1.
-2. The file is copied to `<bulk root>/branch-archive/<name>` under a private temporary name,
-   flushed, then renamed into place. An existing different file is never replaced.
+2. The file is created exclusively at `<bulk root>/branch-archive/<name>` (an existing file is
+   never replaced), then the file, its directory and the bulk root are flushed. A crash can leave a
+   partial file at that name; the next run sees a different sha256, refuses it and keeps the local
+   bundle, and an operator removes the partial by hand.
 3. The copy's sha256 and size must equal the source, and `git bundle verify` must pass on the copy.
    Thin bundles verify only where their prerequisite commits exist, so run it in a clone of this
    repository.
