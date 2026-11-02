@@ -690,9 +690,9 @@ def update(sandbox, revision="HEAD", ref="refs/heads/feature", old=ZERO):
     return (revision, _git(sandbox.work, "rev-parse", revision), ref, old)
 
 
-def run_hook(sandbox, monkeypatch, client, *updates, stdin=None, url=None, remote="origin", **extra):
+def run_hook(sandbox, monkeypatch, client, *updates, stdin=None, url=None, remote="origin", catalog=None, **extra):
     """git_push.main in process on hand-written pre-push input; returns (status, caller hook calls)."""
-    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    monkeypatch.setattr(gate, "catalog", lambda: catalog or CATALOG)
     monkeypatch.setattr(gate, "private_tooling", lambda: sandbox.tooling)
     monkeypatch.setattr(gate, "primary_root", lambda cwd=None: sandbox.root)
     monkeypatch.chdir(sandbox.work)
@@ -880,7 +880,7 @@ def test_history_the_destination_already_has_is_still_scanned(push_sandbox):
     push_sandbox.commit("clean follow-up")
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert_blocked(result, push_sandbox, before, f"commit[{old[:12]}].message")
-    assert "public default-branch head unavailable (1 public repository call(s))" in result.stderr
+    assert "public default-branch head unavailable (0 public repository call(s))" in result.stderr
 
 
 def test_forged_tracking_ref_does_not_suppress_the_scan(push_sandbox):
@@ -1042,12 +1042,74 @@ def test_real_client_excludes_on_a_bound_reply_from_the_catalogue_repository(pus
 
 
 def test_the_default_client_names_the_catalogue_public_repository(monkeypatch):
-    """Never the push URL, GH_REPO or local git configuration."""
+    """Never GH_REPO or local git configuration."""
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
-    client = git_push.CanonicalPublicRepository.from_catalog({"GH_REPO": "unit/forged", "LU_OPSEC_OVERRIDE": "x"})
+    client = git_push.CanonicalPublicRepository.from_catalog(
+        {"GH_REPO": "unit/forged", "LU_OPSEC_OVERRIDE": "x"}, "github.com/unit/public"
+    )
     assert client.repo == "github.com/unit/public" and "LU_OPSEC_OVERRIDE" not in client.environment
     monkeypatch.setattr(gate, "catalog", lambda: {"private": CATALOG["infra-private"]})
-    assert git_push.CanonicalPublicRepository.from_catalog({}) is None
+    assert git_push.CanonicalPublicRepository.from_catalog({}, "github.com/unit/public") is None
+
+
+FLEET = {**CATALOG, "content": {"github": "Unit/Content", "local_name": "content", "role": "public-content"}}
+
+
+def _asked(monkeypatch, head):
+    """Record which repository the real client asks; it answers head for every one."""
+    asked = []
+
+    def default_head(self):
+        self.calls += 1
+        asked.append(self.repo)
+        return head
+
+    monkeypatch.setattr(git_push.CanonicalPublicRepository, "default_head", default_head)
+    return asked
+
+
+@pytest.mark.parametrize(
+    ("url", "repo"),
+    [
+        ("https://github.com/unit/content.git", "github.com/unit/content"),
+        ("git@github.com:unit/public.git", "github.com/unit/public"),
+    ],
+)
+def test_the_public_head_is_the_registered_repository_the_push_goes_to(push_sandbox, monkeypatch, capfd, url, repo):
+    """#12518: each registered public repository excludes its own published history."""
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    public_head = push_sandbox.commit("published clean")
+    push_sandbox.commit("new clean work")
+    asked = _asked(monkeypatch, public_head)
+    status, chained = run_hook(push_sandbox, monkeypatch, None, url=url, catalog=FLEET)
+    err = capfd.readouterr().err
+    assert status == 0 and chained and asked == [repo], err
+    assert "1 commit(s) scanned; public default-branch head present (1 public repository call(s))" in err
+    assert hit[:12] not in err
+
+
+@pytest.mark.parametrize(
+    ("url", "catalog"),
+    [
+        pytest.param("https://github.com/unit/unregistered.git", FLEET, id="unregistered"),
+        pytest.param(None, FLEET, id="local-path"),
+        pytest.param(
+            "https://github.com/unit/content.git",
+            {**FLEET, "mirror": {**FLEET["content"], "local_name": "mirror"}},
+            id="ambiguous",
+        ),
+    ],
+)
+def test_an_unregistered_or_ambiguous_destination_scans_all_history(push_sandbox, monkeypatch, capfd, url, catalog):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    public_head = push_sandbox.commit("published clean")
+    push_sandbox.commit("new clean work")
+    asked = _asked(monkeypatch, public_head)
+    status, chained = run_hook(push_sandbox, monkeypatch, None, url=url, catalog=catalog)
+    err = capfd.readouterr().err
+    assert status == 1 and not chained and asked == [], err
+    assert "public default-branch head unavailable (0 public repository call(s))" in err
+    assert f"field=commit[{hit[:12]}].message" in err
 
 
 def _loose(store, sha):
