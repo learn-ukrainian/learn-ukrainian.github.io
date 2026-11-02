@@ -3739,6 +3739,7 @@ GRANT_REQUEST = {
     "issuer": "claude-cto",
     "issuer_model": "claude-opus-5-5",
     "issued_at": "2026-10-29T01:00:00+00:00",
+    "withheld_capability": None,
 }
 OPEN_F2 = "VERDICT: REQUEST_CHANGES\nF2 [P1] docs/readme.md:3 two writers race on the lock. Impact: lost update."
 
@@ -3974,7 +3975,7 @@ def test_one_valid_grant_admits_beside_unrelated_or_outdated_ones(monkeypatch, t
 def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
     """Archiving moves the record and its result together and keeps the hot result_file (review round 1, F3)."""
     tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
-    write_grant(tasks)
+    write_grant(tasks, {key: value for key, value in GRANT_REQUEST.items() if key != "withheld_capability"})
     archive = tasks / recorder.ARCHIVE_DIR_NAME
     archive.mkdir()
     (tasks / "grant-approval.json").rename(archive / f"{stem}.json")
@@ -4064,3 +4065,105 @@ def test_cli_prints_the_typed_refusal_in_every_invocation_form(form):
     assert done.returncode == 1 and "Traceback" not in done.stderr, done.stderr
     refusal = json.loads(done.stdout)
     assert refusal["admitted"] is False and "refused by the fixture" in refusal["refusal"]
+
+
+WITHHELD_FINDING = (
+    'F2 [P2] docs/readme.md:3 The defect is fixed by reading the code; '
+    'still open only because the shell could not execute the verification probes.'
+)
+WITHHELD_REPLY = f'VERDICT: BLOCKED (missing capability: shell)\n{WITHHELD_FINDING}\n\nSECURITY_VERDICT: FAIL (probes missing)'
+
+
+def withheld_grant_case(monkeypatch, tmp_path, *, duplicate=False, reply=WITHHELD_REPLY):
+    """Sealed, published capability-only runs and a separate capability probe at the retry head."""
+    from scripts.review.verdict_parser import finding_entries
+
+    tasks, comments, calls = grant_case(monkeypatch, tmp_path, last_reply=reply, last_verdict="BLOCKED")
+    for comment in comments[:2]:
+        comment["body"] = comment["body"].replace("T11:", "T10:")
+    bindings = []
+    for task_id in (["round-3", "round-3-retry"] if duplicate else ["round-3"]):
+        started = f"2026-09-23T11:{'01' if task_id.endswith('retry') else '00'}:00.000001+00:00"
+        digest = hashlib.sha256(reply.encode()).hexdigest()
+        write_task(tasks, task_id=task_id, reply=reply, schema_version=2, review_branch=BRANCH, pr=42,
+                   mode="read-only", model="claude-opus-5-5", agent="claude", type="review",
+                   worktree_base_sha="3" * 40, pinned_head="3" * 40, run_nonce=f"{task_id}-nonce",
+                   result_sha256=digest, started_at=started)
+        comment = verdict_with_reply("3" * 40, "BLOCKED", reply, task_id=task_id)
+        comment["body"] = comment["body"].replace("2026-09-23T11:00:00.000001+00:00", started)
+        if task_id == "round-3":
+            comments[-1] = comment
+        else:
+            comments.append(comment)
+        bindings.append({"task_id": task_id, "run_nonce": f"{task_id}-nonce", "reviewed_sha": "3" * 40,
+                         "reply_sha256": digest, "verification_only_evidence": finding_entries(reply, "F2")[-1][1]})
+    probe_reply = "Capability shell demonstrated: project interpreter executed print(1); observed stdout 1, exit 0."
+    probe = {"task_id": "retry-probe", "run_nonce": "probe-nonce", "reviewed_sha": SHA,
+             "reply_sha256": hashlib.sha256(probe_reply.encode()).hexdigest(), "capability_evidence": probe_reply}
+    write_task(tasks, task_id="retry-probe", reply=probe_reply, schema_version=2, review_branch=BRANCH,
+               mode="read-only", run_nonce=probe["run_nonce"], result_sha256=probe["reply_sha256"])
+    write_task(tasks, mode="read-only")
+    request = {**GRANT_REQUEST, "blocker_class": "withheld-capability",
+               "withheld_capability": {"capability": "shell", "runs": bindings, "retry_probe": probe}}
+    return tasks, comments, calls, request
+
+
+@pytest.mark.parametrize("field", ["run_nonce", "reviewed_sha", "reply_sha256"])
+@pytest.mark.parametrize("defect", ["missing-request", "missing-record", "mismatch-request", "mismatch-record"])
+def test_withheld_capability_missing_or_mismatched_run_binding_refused(monkeypatch, tmp_path, field, defect):
+    tasks, _comments, calls, request = withheld_grant_case(monkeypatch, tmp_path)
+    evidence = request["withheld_capability"]["runs"][0]
+    path = tasks / "round-3.json"
+    record = json.loads(path.read_text())
+    key = {"reviewed_sha": "worktree_base_sha", "reply_sha256": "result_sha256"}.get(field, field)
+    target, target_key = (evidence, field) if defect.endswith("request") else (record, key)
+    if defect.startswith("missing"):
+        target.pop(target_key)
+    else:
+        target[target_key] = {"run_nonce": "different-nonce", "reviewed_sha": "e" * 40,
+                              "reply_sha256": "e" * 64}[field]
+    path.write_text(json.dumps(record))
+    write_grant(tasks, request)
+    reason = r"LINEAGE_REFUSED:.*digest" if defect == "mismatch-record" and field == "reply_sha256" else (
+        r"BUDGET_GRANT_REFUSED\[(?:request|evidence)\]"
+    )
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_withheld_capability_two_runs_at_one_head_credit_one_round(monkeypatch, tmp_path):
+    tasks, comments, calls, request = withheld_grant_case(monkeypatch, tmp_path, duplicate=True)
+    write_grant(tasks, request)
+    write_grant(tasks, request, task_id="grant-duplicate")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    receipt = result["budget_grant"]
+    assert receipt["qualifying_heads"] == ["3" * 40]
+    assert receipt["round_allowance"] == 4
+    assert calls["posts"] == 1
+    # A second grant or a retry cannot turn the same charged head into another round.
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[allowance\].*4 rounds"):
+        recorder.require_review_round_within_budget(
+            comments, OTHER, "fleet", budget=3, pr=42, grant=lambda: receipt,
+        )
+    assert [item["body"].count("SECURITY_VERDICT: FAIL") for item in comments[2:4]] == [1, 1]
+
+
+@pytest.mark.parametrize("defect", ["substantive-latest", "new-p0", "new-p1", "new-named-p0", "new-named-p1",
+                                  "substantive-intervening"])
+def test_withheld_capability_substantive_rejection_or_new_p0_p1_refused(monkeypatch, tmp_path, defect):
+    reply = WITHHELD_REPLY
+    if defect.startswith("new-p"):
+        reply += f"\nF3 [{defect[4:].upper()}] docs/readme.md:4 New data loss defect."
+    elif defect.startswith("new-named-p"):
+        reply = reply.replace("[P2]", f"[{defect[-2:].upper()}]")
+    tasks, comments, calls, request = withheld_grant_case(monkeypatch, tmp_path, reply=reply)
+    if defect == "substantive-latest":
+        comments.append(verdict_with_reply("4" * 40, "CHANGES_REQUESTED", OPEN_F2, task_id="later"))
+    elif defect == "substantive-intervening":
+        write_task(tasks, task_id="intervening", reply=OPEN_F2, type="review", pr=42,
+                   worktree_base_sha="2" * 40, started_at="2026-09-23T11:00:01+00:00")
+    write_grant(tasks, request)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[blocker\]"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}

@@ -2246,6 +2246,12 @@ def require_review_round_within_budget(
             refusals.append(str(exc))
             continue
         if receipt is not None:
+            if field == "budget_grant" and not set(receipt.get("qualifying_heads", ())).issubset(counted):
+                refusals.append("BUDGET_GRANT_REFUSED[evidence]: credited head is not a charged round")
+                continue
+            if field == "budget_grant" and len(counted) + 1 > receipt["round_allowance"]:
+                refusals.append(f"BUDGET_GRANT_REFUSED[allowance]: grant allows {receipt['round_allowance']} rounds")
+                continue
             return {field: receipt}
     raise RecordError("; ".join([exhausted, *refusals]))
 
@@ -2342,6 +2348,7 @@ def budget_admission(
             comments=comments,
             login=login,
             task_root=task_root,
+            head=sha,
         )
         if budget < ELEVATED_REVIEW_ROUNDS
         else None,
@@ -2829,6 +2836,11 @@ def record(
             task_root=task_root,
             review_root=review_root,
         )
+        granted_route = budget_receipt.get("budget_grant", {}).get("retry_route")
+        if granted_route is not None and {
+            "agent": task.get("agent"), "model": model, "mode": task.get("mode")
+        } != granted_route:
+            raise RecordError("BUDGET_GRANT_REFUSED[capability]: retry route differs from demonstrated route")
         from scripts.review.repair_round import (
             RepairRefused,
             receipt_at,
