@@ -44,6 +44,8 @@ def _isolate_routing_budget_test_state(tmp_path: Path, monkeypatch: pytest.Monke
     claude_account_usage._reset_for_tests()
     monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", no_provider)
     monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
+    # These tests stand in for the Monitor scheduler, the only prober (#12542).
+    monkeypatch.setattr(claude_account_usage, "_is_probe_owner", lambda: True)
     yield
     state_helpers.cache_invalidate()
     claude_account_usage._reset_for_tests()

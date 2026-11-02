@@ -906,6 +906,23 @@ def _samples_path() -> Path:
     return _routing_budget_state_dir() / _SAMPLES_FILE
 
 
+def _is_probe_owner() -> bool:
+    """True only in the process whose Monitor claude-account scheduler is running.
+
+    That scheduler is the one owner of Claude account probes and of the samples
+    file (#12542). Another process that imports this module (an exporter, a CLI
+    one-liner) must read the Monitor API and never probe, or each account is
+    probed more often than the scheduler intends. ``start_periodic_refresh``
+    assigns the thread before it starts it, so the scheduler's own first probe
+    already sees an alive owner.
+    """
+    # Read through the module: the thread is rebound when the scheduler starts and stops.
+    from scripts.api import subscription_usage  # noqa: PLC0415  # lazy-ok: import cycle
+
+    thread = subscription_usage._claude_account_scheduler_thread
+    return thread is not None and thread.is_alive()
+
+
 def _read_samples(path: Path) -> dict[str, Any]:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -921,11 +938,11 @@ def _persist_sample(label: str, sample: _Sample) -> None:
     binding's generation digest and credential stat facts, and the sample's
     attribution (``named`` and the account fingerprints, digests only). The
     file is never served as is: ``restore_claude_account_samples`` serves an
-    entry only after its binding validates again. Written only where the
-    periodic scheduler runs, since only it reads the file. A failed write is
-    logged, never raised.
+    entry only after its binding validates again. Written only by the
+    process that owns the Monitor scheduler (``_is_probe_owner``), since only it
+    reads the file. A failed write is logged, never raised.
     """
-    if not _periodic_refresh_enabled():
+    if not (_periodic_refresh_enabled() and _is_probe_owner()):
         return
     accounts = sample.accounts
     watch = accounts.watch
@@ -1088,6 +1105,8 @@ def restore_claude_account_samples(*, now: float | None = None) -> float | None:
 
 
 def _refresh_one(label: str, timeout_s: float) -> None:
+    if not _is_probe_owner():  # a non-scheduler process never probes (#12542)
+        return
     with _lock:
         if time.time() < _probe_not_before.get(label, 0.0):
             return
