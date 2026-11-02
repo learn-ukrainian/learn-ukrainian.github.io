@@ -1727,6 +1727,42 @@ def test_failed_fallback_stop_retains_the_worktree_without_settling_it(monkeypat
         "retained", "provider_liveness_unknown")
 
 
+def test_not_owned_exclusion_is_recomputed_on_every_scan():
+    """Defect (#12520, review F1): the sweep rescans before each signal, so an unrelated client that carries the
+    task's marker and appears after the first scan must still be left alone."""
+    from tests.worker_leftovers_fakes import FAKE_PID_BASE, TASK_ID, FakeProc, FakeProcs, scope_of
+
+    table = FakeProcs()
+    owned, client = FAKE_PID_BASE + 1, FAKE_PID_BASE + 2
+    table.procs[owned] = FakeProc(task=TASK_ID)
+    excluded = worker._MarkedButNotOwned(scope_of(), table, owned=lambda: {owned})
+    assert list(excluded) == []
+    table.procs[client] = FakeProc(task=TASK_ID)
+    assert list(excluded) == [client] and client in excluded and len(excluded) == 1
+
+
+@pytest.mark.parametrize("libc", [SimpleNamespace(prctl=lambda *_args: -1), SimpleNamespace()],
+                         ids=["refused", "unavailable"])
+def test_fallback_run_fails_before_any_provider_when_orphan_adoption_fails(sandbox, monkeypatch, libc):
+    """Defect (#12520, review F4): without PR_SET_CHILD_SUBREAPER a double-forked descendant escapes the sweep
+    unseen, so the run must fail before it starts a provider."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker.ctypes, "CDLL", lambda *_args, **_kwargs: libc)
+    monkeypatch.setattr(worker.providers, "load", Mock(side_effect=AssertionError("a provider was started")))
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    spec = TaskSpec("no-adoption", "codex", "echo", None, "read-only", sandbox.repo,
+                    sandbox.repo / "no-adoption.prompt", sandbox.tasks / "no-adoption.result")
+    spec.prompt_file.write_bytes(b"literal final response")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main",
+                              run_git(sandbox.repo, "rev-parse", "HEAD"), {"research_owned_path": []})
+    record.update(prompt_file=str(sandbox.tasks / "no-adoption.prompt"), launch_mode="popen-fallback")
+    path = store.create(record, b"literal final response")
+    (sandbox.tasks / "logs").mkdir()
+    worker.supervise(path, {}, 10)
+    settled = json.loads(path.read_text())
+    assert settled["status"] == "failed" and settled["error"].startswith("fallback_adoption_unavailable")
+
+
 def test_deadline_settles_as_timeout(sandbox):
     task = sandbox.dispatch("blocked", "--hard-timeout", "0.2")
     record = sandbox.settle(task, expected=1)

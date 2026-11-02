@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Collection
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -532,6 +533,39 @@ def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
     return any(pid in protected for pid in members)
 
 
+def _own_tree() -> set[int]:
+    """Every process the supervisor started, whatever group or session it moved to (it adopts orphans)."""
+    return {child.pid for child in psutil.Process().children(recursive=True)}
+
+
+class _MarkedButNotOwned(Collection):
+    """The processes that carry the task's marker but are not in the supervisor's tree, read afresh on each use.
+
+    The marker alone is not ownership: a client that inherited it, or a task this one dispatched, is not the
+    task's descendant. ``stop_leftovers`` rescans before each signal and while it waits, so a snapshot would
+    let a client that appears after the first scan be signalled; this answers for every scan.
+    """
+
+    def __init__(self, scope, reader, owned=_own_tree):
+        self._scope, self._reader, self._owned = scope, reader, owned
+
+    def _pids(self) -> list[int]:
+        from scripts.orchestration import worker_leftovers
+
+        owned = self._owned()
+        return [proc.pid for proc in worker_leftovers.find_leftovers(self._scope, reader=self._reader)
+                if proc.pid not in owned]
+
+    def __iter__(self):
+        return iter(self._pids())
+
+    def __len__(self):
+        return len(self._pids())
+
+    def __contains__(self, pid):
+        return pid in self._pids()
+
+
 def _stop_fallback_tree(task_id: str, nonce: str):
     """Stop the processes a Popen-fallback supervisor started, once; a scan that cannot be read is not ok."""
     from scripts.orchestration import worker_leftovers
@@ -540,14 +574,9 @@ def _stop_fallback_tree(task_id: str, nonce: str):
     try:
         scope = worker_leftovers.worker_scope_at_exit(
             task_id=task_id, launch_mode="popen-fallback", launch_unit=None, run_nonce=nonce, reader=reader)
-        # The marker alone is not ownership: a client that inherited it, or a task this one dispatched, is not
-        # this task's descendant. The supervisor adopts orphans (``_adopt_orphans``), so its process tree is
-        # every process the task started, whatever group or session it moved to.
-        owned = {child.pid for child in psutil.Process().children(recursive=True)}
-        foreign = [proc.pid for proc in worker_leftovers.find_leftovers(scope, reader=reader)
-                   if proc.pid not in owned]
-        stopped = worker_leftovers.stop_leftovers(scope, reader=reader, exclude=foreign)
-        for pid in owned:
+        # The marker alone is not ownership: see ``_MarkedButNotOwned``.
+        stopped = worker_leftovers.stop_leftovers(scope, reader=reader, exclude=_MarkedButNotOwned(scope, reader))
+        for pid in _own_tree():
             # An adopted descendant stays a zombie in its old process group until reaped, which the group
             # liveness check would read as a live provider.
             with contextlib.suppress(ChildProcessError, OSError):
@@ -809,21 +838,22 @@ def _corrected_reply_refusal(lock: dict, text: str | None) -> str | None:
     return None
 
 
-def _adopt_orphans() -> None:
+def _adopt_orphans() -> bool:
     """Make this supervisor the parent of every orphaned descendant (``PR_SET_CHILD_SUBREAPER``).
 
     A Popen-fallback launch has no cgroup. A double-forked descendant would otherwise reparent to init or the
     user manager, out of the supervisor's process tree, and settlement could not tell it from an unrelated process.
+    False when the kernel or a confinement policy refuses.
     """
-    with contextlib.suppress(AttributeError, OSError):
-        ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0)
+    try:
+        return ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0) == 0
+    except (AttributeError, OSError):
+        return False
 
 
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
-    if record.get("launch_mode") == "popen-fallback":
-        _adopt_orphans()
     if record.get("require_review_verdict") is True:
         # The code this supervisor loaded; settlement records it again (#12399).
         record["dispatcher_code_start"] = _dispatcher_code()
@@ -868,6 +898,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     stderr_path = path.parent / "logs" / f"{spec.task_id}.stderr.log"
     try:
         signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM, signal.SIGINT})
+        if record.get("launch_mode") == "popen-fallback" and not _adopt_orphans():
+            # Without it a double-forked descendant would escape settlement's sweep unseen.
+            status, error = "failed", "fallback_adoption_unavailable: PR_SET_CHILD_SUBREAPER was refused"
+            return
         try:
             headroom.check_plan(spec.agent, spec.model, record, review=admission.review_typed(record))
             headroom.check_runtime(spec.agent, spec.model)
