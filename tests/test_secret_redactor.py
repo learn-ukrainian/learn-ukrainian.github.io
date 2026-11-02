@@ -44,7 +44,8 @@ def msg_db(tmp_path):
     ],
 )
 @pytest.mark.parametrize("prefix", ["", "status: pending ", "https://"])
-def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote, prefix, variant):
+@pytest.mark.parametrize("gap", ["", " "])
+def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote, prefix, variant, gap):
     value = _OPAQUE_TOKEN[:12]
     if variant == "embedded_quote":
         value += ("''" if quote == "'" else '\\"') + _OPAQUE_TOKEN[:12]
@@ -53,7 +54,7 @@ def test_yaml_key_value_secret_masked_quoted_and_unquoted(key, key_quote, quote,
     elif variant in {"multiline", "continued"}:
         value = value[:6] + ("\\" if variant == "continued" else "") + "\n" + value[6:]
     closing = "" if variant == "unterminated" else quote
-    prefix += f"{key_quote}{key}{key_quote}: "
+    prefix += f"{key_quote}{key}{key_quote}:{gap}"
     raw = f"{prefix}{quote}{value}{closing}"
     expected = f"{prefix}{quote}{REDACTION}{closing}"
     assert redact_text(raw) == expected

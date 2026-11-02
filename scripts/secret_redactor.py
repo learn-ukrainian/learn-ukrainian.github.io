@@ -235,8 +235,9 @@ def _redact_assignments(text: str) -> str:
     parts = []
     cursor = 0
     authorities = iter(
-        (match.start(), match.start() + _url_authority_bounds(match.group())[1])
+        (match.start() + start, match.start() + end)
         for match in iter_url_matches(text)
+        for start, end in (_url_authority_bounds(match.group()),)
     )
     authority = next(authorities, (len(text), len(text)))
     for match in _ASSIGNMENT_PREFIX.finditer(text):
@@ -245,8 +246,10 @@ def _redact_assignments(text: str) -> str:
         while match.start() >= authority[1]:
             authority = next(authorities, (len(text), len(text)))
         if (match.group("separator") == ":"
-                and authority[0] <= match.start() < match.end() <= authority[1]):
-            continue
+                and authority[0] <= match.start() < match.end() < authority[1]):
+            tail = text[match.end():authority[1]]
+            if (tail.isascii() and tail.isdecimal()) or tail.startswith(REDACTION + "@"):
+                continue
         start = match.end()
         if start == len(text):
             continue
