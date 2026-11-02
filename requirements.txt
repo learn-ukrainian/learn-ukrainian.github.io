@@ -43,7 +43,12 @@ ruff>=0.15.21
 
 # Database
 aiosqlite>=0.22
-psycopg[binary]>=3.3.6  # control-plane storage seam pg authority (Phase 0b #603)
+# psycopg and its C implementation psycopg-binary are exact-pinned together and
+# must always match: `pip install --no-deps` ignores the [binary] extra, so a
+# `psycopg[binary]` spec leaves an old psycopg-binary in place and every
+# connection then fails (#12476). Dependabot bumps the pair as one group.
+psycopg==3.3.6  # control-plane storage seam pg authority (Phase 0b #603)
+psycopg-binary==3.3.6
 
 # Process / file-locking / fuzzy-match utilities (#6830 manifest-debt fix —
 # these were installed transitively and worked until a from-scratch venv

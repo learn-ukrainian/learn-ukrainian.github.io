@@ -10,6 +10,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
 
 from scripts.ci import dependency_change_scope as scope
 
@@ -318,3 +320,26 @@ def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> N
     for heading in ("Examples:", "Outputs:", "Exit codes:", "Related:"):
         assert heading in out
     assert ".venv/bin/python" in out
+
+
+def _exact_pins(path: Path) -> dict[str, str]:
+    pins: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        spec = line.split("#", 1)[0].strip()
+        if not spec or spec.startswith("-") or spec.startswith("."):
+            continue
+        req = Requirement(spec)
+        for item in req.specifier:
+            if item.operator == "==":
+                pins[canonicalize_name(req.name)] = item.version
+    return pins
+
+
+def test_pinned_versions_diverge_between_requirements_and_lock():
+    """Exact pins agree across requirements.txt and the lock; psycopg matches psycopg-binary (#12476)."""
+    declared = _exact_pins(_REPO_ROOT / "requirements.txt")
+    locked = _exact_pins(_REPO_ROOT / "requirements-lock.txt")
+    diverged = {name: (ver, locked[name]) for name, ver in declared.items() if name in locked and locked[name] != ver}
+    assert not diverged, f"requirements.txt vs requirements-lock.txt: {diverged}"
+    for pins in (declared, locked):
+        assert pins["psycopg"] == pins["psycopg-binary"], pins
