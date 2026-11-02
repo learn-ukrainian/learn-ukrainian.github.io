@@ -1145,6 +1145,7 @@ def test_block_only_ukrainian_reply_records_full_coverage(monkeypatch, tmp_path)
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks)
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     marker = sweep.parse_marker(comments[0]["body"])
     assert result["verdict"] == marker["verdict"] == "APPROVED"
