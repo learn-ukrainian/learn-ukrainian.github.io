@@ -575,23 +575,15 @@ def test_tracked_edit_hidden_by_an_index_flag_keeps_the_worktree(sandbox, flag):
     assert (tree / "scripts/dispatch.py").read_text() == "uncommitted tracked edit\n"
 
 
-def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_gone(sandbox):
-    """Defect (FR-45): a provider child alive past settlement's bounded wait kept the tree with no retry."""
+def test_lingering_provider_process_is_ended_at_settlement_before_the_worktree_goes(sandbox):
+    """Defect (FR-45, #12520): a provider child alive past settlement kept the tree with no retry; now the
+    settling supervisor ends it, so the tree is released only after the process is gone."""
     task = sandbox.dispatch("tree")
     grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
     (sandbox.tasks / f"{task[0]}.release").touch()
     record = sandbox.settle(task)
-    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == (
-        "retained", "provider_processes_alive")
-    assert Path(record["worktree_path"]).is_dir()
-    os.kill(grandchild, signal.SIGKILL)
-    deadline = time.monotonic() + 10
-    while worker._provider_alive(record):
-        assert time.monotonic() < deadline, "grandchild survived SIGKILL"
-        time.sleep(0.02)
-    sandbox.sweep()
-    settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
-    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("removed", "clean")
+    assert worker._identity(grandchild) is None
     assert not Path(record["worktree_path"]).exists()
 
 
@@ -635,27 +627,6 @@ def settled_by_scheduled_sweep(sandbox, retained_id, before_release=lambda _kept
         sandbox.sweep()
         assert record_file.stat().st_ino != before, "scheduled settlement never retried the retained worktree"
     return json.loads(record_file.read_text())
-
-
-def test_settlement_removes_a_transient_retained_worktree_once_its_cause_is_gone(sandbox):
-    """Scheduled recovery releases a retained tree once its transient cause has cleared."""
-    task = sandbox.dispatch("tree")
-    grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
-    (sandbox.tasks / f"{task[0]}.release").touch()
-    record = sandbox.settle(task)
-    assert record["worktree_disposition_reason"] == "provider_processes_alive"
-
-    def end_the_cause(kept):
-        assert kept["worktree_disposition_reason"] == "provider_processes_alive"
-        os.kill(grandchild, signal.SIGKILL)
-        deadline = time.monotonic() + 10
-        while worker._provider_alive(record):
-            assert time.monotonic() < deadline, "grandchild survived SIGKILL"
-            time.sleep(0.02)
-
-    settled = settled_by_scheduled_sweep(sandbox, task[0], end_the_cause)
-    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
-    assert not Path(record["worktree_path"]).exists()
 
 
 @pytest.mark.parametrize("model,reason", [("pushed-dirty", "dirty"), ("unpushed", "unpublished")])
@@ -1712,6 +1683,134 @@ def test_cancel_kills_child_process_group(sandbox):
     assert worker._identity(grandchild) is None
 
 
+def test_settling_a_task_terminates_a_descendant_in_another_process_group(sandbox):
+    """Defect (#12520): a descendant outside the provider's process group (GNU ``timeout`` puts its child
+    in one) or reparented away from it (a double fork) outlived a cancelled task on a Popen-fallback launch."""
+    task = sandbox.dispatch("escape")
+    own_session = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
+    daemon = int(await_file(sandbox.tasks / f"{task[0]}.daemon"))
+    assert os.getpgid(own_session) != os.getpgid(int(await_file(sandbox.tasks / f"{task[0]}.started")))
+    assert worker._identity(own_session) is not None and worker._identity(daemon) is not None
+    record = json.loads(sandbox.cli("cancel", task[0], "--run-nonce", task[1]).stdout)
+    assert record["status"] == "cancelled"
+    assert worker._identity(own_session) is None
+    assert worker._identity(daemon) is None
+
+
+def test_fallback_survivor_recorded_by_a_failed_stop_keeps_the_tree_until_it_exits(sandbox):
+    """Defect (#12520): a descendant that left the provider's group and survived the stop was forgotten, so a
+    later retry saw the group gone and released the tree under it."""
+    ended = subprocess.Popen(["true"])
+    ended.wait(timeout=30)
+    survivor = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"], start_new_session=True)
+    try:
+        record = {"launch_mode": "popen-fallback", "provider_pgid": ended.pid,
+                  "fallback_survivors": {str(survivor.pid): worker._identity(survivor.pid)}}
+        assert worker._provider_alive(record) is True
+        survivor.kill()
+        survivor.wait(timeout=30)
+        assert worker._provider_alive(record) is False
+    finally:
+        survivor.kill()
+        survivor.wait(timeout=30)
+
+
+def test_failed_fallback_stop_retains_the_worktree_without_settling_it(monkeypatch):
+    """Defect (#12520): a scan that could not be completed was read as no descendant, and the tree went."""
+    from scripts.orchestration import worker_leftovers
+
+    monkeypatch.setattr(worker, "_end_own_scope", lambda _record: worker_leftovers.StopResult(ok=False, error="x"))
+    monkeypatch.setattr(worker.git, "settle_worktree", Mock(side_effect=AssertionError("settled under a live scan")))
+    record = {"task_id": "t", "launch_mode": "popen-fallback", "provider_pgid": None}
+    worker._reap_settled(record)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == (
+        "retained", "provider_liveness_unknown")
+
+
+def test_stop_never_signals_a_marked_non_descendant_that_appears_mid_stop():
+    """Defect (#12520, review F1): the sweep takes the task's marker for ownership, so an unrelated client that
+    inherits it, and appears after an earlier ownership scan, must still be left alone."""
+    from scripts.orchestration import worker_leftovers
+    from tests.worker_leftovers_fakes import FAKE_PID_BASE, TASK_ID, FakeProc, FakeProcs, scope_of, stop_kwargs
+
+    class LateClient(FakeProcs):
+        def pids(self):
+            listed = super().pids()
+            self.procs.setdefault(FAKE_PID_BASE + 2, FakeProc(task=TASK_ID))  # appears between two listings
+            return listed
+
+    table = LateClient()
+    mine, client = FAKE_PID_BASE + 1, FAKE_PID_BASE + 2
+    table.procs[mine] = FakeProc(task=TASK_ID)
+    result = worker_leftovers.stop_leftovers(scope_of(), reader=table, owned=lambda pid: pid == mine,
+                                             **stop_kwargs(table))
+    assert result.ok and table.signalled() == {mine} and client in table.procs
+    # The supervisor's own tree is judged live: a child is its descendant, its parent is not.
+    child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
+    try:
+        assert worker._is_own_descendant(child.pid) and not worker._is_own_descendant(os.getppid())
+    finally:
+        child.kill()
+        child.wait(timeout=30)
+
+
+def test_unresolved_ancestry_is_unknown_never_a_non_descendant(monkeypatch):
+    """Defect (#12520, review F5): an ancestor that exits mid-walk, or an unreadable ancestry, hid a live
+    descendant from the sweep as if it were a stranger."""
+    from scripts.orchestration import worker_leftovers
+
+    me = os.getpid()
+    parents = {5_000_001: 5_000_002, 5_000_002: me}  # a sleeper whose parent is a provider the supervisor adopts
+    calls = []
+
+    class Process:
+        def __init__(self, pid):
+            self.pid = pid
+
+        def ppid(self):
+            calls.append(self.pid)
+            if self.pid == 5_000_002 and calls.count(5_000_002) == 1:
+                raise worker.psutil.NoSuchProcess(self.pid)  # the provider exits mid-walk; the sleeper reparents
+            if self.pid == 5_000_001 and 5_000_002 in calls:
+                return me
+            if self.pid == 9_000_001:
+                raise worker.psutil.AccessDenied(self.pid)
+            return parents.get(self.pid, 1)
+
+    monkeypatch.setattr(worker.psutil, "Process", Process)
+    assert worker._is_own_descendant(5_000_001) is True
+    assert worker._is_own_descendant(5_000_777) is False  # a proven stranger: its parent is init
+    with pytest.raises(worker_leftovers.ScanUnknown):
+        worker._is_own_descendant(9_000_001)
+    # A descendant deeper than the walk's limit is unknown too: the limit proves nothing about it.
+    parents.update({6_000_000 + hop: 6_000_001 + hop for hop in range(worker.ANCESTRY_DEPTH + 1)})
+    parents[6_000_000 + worker.ANCESTRY_DEPTH + 1] = me
+    with pytest.raises(worker_leftovers.ScanUnknown):
+        worker._is_own_descendant(6_000_000)
+
+
+@pytest.mark.parametrize("libc", [SimpleNamespace(prctl=lambda *_args: -1), SimpleNamespace()],
+                         ids=["refused", "unavailable"])
+def test_fallback_run_fails_before_any_provider_when_orphan_adoption_fails(sandbox, monkeypatch, libc):
+    """Defect (#12520, review F4): without PR_SET_CHILD_SUBREAPER a double-forked descendant escapes the sweep
+    unseen, so the run must fail before it starts a provider."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker.ctypes, "CDLL", lambda *_args, **_kwargs: libc)
+    monkeypatch.setattr(worker.providers, "load", Mock(side_effect=AssertionError("a provider was started")))
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    spec = TaskSpec("no-adoption", "codex", "echo", None, "read-only", sandbox.repo,
+                    sandbox.repo / "no-adoption.prompt", sandbox.tasks / "no-adoption.result")
+    spec.prompt_file.write_bytes(b"literal final response")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main",
+                              run_git(sandbox.repo, "rev-parse", "HEAD"), {"research_owned_path": []})
+    record.update(prompt_file=str(sandbox.tasks / "no-adoption.prompt"), launch_mode="popen-fallback")
+    path = store.create(record, b"literal final response")
+    (sandbox.tasks / "logs").mkdir()
+    worker.supervise(path, {}, 10)
+    settled = json.loads(path.read_text())
+    assert settled["status"] == "failed" and settled["error"].startswith("fallback_adoption_unavailable")
+
+
 def test_deadline_settles_as_timeout(sandbox):
     task = sandbox.dispatch("blocked", "--hard-timeout", "0.2")
     record = sandbox.settle(task, expected=1)
@@ -2314,7 +2413,7 @@ def test_branch_fix_round_ownership_starts_after_preexisting_commits(sandbox, at
     result = sandbox.settle(task, expected=1 if outside else 0)
     if attach != "cwd":
         # Settlement removed the published worktree; re-attach it at its head for the recheck below.
-        assert result["worktree_disposition"] == "removed"
+        assert (result["worktree_disposition"], result.get("worktree_disposition_reason")) == ("removed", "clean")
         run_git(sandbox.repo, "worktree", "add", "-b", result["worktree_branch"], result["cwd"], result["head_sha"])
     # Recheck the reported defect's record shape: base is main, start is the branch tip.
     # Keep the actual start captured at dispatch, independent of the configured base.
