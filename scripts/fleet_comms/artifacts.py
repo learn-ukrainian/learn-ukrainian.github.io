@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
+import json
 import mimetypes
 import os
 import re
@@ -174,6 +175,7 @@ class RetentionReport:
     skipped_recent_use: int
     skipped_changed: int
     by_class: dict[str, dict[str, int]]
+    backup_dir: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -923,6 +925,7 @@ class ArtifactStore:
         grace_seconds: int = RETENTION_GRACE_SECONDS,
         apply: bool = False,
         now: datetime | None = None,
+        backup_dir: Path | None = None,
     ) -> RetentionReport:
         """Remove blobs of finished messages older than the cutoff (#12530).
 
@@ -935,9 +938,22 @@ class ArtifactStore:
         row, unlinks and commits. A
         crash before the commit leaves an unmarked row without its blob;
         the next run marks it again. Sqlite only.
+
+        ``backup_dir`` (apply only) copies each blob there, sha256-verified,
+        inside the same locked transaction just before its unlink, and
+        appends one ``manifest.jsonl`` line per blob, so every removed blob has
+        a verified copy (a rolled-back removal can leave an extra one). Restoring a copy through ``store_bytes``
+        rewrites the blob and clears the expired marker.
         """
         if older_than_days < 1:
             raise ArtifactStoreError("older_than_days must be at least 1")
+        if backup_dir is not None:
+            if not apply:
+                raise ArtifactStoreError("backup_dir is only meaningful with apply")
+            backup_dir = backup_dir.expanduser().resolve()
+            if backup_dir.is_relative_to(self.root.resolve()):
+                raise ArtifactStoreError("backup_dir must be outside the plane root")
+            self._prepare_private_dir(backup_dir)
         if apply:
             self._refuse_readonly_write("expire_message_blobs")
         if self._authority is Authority.PG:
@@ -979,7 +995,9 @@ class ArtifactStore:
                 bucket["present_bytes"] += size
             if not apply:
                 continue
-            outcome = self._expire_one_blob(str(row["artifact_id"]), params, mtime_floor)
+            outcome = self._expire_one_blob(
+                str(row["artifact_id"]), params, mtime_floor, backup_dir=backup_dir
+            )
             if outcome == "removed":
                 removed += 1
                 removed_bytes += size
@@ -1001,6 +1019,7 @@ class ArtifactStore:
             skipped_recent_use=skipped_recent,
             skipped_changed=skipped_changed,
             by_class=dict(sorted(by_class.items())),
+            backup_dir=str(backup_dir) if backup_dir is not None else None,
         )
 
     def _expire_one_blob(
@@ -1008,6 +1027,8 @@ class ArtifactStore:
         artifact_id: str,
         params: dict[str, str],
         mtime_floor: float,
+        *,
+        backup_dir: Path | None = None,
     ) -> str:
         """Re-check one candidate under the writer lock, then mark and unlink.
 
@@ -1032,6 +1053,8 @@ class ArtifactStore:
             except FileNotFoundError:
                 pass
             klass = str(row["retention_class"])
+            if backup_dir is not None:
+                self._back_up_blob(path, row, backup_dir)
             if not klass.startswith(RETENTION_EXPIRED_PREFIX):
                 self._conn.execute(
                     "UPDATE artifacts SET retention_class = ? WHERE artifact_id = ?",
@@ -1043,6 +1066,43 @@ class ArtifactStore:
             raise
         self._conn.commit()
         return "removed"
+
+    def _back_up_blob(self, path: Path, row: sqlite3.Row, backup_dir: Path) -> None:
+        """Copy one blob into ``backup_dir`` and record it, or raise.
+
+        The source must hash to its digest (a corrupt blob is refused, never
+        removed), the copy is written temp, fsync, rename and re-hashed, and
+        the manifest line is fsynced before the caller unlinks the source.
+        A blob that is already gone has nothing to copy and gets no line.
+        """
+        digest = str(row["sha256"])
+        try:
+            data = path.read_bytes()
+        except FileNotFoundError:
+            return
+        if hashlib.sha256(data).hexdigest() != digest:
+            raise ArtifactStoreError(f"refusing to expire corrupt blob {digest}")
+        dest = backup_dir / digest[:2] / digest
+        self._prepare_private_dir(dest.parent)
+        self._write_blob_atomic(dest, data)
+        if hashlib.sha256(dest.read_bytes()).hexdigest() != digest:
+            raise ArtifactStoreError(f"backup copy of {digest} does not verify")
+        entry = json.dumps(
+            {
+                "artifact_id": str(row["artifact_id"]),
+                "sha256": digest,
+                "bytes": int(row["bytes"]),
+                "retention_class": str(row["retention_class"]).removeprefix(
+                    RETENTION_EXPIRED_PREFIX
+                ),
+                "backed_up_at": _utc_now(),
+            },
+            sort_keys=True,
+        )
+        with open(backup_dir / "manifest.jsonl", "a", encoding="utf-8") as handle:
+            handle.write(entry + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
 
     # --- V4 canonical authority store (PR #7662 repair 6/7) ----------------
     #

@@ -1141,6 +1141,9 @@ def cmd_retention(args: argparse.Namespace) -> int:
     from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
 
     root = Path(args.root).expanduser() if args.root else None
+    backup_dir = Path(args.backup_dir) if args.backup_dir else None
+    if backup_dir is not None and not args.apply:
+        raise FleetCommsCliError("retention refused: --backup-dir requires --apply")
     try:
         # A dry run opens read-only: it never migrates or writes the store.
         store = ArtifactStore(root=root) if args.apply else ArtifactStore.open_readonly(root=root)
@@ -1149,8 +1152,9 @@ def cmd_retention(args: argparse.Namespace) -> int:
                 older_than_days=args.older_than_days,
                 grace_seconds=args.grace_seconds,
                 apply=args.apply,
+                backup_dir=backup_dir,
             )
-    except (ArtifactStoreError, sqlite3.Error) as exc:
+    except (ArtifactStoreError, sqlite3.Error, OSError) as exc:
         raise FleetCommsCliError(f"retention refused: {exc}") from exc
     payload = report.to_dict()
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
@@ -1255,6 +1259,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--apply",
         action="store_true",
         help="Remove the candidates (default: report only, read-only open)",
+    )
+    retention.add_argument(
+        "--backup-dir",
+        default=None,
+        help=(
+            "With --apply: copy each blob here (sha256-verified, with manifest.jsonl) "
+            "under the writer lock before removing it; must be outside the plane root"
+        ),
     )
     retention.set_defaults(func=cmd_retention)
 
