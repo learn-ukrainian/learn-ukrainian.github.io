@@ -428,10 +428,17 @@ def _dispatch(args) -> int:
             ) from None
     start = args.pinned_head or args.branch or args.base
     publish_remote = None
+    exact = False
     if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
         start, publish_remote = git.publish_start(repo, info, args.branch, task_id)
+        exact = True
+    elif args.mode == "read-only" and args.branch and not args.pinned_head and not args.cwd:
+        # A branch-pinned review runs at the branch's remote head, never at a possibly
+        # stale local refs/heads/<branch> that worktree_plan would resolve (#12441).
+        start = git.review_branch_start(repo, info, args.branch, task_id, base=args.base)
+        exact = True
     # A published start is created and recorded verbatim, never re-resolved in the shared repository.
-    exact_start = {"exact": True} if publish_remote is not None else {}
+    exact_start = {"exact": True} if exact else {}
     worktree, branch, sha = git.worktree_plan(
         repo, agent, task_id, start, args.cwd, args.worktree, **exact_start
     )

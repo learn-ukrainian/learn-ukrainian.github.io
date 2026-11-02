@@ -46,6 +46,7 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   across runs, retries and grants: each grant permits at most `min(5, 3 + qualifying_heads)`
   total rounds. It never resets spent rounds, reclassifies a capability failure, or clears a
   security FAIL; a fresh probe-backed review must clear the rejection.
+  A reissued and resealed grant may name one `admission_exclusion` per PR across all grants, binding its task, nonce, head and reply digest to the repository and lineage, with the advisor's sealed `admission_exclusion_attestation` that the complete structured empty-findings BLOCKED reply contains only an execution obstruction, no substantive defect and no security FAIL, validated before dispatch and again against the exact later same-seat, same-head replacement at recording and naming both runs in the receipt; the excluded head stays charged, existing findings stay open, the distinct-head allowance is unchanged, and a failed replacement cannot become another exclusion.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
