@@ -297,10 +297,11 @@ def finding_is_open(entry: str) -> bool:
 
 
 def recorded_reply(body: Any) -> str:
-    """The reviewer's reply a recorded verdict comment publishes; empty when it publishes none."""
+    """The reviewer's reply a recorded verdict comment publishes; empty when it publishes none or a truncated one."""
     if not isinstance(body, str) or REPLY_OPENER not in body:
         return ""
-    return body.partition(REPLY_OPENER)[2].rpartition(REPLY_CLOSER)[0]
+    reply = body.partition(REPLY_OPENER)[2].rpartition(REPLY_CLOSER)[0]
+    return "" if recorder.TRUNCATION_FLAG in reply else reply
 
 
 def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, finding_id: str) -> str | None:

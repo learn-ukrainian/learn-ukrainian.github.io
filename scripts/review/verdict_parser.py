@@ -599,20 +599,30 @@ def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return dict(pairs)
 
 
-def _structured_findings(reply: str) -> tuple[Any, ...] | None:
-    """The validated findings of a reply that is exactly one JSON object; None for any other reply.
+def _not_json_constant(token: str) -> Any:
+    raise ValueError(f"non-JSON constant {token}")
 
-    A reply that is a JSON object but not a valid ``code-review-findings.v1`` payload
-    (unreadable, a duplicate key, a schema failure) has no findings: it fails closed.
+
+# A reply that opens with an object or a code fence, or names the findings schema anywhere, is a
+# structured reply; it is never read as a markdown ledger, so text beside the object cannot add findings.
+_STRUCTURED_REPLY_RE = re.compile(r"\A\s*(?:\{|```|~~~)|code-review-findings|\"schema_version\"")
+
+
+def _structured_findings(reply: str) -> tuple[Any, ...] | None:
+    """The validated findings of a structured reply; None for a markdown ledger reply.
+
+    A structured reply that is not exactly one valid ``code-review-findings.v1`` object
+    (bare or one whole fence) has no findings: unreadable JSON, a non-JSON constant such
+    as ``NaN``, a duplicate key, a schema failure, or text beside the object fail closed.
     """
     from scripts.fleet_comms.review_publication import ReviewPublicationError
     from scripts.review.review_contract import ContractError, _whole_reply_fence
 
-    text = _whole_reply_fence(reply.strip())
-    if not text.startswith("{"):
+    if not _STRUCTURED_REPLY_RE.search(reply):
         return None
     try:
-        payload = json.loads(text, object_pairs_hook=_unique_object)
+        text = _whole_reply_fence(reply.strip())
+        payload = json.loads(text, object_pairs_hook=_unique_object, parse_constant=_not_json_constant)
         _, evidence = checked_findings_payload(payload) if isinstance(payload, dict) else (None, None)
     except (ValueError, RecursionError, ContractError, ReviewPublicationError):
         return ()

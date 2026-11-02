@@ -14,6 +14,7 @@ from scripts.review.verdict_parser import finding_entries
 SHA = "a" * 40
 LOGIN = "fleet"
 STAMP = "2026-11-02T15:23:32Z"
+LEDGER = "F4 [P1] still open: retry skips fsync."
 
 
 def _finding(**changes: object) -> dict[str, object]:
@@ -80,10 +81,27 @@ def test_whole_fenced_json_reply_admits() -> None:
         pytest.param(_reply(_finding()).replace("code-review-findings.v1", "code-review-findings.v0"),
                      id="wrong-schema"),
         pytest.param(_reply(_finding()) + "\nF4 [P1] still open: retry skips fsync.", id="ledger-after-json"),
+        pytest.param(_reply(_finding(confidence=float("nan"))), id="nan-constant"),
+        pytest.param(_reply(_finding()).replace('"confidence": 0.97}', '"confidence": Infinity}', 1),
+                     id="infinity-constant"),
+        *(pytest.param(f"{fence}{tag}\n{_reply(_finding(priority='P2'))}\n{fence}\n{LEDGER}", id=f"fence{fence}{tag}")
+          for fence, tag in (("```", "json"), ("```", ""), ("~~~", ""))),
+        pytest.param("```json\n{\"schema_version\": 1}\n```\n" + LEDGER, id="invalid-fence-then-ledger"),
+        pytest.param("Prose first.\n\n" + _reply(_finding(priority="P2")) + "\n\n" + LEDGER, id="prose-json-ledger"),
     ],
 )
 def test_json_reply_refuses_without_an_open_p1(reply: str) -> None:
     assert open_blocker_cited(_comments(reply), LOGIN, "F4") is None
+
+
+def test_truncated_record_is_no_evidence() -> None:
+    body = _comments(_reply(_finding()))[0]["body"]
+    assert isinstance(body, str)
+    truncated = body.replace("\n\n</details>", f"\n\n{recorder.TRUNCATION_FLAG}\n\n</details>", 1)
+    comments = _comments(_reply(_finding()))
+    comments[0]["body"] = truncated
+    assert recorded_reply(truncated) == ""
+    assert open_blocker_cited(comments, LOGIN, "F4") is None
 
 
 def test_trust_rules_still_refuse_a_json_reply() -> None:
