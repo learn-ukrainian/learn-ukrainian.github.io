@@ -3975,6 +3975,69 @@ def test_one_valid_grant_admits_beside_unrelated_or_outdated_ones(monkeypatch, t
     assert result["budget_grant"]["grant_task"] == "grant-b" and calls["posts"] == 1
 
 
+# The owner-request grant (#12551): the PR's own tier plus exactly the rounds the cited tracker item records.
+OWNER_RULING = {**GRANT_REQUEST, "finding_id": "F5", "blocker_class": "owner-request", "p2_fix_verification": None,
+                "owner_request": {"tracker_item": "C-4100", "rounds": 1}}
+OPEN_F5 = "VERDICT: REQUEST_CHANGES\nF5 [P2] docs/readme.md:3 depth exhaustion hides a live descendant."
+
+
+def owner_case(monkeypatch, tmp_path, *, spent, changed):
+    """``spent`` rounds on record, the last a rejection listing F5 at P2, and the next round at SHA."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    monkeypatch.setattr(recorder, "_budget_grant", _REAL_BUDGET_GRANT)
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts_for({"google"}, changed_paths=changed))
+    comments.extend(recorded_verdict(str(n) * 40, "CHANGES_REQUESTED", task_id=f"round-{n}") for n in range(1, spent))
+    comments.append(verdict_with_reply(str(spent) * 40, "CHANGES_REQUESTED", OPEN_F5, task_id=f"round-{spent}"))
+    return tasks, comments, calls
+
+
+@pytest.mark.parametrize(
+    "spent,changed",
+    [(5, ("scripts/review/record_cf_verdict.py",)), (3, ("docs/readme.md",))],
+    ids=["security-tier-five", "default-tier-three"],
+)
+def test_owner_request_grant_admits_exactly_its_recorded_rounds(monkeypatch, tmp_path, spent, changed):
+    tasks, _comments, calls = owner_case(monkeypatch, tmp_path, spent=spent, changed=changed)
+    write_grant(tasks, {**OWNER_RULING, "scope_paths": list(changed)})
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    write_task(tasks, reply=OPEN_F5)
+    receipt = recorder.record("review-one", **kwargs)["budget_grant"]
+    assert receipt["blocker_class"] == "owner-request" and receipt["round_allowance"] == spent + 1
+    assert receipt["owner_request"] == {"tracker_item": "C-4100", "rounds": 1}
+    assert receipt["cited_verdict_head"] == str(spent) * 40 and receipt["advisor_model"] == "gpt-6.1-sol"
+    # The request recorded one round: the next one is over the request, whatever the latest rejection lists.
+    move_head(monkeypatch, "f" * 40)
+    write_task(tasks, task_id="round-over", worktree_base_sha="f" * 40, reply=OPEN_F5)
+    with pytest.raises(recorder.RecordError, match=rf"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[allowance\]: "
+                                                   rf"grant allows {spent + 1} rounds"):
+        recorder.record("round-over", **kwargs)
+    assert calls["posts"] == 1
+
+
+@pytest.mark.parametrize(
+    "ruling,reason",
+    [
+        ({"pr": 41}, None),
+        ({"lineage_id": "codex/other"}, r"\[binding\].*follows lineage 'codex/other'"),
+        ({"scope_paths": ["docs/other.md"]}, r"\[scope\].*does not cover changed paths"),
+        ({"owner_request": None}, r"\[request\].*owner_request needs the tracker_item"),
+        ({"owner_request": {"rounds": 1}}, r"\[request\].*owner_request needs the tracker_item"),
+        ({"owner_request": {"tracker_item": "", "rounds": 1}}, r"\[request\].*owner_request needs the tracker_item"),
+    ],
+    ids=["wrong-pr", "wrong-branch", "wrong-paths", "no-owner-request", "no-tracker-item", "empty-tracker-item"],
+)
+def test_owner_request_grant_refuses(monkeypatch, tmp_path, ruling, reason):
+    changed = ("scripts/review/record_cf_verdict.py",)
+    tasks, _comments, calls = owner_case(monkeypatch, tmp_path, spent=5, changed=changed)
+    write_grant(tasks, {**OWNER_RULING, "scope_paths": list(changed), **ruling})
+    pattern = r"REVIEW_BUDGET_EXHAUSTED" + (r".*BUDGET_GRANT_REFUSED" + reason if reason else "")
+    with pytest.raises(recorder.RecordError, match=pattern) as refused:
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    # Another PR's grant is not this PR's concern.
+    assert reason is not None or "BUDGET_GRANT" not in str(refused.value)
+    assert calls == {"posts": 0, "statuses": 0}
+
+
 @pytest.mark.parametrize("stem", ["grant-approval", "grant-approval.20261029T010000Z.archived"])
 def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
     """Archiving moves the record and its result together and keeps the hot result_file (review round 1, F3)."""
