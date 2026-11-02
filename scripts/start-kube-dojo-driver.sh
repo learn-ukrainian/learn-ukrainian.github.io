@@ -10,6 +10,14 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT/scripts/lib/launcher_core.sh"
+# The lane is fixed: a caller --epic would move the kube-dojo work onto another lane's
+# lease and handoff, so refuse it before any side effect.
+for arg in "$@"; do
+  case "$arg" in
+    --) break ;;
+    --epic|--epic=*) launcher_error "start-kube-dojo-driver.sh fixes --epic kube-dojo; remove the caller --epic."; exit 2 ;;
+  esac
+done
 # The lane and the first-run instruction are fixed wrapper options: scope re-entry and
 # successors replay only the caller's argv, and this wrapper adds them exactly once.
 LC_WRAPPER_LAUNCHER_ARGS=(
