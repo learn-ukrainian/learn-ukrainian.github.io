@@ -84,7 +84,7 @@ jinja2>=3.1
 graphql-core==3.3.1  # scripts/common/github_client.py (imported only when a document can write)
 
 # TypeSafe System One (Jev) — curriculum / open-model triage (#8177–#8179)
-typesafe-sdk>=0.7.0
+typesafe-sdk>=0.7.5
 
 # Security floors (transitive deps held above their vulnerable range)
 # zeroconf comes via mcp-memory-service; CVE-2026-48045 / GHSA-9663-mqmp-p9mm
