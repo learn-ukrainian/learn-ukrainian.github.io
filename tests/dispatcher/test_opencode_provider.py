@@ -41,9 +41,12 @@ def funded(monkeypatch):
         if url.endswith("/credits"):
             return 200, {"data": {"total_credits": balances["openrouter"], "total_usage": 0}}, None
         assert url.endswith("/key")
-        return 200, {"data": {"limit_remaining": None}}, None
+        return 200, {"data": {"limit": None, "limit_remaining": None}}, None  # a key without a cap
 
     monkeypatch.setattr(usage, "_http_json_request", request)
+    # The OpenRouter launch resolves to the injected pins alone: no inherited override, no checkout config.
+    monkeypatch.setattr(opencode, "_resolved_config", lambda env: json.loads(opencode._OPENROUTER_CONFIG))
+    monkeypatch.setattr(opencode, "_project_config", lambda *a: [])
     return SimpleNamespace(keys=keys, balances=balances)
 
 
@@ -81,10 +84,14 @@ def test_openrouter_build_pins_v41_flash_and_allow_list(spec, funded, dispatch):
     assert argv[argv.index("--model") + 1] == OPENROUTER_MODEL
     config = json.loads(invocation.env["OPENCODE_CONFIG_CONTENT"])
     assert config["small_model"] == OPENROUTER_MODEL  # the title call never reaches another model
-    models = config["provider"]["openrouter"]["models"]
-    assert list(models) == ["deepseek/deepseek-v4.1-flash"]
-    routing = models["deepseek/deepseek-v4.1-flash"]["options"]["provider"]
-    assert routing == {"only": US_PROVIDERS, "allow_fallbacks": False, "data_collection": "deny"}
+    assert config["enabled_providers"] == ["openrouter"]  # no other provider is reachable
+    assert {agent["model"] for agent in config["agent"].values()} == {OPENROUTER_MODEL}
+    openrouter = config["provider"]["openrouter"]
+    assert openrouter["whitelist"] == list(openrouter["models"]) == ["deepseek/deepseek-v4.1-flash"]
+    model = openrouter["models"]["deepseek/deepseek-v4.1-flash"]
+    routing = {"only": US_PROVIDERS, "allow_fallbacks": False, "data_collection": "deny"}
+    assert model["id"] == "deepseek/deepseek-v4.1-flash"
+    assert model["options"]["provider"] == model["variants"]["high"]["provider"] == routing
     assert json.loads(invocation.env["OPENCODE_PERMISSION"])["edit"] == "deny"  # read-only lock unchanged
     assert dispatch("--provider", "openrouter")["provider"] == "openrouter"
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import subprocess
 from pathlib import Path
 
 from scripts.common.jsonl import jsonl_lines
@@ -37,19 +38,35 @@ _READ_ONLY_PERMISSION = json.dumps(
 DEFAULT_ENDPOINT = "deepseek"
 MODELS = {"deepseek": "deepseek/deepseek-flash", "openrouter": "openrouter/deepseek/deepseek-v4.1-flash"}
 OPENROUTER_PROVIDERS = ("fireworks/us", "baseten/us", "inference-net/us")
-# OpenCode also sends the prompt to a "small model" for the session title; on OpenRouter its
-# default is another vendor's model, so it is pinned to the same model and allow-list.
+_OPENROUTER_MODEL_ID = MODELS["openrouter"].removeprefix("openrouter/")
+_ROUTING = {"only": list(OPENROUTER_PROVIDERS), "allow_fallbacks": False, "data_collection": "deny"}
+# OpenCode deep-merges this over the operator's and the checkout's config, and the merge keeps
+# inherited keys (https://opencode.ai/docs/config/). So it pins what decides each call: only the
+# OpenRouter provider is enabled and only the pinned model exists on it, under its own id. Routing
+# sits in the model options (title calls) and the high variant, which OpenCode applies last. The
+# title, summary and compaction agents use the same model. Whatever this cannot pin is checked on
+# the resolved config before spawn (``_config_conflict``).
+_OPENROUTER_PROVIDER = {
+    "whitelist": [_OPENROUTER_MODEL_ID],
+    "models": {_OPENROUTER_MODEL_ID: {
+        "id": _OPENROUTER_MODEL_ID, "options": {"provider": _ROUTING}, "variants": {"high": {"provider": _ROUTING}},
+    }},
+}
+_PINNED_AGENTS = ("build", "title", "summary", "compaction")
 _OPENROUTER_CONFIG = json.dumps(
     {
+        "enabled_providers": ["openrouter"],
         "small_model": MODELS["openrouter"],
-        "provider": {"openrouter": {"models": {MODELS["openrouter"].removeprefix("openrouter/"): {"options": {
-            "provider": {"only": list(OPENROUTER_PROVIDERS), "allow_fallbacks": False, "data_collection": "deny"},
-        }}}}},
+        "agent": {name: {"model": MODELS["openrouter"]} for name in _PINNED_AGENTS},
+        "provider": {"openrouter": _OPENROUTER_PROVIDER},
     },
     separators=(",", ":"),
 )
+# OpenCode merges a checkout's own config files and directory below the injected config.
+_PROJECT_CONFIG = ("opencode.json", "opencode.jsonc", ".opencode")
 _BUDGETS = Path(__file__).resolve().parents[2] / "config" / "agent_budgets.yaml"
 _PROBE_TIMEOUT_S = 10.0
+_CONFIG_TIMEOUT_S = 60.0
 
 
 def endpoint(provider: str | None) -> str:
@@ -86,15 +103,82 @@ def _remaining_usd(selected: str, key: str) -> float | None:
     data = payload.get("data") if isinstance(payload, dict) else None
     if status != 200 or not isinstance(data, dict):
         return None
-    cap = usage._coerce_float(data.get("limit_remaining"))
-    return min(total - used, cap) if cap is not None else total - used
+    # OpenRouter reports a key without a cap as both fields null; anything else unreadable is unknown.
+    if "limit" not in data or "limit_remaining" not in data:
+        return None
+    if data["limit"] is None and data["limit_remaining"] is None:
+        return total - used
+    cap = usage._coerce_float(data["limit_remaining"])
+    return None if cap is None else min(total - used, cap)
 
 
-def endpoint_refusal(provider: str | None) -> str | None:
+def _config_conflict(resolved: object) -> str | None:
+    """Why OpenCode's resolved config could reach another model or provider route, or None."""
+    if not isinstance(resolved, dict):
+        return "the resolved config could not be read"
+    if resolved.get("enabled_providers") != ["openrouter"]:
+        return "enabled_providers is overridden"
+    if resolved.get("plugin"):
+        return "a plugin is configured"
+    if resolved.get("small_model") != MODELS["openrouter"]:
+        return "small_model is overridden"
+    if (resolved.get("provider") or {}).get("openrouter") != _OPENROUTER_PROVIDER:
+        return "the openrouter provider block is overridden"
+    for kind in ("agent", "mode"):
+        entries = resolved.get(kind) or {}
+        if not isinstance(entries, dict):
+            return f"{kind} could not be read"
+        for name, entry in entries.items():
+            # Agent options are merged over the model's routing options on every call.
+            if not isinstance(entry, dict) or entry.get("options"):
+                return f"{kind} {name!r} sets request options"
+            if name in _PINNED_AGENTS and entry.get("model", MODELS["openrouter"]) != MODELS["openrouter"]:
+                return f"{kind} {name!r} sets another model"
+    return None
+
+
+def _resolved_config(env: dict[str, str]) -> object:
+    """OpenCode's resolved config under the OpenRouter launch environment, or None. Never logged."""
+    try:
+        done = subprocess.run(
+            ["opencode", "debug", "config"], env={**env, "OPENCODE_CONFIG_CONTENT": _OPENROUTER_CONFIG},
+            cwd=env.get("HOME") or Path.home(), capture_output=True, text=True, timeout=_CONFIG_TIMEOUT_S, check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    try:
+        return json.loads(done.stdout) if done.returncode == 0 else None
+    except ValueError:
+        return None
+
+
+def _project_config(worktree: Path, repo: Path | None, sha: str | None) -> list[str] | None:
+    """The checkout's OpenCode config paths (existing directory or start commit), or None when unreadable."""
+    found = [name for name in _PROJECT_CONFIG if (worktree / name).exists()]
+    if repo is not None and sha:
+        try:
+            done = subprocess.run(
+                ["git", "-C", str(repo), "ls-tree", "--name-only", sha, "--", *_PROJECT_CONFIG],
+                capture_output=True, text=True, timeout=_CONFIG_TIMEOUT_S, check=False,
+            )
+        except (OSError, subprocess.SubprocessError):
+            return None
+        if done.returncode:
+            return None
+        found += done.stdout.split()
+    return sorted(set(found))
+
+
+def endpoint_refusal(
+    provider: str | None, env: dict[str, str] | None = None, *,
+    worktree: Path | None = None, repo: Path | None = None, sha: str | None = None,
+) -> str | None:
     """The typed refusal for the selected endpoint before spawn, or None when it may run.
 
     An endpoint with no configured access, an unreadable balance or a balance below its
-    ``dispatch_floor_usd`` is refused; the other endpoint is never tried instead.
+    ``dispatch_floor_usd`` is refused; the other endpoint is never tried instead. The OpenRouter
+    endpoint is also refused when the checkout carries OpenCode config or the resolved config
+    could still route a call off the pinned model or provider allow-list.
     """
     import yaml
 
@@ -105,6 +189,14 @@ def endpoint_refusal(provider: str | None) -> str | None:
     key = loader()
     if not key:
         return f"opencode_endpoint_no_access: {selected} has no configured API key"
+    if selected == "openrouter":
+        project = _project_config(worktree, repo, sha) if worktree is not None else []
+        if project is None:
+            return "opencode_endpoint_config_conflict: openrouter: the checkout's OpenCode config could not be read"
+        if project:
+            return f"opencode_endpoint_config_conflict: openrouter: the checkout carries OpenCode config {', '.join(project)}"
+        if conflict := _config_conflict(_resolved_config(env or {})):
+            return f"opencode_endpoint_config_conflict: openrouter: {conflict}"
     floor = float((yaml.safe_load(_BUDGETS.read_text(encoding="utf-8")) or {})[selected]["dispatch_floor_usd"])
     remaining = _remaining_usd(selected, key)
     if not isinstance(remaining, (int, float)) or isinstance(remaining, bool) or not math.isfinite(remaining):

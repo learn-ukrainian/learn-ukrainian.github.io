@@ -469,7 +469,9 @@ def _dispatch(args) -> int:
     )
     checks.check_private_input(spec, info["key"])
     # Before any worktree or task record: an endpoint without access or funds is refused, never switched.
-    if agent == "opencode" and (refusal := opencode.endpoint_refusal(spec.provider)):
+    if agent == "opencode" and (refusal := opencode.endpoint_refusal(
+        spec.provider, child_env(spec), worktree=worktree, repo=None if args.cwd else repo, sha=sha,
+    )):
         raise ValueError(refusal)
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
         raise ValueError(refusal)

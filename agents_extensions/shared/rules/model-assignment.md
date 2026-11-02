@@ -428,8 +428,11 @@ or count as a formal review.
   The endpoint is explicit: `--agent opencode` runs the direct API by default, and
   `--provider openrouter` runs OpenRouter. Both are recorded on the task record. **US provider allow-list** (CTO decision 2026-11-01, #12376): OpenRouter
   model `deepseek/deepseek-v4.1-flash` only on `fireworks/us`, `baseten/us`, `inference-net/us`,
-  with no provider fallback and `data_collection: deny`. OpenCode's session-title model is pinned to the same model. An endpoint with no key, an unreadable balance or a balance
-  below its `dispatch_floor_usd` (`scripts/config/agent_budgets.yaml`) is refused before spawn.
+  with no provider fallback and `data_collection: deny`. Only that provider and model are enabled for the
+  run, including OpenCode's title, summary and compaction calls. An endpoint with no key, an unreadable
+  balance or a balance below its `dispatch_floor_usd` (`scripts/config/agent_budgets.yaml`) is refused
+  before spawn. OpenRouter is also refused when the checkout carries OpenCode config, or when the
+  resolved OpenCode config could still route a call elsewhere.
   It is never switched to the other endpoint. `scripts/ai_agent_bridge/routing_guard.py` still
   refuses `openrouter/deepseek` for bridge routing; the dispatcher route above is the only OpenRouter path.
 * **Pool/Laguna**: retired, not subscribed (operator 2026-10-23). Do not route.
