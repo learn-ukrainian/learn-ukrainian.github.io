@@ -30,7 +30,6 @@ ASK_SEATS = (
     ("ask-glm", "_handle_ask_glm", "glm"),
     ("ask-gemma", "_handle_ask_gemma", "gemma"),
     ("ask-cursor", "_handle_ask_cursor", "cursor"),
-    ("ask-hermes", "_handle_ask_hermes", "hermes"),
     ("ask-deepseek", "_handle_ask_deepseek", "deepseek"),
     ("ask-pool", "_handle_ask_pool", "pool"),
 )
@@ -629,14 +628,12 @@ def test_compat_ask_fails_before_provider_invocation_when_provider_binary_is_mis
     monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
 
     with pytest.raises(ValueError) as exc_info:
-        _acp_compat._run_compat_ask_impl("hermes", "question", task_id="dead-seat")
+        _acp_compat._run_compat_ask_impl("deepseek", "question", task_id="dead-seat")
 
     message = str(exc_info.value)
-    # The DeepSeek participant rides the opencode transport since the Hermes
-    # removal (#6805): the admission refusal names the binary that is actually
-    # required now, with the opencode remediation — never the dead hermes path.
+    # The DeepSeek participant rides the opencode transport (#6805): the
+    # admission refusal names the binary that is actually required.
     assert "opencode binary not found on PATH" in message
-    assert "hermes binary not found on PATH" not in message
     assert "docs/runbooks/agent-seat-onboarding.md" in message
     assert invoke.call_count == 0
 

@@ -2,7 +2,7 @@
 
 Historical registry/bridge key was ``grok-build`` (permanent alias). Prefer
 WRITE of the canonical seat ``grok``; dual-READ accepts messages addressed
-to either id. Distinct from the demoted Hermes path ``grok-hermes``.
+to either id.
 Bridge calls use ``agent_runtime.runner.invoke`` so process management,
 telemetry, timeouts, and parsing stay centralized.
 """
@@ -593,7 +593,7 @@ Attached data:
 Standing rules for bridge Q&A:
 - Respond directly and concisely.
 - Do NOT use broker or MCP messaging tools to send your response; output it directly.
-- This is the native grok-build lane. Do not route through Hermes/OpenRouter.
+- This is the native grok-build lane.
 """
     return bridge_prompt(
         prompt,
