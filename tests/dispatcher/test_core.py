@@ -2557,6 +2557,16 @@ def test_failed_git_call_reports_its_operation_and_first_stderr_line_without_sec
     assert "exited 128: fatal: could not read from" in message
     assert "second line" not in message
     assert "token" not in message and "/home/ops/private" not in message
+    for stderr, leaked in (
+        ("remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
+        ("fatal: Unable to create '/synthetic/private directory/worktree/index.lock': Permission denied", "index.lock"),
+    ):
+        monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=subprocess.CalledProcessError(
+            128, ["git", "-C", "/home/ops/private", "rev-parse", "--verify", "topic^{commit}"], stderr=stderr)))
+        assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
+        message = capsys.readouterr().err
+        assert message.startswith("dispatcher: CalledProcessError: git rev-parse --verify topic^{commit} exited 128:")
+        assert leaked not in message and "synthetic" not in message.lower()
 
 
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):

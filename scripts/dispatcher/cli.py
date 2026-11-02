@@ -655,16 +655,26 @@ def _status_or_fail(args: argparse.Namespace) -> int:
 
 
 _URL_USERINFO = re.compile(r"(?<=://)[^/@\s]+@")
+_QUOTED = re.compile(r"""'[^']*'|"[^"]*\"""")
+_CREDENTIAL_WORD = re.compile(r"authoriz|bearer|token|secret|passw|credential|api[_-]?key|cookie", re.IGNORECASE)
+
+
+def _diagnostic_text(text: str) -> str:
+    """``text`` safe to print: no URL credentials, quoted spans (paths with spaces), paths or credential lines."""
+    from scripts.orchestration.dispatch_admission import redact_paths
+
+    if _CREDENTIAL_WORD.search(_URL_USERINFO.sub("", text)):
+        return "<redacted: possible credential>"
+    return redact_paths(_QUOTED.sub("'<redacted>'", _URL_USERINFO.sub("", text)))
 
 
 def _failed_operation(exc: subprocess.CalledProcessError) -> str:
     """``CalledProcessError: <command> exited <rc>: <first stderr line>``, without secrets (#12468).
 
-    The command drops ``-C <path>`` and ``-c <key=value>`` (a path or a configured value),
-    URL credentials are removed everywhere, and only the first stderr line is kept.
+    The command drops ``-C <path>`` and ``-c <key=value>`` (a path or a configured value). Only the first
+    stderr line is kept, and both parts go through :func:`_diagnostic_text`, which fails closed on a line
+    that mentions a credential.
     """
-    from scripts.orchestration.dispatch_admission import redact_paths
-
     words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
     kept, skip = [], False
     for word in words:
@@ -676,8 +686,8 @@ def _failed_operation(exc: subprocess.CalledProcessError) -> str:
             kept.append(word)
     stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
     first = next((line.strip() for line in stderr.splitlines() if line.strip()), "")
-    text = redact_paths(_URL_USERINFO.sub("", f"{' '.join(kept)} exited {exc.returncode}: {first}".rstrip(": ")))
-    return f"CalledProcessError: {text}"
+    detail = f": {_diagnostic_text(first)}" if first else ""
+    return f"CalledProcessError: {_diagnostic_text(' '.join(kept))} exited {exc.returncode}{detail}"
 
 
 def main(argv=None) -> int:
