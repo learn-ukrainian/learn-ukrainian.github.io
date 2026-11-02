@@ -2506,6 +2506,38 @@ def test_stale_local_ref_never_yields_read_only_checkout_at_stale_commit(sandbox
     assert not (sandbox.tasks / "stale-local-ref-short.json").exists()
 
 
+def test_failed_git_call_reports_its_operation_and_a_constant_summary_without_secrets(capsys, monkeypatch):
+    """Defect (#12468): a failed git call printed only the exception class name.
+
+    Nothing user-controlled is printed: the subcommand and a summary chosen from the first stderr line, both
+    constants. Every disclosure probe from the review of the first attempt must end in them.
+    """
+    def fail(command, stderr):
+        error = subprocess.CalledProcessError(128, [command[0], "-C", "/home/ops/private", *command[1:]], stderr=stderr)
+        monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=error))
+        assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
+        return capsys.readouterr().err
+
+    assert fail(["git", "rev-parse", "--verify", "topic^{commit}"], "fatal: Needed a single revision") == (
+        "dispatcher: CalledProcessError: git rev-parse exited 128: needed a single revision\n")
+    assert fail(["git", "fetch", "--", "https://user:token@example.com/org/repo.git", "abc"],
+                "fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n") == (
+        "dispatcher: CalledProcessError: git fetch exited 128: remote not reachable\n")
+    assert fail(["curl", "https://example.com"], "secret") == "dispatcher: CalledProcessError: external command exited 128\n"
+    summaries = {text for _pattern, text in cli._GIT_FAILURES} | {cli.UNRECOGNIZED_GIT_FAILURE}
+    for command, stderr, leaked in (
+        (["git", "fetch"], "remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
+        (["git", "fetch"], "remote: Password: shallow branch denied object", "shallow"),
+        (["git", "fetch"], "fatal: cannot open '/synthetic/Acme Open Access Client/repo': denied", "Access"),
+        (["git", "fetch"], "fatal: Unable to create '/synthetic/private directory/worktree/index.lock': denied", "worktree"),
+        (["git", "worktree", "add", "--no-checkout", "worktree", "status"], "remote: secret", "worktree status"),
+        (["git", "fetch", "user:syntheticsecret"], "fatal: denied", "syntheticsecret"),
+    ):
+        message = fail(command, stderr)
+        assert message.rstrip("\n").rsplit(": ", 1)[1] in summaries
+        assert leaked not in message and "synthetic" not in message.lower() and "/home/ops/private" not in message
+
+
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")
