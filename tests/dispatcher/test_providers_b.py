@@ -251,7 +251,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         proc.stdout.decode(), proc.stderr.decode(), proc.returncode, final_text
     ) == ParsedResult(
         "Finished.", {"input_tokens": 7, "output_tokens": 3}, None,
-        sources_mcp_call_count=0 if provider == "claude" else None,
+        sources_mcp_call_count=0 if provider in ("claude", "codex") else None,
     )
     if provider == "claude":
         env["CLAUDE_CONFIG_DIR"] = str(tmp_path / "selected-account-b")
@@ -370,7 +370,7 @@ def test_missing_usage_remains_none_and_information_does_not_change_success(prov
         events.append(metadata)
     stdout = "\n".join(json.dumps(event) for event in events)
     assert load(provider).parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", None, None, sources_mcp_call_count=0 if provider == "claude" else None
+        "Finished.", None, None, sources_mcp_call_count=0 if provider in ("claude", "codex") else None
     )
 
 
@@ -398,7 +398,7 @@ def test_cursor_message_content_does_not_lose_assistant_text(content):
 def test_codex_turn_usage_is_read_without_token_event():
     stdout = '{"type":"turn.completed","usage":{"input_tokens":4,"output_tokens":2}}'
     assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 4, "output_tokens": 2}, None
+        "Finished.", {"input_tokens": 4, "output_tokens": 2}, None, sources_mcp_call_count=0
     )
 
 
@@ -408,7 +408,7 @@ def test_codex_error_notice_can_retry_before_successful_completion(separator):
     notice = json.dumps({"type": "error", "message": f"Retry{separator}notice"}, ensure_ascii=False)
     stdout = notice + "\n" + SUCCESS["codex"] + " \t\r\n"
     assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 7, "output_tokens": 3}, None
+        "Finished.", {"input_tokens": 7, "output_tokens": 3}, None, sources_mcp_call_count=0
     )
 
 
@@ -453,7 +453,7 @@ def test_codex_terminal_not_last_rejected_without_overwriting_completion_usage(l
     """codex-terminal-not-last: any nonblank record after a terminal invalidates this invocation."""
     stdout = '{"type":"turn.completed","usage":{"input_tokens":4,"output_tokens":2}}\n'
     assert load("codex").parse(stdout + later + "\n", "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 4, "output_tokens": 2}, error
+        "Finished.", {"input_tokens": 4, "output_tokens": 2}, error, sources_mcp_call_count=0
     )
 
 
@@ -1081,3 +1081,38 @@ def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tm
         from scripts.dispatcher.agy_sandbox import _remove
 
         _remove(tmp_path / "scratch-killed")
+
+
+
+def _codex_mcp_item(item_id, server, status, *, error=None, kind="item.completed", item_type="mcp_tool_call"):
+    return {"type": kind, "item": {"id": item_id, "type": item_type, "server": server,
+                                   "tool": "verify_word", "result": None, "error": error, "status": status}}
+
+
+def _codex_stream(*events):
+    done = [{"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}}]
+    return "".join(json.dumps(event) + "\n" for event in [{"type": "turn.started"}, *events, *done])
+
+
+def test_codex_stream_with_completed_sources_calls_reports_their_count():
+    stream = _codex_stream(
+        _codex_mcp_item("item_1", "sources", "in_progress", kind="item.started"),
+        _codex_mcp_item("item_1", "sources", "completed"),
+        _codex_mcp_item("item_2", "sources", "completed"),
+    )
+    parsed = load("codex").parse(stream, "", 0, "VERDICT: APPROVE")
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 2
+
+
+def test_codex_failed_or_non_sources_mcp_calls_do_not_count():
+    stream = _codex_stream(
+        _codex_mcp_item("item_1", "sources", "failed"),
+        _codex_mcp_item("item_2", "sources", "completed", error={"message": "boom"}),
+        _codex_mcp_item("item_3", "codex_apps", "completed"),
+        _codex_mcp_item("item_4", "sources", "in_progress", kind="item.started"),
+        _codex_mcp_item("item_5", "sources", "completed", item_type="command_execution"),
+    )
+    parsed = load("codex").parse(stream, "", 0, "VERDICT: APPROVE")
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 0

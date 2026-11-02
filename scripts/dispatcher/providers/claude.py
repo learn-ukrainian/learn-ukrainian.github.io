@@ -8,6 +8,7 @@ from pathlib import Path
 
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.jsonl import jsonl_lines
+from scripts.dispatcher.providers.stream_json import SOURCES_SERVER
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 from scripts.lib import rules_core
 
@@ -35,7 +36,7 @@ _READ_TOOLS = (
 # project settings that approve .mcp.json servers anyway. Only the tools the server annotates read-only
 # are allowed, so authors, judges and fixers can check their own words; the ones that persist fetched
 # entries (sources_read_only.sources_tool_sets) are denied by name.
-_SOURCES_SERVER = "sources"
+_SOURCES_SERVER = SOURCES_SERVER
 _WRITE_TOOLS = "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
 _READ_DENIES = (
     "Edit,Write,NotebookEdit,Bash(git push *),Bash(git commit *),Bash(git merge *),"
