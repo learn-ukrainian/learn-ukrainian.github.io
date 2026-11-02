@@ -145,6 +145,9 @@ _claude_account_scheduler_thread: threading.Thread | None = None
 _claude_account_refresh_lock = threading.Lock()
 _claude_account_oneshot_lock = threading.Lock()
 _claude_account_oneshot_thread: threading.Thread | None = None
+# Monotonic time when the last Claude-account probe batch started. The
+# scheduler and an on-demand kick share it: both probe every account together.
+_claude_account_probe_started_at: float | None = None
 _last_refresh_started_at: float | None = None
 _last_refresh_finished_at: float | None = None
 _cursor_last_good: tuple[float, dict[str, Any]] | None = None
@@ -3143,19 +3146,54 @@ def _refresh_claude_accounts_live() -> None:
 
 def _run_claude_account_refresh(*, wait: bool = False) -> None:
     """Probe Claude accounts once. A non-waiting caller no-ops if one probe is in flight."""
+    global _claude_account_probe_started_at
     if not _claude_account_refresh_lock.acquire(blocking=wait):
         return
+    # Start-to-start, same clock as the scheduler. A caller that loses the lock
+    # has not started a probe.
+    _claude_account_probe_started_at = time.monotonic()
     try:
         _refresh_claude_accounts_live()
     finally:
         _claude_account_refresh_lock.release()
 
 
+def _claude_account_probe_in_flight() -> bool:
+    """True while the scheduler or an on-demand kick is inside a probe."""
+    if _claude_account_refresh_lock.locked():
+        return True
+    thread = _claude_account_oneshot_thread
+    return thread is not None and thread.is_alive()
+
+
+def _claude_account_reading_past_ttl() -> bool:
+    """True when any cached account row is older than the cache TTL.
+
+    ``claude_accounts_snapshot`` only lstats and never starts a probe. An
+    unknown row is not past TTL: a missing reading is not a stale one.
+    """
+    from scripts.api.claude_account_usage import claude_accounts_snapshot  # noqa: PLC0415, I001  # lazy-ok: import cycle
+
+    rows = claude_accounts_snapshot()
+    return any(bool(row.get("stale")) for row in rows.values() if isinstance(row, dict))
+
+
 def trigger_claude_account_refresh() -> None:
-    """Start one Claude-account probe without waiting on any other lane."""
+    """Start one Claude-account probe without waiting on any other lane.
+
+    On-demand only. The scheduler calls ``_run_claude_account_refresh`` on
+    its own cadence. A kick starts a probe when the last one started more
+    than the scheduler interval ago, or a reading is past the cache TTL,
+    and never while a probe is already in flight. Every account is probed
+    together, so that start time is each account's last probe start.
+    """
     global _claude_account_oneshot_thread
     with _claude_account_oneshot_lock:
-        if _claude_account_oneshot_thread is not None and _claude_account_oneshot_thread.is_alive():
+        if _claude_account_probe_in_flight():
+            return
+        started = _claude_account_probe_started_at
+        interval_elapsed = started is None or (time.monotonic() - started) > _codexbar_refresh_interval_s()
+        if not interval_elapsed and not _claude_account_reading_past_ttl():
             return
         _claude_account_oneshot_thread = threading.Thread(
             target=_run_claude_account_refresh,
