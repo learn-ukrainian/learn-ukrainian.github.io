@@ -1,12 +1,18 @@
-"""#12378 under REVIEW-BOUNDARY-1101: review execution exists only inside the AGY read-only boundary."""
+"""#12378 under REVIEW-BOUNDARY-1101: review execution exists only inside the read-only boundary.
+
+Read-only AGY runs whole inside it; read-only native Claude runs each Bash command inside it.
+"""
 
 import ipaddress
 import json
+import os
+import shutil
 import subprocess
 
 import pytest
 
 from scripts.agent_runtime.attempt_network import load_allowlist
+from scripts.common.repo_root import project_interpreter
 from scripts.dispatcher import agy_sandbox
 from tests.dispatcher.test_providers_b import _bwrap_usable, _launch, _linked_worktree
 
@@ -50,6 +56,10 @@ _CASES = {
     "F2-curl-rfc1918-direct": (False, "curl -sS --noproxy '*' --max-time 5 http://{private}/"),
     "F2-fetch-metadata": (False, f"{_PY} -c \"import urllib.request as u; "
                                  "u.urlopen('https://{metadata}/latest/meta-data/', timeout=10)\""),
+    # GitHub writes through gh: native Claude's gh relay refuses them; AGY's sandbox has no gh login.
+    "F1-gh-pr-merge": (False, "gh pr merge 1 --squash"),
+    "F1-gh-api-post": (False, "gh api -X POST repos/example/repo/issues -f title=x"),
+    "F1-gh-pr-view-web": (False, "gh pr view 1 -cw"),
     "granted-shell-scratch": (True, "echo ok > \"$TMPDIR/probe\" && cat \"$TMPDIR/probe\""),
     "granted-interpreter": (True, f"{_PY} -c \"import pytest; print('interpreter-ok')\""),
     "granted-named-test": (True, f"{_PY} -m pytest -q -p no:cacheprovider test_probe.py"),
@@ -58,13 +68,58 @@ _CASES = {
 }
 
 
+# Claude Code's prefix wrapper ends this way; the boundary must return the working-directory record.
+_CLAUDE_WRAPPER = "source /nonexistent/snapshot.sh 2>/dev/null || true && eval {command} < /dev/null && pwd -P >| {cwd_file}"
+
+
+def _claude_shell(tmp_path, worktree, task_id, command, prefix=agy_sandbox.SHELL_PREFIX):
+    """Run ``command`` the way Claude Code runs a Bash call under CLAUDE_CODE_SHELL_PREFIX."""
+    claude_tmp = tmp_path / "claude-tmp"
+    claude_tmp.mkdir(exist_ok=True)
+    cwd_file = claude_tmp / "claude-ab12-cwd"
+    script = _CLAUDE_WRAPPER.format(command="'" + command.replace("'", "'\\''") + "'", cwd_file=cwd_file)
+    env = {**os.environ, "CLAUDE_CODE_TMPDIR": str(claude_tmp),
+           agy_sandbox.SHELL_ENV_PYTHON: str(project_interpreter()), agy_sandbox.SHELL_ENV_TASK: task_id,
+           agy_sandbox.SHELL_ENV_WORKTREE: str(worktree), agy_sandbox.SHELL_ENV_LOG: str(tmp_path / f"{task_id}.shell.jsonl")}
+    return [str(prefix), script], env, cwd_file
+
+
+def _claude_receipt(tmp_path, task_id):
+    lines = (tmp_path / f"{task_id}.shell.jsonl").read_text().splitlines()
+    assert len(lines) == 1
+    receipt = json.loads(lines[0])
+    receipt["canary"] = {"passed": receipt.pop("canary_passed")}
+    return receipt
+
+
+# Claude's shell prefix must load boundary code only from the dispatcher checkout it really lives in.
+_PREFIX_CASES = {"F3-prefix-root-not-checkout": "root_not_checkout",
+                 "F3-prefix-root-is-reviewed-worktree": "root_is_reviewed_worktree"}
+
+
 @pytest.mark.skipif(not _bwrap_usable(), reason="needs a usable unprivileged bubblewrap")
-@pytest.mark.parametrize("case", sorted(_CASES))
-def test_agy_review_boundary_refuses_bypass_classes_and_keeps_execution(tmp_path, case):
+@pytest.mark.parametrize("route,case", [*((route, case) for route in ("agy", "claude") for case in sorted(_CASES)),
+                                        *(("claude", case) for case in _PREFIX_CASES)])
+def test_review_boundary_refuses_bypass_classes_and_keeps_execution(tmp_path, route, case):
     """Defect: a review shell or interpreter publishes, writes the primary checkout or reaches a private address."""
-    granted, template = _CASES[case]
     worktree, _head = _linked_worktree(tmp_path)
+    if case in _PREFIX_CASES:
+        base = tmp_path / "loose" if case == "F3-prefix-root-not-checkout" else worktree
+        prefix = base / "scripts" / "dispatcher" / "claude_review_shell"
+        prefix.parent.mkdir(parents=True)
+        shutil.copy2(agy_sandbox.SHELL_PREFIX, prefix)
+        marker = tmp_path / "ran"
+        argv, env, _cwd_file = _claude_shell(tmp_path, worktree, "prefix", f"touch {marker}", prefix=prefix)
+        run = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=60, check=False, cwd=worktree)
+        assert (run.returncode, run.stderr) == (
+            125, f"claude read-only boundary refused: claude_review_shell_{_PREFIX_CASES[case]}\n")
+        assert not marker.exists()
+        return
+    granted, template = _CASES[case]
     primary = tmp_path / "repo"
+    if route == "claude":  # as the project's .gitignore does; a shell command keeps the .venv link it adds
+        with (primary / ".git" / "info" / "exclude").open("a") as exclude:
+            exclude.write(".venv\n")
     (worktree / "test_probe.py").write_text("def test_probe():\n    assert 1 + 1 == 2\n")
     subprocess.run(["git", "-C", str(worktree), "add", "test_probe.py"], check=True, timeout=30)
     subprocess.run(["git", "-C", str(worktree), "-c", "user.email=s@example.invalid", "-c", "user.name=S",
@@ -75,9 +130,16 @@ def test_agy_review_boundary_refuses_bypass_classes_and_keeps_execution(tmp_path
     subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True, timeout=30)
     command = template.format(remote=remote, primary=primary, metadata=ipaddress.ip_address(2852039166),
                               private=ipaddress.ip_address(167772161))
-    argv, env = _launch(tmp_path, worktree, "adversarial", ["/bin/sh", "-c", command])
+    scratches = set(agy_sandbox.ensure_scratch_root().glob("claude-shell-*"))
+    if route == "agy":
+        argv, env = _launch(tmp_path, worktree, "adversarial", ["/bin/sh", "-c", command])
+    else:
+        argv, env, cwd_file = _claude_shell(tmp_path, worktree, "adversarial", command)
     run = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=180, check=False, cwd=worktree)
-    receipt = json.loads((tmp_path / "adversarial.sandbox.json").read_text())
+    if route == "agy":
+        receipt = json.loads((tmp_path / "adversarial.sandbox.json").read_text())
+    else:
+        receipt = _claude_receipt(tmp_path, "adversarial")
     assert receipt["status"] == "ran" and receipt["canary"]["passed"] is True, (receipt.get("reason"), run.stderr)
     if granted:
         assert run.returncode == 0, run.stdout + run.stderr
@@ -88,6 +150,16 @@ def test_agy_review_boundary_refuses_bypass_classes_and_keeps_execution(tmp_path
                           timeout=30).stdout == ""
     assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
     assert not (primary / "review-mutation-probe").exists()
-    assert not (worktree / ".venv").exists()  # the boundary removes the link it created
-    allowlist = load_allowlist("agy")
-    assert all(record["destination"].split(":")[0] in allowlist for record in receipt.get("egress", []))
+    if route == "agy":
+        assert not (worktree / ".venv").exists()  # the boundary removes the link it created
+        allowlist = load_allowlist("agy")
+        assert all(record["destination"].split(":")[0] in allowlist for record in receipt.get("egress", []))
+    else:
+        # The shell has no network and no egress proxy; the link stays for the run's next command.
+        assert "egress" not in receipt
+        assert (worktree / ".venv").resolve() == project_interpreter().parent.parent.resolve()
+        assert set(agy_sandbox.ensure_scratch_root().glob("claude-shell-*")) <= scratches  # removed with the command
+        if case.startswith("F1-gh-"):
+            assert receipt["gh"][0]["refused"] and "review boundary: " in run.stderr
+        if granted:
+            assert cwd_file.read_text().strip() == str(worktree.resolve())
