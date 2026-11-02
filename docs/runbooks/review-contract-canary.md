@@ -30,7 +30,11 @@ A canary task is pinned to a head with no `--branch` and no `--pr`, so it spends
 and `record_cf_verdict` refuses it ("review was not branch-pinned"). Its receipt is written to
 `batch_state/review-contract-canary/<head>/<route>.json` with `eligible_as_review: false`, outside
 the PR comments the verdict lookup reads. A receipt is a pointer to its task: the gate re-builds it
-from the settled task record and reply each time, so a receipt file alone admits nothing. It is
+from the settled task record and reply each time, so a receipt file alone admits nothing. Recording
+checks the reply is a canonical receipt with the recorder's copy of the contract (run `record` from
+the candidate worktree). The gate runs main's code and does not re-parse the reply: a verdict-bound
+task settles `done` only after the candidate dispatcher's own receipt gate accepted it, so a
+breaking contract change can still pass. It is
 bound to the exact head commit, which fixes the contract assets and the whole dispatcher tree, to
 the clean dispatcher checkout at that head that settled the task, and to the route and model. The review of record still follows `review-loop`, and
 the canary does not change who reviews, risk floors or round budgets.
@@ -60,7 +64,7 @@ done
 each task settles `done`, record it:
 
 ```bash
-"$PY" -m scripts.review.contract_canary record --task-id "$TASK" --pr "$PR"
+"$PY" -m scripts.review.contract_canary record --task-id "$TASK"
 ```
 
 `record` refuses a task that did not settle `done`, was not read-only and verdict-bound, was not

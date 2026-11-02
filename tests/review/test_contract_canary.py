@@ -88,7 +88,7 @@ def write_all(root: Path, head: str) -> None:
     for route in canary.required_routes():
         record = task(route, head)
         TASKS[record["task_id"]] = (record, RECEIPT)
-        receipt = canary.build_receipt(record, RECEIPT, pr=1, head=head)
+        receipt = canary.build_receipt(record, RECEIPT, head=head)
         path = canary.receipt_root(root) / head / f"{route}.json"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(receipt), encoding="utf-8")
@@ -132,7 +132,7 @@ def test_contract_change_is_refused_until_every_route_has_a_receipt(repo) -> Non
 def test_record_refuses_a_task_that_is_not_canary_evidence(repo, changes: dict, why: str) -> None:
     _, head = repo
     with pytest.raises(canary.CanaryError, match=why):
-        canary.build_receipt(task("claude", head, **changes), RECEIPT, pr=1, head=head)
+        canary.build_receipt(task("claude", head, **changes), RECEIPT, head=head)
 
 
 def test_a_verdict_line_is_not_a_canonical_receipt(repo) -> None:
@@ -140,7 +140,7 @@ def test_a_verdict_line_is_not_a_canonical_receipt(repo) -> None:
     text = "VERDICT: APPROVE\n"
     record = task("claude", head, result_sha256=hashlib.sha256(text.encode()).hexdigest())
     with pytest.raises(canary.CanaryError, match="canonical receipt"):
-        canary.build_receipt(record, text, pr=1, head=head)
+        canary.build_receipt(record, text, head=head)
 
 
 def test_receipts_bound_to_another_route_or_head_refuse(repo) -> None:
@@ -186,7 +186,21 @@ def test_a_reply_with_carriage_returns_keeps_its_byte_digest(tmp_path: Path, mon
     record = task("claude", head, result_file=str(result), result_sha256=hashlib.sha256(result.read_bytes()).hexdigest())
     monkeypatch.setattr(store, "read", lambda task_id: record)
     _, text = REAL_LOAD_TASK("t")
-    assert canary.build_receipt(record, text, pr=1, head=head)["result_sha256"] == record["result_sha256"]
+    assert canary.build_receipt(record, text, head=head)["result_sha256"] == record["result_sha256"]
+
+
+def test_the_gate_trusts_the_candidate_settlement_not_mains_contract(repo, tasks) -> None:
+    # A breaking contract change: main's parser would refuse the reply the candidate settled done.
+    root, head = repo
+    write_all(root, head)
+    reply = json.dumps({"schema_version": "code-review-findings.v2", "verdict": "approve"})
+    record, _ = tasks["contract-canary-1-codex"]
+    tasks["contract-canary-1-codex"] = ({**record, "result_sha256": hashlib.sha256(reply.encode()).hexdigest()}, reply)
+    path = canary.receipt_root(root) / head / "codex.json"
+    path.write_text(json.dumps({**json.loads(path.read_text()), "result_sha256": tasks["contract-canary-1-codex"][0]["result_sha256"]}))
+    assert canary.refusal([CONTRACT_FILE], head, root) is None
+    with pytest.raises(canary.CanaryError, match="canonical receipt"):
+        canary.build_receipt(tasks["contract-canary-1-codex"][0], reply, head=head)
 
 
 def test_the_gate_itself_is_a_contract_path() -> None:

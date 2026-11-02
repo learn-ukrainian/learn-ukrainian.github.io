@@ -77,7 +77,10 @@ def _formal_candidates() -> dict[str, list[Any]]:
 
 def required_routes() -> tuple[str, ...]:
     """Every active formal reviewer route in the catalog. An empty or unreadable catalog raises."""
-    routes = tuple(sorted(_formal_candidates()))
+    try:
+        routes = tuple(sorted(_formal_candidates()))
+    except Exception as exc:
+        raise CanaryError("reviewer routes unavailable") from exc
     if not routes or not all(ROUTE.fullmatch(route) for route in routes):
         raise CanaryError("reviewer routes unavailable")
     return routes
@@ -112,16 +115,15 @@ def _receipt_path(head: str, route: str, root: Path | None = None) -> Path:
     return receipt_root(root) / head / f"{route}.json"
 
 
-def build_receipt(record: Mapping[str, Any], result: str, *, pr: int, head: str) -> dict:
-    """The canary receipt for one settled task, or ``CanaryError`` naming why it is not one.
+def _settled_receipt(record: Mapping[str, Any], result: str, *, head: str) -> dict:
+    """The receipt a settled task supports, from facts no copy of the contract code changes.
 
     The receipt is bound to the exact head commit, which fixes the contract assets and the
     whole dispatcher tree, to the clean dispatcher checkout at that head that settled the
-    task, and to the route and model. It is built by whichever copy of this module runs, so
-    the gate re-builds it from the task rather than trusting a value the recorder computed.
+    task, and to the route and model. A verdict-bound task settles ``done`` only after that
+    candidate dispatcher's own receipt gate accepted its reply, so the gate, running main's
+    code, need not re-parse the reply with main's copy of the contract.
     """
-    from scripts.review.review_contract import ContractError, canonical_receipt_payload
-
     if not SHA.fullmatch(head):
         raise CanaryError("PR head is not a full commit SHA")
     checks = (
@@ -149,14 +151,9 @@ def build_receipt(record: Mapping[str, Any], result: str, *, pr: int, head: str)
         raise CanaryError(f"model {record.get('model')!r} is not a formal reviewer on route {route}")
     if record.get("result_sha256") != hashlib.sha256(result.encode()).hexdigest():
         raise CanaryError("result does not match the task record")
-    try:
-        canonical_receipt_payload(result)
-    except ContractError as exc:
-        raise CanaryError("result is not a canonical receipt") from exc
     return {
         "schema": SCHEMA,
         "eligible_as_review": False,
-        "pr": pr,
         "head": head,
         "route": route,
         "model": record["model"],
@@ -164,6 +161,22 @@ def build_receipt(record: Mapping[str, Any], result: str, *, pr: int, head: str)
         "result_sha256": record["result_sha256"],
         "dispatcher_head": code["head"],
     }
+
+
+def build_receipt(record: Mapping[str, Any], result: str, *, head: str) -> dict:
+    """The canary receipt for one settled task, or ``CanaryError`` naming why it is not one.
+
+    Recording also checks the reply is a canonical receipt with the recorder's copy of the
+    contract, which is the candidate's when ``record`` runs from the candidate worktree.
+    """
+    from scripts.review.review_contract import ContractError, canonical_receipt_payload
+
+    receipt = _settled_receipt(record, result, head=head)
+    try:
+        canonical_receipt_payload(result)
+    except ContractError as exc:
+        raise CanaryError("result is not a canonical receipt") from exc
+    return receipt
 
 
 def refusal(paths: Iterable[str], head: str, root: Path | None = None) -> str | None:
@@ -196,7 +209,7 @@ def refusal(paths: Iterable[str], head: str, root: Path | None = None) -> str | 
         try:
             # The file is a claim; the settled task it names is the evidence.
             task, result = _load_task(str(receipt.get("task_id")))
-            rebuilt = build_receipt(task, result, pr=receipt.get("pr"), head=head)
+            rebuilt = _settled_receipt(task, result, head=head)
         except Exception:
             return f"unverifiable: task behind the receipt for {route}"
         if rebuilt != receipt:
@@ -215,14 +228,14 @@ def _load_task(task_id: str) -> tuple[dict, str]:
     return task, Path(result_file).read_bytes().decode("utf-8")
 
 
-def record(task_id: str, pr: int, root: Path | None = None) -> Path:
+def record(task_id: str, root: Path | None = None) -> Path:
     """Write the receipt for one settled canary task at the head it reviewed.
 
     The keeper and ``pr-merge`` read receipts only at the PR's live head, so a receipt
     for any other head never admits anything.
     """
     task, result = _load_task(task_id)
-    receipt = build_receipt(task, result, pr=pr, head=str(task.get("head_sha")))
+    receipt = build_receipt(task, result, head=str(task.get("head_sha")))
     path = _receipt_path(receipt["head"], receipt["route"], root)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -235,7 +248,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     sub.add_parser("routes", help="Print the required reviewer routes")
     rec = sub.add_parser("record", help="Record one settled canary task as canary evidence")
     rec.add_argument("--task-id", required=True)
-    rec.add_argument("--pr", required=True, type=int)
     chk = sub.add_parser("check", help="Print the refusal for a PR head, if any")
     chk.add_argument("--head", required=True)
     chk.add_argument("paths", nargs="+")
@@ -244,7 +256,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "routes":
             print("\n".join(required_routes()))
         elif args.command == "record":
-            print(record(args.task_id, args.pr))
+            print(record(args.task_id))
         else:
             detail = refusal(args.paths, args.head)
             print(f"{REASON}: {detail}" if detail else "ok")
