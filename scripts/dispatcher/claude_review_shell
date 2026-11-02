@@ -1,0 +1,13 @@
+#!/bin/sh
+# CLAUDE_CODE_SHELL_PREFIX of read-only native Claude dispatches (#12378, decision REVIEW-BOUNDARY-1101).
+# Claude Code runs "<this file> '<command script>'" for every Bash call; shell_main in
+# scripts/dispatcher/agy_sandbox.py runs the script inside the read-only boundary. The code comes
+# from the checkout this file really lives in, never from the reviewed worktree.
+refuse() { echo "claude read-only boundary refused: $1" >&2; exit 125; }
+self=$(readlink -f -- "$0") || refuse claude_review_shell_unresolved
+root=${self%/scripts/dispatcher/claude_review_shell}
+{ [ "$root" != "$self" ] && [ -e "$root/.git" ]; } || refuse claude_review_shell_root_not_checkout
+worktree=$(readlink -f -- "${LU_REVIEW_SHELL_WORKTREE:-/}") || refuse claude_review_shell_worktree_unresolved
+case "$root/" in "$worktree"/*) refuse claude_review_shell_root_is_reviewed_worktree ;; esac
+[ -x "${LU_REVIEW_SHELL_PYTHON:-}" ] || refuse claude_review_shell_interpreter_missing
+exec "$LU_REVIEW_SHELL_PYTHON" -I -c 'import sys; sys.path.insert(0, sys.argv[1]); from scripts.dispatcher.agy_sandbox import shell_main; raise SystemExit(shell_main(sys.argv[2:]))' "$root" "$@"
