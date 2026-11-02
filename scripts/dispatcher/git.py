@@ -920,16 +920,16 @@ def _retention_held(record: dict) -> bool:
     raise _Kept(hold["worktree_disposition_reason"], hold["worktree_disposition_detail"])
 
 
-def _archive_removed(repo: Path, tree: Path, record: dict, head: str) -> str:
+def _archive_removed(repo: Path, tree: Path, record: dict, head: str) -> str | None:
     """Archive the removed worktree's entry in the repository's registry, if it declares one.
 
     A registry that cannot be written never blocks settlement: the failure is recorded and the audit
-    reports the entry that stayed active.
+    reports the entry that stayed active. A repository without a registry leaves the record unchanged (None).
     """
     try:
         registry = registry_path(repo, resolve_repo(record.get("repo"))[1])
         if registry is None:
-            return "not_declared"
+            return None
         reason = f"task {record['task_id']} settled; the dispatcher removed the worktree"
         return "archived" if archive_worktree(registry, tree, reason, head) else "no_entry"
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
@@ -1032,8 +1032,8 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
             task_record=record, preserve_files=untracked or None,
         )
         # Archived under the lock the removal held, before any later dispatch can register this path again.
-        if removal.action == "removed":
-            registry_note.append(_archive_removed(repo, tree, record, head))
+        if removal.action == "removed" and (note := _archive_removed(repo, tree, record, head)) is not None:
+            registry_note.append(note)
     if removal.action == "skipped":
         return disposition("retained", "removal_refused", removal.reason)
     if removal.action != "removed":
