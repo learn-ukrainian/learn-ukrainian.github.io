@@ -34,7 +34,7 @@ from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
 
 # Grok runs through Cursor's TUI: --agent cursor --model grok-4.7-high (grok-build is the separate Grok TUI).
-ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes")
+ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode")
 
 
 class _PromptPath(type(Path())):
@@ -416,6 +416,16 @@ def _dispatch(args) -> int:
             raise host_admission.Refused("❌ --force-admission requires a non-empty reason", 2)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
+    # Settlement can verify only an origin/<branch> base. Refuse anything else before a
+    # workspace-write task is created, so a SHA does not run and then settle no_deliverable (#12420).
+    if args.mode == "workspace-write":
+        try:
+            git.verifiable_origin_base(args.base)
+        except git.OriginBaseRequired:
+            raise ValueError(
+                "workspace_write_base_unverified: settlement cannot verify this --base; "
+                "use --base origin/main --branch <PR head branch>, with the PR's files as owned paths"
+            ) from None
     start = args.pinned_head or args.branch or args.base
     publish_remote = None
     if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
@@ -453,6 +463,11 @@ def _dispatch(args) -> int:
 
             schema_argument(options)
     fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider", "codex_account")}
+    if agent == "opencode":
+        from scripts.dispatcher.providers import opencode
+
+        # The endpoint is explicit on the task record, the default included (#12376).
+        fields["provider"] = opencode.endpoint(fields["provider"])
     spec = TaskSpec(
         task_id,
         agent,
@@ -463,6 +478,11 @@ def _dispatch(args) -> int:
         **fields,
     )
     checks.check_private_input(spec, info["key"])
+    # Before any worktree or task record: an endpoint without access or funds is refused, never switched.
+    if agent == "opencode" and (refusal := opencode.endpoint_refusal(
+        spec.provider, child_env(spec), worktree=worktree, repo=None if args.cwd else repo, sha=sha,
+    )):
+        raise ValueError(refusal)
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
         raise ValueError(refusal)
     # A bound attempt is admitted before anything exists: its prompt is the exact render of its manifest

@@ -2399,6 +2399,30 @@ def test_branch_write_refuses_local_outside_commit_after_remote_branch_deleted(s
     assert not (sandbox.repo / ".worktrees/dispatch/codex/missing-remote").exists()
 
 
+def test_workspace_write_sha_base_is_refused_at_dispatch(sandbox):
+    """A commit SHA is not an origin base, so settlement would record no_deliverable."""
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    result = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "literal final response",
+        "--task-id", "sha-base-write", "--mode", "workspace-write", "--base", sha,
+        expected=2,
+    )
+    assert "workspace_write_base_unverified:" in result.stderr
+    assert "--base origin/main --branch <PR head branch>" in result.stderr
+    assert "with the PR's files as owned paths" in result.stderr
+    assert not (sandbox.tasks / "sha-base-write.json").exists()
+    assert not (sandbox.repo / ".worktrees/dispatch/codex/sha-base-write").exists()
+
+
+def test_read_only_sha_base_is_still_admitted(sandbox):
+    """Read-only reviews keep a commit SHA as --base; settlement does not verify it."""
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    record = sandbox.settle(sandbox.dispatch("echo", "--task-id", "sha-base-read", "--mode", "read-only", "--base", sha))
+    assert record["status"] == "done"
+    assert record["mode"] == "read-only"
+    assert record["worktree_base_ref"] == sha
+
+
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")
@@ -3109,7 +3133,7 @@ def assert_private_input_policy(spec, repo_key, error):
             checks.check_private_input(spec, repo_key)
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize("classification", [{"role": "private-product"}, {"role": "product", "private": True}])
 def test_private_repo_and_prompt_origin_cannot_bypass_private_policy(spec, private_repos, agent):
     private, alias = private_repos
@@ -3184,7 +3208,7 @@ def test_public_muse_contributor_on_is_preserved(spec, private_repos):
     assert argv[argv.index("--contributor-mode") + 1] == "on"
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize(
     "prompt",
     [
@@ -3204,7 +3228,7 @@ def test_private_path_equals_and_encoded_source_cannot_bypass_private_policy(spe
     assert spec.prompt_file.read_text() == prompt
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize(
     "prompt",
     [
@@ -3228,7 +3252,7 @@ def test_private_identifier_substring_contract(spec, private_repos, agent, promp
     assert spec.prompt_file.read_text() == prompt
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize("prompt", ["[notes](100%.md)", "Read file:///public/100%.md"])
 def test_public_literal_percent_is_not_a_malformed_escape_refusal(spec, private_repos, agent, prompt):
     """Old tokenizer incorrectly refused public100percent CommonMark and file URI inputs."""
@@ -3238,7 +3262,7 @@ def test_public_literal_percent_is_not_a_malformed_escape_refusal(spec, private_
     assert spec.prompt_file.read_text() == prompt
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize(
     "prompt",
     [
@@ -3266,7 +3290,7 @@ def test_private_input_policy_leaves_other_providers_unchanged(spec, private_rep
     checks.check_private_input(spec, "private")
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 def test_empty_private_identifiers_do_not_refuse_all_public_prompts(spec, tmp_path, monkeypatch, agent):
     config = tmp_path / "repos.yaml"
     config.write_text(
@@ -3414,7 +3438,7 @@ def test_cursor_child_env_missing_or_blank_key_without_file_key_forwards_nothing
     loader.assert_called_once_with()
 
 
-@pytest.mark.parametrize("agent", ["codex", "claude", "agy", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["codex", "claude", "agy", "muse", "opencode"])
 @pytest.mark.parametrize("process_key", [None, "stub-process-key", "", " \t\n"])
 def test_non_cursor_child_env_never_loads_or_forwards_cursor_key(spec, monkeypatch, agent, process_key):
     loader = Mock(return_value="stub-file-key")
@@ -3442,7 +3466,7 @@ def test_grok_is_no_alias_and_an_unknown_agent_names_the_supported_agents(sandbo
     """Operator 2026-10-27: --agent grok silently launched cursor-agent; Grok runs as cursor + grok-4.7-high."""
     result = sandbox.cli("dispatch", "--agent", "grok", "--model", "grok-4.7-high", "--prompt", "Explain X",
                          expected=2)
-    assert "unknown agent 'grok'; supported agents: codex, claude, cursor, agy, muse, opencode, hermes" in result.stderr
+    assert "unknown agent 'grok'; supported agents: codex, claude, cursor, agy, muse, opencode" in result.stderr
     assert "dispatch Grok as --agent cursor --model grok-4.7-high" in result.stderr
     assert not sandbox.tasks.exists()
 
@@ -3453,7 +3477,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("Fix the bug in X.\n")
     spec = TaskSpec("ro", agent, "vendor/model", None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
-    refused = {"hermes": "bypasses approvals"}
+    refused: dict[str, str] = {}
     if agent in refused:
         with pytest.raises(ValueError, match=f"read_only_unenforceable: {agent} cannot run --mode read-only"):
             providers.load(agent).build(spec, {})
@@ -3536,7 +3560,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():
-    assert dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes") == ALIASES
+    assert dict(sol="codex", gemini="agy", deepseek="opencode") == ALIASES
     args = build_parser().parse_args(
         [
             "dispatch",
@@ -3883,7 +3907,7 @@ def test_status_or_fail_verbose_byte_compatible_without_run_nonce(tmp_path, monk
     assert data_with_nonce["run_nonce"] == "sof-nonce-12345"
 
 
-@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode"])
 def test_dispatch_worker_env_carries_dispatch_identity_markers(spec, monkeypatch, agent):
     """Ported from tests/test_delegate.py::test_dispatch_worker_env_carries_dispatch_identity_markers."""
     monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "parent-task")

@@ -75,17 +75,6 @@ def test_build_mcp_tool_config_native_grok_uses_native_config(agent: str) -> Non
     assert diagnostics["resolution_status"] == "ok"
 
 
-def test_build_mcp_tool_config_grok_hermes_uses_hermes_config() -> None:
-    tool_config, diagnostics = build_mcp_tool_config(
-        "grok-hermes",
-        mcp_servers=["sources"],
-    )
-
-    assert tool_config == {"hermes_mcp_servers": ["sources"]}
-    assert diagnostics["config_path"] == str(Path.home() / ".hermes" / "config.yaml")
-    assert diagnostics["resolution_status"] == "ok"
-
-
 def test_codex_tool_config_strips_claude_format_type_field(
     tmp_path: Path,
 ) -> None:

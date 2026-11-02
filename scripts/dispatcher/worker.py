@@ -618,8 +618,26 @@ def _verdict_failure(record: dict, text: str | None) -> str | None:
     except Exception:
         return "review_gate_error"
     if not verdicts:
-        return "review_missing_verdict_line"
+        return None if _item_judgments_verdict(record, text) else "review_missing_verdict_line"
     return "review_ambiguous_verdict" if len(verdicts) > 1 else None
+
+
+def _item_judgments_verdict(record: dict, text: str | None) -> str | None:
+    """The verdict a valid ``ukrainian-item-judgments`` block carries, or None.
+
+    The Ukrainian contract with an item denominator has the reviewer return only that
+    block (``review-loop/references/ukrainian.md``). The recorder's own parser judges it
+    against the brief's frozen packet, as the recorder does.
+    """
+    if record.get("review_profile") != "ukrainian" or not text:
+        return None
+    from scripts.review.review_contract import ContractError, item_judgments_verdict, load_frozen_item_packet
+
+    try:
+        packet = load_frozen_item_packet(record)
+        return item_judgments_verdict(packet, text) if packet is not None else None
+    except ContractError:
+        return None
 
 
 def _correction_stdin(prior: str) -> bytes:

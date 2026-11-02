@@ -425,8 +425,16 @@ or count as a formal review.
   `deepseek-v4.1-flash`, for coding through opencode on the direct DeepSeek API or OpenRouter
   with a named US provider allow-list. Never send private-repository content or secrets.
   V4 Pro and older are retired. Review-of-record and Ukrainian work need measured evidence first.
-  `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named
-  US provider allow-list exists; the direct API route remains available.
+  The endpoint is explicit: `--agent opencode` runs the direct API by default, and
+  `--provider openrouter` runs OpenRouter. Both are recorded on the task record. **US provider allow-list** (CTO decision 2026-11-01, #12376): OpenRouter
+  model `deepseek/deepseek-v4.1-flash` only on `fireworks/us`, `baseten/us`, `inference-net/us`,
+  with no provider fallback and `data_collection: deny`. Only that provider and model are enabled for the
+  run, including OpenCode's title, summary and compaction calls. An endpoint with no key, an unreadable
+  balance or a balance below its `dispatch_floor_usd` (`scripts/config/agent_budgets.yaml`) is refused
+  before spawn. OpenRouter is also refused when the checkout carries OpenCode config, or when the
+  resolved OpenCode config could still route a call elsewhere.
+  It is never switched to the other endpoint. `scripts/ai_agent_bridge/routing_guard.py` still
+  refuses `openrouter/deepseek` for bridge routing; the dispatcher route above is the only OpenRouter path.
 * **Pool/Laguna**: retired, not subscribed (operator 2026-10-23). Do not route.
 * **kimi** (operator 2026-08-08 / #6468; CTO GO 2026-08-22 / #7140): **retired**
   (OO-58, #11327, 2026-10-21; unused since 2026-10-13, reconfirmed 2026-10-18 and 2026-10-21).
@@ -786,7 +794,7 @@ free disk. **Never convert a timed pause into permanent neglect of that seat.**
 | Path | Use for | Do not use for |
 | --- | --- | --- |
 | **Native CLIs** (claude, codex, cursor, agy) | default dispatch + ask for those families; native Grok dispatch is retired, with Grok dispatched through Cursor at `grok-4.7-high` | Kimi is retired (OO-58); do not dispatch `--agent kimi` |
-| **DeepSeek first-party** (`deepseek` via OpenCode) | latest `deepseek-v4.1-flash` coding; no private-repository content or secrets | Review-of-record and Ukrainian work need measured evidence first; `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists |
+| **DeepSeek first-party** (`deepseek` via OpenCode) | latest `deepseek-v4.1-flash` coding; no private-repository content or secrets | Review-of-record and Ukrainian work need measured evidence first; the dispatcher's `--provider openrouter` endpoint uses the US provider allow-list above (#12376), and `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` for bridge routing |
 | **Cursor multi-model pin** | mechanical work: `grok-4.7-high`; `auto` only for a well-defined coding dispatch | review of record by a Claude model (D-129, #10464); `auto` outside a well-defined coding dispatch, Fast, `grok-4.6`, `grok-4.5`; formal CF as `auto` |
 
 After merge: run `merge_closeout` and free branch holds so the next free lane can attach (the dispatcher removes each settled task's worktree;
@@ -943,9 +951,10 @@ The legacy generic `ask-opencode` ACP route stays retired — named consult seat
 Operator order cto-deepseek-unban (#10959) permits coding through opencode on the direct DeepSeek API
 or OpenRouter with a named US provider allow-list. Use only the latest `deepseek-v4.1-flash`;
 V4 Pro and older are retired. Never send private-repository content or secrets. Review-of-record
-and Ukrainian work need measured evidence first. `scripts/ai_agent_bridge/routing_guard.py` still
-refuses `openrouter/deepseek` until a named US provider allow-list exists. This order does not
-change that guard or authorize an override.
+and Ukrainian work need measured evidence first. The named US provider allow-list is
+`fireworks/us`, `baseten/us`, `inference-net/us` (CTO decision 2026-11-01, #12376). It is used only by
+the dispatcher's `--agent opencode --provider openrouter` endpoint. `scripts/ai_agent_bridge/routing_guard.py`
+still refuses `openrouter/deepseek` for bridge routing; this order does not change that guard or authorize an override.
 ² Qwen and GLM are retired, not subscribed (operator 2026-10-23).
 
 Consequences:

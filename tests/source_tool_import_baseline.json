@@ -1,15 +1,14 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 402,
-    "probe_count": 804,
+    "cli_count": 401,
+    "probe_count": 802,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/kimi_boundary.py",
       "scripts/agent_runtime/lane_probe.py",
       "scripts/agent_runtime/probe_fallback.py",
       "scripts/ai_agent_bridge/__main__.py",
-      "scripts/ai_agent_bridge/_hermes_stdin.py",
       "scripts/ai_agent_bridge/_inbox_watch.py",
       "scripts/ai_agent_bridge/_ui_agy.py",
       "scripts/ai_agent_bridge/_ui_codex.py",
@@ -407,7 +406,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "3c798852f63a8ef222c55ae77a4c694895078fd39c7abe76658b7e9305dfb6c5"
+    "cli_paths_sha256": "0a5e832e8925110c8cb41ec04f5694dd016d3d036c34d52c82e9ab4a68c0e7b9"
   },
   "failures": [
     {

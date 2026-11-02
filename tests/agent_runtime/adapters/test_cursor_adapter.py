@@ -693,3 +693,19 @@ def test_cursor_adapter_parse_response_separates_distinct_v2026_05_27_messages(a
 
     assert result.ok is True
     assert result.response == "First message.\n\nSecond message."
+
+
+def test_cursor_adapter_plan_is_headless_and_passes_the_requested_model(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("shutil.which", lambda _name: "/fake/cursor-agent")
+    for mode in ("read-only", "workspace-write", "danger"):
+        plan = CursorAdapter().build_invocation(
+            prompt="fixture",
+            mode=mode,
+            cwd=tmp_path,
+            model="grok-4.7",
+            task_id="cursor-headless-fixture",
+            session_id=None,
+            tool_config={},
+        )
+        assert "-p" in plan.cmd
+        assert "grok-4.7-high" in plan.cmd

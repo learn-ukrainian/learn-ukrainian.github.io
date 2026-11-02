@@ -218,7 +218,6 @@ GITHUB_TOKEN_SEATS = {
     "glm",
     "grok",
     "grok-build",
-    "grok-hermes",
     "kimi",
 }
 
@@ -313,20 +312,6 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     # credential; `HOME` already passes the global safe-name allowlist.
     "agy": {
         "AGY_APP_DATA_DIR",
-    },
-    "deepseek": {
-        "HERMES_HOME",
-    },
-    # ask-hermes seat (OpenCode owns the bare ``deepseek`` dispatch key).
-    "hermes-deepseek": {
-        "HERMES_HOME",
-    },
-    # Demoted Hermes Grok path (was bare "grok" before the native-seat rename).
-    "grok-hermes": {
-        "HERMES_HOME",
-    },
-    "qwen": {
-        "HERMES_HOME",
     },
     "kimi": {
         # Native CLI executable override; it is a path, never a credential.

@@ -17,7 +17,6 @@ _AUTH = {
     "agy": ("AGY_API_KEY", "AGY_TOKEN", "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"),
     "muse": ("MUSE_API_KEY", "MUSE_TOKEN"),
     "opencode": ("DEEPSEEK_API_KEY",),
-    "hermes": ("OPENROUTER_API_KEY",),
 }
 _NPM_SHIMS = Path(__file__).resolve().parent / "npm_shims"
 

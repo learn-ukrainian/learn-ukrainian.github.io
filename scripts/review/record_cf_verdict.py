@@ -59,6 +59,7 @@ from scripts.orchestration.integration_sweep import (
     SweepError,
     lookup_verdict,
     parse_marker,
+    recorded_p3_residuals,
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
 from scripts.publish.github import CfVerdictRecord, Request, request_run
@@ -73,6 +74,7 @@ from scripts.review.model_catalog import (
 from scripts.review.review_contract import (
     ContractError,
     ItemChunk,
+    item_judgments_verdict,
     judge_item_reply,
     load_frozen_item_packet,
     reply_has_item_judgments,
@@ -102,13 +104,10 @@ from scripts.review.ukrainian_seats import (
     required_ukrainian_seats,
 )
 from scripts.review.verdict_parser import (
-    _FINDINGS_ENVELOPE_KEYS,
     _REVIEW_VERDICT_LINE_RE,
     MISSING_CAPABILITIES_FIELD,
     _commonmark_lines,
     _findings_json_verdicts,
-    _top_level_json_values,
-    _UnreadableFindings,
     _without_code_fences,
     checked_findings_payload,
     declares_incomplete_review,
@@ -221,26 +220,60 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
     return normalize_verdict(reply), "unknown"
 
 
-# A ledger line may carry a slug after F1 (`F1-seed-recharges-...: resolved`).
-_PROSE_FINDING_ID = r"F[1-9][0-9]{0,3}(?:-[A-Za-z0-9][A-Za-z0-9._:-]{0,80})?"
-_PROSE_FINDING_LINE = re.compile(
-    rf"^\s*(?:[-*]\s+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])\**"
-    rf"(?P<rest>(?:\s*[:\u2014\u2013-]+)?(?:\s*(?i:still|remains?)\s+open\s*[:\u2014\u2013-]?)?"
-    rf"(?:\s*(?:\[(P[0-3])\]|\((P[0-3])\)))?.*)$"
-)
-_PROSE_RESOLVED = re.compile(r"^(?:\s*[:\u2014\u2013-]+)?\s*(?i:resolved|fixed)\b")
-_RESOLVED_AMBIGUOUS = re.compile(r"(?i)\b(?:no|not|incorrectly|unresolved|still\s+open|remains?\s+open)\b|\?")
-_BLOCKING_PRIORITY = re.compile(r"(?i)(?<![A-Za-z0-9])p[0-2](?![A-Za-z0-9])")
-_SECURITY_VERDICT = re.compile(
-    r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*"
-)
+_SECURITY_VERDICT = re.compile(r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*")
 _SECURITY_PASS = re.compile(r"(?i)\*{0,2}PASS\*{0,2}\.?\s*(?:\n|$)")
-_FINDING_LIKE = re.compile(
-    rf"(?im)^[ \t]*(?:#{{1,6}}[ \t]+|[-*+][ \t]+|\d+\.[ \t]+|>[ \t]+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])"
-)
 _RESIDUAL_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}\Z")
 TRUNCATION_FLAG = "[Review reply truncated to fit GitHub's comment limit.]"
 REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
+# Why a CHANGES_REQUESTED reply keeps its verdict instead of becoming an approval with residuals.
+P3_NOT_ONE_OBJECT = "reply is not exactly one findings object"
+P3_DUPLICATE_KEY = "findings object repeats a key"
+P3_INVALID_OBJECT = "findings object fails the findings schema"
+P3_SECURITY_NOT_PASS = "security verdict is not PASS"
+P3_INCOMPLETE = "reviewer declares an incomplete review or missing capabilities"
+P3_NO_FINDINGS = "findings object lists no findings"
+P3_BLOCKING_FINDING = "findings object has a P0, P1 or P2 entry"
+P3_CONFLICTING_ID = "findings object repeats an id"
+P3_TRUNCATED = "reply is truncated in the record"
+P3_SCANNER_WITHHELD = "publication scanner withheld the reply"
+P3_STANDING_REJECTION = "head has a standing rejection or an unknown reading"
+P3_REPAIR_WITHHELD = "repair round withholds the P3 mapping"
+
+
+@dataclass(frozen=True)
+class P3Reading:
+    """The open P3 finding ids of an approval with residuals, or the reason there is none."""
+
+    ids: tuple[str, ...] | None = None
+    reason: str | None = None
+
+
+class _DuplicateKey(ValueError):
+    pass
+
+
+def _unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    keys = [key for key, _ in pairs]
+    if len(set(keys)) != len(keys):
+        raise _DuplicateKey
+    return dict(pairs)
+
+
+def _not_json_constant(token: str) -> Any:
+    # NaN and Infinity are a Python decoder extension, not JSON.
+    raise ValueError(token)
+
+
+def _strings(value: Any) -> Iterator[str]:
+    """Every decoded string value in a JSON value, so escapes cannot disguise a declaration."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for item in value.values():
+            yield from _strings(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _strings(item)
 
 
 def _security_verdict_blocks(reply: str) -> bool:
@@ -254,81 +287,47 @@ def _security_verdict_blocks(reply: str) -> bool:
     return any(_SECURITY_PASS.match(reply, match.end()) is None for match in _SECURITY_VERDICT.finditer(reply))
 
 
-def p3_residuals(reply: str) -> tuple[str, ...] | None:
-    """Open finding ids when every one of them is P3, or None when that reading does not apply.
+def p3_reading(reply: str) -> P3Reading:
+    """Read a CHANGES_REQUESTED reply for an approval with P3 residuals (#12409).
 
-    None keeps the reply's own verdict. A P0, P1, or P2 token anywhere in the reply,
-    a security verdict that is not an unambiguous pass, an incomplete review, a malformed
-    findings block, a finding with no readable priority, a truncated body, or a repair
-    round whose mapping was withheld is None. An empty open set is None: a changes
-    request with no findings is not an approval.
+    The reading applies only when the whole reply, apart from surrounding whitespace,
+    is exactly one ``code-review-findings.v1`` object and every entry's typed
+    ``priority`` is P3. No prose is read for findings: any text outside the object,
+    a verdict line included, keeps the reply's own verdict, and so does a truncated
+    reply. Every refusal names its reason.
     """
-    if not isinstance(reply, str) or _security_verdict_blocks(reply):
-        return None
-    if TRUNCATION_FLAG in reply or REPAIR_WITHHELD in reply:
-        return None
-    if _BLOCKING_PRIORITY.search(reply):
-        return None
-    if "BLOCKED" in {token.upper() for token in recognized_verdicts(reply)}:
-        return None
-    if declares_incomplete_review(reply) or declares_missing_capabilities(reply):
-        return None
-    if invalid_findings_block(reply):
-        return None
-    findings: dict[str, str] = {}
-    structured: set[str] = set()
+    if not isinstance(reply, str):
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
     try:
-        payloads = list(_top_level_json_values(reply))
-    except _UnreadableFindings:
-        return None
-    for payload in payloads:
-        if not isinstance(payload, dict) or not (_FINDINGS_ENVELOPE_KEYS & payload.keys()):
-            continue
-        try:
-            _verdict, evidence = checked_findings_payload(payload)
-        except (ContractError, ReviewPublicationError):
-            return None
-        if evidence is None:
-            continue
-        for finding in evidence.findings:
-            previous = findings.get(finding.finding_id)
-            if previous is not None and previous != finding.priority:
-                return None
-            findings[finding.finding_id] = finding.priority
-            structured.add(finding.finding_id)
+        payload = json.loads(reply, object_pairs_hook=_unique_keys, parse_constant=_not_json_constant)
+    except _DuplicateKey:
+        return P3Reading(reason=P3_DUPLICATE_KEY)
+    except (ValueError, RecursionError):
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
+    if not isinstance(payload, dict) or payload.get("schema_version") != REVIEW_SCHEMA_VERSION:
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
     try:
-        visible = _without_code_fences(reply, keep_unclosed=False)
-    except (ValueError, ImportError):
-        return None
-    for line in _commonmark_lines(visible):
-        match = _PROSE_FINDING_LINE.match(line)
-        if match is None:
-            continue
-        finding_id = match.group(1)
-        priority = match.group(3) or match.group(4)
-        rest = match.group("rest") or ""
-        if _PROSE_RESOLVED.match(rest):
-            # Only the resolution clause is judged. A later sentence may say "not".
-            clause = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b.{0,24}", rest)
-            if finding_id in findings or _RESOLVED_AMBIGUOUS.search(clause.group(0) if clause else rest[:40]):
-                return None
-            continue
-        if priority is None:
-            return None
-        if structured and finding_id not in structured:
-            return None
-        previous = findings.get(finding_id)
-        if previous is not None and previous != priority:
-            return None
-        findings[finding_id] = priority
-    for line in reply.splitlines():
-        if _FINDING_LIKE.match(line) and _PROSE_FINDING_LINE.match(line) is None:
-            return None
-    if not findings or any(priority != "P3" for priority in findings.values()):
-        return None
-    if any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in findings):
-        return None
-    return tuple(findings)
+        _verdict, evidence = checked_findings_payload(payload)
+    except (ContractError, ReviewPublicationError):
+        return P3Reading(reason=P3_INVALID_OBJECT)
+    findings = evidence.findings if evidence is not None else ()
+    if not findings:
+        return P3Reading(reason=P3_NO_FINDINGS)
+    if any(finding.priority != "P3" for finding in findings):
+        return P3Reading(reason=P3_BLOCKING_FINDING)
+    if any(_security_verdict_blocks(text) for text in _strings(payload)):
+        return P3Reading(reason=P3_SECURITY_NOT_PASS)
+    if declares_incomplete_review(reply) or MISSING_CAPABILITIES_FIELD in payload:
+        return P3Reading(reason=P3_INCOMPLETE)
+    ids = tuple(finding.finding_id for finding in findings)
+    if len(set(ids)) != len(ids) or any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in ids):
+        return P3Reading(reason=P3_CONFLICTING_ID)
+    return P3Reading(ids=ids)
+
+
+def p3_residuals(reply: str) -> tuple[str, ...] | None:
+    """The open P3 ids of an approval with residuals, or None when the reply keeps its verdict."""
+    return p3_reading(reply).ids
 
 
 def _require_sources_mcp_calls(task: dict[str, Any]) -> None:
@@ -2538,7 +2537,7 @@ def _task_verdict(task: dict[str, Any], reply: str) -> _TaskVerdict:
     if task.get("pinned_head") is not None and task["pinned_head"] != sha:
         raise RecordError("reviewed SHA conflicts with pinned head")
     model, family = reviewer_identity(task)
-    verdict, finding_count = _review_verdict_and_count(reply)
+    verdict, finding_count = _item_judgments_or_review_verdict(task, reply)
     _require_sources_mcp_calls(task)
     sources_count = task.get("sources_mcp_call_count")
     if type(sources_count) is not int or sources_count < 0:
@@ -2591,6 +2590,32 @@ def _post_verdict(repository: str, number: int, comment: str, login: str) -> dic
     ):
         raise RecordError("comment readback mismatch; publication state unknown")
     return readback
+
+
+def _item_judgments_or_review_verdict(task: Mapping[str, Any], reply: str) -> tuple[str, int | Literal["unknown"]]:
+    """The verdict of a Ukrainian reply that returns only its judgment block, else the reply's verdict.
+
+    With a frozen item denominator the contract asks for the block alone, so a reply
+    with no verdict token takes the block's item rollup.
+    """
+    if not is_ukrainian_review(task) or recognized_verdicts(reply):
+        return _review_verdict_and_count(reply)
+    try:
+        packet = load_frozen_item_packet(task)
+        if packet is None:
+            return _review_verdict_and_count(reply)
+        verdict = item_judgments_verdict(packet, reply)
+    except ContractError as exc:
+        raise RecordError(str(exc)) from None
+    if reason := invalid_findings_block(reply, stated=None):
+        raise RecordError(f"reply carries an invalid findings block: {reason}")
+    if declares_incomplete_review(reply):
+        raise RecordError("inconclusive: reviewer declares an incomplete review")
+    if verdict != "BLOCKED" and declares_missing_capabilities(reply):
+        raise RecordError(
+            f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may"
+        )
+    return verdict, "unknown"
 
 
 def _item_chunk(task: Mapping[str, Any], reply: str, verdict: str) -> ItemChunk | None:
@@ -2715,8 +2740,10 @@ def record(
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
     chunk = _item_chunk(task, reply, stated)
-    # The reply stays REQUEST_CHANGES. All-P3 open findings are an approval with residuals.
-    residuals = p3_residuals(reply) if stated == "CHANGES_REQUESTED" else None
+    # The reply stays REQUEST_CHANGES. A pure findings object whose entries are all P3 is an
+    # approval with residuals; any other reply keeps its verdict and names why (#12409).
+    p3 = p3_reading(reply) if stated == "CHANGES_REQUESTED" else P3Reading()
+    residuals, p3_refused = p3.ids, p3.reason
     verdict = "APPROVED" if residuals else stated
     comment_fields = dict(
         sha=sha,
@@ -2741,7 +2768,7 @@ def record(
     comment = build_comment(**comment_fields)
     # A cut reply is not verbatim, so it cannot become an approval.
     if residuals is not None and TRUNCATION_FLAG in comment:
-        residuals = None
+        residuals, p3_refused = None, P3_TRUNCATED
         verdict = stated
         comment_fields["verdict"] = stated
         comment_fields["residuals"] = None
@@ -2757,7 +2784,7 @@ def record(
             raise
         # Hidden findings cannot be listed, so the reply keeps its own verdict.
         if residuals is not None:
-            residuals = None
+            residuals, p3_refused = None, P3_SCANNER_WITHHELD
             verdict = stated
             comment_fields["verdict"] = stated
             comment_fields["residuals"] = None
@@ -2785,7 +2812,7 @@ def record(
             reading = lookup_verdict(comments, sha, login)
             # A standing P0/P1/P2 or BLOCKED rejection, or an unknown head, keeps today's record.
             if reading.state in REJECTED or reading.state == "unknown":
-                residuals = None
+                residuals, p3_refused = None, P3_STANDING_REJECTION
                 verdict = stated
                 comment_fields["verdict"] = stated
                 comment_fields["residuals"] = None
@@ -2821,7 +2848,7 @@ def record(
                 require_repair_verified(reply, repaired)
             except RepairRefused:
                 if residuals is not None:
-                    residuals = None
+                    residuals, p3_refused = None, P3_REPAIR_WITHHELD
                     verdict = stated
                     comment_fields["verdict"] = stated
                     comment_fields["residuals"] = None
@@ -2900,7 +2927,10 @@ def record(
                     and marker.get("sha") == sha
                     and (
                         marker.get("verdict") not in REJECTED
-                        or (marker.get("verdict") == "CHANGES_REQUESTED" and p3_residuals(item["body"]) is not None)
+                        or (
+                            marker.get("verdict") == "CHANGES_REQUESTED"
+                            and recorded_p3_residuals(item["body"]) is not None
+                        )
                     )
                     and is_ukrainian_review(marker)
                 ]
@@ -2947,6 +2977,8 @@ def record(
     }
     if residuals:
         result["residuals"] = list(residuals)
+    elif p3_refused is not None:
+        result["p3_downgrade_refused"] = p3_refused
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
     if chunk is not None:

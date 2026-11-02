@@ -1936,7 +1936,8 @@ def judge_item_reply(
         if item_id in seen_ids:
             raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: duplicate judgment {item_id}")
         seen_ids.add(item_id)
-        verdict = _JUDGMENT_VERDICT.get(row.get("verdict"))
+        raw_verdict = row.get("verdict")
+        verdict = _JUDGMENT_VERDICT.get(raw_verdict) if isinstance(raw_verdict, str) else None
         finding = row.get("finding")
         sources = row.get("sources")
         if verdict is None or not isinstance(finding, str) or not isinstance(sources, str):
@@ -1976,3 +1977,20 @@ def judge_item_reply(
         void = None
     covered = () if void else tuple(sorted(judged))
     return ItemChunk(tuple(packet["denominator"]), covered, void)
+
+
+def item_judgments_verdict(packet: Mapping[str, Any], reply: str) -> str:
+    """The verdict a reply's valid Ukrainian judgment block carries for ``packet``.
+
+    The contract with an item denominator has the reviewer return only the block, so
+    its item rollup is the reply's verdict. An invalid block raises its ContractError.
+    """
+    for stated in ("APPROVED", "CHANGES_REQUESTED", "BLOCKED"):
+        try:
+            judge_item_reply(packet, reply, stated=stated, ukrainian=True)
+        except ContractError as exc:
+            if not str(exc).startswith("VERDICT_ITEM_MISMATCH"):
+                raise
+            continue
+        return stated
+    raise ContractError("ITEM_JUDGMENTS_MALFORMED: the item judgments carry no verdict")
