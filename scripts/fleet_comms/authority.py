@@ -1250,6 +1250,7 @@ class AuthorityService:
         *,
         lease_seconds: int = 300,
         max_attempts: int = 3,
+        resume_owned: bool = False,
         now: str | None = None,
     ) -> AuthorityDeliveryLease | None:
         """Claim one recipient delivery; a stale worker cannot later acknowledge it.
@@ -1267,6 +1268,21 @@ class AuthorityService:
         lease_until = _iso(_parse_iso(now_value, field="now") + timedelta(seconds=lease_seconds))
         with self._write_transaction():
             self._reclaim_expired_deliveries_tx(now_value, max_attempts=max_attempts)
+            if resume_owned:
+                held = self._conn.execute(
+                    """SELECT * FROM authority_deliveries
+                       WHERE recipient = ? AND state = 'running' AND lease_owner = ?
+                       ORDER BY created_at ASC, delivery_id ASC""",
+                    (recipient_name, worker),
+                ).fetchall()
+                for current in held:
+                    if not self._stored_kimi_delivery(current):
+                        message = self.get_message(str(current["message_id"]))
+                        return AuthorityDeliveryLease(
+                            delivery=self._delivery_from_row(current),
+                            body_artifact_id=message.body_artifact_id,
+                            content_sha256=message.content_sha256,
+                        )
             candidates = self._conn.execute(
                 """SELECT * FROM authority_deliveries
                    WHERE recipient = ? AND state = 'queued'
@@ -1311,6 +1327,21 @@ class AuthorityService:
                 body_artifact_id=str(claimed["body_artifact_id"]),
                 content_sha256=str(claimed["content_sha256"]),
             )
+
+    def read_delivery_body(self, delivery_id: str, *, worker_id: str, fence_token: int) -> str:
+        """Read only under a current lease; report unreadable coordinator replies to both parties."""
+        row = self._require_delivery_tx(delivery_id)
+        self._assert_current_delivery_lease(row, worker_id, fence_token, _iso())
+        try:
+            return self.read_message_body(str(row["message_id"]))
+        except (AuthorityServiceError, ArtifactStoreError, OSError) as exc:
+            with self._write_transaction():
+                reported = self._notify_coordinator_reply_failure_tx(
+                    delivery_id, reason_code="read_failed",
+                )
+            if reported:
+                raise AuthorityServiceError("coordinator_reply_read_failed") from exc
+            raise
 
     def record_supervisory_consumption(
         self,
@@ -2324,6 +2355,38 @@ class AuthorityService:
             ) VALUES (?, ?, ?, ?)""",
             (new_id("authority-dead-letter"), delivery_id, reason_code, _iso()),
         )
+        self._notify_coordinator_reply_failure_tx(delivery_id, reason_code=reason_code)
+
+    def _notify_coordinator_reply_failure_tx(self, delivery_id: str, *, reason_code: str) -> bool:
+        row = self._conn.execute(
+            """SELECT d.message_id, d.recipient, m.sender
+               FROM authority_deliveries d JOIN comms_messages m USING (message_id)
+               WHERE d.delivery_id = ?""",
+            (delivery_id,),
+        ).fetchone()
+        if row is None or row["sender"] != DURABLE_CTO_RECIPIENT or row["recipient"] == DURABLE_CTO_RECIPIENT:
+            return False
+        key = f"coordinator-reply-error:{delivery_id}"
+        if self._conn.execute(
+            "SELECT 1 FROM authority_idempotency WHERE namespace = 'message' AND idempotency_key = ?",
+            (key,),
+        ).fetchone():
+            return True
+        # Notifications have a different sender, so their own expiry cannot recurse.
+        self._publish_message_tx(
+            sender="fleet-comms", channel=None, kind="delivery-error",
+            body=_canonical_json({
+                "error": "coordinator_reply_delivery_failed",
+                "reason_code": reason_code,
+                "delivery_id": delivery_id,
+                "message_id": str(row["message_id"]),
+                "recipient": str(row["recipient"]),
+            }),
+            targets=_admit_recipients((str(row["recipient"]), DURABLE_CTO_RECIPIENT), mode=BRIDGE_MODE),
+            in_reply_to=str(row["message_id"]),
+            idempotency_key=key,
+        )
+        return True
 
     def _dead_letter_job_tx(self, job_id: str, *, reason_code: str) -> None:
         self._conn.execute(
