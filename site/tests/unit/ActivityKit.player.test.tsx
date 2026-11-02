@@ -397,12 +397,35 @@ describe('MatchUp onMatch in isolation', () => {
 
   test('attributes ratings to the original pair index despite the shuffled right column', () => {
     const onMatch = vi.fn();
-    const { container } = render(<MatchUp pairs={pairs} onMatch={onMatch} />);
+    const duplicatePairs = [
+      { left: 'First', right: 'Same' },
+      { left: 'Second', right: 'Other' },
+      { left: 'Third', right: 'Same' },
+    ];
+    const { container, rerender } = render(<MatchUp pairs={duplicatePairs} onMatch={onMatch} />);
+    const firstRight = container.querySelector<HTMLButtonElement>('[data-activity="match-right-tile"][data-original-index="0"]')!;
+    const thirdRight = container.querySelector<HTMLButtonElement>('[data-activity="match-right-tile"][data-original-index="2"]')!;
 
-    fireEvent.click(leftTileByText(container, 'корова'));
-    fireEvent.click(rightTileByText(container, 'му'));
+    fireEvent.click(leftTileByText(container, 'Third'));
+    rerender(<MatchUp pairs={duplicatePairs} onMatch={onMatch} disabled />);
+    fireEvent.click(firstRight);
+    expect(onMatch).not.toHaveBeenCalled();
+    expect(firstRight).toBeDisabled();
+    expect(firstRight).toHaveAttribute('data-matched', 'false');
+    rerender(<MatchUp pairs={duplicatePairs} onMatch={onMatch} />);
+    fireEvent.click(firstRight);
 
-    expect(onMatch).toHaveBeenCalledWith(2, 'good');
+    expect(onMatch.mock.calls).toEqual([[2, 'good']]);
+    expect(firstRight).toBeDisabled();
+    expect(firstRight).toHaveAttribute('data-pair-color', '2');
+    expect(firstRight.style.getPropertyValue('--match-pair-hue')).toBe('262');
+    expect(thirdRight).toBeEnabled();
+    fireEvent.click(leftTileByText(container, 'First'));
+    fireEvent.click(thirdRight);
+    expect(onMatch.mock.calls).toEqual([[2, 'good'], [0, 'good']]);
+    expect(thirdRight).toBeDisabled();
+    expect(thirdRight).toHaveAttribute('data-pair-color', '0');
+    expect(thirdRight.style.getPropertyValue('--match-pair-hue')).toBe('199');
   });
 });
 
