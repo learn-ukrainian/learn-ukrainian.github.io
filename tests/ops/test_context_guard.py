@@ -8,13 +8,13 @@ import re
 import subprocess
 import sys
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import pytest
 
 from scripts.ops import context_guard as cg
-from scripts.ops.driver_lanes import PANE_SCRIPT, load_registry
+from scripts.ops.driver_lanes import EXIT_MARKER, PANE_SCRIPT, START_MARKER, load_registry
 from tests.ops._fake_tmux import BOOT, FakePane, FakeTmux
 
 REPO = Path(__file__).resolve().parents[2]
@@ -38,20 +38,100 @@ def codex_text(pct: int, *lines: str, ready: bool = True) -> str:
     return "\n".join([*lines, "Ready" if ready else "Working (3s)", f"Context {pct}% used"])
 
 
+SCOPE = "lu-driver-claude-epics-05592eda-1b2c-4d3e-8f4a-5b6c7d8e9f01.scope"
+CGROUP = f"0::/user.slice/user-1000.slice/user@1000.service/lu.slice/lu-driver.slice/{SCOPE}/tools\n"
+
+
 @dataclass
 class Pane(FakePane):
     pane_start: str = BOOT  # ps lstart of the pane's own shell
+    scope: str | None = SCOPE  # the agent's lu-driver scope; None means it runs outside one
+    exit_after_stop: float | None = 0  # seconds the agent outlives a scope stop; None means it never exits
+    launcher_lag: float = 0  # seconds the pane's launcher keeps running after the agent has exited
+    stop_age: float | None = None  # seconds since the scope stop was queued
 
 
 @dataclass
 class ShellTmux(FakeTmux):
-    """The fake with each pane's own shell in the process table, as ``ps`` lists it."""
+    """The fake with each pane's own shell in the process table, as ``ps`` lists it.
+
+    It also answers the systemd calls of a forced relaunch: the agent's cgroup, a scope's state
+    and ``systemctl stop``. A stopped scope's agent survives ``exit_after_stop`` seconds of fake
+    ``sleep`` (the 2026-11-02 sequence: the old process exits after the respawn used to start),
+    and a respawn records whether a predecessor was still running at that moment.
+    """
+
+    live_scopes: set[str] = field(default_factory=set)  # scopes that stay active with no agent in a pane
+    respawned_over_live_agent: list[bool] = field(default_factory=list)
 
     def _ps_rows(self, *, with_start: bool) -> list[str]:
         rows = super()._ps_rows(with_start=with_start)
         shells = {pane.pane_pid: getattr(pane, "pane_start", BOOT) for pane in self.sessions.values()}
         shell_rows = [f"{pid} 1 {start} bash" if with_start else f"{pid} 1 bash" for pid, start in shells.items()]
         return rows[:1] + shell_rows + rows[1:]
+
+    def _scope_state(self, unit: str) -> str:
+        if unit in self.live_scopes:
+            return "active"
+        for pane in self.sessions.values():
+            if getattr(pane, "scope", None) == unit and pane.agent:
+                return "active" if pane.stop_age is None else "deactivating"
+        return "inactive"
+
+    def run(self, argv: list[str]) -> subprocess.CompletedProcess:
+        if argv[0] == "cat":
+            self.calls.append(list(argv))
+            if "cat" in self.override:
+                return self.override["cat"]  # type: ignore[return-value]
+            pid = argv[1].split("/")[2]
+            for pane in self.sessions.values():
+                if pane.agent and pane.agent_pid == pid:
+                    return self._ok(CGROUP if pane.scope == SCOPE else "0::/user.slice/user-1000.slice/session-3.scope\n")
+            return self._fail("No such file or directory")
+        if argv[0] == "systemctl":
+            self.calls.append(list(argv))
+            if argv[2] == "is-active":
+                return subprocess.CompletedProcess(argv, 0, self._scope_state(argv[3]) + "\n", "")
+            assert argv[2:4] == ["stop", "--no-block"], argv
+            for pane in self.sessions.values():
+                if pane.scope == argv[4] and pane.agent and pane.stop_age is None:
+                    pane.stop_age = 0.0
+                    self._age(0.0)
+            return self._ok("")
+        if argv[:2] == ["tmux", "respawn-pane"]:
+            result = super().run(argv)
+            pane = self.sessions[argv[argv.index("-t") + 1].strip("=:")]
+            alive = pane.agent is not None
+            self.respawned_over_live_agent.append(alive)
+            occurrence = next(a.split("=", 1)[1] for a in argv if a.startswith("LU_LANE_RELAUNCH_ID="))
+            if alive:  # the successor's single-instance check meets the predecessor
+                pane.agent, pane.stop_age = None, None
+                pane.text = launcher_output(occurrence, 3, "refused: a CTO process is still running")
+            else:
+                pane.agent, pane.agent_pid, pane.agent_start = "claude", "400", "Fri Oct 16 12:30:00 2026"
+                pane.text = claude_text(1)
+            return result
+        return super().run(argv)
+
+    def _age(self, seconds: float) -> None:
+        for pane in self.sessions.values():
+            if pane.stop_age is not None and pane.agent:
+                pane.stop_age += seconds
+                if pane.exit_after_stop is not None and pane.stop_age >= pane.exit_after_stop:
+                    pane.agent, pane.stop_age = None, None
+                    pane.launcher_running = pane.launcher_lag > 0
+            elif pane.launcher_running:
+                pane.launcher_lag -= seconds
+                pane.launcher_running = pane.launcher_lag > 0
+
+    def sleep(self, seconds: float) -> None:
+        super().sleep(seconds)
+        self._age(seconds)
+
+
+def launcher_output(occurrence: str, rc: int, tail: str) -> str:
+    """What the fixed pane script prints around a launcher run (scripts/ops/driver_lanes.py)."""
+    return f"\n{START_MARKER}{occurrence}\n{tail}\n\n{EXIT_MARKER}{rc} id={occurrence}\n"
 
 
 class Harness:
@@ -65,7 +145,7 @@ class Harness:
         self.guard = cg.Guard(
             registry=load_registry(),
             repo_root=tmp_path / "repo",
-            tmux=cg.Tmux(run=self.fake.run, sleep=lambda _s: None, clock=lambda: self.moment.timestamp()),
+            tmux=cg.Tmux(run=self.fake.run, sleep=self.fake.sleep, clock=lambda: self.moment.timestamp()),
             log=self.logs.append,
             send=lambda recipient, body, key: self.sent.append((recipient, body)),
             handoff_posted=lambda sender, since: sender in self.posted and self.posted[sender] >= since,
@@ -355,6 +435,261 @@ def test_agent_surviving_two_exits_after_handoff_done_is_relaunched(tmp_path: Pa
     h.tick("cto")
     assert len(respawns(h)) == 1
     assert len([body for recipient, body in h.sent if recipient == "claude-cto"]) == 1
+
+
+def stuck_exit_harness(tmp_path: Path, **pane_fields: object) -> Harness:
+    """A cto lane whose idle agent has swallowed two ``/exit`` after HANDOFF-DONE: the next tick is the forced relaunch."""
+    h = Harness(tmp_path, **{"cto": Pane(text=claude_text(70), agent="claude", **pane_fields)})
+    h.tick("cto")
+    h.advance(5)
+    h.tick("cto")
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    h.advance(5)
+    h.tick("cto")
+    assert h.fake.typed("cto").count("/exit") == 2
+    assert respawns(h) == []
+    h.advance(5)
+    return h
+
+
+def systemctl(h: Harness, verb: str) -> list[list[str]]:
+    return [call for call in h.fake.calls if call[:2] == ["systemctl", "--user"] and verb in call]
+
+
+def cto_alerts(h: Harness) -> list[str]:
+    return [body for recipient, body in h.sent if recipient == "claude-cto"]
+
+
+def test_forced_relaunch_stops_the_scope_and_waits_for_the_agent_before_respawning(tmp_path: Path) -> None:
+    """AC-01/AC-03: the 2026-11-02 agent outlives its pane by seconds; the successor must not start before it is gone."""
+    h = stuck_exit_harness(tmp_path, exit_after_stop=8, launcher_lag=3)
+    h.tick("cto")
+    assert systemctl(h, "stop") == [["systemctl", "--user", "stop", "--no-block", SCOPE]]
+    assert h.fake.calls.index(systemctl(h, "stop")[0]) < h.fake.calls.index(respawns(h)[0])
+    assert h.fake.respawned_over_live_agent == [False]  # nothing of the predecessor was running at the respawn
+    pane = h.pane("cto")
+    assert pane.agent == "claude" and pane.agent_pid == "400"  # the successor started
+    assert "refused" not in pane.text
+    assert h.state["cto"]["phase"] == "watch" and h.state["cto"]["predecessor_scope"] == SCOPE
+    assert len(cto_alerts(h)) == 1 and "survived two /exit attempts" in cto_alerts(h)[0]
+
+
+def test_old_scope_leftover_that_never_exits_blocks_the_respawn_and_alerts_once(tmp_path: Path) -> None:
+    h = stuck_exit_harness(tmp_path, exit_after_stop=None)
+    h.tick("cto")
+    assert respawns(h) == []
+    assert h.state["cto"]["phase"] == "handoff"
+    assert len(systemctl(h, "stop")) == 1
+    alerts = cto_alerts(h)
+    assert len(alerts) == 1 and "relaunch held" in alerts[0] and SCOPE in alerts[0] and "60s" in alerts[0]
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1  # one alert per handoff phase, still no respawn
+    h.pane("cto").agent = None  # it finally exits: the ordinary relaunch takes over
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1 and h.fake.respawned_over_live_agent == [False]
+
+
+def test_forced_relaunch_never_stops_an_agent_it_cannot_place_in_a_driver_scope(tmp_path: Path) -> None:
+    h = stuck_exit_harness(tmp_path, scope=None)
+    h.tick("cto")
+    assert systemctl(h, "stop") == [] and respawns(h) == []
+    assert len(cto_alerts(h)) == 1 and "not in a lu-driver scope" in cto_alerts(h)[0]
+
+
+def test_forced_relaunch_waits_while_the_launcher_is_still_exiting_after_the_agent_is_gone(tmp_path: Path) -> None:
+    h = stuck_exit_harness(tmp_path, launcher_lag=70)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1 and "launcher is still exiting" in cto_alerts(h)[0]
+
+
+def test_unreadable_agent_cgroup_never_stops_or_respawns(tmp_path: Path) -> None:
+    h = stuck_exit_harness(tmp_path)
+    h.fake.override["cat"] = subprocess.CompletedProcess([], 1, "", "No such file or directory")
+    h.tick("cto")
+    assert systemctl(h, "stop") == [] and respawns(h) == []
+    assert any("telemetry unavailable" in line and "agent cgroup" in line for line in h.logs)
+
+
+def test_human_activity_blocks_the_scope_stop(tmp_path: Path) -> None:
+    """AC-04: the human-activity guard also covers the new stop."""
+    h = stuck_exit_harness(tmp_path)
+    h.fake.clients = [("cto", int(h.moment.timestamp()))]
+    h.tick("cto")
+    assert systemctl(h, "stop") == [] and respawns(h) == []
+
+
+def test_agent_is_never_stopped_before_handoff_done(tmp_path: Path) -> None:
+    """AC-04: no forced kill without HANDOFF-DONE, however long the handoff takes."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.tick("cto")
+    for _ in range(30):
+        h.advance(5)
+        h.tick("cto")
+    assert systemctl(h, "stop") == [] and respawns(h) == []
+
+
+def test_replaced_agent_during_the_wait_is_never_respawned_over(tmp_path: Path) -> None:
+    h = stuck_exit_harness(tmp_path, exit_after_stop=None)
+    original_sleep = h.fake.sleep
+
+    def replace_then_sleep(seconds: float) -> None:
+        h.pane("cto").agent_pid, h.pane("cto").agent_start = "555", "Fri Oct 16 12:20:00 2026"  # a human relaunch
+        original_sleep(seconds)
+
+    h.guard.tmux.sleep = replace_then_sleep
+    h.tick("cto")
+    assert respawns(h) == []
+    assert any("replaced while waiting for the predecessor" in line for line in h.logs)
+
+
+def relaunched(tmp_path: Path) -> Harness:
+    """A cto lane relaunched by the forced path, with the successor's launcher then reporting its output."""
+    h = stuck_exit_harness(tmp_path)
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+    return h
+
+
+def refuse(h: Harness, rc: int = 3, tail: str = "refused: a CTO process is still running") -> None:
+    pane = h.pane("cto")
+    pane.agent = None
+    pane.text = launcher_output(h.state["cto"]["relaunch_id"], rc, tail)
+
+
+def test_single_instance_refusal_is_retried_exactly_once_on_the_next_tick(tmp_path: Path) -> None:
+    """AC-02: one retry, a tick later; the second refusal alerts and stays down."""
+    h = relaunched(tmp_path)
+    refuse(h)
+    h.advance(5)
+    h.tick("cto")  # the refusal is seen; the retry waits for the next tick
+    assert len(respawns(h)) == 1
+    assert [body for recipient, body in h.sent if recipient == "epics"] == []
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 2 and h.state["cto"]["relaunch_retried"] is True
+    refuse(h)
+    h.advance(5)
+    h.tick("cto")
+    alerts = [body for recipient, body in h.sent if recipient == "epics"]
+    assert len(alerts) == 1 and "rc=3" in alerts[0] and "still running" in alerts[0]
+    for _ in range(3):
+        h.advance(5)
+        h.tick("cto")
+    assert len(respawns(h)) == 2 and len([1 for r, _b in h.sent if r == "epics"]) == 1
+
+
+def test_a_successful_retry_clears_the_retry_marker(tmp_path: Path) -> None:
+    h = relaunched(tmp_path)
+    refuse(h)
+    h.advance(5)
+    h.tick("cto")
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 2  # the fake's new launcher starts an agent
+    h.advance(5)
+    h.tick("cto")
+    state = h.state["cto"]
+    assert not any(key in state for key in ("relaunch_retried", "relaunch_retry", "relaunch_hold", "predecessor_scope"))
+
+
+@pytest.mark.parametrize(
+    ("rc", "tail"),
+    [
+        (1, "refused: a CTO process is still running"),  # another rc
+        (3, "project interpreter not found: /x/.venv/bin/python"),  # rc 3 for another reason
+        (6, "DRIVER_SCOPE_REFUSED reason=slice-not-installed"),
+    ],
+)
+def test_any_other_launcher_failure_stays_terminal(tmp_path: Path, rc: int, tail: str) -> None:
+    h = relaunched(tmp_path)
+    refuse(h, rc, tail)
+    for _ in range(3):
+        h.advance(5)
+        h.tick("cto")
+    assert len(respawns(h)) == 1
+    assert len([1 for r, _b in h.sent if r == "epics"]) == 1
+
+
+def test_refusal_with_the_predecessor_scope_still_active_is_terminal(tmp_path: Path) -> None:
+    h = relaunched(tmp_path)
+    h.fake.live_scopes.add(SCOPE)
+    refuse(h)
+    for _ in range(3):
+        h.advance(5)
+        h.tick("cto")
+    assert len(respawns(h)) == 1
+    assert len([1 for r, _b in h.sent if r == "epics"]) == 1
+    assert any("the predecessor may remain" in line for line in h.logs)
+
+
+def test_retry_is_deferred_not_spent_while_a_human_is_active(tmp_path: Path) -> None:
+    h = relaunched(tmp_path)
+    refuse(h)
+    h.advance(5)
+    h.tick("cto")
+    h.advance(5)
+    h.fake.clients = [("cto", int(h.moment.timestamp()))]
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+    h.advance(5)
+    h.fake.clients.clear()
+    h.tick("cto")
+    assert len(respawns(h)) == 2
+
+
+def tmux_with(answers: dict[str, subprocess.CompletedProcess]) -> cg.Tmux:
+    return cg.Tmux(run=lambda argv: answers[argv[0] if argv[0] == "cat" else argv[2]])
+
+
+def ok(stdout: str, rc: int = 0) -> subprocess.CompletedProcess:
+    return subprocess.CompletedProcess([], rc, stdout, "")
+
+
+def test_agent_scope_is_the_unit_under_lu_driver_slice_even_from_a_sub_cgroup() -> None:
+    assert tmux_with({"cat": ok(CGROUP)}).agent_scope("200@x") == SCOPE
+    direct = CGROUP.replace("/tools", "")
+    assert tmux_with({"cat": ok(direct)}).agent_scope("200@x") == SCOPE
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "0::/user.slice/user-1000.slice/session-3.scope\n",
+        "0::/user.slice/user-1000.slice/user@1000.service/lu.slice/lu-dispatch.slice/lu-dispatch-x.scope\n",
+        "0::/user.slice/user-1000.slice/user@1000.service/lu.slice/lu-driver.slice/lu-driver-x.service\n",
+        "1:name=systemd:/user.slice\n",
+    ],
+)
+def test_agent_outside_a_driver_scope_has_none(line: str) -> None:
+    assert tmux_with({"cat": ok(line)}).agent_scope("200@x") is None
+
+
+def test_unreadable_agent_cgroup_is_unknown() -> None:
+    with pytest.raises(cg.TelemetryUnavailable):
+        tmux_with({"cat": ok("", 1)}).agent_scope("200@x")
+
+
+@pytest.mark.parametrize(("state", "active"), [("active", True), ("deactivating", True), ("inactive", False), ("failed", False)])
+def test_scope_state_reads_systemctl_is_active(state: str, active: bool) -> None:
+    assert tmux_with({"is-active": ok(state + "\n", 0 if active else 3)}).scope_active(SCOPE) is active
+
+
+@pytest.mark.parametrize("answer", [ok("", 1), ok("unknown\n", 4), ok("Failed to connect to bus\n", 1)])
+def test_unknown_scope_state_is_never_read_as_gone(answer: subprocess.CompletedProcess) -> None:
+    with pytest.raises(cg.TelemetryUnavailable):
+        tmux_with({"is-active": answer}).scope_active(SCOPE)
+
+
+def test_process_exists_requires_the_same_start_time() -> None:
+    rows = "1 0 Fri Oct 16 06:00:00 2026 systemd\n200 100 Fri Oct 16 11:00:00 2026 claude\n"
+    tmux = cg.Tmux(run=lambda argv: ok(rows))
+    start = dt.datetime(2026, 10, 16, 11, 0).isoformat()
+    assert tmux.process_exists(f"200@{start}") is True
+    assert tmux.process_exists("200@" + dt.datetime(2026, 10, 16, 11, 5).isoformat()) is False  # a reused pid
+    assert tmux.process_exists(f"201@{start}") is False
 
 
 def test_ctx_pct_is_logged_on_every_handoff_tick(tmp_path: Path) -> None:
