@@ -291,3 +291,90 @@ def test_rulings_sealed_before_the_field_stay_valid():
     legacy = {key: value for key, value in GRANT_REQUEST.items() if key != "withheld_capability"}
     for request in (GRANT_REQUEST, legacy, {**GRANT_REQUEST, "p2_fix_verification": None}):
         assert budget_grant.parse_request(dict(request), "ruling") == request
+
+
+# A seat's unpublished run that its own later published verdict supersedes (#12563). The ledger's markers are
+# anthropic runs started 11:00; this seat's earlier run ("orphan") never published, and round-2 is its witness.
+ANTHROPIC = {"model": "claude-opus-5-5", "agent": "claude"}
+
+
+def superseded_case(monkeypatch, tmp_path, orphan_reply, *, replies=PR_1117, orphan_started="2026-09-23T10:00:00.000001+00:00",
+                    orphan_status="done", witness=2):
+    tasks, comments, calls = p2_case(monkeypatch, tmp_path, replies)
+    # The witness: a later round's published verdict, re-derived from its own run record. The orphan ran at
+    # round 1's head, so its head is a round already counted.
+    write_task(tasks, task_id=f"round-{witness}", worktree_base_sha=str(witness) * 40,
+               started_at="2026-09-23T11:00:00.000001+00:00", reply=replies[witness - 1], review_mode="cross_family",
+               **ANTHROPIC)
+    write_task(tasks, task_id="orphan", worktree_base_sha="1" * 40, started_at=orphan_started, reply=orphan_reply,
+               status=orphan_status, review_mode="cross_family", **ANTHROPIC)
+    seat(tasks, VERIFIED)
+    return tasks, comments, calls
+
+
+@pytest.mark.parametrize("orphan_reply", [reply(finding("F0")), reply(finding("F0", "P1")), "VERDICT: APPROVE"],
+                         ids=["p2", "p1-resolved-by-a-later-structured-verdict", "approve"])
+def test_a_superseded_unpublished_run_is_admitted(monkeypatch, tmp_path, orphan_reply):
+    tasks, _comments, _calls = superseded_case(monkeypatch, tmp_path, orphan_reply)
+    result = record(tasks, tmp_path)
+    assert result["verdict"] == "APPROVED" and result["budget_grant"]["cited_verdict_head"] == REJECTED_HEAD
+
+
+def test_an_unpublished_run_its_seat_never_superseded_is_refused(monkeypatch, tmp_path):
+    # Started after every published verdict of its seat, so no later same-seat verdict exists.
+    tasks, _comments, calls = superseded_case(monkeypatch, tmp_path, reply(finding("F0")),
+                                              orphan_started="2026-09-23T13:00:00.000001+00:00")
+    refused(tasks, tmp_path, "evidence")
+    assert calls["posts"] == 0 and not receipts(tmp_path)
+
+
+@pytest.mark.parametrize(
+    "orphan_reply,reason",
+    [(reply(finding("F0", "P1")), "blocker"), ("VERDICT: BLOCKED", "blocker"),
+     ("VERDICT: REQUEST_CHANGES\nF0 [P2] docs/readme.md:3 race.\nSECURITY_VERDICT: FAIL", "blocker")],
+    ids=["open-p1", "blocked", "security-fail"],
+)
+def test_a_superseded_run_still_counts_for_the_ledger_rules(monkeypatch, tmp_path, orphan_reply, reason):
+    # Prose verdicts never close a finding, so the superseded run's P1 stays open: supersession resolves none.
+    prose = tuple(f"VERDICT: REQUEST_CHANGES\nF{n} [P2] docs/readme.md:{n} the retry path races." for n in (1, 2, 3))
+    tasks, _comments, calls = superseded_case(monkeypatch, tmp_path, orphan_reply, replies=prose)
+    refused(tasks, tmp_path, reason)
+    assert calls["posts"] == 0 and not receipts(tmp_path)
+
+
+@pytest.mark.parametrize("variant", ["no-reply", "not-done-with-verdict"])
+def test_the_other_rule_five_refusals_stay_for_a_seat_with_a_later_verdict(monkeypatch, tmp_path, variant):
+    tasks, _comments, _calls = superseded_case(monkeypatch, tmp_path, reply(finding("F0")))
+    if variant == "no-reply":
+        (tasks / "orphan.result").unlink()
+    else:
+        write_task(tasks, task_id="orphan", worktree_base_sha="1" * 40, started_at="2026-09-23T10:00:00.000001+00:00",
+                   reply=reply(finding("F0")), status="failed", review_mode="cross_family", **ANTHROPIC)
+    refused(tasks, tmp_path, "evidence")
+
+
+def restart(comments, index, replies, started):
+    """Re-post round ``index + 1``'s marker with another start time, as a verdict from a run begun then."""
+    comments[index]["body"] = recorder.build_comment(
+        sha=str(index + 1) * 40, task_id=f"round-{index + 1}", started=started, verdict="CHANGES_REQUESTED",
+        model="claude-opus-5-5", family="anthropic", reply=replies[index])
+
+
+def test_a_verdict_started_before_a_superseded_run_cannot_close_its_finding(monkeypatch, tmp_path):
+    # The orphan (10:00) raises a P1. A structured verdict that omits it but started at 09:00, though published
+    # later, never saw it; the rejections that did see it are prose, which close nothing.
+    prose = tuple(f"VERDICT: REQUEST_CHANGES\nF{n} [P2] docs/readme.md:{n} the retry path races." for n in (1, 3))
+    replies = (prose[0], reply(finding("F3")), prose[1])
+    tasks, comments, calls = superseded_case(monkeypatch, tmp_path, reply(finding("F9", "P1")), replies=replies,
+                                              witness=3)
+    restart(comments, 1, replies, "2026-09-23T09:00:00.000001+00:00")
+    refused(tasks, tmp_path, "blocker")
+    assert calls["posts"] == 0 and not receipts(tmp_path)
+
+
+def test_a_superseded_run_that_nothing_closed_must_be_among_the_sealed_ids(monkeypatch, tmp_path):
+    # An unresolved P2 of the superseded run (F9) is an open finding: the sealed set names only F3.
+    prose = tuple(f"VERDICT: REQUEST_CHANGES\nF{n} [P2] docs/readme.md:{n} the retry path races." for n in (1, 2, 3))
+    tasks, _comments, calls = superseded_case(monkeypatch, tmp_path, reply(finding("F9")), replies=prose)
+    refused(tasks, tmp_path, "binding")
+    assert calls["posts"] == 0 and not receipts(tmp_path)

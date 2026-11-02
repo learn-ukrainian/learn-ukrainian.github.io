@@ -816,9 +816,28 @@ def _p2_fix_round(
     if (latest["verdict"] != "CHANGES_REQUESTED"
             or lookup_verdict(comments, latest["sha"], login).state != "CHANGES_REQUESTED"):
         raise GrantRefused(BLOCKER, "the latest recorded verdict is not a trusted REJECT")
+    try:
+        runs, runs_refusal = lineage.lineage_runs(task_root, repository=request["repository"], number=request["pr"],
+                                                  branch=request["lineage_id"]), None
+    except lineage.LineageRefused as exc:
+        runs, runs_refusal = [], exc
+    # A finished run whose verdict its seat superseded is no obstruction (rule 5), but supersession resolves
+    # no finding: its findings stay open until a recorded structured verdict that started after the run omits
+    # them (an earlier-started verdict never saw them), and while open they bind the checks below.
+    superseded = lineage.superseded_runs(runs=runs, comments=comments, login=login, exclude_head=head)
+    replies = {(run.task_id, lineage._started(run.record)): run.reply for run in runs}
+    raised: list[tuple[str, dict[str, list[str | None]]]] = []
+    blocking: set[str] = set()
+    for entry in superseded:
+        text = str(replies[(entry["task"], entry["started"])])
+        read = _reply_findings(text)
+        if entry["verdict"] == "BLOCKED" or read is None or recorder._security_verdict_blocks(text):
+            raise GrantRefused(BLOCKER, f"{entry['task']}: the ledger holds a BLOCKED, a security FAIL, "
+                                        "or an edited, withheld or unreadable verdict")
+        raised.append((entry["started"], read[1]))
+        blocking |= {finding for finding, entries in read[1].items() if set(entries) & set(BLOCKING_SEVERITIES)}
     # After each recorded verdict in order, a structured object lists what stays open, so one it
     # omits is resolved; a prose entry keeps its finding open.
-    blocking: set[str] = set()
     still_open: set[str] = set()
     found: dict[str, list[str | None]] = {}
     for position, marker in markers:
@@ -830,28 +849,36 @@ def _p2_fix_round(
             raise GrantRefused(BLOCKER, f"{marker['task']}: the ledger holds a BLOCKED, a security FAIL, "
                                         "or an edited, withheld or unreadable verdict")
         structured, found = read
+        if structured:
+            raised = [(started, {key: value for key, value in items.items() if started >= marker["started"] or key in found})
+                      for started, items in raised]
         still_open = (set() if structured else still_open) | set(found)
         blocking |= {finding for finding, entries in found.items() if set(entries) & set(BLOCKING_SEVERITIES)}
-    if blocking & still_open:
-        raise GrantRefused(BLOCKER, f"{sorted(blocking & still_open)}: an earlier P0/P1 finding has no recorded resolution")
-    if not found or any(severity != "P2" for entries in found.values() for severity in entries):
+    unresolved: dict[str, list[str | None]] = {}
+    for _, items in raised:
+        for key, entries in items.items():
+            unresolved.setdefault(key, []).extend(entries)
+    if blocking & (still_open | set(unresolved)):
+        raise GrantRefused(BLOCKER, f"{sorted(blocking & (still_open | set(unresolved)))}: "
+                                    "an earlier P0/P1 finding has no recorded resolution")
+    # What stays open at the latest rejection: its own findings and every unresolved superseded one.
+    open_now = {key: [*found.get(key, []), *unresolved.get(key, [])] for key in (*found, *unresolved)}
+    if not found or any(severity != "P2" for entries in open_now.values() for severity in entries):
         raise GrantRefused(BLOCKER, "the latest rejection does not leave a nonempty set of findings, all P2")
-    if sorted(found) != p2["finding_ids"]:
-        raise GrantRefused(BINDING, f"the latest rejection names {sorted(found)}, not the sealed finding ids")
+    if sorted(open_now) != p2["finding_ids"]:
+        raise GrantRefused(BINDING, f"the open findings are {sorted(open_now)}, not the sealed finding ids")
     # Rule 5: every earlier review run is terminal and its verdict published; pushing first earns no credit.
     published = {(marker["task"], marker["started"]) for _, marker in markers}
-    try:
-        runs = lineage.lineage_runs(task_root, repository=request["repository"], number=request["pr"],
-                                    branch=request["lineage_id"])
-    except lineage.LineageRefused as exc:
-        raise GrantRefused(EVIDENCE, exc.detail) from None
+    if runs_refusal is not None:
+        raise GrantRefused(EVIDENCE, runs_refusal.detail)
+    forgiven = {(entry["task"], entry["started"]) for entry in superseded}
     for run in runs:
         # Only the run being recorded is exempt; another seat at the candidate head must be published first.
         if (run.task_id, run.record.get("run_nonce")) == recording_run or run.record.get("mode") == "workspace-write":
             continue
         status = run.record.get("status")
         if (status not in lineage.TERMINAL_TASK_STATUSES or run.reply is None
-                or (status == "done" and (run.task_id, lineage._started(run.record)) not in published)
+                or (status == "done" and (run.task_id, lineage._started(run.record)) not in published | forgiven)
                 or (status != "done" and recognized_verdicts(run.reply))):
             raise GrantRefused(EVIDENCE, f"{run.task_id}: an unknown or unpublished review obstruction")
     if repo_root is None:
