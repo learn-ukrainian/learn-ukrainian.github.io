@@ -1266,11 +1266,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/euphony-advanced/activities.yaml",
-      "sha256": "548dd40cbc62e788b81b77a5deb66b42b4be8c8b2b2f0ca56a8f4e88d653d759"
+      "sha256": "3d5cb1d1a34ae19a911eebf77cc7bc08fb83dcdb4a10c883b21917d7cf1c0657"
     },
     {
       "path": "curriculum/l2-uk-en/a2/euphony-advanced/module.md",
-      "sha256": "eb26373e82bee7c2aa16ba9d1279ab91ee242343e297390893f0b4beaa224742"
+      "sha256": "e2cda9a34f260092e14f757a2fa7f6b6e6b46c27f52e11e80ec6c69ad6bd116f"
     },
     {
       "path": "curriculum/l2-uk-en/a2/euphony-advanced/resources.yaml",
@@ -6138,7 +6138,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/euphony-advanced.yaml",
-      "sha256": "6272dbd2d06619c91cd213f3c4ed4af3df5a2611330a51228616cd2f241ce7ee"
+      "sha256": "391b9561696ab8a9c96e63e7668cc0348e0bdaeef32c904c1179ea34551d984a"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/foundations-practice.yaml",
@@ -14286,7 +14286,7 @@
     },
     {
       "path": "site/src/content/docs/a2/euphony-advanced.mdx",
-      "sha256": "425358e85e423ae98c1fdc8755018b38749baa5e8f21fbfc14588ad4138603e9"
+      "sha256": "fecf6243779bb45935afba5c211e73adf700d2a0aa7b3e0dfc3e3ad2441362c9"
     },
     {
       "path": "site/src/content/docs/a2/foundations-practice.mdx",
