@@ -654,26 +654,40 @@ def _status_or_fail(args: argparse.Namespace) -> int:
     return 1
 
 
-_URL_USERINFO = re.compile(r"(?<=://)[^/@\s]+@")
-_QUOTED = re.compile(r"""'[^']*'|"[^"]*\"""")
-_CREDENTIAL_WORD = re.compile(r"authoriz|bearer|token|secret|passw|credential|api[_-]?key|cookie", re.IGNORECASE)
+_SAFE_WORD = re.compile(r"[A-Za-z]+|\d+|[0-9a-f]{40}|[0-9a-f]{64}")
+_SAFE_ARG = re.compile(r"--|--?[A-Za-z][A-Za-z0-9-]*|[A-Za-z0-9][A-Za-z0-9._/^{}~:+-]*")
+_CREDENTIAL_WORD = re.compile(r"authoriz|bearer|token|secret|passw|credential|(api|private|access)[\s_-]*key|cookie", re.IGNORECASE)
 
 
-def _diagnostic_text(text: str) -> str:
-    """``text`` safe to print: no URL credentials, quoted spans (paths with spaces), paths or credential lines."""
-    from scripts.orchestration.dispatch_admission import redact_paths
+def _diagnostic_stderr(line: str) -> str:
+    """The words of one stderr line that are plain words or numbers; every other word is ``<redacted>``.
 
-    if _CREDENTIAL_WORD.search(_URL_USERINFO.sub("", text)):
-        return "<redacted: possible credential>"
-    return redact_paths(_QUOTED.sub("'<redacted>'", _URL_USERINFO.sub("", text)))
+    A path, a URL, a quoted value or an identifier cannot be told from a secret by its shape, so none is
+    printed. A line that still names a secret-bearing field is replaced whole.
+    """
+    words = []
+    for word in line.split():
+        core = word.rstrip(":,.;")
+        words.append(word if _SAFE_WORD.fullmatch(core) else "<redacted>" + word[len(core):])
+    text = re.sub(r"(<redacted>[:,.;]* ?)+", "<redacted> ", " ".join(words)).strip()
+    return "<redacted: possible credential>" if _CREDENTIAL_WORD.search(text) else text
+
+
+def _diagnostic_args(words: list[str]) -> str:
+    """The command's words that are subcommands, flags or ref-like names; a path, URL or value is ``<arg>``."""
+    safe = (
+        word.split("=", 1)[0] + "=<arg>" if word.startswith("--") and "=" in word
+        else word if _SAFE_ARG.fullmatch(word) and "://" not in word and not word.startswith("/") else "<arg>"
+        for word in words
+    )
+    return " ".join(safe)
 
 
 def _failed_operation(exc: subprocess.CalledProcessError) -> str:
     """``CalledProcessError: <command> exited <rc>: <first stderr line>``, without secrets (#12468).
 
-    The command drops ``-C <path>`` and ``-c <key=value>`` (a path or a configured value). Only the first
-    stderr line is kept, and both parts go through :func:`_diagnostic_text`, which fails closed on a line
-    that mentions a credential.
+    The command drops ``-C <path>`` and ``-c <key=value>``. Only the first stderr line is kept. Both parts
+    print only what :func:`_diagnostic_args` and :func:`_diagnostic_stderr` can show safely.
     """
     words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
     kept, skip = [], False
@@ -686,8 +700,8 @@ def _failed_operation(exc: subprocess.CalledProcessError) -> str:
             kept.append(word)
     stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
     first = next((line.strip() for line in stderr.splitlines() if line.strip()), "")
-    detail = f": {_diagnostic_text(first)}" if first else ""
-    return f"CalledProcessError: {_diagnostic_text(' '.join(kept))} exited {exc.returncode}{detail}"
+    detail = f": {_diagnostic_stderr(first)}" if first else ""
+    return f"CalledProcessError: {_diagnostic_args(kept)} exited {exc.returncode}{detail}"
 
 
 def main(argv=None) -> int:

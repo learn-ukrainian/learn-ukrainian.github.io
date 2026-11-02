@@ -2557,16 +2557,26 @@ def test_failed_git_call_reports_its_operation_and_first_stderr_line_without_sec
     assert "exited 128: fatal: could not read from" in message
     assert "second line" not in message
     assert "token" not in message and "/home/ops/private" not in message
-    for stderr, leaked in (
-        ("remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
-        ("fatal: Unable to create '/synthetic/private directory/worktree/index.lock': Permission denied", "index.lock"),
+    # Each leaks if a pattern list were the only defence: the redaction keeps plain words and numbers only.
+    for command, stderr, leaked in (
+        (["git", "fetch"], "remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
+        (["git", "fetch"], "remote: API Key: SYNTHETIC_VALUE", "SYNTHETIC_VALUE"),
+        (["git", "fetch"], "fatal: Unable to create '/synthetic/private directory/worktree/index.lock': denied", "worktree"),
+        (["git", "fetch"], "fatal: cannot open '/synthetic/it's dir/sub/file': denied", "sub"),
+        (["git", "worktree", "add", "/synthetic/private directory/worktree"], "fatal: denied", "directory"),
     ):
         monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=subprocess.CalledProcessError(
-            128, ["git", "-C", "/home/ops/private", "rev-parse", "--verify", "topic^{commit}"], stderr=stderr)))
+            128, [command[0], "-C", "/home/ops/private", *command[1:]], stderr=stderr)))
         assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
         message = capsys.readouterr().err
-        assert message.startswith("dispatcher: CalledProcessError: git rev-parse --verify topic^{commit} exited 128:")
+        assert message.startswith(f"dispatcher: CalledProcessError: {command[0]} {command[1]}")
         assert leaked not in message and "synthetic" not in message.lower()
+    monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=subprocess.CalledProcessError(
+        128, ["git", "-C", "/home/ops/private", "rev-parse", "--verify", "topic^{commit}"],
+        stderr="fatal: Needed a single revision")))
+    assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
+    assert capsys.readouterr().err == (
+        "dispatcher: CalledProcessError: git rev-parse --verify topic^{commit} exited 128: fatal: Needed a single revision\n")
 
 
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
