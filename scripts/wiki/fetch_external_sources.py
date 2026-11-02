@@ -26,9 +26,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
-import os
 import re
-import socket
 import subprocess
 import sys
 import time
@@ -37,7 +35,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urljoin, urlparse
 
 import requests
 import yaml
@@ -60,12 +58,10 @@ YOUTUBE_DELAY = 5.0
 YOUTUBE_BATCH_PAUSE = 30.0
 YOUTUBE_BATCH_SIZE = 20
 
-# Tor proxy settings — password from env or torrc (local-only control port)
-TOR_SOCKS_PROXY = "socks5://127.0.0.1:9050"
-TOR_CONTROL_PORT = 9051
-TOR_CONTROL_PASSWORD = os.environ.get("TOR_CONTROL_PASSWORD", "")
-COOKIE_FILE = Path("/tmp/yt-cookies.txt")
-MAX_429_RETRIES = 3
+USER_AGENT = (
+    "learn-ukrainian-external-sources/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 
 YOUTUBE_SUBTITLE_LANGS = ("uk", "en")
 YOUTUBE_STATUS_FILENAMES = ("ulp_blogs.jsonl", "other_blogs.jsonl")
@@ -85,6 +81,10 @@ YOUTUBE_RECORD_FIELDS = (
 )
 YOUTUBE_DISCOVERY_DIR = PROJECT_ROOT / "data" / "youtube_discovery"
 YOUTUBE_PATTERN_PATH = PROJECT_ROOT / "registry" / "youtube_discovery" / "patterns.yaml"
+
+
+class CollectionUnavailable(RuntimeError):
+    """Collection stopped; the target remains eligible for a later attempt."""
 
 
 @dataclass(frozen=True)
@@ -200,12 +200,30 @@ def load_external_urls() -> dict[str, list[str]]:
 def fetch_blog_article(url: str) -> dict[str, Any] | None:
     """Fetch a blog article and extract clean text content."""
     try:
-        resp = requests.get(
-            url,
-            timeout=30,
-            headers={"User-Agent": "Mozilla/5.0 (learn-ukrainian curriculum project)"},
-        )
-        resp.raise_for_status()
+        request_url = url
+        for hop in range(requests.sessions.DEFAULT_REDIRECT_LIMIT + 1):
+            host = (urlparse(request_url).hostname or "").lower().rstrip(".")
+            if host == "ukrainianlessons.com" or host.endswith(".ukrainianlessons.com"):
+                raise CollectionUnavailable("Ukrainian Lessons website collection is disabled: no automated scraping.")
+            if hop:
+                time.sleep(BLOG_DELAY)
+            resp = requests.get(
+                request_url,
+                timeout=30,
+                headers={"User-Agent": USER_AGENT},
+                allow_redirects=False,
+            )
+            if resp.status_code in {401, 403, 429}:
+                raise CollectionUnavailable(f"Blog collection refused (HTTP {resp.status_code}); stopped.")
+            resp.raise_for_status()
+            if not resp.is_redirect:
+                break
+            request_url = urljoin(request_url, resp.headers["Location"])
+            resp.close()
+        else:
+            raise CollectionUnavailable("Blog redirect limit exceeded; collection stopped.")
+    except CollectionUnavailable:
+        raise
     except Exception as e:
         print(f"  ❌ {url}: {e}")
         return None
@@ -406,15 +424,9 @@ def load_existing_video_ids(output_file: Path) -> set[str]:
     return existing_ids
 
 
-def _yt_dlp_base_cmd(use_tor: bool) -> list[str]:
+def _yt_dlp_base_cmd() -> list[str]:
     """Build the shared yt-dlp invocation using the repo venv explicitly."""
-    cmd = [str(VENV_PYTHON), "-m", "yt_dlp"]
-    if use_tor:
-        cookie_file = _ensure_cookie_file()
-        cmd.extend(["--proxy", TOR_SOCKS_PROXY, "--cookies", str(cookie_file)])
-    else:
-        cmd.extend(["--cookies-from-browser", "chrome"])
-    return cmd
+    return [str(VENV_PYTHON), "-m", "yt_dlp", "--ignore-config", "--user-agent", USER_AGENT]
 
 
 def _run_yt_dlp(
@@ -423,12 +435,17 @@ def _run_yt_dlp(
     limiter: YouTubeRequestLimiter,
     label: str,
     timeout: int,
-    use_tor: bool = False,
 ) -> subprocess.CompletedProcess[str]:
     """Run yt-dlp with the shared rate limiter."""
     limiter.before_request(label)
-    cmd = _yt_dlp_base_cmd(use_tor) + args
-    return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
+    cmd = _yt_dlp_base_cmd() + args
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise CollectionUnavailable("YouTube request unavailable; collection stopped.") from exc
+    if result.returncode or has_http_status(result.stderr or "", (401, 403, 429)):
+        raise CollectionUnavailable("YouTube request failed or was refused; collection stopped, retry later.")
+    return result
 
 
 def get_channel_video_urls(
@@ -454,6 +471,8 @@ def get_channel_video_urls(
             label="channel inventory",
             timeout=120,
         )
+    except CollectionUnavailable:
+        raise
     except Exception as e:
         print(f"  ❌ Channel scrape failed: {e}")
         return []
@@ -501,6 +520,8 @@ def get_channel_video_entries(
             label="channel inventory",
             timeout=120,
         )
+    except CollectionUnavailable:
+        raise
     except Exception as e:
         print(f"  ❌ Channel inventory failed: {e}")
         return []
@@ -522,71 +543,6 @@ def get_channel_video_entries(
     videos = [entry for entry in entries if isinstance(entry, dict) and _entry_video_url(entry)]
     print(f"  📺 Found {len(videos)} videos")
     return videos
-
-
-def _tor_is_running() -> bool:
-    """Check if Tor SOCKS proxy is accepting connections."""
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(2)
-        sock.connect(("127.0.0.1", 9050))
-        sock.close()
-        return True
-    except OSError:
-        return False
-
-
-def _tor_new_circuit() -> bool:
-    """Request a new Tor circuit via the control port."""
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(5)
-        sock.connect(("127.0.0.1", TOR_CONTROL_PORT))
-        sock.recv(1024)
-
-        sock.sendall(f'AUTHENTICATE "{TOR_CONTROL_PASSWORD}"\r\n'.encode())
-        resp = sock.recv(1024).decode()
-        if "250 OK" not in resp:
-            print(f"    ⚠️  Tor auth failed: {resp.strip()}")
-            sock.close()
-            return False
-
-        sock.sendall(b"SIGNAL NEWNYM\r\n")
-        resp = sock.recv(1024).decode()
-        sock.close()
-
-        if "250 OK" in resp:
-            print("    🔄 New Tor circuit requested, waiting 10s...")
-            time.sleep(10)
-            return True
-
-        print(f"    ⚠️  Tor NEWNYM failed: {resp.strip()}")
-        return False
-    except Exception as e:
-        print(f"    ⚠️  Tor control error: {e}")
-        return False
-
-
-def _ensure_cookie_file() -> Path:
-    """Export Chrome YouTube cookies to a Netscape cookie file for Tor use."""
-    if COOKIE_FILE.exists():
-        age = time.time() - COOKIE_FILE.stat().st_mtime
-        if age < 3600:
-            return COOKIE_FILE
-
-    try:
-        from pycookiecheat import chrome_cookies
-
-        cookies = chrome_cookies("https://www.youtube.com")
-        with open(COOKIE_FILE, "w", encoding="utf-8") as f:
-            f.write("# Netscape HTTP Cookie File\n")
-            for name, value in cookies.items():
-                f.write(f".youtube.com\tTRUE\t/\tTRUE\t0\t{name}\t{value}\n")
-        print(f"  🍪 Exported {len(cookies)} YouTube cookies")
-    except Exception as e:
-        print(f"  ⚠️  Cookie export failed: {e}")
-
-    return COOKIE_FILE
 
 
 def _parse_vtt(vtt_text: str) -> str:
@@ -625,7 +581,6 @@ def _fetch_video_metadata(
     video_url: str,
     *,
     limiter: YouTubeRequestLimiter,
-    use_tor: bool,
 ) -> dict[str, Any] | None:
     """Fetch YouTube metadata needed for the cached JSONL schema."""
     try:
@@ -634,8 +589,9 @@ def _fetch_video_metadata(
             limiter=limiter,
             label="video metadata",
             timeout=60,
-            use_tor=use_tor,
         )
+    except CollectionUnavailable:
+        raise
     except Exception as e:
         print(f"    ❌ Metadata fetch failed: {e}")
         return None
@@ -657,7 +613,6 @@ def _download_subtitle_text(
     video_id: str,
     *,
     limiter: YouTubeRequestLimiter,
-    use_tor: bool,
 ) -> str:
     """Download subtitles via yt-dlp and return normalized plain text."""
     import tempfile
@@ -665,53 +620,21 @@ def _download_subtitle_text(
     with tempfile.TemporaryDirectory() as tmpdir:
         output_template = str(Path(tmpdir) / "%(id)s.%(ext)s")
         for lang in YOUTUBE_SUBTITLE_LANGS:
-            for attempt in range(MAX_429_RETRIES + 1):
-                sub_file = Path(tmpdir) / f"{video_id}.{lang}.vtt"
-                if sub_file.exists():
-                    sub_file.unlink()
-
-                try:
-                    result = _run_yt_dlp(
-                        [
-                            "--write-sub",
-                            "--write-auto-sub",
-                            "--sub-lang",
-                            lang,
-                            "--sub-format",
-                            "vtt",
-                            "--skip-download",
-                            "--no-warnings",
-                            "-o",
-                            output_template,
-                            f"https://www.youtube.com/watch?v={video_id}",
-                        ],
-                        limiter=limiter,
-                        label=f"subtitle fetch ({lang})",
-                        timeout=90,
-                        use_tor=use_tor,
-                    )
-                except subprocess.TimeoutExpired:
-                    print(f"    ⏱️  Timeout fetching subs ({lang})")
-                    break
-                except Exception as e:
-                    print(f"    ❌ yt-dlp error ({lang}): {e}")
-                    break
-
-                if sub_file.exists():
-                    text = _parse_vtt(sub_file.read_text(encoding="utf-8"))
-                    if len(text) >= 30:
-                        return text
-                    break
-
-                is_429 = has_http_status(result.stderr or "", (429,))
-                if is_429 and use_tor and attempt < MAX_429_RETRIES:
-                    print(f"    🚫 429 on {lang} (attempt {attempt + 1}/{MAX_429_RETRIES})")
-                    _tor_new_circuit()
-                    continue
-
-                if is_429 and not use_tor:
-                    print("    🚫 429 — start Tor for auto-rotation: tor &")
-                break
+            sub_file = Path(tmpdir) / f"{video_id}.{lang}.vtt"
+            _run_yt_dlp(
+                [
+                    "--write-sub", "--write-auto-sub", "--sub-lang", lang,
+                    "--sub-format", "vtt", "--skip-download", "--no-warnings",
+                    "-o", output_template, f"https://www.youtube.com/watch?v={video_id}",
+                ],
+                limiter=limiter,
+                label=f"subtitle fetch ({lang})",
+                timeout=90,
+            )
+            if sub_file.exists():
+                text = _parse_vtt(sub_file.read_text(encoding="utf-8"))
+                if len(text) >= 30:
+                    return text
 
     return ""
 
@@ -777,12 +700,11 @@ def fetch_youtube_video(
     if not video_id:
         return None
 
-    use_tor = _tor_is_running()
-    metadata = _fetch_video_metadata(video_url, limiter=limiter, use_tor=use_tor)
+    metadata = _fetch_video_metadata(video_url, limiter=limiter)
     if not metadata:
         return None
 
-    subtitles = _download_subtitle_text(video_id, limiter=limiter, use_tor=use_tor)
+    subtitles = _download_subtitle_text(video_id, limiter=limiter)
 
     return build_youtube_record(
         channel=channel,
@@ -880,6 +802,7 @@ def discover_by_title_patterns(
             record = fetcher(video_url, channel=channel, limiter=limiter)
             if not record:
                 print("    ⚠️  Metadata fetch failed")
+                limiter.after_video(index)
                 continue
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
             f.flush()
@@ -887,6 +810,7 @@ def discover_by_title_patterns(
             new_records.append(record)
             suffix = "no captions" if record.get("no_captions") else f"{record['char_count']} chars"
             print(f"    ✅ {record['video_id']} ({suffix})")
+            limiter.after_video(index)
 
     print(f"\n  ✅ New entries: {len(new_records)} | 📄 {output_file}")
     return new_records
@@ -1009,9 +933,18 @@ def main() -> None:
         for channel in YOUTUBE_CHANNELS.values()
     )
     parser = argparse.ArgumentParser(
-        description="Fetch external sources for wiki enrichment",
+        description=("Fetch permitted external blogs and YouTube subtitles for wiki enrichment.\n"
+                     "Use for explicit source targets; Ukrainian Lessons website scraping is disabled."),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Registered YouTube channels:\n" + channel_names,
+        epilog=("Examples:\n"
+                "  .venv/bin/python scripts/wiki/fetch_external_sources.py --other-blogs\n"
+                "  .venv/bin/python scripts/wiki/fetch_external_sources.py --channel-name realna-istoria\n"
+                "  .venv/bin/python scripts/wiki/fetch_external_sources.py --status\n"
+                "Outputs: appends source JSONL; --build-db/--all writes sources.db. "
+                "--backup copies and deletes local caches.\n"
+                "Exit codes: 0 completed; 1 source unavailable/refused; 2 invalid arguments.\n"
+                "Related: #8999; docs/sources/permissions-register.yaml.\n\n"
+                "Registered YouTube channels:\n" + channel_names),
     )
     parser.add_argument("--ulp-blogs", action="store_true", help="Fetch ULP blog articles")
     parser.add_argument("--other-blogs", action="store_true", help="Fetch non-ULP articles")
@@ -1140,4 +1073,8 @@ def _backup_to_gdrive() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except CollectionUnavailable as exc:
+        print(f"Unavailable: {exc}", file=sys.stderr)
+        raise SystemExit(1) from None

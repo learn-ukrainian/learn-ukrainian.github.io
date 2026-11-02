@@ -268,9 +268,9 @@ def test_existing_live_cli_path_and_word_file_still_use_bounded_fetch(tmp_path, 
     words_file.write_text("# fixture\nfixture\nother\n\n")
     db = tmp_path / "sources.db"
     args = ["fixture", "--words-file", str(words_file), "--dict", "vts", "--dict", "sum", "--sleep", "0", "--db", str(db), "--db-role", "staging", "--create-db"]
-    assert ingest.main([*args, "--dry-run"]) == 0
+    assert ingest.main([*args, "--dry-run"]) == 1
     assert not db.exists()
-    assert ingest.main(args) == 0
+    assert ingest.main(args) == 1
     assert calls == [("fixture", 200), ("other", 200)] * 2
     with sqlite3.connect(db) as conn:
         assert conn.execute("SELECT word FROM slovnyk_me_entries ORDER BY id").fetchall() == [("fixture",), ("other",)]

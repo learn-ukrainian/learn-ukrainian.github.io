@@ -257,37 +257,45 @@ def test_status_output_includes_all_registered_channels(fetcher_module) -> None:
         assert f"{channel.output_filename} | present=no" in status
 
 
-@pytest.mark.parametrize("message,rotations", [
-    ("run 7f3a429c9e1b2d44", 0), ("z429nonhexZ", 0), ("0.429", 0),
-    ("HTTP429", 3), ("status: 429", 3),
+@pytest.mark.parametrize("message,refused", [
+    ("run 7f3a429c9e1b2d44", False), ("z429nonhexZ", False), ("0.429", False),
+    ("HTTP429", True), ("status: 429", True),
 ])
-def test_subtitle_retry_only_on_real_status(fetcher_module, monkeypatch, message, rotations):
+def test_subtitle_stops_only_on_real_status(fetcher_module, monkeypatch, message, refused):
     import subprocess
     from unittest.mock import Mock
 
-    run = Mock(return_value=subprocess.CompletedProcess([], 1, stdout="", stderr=message))
-    rotate = Mock()
-    monkeypatch.setattr(fetcher_module, "_run_yt_dlp", run)
-    monkeypatch.setattr(fetcher_module, "_tor_new_circuit", rotate)
+    run = Mock(return_value=subprocess.CompletedProcess([], 0, stdout="", stderr=message))
+    monkeypatch.setattr(fetcher_module.subprocess, "run", run)
     monkeypatch.setattr(fetcher_module, "YOUTUBE_SUBTITLE_LANGS", ("uk",))
-    assert fetcher_module._download_subtitle_text("fixture", limiter=None, use_tor=True) == ""
-    assert rotate.call_count == rotations
-    assert run.call_count == rotations + 1
+    limiter = fetcher_module.YouTubeRequestLimiter(sleep_fn=lambda _: None)
+    if refused:
+        with pytest.raises(fetcher_module.CollectionUnavailable):
+            fetcher_module._download_subtitle_text("fixture", limiter=limiter)
+    else:
+        assert fetcher_module._download_subtitle_text("fixture", limiter=limiter) == ""
+    assert run.call_count == 1
+    cmd = run.call_args.args[0]
+    assert cmd[cmd.index("--user-agent") + 1] == fetcher_module.USER_AGENT
+    assert "/issues" in fetcher_module.USER_AGENT
+    assert "--ignore-config" in cmd
+    assert not any(arg in cmd for arg in ("--cookies-from-browser", "--cookies", "--proxy"))
 
 
-def test_subtitle_status_without_tor_does_not_rotate(fetcher_module, monkeypatch, capsys):
+def test_subtitle_refusal_does_not_retry(fetcher_module, monkeypatch, capsys):
     import subprocess
     from unittest.mock import Mock
 
     monkeypatch.setattr(fetcher_module, "YOUTUBE_SUBTITLE_LANGS", ("uk",))
-    monkeypatch.setattr(fetcher_module, "_run_yt_dlp", Mock(
+    run = Mock(
         return_value=subprocess.CompletedProcess([], 1, stdout="", stderr="HTTP429"),
-    ))
-    rotate = Mock()
-    monkeypatch.setattr(fetcher_module, "_tor_new_circuit", rotate)
-    assert fetcher_module._download_subtitle_text("fixture", limiter=None, use_tor=False) == ""
-    rotate.assert_not_called()
-    assert "429" in capsys.readouterr().out
+    )
+    monkeypatch.setattr(fetcher_module.subprocess, "run", run)
+    limiter = fetcher_module.YouTubeRequestLimiter(sleep_fn=lambda _: None)
+    with pytest.raises(fetcher_module.CollectionUnavailable):
+        fetcher_module._download_subtitle_text("fixture", limiter=limiter)
+    assert run.call_count == 1
+    assert "rotation" not in capsys.readouterr().out
 
 
 @pytest.mark.parametrize("caption,expected", [
@@ -304,16 +312,19 @@ def test_subtitle_download_reads_real_offline_vtt(fetcher_module, monkeypatch, c
         return subprocess.CompletedProcess([], 0, stdout="", stderr="")
 
     monkeypatch.setattr(fetcher_module, "YOUTUBE_SUBTITLE_LANGS", ("uk",))
-    monkeypatch.setattr(fetcher_module, "_run_yt_dlp", download)
-    assert fetcher_module._download_subtitle_text("fixture", limiter=None, use_tor=False) == expected
+    monkeypatch.setattr(fetcher_module.subprocess, "run", download)
+    limiter = fetcher_module.YouTubeRequestLimiter(sleep_fn=lambda _: None)
+    assert fetcher_module._download_subtitle_text("fixture", limiter=limiter) == expected
 
 
 @pytest.mark.parametrize("timeout", [True, False])
-def test_subtitle_download_failure_returns_empty(fetcher_module, monkeypatch, timeout):
+def test_subtitle_download_failure_is_unavailable(fetcher_module, monkeypatch, timeout):
     import subprocess
     from unittest.mock import Mock
 
     error = subprocess.TimeoutExpired("fixture", 90) if timeout else OSError("offline fixture")
     monkeypatch.setattr(fetcher_module, "YOUTUBE_SUBTITLE_LANGS", ("uk",))
-    monkeypatch.setattr(fetcher_module, "_run_yt_dlp", Mock(side_effect=error))
-    assert fetcher_module._download_subtitle_text("fixture", limiter=None, use_tor=False) == ""
+    monkeypatch.setattr(fetcher_module.subprocess, "run", Mock(side_effect=error))
+    limiter = fetcher_module.YouTubeRequestLimiter(sleep_fn=lambda _: None)
+    with pytest.raises(fetcher_module.CollectionUnavailable):
+        fetcher_module._download_subtitle_text("fixture", limiter=limiter)

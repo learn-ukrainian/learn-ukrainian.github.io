@@ -140,6 +140,7 @@ def ingest_words(
     max_text_chars: int,
     db_role: str = "active",
     create: bool = False,
+    outages: list[dict] | None = None,
 ) -> int:
     request = _prepare_store_write_target(
         "sources", Path(__file__).resolve().parents[2], intent="create" if create else "update",
@@ -152,20 +153,22 @@ def ingest_words(
     for index, word in enumerate(words):
         if index and sleep_s > 0:
             time.sleep(sleep_s)
-        outages: list[dict] = []
+        word_outages: list[dict] = []
         fetched = fetch_entries(
             word,
             dictionaries=dictionaries,
             limit=len(dictionaries),
             user_agent=user_agent,
             max_text_chars=max_text_chars,
-            outages=outages,
+            outages=word_outages,
         )
         rows.extend(fetched)
         note = ""
-        if outages:
+        if word_outages:
+            if outages is not None:
+                outages.extend(word_outages)
             # #9005: a failed fetch is not "no entry"; say so rather than print a bare count.
-            failed = sorted({f"{o['dictionary_slug']} ({o['error']})" for o in outages})
+            failed = sorted({f"{o['dictionary_slug']} ({o['error']})" for o in word_outages})
             note = f" — UNAVAILABLE: {', '.join(failed)}"
         print(f"{word}: {len(fetched)} slovnyk.me row(s){note}")
 
@@ -563,6 +566,7 @@ def main(argv: list[str] | None = None) -> int:
                 f"`{OVERLAP_BLOCKED_DICTS[canonical]}` instead.",
                 file=sys.stderr,
             )
+    outages: list[dict] = []
     loaded = ingest_words(
         args.db,
         words,
@@ -571,9 +575,12 @@ def main(argv: list[str] | None = None) -> int:
         sleep_s=max(0.0, args.sleep),
         user_agent=args.user_agent,
         max_text_chars=max(1, args.max_text_chars),
-     db_role=getattr(args, "db_role", "active"), create=getattr(args, "create_db", False))
+        db_role=getattr(args, "db_role", "active"),
+        create=getattr(args, "create_db", False),
+        outages=outages,
+    )
     print(f"Loaded {loaded} slovnyk.me row(s).")
-    return 0
+    return 1 if outages else 0
 
 
 if __name__ == "__main__":

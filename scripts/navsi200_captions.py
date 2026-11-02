@@ -18,6 +18,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
+from threading import Event
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -25,6 +26,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from navsi200_catalog import PRIORITY_TOPICS, load_catalog
+from scripts.common.http_status import has_http_status
 from scripts.storage.artifacts import write_artifact
 from scripts.storage.paths import artifact_path
 
@@ -35,6 +37,10 @@ DEFAULT_LEDGER_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "navsi200-caption
 DEFAULT_CAPTIONS_DIR = PROJECT_ROOT / "data" / "native-reviewer-lessons" / "navsi200-captions"
 
 DEFAULT_YT_DLP_BIN = ".venv/bin/yt-dlp"
+USER_AGENT = (
+    "learn-ukrainian-caption-collector/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 
 TEACHER_NAME_PATTERNS = (
     re.compile(r"\s*від\s+Анни\s+Огойко\b", re.IGNORECASE),
@@ -150,6 +156,9 @@ def fetch_single_caption(
     out_tmpl = str(output_dir / f"{video_id}.%(ext)s")
     cmd = [
         yt_dlp_bin,
+        "--ignore-config",
+        "--user-agent",
+        USER_AGENT,
         "--write-auto-subs",
         "--skip-download",
         "--sub-langs",
@@ -175,14 +184,6 @@ def fetch_single_caption(
         logger.warning("Failed executing yt-dlp for %s: %s", video_id, e)
         return f"error_{type(e).__name__.lower()}", 0, None
 
-    # Check if subtitle file was downloaded
-    for target in (vtt_path, srt_path):
-        if target.exists() and target.stat().st_size > 0:
-            content = target.read_text(encoding="utf-8", errors="replace")
-            cleaned = clean_vtt_text(content)
-            sha = compute_file_sha256(target)
-            return "available", len(cleaned), sha
-
     combined = f"{proc.stderr}\n{proc.stdout}".lower()
     if (
         "sign in to confirm you’re not a bot" in combined
@@ -190,10 +191,16 @@ def fetch_single_caption(
         or "login_required" in combined
     ):
         return "bot_blocked", 0, None
-    elif "no subtitles" in combined or "there's no subtitles" in combined:
-        return "no_captions", 0, None
-    elif proc.returncode != 0:
+    if proc.returncode != 0 or has_http_status(proc.stderr or "", (401, 403, 429)):
         return "unavailable", 0, None
+
+    # A failed/refused response must not promote a partial subtitle to success.
+    for target in (vtt_path, srt_path):
+        if target.exists() and target.stat().st_size > 0:
+            content = target.read_text(encoding="utf-8", errors="replace")
+            cleaned = clean_vtt_text(content)
+            sha = compute_file_sha256(target)
+            return "available", len(cleaned), sha
 
     return "no_captions", 0, None
 
@@ -276,6 +283,8 @@ def build_caption_ledger(
     if limit is not None and limit > 0:
         ordered = ordered[:limit]
 
+    stopped = Event()
+
     def _process_one(lesson: dict[str, Any]) -> dict[str, Any]:
         video_id = lesson["video_id"]
         raw_title = lesson.get("title", "")
@@ -283,11 +292,16 @@ def build_caption_ledger(
         topic = lesson.get("topic", "")
         is_priority = bool(lesson.get("is_priority", False))
 
-        status, char_count, sha256_hash = fetch_single_caption(
-            video_id=video_id,
-            output_dir=captions_dir,
-            yt_dlp_bin=yt_dlp_bin,
-        )
+        if stopped.is_set():
+            status, char_count, sha256_hash = "unavailable", 0, None
+        else:
+            status, char_count, sha256_hash = fetch_single_caption(
+                video_id=video_id,
+                output_dir=captions_dir,
+                yt_dlp_bin=yt_dlp_bin,
+            )
+            if status in {"bot_blocked", "unavailable", "timeout"} or status.startswith("error_"):
+                stopped.set()
 
         return {
             "video_id": video_id,
@@ -422,6 +436,8 @@ Related: scripts/navsi200_catalog.py; #4705.
     out_file = save_caption_ledger(ledger, args.output)
     logger.info("Saved coverage ledger to %s", out_file)
     logger.info("Summary: %s", json.dumps(ledger["summary"], ensure_ascii=False, indent=2))
+    if any(status not in {"available", "no_captions"} for status in ledger["summary"]["status_counts"]):
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

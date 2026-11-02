@@ -76,7 +76,10 @@ def fetch_url_content(url: str, timeout: int = 10) -> tuple[bool, str, str]:
 
         req = urllib.request.Request(
             url,
-            headers={'User-Agent': 'Mozilla/5.0 (compatible; LearnUkrainian/1.0)'}
+            headers={'User-Agent': (
+                'learn-ukrainian-resource-validation/1.0 '
+                '(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)'
+            )}
         )
         with urllib.request.urlopen(req, timeout=timeout) as response:  # nosec B310 — scheme validated above
             raw_html = response.read()

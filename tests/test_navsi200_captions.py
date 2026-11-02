@@ -175,9 +175,14 @@ Language: uk
         fake_proc.stdout = ""
         fake_proc.stderr = "ERROR: [youtube] blockedvid1: Sign in to confirm you’re not a bot."
 
-        with patch("subprocess.run", return_value=fake_proc):
+        with patch("subprocess.run", return_value=fake_proc) as run:
             status, char_count, sha256_hash = fetch_single_caption(video_id, tmp_path)
 
         assert status == "bot_blocked"
         assert char_count == 0
         assert sha256_hash is None
+        argv = run.call_args.args[0]
+        assert argv[argv.index("--user-agent") + 1].startswith("learn-ukrainian-caption-collector/")
+        assert "/issues" in argv[argv.index("--user-agent") + 1]
+        assert "--ignore-config" in argv
+        assert run.call_count == 1

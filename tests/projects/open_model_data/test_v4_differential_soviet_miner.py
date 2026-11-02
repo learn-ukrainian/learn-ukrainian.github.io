@@ -186,11 +186,15 @@ def test_r2u_network_timeout_vs_absence_disambiguation() -> None:
     Differentiate SOURCE_UNAVAILABLE from NOT_FOUND_WITHIN_VERIFIED_COVERAGE.
     """
     # 1. Network error / Timeout must return SOURCE_UNAVAILABLE
-    with patch("urllib.request.urlopen", side_effect=TimeoutError("Connection timed out")):
+    with patch("urllib.request.urlopen", side_effect=TimeoutError("Connection timed out")) as opener:
         with patch("scripts.rag.source_query.r2u_translate_with_status", side_effect=OSError("Network down")):
             status, translations = query_r2u_safe("програмування", allow_network=True)
             assert status == R2ULookupStatus.SOURCE_UNAVAILABLE
             assert translations == []
+            opener.assert_called_once()
+            agent = opener.call_args.args[0].get_header("User-agent")
+            assert agent.startswith("learn-ukrainian-differential-miner/")
+            assert "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues" in agent
 
     # 2. Legitimate absence in verified coverage must return NOT_FOUND_WITHIN_VERIFIED_COVERAGE
     mock_response = MagicMock()

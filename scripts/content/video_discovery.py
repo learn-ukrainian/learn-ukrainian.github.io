@@ -37,12 +37,28 @@ from content.video_discovery_helpers import (
 from content.video_discovery_helpers import (
     search_rag as _search_rag_impl,
 )
+from scripts.common.http_status import has_http_status
 from scripts.common.jsonl import jsonl_lines
 
 logger = logging.getLogger(__name__)
 
 TRANSCRIPT_CAP = 50_000
 MAX_QUERY_LENGTH = 120  # yt-dlp search breaks with very long queries
+USER_AGENT = (
+    "learn-ukrainian-video-discovery/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
+
+
+class VideoDiscoveryUnavailable(RuntimeError):
+    """Discovery stopped without establishing that a video has no captions."""
+
+
+def _refused(stderr: str) -> bool:
+    return has_http_status(stderr, (401, 403, 429)) or any(
+        marker in stderr.lower() for marker in
+        ("sign in to confirm", "login_required", "not a bot", "captcha")
+    )
 
 # Paths to blog databases (relative to project root)
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -312,19 +328,21 @@ def clean_srt(text: str) -> str:
 # ---------------------------------------------------------------------------
 
 def download_transcript(url: str) -> str:
-    """Download Ukrainian auto-subs via yt-dlp. Returns plain text or empty string."""
+    """Return subtitle text (empty if absent); raise when collection is unavailable."""
     try:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_path = Path(tmp_dir) / "subs"
             cmd = [
-                "yt-dlp", url,
+                "yt-dlp", "--ignore-config", "--user-agent", USER_AGENT, url,
                 "--write-subs", "--write-auto-subs",
                 "--sub-langs", "uk",
                 "--convert-subs", "srt",
                 "--skip-download",
                 "--output", f"{tmp_path}.%(ext)s",
             ]
-            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=60)
+            result = subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=60)
+            if _refused(result.stderr or ""):
+                raise VideoDiscoveryUnavailable("YouTube refused the request; discovery stopped, retry later.")
             srt_file = None
             for f in Path(tmp_dir).glob("*.uk.srt"):
                 srt_file = f
@@ -335,11 +353,11 @@ def download_transcript(url: str) -> str:
             text = clean_srt(srt_text)
             return text[:TRANSCRIPT_CAP] if len(text) > TRANSCRIPT_CAP else text
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError) as e:
-        logger.debug("Transcript download failed for %s: %s", url, e)
-        return ""
+        raise VideoDiscoveryUnavailable("YouTube transcript unavailable; discovery stopped, retry later.") from e
+    except VideoDiscoveryUnavailable:
+        raise
     except Exception as e:
-        logger.debug("Unexpected error downloading transcript for %s: %s", url, e)
-        return ""
+        raise VideoDiscoveryUnavailable("YouTube transcript could not be read; discovery stopped.") from e
 
 
 # ---------------------------------------------------------------------------
@@ -405,7 +423,7 @@ def search_channel(keywords: list[str], channel_handle: str, max_results: int = 
     return _yt_dlp_search(search_term, fetch_count, max_results, flat_playlist=False)
 
 
-_RATE_LIMIT_PATTERNS = ("Connection reset by peer", "HTTP Error 429", "UNEXPECTED_EOF")
+_RATE_LIMIT_PATTERNS = ("Connection reset by peer", "UNEXPECTED_EOF")
 
 
 def _yt_dlp_search(
@@ -414,16 +432,18 @@ def _yt_dlp_search(
 ) -> list[dict]:
     """Run yt-dlp search and parse results. Returns list of {url, title} dicts.
 
-    Detects YouTube rate limiting (connection resets, 429s, SSL EOF) and
-    backs off with increasing delays up to 2 retries.
+    Stops on source refusal; connection resets and SSL EOF retain bounded retries.
     """
-    cmd = ["yt-dlp", search_term, "--print", "%(title)s\t%(id)s\t%(language)s"]
+    cmd = ["yt-dlp", "--ignore-config", "--user-agent", USER_AGENT,
+           search_term, "--print", "%(title)s\t%(id)s\t%(language)s"]
     if flat_playlist:
         cmd += ["--flat-playlist", "--playlist-end", str(fetch_count)]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
         # Detect rate limiting in stderr even if returncode != 0
         stderr = result.stderr or ""
+        if _refused(stderr):
+            raise VideoDiscoveryUnavailable("YouTube refused the request; discovery stopped, retry later.")
         if result.returncode != 0:
             if _retry < 2 and any(p in stderr for p in _RATE_LIMIT_PATTERNS):
                 import time
@@ -432,7 +452,7 @@ def _yt_dlp_search(
                 time.sleep(wait)
                 return _yt_dlp_search(search_term, fetch_count, max_results,
                                       flat_playlist=flat_playlist, _retry=_retry + 1)
-            return []
+            raise VideoDiscoveryUnavailable("YouTube search unavailable; discovery stopped, retry later.")
         videos = []
         for line in jsonl_lines(result.stdout):
             parts = line.strip(" \t\r").split("\t")
@@ -448,7 +468,7 @@ def _yt_dlp_search(
             if len(videos) >= max_results:
                 break
         return videos
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as exc:
         if _retry < 2:
             import time
             wait = 10 * (_retry + 1)
@@ -456,11 +476,11 @@ def _yt_dlp_search(
             time.sleep(wait)
             return _yt_dlp_search(search_term, fetch_count, max_results,
                                   flat_playlist=flat_playlist, _retry=_retry + 1)
-        return []
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return []
-    except Exception:
-        return []
+        raise VideoDiscoveryUnavailable("YouTube search timed out; discovery stopped, retry later.") from exc
+    except VideoDiscoveryUnavailable:
+        raise
+    except Exception as exc:
+        raise VideoDiscoveryUnavailable("YouTube search unavailable; discovery stopped, retry later.") from exc
 
 
 # ---------------------------------------------------------------------------

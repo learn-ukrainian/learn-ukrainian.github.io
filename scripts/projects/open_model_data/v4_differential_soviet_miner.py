@@ -536,7 +536,10 @@ def query_r2u_safe(
 
     url = f"https://r2u.org.ua/s?w={urllib.request.quote(norm)}"
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "ULDR-Phase3-Miner/1.0"})
+        req = urllib.request.Request(url, headers={"User-Agent": (
+            "learn-ukrainian-differential-miner/1.0 "
+            "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+        )})
         with urllib.request.urlopen(req, timeout=10) as response:
             if response.status != 200:
                 return R2ULookupStatus.SOURCE_UNAVAILABLE, []

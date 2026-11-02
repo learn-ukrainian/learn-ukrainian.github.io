@@ -48,7 +48,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SITE_DOCS = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 
-_RESOURCE_LIVENESS_UA = "Mozilla/5.0 (learn-ukrainian resource-liveness verification)"
+_RESOURCE_LIVENESS_UA = (
+    "learn-ukrainian-resource-liveness/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 _RESOURCE_LIVENESS_TIMEOUT = 15
 _url_live_cache: dict[str, bool] = {}
 
@@ -58,14 +61,16 @@ def _curl(url: str, *, status_only: bool) -> tuple[int, str]:
 
     curl is used (not urllib) because real-world resource hosts (e.g.
     ukrlib.com.ua) serve incomplete TLS chains that urllib+certifi cannot verify
-    but the system store / AIA fetching resolves. curl follows redirects and
-    matches browser behaviour. status 0 / empty body on any failure (fail-closed).
+    but the system store / AIA fetching resolves. curl follows redirects using
+    the project's identity. Status 0 / empty body on transport failure.
     """
     if not shutil.which("curl"):
         return 0, ""
     args = ["curl", "-sS", "-L", "--max-time", str(_RESOURCE_LIVENESS_TIMEOUT), "-A", _RESOURCE_LIVENESS_UA]
     if status_only:
         args += ["-o", "/dev/null", "-w", "%{http_code}"]
+    else:
+        args += ["-w", "\n%{http_code}"]
     args.append(url)
     try:
         proc = subprocess.run(args, capture_output=True, text=True, timeout=_RESOURCE_LIVENESS_TIMEOUT + 5)
@@ -76,7 +81,14 @@ def _curl(url: str, *, status_only: bool) -> tuple[int, str]:
             return int((proc.stdout or "0").strip() or 0), ""
         except ValueError:
             return 0, ""
-    return (200 if proc.returncode == 0 else 0), proc.stdout
+    if proc.returncode != 0:
+        return 0, ""
+    try:
+        body, status_text = proc.stdout.rsplit("\n", 1)
+        status = int(status_text)
+    except (ValueError, AttributeError):
+        return 0, ""
+    return status, body if status == 200 else ""
 
 
 def _wikipedia_article_exists(url: str) -> bool | None:
@@ -110,8 +122,8 @@ def _wikipedia_article_exists(url: str) -> bool | None:
     api = f"{parts.scheme}://{parts.netloc}/w/api.php?" + urllib.parse.urlencode(
         {"action": "query", "titles": title, "redirects": "1", "format": "json"}
     )
-    _, body = _curl(api, status_only=False)
-    if not body:
+    status, body = _curl(api, status_only=False)
+    if status != 200 or not body:
         return False
     try:
         pages = json.loads(body).get("query", {}).get("pages", {})

@@ -63,10 +63,12 @@ class TestCleanSrt:
 # ---------------------------------------------------------------------------
 
 class TestSearchChannel:
-    def test_returns_empty_when_no_yt_dlp(self):
+    def test_reports_unavailable_when_no_yt_dlp(self):
+        from video_discovery import VideoDiscoveryUnavailable
+
         with patch("video_discovery.subprocess.run", side_effect=FileNotFoundError):
-            result = search_channel(["тест"], "@testchannel")
-            assert result == []
+            with pytest.raises(VideoDiscoveryUnavailable):
+                search_channel(["тест"], "@testchannel")
 
 
 # ---------------------------------------------------------------------------
@@ -271,7 +273,7 @@ def test_video_empty_or_malformed_records(stdout):
 def test_video_search_failure_and_retry_contract(error_kind):
     import subprocess
 
-    from video_discovery import _yt_dlp_search
+    from video_discovery import USER_AGENT, VideoDiscoveryUnavailable, _yt_dlp_search
 
     failure = {
         "rate_limit": subprocess.CompletedProcess([], 1, stdout="", stderr="HTTP Error 429"),
@@ -282,9 +284,14 @@ def test_video_search_failure_and_retry_contract(error_kind):
         "unexpected": RuntimeError("synthetic failure"),
     }[error_kind]
     with patch("video_discovery.subprocess.run", side_effect=[failure] * 3) as run, patch("time.sleep") as sleep:
-        assert _yt_dlp_search("synthetic", 3, 1, flat_playlist=True) == []
-    expected_calls = 3 if error_kind in {"rate_limit", "timeout"} else 1
+        with pytest.raises(VideoDiscoveryUnavailable):
+            _yt_dlp_search("synthetic", 3, 1, flat_playlist=True)
+    expected_calls = 3 if error_kind == "timeout" else 1
     assert run.call_count == expected_calls
     assert sleep.call_count == expected_calls - 1
     assert "--flat-playlist" in run.call_args.args[0]
     assert run.call_args.args[0][-2:] == ["--playlist-end", "3"]
+    argv = run.call_args.args[0]
+    assert argv[argv.index("--user-agent") + 1] == USER_AGENT
+    assert "/issues" in USER_AGENT
+    assert "--ignore-config" in argv

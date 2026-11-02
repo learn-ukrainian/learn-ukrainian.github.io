@@ -88,7 +88,10 @@ def _with_page_size(url: str, page_size: int) -> str:
 
 
 def _http_get(url: str, timeout: float) -> bytes:
-    request = Request(url, headers={"Accept": "application/json", "User-Agent": "learn-ukrainian-sophia-crawler/1"})
+    request = Request(url, headers={
+        "Accept": "application/json",
+        "User-Agent": "learn-ukrainian-sophia-crawler/1 (+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)",
+    })
     try:
         with urlopen(request, timeout=timeout) as response:
             return response.read()
