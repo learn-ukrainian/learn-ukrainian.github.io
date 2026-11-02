@@ -7,7 +7,10 @@ Elevated blocker classes admit at most five rounds while the latest rejection
 keeps the named P0/P1 open. A withheld-capability ruling instead seals blocked
 run bindings and complete verification-only finding excerpts, plus a bound retry
 probe demonstrating capability. It admits min(5, 3 + distinct qualifying heads).
-Neither path resets spent rounds or changes existing verdicts.
+A p2-fix-verification ruling seals the rejected and candidate heads, the delta
+digest and the P2 finding ids; it admits round 4 only, once per work lineage,
+consumed at dispatch (issue #12548; CTO proposal, Sol 6.1 APPROVE in task
+cto-f932-rule-p2round2-sol). No path resets spent rounds or changes existing verdicts.
 
 The designated advisor judges the semantics of the complete bound evidence;
 this module verifies provenance, publication, current eligibility and allowance.
@@ -22,7 +25,7 @@ import json
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -34,18 +37,34 @@ from scripts.agent_runtime.bounded_advisory import (
     load_sealed_result,
 )
 from scripts.opsec.prepublish import normalize_repository
-from scripts.orchestration.integration_sweep import REJECTED, lookup_verdict
+from scripts.orchestration.integration_sweep import REJECTED, REPLY_CLOSER, REPLY_OPENER, lookup_verdict
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.model_catalog import REVIEW_BUDGET_ELEVATION_ROLE, advisory_role_policy, canonical_model_id
 from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
-from scripts.review.verdict_parser import REVIEW_CAPABILITIES, finding_entries, recognized_verdicts
+from scripts.review.verdict_parser import (
+    REVIEW_CAPABILITIES,
+    checked_findings_payload,
+    finding_entries,
+    recognized_verdicts,
+)
 
 # The CTO seat's stable Fleet Comms identity; session-specific slots are not issuers.
 ISSUERS = frozenset({"claude-cto"})
 # The change classes review-loop references/policy.md § Budget elevates.
 WITHHELD_CAPABILITY = "withheld-capability"
-BLOCKER_CLASSES = frozenset({"security", "permissions", "authentication", "data-loss", "state-concurrency", WITHHELD_CAPABILITY})
+P2_FIX = "p2-fix-verification"
+P2_FIELD = "p2_fix_verification"
+P2_FIELDS = frozenset({"rejected_head", "candidate_head", "delta_sha256", "finding_ids"})
+LEGACY_CLASSES = frozenset({"security", "permissions", "authentication", "data-loss", "state-concurrency"})
+BLOCKER_CLASSES = LEGACY_CLASSES | {WITHHELD_CAPABILITY, P2_FIX}
+# The single fix-verification round is round 4: the default budget plus one.
+P2_ROUND_ALLOWANCE = recorder.DEFAULT_REVIEW_ROUNDS + 1
+P2_RECEIPT_DIR = "review-p2-fix-rounds"
+P2_RECEIPT_SCHEMA = "review-p2-fix-round.v1"
+# The round's reviewer states whether the delta only corrects the named findings, bound to its digest.
+# A structured reply carries it in its explanation, so it is read anywhere in the reply.
+P2_DELTA = re.compile(r"\bP2_FIX_DELTA:\s*([0-9a-f]{64})\s+(VERIFIED|REFUTED)\b")
 REQUEST_FIELDS = frozenset(
     {
         "repository",
@@ -58,6 +77,7 @@ REQUEST_FIELDS = frozenset(
         "issuer_model",
         "issued_at",
         "withheld_capability",
+        P2_FIELD,
     }
 )
 FINDING_ID = re.compile(r"F[1-9][0-9]{0,3}")
@@ -72,6 +92,8 @@ SCOPE = "scope"
 BLOCKER = "blocker"
 EVIDENCE = "evidence"
 CAPABILITY = "capability"
+SPENT = "spent"
+VERIFICATION = "verification"
 RUN_FIELDS = frozenset({"task_id", "run_nonce", "reviewed_sha", "reply_sha256"})
 DIGEST = re.compile(r"[0-9a-f]{64}")
 EXCLUSION_ATTESTATION = {
@@ -92,11 +114,14 @@ class GrantRefused(recorder.RecordError):
 
 def parse_request(request: Any, label: str) -> dict[str, Any]:
     """The typed ruling in ``request``, or a refusal naming ``label``."""
-    legacy = (isinstance(request, dict) and isinstance(request.get("blocker_class"), str)
-              and request["blocker_class"] in BLOCKER_CLASSES - {WITHHELD_CAPABILITY})
-    if not isinstance(request, dict) or not (
-        set(request) == REQUEST_FIELDS or (legacy and set(request) == REQUEST_FIELDS - {"withheld_capability"})
-    ):
+    # Rulings sealed before a field existed keep their shape; a p2 ruling always carries its own.
+    blocker = request.get("blocker_class") if isinstance(request, dict) else None
+    shapes = [REQUEST_FIELDS]
+    if blocker != P2_FIX:
+        shapes.append(REQUEST_FIELDS - {P2_FIELD})
+    if isinstance(blocker, str) and blocker in LEGACY_CLASSES:
+        shapes.append(REQUEST_FIELDS - {P2_FIELD, "withheld_capability"})
+    if not isinstance(request, dict) or set(request) not in shapes:
         found = sorted(request) if isinstance(request, dict) else type(request).__name__
         raise GrantRefused(REQUEST, f"{label} must hold exactly {sorted(REQUEST_FIELDS)}, found {found}")
     pr = request["pr"]
@@ -140,6 +165,21 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
         _parse_run(withheld["retry_probe"], {"capability_evidence"}, label)
         if withheld.get("admission_exclusion") is not None:
             _parse_run(withheld["admission_exclusion"], set(), label)
+    p2 = request.get(P2_FIELD)
+    if request["blocker_class"] != P2_FIX:
+        if p2 is not None:
+            raise GrantRefused(REQUEST, f"{label} {P2_FIELD} must be null for other classes")
+    elif (not isinstance(p2, dict) or set(p2) != P2_FIELDS
+          or not all(isinstance(p2[key], str) and recorder.SHA.fullmatch(p2[key])
+                     for key in ("rejected_head", "candidate_head"))
+          or p2["rejected_head"] == p2["candidate_head"]
+          or not isinstance(p2["delta_sha256"], str) or not DIGEST.fullmatch(p2["delta_sha256"])
+          or not isinstance(p2["finding_ids"], list) or not p2["finding_ids"]
+          or not all(isinstance(item, str) and FINDING_ID.fullmatch(item) for item in p2["finding_ids"])
+          or p2["finding_ids"] != sorted(set(p2["finding_ids"]))
+          or request["finding_id"] not in p2["finding_ids"]):
+        raise GrantRefused(REQUEST, f"{label} {P2_FIELD} needs two distinct full heads, a delta digest and the "
+                                    "sorted distinct finding ids, finding_id among them")
     return request
 
 
@@ -199,13 +239,12 @@ def _sealed_ruling(task_id: str, path: Path, record: Mapping[str, Any]) -> tuple
             binding_sha256=str(record.get("advisory_binding_sha256")),
         )
         decision = fenced_object(sealed.result_text, policy.fence)
-        legacy = (isinstance(decision.get("blocker_class"), str)
-                  and decision["blocker_class"] in BLOCKER_CLASSES - {WITHHELD_CAPABILITY})
-        fields = set(policy.output_fields)
-        old_fields = fields - {"admission_exclusion_attestation"}
-        if not (set(decision) in (fields, old_fields)
-                or (legacy and set(decision) in (fields - {"withheld_capability"},
-                                                old_fields - {"withheld_capability"}))):
+        # The shapes sealed before each later field; parse_request decides which class may use which.
+        base = set(policy.output_fields) - {P2_FIELD}
+        shapes = [base | {P2_FIELD}, base, base - {"admission_exclusion_attestation"}]
+        if isinstance(decision.get("blocker_class"), str) and decision["blocker_class"] in LEGACY_CLASSES:
+            shapes += [shape - {"withheld_capability"} for shape in shapes[1:]]
+        if set(decision) not in shapes:
             raise GrantRefused(
                 APPROVAL,
                 f"the {policy.fence} object must hold exactly {list(policy.output_fields)}, found {sorted(decision)}",
@@ -333,6 +372,7 @@ def admit_grant_round(
     task_root: Path,
     head: str,
     recording_run: tuple[str, str] | None = None,
+    repo_root: Path | None = None,
 ) -> dict[str, Any] | None:
     """The receipt of a grant admitting this round; None when the PR has no grant, or a refusal."""
     grants: list[Grant] = []
@@ -360,7 +400,7 @@ def admit_grant_round(
         try:
             receipts.append(_admit(
                 grant, repository=repository, branch=branch, changed_paths=changed_paths, comments=comments, login=login,
-                task_root=task_root, head=head, recording_run=recording_run,
+                task_root=task_root, head=head, recording_run=recording_run, repo_root=repo_root,
             ))
         except GrantRefused as exc:
             refusals.append(exc)
@@ -382,6 +422,7 @@ def _admit(
     task_root: Path,
     head: str,
     recording_run: tuple[str, str] | None,
+    repo_root: Path | None = None,
 ) -> dict[str, Any]:
     """This one grant's receipt for the round, or why it does not apply."""
     request = grant.request
@@ -398,6 +439,10 @@ def _admit(
     if request["blocker_class"] == WITHHELD_CAPABILITY:
         withheld_receipt = _withheld_round(grant, comments=comments, login=login, task_root=task_root, head=head,
                                           recording_run=recording_run)
+        cited = withheld_receipt["cited_verdict_head"]
+    elif request["blocker_class"] == P2_FIX:
+        withheld_receipt = _p2_fix_round(grant, comments=comments, login=login, task_root=task_root, head=head,
+                                         repo_root=repo_root)
         cited = withheld_receipt["cited_verdict_head"]
     else:
         cited = open_blocker_cited(comments, login, request["finding_id"])
@@ -597,6 +642,203 @@ def _withheld_round(
         "retry_probe": probe_evidence,
         **exclusion,
     }
+
+
+def _recorded_findings(comment: Mapping[str, Any]) -> tuple[bool, dict[str, list[tuple[str | None, str]]]] | None:
+    """A recorded verdict's findings and their entries; None when its reply is withheld, cut or unreadable.
+
+    A structured findings object lists open findings (entry text empty, so open); a prose
+    ledger's entries are read by :func:`finding_is_open`, and an id named outside one refuses.
+    """
+    body = comment.get("body")
+    _, opened, rest = body.partition(REPLY_OPENER) if isinstance(body, str) else ("", "", "")
+    reply, closed, _ = rest.rpartition(REPLY_CLOSER)
+    if not opened or not closed or not reply.strip() or recorder.TRUNCATION_FLAG in reply:
+        return None
+    from scripts.review.review_contract import _whole_reply_fence
+
+    try:
+        payload = json.loads(_whole_reply_fence(reply.strip()), object_pairs_hook=recorder._unique_keys,
+                             parse_constant=recorder._not_json_constant)
+    except (ValueError, RecursionError):
+        payload = None
+    if isinstance(payload, dict):
+        try:
+            _, evidence = checked_findings_payload(payload)
+        except (recorder.ContractError, recorder.ReviewPublicationError):
+            return None
+        found: dict[str, list[tuple[str | None, str]]] = {}
+        for finding in evidence.findings if evidence is not None else ():
+            found.setdefault(finding.finding_id, []).append((finding.priority, ""))
+        return True, found
+    named = {finding: finding_entries(reply, finding) for finding in set(re.findall(r"\bF[1-9][0-9]{0,3}\b", reply))}
+    return None if any(not entries for entries in named.values()) else (False, named)
+
+
+def _closing_issues(repository: str, number: int) -> list[int]:
+    from scripts.review.repair_round import github_reads
+
+    return github_reads(repository, number).closing_issues()
+
+
+def _delta_sha256(repo_root: Path, rejected: str, candidate: str) -> str:
+    from scripts.review.repair_round import _diff_sha256
+
+    return _diff_sha256(repo_root, rejected, candidate)
+
+
+def _p2_receipts(task_root: Path) -> Path:
+    """Beside the task ledger, never removed, like the repair rounds' receipts."""
+    return task_root.parent / P2_RECEIPT_DIR
+
+
+def _read_p2_receipt(path: Path) -> dict[str, Any] | None:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return None
+    except (OSError, UnicodeDecodeError, ValueError) as exc:
+        raise GrantRefused(SPENT, f"p2 round receipt {path.name} unreadable: {exc}") from None
+    if not isinstance(data, dict) or data.get("schema") != P2_RECEIPT_SCHEMA:
+        raise GrantRefused(SPENT, f"p2 round receipt {path.name} is not a {P2_RECEIPT_SCHEMA} record")
+    return data
+
+
+def _same_p2_round(receipt: Mapping[str, Any], other: Mapping[str, Any]) -> bool:
+    return all(receipt.get(key) == other.get(key) for key in ("repository", "pr", "candidate_head"))
+
+
+def _p2_fix_round(
+    grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, task_root: Path, head: str,
+    repo_root: Path | None,
+) -> dict[str, Any]:
+    """Rule 1 against the complete ledger, the sealed binding, and the lineage's single use (#12548)."""
+    from scripts.review import review_lineage as lineage
+    from scripts.review.repair_round import RepairRefused, _receipt_path, lineage_keys
+
+    request = grant.request
+    p2 = request[P2_FIELD]
+    if p2["candidate_head"] != head:
+        raise GrantRefused(BINDING, f"grant {grant.task_id!r} seals candidate {p2['candidate_head']}, not {head}")
+    markers = recorder._trusted_markers(comments, login)
+    if not markers:
+        raise GrantRefused(BLOCKER, "no recorded verdict")
+    latest = markers[-1][1]
+    if latest["sha"] != p2["rejected_head"]:
+        raise GrantRefused(BINDING, f"the latest recorded verdict is at {latest['sha']}, not the sealed rejected head")
+    if (latest["verdict"] != "CHANGES_REQUESTED"
+            or lookup_verdict(comments, latest["sha"], login).state != "CHANGES_REQUESTED"):
+        raise GrantRefused(BLOCKER, "the latest recorded verdict is not a trusted REJECT")
+    # Each finding's state after every recorded verdict in order: a prose entry decides by its own
+    # words; a structured object lists what stays open, so one it omits is resolved.
+    state: dict[str, tuple[bool, bool]] = {}
+    found: dict[str, list[tuple[str | None, str]]] = {}
+    for position, marker in markers:
+        comment = comments[position]
+        read = _recorded_findings(comment)
+        if (marker["verdict"] == "BLOCKED" or read is None
+                or comment.get("created_at") != comment.get("updated_at")
+                or recorder._security_verdict_blocks(str(comment.get("body")))):
+            raise GrantRefused(BLOCKER, f"{marker['task']}: the ledger holds a BLOCKED, a security FAIL, "
+                                        "or an edited, withheld or unreadable verdict")
+        structured, found = read
+        if structured:
+            state = {finding: (blocking, False) for finding, (blocking, _) in state.items()}
+        for finding, entries in found.items():
+            blocking = state.get(finding, (False, False))[0] or any(sev in BLOCKING_SEVERITIES for sev, _ in entries)
+            state[finding] = (blocking, finding_is_open(entries[-1][1]))
+    unresolved = sorted(finding for finding, (blocking, still) in state.items() if blocking and still)
+    if unresolved:
+        raise GrantRefused(BLOCKER, f"{unresolved}: an earlier P0/P1 finding has no recorded resolution")
+    named = {finding: entries for finding, entries in found.items() if finding_is_open(entries[-1][1])}
+    if not named or any(severity != "P2" for entries in named.values() for severity, _ in entries):
+        raise GrantRefused(BLOCKER, "the latest rejection does not leave a nonempty set of findings, all P2")
+    if sorted(named) != p2["finding_ids"]:
+        raise GrantRefused(BINDING, f"the latest rejection names {sorted(named)}, not the sealed finding ids")
+    # Rule 5: every earlier review run is terminal and its verdict published; pushing first earns no credit.
+    published = {(marker["task"], marker["started"]) for _, marker in markers}
+    try:
+        runs = lineage.lineage_runs(task_root, repository=request["repository"], number=request["pr"],
+                                    branch=request["lineage_id"])
+    except lineage.LineageRefused as exc:
+        raise GrantRefused(EVIDENCE, exc.detail) from None
+    for run in runs:
+        if run.record.get("worktree_base_sha") == head or run.record.get("mode") == "workspace-write":
+            continue
+        status = run.record.get("status")
+        if (status not in lineage.TERMINAL_TASK_STATUSES or run.reply is None
+                or (status == "done" and (run.task_id, lineage._started(run.record)) not in published)
+                or (status != "done" and recognized_verdicts(run.reply))):
+            raise GrantRefused(EVIDENCE, f"{run.task_id}: an unknown or unpublished review obstruction")
+    if repo_root is None:
+        raise GrantRefused(EVIDENCE, "no checkout to compute the fix delta")
+    try:
+        delta = _delta_sha256(repo_root, p2["rejected_head"], head)
+        keys = lineage_keys(request["repository"], request["pr"], request["lineage_id"],
+                            _closing_issues(request["repository"], request["pr"]))
+    except RepairRefused as exc:
+        raise GrantRefused(EVIDENCE, exc.detail) from None
+    if delta != p2["delta_sha256"]:
+        raise GrantRefused(BINDING, f"the delta {p2['rejected_head'][:12]}..{head[:12]} hashes to {delta}")
+    round_ = {
+        "schema": P2_RECEIPT_SCHEMA, "repository": normalize_repository(request["repository"]), "pr": request["pr"],
+        "branch": request["lineage_id"], "lineage_keys": keys, "rejected_head": p2["rejected_head"],
+        "candidate_head": head, "delta_sha256": delta, "finding_ids": p2["finding_ids"],
+        "grant_task": grant.task_id, "request_sha256": grant.request_sha256,
+    }
+    for key in keys:
+        held = _read_p2_receipt(_receipt_path(_p2_receipts(task_root), key))
+        if held is not None and not _same_p2_round(held, round_):
+            raise GrantRefused(SPENT, f"lineage {key} used its one p2 fix round at PR #{held.get('pr')} "
+                                      f"head {held.get('candidate_head')}; escalate to the CTO")
+    return {"cited_verdict_head": latest["sha"], "round_allowance": P2_ROUND_ALLOWANCE, "p2_fix_round": round_}
+
+
+def record_p2_round(task_root: Path, round_: Mapping[str, Any]) -> None:
+    """Spend the lineage's p2 round under every key, at dispatch and again before its verdict is posted."""
+    from scripts.review.repair_round import _receipt_path, _write_json
+
+    root = _p2_receipts(task_root)
+    root.mkdir(parents=True, exist_ok=True)
+    stamped = {**round_, "admitted_at": datetime.now(UTC).isoformat(timespec="seconds")}
+    written: list[Path] = []
+    for key in round_["lineage_keys"]:
+        path = _receipt_path(root, key)
+        try:
+            _write_json(path, stamped, exclusive=True)
+        except FileExistsError:
+            held = _read_p2_receipt(path)
+            if held is not None and _same_p2_round(held, round_):
+                continue
+            for done in written:
+                done.unlink(missing_ok=True)
+            raise GrantRefused(SPENT, f"lineage {key} took its p2 round concurrently; escalate to the CTO") from None
+        written.append(path)
+
+
+def p2_round_at(task_root: Path, *, repository: str, number: int, branch: str, head: str) -> dict[str, Any] | None:
+    """This PR's p2 round receipt when ``head`` is its candidate, so every seat at that head must attest."""
+    from scripts.review.repair_round import _receipt_path
+
+    repo = repository.casefold()
+    for key in (f"pr:{repo}#{number}", f"branch:{repo}:{branch}"):
+        held = _read_p2_receipt(_receipt_path(_p2_receipts(task_root), key))
+        if held is not None and held.get("pr") == number and held.get("candidate_head") == head:
+            return held
+    return None
+
+
+def require_p2_verified(reply: str, round_: Mapping[str, Any]) -> None:
+    """An APPROVE in the p2 round carries one positive delta attestation bound to the sealed digest."""
+    claims = P2_DELTA.findall(reply)
+    still_open = [finding for finding in round_["finding_ids"]
+                  if (entries := finding_entries(reply, finding)) and finding_is_open(entries[-1][1])]
+    if claims != [(round_["delta_sha256"], "VERIFIED")] or still_open:
+        raise GrantRefused(
+            VERIFICATION,
+            f"an APPROVE in the p2 fix round needs exactly one `P2_FIX_DELTA: {round_['delta_sha256']} VERIFIED`, "
+            "the reviewer's statement that the delta only corrects the named findings, and none of them still open",
+        )
 
 
 def main(argv: list[str] | None = None) -> int:

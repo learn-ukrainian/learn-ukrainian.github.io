@@ -47,6 +47,26 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   total rounds. It never resets spent rounds, reclassifies a capability failure, or clears a
   security FAIL; a fresh probe-backed review must clear the rejection.
   A reissued and resealed grant may name one `admission_exclusion` per PR across all grants, binding its task, nonce, head and reply digest to the repository and lineage, with the advisor's sealed `admission_exclusion_attestation` that the complete structured empty-findings BLOCKED reply contains only an execution obstruction, no substantive defect and no security FAIL, validated before dispatch and again against the exact later same-seat, same-head replacement at recording and naming both runs in the receipt; the excluded head stays charged, existing findings stay open, the distinct-head allowance is unchanged, and a failed replacement cannot become another exclusion.
+- **One P2 fix-verification round per work lineage** (#12548). A sealed grant with
+  `blocker_class: p2-fix-verification` uses the same ruling and approval machinery; its
+  `p2_fix_verification` object seals the `rejected_head`, the `candidate_head`, the
+  `delta_sha256` of `git diff --binary --full-index <rejected> <candidate>` and the sorted
+  `finding_ids` (`finding_id` among them); other classes set it to null. The recorder and the
+  dispatcher admit it only when, across the PR's whole ledger: the default three rounds are
+  spent; the latest recorded verdict is a trusted REJECT at the rejected head whose open
+  findings are exactly the sealed ids, nonempty and all P2; every earlier P0/P1 finding was
+  later closed, by a closing prose entry or by a structured findings object that no longer lists it;
+  no verdict is BLOCKED, carries a security FAIL, or is edited, withheld or unreadable; and
+  every earlier review run is terminal with its verdict published, so pushing before a verdict
+  is recorded earns no credit. It permits round 4 only, never round 5. The dispatcher spends it
+  when it admits the reviewer, and the recorder again before posting, in a durable receipt
+  under the PR, its head branch and every issue it closes; a failed verification, a reissued
+  grant, another reviewer, a replacement PR or a new branch never replenishes it. The
+  reviewer covers the [delta scope](#delta-scope) and only the changes needed to correct the named
+  findings, including their tests. An APPROVE at that head, from any seat, needs exactly one statement
+  `P2_FIX_DELTA: <delta_sha256> VERIFIED` (in a structured reply, in its explanation) and none of the sealed findings still open; a
+  missing, `REFUTED` or mismatched attestation refuses the APPROVE, so a false or
+  unverifiable delta claim is a REJECT. Security failures and the breakers still apply.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
