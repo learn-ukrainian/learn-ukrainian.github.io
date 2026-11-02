@@ -166,6 +166,15 @@ def _cmd_target(args: argparse.Namespace) -> int:
             branch=args.branch,
             base=args.base,
         )
+        expected_head_sha = None
+        if args.mode == "pr":
+            previous_args = _target_args_from_state(state)
+            if (
+                previous_args.get("mode") == "pr"
+                and previous_args.get("pr") == args.pr
+                and state.get("target") is not None
+            ):
+                expected_head_sha = _target_from_dict(state["target"]).head_sha
         target = resolve_review_target(
             args.mode,
             repo_root,
@@ -173,6 +182,7 @@ def _cmd_target(args: argparse.Namespace) -> int:
             branch=args.branch,
             base=args.base,
             pr_number=args.pr,
+            expected_head_sha=expected_head_sha,
         )
     except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
         print(json.dumps({"error": str(repository_target_error(args.repo, exc))}), file=sys.stderr)

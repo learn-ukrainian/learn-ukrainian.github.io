@@ -1040,6 +1040,7 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
     repo.publish()
     payload = {
         "number": 10028,
+        "state": "OPEN",
         "baseRefName": base_name,
         "baseRefOid": repo.sha("origin/main"),
         "headRefName": "feature",
