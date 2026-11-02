@@ -552,7 +552,6 @@ def forbid_legacy_processors(monkeypatch):
         ("_codex", "process_for_codex"),
         ("_agy", "process_for_agy"),
         ("_grok_build", "process_for_grok_build"),
-        ("_hermes", "process_for_hermes"),
         ("_opencode", "process_for_opencode"),
     ]:
         monkeypatch.setattr(
@@ -634,7 +633,7 @@ def test_kimi_messages_are_skipped_with_zero_side_effects(bridge_db, monkeypatch
     assert {message_id: (_row(message_id), _replies(message_id)) for message_id in before} == before
 
 
-@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "pool", "glm", "hermes"])
+@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "pool", "glm"])
 def test_detached_ordinary_worker_uses_acp_without_provider_fallback(
     bridge_db, monkeypatch, target, forbid_legacy_processors
 ):

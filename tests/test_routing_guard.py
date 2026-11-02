@@ -155,30 +155,6 @@ def test_opencode_transport_is_wired() -> None:
     assert "assert_model_routing_allowed" in src
 
 
-def test_hermes_transport_is_wired_and_default_model_allowed(monkeypatch: pytest.MonkeyPatch) -> None:
-    """ask-hermes is a NON-opencode transport: it needs its own guard.
-
-    Regression (deepseek review 2026-07-05, finding 1): the hermes lane had a
-    qwen default model and no guard — every bare ask-hermes silently burned the
-    banned model, and --model could route subscription families via OpenRouter.
-    The guard must fire BEFORE send_message (no orphaned bridge messages).
-    """
-    from scripts.ai_agent_bridge import _hermes
-
-    def _boom(*args, **kwargs):  # pragma: no cover - failure path
-        raise AssertionError("send_message must not run for a refused model")
-
-    monkeypatch.setattr(_hermes, "send_message", _boom)
-    with pytest.raises(ValueError, match="is retired in the model catalog"):
-        _hermes.ask_hermes("hi", task_id="t", model="qwen/qwen3.6-plus")
-    with pytest.raises(ValueError, match="is retired in the model catalog"):
-        _hermes.ask_hermes("hi", task_id="t", model="openrouter/anthropic/claude-sonnet-5")
-    # The shipped default must itself be guard-allowed, or every bare
-    # ask-hermes would error out.
-    assert_model_routing_allowed(_hermes.HERMES_DEFAULT_MODEL, context="test")
-    assert "qwen" not in _hermes.HERMES_DEFAULT_MODEL.lower()
-
-
 def test_delegate_help_does_not_advertise_qwen() -> None:
     """Banned agent must not appear ANYWHERE in dispatch --help (UX trap:
     --help offers it, the guard rejects it at dispatch). Runs the real parser

@@ -592,11 +592,9 @@ _ALWAYS_FRESH_AGENTS = frozenset(
     {
         "grok",  # canonical native seat
         "grok-build",  # permanent alias — keep dual-READ for set_session
-        "grok-hermes",
         "kimi",
         "agy",
         "cursor",
-        "hermes",
         "deepseek-v4-pro",
         "qwen",
         "opencode",
