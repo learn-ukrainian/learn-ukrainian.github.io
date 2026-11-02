@@ -1,8 +1,7 @@
 """GrokBuildAdapter tests — native `grok` CLI headless adapter.
 
-Kept deliberately separate from the Hermes-backed `grok` agent
-(HermesGrokAdapter, grok-4.5). These tests don't require the grok binary
-to be installed — `shutil.which` is mocked.
+These tests don't require the grok binary to be installed — `shutil.which`
+is mocked.
 """
 
 from __future__ import annotations
@@ -453,21 +452,16 @@ def test_parse_plain_fallback():
     assert "just plain text" in r.stderr_excerpt
 
 
-def test_registry_native_grok_distinct_from_hermes_grok():
+def test_registry_native_grok_adapter():
     native = registry.get_agent_entry("grok")
     alias = registry.get_agent_entry("grok-build")
-    hermes = registry.get_agent_entry("grok-hermes")
     assert "grok_build:GrokBuildAdapter" in native["adapter"]
     assert "grok_build:GrokBuildAdapter" in alias["adapter"]
-    assert "hermes_grok:HermesGrokAdapter" in hermes["adapter"]
-    assert native["adapter"] != hermes["adapter"]
     assert native["default_model"] == GROK_BUILD_DEFAULT_MODEL
     assert native["default_effort"] == GROK_BUILD_DEFAULT_EFFORT
     assert "code_writing" in native["capabilities"]
     assert "grok" in registry.available_agents()
     assert "grok-build" in registry.available_agents()
-    assert "grok-hermes" not in registry.available_agents()
-    assert "grok-hermes" in registry.AGENTS
 
 
 @pytest.mark.parametrize("model", ["grok-4.5", "grok-4.6", "grok-4.7-build-fast"])

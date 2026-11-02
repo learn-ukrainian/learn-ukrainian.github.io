@@ -1053,7 +1053,7 @@ models:
     tier: frontier_practical
     lifecycle: active
     roles: [frontend_agentic_coding, strong_code_review, bounded_agentic_work]
-    transports: [hermes, opencode]
+    transports: [opencode]
     strengths: [frontend_code_quality_per_dollar, very_low_cost, speed, one_million_context]
     weaknesses: [preliminary_frontend_evidence_only, not_critical_authority, silent_stall_history, not_for_folk_content, moving_provider_alias]
     # The first-party OpenCode id is a moving alias, not a version pin.

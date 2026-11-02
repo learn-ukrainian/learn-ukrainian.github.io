@@ -1608,10 +1608,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "gemini.py": "gemini",
         "glm.py": "glm",
         "grok_build.py": "grok",
-        "hermes_common.py": None,
-        "hermes_deepseek.py": "deepseek",
-        "hermes_grok.py": "grok",
-        "hermes_qwen.py": "qwen",
         "kimi.py": "kimi",
         "kimicc.py": "kimi",
         "muse.py": "muse",
@@ -1651,8 +1647,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
     for seats in adapter_subject_index().values():
         assert seats <= KNOWN_SUBJECT_SEATS
     assert classify_owned_path("scripts/dispatcher/providers/opencode.py").seats == frozenset({"deepseek"})
-    hermes = classify_owned_path("scripts/dispatcher/providers/hermes.py")
-    assert hermes.kind == "ambiguous" and hermes.seats == frozenset({"deepseek", "grok", "qwen"})
 
 
 _AUTHOR_MODELS = {

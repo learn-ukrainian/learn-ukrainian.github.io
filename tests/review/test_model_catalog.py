@@ -1050,6 +1050,10 @@ CURRENT_INPUTS = _V2_BASELINE["inputs"]
 # byte-identical; the loaded catalog drops the retired fallback block so frozen
 # compares and re-validation match the live route keys.
 CURRENT_BASELINE["catalog"]["execution_routing"]["sol_advised_bounded"].pop("bounded_fallback_worker")
+# The Hermes runtime path is removed (#12410). The gzip fixture stays
+# byte-identical; the loaded catalog drops the retired transport so frozen
+# compares match the live route.
+CURRENT_BASELINE["catalog"]["models"]["deepseek-v4.1-flash"]["transports"].remove("hermes")
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",

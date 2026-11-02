@@ -18,7 +18,7 @@ class ReviewAttempt(TypedDict):
 @dataclass(frozen=True)
 class TaskSpec:
     task_id: str
-    agent: str  # provider module: codex|claude|cursor|agy|muse|opencode|hermes
+    agent: str  # provider module: codex|claude|cursor|agy|muse|opencode
     model: str
     effort: str | None
     mode: str  # "read-only" | "workspace-write"

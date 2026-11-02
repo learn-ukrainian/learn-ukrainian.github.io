@@ -65,7 +65,7 @@ def test_schema_loss_record_and_real_codex_argv(dispatch, absolute, agent):
         provider.build(spec, {})
 
 
-@pytest.mark.parametrize("agent", ["cursor", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["cursor", "muse", "opencode"])
 def test_unsupported_schema_refused_before_launch(dispatch, capsys, agent):
     dispatch.invoke(agent=agent, expected=2)
     assert "--output-schema is supported only with the effective codex, agy, or claude agent" in capsys.readouterr().err
