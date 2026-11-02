@@ -4,7 +4,7 @@
 This harness is intentionally separate from live reviewer routing. It builds
 local per-pin opencode routes cloned from ``FRONTIER_OPENCODE_ROUTE`` and never
 registers them in ``ROUTES`` or asks the live ``assert_route_allowed`` policy to
-approve them. That keeps the production DeepSeek/Hermes ban intact while
+approve them. That keeps the production DeepSeek ban intact while
 allowing a small, explicit offline experiment under ``QG_BAKEOFF=1``.
 """
 

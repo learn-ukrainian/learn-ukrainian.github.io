@@ -12,8 +12,6 @@ import pytest
 
 from scripts.audit import (
     code_review_benchmark,
-    grok_judge_calibration,
-    grok_stage_runner,
     judge_calibration_matrix,
     llm_reviewer_dispatch,
 )
@@ -53,7 +51,6 @@ def test_supported_pipeline_and_spot_audit_defaults_are_admitted():
 @pytest.mark.parametrize("module", [code_review_benchmark, judge_calibration_matrix])
 def test_frozen_benchmark_smoke_defaults_refused_before_side_effects(module, monkeypatch):
     monkeypatch.setattr(module, "run_subprocess", forbidden)
-    monkeypatch.setattr(module, "hermes_effort_swap", forbidden)
     for args in module.SMOKE_CELLS:
         cell = module.Cell(*args)
         with pytest.raises(ValueError):
@@ -67,24 +64,6 @@ def test_benchmark_native_active_successor_reaches_subprocess(module, monkeypatc
     cell = module.Cell("anthropic", "claude-opus-5-5", "native_cli", "high", "with_mcp")
     assert module.run_native_cli(cell, "prompt") == "result"
     assert calls[0][calls[0].index("--model") + 1] == "claude-opus-5-5"
-
-
-def test_grok_standalone_defaults_refused_before_config_or_provider_access(monkeypatch, tmp_path):
-    monkeypatch.setattr(grok_stage_runner.subprocess, "run", forbidden)
-    monkeypatch.setattr(grok_stage_runner.shutil, "copy2", forbidden)
-    monkeypatch.setattr(grok_judge_calibration, "load_hermes_oauth_token", forbidden)
-    monkeypatch.setattr(grok_judge_calibration, "pull_calibration_cases", forbidden)
-    with pytest.raises(ModelCatalogError, match="is retired"):
-        grok_stage_runner.run_hermes("prompt", grok_stage_runner.GROK_MODEL)
-    with pytest.raises(ModelCatalogError, match="is retired"):
-        grok_judge_calibration.call_grok("prompt", "grok-4.5")
-    monkeypatch.setattr("sys.argv", ["grok-stage", "--stage", "2", "--effort", "high", "--out-dir", str(tmp_path / "out")])
-    with pytest.raises(ModelCatalogError, match="is retired"):
-        grok_stage_runner.main()
-    monkeypatch.setattr("sys.argv", ["grok-judge"])
-    with pytest.raises(ModelCatalogError, match="is retired"):
-        grok_judge_calibration.main()
-    assert not (tmp_path / "out").exists()
 
 
 def test_standalone_gemini_defaults_refused_before_corpus_or_credentials(monkeypatch):

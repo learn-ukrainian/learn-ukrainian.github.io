@@ -454,14 +454,13 @@ def assert_mcp_required_for_policy(*, policy_family: str, route: ReviewerRoute) 
 
 
 def assert_route_allowed(route: ReviewerRoute) -> None:
-    """Refuse retired models and DeepSeek/Hermes automated reviewer routes."""
+    """Refuse retired models and DeepSeek automated reviewer routes."""
 
     haystack = " ".join(
         [route.route_name, route.reviewer_model_id, route.reviewer_family, *route.bridge_command]
     )
-    lowered = haystack.lower()
-    if normalize_family(haystack) == "deepseek" or "hermes" in lowered:
-        raise ReviewerRouteError("DeepSeek/Hermes reviewer routes are forbidden")
+    if normalize_family(haystack) == "deepseek":
+        raise ReviewerRouteError("DeepSeek reviewer routes are forbidden")
     from scripts.review.model_catalog import retired_model_refusal
 
     if refusal := retired_model_refusal(route.reviewer_model_id):
