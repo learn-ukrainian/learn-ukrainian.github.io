@@ -37,6 +37,18 @@ def parse(stdout, stderr, returncode, final_text):
 
 
 # The provider environment carries no pool override, so the run selects the pool its marker names.
+# Two descendants the provider's process group cannot reach: one that moved to its own session and process group
+# (what GNU ``timeout`` does to its child), and one double-forked so that init, not the provider, is its parent.
+DOUBLE_FORK = """import os, sys, time
+if os.fork() == 0:
+    os.setsid()
+    if os.fork() == 0:
+        open(sys.argv[1], "w").write(str(os.getpid()))
+        time.sleep(120)
+    os._exit(0)
+os.wait()
+"""
+
 GOVERNED_RUN = """import os, sys, time
 from pathlib import Path
 from scripts.common import test_slots
@@ -58,7 +70,13 @@ def main():
     if model == "cancel":
         os.kill(os.getppid(), signal.SIGTERM)
         time.sleep(120)
-    if model in {"blocked", "tree", "governed"}:
+    if model in {"blocked", "tree", "governed", "escape"}:
+        if model == "escape":
+            process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"], start_new_session=True)
+            prompt.with_suffix(".grandchild.tmp").write_text(str(process.pid))
+            subprocess.run([sys.executable, "-c", DOUBLE_FORK, str(prompt.with_suffix(".daemon.tmp"))], check=True, timeout=30)
+            prompt.with_suffix(".daemon.tmp").replace(prompt.with_suffix(".daemon"))
+            prompt.with_suffix(".grandchild.tmp").replace(prompt.with_suffix(".grandchild"))
         if model == "tree":
             process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
             prompt.with_suffix(".grandchild.tmp").write_text(str(process.pid))

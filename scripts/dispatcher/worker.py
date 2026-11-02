@@ -528,40 +528,61 @@ def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
     return any(pid in protected for pid in members)
 
 
-def _end_own_scope(record: dict) -> None:
-    """End processes left in this finished task's own scope.
+def _end_own_scope(record: dict):
+    """End processes left in this finished task's own boundary; return the stop result, None when none ran.
 
     A scope stays alive while any member remains. Settlement used to read those
-    members as a live provider and keep the worktree. The stop reaches only the
-    unit ``dispatch_isolation`` derives for this task and nonce: a recorded
+    members as a live provider and keep the worktree. A scope launch stops only
+    the unit ``dispatch_isolation`` derives for this task and nonce: a recorded
     cgroup that is not that unit's scope is left alone, another active task's
-    supervisor or provider in this cgroup is left alone, the caller and its
-    ancestors are not signalled, and a fallback launch is not a scope. A stop
-    that cannot be proven leaves the processes for the liveness check, which
-    keeps the tree.
+    supervisor or provider in this cgroup is left alone, and the caller and its
+    ancestors are not signalled. A Popen-fallback launch has no cgroup to stop, and
+    ``killpg`` misses a descendant in another process group (GNU ``timeout``
+    puts its child in one) or session, so the processes that carry this task's
+    dispatch marker are stopped instead (#12520). A stop that cannot be proven
+    leaves the processes for the liveness check, which keeps a scope's tree; the
+    caller keeps a fallback tree from the returned result.
     """
-    if record.get("launch_mode") != "scope":
-        return
+    launch_mode = record.get("launch_mode")
     task_id, unit, nonce = record.get("task_id"), record.get("launch_unit"), record.get("run_nonce")
+    if launch_mode == "popen-fallback":
+        if not (isinstance(task_id, str) and task_id and isinstance(nonce, str) and nonce):
+            return None
+        from scripts.orchestration import worker_leftovers
+
+        reader = worker_leftovers.ProcFsReader()
+        try:
+            if record.get("pid") == os.getpid():
+                # The supervisor itself: its session, start time and cgroup bound the scan.
+                scope = worker_leftovers.worker_scope_at_exit(
+                    task_id=task_id, launch_mode=launch_mode, launch_unit=None, run_nonce=nonce, reader=reader)
+            else:
+                # A later sweep from another process: the task's marker alone names its processes.
+                scope = worker_leftovers.WorkerScope(task_id=task_id, launch_mode=launch_mode, run_nonce=nonce)
+            return worker_leftovers.stop_leftovers(scope, reader=reader)
+        except (OSError, ValueError, worker_leftovers.ScanUnknown):
+            return worker_leftovers.StopResult(ok=False, error="fallback boundary unreadable")
+    if launch_mode != "scope":
+        return None
     if not all(isinstance(value, str) and value for value in (task_id, unit, nonce)):
-        return
+        return None
     from scripts.orchestration import dispatch_isolation, worker_leftovers
 
     if not dispatch_isolation.scope_unit_matches(unit, task_id=task_id, run_nonce=nonce):
-        return
+        return None
     cgroup = dispatch_isolation.scope_cgroup(unit, uid=os.getuid())
     recorded = record.get("launch_cgroup")
     # A recorded boundary that is not this unit's scope is not ours to stop.
     if isinstance(recorded, str) and recorded and recorded != cgroup:
-        return
+        return None
     if _cgroup_holds_other_active_task(record, cgroup):
-        return
+        return None
     scope = worker_leftovers.WorkerScope(
         task_id=task_id, launch_mode=dispatch_isolation.LAUNCH_SCOPE, unit=unit, cgroup=cgroup, run_nonce=nonce)
     try:
-        worker_leftovers.stop_leftovers(scope, reader=worker_leftovers.ProcFsReader())
+        return worker_leftovers.stop_leftovers(scope, reader=worker_leftovers.ProcFsReader())
     except (OSError, ValueError, worker_leftovers.ScanUnknown):
-        return
+        return None
 
 
 def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> None:
@@ -575,7 +596,13 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
     """
     deadline = time.monotonic() + patience
     record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
-    _end_own_scope(record)
+    stopped = _end_own_scope(record)
+    if record.get("launch_mode") == "popen-fallback" and stopped is not None and not stopped.ok:
+        # Nothing but the process group's id is recorded for a fallback launch, so a descendant that left it
+        # (a stop that failed or could not be proven) is invisible to the liveness check below.
+        reason = "provider_processes_alive" if stopped.survivors else "provider_liveness_unknown"
+        record.update(worktree_disposition="retained", worktree_disposition_reason=reason)
+        return
     while (alive := _provider_alive(record)) and time.monotonic() < deadline:
         time.sleep(0.05)
     if alive is not False:

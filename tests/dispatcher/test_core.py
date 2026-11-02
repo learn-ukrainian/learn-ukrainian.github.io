@@ -1712,6 +1712,20 @@ def test_cancel_kills_child_process_group(sandbox):
     assert worker._identity(grandchild) is None
 
 
+def test_settling_a_task_terminates_a_descendant_in_another_process_group(sandbox):
+    """Defect (#12520): a descendant outside the provider's process group (GNU ``timeout`` puts its child
+    in one) or reparented away from it (a double fork) outlived a cancelled task on a Popen-fallback launch."""
+    task = sandbox.dispatch("escape")
+    own_session = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
+    daemon = int(await_file(sandbox.tasks / f"{task[0]}.daemon"))
+    assert os.getpgid(own_session) != os.getpgid(int(await_file(sandbox.tasks / f"{task[0]}.started")))
+    assert worker._identity(own_session) is not None and worker._identity(daemon) is not None
+    record = json.loads(sandbox.cli("cancel", task[0], "--run-nonce", task[1]).stdout)
+    assert record["status"] == "cancelled"
+    assert worker._identity(own_session) is None
+    assert worker._identity(daemon) is None
+
+
 def test_deadline_settles_as_timeout(sandbox):
     task = sandbox.dispatch("blocked", "--hard-timeout", "0.2")
     record = sandbox.settle(task, expected=1)
