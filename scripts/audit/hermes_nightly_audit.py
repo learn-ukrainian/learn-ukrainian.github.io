@@ -2,8 +2,8 @@
 """Run nightly deterministic curriculum track audits sequentially.
 
 This script runs the deterministic audit checks for tracks a1, a2, b1, b2 sequentially.
-It gathers findings, counts, severities, optionally appends a 'hermes insights' snapshot,
-and writes the aggregated results to both Markdown and JSON files in batch_state/hermes_cron/.
+It gathers findings, counts and severities, and writes the aggregated results to both
+Markdown and JSON files in batch_state/nightly_audit/.
 """
 
 from __future__ import annotations
@@ -20,7 +20,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DEFAULT_TRACK_AUDIT_TIMEOUT_SECONDS: float = 300.0
-DEFAULT_HERMES_TIMEOUT_SECONDS: float = 30.0
 
 
 def run_track_audit(track: str) -> dict:
@@ -149,22 +148,7 @@ def run_track_audit(track: str) -> dict:
         }
 
 
-def get_hermes_insights(insights_cmd: str = "hermes") -> str:
-    """Retrieve hermes insights snapshot if available, otherwise return 'insights unavailable'."""
-    try:
-        res = subprocess.run(
-            [insights_cmd, "insights"],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=DEFAULT_HERMES_TIMEOUT_SECONDS,
-        )
-        return res.stdout
-    except Exception:
-        return "insights unavailable"
-
-
-def build_markdown_report(timestamp: str, track_results: dict[str, dict], insights: str) -> str:
+def build_markdown_report(timestamp: str, track_results: dict[str, dict]) -> str:
     """Assemble a beautifully formatted Markdown report of the sweep results."""
     # Compute totals
     total_findings = 0
@@ -183,7 +167,7 @@ def build_markdown_report(timestamp: str, track_results: dict[str, dict], insigh
             total_by_severity[sev] += count
 
     lines = [
-        "# Hermes Nightly Audit Report",
+        "# Nightly Audit Report",
         f"Generated at: `{timestamp}`",
         "",
         "## Summary of Findings",
@@ -236,16 +220,6 @@ def build_markdown_report(timestamp: str, track_results: dict[str, dict], insigh
             lines.append("  - No findings reported.")
         lines.append("")
 
-    lines.extend(
-        [
-            "## Hermes Insights Snapshot",
-            "```",
-            insights.strip(),
-            "```",
-            "",
-        ]
-    )
-
     return "\n".join(lines)
 
 
@@ -256,20 +230,17 @@ def main() -> int:
         "Do NOT use this tool for mutating curriculum data or running LLM tasks.",
         epilog="Examples:\n"
         "  .venv/bin/python scripts/audit/hermes_nightly_audit.py\n"
-        "  .venv/bin/python scripts/audit/hermes_nightly_audit.py --tracks a1\n"
-        "  .venv/bin/python scripts/audit/hermes_nightly_audit.py --tracks a1,a2 --insights-cmd /usr/local/bin/hermes\n\n"
+        "  .venv/bin/python scripts/audit/hermes_nightly_audit.py --tracks a1\n\n"
         "Outputs:\n"
-        "  batch_state/hermes_cron/audit_YYYYMMDD_HHMMSS.md   - Markdown report of findings and insights.\n"
-        "  batch_state/hermes_cron/audit_YYYYMMDD_HHMMSS.json - Machine-readable JSON sidecar.\n"
-        "  batch_state/hermes_cron/latest.md                  - Copy of the latest Markdown report.\n"
-        "  batch_state/hermes_cron/latest.json                - Copy of the latest JSON report.\n\n"
+        "  batch_state/nightly_audit/audit_YYYYMMDD_HHMMSS.md   - Markdown report of findings.\n"
+        "  batch_state/nightly_audit/audit_YYYYMMDD_HHMMSS.json - Machine-readable JSON sidecar.\n"
+        "  batch_state/nightly_audit/latest.md                  - Copy of the latest Markdown report.\n"
+        "  batch_state/nightly_audit/latest.json                - Copy of the latest JSON report.\n\n"
         "Exit codes:\n"
         "  0 - Sweep completed and reports written successfully.\n"
         "  1 - Unexpected script execution failure.\n\n"
         "Related:\n"
-        "  Prompt template: agents_extensions/shared/prompts/hermes-nightly-audit.md\n"
-        "  Auditor script: scripts/audit/track_deterministic_audit.py\n"
-        "  Specification: docs/references/private/hermes-usage.md (gitignored; see stub at docs/best-practices/hermes-usage.md)",
+        "  Auditor script: scripts/audit/track_deterministic_audit.py",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
@@ -277,12 +248,6 @@ def main() -> int:
         default="a1,a2,b1,b2",
         help="Comma-separated track IDs to audit (default: 'a1,a2,b1,b2'). Example: '--tracks a1,a2'.",
     )
-    parser.add_argument(
-        "--insights-cmd",
-        default="hermes",
-        help="The command name or path to the hermes binary for retrieving insights (default: 'hermes').",
-    )
-
     args = parser.parse_args()
 
     track_list = [t.strip().lower() for t in args.tracks.split(",") if t.strip()]
@@ -295,9 +260,6 @@ def main() -> int:
     for track in track_list:
         print(f"Auditing track '{track}'...")
         track_results[track] = run_track_audit(track)
-
-    print("Retrieving Hermes insights snapshot...")
-    insights = get_hermes_insights(args.insights_cmd)
 
     now = datetime.now(UTC)
     timestamp_str = now.strftime("%Y%m%d_%H%M%S")
@@ -319,13 +281,12 @@ def main() -> int:
             "findings_by_severity": dict(overall_by_severity),
         },
         "tracks": track_results,
-        "insights": insights,
     }
 
-    markdown_report = build_markdown_report(iso_timestamp, track_results, insights)
+    markdown_report = build_markdown_report(iso_timestamp, track_results)
 
-    # Write output to batch_state/hermes_cron/ (gitignored)
-    output_dir = PROJECT_ROOT / "batch_state" / "hermes_cron"
+    # Write output to batch_state/nightly_audit/ (gitignored)
+    output_dir = PROJECT_ROOT / "batch_state" / "nightly_audit"
     try:
         output_dir.mkdir(parents=True, exist_ok=True)
     except Exception as e:

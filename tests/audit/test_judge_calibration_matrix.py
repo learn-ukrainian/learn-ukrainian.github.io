@@ -59,21 +59,6 @@ def test_resume_skips_existing_cells(tmp_path: Path) -> None:
     assert records == [existing]
 
 
-def test_hermes_config_swap_is_atomic(tmp_path: Path) -> None:
-    config = tmp_path / "config.yaml"
-    original = "model:\n  default: gpt-5.5\nagent:\n  reasoning_effort: medium\n"
-    config.write_text(original, encoding="utf-8")
-
-    with pytest.raises(RuntimeError, match="boom"):
-        with matrix.hermes_effort_swap(config, "xhigh") as previous:
-            assert previous == "medium"
-            assert "  reasoning_effort: xhigh\n" in config.read_text(encoding="utf-8")
-            raise RuntimeError("boom")
-
-    assert config.read_text(encoding="utf-8") == original
-    assert not (tmp_path / "config.yaml.judge-calibration-backup").exists()
-
-
 def test_native_codex_rejects_old_model_before_subprocess(monkeypatch):
     def forbidden(*args, **kwargs):
         pytest.fail("unapproved Codex model reached subprocess")

@@ -33,17 +33,16 @@ def test_main_writes_only_to_designated_path(tmp_path, monkeypatch):
         }
 
     monkeypatch.setattr(audit, "run_track_audit", dummy_run_track_audit)
-    monkeypatch.setattr(audit, "get_hermes_insights", lambda cmd: "mocked insights")
 
     # Mock CLI arguments
-    test_args = ["--tracks", "a1", "--insights-cmd", "hermes"]
+    test_args = ["--tracks", "a1"]
     with patch("sys.argv", ["scripts/audit/hermes_nightly_audit.py", *test_args]):
         exit_code = audit.main()
 
     assert exit_code == 0
 
-    # Assert reports are written under tmp_path / "batch_state" / "hermes_cron"
-    cron_dir = tmp_path / "batch_state" / "hermes_cron"
+    # Assert reports are written under tmp_path / "batch_state" / "nightly_audit"
+    cron_dir = tmp_path / "batch_state" / "nightly_audit"
     assert cron_dir.exists()
 
     # Verify latest files exist
@@ -54,8 +53,8 @@ def test_main_writes_only_to_designated_path(tmp_path, monkeypatch):
     files = list(cron_dir.glob("audit_*.md"))
     assert len(files) == 1
 
-    # Assert NO writes outside batch_state/hermes_cron/
-    # All files inside tmp_path must be under batch_state/hermes_cron/
+    # Assert NO writes outside batch_state/nightly_audit/
+    # All files inside tmp_path must be under batch_state/nightly_audit/
     all_files = [p for p in tmp_path.glob("**/*") if p.is_file()]
     for p in all_files:
-        assert p.relative_to(tmp_path).parts[0:2] == ("batch_state", "hermes_cron")
+        assert p.relative_to(tmp_path).parts[0:2] == ("batch_state", "nightly_audit")
