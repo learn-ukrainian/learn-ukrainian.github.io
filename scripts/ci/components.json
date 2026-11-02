@@ -512,9 +512,6 @@
     "eslint.config.mjs": [
       "shared-core"
     ],
-    "jest.config.js": [
-      "shared-core"
-    ],
     "package-lock.json": [
       "shared-core"
     ],
