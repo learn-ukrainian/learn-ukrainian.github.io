@@ -461,3 +461,45 @@ def test_role_policy_validation_and_expiry(tmp_path, monkeypatch, case, expected
             reason = mp.role_refusal_reason(model, inferred, now=NOW)
             assert (reason.split(":", 1)[0] if reason else None) == expected, (field, value)
         assert mp.dispatch_roles({"research_role": "authoring", "mode": "read-only"}) == {"authoring"}
+
+
+def test_reading_with_a_past_resets_at_is_not_used_as_headroom(monkeypatch) -> None:
+    """#12467: a fresh-flagged reading from before its window reset is the old window's, so it reads unknown."""
+    monkeypatch.setattr(
+        mp, "routing_budget_used_pct", getattr(mp.routing_budget_used_pct, "__wrapped__", mp.routing_budget_used_pct),
+    )
+    now = datetime(2026, 11, 2, 7, 21, tzinfo=UTC)
+    before, after = "2026-11-02T07:00:00Z", "2026-11-09T07:00:00Z"
+
+    def probe(resets_at: object) -> dict:
+        return {"stale": False, "freshness": "fresh", "weekly_used_pct": 99, "weekly_resets_at": resets_at}
+
+    def read(lane: str, payload: dict, account=HOST_ACCOUNT) -> float | None:
+        _serve(monkeypatch, payload)
+        return mp.routing_budget_used_pct(lane, account=account, now=now)
+
+    def lanes(resets_at: object) -> dict:
+        return {"agents": {"claude": {"status": "hot", "codexbar": probe(resets_at)},
+                           "codex": {"status": "hot", "codexbar": probe(resets_at)}}}
+
+    # lane probe (the default account's fallback, and a non-claude lane), ISO string and epoch seconds
+    for resets_at in (before, int(datetime(2026, 11, 2, 7, 0, tzinfo=UTC).timestamp())):
+        assert read("claude", lanes(resets_at)) is None
+        assert read("codex", lanes(resets_at)) is None
+    assert read("claude", lanes(after)) == 99.0
+    assert read("codex", lanes(None)) == 99.0  # no resets_at is no evidence
+
+    # the account's own row
+    for resets_at, expected in ((before, None), (after, 11.0)):
+        row = _account(89.0)
+        row["weekly"]["resets_at"] = resets_at
+        assert read("claude", _accounts_payload(row), account("b")) == expected
+
+    # AGY Claude windows: either window past its reset
+    fresh = _agy_window_payload(10.0)
+    windows = fresh["agents"]["gemini"]["claude_gpt_windows"]
+    for key in ("five_hour", "weekly"):
+        windows[key]["resets_at"] = after
+    assert read(mp.AGY_CLAUDE_WINDOW_LANE, fresh) == 10.0
+    windows["five_hour"]["resets_at"] = before
+    assert read(mp.AGY_CLAUDE_WINDOW_LANE, fresh) is None
