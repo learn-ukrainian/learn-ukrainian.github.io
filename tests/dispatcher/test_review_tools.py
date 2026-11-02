@@ -60,6 +60,9 @@ _CASES = {
     "F1-gh-pr-merge": (False, "gh pr merge 1 --squash"),
     "F1-gh-api-post": (False, "gh api -X POST repos/example/repo/issues -f title=x"),
     "F1-gh-pr-view-web": (False, "gh pr view 1 -cw"),
+    # Destination selectors: the host's gh would connect to them outside the boundary (cf-12521-sol-r1 F1).
+    "F2-gh-repo-host": (False, "gh pr view 1 --repo localhost:9/a/b --json number"),
+    "F2-gh-url-operand": (False, "gh issue view https://localhost:9/a/b/issues/1"),
     "granted-shell-scratch": (True, "echo ok > \"$TMPDIR/probe\" && cat \"$TMPDIR/probe\""),
     "granted-interpreter": (True, f"{_PY} -c \"import pytest; print('interpreter-ok')\""),
     "granted-named-test": (True, f"{_PY} -m pytest -q -p no:cacheprovider test_probe.py"),

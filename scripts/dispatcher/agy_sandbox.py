@@ -118,6 +118,11 @@ _CLAUDE_CWD_FILE = re.compile(r"claude-[0-9a-f]{1,32}-cwd")
 # The read-only gh forms the route allowed before it had a shell; nothing else reaches the host's gh.
 _GH_READS = frozenset({("pr", "view"), ("pr", "diff"), ("pr", "checks"), ("issue", "view"), ("run", "view")})
 _GH_TIMEOUT = 300
+# Flags of those forms that take a separate value; every other argument is a flag or an operand.
+_GH_VALUE_FLAGS = frozenset({"--json", "-q", "--jq", "-t", "--template", "--job", "-j", "--attempt", "-a",
+                             "--color", "--interval", "-i"})
+# A number, #number or branch name: never a host, URL or OWNER/REPO#N selector.
+_GH_OPERAND = re.compile(r"#?[A-Za-z0-9._/-]+")
 _GH_SHIM = '''#!{interpreter} -I
 import json, os, socket, sys
 directory = os.open(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir), os.O_RDONLY)
@@ -880,9 +885,26 @@ def gh_refusal(argv) -> str | None:
         return "the gh request is malformed"
     if (argv[0], argv[1]) not in _GH_READS:
         return "only gh pr view, gh pr diff, gh pr checks, gh issue view and gh run view are relayed"
-    # --web (-w, also inside a cluster such as -cw) opens a browser on the host.
-    if any(arg.startswith("--web") or (arg[:1] == "-" and arg[1:2] != "-" and "w" in arg) for arg in argv[2:]):
-        return "gh --web is refused"
+    # gh runs on the host's network, so nothing may choose its destination: the repository comes from
+    # the worktree's own remote. A URL operand or --repo/-R (any form) names another host; --web/-w
+    # (also inside a cluster such as -cw) opens a browser on the host.
+    if any("://" in arg for arg in argv[2:]):
+        return "a URL operand is refused; the relay reads only the worktree's repository"
+    expect_value = False
+    for arg in argv[2:]:
+        if expect_value:  # a flag's value: --json fields, a --jq or --template expression, a job id
+            expect_value = False
+        elif arg.startswith("--"):
+            name = arg.split("=", 1)[0]
+            if name.startswith(("--web", "--repo")):
+                return f"gh {name} is refused"
+            expect_value = "=" not in arg and name in _GH_VALUE_FLAGS
+        elif arg.startswith("-") and len(arg) > 1:
+            if "w" in arg or "R" in arg:
+                return f"gh {arg} is refused"
+            expect_value = len(arg) == 2 and arg in _GH_VALUE_FLAGS
+        elif not _GH_OPERAND.fullmatch(arg):
+            return "an operand naming another repository or host is refused"
     return None
 
 
