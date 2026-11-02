@@ -51,16 +51,6 @@ lookups:
      query: 'legacy reboot A1 literacy modules reference only status',
      expect: [docs/reboot/phase-8-references/README.md],
      verify: [{path: docs/reboot/phase-8-references/README.md, contains: 'REFERENCE ONLY'}]}
-  - {id: N02, kind: status, source: 'issue #9218',
-     question: 'Are the old TypeScript build scripts still used, or was everything moved to Python?',
-     query: 'deprecated TypeScript build scripts Python migration',
-     expect: [scripts/legacy/typescript/README.md],
-     verify: [{path: scripts/legacy/typescript/README.md, contains: 'Complete migration to Python'}]}
-  - {id: N03, kind: status, source: 'issue #9412',
-     question: 'Are the plain JavaScript files that used to power the old HTML output still in use?',
-     query: 'legacy JavaScript HTML output scripts deprecated',
-     expect: [scripts/assets/scripts-deprecated/README.md],
-     verify: [{path: scripts/assets/scripts-deprecated/README.md, contains: 'NOT used in the current system'}]}
   - {id: N04, kind: status, source: 'issue #7888',
      question: 'Can I restart generating original dataset rows with the old version-4 runtime package, or what is the supported path now?',
      query: 'legacy V4 dataset row generation supported path',
