@@ -654,40 +654,47 @@ def _status_or_fail(args: argparse.Namespace) -> int:
     return 1
 
 
-_SAFE_WORD = re.compile(r"[A-Za-z]+|\d+")
-_SAFE_ARG = re.compile(r"--|--?[A-Za-z][A-Za-z0-9-]*|[A-Za-z0-9][A-Za-z0-9._/^{}~+-]*")
-_CREDENTIAL_WORD = re.compile(r"authoriz|bearer|token|secret|passw|credential|(api|private|access)[\s_-]*key|cookie", re.IGNORECASE)
+# A failed git call prints only words from these closed sets (#12468). A value, a path or a secret cannot be
+# told from a plain word by its shape, so nothing outside a constant is ever printed.
+_GIT_WORDS = frozenset(
+    [
+        "git", "add", "cat-file", "check-ref-format", "commit-tree", "config", "fetch", "init", "ls-files",
+        "ls-remote", "merge-base", "push", "reset", "rev-list", "rev-parse", "show", "sparse-checkout",
+        "status", "symbolic-ref", "update-ref", "worktree", "write-tree", "--", "--verify", "--exit-code",
+        "--heads", "--is-shallow-repository", "--show-toplevel", "--git-common-dir", "--absolute-git-dir",
+        "--no-tags", "--no-write-fetch-head", "--unshallow", "--quiet", "--short", "--list", "--local",
+        "--null", "--count", "--all", "--not", "--head", "--branches", "--remotes", "--no-checkout",
+        "--no-track", "--porcelain", "--hard", "--cached",
+    ]
+)
+_STDERR_WORDS = frozenset(
+    [
+        "fatal", "error", "warning", "remote", "a", "an", "the", "is", "are", "was", "not", "no", "could",
+        "couldn't", "cannot", "can", "unable", "to", "of", "from", "in", "on", "at", "for", "and", "or",
+        "by", "with", "access", "create", "open", "read", "write", "lock", "resolve", "connect", "host",
+        "repository", "object", "ref", "reference", "revision", "single", "needed", "bad", "invalid",
+        "unknown", "ambiguous", "argument", "path", "file", "directory", "exists", "already", "permission",
+        "denied", "failed", "failure", "rejected", "refused", "timed", "out", "missing", "found", "find",
+        "branch", "commit", "tree", "index", "pack", "shallow", "update", "fetch", "push", "authentication",
+        "unauthorized", "forbidden",
+    ]
+)
 
 
 def _diagnostic_stderr(line: str) -> str:
-    """The words of one stderr line that are plain words or numbers; every other word is ``<redacted>``.
-
-    A path, a URL, a quoted value or an identifier cannot be told from a secret by its shape, so none is
-    printed. A line that still names a secret-bearing field is replaced whole.
-    """
+    """One stderr line with every word outside :data:`_STDERR_WORDS` replaced by ``<redacted>``."""
     words = []
     for word in line.split():
         core = word.rstrip(":,.;")
-        words.append(word if _SAFE_WORD.fullmatch(core) else "<redacted>" + word[len(core):])
-    text = re.sub(r"(<redacted>[:,.;]* ?)+", "<redacted> ", " ".join(words)).strip()
-    return "<redacted: possible credential>" if _CREDENTIAL_WORD.search(text) else text
-
-
-def _diagnostic_args(words: list[str]) -> str:
-    """The command's words that are subcommands, flags or ref-like names; a path, URL or value is ``<arg>``."""
-    safe = (
-        word.split("=", 1)[0] + "=<arg>" if word.startswith("--") and "=" in word
-        else word if _SAFE_ARG.fullmatch(word) and "://" not in word and not word.startswith("/") else "<arg>"
-        for word in words
-    )
-    return " ".join(safe)
+        words.append(word if core.lower() in _STDERR_WORDS else "<redacted>" + word[len(core):])
+    return re.sub(r"(<redacted>[:,.;]* ?)+", "<redacted> ", " ".join(words)).strip()
 
 
 def _failed_operation(exc: subprocess.CalledProcessError) -> str:
     """``CalledProcessError: <command> exited <rc>: <first stderr line>``, without secrets (#12468).
 
-    The command drops ``-C <path>`` and ``-c <key=value>``. Only the first stderr line is kept. Both parts
-    print only what :func:`_diagnostic_args` and :func:`_diagnostic_stderr` can show safely.
+    The command drops ``-C <path>`` and ``-c <key=value>``; every word outside :data:`_GIT_WORDS` is
+    ``<operand>``. Only the first stderr line is kept, filtered by :func:`_diagnostic_stderr`.
     """
     words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
     kept, skip = [], False
@@ -697,11 +704,11 @@ def _failed_operation(exc: subprocess.CalledProcessError) -> str:
         elif word in {"-C", "-c"}:
             skip = True
         else:
-            kept.append(word)
+            kept.append(word if word in _GIT_WORDS else "<operand>")
     stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
     first = next((line.strip() for line in stderr.splitlines() if line.strip()), "")
     detail = f": {_diagnostic_stderr(first)}" if first else ""
-    return f"CalledProcessError: {_diagnostic_args(kept)} exited {exc.returncode}{detail}"
+    return f"CalledProcessError: {' '.join(kept)} exited {exc.returncode}{detail}"
 
 
 def main(argv=None) -> int:

@@ -2557,11 +2557,15 @@ def test_failed_git_call_reports_its_operation_and_first_stderr_line_without_sec
     assert "exited 128: fatal: could not read from" in message
     assert "second line" not in message
     assert "token" not in message and "/home/ops/private" not in message
-    # Each leaks if a pattern list were the only defence: the redaction keeps plain words and numbers only.
+    # Each leaks if a shape rule or a pattern list were the defence: only words from closed constant sets print.
     for command, stderr, leaked in (
         (["git", "fetch"], "remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
         (["git", "fetch"], "remote: API Key: SYNTHETIC_VALUE", "SYNTHETIC_VALUE"),
         (["git", "fetch"], "remote: " + "a1b2c3d4e5" * 4, "a1b2c3d4e5"),
+        (["git", "fetch"], "remote: rejected SYNTHETICVALUE 4815162342", "SYNTHETICVALUE"),
+        (["git", "fetch"], "remote: " + "abcdef" * 7, "abcdef"),
+        (["git", "fetch"], "fatal: cannot open '/synthetic/Acme Client Records/repo': Permission denied", "Client"),
+        (["git", "worktree", "add", "synthetic/clientrecords"], "fatal: denied", "clientrecords"),
         (["git", "fetch", "user:syntheticsecret"], "fatal: denied", "syntheticsecret"),
         (["git", "fetch"], "fatal: Unable to create '/synthetic/private directory/worktree/index.lock': denied", "worktree"),
         (["git", "fetch"], "fatal: cannot open '/synthetic/it's dir/sub/file': denied", "sub"),
@@ -2578,7 +2582,7 @@ def test_failed_git_call_reports_its_operation_and_first_stderr_line_without_sec
         stderr="fatal: Needed a single revision")))
     assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
     assert capsys.readouterr().err == (
-        "dispatcher: CalledProcessError: git rev-parse --verify topic^{commit} exited 128: fatal: Needed a single revision\n")
+        "dispatcher: CalledProcessError: git rev-parse --verify <operand> exited 128: fatal: Needed a single revision\n")
 
 
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
