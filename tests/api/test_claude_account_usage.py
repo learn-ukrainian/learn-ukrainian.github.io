@@ -39,6 +39,15 @@ _ACCOUNT_B = "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b"
 _MARKER = "SYNTHETIC_PRIVATE_MARKER"
 
 
+@pytest.fixture(autouse=True)
+def _scheduler_owns_probes(monkeypatch):
+    """These tests stand in for the Monitor scheduler, the only process that probes (#12542).
+
+    ``test_claude_account_probe_ownership.py`` covers the refusal for any other process.
+    """
+    monkeypatch.setattr(cau, "_is_probe_owner", lambda: True)
+
+
 def _iso(moment: datetime) -> str:
     return moment.astimezone(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
 
