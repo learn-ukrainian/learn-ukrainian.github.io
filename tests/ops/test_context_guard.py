@@ -576,6 +576,49 @@ def test_a_scope_kept_alive_by_background_tasks_still_blocks_the_next_ticks_resp
     assert len(respawns(h)) == 1 and h.fake.respawned_over_live_agent == [False]
 
 
+class Killed(BaseException):
+    """The service timeout ending the pass: not an ``Exception``, so no lane handler catches it."""
+
+
+def test_the_scope_is_saved_before_its_stop_so_a_killed_pass_still_holds_the_next_tick(tmp_path: Path) -> None:
+    """The service timeout can end a pass before the end-of-run save; the next process must still hold."""
+    state_path = tmp_path / "state.json"
+    h = stuck_exit_harness(tmp_path)
+    h.guard.checkpoint = lambda state: cg.save_state(state_path, state)
+    h.fake.live_scopes.add(SCOPE)  # background tasks keep the scope active after the agent exits
+
+    def killed(_seconds: float) -> None:
+        raise Killed
+
+    h.guard.tmux.sleep = killed
+    with pytest.raises(Killed):
+        h.tick("cto")  # killed mid-wait: the end-of-run save never ran
+    assert systemctl(h, "stop") != [] and respawns(h) == []
+    assert cg.load_state(state_path)["cto"]["predecessor_scope"] == SCOPE
+
+    h.guard.tmux.sleep = h.fake.sleep
+    h.state = cg.load_state(state_path)  # a new process starts from disk
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == []  # the agent is gone and the pane idle, but the scope is not
+    h.fake.live_scopes.clear()
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1 and h.fake.respawned_over_live_agent == [False]
+
+
+def test_nothing_is_stopped_when_the_scope_record_cannot_be_saved(tmp_path: Path) -> None:
+    h = stuck_exit_harness(tmp_path)
+
+    def refuse_to_save(_state: dict) -> None:
+        raise OSError("disk full")
+
+    h.guard.checkpoint = refuse_to_save
+    h.tick("cto")
+    assert systemctl(h, "stop") == [] and respawns(h) == []
+    assert any("error OSError" in line for line in h.logs)
+
+
 def test_scope_that_stays_active_at_the_pending_retry_blocks_it(tmp_path: Path) -> None:
     h = relaunched(tmp_path)
     refuse(h)

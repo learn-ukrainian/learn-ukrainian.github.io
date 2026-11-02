@@ -410,6 +410,9 @@ class Guard:
     handoff_posted: Callable[[str, str], bool]
     local: dict[str, dict[str, Any]] = field(default_factory=dict)
     now: Callable[[], dt.datetime] = utcnow
+    # Saves the whole state; the forced relaunch calls it before the stop, so the scope it is about to end
+    # survives a pass that the service timeout cuts off before the end-of-run save.
+    checkpoint: Callable[[dict[str, Any]], None] = lambda _state: None
     _exit_poll_remaining: float = field(default=0, init=False)
 
     def setting(self, key: str) -> int:
@@ -977,15 +980,17 @@ class Guard:
         )
 
     def _end_predecessor(
-        self, lane: Lane, s: dict[str, Any], snap: PaneSnapshot, pct: int | None
+        self, lane: Lane, st: dict[str, Any], s: dict[str, Any], snap: PaneSnapshot, pct: int | None
     ) -> tuple[PaneSnapshot, str | None] | None:
         """End a live predecessor and wait until it is really gone; None means nothing may be respawned.
 
         A live agent (forced relaunch after two swallowed exits) is ended through its ``lu-driver``
         scope, read from its cgroup: stopping the scope takes the agent and its background tasks with
-        it. The scope is recorded in ``predecessor_scope`` before the stop, because an empty pane does
-        not prove it is gone: background tasks can keep it active after the agent exits, so a later
-        tick (and a pending single-instance retry) holds for the recorded scope too. The respawn
+        it. The scope is recorded in ``predecessor_scope`` and saved (``checkpoint``) before the stop,
+        because an empty pane does not prove it is gone: background tasks can keep it active after the
+        agent exits, so a later tick (and a pending single-instance retry) holds for the recorded scope
+        too, even when the service timeout ends this pass before the end-of-run save. A save that fails
+        raises, so nothing is stopped without its record. The respawn
         follows only once that scope is inactive, the agent's pid and start time are out of the process
         table and the pane's launcher has exited, the state the successor's single-instance check
         needs. That takes seconds, so the wait ends at an absolute deadline,
@@ -1003,6 +1008,7 @@ class Guard:
                 )
                 return None
             s["predecessor_scope"] = unit
+            self.checkpoint(st)
         else:
             unit = s.get("predecessor_scope")
             if not unit:
@@ -1045,7 +1051,7 @@ class Guard:
         except LaneConfigError as exc:
             self.log(f"{lane.name} relaunch refused ctx_pct={pct}: {exc}; pane left as is, retry next tick")
             return
-        ended = self._end_predecessor(lane, s, snap, pct)
+        ended = self._end_predecessor(lane, st, s, snap, pct)
         if ended is None:
             return
         settled, unit = ended
@@ -1258,6 +1264,7 @@ def main(argv: list[str] | None = None) -> int:
             send=fleet_sender(registry.guard_sender, log),
             handoff_posted=comms_reader(comms_db(log), log),
             local=local,
+            checkpoint=lambda current: save_state(state_path, current),
         )
         guard.run(state, args.lane)
         save_state(state_path, state)
