@@ -9,6 +9,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import time
 from contextlib import contextmanager, suppress
 from datetime import datetime
 from functools import partial
@@ -401,17 +402,26 @@ def registry_path(repo: Path, repository: dict) -> Path | None:
     return repo / relative
 
 
-def registry_update(registry: Path, key: str, change) -> dict | None:
+def registry_update(registry: Path, key: str, change, *, timeout: float | None = None) -> dict | None:
     """Read-modify-write one ``worktrees`` entry in the target repository's own registry format.
 
     Serialized by an exclusive lock beside the registry and published by atomic replace, so a concurrent
     dispatch or hand edit through the same lock never loses an update. ``change`` receives the current
     entry (or None) and returns the new one, or None to leave the registry untouched; entries are never
     removed. An unreadable or malformed
-    registry is refused, never recreated: the audit treats it as an unknown to resolve.
+    registry is refused, never recreated: the audit treats it as an unknown to resolve. ``timeout`` bounds the
+    wait for the lock (TimeoutError); without it the wait is unbounded, as registration's always was.
     """
     with open(registry.with_name(registry.name + ".lock"), "ab") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+        deadline = None if timeout is None else time.monotonic() + timeout
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | (0 if deadline is None else fcntl.LOCK_NB))
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(f"worktree registry lock is held: {registry}") from None
+                time.sleep(0.05)
         data = json.loads(registry.read_text(encoding="utf-8"))
         if not isinstance(data, dict) or not isinstance(data.get("worktrees"), dict):
             raise ValueError(f"worktree registry has an invalid shape: {registry}")
@@ -490,12 +500,13 @@ def refresh_worktree(registry: Path, path: Path, pr: int | None = None) -> bool:
         branch = None
 
     def change(old):
-        if not old or old.get("state") != "active":
+        if not isinstance(old, dict) or old.get("state") != "active":
             return None
         return {**old, "head": head, **({"branch": branch} if branch else {}), **({"pr": pr} if pr else {})}
-    return registry_update(registry, _key(path), change) is not None
+    return registry_update(registry, _key(path), change, timeout=REFRESH_LOCK_WAIT) is not None
 
 
+REFRESH_LOCK_WAIT = 10.0  # seconds; a refresh never stalls a commit or settlement behind a held registry lock
 REFRESH_HOOKS = ("post-commit", "post-rewrite", "post-merge", "post-checkout")
 
 
@@ -511,7 +522,8 @@ def _install_refresh_hooks(path: Path, registry: Path) -> None:
         def where(*args):
             return Path(_git(path, "rev-parse", "--path-format=absolute", *args, isolate=True))
         try:
-            chain = Path(_git(path, "config", "--get", "core.hooksPath", isolate=True))
+            # Git resolves a relative core.hooksPath against the worktree's top level.
+            chain = Path(path) / _git(path, "config", "--get", "core.hooksPath", isolate=True)
         except subprocess.CalledProcessError:
             chain = where("--git-path", "hooks")
         hooks = where("--git-path", "dispatch-hooks")
@@ -528,7 +540,7 @@ def _install_refresh_hooks(path: Path, registry: Path) -> None:
             script = hooks / name
             script.write_text(
                 f"#!/bin/sh\nchain={shlex.quote(str(chain / name))}\n"
-                f'if [ -x "$chain" ]; then "$chain" "$@" || exit $?; fi\n'
+                f'if [ -x "$chain" ]; then "$chain" "$@"; fi\n'
                 f"cd {shlex.quote(str(root))} && timeout 20 {refresh} || echo 'dispatcher: registry refresh failed' >&2\n"
                 "exit 0\n")
             script.chmod(0o755)

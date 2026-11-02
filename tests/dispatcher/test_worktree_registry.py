@@ -182,3 +182,51 @@ def test_a_commit_refreshes_the_record_and_a_retained_tree_keeps_its_final_head(
     data = json.loads(registry.read_text())
     assert (data["worktrees"][str(tree.resolve())]["head"], data["worktrees"][str(tree.resolve())]["state"]) == (second, "active")
     assert data["worktrees"]["/elsewhere"] == other and data["artifacts"] == {"/scratch/a": {"keep": 1}}
+
+
+def test_refresh_keeps_configured_hooks_and_contains_registry_trouble(sandbox, monkeypatch):  # noqa: F811
+    import fcntl
+
+    from scripts.dispatcher import git, store
+
+    primary, registry, _ = declared_repo(sandbox)
+    monkeypatch.setattr(store, "retention_hold_disposition", lambda _record: None)
+    monkeypatch.setattr(git, "resolve_repo", lambda _key=None: (primary, dict(worktree_registry=REGISTRY)))
+    sha = run_git(primary, "rev-parse", "HEAD")
+    # A relative core.hooksPath is resolved against the worktree, so its guards survive; a failing post hook
+    # of the repository's own does not stop the refresh.
+    (primary / ".githooks").mkdir()
+    guard = primary / ".githooks/pre-commit"
+    guard.write_text("#!/bin/sh\nexit 1\n")
+    failing = primary / ".githooks/post-commit"
+    failing.write_text("#!/bin/sh\nexit 1\n")
+    for hook in (guard, failing):
+        hook.chmod(0o755)
+    run_git(primary, "config", "core.hooksPath", ".githooks")
+    run_git(primary, "add", ".githooks")
+    run_git(primary, "-c", "core.hooksPath=/dev/null", "commit", "-m", "tracked hooks")
+    sha = run_git(primary, "rev-parse", "HEAD")
+    tree = primary / ".worktrees/dispatch/codex/guarded"
+    git.create_worktree(primary, tree, "codex/guarded", sha,
+                        registration=dict(registry=registry, agent="codex", task_id="guarded", initiator=None, purpose="p"))
+    refused = git.subprocess.run(["git", "-C", str(tree), "-c", "user.name=S", "-c", "user.email=s@example.invalid",
+                                  "commit", "--allow-empty", "-m", "x"], capture_output=True)
+    assert refused.returncode != 0, "the repository's pre-commit guard must still run"
+    key = str(tree.resolve())
+    # A malformed entry and a held lock are contained at settlement; the disposition is unchanged.
+    data = json.loads(registry.read_text())
+    data["worktrees"][key] = "garbage"
+    registry.write_text(json.dumps(data))
+    (tree / "README").write_text("dirty\n")
+    run_git(tree, "add", "README")
+    record = dict(task_id="guarded", repo="declared", worktree_path=str(tree), worktree_branch="codex/guarded",
+                  worktree_base_sha=sha, mode="workspace-write", options={})
+    assert git.settle_worktree(record)["worktree_disposition_reason"] == "dirty"
+    monkeypatch.setattr(git, "REFRESH_LOCK_WAIT", 0.2)
+    data["worktrees"][key] = dict(owner="o", purpose="p", branch="codex/guarded", head=sha, state="active",
+                                  next_action="n", pr=None)
+    registry.write_text(json.dumps(data))
+    with open(registry.with_name(registry.name + ".lock"), "ab") as held:
+        fcntl.flock(held, fcntl.LOCK_EX)
+        outcome = git.settle_worktree(record)
+    assert outcome["worktree_disposition_reason"] == "dirty" and outcome["worktree_registry"].startswith("failed: TimeoutError")
