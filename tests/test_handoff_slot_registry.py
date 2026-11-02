@@ -555,7 +555,17 @@ def test_muse_identity_refuses_other_streams(selector: str) -> None:
     assert result.stdout == ""
 
 
-@pytest.mark.parametrize("caller_epic", [("--epic", "devops"), ("--epic=devops",)])
+@pytest.mark.parametrize(
+    "caller_epic",
+    [
+        ("--epic", "devops"),
+        ("--epic=devops",),
+        ("--governor", "devops"),
+        # `--` here is the --endpoint value, not the separator, so --epic is still a launcher flag.
+        ("--endpoint", "--", "--epic", "devops"),
+        ("--endpoint", "--", "--epic=devops"),
+    ],
+)
 def test_kube_dojo_wrapper_refuses_a_caller_lane(caller_epic: tuple[str, ...]) -> None:
     """A caller --epic must not move the kube-dojo work onto another lane's lease (#12553)."""
     result = subprocess.run(
@@ -568,5 +578,5 @@ def test_kube_dojo_wrapper_refuses_a_caller_lane(caller_epic: tuple[str, ...]) -
         check=False,
     )
     assert result.returncode == 2, result.stdout + result.stderr
-    assert "fixes --epic kube-dojo" in result.stderr
+    assert "fixes the lane 'kube-dojo'; refusing the caller's lane 'devops'" in result.stderr
     assert "would claim" not in result.stdout

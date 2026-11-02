@@ -10,18 +10,12 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT/scripts/lib/launcher_core.sh"
-# The lane is fixed: a caller --epic would move the kube-dojo work onto another lane's
-# lease and handoff, so refuse it before any side effect.
-for arg in "$@"; do
-  case "$arg" in
-    --) break ;;
-    --epic|--epic=*) launcher_error "start-kube-dojo-driver.sh fixes --epic kube-dojo; remove the caller --epic."; exit 2 ;;
-  esac
-done
 # The lane and the first-run instruction are fixed wrapper options: scope re-entry and
 # successors replay only the caller's argv, and this wrapper adds them exactly once.
+# LC_WRAPPER_FIXED_EPIC makes the launcher refuse any caller lane before side effects.
+LC_WRAPPER_FIXED_EPIC=kube-dojo
 LC_WRAPPER_LAUNCHER_ARGS=(
-  --epic kube-dojo
+  --epic "$LC_WRAPPER_FIXED_EPIC"
   "kube-dojo lane: drive kube-dojo/kube-dojo.github.io epic #2272 (complete evidence-backed KubeDojo content upgrade), its pages in learner order. Dispatch every kube-dojo worker with scripts/dispatch.py --repo kube-dojo. Routing (tracker C-4063/C-4064): Terra authors; the review of record is the cross-family reviewer the resolver picks; until an exercise environment exists, review covers prose factual claims only. Send every finding outside this lane to claude-cto through Fleet Comms."
 )
 LAUNCHER_MODEL="${LAUNCHER_MODEL:-claude-sonnet-5-5}" \
