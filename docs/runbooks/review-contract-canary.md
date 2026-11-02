@@ -12,13 +12,12 @@ passed both and then no Codex, Claude or Grok review could settle (#12380, #1239
 findings schema, the receipt gate, the verdict parser, the recorder, settlement, the dispatcher
 worker and output-schema binding, and each reviewer provider's schema and reply handling. The
 merge-queue keeper and `scripts.publish pr-merge` read the PR's file list. When it touches one of
-those paths, both refuse the head with the typed reason `needs-contract-canary` and one detail:
+those paths, both refuse the head with the typed reason `needs-contract-canary` and one of these details:
 
 | Detail | Meaning |
 | --- | --- |
 | `missing: <routes>` | No receipt at this head for the routes named. |
-| `stale: …` | A receipt is bound to other contract or dispatcher bytes. |
-| `unverifiable: …` | The route list, the head's tree or a receipt could not be read. |
+| `unverifiable: …` | The route list, a receipt or the settled task behind it could not be read, or the task no longer rebuilds the receipt. |
 
 The required routes are every route of an active formal-review candidate in
 `scripts/config/model_catalog.yaml` (today `agy`, `claude`, `codex`, `cursor`, `muse`). Print the
@@ -30,7 +29,10 @@ quota blocks the change; it never shrinks the list.
 A canary task is pinned to a head with no `--branch` and no `--pr`, so it spends no review round
 and `record_cf_verdict` refuses it ("review was not branch-pinned"). Its receipt is written to
 `batch_state/review-contract-canary/<head>/<route>.json` with `eligible_as_review: false`, outside
-the PR comments the verdict lookup reads. The review of record still follows `review-loop`, and
+the PR comments the verdict lookup reads. A receipt is a pointer to its task: the gate re-builds it
+from the settled task record and reply each time, so a receipt file alone admits nothing. It is
+bound to the exact head commit, which fixes the contract assets and the whole dispatcher tree, to
+the clean dispatcher checkout at that head that settled the task, and to the route and model. The review of record still follows `review-loop`, and
 the canary does not change who reviews, risk floors or round budgets.
 
 ## Recipe
@@ -71,7 +73,8 @@ receipts for an older head admit nothing. Check the head before enqueueing:
 "$PY" -m scripts.review.contract_canary check --head "$HEAD_SHA" $(gh pr diff "$PR" --name-only)
 ```
 
-Every new head needs new receipts. A task that fails on a route is a finding about the change,
+Leave the worktree unchanged until every canary has settled: a task whose dispatcher checkout
+is modified when it settles is refused. Every new head needs new receipts. A task that fails on a route is a finding about the change,
 not a reason to skip that route.
 
 ## Prior art

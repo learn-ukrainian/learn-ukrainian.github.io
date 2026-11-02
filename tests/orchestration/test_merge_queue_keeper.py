@@ -285,7 +285,7 @@ def test_review_contract_change_without_canary_evidence_is_not_enqueued(tmp_path
     assert not failed
     assert "enqueue" not in mutations(fake)
     assert "reason=needs-contract-canary" in lines[0]
-    assert "canary=(unverifiable: contract tree unreadable at head)" in lines[0]
+    assert "canary=(missing: " in lines[0]
 
 
 def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) -> None:

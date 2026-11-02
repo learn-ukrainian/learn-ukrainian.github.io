@@ -19,7 +19,6 @@ import argparse
 import hashlib
 import json
 import re
-import subprocess
 import sys
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
@@ -46,8 +45,6 @@ CONTRACT_PATHS: tuple[str, ...] = (
     "scripts/dispatcher/providers/muse.py",
     "scripts/dispatcher/providers/stream_json.py",
 )
-# What a receipt is bound to: the contract assets and the candidate's whole dispatcher.
-FINGERPRINT_PATHS: tuple[str, ...] = (*CONTRACT_PATHS, "scripts/dispatch.py", "scripts/dispatcher")
 
 REASON = "needs-contract-canary"
 SCHEMA = "review-contract-canary.v1"
@@ -109,32 +106,20 @@ def receipt_root(root: Path | None = None) -> Path:
     return (root or _root()) / "batch_state" / RECEIPT_DIR
 
 
-def contract_fingerprint(head: str, root: Path | None = None) -> str:
-    """SHA-256 of the contract assets and dispatcher tree at ``head``; raises when unreadable."""
-    if not SHA.fullmatch(head):
-        raise CanaryError("head is not a full commit SHA")
-    from scripts.common.git_context import sanitized_git_env
-
-    try:
-        listing = subprocess.run(
-            ["git", "ls-tree", "-r", "--full-tree", head, "--", *FINGERPRINT_PATHS],
-            cwd=root or _root(), env=sanitized_git_env(), capture_output=True, check=True, timeout=30,
-        ).stdout
-    except (OSError, subprocess.SubprocessError) as exc:
-        raise CanaryError("contract tree unreadable at head") from exc
-    if not listing:
-        raise CanaryError("contract tree empty at head")
-    return hashlib.sha256(listing).hexdigest()
-
-
 def _receipt_path(head: str, route: str, root: Path | None = None) -> Path:
     if not SHA.fullmatch(head) or not ROUTE.fullmatch(route):
         raise CanaryError("receipt identity invalid")
     return receipt_root(root) / head / f"{route}.json"
 
 
-def build_receipt(record: Mapping[str, Any], result: str, *, pr: int, head: str, root: Path | None = None) -> dict:
-    """The canary receipt for one settled task, or ``CanaryError`` naming why it is not one."""
+def build_receipt(record: Mapping[str, Any], result: str, *, pr: int, head: str) -> dict:
+    """The canary receipt for one settled task, or ``CanaryError`` naming why it is not one.
+
+    The receipt is bound to the exact head commit, which fixes the contract assets and the
+    whole dispatcher tree, to the clean dispatcher checkout at that head that settled the
+    task, and to the route and model. It is built by whichever copy of this module runs, so
+    the gate re-builds it from the task rather than trusting a value the recorder computed.
+    """
     from scripts.review.review_contract import ContractError, canonical_receipt_payload
 
     if not SHA.fullmatch(head):
@@ -177,7 +162,7 @@ def build_receipt(record: Mapping[str, Any], result: str, *, pr: int, head: str,
         "model": record["model"],
         "task_id": record.get("task_id"),
         "result_sha256": record["result_sha256"],
-        "contract_fingerprint": contract_fingerprint(head, root),
+        "dispatcher_head": code["head"],
     }
 
 
@@ -186,15 +171,14 @@ def refusal(paths: Iterable[str], head: str, root: Path | None = None) -> str | 
 
     A change outside ``CONTRACT_PATHS`` needs nothing. A contract change needs a valid
     receipt for every required route at ``head``, and each receipt must still be what its
-    settled task record and reply build. An unknown route list, an unreadable tree, receipt
-    or task, and a receipt bound to other contract bytes all refuse.
+    settled task record and reply build. An unknown route list, an unreadable receipt or
+    task, and a receipt its task does not rebuild all refuse.
     """
     if not touches_contract(paths):
         return None
     try:
         routes = required_routes()
-        fingerprint = contract_fingerprint(head, root)
-    except Exception as exc:  # an unreadable catalog or tree must refuse, never crash the caller's run
+    except Exception as exc:  # an unreadable catalog must refuse, never crash the caller's run
         return f"unverifiable: {exc}" if isinstance(exc, CanaryError) else f"unverifiable: {type(exc).__name__}"
     missing: list[str] = []
     for route in routes:
@@ -203,18 +187,16 @@ def refusal(paths: Iterable[str], head: str, root: Path | None = None) -> str | 
         except FileNotFoundError:
             missing.append(route)
             continue
-        except (OSError, ValueError, CanaryError):
+        except Exception:  # unreadable, malformed or too deeply nested: refuse, never crash
             return f"unverifiable: receipt for {route}"
         if not isinstance(receipt, dict) or (
             receipt.get("schema"), receipt.get("eligible_as_review"), receipt.get("head"), receipt.get("route")
         ) != (SCHEMA, False, head, route):
             return f"unverifiable: receipt for {route}"
-        if receipt.get("contract_fingerprint") != fingerprint:
-            return f"stale: receipt for {route} is bound to other contract bytes"
         try:
             # The file is a claim; the settled task it names is the evidence.
             task, result = _load_task(str(receipt.get("task_id")))
-            rebuilt = build_receipt(task, result, pr=receipt.get("pr"), head=head, root=root)
+            rebuilt = build_receipt(task, result, pr=receipt.get("pr"), head=head)
         except Exception:
             return f"unverifiable: task behind the receipt for {route}"
         if rebuilt != receipt:
@@ -223,14 +205,14 @@ def refusal(paths: Iterable[str], head: str, root: Path | None = None) -> str | 
 
 
 def _load_task(task_id: str) -> tuple[dict, str]:
-    """A dispatcher task record and its reply text."""
+    """A dispatcher task record and its reply, decoded without newline translation."""
     from scripts.dispatcher import store
 
     task = store.read(task_id)
     result_file = task.get("result_file")
     if not isinstance(result_file, str):
         raise CanaryError("task has no result")
-    return task, Path(result_file).read_text(encoding="utf-8")
+    return task, Path(result_file).read_bytes().decode("utf-8")
 
 
 def record(task_id: str, pr: int, root: Path | None = None) -> Path:
@@ -240,7 +222,7 @@ def record(task_id: str, pr: int, root: Path | None = None) -> Path:
     for any other head never admits anything.
     """
     task, result = _load_task(task_id)
-    receipt = build_receipt(task, result, pr=pr, head=str(task.get("head_sha")), root=root)
+    receipt = build_receipt(task, result, pr=pr, head=str(task.get("head_sha")))
     path = _receipt_path(receipt["head"], receipt["route"], root)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -267,7 +249,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             detail = refusal(args.paths, args.head)
             print(f"{REASON}: {detail}" if detail else "ok")
             return 1 if detail else 0
-    except (CanaryError, ValueError, OSError, subprocess.SubprocessError) as exc:
+    except (CanaryError, ValueError, OSError) as exc:
         print(f"{REASON}: {exc}", file=sys.stderr)
         return 2
     return 0

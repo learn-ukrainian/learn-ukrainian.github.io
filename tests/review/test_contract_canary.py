@@ -34,6 +34,7 @@ def _git(repo: Path, *args: str) -> str:
 
 
 TASKS: dict[str, tuple[dict, str]] = {}
+REAL_LOAD_TASK = canary._load_task
 
 
 @pytest.fixture(autouse=True)
@@ -87,7 +88,7 @@ def write_all(root: Path, head: str) -> None:
     for route in canary.required_routes():
         record = task(route, head)
         TASKS[record["task_id"]] = (record, RECEIPT)
-        receipt = canary.build_receipt(record, RECEIPT, pr=1, head=head, root=root)
+        receipt = canary.build_receipt(record, RECEIPT, pr=1, head=head)
         path = canary.receipt_root(root) / head / f"{route}.json"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(receipt), encoding="utf-8")
@@ -129,26 +130,28 @@ def test_contract_change_is_refused_until_every_route_has_a_receipt(repo) -> Non
     ],
 )
 def test_record_refuses_a_task_that_is_not_canary_evidence(repo, changes: dict, why: str) -> None:
-    root, head = repo
+    _, head = repo
     with pytest.raises(canary.CanaryError, match=why):
-        canary.build_receipt(task("claude", head, **changes), RECEIPT, pr=1, head=head, root=root)
+        canary.build_receipt(task("claude", head, **changes), RECEIPT, pr=1, head=head)
 
 
 def test_a_verdict_line_is_not_a_canonical_receipt(repo) -> None:
-    root, head = repo
+    _, head = repo
     text = "VERDICT: APPROVE\n"
     record = task("claude", head, result_sha256=hashlib.sha256(text.encode()).hexdigest())
     with pytest.raises(canary.CanaryError, match="canonical receipt"):
-        canary.build_receipt(record, text, pr=1, head=head, root=root)
+        canary.build_receipt(record, text, pr=1, head=head)
 
 
-def test_receipts_bound_to_other_contract_bytes_or_routes_refuse(repo) -> None:
+def test_receipts_bound_to_another_route_or_head_refuse(repo) -> None:
     root, head = repo
     write_all(root, head)
     path = canary.receipt_root(root) / head / "agy.json"
     receipt = json.loads(path.read_text())
-    path.write_text(json.dumps({**receipt, "contract_fingerprint": "0" * 64}))
-    assert canary.refusal([CONTRACT_FILE], head, root).startswith("stale: receipt for agy")
+    path.write_text(json.dumps({**receipt, "dispatcher_head": "0" * 40}))
+    assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: receipt for agy does not match its task"
+    path.write_text("[" * 100_000 + "]" * 100_000)  # too deeply nested to decode: refuse, never crash
+    assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: receipt for agy"
     path.write_text(json.dumps({**receipt, "route": "codex"}))
     assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: receipt for agy"
     path.write_text(json.dumps({**receipt, "eligible_as_review": True}))
@@ -170,6 +173,20 @@ def test_a_receipt_must_still_match_its_settled_task(repo, tasks) -> None:
     path = canary.receipt_root(root) / head / "codex.json"
     path.write_text(json.dumps({**json.loads(path.read_text()), "model": "gpt-6-astra"}))
     assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: receipt for codex does not match its task"
+
+
+def test_a_reply_with_carriage_returns_keeps_its_byte_digest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # The dispatcher digests the result file's bytes; reading it must not translate newlines.
+    from scripts.dispatcher import store
+
+    reply = RECEIPT.replace(",", ",\r\n")
+    result = tmp_path / "t.result"
+    result.write_bytes(reply.encode())
+    head = "c" * 40
+    record = task("claude", head, result_file=str(result), result_sha256=hashlib.sha256(result.read_bytes()).hexdigest())
+    monkeypatch.setattr(store, "read", lambda task_id: record)
+    _, text = REAL_LOAD_TASK("t")
+    assert canary.build_receipt(record, text, pr=1, head=head)["result_sha256"] == record["result_sha256"]
 
 
 def test_the_gate_itself_is_a_contract_path() -> None:
