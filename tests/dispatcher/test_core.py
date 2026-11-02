@@ -575,23 +575,15 @@ def test_tracked_edit_hidden_by_an_index_flag_keeps_the_worktree(sandbox, flag):
     assert (tree / "scripts/dispatch.py").read_text() == "uncommitted tracked edit\n"
 
 
-def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_gone(sandbox):
-    """Defect (FR-45): a provider child alive past settlement's bounded wait kept the tree with no retry."""
+def test_lingering_provider_process_is_ended_at_settlement_before_the_worktree_goes(sandbox):
+    """Defect (FR-45, #12520): a provider child alive past settlement kept the tree with no retry; now the
+    settling supervisor ends it, so the tree is released only after the process is gone."""
     task = sandbox.dispatch("tree")
     grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
     (sandbox.tasks / f"{task[0]}.release").touch()
     record = sandbox.settle(task)
-    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == (
-        "retained", "provider_processes_alive")
-    assert Path(record["worktree_path"]).is_dir()
-    os.kill(grandchild, signal.SIGKILL)
-    deadline = time.monotonic() + 10
-    while worker._provider_alive(record):
-        assert time.monotonic() < deadline, "grandchild survived SIGKILL"
-        time.sleep(0.02)
-    sandbox.sweep()
-    settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
-    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("removed", "clean")
+    assert worker._identity(grandchild) is None
     assert not Path(record["worktree_path"]).exists()
 
 
@@ -635,27 +627,6 @@ def settled_by_scheduled_sweep(sandbox, retained_id, before_release=lambda _kept
         sandbox.sweep()
         assert record_file.stat().st_ino != before, "scheduled settlement never retried the retained worktree"
     return json.loads(record_file.read_text())
-
-
-def test_settlement_removes_a_transient_retained_worktree_once_its_cause_is_gone(sandbox):
-    """Scheduled recovery releases a retained tree once its transient cause has cleared."""
-    task = sandbox.dispatch("tree")
-    grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
-    (sandbox.tasks / f"{task[0]}.release").touch()
-    record = sandbox.settle(task)
-    assert record["worktree_disposition_reason"] == "provider_processes_alive"
-
-    def end_the_cause(kept):
-        assert kept["worktree_disposition_reason"] == "provider_processes_alive"
-        os.kill(grandchild, signal.SIGKILL)
-        deadline = time.monotonic() + 10
-        while worker._provider_alive(record):
-            assert time.monotonic() < deadline, "grandchild survived SIGKILL"
-            time.sleep(0.02)
-
-    settled = settled_by_scheduled_sweep(sandbox, task[0], end_the_cause)
-    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
-    assert not Path(record["worktree_path"]).exists()
 
 
 @pytest.mark.parametrize("model,reason", [("pushed-dirty", "dirty"), ("unpushed", "unpublished")])
@@ -3913,6 +3884,9 @@ def test_dispatch_records_the_run_it_was_dispatched_from_never_itself(sandbox, i
     if inherited is not None:
         sandbox.env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = inherited
     task = sandbox.dispatch("echo", "--task-id", "self-run")
+    # The waiting client is not part of the task: it must not carry the task's own marker, which settlement
+    # reads as the task's descendants.
+    sandbox.env.pop("LEARN_UKRAINIAN_DISPATCH_TASK_ID", None)
     assert sandbox.settle(task).get("parent_task_id") == parent
 
 
