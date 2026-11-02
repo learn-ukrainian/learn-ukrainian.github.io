@@ -312,6 +312,26 @@ for provider in claude codex; do
   assert_not_contains "$output" ".claude/atlas-epic/" "Practice handoff isolation"
 done
 
+# 2e0. The CTO seat (start-claude-cto.sh exports SESSION_SEAT=cto) holds the
+# epics lease but gets the CTO binding, not the lane-driver banner (#12496).
+# An epics lane driver started without the CTO seat keeps the lane banner.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/.claude/epics-epic"
+printf '# Claude driver handoff\n' > "$fixture_root/.claude/epics-epic/CLAUDE-DRIVER-HANDOFF.md"
+printf '# Pinned facts\n' > "$fixture_root/.claude/epics-epic/DRIVER-STATE.md"
+output="$(SESSION_SEAT=cto run_hook "$fixture_root" 0 claude-epics "" "" native_claude "" "" epics)"
+assert_contains "$output" "CTO SEAT: combined CTO and cross-epic lead on the epics lease" "CTO seat banner"
+assert_contains "$output" "Rollover namespace: claude-epics" "CTO seat banner"
+assert_contains "$output" "lu-driver-state render --lane cto" "CTO seat banner"
+assert_not_contains "$output" "ASSIGNED EPIC:" "CTO seat has no lane-driver banner"
+assert_not_contains "$output" "NOT the main orchestrator" "CTO seat has no lane-driver banner"
+assert_not_contains "$output" "CLAUDE-DRIVER-HANDOFF.md" "CTO seat has no lane handoff SSOT"
+assert_not_contains "$output" "Driver state (AUTHORITATIVE" "CTO seat has no lane driver-state line"
+assert_not_contains "$output" "REMOTE EPIC STATE" "CTO seat has no remote epic digest"
+output="$(run_hook "$fixture_root" 0 claude-epics "" "" native_claude "" "" epics)"
+assert_contains "$output" "ASSIGNED EPIC: epics.epic" "epics lane driver keeps its banner"
+assert_not_contains "$output" "CTO SEAT:" "epics lane driver keeps its banner"
+
 # 2e. An unknown SESSION_EPIC fails closed: epic binding is stopped and a
 # fail-closed banner listing valid selectors is surfaced.
 setup_fixture "$fixture_root"

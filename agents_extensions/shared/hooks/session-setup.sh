@@ -296,7 +296,7 @@ fi
 
 # 2. Claude-only environment diagnostics do not belong in Codex context.
 if [ "$IS_CODEX_SESSION" = "0" ] && [ -z "$CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS" ]; then
-  ISSUES+=("ENV MISSING: CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS not set. Add to .bashrc: export CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000")
+  ISSUES+=("ENV MISSING: CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS not set. It comes from the env block of agents_extensions/shared/settings.json, deployed to .claude/settings.json; run the agent-extensions deploy.")
 fi
 
 # Broad curriculum scans, service probes, GitHub issue listings, and governance
@@ -939,7 +939,9 @@ fi
 # Hydrate the remote lease after the existing gate and local rollover read have
 # had their chance to run.  This keeps the additive GET from starving the
 # established thread-handoff path under the aggregate startup budget.
-if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] \
+# The CTO seat reads its state from the driver-state database (lane cto), not
+# from the epics lane's remote digest.
+if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] && [ "${SESSION_SEAT:-}" != cto ] \
   && declare -f launcher_selector_stream >/dev/null 2>&1; then
   REMOTE_EPIC_STREAM="$ROLLOVER_BUNDLE_STREAM"
   case "$REMOTE_EPIC_STREAM" in
@@ -958,7 +960,13 @@ unset ROLLOVER_BUNDLE_STREAM
 
 # Epic assignment banner
 EPIC_BANNER=""
-if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
+if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] && [ "${SESSION_SEAT:-}" = cto ]; then
+  # start-claude-cto.sh: the combined CTO and cross-epic lead holds the
+  # epics lease, but it is not that lane's driver (#12496).
+  EPIC_BANNER="CTO SEAT: combined CTO and cross-epic lead on the ${SESSION_EPIC} lease (binding — from the launch command).
+Rollover namespace: ${HANDOFF_AGENT}. Entry point: the cto skill. State: lu-driver-state render --lane cto
+and lu-driver-state check --lane cto (the driver-state database is the CTO state)."
+elif [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
   EPIC_HANDOFF_PATH=".claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md"
   case "$HANDOFF_AGENT" in
     codex|codex-*)

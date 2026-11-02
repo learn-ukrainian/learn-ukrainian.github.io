@@ -58,14 +58,7 @@ Once per session, list them with `.venv/bin/python -m scripts.fleet_comms backlo
 each such name the same way (claim with `--recipient <old name>`, your own `--worker-id`).
 Do not publish to an old name and do not tell a worker to.
 
-## 5. Skip lane-driver items
-
-The SessionStart banner and launch prompt for the epics lane also print lane-driver items.
-They do not bind this seat: loading `drive-epic` as the entry point,
-`.claude/epics-epic/CLAUDE-DRIVER-HANDOFF.md` as lane source of truth
-(the CTO driver-state database is), and rollover candidates other than the named one.
-
-## 6. Re-arm and cycle
+## 5. Re-arm and cycle
 
 Re-arm in the background `.venv/bin/python scripts/dispatch.py wait <task-id> --run-nonce
 <nonce>` for every live worker and any PR watcher the handoff names, then run the first

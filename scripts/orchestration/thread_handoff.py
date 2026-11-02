@@ -6867,6 +6867,11 @@ def render_session_start_context(
             lines.extend(_skipped_foreign_lines(candidate.get("skipped_foreign", [])))
             for item in candidate.get("skipped_stale", []):
                 lines.append(f"Pending packet predates lane handoff {item['newer_handoff']}; left unchanged.")
+            superseded = candidate.get("skipped_superseded", [])
+            if superseded:
+                lines.append(
+                    f"{len(superseded)} older packet(s) superseded by a later confirmed rollover; left unchanged."
+                )
             if candidate.get("excluded_terminal"):
                 lines.append(
                     "Excluded terminal rollover: "
@@ -7060,6 +7065,66 @@ def newer_lane_handoff(
     return newest[1] if newest else None
 
 
+def _packet_stream(state: dict[str, Any], replacement: dict[str, Any]) -> str:
+    """Return the packet's ``epic:<n>`` stream, or "" when it names none."""
+    identity = replacement.get("identity") or state.get("identity") or {}
+    stream_epic = identity.get("stream_epic")
+    return f"epic:{stream_epic}".lower() if stream_epic is not None else ""
+
+
+def _record_confirmed_rollover(
+    newest: dict[tuple[str, str], tuple[datetime, str, str]],
+    state: dict[str, Any],
+    replacement: dict[str, Any],
+    scan_agent: str,
+) -> None:
+    """Keep the latest-prepared confirmed rollover per packet agent and stream."""
+    stream = _packet_stream(state, replacement)
+    prepared = parse_iso_datetime(replacement.get("prepared_at"))
+    if not stream or prepared is None:
+        return
+    key = (str(state.get("agent") or scan_agent), stream)
+    if key not in newest or prepared > newest[key][0]:
+        newest[key] = (prepared, str(state.get("lineage_id")), str(replacement.get("rollover_id")))
+
+
+def _split_superseded_candidates(
+    live_leases: list[tuple[Path, dict[str, Any], dict[str, Any], str]],
+    newest_confirmed: dict[tuple[str, str], tuple[datetime, str, str]],
+    *,
+    current_thread_id: str | None,
+) -> tuple[list[tuple[Path, dict[str, Any], dict[str, Any], str]], list[dict[str, Any]]]:
+    """Separate packets that a later confirmed rollover already replaced.
+
+    A pending or resumed packet whose agent and stream have a confirmed rollover
+    prepared after it is history, not a live candidate: the lineage moved on
+    without confirming it (#12496). Its files stay unchanged; the thread-rollover
+    archive path is the only way to retire them. A packet this thread resumed
+    is always kept, so the exact binding still resolves.
+    """
+    kept: list[tuple[Path, dict[str, Any], dict[str, Any], str]] = []
+    superseded: list[dict[str, Any]] = []
+    for lease in live_leases:
+        _, state, replacement, scan_agent = lease
+        packet_agent = str(state.get("agent") or scan_agent)
+        newer = newest_confirmed.get((packet_agent, _packet_stream(state, replacement)))
+        prepared = parse_iso_datetime(replacement.get("prepared_at"))
+        bound_here = bool(current_thread_id) and replacement.get("resumed_thread_id") == current_thread_id
+        if newer is None or prepared is None or bound_here or prepared >= newer[0]:
+            kept.append(lease)
+            continue
+        superseded.append(
+            {
+                "agent": packet_agent,
+                "lineage_id": state.get("lineage_id"),
+                "rollover_id": replacement.get("rollover_id"),
+                "status": replacement.get("status"),
+                "superseded_by": {"lineage_id": newer[1], "rollover_id": newer[2]},
+            }
+        )
+    return kept, superseded
+
+
 def cmd_detect(args: argparse.Namespace) -> int:
     try:
         _, state_root = resolve_roots(args.repo_root)
@@ -7085,6 +7150,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
     registry_errors: list[str] = []
     skipped_foreign: list[dict[str, Any]] = []
     skipped_stale: list[dict[str, Any]] = []
+    newest_confirmed: dict[tuple[str, str], tuple[datetime, str, str]] = {}
 
     for scan_agent in scan_agents:
         agent_dir = state_root / ".agent" / "thread-rollovers" / scan_agent
@@ -7096,6 +7162,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             if error:
                 print(json.dumps({"error": f"invalid rollover lease {rel(path, state_root)}: {error}"}, indent=2))
                 return 2
+            if replacement is not None and replacement["status"] == "started":
+                _record_confirmed_rollover(newest_confirmed, state, replacement, scan_agent)
             if replacement is not None and replacement["status"] in {"pending_start", "resumed"}:
                 lineage_id = state.get("lineage_id")
                 rollover_id = replacement.get("rollover_id")
@@ -7125,9 +7193,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
                         registry_errors.append(
                             f"registry record corrupt or unreadable for {candidate_agent}/{lineage_id}/{rollover_id}: {exc}"
                         )
-                identity = replacement.get("identity") or state.get("identity") or {}
-                stream_epic = identity.get("stream_epic")
-                packet_stream = f"epic:{stream_epic}".lower() if stream_epic is not None else ""
+                packet_stream = _packet_stream(state, replacement)
                 packet_family = _candidate_task_family(state, replacement)
                 mismatches = []
                 if not stream_filter and scan_agent != agent:
@@ -7166,6 +7232,10 @@ def cmd_detect(args: argparse.Namespace) -> int:
                         continue
                 live_leases.append((path, state, replacement, scan_agent))
 
+    live_leases, skipped_superseded = _split_superseded_candidates(
+        live_leases, newest_confirmed, current_thread_id=args.current_thread_id
+    )
+
     # A family is a disambiguation hint, not stream identity. If it matches no
     # live packet, retain the full candidate set and require exact-ID binding.
     if len(live_leases) > 1 and task_family_filter:
@@ -7183,6 +7253,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             output["skipped_foreign"] = skipped_foreign
         if skipped_stale:
             output["skipped_stale"] = skipped_stale
+        if skipped_superseded:
+            output["skipped_superseded"] = skipped_superseded
         print(
             render_session_start_context(
                 output,
@@ -7231,6 +7303,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             payload["skipped_foreign"] = skipped_foreign
         if skipped_stale:
             payload["skipped_stale"] = skipped_stale
+        if skipped_superseded:
+            payload["skipped_superseded"] = skipped_superseded
 
         if args.format == "session-start":
             print(
@@ -7297,6 +7371,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
         output["skipped_foreign"] = skipped_foreign
     if skipped_stale:
         output["skipped_stale"] = skipped_stale
+    if skipped_superseded:
+        output["skipped_superseded"] = skipped_superseded
 
     print(
         render_session_start_context(
