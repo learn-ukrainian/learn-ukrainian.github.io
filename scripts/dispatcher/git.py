@@ -5,9 +5,11 @@ import fcntl
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
+import time
 from contextlib import contextmanager, suppress
 from datetime import datetime
 from functools import partial
@@ -377,6 +379,7 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
             run_git(path, "reset", "--hard", sha)
             if registration:
                 confirm_worktree(registration["registry"], path)
+                _install_refresh_hooks(path, registration["registry"])
         except BaseException as exc:
             if registration:
                 _reconcile_failed_creation(repo, registration["registry"], path, f"{type(exc).__name__}")
@@ -399,17 +402,26 @@ def registry_path(repo: Path, repository: dict) -> Path | None:
     return repo / relative
 
 
-def registry_update(registry: Path, key: str, change) -> dict | None:
+def registry_update(registry: Path, key: str, change, *, timeout: float | None = None) -> dict | None:
     """Read-modify-write one ``worktrees`` entry in the target repository's own registry format.
 
     Serialized by an exclusive lock beside the registry and published by atomic replace, so a concurrent
     dispatch or hand edit through the same lock never loses an update. ``change`` receives the current
     entry (or None) and returns the new one, or None to leave the registry untouched; entries are never
     removed. An unreadable or malformed
-    registry is refused, never recreated: the audit treats it as an unknown to resolve.
+    registry is refused, never recreated: the audit treats it as an unknown to resolve. ``timeout`` bounds the
+    wait for the lock (TimeoutError); without it the wait is unbounded, as registration's always was.
     """
     with open(registry.with_name(registry.name + ".lock"), "ab") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+        deadline = None if timeout is None else time.monotonic() + timeout
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | (0 if deadline is None else fcntl.LOCK_NB))
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(f"worktree registry lock is held: {registry}") from None
+                time.sleep(0.05)
         data = json.loads(registry.read_text(encoding="utf-8"))
         if not isinstance(data, dict) or not isinstance(data.get("worktrees"), dict):
             raise ValueError(f"worktree registry has an invalid shape: {registry}")
@@ -473,6 +485,91 @@ def _reconcile_failed_creation(repo: Path, registry: Path, path: Path, error: st
             archive_worktree(registry, path, f"worktree was not created ({error})")
     except (OSError, ValueError, subprocess.SubprocessError):
         pass  # the original error is the one raised; the audit reports whatever the registry still holds
+
+
+def refresh_worktree(registry: Path, path: Path, pr: int | None = None) -> bool:
+    """Bring an active entry's branch and head (and ``pr`` once known) to what Git reports for the live tree.
+
+    Same lock, fsync and replace as registration. A missing, archived or foreign entry is left as it is, and a
+    detached HEAD keeps the recorded branch. False when nothing was written.
+    """
+    head = _git(path, "rev-parse", "HEAD", isolate=True)
+    try:
+        branch = _git(path, "symbolic-ref", "--short", "HEAD", isolate=True)
+    except subprocess.CalledProcessError:
+        branch = None
+
+    def change(old):
+        if not isinstance(old, dict) or old.get("state") != "active":
+            return None
+        return {**old, "head": head, **({"branch": branch} if branch else {}), **({"pr": pr} if pr else {})}
+    return registry_update(registry, _key(path), change, timeout=REFRESH_LOCK_WAIT) is not None
+
+
+REFRESH_LOCK_WAIT = 10.0  # seconds; a refresh never stalls a commit or settlement behind a held registry lock
+REFRESH_HOOKS = ("post-commit", "post-rewrite", "post-merge", "post-checkout")
+
+
+def _install_refresh_hooks(path: Path, registry: Path) -> None:
+    """Make every commit, amend, rebase or merge in the worktree refresh its registry entry.
+
+    The hooks live in the worktree's own Git directory behind a worktree-scoped ``core.hooksPath``; the
+    repository's other hooks stay in force by symlink, and its own hook of the same name runs first. A
+    failure leaves the tree without the live refresh (settlement still records the final head) and never
+    blocks creation.
+    """
+    try:
+        def where(*args):
+            return Path(_git(path, "rev-parse", "--path-format=absolute", *args, isolate=True))
+        try:
+            # Git expands a leading ~ and resolves a relative core.hooksPath against the worktree top level.
+            chain = Path(path) / _git(path, "config", "--path", "--get", "core.hooksPath", isolate=True)
+        except subprocess.CalledProcessError:
+            chain = where("--git-path", "hooks")
+        hooks = where("--git-path", "dispatch-hooks")
+        hooks.mkdir(exist_ok=True)
+        if chain.is_dir():
+            for entry in sorted(chain.iterdir()):
+                if entry.name not in REFRESH_HOOKS and entry.is_file() and os.access(entry, os.X_OK) \
+                        and not entry.name.endswith(".sample"):
+                    (hooks / entry.name).symlink_to(entry)
+        root = Path(__file__).resolve().parents[2]
+        refresh = " ".join(shlex.quote(word) for word in (sys.executable, "-m", "scripts.dispatcher.git", "refresh",
+                                                          _key(path), str(registry)))
+        for name in REFRESH_HOOKS:
+            script = hooks / name
+            script.write_text(
+                f"#!/bin/sh\nchain={shlex.quote(str(chain / name))}\n"
+                f'if [ -x "$chain" ]; then "$chain" "$@"; fi\n'
+                f"cd {shlex.quote(str(root))} && timeout 20 {refresh} || echo 'dispatcher: registry refresh failed' >&2\n"
+                "exit 0\n")
+            script.chmod(0o755)
+        _git(path, "config", "--worktree", "core.hooksPath", str(hooks), isolate=True)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def _refresh_at_settlement(record: dict, tree: Path, head: str) -> str | None:
+    """Record a retained tree's final head (and its one open pull request) in the repository's registry.
+
+    Only for a tree the dispatcher created; a failure never blocks settlement and is reported as the note.
+    """
+    try:
+        repo, info = resolve_repo(record.get("repo"))
+        registry = registry_path(repo, info)
+        if registry is None:
+            return None
+        pr = None
+        with suppress(GitHubRefused, ValueError, KeyError, TypeError, OSError, subprocess.SubprocessError):
+            slug, _ = _repo_and_base(record)
+            branch = record["worktree_branch"]
+            listed = json.loads(_gh("pr", "list", "--repo", slug, "--head", branch, "--state", "open",
+                                    "--json", "number,headRefOid,headRefName")) if slug else []
+            matching = [item["number"] for item in listed if item["headRefName"] == branch and item["headRefOid"] == head]
+            pr = matching[0] if len(matching) == 1 else None
+        return "refreshed" if refresh_worktree(registry, tree, pr) else "no_entry"
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
+        return f"failed: {type(exc).__name__}: {exc}"
 
 
 # Fixed conventional slots for sandbox refusal and legacy cleanup, never provisioning.
@@ -954,8 +1051,12 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     a failed or unproven salvage keeps it, and so does every hold _salvage_hold finds.
     """
     registry_note = []  # what archiving the repository's registry entry did, once the tree is removed
+    seen_head = []  # the tree's HEAD once read: a retained tree's entry then records it (_refresh_at_settlement)
 
     def disposition(state, reason, detail=None):
+        if (state == "retained" and seen_head and reason != "borrowed_worktree" and not registry_note
+                and (note := _refresh_at_settlement(record, Path(record["worktree_path"]), seen_head[0])) is not None):
+            registry_note.append(note)
         return dict(worktree_disposition=state, worktree_disposition_reason=reason,
                     **({"worktree_disposition_detail": detail} if detail else {}),
                     **({"worktree_registry": registry_note[0]} if registry_note else {}))
@@ -973,6 +1074,7 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
         repo, tree, branch = resolve_repo(record.get("repo"))[0], Path(record["worktree_path"]), record["worktree_branch"]
         changed, untracked = _tree_changes(tree)
         head, remote, merged = _git(tree, "rev-parse", "HEAD", isolate=True), None, False
+        seen_head.append(head)
         if changed and not salvage:
             return disposition("retained", "dirty", "; ".join(changed[:5]))
         committed = head != record.get("worktree_start_sha", record["worktree_base_sha"])
@@ -1047,3 +1149,9 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     except (OSError, subprocess.SubprocessError):
         return disposition("removed", "branch_delete_failed", salvage_detail)
     return disposition("removed", "salvaged", salvage_detail) if salvaged else disposition("removed", "clean")
+
+
+if __name__ == "__main__":  # the worktree hooks: refresh TREE REGISTRY
+    if len(sys.argv) != 4 or sys.argv[1] != "refresh":
+        sys.exit("usage: python -m scripts.dispatcher.git refresh TREE REGISTRY")
+    refresh_worktree(Path(sys.argv[3]), Path(sys.argv[2]))
