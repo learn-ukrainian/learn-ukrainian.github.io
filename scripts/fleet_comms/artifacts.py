@@ -982,8 +982,16 @@ class ArtifactStore:
             backup_dir = backup_dir.expanduser().resolve()
             if backup_dir.is_relative_to(self.root.resolve()):
                 raise ArtifactStoreError("backup_dir must be outside the plane root")
+            anchor = backup_dir
+            while not anchor.exists():
+                anchor = anchor.parent
             self._prepare_private_dir(backup_dir)
-            _fsync_directory(backup_dir.parent)
+            # Persist the entry of every directory this call created, up to
+            # the pre-existing anchor, before any source can go (#12530 F4).
+            created = backup_dir
+            while created != anchor:
+                _fsync_directory(created.parent)
+                created = created.parent
         if apply:
             self._refuse_readonly_write("expire_message_blobs")
         if self._authority is Authority.PG:
