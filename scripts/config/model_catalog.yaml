@@ -351,7 +351,7 @@ advisory_roles:
   review_budget_elevation:
     effort: high
     fence: budget-elevation
-    output_fields: [decision, repository, pr, lineage_id, scope_paths, finding_id, blocker_class, issuer, issuer_model, issued_at, request_sha256]
+    output_fields: [decision, repository, pr, lineage_id, scope_paths, finding_id, blocker_class, issuer, issuer_model, issued_at, withheld_capability, request_sha256]
 
 models:
   muse-wonder-full-1.0:
