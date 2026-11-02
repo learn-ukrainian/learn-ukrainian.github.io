@@ -34,7 +34,7 @@ click==8.4.2
 cloudpickle==3.1.2
 colorama==0.4.6
 coloredlogs==15.0.1
-coverage==7.16.2
+coverage==7.17.0
 cryptography==50.0.2
 ctranslate2==4.8.2
 curl_cffi==0.15.0
@@ -44,7 +44,7 @@ DAWG2-Python==0.9.0
 decorator==5.3.1
 defusedxml==0.7.1
 dill==0.4.1
-distlib==0.4.3
+distlib==0.4.4
 distro==1.9.0
 docopt==0.6.2
 docstring_parser==0.18.0
@@ -140,7 +140,7 @@ pillow==13.0.0
 platformdirs==4.11.11
 playwright==1.59.0
 pluggy==1.6.0
-portalocker==3.2.0
+portalocker==4.4.1
 pre_commit==4.6.0
 prometheus-client==0.26.0
 prompt-toolkit==3.0.53
@@ -186,7 +186,7 @@ python-docx==1.2.0
 python-dotenv==1.2.3
 python-multipart==0.0.32
 PyYAML==6.0.3
-qdrant-client==1.17.0
+qdrant-client==1.20.0
 RapidFuzz==3.14.6
 referencing==0.37.0
 regex==2026.5.9
@@ -253,7 +253,7 @@ yarl==1.25.1
 youtube-transcript-api==1.2.4
 yt-dlp==2026.7.4
 zeroconf==0.151.3
-zlib-state==0.1.12
+zlib-state==0.1.13
 
 # Repository runtime dependency; install requirements from the repository root.
 ./packages/v4-runtime

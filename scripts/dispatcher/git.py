@@ -278,7 +278,7 @@ def publish_start(repo: Path, repository: dict, branch: str, task_id: str, *, la
         except subprocess.CalledProcessError as exc:
             if exc.returncode != 2:
                 raise
-            raise ValueError(f"{label} is absent from the canonical remote") from None
+            raise ValueError(f"branch_absent_on_remote: {label} is absent from the canonical remote: {branch}") from None
         fields = advertised.split()
         if len(fields) != 2 or fields[1] != source or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", fields[0]):
             raise ValueError(f"{label} must advertise one full object name")
