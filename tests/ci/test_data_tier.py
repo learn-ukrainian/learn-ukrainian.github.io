@@ -1456,7 +1456,10 @@ def test_discarded_non_ascii_file_is_counted_with_its_real_byte_size(tmp_path):
     (tmp_path / "data").mkdir()
     (tmp_path / "data" / "слово.db").write_bytes(b"x" * 4096)
     (tmp_path / "привіт.txt").write_bytes(b"y" * 100)
+    (tmp_path / "output").mkdir()
+    (tmp_path / "output" / "a\rb").write_bytes(b"z" * 7)
+    (tmp_path / os.fsdecode(b"output/\xff.bin")).write_bytes(b"w" * 7)
 
-    assert data_tier.discard_run_output(tmp_path) == {"files": 2, "bytes": 4196}
+    assert data_tier.discard_run_output(tmp_path) == {"files": 4, "bytes": 4210}
     assert not (tmp_path / "привіт.txt").exists()
     assert not (tmp_path / "data").exists()
