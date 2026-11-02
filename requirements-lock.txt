@@ -253,7 +253,7 @@ yarl==1.25.1
 youtube-transcript-api==1.2.4
 yt-dlp==2026.7.4
 zeroconf==0.151.3
-zlib-state==0.1.12
+zlib-state==0.1.13
 
 # Repository runtime dependency; install requirements from the repository root.
 ./packages/v4-runtime
