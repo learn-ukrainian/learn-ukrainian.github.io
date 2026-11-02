@@ -552,8 +552,22 @@ def _dispatch(args) -> int:
         if binding:
             store.check_review_attempt(binding)  # the supervisor claims it (review_attempt.run)
         if not args.cwd:
-            git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
-                                sparse_include=git.SPARSE_EXCLUDE_DEFAULT - set(excluded), **exact_start)
+            # A repository that declares a worktree registry has the tree registered before it exists,
+            # confirmed once it does, and archived again if its creation fails.
+            registry = git.registry_path(repo, info)
+            if registry:
+                git.register_worktree(registry, worktree, agent=agent, task_id=task_id, initiator=args.initiator,
+                                      purpose=prompt.decode(errors="replace") if isinstance(prompt, bytes) else prompt,
+                                      branch=branch, sha=sha)
+            try:
+                git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
+                                    sparse_include=git.SPARSE_EXCLUDE_DEFAULT - set(excluded), **exact_start)
+                if registry:
+                    git.confirm_worktree(registry, worktree)
+            except BaseException as exc:
+                if registry:
+                    git.archive_worktree(registry, worktree, f"task {task_id}: worktree was not created ({type(exc).__name__})")
+                raise
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
         # A task dispatched from inside another task's run names that run, whose settlement then names it while
         # it still runs (worker._running_children, #12156).

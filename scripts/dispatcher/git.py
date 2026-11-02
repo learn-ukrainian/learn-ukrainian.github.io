@@ -371,6 +371,73 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
     site_deps.provision(repo, path)
 
 
+def registry_path(repo: Path, repository: dict) -> Path | None:
+    """The worktree registry the target repository declares (``worktree_registry`` in fleet_repos.yaml).
+
+    The value is relative to that repository's primary checkout; a repository without it has no registry.
+    """
+    declared = repository.get("worktree_registry")
+    if not declared:
+        return None
+    relative = PurePosixPath(str(declared))
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError("worktree_registry must be a path inside the repository")
+    return repo / relative
+
+
+def registry_update(registry: Path, key: str, change) -> dict | None:
+    """Read-modify-write one ``worktrees`` entry in the target repository's own registry format.
+
+    Serialized by an exclusive lock beside the registry and published by atomic replace, so a concurrent
+    dispatch or hand edit through the same lock never loses an update. ``change`` receives the current
+    entry (or None) and returns the new one, or None to leave the registry untouched; entries are never
+    removed. An unreadable or malformed
+    registry is refused, never recreated: the audit treats it as an unknown to resolve.
+    """
+    with open(registry.with_name(registry.name + ".lock"), "ab") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        data = json.loads(registry.read_text(encoding="utf-8"))
+        if not isinstance(data, dict) or not isinstance(data.get("worktrees"), dict):
+            raise ValueError(f"worktree registry has an invalid shape: {registry}")
+        entry = change(data["worktrees"].get(key))
+        if entry is None:
+            return None
+        data["worktrees"][key] = entry
+        temporary = registry.with_name(f".{registry.name}.{os.getpid()}.tmp")
+        try:
+            with open(temporary, "w", encoding="utf-8") as handle:
+                handle.write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, registry)
+        finally:
+            temporary.unlink(missing_ok=True)
+        return entry
+
+
+def register_worktree(registry: Path, path: Path, *, agent: str, task_id: str, initiator: str | None,
+                      purpose: str, branch: str, sha: str) -> None:
+    """Record a worktree the dispatcher is about to create: active, no PR yet, starting head."""
+    summary = " ".join(purpose.split())[:200] or f"dispatch task {task_id}"
+    owner = f"{agent} dispatch task {task_id}; initiator {initiator or 'none'}"
+    registry_update(registry, str(path), lambda _old: dict(
+        owner=owner, purpose=summary, branch=branch, head=sha, state="active",
+        next_action="the dispatcher archives this record when settlement removes the worktree", pr=None))
+
+
+def confirm_worktree(registry: Path, path: Path) -> None:
+    """Replace the intended branch and head by what Git reports for the created worktree."""
+    branch, head = _git(path, "symbolic-ref", "--short", "HEAD"), _git(path, "rev-parse", "HEAD")
+    registry_update(registry, str(path), lambda old: {**(old or {}), "branch": branch, "head": head})
+
+
+def archive_worktree(registry: Path, path: Path, reason: str, head: str | None = None) -> bool:
+    """Mark a registered worktree archived with the reason; False when it has no entry (none is invented)."""
+    entry = registry_update(registry, str(path), lambda old: None if old is None else {
+        **old, "state": "archived", "next_action": reason, **({"head": head} if head else {})})
+    return entry is not None
+
+
 # Fixed conventional slots for sandbox refusal and legacy cleanup, never provisioning.
 DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
 # Legacy dependency links earlier dispatches provisioned; never provisioned again.
@@ -817,6 +884,36 @@ def _retention_held(record: dict) -> bool:
 
 
 def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
+    """Settle the task's worktree (_settle_worktree) and archive its entry in the repository's registry.
+
+    A removed worktree is archived with the reason; a retained one keeps its active entry, with the head
+    it now has. A registry that cannot be written never blocks settlement: the outcome is recorded as
+    ``worktree_registry`` and the audit reports the stale entry.
+    """
+    tree = Path(record["worktree_path"])
+    try:
+        registry = registry_path(*resolve_repo(record.get("repo")))
+        head = _git(tree, "rev-parse", "HEAD", isolate=True) if registry else None
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+        registry, head = None, None
+    outcome = _settle_worktree(record, borrowed=borrowed, salvage=salvage)
+    if registry is None or record.get("options", {}).get("cwd"):
+        return outcome
+    try:
+        if outcome.get("worktree_disposition") == "removed":
+            reason = f"task {record['task_id']} settled; the dispatcher removed the worktree ({outcome.get('worktree_disposition_reason')})"
+            archived = archive_worktree(registry, tree, reason, head)
+        else:
+            reason = None
+            archived = bool(head) and registry_update(registry, str(tree), lambda old: (
+                None if old is None else {**old, "head": head})) is not None
+        outcome["worktree_registry"] = ("archived" if reason else "refreshed") if archived else "no_entry"
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        outcome["worktree_registry"] = f"failed: {type(exc).__name__}: {exc}"
+    return outcome
+
+
+def _settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
     """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
 
     Runs from outside the worktree after the provider has exited. Uncommitted tracked changes keep the
