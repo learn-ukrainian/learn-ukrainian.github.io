@@ -896,7 +896,9 @@ def owner_release_refusal(
     ``worktree_path`` (or fallback ``cwd``), and prove that its dispatch created the
     checkout: ``worktree_reused: false`` or, for a dispatcher record (``schema_version`` 2, which
     never writes that flag), a ``worktree_start_sha`` with no borrowed ``options.cwd`` and a provider
-    process tree the dispatcher's own check proves gone (live or unknown refuses). A reused
+    process tree the dispatcher's own check proves gone (live or unknown refuses). A typed
+    ``spawn_setup_failed`` with no pid and no process group is that proof: setup settled before
+    a provider was spawned. A reused
     checkout belongs to its creator, which reaps it. Only a ``needs_finalize`` creator may use the
     caller's independently proven ``settled_claim``; other unfinished statuses
     remain refused.
@@ -934,6 +936,8 @@ def owner_release_refusal(
         return f"owner task {owner_task_id} records a different worktree_path; refusing worktree removal"
     if not _created_worktree(record):
         return f"owner task {owner_task_id} did not create this worktree; its creator reaps"
+    # False: the dispatcher proved the provider gone, including a pre-spawn settlement
+    # (typed spawn_setup_failed, no pid, no process group). Live or unknown still refuses.
     if record.get("worktree_reused") is None and _provider_alive(record) is not False:
         return f"owner task {owner_task_id} provider processes are live or unknown; refusing worktree removal"
     return None

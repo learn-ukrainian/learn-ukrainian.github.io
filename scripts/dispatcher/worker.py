@@ -6,6 +6,7 @@ import json
 import os
 import re
 import signal
+import stat
 import subprocess
 import sys
 import tempfile
@@ -150,6 +151,30 @@ def _stream_attestation(source: str, model: str | None) -> dict:
                 resolved_model_source=source if model is not None else "pending")
 
 
+def _submitted_prompt_already_published(record: dict, prompt: bytes, failed: str | None) -> bool:
+    """True when exclusive prompt publication collided with the submitted bytes.
+
+    ``store.create`` writes ``record["prompt_file"]`` with ``"xb"`` (``store.py``). A review
+    brief is often already that path: ``--prompt-file batch_state/tasks/<task_id>.prompt``.
+    The exclusive create then raises ``FileExistsError`` before any supervisor exists, and
+    ``start`` records ``spawn_setup_failed``. The same bytes are the prompt this launch
+    would publish, so the collision is the source file, not a foreign occupant. A different
+    file, a symlink, or a ``FileExistsError`` from another path still fails closed.
+    """
+    expected = record.get("prompt_file")
+    if not isinstance(failed, str) or not isinstance(expected, str) or not expected:
+        return False
+    if os.path.normpath(failed) != os.path.normpath(expected):
+        return False
+    path = Path(expected)
+    try:
+        info = path.lstat()
+        held = path.read_bytes() if stat.S_ISREG(info.st_mode) else None
+    except OSError:
+        return False
+    return held == prompt
+
+
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
     from scripts.orchestration.dispatch_admission import new_admission_hold
 
@@ -161,7 +186,11 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
     path = store.record_path(spec.task_id)
     logs = path.parent / "logs"
     try:
-        store.create(record, prompt)
+        try:
+            store.create(record, prompt)
+        except FileExistsError as exc:
+            if not _submitted_prompt_already_published(record, prompt, exc.filename):
+                raise
         logs.mkdir(exist_ok=True, mode=0o700)
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
@@ -338,7 +367,10 @@ def _provider_alive(record: dict) -> bool | None:
     if "provider_pgid" not in record:
         # The supervisor ended before recording whether it started a provider. A launch that the
         # dispatcher itself recorded as never having produced a supervisor started none.
-        never_ran = record.get("returncode_reason") in {"spawn_process_missing", "dispatch_died_after_admission"}
+        # spawn_setup_failed is that record: start() settled with no pid before a provider existed.
+        never_ran = record.get("returncode_reason") in {
+            "spawn_process_missing", "dispatch_died_after_admission", "spawn_setup_failed",
+        }
         return False if never_ran and record.get("pid") is None and record.get("process_start") is None else None
     if record["provider_pgid"] is None:
         return False
