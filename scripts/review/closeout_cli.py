@@ -759,8 +759,19 @@ def load_pull_request_comments(
     return _flatten_comment_pages(payload), login
 
 
-def _proof_author_attributions(repo_root: Path, target: Mapping[str, Any]) -> list[dict[str, str]]:
-    """Model and harness pairs from the frozen range's X-Agent trailers."""
+def _proof_author_attributions(
+    repo_root: Path, target: Mapping[str, Any], *, base_branch: str | None = None
+) -> list[dict[str, str]]:
+    """Model and harness pairs from this change's own ``X-Agent`` trailers.
+
+    The frozen ``base_sha..head_sha`` range also lists commits merged in from
+    the default branch after that base was recorded. Those commits belong to
+    other changes. ``git rev-list`` drops every commit reachable from the
+    default-branch tip. This change's own commits, including its merge
+    commits, remain, and an untrailered one of those still fails closed.
+    A first-parent walk is the wrong cut: the base can be the merge's first
+    parent, as when the branch is merged onto an updated base.
+    """
     from scripts.review.record_cf_verdict import RecordError, _attribute_trailer
 
     head = target.get("head_sha")
@@ -768,7 +779,12 @@ def _proof_author_attributions(repo_root: Path, target: Mapping[str, Any]) -> li
     if not isinstance(head, str) or not head:
         raise CloseoutStateError("ukrainian_behavior_proof_requires_head_sha")
     if isinstance(base, str) and base and base != head:
-        listed = _checkout_git(repo_root, "rev-list", "--reverse", f"{base}..{head}")
+        revisions = ["rev-list", "--reverse", f"{base}..{head}"]
+        # Same reachability resolve-reviewer uses: the tip is read, never stored.
+        exclude = authorship_exclude_sha(repo_root, base_branch=base_branch)
+        if exclude:
+            revisions.append(f"^{exclude}")
+        listed = _checkout_git(repo_root, *revisions)
         shas = [sha for sha in listed.split() if sha]
     else:
         shas = []
@@ -832,7 +848,11 @@ def _cmd_behavior_proof_receipt(args: argparse.Namespace) -> int:
     try:
         repository = _checkout_repository(repo_root)
         comments, login = load_pull_request_comments(repo_root, repository, pr_number)
-        attributions = _proof_author_attributions(repo_root, asdict(target))
+        named_base = target.base_ref_name
+        if not isinstance(named_base, str) or not named_base.strip():
+            stored_base = target_args.get("base")
+            named_base = stored_base if isinstance(stored_base, str) and stored_base.strip() else None
+        attributions = _proof_author_attributions(repo_root, asdict(target), base_branch=named_base)
         input_sha256 = compute_target_input_fingerprint(repo_root, target)
     except CloseoutStateError as exc:
         print(json.dumps({"error": str(exc)}), file=sys.stderr)
