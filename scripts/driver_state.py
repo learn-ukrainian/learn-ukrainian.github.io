@@ -222,7 +222,8 @@ def render_injection(text: str, path: Path) -> str:
 def _payload(stdin_text: str) -> dict:
     try:
         payload = json.loads(stdin_text) if stdin_text.strip() else {}
-    except json.JSONDecodeError:
+    except (ValueError, RecursionError):
+        # Malformed JSON, integer-digit limits and deep nesting are untrusted input, not driver errors.
         return {}
     return payload if isinstance(payload, dict) else {}
 
@@ -284,7 +285,7 @@ def _claude_conversation(payload: dict) -> str:
 def cmd_claude_hook(stdin_text: str) -> dict:
     payload = _payload(stdin_text)
     event = payload.get("hook_event_name")
-    if event not in CLAUDE_INJECT_EVENTS:
+    if not isinstance(event, str) or event not in CLAUDE_INJECT_EVENTS:
         return {}
     path = _claude_session(payload)
     if path is None:
