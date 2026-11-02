@@ -299,12 +299,13 @@ ANTHROPIC = {"model": "claude-opus-5-5", "agent": "claude"}
 
 
 def superseded_case(monkeypatch, tmp_path, orphan_reply, *, replies=PR_1117, orphan_started="2026-09-23T10:00:00.000001+00:00",
-                    orphan_status="done"):
+                    orphan_status="done", witness=2):
     tasks, comments, calls = p2_case(monkeypatch, tmp_path, replies)
-    # The witness: round-2's published verdict, re-derived from its own run record. The orphan ran at round 1's
-    # head, so its head is a round already counted.
-    write_task(tasks, task_id="round-2", worktree_base_sha="2" * 40, started_at="2026-09-23T11:00:00.000001+00:00",
-               reply=replies[1], review_mode="cross_family", **ANTHROPIC)
+    # The witness: a later round's published verdict, re-derived from its own run record. The orphan ran at
+    # round 1's head, so its head is a round already counted.
+    write_task(tasks, task_id=f"round-{witness}", worktree_base_sha=str(witness) * 40,
+               started_at="2026-09-23T11:00:00.000001+00:00", reply=replies[witness - 1], review_mode="cross_family",
+               **ANTHROPIC)
     write_task(tasks, task_id="orphan", worktree_base_sha="1" * 40, started_at=orphan_started, reply=orphan_reply,
                status=orphan_status, review_mode="cross_family", **ANTHROPIC)
     seat(tasks, VERIFIED)
@@ -352,15 +353,28 @@ def test_the_other_rule_five_refusals_stay_for_a_seat_with_a_later_verdict(monke
     refused(tasks, tmp_path, "evidence")
 
 
-def test_a_superseded_structured_run_closes_no_earlier_finding(monkeypatch, tmp_path):
-    # Round 1's prose P1 stays open: the orphan sits after it in start order and its structured reply omits F1,
-    # but only a recorded verdict resolves a finding.
-    prose = ("VERDICT: REQUEST_CHANGES\nF1 [P1] docs/readme.md:1 the retry path races.",
-             "VERDICT: REQUEST_CHANGES\nF2 [P2] docs/readme.md:2 the retry path races.",
-             "VERDICT: REQUEST_CHANGES\nF3 [P2] docs/readme.md:3 the retry path races.")
-    tasks, comments, calls = superseded_case(monkeypatch, tmp_path, reply(finding("F0")), replies=prose)
-    comments[0]["body"] = recorder.build_comment(
-        sha="1" * 40, task_id="round-1", started="2026-09-23T09:00:00.000001+00:00", verdict="CHANGES_REQUESTED",
-        model="claude-opus-5-5", family="anthropic", reply=prose[0])
+def restart(comments, index, replies, started):
+    """Re-post round ``index + 1``'s marker with another start time, as a verdict from a run begun then."""
+    comments[index]["body"] = recorder.build_comment(
+        sha=str(index + 1) * 40, task_id=f"round-{index + 1}", started=started, verdict="CHANGES_REQUESTED",
+        model="claude-opus-5-5", family="anthropic", reply=replies[index])
+
+
+def test_a_verdict_started_before_a_superseded_run_cannot_close_its_finding(monkeypatch, tmp_path):
+    # The orphan (10:00) raises a P1. A structured verdict that omits it but started at 09:00, though published
+    # later, never saw it; the rejections that did see it are prose, which close nothing.
+    prose = tuple(f"VERDICT: REQUEST_CHANGES\nF{n} [P2] docs/readme.md:{n} the retry path races." for n in (1, 3))
+    replies = (prose[0], reply(finding("F3")), prose[1])
+    tasks, comments, calls = superseded_case(monkeypatch, tmp_path, reply(finding("F9", "P1")), replies=replies,
+                                              witness=3)
+    restart(comments, 1, replies, "2026-09-23T09:00:00.000001+00:00")
     refused(tasks, tmp_path, "blocker")
+    assert calls["posts"] == 0 and not receipts(tmp_path)
+
+
+def test_a_superseded_run_that_nothing_closed_must_be_among_the_sealed_ids(monkeypatch, tmp_path):
+    # An unresolved P2 of the superseded run (F9) is an open finding: the sealed set names only F3.
+    prose = tuple(f"VERDICT: REQUEST_CHANGES\nF{n} [P2] docs/readme.md:{n} the retry path races." for n in (1, 2, 3))
+    tasks, _comments, calls = superseded_case(monkeypatch, tmp_path, reply(finding("F9")), replies=prose)
+    refused(tasks, tmp_path, "binding")
     assert calls["posts"] == 0 and not receipts(tmp_path)
