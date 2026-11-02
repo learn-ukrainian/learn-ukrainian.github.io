@@ -2196,8 +2196,10 @@ def require_review_round_within_budget(
     approved head consumes no round (:func:`budget_exempt_heads`, proven with
     ``prove_merge_only``); it is checked only once the counted heads reach the
     budget. A sealed elevated-tier grant (``scripts/review/budget_grant.py``)
-    admits rounds up to ``ELEVATED_REVIEW_ROUNDS`` in total: ``grant`` returns
-    its receipt, None when the PR has no grant, or refuses. The lineage's one
+    admits rounds up to its receipt's ``round_allowance`` in total, which is
+    ``ELEVATED_REVIEW_ROUNDS`` at most except for an owner-request grant (the
+    budget plus the rounds the owner's request records): ``grant`` returns its
+    receipt, None when the PR has no grant, or refuses. The lineage's one
     repair-verification round (``scripts/review/repair_round.py``) is outside
     the budget: ``repair`` returns its receipt or refuses, and ``repair_heads``
     names the heads it already admitted, which count as no budgeted round.
@@ -2233,7 +2235,8 @@ def require_review_round_within_budget(
     )
     refusals: list[str] = []
     admissions = (
-        ("budget_grant", grant, budget < len(counted) + 1 <= ELEVATED_REVIEW_ROUNDS),
+        # Past the budget; the receipt's own round_allowance bounds the round below.
+        ("budget_grant", grant, True),
         # Once per lineage: only a retry of the round already admitted at this head may run it again.
         ("repair_round", repair, not repair_heads - {sha}),
     )
@@ -2339,7 +2342,7 @@ def budget_admission(
         budget=budget,
         pr=number,
         prove_merge_only=_clean_merge_descent_prover(review_root, sha, fetch=fetch),
-        # A change whose paths already give it five rounds needs no grant.
+        # A change whose paths already give it five rounds needs a grant only past five (owner request).
         grant=partial(
             _budget_grant,
             repository=repository,
@@ -2352,9 +2355,8 @@ def budget_admission(
             head=sha,
             recording_run=recording_run,
             repo_root=review_root,
-        )
-        if budget < ELEVATED_REVIEW_ROUNDS
-        else None,
+            budget=budget,
+        ),
         repair=partial(
             _repair_round,
             repository=repository,
