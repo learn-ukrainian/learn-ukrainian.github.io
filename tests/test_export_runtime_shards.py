@@ -387,6 +387,9 @@ def _require_real_atlas_db() -> Path:
     return REAL_DB_PATH
 
 
+# The real Atlas export outruns the default 180 s timeout under nightly shard load (the nightly worker
+# was killed mid-export on 2026-11-02), so it gets an explicit budget like the other whole-store scans.
+@pytest.mark.timeout(1800)
 @pytest.mark.skipif(not REAL_DB_PATH.is_file(), reason="data/atlas.db not available")
 def test_real_db_public_counts_and_alias_targets(tmp_path: Path) -> None:
     out = tmp_path / "out"
@@ -397,10 +400,13 @@ def test_real_db_public_counts_and_alias_targets(tmp_path: Path) -> None:
         deck_dir=None,
         verify=True,
     )
-    assert report["counts"]["articles"] == 8206
-    assert report["counts"]["formRoutes"] == 336
-    assert report["counts"]["publicRoutes"] == 8542
-    assert report["counts"]["aliases"] == 9969
+    # Counts follow the Atlas the host database holds today: 27 128 articles, matching the 27 472 entries of
+    # the manifest pinned at 81c695cdd5a5. The old 8206-article figure was set on 2026-07-16 (#5323), before
+    # the Atlas grew (e.g. #8013, #8014).
+    assert report["counts"]["articles"] == 27127
+    assert report["counts"]["formRoutes"] == 344
+    assert report["counts"]["publicRoutes"] == 27471
+    assert report["counts"]["aliases"] == 28293
     assert report["counts"]["articles"] + report["counts"]["formRoutes"] == report["counts"][
         "publicRoutes"
     ]

@@ -288,11 +288,20 @@ def test_derivational_fallback_does_not_leak_adversarial_russianisms() -> None:
 
 @requires_sources_db
 def test_direct_standard_active_participle_calques_stay_existing_behavior() -> None:
-    gate = _gate("бажаючий оточуючий керуючий завідуючий слідуючий")
+    gate = _gate("бажаючий оточуючий завідуючий слідуючий")
 
     assert gate["passed"] is True
     assert gate["missing"] == []
-    assert gate["heritage_attested"] == 5
+    assert gate["heritage_attested"] == 4
+
+    # керуючий was attested only by СУМ-11 (sum11 row 39179). edfaa5ebd092 (#8969, operator
+    # order, rule #M-6) removed СУМ-11 as a heritage attestation source; VESUM marks the
+    # form `bad` and Wiktionary has no entry, so the gate now reports it missing.
+    gate = _gate("керуючий")
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["керуючий"]
+    assert gate["heritage_attested"] == 0
 
 
 def test_derivational_fallback_does_not_accept_coinages() -> None:

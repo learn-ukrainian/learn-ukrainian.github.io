@@ -950,6 +950,9 @@ def test_host_file_provisioning_copies_content_but_not_nested_repository_metadat
     lexicon = primary / "site" / "public" / "lexicon" / "a.json"
     lexicon.parent.mkdir(parents=True)
     lexicon.write_text("{}\n", encoding="utf-8")
+    manifest = primary / "site" / "src" / "data" / "lexicon-manifest.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text('{"entries": []}\n', encoding="utf-8")
 
     data_tier.provision_host_files(primary, checkout)
 
@@ -957,6 +960,9 @@ def test_host_file_provisioning_copies_content_but_not_nested_repository_metadat
     assert (copy / "data" / "train" / "doc.txt").read_text(encoding="utf-8") == "content\n"
     assert (copy / "python" / "pkg" / ".gitkeep").is_file()
     assert (checkout / "site" / "public" / "lexicon" / "a.json").is_file()
+    assert (checkout / "site" / "src" / "data" / "lexicon-manifest.json").read_text(encoding="utf-8") == (
+        '{"entries": []}\n'
+    )
     assert not (copy / ".git").exists()
 
 
