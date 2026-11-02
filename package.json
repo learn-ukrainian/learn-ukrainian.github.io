@@ -95,16 +95,17 @@
   "devDependencies": {
     "@agentclientprotocol/claude-agent-acp": ">=0.64.2 <1",
     "@agentclientprotocol/sdk": "1.8.0",
+    "@eslint/js": "^10.0.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.6.5",
-    "@typescript-eslint/eslint-plugin": "^8.72.0",
-    "@typescript-eslint/parser": "^8.72.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
     "acpx": ">=0.21.0",
     "c8": "^12.0.0",
-    "eslint": "^9.39.1",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^61.5.0",
+    "eslint-plugin-jsdoc": "^65.4.2",
     "eslint-plugin-prettier": "^5.5.7",
     "js-yaml": "^4.3.2",
     "markdownlint-cli2": "^0.24.0",
@@ -112,7 +113,7 @@
     "puppeteer": "^25.16.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.71.2",
+    "typescript-eslint": "^8.72.1",
     "yaml-language-server": "^1.23.0"
   },
   "dependencies": {
@@ -134,6 +135,9 @@
       "minimatch": "^11.0.4"
     },
     "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.4"
+    },
+    "eslint": {
       "minimatch": "^11.0.4"
     }
   }
