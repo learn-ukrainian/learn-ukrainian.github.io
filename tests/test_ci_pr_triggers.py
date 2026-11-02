@@ -234,7 +234,7 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
         step for step in scan["steps"] if str(step.get("uses", "")).startswith("trufflesecurity/trufflehog@")
     )
     assert "if" not in scanner
-    assert scanner["uses"] == "trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9"
+    assert scanner["uses"] == "trufflesecurity/trufflehog@31ce31ee1abbcc7dc8eee5764c17121c3044c8b2"
     assert scanner["with"]["version"] == "3.99.0"
 
     # Artifact publication is the coverage receipt. It follows a successful
