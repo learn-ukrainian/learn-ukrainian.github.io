@@ -603,19 +603,11 @@ def _not_json_constant(token: str) -> Any:
     raise ValueError(f"non-JSON constant {token}")
 
 
-# A reply that opens with an object or a code fence, names the findings schema or an envelope key, or
-# holds anywhere an object whose root keys name a findings envelope (read even when broken or escaped)
-# is a structured reply. It is never read as a markdown ledger, so text beside the object cannot add findings.
-_STRUCTURED_REPLY_RE = re.compile(
-    r"\A\s*(?:\{|```|~~~)|code-review-findings|\"(?:schema_version|overall|findings)\"\s*:"
-)
-_OBJECT_START_RE = re.compile(r"\{\s*\"")
-
-
-def _is_structured_reply(reply: str) -> bool:
-    return bool(_STRUCTURED_REPLY_RE.search(reply)) or any(
-        _looks_like_findings(reply[match.start():]) for match in _OBJECT_START_RE.finditer(reply)
-    )
+# A reply that opens with a code fence, names the findings schema, or holds a brace anywhere (so any
+# JSON object, valid, broken or escaped alike) is a structured reply. It is never read as a markdown
+# ledger, so text beside an object cannot add findings; a ledger reply with a brace therefore gives no
+# grant evidence, which fails closed.
+_STRUCTURED_REPLY_RE = re.compile(r"\A\s*(?:```|~~~)|\{|code-review-findings")
 
 
 def _structured_findings(reply: str) -> tuple[Any, ...] | None:
@@ -628,7 +620,7 @@ def _structured_findings(reply: str) -> tuple[Any, ...] | None:
     from scripts.fleet_comms.review_publication import ReviewPublicationError
     from scripts.review.review_contract import ContractError, _whole_reply_fence
 
-    if not _is_structured_reply(reply):
+    if not _STRUCTURED_REPLY_RE.search(reply):
         return None
     try:
         text = _whole_reply_fence(reply.strip())

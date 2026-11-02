@@ -93,6 +93,10 @@ def test_whole_fenced_json_reply_admits() -> None:
           for name, body in (("findings", '{"findings": []}'), ("escaped", '{"\\u0066indings": []}'),
                              ("broken", '{"overall": {"correctness": '))),
         pytest.param('Example:\n\n> {"\\u006fverall": {}}\n\n' + LEDGER, id="quoted-escaped-envelope"),
+        *(pytest.param(f'Review follows.\n```json\n{{"note": {value}"\\u0066indings": []}}\n```\n{LEDGER}',
+                       id=f"invalid-member-then-escaped-key-{name}")
+          for name, value in (("invalid", "invalid, "), ("no-comma", "null "))),
+        pytest.param(f"Review follows.\n{{​\"findings\": []}}\n{LEDGER}", id="zero-width-key"),
     ],
 )
 def test_json_reply_refuses_without_an_open_p1(reply: str) -> None:
