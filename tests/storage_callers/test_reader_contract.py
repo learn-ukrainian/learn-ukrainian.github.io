@@ -1,6 +1,7 @@
 """Reader defaults resolve current inputs and never consume a worktree store."""
 
 import importlib
+import sys
 
 import pytest
 
@@ -15,9 +16,13 @@ def test_config_and_verification_import_do_not_resolve(monkeypatch):
         pytest.fail("module import resolved a store")
     with monkeypatch.context() as scoped:
         scoped.setattr(t, "resolve_store", forbidden)
-        importlib.reload(config)
-        importlib.reload(vesum)
-    importlib.reload(vesum)
+        # Re-execute imports without replacing classes held by other test modules.
+        for original in (config, vesum):
+            spec = original.__spec__
+            isolated = importlib.util.module_from_spec(spec)
+            scoped.setitem(sys.modules, original.__name__, isolated)
+            scoped.setattr(sys.modules[original.__package__], spec.name.rsplit(".", 1)[1], isolated)
+            spec.loader.exec_module(isolated)
 
 
 def test_connection_owner_uses_current_override_and_path_free_refusal(tmp_path, monkeypatch):
