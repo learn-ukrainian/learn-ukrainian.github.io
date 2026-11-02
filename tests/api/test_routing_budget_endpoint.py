@@ -1436,9 +1436,11 @@ def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
     warm = client.get("/api/state/routing-budget").json()
 
     assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
-    assert warm["claude_accounts"]["claude:b"]["status"] == "stale"
-    assert warm["claude_accounts"]["claude:b"]["reason"] == "timeout"
-    assert warm["preferred_claude_account"] is None
+    row_b = warm["claude_accounts"]["claude:b"]
+    assert row_b["status"] == "ok"
+    assert row_b["stale"] is False
+    assert row_b["reason"] == "timeout"
+    assert warm["preferred_claude_account"] == "b"
 
 
 # Fails on e75cb7e113: a warm routing snapshot kept serving b's row ``ok`` and
