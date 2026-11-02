@@ -350,3 +350,17 @@ def test_the_other_rule_five_refusals_stay_for_a_seat_with_a_later_verdict(monke
         write_task(tasks, task_id="orphan", worktree_base_sha="1" * 40, started_at="2026-09-23T10:00:00.000001+00:00",
                    reply=reply(finding("F0")), status="failed", review_mode="cross_family", **ANTHROPIC)
     refused(tasks, tmp_path, "evidence")
+
+
+def test_a_superseded_structured_run_closes_no_earlier_finding(monkeypatch, tmp_path):
+    # Round 1's prose P1 stays open: the orphan sits after it in start order and its structured reply omits F1,
+    # but only a recorded verdict resolves a finding.
+    prose = ("VERDICT: REQUEST_CHANGES\nF1 [P1] docs/readme.md:1 the retry path races.",
+             "VERDICT: REQUEST_CHANGES\nF2 [P2] docs/readme.md:2 the retry path races.",
+             "VERDICT: REQUEST_CHANGES\nF3 [P2] docs/readme.md:3 the retry path races.")
+    tasks, comments, calls = superseded_case(monkeypatch, tmp_path, reply(finding("F0")), replies=prose)
+    comments[0]["body"] = recorder.build_comment(
+        sha="1" * 40, task_id="round-1", started="2026-09-23T09:00:00.000001+00:00", verdict="CHANGES_REQUESTED",
+        model="claude-opus-5-5", family="anthropic", reply=prose[0])
+    refused(tasks, tmp_path, "blocker")
+    assert calls["posts"] == 0 and not receipts(tmp_path)

@@ -844,7 +844,8 @@ def _p2_fix_round(
             raise GrantRefused(BLOCKER, f"{item['task']}: the ledger holds a BLOCKED, a security FAIL, "
                                         "or an edited, withheld or unreadable verdict")
         structured, opened = read
-        still_open = (set() if structured else still_open) | set(opened)
+        # Only a recorded verdict can resolve a finding, so a superseded run never resets the open set.
+        still_open = (set() if structured and comment is not None else still_open) | set(opened)
         blocking |= {finding for finding, entries in opened.items() if set(entries) & set(BLOCKING_SEVERITIES)}
         if comment is not None:
             found = opened
