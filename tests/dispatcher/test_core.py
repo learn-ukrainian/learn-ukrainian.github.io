@@ -4730,15 +4730,18 @@ def test_stale_spawn_recovery_rechecks_process_before_terminalizing(tmp_path, mo
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
 def test_dispatch_prompt_destination_collision_settles_failed_spawn(sandbox, mode):
-    """The submitted prompt can already occupy the exclusive task-prompt destination."""
+    """A prompt file that already holds the submission is that task's prompt, not a failed spawn.
+
+    A different occupant still fails closed
+    (``test_spawn_setup_failure_never_strands_published_record``).
+    """
     sandbox.tasks.mkdir(exist_ok=True)
     prompt = sandbox.tasks / "prompt-collision.prompt"
     prompt.write_text("the operator's submitted prompt")
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--task-id", "prompt-collision",
-                "--mode", mode, "--prompt-file", str(prompt), expected=2)
+                "--mode", mode, "--prompt-file", str(prompt))
     state = json.loads(sandbox.cli("status", "prompt-collision").stdout)
-    assert state["status"] == "failed"
-    assert state["returncode_reason"] == "spawn_setup_failed"
-    assert state["pid"] is None
-    assert state["finished_at"]
+    assert state["status"] in {"spawning", "running", "done"}
+    assert state.get("returncode_reason") != "spawn_setup_failed"
+    assert state.get("pid")
     assert prompt.read_text() == "the operator's submitted prompt"

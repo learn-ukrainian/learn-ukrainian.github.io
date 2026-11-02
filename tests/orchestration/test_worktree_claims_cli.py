@@ -282,6 +282,36 @@ def test_dispatcher_record_removal_waits_for_the_provider_tree_to_end(tmp_path, 
     assert worktree.exists()
 
 
+def test_pre_spawn_failure_is_removable_and_unknown_provider_is_still_refused(tmp_path, capsys):
+    """A task that failed before a provider existed can release its checkout; an unrecorded provider cannot."""
+    primary = _primary(tmp_path)
+    failed = _linked(primary, "codex/review-pre-spawn")
+    unknown = _linked(primary, "codex/review-unknown")
+    _record(
+        primary, "review-pre-spawn", run_nonce="pre-spawn-nonce", worktree_path=str(failed),
+        schema_version=2, worktree_start_sha="a" * 40, options={}, status="failed",
+        returncode_reason="spawn_setup_failed", error="spawn_setup_failed: FileExistsError",
+        pid=None, process_start=None,
+    )
+    _record(
+        primary, "review-unknown", run_nonce="unknown-nonce", worktree_path=str(unknown),
+        schema_version=2, worktree_start_sha="b" * 40, options={}, status="failed",
+    )
+
+    code, out, err = _remove(capsys, str(failed), "--owner-task-id", "review-pre-spawn")
+
+    assert code == worktree_claims.EXIT_REMOVED, err
+    assert out.startswith(f"removed: {failed}")
+    assert err == ""
+    assert not failed.exists()
+
+    code, _out, err = _remove(capsys, str(unknown), "--owner-task-id", "review-unknown")
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "provider processes are live or unknown" in err
+    assert unknown.exists()
+
+
 @pytest.mark.parametrize(
     ("owner", "refusal"),
     [
