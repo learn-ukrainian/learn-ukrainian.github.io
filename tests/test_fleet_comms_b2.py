@@ -19,8 +19,7 @@ from scripts.fleet_comms.adapter_conformance import (
 )
 from scripts.fleet_comms.contracts import CompletionState
 
-B2_ADAPTERS = ("grok", "kimi", "cursor", "hermes", "opencode")
-HERMES_ALIASES = ("hermes", "hermes-grok", "hermes-qwen", "hermes-deepseek", "grok-hermes")
+B2_ADAPTERS = ("grok", "kimi", "cursor", "opencode")
 
 
 def _lines(*events: dict[str, Any]) -> str:
@@ -35,13 +34,6 @@ def test_exit0_plain_text_without_terminal_is_unknown_not_complete(name: str) ->
     env = conform(CaptureInput(adapter=name, stdout="looks fine", returncode=0))
     assert env.completion_state is CompletionState.UNKNOWN
     assert env.terminal_event_observed is False
-    assert env.is_formal_review_eligible is False
-
-
-@pytest.mark.parametrize("name", HERMES_ALIASES)
-def test_hermes_aliases_plain_stdout_unknown(name: str) -> None:
-    env = conform(CaptureInput(adapter=name, stdout="assistant final message", returncode=0))
-    assert env.completion_state is CompletionState.UNKNOWN
     assert env.is_formal_review_eligible is False
 
 
@@ -282,55 +274,3 @@ def test_opencode_text_without_step_finish_is_unknown() -> None:
     stdout = json.dumps({"type": "text", "part": {"text": "no finish"}})
     env = conform(CaptureInput(adapter="opencode", stdout=stdout, returncode=0))
     assert env.completion_state is CompletionState.UNKNOWN
-
-
-# ── hermes ───────────────────────────────────────────────────────────────────
-
-
-def test_hermes_structured_result_is_complete() -> None:
-    stdout = _lines(
-        {"type": "assistant", "text": "a"},
-        {"type": "done", "result": "a b"},
-    )
-    env = conform(CaptureInput(adapter="hermes", stdout=stdout, returncode=0))
-    assert env.completion_state is CompletionState.COMPLETE
-    assert env.terminal_event_observed is True
-
-
-def test_hermes_inband_http_error_is_failed() -> None:
-    env = conform(
-        CaptureInput(
-            adapter="hermes-deepseek",
-            stdout="HTTP 401: unauthorized provider",
-            returncode=0,
-        )
-    )
-    assert env.completion_state is CompletionState.FAILED
-    assert env.terminal_event_observed is True
-    assert env.response_text == ""
-
-
-def test_hermes_length_limited_structured() -> None:
-    stdout = json.dumps({"type": "result", "result": "cut", "reason": "max_tokens"})
-    env = conform(CaptureInput(adapter="hermes-qwen", stdout=stdout, returncode=0))
-    assert env.completion_state is CompletionState.LENGTH_LIMITED
-
-
-def test_hermes_nonzero_exit_with_output_is_transport_incomplete() -> None:
-    env = conform(
-        CaptureInput(adapter="hermes-grok", stdout="partial hermes", returncode=1)
-    )
-    assert env.completion_state is CompletionState.TRANSPORT_INCOMPLETE
-    assert env.response_text == "partial hermes"
-
-
-def test_hermes_empty_nonzero_is_failed() -> None:
-    env = conform(CaptureInput(adapter="hermes", stdout="", returncode=1))
-    assert env.completion_state is CompletionState.FAILED
-
-
-def test_hermes_stop_reason_json_object_is_complete() -> None:
-    stdout = json.dumps({"text": "via stopReason", "stopReason": "EndTurn"})
-    env = conform(CaptureInput(adapter="grok-hermes", stdout=stdout, returncode=0))
-    assert env.completion_state is CompletionState.COMPLETE
-    assert env.response_text == "via stopReason"

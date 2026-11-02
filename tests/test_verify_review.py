@@ -823,6 +823,7 @@ def test_pr_target(tmp_path, monkeypatch):
             stdout = json.dumps(
                 {
                     "number": 99,
+                    "state": "OPEN",
                     "baseRefName": "trunk",
                     "baseRefOid": base,
                     "headRefName": "feature",
@@ -2287,3 +2288,67 @@ def test_ukrainian_behavior_proof_cli_writes_receipt_from_pr_comments(tmp_path, 
     assert receipt["behavior_proof"]["source_blind"]["status"] == "pass"
     assert receipt["target"]["head_sha"] == head
     assert {seat["family"] for seat in receipt["ukrainian_seat_verdicts"]} == {"google", "openai"}
+
+
+def test_pr_merged_base_commits_without_trailers_attribute_only_own_commits(tmp_path):
+    """A stale base..head range that merged the base does not treat those commits as authorship.
+
+    The base is the merge's first parent, which is the recorded shape when a
+    branch is merged onto an updated base. An untrailered commit the PR itself
+    authored still fails closed, including after a later trailered commit has
+    landed on the default branch and that tip would otherwise exclude the
+    whole range.
+    """
+    from scripts.review.closeout_cli import CloseoutStateError, _proof_author_attributions
+    from tests.test_review_closeout_cli import _git, _init_repo
+
+    repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/org/repo.git")
+    root = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    (repo / "app.py").write_text("print('base')\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-q", "-m", "base squash without a trailer")
+    base_tip = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _git(repo, "update-ref", "refs/remotes/origin/main", base_tip)
+    _git(repo, "symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+    _git(repo, "checkout", "-q", "-b", "feature", root)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "pr author\n\nX-Agent: claude/claude-opus-5-5")
+    author = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _git(repo, "checkout", "-q", "--detach", base_tip)
+    _git(repo, "merge", "-q", "--no-ff", author, "-m", "merge pr onto base\n\nX-Agent: codex/gpt-6.1-sol")
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert _git(repo, "rev-parse", f"{head}^1").stdout.strip() == base_tip
+    assert _git(repo, "rev-parse", f"{head}^2").stdout.strip() == author
+    raw = set(_git(repo, "rev-list", f"{root}..{head}").stdout.split())
+    assert {base_tip, author, head} <= raw
+
+    def attribute(head_sha: str) -> list[dict[str, str]]:
+        return _proof_author_attributions(
+            repo,
+            {"base_sha": root, "head_sha": head_sha, "base_ref_name": "main"},
+            base_branch="main",
+        )
+
+    assert attribute(head) == [
+        {"model": "claude-opus-5-5", "harness": "claude"},
+        {"model": "gpt-6.1-sol", "harness": "codex"},
+    ]
+
+    (repo / "feature.py").write_text("value = 2\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "pr commit without a trailer")
+    untrailered = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    with pytest.raises(CloseoutStateError, match="ukrainian_behavior_proof_author_trailer_missing"):
+        attribute(untrailered)
+
+    (repo / "feature.py").write_text("value = 3\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "later trailered commit\n\nX-Agent: claude/claude-opus-5-5")
+    landed = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _git(repo, "update-ref", "refs/remotes/origin/main", landed)
+    assert _git(repo, "merge-base", "--is-ancestor", landed, "refs/remotes/origin/main").returncode == 0
+    assert _git(repo, "rev-list", f"{root}..{landed}", f"^{landed}").stdout.strip() == ""
+    with pytest.raises(CloseoutStateError, match="ukrainian_behavior_proof_author_trailer_missing"):
+        attribute(landed)

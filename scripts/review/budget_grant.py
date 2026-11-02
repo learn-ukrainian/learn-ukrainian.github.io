@@ -74,6 +74,11 @@ EVIDENCE = "evidence"
 CAPABILITY = "capability"
 RUN_FIELDS = frozenset({"task_id", "run_nonce", "reviewed_sha", "reply_sha256"})
 DIGEST = re.compile(r"[0-9a-f]{64}")
+EXCLUSION_ATTESTATION = {
+    "complete_reply_execution_obstruction_only": True,
+    "no_substantive_defect": True,
+    "no_security_fail": True,
+}
 
 
 class GrantRefused(recorder.RecordError):
@@ -123,7 +128,8 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
         if withheld is not None:
             raise GrantRefused(REQUEST, f"{label} withheld_capability must be null for other classes")
     else:
-        if not isinstance(withheld, dict) or set(withheld) != {"capability", "runs", "retry_probe"}:
+        required = {"capability", "runs", "retry_probe"}
+        if not isinstance(withheld, dict) or set(withheld) not in (required, required | {"admission_exclusion"}):
             raise GrantRefused(REQUEST, f"{label} withheld_capability needs capability, runs and retry_probe")
         if not isinstance(withheld["capability"], str) or withheld["capability"] not in REVIEW_CAPABILITIES:
             raise GrantRefused(REQUEST, f"{label} has an unknown capability")
@@ -132,6 +138,8 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
         for run in withheld["runs"]:
             _parse_run(run, {"verification_only_evidence"}, label)
         _parse_run(withheld["retry_probe"], {"capability_evidence"}, label)
+        if withheld.get("admission_exclusion") is not None:
+            _parse_run(withheld["admission_exclusion"], set(), label)
     return request
 
 
@@ -153,6 +161,7 @@ class Grant:
     request_sha256: str
     advisor_model: str
     result_sha256: str
+    admission_exclusion_attestation: dict[str, bool] | None = None
 
 
 def _grant_records(task_root: Path) -> list[tuple[str, Path, dict[str, Any]]]:
@@ -192,8 +201,11 @@ def _sealed_ruling(task_id: str, path: Path, record: Mapping[str, Any]) -> tuple
         decision = fenced_object(sealed.result_text, policy.fence)
         legacy = (isinstance(decision.get("blocker_class"), str)
                   and decision["blocker_class"] in BLOCKER_CLASSES - {WITHHELD_CAPABILITY})
-        if not (set(decision) == set(policy.output_fields)
-                or (legacy and set(decision) == set(policy.output_fields) - {"withheld_capability"})):
+        fields = set(policy.output_fields)
+        old_fields = fields - {"admission_exclusion_attestation"}
+        if not (set(decision) in (fields, old_fields)
+                or (legacy and set(decision) in (fields - {"withheld_capability"},
+                                                old_fields - {"withheld_capability"}))):
             raise GrantRefused(
                 APPROVAL,
                 f"the {policy.fence} object must hold exactly {list(policy.output_fields)}, found {sorted(decision)}",
@@ -244,7 +256,15 @@ def check_grant(task_id: str, path: Path, record: Mapping[str, Any]) -> Grant:
         raise GrantRefused(
             APPROVAL, f"advisory task {task_id!r} ran on {record.get('model')!r}, not the advisor {advisor}"
         )
-    return Grant(task_id, request, digest, advisor, sealed.result_sha256)
+    attestation = decision.get("admission_exclusion_attestation")
+    exclusion = (request.get("withheld_capability") or {}).get("admission_exclusion")
+    if exclusion is not None:
+        if (not isinstance(attestation, dict) or set(attestation) != set(EXCLUSION_ATTESTATION)
+                or any(value is not True for value in attestation.values())):
+            raise GrantRefused(APPROVAL, "exclusion needs the advisor's sealed complete-reply semantic attestation")
+    elif attestation is not None:
+        raise GrantRefused(APPROVAL, "exclusion attestation has no bound exclusion")
+    return Grant(task_id, request, digest, advisor, sealed.result_sha256, attestation)
 
 
 def _claimed_pr(path: Path) -> Any:
@@ -328,6 +348,14 @@ def admit_grant_round(
         if grant.request["pr"] == number:
             grants.append(grant)
     receipts = []
+    exclusions = {
+        tuple(sorted(exclusion.items()))
+        for grant in grants
+        if normalize_repository(grant.request["repository"]) == normalize_repository(repository)
+        and (exclusion := (grant.request.get("withheld_capability") or {}).get("admission_exclusion")) is not None
+    }
+    if len(exclusions) > 1:
+        raise GrantRefused(BINDING, "only one excluded run per PR, including across reissued grants")
     for grant in grants:
         try:
             receipts.append(_admit(
@@ -392,6 +420,66 @@ def _admit(
     }
 
 
+def _admission_exclusion(
+    grant: Grant, *, runs: Sequence[Any], markers: Sequence[Any], head: str,
+    recording_run: tuple[str, str] | None, comments: Sequence[Mapping[str, Any]], login: str,
+) -> dict[str, Any]:
+    """Validate one sealed obstruction before dispatch and its exact replacement at recording.
+
+    The advisor judges the complete reply, including defects expressed only in prose.
+    Empty findings are only a structural check, never that semantic attestation.
+    """
+    from scripts.review import review_lineage as lineage
+
+    request = grant.request
+    evidence = request["withheld_capability"].get("admission_exclusion")
+    if evidence is None:
+        return {}
+    if grant.admission_exclusion_attestation != EXCLUSION_ATTESTATION:
+        raise GrantRefused(APPROVAL, "missing sealed exclusion attestation")
+    matches = [run for run in runs if run.task_id == evidence["task_id"]
+               and run.record.get("run_nonce") == evidence["run_nonce"]]
+    if len(matches) != 1:
+        raise GrantRefused(EVIDENCE, "excluded run is missing or ambiguous")
+    excluded = matches[0]
+    lineage.require_run_binding(evidence, excluded.record, repository=request["repository"],
+                                number=request["pr"], branch=request["lineage_id"])
+    try:
+        payload = json.loads(excluded.reply, object_pairs_hook=recorder._unique_keys,
+                             parse_constant=recorder._not_json_constant)
+    except (TypeError, ValueError, RecursionError):
+        raise GrantRefused(EVIDENCE, "excluded reply must be one structured findings object") from None
+    derived = lineage._finished_verdict(excluded)
+    if (not isinstance(payload, dict) or payload.get("schema_version") != recorder.REVIEW_SCHEMA_VERSION
+            or payload.get("findings") != [] or derived is None or derived[1:3] != ("BLOCKED", 0)
+            or evidence["reviewed_sha"] != head
+            or any(re.search(r"\bP[0-3]\b", text) or recorder._security_verdict_blocks(text)
+                   for text in recorder._strings(payload))
+            or any(marker["task"] == excluded.task_id for _, marker in markers)):
+        raise GrantRefused(BLOCKER, "excluded run is not an unpublished, empty-findings BLOCKED at the retry head")
+    started = lineage._started(excluded.record)
+    if lineage.capability_failure.run_events(lineage.capability_failure.events(comments, login), excluded.task_id, started):
+        raise GrantRefused(EVIDENCE, "excluded run already has a capability-failure classification")
+    if datetime.fromisoformat(started) >= datetime.fromisoformat(request["issued_at"].replace("Z", "+00:00")):
+        raise GrantRefused(EVIDENCE, "exclusion must precede its reissued grant")
+    replacement = None
+    if recording_run is not None:
+        matches = [run for run in runs if (run.task_id, run.record.get("run_nonce")) == recording_run]
+        if len(matches) != 1:
+            raise GrantRefused(EVIDENCE, "replacement run is missing or ambiguous")
+        run = matches[0]
+        replacement = {"task_id": run.task_id, "run_nonce": run.record.get("run_nonce"),
+                       "reviewed_sha": head, "reply_sha256": run.record.get("result_sha256")}
+        lineage.require_run_binding(replacement, run.record, repository=request["repository"],
+                                    number=request["pr"], branch=request["lineage_id"])
+        retry = lineage._finished_verdict(run)
+        if (retry is None or retry[4] != derived[4] or lineage._profile(run.record) != lineage._profile(excluded.record)
+                or datetime.fromisoformat(retry[5]) <= datetime.fromisoformat(started)):
+            raise GrantRefused(BINDING, "replacement must be a later same-seat, same-head review")
+    return {"excluded_run": evidence, "replacement_run": replacement,
+            "admission_exclusion_attestation": grant.admission_exclusion_attestation}
+
+
 def _withheld_round(
     grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, task_root: Path, head: str,
     recording_run: tuple[str, str] | None,
@@ -407,6 +495,8 @@ def _withheld_round(
         runs = lineage.lineage_runs(task_root, repository=request["repository"], number=request["pr"],
                                     branch=request["lineage_id"])
         markers = lineage._trusted_markers(comments, login)
+        exclusion = _admission_exclusion(grant, runs=runs, markers=markers, head=head, recording_run=recording_run,
+                                        comments=comments, login=login)
         charged = lineage.dispatched_rounds(runs=runs, comments=comments, login=login, exclude_head=head)
         sources = []
         for evidence in withheld["runs"]:
@@ -454,6 +544,10 @@ def _withheld_round(
                 raise GrantRefused(BLOCKER, f"{marker['task']}: a substantive rejection intervened")
         for run in runs:
             started = lineage._started(run.record)
+            if exclusion and (run.task_id, run.record.get("run_nonce")) == (
+                exclusion["excluded_run"]["task_id"], exclusion["excluded_run"]["run_nonce"]
+            ):
+                continue
             if recording_run is not None and (run.task_id, run.record.get("run_nonce")) == recording_run:
                 continue
             if started is None:
@@ -501,6 +595,7 @@ def _withheld_round(
         "round_allowance": min(recorder.ELEVATED_REVIEW_ROUNDS, recorder.DEFAULT_REVIEW_ROUNDS + len(qualifying_heads)),
         "retry_route": route,
         "retry_probe": probe_evidence,
+        **exclusion,
     }
 
 

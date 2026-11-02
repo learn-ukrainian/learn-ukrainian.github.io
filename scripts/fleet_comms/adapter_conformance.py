@@ -5,8 +5,8 @@ only emit ``complete`` when their documented terminal contract is observed.
 Exit 0 + nonempty text alone is never enough.
 
 B1 primary adapters: codex, claude, agy.
-B2 remaining adapters: grok, kimi, cursor, hermes (+ hermes-*), opencode —
-each implements a real harness-specific terminal contract. Missing terminal
+B2 remaining adapters: grok, kimi, cursor, opencode — each implements a real
+harness-specific terminal contract. Missing terminal
 evidence yields ``unknown`` (formal-review ineligible).
 """
 
@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -27,13 +26,8 @@ REMAINING_ADAPTERS = frozenset(
     {
         "grok",
         "grok-build",
-        "grok-hermes",
         "kimi",
         "cursor",
-        "hermes",
-        "hermes-grok",
-        "hermes-qwen",
-        "hermes-deepseek",
         "opencode",
     }
 )
@@ -61,9 +55,6 @@ _ERROR_REASONS = frozenset(
         "refused",
     }
 )
-_HERMES_HTTP_ERROR_RE = re.compile(r"^HTTP\s+[45]\d{2}\b")
-
-
 @dataclass(frozen=True, slots=True)
 class CaptureInput:
     """Raw transport capture fed into the conformance harness."""
@@ -996,95 +987,6 @@ def conform_opencode(capture: CaptureInput) -> ResponseEnvelope:
     )
 
 
-def conform_hermes(capture: CaptureInput) -> ResponseEnvelope:
-    """Hermes ``-z`` one-shot: plain stdout has no documented terminal event.
-
-    Hermes adapters only see the final assistant message on stdout (no
-    stream-json). Without structured terminal evidence the envelope is
-    ``unknown`` — never ``complete`` on exit 0 + text alone.
-
-    If a capture *does* include structured events (result/done/task_complete)
-    or a grok-shaped ``stopReason`` object, those are honored. In-band
-    ``HTTP 4xx/5xx`` provider errors (documented Hermes failure shape) map to
-    ``failed``.
-    """
-    events = list(capture.events) if capture.events else _parse_jsonl(capture.stdout)
-    texts: list[str] = []
-    stop_reason: str | None = None
-    terminal = False
-    session_id = capture.session_id
-    error_terminal = False
-    extra: dict[str, Any] = {
-        "terminal_contract": "structured_only",
-        "formal_review_eligible": False,
-    }
-
-    if events:
-        for event in events:
-            etype = str(event.get("type") or event.get("event") or "")
-            if etype in {"assistant", "message", "text"}:
-                text = event.get("text") or event.get("content") or event.get("result")
-                if isinstance(text, str) and text:
-                    texts.append(text)
-            if etype in {"result", "done", "RESULT", "task_complete"}:
-                terminal = True
-                stop_reason = str(event.get("reason") or etype)
-                body = event.get("result") or event.get("content") or event.get("text")
-                if isinstance(body, str) and body.strip():
-                    texts.append(body.strip())
-            if "stopReason" in event or "stop_reason" in event:
-                terminal = True
-                raw = event.get("stopReason", event.get("stop_reason"))
-                if raw is not None:
-                    stop_reason = str(raw)
-                text = event.get("text")
-                if isinstance(text, str) and text.strip():
-                    texts.append(text.strip())
-            reason = event.get("stop_reason") or event.get("reason")
-            if isinstance(reason, str) and _is_length_reason(reason):
-                stop_reason = reason
-                terminal = True
-            sid = event.get("session_id")
-            if isinstance(sid, str) and sid:
-                session_id = sid
-    else:
-        obj = _parse_json_object_tolerant(capture.stdout)
-        if obj is not None and ("stopReason" in obj or "stop_reason" in obj):
-            terminal = True
-            raw = obj.get("stopReason", obj.get("stop_reason"))
-            stop_reason = str(raw) if raw is not None else "stopReason"
-            text = obj.get("text")
-            if isinstance(text, str) and text.strip():
-                texts.append(text.strip())
-            sid = obj.get("sessionId") or obj.get("session_id")
-            if isinstance(sid, str) and sid:
-                session_id = sid
-        else:
-            cleaned = (capture.stdout or "").strip()
-            # Strip ANSI the same way Hermes adapters do (minimal: control seq).
-            cleaned = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", cleaned).strip()
-            if cleaned and _HERMES_HTTP_ERROR_RE.match(cleaned.splitlines()[0].strip()):
-                # Documented in-band provider error as the final assistant line.
-                error_terminal = True
-                terminal = True
-                stop_reason = "inband_http_error"
-                # Do not promote the error string as a successful segment.
-            elif cleaned:
-                texts.append(cleaned)
-
-    segments = _ordered_segments(texts)
-    return _finish(
-        segments=segments,
-        terminal=terminal,
-        stop_reason=stop_reason,
-        capture=capture,
-        events=events,
-        session_id=session_id,
-        error_terminal=error_terminal,
-        extra_meta=extra,
-    )
-
-
 def conform_unknown_stub(capture: CaptureInput) -> ResponseEnvelope:
     """Fallback for unregistered transports: never invent ``complete``."""
     text = capture.stdout.strip()
@@ -1109,11 +1011,6 @@ _CONFORMERS: dict[str, Callable[[CaptureInput], ResponseEnvelope]] = {
     "kimi": conform_kimi,
     "cursor": conform_cursor,
     "opencode": conform_opencode,
-    "hermes": conform_hermes,
-    "hermes-grok": conform_hermes,
-    "hermes-qwen": conform_hermes,
-    "hermes-deepseek": conform_hermes,
-    "grok-hermes": conform_hermes,
 }
 
 

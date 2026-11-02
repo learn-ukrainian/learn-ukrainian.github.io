@@ -6,7 +6,7 @@ import re
 from typing import Any
 
 RUNTIME_ROUTE_TOOL_CONFIG_KEY = "agent_runtime_route"
-HERMES_GLM_FORBIDDEN_MARKER = "HERMES_GLM_FORBIDDEN"
+GLM_FORBIDDEN_MARKER = "GLM_FORBIDDEN"
 
 _FORBIDDEN_GLM_MODEL_RE = re.compile(r"(^|[/_.:-])glm($|[/_.:-]|\d)", re.IGNORECASE)
 
@@ -34,7 +34,7 @@ def forbidden_glm_error(
 ) -> str:
     """Build the explicit hard-fail text for forbidden zai/GLM routes."""
     return (
-        f"{HERMES_GLM_FORBIDDEN_MARKER}: automated Hermes run refused "
+        f"{GLM_FORBIDDEN_MARKER}: automated run refused "
         f"local-only zai/GLM route from {source}: "
         f"provider={normalize_route_part(provider)!r} "
         f"model={normalize_route_part(model)!r}"

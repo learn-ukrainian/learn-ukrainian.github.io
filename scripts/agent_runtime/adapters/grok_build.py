@@ -1,9 +1,7 @@
 """GrokBuildAdapter — wraps the native ``grok`` CLI headless.
 
 Registry seat id is canonical ``grok`` (historical alias ``grok-build``).
-DISTINCT from the Hermes-backed ``grok-hermes`` agent (``HermesGrokAdapter``,
-a banned/demoted route pinned to its own legacy model, via the Hermes OAuth
-API path). This adapter drives
+This adapter drives
 the local ``grok`` CLI binary (``~/.local/bin/grok``) in
 single-turn headless mode:
 

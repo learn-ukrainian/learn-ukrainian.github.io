@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from scripts.audit import hermes_nightly_audit as audit
+from scripts.audit import nightly_audit as audit
 
 pytestmark = pytest.mark.reads_content
 
@@ -36,7 +36,7 @@ def test_main_writes_only_to_designated_path(tmp_path, monkeypatch):
 
     # Mock CLI arguments
     test_args = ["--tracks", "a1"]
-    with patch("sys.argv", ["scripts/audit/hermes_nightly_audit.py", *test_args]):
+    with patch("sys.argv", ["scripts/audit/nightly_audit.py", *test_args]):
         exit_code = audit.main()
 
     assert exit_code == 0

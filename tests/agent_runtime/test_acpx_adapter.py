@@ -2364,7 +2364,7 @@ def test_probe_participant_reachability_reports_only_missing_provider_binaries(m
 
     assert acpx_module.probe_participant_reachability("gemma") is None
     assert acpx_module.probe_participant_reachability("glm") is None
-    # DeepSeek shares the opencode transport since the Hermes removal (#6805).
+    # DeepSeek shares the opencode transport (#6805).
     assert acpx_module.probe_participant_reachability("deepseek") is None
     # ACPX built-in seats resolve no external provider binary: unprobed.
     assert acpx_module.probe_participant_reachability("codex") is None
@@ -2372,28 +2372,15 @@ def test_probe_participant_reachability_reports_only_missing_provider_binaries(m
 
 
 def test_probe_participant_reachability_flags_deepseek_when_opencode_is_missing(monkeypatch):
-    """#6805: the DeepSeek seat now degrades on the opencode binary, with the
-    opencode remediation — never on the permanently removed hermes binary."""
+    """#6805: the DeepSeek seat degrades on the opencode binary, with the
+    opencode remediation."""
     _patch_provider_binary_lookup(monkeypatch, lambda _name, *_a, **_k: None)
 
     error = acpx_module.probe_participant_reachability("deepseek")
 
     assert error is not None
     assert "opencode binary not found on PATH" in error
-    assert "hermes binary not found on PATH" not in error
     assert "docs/runbooks/agent-seat-onboarding.md" in error
-
-
-def test_participant_version_probe_accepts_v_prefix_before_build_stamp(tmp_path):
-    binary = tmp_path / "hermes"
-    binary.write_text(
-        "#!/bin/sh\nprintf '%s\\n' 'Python 3.11.15' "
-        "'Hermes Agent v0.18.2 (2026.7.7.2)'\n",
-        encoding="utf-8",
-    )
-    binary.chmod(0o755)
-
-    assert acpx_module._probe_participant_cli_version(str(binary), "hermes") == "0.18.2"
 
 
 def test_acpx_compatibility_probe_checks_global_and_builtin_exec_surfaces(monkeypatch):
@@ -2440,7 +2427,6 @@ def test_acpx_compatibility_probe_checks_global_and_builtin_exec_surfaces(monkey
     [
         ("agy", (), "--sandbox"),
         ("opencode", ("acp",), "--pure"),
-        ("hermes", (), "--ignore-rules"),
     ],
 )
 def test_participant_compatibility_probes_exact_invoked_surface(
@@ -2449,7 +2435,6 @@ def test_participant_compatibility_probes_exact_invoked_surface(
     required = {
         "agy": acpx_module._AGY_REQUIRED_FLAGS,
         "opencode": acpx_module._OPENCODE_REQUIRED_ACP_FLAGS,
-        "hermes": acpx_module._HERMES_REQUIRED_FLAGS,
     }[executable]
     monkeypatch.setattr(
         acpx_module,

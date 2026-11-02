@@ -122,7 +122,7 @@ def test_retired_models_cannot_retain_any_transport(model_id):
 @pytest.mark.parametrize(("model", "transport", "message"), [
     ("cursor:grok-4.5-high", "cursor", "is retired"),
     ("claude-opus-4.6", "native_claude", "not in the model catalog"),
-    ("claude-opus-5-5", "hermes", "no admitted hermes transport"),
+    ("claude-opus-5-5", "native_codex", "no admitted native_codex transport"),
     ("gemini-3.8-flash-high", "native_gemini", "no admitted native_gemini transport"),
 ])
 def test_execution_defaults_refused_by_catalog_identity_and_transport(model, transport, message):
@@ -411,7 +411,7 @@ def test_catalog_rejects_missing_risk_ladder():
 
 def test_catalog_rejects_candidate_transport_not_supported_by_model():
     broken = deepcopy(load_model_catalog())
-    broken["review_candidates"]["grok-4.7-cursor-fallback"]["transport"] = "hermes"
+    broken["review_candidates"]["grok-4.7-cursor-fallback"]["transport"] = "native_claude"
     with pytest.raises(ModelCatalogError, match="is not listed"):
         validate_catalog(broken)
 
@@ -615,13 +615,6 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
     }
     with pytest.raises(ModelCatalogError, match=r"cannot use 'auto' as a formal review candidate"):
         validate_catalog(broken_rc_gen)
-
-
-def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
-    broken = deepcopy(load_model_catalog())
-    broken["models"]["grok-4.7"]["transports"].append("hermes")
-    with pytest.raises(ModelCatalogError, match="must not route"):
-        validate_catalog(broken)
 
 
 def test_catalog_enforces_quality_floor_and_homogeneous_rungs():
@@ -977,7 +970,7 @@ def test_catalog_rejects_retired_and_rule_excluded_executable_references(model, 
 def test_deepseek_flash_catalog_class_is_opencode_execution_only():
     model = "deepseek-v4.1-flash"
     assert require_execution_model(model, transport="opencode") == model
-    for transport in ("hermes", "cursor", "codex"):
+    for transport in ("cursor", "codex"):
         with pytest.raises(ModelCatalogError, match="requires the opencode transport"):
             require_execution_model(model, transport=transport)
 

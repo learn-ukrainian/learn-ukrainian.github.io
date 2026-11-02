@@ -6,6 +6,7 @@ import json
 import os
 import re
 import signal
+import stat
 import subprocess
 import sys
 import tempfile
@@ -97,6 +98,29 @@ def _observe(record: dict) -> dict:
     return record
 
 
+def _dispatcher_code() -> dict:
+    """The checkout whose dispatcher supervises this task: its HEAD and whether its code is unmodified.
+
+    Recorded when the supervisor starts and again when it settles. A review-contract canary
+    needs both to be the same clean checkout at the head it reviewed (#12399). An unreadable
+    checkout records ``head`` None, which no canary accepts.
+    """
+    from scripts.common.git_context import sanitized_git_env
+
+    root = Path(__file__).resolve().parents[2]
+
+    def git_out(*args: str) -> str | None:
+        try:
+            return subprocess.run(["git", *args], cwd=root, env=sanitized_git_env(), capture_output=True,
+                                  text=True, check=True, timeout=30).stdout
+        except (OSError, subprocess.SubprocessError):
+            return None
+
+    head = (git_out("rev-parse", "HEAD") or "").strip() or None
+    status = git_out("status", "--porcelain", "--", "scripts", "schemas")
+    return {"root": str(root), "head": head, "clean": status == ""}
+
+
 def _discard_read_only_scratch(record: dict) -> None:
     """Remove a dispatched Codex read-only task's scratch; residue is recorded, never raised."""
     if record["agent"] == "codex" and record["mode"] == "read-only" and (
@@ -127,6 +151,30 @@ def _stream_attestation(source: str, model: str | None) -> dict:
                 resolved_model_source=source if model is not None else "pending")
 
 
+def _submitted_prompt_already_published(record: dict, prompt: bytes, failed: str | None) -> bool:
+    """True when exclusive prompt publication collided with the submitted bytes.
+
+    ``store.create`` writes ``record["prompt_file"]`` with ``"xb"`` (``store.py``). A review
+    brief is often already that path: ``--prompt-file batch_state/tasks/<task_id>.prompt``.
+    The exclusive create then raises ``FileExistsError`` before any supervisor exists, and
+    ``start`` records ``spawn_setup_failed``. The same bytes are the prompt this launch
+    would publish, so the collision is the source file, not a foreign occupant. A different
+    file, a symlink, or a ``FileExistsError`` from another path still fails closed.
+    """
+    expected = record.get("prompt_file")
+    if not isinstance(failed, str) or not isinstance(expected, str) or not expected:
+        return False
+    if os.path.normpath(failed) != os.path.normpath(expected):
+        return False
+    path = Path(expected)
+    try:
+        info = path.lstat()
+        held = path.read_bytes() if stat.S_ISREG(info.st_mode) else None
+    except OSError:
+        return False
+    return held == prompt
+
+
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
     from scripts.orchestration.dispatch_admission import new_admission_hold
 
@@ -138,7 +186,11 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
     path = store.record_path(spec.task_id)
     logs = path.parent / "logs"
     try:
-        store.create(record, prompt)
+        try:
+            store.create(record, prompt)
+        except FileExistsError as exc:
+            if not _submitted_prompt_already_published(record, prompt, exc.filename):
+                raise
         logs.mkdir(exist_ok=True, mode=0o700)
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
@@ -315,7 +367,10 @@ def _provider_alive(record: dict) -> bool | None:
     if "provider_pgid" not in record:
         # The supervisor ended before recording whether it started a provider. A launch that the
         # dispatcher itself recorded as never having produced a supervisor started none.
-        never_ran = record.get("returncode_reason") in {"spawn_process_missing", "dispatch_died_after_admission"}
+        # spawn_setup_failed is that record: start() settled with no pid before a provider existed.
+        never_ran = record.get("returncode_reason") in {
+            "spawn_process_missing", "dispatch_died_after_admission", "spawn_setup_failed",
+        }
         return False if never_ran and record.get("pid") is None and record.get("process_start") is None else None
     if record["provider_pgid"] is None:
         return False
@@ -697,6 +752,9 @@ def _corrected_reply_refusal(lock: dict, text: str | None) -> str | None:
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
+    if record.get("require_review_verdict") is True:
+        # The code this supervisor loaded; settlement records it again (#12399).
+        record["dispatcher_code_start"] = _dispatcher_code()
     spec = _spec(record, options or {})
     options = spec.options
     hard_timeout, silence_timeout, initial_response_timeout = deadlines({
@@ -1019,6 +1077,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             )
             if sources_calls is not None:
                 record["sources_mcp_call_count"] = sources_calls
+            if record.get("require_review_verdict") is True:
+                record["dispatcher_code"] = _dispatcher_code()
             record.update(git.snapshot_delivery(spec, record))
             if error and error.startswith("TASK_RECORD_"):
                 record.update(worktree_disposition="retained", worktree_disposition_reason="task_record_damaged")

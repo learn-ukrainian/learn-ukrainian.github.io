@@ -781,7 +781,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
             "budget ceilings, lifecycle-file propagation, "
             "and authoring-review-risk. Unset authoring-review-risk is unchecked, unlike legacy critical admission. "
-            "Seats grok-build, grok-hermes, qwen, kimi are refused. "
+            "Seats grok-build, qwen, kimi are refused. "
             "Legacy options and defaults remain forwarded so "
             "unsupported requests fail explicitly. Silence and initial-response watchdogs are forwarded; "
             "explicit zero disables each watchdog."

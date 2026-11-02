@@ -26,13 +26,10 @@ ClassificationKind = Literal["seat", "ambiguous", "unrelated"]
 # intentionally absent — those belong on --subject-family.
 _SUBJECT_ALIASES: dict[str, str] = {
     "grok-build": "grok",
-    "grok-hermes": "grok",
-    "hermes-grok": "grok",
     "grok-4.7": "grok",
     "grok-4.6": "grok",
     "grok-4.5": "grok",
     "grok-4.7-cursor-fallback": "grok",
-    "hermes-deepseek": "deepseek",
     "opencode": "deepseek",
     "kimicc": "kimi",
     "kimi-k3": "kimi",
@@ -62,10 +59,6 @@ _AMBIGUOUS_PATHS = frozenset(
     }
 )
 
-_AMBIGUOUS_PREFIXES = (
-    "scripts/agent_runtime/hermes_hooks/",
-)
-
 _ADAPTER_PREFIX = "scripts/agent_runtime/adapters/"
 _PROVIDER_PREFIX = "scripts/dispatcher/providers/"
 
@@ -91,7 +84,7 @@ def _matches_grok(candidate: _SeatCandidate) -> bool:
     name = candidate.name.casefold()
     model = candidate.concrete_model.casefold()
     route = candidate.route.casefold()
-    return route in {"grok", "grok-hermes"} or name.startswith("grok") or model.startswith("grok")
+    return route == "grok" or name.startswith("grok") or model.startswith("grok")
 
 
 def _matches_claude(candidate: _SeatCandidate) -> bool:
@@ -242,10 +235,7 @@ def adapter_subject_index() -> Mapping[str, frozenset[str]]:
     from scripts.dispatcher.providers import PROVIDERS
 
     for provider in PROVIDERS:
-        by_file[f"{_PROVIDER_PREFIX}{provider}.py"] = (
-            {canonical_subject_seat(name) for name, entry in AGENTS.items() if ".adapters.hermes_" in entry["adapter"]}
-            if provider == "hermes" else {canonical_subject_seat(provider)}
-        )
+        by_file[f"{_PROVIDER_PREFIX}{provider}.py"] = {canonical_subject_seat(provider)}
     return {path: frozenset(seats) for path, seats in by_file.items()}
 
 
@@ -259,10 +249,7 @@ def classify_owned_path(path: str) -> OwnedPathClassification:
     hooked = _HOOK_SEATS.get(rel)
     if hooked is not None:
         return OwnedPathClassification("seat", frozenset({hooked}), hooked)
-    ambiguous_prefix = any(
-        rel.startswith(prefix) or rel == prefix.rstrip("/") for prefix in _AMBIGUOUS_PREFIXES
-    )
-    if rel in _AMBIGUOUS_PATHS or ambiguous_prefix:
+    if rel in _AMBIGUOUS_PATHS:
         return OwnedPathClassification("ambiguous", frozenset(), "shared reviewer-hook surface")
     if rel.startswith((_ADAPTER_PREFIX, _PROVIDER_PREFIX)) and rel.endswith(".py"):
         seats = adapter_subject_index().get(rel)

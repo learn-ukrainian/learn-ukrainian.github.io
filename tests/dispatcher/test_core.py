@@ -2468,6 +2468,44 @@ def test_read_only_sha_base_is_still_admitted(sandbox):
     assert record["worktree_base_ref"] == sha
 
 
+def test_stale_local_ref_never_yields_read_only_checkout_at_stale_commit(sandbox):
+    """Defect (#12441): a branch-pinned read-only dispatch ran at a stale local ref, ignoring --base."""
+    sandbox.review_models("echo")
+    stale = run_git(sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
+                    "stale authored change\n\nX-Agent: claude/claude-opus-5-5")
+    run_git(sandbox.repo, "branch", "review-stale", stale)
+    run_git(sandbox.repo, "push", "origin", "review-stale")
+    remote_head = run_git(sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", stale, "-m",
+                          "newer authored change\n\nX-Agent: claude/claude-opus-5-5")
+    run_git(sandbox.repo, "push", "origin", f"{remote_head}:refs/heads/review-stale")
+    assert run_git(sandbox.repo, "rev-parse", "refs/heads/review-stale") == stale
+    record = sandbox.settle(sandbox.dispatch(
+        "echo", "--task-id", "stale-local-ref", "--mode", "read-only",
+        "--branch", "review-stale", "--base", remote_head,
+    ))
+    assert record["status"] == "done"
+    assert record["worktree_start_sha"] == remote_head
+    assert record["pinned_head"] == remote_head
+    assert record["head_sha"] == remote_head
+    # The fix never moves the primary checkout's local branch ref.
+    assert run_git(sandbox.repo, "rev-parse", "refs/heads/review-stale") == stale
+    refused = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "review",
+        "--task-id", "stale-local-ref-mismatch", "--mode", "read-only",
+        "--branch", "review-stale", "--base", stale, expected=2,
+    )
+    assert "read_only_branch_base_mismatch:" in refused.stderr
+    assert not (sandbox.tasks / "stale-local-ref-mismatch.json").exists()
+    # Git accepts unique abbreviations from four characters; they refuse the same way.
+    short = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "review",
+        "--task-id", "stale-local-ref-short", "--mode", "read-only",
+        "--branch", "review-stale", "--base", stale[:6], expected=2,
+    )
+    assert "read_only_branch_base_mismatch:" in short.stderr
+    assert not (sandbox.tasks / "stale-local-ref-short.json").exists()
+
+
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")
@@ -4730,15 +4768,18 @@ def test_stale_spawn_recovery_rechecks_process_before_terminalizing(tmp_path, mo
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
 def test_dispatch_prompt_destination_collision_settles_failed_spawn(sandbox, mode):
-    """The submitted prompt can already occupy the exclusive task-prompt destination."""
+    """A prompt file that already holds the submission is that task's prompt, not a failed spawn.
+
+    A different occupant still fails closed
+    (``test_spawn_setup_failure_never_strands_published_record``).
+    """
     sandbox.tasks.mkdir(exist_ok=True)
     prompt = sandbox.tasks / "prompt-collision.prompt"
     prompt.write_text("the operator's submitted prompt")
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--task-id", "prompt-collision",
-                "--mode", mode, "--prompt-file", str(prompt), expected=2)
+                "--mode", mode, "--prompt-file", str(prompt))
     state = json.loads(sandbox.cli("status", "prompt-collision").stdout)
-    assert state["status"] == "failed"
-    assert state["returncode_reason"] == "spawn_setup_failed"
-    assert state["pid"] is None
-    assert state["finished_at"]
+    assert state["status"] in {"spawning", "running", "done"}
+    assert state.get("returncode_reason") != "spawn_setup_failed"
+    assert state.get("pid")
     assert prompt.read_text() == "the operator's submitted prompt"
