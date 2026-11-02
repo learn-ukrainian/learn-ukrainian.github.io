@@ -11,16 +11,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.cursor import CursorAdapter
 from agent_runtime.adapters.deepseek import DeepSeekAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter
 from agent_runtime.adapters.glm import GlmAdapter
 from agent_runtime.adapters.grok_build import GrokBuildAdapter
-from agent_runtime.adapters.hermes_common import HERMES_SUBSTITUTION_MARKER
-from agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter
-from agent_runtime.adapters.hermes_grok import HermesGrokAdapter
-from agent_runtime.adapters.hermes_qwen import HermesQwenAdapter
 from scripts.agent_runtime.adapters import acpx as acpx_module
 from scripts.agent_runtime.adapters import agy as agy_module
 from scripts.agent_runtime.adapters.acpx import AcpxGemmaShadowAdapter
@@ -209,62 +204,20 @@ def _build_plan(
     )
 
 
-_HERMES_ADAPTERS = (HermesQwenAdapter, HermesDeepSeekAdapter, HermesGrokAdapter)
-_HERMES_TOOL_CONFIG = {"hermes_mcp_servers": ["sources"]}
-
-
 @pytest.mark.parametrize(
     ("adapter_type", "mode", "model"),
     [
         (GeminiAdapter, "workspace-write", "gemini-3.1-pro-high"),
         (AgyAdapter, "read-only", None),
-        (HermesQwenAdapter, "workspace-write", None),
-        (HermesDeepSeekAdapter, "workspace-write", None),
-        (HermesGrokAdapter, "workspace-write", None),
     ],
 )
 def test_non_claude_max_budget_warning_is_constant(tmp_path, monkeypatch, caplog, adapter_type, mode, model):
     _isolated_environment(monkeypatch, tmp_path)
     secret = "secret-looking-budget-value"
     tool_config = {"max_budget_usd": secret}
-    if adapter_type in _HERMES_ADAPTERS:
-        tool_config.update(_HERMES_TOOL_CONFIG)
     with caplog.at_level(logging.DEBUG):
         _build_plan(adapter_type, tmp_path, tool_config=tool_config, mode=mode, model=model)
     _assert_constant_record(caplog, adapter_type, logging.WARNING, _BUDGET_MESSAGE, secret)
-
-
-@pytest.mark.parametrize(
-    ("adapter_type", "configured_effort", "expected_message"),
-    [
-        (
-            adapter_type,
-            configured_effort,
-            f"Hermes {label} requested effort differs from ~/.hermes/config.yaml "
-            "agent.reasoning_effort; using Hermes config without mutation"
-            if configured_effort
-            else f"Hermes {label} effort requested, but no readable top-level "
-            "agent.reasoning_effort was found in ~/.hermes/config.yaml; using Hermes config without mutation",
-        )
-        for adapter_type, label in (
-            (HermesQwenAdapter, "Qwen"),
-            (HermesDeepSeekAdapter, "DeepSeek"),
-            (HermesGrokAdapter, "Grok"),
-        )
-        for configured_effort in ("configured-secret-effort-value", None)
-    ],
-)
-def test_hermes_effort_warnings_are_constant(
-    tmp_path, monkeypatch, caplog, adapter_type, configured_effort, expected_message
-):
-    _isolated_environment(monkeypatch, tmp_path)
-    secret = "secret-looking-effort-value"
-    monkeypatch.setattr(f"{adapter_type.__module__}.top_level_agent_effort", lambda _config: configured_effort)
-    with caplog.at_level(logging.DEBUG):
-        _build_plan(adapter_type, tmp_path, tool_config=dict(_HERMES_TOOL_CONFIG), effort=secret)
-    _assert_constant_record(
-        caplog, adapter_type, logging.WARNING, expected_message, secret, "configured-secret-effort-value"
-    )
 
 
 @pytest.mark.parametrize(
@@ -348,38 +301,3 @@ def test_agy_interim_language_warning_is_constant(caplog):
     _assert_constant_record(
         caplog, AgyAdapter, logging.WARNING, agy_module.AGY_INTERIM_LANGUAGE_WARNING, "secret-looking-reply-excerpt"
     )
-
-
-def test_hermes_substitution_marker_is_constant(tmp_path, caplog, capsys):
-    """Requested and captured-output route values never reach the marker log record."""
-    requested_secret = "secret-looking-requested-model"
-    actual_model_secret = "secret-looking-actual-model"
-    actual_provider_secret = "secret-looking-actual-provider"
-    plan = InvocationPlan(
-        cmd=["hermes", "-z", "hi", "-m", requested_secret],
-        cwd=tmp_path,
-        metadata={"hermes": {"requested_provider": "deepseek", "requested_model": requested_secret}},
-    )
-    with caplog.at_level(logging.DEBUG):
-        result = HermesDeepSeekAdapter().parse_response(
-            stdout=f"↻ Switched to fallback: {actual_model_secret} ({actual_provider_secret})\nok",
-            stderr="",
-            returncode=0,
-            output_file=None,
-            plan=plan,
-        )
-    assert result.substitution is not None
-    assert result.substitution["substituted"] is True
-    assert result.substitution["actual_model"] == actual_model_secret
-    assert result.substitution["actual_provider"] == actual_provider_secret
-    warnings = [record for record in caplog.records if record.levelno == logging.WARNING]
-    assert len(warnings) == 1
-    record = warnings[0]
-    assert record.getMessage() == f"{HERMES_SUBSTITUTION_MARKER}: configured and actual provider/model differ"
-    assert record.args == ()
-    assert record.exc_info is None
-    for secret in (requested_secret, actual_model_secret, actual_provider_secret):
-        assert secret not in record.getMessage()
-        assert secret not in repr(vars(record))
-    # The stderr marker line is not a log record and is unchanged.
-    assert HERMES_SUBSTITUTION_MARKER in capsys.readouterr().err

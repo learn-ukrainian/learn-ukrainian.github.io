@@ -13,7 +13,8 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
 * lets AGY reach the network only through the CONNECT-only egress proxy of formal review attempts
   (exact allowlisted hosts; host and loopback addresses refused);
 * runs AGY under bubblewrap (``review.isolation``). The root is empty except for read-only binds of
-  the system runtime, the AGY binary, the task worktree, its Git metadata and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
+  the system runtime, the AGY binary, the task worktree, its Git metadata, the project virtual environment
+  (exposed as the worktree's ignored ``.venv`` link so reviews can run the interpreter and tests) and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
   dropped and the root is remounted read-only, so the runtime (which holds TMPDIR) is the only
   writable path;
 * copies each explicit input's hashed bytes into the private scratch and bind-mounts that
@@ -793,7 +794,49 @@ def _write_error(path: Path) -> str:
     return "EROFS" if os.access(path, os.W_OK) else "EACCES"
 
 
+def _venv() -> Path:
+    """The project virtual environment, mounted read-only so a review can run the interpreter and tests."""
+    return project_interpreter().parent.parent.resolve(strict=True)
+
+
+def _venv_reads() -> list[Path]:
+    """The venv plus the directory of every hop of its ``bin/python`` link chain outside it.
+
+    Read roots are bound canonically, so an intermediate link (a uv venv's ``python`` pointing at a
+    base install's ``python3``, itself a link to ``python3.12``) is reachable only when its
+    directory is bound too.
+    """
+    root = _venv()
+    reads, link = [root], root / "bin" / "python"
+    for _ in range(40):
+        if not link.is_symlink():
+            return reads
+        hop = link.parent / os.readlink(link)
+        link = hop.parent.resolve(strict=True) / hop.name
+        if not link.parent.is_relative_to(root) and link.parent not in reads:
+            reads.append(link.parent)
+    raise ValueError("the project interpreter link chain is too long")
+
+
+def _link_interpreter(worktree: Path) -> bool:
+    """Expose the project venv as the worktree's ``.venv``; return whether this call created the link.
+
+    Shell and interpreter run only inside this boundary (decision REVIEW-BOUNDARY-1101, #12378). An
+    existing ``.venv`` is kept only when it already links to the project venv, so the reviewed
+    checkout cannot substitute its own interpreter.
+    """
+    local, target = worktree / ".venv", _venv()
+    if os.path.lexists(local):
+        if not local.is_symlink() or local.resolve(strict=True) != target:
+            raise ValueError("the worktree's .venv is not the project interpreter")
+        return False
+    local.symlink_to(target, target_is_directory=True)
+    return True
+
+
 class _Boundary:
+    created_interpreter = False  # set by run() once it links the project venv into the worktree
+
     def __init__(self, args: argparse.Namespace, receipt: dict):
         self.args, self.receipt = args, receipt
         self.worktree = Path(args.worktree).resolve(strict=True)
@@ -862,6 +905,11 @@ class _Boundary:
         self.receipt["input"] = {"start": start}
         if not start["clean"]:
             raise Refused("the worktree differs from its head before launch")
+        try:
+            # Ignored by the repository's .gitignore, so the head and status comparison is unchanged.
+            self.created_interpreter = _link_interpreter(self.worktree)
+        except (OSError, ValueError) as exc:
+            raise Refused("the project interpreter cannot be exposed in the worktree") from exc
         git_dir = Path(_git(self.worktree, "rev-parse", "--absolute-git-dir").strip()).resolve(strict=True)
         common = Path(_git(self.worktree, "rev-parse", "--path-format=absolute", "--git-common-dir").strip()).resolve(
             strict=True)
@@ -976,7 +1024,7 @@ class _Boundary:
         self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
         sandbox = prepare_host_sandbox(
             engine="agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
-            runtime_reads=[*runtime_files(agy), *reads, *(target for _, target in databases), *sidecars,
+            runtime_reads=[*runtime_files(agy), *_venv_reads(), *reads, *(target for _, target in databases), *sidecars,
                            *runtime_context.read_roots(), boundary],
             network_allowed=False,
         )
@@ -1014,6 +1062,9 @@ class _Boundary:
             "LANG": os.environ.get("LANG", "C.UTF-8"), "USER": "review", "LOGNAME": "review", "SHELL": "/bin/bash",
             "AGY_APP_DATA_DIR": str(app), **{name: os.environ[name] for name in _AGY_AUTH if name in os.environ},
             "LU_TASKS_DIR": str(runtime_context.read_roots()[1]),
+            # The project's scratch root (scripts.common.scratch) defaults to a host path that is
+            # read-only here; tests and probes run by a review write their scratch under TMPDIR.
+            "LU_SCRATCH_ROOT": str(tmp),
         }
         try:
             self.process = subprocess.Popen(argv, env=env, cwd=self.worktree, pass_fds=(report_write, go_read))
@@ -1125,6 +1176,9 @@ class _Boundary:
         if self.fixture is not None:
             with contextlib.suppress(FileNotFoundError):
                 self.fixture.unlink()
+        if self.created_interpreter:
+            with contextlib.suppress(OSError):
+                (self.worktree / ".venv").unlink()
         if "start" in self.receipt.get("input", {}):
             self.receipt["input"]["end"] = _input_state(self.worktree)
         exported = False

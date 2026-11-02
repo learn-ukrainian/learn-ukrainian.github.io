@@ -164,9 +164,6 @@ UNSUPPORTED_HARNESS_REASONS: dict[str, str] = {
     "grok-build": "not yet proven",
     "kimicc": "Kimi: web, UI and backend coding only; reviews are refused",
     "kimi": "Kimi: web, UI and backend coding only; reviews are refused",
-    "grok-hermes": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
-    "deepseek": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
-    "qwen": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
 }
 
 _TOKEN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")

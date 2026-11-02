@@ -368,7 +368,7 @@ models:
       Explicit native coding and low/medium code-review seat under measurement.
       Private inputs are allowed only with contributor mode off (operator order C-2401).
       No driver, automatic fallback, Ukrainian or security-final authority.
-      Formal review only when chosen explicitly.
+      Formal reviewer for low- and medium-risk code and infra reviews (operator decision 2026-11-01).
       Catalog eligibility does not attest provider-origin identity or effective permissions.
     sources: [https://dev.meta.ai/docs/muse-code]
   muse-spark-1.3:
@@ -1053,7 +1053,7 @@ models:
     tier: frontier_practical
     lifecycle: active
     roles: [frontend_agentic_coding, strong_code_review, bounded_agentic_work]
-    transports: [hermes, opencode]
+    transports: [opencode]
     strengths: [frontend_code_quality_per_dollar, very_low_cost, speed, one_million_context]
     weaknesses: [preliminary_frontend_evidence_only, not_critical_authority, silent_stall_history, not_for_folk_content, moving_provider_alias]
     # The first-party OpenCode id is a moving alias, not a version pin.
@@ -1368,6 +1368,7 @@ review_ladders:
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: agy, field: legacy_label}]
     - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: legacy_label}]
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
@@ -1402,7 +1403,7 @@ seats:
   meta_reviewer:
     model_id: muse-wonder-full-1.0
     bindings: [legacy_review_candidate]
-    priority: 110
+    priority: 5
     decision_reference: agents_extensions/shared/rules/model-assignment.md
     routes:
       native:
@@ -1411,8 +1412,10 @@ seats:
         route: muse
         transport: native_muse
         effort: high
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent muse --model {wire_id} --effort high
-        review_profiles: [code]
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent muse --model {wire_id} --effort high --contributor-mode off
+        review_profiles:
+        - code
+        - infra
         capabilities: [code_review]
   openai_frontier:
     model_id: gpt-6.1-sol
@@ -1612,6 +1615,7 @@ roles:
     order_by: priority
   code_review_low:
     routes:
+    - meta_reviewer/native
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
@@ -1623,6 +1627,7 @@ roles:
     risk: low
   code_review_medium:
     routes:
+    - meta_reviewer/native
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy

@@ -7,6 +7,7 @@ probe. Subprocess tests run small ``sys.executable`` children.
 
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import hashlib
 import json
@@ -1719,6 +1720,47 @@ def test_revalidation_rearms_a_same_account_rewrite_without_asking_the_provider(
     assert row["status"] == "ok"
     assert row["weekly"]["left_pct"] == 80.0
     assert provider.calls == asked  # the credentials did not change
+
+
+def test_routine_login_rewrite_preserves_in_ttl_usage(bound, provider, monkeypatch):
+    """A same-account metadata rewrite must keep a known admission reading."""
+    from scripts.fleet.claude_account_lane import account_from_record, account_weekly_used_pct
+
+    cau.refresh_claude_account_usage()
+    before = _row(cau.claude_accounts_snapshot(), "a")
+    asked, probes = provider.calls, bound.calls
+    (bound.home / ".claude.json").write_text(
+        json.dumps({"oauthAccount": {"accountUuid": _ACCOUNT_A}, "projects": {"x": {}}})
+    )
+
+    started, release = threading.Event(), threading.Event()
+    revalidate = cau.revalidate_claude_accounts
+
+    def paused_revalidation():
+        started.set()
+        assert release.wait(timeout=2)
+        revalidate()
+
+    monkeypatch.setattr(cau, "revalidate_claude_accounts", paused_revalidation)
+
+    async def serve():
+        request = asyncio.create_task(cau.revalidated_routing_budget_fields())
+        try:
+            assert await asyncio.to_thread(started.wait, timeout=2)
+        finally:
+            release.set()
+        return await request
+
+    fields = asyncio.run(serve())
+    row = _row(fields["claude_accounts"], "a")
+    assert row["status"] == "ok"
+    assert row["stale"] is False
+    assert row["updated"] == before["updated"]
+    assert row["age_s"] >= before["age_s"]
+    account = account_from_record({"claude_account": "a"}, agent="claude")
+    assert account_weekly_used_pct(fields, account=account) == 74.0
+    assert provider.calls == asked
+    assert bound.calls == probes
 
 
 def test_revalidation_verifies_rotated_credentials(bound, provider):

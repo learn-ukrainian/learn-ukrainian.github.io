@@ -89,13 +89,37 @@ def package_repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def schema_path(tooling_root: Path | None = None) -> Path:
+def schema_path(
+    tooling_root: Path | None = None,
+    *,
+    profile: str | None = None,
+    task: Mapping[str, Any] | None = None,
+) -> Path | None:
+    """Select the structured findings schema for a review target, or None when unstructured.
+
+    Code and infra reviews bind the canonical code-review findings schema. Ukrainian content
+    reviews use item-judgment envelopes parsed from free-text blocks and do not bind a
+    top-level JSON schema.
+    """
+    from scripts.review.language_lane import is_ukrainian_review
+
+    if profile is not None and profile.strip().casefold() == "ukrainian":
+        return None
+    if task is not None and is_ukrainian_review(task):
+        return None
     root = tooling_root or package_repo_root()
     return root / SCHEMA_RELATIVE_PATH
 
 
-def load_schema(tooling_root: Path | None = None) -> dict[str, Any]:
-    path = schema_path(tooling_root)
+def load_schema(
+    tooling_root: Path | None = None,
+    *,
+    profile: str | None = None,
+    task: Mapping[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    path = schema_path(tooling_root, profile=profile, task=task)
+    if path is None:
+        return None
     try:
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
@@ -129,10 +153,14 @@ def _canonical_family(value: str) -> str:
 
 
 def parse_reviewer_json(raw: str) -> dict[str, Any]:
-    """Parse bare JSON or the approved review-loop envelope, without prose extraction."""
+    """Parse bare JSON or the approved review-loop envelope, without prose extraction.
+
+    A reply that is nothing but one closed ``json`` (or untagged) code fence is bare JSON.
+    """
     text = raw.strip()
     if not text:
         raise ContractError("empty_review_input", exit_code=EXIT_INCOMPLETE)
+    text = _whole_reply_fence(text)
     if text.startswith("VERDICT:"):
         try:
             return _parse_review_loop_envelope(text)
@@ -153,6 +181,30 @@ def parse_reviewer_json(raw: str) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ContractError("review_root_must_be_object", exit_code=EXIT_INVALID)
     return payload
+
+
+def _whole_reply_fence(text: str) -> str:
+    """The content of a reply that is exactly one closed top-level json fence, else ``text``."""
+    if not text.startswith(("```", "~~~")):
+        return text
+    from markdown_it import MarkdownIt
+
+    from scripts.review.verdict_parser import _closes_code_fence, _commonmark_lines
+
+    lines = _commonmark_lines(text)
+    tokens = MarkdownIt("commonmark").parse(text)
+    if len(tokens) != 1 or tokens[0].type != "fence":
+        return text
+    block = tokens[0]
+    if (
+        block.info.strip() not in {"", "json"}
+        or block.map != [0, len(lines)]
+        or len(lines) < 2
+        or not _closes_code_fence(lines[-1], block.markup)
+    ):
+        return text
+    content = "\n".join(lines[1:-1]).strip()
+    return content if content.startswith("{") else text
 
 
 def _parse_review_loop_envelope(text: str) -> dict[str, Any]:
@@ -209,6 +261,183 @@ def _parse_review_loop_envelope(text: str) -> dict[str, Any]:
     if derived != canonical:
         raise ContractError("review_envelope_verdict_mismatch")
     return payload
+
+
+_CORRECTNESS_FOR_VERDICT = {
+    "APPROVE": "correct",
+    "APPROVED": "correct",
+    "REQUEST_CHANGES": "incorrect",
+    "CHANGES_REQUESTED": "incorrect",
+    "BLOCKED": "uncertain",
+}
+
+
+def canonical_receipt_payload(raw: str) -> dict[str, Any]:
+    """Return the findings object when the reply can build a canonical receipt.
+
+    A verdict line without the one JSON block, and a JSON object that misses
+    ``confidence`` or ``verbatim``, still fail here. This does not accept a
+    reply the recorder or ``verify_review`` would refuse.
+    """
+    text = raw.strip()
+    payload = parse_reviewer_json(text)
+    if not text.startswith("VERDICT:"):
+        validate_reviewer_payload(payload)
+    return payload
+
+
+def _json_objects(text: str) -> list[dict[str, Any]]:
+    """JSON objects in ``text``, including one that follows commentary."""
+    found: list[dict[str, Any]] = []
+    decoder = json.JSONDecoder()
+    index = 0
+    while True:
+        start = text.find("{", index)
+        if start < 0:
+            return found
+        try:
+            payload, end = decoder.raw_decode(text, start)
+        except (json.JSONDecodeError, RecursionError):
+            index = start + 1
+            continue
+        if isinstance(payload, dict):
+            found.append(payload)
+        index = max(end, start + 1)
+
+
+def _outside_blockquotes(text: str) -> str:
+    """Drop CommonMark blockquotes so an example object cannot lock a decision."""
+    from markdown_it import MarkdownIt
+
+    from scripts.review.verdict_parser import _commonmark_lines
+
+    raw_lines = _commonmark_lines(text, keepends=True)
+    lines = _commonmark_lines(text)
+    parser = MarkdownIt("commonmark")
+    spans: list[tuple[int, int]] = []
+    for token in parser.parse("\n".join(lines)):
+        if token.type != "blockquote_open":
+            continue
+        source_map = token.map
+        if not isinstance(source_map, (list, tuple)) or len(source_map) != 2:
+            raise ValueError("CommonMark blockquote map unavailable")
+        start, end = source_map
+        if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
+            raise ValueError("CommonMark blockquote map invalid")
+        spans.append((start, end))
+    parts: list[str] = []
+    cursor = 0
+    for start, end in sorted(spans):
+        if end <= cursor:
+            continue
+        parts.extend(raw_lines[cursor:start])
+        parts.append("\n")
+        cursor = end
+    parts.extend(raw_lines[cursor:])
+    return "".join(parts)
+
+
+def _effective_verdict(payload: Mapping[str, Any]) -> str | None:
+    """The verdict the receipt's evidence states, when the payload can be read."""
+    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
+
+    try:
+        verdict, _evidence = resolve_verdict_and_evidence(payload)
+    except ReviewPublicationError:
+        return None
+    return verdict
+
+
+def _explanation_rejections(payload: Mapping[str, Any]) -> set[str]:
+    """Rejection tokens written in an explanation, even when the object is not yet valid."""
+    overall = payload.get("overall")
+    if not isinstance(overall, Mapping):
+        return set()
+    explanation = overall.get("explanation")
+    if not isinstance(explanation, str):
+        return set()
+    from scripts.fleet_comms.review_publication import _stated_verdicts
+
+    return _stated_verdicts(explanation) - {"APPROVED"}
+
+
+def _findings_candidate(payload: dict[str, Any]) -> bool:
+    if payload.get("schema_version") == SCHEMA_VERSION:
+        return True
+    return isinstance(payload.get("overall"), dict) or isinstance(payload.get("findings"), list)
+
+
+def decision_lock(raw: str) -> dict[str, Any]:
+    """Freeze a reply's verdict and findings before one format correction.
+
+    Not an approval path. ``ambiguous`` is true when the reply carries more
+    than one verdict or more than one findings object. ``payload`` is set
+    only when exactly one findings object is readable, even if it does not
+    yet validate.
+    """
+    from scripts.review.verdict_parser import recognized_verdicts
+
+    try:
+        visible = _outside_blockquotes(raw)
+    except ValueError:
+        return {"ambiguous": True, "verdicts": [], "payload": None}
+    objects: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for payload in _json_objects(visible):
+        if not _findings_candidate(payload):
+            continue
+        key = json.dumps(payload, sort_keys=True, default=str)
+        if key not in seen:
+            seen.add(key)
+            objects.append(payload)
+    verdicts = list(dict.fromkeys(recognized_verdicts(raw)))
+    return {
+        "ambiguous": len(objects) > 1 or len(verdicts) > 1,
+        "verdicts": verdicts,
+        "payload": objects[0] if len(objects) == 1 else None,
+    }
+
+
+def same_decision(lock: Mapping[str, Any], payload: Mapping[str, Any]) -> bool:
+    """Whether a corrected reply kept the locked verdict and findings."""
+    if lock.get("ambiguous"):
+        return False
+    stated = False
+    prior = lock.get("payload")
+    if isinstance(prior, Mapping):
+        prior_overall = prior.get("overall")
+        later = payload.get("overall")
+        later_correctness = later.get("correctness") if isinstance(later, Mapping) else None
+        if isinstance(prior_overall, Mapping) and "correctness" in prior_overall:
+            stated = True
+            if prior_overall.get("correctness") != later_correctness:
+                return False
+        if "findings" in prior and prior.get("findings") != payload.get("findings"):
+            return False
+    verdicts = list(lock.get("verdicts") or [])
+    if len(verdicts) == 1:
+        stated = True
+        expected = _CORRECTNESS_FOR_VERDICT.get(str(verdicts[0]).upper())
+        overall = payload.get("overall")
+        got = overall.get("correctness") if isinstance(overall, Mapping) else None
+        if expected is None or got != expected:
+            return False
+    if isinstance(prior, Mapping):
+        prior_verdict = _effective_verdict(prior)
+        later_verdict = _effective_verdict(payload)
+        if prior_verdict is not None and later_verdict != prior_verdict:
+            return False
+        # A missing required field can hide a rejection the explanation already states.
+        # Filling the field cannot turn that rejection into an approval.
+        if prior_verdict is None and (rejections := _explanation_rejections(prior)):
+            allowed = set()
+            if rejections & {"CHANGES_REQUESTED", "REQUEST_CHANGES"}:
+                allowed.add("CHANGES_REQUESTED")
+            if "BLOCKED" in rejections:
+                allowed.add("BLOCKED")
+            if later_verdict not in allowed:
+                return False
+    return stated
 
 
 def validate_reviewer_payload(
@@ -1925,7 +2154,8 @@ def judge_item_reply(
         if item_id in seen_ids:
             raise ContractError(f"ITEM_JUDGMENTS_MALFORMED: duplicate judgment {item_id}")
         seen_ids.add(item_id)
-        verdict = _JUDGMENT_VERDICT.get(row.get("verdict"))
+        raw_verdict = row.get("verdict")
+        verdict = _JUDGMENT_VERDICT.get(raw_verdict) if isinstance(raw_verdict, str) else None
         finding = row.get("finding")
         sources = row.get("sources")
         if verdict is None or not isinstance(finding, str) or not isinstance(sources, str):
@@ -1969,3 +2199,20 @@ def judge_item_reply(
         void = None
     covered = () if void else tuple(sorted(judged))
     return ItemChunk(tuple(packet["denominator"]), covered, void)
+
+
+def item_judgments_verdict(packet: Mapping[str, Any], reply: str) -> str:
+    """The verdict a reply's valid Ukrainian judgment block carries for ``packet``.
+
+    The contract with an item denominator has the reviewer return only the block, so
+    its item rollup is the reply's verdict. An invalid block raises its ContractError.
+    """
+    for stated in ("APPROVED", "CHANGES_REQUESTED", "BLOCKED"):
+        try:
+            judge_item_reply(packet, reply, stated=stated, ukrainian=True)
+        except ContractError as exc:
+            if not str(exc).startswith("VERDICT_ITEM_MISMATCH"):
+                raise
+            continue
+        return stated
+    raise ContractError("ITEM_JUDGMENTS_MALFORMED: the item judgments carry no verdict")

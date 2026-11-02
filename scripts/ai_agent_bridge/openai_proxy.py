@@ -8,9 +8,6 @@ from __future__ import annotations
 
 import concurrent.futures
 import os
-import re
-import shlex
-import shutil
 import subprocess
 import tempfile
 import threading
@@ -36,8 +33,6 @@ except ModuleNotFoundError:  # run as the top-level ai_agent_bridge package
     from utils.claude_version import run_version_probe
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
-_HERMES_STDIN_MODULE = "scripts.ai_agent_bridge._hermes_stdin"
-_SHELL_EXEC_RE = re.compile(r"^\s*exec\s+")
 
 
 class Message(BaseModel):
@@ -163,56 +158,6 @@ def _run_backend_command(
     return result
 
 
-def _python_argv_for_console_script(executable: str, seen: set[Path] | None = None) -> list[str] | None:
-    path = Path(shutil.which(executable) or executable).expanduser()
-    try:
-        resolved = path.resolve()
-    except OSError:
-        resolved = path
-
-    seen = set() if seen is None else seen
-    if resolved in seen:
-        return None
-    seen.add(resolved)
-
-    try:
-        text = resolved.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        return None
-
-    lines = text.splitlines()
-    if lines and lines[0].startswith("#!"):
-        shebang = shlex.split(lines[0][2:].strip())
-        if shebang:
-            command_name = Path(shebang[0]).name
-            if command_name == "env" and len(shebang) > 1 and "python" in Path(shebang[1]).name:
-                return shebang
-            if "python" in command_name:
-                return shebang
-
-    for line in lines[:10]:
-        if not _SHELL_EXEC_RE.match(line):
-            continue
-        try:
-            parts = shlex.split(line)
-        except ValueError:
-            continue
-        if len(parts) >= 3 and parts[0] == "exec" and "$@" in parts[2:]:
-            nested = Path(parts[1])
-            if not nested.is_absolute():
-                nested = resolved.parent / nested
-            return _python_argv_for_console_script(str(nested), seen)
-
-    return None
-
-
-def _hermes_python_argv() -> list[str]:
-    hermes = shutil.which("hermes") or "hermes"
-    python_argv = _python_argv_for_console_script(hermes)
-    if python_argv is None:
-        raise OSError(f"could not resolve Python interpreter for Hermes executable: {hermes}")
-    return python_argv
-
 
 class CodexModelSelectionError(ValueError):
     """The direct Codex route selected an unauthorized model."""
@@ -305,18 +250,6 @@ def _claude_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
     return CompletionResponse(content=result.stdout.strip())
 
 
-def _hermes_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
-    prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
-    argv = [
-        *_hermes_python_argv(),
-        "-m",
-        _HERMES_STDIN_MODULE,
-        model,
-    ]
-    result = _run_backend_command("hermes", argv, prompt=prompt)
-    return CompletionResponse(content=result.stdout.strip())
-
-
 # Alias Mapping Table:
 # gemini-* now routed via AGY per #4609. Use AGY display labels in cli_model_name so
 # the backend can pass correct --model to agy. Legacy public names are resolved inside _gemini_backend.
@@ -331,7 +264,6 @@ _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "claude-opus-5-5": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
-    # grok-4.5 → Hermes removed (#6870 / #6865): Hermes is banned for grok;
     # requests for grok-4.5 (or any grok id) 404 via the normal unknown-model path.
     # Native grok-4.6 is not an openai_proxy route — use the grok CLI / GrokBuildAdapter.
 }
@@ -361,15 +293,10 @@ def _probe_claude() -> tuple[bool, str]:
     return _probe_cli(CLAUDE_CMD)
 
 
-def _probe_hermes() -> tuple[bool, str]:
-    return _probe_cli([shutil.which("hermes") or "hermes"])
-
-
 _BACKEND_PROBES: dict[str, Callable[[], tuple[bool, str]]] = {
     "codex": _probe_codex,
     "gemini": _probe_gemini,
     "claude": _probe_claude,
-    "hermes": _probe_hermes,
 }
 
 _BRIDGE_HEALTHZ_TTL_SECS = int(os.environ.get("BRIDGE_HEALTHZ_TTL_SECS", "60"))

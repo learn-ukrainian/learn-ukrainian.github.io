@@ -76,7 +76,7 @@ class InvocationPlan:
         host_harness: Explicit physical CLI host that owns this subprocess
             lifecycle when it differs from a natively supported Entire host.
             Only the project runner consumes this value. It must never be
-            inferred from a model label: ``grok``, ``agy``, and ``hermes`` are
+            inferred from a model label: ``grok`` and ``agy`` are
             the only external fleet owners in the current rollout. ``None``
             means native capture or no capture.
     """

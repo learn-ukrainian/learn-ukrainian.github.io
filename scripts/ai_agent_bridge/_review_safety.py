@@ -1,6 +1,6 @@
 """Fail-closed review-safety helpers for bridge transports (Sol #213 class).
 
-Root cause class: a tool-capable reviewer (e.g. DeepSeek-via-Hermes) inherited
+Root cause class: a tool-capable reviewer (e.g. a DeepSeek reviewer) inherited
 the primary checkout as cwd, checked out a PR branch, and mutated operator HEAD.
 
 Rules:
@@ -357,18 +357,3 @@ def warn_pr_cf_review_prefer_review_pr(
 
 # Back-compat alias used by older call sites / tests.
 assert_pr_cf_review_uses_review_pr = warn_pr_cf_review_prefer_review_pr
-
-
-def allow_primary_hermes_escape() -> bool:
-    """Test-only / emergency escape. Default false."""
-    return os.environ.get("BRIDGE_ALLOW_PRIMARY_HERMES", "").strip() in {
-        "1",
-        "true",
-        "yes",
-        "on",
-    }
-
-
-def hermes_must_use_neutral_cwd(*, review: bool) -> bool:
-    """Hermes is tool-capable; default all asks to neutral cwd unless escape set."""
-    return not (allow_primary_hermes_escape() and not review)

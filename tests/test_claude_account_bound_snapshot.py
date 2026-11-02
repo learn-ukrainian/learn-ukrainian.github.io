@@ -986,7 +986,7 @@ RAW_SNAPSHOT_SOURCES: dict[tuple[str, str], str | None] = {
     ("scripts/fleet/credit_lane.py", "read_routing_budget"): None,
     ("scripts/fleet/credit_lane.py", "dispatch_refusal"): "bind_snapshot to no account (credit lanes only)",
     ("scripts/review/closeout_cli.py", "_cmd_resolve_reviewer"): "live fetch or JSON file: select_account",
-    ("scripts/agent_runtime/model_pause.py", "routing_budget_used_pct"): "bind_snapshot as the named account",
+    ("scripts/agent_runtime/model_pause.py", "_bound_routing_view"): "bind_snapshot as the named account",
     ("scripts/review/bench_health.py", "_bench_inventory"): "select_account as a claude review dispatch would run",
     ("scripts/orchestration/curriculum_coordinator.py", "default_health_probe"): "bind_snapshot as the wave's account",
     ("scripts/lib/claude_weekly_used.py", "main"): None,  # isolated launcher reader: explicit launch account

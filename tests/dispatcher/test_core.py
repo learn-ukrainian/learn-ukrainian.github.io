@@ -87,6 +87,9 @@ def sandbox(tmp_path, hermetic_monitor):
     )
     shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
     shutil.copy(SOURCE / "scripts/config/credit_lanes.yaml", config / "credit_lanes.yaml")
+    schema_dir = repo / "schemas"
+    schema_dir.mkdir()
+    shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
@@ -1336,9 +1339,12 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
                    f"authored change\n\nX-Agent: cursor/{author[0]}")
     run_git(sandbox.repo, "branch", "review-source", head)
     run_git(sandbox.repo, "push", "origin", "review-source")
-    review = sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "VERDICT: APPROVE",
-                         "--require-review-verdict", "--mode", "read-only", "--branch", "review-source",
-                         expected=0 if attested else 2)
+    review = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt",
+        '{"schema_version":"code-review-findings.v1","overall":{"correctness":"correct","explanation":"No defects.","confidence":0.9},"findings":[]}',
+        "--require-review-verdict", "--mode", "read-only", "--branch", "review-source",
+        expected=0 if attested else 2,
+    )
     if attested:
         assert sandbox.settle(review.stdout.splitlines())["status"] == "done"
     else:
@@ -1350,31 +1356,72 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
 
 def test_agy_stream_from_another_model_family_settles_as_a_failure(sandbox):
     """Defect: a silently substituted model was credited as the requested one."""
-    binary_dir = sandbox.repo.parent / "bin"
-    binary_dir.mkdir()
-    events = [
-        {"event": "init", "init": {"model": "gemini-3.8-flash-high"}},
-        {"event": "result", "result": {"status": "SUCCESS", "response": "done"}},
-    ]
-    stdout = "\n".join(json.dumps(event) for event in events) + "\n"
-    executable = binary_dir / "agy"
-    executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r}, end='')\n")
-    executable.chmod(0o755)
-    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
-    dispatched = sandbox.cli(
-        "dispatch", "--agent", "agy", "--model", "claude-sonnet-5-5", "--prompt", "Reply with one word.",
-        "--mode", "workspace-write",
-    )
-    record = sandbox.settle(dispatched.stdout.splitlines(), expected=1)
-    assert record["status"] == "failed"
-    assert record["model"] == "claude-sonnet-5-5-high"
-    assert record["resolved_model"] == "gemini-3.8-flash-high"
-    assert record["resolved_model_known"] is True
-    assert record["resolved_model_source"] == "agy-stream-json"
-    assert record["error"] == (
-        "agy_model_identity_unverified: "
-        "requested claude-sonnet-5-5-high (anthropic), attested gemini-3.8-flash-high (google)"
-    )
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    windows = {
+        "five_hour": {"used_pct": 1.0, "remaining_pct": 99.0},
+        "weekly": {"used_pct": 10.0, "remaining_pct": 90.0},
+    }
+    body = json.dumps({
+        "agents": {"gemini": {
+            "status": "hot",
+            "codexbar": {
+                "stale": False, "freshness": "fresh", "weekly_used_pct": 22.0,
+                "claude_gpt_windows": windows,
+            },
+            "claude_gpt_windows": windows,
+        }},
+    }).encode()
+
+    class _Budget(BaseHTTPRequestHandler):
+        def do_GET(self):
+            if self.path.split("?", 1)[0] != "/api/state/routing-budget":
+                self.send_response(404)
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *_args):
+            return
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), _Budget)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    sandbox.env["DELEGATE_MONITOR_API"] = f"http://127.0.0.1:{server.server_address[1]}"
+    try:
+        binary_dir = sandbox.repo.parent / "bin"
+        binary_dir.mkdir()
+        events = [
+            {"event": "init", "init": {"model": "gemini-3.8-flash-high"}},
+            {"event": "result", "result": {"status": "SUCCESS", "response": "done"}},
+        ]
+        stdout = "\n".join(json.dumps(event) for event in events) + "\n"
+        executable = binary_dir / "agy"
+        executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r}, end='')\n")
+        executable.chmod(0o755)
+        sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+        dispatched = sandbox.cli(
+            "dispatch", "--agent", "agy", "--model", "claude-sonnet-5-5", "--prompt", "Reply with one word.",
+            "--mode", "workspace-write",
+        )
+        record = sandbox.settle(dispatched.stdout.splitlines(), expected=1)
+        assert record["status"] == "failed"
+        assert record["model"] == "claude-sonnet-5-5-high"
+        assert record["resolved_model"] == "gemini-3.8-flash-high"
+        assert record["resolved_model_known"] is True
+        assert record["resolved_model_source"] == "agy-stream-json"
+        assert record["error"] == (
+            "agy_model_identity_unverified: "
+            "requested claude-sonnet-5-5-high (anthropic), attested gemini-3.8-flash-high (google)"
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
 
 
 @pytest.mark.parametrize(
@@ -1431,14 +1478,14 @@ def test_prompt_over_pipe_buffer_reaches_late_reading_child_complete(sandbox):
     assert record["result_sha256"] == hashlib.sha256(prompt).hexdigest()
 
 
+_SCHEMA_REJECTED = "structured_output_invalid: structured output is not valid JSON"
 @pytest.mark.parametrize("text,model,required,error", [
-    ("\nReview details\nVERDICT: APPROVE\n  \t", "file", True, None),
-    ("VERDICT: REQUEST_CHANGES", "echo", True, None),
-    ("VERDICT: APPROVE\nVERDICT: APPROVE", "echo", True, None),
-    ("Review has no decision", "echo", True, "review_missing_verdict_line"),
-    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "echo", True, "review_ambiguous_verdict"),
-    ("> VERDICT: APPROVE\nI might report VERDICT: APPROVE later", "echo", True,
-     "review_missing_verdict_line"),
+    ("\nReview details\nVERDICT: APPROVE\n  \t", "file", True, _SCHEMA_REJECTED),
+    ("VERDICT: REQUEST_CHANGES", "echo", True, _SCHEMA_REJECTED),
+    ("VERDICT: APPROVE\nVERDICT: APPROVE", "echo", True, _SCHEMA_REJECTED),
+    ("Review has no decision", "echo", True, _SCHEMA_REJECTED),
+    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "echo", True, _SCHEMA_REJECTED),
+    ("> VERDICT: APPROVE\nI might report VERDICT: APPROVE later", "echo", True, _SCHEMA_REJECTED),
     ("VERDICT: APPROVE", "fail", True, "provider exited unsuccessfully"),
     ("Review has no decision", "fail", True, "provider exited unsuccessfully"),
     ("Review has no decision", "echo", False, None),
@@ -1463,6 +1510,114 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
     assert json.loads(sandbox.cli("list", "--status", record["status"]).stdout)[0]["task_id"] == task[0]
 
 
+@pytest.mark.parametrize(
+    "second", ["kept", "changed", "invalid", "ambiguous", "quoted", "meaning", "unconfident"]
+)
+def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
+    """Case 3: a Cursor reply with no recognised VERDICT line gets one format correction.
+
+    The second reply is accepted only when it is valid findings JSON and keeps the
+    first reply's decision. A changed or still-invalid second reply fails closed,
+    and there is no third launch.
+    """
+    findings = (
+        '{"schema_version":"code-review-findings.v1",'
+        '"overall":{"correctness":"correct","explanation":"No defects.","confidence":0.9},'
+        '"findings":[]}'
+    )
+    other = findings.replace('"correctness":"correct"', '"correctness":"incorrect"', 1)
+    conflict = findings.replace(
+        '"explanation":"No defects."',
+        '"explanation":"VERDICT: REQUEST_CHANGES. Cannot approve this change."',
+    )
+    reply = findings
+    if second == "ambiguous":
+        first = "VERDICT: APPROVE\n" + findings + "\n" + other
+    elif second == "quoted":
+        first = "Example only, not my review:\n> " + findings
+    elif second == "meaning":
+        first = "The change is sound.\n" + conflict
+    elif second == "unconfident":
+        first = (
+            "The change is sound.\n"
+            '{"schema_version":"code-review-findings.v1",'
+            '"overall":{"correctness":"correct",'
+            '"explanation":"VERDICT: REQUEST_CHANGES. Cannot approve this change."},'
+            '"findings":[]}'
+        )
+    elif second == "changed":
+        first = "The change is sound.\n" + findings
+        reply = other
+    elif second == "invalid":
+        first = "The change is sound.\n" + findings
+        reply = "Still commentary without a verdict."
+    else:
+        first = "The change is sound.\n" + findings
+    binary_dir = sandbox.repo.parent / "bin"
+    binary_dir.mkdir()
+    count = binary_dir / "launches"
+    count.write_text("0")
+    prompts = binary_dir / "prompts"
+    executable = binary_dir / "cursor-agent"
+    executable.write_text(
+        f"#!{sys.executable}\n"
+        "import json, pathlib, sys\n"
+        f"count = pathlib.Path({str(count)!r})\n"
+        f"prompts = pathlib.Path({str(prompts)!r})\n"
+        "n = int(count.read_text()) + 1\n"
+        "count.write_text(str(n))\n"
+        "prompt = sys.stdin.read()\n"
+        "prompts.write_text(prompts.read_text() + '\\n---\\n' + prompt if prompts.exists() else prompt)\n"
+        f"reply = {first!r} if n == 1 else {reply!r}\n"
+        "events = [\n"
+        '    {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"},\n'
+        '    {"type": "assistant", "message": {"content": [{"type": "text", "text": reply}]}},\n'
+        '    {"type": "result", "subtype": "success", "result": reply},\n'
+        "]\n"
+        "print('\\n'.join(json.dumps(event) for event in events))\n"
+    )
+    executable.chmod(0o755)
+    schema_dir = sandbox.repo / "schemas"
+    schema_dir.mkdir(exist_ok=True)
+    shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)
+    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+    sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
+    head = run_git(
+        sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
+        "authored change\n\nX-Agent: claude/claude-opus-5-5",
+    )
+    run_git(sandbox.repo, "branch", "review-source", head)
+    run_git(sandbox.repo, "push", "origin", "review-source")
+    dispatched = sandbox.cli(
+        "dispatch", "--agent", "cursor", "--model", "grok-4.7-high",
+        "--prompt", "Review the change", "--mode", "read-only",
+        "--branch", "review-source", "--require-review-verdict", "--review-profile", "code",
+        "--review-author-model", "claude-opus-5-5",
+    )
+    record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if second == "kept" else 1)
+    launches = 1 if second in {"ambiguous", "quoted"} else 2
+    assert int(count.read_text()) == launches
+    if launches == 2:
+        correction = prompts.read_text().split("\n---\n", 1)[1]
+        assert "Keep the same verdict" in correction
+        if second == "unconfident":
+            assert "REQUEST_CHANGES" in correction
+        else:
+            assert findings in correction or conflict in correction
+    if second == "kept":
+        assert record["status"] == "done"
+        assert json.loads(record["result_file"] and Path(record["result_file"]).read_text())["overall"]["correctness"] == "correct"
+    elif second in {"changed", "meaning", "unconfident"}:
+        assert record["status"] == "failed"
+        assert record["error"] == "review_ambiguous_verdict"
+    elif second == "ambiguous":
+        assert record["status"] == "failed"
+        assert record["error"] == "review_gate_error"
+    else:
+        assert record["status"] == "failed"
+        assert record["error"] == "review_missing_verdict_line"
+
+
 def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     """Defect class: scanner exceptions lose terminal failure or expose exception contents."""
     review = sandbox.repo / "scripts/review"
@@ -1473,14 +1628,22 @@ def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     parser.write_text(
         parser.read_text() + "\n\ndef recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
     )
+    receipt = (
+        '{"schema_version":"code-review-findings.v1","overall":{"correctness":"correct",'
+        '"explanation":"No defects.","confidence":0.9},"findings":[]}'
+    )
     record = sandbox.settle(
-        sandbox.dispatch("echo", "--require-review-verdict", *sandbox.review_target("echo")), expected=1
+        sandbox.cli(
+            "dispatch", "--agent", "sol", "--model", "echo", "--prompt", receipt,
+            "--require-review-verdict", *sandbox.review_target("echo"),
+        ).stdout.splitlines(),
+        expected=1,
     )
     assert record["status"] == "failed"
     assert record["error"] == "review_gate_error"
     assert record["returncode"] == 0
     assert record["finished_at"] is not None
-    assert Path(record["result_file"]).read_text() == "literal final response"
+    assert json.loads(Path(record["result_file"]).read_text()) == json.loads(receipt)
     assert "sensitive scanner diagnostic" not in json.dumps(record)
 
 
@@ -2236,6 +2399,30 @@ def test_branch_write_refuses_local_outside_commit_after_remote_branch_deleted(s
     assert not (sandbox.repo / ".worktrees/dispatch/codex/missing-remote").exists()
 
 
+def test_workspace_write_sha_base_is_refused_at_dispatch(sandbox):
+    """A commit SHA is not an origin base, so settlement would record no_deliverable."""
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    result = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "literal final response",
+        "--task-id", "sha-base-write", "--mode", "workspace-write", "--base", sha,
+        expected=2,
+    )
+    assert "workspace_write_base_unverified:" in result.stderr
+    assert "--base origin/main --branch <PR head branch>" in result.stderr
+    assert "with the PR's files as owned paths" in result.stderr
+    assert not (sandbox.tasks / "sha-base-write.json").exists()
+    assert not (sandbox.repo / ".worktrees/dispatch/codex/sha-base-write").exists()
+
+
+def test_read_only_sha_base_is_still_admitted(sandbox):
+    """Read-only reviews keep a commit SHA as --base; settlement does not verify it."""
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    record = sandbox.settle(sandbox.dispatch("echo", "--task-id", "sha-base-read", "--mode", "read-only", "--base", sha))
+    assert record["status"] == "done"
+    assert record["mode"] == "read-only"
+    assert record["worktree_base_ref"] == sha
+
+
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")
@@ -2946,7 +3133,7 @@ def assert_private_input_policy(spec, repo_key, error):
             checks.check_private_input(spec, repo_key)
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize("classification", [{"role": "private-product"}, {"role": "product", "private": True}])
 def test_private_repo_and_prompt_origin_cannot_bypass_private_policy(spec, private_repos, agent):
     private, alias = private_repos
@@ -3021,7 +3208,7 @@ def test_public_muse_contributor_on_is_preserved(spec, private_repos):
     assert argv[argv.index("--contributor-mode") + 1] == "on"
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize(
     "prompt",
     [
@@ -3041,7 +3228,7 @@ def test_private_path_equals_and_encoded_source_cannot_bypass_private_policy(spe
     assert spec.prompt_file.read_text() == prompt
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize(
     "prompt",
     [
@@ -3065,7 +3252,7 @@ def test_private_identifier_substring_contract(spec, private_repos, agent, promp
     assert spec.prompt_file.read_text() == prompt
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize("prompt", ["[notes](100%.md)", "Read file:///public/100%.md"])
 def test_public_literal_percent_is_not_a_malformed_escape_refusal(spec, private_repos, agent, prompt):
     """Old tokenizer incorrectly refused public100percent CommonMark and file URI inputs."""
@@ -3075,7 +3262,7 @@ def test_public_literal_percent_is_not_a_malformed_escape_refusal(spec, private_
     assert spec.prompt_file.read_text() == prompt
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 @pytest.mark.parametrize(
     "prompt",
     [
@@ -3103,7 +3290,7 @@ def test_private_input_policy_leaves_other_providers_unchanged(spec, private_rep
     checks.check_private_input(spec, "private")
 
 
-@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 def test_empty_private_identifiers_do_not_refuse_all_public_prompts(spec, tmp_path, monkeypatch, agent):
     config = tmp_path / "repos.yaml"
     config.write_text(
@@ -3251,7 +3438,7 @@ def test_cursor_child_env_missing_or_blank_key_without_file_key_forwards_nothing
     loader.assert_called_once_with()
 
 
-@pytest.mark.parametrize("agent", ["codex", "claude", "agy", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["codex", "claude", "agy", "muse", "opencode"])
 @pytest.mark.parametrize("process_key", [None, "stub-process-key", "", " \t\n"])
 def test_non_cursor_child_env_never_loads_or_forwards_cursor_key(spec, monkeypatch, agent, process_key):
     loader = Mock(return_value="stub-file-key")
@@ -3279,7 +3466,7 @@ def test_grok_is_no_alias_and_an_unknown_agent_names_the_supported_agents(sandbo
     """Operator 2026-10-27: --agent grok silently launched cursor-agent; Grok runs as cursor + grok-4.7-high."""
     result = sandbox.cli("dispatch", "--agent", "grok", "--model", "grok-4.7-high", "--prompt", "Explain X",
                          expected=2)
-    assert "unknown agent 'grok'; supported agents: codex, claude, cursor, agy, muse, opencode, hermes" in result.stderr
+    assert "unknown agent 'grok'; supported agents: codex, claude, cursor, agy, muse, opencode" in result.stderr
     assert "dispatch Grok as --agent cursor --model grok-4.7-high" in result.stderr
     assert not sandbox.tasks.exists()
 
@@ -3290,7 +3477,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("Fix the bug in X.\n")
     spec = TaskSpec("ro", agent, "vendor/model", None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
-    refused = {"hermes": "bypasses approvals"}
+    refused: dict[str, str] = {}
     if agent in refused:
         with pytest.raises(ValueError, match=f"read_only_unenforceable: {agent} cannot run --mode read-only"):
             providers.load(agent).build(spec, {})
@@ -3373,7 +3560,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():
-    assert dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes") == ALIASES
+    assert dict(sol="codex", gemini="agy", deepseek="opencode") == ALIASES
     args = build_parser().parse_args(
         [
             "dispatch",
@@ -3720,7 +3907,7 @@ def test_status_or_fail_verbose_byte_compatible_without_run_nonce(tmp_path, monk
     assert data_with_nonce["run_nonce"] == "sof-nonce-12345"
 
 
-@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode"])
 def test_dispatch_worker_env_carries_dispatch_identity_markers(spec, monkeypatch, agent):
     """Ported from tests/test_delegate.py::test_dispatch_worker_env_carries_dispatch_identity_markers."""
     monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "parent-task")
@@ -3897,6 +4084,40 @@ def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp
         invocation = build(dataclasses.replace(spec, claude_account=label), {})
         assert "--max-budget-usd" not in invocation.argv
         assert "CLAUDE_CODE_PROMPT_CACHE_TTL" not in invocation.env
+
+
+def _plan_headroom_policy(tmp_path, monkeypatch, used, **extra):
+    from scripts.dispatcher import headroom
+
+    path = tmp_path / "model-pause.json"
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 90}], **extra}
+    path.write_text(json.dumps(policy), encoding="utf-8")
+    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(path))
+    monkeypatch.setattr(headroom.model_pause, "routing_budget_used_pct", lambda _lane, *, account: used)
+    return headroom
+
+
+def test_check_plan_judges_an_api_key_account_by_its_spend_cap(tmp_path, monkeypatch):
+    """Defect (#12356): an API-key account has no plan meter, so the plan cap refused it as unknown usage."""
+    headroom = _plan_headroom_policy(tmp_path, monkeypatch, None)
+    record = {"claude_account": "kk", "mode": "read-only"}
+    headroom.check_plan("claude", "claude-opus-5-5", record)
+    with pytest.raises(ValueError, match=r"^CLAUDE_ACCOUNT_REFUSED: claude_account_budget_cap_invalid$"):
+        headroom.check_plan("claude", "claude-opus-5-5", {**record, "max_budget_usd": "1000"})
+    _plan_headroom_policy(tmp_path, monkeypatch, None, pauses=[{"pattern": "claude-*", "until": "2999-01-01T00:00:00Z"}])
+    with pytest.raises(headroom.model_pause.ModelPausedRefused, match="MODEL_PAUSED"):
+        headroom.check_plan("claude", "claude-opus-5-5", record)
+
+
+@pytest.mark.parametrize(("used", "reason"), [(95.0, "MODEL_HEADROOM:"), (None, "MODEL_HEADROOM_USAGE_UNKNOWN:")])
+def test_check_plan_keeps_subscription_plan_headroom(tmp_path, monkeypatch, used, reason):
+    """Control (#12356): a subscription account is still judged by its plan meter."""
+    headroom = _plan_headroom_policy(tmp_path, monkeypatch, used)
+    for label in ("a", "b"):
+        with pytest.raises(headroom.model_pause.ModelPausedRefused, match=f"^{reason}"):
+            headroom.check_plan("claude", "claude-opus-5-5", {"claude_account": label, "mode": "read-only"})
+    _plan_headroom_policy(tmp_path, monkeypatch, 50.0)
+    headroom.check_plan("claude", "claude-opus-5-5", {"claude_account": "a", "mode": "read-only"})
 
 
 @pytest.mark.parametrize(

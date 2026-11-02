@@ -59,6 +59,7 @@ from scripts.orchestration.integration_sweep import (
     SweepError,
     lookup_verdict,
     parse_marker,
+    recorded_p3_residuals,
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
 from scripts.publish.github import CfVerdictRecord, Request, request_run
@@ -74,6 +75,7 @@ from scripts.review.review_contract import (
     ContractError,
     ItemChunk,
     captured_sources_events,
+    item_judgments_verdict,
     judge_item_reply,
     load_frozen_item_packet,
     reply_has_item_judgments,
@@ -192,7 +194,9 @@ def _normalize_verdict(reply: str) -> str:
     verdict = tokens.pop()
     # A reviewer that reports missing capabilities cannot approve, wherever the reply declares them.
     if verdict != "BLOCKED" and declares_missing_capabilities(reply):
-        raise RecordError(f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may")
+        raise RecordError(
+            f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may"
+        )
     return verdict
 
 
@@ -216,6 +220,116 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
             raise RecordError("inconclusive: reviewer declares an incomplete review")
         return verdict, len(evidence.findings) if evidence is not None else "unknown"
     return normalize_verdict(reply), "unknown"
+
+
+_SECURITY_VERDICT = re.compile(r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*")
+_SECURITY_PASS = re.compile(r"(?i)\*{0,2}PASS\*{0,2}\.?\s*(?:\n|$)")
+_RESIDUAL_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}\Z")
+TRUNCATION_FLAG = "[Review reply truncated to fit GitHub's comment limit.]"
+REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
+# Why a CHANGES_REQUESTED reply keeps its verdict instead of becoming an approval with residuals.
+P3_NOT_ONE_OBJECT = "reply is not exactly one findings object"
+P3_DUPLICATE_KEY = "findings object repeats a key"
+P3_INVALID_OBJECT = "findings object fails the findings schema"
+P3_SECURITY_NOT_PASS = "security verdict is not PASS"
+P3_INCOMPLETE = "reviewer declares an incomplete review or missing capabilities"
+P3_NO_FINDINGS = "findings object lists no findings"
+P3_BLOCKING_FINDING = "findings object has a P0, P1 or P2 entry"
+P3_CONFLICTING_ID = "findings object repeats an id"
+P3_TRUNCATED = "reply is truncated in the record"
+P3_SCANNER_WITHHELD = "publication scanner withheld the reply"
+P3_STANDING_REJECTION = "head has a standing rejection or an unknown reading"
+P3_REPAIR_WITHHELD = "repair round withholds the P3 mapping"
+
+
+@dataclass(frozen=True)
+class P3Reading:
+    """The open P3 finding ids of an approval with residuals, or the reason there is none."""
+
+    ids: tuple[str, ...] | None = None
+    reason: str | None = None
+
+
+class _DuplicateKey(ValueError):
+    pass
+
+
+def _unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    keys = [key for key, _ in pairs]
+    if len(set(keys)) != len(keys):
+        raise _DuplicateKey
+    return dict(pairs)
+
+
+def _not_json_constant(token: str) -> Any:
+    # NaN and Infinity are a Python decoder extension, not JSON.
+    raise ValueError(token)
+
+
+def _strings(value: Any) -> Iterator[str]:
+    """Every decoded string value in a JSON value, so escapes cannot disguise a declaration."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for item in value.values():
+            yield from _strings(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _strings(item)
+
+
+def _security_verdict_blocks(reply: str) -> bool:
+    """True when a security verdict is present and the whole value is not PASS.
+
+    The key is ``SECURITY`` plus ``_``, ``-`` or a space, then ``VERDICT``.
+    A pass is the token ``PASS``, optional closing emphasis or a period, and
+    then only whitespace to the end of the line. ``PASS_WITH_CONDITIONS``,
+    ``PASS?`` and ``PASS (pending F1)`` are not a pass.
+    """
+    return any(_SECURITY_PASS.match(reply, match.end()) is None for match in _SECURITY_VERDICT.finditer(reply))
+
+
+def p3_reading(reply: str) -> P3Reading:
+    """Read a CHANGES_REQUESTED reply for an approval with P3 residuals (#12409).
+
+    The reading applies only when the whole reply, apart from surrounding whitespace,
+    is exactly one ``code-review-findings.v1`` object and every entry's typed
+    ``priority`` is P3. No prose is read for findings: any text outside the object,
+    a verdict line included, keeps the reply's own verdict, and so does a truncated
+    reply. Every refusal names its reason.
+    """
+    if not isinstance(reply, str):
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
+    try:
+        payload = json.loads(reply, object_pairs_hook=_unique_keys, parse_constant=_not_json_constant)
+    except _DuplicateKey:
+        return P3Reading(reason=P3_DUPLICATE_KEY)
+    except (ValueError, RecursionError):
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
+    if not isinstance(payload, dict) or payload.get("schema_version") != REVIEW_SCHEMA_VERSION:
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
+    try:
+        _verdict, evidence = checked_findings_payload(payload)
+    except (ContractError, ReviewPublicationError):
+        return P3Reading(reason=P3_INVALID_OBJECT)
+    findings = evidence.findings if evidence is not None else ()
+    if not findings:
+        return P3Reading(reason=P3_NO_FINDINGS)
+    if any(finding.priority != "P3" for finding in findings):
+        return P3Reading(reason=P3_BLOCKING_FINDING)
+    if any(_security_verdict_blocks(text) for text in _strings(payload)):
+        return P3Reading(reason=P3_SECURITY_NOT_PASS)
+    if declares_incomplete_review(reply) or MISSING_CAPABILITIES_FIELD in payload:
+        return P3Reading(reason=P3_INCOMPLETE)
+    ids = tuple(finding.finding_id for finding in findings)
+    if len(set(ids)) != len(ids) or any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in ids):
+        return P3Reading(reason=P3_CONFLICTING_ID)
+    return P3Reading(ids=ids)
+
+
+def p3_residuals(reply: str) -> tuple[str, ...] | None:
+    """The open P3 ids of an approval with residuals, or None when the reply keeps its verdict."""
+    return p3_reading(reply).ids
 
 
 def _require_sources_mcp_calls(task: dict[str, Any]) -> None:
@@ -1562,6 +1676,8 @@ def build_comment(
     denominator: Iterable[str] | None = None,
     coverage: Iterable[str] | None = None,
     void: str | None = None,
+    residuals: Iterable[str] | None = None,
+    repair_withheld: bool = False,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1619,15 +1735,23 @@ def build_comment(
         + coverage_lines
         + "\n"
     )
+    residual_ids = tuple(residuals or ())
+    if any(_RESIDUAL_ID.fullmatch(item) is None for item in residual_ids):
+        raise RecordError("residual finding id is not a marker token")
+    # Listed after the reply so the record prefix stays the marker's fixed lines.
+    residual_line = ""
+    if residual_ids:
+        residual_line = "Residuals: " + ", ".join(f"{item} (P3)" for item in residual_ids) + "\n\n"
     if withheld_findings is not None:
         return prefix + f"Withheld findings: {withheld_findings}\n" + "Findings are held privately.\n\n" + marker
     prefix += "<details><summary>Reviewer's reply</summary>\n\n"
-    suffix = f"\n\n</details>\n\n{marker}"
+    repair_note = f"{REPAIR_WITHHELD}\n\n" if repair_withheld else ""
+    suffix = f"\n\n</details>\n\n{residual_line}{repair_note}{marker}"
     available = MAX_COMMENT_BYTES - len((prefix + suffix).encode())
     if available < 0:
         raise RecordError("comment metadata exceeds GitHub limit")
     if len(reply.encode()) > available:
-        flag = "\n\n[Review reply truncated to fit GitHub's comment limit.]"
+        flag = f"\n\n{TRUNCATION_FLAG}"
         available -= len(flag.encode())
         if available < 0:
             raise RecordError("comment metadata exceeds GitHub limit")
@@ -2312,7 +2436,12 @@ def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
 
 
 def _require_formal_reviewer(
-    *, cursor: bool, reported: object, model: str, family: str, native_grok: bool = False,
+    *,
+    cursor: bool,
+    reported: object,
+    model: str,
+    family: str,
+    native_grok: bool = False,
     review_context: Mapping[str, Any] | None = None,
 ) -> None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
@@ -2369,9 +2498,14 @@ def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
     _require_formal_reviewer(
-        cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok,
+        cursor=cursor,
+        reported=reported,
+        model=model,
+        family=family,
+        native_grok=native_grok,
         review_context={
-            "review_mode": task.get("review_mode"), "review_profile": task.get("review_profile"),
+            "review_mode": task.get("review_mode"),
+            "review_profile": task.get("review_profile"),
             "author_model": task.get("review_author_model"),
             "transport": "native_codex" if task.get("agent") == "codex" else task.get("agent"),
         },
@@ -2405,7 +2539,7 @@ def _task_verdict(task: dict[str, Any], reply: str) -> _TaskVerdict:
     if task.get("pinned_head") is not None and task["pinned_head"] != sha:
         raise RecordError("reviewed SHA conflicts with pinned head")
     model, family = reviewer_identity(task)
-    verdict, finding_count = _review_verdict_and_count(reply)
+    verdict, finding_count = _item_judgments_or_review_verdict(task, reply)
     _require_sources_mcp_calls(task)
     sources_count = task.get("sources_mcp_call_count")
     if type(sources_count) is not int or sources_count < 0:
@@ -2458,6 +2592,32 @@ def _post_verdict(repository: str, number: int, comment: str, login: str) -> dic
     ):
         raise RecordError("comment readback mismatch; publication state unknown")
     return readback
+
+
+def _item_judgments_or_review_verdict(task: Mapping[str, Any], reply: str) -> tuple[str, int | Literal["unknown"]]:
+    """The verdict of a Ukrainian reply that returns only its judgment block, else the reply's verdict.
+
+    With a frozen item denominator the contract asks for the block alone, so a reply
+    with no verdict token takes the block's item rollup.
+    """
+    if not is_ukrainian_review(task) or recognized_verdicts(reply):
+        return _review_verdict_and_count(reply)
+    try:
+        packet = load_frozen_item_packet(task)
+        if packet is None:
+            return _review_verdict_and_count(reply)
+        verdict = item_judgments_verdict(packet, reply)
+    except ContractError as exc:
+        raise RecordError(str(exc)) from None
+    if reason := invalid_findings_block(reply, stated=None):
+        raise RecordError(f"reply carries an invalid findings block: {reason}")
+    if declares_incomplete_review(reply):
+        raise RecordError("inconclusive: reviewer declares an incomplete review")
+    if verdict != "BLOCKED" and declares_missing_capabilities(reply):
+        raise RecordError(
+            f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may"
+        )
+    return verdict, "unknown"
 
 
 def _item_chunk(
@@ -2557,9 +2717,9 @@ def record(
         raise RecordError("red-team prompt requires review_mode=red_team")
     review = _task_verdict(task, reply)
     repository, branch, sha = review.repository, review.branch, review.sha
-    model, family, verdict, finding_count = review.model, review.family, review.verdict, review.finding_count
+    model, family, stated, finding_count = review.model, review.family, review.verdict, review.finding_count
     ukrainian, sources_count, started = review.ukrainian, review.sources_count, review.started
-    if ukrainian and verdict == "APPROVED":
+    if ukrainian and stated == "APPROVED":
         _require_ukrainian_claim_support(task, reply, task_id, task_root)
     pr = _pr(repository, branch, pr_number)
     if pr.get("headRefName") != branch:
@@ -2626,7 +2786,15 @@ def record(
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
-    chunk = _item_chunk(task, reply, verdict, source_claims_validated=ukrainian and verdict == "APPROVED")
+    chunk = _item_chunk(task, reply, stated, source_claims_validated=ukrainian and stated == "APPROVED")
+    # The reply stays REQUEST_CHANGES. A pure findings object whose entries are all P3 is an
+    # approval with residuals; any other reply keeps its verdict and names why (#12409).
+    p3 = p3_reading(reply) if stated == "CHANGES_REQUESTED" else P3Reading()
+    residuals, p3_refused = p3.ids, p3.reason
+    verdict = "APPROVED" if residuals else stated
+    # A P3 residual upgrade is still an approval, so it takes the same captured-claim check.
+    if ukrainian and verdict == "APPROVED" and stated != "APPROVED":
+        _require_ukrainian_claim_support(task, reply, task_id, task_root)
     comment_fields = dict(
         sha=sha,
         task_id=task_id,
@@ -2645,9 +2813,18 @@ def record(
         denominator=None if chunk is None else chunk.denominator,
         coverage=None if chunk is None else chunk.coverage,
         void=None if chunk is None else chunk.void,
+        residuals=residuals,
     )
     comment = build_comment(**comment_fields)
+    # A cut reply is not verbatim, so it cannot become an approval.
+    if residuals is not None and TRUNCATION_FLAG in comment:
+        residuals, p3_refused = None, P3_TRUNCATED
+        verdict = stated
+        comment_fields["verdict"] = stated
+        comment_fields["residuals"] = None
+        comment = build_comment(**comment_fields)
     destination = normalize_repository(repository)
+    withheld_comment = False
     try:
         check_texts(destination, [comment], environment={})
     except PublishBlocked as exc:
@@ -2655,8 +2832,15 @@ def record(
         # and publication failures retain their existing refusal behavior.
         if exc.indices != frozenset({0}):
             raise
+        # Hidden findings cannot be listed, so the reply keeps its own verdict.
+        if residuals is not None:
+            residuals, p3_refused = None, P3_SCANNER_WITHHELD
+            verdict = stated
+            comment_fields["verdict"] = stated
+            comment_fields["residuals"] = None
         comment = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=finding_count)
         check_texts(destination, [comment], environment={})
+        withheld_comment = True
     posted = False
     with pr_lock(repository, number, lock_root):
         # The PR may move while an earlier recorder owns the lock.
@@ -2674,6 +2858,16 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
+        if residuals is not None:
+            reading = lookup_verdict(comments, sha, login)
+            # A standing P0/P1/P2 or BLOCKED rejection, or an unknown head, keeps today's record.
+            if reading.state in REJECTED or reading.state == "unknown":
+                residuals, p3_refused = None, P3_STANDING_REJECTION
+                verdict = stated
+                comment_fields["verdict"] = stated
+                comment_fields["residuals"] = None
+                comment = build_comment(**comment_fields)
+                check_texts(destination, [comment], environment={})
         budget_receipt = budget_admission(
             repository=repository,
             number=number,
@@ -2685,6 +2879,31 @@ def record(
             task_root=task_root,
             review_root=review_root,
         )
+        from scripts.review.repair_round import (
+            RepairRefused,
+            receipt_at,
+            record_admission,
+            require_repair_verified,
+        )
+
+        repair = budget_receipt.get("repair_round")
+        repaired = repair or receipt_at(
+            _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
+        )
+        # A repair head stays changes-requested unless the reply attests that the delta is only the repair.
+        # The note is written even when the mapping was already dropped, so lookup cannot approve the body later.
+        # A withheld skeleton stays withheld: rebuilding from the original fields would put the blocked text back.
+        if repaired is not None and stated != "APPROVED" and not withheld_comment:
+            try:
+                require_repair_verified(reply, repaired)
+            except RepairRefused:
+                if residuals is not None:
+                    residuals, p3_refused = None, P3_REPAIR_WITHHELD
+                    verdict = stated
+                    comment_fields["verdict"] = stated
+                    comment_fields["residuals"] = None
+                comment = build_comment(**comment_fields, repair_withheld=True)
+                check_texts(destination, [comment], environment={})
         existing = None
         for item in comments:
             body = item.get("body")
@@ -2703,7 +2922,6 @@ def record(
                 ):
                     if (
                         marker["started"] != started
-                        or marker["verdict"] != verdict
                         or marker["model"] != model
                         or marker["family"] != family
                         or marker.get("review_mode", "cross_family") != review_mode
@@ -2717,16 +2935,15 @@ def record(
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
-                    existing = item
-                    break
+                    if marker["verdict"] == verdict:
+                        existing = item
+                        break
+                    # The same reply recorded before P3 findings were accepted as residuals.
+                    if residuals is not None and marker["verdict"] == "CHANGES_REQUESTED":
+                        continue
+                    raise RecordError("existing verdict marker was edited or conflicts with task")
         require_no_same_head_rejection(comments, sha, login, verdict)
-        from scripts.review.repair_round import receipt_at, record_admission, require_repair_verified
-
-        repair = budget_receipt.get("repair_round")
-        repaired = repair or receipt_at(
-            _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
-        )
-        if repaired is not None and verdict == "APPROVED":
+        if repaired is not None and stated == "APPROVED":
             # The non-author reviewer, not the recorder, verifies that the delta is only the repair.
             require_repair_verified(reply, repaired)
         if repair is not None:
@@ -2758,7 +2975,13 @@ def record(
                     if isinstance(item.get("body"), str)
                     and (marker := parse_marker(item["body"])) is not None
                     and marker.get("sha") == sha
-                    and marker.get("verdict") not in REJECTED
+                    and (
+                        marker.get("verdict") not in REJECTED
+                        or (
+                            marker.get("verdict") == "CHANGES_REQUESTED"
+                            and recorded_p3_residuals(item["body"]) is not None
+                        )
+                    )
                     and is_ukrainian_review(marker)
                 ]
                 open_seats = sorted(
@@ -2802,6 +3025,10 @@ def record(
         "comment": "posted" if posted else "existing",
         "status": status,
     }
+    if residuals:
+        result["residuals"] = list(residuals)
+    elif p3_refused is not None:
+        result["p3_downgrade_refused"] = p3_refused
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
     if chunk is not None:
@@ -2884,7 +3111,21 @@ def budget_check(
 def _open_pr_number(repository: str, branch: str) -> int | None:
     """The number of the one open PR whose head is ``branch``, None when it has none."""
     matches = _run_json(
-        ["gh", "pr", "list", "--repo", repository, "--state", "open", "--head", branch, "--limit", "2", "--json", "number"]
+        [
+            "gh",
+            "pr",
+            "list",
+            "--repo",
+            repository,
+            "--state",
+            "open",
+            "--head",
+            branch,
+            "--limit",
+            "2",
+            "--json",
+            "number",
+        ]
     )
     if not isinstance(matches, list) or len(matches) > 1:
         raise RecordError("branch must identify at most one open PR; pass --pr N")

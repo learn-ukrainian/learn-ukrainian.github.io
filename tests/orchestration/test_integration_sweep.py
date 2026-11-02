@@ -205,6 +205,31 @@ def pr(**updates):
     return data
 
 
+def test_p3_only_changes_requested_marker_is_approval():
+    """A standing CHANGES_REQUESTED marker whose reply is one all-P3 findings object reads as APPROVED."""
+    reply = json.dumps({
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": "incorrect", "explanation": "One P3 residual.", "confidence": 0.9},
+        "findings": [{
+            "id": "F1", "title": "Count is high", "body": "One extra hold.", "priority": "P3",
+            "confidence": 0.9, "category": "correctness",
+            "location": {"path": "scripts/example.py", "start_line": 10, "end_line": 10, "claim_type": "present"},
+            "verbatim": "count += 1", "why_wrong": "Each removal is counted twice.",
+            "smallest_fix": "Count each removal once.", "sources": ["none"],
+        }],
+    })
+    body = build_comment(
+        sha=SHA, task_id="review-one", started=START, verdict="CHANGES_REQUESTED",
+        model="gpt-6.1-sol", family="openai", reply=reply,
+    )
+    item = {
+        "id": 1, "body": body, "user": {"login": "fleet"}, "author_association": "MEMBER",
+        "created_at": "2026-09-23T13:00:00Z", "updated_at": "2026-09-23T13:00:00Z",
+    }
+    assert sweep.parse_marker(body)["verdict"] == "CHANGES_REQUESTED"
+    assert sweep.lookup_verdict([item], SHA, "fleet").state == "APPROVED"
+
+
 def test_latest_started_rejects_approval_then_rejection():
     rows = [
         comment(),

@@ -32,7 +32,7 @@ import pytest
 
 from scripts.lib import rules_core
 from tests.rules_core_view import absent_checkout, checkout_view
-from tests.test_launcher_contract import REPO, hermes_stub_env
+from tests.test_launcher_contract import REPO
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
@@ -257,13 +257,11 @@ LAUNCHER_ROWS = (
     ("codex-interactive", "start-codex.sh", (), None, "developer_instructions", "core"),
     ("codex-driver", "start-codex-driver.sh", ("--epic", "devops"), None, "developer_instructions", "core"),
     ("codex-claude-code", "start-codex.sh", ("--harness", "claude-code"), None, "--append-system-prompt", "core"),
-    ("codex-hermes", "start-codex.sh", ("--harness", "hermes"), "hermes", "--query", "core"),
     ("gemini-agy-interactive", "start-gemini.sh", (), None, "-i", "core"),
     ("gemini-agy-driver", "start-gemini-driver.sh", ("--epic", "infra"), None, "-i", "core"),
     ("cursor-driver", "start-cursor-driver.sh", ("--epic", "infra"), None, "positional", "core"),
     ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
     ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
-    ("grok-hermes", "start-grok.sh", ("--harness", "hermes"), "hermes", "--query", "core"),
     ("glm-opencode", "start-glm.sh", (), None, "positional", "core"),
     ("glmcc", "start-glmcc.sh", (), "glm", "--append-system-prompt", "core"),
 )
@@ -281,9 +279,7 @@ def _launch(
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
     env = {**os.environ, "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
-    if env_kind == "hermes":
-        env.update(hermes_stub_env(tmp_path))
-    elif env_kind == "kimi":
+    if env_kind == "kimi":
         env.update({**_KIMI_CREDENTIALS, "HOME": str(tmp_path / "home")})
     elif env_kind == "glm":
         env.update({**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home")})
@@ -621,12 +617,11 @@ def test_legacy_bridge_builder_without_the_core_refuses(index: int, missing_core
 def test_ask_transports_without_the_core_refuse_before_spawning(
     monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
-    from scripts.ai_agent_bridge import _cursor, _hermes, _opencode
+    from scripts.ai_agent_bridge import _cursor, _opencode
 
     def _spawn(*_a, **_k):
         raise AssertionError("an ask without the rules core must not spawn a process")
 
-    monkeypatch.setattr(_hermes, "_run_hermes_subprocess", _spawn)
     for module in (_cursor, _opencode):
         monkeypatch.setattr(module.subprocess, "run", _spawn)
     # Binary lookup is the shared resolver on the bridge module.
@@ -634,8 +629,6 @@ def test_ask_transports_without_the_core_refuse_before_spawning(
     monkeypatch.setattr(_opencode.shutil, "which", lambda name: f"/stub/{name}")
     with pytest.raises(SystemExit, match=r"ask-cursor: refused: .*core\.md"):
         _cursor._invoke_cursor("hello", "grok-4.7-high")
-    with pytest.raises(SystemExit, match=r"ask-hermes: refused: .*core\.md"):
-        _hermes._invoke_hermes("hello", "deepseek-v4.1-flash")
     with pytest.raises(SystemExit, match=r"ask-opencode: refused: .*core\.md"):
         _opencode._run_opencode("hello", "deepseek/deepseek-v4.1-flash")
 
@@ -664,11 +657,10 @@ def _spy_side_effects(monkeypatch: pytest.MonkeyPatch, modules, names) -> list[s
 
 def _bridge_asks():
     # No ask-kimi: Kimi is not a bridge recipient and is refused before any rules-core step.
-    from scripts.ai_agent_bridge import _agy, _claude, _codex, _cursor, _gemini, _grok_build, _hermes, _opencode
+    from scripts.ai_agent_bridge import _agy, _claude, _codex, _cursor, _gemini, _grok_build, _opencode
 
     return (
         ("ask-cursor", _cursor, "ask_cursor"),
-        ("ask-hermes", _hermes, "ask_hermes"),
         ("ask-opencode", _opencode, "ask_opencode"),
         ("ask-pool", _opencode, "ask_pool"),
         ("ask-glm", _opencode, "ask_glm"),
@@ -682,7 +674,7 @@ def _bridge_asks():
 
 
 @pytest.mark.parametrize("background", [False, True], ids=["foreground", "background"])
-@pytest.mark.parametrize("index", range(11))
+@pytest.mark.parametrize("index", range(10))
 def test_bridge_ask_without_the_core_refuses_before_any_send(
     index: int, background: bool, monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:

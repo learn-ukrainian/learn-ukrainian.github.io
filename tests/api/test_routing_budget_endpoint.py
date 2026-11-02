@@ -1456,8 +1456,8 @@ def test_warm_snapshot_withholds_a_row_whose_binding_was_removed(monkeypatch, tm
 
     assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
     row_b = warm["claude_accounts"]["claude:b"]
-    # The serve saw the binding file change without reading it.
-    assert (row_b["status"], row_b["reason"]) == ("unknown", "not_probed")
+    # Background revalidation resolved the missing binding before publication.
+    assert (row_b["status"], row_b["reason"]) == ("unknown", "claude_account_binding_missing")
     assert row_b["weekly"]["left_pct"] is None
     assert warm["claude_accounts"]["claude:a"]["status"] == "ok"
     assert warm["preferred_claude_account"] is None

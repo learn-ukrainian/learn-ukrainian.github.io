@@ -530,29 +530,6 @@ def test_classifier_routes_hermes_credential_startup_failure_to_auth():
     assert trigger == "auth"
 
 
-def test_classifier_routes_hermes_inband_http_401_to_auth():
-    """The Hermes adapter, not a display excerpt, owns this captured error."""
-    from agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter
-    from agent_runtime.failover import classify_failover_trigger
-
-    excerpt = "HTTP 401: Authentication Fails, Your api key: ****robe is invalid"
-    parse = HermesDeepSeekAdapter().parse_response(
-        stdout=excerpt,
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-    trigger = classify_failover_trigger(
-        parse=parse,
-        returncode=0,
-        kill_reason=None,
-        stdout_text=excerpt,
-        stderr_text="",
-    )
-
-    assert trigger == "auth"
-
-
 def test_classifier_routes_unauthenticated_gh_prompt_to_auth():
     """#7166 / #7472: a seat whose gh lost its auth context fails with
     "please run: gh auth login" — an auth failure, never a rate limit."""
@@ -647,14 +624,13 @@ def test_chain_route_missing_model_after_index_zero_warns_and_drops(tmp_path, ca
 def test_shipped_config_declares_no_grok_chain():
     """Pin the shipped config: native ``grok`` has NO failover chain (user
     order 2026-07-07 — work belongs on the native-app seat; grok-4.* via
-    OpenRouter has no measured niche and 402-drained the OR balance). The
-    demoted hermes path ``grok-hermes`` stays a plain single route too."""
+    OpenRouter has no measured niche and 402-drained the OR balance)."""
     from agent_runtime.failover import (
         default_failover_config_path,
         load_failover_chain,
     )
 
-    for lane in ("grok", "grok-build", "grok-hermes"):
+    for lane in ("grok", "grok-build"):
         chain = load_failover_chain(
             lane,
             effective_model="grok-4.7",

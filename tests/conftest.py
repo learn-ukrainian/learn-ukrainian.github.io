@@ -3851,3 +3851,25 @@ def _no_operator_model_pause(monkeypatch, tmp_path_factory):
     """Tests never read the operator's live model-pause policy."""
     if "LU_MODEL_PAUSE_FILE" not in os.environ:
         monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json"))
+
+
+@pytest.fixture(autouse=True)
+def _hermetic_agy_claude_window(monkeypatch):
+    """Resolver tests do not read the live AGY Claude window.
+
+    An exhausted or missing window excludes AGY Claude seats. A developer host
+    can be exhausted while CI has no Monitor, and either reading would change
+    which catalog seat those tests select. The default reading is a fresh
+    empty window. A test of the real reader restores ``__wrapped__``.
+    """
+    from scripts.agent_runtime import model_pause as mp
+
+    real = mp.routing_budget_used_pct
+
+    def wrapped(lane, *, account):
+        if lane == mp.AGY_CLAUDE_WINDOW_LANE:
+            return 0.0
+        return real(lane, account=account)
+
+    wrapped.__wrapped__ = real
+    monkeypatch.setattr(mp, "routing_budget_used_pct", wrapped)

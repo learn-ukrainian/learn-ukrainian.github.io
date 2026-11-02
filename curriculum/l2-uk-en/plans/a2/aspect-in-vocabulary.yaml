@@ -2,7 +2,7 @@ module: a2-003
 level: A2
 sequence: 3
 slug: aspect-in-vocabulary
-version: 1.1.6
+version: 1.2.0
 title: Дієслова ходять парами
 subtitle: Як утворюються та вивчаються видові пари
 focus: grammar
@@ -59,7 +59,7 @@ content_outline:
   - 'Українські дієслова слід вивчати у видових парах (недоконаний / доконаний). Трьома основними способами їх утворення є
     додавання префікса (писати / написати), зміна суфікса/голосного кореня (відповідати / відповісти) або використання зовсім
     інших слів (брати / взяти).'
-  - 'Самоперевірка: Який дієслово доконаного виду є парою до "говорити"? Яка різниця між "шукати" та "знайти"? Назвіть 3 пари
+  - 'Самоперевірка: Яке дієслово доконаного виду є парою до "говорити"? Яка різниця між "шукати" та "знайти"? Назвіть 3 пари
     дієслів, які використовують префікс для утворення доконаного виду.'
 vocabulary_hints:
   required:
@@ -114,3 +114,8 @@ plan_fixes:
   - Added explicit grammar readiness metadata derived from objectives/content outline.
   - Added register readiness metadata.
   - Added persona readiness metadata for content generation.
+- version: 1.2.0
+  date: '2026-11-01'
+  trigger: 'Source-adjudicated correctness repair under #12272.'
+  changes:
+  - Corrected interrogative agreement with the neuter noun in the summary self-check.

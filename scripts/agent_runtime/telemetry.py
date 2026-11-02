@@ -196,19 +196,6 @@ def _default_effort_for(agent_name: str) -> str | None:
     return str(raw).strip() if isinstance(raw, str) and str(raw).strip() else None
 
 
-def _hermes_configured_effort() -> str | None:
-    """Return Hermes's configured reasoning effort without reading secrets.
-
-    Hermes-routed adapters deliberately use the shared configuration rather
-    than a per-invocation effort flag.  Keep dispatch telemetry aligned with
-    that actual runtime behavior.
-    """
-    from .adapters.hermes_common import read_hermes_config, top_level_agent_effort
-
-    home = Path(os.environ.get("HERMES_HOME", Path.home() / ".hermes"))
-    return top_level_agent_effort(read_hermes_config(home / "config.yaml"))
-
-
 def _deepseek_catalog_identity(model: str | None) -> str | None:
     """Resolve recorded routes without using dispatch eligibility as identity.
 
@@ -247,7 +234,7 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return _config_override(plan.cmd, "model_reasoning_effort")
     if agent_name == "muse":
         return _arg_after(plan.cmd, "--reasoning-effort")
-    from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
+    from .agent_identity import is_native_grok_seat
 
     if agent_name == "claude" or is_native_grok_seat(agent_name):
         return _arg_after(plan.cmd, "--effort")
@@ -255,12 +242,6 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return None
     if agent_name == "deepseek":
         return _arg_after(plan.cmd, "--variant")
-    if agent_name in ("hermes-deepseek", "qwen") or is_hermes_grok_seat(agent_name):
-        # Hermes -z mode: effort is config-scoped (~/.hermes/config.yaml),
-        # not surfaced on the command line. Adapter logs a warning when the
-        # caller's request disagrees with the config — telemetry has nothing
-        # to resolve from the plan.
-        return None
     if agent_name == "kimi":
         if plan.metadata.get("harness") == "kimicc":
             return _arg_after(plan.cmd, "--effort") or (
@@ -328,7 +309,7 @@ def _resolve_model_from_defaults(
             _gemini_settings(),
             ("model", "defaultModel", "selectedModel", "modelName", "default_model"),
         )
-    if agent_name in ("grok-hermes", "deepseek", "hermes-deepseek", "qwen"):
+    if agent_name == "deepseek":
         return _default_model_for(agent_name)
     if agent_name == "claude":
         return _default_model_for(agent_name)
@@ -345,14 +326,10 @@ def _resolve_effort_from_defaults(
     # These CLIs do not expose a per-invocation effort value.  A deliberate
     # marker is observability, not an error: warning on every dispatch made
     # routine task state look broken (#4837).
-    from .agent_identity import is_hermes_grok_seat
-
     if _is_acp_shadow_identity(agent_name):
         return requested_effort or _NOT_EXPOSED
     if agent_name in {"agy", "cursor", "gemini"}:
         return _NOT_EXPOSED
-    if agent_name in {"hermes-deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
-        return _hermes_configured_effort() or _NOT_EXPOSED
     if agent_name == "kimi":
         if harness == "kimicc":
             if requested_effort:
@@ -415,13 +392,6 @@ def _cursor_version_prefix(cmd: list[str]) -> tuple[str, ...]:
     if cmd:
         return (cmd[0],)
     return ("cursor-agent",)
-
-
-def _hermes_version_prefix(cmd: list[str]) -> tuple[str, ...]:
-    """Prefix for ``hermes --version`` probes. Used by every Hermes-backed agent."""
-    if cmd:
-        return (cmd[0],)
-    return ("hermes",)
 
 
 _VERSION_PROBE_CWD: ContextVar[str | None] = ContextVar("agent_runtime_version_probe_cwd", default=None)
@@ -594,17 +564,13 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
                 bin_path = "kimi"
         prefix = (bin_path,)
         return kimi_cli_version(prefix, probe_cwd)
-    from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
+    from .agent_identity import is_native_grok_seat
 
     if is_native_grok_seat(agent_name):
         # Native `grok` CLI — NOT hermes-backed; probe it directly.
         return _probe_version_at(("grok",), probe_cwd)
     if agent_name == "deepseek":
         prefix = (plan.cmd[0],) if plan is not None and plan.cmd else ("opencode",)
-        return _probe_version_at(prefix, probe_cwd)
-    if agent_name == "hermes-deepseek" or is_hermes_grok_seat(agent_name):
-        # Hermes-backed seats share one version probe.
-        prefix = _hermes_version_prefix(plan.cmd) if plan is not None else ("hermes",)
         return _probe_version_at(prefix, probe_cwd)
     return None
 

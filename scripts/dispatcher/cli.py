@@ -34,7 +34,7 @@ from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
 
 # Grok runs through Cursor's TUI: --agent cursor --model grok-4.7-high (grok-build is the separate Grok TUI).
-ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes")
+ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode")
 
 
 class _PromptPath(type(Path())):
@@ -95,8 +95,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("max-budget-usd", None, "Spend cap in USD for a Claude API-key account, at most its configured amount "
          "(default: that amount)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
-        ("output-schema", None, "Codex/AGY JSON object schema: repo-relative or absolute readable file "
-         "(default: existing review findings schema for AGY --require-review-verdict, otherwise none)"),
+        ("output-schema", None, "Codex, AGY, or Claude JSON object schema: repo-relative or absolute readable file "
+         "(default: the review findings schema for a code or infra --require-review-verdict on those agents, otherwise none)"),
         ("research-role", None, "Research role metadata (default: none)"),
         ("research-task-family", None, "Research task family metadata (default: none)"),
         ("research-track", None, "Research track metadata (default: none)"),
@@ -148,8 +148,8 @@ def build_parser() -> argparse.ArgumentParser:
         dispatch.add_argument(f"--{flag}", action="append", default=[],
                               help="Excluded review subject, e.g. grok or xai (repeatable; default: none)")
     dispatch.add_argument("--require-review-verdict", action="store_true", default=None,
-                          help="Require an unambiguous review verdict; AGY uses the existing structured findings "
-                          "schema (read-only; default: off)")
+                          help="Require an unambiguous review verdict; Codex, AGY, and Claude bind the existing "
+                          "structured findings schema (read-only; default: off)")
     for flag in ("review-id", "attempt-id", "review-attempt"):
         dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest file for --review-attempt; all three "
                               "required, with a rendered --prompt-file; use --pinned-head, not --branch or --pr; "
@@ -364,8 +364,8 @@ def _dispatch(args) -> int:
         agent == "claude" and args.mode == "workspace-write" and providers.load("claude").model_id(args.model) == "claude-haiku-5-5"
     ):
         raise ValueError("--advisor is supported only for a workspace-write Claude Haiku 5.5 run")
-    if args.output_schema is not None and agent not in {"codex", "agy"}:
-        raise ValueError("--output-schema is supported only with the effective codex or agy agent")
+    if args.output_schema is not None and agent not in {"codex", "agy", "claude"}:
+        raise ValueError("--output-schema is supported only with the effective codex, agy, or claude agent")
     # Checked before admission and before any worker starts. A path that cannot be mounted is not dropped.
     bound_inputs = []
     if args.input:
@@ -416,6 +416,16 @@ def _dispatch(args) -> int:
             raise host_admission.Refused("❌ --force-admission requires a non-empty reason", 2)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
+    # Settlement can verify only an origin/<branch> base. Refuse anything else before a
+    # workspace-write task is created, so a SHA does not run and then settle no_deliverable (#12420).
+    if args.mode == "workspace-write":
+        try:
+            git.verifiable_origin_base(args.base)
+        except git.OriginBaseRequired:
+            raise ValueError(
+                "workspace_write_base_unverified: settlement cannot verify this --base; "
+                "use --base origin/main --branch <PR head branch>, with the PR's files as owned paths"
+            ) from None
     start = args.pinned_head or args.branch or args.base
     publish_remote = None
     if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
@@ -434,10 +444,12 @@ def _dispatch(args) -> int:
     if bound_inputs:
         options["inputs"] = json.dumps(bound_inputs, separators=(",", ":"), sort_keys=True)
     output_schema = args.output_schema
-    if agent == "agy" and args.require_review_verdict and output_schema is None:
+    if agent in {"codex", "agy", "claude"} and args.require_review_verdict and output_schema is None:
         from scripts.review.review_contract import schema_path
 
-        output_schema = str(schema_path())
+        selected = schema_path(profile=args.review_profile, task=vars(args))
+        if selected is not None:
+            output_schema = str(selected)
     if output_schema is not None:
         from scripts.dispatcher.output_schema import bind
 
@@ -446,7 +458,16 @@ def _dispatch(args) -> int:
             from scripts.dispatcher.providers.agy import schema_argument
 
             schema_argument(options)
+        elif agent == "claude":
+            from scripts.dispatcher.providers.claude import schema_argument
+
+            schema_argument(options)
     fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider", "codex_account")}
+    if agent == "opencode":
+        from scripts.dispatcher.providers import opencode
+
+        # The endpoint is explicit on the task record, the default included (#12376).
+        fields["provider"] = opencode.endpoint(fields["provider"])
     spec = TaskSpec(
         task_id,
         agent,
@@ -457,6 +478,11 @@ def _dispatch(args) -> int:
         **fields,
     )
     checks.check_private_input(spec, info["key"])
+    # Before any worktree or task record: an endpoint without access or funds is refused, never switched.
+    if agent == "opencode" and (refusal := opencode.endpoint_refusal(
+        spec.provider, child_env(spec), worktree=worktree, repo=None if args.cwd else repo, sha=sha,
+    )):
+        raise ValueError(refusal)
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
         raise ValueError(refusal)
     # A bound attempt is admitted before anything exists: its prompt is the exact render of its manifest

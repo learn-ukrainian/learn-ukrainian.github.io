@@ -21,9 +21,11 @@ entry is inert, so the pause lifts by itself at the reset.
 ``headroom``: a model matching ``pattern`` is refused while the lane's weekly
 plan usage (routing-budget) is at or above ``max_weekly_used_pct``. The
 ``claude`` lane's usage is the meter of the account the claude seat runs as,
-which every reader names (``account_used_pct``, #10619, #10630). Unknown or
-stale usage refuses models matching a headroom entry; a missing or invalid
-policy file means no pauses.
+which every reader names (``account_used_pct``, #10619, #10630). An AGY seat
+also stops ``claude-*`` models on ``agents.gemini.claude_gpt_windows`` (the
+five-hour window and the weekly window). Unknown or stale usage refuses
+models matching a headroom entry; a missing or invalid policy file means no
+pauses.
 """
 
 from __future__ import annotations
@@ -324,13 +326,133 @@ def _monitor_base() -> str:
     return (os.environ.get("DELEGATE_MONITOR_API") or DEFAULT_BASE_URL).rstrip("/")
 
 
+# AGY publishes on the gemini lane. Claude models on that seat draw
+# claude_gpt_windows, not Gemini's own weekly percent and not the native plan.
+AGY_CLAUDE_WINDOW_LANE = "agy_claude"
+_AGY_CLAUDE_PROBE_LANE = "gemini"
+_AGY_CLAUDE_WINDOW_KEYS = ("five_hour", "weekly")
+_AGY_CLAUDE_WINDOW_CAP = 100
+
+
+def _fresh_probe_record(info: Mapping[str, Any] | None) -> Mapping[str, Any] | None:
+    """The lane's codexbar block when the probe is fresh, else None.
+
+    Missing, unknown, stale, or any freshness other than fresh is not a usable
+    meter. This is the same rule as the weekly plan reading.
+    """
+    if not info or info.get("status") == "unknown":
+        return None
+    codexbar = info.get("codexbar")
+    if not isinstance(codexbar, Mapping):
+        return None
+    if codexbar.get("stale") is not False or codexbar.get("freshness") != "fresh":
+        return None
+    return codexbar
+
+
+def _finite_pct(value: object) -> float | None:
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        return None
+    try:
+        number = float(value)
+    except (OverflowError, ValueError):
+        return None
+    if not math.isfinite(number):
+        return None
+    return number
+
+
+def _window_used_pct(block: object) -> float | None:
+    """Used percent for one window, or None when that window has no fresh number.
+
+    A remaining percent at or below zero is exhaustion. A present ``used_pct``
+    that is not a finite number makes the window unusable; remaining does not
+    replace it. A present freshness value other than the string ``fresh`` does
+    the same, as does a present ``remaining_pct`` that is not a finite number.
+    A window that carries its own stale flag uses the fresh-probe rule: only
+    ``stale`` exactly ``False`` is fresh.
+    """
+    if not isinstance(block, Mapping):
+        return None
+    if "stale" in block and block.get("stale") is not False:
+        return None
+    if "freshness" in block and block.get("freshness") != "fresh":
+        return None
+    remaining = _finite_pct(block.get("remaining_pct"))
+    if "remaining_pct" in block and remaining is None:
+        return None
+    if "used_pct" in block:
+        used = _finite_pct(block.get("used_pct"))
+        if used is None:
+            return None
+        if remaining is not None and remaining <= 0:
+            return 100.0
+        return used
+    if remaining is None:
+        return None
+    if remaining <= 0:
+        return 100.0
+    return 100.0 - remaining
+
+
+def _agy_claude_windows_used_pct(view: Mapping[str, Any]) -> float | None:
+    """The stricter fresh AGY Claude window, or None when the reading is unusable.
+
+    Both the five-hour window and the weekly window must be fresh numbers.
+    The headroom stop then compares that used percent with its cap.
+    """
+    from scripts.fleet import claude_account_lane
+
+    info = claude_account_lane.other_lane_record(view, _AGY_CLAUDE_PROBE_LANE)
+    if _fresh_probe_record(info) is None:
+        return None
+    windows = info.get("claude_gpt_windows")
+    if not isinstance(windows, Mapping):
+        probe = info.get("codexbar")
+        windows = probe.get("claude_gpt_windows") if isinstance(probe, Mapping) else None
+    if not isinstance(windows, Mapping):
+        return None
+    readings = [_window_used_pct(windows.get(key)) for key in _AGY_CLAUDE_WINDOW_KEYS]
+    if any(reading is None for reading in readings):
+        return None
+    return max(readings)
+
+
+class MonitorUnavailable(Exception):
+    """The Monitor routing-budget did not answer: a transport failure, not a missing usage reading."""
+
+
+def _bound_routing_view(account: ClaudeAccount | None) -> Mapping[str, Any] | None:
+    """The routing-budget bound to ``account``; None when the answer has no readable snapshot.
+
+    Raises :class:`MonitorUnavailable` when the Monitor is unreachable, times
+    out, fails the request or truncates its answer.
+    """
+    from scripts.fleet import claude_account_lane
+
+    base = _monitor_base()
+    try:
+        with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
+            data = json.load(resp)
+    except (OSError, http.client.HTTPException):
+        raise MonitorUnavailable from None
+    except ValueError:
+        return None  # answered, but not a readable snapshot: no usable reading
+    if not isinstance(data, dict):
+        return None
+    # Bound where it enters (#10770): the claude lane is only ever ``account``'s meter; with no account, none.
+    return claude_account_lane.bind_snapshot(data, account=account or claude_account_lane.no_claude_account())
+
+
 def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> float | None:
     """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None.
 
     ``account`` is required: the ``claude`` lane is that account's meter
     (``claude_account_lane.account_weekly_used_pct``), and None (no account
     named, for a structural check) reads the ``claude`` lane as unknown. Other
-    lanes ignore it. Only a fresh probe reading counts.
+    lanes ignore it. ``agy_claude`` reads the fresh AGY Claude windows on the
+    gemini lane. Only a fresh probe reading counts. A Monitor that does not
+    answer raises :class:`MonitorUnavailable` instead of reading as unknown.
     """
     from scripts.fleet import claude_account_lane
 
@@ -338,27 +460,18 @@ def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> floa
         claude_account_lane.require_account(account)
     elif lane == "claude":
         return None
-    base = _monitor_base()
-    try:
-        with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
-            data = json.load(resp)
-    except (OSError, ValueError, http.client.HTTPException):
-        return None  # unreachable, unreadable or truncated: no usable reading
-    if not isinstance(data, dict):
+    view = _bound_routing_view(account)
+    if view is None:
         return None
-    # Bound where it enters (#10770): the claude lane is only ever ``account``'s meter; with no account, none.
-    view = claude_account_lane.bind_snapshot(data, account=account or claude_account_lane.no_claude_account())
     if lane == "claude" and account is not None:
         return claude_account_lane.account_weekly_used_pct(view, account=account)
+    if lane == AGY_CLAUDE_WINDOW_LANE:
+        return _agy_claude_windows_used_pct(view)
     info = claude_account_lane.other_lane_record(view, lane)
-    if not info or info.get("status") == "unknown":
-        return None  # missing, or withdrawn as stale by Monitor
-    codexbar = info.get("codexbar")
-    if not isinstance(codexbar, dict):
+    probe = _fresh_probe_record(info)
+    if probe is None:
         return None
-    if codexbar.get("stale") is not False or codexbar.get("freshness") != "fresh":
-        return None  # only a fresh probe reading may block a dispatch
-    value = codexbar.get("weekly_used_pct")
+    value = probe.get("weekly_used_pct")
     if isinstance(value, int | float) and not isinstance(value, bool):
         return float(value)
     return None
@@ -376,19 +489,32 @@ def account_used_pct(account: ClaudeAccount | None) -> Callable[[str], float | N
     return functools.partial(routing_budget_used_pct, account=account)
 
 
-def policy_for_seat(seat: str, *, review: bool = False, check_headroom: bool = True) -> dict[str, Any]:
+def policy_for_seat(
+    seat: str, *, review: bool = False, check_headroom: bool = True, plan_metered: bool = True
+) -> dict[str, Any]:
     """Keep pauses and only the headroom entries that fund this seat.
 
-    Review admission protects the native Claude plan only. Structural
+    Review admission protects the native Claude plan only. An AGY seat also
+    stops ``claude-*`` models on that seat's Claude windows. Structural
     qualification and checks of unselected models omit headroom explicitly.
+    ``plan_metered=False`` (a claude seat on an API-key account, which has no
+    plan meter) omits the ``claude`` plan entries; its spend cap guards it.
     """
     policy = load_policy()
-    return {**policy, "headroom": [
+    headroom = [
         entry for entry in _entries(policy, "headroom")
         if check_headroom
         and (not review or entry.get("lane") == "claude")
         and (seat == "claude" or entry.get("lane") != "claude")
-    ]}
+        and (plan_metered or entry.get("lane") != "claude")
+    ]
+    if check_headroom and seat == "agy":
+        headroom.append({
+            "lane": AGY_CLAUDE_WINDOW_LANE,
+            "pattern": "claude-*",
+            "max_weekly_used_pct": _AGY_CLAUDE_WINDOW_CAP,
+        })
+    return {**policy, "headroom": headroom}
 
 
 def headroom_stop(
@@ -426,7 +552,10 @@ def refusal_reason(
     # Public-safe codes only: reasons, times and usage stay in the private policy.
     if active_pause(model, policy, now):
         return f"MODEL_PAUSED: {model} is paused by operator policy"
-    stop = headroom_stop(model, policy, used_pct)
+    try:
+        stop = headroom_stop(model, policy, used_pct)
+    except MonitorUnavailable:
+        return f"MODEL_HEADROOM_MONITOR_UNAVAILABLE: {model} usage was not read because the Monitor did not answer"
     if stop is not None and stop["used_pct"] is None:
         return f"MODEL_HEADROOM_USAGE_UNKNOWN: {model} has no fresh plan usage reading"
     if stop is not None:

@@ -2,6 +2,7 @@
 
 import json
 import re
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -27,11 +28,11 @@ def dispatch(tmp_path, monkeypatch):
     schema = tmp_path / "schema.json"
     schema.write_text('{"type":"object","required":["verdict"]}')
 
-    def invoke(path="schema.json", agent="sol", expected=0, review=False):
-        model = "gemini-3.8-flash-high" if agent == "agy" else "gpt-6.1-sol"
-        args = ["dispatch", "--agent", agent, "--model", model, "--task-id", "schema", "--prompt", "Review"]
-        if agent == "agy":
-            args += ["--review-profile", "code"]
+    def invoke(path="schema.json", agent="sol", expected=0, review=False, review_profile="code", task_id="schema"):
+        model = {"agy": "gemini-3.8-flash-high", "claude": "claude-opus-5-5"}.get(agent, "gpt-6.1-sol")
+        args = ["dispatch", "--agent", agent, "--model", model, "--task-id", task_id, "--prompt", "Review"]
+        if agent == "agy" and review_profile is not None:
+            args += ["--review-profile", review_profile]
         if path is not None:
             args += ["--output-schema", str(path)]
         if review:
@@ -42,7 +43,7 @@ def dispatch(tmp_path, monkeypatch):
             git.create_worktree.assert_not_called()
             assert not (tmp_path / "tasks").exists()
             return None
-        return start.call_args.args[0], store.read("schema")
+        return start.call_args.args[0], store.read(task_id)
 
     return SimpleNamespace(invoke=invoke, schema=schema)
 
@@ -64,10 +65,10 @@ def test_schema_loss_record_and_real_codex_argv(dispatch, absolute, agent):
         provider.build(spec, {})
 
 
-@pytest.mark.parametrize("agent", ["claude", "cursor", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("agent", ["cursor", "muse", "opencode"])
 def test_unsupported_schema_refused_before_launch(dispatch, capsys, agent):
     dispatch.invoke(agent=agent, expected=2)
-    assert "--output-schema is supported only with the effective codex or agy agent" in capsys.readouterr().err
+    assert "--output-schema is supported only with the effective codex, agy, or claude agent" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("kind", ["missing", "non-json", "non-object", "invalid-schema", "symlink", "relative-escape"])
@@ -147,6 +148,104 @@ def test_invalid_schema_result_cannot_settle_done(dispatch, monkeypatch, output,
         assert "structured_output_invalid" in settled["error"]
 
 
+def test_claude_review_binds_findings_schema(dispatch):
+    """Case 4: a native Claude code review must bind the findings schema.
+
+    A VERDICT-only reply still cannot become a receipt.
+    """
+    from scripts.dispatcher.providers import claude
+    from scripts.review.review_contract import ContractError, canonical_receipt_payload
+
+    spec, record = dispatch.invoke(path=None, agent="claude", review=True, task_id="claude-schema")
+    assert record["require_review_verdict"] is True
+    assert record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
+    argv = claude.build(spec, {}).argv
+    schema = json.loads(argv[argv.index("--json-schema") + 1])
+    canonical = json.loads(Path(record["output_schema_path"]).read_text(encoding="utf-8"))
+    assert "$schema" in canonical and "$schema" not in schema  # Claude Code refuses the meta-schema reference
+    assert schema == {key: value for key, value in canonical.items() if key != "$schema"}
+    assert schema["properties"]["schema_version"]["const"] == "code-review-findings.v1"
+    assert schema["required"] == ["schema_version", "overall", "findings"]
+    with pytest.raises(ContractError, match="review_envelope_requires_one_json_block"):
+        canonical_receipt_payload("VERDICT: APPROVE\nSCORE: 9/10 No defects.\nNo findings.\n")
+    receipt = {
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": "correct", "explanation": "No defects.", "confidence": 0.9},
+        "findings": [],
+    }
+    bound = json.dumps({
+        "type": "result", "subtype": "success", "is_error": False,
+        "result": "", "structured_output": receipt,
+    })
+    parsed = claude.parse(bound, "", 0, None, output_schema=schema)
+    assert parsed.error is None
+    assert json.loads(parsed.text) == receipt
+    preamble = json.dumps({
+        "type": "result", "subtype": "success", "is_error": False,
+        "result": "VERDICT: APPROVE", "structured_output": receipt,
+    })
+    parsed = claude.parse(preamble, "", 0, None, output_schema=schema)
+    assert json.loads(parsed.text) == receipt
+    missing = claude.parse(
+        json.dumps({"type": "result", "subtype": "success", "is_error": False, "result": "VERDICT: APPROVE"}),
+        "", 0, None, output_schema=schema,
+    )
+    assert missing.error == "claude: missing structured output"
+    failed = claude.parse(bound, "", 1, None, output_schema=schema)
+    assert failed.error == "claude: exited with status 1"
+    codex_spec, codex_record = dispatch.invoke(path=None, agent="sol", review=True, task_id="codex-schema")
+    assert codex_record["output_schema_path"].endswith("/schemas/code-review-findings.v1.schema.json")
+    codex_argv = codex.build(codex_spec, {}).argv
+    assert codex_argv.count("--output-schema") == 1
+    bound_path = Path(codex_argv[codex_argv.index("--output-schema") + 1])
+    assert bound_path.parent.name == ".codex-schemas"
+    assert bound_path.parent.parent == codex_spec.final_file.parent
+    assert codex_spec.options.get("provider_output_schema_sha256") is not None
+    bound = json.loads(bound_path.read_text())
+    assert "if" not in bound and "oneOf" not in json.dumps(bound) and "not" not in bound
+    assert "missing_capabilities" not in bound.get("properties", {})
+    assert bound["properties"]["schema_version"]["type"] == "string"
+    from scripts.audit.post_build_review import validate_codex_output_schema
+
+    validate_codex_output_schema(bound)
+    receipt_schema = json.loads(Path(codex_record["output_schema_path"]).read_text())
+    assert "if" in receipt_schema
+    refused = {**receipt, "missing_capabilities": ["shell"]}
+    from jsonschema import Draft202012Validator
+    from jsonschema.exceptions import ValidationError
+
+    with pytest.raises(ValidationError, match="missing_capabilities"):
+        Draft202012Validator(receipt_schema).validate(refused)
+    Draft202012Validator(receipt_schema).validate(receipt)
+
+    from scripts.dispatcher.types import TaskSpec
+
+    dry_spec = TaskSpec(
+        "codex-dry-schema", "sol", "gpt-6.1-sol", None, "read-only",
+        codex_spec.worktree, codex_spec.prompt_file, codex_spec.final_file,
+        options={**codex_spec.options, "dry_run": "True"},
+    )
+    dry_argv = codex.build(dry_spec, {}).argv
+    dry_path = Path(dry_argv[dry_argv.index("--output-schema") + 1])
+    assert not dry_path.exists()
+
+    name_map_schema = {
+        "type": "object",
+        "properties": {
+            "const": {"type": "string"},
+            "if": {"type": "integer"},
+            "not": {"type": "boolean"},
+        },
+        "required": ["const", "if", "not"],
+    }
+    projected = codex.openai_strict_schema(name_map_schema)
+    assert "const" in projected["properties"]
+    assert "if" in projected["properties"]
+    assert "not" in projected["properties"]
+    assert projected["properties"]["const"]["type"] == "string"
+    assert codex._needs_openai_strict(name_map_schema) is False
+
+
 def test_agy_review_binds_findings_schema(dispatch):
     """Defect class: review dispatch silently omits its structured verdict schema."""
     spec, record = dispatch.invoke(path=None, agent="agy", review=True)
@@ -156,6 +255,97 @@ def test_agy_review_binds_findings_schema(dispatch):
     schema = json.loads(argv[argv.index("--json-schema") + 1])
     assert schema["properties"]["schema_version"]["const"] == "code-review-findings.v1"
     assert schema["required"] == ["schema_version", "overall", "findings"]
+
+
+def test_agy_ukrainian_review_omits_findings_schema(dispatch):
+    """Defect class: Ukrainian review is forced to bind the code-review findings schema."""
+    spec, record = dispatch.invoke(path=None, agent="agy", review=True, review_profile="ukrainian")
+    assert record["require_review_verdict"] is True
+    assert record.get("output_schema_path") is None
+    assert record.get("output_schema_sha256") is None
+    argv = agy.build(spec, {}).argv
+    assert "--json-schema" not in argv
+
+
+@pytest.mark.parametrize("case", ["valid", "missing-block", "malformed-json", "wrong-schema"])
+def test_agy_ukrainian_review_preserves_item_judgments_and_refuses_malformed(case):
+    """Defect class: Ukrainian item judgments are dropped by schema enforcement, or invalid blocks are accepted."""
+    from scripts.review.review_contract import ContractError, build_item_packet, judge_item_reply
+
+    packet = build_item_packet([{"id": "item-1", "text": "слово"}])
+    if case == "valid":
+        reply = (
+            "VERDICT: APPROVE\n\n"
+            "```ukrainian-item-judgments\n"
+            '{"schema": "ukrainian-item-judgments.v1", "items": [{"id": "item-1", "verdict": "APPROVE", "finding": "", "sources": "VESUM", "quote": "слово"}]}\n'
+            "```\n"
+        )
+    elif case == "missing-block":
+        reply = "VERDICT: APPROVE\n\nNo item judgments block provided."
+    elif case == "malformed-json":
+        reply = "VERDICT: APPROVE\n\n```ukrainian-item-judgments\n{not valid json\n```\n"
+    elif case == "wrong-schema":
+        reply = (
+            "VERDICT: APPROVE\n\n"
+            "```ukrainian-item-judgments\n"
+            '{"schema": "code-review-findings.v1", "items": [{"id": "item-1", "verdict": "APPROVE"}]}\n'
+            "```\n"
+        )
+
+    stream = json.dumps({"event": "result", "result": {"status": "SUCCESS", "response": reply}}) + "\n"
+    parsed = agy.parse(stream, "", 0, reply, output_schema=None)
+    assert parsed.error is None
+    assert parsed.text == reply
+
+    if case == "valid":
+        chunk = judge_item_reply(packet, parsed.text, stated="APPROVED", ukrainian=True)
+        assert chunk.coverage == ("item-1",)
+        assert chunk.void is None
+    elif case == "missing-block":
+        with pytest.raises(ContractError, match="ITEM_JUDGMENTS_MISSING"):
+            judge_item_reply(packet, parsed.text, stated="APPROVED", ukrainian=True)
+    else:
+        with pytest.raises(ContractError, match="ITEM_JUDGMENTS_MALFORMED"):
+            judge_item_reply(packet, parsed.text, stated="APPROVED", ukrainian=True)
+
+
+def _item_review_record(tmp_path, profile="ukrainian"):
+    import hashlib
+
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    brief = tmp_path / "brief.prompt"
+    brief.write_text("Review.\n\n" + render_item_packet(build_item_packet([{"id": "item-1", "text": "слово"}])))
+    return {"schema_version": 2, "require_review_verdict": True, "review_profile": profile,
+            "prompt_file": str(brief), "prompt_sha256": hashlib.sha256(brief.read_bytes()).hexdigest()}
+
+
+def test_verdict_gate_accepts_ukrainian_item_judgments_block(tmp_path):
+    """Defect class (#12417): a contract-only Ukrainian item-judgments reply fails the verdict gate."""
+    reply = (
+        "```ukrainian-item-judgments\n"
+        '{"schema": "ukrainian-item-judgments.v1", "items": [{"id": "item-1", "verdict": "APPROVE", '
+        '"finding": "", "sources": "VESUM", "quote": "слово"}]}\n'
+        "```\n"
+    )
+    assert worker._verdict_failure(_item_review_record(tmp_path), reply) is None
+
+
+def test_verdict_gate_refuses_ukrainian_reply_without_block_or_verdict(tmp_path):
+    """Defect class (#12417): a Ukrainian reply with neither a valid block nor a verdict passes the gate."""
+    reply = "```ukrainian-item-judgments\n{not valid json\n```\n"
+    assert worker._verdict_failure(_item_review_record(tmp_path), reply) == "review_missing_verdict_line"
+
+
+def test_verdict_gate_code_review_without_verdict_still_fails(tmp_path):
+    """Defect class (#12417): the item-judgments path leaks into code-review profiles."""
+    reply = (
+        "```ukrainian-item-judgments\n"
+        '{"schema": "ukrainian-item-judgments.v1", "items": [{"id": "item-1", "verdict": "APPROVE", '
+        '"finding": "", "sources": "VESUM", "quote": "слово"}]}\n'
+        "```\n"
+    )
+    assert worker._verdict_failure(_item_review_record(tmp_path, "code"), reply) == "review_missing_verdict_line"
 
 
 @pytest.mark.parametrize("case", ["valid", "conflicting-response", "missing", "null", "invalid",
@@ -267,7 +457,10 @@ def test_agy_schema_rejection_is_typed_before_model_init(phase):
         stdout += json.dumps({"event": "result", "result": {"status": "SUCCESS", "structured_output": payload}})
     parsed = agy.parse(stdout, stderr, 0 if phase == "success" else 1, None, output_schema=load_schema())
     if phase == "before-init":
-        assert parsed.error == "agy_output_schema_unsupported: " + message
+        assert parsed.error == (
+            "agy_output_schema_unsupported: AGY rejected the --json-schema argument; "
+            "its text is in the task's retained stream"
+        )
         assert parsed.text is None and parsed.resolved_model is None
     elif phase == "after-init":
         assert parsed.error == "agy: exited with status 1"

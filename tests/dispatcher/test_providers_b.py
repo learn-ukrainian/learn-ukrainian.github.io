@@ -31,6 +31,9 @@ SUCCESS = {
     "agy": '{"event":"init"}\n'
     '{"event":"result","result":{"status":"SUCCESS","response":"Finished.","usage":{"input_tokens":7,"output_tokens":3}}}\n',
 }
+_AGY_UNCLASSIFIED = (
+    "agy: terminal result unsuccessful (ERROR): unclassified error; its text is in the task's retained stream"
+)
 ERROR = {
     "codex": '{"type":"turn.failed","error":{"message":"failed"}}',
     "claude": '{"type":"result","subtype":"error_during_execution","is_error":true,"result":"Finished."}',
@@ -504,7 +507,7 @@ def test_agy_success_while_background_work_is_open_is_incomplete():
         (
             ERROR["agy"],
             SUCCESS["agy"],
-            ParsedResult("Finished.", None, "agy: terminal result unsuccessful"),
+            ParsedResult("Finished.", None, _AGY_UNCLASSIFIED),
         ),
         (
             '{"event":"result","result":null}',
@@ -584,10 +587,13 @@ def test_claude_unclean_capacity_stream_stays_failed(stdout):
 
 
 # AGY ends a quota refusal with one terminal result and one structured AGY_ERROR line.
-# Exit 0 keeps "terminal result unsuccessful"; exit 3 overwrites that with the exit status.
+# The record carries only the fixed quota class; AGY's message stays in the retained stream (#12408).
 _AGY_QUOTA = (
     "Individual quota reached. Please upgrade your subscription to increase your limits. "
     "Resets in 1h43m57s."
+)
+_AGY_QUOTA_ERROR = (
+    "agy: quota or capacity limit (RESOURCE_EXHAUSTED, 429); its text and reset hint are in the task's retained stream"
 )
 
 
@@ -609,11 +615,13 @@ def test_agy_quota_error_settles_rate_limited_and_a_real_failure_stays_failed():
     stdout, stderr = _agy_quota_stream(_AGY_QUOTA)
     for returncode in (0, 3):
         result = load("agy").parse(stdout, stderr, returncode, None)
-        assert (result.rate_limited, result.error) == (True, f"agy: {_AGY_QUOTA}")
+        assert (result.rate_limited, result.error) == (True, _AGY_QUOTA_ERROR)
     ordinary = load("agy").parse(ERROR["agy"] + "\n", "boom\n", 3, None)
-    assert (ordinary.rate_limited, ordinary.error) == (False, "agy: exited with status 3")
+    assert (ordinary.rate_limited, ordinary.error) == (
+        False, "agy: exited with status 3; " + _AGY_UNCLASSIFIED.removeprefix("agy: "),
+    )
     prose = load("agy").parse(stdout, f"error: {_AGY_QUOTA}\n", 0, None)
-    assert (prose.rate_limited, prose.error) == (False, "agy: terminal result unsuccessful")
+    assert (prose.rate_limited, prose.error) == (False, _AGY_UNCLASSIFIED)
     dirty = load("agy").parse(stdout + "not json\n", stderr, 0, None)
     assert dirty.rate_limited is False
     boolean_code = stderr.replace('"error_code": 429', '"error_code": true')
@@ -621,6 +629,119 @@ def test_agy_quota_error_settles_rate_limited_and_a_real_failure_stays_failed():
     malformed = load("agy").parse(stdout, boolean_code, 0, None)
     assert malformed.rate_limited is False
 
+
+
+# A synthetic secret: no test fixture or record field may carry it once it reaches AGY's output (#12408).
+_CANARY = "CANARY-sk-live-9f3Qz7"
+
+
+def _agy_canary_streams(field, returncode):
+    """AGY output with the canary in one provider field, beside an otherwise ordinary run."""
+    init = {"event": "init", "init": {"model": "gemini-3.8-flash-high"}}
+    terminal = {"status": "ERROR" if returncode else "SUCCESS", "response": "Finished.",
+                "structured_output": {}, "usage": {"input_tokens": 7}}
+    stderr = ""
+    if field == "result.error":
+        terminal.update(status="ERROR", error=f"API error: {_CANARY}")
+    elif field == "result.status":
+        terminal.update(status=_CANARY, error="failed")
+    elif field == "usage.value":
+        terminal["usage"] = {"input_tokens": _CANARY, "output_tokens": [_CANARY]}
+    elif field == "usage.key":
+        terminal["usage"] = {_CANARY: 5}
+    elif field == "init.model":
+        init = {"event": "init", "model": _CANARY, "init": {"model": _CANARY}}
+    elif field == "quota":
+        terminal.update(status="ERROR", error=f"Individual quota reached. {_CANARY}")
+        payload = {"status": "RESOURCE_EXHAUSTED", "error_code": 429, "short_error": _CANARY}
+        stderr = f"error: {_CANARY}\nAGY_ERROR: {json.dumps(payload)}\n"
+    elif field == "model_selection":
+        init = None
+        terminal.update(status="ERROR", error=f"invalid model selection {_CANARY}", num_turns=0)
+        stderr = f"error: {_CANARY}\n"
+    if field == "stderr.schema_refusal":
+        return "", f"Error: invalid --json-schema: {_CANARY}\n- at schema: {_CANARY}\n\nUsage of agy:\n"
+    events = ([init] if init else []) + [{"event": "result", "result": terminal}]
+    return "".join(json.dumps(event) + "\n" for event in events), stderr
+
+
+@pytest.mark.parametrize("schema", [None, "findings"])
+@pytest.mark.parametrize("returncode", [0, 1])
+@pytest.mark.parametrize("field", [
+    "result.error", "result.status", "stderr.schema_refusal", "usage.value", "usage.key", "init.model", "quota",
+    "model_selection",
+])
+def test_agy_provider_text_never_reaches_the_task_record(tmp_path, field, returncode, schema):
+    """Defect class: provider-controlled text copied into a record that is published (#12408)."""
+    from scripts.dispatcher import worker
+    from scripts.review.review_contract import load_schema
+
+    agy = load("agy")
+    stdout, stderr = _agy_canary_streams(field, returncode)
+    parsed = agy.parse(stdout, stderr, returncode, None, output_schema=load_schema() if schema else None)
+    stream = tmp_path / "stdout.jsonl"
+    stream.write_text(stdout)
+    observed = agy.model_observer(stream)()
+    # The fields the worker assigns from a parsed AGY run, settled and while running (worker.start).
+    record = {
+        "error": parsed.error, "usage": parsed.usage,
+        **worker._stream_attestation(agy.MODEL_SOURCE, parsed.resolved_model),
+        "running": worker._stream_attestation(agy.MODEL_SOURCE, observed),
+        "identity": agy.identity_failure("gemini-3.8-flash-high", parsed.resolved_model),
+    }
+    assert _CANARY not in repr(replace(parsed, text=None))
+    assert _CANARY not in json.dumps(record, indent=2)
+    assert _CANARY not in json.dumps(record, ensure_ascii=False)
+
+
+def test_agy_usage_keeps_only_known_non_negative_integer_counters():
+    """Defect class: arbitrary usage values or keys recorded as token counts."""
+    usage = {
+        "input_tokens": 7, "output_tokens": -1, "thinking_tokens": True, "cache_read_tokens": 2.0,
+        "total_tokens": 2**63, "future_tokens": 5,
+    }
+    terminal = {"event": "result", "result": {"status": "SUCCESS", "response": "Finished.", "usage": usage}}
+    assert load("agy").parse(json.dumps(terminal) + "\n", "", 0, None).usage == {"input_tokens": 7}
+    terminal["result"]["usage"] = {"output_tokens": "3", "future_tokens": 5}
+    assert load("agy").parse(json.dumps(terminal) + "\n", "", 0, None).usage is None
+
+
+@pytest.mark.parametrize(("model", "attested"), [
+    ("gemini-3.8-flash-high", "gemini-3.8-flash-high"),
+    ("claude-sonnet-5-5-high", "claude-sonnet-5-5-high"),
+    ("claude-sonnet-5-5", "claude-sonnet-5-5"),
+    ("gpt-6.1-sol", "unrecognized"),
+    ("gemini-9-forged", "unrecognized"),
+])
+def test_agy_init_model_attests_only_a_catalog_agy_model_id(tmp_path, model, attested):
+    """Defect class: an arbitrary init.model string recorded as the resolved model."""
+    stdout = json.dumps({"event": "init", "init": {"model": model}}) + "\n" + SUCCESS["agy"].split("\n", 1)[1]
+    assert load("agy").parse(stdout, "", 0, None).resolved_model == attested
+    stream = tmp_path / "stdout.jsonl"
+    stream.write_text(stdout)
+    assert load("agy").model_observer(stream)() == attested
+
+
+_AGY_UNOFFERED = 'invalid model selection (--model "gemini-9-unoffered-high" --effort ""): model is not recognized'
+
+
+@pytest.mark.parametrize(("started", "error", "stderr", "expected"), [
+    (False, _AGY_UNOFFERED, f"error: {_AGY_UNOFFERED}\n", (
+        False, "agy_model_unavailable: AGY does not offer the requested model to this account")),
+    (True, _AGY_UNOFFERED, f"error: {_AGY_UNOFFERED}\n", (False, (
+        "agy: exited with status 1; terminal result unsuccessful (ERROR): "
+        "model_selection error; its text is in the task's retained stream"))),
+    (True, "API error: connection reset", "", (False, (
+        "agy: exited with status 1; terminal result unsuccessful (ERROR): "
+        "transport error; its text is in the task's retained stream"))),
+    (True, _AGY_QUOTA, _agy_quota_stream(_AGY_QUOTA)[1], (True, _AGY_QUOTA_ERROR)),
+])
+def test_agy_typed_failure_classifications_hold(started, error, stderr, expected):
+    """Defect class: the fixed vocabulary loses the unavailable-model, transport or quota classification."""
+    events = [{"event": "init", "init": {"model": "gemini-3.8-flash-high"}}] if started else []
+    events.append({"event": "result", "result": {"status": "ERROR", "response": "", "error": error, "num_turns": 0}})
+    result = load("agy").parse("".join(json.dumps(event) + "\n" for event in events), stderr, 1, None)
+    assert (result.rate_limited, result.error) == expected
 
 # --- AGY read-only boundary (C-3027) -------------------------------------------------------------
 

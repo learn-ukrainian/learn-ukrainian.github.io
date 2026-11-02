@@ -1050,11 +1050,15 @@ CURRENT_INPUTS = _V2_BASELINE["inputs"]
 # byte-identical; the loaded catalog drops the retired fallback block so frozen
 # compares and re-validation match the live route keys.
 CURRENT_BASELINE["catalog"]["execution_routing"]["sol_advised_bounded"].pop("bounded_fallback_worker")
+# The Hermes runtime path is removed (#12410). The gzip fixture stays
+# byte-identical; the loaded catalog drops the retired transport so frozen
+# compares match the live route.
+CURRENT_BASELINE["catalog"]["models"]["deepseek-v4.1-flash"]["transports"].remove("hermes")
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
-    "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
-    "review_profiles": ["code"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
+    "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high --contributor-mode off",
+    "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
 }
 def _pop_budget_elevation_role(catalog):
     """Remove the elevated-tier grant role (cto-7923-adv-clog-sol, item 3b) and return what it added."""
@@ -1125,6 +1129,17 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # route or review ranking. It replaced the retired budget extension role.
             elevation = _pop_budget_elevation_role(value)
             assert hashlib.sha256(encode(elevation)).hexdigest() == "4a395379ef040f47f69be6badd96376bcbc1041d8698ff0703bc9209e399592d"
+            # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off
+            if value["review_ladders"]["low"] and value["review_ladders"]["low"][-1] == ["muse"]:
+                assert value["review_ladders"]["low"].pop() == ["muse"]
+            if value["review_ladders"]["medium"] and value["review_ladders"]["medium"][-1] == ["muse"]:
+                assert value["review_ladders"]["medium"].pop() == ["muse"]
+            muse_cand = value["review_candidates"]["muse"]
+            assert hashlib.sha256(encode(muse_cand)).hexdigest() == "641cdce0844039c04aadcbff572b54eed2c6927a243cfe172eefbddb802b9b5b"
+            muse_model = value["models"]["muse-wonder-full-1.0"]
+            assert hashlib.sha256(encode(muse_model)).hexdigest() == "72ee5f7017790c3dd0fc3ebfbe47fa40c883010ff444875ad6403ca80fa305e5"
+            value["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])
+            value["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

@@ -436,15 +436,91 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
 SETTLE_PATIENCE = 10
 
 
+def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
+    """Whether another still-active task has its supervisor or provider in ``cgroup``.
+
+    A fallback child started from inside this scope stays in it. Stopping the
+    scope would cancel that task. Membership that cannot be read counts too,
+    and so does a task record or task directory that cannot be read, so the
+    stop is skipped and the liveness check keeps the tree. A child that has
+    its own scope is not a member here and does not block the stop.
+    """
+    from scripts.orchestration import worker_leftovers
+
+    try:
+        members = worker_leftovers.ProcFsReader().cgroup_procs(cgroup)
+    except worker_leftovers.ScanUnknown:
+        return True
+    if not members:
+        return False
+    task_id = record.get("task_id")
+    try:
+        root = store.tasks_dir()
+        if not root.is_dir():
+            return True
+        next(root.iterdir(), None)
+        others = store.list_tasks(strict=True)
+    except (OSError, ValueError):
+        return True
+    protected: set[int] = set()
+    for other in others:
+        if other.get("task_id") == task_id or other.get("status") not in store.ACTIVE:
+            continue
+        for key in ("pid", "provider_pgid"):
+            value = other.get(key)
+            if type(value) is int and value > 0:
+                protected.add(value)
+    return any(pid in protected for pid in members)
+
+
+def _end_own_scope(record: dict) -> None:
+    """End processes left in this finished task's own scope.
+
+    A scope stays alive while any member remains. Settlement used to read those
+    members as a live provider and keep the worktree. The stop reaches only the
+    unit ``dispatch_isolation`` derives for this task and nonce: a recorded
+    cgroup that is not that unit's scope is left alone, another active task's
+    supervisor or provider in this cgroup is left alone, the caller and its
+    ancestors are not signalled, and a fallback launch is not a scope. A stop
+    that cannot be proven leaves the processes for the liveness check, which
+    keeps the tree.
+    """
+    if record.get("launch_mode") != "scope":
+        return
+    task_id, unit, nonce = record.get("task_id"), record.get("launch_unit"), record.get("run_nonce")
+    if not all(isinstance(value, str) and value for value in (task_id, unit, nonce)):
+        return
+    from scripts.orchestration import dispatch_isolation, worker_leftovers
+
+    if not dispatch_isolation.scope_unit_matches(unit, task_id=task_id, run_nonce=nonce):
+        return
+    cgroup = dispatch_isolation.scope_cgroup(unit, uid=os.getuid())
+    recorded = record.get("launch_cgroup")
+    # A recorded boundary that is not this unit's scope is not ours to stop.
+    if isinstance(recorded, str) and recorded and recorded != cgroup:
+        return
+    if _cgroup_holds_other_active_task(record, cgroup):
+        return
+    scope = worker_leftovers.WorkerScope(
+        task_id=task_id, launch_mode=dispatch_isolation.LAUNCH_SCOPE, unit=unit, cgroup=cgroup, run_nonce=nonce)
+    try:
+        worker_leftovers.stop_leftovers(scope, reader=worker_leftovers.ProcFsReader())
+    except (OSError, ValueError, worker_leftovers.ScanUnknown):
+        return
+
+
 def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> None:
     """Record the task worktree's disposition; never changes the task's execution status.
 
     The worktree goes only once the provider's whole process tree is proven gone; liveness that
-    cannot be proven either way keeps it. With salvage (git.settle_worktree), that proof is taken
-    again with the borrower check, before the salvage push and under the removal lock.
+    cannot be proven either way keeps it. A finished scope launch first ends whatever that scope
+    still holds, so a stray descendant cannot keep a published tree. With salvage
+    (git.settle_worktree), that proof is taken again with the borrower check, before the salvage
+    push and under the removal lock.
     """
     deadline = time.monotonic() + patience
     record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
+    _end_own_scope(record)
     while (alive := _provider_alive(record)) and time.monotonic() < deadline:
         time.sleep(0.05)
     if alive is not False:
@@ -519,8 +595,103 @@ def _verdict_failure(record: dict, text: str | None) -> str | None:
     except Exception:
         return "review_gate_error"
     if not verdicts:
-        return "review_missing_verdict_line"
+        return None if _item_judgments_verdict(record, text) else "review_missing_verdict_line"
     return "review_ambiguous_verdict" if len(verdicts) > 1 else None
+
+
+def _item_judgments_verdict(record: dict, text: str | None) -> str | None:
+    """The verdict a valid ``ukrainian-item-judgments`` block carries, or None.
+
+    The Ukrainian contract with an item denominator has the reviewer return only that
+    block (``review-loop/references/ukrainian.md``). The recorder's own parser judges it
+    against the brief's frozen packet, as the recorder does.
+    """
+    if record.get("review_profile") != "ukrainian" or not text:
+        return None
+    from scripts.review.review_contract import ContractError, item_judgments_verdict, load_frozen_item_packet
+
+    try:
+        packet = load_frozen_item_packet(record)
+        return item_judgments_verdict(packet, text) if packet is not None else None
+    except ContractError:
+        return None
+
+
+def _correction_stdin(prior: str) -> bytes:
+    """One format repair. The verdict, findings, and their meaning stay as they were."""
+    return (
+        "The previous reply is not a recordable review.\n"
+        "Return only one JSON object matching schemas/code-review-findings.v1.schema.json.\n"
+        "Keep the same verdict, the same findings, and the same meaning.\n"
+        "Include confidence and verbatim where the schema requires them.\n\n"
+        "Previous reply:\n"
+        f"{prior}\n"
+    ).encode()
+
+
+def _format_correction(record: dict, schema: dict | None, text: str | None, launches: int) -> tuple[bytes, dict] | None:
+    """A second launch when a code review cannot bind a schema and the reply cannot be a receipt.
+
+    Schema-capable providers fail closed on their own schema check. An ambiguous
+    reply is not rewritten into one verdict. One launch is the limit.
+    """
+    if schema is not None or launches >= 1 or record.get("require_review_verdict") is not True:
+        return None
+    if not text or not text.strip():
+        return None
+    from scripts.review.review_contract import (
+        ContractError,
+        canonical_receipt_payload,
+        decision_lock,
+        schema_path,
+    )
+
+    if schema_path(profile=record.get("review_profile"), task=record) is None:
+        return None
+    try:
+        canonical_receipt_payload(text)
+    except ContractError:
+        pass
+    else:
+        return None
+    lock = decision_lock(text)
+    # A correction is accepted only when this reply already states one decision.
+    # With nothing to lock, a second reply would be a new verdict.
+    if lock["ambiguous"] or (lock.get("payload") is None and len(lock.get("verdicts") or []) != 1):
+        return None
+    return _correction_stdin(text), lock
+
+
+def _receipt_failure(record: dict, text: str | None) -> str | None:
+    """A code review settles only when the reply is a canonical receipt.
+
+    A verdict line alone is not a receipt. Ukrainian reviews do not use this
+    object, so they keep the verdict gate.
+    """
+    if record.get("schema_version") != 2 or record.get("require_review_verdict") is not True:
+        return None
+    from scripts.review.review_contract import ContractError, canonical_receipt_payload, schema_path
+
+    if schema_path(profile=record.get("review_profile"), task=record) is None:
+        return None
+    try:
+        canonical_receipt_payload(text or "")
+    except ContractError:
+        return _verdict_failure(record, text) or "review_gate_error"
+    return None
+
+
+def _corrected_reply_refusal(lock: dict, text: str | None) -> str | None:
+    """Refuse a correction that is still not a receipt, or that changes the locked decision."""
+    from scripts.review.review_contract import ContractError, canonical_receipt_payload, same_decision
+
+    try:
+        payload = canonical_receipt_payload(text or "")
+    except ContractError:
+        return _verdict_failure({"schema_version": 2, "require_review_verdict": True}, text) or "review_gate_error"
+    if not same_decision(lock, payload):
+        return "review_ambiguous_verdict"
+    return None
 
 
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
@@ -614,6 +785,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         invocation = runtime_context.build(spec, child_env(spec))
         record["runtime_input_sha256"] = hashlib.sha256(invocation.stdin or b"").hexdigest()
         pending_conversation = None
+        pending_correction = None
+        correction_launches = 0
+        locked = None
         continuations = 0
         parsed = None
         try:
@@ -650,18 +824,23 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         if slots_record is not None:
             record["review_test_slots"] = slots_record
         while True:
+            correcting = pending_correction is not None
             if pending_conversation:
                 from scripts.dispatcher.providers.agy import continuation
 
                 invocation = continuation(runtime_context.build(spec, child_env(spec)), pending_conversation)
+            elif correcting:
+                invocation = replace(runtime_context.build(spec, child_env(spec)), stdin=pending_correction)
+                pending_correction = None
             # The first launch keeps the timeout the caller passed. Only a continuation
             # spends what remains of that same deadline, and a spent deadline does not
             # become the unlimited timeout a zero means.
             launch_hard = hard_timeout
-            if pending_conversation and hard_timeout > 0:
+            if (pending_conversation or correcting) and hard_timeout > 0:
                 launch_hard = max(0.0, hard_timeout - (time.monotonic() - started))
                 if launch_hard <= 0 and parsed is not None:
-                    parsed = _agy_unfinished(parsed)
+                    if pending_conversation:
+                        parsed = _agy_unfinished(parsed)
                     text = parsed.text
                     break
             with tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdin, stdout_path.open("wb") as out, stderr_path.open(
@@ -710,18 +889,27 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             final = invocation.final_file
             final_text = final.read_text(errors="replace") if final and final.exists() else None
             stdout = stdout_path.read_text(errors="replace")
-            parse_options = {"output_schema": schema} if spec.agent == "agy" and schema is not None else {}
+            parse_options = (
+                {"output_schema": schema} if spec.agent in {"agy", "claude"} and schema is not None else {}
+            )
             parsed = provider.parse(stdout, stderr_path.read_text(errors="replace"), exit_code, final_text, **parse_options)
             text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
             # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
             resolved_model = parsed.resolved_model
             conversation, parsed = _agy_follow_up(
                 spec, record, parsed, started, hard_timeout, continuations, checkpoint)
-            if conversation is None:
-                text = parsed.text
-                break
-            pending_conversation = conversation
-            continuations += 1
+            if conversation is not None:
+                pending_conversation = conversation
+                continuations += 1
+                continue
+            text = parsed.text
+            if parsed.error is None and (
+                correction := _format_correction(record, schema, text, correction_launches)
+            ):
+                pending_correction, locked = correction
+                correction_launches += 1
+                continue
+            break
         store.begin_settlement(record)
         if spec.agent == "agy" and spec.mode == "read-only":
             # Only the boundary's receipt, written outside the sandbox, proves the run read-only and
@@ -735,15 +923,15 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             # Before the schema check, which would record the same terminal failure as invalid output.
             status, error = "rate_limited", parsed.error
             return
-        if schema is not None and spec.agent != "agy":
+        if schema is not None and spec.agent != "agy" and exit_code == 0 and not parsed.error:
             from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
 
-            result = structured_result(json_value(text), schema, returncode=exit_code, terminal_ok=not parsed.error)
-            text = result.response
+            result = structured_result(json_value(text), schema, returncode=exit_code, terminal_ok=True)
             if not result.ok:
                 error = f"{result.failure_code}: {result.stderr_excerpt}"
                 status = "failed"
                 return
+            text = result.response
         status = "done" if exit_code == 0 and not parsed.error and text and text.strip() else "failed"
         if exit_code < 0:
             status = "crashed"
@@ -764,6 +952,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 record.update(_stream_attestation(MODEL_USAGE_SOURCE, attested[0]))
                 if attested[1]:
                     status, error = "failed", attested[1]
+        if status == "done" and locked is not None and (refusal := _corrected_reply_refusal(locked, text)):
+            status, error = "failed", refusal
+        if status == "done" and (refusal := _receipt_failure(record, text)):
+            status, error = "failed", refusal
         if status == "done" and (refusal := _verdict_failure(record, text)):
             status, error = "failed", refusal
     except _Cancelled:
