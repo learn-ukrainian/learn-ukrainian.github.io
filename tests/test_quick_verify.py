@@ -65,17 +65,15 @@ def test_structure_missing_section():
     assert "Перші слова" in structure_errors[0].message
 
 
-# --- Word count checks ---
+# --- Word count is not a gate ---
 
 
-def test_word_count_too_short():
+def test_module_is_not_refused_for_its_word_count():
     plan = _make_plan(word_target=1200)
-    content = _make_content(word_count=300)  # Way under
+    content = _make_content(word_count=300)  # far below the legacy target
     results = quick_verify(content, plan)
-    wc_errors = [r for r in results if r.check == "WORD_COUNT"]
-    assert len(wc_errors) == 1
-    assert wc_errors[0].severity == "ERROR"
-    assert "Too short" in wc_errors[0].message
+    assert not [r for r in results if r.check == "WORD_COUNT"]
+    assert not has_errors(results)
 
 
 # --- Toxic token checks ---
