@@ -52,12 +52,25 @@
       "path_prepend": ["scripts/agent_runtime/shims"]
     },
     {
-      "session": "atlas",
+      "session": "codex-atlas",
       "name": "atlas",
       "kind": "codex",
       "epic": "atlas",
       "sender": "codex-atlas",
       "goal": ".claude/atlas-epic/DRIVER-STATE.md",
+      "launcher": "start-codex-driver.sh",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "account_env": ["CODEX_HOME"],
+      "path_prepend": ["scripts/agent_runtime/shims"]
+    },
+    {
+      "session": "codex-core",
+      "name": "curriculum-upgrade",
+      "kind": "codex",
+      "epic": "curriculum-upgrade",
+      "sender": "codex-core",
+      "goal": ".claude/curriculum-upgrade-epic/DRIVER-STATE.md",
       "launcher": "start-codex-driver.sh",
       "model": "gpt-6.1-sol",
       "effort": "high",

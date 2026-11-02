@@ -519,8 +519,10 @@ class Guard:
         The lane registry gives the epic (``lane.epic``); the handoff candidates
         and stream entries are resolved exactly as the Codex launcher does in
         ``scripts/launchers/codex.sh`` -> ``codex_lane mint``: candidates from
-        ``handoff_select.load_codex_candidates`` under ``.claude/<epic>-epic/``,
-        the stream from ``grok_lane.launcher_stream_id``, and entries from
+        ``handoff_select.load_codex_mint_candidates`` (the lane's newest
+        driver-state ``handoff_note`` first, then the markdown handoffs under
+        ``.claude/<epic>-epic/``; #12567), with the registry sender as the
+        lane slot, the stream from ``grok_lane.launcher_stream_id``, and entries from
         ``grok_lane._load_stream_entries``. Only the Codex launcher mints
         anchors (the Claude adapter canary is a no-op), so other kinds are not
         checked.
@@ -533,7 +535,7 @@ class Guard:
         """
         from scripts.session_canary import grok_lane, handoff_select
 
-        candidates = handoff_select.load_codex_candidates(self.repo_root, lane.epic)
+        candidates = handoff_select.load_codex_mint_candidates(self.repo_root, lane.epic, slot=lane.sender)
         stream_id = grok_lane.launcher_stream_id(lane.epic)
         stream_entries = grok_lane._load_stream_entries(stream_id)
         return grok_lane.check_handoff_anchors(
