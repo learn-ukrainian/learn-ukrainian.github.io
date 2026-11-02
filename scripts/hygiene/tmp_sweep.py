@@ -84,7 +84,7 @@ from scripts.orchestration.worktree_claims import _SUPERSEDED_RECORD_RE
 REPO_ROOT = Path(__file__).resolve().parents[2]
 # Unsettled deliverables (needs_finalize), blocked work and dry-run records are held.
 REAPABLE_STATES = frozenset({"done", "failed", "timeout", "cancelled", "crashed", "rate_limited", "no_deliverable"})
-HARNESS_NAMES = re.compile(r"^(?:claude|codex|gemini|agy|cursor|kimi|hermes|acpx)(?:[-_.]|$)")
+HARNESS_NAMES = re.compile(r"^(?:claude|codex|gemini|agy|cursor|kimi|acpx)(?:[-_.]|$)")
 # Never swept: dot-entries, harness/session sockets and systemd private trees.
 EXCLUDED_NAMES = re.compile(r"^(?:\.|claude-|tmux-|ssh-|systemd-)")
 SYSTEM_TEMP_AREAS = (Path("/tmp"), Path("/private/tmp"), Path("/var/tmp"))

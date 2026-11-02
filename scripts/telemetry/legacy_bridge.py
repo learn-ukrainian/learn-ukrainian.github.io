@@ -59,6 +59,8 @@ _TARGETS = (
 # ``acpx-<seat>-shadow`` is handled in ``_canonical_bridge_target``.
 _TARGET_ALIASES = {
     "gemini": "agy",
+    # Retained while the legacy ask-name map still exposes this name
+    # (scripts/agent_runtime/target_admission.py, outside this slice).
     "hermes": "deepseek",
     "grok-build": "grok",
     "kimicc": "kimi",
@@ -130,7 +132,7 @@ def classify_caller_family(source: str | None) -> str:
         (("grok",), "xai"),
         (("kimi",), "moonshot"),
         (("glm",), "zhipu"),
-        (("deepseek", "hermes"), "deepseek"),
+        (("deepseek",), "deepseek"),
         (("cursor",), "cursor"),
     )
     for candidates, family in prefixes:

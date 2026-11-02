@@ -369,8 +369,8 @@ WRITER_TOOL_NAMES = frozenset(
 WRITER_ALLOWED_TOOL_PREFIX = "mcp__sources__"
 # Gemini CLI 0.42.0+ emits tool calls with single-underscore separators
 # (`mcp_sources_search_text`) instead of the canonical double-underscore MCP
-# convention (`mcp__sources__search_text`) used by claude, codex, hermes-backed
-# writers. Both are the same MCP "sources" server tool — Gemini's representation
+# convention (`mcp__sources__search_text`) used by claude and codex writers.
+# Both are the same MCP "sources" server tool — Gemini's representation
 # changed between 0.40.x and 0.42.x. Accept both prefixes for the
 # writer-trace-isolation gate so gemini-tools' valid MCP calls aren't
 # misclassified as wrong-tool-family. Genuinely dangerous wrong-family calls
@@ -3134,15 +3134,13 @@ def _normalize_tool_citation_name(raw_tool: Any) -> str:
 
     * ``mcp__sources__`` — canonical double-underscore convention used by
       claude / codex / gemini-cli ≤0.41 / direct anthropic-tools calls.
-    * ``mcp_sources_`` — single-underscore convention used by Hermes (and
-      gemini-cli 0.42.0+). Hermes registers MCP tools under this name and
-      the post-tool-call shell hook receives this form in its ``tool_name``
-      payload field. Without stripping it here, the gate's downstream
-      ``_tool_name_from_call(call) == "search_text"`` checks all fail
-      silently — every Hermes-routed writer (deepseek/qwen/grok) gets
-      ``search_text_calls: 0`` and a HARD ``textbook_grounding`` REJECT
-      even when the calls actually fired. Matches the symmetry of
-      ``WRITER_ALLOWED_TOOL_PREFIXES`` which already accepts both.
+    * ``mcp_sources_`` — single-underscore convention used by
+      gemini-cli 0.42.0+. Without stripping it here, the gate's downstream
+      ``_tool_name_from_call(call) == "search_text"`` checks fail silently
+      and a writer gets ``search_text_calls: 0`` and a HARD
+      ``textbook_grounding`` REJECT even when the calls actually fired.
+      Matches the symmetry of ``WRITER_ALLOWED_TOOL_PREFIXES`` which accepts
+      both.
     """
     tool = str(raw_tool or "").strip()
     if tool.startswith("mcp__sources__"):
@@ -4281,8 +4279,8 @@ def _runtime_tool_config(
 
     from scripts.agent_runtime.agent_identity import tools_writer_runtime_agent
 
-    # Explicit map — never split("-")[0] for grok-tools (that would land on
-    # the native `grok` seat after the seat rename; grok-tools stays hermes).
+    # Explicit map — never split("-")[0] for a *-tools label; the map is the
+    # single source of truth for the registry seat each writer runs on.
     canonical_agent = tools_writer_runtime_agent(agent_label)
     mcp_dict, diagnostics = build_mcp_tool_config(canonical_agent, **agent_kwargs)
     if canonical_agent in {"claude", "gemini"}:
@@ -4442,14 +4440,13 @@ def invoke_writer(
     section_names = list(sections) if sections is not None else _prompt_sections(prompt)
     tool_calls = _runtime_tool_calls(result)
     # Backfill from sidecar JSONL when the runtime adapter is a black box.
-    # ``hermes -z`` strips tool-call traces from stdout by design, so the
-    # HermesGrok/Qwen/DeepSeek adapters return ``tool_calls_total=None`` —
-    # which makes ``_runtime_tool_calls`` return ``None``. Without backfill,
-    # in-memory writer-runtime gates (``detect_tool_theatre``,
-    # ``emit_writer_response_telemetry``, ``_enforce_writer_runtime_gates``)
-    # all see zero calls and treat every cited tool as a tool-theatre
-    # violation, even when the post_tool_call shell hook actually captured
-    # the calls in ``$cwd/*.write.jsonl``. The gate-side
+    # Some adapters cannot expose tool-call traces on stdout and return
+    # ``tool_calls_total=None``, which makes ``_runtime_tool_calls`` return
+    # ``None``. Without backfill, in-memory writer-runtime gates
+    # (``detect_tool_theatre``, ``emit_writer_response_telemetry``,
+    # ``_enforce_writer_runtime_gates``) all see zero calls and treat every
+    # cited tool as a tool-theatre violation, even when a capture hook wrote
+    # the calls to ``$cwd/*.write.jsonl``. The gate-side
     # ``_load_writer_tool_calls`` already reads that file; this restores
     # parity for the in-memory path. Empirical evidence: 2026-05-19 b1
     # genitive-nuances build, whose ``phase_writer_summary`` reported
@@ -15085,8 +15082,8 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
             # call result as
             # ``[{"functionResponse": {"id": ..., "name": "...",
             # "response": {"output": "**[chunk_id]** — Сторінка N\n\n<md>"}}}]``
-            # — neither the canonical ``{"text": <md>}`` nor the Hermes
-            # ``{"result": <md>}`` shapes the parser previously handled.
+            # — neither the canonical ``{"text": <md>}`` nor the
+            # single-string ``{"result": <md>}`` shape the parser handles.
             # Without this unwrap textbook_grounding reads
             # ``textbook_result_hits: 0`` even when get_chunk_context fired
             # and returned grounded textbook chunks (the 2026-05-20 textbook
@@ -15122,22 +15119,6 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
             # anthropic-tools): result is ``{"type": "text", "text": "<md>"}``.
             if result.get("type") == "text" and isinstance(result.get("text"), str):
                 parsed = _parse_mcp_search_text_markdown(result["text"])
-                if parsed:
-                    return parsed
-            # Hermes-routed MCP variant shape: the sources MCP server wraps
-            # its single-string response under an inner ``result`` key, so
-            # the captured hook payload reads
-            # ``{"tool":"mcp_sources_search_text","result":{"result":"<md>"}}``.
-            # The inner markdown payload follows the same
-            # ``### Result N / **Source** / **Text**`` format the parser
-            # already handles. Empirical evidence: 2026-05-19 b1
-            # genitive-nuances build's hermes.write.jsonl. Without this
-            # unwrap every Hermes-routed writer reads
-            # ``textbook_result_hits: 0`` even when the calls fired and
-            # returned grounded textbook chunks.
-            inner = result.get("result")
-            if isinstance(inner, str):
-                parsed = _parse_mcp_search_text_markdown(inner)
                 if parsed:
                     return parsed
         elif tool_name == "get_chunk_context":
