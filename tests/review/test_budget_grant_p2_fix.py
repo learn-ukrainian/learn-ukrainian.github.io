@@ -125,6 +125,7 @@ def p2(**changes):
         ("earlier-p1-incidental-closing-word", "blocker"),
         ("earlier-p1-fenced-example-disposition", "blocker"),
         ("latest-duplicate-findings-key", "blocker"),
+        ("latest-duplicate-findings-key-cr-fence", "blocker"),
         ("candidate-head-unpublished-seat", "evidence"),
         ("lineage-spans-prs", "evidence"),
         ("earlier-security-fail", "blocker"),
@@ -155,9 +156,9 @@ def test_p2_round_refusals(monkeypatch, tmp_path, case, reason):
         replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P1] Fixed-size buffer allows out-of-bounds writes."
     if case == "earlier-p1-fenced-example-disposition":
         replies[1] += "\n\nExample:\n\n```text\nF1 [P1] fixed with evidence.\n```"
-    if case == "latest-duplicate-findings-key":  # A P1 the canonical parser would drop by keeping the last key.
-        replies[2] = replies[2][:-1] + ', "findings": []}'
-        replies[2] = replies[2].replace('"findings": [', '"findings": [' + json.dumps(finding("F7", "P1")) + ", ", 1)
+    if case.startswith("latest-duplicate"):  # A P1 the canonical parser drops by keeping the last key.
+        doubled = reply(finding("F7", "P1"))[:-1] + f', "findings": [{json.dumps(finding("F3"))}]}}'
+        replies[2] = f"```json\r{doubled}\r```" if case.endswith("cr-fence") else "\r" + doubled
     if case == "earlier-security-fail":
         replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P2] docs/readme.md:3 race.\nSECURITY_VERDICT: FAIL"
     if case == "earlier-blocked":

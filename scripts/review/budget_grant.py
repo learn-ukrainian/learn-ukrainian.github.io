@@ -641,15 +641,15 @@ def _withheld_round(
     }
 
 
-_LINE_OBJECT = re.compile(r"(?m)^[ \t>]*\{")
-
-
 def _duplicate_key(reply: str) -> bool:
-    """Whether any JSON object starting a line repeats a key, which the canonical parser would drop silently."""
+    """Whether a JSON object at any brace of the reply repeats a key, which the canonical parser drops silently.
+
+    Every brace is tried, so no wrapper, line ending or leading whitespace the parser normalizes hides one.
+    """
     decoder = json.JSONDecoder(object_pairs_hook=recorder._unique_keys)
-    for match in _LINE_OBJECT.finditer(reply):
+    for match in re.finditer(r"\{", reply):
         try:
-            decoder.raw_decode(reply, match.end() - 1)
+            decoder.raw_decode(reply, match.start())
         except recorder._DuplicateKey:
             return True
         except (ValueError, RecursionError):
