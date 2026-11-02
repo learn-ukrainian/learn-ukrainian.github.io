@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 397,
-    "probe_count": 794,
+    "cli_count": 398,
+    "probe_count": 796,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/kimi_boundary.py",
@@ -99,6 +99,7 @@
       "scripts/audit/grounding_shadow_compare.py",
       "scripts/audit/grow_lexicon_from_lemmas.py",
       "scripts/audit/grow_lexicon_from_sources.py",
+      "scripts/audit/hermes_nightly_audit.py",
       "scripts/audit/immersion_gate_calibration.py",
       "scripts/audit/ingest_ua_gec_gold.py",
       "scripts/audit/judge_calibration_matrix.py",
@@ -402,7 +403,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "36a91b70b4822aaf8c25c332fee3d7986fe1964efd8f2a49c6a88f9e8b607030"
+    "cli_paths_sha256": "b3f58a04fbfbc322ca3eb80a1640044ff6369dea742b46746564f1b0bf28789a"
   },
   "failures": [
     {
