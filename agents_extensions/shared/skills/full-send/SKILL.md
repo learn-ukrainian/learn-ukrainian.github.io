@@ -212,26 +212,43 @@ printf '%s\n' "question: <one decision, the options, your recommendation>; reply
     --idempotency-key "ask-$LEARN_UKRAINIAN_DISPATCH_TASK_ID-<n>"
 ```
 
-Then wait, for at most 30 minutes, one Bash call per minute (`sleep 60`, then claim). Exit 1 means no
-reply yet:
+Then wait for at most 30 minutes, one Bash call per minute (`sleep 60`, then receive).
+Use `receive` for worker replies: it claims and reads the body in one call and recovers
+your existing lease if an earlier call's output was lost. Keep the entire output and exit
+code. Never pipe it through `tail`, `head`, `grep`, or a parser that drops fields; never
+hide errors with `|| true`. Exit 1 alone means no reply yet. Exit 3 is a typed error,
+not an empty inbox: report it to `claude-cto` and stop dependent work.
 
 ```bash
-/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries claim \
+/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries receive \
   --recipient "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 ```
 
-On a claim, read the reply with its `delivery_id` and `fence_token`, apply it, then acknowledge:
+Exit 0 returns `{"delivery": {"delivery_id": "...", "fence_token": 1,
+"sender": "claude-cto", "body": "the reply", ...}, "content_included": true}`.
+Read and apply `delivery.body`, then acknowledge
+with **`delivery.delivery_id` and `delivery.fence_token` from that same output**:
 
 ```bash
-/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries read "<delivery_id>" \
-  --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --fence-token "<fence_token>"
-/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries ack "<delivery_id>" \
-  --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --fence-token "<fence_token>"
+/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries ack "<delivery.delivery_id>" \
+  --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --fence-token "<delivery.fence_token>"
 ```
 
-If a lease expires before you finish, claim again. If nothing arrives in time, end with
-`BLOCKED waiting on <the open question>` and a hand-off record ([delivery](references/delivery.md#hand-off-record))
-that states the question, the branch and head, and what is done, so a successor can resume.
+Confirm the ack exits 0 and returns `state: acknowledged`. A received reply is not
+acknowledged until this succeeds. If the lease expires before completion, receive again,
+reconcile what you already applied, and ack the current fence without repeating side effects.
+For a reply with `delivery.kind: delivery-error`, report the original delivery id and `reason_code` to `claude-cto`,
+acknowledge the error notification, and stop dependent work. Unreadable and dead-lettered
+coordinator replies produce these durable errors for both parties, without copying the reply.
+
+The lower-level `claim` command returns **flat metadata** on success, and
+`{"delivery": null, "content_included": false}` when empty. It does not read the body.
+Testing `claim` success with `get("delivery")` loses a valid lease. Use `receive` above;
+reclaiming repeatedly is not a read or an acknowledgment.
+
+If nothing arrives in time, end with `BLOCKED waiting on <the open question>` and a hand-off
+record ([delivery](references/delivery.md#hand-off-record)) that states the question, branch,
+head and completed work so a successor can resume.
 
 ## Report
 

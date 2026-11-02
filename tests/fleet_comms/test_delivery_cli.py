@@ -306,3 +306,108 @@ def test_delivery_read_missing_body_file_is_storage_error(plane, capsys):
     assert result == {"content_included": False, "error": "delivery_store_unavailable"}
     assert "body" not in result
     assert "private body sentinel" not in json.dumps(result)
+
+
+def test_lost_claim_output_receive_recovers_same_lease_without_burning_attempts(plane, capsys):
+    """A discarded flat claim must not make a coordinator reply look absent."""
+    with AuthorityService(root=plane) as service:
+        message = service.publish_message(
+            sender="claude-cto", body="Apply option B", recipients=("worker-task",),
+        )
+    claimed = claim(capsys, recipient="worker-task")
+    assert claimed.get("delivery") is None  # The old loop mistook this success for an empty inbox.
+    args = ["receive", "--recipient", "worker-task", "--worker-id", "seat-1"]
+    for _ in range(2):
+        assert main(["deliveries", *args]) == EXIT_OK
+        output = capsys.readouterr()
+        assert output.err == ""
+        received = json.loads(output.out)
+        assert received["content_included"] is True
+        delivery = received["delivery"]
+        assert delivery["body"] == "Apply option B"
+        assert delivery["sender"] == "claude-cto"
+        assert delivery["kind"] == "message"
+        assert delivery["delivery_id"] == message.delivery_ids[0]
+        assert delivery["fence_token"] == claimed["fence_token"]
+        assert delivery["attempt_count"] == 1
+        assert delivery["lease_expires_at"] == claimed["lease_expires_at"]
+        assert delivery["state"] == "running"
+    assert main(["deliveries", "receive", "--recipient", "worker-task", "--worker-id", "other"]) == EXIT_NOT_FOUND
+    assert json.loads(capsys.readouterr().out) == {"delivery": None, "content_included": False}
+    assert invoke(capsys, *fenced("ack", delivery))["state"] == "acknowledged"
+    assert main(["deliveries", *args]) == EXIT_NOT_FOUND
+    assert json.loads(capsys.readouterr().out) == {"delivery": None, "content_included": False}
+
+
+def test_unreadable_coordinator_reply_reports_typed_error_to_both_parties_once(plane, capsys):
+    """Read failure cannot leave only a worker-local error and an eventual silent dead letter."""
+    with AuthorityService(root=plane) as service:
+        message = service.publish_message(
+            sender="claude-cto", body="private body sentinel", recipients=("worker-task",),
+        )
+        service.store.get(message.body_artifact_id).blob_path.unlink()
+    delivery = claim(capsys, recipient="worker-task")
+    for args in (
+        fenced("read", delivery),
+        ["receive", "--recipient", "worker-task", "--worker-id", "seat-1"],
+    ):
+        assert invoke(capsys, *args, expected=EXIT_ERROR) == {
+            "content_included": False, "error": "coordinator_reply_read_failed",
+        }
+    with AuthorityService(root=plane) as service:
+        # Subsequent exhaustion must not send a second notice for the same original delivery.
+        service.reclaim_expired_deliveries(now="2099-01-01T00:00:00Z", max_attempts=1)
+        notices = service.store.connection.execute(
+            "SELECT message_id FROM comms_messages WHERE kind = 'delivery-error'",
+        ).fetchall()
+        assert len(notices) == 1
+        notice = service.get_message(notices[0]["message_id"])
+        assert notice.sender == "fleet-comms"
+        assert notice.in_reply_to == message.message_id
+        assert json.loads(service.read_message_body(notice.message_id)) == {
+            "error": "coordinator_reply_delivery_failed",
+            "reason_code": "read_failed",
+            "delivery_id": delivery["delivery_id"],
+            "message_id": message.message_id,
+            "recipient": "worker-task",
+        }
+        assert {service.get_delivery(d).recipient for d in notice.delivery_ids} == {
+            "worker-task", "claude-cto",
+        }
+
+
+def test_exhausted_unacknowledged_reply_notifies_once_without_recursive_alerts(plane, capsys):
+    """An abandoned reply must produce one notice to both parties, even if notices are abandoned."""
+    with AuthorityService(root=plane) as service:
+        message = service.publish_message(
+            sender="claude-cto", body="Apply option B", recipients=("worker-task",),
+        )
+        for minute in (0, 5, 10):
+            lease = service.claim_next_delivery(
+                "worker-task", "seat-1", now=f"2000-01-01T00:{minute:02}:00Z",
+            )
+            assert lease.delivery.delivery_id == message.delivery_ids[0]
+        assert service.reclaim_expired_deliveries(now="2000-01-01T00:15:00Z") == 1
+        assert service.reclaim_expired_deliveries(now="2000-01-01T00:15:00Z") == 0
+        assert service.get_delivery(message.delivery_ids[0]).state == "dead_lettered"
+        assert service.store.connection.execute(
+            "SELECT COUNT(*) FROM comms_messages WHERE kind = 'delivery-error'",
+        ).fetchone()[0] == 1
+    for recipient in ("worker-task", "claude-cto"):
+        assert main([
+            "deliveries", "receive", "--recipient", recipient, "--worker-id", recipient,
+        ]) == EXIT_OK
+        notice = json.loads(capsys.readouterr().out)["delivery"]
+        assert notice["kind"] == "delivery-error"
+        assert json.loads(notice["body"]) == {
+            "error": "coordinator_reply_delivery_failed",
+            "reason_code": "attempts_exhausted",
+            "delivery_id": message.delivery_ids[0],
+            "message_id": message.message_id,
+            "recipient": "worker-task",
+        }
+    with AuthorityService(root=plane) as service:
+        assert service.reclaim_expired_deliveries(now="2099-01-01T00:00:00Z", max_attempts=1) == 2
+        assert service.store.connection.execute(
+            "SELECT COUNT(*) FROM comms_messages WHERE kind = 'delivery-error'",
+        ).fetchone()[0] == 1
