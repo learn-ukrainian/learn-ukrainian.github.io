@@ -4116,6 +4116,19 @@ def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeyp
     assert test_slots.HOLDER_ENV not in env and test_slots.SESSION_ENV not in env
 
 
+@pytest.mark.parametrize("mode", ["read-only", "write"])
+@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode"])
+def test_worker_env_disables_the_node_compile_cache(spec, monkeypatch, tmp_path, agent, mode):
+    """#12474: a worker's lint or tsc run must not add to the shared on-disk Node compile cache."""
+    monkeypatch.setenv("NODE_COMPILE_CACHE", str(tmp_path / "shared-cache"))
+    monkeypatch.delenv("NODE_DISABLE_COMPILE_CACHE", raising=False)
+
+    env = child_env(dataclasses.replace(spec, agent=agent, mode=mode))
+
+    assert env["NODE_DISABLE_COMPILE_CACHE"] == "1"
+    assert "NODE_COMPILE_CACHE" not in env
+
+
 @pytest.mark.parametrize(
     "extra,code",
     [
