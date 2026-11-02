@@ -30,7 +30,6 @@ _CLI_STUBS = (
     "cursor-agent",
     "gemini",
     "grok",
-    "hermes",
     "kimi",
     "muse",
     "npx",

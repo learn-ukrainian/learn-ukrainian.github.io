@@ -13,21 +13,6 @@ launcher_adapter_validate() {
       exit 2
       ;;
   esac
-  if [ "$LC_HARNESS" = hermes ]; then
-    launcher_hermes_validate
-    if [ "$LC_MODE" != interactive ]; then
-      launcher_error 'Codex/Hermes is interactive only; it must not start an epic driver.'
-      exit 4
-    fi
-    # Hermes' wire vocabulary is narrower than its generic CLI vocabulary.
-    # Refuse levels that would be silently clamped by this model's transport.
-    case "$LC_EFFORT" in
-      low|medium|high|xhigh) ;;
-      *) launcher_error 'Codex/Hermes supports only low|medium|high|xhigh effort.'; exit 2 ;;
-    esac
-    # shellcheck disable=SC2034 # consumed by shared Hermes execution
-    LC_HERMES_PROVIDER=openai-codex
-  fi
   local forwarded
   for forwarded in "${LC_FORWARD_ARGS[@]}"; do
     case "$forwarded" in
@@ -43,7 +28,7 @@ launcher_adapter_validate() {
         ;;
     esac
   done
-  case "$LC_HARNESS" in codex|claude-code|hermes) ;; *) launcher_error 'Codex supports --harness codex|claude-code|hermes.'; exit 2 ;; esac
+  case "$LC_HARNESS" in codex|claude-code) ;; *) launcher_error 'Codex supports --harness codex|claude-code.'; exit 2 ;; esac
 }
 
 launcher_codex_resolve_canonical_root() {
@@ -160,7 +145,6 @@ launcher_codex_transport_probe() {
   fi
 }
 launcher_adapter_preflight() {
-  if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_preflight; return; fi
   if [ "$LC_HARNESS" = codex ]; then
     launcher_codex_native_profile_preflight
     LC_AUTH_SOURCE='codex-cli-oauth'
@@ -193,7 +177,6 @@ launcher_adapter_canary() {
     && "${cmd[@]}" bootstrap --epic "$LC_EPIC" --stream "$stream"
 }
 launcher_adapter_exec() {
-  if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_exec; return; fi
   local cmd
   if [ "$LC_HARNESS" = codex ]; then
     cmd=(

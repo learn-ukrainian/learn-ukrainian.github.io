@@ -41,7 +41,6 @@ from ._gemini import converse_gemini
 from ._grok_build import (
     GROK_BUILD_DEFAULT_MODEL,
 )
-from ._hermes import HERMES_DEFAULT_MODEL
 from ._messaging import (
     acknowledge,
     acknowledge_all,
@@ -851,25 +850,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    # ask-hermes
-    ask_hermes_parser = subparsers.add_parser(
-        "ask-hermes",
-        help="Send message AND invoke Hermes one-shot (use '-' to read from stdin)",
-    )
-    ask_hermes_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
-    ask_hermes_parser.add_argument("--task-id", required=True, help="Task ID")
-    ask_hermes_parser.add_argument("--type", default="query", help="Message type")
-    ask_hermes_parser.add_argument("--data", help="Path to data file to attach")
-    ask_hermes_parser.add_argument(
-        "--model",
-        help=f"Deprecated alias for --to-model (default {HERMES_DEFAULT_MODEL})",
-    )
-    ask_hermes_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
-    ask_hermes_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
-    ask_hermes_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
-    ask_hermes_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
-    ask_hermes_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
-
     # ask-opencode
     ask_opencode_parser = subparsers.add_parser(
         "ask-opencode",
@@ -1050,7 +1030,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ask_codex_parser,
         ask_gemini_parser,
         ask_agy_parser,
-        ask_hermes_parser,
         ask_opencode_parser,
         ask_deepseek_parser,
         ask_pool_parser,
@@ -1078,7 +1057,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ask_codex_parser,
         ask_gemini_parser,
         ask_agy_parser,
-        ask_hermes_parser,
         ask_opencode_parser,
         ask_pool_parser,
         ask_glm_parser,
@@ -1433,8 +1411,6 @@ def _dispatch_command(args):
         _handle_ask_gemini(args)
     elif args.command == "ask-agy":
         _handle_ask_agy(args)
-    elif args.command == "ask-hermes":
-        _handle_ask_hermes(args)
     elif args.command == "ask-deepseek":
         _handle_ask_deepseek(args)
     elif args.command == "ask-opencode":
@@ -1879,8 +1855,7 @@ def _dispatch_headless_review(
     from ._dispatch_wrappers import run_ask_review_dispatch
 
     try:
-        # Same legacy-alias resolution as the ACP path (e.g. hermes→deepseek,
-        # gemini→agy) so `--agent` is a name `dispatch.py dispatch` accepts.
+        # Same legacy-alias resolution as the ACP path (e.g. gemini→agy) so `--agent` is a name `dispatch.py dispatch` accepts.
         dispatch_agent = require_compat_target(target, model=model, data=data)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
@@ -1937,11 +1912,6 @@ def _handle_ask_codex(args):
 def _handle_ask_agy(args):
     """Handle ask-agy subcommand."""
     _handle_acp_compat(args, "agy")
-
-
-def _handle_ask_hermes(args):
-    """Handle ask-hermes subcommand."""
-    _handle_acp_compat(args, "hermes")
 
 
 def _handle_ask_deepseek(args):

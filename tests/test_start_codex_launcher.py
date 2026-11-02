@@ -17,29 +17,3 @@ def test_codex_native_harness_is_default_and_forwards_arguments_after_separator(
     assert result.returncode == 0, result.stderr
     assert "would exec codex" in result.stdout
     assert "--ask-for-approval never" in result.stdout
-
-
-def test_codex_hermes_opt_in_uses_provider_label_separately_from_model(tmp_path) -> None:
-    from tests.test_launcher_contract import hermes_stub_env
-
-    result = run_launcher("start-codex.sh", "--harness", "hermes", env=hermes_stub_env(tmp_path))
-    assert result.returncode == 0, result.stderr
-    assert "would exec hermes chat --cli --provider openai-codex --model gpt-6.1-sol" in result.stdout
-    assert "--reasoning high" in result.stdout
-    assert "would claim lease" not in result.stdout
-    assert "would probe" not in result.stdout
-
-
-def test_codex_hermes_rejects_provider_label_as_model() -> None:
-    result = run_launcher("start-codex.sh", "--harness", "hermes", "--model", "openai-codex")
-    assert result.returncode == 2
-    assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr
-
-
-def test_codex_hermes_cannot_start_astra_driver_or_governor() -> None:
-    for selector in ("--epic", "--governor"):
-        result = run_launcher("start-codex-driver.sh", "--harness", "hermes", selector, "devops")
-        assert result.returncode == 4, result.stderr
-        assert "interactive only" in result.stderr
-        assert "would claim lease" not in result.stdout
-        assert "would probe" not in result.stdout

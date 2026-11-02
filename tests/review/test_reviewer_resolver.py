@@ -129,7 +129,6 @@ def test_review_task_identity_matches_trailer_suffix(task_id, expected):
         ("claude-impl-x", "cursor", {"claude-impl-x", "impl-x"}),
         (" CODEX/Author-One ", "claude", {"codex-author-one", "author-one"}),
         ("cursor/Author name!", "cursor", {"cursor-author-name", "author-name"}),
-        ("grok-hermes-author", "codex", {"grok-hermes-author", "hermes-author", "author"}),
         ("custom/author-one", "custom", {"custom-author-one", "author-one"}),
         ("codex/gpt-6.1-sol", "claude", {"codex-gpt-6.1-sol", "gpt-6.1-sol"}),
         ("other-task", "claude", {"other-task"}),
@@ -211,8 +210,11 @@ def test_near_cap_sol_precedes_agy_and_grok_for_claude_author(risk):
             risk=risk,
             routing_snapshot={
                 "agents": {
-                    route: {"status": "near_cap", "remaining_pct": 5, "health": {"healthy": True}}
-                    for route in ("claude", "codex")
+                    **{
+                        route: {"status": "near_cap", "remaining_pct": 5, "health": {"healthy": True}}
+                        for route in ("claude", "codex")
+                    },
+                    "muse": {"status": "unhealthy", "health": {"healthy": False}},
                 },
                 "diagnostics": {"stale": False},
             }, claude_account=HOST_ACCOUNT,

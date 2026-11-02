@@ -58,6 +58,7 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    it. Otherwise open a replacement branch that imports the original commits unchanged
    (`git cherry-pick` keeps their authors) and adds your fixes as separate commits. Do not
    overwrite unrelated work. The finding ledger and review budget carry over either way.
+   A takeover or any worker pushing to an existing PR branch is dispatched with `--branch <PR head branch>`.
 5. **Preserve credit.** Keep Git authorship and existing `Co-authored-by` trailers; use verified
    identities from the commits, never guessed emails:
 

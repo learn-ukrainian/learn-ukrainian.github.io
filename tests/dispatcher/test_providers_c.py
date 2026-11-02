@@ -10,7 +10,7 @@ from dataclasses import replace
 
 import pytest
 
-from scripts.dispatcher.providers import cursor, hermes, load, muse, opencode
+from scripts.dispatcher.providers import cursor, load, muse, opencode
 from scripts.dispatcher.types import TaskSpec
 from scripts.review.verdict_parser import recognized_verdicts
 
@@ -35,14 +35,12 @@ def stub_env(tmp_path):
 args = sys.argv[1:]
 if "--prompt-file" in args:
     prompt = pathlib.Path(args[args.index("--prompt-file") + 1]).read_text(encoding="utf-8")
-elif "-z" in args:
-    prompt = args[args.index("-z") + 1]
 else:
     prompt = args[args.index("--") + 1]
 print(json.dumps({"argv": args, "prompt": prompt, "stdin": sys.stdin.read(), "cwd": str(pathlib.Path.cwd())}))
 """
     )
-    for name in ("muse", "opencode", "hermes"):
+    for name in ("muse", "opencode"):
         executable = binary_dir / name
         executable.write_text(source, encoding="utf-8")
         executable.chmod(0o755)
@@ -110,17 +108,6 @@ def test_opencode_argv(spec, stub_env, mode, model):
     if mode == "workspace-write":
         expected += ["--auto"]
     assert run_stub(opencode.build(spec, stub_env), spec) == [*expected, "--", PROMPT]
-
-
-@pytest.mark.parametrize("model", ("vendor/explicit-model", "another/model"))
-def test_hermes_argv(spec, stub_env, model):
-    spec = replace(spec, agent="hermes", model=model, mode="workspace-write")
-    assert run_stub(hermes.build(spec, stub_env), spec) == ["-z", PROMPT, "-m", model, "--provider", "openrouter"]
-
-
-def test_hermes_has_no_default_model(spec):
-    with pytest.raises(ValueError, match="explicit model"):
-        hermes.build(replace(spec, model="", mode="workspace-write"), {})
 
 
 def stream(*events):
@@ -230,18 +217,8 @@ def test_opencode_explicit_failure_is_sticky(failure):
     assert opencode.parse(stream(failure, OC_TEXT, OC_STOP), "", 0, None).error
 
 
-def test_hermes_ansi_and_optional_usage():
-    result = hermes.parse("\x1b[32mready\x1b[0m\n", "warning", 0, "ignored")
-    assert (result.text, result.usage, result.error) == ("ready", None, None)
-
-
-def test_hermes_inband_error():
-    assert hermes.parse("\x1b[31mHTTP 429: rate limited\x1b[0m", "", 0, None).error
-    assert hermes.parse("HTTP 429 is a rate limit.\nHere is how to handle it.", "", 0, None).error is None
-
-
 @pytest.mark.parametrize(
-    "provider,stdout", ((muse, stream(MUSE_READY)), (opencode, stream(OC_TEXT, OC_STOP)), (hermes, "ready"))
+    "provider,stdout", ((muse, stream(MUSE_READY)), (opencode, stream(OC_TEXT, OC_STOP)))
 )
 def test_nonzero_exit_cannot_succeed(provider, stdout):
     result = provider.parse(stdout, "private diagnostic must not become public error", 2, "ready")
@@ -249,7 +226,7 @@ def test_nonzero_exit_cannot_succeed(provider, stdout):
     assert "private diagnostic" not in result.error
 
 
-@pytest.mark.parametrize("provider", (muse, opencode, hermes))
+@pytest.mark.parametrize("provider", (muse, opencode))
 def test_missing_response(provider):
     result = provider.parse("", "", 0, "sidecar is not this provider's response")
     assert result.text is None
@@ -264,7 +241,7 @@ def test_unknown_events_are_not_a_response(provider):
     assert result.error
 
 
-@pytest.mark.parametrize("name", ("muse", "opencode", "hermes"))
+@pytest.mark.parametrize("name", ("muse", "opencode"))
 def test_registry(name):
     assert load(name).__name__ == f"scripts.dispatcher.providers.{name}"
 
@@ -314,6 +291,22 @@ def test_cursor_keeps_the_verdict_on_its_own_line_when_result_concatenates_messa
     assert parsed.error is None
     assert parsed.text == "\n\n".join(messages)
     assert recognized_verdicts(parsed.text) == ["APPROVE"]
+
+
+def test_cursor_reply_is_the_final_turn_after_the_last_tool_call():
+    """#12390 stream shape: narration, tool calls, then the findings object as the final message."""
+    narration = "I'll match the findings schema and return one JSON object with the same verdict."
+    reply = '{"schema_version":"code-review-findings.v1","findings":[]}'
+    events = [
+        {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"},
+        _assistant(narration),
+        {"type": "tool_call", "subtype": "started"},
+        {"type": "tool_call", "subtype": "completed"},
+        _assistant(reply),
+        {"type": "result", "subtype": "success", "is_error": False, "result": narration + reply},
+    ]
+    parsed = cursor.parse(stream(*events), "", 0, None)
+    assert (parsed.text, parsed.error) == (reply, None)
 
 
 def test_cursor_falls_back_to_the_result_when_no_assistant_text_was_captured():

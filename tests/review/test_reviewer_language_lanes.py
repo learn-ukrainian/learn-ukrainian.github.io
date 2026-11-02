@@ -151,19 +151,19 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
 
 
 def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
-    """Gemini stays excluded from infra; AGY Claude supplies a qualified fallback."""
+    """Gemini stays excluded from infra; Muse supplies a qualified low/medium selection."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "muse": "healthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
     assert resolution.selected is not None
-    assert resolution.selected.concrete_model == "claude-sonnet-5-5"
-    assert resolution.selected.route == "agy"
+    assert resolution.selected.concrete_model == "muse-wonder-full-1.0"
+    assert resolution.selected.route == "muse"
     assert all(item.status == "excluded" for item in resolution.trace if item.family == "google")
     assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7-cursor-fallback"]
     dark = resolve_reviewer(
@@ -172,7 +172,7 @@ def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
     assert dark.selected is None

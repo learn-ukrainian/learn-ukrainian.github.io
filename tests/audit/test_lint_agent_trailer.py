@@ -336,7 +336,7 @@ def test_deepseek_plain_trailer_accepted(tmp_path: Path, monkeypatch: pytest.Mon
     assert reason == "X-Agent: deepseek/1234-fix-parse"
 
 
-@pytest.mark.parametrize("agent", ["hermes", "muse", "opencode"])
+@pytest.mark.parametrize("agent", ["muse", "opencode"])
 def test_dispatcher_provider_agents_accepted(agent: str, monkeypatch: pytest.MonkeyPatch) -> None:
     """Every scripts/dispatcher/providers agent has a valid trailer; bare model names do not."""
     provenance = ProvenanceContext(active=False)

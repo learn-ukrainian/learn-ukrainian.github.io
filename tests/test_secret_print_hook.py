@@ -19,7 +19,7 @@ from tests.test_guard_secret_print import (
     ROUND_SIX_NEIGHBORS,
 )
 
-HARNESS_NAMES = ["claude", "codex", "grok", "kimi", "cursor", "agy", "hermes", "opencode"]
+HARNESS_NAMES = ["claude", "codex", "grok", "kimi", "cursor", "agy", "opencode"]
 ROOT = Path(__file__).resolve().parents[1]
 ADAPTER = ROOT / "scripts/agent_runtime/secret_print_hook.py"
 SENTINEL = "synthetic_adapter_value_91b8"

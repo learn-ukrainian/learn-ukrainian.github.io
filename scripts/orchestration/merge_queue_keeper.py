@@ -46,6 +46,7 @@ from scripts.orchestration.integration_sweep import (
     verdict_detail,
 )
 from scripts.publish.github import Request, request_run
+from scripts.review import contract_canary
 
 FLOOR = 500
 MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
@@ -468,7 +469,14 @@ def _check_state(checks: list[dict[str, Any]], head: str) -> str:
     return pending or "ok"
 
 
-def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: int, queue_enabled: bool | None) -> str:
+def _reason(
+    row: Mapping[str, Any],
+    verdict: Verdict,
+    check_state: str,
+    drops: int,
+    queue_enabled: bool | None,
+    canary: str | None = None,
+) -> str:
     if queue_enabled is not True:
         return "no-merge-queue" if queue_enabled is False else "queue-unknown"
     if not isinstance(row.get("headRefOid"), str) or not SHA.fullmatch(row["headRefOid"]):
@@ -480,6 +488,9 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
         return "hold" if hold else "hold-unknown"
     if verdict.state != "APPROVED":
         return "needs-CF" if verdict.state in MISSING_CF_STATES else f"CF-{verdict.state.lower()}"
+    if canary is not None:
+        # A review-contract change without live canary evidence on every route (#12399).
+        return contract_canary.REASON
     if check_state != "ok":
         return check_state
     if row.get("mergeStateStatus") in {"DIRTY", "UNKNOWN"} or not isinstance(row.get("mergeStateStatus"), str):
@@ -541,6 +552,7 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("squash_revoked", {}), dict)
         or not isinstance(data.get("pending_comments", {}), dict)
         or not isinstance(data.get("flake_issue_updates", {}), dict)
+        or not isinstance(data.get("last_removal", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
     for name in ("requeued", "shared_pass", "shared_requeues"):
@@ -596,10 +608,12 @@ def _revoke_reason(
     verdict_lookup_ok: bool,
     *,
     queued: bool,
+    canary: str | None = None,
 ) -> str | None:
     """Fresh, positive blockers that may remove a queued or armed PR.
 
-    A queued head with no cross-family approval at that head is removed.
+    A queued head with no cross-family approval at that head is removed, and so is a
+    review-contract change without its canary evidence (#12399).
     """
     if row.get("isDraft") is True:
         return "draft"
@@ -613,6 +627,8 @@ def _revoke_reason(
         return "CF-unknown-after-approval"
     if queued and verdict_lookup_ok and verdict.state in MISSING_CF_STATES:
         return "needs-CF"
+    if canary is not None:
+        return contract_canary.REASON
     return None
 
 
@@ -654,6 +670,46 @@ def _comment_once(
     message = "was previously removed from the queue" if reason == "queue-drop" else f"was not queued because {shown}"
     gh.comment(number, f"Merge queue keeper: #{number} {message}.{detail}\n\n{marker}")
     comments.append({"body": marker, "user": {"login": login}})
+
+
+def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]) -> None:
+    """Count timeline removals independently of membership and failure diagnosis."""
+    key = str(number)
+    dropped_head = previous["queued"].get(key, head)
+    drop_key = f"{number}:{dropped_head}"
+    cursor = previous.get("last_removal", {}).get(key, {
+        "created_at": previous.get("undiagnosed", {}).get(drop_key, previous.get("observed", "")), "id": 0,
+    })
+
+    def position(stamp: str, event_id: int) -> tuple[datetime, int]:
+        if not isinstance(stamp, str) or not stamp or type(event_id) is not int:
+            raise KeeperError("queue removal position malformed")
+        try:
+            when = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise KeeperError("queue removal timestamp invalid") from exc
+        if when.tzinfo is None:
+            raise KeeperError("queue removal timestamp has no timezone")
+        return when, event_id
+
+    after = position(cursor["created_at"], cursor["id"]) if cursor["created_at"] else (datetime.min.replace(tzinfo=UTC), 0)
+    events = sorted({
+        position(item.get("created_at"), item.get("id", 0))
+        for item in gh.timeline(number)
+        if item.get("event") == "removed_from_merge_queue"
+    })
+    for stamp, event_id in events:
+        if (stamp, event_id) <= after:
+            continue
+        # Keeper dequeues are handled at mutation. Their timeline confirmation
+        # must not charge them again or attribute them to a later head.
+        pending = cursor.get("keeper_dequeues", 0)
+        if pending:
+            cursor["keeper_dequeues"] = pending - 1
+        else:
+            previous["drops"][drop_key] = int(previous["drops"].get(drop_key, 0)) + 1
+        cursor["created_at"], cursor["id"] = stamp.isoformat(), event_id
+    previous.setdefault("last_removal", {})[key] = cursor
 
 
 def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str], dict[str, list[str]], int | None]:
@@ -1006,9 +1062,13 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         comment_safe = True
         # Whether the PR changes learner content, which takes the Ukrainian seats; None when unread.
         learner_content: bool | None = None
+        # The typed canary refusal for a review-contract change; None when it may queue (#12399).
+        canary: str | None = None
         try:
             comments = gh.comments(number)
-            learner_content = changes_learner_content(gh.pr_files(number))
+            files = gh.pr_files(number)
+            learner_content = changes_learner_content(files)
+            canary = contract_canary.refusal(files, head)
             verdict = lookup_verdict(comments, head, login, learner_content=learner_content)
             check_rows = gh.checks(head)
             checks = _check_state(check_rows, head)
@@ -1021,6 +1081,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         if approved_before:
             approved_now[key] = head
         drop_key = f"{number}:{head}"
+        removal_error = ""
+        try:
+            _count_removals(gh, number, head, previous)
+        except KeeperError as exc:
+            removal_error = display_text(str(exc), DISPLAY_REASON_LIMIT)
         drops = int(previous["drops"].get(drop_key, 0))
         dropped = key in previous["queued"] and queued is False
         detail = ""
@@ -1038,14 +1103,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 detail, failed_jobs, failed_tests, failed_run = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
-                    previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
-                    if dropped_head == head:
-                        drops = previous["drops"][drop_key]
                 else:
                     detail = " Queue removal diagnosis unknown."
             except KeeperError as exc:
                 detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
-        reason = _reason(pr, verdict, checks, drops, queue_enabled)
+        reason = _reason(pr, verdict, checks, drops, queue_enabled, canary)
         if reason == "ready" and queued is not True and not armed:
             try:
                 reason = _gate_hold(gh, number, head, previous) or reason
@@ -1062,7 +1124,10 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         lines.append(
             f"#{number} head={head[:12]} state={state} reason={reason} queued={queued} armed={armed}"
             + verdict_detail(verdict.reason, verdict.comment_id, verdict.superseded_markers)
+            + (f" canary=({canary})" if reason == contract_canary.REASON else "")
         )
+        if removal_error:
+            lines.append(f"#{number} queue removal count unknown: {removal_error}")
         if not apply:
             continue
         if not budget:
@@ -1103,7 +1168,9 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 try:
                     current_comments = gh.comments(number)
                     if learner_content is None:
-                        learner_content = changes_learner_content(gh.pr_files(number))
+                        files = gh.pr_files(number)
+                        learner_content = changes_learner_content(files)
+                        canary = contract_canary.refusal(files, head)
                     current_verdict = lookup_verdict(current_comments, head, login, learner_content=learner_content)
                 except KeeperError:
                     current_comments, current_verdict = [], Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
@@ -1123,7 +1190,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 except KeeperError:
                     current_checks = "CI-unknown"
                 reason = (
-                    _reason(current, current_verdict, current_checks, drops, queue_enabled)
+                    _reason(current, current_verdict, current_checks, drops, queue_enabled, canary)
                     if verdict_lookup_ok
                     else "fresh-evidence-unknown"
                 )
@@ -1144,6 +1211,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         approved_before,
                         verdict_lookup_ok,
                         queued=queued is True,
+                        canary=canary,
                     )
                     if fresh
                     else None
@@ -1157,9 +1225,14 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 if revoke is not None:
                     if queued is True:
                         gh.dequeue(node_id)
+                        cursor = previous.setdefault("last_removal", {}).setdefault(key, {
+                            "created_at": previous.get("observed", ""), "id": 0,
+                        })
+                        cursor["keeper_dequeues"] = cursor.get("keeper_dequeues", 0) + 1
                     else:
                         gh.disarm(number)
-                    lines.append(f"#{number} revoked: {revoke}" + _cf_unknown_detail(revoke, current_verdict))
+                    lines.append(f"#{number} revoked: {revoke}" + _cf_unknown_detail(revoke, current_verdict)
+                                 + (f" ({canary})" if revoke == contract_canary.REASON else ""))
                     if queued is True:
                         queued_now.pop(key, None)
                     if revoke == "squash-text-blocked":
@@ -1171,11 +1244,10 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                             previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
                 elif reason == "ready" and queued is True:
-                    gh.enqueue(number, head)
                     lines.append(f"#{number} remains queued")
-                    estimated_remaining -= 30
                 elif reason != "ready":
-                    lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
+                    lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict)
+                                 + (f" ({canary})" if reason == contract_canary.REASON else ""))
             elif reason == "ready":
                 jumped = gh.enqueue(number, head)
                 if not gh.membership(number):
@@ -1215,7 +1287,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
-        for name in ("squash_revoked", "undiagnosed", "pending_comments"):
+        for name in ("squash_revoked", "undiagnosed", "pending_comments", "last_removal"):
             if name in previous:
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers

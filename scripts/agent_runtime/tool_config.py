@@ -34,14 +34,11 @@ _CODEX_MCP_SERVER_FIELDS = frozenset(
 def _canonical_agent_name(agent: str) -> str | None:
     """Normalize caller-facing agent labels to runtime adapter names.
 
-    Order is load-bearing: ``grok-build`` and ``grok-hermes`` must be matched
-    before the bare ``grok`` prefix, otherwise the permanent alias and the
-    demoted Hermes seat both collapse into the native seat.
+    Order is load-bearing: ``grok-build`` must be matched before the bare ``grok``
+    prefix, otherwise the permanent alias collapses into the native seat.
     """
     from .agent_identity import (
-        HERMES_GROK_SEAT,
         NATIVE_GROK_SEAT,
-        is_hermes_grok_seat,
         is_native_grok_seat,
         normalize_seat,
     )
@@ -55,15 +52,11 @@ def _canonical_agent_name(agent: str) -> str | None:
     # Order-sensitive: longer / more-specific grok* prefixes first.
     if agent.startswith("grok-build") or is_native_grok_seat(agent):
         return NATIVE_GROK_SEAT
-    if agent.startswith("grok-hermes") or is_hermes_grok_seat(agent):
-        return HERMES_GROK_SEAT
     if agent.startswith("grok"):
         # Bare / versioned labels such as "grok-4.6-tools" → native seat.
         return NATIVE_GROK_SEAT
     if agent.startswith("glm"):
         return "glm"
-    if agent.startswith("hermes-deepseek"):
-        return "hermes-deepseek"
     if agent.startswith("deepseek"):
         return "deepseek"
     if agent.startswith("qwen"):
@@ -80,11 +73,8 @@ def _canonical_agent_name(agent: str) -> str | None:
         "gemini",
         "codex",
         NATIVE_GROK_SEAT,
-        HERMES_GROK_SEAT,
         "deepseek",
-        "hermes-deepseek",
         "glm",
-        "qwen",
         "agy",
         "cursor",
         "kimi",
@@ -532,27 +522,6 @@ def build_mcp_tool_config(
             resolved_servers=None,
             resolution_status="servers_not_found" if mcp_servers else "config_empty",
             missing_server_names=mcp_servers,
-        )
-
-    if canonical_agent in ("grok-hermes", "deepseek", "hermes-deepseek", "qwen"):
-        # Hermes-backed seats (grok-hermes / DeepSeek / ask-hermes /
-        # Qwen): tool_config translation is identical (Hermes reads MCP
-        # servers from ~/.hermes/config.yaml, not from the per-call payload).
-        if not mcp_servers:
-            return None, _basic_diagnostics(
-                mcp_config_path=Path.home() / ".hermes" / "config.yaml",
-                requested_servers=mcp_servers,
-                resolved_servers=None,
-                resolution_status="config_empty",
-            )
-        return (
-            {"hermes_mcp_servers": mcp_servers},
-            _basic_diagnostics(
-                mcp_config_path=Path.home() / ".hermes" / "config.yaml",
-                requested_servers=mcp_servers,
-                resolved_servers=mcp_servers,
-                resolution_status="ok",
-            ),
         )
 
     if canonical_agent in ("grok", "glm"):

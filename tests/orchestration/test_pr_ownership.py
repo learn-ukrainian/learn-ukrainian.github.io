@@ -301,6 +301,37 @@ def test_accept_records_one_owner_and_refuses_a_second():
     assert do_accept(data, records)["successor"] == "succ"  # re-accepting is idempotent
 
 
+def _write_task(branch="cursor/dispatch-branch", publish_branch=None):
+    return {**task("succ", branch), "mode": "workspace-write", "publish_branch": publish_branch}
+
+
+def test_accept_succeeds_when_publish_branch_is_the_pr_head(monkeypatch):
+    monkeypatch.setenv(own.TASK_ENV, "succ")
+    receipt = do_accept(own._empty(), [_write_task(publish_branch="codex/x")])
+    assert receipt["successor"] == "succ" and receipt["head"] == HEAD
+
+
+def test_accept_refuses_when_publish_branch_is_null(monkeypatch):
+    monkeypatch.setenv(own.TASK_ENV, "succ")
+    data = own._empty()
+    with pytest.raises(own.PublishBranchRequired, match="re-dispatch with --branch codex/x") as caught:
+        do_accept(data, [_write_task(publish_branch=None)])
+    assert caught.value.code == "publish_branch_required" and data["handoffs"] == {}
+
+
+def test_decision_custody_outside_a_task_is_unchanged(monkeypatch):
+    monkeypatch.delenv(own.TASK_ENV, raising=False)
+    data = own._empty()
+    pr = {"state": "OPEN", "headRefOid": HEAD, "headRefName": "codex/x", "isCrossRepository": False}
+    receipt = own.record_decision_custody(
+        data, repo=REPO, number=42, pr=pr, reason="driver holding an ownerless PR",
+        decision_owner="claude-cto", records=[_write_task()], now=at(30), rerun="unspent",
+        repos=FLEET, live=is_live,
+    )
+    assert receipt["decision_owner"] == "claude-cto" and receipt["pr_state"] == "OPEN"
+    assert data["handoffs"][KEY]["successor"] == "claude-cto"
+
+
 def test_accept_refuses_while_a_live_task_owns_the_branch_or_successor_is_not_live():
     records = [task("live-owner"), task("succ", "claude/queue"), task("dead", "claude/d", "done")]
     with pytest.raises(own.OwnershipError, match="live-owner"):

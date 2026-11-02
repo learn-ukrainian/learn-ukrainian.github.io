@@ -875,7 +875,6 @@
   "tests/test_artifacts_site_api.py": 1.139,
   "tests/test_ask_cursor.py": 0.802,
   "tests/test_ask_gemma.py": 0.125,
-  "tests/test_ask_hermes.py": 0.2,
   "tests/test_ask_opencode.py": 1.532,
   "tests/test_ask_pool.py": 1.084,
   "tests/test_ask_review_admission_floor.py": 0.19,

@@ -407,6 +407,17 @@ def main(argv: list[str] | None = None) -> int:
         # Pre-commit passes files. We need to check staged files.
         cached = True
         changed_files = get_changed_files(cached=True)
+        try:
+            merge_base = subprocess.check_output(
+                ["git", "merge-base", "origin/main", "HEAD"],
+                text=True,
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            ).strip()
+            if not merge_base:
+                raise subprocess.CalledProcessError(1, ["git", "merge-base"])
+            changed_files.extend(get_changed_files(base="origin/main"))
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError):
+            print("Cannot resolve merge-base with origin/main; falling back to staged files only.")
         # Include explicit files just in case
         mdx_files = [f.resolve() for f in args.files if f.suffix == ".mdx" and str(MDX_DIR) in str(f.resolve())]
         # Also ensure changed files contain them

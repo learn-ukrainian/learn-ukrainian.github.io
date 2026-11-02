@@ -19,7 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARD_PATH = ROOT / "agents_extensions/shared/hooks/guard-secret-print.py"
-HARNESSES = frozenset({"claude", "codex", "grok", "kimi", "cursor", "agy", "hermes", "opencode"})
+HARNESSES = frozenset({"claude", "codex", "grok", "kimi", "cursor", "agy", "opencode"})
 DEFAULT_TIMEOUT = 5.0
 MAX_STDIN_BYTES = 1_048_576
 BLOCK_PREFIX = "BLOCKED by guard-secret-print (#M-5): "

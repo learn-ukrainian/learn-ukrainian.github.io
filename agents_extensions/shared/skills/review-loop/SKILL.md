@@ -41,8 +41,10 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    already knows. If the change is being discarded for a new approach, skip repairs to the code
    being replaced; the code that stays and its replacement still get checks and exact-head review.
 1. **Freeze the round-1 brief** ([brief](references/brief.md)): outcome, acceptance criteria,
-   non-goals, threat and input model, dispositions. Record the budget tier
-   ([policy](references/policy.md#budget)); later rounds reuse the frozen sections unchanged.
+   non-goals, threat and input model, dispositions. If an optional DeepSeek author pre-check
+   (DS-PRECHECK-1101) was run, list its findings and their dispositions as author context only.
+   Record the budget tier ([policy](references/policy.md#budget)); later rounds reuse the
+   frozen sections unchanged.
 2. **Resolve the target and the reviewer live.** Never pick a fixed model. Derive the review
    profile from the target and record it in the hand-off record (`review.profile`) and the
    frozen brief: `infra` when the change touches the build pipeline, gates, CI, deploy, the
@@ -86,7 +88,12 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
 
    The dispatcher refuses a review past the PR's round budget, counting every review dispatched
    for the PR whether or not its verdict was recorded ([policy](references/policy.md#budget)).
-   Stdout is two lines: the task id, then the run nonce. Record both.
+   For a code or infra review, `--require-review-verdict` binds
+   `schemas/code-review-findings.v1.schema.json` on a provider that accepts a schema. The
+   brief asks for that object ([brief](references/brief.md#reply-format)). A provider that
+   cannot take a schema gets one format correction in the same task before it settles; the
+   correction cannot change the verdict, the findings, or their meaning. A Ukrainian review
+   does not bind that schema. Stdout is two lines: the task id, then the run nonce. Record both.
 4. **Wait on that task and nonce.** Never re-dispatch.
 
    ```bash
@@ -139,6 +146,14 @@ On a PR with catalog risk `critical`, the driver may add Muse Wonder Full as a s
 read-only reader. Its findings enter the same ledger and are triaged like any other finding.
 It is advisory: it is not a gate, it never replaces or outvotes the reviewer of record, and its
 silence or approval proves nothing. Making it mandatory needs the operator's approval.
+
+## Optional DeepSeek author pre-check (DS-PRECHECK-1101)
+
+The optional DeepSeek author pre-check (`full-send`) is never a review of record and never
+satisfies or waives the cross-family gate. It opens no review round and does not alter
+reviewer choice, risk floors, or round budgets. If the author ran the pre-check, its usable
+findings and their dispositions must appear in the PR body (fixed, or rejected with a reason)
+and are listed in the review-of-record brief as author context only.
 
 ## Review profiles
 

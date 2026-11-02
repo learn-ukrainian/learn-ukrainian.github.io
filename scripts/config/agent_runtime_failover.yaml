@@ -28,21 +28,16 @@
 #   AGENT_RUNTIME_FAILOVER_COOLDOWN_DB pointed at throwaway copies — never
 #   the live cooldown DB.
 #
-# v1 coverage:
-# - Hermes-backed lanes (deepseek, qwen, grok): provider + model override.
 # - agy: model override; provider is informational unless encoded by the CLI
 #   model label.
 # - Other adapters: chain only if their existing model flag can express it.
 # NO provider-level failover chains are currently shipped (user order
 # 2026-07-07, burned twice the same day):
 # - deepseek runs FIRST-PARTY ONLY. `openrouter/deepseek/*` is guard-REFUSED
-#   in routing_guard.py for direct routing, but the old fallback routes here
-#   BYPASSED that guard and leeched a fresh OpenRouter top-up (2026-07-07).
-#   The chain config must honor the same order as the guard.
+#   in routing_guard.py for direct routing.
 # - grok work belongs on the `grok` seat (native grok app CLI, subscription;
 #   historical alias: grok-build). grok-4.* via OpenRouter has no measured niche
-#   and 402-drains the OR balance. The demoted hermes path is `grok-hermes`
-#   (plain single route; no chain needed).
+#   and 402-drains the OR balance.
 # A single-route lane is NOT a failover chain (loader requires >= 2 routes),
 # so no chains are declared. On a lane fault the ORCHESTRATOR reroutes BY
 # SEAT per model-assignment.md (review stall -> the next resolve-reviewer pick,

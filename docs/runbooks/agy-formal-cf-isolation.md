@@ -44,6 +44,22 @@ Formal CF for AGY-authored work is requested by the driver of record via direct 
   --task-id agy-bounded --to-model gemini-3.8-flash-high
 ```
 
+## What an AGY task record carries (#12408)
+
+The task record is published to Fleet messages, PR comments and reviewer briefs, so it never copies AGY's text. Provider text can hold any value, and no redactor recognizes every secret form. Each field that `scripts/dispatcher/providers/agy.py` derives from AGY's output is a fixed value or a validated typed value:
+
+| Field | What the record carries |
+| --- | --- |
+| Terminal status | `SUCCESS` or `ERROR`; any other status records as `unrecognized`. |
+| Error | Fixed text only. A terminal failure names its error class: `transport` (`API error` prefix), `model_selection` or `unclassified`. For example: `agy: exited with status 1; terminal result unsuccessful (ERROR): transport error; its text is in the task's retained stream`. |
+| Quota or capacity | `rate_limited` with `agy: quota or capacity limit (RESOURCE_EXHAUSTED, 429); its text and reset hint are in the task's retained stream`. The class comes from the one structured `AGY_ERROR` line and lists only known statuses and codes. |
+| Unoffered model | `agy_model_unavailable: AGY does not offer the requested model to this account` when AGY refuses `--model` before any init or turn. Do not retry it, and do not reroute to it. |
+| Schema refusal | `agy_output_schema_unsupported: AGY rejected the --json-schema argument; its text is in the task's retained stream`. |
+| Usage | Only `input_tokens`, `output_tokens`, `thinking_tokens`, `cache_read_tokens` and `total_tokens` with non-negative integer values. Every other key and value is dropped. |
+| Resolved model | A catalog identifier of a model with an AGY wire id (`routing_wire_ids.agy` in `scripts/config/model_catalog.yaml`), else `unrecognized`, which fails the identity check. |
+
+To read AGY's own message, such as the reset time or the reason a schema was rejected, open the task's retained stdout and stderr logs.
+
 ## Substitute formal CF
 
 ```bash

@@ -106,7 +106,7 @@ def _write_ask_launch_record(
     if timeout_seconds is None:
         # Target-specific default hard timeout when not explicitly provided in options:
         # AGY, Grok, Gemini, and OpenCode pool/glm/gemma default to 1800s (30m).
-        # Claude, Codex, Cursor, Hermes, Opencode default to 900s (15m).
+        # Claude, Codex, Cursor, Opencode default to 900s (15m).
         timeout_seconds = (
             1800
             if target in {"agy", "grok", "grok-build", "gemini", "pool", "glm", "gemma"}
@@ -993,10 +993,6 @@ def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bo
         from ._cursor import process_for_cursor
 
         process_for_cursor(message_id, no_timeout=no_timeout)
-    elif target == "hermes":
-        from ._hermes import process_for_hermes
-
-        process_for_hermes(message_id, no_timeout=no_timeout)
     elif target in {"opencode", "pool", "glm", "gemma"}:
         from ._opencode import process_for_opencode
 

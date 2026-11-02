@@ -223,9 +223,15 @@ def _authoritative_task_repository(task: dict[str, Any]) -> str | None:
 
 
 _TaskFileFingerprint = tuple[str, int, int, int, int]
-_TASK_STATE_CACHE: dict[
-    str, tuple[_TaskFileFingerprint, dict[str, Any], str, bool, str | None, int | None]
-] = {}
+# A missing summary marks a file that is not a task record. The fingerprint
+# still skips a later parse while the file is unchanged.
+_TaskCacheEntry = tuple[_TaskFileFingerprint, dict[str, Any] | None, str, bool, str | None, int | None]
+_TASK_STATE_CACHE: dict[str, _TaskCacheEntry] = {}
+# Directory-only scans (routing-budget passes an explicit tasks dir) must not
+# write the SQLite index or the process-wide cache that index mirrors.
+# They keep their own summaries, keyed by path and file fingerprint, so a
+# later refresh does not parse records that have not changed.
+_DIRECTORY_TASK_STATE_CACHE: dict[str, dict[str, _TaskCacheEntry]] = {}
 _LAST_TASKS_DIR_STR: str = ""
 
 
@@ -547,12 +553,24 @@ def _delegate_task_rows_locked(
         _LAST_TASKS_DIR_STR = tasks_dir_str
     # Inserts and evictions belong to the persistent index together. A
     # directory-only scan must not consume either update without writing it.
-    task_cache = _TASK_STATE_CACHE if persist_cache else _TASK_STATE_CACHE.copy()
+    # It still reuses summaries it parsed itself, and it may read the
+    # persistent cache without writing either store.
+    directory_cache: dict[str, _TaskCacheEntry] | None = None
+    if persist_cache:
+        task_cache = _TASK_STATE_CACHE
+    else:
+        for stale_dir in [key for key in _DIRECTORY_TASK_STATE_CACHE if not os.path.isdir(key)]:
+            _DIRECTORY_TASK_STATE_CACHE.pop(stale_dir, None)
+        directory_cache = _DIRECTORY_TASK_STATE_CACHE.setdefault(tasks_dir_str, {})
+        task_cache = _TASK_STATE_CACHE.copy()
+        task_cache.update(directory_cache)
 
     repo_predicate = _normalize_repository_predicate(repository)
 
     rows: list[dict[str, Any]] = []
     if not tasks_dir.exists():
+        if directory_cache is not None:
+            directory_cache.clear()
         if task_generation is not None:
             task_generation.append("missing")
         return rows
@@ -599,6 +617,8 @@ def _delegate_task_rows_locked(
 
         if cached is not None and cached[0] == fingerprint:
             _, summary, derived_status, alive, claimed_repo, pid = cached
+            if summary is None:
+                continue
             if is_active_query and derived_status not in statuses:
                 continue
             if derived_status == "running" and pid:
@@ -611,6 +631,8 @@ def _delegate_task_rows_locked(
                 if persist_cache else _read_task_state(path_str, resolved, tasks_dir=tasks_dir)
             )
             if task is None:
+                if not persist_cache:
+                    task_cache[path_str] = (fingerprint, None, "", False, None, None)
                 continue
             derived_status, alive = _derived_task_status(task)
             claimed_repo = _authoritative_task_repository(task)
@@ -722,6 +744,15 @@ def _delegate_task_rows_locked(
             del task_cache[path]
         if persist_cache:
             _delete_task_cache_entries(tasks_dir_str, vanished, resolved)
+    if directory_cache is not None:
+        directory_cache.clear()
+        directory_cache.update(
+            {
+                path: entry
+                for path, entry in task_cache.items()
+                if os.path.dirname(path) in scanned_dirs
+            }
+        )
 
     rows.sort(
         key=lambda item: _parse_iso_datetime(item.get("started_at"))
@@ -821,6 +852,8 @@ def active_delegate_tasks(
     scan, or stays empty when the generation cannot be observed.
     An explicit ``tasks_dir`` reuses existing summaries without building an
     application context or updating the shared cache or persistent SQLite index.
+    Summaries parsed for that directory, including files that are not task records,
+    stay in memory and are reused while the file fingerprint matches.
     """
     active = _delegate_task_rows(
         ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx, task_generation=task_generation, tasks_dir=tasks_dir,

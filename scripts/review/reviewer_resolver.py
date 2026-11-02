@@ -32,6 +32,7 @@ selection unchanged. Ambiguous path inference fails closed instead of guessing.
 from __future__ import annotations
 
 import re
+import shlex
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from fnmatch import fnmatchcase
@@ -206,6 +207,7 @@ class ReviewerCandidate:
     invocation: str
     quality_tier: str
     last_resort: bool = False
+    seat_priority: int = 100
     model_roles: frozenset[str] = field(default_factory=frozenset)
     # Optional subset for semantic ranking, never a grant of activity roles.
     suitability_roles: frozenset[str] = field(default_factory=frozenset)
@@ -249,6 +251,7 @@ _SCHEDULER_POLICY_VERSION = _SCHEDULER_POLICY["policy_version"]
 def _catalog_candidate(name: str) -> ReviewerCandidate:
     from scripts.review.role_resolution import resolve_routing_reference
 
+    seat_priority = 100
     if "roles" in _MODEL_CATALOG:
         matches = [
             (seat_name, route_name)
@@ -257,6 +260,7 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
             if route.get("legacy_name") == name
         ]
         seat_name, route_name = matches[0]
+        seat_priority = int(_MODEL_CATALOG["seats"][seat_name].get("priority", 100))
         raw = resolve_routing_reference(
             {"role": "legacy_reviewers", "seat": seat_name, "route_name": route_name, "field": "candidate"},
             _MODEL_CATALOG,
@@ -281,6 +285,7 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         invocation=raw["invocation"],
         quality_tier=model["tier"],
         last_resort=raw.get("last_resort", False),
+        seat_priority=seat_priority,
         model_roles=frozenset(model["roles"]),
         suitability_roles=frozenset(raw.get("suitability_roles", [])),
         transport_fallback_for=raw.get("transport_fallback_for"),
@@ -676,6 +681,18 @@ def _near_cap_credit(candidate: ReviewerCandidate, snapshot: Mapping[str, object
     )
 
 
+def _contributor_mode_off(invocation: str) -> bool:
+    try:
+        tokens = shlex.split(invocation)
+    except ValueError:
+        return False
+    indices = [i for i, tok in enumerate(tokens) if tok == "--contributor-mode"]
+    if len(indices) != 1:
+        return False
+    idx = indices[0]
+    return idx + 1 < len(tokens) and tokens[idx + 1] == "off"
+
+
 def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs) -> str | None:
     """Non-family exclusions: cost policy, domain carve-out, data-egress
     (fail-closed), missing required capability. Family/advisory handling is
@@ -743,6 +760,8 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
                 or candidate.sealed_executable != "scripts/dispatch.py"
             ):
                 return "native Muse review endpoint identity is invalid"
+            if not _contributor_mode_off(candidate.invocation):
+                return "Muse review requires contributor mode off (operator order C-2401)"
         elif candidate.adapter_transport != "acp":
             return "formal-review candidate is not bound to the ACP adapter transport"
         if not native_review and candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
@@ -1234,15 +1253,17 @@ def _evaluate_candidate(
 
 
 def _best_eligible(
-    eligible_by_fit_and_tier: dict[tuple[bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]],
+    eligible_by_fit_and_tier: dict[
+        tuple[bool, int, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
+    ],
     *,
     exclude_families: frozenset[str] = frozenset(),
 ) -> tuple[ReviewerCandidate, CandidateResult, int] | None:
-    """Pick the best eligible entry: primary before last resort, then suitability and tier,
-    plan-backed before credit-backed, deterministic selection_score inside it. ``exclude_families`` lets the
-    dual-family quorum path pick a second seat outside the first seat's
-    family without relaxing the fit-before-pressure ordering. An eligible
-    same-model primary transport precedes its declared fallback."""
+    """Pick the best eligible entry: primary before last resort, prioritized seat before
+    standard tier, then suitability and tier, plan-backed before credit-backed, deterministic
+    selection_score inside it. ``exclude_families`` lets the dual-family quorum path pick
+    a second seat outside the first seat's family without relaxing the fit-before-pressure
+    ordering. An eligible same-model primary transport precedes its declared fallback."""
     filtered = {
         fit_key: kept
         for fit_key, entries in eligible_by_fit_and_tier.items()
@@ -1498,7 +1519,7 @@ def resolve_reviewer(
     # A credit-backed near-cap seat (#9517) ranks after every plan-backed seat
     # of equal standing (same last-resort flag, suitability and tier).
     eligible_by_fit_and_tier: dict[
-        tuple[bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
+        tuple[bool, int, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
     ] = {}
     tier_for_candidate = {
         name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier] for name, candidate in REVIEW_CANDIDATES.items()
@@ -1545,8 +1566,21 @@ def resolve_reviewer(
             if result.status == "advisory_only":
                 advisory.append(result)
             elif result.status == "eligible":
+                if (
+                    candidate.seat_priority < 10
+                    and inputs.pinned_candidate is None
+                    and (result.health != "healthy" or result.capacity.near_cap)
+                ):
+                    continue
+                prioritized = (
+                    candidate.seat_priority < 10
+                    and inputs.risk in {"low", "medium"}
+                    and result.health == "healthy"
+                    and not result.capacity.near_cap
+                )
                 fit_key = (
                     candidate.last_resort,
+                    0 if prioritized else (1 if tier_for_candidate[candidate.name] <= 2 else 2),
                     result.suitability_rank or 0,
                     tier_for_candidate[candidate.name],
                     result.credit is not None,
@@ -1682,7 +1716,19 @@ def resolve_reviewer(
             for rung in active_ladder
             for candidate in rung
         )
-        if higher_quality_tier_exists:
+        prioritized_selection = (
+            inputs.pinned_candidate is None
+            and candidate is not None
+            and candidate.seat_priority < 10
+            and inputs.risk in {"low", "medium"}
+            and selected.health == "healthy"
+            and (selected.capacity is None or not selected.capacity.near_cap)
+        )
+        if prioritized_selection:
+            substitution_notes.append(
+                f"selected {selected.name} by operator decision 2026-11-01 ahead of higher-tier seats"
+            )
+        elif higher_quality_tier_exists:
             substitution_notes.append(
                 f"fell back to {selected.name}: no eligible candidate remained in a higher-quality tier"
             )

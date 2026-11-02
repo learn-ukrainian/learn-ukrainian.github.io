@@ -9,15 +9,13 @@ from __future__ import annotations
 from collections.abc import Mapping
 from types import ModuleType
 
-PROVIDERS = ("codex", "claude", "cursor", "agy", "muse", "opencode", "hermes")
+PROVIDERS = ("codex", "claude", "cursor", "agy", "muse", "opencode")
 
 # Read-only must be unable to edit. These CLIs give a dispatched run no enforceable write lock, so
 # read-only is refused before launch instead of trusting the model not to edit (probed 2026-10-28).
 # AGY has none either; its read-only runs inside the dispatcher's bubblewrap boundary (agy_sandbox,
 # C-3027) and is refused only where that boundary cannot start.
-READ_ONLY_REFUSALS = {
-    "hermes": "hermes -z bypasses approvals, and its file toolset grants write_file and patch with read_file",
-}
+READ_ONLY_REFUSALS: dict[str, str] = {}
 
 
 def read_only_refusal(name: str, env: Mapping[str, str] | None = None) -> str | None:
@@ -54,8 +52,6 @@ def load(name: str) -> ModuleType:
         from scripts.dispatcher.providers import muse as module
     elif name == "opencode":
         from scripts.dispatcher.providers import opencode as module
-    elif name == "hermes":
-        from scripts.dispatcher.providers import hermes as module
     else:
         raise ValueError(f"unknown agent {name!r}; known: {', '.join(PROVIDERS)}")
     return module

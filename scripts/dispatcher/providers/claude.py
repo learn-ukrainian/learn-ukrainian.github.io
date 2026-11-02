@@ -181,6 +181,28 @@ def executor_failure(spec: TaskSpec, stdout: str) -> tuple[str | None, str | Non
             f"claude_advisor_executor_unverified: approved {approved}, reported {', '.join(reported) or 'none'}")
 
 
+def schema_argument(options: dict) -> str | None:
+    """Check the digest-bound schema before putting its JSON in one argv entry.
+
+    Claude Code refuses a top-level draft 2020-12 ``$schema`` meta-schema reference, so the
+    argument is a copy without it. The canonical document, its digest and validation are unchanged.
+    """
+    from scripts.dispatcher.output_schema import load
+
+    schema = load(options)
+    if schema is None:
+        return None
+    schema = {key: value for key, value in schema.items() if key != "$schema"}
+    try:
+        argument = json.dumps(schema, separators=(",", ":"), allow_nan=False)
+    except ValueError as exc:
+        raise ValueError("claude_output_schema_unsupported: schema must contain finite JSON values") from exc
+    # Linux permits at most 128 KiB including the NUL in one argument. Refuse before spawn.
+    if len(argument.encode("utf-8")) >= 128 * 1024:
+        raise ValueError("claude_output_schema_unsupported: schema exceeds the inline argument limit")
+    return argument
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     from scripts.agent_runtime.attempt_boundary import resolve_claude_budget_usd
 
@@ -219,10 +241,14 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         argv += ["--max-budget-usd", f"{budget:.2f}"]
         if spec.mode == "workspace-write":
             env["CLAUDE_CODE_PROMPT_CACHE_TTL"] = "1h"
+    if (argument := schema_argument(spec.options)) is not None:
+        argv += ["--json-schema", argument]
     return Invocation(argv, spec.prompt_file.read_bytes(), env, None)
 
 
-def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
+def parse(
+    stdout: str, stderr: str, returncode: int, final_text: str | None, output_schema: dict | None = None,
+) -> ParsedResult:
     result, error, overloaded = {}, None, False
     stream_clean, terminals = True, 0
     # Runtime evidence for Ukrainian reviews: Sources tool calls whose result came back without error.
@@ -266,6 +292,16 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         return ParsedResult(None, None, f"claude: {result['result']}", rate_limited=True)
     if returncode:
         error = f"claude: exited with status {returncode}"
+    elif output_schema is not None and error is None and result.get("subtype") == "success" and result.get("is_error") is not True:
+        # A schema-bound run returns the receipt on structured_output. The result
+        # string can be empty or a preamble; neither one is the receipt.
+        structured = result.get("structured_output") if "structured_output" in result else None
+        if isinstance(structured, str) and structured.strip():
+            text = structured
+        elif isinstance(structured, dict):
+            text = json.dumps(structured)
+        else:
+            text, error = None, "claude: missing structured output"
     return ParsedResult(
         text, usage if isinstance(usage, dict) else None, error or (None if text else "claude: missing final text"),
         sources_mcp_call_count=len(sources_calls & completed),

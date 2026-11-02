@@ -237,7 +237,6 @@ def _resolve_kimi_binary() -> str:
     candidates = (
         override,
         shutil.which("kimi"),
-        str(Path.home() / ".hermes" / "node" / "bin" / "kimi"),
         str(Path.home() / ".kimi-code" / "bin" / "kimi"),
     )
     for candidate in candidates:

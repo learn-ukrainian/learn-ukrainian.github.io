@@ -81,6 +81,8 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
    every fix is a new head and restarts the wait. **No budgeted review round starts until
    the `CI Gate` is green on the head to be reviewed**: a round spent on a head that then
    changes for a CI failure is wasted budget.
+   Before step 5, the author may optionally run the DeepSeek author pre-check
+   ([below](#optional-deepseek-author-pre-check-ds-precheck-1101)) on the pinned green head.
 5. **Review with `review-loop`**, which you run yourself, at that green head. It resolves
    the reviewer live (never from a family that authored the branch), dispatches it at the
    exact pushed head, keeps the budget and the ledger, and records the verdict. A fix that
@@ -138,6 +140,35 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 11. **Dispose of the linked issues.** A worker does this before it ends its run. Close each named issue as completed with evidence on the
     merged SHA, or comment what remains, its owner and what it waits on (rules core P4).
 
+## Optional DeepSeek author pre-check (DS-PRECHECK-1101)
+
+An optional, explicitly chosen, read-only DeepSeek pre-check may be run by the author before the
+first review of record, at most **one per PR lineage**.
+
+- **Scope:** only for low or medium risk **public** code. Never on private repositories, high or
+  critical risk, security-class paths, or Ukrainian content. Everything sent to it must be public
+  and free of secrets.
+- **Trigger:** nothing invokes it automatically, it has no retries, and it does not repeat after
+  the head changes. It runs on a pinned pushed head before the first review of record.
+- **Credit check:** execution is skipped when remaining DeepSeek credit is unknown or exhausted.
+  Query the Monitor routing-budget endpoint (`http://127.0.0.1:8765/api/state/routing-budget`,
+  field `api_accounts.deepseek.total_balance`); skip when the field is missing or below the
+  credit floor of $0.10.
+- **Execution:** run with a hard timeout of 900 seconds:
+
+  ```bash
+  "$PY" scripts/dispatch.py dispatch \
+    --agent opencode --model deepseek-v4.1-flash --mode read-only \
+    --hard-timeout 900 --worktree --task-id "$PRECHECK_TASK" \
+    --prompt-file "$PRECHECK_PROMPT" --pinned-head "$HEAD_SHA"
+  ```
+
+- **Findings and status:** findings go only to the author. A failed run never blocks review. Any
+  usable findings it returned need a disposition in the PR body (fixed, or rejected with a reason),
+  and confirmed defects follow the existing review-loop severity policy.
+- **Non-record status:** it is never a review of record and never satisfies or waives the
+  cross-family gate. No change to reviewer choice, risk floors, or round budgets.
+
 ## Stop and escalate
 
 Stop, and report `BLOCKED <reason>`, when: the proof cannot be obtained; the recorder's
@@ -181,26 +212,43 @@ printf '%s\n' "question: <one decision, the options, your recommendation>; reply
     --idempotency-key "ask-$LEARN_UKRAINIAN_DISPATCH_TASK_ID-<n>"
 ```
 
-Then wait, for at most 30 minutes, one Bash call per minute (`sleep 60`, then claim). Exit 1 means no
-reply yet:
+Then wait for at most 30 minutes, one Bash call per minute (`sleep 60`, then receive).
+Use `receive` for worker replies: it claims and reads the body in one call and recovers
+your existing lease if an earlier call's output was lost. Keep the entire output and exit
+code. Never pipe it through `tail`, `head`, `grep`, or a parser that drops fields; never
+hide errors with `|| true`. Exit 1 alone means no reply yet. Exit 3 is a typed error,
+not an empty inbox: report it to `claude-cto` and stop dependent work.
 
 ```bash
-/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries claim \
+/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries receive \
   --recipient "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 ```
 
-On a claim, read the reply with its `delivery_id` and `fence_token`, apply it, then acknowledge:
+Exit 0 returns `{"delivery": {"delivery_id": "...", "fence_token": 1,
+"sender": "claude-cto", "body": "the reply", ...}, "content_included": true}`.
+Read and apply `delivery.body`, then acknowledge
+with **`delivery.delivery_id` and `delivery.fence_token` from that same output**:
 
 ```bash
-/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries read "<delivery_id>" \
-  --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --fence-token "<fence_token>"
-/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries ack "<delivery_id>" \
-  --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --fence-token "<fence_token>"
+/abs/path/.venv/bin/python -m scripts.fleet_comms deliveries ack "<delivery.delivery_id>" \
+  --worker-id "$LEARN_UKRAINIAN_DISPATCH_TASK_ID" --fence-token "<delivery.fence_token>"
 ```
 
-If a lease expires before you finish, claim again. If nothing arrives in time, end with
-`BLOCKED waiting on <the open question>` and a hand-off record ([delivery](references/delivery.md#hand-off-record))
-that states the question, the branch and head, and what is done, so a successor can resume.
+Confirm the ack exits 0 and returns `state: acknowledged`. A received reply is not
+acknowledged until this succeeds. If the lease expires before completion, receive again,
+reconcile what you already applied, and ack the current fence without repeating side effects.
+For a reply with `delivery.kind: delivery-error`, report the original delivery id and `reason_code` to `claude-cto`,
+acknowledge the error notification, and stop dependent work. Unreadable and dead-lettered
+coordinator replies produce these durable errors for both parties, without copying the reply.
+
+The lower-level `claim` command returns **flat metadata** on success, and
+`{"delivery": null, "content_included": false}` when empty. It does not read the body.
+Testing `claim` success with `get("delivery")` loses a valid lease. Use `receive` above;
+reclaiming repeatedly is not a read or an acknowledgment.
+
+If nothing arrives in time, end with `BLOCKED waiting on <the open question>` and a hand-off
+record ([delivery](references/delivery.md#hand-off-record)) that states the question, branch,
+head and completed work so a successor can resume.
 
 ## Report
 

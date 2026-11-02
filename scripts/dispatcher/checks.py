@@ -236,7 +236,7 @@ def _handle_private_input(spec: TaskSpec, message: str) -> None:
 
 
 def check_private_input(spec: TaskSpec, repo_key: str) -> None:
-    if spec.agent not in {"muse", "opencode", "hermes"}:
+    if spec.agent not in {"muse", "opencode"}:
         return
     repos = yaml.safe_load(git.CONFIG.read_text())["repos"]
     private = {

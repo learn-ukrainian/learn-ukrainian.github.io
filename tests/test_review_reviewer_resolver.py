@@ -517,6 +517,7 @@ def test_codexbar_unavailable_status_fail_open_does_not_ban_lane():
                 "agents": {
                     "claude": {"status": "unavailable"},
                     "codex": {"status": "unavailable"},
+                    "muse": {"status": "unhealthy"},
                 }
             }, claude_account=HOST_ACCOUNT,
         )
@@ -531,7 +532,7 @@ def test_unhealthy_route_is_unavailable_and_falls_to_the_next_quality_tier():
         ResolverInputs(
             author_model="gemini",
             risk="medium",
-            routing_snapshot={"codex": "unhealthy", "cursor": "healthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"codex": "unhealthy", "cursor": "healthy", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
     # Practical ladder: Astra dark → Sonnet 5.5 (Claude healthy by default).
@@ -548,6 +549,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
             "gemini": {"status": "hot", "health": {"healthy": True}},
             "grok": {"status": "cool", "health": {"healthy": True}},
             "claude": {"status": "warm", "remaining_pct": 45, "health": {"healthy": True}},
+            "muse": {"status": "unhealthy", "health": {"healthy": False}},
         },
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
@@ -592,7 +594,7 @@ def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed(
         ResolverInputs(
             author_model="codex",
             risk="medium",
-            routing_snapshot={"agy": "UNHEALTHY", "grok": "healthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"agy": "UNHEALTHY", "grok": "healthy", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
     assert unhealthy.selected.name == "claude-sonnet-5-5"
@@ -614,7 +616,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
         ResolverInputs(
             author_model="codex",
             risk="medium",
-            routing_snapshot={"agy": "pre_launch", "grok": "near_cap"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"agy": "pre_launch", "grok": "near_cap", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
     assert pre_launch.selected.name == "claude-sonnet-5-5"
@@ -638,7 +640,7 @@ def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallbac
             author_model="gemini",
             risk="medium",
             routing_snapshot={
-                "agents": {"codex": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "healthy"}},
+                "agents": {"codex": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "healthy"}, "muse": {"status": "unhealthy"}},
                 "diagnostics": {"stale": False},
             }, claude_account=HOST_ACCOUNT,
         )
@@ -668,6 +670,7 @@ def test_deepseek_is_absent_from_automatic_ladders_even_when_other_lanes_are_dar
                 # Dark Pro by candidate name; leave route "deepseek" open for Flash.
                 "deepseek-v4-pro": "unhealthy",
                 "pool": "unhealthy",
+                "muse": "unhealthy",
             },
             data_egress_policy="local_interactive", claude_account=HOST_ACCOUNT,
         )
@@ -1058,7 +1061,7 @@ def test_explicit_glm_pin_is_refused_after_subscription_retirement():
 
 
 def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing():
-    resolution = resolve_reviewer(ResolverInputs(author_model="claude", exact_head="d" * 40, claude_account=HOST_ACCOUNT))
+    resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="high", exact_head="d" * 40, claude_account=HOST_ACCOUNT))
     selected = resolution.selected
     assert selected is not None
     assert selected.participant == "codex"
@@ -1100,8 +1103,9 @@ def test_ladders_place_cursor_grok_directly_after_opus(risk):
         assert ladder[4][0].name == "claude-sonnet-5-5"
         assert ladder[5][0].name == "claude-sonnet-5-5-agy"
         assert ladder[6][0].name == "gemini-3.8-flash-high"
-        assert len(ladder) == 7
-        assert "muse" not in {c.name for rung in ladder for c in rung}
+        assert ladder[7][0].name == "muse"
+        assert len(ladder) == 8
+        assert "muse" in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1368,9 +1372,10 @@ def test_normalize_muse_subject_seat_and_meta_family():
     assert formal.status == "eligible"
     advisory = replace(inputs, formal_review=False)
     assert evaluate_candidate(candidate, advisory).status == "eligible"
-    for risk in ("low", "medium", "high", "critical"):
-        assert candidate not in {c for rung in REVIEW_LADDERS[risk] for c in rung}
+    for risk in ("low", "medium"):
+        assert candidate in {c for rung in REVIEW_LADDERS[risk] for c in rung}
     for risk in ("high", "critical"):
+        assert candidate not in {c for rung in REVIEW_LADDERS[risk] for c in rung}
         assert evaluate_candidate(candidate, replace(inputs, risk=risk)).status == "excluded"
         pinned = replace(inputs, risk=risk, pinned_candidate="muse", pressure_override_reason="fixture")
         assert resolve_reviewer(pinned).selected is None
@@ -1379,10 +1384,10 @@ def test_normalize_muse_subject_seat_and_meta_family():
     meta_author = evaluate_candidate(candidate, replace(advisory, author_families=frozenset({"meta"})))
     assert meta_author.status == "excluded"
     assert "same family as author (meta)" in meta_author.reason
+    assert evaluate_candidate(candidate, replace(advisory, review_profile="infra")).status == "eligible"
     for changes in (
         {"subject_seats": frozenset({"muse"})}, {"subject_families": frozenset({"meta"})},
         {"language_lane": True},
-        {"review_profile": "infra"},
         {"isolation_required": True}, {"required_capabilities": frozenset({"sealed_evidence"})},
         {"changed_paths": ("scripts/hooks/admission.py",)},
     ):
@@ -1410,6 +1415,96 @@ def test_muse_formal_review_eligibility_must_stay_limited_to_low_medium_code_rev
         refused = replace(inputs, **changes)
         assert evaluate_candidate(candidate, refused).status == "excluded"
         assert resolve_reviewer(refused).selected is None
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_low_medium_resolves_to_muse_when_healthy(risk, profile):
+    inputs = ResolverInputs(
+        author_model="claude-opus-5-5",
+        risk=risk,
+        review_profile=profile,
+        routing_snapshot={"agents": {"muse": {"status": "healthy"}}},
+        claude_account=HOST_ACCOUNT,
+    )
+    result = resolve_reviewer(inputs)
+    assert result.selected is not None
+    assert result.selected.name == "muse"
+    assert result.selected.concrete_model == "muse-wonder-full-1.0"
+    assert result.selected.family == "meta"
+    assert result.substitution_note == "selected muse by operator decision 2026-11-01 ahead of higher-tier seats"
+
+
+def test_muse_not_selected_when_health_is_unknown_or_unhealthy():
+    unknown = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5",
+            risk="medium",
+            review_profile="code",
+            routing_snapshot=None,
+            claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert unknown.selected.name != "muse"
+    assert unknown.selected.family == "openai"
+
+    unhealthy = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5",
+            risk="medium",
+            review_profile="code",
+            routing_snapshot={"agents": {"muse": {"status": "unhealthy"}}},
+            claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert unhealthy.selected.name != "muse"
+    assert unhealthy.selected.family == "openai"
+
+    exhausted = resolve_reviewer(
+        ResolverInputs(
+            author_model="gemini-3.8-flash-high",
+            risk="low",
+            review_profile="infra",
+            structural=True,
+            routing_snapshot={
+                "diagnostics": {"stale": False},
+                "agents": {
+                    "codex": {"status": "unhealthy"},
+                    "cursor": {"status": "unhealthy"},
+                    "claude": {"status": "unhealthy"},
+                    "grok": {"status": "unhealthy"},
+                    "agy": {"status": "unhealthy"},
+                    "gemini": {"status": "unhealthy"},
+                    "muse": {"status": "unavailable"},
+                },
+            },
+            claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert exhausted.selected is None
+
+    near_cap = resolve_reviewer(
+        ResolverInputs(
+            author_model="gemini-3.8-flash-high",
+            risk="low",
+            review_profile="infra",
+            structural=True,
+            routing_snapshot={
+                "diagnostics": {"stale": False},
+                "agents": {
+                    "codex": {"status": "unhealthy"},
+                    "cursor": {"status": "unhealthy"},
+                    "claude": {"status": "unhealthy"},
+                    "grok": {"status": "unhealthy"},
+                    "agy": {"status": "unhealthy"},
+                    "gemini": {"status": "unhealthy"},
+                    "muse": {"status": "healthy", "health": {"healthy": True}, "remaining_pct": 5},
+                },
+            },
+            claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert near_cap.selected is None
 
 
 @pytest.mark.parametrize(
@@ -1513,10 +1608,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "gemini.py": "gemini",
         "glm.py": "glm",
         "grok_build.py": "grok",
-        "hermes_common.py": None,
-        "hermes_deepseek.py": "deepseek",
-        "hermes_grok.py": "grok",
-        "hermes_qwen.py": "qwen",
         "kimi.py": "kimi",
         "kimicc.py": "kimi",
         "muse.py": "muse",
@@ -1556,8 +1647,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
     for seats in adapter_subject_index().values():
         assert seats <= KNOWN_SUBJECT_SEATS
     assert classify_owned_path("scripts/dispatcher/providers/opencode.py").seats == frozenset({"deepseek"})
-    hermes = classify_owned_path("scripts/dispatcher/providers/hermes.py")
-    assert hermes.kind == "ambiguous" and hermes.seats == frozenset({"deepseek", "grok", "qwen"})
 
 
 _AUTHOR_MODELS = {
@@ -1596,6 +1685,7 @@ _AUTHORITY_DOWN = {
     "agy": "unhealthy",
     "codex": "unhealthy",
     "claude": "unhealthy",
+    "muse": "unhealthy",
 }
 
 

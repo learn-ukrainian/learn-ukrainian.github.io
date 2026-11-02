@@ -15,17 +15,14 @@ import pytest
 
 from scripts.agent_runtime.adapters.acpx import InvocationPlan as AcpxInvocationPlan
 from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.adapters.hermes_common import HermesInvocationContext
 from scripts.agent_runtime.kimi_admission import CommitTree
 from scripts.agent_runtime.redacted_env import RedactedEnv
 
 SENTINEL = "sentinel-not-a-real-value-XYZ"
-PLAN_TYPES = (InvocationPlan, AcpxInvocationPlan, HermesInvocationContext, CommitTree)
+PLAN_TYPES = (InvocationPlan, AcpxInvocationPlan, CommitTree)
 
 
 def make_plan(plan_type, env):
-    if plan_type is HermesInvocationContext:
-        return plan_type(config={}, env_overrides=env, metadata={})
     if plan_type is CommitTree:
         return plan_type(repo=Path("."), commit="a" * 40, env=env)
     return plan_type(cmd=["agent"], cwd=Path("."), env_overrides=env)
@@ -109,7 +106,7 @@ def run_failing_comparison(tmp_path, plan_type, verbosity, comparison, left_env,
     return output
 
 
-@pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
+@pytest.mark.parametrize("plan_type", (InvocationPlan, CommitTree))
 @pytest.mark.parametrize("verbosity", ("-q", "-vv"))
 def test_real_pytest_plan_assertion_does_not_expose_values(tmp_path, plan_type, verbosity):
     output = run_failing_comparison(
@@ -123,7 +120,7 @@ def test_real_pytest_plan_assertion_does_not_expose_values(tmp_path, plan_type, 
     assert SENTINEL not in output, output
 
 
-@pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
+@pytest.mark.parametrize("plan_type", (InvocationPlan, CommitTree))
 @pytest.mark.parametrize("verbosity", ("-q", "-vv"))
 @pytest.mark.parametrize(
     ("comparison", "right_env", "exposes_value"),
@@ -151,7 +148,7 @@ def test_real_pytest_multiline_comparison_redaction_boundary(
         assert f"E         + {SENTINEL}" in output, output
 
 
-@pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
+@pytest.mark.parametrize("plan_type", (InvocationPlan, CommitTree))
 @pytest.mark.parametrize("verbosity", ("-q", "-vv"))
 @pytest.mark.parametrize(
     ("comparison", "left_env", "right_env"),
@@ -186,12 +183,6 @@ def test_real_pytest_env_assertion_does_not_expose_values(
             "(['agent'], PosixPath('.'), '', None, RedactedEnv(names=['A']), (), (), {}, None)",
             "InvocationPlan(cmd=['agent'], cwd=PosixPath('.'), stdin_payload='', output_file=None, "
             "env_overrides=RedactedEnv(names=['A']), env_unsets=(), liveness_paths=(), metadata={}, host_harness=None)",
-        ),
-        (
-            HermesInvocationContext,
-            "{'config': {}, 'env_overrides': RedactedEnv(names=['A']), 'metadata': {}}",
-            "({}, RedactedEnv(names=['A']), {})",
-            "HermesInvocationContext(config={}, env_overrides=RedactedEnv(names=['A']), metadata={})",
         ),
         (
             CommitTree,
@@ -250,7 +241,7 @@ def test_env_mutations_redact_value_representations(operation):
     assert json.loads(json.dumps(env)) == {"A": SENTINEL}
 
 
-@pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
+@pytest.mark.parametrize("plan_type", (InvocationPlan, CommitTree))
 @pytest.mark.parametrize("conversion", (dict, lambda env: {**env}), ids=("dict", "unpack"))
 @pytest.mark.parametrize("value", (SENTINEL, "prefix\n" + SENTINEL), ids=("single-line", "multiline"))
 def test_real_subprocess_receives_original_env_values(plan_type, conversion, value):
