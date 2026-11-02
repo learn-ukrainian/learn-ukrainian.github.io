@@ -2575,6 +2575,7 @@ def test_failed_git_call_reports_its_operation_and_a_constant_summary_without_se
         (["git", "worktree", "add", "synthetic/clientrecords"], "fatal: Needed a single revision", "clientrecords"),
         (["git", "worktree", "add", "/synthetic/private directory/worktree"], "fatal: denied", "directory"),
         (["git", "fetch", "user:syntheticsecret"], "fatal: denied", "syntheticsecret"),
+        (["git", "worktree", "add", "--no-checkout", "worktree", "status"], "remote: secret", "worktree status"),
     ):
         message = fail(command, stderr)
         assert message.startswith(f"dispatcher: CalledProcessError: {command[0]} {command[1]}")

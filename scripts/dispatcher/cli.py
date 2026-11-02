@@ -654,19 +654,25 @@ def _status_or_fail(args: argparse.Namespace) -> int:
     return 1
 
 
-# A failed git call prints only constants (#12468): the command words below and a summary chosen by the stderr.
+# A failed git call prints only constants (#12468): the command words below, by position, and a summary chosen by the stderr.
 # A value, a path or a secret cannot be told from a plain word by its shape, so no input text is ever printed.
-_GIT_WORDS = frozenset(
+_GIT_SUBCOMMANDS = frozenset(
     [
-        "git", "add", "cat-file", "check-ref-format", "commit-tree", "config", "fetch", "init", "ls-files",
-        "ls-remote", "merge-base", "push", "reset", "rev-list", "rev-parse", "show", "sparse-checkout",
-        "status", "symbolic-ref", "update-ref", "worktree", "write-tree", "--", "--verify", "--exit-code",
-        "--heads", "--is-shallow-repository", "--show-toplevel", "--git-common-dir", "--absolute-git-dir",
-        "--no-tags", "--no-write-fetch-head", "--unshallow", "--quiet", "--short", "--list", "--local",
-        "--null", "--count", "--all", "--not", "--head", "--branches", "--remotes", "--no-checkout",
-        "--no-track", "--porcelain", "--hard", "--cached",
+        "add", "cat-file", "check-ref-format", "commit-tree", "config", "fetch", "init", "ls-files", "ls-remote",
+        "merge-base", "push", "reset", "rev-list", "rev-parse", "show", "sparse-checkout", "status",
+        "symbolic-ref", "update-ref", "worktree", "write-tree",
     ]
 )
+_GIT_ACTIONS = frozenset(["add", "remove", "list", "prune", "set", "init"])
+_GIT_FLAGS = frozenset(
+    [
+        "--", "--verify", "--exit-code", "--heads", "--is-shallow-repository", "--show-toplevel",
+        "--git-common-dir", "--absolute-git-dir", "--no-tags", "--no-write-fetch-head", "--unshallow", "--quiet",
+        "--short", "--list", "--local", "--null", "--count", "--all", "--not", "--head", "--branches",
+        "--remotes", "--no-checkout", "--no-track", "--porcelain", "--hard", "--cached",
+    ]
+)
+
 # The stderr of a failed git call never reaches the output. It selects one of these constants (first match wins).
 _GIT_FAILURES = tuple((re.compile(pattern, re.IGNORECASE), text) for pattern, text in (
     (r"needed a single revision", "needed a single revision"),
@@ -695,18 +701,29 @@ def _git_failure_summary(stderr: str) -> str:
 def _failed_operation(exc: subprocess.CalledProcessError) -> str:
     """``CalledProcessError: <command> exited <rc>: <first stderr line>``, without secrets (#12468).
 
-    The command drops ``-C <path>`` and ``-c <key=value>``; every word outside :data:`_GIT_WORDS` is
-    ``<operand>``. The first stderr line only selects a constant from :data:`_GIT_FAILURES`.
+    The command drops ``-C <path>`` and ``-c <key=value>``. Only the command, the subcommand, an action and
+    known flags print, by position; every other word is ``<operand>``. The first stderr line only selects a constant from :data:`_GIT_FAILURES`.
     """
     words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
-    kept, skip = [], False
+    kept, skip, position = [], False, 0  # position: 0 command, 1 subcommand, 2 action, 3 operands
     for word in words:
         if skip:
             skip = False
         elif word in {"-C", "-c"}:
             skip = True
+        elif word.startswith("-"):
+            kept.append(word if word in _GIT_FLAGS else "<operand>")
+        elif position == 0:
+            kept.append("git" if word == "git" else "<operand>")
+            position = 1
+        elif position == 1:
+            kept.append(word if word in _GIT_SUBCOMMANDS else "<operand>")
+            position = 2 if word in {"worktree", "sparse-checkout"} else 3
+        elif position == 2:
+            kept.append(word if word in _GIT_ACTIONS else "<operand>")
+            position = 3
         else:
-            kept.append(word if word in _GIT_WORDS else "<operand>")
+            kept.append("<operand>")
     stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
     return f"CalledProcessError: {' '.join(kept)} exited {exc.returncode}: {_git_failure_summary(stderr)}"
 
