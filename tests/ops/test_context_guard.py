@@ -62,6 +62,7 @@ class ShellTmux(FakeTmux):
     """
 
     live_scopes: set[str] = field(default_factory=set)  # scopes that stay active with no agent in a pane
+    stop_ends_live_scope: bool = False  # a stop also ends the scopes in ``live_scopes``
     call_cost: float = 0  # seconds of the monotonic clock each runner call takes
     mono: float = 5_000.0
     stopped_at: list[float] = field(default_factory=list)  # monotonic time of each scope stop
@@ -102,6 +103,8 @@ class ShellTmux(FakeTmux):
                 return subprocess.CompletedProcess(argv, 0, self._scope_state(argv[3]) + "\n", "")
             assert argv[2:4] == ["stop", "--no-block"], argv
             self.stopped_at.append(self.mono)
+            if self.stop_ends_live_scope:
+                self.live_scopes.discard(argv[4])
             for pane in self.sessions.values():
                 if pane.scope == argv[4] and pane.agent and pane.stop_age is None:
                     pane.stop_age = 0.0
@@ -617,6 +620,28 @@ def test_nothing_is_stopped_when_the_scope_record_cannot_be_saved(tmp_path: Path
     h.tick("cto")
     assert systemctl(h, "stop") == [] and respawns(h) == []
     assert any("error OSError" in line for line in h.logs)
+
+
+def test_an_agent_that_exits_on_its_own_leaves_a_scope_the_relaunch_still_waits_for(tmp_path: Path) -> None:
+    """The ordinary relaunch: the agent obeyed ``/exit`` but its background tasks keep the scope active."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.tick("cto")
+    h.advance(5)
+    h.tick("cto")
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    assert h.state["cto"]["predecessor_scope"] == SCOPE
+    h.pane("cto").agent = None  # it exited on `/exit`
+    h.fake.live_scopes.add(SCOPE)
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and systemctl(h, "stop") != []  # the stragglers are ended, then waited for
+    assert len(cto_alerts(h)) == 1 and "still active" in cto_alerts(h)[0]
+    h.fake.stop_ends_live_scope = True
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1 and h.fake.respawned_over_live_agent == [False]
+    assert "predecessor_scope" in h.state["cto"]  # kept for the single-instance retry
 
 
 def test_scope_that_stays_active_at_the_pending_retry_blocks_it(tmp_path: Path) -> None:
@@ -1188,11 +1213,11 @@ REPLACED = "Fri Oct 16 12:09:00 2026"  # ps lstart of a pane shell started durin
 
 
 def before_call(tmux: cg.Tmux, command: str, change: Callable[[], None], nth: int = 1) -> None:
-    """Run ``change`` right before the ``nth`` ``command`` call (``ps`` or a tmux command) from now on."""
+    """Run ``change`` right before the ``nth`` ``command`` call (``ps``, ``cat``, ``systemctl`` or a tmux command) from now on."""
     run, seen = tmux.run, [0]
 
     def wrapped(argv: list[str]) -> subprocess.CompletedProcess:
-        if (argv[1] if argv[0] == "tmux" else "ps") == command:
+        if (argv[1] if argv[0] == "tmux" else ("ps" if "ps" in argv[:3] else argv[0])) == command:
             seen[0] += 1
             if seen[0] == nth:
                 change()

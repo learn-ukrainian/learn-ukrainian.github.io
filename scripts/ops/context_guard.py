@@ -26,8 +26,9 @@ handoff
     lane back with the missing sections and counts instead of exiting; the check
     is bounded and alerts ``epics`` once per distinct failure. A check error or a missing handoff fails
     open, with one alert, so the anchor check can never wedge a lane. Once
-    HANDOFF-DONE has been seen and the agent and its launcher have exited, the
-    pane is respawned with the lane's launcher
+    HANDOFF-DONE has been seen and the agent and its launcher have exited, and the
+    ``lu-driver`` scope recorded for that agent is inactive (the guard ends it and waits if
+    background tasks keep it alive), the pane is respawned with the lane's launcher
     (fresh session; it reads its goal file). If the same idle Claude agent survives
     two exits after HANDOFF-DONE, the guard ends it first: it stops the agent's
     ``lu-driver`` systemd scope (read from the agent's cgroup), waits up to
@@ -486,6 +487,8 @@ class Guard:
             quit_attempts=0,
             alerted=False,
             predecessor_alerted=False,
+            predecessor_scope=None,
+            scope_agent=None,
             done_seen=done,
             nudges=0,
             last_nudge=None,
@@ -854,6 +857,8 @@ class Guard:
                 "done_marks": done_lines(text),
             }
             return
+        if snap.agent is not None:
+            self._note_scope(lane, s, snap)
         if snap.agent is None:
             s["done_seen"] = bool(s.get("done_seen")) or self.handoff_posted(
                 lane.sender, s.get("done_floor") or s["since"]
@@ -964,6 +969,20 @@ class Guard:
                 f"handoff-alert-{lane.name}-{iso(self.now())}",
             )
             s["alerted"] = True
+
+    def _note_scope(self, lane: Lane, s: dict[str, Any], snap: PaneSnapshot) -> None:
+        """Record the live agent's ``lu-driver`` scope once, so a relaunch after the agent exits on its own
+        still waits for the scope: background tasks can keep it active after the agent has gone."""
+        if s.get("scope_agent") == snap.agent or snap.agent is None:
+            return
+        try:
+            unit = self.tmux.agent_scope(snap.agent)
+        except TelemetryUnavailable as exc:
+            self.log(f"{lane.name} handoff: agent scope unreadable ({exc}); retry next tick")
+            return
+        s["scope_agent"] = snap.agent
+        if unit:
+            s["predecessor_scope"] = unit
 
     def _predecessor_alert(self, lane: Lane, s: dict[str, Any], reason: str) -> None:
         """Alert claude-cto once per handoff phase that a relaunch is held because the predecessor is not gone."""
