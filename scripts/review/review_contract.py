@@ -1559,7 +1559,7 @@ def validate_item_claims(
                         continue
                     if finding and path == ("location",) and field == "path" and isinstance(part, str):
                         continue
-                    if reference and field in {"receipt", "receipt_id"}:
+                    if reference and field in {"receipt", "receipt_id"} and isinstance(part, str):
                         continue
                     if not path and finding and field == "expected" and isinstance(part, str):
                         continue
@@ -1644,6 +1644,31 @@ def validate_item_claims(
             return False, "quote_not_in_result"
         return True, None
 
+    def _validate_reference_boundary(
+        value: Any,
+        item_id: str | None = None,
+        *,
+        containers: tuple[type, ...] = (dict, list),
+        require_quote: bool = False,
+    ) -> tuple[list[dict[str, Any]], bool]:
+        nonlocal claims_total, claims_unsupported
+        valid = []
+        malformed = not isinstance(value, containers)
+        claims = value if isinstance(value, list) and not malformed else [value]
+        rejected = False
+        for claim in claims:
+            claims_total += 1
+            ok, reason = (False, "malformed_claim") if malformed else _validate_claim(
+                claim, item_id, require_quote=require_quote,
+            )
+            if ok:
+                valid.append(claim)
+            else:
+                rejected = True
+                claims_unsupported += 1
+                dropped.append({"item_id": item_id, "claim": claim, "reason": reason})
+        return valid, rejected
+
     updated_items = []
     for item in payload.get("items", []):
         if not isinstance(item, dict):
@@ -1654,25 +1679,12 @@ def validate_item_claims(
         if verdict == "UNKNOWN":
             unknown_items += 1
 
-        evidence = item_copy.get("evidence")
-        if evidence is not None:
+        if "evidence" in item_copy:
+            evidence = item_copy["evidence"]
             was_dict = isinstance(evidence, dict)
-            claims_list = [evidence] if was_dict else (list(evidence) if isinstance(evidence, list) else [evidence])
-            valid_claims = []
-            has_dropped = False
-            for claim in claims_list:
-                claims_total += 1
-                ok, reason = _validate_claim(claim, item_copy.get("id"), require_quote=True)
-                if not ok:
-                    claims_unsupported += 1
-                    has_dropped = True
-                    dropped.append({
-                        "item_id": item_copy.get("id"),
-                        "claim": claim,
-                        "reason": reason,
-                    })
-                else:
-                    valid_claims.append(claim)
+            valid_claims, has_dropped = _validate_reference_boundary(
+                evidence, item_copy.get("id"), require_quote=True,
+            )
 
             if was_dict:
                 if valid_claims:
@@ -1693,42 +1705,14 @@ def validate_item_claims(
     if "evidence" in payload:
         evidence = payload["evidence"]
         was_dict = isinstance(evidence, dict)
-        claims_list = [evidence] if was_dict else (list(evidence) if isinstance(evidence, list) else [evidence])
-        valid_claims = []
-        for claim in claims_list:
-            claims_total += 1
-            ok, reason = _validate_claim(claim, None, require_quote=False)
-            if not ok:
-                claims_unsupported += 1
-                dropped.append({
-                    "item_id": None,
-                    "claim": claim,
-                    "reason": reason,
-                })
-            else:
-                valid_claims.append(claim)
+        valid_claims, _ = _validate_reference_boundary(evidence)
         updated_evidence = (valid_claims[0] if valid_claims else None) if was_dict else valid_claims
 
     updated_broadened = None
     if "broadened_searches" in payload:
-        broadened = payload["broadened_searches"]
-        if isinstance(broadened, list):
-            valid_searches = []
-            for claim in broadened:
-                claims_total += 1
-                ok, reason = _validate_claim(claim, None, require_quote=True)
-                if not ok:
-                    claims_unsupported += 1
-                    dropped.append({
-                        "item_id": None,
-                        "claim": claim,
-                        "reason": reason,
-                    })
-                else:
-                    valid_searches.append(claim)
-            updated_broadened = valid_searches
-        else:
-            updated_broadened = broadened
+        updated_broadened, _ = _validate_reference_boundary(
+            payload["broadened_searches"], containers=(list,), require_quote=True,
+        )
 
     updated_findings = None
     if "findings" in payload:
@@ -1747,23 +1731,8 @@ def validate_item_claims(
                 if "evidence" in f_copy:
                     ev = f_copy["evidence"]
                     was_dict = isinstance(ev, dict)
-                    claims_list = [ev] if was_dict else (list(ev) if isinstance(ev, list) else [ev])
-                    valid_ev = []
-                    for claim in claims_list:
-                        claims_total += 1
-                        ok, reason = _validate_claim(claim, f_id, require_quote=False)
-                        if not ok:
-                            claims_unsupported += 1
-                            dropped.append({
-                                "item_id": f_id,
-                                "claim": claim,
-                                "reason": reason,
-                            })
-                        else:
-                            valid_ev.append(claim)
-                            r_id = claim.get("receipt") or claim.get("receipt_id")
-                            if isinstance(r_id, str):
-                                valid_receipt_ids.append(r_id)
+                    valid_ev, _ = _validate_reference_boundary(ev, f_id)
+                    valid_receipt_ids.extend(claim.get("receipt") or claim["receipt_id"] for claim in valid_ev)
                     if was_dict:
                         if valid_ev:
                             f_copy["evidence"] = valid_ev[0]
@@ -1772,47 +1741,31 @@ def validate_item_claims(
                     else:
                         f_copy["evidence"] = valid_ev
 
-                if "source_conflict" in f_copy and isinstance(f_copy["source_conflict"], dict):
-                    sc = dict(f_copy["source_conflict"])
-                    for side in ("a", "b"):
-                        if side in sc and isinstance(sc[side], dict):
-                            claims_total += 1
-                            ok, reason = _validate_claim(sc[side], f_id, require_quote=False)
-                            if not ok:
-                                claims_unsupported += 1
-                                dropped.append({
-                                    "item_id": f_id,
-                                    "claim": sc[side],
-                                    "reason": reason,
-                                })
-                                sc.pop(side, None)
-                            else:
-                                r_id = sc[side].get("receipt") or sc[side].get("receipt_id")
-                                if isinstance(r_id, str):
-                                    valid_receipt_ids.append(r_id)
-                    f_copy["source_conflict"] = sc
+                if "source_conflict" in f_copy:
+                    if isinstance(f_copy["source_conflict"], dict):
+                        sc = dict(f_copy["source_conflict"])
+                        for side in ("a", "b"):
+                            if side in sc:
+                                valid_side, _ = _validate_reference_boundary(sc[side], f_id, containers=(dict,))
+                                if valid_side:
+                                    sc[side] = valid_side[0]
+                                    valid_receipt_ids.append(sc[side].get("receipt") or sc[side]["receipt_id"])
+                                else:
+                                    sc.pop(side)
+                        f_copy["source_conflict"] = sc
+                    else:
+                        _validate_reference_boundary(f_copy.pop("source_conflict"), f_id, containers=())
 
-                if "unsupported_by_source" in f_copy and isinstance(f_copy["unsupported_by_source"], dict):
-                    ubs = dict(f_copy["unsupported_by_source"])
-                    if "searches" in ubs and isinstance(ubs["searches"], list):
-                        valid_searches = []
-                        for s in ubs["searches"]:
-                            claims_total += 1
-                            ok, reason = _validate_claim(s, f_id, require_quote=False)
-                            if not ok:
-                                claims_unsupported += 1
-                                dropped.append({
-                                    "item_id": f_id,
-                                    "claim": s,
-                                    "reason": reason,
-                                })
-                            else:
-                                valid_searches.append(s)
-                                r_id = s.get("receipt") or s.get("receipt_id")
-                                if isinstance(r_id, str):
-                                    valid_receipt_ids.append(r_id)
-                        ubs["searches"] = valid_searches
-                    f_copy["unsupported_by_source"] = ubs
+                if "unsupported_by_source" in f_copy:
+                    if isinstance(f_copy["unsupported_by_source"], dict):
+                        ubs = dict(f_copy["unsupported_by_source"])
+                        if "searches" in ubs:
+                            valid_searches, _ = _validate_reference_boundary(ubs["searches"], f_id, containers=(list,))
+                            valid_receipt_ids.extend(claim.get("receipt") or claim["receipt_id"] for claim in valid_searches)
+                            ubs["searches"] = valid_searches
+                        f_copy["unsupported_by_source"] = ubs
+                    else:
+                        _validate_reference_boundary(f_copy.pop("unsupported_by_source"), f_id, containers=())
 
                 if "expected" in f_copy:
                     expected = f_copy["expected"]
