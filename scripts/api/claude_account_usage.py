@@ -94,7 +94,12 @@ from scripts.agent_runtime.attempt_boundary import (
     load_claude_account_binding,
     renew_claude_login,
 )
-from scripts.api.subscription_usage import _codexbar_bin, _codexbar_cache_ttl_s, _parse_resets_at_any
+from scripts.api.subscription_usage import (
+    _codexbar_bin,
+    _codexbar_cache_ttl_s,
+    _codexbar_refresh_interval_s,
+    _parse_resets_at_any,
+)
 from scripts.common import scratch
 
 _log = logging.getLogger(__name__)
@@ -137,6 +142,7 @@ PROBE_FAILURE_CODES = frozenset(
         "timeout",
         "oversized",
         "exit_nonzero",
+        "rate_limited",
         "bad_json",
         "provider_mismatch",
         "provider_error",
@@ -204,6 +210,11 @@ _lock = threading.Lock()
 _last_good: dict[str, _Sample] = {}
 # label -> failure code of the newest probe or revalidation; absent after a success
 _last_failure: dict[str, str] = {}
+# label -> epoch before which a rate-limited label is not probed again
+_probe_not_before: dict[str, float] = {}
+# Stderr kept only long enough to tell a rate limit from any other failed exit.
+_STDERR_CLASSIFY_BYTES = 4096
+_RATE_LIMIT_MARKERS = (b"rate limited", b"rate_limit")
 _revalidation_lock = threading.Lock()
 _revalidation: threading.Thread | None = None
 _sandbox_residue = 0  # probe sandboxes this process could not remove
@@ -404,19 +415,31 @@ def _await_exit(pid: int, deadline: float) -> None:
         delay = min(delay * 2, 0.1)
 
 
+def _probe_output_is_rate_limited(stdout: bytes, stderr: bytes) -> bool:
+    """True when a failed probe's own output says the endpoint rate-limited it.
+
+    The text is not kept, logged or published. Matching is on the bounded
+    prefix the probe already held.
+    """
+    text = stdout.lower() + b"\n" + stderr.lower()
+    return any(marker in text for marker in _RATE_LIMIT_MARKERS)
+
+
 def _run_codexbar(codexbar: str, env: dict[str, str], *, timeout_s: float, max_bytes: int) -> bytes:
     """Run the fixed Claude usage query without a shell, outside the repository,
     under a hard deadline and output cap.
 
     The child gets its own process group. Every helper it started is killed on
-    every path, success included, before the leader is reaped.
+    every path, success included, before the leader is reaped. Stderr is drained
+    so a helper that keeps it open cannot stall the probe, and only a bounded
+    prefix is used to tell a rate limit from any other failed exit.
     """
     try:
         proc = subprocess.Popen(
             [codexbar, *_QUERY],
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             env=env,
             cwd="/",
             close_fds=True,
@@ -424,10 +447,31 @@ def _run_codexbar(codexbar: str, env: dict[str, str], *, timeout_s: float, max_b
         )
     except OSError:
         raise _ProbeFailed("spawn_error") from None
-    assert proc.stdout is not None
+    assert proc.stdout is not None and proc.stderr is not None
     deadline = time.monotonic() + timeout_s
     chunks: list[bytes] = []
     size = 0
+    err_parts: list[bytes] = []
+    err_kept = 0
+
+    def _drain_stderr() -> None:
+        nonlocal err_kept
+        assert proc.stderr is not None
+        try:
+            while True:
+                chunk = os.read(proc.stderr.fileno(), 65536)
+                if not chunk:
+                    return
+                if err_kept >= _STDERR_CLASSIFY_BYTES:
+                    continue
+                take = chunk[: _STDERR_CLASSIFY_BYTES - err_kept]
+                err_parts.append(take)
+                err_kept += len(take)
+        except OSError:
+            return
+
+    reader = threading.Thread(target=_drain_stderr, name="claude-usage-probe-stderr", daemon=True)
+    reader.start()
     selector = selectors.DefaultSelector()
     try:
         selector.register(proc.stdout, selectors.EVENT_READ)
@@ -451,8 +495,13 @@ def _run_codexbar(codexbar: str, env: dict[str, str], *, timeout_s: float, max_b
             os.killpg(proc.pid, signal.SIGKILL)
         returncode = proc.wait()
         proc.stdout.close()
+        reader.join(timeout=2.0)
+        proc.stderr.close()
     if returncode != 0:
-        raise _ProbeFailed("exit_nonzero")
+        code = (
+            "rate_limited" if _probe_output_is_rate_limited(b"".join(chunks), b"".join(err_parts)) else "exit_nonzero"
+        )
+        raise _ProbeFailed(code)
     return b"".join(chunks)
 
 
@@ -828,13 +877,21 @@ def _record(
             windows = {name: dict(row[name]) for _key, name in _WINDOWS}
             _last_good[label] = _Sample(source_at, windows, accounts)
             _last_failure.pop(label, None)
+            _probe_not_before.pop(label, None)
             return
         if forget:
             _last_good.pop(label, None)
         _last_failure[label] = failure or "probe_error"
+        if failure == "rate_limited":
+            # On-demand kicks probe again as soon as the last one finishes.
+            # Hold this label for one scheduler interval so they cannot retry sooner.
+            _probe_not_before[label] = time.time() + _codexbar_refresh_interval_s()
 
 
 def _refresh_one(label: str, timeout_s: float) -> None:
+    with _lock:
+        if time.time() < _probe_not_before.get(label, 0.0):
+            return
     try:
         row, accounts = probe_account(label, timeout_s=timeout_s)
     except ClaudeAccountRefused as exc:
@@ -952,8 +1009,9 @@ def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = 
     revalidation is scheduled, after which a changed binding gives ``not_probed``
     and a refused one its refusal code.
 
-    ``ok``: the measured state is younger than the cache TTL and no probe failed since.
-    ``stale``: a last good sample that is older or followed by a failure.
+    ``ok``: the measured state is younger than the cache TTL. A probe that failed
+    after it is recorded in ``reason`` and does not discard it.
+    ``stale``: a last good sample older than the cache TTL. Admission reads it as unknown.
     ``unknown``: no usable sample, or numbers withheld as ``account_ambiguous``.
     """
     ttl = _codexbar_cache_ttl_s() if ttl_s is None else ttl_s
@@ -976,7 +1034,8 @@ def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = 
             rows[row_key(label)] = _unknown_row(ACCOUNT_AMBIGUOUS)
             continue
         age = max(0.0, moment - sample.source_at)
-        stale = failure is not None or age >= ttl
+        # A later probe failure does not shorten the reading's own TTL.
+        stale = age >= ttl
         rows[row_key(label)] = {
             **{name: dict(window) for name, window in sample.windows.items()},
             "updated": _iso(datetime.fromtimestamp(sample.source_at, UTC)),
@@ -1042,4 +1101,5 @@ def _reset_for_tests() -> None:
     with _lock:
         _last_good.clear()
         _last_failure.clear()
+        _probe_not_before.clear()
         _sandbox_residue = 0
