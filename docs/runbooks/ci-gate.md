@@ -6,7 +6,7 @@ guard, attribution, lint and content contracts, dependency-audit scoping,
 `pytest --collect-only` and Frontend. They run no pytest shards; the gate summary
 states plainly that full pytest was not run (operator decision, 2026-10-29).
 The parallel required `pr-affected` job executes literal changed existing
-`tests/**/test_*.py` files, every path in `scripts/ci/pr-affected-guards.txt`, and
+`tests/**/test_*.py` files, every entry in `scripts/ci/pr-affected-guards.txt` (a whole test path, or a pinned `path::test` id that runs only that test and costs nothing extra when its file is already selected), and
 the tests that directly import, load, read or run a changed non-test file.
 The same job also runs `pytest tests -m 'repo_wide and not atlas_release and not slow and not site_toolchain'`
 in a separate required step.

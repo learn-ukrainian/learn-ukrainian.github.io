@@ -1046,6 +1046,34 @@ def test_pr_provider_module_change_selects_the_registry_driven_dispatcher_test(
     assert affected.plan(base, candidate)['run_files'] == [f'{heavy}::TestA::test_m']
 
 
+def test_pinned_test_whose_file_is_already_selected_adds_no_estimate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A pinned id costs nothing when its whole file is already selected."""
+    from scripts.ci import pr_affected_tests as affected
+
+    whole, other = 'tests/test_whole.py', 'tests/test_other.py'
+    repo = tmp_path / 'pinned'
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / 'tests').mkdir()
+    for name in (whole, other):
+        (repo / name).write_text('def test_x():\n    pass\n')
+    (repo / affected.GUARDS).write_text(f'{whole}\n{whole}::test_x\n')
+    (repo / affected.DURATIONS).write_text(json.dumps({whole: 10, other: 10}))
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    _git(repo, 'init', '-q', '-b', 'main')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    (repo / other).write_text('def test_x():\n    assert True\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'change')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    monkeypatch.chdir(repo)
+    # 60 s reserve + 10 s whole guard + 10 s changed file; the pinned id adds nothing.
+    assert affected.plan(base, candidate)['estimate_seconds'] == 80
+
+
 def test_pr_selection_estimated_just_under_the_timeout_is_deferred_not_run_to_the_kill(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:

@@ -185,8 +185,11 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
     )
     # Sum serial times with a minute reserved for setup and collection.
     # A pinned id is costed at the default: the record holds whole-file times only.
-    def cost(p: str) -> float:
-        return default if "::" in p else durations.get(p, default)
+    # Its whole file already pays for it, so it adds nothing when that file is selected.
+    def cost(p: str, whole: set[str] = frozenset(selected)) -> float:
+        if "::" in p:
+            return 0 if guard_file(p) in whole else default
+        return durations.get(p, default)
 
     estimate = 60 + sum(cost(p) for p in selected)
     infrastructure = any(
@@ -196,7 +199,7 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         or p == "tests/flake_quarantine.yaml"
         for p in changed
     )
-    guard_estimate = 60 + sum(cost(p) for p in guards)
+    guard_estimate = 60 + sum(cost(p, set(guards)) for p in guards)
     reason = (
         "pytest infrastructure changed"
         if infrastructure
