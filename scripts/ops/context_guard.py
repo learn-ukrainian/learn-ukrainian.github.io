@@ -692,14 +692,26 @@ class Guard:
     ) -> None:
         retry_due = bool(s.get("relaunch_retry"))  # set on an earlier tick; a refusal seen now waits for the next
         if snap.agent is not None:
-            for key in ("relaunch_watch", "relaunch_id", "relaunch_hold", "relaunch_retry", "relaunch_retried"):
+            for key in (
+                "relaunch_watch",
+                "relaunch_id",
+                "relaunch_hold",
+                "relaunch_retry",
+                "relaunch_retry_pane",
+                "relaunch_retried",
+            ):
                 s.pop(key, None)
             s.pop("predecessor_scope", None)
         else:
             self._watch_launcher_exit(lane, s, text, snap)
         if snap.agent is None:
             self.log(f"{lane.name} watch: agent not running in session {lane.session}")
-            if retry_due and not snap.busy:
+            if retry_due and s.get("relaunch_retry_pane") != snap.pane:
+                # A person replaced the pane since the refusal: that pane is theirs, not the failed launch's.
+                s.pop("relaunch_retry", None)
+                s.pop("relaunch_retry_pane", None)
+                self.log(f"{lane.name} watch: pane replaced since the launcher's refusal; pending retry cancelled")
+            elif retry_due and not snap.busy:
                 self.log(f"{lane.name} watch: retrying the relaunch once after the launcher's single-instance refusal")
                 self._relaunch(lane, st, s, None, snap)
             return
@@ -780,6 +792,7 @@ class Guard:
             remains = self._predecessor_remains(s, snap)
             if remains is None:
                 s["relaunch_retry"] = True
+                s["relaunch_retry_pane"] = snap.pane  # the retry belongs to this pane only
                 s["relaunch_retried"] = True
                 self.log(
                     f"{lane.name} watch: relaunched launcher refused (single instance) with no predecessor "
@@ -968,27 +981,41 @@ class Guard:
     ) -> tuple[PaneSnapshot, str | None] | None:
         """End a live predecessor and wait until it is really gone; None means nothing may be respawned.
 
-        With no agent in the pane (the usual relaunch) ``snap`` already shows the predecessor gone. A live
-        agent (forced relaunch after two swallowed exits) is ended through its ``lu-driver`` scope, read from
-        its cgroup: stopping the scope takes the agent and its background tasks with it. The respawn follows
-        only once the scope is inactive, the agent's pid and start time are out of the process table and
-        the pane's launcher has exited, the state the successor's single-instance check needs. That
-        takes seconds, so the wait is bounded by ``PREDECESSOR_EXIT_SECONDS``; on expiry, or when the
-        scope cannot be identified, the guard alerts and leaves the pane as it is. Returns the pane
-        snapshot taken once the predecessor is gone, and the scope that held it.
+        A live agent (forced relaunch after two swallowed exits) is ended through its ``lu-driver``
+        scope, read from its cgroup: stopping the scope takes the agent and its background tasks with
+        it. The scope is recorded in ``predecessor_scope`` before the stop, because an empty pane does
+        not prove it is gone: background tasks can keep it active after the agent exits, so a later
+        tick (and a pending single-instance retry) holds for the recorded scope too. The respawn
+        follows only once that scope is inactive, the agent's pid and start time are out of the process
+        table and the pane's launcher has exited, the state the successor's single-instance check
+        needs. That takes seconds, so the wait ends at an absolute deadline,
+        ``PREDECESSOR_EXIT_SECONDS`` after the stop, however long each telemetry call takes; a call
+        that itself hangs raises ``TelemetryUnavailable`` through the runner's timeout and ends the
+        tick without a respawn. On expiry, or when the scope cannot be identified, the guard alerts
+        and leaves the pane as it is. Returns the pane snapshot taken once the predecessor is gone,
+        and the scope that held it.
         """
-        if snap.agent is None:
-            return snap, None
-        unit = self.tmux.agent_scope(snap.agent)
-        if unit is None:
-            self._predecessor_alert(lane, s, f"agent {snap.agent} is not in a lu-driver scope, so it cannot be ended safely")
-            return None
+        if snap.agent is not None:
+            unit = self.tmux.agent_scope(snap.agent)
+            if unit is None:
+                self._predecessor_alert(
+                    lane, s, f"agent {snap.agent} is not in a lu-driver scope, so it cannot be ended safely"
+                )
+                return None
+            s["predecessor_scope"] = unit
+        else:
+            unit = s.get("predecessor_scope")
+            if not unit:
+                return snap, None
+        deadline = self.tmux.monotonic() + PREDECESSOR_EXIT_SECONDS
         if self.tmux.scope_active(unit):
             if not self._unchanged(lane, snap, f"stopping scope {unit}", pct):
                 return None
             stop = self.tmux.stop_scope(unit)
-            self.log(f"{lane.name} relaunch ctx_pct={pct}: stop scope {unit} rc={stop.returncode} {(stop.stderr or '').strip()[-120:]}")
-        waited = 0.0
+            self.log(
+                f"{lane.name} relaunch ctx_pct={pct}: stop scope {unit} rc={stop.returncode} "
+                f"{(stop.stderr or '').strip()[-120:]}"
+            )
         while True:
             fresh = self.tmux.snapshot(lane.target, AGENT_COMMANDS[lane.kind])
             if fresh.pane != snap.pane or fresh.agent not in (None, snap.agent):
@@ -999,18 +1026,16 @@ class Guard:
                 return None
             if self.tmux.scope_active(unit):
                 remaining = f"scope {unit} is still active"
-            elif self.tmux.process_exists(snap.agent) or fresh.agent is not None:
+            elif (snap.agent is not None and self.tmux.process_exists(snap.agent)) or fresh.agent is not None:
                 remaining = f"agent {snap.agent} is still running"
             elif fresh.busy:
                 remaining = "the launcher is still exiting"
             else:
                 return fresh, unit
-            if waited >= PREDECESSOR_EXIT_SECONDS:
-                self._predecessor_alert(lane, s, f"{remaining} {int(waited)}s after the scope stop")
+            if self.tmux.monotonic() >= deadline:
+                self._predecessor_alert(lane, s, f"{remaining} {PREDECESSOR_EXIT_SECONDS}s after the scope stop")
                 return None
-            started = self.tmux.monotonic()
             self.tmux.sleep(1)
-            waited += max(1.0, self.tmux.monotonic() - started)
 
     def _relaunch(self, lane: Lane, st: dict[str, Any], s: dict[str, Any], pct: int | None, snap: PaneSnapshot) -> None:
         if self._human(lane):

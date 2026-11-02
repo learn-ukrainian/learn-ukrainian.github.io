@@ -62,6 +62,9 @@ class ShellTmux(FakeTmux):
     """
 
     live_scopes: set[str] = field(default_factory=set)  # scopes that stay active with no agent in a pane
+    call_cost: float = 0  # seconds of the monotonic clock each runner call takes
+    mono: float = 5_000.0
+    stopped_at: list[float] = field(default_factory=list)  # monotonic time of each scope stop
     respawned_over_live_agent: list[bool] = field(default_factory=list)
 
     def _ps_rows(self, *, with_start: bool) -> list[str]:
@@ -78,7 +81,12 @@ class ShellTmux(FakeTmux):
                 return "active" if pane.stop_age is None else "deactivating"
         return "inactive"
 
+    def monotonic(self) -> float:
+        return self.mono
+
     def run(self, argv: list[str]) -> subprocess.CompletedProcess:
+        self.mono += self.call_cost
+        self._age(self.call_cost)
         if argv[0] == "cat":
             self.calls.append(list(argv))
             if "cat" in self.override:
@@ -93,6 +101,7 @@ class ShellTmux(FakeTmux):
             if argv[2] == "is-active":
                 return subprocess.CompletedProcess(argv, 0, self._scope_state(argv[3]) + "\n", "")
             assert argv[2:4] == ["stop", "--no-block"], argv
+            self.stopped_at.append(self.mono)
             for pane in self.sessions.values():
                 if pane.scope == argv[4] and pane.agent and pane.stop_age is None:
                     pane.stop_age = 0.0
@@ -120,12 +129,13 @@ class ShellTmux(FakeTmux):
                 if pane.exit_after_stop is not None and pane.stop_age >= pane.exit_after_stop:
                     pane.agent, pane.stop_age = None, None
                     pane.launcher_running = pane.launcher_lag > 0
-            elif pane.launcher_running:
+            elif pane.launcher_running and pane.launcher_lag > 0:
                 pane.launcher_lag -= seconds
                 pane.launcher_running = pane.launcher_lag > 0
 
     def sleep(self, seconds: float) -> None:
         super().sleep(seconds)
+        self.mono += seconds
         self._age(seconds)
 
 
@@ -145,7 +155,12 @@ class Harness:
         self.guard = cg.Guard(
             registry=load_registry(),
             repo_root=tmp_path / "repo",
-            tmux=cg.Tmux(run=self.fake.run, sleep=self.fake.sleep, clock=lambda: self.moment.timestamp()),
+            tmux=cg.Tmux(
+                run=self.fake.run,
+                sleep=self.fake.sleep,
+                clock=lambda: self.moment.timestamp(),
+                monotonic=self.fake.monotonic,
+            ),
             log=self.logs.append,
             send=lambda recipient, body, key: self.sent.append((recipient, body)),
             handoff_posted=lambda sender, since: sender in self.posted and self.posted[sender] >= since,
@@ -543,6 +558,63 @@ def test_replaced_agent_during_the_wait_is_never_respawned_over(tmp_path: Path) 
     h.tick("cto")
     assert respawns(h) == []
     assert any("replaced while waiting for the predecessor" in line for line in h.logs)
+
+
+def test_a_scope_kept_alive_by_background_tasks_still_blocks_the_next_ticks_respawn(tmp_path: Path) -> None:
+    """The recorded scope outlives the agent: an empty pane is not proof that the predecessor is gone."""
+    h = stuck_exit_harness(tmp_path)
+    h.fake.live_scopes.add(SCOPE)
+    h.tick("cto")  # the agent exits on the stop, the scope stays active: the wait expires
+    assert respawns(h) == [] and h.pane("cto").agent is None
+    assert h.state["cto"]["predecessor_scope"] == SCOPE and len(cto_alerts(h)) == 1
+    h.advance(5)
+    h.tick("cto")  # agent gone and pane idle, but the recorded scope is still active
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1
+    h.fake.live_scopes.clear()
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1 and h.fake.respawned_over_live_agent == [False]
+
+
+def test_scope_that_stays_active_at_the_pending_retry_blocks_it(tmp_path: Path) -> None:
+    h = relaunched(tmp_path)
+    refuse(h)
+    h.advance(5)
+    h.tick("cto")  # a refusal with nothing of the predecessor left: the retry is scheduled
+    h.fake.live_scopes.add(SCOPE)
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+
+
+def test_pending_retry_is_cancelled_when_a_person_replaces_the_pane(tmp_path: Path) -> None:
+    h = relaunched(tmp_path)
+    refuse(h)
+    h.advance(5)
+    h.tick("cto")
+    pane = h.pane("cto")
+    pane.pane_pid, pane.text = "777", "$ "  # a person opens their own shell in the lane
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+    assert "relaunch_retry" not in h.state["cto"]
+    assert any("pending retry cancelled" in line for line in h.logs)
+    for _ in range(2):
+        h.advance(5)
+        h.tick("cto")
+    assert len(respawns(h)) == 1
+
+
+def test_the_wait_is_bounded_by_the_clock_including_slow_telemetry(tmp_path: Path) -> None:
+    """Each runner call takes 5 s: the deadline still ends the wait 60 s after the stop, plus at most one polling pass."""
+    h = stuck_exit_harness(tmp_path, exit_after_stop=None)
+    h.fake.call_cost = 5
+    alerted_at: list[float] = []
+    h.guard.send = lambda recipient, body, key: alerted_at.append(h.fake.mono)
+    h.tick("cto")
+    assert respawns(h) == [] and len(alerted_at) == 1
+    polling_pass = 5 * 5 + 1  # the snapshot (3 reads), the scope state and the process table, plus the sleep
+    assert alerted_at[0] - h.fake.stopped_at[0] <= cg.PREDECESSOR_EXIT_SECONDS + polling_pass + 5
 
 
 def relaunched(tmp_path: Path) -> Harness:
