@@ -43,7 +43,12 @@ from scripts.control_plane.storage import (
     StoreId,
     assert_component_supported,
 )
-from scripts.fleet_comms.artifacts import ArtifactRecord, ArtifactStore, ArtifactStoreError
+from scripts.fleet_comms.artifacts import (
+    RETENTION_EXPIRED_PREFIX,
+    ArtifactRecord,
+    ArtifactStore,
+    ArtifactStoreError,
+)
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.formal_review_jobs import (
     FormalReviewJob,
@@ -1497,6 +1502,10 @@ class AuthorityService:
                 result_artifact_id=result_artifact_id,
                 producer="authority-delivery-result",
             )
+            # The writer lock also covers retention's mark and unlink phases.
+            # Refuse a marked artifact even while its bytes still exist (#12573).
+            if artifact is not None and artifact.retention_class.startswith(RETENTION_EXPIRED_PREFIX):
+                raise AuthorityServiceError("artifact_expired")
             if str(row["state"]) in _DELIVERY_TERMINAL:
                 self._assert_terminal_replay(
                     actual_state=str(row["state"]),

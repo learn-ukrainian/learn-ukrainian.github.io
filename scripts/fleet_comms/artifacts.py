@@ -1078,6 +1078,12 @@ class ArtifactStore:
         that stops qualifying between the phases (a reviver, a new reference,
         a touched blob) gets its class restored if its blob is still there.
 
+        #12573 AC-02: finish_delivery refuses an expired-marked acknowledgment
+        artifact, even between these phases while its blob is present. Its
+        marker check and delivery update share one BEGIN IMMEDIATE transaction,
+        so an acknowledgment cannot revive a marked blob. An acknowledgment
+        committed before phase 1 instead makes this artifact ineligible.
+
         Returns ``removed``, ``recent`` (blob touched inside the grace
         window) or ``changed`` (no longer a candidate).
         """
