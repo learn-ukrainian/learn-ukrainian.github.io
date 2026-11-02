@@ -154,6 +154,33 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
     assert len(reads) == (7 if state == "ready" else 3)
 
 
+def test_review_contract_change_without_canary_evidence_is_refused_before_write(synthetic_opsec):
+    # #12399: an approved green head that changes the review contract needs canary receipts first.
+    writes = []
+    def spy(args, **kwargs):
+        if args[1:3] == ["pr", "view"]:
+            body = {"number": 1, "isDraft": False, "headRefOid": "a" * 40, "statusCheckRollup": [
+                {"__typename": "CheckRun", "name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}]}
+        elif args[1:3] == ["pr", "checks"]:
+            body = [{"name": "CI Gate", "bucket": "pass"}]
+        elif args[1:5] == ["api", "--method", "POST", "graphql"]:
+            body = {"data": {"repository": {"pullRequest": {
+                "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
+                "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "clean"}}}}
+        elif args[1:4] == ["api", "--method", "GET"]:
+            if "/pulls/1/files" in args[4]:
+                body = [[{"filename": "scripts/dispatcher/providers/codex.py"}]]
+            else:
+                body = [[recorded_approval("a" * 40)]] if "/issues/1/comments" in args[4] else {"login": "unit"}
+        else:
+            writes.append(args)
+            return subprocess.CompletedProcess(args, 0, "", "")
+        return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
+    with pytest.raises(gate.PublishBlocked, match="merge refused: needs-contract-canary: "):
+        pub.publish("pr-merge", repo="unit/public", number=1, runner=spy, env={})
+    assert writes == []
+
+
 def test_worker_merge_guard_and_changed_head_refuse_before_write():
     with pytest.raises(gate.PublishBlocked, match="AGENT_NO_MERGE"):
         pub.publish("pr-merge", repo="unit/private", number=1, env={"AGENT_NO_MERGE": "1"}, runner=lambda *a, **k: pytest.fail("send"))
