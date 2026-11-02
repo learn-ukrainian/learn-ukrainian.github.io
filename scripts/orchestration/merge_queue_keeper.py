@@ -46,6 +46,7 @@ from scripts.orchestration.integration_sweep import (
     verdict_detail,
 )
 from scripts.publish.github import Request, request_run
+from scripts.review import contract_canary
 
 FLOOR = 500
 MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
@@ -468,7 +469,14 @@ def _check_state(checks: list[dict[str, Any]], head: str) -> str:
     return pending or "ok"
 
 
-def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: int, queue_enabled: bool | None) -> str:
+def _reason(
+    row: Mapping[str, Any],
+    verdict: Verdict,
+    check_state: str,
+    drops: int,
+    queue_enabled: bool | None,
+    canary: str | None = None,
+) -> str:
     if queue_enabled is not True:
         return "no-merge-queue" if queue_enabled is False else "queue-unknown"
     if not isinstance(row.get("headRefOid"), str) or not SHA.fullmatch(row["headRefOid"]):
@@ -480,6 +488,9 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
         return "hold" if hold else "hold-unknown"
     if verdict.state != "APPROVED":
         return "needs-CF" if verdict.state in MISSING_CF_STATES else f"CF-{verdict.state.lower()}"
+    if canary is not None:
+        # A review-contract change without live canary evidence on every route (#12399).
+        return contract_canary.REASON
     if check_state != "ok":
         return check_state
     if row.get("mergeStateStatus") in {"DIRTY", "UNKNOWN"} or not isinstance(row.get("mergeStateStatus"), str):
@@ -597,10 +608,12 @@ def _revoke_reason(
     verdict_lookup_ok: bool,
     *,
     queued: bool,
+    canary: str | None = None,
 ) -> str | None:
     """Fresh, positive blockers that may remove a queued or armed PR.
 
-    A queued head with no cross-family approval at that head is removed.
+    A queued head with no cross-family approval at that head is removed, and so is a
+    review-contract change without its canary evidence (#12399).
     """
     if row.get("isDraft") is True:
         return "draft"
@@ -614,6 +627,8 @@ def _revoke_reason(
         return "CF-unknown-after-approval"
     if queued and verdict_lookup_ok and verdict.state in MISSING_CF_STATES:
         return "needs-CF"
+    if canary is not None:
+        return contract_canary.REASON
     return None
 
 
@@ -1047,9 +1062,13 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         comment_safe = True
         # Whether the PR changes learner content, which takes the Ukrainian seats; None when unread.
         learner_content: bool | None = None
+        # The typed canary refusal for a review-contract change; None when it may queue (#12399).
+        canary: str | None = None
         try:
             comments = gh.comments(number)
-            learner_content = changes_learner_content(gh.pr_files(number))
+            files = gh.pr_files(number)
+            learner_content = changes_learner_content(files)
+            canary = contract_canary.refusal(files, head)
             verdict = lookup_verdict(comments, head, login, learner_content=learner_content)
             check_rows = gh.checks(head)
             checks = _check_state(check_rows, head)
@@ -1088,7 +1107,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     detail = " Queue removal diagnosis unknown."
             except KeeperError as exc:
                 detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
-        reason = _reason(pr, verdict, checks, drops, queue_enabled)
+        reason = _reason(pr, verdict, checks, drops, queue_enabled, canary)
         if reason == "ready" and queued is not True and not armed:
             try:
                 reason = _gate_hold(gh, number, head, previous) or reason
@@ -1105,6 +1124,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         lines.append(
             f"#{number} head={head[:12]} state={state} reason={reason} queued={queued} armed={armed}"
             + verdict_detail(verdict.reason, verdict.comment_id, verdict.superseded_markers)
+            + (f" canary=({canary})" if reason == contract_canary.REASON else "")
         )
         if removal_error:
             lines.append(f"#{number} queue removal count unknown: {removal_error}")
@@ -1148,7 +1168,9 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 try:
                     current_comments = gh.comments(number)
                     if learner_content is None:
-                        learner_content = changes_learner_content(gh.pr_files(number))
+                        files = gh.pr_files(number)
+                        learner_content = changes_learner_content(files)
+                        canary = contract_canary.refusal(files, head)
                     current_verdict = lookup_verdict(current_comments, head, login, learner_content=learner_content)
                 except KeeperError:
                     current_comments, current_verdict = [], Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
@@ -1168,7 +1190,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 except KeeperError:
                     current_checks = "CI-unknown"
                 reason = (
-                    _reason(current, current_verdict, current_checks, drops, queue_enabled)
+                    _reason(current, current_verdict, current_checks, drops, queue_enabled, canary)
                     if verdict_lookup_ok
                     else "fresh-evidence-unknown"
                 )
@@ -1189,6 +1211,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         approved_before,
                         verdict_lookup_ok,
                         queued=queued is True,
+                        canary=canary,
                     )
                     if fresh
                     else None
@@ -1208,7 +1231,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         cursor["keeper_dequeues"] = cursor.get("keeper_dequeues", 0) + 1
                     else:
                         gh.disarm(number)
-                    lines.append(f"#{number} revoked: {revoke}" + _cf_unknown_detail(revoke, current_verdict))
+                    lines.append(f"#{number} revoked: {revoke}" + _cf_unknown_detail(revoke, current_verdict)
+                                 + (f" ({canary})" if revoke == contract_canary.REASON else ""))
                     if queued is True:
                         queued_now.pop(key, None)
                     if revoke == "squash-text-blocked":
@@ -1222,7 +1246,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 elif reason == "ready" and queued is True:
                     lines.append(f"#{number} remains queued")
                 elif reason != "ready":
-                    lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
+                    lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict)
+                                 + (f" ({canary})" if reason == contract_canary.REASON else ""))
             elif reason == "ready":
                 jumped = gh.enqueue(number, head)
                 if not gh.membership(number):
