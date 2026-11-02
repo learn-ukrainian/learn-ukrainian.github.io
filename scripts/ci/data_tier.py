@@ -230,6 +230,37 @@ def remove_test_worktree(primary: Path, checkout: Path) -> worktree_claims.Workt
     return removal
 
 
+def discard_run_output(checkout: Path) -> dict[str, int]:
+    """Delete the ignored and untracked files this run put in its own checkout (#12528).
+
+    The checkout is created fresh from ``origin/main`` by :func:`make_test_worktree` and verified clean, so
+    every ignored or untracked file in it was written by this run: the Atlas snapshot, the provisioned host
+    files, hydrated artifacts and anything the tests wrote. That is the run's declared disposable output.
+    Left in place, the guarded remover would see an unrecorded checkout it cannot attribute and copy the
+    bytes (about 1.3 GB) into ``batch_state/preserved/`` every night. The test report, log and summary the
+    run needs for diagnosis live in ``batch_state/data-tier/``, outside the checkout, and are kept.
+    Returns the file count and byte total discarded, for the run summary.
+    """
+    listing = command(["git", "clean", "-ffdxn"], cwd=checkout, timeout=300).stdout
+    names = [line.removeprefix("Would remove ") for line in listing.splitlines() if line.startswith("Would remove ")]
+    total = 0
+    count = 0
+    for name in names:
+        target = checkout / name
+        if target.is_symlink() or not target.is_dir():
+            count += 1
+            with contextlib.suppress(OSError):
+                total += target.lstat().st_size
+            continue
+        for member in target.rglob("*"):
+            if member.is_file() or member.is_symlink():
+                count += 1
+                with contextlib.suppress(OSError):
+                    total += member.lstat().st_size
+    command(["git", "clean", "-ffdx"], cwd=checkout, timeout=900)
+    return {"files": count, "bytes": total}
+
+
 def stop_scope(unit: str) -> None:
     result = subprocess.run(
         ["systemctl", "--user", "show", "-p", "LoadState", unit],
@@ -762,6 +793,11 @@ def run(args: argparse.Namespace) -> int:
                 scope_stopped = False
                 summary["runner_errors"].append(f"scope cleanup failed: {safe_text(str(error))}")
         if checkout and scope_stopped:
+            try:
+                summary["discarded_output"] = discard_run_output(checkout)
+            except Exception as error:
+                # The guarded remover below then keeps whatever is left in a verified copy.
+                summary["runner_errors"].append(f"output discard failed: {safe_text(str(error))}")
             try:
                 remove_test_worktree(primary, checkout)
             except Exception as error:
