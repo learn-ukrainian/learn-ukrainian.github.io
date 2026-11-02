@@ -1479,7 +1479,10 @@ def test_cf_r15_phrase_attestation_regression(dictionary_probe):
 def test_cf_r20_remediations_regression(decolonization_data, require_local_databases):
     """Verify CF-R20 findings remediations: ПЛИН, ЗАГАЛ, ЧАС, and sample review audit."""
     from scripts.projects.open_model_data.audit_dataset_acceptance import DEFAULT_SOURCES_DB, VESUM_DB_PATH
-    from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
+    from scripts.projects.open_model_data.build_decolonization_cases import (
+        SourceEvidenceUnavailable,
+        query_source_evidence,
+    )
     from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
     from scripts.projects.open_model_data.sum20_codification_records import (
         COMMITTED_SUM20_RECORDS,
@@ -1525,41 +1528,28 @@ def test_cf_r20_remediations_regression(decolonization_data, require_local_datab
     ensure_reproducible_sum20_table(s_conn)
     s_cur = s_conn.cursor()
 
-    res_071 = query_source_evidence(
-        case_id="decol_prot_071",
-        term="плин часу",
-        copy="",
-        auth="СУМ-20",
-        cat_name="protective_authentic",
-        s_cur=s_cur,
-        v_cur=v_cur,
-        style_guide_cache=[],
-    )
-    assert res_071["status"] == "source_attested"
-
-    res_072 = query_source_evidence(
-        case_id="decol_prot_072",
-        term="загал",
-        copy="",
-        auth="ВТС",
-        cat_name="protective_authentic",
-        s_cur=s_cur,
-        v_cur=v_cur,
-        style_guide_cache=[],
-    )
-    assert res_072["status"] == "source_attested"
-
-    res_074 = query_source_evidence(
-        case_id="decol_prot_074",
-        term="у той же час",
-        copy="",
-        auth="СУМ-20",
-        cat_name="protective_authentic",
-        s_cur=s_cur,
-        v_cur=v_cur,
-        style_guide_cache=[],
-    )
-    assert res_074["status"] == "source_attested"
+    # Since #9609 (25c157feb1ab) the host's curated СУМ-20/ВТС articles ПЛИН and
+    # ЗАГАЛ are quarantined as unverified provenance, and #9840 (a790a565ec30)
+    # makes the query refuse them (and withhold the committed ЧАС record, whose
+    # held row is unproven) rather than attest from a sealed row. The three
+    # remediated cases are therefore withheld, each with its own reason code.
+    for case_id, term, auth, reason_code in (
+        ("decol_prot_071", "плин часу", "СУМ-20", "quarantined_headword"),
+        ("decol_prot_072", "загал", "ВТС", "quarantined_headword"),
+        ("decol_prot_074", "у той же час", "СУМ-20", "held_source_unproven"),
+    ):
+        with pytest.raises(SourceEvidenceUnavailable) as withheld:
+            query_source_evidence(
+                case_id=case_id,
+                term=term,
+                copy="",
+                auth=auth,
+                cat_name="protective_authentic",
+                s_cur=s_cur,
+                v_cur=v_cur,
+                style_guide_cache=[],
+            )
+        assert withheld.value.reason_code == reason_code, case_id
 
     # 6. Sample review receipt verification
     receipt_file = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"

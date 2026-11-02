@@ -347,7 +347,19 @@ def snapshot_databases(primary: Path, checkout: Path, snapshots: Path, *, only: 
 PROVISION_SKIPPED_PARTS = frozenset({".git"})
 
 
+# Single gitignored files the audited tests read from the checkout. The Atlas release manifest is
+# restored from its pinned release asset on the host; the conformance test refuses to run without it
+# (#9981 turned its skip into a failure) and checks its hash against the committed pointer itself.
+PROVISIONED_HOST_FILES = ("site/src/data/lexicon-manifest.json",)
+
+
 def provision_host_files(primary: Path, checkout: Path) -> None:
+    for relative in PROVISIONED_HOST_FILES:
+        source = primary / relative
+        destination = checkout / relative
+        if source.is_file() and not source.is_symlink() and not destination.exists():
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
     for relative in (
         "data/ua-gec",
         "data/literary_texts",
