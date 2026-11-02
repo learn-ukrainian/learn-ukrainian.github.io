@@ -5,6 +5,7 @@ from __future__ import annotations
 import itertools
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 from unittest.mock import patch
@@ -325,7 +326,7 @@ def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> N
 def _exact_pins(path: Path) -> dict[str, str]:
     pins: dict[str, str] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
-        spec = line.split("#", 1)[0].strip()
+        spec = re.split(r"\s+#", line, maxsplit=1)[0].strip()
         if not spec or spec.startswith("-") or spec.startswith("."):
             continue
         req = Requirement(spec)
