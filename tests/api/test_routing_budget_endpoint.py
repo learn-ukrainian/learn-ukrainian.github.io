@@ -1688,3 +1688,25 @@ def test_account_rows_refuse_a_scratch_root_inside_a_git_checkout(monkeypatch, t
     rows = _routing_client(tmp_path).get("/api/state/routing-budget").json()["claude_accounts"]
 
     assert {(row["status"], row["reason"]) for row in rows.values()} == {("unknown", "sandbox_unavailable")}
+
+
+def test_startup_warmup_fills_dispatch_routing_budget_key_cold_start_timeout(monkeypatch, tmp_path):
+    """#12512 (cold-start read timeout): the startup warmup must leave the dispatch key warm.
+
+    A dispatch launch right after a Monitor restart read a cold routing-budget
+    and timed out; the warmup now fills the exact key that read uses.
+    """
+    ctx = fixture_context(tmp_path)
+    (ctx.roots.batch_state_dir / "tasks").mkdir(parents=True)
+    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **_kw: {"agents": {}})
+    monkeypatch.setattr(state_router, "_compute_pipeline_versions_payload", lambda *_a: {})
+    monkeypatch.setattr(state_router, "_compute_weak_points_payload", lambda *_a: {})
+    monkeypatch.setattr(state_router, "compute_summary", lambda **_kw: {})
+    monkeypatch.setattr(state_router, "compute_research_coverage", lambda **_kw: {})
+
+    key = state_router._ctx_cache_key(ctx, "routing-budget", "dispatch", 0)
+    assert state_helpers.cache_get(key, state_router.ROUTING_BUDGET_TTL_S) is None
+
+    state_router._run_state_scan_warmup(ctx)
+
+    assert state_helpers.cache_get(key, state_router.ROUTING_BUDGET_TTL_S) is not None
