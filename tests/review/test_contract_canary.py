@@ -129,6 +129,7 @@ def test_contract_change_is_refused_until_every_route_has_a_receipt(repo) -> Non
         ({"dispatcher_code": None}, "candidate's clean dispatcher"),
         ({"agent": "kimi"}, "not a required reviewer route"),
         ({"model": "claude-fable-5-1"}, "not a formal reviewer"),
+        ({"resolved_model_known": False}, "did not attest the model"),
         ({"result_sha256": "0" * 64}, "does not match"),
     ],
 )

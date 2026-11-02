@@ -116,7 +116,7 @@ def _receipt_path(head: str, route: str, root: Path | None = None) -> Path:
 
 
 def _settled_receipt(record: Mapping[str, Any], result: str, *, head: str) -> dict:
-    """The receipt a settled task supports, from facts no copy of the contract code changes.
+    """The receipt a settled task supports, from its settlement facts and the gate's catalog.
 
     The receipt is bound to the exact head commit, which fixes the contract assets and the
     whole dispatcher tree, to the clean dispatcher checkout at that head that settled the
@@ -152,6 +152,9 @@ def _settled_receipt(record: Mapping[str, Any], result: str, *, head: str) -> di
         raise CanaryError(f"route {route!r} is not a required reviewer route")
     if record.get("model") not in _route_models(candidates[route]):
         raise CanaryError(f"model {record.get('model')!r} is not a formal reviewer on route {route}")
+    # A provider that attests its model from its own stream must have named one.
+    if "resolved_model_known" in record and record["resolved_model_known"] is not True:
+        raise CanaryError(f"route {route} did not attest the model that ran")
     if record.get("result_sha256") != hashlib.sha256(result.encode()).hexdigest():
         raise CanaryError("result does not match the task record")
     return {
