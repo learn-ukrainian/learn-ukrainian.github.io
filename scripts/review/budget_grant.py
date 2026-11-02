@@ -10,7 +10,11 @@ probe demonstrating capability. It admits min(5, 3 + distinct qualifying heads).
 A p2-fix-verification ruling seals the rejected and candidate heads, the delta
 digest and the P2 finding ids; it admits round 4 only, once per work lineage,
 consumed at dispatch (issue #12548; CTO proposal, Sol 6.1 APPROVE in task
-cto-f932-rule-p2round2-sol). No path resets spent rounds or changes existing verdicts.
+cto-f932-rule-p2round2-sol). An owner-request ruling seals the tracker item recording
+the project owner's request and the round count it records; it admits the PR's own
+tier budget plus exactly that count, past five when the tier is already five, while
+the latest recorded rejection lists the cited finding (issue #12551, tracker C-4100).
+No path resets spent rounds or changes existing verdicts.
 
 The designated advisor judges the semantics of the complete bound evidence;
 this module verifies provenance, publication, current eligibility and allowance.
@@ -58,8 +62,13 @@ WITHHELD_CAPABILITY = "withheld-capability"
 P2_FIX = "p2-fix-verification"
 P2_FIELD = "p2_fix_verification"
 P2_FIELDS = frozenset({"rejected_head", "candidate_head", "delta_sha256", "finding_ids"})
+# The project owner's request for more rounds on one PR (review-loop policy § Budget, `budget_tier: elevated`).
+OWNER_REQUEST = "owner-request"
+OWNER_FIELD = "owner_request"
+OWNER_FIELDS = frozenset({"tracker_item", "rounds"})
+TRACKER_ITEM = re.compile(r"C-[1-9][0-9]{0,5}")
 LEGACY_CLASSES = frozenset({"security", "permissions", "authentication", "data-loss", "state-concurrency"})
-BLOCKER_CLASSES = LEGACY_CLASSES | {WITHHELD_CAPABILITY, P2_FIX}
+BLOCKER_CLASSES = LEGACY_CLASSES | {WITHHELD_CAPABILITY, P2_FIX, OWNER_REQUEST}
 # The single fix-verification round is round 4: the default budget plus one.
 P2_ROUND_ALLOWANCE = recorder.DEFAULT_REVIEW_ROUNDS + 1
 P2_RECEIPT_DIR = "review-p2-fix-rounds"
@@ -77,6 +86,7 @@ REQUEST_FIELDS = frozenset(
         "issued_at",
         "withheld_capability",
         P2_FIELD,
+        OWNER_FIELD,
     }
 )
 FINDING_ID = re.compile(r"F[1-9][0-9]{0,3}")
@@ -113,13 +123,15 @@ class GrantRefused(recorder.RecordError):
 
 def parse_request(request: Any, label: str) -> dict[str, Any]:
     """The typed ruling in ``request``, or a refusal naming ``label``."""
-    # Rulings sealed before a field existed keep their shape; a p2 ruling always carries its own.
+    # Rulings sealed before a field existed keep their shape; a p2 or owner-request ruling always carries its own.
     blocker = request.get("blocker_class") if isinstance(request, dict) else None
     shapes = [REQUEST_FIELDS]
-    if blocker != P2_FIX:
-        shapes.append(REQUEST_FIELDS - {P2_FIELD})
-    if isinstance(blocker, str) and blocker in LEGACY_CLASSES:
-        shapes.append(REQUEST_FIELDS - {P2_FIELD, "withheld_capability"})
+    if blocker != OWNER_REQUEST:
+        shapes.append(REQUEST_FIELDS - {OWNER_FIELD})
+        if blocker != P2_FIX:
+            shapes.append(REQUEST_FIELDS - {OWNER_FIELD, P2_FIELD})
+        if isinstance(blocker, str) and blocker in LEGACY_CLASSES:
+            shapes.append(REQUEST_FIELDS - {OWNER_FIELD, P2_FIELD, "withheld_capability"})
     if not isinstance(request, dict) or set(request) not in shapes:
         found = sorted(request) if isinstance(request, dict) else type(request).__name__
         raise GrantRefused(REQUEST, f"{label} must hold exactly {sorted(REQUEST_FIELDS)}, found {found}")
@@ -179,6 +191,15 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
           or request["finding_id"] not in p2["finding_ids"]):
         raise GrantRefused(REQUEST, f"{label} {P2_FIELD} needs two distinct full heads, a delta digest and the "
                                     "sorted distinct finding ids, finding_id among them")
+    owner = request.get(OWNER_FIELD)
+    if request["blocker_class"] != OWNER_REQUEST:
+        if owner is not None:
+            raise GrantRefused(REQUEST, f"{label} {OWNER_FIELD} must be null for other classes")
+    elif (not isinstance(owner, dict) or set(owner) != OWNER_FIELDS
+          or not isinstance(owner["tracker_item"], str) or not TRACKER_ITEM.fullmatch(owner["tracker_item"])
+          or isinstance(owner["rounds"], bool) or not isinstance(owner["rounds"], int) or owner["rounds"] < 1):
+        raise GrantRefused(REQUEST, f"{label} {OWNER_FIELD} needs the tracker_item recording the owner's request "
+                                    f"({TRACKER_ITEM.pattern}) and the positive count of rounds it records")
     return request
 
 
@@ -239,10 +260,10 @@ def _sealed_ruling(task_id: str, path: Path, record: Mapping[str, Any]) -> tuple
         )
         decision = fenced_object(sealed.result_text, policy.fence)
         # The shapes sealed before each later field; parse_request decides which class may use which.
-        base = set(policy.output_fields) - {P2_FIELD}
-        shapes = [base | {P2_FIELD}, base, base - {"admission_exclusion_attestation"}]
+        base = set(policy.output_fields) - {P2_FIELD, OWNER_FIELD}
+        shapes = [base | {P2_FIELD, OWNER_FIELD}, base | {P2_FIELD}, base, base - {"admission_exclusion_attestation"}]
         if isinstance(decision.get("blocker_class"), str) and decision["blocker_class"] in LEGACY_CLASSES:
-            shapes += [shape - {"withheld_capability"} for shape in shapes[1:]]
+            shapes += [shape - {"withheld_capability"} for shape in shapes[2:]]
         if set(decision) not in shapes:
             raise GrantRefused(
                 APPROVAL,
@@ -409,8 +430,12 @@ def admit_grant_round(
     head: str,
     recording_run: tuple[str, str] | None = None,
     repo_root: Path | None = None,
+    budget: int = recorder.DEFAULT_REVIEW_ROUNDS,
 ) -> dict[str, Any] | None:
-    """The receipt of a grant admitting this round; None when the PR has no grant, or a refusal."""
+    """The receipt of a grant admitting this round; None when the PR has no grant, or a refusal.
+
+    ``budget`` is the PR's own tier budget, which an owner-request grant extends.
+    """
     grants: list[Grant] = []
     refusals: list[GrantRefused] = []
     for task_id, path, record in _grant_records(task_root):
@@ -436,7 +461,7 @@ def admit_grant_round(
         try:
             receipts.append(_admit(
                 grant, repository=repository, branch=branch, changed_paths=changed_paths, comments=comments, login=login,
-                task_root=task_root, head=head, recording_run=recording_run, repo_root=repo_root,
+                task_root=task_root, head=head, recording_run=recording_run, repo_root=repo_root, budget=budget,
             ))
         except GrantRefused as exc:
             refusals.append(exc)
@@ -459,6 +484,7 @@ def _admit(
     head: str,
     recording_run: tuple[str, str] | None,
     repo_root: Path | None = None,
+    budget: int = recorder.DEFAULT_REVIEW_ROUNDS,
 ) -> dict[str, Any]:
     """This one grant's receipt for the round, or why it does not apply."""
     request = grant.request
@@ -479,6 +505,9 @@ def _admit(
     elif request["blocker_class"] == P2_FIX:
         withheld_receipt = _p2_fix_round(grant, comments=comments, login=login, task_root=task_root, head=head,
                                          repo_root=repo_root, recording_run=recording_run)
+        cited = withheld_receipt["cited_verdict_head"]
+    elif request["blocker_class"] == OWNER_REQUEST:
+        withheld_receipt = _owner_round(grant, comments=comments, login=login, budget=budget)
         cited = withheld_receipt["cited_verdict_head"]
     else:
         from scripts.review import review_lineage as lineage
@@ -506,6 +535,30 @@ def _admit(
         "round_allowance": recorder.ELEVATED_REVIEW_ROUNDS,
         **withheld_receipt,
     }
+
+
+def _owner_round(grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, budget: int) -> dict[str, Any]:
+    """The owner's recorded rounds on top of the PR's tier budget, while its latest rejection lists the finding.
+
+    The designated advisor confirms the sealed count is the one the tracker item records;
+    this checks only that the round follows an unedited trusted rejection naming the cited finding.
+    """
+    request = grant.request
+    markers = recorder._trusted_markers(comments, login)
+    if not markers:
+        raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: no recorded verdict")
+    index, latest = markers[-1]
+    comment = comments[index]
+    if (latest["verdict"] not in REJECTED or lookup_verdict(comments, latest["sha"], login).state not in REJECTED
+            or comment.get("created_at") != comment.get("updated_at")):
+        raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the latest recorded verdict is not an unedited "
+                                    "trusted rejection")
+    read = _recorded_findings(comment)
+    if read is None or request["finding_id"] not in read[1]:
+        raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the latest recorded rejection does not list "
+                                    f"{request['finding_id']}")
+    owner = request[OWNER_FIELD]
+    return {"cited_verdict_head": latest["sha"], "round_allowance": budget + owner["rounds"], OWNER_FIELD: dict(owner)}
 
 
 def _admission_exclusion(

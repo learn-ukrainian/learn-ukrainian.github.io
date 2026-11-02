@@ -106,6 +106,7 @@ ADVISORY_ROLE_SHAPES = {
             "issued_at",
             "withheld_capability",
             "p2_fix_verification",
+            "owner_request",
             "admission_exclusion_attestation",
             "request_sha256",
         ],

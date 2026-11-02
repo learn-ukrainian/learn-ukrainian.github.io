@@ -28,7 +28,12 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   (`still open: <reason>`, or a newly raised finding); any closing word in that entry, such as
   `resolved`, `fixed` or `declined`, refuses the round. A grant never
   resets the rounds already counted, never covers a path outside its scope, and five rounds
-  stay the total.
+  stay the total except under an owner request.
+- **Owner request** (#12551). A sealed grant with `blocker_class: owner-request` names in its
+  `owner_request` object the `tracker_item` recording the project owner's request for that one
+  PR and the `rounds` it records (other classes set it to null); while the latest recorded
+  rejection lists the cited finding, it admits the PR's own budget plus exactly that count,
+  past five when the budget is already five, and never resets spent rounds.
 - **Withheld-capability recovery.** A sealed grant with `blocker_class: withheld-capability`
   uses the same ruling and approval machinery and names the finding awaiting verification,
   at any severity. Its `withheld_capability` object names the missing `capability`, cites
