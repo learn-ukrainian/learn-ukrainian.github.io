@@ -2295,7 +2295,9 @@ def test_pr_merged_base_commits_without_trailers_attribute_only_own_commits(tmp_
 
     The base is the merge's first parent, which is the recorded shape when a
     branch is merged onto an updated base. An untrailered commit the PR itself
-    authored still fails closed.
+    authored still fails closed, including after a later trailered commit has
+    landed on the default branch and that tip would otherwise exclude the
+    whole range.
     """
     from scripts.review.closeout_cli import CloseoutStateError, _proof_author_attributions
     from tests.test_review_closeout_cli import _git, _init_repo
@@ -2340,3 +2342,13 @@ def test_pr_merged_base_commits_without_trailers_attribute_only_own_commits(tmp_
     untrailered = _git(repo, "rev-parse", "HEAD").stdout.strip()
     with pytest.raises(CloseoutStateError, match="ukrainian_behavior_proof_author_trailer_missing"):
         attribute(untrailered)
+
+    (repo / "feature.py").write_text("value = 3\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "later trailered commit\n\nX-Agent: claude/claude-opus-5-5")
+    landed = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _git(repo, "update-ref", "refs/remotes/origin/main", landed)
+    assert _git(repo, "merge-base", "--is-ancestor", landed, "refs/remotes/origin/main").returncode == 0
+    assert _git(repo, "rev-list", f"{root}..{landed}", f"^{landed}").stdout.strip() == ""
+    with pytest.raises(CloseoutStateError, match="ukrainian_behavior_proof_author_trailer_missing"):
+        attribute(landed)

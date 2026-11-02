@@ -766,11 +766,15 @@ def _proof_author_attributions(
 
     The frozen ``base_sha..head_sha`` range also lists commits merged in from
     the default branch after that base was recorded. Those commits belong to
-    other changes. ``git rev-list`` drops every commit reachable from the
-    default-branch tip. This change's own commits, including its merge
-    commits, remain, and an untrailered one of those still fails closed.
-    A first-parent walk is the wrong cut: the base can be the merge's first
-    parent, as when the branch is merged onto an updated base.
+    other changes. While this head is not yet on that branch, ``git rev-list``
+    drops every commit reachable from the default-branch tip. This change's
+    own commits, including its merge commits, remain, and an untrailered one
+    of those still fails closed. Once the tip already contains this head, it
+    also contains the commits this change merged in, so the two sides are no
+    longer separable. The exclusion stays off and the frozen range keeps the
+    trailer check; falling back to the head alone would skip an earlier
+    untrailered commit. A first-parent walk is the wrong cut: the base can be
+    the merge's first parent, as when the branch is merged onto an updated base.
     """
     from scripts.review.record_cf_verdict import RecordError, _attribute_trailer
 
@@ -779,13 +783,16 @@ def _proof_author_attributions(
     if not isinstance(head, str) or not head:
         raise CloseoutStateError("ukrainian_behavior_proof_requires_head_sha")
     if isinstance(base, str) and base and base != head:
-        revisions = ["rev-list", "--reverse", f"{base}..{head}"]
+        listed = _checkout_git(repo_root, "rev-list", "--reverse", f"{base}..{head}")
+        shas = [sha for sha in listed.split() if sha]
         # Same reachability resolve-reviewer uses: the tip is read, never stored.
         exclude = authorship_exclude_sha(repo_root, base_branch=base_branch)
-        if exclude:
-            revisions.append(f"^{exclude}")
-        listed = _checkout_git(repo_root, *revisions)
-        shas = [sha for sha in listed.split() if sha]
+        if exclude and shas:
+            narrowed = _checkout_git(repo_root, "rev-list", "--reverse", f"{base}..{head}", f"^{exclude}")
+            own = [sha for sha in narrowed.split() if sha]
+            # An empty narrowing means the tip contains this head. Keep ``shas``.
+            if own:
+                shas = own
     else:
         shas = []
     if not shas:
