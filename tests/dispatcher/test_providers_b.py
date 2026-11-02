@@ -251,7 +251,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         proc.stdout.decode(), proc.stderr.decode(), proc.returncode, final_text
     ) == ParsedResult(
         "Finished.", {"input_tokens": 7, "output_tokens": 3}, None,
-        sources_mcp_call_count=0 if provider in ("claude", "codex") else None,
+        sources_mcp_call_count=0 if provider in ("claude", "codex", "agy") else None,
     )
     if provider == "claude":
         env["CLAUDE_CONFIG_DIR"] = str(tmp_path / "selected-account-b")
@@ -370,7 +370,7 @@ def test_missing_usage_remains_none_and_information_does_not_change_success(prov
         events.append(metadata)
     stdout = "\n".join(json.dumps(event) for event in events)
     assert load(provider).parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", None, None, sources_mcp_call_count=0 if provider in ("claude", "codex") else None
+        "Finished.", None, None, sources_mcp_call_count=0 if provider in ("claude", "codex", "agy") else None
     )
 
 
@@ -482,7 +482,7 @@ def test_agy_partial_stderr_rejects_incomplete_runs_with_safe_reason(stderr, err
     """agy-partial-stderr: native incomplete signals override SUCCESS without exposing stderr."""
     stderr = "private diagnostic\n" + stderr + "\nprivate diagnostic"
     assert load("agy").parse(SUCCESS["agy"], stderr, 0, None) == ParsedResult(
-        "Finished.", {"input_tokens": 7, "output_tokens": 3}, error
+        "Finished.", {"input_tokens": 7, "output_tokens": 3}, error, sources_mcp_call_count=0
     )
     if error:
         assert load("agy").parse(SUCCESS["agy"], stderr, 9, None).error == "agy: exited with status 9"
@@ -508,22 +508,24 @@ def test_agy_success_while_background_work_is_open_is_incomplete():
         (
             SUCCESS["agy"],
             '{"event":"result","result":{"status":"SUCCESS","response":"Replacement.","usage":{"input_tokens":99}}}',
-            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result"),
+            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result",
+                         sources_mcp_call_count=0),
         ),
         (
             ERROR["agy"],
             SUCCESS["agy"],
-            ParsedResult("Finished.", None, _AGY_UNCLASSIFIED),
+            ParsedResult("Finished.", None, _AGY_UNCLASSIFIED, sources_mcp_call_count=0),
         ),
         (
             '{"event":"result","result":null}',
             SUCCESS["agy"],
-            ParsedResult(None, None, "agy: invalid terminal result"),
+            ParsedResult(None, None, "agy: invalid terminal result", sources_mcp_call_count=0),
         ),
         (
             SUCCESS["agy"],
             '{"event":"result","result":[]}',
-            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result"),
+            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result",
+                         sources_mcp_call_count=0),
         ),
     ],
 )
@@ -1114,5 +1116,46 @@ def test_codex_failed_or_non_sources_mcp_calls_do_not_count():
         _codex_mcp_item("item_5", "sources", "completed", item_type="command_execution"),
     )
     parsed = load("codex").parse(stream, "", 0, "VERDICT: APPROVE")
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 0
+
+
+def _agy_mcp_step(index, state, server="sources", *, error=None, output=True, tool_name="call_mcp_tool"):
+    info = {"name": tool_name, "parameters": {"Arguments": {"word": "мова"}, "ServerName": server, "ToolName": "verify_word"}}
+    if output:
+        info["output"] = "1 analysis"
+    if error is not None:
+        info["error"] = error
+    step = {"conversation_id": "c1", "step_index": index, "state": state, "step_type": "tool",
+            "tool_name": tool_name, "tool_info": info}
+    return {"event": "step_update", "step_update": step}
+
+
+def _agy_stream(*events):
+    done = {"event": "result", "result": {"status": "SUCCESS", "response": "VERDICT: APPROVE"}}
+    return "".join(json.dumps(event) + "\n" for event in [*events, done])
+
+
+def test_agy_stream_with_completed_sources_calls_reports_their_count():
+    stream = _agy_stream(
+        _agy_mcp_step(1, "ACTIVE", output=False),
+        _agy_mcp_step(1, "DONE"),
+        _agy_mcp_step(2, "DONE", output=False),  # a call that returned nothing still completed
+    )
+    parsed = load("agy").parse(stream, "", 0, None)
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 2
+
+
+def test_agy_failed_or_non_sources_mcp_calls_do_not_count():
+    failed = {"type": "TOOL_ERROR", "message": "Tool call failed: verify_word."}
+    stream = _agy_stream(
+        _agy_mcp_step(1, "ERROR", error=failed),
+        _agy_mcp_step(2, "DONE", error=failed),
+        _agy_mcp_step(3, "DONE", server="other"),
+        _agy_mcp_step(4, "ACTIVE", output=False),
+        _agy_mcp_step(5, "DONE", tool_name="read_file"),
+    )
+    parsed = load("agy").parse(stream, "", 0, None)
     assert parsed.error is None
     assert parsed.sources_mcp_call_count == 0
