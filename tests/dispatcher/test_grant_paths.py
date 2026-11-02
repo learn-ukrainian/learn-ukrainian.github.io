@@ -88,10 +88,12 @@ class TestHooksAndSettlementShareScope:
                                                "--owned-path", "original.txt")
         path = sandbox.tasks / f"{task_id}.json"
         deadline = time.monotonic() + 10
-        while not (sandbox.tasks / f"{task_id}.started").exists():
+        initial = json.loads(path.read_text())
+        # Provider startup does not imply the supervisor has published its process group.
+        while not initial.get("provider_pgid"):
             assert time.monotonic() < deadline
             time.sleep(0.02)
-        initial = json.loads(path.read_text())
+            initial = json.loads(path.read_text())
         tree = Path(initial["worktree_path"])
         task_env = {**sandbox.env, ownership.TASK_ID_ENV: task_id}
 
