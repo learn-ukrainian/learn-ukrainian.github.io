@@ -44,8 +44,11 @@ identified, every served row is withheld as ``account_ambiguous``.
 Serving: every read, parse and provider question runs in the background. Each
 sample keeps the cheap stat facts of every file its validation read (type,
 device and inode; for files also mode, owner, size and change times), with its
-generation and private fingerprints of its account, none of them published,
-logged or serialised. Serving only ``lstat``s those paths: any difference
+generation and private fingerprints of its account, none of them published or
+logged. The fingerprints and stat facts stay in memory. Only the generation
+digest and the credentials' stat facts go to a private file beside each good
+reading (``_persist_sample``), so a restart can re-prove the binding and time
+its first probe; that file is never served. Serving only ``lstat``s those paths: any difference
 withholds the row as ``not_probed`` and schedules one background revalidation,
 which re-arms the sample when the binding still validates to the same
 generation (asking the provider again only about changed credentials) and
@@ -99,6 +102,8 @@ from scripts.api.subscription_usage import (
     _codexbar_cache_ttl_s,
     _codexbar_refresh_interval_s,
     _parse_resets_at_any,
+    _periodic_refresh_enabled,
+    _routing_budget_state_dir,
 )
 from scripts.common import scratch
 
@@ -875,7 +880,9 @@ def _record(
             # The state cannot be newer than the moment it was observed.
             source_at = observed if measured is None else min(measured.timestamp(), observed)
             windows = {name: dict(row[name]) for _key, name in _WINDOWS}
-            _last_good[label] = _Sample(source_at, windows, accounts)
+            sample = _Sample(source_at, windows, accounts)
+            _last_good[label] = sample
+            _persist_sample(label, sample)
             _last_failure.pop(label, None)
             _probe_not_before.pop(label, None)
             return
@@ -886,6 +893,98 @@ def _record(
             # On-demand kicks probe again as soon as the last one finishes.
             # Hold this label for one scheduler interval so they cannot retry sooner.
             _probe_not_before[label] = time.time() + _codexbar_refresh_interval_s()
+
+# One entry per label, overwritten by each good probe, beside provider_lkg.json.
+_SAMPLES_FILE = "claude_account_samples.json"
+
+
+def _samples_path() -> Path:
+    return _routing_budget_state_dir() / _SAMPLES_FILE
+
+
+def _read_samples(path: Path) -> dict[str, Any]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _persist_sample(label: str, sample: _Sample) -> None:
+    """Keep the label's last good reading on disk so a restart can tell how old it is.
+
+    Only the measured numbers, their time, and the binding's generation digest
+    and credential stat facts are written, to a private file. Nothing here is
+    served: ``claude_accounts_snapshot`` reads ``_last_good`` alone, so a row
+    stays unknown until a real probe. Written only where the periodic scheduler
+    runs, since only it reads the file. A failed write is logged, never raised.
+    """
+    if not _periodic_refresh_enabled():
+        return
+    watch = sample.accounts.watch
+    entry = {
+        "source_at": sample.source_at,
+        "windows": sample.windows,
+        "generation": watch.generation.hex(),
+        "credentials": None if watch.credentials is None else list(watch.credentials),
+    }
+    try:
+        path = _samples_path()
+        entries = _read_samples(path)
+        entries[label] = entry
+        tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
+        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(json.dumps(entries, sort_keys=True) + "\n")
+        tmp.replace(path)
+    except (OSError, TypeError, ValueError):
+        _log.warning("claude account sample not persisted", exc_info=True)
+
+
+def _restored_age_s(label: str, entry: Any, now: float, limit_s: float) -> float | None:
+    """Age of a persisted reading, when it is younger than ``limit_s`` and its binding still holds."""
+    if not isinstance(entry, dict):
+        return None
+    source_at, generation, credentials = entry.get("source_at"), entry.get("generation"), entry.get("credentials")
+    if isinstance(source_at, bool) or not isinstance(source_at, int | float) or not isinstance(generation, str):
+        return None
+    age = now - float(source_at)
+    if not 0.0 <= age < limit_s:
+        return None
+    try:
+        if credentials is not None and not (
+            isinstance(credentials, list) and all(type(fact) is int for fact in credentials)
+        ):
+            return None
+        proof = _Watch(
+            roots=(),
+            entries=(),
+            generation=bytes.fromhex(generation),
+            credentials=None if credentials is None else tuple(credentials),
+        )
+        # The binding must validate again, to the generation the reading was taken under.
+        # Unchanged credentials are not put to the provider again; changed ones must be
+        # proven the bound account's, as for a probe.
+        with account_binding(label, verified=proof) as binding:
+            return age if binding.generation == proof.generation else None
+    except Exception:  # an unprovable binding means no reuse, never a startup failure
+        return None
+
+
+def restored_probe_age_s(*, now: float | None = None) -> float | None:
+    """Age of the oldest persisted reading, only if every label has one that gates a probe.
+
+    A label with no entry, an entry past the cache TTL or the scheduler interval,
+    or a binding that no longer validates gives ``None``: probe. Background only
+    (it validates bindings); never probes, never serves a row.
+    """
+    moment = time.time() if now is None else now
+    limit_s = min(_codexbar_refresh_interval_s(), _codexbar_cache_ttl_s())
+    entries = _read_samples(_samples_path())
+    ages = [_restored_age_s(label, entries.get(label), moment, limit_s) for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS]
+    if any(age is None for age in ages):
+        return None
+    return max((age for age in ages if age is not None), default=None)
 
 
 def _refresh_one(label: str, timeout_s: float) -> None:
