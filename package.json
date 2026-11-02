@@ -128,6 +128,16 @@
     "brace-expansion@2": "2.1.7",
     "markdown-it": "^14.3.1",
     "adm-zip": "0.6.0",
-    "katex": "0.18.2"
+    "katex": "0.18.2",
+    "re2js": "2.8.7",
+    "glob": {
+      "minimatch": "^11.0.4"
+    },
+    "test-exclude": {
+      "minimatch": "^11.0.4"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.4"
+    }
   }
 }
