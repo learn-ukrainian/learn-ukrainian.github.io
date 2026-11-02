@@ -29,7 +29,6 @@ import json
 import mimetypes
 import os
 import re
-import shutil
 import sqlite3
 import tempfile
 import time
@@ -179,6 +178,15 @@ class RetentionReport:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def _fsync_directory(path: Path) -> None:
+    """Persist a directory's entries (a rename or a new child) to disk."""
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
 
 
 def _utc_now() -> str:
@@ -424,7 +432,9 @@ class ArtifactStore:
             "SELECT * FROM artifacts WHERE sha256 = ?", (digest,)
         ).fetchone()
         if existing is not None:
-            return self._reuse_existing_blob(existing, dest, data, commit=commit)
+            reused = self._reuse_existing_blob(digest, dest, data, commit=commit)
+            if reused is not None:
+                return reused
 
         aid = artifact_id or new_id("artifact")
         created = _utc_now()
@@ -466,56 +476,64 @@ class ArtifactStore:
 
     def _reuse_existing_blob(
         self,
-        existing: sqlite3.Row,
+        digest: str,
         dest: Path,
         data: bytes,
         *,
         commit: bool,
-    ) -> ArtifactRecord:
+    ) -> ArtifactRecord | None:
         """Return a deduplicated row with its blob present and marked in use.
 
-        #12530: touching the blob's mtime opens the retention grace window,
-        so a caller that links this artifact to a new message soon after
-        cannot lose the bytes to a concurrent retention run (the run re-checks
-        mtime under the write lock). A blob already removed by retention is
-        rewritten from ``data`` and its class marker restored under the write
-        lock, so the row never claims "expired" while the bytes are back.
+        #12530: runs under the store's writer lock, the lock retention holds
+        while it re-checks and unlinks, and re-reads the row under it. A live
+        row's blob gets its mtime touched (rewritten if missing), which opens
+        retention's grace window, so a caller that links this artifact to a
+        new message soon after cannot lose the bytes. An expired row's blob is
+        rewritten from ``data`` and its class restored. Inside a caller-owned
+        transaction a no-op UPDATE takes the same lock. Returns None when the
+        row vanished, so the caller inserts it afresh.
         """
-        retention_class = str(existing["retention_class"])
-        if not retention_class.startswith(RETENTION_EXPIRED_PREFIX):
-            try:
-                os.utime(dest)
-            except FileNotFoundError:
-                self._write_blob_atomic(dest, data)
-            except PermissionError:
-                # Not our file to touch; the bytes are present, which is all
-                # the pre-#12530 contract promised.
-                pass
-            return self._row_to_record(existing)
         own_transaction = commit and not self._conn.in_transaction
         if own_transaction:
             self._conn.execute("BEGIN IMMEDIATE")
         try:
-            self._write_blob_atomic(dest, data)
-            self._conn.execute(
-                """UPDATE artifacts SET retention_class = ?
-                   WHERE artifact_id = ? AND retention_class = ?""",
-                (
-                    retention_class[len(RETENTION_EXPIRED_PREFIX):],
-                    str(existing["artifact_id"]),
-                    retention_class,
-                ),
-            )
+            if not own_transaction:
+                self._conn.execute(
+                    "UPDATE artifacts SET retention_class = retention_class WHERE sha256 = ?",
+                    (digest,),
+                )
+            row = self._conn.execute(
+                "SELECT * FROM artifacts WHERE sha256 = ?", (digest,)
+            ).fetchone()
+            if row is not None:
+                retention_class = str(row["retention_class"])
+                if retention_class.startswith(RETENTION_EXPIRED_PREFIX):
+                    self._write_blob_atomic(dest, data)
+                    self._conn.execute(
+                        "UPDATE artifacts SET retention_class = ? WHERE artifact_id = ?",
+                        (
+                            retention_class.removeprefix(RETENTION_EXPIRED_PREFIX),
+                            str(row["artifact_id"]),
+                        ),
+                    )
+                else:
+                    try:
+                        os.utime(dest)
+                    except FileNotFoundError:
+                        self._write_blob_atomic(dest, data)
+                    except PermissionError:
+                        # Not our file to touch; the bytes are present, which
+                        # is all the pre-#12530 contract promised.
+                        pass
             if own_transaction:
                 self._conn.commit()
         except Exception:
             if own_transaction:
                 self._conn.rollback()
             raise
-        row = self._conn.execute(
-            "SELECT * FROM artifacts WHERE artifact_id = ?", (str(existing["artifact_id"]),)
-        ).fetchone()
-        return self._row_to_record(row)
+        if row is None:
+            return None
+        return self.get(str(row["artifact_id"]))
 
     def _store_bytes_pg(
         self,
@@ -673,12 +691,9 @@ class ArtifactStore:
         dest = dest_dir / name
         if dest.exists():
             raise ArtifactStoreError(f"materialize target already exists: {dest}")
-        if self._authority is Authority.PG:
-            # Write the Postgres bytes into scratch directly — there is no
-            # host-local blob file to copy from under the pg byte-plane.
-            dest.write_bytes(self.read_bytes(artifact_id))
-        else:
-            shutil.copyfile(rec.blob_path, dest)
+        # Both backends go through read_bytes: it verifies the digest and
+        # reports a retention-removed blob as ArtifactExpiredError (#12530).
+        dest.write_bytes(self.read_bytes(artifact_id))
         if readonly:
             dest.chmod(0o444)
         return dest
@@ -722,16 +737,21 @@ class ArtifactStore:
                 raise ArtifactStoreError(f"blob digest mismatch for {artifact_id}")
             return data
         rec = self.get(artifact_id)
-        if not rec.blob_path.is_file():
-            if rec.retention_class.startswith(RETENTION_EXPIRED_PREFIX):
+        try:
+            data = rec.blob_path.read_bytes()
+        except FileNotFoundError:
+            # Judge from metadata read after the miss: retention commits the
+            # expired marker before it unlinks (#12530), so a blob removed
+            # while this read ran is reported as expired, not as corruption.
+            current = self.get(artifact_id)
+            if current.retention_class.startswith(RETENTION_EXPIRED_PREFIX):
                 raise ArtifactExpiredError(
                     f"blob for {artifact_id} (sha256={rec.sha256}) was removed by "
                     "the message retention rule (#12530); the row and digest remain"
-                )
+                ) from None
             raise ArtifactStoreError(
                 f"missing blob for {artifact_id} (sha256={rec.sha256}) — integrity failure"
-            )
-        data = rec.blob_path.read_bytes()
+            ) from None
         if hashlib.sha256(data).hexdigest() != rec.sha256:
             raise ArtifactStoreError(f"blob digest mismatch for {artifact_id}")
         return data
@@ -776,6 +796,15 @@ class ArtifactStore:
                    VALUES (?, ?, ?)""",
                 (message_id, artifact_id, relation),
             )
+            # The INSERT holds the writer lock that retention also takes
+            # (#12530): never link a blob retention removed, and clear a
+            # marker whose blob is still here, since this link keeps it.
+            self._restore_if_present(artifact_id)
+            if self.get(artifact_id).retention_class.startswith(RETENTION_EXPIRED_PREFIX):
+                raise ArtifactExpiredError(
+                    f"refusing to reference {artifact_id}: its blob was removed by "
+                    "the message retention rule (#12530)"
+                )
             if commit:
                 self._conn.commit()
         except Exception:
@@ -932,18 +961,18 @@ class ArtifactStore:
         Dry run unless ``apply``. Only the blob file goes; the ``artifacts``
         row keeps its sha256 and byte count, its class gains
         ``RETENTION_EXPIRED_PREFIX``, and every message row stays. Each removal
-        re-evaluates the full rule and the blob's mtime inside one
-        ``BEGIN IMMEDIATE`` transaction (the store's writer lock, which
-        authority writes and new artifact rows also take), then marks the
-        row, unlinks and commits. A
-        crash before the commit leaves an unmarked row without its blob;
-        the next run marks it again. Sqlite only.
+        re-evaluates the full rule and the blob's mtime under ``BEGIN
+        IMMEDIATE`` (the store's writer lock, which authority writes,
+        artifact inserts, dedup reuse and ``reference`` also take) in two
+        phases: mark and commit, then re-check and unlink
+        (``_expire_one_blob``). Sqlite only.
 
         ``backup_dir`` (apply only) copies each blob there, sha256-verified,
-        inside the same locked transaction just before its unlink, and
-        appends one ``manifest.jsonl`` line per blob, so every removed blob has
-        a verified copy (a rolled-back removal can leave an extra one). Restoring a copy through ``store_bytes``
-        rewrites the blob and clears the expired marker.
+        inside the locked phase that unlinks it, persists the copy and its
+        directory entries, and appends one fsynced ``manifest.jsonl`` line,
+        so every removed blob has a durable verified copy (a rolled-back
+        removal can leave an extra one). Restoring a copy through
+        ``store_bytes`` rewrites the blob and clears the expired marker.
         """
         if older_than_days < 1:
             raise ArtifactStoreError("older_than_days must be at least 1")
@@ -954,6 +983,7 @@ class ArtifactStore:
             if backup_dir.is_relative_to(self.root.resolve()):
                 raise ArtifactStoreError("backup_dir must be outside the plane root")
             self._prepare_private_dir(backup_dir)
+            _fsync_directory(backup_dir.parent)
         if apply:
             self._refuse_readonly_write("expire_message_blobs")
         if self._authority is Authority.PG:
@@ -1030,42 +1060,85 @@ class ArtifactStore:
         *,
         backup_dir: Path | None = None,
     ) -> str:
-        """Re-check one candidate under the writer lock, then mark and unlink.
+        """Expire one candidate in two locked phases (#12530).
 
-        Returns ``removed`` (blob unlinked, or already gone and now marked),
-        ``recent`` (blob touched inside the grace window) or ``changed`` (no
-        longer a candidate: a new link, an open delivery or a revived row).
+        Phase 1 re-checks the rule and the grace window, marks the row
+        expired and commits while the blob is still readable. Phase 2
+        re-checks under the lock again, backs the blob up and unlinks it; it
+        writes no row, so a crash at any point leaves either readable bytes or
+        a durable expired marker, never an unmarked row without bytes. A row
+        that stops qualifying between the phases (a reviver, a new reference,
+        a touched blob) gets its class restored if its blob is still there.
+
+        Returns ``removed``, ``recent`` (blob touched inside the grace
+        window) or ``changed`` (no longer a candidate).
         """
+        locked = {**params, "artifact_id": artifact_id}
         self._conn.execute("BEGIN IMMEDIATE")
         try:
-            row = self._conn.execute(
-                _retention_candidate_sql(single=True),
-                {**params, "artifact_id": artifact_id},
-            ).fetchone()
-            if row is None:
-                self._conn.rollback()
-                return "changed"
-            path = self.blob_path_for(str(row["sha256"]))
-            try:
-                if path.stat().st_mtime > mtime_floor:
-                    self._conn.rollback()
-                    return "recent"
-            except FileNotFoundError:
-                pass
-            klass = str(row["retention_class"])
-            if backup_dir is not None:
-                self._back_up_blob(path, row, backup_dir)
-            if not klass.startswith(RETENTION_EXPIRED_PREFIX):
-                self._conn.execute(
-                    "UPDATE artifacts SET retention_class = ? WHERE artifact_id = ?",
-                    (RETENTION_EXPIRED_PREFIX + klass, artifact_id),
-                )
-            path.unlink(missing_ok=True)
+            row = self._conn.execute(_retention_candidate_sql(single=True), locked).fetchone()
+            outcome = self._grace_outcome(row, mtime_floor)
+            if outcome is None:
+                klass = str(row["retention_class"])
+                if not klass.startswith(RETENTION_EXPIRED_PREFIX):
+                    self._conn.execute(
+                        "UPDATE artifacts SET retention_class = ? WHERE artifact_id = ?",
+                        (RETENTION_EXPIRED_PREFIX + klass, artifact_id),
+                    )
         except Exception:
             self._conn.rollback()
             raise
         self._conn.commit()
-        return "removed"
+        if outcome is not None:
+            return outcome
+        self._conn.execute("BEGIN IMMEDIATE")
+        try:
+            row = self._conn.execute(_retention_candidate_sql(single=True), locked).fetchone()
+            outcome = self._grace_outcome(row, mtime_floor)
+            if outcome is None and not str(row["retention_class"]).startswith(
+                RETENTION_EXPIRED_PREFIX
+            ):
+                outcome = "changed"
+            if outcome is not None:
+                self._restore_if_present(artifact_id)
+            else:
+                path = self.blob_path_for(str(row["sha256"]))
+                if backup_dir is not None:
+                    self._back_up_blob(path, row, backup_dir)
+                path.unlink(missing_ok=True)
+        except Exception:
+            self._conn.rollback()
+            raise
+        self._conn.commit()
+        return outcome or "removed"
+
+    def _grace_outcome(self, row: sqlite3.Row | None, mtime_floor: float) -> str | None:
+        """``changed`` for a non-candidate, ``recent`` inside grace, else None."""
+        if row is None:
+            return "changed"
+        try:
+            if self.blob_path_for(str(row["sha256"])).stat().st_mtime > mtime_floor:
+                return "recent"
+        except FileNotFoundError:
+            pass
+        return None
+
+    def _restore_if_present(self, artifact_id: str) -> None:
+        """Clear the expired marker of a row whose blob is still on disk."""
+        row = self._conn.execute(
+            "SELECT sha256, retention_class FROM artifacts WHERE artifact_id = ?",
+            (artifact_id,),
+        ).fetchone()
+        if row is None:
+            return
+        klass = str(row["retention_class"])
+        if klass.startswith(RETENTION_EXPIRED_PREFIX) and self.blob_path_for(
+            str(row["sha256"])
+        ).is_file():
+            self._conn.execute(
+                "UPDATE artifacts SET retention_class = ? WHERE artifact_id = ?",
+                (klass.removeprefix(RETENTION_EXPIRED_PREFIX), artifact_id),
+            )
 
     def _back_up_blob(self, path: Path, row: sqlite3.Row, backup_dir: Path) -> None:
         """Copy one blob into ``backup_dir`` and record it, or raise.
@@ -1087,6 +1160,9 @@ class ArtifactStore:
         self._write_blob_atomic(dest, data)
         if hashlib.sha256(dest.read_bytes()).hexdigest() != digest:
             raise ArtifactStoreError(f"backup copy of {digest} does not verify")
+        # The rename and any new shard directory are directory entries:
+        # persist both before the source can go (#12530 F4).
+        _fsync_directory(dest.parent)
         entry = json.dumps(
             {
                 "artifact_id": str(row["artifact_id"]),
@@ -1103,6 +1179,7 @@ class ArtifactStore:
             handle.write(entry + "\n")
             handle.flush()
             os.fsync(handle.fileno())
+        _fsync_directory(backup_dir)
 
     # --- V4 canonical authority store (PR #7662 repair 6/7) ----------------
     #
