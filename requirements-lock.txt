@@ -229,7 +229,7 @@ typer-slim==0.24.0
 typesafe-sdk==0.7.2
 typing_extensions==4.16.0
 typing-inspection==0.4.4
-tzlocal==5.4.4
+tzlocal==5.4.5
 udapi==0.5.2
 udtools==0.2.8
 ukrainian_word_stress==2.1.0
