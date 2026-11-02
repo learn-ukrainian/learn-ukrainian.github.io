@@ -131,6 +131,40 @@ def test_delivery_ack_artifact_and_conflicting_replay(plane, capsys):
     assert result["error"] == "terminalization_conflict"
 
 
+def test_delivery_ack_refuses_retention_removed_artifact_without_losing_lease(plane, capsys):
+    """#12573, CTO-approved: an unreadable artifact must not acknowledge a delivery."""
+    from datetime import UTC, datetime, timedelta
+
+    with AuthorityService(root=plane) as service:
+        done = service.publish_message(sender="operator", body="old body", recipients=("codex",))
+        lease = service.claim_next_delivery("codex", "old-seat")
+        service.acknowledge_delivery(
+            lease.delivery.delivery_id, worker_id="old-seat", fence_token=lease.fence_token
+        )
+        assert service.store.expire_message_blobs(
+            apply=True, now=datetime.now(UTC) + timedelta(days=60)
+        ).removed == 1
+        assert not service.store.get(done.body_artifact_id).blob_path.is_file()
+    live = publish(plane)
+    delivery = claim(capsys)
+    status_before = invoke(capsys, "status", delivery["delivery_id"])
+    with AuthorityService(root=plane) as service:
+        attempt_before = dict(service._conn.execute(
+            "SELECT * FROM authority_delivery_attempts WHERE delivery_id = ?",
+            (delivery["delivery_id"],),
+        ).fetchone())
+    args = [*fenced("ack", delivery), "--acknowledgment-artifact-id"]
+    result = invoke(capsys, *args, done.body_artifact_id, expected=EXIT_ERROR)
+    assert result == {"content_included": False, "error": "artifact_expired"}
+    assert invoke(capsys, "status", delivery["delivery_id"]) == status_before
+    with AuthorityService(root=plane) as service:
+        assert dict(service._conn.execute(
+            "SELECT * FROM authority_delivery_attempts WHERE delivery_id = ?",
+            (delivery["delivery_id"],),
+        ).fetchone()) == attempt_before
+    assert invoke(capsys, *args, live.body_artifact_id)["state"] == "acknowledged"
+
+
 def test_delivery_stale_fence_after_reclaim(plane, capsys):
     publish(plane)
     # An expired real lease avoids sleeps and proves a previous worker is fenced.
