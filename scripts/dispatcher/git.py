@@ -266,11 +266,11 @@ def resolve_repo(key: str | None = None) -> tuple[Path, dict]:
     return (ROOT if item.get("default") else ROOT.parent / item["local_name"]).resolve(), item
 
 
-def publish_start(repo: Path, repository: dict, branch: str, task_id: str) -> tuple[str, str]:
+def publish_start(repo: Path, repository: dict, branch: str, task_id: str, *, label: str = "publish branch") -> tuple[str, str]:
     """Start published fix rounds at origin's tip without moving the local PR branch."""
     remote = verification_origin(repo)
     if remote not in canonical_origins(repository):
-        raise ValueError("publish branch origin must match the registered canonical repository URL")
+        raise ValueError(f"{label} origin must match the registered canonical repository URL")
     source = f"refs/heads/{branch}"
     with _private_remote_git(task_id, remote) as (run, _):
         try:
@@ -278,16 +278,43 @@ def publish_start(repo: Path, repository: dict, branch: str, task_id: str) -> tu
         except subprocess.CalledProcessError as exc:
             if exc.returncode != 2:
                 raise
-            raise ValueError("publish branch is absent from the canonical remote") from None
+            raise ValueError(f"{label} is absent from the canonical remote") from None
         fields = advertised.split()
         if len(fields) != 2 or fields[1] != source or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", fields[0]):
-            raise ValueError("publish branch must advertise one full object name")
+            raise ValueError(f"{label} must advertise one full object name")
         sha = fields[0]
     # Materialize the immutable advertised object, never a worker-writable ref.
     # Shared URL rewrites can make this transfer fail, but cannot change its SHA.
     _verification_git(repo, "fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
                       sha, timeout=VERIFICATION_FETCH_TIMEOUT, credential_remote=remote)
     return sha, remote
+
+
+def review_branch_start(repo: Path, repository: dict, branch: str, task_id: str, *, base: str | None = None) -> str:
+    """The remote head a read-only ``--branch`` dispatch checks out (#12441).
+
+    The local ``refs/heads/<branch>`` is never consulted or moved: the advertised
+    remote object is fetched by SHA, exactly as a published write start. A
+    commit-SHA ``--base`` naming a different commit is refused typed instead of
+    being silently ignored; a ref ``--base`` (the ``origin/main`` default) stays
+    the review's base ref and does not name the checkout commit.
+    """
+    sha, _remote = publish_start(repo, repository, branch, task_id, label="review branch")
+    if base and re.fullmatch(r"[0-9a-fA-F]{7,64}", base):
+        if len(base) in (40, 64):
+            resolved = base.lower()
+        else:
+            try:
+                resolved = _verification_git(repo, "rev-parse", "--verify", f"{base}^{{commit}}")
+            except subprocess.SubprocessError:
+                resolved = base.lower()
+        if resolved != sha:
+            raise ValueError(
+                f"read_only_branch_base_mismatch: --base {base} is {resolved}, "
+                f"but the remote head of {branch} is {sha}; "
+                "drop --base or pass the remote head"
+            )
+    return sha
 
 
 def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, worktree=None, *, exact=False):
