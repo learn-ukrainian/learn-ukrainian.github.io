@@ -1782,6 +1782,11 @@ def test_unresolved_ancestry_is_unknown_never_a_non_descendant(monkeypatch):
     assert worker._is_own_descendant(5_000_777) is False  # a proven stranger: its parent is init
     with pytest.raises(worker_leftovers.ScanUnknown):
         worker._is_own_descendant(9_000_001)
+    # A descendant deeper than the walk's limit is unknown too: the limit proves nothing about it.
+    parents.update({6_000_000 + hop: 6_000_001 + hop for hop in range(worker.ANCESTRY_DEPTH + 1)})
+    parents[6_000_000 + worker.ANCESTRY_DEPTH + 1] = me
+    with pytest.raises(worker_leftovers.ScanUnknown):
+        worker._is_own_descendant(6_000_000)
 
 
 @pytest.mark.parametrize("libc", [SimpleNamespace(prctl=lambda *_args: -1), SimpleNamespace()],

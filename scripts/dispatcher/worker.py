@@ -495,6 +495,8 @@ SETTLE_PATIENCE = 10
 FALLBACK_SCAN_RETRIES = 10
 # Ancestry walks of one candidate, restarted when an ancestor exits during the walk.
 ANCESTRY_ATTEMPTS = 5
+# Parents followed from one candidate; a deeper chain is unknown, never a stranger.
+ANCESTRY_DEPTH = 64
 
 
 def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
@@ -553,7 +555,7 @@ def _is_own_descendant(pid: int) -> bool:
     me = os.getpid()
     for _ in range(ANCESTRY_ATTEMPTS):
         current, settled = pid, True
-        for _ in range(64):
+        for _ in range(ANCESTRY_DEPTH):
             try:
                 parent = psutil.Process(current).ppid()
             except psutil.NoSuchProcess:
@@ -569,7 +571,7 @@ def _is_own_descendant(pid: int) -> bool:
                 return False
             current = parent
         if settled:
-            return False
+            raise worker_leftovers.ScanUnknown(f"ancestry of {pid} is deeper than {ANCESTRY_DEPTH} processes")
     raise worker_leftovers.ScanUnknown(f"ancestry of {pid} kept changing")
 
 
