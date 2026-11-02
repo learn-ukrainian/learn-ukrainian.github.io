@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import argparse
-import contextlib
-import fcntl
 import html
 import json
 import os
-import shutil
 import subprocess
 import time
 from collections.abc import Callable, Iterable
@@ -46,17 +43,13 @@ except ModuleNotFoundError:
     from scripts.agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude
 
 REQUEST_TIMEOUT_S = 480
-HERMES_TIMEOUT_S = 600
-HERMES_BIN = "hermes"
-HERMES_CFG = Path.home() / ".hermes" / "config.yaml"
 DEFAULT_OUT_DIR = PROJECT_ROOT / "audit" / "2026-05-17-judge-calibration-matrix"
 
-FAMILIES = ("xai", "anthropic", "openai", "google")
-HARNESSES = ("native_cli", "hermes")
+FAMILIES = ("anthropic", "openai", "google")
+HARNESSES = ("native_cli",)
 MCP_STATES = ("with_mcp", "without_mcp")
 
 FAMILY_MODELS: dict[str, tuple[str, ...]] = {
-    "xai": ("grok-4.5",),
     "anthropic": (
         "claude-opus-4-7",
         "claude-opus-4-6",
@@ -79,24 +72,20 @@ FAMILY_MODELS: dict[str, tuple[str, ...]] = {
 }
 
 SUPPORTED_HARNESSES: dict[str, tuple[str, ...]] = {
-    "xai": ("hermes",),
-    "anthropic": ("native_cli", "hermes"),
-    "openai": ("native_cli", "hermes"),
+    "anthropic": ("native_cli",),
+    "openai": ("native_cli",),
     "google": ("native_cli",),
 }
 
 DEFAULT_EFFORTS: dict[str, tuple[str, ...]] = {
-    "xai": ("low", "minimal", "medium", "high", "xhigh"),
     "anthropic": ("low", "medium", "high", "xhigh"),
     "openai": ("low", "medium", "high"),
     "google": ("default",),
 }
 
 SMOKE_CELLS = (
-    ("xai", "grok-4.5", "hermes", "medium", "with_mcp"),
     ("anthropic", "claude-haiku-4-5-20251001", "native_cli", "medium", "with_mcp"),
     ("openai", "gpt-5.4-mini", "native_cli", "medium", "with_mcp"),
-    ("openai", "gpt-5.5", "hermes", "medium", "with_mcp"),
     ("google", "gemini-3.1-pro-preview", "native_cli", "default", "with_mcp"),
 )
 
@@ -146,11 +135,6 @@ def cell_path(out_dir: Path, cell: Cell) -> Path:
     return out_dir / cell.family / cell.model / cell.harness / f"{cell.effort}-{cell.mcp_state}.json"
 
 
-def is_forbidden_cell(cell: Cell) -> bool:
-    """Return True for combinations the matrix must not materialize."""
-    return cell.family == "google" and cell.harness == "hermes"
-
-
 def unsupported_reason(cell: Cell) -> str | None:
     """Return a deterministic skip reason for unsupported cells."""
     if cell.family not in FAMILIES:
@@ -195,7 +179,7 @@ def build_matrix(
             and (models is None or raw[1] in models)
             and (efforts is None or raw[3] in efforts)
         ]
-        return [cell for cell in cells if not is_forbidden_cell(cell)]
+        return cells
 
     cells: list[Cell] = []
     for family in selected_families:
@@ -205,9 +189,7 @@ def build_matrix(
             for harness in selected_harnesses:
                 for effort in selected_efforts:
                     for mcp_state in selected_mcp_states:
-                        cell = Cell(family, model, harness, effort, mcp_state)
-                        if not is_forbidden_cell(cell):
-                            cells.append(cell)
+                        cells.append(Cell(family, model, harness, effort, mcp_state))
     return cells
 
 
@@ -308,10 +290,6 @@ def build_native_command(cell: Cell, prompt: str) -> list[str]:
         #     Claude Code context (e.g. dispatched headless worker). Costs
         #     ~30s extra init per call but eliminates the API-key
         #     requirement.
-        #
-        # See #2036 for the Hermes-anthropic silent-drop bug that makes the
-        # hermes lane unusable as of 2026-05-17 (status reports `logged in`
-        # but calls return empty stdout).
         use_bare = os.environ.get("CLAUDE_MATRIX_USE_BARE") == "1"
         cmd = ["claude", "-p"]
         if use_bare:
@@ -366,92 +344,8 @@ def run_native_cli(cell: Cell, prompt: str) -> HarnessCall:
     return run_subprocess(cmd, timeout_s=REQUEST_TIMEOUT_S, headless_claude=cell.family == "anthropic")
 
 
-def _read_effort_line(text: str) -> tuple[int, str] | None:
-    """Find the agent-level Hermes ``reasoning_effort`` line."""
-    for idx, line in enumerate(text.splitlines()):
-        stripped = line.strip()
-        if line.startswith("  reasoning_effort:") and stripped.startswith("reasoning_effort:"):
-            value = stripped.split(":", 1)[1].strip()
-            return idx, value
-    return None
-
-
-def set_hermes_effort(config_path: Path, effort: str) -> str:
-    """Edit Hermes config in place and return the previous effort."""
-    text = config_path.read_text(encoding="utf-8")
-    located = _read_effort_line(text)
-    if located is None:
-        raise RuntimeError(
-            "could not locate `  reasoning_effort: <value>` in ~/.hermes/config.yaml; "
-            "Hermes may have changed config shape"
-        )
-    line_idx, previous = located
-    lines = text.splitlines(keepends=True)
-    newline = "\n" if lines[line_idx].endswith("\n") else ""
-    lines[line_idx] = f"  reasoning_effort: {effort}{newline}"
-    config_path.write_text("".join(lines), encoding="utf-8")
-    return previous
-
-
-@contextlib.contextmanager
-def hermes_effort_swap(config_path: Path, effort: str) -> Iterable[str]:
-    """Lock, back up, edit, and restore Hermes effort for one call."""
-    backup_path = config_path.with_name(f"{config_path.name}.judge-calibration-backup")
-    with config_path.open("r", encoding="utf-8") as lock_file:
-        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
-        shutil.copy2(config_path, backup_path)
-        previous = set_hermes_effort(config_path, effort)
-        try:
-            yield previous
-        finally:
-            shutil.copy2(backup_path, config_path)
-            backup_path.unlink(missing_ok=True)
-            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
-
-
-def hermes_mcp_command(action: str) -> HarnessCall:
-    """Run ``hermes mcp disable/enable sources``."""
-    call = run_subprocess([HERMES_BIN, "mcp", action, "sources"], timeout_s=60)
-    if call.returncode == 0 and call.error is None:
-        return HarnessCall(
-            True,
-            call.stdout,
-            call.stderr,
-            call.returncode,
-            call.duration_s,
-            call.cmd,
-        )
-    return call
-
-
-def run_hermes(cell: Cell, prompt: str, *, config_path: Path = HERMES_CFG) -> HarnessCall:
-    """Invoke Hermes one-shot mode with atomic effort config swapping."""
-    from scripts.review.model_catalog import require_execution_model
-
-    require_execution_model(cell.model, transport="hermes")
-    try:
-        with hermes_effort_swap(config_path, cell.effort):
-            disabled: HarnessCall | None = None
-            if cell.mcp_state == "without_mcp":
-                disabled = hermes_mcp_command("disable")
-                if not disabled.ok:
-                    return disabled
-            try:
-                return run_subprocess(
-                    [HERMES_BIN, "-z", prompt, "-m", cell.model],
-                    timeout_s=HERMES_TIMEOUT_S,
-                )
-            finally:
-                if disabled is not None:
-                    hermes_mcp_command("enable")
-    except (OSError, RuntimeError) as exc:
-        return HarnessCall(False, "", "", None, 0.0, (HERMES_BIN, "-z", "-m", cell.model), error=str(exc))
-
-
 def run_harness(cell: Cell, prompt: str) -> HarnessCall:
     """Dispatch a single prompt to the configured harness."""
-    if cell.harness == "hermes":
-        return run_hermes(cell, prompt)
     if cell.harness == "native_cli":
         return run_native_cli(cell, prompt)
     raise ValueError(f"unknown harness {cell.harness}")
@@ -553,7 +447,7 @@ def run_cell(
         },
         "raw_telemetry": {
             "harness": cell.harness,
-            "harness_version": command_version(HERMES_BIN if cell.harness == "hermes" else _native_binary(cell.family)),
+            "harness_version": command_version(_native_binary(cell.family)),
             "model_id": cell.model,
             "effort_actual": cell.effort,
             "mcp_servers": ["sources"] if cell.mcp_state == "with_mcp" else [],
@@ -757,9 +651,6 @@ def build_markdown_report(results: list[dict[str, Any]]) -> str:
         )
     )
 
-    lines.extend(["", "## Harness Comparison", ""])
-    lines.extend(table(["model", "effort", "mcp_state", "native_cli F1", "hermes F1", "delta"], harness_comparison_rows(ok_results)))
-
     lines.extend(["", "## MCP Impact", ""])
     lines.extend(table(["model", "harness", "effort", "without case_acc", "with case_acc", "delta"], mcp_impact_rows(ok_results)))
 
@@ -785,20 +676,6 @@ def build_markdown_report(results: list[dict[str, Any]]) -> str:
         )
     lines.extend(table(["family", "model", "harness", "effort", "mcp_state", "reason"], failure_rows or [["n/a", "n/a", "n/a", "n/a", "n/a", "none"]]))
     return "\n".join(lines) + "\n"
-
-
-def harness_comparison_rows(results: list[dict[str, Any]]) -> list[list[str]]:
-    by_key: dict[tuple[str, str, str], dict[str, float]] = {}
-    for result in results:
-        cell = result["cell"]
-        key = (cell["model"], cell["effort"], cell["mcp_state"])
-        by_key.setdefault(key, {})[cell["harness"]] = result["scores"]["f1"]
-    rows = []
-    for (model, effort, mcp_state), values in sorted(by_key.items()):
-        if "native_cli" in values and "hermes" in values:
-            delta = values["hermes"] - values["native_cli"]
-            rows.append([model, effort, mcp_state, pct(values["native_cli"]), pct(values["hermes"]), f"{delta * 100:+.1f}pp"])
-    return rows or [["n/a", "n/a", "n/a", "n/a", "n/a", "n/a"]]
 
 
 def mcp_impact_rows(results: list[dict[str, Any]]) -> list[list[str]]:
@@ -902,7 +779,7 @@ def print_dry_run(cells: list[Cell]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--families", help="Comma-separated families (default: all)")
-    parser.add_argument("--harnesses", help="Comma-separated harnesses: native_cli,hermes (default: all)")
+    parser.add_argument("--harnesses", help="Comma-separated harnesses: native_cli (default: all)")
     parser.add_argument("--models", help="Comma-separated model ids (default: all supported for selected families)")
     parser.add_argument("--efforts", help="Comma-separated efforts (default: per-model palette)")
     parser.add_argument("--mcp-states", help="Comma-separated MCP states: with_mcp,without_mcp (default: both)")

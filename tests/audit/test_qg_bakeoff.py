@@ -271,9 +271,6 @@ def test_bakeoff_deepseek_route_stays_unregistered_while_live_policy_rejects_dee
     assert all(existing.route_name != route.route_name for existing in llm_reviewer_dispatch.ROUTES)
     with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError):
         llm_reviewer_dispatch.assert_route_allowed(route)
-    hermes_route = qg_bakeoff.bakeoff_route_for_model("hermes/some-model-pin")
-    with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError):
-        llm_reviewer_dispatch.assert_route_allowed(hermes_route)
 
 
 def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() -> None:
