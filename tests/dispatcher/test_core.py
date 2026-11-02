@@ -2560,6 +2560,10 @@ def test_failed_git_call_reports_its_operation_and_a_constant_summary_without_se
                 "fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n") == (
         "dispatcher: CalledProcessError: git fetch exited 128: remote not reachable\n")
     assert fail(["curl", "https://example.com"], "secret") == "dispatcher: CalledProcessError: external command exited 128\n"
+    assert fail(["/usr/bin/git", "fetch"], "fatal: could not read from x") == (
+        "dispatcher: CalledProcessError: git fetch exited 128: remote not reachable\n")
+    assert fail(["git", "--git-dir", "/synthetic/x", "fetch"], "fatal: denied") == (
+        "dispatcher: CalledProcessError: git fetch exited 128: unrecognized git error\n")
     summaries = {text for _pattern, text in cli._GIT_FAILURES} | {cli.UNRECOGNIZED_GIT_FAILURE}
     for command, stderr, leaked in (
         (["git", "fetch"], "remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
