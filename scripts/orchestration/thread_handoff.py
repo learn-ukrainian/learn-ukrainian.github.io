@@ -208,8 +208,11 @@ def argparse_agent_name(value: str) -> str:
 
 CODEX_PROVIDER_AGENT = "codex"
 LANE_SLOT_ENV = "SESSION_HANDOFF_AGENT"
-# Lease commands already receive the exact slot from the SessionStart hook.
-_LANE_SLOT_EXEMPT_COMMANDS = frozenset({"claim-thread-lease", "release-thread-lease", "refresh-thread-lease-heartbeat"})
+# Lease commands already receive the exact slot from the SessionStart hook, and
+# a bundle's agent is an explicit selector of the namespace it belongs to.
+_LANE_SLOT_EXEMPT_COMMANDS = frozenset(
+    {"claim-thread-lease", "release-thread-lease", "refresh-thread-lease-heartbeat", "export-bundle", "import-bundle"}
+)
 
 
 def codex_lane_slot_from_env(environ: Mapping[str, str] | None = None) -> str | None:
@@ -253,9 +256,14 @@ def resolve_rollover_agent(
 
 
 def apply_lane_slot(args: argparse.Namespace) -> None:
-    """Resolve ``args.agent`` through :func:`resolve_rollover_agent` before dispatch."""
+    """Resolve ``args.agent`` through :func:`resolve_rollover_agent` before dispatch.
+
+    An explicit ``--state-file`` already names the packet, so its agent is kept.
+    """
     agent = getattr(args, "agent", None)
     if agent != CODEX_PROVIDER_AGENT or getattr(args, "command", None) in _LANE_SLOT_EXEMPT_COMMANDS:
+        return
+    if getattr(args, "state_file", None):
         return
     try:
         _, state_root = resolve_roots(args.repo_root)
@@ -7306,10 +7314,13 @@ def cmd_detect(args: argparse.Namespace) -> int:
     # packet prepared at or after the lane's newest one still competes, and a
     # packet this thread already resumed is always kept.
     skipped_fallback: list[dict[str, Any]] = []
+    # Codex lanes only: Claude slots keep their existing ambiguity refusal.
     own_prepared = [
         prepared
         for _path, _state, replacement, scan_agent in live_leases
-        if scan_agent == agent and (prepared := parse_iso_datetime(replacement.get("prepared_at"))) is not None
+        if agent.startswith(f"{CODEX_PROVIDER_AGENT}-")
+        and scan_agent == agent
+        and (prepared := parse_iso_datetime(replacement.get("prepared_at"))) is not None
     ]
     if own_prepared:
         newest_own = max(own_prepared)

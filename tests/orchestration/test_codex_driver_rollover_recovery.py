@@ -296,3 +296,33 @@ def test_a_newer_bare_namespace_packet_still_competes_with_the_lane_packet(tmp_p
 
     assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex-core", "--stream", "epic:1001"]) == 2
     assert json.loads(capsys.readouterr().out)["status"] == "ambiguous"
+
+
+def test_a_claude_slot_keeps_its_ambiguity_refusal(tmp_path, monkeypatch, capsys):
+    """Review F1: only Codex lanes let their own packet win over the bare namespace."""
+    _rollover_fixture(monkeypatch)
+    monkeypatch.setattr(th, "utc_now", lambda: datetime(2026, 11, 1, 9, tzinfo=UTC))
+    _prepare(tmp_path, capsys, "claude", "older-bare-predecessor")
+    monkeypatch.setattr(th, "utc_now", lambda: datetime(2026, 11, 2, 9, tzinfo=UTC))
+    _prepare(tmp_path, capsys, "claude-core", "lane-predecessor")
+
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "claude-core", "--stream", "epic:1001"]) == 2
+    assert json.loads(capsys.readouterr().out)["status"] == "ambiguous"
+
+
+@pytest.mark.parametrize(
+    ("argv", "agent"),
+    [
+        (["prepare", "--agent", "codex"], "codex-core"),
+        (["prepare", "--agent", "codex", "--state-file", ".agent/thread-rollovers/codex/lineage-x/lease.json"], "codex"),
+        (["import-bundle", "--agent", "codex", "--file", "legacy.tgz"], "codex"),
+        (["export-bundle", "--agent", "codex"], "codex"),
+        (["claim-thread-lease", "--agent", "codex", "--current-thread-id", "t"], "codex"),
+    ],
+)
+def test_explicit_packet_selectors_keep_their_namespace(tmp_path, monkeypatch, argv, agent):
+    """Review F2: an explicit state file or bundle keeps the namespace it names."""
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-core")
+    args = th.build_parser().parse_args(["--repo-root", str(tmp_path), *argv])
+    th.apply_lane_slot(args)
+    assert args.agent == agent
