@@ -2506,6 +2506,59 @@ def test_stale_local_ref_never_yields_read_only_checkout_at_stale_commit(sandbox
     assert not (sandbox.tasks / "stale-local-ref-short.json").exists()
 
 
+def _published_branch(sandbox, name):
+    """Push ``name`` to origin at a commit that is not the local ``name`` (if any)."""
+    remote_head = run_git(sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m", "remote pr head")
+    run_git(sandbox.repo, "push", "origin", f"{remote_head}:refs/heads/{name}")
+    return remote_head
+
+
+def _write_branch_plan(sandbox, branch, *extra):
+    result = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "takeover", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--branch", branch, "--dry-run", *extra,
+    )
+    assert not sandbox.tasks.exists()
+    return json.loads(result.stdout)
+
+
+def test_write_branch_dry_run_without_local_ref_starts_at_remote_head(sandbox):
+    """Defect (#12468): a write --branch preview rev-parsed a missing local ref and died as CalledProcessError."""
+    remote_head = _published_branch(sandbox, "takeover-no-local")
+    assert not run_git(sandbox.repo, "branch", "--list", "takeover-no-local")
+    assert _write_branch_plan(sandbox, "takeover-no-local")["start_sha"] == remote_head
+    assert not run_git(sandbox.repo, "branch", "--list", "takeover-no-local")
+
+
+def test_write_branch_dry_run_ignores_stale_local_ref(sandbox):
+    """Defect (#12468): a stale local refs/heads/<branch> must never set the start of a takeover."""
+    stale = run_git(sandbox.repo, "rev-parse", "HEAD")
+    run_git(sandbox.repo, "branch", "takeover-stale", stale)
+    remote_head = _published_branch(sandbox, "takeover-stale")
+    assert _write_branch_plan(sandbox, "takeover-stale")["start_sha"] == remote_head
+    assert run_git(sandbox.repo, "rev-parse", "refs/heads/takeover-stale") == stale
+    refused = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "takeover", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--branch", "takeover-missing", "--dry-run", expected=2,
+    )
+    assert "branch_absent_on_remote:" in refused.stderr and "takeover-missing" in refused.stderr
+
+
+def test_failed_git_call_reports_its_operation_and_first_stderr_line_without_secrets(capsys, monkeypatch):
+    """Defect (#12468): a failed git call printed only the exception class name."""
+    error = subprocess.CalledProcessError(
+        128, ["git", "-C", "/home/ops/private", "fetch", "--", "https://user:token@example.com/org/repo.git", "abc"],
+        stderr="fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n",
+    )
+    monkeypatch.setattr(cli, "_dispatch", Mock(side_effect=error))
+    assert cli.main(["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x"]) == 2
+    message = capsys.readouterr().err
+    assert message.startswith("dispatcher: CalledProcessError: git fetch -- ")
+    assert "exited 128: fatal: could not read from" in message
+    assert "second line" not in message
+    assert "token" not in message and "/home/ops/private" not in message
+
+
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")

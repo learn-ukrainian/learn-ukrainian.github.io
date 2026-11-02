@@ -429,7 +429,9 @@ def _dispatch(args) -> int:
     start = args.pinned_head or args.branch or args.base
     publish_remote = None
     exact = False
-    if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
+    if args.mode == "workspace-write" and args.branch and not args.pinned_head:
+        # A dry-run resolves the same start as the real run: worktree_plan would otherwise
+        # rev-parse a local refs/heads/<branch> that may be absent or stale (#12468).
         start, publish_remote = git.publish_start(repo, info, args.branch, task_id)
         exact = True
     elif args.mode == "read-only" and args.branch and not args.pinned_head and not args.cwd:
@@ -533,7 +535,7 @@ def _dispatch(args) -> int:
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
         invocation = runtime_context.build(spec, child_env(spec))
-        plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
+        plan = dict(worktree=str(worktree), start_sha=sha, argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
@@ -652,6 +654,32 @@ def _status_or_fail(args: argparse.Namespace) -> int:
     return 1
 
 
+_URL_USERINFO = re.compile(r"(?<=://)[^/@\s]+@")
+
+
+def _failed_operation(exc: subprocess.CalledProcessError) -> str:
+    """``CalledProcessError: <command> exited <rc>: <first stderr line>``, without secrets (#12468).
+
+    The command drops ``-C <path>`` and ``-c <key=value>`` (a path or a configured value),
+    URL credentials are removed everywhere, and only the first stderr line is kept.
+    """
+    from scripts.orchestration.dispatch_admission import redact_paths
+
+    words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
+    kept, skip = [], False
+    for word in words:
+        if skip:
+            skip = False
+        elif word in {"-C", "-c"}:
+            skip = True
+        else:
+            kept.append(word)
+    stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
+    first = next((line.strip() for line in stderr.splitlines() if line.strip()), "")
+    text = redact_paths(_URL_USERINFO.sub("", f"{' '.join(kept)} exited {exc.returncode}: {first}".rstrip(": ")))
+    return f"CalledProcessError: {text}"
+
+
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
@@ -691,7 +719,12 @@ def main(argv=None) -> int:
         print(str(exc), file=sys.stderr)
         return exc.code
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
-        message = str(exc).splitlines()[0] if isinstance(exc, ValueError) else type(exc).__name__
+        if isinstance(exc, ValueError):
+            message = str(exc).splitlines()[0]
+        elif isinstance(exc, subprocess.CalledProcessError):
+            message = _failed_operation(exc)
+        else:
+            message = type(exc).__name__
         print(f"dispatcher: {message}", file=sys.stderr)
         return 2
 
