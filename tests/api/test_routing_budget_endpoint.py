@@ -1210,6 +1210,28 @@ def test_restart_probes_when_persisted_reading_is_old_or_its_binding_changed(
         subscription_usage_mod._claude_account_probe_started_at = None
 
 
+def test_restart_startup_wait_ends_at_the_cache_ttl_and_counts_validation_time(monkeypatch, tmp_path):
+    """The first probe is never held past the TTL, and time spent validating bindings is not lost."""
+    _persist_account_readings(monkeypatch, tmp_path, age_s=30.0)
+    monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "720")
+    monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "60")
+
+    @contextlib.contextmanager
+    def _binding(_label, *, verified=None):
+        yield claude_account_usage._Binding(Path("/nonexistent"), "acct", verified)
+
+    monkeypatch.setattr(claude_account_usage, "account_binding", _binding)
+    wait_s = subscription_usage_mod._claude_account_startup_wait_s(720.0)
+    assert wait_s is not None
+    assert 25.0 < wait_s <= 30.0  # TTL 60 minus an age of about 30, not the interval's 690
+
+    # Validation that carries a reading to its limit leaves nothing to wait for.
+    real_time = time.time
+    monkeypatch.setattr(claude_account_usage.time, "time", lambda: real_time() + 31.0)
+    assert subscription_usage_mod._claude_account_startup_wait_s(720.0) is None
+    subscription_usage_mod._claude_account_probe_started_at = None
+
+
 def test_restart_probes_when_no_reading_was_persisted(monkeypatch, tmp_path):
     monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
     monkeypatch.setattr(claude_account_usage, "_samples_path", lambda: tmp_path / "claude_account_samples.json")

@@ -3211,7 +3211,8 @@ def _claude_account_startup_wait_s(interval_s: float) -> float | None:
 
     A restart forgets the in-memory probe clock. The persisted readings keep
     their own times, so the clock is rebuilt from the oldest of them: no probe
-    starts until one interval after that reading.
+    starts until one interval after that reading, or when it reaches the cache
+    TTL if that comes first.
     """
     global _claude_account_probe_started_at, _claude_account_startup_pending
     # The per-account module reads this module's CodexBar helpers, so a top-level import is a cycle.
@@ -3219,11 +3220,14 @@ def _claude_account_startup_wait_s(interval_s: float) -> float | None:
 
     try:
         age = restored_probe_age_s()
-        if age is None or age >= interval_s:
+        if age is None:
+            return None
+        wait_s = min(interval_s, _codexbar_cache_ttl_s()) - age
+        if wait_s <= 0:
             return None
         with _claude_account_oneshot_lock:
             _claude_account_probe_started_at = time.monotonic() - age
-        return interval_s - age
+        return wait_s
     except Exception:  # an unreadable file means probe now, as before
         return None
     finally:

@@ -941,15 +941,14 @@ def _persist_sample(label: str, sample: _Sample) -> None:
         _log.warning("claude account sample not persisted", exc_info=True)
 
 
-def _restored_age_s(label: str, entry: Any, now: float, limit_s: float) -> float | None:
-    """Age of a persisted reading, when it is younger than ``limit_s`` and its binding still holds."""
+def _restored_source_at(label: str, entry: Any, now: float, limit_s: float) -> float | None:
+    """Measured time of a persisted reading, when it is younger than ``limit_s`` and its binding still holds."""
     if not isinstance(entry, dict):
         return None
     source_at, generation, credentials = entry.get("source_at"), entry.get("generation"), entry.get("credentials")
     if isinstance(source_at, bool) or not isinstance(source_at, int | float) or not isinstance(generation, str):
         return None
-    age = now - float(source_at)
-    if not 0.0 <= age < limit_s:
+    if not 0.0 <= now - float(source_at) < limit_s:
         return None
     try:
         if credentials is not None and not (
@@ -966,7 +965,7 @@ def _restored_age_s(label: str, entry: Any, now: float, limit_s: float) -> float
         # Unchanged credentials are not put to the provider again; changed ones must be
         # proven the bound account's, as for a probe.
         with account_binding(label, verified=proof) as binding:
-            return age if binding.generation == proof.generation else None
+            return float(source_at) if binding.generation == proof.generation else None
     except Exception:  # an unprovable binding means no reuse, never a startup failure
         return None
 
@@ -975,16 +974,22 @@ def restored_probe_age_s(*, now: float | None = None) -> float | None:
     """Age of the oldest persisted reading, only if every label has one that gates a probe.
 
     A label with no entry, an entry past the cache TTL or the scheduler interval,
-    or a binding that no longer validates gives ``None``: probe. Background only
-    (it validates bindings); never probes, never serves a row.
+    or a binding that no longer validates gives ``None``: probe. The age is read
+    after the bindings were validated, so the time that took is not lost, and it
+    is ``None`` again if validation carried a reading past that limit. Background
+    only (it validates bindings); never probes, never serves a row.
     """
-    moment = time.time() if now is None else now
     limit_s = min(_codexbar_refresh_interval_s(), _codexbar_cache_ttl_s())
     entries = _read_samples(_samples_path())
-    ages = [_restored_age_s(label, entries.get(label), moment, limit_s) for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS]
-    if any(age is None for age in ages):
+    moment = time.time() if now is None else now
+    measured = [
+        _restored_source_at(label, entries.get(label), moment, limit_s) for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS
+    ]
+    if not measured or any(source_at is None for source_at in measured):
         return None
-    return max((age for age in ages if age is not None), default=None)
+    oldest = min(source_at for source_at in measured if source_at is not None)
+    age = (time.time() if now is None else now) - oldest
+    return age if 0.0 <= age < limit_s else None
 
 
 def _refresh_one(label: str, timeout_s: float) -> None:
