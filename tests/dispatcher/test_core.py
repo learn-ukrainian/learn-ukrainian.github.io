@@ -2561,6 +2561,8 @@ def test_failed_git_call_reports_its_operation_and_first_stderr_line_without_sec
     for command, stderr, leaked in (
         (["git", "fetch"], "remote: Authorization: Bearer SYNTHETIC_SECRET", "SYNTHETIC_SECRET"),
         (["git", "fetch"], "remote: API Key: SYNTHETIC_VALUE", "SYNTHETIC_VALUE"),
+        (["git", "fetch"], "remote: " + "a1b2c3d4e5" * 4, "a1b2c3d4e5"),
+        (["git", "fetch", "user:syntheticsecret"], "fatal: denied", "syntheticsecret"),
         (["git", "fetch"], "fatal: Unable to create '/synthetic/private directory/worktree/index.lock': denied", "worktree"),
         (["git", "fetch"], "fatal: cannot open '/synthetic/it's dir/sub/file': denied", "sub"),
         (["git", "worktree", "add", "/synthetic/private directory/worktree"], "fatal: denied", "directory"),

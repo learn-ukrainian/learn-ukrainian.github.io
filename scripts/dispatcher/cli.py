@@ -654,8 +654,8 @@ def _status_or_fail(args: argparse.Namespace) -> int:
     return 1
 
 
-_SAFE_WORD = re.compile(r"[A-Za-z]+|\d+|[0-9a-f]{40}|[0-9a-f]{64}")
-_SAFE_ARG = re.compile(r"--|--?[A-Za-z][A-Za-z0-9-]*|[A-Za-z0-9][A-Za-z0-9._/^{}~:+-]*")
+_SAFE_WORD = re.compile(r"[A-Za-z]+|\d+")
+_SAFE_ARG = re.compile(r"--|--?[A-Za-z][A-Za-z0-9-]*|[A-Za-z0-9][A-Za-z0-9._/^{}~+-]*")
 _CREDENTIAL_WORD = re.compile(r"authoriz|bearer|token|secret|passw|credential|(api|private|access)[\s_-]*key|cookie", re.IGNORECASE)
 
 
