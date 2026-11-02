@@ -59,12 +59,17 @@ def p2_case(monkeypatch, tmp_path, replies=PR_1117, verdicts=("CHANGES_REQUESTED
     monkeypatch.setattr(recorder, "_budget_grant", _REAL_BUDGET_GRANT)
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts_for({"google"}, changed_paths=("docs/readme.md",)))
     monkeypatch.setattr(budget_grant, "_delta_sha256", lambda _root, rejected, candidate: DELTA)
-    monkeypatch.setattr(budget_grant, "_closing_issues", lambda _repository, _number: [12548])
+    monkeypatch.setattr(budget_grant, "_lineage_links", lambda _repository, _number: ([12548], []))
     for index, (text, verdict) in enumerate(zip(replies, verdicts, strict=True), start=1):
         comments.append(verdict_with_reply(str(index) * 40, verdict, text, task_id=f"round-{index}"))
     if request is not None:
         write_grant(tasks, request)
     return tasks, comments, calls
+
+
+def seat(tasks, text, task_id="review-one", **updates):
+    """A finished review run of this lineage, with the run identity the recorder exempts while recording it."""
+    write_task(tasks, task_id=task_id, reply=text, review_mode="cross_family", run_nonce=f"{task_id}-run", **updates)
 
 
 def record(tasks, tmp_path, task_id="review-one"):
@@ -83,7 +88,7 @@ def receipts(tmp_path):
 def test_pr_1117_replay_admits_exactly_one_round_four_and_refuses_a_second(monkeypatch, tmp_path):
     tasks, _comments, calls = p2_case(monkeypatch, tmp_path)
     # Round 4 verifies F3 fixed but, like rounds 1-3, finds a new P2 (F4).
-    write_task(tasks, reply=reply(finding("F4")))
+    seat(tasks, reply(finding("F4")))
     result = record(tasks, tmp_path)
     grant = result["budget_grant"]
     assert result["verdict"] == "CHANGES_REQUESTED" and grant["round_allowance"] == 4
@@ -115,6 +120,9 @@ def p2(**changes):
         ("latest-p2-and-p3", "blocker"),
         ("latest-no-findings", "blocker"),
         ("earlier-p1-unresolved", "blocker"),
+        ("earlier-p1-incidental-closing-word", "blocker"),
+        ("candidate-head-unpublished-seat", "evidence"),
+        ("lineage-spans-prs", "evidence"),
         ("earlier-security-fail", "blocker"),
         ("earlier-blocked", "blocker"),
         ("earlier-edited", "blocker"),
@@ -134,11 +142,13 @@ def test_p2_round_refusals(monkeypatch, tmp_path, case, reason):
         verdicts[2] = "APPROVED"
     replies[2] = {"latest-p1": reply(finding("F3", "P1")), "latest-p2-and-p3": reply(finding("F3"), finding("F4", "P3")),
                   "latest-no-findings": reply()}.get(case, replies[2])
-    if case == "earlier-p1-unresolved":
+    if case in {"earlier-p1-unresolved", "earlier-p1-incidental-closing-word"}:
         replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P1] docs/readme.md:3 two writers race on the lock."
         replies[1] = "VERDICT: REQUEST_CHANGES\nF2 [P2] docs/readme.md:4 the retry path still races."
         # A prose ledger that omits F1 is no resolution (a structured object that omits it would be).
         replies[2] = "VERDICT: REQUEST_CHANGES\nF3 [P2] docs/readme.md:5 the retry path drops the lease."
+    if case == "earlier-p1-incidental-closing-word":  # A description word is not a disposition.
+        replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P1] docs/readme.md:3 The fixed timeout lets any writer keep the lock."
     if case == "earlier-security-fail":
         replies[0] = "VERDICT: REQUEST_CHANGES\nF1 [P2] docs/readme.md:3 race.\nSECURITY_VERDICT: FAIL"
     if case == "earlier-blocked":
@@ -155,6 +165,10 @@ def test_p2_round_refusals(monkeypatch, tmp_path, case, reason):
         # Rule 5: a round-3 rerun whose verdict was never recorded (the author pushed first) earns no credit.
         write_task(tasks, task_id="round-3-rerun", worktree_base_sha=REJECTED_HEAD, reply=PR_1117[2],
                    review_mode="cross_family")
+    if case == "candidate-head-unpublished-seat":
+        seat(tasks, reply(finding("F9", "P1")), task_id="other-seat", worktree_base_sha=SHA)
+    if case == "lineage-spans-prs":
+        monkeypatch.setattr(budget_grant, "_lineage_links", lambda _repository, _number: ([12548], [41]))
     if case == "delta":
         monkeypatch.setattr(budget_grant, "_delta_sha256", lambda *_a: "e" * 64)
     if case == "spent-by-replaced-pr":
@@ -164,7 +178,7 @@ def test_p2_round_refusals(monkeypatch, tmp_path, case, reason):
         from scripts.review.repair_round import _receipt_path
 
         _receipt_path(root, "issue:owner/repo#12548").write_text(json.dumps(held))
-    write_task(tasks, reply=VERIFIED)
+    seat(tasks, VERIFIED)
     refused(tasks, tmp_path, reason)
     assert calls == {"posts": 0, "statuses": 0} and (case == "spent-by-replaced-pr" or not receipts(tmp_path))
 
@@ -172,11 +186,11 @@ def test_p2_round_refusals(monkeypatch, tmp_path, case, reason):
 def test_earlier_p1_with_recorded_resolution_admits(monkeypatch, tmp_path):
     replies = ("VERDICT: REQUEST_CHANGES\nF1 [P1] docs/readme.md:3 two writers race on the lock.",
                "VERDICT: REQUEST_CHANGES\nF1 [P1] fixed with evidence.\n\nF2 [P2] docs/readme.md:4 retry races.",
-               reply(finding("F3")))
+               f"VERDICT: REQUEST_CHANGES\nSCORE: 7/10\n\n```json\n{reply(finding('F3'))}\n```")
     tasks, _comments, _calls = p2_case(monkeypatch, tmp_path, replies)
     approve = json.dumps({"schema_version": "code-review-findings.v1", "findings": [], "overall": {
         "correctness": "correct", "confidence": 0.9, "explanation": f"F3 fixed. P2_FIX_DELTA: {DELTA} VERIFIED"}})
-    write_task(tasks, reply=approve)
+    seat(tasks, approve)
     result = record(tasks, tmp_path)
     assert result["verdict"] == "APPROVED" and result["budget_grant"]["cited_verdict_head"] == REJECTED_HEAD
 
@@ -184,7 +198,7 @@ def test_earlier_p1_with_recorded_resolution_admits(monkeypatch, tmp_path):
 @pytest.mark.parametrize("change", ["reissued-grant", "new-reviewer"])
 def test_failed_verification_spends_the_round(monkeypatch, tmp_path, change):
     tasks, _comments, calls = p2_case(monkeypatch, tmp_path)
-    write_task(tasks, reply=reply(finding("F3")))
+    seat(tasks, reply(finding("F3")))
     assert record(tasks, tmp_path)["verdict"] == "CHANGES_REQUESTED"
     write_grant(tasks, p2(rejected_head=SHA, candidate_head=NEXT), task_id="grant-two")
     move_head(monkeypatch, NEXT)
@@ -200,6 +214,11 @@ def test_failed_verification_spends_the_round(monkeypatch, tmp_path, change):
     assert calls["posts"] == 1
 
 
+def approve(explanation: str, *findings: dict[str, object]) -> str:
+    return json.dumps({"schema_version": "code-review-findings.v1", "findings": list(findings), "overall": {
+        "correctness": "correct", "confidence": 0.9, "explanation": explanation}})
+
+
 @pytest.mark.parametrize(
     "text",
     [
@@ -207,18 +226,34 @@ def test_failed_verification_spends_the_round(monkeypatch, tmp_path, change):
         pytest.param(f"VERDICT: APPROVE\nP2_FIX_DELTA: {DELTA} REFUTED", id="false"),
         pytest.param(f"VERDICT: APPROVE\nP2_FIX_DELTA: {DELTA} VERIFIED\nF3 still open: [P2] still races.", id="false-open"),
         pytest.param(f"VERDICT: APPROVE\nP2_FIX_DELTA: {'e' * 64} VERIFIED", id="mismatched"),
+        pytest.param(approve(f"P2_FIX_DELTA: {DELTA} VERIFIED", finding("F3", "P3")), id="structured-still-listed"),
+        pytest.param(approve("Looks right.", finding("F9", "P3") | {"verbatim": f"P2_FIX_DELTA: {DELTA} VERIFIED"}),
+                     id="token-only-in-quoted-code"),
     ],
 )
 def test_approve_needs_positive_delta_attestation(monkeypatch, tmp_path, text):
     tasks, _comments, calls = p2_case(monkeypatch, tmp_path)
-    write_task(tasks, reply=text)
+    seat(tasks, text)
     with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[verification\]"):
         record(tasks, tmp_path)
-    # Consumed even though the APPROVE was refused; a second seat at the head must attest too.
+    # Consumed although the APPROVE was refused; that refused claim is a rejection, so no other seat approves.
     assert len(receipts(tmp_path)) == 3 and calls["posts"] == 0
-    write_task(tasks, task_id="second-seat", reply=text, model="claude-opus-5-5", agent="claude")
-    with pytest.raises(recorder.RecordError, match=r"verification"):
-        record(tasks, tmp_path, "second-seat")
+    seat(tasks, VERIFIED, task_id="second-seat", model="claude-opus-5-5", agent="claude")
+    refused(tasks, tmp_path, "evidence", "second-seat")
+
+
+@pytest.mark.parametrize("text", ["VERDICT: APPROVE", reply(finding("F3", "P3"))], ids=["approve", "p3-residual"])
+def test_every_seat_at_the_candidate_head_must_attest(monkeypatch, tmp_path, text):
+    tasks, _comments, calls = p2_case(monkeypatch, tmp_path)
+    seat(tasks, VERIFIED)
+    assert record(tasks, tmp_path)["verdict"] == "APPROVED"
+    seat(tasks, text, task_id="second-seat", model="claude-opus-5-5", agent="claude")
+    if text.startswith("VERDICT"):
+        with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[verification\]"):
+            record(tasks, tmp_path, "second-seat")
+    else:  # A P3-only reply keeps its rejection instead of becoming an approval with residuals.
+        assert record(tasks, tmp_path, "second-seat")["p3_downgrade_refused"] == recorder.P3_REPAIR_WITHHELD
+    assert calls["posts"] == 1 + (not text.startswith("VERDICT"))
 
 
 def test_dispatch_spends_the_round_before_the_reviewer_runs(monkeypatch, tmp_path):

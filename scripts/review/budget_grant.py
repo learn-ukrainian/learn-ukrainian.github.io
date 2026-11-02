@@ -63,8 +63,9 @@ P2_ROUND_ALLOWANCE = recorder.DEFAULT_REVIEW_ROUNDS + 1
 P2_RECEIPT_DIR = "review-p2-fix-rounds"
 P2_RECEIPT_SCHEMA = "review-p2-fix-round.v1"
 # The round's reviewer states whether the delta only corrects the named findings, bound to its digest.
-# A structured reply carries it in its explanation, so it is read anywhere in the reply.
+# A structured reply states it in its explanation; a prose reply on its own line.
 P2_DELTA = re.compile(r"\bP2_FIX_DELTA:\s*([0-9a-f]{64})\s+(VERIFIED|REFUTED)\b")
+P2_PROSE_DELTA = re.compile(r"(?m)^\s*P2_FIX_DELTA:\s*([0-9a-f]{64})\s+(VERIFIED|REFUTED)\s*$")
 REQUEST_FIELDS = frozenset(
     {
         "repository",
@@ -442,7 +443,7 @@ def _admit(
         cited = withheld_receipt["cited_verdict_head"]
     elif request["blocker_class"] == P2_FIX:
         withheld_receipt = _p2_fix_round(grant, comments=comments, login=login, task_root=task_root, head=head,
-                                         repo_root=repo_root)
+                                         repo_root=repo_root, recording_run=recording_run)
         cited = withheld_receipt["cited_verdict_head"]
     else:
         cited = open_blocker_cited(comments, login, request["finding_id"])
@@ -644,41 +645,72 @@ def _withheld_round(
     }
 
 
-def _recorded_findings(comment: Mapping[str, Any]) -> tuple[bool, dict[str, list[tuple[str | None, str]]]] | None:
-    """A recorded verdict's findings and their entries; None when its reply is withheld, cut or unreadable.
+# A prose entry resolves its finding only when its disposition follows the id and severity.
+_PROSE_CLOSED = re.compile(r"\s*(?:[-*]\s+)?\**F[1-9][0-9]{0,3}\**\s*(?:\[P[0-3]\]|\(P[0-3]\))?\s*[:\u2014\u2013-]?\s*"
+                           r"\**(?:resolved|fixed|declined|withdrawn|closed|superseded)\b", re.I)
 
-    A structured findings object lists open findings (entry text empty, so open); a prose
-    ledger's entries are read by :func:`finding_is_open`, and an id named outside one refuses.
+
+def _structured_reply(reply: str) -> tuple[dict[str, Any], tuple[Any, ...]] | None:
+    """A structured reply's payload and validated findings (bare, fenced or a VERDICT envelope); None for prose."""
+    from scripts.review.review_contract import parse_reviewer_json
+
+    try:
+        payload = parse_reviewer_json(reply)
+    except recorder.ContractError:
+        return None
+    if payload.get("schema_version") != recorder.REVIEW_SCHEMA_VERSION:
+        return None
+    _, evidence = checked_findings_payload(payload)
+    return payload, tuple(evidence.findings) if evidence is not None else ()
+
+
+def _reply_findings(reply: str) -> tuple[bool, dict[str, list[tuple[str | None, bool]]]] | None:
+    """Each finding a reply names with its entries' severity and openness; None when unreadable.
+
+    A structured object lists open findings. A prose entry is open unless its disposition
+    closes it (:data:`_PROSE_CLOSED`); an id named outside an entry refuses.
     """
+    try:
+        structured = _structured_reply(reply)
+    except (recorder.ContractError, recorder.ReviewPublicationError, ValueError, RecursionError):
+        return None
+    if structured is not None:
+        found: dict[str, list[tuple[str | None, bool]]] = {}
+        for finding in structured[1]:
+            found.setdefault(finding.finding_id, []).append((finding.priority, True))
+        return True, found
+    named = {finding: [(severity, _PROSE_CLOSED.match(text) is None) for severity, text in finding_entries(reply, finding)]
+             for finding in set(re.findall(r"\bF[1-9][0-9]{0,3}\b", reply))}
+    return None if any(not entries for entries in named.values()) else (False, named)
+
+
+def _recorded_findings(comment: Mapping[str, Any]) -> tuple[bool, dict[str, list[tuple[str | None, bool]]]] | None:
+    """A recorded verdict's findings; None when its reply is withheld, cut or unreadable."""
     body = comment.get("body")
     _, opened, rest = body.partition(REPLY_OPENER) if isinstance(body, str) else ("", "", "")
     reply, closed, _ = rest.rpartition(REPLY_CLOSER)
     if not opened or not closed or not reply.strip() or recorder.TRUNCATION_FLAG in reply:
         return None
-    from scripts.review.review_contract import _whole_reply_fence
+    return _reply_findings(reply)
 
+
+_LINKED_PRS = """query($owner: String!, $name: String!, $pr: Int!) { repository(owner: $owner, name: $name) {
+  pullRequest(number: $pr) { closingIssuesReferences(first: 50) { nodes { number
+    closedByPullRequestsReferences(first: 50, includeClosedPrs: true) { nodes { number } } } } } } }"""
+
+
+def _lineage_links(repository: str, number: int) -> tuple[list[int], list[int]]:
+    """The issues this PR closes, and every other PR, open or closed, that closes one of them."""
+    owner, name = normalize_repository(repository).split("/")[-2:]
+    data = recorder._run_json(["gh", "api", "graphql", "-F", f"owner={owner}", "-F", f"name={name}",
+                               "-F", f"pr={number}", "-f", f"query={_LINKED_PRS}"])
     try:
-        payload = json.loads(_whole_reply_fence(reply.strip()), object_pairs_hook=recorder._unique_keys,
-                             parse_constant=recorder._not_json_constant)
-    except (ValueError, RecursionError):
-        payload = None
-    if isinstance(payload, dict):
-        try:
-            _, evidence = checked_findings_payload(payload)
-        except (recorder.ContractError, recorder.ReviewPublicationError):
-            return None
-        found: dict[str, list[tuple[str | None, str]]] = {}
-        for finding in evidence.findings if evidence is not None else ():
-            found.setdefault(finding.finding_id, []).append((finding.priority, ""))
-        return True, found
-    named = {finding: finding_entries(reply, finding) for finding in set(re.findall(r"\bF[1-9][0-9]{0,3}\b", reply))}
-    return None if any(not entries for entries in named.values()) else (False, named)
-
-
-def _closing_issues(repository: str, number: int) -> list[int]:
-    from scripts.review.repair_round import github_reads
-
-    return github_reads(repository, number).closing_issues()
+        issues = data["data"]["repository"]["pullRequest"]["closingIssuesReferences"]["nodes"]
+        return (sorted({issue["number"] for issue in issues}),
+                sorted({pr["number"] for issue in issues for pr in issue["closedByPullRequestsReferences"]["nodes"]}
+                       - {number}))
+    except (KeyError, TypeError) as exc:
+        raise GrantRefused(EVIDENCE, f"PR #{number} lineage links unavailable: {exc!r}") from None
 
 
 def _delta_sha256(repo_root: Path, rejected: str, candidate: str) -> str:
@@ -710,7 +742,7 @@ def _same_p2_round(receipt: Mapping[str, Any], other: Mapping[str, Any]) -> bool
 
 def _p2_fix_round(
     grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, task_root: Path, head: str,
-    repo_root: Path | None,
+    repo_root: Path | None, recording_run: tuple[str, str] | None,
 ) -> dict[str, Any]:
     """Rule 1 against the complete ledger, the sealed binding, and the lineage's single use (#12548)."""
     from scripts.review import review_lineage as lineage
@@ -729,10 +761,10 @@ def _p2_fix_round(
     if (latest["verdict"] != "CHANGES_REQUESTED"
             or lookup_verdict(comments, latest["sha"], login).state != "CHANGES_REQUESTED"):
         raise GrantRefused(BLOCKER, "the latest recorded verdict is not a trusted REJECT")
-    # Each finding's state after every recorded verdict in order: a prose entry decides by its own
-    # words; a structured object lists what stays open, so one it omits is resolved.
+    # Each finding's state after every recorded verdict in order: a prose entry by its stated
+    # disposition; a structured object lists what stays open, so one it omits is resolved.
     state: dict[str, tuple[bool, bool]] = {}
-    found: dict[str, list[tuple[str | None, str]]] = {}
+    found: dict[str, list[tuple[str | None, bool]]] = {}
     for position, marker in markers:
         comment = comments[position]
         read = _recorded_findings(comment)
@@ -746,11 +778,11 @@ def _p2_fix_round(
             state = {finding: (blocking, False) for finding, (blocking, _) in state.items()}
         for finding, entries in found.items():
             blocking = state.get(finding, (False, False))[0] or any(sev in BLOCKING_SEVERITIES for sev, _ in entries)
-            state[finding] = (blocking, finding_is_open(entries[-1][1]))
+            state[finding] = (blocking, entries[-1][1])
     unresolved = sorted(finding for finding, (blocking, still) in state.items() if blocking and still)
     if unresolved:
         raise GrantRefused(BLOCKER, f"{unresolved}: an earlier P0/P1 finding has no recorded resolution")
-    named = {finding: entries for finding, entries in found.items() if finding_is_open(entries[-1][1])}
+    named = {finding: entries for finding, entries in found.items() if entries[-1][1]}
     if not named or any(severity != "P2" for entries in named.values() for severity, _ in entries):
         raise GrantRefused(BLOCKER, "the latest rejection does not leave a nonempty set of findings, all P2")
     if sorted(named) != p2["finding_ids"]:
@@ -763,7 +795,8 @@ def _p2_fix_round(
     except lineage.LineageRefused as exc:
         raise GrantRefused(EVIDENCE, exc.detail) from None
     for run in runs:
-        if run.record.get("worktree_base_sha") == head or run.record.get("mode") == "workspace-write":
+        # Only the run being recorded is exempt; another seat at the candidate head must be published first.
+        if (run.task_id, run.record.get("run_nonce")) == recording_run or run.record.get("mode") == "workspace-write":
             continue
         status = run.record.get("status")
         if (status not in lineage.TERMINAL_TASK_STATUSES or run.reply is None
@@ -772,12 +805,15 @@ def _p2_fix_round(
             raise GrantRefused(EVIDENCE, f"{run.task_id}: an unknown or unpublished review obstruction")
     if repo_root is None:
         raise GrantRefused(EVIDENCE, "no checkout to compute the fix delta")
+    issues, others = _lineage_links(request["repository"], request["pr"])
+    if others:
+        # Earlier PRs' ledgers are not read here, so a lineage that spans PRs is never admitted.
+        raise GrantRefused(EVIDENCE, f"the work lineage spans PRs {others}; escalate to the CTO")
     try:
         delta = _delta_sha256(repo_root, p2["rejected_head"], head)
-        keys = lineage_keys(request["repository"], request["pr"], request["lineage_id"],
-                            _closing_issues(request["repository"], request["pr"]))
     except RepairRefused as exc:
         raise GrantRefused(EVIDENCE, exc.detail) from None
+    keys = lineage_keys(request["repository"], request["pr"], request["lineage_id"], issues)
     if delta != p2["delta_sha256"]:
         raise GrantRefused(BINDING, f"the delta {p2['rejected_head'][:12]}..{head[:12]} hashes to {delta}")
     round_ = {
@@ -829,15 +865,23 @@ def p2_round_at(task_root: Path, *, repository: str, number: int, branch: str, h
 
 
 def require_p2_verified(reply: str, round_: Mapping[str, Any]) -> None:
-    """An APPROVE in the p2 round carries one positive delta attestation bound to the sealed digest."""
-    claims = P2_DELTA.findall(reply)
+    """An APPROVE in the p2 round carries the reviewer's positive delta attestation, bound to the sealed digest.
+
+    A structured reply states it in ``overall.explanation`` and lists no sealed finding; a prose
+    reply states it on its own line and leaves no sealed finding open.
+    """
+    read = _reply_findings(reply)
+    structured = _structured_reply(reply) if read is not None and read[0] else None
+    declaration = str(structured[0]["overall"].get("explanation")) if structured else ""
+    claims = P2_DELTA.findall(declaration) if structured else P2_PROSE_DELTA.findall(reply)
     still_open = [finding for finding in round_["finding_ids"]
-                  if (entries := finding_entries(reply, finding)) and finding_is_open(entries[-1][1])]
+                  if read is None or any(is_open for _, is_open in read[1].get(finding, [])[-1:])]
     if claims != [(round_["delta_sha256"], "VERIFIED")] or still_open:
         raise GrantRefused(
             VERIFICATION,
-            f"an APPROVE in the p2 fix round needs exactly one `P2_FIX_DELTA: {round_['delta_sha256']} VERIFIED`, "
-            "the reviewer's statement that the delta only corrects the named findings, and none of them still open",
+            f"an APPROVE in the p2 fix round needs exactly one `P2_FIX_DELTA: {round_['delta_sha256']} VERIFIED` "
+            "(a structured reply's explanation, or its own prose line), the reviewer's statement that the delta "
+            "only corrects the named findings, and none of them still open",
         )
 
 
