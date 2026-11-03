@@ -981,7 +981,7 @@ def test_pr_importing_tests_fill_only_to_the_fill_budget(
     _git(repo, *ident, 'commit', '-qm', 'change')
     candidate = _git(repo, 'rev-parse', 'HEAD')
     monkeypatch.chdir(repo)
-    monkeypatch.setattr(affected, 'importing_tests', lambda *_: importers)
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: (importers, []))
     selected = affected.plan(base, candidate)
     # 65 s + two importers = 265 s fits the 332.5 s fill limit (half the room under
     # the cap); a third would reach 365 s.
@@ -990,6 +990,36 @@ def test_pr_importing_tests_fill_only_to_the_fill_budget(
     assert selected['estimate_seconds'] == 265
     assert selected['reason'] == 'recorded estimate exceeds 600 second cap'
     assert affected.CAP_SECONDS == 600
+
+
+def test_pr_conftest_import_edges_select_the_tests_under_its_directory(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: a conftest's import edges are invisible to the selector.
+
+    Code a conftest imports is run by every test file under that conftest's directory, so a change
+    to it selects those tests, and only those: not a sibling directory sharing a name prefix, and
+    not tests under a conftest that imports other code.
+    """
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    sources = {
+        'scripts/x.py': b'X = 1\n',
+        'scripts/y.py': b'Y = 1\n',
+        'tests/sub/conftest.py': b'from scripts import x\n',
+        'tests/sub/test_a.py': b'def test_a():\n    pass\n',
+        'tests/sub/deep/test_b.py': b'def test_b():\n    pass\n',
+        'tests/sub/test_direct.py': b'from scripts import x\n',
+        'tests/sub2/test_c.py': b'def test_c():\n    pass\n',
+        'tests/other/conftest.py': b'from scripts import y\n',
+        'tests/other/test_d.py': b'def test_d():\n    pass\n',
+    }
+    monkeypatch.setattr(components, 'python_sources', lambda: sources)
+    monkeypatch.setattr(components, 'tracked_paths', lambda: list(sources))
+    entries = {name: '100644' for name in sources}
+    direct, shared = affected.importing_tests({'scripts/x.py'}, set(), 'unused', entries)
+    assert direct == ['tests/sub/test_direct.py']
+    assert shared == ['tests/sub/deep/test_b.py', 'tests/sub/test_a.py']
+    assert affected.importing_tests({'scripts/unrelated.py'}, set(), 'unused', entries) == ([], [])
 
 
 def test_pr_provider_module_change_selects_the_registry_driven_dispatcher_test(
@@ -1020,14 +1050,14 @@ def test_pr_provider_module_change_selects_the_registry_driven_dispatcher_test(
     _git(repo, *ident, 'commit', '-qm', 'change a provider')
     candidate = _git(repo, 'rev-parse', 'HEAD')
     monkeypatch.chdir(repo)
-    monkeypatch.setattr(affected, 'importing_tests', lambda *_: [heavy])
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: ([heavy], []))
     selected = affected.plan(base, candidate)
     assert selected['run_files'] == [pinned]
     assert selected['deferred_files'] == [heavy]
     assert selected['unknown_duration_files'] == []
     assert not selected['guards_exceed_safe_budget']
     # Whole-file selection subsumes the pinned id.
-    monkeypatch.setattr(affected, 'importing_tests', lambda *_: [])
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: ([], []))
     monkeypatch.setattr(affected, 'CAP_SECONDS', 5000)
     monkeypatch.setattr(affected, 'SAFE_SECONDS', 5000)
     (repo / heavy).write_text((repo / heavy).read_text() + '# touched\n')
@@ -1117,7 +1147,7 @@ def test_pr_selection_estimated_just_under_the_timeout_is_deferred_not_run_to_th
     _git(repo, *ident, 'commit', '-qm', 'module')
     module_candidate = _git(repo, 'rev-parse', 'HEAD')
     reached: list[bool] = []
-    monkeypatch.setattr(affected, 'importing_tests', lambda *_: reached.append(True) or [heavy])
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: reached.append(True) or ([heavy], []))
     (repo / affected.DURATIONS).write_text(json.dumps({guard: 200, heavy: 150, light: 10}))
     imported = affected.plan(candidate, module_candidate)
     assert reached and imported['importing_test_files'] == [heavy]
