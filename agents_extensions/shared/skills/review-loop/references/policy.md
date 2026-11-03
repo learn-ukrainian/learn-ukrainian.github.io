@@ -163,8 +163,11 @@ When the reviewer stopped only because a capability it needed was missing, the C
 capability failure for the run instead of a verdict
 (`scripts/review/capability_failure.py`):
 
+Resolve `PRIMARY_REPO` and `PY` as in the [review-loop setup](../SKILL.md#review-loop).
+Use the primary recorder so the caller's branch age cannot select its rules.
+
 ```bash
-"$PY" scripts/review/record_cf_verdict.py capability-failure --task-id "$REVIEW_TASK" --pr "$PR" \
+"$PY" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py" capability-failure --task-id "$REVIEW_TASK" --pr "$PR" \
   --capability <sources-mcp|test-execution|shell|browser|checkout-data> --authority claude-cto
 ```
 
