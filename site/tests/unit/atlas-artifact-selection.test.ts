@@ -15,6 +15,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import {
   AtlasArtifactSelectionError,
   PINNED_SELECTION_ENV,
+  PINNED_ARTIFACT_DIRNAME,
+  PINNED_SHARDS_SIDECAR,
   PINNED_SOURCE_MARKER,
   SELECTED_ARTIFACT_NAMES,
   assertSelectedArtifactsComplete,
@@ -75,6 +77,8 @@ function makeSite(options: { pinned: boolean }): { root: string; env: NodeJS.Pro
     }
     write(join(root, '.atlas-pinned/public/lexicon/browse/А.json'), '"PINNED А"');
     write(join(root, '.atlas-pinned/data', PINNED_SOURCE_MARKER), sourceMarker(treeA));
+    // The Node step that derived public/lexicon/search from this set records the marker it used.
+    write(join(root, PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR), sourceMarker(treeA));
   }
   return { root, env: { [PINNED_SELECTION_ENV]: treeA } as NodeJS.ProcessEnv };
 }
@@ -138,6 +142,19 @@ describe('shared Atlas artifact selection (#12527)', () => {
     // An interrupted generation leaves no marker.
     rmSync(join(root, '.atlas-pinned/data', PINNED_SOURCE_MARKER));
     expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/has no pinned-source\.json/);
+  });
+
+  it('rejects pinned data whose derived search shards came from another set or from the committed copy', () => {
+    const { root, env } = makeSite({ pinned: true });
+    const sidecar = join(root, PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
+    expect(() => assertSelectedArtifactsComplete(root, env)).not.toThrow();
+
+    // The sidecar belongs to a different generation of the set.
+    write(sidecar, sourceMarker(makeRuntimeTree(root, 'B')));
+    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/public\/lexicon\/search was not derived/);
+    // No sidecar at all: the shards were never derived from the pinned set.
+    rmSync(sidecar);
+    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/public\/lexicon\/search was not derived/);
   });
 
   it('installs only the pinned browse shards into dist and leaves committed files untouched', () => {
@@ -219,5 +236,20 @@ describe('shared Atlas artifact selection (#12527)', () => {
     }
     expect(readdirSync(join(site, 'public/lexicon/search'))).toEqual(['pinned.json']);
     expect(readFileSync(join(site, 'public/lexicon/search/pinned.json'), 'utf8')).toContain('"pinned"');
+
+    // The pinned hydrate ties the shards to the marker; a committed-selection hydrate drops the tie,
+    // so a later pinned gate refuses shards derived from the committed copy.
+    const sidecar = join(site, PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
+    const marker = readFileSync(join(site, '.atlas-pinned/data', PINNED_SOURCE_MARKER));
+    expect(readFileSync(sidecar).equals(marker)).toBe(true);
+    delete process.env[PINNED_SELECTION_ENV];
+    try {
+      writeSearchShardFiles(site);
+    } finally {
+      if (previous !== undefined) process.env[PINNED_SELECTION_ENV] = previous;
+    }
+    expect(readdirSync(join(site, 'public/lexicon/search'))).toEqual(['committed.json']);
+    expect(existsSync(sidecar)).toBe(false);
+    expect(() => assertSelectedArtifactsComplete(site, PINNED_ENV)).toThrow(/was not derived/);
   });
 });

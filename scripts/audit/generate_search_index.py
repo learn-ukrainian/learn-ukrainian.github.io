@@ -1195,6 +1195,35 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
     args.browse_flagged_out = resolve_output_path(args.browse_flagged_out, DEFAULT_BROWSE_FLAGGED_OUT, pinned=pinned)
     args.browse_dir = resolve_output_path(args.browse_dir, DEFAULT_BROWSE_DIR, pinned=pinned)
 
+    # The canonical marker certifies the whole canonical pinned set. Any run that writes a
+    # canonical pinned path (pinned or not, with an explicit override) drops it first, and only
+    # a pinned run that regenerates every canonical output together publishes it again.
+    canonical_paths = [
+        resolve_output_path(None, default, pinned=True).resolve()
+        for default in (
+            DEFAULT_SEARCH_OUT,
+            DEFAULT_SEARCH_ALIASES_OUT,
+            DEFAULT_SEARCH_SHARDS_OUT,
+            DEFAULT_BROWSE_META_OUT,
+            DEFAULT_BROWSE_FLAGGED_OUT,
+            DEFAULT_BROWSE_DIR,
+        )
+    ]
+    written_paths = [
+        path.resolve()
+        for path in (
+            args.out,
+            args.aliases_out,
+            args.search_shards_out,
+            args.browse_meta_out,
+            args.browse_flagged_out,
+            args.browse_dir,
+        )
+    ]
+    canonical_marker = PINNED_DATA_DIR / PINNED_SOURCE_MARKER
+    if any(path in canonical_paths for path in written_paths):
+        canonical_marker.unlink(missing_ok=True)
+
     if args.runtime_tree is not None:
         # The vendor reader owns runtime membership and the public display
         # projection. Import lazily so unpinned DB/manifest execution stays small.
@@ -1202,34 +1231,6 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
             sys.path.insert(0, str(PROJECT_ROOT))
         from scripts.deploy.vendor_atlas_tree import build_pinned_search
 
-        # The canonical marker certifies the whole canonical set. It goes before any canonical
-        # output is rewritten (an interrupted or partial run must read as stale) and returns
-        # only when every canonical output was regenerated together by this run.
-        canonical_paths = [
-            resolve_output_path(None, default, pinned=True).resolve()
-            for default in (
-                DEFAULT_SEARCH_OUT,
-                DEFAULT_SEARCH_ALIASES_OUT,
-                DEFAULT_SEARCH_SHARDS_OUT,
-                DEFAULT_BROWSE_META_OUT,
-                DEFAULT_BROWSE_FLAGGED_OUT,
-                DEFAULT_BROWSE_DIR,
-            )
-        ]
-        written_paths = [
-            path.resolve()
-            for path in (
-                args.out,
-                args.aliases_out,
-                args.search_shards_out,
-                args.browse_meta_out,
-                args.browse_flagged_out,
-                args.browse_dir,
-            )
-        ]
-        canonical_marker = PINNED_DATA_DIR / PINNED_SOURCE_MARKER
-        if any(path in canonical_paths for path in written_paths):
-            canonical_marker.unlink(missing_ok=True)
         rows, aliases, parity = build_pinned_search(args.runtime_tree)
         meta, browse_shards, flagged_rows = build_browse_outputs(rows)
         search_shards, search_shard_rows = build_search_shards(rows)

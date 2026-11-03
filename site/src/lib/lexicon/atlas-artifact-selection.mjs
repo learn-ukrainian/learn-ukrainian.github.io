@@ -22,7 +22,7 @@
  * directory, as the other runtime readers already assume).
  */
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
 export const PINNED_SELECTION_ENV = 'ATLAS_SEARCH_RUNTIME_TREE';
@@ -34,6 +34,11 @@ export const PINNED_ARTIFACT_DIRNAME = '.atlas-pinned';
  * generation leaves no marker).
  */
 export const PINNED_SOURCE_MARKER = 'pinned-source.json';
+/**
+ * Written into `.atlas-pinned/` by the Node hydrate step that derives `public/lexicon/search/*.json`
+ * from the selected set: a copy of the marker those shards came from. The unpinned run deletes it.
+ */
+export const PINNED_SHARDS_SIDECAR = 'search-shards-source.json';
 /** The generated JSON files whose location depends on the selection. */
 export const SELECTED_ARTIFACT_NAMES = Object.freeze([
   'lexicon-search-index.json',
@@ -192,7 +197,8 @@ export function assertSelectedArtifactsComplete(siteRoot, env = process.env) {
       `the pinned set in ${dataDir} has no ${PINNED_SOURCE_MARKER}; regenerate it with the pinned hydrate`,
     );
   }
-  const marker = JSON.parse(readFileSync(markerPath, 'utf8'));
+  const markerBytes = readFileSync(markerPath);
+  const marker = JSON.parse(markerBytes.toString('utf8'));
   const selected = readRuntimeTreeIdentity(/** @type {string} */ (env[PINNED_SELECTION_ENV]).trim());
   if (
     marker.dataVersion !== selected.dataVersion ||
@@ -203,6 +209,38 @@ export function assertSelectedArtifactsComplete(siteRoot, env = process.env) {
         ` but ${PINNED_SELECTION_ENV} selects ${selected.dataVersion} (${selected.runtimeManifestSha256})`,
     );
   }
+  // public/lexicon/search/*.json is derived from the selected set by a separate step; it must
+  // have been derived from this exact set (a committed-selection hydrate removes the record).
+  const sidecar = join(resolve(siteRoot), PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
+  if (!existsSync(sidecar) || !readFileSync(sidecar).equals(markerBytes)) {
+    throw new AtlasArtifactSelectionError(
+      `public/lexicon/search was not derived from the pinned set in ${dataDir};` +
+        ' run hydrate-lexicon-api-shards.ts with the pinned selection',
+    );
+  }
+}
+
+/**
+ * Record, after the search shards under `public/lexicon/search` were derived from the selected
+ * set, which pinned set they came from. The committed selection removes the record, so shards
+ * derived from the committed copy never pass the pinned gate.
+ * @param {string} siteRoot
+ * @param {NodeJS.ProcessEnv} [env]
+ */
+export function recordDerivedSearchShards(siteRoot, env = process.env) {
+  const sidecar = join(resolve(siteRoot), PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
+  if (!isPinnedSelection(env)) {
+    rmSync(sidecar, { force: true });
+    return;
+  }
+  const markerPath = join(resolveSelectedArtifactLocations(siteRoot, env).dataDir, PINNED_SOURCE_MARKER);
+  if (!existsSync(markerPath)) {
+    throw new AtlasArtifactSelectionError(
+      `${PINNED_SELECTION_ENV} is set but ${markerPath} is missing; regenerate the pinned set before deriving search shards`,
+    );
+  }
+  mkdirSync(dirname(sidecar), { recursive: true });
+  writeFileSync(sidecar, readFileSync(markerPath));
 }
 
 /**

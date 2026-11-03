@@ -23,6 +23,8 @@ import {
   type BuildRoots,
 } from '../helpers/ci-build-artifact';
 import {
+  PINNED_ARTIFACT_DIRNAME,
+  PINNED_SHARDS_SIDECAR,
   PINNED_SOURCE_MARKER,
   SELECTED_ARTIFACT_NAMES,
   readRuntimeTreeIdentity,
@@ -87,7 +89,9 @@ function makePinnedSet(fixture: BuildRoots, tag: string): { tree: string; pinned
   );
   writeFileSync(join(browseDir, 'А.json'), '[]\n');
   const { dataVersion, runtimeManifestSha256 } = readRuntimeTreeIdentity(tree);
-  writeFileSync(join(dataDir, PINNED_SOURCE_MARKER), JSON.stringify({ dataVersion, runtimeManifestSha256 }));
+  const marker = JSON.stringify({ dataVersion, runtimeManifestSha256 });
+  writeFileSync(join(dataDir, PINNED_SOURCE_MARKER), marker);
+  writeFileSync(join(fixture.siteDir, PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR), marker);
   return { tree, pinnedFile: join(dataDir, 'lexicon-search-index.json') };
 }
 

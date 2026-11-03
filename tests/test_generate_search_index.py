@@ -943,6 +943,14 @@ def test_pinned_run_writes_the_ignored_build_dir_and_never_the_committed_snapsho
     assert json.loads((pinned_data / gsi.PINNED_SOURCE_MARKER).read_bytes())["dataVersion"] == "atlas-v1-other"
     assert main(["--runtime-tree", str(tmp_path / "tree"), "--out", str(tmp_path / "custom/search.json")]) == 0
     assert not (pinned_data / gsi.PINNED_SOURCE_MARKER).exists()
+    # An unpinned (legacy manifest) run that writes a canonical pinned path drops the marker too.
+    assert main(["--runtime-tree", str(tmp_path / "tree")]) == 0
+    assert (pinned_data / gsi.PINNED_SOURCE_MARKER).is_file()
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    monkeypatch.delenv("ATLAS_SEARCH_RUNTIME_TREE", raising=False)
+    assert main(["--manifest", str(manifest), "--out", str(pinned_data / "lexicon-search-index.json")]) == 0
+    assert not (pinned_data / gsi.PINNED_SOURCE_MARKER).exists()
     # The ignored directory name is shared with the site reader's selection module.
     selection = (PROJECT_ROOT / "site/src/lib/lexicon/atlas-artifact-selection.mjs").read_text(encoding="utf-8")
     declared = re.search(r"PINNED_ARTIFACT_DIRNAME = '([^']+)'", selection)

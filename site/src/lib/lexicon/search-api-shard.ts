@@ -1,6 +1,6 @@
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { readSelectedArtifactJson } from "./atlas-artifact-selection.mjs";
+import { readSelectedArtifactJson, recordDerivedSearchShards } from "./atlas-artifact-selection.mjs";
 import {
   buildSearchRowsByShard,
   type SearchRow,
@@ -43,6 +43,8 @@ export function writeSearchShardFiles(siteRoot: string): number {
       "utf8",
     );
   }
+  // Tie these shards to the artifact set they were derived from (or drop the tie when committed).
+  recordDerivedSearchShards(siteRoot);
   return rowsByShard.size;
 }
 
