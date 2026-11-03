@@ -272,9 +272,13 @@ def seed_manifest_inventory(
     )
 
 
-def _registry_snapshot_for_response(store: SessionStreamStore) -> str | None:
+def _registry_snapshot_marker() -> str | None:
     with _REGISTRY_HEALTH_LOCK:
-        marker = _REGISTRY_SNAPSHOT_SHA256
+        return _REGISTRY_SNAPSHOT_SHA256
+
+
+def _registry_snapshot_for_response(store: SessionStreamStore) -> str | None:
+    marker = _registry_snapshot_marker()
     if marker is not None:
         return marker
     try:
@@ -478,11 +482,14 @@ def _response_host(value: Any) -> str | None:
 
 
 def _stream_response(store: SessionStreamStore, stream_id: str, limit: int) -> dict[str, Any]:
-    # One read snapshot for every part of the status (#12627).
+    # One read snapshot for every part of the status (#12627). Without the
+    # seeded marker, the store resolves the newest receipt inside that snapshot.
+    marker = _registry_snapshot_marker()
     status = store.load_remote_epic_status(
         stream_id,
         limit=limit,
-        snapshot_sha256=_registry_snapshot_for_response(store),
+        snapshot_sha256=marker,
+        latest_snapshot_fallback=marker is None,
     )
     row = status["projection"].get("lease")
     now = utc_now()

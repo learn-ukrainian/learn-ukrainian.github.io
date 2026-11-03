@@ -2360,19 +2360,28 @@ class SessionStreamStore:
         *,
         limit: int,
         snapshot_sha256: str | None,
+        latest_snapshot_fallback: bool = False,
     ) -> dict[str, Any]:
         """One read snapshot for one epic's status: projection, registry, digest.
 
         The status read used to open a fresh connection for each part, and
         every connection repeats its setup statements. Each statement hands
         the GIL back, so under CPU-bound work in the API process the status
-        read stalled for seconds (#12627). The parts are unchanged.
+        read stalled for seconds (#12627). The parts are unchanged. With
+        ``latest_snapshot_fallback`` the registry snapshot is the newest
+        inventory receipt's, read after the stream is known to exist.
         """
         stream_id = _validate_remote_epic_stream(stream_id)
         _validate_digest_limit(limit)
         with self._read_snapshot() as connection:
+            projection = self._remote_stream_projection_in(connection, stream_id)
+            if latest_snapshot_fallback:
+                try:
+                    snapshot_sha256 = self._latest_inventory_source_sha_in(connection)
+                except sqlite3.Error:
+                    snapshot_sha256 = None
             return {
-                "projection": self._remote_stream_projection_in(connection, stream_id),
+                "projection": projection,
                 "registry": self._remote_registry_projection_in(connection, stream_id, snapshot_sha256),
                 "digest": self._remote_digest_in(connection, stream_id, limit),
             }
@@ -2532,10 +2541,14 @@ class SessionStreamStore:
     def latest_inventory_source_sha(self) -> str | None:
         """Return the source hash from the newest append-only inventory receipt."""
         with self._read_snapshot() as connection:
-            row = connection.execute(
-                "SELECT source_sha256 FROM stream_inventory_receipts ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1"
-            ).fetchone()
-            return None if row is None else str(row["source_sha256"])
+            return self._latest_inventory_source_sha_in(connection)
+
+    @staticmethod
+    def _latest_inventory_source_sha_in(connection: sqlite3.Connection) -> str | None:
+        row = connection.execute(
+            "SELECT source_sha256 FROM stream_inventory_receipts ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1"
+        ).fetchone()
+        return None if row is None else str(row["source_sha256"])
 
     def inventory_modes(self, stream_ids: set[str]) -> dict[str, str]:
         """Read migration modes without opening a write transaction."""
