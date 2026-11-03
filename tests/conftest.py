@@ -131,25 +131,47 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
         yield log_dir
 
 
-@pytest.fixture(autouse=True)
-def no_free_disk_floor(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+_GUARD_FREE_DISK_TEST = "test_snapshot_stops_when_free_disk_falls_below_the_floor"
+_guard_reads_production_free_disk = False
+
+
+@pytest.fixture(scope="session", autouse=True)
+def no_free_disk_floor() -> Generator[None, None, None]:
     """Keep evidence ``Sources`` snapshots off the runner's free disk (#12640).
 
     One fixture replaces the copies under ``tests/build`` and
-    ``tests/curriculum/evidence``. The floor environment is what a subprocess
+    ``tests/curriculum/evidence``. Session scope runs it before module-scoped
+    fixtures that open a snapshot. The floor environment is what a subprocess
     inherits. Replacing ``free_disk_bytes`` keeps an in-process ``_guard`` off
-    ``shutil.disk_usage``. The guard's own test passes an explicit floor and
-    still calls the production reading.
+    ``shutil.disk_usage``. The guard's own test still calls the production
+    reading for the duration of its body.
     """
     from scripts.curriculum.evidence import config
     from scripts.curriculum.evidence.sources import Sources
 
-    monkeypatch.setenv(config.FREE_DISK_FLOOR_ENV, "0")
-    if getattr(request.node, "originalname", request.node.name) == (
-        "test_snapshot_stops_when_free_disk_falls_below_the_floor"
-    ):
-        return
-    monkeypatch.setattr(Sources, "free_disk_bytes", lambda self: config.FREE_DISK_FLOOR_BYTES)
+    real = Sources.free_disk_bytes
+
+    def free_disk_bytes(self: Sources) -> int:
+        if _guard_reads_production_free_disk:
+            return real(self)
+        return config.FREE_DISK_FLOOR_BYTES
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setenv(config.FREE_DISK_FLOOR_ENV, "0")
+        patch.setattr(Sources, "free_disk_bytes", free_disk_bytes)
+        yield
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_call(item: pytest.Item) -> Generator[None, object, object]:
+    """Let the free-disk guard test call the production reading (#12640)."""
+    global _guard_reads_production_free_disk
+    name = getattr(item, "originalname", item.name)
+    _guard_reads_production_free_disk = name == _GUARD_FREE_DISK_TEST
+    try:
+        return (yield)
+    finally:
+        _guard_reads_production_free_disk = False
 
 
 @pytest.fixture(scope="session", autouse=True)
