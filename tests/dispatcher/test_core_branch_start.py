@@ -290,6 +290,41 @@ def test_workspace_write_sha_base_is_refused_at_dispatch(sandbox):
     assert not (sandbox.repo / ".worktrees/dispatch/codex/sha-base-write").exists()
 
 
+def test_workspace_write_base_equal_to_branch_is_refused_at_dispatch(sandbox):
+    """A publish branch used as its own base is refused before a task or worktree exists (#12667)."""
+    branch = "codex/existing-pr"
+    remote_head = _published_branch(sandbox, branch)
+    refused = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "takeover",
+        "--task-id", "base-equals-branch", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--base", f"origin/{branch}", "--branch", branch,
+        expected=2,
+    )
+    assert "workspace_write_base_equals_branch:" in refused.stderr
+    assert "--base origin/main --branch <PR head branch>" in refused.stderr
+    assert "with the PR's files as owned paths" in refused.stderr
+    assert not (sandbox.tasks / "base-equals-branch.json").exists()
+    assert not (sandbox.repo / ".worktrees/dispatch/codex/base-equals-branch").exists()
+    # refs/remotes/origin/<branch> is the same base, and it is refused the same way.
+    prefixed = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "takeover",
+        "--task-id", "base-equals-branch-prefixed", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--base", f"refs/remotes/origin/{branch}", "--branch", branch,
+        expected=2,
+    )
+    assert "workspace_write_base_equals_branch:" in prefixed.stderr
+    assert not (sandbox.tasks / "base-equals-branch-prefixed.json").exists()
+    # The allowed form still dispatches: origin/main with a different publish branch.
+    allowed = sandbox.settle(sandbox.dispatch(
+        "pushed", "--task-id", "base-is-main", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--base", "origin/main", "--branch", branch,
+    ))
+    assert (allowed["status"], allowed["error"]) == ("done", None)
+    assert allowed["worktree_base_ref"] == "origin/main"
+    assert allowed["publish_branch"] == branch
+    assert allowed["worktree_start_sha"] == remote_head
+
+
 def test_read_only_sha_base_is_still_admitted(sandbox):
     """Read-only reviews keep a commit SHA as --base; settlement does not verify it."""
     sha = run_git(sandbox.repo, "rev-parse", "HEAD")

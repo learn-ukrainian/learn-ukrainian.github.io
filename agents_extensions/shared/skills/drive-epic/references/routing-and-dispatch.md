@@ -127,7 +127,7 @@ split-or-justify rule in [workflow.md § Merge policy](../../../rules/workflow.m
 ```
 
 A takeover or any worker pushing to an existing PR branch is dispatched with `--branch <PR head branch>`.
-A workspace-write dispatch uses `--base origin/main` with that branch, and the PR's files as owned paths. Any other `--base`, including a commit SHA, is refused at dispatch by the same origin-base rule settlement uses. Read-only dispatches still accept a SHA base.
+A workspace-write dispatch uses `--base origin/main` with that branch, and the PR's files as owned paths. A `--base` that settlement cannot verify, including a commit SHA, is refused at dispatch by the origin-base rule settlement uses. A `--base` whose branch equals `--branch` is refused at dispatch too, because settlement requires those refs to differ. Read-only dispatches still accept a SHA base.
 
 If frozen inputs require creating a tree before dispatch, use
 `scripts.dispatcher.git.create_worktree`, with `creator_actor` naming the driver.
