@@ -7,6 +7,17 @@ driver. It opens the fenced lease before a harness starts, then emits the
 read-only bootstrap capsule. A harness or model must never open, renew, close,
 or recover its own lease.
 
+## Codex context guard
+
+The driver-lane context guard counts top-level `compacted` events in the rollout
+held open by the pane's Codex agent process. It checks the process PID and start
+time before and after the read. Context-percent changes do not contribute to
+the count. A session at or past the configured `codex_max_compactions` receives
+`HANDOFF NOW` on the next tick, unless the pane shows `Compacting context` or
+the existing human-activity guard defers input. An unreadable, incomplete or
+unidentifiable rollout logs the count as unknown and sends no handoff that tick.
+The Claude rule and the configured thresholds are unchanged.
+
 ## Launcher contract
 
 Claude CTO supervisory successors enter the existing `lu-start-cto --here`

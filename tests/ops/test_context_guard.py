@@ -152,6 +152,12 @@ class Harness:
         self.sent: list[tuple[str, str]] = []
         self.posted: dict[str, str] = {}  # sender -> created_at of a HANDOFF-DONE post
         self.state: dict = {}
+        self.proc_root = tmp_path / "proc"
+        self.rollouts = tmp_path / "rollouts"
+        self.rollouts.mkdir(exist_ok=True)
+        for session, pane in panes.items():
+            if pane.agent == "codex":
+                self.compactions(session, 0)
         self.guard = cg.Guard(
             registry=load_registry(),
             repo_root=tmp_path / "repo",
@@ -166,6 +172,7 @@ class Harness:
             handoff_posted=lambda sender, since: sender in self.posted and self.posted[sender] >= since,
             now=lambda: self.moment,
         )
+        self.guard.tmux.proc_root = self.proc_root
 
     def tick(self, *only: str) -> None:
         self.guard.run(self.state, list(only))
@@ -175,6 +182,19 @@ class Harness:
 
     def pane(self, session: str) -> FakePane:
         return self.fake.sessions[session]
+
+    def compactions(self, session: str, count: int) -> Path:
+        """The fake agent holds its own rollout open, independently of the pane percent."""
+        pid = self.pane(session).agent_pid
+        path = self.rollouts / f"rollout-{pid}.jsonl"
+        records = [{"type": "session_meta", "payload": {"id": "01234567-89ab-4cde-8fab-0123456789ab"}}]
+        records += [{"type": "compacted", "payload": {}} for _ in range(count)]
+        path.write_text("".join(json.dumps(record) + "\n" for record in records), encoding="utf-8")
+        fd = self.proc_root / pid / "fd" / "3"
+        fd.parent.mkdir(parents=True, exist_ok=True)
+        if not fd.is_symlink():
+            fd.symlink_to(path)
+        return path
 
 
 def claude_pane(pct: int, *lines: str, busy: bool = False) -> Pane:
@@ -888,13 +908,46 @@ def test_relaunch_waits_until_the_launcher_has_exited(tmp_path: Path) -> None:
     assert any(call[:2] == ["tmux", "respawn-pane"] for call in h.fake.calls)
 
 
+def test_codex_compactions_counted_from_session_record_not_percent_drops(tmp_path: Path) -> None:
+    """Defect class: compactions missed when the context percent does not drop between ticks."""
+    h = Harness(tmp_path, **{"harness": codex_pane(55)})
+    h.tick("harness")
+    assert h.fake.typed() == []
+    h.compactions("harness", 9)
+    h.advance(5)
+    h.tick("harness")  # context refilled to the same percent between ticks
+    assert h.state["harness"]["compactions"] == 9
+    assert h.state["harness"]["phase"] == "handoff"
+    assert len(h.fake.typed("harness")) == 1
+    assert "HANDOFF NOW" in h.fake.typed("harness")[0]
+    assert "compacted 9 times" in h.sent[0][1]
+
+
 def test_codex_compactions_trigger_handoff(tmp_path: Path) -> None:
     h = Harness(tmp_path, **{"harness": codex_pane(60)})
-    for pct in (60, 20, 50, 10, 45, 5):
-        h.pane("harness").text = codex_text(pct)
-        h.tick()
-        h.advance(5)
-    assert h.state["harness"]["compactions"] == 3
+    h.tick("harness")
+    h.pane("harness").text = codex_text(20)  # a percent drop is not a compaction
+    h.advance(5)
+    h.tick("harness")
+    assert h.state["harness"]["compactions"] == 0
+    assert h.fake.typed() == []
+    threshold = h.guard.setting("codex_max_compactions")
+    path = h.compactions("harness", threshold)
+    h.pane("harness").text = codex_text(20, "Compacting context")
+    h.advance(5)
+    h.tick("harness")
+    assert h.state["harness"]["compactions"] == threshold
+    assert h.fake.typed() == []
+    path.write_text(path.read_text(encoding="utf-8") + '{"type":', encoding="utf-8")
+    h.pane("harness").text = codex_text(20)
+    h.advance(5)
+    h.tick("harness")
+    assert h.state["harness"]["compactions"] is None
+    assert h.fake.typed() == [] and h.sent == []
+    assert "compactions unknown" in h.logs[-1]
+    h.compactions("harness", threshold)
+    h.advance(5)
+    h.tick("harness")
     assert h.fake.typed("harness")[0].startswith("HANDOFF NOW")
 
 

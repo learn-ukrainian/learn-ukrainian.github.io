@@ -7,9 +7,10 @@ Per lane (state in ``$XDG_STATE_HOME/learn-ukrainian/context-guard/``):
 watch
     Claude lanes: the status line ``ctx: …K/…K (N%)`` reaches
     ``claude_handoff_pct``. Codex lanes: the session compacted
-    ``codex_max_compactions`` times (a ``Context N% used`` drop of at least
-    ``codex_drop_pct`` points between ticks). Either way the guard types
-    ``HANDOFF NOW`` (and posts it to Fleet Comms) and enters ``handoff``. A
+    ``codex_max_compactions`` times, counted from top-level ``compacted`` events
+    in the rollout held open by that pane's agent process. An unidentifiable or
+    unreadable rollout is logged as unknown and sends no handoff. At a known
+    threshold the guard types ``HANDOFF NOW`` (and posts it to Fleet Comms) and enters ``handoff``. A
     lane that already printed or posted ``HANDOFF-DONE`` enters ``handoff``
     at once, done, so it does not idle until the next threshold.
 handoff
@@ -229,6 +230,7 @@ class Tmux:
     sleep: Callable[[float], None] = time.sleep
     clock: Callable[[], float] = time.time
     monotonic: Callable[[], float] = time.monotonic
+    proc_root: Path = Path("/proc")
 
     def tmux(self, *args: str) -> subprocess.CompletedProcess[str]:
         return self.run(["tmux", *args])
@@ -370,6 +372,57 @@ class Tmux:
         """Whether the process ``<pid>@<start>`` is still in the process table (a reused pid has another start)."""
         starts, _children = self._process_table()
         return starts.get(agent.split("@", 1)[0]) == agent.split("@", 1)[1]
+
+    def codex_compactions(self, agent: str) -> int:
+        """Count the exact pane agent's open rollout, never a recent session or pane text.
+
+        Both process identity and the open file must survive the read. A partial
+        JSONL write is unknown until the next tick, not a smaller count.
+        """
+        def rollout() -> Path:
+            if not self.process_exists(agent):
+                raise TelemetryUnavailable("Codex compactions unknown: agent changed")
+            paths = set()
+            for fd in (self.proc_root / agent.split("@", 1)[0] / "fd").iterdir():
+                try:
+                    path = fd.resolve(strict=True)
+                except FileNotFoundError:  # an unrelated descriptor may close during enumeration
+                    continue
+                if path.name.startswith("rollout-") and path.suffix == ".jsonl":
+                    paths.add(path)
+            if len(paths) != 1:
+                raise TelemetryUnavailable("Codex compactions unknown: no unique open rollout")
+            return paths.pop()
+
+        try:
+            path = rollout()
+            count = 0
+            records = 0
+            with path.open(encoding="utf-8") as handle:
+                identity = os.fstat(handle.fileno())
+                for index, line in enumerate(handle):
+                    if not line.endswith("\n"):
+                        raise ValueError("incomplete rollout record")
+                    record = json.loads(line)
+                    if not isinstance(record, dict):
+                        raise ValueError("rollout record is not an object")
+                    if index == 0:
+                        if record.get("type") != "session_meta":
+                            raise ValueError("missing session metadata")
+                        session_id = record["payload"]["id"]
+                        if not isinstance(session_id, str):
+                            raise ValueError("invalid session identity")
+                        uuid.UUID(session_id)
+                    records += 1
+                    count += record.get("type") == "compacted"
+                if not records:
+                    raise ValueError("empty rollout")
+            current = rollout().stat()
+            if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                raise ValueError("rollout changed")
+            return count
+        except (OSError, ValueError, TypeError, KeyError, RecursionError) as exc:
+            raise TelemetryUnavailable(f"Codex compactions unknown: {type(exc).__name__}") from exc
 
     def human_activity(self, session: str, window_s: int) -> str | None:
         """Why a human may be using ``session``, or None when no client of it had input within ``window_s``.
@@ -728,12 +781,10 @@ class Guard:
             s.pop("last_pct", None)
         extra = ""
         if lane.kind == "codex":
-            prev = s.get("last_pct")
-            if pct is not None and prev is not None and prev - pct >= self.setting("codex_drop_pct"):
-                s["compactions"] = int(s.get("compactions", 0)) + 1
-            if pct is not None:
-                s["last_pct"] = pct
-            extra = f" compactions={s.get('compactions', 0)} compacting_now={'Compacting context' in text}"
+            s.pop("last_pct", None)
+            s["compactions"] = None
+            s["compactions"] = self.tmux.codex_compactions(snap.agent)
+            extra = f" compactions={s['compactions']} compacting_now={'Compacting context' in text}"
         self.log(f"{lane.name} watch ctx_pct={pct}{extra}")
         pane_done = self._pane_done(s, done_lines(text), snap)
         if pane_done or self.handoff_posted(lane.sender, s["watch_since"]):

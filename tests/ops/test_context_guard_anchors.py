@@ -493,6 +493,7 @@ def delivered_alerts(h: Harness) -> FleetPlane:
 def new_handoff_phase(h: Harness) -> None:
     """A human relaunch: a new agent process, then a fresh HANDOFF-DONE."""
     h.pane(LANE).agent_pid = "201"
+    h.compactions(LANE, 0)
     h.advance(5)
     h.tick(LANE)  # the handoff phase sees the new agent -> watch
     assert h.state[LANE]["phase"] == "watch"
@@ -550,6 +551,7 @@ def launcher_exit_in_two_relaunches(h: Harness) -> None:
     pane = h.pane(LANE)
     pane.agent = "codex"
     pane.agent_pid = "201"
+    h.compactions(LANE, 0)
     pane.text = codex_text(40)
     h.advance(5)
     h.tick(LANE)  # watch: a new agent clears the hold
