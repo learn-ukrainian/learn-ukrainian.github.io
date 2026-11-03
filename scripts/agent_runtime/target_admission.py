@@ -685,6 +685,17 @@ def _resolve_review_target(
             raise ReviewAdmissionRefused(refusal)
     concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")
+    if review_mode == "cross_family" and profile in {"code", "infra"} and facts is not None and facts.mixed_family:
+        from scripts.review.record_cf_verdict import RecordError
+
+        try:
+            scope = facts.reviewer_scope(family)
+        except RecordError as exc:
+            raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {exc}") from exc
+        reviewer_ids = review_task_id_comparison_keys(reviewer_task_id or "", agent=seat)
+        author_ids = {key for identity in scope.author_task_ids for key in review_task_id_comparison_keys(identity)}
+        if reviewer_ids & author_ids:
+            raise ReviewAdmissionRefused("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
     if attempt and seat in {"grok", "grok-build"}:
