@@ -315,9 +315,21 @@ def test_unset_configuration_keeps_todays_import_time_roots() -> None:
     assert Path(roots["integration_entry"]) == primary / "scripts" / "dispatch.py"
 
 
-def test_a_linked_worktree_is_never_the_configured_primary_or_state_root(monkeypatch, tmp_path: Path) -> None:
+@pytest.mark.parametrize("git_metadata", ["gitfile", "symlink-to-admin-dir", "copied-admin-dir", "absent"])
+def test_a_linked_worktree_is_never_the_configured_primary_or_state_root(
+    monkeypatch, tmp_path: Path, git_metadata: str
+) -> None:
     """State stays on a primary checkout: a configured worktree would split records from closeout's locks."""
-    _, tree = _linked_worktree(tmp_path)
+    primary, tree = _linked_worktree(tmp_path)
+    admin = primary / ".git" / "worktrees" / "wt"
+    (admin / "commondir").write_text("../..\n", encoding="utf-8")
+    if git_metadata != "gitfile":
+        (tree / ".git").unlink()
+    if git_metadata == "symlink-to-admin-dir":
+        (tree / ".git").symlink_to(admin, target_is_directory=True)
+    elif git_metadata == "copied-admin-dir":
+        (tree / ".git").mkdir()
+        (tree / ".git" / "commondir").write_text(f"{primary / '.git'}\n", encoding="utf-8")
     monkeypatch.setenv(rr.PRIMARY_ROOT_ENV, str(tree))
     monkeypatch.setenv(rr.STATE_ROOT_ENV, str(tree))
     for resolve in (rr.machinery_roots, rr.state_root, lambda: rr.resolve_repo_root(Path(rr.__file__), 2)):

@@ -108,16 +108,31 @@ def _configured_path(name: str, env: Mapping[str, str] | None) -> Path | None:
 def configured_primary_root(env: Mapping[str, str] | None = None) -> Path | None:
     """The primary checkout named by the configuration, or ``None`` for the Git-derived default.
 
-    A configured value whose ``.git`` is a file is refused: that is a linked worktree
-    (or a separate Git directory no local metadata proves primary), and anchoring
-    state there would split task records from the locks closeout reads (#5171 class).
+    Only a checkout whose ``.git`` is a real directory (not a symlink) holding no
+    ``commondir`` file is accepted: that is the one shape whose Git common directory is
+    its own ``.git``. Anything else (a gitfile, a ``.git`` symlink such as one to a
+    linked worktree's administrative directory, a copied worktree gitdir, or no ``.git``)
+    is refused, since anchoring state there would split task records from the locks
+    closeout reads (#5171 class).
     """
     configured = _configured_path(PRIMARY_ROOT_ENV, env)
-    if configured is not None and (configured / ".git").is_file():
+    if configured is not None and not _is_primary_git_layout(configured):
         raise MachineryConfigError(
-            f"{PRIMARY_ROOT_ENV} must name a primary checkout, not a linked worktree: {configured}/.git is a file"
+            f"{PRIMARY_ROOT_ENV} must name a primary checkout, not a linked worktree: "
+            f"{configured}/.git is not a real Git directory of its own"
         )
     return configured
+
+
+def _is_primary_git_layout(checkout: Path) -> bool:
+    """``checkout/.git`` is a non-symlink directory with no ``commondir`` file."""
+    git_dir = checkout / ".git"
+    try:
+        if not stat.S_ISDIR(os.lstat(git_dir).st_mode):
+            return False
+    except OSError:
+        return False
+    return not os.path.lexists(git_dir / "commondir")
 
 
 def runtime_primary_root() -> Path:
