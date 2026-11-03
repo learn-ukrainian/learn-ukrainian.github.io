@@ -43,6 +43,10 @@ The practice consumer checks the request's case, number, and any supplied
 gender, person, or tense against the verified slot before emitting an answer.
 It uses the established VESUM slot parser, including its implicit singular
 convention. Lemma membership alone cannot answer another requested case.
+The shared emitter uses the production VESUM adapter when a caller supplies no
+verifier. Cached densification rechecks every supplied paradigm before writing
+shards or index flags; an unverified slot refuses the operation rather than
+silently replacing an existing shard with an empty result.
 
 Version 2 has these closed-schema fields:
 

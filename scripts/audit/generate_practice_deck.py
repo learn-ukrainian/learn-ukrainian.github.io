@@ -3725,9 +3725,9 @@ def _build_paradigm_items(
     cases = lexeme.get("paradigm", {}).get("cases")
     if not isinstance(cases, dict):
         return []
-    if verifier is not None and not _verify_paradigm(
+    if not _verify_paradigm(
         _plain(str(lexeme.get("lemmaPlain") or lexeme.get("lemma") or "")),
-        lexeme.get("pos"), lexeme["paradigm"], verifier,
+        lexeme.get("pos"), lexeme["paradigm"], verifier if verifier is not None else RealVesumVerifier(),
     ):
         return []
     preferred_keys = list(CASE_LABELS_UA.keys()) + list(CASE_LABELS_UA.values())
