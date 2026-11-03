@@ -1,6 +1,7 @@
 """Detached supervision, client waits and process-group cancellation."""
 
 import contextlib
+import ctypes
 import hashlib
 import json
 import os
@@ -377,7 +378,8 @@ def _provider_alive(record: dict) -> bool | None:
     try:
         os.killpg(record["provider_pgid"], 0)
     except ProcessLookupError:
-        return False
+        # A descendant that left the group is named by the stop that could not end it (#12520).
+        return any(_identity(int(pid)) == identity for pid, identity in record.get("fallback_survivors", {}).items())
     except PermissionError:
         pass
     return True
@@ -489,6 +491,12 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
                            "nested_repository_unpushed", "github_deferred"})
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
 SETTLE_PATIENCE = 10
+# Extra fallback scans, 0.2 s apart, before an unreadable one keeps the worktree.
+FALLBACK_SCAN_RETRIES = 10
+# Ancestry walks of one candidate, restarted when an ancestor exits during the walk.
+ANCESTRY_ATTEMPTS = 5
+# Parents followed from one candidate; a deeper chain is unknown, never a stranger.
+ANCESTRY_DEPTH = 64
 
 
 def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
@@ -528,40 +536,119 @@ def _cgroup_holds_other_active_task(record: dict, cgroup: str) -> bool:
     return any(pid in protected for pid in members)
 
 
-def _end_own_scope(record: dict) -> None:
-    """End processes left in this finished task's own scope.
+def _own_tree() -> set[int]:
+    """Every process the supervisor started, whatever group or session it moved to (it adopts orphans)."""
+    return {child.pid for child in psutil.Process().children(recursive=True)}
+
+
+def _is_own_descendant(pid: int) -> bool:
+    """Whether ``pid`` is in the supervisor's process tree now, which the marker alone does not prove.
+
+    A client that inherited the task's marker, or a task this one dispatched, is not the task's descendant.
+    ``stop_leftovers`` asks this of each candidate as it is listed and again after its pidfd is open, so a
+    process that appears mid-stop is judged at that moment. An ancestor that exits during the walk has just
+    reparented the candidate to the supervisor, so the walk starts again; ancestry that stays unresolved or
+    unreadable raises ``ScanUnknown`` (the stop is then not ok) and is never read as "not a descendant".
+    """
+    from scripts.orchestration import worker_leftovers
+
+    me = os.getpid()
+    for _ in range(ANCESTRY_ATTEMPTS):
+        current, settled = pid, True
+        for _ in range(ANCESTRY_DEPTH):
+            try:
+                parent = psutil.Process(current).ppid()
+            except psutil.NoSuchProcess:
+                if current == pid:
+                    return False  # the candidate itself has exited
+                settled = False
+                break
+            except psutil.Error as exc:
+                raise worker_leftovers.ScanUnknown(f"ancestry of {pid} unreadable: {exc}") from None
+            if parent == me:
+                return True
+            if parent <= 1:
+                return False
+            current = parent
+        if settled:
+            raise worker_leftovers.ScanUnknown(f"ancestry of {pid} is deeper than {ANCESTRY_DEPTH} processes")
+    raise worker_leftovers.ScanUnknown(f"ancestry of {pid} kept changing")
+
+
+def _stop_fallback_tree(task_id: str, nonce: str):
+    """Stop the processes a Popen-fallback supervisor started, once; a scan that cannot be read is not ok."""
+    from scripts.orchestration import worker_leftovers
+
+    reader = worker_leftovers.ProcFsReader()
+    try:
+        scope = worker_leftovers.worker_scope_at_exit(
+            task_id=task_id, launch_mode="popen-fallback", launch_unit=None, run_nonce=nonce, reader=reader)
+        stopped = worker_leftovers.stop_leftovers(scope, reader=reader, owned=_is_own_descendant)
+        for pid in _own_tree():
+            # An adopted descendant stays a zombie in its old process group until reaped, which the group
+            # liveness check would read as a live provider.
+            with contextlib.suppress(ChildProcessError, OSError):
+                os.waitpid(pid, os.WNOHANG)
+        return stopped
+    except (OSError, ValueError, psutil.Error, worker_leftovers.ScanUnknown):
+        return worker_leftovers.StopResult(ok=False, error="fallback boundary unreadable")
+
+
+def _end_own_scope(record: dict):
+    """End processes left in this finished task's own boundary; return the stop result, None when none ran.
 
     A scope stays alive while any member remains. Settlement used to read those
-    members as a live provider and keep the worktree. The stop reaches only the
-    unit ``dispatch_isolation`` derives for this task and nonce: a recorded
+    members as a live provider and keep the worktree. A scope launch stops only
+    the unit ``dispatch_isolation`` derives for this task and nonce: a recorded
     cgroup that is not that unit's scope is left alone, another active task's
-    supervisor or provider in this cgroup is left alone, the caller and its
-    ancestors are not signalled, and a fallback launch is not a scope. A stop
-    that cannot be proven leaves the processes for the liveness check, which
-    keeps the tree.
+    supervisor or provider in this cgroup is left alone, and the caller and its
+    ancestors are not signalled. A Popen-fallback launch has no cgroup to stop, and
+    ``killpg`` misses a descendant in another process group (GNU ``timeout``
+    puts its child in one) or session, so the marked processes of the supervisor's
+    own tree are stopped instead (#12520). A stop that cannot be proven
+    leaves the processes for the liveness check, which keeps a scope's tree; the
+    caller keeps a fallback tree from a failed stop. Only the supervisor sweeps a
+    fallback launch (None otherwise): it alone knows the cgroup its jobs keep and the tree it adopted.
     """
-    if record.get("launch_mode") != "scope":
-        return
+    launch_mode = record.get("launch_mode")
     task_id, unit, nonce = record.get("task_id"), record.get("launch_unit"), record.get("run_nonce")
+    if launch_mode == "popen-fallback":
+        if not (isinstance(task_id, str) and task_id and isinstance(nonce, str) and nonce):
+            return None
+        if record.get("pid") != os.getpid():
+            # Only the supervisor knows the cgroup its jobs keep, which a closed environment is judged by (#9514);
+            # a later sweep from another process cannot bound the scan, so it leaves the task's processes alone.
+            return None
+        # A process that is mid-exec on a busy host reads as closed for an instant; only a scan that stays
+        # unreadable keeps the tree.
+        stopped = _stop_fallback_tree(task_id, nonce)
+        for _ in range(FALLBACK_SCAN_RETRIES):
+            if stopped.ok or stopped.survivors:
+                break
+            time.sleep(0.2)
+            stopped = _stop_fallback_tree(task_id, nonce)
+        return stopped
+    if launch_mode != "scope":
+        return None
     if not all(isinstance(value, str) and value for value in (task_id, unit, nonce)):
-        return
+        return None
     from scripts.orchestration import dispatch_isolation, worker_leftovers
 
     if not dispatch_isolation.scope_unit_matches(unit, task_id=task_id, run_nonce=nonce):
-        return
+        return None
     cgroup = dispatch_isolation.scope_cgroup(unit, uid=os.getuid())
     recorded = record.get("launch_cgroup")
     # A recorded boundary that is not this unit's scope is not ours to stop.
     if isinstance(recorded, str) and recorded and recorded != cgroup:
-        return
+        return None
     if _cgroup_holds_other_active_task(record, cgroup):
-        return
+        return None
     scope = worker_leftovers.WorkerScope(
         task_id=task_id, launch_mode=dispatch_isolation.LAUNCH_SCOPE, unit=unit, cgroup=cgroup, run_nonce=nonce)
     try:
-        worker_leftovers.stop_leftovers(scope, reader=worker_leftovers.ProcFsReader())
+        return worker_leftovers.stop_leftovers(scope, reader=worker_leftovers.ProcFsReader())
     except (OSError, ValueError, worker_leftovers.ScanUnknown):
-        return
+        return None
 
 
 def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> None:
@@ -575,7 +662,15 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
     """
     deadline = time.monotonic() + patience
     record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
-    _end_own_scope(record)
+    stopped = _end_own_scope(record)
+    if record.get("launch_mode") == "popen-fallback" and stopped is not None and not stopped.ok:
+        # Only the process group's id is recorded for a fallback launch, so a descendant that left it is
+        # invisible to the liveness check below. Name each survivor so a later retry still sees it.
+        survivors = {str(proc.pid): identity for proc in stopped.survivors if (identity := _identity(proc.pid))}
+        record["fallback_survivors"] = survivors
+        record.update(worktree_disposition="retained",
+                      worktree_disposition_reason="provider_processes_alive" if survivors else "provider_liveness_unknown")
+        return
     while (alive := _provider_alive(record)) and time.monotonic() < deadline:
         time.sleep(0.05)
     if alive is not False:
@@ -749,6 +844,19 @@ def _corrected_reply_refusal(lock: dict, text: str | None) -> str | None:
     return None
 
 
+def _adopt_orphans() -> bool:
+    """Make this supervisor the parent of every orphaned descendant (``PR_SET_CHILD_SUBREAPER``).
+
+    A Popen-fallback launch has no cgroup. A double-forked descendant would otherwise reparent to init or the
+    user manager, out of the supervisor's process tree, and settlement could not tell it from an unrelated process.
+    False when the kernel or a confinement policy refuses.
+    """
+    try:
+        return ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0) == 0
+    except (AttributeError, OSError):
+        return False
+
+
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
@@ -796,6 +904,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     stderr_path = path.parent / "logs" / f"{spec.task_id}.stderr.log"
     try:
         signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM, signal.SIGINT})
+        if record.get("launch_mode") == "popen-fallback" and not _adopt_orphans():
+            # Without it a double-forked descendant would escape settlement's sweep unseen.
+            status, error = "failed", "fallback_adoption_unavailable: PR_SET_CHILD_SUBREAPER was refused"
+            return
         try:
             headroom.check_plan(spec.agent, spec.model, record, review=admission.review_typed(record))
             headroom.check_runtime(spec.agent, spec.model)

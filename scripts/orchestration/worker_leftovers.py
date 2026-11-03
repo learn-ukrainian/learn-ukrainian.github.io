@@ -657,8 +657,14 @@ def find_leftovers(
     *,
     reader: ProcessReader,
     exclude: Collection[int] = (),
+    owned: Callable[[int], bool] | None = None,
 ) -> list[LeftoverProcess]:
-    """Live processes inside ``scope``; raises :class:`ScanUnknown` when that cannot be proven."""
+    """Live processes inside ``scope``; raises :class:`ScanUnknown` when that cannot be proven.
+
+    With ``owned``, a process inside the boundary is reported only when ``owned(pid)`` holds: a caller that
+    can prove ownership more strictly than the boundary does (a supervisor's own process tree) asks it of
+    each candidate as it is listed, never of an earlier snapshot.
+    """
     protected = _protected_pids(reader, exclude)
     if scope.launch_mode == LAUNCH_SCOPE:
         cgroup = _scope_cgroup(scope)
@@ -676,6 +682,8 @@ def find_leftovers(
             continue
         info = reader.stat(pid)
         if info is None or info.state == "Z" or not _in_boundary(scope, reader, pid, info):
+            continue
+        if owned is not None and not owned(pid):
             continue
         found.append(LeftoverProcess(pid=pid, start_ticks=info.start_ticks, cmdline=reader.cmdline(pid)))
     return found
@@ -810,11 +818,12 @@ def _signal_via_pidfd(
     ops: PidfdOps,
     *,
     selected: Callable[[int], bool] | None = None,
+    owned: Callable[[int], bool] | None = None,
 ) -> str:
     """Signal one process through a pidfd.
 
     Returns ``signalled``, ``gone``, ``left_scope``, ``unavailable``,
-    ``refused`` or ``unselected``. A process of another real uid (a job that
+    ``refused``, ``unselected`` or ``unowned`` (``owned``, read after the pidfd is open, does not hold). A process of another real uid (a job that
     changed it) is refused: it may not be ours to signal. After the pidfd is
     open, ``selected`` (when given) inspects the process, then the whole
     identity check (start time, boundary membership, real uid) runs again as
@@ -846,6 +855,8 @@ def _signal_via_pidfd(
     try:
         if selected is not None and not selected(proc.pid):
             return "unselected"
+        if owned is not None and not owned(proc.pid):
+            return "unowned"
         # The last read before the signal: membership can change during any read before it.
         identity = _identity(scope, reader, proc)
         if identity != "same":
@@ -942,6 +953,7 @@ def stop_leftovers(
     *,
     reader: ProcessReader,
     exclude: Collection[int] = (),
+    owned: Callable[[int], bool] | None = None,
     grace_s: float = 5.0,
     pidfd: PidfdOps | None = None,
     stop_unit: Callable[[str], bool] = _systemctl_stop,
@@ -955,14 +967,16 @@ def stop_leftovers(
     members are reported as unsignalled and the reap is refused. A scope unit the caller is not inside is stopped as a unit, which also
     takes anything forked mid-stop. Otherwise, and for whatever that leaves,
     each process gets SIGTERM, then SIGKILL after ``grace_s``, through a
-    pidfd only; without pidfd support it is left alone and reported.
+    pidfd only; without pidfd support it is left alone and reported. ``owned``
+    narrows every scan and every signal to processes it accepts, so an unrelated
+    process that appears mid-stop is never signalled.
     """
     identity_error = scope_identity_error(scope)
     if identity_error is not None:
         return StopResult(ok=False, error=f"worker scope refused: {identity_error}")
     ops = live_pidfd_ops() if pidfd is None else pidfd
     try:
-        leftovers = find_leftovers(scope, reader=reader, exclude=exclude)
+        leftovers = find_leftovers(scope, reader=reader, exclude=exclude, owned=owned)
     except ScanUnknown as exc:
         return StopResult(ok=False, error=f"worker scope unreadable: {exc}")
     if not leftovers:
@@ -1001,7 +1015,7 @@ def stop_leftovers(
     if scope.cgroup and scope.unit and own is not None and own != scope.cgroup:
         unit_stopped = stop_unit(scope.unit)
         try:
-            leftovers = find_leftovers(scope, reader=reader, exclude=exclude)
+            leftovers = find_leftovers(scope, reader=reader, exclude=exclude, owned=owned)
         except ScanUnknown as exc:
             return unreadable(exc)
         if not leftovers:
@@ -1010,7 +1024,7 @@ def stop_leftovers(
     for sig in (signal.SIGTERM, signal.SIGKILL):
         delivered = False
         for proc in leftovers:
-            outcome = _signal_via_pidfd(scope, reader, proc, sig, ops)
+            outcome = _signal_via_pidfd(scope, reader, proc, sig, ops, owned=owned)
             if outcome == "signalled":
                 delivered = True
                 if proc.pid not in signalled:
@@ -1022,7 +1036,7 @@ def stop_leftovers(
         deadline = clock() + (grace_s if delivered else 0.0)
         while True:
             try:
-                leftovers = find_leftovers(scope, reader=reader, exclude=exclude)
+                leftovers = find_leftovers(scope, reader=reader, exclude=exclude, owned=owned)
             except ScanUnknown as exc:
                 return unreadable(exc)
             if not leftovers or clock() >= deadline:
