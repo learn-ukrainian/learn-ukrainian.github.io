@@ -40,6 +40,7 @@ def test_new_machinery_to_product_import_does_not_pass(tmp_path: Path) -> None:
         {
             "mach/a.py": "from scripts.prod.widget import name\n",
             "prod/__init__.py": "",
+            "prod/widget.py": "name = 1\n",
         },
         {"mach": "machinery", "prod": "product"},
     )
@@ -67,6 +68,7 @@ def test_import_inside_a_function_is_not_missed(tmp_path: Path) -> None:
         {
             "mach/a.py": "from scripts.other import ok\n\n\ndef load():\n    from scripts.prod.widget import name\n    return name\n",
             "prod/__init__.py": "",
+            "prod/widget.py": "name = 1\n",
             "other/__init__.py": "",
         },
         {"mach": "machinery", "prod": "product", "other": "shared"},

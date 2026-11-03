@@ -2,12 +2,14 @@
 """Ratchet machinery-to-product imports under scripts/ (#12660).
 
 Every top-level scripts/ directory and scripts/*.py module is classified
-as machinery, product, or shared. A machinery file may not gain an import
-of a product package or module. The baseline counts occurrences of
-``(importing file, imported module)``. Line numbers are not part of the
-identity. The scan is the AST, so ``import``, ``from ... import``, and
-imports nested in functions all count. A bare import whose top name is a
-scripts package or module is the same site as ``scripts.<name>``.
+as machinery, product, or shared. A file inside a mixed package can carry
+its own role. A machinery file may not gain an import of a product file.
+Edges come from ``scripts.ci.components.scan_imports``: static imports,
+imports nested in functions, relative imports, and literal dynamic loads.
+One identity is one importer file plus one resolved target file, so a
+second statement of the same target is the same identity, and dropping one
+target never pays for a different one. Line numbers are not part of the
+identity. A non-literal load is not an identity.
 
 Once origin/main contains the baseline, the committed counts may only
 shrink. Before that first landing there is no predecessor; the baseline
@@ -26,16 +28,17 @@ baseline written. Exit 1 is a violation or an unreadable tree.
 from __future__ import annotations
 
 import argparse
-import ast
 import json
 import subprocess
 import sys
 from collections import Counter
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
+
+from scripts.ci.components import scan_imports
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("boundary_baseline.json")
@@ -50,11 +53,12 @@ _SKIP_DIRS = frozenset({"__pycache__"})
 
 @dataclass(frozen=True)
 class Classified:
-    """Roles for top-level scripts directories and scripts/*.py modules."""
+    """Roles for top-level scripts names and for files that do not inherit one."""
 
     packages: Mapping[str, str]
     modules: Mapping[str, str]
     reasons: Mapping[tuple[str, str], str]
+    files: Mapping[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, order=True)
@@ -122,6 +126,37 @@ def _role_table(rows: object, kind: str, where: str) -> tuple[dict[str, str], di
     return roles, reasons
 
 
+def _file_table(rows: object, where: str) -> tuple[dict[str, str], dict[tuple[str, str], str]]:
+    if rows is None:
+        return {}, {}
+    if not isinstance(rows, dict):
+        raise ValueError(f"{where}: files must be a mapping")
+    roles: dict[str, str] = {}
+    reasons: dict[tuple[str, str], str] = {}
+    for name, entry in rows.items():
+        path = Path(name)
+        if (
+            not isinstance(name, str)
+            or not name.startswith("scripts/")
+            or not name.endswith(".py")
+            or name.startswith(("/", "\\"))
+            or ".." in path.parts
+        ):
+            raise ValueError(f"{where}: bad file name: {name!r}")
+        if not isinstance(entry, dict):
+            raise ValueError(f"{where}: files.{name} must be a mapping")
+        role = entry.get("role")
+        if role not in ROLES:
+            raise ValueError(f"{where}: files.{name} role must be machinery, product, or shared")
+        reason = _reason(entry, f"{where}: files.{name}")
+        if role == "shared" and not reason:
+            raise ValueError(f"{where}: files.{name} shared entry needs a reason")
+        roles[name] = str(role)
+        if reason:
+            reasons[("files", name)] = reason
+    return roles, reasons
+
+
 def load_config(path: Path) -> Classified:
     """Load the package boundary. A shared entry without a reason fails."""
 
@@ -131,7 +166,13 @@ def load_config(path: Path) -> Classified:
         raise ValueError(f"{where}: schema must be {CONFIG_SCHEMA}")
     packages, package_reasons = _role_table(payload.get("packages"), "packages", where)
     modules, module_reasons = _role_table(payload.get("modules"), "modules", where)
-    return Classified(packages, modules, {**package_reasons, **module_reasons})
+    files, file_reasons = _file_table(payload.get("files"), where)
+    return Classified(
+        packages,
+        modules,
+        {**package_reasons, **module_reasons, **file_reasons},
+        files,
+    )
 
 
 def _scripts_dir(root: Path) -> Path:
@@ -169,37 +210,30 @@ def classification_violations(root: Path, config: Classified) -> list[str]:
         violations.append(f"scripts/{name}: unclassified module")
     for name in sorted(set(config.modules) - modules):
         violations.append(f"scripts/{name}: classified module is not in the tree")
+    for name in sorted(config.files):
+        if not (root / name).is_file():
+            violations.append(f"{name}: classified file is not in the tree")
     return violations
 
 
-def _enclosing(rel: Path) -> list[str]:
-    """Package path of ``rel`` under scripts/, excluding the scripts prefix."""
+def file_role(rel: str, config: Classified) -> str | None:
+    """Role of one scripts file. A listed file wins; otherwise the package or module role."""
 
-    return list(rel.parts[:-1])
+    override = config.files.get(rel)
+    if override:
+        return override
+    path = Path(rel)
+    if not path.parts or path.parts[0] != "scripts":
+        return None
+    return importer_role(Path(*path.parts[1:]), config)
 
 
-def _known_tops(root: Path) -> set[str]:
-    packages, modules = disk_names(root)
-    return packages | {name[:-3] for name in modules}
-
-
-def target_role(top: str, root: Path, config: Classified) -> str | None:
-    """Role of a scripts top-level name, using the same file Python imports.
-
-    A directory with ``__init__.py`` is the package, including when a sibling
-    ``<name>.py`` exists. A directory without ``__init__.py`` loses to a
-    sibling module (``scripts/config.py`` shadows ``scripts/config/``). A
-    directory alone is a namespace package.
-    """
-
-    scripts = _scripts_dir(root)
-    directory = scripts / top
-    module = scripts / f"{top}.py"
-    if directory.is_dir() and ((directory / "__init__.py").is_file() or not module.is_file()):
-        return config.packages.get(top)
-    if module.is_file():
-        return config.modules.get(f"{top}.py")
-    return None
+def _module_of(path: str) -> str:
+    name = path[:-3].replace("/", ".")
+    suffix = ".__init__"
+    if name.endswith(suffix):
+        name = name[: -len(suffix)]
+    return name
 
 
 def importer_role(rel: Path, config: Classified) -> str | None:
@@ -208,59 +242,6 @@ def importer_role(rel: Path, config: Classified) -> str | None:
     if len(rel.parts) == 1:
         return config.modules.get(rel.name)
     return config.packages.get(rel.parts[0])
-
-
-def _canonical(parts: Sequence[str]) -> str | None:
-    if not parts or any(part in {"", ".", ".."} for part in parts):
-        return None
-    return "scripts." + ".".join(parts)
-
-
-def _absolute_modules(module: str, names: Sequence[str], known: set[str]) -> list[str]:
-    bits = module.split(".") if module else []
-    if not bits:
-        return []
-    if bits[0] == "scripts":
-        if len(bits) == 1:
-            return [f"scripts.{name}" for name in names if name in known]
-        return [module]
-    if bits[0] in known:
-        return ["scripts." + module]
-    return []
-
-
-def _relative_modules(rel: Path, node: ast.ImportFrom) -> list[str]:
-    enclosing = _enclosing(rel)
-    drop = node.level - 1
-    if drop > len(enclosing):
-        return []
-    base = enclosing[: len(enclosing) - drop]
-    if node.module:
-        base = base + node.module.split(".")
-        canonical = _canonical(base)
-        return [canonical] if canonical else []
-    found: list[str] = []
-    for alias in node.names:
-        canonical = _canonical([*base, alias.name])
-        if canonical:
-            found.append(canonical)
-    return found
-
-
-def imported_modules(rel: Path, tree: ast.AST, known: set[str]) -> list[str]:
-    """Every imported module in ``tree``, including imports inside functions."""
-
-    found: list[str] = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            for alias in node.names:
-                found.extend(_absolute_modules(alias.name, (), known))
-        elif isinstance(node, ast.ImportFrom):
-            if node.level:
-                found.extend(_relative_modules(rel, node))
-            else:
-                found.extend(_absolute_modules(node.module or "", [alias.name for alias in node.names], known))
-    return found
 
 
 def _python_files(root: Path, targets: Sequence[str] | None) -> list[Path]:
@@ -290,34 +271,45 @@ def collect_import_counts(
     config: Classified,
     targets: Sequence[str] | None = None,
 ) -> tuple[Counter[tuple[str, str]], list[str]]:
-    """Count machinery-to-product import sites. Fatal parse errors are separate."""
+    """Count machinery-to-product identities from the shared dependency scanner.
 
-    known = _known_tops(root)
-    counts: Counter[tuple[str, str]] = Counter()
+    The scanner resolves names against the whole ``scripts/`` tree. ``targets``
+    only chooses which importer files are counted.
+    """
+
     fatal: list[str] = []
-    for path in _python_files(root, targets):
+    sources: dict[str, bytes] = {}
+    for path in _python_files(root, None):
         try:
-            rel = path.relative_to(root)
+            rel = path.relative_to(root).as_posix()
         except ValueError:
             fatal.append(f"{path}: outside the tree")
             continue
-        if not rel.parts or rel.parts[0] != "scripts":
-            continue
-        inner = Path(*rel.parts[1:])
-        if importer_role(inner, config) != "machinery":
-            continue
         try:
-            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(rel))
-        except (OSError, SyntaxError, UnicodeError) as exc:
-            fatal.append(f"{rel.as_posix()}: cannot parse imports: {exc}")
+            sources[rel] = path.read_bytes()
+        except OSError as exc:
+            fatal.append(f"{rel}: cannot read imports: {exc}")
+    if fatal:
+        return Counter(), fatal
+    graph = scan_imports(sources)
+    for edge in graph["unresolved_edges"]:
+        if edge["reason"] == "parse-error":
+            fatal.append(f"{edge['path']}: cannot parse imports")
+    if fatal:
+        return Counter(), fatal
+    scope = {path.relative_to(root).as_posix() for path in _python_files(root, targets)} if targets is not None else None
+    counts: Counter[tuple[str, str]] = Counter()
+    for importer, target in graph["file_edges"]:
+        if scope is not None and importer not in scope:
             continue
-        for module in imported_modules(inner, tree, known):
-            parts = module.split(".")
-            if len(parts) < 2 or parts[0] != "scripts":
-                continue
-            if target_role(parts[1], root, config) != "product":
-                continue
-            counts[(rel.as_posix(), module)] += 1
+        if file_role(importer, config) != "machinery":
+            continue
+        if file_role(target, config) != "product":
+            continue
+        module = _module_of(target)
+        if not module.startswith("scripts."):
+            continue
+        counts[(importer, module)] += 1
     return counts, fatal
 
 

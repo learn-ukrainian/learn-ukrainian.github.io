@@ -2,13 +2,48 @@
   "schema": "boundary-ratchet-baseline.v1",
   "entries": [
     {
+      "path": "scripts/agent_runtime/adapters/codex.py",
+      "module": "scripts.review.receipts.ledger",
+      "count": 1
+    },
+    {
+      "path": "scripts/agent_runtime/attempt_boundary.py",
+      "module": "scripts.build",
+      "count": 1
+    },
+    {
+      "path": "scripts/agent_runtime/attempt_boundary.py",
+      "module": "scripts.build.fresh",
+      "count": 1
+    },
+    {
       "path": "scripts/agent_runtime/attempt_boundary.py",
       "module": "scripts.build.fresh.manifest",
-      "count": 2
+      "count": 1
+    },
+    {
+      "path": "scripts/agent_runtime/attempt_boundary.py",
+      "module": "scripts.review.prompts.eligibility",
+      "count": 1
+    },
+    {
+      "path": "scripts/agent_runtime/review_mcp.py",
+      "module": "scripts.review.receipts.ledger",
+      "count": 1
     },
     {
       "path": "scripts/ai_agent_bridge/_citation_check.py",
       "module": "scripts.wiki",
+      "count": 1
+    },
+    {
+      "path": "scripts/ai_agent_bridge/_citation_check.py",
+      "module": "scripts.wiki.sources_db",
+      "count": 1
+    },
+    {
+      "path": "scripts/ai_agent_bridge/_db.py",
+      "module": "scripts.migrations.2026-05-06-broker-indexes",
       "count": 1
     },
     {
@@ -23,7 +58,27 @@
     },
     {
       "path": "scripts/api/atlas_jobs_router.py",
+      "module": "scripts.lexicon",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/atlas_jobs_router.py",
       "module": "scripts.lexicon.runner",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/atlas_jobs_router.py",
+      "module": "scripts.lexicon.runner.atlas_job",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/blue_router.py",
+      "module": "scripts.audit",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/blue_router.py",
+      "module": "scripts.audit.checks",
       "count": 1
     },
     {
@@ -43,6 +98,11 @@
     },
     {
       "path": "scripts/api/config.py",
+      "module": "scripts.wiki",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/config.py",
       "module": "scripts.wiki.config",
       "count": 1
     },
@@ -53,12 +113,27 @@
     },
     {
       "path": "scripts/api/cost_router.py",
+      "module": "scripts.analytics",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/cost_router.py",
       "module": "scripts.analytics.cost_report",
       "count": 1
     },
     {
       "path": "scripts/api/dashboard_helpers.py",
+      "module": "scripts.audit",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/dashboard_helpers.py",
       "module": "scripts.audit.status_cache",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/dashboard_router.py",
+      "module": "scripts.audit",
       "count": 1
     },
     {
@@ -73,7 +148,17 @@
     },
     {
       "path": "scripts/api/decisions_router.py",
+      "module": "scripts.audit",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/decisions_router.py",
       "module": "scripts.audit.decision_lineage",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/fleet_workers_collect.py",
+      "module": "scripts.lexicon",
       "count": 1
     },
     {
@@ -82,7 +167,22 @@
       "count": 1
     },
     {
+      "path": "scripts/api/fleet_workers_collect.py",
+      "module": "scripts.lexicon.runner.atlas_job",
+      "count": 1
+    },
+    {
       "path": "scripts/api/governance_router.py",
+      "module": "scripts.audit",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/governance_router.py",
+      "module": "scripts.audit.check_adrs",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/hramatka_generator.py",
       "module": "scripts.audit",
       "count": 1
     },
@@ -98,48 +198,73 @@
     },
     {
       "path": "scripts/api/hramatka_router.py",
+      "module": "scripts.rag.config",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/hramatka_router.py",
       "module": "scripts.verification",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/hramatka_router.py",
+      "module": "scripts.verification.vesum",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/images_router.py",
+      "module": "scripts.rag",
       "count": 1
     },
     {
       "path": "scripts/api/images_router.py",
       "module": "scripts.rag.poc_pair_page",
-      "count": 2
+      "count": 1
+    },
+    {
+      "path": "scripts/api/main.py",
+      "module": "scripts.audit",
+      "count": 1
     },
     {
       "path": "scripts/api/main.py",
       "module": "scripts.audit.check_core_bare",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/api/main.py",
       "module": "scripts.audit.check_node_modules_integrity",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/api/main.py",
       "module": "scripts.audit.check_primary_integrity",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/api/main.py",
       "module": "scripts.audit.check_self_symlinks",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/api/main.py",
       "module": "scripts.audit.check_tmp_usability",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/api/main.py",
       "module": "scripts.audit.check_venv_integrity",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/api/main.py",
       "module": "scripts.audit.check_worktree_cleanup_integrity",
-      "count": 2
+      "count": 1
+    },
+    {
+      "path": "scripts/api/main.py",
+      "module": "scripts.build",
+      "count": 1
     },
     {
       "path": "scripts/api/main.py",
@@ -148,7 +273,22 @@
     },
     {
       "path": "scripts/api/occupancy.py",
+      "module": "scripts.lexicon",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/occupancy.py",
       "module": "scripts.lexicon.runner",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/occupancy.py",
+      "module": "scripts.lexicon.runner.atlas_job",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/occupancy_local.py",
+      "module": "scripts.lexicon",
       "count": 1
     },
     {
@@ -157,13 +297,33 @@
       "count": 1
     },
     {
+      "path": "scripts/api/occupancy_local.py",
+      "module": "scripts.lexicon.runner.atlas_job",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/sources_router.py",
+      "module": "scripts.rag",
+      "count": 1
+    },
+    {
       "path": "scripts/api/sources_router.py",
       "module": "scripts.rag.query",
-      "count": 4
+      "count": 1
+    },
+    {
+      "path": "scripts/api/state_build.py",
+      "module": "scripts.build",
+      "count": 1
     },
     {
       "path": "scripts/api/state_build.py",
       "module": "scripts.build.phase_constants",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/state_compute.py",
+      "module": "scripts.audit",
       "count": 1
     },
     {
@@ -173,22 +333,42 @@
     },
     {
       "path": "scripts/api/state_coverage.py",
+      "module": "scripts.build",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/state_coverage.py",
       "module": "scripts.build.phase_constants",
-      "count": 2
+      "count": 1
+    },
+    {
+      "path": "scripts/api/state_helpers.py",
+      "module": "scripts.build",
+      "count": 1
     },
     {
       "path": "scripts/api/state_helpers.py",
       "module": "scripts.build.phase_constants",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/api/state_helpers.py",
       "module": "scripts.pipeline.state",
-      "count": 2
+      "count": 1
+    },
+    {
+      "path": "scripts/api/state_issues.py",
+      "module": "scripts.build",
+      "count": 1
     },
     {
       "path": "scripts/api/state_issues.py",
       "module": "scripts.build.phase_constants",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/state_router.py",
+      "module": "scripts.analytics",
       "count": 1
     },
     {
@@ -198,7 +378,17 @@
     },
     {
       "path": "scripts/api/state_router.py",
+      "module": "scripts.audit",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/state_router.py",
       "module": "scripts.audit.llm_qg_store",
+      "count": 1
+    },
+    {
+      "path": "scripts/api/wiki_router.py",
+      "module": "scripts.wiki",
       "count": 1
     },
     {
@@ -228,7 +418,22 @@
     },
     {
       "path": "scripts/bakeoff/run_b1_writer.py",
+      "module": "scripts.build.linear_pipeline",
+      "count": 1
+    },
+    {
+      "path": "scripts/bakeoff/run_b1_writer.py",
+      "module": "scripts.build.phases",
+      "count": 1
+    },
+    {
+      "path": "scripts/bakeoff/run_b1_writer.py",
       "module": "scripts.build.phases.implementation_map",
+      "count": 1
+    },
+    {
+      "path": "scripts/bakeoff/score_b1_writer_output.py",
+      "module": "scripts.audit",
       "count": 1
     },
     {
@@ -239,6 +444,16 @@
     {
       "path": "scripts/bakeoff/score_b1_writer_output.py",
       "module": "scripts.build",
+      "count": 1
+    },
+    {
+      "path": "scripts/bakeoff/score_b1_writer_output.py",
+      "module": "scripts.build.linear_pipeline",
+      "count": 1
+    },
+    {
+      "path": "scripts/bakeoff/score_b1_writer_output.py",
+      "module": "scripts.build.phases",
       "count": 1
     },
     {
@@ -257,13 +472,23 @@
       "count": 1
     },
     {
+      "path": "scripts/ci/components.py",
+      "module": "scripts.deploy.auto_deploy_eligibility",
+      "count": 1
+    },
+    {
       "path": "scripts/config.py",
       "module": "scripts.batch_gemini_config",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/config.py",
       "module": "scripts.level_config",
+      "count": 1
+    },
+    {
+      "path": "scripts/debug/debug_hash.py",
+      "module": "scripts.audit",
       "count": 1
     },
     {
@@ -273,12 +498,42 @@
     },
     {
       "path": "scripts/dispatcher/providers/codex.py",
+      "module": "scripts.audit",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/providers/codex.py",
       "module": "scripts.audit.post_build_review",
       "count": 1
     },
     {
       "path": "scripts/dispatcher/review_attempt.py",
+      "module": "scripts.build",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/review_attempt.py",
+      "module": "scripts.build.fresh",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/review_attempt.py",
       "module": "scripts.build.fresh.manifest",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/review_attempt.py",
+      "module": "scripts.review.prompts.check",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/review_attempt.py",
+      "module": "scripts.review.receipts.ledger",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/lesson_ab/core.py",
+      "module": "scripts.verification",
       "count": 1
     },
     {
@@ -289,11 +544,21 @@
     {
       "path": "scripts/eval/lesson_ab/core.py",
       "module": "scripts.verification.stress",
-      "count": 2
+      "count": 1
     },
     {
       "path": "scripts/eval/lesson_ab/core.py",
       "module": "scripts.verification.vesum",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_behaviour/adapters.py",
+      "module": "scripts.build",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_behaviour/adapters.py",
+      "module": "scripts.build.fresh",
       "count": 1
     },
     {
@@ -307,8 +572,33 @@
       "count": 1
     },
     {
+      "path": "scripts/eval/uk_behaviour/binding.py",
+      "module": "scripts.review.receipts.ledger",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_behaviour/prove.py",
+      "module": "scripts.build",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_behaviour/prove.py",
+      "module": "scripts.build.fresh",
+      "count": 1
+    },
+    {
       "path": "scripts/eval/uk_behaviour/prove.py",
       "module": "scripts.build.fresh.writer",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_behaviour/prove.py",
+      "module": "scripts.review.receipts.ledger",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_preamble/scoring.py",
+      "module": "scripts.verification",
       "count": 1
     },
     {
@@ -323,12 +613,27 @@
     },
     {
       "path": "scripts/eval/uk_preamble/scoring.py",
+      "module": "scripts.wiki",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_preamble/scoring.py",
       "module": "scripts.wiki.sources_db",
+      "count": 1
+    },
+    {
+      "path": "scripts/lint/lint_prompts.py",
+      "module": "scripts.validate.seminar_prompt_suite_refs",
       "count": 1
     },
     {
       "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
       "module": "scripts.audit",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
+      "module": "scripts.audit.post_build_review",
       "count": 1
     },
     {
@@ -339,6 +644,11 @@
     {
       "path": "scripts/orchestration/curriculum_readiness.py",
       "module": "scripts.audit",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/curriculum_readiness.py",
+      "module": "scripts.audit.lint_bio_dossier_xref",
       "count": 1
     },
     {
@@ -353,12 +663,37 @@
     },
     {
       "path": "scripts/orchestration/curriculum_readiness.py",
+      "module": "scripts.build.linear_pipeline",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/curriculum_readiness.py",
       "module": "scripts.level_config",
       "count": 1
     },
     {
       "path": "scripts/orchestration/curriculum_readiness.py",
       "module": "scripts.validate",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/curriculum_readiness.py",
+      "module": "scripts.validate.check_discovery_integrity",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/curriculum_readiness.py",
+      "module": "scripts.validate.check_wiki_subject",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/curriculum_readiness.py",
+      "module": "scripts.validate.lint_seminar_quality",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/curriculum_readiness.py",
+      "module": "scripts.wiki",
       "count": 1
     },
     {
@@ -373,7 +708,17 @@
     },
     {
       "path": "scripts/orchestration/integration_sweep.py",
+      "module": "scripts.deploy",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/integration_sweep.py",
       "module": "scripts.deploy.auto_deploy_eligibility",
+      "count": 1
+    },
+    {
+      "path": "scripts/orchestration/sources_watchdog.py",
+      "module": "scripts.rag",
       "count": 1
     },
     {
@@ -387,6 +732,16 @@
       "count": 1
     },
     {
+      "path": "scripts/pre_commit/regen_lesson_schema.py",
+      "module": "scripts.build.generate_lesson_schema",
+      "count": 1
+    },
+    {
+      "path": "scripts/pre_commit/regen_lexicon_fingerprint.py",
+      "module": "scripts.lexicon",
+      "count": 1
+    },
+    {
       "path": "scripts/pre_commit/regen_lexicon_fingerprint.py",
       "module": "scripts.lexicon.manifest_fingerprint",
       "count": 1
@@ -394,7 +749,17 @@
     {
       "path": "scripts/research/observability.py",
       "module": "scripts.audit",
-      "count": 2
+      "count": 1
+    },
+    {
+      "path": "scripts/research/observability.py",
+      "module": "scripts.audit.atlas_intake_registry",
+      "count": 1
+    },
+    {
+      "path": "scripts/research/observability.py",
+      "module": "scripts.audit.check_research_registry",
+      "count": 1
     },
     {
       "path": "scripts/research/registry.py",
@@ -402,188 +767,63 @@
       "count": 1
     },
     {
-      "path": "scripts/review/digest/codes.py",
+      "path": "scripts/research/registry.py",
+      "module": "scripts.audit.check_research_registry",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/digest/__init__.py",
+      "module": "scripts.review.digest.codes",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/digest/__init__.py",
+      "module": "scripts.review.digest.generator",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/digest/__main__.py",
+      "module": "scripts.review.digest.codes",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/digest/__main__.py",
+      "module": "scripts.review.digest.generator",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/digest/schema.py",
+      "module": "scripts.review.digest.codes",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/digest/schema.py",
+      "module": "scripts.review.digest.generator",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/receipts/__init__.py",
+      "module": "scripts.review.receipts.ledger",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/review_contract.py",
+      "module": "scripts.review.receipts.ledger",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/validate/__init__.py",
+      "module": "scripts.review.validate.validate",
+      "count": 1
+    },
+    {
+      "path": "scripts/review/validate/__main__.py",
+      "module": "scripts.review.validate.validate",
+      "count": 1
+    },
+    {
+      "path": "scripts/storage/generations.py",
       "module": "scripts.curriculum.evidence",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/generator.py",
-      "module": "scripts.curriculum.evidence",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/generator.py",
-      "module": "scripts.curriculum.resolver.classify",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/generator.py",
-      "module": "scripts.curriculum.resolver.tokenize",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/generator.py",
-      "module": "scripts.curriculum.validate.loader",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/fixloop.py",
-      "module": "scripts.build.fresh",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/fixloop.py",
-      "module": "scripts.build.fresh.manifest",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/fixloop.py",
-      "module": "scripts.build.fresh.path_guard",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/fixloop.py",
-      "module": "scripts.curriculum.evidence",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/fixloop.py",
-      "module": "scripts.curriculum.validate.loader",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.build.fresh",
-      "count": 2
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.build.fresh.cli",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.curriculum.evidence",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.curriculum.evidence.sources",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.curriculum.learner_state.inventory_gate",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.curriculum.learner_state.planned",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.curriculum.resolver",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.curriculum.resolver.inputs",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/integration_check.py",
-      "module": "scripts.curriculum.validate.validate",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/prompts/check.py",
-      "module": "scripts.build.fresh.manifest",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/prompts/eligibility.py",
-      "module": "scripts.build.fresh",
-      "count": 2
-    },
-    {
-      "path": "scripts/review/prompts/eligibility.py",
-      "module": "scripts.build.fresh.manifest",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/prompts/eligibility.py",
-      "module": "scripts.build.fresh.path_guard",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/prompts/eligibility.py",
-      "module": "scripts.build.fresh.prompt",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/prompts/render.py",
-      "module": "scripts.build.fresh.cli",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/prompts/render.py",
-      "module": "scripts.build.fresh.manifest",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/receipts/ledger.py",
-      "module": "scripts.curriculum.evidence.lock",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/receipts/ledger.py",
-      "module": "scripts.curriculum.evidence.sources",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/receipts/ledger.py",
-      "module": "scripts.verification.stress",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/record.py",
-      "module": "scripts.build.fresh.manifest",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/record.py",
-      "module": "scripts.build.fresh.path_guard",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/settle.py",
-      "module": "scripts.build.fresh.assemble",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/settle.py",
-      "module": "scripts.build.fresh.path_guard",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/settle.py",
-      "module": "scripts.curriculum.evidence.lock",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/settle.py",
-      "module": "scripts.curriculum.validate.loader",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/validate/validate.py",
-      "module": "scripts.build.fresh",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/validate/validate.py",
-      "module": "scripts.curriculum.resolver.codes",
       "count": 1
     },
     {

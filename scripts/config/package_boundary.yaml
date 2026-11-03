@@ -523,3 +523,40 @@ modules:
   yaml_activities.py:
     reason: Activity YAML parser for the generator and the validator.
     role: product
+files:
+  scripts/review/digest/codes.py:
+    reason: Outcome codes for the lesson-digest generator, which checks curriculum evidence.
+    role: product
+  scripts/review/digest/generator.py:
+    reason: Aggregates recorded lesson decisions for one curriculum module.
+    role: product
+  scripts/review/fixloop.py:
+    reason: Lesson-verdict and provenance report for a built curriculum module.
+    role: product
+  scripts/review/integration_check.py:
+    reason: Drives the curriculum review path through a built lesson module.
+    role: product
+  scripts/review/prompts/check.py:
+    reason: Checks a rendered plan or lesson review prompt against its pinned documents.
+    role: product
+  scripts/review/prompts/eligibility.py:
+    reason: Decides which lesson and plan documents a reviewer may receive.
+    role: product
+  scripts/review/prompts/render.py:
+    reason: Renders plan, lesson, and lexical review prompts from pinned curriculum files.
+    role: product
+  scripts/review/receipts/ledger.py:
+    reason: Stores the sources and VESUM receipts for one language-claim review attempt.
+    role: product
+  scripts/review/record.py:
+    reason: Records a lesson or plan review return against the pinned curriculum inputs.
+    role: product
+  scripts/review/seeds/adjudicate.py:
+    reason: Adjudicates a finding about a lesson, including a claim about the language.
+    role: product
+  scripts/review/settle.py:
+    reason: Language-seat settle of one quoted construction or absence in a lesson or plan.
+    role: product
+  scripts/review/validate/validate.py:
+    reason: Checks a review return's quotes against the pinned lesson or plan.
+    role: product
