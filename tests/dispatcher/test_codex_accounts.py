@@ -83,3 +83,62 @@ def test_meter_price_arithmetic(tmp_path):
     for invalid in ({}, {**usage, "cached_input_tokens": 1_000_001}, {**usage, "output_tokens": -1}):
         with pytest.raises(ValueError):
             task_cost({**record, "model": "gpt-6-luna", "usage": invalid})
+
+
+def test_unknown_or_unbound_codex_account_never_falls_back(tmp_path, monkeypatch):
+    """TEST-DEFAULT-1103: a label that is unknown, unbound, shared or logged out refuses, never substitutes."""
+    api, b = tmp_path / "api", tmp_path / "b"
+    api.mkdir(mode=0o700)
+    b.mkdir(mode=0o700)
+    binding = tmp_path / "codex_accounts.json"
+
+    def bind(accounts):
+        binding.write_text(json.dumps({"schema_version": 1, "accounts": {
+            label: {"codex_home": str(home), "budget_usd": 200} for label, home in accounts.items()}}))
+        binding.chmod(0o600)
+
+    fake = tmp_path / "bin"
+    fake.mkdir()
+    (fake / "codex").write_text('#!/bin/sh\n[ "$1 $2" = "login status" ] && [ -f "$CODEX_HOME/fixture-login" ]\n')
+    (fake / "codex").chmod(0o700)
+    monkeypatch.setenv("PATH", f"{fake}:/usr/bin:/bin")
+    monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(binding))
+    for name in ("OPENAI_API_KEY", "CODEX_API_KEY", "CODEX_ACCESS_TOKEN", "CODEX_HOME"):
+        monkeypatch.delenv(name, raising=False)
+    spec = TaskSpec("account", "codex", "gpt-6-luna", "high", "read-only", tmp_path,
+                    tmp_path / "prompt", tmp_path / "result", codex_account="b")
+
+    def refused(code, label="b"):
+        with pytest.raises(CodexAccountRefused, match=code):
+            admission.codex_account("codex", label)
+        with pytest.raises(CodexAccountRefused, match=code):
+            child_env(dataclasses.replace(spec, codex_account=label))
+
+    for label in ("c", "B", "", "default"):
+        refused("codex_account_unknown", label)
+    bind({"api": api})
+    refused("codex_account_unbound")
+    assert child_env(dataclasses.replace(spec, codex_account="api"))["CODEX_HOME"] == str(api)
+    bind({"api": api, "b": api})
+    refused("codex_account_binding_shared")
+    bind({"api": api, "b": b})
+    refused("codex_account_not_logged_in")
+    monkeypatch.setenv("PATH", str(tmp_path / "empty"))
+    refused("codex_account_login_unverified")
+    monkeypatch.setenv("PATH", f"{fake}:/usr/bin:/bin")
+    (b / "fixture-login").touch()
+    assert admission.codex_account("codex", "b") == {"codex_account": "b"}
+    assert child_env(spec)["CODEX_HOME"] == str(b)
+    b.chmod(0o755)
+    refused("codex_account_home_not_private")
+    b.chmod(0o700)
+    bind({"api": api, "b": tmp_path / "missing"})
+    refused("codex_account_home_unavailable")
+    assert admission.codex_account("codex", "sub") == {"codex_account": "sub"}
+    usage = {"input_tokens": 1_000_000, "cached_input_tokens": 0, "output_tokens": 0}
+    for label in ("sub", "api", "b"):
+        (tmp_path / f"{label}.json").write_text(json.dumps(
+            {"agent": "codex", "codex_account": label, "model": "gpt-6-luna", "usage": usage, "status": "done"}))
+    for label in ("api", "b"):
+        report = estimate(tmp_path, Decimal(200), label)
+        assert (report["priced_tasks"], Decimal(report["spent_usd"])) == (1, Decimal("0.1"))
