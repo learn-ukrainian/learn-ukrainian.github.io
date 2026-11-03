@@ -86,7 +86,7 @@ fleet_comms_cold_clause() {
     "Cross-family CF: direct ask-<lane> for verdict+findings (sealed review-pr / lu-review temps RETIRED — do not use). Never self-seal. " \
     "All normal inter-agent asks and discussions of 2 to 4 enabled seats use ACP; other seat counts reject loudly. " \
     "never fall back to bridge/provider execution. ACP transports; fleet-comms owns durable state. " \
-    "Closeout: use the task-prescribed interpreter with \`-m scripts.orchestration.merge_closeout <N> --apply\`; require the common-reaper cleanup receipt. " \
+    "Closeout: use the task-prescribed interpreter with \`-m scripts.orchestration.merge_closeout <N> --apply\`; the cleanup proof is that command exiting 0 after the worker's task has settled (its worktree removed by the dispatcher). " \
     "Continuity: stream lease already claimed; write durable receipts to fleet-comms."
 }
 
