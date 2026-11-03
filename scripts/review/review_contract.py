@@ -1417,7 +1417,9 @@ def validate_ukrainian_reply_claims(
         body = reply
     try:
         payload = yaml.safe_load(body)
-    except yaml.YAMLError as exc:
+    # The reply is untrusted: besides YAMLError, PyYAML's constructors raise ValueError, KeyError,
+    # IndexError, AttributeError or OverflowError on bad scalars, and deep nesting RecursionError.
+    except Exception as exc:
         if tag:
             raise ContractError("CLAIM_PAYLOAD_MALFORMED: review payload is not readable") from exc
         payload = None

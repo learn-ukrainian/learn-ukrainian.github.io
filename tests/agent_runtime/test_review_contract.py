@@ -527,3 +527,17 @@ def test_non_list_findings_envelope_is_refused_not_zero_claims():
     _, checked = validate_ukrainian_reply_claims(control)
     assert (checked.claims_total, checked.claims_unsupported) == (1, 1)
     assert checked.dropped_claims[0]["reason"] == "receipt_not_found"
+
+
+def test_invalid_yaml_scalar_is_typed_malformed_refusal():
+    """A reply that YAML parses but cannot construct gets the typed malformed refusal, not an exception (#12613)."""
+    from scripts.review.review_contract import ContractError, validate_ukrainian_reply_claims
+
+    # ValueError, AttributeError, IndexError, KeyError, OverflowError and RecursionError from construction.
+    bodies = ("x: 2024-13-45", "x: !!float abc", "x: !!timestamp abc", 'x: !!int ""', "x: !!bool abc",
+              "x: !!float " + ":".join(["1"] * 400), "[" * 5000 + "]" * 5000)
+    for body in bodies:
+        with pytest.raises(ContractError, match="CLAIM_PAYLOAD_MALFORMED: review payload is not readable"):
+            validate_ukrainian_reply_claims(f"VERDICT: APPROVE\n```yaml\n{body}\n```\n")
+        reply = f"VERDICT: APPROVE\n{body}\n"
+        assert validate_ukrainian_reply_claims(reply)[0] == reply
