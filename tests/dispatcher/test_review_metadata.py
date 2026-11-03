@@ -59,6 +59,7 @@ def test_review_metadata_loss_round_trip_enforces_risk_and_subjects(dispatch, mo
     assert cf._task_flag_values(record, "review_subject_families") == ("xai",)
     assert not cf.is_ukrainian_review(record)
     facts = Mock()
+    facts.resolver_inputs.return_value = cf.ResolverInputs(author_model=record["review_author_model"])
     monkeypatch.setattr(cf, "evaluate_candidate", lambda *a, **kw: SimpleNamespace(status="eligible"))
     cf._require_qualified_reviewer(facts, task=record,
                                    model="gpt-6.1-sol", family="openai")
