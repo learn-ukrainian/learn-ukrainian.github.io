@@ -752,14 +752,15 @@ def test_a_failed_scope_lookup_holds_the_ordinary_relaunch_and_alerts_after_the_
     h.advance(5)
     h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
     h.tick("cto")
-    assert "/exit" not in h.fake.typed("cto")  # no evidence on disk, so the agent is not exited by the guard
+    assert "/exit" not in h.fake.typed("cto") and cto_alerts(h) == []  # no evidence on disk: no exit, held quietly
+    h.advance(UNKNOWN_BOUND_MINUTES)
+    h.tick("cto")  # still alive and done, still unreadable: the hold alerts instead of stalling in silence
+    assert "/exit" not in h.fake.typed("cto")
+    assert len(cto_alerts(h)) == 1 and "could not be recorded" in cto_alerts(h)[0]
     h.pane("cto").agent = None  # it exits on its own
     h.advance(5)
     h.tick("cto")
-    assert respawns(h) == [] and cto_alerts(h) == []
-    h.advance(UNKNOWN_BOUND_MINUTES)
-    h.tick("cto")
-    assert respawns(h) == [] and len(cto_alerts(h)) == 1 and "no scope was recorded" in cto_alerts(h)[0]
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1
 
     second = tmp_path / "second"
     second.mkdir()
@@ -787,7 +788,17 @@ def test_a_reused_pid_never_lends_its_scope_to_the_ordinary_relaunch(tmp_path: P
     h.tick("cto")
     assert "exit_evidence" not in h.state["cto"]  # nothing was attributed to the exited agent
     assert any("pid was reused" in line for line in h.logs)
-    assert respawns(h) == [] and "/exit" not in h.fake.typed("cto")
+    assert "/exit" not in h.fake.typed("cto")
+
+    # The original agent is gone but its tasks keep the scope active. Had the other process's "no scope"
+    # been attributed to it, the relaunch would now pass blind.
+    pane = h.pane("cto")
+    pane.agent = None
+    h.fake.live_scopes.add(SCOPE)
+    h.posted["claude-epics"] = cg.iso(h.moment)
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == []
 
 
 def relaunched(tmp_path: Path) -> Harness:

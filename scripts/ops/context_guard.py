@@ -988,7 +988,8 @@ class Guard:
             command = "/exit" if lane.kind == "claude" else "/quit"
             if not recorded:
                 # The ordinary relaunch waits for this agent's scope, so it must be on disk before the agent exits.
-                self.log(f"{lane.name} handoff ctx_pct={pct}: agent scope not recorded; no {command}, retry next tick")
+                # Without the record no exit is sent, so the hold must alert, or the lane would stall in silence.
+                self._hold_unknown(lane, s, f"the agent's scope could not be recorded, so no {command} was sent")
                 return
             if not self._unchanged(lane, snap, command, pct):
                 return
@@ -1072,6 +1073,7 @@ class Guard:
         except BaseException:
             s.pop("exit_evidence", None)
             raise
+        s.pop("relaunch_held_since", None)  # an earlier failed read no longer ages a later hold
         return True
 
     def _hold_unknown(self, lane: Lane, s: dict[str, Any], reason: str) -> None:
