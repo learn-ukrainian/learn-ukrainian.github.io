@@ -11,8 +11,8 @@ import pytest
 from agent_runtime import usage as bridge_usage
 from scripts.agent_runtime import acpx_pilot, runner, usage
 from scripts.ai_agent_bridge import _cli, _codex
-from scripts.analytics import cost_report
 from scripts.audit import qg_bakeoff
+from scripts.telemetry import cost_report
 
 MODEL = "gpt-6.1-sol"
 READERS = ("codex-report", "pilot", "cost")

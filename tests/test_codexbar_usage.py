@@ -11,7 +11,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_router
 from scripts.api import subscription_usage as subscription_usage_mod
@@ -23,6 +22,7 @@ from scripts.api.subscription_usage import (
     pace_is_deficit,
     pace_is_visible,
 )
+from scripts.telemetry.cost_report import CostRecord
 
 
 @pytest.mark.parametrize("used_pct", [90.0, 98.99, 99.0, 100.0])

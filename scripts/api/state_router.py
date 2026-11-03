@@ -46,11 +46,11 @@ import yaml
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 
-from scripts.analytics.cost_report import CostRecord, load_cost_records
 from scripts.audit.llm_qg_store import (
     current_payload_for_module,
     llm_qg_file_is_current_for_module,
 )
+from scripts.telemetry.cost_report import CostRecord, load_cost_records
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)

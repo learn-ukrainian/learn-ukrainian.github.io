@@ -1398,11 +1398,6 @@
       "message": "Incompatible types in assignment (expression has type \"object\", variable has type \"None | str\")"
     },
     {
-      "path": "scripts/analytics/cost_report.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"counts\""
-    },
-    {
       "path": "scripts/analytics/vocab_progression.py",
       "code": "arg-type",
       "message": "Argument \"key\" to \"sorted\" has incompatible type overloaded function; expected \"Callable[[str], SupportsDunderGT[Any] | SupportsDunderLT[Any]]\""

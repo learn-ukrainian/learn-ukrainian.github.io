@@ -6,7 +6,7 @@ import asyncio
 
 from fastapi import APIRouter, Depends, Query
 
-from scripts.analytics.cost_report import build_cost_windows
+from scripts.telemetry.cost_report import build_cost_windows
 
 from .monitor_context import MonitorContext, get_ctx
 

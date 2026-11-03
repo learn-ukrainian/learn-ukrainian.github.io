@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_helpers, state_router
 from scripts.api.lane_health import (
@@ -19,6 +18,7 @@ from scripts.api.lane_health import (
     sanitize_error_excerpt,
     scan_lane_health,
 )
+from scripts.telemetry.cost_report import CostRecord
 
 
 def test_is_spawn_phase_failure():
