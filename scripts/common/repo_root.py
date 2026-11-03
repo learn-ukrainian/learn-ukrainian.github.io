@@ -106,8 +106,27 @@ def _configured_path(name: str, env: Mapping[str, str] | None) -> Path | None:
 
 
 def configured_primary_root(env: Mapping[str, str] | None = None) -> Path | None:
-    """The primary checkout named by the configuration, or ``None`` for the Git-derived default."""
-    return _configured_path(PRIMARY_ROOT_ENV, env)
+    """The primary checkout named by the configuration, or ``None`` for the Git-derived default.
+
+    A configured value whose ``.git`` is a file is refused: that is a linked worktree
+    (or a separate Git directory no local metadata proves primary), and anchoring
+    state there would split task records from the locks closeout reads (#5171 class).
+    """
+    configured = _configured_path(PRIMARY_ROOT_ENV, env)
+    if configured is not None and (configured / ".git").is_file():
+        raise MachineryConfigError(
+            f"{PRIMARY_ROOT_ENV} must name a primary checkout, not a linked worktree: {configured}/.git is a file"
+        )
+    return configured
+
+
+def runtime_primary_root() -> Path:
+    """The running code's own primary checkout, from its Git metadata; never configured.
+
+    Callers that start the dispatcher use this, as ``exec_primary`` does, so the
+    configured target primary never selects which dispatcher code runs.
+    """
+    return main_checkout_root(RUNTIME_ROOT)
 
 
 def primary_root(start: Path | None = None, env: Mapping[str, str] | None = None) -> Path:
@@ -118,14 +137,19 @@ def primary_root(start: Path | None = None, env: Mapping[str, str] | None = None
     return main_checkout_root(RUNTIME_ROOT if start is None else start)
 
 
-def github_slug(env: Mapping[str, str] | None = None) -> str:
-    """The configured ``owner/name`` GitHub slug, else this repository's."""
+def configured_github_slug(env: Mapping[str, str] | None = None) -> str | None:
+    """The configured ``owner/name`` GitHub slug, or ``None`` when unset or empty."""
     value = _env(env).get(GITHUB_SLUG_ENV, "")
     if not value:
-        return DEFAULT_GITHUB_SLUG
+        return None
     if not _GITHUB_SLUG_RE.fullmatch(value) or value.split("/")[1] in (".", ".."):
         raise MachineryConfigError(f"{GITHUB_SLUG_ENV} must be an owner/name GitHub slug, got {value!r}")
     return value
+
+
+def github_slug(env: Mapping[str, str] | None = None) -> str:
+    """The configured ``owner/name`` GitHub slug, else this repository's."""
+    return configured_github_slug(env) or DEFAULT_GITHUB_SLUG
 
 
 def state_root(start: Path | None = None, env: Mapping[str, str] | None = None) -> Path:

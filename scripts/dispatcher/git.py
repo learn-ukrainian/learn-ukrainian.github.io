@@ -20,7 +20,7 @@ import yaml
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.git_credentials import canonical_origins as canonical_origins
 from scripts.common.git_credentials import verification_credentials
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import configured_github_slug, resolve_repo_root
 from scripts.common.task_scratch import TaskScratchError, allocate
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import site_deps
@@ -265,6 +265,10 @@ def resolve_repo(key: str | None = None) -> tuple[Path, dict]:
     if key not in repos:
         raise ValueError("unknown repository key")
     item = {**repos[key], "key": key}
+    slug = configured_github_slug() if item.get("default") else None
+    if slug is not None:
+        # A configured slug names the default repository (#12681); unset, the catalog's value stands.
+        item["github"] = slug
     return (ROOT if item.get("default") else ROOT.parent / item["local_name"]).resolve(), item
 
 

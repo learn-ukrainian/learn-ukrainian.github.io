@@ -27,6 +27,8 @@ UNIT = REPO / "packaging" / "systemd" / "learn-ukrainian-project-state-reporter.
 DEFAULT_SLUG = "learn-ukrainian/learn-ukrainian.github.io"
 # Fleet catalog keys and their GitHub slugs (scripts/config/fleet_repos.yaml).
 REPOS = {"public": DEFAULT_SLUG, "kube-dojo": "kube-dojo/kube-dojo.github.io"}
+# A configured slug for the default repository that no catalog entry carries.
+CONFIGURED_SLUG = "example-org/moved-primary"
 
 
 class _Execed(Exception):
@@ -48,12 +50,17 @@ def _import_time_roots(env: dict[str, str]) -> dict[str, str]:
     """Roots that consumers bind at import time, read in a fresh interpreter."""
     code = (
         "import json\n"
+        "from scripts.ai_agent_bridge import _dispatch_wrappers as bridge\n"
         "from scripts.common.task_store_paths import tasks_dir\n"
         "from scripts.dispatcher import git\n"
         "from scripts.orchestration.task_identity import DEFAULT_REPOSITORY\n"
-        "print(json.dumps({'public': str(git.resolve_repo('public')[0]),\n"
-        "                  'kube-dojo': str(git.resolve_repo('kube-dojo')[0]),\n"
-        "                  'tasks_dir': str(tasks_dir()), 'slug': DEFAULT_REPOSITORY}))\n"
+        "from scripts.review import integration_check\n"
+        "repos = {key: git.resolve_repo(key) for key in ('public', 'kube-dojo')}\n"
+        "print(json.dumps({**{key: str(path) for key, (path, _) in repos.items()},\n"
+        "                  'github': {key: item['github'] for key, (_, item) in repos.items()},\n"
+        "                  'tasks_dir': str(tasks_dir()), 'slug': DEFAULT_REPOSITORY,\n"
+        "                  'bridge_state': str(bridge.REPO_ROOT), 'bridge_dispatcher': str(bridge.DISPATCHER_ROOT),\n"
+        "                  'integration_entry': str(integration_check.DISPATCH_ENTRY)}))\n"
     )
     result = subprocess.run(
         [sys.executable, "-c", code], cwd=REPO, env=env, capture_output=True, text=True, timeout=120, check=False
@@ -87,7 +94,7 @@ def layout(tmp_path: Path) -> dict[str, Path]:
 def _configured(layout: dict[str, Path], repo: str) -> dict[str, str]:
     return {
         rr.PRIMARY_ROOT_ENV: str(layout["primary"]),
-        rr.GITHUB_SLUG_ENV: REPOS[repo],
+        rr.GITHUB_SLUG_ENV: CONFIGURED_SLUG,
         rr.STATE_ROOT_ENV: str(layout["primary"]),
         rr.RULES_DIR_ENV: str(layout["rules"]),
         rr.INTERPRETER_ENV: str(layout["python"]),
@@ -183,7 +190,16 @@ def test_dispatch_targets_state_and_slug_follow_the_configuration(layout, repo: 
     roots = _import_time_roots(_subprocess_env(**_configured(layout, repo)))
     assert Path(roots[repo]) == layout[repo].resolve()
     assert Path(roots["tasks_dir"]) == layout["primary"] / "batch_state" / "tasks"
-    assert roots["slug"] == REPOS[repo]
+    assert Path(roots["bridge_state"]) == layout["primary"]
+    # One slug per process: dispatch identity and task identity both carry the configured one,
+    # and a sibling keeps its own catalog slug.
+    assert roots["slug"] == roots["github"]["public"] == CONFIGURED_SLUG
+    assert roots["github"]["kube-dojo"] == REPOS["kube-dojo"]
+    # The configured target never selects dispatcher code: the bridge and the integration
+    # check still start the dispatcher from the running code's own primary.
+    runtime_primary = rr.main_checkout_root(REPO)
+    assert Path(roots["bridge_dispatcher"]) == runtime_primary
+    assert Path(roots["integration_entry"]) == runtime_primary / "scripts" / "dispatch.py"
 
 
 @pytest.mark.parametrize("repo", sorted(REPOS))
@@ -237,7 +253,7 @@ def test_systemd_exec_start_runs_with_the_configured_roots(tmp_path: Path, layou
         "argv": [str(reporter), "report"],
         "primary": str(layout["primary"]),
         "rules": str(layout["rules"]),
-        "slug": REPOS[repo],
+        "slug": CONFIGURED_SLUG,
     }
 
 
@@ -261,7 +277,7 @@ def test_runtime_target_interpreter_policy_and_state_roots_are_distinct(monkeypa
         monkeypatch.setenv(key, value)
     roots = rr.machinery_roots()
     assert (roots.runtime, roots.primary, roots.state) == (rr.RUNTIME_ROOT, layout["primary"], layout["primary"])
-    assert (roots.rules_dir, roots.interpreter, roots.github_slug) == (layout["rules"], layout["python"], REPOS[repo])
+    assert (roots.rules_dir, roots.interpreter, roots.github_slug) == (layout["rules"], layout["python"], CONFIGURED_SLUG)
     target = layout[repo]
     distinct = {roots.runtime, roots.rules_dir, roots.interpreter, roots.state}
     assert len(distinct) == 4
@@ -294,6 +310,21 @@ def test_unset_configuration_keeps_todays_import_time_roots() -> None:
     assert Path(roots["kube-dojo"]) == (primary.parent / "kube-dojo").resolve()
     assert Path(roots["tasks_dir"]) == primary / "batch_state" / "tasks"
     assert roots["slug"] == DEFAULT_SLUG
+    assert roots["github"] == REPOS
+    assert Path(roots["bridge_state"]) == Path(roots["bridge_dispatcher"]) == primary
+    assert Path(roots["integration_entry"]) == primary / "scripts" / "dispatch.py"
+
+
+def test_a_linked_worktree_is_never_the_configured_primary_or_state_root(monkeypatch, tmp_path: Path) -> None:
+    """State stays on a primary checkout: a configured worktree would split records from closeout's locks."""
+    _, tree = _linked_worktree(tmp_path)
+    monkeypatch.setenv(rr.PRIMARY_ROOT_ENV, str(tree))
+    monkeypatch.setenv(rr.STATE_ROOT_ENV, str(tree))
+    for resolve in (rr.machinery_roots, rr.state_root, lambda: rr.resolve_repo_root(Path(rr.__file__), 2)):
+        with pytest.raises(rr.MachineryConfigError, match="not a linked worktree"):
+            resolve()
+    with pytest.raises(worktree_claims.ControlPlaneError):
+        worktree_claims.public_primary_root()
 
 
 def test_unset_configuration_keeps_todays_interpreter_order(clean_env, tmp_path: Path) -> None:
