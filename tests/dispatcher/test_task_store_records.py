@@ -11,8 +11,7 @@ from scripts.dispatcher.types import TaskSpec
 from scripts.orchestration.task_record_store import read_task_record
 from scripts.review import budget_grant, review_lineage
 from scripts.review import record_cf_verdict as recorder
-from tests.dispatcher.test_core import run_git
-from tests.dispatcher.test_core import sandbox as sandbox
+from tests.dispatcher.conftest import run_git
 
 HEAD = "a" * 40
 

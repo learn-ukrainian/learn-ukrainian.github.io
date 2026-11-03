@@ -36,7 +36,7 @@ import math
 import os
 import re
 import threading
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -344,6 +344,15 @@ def _compute_weak_points_payload(
 
 def _run_state_scan_warmup(ctx: MonitorContext) -> None:
     """Populate the default expensive state-scan caches after process start."""
+    try:
+        # First: a dispatch launch right after a restart reads this key (#12512).
+        cache_get_or_compute(
+            _ctx_cache_key(ctx, "routing-budget", "dispatch", 0),
+            ROUTING_BUDGET_TTL_S,
+            _routing_budget_compute(ctx, "dispatch", False),
+        )
+    except Exception as exc:
+        logging.getLogger("state_router").warning("Routing-budget warmup failed: %s", exc)
     try:
         cache_get_or_compute(
             _ctx_cache_key(ctx, "pipeline_versions", "all"),
@@ -2326,6 +2335,39 @@ class _RoutingBudgetGeneration:
     invalidated: threading.Event = field(default_factory=threading.Event)
 
 
+def _routing_budget_compute(
+    ctx: MonitorContext, transport: str, refresh_requested: bool
+) -> Callable[[], tuple[_RoutingBudgetGeneration, dict[str, Any]]]:
+    """The cache compute for one routing-budget key, shared by the route and the startup warmup."""
+    tasks_dir = ctx.roots.batch_state_dir / "tasks"
+
+    def _compute() -> tuple[_RoutingBudgetGeneration, dict[str, Any]]:
+        started_at = state_helpers._ttl_clock()
+        directory_token = delegate_api._dir_token(tasks_dir)
+        generation: list[str] = []
+        value = compute_routing_budget(
+            transport=transport,
+            fresh_codexbar=False,
+            refresh_requested=refresh_requested,
+            budget_config_path=ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+            tasks_dir=tasks_dir,
+            project_root=ctx.roots.project_root,
+            curriculum_root=ctx.roots.curriculum_root,
+            batch_state_dir=ctx.roots.batch_state_dir,
+            task_generation=generation,
+        )
+        observed = _RoutingBudgetGeneration(generation[0] if generation else None, directory_token, started_at)
+        if (
+            observed.content_token is None
+            or observed.content_token != _tasks_content_token(tasks_dir)
+            or directory_token != delegate_api._dir_token(tasks_dir)
+        ):
+            observed.invalidated.set()
+        return observed, value
+
+    return _compute
+
+
 @router.get("/routing-budget")
 async def routing_budget(
     fresh_codexbar: bool = Query(False),
@@ -2345,30 +2387,7 @@ async def routing_budget(
     # Directory checks are cheap enough for warm reads. All-file validation
     # runs beside the request to detect in-place rewrites without pool waits.
     tasks_dir = ctx.roots.batch_state_dir / "tasks"
-
-    def _compute() -> tuple[_RoutingBudgetGeneration, dict[str, Any]]:
-        started_at = state_helpers._ttl_clock()
-        directory_token = delegate_api._dir_token(tasks_dir)
-        generation: list[str] = []
-        value = compute_routing_budget(
-            transport=transport,
-            fresh_codexbar=False,
-            refresh_requested=fresh_codexbar,
-            budget_config_path=ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
-            tasks_dir=tasks_dir,
-            project_root=ctx.roots.project_root,
-            curriculum_root=ctx.roots.curriculum_root,
-            batch_state_dir=ctx.roots.batch_state_dir,
-            task_generation=generation,
-        )
-        observed = _RoutingBudgetGeneration(generation[0] if generation else None, directory_token, started_at)
-        if (
-            observed.content_token is None
-            or observed.content_token != _tasks_content_token(tasks_dir)
-            or directory_token != delegate_api._dir_token(tasks_dir)
-        ):
-            observed.invalidated.set()
-        return observed, value
+    _compute = _routing_budget_compute(ctx, transport, fresh_codexbar)
 
     # A warm snapshot returns on the event loop. After the TTL, the last
     # snapshot is served with its real age and refreshed beside the request.

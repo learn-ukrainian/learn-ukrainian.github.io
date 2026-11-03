@@ -476,11 +476,17 @@ def test_transport_default_and_invalid_value(tmp_path, monkeypatch):
 def test_registry_opts_in_exactly_the_private_sibling(https_world, tmp_path, monkeypatch):
     """Pin the shipped registry: one https entry, and its derived canonical URL."""
     real_registry = yaml.safe_load(_REAL_REGISTRY.read_text(encoding="utf-8"))["repos"]
-    assert {key for key, body in real_registry.items() if body.get("transport") == "https"} == {"infra-private"}
+    assert {key for key, body in real_registry.items() if body.get("transport") == "https"} == {
+        "infra-private",
+        "kube-dojo",
+        "kubedojo-labs",
+    }
     assert {key: body.get("transport") for key, body in real_registry.items()} == {
         "public": "ssh",
         "infra-private": "https",
         "hramatka": "ssh",
+        "kube-dojo": "https",
+        "kubedojo-labs": "https",
     }
     shipped = load_fleet_repos()["infra-private"]
     monkeypatch.setattr(sg, "_REGISTRY_PATH", _REAL_REGISTRY)

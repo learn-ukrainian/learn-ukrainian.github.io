@@ -43,7 +43,12 @@ ruff>=0.15.21
 
 # Database
 aiosqlite>=0.22
-psycopg[binary]>=3.3  # control-plane storage seam pg authority (Phase 0b #603)
+# psycopg and its C implementation psycopg-binary are exact-pinned together and
+# must always match: `pip install --no-deps` ignores the [binary] extra, so a
+# `psycopg[binary]` spec leaves an old psycopg-binary in place and every
+# connection then fails (#12476). Dependabot bumps the pair as one group.
+psycopg==3.3.6  # control-plane storage seam pg authority (Phase 0b #603)
+psycopg-binary==3.3.6
 
 # Process / file-locking / fuzzy-match utilities (#6830 manifest-debt fix —
 # these were installed transitively and worked until a from-scratch venv
@@ -59,7 +64,7 @@ rapidfuzz>=3.14.6  # .mcp/servers/sources/server.py (handle_verify_quote), scrip
 # `test_plan_latin_fix.py`, and 15 `test_open_model_phase3_*` modules).
 lxml>=6.1         # scripts/ingest/esum_abbyy_parser.py
 pypdf>=6.21.4       # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py; 6.21.4 clears CVE-2026-119203 to -119209
-PyMuPDF>=1.28.2     # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
+PyMuPDF>=2.0     # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
 ruamel.yaml>=0.19 # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}.py
 
 # MCP protocol (sources + trails MCP servers ported to 2.0 API); >=2.2 clears CVE-2026-59951
@@ -79,7 +84,7 @@ jinja2>=3.1
 graphql-core==3.3.1  # scripts/common/github_client.py (imported only when a document can write)
 
 # TypeSafe System One (Jev) — curriculum / open-model triage (#8177–#8179)
-typesafe-sdk>=0.7.0
+typesafe-sdk>=0.7.5
 
 # Security floors (transitive deps held above their vulnerable range)
 # zeroconf comes via mcp-memory-service; CVE-2026-48045 / GHSA-9663-mqmp-p9mm

@@ -1,16 +1,19 @@
 #!/bin/sh
-# AGY hook entry point for the pinned driver state (scripts/driver_state.py).
-#   driver_state_inject.sh [agy-hook|agy-stop-hook|agy-pretool-hook]
-# AGY runs hooks from the directory that holds hooks.json (.agents/), so
-# resolve the checkout from this script. Fail-open: always print a JSON
-# object and exit 0, so a broken hook never blocks the agent loop.
+# Harness hook entry point for the pinned driver state (scripts/driver_state.py).
+#   driver_state_inject.sh [agy-hook|agy-stop-hook|agy-pretool-hook|claude-hook|claude-stop-hook]
+# AGY runs hooks from the directory that holds hooks.json (.agents/), and
+# Claude Code from the project directory, so resolve the checkout from this
+# script. Fail-open: always print a JSON object and exit 0, so a broken hook
+# never blocks the agent loop.
 mode="${1:-agy-hook}"
 case "$mode" in
-  agy-hook|agy-stop-hook|agy-pretool-hook) ;;
+  agy-hook|agy-stop-hook|agy-pretool-hook|claude-hook|claude-stop-hook) ;;
   *) mode=agy-hook ;;
 esac
-fallback='{}'
-[ "$mode" != agy-hook ] && fallback='{"decision": "allow"}'
+case "$mode" in
+  agy-stop-hook|agy-pretool-hook) fallback='{"decision": "allow"}' ;;
+  *) fallback='{}' ;;
+esac
 # Drain the hook input before any child can fail without reading it. Keep the
 # original bytes in a file because shell variables cannot preserve NULs.
 input_file=$(mktemp --tmpdir="$TMPDIR" agy-in.XXXXXX) || { cat >/dev/null; echo "$fallback"; exit 0; }

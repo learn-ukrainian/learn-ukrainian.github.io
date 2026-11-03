@@ -1266,11 +1266,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/euphony-advanced/activities.yaml",
-      "sha256": "548dd40cbc62e788b81b77a5deb66b42b4be8c8b2b2f0ca56a8f4e88d653d759"
+      "sha256": "3d5cb1d1a34ae19a911eebf77cc7bc08fb83dcdb4a10c883b21917d7cf1c0657"
     },
     {
       "path": "curriculum/l2-uk-en/a2/euphony-advanced/module.md",
-      "sha256": "eb26373e82bee7c2aa16ba9d1279ab91ee242343e297390893f0b4beaa224742"
+      "sha256": "e2cda9a34f260092e14f757a2fa7f6b6e6b46c27f52e11e80ec6c69ad6bd116f"
     },
     {
       "path": "curriculum/l2-uk-en/a2/euphony-advanced/resources.yaml",
@@ -1362,11 +1362,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-prepositions-direction/activities.yaml",
-      "sha256": "eeb9a2ed9e21c186b5daf69b5ef05e1601435cdff32bd862f07b567ab6ae0999"
+      "sha256": "5a563c012b2efb1983c53559e41cb4fdbf610ca058e4573eacbbee575e315276"
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-prepositions-direction/module.md",
-      "sha256": "1f91468d069e06880ab6becadf84c7ba62e210cc694152736011ae1482c6d003"
+      "sha256": "91dbfeab49307befff3252910d1d8cb4c9b35b39734905aa6543559bba2ee8d6"
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-prepositions-direction/resources.yaml",
@@ -6138,7 +6138,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/euphony-advanced.yaml",
-      "sha256": "6272dbd2d06619c91cd213f3c4ed4af3df5a2611330a51228616cd2f241ce7ee"
+      "sha256": "391b9561696ab8a9c96e63e7668cc0348e0bdaeef32c904c1179ea34551d984a"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/foundations-practice.yaml",
@@ -6162,7 +6162,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/genitive-prepositions-direction.yaml",
-      "sha256": "d4e84b747d564c41e40dbe7ca4093c8d428bb014f3864abcc10dd0c8007c8917"
+      "sha256": "afeac644bba1f0a5cfe31f941051eb75c5a655c13afa3ffef45ee0b9f0a75ed7"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/genitive-prepositions-purpose.yaml",
@@ -14286,7 +14286,7 @@
     },
     {
       "path": "site/src/content/docs/a2/euphony-advanced.mdx",
-      "sha256": "425358e85e423ae98c1fdc8755018b38749baa5e8f21fbfc14588ad4138603e9"
+      "sha256": "fecf6243779bb45935afba5c211e73adf700d2a0aa7b3e0dfc3e3ad2441362c9"
     },
     {
       "path": "site/src/content/docs/a2/foundations-practice.mdx",
@@ -14310,7 +14310,7 @@
     },
     {
       "path": "site/src/content/docs/a2/genitive-prepositions-direction.mdx",
-      "sha256": "8d72905daa18b2f6b7e09123f1c9b169b2dae685c1b68c52a50b6bfd53f5cf2a"
+      "sha256": "c13a25543c172f57a9cb5aeed6043930374b1b2c4feaae492ba3cfca9068b44a"
     },
     {
       "path": "site/src/content/docs/a2/genitive-prepositions-purpose.mdx",

@@ -137,7 +137,6 @@ _MODULE_ARTIFACT_NAMES = (
     "upgrade_writer.json",
     "writer_prompt.md",
     "writer_output.raw.md",
-    "hermes.write.jsonl",
     "writer_tool_calls.json",
     "knowledge_packet.md",
     "wiki_manifest.json",
@@ -401,9 +400,6 @@ def _persist_artifact_paths(
     for artifact_dir in artifact_dirs:
         candidate_paths.extend(_existing_module_artifacts(artifact_dir))
 
-    # Gemini-routed writes can place the Hermes trace at the repository root.
-    candidate_paths.append(worktree.path / "hermes.write.jsonl")
-
     default_mdx = (
         worktree.path
         / "site"
@@ -621,7 +617,7 @@ def _persist_build_artifacts(
 ) -> bool:
     """Commit scoped build artifacts to the worktree's build branch.
 
-    Build artifacts (writer_prompt.md, writer_output.raw.md, hermes.write.jsonl,
+    Build artifacts (writer_prompt.md, writer_output.raw.md,
     writer_tool_calls.json, knowledge_packet.md, implementation_map.json, the
     module.md + yaml siblings, and the assembled MDX if the build reached the
     publish phase) are LOAD-BEARING for diagnosis and for the self-correction
@@ -2641,8 +2637,8 @@ def _run(args: argparse.Namespace) -> int:
             # gemini-tools must load .gemini/settings.json from repo root;
             # module_dir cwd would leave its MCP catalog empty. See
             # audit/gemini-tools-review-2026-05-09/REPORT.html E5/E6.
-            # grok-tools routes to grok-hermes (Hermes MCP via ~/.hermes/config.yaml)
-            # and can run from the module directory like claude-tools/codex-tools.
+            # grok-tools can run from the module directory like
+            # claude-tools/codex-tools.
             writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else module_dir
             writer_output = linear_pipeline.invoke_writer(
                 prompt,

@@ -707,6 +707,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-setup.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/agy_hooks/driver_state_inject.sh claude-hook",
+            "timeout": 10
           }
         ]
       }
@@ -850,6 +855,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/context-rollover-guard.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/agy_hooks/driver_state_inject.sh claude-hook",
+            "timeout": 10
           }
         ]
       }
@@ -907,6 +917,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/goal-driver-stop.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/agy_hooks/driver_state_inject.sh claude-stop-hook",
+            "timeout": 10
           }
         ]
       }
@@ -962,6 +977,7 @@
   "effortLevel": "high",
   "env": {
     "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1",
+    "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS": "32000",
     "PYTHONDONTWRITEBYTECODE": "1"
   }
 }

@@ -232,7 +232,7 @@ class KimiAdapter:
 
 def _resolve_kimi_binary() -> str:
     override = os.environ.get("LEARN_UK_KIMI_BIN")
-    # The hermes npm install (@moonshot-ai/kimi-code) is the maintained one;
+    # The PATH-resolved kimi (@moonshot-ai/kimi-code) is the maintained one;
     # ~/.kimi-code/bin/kimi is the legacy standalone binary and is often stale.
     candidates = (
         override,

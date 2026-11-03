@@ -10,9 +10,10 @@ remote ref names, the names and messages of the annotated tags on the way from
 each sent id (nested tags included) and the whole raw messages of every commit
 reachable from the sent ids, with the tag names and messages embedded in their
 mergetag headers, are scanned through check_texts, except commits reachable
-from the head of the default branch of the catalogue's canonical public
-repository (already public), and only when every commit object reachable from
-it hashes to its id. That head comes from one GitHub API read per push;
+from the head of the default branch of the registered public repository the
+push goes to (already public), and only when every commit object reachable
+from it hashes to its id. That repository is the catalogue row the push
+destination names; an unregistered or ambiguous destination excludes nothing. That head comes from one GitHub API read per push;
 nothing is cached between pushes, and nothing the destination reports is
 evidence of what it already has. Enumeration ignores replacement objects,
 grafts and commit-graph files, a grafted repository is refused, a shallow one
@@ -283,10 +284,10 @@ class Repository:
 
 
 class CanonicalPublicRepository:
-    """The default-branch head of the catalogue's public repository, read through the typed publisher reads.
+    """The default-branch head of a registered public repository, read through the typed publisher reads.
 
     The repository comes from the catalogue, never from the push URL or local
-    git configuration, and the answer comes from the GitHub API. Only a
+    git configuration alone (from_catalog), and the answer comes from the GitHub API. Only a
     well-formed reply bound to the question counts; a failure, timeout, rate
     limit, 404 or malformed or inconsistent body is no answer.
     """
@@ -299,10 +300,26 @@ class CanonicalPublicRepository:
         self.calls = 0
 
     @classmethod
-    def from_catalog(cls, environment: dict[str, str]) -> CanonicalPublicRepository | None:
-        rows = [row for row in gate.catalog().values() if row.get("role") == "public-monorepo"]
-        repo = gate.normalize_repository(rows[0]["github"]) if len(rows) == 1 else "unknown"
-        return None if repo == "unknown" else cls(repo, environment)
+    def from_catalog(cls, environment: dict[str, str], destination: str) -> CanonicalPublicRepository | None:
+        """The registered public repository the push goes to, or None, which excludes nothing.
+
+        destination (the push URL's canonical host/owner/name) only selects
+        among catalogue rows: it must equal the repository of exactly one row
+        whose role is public ("public-..."), and the repository asked about
+        is that row's. Whatever a row selects, only commits its verified
+        public default-branch history holds are ever excluded, so a forged
+        or rewritten URL can at most pick another public history. An unknown,
+        unregistered, private or ambiguous destination selects nothing.
+        """
+        if destination == "unknown":
+            return None
+        rows = [
+            repo
+            for row in gate.catalog().values()
+            if str(row.get("role", "")).startswith("public-")
+            and (repo := gate.normalize_repository(str(row.get("github", "")))) == destination
+        ]
+        return cls(rows[0], environment) if len(rows) == 1 else None
 
     def default_head(self) -> str | None:
         """The commit the public default branch names now, or None without a bound answer.
@@ -609,8 +626,8 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
 
     arguments are the hook's (remote name, URL) and data its whole input.
     public_repository reports the canonical public default-branch head; by
-    default it is built from the catalogue, and only when the push sends
-    commits.
+    default it is the catalogue's public repository the destination names
+    (from_catalog), built only when the push sends commits.
     """
     if len(arguments) != 2:
         raise gate.PublishBlocked("OPSEC: pre-push hook arguments malformed; push refused.")
@@ -636,7 +653,7 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
         if grafted:
             raise gate.PublishBlocked("OPSEC: grafted history present; push refused.")
         if public_repository is None:
-            public_repository = CanonicalPublicRepository.from_catalog(dict(os.environ))
+            public_repository = CanonicalPublicRepository.from_catalog(dict(os.environ), dest)
         head, state = public_history(repository, public_repository, object_format)
         exclusion = f"^{head}\n" if state == "present" else ""
         stdin = "".join(f"{sha}\n" for sha in tips) + exclusion

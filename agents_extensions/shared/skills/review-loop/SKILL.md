@@ -29,8 +29,13 @@ Recipes run with the primary checkout's interpreter, resolved once
 ([delivery](../full-send/references/delivery.md#interpreter)):
 
 ```bash
-PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/bin/python"
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+PY="$PRIMARY_REPO/.venv/bin/python"
 ```
+
+Invoke the recorder by its absolute primary-checkout path below. This applies current
+recorder rules even when the caller's branch predates a recorder fix. Resolving only the
+interpreter does not select the primary checkout's Python modules.
 
 ## Steps
 
@@ -114,7 +119,7 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    repair-verification round ([policy](references/policy.md#budget)):
 
    ```bash
-   "$PY" -m scripts.review.record_cf_verdict budget-check --repository "$REPOSITORY" --pr "$PR"
+   "$PY" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py" budget-check --repository "$REPOSITORY" --pr "$PR"
    ```
 
    Exit 0 admits the round; carry any `repair_round` receipt (its approved and candidate heads,
@@ -126,7 +131,7 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
 7. **Record the verdict on the open PR** (it is open and CI-green at the reviewed head, `full-send` step 4):
 
    ```bash
-   "$PY" -m scripts.review.record_cf_verdict --task-id "$REVIEW_TASK" --pr "$PR"
+   "$PY" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py" --task-id "$REVIEW_TASK" --pr "$PR"
    ```
 
    Exit 0 means recorded with a JSON receipt; exit 1 means refused, so nothing is recorded.

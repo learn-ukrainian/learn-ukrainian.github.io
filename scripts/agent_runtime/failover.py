@@ -33,9 +33,9 @@ _RATE_LIMIT_RE = re.compile(
     r"resource_exhausted|\bHTTP 429\b|\bstatus 429\b|\b429\b",
     re.IGNORECASE,
 )
-# Credential-absence phrasings included: hermes refuses to start a provider
-# whose key is missing/disabled with "Provider '<name>' is set in config.yaml
-# but no API key was found ..." (live-captured 2026-07-06). Rotating to the
+# Credential-absence phrasings included: a provider CLI refuses to start a
+# provider whose key is missing/disabled with "Provider '<name>' is set in
+# config.yaml but no API key was found ..." (live-captured 2026-07-06). Rotating to the
 # next route on a dead credential is the point of the chain, so these
 # classify as auth. Judgment call: the phrasings are broad enough that a
 # provider passing through a verbose downstream error body could false-match;

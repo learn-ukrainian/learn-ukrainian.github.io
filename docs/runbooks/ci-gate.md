@@ -6,7 +6,7 @@ guard, attribution, lint and content contracts, dependency-audit scoping,
 `pytest --collect-only` and Frontend. They run no pytest shards; the gate summary
 states plainly that full pytest was not run (operator decision, 2026-10-29).
 The parallel required `pr-affected` job executes literal changed existing
-`tests/**/test_*.py` files, every path in `scripts/ci/pr-affected-guards.txt`, and
+`tests/**/test_*.py` files, every entry in `scripts/ci/pr-affected-guards.txt` (a whole test path, or a pinned `path::test` id that runs only that test and costs nothing extra when its file is already selected), and
 the tests that directly import, load, read or run a changed non-test file.
 The same job also runs `pytest tests -m 'repo_wide and not atlas_release and not slow and not site_toolchain'`
 in a separate required step.
@@ -28,7 +28,8 @@ Unsafe paths, missing guards and symlinks fail closed. Tests for changed code co
 from the direct edges of the static scan in `scripts/ci/components.py`
 (`scan_imports`): imports, literal loads, file reads and Python subprocess targets.
 Only direct importers are selected; the transitive closure spans most of the suite,
-which the merge group runs. A deleted file has no edges in the candidate, so the
+which the merge group runs. A `conftest.py` counts as an importer for every test file under its directory, because
+pytest loads it for each of them: code a conftest imports or copies into a fixture selects those tests too. A deleted file has no edges in the candidate, so the
 surviving tests that depended on it come from the same scan of the base tree.
 The component inventory chooses no tests.
 
@@ -59,7 +60,7 @@ outside the guards defer to merge-group pytest. If it exceeds the safe budget, t
 run and changed tests fill the rest of the budget, cheapest recorded duration first; the
 others defer with an explicit reason. Otherwise the importing tests fill half of the room
 the guards and changed tests leave under the cap, never past the safe budget, cheapest
-recorded duration first; the rest defer with the same reason and are listed in
+recorded duration first, tests that import the changed code themselves before tests that only share a conftest with it; the rest defer with the same reason and are listed in
 `importing_test_files` and `deferred_files`. If the guards alone exceed the safe budget,
 the job writes `pr-affected.json` with `execution_status` `not_run_guards_exceed_safe_budget`
 and fails with that reason instead of running to the timeout. The recorded estimate includes the importing tests that run, and

@@ -144,11 +144,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "df609e52aff528177c6d4cda7725564ea25af9a2d765f2de916d35d64c00d39f:1",
     ),
     (
-        "scripts/agent_runtime/probe_fallback.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
-        "4011a53ed8820d21fd8086a91827ed8cb250f8d5f02a2a4ea76601f4f8af2213:1 db01cca994b6ba71b665bd75596a2491438cef55fa6da3bba4b170f269095bc5:1",
-    ),
-    (
         "scripts/agent_runtime/runner.py",
         "Existing path detection/privacy rule; not a temp directory producer. Expanded checks retain exact legacy fingerprints (#9702).",
         "157c5504e246d91fc39c7a97000388fbb49ded2a1e940ab30d4a92310a851018:1 27e2a870d20bcd60a938424c008e9548500d4fdf66554af3ef7e89d14db9e54e:1 5626cf9c36f6c39aa27b49c3c3a28c37bd827034ba92e47f0e39bb9f8b0cf4d9:1 62727a005096ecac61c899e122a56d6728b1ea730538ef7070f6a36f78924ed1:1 a09bdb0bbd6dd2c2efc822b650fd74694f00d2234214ff99883dce2c68b26383:1",

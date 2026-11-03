@@ -173,6 +173,82 @@ describe('MatchUp', () => {
     expect(findRightByText(container, 'Meow')).toBeDisabled();
   });
 
+  test('two identical right labels: the non-authored identical tile is accepted and each tile is consumed once', async () => {
+    const user = userEvent.setup();
+    const onMatch = vi.fn();
+    const onComplete = vi.fn();
+    const duplicatePairs = [
+      { left: 'Cat', right: 'Same' },
+      { left: 'Dog', right: 'Same' },
+      { left: 'Cow', right: 'Other' },
+    ];
+    const { container, rerender } = render(
+      <MatchUp pairs={duplicatePairs} matchedPairCoding="semantic-four" onMatch={onMatch} onComplete={onComplete} />,
+    );
+    const left = leftTiles(container);
+    const right = rightTiles(container);
+    const catRight = right.find((tile) => tile.dataset.originalIndex === '0')!;
+    const dogRight = right.find((tile) => tile.dataset.originalIndex === '1')!;
+
+    await user.click(left[0]);
+    await user.click(dogRight);
+
+    expect(left[0]).toBeDisabled();
+    expect(dogRight).toBeDisabled();
+    expect(left[1]).toBeEnabled();
+    expect(catRight).toBeEnabled();
+    expect(left[0]).toHaveAttribute('aria-label', 'Cat — Same, pair ①, matched with Same');
+    expect(dogRight).toHaveAttribute('aria-label', 'Cat — Same, pair ①, matched with Cat');
+    for (const tile of [left[0], dogRight]) {
+      expect(tile).toHaveAttribute('data-matched', 'true');
+      expect(tile).toHaveAttribute('data-pair-color', '0');
+      expect(tile).toHaveAttribute('data-pair-token', '0');
+      expect(tile.style.getPropertyValue('--match-pair-token')).toBe('teal');
+      expect(tile.querySelector('.matchPairTag')).toHaveTextContent('①');
+    }
+    expect(onMatch.mock.calls).toEqual([[0, 'good']]);
+    await user.click(left[0]);
+    await user.click(left[1]);
+    await user.click(dogRight);
+    expect(left[1]).toHaveAttribute('data-selected', 'true');
+    expect(onMatch.mock.calls).toEqual([[0, 'good']]);
+
+    await user.click(catRight);
+    expect(catRight).toHaveAttribute('aria-label', 'Dog — Same, pair ②, matched with Dog');
+    for (const tile of [left[1], catRight]) {
+      expect(tile).toBeDisabled();
+      expect(tile).toHaveAttribute('data-pair-color', '1');
+      expect(tile).toHaveAttribute('data-pair-token', '1');
+      expect(tile.style.getPropertyValue('--match-pair-token')).toBe('orange');
+      expect(tile.querySelector('.matchPairTag')).toHaveTextContent('②');
+    }
+    await user.click(left[2]);
+    await user.click(findRightByText(container, 'Other'));
+    expect(onMatch.mock.calls).toEqual([[0, 'good'], [1, 'good'], [2, 'good']]);
+    expect(onComplete.mock.calls).toEqual([[true]]);
+    expect(feedback(container)).toHaveTextContent('All matched correctly');
+    for (const tile of [...left, ...right]) {
+      expect(tile).toBeDisabled();
+      expect(tile).toHaveAttribute('data-matched', 'true');
+      await user.click(tile);
+    }
+    expect(onMatch).toHaveBeenCalledTimes(3);
+    expect(onComplete).toHaveBeenCalledTimes(1);
+
+    rerender(<MatchUp pairs={[...duplicatePairs]} matchedPairCoding="semantic-four" onMatch={onMatch} onComplete={onComplete} />);
+    for (const tile of [...leftTiles(container), ...rightTiles(container)]) {
+      expect(tile).toBeEnabled();
+      expect(tile).toHaveAttribute('data-matched', 'false');
+      expect(tile).not.toHaveAttribute('aria-label');
+      expect(tile.querySelector('.matchPairTag')).not.toBeInTheDocument();
+    }
+    expect(feedback(container)).not.toBeInTheDocument();
+    await user.click(leftTiles(container)[1]);
+    await user.click(rightTiles(container).find((tile) => tile.dataset.originalIndex === '0')!);
+    expect(onMatch.mock.calls).toEqual([[0, 'good'], [1, 'good'], [2, 'good'], [1, 'good']]);
+    expect(leftTiles(container)[1].querySelector('.matchPairTag')).toHaveTextContent('①');
+  });
+
   test('unmatched tiles remain enabled after a correct match', async () => {
     const user = userEvent.setup();
     const { container } = render(<MatchUp pairs={pairs} />);
@@ -537,6 +613,13 @@ describe('MatchUp', () => {
       );
 
       expect(onMatch).not.toHaveBeenCalled();
+
+      await user.click(catTile);
+      await user.click(findRightByText(container, 'Meow'));
+      expect(onMatch.mock.calls).toEqual([[0, 'hard']]);
+      expect(catTile).toBeDisabled();
+      expect(findRightByText(container, 'Meow')).toBeDisabled();
+      expect(catTile.querySelector('.matchPairTag')).toHaveTextContent('①');
     });
   });
 });

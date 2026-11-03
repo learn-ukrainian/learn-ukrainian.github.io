@@ -57,7 +57,15 @@ def test_search_esum_sibir_is_outside_volume_one_scope() -> None:
 
 @needs_esum_data
 def test_search_esum_berkut_returns_turkic_origin() -> None:
-    hits = search_esum("беркут", volume=1, limit=3)
-    assert [hit["lemma"] for hit in hits] == ["беркут"]
+    """A clean volume-1 Turkic-origin entry is returned with its etymology.
+
+    The test keeps its historical name (its node id is pinned in the data-tier
+    selection) but no longer queries "беркут": that row's OCR text interleaves a
+    neighbouring column and carries the `\\У` mojibake marker, so since
+    55254d8acd46 ("filter garbled ESUM etymologies") ``search_esum`` withholds it by
+    design. "баклан" is a clean volume-1 row with the same Turkic-origin claim.
+    """
+    hits = search_esum("баклан", volume=1, limit=3)
+    assert hits[0]["lemma"] == "баклан"
     assert "запозичення з тюркських мов" in hits[0]["etymology_text"]
-    assert "тат. біркут" in hits[0]["etymology_text"]
+    assert "тат. ст. баклан" in hits[0]["etymology_text"]

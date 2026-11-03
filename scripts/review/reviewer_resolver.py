@@ -1,7 +1,7 @@
 """Canonical cross-family reviewer resolver for code-review closeout.
 
 Family follows the MODEL, not the harness or CLI name — the same underlying
-model reachable through different tooling (native CLI, hermes, a `-tools`
+model reachable through different tooling (native CLI, opencode, a `-tools`
 V7 seat) always resolves to the same family, so an author can't dodge the
 cross-family requirement by switching harness. Domain and data-egress
 exclusions are fail-closed: an unspecified or non-matching policy excludes

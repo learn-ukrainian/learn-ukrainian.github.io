@@ -9,8 +9,8 @@ from pathlib import Path
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher import agy_sandbox
 from scripts.dispatcher.providers import read_only_refusal
+from scripts.dispatcher.providers.stream_json import SOURCES_SERVER, one_model
 from scripts.dispatcher.providers.stream_json import model_observer as _observe
-from scripts.dispatcher.providers.stream_json import one_model
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 from scripts.dispatcher.watchdog import deadlines
 
@@ -288,6 +288,34 @@ def _open_commands(event: dict, open_steps: set[int]) -> None:
         open_steps.discard(index)
 
 
+def _completed_sources_call(event: dict) -> tuple[object, int] | None:
+    """The (conversation, step) of a finished Sources MCP call, else None.
+
+    AGY reports an MCP call as ``step_update`` events for one ``step_index``: ACTIVE, then
+    DONE or ERROR. Only DONE with no ``error`` object counts, the same rule as the Claude and
+    Codex providers (``SOURCES_SERVER``). Retained streams show DONE with no ``output`` key for
+    a call that returned nothing, which still completed.
+    """
+    step = event.get("step_update")
+    if event.get("event") != "step_update" or not isinstance(step, dict):
+        return None
+    info, index = step.get("tool_info"), step.get("step_index")
+    if (
+        step.get("tool_name") != "call_mcp_tool"
+        or step.get("state") != "DONE"
+        or not isinstance(info, dict)
+        or info.get("error") is not None
+        or step.get("error") is not None
+        or isinstance(index, bool)
+        or not isinstance(index, int)
+    ):
+        return None
+    parameters = info.get("parameters")
+    if not isinstance(parameters, dict) or parameters.get("ServerName") != SOURCES_SERVER:
+        return None
+    return step.get("conversation_id"), index
+
+
 def conversation_id(log_file: Path) -> str | None:
     """The conversation the AGY log bound, using the adapter's own reader."""
     from scripts.agent_runtime.adapters.agy import _conversation_id_from_log
@@ -342,6 +370,7 @@ def parse(
     terminal_seen, stream_clean = False, True
     open_steps: set[int] = set()
     open_at_result: set[int] | None = None
+    sources_calls: set[tuple[object, int]] = set()
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -363,6 +392,8 @@ def parse(
             started = True
         if not terminal_seen:
             _open_commands(event, open_steps)
+        if (call := _completed_sources_call(event)) is not None:
+            sources_calls.add(call)
         if event.get("event") == "result":
             if open_at_result is None:
                 open_at_result = set(open_steps)
@@ -439,5 +470,9 @@ def parse(
             structured.response, usage,
             error or (f"{structured.failure_code}: {structured.stderr_excerpt}" if not structured.ok else None),
             one_model(models),
+            sources_mcp_call_count=len(sources_calls),
         )
-    return ParsedResult(text, usage, error or (None if text else "agy: missing final text"), one_model(models))
+    return ParsedResult(
+        text, usage, error or (None if text else "agy: missing final text"), one_model(models),
+        sources_mcp_call_count=len(sources_calls),
+    )

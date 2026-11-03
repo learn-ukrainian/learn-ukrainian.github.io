@@ -174,7 +174,7 @@ describe('ZnoPractice', () => {
     await user.click(screen.getByRole('button', { name: 'Б друга' }));
     expect(rate).toHaveBeenCalledTimes(2);
     view.unmount();
-    view = render(<ZnoPractice deck={{ ...deck, items: deck.items.map((item) => ({ ...item, options: ['changed', 'key', 'three'] })) }} />);
+    render(<ZnoPractice deck={{ ...deck, items: deck.items.map((item) => ({ ...item, options: ['changed', 'key', 'three'] })) }} />);
     expect(screen.getByRole('alert')).toHaveTextContent('The task content has changed');
     expect(screen.queryByTestId('zno-practice-item')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Start a new session' }));

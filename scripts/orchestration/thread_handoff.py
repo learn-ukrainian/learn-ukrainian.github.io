@@ -206,6 +206,72 @@ def argparse_agent_name(value: str) -> str:
         raise argparse.ArgumentTypeError(str(exc)) from exc
 
 
+CODEX_PROVIDER_AGENT = "codex"
+LANE_SLOT_ENV = "SESSION_HANDOFF_AGENT"
+# Lease commands already receive the exact slot from the SessionStart hook, and
+# a bundle's agent is an explicit selector of the namespace it belongs to.
+_LANE_SLOT_EXEMPT_COMMANDS = frozenset(
+    {"claim-thread-lease", "release-thread-lease", "refresh-thread-lease-heartbeat", "export-bundle", "import-bundle"}
+)
+
+
+def codex_lane_slot_from_env(environ: Mapping[str, str] | None = None) -> str | None:
+    """Return the Codex lane's rollover namespace, or None outside a Codex lane.
+
+    The name is decided once, by ``handoff_identity_for_codex_epic`` in
+    ``scripts/lib/handoff_identity.sh``. The launcher exports it as
+    ``SESSION_HANDOFF_AGENT`` and runs its pre-lease detect with the same value,
+    so a packet prepared from inside the lane is found by the next launch (#12567).
+    """
+    env = os.environ if environ is None else environ
+    slot = (env.get(LANE_SLOT_ENV) or "").strip().lower()
+    if not slot.startswith(f"{CODEX_PROVIDER_AGENT}-") or not AGENT_NAME_RE.fullmatch(slot):
+        return None
+    return slot
+
+
+def resolve_rollover_agent(
+    requested: str,
+    *,
+    state_root: Path,
+    lineage_id: str | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> str:
+    """Map the bare ``codex`` namespace to the launching lane's slot.
+
+    Only the bare provider name is mapped, and only inside a launcher-started
+    Codex lane. A named lineage that already exists under ``codex`` and not
+    under the slot stays where it was prepared, so older packets remain usable.
+    """
+    if requested != CODEX_PROVIDER_AGENT:
+        return requested
+    slot = codex_lane_slot_from_env(environ)
+    if slot is None:
+        return requested
+    if lineage_id:
+        base = state_root / ".agent" / "thread-rollovers"
+        if (base / requested / lineage_id).exists() and not (base / slot / lineage_id).exists():
+            return requested
+    return slot
+
+
+def apply_lane_slot(args: argparse.Namespace) -> None:
+    """Resolve ``args.agent`` through :func:`resolve_rollover_agent` before dispatch.
+
+    An explicit ``--state-file`` already names the packet, so its agent is kept.
+    """
+    agent = getattr(args, "agent", None)
+    if agent != CODEX_PROVIDER_AGENT or getattr(args, "command", None) in _LANE_SLOT_EXEMPT_COMMANDS:
+        return
+    if getattr(args, "state_file", None):
+        return
+    try:
+        _, state_root = resolve_roots(args.repo_root)
+    except ValueError:
+        return  # The command reports the root error itself.
+    args.agent = resolve_rollover_agent(agent, state_root=state_root, lineage_id=getattr(args, "lineage_id", None))
+
+
 def normalize_lineage_id(value: str) -> str:
     lineage_id = value.strip().lower()
     if not LINEAGE_ID_RE.fullmatch(lineage_id):
@@ -6867,6 +6933,11 @@ def render_session_start_context(
             lines.extend(_skipped_foreign_lines(candidate.get("skipped_foreign", [])))
             for item in candidate.get("skipped_stale", []):
                 lines.append(f"Pending packet predates lane handoff {item['newer_handoff']}; left unchanged.")
+            superseded = candidate.get("skipped_superseded", [])
+            if superseded:
+                lines.append(
+                    f"{len(superseded)} older packet(s) superseded by a later confirmed rollover; left unchanged."
+                )
             if candidate.get("excluded_terminal"):
                 lines.append(
                     "Excluded terminal rollover: "
@@ -6915,6 +6986,12 @@ def render_session_start_context(
         for err in candidate["registry_errors"]:
             lines.append(f"Registry error: {err}")
     lines.extend(_skipped_foreign_lines(candidate.get("skipped_foreign", [])))
+    fallback = candidate.get("skipped_fallback", [])
+    if fallback:
+        lines.append(
+            f"{len(fallback)} older packet(s) under the bare provider namespace left unchanged; "
+            "the lane's own packet wins."
+        )
     return "\n".join(lines)
 
 
@@ -7060,6 +7137,66 @@ def newer_lane_handoff(
     return newest[1] if newest else None
 
 
+def _packet_stream(state: dict[str, Any], replacement: dict[str, Any]) -> str:
+    """Return the packet's ``epic:<n>`` stream, or "" when it names none."""
+    identity = replacement.get("identity") or state.get("identity") or {}
+    stream_epic = identity.get("stream_epic")
+    return f"epic:{stream_epic}".lower() if stream_epic is not None else ""
+
+
+def _record_confirmed_rollover(
+    newest: dict[tuple[str, str], tuple[datetime, str, str]],
+    state: dict[str, Any],
+    replacement: dict[str, Any],
+    scan_agent: str,
+) -> None:
+    """Keep the latest-prepared confirmed rollover per packet agent and stream."""
+    stream = _packet_stream(state, replacement)
+    prepared = parse_iso_datetime(replacement.get("prepared_at"))
+    if not stream or prepared is None:
+        return
+    key = (str(state.get("agent") or scan_agent), stream)
+    if key not in newest or prepared > newest[key][0]:
+        newest[key] = (prepared, str(state.get("lineage_id")), str(replacement.get("rollover_id")))
+
+
+def _split_superseded_candidates(
+    live_leases: list[tuple[Path, dict[str, Any], dict[str, Any], str]],
+    newest_confirmed: dict[tuple[str, str], tuple[datetime, str, str]],
+    *,
+    current_thread_id: str | None,
+) -> tuple[list[tuple[Path, dict[str, Any], dict[str, Any], str]], list[dict[str, Any]]]:
+    """Separate packets that a later confirmed rollover already replaced.
+
+    A pending or resumed packet whose agent and stream have a confirmed rollover
+    prepared after it is history, not a live candidate: the lineage moved on
+    without confirming it (#12496). Its files stay unchanged; the thread-rollover
+    archive path is the only way to retire them. A packet this thread resumed
+    is always kept, so the exact binding still resolves.
+    """
+    kept: list[tuple[Path, dict[str, Any], dict[str, Any], str]] = []
+    superseded: list[dict[str, Any]] = []
+    for lease in live_leases:
+        _, state, replacement, scan_agent = lease
+        packet_agent = str(state.get("agent") or scan_agent)
+        newer = newest_confirmed.get((packet_agent, _packet_stream(state, replacement)))
+        prepared = parse_iso_datetime(replacement.get("prepared_at"))
+        bound_here = bool(current_thread_id) and replacement.get("resumed_thread_id") == current_thread_id
+        if newer is None or prepared is None or bound_here or prepared >= newer[0]:
+            kept.append(lease)
+            continue
+        superseded.append(
+            {
+                "agent": packet_agent,
+                "lineage_id": state.get("lineage_id"),
+                "rollover_id": replacement.get("rollover_id"),
+                "status": replacement.get("status"),
+                "superseded_by": {"lineage_id": newer[1], "rollover_id": newer[2]},
+            }
+        )
+    return kept, superseded
+
+
 def cmd_detect(args: argparse.Namespace) -> int:
     try:
         _, state_root = resolve_roots(args.repo_root)
@@ -7085,6 +7222,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
     registry_errors: list[str] = []
     skipped_foreign: list[dict[str, Any]] = []
     skipped_stale: list[dict[str, Any]] = []
+    newest_confirmed: dict[tuple[str, str], tuple[datetime, str, str]] = {}
 
     for scan_agent in scan_agents:
         agent_dir = state_root / ".agent" / "thread-rollovers" / scan_agent
@@ -7096,6 +7234,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             if error:
                 print(json.dumps({"error": f"invalid rollover lease {rel(path, state_root)}: {error}"}, indent=2))
                 return 2
+            if replacement is not None and replacement["status"] == "started":
+                _record_confirmed_rollover(newest_confirmed, state, replacement, scan_agent)
             if replacement is not None and replacement["status"] in {"pending_start", "resumed"}:
                 lineage_id = state.get("lineage_id")
                 rollover_id = replacement.get("rollover_id")
@@ -7125,9 +7265,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
                         registry_errors.append(
                             f"registry record corrupt or unreadable for {candidate_agent}/{lineage_id}/{rollover_id}: {exc}"
                         )
-                identity = replacement.get("identity") or state.get("identity") or {}
-                stream_epic = identity.get("stream_epic")
-                packet_stream = f"epic:{stream_epic}".lower() if stream_epic is not None else ""
+                packet_stream = _packet_stream(state, replacement)
                 packet_family = _candidate_task_family(state, replacement)
                 mismatches = []
                 if not stream_filter and scan_agent != agent:
@@ -7166,6 +7304,45 @@ def cmd_detect(args: argparse.Namespace) -> int:
                         continue
                 live_leases.append((path, state, replacement, scan_agent))
 
+    live_leases, skipped_superseded = _split_superseded_candidates(
+        live_leases, newest_confirmed, current_thread_id=args.current_thread_id
+    )
+
+    # The lane's own namespace wins over older packets in the bare provider
+    # namespace (#12567): those stay on disk and are reported, but they can no
+    # longer make the lane's newer prepared packet ambiguous. A bare-namespace
+    # packet prepared at or after the lane's newest one still competes, and a
+    # packet this thread already resumed is always kept.
+    skipped_fallback: list[dict[str, Any]] = []
+    # Codex lanes only: Claude slots keep their existing ambiguity refusal.
+    own_prepared = [
+        prepared
+        for _path, _state, replacement, scan_agent in live_leases
+        if agent.startswith(f"{CODEX_PROVIDER_AGENT}-")
+        and scan_agent == agent
+        and (prepared := parse_iso_datetime(replacement.get("prepared_at"))) is not None
+    ]
+    if own_prepared:
+        newest_own = max(own_prepared)
+        kept_leases = []
+        for lease in live_leases:
+            _path, state, replacement, scan_agent = lease
+            bound_here = bool(args.current_thread_id) and replacement.get("resumed_thread_id") == args.current_thread_id
+            prepared = parse_iso_datetime(replacement.get("prepared_at"))
+            if scan_agent == agent or bound_here or prepared is None or prepared >= newest_own:
+                kept_leases.append(lease)
+                continue
+            skipped_fallback.append(
+                {
+                    "agent": str(state.get("agent") or scan_agent),
+                    "lineage_id": state.get("lineage_id"),
+                    "rollover_id": replacement.get("rollover_id"),
+                    "status": replacement.get("status"),
+                    "reason": f"older than the newest live packet in lane namespace {agent}",
+                }
+            )
+        live_leases = kept_leases
+
     # A family is a disambiguation hint, not stream identity. If it matches no
     # live packet, retain the full candidate set and require exact-ID binding.
     if len(live_leases) > 1 and task_family_filter:
@@ -7183,6 +7360,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             output["skipped_foreign"] = skipped_foreign
         if skipped_stale:
             output["skipped_stale"] = skipped_stale
+        if skipped_superseded:
+            output["skipped_superseded"] = skipped_superseded
         print(
             render_session_start_context(
                 output,
@@ -7231,6 +7410,10 @@ def cmd_detect(args: argparse.Namespace) -> int:
             payload["skipped_foreign"] = skipped_foreign
         if skipped_stale:
             payload["skipped_stale"] = skipped_stale
+        if skipped_superseded:
+            payload["skipped_superseded"] = skipped_superseded
+        if skipped_fallback:
+            payload["skipped_fallback"] = skipped_fallback
 
         if args.format == "session-start":
             print(
@@ -7297,6 +7480,10 @@ def cmd_detect(args: argparse.Namespace) -> int:
         output["skipped_foreign"] = skipped_foreign
     if skipped_stale:
         output["skipped_stale"] = skipped_stale
+    if skipped_superseded:
+        output["skipped_superseded"] = skipped_superseded
+    if skipped_fallback:
+        output["skipped_fallback"] = skipped_fallback
 
     print(
         render_session_start_context(
@@ -7829,6 +8016,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    apply_lane_slot(args)
     return args.func(args)
 
 

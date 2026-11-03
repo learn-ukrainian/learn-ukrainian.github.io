@@ -1,10 +1,9 @@
 """Regression tests for duplicate agent names in runtime agent listings.
 
 Issue #7082: ``/api/runtime/agents`` (and ``/api/orient`` ``runtime.agents``,
-which shares the same source list) surfaced ``deepseek`` twice because the
-alternate-harness ``hermes_deepseek`` adapter re-exports the fleet name
-``deepseek``. Alternate-harness adapters (``hermes_*``) are ask-hermes-only
-and must not appear as separate fleet agents.
+which shares the same source list) surfaced ``deepseek`` twice because an
+alternate-harness adapter re-exported the fleet name ``deepseek``.
+Alternate-harness adapters must not appear as separate fleet agents.
 """
 
 from __future__ import annotations

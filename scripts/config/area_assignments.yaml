@@ -123,3 +123,10 @@ assignments:
       - claude-hramatka
       - codex-hramatka
       - gemini-hramatka
+  kube-dojo:
+    # kube-dojo lane (#12553, ordered by tracker C-4049 item 2): a Claude Sonnet 5.5
+    # drive-epic driver started by scripts/start-kube-dojo-driver.sh. The work is in the
+    # kube-dojo fleet repository (scripts/config/fleet_repos.yaml); the lease and inbox stay here.
+    driver_agent_type: infra-orchestrator
+    slots:
+      - claude-kube-dojo

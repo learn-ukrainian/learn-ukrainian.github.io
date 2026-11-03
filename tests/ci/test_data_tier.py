@@ -950,6 +950,9 @@ def test_host_file_provisioning_copies_content_but_not_nested_repository_metadat
     lexicon = primary / "site" / "public" / "lexicon" / "a.json"
     lexicon.parent.mkdir(parents=True)
     lexicon.write_text("{}\n", encoding="utf-8")
+    manifest = primary / "site" / "src" / "data" / "lexicon-manifest.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text('{"entries": []}\n', encoding="utf-8")
 
     data_tier.provision_host_files(primary, checkout)
 
@@ -957,6 +960,9 @@ def test_host_file_provisioning_copies_content_but_not_nested_repository_metadat
     assert (copy / "data" / "train" / "doc.txt").read_text(encoding="utf-8") == "content\n"
     assert (copy / "python" / "pkg" / ".gitkeep").is_file()
     assert (checkout / "site" / "public" / "lexicon" / "a.json").is_file()
+    assert (checkout / "site" / "src" / "data" / "lexicon-manifest.json").read_text(encoding="utf-8") == (
+        '{"entries": []}\n'
+    )
     assert not (copy / ".git").exists()
 
 
@@ -1410,3 +1416,56 @@ def test_nightly_invalid_external_override_is_not_ignored(nightly, monkeypatch, 
     assert nightly.snapshots == []
     assert not nightly.scratch_root.exists()
     assert invalid.read_text() == "keep"
+
+
+def test_finished_data_tier_run_leaves_no_preserved_copy(tmp_path):
+    """#12528: the run discards its own ignored output, so the guarded remover has nothing to copy."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@example.invalid"]
+    subprocess.run([*git, "init", "-q", "-b", "main"], cwd=primary, check=True, timeout=30)
+    (primary / ".gitignore").write_text("data/\nsite/public/\n")
+    (primary / "README.md").write_text("tracked\n")
+    subprocess.run([*git, "add", "."], cwd=primary, check=True, timeout=30)
+    subprocess.run([*git, "commit", "-q", "-m", "base"], cwd=primary, check=True, timeout=30)
+    parent = primary / ".worktrees" / "data-tier"
+    parent.mkdir(parents=True)
+    checkout = parent / f"run-{'0123456789abcdef' * 2}"
+    subprocess.run([*git, "worktree", "add", "-q", "--detach", str(checkout)], cwd=primary, check=True, timeout=30)
+    (checkout / "data").mkdir()
+    (checkout / "data" / "atlas.db").write_bytes(b"x" * 4096)
+    (checkout / "data" / "ua-gec").mkdir()
+    (checkout / "data" / "ua-gec" / "part.txt").write_text("copy")
+    (checkout / "site" / "public").mkdir(parents=True)
+    (checkout / "site" / "public" / "lexicon.json").write_text("{}")
+
+    discarded = data_tier.discard_run_output(checkout)
+    assert discarded["files"] == 3
+    assert discarded["bytes"] >= 4096
+    assert (checkout / "README.md").is_file()
+
+    removal = data_tier.remove_test_worktree(primary, checkout)
+    assert removal.action == "removed"
+    assert not removal.preserved_artifacts
+    assert not checkout.exists()
+    assert not (primary / "batch_state" / "preserved").exists()
+
+
+def test_discarded_non_ascii_file_is_counted_with_its_real_byte_size(tmp_path):
+    """#12537: a discarded file with a non-ASCII name is counted with its real byte size."""
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@example.invalid"]
+    subprocess.run([*git, "init", "-q", "-b", "main"], cwd=tmp_path, check=True, timeout=30)
+    (tmp_path / ".gitignore").write_text("data/\n")
+    (tmp_path / "README.md").write_text("tracked\n")
+    subprocess.run([*git, "add", "."], cwd=tmp_path, check=True, timeout=30)
+    subprocess.run([*git, "commit", "-q", "-m", "base"], cwd=tmp_path, check=True, timeout=30)
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "слово.db").write_bytes(b"x" * 4096)
+    (tmp_path / "привіт.txt").write_bytes(b"y" * 100)
+    (tmp_path / "output").mkdir()
+    (tmp_path / "output" / "a\rb").write_bytes(b"z" * 7)
+    (tmp_path / os.fsdecode(b"output/\xff.bin")).write_bytes(b"w" * 7)
+
+    assert data_tier.discard_run_output(tmp_path) == {"files": 4, "bytes": 4210}
+    assert not (tmp_path / "привіт.txt").exists()
+    assert not (tmp_path / "data").exists()

@@ -44,8 +44,8 @@ Trailer format
 ``X-Agent: <agent>/<task-id>``
 
 Where ``agent`` ∈ {``claude-inline``, ``claude``, ``codex``, ``gemini``,
-``agy-inline``, ``agy``, ``grok``, ``grok-build``, ``grok-hermes``,
-``deepseek``, ``deepseek-v4-pro``, ``cursor``, ``hermes``, ``muse``, ``opencode``, ``glm``, ``kimi``, ``dependabot``} and ``task-id`` is the
+``agy-inline``, ``agy``, ``grok``, ``grok-build``,
+``deepseek``, ``deepseek-v4-pro``, ``cursor``, ``muse``, ``opencode``, ``glm``, ``kimi``, ``dependabot``} and ``task-id`` is the
 dispatch task identifier or the ``inline`` literal for orchestrator commits.
 ``grok-build`` is a permanent alias of the native ``grok`` seat (historical
 trailers must keep validating). ``gemini`` is an alias of ``agy``. Examples::
@@ -84,7 +84,7 @@ from scripts.common.repo_root import main_checkout_root, resolve_repo_root
 from scripts.orchestration.task_record_store import locate_task_record
 
 _TRAILER_RE = re.compile(
-    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek|deepseek-v4-pro|cursor|hermes|muse|opencode|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
+    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|deepseek|deepseek-v4-pro|cursor|muse|opencode|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
     re.MULTILINE,
 )
 

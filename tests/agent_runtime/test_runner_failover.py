@@ -476,7 +476,7 @@ def test_runner_failover_rejects_forbidden_glm_target(tmp_path, monkeypatch):
         forbidden_config=True,
     )
 
-    with pytest.raises(ValueError, match="HERMES_GLM_FORBIDDEN"):
+    with pytest.raises(ValueError, match="GLM_FORBIDDEN"):
         runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
 
 
@@ -508,16 +508,16 @@ def test_shipped_config_declares_no_deepseek_chain():
     )
 
 
-def test_classifier_routes_hermes_credential_startup_failure_to_auth():
-    """Live-captured 2026-07-06: a dead/missing credential fails hermes at
-    startup with prose that previously matched NO trigger class, so the chain
-    never rotated. Credential rotation is the point — must classify as auth."""
+def test_classifier_routes_credential_startup_failure_to_auth():
+    """Live-captured 2026-07-06: a dead/missing credential fails the provider
+    CLI at startup with prose that previously matched NO trigger class, so the
+    chain never rotated. Credential rotation is the point — must classify as auth."""
     from agent_runtime.failover import classify_failover_trigger
 
     stderr = (
-        "hermes -z: agent failed: Provider 'deepseek' is set in config.yaml "
+        "agent failed: Provider 'deepseek' is set in config.yaml "
         "but no API key was found. Set the DEEPSEEK_API_KEY environment "
-        "variable, or switch to a different provider with `hermes model`."
+        "variable, or switch to a different provider."
     )
     trigger = classify_failover_trigger(
         parse=ParseResult(ok=False, response="", stderr_excerpt=stderr[:500]),

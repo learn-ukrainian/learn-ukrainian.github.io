@@ -262,17 +262,17 @@ def test_textbook_grounding_gate_reads_mcp_markdown_result(tmp_path: Path) -> No
     assert result["textbook_result_hits"] == 2
 
 
-def test_textbook_grounding_gate_accepts_hermes_single_underscore_prefix(
+def test_textbook_grounding_gate_accepts_single_underscore_prefix(
     tmp_path: Path,
 ) -> None:
-    """Hermes registers MCP tools with single-underscore (``mcp_sources_X``).
+    """gemini-cli 0.42.0+ registers MCP tools with single underscores.
 
     Prior to the 2026-05-19 normalizer fix, the gate's tool-name match was
-    hardcoded to strip only the double-underscore canonical form, so every
-    Hermes-routed writer (deepseek/qwen/grok) was reading ``search_text_calls:
-    0`` and HARD-REJECTing on ``textbook_grounding`` — even when the calls
-    actually fired. This test pins the single-underscore acceptance so the
-    regression can't silently come back.
+    hardcoded to strip only the double-underscore canonical form, so a writer
+    using ``mcp_sources_X`` was reading ``search_text_calls: 0`` and
+    HARD-REJECTing on ``textbook_grounding`` — even when the calls actually
+    fired. This test pins the single-underscore acceptance so the regression
+    can't silently come back.
     """
     _write_tool_calls(
         tmp_path,
@@ -291,7 +291,7 @@ def test_textbook_grounding_gate_accepts_hermes_single_underscore_prefix(
                 ],
             },
             {
-                # Hermes single-underscore prefix variant of get_chunk_context.
+                # Single-underscore prefix variant of get_chunk_context.
                 "tool": "mcp_sources_get_chunk_context",
                 "args": {"chunk_id": "10-klas-ukrmova-karaman-2018_s0176"},
                 "result": [
@@ -320,16 +320,14 @@ def test_textbook_grounding_gate_accepts_hermes_single_underscore_prefix(
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
-def test_textbook_grounding_gate_reads_hermes_hook_jsonl(tmp_path: Path) -> None:
-    """End-to-end pin for the Hermes ``post_tool_call`` shell-hook output.
+def test_textbook_grounding_gate_reads_sidecar_jsonl(tmp_path: Path) -> None:
+    """End-to-end pin for the ``post_tool_call`` sidecar-JSONL capture.
 
-    The hook (``scripts/agent_runtime/hermes_hooks/log_tool_call.sh``) writes
-    one line per MCP tool call to ``$cwd/hermes.write.jsonl`` with the
-    Hermes single-underscore prefix and an ``event: writer_tool_call`` sentinel
-    so ``_load_jsonl_tool_calls`` picks it up. This test feeds the exact
-    on-disk shape the hook produces and asserts the gate sees the call and
-    matches the reference — closes the observability gap that previously had
-    every Hermes-routed writer build HARD-rejecting on ``textbook_grounding``.
+    A capture hook writes one line per MCP tool call to
+    ``$cwd/*.write.jsonl`` with the single-underscore prefix and an
+    ``event: writer_tool_call`` sentinel so ``_load_jsonl_tool_calls`` picks
+    it up. This test feeds that on-disk shape and asserts the gate sees the
+    call and matches the reference.
     """
     event = {
         "event": "writer_tool_call",
@@ -367,7 +365,7 @@ def test_textbook_grounding_gate_reads_hermes_hook_jsonl(tmp_path: Path) -> None
         "session_id": "sess_test",
         "ts": 1779220001,
     }
-    (tmp_path / "hermes.write.jsonl").write_text(
+    (tmp_path / "writer.write.jsonl").write_text(
         json.dumps(event, ensure_ascii=False)
         + "\n"
         + json.dumps(chunk_event, ensure_ascii=False)
@@ -386,74 +384,6 @@ def test_textbook_grounding_gate_reads_hermes_hook_jsonl(tmp_path: Path) -> None
     assert result["search_text_calls"] == 1
     assert result["chunk_context_calls"] == 1
     assert result["textbook_result_hits"] == 2
-    assert result["matched"] == ["Караман Grade 10, p.176"]
-
-
-def test_textbook_grounding_gate_unwraps_hermes_inner_result_shape(
-    tmp_path: Path,
-) -> None:
-    """Pin the Hermes-routed MCP-server shape ``{"result": "<markdown>"}``.
-
-    The learn-ukrainian sources MCP server wraps its single-string response
-    under an inner ``result`` key (observed 2026-05-19 in the b1
-    genitive-nuances build's ``hermes.write.jsonl``). Before this unwrap
-    the textbook_grounding gate read ``textbook_result_hits: 0`` for every
-    Hermes-routed writer even though the calls fired and returned valid
-    grounded chunks — the gate's mapping path didn't know to dive into
-    the inner ``result`` key.
-    """
-    inner_markdown = (
-        'Found 1 results for: "Караман reflexive verbs"\n\n'
-        "### Result 1\n"
-        "- **Section**: Сторінка 176\n"
-        "- **Source**: Grade 10, karaman\n"
-        "- **Chunk ID**: `10-klas-ukrmova-karaman-2018_s0315`\n"
-        "- **Text**:\n"
-        f"{SEARCH_TEXT}\n"
-    )
-    chunk_event = {
-        "event": "writer_tool_call",
-        "tool": "mcp_sources_get_chunk_context",
-        "args": {"chunk_id": "10-klas-ukrmova-karaman-2018_s0315"},
-        "result": {"result": inner_markdown},
-        "duration_ms": 12,
-        "tool_call_id": "call_inner_chunk",
-        "session_id": "sess",
-        "ts": 1779220001,
-    }
-    (tmp_path / "hermes.write.jsonl").write_text(
-        json.dumps(
-            {
-                "event": "writer_tool_call",
-                "tool": "mcp_sources_search_text",
-                "args": {"query": "Караман Grade 10 reflexive verbs"},
-                "result": {"result": inner_markdown},
-                "duration_ms": 101,
-                "tool_call_id": "call_inner",
-                "session_id": "sess",
-                "ts": 1779220000,
-            },
-            ensure_ascii=False,
-        )
-        + "\n"
-        + json.dumps(chunk_event, ensure_ascii=False)
-        + "\n",
-        encoding="utf-8",
-    )
-    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
-
-    result = linear_pipeline._textbook_grounding_gate(
-        module_text,
-        _plan(),
-        tmp_path,
-    )
-
-    assert result["passed"] is True
-    assert result["search_text_calls"] == 1
-    assert result["chunk_context_calls"] == 1
-    # The inner-result unwrap parses the markdown; both calls return the
-    # same parsed chunk so the dedupe path counts a single hit.
-    assert result["textbook_result_hits"] >= 1
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
@@ -492,7 +422,7 @@ def test_textbook_grounding_gate_matches_via_get_chunk_context(
     chunk_markdown = (
         f"**[{chunk_id}]** — Сторінка 176\n\n{body}"
     )
-    (tmp_path / "hermes.write.jsonl").write_text(
+    (tmp_path / "writer.write.jsonl").write_text(
         json.dumps(
             {
                 "event": "writer_tool_call",
@@ -547,7 +477,7 @@ def test_textbook_grounding_gate_unwraps_gemini_function_response_shape(
     ``[{"functionResponse": {"id": ..., "name": "mcp_sources_get_chunk_context",
     "response": {"output": "**[<chunk_id>]** — Сторінка <N>\\n\\n<md>"}}}]``
     — neither the canonical ``{"text": <md>}`` shape (claude/codex/direct
-    anthropic-tools) nor the Hermes ``{"result": <md>}`` shape the
+    anthropic-tools) nor the single-string ``{"result": <md>}`` shape the
     2026-05-20 textbook parser fix (`07c12f2dd7`) covered. Without this
     unwrap the 2026-05-21 a1/my-morning gemini-tools build read
     ``textbook_result_hits: 0`` despite making two valid
@@ -720,19 +650,19 @@ def test_invoke_writer_backfills_tool_calls_from_sidecar_jsonl(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Pin the invoke_writer sidecar-JSONL backfill for Hermes-routed writers.
+    """Pin the invoke_writer sidecar-JSONL backfill for black-box writers.
 
-    ``hermes -z`` strips tool-call traces from stdout, so the Hermes adapter
+    A black-box adapter cannot expose tool-call traces on stdout, so it
     returns ``tool_calls_total=None`` and ``_runtime_tool_calls`` returns
     ``None``. Without backfill, ``detect_tool_theatre`` and
     ``_enforce_writer_runtime_gates`` see zero calls and treat every cited
-    tool as a violation, even when the ``post_tool_call`` shell hook
-    captured the calls in ``$cwd/hermes.write.jsonl``. This test simulates
-    that situation by:
+    tool as a violation, even when a ``post_tool_call`` capture hook wrote
+    the calls to ``$cwd/*.write.jsonl``. This test simulates that situation
+    by:
 
-    * Creating a fake Hermes-style invoker that returns
-      ``tool_calls_total=None`` (signal: telemetry unavailable).
-    * Seeding ``$cwd/hermes.write.jsonl`` with one captured MCP call.
+    * Creating a fake black-box invoker that returns ``tool_calls_total=None``
+      (signal: telemetry unavailable).
+    * Seeding ``$cwd/writer.write.jsonl`` with one captured MCP call.
     * Asserting the trace file written by ``invoke_writer`` contains the
       backfilled call (proves the in-memory path also saw it).
     """
@@ -742,7 +672,7 @@ def test_invoke_writer_backfills_tool_calls_from_sidecar_jsonl(
     # Simulate the hook's output (one MCP call captured during the writer
     # session). ``event: writer_tool_call`` is required for
     # ``_load_jsonl_tool_calls`` to keep this line.
-    (tmp_path / "hermes.write.jsonl").write_text(
+    (tmp_path / "writer.write.jsonl").write_text(
         json.dumps(
             {
                 "event": "writer_tool_call",
@@ -760,12 +690,11 @@ def test_invoke_writer_backfills_tool_calls_from_sidecar_jsonl(
         encoding="utf-8",
     )
 
-    def hermes_like_invoker(
+    def black_box_invoker(
         _agent: str, _prompt: str, **_kwargs: Any
     ) -> SimpleNamespace:
-        # tool_calls_total=None mirrors HermesDeepSeekParseResult / Grok /
-        # Qwen — the adapter explicitly returns "unknown" for the call
-        # count because Hermes -z doesn't expose the trace on stdout.
+        # The adapter explicitly returns "unknown" for the call count when it
+        # cannot expose the trace on stdout.
         return SimpleNamespace(
             response="writer output",
             tool_calls=[],
@@ -776,7 +705,7 @@ def test_invoke_writer_backfills_tool_calls_from_sidecar_jsonl(
         "Write.",
         "deepseek-tools",
         cwd=tmp_path,
-        invoker=hermes_like_invoker,
+        invoker=black_box_invoker,
         tool_trace_path=trace_path,
     )
 

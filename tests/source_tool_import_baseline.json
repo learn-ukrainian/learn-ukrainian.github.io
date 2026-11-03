@@ -1,13 +1,12 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 401,
-    "probe_count": 802,
+    "cli_count": 397,
+    "probe_count": 794,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/kimi_boundary.py",
       "scripts/agent_runtime/lane_probe.py",
-      "scripts/agent_runtime/probe_fallback.py",
       "scripts/ai_agent_bridge/__main__.py",
       "scripts/ai_agent_bridge/_inbox_watch.py",
       "scripts/ai_agent_bridge/_ui_agy.py",
@@ -96,12 +95,9 @@
       "scripts/audit/generate_sentence_inventory.py",
       "scripts/audit/generate_source_inventory_review_candidates.py",
       "scripts/audit/generate_tatoeba_cloze_candidates.py",
-      "scripts/audit/grok_judge_calibration.py",
-      "scripts/audit/grok_stage_runner.py",
       "scripts/audit/grounding_shadow_compare.py",
       "scripts/audit/grow_lexicon_from_lemmas.py",
       "scripts/audit/grow_lexicon_from_sources.py",
-      "scripts/audit/hermes_nightly_audit.py",
       "scripts/audit/immersion_gate_calibration.py",
       "scripts/audit/ingest_ua_gec_gold.py",
       "scripts/audit/judge_calibration_matrix.py",
@@ -130,6 +126,7 @@
       "scripts/audit/module_quality_audit.py",
       "scripts/audit/module_size_policy_audit.py",
       "scripts/audit/naturalness_check.py",
+      "scripts/audit/nightly_audit.py",
       "scripts/audit/opencode_judge_calibration.py",
       "scripts/audit/paronym_residual_audit.py",
       "scripts/audit/plan_references_audit.py",
@@ -145,7 +142,6 @@
       "scripts/audit/qg_tier2_canary_check.py",
       "scripts/audit/qg_tier2_disarm.py",
       "scripts/audit/qg_workflow.py",
-      "scripts/audit/qwen_judge_calibration.py",
       "scripts/audit/refresh_opsec_tracking_issues.py",
       "scripts/audit/relation_residual_audit.py",
       "scripts/audit/resolve_fixture_rights.py",
@@ -406,7 +402,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "0a5e832e8925110c8cb41ec04f5694dd016d3d036c34d52c82e9ab4a68c0e7b9"
+    "cli_paths_sha256": "9946c14f0863aa5f7ad76c44b42184d7ba9e81c382b4f9fb433706c5be031bbc"
   },
   "failures": [
     {

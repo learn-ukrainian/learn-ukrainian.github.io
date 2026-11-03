@@ -59,7 +59,7 @@ jobs:
             scripts/
             .python-version
           sparse-checkout-cone-mode: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - name: Record original queue candidate
@@ -85,7 +85,7 @@ jobs:
       # steps to the newest trufflesecurity/trufflehog release (3.99.0 or
       # newer — never an older tag to clear a finding) and re-scan with
       # scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # action v3.99.2
+      - uses: trufflesecurity/trufflehog@31ce31ee1abbcc7dc8eee5764c17121c3044c8b2 # action v3.99.7
         with:
           version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
@@ -112,7 +112,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
           filter: ${{ !(github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit') && 'blob:none' || '' }}
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - name: Scan publication fields
@@ -165,7 +165,7 @@ jobs:
       # Same scanner pin as the queue-metadata step. Bump both together:
       # newest trufflesecurity/trufflehog release, never an older tag to clear
       # a finding, then re-scan with scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # action v3.99.2
+      - uses: trufflesecurity/trufflehog@31ce31ee1abbcc7dc8eee5764c17121c3044c8b2 # action v3.99.7
         with:
           version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
@@ -213,12 +213,12 @@ jobs:
           persist-credentials: false
           fetch-depth: 0  # origin/main merge-base diffs
           filter: blob:none  # git fetches the few old blobs the checks read
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: npm
           cache-dependency-path: package-lock.json
       - name: Python CI environment
@@ -256,12 +256,12 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
           filter: blob:none
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: npm
           cache-dependency-path: site/package-lock.json
       - name: Python CI environment
@@ -348,7 +348,7 @@ jobs:
             scripts/opsec/prepublish.py
             .python-version
           sparse-checkout-cone-mode: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - name: Refresh pytest duration snapshot
@@ -407,12 +407,12 @@ jobs:
           fetch-depth: ${{ matrix.shard != 1 && 1 || 0 }}
       # PostgreSQL 16/bubblewrap and npm ci run in the background during the Python install.
       - run: bash scripts/ci/test_env.sh start postgres
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: npm
           cache-dependency-path: package-lock.json
       - run: bash scripts/ci/test_env.sh start npm
@@ -539,7 +539,7 @@ jobs:
             registry/artifacts/needs-artifact-expected.txt
             .python-version
           sparse-checkout-cone-mode: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
@@ -584,7 +584,7 @@ jobs:
           # which read old blobs, so PR runs keep a full clone. Other events run no
           # tests here and fetch commits and trees only (FR-58).
           filter: ${{ github.event_name != 'pull_request' && 'blob:none' || '' }}
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       # Changed tests run with the same root node_modules as the pytest shards
@@ -593,7 +593,7 @@ jobs:
       - if: github.event_name == 'pull_request'
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: npm
           cache-dependency-path: package-lock.json
       - if: github.event_name == 'pull_request'
@@ -645,7 +645,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
           filter: blob:none
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - id: scope
@@ -657,7 +657,7 @@ jobs:
       - if: steps.scope.outputs.run == 'true'
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
       - if: steps.scope.outputs.run == 'true'
         name: Run dependency vulnerability audit
         run: |
@@ -688,7 +688,7 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Set up Python
         id: setup-python-gate
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
       - name: Check large files guard

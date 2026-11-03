@@ -10,7 +10,7 @@ A round is one reviewer dispatch at one exact head: round 1 is the full review, 
 rounds are deltas. A round is spent when its reviewer is dispatched, whether or not its
 verdict is ever recorded; more seats or a retry at a head already dispatched open no round.
 
-- **Default: three rounds** (`budget_tier: default` in the hand-off record).
+- **Default: three rounds** (`budget_tier: default` in the hand-off record). A target repository whose own review policy sets a different automatic budget declares it as `review_rounds` under `repositories` in `scripts/config/review_budget_policy.yaml` (kube-dojo: five), and the recorder applies that budget to its PRs.
 - **Up to five rounds** for a change to security, permissions, authentication, data loss, or
   state and concurrency, and only while an evidenced blocker on it stays open, or when the
   operator asks for it (`budget_tier: elevated`). Each round past the third cites the open
@@ -26,9 +26,68 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   --initiator claude-cto`. Each granted round needs the latest recorded verdict to be a
   rejection that lists the granted finding at P0 or P1 and keeps it open in plain words
   (`still open: <reason>`, or a newly raised finding); any closing word in that entry, such as
-  `resolved`, `fixed` or `declined`, refuses the round. A grant never
+  `resolved`, `fixed` or `declined`, refuses the round unless it is inside a hyphenated
+  compound such as `fail-closed` and the entry has an explicit open phrase. Without an
+  open phrase, a closing word inside a compound still refuses the round. A grant never
   resets the rounds already counted, never covers a path outside its scope, and five rounds
-  stay the total.
+  stay the total except under an owner request.
+- **Owner request** (#12551). A sealed grant with `blocker_class: owner-request` names in its
+  `owner_request` object the `tracker_item` recording the project owner's request for that one
+  PR and the `rounds` it records (other classes set it to null); while the latest recorded
+  rejection lists the cited finding, it admits the PR's own budget plus exactly that count,
+  past five when the budget is already five, and never resets spent rounds. A rejection recorded
+  with its findings withheld lists what the sealed reply of the one review run its marker names
+  lists, when that run's digest, head, verdict, reviewer and finding count match the comment and
+  its reply is not truncated; otherwise it lists nothing (#12585).
+- **Withheld-capability recovery.** A sealed grant with `blocker_class: withheld-capability`
+  uses the same ruling and approval machinery and names the finding awaiting verification,
+  at any severity. Its `withheld_capability` object names the missing `capability`, cites
+  `runs` by `task_id`, `run_nonce`, `reviewed_sha` and `reply_sha256`, and includes each
+  run's complete `verification_only_evidence` finding excerpt. The designated advisor must
+  confirm that these excerpts establish the defect is corrected and only verification is
+  missing. Every cited run must have an intact trusted BLOCKED publication naming the missing
+  capability, matching its recorded reply and lineage, with no new P0/P1 or substantive blocker.
+  The latest rejection must remain one of these capability-only runs, with no substantive or
+  unknown review intervening. `retry_probe` seals the same run identifiers plus a literal
+  `capability_evidence` excerpt demonstrating the capability on the retry route at the new
+  head; the recorder refuses a retry on a different route. Other classes set
+  `withheld_capability` to null; their existing sealed grants remain valid. Credits count
+  distinct already charged heads, deduplicated
+  across runs, retries and grants: each grant permits at most `min(5, 3 + qualifying_heads)`
+  total rounds. It never resets spent rounds, reclassifies a capability failure, or clears a
+  security FAIL; a fresh probe-backed review must clear the rejection.
+  A reissued and resealed grant may name one `admission_exclusion` per PR across all grants, binding its task, nonce, head and reply digest to the repository and lineage, with the advisor's sealed `admission_exclusion_attestation` that the complete structured empty-findings BLOCKED reply contains only an execution obstruction, no substantive defect and no security FAIL, validated before dispatch and again against the exact later same-seat, same-head replacement at recording and naming both runs in the receipt; the excluded head stays charged, existing findings stay open, the distinct-head allowance is unchanged, and a failed replacement cannot become another exclusion.
+- **One P2 fix-verification round per work lineage** (#12548). A sealed grant with
+  `blocker_class: p2-fix-verification` uses the same ruling and approval machinery; its
+  `p2_fix_verification` object seals the `rejected_head`, the `candidate_head`, the
+  `delta_sha256` of `git diff --binary --full-index <rejected> <candidate>` and the sorted
+  `finding_ids` (`finding_id` among them); other classes set it to null. The recorder and the
+  dispatcher admit it only when, across the PR's whole ledger: the default three rounds are
+  spent; the latest recorded verdict is a trusted REJECT at the rejected head whose open
+  findings are exactly the sealed ids, nonempty and all P2; every earlier P0/P1 finding was
+  closed by a later structured findings object (bare, fenced or in a `VERDICT`/`SCORE`
+  envelope, with no repeated key) that no longer lists it, since a prose entry never closes a
+  finding; no verdict is BLOCKED, carries a security FAIL, or is edited or unreadable (a verdict
+  recorded withheld is read, security verdict included, from its sealed review run as under the
+  owner request, and is unreadable without it);
+  and every other review run of the PR, at the candidate head too, is terminal with its verdict
+  published, so pushing before a verdict is recorded earns no credit, except that a run its
+  seat superseded ([below](#an-unpublished-verdict-that-its-seat-superseded)) stops refusing
+  while its BLOCKED or security FAIL still counts, and its findings stay open (and count in
+  the all-P2 and sealed-id checks) until a later structured verdict that started after that run
+  omits them. A lineage whose closing
+  issues are linked to any other PR, open or closed, is refused, because earlier PRs' ledgers
+  are not read. It permits round 4 only, never round 5. The dispatcher spends it when it admits
+  the reviewer, and the recorder again before posting, in a durable receipt under the PR, its
+  head branch and every issue it closes; a failed verification, a reissued grant, another
+  reviewer, a replacement PR or a new branch never replenishes it. The reviewer covers the
+  [delta scope](#delta-scope) and only the changes needed to correct the named findings,
+  including their tests. An APPROVE at that head from any seat, or a P3-only reply that would
+  become one, must be a structured reply whose `overall.explanation` begins with the line
+  `P2_FIX_DELTA: <delta_sha256> VERIFIED`, which mentions `P2_FIX_DELTA` nowhere else and lists
+  no sealed finding; prose cannot attest. Otherwise the recorder refuses the APPROVE: a false or
+  unverifiable delta claim is a rejection, and no other seat can approve that head. Security
+  failures and the breakers still apply.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
@@ -106,8 +165,11 @@ When the reviewer stopped only because a capability it needed was missing, the C
 capability failure for the run instead of a verdict
 (`scripts/review/capability_failure.py`):
 
+Resolve `PRIMARY_REPO` and `PY` as in the [review-loop setup](../SKILL.md#review-loop).
+Use the primary recorder so the caller's branch age cannot select its rules.
+
 ```bash
-"$PY" scripts/review/record_cf_verdict.py capability-failure --task-id "$REVIEW_TASK" --pr "$PR" \
+"$PY" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py" capability-failure --task-id "$REVIEW_TASK" --pr "$PR" \
   --capability <sources-mcp|test-execution|shell|browser|checkout-data> --authority claude-cto
 ```
 

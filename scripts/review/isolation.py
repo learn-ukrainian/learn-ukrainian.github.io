@@ -2036,12 +2036,11 @@ def resolve_trusted_reviewer_executable(
     if engine_key == "codex":
         allowed_targets.extend(
             [
-                home / ".hermes" / "node" / "lib" / "node_modules" / "@openai" / "codex",
                 home / ".local" / "share" / "codex",
                 # npm user-prefix install (`npm i -g` with prefix ~/.local): the
                 # #5950 CLI rollback reinstalled codex here, and the seat died
                 # with trusted_reviewer_not_found until this root was trusted
-                # (#5978). Package-scoped, same trust level as the hermes root.
+                # (#5978). Trust only this package within the npm user prefix.
                 home / ".local" / "lib" / "node_modules" / "@openai" / "codex",
             ]
         )
@@ -2743,7 +2742,6 @@ def _resolve_trusted_runtime_command(name: str, *, reject_roots: Iterable[Path |
     home = Path.home().resolve()
     candidates = [
         home / ".local" / "bin" / name,
-        home / ".hermes" / "node" / "bin" / name,
         *(Path(root) / name for root in _DEFAULT_EXTERNAL_PATHS),
     ]
     rejects = tuple(Path(root).resolve() for root in reject_roots)
@@ -2751,7 +2749,6 @@ def _resolve_trusted_runtime_command(name: str, *, reject_roots: Iterable[Path |
         Path("/usr/local").resolve(),
         Path("/opt/homebrew").resolve(),
         Path("/usr").resolve(),
-        home / ".hermes" / "node",
     )
     for candidate in candidates:
         if not candidate.is_file() or not os.access(candidate, os.X_OK):

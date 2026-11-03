@@ -226,13 +226,9 @@ def _run_protocol(tmp_path: Path, *, provider: str, model: str, binary: Path) ->
 def _fake_binary(tmp_path: Path, name: str, response: str) -> Path:
     binary = tmp_path / name
     capture = shlex.quote(str(tmp_path / f"{name}-capture.txt"))
-    config_capture = shlex.quote(str(tmp_path / f"{name}-config.yaml"))
     binary.write_text(
         "#!/bin/sh\n"
-        f"printf '%s\\n' \"$PWD|${{AGY_APP_DATA_DIR:-}}|${{HERMES_HOME:-}}|$*|${{UNRELATED_API_KEY:-}}\" > {capture}\n"
-        'if [ -n "${HERMES_HOME:-}" ]; then\n'
-        f'  /bin/cp "$HERMES_HOME/config.yaml" {config_capture}\n'
-        "fi\n"
+        f"printf '%s\\n' \"$PWD|${{AGY_APP_DATA_DIR:-}}|$*|${{UNRELATED_API_KEY:-}}\" > {capture}\n"
         f"printf '%s' {json.dumps(response)}\n",
         encoding="utf-8",
     )
@@ -274,40 +270,16 @@ def test_agy_text_agent_is_source_blind_sandboxed_and_ephemeral(tmp_path):
         model="gemini-3.6-flash-high",
         binary=binary,
     )
-    cwd, app_data, hermes_home, args, unrelated_secret = capture.strip().split("|", 4)
+    cwd, app_data, args, unrelated_secret = capture.strip().split("|", 3)
     assert response == "agy fake response"
     assert cwd != str(_ROOT)
     assert not Path(cwd).exists()
     assert Path(app_data).resolve().is_relative_to(Path(cwd).resolve())
     assert not Path(app_data).exists()
-    assert hermes_home == ""
     assert "--mode plan" in args
     assert "--sandbox" in args
     assert "--disable-slash-commands" in args
     assert "--dangerously-skip-permissions" not in args
-    assert unrelated_secret == ""
-
-
-def test_deepseek_text_agent_has_empty_tools_no_fallbacks_and_ephemeral_home(tmp_path):
-    binary = _fake_binary(tmp_path, "hermes", "deepseek fake response")
-    response, capture = _run_protocol(
-        tmp_path,
-        provider="deepseek",
-        model="deepseek-v4-pro",
-        binary=binary,
-    )
-    cwd, app_data, hermes_home, args, unrelated_secret = capture.strip().split("|", 4)
-    assert response == "deepseek fake response"
-    assert cwd != str(_ROOT)
-    assert app_data == ""
-    assert Path(hermes_home).resolve().is_relative_to(Path(cwd).resolve())
-    assert not Path(hermes_home).exists()
-    assert "--ignore-rules -z" in args
-    assert "-m deepseek-v4-pro --provider deepseek" in args
-    config = (tmp_path / "hermes-config.yaml").read_text(encoding="utf-8")
-    assert "platform_toolsets:\n  cli: []" in config
-    assert "fallback_providers: []" in config
-    assert "mcp_servers: {}" in config
     assert unrelated_secret == ""
 
 

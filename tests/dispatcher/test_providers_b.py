@@ -12,7 +12,8 @@ import pytest
 from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
 from scripts.agent_runtime.read_only_tmp import dispatch_lease
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
-from scripts.dispatcher import runtime_context
+from scripts.common.repo_root import project_interpreter
+from scripts.dispatcher import agy_sandbox, runtime_context
 from scripts.dispatcher.providers import load
 from scripts.dispatcher.runtime_context import read_roots
 from scripts.dispatcher.types import ParsedResult, TaskSpec
@@ -189,8 +190,8 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         expected += ["--mcp-config", SOURCES_MCP_CONFIG, "--strict-mcp-config", "--allowedTools"]
         expected += [
             (
-                "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
-                "Bash(gh issue view *),Bash(gh run view *),"
+                # Read-only Bash runs only inside the boundary its shell prefix sets (#12378).
+                "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash,"
                 if mode == "read-only"
                 else "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch,"
             )
@@ -225,8 +226,14 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         assert capture["background"] == "1"
         assert capture["advisor"] == "1"
         assert capture["context"] == "inherited-session"
+        shell = {} if mode != "read-only" else {
+            "CLAUDE_CODE_SHELL_PREFIX": str(agy_sandbox.SHELL_PREFIX),
+            agy_sandbox.SHELL_ENV_PYTHON: str(project_interpreter()), agy_sandbox.SHELL_ENV_TASK: spec.task_id,
+            agy_sandbox.SHELL_ENV_WORKTREE: str(spec.worktree),
+            agy_sandbox.SHELL_ENV_LOG: str(spec.final_file.with_suffix(".shell.jsonl")),
+        }
         assert invocation.env == dict(
-            original_env, CLAUDE_CODE_DISABLE_BACKGROUND_TASKS="1", CLAUDE_CODE_DISABLE_ADVISOR_TOOL="1"
+            original_env, CLAUDE_CODE_DISABLE_BACKGROUND_TASKS="1", CLAUDE_CODE_DISABLE_ADVISOR_TOOL="1", **shell
         )
     assert capture["argv"] == expected
     assert capture["cwd"] == str(worktree)
@@ -251,7 +258,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         proc.stdout.decode(), proc.stderr.decode(), proc.returncode, final_text
     ) == ParsedResult(
         "Finished.", {"input_tokens": 7, "output_tokens": 3}, None,
-        sources_mcp_call_count=0 if provider == "claude" else None,
+        sources_mcp_call_count=0 if provider in ("claude", "codex", "agy") else None,
     )
     if provider == "claude":
         env["CLAUDE_CONFIG_DIR"] = str(tmp_path / "selected-account-b")
@@ -345,7 +352,13 @@ def test_failure_cannot_become_success_from_final_prose(provider, failure):
         stdout, "private diagnostic must not be echoed", 9 if failure == "nonzero" else 0, "Finished."
     )
     assert result.error
-    assert "private diagnostic" not in result.error
+    if provider == "codex" and failure == "nonzero":
+        excerpt = result.error.removeprefix("codex: exited with status 9: ")
+        assert excerpt == "private diagnostic must not be echoed"
+        assert len(excerpt) <= 500
+        assert excerpt == " ".join(excerpt.split())
+    else:
+        assert "private diagnostic" not in result.error
 
 
 @pytest.mark.parametrize("provider", SUCCESS)
@@ -364,7 +377,7 @@ def test_missing_usage_remains_none_and_information_does_not_change_success(prov
         events.append(metadata)
     stdout = "\n".join(json.dumps(event) for event in events)
     assert load(provider).parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", None, None, sources_mcp_call_count=0 if provider == "claude" else None
+        "Finished.", None, None, sources_mcp_call_count=0 if provider in ("claude", "codex", "agy") else None
     )
 
 
@@ -392,7 +405,7 @@ def test_cursor_message_content_does_not_lose_assistant_text(content):
 def test_codex_turn_usage_is_read_without_token_event():
     stdout = '{"type":"turn.completed","usage":{"input_tokens":4,"output_tokens":2}}'
     assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 4, "output_tokens": 2}, None
+        "Finished.", {"input_tokens": 4, "output_tokens": 2}, None, sources_mcp_call_count=0
     )
 
 
@@ -402,7 +415,7 @@ def test_codex_error_notice_can_retry_before_successful_completion(separator):
     notice = json.dumps({"type": "error", "message": f"Retry{separator}notice"}, ensure_ascii=False)
     stdout = notice + "\n" + SUCCESS["codex"] + " \t\r\n"
     assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 7, "output_tokens": 3}, None
+        "Finished.", {"input_tokens": 7, "output_tokens": 3}, None, sources_mcp_call_count=0
     )
 
 
@@ -447,7 +460,7 @@ def test_codex_terminal_not_last_rejected_without_overwriting_completion_usage(l
     """codex-terminal-not-last: any nonblank record after a terminal invalidates this invocation."""
     stdout = '{"type":"turn.completed","usage":{"input_tokens":4,"output_tokens":2}}\n'
     assert load("codex").parse(stdout + later + "\n", "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 4, "output_tokens": 2}, error
+        "Finished.", {"input_tokens": 4, "output_tokens": 2}, error, sources_mcp_call_count=0
     )
 
 
@@ -476,7 +489,7 @@ def test_agy_partial_stderr_rejects_incomplete_runs_with_safe_reason(stderr, err
     """agy-partial-stderr: native incomplete signals override SUCCESS without exposing stderr."""
     stderr = "private diagnostic\n" + stderr + "\nprivate diagnostic"
     assert load("agy").parse(SUCCESS["agy"], stderr, 0, None) == ParsedResult(
-        "Finished.", {"input_tokens": 7, "output_tokens": 3}, error
+        "Finished.", {"input_tokens": 7, "output_tokens": 3}, error, sources_mcp_call_count=0
     )
     if error:
         assert load("agy").parse(SUCCESS["agy"], stderr, 9, None).error == "agy: exited with status 9"
@@ -502,22 +515,24 @@ def test_agy_success_while_background_work_is_open_is_incomplete():
         (
             SUCCESS["agy"],
             '{"event":"result","result":{"status":"SUCCESS","response":"Replacement.","usage":{"input_tokens":99}}}',
-            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result"),
+            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result",
+                         sources_mcp_call_count=0),
         ),
         (
             ERROR["agy"],
             SUCCESS["agy"],
-            ParsedResult("Finished.", None, _AGY_UNCLASSIFIED),
+            ParsedResult("Finished.", None, _AGY_UNCLASSIFIED, sources_mcp_call_count=0),
         ),
         (
             '{"event":"result","result":null}',
             SUCCESS["agy"],
-            ParsedResult(None, None, "agy: invalid terminal result"),
+            ParsedResult(None, None, "agy: invalid terminal result", sources_mcp_call_count=0),
         ),
         (
             SUCCESS["agy"],
             '{"event":"result","result":[]}',
-            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result"),
+            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result",
+                         sources_mcp_call_count=0),
         ),
     ],
 )
@@ -1075,3 +1090,79 @@ def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tm
         from scripts.dispatcher.agy_sandbox import _remove
 
         _remove(tmp_path / "scratch-killed")
+
+
+
+def _codex_mcp_item(item_id, server, status, *, error=None, kind="item.completed", item_type="mcp_tool_call"):
+    return {"type": kind, "item": {"id": item_id, "type": item_type, "server": server,
+                                   "tool": "verify_word", "result": None, "error": error, "status": status}}
+
+
+def _codex_stream(*events):
+    done = [{"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}}]
+    return "".join(json.dumps(event) + "\n" for event in [{"type": "turn.started"}, *events, *done])
+
+
+def test_codex_stream_with_completed_sources_calls_reports_their_count():
+    stream = _codex_stream(
+        _codex_mcp_item("item_1", "sources", "in_progress", kind="item.started"),
+        _codex_mcp_item("item_1", "sources", "completed"),
+        _codex_mcp_item("item_2", "sources", "completed"),
+    )
+    parsed = load("codex").parse(stream, "", 0, "VERDICT: APPROVE")
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 2
+
+
+def test_codex_failed_or_non_sources_mcp_calls_do_not_count():
+    stream = _codex_stream(
+        _codex_mcp_item("item_1", "sources", "failed"),
+        _codex_mcp_item("item_2", "sources", "completed", error={"message": "boom"}),
+        _codex_mcp_item("item_3", "codex_apps", "completed"),
+        _codex_mcp_item("item_4", "sources", "in_progress", kind="item.started"),
+        _codex_mcp_item("item_5", "sources", "completed", item_type="command_execution"),
+    )
+    parsed = load("codex").parse(stream, "", 0, "VERDICT: APPROVE")
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 0
+
+
+def _agy_mcp_step(index, state, server="sources", *, error=None, output=True, tool_name="call_mcp_tool"):
+    info = {"name": tool_name, "parameters": {"Arguments": {"word": "мова"}, "ServerName": server, "ToolName": "verify_word"}}
+    if output:
+        info["output"] = "1 analysis"
+    if error is not None:
+        info["error"] = error
+    step = {"conversation_id": "c1", "step_index": index, "state": state, "step_type": "tool",
+            "tool_name": tool_name, "tool_info": info}
+    return {"event": "step_update", "step_update": step}
+
+
+def _agy_stream(*events):
+    done = {"event": "result", "result": {"status": "SUCCESS", "response": "VERDICT: APPROVE"}}
+    return "".join(json.dumps(event) + "\n" for event in [*events, done])
+
+
+def test_agy_stream_with_completed_sources_calls_reports_their_count():
+    stream = _agy_stream(
+        _agy_mcp_step(1, "ACTIVE", output=False),
+        _agy_mcp_step(1, "DONE"),
+        _agy_mcp_step(2, "DONE", output=False),  # a call that returned nothing still completed
+    )
+    parsed = load("agy").parse(stream, "", 0, None)
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 2
+
+
+def test_agy_failed_or_non_sources_mcp_calls_do_not_count():
+    failed = {"type": "TOOL_ERROR", "message": "Tool call failed: verify_word."}
+    stream = _agy_stream(
+        _agy_mcp_step(1, "ERROR", error=failed),
+        _agy_mcp_step(2, "DONE", error=failed),
+        _agy_mcp_step(3, "DONE", server="other"),
+        _agy_mcp_step(4, "ACTIVE", output=False),
+        _agy_mcp_step(5, "DONE", tool_name="read_file"),
+    )
+    parsed = load("agy").parse(stream, "", 0, None)
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 0

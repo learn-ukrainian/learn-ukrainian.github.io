@@ -152,7 +152,6 @@ AGENTS: dict[str, AgentEntry] = {
         # (currently grok-4.7, operator order 2026-09-22 / #8464). Historical
         # alias: "grok-build" (see agent_identity.SEAT_ALIASES); dual-READ
         # only, prefer-WRITE "grok".
-        # DISTINCT from "grok-hermes" below (disfavored Hermes/OpenRouter path).
         "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
         "default_model": "grok-4.7",
         "default_effort": "high",
@@ -191,10 +190,8 @@ AGENTS: dict[str, AgentEntry] = {
         # OpenCode → first-party api.deepseek.com (deepseek-direct/*) is the
         # dispatch default (operator 2026-08-13): Flash default, --variant high.
         # Retired Pro model requests are refused.
-        # Bridge asks (`ask-deepseek`,
-        # `ask-hermes` alias) ride the acpx-deepseek-shadow ACP seat on the
-        # same first-party opencode route since the Hermes removal (operator
-        # order 2026-08-16, #6805). First-party DeepSeek is China-hosted →
+        # Bridge asks (`ask-deepseek`) ride the acpx-deepseek-shadow ACP
+        # seat on the same first-party opencode route. First-party DeepSeek is China-hosted →
         # CI runs are refused by the adapter.
         "adapter": "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter",
         "default_model": "deepseek-v4.1-flash",
@@ -360,8 +357,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "acpx-deepseek-shadow": {
         # Native opencode ACP transport (``opencode acp --pure``, deny-all)
-        # pinned to first-party deepseek-direct — the standing route since
-        # Hermes was permanently removed (operator order 2026-08-16, #6805).
+        # pinned to first-party deepseek-direct — the standing route.
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
         "default_model": "deepseek-v4.1-flash",
         "cost_tier": "unknown",

@@ -7,7 +7,6 @@ In-process tests call the hook's main with hand-written pre-push input.
 
 from __future__ import annotations
 
-import gc
 import hashlib
 import json
 import os
@@ -17,6 +16,7 @@ import shutil
 import subprocess
 import sys
 import time
+import tracemalloc
 import zlib
 from pathlib import Path
 
@@ -423,65 +423,51 @@ def test_continuation_unfolding_is_linear_in_the_header_size(size):
     assert work <= 8 * len(raw), f"unfolding copied {work} bytes for {len(raw)} input bytes"
 
 
-def _continuation_fixture(size):
-    """Commit bytes whose mergetag continues for about `size` bytes, and the fields that split must return."""
-    line = b" " + b"x" * 63
-    raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 64) + b"\n\nclean\n"
-    expected = [(b"tree", b"0"), (b"mergetag", b"object 0" + (b"\n" + line[1:]) * (size // 64))]
-    return raw, expected
+def _allocated_bytes(function, *args):
+    """Bytes newly allocated while `function` runs, summed over every executed opcode.
 
+    A sample per opcode is needed: `fields[-1] = (key, old + b"\\n" + part)` frees
+    the old value inside the same source line, so a per-line or end-of-call reading
+    would see none of the copying. Unlike the subclass meter above, this also sees
+    copies of plain bytes made inside C (`join`, `%`-formatting, `bytearray`).
+    It counts memory, not time, so it does not depend on runner load.
 
-def _unfold_cpu_seconds(size, samples=5, target=0.2):
-    """Minimum per-call thread CPU time on plain bytes.
-
-    A single call at the small size is only a few milliseconds, and the 64x bound
-    is about 30 ms of additive thread CPU above that call. Best-of-three on one
-    call therefore accepts a quadratic unfold when every short sample pays a stall
-    (a collection, a cold fault) that barely moves the multi-second large sample.
-    Each sample repeats the call until it has used `target` seconds, after one
-    warmup and with the cyclic collector off, so that stall is spread across many
-    calls. The reported value is the minimum per-call time: extra time is noise,
-    not negative. Thread CPU time does not count time spent descheduled. Copies
-    that plain bytes hide from the subclass counter still show up here.
+    CPython 3.12 delivers no opcode events for a code object on its first traced
+    run, so the first traced run is a discarded warm-up; the second is the measurement.
     """
-    raw, expected = _continuation_fixture(size)
-    git_push.split_object(raw, "commit[unit]")
-    best = float("inf")
-    call_cap = 100_000
-    for _ in range(samples):
-        gc.collect()
-        enabled = gc.isenabled()
-        gc.disable()
-        elapsed = 0.0
-        fields, message = None, ""
-        calls = 0
-        try:
-            started = time.thread_time()
-            while calls < call_cap:
-                fields, message = git_push.split_object(raw, "commit[unit]")
-                calls += 1
-                elapsed = time.thread_time() - started
-                if elapsed >= target:
-                    break
-        finally:
-            if enabled:
-                gc.enable()
-        assert fields == expected and message == "clean\n"
-        if elapsed <= 0 or calls == 0:
-            raise AssertionError(f"unfolding CPU scaling: thread clock did not advance at size {size}")
-        best = min(best, elapsed / calls)
-    return best
+    allocated, last = [0], [0]
+
+    def trace(frame, event, arg):
+        frame.f_trace_opcodes = True
+        if event == "opcode":
+            current = tracemalloc.get_traced_memory()[0]
+            allocated[0] += max(current - last[0], 0)
+            last[0] = current
+        return trace
+
+    was_tracing, previous = tracemalloc.is_tracing(), sys.gettrace()
+    if not was_tracing:
+        tracemalloc.start()
+    try:
+        for _ in range(2):
+            allocated[0], last[0] = 0, tracemalloc.get_traced_memory()[0]
+            sys.settrace(trace)
+            try:
+                function(*args)
+            finally:
+                sys.settrace(previous)
+    finally:
+        if not was_tracing:
+            tracemalloc.stop()
+    return allocated[0]
 
 
-def test_continuation_unfolding_has_linear_cpu_scaling():
-    """A 16x input increase allows 64x CPU work; quadratic unfolding needs about 256x."""
-    # 128 KiB against 2 MiB is the 16x gap this 64x allowance was calibrated for.
-    # A wider gap spends the slack the real scanner needs: its CPU cost is a bit
-    # above linear because each continuation line has a fixed loop cost.
-    # Short continuation lines make repeated full-prefix copies dominate that loop.
-    # The 1 ms floor keeps a tiny small sample from turning timer noise into a ratio.
-    small, large = _unfold_cpu_seconds(128 << 10), _unfold_cpu_seconds(2 << 20)
-    assert large <= 64 * max(small, 0.001), f"unfolding CPU scaling: small={small:.6f}s large={large:.6f}s"
+def test_continuation_unfolding_allocates_linearly_in_the_header_size():
+    """Plain-bytes copying stays within a fixed multiple of the input; quadratic unfolding allocates over 200x."""
+    line = b" " + b"x" * 63
+    raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * ((32 << 10) // 64) + b"\n\nclean\n"
+    allocated = _allocated_bytes(git_push.split_object, raw, "commit[unit]")
+    assert allocated <= 32 * len(raw), f"unfolding allocation: {allocated} bytes for {len(raw)} input bytes"
 
 
 @pytest.mark.parametrize(
@@ -507,15 +493,15 @@ def test_linearity_checks_reject_quadratic_unfolding(monkeypatch, combine, count
         return fields, body.decode("utf-8", "replace")
 
     monkeypatch.setattr(git_push, "split_object", quadratic)
+    # Every variant is rejected by the allocation meter; the copy counter also sees the counted one.
     if counted:
         with pytest.raises(AssertionError, match="unfolding copied"):
             test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
     else:
-        # These regressions bypass the deterministic meter, so prove the CPU
-        # scaling check catches them even while the copy-counter check passes.
+        # These regressions bypass the copy counter, so only the allocation meter can catch them.
         test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
-    with pytest.raises(AssertionError, match="unfolding CPU scaling"):
-        test_continuation_unfolding_has_linear_cpu_scaling()
+    with pytest.raises(AssertionError, match="unfolding allocation"):
+        test_continuation_unfolding_allocates_linearly_in_the_header_size()
 
 
 # --- A clean push is ordinary: delivered unchanged, with Git's own bookkeeping ---
@@ -690,9 +676,9 @@ def update(sandbox, revision="HEAD", ref="refs/heads/feature", old=ZERO):
     return (revision, _git(sandbox.work, "rev-parse", revision), ref, old)
 
 
-def run_hook(sandbox, monkeypatch, client, *updates, stdin=None, url=None, remote="origin", **extra):
+def run_hook(sandbox, monkeypatch, client, *updates, stdin=None, url=None, remote="origin", catalog=None, **extra):
     """git_push.main in process on hand-written pre-push input; returns (status, caller hook calls)."""
-    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    monkeypatch.setattr(gate, "catalog", lambda: catalog or CATALOG)
     monkeypatch.setattr(gate, "private_tooling", lambda: sandbox.tooling)
     monkeypatch.setattr(gate, "primary_root", lambda cwd=None: sandbox.root)
     monkeypatch.chdir(sandbox.work)
@@ -880,7 +866,7 @@ def test_history_the_destination_already_has_is_still_scanned(push_sandbox):
     push_sandbox.commit("clean follow-up")
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert_blocked(result, push_sandbox, before, f"commit[{old[:12]}].message")
-    assert "public default-branch head unavailable (1 public repository call(s))" in result.stderr
+    assert "public default-branch head unavailable (0 public repository call(s))" in result.stderr
 
 
 def test_forged_tracking_ref_does_not_suppress_the_scan(push_sandbox):
@@ -1042,12 +1028,74 @@ def test_real_client_excludes_on_a_bound_reply_from_the_catalogue_repository(pus
 
 
 def test_the_default_client_names_the_catalogue_public_repository(monkeypatch):
-    """Never the push URL, GH_REPO or local git configuration."""
+    """Never GH_REPO or local git configuration."""
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
-    client = git_push.CanonicalPublicRepository.from_catalog({"GH_REPO": "unit/forged", "LU_OPSEC_OVERRIDE": "x"})
+    client = git_push.CanonicalPublicRepository.from_catalog(
+        {"GH_REPO": "unit/forged", "LU_OPSEC_OVERRIDE": "x"}, "github.com/unit/public"
+    )
     assert client.repo == "github.com/unit/public" and "LU_OPSEC_OVERRIDE" not in client.environment
     monkeypatch.setattr(gate, "catalog", lambda: {"private": CATALOG["infra-private"]})
-    assert git_push.CanonicalPublicRepository.from_catalog({}) is None
+    assert git_push.CanonicalPublicRepository.from_catalog({}, "github.com/unit/public") is None
+
+
+FLEET = {**CATALOG, "content": {"github": "Unit/Content", "local_name": "content", "role": "public-content"}}
+
+
+def _asked(monkeypatch, head):
+    """Record which repository the real client asks; it answers head for every one."""
+    asked = []
+
+    def default_head(self):
+        self.calls += 1
+        asked.append(self.repo)
+        return head
+
+    monkeypatch.setattr(git_push.CanonicalPublicRepository, "default_head", default_head)
+    return asked
+
+
+@pytest.mark.parametrize(
+    ("url", "repo"),
+    [
+        ("https://github.com/unit/content.git", "github.com/unit/content"),
+        ("git@github.com:unit/public.git", "github.com/unit/public"),
+    ],
+)
+def test_the_public_head_is_the_registered_repository_the_push_goes_to(push_sandbox, monkeypatch, capfd, url, repo):
+    """#12518: each registered public repository excludes its own published history."""
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    public_head = push_sandbox.commit("published clean")
+    push_sandbox.commit("new clean work")
+    asked = _asked(monkeypatch, public_head)
+    status, chained = run_hook(push_sandbox, monkeypatch, None, url=url, catalog=FLEET)
+    err = capfd.readouterr().err
+    assert status == 0 and chained and asked == [repo], err
+    assert "1 commit(s) scanned; public default-branch head present (1 public repository call(s))" in err
+    assert hit[:12] not in err
+
+
+@pytest.mark.parametrize(
+    ("url", "catalog"),
+    [
+        pytest.param("https://github.com/unit/unregistered.git", FLEET, id="unregistered"),
+        pytest.param(None, FLEET, id="local-path"),
+        pytest.param(
+            "https://github.com/unit/content.git",
+            {**FLEET, "mirror": {**FLEET["content"], "local_name": "mirror"}},
+            id="ambiguous",
+        ),
+    ],
+)
+def test_an_unregistered_or_ambiguous_destination_scans_all_history(push_sandbox, monkeypatch, capfd, url, catalog):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    public_head = push_sandbox.commit("published clean")
+    push_sandbox.commit("new clean work")
+    asked = _asked(monkeypatch, public_head)
+    status, chained = run_hook(push_sandbox, monkeypatch, None, url=url, catalog=catalog)
+    err = capfd.readouterr().err
+    assert status == 1 and not chained and asked == [], err
+    assert "public default-branch head unavailable (0 public repository call(s))" in err
+    assert f"field=commit[{hit[:12]}].message" in err
 
 
 def _loose(store, sha):

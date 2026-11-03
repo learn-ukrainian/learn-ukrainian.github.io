@@ -5,9 +5,11 @@ import fcntl
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
+import time
 from contextlib import contextmanager, suppress
 from datetime import datetime
 from functools import partial
@@ -266,11 +268,11 @@ def resolve_repo(key: str | None = None) -> tuple[Path, dict]:
     return (ROOT if item.get("default") else ROOT.parent / item["local_name"]).resolve(), item
 
 
-def publish_start(repo: Path, repository: dict, branch: str, task_id: str) -> tuple[str, str]:
+def publish_start(repo: Path, repository: dict, branch: str, task_id: str, *, label: str = "publish branch") -> tuple[str, str]:
     """Start published fix rounds at origin's tip without moving the local PR branch."""
     remote = verification_origin(repo)
     if remote not in canonical_origins(repository):
-        raise ValueError("publish branch origin must match the registered canonical repository URL")
+        raise ValueError(f"{label} origin must match the registered canonical repository URL")
     source = f"refs/heads/{branch}"
     with _private_remote_git(task_id, remote) as (run, _):
         try:
@@ -278,16 +280,43 @@ def publish_start(repo: Path, repository: dict, branch: str, task_id: str) -> tu
         except subprocess.CalledProcessError as exc:
             if exc.returncode != 2:
                 raise
-            raise ValueError("publish branch is absent from the canonical remote") from None
+            raise ValueError(f"branch_absent_on_remote: {label} is absent from the canonical remote: {branch}") from None
         fields = advertised.split()
         if len(fields) != 2 or fields[1] != source or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", fields[0]):
-            raise ValueError("publish branch must advertise one full object name")
+            raise ValueError(f"{label} must advertise one full object name")
         sha = fields[0]
     # Materialize the immutable advertised object, never a worker-writable ref.
     # Shared URL rewrites can make this transfer fail, but cannot change its SHA.
     _verification_git(repo, "fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
                       sha, timeout=VERIFICATION_FETCH_TIMEOUT, credential_remote=remote)
     return sha, remote
+
+
+def review_branch_start(repo: Path, repository: dict, branch: str, task_id: str, *, base: str | None = None) -> str:
+    """The remote head a read-only ``--branch`` dispatch checks out (#12441).
+
+    The local ``refs/heads/<branch>`` is never consulted or moved: the advertised
+    remote object is fetched by SHA, exactly as a published write start. A
+    commit-SHA ``--base`` naming a different commit is refused typed instead of
+    being silently ignored; a ref ``--base`` (the ``origin/main`` default) stays
+    the review's base ref and does not name the checkout commit.
+    """
+    sha, _remote = publish_start(repo, repository, branch, task_id, label="review branch")
+    if base and re.fullmatch(r"[0-9a-fA-F]{4,64}", base):
+        if len(base) in (40, 64):
+            resolved = base.lower()
+        else:
+            try:
+                resolved = _verification_git(repo, "rev-parse", "--verify", f"{base}^{{commit}}")
+            except subprocess.SubprocessError:
+                resolved = base.lower()
+        if resolved != sha:
+            raise ValueError(
+                f"read_only_branch_base_mismatch: --base {base} is {resolved}, "
+                f"but the remote head of {branch} is {sha}; "
+                "drop --base or pass the remote head"
+            )
+    return sha
 
 
 def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, worktree=None, *, exact=False):
@@ -323,7 +352,12 @@ def worktree_lock(repo: Path):
 
 
 def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=(),
-                    exact=False) -> None:
+                    exact=False, registration: dict | None = None) -> None:
+    """Create a task worktree; ``registration`` (see register_worktree) also keeps its registry entry true.
+
+    The entry is written before the tree exists and confirmed after, all under the worktree lock that
+    settlement removes (and archives) under, so a later dispatch to the same path cannot interleave.
+    """
     excluded = sparse_excludes(sparse_include)
     # A published start is checked out as that exact object, not a shared replacement.
     no_replace = ("--no-replace-objects",) if exact else ()
@@ -333,15 +367,209 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
     path.parent.mkdir(parents=True, exist_ok=True)
     # Serialize config enablement and keep sparse settings local to the new worktree.
     with worktree_lock(repo):
-        run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
-        run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
-        if full_checkout:
-            run_git(path, "sparse-checkout", "disable")
-        else:
-            run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
-        run_git(path, "reset", "--hard", sha)
+        if registration:
+            register_worktree(path=path, branch=branch, sha=sha, **registration)
+        try:
+            run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
+            run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
+            if full_checkout:
+                run_git(path, "sparse-checkout", "disable")
+            else:
+                run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
+            run_git(path, "reset", "--hard", sha)
+            if registration:
+                confirm_worktree(registration["registry"], path)
+                _install_refresh_hooks(path, registration["registry"])
+        except BaseException as exc:
+            if registration:
+                _reconcile_failed_creation(repo, registration["registry"], path, f"{type(exc).__name__}")
+            raise
     # Outside the lock: a store miss runs one npm install, and other creations must not wait for it.
     site_deps.provision(repo, path)
+
+
+def registry_path(repo: Path, repository: dict) -> Path | None:
+    """The worktree registry the target repository declares (``worktree_registry`` in fleet_repos.yaml).
+
+    The value is relative to that repository's primary checkout; a repository without it has no registry.
+    """
+    declared = repository.get("worktree_registry")
+    if not declared:
+        return None
+    relative = PurePosixPath(str(declared))
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError("worktree_registry must be a path inside the repository")
+    return repo / relative
+
+
+def registry_update(registry: Path, key: str, change, *, timeout: float | None = None) -> dict | None:
+    """Read-modify-write one ``worktrees`` entry in the target repository's own registry format.
+
+    Serialized by an exclusive lock beside the registry and published by atomic replace, so a concurrent
+    dispatch or hand edit through the same lock never loses an update. ``change`` receives the current
+    entry (or None) and returns the new one, or None to leave the registry untouched; entries are never
+    removed. An unreadable or malformed
+    registry is refused, never recreated: the audit treats it as an unknown to resolve. ``timeout`` bounds the
+    wait for the lock (TimeoutError); without it the wait is unbounded, as registration's always was.
+    """
+    with open(registry.with_name(registry.name + ".lock"), "ab") as lock:
+        deadline = None if timeout is None else time.monotonic() + timeout
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | (0 if deadline is None else fcntl.LOCK_NB))
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(f"worktree registry lock is held: {registry}") from None
+                time.sleep(0.05)
+        data = json.loads(registry.read_text(encoding="utf-8"))
+        if not isinstance(data, dict) or not isinstance(data.get("worktrees"), dict):
+            raise ValueError(f"worktree registry has an invalid shape: {registry}")
+        entry = change(data["worktrees"].get(key))
+        if entry is None:
+            return None
+        data["worktrees"][key] = entry
+        temporary = registry.with_name(f".{registry.name}.{os.getpid()}.tmp")
+        try:
+            with open(temporary, "w", encoding="utf-8") as handle:
+                handle.write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, registry)
+        finally:
+            temporary.unlink(missing_ok=True)
+        return entry
+
+
+def _key(path: Path) -> str:
+    """The absolute, normalized spelling Git reports for the worktree, which is what the audit matches."""
+    return str(Path(path).resolve())
+
+
+def register_worktree(registry: Path, path: Path, *, agent: str, task_id: str, initiator: str | None,
+                      purpose: str, branch: str, sha: str) -> None:
+    """Record a worktree the dispatcher is about to create: active, no PR yet, starting head.
+
+    A path that already holds a live worktree is refused: its record belongs to that tree's owner.
+    """
+    if (Path(path) / ".git").exists():
+        raise ValueError(f"worktree registry: {path} already holds a worktree; its record is not replaced")
+    summary = " ".join(purpose.split())[:200] or f"dispatch task {task_id}"
+    owner = f"{agent} dispatch task {task_id}; initiator {initiator or 'none'}"
+    registry_update(registry, _key(path), lambda _old: dict(
+        owner=owner, purpose=summary, branch=branch, head=sha, state="active",
+        next_action="the dispatcher archives this record when settlement removes the worktree", pr=None))
+
+
+def confirm_worktree(registry: Path, path: Path) -> None:
+    """Replace the intended branch and head by what Git reports for the created worktree."""
+    branch, head = _git(path, "symbolic-ref", "--short", "HEAD"), _git(path, "rev-parse", "HEAD")
+    registry_update(registry, _key(path), lambda old: {**(old or {}), "branch": branch, "head": head})
+
+
+def archive_worktree(registry: Path, path: Path, reason: str, head: str | None = None) -> bool:
+    """Mark a registered worktree archived with the reason; False when it has no entry (none is invented)."""
+    entry = registry_update(registry, _key(path), lambda old: None if old is None else {
+        **old, "state": "archived", "next_action": reason, **({"head": head} if head else {})})
+    return entry is not None
+
+
+def _reconcile_failed_creation(repo: Path, registry: Path, path: Path, error: str) -> None:
+    """After a failed creation, archive the entry only when Git shows no worktree there; a surviving one stays active."""
+    try:
+        listing = _git(repo, "worktree", "list", "--porcelain", isolate=True)
+        live = any(line == f"worktree {_key(path)}" for line in listing.splitlines())
+        if live:
+            confirm_worktree(registry, path)
+        else:
+            archive_worktree(registry, path, f"worktree was not created ({error})")
+    except (OSError, ValueError, subprocess.SubprocessError):
+        pass  # the original error is the one raised; the audit reports whatever the registry still holds
+
+
+def refresh_worktree(registry: Path, path: Path, pr: int | None = None) -> bool:
+    """Bring an active entry's branch and head (and ``pr`` once known) to what Git reports for the live tree.
+
+    Same lock, fsync and replace as registration. A missing, archived or foreign entry is left as it is, and a
+    detached HEAD keeps the recorded branch. False when nothing was written.
+    """
+    head = _git(path, "rev-parse", "HEAD", isolate=True)
+    try:
+        branch = _git(path, "symbolic-ref", "--short", "HEAD", isolate=True)
+    except subprocess.CalledProcessError:
+        branch = None
+
+    def change(old):
+        if not isinstance(old, dict) or old.get("state") != "active":
+            return None
+        return {**old, "head": head, **({"branch": branch} if branch else {}), **({"pr": pr} if pr else {})}
+    return registry_update(registry, _key(path), change, timeout=REFRESH_LOCK_WAIT) is not None
+
+
+REFRESH_LOCK_WAIT = 10.0  # seconds; a refresh never stalls a commit or settlement behind a held registry lock
+REFRESH_HOOKS = ("post-commit", "post-rewrite", "post-merge", "post-checkout")
+
+
+def _install_refresh_hooks(path: Path, registry: Path) -> None:
+    """Make every commit, amend, rebase or merge in the worktree refresh its registry entry.
+
+    The hooks live in the worktree's own Git directory behind a worktree-scoped ``core.hooksPath``; the
+    repository's other hooks stay in force by symlink, and its own hook of the same name runs first. A
+    failure leaves the tree without the live refresh (settlement still records the final head) and never
+    blocks creation.
+    """
+    try:
+        def where(*args):
+            return Path(_git(path, "rev-parse", "--path-format=absolute", *args, isolate=True))
+        try:
+            # Git expands a leading ~ and resolves a relative core.hooksPath against the worktree top level.
+            chain = Path(path) / _git(path, "config", "--path", "--get", "core.hooksPath", isolate=True)
+        except subprocess.CalledProcessError:
+            chain = where("--git-path", "hooks")
+        hooks = where("--git-path", "dispatch-hooks")
+        hooks.mkdir(exist_ok=True)
+        if chain.is_dir():
+            for entry in sorted(chain.iterdir()):
+                if entry.name not in REFRESH_HOOKS and entry.is_file() and os.access(entry, os.X_OK) \
+                        and not entry.name.endswith(".sample"):
+                    (hooks / entry.name).symlink_to(entry)
+        root = Path(__file__).resolve().parents[2]
+        refresh = " ".join(shlex.quote(word) for word in (sys.executable, "-m", "scripts.dispatcher.git", "refresh",
+                                                          _key(path), str(registry)))
+        for name in REFRESH_HOOKS:
+            script = hooks / name
+            script.write_text(
+                f"#!/bin/sh\nchain={shlex.quote(str(chain / name))}\n"
+                f'if [ -x "$chain" ]; then "$chain" "$@"; fi\n'
+                f"cd {shlex.quote(str(root))} && timeout 20 {refresh} || echo 'dispatcher: registry refresh failed' >&2\n"
+                "exit 0\n")
+            script.chmod(0o755)
+        _git(path, "config", "--worktree", "core.hooksPath", str(hooks), isolate=True)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def _refresh_at_settlement(record: dict, tree: Path, head: str) -> str | None:
+    """Record a retained tree's final head (and its one open pull request) in the repository's registry.
+
+    Only for a tree the dispatcher created; a failure never blocks settlement and is reported as the note.
+    """
+    try:
+        repo, info = resolve_repo(record.get("repo"))
+        registry = registry_path(repo, info)
+        if registry is None:
+            return None
+        pr = None
+        with suppress(GitHubRefused, ValueError, KeyError, TypeError, OSError, subprocess.SubprocessError):
+            slug, _ = _repo_and_base(record)
+            branch = record["worktree_branch"]
+            listed = json.loads(_gh("pr", "list", "--repo", slug, "--head", branch, "--state", "open",
+                                    "--json", "number,headRefOid,headRefName")) if slug else []
+            matching = [item["number"] for item in listed if item["headRefName"] == branch and item["headRefOid"] == head]
+            pr = matching[0] if len(matching) == 1 else None
+        return "refreshed" if refresh_worktree(registry, tree, pr) else "no_entry"
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
+        return f"failed: {type(exc).__name__}: {exc}"
 
 
 # Fixed conventional slots for sandbox refusal and legacy cleanup, never provisioning.
@@ -631,7 +859,7 @@ def _salvage_hold(tree: Path, primary: Path, untracked: list[str]) -> tuple[str,
     commit pointer), so one with commits that are on none of its remotes, or with uncommitted work,
     keeps the tree. So does meaningful ignored output past SALVAGE_IGNORED_LIMIT.
     """
-    from scripts.fleet.regenerable_output import is_regenerable_ignored_path
+    from scripts.fleet.regenerable_output import committed_release_pins, is_regenerable_ignored_path
     from scripts.orchestration.worktree_artifacts import is_disposable_path
 
     ignored = [name for name in _git(tree, "ls-files", "-z", "--others", "--ignored", "--exclude-standard",
@@ -644,11 +872,12 @@ def _salvage_hold(tree: Path, primary: Path, untracked: list[str]) -> tuple[str,
             return "nested_repository_unpushed", name
     tracked = set(_git(tree, "ls-files", "-z", "--cached", isolate=True, strip=False).split("\0"))
     ignored_names = set(ignored)
+    release_pins = committed_release_pins(tree, tracked)
     dependency_locks: dict[str, bool] = {}  # one lock verdict per dependency directory, not per file
     total = 0
     for name in ignored:
         if not is_disposable_path(Path(name), worktree=tree, primary=primary) and not is_regenerable_ignored_path(
-                name, worktree=tree, tracked=tracked, ignored=ignored_names, release_pins={},
+                name, worktree=tree, tracked=tracked, ignored=ignored_names, release_pins=release_pins,
                 dependency_locks=dependency_locks):
             total += os.lstat(tree / name).st_size
             if total > SALVAGE_IGNORED_LIMIT:
@@ -788,6 +1017,22 @@ def _retention_held(record: dict) -> bool:
     raise _Kept(hold["worktree_disposition_reason"], hold["worktree_disposition_detail"])
 
 
+def _archive_removed(repo: Path, tree: Path, record: dict, head: str) -> str | None:
+    """Archive the removed worktree's entry in the repository's registry, if it declares one.
+
+    A registry that cannot be written never blocks settlement: the failure is recorded and the audit
+    reports the entry that stayed active. A repository without a registry leaves the record unchanged (None).
+    """
+    try:
+        registry = registry_path(repo, resolve_repo(record.get("repo"))[1])
+        if registry is None:
+            return None
+        reason = f"task {record['task_id']} settled; the dispatcher removed the worktree"
+        return "archived" if archive_worktree(registry, tree, reason, head) else "no_entry"
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
+        return f"failed: {type(exc).__name__}: {exc}"
+
+
 def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
     """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
 
@@ -805,9 +1050,16 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     claims admit it, and is removed only while its HEAD and content still equal what that branch holds;
     a failed or unproven salvage keeps it, and so does every hold _salvage_hold finds.
     """
+    registry_note = []  # what archiving the repository's registry entry did, once the tree is removed
+    seen_head = []  # the tree's HEAD once read: a retained tree's entry then records it (_refresh_at_settlement)
+
     def disposition(state, reason, detail=None):
+        if (state == "retained" and seen_head and reason != "borrowed_worktree" and not registry_note
+                and (note := _refresh_at_settlement(record, Path(record["worktree_path"]), seen_head[0])) is not None):
+            registry_note.append(note)
         return dict(worktree_disposition=state, worktree_disposition_reason=reason,
-                    **({"worktree_disposition_detail": detail} if detail else {}))
+                    **({"worktree_disposition_detail": detail} if detail else {}),
+                    **({"worktree_registry": registry_note[0]} if registry_note else {}))
 
     # An owner hold is decided before any Git read, push, or removal. The disk
     # record wins when this copy is stale.
@@ -822,6 +1074,7 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
         repo, tree, branch = resolve_repo(record.get("repo"))[0], Path(record["worktree_path"]), record["worktree_branch"]
         changed, untracked = _tree_changes(tree)
         head, remote, merged = _git(tree, "rev-parse", "HEAD", isolate=True), None, False
+        seen_head.append(head)
         if changed and not salvage:
             return disposition("retained", "dirty", "; ".join(changed[:5]))
         committed = head != record.get("worktree_start_sha", record["worktree_base_sha"])
@@ -880,6 +1133,9 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
             force=bool(untracked or changed or salvage), dirty_probe=changed_since_inventory, tasks_dir=tasks_dir(),
             task_record=record, preserve_files=untracked or None,
         )
+        # Archived under the lock the removal held, before any later dispatch can register this path again.
+        if removal.action == "removed" and (note := _archive_removed(repo, tree, record, head)) is not None:
+            registry_note.append(note)
     if removal.action == "skipped":
         return disposition("retained", "removal_refused", removal.reason)
     if removal.action != "removed":
@@ -893,3 +1149,9 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     except (OSError, subprocess.SubprocessError):
         return disposition("removed", "branch_delete_failed", salvage_detail)
     return disposition("removed", "salvaged", salvage_detail) if salvaged else disposition("removed", "clean")
+
+
+if __name__ == "__main__":  # the worktree hooks: refresh TREE REGISTRY
+    if len(sys.argv) != 4 or sys.argv[1] != "refresh":
+        sys.exit("usage: python -m scripts.dispatcher.git refresh TREE REGISTRY")
+    refresh_worktree(Path(sys.argv[3]), Path(sys.argv[2]))

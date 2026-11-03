@@ -21,7 +21,7 @@ semantics, scope freezing, non-mutating checks, cross-family reviewer
 resolution, finding adjudication, and separate behavior proof. A clean
 working tree never substitutes for reviewing a requested commit or PR.
 
-For the review of record, use `scripts/review/record_cf_verdict.py` after the
+For the review of record, use `"$PY" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py"` after the
 toolful review settles. It posts a PR comment bound to the exact head, with
 model/family/harness provenance. GitHub rejects an API approval review when the
 shared bot identity also authored the PR (`gh pr review --approve` uses that API).
@@ -29,6 +29,8 @@ Post the verdict as a PR comment bound to the reviewed head SHA, not as an
 approval review. The comment must still come from an independent cross-family
 reviewer; a shared posting identity does not establish independence. See
 `workflow.md` § Merge policy.
+Resolve `PRIMARY_REPO` and `PY` with the [review-loop setup](../review-loop/SKILL.md#review-loop)
+so the recorder uses current primary-checkout rules on older branches too.
 
 Red-team exception (`workflow.md` § Merge policy), for code review only:
 only when no eligible outside-family reviewer exists, resolve with

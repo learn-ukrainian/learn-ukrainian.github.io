@@ -216,7 +216,7 @@ function normalizeCardState(raw: unknown): CardState | null {
 /** Tolerant parse; unreadable data is kept under `<key>.corrupt` and an empty store returned. */
 export function readDeckProgress(storage: StorageLike, deckId: string, defaults: DeckSettings): DeckProgress {
   const key = deckProgressStorageKey(deckId);
-  let raw: string | null = null;
+  let raw: string | null;
   try {
     raw = storage.getItem(key);
   } catch {

@@ -278,8 +278,7 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     },
     "acpx-deepseek-shadow": {
         # Same OpenCode ACP auth selector and deny-all policy JSON as the GLM
-        # seat — the DeepSeek seat rides the native opencode ACP transport
-        # since the Hermes removal (#6805).
+        # seat; the DeepSeek seat uses the native opencode ACP transport.
         "ACPX_AUTH_OPENCODE_LOGIN",
         "OPENCODE_CONFIG_CONTENT",
     },

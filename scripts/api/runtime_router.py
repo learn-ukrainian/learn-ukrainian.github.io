@@ -41,7 +41,6 @@ from agent_runtime.adapters.acpx import (
     GROK_CLI_COMPATIBILITY_CONTRACT,
     GROK_SHADOW_EFFORT,
     GROK_SHADOW_MODEL,
-    HERMES_CLI_COMPATIBILITY_CONTRACT,
     OPENCODE_CLI_COMPATIBILITY_CONTRACT,
     AcpxAdapter,
     AcpxGrokShadowAdapter,
@@ -422,10 +421,8 @@ def list_runtime_agents(ctx: MonitorContext, unreadable: dict[str, int] | None =
     adapters_dir = _adapters_dir(ctx)
     agents: list[dict[str, Any]] = []
     for path in sorted(adapters_dir.glob("*.py")):
-        # Skip non-agent helper modules and alternate-harness adapters that
-        # alias an existing fleet agent name (hermes_* wrap the same grok /
-        # qwen / deepseek identities for ask-hermes only).
-        if path.stem in {"__init__", "acpx", "base", "hermes_deepseek", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
+        # Skip non-agent helper modules.
+        if path.stem in {"__init__", "acpx", "base"} or path.stem.startswith("_"):
             continue
         try:
             module = import_named_module(f"agent_runtime.adapters.{path.stem}")
@@ -622,11 +619,6 @@ def acpx_shadow_overview(*, days: int = 7, ctx: MonitorContext | None = None) ->
             },
             "grok_cli": {
                 "contract": GROK_CLI_COMPATIBILITY_CONTRACT,
-                "validation": "before_spawn",
-                "version_policy": "telemetry_only",
-            },
-            "hermes_cli": {
-                "contract": HERMES_CLI_COMPATIBILITY_CONTRACT,
                 "validation": "before_spawn",
                 "version_policy": "telemetry_only",
             },

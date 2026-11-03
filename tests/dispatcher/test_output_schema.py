@@ -217,6 +217,10 @@ def test_claude_review_binds_findings_schema(dispatch):
     with pytest.raises(ValidationError, match="missing_capabilities"):
         Draft202012Validator(receipt_schema).validate(refused)
     Draft202012Validator(receipt_schema).validate(receipt)
+    failed_codex = codex.parse("", "HTTP 400 schema.if is not permitted when strict is true", 1, None)
+    assert failed_codex.error == (
+        "codex: exited with status 1: HTTP 400 schema.if is not permitted when strict is true"
+    )
 
     from scripts.dispatcher.types import TaskSpec
 
@@ -244,6 +248,57 @@ def test_claude_review_binds_findings_schema(dispatch):
     assert "not" in projected["properties"]
     assert projected["properties"]["const"]["type"] == "string"
     assert codex._needs_openai_strict(name_map_schema) is False
+
+
+def test_codex_stderr_excerpt_redacts_secret_and_home_path():
+    secret = "key_" + "aB09" * 16
+    home_path = "/home/fixture/.codex/config.toml"
+    failed = codex.parse("", f"open {home_path} failed\nwith {secret}  rejected", 1, None)
+    assert failed.error is not None
+    assert secret not in failed.error
+    assert home_path not in failed.error
+    assert "/home/" not in failed.error
+    assert failed.error.startswith("codex: exited with status 1: ")
+    assert len(failed.error) <= len("codex: exited with status 1: ") + 500
+
+
+@pytest.mark.parametrize("character", ["\x00", "\x1b", "\x7f", "\x85", "\u200b", "\u202e", "\u2066", "\ufeff", "\t", "\r", "\n", "\r\n"])
+@pytest.mark.parametrize("placement", ["split_token", "split_key", "separated", "trailing"])
+def test_control_format_characters_removed_from_stderr_excerpt(character, placement):
+    secret = "key_" + "aB09" * 16
+    if placement == "split_token":
+        raw = "notice" + character + secret[:8] + character + secret[8:]
+    elif placement == "split_key":
+        raw = "notice" + character + "PASS" + character + "WORD: " + secret[4:12]
+    elif placement == "separated":
+        raw = "notice" + character + "PASSWORD: " + secret[4:12] + character + "TOKEN: " + secret[4:12]
+    else:
+        raw = "notice " + secret + character
+    parsed = codex.parse("", raw, 1, None)
+    if placement == "trailing" and character in {"\t", "\r", "\n", "\r\n", "\x85"}:
+        expected = "codex: exited with status 1: notice [REDACTED_SECRET]"
+    else:
+        expected = "codex: exited with status 1: [stderr excerpt withheld: control or format characters]"
+    assert parsed.error == expected
+    assert character not in parsed.error
+    assert secret[:8] not in parsed.error
+    assert secret[8:] not in parsed.error
+    assert secret[4:12] not in parsed.error
+
+
+@pytest.mark.parametrize("signal", ["credit balance is too low", "insufficient_quota", "billing error 429"])
+@pytest.mark.parametrize("structured", [False, True])
+def test_stderr_text_alone_cannot_mark_pool_exhausted(tmp_path, monkeypatch, signal, structured):
+    from scripts.dispatcher import pool_selector
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    task_id = "stderr-pool"
+    path = store.record_path(task_id).parent / "logs" / f"{task_id}.stdout.log"
+    path.parent.mkdir(parents=True)
+    stdout = json.dumps({"type": "turn.failed", "error": {"message": signal}}) if structured else ""
+    path.write_text(stdout)
+    parsed = codex.parse(stdout, signal, 1, None)
+    assert pool_selector._provider_exhausted({"task_id": task_id, "agent": "codex", "error": parsed.error}) is structured
 
 
 def test_agy_review_binds_findings_schema(dispatch):
