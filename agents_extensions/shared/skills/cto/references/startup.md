@@ -60,6 +60,13 @@ Do not publish to an old name and do not tell a worker to.
 
 ## 5. Re-arm and cycle
 
+Before re-arming, and before the first dispatch of the session, list every task
+record whose id starts with the predecessor session's prefix (for example
+`ls batch_state/tasks/ | grep '^cto-<prefix>-'`, then `scripts/dispatch.py status
+<id>` for each). Reconcile that list against the handoff note, and read the
+latest notes on the top operator order. The handoff list is a snapshot; the task
+records under `batch_state/tasks` are the source of truth.
+
 Re-arm in the background `.venv/bin/python scripts/dispatch.py wait <task-id> --run-nonce
 <nonce>` for every live worker and any PR watcher the handoff names, then run the first
 [cycle](cycle.md).
