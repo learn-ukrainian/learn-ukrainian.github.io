@@ -418,7 +418,7 @@ def pr_file_paths(rows: object) -> list[str]:
 
 # Exact metadata-only manifests under a content prefix. Each file carries
 # schema, file paths, SHA-256 digests, counts or membership, and no
-# learner-visible Ukrainian text; no site code renders it. Exact paths only:
+# learner-visible Ukrainian text, and no site code renders it. Exact paths only:
 # no prefixes and no globs. Ukrainian seats and behavior-proof receipts share
 # this exemption (#12653, #12687). Auto-deploy eligibility still treats these
 # paths as content.
@@ -429,7 +429,8 @@ METADATA_ONLY_RELEASE_MANIFESTS = frozenset(
         "registry/lexicon/atlas-runtime-release.json",
         # Freshness sidecar from scripts/lexicon/manifest_fingerprint.py: schema
         # version, scope, and the path and SHA-256 of each scripts/lexicon/*.py
-        # file. No learner-visible text, and no site code reads it (#12687).
+        # file. No learner-visible text, and no site code renders it; only build
+        # freshness checks in site/scripts compare it with the pointer (#12687).
         "site/src/data/lexicon-manifest.fingerprint.json",
     }
 )
