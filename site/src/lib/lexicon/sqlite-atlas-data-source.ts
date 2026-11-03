@@ -12,6 +12,12 @@
  */
 
 import Database from "better-sqlite3";
+import {
+  AtlasArtifactSelectionError,
+  PINNED_SELECTION_ENV,
+  isPinnedSelection,
+  resolveSelectedArtifactLocations,
+} from "./atlas-artifact-selection.mjs";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import {
@@ -264,9 +270,16 @@ export class SqliteAtlasDataSource implements AtlasDataSource {
 
       // Prefer the dual-publication search artifacts so ranking matches the
       // legacy generate_search_index / exporter transliteration surface.
-      const searchArtifactsDir = options?.searchArtifactsDir ?? resolve(process.cwd(), "src/data");
+      const searchArtifactsDir =
+        options?.searchArtifactsDir ?? resolveSelectedArtifactLocations(process.cwd()).dataDir;
       const searchIndexPath = resolve(searchArtifactsDir, "lexicon-search-index.json");
       const searchAliasesPath = resolve(searchArtifactsDir, "lexicon-search-aliases.json");
+      if (isPinnedSelection() && !(existsSync(searchIndexPath) && existsSync(searchAliasesPath))) {
+        // The pinned build must not silently rank from atlas.db instead of the pinned set.
+        throw new AtlasArtifactSelectionError(
+          `${PINNED_SELECTION_ENV} is set but the pinned search artifacts are missing in ${searchArtifactsDir}`,
+        );
+      }
       if (existsSync(searchIndexPath) && existsSync(searchAliasesPath)) {
         this.articleRows = JSON.parse(readFileSync(searchIndexPath, "utf-8")) as SearchRow[];
         this.aliasRows = JSON.parse(readFileSync(searchAliasesPath, "utf-8")) as SearchAlias[];

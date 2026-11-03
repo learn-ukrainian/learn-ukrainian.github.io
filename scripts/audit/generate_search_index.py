@@ -47,6 +47,14 @@ DEFAULT_SEARCH_SHARD_DIR: Path | None = None
 DEFAULT_BROWSE_META_OUT = Path("site/src/data/lexicon-browse-meta.json")
 DEFAULT_BROWSE_FLAGGED_OUT = Path("site/src/data/lexicon-browse-flagged.json")
 DEFAULT_BROWSE_DIR = Path("site/public/lexicon/browse")
+# A pinned runtime tree is the Pages deployment projection, not the committed
+# DB-derived snapshot above. It writes to this ignored build directory so a
+# release build never rewrites tracked files (#12527). The site reads it through
+# site/src/lib/lexicon/atlas-artifact-selection.mjs, whose PINNED_ARTIFACT_DIRNAME
+# must name the same directory.
+PINNED_ARTIFACT_ROOT = Path("site/.atlas-pinned")
+PINNED_DATA_DIR = PINNED_ARTIFACT_ROOT / "data"
+PINNED_BROWSE_DIR = PINNED_ARTIFACT_ROOT / "public/lexicon/browse"
 
 CEFR_LEVELS = {"A1", "A2", "B1", "B2", "C1", "C2"}
 UKRAINIAN_ALPHABET = tuple("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ")
@@ -1086,6 +1094,18 @@ def write_browse_outputs(
         (browse_dir / f"{letter}.json").write_bytes(_json_bytes(rows))
 
 
+def resolve_output_path(explicit: Path | None, committed_default: Path, *, pinned: bool) -> Path:
+    """Pick one output path: explicit flag, else the pinned build dir or the committed snapshot."""
+
+    if explicit is not None:
+        return explicit
+    if not pinned:
+        return committed_default
+    if committed_default == DEFAULT_BROWSE_DIR:
+        return PINNED_BROWSE_DIR
+    return PINNED_DATA_DIR / committed_default.name
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(
@@ -1100,6 +1120,8 @@ def main(argv: list[str] | None = None) -> int:
 
 Outputs: search index, alias index, search shard metadata, browse metadata and letter shards.
 ATLAS_SEARCH_RUNTIME_TREE selects the verified tree prepared by site/scripts/prepare-atlas-search.py.
+A pinned run writes to site/.atlas-pinned/ (ignored) and leaves the committed snapshot under
+site/src/data and site/public/lexicon/browse untouched; an explicit output flag overrides this.
 This generator neither downloads a runtime nor changes a release or pointer.
 Exit codes: 0 on success; nonzero on invalid input or runtime integrity failure.
 Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-api.md; #10453.
@@ -1116,26 +1138,26 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
     parser.add_argument(
         "--runtime-tree",
         type=Path,
-        default=os.environ.get("ATLAS_SEARCH_RUNTIME_TREE") or None,
+        default=(os.environ.get("ATLAS_SEARCH_RUNTIME_TREE") or "").strip() or None,
         help="Verified extracted tree containing atlas/current.json; overrides DB (default: $ATLAS_SEARCH_RUNTIME_TREE or none).",
     )
     parser.add_argument(
         "--out",
         type=Path,
-        default=DEFAULT_SEARCH_OUT,
-        help=f"Article search index output (default: {DEFAULT_SEARCH_OUT}).",
+        default=None,
+        help=f"Article search index output (default: {DEFAULT_SEARCH_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--aliases-out",
         type=Path,
-        default=DEFAULT_SEARCH_ALIASES_OUT,
-        help=f"Runtime/DB alias index output (default: {DEFAULT_SEARCH_ALIASES_OUT}).",
+        default=None,
+        help=f"Runtime/DB alias index output (default: {DEFAULT_SEARCH_ALIASES_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--search-shards-out",
         type=Path,
-        default=DEFAULT_SEARCH_SHARDS_OUT,
-        help=f"Search shard metadata output (default: {DEFAULT_SEARCH_SHARDS_OUT}).",
+        default=None,
+        help=f"Search shard metadata output (default: {DEFAULT_SEARCH_SHARDS_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--search-shard-dir",
@@ -1146,22 +1168,29 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
     parser.add_argument(
         "--browse-meta-out",
         type=Path,
-        default=DEFAULT_BROWSE_META_OUT,
-        help=f"Browse metadata output (default: {DEFAULT_BROWSE_META_OUT}).",
+        default=None,
+        help=f"Browse metadata output (default: {DEFAULT_BROWSE_META_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--browse-flagged-out",
         type=Path,
-        default=DEFAULT_BROWSE_FLAGGED_OUT,
-        help=f"Flagged browse rows output (default: {DEFAULT_BROWSE_FLAGGED_OUT}).",
+        default=None,
+        help=f"Flagged browse rows output (default: {DEFAULT_BROWSE_FLAGGED_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--browse-dir",
         type=Path,
-        default=DEFAULT_BROWSE_DIR,
-        help=f"Browse letter shard directory (default: {DEFAULT_BROWSE_DIR}).",
+        default=None,
+        help=f"Browse letter shard directory (default: {DEFAULT_BROWSE_DIR}; pinned runs: site/.atlas-pinned/).",
     )
     args = parser.parse_args(argv)
+    pinned = args.runtime_tree is not None
+    args.out = resolve_output_path(args.out, DEFAULT_SEARCH_OUT, pinned=pinned)
+    args.aliases_out = resolve_output_path(args.aliases_out, DEFAULT_SEARCH_ALIASES_OUT, pinned=pinned)
+    args.search_shards_out = resolve_output_path(args.search_shards_out, DEFAULT_SEARCH_SHARDS_OUT, pinned=pinned)
+    args.browse_meta_out = resolve_output_path(args.browse_meta_out, DEFAULT_BROWSE_META_OUT, pinned=pinned)
+    args.browse_flagged_out = resolve_output_path(args.browse_flagged_out, DEFAULT_BROWSE_FLAGGED_OUT, pinned=pinned)
+    args.browse_dir = resolve_output_path(args.browse_dir, DEFAULT_BROWSE_DIR, pinned=pinned)
 
     if args.runtime_tree is not None:
         # The vendor reader owns runtime membership and the public display

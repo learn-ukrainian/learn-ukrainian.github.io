@@ -5,6 +5,9 @@
  * exit code, writes a fresh nonce into dist/, and binds all of it to the input
  * identity: HEAD, the tracked working-tree diff and the content of every file
  * under the hydrated inputs (site/src/data, site/public, data/atlas.db).
+ * A pinned build (ATLAS_SEARCH_RUNTIME_TREE set) also binds the ignored
+ * site/.atlas-pinned/ set it reads instead of the committed search/browse
+ * snapshot, and the record states which selection it was built with (#12527).
  * The identity is taken before the build. A file the build itself creates under
  * the inputs (astro.config.mjs writes the fallback
  * public/audio/pronunciation/manifest.json when it is absent, #8378) is added
@@ -37,12 +40,21 @@ import {
 } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import {
+  PINNED_ARTIFACT_DIRNAME,
+  PINNED_SELECTION_ENV,
+  isPinnedSelection,
+} from '../../src/lib/lexicon/atlas-artifact-selection.mjs';
 
 export const RECORD_SCHEMA = 'lu.frontend-build-record.v1';
 export const NONCE_FILE = '.frontend-build-nonce';
 export const INPUT_PATHS = ['site/src/data', 'site/public', 'data/atlas.db'] as const;
+/** Extra input bound only by a pinned build: the generated set it reads instead of the committed snapshot. */
+export const PINNED_INPUT_PATH = `site/${PINNED_ARTIFACT_DIRNAME}`;
+export type ArtifactSelectionMode = 'committed' | 'pinned';
 export const BUILD_ENV_KEYS = [
   'ATLAS_MANIFEST_ALLOW_STALE_POINTER',
+  PINNED_SELECTION_ENV,
   'ATLAS_STATIC_ROUTES',
   'CI',
   'NODE_ENV',
@@ -74,7 +86,13 @@ export interface BuildRecord {
   /** Input files absent before the build and created by it, fingerprinted after it. */
   buildCreatedInputs: string[];
   buildEnv: { node: string; platform: string; arch: string; env: Record<string, string | null> };
+  /** Which search/browse artifact set the build read; absent in records written before #12527 (committed). */
+  artifactSelection?: ArtifactSelectionMode;
   inputs: InputIdentity;
+}
+
+export function selectionModeFromEnv(env: NodeJS.ProcessEnv = process.env): ArtifactSelectionMode {
+  return isPinnedSelection(env) ? 'pinned' : 'committed';
 }
 
 export class BuildRecordError extends Error {
@@ -123,9 +141,13 @@ function git(repoRoot: string, args: string[]): Buffer {
   return execFileSync('git', args, { cwd: repoRoot, env, maxBuffer: 1 << 30 });
 }
 
-export function computeInputIdentity(roots: BuildRoots = DEFAULT_ROOTS): InputIdentity {
+export function computeInputIdentity(
+  roots: BuildRoots = DEFAULT_ROOTS,
+  mode: ArtifactSelectionMode = selectionModeFromEnv(),
+): InputIdentity {
   const files: Record<string, string> = {};
-  for (const relPath of INPUT_PATHS) {
+  const inputPaths = mode === 'pinned' ? [...INPUT_PATHS, PINNED_INPUT_PATH] : INPUT_PATHS;
+  for (const relPath of inputPaths) {
     if (!existsSync(join(roots.repoRoot, relPath))) {
       throw new BuildRecordError(`missing build input: ${relPath}`);
     }
@@ -175,7 +197,8 @@ export async function recordBuild(options: RecordOptions): Promise<BuildRecord> 
   const env = options.env ?? process.env;
   if (command.length === 0) throw new BuildRecordError('record needs a build command after --');
 
-  const inputs = computeInputIdentity(roots);
+  const mode = selectionModeFromEnv(env);
+  const inputs = computeInputIdentity(roots, mode);
   const logPath = defaultLogPath(recordPath);
   mkdirSync(dirname(recordPath), { recursive: true });
 
@@ -208,7 +231,7 @@ export async function recordBuild(options: RecordOptions): Promise<BuildRecord> 
 
   // Admit only inputs the build created: changed or removed inputs keep their
   // pre-build hashes, so verification reports them.
-  const after = computeInputIdentity(roots);
+  const after = computeInputIdentity(roots, mode);
   const buildCreatedInputs = Object.keys(after.files)
     .filter((path) => !(path in inputs.files))
     .sort();
@@ -236,6 +259,7 @@ export async function recordBuild(options: RecordOptions): Promise<BuildRecord> 
       arch: process.arch,
       env: Object.fromEntries(BUILD_ENV_KEYS.map((key) => [key, env[key] ?? null])),
     },
+    artifactSelection: mode,
     inputs,
   };
   writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`);
@@ -282,7 +306,15 @@ export function verifyBuildRecord(recordPath: string, roots: BuildRoots = DEFAUL
   if (!record.nonce || distNonce !== record.nonce) {
     throw new BuildRecordError(`${distDir} is not the recorded build (nonce mismatch)`);
   }
-  const differences = inputIdentityDifferences(record.inputs, computeInputIdentity(roots));
+  const recordedMode = record.artifactSelection ?? 'committed';
+  const currentMode = selectionModeFromEnv();
+  if (recordedMode !== currentMode) {
+    throw new BuildRecordError(
+      `build was recorded with the ${recordedMode} artifact selection but this run selects ${currentMode}` +
+        ` (${PINNED_SELECTION_ENV} must match between record and verify)`,
+    );
+  }
+  const differences = inputIdentityDifferences(record.inputs, computeInputIdentity(roots, recordedMode));
   if (differences.length > 0) {
     const shown = differences.slice(0, 20).join('\n  ');
     const more = differences.length > 20 ? `\n  ... ${differences.length - 20} more` : '';

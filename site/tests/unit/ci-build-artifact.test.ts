@@ -10,7 +10,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   BuildRecordError,
   NONCE_FILE,
@@ -77,7 +77,13 @@ function expectRejected(fixture: ReturnType<typeof makeFixture>, message: RegExp
   expect(() => verifyBuildRecord(fixture.recordPath, fixture)).toThrow(message);
 }
 
+// Hermetic selection: the fixtures are committed-selection builds unless a test pins one (#12527).
+beforeEach(() => {
+  vi.stubEnv('ATLAS_SEARCH_RUNTIME_TREE', '');
+});
+
 afterEach(() => {
+  vi.unstubAllEnvs();
   for (const dir of fixtures.splice(0)) rmSync(dir, { recursive: true, force: true });
 });
 
@@ -98,11 +104,41 @@ describe('frontend CI build record', () => {
       'data/atlas.db',
     ]);
     expect(record.buildEnv.env).toHaveProperty('ATLAS_MANIFEST_ALLOW_STALE_POINTER');
+    expect(record.buildEnv.env).toHaveProperty('ATLAS_SEARCH_RUNTIME_TREE');
+    expect(record.artifactSelection).toBe('committed');
 
     const verified = verifyBuildRecord(fixture.recordPath, fixture);
     expect(verified.log).toBe('built 1 page\n[WARN] fixture\n');
     expect(verified.log).toBe(readFileSync(defaultLogPath(fixture.recordPath), 'utf-8'));
     expect(verified.record.exitCode).toBe(0);
+  });
+
+  it('binds the ignored pinned artifact set of a pinned build and refuses a selection switch (#12527)', async () => {
+    const fixture = makeFixture();
+    const pinnedFile = join(fixture.siteDir, '.atlas-pinned/data/lexicon-search-index.json');
+    mkdirSync(join(fixture.siteDir, '.atlas-pinned/data'), { recursive: true });
+    writeFileSync(pinnedFile, '["pinned"]\n');
+
+    vi.stubEnv('ATLAS_SEARCH_RUNTIME_TREE', '/runtime/tree');
+    const record = await recordFixture(fixture);
+    expect(record.artifactSelection).toBe('pinned');
+    expect(record.buildEnv.env.ATLAS_SEARCH_RUNTIME_TREE).toBe('/runtime/tree');
+    expect(Object.keys(record.inputs.files)).toContain('site/.atlas-pinned/data/lexicon-search-index.json');
+    expect(() => verifyBuildRecord(fixture.recordPath, fixture)).not.toThrow();
+
+    writeFileSync(pinnedFile, '["changed after the build"]\n');
+    expectRejected(fixture, /changed site\/\.atlas-pinned\/data\/lexicon-search-index\.json/);
+    writeFileSync(pinnedFile, '["pinned"]\n');
+
+    // Verifying under the committed selection would test the wrong artifact set.
+    vi.stubEnv('ATLAS_SEARCH_RUNTIME_TREE', '');
+    expectRejected(fixture, /recorded with the pinned artifact selection but this run selects committed/);
+  });
+
+  it('refuses to record a pinned build whose pinned set is missing', async () => {
+    const fixture = makeFixture();
+    vi.stubEnv('ATLAS_SEARCH_RUNTIME_TREE', '/runtime/tree');
+    await expect(recordFixture(fixture)).rejects.toThrow(/missing build input: site\/\.atlas-pinned/);
   });
 
   it('passes a rendering-error log from an exit-0 build through byte for byte', async () => {

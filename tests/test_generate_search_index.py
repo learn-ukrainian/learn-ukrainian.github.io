@@ -884,6 +884,51 @@ def test_pinned_generator_withholds_unverified_heads_and_placeholder_glosses(tmp
         _discovery_exclusions(articles)
 
 
+def test_pinned_run_writes_the_ignored_build_dir_and_never_the_committed_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#12527: pinned-mode output must not land on the tracked committed artifact paths."""
+    import re
+
+    import scripts.audit.generate_search_index as gsi
+    import scripts.deploy.vendor_atlas_tree as vendor
+
+    committed = {
+        tmp_path / DEFAULT_SEARCH_OUT: "COMMITTED-SEARCH",
+        tmp_path / DEFAULT_BROWSE_META_OUT: "COMMITTED-META",
+        tmp_path / DEFAULT_BROWSE_DIR / "А.json": "COMMITTED-SHARD",
+    }
+    for path, text in committed.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    row = {"s": "іван", "l": "Іван", "g": "Ivan", "r": "ivan", "t": "lemma"}
+    monkeypatch.setattr(vendor, "build_pinned_search", lambda tree: ([row], [], {"dataVersion": "atlas-v1-test"}))
+    monkeypatch.chdir(tmp_path)
+
+    assert main(["--runtime-tree", str(tmp_path / "tree")]) == 0
+
+    assert {path: path.read_text(encoding="utf-8") for path in committed} == committed
+    pinned_data = tmp_path / gsi.PINNED_DATA_DIR
+    assert json.loads((pinned_data / "lexicon-search-index.json").read_bytes()) == [row]
+    for name in (
+        "lexicon-search-aliases.json",
+        "lexicon-search-shards.json",
+        "lexicon-browse-meta.json",
+        "lexicon-browse-flagged.json",
+    ):
+        assert (pinned_data / name).is_file(), name
+    assert [p.name for p in (tmp_path / gsi.PINNED_BROWSE_DIR).glob("*.json")] == ["І.json"]
+    # The ignored directory name is shared with the site reader's selection module.
+    selection = (PROJECT_ROOT / "site/src/lib/lexicon/atlas-artifact-selection.mjs").read_text(encoding="utf-8")
+    declared = re.search(r"PINNED_ARTIFACT_DIRNAME = '([^']+)'", selection)
+    assert declared is not None and declared.group(1) == gsi.PINNED_ARTIFACT_ROOT.name
+
+    # An unpinned run and an explicit flag keep their own paths.
+    assert gsi.resolve_output_path(None, DEFAULT_SEARCH_OUT, pinned=False) == DEFAULT_SEARCH_OUT
+    explicit = tmp_path / "elsewhere.json"
+    assert gsi.resolve_output_path(explicit, DEFAULT_SEARCH_OUT, pinned=True) == explicit
+
+
 def test_browse_staleness_guard_fires_when_browse_would_stay_pinned(tmp_path: Path) -> None:
     stale_meta = tmp_path / "browse-meta.json"
     stale_meta.write_text(json.dumps({"total": 1}), encoding="utf-8")

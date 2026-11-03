@@ -1,6 +1,5 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import type { APIRoute } from "astro";
+import { readSelectedArtifactText } from "../../lib/lexicon/atlas-artifact-selection.mjs";
 
 /**
  * Public alias resolvers for Word Atlas typeahead.
@@ -14,10 +13,7 @@ let cachedSearchAliasesJson: string | null = null;
 
 function getSearchAliasesJson(): string {
   if (!cachedSearchAliasesJson) {
-    cachedSearchAliasesJson = readFileSync(
-      resolve(process.cwd(), "src/data/lexicon-search-aliases.json"),
-      "utf8",
-    );
+    cachedSearchAliasesJson = readSelectedArtifactText("lexicon-search-aliases.json", process.cwd());
   }
   return cachedSearchAliasesJson;
 }
