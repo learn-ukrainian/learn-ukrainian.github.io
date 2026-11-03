@@ -291,10 +291,11 @@ contract or owner-boundary change, and a needed design decision. A contested ver
 - **Where it is recorded.** The PR-body ledger holds each finding, structured or prose, with
   its evidence mode, severity and validated disposition; a prose observation is recorded even
   when the findings array is empty. The round report of `review-loop` (its Stop and report
-  section, which already names reviewer model, family and harness) also records the catch
-  outcome, false positives, escaped defects (found after approval), review and repair tokens
-  and elapsed time, with the risk and task family. Per-model yield is aggregated from those
-  records.
+  section, which already names reviewer model, family and harness) also records the unique
+  verified catches, false positives, escaped defects (found after approval), review and
+  repair tokens and elapsed time, with the risk and task family. A unique verified catch is a
+  stable finding id counted once across all rounds, confirmed by its evidence mode and not a
+  false positive. Per-model yield is aggregated from those records.
 - Usage that was not reported stays `unknown`, never estimated. A small or confounded sample
   does not justify a change of tier or seat.
 - **Recurring findings become checks.** A defect class that review catches a second time is
