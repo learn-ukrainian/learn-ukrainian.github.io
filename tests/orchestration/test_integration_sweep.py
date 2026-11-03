@@ -188,6 +188,18 @@ def test_learner_content_needs_its_ukrainian_seats_without_a_ukrainian_verdict(r
     assert sweep.classify_pr(pr(), verdict, queued=False, observed_at=START).state == expected
 
 
+@pytest.mark.parametrize(
+    "paths,learner_content",
+    [
+        (["site/src/data/lexicon-manifest.fingerprint.json", "registry/lexicon/atlas-runtime-release.json"], False),
+        (["site/src/data/lexicon-manifest.fingerprint.json", "site/src/data/lexicon-search-index.json"], True),
+    ],
+)
+def test_metadata_only_manifests_do_not_change_learner_content(paths, learner_content):
+    # #12687: the lexicon fingerprint sidecar holds code paths and digests only; a learner path beside it still counts.
+    assert sweep.changes_learner_content(paths) is learner_content
+
+
 def pr(**updates):
     data = {
         "number": 42,

@@ -416,16 +416,21 @@ def pr_file_paths(rows: object) -> list[str]:
     return paths
 
 
-# Exact release manifests under a content prefix. Each file carries schema,
-# SHA-256 digests, counts and membership of already-built artifacts, and no
-# learner-visible Ukrainian text. Exact paths only: no prefixes and no globs.
-# Ukrainian seats and behavior-proof receipts share this exemption (#12653).
-# Auto-deploy eligibility still treats these paths as content.
+# Exact metadata-only manifests under a content prefix. Each file carries
+# schema, file paths, SHA-256 digests, counts or membership, and no
+# learner-visible Ukrainian text; no site code renders it. Exact paths only:
+# no prefixes and no globs. Ukrainian seats and behavior-proof receipts share
+# this exemption (#12653, #12687). Auto-deploy eligibility still treats these
+# paths as content.
 METADATA_ONLY_RELEASE_MANIFESTS = frozenset(
     {
         # Schema, digests, counts and membership of already-built Atlas artifacts.
         # No learner-visible Ukrainian text.
         "registry/lexicon/atlas-runtime-release.json",
+        # Freshness sidecar from scripts/lexicon/manifest_fingerprint.py: schema
+        # version, scope, and the path and SHA-256 of each scripts/lexicon/*.py
+        # file. No learner-visible text, and no site code reads it (#12687).
+        "site/src/data/lexicon-manifest.fingerprint.json",
     }
 )
 
@@ -439,8 +444,8 @@ def changes_learner_content(paths: Iterable[str]) -> bool:
 
     The content surfaces are the auto-deploy ones, the repository's one list of
     paths that can change published learner content (#12181). Only the exact
-    metadata-only release manifests are exempt from Ukrainian seats and receipts
-    (#12653). Auto-deploy eligibility uses its own classifier and stays unchanged.
+    metadata-only manifests are exempt from Ukrainian seats and receipts
+    (#12653, #12687). Auto-deploy eligibility uses its own classifier and stays unchanged.
     """
     return any(_content_prefix_path(path) and path not in METADATA_ONLY_RELEASE_MANIFESTS for path in paths)
 

@@ -3116,7 +3116,8 @@ def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_
     )
 
     manifest = "registry/lexicon/atlas-runtime-release.json"
-    assert frozenset({manifest}) == METADATA_ONLY_RELEASE_MANIFESTS
+    fingerprint = "site/src/data/lexicon-manifest.fingerprint.json"
+    assert frozenset({manifest, fingerprint}) == METADATA_ONLY_RELEASE_MANIFESTS
     payload = "curriculum/l2-uk-en/a2/liudyna-i-stosunky.mdx"
     lookalike = "registry/lexicon/atlas-runtime-release.jsonl"
     code = "scripts/deploy/prepare_atlas_runtime_release.py"
