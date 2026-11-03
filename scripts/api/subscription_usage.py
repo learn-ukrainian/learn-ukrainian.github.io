@@ -6,17 +6,19 @@ Provides background-threaded asynchronous caching of provider dashboard metrics.
 
 from __future__ import annotations
 
+import functools
 import json
 import math
 import os
 import platform
 import shutil
+import stat
 import subprocess
 import threading
 import time
 import urllib.error
 import urllib.request
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -53,6 +55,23 @@ try:
     from scripts.common.repo_root import main_checkout_root
 except ImportError:  # pragma: no cover
     from common.repo_root import main_checkout_root
+
+try:
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, _read_private_json
+    from scripts.agent_runtime.codex_accounts import (
+        CODEX_SUBSCRIPTION_ACCOUNTS,
+        DEFAULT_CODEX_ACCOUNT,
+        CodexAccountRefused,
+        codex_account_home,
+    )
+except ImportError:  # pragma: no cover
+    from agent_runtime.attempt_boundary import ClaudeAccountRefused, _read_private_json  # type: ignore
+    from agent_runtime.codex_accounts import (  # type: ignore
+        CODEX_SUBSCRIPTION_ACCOUNTS,
+        DEFAULT_CODEX_ACCOUNT,
+        CodexAccountRefused,
+        codex_account_home,
+    )
 
 try:
     from scripts.lib import kimi_coding_oauth
@@ -120,8 +139,23 @@ SUBSCRIPTION_PROVIDERS: tuple[str, ...] = (
     "muse",
 )
 
+# One Codex subscription row per account (#12692), keyed ``codex:<account>``: label
+# ``sub`` is account a, ``b-sub`` is account b. Compatibility: the legacy ``codex`` key
+# keeps meaning account a until slice B moves its consumers onto ``codex:a``; the two
+# keys are probed once and stored together, so they can never disagree.
+CODEX_ACCOUNT_USAGE_KEYS: dict[str, str] = dict(
+    zip(CODEX_SUBSCRIPTION_ACCOUNTS, ("codex:a", "codex:b"), strict=True)
+)
+_CODEX_ACCOUNT_A_KEYS: tuple[str, ...] = ("codex", "codex:a")
+_CODEX_LABEL_BY_USAGE_KEY: dict[str, str] = {
+    "codex": DEFAULT_CODEX_ACCOUNT,
+    **{key: label for label, key in CODEX_ACCOUNT_USAGE_KEYS.items()},
+}
+
 PROVIDER_TO_LANE = {
     "codex": "codex",
+    "codex:a": "codex",
+    "codex:b": "codex",
     "claude": "claude",
     "cursor": "cursor",
     "gemini": "gemini",
@@ -202,17 +236,27 @@ def _record_probe_result(provider: str, data: dict[str, Any] | None) -> bool:
     value.  In particular, it must never replace a valid last-known-good
     sample, otherwise a single timeout turns a usable lane into unavailable.
     """
+    keys = _stored_usage_keys(provider)
     if not _is_usable_capacity(data):
         if isinstance(data, dict):
-            _last_failure_data[provider] = _failure_metadata(data)
+            failure = _failure_metadata(data)
+            for key in keys:
+                _last_failure_data[key] = failure
         return False
 
     assert data is not None  # narrowed by _is_usable_capacity
     snapshot = dict(data)
-    _last_failure_data.pop(provider, None)
-    cache_set(f"codexbar_usage:{provider}", snapshot)
-    _last_good_data[provider] = (time.monotonic(), snapshot)
+    observed_at = time.monotonic()
+    for key in keys:
+        _last_failure_data.pop(key, None)
+        cache_set(f"codexbar_usage:{key}", snapshot)
+        _last_good_data[key] = (observed_at, snapshot)
     return True
+
+
+def _stored_usage_keys(provider: str) -> tuple[str, ...]:
+    """Every key one probe result is stored under: account a's two Codex keys stay one row."""
+    return _CODEX_ACCOUNT_A_KEYS if provider in _CODEX_ACCOUNT_A_KEYS else (provider,)
 
 
 def _with_observation_metadata(
@@ -327,7 +371,9 @@ def refresh_provider_usage_data(
     """
     if timeout_s is None:
         timeout_s = _codexbar_refresh_timeout_s()
-    unique_providers = tuple(dict.fromkeys(providers))
+    requested = tuple(dict.fromkeys(providers))
+    # ``codex`` and ``codex:a`` are one account: probe it once, store and answer both.
+    unique_providers = tuple(dict.fromkeys(_stored_usage_keys(provider)[0] for provider in requested))
     if not unique_providers:
         return {}
 
@@ -357,12 +403,14 @@ def refresh_provider_usage_data(
                 # The explicit fresh caller may use only a confirmed capacity
                 # sample. Failed probes remain available through
                 # get_provider_usage_data() as diagnostic metadata.
-                refreshed[provider] = _with_observation_metadata(
-                    data,
-                    freshness="fresh",
-                    age_s=0.0,
-                    provider=provider,
-                )
+                for key in _stored_usage_keys(provider):
+                    if key in requested:
+                        refreshed[key] = _with_observation_metadata(
+                            data,
+                            freshness="fresh",
+                            age_s=0.0,
+                            provider=key,
+                        )
     return refreshed
 
 
@@ -449,28 +497,71 @@ def _load_claude_oauth_token() -> str | None:
     return None
 
 
-def _load_codex_oauth_token() -> str | None:
-    codex_home = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")).expanduser()
-    for candidate in (codex_home / "auth.json", Path.home() / ".config" / "codex" / "auth.json"):
-        data = _read_json_file(candidate)
-        if not data:
-            continue
+def _codex_access_token(data: dict[str, Any]) -> str | None:
+    """The OAuth access token of one Codex ``auth.json`` object, or ``None``."""
+    for key in ("access_token", "accessToken", "token"):
+        val = data.get(key)
+        if isinstance(val, str) and val.strip():
+            return val.strip()
+    # Codex CLI's current auth.json shape nests the OAuth token set under
+    # "tokens" (e.g. {"tokens": {"access_token": ..., "refresh_token":
+    # ...}, "last_refresh": ...}). Only the top-level keys above were
+    # read, so a nested-shape auth.json probed as NEED_LOGIN even with a
+    # valid, unexpired access_token on disk.
+    nested = data.get("tokens")
+    if isinstance(nested, dict):
         for key in ("access_token", "accessToken", "token"):
-            val = data.get(key)
+            val = nested.get(key)
             if isinstance(val, str) and val.strip():
                 return val.strip()
-        # Codex CLI's current auth.json shape nests the OAuth token set under
-        # "tokens" (e.g. {"tokens": {"access_token": ..., "refresh_token":
-        # ...}, "last_refresh": ...}). Only the top-level keys above were
-        # read, so a nested-shape auth.json probed as NEED_LOGIN even with a
-        # valid, unexpired access_token on disk.
-        nested = data.get("tokens")
-        if isinstance(nested, dict):
-            for key in ("access_token", "accessToken", "token"):
-                val = nested.get(key)
-                if isinstance(val, str) and val.strip():
-                    return val.strip()
     return None
+
+
+def _load_codex_oauth_token() -> str | None:
+    """Account a's token (label ``sub``), from ``$HOME/.codex``, never from ambient ``CODEX_HOME``.
+
+    A Monitor started with ``CODEX_HOME`` on account b's home would otherwise
+    publish b's window as account a's (#12692).
+    """
+    for candidate in (codex_account_home(DEFAULT_CODEX_ACCOUNT) / "auth.json", Path.home() / ".config" / "codex" / "auth.json"):
+        data = _read_json_file(candidate)
+        if data:
+            token = _codex_access_token(data)
+            if token:
+                return token
+    return None
+
+
+_CODEX_AUTH_FILE_LIMIT = 64 * 1024
+
+
+def _load_codex_account_oauth_token(label: str) -> str | None:
+    """A bound account's token, read only from its own validated home; ``None`` when not logged in.
+
+    The home is opened without following links and checked again through the
+    open descriptor, and ``auth.json`` is read relative to it as an owner-only
+    regular file. There is no fallback location: another account's credentials
+    can never stand in. Raises value-free ``CodexAccountRefused``.
+    """
+    home = codex_account_home(label)
+    try:
+        dir_fd = os.open(home, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError:
+        raise CodexAccountRefused("codex_account_home_unavailable") from None
+    try:
+        info = os.fstat(dir_fd)
+        if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
+            raise CodexAccountRefused("codex_account_home_not_private")
+        data = _read_private_json(Path("auth.json"), limit=_CODEX_AUTH_FILE_LIMIT, code="codex_account_auth", dir_fd=dir_fd)
+    except ClaudeAccountRefused as exc:
+        raise CodexAccountRefused(exc.code) from None
+    finally:
+        os.close(dir_fd)
+    if data is None:
+        return None
+    if not isinstance(data, dict):
+        raise CodexAccountRefused("codex_account_auth_invalid")
+    return _codex_access_token(data)
 
 
 def _load_kimi_static_bearer() -> str | None:
@@ -1097,11 +1188,35 @@ def _codex_reset_inventory(payload: Any, *, now: datetime | None = None) -> dict
     }
 
 
-def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
-    token = _load_codex_oauth_token()
+def _probe_codex_native(*, timeout_s: float, usage_key: str = "codex") -> dict[str, Any]:
+    """One Codex subscription account's plan windows, labelled with that account only.
+
+    ``usage_key`` selects the account (``codex`` and ``codex:a`` are account a,
+    ``codex:b`` is account b). A failure on one account is that account's row as
+    unavailable with a named reason (``error_kind``); nothing is borrowed from
+    the other account. Rows and messages carry labels and numbers, never a
+    token, key, email or directory.
+    """
+    label = _CODEX_LABEL_BY_USAGE_KEY[usage_key]
+    result = _probe_codex_account(label, usage_key=usage_key, timeout_s=timeout_s)
+    result["codex_account"] = label
+    return result
+
+
+def _probe_codex_account(label: str, *, usage_key: str, timeout_s: float) -> dict[str, Any]:
+    if label == DEFAULT_CODEX_ACCOUNT:
+        token = _load_codex_oauth_token()
+    else:
+        try:
+            token = _load_codex_account_oauth_token(label)
+        except CodexAccountRefused as exc:
+            return _normalize_provider_error(
+                usage_key,
+                {"message": f"Codex account {label} unavailable: {exc.code}", "kind": "account_unavailable", "code": exc.code},
+            )
     if not token:
         return _normalize_provider_error(
-            "codex",
+            usage_key,
             {"message": "Codex OAuth credentials unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
         )
     status, payload, err = _http_json_request(
@@ -1111,13 +1226,20 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
         timeout_s=timeout_s,
     )
     if status in {401, 403}:
+        # An expired access token answers 401 until one Codex call on that
+        # account refreshes it; the probe never refreshes (that would rotate the
+        # account's refresh token under a running Codex).
         return _normalize_provider_error(
-            "codex",
-            {"message": "Codex OAuth token rejected", "kind": "provider", "code": status},
+            usage_key,
+            {
+                "message": "Codex OAuth token rejected (expired or revoked); one Codex call on this account refreshes it",
+                "kind": "token_rejected",
+                "code": status,
+            },
         )
     if status != 200 or not isinstance(payload, dict):
         return _normalize_provider_error(
-            "codex",
+            usage_key,
             {
                 "message": "Codex usage request timed out"
                 if status == 0 and "timed out" in (err or "")
@@ -1201,7 +1323,7 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
     usage = {"primary": primary_mapped, "secondary": secondary_mapped}
     if usage["primary"] is None and usage["secondary"] is None:
         return _normalize_provider_error(
-            "codex",
+            usage_key,
             {
                 "message": "Codex usage payload missing rate windows",
                 "kind": "unparseable_schema",
@@ -1209,7 +1331,7 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
             },
         )
     return _normalize_provider_data(
-        "codex",
+        usage_key,
         {
             "provider": "codex",
             "source": "codex_oauth",
@@ -2338,9 +2460,11 @@ def project_agy_for_status(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-_NATIVE_PROBES = {
+_NATIVE_PROBES: dict[str, Callable[..., dict[str, Any]]] = {
     "claude": _probe_claude_native,
     "codex": _probe_codex_native,
+    "codex:a": functools.partial(_probe_codex_native, usage_key="codex:a"),
+    "codex:b": functools.partial(_probe_codex_native, usage_key="codex:b"),
     "kimi": _probe_kimi_native,
     "grok": _probe_grok_native,
     "gemini": _probe_antigravity_native,
@@ -2372,10 +2496,16 @@ def fetch_provider_usage(provider: str, *, timeout_s: float | None = None) -> di
     except Exception as exc:
         if provider in {"gemini", "antigravity"}:
             _note_agy_quota_failure("fetch_error", "FETCH_ERROR")
-        return _normalize_provider_error(
+        label = _CODEX_LABEL_BY_USAGE_KEY.get(provider)
+        # A Codex account row names the exception type only: its text could carry a home path.
+        detail = type(exc).__name__ if label else str(exc)
+        result = _normalize_provider_error(
             provider,
-            {"message": f"Native probe failed: {exc}", "kind": "fetch_error", "code": "FETCH_ERROR"},
+            {"message": f"Native probe failed: {detail}", "kind": "fetch_error", "code": "FETCH_ERROR"},
         )
+        if label:
+            result["codex_account"] = label
+        return result
 
 
 def fetch_codexbar_usage(provider: str, *, timeout_s: float | None = None) -> dict[str, Any]:
@@ -3128,7 +3258,7 @@ def _run_all_refreshes() -> None:
         # floor as the explicit fresh-refresh path (see _codexbar_refresh_timeout_s)
         # rather than the prior 2.0s, which never let the claude lane's ~17s CLI
         # probe complete.
-        refresh_provider_usage_data(SUBSCRIPTION_LANES_WITHOUT_CURSOR)
+        refresh_provider_usage_data(SUBSCRIPTION_REFRESH_KEYS)
         _refresh_cursor_usage_live()
         _refresh_api_accounts_live()
     finally:
@@ -3137,6 +3267,10 @@ def _run_all_refreshes() -> None:
 
 
 SUBSCRIPTION_LANES_WITHOUT_CURSOR: tuple[str, ...] = tuple(p for p in SUBSCRIPTION_PROVIDERS if p != "cursor")
+# The background refresh also probes every Codex subscription account under its own key.
+SUBSCRIPTION_REFRESH_KEYS: tuple[str, ...] = tuple(
+    dict.fromkeys((*SUBSCRIPTION_LANES_WITHOUT_CURSOR, *CODEX_ACCOUNT_USAGE_KEYS.values()))
+)
 
 
 def _refresh_claude_accounts_live() -> None:
@@ -3618,6 +3752,17 @@ def scheduler_status() -> dict[str, Any]:
     }
 
 
+def codex_account_usage_snapshot(*, kick_refresh: bool = True) -> dict[str, dict[str, Any]]:
+    """One cached row per Codex subscription account, keyed ``codex:a`` / ``codex:b`` (#12692).
+
+    Each row carries its ``codex_account`` label and that account's numbers or
+    its own unavailable reason. Cache-only, like :func:`get_provider_usage_data`.
+    """
+    return {
+        key: get_provider_usage_data(key, kick_refresh=kick_refresh) for key in CODEX_ACCOUNT_USAGE_KEYS.values()
+    }
+
+
 def get_provider_usage_data(provider: str, *, kick_refresh: bool = True) -> dict[str, Any]:
     """Retrieve provider data from cache.
 
@@ -3696,6 +3841,8 @@ def get_provider_usage_data(provider: str, *, kick_refresh: bool = True) -> dict
         "error_kind": "unavailable",
         "error_code": None,
     }
+    if provider in _CODEX_LABEL_BY_USAGE_KEY:
+        result["codex_account"] = _CODEX_LABEL_BY_USAGE_KEY[provider]
     failure = _last_failure_data.get(provider)
     if failure:
         result.update(

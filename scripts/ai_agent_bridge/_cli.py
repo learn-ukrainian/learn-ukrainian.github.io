@@ -342,6 +342,8 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
     outcomes = ("ok", "error", "rate_limited", "timeout")
     by_outcome: dict[str, dict[str, object]] = {}
     by_entrypoint: dict[str, int] = {}
+    # Per-account counts (#12692); records written before labels are "unlabelled".
+    by_account: dict[str, dict[str, int]] = {}
     recent_rate_limits: list[str] = []
     total_duration_s = 0.0
 
@@ -359,6 +361,12 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         outcome_bucket["total_duration_s"] = float(outcome_bucket["total_duration_s"]) + duration
 
         by_entrypoint[entry] = by_entrypoint.get(entry, 0) + 1
+        account_bucket = by_account.setdefault(
+            runtime_usage._record_codex_account(record) or "unlabelled", {"calls": 0, "rate_limited": 0}
+        )
+        account_bucket["calls"] += 1
+        if outcome == "rate_limited":
+            account_bucket["rate_limited"] += 1
 
         if outcome == "rate_limited" and record.get("ts"):
             ts = str(record["ts"])
@@ -385,9 +393,12 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         "total_duration_s": round(total_duration_s, 1),
         "by_outcome": by_outcome,
         "by_entrypoint": dict(sorted(by_entrypoint.items())),
+        "by_account": dict(sorted(by_account.items())),
         "recent_rate_limits": sorted(recent_rate_limits),
         "headroom": {
             "model": "gpt-6.1-sol",
+            # The account this process runs on; headroom counts only its limits.
+            "codex_account": runtime_usage.current_codex_account() or "unattributed",
             "has_headroom": has_room,
             "reason": headroom_reason,
         },
@@ -427,9 +438,16 @@ def _print_codex_usage_report(report: dict) -> None:
     else:
         print("  (none)")
 
+    print("\nBy account:")
+    if report["by_account"]:
+        for name, bucket in report["by_account"].items():
+            print(f"  {name:<10} {bucket['calls']} calls, {bucket['rate_limited']} rate limited")
+    else:
+        print("  (none)")
+
     headroom = report["headroom"]
     symbol = "✓" if headroom["has_headroom"] else "✗"
-    line = f"\nHeadroom check: {headroom['model']} - has headroom {symbol}"
+    line = f"\nHeadroom check: {headroom['model']} on {headroom['codex_account']} - has headroom {symbol}"
     if not headroom["has_headroom"] and headroom["reason"]:
         line += f" ({headroom['reason']})"
     print(line)

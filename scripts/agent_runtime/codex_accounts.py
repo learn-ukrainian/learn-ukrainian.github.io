@@ -23,6 +23,9 @@ DEFAULT_CODEX_ACCOUNT = "sub"
 # recorded label, in the private codex_accounts.json.
 CODEX_BOUND_ACCOUNTS = ("api", "b-sub", "b-api")
 CODEX_ACCOUNT_LABELS = (DEFAULT_CODEX_ACCOUNT, *CODEX_BOUND_ACCOUNTS)
+# Routes logged in with a ChatGPT subscription, so each has its own plan usage window.
+# The "api" routes are billed per token and have none.
+CODEX_SUBSCRIPTION_ACCOUNTS = (DEFAULT_CODEX_ACCOUNT, "b-sub")
 # Accepted spellings, resolved to the recorded label before anything else reads them.
 CODEX_ACCOUNT_ALIASES = {"a-sub": "sub", "a-api": "api", "b": "b-sub"}
 # Account a's routes keep their original behaviour; account b's must show a login at admission.
@@ -118,6 +121,69 @@ def _require_login(env: Mapping[str, str], directory: Path) -> None:
         raise CodexAccountRefused("codex_account_not_logged_in")
 
 
+def default_codex_home(environ: Mapping[str, str] | None = None) -> Path:
+    """Account a's home (label ``sub``): ``$HOME/.codex``, whatever ``CODEX_HOME`` says."""
+    env = os.environ if environ is None else environ
+    return Path(env.get("HOME") or Path.home()) / ".codex"
+
+
+def _validated_bound_home(label: str, bindings: Mapping[str, CodexAccountBinding],
+                          environ: Mapping[str, str]) -> Path:
+    """The bound home of ``label``: a private directory of this user, not account a's, not shared."""
+    if label not in bindings:
+        raise CodexAccountRefused("codex_account_unbound")
+    try:
+        directory = bindings[label].codex_home
+        info = directory.lstat()
+        if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid()
+                or stat.S_IMODE(info.st_mode) & 0o077):
+            raise CodexAccountRefused("codex_account_home_not_private")
+        if directory.resolve() == default_codex_home(environ).resolve():
+            raise CodexAccountRefused("codex_account_binding_is_default")
+        if any(other != label and os.path.realpath(binding.codex_home) == os.path.realpath(directory)
+               for other, binding in bindings.items()):
+            raise CodexAccountRefused("codex_account_binding_shared")
+    except OSError:
+        raise CodexAccountRefused("codex_account_home_unavailable") from None
+    return directory
+
+
+def codex_account_home(label: object, environ: Mapping[str, str] | None = None) -> Path:
+    """The home a reader of ``label``'s own state (usage window, login) must use; refuses, never substitutes.
+
+    ``sub`` is ``$HOME/.codex``; ambient ``CODEX_HOME`` is ignored, so a process
+    started on another account's home cannot report that account as ``sub``.
+    Every other label is its validated binding. Runs no subprocess.
+    """
+    env = os.environ if environ is None else environ
+    label = resolve_codex_account_label(label)
+    if label == DEFAULT_CODEX_ACCOUNT:
+        return default_codex_home(env)
+    return _validated_bound_home(label, _load_bindings(env), env)
+
+
+def codex_account_of_environment(environ: Mapping[str, str] | None = None) -> str | None:
+    """The label whose home ``CODEX_HOME`` selects, or ``None`` when it cannot be attributed.
+
+    Unset, or account a's home, is ``sub``; a bound home is its label. A scoped
+    or unknown home, or an unreadable binding file, is ``None``: callers must
+    treat it as unattributed, never as a guessed account.
+    """
+    env = os.environ if environ is None else environ
+    home = env.get("CODEX_HOME")
+    if not home:
+        return DEFAULT_CODEX_ACCOUNT
+    try:
+        target = os.path.realpath(home)
+        if target == os.path.realpath(default_codex_home(env)):
+            return DEFAULT_CODEX_ACCOUNT
+        bindings = _load_bindings(env)
+    except (CodexAccountRefused, OSError, ValueError):
+        return None
+    matches = [label for label, binding in bindings.items() if os.path.realpath(binding.codex_home) == target]
+    return matches[0] if len(matches) == 1 else None
+
+
 def codex_account_env(label: object, environ: Mapping[str, str]) -> dict[str, str]:
     """Preserve the default route; bind a labelled run to its own home or refuse.
 
@@ -130,20 +196,8 @@ def codex_account_env(label: object, environ: Mapping[str, str]) -> dict[str, st
         return dict(environ)
     if any(environ.get(name) for name in _AUTH_ENV):
         raise CodexAccountRefused("codex_account_ambient_conflict")
-    bindings = _load_bindings(environ)
-    if label not in bindings:
-        raise CodexAccountRefused("codex_account_unbound")
+    directory = _validated_bound_home(label, _load_bindings(environ), environ)
     try:
-        directory = bindings[label].codex_home
-        info = directory.lstat()
-        if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid()
-                or stat.S_IMODE(info.st_mode) & 0o077):
-            raise CodexAccountRefused("codex_account_home_not_private")
-        if directory.resolve() == (Path(environ.get("HOME") or Path.home()) / ".codex").resolve():
-            raise CodexAccountRefused("codex_account_binding_is_default")
-        if any(other != label and os.path.realpath(binding.codex_home) == os.path.realpath(directory)
-               for other, binding in bindings.items()):
-            raise CodexAccountRefused("codex_account_binding_shared")
         if environ.get("CODEX_HOME") and not directory.samefile(Path(environ["CODEX_HOME"])):
             raise CodexAccountRefused("codex_account_ambient_conflict")
     except OSError:

@@ -633,3 +633,46 @@ def test_unlistable_usage_directory_counts_as_one_unreadable_file(tmp_path: Path
         assert summary["unreadable"] == {"files": 1, "lines": 0, "records": 0, "total": 1}
 
     _prove_unlistable_directory(root, prove)
+
+
+@pytest.mark.parametrize(("limited", "other"), [("b-sub", "sub"), ("sub", "b-sub")])
+def test_codex_rate_limit_counts_only_against_its_own_account(
+    tmp_path: Path, monkeypatch, limited: str, other: str
+) -> None:
+    """#12692 AC-02: a 429 on one Codex account leaves the other account's headroom unchanged."""
+    usage_mod._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(usage_mod, "_usage_dir", lambda: tmp_path)
+    monkeypatch.delenv("LU_BYPASS_RATE_LIMIT", raising=False)
+    monkeypatch.delenv("CODEX_HOME", raising=False)  # this process runs on account a ("sub")
+    model = "gpt-6.1-sol"
+    try:
+        for _ in range(2):
+            record = {
+                "ts": datetime.now(UTC).isoformat(),
+                "agent": "codex",
+                "entrypoint": "bridge",
+                "model": model,
+                "outcome": "rate_limited",
+            }
+            if limited != "sub":
+                record["codex_account"] = limited  # account a's records get their label from CODEX_HOME
+            usage_mod.write_record(record)
+        rows = [json.loads(line) for path in tmp_path.glob("usage_codex-*.jsonl") for line in path.read_text().splitlines()]
+        assert [row["codex_account"] for row in rows] == [limited, limited]
+
+        for check in ("cache", "disk"):
+            if check == "disk":
+                usage_mod._reset_rate_limit_cache_for_tests()
+            assert usage_mod.has_headroom("codex", model, codex_account=limited)[0] is False, check
+            assert usage_mod.has_headroom("codex", model, codex_account=other) == (True, ""), check
+            assert usage_mod.has_headroom("codex", model)[0] is (limited != "sub"), check
+            limited_summary = usage_mod.summarize_lane_runtime("codex", usage_dir=tmp_path, codex_account=limited)
+            other_summary = usage_mod.summarize_lane_runtime("codex", usage_dir=tmp_path, codex_account=other)
+            assert (limited_summary["headroom_blocked"], limited_summary["rate_limited"]) == (True, 2), check
+            assert (other_summary["headroom_blocked"], other_summary["rate_limited"]) == (False, 0), check
+            assert other_summary["codex_account"] == other
+            # The legacy ``codex`` lane summary is account a's.
+            default_summary = usage_mod.summarize_lane_runtime("codex", usage_dir=tmp_path)
+            assert default_summary["headroom_blocked"] is (limited == "sub"), check
+    finally:
+        usage_mod._reset_rate_limit_cache_for_tests()

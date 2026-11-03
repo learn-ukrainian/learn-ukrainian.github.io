@@ -36,12 +36,14 @@ Issue: #1184. Supersedes standalone #1183.
 from __future__ import annotations
 
 import contextlib
+import importlib
 import json
 import os
 import time
 from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 try:
@@ -103,6 +105,50 @@ _BYPASS_ENV = "LU_BYPASS_RATE_LIMIT"
 # re-reading the JSONL file.
 _RATE_LIMIT_CACHE: dict[tuple[str, str], float] = {}
 
+# Codex runs on more than one account (#12692): labels ``sub`` (account a) and
+# ``b-sub`` (account b) are separate ChatGPT subscriptions with separate limits.
+# A Codex record carries ``codex_account``, the label of the home it ran on, and
+# a rate limit counts only against that account. A record without a label
+# (written before labels, or from a home no binding names) counts against
+# every account, as all Codex records did before.
+_CODEX_AGENT = "codex"
+_ACCOUNT_RATE_LIMIT_CACHE: dict[tuple[str, str, str], float] = {}
+
+
+def _codex_accounts() -> ModuleType:
+    try:
+        return importlib.import_module("scripts.agent_runtime.codex_accounts")
+    except ImportError:  # pragma: no cover - scripts/ on sys.path
+        return importlib.import_module("agent_runtime.codex_accounts")
+
+
+def _codex_account_label(raw: object) -> str:
+    """``raw`` resolved to a recorded label (``None`` is ``sub``); refuses an unknown one."""
+    label: str = _codex_accounts().resolve_codex_account_label(raw)
+    return label
+
+
+def current_codex_account() -> str | None:
+    """Label of the Codex account this process runs on (from ``CODEX_HOME``); ``None`` when unattributed."""
+    label: str | None = _codex_accounts().codex_account_of_environment()
+    return label
+
+
+def _record_codex_account(record: dict[str, Any]) -> str | None:
+    """A record's Codex account label; ``None`` when absent or not a known label."""
+    raw = record.get("codex_account")
+    if raw is None:
+        return None
+    try:
+        return _codex_account_label(raw)
+    except ValueError:
+        return None
+
+
+def _counts_for_account(record_account: str | None, account: str | None) -> bool:
+    """Whether a record of ``record_account`` counts for ``account`` (``None`` on either side: it does)."""
+    return account is None or record_account is None or record_account == account
+
 
 def _usage_dir() -> Path:
     """Return the batch_state/api_usage/ directory, creating it if missing."""
@@ -142,6 +188,11 @@ def write_record(record: dict[str, Any]) -> None:
     """
     try:
         record = redact_value(record)
+        if record.get("agent") == _CODEX_AGENT:
+            account = _record_codex_account(record) if "codex_account" in record else current_codex_account()
+            record.pop("codex_account", None)
+            if account is not None:
+                record["codex_account"] = account
         path = _usage_file(record["agent"], record["entrypoint"])
         line = (json.dumps(record, ensure_ascii=False, default=str) + "\n").encode("utf-8")
         fd = os.open(str(path), os.O_APPEND | os.O_CREAT | os.O_WRONLY, 0o600)
@@ -157,15 +208,22 @@ def write_record(record: dict[str, Any]) -> None:
         # actual event time. Also honor the newest event when multiple writers
         # race on the same (agent, model) key.)
         if record.get("outcome") == "rate_limited":
-            key = (record["agent"], record["model"])
             ts_str = record.get("ts")
             event_ts: float = time.time()  # safe fallback
             if ts_str:
                 with contextlib.suppress(ValueError, AttributeError):
                     event_ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
-            existing = _RATE_LIMIT_CACHE.get(key)
-            if existing is None or event_ts > existing:
-                _RATE_LIMIT_CACHE[key] = event_ts
+            labelled = record.get("codex_account")
+            if labelled is not None:
+                account_key = (record["agent"], record["model"], labelled)
+                existing = _ACCOUNT_RATE_LIMIT_CACHE.get(account_key)
+                if existing is None or event_ts > existing:
+                    _ACCOUNT_RATE_LIMIT_CACHE[account_key] = event_ts
+            else:
+                key = (record["agent"], record["model"])
+                existing = _RATE_LIMIT_CACHE.get(key)
+                if existing is None or event_ts > existing:
+                    _RATE_LIMIT_CACHE[key] = event_ts
     except Exception as exc:  # pragma: no cover — degraded mode only
         # Best-effort: print to stderr but don't fail the caller. The agent
         # call itself already succeeded or failed at this point; we're only
@@ -256,6 +314,7 @@ def summarize_lane_runtime(
     window_s: float = LANE_RUNTIME_WINDOW_S,
     usage_dir: Path | None = None,
     now: float | None = None,
+    codex_account: str | None = None,
 ) -> dict[str, Any]:
     """Summarize recent invocation outcomes for one agent lane from JSONL logs.
 
@@ -277,7 +336,12 @@ def summarize_lane_runtime(
     The Gemini subscription name and the AGY writer are one read set
     (``usage_agy-*`` and ``usage_gemini-*``). An input that both names reach
     is counted once. Other lanes stay on their own prefix.
+
+    For ``codex`` the summary is one account's: ``codex_account`` (default
+    ``sub``, account a, which the ``codex`` lane key means) plus unlabelled
+    records. Another account's records, rate limits included, are left out.
     """
+    account = _codex_account_label(codex_account) if agent == _CODEX_AGENT else None
     now_ts = time.time() if now is None else now
     cutoff = now_ts - float(window_s)
     root = usage_dir if usage_dir is not None else _usage_dir()
@@ -312,6 +376,8 @@ def summarize_lane_runtime(
                 unreadable["files"] += 1
                 continue
             for rec in _iter_usage_records(file_path, unreadable):
+                if account is not None and not _counts_for_account(_record_codex_account(rec), account):
+                    continue
                 outcome = str(rec.get("outcome") or "other")
                 if outcome == "rate_limited" and _utc_timestamp(rec.get("ts")) is None:
                     # Counted below only when the lenient parse reads it (legacy
@@ -352,6 +418,18 @@ def summarize_lane_runtime(
                 models_limited.add(str(cached_model))
         else:
             _RATE_LIMIT_CACHE.pop((cached_agent, cached_model), None)
+    if account is not None:
+        for (cached_agent, cached_model, cached_account), cached_ts in list(_ACCOUNT_RATE_LIMIT_CACHE.items()):
+            if cached_agent != agent or cached_account != account:
+                continue
+            if cached_ts >= cutoff:
+                if cached_ts not in rate_limit_events:
+                    rate_limit_events.append(cached_ts)
+                    counts["rate_limited"] += 1
+                if cached_model:
+                    models_limited.add(str(cached_model))
+            else:
+                _ACCOUNT_RATE_LIMIT_CACHE.pop((cached_agent, cached_model, cached_account), None)
 
     headroom_blocked = False
     headroom_reason = ""
@@ -370,7 +448,7 @@ def summarize_lane_runtime(
         return datetime.fromtimestamp(ts, tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     total = sum(counts.values())
-    return {
+    summary: dict[str, Any] = {
         "source": "agent_runtime_jsonl",
         "window_s": int(window_s),
         "ok": counts["ok"],
@@ -386,6 +464,9 @@ def summarize_lane_runtime(
         "headroom_reason": headroom_reason,
         "unreadable": {**unreadable, "total": sum(unreadable.values())},
     }
+    if account is not None:
+        summary["codex_account"] = account
+    return summary
 
 
 def _iter_usage_records(file_path: Path, unreadable: dict[str, int]) -> Iterator[dict[str, Any]]:
@@ -506,6 +587,7 @@ def has_headroom(
     model: str,
     *,
     unreadable: dict[str, int] | None = None,
+    codex_account: str | None = None,
 ) -> tuple[bool, str]:
     """Check whether (agent, model) has quota headroom for a new call.
 
@@ -518,6 +600,10 @@ def has_headroom(
             cannot be read, each increment the counter instead of raising
             or being silently dropped (#9924). When omitted the counts are
             still computed but not surfaced.
+        codex_account: For ``codex``, the account label whose limits apply.
+            Omitted: the account of this process's ``CODEX_HOME``. Another
+            account's rate limits never count; unlabelled records, and every
+            record when this process's account cannot be attributed, do.
 
     Returns:
         (True, "")  — no recent rate-limit in the 15-minute window, proceed.
@@ -554,6 +640,13 @@ def has_headroom(
     rate_limit_events: list[float] = []
     if unreadable is None:
         unreadable = {"files": 0, "lines": 0, "records": 0}
+    account: str | None = None
+    if agent == _CODEX_AGENT:
+        account = (
+            current_codex_account()
+            if codex_account is None
+            else _codex_account_label(codex_account)
+        )
 
     for file_path in usage_dir.glob(f"usage_{agent}-*.jsonl"):
         try:
@@ -575,6 +668,8 @@ def has_headroom(
                 continue
             if rec.get("outcome") != "rate_limited":
                 continue
+            if agent == _CODEX_AGENT and not _counts_for_account(_record_codex_account(rec), account):
+                continue
             ts_str = rec.get("ts")
             if not ts_str:
                 continue
@@ -594,6 +689,13 @@ def has_headroom(
             rate_limit_events.append(cached_ts)
         elif cached_ts < cutoff:
             _RATE_LIMIT_CACHE.pop(cache_key, None)  # expired
+    for account_key, cached_ts in list(_ACCOUNT_RATE_LIMIT_CACHE.items()):
+        if account_key[:2] != cache_key or not _counts_for_account(account_key[2], account):
+            continue
+        if cached_ts >= cutoff and cached_ts not in rate_limit_events:
+            rate_limit_events.append(cached_ts)
+        elif cached_ts < cutoff:
+            _ACCOUNT_RATE_LIMIT_CACHE.pop(account_key, None)  # expired
 
     # Block ONLY when:
     #   1. We have enough events to be confident the quota is actually
@@ -616,3 +718,4 @@ def has_headroom(
 def _reset_rate_limit_cache_for_tests() -> None:
     """Clear the in-process rate-limit cache. Tests only."""
     _RATE_LIMIT_CACHE.clear()
+    _ACCOUNT_RATE_LIMIT_CACHE.clear()

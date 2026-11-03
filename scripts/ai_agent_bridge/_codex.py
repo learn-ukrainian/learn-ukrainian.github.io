@@ -246,13 +246,17 @@ def _reported_codex_effort(result: object) -> tuple[str | None, str | None]:
     return None, "Codex runtime did not report the applied effort"
 
 
-def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
-    """Return whether Codex has quota headroom for a new bridge call."""
+def has_codex_headroom(model: str | None = None, codex_account: str | None = None) -> tuple[bool, str]:
+    """Return whether one Codex account has quota headroom for a new bridge call.
+
+    ``codex_account`` defaults to the account of this process's ``CODEX_HOME``
+    (the bridge runs on the ambient home); another account's rate limits never block it.
+    """
     from agent_runtime.usage import has_headroom
 
     effective_model = model or "gpt-6.1-sol"
     unreadable = {"files": 0, "lines": 0, "records": 0}
-    decision = has_headroom("codex", effective_model, unreadable=unreadable)
+    decision = has_headroom("codex", effective_model, unreadable=unreadable, codex_account=codex_account)
     if any(unreadable.values()):
         logging.getLogger(__name__).warning(
             "Codex headroom check for %s: unreadable usage records %s", effective_model, unreadable
