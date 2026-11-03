@@ -518,6 +518,17 @@ def _load_bound_review_code() -> None:
             sys.path.remove(scripts_dir)
 
 
+def _load_provider_modules() -> None:
+    """Import the provider modules in their own scope.
+
+    ``load_post_start_code`` also imports ``scripts.agent_runtime.adapters`` under the names ``agy``, ``claude``, ``codex``,
+    ``cursor`` and ``muse``. Binding those names twice in one function is a mypy ``no-redef`` error. The imports stay
+    literal, and each module still lands in ``sys.modules``.
+    """
+    with contextlib.suppress(Exception):
+        from scripts.dispatcher.providers import agy, claude, codex, cursor, muse, opencode, stream_json  # noqa: F401
+
+
 def load_post_start_code(bound_review: bool = False) -> None:
     """Import, as the worker starts, the modules its later steps import inside functions.
 
@@ -583,7 +594,7 @@ def load_post_start_code(bound_review: bool = False) -> None:
         from scripts.review.receipts import ledger, outcomes  # noqa: F401
     with contextlib.suppress(Exception):
         from scripts.dispatcher import checks, host_admission, output_schema, review_attempt, scope  # noqa: F401
-        from scripts.dispatcher.providers import agy, claude, codex, cursor, muse, opencode, stream_json  # noqa: F401
+    _load_provider_modules()
     with contextlib.suppress(Exception):
         from scripts.fleet import (  # noqa: F401
             credit_lane,
