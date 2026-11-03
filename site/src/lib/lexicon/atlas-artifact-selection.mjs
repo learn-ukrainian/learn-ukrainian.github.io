@@ -21,12 +21,19 @@
  * from `import.meta.url`, so runtime readers pass `process.cwd()` (the `site/`
  * directory, as the other runtime readers already assume).
  */
+import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
 export const PINNED_SELECTION_ENV = 'ATLAS_SEARCH_RUNTIME_TREE';
 /** Ignored build directory under `site/`; `generate_search_index.py` writes the same name. */
 export const PINNED_ARTIFACT_DIRNAME = '.atlas-pinned';
+/**
+ * Written last by `generate_search_index.py` into the pinned data directory: the identity
+ * of the runtime tree the set was generated from (removed first, so an interrupted
+ * generation leaves no marker).
+ */
+export const PINNED_SOURCE_MARKER = 'pinned-source.json';
 /** The generated JSON files whose location depends on the selection. */
 export const SELECTED_ARTIFACT_NAMES = Object.freeze([
   'lexicon-search-index.json',
@@ -130,8 +137,31 @@ export function browseShardFileNames(meta, metaPath) {
 }
 
 /**
- * Throw unless the pinned set is complete and has no stale shard. A no-op for the
- * committed selection, whose completeness `verify:artifacts` owns.
+ * Identity of an extracted Atlas runtime tree: its CURRENT data version and the SHA-256 of
+ * that version's manifest, the same pair `build_pinned_search` reports.
+ * @param {string} treeDir
+ */
+export function readRuntimeTreeIdentity(treeDir) {
+  try {
+    const current = JSON.parse(readFileSync(join(treeDir, 'atlas', 'current.json'), 'utf8'));
+    const manifest = readFileSync(join(treeDir, 'atlas', current.manifestUrl));
+    return {
+      dataVersion: String(current.dataVersion),
+      runtimeManifestSha256: createHash('sha256').update(manifest).digest('hex'),
+    };
+  } catch (error) {
+    throw new AtlasArtifactSelectionError(
+      `${PINNED_SELECTION_ENV} points at ${treeDir}, which is not a readable Atlas runtime tree: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+}
+
+/**
+ * Throw unless the pinned set is complete, has no stale shard and was generated from the
+ * runtime tree that is selected now. A no-op for the committed selection, whose
+ * completeness `verify:artifacts` owns.
  * @param {string} siteRoot
  * @param {NodeJS.ProcessEnv} [env]
  */
@@ -153,6 +183,24 @@ export function assertSelectedArtifactsComplete(siteRoot, env = process.env) {
     throw new AtlasArtifactSelectionError(
       `pinned browse shards in ${browseDir} do not match lexicon-browse-meta.json` +
         ` (missing: ${absent.join(', ') || 'none'}; stale: ${stale.join(', ') || 'none'})`,
+    );
+  }
+  // A complete set from an earlier or interrupted generation must not pass for this runtime.
+  const markerPath = join(dataDir, PINNED_SOURCE_MARKER);
+  if (!existsSync(markerPath)) {
+    throw new AtlasArtifactSelectionError(
+      `the pinned set in ${dataDir} has no ${PINNED_SOURCE_MARKER}; regenerate it with the pinned hydrate`,
+    );
+  }
+  const marker = JSON.parse(readFileSync(markerPath, 'utf8'));
+  const selected = readRuntimeTreeIdentity(/** @type {string} */ (env[PINNED_SELECTION_ENV]).trim());
+  if (
+    marker.dataVersion !== selected.dataVersion ||
+    marker.runtimeManifestSha256 !== selected.runtimeManifestSha256
+  ) {
+    throw new AtlasArtifactSelectionError(
+      `the pinned set in ${dataDir} was generated from runtime ${marker.dataVersion} (${marker.runtimeManifestSha256}),` +
+        ` but ${PINNED_SELECTION_ENV} selects ${selected.dataVersion} (${selected.runtimeManifestSha256})`,
     );
   }
 }

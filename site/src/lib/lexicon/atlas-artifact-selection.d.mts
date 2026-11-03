@@ -2,6 +2,7 @@ import type { Plugin } from "vite";
 
 export const PINNED_SELECTION_ENV: "ATLAS_SEARCH_RUNTIME_TREE";
 export const PINNED_ARTIFACT_DIRNAME: ".atlas-pinned";
+export const PINNED_SOURCE_MARKER: "pinned-source.json";
 export const SELECTED_ARTIFACT_NAMES: readonly string[];
 
 export class AtlasArtifactSelectionError extends Error {
@@ -23,6 +24,7 @@ export function resolveSelectedArtifactLocations(
 export function selectedArtifactPath(name: string, siteRoot: string, env?: NodeJS.ProcessEnv): string;
 export function readSelectedArtifactText(name: string, siteRoot: string, env?: NodeJS.ProcessEnv): string;
 export function readSelectedArtifactJson(name: string, siteRoot: string, env?: NodeJS.ProcessEnv): unknown;
+export function readRuntimeTreeIdentity(treeDir: string): { dataVersion: string; runtimeManifestSha256: string };
 export function browseShardFileNames(meta: unknown, metaPath: string): string[];
 export function assertSelectedArtifactsComplete(siteRoot: string, env?: NodeJS.ProcessEnv): void;
 export function installSelectedBrowseShards(distDir: string, siteRoot: string, env?: NodeJS.ProcessEnv): void;

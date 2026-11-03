@@ -15,16 +15,17 @@ import { afterEach, describe, expect, it } from 'vitest';
 import {
   AtlasArtifactSelectionError,
   PINNED_SELECTION_ENV,
+  PINNED_SOURCE_MARKER,
   SELECTED_ARTIFACT_NAMES,
   assertSelectedArtifactsComplete,
   atlasArtifactSelectionPlugin,
   installSelectedBrowseShards,
+  readRuntimeTreeIdentity,
   readSelectedArtifactText,
   resolveSelectedArtifactLocations,
 } from '../../src/lib/lexicon/atlas-artifact-selection.mjs';
 import { writeSearchShardFiles } from '../../src/lib/lexicon/search-api-shard';
 
-const PINNED_ENV = { [PINNED_SELECTION_ENV]: '/runtime/tree' } as NodeJS.ProcessEnv;
 const COMMITTED_ENV = {} as NodeJS.ProcessEnv;
 const fixtures: string[] = [];
 
@@ -33,10 +34,30 @@ function write(path: string, text: string): void {
   writeFileSync(path, text);
 }
 
-/** A site root holding a committed snapshot and, optionally, a pinned set with different bytes. */
-function makeSite(options: { pinned: boolean }): string {
+/** A minimal extracted Atlas runtime tree whose identity depends on `tag`. */
+function makeRuntimeTree(root: string, tag: string): string {
+  const tree = join(root, `runtime-${tag}`);
+  const version = `atlas-v1-${tag}`;
+  write(
+    join(tree, 'atlas/current.json'),
+    JSON.stringify({ dataVersion: version, manifestUrl: `versions/${version}/manifest.json` }),
+  );
+  write(join(tree, `atlas/versions/${version}/manifest.json`), JSON.stringify({ tag }));
+  return tree;
+}
+
+function sourceMarker(tree: string): string {
+  return JSON.stringify({ schema: 'atlas-pinned-source', schemaVersion: 1, ...readRuntimeTreeIdentity(tree) });
+}
+
+/**
+ * A site root holding a committed copy and, optionally, a pinned set with different bytes
+ * generated from runtime tree "A". `env` selects that tree.
+ */
+function makeSite(options: { pinned: boolean }): { root: string; env: NodeJS.ProcessEnv } {
   const root = mkdtempSync(join(tmpdir(), 'atlas-selection-'));
   fixtures.push(root);
+  const treeA = makeRuntimeTree(root, 'A');
   const meta = (tag: string, letters: string[]) =>
     JSON.stringify({
       total: letters.length,
@@ -53,8 +74,9 @@ function makeSite(options: { pinned: boolean }): string {
       write(join(root, '.atlas-pinned/data', name), name === 'lexicon-browse-meta.json' ? meta('PINNED', ['А']) : `"PINNED ${name}"`);
     }
     write(join(root, '.atlas-pinned/public/lexicon/browse/А.json'), '"PINNED А"');
+    write(join(root, '.atlas-pinned/data', PINNED_SOURCE_MARKER), sourceMarker(treeA));
   }
-  return root;
+  return { root, env: { [PINNED_SELECTION_ENV]: treeA } as NodeJS.ProcessEnv };
 }
 
 afterEach(() => {
@@ -63,7 +85,7 @@ afterEach(() => {
 
 describe('shared Atlas artifact selection (#12527)', () => {
   it('reads the committed snapshot unpinned and the ignored pinned set when pinned, never the other', () => {
-    const root = makeSite({ pinned: true });
+    const { root, env: PINNED_ENV } = makeSite({ pinned: true });
     expect(resolveSelectedArtifactLocations(root, COMMITTED_ENV).mode).toBe('committed');
     expect(readSelectedArtifactText('lexicon-search-index.json', root, COMMITTED_ENV)).toBe(
       '"COMMITTED lexicon-search-index.json"',
@@ -77,24 +99,49 @@ describe('shared Atlas artifact selection (#12527)', () => {
   });
 
   it('fails closed when the pinned set is missing, incomplete or stale; never falls back to committed files', () => {
-    const missing = makeSite({ pinned: false });
-    expect(() => readSelectedArtifactText('lexicon-search-index.json', missing, PINNED_ENV)).toThrow(
+    const { root: missing, env: missingEnv } = makeSite({ pinned: false });
+    expect(() => readSelectedArtifactText('lexicon-search-index.json', missing, missingEnv)).toThrow(
       AtlasArtifactSelectionError,
     );
-    expect(() => assertSelectedArtifactsComplete(missing, PINNED_ENV)).toThrow(/lacks/);
+    expect(() => assertSelectedArtifactsComplete(missing, missingEnv)).toThrow(/lacks/);
     expect(() => assertSelectedArtifactsComplete(missing, COMMITTED_ENV)).not.toThrow();
 
-    const site = makeSite({ pinned: true });
-    expect(() => assertSelectedArtifactsComplete(site, PINNED_ENV)).not.toThrow();
+    const { root: site, env } = makeSite({ pinned: true });
+    expect(() => assertSelectedArtifactsComplete(site, env)).not.toThrow();
     write(join(site, '.atlas-pinned/public/lexicon/browse/Я.json'), '"STALE"');
-    expect(() => assertSelectedArtifactsComplete(site, PINNED_ENV)).toThrow(/stale: Я\.json/);
+    expect(() => assertSelectedArtifactsComplete(site, env)).toThrow(/stale: Я\.json/);
     rmSync(join(site, '.atlas-pinned/public/lexicon/browse/Я.json'));
     rmSync(join(site, '.atlas-pinned/public/lexicon/browse/А.json'));
-    expect(() => assertSelectedArtifactsComplete(site, PINNED_ENV)).toThrow(/missing: А\.json/);
+    expect(() => assertSelectedArtifactsComplete(site, env)).toThrow(/missing: А\.json/);
+  });
+
+  it('rejects a complete pinned set that was generated from another or an interrupted runtime', () => {
+    const { root, env } = makeSite({ pinned: true });
+    expect(() => assertSelectedArtifactsComplete(root, env)).not.toThrow();
+
+    // Same files, different runtime tree selected: a self-consistent old set must not pass.
+    const treeB = makeRuntimeTree(root, 'B');
+    expect(() => assertSelectedArtifactsComplete(root, { [PINNED_SELECTION_ENV]: treeB })).toThrow(
+      /generated from runtime atlas-v1-A .* selects atlas-v1-B/,
+    );
+    // Same data version, different manifest bytes: identity includes the manifest digest.
+    write(join(treeB, 'atlas/versions/atlas-v1-B/manifest.json'), '{"tag":"B2"}');
+    write(join(root, '.atlas-pinned/data', PINNED_SOURCE_MARKER), sourceMarker(treeB));
+    write(join(treeB, 'atlas/versions/atlas-v1-B/manifest.json'), '{"tag":"B3"}');
+    expect(() => assertSelectedArtifactsComplete(root, { [PINNED_SELECTION_ENV]: treeB })).toThrow(
+      /runtimeManifestSha256|generated from runtime/,
+    );
+    // The selected tree must exist and be readable.
+    expect(() =>
+      assertSelectedArtifactsComplete(root, { [PINNED_SELECTION_ENV]: join(root, 'no-such-tree') }),
+    ).toThrow(/not a readable Atlas runtime tree/);
+    // An interrupted generation leaves no marker.
+    rmSync(join(root, '.atlas-pinned/data', PINNED_SOURCE_MARKER));
+    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/has no pinned-source\.json/);
   });
 
   it('installs only the pinned browse shards into dist and leaves committed files untouched', () => {
-    const site = makeSite({ pinned: true });
+    const { root: site, env: PINNED_ENV } = makeSite({ pinned: true });
     const dist = join(site, 'dist');
     // public/ copied the committed shards, including one the pinned set no longer has.
     write(join(dist, 'lexicon/browse/А.json'), '"COMMITTED А"');
@@ -114,7 +161,7 @@ describe('shared Atlas artifact selection (#12527)', () => {
   });
 
   it('redirects the Vite JSON import of a client-bundled module (heritage-severity) to the selected set', async () => {
-    const site = makeSite({ pinned: true });
+    const { root: site, env: PINNED_ENV } = makeSite({ pinned: true });
     // heritage-severity.ts is bundled into the client; it statically imports ../../data/lexicon-browse-meta.json.
     write(
       join(site, 'src/lib/lexicon/heritage-severity.ts'),
@@ -152,7 +199,7 @@ describe('shared Atlas artifact selection (#12527)', () => {
   });
 
   it('hydrates search shards from the selected set (plain Node import) and drops stale shards', () => {
-    const site = makeSite({ pinned: true });
+    const { root: site, env: PINNED_ENV } = makeSite({ pinned: true });
     const row = (slug: string) => ({ l: slug, s: slug, g: '', r: slug, t: 'lemma' });
     const shards = (tag: string) =>
       JSON.stringify({ prefixMap: { [tag.slice(0, 1)]: tag }, shards: { [tag]: { count: 1 } } });
@@ -163,7 +210,7 @@ describe('shared Atlas artifact selection (#12527)', () => {
     write(join(site, 'public/lexicon/search/earlier-run.json'), '[]');
 
     const previous = process.env[PINNED_SELECTION_ENV];
-    process.env[PINNED_SELECTION_ENV] = '/runtime/tree';
+    process.env[PINNED_SELECTION_ENV] = PINNED_ENV[PINNED_SELECTION_ENV];
     try {
       expect(() => writeSearchShardFiles(site)).not.toThrow();
     } finally {

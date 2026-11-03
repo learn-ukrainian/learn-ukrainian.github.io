@@ -80,8 +80,14 @@ function main() {
   }
   if (missing.length > 0) failForMissingArtifacts(missing);
 
-  // Pinned selection: also reject stale shards and an incomplete set (fail closed, no fallback).
-  assertSelectedArtifactsComplete(siteRoot);
+  // Pinned selection: also reject stale shards, an incomplete set and a set generated from another
+  // runtime (fail closed, no fallback to the committed files).
+  try {
+    assertSelectedArtifactsComplete(siteRoot);
+  } catch (error) {
+    console.error(`Invalid pinned Atlas artifacts: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  }
 
   const pointer = parseJson('site/src/data/lexicon-manifest.pointer.json');
   const fingerprint = parseJson('site/src/data/lexicon-manifest.fingerprint.json');

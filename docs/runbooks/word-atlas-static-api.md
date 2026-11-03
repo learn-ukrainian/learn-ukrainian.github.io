@@ -82,7 +82,7 @@ writes the pinned projection to the ignored `site/.atlas-pinned/` (`data/` and
 static JSON imports, the filesystem readers and the Node hydration script call
 the same functions, and `astro:build:done` replaces the `*.json` shards in `dist/lexicon/browse/` with
 the pinned shards (the prerendered browse page stays). A pinned build fails closed when the pinned set is missing,
-incomplete or carries a stale shard; it never falls back to the committed files.
+incomplete or carries a stale shard, or when the set was generated from a different runtime than the one selected now (the generator writes `pinned-source.json`, the runtime's data version and manifest digest, last); it never falls back to the committed files.
 The Frontend CI build record binds `site/.atlas-pinned/` and records the
 selection, so a release build leaves `git status` empty and the worktree can be
 removed with the guarded remover. Do not set `ATLAS_SEARCH_RUNTIME_TREE` for

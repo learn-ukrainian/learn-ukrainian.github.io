@@ -55,6 +55,9 @@ DEFAULT_BROWSE_DIR = Path("site/public/lexicon/browse")
 PINNED_ARTIFACT_ROOT = Path("site/.atlas-pinned")
 PINNED_DATA_DIR = PINNED_ARTIFACT_ROOT / "data"
 PINNED_BROWSE_DIR = PINNED_ARTIFACT_ROOT / "public/lexicon/browse"
+# Written last, beside the pinned search index: the identity of the runtime tree the set
+# came from, so the site refuses a complete set left by another or interrupted generation.
+PINNED_SOURCE_MARKER = "pinned-source.json"
 
 CEFR_LEVELS = {"A1", "A2", "B1", "B2", "C1", "C2"}
 UKRAINIAN_ALPHABET = tuple("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ")
@@ -1199,6 +1202,8 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
             sys.path.insert(0, str(PROJECT_ROOT))
         from scripts.deploy.vendor_atlas_tree import build_pinned_search
 
+        # No marker while the set is being rewritten: an interrupted run must read as stale.
+        (args.out.parent / PINNED_SOURCE_MARKER).unlink(missing_ok=True)
         rows, aliases, parity = build_pinned_search(args.runtime_tree)
         meta, browse_shards, flagged_rows = build_browse_outputs(rows)
         search_shards, search_shard_rows = build_search_shards(rows)
@@ -1209,6 +1214,16 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
             meta, browse_shards, flagged_rows, args.browse_meta_out, args.browse_flagged_out, args.browse_dir
         )
         verify_browse_artifacts_written(args.browse_meta_out, args.browse_dir, meta["total"])
+        (args.out.parent / PINNED_SOURCE_MARKER).write_bytes(
+            _json_bytes(
+                {
+                    "schema": "atlas-pinned-source",
+                    "schemaVersion": 1,
+                    "dataVersion": parity["dataVersion"],
+                    "runtimeManifestSha256": parity["runtimeManifestSha256"],
+                }
+            )
+        )
         print(
             "atlas pinned search/browse artifacts: "
             f"articles={len(rows)} aliases={len(aliases)} browse_records={meta['total']} "

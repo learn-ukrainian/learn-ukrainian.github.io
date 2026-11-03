@@ -41,8 +41,10 @@ import {
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
+  AtlasArtifactSelectionError,
   PINNED_ARTIFACT_DIRNAME,
   PINNED_SELECTION_ENV,
+  assertSelectedArtifactsComplete,
   isPinnedSelection,
 } from '../../src/lib/lexicon/atlas-artifact-selection.mjs';
 
@@ -93,6 +95,16 @@ export interface BuildRecord {
 
 export function selectionModeFromEnv(env: NodeJS.ProcessEnv = process.env): ArtifactSelectionMode {
   return isPinnedSelection(env) ? 'pinned' : 'committed';
+}
+
+/** A pinned set must be complete and generated from the runtime selected in this environment. */
+function assertPinnedSetCurrent(roots: BuildRoots, env: NodeJS.ProcessEnv): void {
+  try {
+    assertSelectedArtifactsComplete(roots.siteDir, env);
+  } catch (error) {
+    if (error instanceof AtlasArtifactSelectionError) throw new BuildRecordError(error.message);
+    throw error;
+  }
 }
 
 export class BuildRecordError extends Error {
@@ -198,6 +210,7 @@ export async function recordBuild(options: RecordOptions): Promise<BuildRecord> 
   if (command.length === 0) throw new BuildRecordError('record needs a build command after --');
 
   const mode = selectionModeFromEnv(env);
+  assertPinnedSetCurrent(roots, env);
   const inputs = computeInputIdentity(roots, mode);
   const logPath = defaultLogPath(recordPath);
   mkdirSync(dirname(recordPath), { recursive: true });
@@ -314,6 +327,8 @@ export function verifyBuildRecord(recordPath: string, roots: BuildRoots = DEFAUL
         ` (${PINNED_SELECTION_ENV} must match between record and verify)`,
     );
   }
+  // Unchanged files are not enough: the pinned set must still match the runtime selected now.
+  assertPinnedSetCurrent(roots, process.env);
   const differences = inputIdentityDifferences(record.inputs, computeInputIdentity(roots, recordedMode));
   if (differences.length > 0) {
     const shown = differences.slice(0, 20).join('\n  ');

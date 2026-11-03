@@ -902,7 +902,11 @@ def test_pinned_run_writes_the_ignored_build_dir_and_never_the_committed_snapsho
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
     row = {"s": "іван", "l": "Іван", "g": "Ivan", "r": "ivan", "t": "lemma"}
-    monkeypatch.setattr(vendor, "build_pinned_search", lambda tree: ([row], [], {"dataVersion": "atlas-v1-test"}))
+    monkeypatch.setattr(
+        vendor,
+        "build_pinned_search",
+        lambda tree: ([row], [], {"dataVersion": "atlas-v1-test", "runtimeManifestSha256": "ab" * 32}),
+    )
     monkeypatch.chdir(tmp_path)
 
     assert main(["--runtime-tree", str(tmp_path / "tree")]) == 0
@@ -918,10 +922,19 @@ def test_pinned_run_writes_the_ignored_build_dir_and_never_the_committed_snapsho
     ):
         assert (pinned_data / name).is_file(), name
     assert [p.name for p in (tmp_path / gsi.PINNED_BROWSE_DIR).glob("*.json")] == ["І.json"]
+    # The generator records which runtime the set came from, last; the site rejects a set without it.
+    assert json.loads((pinned_data / gsi.PINNED_SOURCE_MARKER).read_bytes()) == {
+        "schema": "atlas-pinned-source",
+        "schemaVersion": 1,
+        "dataVersion": "atlas-v1-test",
+        "runtimeManifestSha256": "ab" * 32,
+    }
     # The ignored directory name is shared with the site reader's selection module.
     selection = (PROJECT_ROOT / "site/src/lib/lexicon/atlas-artifact-selection.mjs").read_text(encoding="utf-8")
     declared = re.search(r"PINNED_ARTIFACT_DIRNAME = '([^']+)'", selection)
     assert declared is not None and declared.group(1) == gsi.PINNED_ARTIFACT_ROOT.name
+    marker = re.search(r"PINNED_SOURCE_MARKER = '([^']+)'", selection)
+    assert marker is not None and marker.group(1) == gsi.PINNED_SOURCE_MARKER
 
     # An unpinned run and an explicit flag keep their own paths.
     assert gsi.resolve_output_path(None, DEFAULT_SEARCH_OUT, pinned=False) == DEFAULT_SEARCH_OUT
