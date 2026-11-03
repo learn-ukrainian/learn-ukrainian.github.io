@@ -847,11 +847,14 @@ def _recorded_findings(
     if not isinstance(body, str):
         return None
     _, opened, rest = body.partition(REPLY_OPENER)
-    if not opened:
-        reply = _withheld_reply(body, runs)
-        return None if reply is None else _reply_findings(reply)
-    reply, closed, _ = rest.rpartition(REPLY_CLOSER)
-    if not closed or not reply.strip() or recorder.TRUNCATION_FLAG in reply:
+    if opened:
+        reply, closed, _ = rest.rpartition(REPLY_CLOSER)
+        if not closed:
+            return None
+    else:
+        reply = _withheld_reply(body, runs) or ""
+    # A sealed reply is intact, not necessarily complete: a cut one refuses in either form.
+    if not reply.strip() or recorder.TRUNCATION_FLAG in reply:
         return None
     return _reply_findings(reply)
 
