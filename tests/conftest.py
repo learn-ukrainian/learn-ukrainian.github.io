@@ -131,6 +131,27 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
         yield log_dir
 
 
+@pytest.fixture(autouse=True)
+def no_free_disk_floor(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep evidence ``Sources`` snapshots off the runner's free disk (#12640).
+
+    One fixture replaces the copies under ``tests/build`` and
+    ``tests/curriculum/evidence``. The floor environment is what a subprocess
+    inherits. Replacing ``free_disk_bytes`` keeps an in-process ``_guard`` off
+    ``shutil.disk_usage``. The guard's own test passes an explicit floor and
+    still calls the production reading.
+    """
+    from scripts.curriculum.evidence import config
+    from scripts.curriculum.evidence.sources import Sources
+
+    monkeypatch.setenv(config.FREE_DISK_FLOOR_ENV, "0")
+    if getattr(request.node, "originalname", request.node.name) == (
+        "test_snapshot_stops_when_free_disk_falls_below_the_floor"
+    ):
+        return
+    monkeypatch.setattr(Sources, "free_disk_bytes", lambda self: config.FREE_DISK_FLOOR_BYTES)
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _lexicon_cap_test_unit_prefix() -> Generator[None, None, None]:
     """Name scopes created by the suite ``lexicon-captest-*`` (#9624).
