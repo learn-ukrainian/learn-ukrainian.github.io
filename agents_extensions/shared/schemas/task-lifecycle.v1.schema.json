@@ -123,6 +123,25 @@
       "type": "array",
       "items": {"$ref": "#/$defs/evidence"}
     },
+    "evidence_type_corrections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "ac_id", "actor", "reason", "recorded_at", "old_types", "new_types", "old_snapshot", "new_snapshot"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "ac_id": {"type": "string", "minLength": 2, "maxLength": 32},
+          "actor": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "\\S"},
+          "reason": {"type": "string", "minLength": 1, "maxLength": 4000, "pattern": "\\S"},
+          "recorded_at": {"type": "string", "format": "date-time"},
+          "old_types": {"$ref": "#/properties/ac_snapshot/properties/criteria/items/properties/required_evidence"},
+          "new_types": {"$ref": "#/properties/ac_snapshot/properties/criteria/items/properties/required_evidence"},
+          "old_snapshot": {"$ref": "#/properties/ac_snapshot"},
+          "new_snapshot": {"$ref": "#/properties/ac_snapshot"}
+        }
+      }
+    },
     "required_checks": {
       "type": "array",
       "minItems": 1,

@@ -926,6 +926,42 @@ def _stub_fresh_init(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
+def test_init_reuse_refuses_changed_ac_policy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    """A reused ledger must not silently ignore a changed AC policy."""
+    _stub_fresh_init(tmp_path, monkeypatch)
+    command = _fresh_init_command(tmp_path)
+    assert task_closeout.main(command) == 0
+    path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    before = path.read_bytes()
+    _write_json(Path(command[command.index("--ac-policy") + 1]), {
+        "AC-IMPL": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["document", "review"]},
+    })
+    assert task_closeout.main([*command, "--reuse"]) == 2
+    assert "AC_SNAPSHOT_MISMATCH" in json.loads(capsys.readouterr().err)["error"]
+    assert path.read_bytes() == before
+
+
+def test_evidence_type_correction_refused_after_criterion_checked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys,
+) -> None:
+    """A correction must not rewrite a criterion that already has checked evidence."""
+    _stub_fresh_init(tmp_path, monkeypatch)
+    command = _fresh_init_command(tmp_path)
+    assert task_closeout.main(command) == 0
+    path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    before = path.read_bytes()
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", lambda *args: {
+        "number": 42, "state": "OPEN", "state_reason": None,
+        "body": "- [x] **AC-IMPL** — Implementation is verified.\n",
+    })
+    assert task_closeout.main([
+        "correct-evidence-types", "--state-file", str(path), "--ac-id", "AC-IMPL",
+        "--required-evidence", "document", "--actor", "codex/test", "--reason", "Documentation criterion",
+    ]) == 2
+    assert "AC_ALREADY_CHECKED" in json.loads(capsys.readouterr().err)["error"]
+    assert path.read_bytes() == before
+
+
 def test_cli_fresh_init_carrier_and_read_only_reconcile_preserve_exact_identity(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys,
 ) -> None:
@@ -956,6 +992,55 @@ def test_cli_fresh_init_carrier_and_read_only_reconcile_preserve_exact_identity(
     assert task_closeout.main([*command, "--reuse"]) == 0
     capsys.readouterr()
     assert task_lifecycle.load_lifecycle(path)["observation_receipts"]
+
+    original = task_lifecycle.load_lifecycle(path)
+    correction_command = [
+        "correct-evidence-types", "--state-file", str(path), "--ac-id", "AC-IMPL",
+        "--required-evidence", "document", "--required-evidence", "review",
+        "--actor", "codex/test", "--reason", "Documentation criterion", "--now", "2026-07-16T10:01:00Z",
+    ]
+    assert task_closeout.main(correction_command) == 0
+    result = json.loads(capsys.readouterr().out)
+    corrected = task_lifecycle.load_lifecycle(path)
+    record = result["correction"]
+    assert record["actor"] == "codex/test"
+    assert record["reason"] == "Documentation criterion"
+    assert record["recorded_at"] == "2026-07-16T10:01:00Z"
+    assert record["old_types"] == ["test"]
+    assert record["new_types"] == ["document", "review"]
+    assert record["old_snapshot"] == original["ac_snapshot"]
+    assert record["new_snapshot"] == corrected["ac_snapshot"]
+    assert corrected["ac_snapshot"]["content_hash"] != original["ac_snapshot"]["content_hash"]
+    assert corrected["observation_receipts"] == original["observation_receipts"]
+    assert corrected["evidence"] == original["evidence"]
+    assert corrected["evidence_type_corrections"] == [record]
+    assert task_closeout.main(correction_command) == 0
+    assert json.loads(capsys.readouterr().out)["replayed"] is True
+    assert task_lifecycle.load_lifecycle(path) == corrected
+
+    before = path.read_bytes()
+    # The old policy and changed issue text both refuse reuse without a write.
+    assert task_closeout.main([*command, "--reuse"]) == 2
+    assert json.loads(capsys.readouterr().err)["error_code"] == "AC_SNAPSHOT_MISMATCH"
+    _write_json(Path(command[command.index("--ac-policy") + 1]), {
+        "AC-IMPL": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["document", "review"]},
+    })
+    assert task_closeout.main([*command, "--reuse"]) == 0
+    capsys.readouterr()
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", lambda *args: {
+        "number": 42, "parent_epic": 10, "parent_repository": "org/repo",
+        "state": "OPEN", "body": "- [ ] **AC-IMPL** — Different text.\n",
+    })
+    assert task_closeout.main([*command, "--reuse"]) == 2
+    assert json.loads(capsys.readouterr().err)["error_code"] == "AC_SNAPSHOT_MISMATCH"
+    assert path.read_bytes() == before
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", lambda *args: {
+        "number": 42, "state": "CLOSED", "state_reason": "COMPLETED",
+        "body": "- [ ] **AC-IMPL** — Implementation is verified.\n",
+    })
+    assert task_closeout.main(correction_command) == 2
+    assert json.loads(capsys.readouterr().err)["error_code"] == "AC_ISSUE_COMPLETED"
+    assert path.read_bytes() == before
 
 
 @pytest.mark.parametrize("existing_form", ["fresh", "rollover"])

@@ -61,6 +61,24 @@ The acceptance ids, typed evidence and behaviour proof live in the lifecycle led
 (`workflow.md` § Mandatory task workflow, steps 3 to 5); the record names them, it does not
 replace them.
 
+`task_closeout init --reuse` refuses a changed effective AC snapshot or policy
+with `AC_SNAPSHOT_MISMATCH` and exit 2. For wrongly frozen required evidence
+types, use the supported append-only correction before the criterion is checked
+or the issue is closed as completed:
+
+```bash
+"$PY" -m scripts.orchestration.task_closeout correct-evidence-types \
+  --state-file ledger.json --ac-id AC-02 \
+  --required-evidence document --required-evidence review \
+  --actor codex/task-id --reason 'This criterion verifies documentation'
+```
+
+The correction retains old/new snapshots and types with actor, reason and time,
+and re-hashes the snapshot. It creates no proof and relaxes no evidence, review
+or CI gate. Reuse then requires the corrected policy. See the
+[lifecycle contract](../../../contracts/task-lifecycle-closeout.md#correcting-frozen-required-evidence-types)
+for typed refusals, replay and retained-history checks.
+
 **Public-safe subset.** Only these fields go into the PR body: target, acceptance ids and their
 proof, catalog risk and budget tier, the finding ledger (including any optional DeepSeek
 pre-check dispositions), and credit. Everything else, such as worktree paths, host details and
