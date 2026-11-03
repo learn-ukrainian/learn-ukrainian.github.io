@@ -41,6 +41,15 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
   workers. Before the session starts, the `ci.pytest_dispatch_cap` plugin caps `-n` (`auto` included),
   cuts an explicit `--tx` list and lowers `PYTEST_XDIST_AUTO_NUM_WORKERS` for the run and its own
   descendants. The count is per run: it does not add up the runs that share one hold.
+- A local pytest with no live hold, and with `CI` unset, is refused before any worker or test starts
+  when the worker count xdist would start is above `MAX_PROCESSES` (2) in
+  `scripts/ci/pytest_dispatch_cap.py`. The error names
+  `.venv/bin/python -m scripts.common.test_slots run -- .venv/bin/python -m pytest ...`.
+  Serial runs, `-n 0`, and a count at or under 2 are unchanged. `--collect-only`, `--help`,
+  `--version` and `--markers` are unchanged. `--fixtures` and `--fixtures-per-test` are refused
+  only when they would start more workers than the cap; a serial fixtures listing does not queue.
+  What proves the refusal is in the autopsy
+  `docs/bug-autopsies/unleased-pytest-worker-fanout.md` under Verification.
 - The governor never raises an existing `PYTEST_XDIST_AUTO_NUM_WORKERS`, such as a driver scope's
   memory cap. A value of `0` keeps `-n auto` serial.
 
@@ -53,9 +62,12 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
 | Codex read-only reviews | The dispatch worker holds 2 `review` slots before the CLI starts. See "Sandboxed reviews" below. |
 | Dispatch admission | `dispatch.py dispatch` refuses a new write worker while more than `DISPATCH_MAX_TEST_SLOT_QUEUE` runs (default 4) wait for slots. The refusal uses the usual admission message and exit 3. |
 
-Operator shells and CI are unchanged: the plugin takes slots only for dispatch workers, it caps
-workers only for runs below a live holder, and a true `CI` variable turns the pool off unless
-`LU_TEST_SLOTS=on` is set explicitly.
+The plugin takes slots only for dispatch workers, and it caps workers for runs below a live holder.
+A true `CI` variable turns the pool off unless `LU_TEST_SLOTS=on` is set explicitly, and CI is not
+subject to the local over-cap refusal, including when slots are turned on. Setting `CI` locally is
+an evasion of that refusal, as are `-p no:xdist`, `--noconftest`, and an `addopts` override that
+drops `ci.pytest_dispatch_cap`. A same-user copy of a live holder marker is still accepted when the
+task ids do not conflict; that is the existing descendant contract, not a second lease.
 
 ## Sandboxed reviews
 
@@ -116,7 +128,7 @@ outlive it until they end.
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `LU_TEST_SLOTS` | on (off when `CI` is true) | `off` restores the previous behaviour everywhere: no waits, no `-n` changes and no admission check. |
+| `LU_TEST_SLOTS` | on (off when `CI` is true) | `off` disables acquisition: no waits, no `-n` rewrite and no admission check. It does not authorize a local pytest above the worker cap. |
 | `LU_TEST_SLOTS_COUNT` | Half the CPU count, rounded down, at least 2 | Pool size. Every participant on the host must use the same value. |
 | `LU_TEST_SLOTS_WAIT_S` | 3600 | Longest wait before a typed refusal. |
 | `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`; the pool sits in that root as `test-slots-<uid>`. |
@@ -137,7 +149,7 @@ It disables tokenizer parallelism regardless of its previous setting. The caller
 For a test that needs native parallelism, set `LU_TEST_THREAD_CAP=off` for that command and record
 the test and its owner. This preserves the environment rather than removing limits inherited from an
 ancestor. `LU_TEST_SLOTS=off` and the governor's CI exemption also disable application of thread caps.
-Operator pytest runs outside a live holder stay unchanged. Libraries can ignore these environment
+Operator pytest runs outside a live holder still do not get these thread caps. Libraries can ignore these environment
 variables, so measure native thread counts before claiming a CPU bound. NumPy's
 [threading documentation](https://numpy.org/doc/stable/reference/global_state.html#number-of-threads-used-for-linear-algebra)
 describes its BLAS backend controls.
@@ -184,7 +196,8 @@ The launcher exits 75 and prints a `{"test_slots": {"outcome": "refused", ...}}`
    pool. Never delete pool files to free slots: a live holder keeps its locks, and a deleted lock file
    lets a second run take the same slot.
 3. As an emergency stop for one command, set `LU_TEST_SLOTS=off`. Report it, because that run is
-   ungoverned.
+   ungoverned. A local pytest that would start more than two xdist workers is still refused:
+   `off` does not raise the cap, and `test_slots run` under `off` does not either.
 
 ## High-load attribution
 

@@ -15,6 +15,7 @@ from scripts.ci.pytest_dispatch_cap import (
     CAP_LINE,
     DISPATCH_TASK_ENV,
     FULL_SUITE_BUSY,
+    GOVERNED_PYTEST,
     LOCK_ENV,
     MAX_PROCESSES,
     acquire_full_suite_lock,
@@ -205,12 +206,24 @@ def test_nested_pytest_main_does_not_release_the_outer_lock(tmp_path: Path) -> N
     assert "LOCK_BEFORE_NESTED True LOCK_AFTER_NESTED True EXITS 0" in completed.stdout
 
 
-def test_without_marker_explicit_n_is_unchanged(tmp_path: Path) -> None:
+def test_without_marker_explicit_n_above_the_cap_is_refused(tmp_path: Path) -> None:
+    """An ungoverned local ``-n`` above the cap fails before configure, workers, or the test body (#11179)."""
     _write_probe(tmp_path)
-    completed = _run_pytest(tmp_path, ["-n", "4", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker=None))
-    assert completed.returncode == 0, completed.stderr
-    assert "OBSERVED_WORKERS=4" in completed.stdout
-    assert CAP_LINE not in completed.stdout
+    ran = tmp_path / "body_ran"
+    (tmp_path / "tests" / "test_sample.py").write_text(
+        f"def test_ok():\n    open({str(ran)!r}, 'w', encoding='utf-8').write('ran')\n",
+        encoding="utf-8",
+    )
+    env = _child_env(tmp_path, marker=None)
+    env.pop("CI", None)
+    env[test_slots.ENABLE_ENV] = "on"
+    completed = _run_pytest(tmp_path, ["-n", "4", "-q", "tests/test_sample.py"], env)
+    combined = completed.stdout + completed.stderr
+    assert completed.returncode == pytest.ExitCode.USAGE_ERROR, combined
+    assert "OBSERVED_WORKERS" not in completed.stdout
+    assert GOVERNED_PYTEST in combined
+    assert CAP_LINE not in combined
+    assert not ran.is_file()
 
 
 @pytest.mark.parametrize(
