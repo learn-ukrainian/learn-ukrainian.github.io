@@ -15,6 +15,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+import yaml
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
@@ -739,21 +740,37 @@ def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch,
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
 
 
+EXHAUSTED = r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"
+
+
 @pytest.mark.parametrize(
-    "risk,security,prior_heads,refused",
+    "risk,security,prior_heads,refused,policy",
     [
-        (None, False, 2, False),
-        (None, False, 3, True),
-        ("high", False, 3, True),
+        (None, False, 2, None, None),
+        (None, False, 3, EXHAUSTED, None),
+        ("high", False, 3, EXHAUSTED, None),
         # The review task's own --risk critical never raises a non-security diff past 3 rounds (F3).
-        ("critical", False, 3, True),
+        ("critical", False, 3, EXHAUSTED, None),
         # A security-sensitive diff reaches 5 rounds whatever risk the task recorded.
-        ("low", True, 4, False),
-        (None, True, 5, True),
+        ("low", True, 4, None, None),
+        (None, True, 5, EXHAUSTED, None),
+        # A repository whose own policy declares 5 rounds gets rounds 4 and 5, never 6 (#12584).
+        (None, False, 3, None, {REPOSITORY: {"review_rounds": 5}}),
+        (None, False, 4, None, {REPOSITORY: {"review_rounds": 5}}),
+        (None, False, 5, EXHAUSTED, {REPOSITORY: {"review_rounds": 5}}),
+        # Another repository's declaration leaves an unlisted one at 3.
+        (None, False, 3, EXHAUSTED, {"other/repo": {"review_rounds": 5}}),
+        # A malformed declaration refuses rather than counting as a budget, even on a security path.
+        (None, False, 0, "review budget unavailable", {REPOSITORY: {"review_rounds": True}}),
+        (None, True, 0, "review budget unavailable", {REPOSITORY: {"review_rounds": 6}}),
     ],
 )
-def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, security, prior_heads, refused):
+def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, security, prior_heads, refused, policy):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    if policy is not None:
+        declared = tmp_path / "review_budget_policy.yaml"
+        declared.write_text(yaml.safe_dump({"version": 1, "repositories": policy}))
+        monkeypatch.setattr(recorder, "REVIEW_BUDGET_POLICY", declared)
     write_task(tasks, **({"review_risk": risk, "options": {"risk": risk}} if risk else {}))
     changed = ("scripts/review/record_cf_verdict.py",) if security else ("docs/readme.md",)
     facts = facts_for({"google"}, changed_paths=changed)
@@ -763,7 +780,7 @@ def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, se
     comments.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     if refused:
-        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"):
+        with pytest.raises(recorder.RecordError, match=refused):
             recorder.record("review-one", **kwargs)
         assert calls == {"posts": 0, "statuses": 0}
     else:

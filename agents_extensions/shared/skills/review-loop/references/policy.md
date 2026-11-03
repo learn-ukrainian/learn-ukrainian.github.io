@@ -10,7 +10,7 @@ A round is one reviewer dispatch at one exact head: round 1 is the full review, 
 rounds are deltas. A round is spent when its reviewer is dispatched, whether or not its
 verdict is ever recorded; more seats or a retry at a head already dispatched open no round.
 
-- **Default: three rounds** (`budget_tier: default` in the hand-off record). A target repository whose own review policy sets a different automatic budget declares it as `review_rounds` on its row in `scripts/config/fleet_repos.yaml` (kube-dojo: five), and the recorder applies that budget to its PRs.
+- **Default: three rounds** (`budget_tier: default` in the hand-off record). A target repository whose own review policy sets a different automatic budget declares it as `review_rounds` under `repositories` in `scripts/config/review_budget_policy.yaml` (kube-dojo: five), and the recorder applies that budget to its PRs.
 - **Up to five rounds** for a change to security, permissions, authentication, data loss, or
   state and concurrency, and only while an evidenced blocker on it stays open, or when the
   operator asks for it (`budget_tier: elevated`). Each round past the third cites the open

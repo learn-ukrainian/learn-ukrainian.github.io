@@ -2030,31 +2030,53 @@ def require_no_same_head_rejection(comments: Sequence[Mapping[str, Any]], sha: s
         )
 
 
-def repository_review_rounds(repository: str, policy: Path = REVIEW_BUDGET_POLICY) -> int:
+class _UniqueKeyLoader(yaml.SafeLoader):
+    """A repeated key would silently keep its last value, so it makes the budget policy ambiguous."""
+
+    def construct_mapping(self, node: yaml.MappingNode, deep: bool = False) -> dict[Any, Any]:
+        keys = [self.construct_object(key, deep=deep) for key, _ in node.value]
+        if len(set(keys)) != len(keys):
+            raise yaml.constructor.ConstructorError(None, None, "duplicate key", node.start_mark)
+        return super().construct_mapping(node, deep=deep)
+
+
+def _review_budget_policy(policy: Path) -> dict[str, int]:
+    """Every declared budget in ``policy``, keyed by normalized repository; any defect in the file refuses.
+
+    The whole file is validated, whichever repository is asked about: an integer ``version`` of 1,
+    no repeated key at any level, every repository a distinct known owner/name, and every
+    ``review_rounds`` an integer from 1 to ``ELEVATED_REVIEW_ROUNDS``.
+    """
+    try:
+        document = yaml.load(policy.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+    except (OSError, ValueError, TypeError, yaml.YAMLError):
+        raise RecordError("review budget unavailable: the review budget policy is unreadable") from None
+    version = document.get("version") if isinstance(document, Mapping) else None
+    listed = document.get("repositories") if type(version) is int and version == 1 else None
+    if not isinstance(listed, Mapping):
+        raise RecordError("review budget unavailable: the review budget policy is malformed")
+    budgets: dict[str, int] = {}
+    for name, row in listed.items():
+        key = normalize_repository(name) if isinstance(name, str) else "unknown"
+        rounds = row.get("review_rounds") if isinstance(row, Mapping) else None
+        if key == "unknown" or key in budgets or type(rounds) is not int or not 1 <= rounds <= ELEVATED_REVIEW_ROUNDS:
+            raise RecordError(
+                f"review budget unavailable: policy entry {name!r} needs a distinct owner/name and one "
+                f"review_rounds integer from 1 to {ELEVATED_REVIEW_ROUNDS}"
+            )
+        budgets[key] = rounds
+    return budgets
+
+
+def repository_review_rounds(repository: str, policy: Path | None = None) -> int:
     """The automatic round budget the target repository's own review policy declares (#12584).
 
     It is the repository's ``review_rounds`` in ``scripts/config/review_budget_policy.yaml``.
-    A repository the file does not list gets ``DEFAULT_REVIEW_ROUNDS``. An unreadable or
-    malformed file, a repository listed twice, or a value that is not an integer from 1 to
-    ``ELEVATED_REVIEW_ROUNDS`` refuses.
+    A repository the file does not list gets ``DEFAULT_REVIEW_ROUNDS``. A file that is
+    unreadable or malformed anywhere refuses (:func:`_review_budget_policy`).
     """
-    try:
-        document = yaml.safe_load(policy.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
-        raise RecordError("review budget unavailable: the review budget policy is unreadable") from None
-    listed = document.get("repositories") if isinstance(document, Mapping) and document.get("version") == 1 else None
-    if not isinstance(listed, Mapping):
-        raise RecordError("review budget unavailable: the review budget policy is malformed")
-    wanted = normalize_repository(repository)
-    rows = [row for name, row in listed.items() if wanted != "unknown" and normalize_repository(str(name)) == wanted]
-    if not rows:
-        return DEFAULT_REVIEW_ROUNDS
-    declared = rows[0].get("review_rounds") if len(rows) == 1 and isinstance(rows[0], Mapping) else None
-    if type(declared) is not int or not 1 <= declared <= ELEVATED_REVIEW_ROUNDS:
-        raise RecordError(
-            f"review budget unavailable: {repository} needs one review_rounds integer from 1 to {ELEVATED_REVIEW_ROUNDS}"
-        )
-    return declared
+    budgets = _review_budget_policy(REVIEW_BUDGET_POLICY if policy is None else policy)
+    return budgets.get(normalize_repository(repository), DEFAULT_REVIEW_ROUNDS)
 
 
 def review_round_budget(facts: BranchReviewFacts) -> int:
@@ -2066,9 +2088,11 @@ def review_round_budget(facts: BranchReviewFacts) -> int:
     the author. Otherwise the budget is the one the target repository declares
     (:func:`repository_review_rounds`), 3 when it declares none.
     """
+    # Read first: a policy that cannot be read refuses every budget decision, the elevated tier's too.
+    declared = repository_review_rounds(facts.repository)
     if is_security_sensitive_change(facts.changed_paths, facts.scope_paths):
         return ELEVATED_REVIEW_ROUNDS
-    return repository_review_rounds(facts.repository)
+    return declared
 
 
 def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[int, dict[str, Any]]]:
@@ -3150,20 +3174,23 @@ def dispatch_budget_check(
     already has a run opens no round, and while the other dispatched heads stay under the
     repository's budget (:func:`repository_review_rounds`) the round is admitted. From there the
     recorder's own decision at the PR's current head applies (:func:`budget_check`), so the PR's
-    tier, a clean base merge, a designated grant or the lineage's repair round may still admit it. A branch with no open PR gets the repository's budget.
+    tier, a clean base merge, a designated grant or the lineage's repair round may still admit it.
+    A branch with no open PR gets the repository's budget.
     """
     from scripts.review.review_lineage import dispatched_rounds, lineage_runs, review_records
 
     records = review_records(task_root, repository=repository)
     if not records:
+        # No review of the repository on record, so no round is spent: round 1 fits every budget the
+        # policy can declare (1 at least) and nothing here depends on it. The verdict still reads it first.
         return None
+    budget = repository_review_rounds(repository)
     if number is None and branch is not None:
         number = _open_pr_number(repository, branch)
     elif number is not None and branch is None:
         branch = _pr(repository, "", number)["headRefName"]
     runs = lineage_runs(task_root, repository=repository, number=number, branch=branch, records=records)
     heads = dispatched_rounds(runs=runs, comments=(), login="")
-    budget = repository_review_rounds(repository)
     if head in heads or len(heads) < budget:
         return None
     if number is None:
