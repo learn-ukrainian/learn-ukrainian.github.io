@@ -556,8 +556,7 @@ def evaluate_a1_assertions(assembly: dict, sources: dict, batch_name: str) -> di
 
     This is assertion evidence only. It grants no review, audit or export approval.
     """
-    import importlib
-
+    from scripts.atlas import a1_slice3_inputs, a1_slice4_inputs, a1_slice5_inputs, a1_slice6_inputs
     from scripts.atlas import a1_word_cards as a1
     from scripts.atlas import word_card_foundation as foundation
 
@@ -571,7 +570,8 @@ def evaluate_a1_assertions(assembly: dict, sources: dict, batch_name: str) -> di
         validate = a1._inputs
     else:
         gold.require(batch_name in {"slice3", "slice4", "slice5", "slice6"}, "Unknown A1 batch")
-        reader = importlib.import_module("scripts.atlas.a1_" + batch_name + "_inputs")
+        reader = {"slice3": a1_slice3_inputs, "slice4": a1_slice4_inputs,
+                  "slice5": a1_slice5_inputs, "slice6": a1_slice6_inputs}[batch_name]
         manifest, inventory, base, companion, batch = reader.load_batch(a1.ROOT)
         validate = batch.validate_inputs
     effective, _ = validate(inventory, base, companion, manifest, sources, manifest["allocation_pins"])
