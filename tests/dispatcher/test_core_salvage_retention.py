@@ -398,7 +398,15 @@ def test_settlement_keeps_a_worktree_that_a_live_task_borrowed(sandbox, borrower
     borrower = sandbox.dispatch("blocked", "--cwd", str(cwd))
     provider = int(await_file(sandbox.tasks / f"{borrower[0]}.started"))
     if borrower_state == "crashed":
-        supervisor = json.loads((sandbox.tasks / f"{borrower[0]}.json").read_text())
+        # The provider writes its marker before the supervisor records its group. Killing in that
+        # window leaves liveness unknown, and the sweep keeps a borrowed tree until the group is
+        # proven gone (_provider_alive is False, not merely falsy).
+        deadline = time.monotonic() + 10
+        while "provider_pgid" not in (
+            supervisor := json.loads((sandbox.tasks / f"{borrower[0]}.json").read_text())
+        ):
+            assert time.monotonic() < deadline, "supervisor never recorded its provider"
+            time.sleep(0.02)
         os.kill(supervisor["pid"], signal.SIGKILL)
         deadline = time.monotonic() + 10
         while worker._identity(supervisor["pid"]) == supervisor["process_start"]:
@@ -414,7 +422,7 @@ def test_settlement_keeps_a_worktree_that_a_live_task_borrowed(sandbox, borrower
     if borrower_state == "crashed":
         os.killpg(provider, signal.SIGKILL)
         deadline = time.monotonic() + 10
-        while worker._provider_alive(json.loads((sandbox.tasks / f"{borrower[0]}.json").read_text())):
+        while worker._provider_alive(json.loads((sandbox.tasks / f"{borrower[0]}.json").read_text())) is not False:
             assert time.monotonic() < deadline, "provider survived SIGKILL"
             time.sleep(0.02)
     else:
