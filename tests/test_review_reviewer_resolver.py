@@ -2181,12 +2181,17 @@ def test_complete_author_set_excludes_every_member_not_only_the_latest():
     latest_only = resolve_reviewer(
         ResolverInputs(author_model="gpt-6.1-sol", risk="medium", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT)
     )
-    complete = _complete({"anthropic", "openai"}, author_model="gpt-6.1-sol")
+    complete = resolve_reviewer(ResolverInputs(
+        author_model="gpt-6.1-sol", author_families=frozenset({"anthropic", "openai"}),
+        author_commits=(("a" * 40, "anthropic"), ("b" * 40, "openai")),
+        risk="medium", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT,
+    ))
 
     assert latest_only.selected.family == "anthropic"
-    assert complete.selected.name == "gemini-3.8-flash-high"
-    reasons = {entry.name: entry.reason for entry in complete.trace}
-    assert "same family as author (anthropic)" in reasons["claude-opus-5-5"]
+    assert complete.selected is None and {seat.family for seat in complete.quorum} == {"anthropic", "openai"}
+    assert {scope.reviewer_family: scope.commits for scope in complete.review_scopes} == {
+        "anthropic": ("b" * 40,), "openai": ("a" * 40,),
+    }
     # Grok reviews at every risk (#9769); an xAI member removes it too.
     assert _complete({"anthropic", "openai", "xai"}, risk="critical").selected is None
 
