@@ -407,7 +407,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
     source, or removes a cited artifact."""
     with ArtifactStore(root=tmp_path / "plane") as store:
         names = (
-            "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_concat", "by_cut",
+            "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut",
             "uncited", "padded", "inventory",
         )
         recs = {name: store.store_bytes(_payload(), producer="t") for name in names}
@@ -505,12 +505,21 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         (good.docs_dir / "data" / "joined.bz2").write_bytes(
             bz2.compress(b"prefix") + gzip.compress(recs["by_concat"].artifact_id.encode())
         )
+        # A zip inside a zip is read too (zipfile must seek the inner one).
+        inner_zip = io.BytesIO()
+        with zipfile.ZipFile(inner_zip, "w", zipfile.ZIP_DEFLATED) as bundle:
+            bundle.writestr("inner.txt", gzip.compress(recs["by_zip"].artifact_id.encode()))
         archive = io.BytesIO()
         with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
-            bundle.writestr("inner.txt", gzip.compress(recs["by_zip"].artifact_id.encode()))
+            bundle.writestr("inner.zip", inner_zip.getvalue())
         (good.tasks_dir / "bundle.dat").write_bytes(archive.getvalue())
         attached = store.store_bytes(gzip.compress(recs["by_blob"].artifact_id.encode()), producer="t")
         store.reference("message_attachment", attached.artifact_id)
+        # A zip attachment is read too (zipfile must seek the blob).
+        blob_zip = io.BytesIO()
+        with zipfile.ZipFile(blob_zip, "w", zipfile.ZIP_DEFLATED) as bundle:
+            bundle.writestr("note.txt", recs["by_blobzip"].artifact_id)
+        store.reference("message_attachment", store.store_bytes(blob_zip.getvalue(), producer="t").artifact_id)
         # The dispatcher's generated checkout inventory lists every blob path:
         # exactly those entries are not citations (and are counted). A citation
         # elsewhere in an inventory-named file still holds its artifact.
@@ -536,7 +545,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         scan = store.scan_citations(good, now=now, accept_truncated=frozenset({cut_blob.sha256}))
         assert scan.cited == frozenset(
             recs[name].artifact_id
-            for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_concat", "by_cut")
+            for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut")
         )
         # Every byte the decoder can produce before the cut was scanned.
         receipt = {
@@ -554,10 +563,10 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
             citations=scan, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
         )
         assert dry.acknowledged_truncated == report.acknowledged_truncated == [receipt]
-        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 10)
+        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 11)
         assert cut_blob.blob_path.is_file()
         assert {entry["source"] for entry in report.sources} == {"store", "tasks", "docs", "github"}
-        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_concat", "by_cut"):
+        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut"):
             assert recs[name].blob_path.is_file()
         for name in ("uncited", "padded", "inventory"):
             assert not recs[name].blob_path.is_file()

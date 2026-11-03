@@ -460,16 +460,35 @@ class _StreamReader(io.RawIOBase):
 
 
 class _HashingReader(io.RawIOBase):
-    """Read a file, hashing and counting exactly the bytes handed to the scan."""
+    """Read a file, hashing and counting exactly the bytes handed to the scan.
+
+    Seeking is delegated, so a zip blob (which ``zipfile`` must seek) stays
+    readable. The digest covers the file only while the reads run unbroken
+    from the start: any seek away from the current end of the hashed bytes
+    clears ``sequential``, and an acknowledgement needs it set.
+    """
 
     def __init__(self, source: Any) -> None:
         super().__init__()
         self._source = source
         self.digest = hashlib.sha256()
         self.size = 0
+        self.sequential = True
 
     def readable(self) -> bool:
         return True
+
+    def seekable(self) -> bool:
+        return self._source.seekable()
+
+    def seek(self, offset: int, whence: int = io.SEEK_SET) -> int:
+        position = self._source.seek(offset, whence)
+        if position != self.size:
+            self.sequential = False
+        return position
+
+    def tell(self) -> int:
+        return self._source.tell()
 
     def readinto(self, buffer: Any) -> int:
         count = self._source.readinto(buffer)
@@ -480,7 +499,12 @@ class _HashingReader(io.RawIOBase):
 
 
 class _ChargedReader(io.RawIOBase):
-    """Pass a decoded handle through, charging every byte it yields to the size cap."""
+    """Pass a decoded handle through, charging every byte it yields to the size cap.
+
+    Seeking is delegated, so a zip member that is itself a zip (which
+    ``zipfile`` must seek) stays readable; bytes read again after a seek are
+    charged again, which errs toward the cap.
+    """
 
     def __init__(self, source: Any, charge: Any) -> None:
         super().__init__()
@@ -489,6 +513,15 @@ class _ChargedReader(io.RawIOBase):
 
     def readable(self) -> bool:
         return True
+
+    def seekable(self) -> bool:
+        return self._source.seekable()
+
+    def seek(self, offset: int, whence: int = io.SEEK_SET) -> int:
+        return self._source.seek(offset, whence)
+
+    def tell(self) -> int:
+        return self._source.tell()
 
     def readinto(self, buffer: Any) -> int:
         data = self._source.read(len(buffer))
@@ -1899,6 +1932,11 @@ class ArtifactStore:
             ) from cut
         while hashed.read(_STREAM_READ):
             pass
+        if not hashed.sequential:
+            raise ArtifactStoreError(
+                f"citation source store: linked blob {sha} was not read in one pass; "
+                "the acknowledgement cannot be checked against the bytes scanned; refusing"
+            ) from cut
         if hashed.digest.hexdigest() != sha:
             raise ArtifactStoreError(
                 f"citation source store: the bytes scanned for linked blob {sha} hash to "
