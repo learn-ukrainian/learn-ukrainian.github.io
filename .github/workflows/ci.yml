@@ -223,6 +223,23 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
+      # mypy ratchet (#12642). One cache key, saved on main only: a pull_request
+      # save is visible only to that PR and the scripts/ cache is large.
+      # A miss rechecks scripts/ inside this job; a hit reuses incremental results.
+      - name: Restore mypy cache
+        id: mypy-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .mypy_cache
+          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'pyproject.toml') }}
+      - name: Mypy ratchet
+        run: .venv/bin/python -m scripts.lint.mypy_ratchet
+      - name: Save mypy cache
+        if: github.ref == 'refs/heads/main' && steps.mypy-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .mypy_cache
+          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'pyproject.toml') }}
       - name: Collect pytest for PR admission
         if: github.event_name == 'pull_request'
         # Report per-file counts instead of potentially oversized parameter IDs.
