@@ -135,13 +135,15 @@ def _is_primary_git_layout(checkout: Path) -> bool:
     return not os.path.lexists(git_dir / "commondir")
 
 
-def runtime_primary_root() -> Path:
+def runtime_primary_root(start: Path | None = None) -> Path:
     """The running code's own primary checkout, from its Git metadata; never configured.
 
-    Callers that start the dispatcher use this, as ``exec_primary`` does, so the
-    configured target primary never selects which dispatcher code runs.
+    ``start`` is the caller's own checkout (``Path(__file__).resolve().parents[2]``),
+    default this module's. Callers that start the dispatcher use this, as
+    ``exec_primary`` does, so the configured target primary never selects which
+    dispatcher code runs.
     """
-    return main_checkout_root(RUNTIME_ROOT)
+    return main_checkout_root(RUNTIME_ROOT if start is None else start)
 
 
 def primary_root(start: Path | None = None, env: Mapping[str, str] | None = None) -> Path:

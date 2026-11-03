@@ -6,11 +6,12 @@ import json
 import re
 from collections.abc import Mapping
 from copy import deepcopy
+from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from scripts.common.repo_root import RUNTIME_ROOT, github_slug
+from scripts.common.repo_root import github_slug
 
 IDENTITY_SCHEMA_VERSION = "task-identity.v1"
 TITLE_TRANSITION_SCHEMA_VERSION = "rollover-title-transition.v1"
@@ -29,8 +30,9 @@ FALLBACK_CARRIERS = (
 )
 NATIVE_TITLE_HARNESSES = frozenset({"codex-app"})
 
-# The schema ships with the machinery code, so it is read from the runtime checkout.
-_SCHEMA_PATH = RUNTIME_ROOT / "agents_extensions" / "shared" / "schemas" / "task-identity.v1.schema.json"
+# The schema ships with this code, so it is read beside this file (the runtime checkout).
+_ROOT = Path(__file__).resolve().parents[2]
+_SCHEMA_PATH = _ROOT / "agents_extensions" / "shared" / "schemas" / "task-identity.v1.schema.json"
 _IDENTITY_SCHEMA = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
 _IDENTITY_VALIDATOR = Draft202012Validator(_IDENTITY_SCHEMA, format_checker=FormatChecker())
 

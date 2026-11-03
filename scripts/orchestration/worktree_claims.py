@@ -577,7 +577,7 @@ def public_primary_root() -> Path:
     checkouts under a temporary directory.
     """
     try:
-        return state_root()
+        return state_root(Path(__file__).resolve().parents[2])
     except ValueError as exc:
         raise ControlPlaneError(f"machinery state root unusable: {exc}") from exc
 

@@ -32,7 +32,7 @@ REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 # The dispatcher runs from this code's own primary checkout, never from the configured
 # target primary (LEARN_UKRAINIAN_PRIMARY_REPO_ROOT), so the configuration never selects
 # dispatcher code (#12681). Without a configuration it is REPO_ROOT.
-DISPATCHER_ROOT = runtime_primary_root()
+DISPATCHER_ROOT = runtime_primary_root(Path(__file__).resolve().parents[2])
 PYTHON = ".venv/bin/python"
 
 REVIEW_DEEP_INSTRUCTIONS = (

@@ -6,9 +6,11 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import NoReturn
 
-from scripts.common.repo_root import RUNTIME_ROOT, configured_interpreter, main_checkout_root
+from scripts.common.repo_root import configured_interpreter, main_checkout_root
 
 ENTRY = Path("scripts/dispatch.py")
+# The checkout this dispatcher code runs from, read from this file.
+RUNTIME_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _refuse(message: str) -> NoReturn:

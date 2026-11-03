@@ -92,7 +92,7 @@ from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsuppo
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PRIMARY = resolve_repo_root(Path(__file__), 2)  # batch_state lives here, never in a worktree copy
 # The dispatcher entry comes from this code's own primary, never the configured target (#12681).
-DISPATCH_ENTRY = runtime_primary_root() / "scripts" / "dispatch.py"
+DISPATCH_ENTRY = runtime_primary_root(Path(__file__).resolve().parents[2]) / "scripts" / "dispatch.py"
 # where a receipt-recording seat writes its ledger: prepare_review_attempt anchors it to the primary checkout
 PYTHON = project_interpreter()
 STATE_NAME = "integration-state.json"
