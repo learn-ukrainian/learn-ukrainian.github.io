@@ -755,16 +755,26 @@ def _legacy_writes_retired() -> bool:
 def queued_authority_delivery_count(recipient: str) -> int | None:
     """Queued authority deliveries for *recipient*; ``None`` when they cannot be read."""
     try:
-        from scripts.fleet_comms.efficiency_metrics import collect_delivery_backlog_authority
+        from scripts.fleet_comms.efficiency_metrics import (
+            _authority_file_missing,
+            _connect_ro,
+            _placeholder,
+            _table_exists,
+        )
         from scripts.fleet_comms.paths import default_plane_root, validate_plane_root
 
         plane_db = validate_plane_root(default_plane_root()) / "comms.sqlite3"
-        payload = collect_delivery_backlog_authority(plane_db, limit=1_000_000, exclude_retired=False)
-        return sum(
-            1
-            for row in payload.get("rows", [])
-            if row.get("to_agent") == recipient and row.get("status") == "queued"
-        )
+        if _authority_file_missing(plane_db):
+            return None
+        with _connect_ro(plane_db) as conn:
+            if not _table_exists(conn, "authority_deliveries"):
+                return None
+            row = conn.execute(
+                "SELECT COUNT(*) AS n FROM authority_deliveries "
+                f"WHERE state = 'queued' AND recipient = {_placeholder(conn)}",
+                (recipient,),
+            ).fetchone()
+            return int(row["n"])
     except Exception:
         return None
 
