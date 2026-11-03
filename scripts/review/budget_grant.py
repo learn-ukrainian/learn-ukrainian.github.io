@@ -507,7 +507,7 @@ def _admit(
                                          repo_root=repo_root, recording_run=recording_run)
         cited = withheld_receipt["cited_verdict_head"]
     elif request["blocker_class"] == OWNER_REQUEST:
-        withheld_receipt = _owner_round(grant, comments=comments, login=login, budget=budget)
+        withheld_receipt = _owner_round(grant, comments=comments, login=login, task_root=task_root, budget=budget)
         cited = withheld_receipt["cited_verdict_head"]
     else:
         from scripts.review import review_lineage as lineage
@@ -537,7 +537,9 @@ def _admit(
     }
 
 
-def _owner_round(grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, budget: int) -> dict[str, Any]:
+def _owner_round(
+    grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, task_root: Path, budget: int
+) -> dict[str, Any]:
     """The owner's recorded rounds on top of the PR's tier budget, while its latest rejection lists the finding.
 
     The designated advisor confirms the sealed count is the one the tracker item records;
@@ -553,7 +555,17 @@ def _owner_round(grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: 
             or comment.get("created_at") != comment.get("updated_at")):
         raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the latest recorded verdict is not an unedited "
                                     "trusted rejection")
-    read = _recorded_findings(comment)
+    runs = None
+    if REPLY_OPENER not in str(comment.get("body")):
+        # Only a withheld verdict needs its run's sealed reply.
+        from scripts.review import review_lineage as lineage
+
+        try:
+            runs = lineage.lineage_runs(task_root, repository=request["repository"], number=request["pr"],
+                                        branch=request["lineage_id"])
+        except lineage.LineageRefused as exc:
+            raise GrantRefused(EVIDENCE, f"grant {grant.task_id!r}: review runs unreadable: {exc}") from None
+    read = _recorded_findings(comment, runs)
     if read is None or request["finding_id"] not in read[1]:
         raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the latest recorded rejection does not list "
                                     f"{request['finding_id']}")
@@ -792,12 +804,57 @@ def _reply_findings(reply: str) -> tuple[bool, dict[str, list[str | None]]] | No
     return None if any(not entries for entries in named.values()) else (False, named)
 
 
-def _recorded_findings(comment: Mapping[str, Any]) -> tuple[bool, dict[str, list[str | None]]] | None:
-    """A recorded verdict's findings; None when its reply is withheld, cut or unreadable."""
+# The recorder's withheld-findings lines, current and earlier wording (integration_sweep reads both).
+_WITHHELD_LINES = (
+    "Findings are held privately.",
+    "Findings are held privately on the host in CF run output files (`out/<task>.final` and `out/<task>.md`).",
+)
+
+
+def _withheld_reply(body: str, runs: Sequence[Any] | None) -> str | None:
+    """The sealed reply of the one run a withheld verdict records; None when no run binds it (#12585).
+
+    The run is the PR's only one with the marker's task and start, its record seals the reply's
+    digest (which ``review_lineage`` checks on reading), and its head, verdict, reviewer and finding
+    count are exactly what the comment records.
+    """
+    from scripts.review import review_lineage as lineage
+
+    marker = recorder.parse_marker(body)
+    if marker is None or runs is None:
+        return None
+    matches = [run for run in runs if run.task_id == marker["task"] and lineage._started(run.record) == marker["started"]]
+    derived = lineage._finished_verdict(matches[0]) if len(matches) == 1 else None
+    if (derived is None or not isinstance(matches[0].record.get("result_sha256"), str)
+            or (marker["sha"], marker["verdict"], marker["model"], marker["family"]) != (*derived[:2], *derived[3:5])):
+        return None
+    record = body.rpartition("<!-- cf-verdict v1 ")[0]
+    if not any(record.endswith(f"\nWithheld findings: {derived[2]}\n{line}\n\n") for line in _WITHHELD_LINES):
+        return None
+    return matches[0].reply
+
+
+def _recorded_findings(
+    comment: Mapping[str, Any], runs: Sequence[Any] | None = None
+) -> tuple[bool, dict[str, list[str | None]]] | None:
+    """A recorded verdict's findings; None when its reply is cut or unreadable, or withheld and unbound.
+
+    A withheld verdict publishes no reply, so its findings come from the sealed reply of the run it
+    records, among ``runs`` (:func:`_withheld_reply`). Only finding ids and severities are returned,
+    so no withheld text leaves the check.
+    """
     body = comment.get("body")
-    _, opened, rest = body.partition(REPLY_OPENER) if isinstance(body, str) else ("", "", "")
-    reply, closed, _ = rest.rpartition(REPLY_CLOSER)
-    if not opened or not closed or not reply.strip() or recorder.TRUNCATION_FLAG in reply:
+    if not isinstance(body, str):
+        return None
+    _, opened, rest = body.partition(REPLY_OPENER)
+    if opened:
+        reply, closed, _ = rest.rpartition(REPLY_CLOSER)
+        if not closed:
+            return None
+    else:
+        reply = _withheld_reply(body, runs) or ""
+    # A sealed reply is intact, not necessarily complete: a cut one refuses in either form.
+    if not reply.strip() or recorder.TRUNCATION_FLAG in reply:
         return None
     return _reply_findings(reply)
 
@@ -895,10 +952,13 @@ def _p2_fix_round(
     found: dict[str, list[str | None]] = {}
     for position, marker in markers:
         comment = comments[position]
-        read = _recorded_findings(comment)
+        read = _recorded_findings(comment, runs)
+        body = str(comment.get("body"))
+        # A withheld verdict's security verdict is in its sealed reply.
+        sealed = "" if REPLY_OPENER in body else _withheld_reply(body, runs) or ""
         if (marker["verdict"] == "BLOCKED" or read is None
                 or comment.get("created_at") != comment.get("updated_at")
-                or recorder._security_verdict_blocks(str(comment.get("body")))):
+                or recorder._security_verdict_blocks(body) or recorder._security_verdict_blocks(sealed)):
             raise GrantRefused(BLOCKER, f"{marker['task']}: the ledger holds a BLOCKED, a security FAIL, "
                                         "or an edited, withheld or unreadable verdict")
         structured, found = read

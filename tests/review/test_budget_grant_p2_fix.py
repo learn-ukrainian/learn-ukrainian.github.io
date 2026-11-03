@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from types import SimpleNamespace
 
@@ -202,6 +203,27 @@ def test_earlier_p1_with_recorded_resolution_admits(monkeypatch, tmp_path):
     seat(tasks, VERIFIED)
     result = record(tasks, tmp_path)
     assert result["verdict"] == "APPROVED" and result["budget_grant"]["cited_verdict_head"] == REJECTED_HEAD
+
+
+@pytest.mark.parametrize("security", ["", "\nSECURITY_VERDICT: FAIL (lock unchecked)"], ids=["admits", "security-fail"])
+def test_a_withheld_rejection_reads_its_sealed_run(monkeypatch, tmp_path, security):
+    """A withheld latest rejection is read from its run's sealed reply, security verdict included (#12585)."""
+    tasks, comments, calls = p2_case(monkeypatch, tmp_path)
+    sealed = "VERDICT: REQUEST_CHANGES\nF3 [P2] docs/readme.md:5 the retry path drops the lease." + security
+    started = "2026-09-23T11:00:00.000001+00:00"
+    comments[2]["body"] = recorder.build_comment(
+        sha=REJECTED_HEAD, task_id="round-3", started=started, verdict="CHANGES_REQUESTED", model="claude-opus-5-5",
+        family="anthropic", reply="", withheld_findings="unknown",
+    )
+    seat(tasks, sealed, task_id="round-3", worktree_base_sha=REJECTED_HEAD, started_at=started,
+         result_sha256=hashlib.sha256(sealed.encode()).hexdigest(), **ANTHROPIC)
+    seat(tasks, VERIFIED)
+    if security:
+        refused(tasks, tmp_path, "blocker")
+        assert calls == {"posts": 0, "statuses": 0}
+        return
+    result = record(tasks, tmp_path)
+    assert result["verdict"] == "APPROVED" and result["budget_grant"]["p2_fix_round"]["finding_ids"] == ["F3"]
 
 
 @pytest.mark.parametrize("change", ["reissued-grant", "new-reviewer"])
