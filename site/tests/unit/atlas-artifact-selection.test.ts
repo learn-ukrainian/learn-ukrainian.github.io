@@ -99,12 +99,15 @@ describe('shared Atlas artifact selection (#12527)', () => {
     // public/ copied the committed shards, including one the pinned set no longer has.
     write(join(dist, 'lexicon/browse/А.json'), '"COMMITTED А"');
     write(join(dist, 'lexicon/browse/Б.json'), '"COMMITTED Б"');
+    // The same directory holds the prerendered browse page, which the Atlas vendor step requires.
+    write(join(dist, 'lexicon/browse/index.html'), '<h1>browse</h1>');
 
     installSelectedBrowseShards(dist, site, COMMITTED_ENV);
-    expect(readdirSync(join(dist, 'lexicon/browse')).sort()).toEqual(['А.json', 'Б.json']);
+    expect(readdirSync(join(dist, 'lexicon/browse')).sort()).toEqual(['index.html', 'А.json', 'Б.json']);
 
     installSelectedBrowseShards(dist, site, PINNED_ENV);
-    expect(readdirSync(join(dist, 'lexicon/browse'))).toEqual(['А.json']);
+    expect(readdirSync(join(dist, 'lexicon/browse')).sort()).toEqual(['index.html', 'А.json']);
+    expect(readFileSync(join(dist, 'lexicon/browse/index.html'), 'utf8')).toBe('<h1>browse</h1>');
     expect(readFileSync(join(dist, 'lexicon/browse/А.json'), 'utf8')).toBe('"PINNED А"');
     expect(readFileSync(join(site, 'public/lexicon/browse/А.json'), 'utf8')).toBe('"COMMITTED А"');
     expect(existsSync(join(site, 'public/lexicon/browse/Б.json'))).toBe(true);

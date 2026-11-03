@@ -158,9 +158,11 @@ export function assertSelectedArtifactsComplete(siteRoot, env = process.env) {
 }
 
 /**
- * Replace `<distDir>/lexicon/browse` with the pinned shards. `public/` carries the
- * committed shards into every build; the pinned build must ship only its own.
- * A no-op for the committed selection.
+ * Replace the letter shards in `<distDir>/lexicon/browse` with the pinned ones.
+ * `public/` carries the committed shards into every build; the pinned build must
+ * ship only its own. The directory also holds the prerendered browse page
+ * (`index.html`), so only the `*.json` shards are replaced. A no-op for the
+ * committed selection.
  * @param {string} distDir
  * @param {string} siteRoot
  * @param {NodeJS.ProcessEnv} [env]
@@ -170,9 +172,13 @@ export function installSelectedBrowseShards(distDir, siteRoot, env = process.env
   assertSelectedArtifactsComplete(siteRoot, env);
   const { browseDir } = resolveSelectedArtifactLocations(siteRoot, env);
   const target = join(distDir, 'lexicon', 'browse');
-  rmSync(target, { recursive: true, force: true });
-  mkdirSync(dirname(target), { recursive: true });
-  cpSync(browseDir, target, { recursive: true });
+  mkdirSync(target, { recursive: true });
+  for (const name of readdirSync(target)) {
+    if (name.endsWith('.json')) rmSync(join(target, name));
+  }
+  for (const name of readdirSync(browseDir)) {
+    if (name.endsWith('.json')) cpSync(join(browseDir, name), join(target, name));
+  }
 }
 
 /**

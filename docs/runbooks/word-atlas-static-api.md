@@ -80,8 +80,8 @@ writes the pinned projection to the ignored `site/.atlas-pinned/` (`data/` and
 `public/lexicon/browse/`) and the site reads that set through the single module
 `site/src/lib/lexicon/atlas-artifact-selection.mjs`: a Vite plugin redirects the
 static JSON imports, the filesystem readers and the Node hydration script call
-the same functions, and `astro:build:done` replaces `dist/lexicon/browse/` with
-the pinned shards. A pinned build fails closed when the pinned set is missing,
+the same functions, and `astro:build:done` replaces the `*.json` shards in `dist/lexicon/browse/` with
+the pinned shards (the prerendered browse page stays). A pinned build fails closed when the pinned set is missing,
 incomplete or carries a stale shard; it never falls back to the committed files.
 The Frontend CI build record binds `site/.atlas-pinned/` and records the
 selection, so a release build leaves `git status` empty and the worktree can be
