@@ -495,9 +495,12 @@ def _load_bound_review_code() -> None:
     """Import what a bound formal review attempt (``review_attempt.run``) imports on demand.
 
     Only that kind of run needs the build engine's manifest, the evidence sources, the review prompt checks and the agent runner with
-    its ``ai_llm`` package (hundreds of modules), so no other worker pays for them. The runner imports
-    ``ai_llm`` from ``scripts/``, which ``review_attempt.run`` puts on ``sys.path`` just before it imports the
-    runner; do the same, and leave ``sys.path`` as it was.
+    its ``ai_llm`` package. The manifest import reaches ``scripts.wiki.dense_rerank``, which imports numpy, and numpy starts an
+    OpenBLAS thread pool in this process. The pool shares the file table. A supervisor that then holds review slots keeps those
+    flocks in the same table; SIGKILL makes the leader a zombie, which ``_identity`` treats as gone, while the pool still holds
+    the flocks, so the hold stays live. A bound attempt does not take review slots (``hold_review_test_slots`` returns immediately
+    when ``review_attempt`` is set), so only that run loads this code. The runner imports ``ai_llm`` from ``scripts/``, which
+    ``review_attempt.run`` puts on ``sys.path`` just before it imports the runner; do the same, and leave ``sys.path`` as it was.
     """
     scripts_dir = str(Path(__file__).resolve().parents[1])
     added = scripts_dir not in sys.path

@@ -414,6 +414,66 @@ def _provider_environment(pid, sandbox):
     return {**environment, test_slots.DIR_ENV: sandbox.env[test_slots.DIR_ENV]}
 
 
+def test_a_slot_holding_preload_starts_no_thread_pool_that_keeps_the_review_hold(tmp_path):
+    """Defect: the build-engine preload starts an OpenBLAS pool that keeps review flocks past SIGKILL.
+
+    ``scripts.build.fresh.manifest`` reaches numpy. Its threads share the supervisor's file table, so once the
+    leader is a zombie ``_identity`` reports it gone while the flocks are still held. The preload a slot-holding
+    supervisor runs is ``load_post_start_code(False)``: a bound review attempt is the only run that passes True,
+    and that run does not take review slots.
+    """
+    from scripts.common import test_slots
+
+    pool = tmp_path / "pool"
+    ready = tmp_path / "ready"
+    code = """
+import json, os, sys, time
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+os.environ["LU_TEST_SLOTS"] = "on"
+os.environ["LU_TEST_SLOTS_DIR"] = sys.argv[2]
+os.environ["LU_TEST_SLOTS_COUNT"] = "4"
+os.environ["LU_TEST_SLOTS_WAIT_S"] = "5"
+os.environ.pop("CI", None)
+os.environ.pop("LU_TEST_SLOTS_HOLDER", None)
+os.environ.pop("LU_TEST_SLOTS_SESSION", None)
+from scripts.dispatcher.worker import load_post_start_code
+load_post_start_code(False)
+threads = len(list(Path("/proc/self/task").iterdir()))
+from scripts.common import test_slots
+test_slots.acquire(2, kind="review", task_id="preload-threads")
+Path(sys.argv[3]).write_text(json.dumps({"threads": threads}))
+time.sleep(30)
+"""
+    err = tmp_path / "child.err"
+    with err.open("w") as stream:
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(SOURCE), str(pool), str(ready)],
+            stdout=subprocess.DEVNULL, stderr=stream,
+        )
+    try:
+        deadline = time.monotonic() + 30
+        while not ready.exists():
+            if proc.poll() is not None:
+                raise AssertionError(err.read_text() or f"preload child exited {proc.returncode}")
+            assert time.monotonic() < deadline, "the preload child did not take its slots"
+            time.sleep(0.02)
+        assert json.loads(ready.read_text())["threads"] == 1
+        os.kill(proc.pid, signal.SIGKILL)
+        proc.wait(timeout=5)
+        status = test_slots.status({
+            test_slots.ENABLE_ENV: "on", test_slots.DIR_ENV: str(pool),
+            test_slots.COUNT_ENV: "4", test_slots.WAIT_ENV: "5",
+        })
+        assert status["error"] is None, status
+        assert status["slots_in_use"] == 0
+        assert status["slots_draining"] == 0
+    finally:
+        if proc.poll() is None:
+            os.kill(proc.pid, signal.SIGKILL)
+            proc.wait(timeout=5)
+
+
 def test_a_killed_supervisors_review_hold_ends_with_it_and_its_provider_holds_no_pool_descriptor(sandbox, tmp_path):
     """Defect class: a provider that outlives its supervisor keeps the review hold, so slots strand without bound."""
     from scripts.common import test_slots
