@@ -12,6 +12,7 @@ from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError
 from scripts.build import linear_pipeline
+from scripts.review.review_contract import captured_sources_events
 
 FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "agy"
 CONVERSATION_ID = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
@@ -234,7 +235,11 @@ def test_missing_saved_tool_result_is_marked_file_removed(tmp_path: Path) -> Non
 
 
 def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
-    """A completed Sources call with no stream output receives the step file through the inliner."""
+    """A completed Sources call with no stream output receives the step file through the inliner.
+
+    The event is the real AGY step_update shape: tool_name and tool_info.name are
+    both call_mcp_tool, and Arguments is a dict.
+    """
     app_data = (tmp_path / "antigravity-cli").resolve()
     steps = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "steps"
     output = steps / "34" / "output.txt"
@@ -248,7 +253,14 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
     saved = agy_module.export_saved_step_outputs(app_data)
 
     def event(step: int, body: str | None) -> dict:
-        info: dict = {"parameters": {"ServerName": "sources", "ToolName": "search_text", "Arguments": "{}"}}
+        info: dict = {
+            "name": "call_mcp_tool",
+            "parameters": {
+                "ServerName": "sources",
+                "ToolName": "search_text",
+                "Arguments": {},
+            },
+        }
         if body is not None:
             info["output"] = body
         return {
@@ -257,6 +269,7 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
                 "conversation_id": CONVERSATION_ID,
                 "state": "DONE",
                 "step_index": step,
+                "step_type": "tool",
                 "tool_name": "call_mcp_tool",
                 "tool_info": info,
             },
@@ -264,8 +277,14 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
 
     pointer = f"The output was large and was saved to: {pointed.as_uri()}"
     stdout = json.dumps(event(34, None)) + "\n" + json.dumps(event(50, pointer)) + "\n"
+    captured = captured_sources_events(stdout)
+    assert [item["tool"] for item in captured] == ["search_text", "search_text"]
+    assert all(isinstance(item["arguments"], dict) for item in captured)
     merged, retained, missing = agy_module.merge_saved_step_outputs(stdout, saved)
     parsed = [json.loads(line) for line in merged.splitlines()]
+    assert parsed[0]["step_update"]["tool_name"] == "call_mcp_tool"
+    assert parsed[0]["step_update"]["tool_info"]["name"] == "call_mcp_tool"
+    assert parsed[0]["step_update"]["tool_info"]["parameters"]["Arguments"] == {}
     assert parsed[0]["step_update"]["tool_info"]["output"] == "kept body"
     assert parsed[1]["step_update"]["tool_info"]["output"] == "expanded body"
     assert "saved to:" not in merged
