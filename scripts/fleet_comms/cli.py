@@ -1330,7 +1330,7 @@ def build_parser() -> argparse.ArgumentParser:
     retention.add_argument(
         "--cited-from-docs",
         default=None,
-        help="Repository docs tree scanned for citations (every file; .git, node_modules, .venv, .worktrees, batch_state and data are skipped and counted)",
+        help="Repository docs tree (pass the docs directory); every file and subtree is scanned, none is skipped",
     )
     retention.add_argument(
         "--cited-from-github",

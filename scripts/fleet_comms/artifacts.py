@@ -144,13 +144,14 @@ _CITE_ID = re.compile(rb"artifact_[0-9a-f]{32}")
 _CITE_SHA = re.compile(rb"(?<![0-9a-f])([0-9a-f]{64})(?![0-9a-f])")
 _SCAN_CHUNK = 8 * 1024 * 1024
 _SCAN_OVERLAP = 96
-# The dispatcher writes a full inventory of the checkout, every ignored blob path
-# included, before and after a read-only task. That file is generated output, not
-# a citation; every other file in a snapshot directory is scanned.
+# The dispatcher writes a full inventory of the checkout (path -> git status) before
+# and after a read-only task, so it lists every ignored blob path. Only an entry of
+# that exact shape, ``"<...>/blobs/sha256/<aa>/<aa...digest>":"!!"`` (git's "ignored" status) inside one of
+# these two files (live or archived snapshot directories), is a listing and not a citation;
+# the rest of the file is scanned like any other.
 _INVENTORY_SNAPSHOT_FILES = frozenset({"read_only_checkout_pre.json", "read_only_checkout_post.json"})
-_DOC_EXCLUDED_DIRS = frozenset(
-    {".git", "node_modules", ".venv", ".worktrees", "batch_state", "data", "__pycache__", ".pytest_cache"}
-)
+_INVENTORY_ENTRY = re.compile(rb'"(?:[^"\\]*/)?blobs/sha256/([0-9a-f]{2})/\1[0-9a-f]{62}":"!!",?')
+_INVENTORY_MAX_BYTES = 256 * 1024 * 1024
 
 
 def _retention_candidate_sql(*, single: bool) -> str:
@@ -335,6 +336,22 @@ class _ScanState:
             self.feed(tail + chunk)
             tail = chunk[-_SCAN_OVERLAP:]
         return total
+
+    def feed_inventory(self, handle: Any) -> tuple[int, int]:
+        """Scan a generated checkout inventory; returns (bytes read, listings ignored).
+
+        Only entries of the exact blob-listing shape are ignored; everything
+        else is scanned in full. A file too large to hold in memory refuses
+        the run (none exists: the largest live inventory is about 42 MB).
+        """
+        data = handle.read(_INVENTORY_MAX_BYTES + 1)
+        if len(data) > _INVENTORY_MAX_BYTES:
+            raise ArtifactStoreError(
+                f"citation source: a checkout inventory exceeds {_INVENTORY_MAX_BYTES} bytes"
+            )
+        rest, listed = _INVENTORY_ENTRY.subn(b"", data)
+        self.feed(rest)
+        return len(data), listed
 
 
 def _fsync_directory(path: Path) -> None:
@@ -1444,12 +1461,8 @@ class ArtifactStore:
         )
         coverage = [
             self._scan_store(state),
-            self._scan_tree(
-                "tasks", sources.tasks_dir, state, required_suffix=".json", skip_inventories=True
-            ),
-            self._scan_tree(
-                "docs", sources.docs_dir, state, required_suffix=".md", excluded=_DOC_EXCLUDED_DIRS
-            ),
+            self._scan_tree("tasks", sources.tasks_dir, state, required_suffix=".json", inventories=True),
+            self._scan_tree("docs", sources.docs_dir, state, required_suffix=".md"),
             self._scan_github(sources.github_dump, state, now or datetime.now(UTC)),
         ]
         if self._conn.in_transaction:
@@ -1506,16 +1519,15 @@ class ArtifactStore:
         state: _ScanState,
         *,
         required_suffix: str,
-        excluded: frozenset[str] = frozenset(),
-        skip_inventories: bool = False,
+        inventories: bool = False,
     ) -> dict[str, Any]:
         """Scan every file under ``root`` end to end, or raise.
 
         Complete or refused: a symlink, a non-regular entry, an unreadable
         or vanished file or directory, or a tree with no ``required_suffix``
-        file raises. Only declared skips are allowed and all are counted in
-        the coverage: ``excluded`` directory names, and (``skip_inventories``)
-        the generated checkout inventories in ``*.snapshots`` directories.
+        file raises. Nothing is skipped. With ``inventories``, the blob-path
+        listings inside the dispatcher's generated checkout inventories are
+        not citations (``_INVENTORY_ENTRY``); they are counted in the coverage.
         """
 
         def fail_walk(exc: OSError) -> None:
@@ -1524,30 +1536,19 @@ class ArtifactStore:
         root = Path(root)
         if not root.is_dir():
             raise ArtifactStoreError(f"citation source {name}: {root} is not a directory")
-        files = required = total = skipped_excluded = skipped_inventory = 0
+        files = required = total = listings = 0
         digest = hashlib.sha256()
         for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=fail_walk):
-            kept = []
-            for dirname in sorted(dirnames):
+            dirnames.sort()
+            for dirname in dirnames:
                 if os.path.islink(os.path.join(dirpath, dirname)):
                     raise ArtifactStoreError(
                         f"citation source {name}: {dirpath}/{dirname} is a symlink; "
                         "refusing an incompletely scanned tree"
                     )
-                if dirname in excluded:
-                    skipped_excluded += 1
-                else:
-                    kept.append(dirname)
-            dirnames[:] = kept
             for filename in sorted(filenames):
                 path = Path(dirpath) / filename
-                if (
-                    skip_inventories
-                    and path.parent.name.endswith(".snapshots")
-                    and filename in _INVENTORY_SNAPSHOT_FILES
-                ):
-                    skipped_inventory += 1
-                    continue
+                inventory = inventories and filename in _INVENTORY_SNAPSHOT_FILES
                 try:
                     if not stat.S_ISREG(os.lstat(path).st_mode):
                         raise ArtifactStoreError(
@@ -1555,7 +1556,11 @@ class ArtifactStore:
                             "refusing an incompletely scanned tree"
                         )
                     with open(path, "rb") as handle:
-                        size = state.feed_stream(handle)
+                        if inventory:
+                            size, ignored = state.feed_inventory(handle)
+                            listings += ignored
+                        else:
+                            size = state.feed_stream(handle)
                 except FileNotFoundError as exc:
                     raise ArtifactStoreError(
                         f"citation source {name}: {path} vanished during the scan; run again"
@@ -1578,8 +1583,7 @@ class ArtifactStore:
             "path": str(root),
             "files": files,
             "bytes": total,
-            "skipped_excluded_dirs": skipped_excluded,
-            "skipped_inventory_files": skipped_inventory,
+            "inventory_listings_ignored": listings,
             "digest": digest.hexdigest(),
         }
 

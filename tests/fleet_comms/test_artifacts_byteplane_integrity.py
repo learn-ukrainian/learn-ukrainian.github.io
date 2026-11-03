@@ -399,7 +399,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
     removes with a missing, empty, stale, incomplete or unreadable citation
     source, or removes a cited artifact."""
     with ArtifactStore(root=tmp_path / "plane") as store:
-        names = ("by_id", "by_sha", "by_path", "by_doc", "uncited", "padded", "inventory")
+        names = ("by_id", "by_sha", "by_path", "by_doc", "by_note", "uncited", "padded", "inventory")
         recs = {name: store.store_bytes(_payload(), producer="t") for name in names}
         for rec in recs.values():
             _age(store, rec.artifact_id)
@@ -462,23 +462,31 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
             # a 65-character hex run is no token of its own.
             cite_in_tasks=f"{recs['by_sha'].sha256} {blob_path(recs['by_path'])} {recs['padded'].sha256}0",
         )
-        (good.docs_dir / "page.mdx").write_text(recs["by_doc"].artifact_id)
+        # Every docs subtree is scanned, whatever its name or suffix.
+        (good.docs_dir / "data").mkdir()
+        (good.docs_dir / "data" / "evidence.mdx").write_text(recs["by_doc"].artifact_id)
         # The dispatcher's generated checkout inventory lists every blob path:
-        # it is skipped (and counted), unlike any other snapshot file.
-        snapshots = good.tasks_dir / "job.snapshots"
+        # exactly those entries are not citations (and are counted). A citation
+        # elsewhere in an inventory-named file still holds its artifact.
+        snapshots = good.tasks_dir / "job.snapshots.20260101T000000Z.archived"
         snapshots.mkdir()
-        (snapshots / "read_only_checkout_pre.json").write_text(blob_path(recs["inventory"]))
+        inventory_key = f"x/{blob_path(recs['inventory'])}"
+        listing = f'"{inventory_key}":"!!"'
+        (snapshots / "read_only_checkout_pre.json").write_text("{" + listing + "}")
+        (snapshots / "read_only_checkout_post.json").write_text(
+            json.dumps({"note": recs["by_note"].artifact_id, inventory_key: "!!"}, separators=(",", ":"))
+        )
         scan = store.scan_citations(good, now=now)
         assert scan.cited == frozenset(
-            recs[name].artifact_id for name in ("by_id", "by_sha", "by_path", "by_doc")
+            recs[name].artifact_id for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note")
         )
-        assert [e["skipped_inventory_files"] for e in scan.coverage if e["source"] == "tasks"] == [1]
+        assert [e["inventory_listings_ignored"] for e in scan.coverage if e["source"] == "tasks"] == [2]
         report = store.expire_unreferenced_blobs(
             citations=scan, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
         )
-        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 4)
+        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 5)
         assert {entry["source"] for entry in report.sources} == {"store", "tasks", "docs", "github"}
-        for name in ("by_id", "by_sha", "by_path", "by_doc"):
+        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note"):
             assert recs[name].blob_path.is_file()
         for name in ("uncited", "padded", "inventory"):
             assert not recs[name].blob_path.is_file()
