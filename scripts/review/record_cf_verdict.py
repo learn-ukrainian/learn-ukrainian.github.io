@@ -2079,17 +2079,17 @@ def repository_review_rounds(repository: str, policy: Path | None = None) -> int
     return budgets.get(normalize_repository(repository), DEFAULT_REVIEW_ROUNDS)
 
 
-def review_round_budget(facts: BranchReviewFacts) -> int:
+def review_round_budget(facts: BranchReviewFacts, repository: str) -> int:
     """Rounds one PR may spend: 5 on a security-sensitive change, else its repository's budget (C-2902, #12584).
 
     The tier comes from the branch's own changed paths, the shared rule that
     raises a security-sensitive target to critical. The review task's
     caller-supplied risk never raises it: the dispatcher of a review can be
-    the author. Otherwise the budget is the one the target repository declares
-    (:func:`repository_review_rounds`), 3 when it declares none.
+    the author. Otherwise the budget is the one ``repository``, the PR's target,
+    declares (:func:`repository_review_rounds`), 3 when it declares none.
     """
     # Read first: a policy that cannot be read refuses every budget decision, the elevated tier's too.
-    declared = repository_review_rounds(facts.repository)
+    declared = repository_review_rounds(repository)
     if is_security_sensitive_change(facts.changed_paths, facts.scope_paths):
         return ELEVATED_REVIEW_ROUNDS
     return declared
@@ -2389,7 +2389,7 @@ def budget_admission(
     )
     from scripts.review.repair_round import repair_heads
 
-    budget = review_round_budget(facts)
+    budget = review_round_budget(facts, repository)
     receipts = _repair_receipts(task_root)
     return require_review_round_within_budget(
         comments,
@@ -3132,7 +3132,7 @@ def budget_check(
         "admitted": True,
         "reviewed_heads": len(heads | set(unrecorded)),
         "unrecorded_rounds": [{"head": head, "tasks": tasks} for head, tasks in sorted(unrecorded.items())],
-        "budget": review_round_budget(facts),
+        "budget": review_round_budget(facts, repository),
         "head_already_reviewed": already,
         **receipt,
     }
