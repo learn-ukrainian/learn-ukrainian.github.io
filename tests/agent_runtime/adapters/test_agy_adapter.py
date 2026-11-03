@@ -234,7 +234,11 @@ def test_missing_saved_tool_result_is_marked_file_removed(tmp_path: Path) -> Non
 
 
 def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
-    """A completed Sources call with no stream output receives the step file through the inliner."""
+    """A completed Sources call with no stream output receives the step file through the inliner.
+
+    The event is the real AGY step_update shape: tool_name and tool_info.name are
+    both call_mcp_tool, and Arguments is a dict.
+    """
     app_data = (tmp_path / "antigravity-cli").resolve()
     steps = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "steps"
     output = steps / "34" / "output.txt"
@@ -248,7 +252,14 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
     saved = agy_module.export_saved_step_outputs(app_data)
 
     def event(step: int, body: str | None) -> dict:
-        info: dict = {"parameters": {"ServerName": "sources", "ToolName": "search_text", "Arguments": "{}"}}
+        info: dict = {
+            "name": "call_mcp_tool",
+            "parameters": {
+                "ServerName": "sources",
+                "ToolName": "search_text",
+                "Arguments": {},
+            },
+        }
         if body is not None:
             info["output"] = body
         return {
@@ -257,6 +268,7 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
                 "conversation_id": CONVERSATION_ID,
                 "state": "DONE",
                 "step_index": step,
+                "step_type": "tool",
                 "tool_name": "call_mcp_tool",
                 "tool_info": info,
             },
