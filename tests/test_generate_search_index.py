@@ -923,34 +923,56 @@ def test_pinned_run_writes_the_ignored_build_dir_and_never_the_committed_snapsho
         assert (pinned_data / name).is_file(), name
     assert [p.name for p in (tmp_path / gsi.PINNED_BROWSE_DIR).glob("*.json")] == ["І.json"]
     # The generator records which runtime the set came from, last; the site rejects a set without it.
-    assert json.loads((pinned_data / gsi.PINNED_SOURCE_MARKER).read_bytes()) == {
-        "schema": "atlas-pinned-source",
-        "schemaVersion": 1,
-        "dataVersion": "atlas-v1-test",
-        "runtimeManifestSha256": "ab" * 32,
+    first = json.loads((pinned_data / gsi.PINNED_SOURCE_MARKER).read_bytes())
+    assert (first["schema"], first["schemaVersion"]) == ("atlas-pinned-source", 2)
+    assert (first["dataVersion"], first["runtimeManifestSha256"]) == ("atlas-v1-test", "ab" * 32)
+    # The marker binds the canonical set by content digest. A run that wrote every canonical
+    # output publishes its own marker; a run with any override publishes none and leaves the
+    # earlier one, whose digests the changed canonical files no longer match.
+    import hashlib
+
+    marker_file = pinned_data / gsi.PINNED_SOURCE_MARKER
+    recorded = json.loads(marker_file.read_bytes())
+    assert recorded["files"] == {
+        name: hashlib.sha256((pinned_data / name).read_bytes()).hexdigest() for name in recorded["files"]
     }
-    # A later run that rewrites only some canonical outputs (an override elsewhere) must not
-    # leave the earlier marker certifying a mixed set, nor publish a marker of its own.
+    assert set(recorded["files"]) == {
+        "lexicon-search-index.json",
+        "lexicon-search-aliases.json",
+        "lexicon-search-shards.json",
+        "lexicon-browse-meta.json",
+        "lexicon-browse-flagged.json",
+    }
+    assert recorded["browse"] == {
+        shard.name: hashlib.sha256(shard.read_bytes()).hexdigest()
+        for shard in (tmp_path / gsi.PINNED_BROWSE_DIR).glob("*.json")
+    }
+    other_row = {"s": "марія", "l": "Марія", "g": "Maria", "r": "maria", "t": "lemma"}
     monkeypatch.setattr(
         vendor,
         "build_pinned_search",
-        lambda tree: ([row], [], {"dataVersion": "atlas-v1-other", "runtimeManifestSha256": "cd" * 32}),
+        lambda tree: ([other_row], [], {"dataVersion": "atlas-v1-other", "runtimeManifestSha256": "cd" * 32}),
     )
     assert main(["--runtime-tree", str(tmp_path / "tree"), "--aliases-out", str(tmp_path / "custom/aliases.json")]) == 0
-    assert not (pinned_data / gsi.PINNED_SOURCE_MARKER).exists()
-    assert (tmp_path / "custom/aliases.json").is_file()
+    assert json.loads(marker_file.read_bytes()) == recorded  # not republished
+    assert recorded["files"]["lexicon-search-index.json"] != hashlib.sha256(
+        (pinned_data / "lexicon-search-index.json").read_bytes()
+    ).hexdigest()  # the canonical index changed, so the old marker no longer certifies the set
     assert main(["--runtime-tree", str(tmp_path / "tree")]) == 0
-    assert json.loads((pinned_data / gsi.PINNED_SOURCE_MARKER).read_bytes())["dataVersion"] == "atlas-v1-other"
-    assert main(["--runtime-tree", str(tmp_path / "tree"), "--out", str(tmp_path / "custom/search.json")]) == 0
-    assert not (pinned_data / gsi.PINNED_SOURCE_MARKER).exists()
-    # An unpinned (legacy manifest) run that writes a canonical pinned path drops the marker too.
-    assert main(["--runtime-tree", str(tmp_path / "tree")]) == 0
-    assert (pinned_data / gsi.PINNED_SOURCE_MARKER).is_file()
+    republished = json.loads(marker_file.read_bytes())
+    assert republished["dataVersion"] == "atlas-v1-other"
+    assert republished["files"]["lexicon-search-index.json"] == hashlib.sha256(
+        (pinned_data / "lexicon-search-index.json").read_bytes()
+    ).hexdigest()
+    # An unpinned (legacy manifest) run writing a canonical path leaves digests that no longer match.
     manifest = tmp_path / "manifest.json"
     manifest.write_text('{"entries": []}', encoding="utf-8")
     monkeypatch.delenv("ATLAS_SEARCH_RUNTIME_TREE", raising=False)
     assert main(["--manifest", str(manifest), "--out", str(pinned_data / "lexicon-search-index.json")]) == 0
-    assert not (pinned_data / gsi.PINNED_SOURCE_MARKER).exists()
+    assert json.loads(marker_file.read_bytes()) == republished
+    assert republished["files"]["lexicon-search-index.json"] != hashlib.sha256(
+        (pinned_data / "lexicon-search-index.json").read_bytes()
+    ).hexdigest()
     # The ignored directory name is shared with the site reader's selection module.
     selection = (PROJECT_ROOT / "site/src/lib/lexicon/atlas-artifact-selection.mjs").read_text(encoding="utf-8")
     declared = re.search(r"PINNED_ARTIFACT_DIRNAME = '([^']+)'", selection)

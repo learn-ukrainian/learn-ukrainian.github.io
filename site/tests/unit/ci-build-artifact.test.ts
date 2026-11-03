@@ -23,11 +23,12 @@ import {
   type BuildRoots,
 } from '../helpers/ci-build-artifact';
 import {
-  PINNED_ARTIFACT_DIRNAME,
-  PINNED_SHARDS_SIDECAR,
+  PINNED_SELECTION_ENV,
   PINNED_SOURCE_MARKER,
   SELECTED_ARTIFACT_NAMES,
+  digestPinnedSet,
   readRuntimeTreeIdentity,
+  recordDerivedSearchShards,
 } from '../../src/lib/lexicon/atlas-artifact-selection.mjs';
 
 const HELPER = resolve(__dirname, '../helpers/ci-build-artifact.ts');
@@ -88,10 +89,15 @@ function makePinnedSet(fixture: BuildRoots, tag: string): { tree: string; pinned
     JSON.stringify({ browseShards: { А: { path: '/lexicon/browse/А.json' } } }),
   );
   writeFileSync(join(browseDir, 'А.json'), '[]\n');
-  const { dataVersion, runtimeManifestSha256 } = readRuntimeTreeIdentity(tree);
-  const marker = JSON.stringify({ dataVersion, runtimeManifestSha256 });
-  writeFileSync(join(dataDir, PINNED_SOURCE_MARKER), marker);
-  writeFileSync(join(fixture.siteDir, PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR), marker);
+  mkdirSync(join(fixture.siteDir, 'public/lexicon/search'), { recursive: true });
+  writeFileSync(join(fixture.siteDir, 'public/lexicon/search/a.json'), '[]\n');
+  // What a completed pinned generation and hydrate record: runtime identity, digests, derived shards.
+  const env = { [PINNED_SELECTION_ENV]: tree } as NodeJS.ProcessEnv;
+  writeFileSync(
+    join(dataDir, PINNED_SOURCE_MARKER),
+    JSON.stringify({ ...readRuntimeTreeIdentity(tree), ...digestPinnedSet(fixture.siteDir, env) }),
+  );
+  recordDerivedSearchShards(fixture.siteDir, env);
   return { tree, pinnedFile: join(dataDir, 'lexicon-search-index.json') };
 }
 
@@ -164,7 +170,8 @@ describe('frontend CI build record', () => {
     expect(() => verifyBuildRecord(fixture.recordPath, fixture)).not.toThrow();
 
     writeFileSync(pinnedFile, '["changed after the build"]\n');
-    expectRejected(fixture, /changed site\/\.atlas-pinned\/data\/lexicon-search-index\.json/);
+    // The shared gate rejects the file the marker no longer certifies before the input hash does.
+    expectRejected(fixture, /artifact lexicon-search-index\.json/);
     writeFileSync(pinnedFile, '["pinned"]\n');
 
     // Verifying under the committed selection would test the wrong artifact set.

@@ -29,14 +29,16 @@ export const PINNED_SELECTION_ENV = 'ATLAS_SEARCH_RUNTIME_TREE';
 /** Ignored build directory under `site/`; `generate_search_index.py` writes the same name. */
 export const PINNED_ARTIFACT_DIRNAME = '.atlas-pinned';
 /**
- * Written last by `generate_search_index.py` into the pinned data directory: the identity
- * of the runtime tree the set was generated from (removed first, so an interrupted
- * generation leaves no marker).
+ * Written last by `generate_search_index.py` into the pinned data directory, and only by a run
+ * that wrote every canonical output: the identity of the runtime tree the set came from plus the
+ * SHA-256 of each canonical artifact and browse shard. The gate recomputes the digests, so any
+ * later write to the set (another run, an override, an interrupted write) is detected whatever
+ * wrote it.
  */
 export const PINNED_SOURCE_MARKER = 'pinned-source.json';
 /**
  * Written into `.atlas-pinned/` by the Node hydrate step that derives `public/lexicon/search/*.json`
- * from the selected set: a copy of the marker those shards came from. The unpinned run deletes it.
+ * from the selected set: the SHA-256 of the marker those shards came from and of each shard.
  */
 export const PINNED_SHARDS_SIDECAR = 'search-shards-source.json';
 /** The generated JSON files whose location depends on the selection. */
@@ -141,6 +143,58 @@ export function browseShardFileNames(meta, metaPath) {
   });
 }
 
+/** @param {import('node:fs').PathLike} path */
+function sha256File(path) {
+  return createHash('sha256').update(readFileSync(path)).digest('hex');
+}
+
+/**
+ * SHA-256 of every `*.json` directly inside `dir`, keyed by file name.
+ * @param {string} dir
+ * @returns {Record<string, string>}
+ */
+function digestJsonFiles(dir) {
+  if (!existsSync(dir)) return {};
+  return Object.fromEntries(
+    readdirSync(dir)
+      .filter((name) => name.endsWith('.json'))
+      .sort()
+      .map((name) => [name, sha256File(join(dir, name))]),
+  );
+}
+
+/**
+ * Names whose recorded digest is missing, extra or different, for an error message.
+ * @param {string} label
+ * @param {unknown} recorded
+ * @param {Record<string, string>} actual
+ * @returns {string[]}
+ */
+function digestDifferences(label, recorded, actual) {
+  const expected = /** @type {Record<string, string>} */ (
+    recorded && typeof recorded === 'object' && !Array.isArray(recorded) ? recorded : {}
+  );
+  const names = new Set([...Object.keys(expected), ...Object.keys(actual)]);
+  return [...names]
+    .sort()
+    .filter((name) => expected[name] !== actual[name])
+    .map((name) => `${label} ${name}`);
+}
+
+/** The digests the pinned-source marker records: the canonical artifacts and every browse shard. */
+export function digestPinnedSet(siteRoot, env = process.env) {
+  const { dataDir, browseDir } = resolveSelectedArtifactLocations(siteRoot, env);
+  return {
+    files: Object.fromEntries(SELECTED_ARTIFACT_NAMES.map((name) => [name, sha256File(join(dataDir, name))]).sort()),
+    browse: digestJsonFiles(browseDir),
+  };
+}
+
+/** The digests the shards sidecar records: every derived `public/lexicon/search/*.json`. */
+export function digestDerivedSearchShards(siteRoot) {
+  return digestJsonFiles(join(resolve(siteRoot), 'public', 'lexicon', 'search'));
+}
+
 /**
  * Identity of an extracted Atlas runtime tree: its CURRENT data version and the SHA-256 of
  * that version's manifest, the same pair `build_pinned_search` reports.
@@ -209,38 +263,59 @@ export function assertSelectedArtifactsComplete(siteRoot, env = process.env) {
         ` but ${PINNED_SELECTION_ENV} selects ${selected.dataVersion} (${selected.runtimeManifestSha256})`,
     );
   }
-  // public/lexicon/search/*.json is derived from the selected set by a separate step; it must
-  // have been derived from this exact set (a committed-selection hydrate removes the record).
-  const sidecar = join(resolve(siteRoot), PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
-  if (!existsSync(sidecar) || !readFileSync(sidecar).equals(markerBytes)) {
+  // The files must still be the bytes the marker certified, whatever wrote them since.
+  const current = digestPinnedSet(siteRoot, env);
+  const changed = [
+    ...digestDifferences('artifact', marker.files, current.files),
+    ...digestDifferences('browse shard', marker.browse, current.browse),
+  ];
+  if (changed.length > 0) {
     throw new AtlasArtifactSelectionError(
-      `public/lexicon/search was not derived from the pinned set in ${dataDir};` +
+      `the pinned set in ${dataDir} changed after ${PINNED_SOURCE_MARKER} was written (${changed.slice(0, 5).join(', ')}` +
+        `${changed.length > 5 ? `, ${changed.length - 5} more` : ''}); regenerate it with the pinned hydrate`,
+    );
+  }
+  // public/lexicon/search/*.json is derived from the set by a separate step; it must still be
+  // exactly what that step wrote for this marker.
+  const sidecarPath = join(resolve(siteRoot), PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
+  const sidecar = existsSync(sidecarPath) ? JSON.parse(readFileSync(sidecarPath, 'utf8')) : null;
+  const markerSha256 = createHash('sha256').update(markerBytes).digest('hex');
+  const shardChanges = sidecar ? digestDifferences('search shard', sidecar.searchShards, digestDerivedSearchShards(siteRoot)) : [];
+  if (!sidecar || sidecar.markerSha256 !== markerSha256 || shardChanges.length > 0) {
+    throw new AtlasArtifactSelectionError(
+      `public/lexicon/search was not derived from the pinned set in ${dataDir}` +
+        `${shardChanges.length > 0 ? ` (${shardChanges.slice(0, 5).join(', ')})` : ''};` +
         ' run hydrate-lexicon-api-shards.ts with the pinned selection',
     );
   }
 }
 
 /**
- * Record, after the search shards under `public/lexicon/search` were derived from the selected
- * set, which pinned set they came from. The committed selection removes the record, so shards
- * derived from the committed copy never pass the pinned gate.
+ * Record, after the search shards under `public/lexicon/search` were derived from the pinned set,
+ * the marker they came from and each shard's digest. A no-op for the committed selection: shards
+ * derived from the committed copy simply fail the pinned gate's digest comparison.
  * @param {string} siteRoot
  * @param {NodeJS.ProcessEnv} [env]
  */
 export function recordDerivedSearchShards(siteRoot, env = process.env) {
-  const sidecar = join(resolve(siteRoot), PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
-  if (!isPinnedSelection(env)) {
-    rmSync(sidecar, { force: true });
-    return;
-  }
+  if (!isPinnedSelection(env)) return;
   const markerPath = join(resolveSelectedArtifactLocations(siteRoot, env).dataDir, PINNED_SOURCE_MARKER);
   if (!existsSync(markerPath)) {
     throw new AtlasArtifactSelectionError(
       `${PINNED_SELECTION_ENV} is set but ${markerPath} is missing; regenerate the pinned set before deriving search shards`,
     );
   }
+  const sidecar = join(resolve(siteRoot), PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
   mkdirSync(dirname(sidecar), { recursive: true });
-  writeFileSync(sidecar, readFileSync(markerPath));
+  writeFileSync(
+    sidecar,
+    `${JSON.stringify({
+      schema: 'atlas-pinned-search-shards',
+      schemaVersion: 1,
+      markerSha256: sha256File(markerPath),
+      searchShards: digestDerivedSearchShards(siteRoot),
+    })}\n`,
+  );
 }
 
 /**

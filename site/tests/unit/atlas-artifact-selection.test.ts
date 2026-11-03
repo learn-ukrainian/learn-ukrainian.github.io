@@ -21,8 +21,10 @@ import {
   SELECTED_ARTIFACT_NAMES,
   assertSelectedArtifactsComplete,
   atlasArtifactSelectionPlugin,
+  digestPinnedSet,
   installSelectedBrowseShards,
   readRuntimeTreeIdentity,
+  recordDerivedSearchShards,
   readSelectedArtifactText,
   resolveSelectedArtifactLocations,
 } from '../../src/lib/lexicon/atlas-artifact-selection.mjs';
@@ -48,8 +50,22 @@ function makeRuntimeTree(root: string, tag: string): string {
   return tree;
 }
 
-function sourceMarker(tree: string): string {
-  return JSON.stringify({ schema: 'atlas-pinned-source', schemaVersion: 1, ...readRuntimeTreeIdentity(tree) });
+/**
+ * What a completed pinned generation and hydrate leave behind for `tree`: the marker (runtime
+ * identity plus the digests of the files now on disk) and the derived-shards sidecar.
+ */
+function writeProvenance(root: string, tree: string): void {
+  const env = { [PINNED_SELECTION_ENV]: tree } as NodeJS.ProcessEnv;
+  write(
+    join(root, '.atlas-pinned/data', PINNED_SOURCE_MARKER),
+    JSON.stringify({
+      schema: 'atlas-pinned-source',
+      schemaVersion: 2,
+      ...readRuntimeTreeIdentity(tree),
+      ...digestPinnedSet(root, env),
+    }),
+  );
+  recordDerivedSearchShards(root, env);
 }
 
 /**
@@ -76,9 +92,9 @@ function makeSite(options: { pinned: boolean }): { root: string; env: NodeJS.Pro
       write(join(root, '.atlas-pinned/data', name), name === 'lexicon-browse-meta.json' ? meta('PINNED', ['А']) : `"PINNED ${name}"`);
     }
     write(join(root, '.atlas-pinned/public/lexicon/browse/А.json'), '"PINNED А"');
-    write(join(root, '.atlas-pinned/data', PINNED_SOURCE_MARKER), sourceMarker(treeA));
-    // The Node step that derived public/lexicon/search from this set records the marker it used.
-    write(join(root, PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR), sourceMarker(treeA));
+    // public/lexicon/search holds the shards the Node hydrate step derived from this set.
+    write(join(root, 'public/lexicon/search/p.json'), '["pinned-derived"]');
+    writeProvenance(root, treeA);
   }
   return { root, env: { [PINNED_SELECTION_ENV]: treeA } as NodeJS.ProcessEnv };
 }
@@ -130,10 +146,10 @@ describe('shared Atlas artifact selection (#12527)', () => {
     );
     // Same data version, different manifest bytes: identity includes the manifest digest.
     write(join(treeB, 'atlas/versions/atlas-v1-B/manifest.json'), '{"tag":"B2"}');
-    write(join(root, '.atlas-pinned/data', PINNED_SOURCE_MARKER), sourceMarker(treeB));
+    writeProvenance(root, treeB);
     write(join(treeB, 'atlas/versions/atlas-v1-B/manifest.json'), '{"tag":"B3"}');
     expect(() => assertSelectedArtifactsComplete(root, { [PINNED_SELECTION_ENV]: treeB })).toThrow(
-      /runtimeManifestSha256|generated from runtime/,
+      /generated from runtime atlas-v1-B/,
     );
     // The selected tree must exist and be readable.
     expect(() =>
@@ -144,15 +160,35 @@ describe('shared Atlas artifact selection (#12527)', () => {
     expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/has no pinned-source\.json/);
   });
 
-  it('rejects pinned data whose derived search shards came from another set or from the committed copy', () => {
+  it('rejects a pinned set or derived shards changed after their provenance was written, whatever wrote them', () => {
     const { root, env } = makeSite({ pinned: true });
+    const index = join(root, '.atlas-pinned/data/lexicon-search-index.json');
+    const browse = join(root, '.atlas-pinned/public/lexicon/browse/А.json');
+    const shard = join(root, 'public/lexicon/search/p.json');
     const sidecar = join(root, PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
     expect(() => assertSelectedArtifactsComplete(root, env)).not.toThrow();
 
-    // The sidecar belongs to a different generation of the set.
-    write(sidecar, sourceMarker(makeRuntimeTree(root, 'B')));
-    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/public\/lexicon\/search was not derived/);
-    // No sidecar at all: the shards were never derived from the pinned set.
+    // A canonical artifact rewritten by another run or an override (marker left behind).
+    write(index, '"rewritten by another writer"');
+    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/artifact lexicon-search-index\.json/);
+    write(index, '"PINNED lexicon-search-index.json"');
+    expect(() => assertSelectedArtifactsComplete(root, env)).not.toThrow();
+
+    // A single browse shard rewritten in place (same file names, so no stale or missing shard).
+    write(browse, '"rewritten shard"');
+    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/browse shard А\.json/);
+    write(browse, '"PINNED А"');
+
+    // Derived search shards: rewritten, removed (an interrupted hydrate), extra, or never recorded.
+    write(shard, '["rewritten"]');
+    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/search shard p\.json/);
+    rmSync(shard);
+    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/search shard p\.json/);
+    write(shard, '["pinned-derived"]');
+    write(join(root, 'public/lexicon/search/extra.json'), '[]');
+    expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/search shard extra\.json/);
+    rmSync(join(root, 'public/lexicon/search/extra.json'));
+    expect(() => assertSelectedArtifactsComplete(root, env)).not.toThrow();
     rmSync(sidecar);
     expect(() => assertSelectedArtifactsComplete(root, env)).toThrow(/public\/lexicon\/search was not derived/);
   });
@@ -225,6 +261,8 @@ describe('shared Atlas artifact selection (#12527)', () => {
     write(join(site, '.atlas-pinned/data/lexicon-search-index.json'), JSON.stringify([row('pinned')]));
     write(join(site, '.atlas-pinned/data/lexicon-search-shards.json'), shards('pinned'));
     write(join(site, 'public/lexicon/search/earlier-run.json'), '[]');
+    // The pinned inputs above replaced the fixture's; a pinned generation leaves a fresh marker.
+    writeProvenance(site, PINNED_ENV[PINNED_SELECTION_ENV] as string);
 
     const previous = process.env[PINNED_SELECTION_ENV];
     process.env[PINNED_SELECTION_ENV] = PINNED_ENV[PINNED_SELECTION_ENV];
@@ -237,11 +275,9 @@ describe('shared Atlas artifact selection (#12527)', () => {
     expect(readdirSync(join(site, 'public/lexicon/search'))).toEqual(['pinned.json']);
     expect(readFileSync(join(site, 'public/lexicon/search/pinned.json'), 'utf8')).toContain('"pinned"');
 
-    // The pinned hydrate ties the shards to the marker; a committed-selection hydrate drops the tie,
-    // so a later pinned gate refuses shards derived from the committed copy.
-    const sidecar = join(site, PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
-    const marker = readFileSync(join(site, '.atlas-pinned/data', PINNED_SOURCE_MARKER));
-    expect(readFileSync(sidecar).equals(marker)).toBe(true);
+    // The pinned hydrate recorded the shards it derived; the gate accepts exactly that state.
+    expect(() => assertSelectedArtifactsComplete(site, PINNED_ENV)).not.toThrow();
+    // A hydrate under the committed selection derives different shards from the committed copy.
     delete process.env[PINNED_SELECTION_ENV];
     try {
       writeSearchShardFiles(site);
@@ -249,7 +285,6 @@ describe('shared Atlas artifact selection (#12527)', () => {
       if (previous !== undefined) process.env[PINNED_SELECTION_ENV] = previous;
     }
     expect(readdirSync(join(site, 'public/lexicon/search'))).toEqual(['committed.json']);
-    expect(existsSync(sidecar)).toBe(false);
-    expect(() => assertSelectedArtifactsComplete(site, PINNED_ENV)).toThrow(/was not derived/);
+    expect(() => assertSelectedArtifactsComplete(site, PINNED_ENV)).toThrow(/search shard (committed|pinned)\.json/);
   });
 });

@@ -43,7 +43,7 @@ export function writeSearchShardFiles(siteRoot: string): number {
       "utf8",
     );
   }
-  // Tie these shards to the artifact set they were derived from (or drop the tie when committed).
+  // Record which pinned set these shards came from and their digests (a no-op when committed).
   recordDerivedSearchShards(siteRoot);
   return rowsByShard.size;
 }

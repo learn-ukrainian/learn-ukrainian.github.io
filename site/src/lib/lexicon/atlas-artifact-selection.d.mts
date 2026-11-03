@@ -26,6 +26,8 @@ export function selectedArtifactPath(name: string, siteRoot: string, env?: NodeJ
 export function readSelectedArtifactText(name: string, siteRoot: string, env?: NodeJS.ProcessEnv): string;
 export function readSelectedArtifactJson(name: string, siteRoot: string, env?: NodeJS.ProcessEnv): unknown;
 export function readRuntimeTreeIdentity(treeDir: string): { dataVersion: string; runtimeManifestSha256: string };
+export function digestPinnedSet(siteRoot: string, env?: NodeJS.ProcessEnv): { files: Record<string, string>; browse: Record<string, string> };
+export function digestDerivedSearchShards(siteRoot: string): Record<string, string>;
 export function browseShardFileNames(meta: unknown, metaPath: string): string[];
 export function assertSelectedArtifactsComplete(siteRoot: string, env?: NodeJS.ProcessEnv): void;
 export function recordDerivedSearchShards(siteRoot: string, env?: NodeJS.ProcessEnv): void;

@@ -1097,6 +1097,24 @@ def write_browse_outputs(
         (browse_dir / f"{letter}.json").write_bytes(_json_bytes(rows))
 
 
+def pinned_set_digests(data_dir: Path, browse_dir: Path) -> dict[str, dict[str, str]]:
+    """SHA-256 of the five canonical JSON artifacts and of every browse shard, as written on disk."""
+
+    names = (
+        DEFAULT_SEARCH_OUT.name,
+        DEFAULT_SEARCH_ALIASES_OUT.name,
+        DEFAULT_SEARCH_SHARDS_OUT.name,
+        DEFAULT_BROWSE_META_OUT.name,
+        DEFAULT_BROWSE_FLAGGED_OUT.name,
+    )
+    return {
+        "files": {name: hashlib.sha256((data_dir / name).read_bytes()).hexdigest() for name in sorted(names)},
+        "browse": {
+            shard.name: hashlib.sha256(shard.read_bytes()).hexdigest() for shard in sorted(browse_dir.glob("*.json"))
+        },
+    }
+
+
 def resolve_output_path(explicit: Path | None, committed_default: Path, *, pinned: bool) -> Path:
     """Pick one output path: explicit flag, else the pinned build dir or the committed snapshot."""
 
@@ -1195,9 +1213,9 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
     args.browse_flagged_out = resolve_output_path(args.browse_flagged_out, DEFAULT_BROWSE_FLAGGED_OUT, pinned=pinned)
     args.browse_dir = resolve_output_path(args.browse_dir, DEFAULT_BROWSE_DIR, pinned=pinned)
 
-    # The canonical marker certifies the whole canonical pinned set. Any run that writes a
-    # canonical pinned path (pinned or not, with an explicit override) drops it first, and only
-    # a pinned run that regenerates every canonical output together publishes it again.
+    # The pinned-source marker binds the canonical pinned set by content digest, so whatever else
+    # rewrites a canonical file later (another run, an override, an interrupted write) makes the
+    # site refuse the set. It is published only by a pinned run that wrote every canonical output.
     canonical_paths = [
         resolve_output_path(None, default, pinned=True).resolve()
         for default in (
@@ -1220,9 +1238,6 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
             args.browse_dir,
         )
     ]
-    canonical_marker = PINNED_DATA_DIR / PINNED_SOURCE_MARKER
-    if any(path in canonical_paths for path in written_paths):
-        canonical_marker.unlink(missing_ok=True)
 
     if args.runtime_tree is not None:
         # The vendor reader owns runtime membership and the public display
@@ -1242,13 +1257,14 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
         )
         verify_browse_artifacts_written(args.browse_meta_out, args.browse_dir, meta["total"])
         if written_paths == canonical_paths:
-            canonical_marker.write_bytes(
+            (PINNED_DATA_DIR / PINNED_SOURCE_MARKER).write_bytes(
                 _json_bytes(
                     {
                         "schema": "atlas-pinned-source",
-                        "schemaVersion": 1,
+                        "schemaVersion": 2,
                         "dataVersion": parity["dataVersion"],
                         "runtimeManifestSha256": parity["runtimeManifestSha256"],
+                        **pinned_set_digests(PINNED_DATA_DIR, PINNED_BROWSE_DIR),
                     }
                 )
             )

@@ -81,8 +81,14 @@ writes the pinned projection to the ignored `site/.atlas-pinned/` (`data/` and
 `site/src/lib/lexicon/atlas-artifact-selection.mjs`: a Vite plugin redirects the
 static JSON imports, the filesystem readers and the Node hydration script call
 the same functions, and `astro:build:done` replaces the `*.json` shards in `dist/lexicon/browse/` with
-the pinned shards (the prerendered browse page stays). A pinned build fails closed when the pinned set is missing,
-incomplete or carries a stale shard, or when the set was generated from a different runtime than the one selected now (the generator writes `pinned-source.json`, the runtime's data version and manifest digest, and only when one run regenerated every canonical output; it drops the marker before any run that writes a canonical pinned path), or when `public/lexicon/search/` was not derived from that set (the Node hydrate step copies the marker to `.atlas-pinned/search-shards-source.json`; an unpinned hydrate removes it); it never falls back to the committed files.
+the pinned shards (the prerendered browse page stays). A pinned build fails closed when the pinned set is missing, incomplete or carries a stale shard,
+and when it does not match the runtime selected now. The generator writes `pinned-source.json`
+(the runtime's data version and manifest digest, plus the SHA-256 of every canonical artifact and
+browse shard) only when one run wrote every canonical output, and the shared gate recomputes the
+digests, so any later write to the set (another run, an output override, an interrupted write) is
+refused whatever wrote it. The Node hydrate step records the digests of the search shards it derives
+into `public/lexicon/search/` in `.atlas-pinned/search-shards-source.json`, and the gate checks them
+too. A pinned build never falls back to the committed files.
 The Frontend CI build record binds `site/.atlas-pinned/` and records the
 selection, so a release build leaves `git status` empty and the worktree can be
 removed with the guarded remover. Do not set `ATLAS_SEARCH_RUNTIME_TREE` for
