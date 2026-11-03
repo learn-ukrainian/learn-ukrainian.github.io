@@ -491,7 +491,31 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
                            "nested_repository_unpushed", "github_deferred", git.CODE_UNAVAILABLE})
 
 
-def load_post_start_code() -> None:
+def _load_bound_review_code() -> None:
+    """Import what a bound formal review attempt (``review_attempt.run``) imports on demand.
+
+    Only that kind of run needs the build engine's manifest, the evidence sources, the review prompt checks and the agent runner with
+    its ``ai_llm`` package (hundreds of modules), so no other worker pays for them. The runner imports
+    ``ai_llm`` from ``scripts/``, which ``review_attempt.run`` puts on ``sys.path`` just before it imports the
+    runner; do the same, and leave ``sys.path`` as it was.
+    """
+    scripts_dir = str(Path(__file__).resolve().parents[1])
+    added = scripts_dir not in sys.path
+    if added:
+        sys.path.insert(0, scripts_dir)
+    try:
+        with contextlib.suppress(Exception):
+            from scripts.build.fresh import manifest  # noqa: F401
+            from scripts.curriculum.evidence import sources  # noqa: F401
+            from scripts.review.prompts import check, eligibility  # noqa: F401
+        with contextlib.suppress(Exception):
+            from scripts.agent_runtime import runner  # noqa: F401
+    finally:
+        if added:
+            sys.path.remove(scripts_dir)
+
+
+def load_post_start_code(bound_review: bool = False) -> None:
     """Import, as the worker starts, the modules its later steps import inside functions.
 
     Settlement and the other steps after the provider runs import part of their code on demand, from the
@@ -500,7 +524,7 @@ def load_post_start_code() -> None:
     run use the version it started with. The list holds the deferred imports of the modules a worker runs
     after start (this one, ``git``, the provider registry, the settlement chain, review attempts and
     their helpers) and the modules the dispatcher tests loaded after start. A new deferred import in
-    those steps belongs here. Each group is skipped whole when any module in it fails to import, whatever
+    those steps belongs here; ``bound_review`` adds what only a bound review attempt imports. Each group is skipped whole when any module in it fails to import, whatever
     the error, so the worker still starts; a step that then cannot load its code records
     ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a fresh process.
     """
@@ -529,22 +553,11 @@ def load_post_start_code() -> None:
             cursor,
             muse,
         )
-    # The runner imports the top-level ``ai_llm`` package from ``scripts/``, which review_attempt.run puts on
-    # sys.path just before it imports the runner; do the same, alone, and leave sys.path as it was.
-    scripts_dir = str(Path(__file__).resolve().parents[1])
-    added = scripts_dir not in sys.path
-    if added:
-        sys.path.insert(0, scripts_dir)
-    try:
-        with contextlib.suppress(Exception):
-            from scripts.agent_runtime import runner  # noqa: F401
-    finally:
-        if added:
-            sys.path.remove(scripts_dir)
+    if bound_review:
+        _load_bound_review_code()
     with contextlib.suppress(Exception):
-        from scripts.build.fresh import manifest  # noqa: F401
         from scripts.common import fallback_substitutions, nofollow_walk, release_layout, safe_open  # noqa: F401
-        from scripts.curriculum.evidence import codes, lock, sources  # noqa: F401
+        from scripts.curriculum.evidence import codes, lock  # noqa: F401
         from scripts.guardrails import delegate_ownership  # noqa: F401
         from scripts.lib import git_identity  # noqa: F401
         from scripts.opsec import git_push  # noqa: F401
@@ -564,7 +577,6 @@ def load_post_start_code() -> None:
             subject_seat,
             verdict_parser,
         )
-        from scripts.review.prompts import check, eligibility  # noqa: F401
         from scripts.review.receipts import ledger, outcomes  # noqa: F401
     with contextlib.suppress(Exception):
         from scripts.dispatcher import checks, host_admission, output_schema, review_attempt, scope  # noqa: F401
@@ -971,8 +983,8 @@ def _adopt_orphans() -> bool:
 
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
-    load_post_start_code()
     record = json.loads(path.read_text())
+    load_post_start_code(bool(record.get("review_attempt")))
     if record.get("require_review_verdict") is True:
         # The code this supervisor loaded; settlement records it again (#12399).
         record["dispatcher_code_start"] = _dispatcher_code()
