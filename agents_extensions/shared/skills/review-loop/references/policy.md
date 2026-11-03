@@ -232,6 +232,7 @@ Review budgets, seats, ladders, and exact-head binding are unchanged. A P0, P1, 
   risk floors, security sign-off roles, subject exclusions and `SELF_REVIEW_DETECTED` apply
   per seat. Record both verdicts. Enqueue requires both APPROVEs at the same exact head;
   either rejection blocks, and a moved head voids both. One pair counts as one round.
+  Verified app-bot commits have no model family and remain part of the whole-diff context.
   A commit carrying both families' trailers cannot be partitioned without assigning a
   reviewer its own family's work and fails closed. Single-family, red-team and zero-trailer
   plans remain unchanged. This rule adds no reviewer seat or override.

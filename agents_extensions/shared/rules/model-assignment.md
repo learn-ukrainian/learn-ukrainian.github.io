@@ -1081,6 +1081,7 @@ The resolver returns a pair using existing qualified seats: one Anthropic review
 OpenAI-authored commits and one OpenAI reviewer for the Anthropic-authored commits. Each
 gets the whole PR diff as context. Both must APPROVE the same exact head before enqueue;
 either rejection blocks, and a head move voids both approvals. The pair counts as one round.
+Verified app-bot commits have no model family and remain part of the whole-diff context.
 Risk floors, security sign-off roles, subject exclusions and `SELF_REVIEW_DETECTED` bind per
 seat. A commit carrying both families' trailers cannot be independently partitioned and
 fails closed. Single-family routing, red-team and zero-trailer plans remain unchanged;

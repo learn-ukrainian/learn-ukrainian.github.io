@@ -895,7 +895,7 @@ class BranchReviewFacts:
 
     @property
     def mixed_family(self) -> bool:
-        return self.excluded_families == MIXED_REVIEW_FAMILIES
+        return self.excluded_families - {VERIFIED_APP_BOT} == MIXED_REVIEW_FAMILIES
 
     @property
     def unresolved_authors(self) -> tuple[str, ...]:

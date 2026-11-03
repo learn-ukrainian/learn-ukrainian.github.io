@@ -544,11 +544,11 @@ MIXED_REVIEW_FAMILIES = frozenset({"anthropic", "openai"})
 
 def mixed_family_review(inputs: ResolverInputs) -> bool:
     """The approved two-family code/infra plan, never a red-team or unattested plan."""
+    authors = complete_author_families(inputs, resolve_author_family(inputs.author_model, inputs.author_family))
     return (
         inputs.review_profile in {"code", "infra"}
-        and frozenset(family for _sha, family in inputs.author_commits) == MIXED_REVIEW_FAMILIES
-        and complete_author_families(inputs, resolve_author_family(inputs.author_model, inputs.author_family))
-        == MIXED_REVIEW_FAMILIES
+        and frozenset(family for _sha, family in inputs.author_commits) - {VERIFIED_APP_BOT} == MIXED_REVIEW_FAMILIES
+        and authors is not None and authors - {VERIFIED_APP_BOT} == MIXED_REVIEW_FAMILIES
     )
 
 
