@@ -38,7 +38,7 @@ from typing import Any, TypeGuard
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import main_checkout_root, state_root
 from scripts.guardrails import worktree_containment
 from scripts.orchestration.dead_worker_state import worker_liveness
 from scripts.orchestration.execution_safe_git import SafeGitRunner
@@ -568,10 +568,18 @@ class ControlPlaneError(RuntimeError):
 def public_primary_root() -> Path:
     """Return the public primary checkout that owns dispatch state.
 
+    This is the machinery state root (:func:`scripts.common.repo_root.state_root`):
+    the configured primary checkout, else the primary of the checkout this code
+    runs from. Sibling checkouts sit beside it. A configured value that cannot be
+    used raises :class:`ControlPlaneError`.
+
     Test seam: tests monkeypatch this to lay out a public primary and sibling
     checkouts under a temporary directory.
     """
-    return main_checkout_root(Path(__file__).resolve().parents[2])
+    try:
+        return state_root()
+    except ValueError as exc:
+        raise ControlPlaneError(f"machinery state root unusable: {exc}") from exc
 
 
 def identity_cache_publication_allowed(worktree: Path, tasks_dir: Path) -> bool:

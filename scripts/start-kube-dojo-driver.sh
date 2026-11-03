@@ -7,6 +7,12 @@
 # tmux session, for example:
 #   tmux new-session -d -s kube-dojo -c /home/ops/learn-ukrainian \
 #     -e CLAUDE_CONFIG_DIR=/home/ops/.claude scripts/start-kube-dojo-driver.sh
+# Roots (scripts/common/repo_root.py): ROOT below is the runtime root, the machinery
+# checkout this wrapper and launcher_core.sh ship in, so it is read from this file's
+# location. Everything the driver then targets comes from the machinery configuration
+# (LEARN_UKRAINIAN_PRIMARY_REPO_ROOT and the rest): `--repo kube-dojo` resolves the
+# kube-dojo checkout beside the configured primary, and task records, locks and the
+# lease stay on that primary's state root.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT/scripts/lib/launcher_core.sh"

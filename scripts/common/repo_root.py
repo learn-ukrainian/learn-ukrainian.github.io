@@ -1,11 +1,47 @@
-"""Repository root and project-interpreter resolvers."""
+"""Repository root and project-interpreter resolvers, and the one machinery root configuration.
+
+Machinery roots (#12681). Five roots are kept distinct, and the four that can live
+outside this checkout come from one configuration: environment variables read at the
+call (a systemd ``EnvironmentFile=``, a launcher or a test can supply them). An unset or
+empty variable keeps today's value, so the defaults are the behaviour before the
+configuration existed.
+
+========================  ====================================  =================================================
+Root                      Variable                              Default (today's behaviour)
+========================  ====================================  =================================================
+runtime (machinery code)  none: the checkout this file is in    ``Path(__file__).parents[2]``
+primary checkout          ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT``  ``main_checkout_root`` of the runtime checkout
+GitHub slug               ``LEARN_UKRAINIAN_GITHUB_SLUG``        ``learn-ukrainian/learn-ukrainian.github.io``
+state root                ``LEARN_UKRAINIAN_STATE_ROOT``         the primary checkout (holds ``batch_state/``)
+rules directory (policy)  ``LEARN_UKRAINIAN_RULES_DIR``          ``<checkout>/agents_extensions/shared/rules``
+interpreter               ``LEARN_UKRAINIAN_PYTHON``             :func:`project_interpreter`'s resolution order
+========================  ====================================  =================================================
+
+``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`` and ``LEARN_UKRAINIAN_PYTHON`` are the names the
+project-state reporter wrapper already reads; the configuration reuses them so one
+setting means one thing everywhere.
+
+Path values must be absolute; a relative value raises :class:`MachineryConfigError`
+(a ``ValueError``) rather than resolving against the working directory. The state root
+must name the primary checkout: moving state to another store is the operator's state
+cutover (machinery move step 9), so any other value is refused, which also keeps
+modules that still anchor ``batch_state/`` on the primary from splitting from those
+that read the state root.
+
+The runtime root is never configured. It is the code that is running, and a re-exec
+from a linked worktree (``scripts/dispatcher/primary.py``) still resolves that code's own
+primary from Git metadata, not from this configuration.
+"""
 
 from __future__ import annotations
 
 import importlib.util
 import os
+import re
 import stat
 import sys
+from collections.abc import Mapping
+from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -37,6 +73,119 @@ _install_redacted_environ()
 # Directory and final-component symlink hops followed while identifying a venv
 # entrypoint. POSIX SYMLOOP_MAX is commonly 40; longer chains fail closed.
 _MAX_SYMLINK_HOPS = 40
+
+PRIMARY_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+GITHUB_SLUG_ENV = "LEARN_UKRAINIAN_GITHUB_SLUG"
+STATE_ROOT_ENV = "LEARN_UKRAINIAN_STATE_ROOT"
+RULES_DIR_ENV = "LEARN_UKRAINIAN_RULES_DIR"
+INTERPRETER_ENV = "LEARN_UKRAINIAN_PYTHON"
+MACHINERY_ENV_VARS = (PRIMARY_ROOT_ENV, GITHUB_SLUG_ENV, STATE_ROOT_ENV, RULES_DIR_ENV, INTERPRETER_ENV)
+DEFAULT_GITHUB_SLUG = "learn-ukrainian/learn-ukrainian.github.io"
+RULES_DIR_REL = "agents_extensions/shared/rules"
+RUNTIME_ROOT = Path(__file__).resolve().parents[2]
+# GitHub owner (alphanumerics and inner hyphens) / repository name.
+_GITHUB_SLUG_RE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}")
+
+
+class MachineryConfigError(ValueError):
+    """A machinery root variable is set to a value that cannot be used; the message names it."""
+
+
+def _env(env: Mapping[str, str] | None) -> Mapping[str, str]:
+    return os.environ if env is None else env
+
+
+def _configured_path(name: str, env: Mapping[str, str] | None) -> Path | None:
+    """Absolute path named by ``name``, ``None`` when unset or empty; refuse a relative path."""
+    value = _env(env).get(name, "")
+    if not value:
+        return None
+    if not os.path.isabs(value):
+        raise MachineryConfigError(f"{name} must be an absolute path, got {value!r}")
+    return Path(value)
+
+
+def configured_primary_root(env: Mapping[str, str] | None = None) -> Path | None:
+    """The primary checkout named by the configuration, or ``None`` for the Git-derived default."""
+    return _configured_path(PRIMARY_ROOT_ENV, env)
+
+
+def primary_root(start: Path | None = None, env: Mapping[str, str] | None = None) -> Path:
+    """The configured primary checkout, else the primary that owns ``start`` (default: the runtime)."""
+    configured = configured_primary_root(env)
+    if configured is not None:
+        return configured
+    return main_checkout_root(RUNTIME_ROOT if start is None else start)
+
+
+def github_slug(env: Mapping[str, str] | None = None) -> str:
+    """The configured ``owner/name`` GitHub slug, else this repository's."""
+    value = _env(env).get(GITHUB_SLUG_ENV, "")
+    if not value:
+        return DEFAULT_GITHUB_SLUG
+    if not _GITHUB_SLUG_RE.fullmatch(value) or value.split("/")[1] in (".", ".."):
+        raise MachineryConfigError(f"{GITHUB_SLUG_ENV} must be an owner/name GitHub slug, got {value!r}")
+    return value
+
+
+def state_root(start: Path | None = None, env: Mapping[str, str] | None = None) -> Path:
+    """The checkout whose ``batch_state/`` holds dispatch state: the primary checkout.
+
+    A configured state root must be that same directory (compared after ``realpath``);
+    any other value would point state at a new store, which only the operator's state
+    cutover may do, so it is refused.
+    """
+    primary = primary_root(start, env)
+    configured = _configured_path(STATE_ROOT_ENV, env)
+    if configured is None:
+        return primary
+    if _realpath(configured) != _realpath(primary):
+        raise MachineryConfigError(
+            f"{STATE_ROOT_ENV} ({configured}) must be the primary checkout ({primary}); "
+            "moving dispatch state to another store is the operator's state cutover"
+        )
+    return configured
+
+
+def rules_dir(root: Path | None = None, env: Mapping[str, str] | None = None) -> Path:
+    """The configured rules directory, else ``root``'s (default: the runtime's) rules directory."""
+    configured = _configured_path(RULES_DIR_ENV, env)
+    if configured is not None:
+        return configured
+    return (RUNTIME_ROOT if root is None else Path(root)) / RULES_DIR_REL
+
+
+def configured_interpreter(env: Mapping[str, str] | None = None) -> Path | None:
+    """The interpreter named by the configuration, or ``None`` for :func:`project_interpreter`'s order."""
+    return _configured_path(INTERPRETER_ENV, env)
+
+
+@dataclass(frozen=True)
+class MachineryRoots:
+    """The five distinct roots and the GitHub slug, as one resolved view."""
+
+    runtime: Path
+    primary: Path
+    github_slug: str
+    state: Path
+    rules_dir: Path
+    interpreter: Path
+
+
+def machinery_roots(env: Mapping[str, str] | None = None) -> MachineryRoots:
+    """Resolve every machinery root from the configuration and its defaults.
+
+    Raises :class:`MachineryConfigError` for an unusable value and ``FileNotFoundError``
+    when no interpreter can be resolved.
+    """
+    return MachineryRoots(
+        runtime=RUNTIME_ROOT,
+        primary=primary_root(env=env),
+        github_slug=github_slug(env),
+        state=state_root(env=env),
+        rules_dir=rules_dir(env=env),
+        interpreter=project_interpreter(env=env),
+    )
 
 
 def main_checkout_root(repo_root: Path) -> Path:
@@ -194,14 +343,18 @@ def _venv_owners(interpreter: Path) -> set[Path]:
     )
 
 
-def project_interpreter(root: Path | None = None) -> Path:
+def project_interpreter(root: Path | None = None, *, env: Mapping[str, str] | None = None) -> Path:
     """Return the project interpreter for ``root`` or this checkout.
 
     Called when a spawn needs the interpreter, not while this module is
     imported. Import therefore succeeds when no project interpreter can be
     found; this function raises ``FileNotFoundError`` at the call.
 
-    Resolution order for the requested checkout:
+    A configured ``LEARN_UKRAINIAN_PYTHON`` wins for every checkout: it must be an
+    absolute path to an existing file, else this raises (``MachineryConfigError``
+    for a relative path, ``FileNotFoundError`` for a missing file). The operator who
+    sets it vouches for it, as for ``PATH``. Unset, the resolution order for the
+    requested checkout is:
 
     1. The primary checkout's ``.venv/bin/python`` when the file exists.
        The primary is the git common-dir checkout ``main_checkout_root``
@@ -223,7 +376,12 @@ def project_interpreter(root: Path | None = None) -> Path:
        components that cannot be inspected, and a link that changes between
        the check and the read fail closed with ``FileNotFoundError``.
     """
-    repo = Path(__file__).resolve().parents[2] if root is None else Path(root)
+    configured = configured_interpreter(env)
+    if configured is not None:
+        if not configured.is_file():
+            raise FileNotFoundError(f"project interpreter not found: {INTERPRETER_ENV}={configured} is not a file")
+        return configured
+    repo = RUNTIME_ROOT if root is None else Path(root)
     primary_root = main_checkout_root(repo)
     primary = _venv_python(primary_root)
     if primary.is_file():
@@ -258,5 +416,12 @@ def resolve_repo_root(script_path: Path, parents: int) -> Path:
     worktree branch's. Intentional: dispatch infrastructure is ground truth
     in the primary; cross-cutting changes to dispatch.py plus its lazy deps
     must land on main before they steer live dispatches.
+
+    A configured ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`` names that primary
+    directly, so machinery installed outside the checkout anchors state on
+    the configured primary instead of on its own install location.
     """
+    configured = configured_primary_root()
+    if configured is not None:
+        return configured
     return main_checkout_root(script_path.resolve().parents[parents])
