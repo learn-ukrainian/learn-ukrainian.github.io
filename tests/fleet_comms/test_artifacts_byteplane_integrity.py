@@ -569,7 +569,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         linked.blob_path.unlink()
         refuses_after = pytest.raises(ArtifactStoreError, match="is missing")
         with refuses_after:
-            store.scan_citations(good, now=now)
+            store.scan_citations(good, now=now, accept_truncated=frozenset({cut_blob.sha256}))
 
     # An acknowledgement covers only the end of the blob's own bytes, and only
     # bytes that hash to the acknowledged digest.
