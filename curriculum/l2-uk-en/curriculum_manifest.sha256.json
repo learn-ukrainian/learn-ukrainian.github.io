@@ -1334,7 +1334,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-intro/module.md",
-      "sha256": "7a8f273a6c7ae22923c9de67d0ff5104cb6082e2250ff6ae32cbd8216bf87a23"
+      "sha256": "495e5c733eb577f367c2ed428d7dc5acb2a377281a9f4b151e0edbc2153735e7"
     },
     {
       "path": "curriculum/l2-uk-en/a2/genitive-intro/resources.yaml",
@@ -6154,7 +6154,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/genitive-intro.yaml",
-      "sha256": "2d29749dbce3637cd2879962325c258f360b5c13a0b98578b4fea6df4b5874e9"
+      "sha256": "a49b7ef842ccc50bb3117da464532497fec6623c7f97d10a99fdb4341f35ce0b"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/genitive-plural.yaml",
@@ -14302,7 +14302,7 @@
     },
     {
       "path": "site/src/content/docs/a2/genitive-intro.mdx",
-      "sha256": "d587711b152c7ac0f132a7bc9428f6b7c1e572371e5746b97af7319fba14d95a"
+      "sha256": "1cf9acae347c698ddc854f5af709ddb2a9f897870c8aa573a4d825e7cef24034"
     },
     {
       "path": "site/src/content/docs/a2/genitive-plural.mdx",
