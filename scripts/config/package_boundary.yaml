@@ -1,0 +1,525 @@
+schema: package-boundary.v1
+packages:
+  agent_runtime:
+    reason: operator classification
+    role: machinery
+  agy_hooks:
+    reason: operator classification
+    role: machinery
+  ai_agent_bridge:
+    reason: operator classification
+    role: machinery
+  ai_llm:
+    reason: LLM invocation policy and cooldowns for agent adapters.
+    role: machinery
+  analytics:
+    reason: 'Unsure: cost windows are fleet spend and vocabulary progression is learner data. Product, so the monitor import stays on the ratchet.'
+    role: product
+  api:
+    reason: operator classification
+    role: machinery
+  atlas:
+    reason: operator classification
+    role: product
+  audio:
+    reason: Pronunciation clips for Atlas and Practice.
+    role: product
+  audit:
+    reason: operator classification
+    role: product
+  bakeoff:
+    reason: 'Unsure: writer bake-off harness. Machinery, so its build and audit imports stay on the ratchet.'
+    role: machinery
+  batch:
+    reason: Curriculum-generation batch runner.
+    role: product
+  batch_gemini_runner:
+    reason: Curriculum batch execution split out of the batch runner.
+    role: product
+  bench:
+    reason: 'Unsure: V7 writer-matrix bench. Machinery, so a product import from it is ratcheted.'
+    role: machinery
+  benchmarks:
+    reason: Synthetic Atlas datasets.
+    role: product
+  build:
+    reason: operator classification
+    role: product
+  canary:
+    reason: Operational auth canaries.
+    role: machinery
+  ci:
+    reason: operator classification
+    role: machinery
+  common:
+    reason: Utilities already shared by build, audit, and tooling.
+    role: shared
+  config:
+    reason: YAML tables for fleet and tooling. scripts/config.py is a separate module.
+    role: shared
+  content:
+    reason: operator classification
+    role: product
+  control_plane:
+    reason: operator classification
+    role: machinery
+  crawl:
+    reason: operator classification
+    role: product
+  curriculum:
+    reason: operator classification
+    role: product
+  data:
+    reason: Learner stress and IPA override tables.
+    role: product
+  dataset:
+    reason: operator classification
+    role: product
+  debug:
+    reason: 'Unsure: local debug scripts. Machinery, so a product import from them is ratcheted.'
+    role: machinery
+  deploy:
+    reason: operator classification
+    role: product
+  dev:
+    reason: tokenize-uk smoke for the learner pipeline.
+    role: product
+  dispatcher:
+    reason: operator classification
+    role: machinery
+  docs:
+    reason: Repository document catalogue served by the knowledge API.
+    role: machinery
+  etymology:
+    reason: operator classification
+    role: product
+  eval:
+    reason: 'Unsure: lesson-evaluation harness that also drives the dispatcher. Machinery, so its build, wiki, and verification imports stay on the ratchet.'
+    role: machinery
+  evidence:
+    reason: Git-history census of agent repairs.
+    role: machinery
+  exercises:
+    reason: operator classification
+    role: product
+  fleet:
+    reason: operator classification
+    role: machinery
+  fleet_comms:
+    reason: operator classification
+    role: machinery
+  generate_mdx:
+    reason: operator classification
+    role: product
+  generators:
+    reason: operator classification
+    role: product
+  goal_driver:
+    reason: operator classification
+    role: machinery
+  guardrails:
+    reason: operator classification
+    role: machinery
+  hooks:
+    reason: operator classification
+    role: machinery
+  hygiene:
+    reason: operator classification
+    role: machinery
+  ingest:
+    reason: operator classification
+    role: product
+  launchd:
+    reason: launchd plist for the agent watcher.
+    role: machinery
+  launchers:
+    reason: operator classification
+    role: machinery
+  lexdata:
+    reason: operator classification
+    role: product
+  lexicon:
+    reason: operator classification
+    role: product
+  lib:
+    reason: Generic helpers the operator classified as shared; both sides may import them.
+    role: shared
+  linguistics:
+    reason: operator classification
+    role: product
+  lint:
+    reason: operator classification
+    role: machinery
+  maintenance:
+    reason: Task-state retention, session scratch, and venv drift.
+    role: machinery
+  migrate:
+    reason: One-shot curriculum and content tree migrations.
+    role: product
+  migrations:
+    reason: 'Unsure: textbook and plan schema changes share a directory with one broker-index script. Product, so a machinery import is caught.'
+    role: product
+  mphdict:
+    reason: operator classification
+    role: product
+  ocr:
+    reason: operator classification
+    role: product
+  open_dataset:
+    reason: operator classification
+    role: product
+  ops:
+    reason: operator classification
+    role: machinery
+  opsec:
+    reason: operator classification
+    role: machinery
+  orchestration:
+    reason: operator classification
+    role: machinery
+  pipeline:
+    reason: Curriculum generation pipeline used by build and the monitor.
+    role: product
+  practice:
+    reason: operator classification
+    role: product
+  practice_deck:
+    reason: operator classification
+    role: product
+  pre_commit:
+    reason: operator classification
+    role: machinery
+  pre_push:
+    reason: operator classification
+    role: machinery
+  projects:
+    reason: Open-model-data and Ukrainian eval projects used by atlas, ingest, and wiki.
+    role: product
+  publish:
+    reason: operator classification
+    role: machinery
+  rag:
+    reason: operator classification
+    role: product
+  readings:
+    reason: operator classification
+    role: product
+  research:
+    reason: Project research registry for orchestration and the monitor.
+    role: machinery
+  review:
+    reason: operator classification
+    role: machinery
+  scoring:
+    reason: Curriculum track scoring.
+    role: product
+  session_canary:
+    reason: operator classification
+    role: machinery
+  session_supervisor:
+    reason: operator classification
+    role: machinery
+  shared:
+    reason: Helpers both sides import.
+    role: shared
+  storage:
+    reason: operator classification
+    role: machinery
+  sync:
+    reason: Promote curriculum artifacts and regenerate landing pages.
+    role: product
+  telemetry:
+    reason: operator classification
+    role: machinery
+  tools:
+    reason: CLIs both sides may run.
+    role: shared
+  typesafe:
+    reason: Domain-free TypeSafe HTTP client both sides may call.
+    role: shared
+  utils:
+    reason: Version gates and small helpers with no domain policy.
+    role: shared
+  validate:
+    reason: operator classification
+    role: product
+  verification:
+    reason: operator classification
+    role: product
+  vocab:
+    reason: operator classification
+    role: product
+  vocab_audit:
+    reason: operator classification
+    role: product
+  wiki:
+    reason: operator classification
+    role: product
+  work:
+    reason: operator classification
+    role: machinery
+modules:
+  __init__.py:
+    reason: Unsure. The package init loads with scripts; machinery, so a product import there fails.
+    role: machinery
+  add_dialogue_situations.py:
+    reason: Adds dialogue situations to curriculum plans.
+    role: product
+  aggregate_review_findings.py:
+    reason: Shim for scripts/audit, which is product.
+    role: product
+  audit_level.py:
+    reason: Shim for scripts/audit, which is product.
+    role: product
+  audit_module.py:
+    reason: Shim for scripts/audit, which is product.
+    role: product
+  backfill_executor.py:
+    reason: Shim for scripts/batch, which is product.
+    role: product
+  batch_dispatcher.py:
+    reason: Shim for scripts/batch, which is product.
+    role: product
+  batch_gemini_config.py:
+    reason: Shim for scripts/batch, which is product.
+    role: product
+  batch_gemini_runner.py:
+    reason: Shim for scripts/batch, which is product.
+    role: product
+  batch_utils.py:
+    reason: Shim for scripts/batch, which is product.
+    role: product
+  build_dashboards.py:
+    reason: Shim for scripts/build, which is product.
+    role: product
+  build_landing_pages.py:
+    reason: Site landing-page generation.
+    role: product
+  calculate_richness.py:
+    reason: Shim for scripts/scoring, which is product.
+    role: product
+  check_decisions.py:
+    reason: Shim for scripts/audit, which is product.
+    role: product
+  check_issue_task_quality.py:
+    reason: Shim for scripts/ci, which is machinery.
+    role: machinery
+  check_review_issues.py:
+    reason: Shim for scripts/audit, which is product.
+    role: product
+  config.py:
+    reason: Unsure versus the shared YAML directory scripts/config. Python binds scripts.config to this module; it mixes dispatch floors with pedagogy, so its product imports stay on the ratchet.
+    role: machinery
+  consultation_cli.py:
+    reason: Shim for scripts/tools, which is shared.
+    role: shared
+  context_canary.py:
+    reason: Context-integrity canary for long agent sessions.
+    role: machinery
+  convert_seminar_plans_v6.py:
+    reason: Shim for scripts/tools, which is shared.
+    role: shared
+  curriculum_gap_analysis.py:
+    reason: Curriculum coverage against the state standard.
+    role: product
+  cursor_cold_start.py:
+    reason: Cursor cold-start fetch of the rules API.
+    role: machinery
+  deploy_codex_home.py:
+    reason: Deploys Codex agent assets, not the learner site.
+    role: machinery
+  dispatch.py:
+    reason: Dispatcher command-line entry.
+    role: machinery
+  driver_blockers.py:
+    reason: Fleet finalization alerts.
+    role: machinery
+  driver_state.py:
+    reason: Pinned per-epic driver facts.
+    role: machinery
+  extract_track_metrics.py:
+    reason: Shim for scripts/tools, which is shared.
+    role: shared
+  fill_template.py:
+    reason: Shim for scripts/generate_mdx, which is product.
+    role: product
+  fix_external_resources.py:
+    reason: Shim for scripts/tools, which is shared.
+    role: shared
+  fleet_repos.py:
+    reason: Shim for scripts/orchestration, which is machinery.
+    role: machinery
+  gemini_output.py:
+    reason: Shim for scripts/tools, which is shared.
+    role: shared
+  generate_a2_plans.py:
+    reason: Shim for scripts/generators, which is product.
+    role: product
+  generate_curriculum_stats.py:
+    reason: Site curriculum-stats data from the manifest.
+    role: product
+  generate_dashboard_data.py:
+    reason: Shim for scripts/generate_mdx, which is product.
+    role: product
+  generate_ipa.py:
+    reason: Shim for scripts/generate_mdx, which is product.
+    role: product
+  generate_json.py:
+    reason: Shim for scripts/generate_mdx, which is product.
+    role: product
+  generate_landing_pages.py:
+    reason: Site landing pages from curriculum.yaml.
+    role: product
+  generate_level_status.py:
+    reason: Shim for scripts/generate_mdx, which is product.
+    role: product
+  generate_mdx.py:
+    reason: Thin wrapper for the generate_mdx package.
+    role: product
+  generate_mdx_direct.py:
+    reason: Shim for scripts/generate_mdx, which is product.
+    role: product
+  generate_seo.py:
+    reason: Shim for scripts/generate_mdx, which is product.
+    role: product
+  gh_merge_queue_status.py:
+    reason: GitHub merge-queue status.
+    role: machinery
+  github_check_rollup.py:
+    reason: GitHub check-run rollup.
+    role: machinery
+  github_graphql_budget.py:
+    reason: GitHub GraphQL budget observation.
+    role: machinery
+  github_rest_cache.py:
+    reason: GitHub REST cache for the monitor and work pollers.
+    role: machinery
+  inbox_pending.py:
+    reason: Read-only pending-order probe for the AGY hook.
+    role: machinery
+  level_config.py:
+    reason: Resolves parallel curriculum levels to their pedagogical base.
+    role: product
+  lexical_sandbox.py:
+    reason: Shim for scripts/vocab, which is product.
+    role: product
+  lint_ipa.py:
+    reason: Shim for scripts/lint, which is machinery.
+    role: machinery
+  lint_prompts.py:
+    reason: Shim for scripts/lint, which is machinery.
+    role: machinery
+  manifest_utils.py:
+    reason: Loader for curriculum.yaml.
+    role: product
+  md_to_yaml.py:
+    reason: Shim for scripts/content, which is product.
+    role: product
+  navsi200_asr_bakeoff.py:
+    reason: Ukrainian transcript bake-off for navsi200 lessons.
+    role: product
+  navsi200_captions.py:
+    reason: navsi200 caption fetcher.
+    role: product
+  navsi200_catalog.py:
+    reason: navsi200 lesson catalog.
+    role: product
+  orientation_packet.py:
+    reason: Bounded orientation packet for an agent lane.
+    role: machinery
+  path_safety.py:
+    reason: Path checks for user-provided values; no learner or fleet policy.
+    role: shared
+  paths.py:
+    reason: Repo and scripts directory constants every script may import.
+    role: shared
+  pipeline.py:
+    reason: Shim for scripts/build, which is product.
+    role: product
+  pipeline_lib.py:
+    reason: Compatibility shim for the curriculum pipeline package.
+    role: product
+  plan_autofix.py:
+    reason: Shim for scripts/tools, which is shared.
+    role: shared
+  populate_vocab_db.py:
+    reason: Shim for scripts/vocab, which is product.
+    role: product
+  proofread.py:
+    reason: Shim for scripts/content, which is product.
+    role: product
+  rag_batch_verify.py:
+    reason: Shim for scripts/rag, which is product.
+    role: product
+  rehash_module.py:
+    reason: Shim for scripts/migrate, which is product.
+    role: product
+  research_quality.py:
+    reason: Shim for scripts/research, which is machinery.
+    role: machinery
+  rewrite_activity_hints.py:
+    reason: Rewrites activity hints in curriculum plans.
+    role: product
+  score_track.py:
+    reason: Shim for scripts/scoring, which is product.
+    role: product
+  secret_redactor.py:
+    reason: Secret redaction for agent egress.
+    role: machinery
+  slug_utils.py:
+    reason: Unsure versus a shared string helper. Curriculum slug construction, so the monitor import stays on the ratchet.
+    role: product
+  sync_landing_pages.py:
+    reason: Shim for scripts/sync, which is product.
+    role: product
+  token_usage.py:
+    reason: Agent token-usage analyzer.
+    role: machinery
+  validate_activities.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_activities_schema.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_activities_v2.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_direct.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_html.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_mdx.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_plan_config.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_plan_ordering.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_plans.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_vocab_yaml.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  validate_yaml.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  verify_review.py:
+    reason: Structured code-review verifier.
+    role: machinery
+  verify_track.py:
+    reason: Shim for scripts/validate, which is product.
+    role: product
+  video_discovery.py:
+    reason: Shim for scripts/content, which is product.
+    role: product
+  vocab_init.py:
+    reason: Shim for scripts/vocab, which is product.
+    role: product
+  yaml_activities.py:
+    reason: Activity YAML parser for the generator and the validator.
+    role: product
