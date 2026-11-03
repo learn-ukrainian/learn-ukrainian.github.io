@@ -1527,9 +1527,9 @@ def _behavior_proof_reference_error(
             or not all(isinstance(path, str) for path in changed_paths)
         ):
             return "behavior-proof learner-content file list is unreadable"
-        from scripts.orchestration.integration_sweep import changes_learner_content
+        from scripts.orchestration.integration_sweep import requires_ukrainian_behavior_receipt
 
-        if changes_learner_content(changed_paths) and receipt.get("review_profile") != "ukrainian":
+        if requires_ukrainian_behavior_receipt(changed_paths) and receipt.get("review_profile") != "ukrainian":
             return "learner-content change requires a ukrainian behavior-proof receipt"
     if receipt.get("review_profile") == "ukrainian":
         seat_error = _ukrainian_behavior_proof_error(

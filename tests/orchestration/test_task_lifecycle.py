@@ -3096,3 +3096,62 @@ def test_learner_content_diff_refuses_code_behavior_receipt(tmp_path: Path) -> N
     local_blockers = " ".join(local_result["hard_blockers"])
     assert "ukrainian" in local_blockers
     assert "behavior_proof" not in local_result["valid_evidence"].get("AC-IMPL", set())
+
+
+def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_payloads(
+    tmp_path: Path,
+) -> None:
+    """A metadata-only receipt forced into linguistic review.
+
+    ``registry/lexicon/atlas-runtime-release.json`` carries schema, digests, counts
+    and membership of already-built artifacts and no learner text. Closeout accepts
+    an infra behavior-proof receipt for that exact path, including beside ordinary
+    code. The same manifest plus any other learner path still requires the Ukrainian
+    receipt. Auto-deploy and the Ukrainian seat classification stay on the content prefix.
+    """
+    from scripts.deploy.auto_deploy_eligibility import decide_auto_deploy
+    from scripts.orchestration.integration_sweep import (
+        METADATA_ONLY_RELEASE_MANIFESTS,
+        changes_learner_content,
+    )
+
+    manifest = "registry/lexicon/atlas-runtime-release.json"
+    assert frozenset({manifest}) == METADATA_ONLY_RELEASE_MANIFESTS
+    payload = "curriculum/l2-uk-en/a2/liudyna-i-stosunky.mdx"
+    lookalike = "registry/lexicon/atlas-runtime-release.jsonl"
+    code = "scripts/deploy/prepare_atlas_runtime_release.py"
+    assert changes_learner_content([manifest]) is True
+    decision = decide_auto_deploy([manifest])
+    assert decision.deploy is False and decision.reason == "content_drift"
+
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates={"review_profile": "infra"})
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL",
+        "behavior_proof",
+        details=reference,
+    )
+
+    def evaluated(paths: list[str], *, local: bool = False) -> dict:
+        observation = _observation(_body())
+        if local:
+            observation["local"]["changed_paths"] = paths
+        else:
+            observation["github"]["pr"]["files"] = paths
+        return task_lifecycle.evaluate(ledger, observation)
+
+    for paths, local in (
+        ([manifest], False),
+        ([manifest, code], False),
+        ([manifest], True),
+    ):
+        result = evaluated(paths, local=local)
+        blockers = " ".join(result["hard_blockers"])
+        assert "behavior_proof" in result["valid_evidence"]["AC-IMPL"], blockers
+        assert "learner-content change requires a ukrainian behavior-proof receipt" not in blockers
+
+    for paths in ([manifest, payload], [lookalike], [manifest, lookalike]):
+        result = evaluated(paths)
+        blockers = " ".join(result["hard_blockers"])
+        assert "learner-content change requires a ukrainian behavior-proof receipt" in blockers
+        assert "behavior_proof" not in result["valid_evidence"].get("AC-IMPL", set())
