@@ -86,3 +86,45 @@ Dual-engine coverage lives in `tests/fleet_comms/test_efficiency_metrics_authori
 Phase 0b residuals on private #603 (not this PR): HTTP Idempotency-Key.
 
 No Patroni, dual-write, public bind, live DSN flip, or DSN in git.
+
+## Unreferenced artifact retention citation sources
+
+The unreferenced rule (#12574, #12611) requires all five declared sources.
+It also scans the store's message text, metadata and message-linked blobs.
+Every source is scanned for artifact ids and sha256 tokens.
+
+| Argument | Source |
+| --- | --- |
+| `--cited-from-tasks` | Dispatcher task tree, including archived task records and transcripts; at least one `.json` file |
+| `--cited-from-docs` | Repository docs tree, every file and subtree; at least one `.md` file |
+| `--cited-from-github` | Complete GitHub JSONL export of issues, PRs and comments, fetched within 24 hours; format in `retention --help` |
+| `--cited-from-export` | Caller-supplied citation export file, plain text or JSON; handoff tooling exports its artifact citations here |
+| `--cited-from-batch-state` | Entire `batch_state/` tree, including receipts outside `tasks/` and archived subtrees; no subtree exclusions |
+
+The export must be non-empty, and the batch-state tree must contain at least
+one file. Pass the full batch-state root even when the tasks tree is inside it;
+each source has its own coverage entry. An artifact cited only in the export
+or in a receipt stays held as cited. The export has no required schema.
+No private store or location is built into the scanner.
+
+A dry run writes nothing and reports each source's path, scanned bytes and
+file or record counts in `unreferenced.sources`. The tree receipts also count
+exact generated checkout-inventory blob listings ignored as non-citations.
+The export and batch-state scan use the same compressed-content handling as
+the other file sources. A missing, unreadable, incomplete or invalid declared
+source refuses the entire run before either retention rule computes candidates.
+Symlinks and non-regular files in the export or scanned trees also refuse.
+
+```bash
+.venv/bin/python -m scripts.fleet_comms retention \
+  --cited-from-tasks batch_state/tasks \
+  --cited-from-docs docs \
+  --cited-from-github github.jsonl \
+  --cited-from-export citations.txt \
+  --cited-from-batch-state batch_state
+```
+
+With no citation arguments, only the message rule runs. A partial source list
+refuses. The unreferenced rule keeps its minimum 90-day cutoff and existing
+retention classes. Apply still requires `--apply --backup-dir` and a verified
+backup before unlinking; no rows or digests are deleted.

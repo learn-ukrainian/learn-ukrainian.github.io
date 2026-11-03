@@ -348,12 +348,14 @@ class UnreferencedReport:
 class CitationSources:
     """The declared outside-the-store places that may cite an artifact (#12574).
 
-    All three are required: the unreferenced rule never runs on a partial set.
+    All five are required: the unreferenced rule never runs on a partial set.
     """
 
     tasks_dir: Path
     docs_dir: Path
     github_dump: Path
+    citation_export: Path
+    batch_state_dir: Path
 
 
 @dataclass(frozen=True, slots=True)
@@ -1959,8 +1961,8 @@ class ArtifactStore:
         readable end to end, so the unreferenced rule cannot start on a
         partial or blind scan. Coverage is evidence; the refusal is the
         protection. Sources: the store itself (message text, message-linked
-        blobs), the tasks directory, the repository docs tree and a GitHub
-        dump (``_scan_github``).
+        blobs), the tasks directory, the repository docs tree, a GitHub dump
+        (``_scan_github``), a citation export file and the full batch-state tree.
 
         Compressed content cut short refuses, with one exception:
         ``accept_truncated`` names message-linked blobs (by full sha256) whose
@@ -1982,6 +1984,8 @@ class ArtifactStore:
             self._scan_tree("tasks", sources.tasks_dir, state, required_suffix=".json", inventories=True),
             self._scan_tree("docs", sources.docs_dir, state, required_suffix=".md"),
             self._scan_github(sources.github_dump, state, now or datetime.now(UTC)),
+            self._scan_export(sources.citation_export, state),
+            self._scan_tree("batch_state", sources.batch_state_dir, state, inventories=True),
         ]
         if self._conn.in_transaction:
             self._conn.commit()
@@ -2100,19 +2104,33 @@ class ArtifactStore:
         return state.plain_bytes
 
     @staticmethod
+    def _scan_export(path: Path, state: _ScanState) -> dict[str, Any]:
+        """Scan the caller's citation export as content, without a format schema."""
+        try:
+            if not stat.S_ISREG(os.lstat(path).st_mode):
+                raise ArtifactStoreError(f"citation source export: {path} is not a regular file")
+            with open(path, "rb") as handle:
+                size = state.feed_stream(handle)
+        except OSError as exc:
+            raise ArtifactStoreError(f"citation source export: cannot read {path}: {exc}") from exc
+        if size == 0:
+            raise ArtifactStoreError(f"citation source export: {path} is empty")
+        return {"source": "export", "path": str(path), "files": 1, "bytes": size}
+
+    @staticmethod
     def _scan_tree(
         name: str,
         root: Path,
         state: _ScanState,
         *,
-        required_suffix: str,
+        required_suffix: str | None = None,
         inventories: bool = False,
     ) -> dict[str, Any]:
         """Scan every file under ``root`` end to end, or raise.
 
         Complete or refused: a symlink, a non-regular entry, an unreadable
-        or vanished file or directory, or a tree with no ``required_suffix``
-        file raises. Nothing is skipped. With ``inventories``, the blob-path
+        or vanished file or directory, or an empty tree raises. If given,
+        ``required_suffix`` must occur. Nothing is skipped. With ``inventories``, the blob-path
         listings inside the dispatcher's generated checkout inventories are
         not citations (``_INVENTORY_ENTRY``); they are counted in the coverage.
         """
@@ -2121,6 +2139,8 @@ class ArtifactStore:
             raise ArtifactStoreError(f"citation source {name}: cannot list {exc.filename}: {exc}")
 
         root = Path(root)
+        if root.is_symlink():
+            raise ArtifactStoreError(f"citation source {name}: {root} is a symlink")
         if not root.is_dir():
             raise ArtifactStoreError(f"citation source {name}: {root} is not a directory")
         files = required = total = listings = 0
@@ -2158,11 +2178,12 @@ class ArtifactStore:
                     ) from exc
                 files += 1
                 total += size
-                required += path.suffix == required_suffix
+                required += required_suffix is None or path.suffix == required_suffix
                 digest.update(f"{path.relative_to(root)}\0{size}\n".encode())
         if required < 1:
+            expected = f"no {required_suffix} file" if required_suffix is not None else "no file"
             raise ArtifactStoreError(
-                f"citation source {name}: {root} holds no {required_suffix} file; "
+                f"citation source {name}: {root} holds {expected}; "
                 "refusing an empty or wrong tree"
             )
         return {
