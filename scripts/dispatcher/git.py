@@ -403,7 +403,7 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
             from scripts.orchestration.worktree_claims import new_helper_creator, publish_helper_creator
 
             receipt_path, receipt = new_helper_creator(
-                path, repo_root=repo,
+                path.resolve(), repo_root=repo,
                 actor=creator_actor or os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID") or f"uid:{os.getuid()}",
                 source="dispatcher_helper", reason=f"dispatcher helper created {branch}",
             )
