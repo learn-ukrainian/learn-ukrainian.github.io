@@ -1430,6 +1430,10 @@ def validate_ukrainian_reply_claims(
     rows = payload.get("items", [])
     if not isinstance(rows, list):
         raise ContractError("CLAIM_PAYLOAD_MALFORMED: items must be a list")
+    # Claims are checked per finding mapping; any other envelope would yield zero claims.
+    findings = payload.get("findings", [])
+    if not isinstance(findings, list) or not all(isinstance(finding, Mapping) for finding in findings):
+        raise ContractError("CLAIM_PAYLOAD_MALFORMED: findings must be a list of mappings")
     working = {**payload, "items": [*rows, {
         "id": "review-prose", "verdict": "APPROVE", "finding": outside, "sources": "none",
     }]}

@@ -507,3 +507,19 @@ def test_equal_size_edit_with_restored_mtime_changes_the_digest(tmp_path: Path) 
     _assert_same_closure_as_main(root)
     assert after.digest != before.digest
     assert after.files["scripts/kept.py"] != before.files["scripts/kept.py"]
+
+
+def test_non_list_findings_envelope_is_refused_not_zero_claims():
+    """A findings envelope that is not a list of findings is refused before claim counting (#12617)."""
+    from scripts.review.review_contract import ContractError, validate_ukrainian_reply_claims
+
+    evidence = {"receipt": "missing", "quote": "fabricated excerpt"}
+    for findings in ({"evidence": evidence}, "fabricated excerpt", [["fabricated excerpt"]]):
+        reply = "VERDICT: APPROVE\n```yaml\n" + json.dumps({"findings": findings}) + "\n```\n"
+        with pytest.raises(ContractError, match="CLAIM_PAYLOAD_MALFORMED: findings"):
+            validate_ukrainian_reply_claims(reply)
+
+    control = "VERDICT: APPROVE\n```yaml\n" + json.dumps({"findings": [{"evidence": evidence}]}) + "\n```\n"
+    _, checked = validate_ukrainian_reply_claims(control)
+    assert (checked.claims_total, checked.claims_unsupported) == (1, 1)
+    assert checked.dropped_claims[0]["reason"] == "receipt_not_found"
