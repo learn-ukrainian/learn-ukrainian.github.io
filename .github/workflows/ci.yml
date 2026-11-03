@@ -240,6 +240,8 @@ jobs:
         with:
           path: .mypy_cache
           key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'pyproject.toml') }}
+      - name: Package boundary ratchet
+        run: .venv/bin/python -m scripts.lint.boundary_ratchet
       - name: Collect pytest for PR admission
         if: github.event_name == 'pull_request'
         # Report per-file counts instead of potentially oversized parameter IDs.

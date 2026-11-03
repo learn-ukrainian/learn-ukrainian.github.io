@@ -320,6 +320,16 @@ repos:
         pass_filenames: true
         stages: [pre-commit]
 
+      # Same boundary as the Checks job (#12660). Staged scripts Python is
+      # checked; staging only the baseline or the boundary file rechecks scripts/.
+      - id: boundary-ratchet
+        name: package boundary ratchet (scripts/)
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.boundary_ratchet
+        language: system
+        files: ^scripts/.*\.py$|^scripts/lint/boundary_baseline\.json$|^scripts/config/package_boundary\.yaml$
+        pass_filenames: true
+        stages: [pre-commit]
+
       # --- Repo-wide guards (B19, #9064; trimmed in #11315) ---
       # No push path runs pytest. CI Gate's pytest shards own repo-wide-marker-invariant
       # and task-store-resolver-guard. The required Checks job collects pytest on
