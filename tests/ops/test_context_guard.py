@@ -343,7 +343,9 @@ def test_handoff_done_in_watch_phase_starts_the_exit_without_waiting_for_the_thr
 
 def test_handoff_done_posted_to_fleet_in_watch_phase_is_honoured(tmp_path: Path) -> None:
     h = Harness(tmp_path, **{"harness": codex_pane(40)})
+    h.guard.tmux.proc_root = tmp_path / "unavailable-proc"
     h.tick("harness")
+    assert h.state["harness"]["compactions"] is None
     h.advance(5)
     h.posted["codex-monitor"] = cg.iso(h.moment)
     h.tick("harness")

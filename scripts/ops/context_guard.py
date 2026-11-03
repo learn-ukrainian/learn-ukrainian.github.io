@@ -783,8 +783,13 @@ class Guard:
         if lane.kind == "codex":
             s.pop("last_pct", None)
             s["compactions"] = None
-            s["compactions"] = self.tmux.codex_compactions(snap.agent)
-            extra = f" compactions={s['compactions']} compacting_now={'Compacting context' in text}"
+            try:
+                s["compactions"] = self.tmux.codex_compactions(snap.agent)
+            except TelemetryUnavailable as exc:
+                extra = f" compactions=unknown ({exc})"
+            else:
+                extra = f" compactions={s['compactions']}"
+            extra += f" compacting_now={'Compacting context' in text}"
         self.log(f"{lane.name} watch ctx_pct={pct}{extra}")
         pane_done = self._pane_done(s, done_lines(text), snap)
         if pane_done or self.handoff_posted(lane.sender, s["watch_since"]):
@@ -794,7 +799,12 @@ class Guard:
         if lane.kind == "claude":
             due = pct is not None and pct >= self.setting("claude_handoff_pct")
         else:
-            due = s.get("compactions", 0) >= self.setting("codex_max_compactions") and "Compacting context" not in text
+            compactions = s.get("compactions")
+            due = (
+                compactions is not None
+                and compactions >= self.setting("codex_max_compactions")
+                and "Compacting context" not in text
+            )
         if not due or self._human(lane):
             return
         self._enter_handoff(s, pct, done=False)
