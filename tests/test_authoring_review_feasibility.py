@@ -485,7 +485,11 @@ def test_cursor_auto_incoming_writer_adds_only_cursor_family(repo, tasks):
     assert auto.excluded_families == {"anthropic", "openai", "cursor"}
     # AGY remains independent. The surviving Grok Cursor route cannot review
     # a Cursor-authored branch.
-    assert selected(facts(repo, tasks, writer=OPUS), "medium") == "gemini-3.8-flash-high"
+    pair = recorder.structural_review_route(facts(repo, tasks, writer=OPUS), risk="medium", claude_account=HOST_ACCOUNT)
+    assert pair.selected is None and {seat.family for seat in pair.quorum} == {"anthropic", "openai"}
+    assert {scope.reviewer_family: scope.commits for scope in pair.review_scopes} == {
+        "anthropic": (repo.sha("HEAD"),), "openai": (repo.sha("HEAD^"),),
+    }
     resolution = recorder.structural_review_route(auto, risk="medium", claude_account=HOST_ACCOUNT)
     assert resolution.selected.name == "gemini-3.8-flash-high"
     trace = {entry.name: entry for entry in resolution.trace}
