@@ -47,6 +47,17 @@ DEFAULT_SEARCH_SHARD_DIR: Path | None = None
 DEFAULT_BROWSE_META_OUT = Path("site/src/data/lexicon-browse-meta.json")
 DEFAULT_BROWSE_FLAGGED_OUT = Path("site/src/data/lexicon-browse-flagged.json")
 DEFAULT_BROWSE_DIR = Path("site/public/lexicon/browse")
+# A pinned runtime tree is the Pages deployment projection, not the committed
+# DB-derived snapshot above. It writes to this ignored build directory so a
+# release build never rewrites tracked files (#12527). The site reads it through
+# site/src/lib/lexicon/atlas-artifact-selection.mjs, whose PINNED_ARTIFACT_DIRNAME
+# must name the same directory.
+PINNED_ARTIFACT_ROOT = Path("site/.atlas-pinned")
+PINNED_DATA_DIR = PINNED_ARTIFACT_ROOT / "data"
+PINNED_BROWSE_DIR = PINNED_ARTIFACT_ROOT / "public/lexicon/browse"
+# Written last, beside the pinned search index: the identity of the runtime tree the set
+# came from, so the site refuses a complete set left by another or interrupted generation.
+PINNED_SOURCE_MARKER = "pinned-source.json"
 
 CEFR_LEVELS = {"A1", "A2", "B1", "B2", "C1", "C2"}
 UKRAINIAN_ALPHABET = tuple("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ")
@@ -1038,14 +1049,20 @@ def build_browse_outputs(
     return meta, shards, flagged_rows
 
 
-def write_index(rows: list[dict[str, Any]], out_path: Path) -> None:
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_bytes(_json_bytes(rows))
+def _write_digest(path: Path, data: bytes) -> str:
+    """Write `data` and return the SHA-256 of exactly those bytes (never re-read from disk)."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    return hashlib.sha256(data).hexdigest()
 
 
-def write_aliases(rows: list[dict[str, Any]], out_path: Path) -> None:
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_bytes(_json_bytes(rows))
+def write_index(rows: list[dict[str, Any]], out_path: Path) -> str:
+    return _write_digest(out_path, _json_bytes(rows))
+
+
+def write_aliases(rows: list[dict[str, Any]], out_path: Path) -> str:
+    return _write_digest(out_path, _json_bytes(rows))
 
 
 def write_search_shards(
@@ -1053,17 +1070,17 @@ def write_search_shards(
     shards: Mapping[str, list[dict[str, Any]]],
     out_path: Path,
     shard_dir: Path | None,
-) -> None:
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_bytes(_json_bytes(payload))
+) -> str:
+    digest = _write_digest(out_path, _json_bytes(payload))
     if shard_dir is None:
-        return
+        return digest
 
     shard_dir.mkdir(parents=True, exist_ok=True)
     for old_shard in shard_dir.glob("*.json"):
         old_shard.unlink()
     for key, rows in shards.items():
         (shard_dir / f"{key}.json").write_bytes(_json_bytes(rows))
+    return digest
 
 
 def write_browse_outputs(
@@ -1073,17 +1090,50 @@ def write_browse_outputs(
     meta_out: Path,
     flagged_out: Path,
     browse_dir: Path,
-) -> None:
-    meta_out.parent.mkdir(parents=True, exist_ok=True)
-    meta_out.write_bytes(_json_bytes(meta))
-    flagged_out.parent.mkdir(parents=True, exist_ok=True)
-    flagged_out.write_bytes(_json_bytes(flagged_rows))
+) -> dict[str, Any]:
+    """Write the browse outputs; return the SHA-256 of the exact bytes written for each."""
+
+    meta_digest = _write_digest(meta_out, _json_bytes(meta))
+    flagged_digest = _write_digest(flagged_out, _json_bytes(flagged_rows))
 
     browse_dir.mkdir(parents=True, exist_ok=True)
     for old_shard in browse_dir.glob("*.json"):
         old_shard.unlink()
-    for letter, rows in shards.items():
-        (browse_dir / f"{letter}.json").write_bytes(_json_bytes(rows))
+    shard_digests = {
+        f"{letter}.json": _write_digest(browse_dir / f"{letter}.json", _json_bytes(rows))
+        for letter, rows in shards.items()
+    }
+    return {"meta": meta_digest, "flagged": flagged_digest, "shards": shard_digests}
+
+
+def pinned_set_digests(data_dir: Path, browse_dir: Path) -> dict[str, dict[str, str]]:
+    """SHA-256 of the five canonical JSON artifacts and of every browse shard, as written on disk."""
+
+    names = (
+        DEFAULT_SEARCH_OUT.name,
+        DEFAULT_SEARCH_ALIASES_OUT.name,
+        DEFAULT_SEARCH_SHARDS_OUT.name,
+        DEFAULT_BROWSE_META_OUT.name,
+        DEFAULT_BROWSE_FLAGGED_OUT.name,
+    )
+    return {
+        "files": {name: hashlib.sha256((data_dir / name).read_bytes()).hexdigest() for name in sorted(names)},
+        "browse": {
+            shard.name: hashlib.sha256(shard.read_bytes()).hexdigest() for shard in sorted(browse_dir.glob("*.json"))
+        },
+    }
+
+
+def resolve_output_path(explicit: Path | None, committed_default: Path, *, pinned: bool) -> Path:
+    """Pick one output path: explicit flag, else the pinned build dir or the committed snapshot."""
+
+    if explicit is not None:
+        return explicit
+    if not pinned:
+        return committed_default
+    if committed_default == DEFAULT_BROWSE_DIR:
+        return PINNED_BROWSE_DIR
+    return PINNED_DATA_DIR / committed_default.name
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1100,6 +1150,8 @@ def main(argv: list[str] | None = None) -> int:
 
 Outputs: search index, alias index, search shard metadata, browse metadata and letter shards.
 ATLAS_SEARCH_RUNTIME_TREE selects the verified tree prepared by site/scripts/prepare-atlas-search.py.
+A pinned run writes to site/.atlas-pinned/ (ignored) and leaves the committed snapshot under
+site/src/data and site/public/lexicon/browse untouched; an explicit output flag overrides this.
 This generator neither downloads a runtime nor changes a release or pointer.
 Exit codes: 0 on success; nonzero on invalid input or runtime integrity failure.
 Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-api.md; #10453.
@@ -1116,26 +1168,26 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
     parser.add_argument(
         "--runtime-tree",
         type=Path,
-        default=os.environ.get("ATLAS_SEARCH_RUNTIME_TREE") or None,
+        default=(os.environ.get("ATLAS_SEARCH_RUNTIME_TREE") or "").strip() or None,
         help="Verified extracted tree containing atlas/current.json; overrides DB (default: $ATLAS_SEARCH_RUNTIME_TREE or none).",
     )
     parser.add_argument(
         "--out",
         type=Path,
-        default=DEFAULT_SEARCH_OUT,
-        help=f"Article search index output (default: {DEFAULT_SEARCH_OUT}).",
+        default=None,
+        help=f"Article search index output (default: {DEFAULT_SEARCH_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--aliases-out",
         type=Path,
-        default=DEFAULT_SEARCH_ALIASES_OUT,
-        help=f"Runtime/DB alias index output (default: {DEFAULT_SEARCH_ALIASES_OUT}).",
+        default=None,
+        help=f"Runtime/DB alias index output (default: {DEFAULT_SEARCH_ALIASES_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--search-shards-out",
         type=Path,
-        default=DEFAULT_SEARCH_SHARDS_OUT,
-        help=f"Search shard metadata output (default: {DEFAULT_SEARCH_SHARDS_OUT}).",
+        default=None,
+        help=f"Search shard metadata output (default: {DEFAULT_SEARCH_SHARDS_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--search-shard-dir",
@@ -1146,22 +1198,55 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
     parser.add_argument(
         "--browse-meta-out",
         type=Path,
-        default=DEFAULT_BROWSE_META_OUT,
-        help=f"Browse metadata output (default: {DEFAULT_BROWSE_META_OUT}).",
+        default=None,
+        help=f"Browse metadata output (default: {DEFAULT_BROWSE_META_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--browse-flagged-out",
         type=Path,
-        default=DEFAULT_BROWSE_FLAGGED_OUT,
-        help=f"Flagged browse rows output (default: {DEFAULT_BROWSE_FLAGGED_OUT}).",
+        default=None,
+        help=f"Flagged browse rows output (default: {DEFAULT_BROWSE_FLAGGED_OUT}; pinned runs: site/.atlas-pinned/).",
     )
     parser.add_argument(
         "--browse-dir",
         type=Path,
-        default=DEFAULT_BROWSE_DIR,
-        help=f"Browse letter shard directory (default: {DEFAULT_BROWSE_DIR}).",
+        default=None,
+        help=f"Browse letter shard directory (default: {DEFAULT_BROWSE_DIR}; pinned runs: site/.atlas-pinned/).",
     )
     args = parser.parse_args(argv)
+    pinned = args.runtime_tree is not None
+    args.out = resolve_output_path(args.out, DEFAULT_SEARCH_OUT, pinned=pinned)
+    args.aliases_out = resolve_output_path(args.aliases_out, DEFAULT_SEARCH_ALIASES_OUT, pinned=pinned)
+    args.search_shards_out = resolve_output_path(args.search_shards_out, DEFAULT_SEARCH_SHARDS_OUT, pinned=pinned)
+    args.browse_meta_out = resolve_output_path(args.browse_meta_out, DEFAULT_BROWSE_META_OUT, pinned=pinned)
+    args.browse_flagged_out = resolve_output_path(args.browse_flagged_out, DEFAULT_BROWSE_FLAGGED_OUT, pinned=pinned)
+    args.browse_dir = resolve_output_path(args.browse_dir, DEFAULT_BROWSE_DIR, pinned=pinned)
+
+    # The pinned-source marker binds the canonical pinned set by content digest, so whatever else
+    # rewrites a canonical file later (another run, an override, an interrupted write) makes the
+    # site refuse the set. It is published only by a pinned run that wrote every canonical output.
+    canonical_paths = [
+        resolve_output_path(None, default, pinned=True).resolve()
+        for default in (
+            DEFAULT_SEARCH_OUT,
+            DEFAULT_SEARCH_ALIASES_OUT,
+            DEFAULT_SEARCH_SHARDS_OUT,
+            DEFAULT_BROWSE_META_OUT,
+            DEFAULT_BROWSE_FLAGGED_OUT,
+            DEFAULT_BROWSE_DIR,
+        )
+    ]
+    written_paths = [
+        path.resolve()
+        for path in (
+            args.out,
+            args.aliases_out,
+            args.search_shards_out,
+            args.browse_meta_out,
+            args.browse_flagged_out,
+            args.browse_dir,
+        )
+    ]
 
     if args.runtime_tree is not None:
         # The vendor reader owns runtime membership and the public display
@@ -1173,13 +1258,42 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
         rows, aliases, parity = build_pinned_search(args.runtime_tree)
         meta, browse_shards, flagged_rows = build_browse_outputs(rows)
         search_shards, search_shard_rows = build_search_shards(rows)
-        write_index(rows, args.out)
-        write_aliases(aliases, args.aliases_out)
-        write_search_shards(search_shards, search_shard_rows, args.search_shards_out, args.search_shard_dir)
-        write_browse_outputs(
+        index_digest = write_index(rows, args.out)
+        aliases_digest = write_aliases(aliases, args.aliases_out)
+        shards_digest = write_search_shards(search_shards, search_shard_rows, args.search_shards_out, args.search_shard_dir)
+        browse_digests = write_browse_outputs(
             meta, browse_shards, flagged_rows, args.browse_meta_out, args.browse_flagged_out, args.browse_dir
         )
         verify_browse_artifacts_written(args.browse_meta_out, args.browse_dir, meta["total"])
+        if written_paths == canonical_paths:
+            # Certify the bytes this run produced, not whatever the files hold now, and refuse to
+            # certify when another writer replaced any of them in between.
+            produced = {
+                "files": {
+                    DEFAULT_SEARCH_OUT.name: index_digest,
+                    DEFAULT_SEARCH_ALIASES_OUT.name: aliases_digest,
+                    DEFAULT_SEARCH_SHARDS_OUT.name: shards_digest,
+                    DEFAULT_BROWSE_META_OUT.name: browse_digests["meta"],
+                    DEFAULT_BROWSE_FLAGGED_OUT.name: browse_digests["flagged"],
+                },
+                "browse": browse_digests["shards"],
+            }
+            if pinned_set_digests(PINNED_DATA_DIR, PINNED_BROWSE_DIR) != produced:
+                raise SystemExit(
+                    "pinned set changed on disk while it was being written; "
+                    f"not writing {PINNED_SOURCE_MARKER}, regenerate it"
+                )
+            (PINNED_DATA_DIR / PINNED_SOURCE_MARKER).write_bytes(
+                _json_bytes(
+                    {
+                        "schema": "atlas-pinned-source",
+                        "schemaVersion": 2,
+                        "dataVersion": parity["dataVersion"],
+                        "runtimeManifestSha256": parity["runtimeManifestSha256"],
+                        **produced,
+                    }
+                )
+            )
         print(
             "atlas pinned search/browse artifacts: "
             f"articles={len(rows)} aliases={len(aliases)} browse_records={meta['total']} "

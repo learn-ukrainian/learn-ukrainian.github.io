@@ -1,6 +1,5 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import type { APIRoute } from "astro";
+import { readSelectedArtifactText } from "../../lib/lexicon/atlas-artifact-selection.mjs";
 
 /**
  * Static client-side search index for Word Atlas typeahead.
@@ -19,10 +18,7 @@ let cachedSearchIndexJson: string | null = null;
 
 function getSearchIndexJson(): string {
   if (!cachedSearchIndexJson) {
-    cachedSearchIndexJson = readFileSync(
-      resolve(process.cwd(), "src/data/lexicon-search-index.json"),
-      "utf8",
-    );
+    cachedSearchIndexJson = readSelectedArtifactText("lexicon-search-index.json", process.cwd());
   }
   return cachedSearchIndexJson;
 }

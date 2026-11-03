@@ -10,6 +10,10 @@ import sitemap from '@astrojs/sitemap';
 import rehypeMermaid from 'rehype-mermaid';
 import remarkDirective from 'remark-directive';
 import remarkGfm from 'remark-gfm';
+import {
+  atlasArtifactSelectionPlugin,
+  installSelectedBrowseShards,
+} from './src/lib/lexicon/atlas-artifact-selection.mjs';
 import remarkAdmonitions from './plugins/remark-admonitions.mjs';
 import { rawAtlasShardTransport } from './plugins/raw-atlas-shard-transport.mjs';
 import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
@@ -70,7 +74,8 @@ export default defineConfig({
 
   // Prevent duplicate React instances (SSR + client hydration)
   vite: {
-    plugins: [rawAtlasShardTransport()],
+    // Pinned builds (ATLAS_SEARCH_RUNTIME_TREE) read the ignored .atlas-pinned/ set (#12527).
+    plugins: [rawAtlasShardTransport(), atlasArtifactSelectionPlugin({ siteRoot: starlightRoot })],
     server: {
       fs: {
         allow: [starlightRoot, starlightNodeModules],
@@ -89,6 +94,15 @@ export default defineConfig({
   },
 
   integrations: [
+    {
+      // public/ carries the committed browse shards into dist/; a pinned build ships its own (#12527).
+      name: 'atlas-pinned-browse-shards',
+      hooks: {
+        'astro:build:done': ({ dir }) => {
+          installSelectedBrowseShards(fileURLToPath(dir), starlightRoot);
+        },
+      },
+    },
     {
       name: 'raw-atlas-preview-adapter',
       hooks: {

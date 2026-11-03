@@ -340,8 +340,25 @@ describe("Atlas fixture input isolation", () => {
         expect(await new SqliteAtlasDataSource().search("sentinel")).toEqual(
           await defaultSource.search("sentinel"),
         );
+
+        // #12527: a pinned build ranks from the pinned set (different from the committed
+        // one above) and never falls back to the committed files or to atlas.db.
+        const pinnedDir = resolve(root, ".atlas-pinned/data");
+        const pinnedRows: SearchRow[] = [
+          { l: "sentinel pinned", r: "sentinel pinned", s: "pinned-sentinel", g: null },
+        ];
+        mkdirSync(pinnedDir, { recursive: true });
+        writeFileSync(resolve(pinnedDir, "lexicon-search-index.json"), JSON.stringify(pinnedRows));
+        writeFileSync(resolve(pinnedDir, "lexicon-search-aliases.json"), "[]");
+        vi.stubEnv("ATLAS_SEARCH_RUNTIME_TREE", "/runtime/tree");
+        expect((await new SqliteAtlasDataSource().search("sentinel")).results).toEqual(
+          rankSearchResults(pinnedRows, [], "sentinel", 12),
+        );
+        rmSync(resolve(pinnedDir, "lexicon-search-aliases.json"));
+        expect(() => new SqliteAtlasDataSource()).toThrow(/pinned search artifacts are missing/);
       });
     } finally {
+      vi.unstubAllEnvs();
       cwdSpy?.mockRestore();
       rmSync(root, { recursive: true, force: true });
     }
