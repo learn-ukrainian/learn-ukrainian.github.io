@@ -26,7 +26,9 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   --initiator claude-cto`. Each granted round needs the latest recorded verdict to be a
   rejection that lists the granted finding at P0 or P1 and keeps it open in plain words
   (`still open: <reason>`, or a newly raised finding); any closing word in that entry, such as
-  `resolved`, `fixed` or `declined`, refuses the round. A grant never
+  `resolved`, `fixed` or `declined`, refuses the round unless it is inside a hyphenated
+  compound such as `fail-closed` and the entry has an explicit open phrase. Without an
+  open phrase, a closing word inside a compound still refuses the round. A grant never
   resets the rounds already counted, never covers a path outside its scope, and five rounds
   stay the total except under an owner request.
 - **Owner request** (#12551). A sealed grant with `blocker_class: owner-request` names in its
