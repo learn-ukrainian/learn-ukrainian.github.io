@@ -10,10 +10,12 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.atlas import a1_word_cards as cards
 from scripts.atlas import word_card_resolver as resolver
 from scripts.atlas.a1_card_receipts import Refusal, make_receipt, selected_rows
+from scripts.projects.open_model_data.word_cards import dataset_projection
 
 ROOT = Path(__file__).resolve().parents[2]
 TARGET = "wc_6bt62wd6zzzf"
@@ -213,6 +215,88 @@ def approve_example(batch, claim):
         "reviewer_family": "google", "verdict": "APPROVE", "record": "fixture-independent-review",
         "quotation": "An exact cited sentence.", "span": claim["span"][:],
         "source_sense_key": "fixture:sense:1", "sources_sha256": sha(batch["sources"])}
+
+
+def test_frozen_batch_register_pin_projects_without_losing_fields(batch, tmp_path):
+    """A release must consume the batch's register pin and refuse changed terms."""
+    register = batch["register"]
+    for source in register["sources"]:
+        source.update(appears_in=["internal", "site", "dataset"],
+                      citation={"form": "Fixture dictionary attribution"},
+                      terms={"licence": {"name": "Fixture licence"}})
+    register_path = tmp_path / "register.yaml"
+    register_path.write_text(yaml.safe_dump(register))
+    card = target(assemble(batch))
+    original = encoded(card)
+    release = dataset_projection.create_release(
+        [card], release_version="v0.1.1-fixture", register_path=register_path,
+        allow_candidates=True,
+    )
+    row = json.loads(release.dataset)
+    assert row["status"] == "CANDIDATE"
+    assert row["card_id"] == TARGET
+    assert row["card_version"] == card["build"]["card_version"]
+    assert {field["field"]: field["value"] for field in row["fields"]} == {
+        "definition_uk": "A literal definition.",
+        "paradigm": {"slot": "noun:n:v_naz", "forms": ["fixture-form"],
+                     "entry_id": 436914, "tags": "noun:n:v_naz"},
+        "stress": "яйце" + ACUTE,
+    }
+    assert len(row["fields"]) == 3
+    for field in row["fields"]:
+        source = {"definition_uk": VTS, "paradigm": "vesum", "stress": "ulif"}[field["field"]]
+        assertion = next(a for a in card["assertions"] if a["assertion_id"] == field["assertion_id"])
+        assert field["subject"] == assertion["subject"]
+        assert field["citation"] == {
+            "source_id": source, "snapshot_id": assertion["snapshot_id"],
+            "locator": assertion["locator"], "source_record_id": assertion["source_record_id"],
+            "source_record_key": assertion["source_record_key"],
+            "licence_ref": {"register_source_id": source, "register_version": 2,
+                            "appears_in": ["internal", "site", "dataset"]},
+            "attribution": "Fixture dictionary attribution", "licence": {"name": "Fixture licence"},
+            "terms_ref": f"docs/sources/permissions-register.yaml#sources/{source}/terms",
+        }
+    assert encoded(card) == original
+    register["sources"][0]["terms"]["licence"]["name"] = "Changed terms"
+    register_path.write_text(yaml.safe_dump(register))
+    with pytest.raises(dataset_projection.ProjectionRefusal, match="Projection register differs from card register"):
+        dataset_projection.create_release(
+            [card], release_version="v0.1.1-fixture", register_path=register_path,
+            allow_candidates=True,
+        )
+
+
+def test_site_projection_preserves_site_only_fields_without_exporting_them(batch, tmp_path):
+    """Site-authorized definitions must survive preview without entering datasets."""
+    register = batch["register"]
+    for source in register["sources"]:
+        source.update(appears_in=["internal", "site"] if source["id"] == VTS else
+                      ["internal", "site", "dataset"],
+                      citation={"form": "Fixture dictionary attribution"},
+                      terms={"licence": {"name": "Fixture licence"}})
+    register_path = tmp_path / "register.yaml"
+    register_path.write_text(yaml.safe_dump(register))
+    card = target(assemble(batch))
+    options = {"release_version": "v0.1.1-fixture", "register_path": register_path,
+               "allow_candidates": True}
+    dataset = dataset_projection.create_release([card], **options)
+    site = dataset_projection.create_release([card], scope="site", **options)
+    dataset_row, site_row = (json.loads(release.dataset) for release in (dataset, site))
+    assert {f["field"] for f in dataset_row["fields"]} == {"paradigm", "stress"}
+    assert {f["field"] for f in site_row["fields"]} == {"definition_uk", "paradigm", "stress"}
+    meaning = next(f for f in site_row["fields"] if f["field"] == "definition_uk")
+    assert meaning["value"] == "A literal definition."
+    assert meaning["citation"]["source_id"] == VTS
+    assert meaning["citation"]["licence_ref"] == {
+        "register_source_id": VTS, "register_version": 2, "appears_in": ["internal", "site"],
+    }
+    assert {f["field"]: f for f in site_row["fields"] if f["field"] != "definition_uk"} == {
+        f["field"]: f for f in dataset_row["fields"]}
+    assert site_row["card_id"] == dataset_row["card_id"] == TARGET
+    assert site_row["card_version"] == dataset_row["card_version"] == card["build"]["card_version"]
+    assert site_row["status"] == dataset_row["status"] == "CANDIDATE"
+    assert dataset.manifest["source_breakdown"][VTS]["filter_reasons"] == {"dataset_scope_absent": 1}
+    assert site.manifest["source_breakdown"][VTS]["filter_reasons"] == {}
 
 
 def test_reconciles_frozen_rows_and_preserves_pilot_identities(batch):
