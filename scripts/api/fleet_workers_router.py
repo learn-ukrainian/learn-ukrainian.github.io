@@ -14,10 +14,13 @@ router = APIRouter(prefix="/workers/v1", tags=["fleet-workers"])
 
 
 @router.get("")
-async def get_workers(
+def get_workers(
     host_id: str | None = Query(default=None),
     ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
+    # Plain ``def`` so FastAPI runs it in its thread pool. A cold build parses
+    # every task record (seconds of CPU); as ``async def`` it ran on the event
+    # loop and stalled every other Monitor request, headroom reads included (#12627).
     self_report_ids = workers_collect._self_host_ids() - {workers_collect.UNATTRIBUTED_HOST_ID}
     if host_id is not None:
         self_report_ids &= {host_id}
