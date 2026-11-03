@@ -33,7 +33,10 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   `owner_request` object the `tracker_item` recording the project owner's request for that one
   PR and the `rounds` it records (other classes set it to null); while the latest recorded
   rejection lists the cited finding, it admits the PR's own budget plus exactly that count,
-  past five when the budget is already five, and never resets spent rounds.
+  past five when the budget is already five, and never resets spent rounds. A rejection recorded
+  with its findings withheld lists what the sealed reply of the one review run its marker names
+  lists, when that run's digest, head, verdict, reviewer and finding count match the comment and
+  its reply is not truncated; otherwise it lists nothing (#12585).
 - **Withheld-capability recovery.** A sealed grant with `blocker_class: withheld-capability`
   uses the same ruling and approval machinery and names the finding awaiting verification,
   at any severity. Its `withheld_capability` object names the missing `capability`, cites
@@ -62,7 +65,9 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   findings are exactly the sealed ids, nonempty and all P2; every earlier P0/P1 finding was
   closed by a later structured findings object (bare, fenced or in a `VERDICT`/`SCORE`
   envelope, with no repeated key) that no longer lists it, since a prose entry never closes a
-  finding; no verdict is BLOCKED, carries a security FAIL, or is edited, withheld or unreadable;
+  finding; no verdict is BLOCKED, carries a security FAIL, or is edited or unreadable (a verdict
+  recorded withheld is read, security verdict included, from its sealed review run as under the
+  owner request, and is unreadable without it);
   and every other review run of the PR, at the candidate head too, is terminal with its verdict
   published, so pushing before a verdict is recorded earns no credit, except that a run its
   seat superseded ([below](#an-unpublished-verdict-that-its-seat-superseded)) stops refusing
