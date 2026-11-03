@@ -1,0 +1,54 @@
+# Scanner pins for the private learn-ukrainian/machinery security workflows
+# (issue #12682, machinery move contract v3 section 5). This file is the record;
+# secret-scan.yml and sast.yml carry the same values and are not read from here.
+# Bump a pin by changing it here and in the workflow together, with the new
+# upstream evidence. Never move to an older release to clear a finding.
+# Upstream checks below were made on 2026-11-03.
+
+# TruffleHog (secret scan)
+TRUFFLEHOG_VERSION=3.99.0
+#   Release v3.99.0, published 2026-10-06, tag commit b2b0a92070f206ab7b5a1105d82a7f2f48d92341
+#   https://github.com/trufflesecurity/trufflehog/releases/tag/v3.99.0
+#   The rule set is the detector catalog built into this CLI release.
+TRUFFLEHOG_LINUX_AMD64_SHA256=e35ae3fd1e4b7a0c1699d0fda1814282bf906d03379bd4337b092b3a84c6740b
+#   trufflehog_3.99.0_linux_amd64.tar.gz; equals the entry in the release's
+#   trufflehog_3.99.0_checksums.txt.
+TRUFFLEHOG_ACTION_SHA=31ce31ee1abbcc7dc8eee5764c17121c3044c8b2
+#   Commit of tag v3.99.7 of trufflesecurity/trufflehog (2026-10-24), the
+#   action script the public repository's .github/workflows/ci.yml pins.
+#   secret-scan.yml runs the CLI with the command line this script builds
+#   (git file://, --since-commit, --branch, --fail, --no-update) without its
+#   `docker run` wrapper, because the self-hosted runner has no Docker.
+TRUFFLEHOG_FLAGS=--results=verified,unknown,unverified --exclude-detectors=Lob --fail-on-scan-errors --exclude-paths=.trufflehogignore
+#   `unverified` is added to the contract's --results=verified,unknown by
+#   claude-cto decision on 2026-11-03 (#12682), for the private repository only.
+#   Reason: on the vendor's canary repository trufflesecurity/test_keys,
+#   TruffleHog 3.99.0 reports 3 results with verified,unknown and 8 with
+#   verified,unknown,unverified. The 4 extra AWS keys and the PrivateKey
+#   result are unverified, so the narrower filter passes revoked, synthetic
+#   and most private-key secrets. That is fail-open. False positives go
+#   through the reviewed .trufflehogignore or an inline trufflehog:ignore with
+#   a reason.
+
+# Semgrep CE (SAST)
+SEMGREP_VERSION=1.183.0
+#   Release v1.183.0, published 2026-10-29, tag commit 4fe07d805dd2a4b64fed486e95136923f08648d0
+#   https://github.com/semgrep/semgrep/releases/tag/v1.183.0
+#   The release has no binary assets; the install comes from PyPI.
+SEMGREP_WHEEL_MANYLINUX_2_34_X86_64_SHA256=f36115c4d0cb43056ceb308273421a2f6a35e055e7e029601e130850f836646e
+#   https://pypi.org/project/semgrep/1.183.0/ (uploaded 2026-10-29). sast.yml
+#   pins all 66 wheels of the dependency closure for CPython 3.12 on x86_64
+#   Linux by SHA-256.
+SEMGREP_PYTHON=3.12.14
+SEMGREP_RULES_REPOSITORY=https://github.com/semgrep/semgrep-rules
+SEMGREP_RULES_COMMIT=16b9e6d45f10649f6a531ec4838ed9924372c3bc
+#   Commit dated 2026-10-21 ("add php docker rule (#4114)"); the develop head
+#   on 2026-11-03. Rules are under the Semgrep Rules License v1.0, which
+#   permits scanning one's own code.
+SEMGREP_CONFIGS=python/lang python/correctness python/jinja2 python/jwt python/requests python/sh generic/secrets bash/lang yaml/github-actions yaml/kubernetes
+
+# GitHub actions used by the workflows
+ACTIONS_CHECKOUT=3d3c42e5aac5ba805825da76410c181273ba90b1
+#   actions/checkout tag v7.0.1 (the latest release)
+ACTIONS_SETUP_PYTHON=6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+#   actions/setup-python tag v7.1.0 (the latest release)
