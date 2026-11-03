@@ -115,6 +115,94 @@ URLs still require a future runtime-data disposition. The option
 trusts prior archive verification. Public builds always prepare a fresh verified
 tree and independently validate the built advertisements before publication.
 
+## Runtime source freshness and release preparation
+
+Pages should serve the reviewed discovery projection of immutable runtime
+CURRENT, refreshed from the current committed manifest through a fresh Atlas
+DB. Keep the asset-ID/SHA-256 pin for reproducible, digest-verified release
+identity. The committed DB projection remains the unpinned build input; it is
+also independent source evidence for the pinned projection, after applying the
+same reviewed discovery holds. A historical article-count gap alone does not
+establish either projection's present freshness.
+
+`scripts/deploy/prepare_atlas_runtime_release.py` owns preparation and replay.
+Hydrate the committed manifest and practice-deck pointers through
+`site/scripts/hydrate-manifest.mjs` and `site/scripts/hydrate-practice-deck.mjs`
+first. Acquire the exact prior archive separately. Use the project interpreter
+and fresh managed scratch outside the worktree:
+
+```bash
+.venv/bin/python scripts/deploy/prepare_atlas_runtime_release.py prepare \
+  --work "$TMPDIR/prepare-work" --out "$TMPDIR/prepare-out" \
+  --prior-archive ./prior.zip --prior-sha256 <64hex>
+.venv/bin/python scripts/deploy/prepare_atlas_runtime_release.py verify \
+  --work "$TMPDIR/replay-work" --out "$TMPDIR/replay-out" \
+  --prior-archive ./prior.zip --prior-sha256 <64hex>
+```
+
+`--manifest` and `--deck-dir` can select separately hydrated scratch copies;
+their bytes must still match this checkout's committed pointers. Preparation
+copies verified inputs into isolated scratch, builds a fresh DB with the
+existing certification and alias checks, fully vendors the prior, and retains
+exactly the prior's pointed CURRENT directory with its original name and bytes.
+It calls the existing exporter and deterministic publication ZIP writer, then
+fully vendors the candidate and checks complete raw article membership against
+the fresh DB. The raw set is the disjoint union of projected and withheld
+articles. It also writes and verifies the canonical search, alias, browse and
+derived search artifacts in scratch. Certification, source, scale and distinct
+logical PRIOR guards remain unchanged. Preparation performs no enrichment,
+upload, pin update or deployment.
+
+The product receipt `registry/lexicon/atlas-runtime-release.json` uses schema
+`atlas-runtime-release.v1`. Its only bindings are the manifest pointer's JSON
+SHA-256, consumed deck digests, holds digest, candidate archive digest and
+CURRENT identity, exact prior archive/CURRENT identity and manifest URL, and
+raw/projected article counts and membership digests. A membership digest hashes
+a sorted, duplicate-free UTF-8 JSON slug array with compact separators and no
+trailing LF. The receipt uses sorted keys, compact separators and a trailing LF;
+it contains no timestamp or environment freshness condition.
+
+`verify` reruns preparation with current validated inputs and the receipt's
+exact prior, then requires identical archive SHA-256 and receipt bytes. Changed
+inputs require a new prepare. Different archive bytes for unchanged inputs
+refuse with `nondeterministic_export`. Run replay at the reviewed head and again
+at the merged head before promotion. A holds-only change must leave archive
+bytes identical while changing the projected membership and receipt.
+
+After its existing fatal runtime/DB, browse and marker checks, search generation
+emits one source-report JSON line and one workflow notice or warning. Reporting
+reuses the selected rows and runtime parity, validates the hydrated source
+against the pointers, and independently rebuilds source membership through a
+fresh DB. It neither exports nor re-vendors. The receipt bridges source digest
+and runtime identity; those different digests are never compared as equal.
+`--manifest` selects this independent source in both DB and runtime modes,
+even when `--db` supplies a different database. It must match the committed
+source pointers. Selected DB rows cannot stand in for source verification.
+Fixture runs bind a small source and receipt explicitly, including their
+pointers, so they exercise the report without rebuilding an unrelated corpus.
+
+- `current` requires every applicable binding, full membership and count to match.
+- `stale` lists every applicable fixed reason: `manifest_changed`,
+  `membership_diverged`, `count_diverged`, or `holds_changed`.
+- `unknown` uses `receipt_missing`, `receipt_invalid`, or `report_error` when
+  evidence is absent, invalid, contradictory or unavailable. It never means current.
+
+Workflow commands contain only fixed status/reason enums and integer counts.
+Only the added report call has an exception boundary. A report-only failure
+warns `unknown/report_error` and preserves the existing artifact bytes, routes
+and exit code; preexisting fatal checks still fail. Runtime and unpinned DB
+modes both report evidence. Reporting does not authorize a release.
+
+A release still requires current operator GO for upload, pin or Pages activation.
+Bind deployed revision and archive digest to the merged implementation and
+independently replayed receipt. Compare complete raw/projected membership and
+counts. Prove selected content equality through the existing canonical/browse
+digests from `pinned_set_digests` and the derived-search digest proof in
+`atlas-artifact-selection.mjs`, compared with the deployed artifact bytes.
+Include compatibility endpoints and embedded browse data. No per-article
+payload parser, sampling or count-only closure replaces those full-artifact
+bindings. Implementation, merge, deployment and issue completion are separate.
+
 ## Contract Checks
 
 Consumers should treat `status: "ok"` as the normal state. `warning` means the
