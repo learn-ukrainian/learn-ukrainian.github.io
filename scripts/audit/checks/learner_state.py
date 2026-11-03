@@ -11,10 +11,10 @@ from typing import Any
 import yaml
 
 try:
-    from scripts.config import get_immersion_structural
+    from scripts.curriculum.pedagogy_config import get_immersion_structural
     from scripts.pipeline.learner_state import build_learner_state
 except ModuleNotFoundError:  # pragma: no cover - CLI path compatibility
-    from config import get_immersion_structural
+    from curriculum.pedagogy_config import get_immersion_structural
     from pipeline.learner_state import build_learner_state
 
 try:

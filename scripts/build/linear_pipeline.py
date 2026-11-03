@@ -105,7 +105,7 @@ from scripts.common.review_loop import (
     min_score_regressed,
 )
 from scripts.common.thresholds import QG_DIMS, aggregate_review
-from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
+from scripts.curriculum.pedagogy_config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.generate_mdx.core import generate_mdx
 from scripts.generate_mdx.resources import validate_and_clean_url
 from scripts.pipeline.learner_state import build_learner_state, format_learner_state

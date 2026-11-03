@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts import config
+from scripts.curriculum import pedagogy_config as config
 from scripts.curriculum.arc.loader import ArcPosition, load_arc
 
 from . import codes

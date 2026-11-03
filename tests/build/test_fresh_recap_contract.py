@@ -10,9 +10,9 @@ from pathlib import Path
 
 import pytest
 
-from scripts import config
 from scripts.build.fresh.assemble import AssemblerError, _render_urok_markdown, assemble_expanded_document
 from scripts.build.fresh.immersion import compute_immersion_payload
+from scripts.curriculum import pedagogy_config as config
 from scripts.curriculum.arc.loader import ArcPosition, ArcStaleError, load_arc
 from scripts.curriculum.learner_state.immersion import ImmersionError, compute_lesson_immersion_band
 from scripts.curriculum.validate import codes

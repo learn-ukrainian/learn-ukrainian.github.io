@@ -8,11 +8,11 @@ from typing import Any
 try:
     from scripts.audit.checks.learner_state import _strip_non_body_prose, _vesum_helpers
     from scripts.build.learner_immersion import build_lemma_frequency_map
-    from scripts.config import get_recycle_cadence_policy
+    from scripts.curriculum.pedagogy_config import get_recycle_cadence_policy
 except ModuleNotFoundError:  # pragma: no cover - CLI path compatibility
     from audit.checks.learner_state import _strip_non_body_prose, _vesum_helpers
     from build.learner_immersion import build_lemma_frequency_map
-    from config import get_recycle_cadence_policy
+    from curriculum.pedagogy_config import get_recycle_cadence_policy
 
 
 def _extract_all_ukrainian_surfaces(content: str) -> list[str]:

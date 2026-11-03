@@ -12,7 +12,7 @@ For non-A1 levels the YAML additionally carries the level's immersion band
 mapping, parsed from the document's §7 band table (tables only — prose in §7
 fails generation): a top-level ``immersion_bands`` list of
 ``{start, end, band_key}`` ranges plus a per-position ``band_key`` filled from
-those ranges, validated against IMMERSION_POLICIES in scripts/config.py.
+those ranges, validated against IMMERSION_POLICIES in scripts/curriculum/pedagogy_config.py.
 A1 declares ``a1-orientation`` only at position 1; ordinary positions retain
 vocabulary-selected immersion and no per-position key.
 """
@@ -36,11 +36,11 @@ MANIFEST_REL = "curriculum/l2-uk-en/curriculum.yaml"
 SUPPORTED_LEVELS = ("a1", "a2", "b1", "b2")
 
 try:
-    from scripts.config import IMMERSION_POLICIES, _immersion_track_key
+    from scripts.curriculum.pedagogy_config import IMMERSION_POLICIES, _immersion_track_key
 except ModuleNotFoundError:  # running as a bare script: repo root not on sys.path yet
     if str(REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(REPO_ROOT))
-    from scripts.config import IMMERSION_POLICIES, _immersion_track_key
+    from scripts.curriculum.pedagogy_config import IMMERSION_POLICIES, _immersion_track_key
 
 LITERACY_HEADER = ["Pos", "Slug", "Phase", "Job", "Inventory (letters / signs)", "Skills duty", "Est. lessons"]
 MAIN_HEADER = ["Pos", "Slug", "Phase", "One-sentence job", "Skills duty", "L"]
@@ -510,7 +510,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Non-A1 levels additionally carry the immersion band mapping parsed from the document's §7 "
             "band table (| Positions | Band key | Advisory Ukrainian share |): a top-level immersion_bands "
             "list of {start, end, band_key} ranges and a per-position band_key filled from those ranges, "
-            "validated against IMMERSION_POLICIES in scripts/config.py. A1 declares a1-orientation "
+            "validated against IMMERSION_POLICIES in scripts/curriculum/pedagogy_config.py. A1 declares a1-orientation "
             "only at position 1; ordinary positions retain vocabulary-selected immersion.\n"
             "Use it after the arc document changes; never edit _arc.yaml by hand — the committed YAML must be "
             "byte-identical to a fresh run of this generator."
