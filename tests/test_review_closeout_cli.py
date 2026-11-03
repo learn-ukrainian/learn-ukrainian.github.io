@@ -796,13 +796,13 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
     medium = _run_cli(state, "resolve-reviewer", *common, "--risk", "medium")
     payload = json.loads(medium.stdout)
 
-    # The latest author alone (GPT) would select Opus; the earlier Claude author excludes it.
+    # Both committed families require a pair; each reviews only the other family's commits.
     assert medium.returncode == 0, medium.stdout
-    assert payload["selected"]["name"] == "gemini-3.8-flash-high"
+    assert payload["selected"] is None
+    assert {seat["family"] for seat in payload["quorum"]} == {"anthropic", "openai"}
+    assert all(seat["scope"]["author_family"] != seat["family"] for seat in payload["quorum"])
     assert payload["branch_facts"]["existing_families"] == ["anthropic", "openai"]
-    trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
-    assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
-    # The recorder, from its own collection of the same Git facts, accepts that reviewer and not Opus.
+    # The recorder qualifies both seats on the same complete Git facts.
     frozen = json.loads(state.read_text())["target"]
     facts = recorder.collect_branch_review_facts(
         repository=REPOSITORY,
@@ -811,12 +811,11 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
         head_sha=frozen["head_sha"],
         task_root=tasks,
     )
-    recorder._require_qualified_reviewer(
-        facts, task={"agent": "agy", "review_risk": "medium"}, model="gemini-3.8-flash-high", family="google"
-    )
-    with pytest.raises(recorder.RecordError, match="not qualified"):
+    for agent, model, family in (("claude", "claude-opus-5-5", "anthropic"), ("codex", "gpt-6.1-sol", "openai")):
+        recorder._require_qualified_reviewer(facts, task={"agent": agent, "review_risk": "medium"}, model=model, family=family)
+    with pytest.raises(recorder.RecordError, match="mixed-family review requires"):
         recorder._require_qualified_reviewer(
-            facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
+            facts, task={"agent": "agy", "review_risk": "medium"}, model="gemini-3.8-flash-high", family="google"
         )
 
     # Grok reviews at every risk (#9769); an xAI author leaves no reviewer at all.
@@ -1084,14 +1083,16 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         "medium",
     )
     body = json.loads(result.stdout)
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert body["selected"]["name"] == "gemini-3.8-flash-high"
     if excluded:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert body["selected"]["name"] == "gemini-3.8-flash-high"
         assert body["branch_facts"]["existing_families"] == ["anthropic"]
     else:
         # Not the default branch: the main squash stays in the PR's range and is
         # attributed by its own trailers; the clean sync merge adds no author.
         assert body["branch_facts"]["existing_families"] == ["anthropic", "openai"]
+        assert result.returncode == 1 and body["selected"] is None and not body["quorum"]
+        assert "cannot partition a commit authored by both families" in body["fail_closed_reason"]
 
 
 # Re-pinned after native Grok dispatch retirement; Cursor remains in automatic traces.
