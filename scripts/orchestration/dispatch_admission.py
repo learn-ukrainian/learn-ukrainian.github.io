@@ -53,6 +53,19 @@ every check passes. Read-only dispatches are exempt.
   thresholds raises :class:`DiskWatermarkConfigError` (#10871). A disk probe
   that fails, or an alert that fails, never refuses on its own: the reason
   is logged and shown.
+* **Product policy (#12680).** The curriculum's seat and receipt decisions
+  (which agent types are content seats, which families may work on and
+  review Ukrainian content, which changed paths are learner payloads, and
+  whose review receipts a Ukrainian head needs) are product data in
+  ``scripts/curriculum/admission_policy.v1.json``, read only through
+  :mod:`scripts.orchestration.product_policy`. Every :func:`evaluate`, of any
+  mode, and every write-mode :func:`precheck` loads it first; a missing,
+  renamed, truncated or incompatible policy raises
+  :class:`~scripts.orchestration.product_policy.ProductPolicyError`, a
+  ``ValueError``, so callers refuse exactly as they do for an invalid
+  threshold and ``--force-admission`` cannot override it. The policy is read
+  from the checkout this module runs from, so a dispatch that runs the
+  primary checkout's code reads the primary checkout's policy.
 * **Slice use is reported, not enforced.** When ``lu-dispatch.slice`` is
   active, the admission line adds its current memory against ``MemoryMax``.
   An inactive or missing slice omits that clause. The floor and the caps
@@ -95,7 +108,7 @@ import subprocess
 import sys
 import time
 import urllib.parse
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -105,7 +118,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import test_slots
-from scripts.orchestration import admission_shadow, pool_headroom, task_record_store, worktree_prep
+from scripts.orchestration import admission_shadow, pool_headroom, product_policy, task_record_store, worktree_prep
 from scripts.orchestration.dispatch_isolation import slice_usage_clause
 
 _logger = logging.getLogger(__name__)
@@ -414,6 +427,36 @@ class AdmissionDecision:
             "swept_crashed": list(self.dead_task_ids) if self.swept else [],
             "psi_shadow": self.psi_shadow,
         }
+
+
+def load_product_policy(path: Path | None = None) -> product_policy.ProductPolicy:
+    """The product's seat and receipt policy; raises ``ProductPolicyError`` (a ``ValueError``) fail closed."""
+    return product_policy.load_policy(path)
+
+
+def is_content_seat(agent_type: str) -> bool:
+    """Seat decision: this agent type is a curriculum (content) seat."""
+    return load_product_policy().is_content_seat(agent_type)
+
+
+def ukrainian_content_family_allowed(family: str) -> bool:
+    """Seat decision: a model of this family may work on Ukrainian content."""
+    return load_product_policy().ukrainian_content_family_allowed(family)
+
+
+def is_ukrainian_review_seat(route: str, family: str) -> bool:
+    """Seat decision: this (harness route, family) pair is a Ukrainian review seat."""
+    return load_product_policy().is_ukrainian_review_seat(route, family)
+
+
+def requires_ukrainian_review(changes: Iterable[str | tuple[str, str]]) -> bool:
+    """Receipt decision: a changed path, or either side of an ``(origin, destination)`` rename, is a learner payload."""
+    return load_product_policy().requires_ukrainian_review(changes)
+
+
+def required_review_receipts(author_families: Iterable[str]) -> frozenset[str]:
+    """Receipt decision: the reviewer families whose receipts a Ukrainian head needs for these authors."""
+    return load_product_policy().required_review_receipts(author_families)
 
 
 def config_defaults() -> Thresholds:
@@ -1203,10 +1246,12 @@ def precheck(mode: str, *, thresholds: Thresholds | None = None) -> AdmissionDec
     stop (#10776). ``None`` (an exempt mode,
     memory and load pass or are unknown, or a full disk) admits nothing:
     :func:`evaluate` under :func:`admission_lock` stays the decision. Invalid
-    threshold environment variables raise ``ValueError``.
+    threshold environment variables raise ``ValueError``; so does a missing or
+    incompatible product policy (``ProductPolicyError``, #12680).
     """
     if mode not in WRITE_CAPABLE_MODES:
         return None
+    load_product_policy()
     limits = thresholds or load_thresholds()
     probe = probe_host()
     failures = host_failures(probe, limits)
@@ -1244,8 +1289,11 @@ def evaluate(
     ``disk_guard=False``
     (a dispatch that reuses an existing worktree) skips the disk check and
     the alert. Invalid threshold environment variables raise
-    ``ValueError``.
+    ``ValueError``. A missing or incompatible product policy raises
+    ``ProductPolicyError`` (a ``ValueError``) for every mode, read-only
+    included, before anything is read or swept (#12680).
     """
+    load_product_policy()
     if mode not in WRITE_CAPABLE_MODES:
         return AdmissionDecision(mode=mode, exempt=True, admitted=True)
     limits = thresholds or load_thresholds()

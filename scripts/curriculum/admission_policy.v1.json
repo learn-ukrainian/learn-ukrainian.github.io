@@ -1,0 +1,54 @@
+{
+  "schema": "learn-ukrainian.product-admission-policy",
+  "schema_version": 1,
+  "origin": "scripts/curriculum/admission_policy.v1.json",
+  "seats": {
+    "content_agent_types": [
+      "curriculum-orchestrator"
+    ],
+    "ukrainian_content_families": [
+      "anthropic",
+      "google",
+      "openai"
+    ],
+    "ukrainian_review_seats": [
+      {
+        "route": "agy",
+        "family": "google"
+      },
+      {
+        "route": "codex",
+        "family": "openai"
+      }
+    ]
+  },
+  "receipts": {
+    "learner_payload_paths": [
+      "curriculum/",
+      "scripts/curriculum/",
+      "scripts/data/stress_overrides.yaml",
+      "scripts/verification/stress*",
+      "scripts/pipeline/stress_annotator.py",
+      "scripts/lexicon/",
+      "site/src/lib/lexicon/",
+      "scripts/review/prompts/",
+      "scripts/build/phases/",
+      "scripts/build/fresh/prompt*",
+      "docs/epics/fresh-build-*",
+      "schemas/activities-*"
+    ],
+    "review_receipts_by_author_family": {
+      "google": [
+        "openai"
+      ],
+      "openai": [
+        "google"
+      ]
+    },
+    "review_receipts_default": [
+      "google",
+      "openai"
+    ]
+  },
+  "content_sha256": "1ccc53ccd3aa2409611673006bcfe0ed76c6d0b4591878399c72f6b60093ff56"
+}

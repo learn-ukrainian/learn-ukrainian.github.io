@@ -15,8 +15,8 @@ _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(_PROJECT_ROOT) not in _sys.path:
     _sys.path.insert(0, str(_PROJECT_ROOT))
 
-from scripts import config as _shared_config
 from scripts.common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
+from scripts.curriculum import pedagogy_config as _shared_config
 from scripts.level_config import base_level
 
 shared_get_immersion_range = _shared_config.get_immersion_range

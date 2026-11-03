@@ -13,8 +13,8 @@ import subprocess
 
 import pytest
 
-from scripts import config
 from scripts.build.fresh import assemble
+from scripts.curriculum import pedagogy_config as config
 from tests.build.test_fresh_page_safety import FIXTURE, reassemble_attempt5
 from tests.build.test_fresh_render_coverage import LEVELS, ROOT, check_render, maximal_draft
 from tests.build.test_fresh_render_coverage import render_environment as render_environment

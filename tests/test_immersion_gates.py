@@ -11,7 +11,7 @@ from scripts.build.linear_pipeline import (
     _l2_exposure_floor_gate,
     _long_uk_ceiling_gate,
 )
-from scripts.config import IMMERSION_POLICIES
+from scripts.curriculum.pedagogy_config import IMMERSION_POLICIES
 
 A1_PLAN = {"level": "a1", "sequence": 20}
 A1_EARLY_PLAN = {"level": "a1", "sequence": 1}

@@ -172,9 +172,9 @@ sys.path = [{str(shadow)!r}, str(root), str(root / 'scripts/audit'), str(root / 
     if entry and Path(entry).resolve() not in blocked
 ]
 config = importlib.import_module('scripts.audit.config')
-canonical = importlib.import_module('scripts.config')
+canonical = importlib.import_module('scripts.curriculum.pedagogy_config')
 assert config._shared_config is canonical
-assert Path(config.shared_get_immersion_range.__code__.co_filename).resolve() == root / 'scripts/config.py'
+assert Path(config.shared_get_immersion_range.__code__.co_filename).resolve() == root / 'scripts/curriculum/pedagogy_config.py'
 assert 'config' not in sys.modules
 print('bare config shadow ignored')
 """
