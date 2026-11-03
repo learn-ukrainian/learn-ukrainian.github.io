@@ -17,8 +17,13 @@
 #   other non-zero exit, warning-level errors (--strict), errors in the JSON
 #   output, unparsable output, and results arriving with a zero exit.
 # - The log shows the rule id, file and line of each finding and the type and
-#   file of each error, never the matched code. The raw results file stays in
-#   the job temp directory and is deleted when the job ends.
+#   file of each error, never the matched code. Scanner stderr is captured and
+#   only its line count is printed, because it can quote repository content.
+#   Results and stderr stay in the job temp directory and are deleted when the
+#   job ends; reproduce a scan error locally with the pinned versions.
+# - Install steps run from the job temp directory with isolated interpreters
+#   (python -I), and the scanner runs with PYTHONSAFEPATH=1, so no Python
+#   module in the checkout is imported.
 # - Semgrep's built-in ignore list applies while the repository has no
 #   .semgrepignore (it skips test/, tests/, vendor/, build/, dist/ and similar).
 #   Files over 1 MB are skipped (Semgrep's default --max-target-bytes).
@@ -63,9 +68,12 @@ jobs:
       - name: Install Semgrep (hash-pinned wheels)
         run: |
           set -euo pipefail
+          # Run from the job temp directory with isolated interpreters (-I), so a
+          # venv.py, pip.py or other module in the checkout is never imported.
+          cd "$RUNNER_TEMP"
           venv="$RUNNER_TEMP/semgrep-venv"
           rm -rf "$venv"
-          python -m venv "$venv"
+          python -I -m venv "$venv"
           requirements="$RUNNER_TEMP/semgrep-requirements.txt"
           cat > "$requirements" <<'REQUIREMENTS'
           annotated-types==0.8.0 \
@@ -211,10 +219,11 @@ jobs:
           zipp==4.1.2 \
               --hash=sha256:b30cb6cd253122169c47de245ca24a86bac2a5d3802ba15bf7ba6414eb9e144d
           REQUIREMENTS
-          "$venv/bin/python" -m pip install --no-cache-dir --disable-pip-version-check \
+          "$venv/bin/python" -I -m pip install --no-cache-dir --disable-pip-version-check \
             --no-input --require-hashes --only-binary=:all: --requirement "$requirements"
           mkdir -p "$venv/home"
-          reported="$(env -i PATH="$venv/bin:/usr/bin:/bin" HOME="$venv/home" "$venv/bin/semgrep" --version)"
+          reported="$(env -i PATH="$venv/bin:/usr/bin:/bin" HOME="$venv/home" PYTHONSAFEPATH=1 \
+            "$venv/bin/semgrep" --version)"
           if [ "$reported" != "$SEMGREP_VERSION" ]; then
             echo "::error::Expected semgrep ${SEMGREP_VERSION}, got: ${reported}"
             exit 1
@@ -266,33 +275,49 @@ jobs:
           rm -rf "$work"
           mkdir -p "$work/home" "$work/tmp"
           results="$work/results.json"
+          diagnostics="$work/stderr.log"
+          # Scanner stderr can quote repository content, so it goes to a file
+          # that is never printed; only its line count reaches the log.
           set +e
           env -i PATH="$venv/bin:/usr/bin:/bin" HOME="$work/home" TMPDIR="$work/tmp" \
-            SEMGREP_SEND_METRICS=off SEMGREP_ENABLE_VERSION_CHECK=0 \
+            PYTHONSAFEPATH=1 SEMGREP_SEND_METRICS=off SEMGREP_ENABLE_VERSION_CHECK=0 \
             "$venv/bin/semgrep" scan "${args[@]}" \
             --metrics=off --disable-version-check --strict --error \
-            --json --output "$results" --quiet .
+            --json --output "$results" --quiet . 2> "$diagnostics"
           rc=$?
           set -e
+          echo "Semgrep exited ${rc}; $(wc -l < "$diagnostics") stderr line(s) withheld from this log."
 
-          if ! counts="$(jq -r '"\(.results | length) \(.errors | length)"' "$results")"; then
-            echo "::error::Semgrep output is missing or not valid JSON (exit ${rc}); failing closed"
+          # Exactly one JSON object with results and errors arrays; anything else
+          # (missing file, other JSON, several values) fails. jq's own error text
+          # can quote the input, so it is discarded.
+          if ! jq -s -e 'length == 1 and (.[0] | type == "object"
+                and (.results | type) == "array" and (.errors | type) == "array")' \
+                "$results" > /dev/null 2>&1; then
+            echo "::error::Semgrep output is missing or malformed (exit ${rc}); failing closed"
             exit 1
           fi
-          read -r findings errors <<< "$counts"
+          findings="$(jq '.results | length' "$results")"
+          errors="$(jq '.errors | length' "$results")"
           if [ "$findings" -gt 0 ]; then
             echo "::error::Semgrep reported ${findings} finding(s). Matched code is redacted from this log."
             # Rule id and location only; extra.lines (the matched code) never reaches the log.
-            jq -r '.results[]
-              | "::error file=\(.path),line=\(.start.line)::Semgrep \(.check_id) at \(.path):\(.start.line)"' "$results"
+            # Every printed field must be a string or a number; anything else prints "?".
+            jq -r 'def s: if type == "string" or type == "number" then tostring else "?" end;
+              .results[]
+              | "::error file=\(.path | s),line=\(.start.line | s)::Semgrep \(.check_id | s)"
+              + " at \(.path | s):\(.start.line | s)"' \
+              "$results" 2> /dev/null || echo "::error::Finding locations could not be summarized"
           fi
           if [ "$errors" -gt 0 ]; then
             echo "::error::Semgrep reported ${errors} scan error(s)."
             # Type, level and path only; error messages can quote target code.
-            jq -r '.errors[]
-              | "::error::Semgrep error level=\(.level // "?")"
-              + " type=\(.type | if type == "array" then .[0] else . end)"
-              + " path=\(.path // .spans[0].file // "?")"' "$results"
+            jq -r 'def s: if type == "string" or type == "number" then tostring else "?" end;
+              .errors[]
+              | "::error::Semgrep error level=\(.level | s)"
+              + " type=\(.type | if type == "array" then .[0] else . end | s)"
+              + " path=\(.path // .spans[0].file | s)"' \
+              "$results" 2> /dev/null || echo "::error::Scan errors could not be summarized"
           fi
           if [ "$rc" -eq 0 ] && [ "$findings" -eq 0 ] && [ "$errors" -eq 0 ]; then
             echo "No findings."
