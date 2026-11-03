@@ -6302,7 +6302,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/vocative-expanded.yaml",
-      "sha256": "8d21f1c3b45cfc2a303e8ad440e2bc1309dd5a16ec83100b26632658abc79ffb"
+      "sha256": "10dc4c9eb5dfedf1efe60264ee8e4147b4341bfffc968bd66bbb1a416679d13e"
     },
     {
       "path": "curriculum/l2-uk-en/plans/a2/which-case-when.yaml",
@@ -14454,7 +14454,7 @@
     },
     {
       "path": "site/src/content/docs/a2/vocative-expanded.mdx",
-      "sha256": "030b93a8950f377c5c602fd0c7e68e12159acd5f455a5ad28744d429f762fd10"
+      "sha256": "67f8e78d7be839f4f42abcb8d9d59b47253dec19832b21884bc498823068fbae"
     },
     {
       "path": "site/src/content/docs/a2/which-case-when.mdx",
