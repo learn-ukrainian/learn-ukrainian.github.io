@@ -1238,6 +1238,61 @@ launcher_close_driver_lease
     assert "-m\nscripts.session_supervisor\nclose\n--role\ndriver\n" in body
 
 
+def test_cto_wrapper_start_builds_cto_prompt_not_lane_driver_prompt(tmp_path: Path) -> None:
+    """#12496: the CTO seat holds the epics lease but binds lane cto and the cto skill."""
+    argv_file = tmp_path / "cto-argv"
+    cto = run_launcher(
+        "start-claude-cto.sh",
+        "--epic",
+        "epics",
+        "--model",
+        "claude-opus-5-5",
+        "KICK",
+        env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file)},
+    )
+    assert cto.returncode == 0, cto.stderr
+    assert "launcher: would bind cto after lease" in cto.stdout
+    prompt = argv_file.read_bytes().decode().removesuffix("\0").split("\0")[-1]
+    assert prompt.startswith("First run lu-driver-state render --lane cto, then lu-driver-state check --lane cto.")
+    assert "agents_extensions/shared/skills/cto/SKILL.md" in prompt
+    assert "The launcher already claimed the epics lease" in prompt
+    assert "first repeat lu-driver-state render --lane cto and lu-driver-state check --lane cto" in prompt
+    assert "drive-epic" not in prompt
+    assert "--lane epics" not in prompt
+    assert prompt.endswith("Caller instructions:\nKICK")
+
+    # The same lane through the lane-driver launcher keeps the drive-epic binding.
+    lane = run_launcher("start-claude-driver.sh", "--epic", "epics")
+    assert lane.returncode == 0, lane.stderr
+    assert "launcher: would bind drive-epic after lease" in lane.stdout
+    lane_prompt = shlex.split(lane.stdout.split("would exec ", 1)[1])[-1]
+    assert lane_prompt.startswith(
+        "First run lu-driver-state render --lane epics, then lu-driver-state check --lane epics."
+    )
+    assert "agents_extensions/shared/skills/drive-epic/SKILL.md" in lane_prompt
+
+
+def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
+    """#12496: only the CTO seat names another skill; the lane-driver clause is unchanged."""
+    script = (
+        'source "$1"; printf "%s\\0%s\\0%s" '
+        '"$(fleet_comms_cold_clause)" "$(fleet_comms_cold_clause drive-epic)" "$(fleet_comms_cold_clause cto)"'
+    )
+    result = subprocess.run(
+        ["bash", "-c", script, "bash", str(REPO / "scripts/lib/fleet_comms_cold_start.sh")],
+        env={**os.environ, "FLEET_COMMS_PLANE_MODE": "authority", "PROJECT_DIR": str(REPO), "LC_ROOT": str(REPO)},
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    default, lane, cto = result.stdout.split("\0")
+    assert default == lane
+    assert "Method playbook: load skill drive-epic (provider drivers inject the binding after lease + canary). " in lane
+    assert cto == lane.replace("load skill drive-epic", "load skill cto")
+
+
 def test_compat_kimicc_rejects_harness_override() -> None:
     result = run_launcher("start-kimicc.sh", "--harness", "kimi-code")
     assert result.returncode == 2
@@ -1275,195 +1330,6 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     assert alias.returncode == 2
     assert "claude-atlas-practice" in alias.stderr
     assert "not registered" in alias.stderr
-
-
-def hermes_stub_env(tmp_path: Path, *, help_text: str | None = None) -> dict[str, str]:
-    """No inference or credentials: emulate the installed Hermes probe/argv surface."""
-    import shlex
-
-    binary = tmp_path / "hermes"
-    help_text = (
-        help_text
-        if help_text is not None
-        else (
-            "  -m MODEL, --model MODEL\n"
-            "  --provider PROVIDER\n"
-            "  -q QUERY, --query QUERY\n"
-            "  --in DIR\n"
-            "  --cli\n"
-            "  --reasoning LEVEL  Reasoning effort: low, medium, high, xhigh, max.\n"
-        )
-    )
-    binary.write_text(
-        "#!/usr/bin/env bash\n"
-        'if [[ "$*" == "chat --help" ]]; then\n'
-        f"  printf '%s\\n' {shlex.quote(help_text)}\n"
-        'elif [[ "$*" == "fallback list" ]]; then\n'
-        '  if [[ "${TEST_HERMES_FALLBACK:-0}" == 1 ]]; then\n'
-        "    printf 'Fallback chain: private-test-credential\\n'\n"
-        "  else\n"
-        "    printf '\\n  No fallback providers configured.\\n\\n  Add one with:  hermes fallback add\\n'\n"
-        "  fi\n"
-        "else\n"
-        "  printf '%s\\0' \"$@\"\n"
-        "fi\n",
-        encoding="utf-8",
-    )
-    binary.chmod(0o755)
-    return {"PATH": f"{tmp_path}{os.pathsep}{os.defpath}"}
-
-
-@pytest.mark.parametrize("provider", ("grok", "codex"))
-def test_hermes_absent_binary_fails_before_lifecycle(provider: str) -> None:
-    assert shutil.which("hermes", path=os.defpath) is None
-    result = run_launcher(
-        f"start-{provider}.sh",
-        "--harness",
-        "hermes",
-        env={"PATH": os.defpath},
-        dry_run=False,
-    )
-    assert result.returncode == 3
-    assert "Hermes executable is unavailable" in result.stderr
-    assert "lease" not in result.stdout
-
-
-@pytest.mark.parametrize("provider", ("grok", "codex"))
-def test_hermes_environment_is_not_opt_in(provider: str) -> None:
-    result = run_launcher(f"start-{provider}.sh", env={"LAUNCHER_HARNESS": "hermes"})
-    assert result.returncode == 2
-    assert "explicit --harness hermes" in result.stderr
-
-
-@pytest.mark.parametrize("provider", ("grok", "codex"))
-@pytest.mark.parametrize(
-    "override",
-    (
-        "--provider=openrouter",
-        "--model=other",
-        "-mother",
-        "--reasoning=ultra",
-        "--yolo",
-        "--safe-mode",
-        "--ignore-rules",
-        "--api-key=private-test-credential",
-        "--resume=latest",
-        "--oneshot",
-        "--query=override",
-    ),
-)
-def test_hermes_forwarded_flags_fail_closed_without_echoing_values(provider: str, override: str) -> None:
-    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--", override)
-    assert result.returncode == 2
-    assert "forwarded CLI flags are forbidden" in result.stderr
-    assert "private-test-credential" not in result.stdout + result.stderr
-
-
-@pytest.mark.parametrize("provider", ("grok", "codex"))
-def test_hermes_unproven_effort_is_rejected(tmp_path: Path, provider: str) -> None:
-    env = hermes_stub_env(
-        tmp_path,
-        help_text=(
-            "  --model MODEL\n  --provider PROVIDER\n  --query QUERY\n  --in DIR\n  --cli\n"
-            "  --reasoning LEVEL  Reasoning effort: medium, high.\n"
-            "  --verbosity LEVEL  Verbosity: low, high.\n"
-        ),
-    )
-    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--effort", "low", env=env)
-    assert result.returncode == 2
-    assert "does not advertise" in result.stderr
-    assert "would claim lease" not in result.stdout
-
-
-@pytest.mark.parametrize("provider", ("grok", "codex"))
-def test_hermes_configured_fallback_is_refused_and_redacted(tmp_path: Path, provider: str) -> None:
-    env = hermes_stub_env(tmp_path) | {"TEST_HERMES_FALLBACK": "1"}
-    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", env=env)
-    assert result.returncode == 2
-    assert "empty fallback chain" in result.stderr
-    assert "private-test-credential" not in result.stdout + result.stderr
-
-
-@pytest.mark.parametrize("provider", ("grok", "codex"))
-def test_hermes_help_never_probes_or_claims(provider: str) -> None:
-    result = run_launcher(
-        f"start-{provider}-driver.sh",
-        "--harness",
-        "hermes",
-        "--help",
-        env={"PATH": os.defpath},
-    )
-    assert result.returncode == 0
-    assert "Rollback: omit --harness hermes" in result.stdout
-    assert "would claim lease" not in result.stdout
-
-
-@pytest.mark.parametrize(
-    "provider,model,route",
-    (
-        ("grok", "grok-4.7", "xai-oauth"),
-        ("codex", "gpt-6.1-sol", "openai-codex"),
-    ),
-)
-def test_hermes_real_exec_preserves_literal_prompt_argv(
-    tmp_path: Path,
-    provider: str,
-    model: str,
-    route: str,
-) -> None:
-    """Run the real adapter against a fake binary, without deployment/lease effects."""
-    import shlex
-
-    env = os.environ | hermes_stub_env(tmp_path)
-    prompt = "quotes ' and \"; $(touch never-execute) `false`\nsecond line"
-    command = (
-        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
-        f"source {shlex.quote(str(REPO / f'scripts/launchers/{provider}.sh'))}\n"
-        f"LC_PROVIDER={provider}; LC_MODE=interactive; launcher_defaults\n"
-        f"LC_SESSION_ROOT={shlex.quote(str(tmp_path / 'repo with spaces'))}\n"
-        f"launcher_parse --harness hermes --effort low -- {shlex.quote(prompt)}\n"
-        "launcher_adapter_validate\nlauncher_adapter_preflight\nlauncher_adapter_exec\n"
-    )
-    result = subprocess.run(
-        ["bash", "-eu", "-c", command],
-        cwd=REPO,
-        env=env,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout.split("\0") == [
-        "chat",
-        "--cli",
-        "--provider",
-        route,
-        "--model",
-        model,
-        "--in",
-        str(tmp_path / "repo with spaces"),
-        "--reasoning",
-        "low",
-        "--query",
-        prompt,
-        "",
-    ]
-
-
-@pytest.mark.parametrize("provider", ("grok", "codex"))
-def test_hermes_missing_required_cli_flag_fails_closed(tmp_path: Path, provider: str) -> None:
-    env = hermes_stub_env(tmp_path, help_text="  --model MODEL\n  --reasoning LEVEL low, high.\n")
-    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", env=env)
-    assert result.returncode == 2
-    assert "lacks a required launcher option" in result.stderr
-
-
-@pytest.mark.parametrize("provider", ("grok", "codex"))
-def test_hermes_rejects_effort_that_transport_would_clamp(provider: str) -> None:
-    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--effort", "max")
-    assert result.returncode == 2
-    assert "supports only low|medium|high|xhigh effort" in result.stderr
 
 
 @pytest.mark.parametrize("reason", ["Monitor API unreachable", "Monitor API returned an error (503)"])

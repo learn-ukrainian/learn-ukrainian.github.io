@@ -44,8 +44,14 @@ identified, every served row is withheld as ``account_ambiguous``.
 Serving: every read, parse and provider question runs in the background. Each
 sample keeps the cheap stat facts of every file its validation read (type,
 device and inode; for files also mode, owner, size and change times), with its
-generation and private fingerprints of its account, none of them published,
-logged or serialised. Serving only ``lstat``s those paths: any difference
+generation and private fingerprints of its account, none of them published or
+logged. The other stat facts stay in memory. The generation digest, the
+credentials' stat facts and the attribution (fingerprints, digests only) go to
+a private file beside each good reading (``_persist_sample``). After a restart
+a reading from that file is served again only when every label's binding
+validates again to its generation and every reading is still fresh
+(``restore_claude_account_samples``); otherwise the scheduler probes at once.
+Serving only ``lstat``s those paths: any difference
 withholds the row as ``not_probed`` and schedules one background revalidation,
 which re-arms the sample when the binding still validates to the same
 generation (asking the provider again only about changed credentials) and
@@ -94,7 +100,14 @@ from scripts.agent_runtime.attempt_boundary import (
     load_claude_account_binding,
     renew_claude_login,
 )
-from scripts.api.subscription_usage import _codexbar_bin, _codexbar_cache_ttl_s, _parse_resets_at_any
+from scripts.api.subscription_usage import (
+    _codexbar_bin,
+    _codexbar_cache_ttl_s,
+    _codexbar_refresh_interval_s,
+    _parse_resets_at_any,
+    _periodic_refresh_enabled,
+    _routing_budget_state_dir,
+)
 from scripts.common import scratch
 
 _log = logging.getLogger(__name__)
@@ -137,6 +150,7 @@ PROBE_FAILURE_CODES = frozenset(
         "timeout",
         "oversized",
         "exit_nonzero",
+        "rate_limited",
         "bad_json",
         "provider_mismatch",
         "provider_error",
@@ -180,7 +194,7 @@ class _Binding:
 
 @dataclass(frozen=True)
 class _Accounts:
-    """What a sample is attributed to; never published, logged or serialised."""
+    """What a sample is attributed to; never published or logged, persisted only to the private samples file."""
 
     watch: _Watch = field(repr=False)  # the validation it is served under
     fingerprints: frozenset[bytes] = field(repr=False)  # the bound and the named accounts
@@ -204,6 +218,11 @@ _lock = threading.Lock()
 _last_good: dict[str, _Sample] = {}
 # label -> failure code of the newest probe or revalidation; absent after a success
 _last_failure: dict[str, str] = {}
+# label -> epoch before which a rate-limited label is not probed again
+_probe_not_before: dict[str, float] = {}
+# Stderr kept only long enough to tell a rate limit from any other failed exit.
+_STDERR_CLASSIFY_BYTES = 4096
+_RATE_LIMIT_MARKERS = (b"rate limited", b"rate_limit")
 _revalidation_lock = threading.Lock()
 _revalidation: threading.Thread | None = None
 _sandbox_residue = 0  # probe sandboxes this process could not remove
@@ -404,19 +423,31 @@ def _await_exit(pid: int, deadline: float) -> None:
         delay = min(delay * 2, 0.1)
 
 
+def _probe_output_is_rate_limited(stdout: bytes, stderr: bytes) -> bool:
+    """True when a failed probe's own output says the endpoint rate-limited it.
+
+    The text is not kept, logged or published. Matching is on the bounded
+    prefix the probe already held.
+    """
+    text = stdout.lower() + b"\n" + stderr.lower()
+    return any(marker in text for marker in _RATE_LIMIT_MARKERS)
+
+
 def _run_codexbar(codexbar: str, env: dict[str, str], *, timeout_s: float, max_bytes: int) -> bytes:
     """Run the fixed Claude usage query without a shell, outside the repository,
     under a hard deadline and output cap.
 
     The child gets its own process group. Every helper it started is killed on
-    every path, success included, before the leader is reaped.
+    every path, success included, before the leader is reaped. Stderr is drained
+    so a helper that keeps it open cannot stall the probe, and only a bounded
+    prefix is used to tell a rate limit from any other failed exit.
     """
     try:
         proc = subprocess.Popen(
             [codexbar, *_QUERY],
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             env=env,
             cwd="/",
             close_fds=True,
@@ -424,10 +455,31 @@ def _run_codexbar(codexbar: str, env: dict[str, str], *, timeout_s: float, max_b
         )
     except OSError:
         raise _ProbeFailed("spawn_error") from None
-    assert proc.stdout is not None
+    assert proc.stdout is not None and proc.stderr is not None
     deadline = time.monotonic() + timeout_s
     chunks: list[bytes] = []
     size = 0
+    err_parts: list[bytes] = []
+    err_kept = 0
+
+    def _drain_stderr() -> None:
+        nonlocal err_kept
+        assert proc.stderr is not None
+        try:
+            while True:
+                chunk = os.read(proc.stderr.fileno(), 65536)
+                if not chunk:
+                    return
+                if err_kept >= _STDERR_CLASSIFY_BYTES:
+                    continue
+                take = chunk[: _STDERR_CLASSIFY_BYTES - err_kept]
+                err_parts.append(take)
+                err_kept += len(take)
+        except OSError:
+            return
+
+    reader = threading.Thread(target=_drain_stderr, name="claude-usage-probe-stderr", daemon=True)
+    reader.start()
     selector = selectors.DefaultSelector()
     try:
         selector.register(proc.stdout, selectors.EVENT_READ)
@@ -451,8 +503,13 @@ def _run_codexbar(codexbar: str, env: dict[str, str], *, timeout_s: float, max_b
             os.killpg(proc.pid, signal.SIGKILL)
         returncode = proc.wait()
         proc.stdout.close()
+        reader.join(timeout=2.0)
+        proc.stderr.close()
     if returncode != 0:
-        raise _ProbeFailed("exit_nonzero")
+        code = (
+            "rate_limited" if _probe_output_is_rate_limited(b"".join(chunks), b"".join(err_parts)) else "exit_nonzero"
+        )
+        raise _ProbeFailed(code)
     return b"".join(chunks)
 
 
@@ -826,15 +883,233 @@ def _record(
             # The state cannot be newer than the moment it was observed.
             source_at = observed if measured is None else min(measured.timestamp(), observed)
             windows = {name: dict(row[name]) for _key, name in _WINDOWS}
-            _last_good[label] = _Sample(source_at, windows, accounts)
+            sample = _Sample(source_at, windows, accounts)
+            _last_good[label] = sample
+            _persist_sample(label, sample)
             _last_failure.pop(label, None)
+            _probe_not_before.pop(label, None)
             return
         if forget:
             _last_good.pop(label, None)
         _last_failure[label] = failure or "probe_error"
+        if failure == "rate_limited":
+            # On-demand kicks probe again as soon as the last one finishes.
+            # Hold this label for one scheduler interval so they cannot retry sooner.
+            _probe_not_before[label] = time.time() + _codexbar_refresh_interval_s()
+
+
+# One entry per label, overwritten by each good probe, beside provider_lkg.json.
+_SAMPLES_FILE = "claude_account_samples.json"
+
+
+def _samples_path() -> Path:
+    return _routing_budget_state_dir() / _SAMPLES_FILE
+
+
+def _is_probe_owner() -> bool:
+    """True only in the process whose Monitor claude-account scheduler is running.
+
+    That scheduler is the one owner of Claude account probes and of the samples
+    file (#12542). Another process that imports this module (an exporter, a CLI
+    one-liner) must read the Monitor API and never probe, or each account is
+    probed more often than the scheduler intends. ``start_periodic_refresh``
+    assigns the thread before it starts it, so the scheduler's own first probe
+    already sees an alive owner.
+    """
+    # Read through the module: the thread is rebound when the scheduler starts and stops.
+    from scripts.api import subscription_usage  # noqa: PLC0415  # lazy-ok: import cycle
+
+    thread = subscription_usage._claude_account_scheduler_thread
+    return thread is not None and thread.is_alive()
+
+
+def _read_samples(path: Path) -> dict[str, Any]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _persist_sample(label: str, sample: _Sample) -> None:
+    """Keep the label's last good reading on disk so a restart can serve it again.
+
+    Written to a private file: the measured numbers and their time, the
+    binding's generation digest and credential stat facts, and the sample's
+    attribution (``named`` and the account fingerprints, digests only). The
+    file is never served as is: ``restore_claude_account_samples`` serves an
+    entry only after its binding validates again. Written only by the
+    process that owns the Monitor scheduler (``_is_probe_owner``), since only it
+    reads the file. A failed write is logged, never raised.
+    """
+    if not (_periodic_refresh_enabled() and _is_probe_owner()):
+        return
+    accounts = sample.accounts
+    watch = accounts.watch
+    entry = {
+        "source_at": sample.source_at,
+        "windows": sample.windows,
+        "generation": watch.generation.hex(),
+        "credentials": None if watch.credentials is None else list(watch.credentials),
+        "named": accounts.named,
+        "fingerprints": sorted(fingerprint.hex() for fingerprint in accounts.fingerprints),
+    }
+    try:
+        path = _samples_path()
+        entries = _read_samples(path)
+        entries[label] = entry
+        tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
+        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(json.dumps(entries, sort_keys=True) + "\n")
+        tmp.replace(path)
+    except (OSError, TypeError, ValueError):
+        _log.warning("claude account sample not persisted", exc_info=True)
+
+
+def _restored_windows(raw: Any) -> dict[str, dict[str, Any]] | None:
+    """The persisted windows, only when each is exactly what ``_window_row`` builds; ``None`` otherwise.
+
+    Nothing is coerced: every number is finite and in its domain, the projected
+    leftover is a whole percentage, the reset time is in the canonical form, and
+    the pace text is the one its delta derives.
+    """
+    if not isinstance(raw, dict) or set(raw) != {name for _key, name in _WINDOWS}:
+        return None
+    windows: dict[str, dict[str, Any]] = {}
+    for _key, name in _WINDOWS:
+        window = raw[name]
+        if not isinstance(window, dict) or set(window) != set(_WINDOW_FIELDS):
+            return None
+        left, delta, leftover = window["left_pct"], window["pace_delta_pct"], window["leftover_pct"]
+        if any(value is not None and _number(value) is None for value in (left, delta)):
+            return None  # a value that is not a finite number
+        if left is not None and not 0 <= left <= 100:
+            return None
+        if delta is not None and not -100 <= delta <= 100:  # the difference of two percentages
+            return None
+        if leftover is not None and (type(leftover) is not int or not 0 <= leftover <= 100):
+            return None
+        resets_at = window["resets_at"]
+        if resets_at is not None:
+            moment = _timestamp(resets_at) if isinstance(resets_at, str) else None
+            if moment is None or _iso(moment) != resets_at:
+                return None
+        if window["pace"] != _pace_label(delta):
+            return None
+        windows[name] = {field: window[field] for field in _WINDOW_FIELDS}
+    return windows
+
+
+# Every field ``_persist_sample`` writes; an entry with any other set is refused.
+_ENTRY_FIELDS = frozenset({"source_at", "windows", "generation", "credentials", "named", "fingerprints"})
+
+
+def _digest(value: Any) -> bytes | None:
+    """A SHA-256 digest from exactly the lowercase hex ``_persist_sample`` writes; ``None`` for anything else.
+
+    ``bytes.fromhex`` skips whitespace, so the decoded digest must also encode
+    back to the same text: no whitespace, no other case, no other length.
+    """
+    if not isinstance(value, str):
+        return None
+    try:
+        digest = bytes.fromhex(value)
+    except ValueError:
+        return None
+    return digest if len(digest) == hashlib.sha256().digest_size and digest.hex() == value else None
+
+
+def _restored_sample(label: str, entry: Any, now: float, limit_s: float) -> _Sample | None:
+    """A persisted reading, attributed again, when it is younger than ``limit_s`` and its binding still holds.
+
+    The binding must validate again, to the generation the reading was taken
+    under. Unchanged credentials are not put to the provider again; changed ones
+    must be proven the bound account's, as for a probe. The sample is served
+    under that new validation, so the serve-time stat check guards it as it
+    guards a probed sample.
+
+    The entry is refused, never repaired: an entry written before attribution
+    was persisted, any field outside ``_ENTRY_FIELDS``, or attribution that is
+    not the non-empty set of digests a sample holds, including its bound
+    account, means probe.
+    """
+    if not isinstance(entry, dict) or set(entry) != _ENTRY_FIELDS:
+        return None
+    source_at, credentials, named = entry["source_at"], entry["credentials"], entry["named"]
+    generation = _digest(entry["generation"])
+    fingerprints = entry["fingerprints"]
+    if isinstance(source_at, bool) or not isinstance(source_at, int | float) or generation is None:
+        return None
+    if not isinstance(named, bool) or not isinstance(fingerprints, list) or not fingerprints:
+        return None
+    digests = [_digest(fingerprint) for fingerprint in fingerprints]
+    persisted = frozenset(digest for digest in digests if digest is not None)
+    if len(persisted) < len(digests):
+        return None  # a value that is not a digest
+    if credentials is not None and not (
+        isinstance(credentials, list) and all(type(fact) is int for fact in credentials)
+    ):
+        return None
+    if not 0.0 <= now - float(source_at) < limit_s:
+        return None
+    windows = _restored_windows(entry.get("windows"))
+    if windows is None:
+        return None
+    try:
+        proof = _Watch(
+            roots=(),
+            entries=(),
+            generation=generation,
+            credentials=None if credentials is None else tuple(credentials),
+        )
+        with account_binding(label, verified=proof) as binding:
+            # Every sample's attribution holds its bound account, proven again here.
+            if binding.generation != generation or _fingerprint("account_id", binding.account) not in persisted:
+                return None
+            accounts = _Accounts(binding.watch, persisted, named=named)
+            return _Sample(float(source_at), windows, accounts)
+    except Exception:  # an unprovable binding means no reuse, never a startup failure
+        return None
+
+
+def restore_claude_account_samples(*, now: float | None = None) -> float | None:
+    """Serve the persisted readings again when every label has one; return the oldest one's age.
+
+    A restart loses the in-memory readings. When every label's persisted
+    reading is younger than the scheduler interval and the cache TTL and its
+    binding validates again (``_restored_sample``), those readings become the
+    served samples with their own measured time, exactly as the previous process
+    served them, and the age gates the first probe. Otherwise nothing is served
+    from the file and ``None`` means probe now. The age is read after the
+    bindings were validated, so the time that took is not lost. Background only
+    (it validates bindings); never probes.
+    """
+    limit_s = min(_codexbar_refresh_interval_s(), _codexbar_cache_ttl_s())
+    entries = _read_samples(_samples_path())
+    moment = time.time() if now is None else now
+    restored = {
+        label: _restored_sample(label, entries.get(label), moment, limit_s)
+        for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS
+    }
+    samples = {label: sample for label, sample in restored.items() if sample is not None}
+    if not restored or len(samples) < len(restored):
+        return None
+    age = (time.time() if now is None else now) - min(sample.source_at for sample in samples.values())
+    if not 0.0 <= age < limit_s:
+        return None
+    with _lock:
+        for label, sample in samples.items():
+            _last_good.setdefault(label, sample)  # a reading recorded meanwhile is newer
+    return age
 
 
 def _refresh_one(label: str, timeout_s: float) -> None:
+    if not _is_probe_owner():  # a non-scheduler process never probes (#12542)
+        return
+    with _lock:
+        if time.time() < _probe_not_before.get(label, 0.0):
+            return
     try:
         row, accounts = probe_account(label, timeout_s=timeout_s)
     except ClaudeAccountRefused as exc:
@@ -952,8 +1227,9 @@ def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = 
     revalidation is scheduled, after which a changed binding gives ``not_probed``
     and a refused one its refusal code.
 
-    ``ok``: the measured state is younger than the cache TTL and no probe failed since.
-    ``stale``: a last good sample that is older or followed by a failure.
+    ``ok``: the measured state is younger than the cache TTL. A probe that failed
+    after it is recorded in ``reason`` and does not discard it.
+    ``stale``: a last good sample older than the cache TTL. Admission reads it as unknown.
     ``unknown``: no usable sample, or numbers withheld as ``account_ambiguous``.
     """
     ttl = _codexbar_cache_ttl_s() if ttl_s is None else ttl_s
@@ -976,7 +1252,8 @@ def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = 
             rows[row_key(label)] = _unknown_row(ACCOUNT_AMBIGUOUS)
             continue
         age = max(0.0, moment - sample.source_at)
-        stale = failure is not None or age >= ttl
+        # A later probe failure does not shorten the reading's own TTL.
+        stale = age >= ttl
         rows[row_key(label)] = {
             **{name: dict(window) for name, window in sample.windows.items()},
             "updated": _iso(datetime.fromtimestamp(sample.source_at, UTC)),
@@ -1042,4 +1319,5 @@ def _reset_for_tests() -> None:
     with _lock:
         _last_good.clear()
         _last_failure.clear()
+        _probe_not_before.clear()
         _sandbox_residue = 0

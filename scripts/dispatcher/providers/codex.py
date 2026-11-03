@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import time
+import unicodedata
 from collections.abc import Mapping
 
 from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
@@ -15,12 +16,14 @@ from scripts.audit.post_build_review import (
     OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS as _POST_BUILD_FORBIDDEN_KEYWORDS,
 )
 from scripts.common.jsonl import jsonl_lines
+from scripts.dispatcher.providers.stream_json import SOURCES_SERVER
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = _POST_BUILD_FORBIDDEN_KEYWORDS | frozenset({"$schema", "$id"})
 
 # Failure codes (agent_runtime) for a provider that cannot take the run now: usage limits and no capacity.
 _OUT_OF_CAPACITY = frozenset({"rate_limited", "provider_overloaded"})
+_STDERR_EXCERPT = 500
 
 
 
@@ -192,6 +195,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     usage, error, completed = None, None, False
     terminal_seen, capacity, stream_clean = False, None, True
+    sources_calls: set[str] = set()
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -210,6 +214,17 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             stream_clean = False
             continue
         kind = event.get("type", "")
+        item = event.get("item")
+        if (
+            kind == "item.completed"
+            and isinstance(item, dict)
+            and item.get("type") == "mcp_tool_call"
+            and item.get("server") == SOURCES_SERVER
+            and item.get("status") == "completed"
+            and item.get("error") is None
+            and isinstance(item.get("id"), str)
+        ):
+            sources_calls.add(item["id"])
         if kind == "turn.completed":
             terminal_seen = True
             completed = True
@@ -238,6 +253,17 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         return ParsedResult(text, usage, f"codex: {capacity}", rate_limited=True)
     if returncode:
         error = f"codex: exited with status {returncode}"
+        from scripts.orchestration.dispatch_admission import redact_paths
+        from scripts.secret_redactor import redact_text
+
+        sanitized = stderr.strip()
+        if any(unicodedata.category(char) in {"Cc", "Cf"} for char in sanitized):
+            excerpt = "[stderr excerpt withheld: control or format characters]"
+        else:
+            excerpt = " ".join(redact_paths(redact_text(sanitized) or "").split())
+        if excerpt:
+            error = f"{error}: {excerpt[:_STDERR_EXCERPT]}"
     return ParsedResult(
-        text, usage, error or (None if completed and text else "codex: missing completion or final text")
+        text, usage, error or (None if completed and text else "codex: missing completion or final text"),
+        sources_mcp_call_count=len(sources_calls),
     )

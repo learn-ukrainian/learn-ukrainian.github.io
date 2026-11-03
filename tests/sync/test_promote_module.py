@@ -77,7 +77,6 @@ def _seed_build_branch(
         "resources.yaml": "resources: []\n",
         "writer_prompt.md": "prompt\n",
         "writer_output.raw.md": "raw\n",
-        "hermes.write.jsonl": "{}\n",
         "writer_tool_calls.json": "[]\n",
         "python_qg.json": "{}\n",
         "llm_qg.json": "{}\n",

@@ -144,11 +144,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "df609e52aff528177c6d4cda7725564ea25af9a2d765f2de916d35d64c00d39f:1",
     ),
     (
-        "scripts/agent_runtime/probe_fallback.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
-        "4011a53ed8820d21fd8086a91827ed8cb250f8d5f02a2a4ea76601f4f8af2213:1 db01cca994b6ba71b665bd75596a2491438cef55fa6da3bba4b170f269095bc5:1",
-    ),
-    (
         "scripts/agent_runtime/runner.py",
         "Existing path detection/privacy rule; not a temp directory producer. Expanded checks retain exact legacy fingerprints (#9702).",
         "157c5504e246d91fc39c7a97000388fbb49ded2a1e940ab30d4a92310a851018:1 27e2a870d20bcd60a938424c008e9548500d4fdf66554af3ef7e89d14db9e54e:1 5626cf9c36f6c39aa27b49c3c3a28c37bd827034ba92e47f0e39bb9f8b0cf4d9:1 62727a005096ecac61c899e122a56d6728b1ea730538ef7070f6a36f78924ed1:1 a09bdb0bbd6dd2c2efc822b650fd74694f00d2234214ff99883dce2c68b26383:1",
@@ -1795,11 +1790,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/test_agent_runtime_env_sanitize.py",
         "Existing test literal; migration outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
         "00c81db6ac6e12ac8a15612bb20ab59421cdb05b6d57f0f676a1d0c2142c14c7:1 587a8321f0c8593d51f1bbc5ac465899851c85fd0f3858326a5a14446a66d285:1 b05e8ab098fe2aa50201893b605fa6376c543d00ebe3481f2d33b72d0f02a18f:1 b0ef84eb140fe780b125aa15147727536f0e2706d21976526efadd7b563ced5b:1 cc77d44849990fe9b498a992839fe364c07d810c8355df81413d71db35c01dbf:1 cd2c04add61ae39780f454916b92d9fde10e3fad577924834acc718eba4caba9:1 d278e25f6adada5d87b66a1364c2cca3696ada63eaf46d2a0231d8bff42a9a28:1 e57675f0d44663b10cea1d278b24f23d5f76a49747ad313bc04142920647ceda:1 f1ae2347f419225140df736e8bbe882f990978fbfde730ecbc92644e33d9ae00:1",
-    ),
-    (
-        "tests/test_ask_hermes.py",
-        "Existing test literal; migration outside this bounded packet (#9702).",
-        "583cd88f6a966934a12dc9249856531b7025cc46a402c9dfcda66d888c146d5f:1",
     ),
     (
         "tests/test_atlas_job_protocol.py",

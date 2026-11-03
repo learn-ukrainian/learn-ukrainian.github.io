@@ -36,7 +36,7 @@ def test_public_monorepo_coding_is_admitted():
     ) is None
 
 
-@pytest.mark.parametrize("seat", ["deepseek", "hermes", "hermes-deepseek", "acpx-deepseek-shadow"])
+@pytest.mark.parametrize("seat", ["deepseek", "acpx-deepseek-shadow"])
 def test_prelaunch_function_calls_deepseek_helper_before_kimi_return(seat):
     with pytest.raises(DeepSeekAdmissionRefused, match="repository role must be public-monorepo"):
         refuse_kimi_if_disallowed(

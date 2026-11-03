@@ -87,7 +87,6 @@ def test_healthz_concurrent_first_request(monkeypatch):
             "codex": True,
             "gemini": True,
             "claude": True,
-            "hermes": True,
         }
 
     # Single-flight: at most 1 probe per backend across all calls

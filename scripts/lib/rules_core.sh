@@ -6,7 +6,7 @@
 #   codex        -c developer_instructions=<rules_core_toml>
 #   grok         --rules "$LC_RULES_CORE"
 #   kimi-code    --agent-file <rules_core_kimi_agent_file>   (keeps ${base_prompt})
-#   agy, cursor-agent, opencode, hermes: the core leads the initial prompt
+#   agy, cursor-agent, opencode: the core leads the initial prompt
 # Fail-closed: a missing or unreadable core, seat or loader refuses the launch
 # (rules_core_load returns 1) before any adapter check or side effect runs.
 

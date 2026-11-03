@@ -722,7 +722,8 @@
         },
         "min_words": {
           "type": "integer",
-          "minimum": 100
+          "minimum": 0,
+          "description": "Legacy compatibility metadata, not a teaching or response-length requirement"
         },
         "model_answer": {
           "type": "string",

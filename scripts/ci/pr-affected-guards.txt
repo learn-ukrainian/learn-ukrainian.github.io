@@ -3,3 +3,4 @@ tests/review/test_routing_consumers.py
 tests/agent_runtime/test_lane_probe.py
 tests/common/test_jsonl_splitlines_guard.py
 tests/test_review_reviewer_resolver.py
+tests/dispatcher/test_core.py::test_read_only_mode_denies_edits_on_every_provider

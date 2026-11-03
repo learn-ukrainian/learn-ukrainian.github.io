@@ -4,7 +4,9 @@
 > resolves the exact target, runs a non-mutating review, resolves a
 > cross-family reviewer, and requires separate behavior proof for
 > user-visible changes. For the exact-head review comment, use
-> `scripts/review/record_cf_verdict.py` after the toolful review settles.
+> `"$PY" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py"` after the toolful review settles.
+> Resolve `PRIMARY_REPO` and `PY` with the [review-loop setup](../review-loop/SKILL.md#review-loop)
+> to use current primary-checkout recorder rules regardless of branch age.
 
 All state for one review lives in a single JSON file so every step below
 can be a separate CLI call. Pick a path once per review and reuse it:

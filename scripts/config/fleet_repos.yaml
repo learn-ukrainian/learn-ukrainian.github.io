@@ -8,6 +8,8 @@
 # primary that owns `scripts/dispatch.py`. `--repo` retargets git worktree
 # creation and `gh` remotes only.
 #
+# `worktree_registry` (optional) names the repository's own worktree registry; see kube-dojo.
+#
 # `verdict_recorder` (required, boolean) says whether the repository's PRs carry
 # review verdicts from scripts/review/record_cf_verdict.py. When true,
 # `python -m scripts.publish pr-merge` refuses a head without a recorded
@@ -36,3 +38,21 @@ repos:
     transport: ssh
     role: private-product
     verdict_recorder: false
+  # kube-dojo (#12499, plan approved under #12239). Both are public repositories, so their roles
+  # deliberately avoid "public-monorepo" (learn-ukrainian-only audits, Kimi and DeepSeek admission)
+  # and any "private" spelling (private-input and OPSEC private-repo handling).
+  kube-dojo:
+    github: kube-dojo/kube-dojo.github.io
+    local_name: kube-dojo
+    transport: https
+    role: public-content
+    verdict_recorder: true
+    # Ignored registry in the repository's primary checkout, written by the dispatcher for every worktree
+    # it creates or removes (kube-dojo docs/ops/workspace-hygiene.md); a path relative to that checkout.
+    worktree_registry: .agent/workspace-hygiene.json
+  kubedojo-labs:
+    github: kube-dojo/kubedojo-labs
+    local_name: kubedojo-labs
+    transport: https
+    role: public-labs
+    verdict_recorder: true

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -473,3 +474,29 @@ def test_json_receipts_survive_failure_after_deletion(
     assert len(deleted) == 1
     assert deleted[0]["remote_deleted"] and deleted[0]["local_deleted"]
     assert not git(repo, "ls-remote", "--heads", "origin", "codex/a")
+
+
+def test_no_bulk_root_means_no_local_deletion(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Without a marker-valid bulk root, an age-out apply removes nothing and records nothing."""
+    archive = repo / sweep.ARCHIVE_DIR
+    archive.mkdir(parents=True)
+    bundle = archive / "stale-local-20200101T000000Z.bundle"
+    bundle.write_bytes(b"not read: the bulk root is checked first")
+    old = bundle.stat().st_mtime - 40 * 86400
+    os.utime(bundle, (old, old))
+    receipts = archive / "stale-local-receipts.jsonl"
+    receipts.write_text('{"event":"earlier"}\n')
+    empty_root = tmp_path / "not-a-bulk-root"  # lacks literary_texts/ and textbook_chunks/
+    empty_root.mkdir()
+    monkeypatch.setenv("LU_BULK_ROOT", str(empty_root))
+    monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
+
+    assert sweep.main(["--age-out-bundles", "--apply", "--json"]) == 1
+
+    report = json.loads(capsys.readouterr().out)
+    assert [item["status"] for item in report["results"]] == ["retained"]
+    assert bundle.read_bytes() == b"not read: the bulk root is checked first"
+    assert receipts.read_text() == '{"event":"earlier"}\n'
+    assert not empty_root.joinpath(sweep.BULK_ARCHIVE_DIR).exists()

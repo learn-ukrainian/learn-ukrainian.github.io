@@ -161,7 +161,7 @@ _STDERR_TYPED_MARKER = re.compile(
     re.IGNORECASE,
 )
 _STDERR_DIAGNOSTIC_PREFIX = re.compile(
-    r"^(?:hermes -z: agent failed:|provider\.[a-z_]+:|"
+    r"^(?:provider\.[a-z_]+:|"
     r"HTTP\s+[45]\d{2}\b|[45]\d{2}\s+(?:RESOURCE_EXHAUSTED|quota|too many|unauthorized)\b|"
     r"(?:RateLimitError|APIError|TerminalQuotaError|RetryableQuotaError|GaxiosError|"
     r"APIConnectionError|APIConnectionTimeoutError):|(?:✕\s+)?\[API Error:|"

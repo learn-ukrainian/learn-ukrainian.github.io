@@ -152,7 +152,6 @@ AGENTS: dict[str, AgentEntry] = {
         # (currently grok-4.7, operator order 2026-09-22 / #8464). Historical
         # alias: "grok-build" (see agent_identity.SEAT_ALIASES); dual-READ
         # only, prefer-WRITE "grok".
-        # DISTINCT from "grok-hermes" below (disfavored Hermes/OpenRouter path).
         "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
         "default_model": "grok-4.7",
         "default_effort": "high",
@@ -191,10 +190,8 @@ AGENTS: dict[str, AgentEntry] = {
         # OpenCode → first-party api.deepseek.com (deepseek-direct/*) is the
         # dispatch default (operator 2026-08-13): Flash default, --variant high.
         # Retired Pro model requests are refused.
-        # Bridge asks (`ask-deepseek`,
-        # `ask-hermes` alias) ride the acpx-deepseek-shadow ACP seat on the
-        # same first-party opencode route since the Hermes removal (operator
-        # order 2026-08-16, #6805). First-party DeepSeek is China-hosted →
+        # Bridge asks (`ask-deepseek`) ride the acpx-deepseek-shadow ACP
+        # seat on the same first-party opencode route. First-party DeepSeek is China-hosted →
         # CI runs are refused by the adapter.
         "adapter": "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter",
         "default_model": "deepseek-v4.1-flash",
@@ -210,59 +207,6 @@ AGENTS: dict[str, AgentEntry] = {
             }
         ),
         "cli_available": True,
-        "resume_policy": "never",
-    },
-    "hermes-deepseek": {
-        # Legacy Hermes-backed DeepSeek seat for the `_hermes.py` review path.
-        # Hermes was permanently removed from this host (operator order
-        # 2026-08-16): invocations refuse at binary resolution with the
-        # documented opencode fallbacks. Bridge `ask-deepseek`/`ask-hermes`
-        # asks route through the acpx-deepseek-shadow opencode seat (#6805).
-        "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
-        "default_model": "deepseek-v4.1-flash",
-        "cost_tier": "low",
-        "capabilities": frozenset(
-            {
-                "content_writing",
-                "content_review",
-                "adversarial_review",
-            }
-        ),
-        "cli_available": True,
-        "resume_policy": "never",
-    },
-    "grok-hermes": {
-        # Hermes-backed Grok path (DISABLED per user directive 2026-07-22:
-        # "not routing grok towards hermes anymore"). Kept in registry for
-        # backwards-compatibility lookups, but cli_available is False.
-        "adapter": "scripts.agent_runtime.adapters.hermes_grok:HermesGrokAdapter",
-        "default_model": "grok-4.5",
-        "cost_tier": "low",
-        "capabilities": frozenset(
-            {
-                "content_writing",
-                "content_review",
-                "adversarial_review",
-            }
-        ),
-        "cli_available": False,
-        "resume_policy": "never",
-    },
-    "qwen": {
-        # Qwen path (DISABLED per user directive 2026-07-22: "we dont use qwen,
-        # but we use glm-5.3"). Kept in registry for historical lookups, but
-        # cli_available is False.
-        "adapter": "scripts.agent_runtime.adapters.hermes_qwen:HermesQwenAdapter",
-        "default_model": "qwen/qwen3.6-plus",
-        "cost_tier": "low",
-        "capabilities": frozenset(
-            {
-                "content_writing",
-                "content_review",
-                "adversarial_review",
-            }
-        ),
-        "cli_available": False,
         "resume_policy": "never",
     },
     "glm": {
@@ -413,8 +357,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "acpx-deepseek-shadow": {
         # Native opencode ACP transport (``opencode acp --pure``, deny-all)
-        # pinned to first-party deepseek-direct — the standing route since
-        # Hermes was permanently removed (operator order 2026-08-16, #6805).
+        # pinned to first-party deepseek-direct — the standing route.
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
         "default_model": "deepseek-v4.1-flash",
         "cost_tier": "unknown",

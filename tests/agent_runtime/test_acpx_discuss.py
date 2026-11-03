@@ -454,10 +454,9 @@ def test_message_persistence_rolls_back_every_precommit_boundary(
         assert reopened.connection.execute(
             "SELECT COUNT(*) FROM artifacts",
         ).fetchone()[0] == 0
-        assert reopened.garbage_collect_unreferenced(grace_seconds=0) == []
 
 
-def test_committed_message_body_is_gc_visible_after_zero_grace(tmp_path, monkeypatch):
+def test_committed_message_body_is_referenced_after_reopen(tmp_path, monkeypatch):
     controller = _controller(
         tmp_path,
         monkeypatch,
@@ -501,7 +500,7 @@ def test_committed_message_body_is_gc_visible_after_zero_grace(tmp_path, monkeyp
             "SELECT 1 FROM message_artifacts WHERE message_id = ? AND artifact_id = ?",
             (message_id, artifact_id),
         ).fetchone() is not None
-        assert reopened.garbage_collect_unreferenced(grace_seconds=0) == []
+        assert reopened.is_referenced(artifact_id)
         assert reopened.get(artifact_id).artifact_id == artifact_id
 
 

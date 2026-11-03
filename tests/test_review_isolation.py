@@ -3625,9 +3625,8 @@ def test_codex_npm_user_prefix_install_is_a_trusted_reviewer_root(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """#5978: the #5950 CLI rollback reinstalled codex under the npm user prefix
-    (~/.local/lib/node_modules/@openai/codex); the trust list only knew the
-    hermes root and ~/.local/share/codex, so the reviewer seat died at checkout
-    with trusted_reviewer_not_found:codex despite a healthy install."""
+    (~/.local/lib/node_modules/@openai/codex); the missing trust-list entry
+    caused trusted_reviewer_not_found:codex despite a healthy install."""
     home = tmp_path / "home"
     package_bin = home / ".local" / "lib" / "node_modules" / "@openai" / "codex" / "bin"
     package_bin.mkdir(parents=True)

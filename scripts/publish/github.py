@@ -483,7 +483,9 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
     outside the recorder's regime and is not refused here, unless the head's own rollup
     carries the recorder's status: then its record was removed or rewritten, and the
     status alone is unverifiable. A PR whose files change learner content takes its
-    Ukrainian seats even with no Ukrainian verdict recorded yet (#12181).
+    Ukrainian seats even with no Ukrainian verdict recorded yet (#12181). A change to the
+    review output contract is refused until its canary evidence covers every reviewer route
+    (``scripts.review.contract_canary``, #12399).
     """
     from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
     from scripts.orchestration.integration_sweep import (
@@ -518,7 +520,8 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
             raise ValueError
         if not isinstance(login, str) or not re.fullmatch(r"\S+", login):
             raise ValueError
-        content = changes_learner_content(pr_file_paths([item for page in files for item in page]))
+        paths = pr_file_paths([item for page in files for item in page])
+        content = changes_learner_content(paths)
         state = lookup_verdict([item for page in pages for item in page], head, login, learner_content=content).state
     except github_client.GitHubRateLimited:
         raise
@@ -532,6 +535,11 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
         raise gate.PublishBlocked(
             f"OPSEC: merge refused: no cross-family APPROVE from scripts/review/record_cf_verdict.py is recorded at {head}."
         )
+    from scripts.review import contract_canary
+
+    # A review-contract change also needs live canary evidence on every reviewer route (#12399).
+    if (canary := contract_canary.refusal(paths, head)) is not None:
+        raise gate.PublishBlocked(f"OPSEC: merge refused: {contract_canary.REASON}: {canary}.")
     if state == "needs-CF":
         from scripts.publish.merge_guard import _rollup_name
 
@@ -722,6 +730,62 @@ def _issue_node(read_runner, gh_repo, number, cwd, environment):
     return document["node_id"]
 
 
+def _fleet_catalog_row(gh_repo):
+    """The fleet_repos row for this owner/name, or None when the repository is not registered."""
+    slug = gh_repo.casefold()
+    for row in gate.catalog().values():
+        github = row.get("github") if isinstance(row, dict) else None
+        if not isinstance(github, str):
+            continue
+        normalized = gate.normalize_repository(github)
+        if normalized != "unknown" and normalized.split("/", 1)[1] == slug:
+            return row
+    return None
+
+
+def _owns_stream_registry(row):
+    """True for the repository whose issues the stream-registry numbers are.
+
+    ``issue_streams.yaml`` has no per-repository key. Its epic numbers are issues in the
+    one default fleet repository. Every other registered repository has no stream registry.
+    """
+    return bool(row.get("default"))
+
+
+def _issue_create_parent_policy(gh_repo):
+    """``stream`` (own open epic), ``none`` (no --parent), or ``unregistered``."""
+    row = _fleet_catalog_row(gh_repo)
+    if row is None:
+        return "unregistered"
+    return "stream" if _owns_stream_registry(row) else "none"
+
+
+def _cli_keeps_stream_parent_refusal(explicit):
+    """Keep the historical missing-parent sentence unless this destination has no stream registry.
+
+    An unresolved destination keeps that sentence, so a checkout of the default repository
+    that omits ``--repo`` still prints it. A resolved repository with no stream registry, and
+    a resolved unregistered repository, fall through to ``publish``.
+    """
+    slug = None
+    if isinstance(explicit, str) and explicit.strip():
+        normalized = gate.normalize_repository(explicit)
+        if normalized != "unknown":
+            slug = normalized.split("/", 1)[1]
+    if slug is None:
+        try:
+            dest = repository(Path.cwd(), _validated_environment(None), explicit)
+        except gate.PublishBlocked:
+            return True
+        if dest == "unknown":
+            return True
+        slug = dest.split("/", 1)[1]
+    try:
+        return _issue_create_parent_policy(slug) == "stream"
+    except gate.PublishBlocked:
+        return True
+
+
 def _parent_epic_node(read_runner, gh_repo, parent, cwd, environment):
     """Resolve --parent to a registered open stream epic's node id before anything is created."""
     from scripts.orchestration import issue_stream_audit
@@ -826,12 +890,24 @@ def publish(
         readiness_runner = merge_readiness_runner(runner)
         parent_node = None
         if verb == "issue-create":
-            if "parent" not in fields:
+            policy = _issue_create_parent_policy(gh_repo)
+            if policy == "unregistered":
                 raise gate.PublishBlocked(
-                    "PARENT_REQUIRED: issue-create requires parent, the number of a registered open stream epic; "
+                    "REPO_REFUSED: issue-create only targets a repository registered in "
+                    "scripts/config/fleet_repos.yaml; nothing was created."
+                )
+            if policy == "stream":
+                if "parent" not in fields:
+                    raise gate.PublishBlocked(
+                        "PARENT_REQUIRED: issue-create requires parent, the number of a registered open stream epic; "
+                        "nothing was created."
+                    )
+                parent_node = _parent_epic_node(readiness_runner, gh_repo, fields["parent"], cwd, environment)
+            elif "parent" in fields:
+                raise gate.PublishBlocked(
+                    "PARENT_REFUSED: this repository has no stream registry, so issue-create accepts no --parent; "
                     "nothing was created."
                 )
-            parent_node = _parent_epic_node(readiness_runner, gh_repo, fields["parent"], cwd, environment)
 
         def queue_probe():
             identity = readiness_runner(
@@ -1361,7 +1437,7 @@ def main(argv=None, *, runner=None):
     )
     args = vars(parser.parse_args(argv))
     verb = args.pop("verb")
-    if verb == "issue-create" and "parent" not in args:
+    if verb == "issue-create" and "parent" not in args and _cli_keeps_stream_parent_refusal(args.get("repo")):
         print(
             "issue-create requires --parent <stream epic issue number>; the new issue is linked to it. "
             "Nothing was created.",

@@ -149,6 +149,53 @@ Before appending a real review correction, the driver must toolfully verify the
 canonical comment's exact author, approved head SHA and verdict. A correction
 link does not establish approval or strengthen a comment's evidential authority.
 
+### Correcting frozen required evidence types
+
+`init --reuse` compares the supplied effective AC policy and authoritative issue
+snapshot with the stored snapshot. A difference in criterion IDs, order, text,
+applicability, due state, required evidence or behavior-proof requirement returns
+`AC_SNAPSHOT_MISMATCH` and exits 2 without writing the ledger. Checkbox changes
+and initialization timestamps are excluded from that comparison.
+
+To correct wrongly frozen required evidence types, use:
+
+```bash
+.venv/bin/python -m scripts.orchestration.task_closeout correct-evidence-types \
+  --state-file ledger.json --ac-id AC-02 \
+  --required-evidence document --required-evidence review \
+  --actor codex/task-id --reason 'This criterion verifies documentation'
+```
+
+The command reads the authoritative issue under the ledger lock. It refuses a
+checked criterion (`AC_ALREADY_CHECKED`) or an issue closed as completed
+(`AC_ISSUE_COMPLETED`), including those facts retained in prior observation
+receipts. An unread historical observation supplies no issue facts and does not
+block a later correction. Historical checkbox inspection uses the same line
+grammar as live parsing; unrelated missing or malformed old criteria do not
+erase an observed checked criterion. Unknown live issue state or a closed
+issue's unknown closure reason fails closed (`AC_ISSUE_UNREAD`).
+It checks the current issue's criterion IDs, order and text against the snapshot.
+It does not reconstruct unobserved GitHub history.
+
+One digest-bound row in the optional `evidence_type_corrections` history records
+the criterion, actor, reason, old and new type lists, timestamp, and full old and
+new snapshots. Only the targeted `required_evidence` and snapshot hash change;
+all other snapshot fields, original evidence and observation receipts remain
+immutable. Loading validates the chain and the current snapshot against its tip.
+Old ledgers without this optional history remain valid. Repeating the latest
+identical correction while still eligible returns its receipt without appending.
+A correction cannot predate the ledger's last update or the previous correction.
+Loading validates chronology within the correction chain. It does not compare
+that history with `updated_at`, which other ledger operations may set from their
+own supplied timestamps. Existing timestamped evidence and reconciliation writes
+remain supported after a correction.
+
+This command corrects the evidence policy only. It supplies no evidence, checks
+no boxes, and changes neither supported evidence types nor evidence validity,
+behavior-proof, review, CI or closeout gates. After correction, reuse requires
+the corrected policy. Changes to other snapshot fields need an explicit new
+snapshot version; this command cannot make them.
+
 ## Reconciliation and mutation
 
 `reconcile` is read-only. It observes GitHub and local Git, validates identity,

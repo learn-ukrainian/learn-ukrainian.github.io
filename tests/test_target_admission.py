@@ -497,25 +497,25 @@ def test_review_admission_uses_complete_branch_authorship_like_the_recorder(tmp_
         "review_risk": "medium",
     }
 
-    # Without the facts, the latest author alone admits an earlier author's family.
+    # Complete mixed-family facts admit the Claude seat for the OpenAI commits.
     (legacy,) = resolve_and_admit(("claude",), model="claude-opus-5-5", **trusted, claude_account=HOST_ACCOUNT)
     assert legacy.recipient == "claude"
-    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ROUTE_REFUSED"):
-        resolve_and_admit(
-            ("claude",), model="claude-opus-5-5", review_facts=facts, **trusted, claude_account=HOST_ACCOUNT
-        )
-    (grok,) = resolve_and_admit(
-        ("cursor",), model="grok-4.7-high", review_facts=lambda: facts, **trusted, claude_account=HOST_ACCOUNT
+    (scoped,) = resolve_and_admit(
+        ("claude",), model="claude-opus-5-5", review_facts=facts, **trusted, claude_account=HOST_ACCOUNT
     )
-    assert (grok.recipient, grok.model) == ("cursor", "grok-4.7-high")
+    assert scoped.recipient == "claude"
+    with pytest.raises(ReviewAdmissionRefused, match="mixed-family review requires"):
+        resolve_and_admit(
+            ("cursor",), model="grok-4.7-high", review_facts=lambda: facts, **trusted, claude_account=HOST_ACCOUNT
+        )
 
     # The recorder reaches the same verdicts on the same facts.
     recorder._require_qualified_reviewer(
-        facts, task={"agent": "cursor", "review_risk": "medium"}, model="grok-4.7", family="xai"
+        facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
     )
-    with pytest.raises(recorder.RecordError, match="not qualified"):
+    with pytest.raises(recorder.RecordError, match="mixed-family review requires"):
         recorder._require_qualified_reviewer(
-            facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
+            facts, task={"agent": "cursor", "review_risk": "medium"}, model="grok-4.7", family="xai"
         )
 
 

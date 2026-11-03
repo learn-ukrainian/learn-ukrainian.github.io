@@ -218,7 +218,6 @@ GITHUB_TOKEN_SEATS = {
     "glm",
     "grok",
     "grok-build",
-    "grok-hermes",
     "kimi",
 }
 
@@ -279,8 +278,7 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     },
     "acpx-deepseek-shadow": {
         # Same OpenCode ACP auth selector and deny-all policy JSON as the GLM
-        # seat — the DeepSeek seat rides the native opencode ACP transport
-        # since the Hermes removal (#6805).
+        # seat; the DeepSeek seat uses the native opencode ACP transport.
         "ACPX_AUTH_OPENCODE_LOGIN",
         "OPENCODE_CONFIG_CONTENT",
     },
@@ -313,20 +311,6 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     # credential; `HOME` already passes the global safe-name allowlist.
     "agy": {
         "AGY_APP_DATA_DIR",
-    },
-    "deepseek": {
-        "HERMES_HOME",
-    },
-    # ask-hermes seat (OpenCode owns the bare ``deepseek`` dispatch key).
-    "hermes-deepseek": {
-        "HERMES_HOME",
-    },
-    # Demoted Hermes Grok path (was bare "grok" before the native-seat rename).
-    "grok-hermes": {
-        "HERMES_HOME",
-    },
-    "qwen": {
-        "HERMES_HOME",
     },
     "kimi": {
         # Native CLI executable override; it is a path, never a credential.

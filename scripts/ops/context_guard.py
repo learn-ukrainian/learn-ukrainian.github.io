@@ -7,9 +7,10 @@ Per lane (state in ``$XDG_STATE_HOME/learn-ukrainian/context-guard/``):
 watch
     Claude lanes: the status line ``ctx: …K/…K (N%)`` reaches
     ``claude_handoff_pct``. Codex lanes: the session compacted
-    ``codex_max_compactions`` times (a ``Context N% used`` drop of at least
-    ``codex_drop_pct`` points between ticks). Either way the guard types
-    ``HANDOFF NOW`` (and posts it to Fleet Comms) and enters ``handoff``. A
+    ``codex_max_compactions`` times, counted from top-level ``compacted`` events
+    in the rollout held open by that pane's agent process. An unidentifiable or
+    unreadable rollout is logged as unknown and sends no handoff. At a known
+    threshold the guard types ``HANDOFF NOW`` (and posts it to Fleet Comms) and enters ``handoff``. A
     lane that already printed or posted ``HANDOFF-DONE`` enters ``handoff``
     at once, done, so it does not idle until the next threshold.
 handoff
@@ -29,11 +30,25 @@ handoff
     HANDOFF-DONE has been seen and the agent and its launcher have exited, the
     pane is respawned with the lane's launcher
     (fresh session; it reads its goal file). If the same idle Claude agent survives
-    two exits after HANDOFF-DONE, the same guarded respawn ends it and alerts
+    two exits after HANDOFF-DONE, the guard ends it first: it stops the agent's
+    ``lu-driver`` systemd scope (read from the agent's cgroup), waits up to
+    ``PREDECESSOR_EXIT_SECONDS`` until the scope is inactive, the agent process is
+    gone and the launcher has exited, and only then respawns, so the successor's
+    single-instance check never meets the predecessor (#12562). If the
+    predecessor does not exit in time, or its scope cannot be identified, nothing is
+    respawned and ``claude-cto`` is alerted once. The ordinary relaunch (the agent exited by
+    itself or on ``/exit``) takes the same wait without the stop (#12569): the agent's scope is
+    read and checkpointed with the agent's pid and start time while it is alive, before any
+    ``/exit`` (none is typed when that fails), and the respawn waits until that scope is gone.
+    A scope that was never recorded, or whose state cannot be read, holds the relaunch and
+    alerts ``claude-cto`` after ``UNKNOWN_SCOPE_ALERT_SECONDS``; it never relaunches blind. A completed relaunch alerts
     ``claude-cto`` once with a redacted pane tail. Other stalled handoffs alert
     ``epics`` once after ``handoff_alert_seconds``. After a respawn it
     watches the launcher; a non-zero launcher exit alerts once with the pane's
-    stderr tail and is not relaunched in a loop.
+    stderr tail and is not relaunched in a loop. The one exception is the
+    launcher's single-instance refusal (rc 3 with its "process is still running"
+    text) while no predecessor process remains: that relaunch is retried once on
+    the next tick, and a second refusal alerts as any other failure.
 
 A missing session is logged on every tick. For a lead lane (the CTO) it also
 alerts ``claude-cto`` once it has been missing for 15 minutes, then hourly, with
@@ -115,6 +130,20 @@ LAUNCHER_EXIT_RE = re.compile(rf"{re.escape(EXIT_MARKER)}(-?\d+) id=([0-9a-f]{{3
 ANCHOR_MAX_SENDBACKS = 3
 ANCHOR_SENDBACK_PREFIX = "ANCHOR CHECK"
 RELAUNCH_SETTLE_SECONDS = 900
+# A forced relaunch waits this long for the predecessor's scope and agent to exit before it respawns.
+PREDECESSOR_EXIT_SECONDS = 60
+# An ordinary relaunch held because the predecessor's scope is unknown alerts claude-cto after this long.
+UNKNOWN_SCOPE_ALERT_SECONDS = 600
+# The agent's driver scope, from its cgroup path (``scripts/lib/driver_scope.sh`` verifies the same shape).
+# The agent may sit in a sub-cgroup of the scope, so the unit is the component under ``lu-driver.slice``.
+DRIVER_SCOPE_RE = re.compile(r"/lu\.slice/lu-driver\.slice/(lu-[A-Za-z0-9_.:-]+\.scope)(?:/|$)")
+# ``systemctl is-active`` states: a scope in either set has a definite answer; anything else is unknown.
+SCOPE_GONE_STATES = frozenset({"inactive", "failed"})
+SCOPE_LIVE_STATES = frozenset({"active", "activating", "deactivating", "reloading", "refreshing", "maintenance"})
+# The launcher's single-instance refusal (host-local ``lu-start-cto``): exit 3 and this line. rc 3 alone
+# is not enough, since the repository launchers also exit 3 for interpreter and git-metadata failures.
+SINGLE_INSTANCE_RC = 3
+SINGLE_INSTANCE_REFUSAL_RE = re.compile(r"refused: .*process is still running")
 RELAUNCH_TAIL_LINES = 6
 ALERT_DETAIL_CHARS = 600
 # A lead lane (the CTO) whose session is missing alerts claude-cto after this long, then hourly.
@@ -208,6 +237,7 @@ class Tmux:
     sleep: Callable[[float], None] = time.sleep
     clock: Callable[[], float] = time.time
     monotonic: Callable[[], float] = time.monotonic
+    proc_root: Path = Path("/proc")
 
     def tmux(self, *args: str) -> subprocess.CompletedProcess[str]:
         return self.run(["tmux", *args])
@@ -313,6 +343,101 @@ class Tmux:
                 stack.append(child)
         return PaneSnapshot(pane=f"{pid}@{starts[pid]}", agent=agent, busy=bool(children.get(pid)))
 
+    def agent_scope(self, agent: str, *, strict: bool = False) -> str | None:
+        """The ``lu-driver`` scope unit holding the agent ``<pid>@<start>``, or None when it is not in one.
+
+        Raises ``TelemetryUnavailable`` when the cgroup cannot be read (for example the process just exited).
+        ``strict`` treats output without a unified (``0::``) line, or with a relative or deleted path, as
+        unreadable, not as "in no scope"; the forced relaunch keeps the lenient read.
+        """
+        pid = agent.split("@", 1)[0]
+        for line in self._query(["cat", f"/proc/{pid}/cgroup"], "agent cgroup").splitlines():
+            if line.startswith("0::"):
+                path = line[3:]
+                if strict and not (path.startswith("/") and not path.endswith("(deleted)")):
+                    raise TelemetryUnavailable(f"agent cgroup: malformed unified path {path[:60]!r}")
+                match = DRIVER_SCOPE_RE.search(path)
+                return match.group(1) if match else None
+        if strict:
+            raise TelemetryUnavailable("agent cgroup: no unified cgroup line")
+        return None
+
+    def scope_active(self, unit: str) -> bool:
+        """Whether the user-manager scope ``unit`` still exists (any state but inactive or failed).
+
+        An unknown or unparseable answer raises ``TelemetryUnavailable``; it is never read as "gone".
+        """
+        try:
+            result = self.run(["systemctl", "--user", "is-active", unit])
+        except (subprocess.SubprocessError, OSError) as exc:
+            raise TelemetryUnavailable(f"scope state: {type(exc).__name__}") from exc
+        state = (result.stdout or "").strip()
+        if state in SCOPE_GONE_STATES:
+            return False
+        if state in SCOPE_LIVE_STATES:
+            return True
+        raise TelemetryUnavailable(f"scope state: rc={result.returncode} {state[:40]!r} {(result.stderr or '').strip()[-80:]}")
+
+    def stop_scope(self, unit: str) -> subprocess.CompletedProcess[str]:
+        """Queue the stop of ``unit`` without waiting for it: systemd's own SIGKILL timeout can exceed the runner's."""
+        return self.run(["systemctl", "--user", "stop", "--no-block", unit])
+
+    def process_exists(self, agent: str) -> bool:
+        """Whether the process ``<pid>@<start>`` is still in the process table (a reused pid has another start)."""
+        starts, _children = self._process_table()
+        return starts.get(agent.split("@", 1)[0]) == agent.split("@", 1)[1]
+
+    def codex_compactions(self, agent: str) -> int:
+        """Count the exact pane agent's open rollout, never a recent session or pane text.
+
+        Both process identity and the open file must survive the read. A partial
+        JSONL write is unknown until the next tick, not a smaller count.
+        """
+        def rollout() -> Path:
+            if not self.process_exists(agent):
+                raise TelemetryUnavailable("Codex compactions unknown: agent changed")
+            paths = set()
+            for fd in (self.proc_root / agent.split("@", 1)[0] / "fd").iterdir():
+                try:
+                    path = fd.resolve(strict=True)
+                except FileNotFoundError:  # an unrelated descriptor may close during enumeration
+                    continue
+                if path.name.startswith("rollout-") and path.suffix == ".jsonl":
+                    paths.add(path)
+            if len(paths) != 1:
+                raise TelemetryUnavailable("Codex compactions unknown: no unique open rollout")
+            return paths.pop()
+
+        try:
+            path = rollout()
+            count = 0
+            records = 0
+            with path.open(encoding="utf-8") as handle:
+                identity = os.fstat(handle.fileno())
+                for index, line in enumerate(handle):
+                    if not line.endswith("\n"):
+                        raise ValueError("incomplete rollout record")
+                    record = json.loads(line)
+                    if not isinstance(record, dict):
+                        raise ValueError("rollout record is not an object")
+                    if index == 0:
+                        if record.get("type") != "session_meta":
+                            raise ValueError("missing session metadata")
+                        session_id = record["payload"]["id"]
+                        if not isinstance(session_id, str):
+                            raise ValueError("invalid session identity")
+                        uuid.UUID(session_id)
+                    records += 1
+                    count += record.get("type") == "compacted"
+                if not records:
+                    raise ValueError("empty rollout")
+            current = rollout().stat()
+            if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                raise ValueError("rollout changed")
+            return count
+        except (OSError, ValueError, TypeError, KeyError, RecursionError) as exc:
+            raise TelemetryUnavailable(f"Codex compactions unknown: {type(exc).__name__}") from exc
+
     def human_activity(self, session: str, window_s: int) -> str | None:
         """Why a human may be using ``session``, or None when no client of it had input within ``window_s``.
 
@@ -352,6 +477,9 @@ class Guard:
     handoff_posted: Callable[[str, str], bool]
     local: dict[str, dict[str, Any]] = field(default_factory=dict)
     now: Callable[[], dt.datetime] = utcnow
+    # Saves the whole state; the forced relaunch calls it before the stop, so the scope it is about to end
+    # survives a pass that the service timeout cuts off before the end-of-run save.
+    checkpoint: Callable[[dict[str, Any]], None] = lambda _state: None
     _exit_poll_remaining: float = field(default=0, init=False)
 
     def setting(self, key: str) -> int:
@@ -424,6 +552,7 @@ class Guard:
             quit_sent=None,
             quit_attempts=0,
             alerted=False,
+            predecessor_alerted=False,
             done_seen=done,
             nudges=0,
             last_nudge=None,
@@ -457,8 +586,10 @@ class Guard:
         The lane registry gives the epic (``lane.epic``); the handoff candidates
         and stream entries are resolved exactly as the Codex launcher does in
         ``scripts/launchers/codex.sh`` -> ``codex_lane mint``: candidates from
-        ``handoff_select.load_codex_candidates`` under ``.claude/<epic>-epic/``,
-        the stream from ``grok_lane.launcher_stream_id``, and entries from
+        ``handoff_select.load_codex_mint_candidates`` (the lane's newest
+        driver-state ``handoff_note`` first, then the markdown handoffs under
+        ``.claude/<epic>-epic/``; #12567), with the registry sender as the
+        lane slot, the stream from ``grok_lane.launcher_stream_id``, and entries from
         ``grok_lane._load_stream_entries``. Only the Codex launcher mints
         anchors (the Claude adapter canary is a no-op), so other kinds are not
         checked.
@@ -471,7 +602,7 @@ class Guard:
         """
         from scripts.session_canary import grok_lane, handoff_select
 
-        candidates = handoff_select.load_codex_candidates(self.repo_root, lane.epic)
+        candidates = handoff_select.load_codex_mint_candidates(self.repo_root, lane.epic, slot=lane.sender)
         stream_id = grok_lane.launcher_stream_id(lane.epic)
         stream_entries = grok_lane._load_stream_entries(stream_id)
         return grok_lane.check_handoff_anchors(
@@ -599,7 +730,7 @@ class Guard:
             pct = context_pct(lane.kind, text)
             snap = self.tmux.snapshot(lane.target, AGENT_COMMANDS[lane.kind])
             if s["phase"] == "watch":
-                self._watch(lane, s, text, pct, snap)
+                self._watch(lane, st, s, text, pct, snap)
             else:
                 self._handoff(lane, st, s, text, pct, snap)
         except TelemetryUnavailable as exc:
@@ -628,15 +759,34 @@ class Guard:
             f"lead-missing-{lane.name}-{stamp}",
         )
 
-    def _watch(self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot) -> None:
+    def _watch(
+        self, lane: Lane, st: dict[str, Any], s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot
+    ) -> None:
+        retry_due = bool(s.get("relaunch_retry"))  # set on an earlier tick; a refusal seen now waits for the next
         if snap.agent is not None:
-            s.pop("relaunch_watch", None)
-            s.pop("relaunch_id", None)
-            s.pop("relaunch_hold", None)
+            for key in (
+                "relaunch_watch",
+                "relaunch_id",
+                "relaunch_hold",
+                "relaunch_retry",
+                "relaunch_retry_pane",
+                "relaunch_retried",
+            ):
+                s.pop(key, None)
+            s.pop("predecessor_scope", None)
+            s.pop("exit_evidence", None)
         else:
-            self._watch_launcher_exit(lane, s, text)
+            self._watch_launcher_exit(lane, s, text, snap)
         if snap.agent is None:
             self.log(f"{lane.name} watch: agent not running in session {lane.session}")
+            if retry_due and s.get("relaunch_retry_pane") != snap.pane:
+                # A person replaced the pane since the refusal: that pane is theirs, not the failed launch's.
+                s.pop("relaunch_retry", None)
+                s.pop("relaunch_retry_pane", None)
+                self.log(f"{lane.name} watch: pane replaced since the launcher's refusal; pending retry cancelled")
+            elif retry_due and not snap.busy:
+                self.log(f"{lane.name} watch: retrying the relaunch once after the launcher's single-instance refusal")
+                self._relaunch(lane, st, s, None, snap)
             return
         if (s.get("agent_id"), s.get("pane_id")) != (snap.agent, snap.pane):
             # A new agent process (or pane) is a new session: earlier HANDOFF-DONE posts and compactions were
@@ -646,35 +796,65 @@ class Guard:
             s.pop("last_pct", None)
         extra = ""
         if lane.kind == "codex":
-            prev = s.get("last_pct")
-            if pct is not None and prev is not None and prev - pct >= self.setting("codex_drop_pct"):
-                s["compactions"] = int(s.get("compactions", 0)) + 1
-            if pct is not None:
-                s["last_pct"] = pct
-            extra = f" compactions={s.get('compactions', 0)} compacting_now={'Compacting context' in text}"
+            s.pop("last_pct", None)
+            s["compactions"] = None
+            try:
+                s["compactions"] = self.tmux.codex_compactions(snap.agent)
+            except TelemetryUnavailable as exc:
+                extra = f" compactions=unknown ({exc})"
+            else:
+                extra = f" compactions={s['compactions']}"
+            extra += f" compacting_now={'Compacting context' in text}"
         self.log(f"{lane.name} watch ctx_pct={pct}{extra}")
         pane_done = self._pane_done(s, done_lines(text), snap)
         if pane_done or self.handoff_posted(lane.sender, s["watch_since"]):
             self.log(f"{lane.name} watch: HANDOFF-DONE seen before the prompt -> handoff (done)")
             self._enter_handoff(s, pct, done=True)
+            self._record_scope(lane, st, s, snap, pct)
             return
         if lane.kind == "claude":
             due = pct is not None and pct >= self.setting("claude_handoff_pct")
         else:
-            due = s.get("compactions", 0) >= self.setting("codex_max_compactions") and "Compacting context" not in text
+            compactions = s.get("compactions")
+            due = (
+                compactions is not None
+                and compactions >= self.setting("codex_max_compactions")
+                and "Compacting context" not in text
+            )
         if not due or self._human(lane):
             return
         self._enter_handoff(s, pct, done=False)
         self._nudge(lane, s, pct)
         self.log(f"{lane.name} watch -> handoff: HANDOFF NOW sent")
+        self._record_scope(lane, st, s, snap, pct)
 
-    def _watch_launcher_exit(self, lane: Lane, s: dict[str, Any], text: str) -> None:
+    def _predecessor_remains(self, s: dict[str, Any], snap: PaneSnapshot) -> str | None:
+        """Why the predecessor may still be running after a relaunch, or None when nothing of it remains.
+
+        Called with no agent in the pane. Its recorded scope, when the relaunch ended one, must be
+        inactive too; an unreadable scope state counts as remaining.
+        """
+        if snap.busy:
+            return "the pane still runs a process"
+        unit = s.get("predecessor_scope")
+        if unit:
+            try:
+                if self.tmux.scope_active(unit):
+                    return f"scope {unit} is still active"
+            except TelemetryUnavailable as exc:
+                return f"scope state unknown ({exc})"
+        return None
+
+    def _watch_launcher_exit(self, lane: Lane, s: dict[str, Any], text: str, snap: PaneSnapshot) -> None:
         """Alert once when the launcher a relaunch started has exited non-zero.
 
         The relaunch records its timestamp and occurrence ID; the pane script
         tags the exit status with that ID. A non-zero exit keeps ``relaunch_hold``
         so the same failure is never relaunched in a loop. An agent appearing
-        clears the watch, ID and hold.
+        clears the watch, ID and hold. The one exception is the launcher's
+        single-instance refusal while no predecessor process remains: it is
+        retried once, on the next tick (``relaunch_retry``), and ``relaunch_retried``
+        makes a second refusal an ordinary failure.
         """
         started = s.get("relaunch_watch")
         if not started:
@@ -691,6 +871,18 @@ class Guard:
         if rc == 0:
             self.log(f"{lane.name} watch: relaunched launcher exited rc=0")
             return
+        if rc == SINGLE_INSTANCE_RC and SINGLE_INSTANCE_REFUSAL_RE.search(tail) and not s.get("relaunch_retried"):
+            remains = self._predecessor_remains(s, snap)
+            if remains is None:
+                s["relaunch_retry"] = True
+                s["relaunch_retry_pane"] = snap.pane  # the retry belongs to this pane only
+                s["relaunch_retried"] = True
+                self.log(
+                    f"{lane.name} watch: relaunched launcher refused (single instance) with no predecessor "
+                    "process remaining; relaunch retried once next tick"
+                )
+                return
+            self.log(f"{lane.name} watch: single-instance refusal and the predecessor may remain: {remains}")
         s["relaunch_hold"] = rc
         self.log(f"{lane.name} watch: relaunched launcher exited rc={rc}; alerting once, no relaunch loop")
         self.send(
@@ -708,11 +900,19 @@ class Guard:
             return CLAUDE_BUSY_RE.search(tail) is None
         return "Ready" in tail and "Working" not in tail
 
-    def _answer_exit_dialog(self, lane: Lane, text: str, pct: int | None, snap: PaneSnapshot) -> bool:
-        """Handle a visible Claude exit dialog, deferring if either guard refuses."""
+    def _answer_exit_dialog(
+        self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot, *, recorded: bool = True
+    ) -> bool:
+        """Handle a visible Claude exit dialog, deferring if either guard refuses.
+
+        Answering ends the agent, so an agent whose scope is not recorded (``recorded`` False) is held instead.
+        """
         tail = "\n".join(text.splitlines()[-8:])
         if lane.kind != "claude" or not any(marker in tail for marker in EXIT_DIALOG):
             return False
+        if not recorded:
+            self._hold_unknown(lane, s, "the agent's scope could not be recorded, so the exit dialog was not answered")
+            return True
         # "Move to background" keeps a lease-holding fork alive; always "Exit and stop tasks".
         # Delegate workers are separate tasks and keep running.
         if not self._human(lane) and self._unchanged(lane, snap, "the exit-dialog answer", pct):
@@ -756,6 +956,7 @@ class Guard:
                 return
             self._relaunch(lane, st, s, pct, snap)
             return
+        recorded = self._record_scope(lane, st, s, snap, pct)
         tail = ""
         if s.get("quit_sent") and lane.kind == "claude":
             redacted = redact_text(text) or ""
@@ -776,7 +977,7 @@ class Guard:
         # After two swallowed exits an idle, completed handoff takes the guarded
         # relaunch path even if an exit dialog remains on screen.
         force_exit = lane.kind == "claude" and done and idle and int(s.get("quit_attempts", 0)) >= 2
-        if not force_exit and self._answer_exit_dialog(lane, text, pct, snap):
+        if not force_exit and self._answer_exit_dialog(lane, s, text, pct, snap, recorded=recorded):
             return
         quit_due = (
             lane.kind == "claude"
@@ -800,6 +1001,11 @@ class Guard:
                     self._stall_alert(lane, s, waited)
                 return
             command = "/exit" if lane.kind == "claude" else "/quit"
+            if not recorded:
+                # The ordinary relaunch waits for this agent's scope, so it must be on disk before the agent exits.
+                # Without the record no exit is sent, so the hold must alert, or the lane would stall in silence.
+                self._hold_unknown(lane, s, f"the agent's scope could not be recorded, so no {command} was sent")
+                return
             if not self._unchanged(lane, snap, command, pct):
                 return
             self.tmux.type_into(lane.target, command)
@@ -826,7 +1032,7 @@ class Guard:
                         dialog = self.tmux.capture(lane.target)
                         if self.tmux.monotonic() - started >= self._exit_poll_remaining:
                             break
-                        if self._answer_exit_dialog(lane, dialog, pct, snap):
+                        if self._answer_exit_dialog(lane, s, dialog, pct, snap):
                             break
                     finally:
                         # One run shares this budget, including time spent reading telemetry.
@@ -853,6 +1059,168 @@ class Guard:
             )
             s["alerted"] = True
 
+    def _record_scope(self, lane: Lane, st: dict[str, Any], s: dict[str, Any], snap: PaneSnapshot, pct: int | None) -> bool:
+        """Checkpoint the live agent's driver scope with its pid and start time; False when that is not possible.
+
+        The ordinary relaunch happens after the agent is gone, when its cgroup can no longer be
+        read, so the evidence is taken while it runs and saved before anything ends it (#12569).
+        The scope is trusted only if the agent ``<pid>@<start>`` is still in the process table after
+        the cgroup read, so a reused pid never lends another process's scope. ``exit_evidence`` is
+        ``{"agent": ..., "scope": unit or None}`` (None: the agent is in no driver scope). A save
+        that fails raises and leaves nothing recorded.
+        """
+        agent = snap.agent
+        if agent is None:
+            return False
+        evidence = s.get("exit_evidence")
+        if isinstance(evidence, dict) and evidence.get("agent") == agent:
+            return True
+        try:
+            unit = self.tmux.agent_scope(agent, strict=True)
+            if not self.tmux.process_exists(agent):
+                raise TelemetryUnavailable(f"agent {agent} exited or its pid was reused while its scope was read")
+        except TelemetryUnavailable as exc:
+            self.log(f"{lane.name} handoff ctx_pct={pct}: agent scope not recorded ({exc}); retry next tick")
+            return False
+        s["exit_evidence"] = {"agent": agent, "scope": unit}
+        try:
+            self.checkpoint(st)
+        except BaseException:
+            s.pop("exit_evidence", None)
+            raise
+        s.pop("relaunch_held_since", None)  # an earlier failed read no longer ages a later hold
+        return True
+
+    def _hold_unknown(self, lane: Lane, s: dict[str, Any], reason: str) -> None:
+        """Hold an ordinary relaunch whose predecessor scope is unknown; alert once the hold passes the bound."""
+        held = s.setdefault("relaunch_held_since", iso(self.now()))
+        waited = self._seconds_since(held)
+        if waited >= UNKNOWN_SCOPE_ALERT_SECONDS:
+            self._predecessor_alert(lane, s, f"{reason}, held {int(waited)}s")
+        else:
+            self.log(f"{lane.name} relaunch held: {reason}; no respawn, retry next tick")
+
+    def _predecessor_alert(self, lane: Lane, s: dict[str, Any], reason: str) -> None:
+        """Alert claude-cto once per handoff phase that a relaunch is held because the predecessor is not gone."""
+        self.log(f"{lane.name} relaunch held: {reason}; no respawn, retry next tick")
+        if s.get("predecessor_alerted"):
+            return
+        s["predecessor_alerted"] = True
+        stamp = iso(self.now())
+        self.send(
+            "claude-cto",
+            f"CTO-ALERT {stamp}: {lane.name} relaunch held, nothing respawned: {reason}. The successor's "
+            f"single-instance check would refuse while the predecessor runs. Check tmux session {lane.session}",
+            f"relaunch-held-{lane.name}-{s.get('since') or stamp}",
+        )
+
+    def _end_predecessor(
+        self, lane: Lane, st: dict[str, Any], s: dict[str, Any], snap: PaneSnapshot, pct: int | None
+    ) -> tuple[PaneSnapshot, str | None] | None:
+        """End a live predecessor and wait until it is really gone; None means nothing may be respawned.
+
+        A live agent (forced relaunch after two swallowed exits) is ended through its ``lu-driver``
+        scope, read from its cgroup: stopping the scope takes the agent and its background tasks with
+        it. The scope is recorded in ``predecessor_scope`` and saved (``checkpoint``) before the stop,
+        because an empty pane does not prove it is gone: background tasks can keep it active after the
+        agent exits, so a later tick (and a pending single-instance retry) holds for the recorded scope
+        too, even when the service timeout ends this pass before the end-of-run save. A save that fails
+        raises, so nothing is stopped without its record. The respawn
+        follows only once that scope is inactive, the agent's pid and start time are out of the process
+        table and the pane's launcher has exited, the state the successor's single-instance check
+        needs. That takes seconds, so the wait ends at an absolute deadline,
+        ``PREDECESSOR_EXIT_SECONDS`` after the stop, however long each telemetry call takes; a call
+        that itself hangs raises ``TelemetryUnavailable`` through the runner's timeout and ends the
+        tick without a respawn. On expiry, or when the scope cannot be identified, the guard alerts
+        and leaves the pane as it is. Returns the pane snapshot taken once the predecessor is gone,
+        and the scope that held it.
+        """
+        ordinary, watched = False, snap.agent
+        if snap.agent is not None:
+            unit = self.tmux.agent_scope(snap.agent)
+            if not self.tmux.process_exists(snap.agent):
+                # A pid is only unique while its process lives: the cgroup just read may be another process's.
+                self.log(
+                    f"{lane.name} relaunch ctx_pct={pct}: agent {snap.agent} exited or its pid was reused while "
+                    "its scope was read; nothing recorded or stopped, retry next tick"
+                )
+                return None
+            if unit is None:
+                self._predecessor_alert(
+                    lane, s, f"agent {snap.agent} is not in a lu-driver scope, so it cannot be ended safely"
+                )
+                return None
+            s["predecessor_scope"] = unit
+            self.checkpoint(st)
+        else:
+            unit = s.get("predecessor_scope")
+            if not unit:
+                # The ordinary relaunch: the agent exited by itself, so only the evidence taken while it ran
+                # says which scope it held (#12569). No evidence is a hold, never a pass.
+                evidence = s.get("exit_evidence")
+                if not isinstance(evidence, dict) or not evidence.get("agent") or "scope" not in evidence:
+                    self._hold_unknown(lane, s, "no scope was recorded for the agent that exited")
+                    return None
+                ordinary, watched, unit = True, evidence["agent"], evidence["scope"]
+        try:
+            return self._wait_for_scope(lane, s, snap, pct, unit, watched, stop=not ordinary)
+        except TelemetryUnavailable as exc:
+            if not ordinary:
+                raise
+            self._hold_unknown(lane, s, f"scope state unknown ({exc})")
+            return None
+
+    def _wait_for_scope(
+        self,
+        lane: Lane,
+        s: dict[str, Any],
+        snap: PaneSnapshot,
+        pct: int | None,
+        unit: str | None,
+        watched: str | None,
+        *,
+        stop: bool,
+    ) -> tuple[PaneSnapshot, str | None] | None:
+        """Wait until ``unit`` is inactive, ``watched`` (``<pid>@<start>``) is gone and the launcher has exited.
+
+        ``stop`` first queues the stop of an active scope (the forced relaunch); the ordinary relaunch
+        only waits, because the agent left by itself and its leftover tasks are not ours to kill. A
+        ``unit`` of None (the agent was in no driver scope) skips the systemd calls, not the identity wait.
+        """
+        if not stop and not (unit and self.tmux.scope_active(unit)) and not (watched and self.tmux.process_exists(watched)):
+            return snap, unit  # already gone: the caller's own re-check of this snapshot guards the respawn
+        deadline = self.tmux.monotonic() + PREDECESSOR_EXIT_SECONDS
+        if stop and self.tmux.scope_active(unit):
+            if not self._unchanged(lane, snap, f"stopping scope {unit}", pct):
+                return None
+            stopped = self.tmux.stop_scope(unit)
+            self.log(
+                f"{lane.name} relaunch ctx_pct={pct}: stop scope {unit} rc={stopped.returncode} "
+                f"{(stopped.stderr or '').strip()[-120:]}"
+            )
+        while True:
+            fresh = self.tmux.snapshot(lane.target, AGENT_COMMANDS[lane.kind])
+            if fresh.pane != snap.pane or fresh.agent not in (None, snap.agent):
+                self.log(
+                    f"{lane.name} relaunch ctx_pct={pct}: pane or agent replaced while waiting for the predecessor "
+                    f"(pane {snap.pane} -> {fresh.pane}, agent {snap.agent} -> {fresh.agent}); nothing respawned"
+                )
+                return None
+            if unit and self.tmux.scope_active(unit):
+                remaining = f"scope {unit} is still active"
+            elif (watched is not None and self.tmux.process_exists(watched)) or fresh.agent is not None:
+                remaining = f"agent {watched or fresh.agent} is still running"
+            elif fresh.busy:
+                remaining = "the launcher is still exiting"
+            else:
+                return fresh, unit
+            if self.tmux.monotonic() >= deadline:
+                self._predecessor_alert(
+                    lane, s, f"{remaining} {PREDECESSOR_EXIT_SECONDS}s after the {'scope stop' if stop else 'agent exit'}"
+                )
+                return None
+            self.tmux.sleep(1)
+
     def _relaunch(self, lane: Lane, st: dict[str, Any], s: dict[str, Any], pct: int | None, snap: PaneSnapshot) -> None:
         if self._human(lane):
             return
@@ -861,7 +1229,14 @@ class Guard:
         except LaneConfigError as exc:
             self.log(f"{lane.name} relaunch refused ctx_pct={pct}: {exc}; pane left as is, retry next tick")
             return
-        if not self._unchanged(lane, snap, "respawn-pane -k", pct):
+        ended = self._end_predecessor(lane, st, s, snap, pct)
+        if ended is None:
+            return
+        settled, unit = ended
+        # The wait can be long enough for a person to start typing: ask again before the respawn.
+        if settled is not snap and self._human(lane):
+            return
+        if not self._unchanged(lane, settled, "respawn-pane -k", pct):
             return
         env_args = [arg for key, value in sorted(plan.env.items()) for arg in ("-e", f"{key}={value}")]
         occurrence = uuid.uuid4().hex
@@ -883,7 +1258,12 @@ class Guard:
             "last_pct_at_trigger": s.get("pct_at_trigger"),
             "relaunch_watch": stamp,
             "relaunch_id": occurrence,
+            # What the single-instance retry needs: the scope this relaunch ended, and whether it already retried.
+            "predecessor_scope": unit or s.get("predecessor_scope"),
+            "relaunch_retried": bool(s.get("relaunch_retried")),
         }
+        if isinstance(s.get("exit_evidence"), dict):  # the single-instance retry needs it too
+            st[lane.session]["exit_evidence"] = s["exit_evidence"]
 
     def run(self, st: dict[str, Any], only: list[str] | None = None) -> None:
         self._exit_poll_remaining = 10.0
@@ -1064,6 +1444,7 @@ def main(argv: list[str] | None = None) -> int:
             send=fleet_sender(registry.guard_sender, log),
             handoff_posted=comms_reader(comms_db(log), log),
             local=local,
+            checkpoint=lambda current: save_state(state_path, current),
         )
         guard.run(state, args.lane)
         save_state(state_path, state)

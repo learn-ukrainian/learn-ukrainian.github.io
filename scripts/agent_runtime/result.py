@@ -141,7 +141,7 @@ class ParseResult:
             ``_raw`` / ``_value`` keys. Timestamps are provider strings or
             lenient ISO-8601 fallbacks.
         substitution: Non-secret route identity for harness-level fallback.
-            Hermes adapters populate this with requested_provider/model and
+            Adapters populate this with requested_provider/model and
             actual_provider/model so silent provider/model substitution cannot
             disappear between parse, usage telemetry, and delegate state.
         model_identity: Optional bounded AGY provider observation for the

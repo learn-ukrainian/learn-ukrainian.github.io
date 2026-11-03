@@ -6,17 +6,7 @@ launcher_adapter_validate() {
       # shellcheck disable=SC2153 # LC_MODE is supplied by launcher_core.sh.
       if [ "$LC_MODE" = driver ]; then launcher_grok_validate_driver_args; fi
       ;;
-    hermes)
-      launcher_hermes_validate
-      LC_MODEL="${LC_MODEL:-grok-4.7}"
-      # shellcheck disable=SC2034 # consumed by shared Hermes execution
-      LC_HERMES_PROVIDER=xai-oauth
-      case "$LC_EFFORT" in
-        ""|low|medium|high|xhigh) ;;
-        *) launcher_error 'Grok/Hermes supports only low|medium|high|xhigh effort.'; exit 2 ;;
-      esac
-      ;;
-    *) launcher_error 'Grok supports only --harness grok or --harness hermes.'; exit 2 ;;
+    *) launcher_error 'Grok supports only --harness grok.'; exit 2 ;;
   esac
 }
 
@@ -66,7 +56,6 @@ launcher_grok_validate_driver_args() {
   done
 }
 launcher_adapter_preflight() {
-  if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_preflight; return; fi
   LC_AUTH_SOURCE='grok-cli-oauth'
   launcher_require_binary grok 'Grok executable is unavailable.' 3 || exit $?
 }
@@ -75,7 +64,6 @@ launcher_adapter_canary() {
   return 0
 }
 launcher_adapter_exec() {
-  if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_exec; return; fi
   local cmd=(grok)
   # Only pin --model / --reasoning-effort when the caller asked for them;
   # otherwise the Grok TUI keeps whatever was selected last in the session.

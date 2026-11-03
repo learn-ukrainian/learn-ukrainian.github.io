@@ -254,6 +254,7 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
     )
     payload = {
         "number": 5283,
+        "state": "OPEN",
         "baseRefName": "release/whatever",  # deliberately NOT "main"
         "baseRefOid": base_sha,
         "headRefName": "feature-branch",
@@ -275,6 +276,9 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
     assert target.head_sha == head_sha
     assert "release/whatever" in target.description
     assert target.changed_paths == ("pr_change.py",)
+    _git(repo, "push", "origin", ":refs/heads/feature-branch")
+    with pytest.raises(TargetResolutionError, match="PR_HEAD_BRANCH_MISSING"):
+        resolve_pr_target(repo, 5283)
 
 
 def test_resolve_pr_target_diffs_merge_base_not_moved_base_tip(tmp_path, monkeypatch):
@@ -310,6 +314,7 @@ def test_resolve_pr_target_diffs_merge_base_not_moved_base_tip(tmp_path, monkeyp
     _publish_pr_branch(repo, "feature", head_sha)
     payload = {
         "number": 9001,
+        "state": "OPEN",
         "baseRefName": "trunk",
         "baseRefOid": base_tip_sha,
         "headRefName": "feature",
@@ -348,6 +353,84 @@ def test_resolve_pr_target_missing_sha_raises(tmp_path, monkeypatch):
     monkeypatch.setattr(tr, "_run_gh", fake_run_gh)
     with __import__("pytest").raises(TargetResolutionError):
         resolve_pr_target(repo, 1)
+
+
+def test_merged_pr_deleted_branch_resolves_recorded_final_head(tmp_path, monkeypatch, capsys):
+    from scripts.review import closeout_cli
+    from scripts.review import target_resolution as tr
+
+    repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
+    merge_base = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _git(repo, "checkout", "-q", "-b", "feature")
+    (repo / "pr_change.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "pr_change.py")
+    _git(repo, "commit", "-q", "-m", "pr change")
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _publish_pr_branch(repo, "feature", head)
+    _git(repo, "--git-dir", str(repo.parent / "repo-canonical.git"), "update-ref", "-d", "refs/heads/feature")
+    _git(repo, "checkout", "-q", "trunk")
+    (repo / "unrelated.py").write_text("value = 2\n", encoding="utf-8")
+    _git(repo, "add", "unrelated.py")
+    _git(repo, "commit", "-q", "-m", "base advances")
+    base_tip = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    payload = {
+        "number": 12401, "state": "MERGED", "baseRefName": "trunk", "baseRefOid": base_tip,
+        "headRefName": "feature", "headRefOid": head, "isCrossRepository": False,
+    }
+
+    def fake_run_gh(args, cwd, timeout=30.0):
+        assert "state" in args[args.index("--json") + 1].split(",")
+        return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(tr, "_run_gh", fake_run_gh)
+    state = tmp_path / "closeout.json"
+    args = ["--state-file", str(state), "target", "--mode", "pr", "--pr", "12401", "--repo-root", str(repo)]
+    assert closeout_cli.main(args) == 0
+    target = json.loads(capsys.readouterr().out)
+    assert target["head_sha"] == head
+    assert target["base_sha"] == merge_base
+    assert target["base_ref_name"] == "trunk"
+    assert target["changed_paths"] == ["pr_change.py"]
+    assert "MERGED PR" in target["description"]
+    assert base_tip[:12] in target["description"]
+    assert json.loads(state.read_text())["target"] == target
+    # Reusing the matching recorded pin remains valid after branch deletion.
+    assert closeout_cli.main(args) == 0
+
+
+def test_closed_unmerged_pr_or_recorded_head_mismatch_is_refused(tmp_path, monkeypatch, capsys):
+    from scripts.review import closeout_cli
+    from scripts.review import target_resolution as tr
+
+    repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _publish_pr_branch(repo, "feature", head)
+    payload = {
+        "number": 12401, "state": "CLOSED", "baseRefName": "trunk", "baseRefOid": head,
+        "headRefName": "feature", "headRefOid": head, "isCrossRepository": False,
+    }
+
+    def fake_run_gh(args, cwd, timeout=30.0):
+        return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(tr, "_run_gh", fake_run_gh)
+    state = tmp_path / "closeout.json"
+    saved = {
+        "target": {"mode": "pr", "base_sha": head, "head_sha": "f" * 40, "changed_paths": [],
+                   "non_test_loc": 0, "clean_tree": False, "description": "recorded target"},
+        "target_args": {"mode": "pr", "pr": 12401, "repo_root": str(repo)},
+    }
+    state.write_text(json.dumps(saved))
+    before = state.read_bytes()
+    for pr_state, reason in (("CLOSED", "PR_CLOSED_UNMERGED"), ("MERGED", "PR_HEAD_MISMATCH")):
+        payload["state"] = pr_state
+        assert closeout_cli.main([
+            "--state-file", str(state), "target", "--mode", "pr", "--pr", "12401", "--repo-root", str(repo),
+        ]) == 1
+        assert json.loads(capsys.readouterr().err)["error"].startswith(reason + ":")
+        assert state.read_bytes() == before
 
 
 @pytest.mark.parametrize("base_name", ["  ", ["main"], None, 1])

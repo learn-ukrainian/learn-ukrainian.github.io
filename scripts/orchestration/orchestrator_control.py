@@ -747,6 +747,13 @@ def cmd_inbox(args: argparse.Namespace) -> int:
         max_result_chars=args.max_result_chars,
         max_log_chars=args.max_log_chars,
     )
+    from scripts.ai_agent_bridge._channels_cli import authority_inbox_notice
+
+    # JSON stays machine-parseable: its pointer goes to stderr.
+    authority_inbox_notice(
+        os.environ.get("SESSION_HANDOFF_AGENT"),
+        file=sys.stderr if args.format == "json" else None,
+    )
     if args.format == "json":
         print(json.dumps(payload, indent=2, default=str))
     else:
@@ -781,7 +788,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
             "budget ceilings, lifecycle-file propagation, "
             "and authoring-review-risk. Unset authoring-review-risk is unchecked, unlike legacy critical admission. "
-            "Seats grok-build, grok-hermes, qwen, kimi are refused. "
+            "Seats grok-build, qwen, kimi are refused. "
             "Legacy options and defaults remain forwarded so "
             "unsupported requests fail explicitly. Silence and initial-response watchdogs are forwarded; "
             "explicit zero disables each watchdog."

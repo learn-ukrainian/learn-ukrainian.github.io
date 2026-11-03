@@ -17,7 +17,6 @@ _AUTH = {
     "agy": ("AGY_API_KEY", "AGY_TOKEN", "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"),
     "muse": ("MUSE_API_KEY", "MUSE_TOKEN"),
     "opencode": ("DEEPSEEK_API_KEY",),
-    "hermes": ("OPENROUTER_API_KEY",),
 }
 _NPM_SHIMS = Path(__file__).resolve().parent / "npm_shims"
 
@@ -98,6 +97,9 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         LEARN_UKRAINIAN_DISPATCH_TASK_ID=spec.task_id,
         LEARN_UKRAINIAN_DISPATCH_AGENT=spec.agent,
         LU_TASKS_DIR=str(tasks_dir().resolve()),
+        # eslint, tsc and prettier call module.enableCompileCache(), which writes a copy of its cache into
+        # os.tmpdir()/node-compile-cache for every new worktree path and is never removed (#12474).
+        NODE_DISABLE_COMPILE_CACHE="1",
     )
     if spec.agent == "codex" and spec.mode == "read-only":
         # Its sandbox leaves no writable temp, so git, gh and pytest need this lease; the worker creates it.

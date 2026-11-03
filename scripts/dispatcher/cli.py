@@ -34,7 +34,7 @@ from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
 
 # Grok runs through Cursor's TUI: --agent cursor --model grok-4.7-high (grok-build is the separate Grok TUI).
-ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes")
+ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode")
 
 
 class _PromptPath(type(Path())):
@@ -416,12 +416,31 @@ def _dispatch(args) -> int:
             raise host_admission.Refused("❌ --force-admission requires a non-empty reason", 2)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
+    # Settlement can verify only an origin/<branch> base. Refuse anything else before a
+    # workspace-write task is created, so a SHA does not run and then settle no_deliverable (#12420).
+    if args.mode == "workspace-write":
+        try:
+            git.verifiable_origin_base(args.base)
+        except git.OriginBaseRequired:
+            raise ValueError(
+                "workspace_write_base_unverified: settlement cannot verify this --base; "
+                "use --base origin/main --branch <PR head branch>, with the PR's files as owned paths"
+            ) from None
     start = args.pinned_head or args.branch or args.base
     publish_remote = None
-    if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
+    exact = False
+    if args.mode == "workspace-write" and args.branch and not args.pinned_head:
+        # A dry-run resolves the same start as the real run: worktree_plan would otherwise
+        # rev-parse a local refs/heads/<branch> that may be absent or stale (#12468).
         start, publish_remote = git.publish_start(repo, info, args.branch, task_id)
+        exact = True
+    elif args.mode == "read-only" and args.branch and not args.pinned_head and not args.cwd:
+        # A branch-pinned review runs at the branch's remote head, never at a possibly
+        # stale local refs/heads/<branch> that worktree_plan would resolve (#12441).
+        start = git.review_branch_start(repo, info, args.branch, task_id, base=args.base)
+        exact = True
     # A published start is created and recorded verbatim, never re-resolved in the shared repository.
-    exact_start = {"exact": True} if publish_remote is not None else {}
+    exact_start = {"exact": True} if exact else {}
     worktree, branch, sha = git.worktree_plan(
         repo, agent, task_id, start, args.cwd, args.worktree, **exact_start
     )
@@ -453,6 +472,11 @@ def _dispatch(args) -> int:
 
             schema_argument(options)
     fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider", "codex_account")}
+    if agent == "opencode":
+        from scripts.dispatcher.providers import opencode
+
+        # The endpoint is explicit on the task record, the default included (#12376).
+        fields["provider"] = opencode.endpoint(fields["provider"])
     spec = TaskSpec(
         task_id,
         agent,
@@ -463,6 +487,11 @@ def _dispatch(args) -> int:
         **fields,
     )
     checks.check_private_input(spec, info["key"])
+    # Before any worktree or task record: an endpoint without access or funds is refused, never switched.
+    if agent == "opencode" and (refusal := opencode.endpoint_refusal(
+        spec.provider, child_env(spec), worktree=worktree, repo=None if args.cwd else repo, sha=sha,
+    )):
+        raise ValueError(refusal)
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
         raise ValueError(refusal)
     # A bound attempt is admitted before anything exists: its prompt is the exact render of its manifest
@@ -506,7 +535,7 @@ def _dispatch(args) -> int:
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
         invocation = runtime_context.build(spec, child_env(spec))
-        plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
+        plan = dict(worktree=str(worktree), start_sha=sha, argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
@@ -523,8 +552,14 @@ def _dispatch(args) -> int:
         if binding:
             store.check_review_attempt(binding)  # the supervisor claims it (review_attempt.run)
         if not args.cwd:
+            # A repository that declares a worktree registry has the tree registered before it exists.
+            registry = git.registry_path(repo, info)
+            registration = None if registry is None else dict(
+                registry=registry, agent=agent, task_id=task_id, initiator=args.initiator,
+                purpose=prompt.decode(errors="replace") if isinstance(prompt, bytes) else prompt)
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
-                                sparse_include=git.SPARSE_EXCLUDE_DEFAULT - set(excluded), **exact_start)
+                                sparse_include=git.SPARSE_EXCLUDE_DEFAULT - set(excluded), registration=registration,
+                                **exact_start)
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
         # A task dispatched from inside another task's run names that run, whose settlement then names it while
         # it still runs (worker._running_children, #12156).
@@ -625,6 +660,56 @@ def _status_or_fail(args: argparse.Namespace) -> int:
     return 1
 
 
+# A failed git call prints only constants (#12468): the subcommand from this set and a summary the first stderr
+# line selects from the table below (first match wins). A value, a path or a secret cannot be told from a plain
+# word by its shape, so no operand, flag or stderr byte is ever printed.
+_GIT_SUBCOMMANDS = frozenset(
+    [
+        "add", "cat-file", "check-ref-format", "commit-tree", "config", "fetch", "init", "ls-files", "ls-remote",
+        "merge-base", "push", "reset", "rev-list", "rev-parse", "show", "sparse-checkout", "status",
+        "symbolic-ref", "update-ref", "worktree", "write-tree",
+    ]
+)
+_GIT_FAILURES = tuple((re.compile(pattern, re.IGNORECASE), text) for pattern, text in (
+    (r"needed a single revision", "needed a single revision"),
+    (r"unknown revision|bad revision|ambiguous argument", "unknown revision"),
+    (r"bad object|invalid object name|not a valid object", "bad object name"),
+    (r"authentication failed|could not read (username|password)|publickey|invalid username or password",
+     "authentication failed"),
+    (r"could not resolve host|unable to access|could not read from|connection (refused|timed out)|unreachable",
+     "remote not reachable"),
+    (r"index\.lock|another git process|\.lock'", "lock file conflict"),
+    (r"already exists", "target already exists"),
+    (r"not a git repository", "not a git repository"),
+    (r"find remote ref|repository not found|does not appear to be a git repository",
+     "remote ref or repository not found"),
+    (r"permission denied", "permission denied"),
+    (r"timed out", "timed out"),
+))
+# Global options whose next word is their value, not the subcommand (the ``--opt=value`` form is one word).
+_GIT_VALUED_GLOBALS = frozenset(["-C", "-c", "--git-dir", "--work-tree", "--namespace", "--super-prefix",
+                                 "--config-env", "--attr-source"])
+UNRECOGNIZED_GIT_FAILURE = "unrecognized git error"
+
+
+def _failed_operation(exc: subprocess.CalledProcessError) -> str:
+    """``CalledProcessError: git <subcommand> exited <rc>: <summary>``, nothing user-controlled (#12468)."""
+    words = [str(word) for word in (exc.cmd if isinstance(exc.cmd, (list, tuple)) else [exc.cmd])]
+    if not words or os.path.basename(words[0]) != "git":
+        return f"CalledProcessError: external command exited {exc.returncode}"
+    rest, subcommand = iter(words[1:]), None
+    for word in rest:
+        if word in _GIT_VALUED_GLOBALS:
+            next(rest, None)
+        elif not word.startswith("-"):
+            subcommand = word if word in _GIT_SUBCOMMANDS else None
+            break
+    stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
+    first = next((line for line in stderr.splitlines() if line.strip()), "")
+    summary = next((text for pattern, text in _GIT_FAILURES if pattern.search(first)), UNRECOGNIZED_GIT_FAILURE)
+    return f"CalledProcessError: git{f' {subcommand}' if subcommand else ''} exited {exc.returncode}: {summary}"
+
+
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
@@ -664,7 +749,12 @@ def main(argv=None) -> int:
         print(str(exc), file=sys.stderr)
         return exc.code
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
-        message = str(exc).splitlines()[0] if isinstance(exc, ValueError) else type(exc).__name__
+        if isinstance(exc, ValueError):
+            message = str(exc).splitlines()[0]
+        elif isinstance(exc, subprocess.CalledProcessError):
+            message = _failed_operation(exc)
+        else:
+            message = type(exc).__name__
         print(f"dispatcher: {message}", file=sys.stderr)
         return 2
 

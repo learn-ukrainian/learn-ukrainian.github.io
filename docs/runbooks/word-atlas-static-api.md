@@ -71,6 +71,32 @@ Preparation requires both pin values. The independent post-build vendor check
 still validates every advertisement, including separately pinned Practice and
 Daily Word artifacts.
 
+Two projections of the five search/browse artifacts exist, and they never share
+a path (#12527). The committed DB-derived snapshot stays tracked under
+`site/src/data/lexicon-{search-index,search-aliases,search-shards,browse-meta,browse-flagged}.json`
+and `site/public/lexicon/browse/`; Python tests, `npm run verify:artifacts` and
+unpinned builds read it. When `ATLAS_SEARCH_RUNTIME_TREE` is set, the generator
+writes the pinned projection to the ignored `site/.atlas-pinned/` (`data/` and
+`public/lexicon/browse/`) and the site reads that set through the single module
+`site/src/lib/lexicon/atlas-artifact-selection.mjs`: a Vite plugin redirects the
+static JSON imports, the filesystem readers and the Node hydration script call
+the same functions, and `astro:build:done` replaces the `*.json` shards in `dist/lexicon/browse/` with
+the pinned shards (the prerendered browse page stays). A pinned build fails closed when the pinned set is missing, incomplete or carries a stale shard,
+and when it does not match the runtime selected now. The generator writes `pinned-source.json`
+(the runtime's data version and manifest digest, plus the SHA-256 of every canonical artifact and
+browse shard) only when one run wrote every canonical output, and the shared gate recomputes the
+digests, so any later write to the set (another run, an output override, an interrupted write) is
+refused whatever wrote it. The digests are those of the exact bytes the generator wrote, and it refuses to certify a set
+another writer changed meanwhile. The Node hydrate step derives `public/lexicon/search/` only from
+inputs the marker certifies, then records the inputs and the digests of the shard bytes it wrote in
+`.atlas-pinned/search-shards-source.json`; the gate checks them too. A pinned build never falls back
+to the committed files.
+The Frontend CI build record binds `site/.atlas-pinned/` and records the
+selection, so a release build leaves `git status` empty and the worktree can be
+removed with the guarded remover. Do not set `ATLAS_SEARCH_RUNTIME_TREE` for
+`astro dev` or `astro preview`: pinned selection is a build-time feature, and the
+committed browse shards in `public/` are what those servers publish.
+
 Unpinned local builds retain the DB-backed generator and its
 `article_vs_alias_count` and `alias_target_integrity` checks. For local preparation
 from an already verified extracted archive, pass `--runtime-tree ./runtime-tree`

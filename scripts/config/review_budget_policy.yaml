@@ -1,0 +1,17 @@
+# Automatic review-round budget per target repository (#12584).
+#
+# The verdict recorder (scripts/review/record_cf_verdict.py) counts the review
+# rounds of one PR against a budget. A repository whose own review policy sets
+# a different automatic budget is listed here by its GitHub owner/name, with
+# `review_rounds` an integer from 1 to 5 and `basis` naming that policy.
+# A repository not listed here gets the recorder's default of three rounds.
+# Security-sensitive changed paths still raise a PR to five, and five stays
+# the cap. An unreadable or malformed file refuses every verdict, and every
+# review dispatch once the repository has a review on record.
+
+version: 1
+
+repositories:
+  kube-dojo/kube-dojo.github.io:
+    review_rounds: 5
+    basis: "kube-dojo .claude/skills/review-loop/SKILL.md: up to five independent review invocations automatically per stream"

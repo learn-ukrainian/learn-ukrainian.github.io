@@ -128,14 +128,6 @@ def test_deepseek_telemetry_records_catalog_identity_not_moving_invocation_alias
 
 def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkeypatch, caplog):
     """Known CLI limits are explicit metadata, not dispatch warnings (#4837)."""
-    hermes_home = tmp_path / "hermes"
-    hermes_home.mkdir()
-    (hermes_home / "config.yaml").write_text(
-        "agent:\n  reasoning_effort: xhigh\n",
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
-
     probed: list[tuple[str, ...]] = []
 
     def probe(prefix: tuple[str, ...]) -> str | None:

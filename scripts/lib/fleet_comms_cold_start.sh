@@ -64,8 +64,11 @@ fleet_comms_resolve_plane_mode() {
   printf '%s' "$mode"
 }
 
-# Compact authority-aware clause for injected cold-start prompts.
+# Compact authority-aware clause for injected cold-start prompts. The optional
+# argument names the seat's entry skill: drive-epic for lane drivers, cto for
+# the CTO seat (#12496).
 fleet_comms_cold_clause() {
+  local skill="${1:-drive-epic}"
   local plane_mode="${FLEET_COMMS_PLANE_MODE:-}"
   if [ -z "$plane_mode" ]; then
     plane_mode="$(fleet_comms_resolve_plane_mode)"
@@ -74,7 +77,7 @@ fleet_comms_cold_clause() {
   rule="$(fleet_comms_rule_relpath)"
   printf '%s' \
     "Fleet-comms (#6159) authority cutover — obey ${rule} (also in /api/rules?scope=task:fleet-comms or scope=full). " \
-    "Method playbook: load skill drive-epic (provider drivers inject the binding after lease + canary). " \
+    "Method playbook: load skill ${skill} (provider drivers inject the binding after lease + canary). " \
     "Use fleet-comms as communication authority when current mode=${plane_mode}; " \
     "legacy bridge/channel stores are read-only migration projections in authority mode. " \
     "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \

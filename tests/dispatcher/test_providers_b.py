@@ -12,7 +12,8 @@ import pytest
 from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
 from scripts.agent_runtime.read_only_tmp import dispatch_lease
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
-from scripts.dispatcher import runtime_context
+from scripts.common.repo_root import project_interpreter
+from scripts.dispatcher import agy_sandbox, runtime_context
 from scripts.dispatcher.providers import load
 from scripts.dispatcher.runtime_context import read_roots
 from scripts.dispatcher.types import ParsedResult, TaskSpec
@@ -31,6 +32,9 @@ SUCCESS = {
     "agy": '{"event":"init"}\n'
     '{"event":"result","result":{"status":"SUCCESS","response":"Finished.","usage":{"input_tokens":7,"output_tokens":3}}}\n',
 }
+_AGY_UNCLASSIFIED = (
+    "agy: terminal result unsuccessful (ERROR): unclassified error; its text is in the task's retained stream"
+)
 ERROR = {
     "codex": '{"type":"turn.failed","error":{"message":"failed"}}',
     "claude": '{"type":"result","subtype":"error_during_execution","is_error":true,"result":"Finished."}',
@@ -186,8 +190,8 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         expected += ["--mcp-config", SOURCES_MCP_CONFIG, "--strict-mcp-config", "--allowedTools"]
         expected += [
             (
-                "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
-                "Bash(gh issue view *),Bash(gh run view *),"
+                # Read-only Bash runs only inside the boundary its shell prefix sets (#12378).
+                "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash,"
                 if mode == "read-only"
                 else "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch,"
             )
@@ -222,8 +226,14 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         assert capture["background"] == "1"
         assert capture["advisor"] == "1"
         assert capture["context"] == "inherited-session"
+        shell = {} if mode != "read-only" else {
+            "CLAUDE_CODE_SHELL_PREFIX": str(agy_sandbox.SHELL_PREFIX),
+            agy_sandbox.SHELL_ENV_PYTHON: str(project_interpreter()), agy_sandbox.SHELL_ENV_TASK: spec.task_id,
+            agy_sandbox.SHELL_ENV_WORKTREE: str(spec.worktree),
+            agy_sandbox.SHELL_ENV_LOG: str(spec.final_file.with_suffix(".shell.jsonl")),
+        }
         assert invocation.env == dict(
-            original_env, CLAUDE_CODE_DISABLE_BACKGROUND_TASKS="1", CLAUDE_CODE_DISABLE_ADVISOR_TOOL="1"
+            original_env, CLAUDE_CODE_DISABLE_BACKGROUND_TASKS="1", CLAUDE_CODE_DISABLE_ADVISOR_TOOL="1", **shell
         )
     assert capture["argv"] == expected
     assert capture["cwd"] == str(worktree)
@@ -248,7 +258,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         proc.stdout.decode(), proc.stderr.decode(), proc.returncode, final_text
     ) == ParsedResult(
         "Finished.", {"input_tokens": 7, "output_tokens": 3}, None,
-        sources_mcp_call_count=0 if provider == "claude" else None,
+        sources_mcp_call_count=0 if provider in ("claude", "codex", "agy") else None,
     )
     if provider == "claude":
         env["CLAUDE_CONFIG_DIR"] = str(tmp_path / "selected-account-b")
@@ -342,7 +352,13 @@ def test_failure_cannot_become_success_from_final_prose(provider, failure):
         stdout, "private diagnostic must not be echoed", 9 if failure == "nonzero" else 0, "Finished."
     )
     assert result.error
-    assert "private diagnostic" not in result.error
+    if provider == "codex" and failure == "nonzero":
+        excerpt = result.error.removeprefix("codex: exited with status 9: ")
+        assert excerpt == "private diagnostic must not be echoed"
+        assert len(excerpt) <= 500
+        assert excerpt == " ".join(excerpt.split())
+    else:
+        assert "private diagnostic" not in result.error
 
 
 @pytest.mark.parametrize("provider", SUCCESS)
@@ -361,7 +377,7 @@ def test_missing_usage_remains_none_and_information_does_not_change_success(prov
         events.append(metadata)
     stdout = "\n".join(json.dumps(event) for event in events)
     assert load(provider).parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", None, None, sources_mcp_call_count=0 if provider == "claude" else None
+        "Finished.", None, None, sources_mcp_call_count=0 if provider in ("claude", "codex", "agy") else None
     )
 
 
@@ -389,7 +405,7 @@ def test_cursor_message_content_does_not_lose_assistant_text(content):
 def test_codex_turn_usage_is_read_without_token_event():
     stdout = '{"type":"turn.completed","usage":{"input_tokens":4,"output_tokens":2}}'
     assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 4, "output_tokens": 2}, None
+        "Finished.", {"input_tokens": 4, "output_tokens": 2}, None, sources_mcp_call_count=0
     )
 
 
@@ -399,7 +415,7 @@ def test_codex_error_notice_can_retry_before_successful_completion(separator):
     notice = json.dumps({"type": "error", "message": f"Retry{separator}notice"}, ensure_ascii=False)
     stdout = notice + "\n" + SUCCESS["codex"] + " \t\r\n"
     assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 7, "output_tokens": 3}, None
+        "Finished.", {"input_tokens": 7, "output_tokens": 3}, None, sources_mcp_call_count=0
     )
 
 
@@ -444,7 +460,7 @@ def test_codex_terminal_not_last_rejected_without_overwriting_completion_usage(l
     """codex-terminal-not-last: any nonblank record after a terminal invalidates this invocation."""
     stdout = '{"type":"turn.completed","usage":{"input_tokens":4,"output_tokens":2}}\n'
     assert load("codex").parse(stdout + later + "\n", "", 0, "Finished.") == ParsedResult(
-        "Finished.", {"input_tokens": 4, "output_tokens": 2}, error
+        "Finished.", {"input_tokens": 4, "output_tokens": 2}, error, sources_mcp_call_count=0
     )
 
 
@@ -473,7 +489,7 @@ def test_agy_partial_stderr_rejects_incomplete_runs_with_safe_reason(stderr, err
     """agy-partial-stderr: native incomplete signals override SUCCESS without exposing stderr."""
     stderr = "private diagnostic\n" + stderr + "\nprivate diagnostic"
     assert load("agy").parse(SUCCESS["agy"], stderr, 0, None) == ParsedResult(
-        "Finished.", {"input_tokens": 7, "output_tokens": 3}, error
+        "Finished.", {"input_tokens": 7, "output_tokens": 3}, error, sources_mcp_call_count=0
     )
     if error:
         assert load("agy").parse(SUCCESS["agy"], stderr, 9, None).error == "agy: exited with status 9"
@@ -499,22 +515,24 @@ def test_agy_success_while_background_work_is_open_is_incomplete():
         (
             SUCCESS["agy"],
             '{"event":"result","result":{"status":"SUCCESS","response":"Replacement.","usage":{"input_tokens":99}}}',
-            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result"),
+            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result",
+                         sources_mcp_call_count=0),
         ),
         (
             ERROR["agy"],
             SUCCESS["agy"],
-            ParsedResult("Finished.", None, "agy: terminal result unsuccessful"),
+            ParsedResult("Finished.", None, _AGY_UNCLASSIFIED, sources_mcp_call_count=0),
         ),
         (
             '{"event":"result","result":null}',
             SUCCESS["agy"],
-            ParsedResult(None, None, "agy: invalid terminal result"),
+            ParsedResult(None, None, "agy: invalid terminal result", sources_mcp_call_count=0),
         ),
         (
             SUCCESS["agy"],
             '{"event":"result","result":[]}',
-            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result"),
+            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result",
+                         sources_mcp_call_count=0),
         ),
     ],
 )
@@ -584,10 +602,13 @@ def test_claude_unclean_capacity_stream_stays_failed(stdout):
 
 
 # AGY ends a quota refusal with one terminal result and one structured AGY_ERROR line.
-# Exit 0 keeps "terminal result unsuccessful"; exit 3 overwrites that with the exit status.
+# The record carries only the fixed quota class; AGY's message stays in the retained stream (#12408).
 _AGY_QUOTA = (
     "Individual quota reached. Please upgrade your subscription to increase your limits. "
     "Resets in 1h43m57s."
+)
+_AGY_QUOTA_ERROR = (
+    "agy: quota or capacity limit (RESOURCE_EXHAUSTED, 429); its text and reset hint are in the task's retained stream"
 )
 
 
@@ -609,11 +630,13 @@ def test_agy_quota_error_settles_rate_limited_and_a_real_failure_stays_failed():
     stdout, stderr = _agy_quota_stream(_AGY_QUOTA)
     for returncode in (0, 3):
         result = load("agy").parse(stdout, stderr, returncode, None)
-        assert (result.rate_limited, result.error) == (True, f"agy: {_AGY_QUOTA}")
+        assert (result.rate_limited, result.error) == (True, _AGY_QUOTA_ERROR)
     ordinary = load("agy").parse(ERROR["agy"] + "\n", "boom\n", 3, None)
-    assert (ordinary.rate_limited, ordinary.error) == (False, "agy: exited with status 3")
+    assert (ordinary.rate_limited, ordinary.error) == (
+        False, "agy: exited with status 3; " + _AGY_UNCLASSIFIED.removeprefix("agy: "),
+    )
     prose = load("agy").parse(stdout, f"error: {_AGY_QUOTA}\n", 0, None)
-    assert (prose.rate_limited, prose.error) == (False, "agy: terminal result unsuccessful")
+    assert (prose.rate_limited, prose.error) == (False, _AGY_UNCLASSIFIED)
     dirty = load("agy").parse(stdout + "not json\n", stderr, 0, None)
     assert dirty.rate_limited is False
     boolean_code = stderr.replace('"error_code": 429', '"error_code": true')
@@ -621,6 +644,119 @@ def test_agy_quota_error_settles_rate_limited_and_a_real_failure_stays_failed():
     malformed = load("agy").parse(stdout, boolean_code, 0, None)
     assert malformed.rate_limited is False
 
+
+
+# A synthetic secret: no test fixture or record field may carry it once it reaches AGY's output (#12408).
+_CANARY = "CANARY-sk-live-9f3Qz7"
+
+
+def _agy_canary_streams(field, returncode):
+    """AGY output with the canary in one provider field, beside an otherwise ordinary run."""
+    init = {"event": "init", "init": {"model": "gemini-3.8-flash-high"}}
+    terminal = {"status": "ERROR" if returncode else "SUCCESS", "response": "Finished.",
+                "structured_output": {}, "usage": {"input_tokens": 7}}
+    stderr = ""
+    if field == "result.error":
+        terminal.update(status="ERROR", error=f"API error: {_CANARY}")
+    elif field == "result.status":
+        terminal.update(status=_CANARY, error="failed")
+    elif field == "usage.value":
+        terminal["usage"] = {"input_tokens": _CANARY, "output_tokens": [_CANARY]}
+    elif field == "usage.key":
+        terminal["usage"] = {_CANARY: 5}
+    elif field == "init.model":
+        init = {"event": "init", "model": _CANARY, "init": {"model": _CANARY}}
+    elif field == "quota":
+        terminal.update(status="ERROR", error=f"Individual quota reached. {_CANARY}")
+        payload = {"status": "RESOURCE_EXHAUSTED", "error_code": 429, "short_error": _CANARY}
+        stderr = f"error: {_CANARY}\nAGY_ERROR: {json.dumps(payload)}\n"
+    elif field == "model_selection":
+        init = None
+        terminal.update(status="ERROR", error=f"invalid model selection {_CANARY}", num_turns=0)
+        stderr = f"error: {_CANARY}\n"
+    if field == "stderr.schema_refusal":
+        return "", f"Error: invalid --json-schema: {_CANARY}\n- at schema: {_CANARY}\n\nUsage of agy:\n"
+    events = ([init] if init else []) + [{"event": "result", "result": terminal}]
+    return "".join(json.dumps(event) + "\n" for event in events), stderr
+
+
+@pytest.mark.parametrize("schema", [None, "findings"])
+@pytest.mark.parametrize("returncode", [0, 1])
+@pytest.mark.parametrize("field", [
+    "result.error", "result.status", "stderr.schema_refusal", "usage.value", "usage.key", "init.model", "quota",
+    "model_selection",
+])
+def test_agy_provider_text_never_reaches_the_task_record(tmp_path, field, returncode, schema):
+    """Defect class: provider-controlled text copied into a record that is published (#12408)."""
+    from scripts.dispatcher import worker
+    from scripts.review.review_contract import load_schema
+
+    agy = load("agy")
+    stdout, stderr = _agy_canary_streams(field, returncode)
+    parsed = agy.parse(stdout, stderr, returncode, None, output_schema=load_schema() if schema else None)
+    stream = tmp_path / "stdout.jsonl"
+    stream.write_text(stdout)
+    observed = agy.model_observer(stream)()
+    # The fields the worker assigns from a parsed AGY run, settled and while running (worker.start).
+    record = {
+        "error": parsed.error, "usage": parsed.usage,
+        **worker._stream_attestation(agy.MODEL_SOURCE, parsed.resolved_model),
+        "running": worker._stream_attestation(agy.MODEL_SOURCE, observed),
+        "identity": agy.identity_failure("gemini-3.8-flash-high", parsed.resolved_model),
+    }
+    assert _CANARY not in repr(replace(parsed, text=None))
+    assert _CANARY not in json.dumps(record, indent=2)
+    assert _CANARY not in json.dumps(record, ensure_ascii=False)
+
+
+def test_agy_usage_keeps_only_known_non_negative_integer_counters():
+    """Defect class: arbitrary usage values or keys recorded as token counts."""
+    usage = {
+        "input_tokens": 7, "output_tokens": -1, "thinking_tokens": True, "cache_read_tokens": 2.0,
+        "total_tokens": 2**63, "future_tokens": 5,
+    }
+    terminal = {"event": "result", "result": {"status": "SUCCESS", "response": "Finished.", "usage": usage}}
+    assert load("agy").parse(json.dumps(terminal) + "\n", "", 0, None).usage == {"input_tokens": 7}
+    terminal["result"]["usage"] = {"output_tokens": "3", "future_tokens": 5}
+    assert load("agy").parse(json.dumps(terminal) + "\n", "", 0, None).usage is None
+
+
+@pytest.mark.parametrize(("model", "attested"), [
+    ("gemini-3.8-flash-high", "gemini-3.8-flash-high"),
+    ("claude-sonnet-5-5-high", "claude-sonnet-5-5-high"),
+    ("claude-sonnet-5-5", "claude-sonnet-5-5"),
+    ("gpt-6.1-sol", "unrecognized"),
+    ("gemini-9-forged", "unrecognized"),
+])
+def test_agy_init_model_attests_only_a_catalog_agy_model_id(tmp_path, model, attested):
+    """Defect class: an arbitrary init.model string recorded as the resolved model."""
+    stdout = json.dumps({"event": "init", "init": {"model": model}}) + "\n" + SUCCESS["agy"].split("\n", 1)[1]
+    assert load("agy").parse(stdout, "", 0, None).resolved_model == attested
+    stream = tmp_path / "stdout.jsonl"
+    stream.write_text(stdout)
+    assert load("agy").model_observer(stream)() == attested
+
+
+_AGY_UNOFFERED = 'invalid model selection (--model "gemini-9-unoffered-high" --effort ""): model is not recognized'
+
+
+@pytest.mark.parametrize(("started", "error", "stderr", "expected"), [
+    (False, _AGY_UNOFFERED, f"error: {_AGY_UNOFFERED}\n", (
+        False, "agy_model_unavailable: AGY does not offer the requested model to this account")),
+    (True, _AGY_UNOFFERED, f"error: {_AGY_UNOFFERED}\n", (False, (
+        "agy: exited with status 1; terminal result unsuccessful (ERROR): "
+        "model_selection error; its text is in the task's retained stream"))),
+    (True, "API error: connection reset", "", (False, (
+        "agy: exited with status 1; terminal result unsuccessful (ERROR): "
+        "transport error; its text is in the task's retained stream"))),
+    (True, _AGY_QUOTA, _agy_quota_stream(_AGY_QUOTA)[1], (True, _AGY_QUOTA_ERROR)),
+])
+def test_agy_typed_failure_classifications_hold(started, error, stderr, expected):
+    """Defect class: the fixed vocabulary loses the unavailable-model, transport or quota classification."""
+    events = [{"event": "init", "init": {"model": "gemini-3.8-flash-high"}}] if started else []
+    events.append({"event": "result", "result": {"status": "ERROR", "response": "", "error": error, "num_turns": 0}})
+    result = load("agy").parse("".join(json.dumps(event) + "\n" for event in events), stderr, 1, None)
+    assert (result.rate_limited, result.error) == expected
 
 # --- AGY read-only boundary (C-3027) -------------------------------------------------------------
 
@@ -954,3 +1090,79 @@ def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tm
         from scripts.dispatcher.agy_sandbox import _remove
 
         _remove(tmp_path / "scratch-killed")
+
+
+
+def _codex_mcp_item(item_id, server, status, *, error=None, kind="item.completed", item_type="mcp_tool_call"):
+    return {"type": kind, "item": {"id": item_id, "type": item_type, "server": server,
+                                   "tool": "verify_word", "result": None, "error": error, "status": status}}
+
+
+def _codex_stream(*events):
+    done = [{"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}}]
+    return "".join(json.dumps(event) + "\n" for event in [{"type": "turn.started"}, *events, *done])
+
+
+def test_codex_stream_with_completed_sources_calls_reports_their_count():
+    stream = _codex_stream(
+        _codex_mcp_item("item_1", "sources", "in_progress", kind="item.started"),
+        _codex_mcp_item("item_1", "sources", "completed"),
+        _codex_mcp_item("item_2", "sources", "completed"),
+    )
+    parsed = load("codex").parse(stream, "", 0, "VERDICT: APPROVE")
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 2
+
+
+def test_codex_failed_or_non_sources_mcp_calls_do_not_count():
+    stream = _codex_stream(
+        _codex_mcp_item("item_1", "sources", "failed"),
+        _codex_mcp_item("item_2", "sources", "completed", error={"message": "boom"}),
+        _codex_mcp_item("item_3", "codex_apps", "completed"),
+        _codex_mcp_item("item_4", "sources", "in_progress", kind="item.started"),
+        _codex_mcp_item("item_5", "sources", "completed", item_type="command_execution"),
+    )
+    parsed = load("codex").parse(stream, "", 0, "VERDICT: APPROVE")
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 0
+
+
+def _agy_mcp_step(index, state, server="sources", *, error=None, output=True, tool_name="call_mcp_tool"):
+    info = {"name": tool_name, "parameters": {"Arguments": {"word": "мова"}, "ServerName": server, "ToolName": "verify_word"}}
+    if output:
+        info["output"] = "1 analysis"
+    if error is not None:
+        info["error"] = error
+    step = {"conversation_id": "c1", "step_index": index, "state": state, "step_type": "tool",
+            "tool_name": tool_name, "tool_info": info}
+    return {"event": "step_update", "step_update": step}
+
+
+def _agy_stream(*events):
+    done = {"event": "result", "result": {"status": "SUCCESS", "response": "VERDICT: APPROVE"}}
+    return "".join(json.dumps(event) + "\n" for event in [*events, done])
+
+
+def test_agy_stream_with_completed_sources_calls_reports_their_count():
+    stream = _agy_stream(
+        _agy_mcp_step(1, "ACTIVE", output=False),
+        _agy_mcp_step(1, "DONE"),
+        _agy_mcp_step(2, "DONE", output=False),  # a call that returned nothing still completed
+    )
+    parsed = load("agy").parse(stream, "", 0, None)
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 2
+
+
+def test_agy_failed_or_non_sources_mcp_calls_do_not_count():
+    failed = {"type": "TOOL_ERROR", "message": "Tool call failed: verify_word."}
+    stream = _agy_stream(
+        _agy_mcp_step(1, "ERROR", error=failed),
+        _agy_mcp_step(2, "DONE", error=failed),
+        _agy_mcp_step(3, "DONE", server="other"),
+        _agy_mcp_step(4, "ACTIVE", output=False),
+        _agy_mcp_step(5, "DONE", tool_name="read_file"),
+    )
+    parsed = load("agy").parse(stream, "", 0, None)
+    assert parsed.error is None
+    assert parsed.sources_mcp_call_count == 0

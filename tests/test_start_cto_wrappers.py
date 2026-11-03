@@ -75,7 +75,9 @@ def test_cto_selection_and_dry_run(name: str, case: str, launch_with_usage) -> N
     assert f"stream={EPICS_STREAM} agent={provider}" in result.stdout
     assert f"slot={provider}-epics" in result.stdout
     assert ".claude/epics-epic/DRIVER-STATE.md" in result.stdout
-    assert "drive-epic" in result.stdout
+    # The Claude CTO seat binds lane cto and the cto skill (#12496); Codex keeps drive-epic.
+    binding = "cto" if name == WRAPPERS[0] else "drive-epic"
+    assert f"would bind {binding} after lease" in result.stdout
     assert "LAUNCHER_DRY_RUN=1" in result.stdout
     assert not (Path(result.args[0]).parent / ".claude/epics-epic/DRIVER-STATE.md").exists()
 

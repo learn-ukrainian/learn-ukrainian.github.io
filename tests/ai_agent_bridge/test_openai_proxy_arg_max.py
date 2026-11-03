@@ -13,7 +13,6 @@ from scripts.ai_agent_bridge import openai_proxy as proxy
     [
         (proxy._gemini_backend, "gemini-3.1-pro-preview"),
         (proxy._claude_backend, "claude-sonnet-4-7"),
-        (proxy._hermes_backend, "deepseek-v4.1-flash"),
     ],
 )
 def test_large_prompt_is_passed_via_stdin(
@@ -30,7 +29,6 @@ def test_large_prompt_is_passed_via_stdin(
         return subprocess.CompletedProcess(argv, 0, stdout="backend response\n", stderr="")
 
     monkeypatch.setattr(proxy.subprocess, "run", fake_run)
-    monkeypatch.setattr(proxy, "_hermes_python_argv", lambda: ["hermes-python"])
 
     completion = backend(model, [], prompt=prompt)
 

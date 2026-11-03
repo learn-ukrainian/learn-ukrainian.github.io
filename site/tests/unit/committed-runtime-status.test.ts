@@ -1,6 +1,6 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import {
   buildCommittedLexiconRuntimeStatus,
@@ -77,8 +77,34 @@ describe("committed lexicon runtime status", () => {
   });
 
   afterEach(() => {
+    vi.unstubAllEnvs();
     resetCommittedLexiconRuntimeStatusForTests();
     rmSync(TEST_FIXTURE_BASE, { recursive: true, force: true });
+  });
+
+  test("reports the pinned search set, not the committed snapshot, while a runtime tree is pinned (#12527)", () => {
+    const root = createFixtureRoot("pinned-selection");
+    const pinnedDir = resolve(root, ".atlas-pinned/data");
+    mkdirSync(pinnedDir, { recursive: true });
+    // Deliberately different from the committed fixture: two articles, not one.
+    writeFileSync(resolve(pinnedDir, "lexicon-search-index.json"), JSON.stringify([{ t: "lemma" }, { t: "lemma" }]));
+    writeFileSync(resolve(pinnedDir, "lexicon-search-aliases.json"), "[]");
+    writeFileSync(resolve(pinnedDir, "lexicon-search-shards.json"), "{}");
+    writeFileSync(
+      resolve(pinnedDir, "lexicon-browse-meta.json"),
+      JSON.stringify({ total: 2, letterCounts: { С: 2 } }),
+    );
+
+    vi.stubEnv("ATLAS_SEARCH_RUNTIME_TREE", "");
+    expect(buildCommittedLexiconRuntimeStatus(root).publicAtlas.searchArticleEntries).toBe(1);
+
+    vi.stubEnv("ATLAS_SEARCH_RUNTIME_TREE", "/runtime/tree");
+    expect(buildCommittedLexiconRuntimeStatus(root).publicAtlas.searchArticleEntries).toBe(2);
+
+    // Pinned but missing: fail closed instead of reporting the committed snapshot.
+    rmSync(resolve(pinnedDir, "lexicon-search-index.json"));
+    resetCommittedLexiconRuntimeStatusForTests();
+    expect(() => buildCommittedLexiconRuntimeStatus(root)).toThrow(/missing/);
   });
 
   test("returns hydrated status and non-null source inventory when manifest is present", () => {

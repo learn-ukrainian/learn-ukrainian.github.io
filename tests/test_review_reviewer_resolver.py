@@ -154,7 +154,6 @@ def test_family_resolution_across_model_and_harness_aliases():
         "gemma-4-31b-it": "google",
         "grok": "xai",
         "grok-build": "xai",
-        "grok-hermes": "xai",
         "grok-4.6": "xai",
         "deepseek-v4.1-flash": "deepseek",
         "deepseek-v4-pro": "deepseek",
@@ -1608,10 +1607,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "gemini.py": "gemini",
         "glm.py": "glm",
         "grok_build.py": "grok",
-        "hermes_common.py": None,
-        "hermes_deepseek.py": "deepseek",
-        "hermes_grok.py": "grok",
-        "hermes_qwen.py": "qwen",
         "kimi.py": "kimi",
         "kimicc.py": "kimi",
         "muse.py": "muse",
@@ -1638,7 +1633,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "scripts/agent_runtime/codex_hook_probe.py": "codex",
         "agents_extensions/codex/hooks.json": "codex",
         "agents_extensions/shared/hooks/guard-reviewer-publish.py": None,
-        "scripts/agent_runtime/hermes_hooks/log_tool_call.sh": None,
     }
     for rel, seat in hooks.items():
         assert (repo / rel).is_file(), rel
@@ -1651,8 +1645,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
     for seats in adapter_subject_index().values():
         assert seats <= KNOWN_SUBJECT_SEATS
     assert classify_owned_path("scripts/dispatcher/providers/opencode.py").seats == frozenset({"deepseek"})
-    hermes = classify_owned_path("scripts/dispatcher/providers/hermes.py")
-    assert hermes.kind == "ambiguous" and hermes.seats == frozenset({"deepseek", "grok", "qwen"})
 
 
 _AUTHOR_MODELS = {
@@ -2189,12 +2181,17 @@ def test_complete_author_set_excludes_every_member_not_only_the_latest():
     latest_only = resolve_reviewer(
         ResolverInputs(author_model="gpt-6.1-sol", risk="medium", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT)
     )
-    complete = _complete({"anthropic", "openai"}, author_model="gpt-6.1-sol")
+    complete = resolve_reviewer(ResolverInputs(
+        author_model="gpt-6.1-sol", author_families=frozenset({"anthropic", "openai"}),
+        author_commits=(("a" * 40, "anthropic"), ("b" * 40, "openai")),
+        risk="medium", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT,
+    ))
 
     assert latest_only.selected.family == "anthropic"
-    assert complete.selected.name == "gemini-3.8-flash-high"
-    reasons = {entry.name: entry.reason for entry in complete.trace}
-    assert "same family as author (anthropic)" in reasons["claude-opus-5-5"]
+    assert complete.selected is None and {seat.family for seat in complete.quorum} == {"anthropic", "openai"}
+    assert {scope.reviewer_family: scope.commits for scope in complete.review_scopes} == {
+        "anthropic": ("b" * 40,), "openai": ("a" * 40,),
+    }
     # Grok reviews at every risk (#9769); an xAI member removes it too.
     assert _complete({"anthropic", "openai", "xai"}, risk="critical").selected is None
 

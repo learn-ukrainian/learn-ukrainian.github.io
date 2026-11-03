@@ -340,7 +340,7 @@ def test_v2_launch_flag_parity_and_watchdog_forwarding(tmp_path: Path, capsys, m
         ["--lifecycle-file", "ledger.json"],
         ["--authoring-review-risk", "medium"],
         ["--mode", "danger"],
-        *(["--agent", seat] for seat in ("grok-build", "grok-hermes", "qwen", "kimi")),
+        *(["--agent", seat] for seat in ("grok-build", "qwen", "kimi")),
     ],
 )
 def test_v2_gaps_are_forwarded_for_explicit_refusal(tmp_path: Path, option):

@@ -174,7 +174,6 @@ function run() {
   const document = new decoder.Document(arrayBuffer);
   if (document.getPagesQuantity() !== expectedPages) fail("decoder page denominator drift");
 
-  let outputHandle = null;
   const outputDigest = crypto.createHash("sha256");
   const textHashes = [];
   const zoneHashes = [];
@@ -185,7 +184,7 @@ function run() {
   let totalCodePoints = 0;
   let totalUtf8Bytes = 0;
   let totalZones = 0;
-  outputHandle = openExclusiveOutput(outputPath);
+  let outputHandle = openExclusiveOutput(outputPath);
   try {
     for (let pageNumber = 1; pageNumber <= expectedPages; pageNumber += 1) {
       const page = document.getPageUnsafe(pageNumber);

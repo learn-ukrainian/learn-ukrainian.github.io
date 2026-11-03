@@ -426,6 +426,8 @@ def live_canonical_branch_head(repo_root: Path, branch: str, *, repository: str)
     except (OSError, subprocess.TimeoutExpired, UnsafeBranchNameError) as exc:
         raise TargetResolutionError("canonical live branch lookup unavailable") from exc
     if proc.returncode != 0:
+        if proc.returncode == 2:
+            raise TargetResolutionError("PR_HEAD_BRANCH_MISSING: canonical live branch is absent")
         raise TargetResolutionError(f"canonical live branch lookup failed (exit {proc.returncode})")
     match = re.fullmatch(r"([0-9a-fA-F]{40})\t" + re.escape(ref) + r"\n", proc.stdout)
     if match is None or match[1] == "0" * 40:
@@ -433,7 +435,7 @@ def live_canonical_branch_head(repo_root: Path, branch: str, *, repository: str)
     return match[1].lower()
 
 
-def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
+def resolve_pr_target(repo_root: Path, pr_number: int, *, expected_head_sha: str | None = None) -> ReviewTarget:
     """A PR's diff using the merge-base with its actual base branch (not an
     assumed default branch, and not the base branch's possibly-moved tip).
 
@@ -445,6 +447,9 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
     must be computed against. The base ref name is kept on the target so a
     later review can exclude the default branch; the base tip stays in
     ``description`` for provenance.
+
+    Merged PRs use GitHub's final head and refuse a conflicting recorded pin.
+    Open PRs still pin and recheck the live canonical branch.
     """
     slug = _origin_github_repo(repo_root)
     if slug is None:
@@ -457,7 +462,7 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
             "--repo",
             slug,
             "--json",
-            "number,baseRefName,baseRefOid,headRefName,headRefOid,isCrossRepository",
+            "number,state,baseRefName,baseRefOid,headRefName,headRefOid,isCrossRepository",
         ],
         repo_root,
     )
@@ -483,12 +488,22 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
         raise TargetResolutionError(f"PR #{pr_number} payload missing base/head SHA")
     if not isinstance(head_ref_name, str) or not head_ref_name:
         raise TargetResolutionError(f"PR #{pr_number} payload missing head branch")
-    head_sha = live_canonical_branch_head(repo_root, head_ref_name, repository=slug)
+    pr_state = payload.get("state")
+    if pr_state == "CLOSED":
+        raise TargetResolutionError("PR_CLOSED_UNMERGED: closed PR has no merged review target")
+    if pr_state not in ("OPEN", "MERGED"):
+        raise TargetResolutionError("PR_STATE_UNKNOWN: PR state must be OPEN or MERGED")
+    if pr_state == "MERGED":
+        # GitHub retains the final head even after post-merge branch deletion.
+        if expected_head_sha is not None and expected_head_sha.lower() != head_sha.lower():
+            raise TargetResolutionError("PR_HEAD_MISMATCH: recorded head differs from merged PR head")
+    else:
+        head_sha = live_canonical_branch_head(repo_root, head_ref_name, repository=slug)
 
     _ensure_commit_available(repo_root, base_tip_sha)
     _ensure_commit_available(repo_root, head_sha)
-    if live_canonical_branch_head(repo_root, head_ref_name, repository=slug) != head_sha:
-        raise TargetResolutionError("PR head moved after pinning")
+    if pr_state == "OPEN" and live_canonical_branch_head(repo_root, head_ref_name, repository=slug) != head_sha:
+        raise TargetResolutionError("PR_HEAD_MISMATCH: PR head moved after pinning")
     merge_base_proc = _run_git(["merge-base", base_tip_sha, head_sha], repo_root)
     if merge_base_proc.returncode != 0:
         raise TargetResolutionError(
@@ -507,6 +522,7 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
         description=(
             f"PR #{pr_number}: {head_ref_name}@{head_sha[:12]} vs merge-base {merge_base_sha[:12]} "
             f"(base tip {base_ref_name}@{base_tip_sha[:12]})"
+            + (" [MERGED PR]" if pr_state == "MERGED" else "")
         ),
         base_ref_name=base_ref_name,
     )
@@ -520,6 +536,7 @@ def resolve_review_target(
     branch: str | None = None,
     base: str | None = None,
     pr_number: int | None = None,
+    expected_head_sha: str | None = None,
 ) -> ReviewTarget:
     """Dispatch to the mode-specific resolver. ``mode`` must be explicit."""
     if mode == "local":
@@ -535,7 +552,7 @@ def resolve_review_target(
     if mode == "pr":
         if pr_number is None:
             raise TargetResolutionError("mode=pr requires --pr")
-        return resolve_pr_target(repo_root, pr_number)
+        return resolve_pr_target(repo_root, pr_number, expected_head_sha=expected_head_sha)
     raise TargetResolutionError(f"unknown mode {mode!r} (expected local/commit/branch/pr)")
 
 

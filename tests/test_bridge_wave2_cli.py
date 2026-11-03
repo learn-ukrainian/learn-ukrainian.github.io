@@ -126,7 +126,7 @@ def test_post_review_flag_implies_action_required_priority(monkeypatch):
     monkeypatch.setattr(_acp_compat, "run_compat_ask", acp_ask)
     parser = _cli._build_parser()
     for command in (
-        "ask-claude", "ask-codex", "ask-gemini", "ask-agy", "ask-hermes", "ask-opencode",
+        "ask-claude", "ask-codex", "ask-gemini", "ask-agy", "ask-opencode",
         "ask-deepseek", "ask-pool", "ask-glm", "ask-gemma", "ask-cursor", "ask-grok",
         "ask-grok-build", "ask-kimi",
     ):

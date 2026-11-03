@@ -29,7 +29,7 @@ import sys
 from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
 from types import SimpleNamespace
@@ -52,7 +52,6 @@ COMPAT_TARGETS: dict[str, str] = {
     "codex": "codex",
     "agy": "agy",
     "gemini": "agy",
-    "hermes": "deepseek",
     "deepseek": "deepseek",
     "pool": "pool",
     "glm": "glm",
@@ -686,6 +685,17 @@ def _resolve_review_target(
             raise ReviewAdmissionRefused(refusal)
     concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")
+    if review_mode == "cross_family" and profile in {"code", "infra"} and facts is not None and facts.mixed_family:
+        from scripts.review.record_cf_verdict import RecordError
+
+        try:
+            scope = facts.reviewer_scope(family)
+        except RecordError as exc:
+            raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {exc}") from exc
+        reviewer_ids = review_task_id_comparison_keys(reviewer_task_id or "", agent=seat)
+        author_ids = {key for identity in scope.author_task_ids for key in review_task_id_comparison_keys(identity)}
+        if reviewer_ids & author_ids:
+            raise ReviewAdmissionRefused("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
     if attempt and seat in {"grok", "grok-build"}:
@@ -754,6 +764,9 @@ def _resolve_review_target(
             subject_evidence=subject.evidence,
             claude_account=claude_account,
         )
+    if review_mode == "red_team":
+        # Preserve the existing whole-branch precedence probes, rather than resolving a pair here.
+        inputs = replace(inputs, author_commits=())
     author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
     if (
         trusted

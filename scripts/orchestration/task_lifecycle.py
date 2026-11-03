@@ -126,6 +126,14 @@ class LifecycleError(ValueError):
     """The lifecycle ledger or requested transition violates the contract."""
 
 
+class EvidencePolicyError(LifecycleError):
+    """A stable refusal code for AC reuse and evidence-policy correction."""
+
+    def __init__(self, code: str, message: str):
+        self.code = code
+        super().__init__(f"{code}: {message}")
+
+
 class MalformedAcceptanceCriterion(LifecycleError):
     """A checkbox line the parser rejects (malformed, duplicate or oversized); carries the line."""
 
@@ -753,6 +761,43 @@ def _validate_behavior_proof_reference_shape(details: Mapping[str, Any]) -> dict
     return normalized
 
 
+def _validate_evidence_type_corrections(ledger: Mapping[str, Any]) -> None:
+    expected_snapshot = ledger["ac_snapshot"]
+    latest_time: datetime | None = None
+    seen: set[str] = set()
+    for record in reversed(ledger.get("evidence_type_corrections", [])):
+        if record["id"] != digest(_receipt_event_payload(record)):
+            raise LifecycleError("evidence-type correction digest is invalid")
+        if record["id"] in seen:
+            raise LifecycleError("duplicate evidence-type correction")
+        seen.add(record["id"])
+        if record["new_snapshot"] != expected_snapshot:
+            raise LifecycleError("evidence-type correction snapshot chain is broken")
+        old = record["old_snapshot"]
+        if old["content_hash"] != ac_content_hash(old["criteria"]):
+            raise LifecycleError("evidence-type correction old snapshot hash is invalid")
+        expected = deepcopy(old)
+        targets = [item for item in expected["criteria"] if item["id"] == record["ac_id"]]
+        if len(targets) != 1 or targets[0]["required_evidence"] != record["old_types"]:
+            raise LifecycleError("evidence-type correction does not match its old criterion")
+        if record["old_types"] == record["new_types"]:
+            raise LifecycleError("evidence-type correction must change required evidence")
+        targets[0]["required_evidence"] = record["new_types"]
+        expected["content_hash"] = ac_content_hash(expected["criteria"])
+        if expected != record["new_snapshot"]:
+            raise LifecycleError("evidence-type correction may change only required evidence types and the hash")
+        for criterion in old["criteria"]:
+            if criterion["behavior_proof_required"] and "behavior_proof" not in criterion["required_evidence"]:
+                raise LifecycleError("evidence-type correction history omits required behavior proof")
+        recorded_at = _utc_timestamp(record["recorded_at"])
+        if recorded_at < _utc_timestamp(old["finalized_at"]) or (
+            latest_time is not None and recorded_at > latest_time
+        ):
+            raise LifecycleError("evidence-type correction chronology is invalid")
+        latest_time = recorded_at
+        expected_snapshot = old
+
+
 def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
     errors = _schema_errors(payload)
     if errors:
@@ -779,6 +824,7 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
     for criterion in criteria:
         if criterion["behavior_proof_required"] and "behavior_proof" not in criterion["required_evidence"]:
             raise LifecycleError(f"{criterion['id']}: behavior-proof-required AC must require behavior_proof evidence")
+    _validate_evidence_type_corrections(ledger)
     criteria_by_id = {item["id"]: item for item in criteria}
     evidence_ids: set[str] = set()
     earlier_evidence: dict[str, Mapping[str, Any]] = {}
@@ -864,6 +910,94 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
             raise LifecycleError("duplicate mutation receipt event")
         mutation_ids.add(receipt["id"])
     return ledger
+
+
+def _normalized_issue_state(issue: Mapping[str, Any]) -> str:
+    """Issue state as reconcile and correction history both read it.
+
+    A hermetic receipt keeps the caller's spelling, so ``closed`` and ``CLOSED``
+    are one state.
+    """
+    return str(issue.get("state") or "").upper()
+
+
+def correct_evidence_types(
+    payload: Mapping[str, Any], *, ac_id: str, required_evidence: list[str],
+    actor: str, reason: str, issue: Mapping[str, Any], now: str,
+) -> tuple[dict[str, Any], dict[str, Any], bool]:
+    """Append one policy correction; retain snapshots, evidence and receipts."""
+    ledger = validate_lifecycle(payload)
+    actor = _clean_text(actor, "correction actor", maximum=200)
+    reason = _clean_text(reason, "correction reason")
+    if (
+        not required_evidence or len(set(required_evidence)) != len(required_evidence)
+        or any(kind not in EVIDENCE_TYPES for kind in required_evidence)
+    ):
+        raise EvidencePolicyError("AC_INVALID_EVIDENCE_TYPES", "use a non-empty unique list of supported types")
+    targets = [item for item in ledger["ac_snapshot"]["criteria"] if item["id"] == ac_id]
+    if not targets:
+        raise EvidencePolicyError("AC_UNKNOWN_CRITERION", ac_id)
+    criterion = targets[0]
+    observed = [issue]
+    observed.extend(
+        receipt["observation"].get("github", {}).get("issue", {})
+        for receipt in ledger["observation_receipts"]
+    )
+    for index, item in enumerate(observed):
+        if item.get("number") != ledger["identity"]["github_issue_number"]:
+            if index == 0:
+                raise EvidencePolicyError("AC_ISSUE_UNREAD", "authoritative issue number does not match")
+            continue
+        state = _normalized_issue_state(item)
+        if index > 0 and state not in {"OPEN", "CLOSED"}:
+            continue
+        if state == "CLOSED":
+            if item.get("state_reason") == "COMPLETED":
+                raise EvidencePolicyError("AC_ISSUE_COMPLETED", "completed issues cannot change evidence policy")
+            if item.get("state_reason") != "NOT_PLANNED":
+                raise EvidencePolicyError("AC_ISSUE_UNREAD", "closed issue completion reason is unknown")
+        elif state != "OPEN":
+            raise EvidencePolicyError("AC_ISSUE_UNREAD", "issue state is unknown")
+        if index == 0:
+            parsed = parse_issue_acceptance_criteria(item.get("body", ""))
+        else:
+            parsed = [
+                {"id": match.group("id"), "checked": match.group("checked").lower() == "x"}
+                for line in str(item.get("body") or "").splitlines()
+                if (match := _match_ac_checkbox_line(line)) is not None
+            ]
+        if any(ac["id"] == ac_id and ac["checked"] for ac in parsed):
+            raise EvidencePolicyError("AC_ALREADY_CHECKED", f"{ac_id} has been observed checked")
+        if index == 0 and [{"id": ac["id"], "text": ac["text"]} for ac in parsed] != [
+            {"id": ac["id"], "text": ac["text"]} for ac in ledger["ac_snapshot"]["criteria"]
+        ]:
+            raise EvidencePolicyError("AC_SNAPSHOT_MISMATCH", "authoritative issue criteria differ from the stored snapshot")
+    history = ledger.get("evidence_type_corrections", [])
+    if criterion["required_evidence"] == required_evidence:
+        if history and all(history[-1][key] == value for key, value in {
+            "ac_id": ac_id, "new_types": required_evidence, "actor": actor, "reason": reason,
+        }.items()):
+            return ledger, history[-1], True
+        raise EvidencePolicyError("AC_POLICY_UNCHANGED", "criterion already requires these evidence types")
+    earliest = max(
+        _utc_timestamp(ledger["updated_at"]),
+        _utc_timestamp(history[-1]["recorded_at"] if history else ledger["ac_snapshot"]["finalized_at"]),
+    )
+    if _utc_timestamp(now) < earliest:
+        raise EvidencePolicyError("AC_CORRECTION_BACKDATED", "correction predates the ledger or prior correction")
+    old = deepcopy(ledger["ac_snapshot"])
+    old_types = list(criterion["required_evidence"])
+    criterion["required_evidence"] = list(required_evidence)
+    ledger["ac_snapshot"]["content_hash"] = ac_content_hash(ledger["ac_snapshot"]["criteria"])
+    material = {
+        "ac_id": ac_id, "actor": actor, "reason": reason, "recorded_at": now,
+        "old_types": old_types, "new_types": list(required_evidence),
+        "old_snapshot": old, "new_snapshot": deepcopy(ledger["ac_snapshot"]),
+    }
+    record = {"id": digest(material), **material}
+    ledger.setdefault("evidence_type_corrections", []).append(record)
+    ledger["updated_at"] = now
+    return validate_lifecycle(ledger), record, False
 
 
 def bind_pr(payload: Mapping[str, Any], *, pr_number: int, now: str) -> dict[str, Any]:
@@ -1861,7 +1995,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         and STATE_RANK[item["due_state"]] <= STATE_RANK[remote_goal_state]
         and not checked.get(item["id"], False)
     ]
-    if str(issue.get("state") or "").upper() == "CLOSED":
+    if _normalized_issue_state(issue) == "CLOSED":
         if not goal_reached or preclose_missing or preclose_unchecked or remaining["status"] == "open":
             hard.append("issue closed before terminal goal and pre-close AC proof were complete")
         else:

@@ -476,7 +476,7 @@ def test_runner_failover_rejects_forbidden_glm_target(tmp_path, monkeypatch):
         forbidden_config=True,
     )
 
-    with pytest.raises(ValueError, match="HERMES_GLM_FORBIDDEN"):
+    with pytest.raises(ValueError, match="GLM_FORBIDDEN"):
         runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
 
 
@@ -508,16 +508,16 @@ def test_shipped_config_declares_no_deepseek_chain():
     )
 
 
-def test_classifier_routes_hermes_credential_startup_failure_to_auth():
-    """Live-captured 2026-07-06: a dead/missing credential fails hermes at
-    startup with prose that previously matched NO trigger class, so the chain
-    never rotated. Credential rotation is the point — must classify as auth."""
+def test_classifier_routes_credential_startup_failure_to_auth():
+    """Live-captured 2026-07-06: a dead/missing credential fails the provider
+    CLI at startup with prose that previously matched NO trigger class, so the
+    chain never rotated. Credential rotation is the point — must classify as auth."""
     from agent_runtime.failover import classify_failover_trigger
 
     stderr = (
-        "hermes -z: agent failed: Provider 'deepseek' is set in config.yaml "
+        "agent failed: Provider 'deepseek' is set in config.yaml "
         "but no API key was found. Set the DEEPSEEK_API_KEY environment "
-        "variable, or switch to a different provider with `hermes model`."
+        "variable, or switch to a different provider."
     )
     trigger = classify_failover_trigger(
         parse=ParseResult(ok=False, response="", stderr_excerpt=stderr[:500]),
@@ -525,29 +525,6 @@ def test_classifier_routes_hermes_credential_startup_failure_to_auth():
         kill_reason=None,
         stdout_text="",
         stderr_text=stderr,
-    )
-
-    assert trigger == "auth"
-
-
-def test_classifier_routes_hermes_inband_http_401_to_auth():
-    """The Hermes adapter, not a display excerpt, owns this captured error."""
-    from agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter
-    from agent_runtime.failover import classify_failover_trigger
-
-    excerpt = "HTTP 401: Authentication Fails, Your api key: ****robe is invalid"
-    parse = HermesDeepSeekAdapter().parse_response(
-        stdout=excerpt,
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-    trigger = classify_failover_trigger(
-        parse=parse,
-        returncode=0,
-        kill_reason=None,
-        stdout_text=excerpt,
-        stderr_text="",
     )
 
     assert trigger == "auth"
@@ -647,14 +624,13 @@ def test_chain_route_missing_model_after_index_zero_warns_and_drops(tmp_path, ca
 def test_shipped_config_declares_no_grok_chain():
     """Pin the shipped config: native ``grok`` has NO failover chain (user
     order 2026-07-07 — work belongs on the native-app seat; grok-4.* via
-    OpenRouter has no measured niche and 402-drained the OR balance). The
-    demoted hermes path ``grok-hermes`` stays a plain single route too."""
+    OpenRouter has no measured niche and 402-drained the OR balance)."""
     from agent_runtime.failover import (
         default_failover_config_path,
         load_failover_chain,
     )
 
-    for lane in ("grok", "grok-build", "grok-hermes"):
+    for lane in ("grok", "grok-build"):
         chain = load_failover_chain(
             lane,
             effective_model="grok-4.7",

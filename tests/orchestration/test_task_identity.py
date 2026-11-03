@@ -312,7 +312,6 @@ def test_unsupported_adapter_records_honest_carrier_fallback() -> None:
         ("gemini", False),
         ("agy", False),
         ("cursor", False),
-        ("hermes", False),
         ("opencode", False),
     ],
 )

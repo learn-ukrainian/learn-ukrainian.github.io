@@ -202,7 +202,6 @@ def test_healthz_endpoint_returns_backend_status(monkeypatch):
             "codex": lambda: (True, "codex v1.2.3"),
             "gemini": lambda: (False, ""),
             "claude": lambda: (True, "claude v4.0"),
-            "hermes": lambda: (False, ""),
         },
     )
 
@@ -215,7 +214,6 @@ def test_healthz_endpoint_returns_backend_status(monkeypatch):
             "codex": True,
             "gemini": False,
             "claude": True,
-            "hermes": False,
         },
     }
 

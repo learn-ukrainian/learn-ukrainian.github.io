@@ -237,13 +237,17 @@ own worker count.
 
 ## CPU-time containment
 
-**Status: PROPOSED (#10735).** The ceiling below is not applied anywhere. It needs
-designated approval, then routine host maintenance by the accountable driver.
-`packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example` carries the keys; the
-`.example` suffix is never loaded, and no script (including
-`scripts/ops/lu_slice_apply.sh`) installs it. Installation is manual, below.
+**Status: APPLIED (#10735), 2026-11-02.** The CTO brief for #10735 approved the
+ceiling after orphaned busy loops from one worker starved dispatch admission.
+`packaging/systemd/dropins/lu.slice.d/20-cpu.conf` carries the keys. No script
+installs it; installation is the manual step below.
+Such loops, like every worker, run in the user manager's
+`lu.slice/lu-dispatch.slice/lu-worker-<task>-<nonce>.scope`. Reparenting to PID 1
+does not change a process's cgroup, so the quota on `lu.slice` holds them. (The
+system manager's `lu.slice` and `lu-dispatch.slice` are empty placeholders: always
+use `systemctl --user`.)
 
-| Key | Proposed value |
+| Key | Value |
 | --- | --- |
 | `CPUAccounting` | `yes` |
 | `CPUQuota` | `1200%` |
@@ -274,7 +278,7 @@ The memory limits are separate and unchanged.
 Add only the new file beside it, and re-verify the memory properties after every
 change, as below.
 
-### Apply (after approval)
+### Apply
 
 First record the memory properties, so the verification can compare against them:
 
@@ -287,7 +291,7 @@ Then install the persistent drop-in. It is the only apply path; there is no
 directory and can mask a later `20-cpu.conf`.
 
 ```bash
-install -m 0644 packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example \
+install -m 0644 packaging/systemd/dropins/lu.slice.d/20-cpu.conf \
   "$HOME/.config/systemd/user/lu.slice.d/20-cpu.conf"
 systemctl --user daemon-reload
 ```
@@ -302,11 +306,17 @@ Never judge from the drop-in text. Read what the manager and the kernel report:
 systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuotaPeriodUSec -p CPUWeight -p MemoryMax -p MemoryHigh -p MemorySwapMax
 ```
 
-Expect `CPUAccounting=yes`, `CPUQuotaPerSecUSec=12s`, `CPUQuotaPeriodUSec=100ms`,
+Expect `CPUQuotaPerSecUSec=12s`, `CPUQuotaPeriodUSec=100ms`,
 `CPUWeight=50`, and `MemoryHigh`, `MemoryMax`, `MemorySwapMax` equal to the
 snapshot recorded before the change. Then read the slice's cgroup: `cpu.max` is
 `<quota> <period>`, and the apply-time expected line is `1200000 100000`;
-`cpu.weight` must read `50`.
+`cpu.weight` must read `50`. On this host's systemd, `show` prints no `CPUAccounting`
+line; a readable `cpu.stat` in the slice cgroup is the accounting check.
+
+Containment proof, 2026-11-02: a bounded set of busy loops, more than the quota allows,
+ran in a transient unit under `lu-dispatch.slice`. `lu.slice` stayed below its ceiling in
+`cpu.stat`, `nr_throttled` grew, and Monitor `/api/health` stayed responsive. The unit was
+inactive and no loop survived. Measurements stay in the private operations notes.
 
 ### Observe
 

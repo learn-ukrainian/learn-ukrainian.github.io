@@ -75,10 +75,6 @@ def _profile_for_agent(agent_name: str) -> str:
         raise TrailIsolationError(
             "trail isolation refused for GLM: the opencode adapter ignores tool restrictions"
         )
-    if agent_name == "grok-hermes":
-        raise TrailIsolationError(
-            "trail isolation refused for grok-hermes: this harness cannot prove trail tool admission"
-        )
     raise TrailIsolationError(
         f"trail isolation refused for {agent_name!r}: this harness cannot prove trail tool admission"
     )

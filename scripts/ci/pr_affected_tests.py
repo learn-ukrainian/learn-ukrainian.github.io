@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import math
 import os
@@ -47,13 +48,43 @@ GUARDS_REASON = "guards alone exceed the safe budget under the 480 second pytest
 # from zero, so a heavy guard list never starves every importing test.
 FILL_SHARE = 0.5
 TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
+# A guard line is a test file, or `file::name[::name]` to pin one test (or Class::test) in a file
+# too slow to run whole under the PR cap. Names are plain identifiers, so a pinned id carries no
+# shell, glob or parametrize syntax and always runs every case of that test.
+NODE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)?")
+
+
+def guard_file(entry: str) -> str:
+    return entry.split("::", 1)[0]
+
+
+def validate_node(entry: str) -> None:
+    """A pinned guard must name a test the file defines, so a rename cannot silently drop it."""
+    file, _, node = entry.partition("::")
+    if not NODE.fullmatch(node):
+        raise ValueError("invalid pinned guard id")
+    *owners, name = node.split("::")
+    body = ast.parse(Path(file).read_text(encoding="utf-8")).body
+    for owner in owners:
+        body = next((n.body for n in body if isinstance(n, ast.ClassDef) and n.name == owner), None)
+        if body is None:
+            raise ValueError("pinned guard class is not defined")
+    if not any(isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name == name and name.startswith("test")
+               for n in body):
+        raise ValueError("pinned guard test is not defined")
 
 
 def git(*args: str) -> bytes:
     return subprocess.run(["git", *args], check=True, capture_output=True, timeout=30).stdout
 
 
-def safe_path(name: str) -> str:
+def safe_path(name: str, *, node: bool = False) -> str:
+    if node and "::" in name:
+        file, _, rest = name.partition("::")
+        safe_path(file)
+        if not NODE.fullmatch(rest):
+            raise ValueError("unsafe repository path")
+        return name
     path = PurePosixPath(name)
     if (
         not name
@@ -68,8 +99,15 @@ def safe_path(name: str) -> str:
     return name
 
 
-def importing_tests(targets: set[str], deleted: set[str], base: str, entries: dict[str, str]) -> list[str]:
-    """Tests that directly import, load, read or run a changed file, by static scan.
+def importing_tests(
+    targets: set[str], deleted: set[str], base: str, entries: dict[str, str],
+) -> tuple[list[str], list[str]]:
+    """Tests that import, load, read or run a changed file, by static scan, in two tiers.
+
+    The first tier is the tests that do so themselves. The second is the tests that
+    only share a ``conftest.py`` that does: pytest loads a conftest for every test
+    file under its directory, so the code it imports or copies into a fixture is code
+    those tests run. The second tier lists no test twice.
 
     A test that loads a computed path also depends on every file under the
     directories its constants name (`components.directory_edges`).
@@ -93,14 +131,17 @@ def importing_tests(targets: set[str], deleted: set[str], base: str, entries: di
         scan = components.scan_imports(sources, set(tree))
         edges = [*edges, *(edge for edge in scan["file_edges"] if edge[1] in deleted)]
         directories = [*directories, *scan["directory_edges"]]
-    return sorted({
-        importer for importer, target in edges
-        if target in targets and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
-    } | {
+    regular = {name for name, mode in entries.items() if TEST.fullmatch(name) and mode in {"100644", "100755"}}
+    reached = {importer for importer, target in edges if target in targets} | {
         importer for importer, directory in directories
         if any(target.startswith(directory + "/") for target in targets)
-        and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
-    })
+    }
+    direct = reached & regular
+    scopes = {PurePosixPath(importer).parent.as_posix() for importer in reached
+              if PurePosixPath(importer).name == "conftest.py"}
+    shared = {name for name in regular
+              if any(scope == "." or name.startswith(scope + "/") for scope in scopes)}
+    return sorted(direct), sorted(shared - direct)
 
 
 def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
@@ -115,24 +156,28 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         for p in git("diff", "--no-renames", "--name-only", "-z", base, candidate, "--").split(b"\0")
         if p
     ]
-    guards = [safe_path(line) for line in GUARDS.read_text(encoding="utf-8").splitlines()]
+    guards = [safe_path(line, node=True) for line in GUARDS.read_text(encoding="utf-8").splitlines()]
     if not guards or len(set(guards)) != len(guards):
         raise ValueError("empty or duplicate guard list")
     tests = sorted(p for p in changed if TEST.fullmatch(p) and p in entries)
-    for name in set(guards) | set(tests):
+    for name in {guard_file(g) for g in guards} | set(tests):
         if not TEST.fullmatch(name) or entries.get(name) not in {"100644", "100755"}:
             raise ValueError("test is not a tracked regular file")
         path = Path(name)
         if not path.is_file() or any(p.is_symlink() for p in (path, *path.parents)):
             raise ValueError("missing test or symlinked test path")
+    for entry in guards:
+        if "::" in entry:
+            validate_node(entry)
     durations = json.loads(DURATIONS.read_text(encoding="utf-8"))
     if not isinstance(durations, dict):
         raise ValueError("invalid duration record")
+    # A pinned id always runs: its whole file may be deferred by cost even when it changed.
     selected = sorted(set(guards) | set(tests))
-    unknown = [p for p in selected if p not in durations]
+    unknown = [p for p in selected if p not in durations and "::" not in p]
     for p in selected:
         value = durations.get(p)
-        if p not in unknown and (type(value) not in {int, float} or not math.isfinite(value) or value < 0):
+        if p not in unknown and "::" not in p and (type(value) not in {int, float} or not math.isfinite(value) or value < 0):
             raise ValueError("invalid recorded duration")
     # An unrecorded file (e.g. new in this PR) is costed conservatively at the
     # 95th percentile of recorded durations, so an unrecorded file does not
@@ -149,7 +194,14 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         else 1.0
     )
     # Sum serial times with a minute reserved for setup and collection.
-    estimate = 60 + sum(durations.get(p, default) for p in selected)
+    # A pinned id is costed at the default: the record holds whole-file times only.
+    # Its whole file already pays for it, so it adds nothing when that file is selected.
+    def cost(p: str, whole: set[str] = frozenset(selected)) -> float:
+        if "::" in p:
+            return 0 if guard_file(p) in whole else default
+        return durations.get(p, default)
+
+    estimate = 60 + sum(cost(p) for p in selected)
     infrastructure = any(
         p in INFRA
         or Path(p).name == "conftest.py"
@@ -157,7 +209,7 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         or p == "tests/flake_quarantine.yaml"
         for p in changed
     )
-    guard_estimate = 60 + sum(durations.get(p, default) for p in guards)
+    guard_estimate = 60 + sum(cost(p, set(guards)) for p in guards)
     reason = (
         "pytest infrastructure changed"
         if infrastructure
@@ -172,10 +224,10 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         # Over the safe budget: changed tests fill what the guards leave, cheapest
         # first, so the same rule bounds the mandatory selection and the importers.
         used = guard_estimate
-        for p in sorted(set(tests) - set(guards), key=lambda p: (durations.get(p, default), p)):
-            if used + durations.get(p, default) <= SAFE_SECONDS:
+        for p in sorted(set(tests) - set(guards), key=lambda p: (cost(p), p)):
+            if used + cost(p) <= SAFE_SECONDS:
                 run.add(p)
-                used += durations.get(p, default)
+                used += cost(p)
     # Tests for changed code fill the fill budget, cheapest first; the
     # rest defer to merge-group pytest. Infrastructure changes run guards only.
     sources = {p for p in changed if not TEST.fullmatch(p)}
@@ -184,11 +236,12 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         for p in git("diff", "--no-renames", "--diff-filter=D", "--name-only", "-z", base, candidate, "--").split(b"\0")
         if p
     } & sources
-    imported = (
-        [p for p in importing_tests(sources, deleted, base, entries) if p not in run]
+    direct, shared = (
+        tuple([p for p in tier if p not in run] for tier in importing_tests(sources, deleted, base, entries))
         if importers and sources and not reason
-        else []
+        else ([], [])
     )
+    imported = direct + shared
     unknown += [p for p in imported if p not in durations]
     for p in imported:
         value = durations.get(p, default)
@@ -196,13 +249,17 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
             raise ValueError("invalid recorded duration")
     budget = estimate
     fill_limit = min(estimate + (CAP_SECONDS - estimate) * FILL_SHARE, SAFE_SECONDS)
-    for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
-        if budget + durations.get(p, default) <= fill_limit:
-            run.add(p)
-            budget += durations.get(p, default)
+    # Tests that import the code themselves fill first. Tests that only share a conftest
+    # with it are cheaper to name than to trust, so they never displace a direct importer.
+    for tier in (direct, shared):
+        for p in sorted(tier, key=lambda p: (durations.get(p, default), p)):
+            if budget + durations.get(p, default) <= fill_limit:
+                run.add(p)
+                budget += durations.get(p, default)
     if set(imported) - run:
         reason = BUDGET_REASON if fill_limit == SAFE_SECONDS else "recorded estimate exceeds 600 second cap"
-    run = sorted(run)
+    # A whole file already covers its pinned ids.
+    run = sorted(p for p in run if "::" not in p or guard_file(p) not in run)
     return {
         "candidate": candidate,
         "base": base,

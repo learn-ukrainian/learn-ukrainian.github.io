@@ -5,7 +5,7 @@ These tests pin the wiring so a refactor can't silently orphan the file:
 
 - Full API reference      -> contract first at /api/rules?scope=full
 - Unscoped API cold-start -> binding core, with boot-file contract digests
-- Codex / cursor / opencode / hermes slot-5 -> AGENTS.md digest section
+- Codex / cursor / opencode slot-5 -> AGENTS.md digest section
 - Deploy targets           -> excluded from .claude autoload, present in
                               .codex/.agent/.gemini rules (lock-step lists)
 """

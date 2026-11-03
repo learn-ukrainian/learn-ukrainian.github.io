@@ -152,7 +152,7 @@ def test_kimi_trail_sessions_are_refused_at_every_boundary(tmp_path: Path, harne
     assert not hasattr(trail_isolation, "KIMICC_TRAIL_TOOLS")
 
 
-@pytest.mark.parametrize("adapter", ["glm", "grok-hermes", "claude"])
+@pytest.mark.parametrize("adapter", ["glm", "claude"])
 def test_unproven_adapters_refuse_before_runner_loads_them(adapter: str) -> None:
     with patch("agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
         with pytest.raises(TrailIsolationError, match="trail isolation refused"):

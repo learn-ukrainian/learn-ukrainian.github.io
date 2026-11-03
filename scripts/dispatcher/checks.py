@@ -236,7 +236,7 @@ def _handle_private_input(spec: TaskSpec, message: str) -> None:
 
 
 def check_private_input(spec: TaskSpec, repo_key: str) -> None:
-    if spec.agent not in {"muse", "opencode", "hermes"}:
+    if spec.agent not in {"muse", "opencode"}:
         return
     repos = yaml.safe_load(git.CONFIG.read_text())["repos"]
     private = {
@@ -356,7 +356,18 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
                 raise ValueError(str(exc)) from None
         return
     reviewer = _model_families().get(reviewer_model)
-    if not reviewer or reviewer in facts.excluded_families:
+    scope = facts
+    if facts.mixed_family and args.review_profile in {"code", "infra"}:
+        try:
+            scope = facts.reviewer_scope(reviewer)
+        except RecordError as exc:
+            raise ValueError(f"review independence: {exc}") from None
+        from scripts.review.reviewer_resolver import review_task_id_comparison_keys
+
+        reviewer_ids = review_task_id_comparison_keys(args.task_id or "", agent=args.agent)
+        if any(reviewer_ids & review_task_id_comparison_keys(task) for task in scope.author_task_ids):
+            raise ValueError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+    if not reviewer or reviewer in scope.excluded_families:
         raise ValueError(
             f"review independence: reviewer family {reviewer or 'unknown'} is not outside the branch's author "
             f"families {sorted(facts.excluded_families)}; choose a reviewer from another family"
@@ -364,13 +375,21 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
 
 
 def check_review_budget(args, repository: dict, head_sha: str) -> None:
-    """Refuse a review dispatch past its PR's review round budget, recorded verdicts or not (#12098)."""
+    """Refuse a review dispatch past its PR's review round budget, recorded verdicts or not (#12098).
+
+    A p2 fix-verification round is spent here, at dispatch, before its reviewer runs (#12548).
+    """
     from scripts.orchestration.integration_sweep import SweepError
     from scripts.review.record_cf_verdict import RecordError, dispatch_budget_check
 
     try:
-        dispatch_budget_check(repository["github"], number=args.pr, branch=args.branch, head=head_sha,
-                              task_root=store.tasks_dir())
+        decision = dispatch_budget_check(repository["github"], number=args.pr, branch=args.branch, head=head_sha,
+                                         task_root=store.tasks_dir())
+        p2_round = ((decision or {}).get("budget_grant") or {}).get("p2_fix_round")
+        if p2_round is not None:
+            from scripts.review.budget_grant import record_p2_round
+
+            record_p2_round(store.tasks_dir(), p2_round)
     except (RecordError, SweepError, OSError, subprocess.SubprocessError) as exc:
         raise ValueError(f"review dispatch refused: {exc}") from None
 

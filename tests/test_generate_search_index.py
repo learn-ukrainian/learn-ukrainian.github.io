@@ -5,6 +5,7 @@ import hashlib
 import json
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -882,6 +883,122 @@ def test_pinned_generator_withholds_unverified_heads_and_placeholder_glosses(tmp
         from scripts.deploy.vendor_atlas_tree import _discovery_exclusions
 
         _discovery_exclusions(articles)
+
+
+def test_pinned_run_writes_the_ignored_build_dir_and_never_the_committed_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#12527: pinned-mode output must not land on the tracked committed artifact paths."""
+    import re
+
+    import scripts.audit.generate_search_index as gsi
+    import scripts.deploy.vendor_atlas_tree as vendor
+
+    committed = {
+        tmp_path / DEFAULT_SEARCH_OUT: "COMMITTED-SEARCH",
+        tmp_path / DEFAULT_BROWSE_META_OUT: "COMMITTED-META",
+        tmp_path / DEFAULT_BROWSE_DIR / "А.json": "COMMITTED-SHARD",
+    }
+    for path, text in committed.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    row = {"s": "іван", "l": "Іван", "g": "Ivan", "r": "ivan", "t": "lemma"}
+    monkeypatch.setattr(
+        vendor,
+        "build_pinned_search",
+        lambda tree: ([row], [], {"dataVersion": "atlas-v1-test", "runtimeManifestSha256": "ab" * 32}),
+    )
+    monkeypatch.chdir(tmp_path)
+
+    assert main(["--runtime-tree", str(tmp_path / "tree")]) == 0
+
+    assert {path: path.read_text(encoding="utf-8") for path in committed} == committed
+    pinned_data = tmp_path / gsi.PINNED_DATA_DIR
+    assert json.loads((pinned_data / "lexicon-search-index.json").read_bytes()) == [row]
+    for name in (
+        "lexicon-search-aliases.json",
+        "lexicon-search-shards.json",
+        "lexicon-browse-meta.json",
+        "lexicon-browse-flagged.json",
+    ):
+        assert (pinned_data / name).is_file(), name
+    assert [p.name for p in (tmp_path / gsi.PINNED_BROWSE_DIR).glob("*.json")] == ["І.json"]
+    # The generator records which runtime the set came from, last; the site rejects a set without it.
+    first = json.loads((pinned_data / gsi.PINNED_SOURCE_MARKER).read_bytes())
+    assert (first["schema"], first["schemaVersion"]) == ("atlas-pinned-source", 2)
+    assert (first["dataVersion"], first["runtimeManifestSha256"]) == ("atlas-v1-test", "ab" * 32)
+    # The marker binds the canonical set by content digest. A run that wrote every canonical
+    # output publishes its own marker; a run with any override publishes none and leaves the
+    # earlier one, whose digests the changed canonical files no longer match.
+    import hashlib
+
+    marker_file = pinned_data / gsi.PINNED_SOURCE_MARKER
+    recorded = json.loads(marker_file.read_bytes())
+    assert recorded["files"] == {
+        name: hashlib.sha256((pinned_data / name).read_bytes()).hexdigest() for name in recorded["files"]
+    }
+    assert set(recorded["files"]) == {
+        "lexicon-search-index.json",
+        "lexicon-search-aliases.json",
+        "lexicon-search-shards.json",
+        "lexicon-browse-meta.json",
+        "lexicon-browse-flagged.json",
+    }
+    assert recorded["browse"] == {
+        shard.name: hashlib.sha256(shard.read_bytes()).hexdigest()
+        for shard in (tmp_path / gsi.PINNED_BROWSE_DIR).glob("*.json")
+    }
+    other_row = {"s": "марія", "l": "Марія", "g": "Maria", "r": "maria", "t": "lemma"}
+    monkeypatch.setattr(
+        vendor,
+        "build_pinned_search",
+        lambda tree: ([other_row], [], {"dataVersion": "atlas-v1-other", "runtimeManifestSha256": "cd" * 32}),
+    )
+    assert main(["--runtime-tree", str(tmp_path / "tree"), "--aliases-out", str(tmp_path / "custom/aliases.json")]) == 0
+    assert json.loads(marker_file.read_bytes()) == recorded  # not republished
+    assert recorded["files"]["lexicon-search-index.json"] != hashlib.sha256(
+        (pinned_data / "lexicon-search-index.json").read_bytes()
+    ).hexdigest()  # the canonical index changed, so the old marker no longer certifies the set
+    assert main(["--runtime-tree", str(tmp_path / "tree")]) == 0
+    republished = json.loads(marker_file.read_bytes())
+    assert republished["dataVersion"] == "atlas-v1-other"
+    assert republished["files"]["lexicon-search-index.json"] == hashlib.sha256(
+        (pinned_data / "lexicon-search-index.json").read_bytes()
+    ).hexdigest()
+    # An unpinned (legacy manifest) run writing a canonical path leaves digests that no longer match.
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    monkeypatch.delenv("ATLAS_SEARCH_RUNTIME_TREE", raising=False)
+    assert main(["--manifest", str(manifest), "--out", str(pinned_data / "lexicon-search-index.json")]) == 0
+    assert json.loads(marker_file.read_bytes()) == republished
+    assert republished["files"]["lexicon-search-index.json"] != hashlib.sha256(
+        (pinned_data / "lexicon-search-index.json").read_bytes()
+    ).hexdigest()
+    # Another writer replacing a canonical file while this run is still writing: nothing is certified.
+    unchanged = marker_file.read_bytes()
+    real_write_browse = gsi.write_browse_outputs
+
+    def write_then_lose_the_index(*args: Any, **kwargs: Any) -> Any:
+        result = real_write_browse(*args, **kwargs)
+        (pinned_data / "lexicon-search-index.json").write_text("[]", encoding="utf-8")
+        return result
+
+    monkeypatch.setattr(gsi, "write_browse_outputs", write_then_lose_the_index)
+    with pytest.raises(SystemExit, match="changed on disk while it was being written"):
+        main(["--runtime-tree", str(tmp_path / "tree")])
+    assert marker_file.read_bytes() == unchanged
+    monkeypatch.setattr(gsi, "write_browse_outputs", real_write_browse)
+    # The ignored directory name is shared with the site reader's selection module.
+    selection = (PROJECT_ROOT / "site/src/lib/lexicon/atlas-artifact-selection.mjs").read_text(encoding="utf-8")
+    declared = re.search(r"PINNED_ARTIFACT_DIRNAME = '([^']+)'", selection)
+    assert declared is not None and declared.group(1) == gsi.PINNED_ARTIFACT_ROOT.name
+    marker = re.search(r"PINNED_SOURCE_MARKER = '([^']+)'", selection)
+    assert marker is not None and marker.group(1) == gsi.PINNED_SOURCE_MARKER
+
+    # An unpinned run and an explicit flag keep their own paths.
+    assert gsi.resolve_output_path(None, DEFAULT_SEARCH_OUT, pinned=False) == DEFAULT_SEARCH_OUT
+    explicit = tmp_path / "elsewhere.json"
+    assert gsi.resolve_output_path(explicit, DEFAULT_SEARCH_OUT, pinned=True) == explicit
 
 
 def test_browse_staleness_guard_fires_when_browse_would_stay_pinned(tmp_path: Path) -> None:

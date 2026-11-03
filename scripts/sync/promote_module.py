@@ -69,7 +69,6 @@ FORENSICS_FILES = frozenset(
     {
         "writer_prompt.md",
         "writer_output.raw.md",
-        "hermes.write.jsonl",
         "writer_tool_calls.json",
         "python_qg.json",
         "llm_qg.json",

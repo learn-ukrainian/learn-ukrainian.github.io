@@ -13,21 +13,6 @@ launcher_adapter_validate() {
       exit 2
       ;;
   esac
-  if [ "$LC_HARNESS" = hermes ]; then
-    launcher_hermes_validate
-    if [ "$LC_MODE" != interactive ]; then
-      launcher_error 'Codex/Hermes is interactive only; it must not start an epic driver.'
-      exit 4
-    fi
-    # Hermes' wire vocabulary is narrower than its generic CLI vocabulary.
-    # Refuse levels that would be silently clamped by this model's transport.
-    case "$LC_EFFORT" in
-      low|medium|high|xhigh) ;;
-      *) launcher_error 'Codex/Hermes supports only low|medium|high|xhigh effort.'; exit 2 ;;
-    esac
-    # shellcheck disable=SC2034 # consumed by shared Hermes execution
-    LC_HERMES_PROVIDER=openai-codex
-  fi
   local forwarded
   for forwarded in "${LC_FORWARD_ARGS[@]}"; do
     case "$forwarded" in
@@ -43,7 +28,7 @@ launcher_adapter_validate() {
         ;;
     esac
   done
-  case "$LC_HARNESS" in codex|claude-code|hermes) ;; *) launcher_error 'Codex supports --harness codex|claude-code|hermes.'; exit 2 ;; esac
+  case "$LC_HARNESS" in codex|claude-code) ;; *) launcher_error 'Codex supports --harness codex|claude-code.'; exit 2 ;; esac
 }
 
 launcher_codex_resolve_canonical_root() {
@@ -160,7 +145,6 @@ launcher_codex_transport_probe() {
   fi
 }
 launcher_adapter_preflight() {
-  if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_preflight; return; fi
   if [ "$LC_HARNESS" = codex ]; then
     launcher_codex_native_profile_preflight
     LC_AUTH_SOURCE='codex-cli-oauth'
@@ -179,9 +163,20 @@ launcher_adapter_prelease() {
   if [ "$LC_HARNESS" != codex ] || [ "${LC_DRIVER_LEASE_ENABLED:-1}" != 1 ]; then
     return 0
   fi
+  # The lease (which exports SESSION_STREAM_ID) is claimed after this check,
+  # so pass the launcher's stream explicitly. Without it, every packet under
+  # the bare `codex` namespace was skipped and the lane cold-started (#12567).
+  local stream
+  stream="$(launcher_selector_stream "$LC_EPIC")" || return 1
   # shellcheck source=scripts/lib/thread_rollover_link.sh
   source "$LC_ROOT/scripts/lib/thread_rollover_link.sh"
-  resolve_codex_pending_rollover "$LC_CODEX_CANONICAL_ROOT" "$SESSION_HANDOFF_AGENT"
+  if [ "$LC_DRY_RUN" = 1 ]; then
+    # detect is read-only; a dry run reports the packet it would bind.
+    resolve_codex_pending_rollover "$LC_CODEX_CANONICAL_ROOT" "$SESSION_HANDOFF_AGENT" "$stream" \
+      || echo 'LAUNCHER_DRY_RUN=1: rollover preflight would refuse launch (exit 1)'
+    return 0
+  fi
+  resolve_codex_pending_rollover "$LC_CODEX_CANONICAL_ROOT" "$SESSION_HANDOFF_AGENT" "$stream"
 }
 launcher_adapter_canary() {
   local py stream
@@ -193,7 +188,6 @@ launcher_adapter_canary() {
     && "${cmd[@]}" bootstrap --epic "$LC_EPIC" --stream "$stream"
 }
 launcher_adapter_exec() {
-  if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_exec; return; fi
   local cmd
   if [ "$LC_HARNESS" = codex ]; then
     cmd=(

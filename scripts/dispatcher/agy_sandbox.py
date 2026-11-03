@@ -13,7 +13,8 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
 * lets AGY reach the network only through the CONNECT-only egress proxy of formal review attempts
   (exact allowlisted hosts; host and loopback addresses refused);
 * runs AGY under bubblewrap (``review.isolation``). The root is empty except for read-only binds of
-  the system runtime, the AGY binary, the task worktree, its Git metadata and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
+  the system runtime, the AGY binary, the task worktree, its Git metadata, the project virtual environment
+  (exposed as the worktree's untracked ``.venv`` link so reviews can run the interpreter and tests) and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
   dropped and the root is remounted read-only, so the runtime (which holds TMPDIR) is the only
   writable path;
 * copies each explicit input's hashed bytes into the private scratch and bind-mounts that
@@ -31,6 +32,17 @@ worker can put that body, or a missing-body reason, on the retained stream. Any 
 failure refuses the run, which never falls back to an unsandboxed AGY. A read-only bind is a live
 view of host files, not a snapshot: input drift is detected by the before/after comparison, not
 prevented.
+
+A read-only native Claude dispatch reuses the same boundary for its shell only (#12378, decision
+REVIEW-BOUNDARY-1101). The Claude process and its credentials stay outside: ``providers/claude.py``
+sets ``CLAUDE_CODE_SHELL_PREFIX`` to ``claude_review_shell``, so Claude Code hands every Bash command
+to ``shell_main`` as one script string, and the script runs as ``/bin/bash -c`` in a fresh boundary
+per command. That boundary has the same binds, venv link, canary and before/after check, but no AGY
+home or token, no Sources relay (Claude's own Sources server runs outside) and no network at all.
+Its writable runtime is private to the command and removed with it. Two narrow paths cross it: the
+read-only ``gh`` forms the route allowed before run on the host through ``_GhBroker`` (argv only, no
+shell, ``--web`` refused), and the file in which Claude Code's wrapper records the shell's working
+directory is copied back to Claude's temporary directory.
 """
 
 from __future__ import annotations
@@ -50,6 +62,7 @@ import socket
 import stat
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import uuid
@@ -94,6 +107,35 @@ _GIT_TIMEOUT = 120
 INPUT_MOUNT = "/agy-inputs"
 MAX_INPUTS = 8
 MAX_INPUT_BYTES = 8 << 20
+# Native Claude's shell (shell_main). providers/claude.py sets these variables on the Claude process;
+# Claude Code passes its environment to the prefix, and the boundary passes none of it inside.
+SHELL_PREFIX = ROOT / "scripts" / "dispatcher" / "claude_review_shell"
+SHELL_ENV_PYTHON, SHELL_ENV_TASK, SHELL_ENV_WORKTREE, SHELL_ENV_LOG = (
+    "LU_REVIEW_SHELL_PYTHON", "LU_REVIEW_SHELL_TASK", "LU_REVIEW_SHELL_WORKTREE", "LU_REVIEW_SHELL_LOG",
+)
+# The wrapper Claude Code puts around each command ends with ``pwd -P >| <tmp>/claude-<hex>-cwd``.
+_CLAUDE_CWD_FILE = re.compile(r"claude-[0-9a-f]{1,32}-cwd")
+# The read-only gh forms the route allowed before it had a shell; nothing else reaches the host's gh.
+_GH_READS = frozenset({("pr", "view"), ("pr", "diff"), ("pr", "checks"), ("issue", "view"), ("run", "view")})
+_GH_TIMEOUT = 300
+# Flags of those forms that take a separate value; every other argument is a flag or an operand.
+_GH_VALUE_FLAGS = frozenset({"--json", "-q", "--jq", "-t", "--template", "--job", "-j", "--attempt", "-a",
+                             "--color", "--interval", "-i"})
+# A number, #number or branch name: never a host, URL or OWNER/REPO#N selector.
+_GH_OPERAND = re.compile(r"#?[A-Za-z0-9._/-]+")
+_GH_SHIM = '''#!{interpreter} -I
+import json, os, socket, sys
+directory = os.open(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir), os.O_RDONLY)
+with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as relay:
+    relay.connect(f"/proc/self/fd/{{directory}}/gh.sock")  # avoids the sockaddr_un length limit
+    relay.sendall(json.dumps({{"argv": sys.argv[1:]}}).encode())
+    relay.shutdown(socket.SHUT_WR)
+    reply = json.loads(b"".join(iter(lambda: relay.recv(65536), b"")))
+sys.stdout.write(reply["stdout"])
+sys.stdout.flush()
+sys.stderr.write(reply["stderr"])
+sys.exit(reply["returncode"])
+'''
 
 
 class Refused(RuntimeError):
@@ -493,11 +535,15 @@ def _git(worktree: Path, *args: str) -> str:
 
 
 def _input_state(worktree: Path) -> dict:
-    """The reviewed head and whether the worktree matches it (no staged, unstaged or untracked change)."""
+    """The reviewed head and clean state, allowing only the untracked project-interpreter link."""
     try:
         head = _git(worktree, "rev-parse", "--verify", "HEAD^{commit}").strip()
         status = _git(worktree, "status", "--porcelain=v1", "-z", "--ignore-submodules=none")
-    except (Refused, OSError, subprocess.SubprocessError):
+        if status == "?? .venv\0":
+            local = worktree / ".venv"
+            if local.is_symlink() and local.resolve(strict=True) == _venv():
+                status = ""
+    except (Refused, OSError, RuntimeError, subprocess.SubprocessError):
         return {"head": None, "clean": False}
     return {"head": head, "clean": status == ""}
 
@@ -793,7 +839,158 @@ def _write_error(path: Path) -> str:
     return "EROFS" if os.access(path, os.W_OK) else "EACCES"
 
 
+def _venv() -> Path:
+    """The project virtual environment, mounted read-only so a review can run the interpreter and tests."""
+    return project_interpreter().parent.parent.resolve(strict=True)
+
+
+def _venv_reads() -> list[Path]:
+    """The venv plus the directory of every hop of its ``bin/python`` link chain outside it.
+
+    Read roots are bound canonically, so an intermediate link (a uv venv's ``python`` pointing at a
+    base install's ``python3``, itself a link to ``python3.12``) is reachable only when its
+    directory is bound too.
+    """
+    root = _venv()
+    reads, link = [root], root / "bin" / "python"
+    for _ in range(40):
+        if not link.is_symlink():
+            return reads
+        hop = link.parent / os.readlink(link)
+        link = hop.parent.resolve(strict=True) / hop.name
+        if not link.parent.is_relative_to(root) and link.parent not in reads:
+            reads.append(link.parent)
+    raise ValueError("the project interpreter link chain is too long")
+
+
+def _link_interpreter(worktree: Path) -> bool:
+    """Expose the project venv as the worktree's ``.venv``; return whether this call created the link.
+
+    Shell and interpreter run only inside this boundary (decision REVIEW-BOUNDARY-1101, #12378). An
+    existing ``.venv`` is kept only when it already links to the project venv, so the reviewed
+    checkout cannot substitute its own interpreter.
+    """
+    local, target = worktree / ".venv", _venv()
+    if os.path.lexists(local):
+        if not local.is_symlink() or local.resolve(strict=True) != target:
+            raise ValueError("the worktree's .venv is not the project interpreter")
+        return False
+    try:
+        local.symlink_to(target, target_is_directory=True)
+    except FileExistsError:  # a concurrent shell command of the same run linked it first
+        return _link_interpreter(worktree)
+    return True
+
+
+def gh_refusal(argv) -> str | None:
+    """Why the boundary's ``gh`` relay refuses ``argv``, or None for one of the route's read-only forms."""
+    if not (isinstance(argv, list) and 2 <= len(argv) <= 64
+            and all(isinstance(arg, str) and "\0" not in arg and len(arg) <= 4096 for arg in argv)):
+        return "the gh request is malformed"
+    if (argv[0], argv[1]) not in _GH_READS:
+        return "only gh pr view, gh pr diff, gh pr checks, gh issue view and gh run view are relayed"
+    # gh runs on the host's network, so nothing may choose its destination: the repository comes from
+    # the worktree's own remote. A URL operand or --repo/-R (any form) names another host; --web/-w
+    # (also inside a cluster such as -cw) opens a browser on the host.
+    if any("://" in arg for arg in argv[2:]):
+        return "a URL operand is refused; the relay reads only the worktree's repository"
+    expect_value = False
+    for arg in argv[2:]:
+        if expect_value:  # a flag's value: --json fields, a --jq or --template expression, a job id
+            expect_value = False
+        elif arg.startswith("--"):
+            name = arg.split("=", 1)[0]
+            if name.startswith(("--web", "--repo")):
+                return f"gh {name} is refused"
+            expect_value = "=" not in arg and name in _GH_VALUE_FLAGS
+        elif arg.startswith("-") and len(arg) > 1:
+            if "w" in arg or "R" in arg:
+                return f"gh {arg} is refused"
+            expect_value = len(arg) == 2 and arg in _GH_VALUE_FLAGS
+        elif not _GH_OPERAND.fullmatch(arg):
+            return "an operand naming another repository or host is refused"
+    return None
+
+
+class _GhBroker:
+    """Run the route's read-only ``gh`` forms on the host for the shell's ``gh`` shim.
+
+    The shim sends its argv over a socket in the read-only boundary directory. The host's ``gh``
+    runs that argv without a shell, in the worktree, with only the environment it needs to find its
+    own login, so no token enters the sandbox and ``--jq`` sees no credential in ``$ENV``.
+    """
+
+    def __init__(self, path: Path, cwd: Path):
+        self.cwd, self.records, self.process = cwd, [], None
+        self.gh = shutil.which("gh")
+        self.env = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "XDG_CONFIG_HOME", "GH_CONFIG_DIR")
+                    if name in os.environ}
+        self.env.update(GH_PROMPT_DISABLED="1", GH_NO_UPDATE_NOTIFIER="1", GH_PAGER="cat", GIT_ALLOW_PROTOCOL="file")
+        self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:  # the descriptor path avoids the sockaddr_un length limit, as in SourcesRelay
+            self.server.bind(f"/proc/self/fd/{directory}/{path.name}")
+        finally:
+            os.close(directory)
+        self.server.listen(4)
+        self.closed = False
+        threading.Thread(target=self._serve, daemon=True).start()
+
+    def _serve(self) -> None:
+        while not self.closed:
+            try:
+                connection, _ = self.server.accept()
+            except OSError:
+                return
+            with connection, contextlib.suppress(OSError, ValueError):
+                self._handle(connection)
+
+    def _handle(self, connection: socket.socket) -> None:
+        connection.settimeout(30)
+        chunks, size = [], 0
+        while size <= 1 << 20 and (chunk := connection.recv(65536)):
+            chunks.append(chunk)
+            size += len(chunk)
+        try:
+            argv = json.loads(b"".join(chunks))["argv"]
+        except (ValueError, KeyError, TypeError):
+            argv = None
+        refusal = gh_refusal(argv) or (None if self.gh else "gh is not installed on the host")
+        reply = {"returncode": 1, "stdout": "", "stderr": f"review boundary: {refusal}\n"}
+        if refusal is None:
+            self.process = subprocess.Popen([self.gh, *argv], cwd=self.cwd, env=self.env, stdin=subprocess.DEVNULL,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            try:
+                out, err = self.process.communicate(timeout=_GH_TIMEOUT)
+                returncode = self.process.returncode
+            except subprocess.TimeoutExpired:
+                self.process.kill()
+                out, err = self.process.communicate()
+                returncode, err = 124, err + b"\nreview boundary: gh timed out\n"
+            reply = {"returncode": returncode, "stdout": out[:_MAX_LINE].decode("utf-8", "replace"),
+                     "stderr": err[:_MAX_LINE].decode("utf-8", "replace")}
+        self.records.append({"command": argv[:2] if isinstance(argv, list) else None, "refused": refusal,
+                             "returncode": reply["returncode"]})
+        connection.settimeout(None)
+        connection.sendall(json.dumps(reply).encode())
+
+    def cleanup(self) -> None:
+        self.closed = True
+        with contextlib.suppress(OSError):
+            self.server.close()
+        if self.process is not None and self.process.poll() is None:
+            with contextlib.suppress(OSError):
+                self.process.kill()
+
+
+def _overlaps(path: Path, roots) -> bool:
+    return any(path == root or path.is_relative_to(root) or root.is_relative_to(path) for root in map(Path, roots))
+
+
 class _Boundary:
+    created_interpreter = False  # set by run() once it links the project venv into the worktree
+    shell, gh = False, None  # native Claude's shell mode and its gh relay (shell_main)
+
     def __init__(self, args: argparse.Namespace, receipt: dict):
         self.args, self.receipt = args, receipt
         self.worktree = Path(args.worktree).resolve(strict=True)
@@ -801,6 +998,8 @@ class _Boundary:
         self.relay = self.egress = self.process = self.fixture = None
         self.created = False
         self.confirmed_inputs: list[dict] = []
+        # Native Claude's shell (shell_main): one command per boundary, its writable runtime private.
+        self.shell = bool(getattr(args, "shell", False))
 
     def _requested_inputs(self) -> list[dict]:
         paths, digests = self.args.input or [], self.args.input_sha256 or []
@@ -856,12 +1055,18 @@ class _Boundary:
         command = self.args.command[1:] if self.args.command[:1] == ["--"] else self.args.command
         found = shutil.which(command[0]) if command else None
         if not found:
-            raise Refused("the agy executable was not found")
+            raise Refused(f"the {'shell' if self.shell else 'agy'} executable was not found")
         agy = Path(found).resolve(strict=True)
         start = _input_state(self.worktree)
         self.receipt["input"] = {"start": start}
         if not start["clean"]:
             raise Refused("the worktree differs from its head before launch")
+        try:
+            created = _link_interpreter(self.worktree)
+        except (OSError, ValueError) as exc:
+            raise Refused("the project interpreter cannot be exposed in the worktree") from exc
+        # A shell command keeps the link: concurrent commands of the same run share it.
+        self.created_interpreter = created and not self.shell
         git_dir = Path(_git(self.worktree, "rev-parse", "--absolute-git-dir").strip()).resolve(strict=True)
         common = Path(_git(self.worktree, "rev-parse", "--path-format=absolute", "--git-common-dir").strip()).resolve(
             strict=True)
@@ -881,14 +1086,18 @@ class _Boundary:
             directory.mkdir(mode=0o700)
         app = home / ".gemini" / "antigravity-cli"
         config = home / ".gemini" / "config"
-        app.mkdir(mode=0o700, parents=True)
-        config.mkdir(mode=0o700)
-        try:
-            token = _real_agy_token().read_bytes()
-        except OSError as exc:
-            raise Refused("the AGY OAuth token is unavailable") from exc
-        _write_private(app / "antigravity-oauth-token", token)  # a regular-file copy: no shared link or inode
+        if not self.shell:
+            app.mkdir(mode=0o700, parents=True)
+            config.mkdir(mode=0o700)
+            try:
+                token = _real_agy_token().read_bytes()
+            except OSError as exc:
+                raise Refused("the AGY OAuth token is unavailable") from exc
+            _write_private(app / "antigravity-oauth-token", token)  # a regular-file copy: no shared link or inode
+        interpreter = project_interpreter().resolve(strict=True)
         projected = {name: source.read_bytes() for name, source in _PROJECTED.items()}
+        if self.shell:
+            projected["bin/gh"] = _GH_SHIM.format(interpreter=interpreter).encode()
         # The canary imports these trusted contracts, never branch-controlled code.
         for relative in ("scripts/storage/topology.py", "scripts/lib/readonly_sqlite.py", "scripts/common/repo_root.py"):
             projected[f"store_contract/{relative}"] = (ROOT / relative).read_bytes()
@@ -909,15 +1118,15 @@ class _Boundary:
         for name in sorted(projected):
             digest.update(name.encode() + b"\0" + hashlib.sha256(projected[name]).digest())
         self.receipt["wrapper_sha256"] = digest.hexdigest()
-        interpreter = project_interpreter().resolve(strict=True)
         readers, writers = sources_tool_sets()
-        _write_private(config / "mcp_config.json", json.dumps({"mcpServers": {"sources": {
-            "command": str(interpreter), "args": [str(boundary / "stdio.py"), str(boundary / "sources.sock")],
-        }}}).encode())
-        # Defense in depth only: the relay is what refuses these tools.
-        _write_private(app / "settings.json", json.dumps({"permissions": {
-            "deny": [f"mcp(sources/{name})" for name in writers],
-        }}).encode())
+        if not self.shell:
+            _write_private(config / "mcp_config.json", json.dumps({"mcpServers": {"sources": {
+                "command": str(interpreter), "args": [str(boundary / "stdio.py"), str(boundary / "sources.sock")],
+            }}}).encode())
+            # Defense in depth only: the relay is what refuses these tools.
+            _write_private(app / "settings.json", json.dumps({"permissions": {
+                "deny": [f"mcp(sources/{name})" for name in writers],
+            }}).encode())
         uid, gid = os.getuid(), os.getgid()
         _write_private(boundary / "passwd", f"review:x:{uid}:{gid}:Review seat:{home}:/bin/bash\n".encode(), 0o444)
         _write_private(boundary / "group", f"review:x:{gid}:\n".encode(), 0o444)
@@ -971,12 +1180,15 @@ class _Boundary:
             ])
         self.receipt["canary"] = {"targets": sorted({probe["path"] for probe in probes}), "passed": False}
 
-        env_keep = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "TMPDIR") if name in os.environ}
-        self.relay = SourcesRelay(boundary / "sources.sock", frozenset(readers), env_keep)
-        self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
+        if self.shell:
+            self.gh = _GhBroker(boundary / "gh.sock", self.worktree)
+        else:
+            env_keep = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "TMPDIR") if name in os.environ}
+            self.relay = SourcesRelay(boundary / "sources.sock", frozenset(readers), env_keep)
+            self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
         sandbox = prepare_host_sandbox(
-            engine="agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
-            runtime_reads=[*runtime_files(agy), *reads, *(target for _, target in databases), *sidecars,
+            engine="claude" if self.shell else "agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
+            runtime_reads=[*runtime_files(agy), *_venv_reads(), *reads, *(target for _, target in databases), *sidecars,
                            *runtime_context.read_roots(), boundary],
             network_allowed=False,
         )
@@ -985,8 +1197,10 @@ class _Boundary:
         go_read, go_write = os.pipe()
         plan = {"report_fd": report_write, "go_fd": go_read, "probes": probes}
         _write_private(boundary / "plan.json", json.dumps(plan).encode(), 0o444)
+        # A shell runs with no network at all; AGY reaches its provider hosts only through the egress proxy.
+        forwarder = [] if self.shell else [str(interpreter), str(boundary / "forwarder.py"), str(boundary / "egress.sock")]
         inner = [str(interpreter), str(boundary / "canary.py"), str(boundary / "plan.json"), "--",
-                 str(interpreter), str(boundary / "forwarder.py"), str(boundary / "egress.sock"), str(agy), *command[1:]]
+                 *forwarder, str(agy), *command[1:]]
         argv = wrap_argv_with_sandbox(inner, sandbox)
         masks = [argument for path in hidden for argument in ("--tmpfs", str(path), "--remount-ro", str(path))]
         masks += [argument for copy, source in overlays for argument in ("--ro-bind", str(copy), str(source))]
@@ -1001,10 +1215,23 @@ class _Boundary:
             input_mounts += ["--dir", INPUT_MOUNT]
             for item in self.confirmed_inputs:
                 input_mounts += ["--ro-bind", item["copy"], item["mount"]]
+        cwd = self.worktree
+        if self.shell:
+            # The command's own writable copy of Claude Code's temporary directory, which holds nothing
+            # else inside; _copy_cwd_file returns only the working-directory record after the command.
+            # Claude Code's choice: CLAUDE_CODE_TMPDIR, else Node's os.tmpdir(), which gettempdir mirrors.
+            self.claude_tmp = Path(os.environ.get("CLAUDE_CODE_TMPDIR") or tempfile.gettempdir()).resolve()
+            if _overlaps(self.claude_tmp, [*sandbox.read_roots, sandbox.write_root, self.base, repository]):
+                raise Refused("Claude Code's temporary directory overlaps a boundary root")
+            self.cwd_out = self.base / "claude-tmp"
+            self.cwd_out.mkdir(mode=0o700)
+            input_mounts += ["--bind", str(self.cwd_out), str(self.claude_tmp)]
+            here = Path.cwd().resolve()
+            cwd = here if here.is_relative_to(self.worktree) else self.worktree
         argv[-len(inner):-len(inner)] = [
             *masks, *input_mounts, "--ro-bind", str(boundary / "passwd"), "/etc/passwd",
             "--ro-bind", str(boundary / "group"),
-            "/etc/group", "--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(self.worktree),
+            "/etc/group", "--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(cwd),
             # Last: the empty root becomes read-only, leaving the runtime bind as the only writable path.
             "--remount-ro", "/",
         ]
@@ -1012,11 +1239,17 @@ class _Boundary:
         env = {
             "HOME": str(home), "TMPDIR": str(tmp), "PATH": f"/usr/bin:/bin:{agy.parent}",
             "LANG": os.environ.get("LANG", "C.UTF-8"), "USER": "review", "LOGNAME": "review", "SHELL": "/bin/bash",
-            "AGY_APP_DATA_DIR": str(app), **{name: os.environ[name] for name in _AGY_AUTH if name in os.environ},
             "LU_TASKS_DIR": str(runtime_context.read_roots()[1]),
+            # The project's scratch root (scripts.common.scratch) defaults to a host path that is
+            # read-only here; tests and probes run by a review write their scratch under TMPDIR.
+            "LU_SCRATCH_ROOT": str(tmp),
         }
+        if self.shell:
+            env.update(PATH=f"{boundary / 'bin'}:/usr/bin:/bin", GIT_ALLOW_PROTOCOL="file")
+        else:
+            env.update(AGY_APP_DATA_DIR=str(app), **{name: os.environ[name] for name in _AGY_AUTH if name in os.environ})
         try:
-            self.process = subprocess.Popen(argv, env=env, cwd=self.worktree, pass_fds=(report_write, go_read))
+            self.process = subprocess.Popen(argv, env=env, cwd=cwd, pass_fds=(report_write, go_read))
         finally:
             os.close(report_write)
             os.close(go_read)
@@ -1037,7 +1270,25 @@ class _Boundary:
         self.receipt["status"] = "ran"
         returncode = self.process.wait()
         self.receipt["returncode"] = returncode
+        if self.shell:
+            self._copy_cwd_file()
         return returncode
+
+    def _copy_cwd_file(self) -> None:
+        """Return the wrapper's working-directory record to Claude: one small regular file with its name, nothing else.
+
+        Runs after bubblewrap exits, and with it every process of the sandbox's PID namespace.
+        """
+        for entry in os.scandir(self.cwd_out):
+            if _CLAUDE_CWD_FILE.fullmatch(entry.name) and entry.is_file(follow_symlinks=False):
+                descriptor = os.open(entry.path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+                with os.fdopen(descriptor, "rb") as handle:
+                    data = handle.read(4097)
+                if len(data) <= 4096:
+                    temporary = self.claude_tmp / f".{entry.name}.{uuid.uuid4().hex}"
+                    _write_private(temporary, data)
+                    os.replace(temporary, self.claude_tmp / entry.name)
+                return
 
     def _probes(self, tracked, git_dir, overlays, databases, repository, positive, nonce) -> list[dict]:
         probes = []
@@ -1114,10 +1365,12 @@ class _Boundary:
             with contextlib.suppress(OSError):
                 self.process.kill()
             self.process.wait()
-        for helper in (self.relay, self.egress):
+        for helper in (self.relay, self.egress, self.gh):
             if helper is not None:
                 with contextlib.suppress(Exception):
                     helper.cleanup()
+        if self.gh is not None:
+            self.receipt["gh"] = list(self.gh.records)
         if self.relay is not None:
             self.receipt["sources"] = self.relay.evidence()
         if self.egress is not None:
@@ -1125,10 +1378,13 @@ class _Boundary:
         if self.fixture is not None:
             with contextlib.suppress(FileNotFoundError):
                 self.fixture.unlink()
+        if self.created_interpreter:
+            with contextlib.suppress(OSError):
+                (self.worktree / ".venv").unlink()
         if "start" in self.receipt.get("input", {}):
             self.receipt["input"]["end"] = _input_state(self.worktree)
-        exported = False
-        if self.created:
+        exported = self.shell  # a shell has no AGY tool bodies to export
+        if self.created and not self.shell:
             try:
                 self._export_tool_results()
                 exported = True
@@ -1171,6 +1427,11 @@ def main(argv: list[str]) -> int:
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args(argv)
     receipt = {"schema": SCHEMA, "task_id": args.task_id, "status": "refused", "started_at": _now()}
+    return _run(args, receipt, lambda: _write_receipt(Path(args.receipt), receipt), "agy")
+
+
+def _run(args: argparse.Namespace, receipt: dict, record, name: str) -> int:
+    """Run one boundary; every failure refuses, and nothing falls back to an unsandboxed command."""
     boundary = None
 
     def cancelled(_signum, _frame):
@@ -1180,12 +1441,12 @@ def main(argv: list[str]) -> int:
     try:
         boundary = _Boundary(args, receipt)
         return boundary.run()
-    except Exception as exc:  # every failure refuses; nothing falls back to an unsandboxed AGY
+    except Exception as exc:  # every failure refuses; nothing falls back to an unsandboxed run
         if receipt["status"] != "ran":
             receipt["reason"] = str(exc) if isinstance(exc, Refused) else f"setup failed: {type(exc).__name__}: {exc}"[:500]
-            print(f"agy read-only boundary refused: {receipt['reason']}", file=sys.stderr)
+            print(f"{name} read-only boundary refused: {receipt['reason']}", file=sys.stderr)
             return REFUSED
-        # AGY started but the launcher could not see it finish: the run proves nothing.
+        # The command started but the launcher could not see it finish: the run proves nothing.
         receipt.update(status="interrupted", reason=f"{exc if isinstance(exc, Refused) else type(exc).__name__}")
         return REFUSED
     finally:
@@ -1195,5 +1456,39 @@ def main(argv: list[str]) -> int:
                 boundary.cleanup()
         finally:
             receipt["finished_at"] = _now()
-            _write_receipt(Path(args.receipt), receipt)
+            record()
             signal.signal(signal.SIGTERM, previous)
+
+
+def shell_main(argv: list[str]) -> int:
+    """Run one native Claude Bash command (``argv``: Claude Code's script) inside the boundary.
+
+    ``claude_review_shell`` calls this as Claude Code's ``CLAUDE_CODE_SHELL_PREFIX``. The task and
+    worktree come from the environment ``providers/claude.py`` gave the Claude process. Each command
+    gets a fresh boundary whose scratch is removed with it; one JSON line per command is appended to
+    the log beside the task result when the run names one.
+    """
+    task, worktree = os.environ.get(SHELL_ENV_TASK, ""), os.environ.get(SHELL_ENV_WORKTREE, "")
+    receipt = {"schema": SCHEMA, "route": "claude-shell", "task_id": task, "status": "refused", "started_at": _now()}
+    log = os.environ.get(SHELL_ENV_LOG)
+
+    def record() -> None:
+        if log:
+            line = json.dumps({key: value for key, value in receipt.items() if key != "canary"}
+                              | {"canary_passed": receipt.get("canary", {}).get("passed", False)}, sort_keys=True)
+            descriptor = os.open(log, os.O_WRONLY | os.O_APPEND | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
+            with os.fdopen(descriptor, "a", encoding="utf-8") as handle:
+                handle.write(line + "\n")
+
+    if len(argv) != 1 or not _TASK_ID.fullmatch(task) or not worktree:
+        receipt["reason"] = "the shell prefix needs one command script, the task id and the worktree"
+        print(f"claude read-only boundary refused: {receipt['reason']}", file=sys.stderr)
+        record()
+        return REFUSED
+    receipt["command_sha256"] = hashlib.sha256(argv[0].encode("utf-8", "surrogatepass")).hexdigest()
+    args = argparse.Namespace(
+        task_id=task, worktree=worktree, input=None, input_sha256=None, shell=True,
+        scratch=str(ensure_scratch_root() / f"claude-shell-{uuid.uuid4().hex[:16]}"),
+        command=["/bin/bash", "-c", argv[0]],
+    )
+    return _run(args, receipt, record, "claude")

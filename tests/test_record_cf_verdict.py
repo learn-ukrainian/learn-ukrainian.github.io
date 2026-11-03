@@ -15,6 +15,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+import yaml
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
@@ -739,21 +740,37 @@ def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch,
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
 
 
+EXHAUSTED = r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"
+
+
 @pytest.mark.parametrize(
-    "risk,security,prior_heads,refused",
+    "risk,security,prior_heads,refused,policy",
     [
-        (None, False, 2, False),
-        (None, False, 3, True),
-        ("high", False, 3, True),
+        (None, False, 2, None, None),
+        (None, False, 3, EXHAUSTED, None),
+        ("high", False, 3, EXHAUSTED, None),
         # The review task's own --risk critical never raises a non-security diff past 3 rounds (F3).
-        ("critical", False, 3, True),
+        ("critical", False, 3, EXHAUSTED, None),
         # A security-sensitive diff reaches 5 rounds whatever risk the task recorded.
-        ("low", True, 4, False),
-        (None, True, 5, True),
+        ("low", True, 4, None, None),
+        (None, True, 5, EXHAUSTED, None),
+        # A repository whose own policy declares 5 rounds gets rounds 4 and 5, never 6 (#12584).
+        (None, False, 3, None, {REPOSITORY: {"review_rounds": 5}}),
+        (None, False, 4, None, {REPOSITORY: {"review_rounds": 5}}),
+        (None, False, 5, EXHAUSTED, {REPOSITORY: {"review_rounds": 5}}),
+        # Another repository's declaration leaves an unlisted one at 3.
+        (None, False, 3, EXHAUSTED, {"other/repo": {"review_rounds": 5}}),
+        # A malformed declaration refuses rather than counting as a budget, even on a security path.
+        (None, False, 0, "review budget unavailable", {REPOSITORY: {"review_rounds": True}}),
+        (None, True, 0, "review budget unavailable", {REPOSITORY: {"review_rounds": 6}}),
     ],
 )
-def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, security, prior_heads, refused):
+def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, security, prior_heads, refused, policy):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    if policy is not None:
+        declared = tmp_path / "review_budget_policy.yaml"
+        declared.write_text(yaml.safe_dump({"version": 1, "repositories": policy}))
+        monkeypatch.setattr(recorder, "REVIEW_BUDGET_POLICY", declared)
     write_task(tasks, **({"review_risk": risk, "options": {"risk": risk}} if risk else {}))
     changed = ("scripts/review/record_cf_verdict.py",) if security else ("docs/readme.md",)
     facts = facts_for({"google"}, changed_paths=changed)
@@ -763,7 +780,7 @@ def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, se
     comments.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     if refused:
-        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"):
+        with pytest.raises(recorder.RecordError, match=refused):
             recorder.record("review-one", **kwargs)
         assert calls == {"posts": 0, "statuses": 0}
     else:
@@ -3739,6 +3756,7 @@ GRANT_REQUEST = {
     "issuer": "claude-cto",
     "issuer_model": "claude-opus-5-5",
     "issued_at": "2026-10-29T01:00:00+00:00",
+    "withheld_capability": None,
 }
 OPEN_F2 = "VERDICT: REQUEST_CHANGES\nF2 [P1] docs/readme.md:3 two writers race on the lock. Impact: lost update."
 
@@ -3748,7 +3766,8 @@ def write_grant(tasks, request=GRANT_REQUEST, *, task_id="grant-approval", decis
     from scripts.agent_runtime import bounded_advisory
 
     digest = bounded_advisory.canonical_sha256(request)
-    typed = {"decision": "APPROVE", **request, "request_sha256": digest, **dict(decision)}
+    typed = {"decision": "APPROVE", **request, "admission_exclusion_attestation": None,
+             "request_sha256": digest, **dict(decision)}
     text = f"VERDICT: APPROVE\n\n```budget-elevation\n{json.dumps(typed)}\n```\n"
     path = tasks / f"{task_id}.json"
     data = {
@@ -3796,6 +3815,9 @@ def grant_case(monkeypatch, tmp_path, *, last_reply=OPEN_F2, last_verdict="CHANG
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     comments.extend(recorded_verdict(sha, "CHANGES_REQUESTED", task_id=f"round-{sha[0]}") for sha in ("1" * 40, "2" * 40))
     comments.append(verdict_with_reply("3" * 40, last_verdict, last_reply, task_id="round-3"))
+    # The cited round's run: a grant reads the reply format from it (#12549); no output schema keeps the ledger.
+    write_task(tasks, task_id="round-3", reply=last_reply, worktree_base_sha="3" * 40, pr=42,
+               started_at="2026-09-23T11:00:00.000001+00:00")
     return tasks, comments, calls
 
 
@@ -3803,7 +3825,7 @@ def test_elevated_grant_admits_rounds_four_and_five_only(monkeypatch, tmp_path):
     tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
     write_grant(tasks)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    write_task(tasks, reply=OPEN_F2.replace("Impact", "Still open: the retry path. Impact"))
+    write_task(tasks, reply=OPEN_F2.replace("Impact", "Still open: the retry path. Impact"), pr=42)
     receipt = recorder.record("review-one", **kwargs)["budget_grant"]
     assert receipt["grant_task"] == "grant-approval" and receipt["advisor_model"] == "gpt-6.1-sol"
     assert receipt["finding_id"] == "F2" and receipt["cited_verdict_head"] == "3" * 40
@@ -3970,11 +3992,129 @@ def test_one_valid_grant_admits_beside_unrelated_or_outdated_ones(monkeypatch, t
     assert result["budget_grant"]["grant_task"] == "grant-b" and calls["posts"] == 1
 
 
+# The owner-request grant (#12551): the PR's own tier plus exactly the rounds the cited tracker item records.
+OWNER_RULING = {**GRANT_REQUEST, "finding_id": "F5", "blocker_class": "owner-request", "p2_fix_verification": None,
+                "owner_request": {"tracker_item": "C-4100", "rounds": 1}}
+OPEN_F5 = "VERDICT: REQUEST_CHANGES\nF5 [P2] docs/readme.md:3 depth exhaustion hides a live descendant."
+
+
+def owner_case(monkeypatch, tmp_path, *, spent, changed):
+    """``spent`` rounds on record, the last a rejection listing F5 at P2, and the next round at SHA."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    monkeypatch.setattr(recorder, "_budget_grant", _REAL_BUDGET_GRANT)
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts_for({"google"}, changed_paths=changed))
+    comments.extend(recorded_verdict(str(n) * 40, "CHANGES_REQUESTED", task_id=f"round-{n}") for n in range(1, spent))
+    comments.append(verdict_with_reply(str(spent) * 40, "CHANGES_REQUESTED", OPEN_F5, task_id=f"round-{spent}"))
+    return tasks, comments, calls
+
+
+@pytest.mark.parametrize(
+    "spent,changed",
+    [(5, ("scripts/review/record_cf_verdict.py",)), (3, ("docs/readme.md",))],
+    ids=["security-tier-five", "default-tier-three"],
+)
+def test_owner_request_grant_admits_exactly_its_recorded_rounds(monkeypatch, tmp_path, spent, changed):
+    tasks, _comments, calls = owner_case(monkeypatch, tmp_path, spent=spent, changed=changed)
+    write_grant(tasks, {**OWNER_RULING, "scope_paths": list(changed)})
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    write_task(tasks, reply=OPEN_F5)
+    receipt = recorder.record("review-one", **kwargs)["budget_grant"]
+    assert receipt["blocker_class"] == "owner-request" and receipt["round_allowance"] == spent + 1
+    assert receipt["owner_request"] == {"tracker_item": "C-4100", "rounds": 1}
+    assert receipt["cited_verdict_head"] == str(spent) * 40 and receipt["advisor_model"] == "gpt-6.1-sol"
+    # The request recorded one round: the next one is over the request, whatever the latest rejection lists.
+    move_head(monkeypatch, "f" * 40)
+    write_task(tasks, task_id="round-over", worktree_base_sha="f" * 40, reply=OPEN_F5)
+    with pytest.raises(recorder.RecordError, match=rf"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[allowance\]: "
+                                                   rf"grant allows {spent + 1} rounds"):
+        recorder.record("round-over", **kwargs)
+    assert calls["posts"] == 1
+
+
+@pytest.mark.parametrize(
+    "ruling,reason",
+    [
+        ({"pr": 41}, None),
+        ({"lineage_id": "codex/other"}, r"\[binding\].*follows lineage 'codex/other'"),
+        ({"scope_paths": ["docs/other.md"]}, r"\[scope\].*does not cover changed paths"),
+        ({"owner_request": None}, r"\[request\].*owner_request needs the tracker_item"),
+        ({"owner_request": {"rounds": 1}}, r"\[request\].*owner_request needs the tracker_item"),
+        ({"owner_request": {"tracker_item": "", "rounds": 1}}, r"\[request\].*owner_request needs the tracker_item"),
+    ],
+    ids=["wrong-pr", "wrong-branch", "wrong-paths", "no-owner-request", "no-tracker-item", "empty-tracker-item"],
+)
+def test_owner_request_grant_refuses(monkeypatch, tmp_path, ruling, reason):
+    changed = ("scripts/review/record_cf_verdict.py",)
+    tasks, _comments, calls = owner_case(monkeypatch, tmp_path, spent=5, changed=changed)
+    write_grant(tasks, {**OWNER_RULING, "scope_paths": list(changed), **ruling})
+    pattern = r"REVIEW_BUDGET_EXHAUSTED" + (r".*BUDGET_GRANT_REFUSED" + reason if reason else "")
+    with pytest.raises(recorder.RecordError, match=pattern) as refused:
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    # Another PR's grant is not this PR's concern.
+    assert reason is not None or "BUDGET_GRANT" not in str(refused.value)
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+# A withheld rejection's findings are its run's sealed reply (#12585); only ids and severities are read.
+WITHHELD_F5 = f"{OPEN_F5}\nF8 [P3] docs/readme.md:9 the withheld note."
+WITHHELD_START = "2026-09-23T11:00:00.000001+00:00"
+UNLISTED = r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*does not list F5"
+
+
+@pytest.mark.parametrize(
+    "defect,reason",
+    [
+        (None, None),
+        ("missing-run", UNLISTED),
+        ("unsealed-digest", UNLISTED),
+        # The recorder's own lineage read refuses an altered reply before any grant is checked.
+        ("altered-reply", r"LINEAGE_REFUSED: review task round-5 reply does not match its recorded digest"),
+        ("other-head", UNLISTED),
+        # Review round 1, F1: a digest proves the sealed reply intact, not complete.
+        ("truncated-reply", UNLISTED),
+        ("other-count", UNLISTED),
+        ("ambiguous-run", UNLISTED),
+    ],
+)
+def test_owner_request_grant_reads_a_withheld_rejection_from_its_sealed_run(monkeypatch, tmp_path, defect, reason):
+    changed = ("scripts/review/record_cf_verdict.py",)
+    tasks, comments, calls = owner_case(monkeypatch, tmp_path, spent=5, changed=changed)
+    write_grant(tasks, {**OWNER_RULING, "scope_paths": list(changed)})
+    comments[-1]["body"] = recorder.build_comment(
+        sha="5" * 40, task_id="round-5", started=WITHHELD_START, verdict="CHANGES_REQUESTED", model="claude-opus-5-5",
+        family="anthropic", reply="", withheld_findings=1 if defect == "other-count" else "unknown",
+    )
+    sealed = WITHHELD_F5 + (f"\n\n{recorder.TRUNCATION_FLAG}" if defect == "truncated-reply" else "")
+    run = dict(worktree_base_sha="6" * 40 if defect == "other-head" else "5" * 40, model="claude-opus-5-5",
+               agent="claude", started_at=WITHHELD_START, pr=42, review_mode="cross_family",
+               result_sha256=None if defect == "unsealed-digest" else hashlib.sha256(sealed.encode()).hexdigest())
+    if defect != "missing-run":
+        write_task(tasks, task_id="round-5", reply=sealed, **run)
+    if defect == "altered-reply":
+        (tasks / "round-5.result").write_text(WITHHELD_F5 + "\nF9 [P1] added later.")
+    if defect == "ambiguous-run":
+        write_task(tasks, task_id="round-5-copy", reply=WITHHELD_F5, **run)
+        record = json.loads((tasks / "round-5-copy.json").read_text())
+        (tasks / "round-5-copy.json").write_text(json.dumps({**record, "task_id": "round-5"}))
+    write_task(tasks, reply=OPEN_F5)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    if reason is None:
+        receipt = recorder.record("review-one", **kwargs)["budget_grant"]
+        assert receipt["round_allowance"] == 6 and receipt["cited_verdict_head"] == "5" * 40
+        # No withheld text reaches the receipt.
+        assert "withheld note" not in json.dumps(receipt) and "depth exhaustion" not in json.dumps(receipt)
+        assert calls["posts"] == 1
+        return
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", **kwargs)
+    assert calls == {"posts": 0, "statuses": 0}
+
+
 @pytest.mark.parametrize("stem", ["grant-approval", "grant-approval.20261029T010000Z.archived"])
 def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
     """Archiving moves the record and its result together and keeps the hot result_file (review round 1, F3)."""
     tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
-    write_grant(tasks)
+    write_grant(tasks, {key: value for key, value in GRANT_REQUEST.items() if key != "withheld_capability"})
     archive = tasks / recorder.ARCHIVE_DIR_NAME
     archive.mkdir()
     (tasks / "grant-approval.json").rename(archive / f"{stem}.json")
@@ -4026,6 +4166,11 @@ import json, runpy, subprocess, sys
 
 import scripts.orchestration.fleet_repos as fleet_repos
 import scripts.publish.github as github
+import scripts.dispatcher.primary as primary
+
+# This case isolates the package refusal classes; the primary-bootstrap cases below
+# exercise real re-exec in separate checkout fixtures.
+primary.exec_primary = lambda *_args, **_kwargs: None
 
 OPEN_PR = {"headRefOid": "a" * 40, "headRefName": "claude/x", "state": "OPEN"}
 
@@ -4064,3 +4209,341 @@ def test_cli_prints_the_typed_refusal_in_every_invocation_form(form):
     assert done.returncode == 1 and "Traceback" not in done.stderr, done.stderr
     refusal = json.loads(done.stdout)
     assert refusal["admitted"] is False and "refused by the fixture" in refusal["refusal"]
+
+
+def recorder_cli_tree(tmp_path):
+    source = Path(recorder.__file__).resolve().parents[2]
+    primary = tmp_path / "primary checkout"
+    tree = tmp_path / "older branch"
+    gitdir = primary / ".git/worktrees/older"
+    gitdir.mkdir(parents=True)
+    tree.mkdir()
+    (tree / ".git").write_text(f"gitdir: {gitdir}\n")
+    for relative in (
+        "scripts/review/record_cf_verdict.py",
+        "scripts/dispatcher/primary.py",
+        "scripts/common/repo_root.py",
+    ):
+        target = tree / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((source / relative).read_bytes())
+    for package in ("scripts", "scripts/review", "scripts/dispatcher", "scripts/common"):
+        (tree / package / "__init__.py").write_text("")
+    # A stale recorder dependency must never load before the primary bootstrap.
+    (tree / "yaml.py").write_text("raise RuntimeError('stale recorder dependency loaded')\n")
+    entry = primary / "scripts/review/record_cf_verdict.py"
+    entry.parent.mkdir(parents=True)
+    return tree, entry
+
+
+def run_recorder_cli(tree, form, argv):
+    entry = [str(tree / "scripts/review/record_cf_verdict.py")] if form == "file" else [
+        "-m", "scripts.review.record_cf_verdict"
+    ]
+    cwd = tree / "nested working directory"
+    cwd.mkdir()
+    return subprocess.run(
+        [sys.executable, *entry, *argv], cwd=cwd,
+        env={**os.environ, "PYTHONPATH": str(tree)},
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+
+
+@pytest.mark.parametrize("form", ["file", "module"])
+@pytest.mark.parametrize("argv", [
+    ["budget-check", "--repository", REPOSITORY, "--pr", "42"],
+    ["--task-id", "review-current-head", "--pr", "42"],
+])
+def test_cli_uses_primary_recorder_before_stale_imports(tmp_path, form, argv):
+    """Defect class: branch-age-dependent recorder gate and stale dependency imports."""
+    tree, entry = recorder_cli_tree(tmp_path)
+    entry.write_text(
+        'import json, os, sys\n'
+        'print(json.dumps({"rules": "primary", "argv": sys.argv, "cwd": os.getcwd()}))\n'
+    )
+    done = run_recorder_cli(tree, form, argv)
+    assert done.returncode == 0, done.stderr
+    assert json.loads(done.stdout) == {
+        "rules": "primary", "argv": [str(entry), *argv], "cwd": str(tree / "nested working directory")
+    }
+
+
+@pytest.mark.parametrize("form", ["file", "module"])
+@pytest.mark.parametrize("failure, reason", [
+    ("metadata", "cannot resolve the primary checkout of linked worktree"),
+    ("missing-entry", "primary checkout has no entry point:"),
+    ("symlink-loop", "loop-a"),
+])
+def test_cli_refuses_unavailable_primary_recorder(tmp_path, form, failure, reason):
+    """Defect classes: fail-open stale gate on missing primary; untyped bootstrap failure on symlink-loop metadata."""
+    tree, _entry = recorder_cli_tree(tmp_path)
+    if failure == "metadata":
+        (tree / ".git").write_text("gitdir: /nonexistent/metadata\n")
+    elif failure == "symlink-loop":
+        first, second = tmp_path / "loop-a", tmp_path / "loop-b"
+        first.symlink_to(second)
+        second.symlink_to(first)
+        (tree / ".git").write_text(f"gitdir: {first}\n")
+    done = run_recorder_cli(tree, form, ["budget-check", "--repository", REPOSITORY, "--pr", "42"])
+    assert done.returncode == 2 and done.stderr == "", done.stderr
+    assert len(done.stdout.splitlines()) == 1
+    refusal = json.loads(done.stdout)
+    assert refusal["admitted"] is False
+    assert refusal["refusal"].startswith("RECORDER_PRIMARY_REFUSED:")
+    assert reason in refusal["refusal"]
+
+
+WITHHELD_FINDING = (
+    'F2 [P2] docs/readme.md:3 The defect is fixed by reading the code; '
+    'still open only because the shell could not execute the verification probes.'
+)
+WITHHELD_REPLY = f'VERDICT: BLOCKED (missing capability: shell)\n{WITHHELD_FINDING}\n\nSECURITY_VERDICT: FAIL (probes missing)'
+
+
+def withheld_grant_case(monkeypatch, tmp_path, *, duplicate=False, reply=WITHHELD_REPLY):
+    """Sealed, published capability-only runs and a separate capability probe at the retry head."""
+    from scripts.review.verdict_parser import finding_entries
+
+    tasks, comments, calls = grant_case(monkeypatch, tmp_path, last_reply=reply, last_verdict="BLOCKED")
+    for comment in comments[:2]:
+        comment["body"] = comment["body"].replace("T11:", "T10:")
+    bindings = []
+    for task_id in (["round-3", "round-3-retry"] if duplicate else ["round-3"]):
+        started = f"2026-09-23T11:{'01' if task_id.endswith('retry') else '00'}:00.000001+00:00"
+        digest = hashlib.sha256(reply.encode()).hexdigest()
+        write_task(tasks, task_id=task_id, reply=reply, schema_version=2, review_branch=BRANCH, pr=42,
+                   mode="read-only", model="claude-opus-5-5", agent="claude", type="review",
+                   worktree_base_sha="3" * 40, pinned_head="3" * 40, run_nonce=f"{task_id}-nonce",
+                   result_sha256=digest, started_at=started)
+        comment = verdict_with_reply("3" * 40, "BLOCKED", reply, task_id=task_id)
+        comment["body"] = comment["body"].replace("2026-09-23T11:00:00.000001+00:00", started)
+        if task_id == "round-3":
+            comments[-1] = comment
+        else:
+            comments.append(comment)
+        bindings.append({"task_id": task_id, "run_nonce": f"{task_id}-nonce", "reviewed_sha": "3" * 40,
+                         "reply_sha256": digest, "verification_only_evidence": finding_entries(reply, "F2")[-1][1]})
+    probe_reply = "Capability shell demonstrated: project interpreter executed print(1); observed stdout 1, exit 0."
+    probe = {"task_id": "retry-probe", "run_nonce": "probe-nonce", "reviewed_sha": SHA,
+             "reply_sha256": hashlib.sha256(probe_reply.encode()).hexdigest(), "capability_evidence": probe_reply}
+    write_task(tasks, task_id="retry-probe", reply=probe_reply, schema_version=2, review_branch=BRANCH,
+               mode="read-only", run_nonce=probe["run_nonce"], result_sha256=probe["reply_sha256"])
+    write_task(tasks, schema_version=2, review_branch=BRANCH, pr=42, mode="read-only", run_nonce="current-nonce")
+    request = {**GRANT_REQUEST, "blocker_class": "withheld-capability",
+               "withheld_capability": {"capability": "shell", "runs": bindings, "retry_probe": probe}}
+    return tasks, comments, calls, request
+
+
+@pytest.mark.parametrize("field", ["run_nonce", "reviewed_sha", "reply_sha256"])
+@pytest.mark.parametrize("defect", ["missing-request", "missing-record", "mismatch-request", "mismatch-record"])
+def test_withheld_capability_missing_or_mismatched_run_binding_refused(monkeypatch, tmp_path, field, defect):
+    tasks, _comments, calls, request = withheld_grant_case(monkeypatch, tmp_path)
+    evidence = request["withheld_capability"]["runs"][0]
+    path = tasks / "round-3.json"
+    record = json.loads(path.read_text())
+    key = {"reviewed_sha": "worktree_base_sha", "reply_sha256": "result_sha256"}.get(field, field)
+    target, target_key = (evidence, field) if defect.endswith("request") else (record, key)
+    if defect.startswith("missing"):
+        target.pop(target_key)
+    else:
+        target[target_key] = {"run_nonce": "different-nonce", "reviewed_sha": "e" * 40,
+                              "reply_sha256": "e" * 64}[field]
+    path.write_text(json.dumps(record))
+    write_grant(tasks, request)
+    reason = r"LINEAGE_REFUSED:.*digest" if defect == "mismatch-record" and field == "reply_sha256" else (
+        r"BUDGET_GRANT_REFUSED\[(?:request|evidence)\]"
+    )
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_withheld_capability_two_runs_at_one_head_credit_one_round(monkeypatch, tmp_path):
+    tasks, comments, calls, request = withheld_grant_case(monkeypatch, tmp_path, duplicate=True)
+    write_grant(tasks, request)
+    write_grant(tasks, request, task_id="grant-duplicate")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    receipt = result["budget_grant"]
+    assert receipt["qualifying_heads"] == ["3" * 40]
+    assert receipt["round_allowance"] == 4
+    assert calls["posts"] == 1
+    # A second grant or a retry cannot turn the same charged head into another round.
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[allowance\].*4 rounds"):
+        recorder.require_review_round_within_budget(
+            comments, OTHER, "fleet", budget=3, pr=42, grant=lambda: receipt,
+        )
+    assert [item["body"].count("SECURITY_VERDICT: FAIL") for item in comments[2:4]] == [1, 1]
+
+
+@pytest.mark.parametrize("defect", ["substantive-latest", "new-p0", "new-p1", "new-named-p0", "new-named-p1",
+                                  "substantive-intervening", "same-head-substantive"])
+def test_withheld_capability_substantive_rejection_or_new_p0_p1_refused(monkeypatch, tmp_path, defect):
+    reply = WITHHELD_REPLY
+    if defect.startswith("new-p"):
+        reply += f"\nF3 [{defect[4:].upper()}] docs/readme.md:4 New data loss defect."
+    elif defect.startswith("new-named-p"):
+        reply = reply.replace("[P2]", f"[{defect[-2:].upper()}]")
+    tasks, comments, calls, request = withheld_grant_case(monkeypatch, tmp_path, reply=reply)
+    if defect == "substantive-latest":
+        comments.append(verdict_with_reply("4" * 40, "CHANGES_REQUESTED", OPEN_F2, task_id="later"))
+    elif defect in {"substantive-intervening", "same-head-substantive"}:
+        write_task(tasks, task_id="intervening", reply=OPEN_F2, type="review", pr=42, mode="read-only",
+                   worktree_base_sha=SHA if defect == "same-head-substantive" else "2" * 40,
+                   started_at="2026-09-23T11:00:01+00:00")
+    write_grant(tasks, request)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[blocker\]"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+EXCLUSION_ATTESTATION = {
+    "complete_reply_execution_obstruction_only": True,
+    "no_substantive_defect": True,
+    "no_security_fail": True,
+}
+
+
+def exclusion_grant_case(monkeypatch, tmp_path, *, explanation="The brief's probe program is absent; execution is obstructed."):
+    tasks, comments, calls, request = withheld_grant_case(monkeypatch, tmp_path)
+    reply = json.dumps({"schema_version": "code-review-findings.v1",
+                        "overall": {"correctness": "uncertain", "explanation": explanation, "confidence": 0.9},
+                        "findings": []})
+    evidence = {"task_id": "review-one", "run_nonce": "excluded-nonce", "reviewed_sha": SHA,
+                "reply_sha256": hashlib.sha256(reply.encode()).hexdigest()}
+    write_task(tasks, reply=reply, schema_version=2, type="review", review_branch=BRANCH, pr=42, mode="read-only",
+               started_at="2026-09-23T11:30:00+00:00", run_nonce=evidence["run_nonce"],
+               result_sha256=evidence["reply_sha256"])
+    request["withheld_capability"]["admission_exclusion"] = evidence
+    return tasks, comments, calls, request
+
+
+def write_exclusion_grant(tasks, request, *, attestation=EXCLUSION_ATTESTATION, task_id="grant-exclusion"):
+    write_grant(tasks, request, task_id=task_id, decision={"admission_exclusion_attestation": attestation})
+
+
+def write_replacement(tasks, **updates):
+    reply = "VERDICT: APPROVE"
+    write_task(tasks, task_id="replacement", reply=reply, schema_version=2, type="review", review_branch=BRANCH,
+               pr=42, mode="read-only", run_nonce="replacement-nonce", result_sha256=hashlib.sha256(reply.encode()).hexdigest(),
+               **updates)
+
+
+@pytest.mark.parametrize("defect", [None, "seat", "head", "earlier", "nonce"])
+def test_sealed_exclusion_admits_only_exact_later_same_seat_same_head_replacement(monkeypatch, tmp_path, defect):
+    tasks, comments, calls, request = exclusion_grant_case(monkeypatch, tmp_path)
+    write_exclusion_grant(tasks, request)
+    before = recorder.budget_check(REPOSITORY, 42, task_root=tasks)
+    assert before["admitted"] is True
+    assert before["budget_grant"]["excluded_run"] == request["withheld_capability"]["admission_exclusion"]
+    assert before["budget_grant"]["replacement_run"] is None
+    assert before["budget_grant"]["round_allowance"] == 4
+    from scripts.review.review_lineage import dispatched_rounds, lineage_runs
+
+    runs = lineage_runs(tasks, repository=REPOSITORY, number=42, branch=BRANCH)
+    assert dispatched_rounds(runs=runs, comments=comments, login="fleet")[SHA] == ["review-one"]
+    assert calls == {"posts": 0, "statuses": 0}
+    updates = {"review_profile": "ukrainian"} if defect == "seat" else (
+        {"worktree_base_sha": OTHER} if defect == "head" else (
+            {"started_at": "2026-09-23T11:00:00+00:00"} if defect == "earlier" else {}))
+    write_replacement(tasks, **updates)
+    if defect in {"nonce", "seat"}:
+        from scripts.review.budget_grant import admit_grant_round
+
+        with pytest.raises(recorder.RecordError, match=r"replacement run is missing|same-seat"):
+            admit_grant_round(repository=REPOSITORY, number=42, branch=BRANCH, changed_paths=["docs/readme.md"],
+                              comments=comments, login="fleet", task_root=tasks, head=SHA,
+                              recording_run=("replacement", "wrong-nonce" if defect == "nonce" else "replacement-nonce"))
+    elif defect:
+        with pytest.raises(recorder.RecordError, match=r"same-seat|head moved|worktree HEAD"):
+            recorder.record("replacement", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    else:
+        receipt = recorder.record("replacement", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["budget_grant"]
+        assert receipt["replacement_run"] == {"task_id": "replacement", "run_nonce": "replacement-nonce",
+                                              "reviewed_sha": SHA,
+                                              "reply_sha256": hashlib.sha256(b"VERDICT: APPROVE").hexdigest()}
+        assert receipt["excluded_run"] == request["withheld_capability"]["admission_exclusion"]
+        assert receipt["qualifying_heads"] == ["3" * 40]
+        assert receipt["admission_exclusion_attestation"] == EXCLUSION_ATTESTATION
+        assert calls == {"posts": 1, "statuses": 1}
+    # The exclusion never publishes an approval or resolves the earlier finding.
+    assert "SECURITY_VERDICT: FAIL" in comments[2]["body"]
+
+
+@pytest.mark.parametrize("field", ["task_id", "run_nonce", "reviewed_sha", "reply_sha256", "repository", "lineage", "pr"])
+def test_sealed_exclusion_mismatched_run_binding_refused(monkeypatch, tmp_path, field):
+    tasks, _comments, calls, request = exclusion_grant_case(monkeypatch, tmp_path)
+    if field in {"repository", "lineage", "pr"}:
+        path = tasks / "review-one.json"
+        data = json.loads(path.read_text())
+        data[{"lineage": "review_branch"}.get(field, field)] = 43 if field == "pr" else "other/repo"
+        path.write_text(json.dumps(data))
+    else:
+        request["withheld_capability"]["admission_exclusion"][field] = {
+            "task_id": "other-task", "run_nonce": "other-nonce", "reviewed_sha": OTHER, "reply_sha256": "e" * 64,
+        }[field]
+    write_exclusion_grant(tasks, request)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[evidence\]"):
+        recorder.budget_check(REPOSITORY, 42, task_root=tasks)
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("defect", ["prose-defect", "security-fail", "finding", "priority-in-prose", "prose-reply", "unsealed"])
+def test_sealed_exclusion_prose_defect_or_any_finding_refused_even_with_zero_parser_findings(monkeypatch, tmp_path, defect):
+    explanation = {"prose-defect": "Authentication is bypassed because the token is never checked.",
+                   "security-fail": "SECURITY_VERDICT: FAIL", "priority-in-prose": "P3: a spelling defect."}.get(defect,
+                    "The probe program is absent; execution is obstructed.")
+    tasks, _comments, calls, request = exclusion_grant_case(monkeypatch, tmp_path, explanation=explanation)
+    attestation = dict(EXCLUSION_ATTESTATION)
+    if defect == "prose-defect":
+        # The trusted advisor must judge the full prose, not infer semantics from a zero count.
+        assert recorder._review_verdict_and_count((tasks / "review-one.result").read_text()) == ("BLOCKED", 0)
+        attestation["no_substantive_defect"] = False
+    elif defect == "unsealed":
+        attestation = None
+    elif defect in {"finding", "prose-reply"}:
+        reply = "VERDICT: BLOCKED (missing capability: shell)" if defect == "prose-reply" else json.dumps({
+            "schema_version": "code-review-findings.v1",
+            "overall": {"correctness": "uncertain", "explanation": explanation, "confidence": 0.9},
+            "findings": [{"id": "F3", "title": "Spelling", "body": "Typo.", "priority": "P3", "confidence": 0.9,
+                          "category": "docs", "location": {"path": "docs/readme.md", "start_line": 3, "end_line": 3,
+                                                           "claim_type": "present"},
+                          "verbatim": "typo", "why_wrong": "Misspelt.", "smallest_fix": "Correct spelling.", "sources": ["none"]}],
+        })
+        (tasks / "review-one.result").write_text(reply)
+        path = tasks / "review-one.json"
+        data = json.loads(path.read_text())
+        data["result_sha256"] = hashlib.sha256(reply.encode()).hexdigest()
+        path.write_text(json.dumps(data))
+        request["withheld_capability"]["admission_exclusion"]["reply_sha256"] = data["result_sha256"]
+    write_exclusion_grant(tasks, request, attestation=attestation)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[(?:approval|blocker|evidence)\]"):
+        recorder.budget_check(REPOSITORY, 42, task_root=tasks)
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("defect", ["second-grant", "failed-retry", "two-exclusions"])
+def test_sealed_exclusion_second_exclusion_or_failed_retry_refused(monkeypatch, tmp_path, defect):
+    from copy import deepcopy
+
+    tasks, _comments, calls, request = exclusion_grant_case(monkeypatch, tmp_path)
+    write_exclusion_grant(tasks, request)
+    second = deepcopy(request)
+    if defect == "two-exclusions":
+        second["withheld_capability"]["admission_exclusion"] = [second["withheld_capability"]["admission_exclusion"]] * 2
+        from scripts.review.budget_grant import parse_request
+
+        with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[request\]"):
+            parse_request(second, "ruling")
+        return
+    else:
+        reply = (tasks / "review-one.result").read_text()
+        evidence = {**request["withheld_capability"]["admission_exclusion"], "task_id": "failed-retry", "run_nonce": "failed-nonce"}
+        write_task(tasks, task_id="failed-retry", reply=reply, schema_version=2, review_branch=BRANCH, pr=42,
+                   mode="read-only", type="review", run_nonce="failed-nonce", result_sha256=evidence["reply_sha256"],
+                   started_at="2026-09-23T12:01:00+00:00")
+        if defect == "second-grant":
+            second["withheld_capability"]["admission_exclusion"] = evidence
+    write_exclusion_grant(tasks, second, task_id="second-grant")
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[(?:request|binding|blocker)\]"):
+        recorder.budget_check(REPOSITORY, 42, task_root=tasks)
+    assert calls == {"posts": 0, "statuses": 0}

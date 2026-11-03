@@ -37,6 +37,7 @@ import json
 import math
 import os
 import re
+import time
 import urllib.request
 from collections.abc import Callable, Iterable, Mapping
 from datetime import UTC, datetime
@@ -418,6 +419,75 @@ def _agy_claude_windows_used_pct(view: Mapping[str, Any]) -> float | None:
     return max(readings)
 
 
+def _reset_instant(value: object) -> datetime | None:
+    """A window ``resets_at`` as an instant, or None.
+
+    Accepts what the Monitor producers emit (``subscription_usage._parse_resets_at_any``):
+    an ISO-8601 string (no offset means UTC) or epoch seconds or milliseconds.
+    """
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int | float):
+        try:
+            seconds = float(value) / 1000.0 if value > 1e12 else float(value)
+            return datetime.fromtimestamp(seconds, UTC)
+        except (OverflowError, OSError, ValueError):
+            return None
+    if isinstance(value, str):
+        try:
+            parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        return parsed.replace(tzinfo=UTC) if parsed.tzinfo is None else parsed
+    return None
+
+
+def _window_reset_passed(block: object, now: datetime) -> bool:
+    """True when this window's ``resets_at`` is earlier than ``now``.
+
+    A reading taken before its window reset describes the old window (#12467):
+    it stays "fresh" for the probe's whole TTL, so freshness alone cannot retire
+    it. A window with no usable ``resets_at`` carries no such evidence.
+    """
+    reset = _reset_instant(block.get("resets_at") if isinstance(block, Mapping) else None)
+    return reset is not None and reset < now
+
+
+def _reading_window_passed(view: Mapping[str, Any], lane: str, account: ClaudeAccount | None, now: datetime) -> bool:
+    """True when a window that ``routing_budget_used_pct`` would read has reset before ``now``."""
+    from scripts.fleet import claude_account_lane
+
+    if lane == AGY_CLAUDE_WINDOW_LANE:
+        info = claude_account_lane.other_lane_record(view, _AGY_CLAUDE_PROBE_LANE)
+        windows = info.get("claude_gpt_windows")
+        if not isinstance(windows, Mapping):
+            probe = info.get("codexbar")
+            windows = probe.get("claude_gpt_windows") if isinstance(probe, Mapping) else None
+        if not isinstance(windows, Mapping):
+            return False
+        return any(_window_reset_passed(windows.get(key), now) for key in _AGY_CLAUDE_WINDOW_KEYS)
+    if lane == "claude" and account is not None:
+        rows = view.get("claude_accounts")
+        row = rows.get(f"claude:{account.label}") if isinstance(rows, Mapping) else None
+        if isinstance(row, Mapping):  # an account row owns the reading, as in account_weekly_used_pct
+            return _window_reset_passed(row.get("weekly"), now)
+        agents = view.get("agents")
+        info = agents.get(lane) if isinstance(agents, Mapping) else None
+    else:
+        info = claude_account_lane.other_lane_record(view, lane)
+    probe = info.get("codexbar") if isinstance(info, Mapping) else None
+    if not isinstance(probe, Mapping):
+        return False
+    return _window_reset_passed({"resets_at": probe.get("weekly_resets_at")}, now)
+
+
+_MONITOR_READ_TIMEOUT_S = 5.0
+_MONITOR_READY_WAIT_S = 30.0  # covers the cold first routing-budget fill after a restart (~15 s measured)
+_MONITOR_RETRY_PAUSE_S = 1.0
+_MONITOR_DOWN_MEMO_S = 30.0  # after one spent wait, later reads in this process do one 3 s attempt, not another wait
+_monitor_wait_spent_at: float | None = None
+
+
 class MonitorUnavailable(Exception):
     """The Monitor routing-budget did not answer: a transport failure, not a missing usage reading."""
 
@@ -431,27 +501,47 @@ def _bound_routing_view(account: ClaudeAccount | None) -> Mapping[str, Any] | No
     from scripts.fleet import claude_account_lane
 
     base = _monitor_base()
-    try:
-        with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
-            data = json.load(resp)
-    except (OSError, http.client.HTTPException):
-        raise MonitorUnavailable from None
-    except ValueError:
-        return None  # answered, but not a readable snapshot: no usable reading
+    # A Monitor that has just restarted may refuse, time out or answer 5xx while its first
+    # routing-budget snapshot fills (#12512). Wait a bounded time for readiness; past the
+    # bound the read is still MonitorUnavailable, so an unknown reading never admits.
+    # One resolver walk reads once per candidate: a wait already spent on a dead Monitor is not repeated.
+    global _monitor_wait_spent_at
+    spent = _monitor_wait_spent_at
+    waited_recently = spent is not None and time.monotonic() - spent < _MONITOR_DOWN_MEMO_S
+    deadline = time.monotonic() + (0.0 if waited_recently else _MONITOR_READY_WAIT_S)
+    timeout = 3.0 if waited_recently else _MONITOR_READ_TIMEOUT_S
+    while True:
+        try:
+            with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=timeout) as resp:
+                data = json.load(resp)
+            _monitor_wait_spent_at = None
+            break
+        except (OSError, http.client.HTTPException):
+            if time.monotonic() + _MONITOR_RETRY_PAUSE_S >= deadline:
+                if not waited_recently:
+                    _monitor_wait_spent_at = time.monotonic()
+                raise MonitorUnavailable from None
+            time.sleep(_MONITOR_RETRY_PAUSE_S)
+        except ValueError:
+            return None  # answered, but not a readable snapshot: no usable reading
     if not isinstance(data, dict):
         return None
     # Bound where it enters (#10770): the claude lane is only ever ``account``'s meter; with no account, none.
     return claude_account_lane.bind_snapshot(data, account=account or claude_account_lane.no_claude_account())
 
 
-def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> float | None:
+def routing_budget_used_pct(
+    lane: str, *, account: ClaudeAccount | None, now: datetime | None = None
+) -> float | None:
     """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None.
 
     ``account`` is required: the ``claude`` lane is that account's meter
     (``claude_account_lane.account_weekly_used_pct``), and None (no account
     named, for a structural check) reads the ``claude`` lane as unknown. Other
     lanes ignore it. ``agy_claude`` reads the fresh AGY Claude windows on the
-    gemini lane. Only a fresh probe reading counts. A Monitor that does not
+    gemini lane. Only a fresh probe reading counts, and a reading whose window
+    ``resets_at`` is earlier than ``now`` (default: the current time) is the
+    old window's and reads as unknown (#12467). A Monitor that does not
     answer raises :class:`MonitorUnavailable` instead of reading as unknown.
     """
     from scripts.fleet import claude_account_lane
@@ -462,6 +552,8 @@ def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> floa
         return None
     view = _bound_routing_view(account)
     if view is None:
+        return None
+    if _reading_window_passed(view, lane, account, now or datetime.now(UTC)):
         return None
     if lane == "claude" and account is not None:
         return claude_account_lane.account_weekly_used_pct(view, account=account)

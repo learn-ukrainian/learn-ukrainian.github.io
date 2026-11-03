@@ -409,7 +409,7 @@ class RequestExecutor:
         )
         # #7485: finalize atomically. The artifact commit above is the ONLY
         # separate commit — a crash after it leaves an unreferenced artifact,
-        # which is exactly what garbage_collect_unreferenced() reclaims. All
+        # which the unreferenced retention rule (#12574) expires. All
         # state that must agree (references, request state, reply message)
         # lands in ONE transaction below.
         request_state = self._map_completion_to_request_state(envelope.completion_state)

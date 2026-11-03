@@ -71,7 +71,7 @@ export interface PocketBaseAdapterConfig {
 const defaultFetch: PocketBaseFetchLike = async (url, init) => {
   const response = await globalThis.fetch(url, init);
   const text = await response.text();
-  let body: unknown = null;
+  let body: unknown;
   try {
     body = text ? JSON.parse(text) : null;
   } catch {

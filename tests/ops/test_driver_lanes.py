@@ -17,10 +17,11 @@ from tests._host_path_guard import assert_no_host_facts
 REPO = Path(__file__).resolve().parents[2]
 
 
-def test_registry_holds_the_seven_lanes_with_generic_launchers() -> None:
+def test_registry_holds_the_nine_lanes_with_generic_launchers() -> None:
     registry = dl.load_registry()
     assert [lane.session for lane in registry.lanes] == [
-        "infra-muse", "devops-muse", "harness", "atlas", "practice", "open-model-data", "cto",
+        "infra-muse", "devops-muse", "harness", "codex-atlas", "codex-core", "practice", "open-model-data",
+        "kube-dojo", "cto",
     ]
     assert [lane.session for lane in registry.lanes if lane.lead] == ["cto"]
     for lane in registry.lanes:
@@ -60,6 +61,33 @@ def test_practice_lane_uses_the_infra_claude_pattern() -> None:
     )
     plan = dl.launch_plan(lane, repo_root=REPO, local={})
     assert plan.env == {}  # Account choice belongs to ignored local config.
+
+
+@pytest.mark.parametrize(
+    ("session", "epic"), [("codex-core", "curriculum-upgrade"), ("codex-atlas", "atlas")],
+)
+def test_live_codex_lanes_are_registered_under_their_tmux_sessions(session: str, epic: str) -> None:
+    """#12567: the guard and the boot relaunch address the sessions the Codex lanes run in."""
+    lane = dl.load_registry().by_session(session)
+    assert (lane.kind, lane.epic, lane.sender) == ("codex", epic, session)
+    assert lane.goal == f".claude/{epic}-epic/DRIVER-STATE.md"
+    assert dl.generic_argv(lane) == (
+        "./start-codex-driver.sh", "--epic", epic, "--model", "gpt-6.1-sol", "--effort", "high",
+    )
+    assert lane.account_env == ("CODEX_HOME",)
+
+
+def test_codex_lane_sender_is_the_launcher_rollover_slot() -> None:
+    """The guard reads a Codex lane's DB handoff by its sender, which must be the launcher's slot."""
+    for lane in dl.load_registry().lanes:
+        if lane.kind != "codex":
+            continue
+        slot = subprocess.run(
+            ["bash", "-c", 'source "$1" && handoff_identity_for_codex_epic "$2"', "slot",
+             str(REPO / "scripts/lib/handoff_identity.sh"), lane.epic],
+            capture_output=True, text=True, check=True, timeout=60,
+        ).stdout.strip()
+        assert lane.sender == slot, lane.session
 
 
 def test_generic_command_is_repo_relative() -> None:
@@ -190,8 +218,8 @@ def test_wrapper_path_or_word_list_becomes_the_launcher_argv(tmp_path: Path, wra
 
 
 def test_invalid_local_env_is_refused_for_that_lane_only(tmp_path: Path) -> None:
-    overrides = dl.load_local_config(write_local(tmp_path, {"cto": {"env": {"bad key": "x"}}, "atlas": "x"}))
-    for session in ("cto", "atlas"):
+    overrides = dl.load_local_config(write_local(tmp_path, {"cto": {"env": {"bad key": "x"}}, "codex-atlas": "x"}))
+    for session in ("cto", "codex-atlas"):
         with pytest.raises(dl.LaneConfigError, match=f"local lane config: {session}: "):
             dl.launch_plan(dl.load_registry().by_session(session), repo_root=tmp_path, local=overrides)
 

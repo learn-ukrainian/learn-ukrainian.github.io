@@ -22,6 +22,19 @@ from scripts.review.ukrainian_seats import (
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
 
 
+def captured_source_trace(tasks, *, task_id="review-one", tool="verify_word", arguments=None, output="VESUM"):
+    """A provider's completed Sources event, separate from the reviewer's reply."""
+    path = tasks / "logs" / f"{task_id}.stdout.log"
+    path.parent.mkdir(exist_ok=True)
+    path.write_text(json.dumps({"event": "step_update", "step_update": {
+        "state": "DONE", "step_index": 4, "step_type": "tool", "tool_name": "call_mcp_tool",
+        "tool_info": {"name": "call_mcp_tool", "parameters": {
+            "ServerName": "sources", "ToolName": tool, "Arguments": arguments or {"word": "example"},
+        }, **({"output": output} if output is not None else {})},
+    }}) + "\n")
+
+
+
 @pytest.mark.parametrize("marker", ["trial_label", "trial_role", "trial_qualified_task"])
 def test_trial_never_becomes_review_of_record(tmp_path, monkeypatch, marker):
     from scripts.review.review_lineage import review_records
@@ -217,20 +230,22 @@ def test_approve_reply_with_one_p3_finding_records_approve_with_score(scanned_re
 def test_changes_requested_with_only_p3_findings_records_approval(scanned_recorder, tmp_path, monkeypatch):
     """REQUEST_CHANGES whose open findings are all P3 records as APPROVED, status success, reply verbatim."""
     tasks, comments, _, sent, _ = scanned_recorder
-    payload = structured_review(1)
+    payload = structured_review(2)
     payload["overall"].update(
         correctness="incorrect",
-        explanation="VERDICT: REQUEST_CHANGES. SCORE: 6/10. The only open finding is a P3 regression.",
+        explanation="VERDICT: REQUEST_CHANGES. SCORE: 6/10. The only open findings are P3 regressions.",
     )
-    payload["findings"][0]["priority"] = "P3"
+    for finding in payload["findings"]:
+        finding["priority"] = "P3"
     reply = json.dumps(payload)
     write_task(tasks, reply=reply)
     statuses = []
     monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields))
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     body = comments[0]["body"]
-    assert reply in body and "Residuals: F1 (P3)" in body
-    assert result["verdict"] == "APPROVED" and result["residuals"] == ["F1"]
+    assert reply in body and "Residuals: F1 (P3), F2 (P3)" in body
+    assert result["verdict"] == "APPROVED" and result["residuals"] == ["F1", "F2"]
+    assert "p3_downgrade_refused" not in result
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
     assert statuses == [{
         "repository": "owner/repo",
@@ -240,6 +255,26 @@ def test_changes_requested_with_only_p3_findings_records_approval(scanned_record
         "description": "VERDICT: APPROVED openai review-one",
     }]
     assert sent == [body]
+
+
+@pytest.mark.parametrize("blocking", ["P0", "P1", "P2"])
+def test_pure_findings_object_with_a_blocking_entry_records_rejection(scanned_recorder, tmp_path, monkeypatch, blocking):
+    """One P0 to P2 entry beside P3 entries keeps REQUEST_CHANGES and names why (#12409)."""
+    tasks, comments, _, _, _ = scanned_recorder
+    payload = structured_review(2)
+    payload["overall"]["explanation"] = "VERDICT: REQUEST_CHANGES. One finding blocks."
+    payload["findings"][0]["priority"] = "P3"
+    payload["findings"][1]["priority"] = blocking
+    write_task(tasks, reply=json.dumps(payload))
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields))
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    body = comments[0]["body"]
+    assert result["verdict"] == "CHANGES_REQUESTED" and "residuals" not in result
+    assert result["p3_downgrade_refused"] == recorder.P3_BLOCKING_FINDING
+    assert "Residuals:" not in body
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "CHANGES_REQUESTED"
+    assert statuses[0]["state"] == "failure"
 
 
 def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_path, monkeypatch):
@@ -262,6 +297,78 @@ def test_security_verdict_fail_keeps_changes_requested(scanned_recorder, tmp_pat
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "CHANGES_REQUESTED"
     assert statuses[0]["state"] == "failure" and statuses[0]["context"] == "fleet/cross-family-review"
     assert statuses[0]["description"] == "VERDICT: CHANGES_REQUESTED openai review-one"
+
+
+def _all_p3_object(*, indent=None):
+    payload = structured_review(1)
+    payload["overall"]["explanation"] = "One P3 residual."
+    payload["findings"][0]["priority"] = "P3"
+    return json.dumps(payload, indent=indent)
+
+
+_P3_PREFIX = "VERDICT: REQUEST_CHANGES\nF1 [P3] scripts/example.py:10 count is high.\n"
+_P3_OBJECT = _all_p3_object()
+_P3_FENCED = "```json\n" + _all_p3_object(indent=2) + "\n```\n"
+# A plain decoder keeps the last "findings" key, which would hide the P1 list before it.
+_P3_DUPLICATE = _P3_OBJECT.replace(
+    '"findings": ', '"findings": ' + json.dumps(structured_review(1)["findings"]).replace("P2", "P1") + ', "findings": ', 1
+)
+# Every reply form that hid an open P0 to P2 finding from PR #12379's prose matchers (rounds 2 to 6).
+_P3_REFUSED = {
+    "prose-only": _P3_PREFIX,
+    "r2-nested-quoted-fence": _P3_PREFIX + ">> ```\n>> F2 scripts/example.py:20 missing priority.\n>> ```\n",
+    "r2-nested-quoted-indent": _P3_PREFIX + ">>\n>>     F2 scripts/example.py:20 missing priority.\n",
+    "r2-quoted-fence": _P3_PREFIX + "> ```\n> F2 scripts/example.py:20 missing priority.\n> ```\n",
+    "r2-fenced-resolved-question": _P3_PREFIX + "```\nF2 resolved? scripts/example.py:20 still open.\n```\n",
+    "r2-indented-resolved-question": _P3_PREFIX + "\n    F2 resolved? scripts/example.py:20 still open.\n",
+    "r3-long-resolution-window": (
+        _P3_PREFIX + "```\nF2 resolved after checking the patch? scripts/example.py:20 still open.\n```\n"
+    ),
+    "r3-fixed-long-window": _P3_PREFIX + "F2 fixed after checking the patch? scripts/example.py:20 still open.\n",
+    "r3-later-negation": _P3_PREFIX + "F2 resolved after checking the patch, not actually fixed.\n",
+    "r3-padded-question": _P3_PREFIX + "F2 resolved after checking the patch ? scripts/example.py:20 still open.\n",
+    "r3-next-sentence": _P3_PREFIX + "F2 resolved. This is not a blocker.\n",
+    "r4-i.e.": _P3_PREFIX + "F2 resolved, i.e. not actually fixed.\n",
+    "r4-e.g.": _P3_PREFIX + "F2 fixed, e.g. not actually fixed.\n",
+    "r4-e.g.-mid-clause": _P3_PREFIX + "F2 resolved in e.g. scripts/example.py:20, but not actually fixed.\n",
+    "r4-emphasis": _P3_PREFIX + "F2 resolved **successfully.** This is not a blocker.\n",
+    "r5-colon-i.e.": _P3_PREFIX + "```\nF2: resolved, i.e. not actually fixed.\n```\n",
+    "r5-colon-e.g.": _P3_PREFIX + "F2: fixed, e.g. not actually fixed.\n",
+    "r5-colon-unprioritized": _P3_PREFIX + "    F2: scripts/example.py:20 missing priority.\n",
+    "r6-verdict-line-p1-prose-fenced-object": (
+        "VERDICT: REQUEST_CHANGES\nF2 [P1] scripts/a.py:3 auth bypass, blocker.\n\n" + _P3_FENCED
+    ),
+    "r6-unprioritized-prose-fenced-object": "VERDICT: REQUEST_CHANGES\nF2 scripts/a.py:3 auth bypass.\n\n" + _P3_FENCED,
+    "r6-p0-prose-bare-object": "VERDICT: REQUEST_CHANGES\nF2 [P0] scripts/a.py:3 data loss.\n\n" + _P3_OBJECT,
+    "r6-verdict-line-only-object": "VERDICT: REQUEST_CHANGES\n\n" + _P3_OBJECT,
+    "fenced-object-alone": _P3_FENCED,
+    "object-then-prose": _P3_OBJECT + "\n\nF2 [P2] scripts/a.py:3 still open.\n",
+    "two-objects": _P3_OBJECT + "\n" + _P3_OBJECT,
+    "duplicate-findings-key": _P3_DUPLICATE,
+    "nan-confidence": _P3_OBJECT.replace('"confidence": 0.9', '"confidence": NaN', 1),
+    "infinity-confidence": _P3_OBJECT.replace('"confidence": 0.9', '"confidence": Infinity', 1),
+    "escaped-security-fail": _P3_OBJECT.replace("One P3 residual.", "\\u0053ECURITY_VERDICT: FAIL"),
+    "escaped-security-underscore": _P3_OBJECT.replace("One P3 residual.", "SECURITY\\u005fVERDICT: FAIL"),
+}
+_P3_REASONS = {
+    "duplicate-findings-key": recorder.P3_DUPLICATE_KEY,
+    "escaped-security-fail": recorder.P3_SECURITY_NOT_PASS,
+    "escaped-security-underscore": recorder.P3_SECURITY_NOT_PASS,
+}
+
+
+@pytest.mark.parametrize("name", list(_P3_REFUSED))
+def test_p3_downgrade_refuses_every_reply_but_one_findings_object(name):
+    """Only a whole-reply findings object is read for P3 residuals; prose keeps the rejection (#12409)."""
+    reply = _P3_REFUSED[name]
+    reading = recorder.p3_reading(reply)
+    assert reading == recorder.P3Reading(reason=_P3_REASONS.get(name, recorder.P3_NOT_ONE_OBJECT))
+    body = recorder.build_comment(
+        sha=SHA, task_id="review-one", started="2026-09-23T12:00:00+00:00", verdict="CHANGES_REQUESTED",
+        model="gpt-6.1-sol", family="openai", reply=reply,
+    )
+    assert sweep.recorded_p3_residuals(body) is None
+    assert sweep.recorded_p3_residuals(body.replace(reply, _P3_OBJECT)) == ("F1",)
 
 
 @pytest.mark.parametrize(("deep", "reason"), [
@@ -896,6 +1003,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
     from scripts.review.review_contract import build_item_packet, render_item_packet
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    captured_source_trace(tasks)
     packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
     prompt = tmp_path / "brief.md"
     prompt.write_bytes(render_item_packet(packet).encode())
@@ -948,6 +1056,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks, task_id="review-hidden")
     recorder.record("review-hidden", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     hidden_marker = sweep.parse_marker(comments[1]["body"])
     assert hidden_marker["void"] == "quote-mismatch"
@@ -966,6 +1075,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks, task_id="review-single")
     recorder.record("review-single", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     single_marker = sweep.parse_marker(comments[2]["body"])
     assert single_marker["void"] == "quote-mismatch"
@@ -984,6 +1094,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks, task_id="review-apostrophe")
     recorder.record("review-apostrophe", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     apostrophe_marker = sweep.parse_marker(comments[3]["body"])
     assert apostrophe_marker["void"] == "quote-mismatch"
@@ -1002,10 +1113,44 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
         prompt_file=str(prompt),
         prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
     )
+    captured_source_trace(tasks, task_id="review-spaces")
     recorder.record("review-spaces", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     spaces_marker = sweep.parse_marker(comments[4]["body"])
     assert spaces_marker["void"] == "quote-mismatch"
     assert spaces_marker["coverage"] == []
+
+
+def test_block_only_ukrainian_reply_records_full_coverage(monkeypatch, tmp_path):
+    """Defect class (#12417): a contract-only judgment block with a frozen packet is refused for lack of a verdict line."""
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_bytes(render_item_packet(packet).encode())
+    items = [
+        {"id": item_id, "verdict": "APPROVE", "finding": "", "sources": "VESUM", "quote": text}
+        for item_id, text in (("card-a", "привіт"), ("card-b", "друг"))
+    ]
+    reply = (
+        "```ukrainian-item-judgments\n"
+        + json.dumps({"schema": "ukrainian-item-judgments.v1", "items": items}, ensure_ascii=False)
+        + "\n```\n"
+    )
+    write_task(
+        tasks,
+        reply=reply,
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        prompt_file=str(prompt),
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
+    captured_source_trace(tasks)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert result["verdict"] == marker["verdict"] == "APPROVED"
+    assert marker["denominator"] == marker["coverage"] == ["card-a", "card-b"]
+    assert marker.get("void") is None
 
 
 def test_item_judgments_unknown_verdict_leaves_coverage_incomplete(monkeypatch, tmp_path):
@@ -1013,6 +1158,7 @@ def test_item_judgments_unknown_verdict_leaves_coverage_incomplete(monkeypatch, 
     from scripts.review.review_contract import build_item_packet, render_item_packet
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    captured_source_trace(tasks)
     packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
     prompt = tmp_path / "brief.md"
     prompt.write_bytes(render_item_packet(packet).encode())
@@ -1084,3 +1230,391 @@ def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
     chunk = judge_item_reply(packet, reply, stated="APPROVED", ukrainian=False)
     assert chunk.void == VOID_REVIEWER_BOOKKEEPING
     assert chunk.coverage == ()
+
+
+@pytest.mark.parametrize("claim,output,placement", [
+    ("Example Reference page 7", "Different Reference page 2", "sources"),
+    ("Rule 8 classifies this suffix as soft-group.", "Rule 8 classifies this suffix as hard-group.", "finding"),
+    ("VESUM tag noun:inanim:f:v_naz for example", "VESUM tag noun:anim:f:v_naz for example", "sources"),
+    ("check_russian_shadow for example returned confidence 0.0", "check_russian_shadow for other returned 0.0", "sources"),
+    ("Example Reference page 7", None, "sources"),
+    ("СУМ-20 подає цю форму як нормативну, с. 45", "VESUM", "finding"),
+    ("verify_stress returned stress on the second syllable", "VESUM", "finding"),
+    ("с. 45", "VESUM", "finding"),
+    ("Example Reference page 7", "Example Reference page 75", "sources"),
+    ("Rule 8", "Rule 81", "finding"),
+    ("noun:inanim:f:v_naz", "noun:anim:f:v_naz", "finding"),
+    ("ВТС подає це значення як основне", "VESUM", "finding"),
+    ("стор. 45", "VESUM", "finding"),
+    ("Заболотний подає цю форму", "VESUM", "finding"),
+    ("Вікіпедія подає цю форму", "VESUM", "finding"),
+    ("Wikipedia reports this form", "VESUM", "finding"),
+], ids=["source-page", "rule", "tag", "check", "missing-output", "ukrainian-source", "tool-name", "ukrainian-page",
+        "page-prefix", "rule-prefix", "bare-tag", "vts", "page-abbreviation", "author-cyrillic", "wikipedia-uk", "wikipedia-en"])
+@pytest.mark.parametrize("reply_format", ["items", "overall", "finding", "title", "smallest_fix", "body", "prose",
+                                         "verbatim", "nested", "top-notes", "fenced-summary", "fenced-quote", "fenced-list",
+                                         "key-json", "plain-mapping", "nested-control", "non-row-item", "invalid-control-types",
+                                         "dotted-reference"])
+def test_unbound_ukrainian_source_claims_refused_before_publication(
+    monkeypatch, tmp_path, claim, output, placement, reply_format,
+):
+    """An unbound review must not publish a source assertion missing from its own outputs."""
+    from scripts.review.review_contract import build_item_packet, render_item_packet
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    packet = build_item_packet([{"id": "item-a", "text": "example"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_text(render_item_packet(packet))
+    row = {"id": "item-a", "verdict": "APPROVE", "finding": "Appropriate activity.", "sources": "none"}
+    row[placement] = claim
+    reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
+        "schema": "ukrainian-item-judgments.v1", "items": [row],
+    }) + "\n```\n"
+    audit_id, audit_field = "item-a", placement
+    audit_claim = claim
+    if reply_format == "key-json":
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps({claim: "Uncited wording."}) + "\n```\n"
+        audit_id, audit_field = None, claim + ".__key__"
+    elif reply_format == "plain-mapping":
+        reply = "VERDICT: APPROVE\n" + claim + ": Uncited wording.\n"
+        audit_id, audit_field = "review-prose", "finding"
+        audit_claim = "VERDICT: APPROVE\n" + claim + ": Uncited wording."
+    elif reply_format == "nested-control":
+        payload = {"notes": {"category": claim, "outcome": claim, "id": claim,
+                             "location": {"path": claim}, "receipt_id": claim}}
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = None, "notes.category"
+    elif reply_format == "non-row-item":
+        reply = "VERDICT: APPROVE\n```json\n" + json.dumps({"items": [claim]}) + "\n```\n"
+        audit_id, audit_field = None, "items"
+    elif reply_format == "invalid-control-types":
+        payload = {"items": [{"id": {"claim": claim}, "quote": {"claim": claim}}],
+                   "findings": [{"location": {"path": {"claim": claim}}}]}
+        reply = "VERDICT: APPROVE\n```yaml\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = {"claim": claim}, "id.claim"
+    elif reply_format == "dotted-reference":
+        payload = {"findings": [{"source_conflict.a": {"quote": claim, "receipt_id": "step-4"}}]}
+        reply = "VERDICT: APPROVE\n```yaml\n" + json.dumps(payload) + "\n```\n"
+        audit_id, audit_field = None, "source_conflict.a.quote"
+    elif reply_format in {"fenced-summary", "fenced-quote", "fenced-list"}:
+        field = "quote" if reply_format == "fenced-quote" else "summary"
+        body = "- " + claim if reply_format == "fenced-list" else json.dumps({field: claim})
+        tag = "yaml" if reply_format == "fenced-list" else "json"
+        reply = f"VERDICT: APPROVE\n```{tag}\n{body}\n```\n"
+        if reply_format == "fenced-list":
+            audit_id, audit_field = "review-prose", "finding"
+            audit_claim = "VERDICT: APPROVE\n\n\n" + body
+        else:
+            audit_id, audit_field = None, field
+    elif reply_format in {"nested", "top-notes"}:
+        row[placement] = "none"
+        payload = {"schema": "ukrainian-item-judgments.v1", "items": [row]}
+        if reply_format == "nested":
+            row["extra"] = {"notes": [claim]}
+            audit_id, audit_field = "item-a", "extra.notes"
+        else:
+            payload["notes"] = claim
+            audit_id, audit_field = None, "notes"
+        reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps(payload) + "\n```\n"
+    elif reply_format == "prose":
+        row[placement] = "none"
+        reply = claim + ";\nVERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
+            "schema": "ukrainian-item-judgments.v1", "items": [row],
+        }) + "\n```\n"
+        audit_id, audit_field = "review-prose", "finding"
+    elif reply_format != "items":
+        payload = structured_review(0 if reply_format == "overall" else 1)
+        payload["overall"]["correctness"] = "correct"
+        if reply_format == "overall":
+            payload["overall"]["explanation"] = claim
+            audit_id, audit_field = None, "overall.explanation"
+        else:
+            payload["overall"]["explanation"] = "Appropriate activity."
+            payload["findings"][0].update(priority="P3", body="Advisory wording.", sources=["none"])
+            audit_field = "sources" if reply_format == "finding" else reply_format
+            payload["findings"][0][audit_field] = [claim] if audit_field == "sources" else claim
+            audit_id = "F1"
+        reply = json.dumps(payload)
+    captured_source_trace(tasks, arguments={"query": claim}, output=output)
+    write_task(tasks, reply=reply, review_profile="ukrainian", sources_mcp_call_count=75,
+               prompt_file=str(prompt), prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    raw = (tasks / "review-one.result").read_bytes()
+
+    def no_network(*args, **kwargs):
+        pytest.fail("Unsupported review reached the publication/network boundary")
+
+    monkeypatch.setattr(recorder, "_pr", no_network)
+    with pytest.raises(recorder.RecordError, match="UKRAINIAN_CLAIMS_UNSUPPORTED") as refused:
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    audit = json.loads(str(refused.value).split(": ", 1)[1])
+    assert audit[0]["item_id"] == audit_id
+    assert audit[0]["claim"] == {audit_field: audit_claim}
+    assert audit[0]["reason"] == "claim_not_in_captured_output"
+    assert audit[0]["captured_event_ids"] == ["step-4"]
+    assert audit[0]["uncaptured_event_ids"] == (["step-4"] if output is None else [])
+    if reply_format == "nested-control":
+        assert {next(iter(entry["claim"])) for entry in audit} == {
+            "notes.category", "notes.outcome", "notes.id", "notes.location.path", "notes.receipt_id",
+        }
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    assert (tasks / "review-one.result").read_bytes() == raw
+
+
+@pytest.mark.parametrize("capture", ["agy", "codex", "claude", "bound"])
+@pytest.mark.parametrize("finding", ["Appropriate activity.", "Вправа правильно перевіряє форму", "Вправа передає сум"])
+@pytest.mark.parametrize("bad_quote", ["uncaptured quote", "Rule 8", "category: Rule 8", "outcome: Rule 8",
+                                      "category nested: Rule 8", "outcome nested: Rule 8"])
+def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, capture, finding, bad_quote):
+    """A supported exact-head review must not be over-rejected, including quoted source output."""
+    import yaml
+
+    from scripts.dispatcher import store
+    from scripts.review.receipts import ledger
+    from scripts.review.review_contract import build_item_packet, render_item_packet, validate_ukrainian_reply_claims
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    claim = 'VESUM reports "attested" for the example.'
+    packet = build_item_packet([{"id": "item-a", "text": "example"}])
+    prompt = tmp_path / "brief.md"
+    prompt.write_text(render_item_packet(packet))
+    binding = None
+    if capture == "bound":
+        binding = {"review_id": "review", "attempt_id": "attempt", "manifest_sha256": "a" * 64}
+        root = tmp_path / "review-receipts"
+        monkeypatch.setattr(store, "receipts_root", lambda: root)
+        path = root / "review" / "attempt.jsonl"
+        receipt = ledger.append(path, **binding, tool="verify_word", arguments={"word": "example"},
+                                result=claim + "; Rule 81", server_version="test", snapshots={}, status="ok")
+        rejected = structured_review(1)
+        rejected["overall"].update(correctness="correct", explanation="Appropriate activity.")
+        rejected["findings"][0].update(
+            priority="P3", body=claim, sources=["none"], evidence={"receipt": receipt, "quote": bad_quote},
+        )
+        metadata = bad_quote.split(": ", 1) if ": " in bad_quote else None
+        nested = bool(metadata and metadata[0].endswith(" nested"))
+        if metadata:
+            metadata[0] = metadata[0].removesuffix(" nested")
+            metadata_value = {"quote": metadata[1], "receipt_id": metadata[1]} if nested else metadata[1]
+            rejected["findings"][0]["evidence"].update(quote=claim, **{metadata[0]: metadata_value})
+        tag = "yaml" if metadata else "json"
+        candidate = ("VERDICT: APPROVE\n" if metadata else "") + f"```{tag}\n" + json.dumps(rejected) + "\n```"
+        sanitized, checked = validate_ukrainian_reply_claims(candidate, ledger_path=path, binding=binding)
+        assert checked.claims_unsupported == (2 if nested or not metadata else 1)
+        body = sanitized.split(f"```{tag}\n")[1].split("\n```")[0]
+        sanitized_finding = (yaml.safe_load(body) if metadata else json.loads(body))["findings"][0]
+        if metadata:
+            assert sanitized_finding["evidence"][metadata[0]] == metadata_value
+        else:
+            assert "evidence" not in sanitized_finding
+        write_task(tasks, reply=sanitized, review_profile="ukrainian", sources_mcp_call_count=1,
+                   review_attempt=binding, claims_unsupported=checked.claims_unsupported,
+                   dropped_claims=list(checked.dropped_claims))
+        with monkeypatch.context() as guarded:
+            def no_network(*args, **kwargs):
+                pytest.fail("Sanitized unsupported attempt reached publication")
+            guarded.setattr(recorder, "_pr", no_network)
+            with pytest.raises(recorder.RecordError, match="UKRAINIAN_CLAIMS_UNSUPPORTED") as refused:
+                recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert (metadata[1] if metadata else bad_quote) in str(refused.value)
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    else:
+        captured_source_trace(tasks, output=claim)
+        receipt = "step-4"
+        if capture != "agy":
+            path = tasks / "logs" / "review-one.stdout.log"
+            if capture == "codex":
+                events = [{"type": "response_item", "payload": {
+                    "type": "function_call", "call_id": "call-1", "name": "mcp__sources__verify_word",
+                    "arguments": json.dumps({"word": "example"}),
+                }}, {"type": "response_item", "payload": {
+                    "type": "function_call_output", "call_id": "call-1", "output": claim,
+                }}]
+            else:
+                events = [{"type": "assistant", "message": {"content": [{
+                    "type": "tool_use", "id": "call-1", "name": "mcp__sources__verify_word",
+                    "input": {"word": "example"},
+                }]}}, {"type": "user", "message": {"content": [{
+                    "type": "tool_result", "tool_use_id": "call-1", "content": claim,
+                }]}}]
+            path.write_text("\n".join(json.dumps(event) for event in events) + "\n")
+            receipt = "runtime-0"
+    reply = "VERDICT: APPROVE\n```ukrainian-item-judgments\n" + json.dumps({
+        "schema": "ukrainian-item-judgments.v1", "items": [{
+            "id": "item-a", "verdict": "APPROVE", "finding": finding,
+            "sources": claim, "evidence": [{"receipt": receipt, "quote": claim}],
+        }],
+    }) + "\n```\n"
+    write_task(tasks, reply=reply, review_profile="ukrainian", sources_mcp_call_count=1,
+               prompt_file=str(prompt), prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+               **({"review_attempt": binding} if binding else {}))
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "APPROVED"
+    assert calls == {"posts": 1, "statuses": 1}
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert marker["coverage"] == marker["denominator"] == ["item-a"]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+
+
+def test_mixed_family_branch_resolves_one_seat_per_family(tmp_path, monkeypatch):
+    """Defect: a mixed-family branch has no eligible reviewer without a third family."""
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+    from tests.test_review_closeout_cli import _run_cli
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    anthropic = repo.commit(OPUS, message="Anthropic change")
+    openai = repo.commit(SOL, path="scripts/review/example.py", text="value = 2\n", message="OpenAI change")
+    state = tmp_path / "state.json"
+    snapshot = tmp_path / "routing.json"
+    snapshot.write_text('{"cursor": "unhealthy"}')
+
+    def run(*args):
+        return _run_cli(state, *args)
+
+    target = run("target", "--mode", "branch", "--branch", "feature", "--base", "origin/main",
+                 "--repo-root", str(repo.root))
+    assert target.returncode == 0, target.stderr
+    args = ("resolve-reviewer", "--author-model", "gpt-6.1-sol", "--repository", REPOSITORY,
+            "--task-root", str(tmp_path / "tasks"), "--risk", "low", "--domain", "infra",
+            "--review-profile", "infra", "--routing-snapshot-file", str(snapshot))
+    resolved = run(*args)
+    assert resolved.returncode == 0, resolved.stdout + resolved.stderr
+    payload = json.loads(resolved.stdout)
+    assert payload["selected"] is None and payload["resolved_risk"] == "critical"
+    assert len(payload["quorum"]) == 2
+    seats = {seat["family"]: seat for seat in payload["quorum"]}
+    assert set(seats) == {"anthropic", "openai"}
+    assert {seat["concrete_model"] for seat in seats.values()} == {"claude-opus-5-5", "gpt-6.1-sol"}
+    assert seats["anthropic"]["scope"] == {
+        "reviewer_family": "anthropic", "author_family": "openai", "commits": [openai], "context_head": openai,
+    }
+    assert seats["openai"]["scope"] == {
+        "reviewer_family": "openai", "author_family": "anthropic", "commits": [anthropic], "context_head": openai,
+    }
+    assert json.loads(state.read_text())["resolved_reviewer"] == payload
+    excluded = run(*args, "--subject-family", "openai")
+    assert excluded.returncode == 1 and not json.loads(excluded.stdout)["quorum"]
+
+
+def test_mixed_family_head_needs_both_family_approvals(tmp_path, monkeypatch):
+    """Defect: one family's APPROVE lands a mixed-family head."""
+    from dataclasses import replace
+
+    from scripts.publish import github
+    from tests.test_authoring_review_feasibility import OPUS, SOL, mini_repo
+    from tests.test_record_cf_verdict import REPOSITORY
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    anthropic = repo.commit(OPUS, message="Anthropic change")
+    head = repo.commit(SOL, message="OpenAI change")
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
+    facts = recorder.collect_branch_review_facts(
+        repository=REPOSITORY, repo_root=repo.root, base_tip_sha=repo.sha("origin/main"), head_sha=head, task_root=tasks,
+    )
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields["state"]))
+    monkeypatch.setattr(github.gate, "catalog", lambda: {"unit": {"github": REPOSITORY, "verdict_recorder": True}})
+
+    def reads(operation, **_kwargs):
+        value = {"comments": [comments], "pr-files": [[{"filename": "docs/a.md"}]], "identity": {"login": "fleet"}}
+        return subprocess.CompletedProcess([], 0, stdout=json.dumps(value[operation]), stderr="")
+
+    monkeypatch.setattr(github, "read", reads)
+    row = {"headRefOid": head, "isDraft": False, "title": "Scoped review", "labels": [], "mergeStateStatus": "CLEAN"}
+    write_task(tasks, worktree_base_sha=head, review_risk="critical",
+               result_sha256=hashlib.sha256(b"VERDICT: APPROVE").hexdigest())
+    with monkeypatch.context() as publication:
+        def withhold_reply(_destination, texts, **_kwargs):
+            if any("<details>" in text for text in texts):
+                blocked = recorder.PublishBlocked("synthetic reply finding")
+                blocked.indices = frozenset({0})
+                raise blocked
+
+        publication.setattr(recorder, "check_texts", withhold_reply)
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert statuses == ["pending"]
+    assert sweep.lookup_verdict(comments, head, "fleet").state == sweep.NEEDS_SEAT
+    partial = sweep.lookup_verdict(comments, head, "fleet")
+    assert keeper._reason(row, partial, "ok", 0, True) == "needs-CF"
+    assert keeper._revoke_reason(row, partial, "ok", True, True, queued=True) == "needs-CF"
+    with pytest.raises(github.gate.PublishBlocked):
+        github._refuse_incomplete_seats(REPOSITORY, 42, head, None, tmp_path, {})
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert marker["review_pair"] == "anthropic_openai" and marker["scope_commits"] == (anthropic,)
+    assert "Findings are held privately." in comments[0]["body"]
+    assert recorder.republish_withheld(
+        "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+    )["comment"] == "posted"
+    assert sweep.parse_marker(comments[1]["body"]) == marker
+    assert statuses == ["pending"] and sweep.lookup_verdict(comments, head, "fleet").state == sweep.NEEDS_SEAT
+    write_task(tasks, task_id="review-two", agent="claude", model="claude-opus-5-5",
+               worktree_base_sha=head, review_risk="critical")
+    recorder.record("review-two", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert statuses == ["pending", "success"] and calls["posts"] == 3
+    assert sweep.lookup_verdict(comments, head, "fleet").state == "APPROVED"
+    assert keeper._reason(row, sweep.lookup_verdict(comments, head, "fleet"), "ok", 0, True) == "ready"
+    github._refuse_incomplete_seats(REPOSITORY, 42, head, None, tmp_path, {})
+    assert recorder.require_review_round_within_budget(comments, head, "fleet", budget=1, pr=42) == {}
+    moved = "d" * 40
+    with pytest.raises(recorder.RecordError, match=r"1 heads.*budget is 1 rounds"):
+        recorder.require_review_round_within_budget(comments, moved, "fleet", budget=1, pr=42)
+    assert sweep.lookup_verdict(comments, moved, "fleet").state == "CF-stale"
+    assert keeper._reason({**row, "headRefOid": moved}, sweep.lookup_verdict(comments, moved, "fleet"), "ok", 0, True) == "needs-CF"
+    with pytest.raises(github.gate.PublishBlocked):
+        github._refuse_incomplete_seats(REPOSITORY, 42, moved, None, tmp_path, {})
+
+    approved = list(comments)
+    for agent, model in (("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")):
+        comments[:] = approved
+        write_task(tasks, task_id="review-reject", agent=agent, model=model, worktree_base_sha=head,
+                   review_risk="critical", reply="VERDICT: REQUEST_CHANGES\nA blocking defect remains.")
+        recorder.record("review-reject", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert sweep.lookup_verdict(comments, head, "fleet").state == "CHANGES_REQUESTED"
+        assert statuses[-1] == "failure"
+        assert keeper._reason(row, sweep.lookup_verdict(comments, head, "fleet"), "ok", 0, True) == "CF-changes_requested"
+        with pytest.raises(github.gate.PublishBlocked):
+            github._refuse_incomplete_seats(REPOSITORY, 42, head, None, tmp_path, {})
+        with pytest.raises(recorder.RecordError, match="APPROVE_REFUSED"):
+            recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+    facts = replace(facts, commits=tuple(
+        replace(commit, task_id="review-one") if commit.family == "anthropic" else commit for commit in facts.commits
+    ))
+    with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from tests.claude_route_accounts import HOST_ACCOUNT
+
+    with pytest.raises(ReviewAdmissionRefused, match="SELF_REVIEW_DETECTED"):
+        resolve_and_admit(
+            ("codex",), model="gpt-6.1-sol", mode="read-only", review_dispatch=True,
+            review_risk="critical", review_task_id="review-one", review_facts=facts, claude_account=HOST_ACCOUNT,
+        )
+    monkeypatch.setattr(recorder, "_pr", lambda *_a, **_k: {"number": 42, "headRefName": "codex/42", "headRefOid": moved})
+    with pytest.raises(recorder.RecordError, match="head moved"):
+        recorder.record("review-two", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+
+def test_single_family_branch_resolution_unchanged(tmp_path, monkeypatch):
+    """Control: the pair rule changes single-family routing."""
+    from dataclasses import asdict, replace
+
+    from scripts.review.reviewer_resolver import resolve_reviewer
+    from tests.claude_route_accounts import HOST_ACCOUNT
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    for trailer, model, expected in ((OPUS, "claude-opus-5-5", "openai"), (SOL, "gpt-6.1-sol", "anthropic")):
+        directory = tmp_path / expected
+        directory.mkdir()
+        repo = mini_repo(directory, monkeypatch)
+        head = repo.commit(trailer)
+        facts = recorder.collect_branch_review_facts(
+            repository=REPOSITORY, repo_root=repo.root, base_tip_sha=repo.sha("origin/main"), head_sha=head,
+            task_root=directory / "tasks",
+        )
+        inputs = facts.resolver_inputs(risk="critical", review_profile="infra", claude_account=HOST_ACCOUNT, structural=True)
+        result = resolve_reviewer(inputs)
+        legacy = resolve_reviewer(replace(inputs, author_model=model, author_families=frozenset(), author_commits=()))
+        assert result == legacy and result.selected.family == expected
+        assert not result.quorum and not result.review_scopes
+        assert "review_scopes" not in asdict(result)

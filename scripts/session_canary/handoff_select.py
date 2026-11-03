@@ -46,7 +46,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import shutil
+import subprocess
+import sys
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
@@ -288,6 +292,195 @@ def load_codex_candidates(repo: Path, epic: str) -> list[LoadedCandidate]:
         ),
         preferred=("CODEX-DRIVER-HANDOFF.md",),
     )
+
+
+# A lane's handoff lives in the driver-state database as one full-content
+# ``handoff_note`` (scripts/driver_state.py). The Codex canary mints from the
+# newest note first; markdown handoffs are the fallback (#12567).
+DRIVER_STATE_CLI_ENV = "LU_DRIVER_STATE_CLI"
+DRIVER_STATE_CLI_DEFAULT = "lu-driver-state"
+DRIVER_STATE_TIMEOUT_SECONDS = 60
+DRIVER_STATE_SNAPSHOT_NAME = "driver-state-handoff-note.md"
+_NUMBERED_ITEM_RE = re.compile(r"^\s*\d+[.)]\s+(.+?)\s*$")
+_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _warn(message: str) -> None:
+    print(f"warning: {message}", file=sys.stderr)
+
+
+def _driver_state_cli() -> str | None:
+    """The driver-state CLI path; ``LU_DRIVER_STATE_CLI=""`` disables the lookup."""
+    name = os.environ.get(DRIVER_STATE_CLI_ENV, DRIVER_STATE_CLI_DEFAULT)
+    return shutil.which(name) if name else None
+
+
+def codex_lane_slot(epic: str) -> str | None:
+    """The Codex slot the launcher derives for ``epic`` (``handoff_identity_for_codex_epic``).
+
+    Inside a launched lane the launcher already exported that value as
+    ``SESSION_HANDOFF_AGENT``; otherwise the shell function is asked directly.
+    """
+    exported = os.environ.get("SESSION_HANDOFF_AGENT", "").strip()
+    if re.fullmatch(r"codex-[a-z0-9-]+", exported) and os.environ.get("SESSION_EPIC", "").strip() == epic:
+        return exported
+    try:
+        result = subprocess.run(
+            [
+                "bash",
+                "-c",
+                'source "$1" && handoff_identity_for_codex_epic "$2"',
+                "codex-slot",
+                str(_ROOT / "scripts/lib/handoff_identity.sh"),
+                epic,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    slot = result.stdout.strip()
+    return slot if result.returncode == 0 and re.fullmatch(r"codex-[a-z0-9-]+", slot) else None
+
+
+def _note_created(note: Mapping[str, object]) -> datetime | None:
+    raw = note.get("created_utc")
+    if not isinstance(raw, str):
+        return None
+    try:
+        created = datetime.fromisoformat(raw.strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return created if created.tzinfo else created.replace(tzinfo=UTC)
+
+
+def fetch_newest_handoff_note(lane: str, owner: str) -> dict[str, object] | None:
+    """Newest non-dropped ``handoff_note`` for ``lane`` written by ``owner``, or None.
+
+    Reads through the ``lu-driver-state`` CLI (override or disable with
+    ``LU_DRIVER_STATE_CLI``; an empty value disables the lookup). Any failure
+    returns None, so the caller falls back to markdown handoffs.
+    """
+    cli = _driver_state_cli()
+    if not cli:
+        return None
+    command = [cli, "list", "--lane", lane, "--kind", "handoff_note", "--owner", owner, "--all", "--json"]
+    try:
+        result = subprocess.run(
+            command, capture_output=True, text=True, timeout=DRIVER_STATE_TIMEOUT_SECONDS, check=False
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        _warn(f"driver-state handoff_note unavailable ({type(exc).__name__}); using markdown handoffs")
+        return None
+    if result.returncode != 0:
+        _warn(f"driver-state handoff_note unavailable (exit {result.returncode}); using markdown handoffs")
+        return None
+    try:
+        items = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        _warn("driver-state handoff_note output is not JSON; using markdown handoffs")
+        return None
+    notes = [
+        item
+        for item in (items if isinstance(items, list) else [])
+        if isinstance(item, dict)
+        and item.get("kind") == "handoff_note"
+        and item.get("lane") == lane
+        and item.get("owner") == owner
+        and item.get("status") != "dropped"
+        and isinstance(item.get("id"), str)
+        and isinstance(item.get("statement"), str)
+        and _note_created(item) is not None
+    ]
+    if not notes:
+        return None
+    return max(notes, key=lambda item: (_note_created(item), str(item["id"])))
+
+
+def _next_actions(statement: str, limit: int = 3) -> list[str]:
+    """The first numbered list in the note: the handoff's next actions."""
+    items: list[str] = []
+    for line in statement.splitlines():
+        match = _NUMBERED_ITEM_RE.match(line)
+        if match:
+            items.append(" ".join(match.group(1).split()))
+            if len(items) >= limit:
+                break
+        elif items and line.strip():
+            break
+    return items
+
+
+def render_handoff_note(note: Mapping[str, object], *, lane: str, owner: str) -> str:
+    """Render a note as a handoff the canary minter reads: next actions plus a working set."""
+    note_id = str(note["id"])
+    created = _note_created(note)
+    if created is None:
+        raise ValueError(f"handoff_note {note_id} has no valid created_utc")
+    created_utc = created.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    statement = str(note.get("statement") or "")
+    lines = [
+        f"# Driver-state handoff_note {note_id}",
+        "",
+        f"> Snapshot written by the Codex lane canary from the driver-state database "
+        f"(lane `{lane}`, owner `{owner}`). The database note is the authority; "
+        f"full content: `lu-driver-state show {note_id}`.",
+        "",
+        f"## Session {created.astimezone(UTC).date().isoformat()} — handoff_note {note_id}",
+        "",
+        "## Next actions",
+        *(f"- {item}" for item in _next_actions(statement)),
+        "",
+        "## Active working set",
+        f"- Newest driver-state handoff_note: {note_id} (created {created_utc})",
+    ]
+    for label, key in (("Done when", "done_when"), ("Answers order", "source_ref")):
+        value = note.get(key)
+        if isinstance(value, str) and value.strip():
+            lines.append(f"- {label}: {' '.join(value.split())}")
+    return "\n".join(lines) + "\n"
+
+
+def load_driver_state_candidate(repo: Path, epic: str, *, slot: str | None = None) -> LoadedCandidate | None:
+    """The lane's newest driver-state ``handoff_note`` as a mint candidate, or None.
+
+    The driver-state lane is the launcher's epic; the note owner is the lane's
+    Codex slot. The rendered snapshot is written under the epic's canary
+    directory so mint, score and hydrate read the same recorded file.
+    """
+    if _driver_state_cli() is None:
+        return None
+    owner = slot or codex_lane_slot(epic)
+    if not owner:
+        return None
+    note = fetch_newest_handoff_note(epic, owner)
+    if note is None:
+        return None
+    text = render_handoff_note(note, lane=epic, owner=owner)
+    path = repo / ".claude" / f"{epic}-epic" / "canary" / DRIVER_STATE_SNAPSHOT_NAME
+    try:
+        if read_candidate_text(path) != text:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            temporary = path.with_name(f".{path.name}.tmp")
+            temporary.write_text(text, encoding="utf-8")
+            temporary.replace(path)
+    except OSError as exc:
+        _warn(f"cannot write the driver-state handoff snapshot ({exc}); using markdown handoffs")
+        return None
+    return LoadedCandidate(path=path, text=text)
+
+
+def load_codex_mint_candidates(repo: Path, epic: str, *, slot: str | None = None) -> list[LoadedCandidate]:
+    """What the Codex launcher mints from: the newest DB handoff_note, then markdown.
+
+    Selection takes the first candidate that yields the full anchor set, so the
+    markdown handoffs are used only when the database note is absent or short.
+    """
+    markdown = load_codex_candidates(repo, epic)
+    note = load_driver_state_candidate(repo, epic, slot=slot)
+    return [note, *markdown] if note is not None else markdown
 
 
 def lane_handoff_candidates(

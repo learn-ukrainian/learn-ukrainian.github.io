@@ -126,6 +126,21 @@ split-or-justify rule in [workflow.md § Merge policy](../../../rules/workflow.m
 .venv/bin/python scripts/dispatch.py dispatch --model <catalog-model>  --agent <lane> --worktree ...
 ```
 
+A takeover or any worker pushing to an existing PR branch is dispatched with `--branch <PR head branch>`.
+A workspace-write dispatch uses `--base origin/main` with that branch, and the PR's files as owned paths. Any other `--base`, including a commit SHA, is refused at dispatch by the same origin-base rule settlement uses. Read-only dispatches still accept a SHA base.
+
+If frozen inputs require creating a tree before dispatch, use
+`scripts.dispatcher.git.create_worktree`, with `creator_actor` naming the driver.
+The helper writes a durable creator receipt. Tasks launched with `--cwd` borrow
+that tree. Once all borrowers are terminal, use `worktree_claims remove PATH`
+without `--owner-task-id`. The remover preserves output before plain Git removal.
+For trees created before helper receipts existed, use
+`worktree_claims attribute-helper PATH --actor ACTOR --reason REASON` once first.
+That command verifies terminal borrowers and preserves output before attribution;
+it does not remove the tree. Both paths refuse tracked changes and live or
+unknown custody. Commands and recovery locators are in the
+[helper cleanup runbook](../../../../../docs/runbooks/worktree-cleanup.md#remove-helper-created-trees-12602).
+
 Dispatch v2 has no budget substitution guard. Choose the lane explicitly from
 live capacity evidence and record substitutions. Verify the task record's actual
 agent/model before attributing work.

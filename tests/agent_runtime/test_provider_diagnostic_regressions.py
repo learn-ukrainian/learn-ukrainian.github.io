@@ -7,12 +7,11 @@ Positive diagnostic provenance (no paid CLI calls):
 * Gemini: test_gemini_adapter_auth.py::TestRateLimitMarkersFromCodexReview;
   scripts/etymology/bulk_ocr_gemini.py's captured TerminalQuotaError.
 * SDK formats: installed Kimi bundle's GaxiosError.extractAPIErrorFromResponse
-  and installed Hermes openai/_base_client.py::_make_status_error.
+  and the installed openai SDK's _base_client.py::_make_status_error.
 * AGY: installed binary embeds googleapi's "googleapi: Error %d:" formatter.
 * Gemini retry prefix: upstream packages/core/src/utils/retry.ts::logRetryAttempt,
   corroborating the review's Gaxios retry block; the SDK exception is installed in Kimi.
-* HTTP/transport: test_runner_failover.py::_TRIGGER_CASES and
-  adapters/test_hermes_deepseek_adapter.py's captured in-band errors.
+* HTTP/transport: test_runner_failover.py::_TRIGGER_CASES.
 """
 
 from __future__ import annotations
@@ -276,48 +275,6 @@ def test_recognized_provider_codes_still_override_prose(code):
         "api_error": "provider_error",
     }[code]
     assert provider_failure_code(f"provider.{code}: Rate limit exceeded for provider.openrouter") == expected
-
-
-@pytest.mark.parametrize(
-    "adapter_module,adapter_name",
-    [
-        ("hermes_deepseek", "HermesDeepSeekAdapter"),
-        ("hermes_grok", "HermesGrokAdapter"),
-        ("hermes_qwen", "HermesQwenAdapter"),
-    ],
-)
-@pytest.mark.parametrize(
-    "status,expected,trigger",
-    [
-        (401, "provider_auth", "auth"),
-        (403, "provider_auth", "auth"),
-        (429, "rate_limited", "rate_limited"),
-        (500, "provider_overloaded", "overloaded"),
-        (503, "provider_overloaded", "overloaded"),
-        (400, "provider_error", None),
-    ],
-)
-@pytest.mark.parametrize("returncode", [0, 1])
-def test_hermes_inband_status_is_typed_by_adapter(adapter_module, adapter_name, status, expected, trigger, returncode):
-    import importlib
-
-    cls = getattr(importlib.import_module(f"agent_runtime.adapters.{adapter_module}"), adapter_name)
-    # Installed Hermes agent/api_error_summary.py::_http_prefix.
-    diagnostic = f"HTTP {status}: "
-    result = cls().parse_response(stdout=diagnostic, stderr="", returncode=returncode, output_file=None)
-    assert result.failure_code == expected
-    assert result.provider_error_text == diagnostic.strip()
-    assert result.rate_limited is (status == 429)
-    assert (
-        classify_failover_trigger(
-            parse=result,
-            returncode=returncode,
-            kill_reason=None,
-            stdout_text=diagnostic,
-            stderr_text="",
-        )
-        == trigger
-    )
 
 
 @pytest.mark.parametrize("field", ["error", "message"])

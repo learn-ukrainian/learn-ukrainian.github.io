@@ -22,7 +22,7 @@ def refuse_deepseek_if_disallowed(
     """Refuse non-public repository roles and prompt files inside private agent state."""
     names = (str(value or "").strip().casefold() for value in (*effective_participants, *effective_models))
     if not any(
-        name in {"deepseek", "hermes", "hermes-deepseek"}
+        name == "deepseek"
         or name.startswith(("deepseek-", "deepseek/", "acpx-deepseek", "openrouter/deepseek"))
         for name in names
     ):

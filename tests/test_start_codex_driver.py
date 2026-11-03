@@ -511,3 +511,59 @@ def test_non_driver_workers_are_rejected_for_driver_and_governor() -> None:
     bounded = run_launcher("start-codex.sh", "--model", "gpt-6-luna")
     assert bounded.returncode == 0, bounded.stderr
     assert "--model gpt-6-luna" in bounded.stdout
+
+
+def test_dry_run_reports_the_lane_packet_a_relaunch_would_bind(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """#12567: a packet prepared from inside the lane is found before the lease is claimed."""
+    import json
+
+    from scripts.orchestration import thread_handoff as th
+    from tests.orchestration.test_thread_handoff import sample_snapshot
+
+    launcher, executable_dir = _runtime_driver_launcher(tmp_path)
+    root = launcher.parent
+    shutil.copy2(REPO / "scripts/lib/thread_rollover_link.sh", root / "scripts/lib/thread_rollover_link.sh")
+    shim = root / "scripts/orchestration/thread_handoff.py"
+    shim.parent.mkdir(parents=True, exist_ok=True)
+    shim.write_text(
+        f"import sys\nsys.path.insert(0, {str(REPO)!r})\n"
+        "from scripts.orchestration.thread_handoff import main\nraise SystemExit(main())\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(th, "gather_snapshot", lambda r, _url: sample_snapshot(r))
+    monkeypatch.setattr(th, "gather_git_state", lambda r: sample_snapshot(r)["git"])
+    for name in ("LEARN_UKRAINIAN_CLAUDEX_RUN_ID", "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION"):
+        monkeypatch.delenv(name, raising=False)
+    stream = subprocess.run(
+        ["bash", "-c", 'source "$1" && launcher_selector_stream "$2"', "stream",
+         str(REPO / "scripts/lib/handoff_identity.sh"), "curriculum-upgrade"],
+        capture_output=True, text=True, check=True, timeout=60,
+    ).stdout.strip()
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-core")  # The lane's own environment.
+    assert th.main([
+        "--repo-root", str(root), "prepare", "--agent", "codex", "--active-thread-id", "lane-predecessor",
+        "--harness", "codex-cli", "--stream-epic", stream.removeprefix("epic:"),
+    ]) == 0
+    prepared = json.loads(capsys.readouterr().out)
+    lease = th.load_state(root / prepared["state_file"])
+
+    result = run_launcher(
+        launcher.name,
+        "--epic",
+        "curriculum-upgrade",
+        root=root,
+        dry_run=True,
+        env={
+            **{key: value for key, value in _clean_environ().items() if not key.startswith("SESSION_")},
+            "CODEX_CANONICAL_REPO_ROOT": str(root),
+            "PATH": f"{executable_dir}:{os.environ.get('PATH', '')}",
+        },
+    )
+
+    assert result.returncode == 0, result.stderr
+    found = f"Rollover preflight: exact fresh packet {lease['lineage_id']} / {lease['replacement']['rollover_id']}."
+    assert found in result.stdout
+    assert result.stdout.index(found) < result.stdout.index(f"LEASE_STUB {stream}")
+    assert prepared["state_file"].startswith(".agent/thread-rollovers/codex-core/")

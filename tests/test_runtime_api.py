@@ -483,11 +483,6 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
             "validation": "before_spawn",
             "version_policy": "telemetry_only",
         },
-        "hermes_cli": {
-            "contract": "text-oneshot-isolated-v1",
-            "validation": "before_spawn",
-            "version_policy": "telemetry_only",
-        },
         "opencode_cli": {
             "contract": "native-acp-pure-v1",
             "validation": "before_spawn",

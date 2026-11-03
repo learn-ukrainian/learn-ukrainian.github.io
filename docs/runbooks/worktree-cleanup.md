@@ -12,7 +12,7 @@ interpreter instead:
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/dispatcher/test_core.py
+"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/dispatcher/test_core*.py
 ```
 
 Do not substitute `python`, `.venv/bin/python`, or `python -m venv .venv`.
@@ -66,6 +66,51 @@ an unreadable scan).
 Matching scratch names do not permit removing linked worktrees outside the
 shared guard; ordinary disposable clones with their own `.git` directory
 retain their existing scratch-cleanup behavior.
+
+### Remove helper-created trees (#12602)
+
+`scripts.dispatcher.git.create_worktree` records the creating actor and checkout
+identity under the owning repository's Git common directory,
+`lu-worktree-creators/`. Callers can pass `creator_actor="claude-driver"`.
+The default actor is the dispatch task identity, or the local uid outside a task.
+These audit records survive removal. They are separate from task records and
+apply only when the tree has borrowers and no task creator.
+
+After every borrowing task is terminal, remove the tree without
+`--owner-task-id`:
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.orchestration.worktree_claims remove \
+    .worktrees/dispatch/claude/source-author --reason 'terminal helper borrowers' --json
+```
+
+The remover holds the dispatch attachment lock and the path lock. It checks hot
+and archived borrowers, provider liveness, and retention holds. Unknown liveness
+or an active or damaged retention hold refuses helper cleanup. With no borrower
+records, existing removal rules apply: a clean tree remains removable, while
+unattributed ignored output retains the tree.
+It copies untracked and ignored output through the existing 256 MiB preservation
+budget, verifies retrieval, and publishes the receipt on the helper creator
+record. Only then does it clear verified untracked regular files and call plain
+Git removal. Untracked symlinks or unsupported file types retain the tree.
+Tracked changes, including present hidden index entries, also retain the tree.
+The remover never forces helper removal. Branch refs remain unchanged.
+
+For a helper tree created before this fix, attest its provenance once:
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.orchestration.worktree_claims attribute-helper \
+    .worktrees/dispatch/claude/source-author --actor claude-driver \
+    --reason 'pre-fix dispatcher helper creation' --json
+```
+
+This command requires a registered dispatch tree with terminal borrower records
+and clean tracked files. It preserves and verifies output before publishing the
+creator record. It neither clears files nor removes the tree. An existing creator
+record refuses replacement. After exit 0, use the `remove` command above.
+Both commands return exit 3 on refusal and JSON retrieval locators under
+`batch_state/preserved/helper-<id>/`. Keep those locators for recovery.
+If either command refuses, resolve its stated condition without forcing removal.
 
 ### Removal path audit (#9645)
 
@@ -281,8 +326,14 @@ and the old-tree report does not inspect a held checkout. Clearing the hold
 does not push or remove the tree; the next settlement decides. The run's private receipt lists every
 finished task's tree still on disk with its reason; the summary carries
 `retained_count`, `retained_safety_stops` and `retained_complete`.
+A finished data-tier run discards its own checkout output first (`discard_run_output` in
+`scripts/ci/data_tier.py`; the file and byte totals go in the run summary's `discarded_output`).
+The checkout is a fresh `origin/main` worktree, so everything ignored in it is the run's own
+snapshot, provisioned copy or test output, and the test report, log and summary a failed run needs
+stay in `batch_state/data-tier/`. A finished run therefore leaves nothing to preserve (#12528).
 The same run prunes the nightly data-tier job's abandoned checkouts
-(`.worktrees/data-tier/run-*`), which no task record names: the remover removes
+(`.worktrees/data-tier/run-*`), which no task record names (a run killed before its cleanup):
+the remover removes
 one only after its ignored output is in a verified copy under
 `batch_state/preserved/data-tier-run-<id>/` (up to 4 GiB), and the receipt's
 `unrecorded` list gives each checkout's path, the copy's size and its locator.
@@ -401,8 +452,48 @@ without copying into a live archive name. Private staging is removed after the
 attempt; published bundles survive later guard or receipt failure.
 Thin bundles exclude `origin/main` history.
 The receipt's restore command needs those prerequisite commits present: fetch
-them from origin or restore in a clone of this repository. Remote refs and
-archive bundles are retained; bundles at least 90 days old are listed for review.
+them from origin or restore in a clone of this repository. Remote refs stay.
+Sweeps never remove archive bundles; bundles at least 90 days old are listed for review.
+A bundle leaves the local archive only through the age-out below.
+
+### Archive purpose, readers and age-out (OO-RETENTION-1102, #12531)
+
+`batch_state/branch-archive/` is the rescue copy of local branches the sweep deleted. It is
+not backed up (`docs/runbooks/data-backup.md`). Writers: `_write_verified_bundle` and
+`_write_archive_receipts` (`scripts/hygiene/branch_sweep.py`) for bundles and
+`stale-local-receipts.jsonl`; `_append_receipt` for `evidence.jsonl`. Readers:
+
+- `evidence.jsonl` has no program reader. It is the append-only audit trail for a human
+  asking why a ref was deleted.
+- `stale-local-receipts.jsonl` is re-read by `_parse_archive_receipts` before every append
+  and before any ref delete (a malformed ledger refuses the batch), and by
+  `_relocation_records` for restore.
+- A bundle is read only by a restore: the receipt's `restore` line or `--restore-bundle`.
+
+`branch_sweep --age-out-bundles` lists bundles at least 30 days old by mtime (`--bundle-age-days N`
+changes it). It sweeps no branches. Dry run is the default. With `--apply` and, for each bundle,
+under the archive lock:
+
+1. The bulk root comes only from `scripts.storage.topology.resolve_bulk_root()` (marker-valid
+   `literary_texts/` and `textbook_chunks/`; see `storage-topology.md`). With none, nothing is
+   removed and the command exits 1.
+2. The file is created exclusively at `<bulk root>/branch-archive/<name>` (an existing file is
+   never replaced), then the file, its directory and the bulk root are flushed. A crash can leave a
+   partial file at that name; the next run sees a different sha256, refuses it and keeps the local
+   bundle, and an operator removes the partial by hand.
+3. The copy's sha256 and size must equal the source, and `git bundle verify` must pass on the copy.
+   Thin bundles verify only where their prerequisite commits exist, so run it in a clone of this
+   repository.
+4. A `bundle-relocated` line (`bulk_locator`, `sha256`, `size_bytes`, `restore`) is appended to
+   `stale-local-receipts.jsonl` and re-read.
+5. Only then is the local file unlinked. Any failure keeps the local file. A rerun after a crash finds
+   the matching bulk copy and finishes. The bulk copy is never deleted or overwritten here.
+
+Restore: `.venv/bin/python -m scripts.hygiene.branch_sweep --restore-bundle NAME [--restore-to DIR]`
+copies the bulk file back (default: this archive directory, never replacing a file), checks its sha256
+against the `bundle-relocated` line and runs `git bundle verify`. Then use the original receipt's
+`git fetch <bundle> refs/heads/<branch>:refs/heads/<branch>`. An earlier receipt's local path in its
+`restore` line is stale once a `bundle-relocated` line exists for that file.
 
 Symbolic local refs are retained. Any selected branch failing pre-bundle
 validation keeps the entire batch without creating a bundle. After receipts are

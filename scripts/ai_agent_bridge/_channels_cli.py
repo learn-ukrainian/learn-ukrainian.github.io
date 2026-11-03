@@ -752,6 +752,58 @@ def _legacy_writes_retired() -> bool:
     return resolve_plane_mode(None) == "authority"
 
 
+def queued_authority_delivery_count(recipient: str) -> int | None:
+    """Queued authority deliveries for *recipient*; ``None`` when they cannot be read."""
+    try:
+        from scripts.fleet_comms.efficiency_metrics import (
+            _authority_file_missing,
+            _connect_ro,
+            _placeholder,
+            _table_exists,
+        )
+        from scripts.fleet_comms.paths import default_plane_root, validate_plane_root
+
+        plane_db = validate_plane_root(default_plane_root()) / "comms.sqlite3"
+        if _authority_file_missing(plane_db):
+            return None
+        with _connect_ro(plane_db) as conn:
+            if not _table_exists(conn, "authority_deliveries"):
+                return None
+            row = conn.execute(
+                "SELECT COUNT(*) AS n FROM authority_deliveries "
+                f"WHERE state = 'queued' AND recipient = {_placeholder(conn)}",
+                (recipient,),
+            ).fetchone()
+            return int(row["n"])
+    except Exception:
+        return None
+
+
+def authority_inbox_notice(recipient: str | None, *, file: Any = None) -> bool:
+    """In authority mode print one line pointing a legacy read path at Fleet Comms deliveries.
+
+    Returns whether the line was printed; outside authority mode nothing is printed.
+    """
+    from scripts.fleet_comms.message_plane import resolve_plane_mode
+
+    try:
+        if resolve_plane_mode(None) != "authority":
+            return False
+    except ValueError:
+        return False
+    slot = (recipient or "").strip().lower() or None
+    if slot:
+        slot = _channels.resolve_recipient_alias(slot)
+    count = queued_authority_delivery_count(slot) if slot else None
+    print(
+        "Legacy inbox is a read-only projection in authority mode; read your deliveries with "
+        f"`.venv/bin/python -m scripts.fleet_comms deliveries receive --recipient {slot or '<slot>'}` "
+        f"(queued authority deliveries: {'unknown' if count is None else count}).",
+        file=file or sys.stdout,
+    )
+    return True
+
+
 def _retired_legacy_write(command: str) -> int:
     print(
         f"legacy `{command}` writes are retired in authority mode; "

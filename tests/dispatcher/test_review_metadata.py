@@ -20,7 +20,8 @@ BRANCH_AUTHOR_FAMILIES = checks.check_branch_author_families
 def dispatch(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
-    monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
+    monkeypatch.setattr(git, "review_branch_start", lambda *a, **k: "a" * 40)
+    monkeypatch.setattr(git, "worktree_plan", lambda *a, **k: (tmp_path, "codex/review", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
     # The synthetic head has no Git history; branch authorship is exercised against a real repository below.
@@ -58,6 +59,10 @@ def test_review_metadata_loss_round_trip_enforces_risk_and_subjects(dispatch, mo
     assert cf._task_flag_values(record, "review_subject_families") == ("xai",)
     assert not cf.is_ukrainian_review(record)
     facts = Mock()
+    facts.resolver_inputs.return_value = cf.ResolverInputs(
+        author_model=record["review_author_model"],
+        claude_account=cf.account_from_record(record, agent=record["agent"]),
+    )
     monkeypatch.setattr(cf, "evaluate_candidate", lambda *a, **kw: SimpleNamespace(status="eligible"))
     cf._require_qualified_reviewer(facts, task=record,
                                    model="gpt-6.1-sol", family="openai")
@@ -137,7 +142,7 @@ def test_unpublishable_language_subject_review_refused_before_launch(dispatch, c
 @pytest.mark.parametrize("flags", [("--review-profile", "code"), ("--subject-seat", "grok"),
                                   ("--subject-family", "xai")])
 def test_ambiguous_provider_refused_for_review_only(dispatch, capsys, flags):
-    dispatch("--owned-path", "scripts/dispatcher/providers/hermes.py", *flags, expected=2)
+    dispatch("--owned-path", "scripts/dispatcher/providers/unknown.py", *flags, expected=2)
     assert "ambiguous review subject path" in capsys.readouterr().err
 
 
@@ -224,7 +229,8 @@ def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp
     if "--branch" not in flags:
         flags = ("--branch", "review/target", *flags)
     monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
-    monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "claude/branch", head))
+    monkeypatch.setattr(git, "review_branch_start", lambda *a, **k: head)
+    monkeypatch.setattr(git, "worktree_plan", lambda *a, **k: (tmp_path, "claude/branch", head))
     monkeypatch.setattr(checks, "check_branch_author_families", BRANCH_AUTHOR_FAMILIES)
     review = ("--mode", "read-only", *flags)
     dispatch(*review, agent=reviewer[0], model=reviewer[1], expected=2)
@@ -254,7 +260,8 @@ def test_typed_dispatch_without_a_reviewed_change_checks_no_branch_authorship(di
 def test_fourth_default_tier_review_dispatch_is_refused_without_any_recorded_verdict(dispatch, monkeypatch, capsys):
     """Defect class: unbounded review spend through unrecorded rounds (#12098)."""
     heads = iter(f"{index}" * 40 for index in range(1, 5))
-    monkeypatch.setattr(git, "worktree_plan", lambda *a: (Path("/nonexistent"), "codex/review", next(heads)))
+    monkeypatch.setattr(git, "review_branch_start", lambda *a, **k: next(heads))
+    monkeypatch.setattr(git, "worktree_plan", lambda *a, **k: (Path("/nonexistent"), "codex/review", a[3]))
     review = ("--mode", "read-only", "--branch", "codex/fix", "--pr", "42", "--risk", "medium",
               "--require-review-verdict", "--prompt", "Review this change")
     for round_number in (1, 2, 3):

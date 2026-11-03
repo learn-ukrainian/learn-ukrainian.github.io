@@ -8,15 +8,17 @@ from pathlib import Path
 
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.jsonl import jsonl_lines
+from scripts.dispatcher.providers.stream_json import SOURCES_SERVER
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 from scripts.lib import rules_core
 
 # Static permission profile from adapters/claude.py; account env belongs to core.
-# Read-only grants no blanket Bash: under dontAsk only Claude Code's built-in read-only commands
-# (ls, cat, grep, find, read-only git forms) and the gh reads below run, every other command is
-# denied, and an output redirect is checked against the Edit deny like a direct write
-# (https://code.claude.com/docs/en/permissions, "Read-only commands" and "Redirections").
-# Its OS sandbox would allow tests too, but it needs socat on Linux and refuses to start without it.
+# Read-only has a shell only inside an OS boundary (decision REVIEW-BOUNDARY-1101, #12378): every Bash
+# command goes through CLAUDE_CODE_SHELL_PREFIX to agy_sandbox.shell_main, which runs it in the
+# bubblewrap boundary of read-only AGY (read-only checkout and Git metadata, the project interpreter,
+# private scratch, no network, no credentials) and relays only the gh reads the route had before.
+# Claude Code itself, with its login, stays outside. The command denies below remain as defense in depth.
+# Claude Code's own OS sandbox would do the same, but it needs socat on Linux and refuses to start without it.
 # dontAsk still runs anything a loaded settings file pre-approves, and a worktree loads the main
 # checkout's local settings file, so read-only runs --restricted: Claude Code then reads no
 # user, project or local settings file (managed settings and --settings still apply) and drops every
@@ -25,17 +27,14 @@ from scripts.lib import rules_core
 # once ``managed_policy`` finds no managed source. --restricted also skips CLAUDE.md, so the rules
 # core that ``require_core`` checks is appended to the system prompt instead.
 _READ_TOOLSET = "Read,Grep,Glob,Bash,WebFetch,WebSearch"
-_READ_TOOLS = (
-    "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
-    "Bash(gh issue view *),Bash(gh run view *)"
-)
+_READ_TOOLS = "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash"
 # Every run, read-only or workspace-write, gets the Sources MCP server explicitly: from the dispatcher's
 # own checkout, never the task's worktree, whose .mcp.json the change in it could turn into a command,
 # and alone, as --strict-mcp-config drops every other server (#10074); --restricted would skip the
 # project settings that approve .mcp.json servers anyway. Only the tools the server annotates read-only
 # are allowed, so authors, judges and fixers can check their own words; the ones that persist fetched
 # entries (sources_read_only.sources_tool_sets) are denied by name.
-_SOURCES_SERVER = "sources"
+_SOURCES_SERVER = SOURCES_SERVER
 _WRITE_TOOLS = "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
 _READ_DENIES = (
     "Edit,Write,NotebookEdit,Bash(git push *),Bash(git commit *),Bash(git merge *),"
@@ -112,6 +111,20 @@ def managed_policy(env: Mapping[str, str]) -> str | None:
     if not remote.startswith(_REMOTE_NOT_FETCHED):
         return f"server-managed settings are {remote!r}"
     return None
+
+
+def review_shell_env(spec: TaskSpec) -> dict[str, str]:
+    """The variables that send every read-only Bash command into the boundary (agy_sandbox.shell_main)."""
+    from scripts.common.repo_root import project_interpreter
+    from scripts.dispatcher import agy_sandbox
+
+    return {
+        "CLAUDE_CODE_SHELL_PREFIX": str(agy_sandbox.SHELL_PREFIX),
+        agy_sandbox.SHELL_ENV_PYTHON: str(project_interpreter()),
+        agy_sandbox.SHELL_ENV_TASK: spec.task_id,
+        agy_sandbox.SHELL_ENV_WORKTREE: str(spec.worktree),
+        agy_sandbox.SHELL_ENV_LOG: str(spec.final_file.with_suffix(".shell.jsonl")),
+    }
 
 
 def _sources_mcp_config() -> str:
@@ -219,6 +232,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.mode == "read-only":
         core = rules_core.source_path(rules_core.CORE_REL)
         argv += ["--restricted", "--tools", _READ_TOOLSET, "--append-system-prompt-file", str(core)]
+        env = {**env, **review_shell_env(spec)}
     argv += ["--mcp-config", _sources_mcp_config(), "--strict-mcp-config"]
     readers, writers = sources_tool_sets()
     allowed_tools = ",".join([allowed_tools, *(f"mcp__{_SOURCES_SERVER}__{name}" for name in readers)])

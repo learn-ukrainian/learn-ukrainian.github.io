@@ -25,6 +25,17 @@ from typing import Any, Literal
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+if __name__ == "__main__":
+    # Re-exec before importing recorder dependencies, as scripts/dispatch.py does.
+    try:
+        from scripts.dispatcher.primary import exec_primary
+
+        exec_primary(sys.argv[1:], entry=Path("scripts/review/record_cf_verdict.py"), refuse=sys.exit)
+    except (ImportError, OSError, RuntimeError, SystemExit) as exc:
+        print(json.dumps({"admitted": False, "refusal": f"RECORDER_PRIMARY_REFUSED: {exc}"}, sort_keys=True))
+        raise SystemExit(2) from None
+
+import yaml
 from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
@@ -59,6 +70,7 @@ from scripts.orchestration.integration_sweep import (
     SweepError,
     lookup_verdict,
     parse_marker,
+    recorded_p3_residuals,
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
 from scripts.publish.github import CfVerdictRecord, Request, request_run
@@ -73,18 +85,24 @@ from scripts.review.model_catalog import (
 from scripts.review.review_contract import (
     ContractError,
     ItemChunk,
+    captured_sources_events,
+    item_judgments_verdict,
     judge_item_reply,
     load_frozen_item_packet,
     reply_has_item_judgments,
+    validate_ukrainian_reply_claims,
 )
 from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_MODELS,
+    MIXED_REVIEW_FAMILIES,
     REVIEW_CANDIDATES,
     UNKNOWN_AUTHOR_FAMILY,
     UNRESOLVED_AUTHOR_FAMILIES,
     ResolverInputs,
     ReviewerResolution,
     evaluate_candidate,
+    mixed_family_review,
+    mixed_family_scope,
     normalize_review_task_id,
     red_team_seat_refusal,
     resolve_author_family,
@@ -102,13 +120,10 @@ from scripts.review.ukrainian_seats import (
     required_ukrainian_seats,
 )
 from scripts.review.verdict_parser import (
-    _FINDINGS_ENVELOPE_KEYS,
     _REVIEW_VERDICT_LINE_RE,
     MISSING_CAPABILITIES_FIELD,
     _commonmark_lines,
     _findings_json_verdicts,
-    _top_level_json_values,
-    _UnreadableFindings,
     _without_code_fences,
     checked_findings_payload,
     declares_incomplete_review,
@@ -142,6 +157,8 @@ NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
 # a security-sensitive change gets the elevated budget.
 DEFAULT_REVIEW_ROUNDS = 3
 ELEVATED_REVIEW_ROUNDS = 5
+# A target repository whose own review policy sets another automatic budget declares it here (#12584).
+REVIEW_BUDGET_POLICY = Path(__file__).resolve().parents[2] / "scripts" / "config" / "review_budget_policy.yaml"
 
 
 class RecordError(RuntimeError):
@@ -221,26 +238,60 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
     return normalize_verdict(reply), "unknown"
 
 
-# A ledger line may carry a slug after F1 (`F1-seed-recharges-...: resolved`).
-_PROSE_FINDING_ID = r"F[1-9][0-9]{0,3}(?:-[A-Za-z0-9][A-Za-z0-9._:-]{0,80})?"
-_PROSE_FINDING_LINE = re.compile(
-    rf"^\s*(?:[-*]\s+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])\**"
-    rf"(?P<rest>(?:\s*[:\u2014\u2013-]+)?(?:\s*(?i:still|remains?)\s+open\s*[:\u2014\u2013-]?)?"
-    rf"(?:\s*(?:\[(P[0-3])\]|\((P[0-3])\)))?.*)$"
-)
-_PROSE_RESOLVED = re.compile(r"^(?:\s*[:\u2014\u2013-]+)?\s*(?i:resolved|fixed)\b")
-_RESOLVED_AMBIGUOUS = re.compile(r"(?i)\b(?:no|not|incorrectly|unresolved|still\s+open|remains?\s+open)\b|\?")
-_BLOCKING_PRIORITY = re.compile(r"(?i)(?<![A-Za-z0-9])p[0-2](?![A-Za-z0-9])")
-_SECURITY_VERDICT = re.compile(
-    r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*"
-)
+_SECURITY_VERDICT = re.compile(r"(?i)\*{0,2}security(?:[_\- ]+)verdict\*{0,2}\s*[:\u2014\u2013\-=]?\s*")
 _SECURITY_PASS = re.compile(r"(?i)\*{0,2}PASS\*{0,2}\.?\s*(?:\n|$)")
-_FINDING_LIKE = re.compile(
-    rf"(?im)^[ \t]*(?:#{{1,6}}[ \t]+|[-*+][ \t]+|\d+\.[ \t]+|>[ \t]+)?\**({_PROSE_FINDING_ID})(?![A-Za-z0-9._:-])"
-)
 _RESIDUAL_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}\Z")
 TRUNCATION_FLAG = "[Review reply truncated to fit GitHub's comment limit.]"
 REPAIR_WITHHELD = "Repair round: P3 mapping withheld"
+# Why a CHANGES_REQUESTED reply keeps its verdict instead of becoming an approval with residuals.
+P3_NOT_ONE_OBJECT = "reply is not exactly one findings object"
+P3_DUPLICATE_KEY = "findings object repeats a key"
+P3_INVALID_OBJECT = "findings object fails the findings schema"
+P3_SECURITY_NOT_PASS = "security verdict is not PASS"
+P3_INCOMPLETE = "reviewer declares an incomplete review or missing capabilities"
+P3_NO_FINDINGS = "findings object lists no findings"
+P3_BLOCKING_FINDING = "findings object has a P0, P1 or P2 entry"
+P3_CONFLICTING_ID = "findings object repeats an id"
+P3_TRUNCATED = "reply is truncated in the record"
+P3_SCANNER_WITHHELD = "publication scanner withheld the reply"
+P3_STANDING_REJECTION = "head has a standing rejection or an unknown reading"
+P3_REPAIR_WITHHELD = "repair round withholds the P3 mapping"
+
+
+@dataclass(frozen=True)
+class P3Reading:
+    """The open P3 finding ids of an approval with residuals, or the reason there is none."""
+
+    ids: tuple[str, ...] | None = None
+    reason: str | None = None
+
+
+class _DuplicateKey(ValueError):
+    pass
+
+
+def _unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    keys = [key for key, _ in pairs]
+    if len(set(keys)) != len(keys):
+        raise _DuplicateKey
+    return dict(pairs)
+
+
+def _not_json_constant(token: str) -> Any:
+    # NaN and Infinity are a Python decoder extension, not JSON.
+    raise ValueError(token)
+
+
+def _strings(value: Any) -> Iterator[str]:
+    """Every decoded string value in a JSON value, so escapes cannot disguise a declaration."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for item in value.values():
+            yield from _strings(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _strings(item)
 
 
 def _security_verdict_blocks(reply: str) -> bool:
@@ -254,81 +305,47 @@ def _security_verdict_blocks(reply: str) -> bool:
     return any(_SECURITY_PASS.match(reply, match.end()) is None for match in _SECURITY_VERDICT.finditer(reply))
 
 
-def p3_residuals(reply: str) -> tuple[str, ...] | None:
-    """Open finding ids when every one of them is P3, or None when that reading does not apply.
+def p3_reading(reply: str) -> P3Reading:
+    """Read a CHANGES_REQUESTED reply for an approval with P3 residuals (#12409).
 
-    None keeps the reply's own verdict. A P0, P1, or P2 token anywhere in the reply,
-    a security verdict that is not an unambiguous pass, an incomplete review, a malformed
-    findings block, a finding with no readable priority, a truncated body, or a repair
-    round whose mapping was withheld is None. An empty open set is None: a changes
-    request with no findings is not an approval.
+    The reading applies only when the whole reply, apart from surrounding whitespace,
+    is exactly one ``code-review-findings.v1`` object and every entry's typed
+    ``priority`` is P3. No prose is read for findings: any text outside the object,
+    a verdict line included, keeps the reply's own verdict, and so does a truncated
+    reply. Every refusal names its reason.
     """
-    if not isinstance(reply, str) or _security_verdict_blocks(reply):
-        return None
-    if TRUNCATION_FLAG in reply or REPAIR_WITHHELD in reply:
-        return None
-    if _BLOCKING_PRIORITY.search(reply):
-        return None
-    if "BLOCKED" in {token.upper() for token in recognized_verdicts(reply)}:
-        return None
-    if declares_incomplete_review(reply) or declares_missing_capabilities(reply):
-        return None
-    if invalid_findings_block(reply):
-        return None
-    findings: dict[str, str] = {}
-    structured: set[str] = set()
+    if not isinstance(reply, str):
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
     try:
-        payloads = list(_top_level_json_values(reply))
-    except _UnreadableFindings:
-        return None
-    for payload in payloads:
-        if not isinstance(payload, dict) or not (_FINDINGS_ENVELOPE_KEYS & payload.keys()):
-            continue
-        try:
-            _verdict, evidence = checked_findings_payload(payload)
-        except (ContractError, ReviewPublicationError):
-            return None
-        if evidence is None:
-            continue
-        for finding in evidence.findings:
-            previous = findings.get(finding.finding_id)
-            if previous is not None and previous != finding.priority:
-                return None
-            findings[finding.finding_id] = finding.priority
-            structured.add(finding.finding_id)
+        payload = json.loads(reply, object_pairs_hook=_unique_keys, parse_constant=_not_json_constant)
+    except _DuplicateKey:
+        return P3Reading(reason=P3_DUPLICATE_KEY)
+    except (ValueError, RecursionError):
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
+    if not isinstance(payload, dict) or payload.get("schema_version") != REVIEW_SCHEMA_VERSION:
+        return P3Reading(reason=P3_NOT_ONE_OBJECT)
     try:
-        visible = _without_code_fences(reply, keep_unclosed=False)
-    except (ValueError, ImportError):
-        return None
-    for line in _commonmark_lines(visible):
-        match = _PROSE_FINDING_LINE.match(line)
-        if match is None:
-            continue
-        finding_id = match.group(1)
-        priority = match.group(3) or match.group(4)
-        rest = match.group("rest") or ""
-        if _PROSE_RESOLVED.match(rest):
-            # Only the resolution clause is judged. A later sentence may say "not".
-            clause = re.match(r"(?i)^(?:\s*[:\u2014\u2013-]+)?\s*(?:resolved|fixed)\b.{0,24}", rest)
-            if finding_id in findings or _RESOLVED_AMBIGUOUS.search(clause.group(0) if clause else rest[:40]):
-                return None
-            continue
-        if priority is None:
-            return None
-        if structured and finding_id not in structured:
-            return None
-        previous = findings.get(finding_id)
-        if previous is not None and previous != priority:
-            return None
-        findings[finding_id] = priority
-    for line in reply.splitlines():
-        if _FINDING_LIKE.match(line) and _PROSE_FINDING_LINE.match(line) is None:
-            return None
-    if not findings or any(priority != "P3" for priority in findings.values()):
-        return None
-    if any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in findings):
-        return None
-    return tuple(findings)
+        _verdict, evidence = checked_findings_payload(payload)
+    except (ContractError, ReviewPublicationError):
+        return P3Reading(reason=P3_INVALID_OBJECT)
+    findings = evidence.findings if evidence is not None else ()
+    if not findings:
+        return P3Reading(reason=P3_NO_FINDINGS)
+    if any(finding.priority != "P3" for finding in findings):
+        return P3Reading(reason=P3_BLOCKING_FINDING)
+    if any(_security_verdict_blocks(text) for text in _strings(payload)):
+        return P3Reading(reason=P3_SECURITY_NOT_PASS)
+    if declares_incomplete_review(reply) or MISSING_CAPABILITIES_FIELD in payload:
+        return P3Reading(reason=P3_INCOMPLETE)
+    ids = tuple(finding.finding_id for finding in findings)
+    if len(set(ids)) != len(ids) or any(_RESIDUAL_ID.fullmatch(finding_id) is None for finding_id in ids):
+        return P3Reading(reason=P3_CONFLICTING_ID)
+    return P3Reading(ids=ids)
+
+
+def p3_residuals(reply: str) -> tuple[str, ...] | None:
+    """The open P3 ids of an approval with residuals, or None when the reply keeps its verdict."""
+    return p3_reading(reply).ids
 
 
 def _require_sources_mcp_calls(task: dict[str, Any]) -> None:
@@ -877,6 +894,10 @@ class BranchReviewFacts:
         return self.author_families
 
     @property
+    def mixed_family(self) -> bool:
+        return self.excluded_families - {VERIFIED_APP_BOT} == MIXED_REVIEW_FAMILIES
+
+    @property
     def unresolved_authors(self) -> tuple[str, ...]:
         """Commits whose author family is unknown, so no reviewer can be proved outside it.
 
@@ -932,8 +953,11 @@ class BranchReviewFacts:
         overrides.setdefault("author_model", "")
         overrides.setdefault("unknown_history", self.unknown_history)
         overrides.setdefault("app_bot_commits", self.app_bot_commits)
+        if self.mixed_family:
+            overrides.setdefault("exact_head", self.head_sha)
         return ResolverInputs(
             author_families=self.excluded_families,
+            author_commits=tuple((commit.sha, commit.family) for commit in self.commits if commit.sha and commit.family),
             author_models=self.author_models,
             author_task_models=self.author_task_models,
             claude_account=claude_account,
@@ -945,6 +969,20 @@ class BranchReviewFacts:
             subject_families=self.subject_families,
             subject_evidence=self.subject_evidence,
             **overrides,
+        )
+
+    def reviewer_scope(self, family: str) -> BranchReviewFacts:
+        """The opposing family's commits, keeping the complete diff as protected context."""
+        try:
+            shas = mixed_family_scope(
+                ((commit.sha, commit.family) for commit in self.commits if commit.sha and commit.family), family
+            )
+        except ValueError as exc:
+            raise RecordError(str(exc)) from exc
+        commits = tuple(commit for commit in self.commits if commit.sha in shas)
+        return replace(
+            self, commits=commits, existing_families=frozenset(commit.family for commit in commits if commit.family),
+            incoming_writer=None, incoming_family=None,
         )
 
     def receipt(self) -> dict[str, Any]:
@@ -1193,7 +1231,7 @@ def structural_review_route(
     review_profile: str = "code",
     review_mode: str = "cross_family",
 ) -> ReviewerResolution:
-    """Resolve a formal reviewer outside every author family under the live catalog floors.
+    """Resolve independent review, including the mixed-family pair, under the live catalog floors.
 
     Structural only (A2): no routing snapshot, so health and quota never decide
     feasibility; the resolver's own health semantics stay unchanged.
@@ -1593,6 +1631,8 @@ def _require_qualified_reviewer(
         claude_account=account_from_record(task, agent=agent),
         structural=True,
     )
+    if review_mode == "cross_family" and mixed_family_review(inputs):
+        facts.reviewer_scope(family)
     results = [evaluate_candidate(candidate, inputs, review_mode=review_mode) for candidate in candidates]
     if not any(result.status == "eligible" for result in results):
         reasons = "; ".join(sorted({str(result.reason) for result in results}))
@@ -1677,6 +1717,7 @@ def build_comment(
     void: str | None = None,
     residuals: Iterable[str] | None = None,
     repair_withheld: bool = False,
+    scope_commits: Iterable[str] | None = None,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1708,10 +1749,24 @@ def build_comment(
     # The score is advisory (C-3020): stored for calibration, never read by a gate.
     score_text = f"{score}/10" if score is not None else "absent"
     authors = sorted({author for author in author_models if author})
+    pair_field = pair_lines = ""
+    if scope_commits is not None:
+        scope = tuple(sorted(set(scope_commits)))
+        if (
+            family not in MIXED_REVIEW_FAMILIES
+            or not scope or any(not SHA.fullmatch(commit) for commit in scope)
+            or review_mode != "cross_family" or ukrainian or tokens is not None
+            or attested_author_families([{"author_models": authors}]) != MIXED_REVIEW_FAMILIES
+        ):
+            raise RecordError("invalid mixed-family review scope")
+        scope_token = ",".join(scope)
+        other = next(iter(MIXED_REVIEW_FAMILIES - {family}))
+        pair_field = f" review_pair=anthropic_openai scope_commits={scope_token}"
+        pair_lines = f"Review pair: anthropic_openai\nScope author family: {other}\nScope commits: {scope_token}\n"
     marker = (
         f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
         f"model={model} family={family}{mode_field}{history_field}{authorship_field}{profile_field}{sources_field}"
-        f"{coverage_field} -->"
+        f"{coverage_field}{pair_field} -->"
     )
     prefix = (
         ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
@@ -1732,6 +1787,7 @@ def build_comment(
         + (f"Authored by: {', '.join(authors)}\n" if authors else "")
         + f"Task id: {task_id}\n"
         + coverage_lines
+        + pair_lines
         + "\n"
     )
     residual_ids = tuple(residuals or ())
@@ -2027,17 +2083,69 @@ def require_no_same_head_rejection(comments: Sequence[Mapping[str, Any]], sha: s
         )
 
 
-def review_round_budget(facts: BranchReviewFacts) -> int:
-    """Rounds one PR may spend: 5 on a security-sensitive change, else 3 (C-2902).
+class _UniqueKeyLoader(yaml.SafeLoader):
+    """A repeated key would silently keep its last value, so it makes the budget policy ambiguous."""
+
+    def construct_mapping(self, node: yaml.MappingNode, deep: bool = False) -> dict[Any, Any]:
+        keys = [self.construct_object(key, deep=deep) for key, _ in node.value]
+        if len(set(keys)) != len(keys):
+            raise yaml.constructor.ConstructorError(None, None, "duplicate key", node.start_mark)
+        return super().construct_mapping(node, deep=deep)
+
+
+def _review_budget_policy(policy: Path) -> dict[str, int]:
+    """Every declared budget in ``policy``, keyed by normalized repository; any defect in the file refuses.
+
+    The whole file is validated, whichever repository is asked about: an integer ``version`` of 1,
+    no repeated key at any level, every repository a distinct known owner/name, and every
+    ``review_rounds`` an integer from 1 to ``ELEVATED_REVIEW_ROUNDS``.
+    """
+    try:
+        document = yaml.load(policy.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+    except (OSError, ValueError, TypeError, yaml.YAMLError):
+        raise RecordError("review budget unavailable: the review budget policy is unreadable") from None
+    version = document.get("version") if isinstance(document, Mapping) else None
+    listed = document.get("repositories") if type(version) is int and version == 1 else None
+    if not isinstance(listed, Mapping):
+        raise RecordError("review budget unavailable: the review budget policy is malformed")
+    budgets: dict[str, int] = {}
+    for name, row in listed.items():
+        key = normalize_repository(name) if isinstance(name, str) else "unknown"
+        rounds = row.get("review_rounds") if isinstance(row, Mapping) else None
+        if key == "unknown" or key in budgets or type(rounds) is not int or not 1 <= rounds <= ELEVATED_REVIEW_ROUNDS:
+            raise RecordError(
+                f"review budget unavailable: policy entry {name!r} needs a distinct owner/name and one "
+                f"review_rounds integer from 1 to {ELEVATED_REVIEW_ROUNDS}"
+            )
+        budgets[key] = rounds
+    return budgets
+
+
+def repository_review_rounds(repository: str, policy: Path | None = None) -> int:
+    """The automatic round budget the target repository's own review policy declares (#12584).
+
+    It is the repository's ``review_rounds`` in ``scripts/config/review_budget_policy.yaml``.
+    A repository the file does not list gets ``DEFAULT_REVIEW_ROUNDS``. A file that is
+    unreadable or malformed anywhere refuses (:func:`_review_budget_policy`).
+    """
+    budgets = _review_budget_policy(REVIEW_BUDGET_POLICY if policy is None else policy)
+    return budgets.get(normalize_repository(repository), DEFAULT_REVIEW_ROUNDS)
+
+
+def review_round_budget(facts: BranchReviewFacts, repository: str) -> int:
+    """Rounds one PR may spend: 5 on a security-sensitive change, else its repository's budget (C-2902, #12584).
 
     The tier comes from the branch's own changed paths, the shared rule that
     raises a security-sensitive target to critical. The review task's
     caller-supplied risk never raises it: the dispatcher of a review can be
-    the author.
+    the author. Otherwise the budget is the one ``repository``, the PR's target,
+    declares (:func:`repository_review_rounds`), 3 when it declares none.
     """
+    # Read first: a policy that cannot be read refuses every budget decision, the elevated tier's too.
+    declared = repository_review_rounds(repository)
     if is_security_sensitive_change(facts.changed_paths, facts.scope_paths):
         return ELEVATED_REVIEW_ROUNDS
-    return DEFAULT_REVIEW_ROUNDS
+    return declared
 
 
 def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[int, dict[str, Any]]]:
@@ -2197,8 +2305,10 @@ def require_review_round_within_budget(
     approved head consumes no round (:func:`budget_exempt_heads`, proven with
     ``prove_merge_only``); it is checked only once the counted heads reach the
     budget. A sealed elevated-tier grant (``scripts/review/budget_grant.py``)
-    admits rounds up to ``ELEVATED_REVIEW_ROUNDS`` in total: ``grant`` returns
-    its receipt, None when the PR has no grant, or refuses. The lineage's one
+    admits rounds up to its receipt's ``round_allowance`` in total, which is
+    ``ELEVATED_REVIEW_ROUNDS`` at most except for an owner-request grant (the
+    budget plus the rounds the owner's request records): ``grant`` returns its
+    receipt, None when the PR has no grant, or refuses. The lineage's one
     repair-verification round (``scripts/review/repair_round.py``) is outside
     the budget: ``repair`` returns its receipt or refuses, and ``repair_heads``
     names the heads it already admitted, which count as no budgeted round.
@@ -2234,7 +2344,8 @@ def require_review_round_within_budget(
     )
     refusals: list[str] = []
     admissions = (
-        ("budget_grant", grant, budget < len(counted) + 1 <= ELEVATED_REVIEW_ROUNDS),
+        # Past the budget; the receipt's own round_allowance bounds the round below.
+        ("budget_grant", grant, True),
         # Once per lineage: only a retry of the round already admitted at this head may run it again.
         ("repair_round", repair, not repair_heads - {sha}),
     )
@@ -2247,6 +2358,12 @@ def require_review_round_within_budget(
             refusals.append(str(exc))
             continue
         if receipt is not None:
+            if field == "budget_grant" and not set(receipt.get("qualifying_heads", ())).issubset(counted):
+                refusals.append("BUDGET_GRANT_REFUSED[evidence]: credited head is not a charged round")
+                continue
+            if field == "budget_grant" and len(counted) + 1 > receipt["round_allowance"]:
+                refusals.append(f"BUDGET_GRANT_REFUSED[allowance]: grant allows {receipt['round_allowance']} rounds")
+                continue
             return {field: receipt}
     raise RecordError("; ".join([exhausted, *refusals]))
 
@@ -2306,6 +2423,7 @@ def budget_admission(
     review_root: Path,
     fetch: bool = True,
     dispatched: Callable[[], dict[str, list[str]]] | None = None,
+    recording_run: tuple[str, str] | None = None,
 ) -> dict[str, Any]:
     """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``.
 
@@ -2324,7 +2442,7 @@ def budget_admission(
     )
     from scripts.review.repair_round import repair_heads
 
-    budget = review_round_budget(facts)
+    budget = review_round_budget(facts, repository)
     receipts = _repair_receipts(task_root)
     return require_review_round_within_budget(
         comments,
@@ -2333,7 +2451,7 @@ def budget_admission(
         budget=budget,
         pr=number,
         prove_merge_only=_clean_merge_descent_prover(review_root, sha, fetch=fetch),
-        # A change whose paths already give it five rounds needs no grant.
+        # A change whose paths already give it five rounds needs a grant only past five (owner request).
         grant=partial(
             _budget_grant,
             repository=repository,
@@ -2343,9 +2461,11 @@ def budget_admission(
             comments=comments,
             login=login,
             task_root=task_root,
-        )
-        if budget < ELEVATED_REVIEW_ROUNDS
-        else None,
+            head=sha,
+            recording_run=recording_run,
+            repo_root=review_root,
+            budget=budget,
+        ),
         repair=partial(
             _repair_round,
             repository=repository,
@@ -2538,7 +2658,7 @@ def _task_verdict(task: dict[str, Any], reply: str) -> _TaskVerdict:
     if task.get("pinned_head") is not None and task["pinned_head"] != sha:
         raise RecordError("reviewed SHA conflicts with pinned head")
     model, family = reviewer_identity(task)
-    verdict, finding_count = _review_verdict_and_count(reply)
+    verdict, finding_count = _item_judgments_or_review_verdict(task, reply)
     _require_sources_mcp_calls(task)
     sources_count = task.get("sources_mcp_call_count")
     if type(sources_count) is not int or sources_count < 0:
@@ -2593,7 +2713,35 @@ def _post_verdict(repository: str, number: int, comment: str, login: str) -> dic
     return readback
 
 
-def _item_chunk(task: Mapping[str, Any], reply: str, verdict: str) -> ItemChunk | None:
+def _item_judgments_or_review_verdict(task: Mapping[str, Any], reply: str) -> tuple[str, int | Literal["unknown"]]:
+    """The verdict of a Ukrainian reply that returns only its judgment block, else the reply's verdict.
+
+    With a frozen item denominator the contract asks for the block alone, so a reply
+    with no verdict token takes the block's item rollup.
+    """
+    if not is_ukrainian_review(task) or recognized_verdicts(reply):
+        return _review_verdict_and_count(reply)
+    try:
+        packet = load_frozen_item_packet(task)
+        if packet is None:
+            return _review_verdict_and_count(reply)
+        verdict = item_judgments_verdict(packet, reply)
+    except ContractError as exc:
+        raise RecordError(str(exc)) from None
+    if reason := invalid_findings_block(reply, stated=None):
+        raise RecordError(f"reply carries an invalid findings block: {reason}")
+    if declares_incomplete_review(reply):
+        raise RecordError("inconclusive: reviewer declares an incomplete review")
+    if verdict != "BLOCKED" and declares_missing_capabilities(reply):
+        raise RecordError(
+            f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may"
+        )
+    return verdict, "unknown"
+
+
+def _item_chunk(
+    task: Mapping[str, Any], reply: str, verdict: str, *, source_claims_validated: bool = False,
+) -> ItemChunk | None:
     """Coverage declared by the frozen brief, or None when the brief has no item denominator."""
     try:
         packet = load_frozen_item_packet(task)
@@ -2603,9 +2751,50 @@ def _item_chunk(task: Mapping[str, Any], reply: str, verdict: str) -> ItemChunk 
             raise ContractError(
                 "ITEM_JUDGMENTS_WITHOUT_DENOMINATOR: item judgments need the brief's frozen item packet"
             )
-        return judge_item_reply(packet, reply, stated=verdict, ukrainian=is_ukrainian_review(task))
+        return judge_item_reply(
+            packet, reply, stated=verdict, ukrainian=is_ukrainian_review(task),
+            source_claims_validated=source_claims_validated,
+        )
     except ContractError as exc:
         raise RecordError(str(exc)) from None
+
+
+def _require_ukrainian_claim_support(
+    task: Mapping[str, Any], reply: str, task_id: str, task_root: Path,
+) -> None:
+    """Recheck the sealed reply against its own captured outputs before any publication."""
+    from scripts.dispatcher import store
+
+    binding = task.get("review_attempt")
+    ledger_path = None
+    events = ()
+    if binding is not None:
+        if task.get("claims_unsupported"):
+            raise RecordError("UKRAINIAN_CLAIMS_UNSUPPORTED: " + json.dumps(
+                task.get("dropped_claims") or [{"reason": "attempt_claims_unsupported"}], ensure_ascii=False,
+            ))
+        if not isinstance(binding, dict) or any(
+            not isinstance(binding.get(key), str) or not TASK_ID.fullmatch(binding[key])
+            for key in ("review_id", "attempt_id")
+        ):
+            raise RecordError("UKRAINIAN_CLAIMS_UNSUPPORTED: invalid review-attempt binding")
+        ledger_path = store.receipts_root() / binding["review_id"] / f"{binding['attempt_id']}.jsonl"
+    else:
+        path = _hot_or_archived(task_root, f"logs/{task_id}.stdout.log")
+        try:
+            events = captured_sources_events(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError):
+            events = ()
+    try:
+        _, checked = validate_ukrainian_reply_claims(
+            reply, ledger_path=ledger_path, binding=binding, tool_events=events,
+        )
+    except ContractError as exc:
+        raise RecordError(str(exc)) from None
+    if checked.claims_unsupported:
+        raise RecordError("UKRAINIAN_CLAIMS_UNSUPPORTED: " + json.dumps(
+            list(checked.dropped_claims), ensure_ascii=False,
+        ))
 
 
 @publication_boundary(RecordError)
@@ -2649,6 +2838,8 @@ def record(
     repository, branch, sha = review.repository, review.branch, review.sha
     model, family, stated, finding_count = review.model, review.family, review.verdict, review.finding_count
     ukrainian, sources_count, started = review.ukrainian, review.sources_count, review.started
+    if ukrainian and stated == "APPROVED":
+        _require_ukrainian_claim_support(task, reply, task_id, task_root)
     pr = _pr(repository, branch, pr_number)
     if pr.get("headRefName") != branch:
         raise RecordError("review branch does not match PR head ref")
@@ -2687,7 +2878,9 @@ def record(
             raise RecordError("unknown history conflicts with completed review task")
     if not facts.existing_families:
         raise RecordError("PR has no attributed author commits")
-    if review_mode == "red_team":
+    mixed_pair = review_mode == "cross_family" and not ukrainian and facts.mixed_family
+    scope = facts.reviewer_scope(family) if mixed_pair else facts
+    if review_mode == "red_team" or mixed_pair:
         agent = str(task.get("agent") or "")
         reviewer_ids = {
             key
@@ -2695,9 +2888,10 @@ def record(
             if isinstance(identity, str)
             for key in review_task_id_comparison_keys(identity, agent=agent)
         }
-        author_ids = {key for identity in facts.author_task_ids for key in review_task_id_comparison_keys(identity)}
+        author_ids = {key for identity in scope.author_task_ids for key in review_task_id_comparison_keys(identity)}
         if reviewer_ids & author_ids:
             raise RecordError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+    if review_mode == "red_team":
         refusal = red_team_seat_refusal(
             (task.get("model"), task.get("resolved_model"), model),
             author_models=facts.author_models,
@@ -2708,16 +2902,21 @@ def record(
             raise RecordError(refusal)
     # Every mode, red team included (F9): an unresolved author has no model a seat rule can compare.
     require_resolved_branch_authors(facts)
-    if review_mode != "red_team" and family in facts.excluded_families:
+    if review_mode != "red_team" and family in scope.excluded_families:
         raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
-    chunk = _item_chunk(task, reply, stated)
-    # The reply stays REQUEST_CHANGES. All-P3 open findings are an approval with residuals.
-    residuals = p3_residuals(reply) if stated == "CHANGES_REQUESTED" else None
+    chunk = _item_chunk(task, reply, stated, source_claims_validated=ukrainian and stated == "APPROVED")
+    # The reply stays REQUEST_CHANGES. A pure findings object whose entries are all P3 is an
+    # approval with residuals; any other reply keeps its verdict and names why (#12409).
+    p3 = p3_reading(reply) if stated == "CHANGES_REQUESTED" else P3Reading()
+    residuals, p3_refused = p3.ids, p3.reason
     verdict = "APPROVED" if residuals else stated
+    # A P3 residual upgrade is still an approval, so it takes the same captured-claim check.
+    if ukrainian and verdict == "APPROVED" and stated != "APPROVED":
+        _require_ukrainian_claim_support(task, reply, task_id, task_root)
     comment_fields = dict(
         sha=sha,
         task_id=task_id,
@@ -2737,11 +2936,12 @@ def record(
         coverage=None if chunk is None else chunk.coverage,
         void=None if chunk is None else chunk.void,
         residuals=residuals,
+        scope_commits=tuple(commit.sha for commit in scope.commits) if mixed_pair else None,
     )
     comment = build_comment(**comment_fields)
     # A cut reply is not verbatim, so it cannot become an approval.
     if residuals is not None and TRUNCATION_FLAG in comment:
-        residuals = None
+        residuals, p3_refused = None, P3_TRUNCATED
         verdict = stated
         comment_fields["verdict"] = stated
         comment_fields["residuals"] = None
@@ -2757,7 +2957,7 @@ def record(
             raise
         # Hidden findings cannot be listed, so the reply keeps its own verdict.
         if residuals is not None:
-            residuals = None
+            residuals, p3_refused = None, P3_SCANNER_WITHHELD
             verdict = stated
             comment_fields["verdict"] = stated
             comment_fields["residuals"] = None
@@ -2785,7 +2985,7 @@ def record(
             reading = lookup_verdict(comments, sha, login)
             # A standing P0/P1/P2 or BLOCKED rejection, or an unknown head, keeps today's record.
             if reading.state in REJECTED or reading.state == "unknown":
-                residuals = None
+                residuals, p3_refused = None, P3_STANDING_REJECTION
                 verdict = stated
                 comment_fields["verdict"] = stated
                 comment_fields["residuals"] = None
@@ -2801,27 +3001,39 @@ def record(
             login=login,
             task_root=task_root,
             review_root=review_root,
+            recording_run=(task_id, task["run_nonce"]) if isinstance(task.get("run_nonce"), str) else None,
         )
-        from scripts.review.repair_round import (
-            RepairRefused,
-            receipt_at,
-            record_admission,
-            require_repair_verified,
-        )
+        granted_route = budget_receipt.get("budget_grant", {}).get("retry_route")
+        if granted_route is not None and {
+            "agent": task.get("agent"), "model": model, "mode": task.get("mode")
+        } != granted_route:
+            raise RecordError("BUDGET_GRANT_REFUSED[capability]: retry route differs from demonstrated route")
+        from scripts.review.budget_grant import p2_round_at, record_p2_round, require_p2_verified
+        from scripts.review.repair_round import receipt_at, record_admission, require_repair_verified
 
+        # The lineage's p2 fix round is spent before its verdict exists, whatever that verdict is (#12548).
+        p2_round = budget_receipt.get("budget_grant", {}).get("p2_fix_round")
+        if p2_round is not None:
+            record_p2_round(task_root, p2_round)
+        p2_held = p2_round or p2_round_at(task_root, repository=repository, number=number, branch=branch, head=sha)
         repair = budget_receipt.get("repair_round")
         repaired = repair or receipt_at(
             _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
         )
-        # A repair head stays changes-requested unless the reply attests that the delta is only the repair.
+        verify = (
+            partial(require_repair_verified, reply, repaired) if repaired is not None
+            else partial(require_p2_verified, reply, p2_held) if p2_held is not None
+            else None
+        )
+        # A repair or p2 fix head stays changes-requested unless the reply attests its delta.
         # The note is written even when the mapping was already dropped, so lookup cannot approve the body later.
         # A withheld skeleton stays withheld: rebuilding from the original fields would put the blocked text back.
-        if repaired is not None and stated != "APPROVED" and not withheld_comment:
+        if verify is not None and stated != "APPROVED" and not withheld_comment:
             try:
-                require_repair_verified(reply, repaired)
-            except RepairRefused:
+                verify()
+            except RecordError:
                 if residuals is not None:
-                    residuals = None
+                    residuals, p3_refused = None, P3_REPAIR_WITHHELD
                     verdict = stated
                     comment_fields["verdict"] = stated
                     comment_fields["residuals"] = None
@@ -2855,6 +3067,7 @@ def record(
                         or list(marker.get("denominator") or ()) != list(chunk.denominator if chunk else ())
                         or list(marker.get("coverage") or ()) != list(chunk.coverage if chunk else ())
                         or marker.get("void") != (chunk.void if chunk else None)
+                        or tuple(marker.get("scope_commits") or ()) != tuple(sorted(set(comment_fields["scope_commits"] or ())))
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
@@ -2866,9 +3079,9 @@ def record(
                         continue
                     raise RecordError("existing verdict marker was edited or conflicts with task")
         require_no_same_head_rejection(comments, sha, login, verdict)
-        if repaired is not None and stated == "APPROVED":
-            # The non-author reviewer, not the recorder, verifies that the delta is only the repair.
-            require_repair_verified(reply, repaired)
+        if verify is not None and stated == "APPROVED":
+            # The non-author reviewer, not the recorder, verifies the delta its attestation names.
+            verify()
         if repair is not None:
             # The admission receipt is durable before the verdict exists, so the round is spent even if posting fails.
             record_admission(_repair_receipts(task_root), repair)
@@ -2891,7 +3104,9 @@ def record(
             # count, so its own verdict does not decide the status.
             current = lookup_verdict(comments, sha, login)
             state = "success" if current.state == "APPROVED" else "failure" if current.state in REJECTED else "pending"
-            if current.state == NEEDS_SEAT:
+            if current.state == NEEDS_SEAT and mixed_pair:
+                pending_reason = "; awaiting Anthropic/OpenAI review pair"
+            elif current.state == NEEDS_SEAT:
                 profiled = [
                     marker
                     for item in comments
@@ -2900,7 +3115,10 @@ def record(
                     and marker.get("sha") == sha
                     and (
                         marker.get("verdict") not in REJECTED
-                        or (marker.get("verdict") == "CHANGES_REQUESTED" and p3_residuals(item["body"]) is not None)
+                        or (
+                            marker.get("verdict") == "CHANGES_REQUESTED"
+                            and recorded_p3_residuals(item["body"]) is not None
+                        )
                     )
                     and is_ukrainian_review(marker)
                 ]
@@ -2947,6 +3165,8 @@ def record(
     }
     if residuals:
         result["residuals"] = list(residuals)
+    elif p3_refused is not None:
+        result["p3_downgrade_refused"] = p3_refused
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
     if chunk is not None:
@@ -3020,7 +3240,7 @@ def budget_check(
         "admitted": True,
         "reviewed_heads": len(heads | set(unrecorded)),
         "unrecorded_rounds": [{"head": head, "tasks": tasks} for head, tasks in sorted(unrecorded.items())],
-        "budget": review_round_budget(facts),
+        "budget": review_round_budget(facts, repository),
         "head_already_reviewed": already,
         **receipt,
     }
@@ -3059,30 +3279,40 @@ def dispatch_budget_check(
     (``review_lineage.dispatched_rounds``). A dispatch that names only one of PR and branch has
     the other read from GitHub first, so runs recorded under either count; with no review run of
     the repository on record, no round has been spent and nothing more is read. A head that
-    already has a run opens no round, and while the other dispatched heads stay under the default
-    budget the round is admitted. From there the recorder's own decision at the PR's current head
-    applies (:func:`budget_check`), so the PR's tier, a clean base merge, a designated grant or the
-    lineage's repair round may still admit it. A branch with no open PR gets the default budget.
+    already has a run opens no round, and while the other dispatched heads stay under the
+    repository's budget (:func:`repository_review_rounds`) the round is admitted. From there the
+    recorder's own decision at the PR's current head applies (:func:`budget_check`), so the PR's
+    tier, a clean base merge, a designated grant or the lineage's repair round may still admit it.
+    A branch with no open PR gets the repository's budget.
     """
     from scripts.review.review_lineage import dispatched_rounds, lineage_runs, review_records
 
     records = review_records(task_root, repository=repository)
     if not records:
+        # No review of the repository on record, so no round is spent: round 1 fits every budget the
+        # policy can declare (1 at least) and nothing here depends on it. The verdict still reads it first.
         return None
+    budget = repository_review_rounds(repository)
     if number is None and branch is not None:
         number = _open_pr_number(repository, branch)
     elif number is not None and branch is None:
         branch = _pr(repository, "", number)["headRefName"]
     runs = lineage_runs(task_root, repository=repository, number=number, branch=branch, records=records)
     heads = dispatched_rounds(runs=runs, comments=(), login="")
-    if head in heads or len(heads) < DEFAULT_REVIEW_ROUNDS:
+    if head in heads or len(heads) < budget:
         return None
     if number is None:
         raise RecordError(
             f"REVIEW_BUDGET_EXHAUSTED: branch {branch} has review dispatches at {len(heads)} heads and no open PR; "
-            f"its budget is {DEFAULT_REVIEW_ROUNDS} rounds; budget end is never approval, escalate instead"
+            f"its budget is {budget} rounds; budget end is never approval, escalate instead"
         )
     return budget_check(repository, number, task_root=task_root, head=head)
+
+
+RECORDER_COMMAND = '"$PRIMARY_REPO/.venv/bin/python" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py"'
+RECORDER_EXAMPLES = (
+    'Examples:\n  PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"\n'
+)
 
 
 def budget_check_main(argv: list[str]) -> int:
@@ -3091,11 +3321,11 @@ def budget_check_main(argv: list[str]) -> int:
         description="Ask the verdict recorder whether a review round at the PR's current head would be admitted.\n"
         "Run it before dispatching a reviewer; it reads only and writes no receipt.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py budget-check "
+        epilog=f"{RECORDER_EXAMPLES}  {RECORDER_COMMAND} budget-check "
         "--repository learn-ukrainian/learn-ukrainian.github.io --pr 42\n"
         "Outputs: JSON on stdout: admitted, the budget, unrecorded_rounds (heads reviewed with no recorded verdict)\n"
         "  and any exemption, grant or repair-round receipt.\n"
-        "Exit codes: 0: admitted; 1: refused (the reason names what to escalate).\n"
+        "Exit codes: 0: admitted; 1: refused (the reason names what to escalate); 2: primary bootstrap refused.\n"
         "Related: agents_extensions/shared/skills/review-loop/references/policy.md",
     )
     parser.add_argument("--repository", required=True, help="GitHub owner/name of the PR")
@@ -3159,6 +3389,8 @@ def republish_withheld(
         current_head=False,
     )
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
+    mixed_pair = review_mode == "cross_family" and not review.ukrainian and facts.mixed_family
+    scope = facts.reviewer_scope(review.family) if mixed_pair else facts
     comment_fields = dict(
         sha=review.sha,
         task_id=task_id,
@@ -3174,6 +3406,7 @@ def republish_withheld(
         app_bot=bool(facts.app_bot_commits),
         score=review_score(reply),
         author_models=facts.author_models,
+        scope_commits=tuple(commit.sha for commit in scope.commits) if mixed_pair else None,
     )
     withheld = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=review.finding_count)
     comment = build_comment(**comment_fields)
@@ -3209,10 +3442,10 @@ def republish_withheld_main(argv: list[str]) -> int:
         description="Publish the findings of a verdict recorded as withheld, once the cause is fixed.\n"
         "Posts the sealed reply beside the withheld comment; records no new verdict, round or status.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py republish-withheld "
+        epilog=f"{RECORDER_EXAMPLES}  {RECORDER_COMMAND} republish-withheld "
         "--task-id review-unit --pr 42\n"
         "Outputs: JSON on stdout: the PR, head, task, verdict and whether a comment was posted.\n"
-        "Exit codes: 0: posted, or the findings were already published; 1: refused.\n"
+        "Exit codes: 0: posted, or the findings were already published; 1: refused; 2: primary bootstrap refused.\n"
         "Related: agents_extensions/shared/skills/review-loop/SKILL.md",
     )
     parser.add_argument("--task-id", required=True, help="Review task whose verdict was recorded withheld")
@@ -3248,20 +3481,20 @@ def main(argv: list[str] | None = None) -> int:
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
         "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
+        epilog=f"{RECORDER_EXAMPLES}  {RECORDER_COMMAND} --task-id review-unit --pr 1\n"
+        f"  {RECORDER_COMMAND} --task-id review-unit --pr 1 "
         "--review-mode red_team --red-team-prompt brief.md\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-check --repository owner/name --pr 1\n"
+        f"  {RECORDER_COMMAND} budget-check --repository owner/name --pr 1\n"
         "    (whether the next review round is admitted, before dispatch; see budget-check --help)\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-grant digest <ruling.json>\n"
+        f"  {RECORDER_COMMAND} budget-grant digest <ruling.json>\n"
         "    (an elevated-tier grant ruling's digest; see budget-grant --help)\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py republish-withheld --task-id review-unit --pr 1\n"
+        f"  {RECORDER_COMMAND} republish-withheld --task-id review-unit --pr 1\n"
         "    (publish the findings of a verdict recorded withheld; see republish-withheld --help)\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py capability-failure --task-id review-unit --pr 1 "
+        f"  {RECORDER_COMMAND} capability-failure --task-id review-unit --pr 1 "
         "--capability test-execution --authority claude-cto\n"
         "    (classify a finished run that only lacked a capability; see capability-failure --help)\n"
         "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
-        "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
+        "Exit codes: 0: recorded; 1: refused or status publication failed; 2: primary bootstrap refused.\nRelated: #9297, #9951",
     )
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")
