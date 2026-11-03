@@ -121,7 +121,9 @@ def validate_receipt(value: Any) -> dict[str, Any]:
     if any(not isinstance(digest, str) or not _DIGEST.fullmatch(digest) for digest in digests):
         raise ValueError("invalid receipt digest")
     raw, projected = value["raw"], value["projected"]
-    if projected["count"] > raw["count"] or (projected["count"] == raw["count"] and projected != raw):
+    same_count = projected["count"] == raw["count"]
+    same_membership = projected["membership_sha256"] == raw["membership_sha256"]
+    if projected["count"] > raw["count"] or same_count != same_membership:
         raise ValueError("contradictory projection")
     return value
 

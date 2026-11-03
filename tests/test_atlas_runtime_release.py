@@ -85,7 +85,7 @@ def test_report_classifies_data_drift_and_missing_or_invalid_evidence(
     elif scenario == "holds":
         receipt["holds_sha256"] = "f" * 64
     elif scenario == "invalid":
-        receipt["schema"] = "unsupported"
+        receipt["raw"]["count"] = 2  # Identical membership digests cannot have unequal cardinality.
     receipt_path.write_bytes(report.canonical_bytes(receipt))
     if scenario == "missing":
         receipt_path.unlink()
