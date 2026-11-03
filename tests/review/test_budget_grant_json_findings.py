@@ -8,7 +8,7 @@ import json
 import pytest
 
 from scripts.review import record_cf_verdict as recorder
-from scripts.review.budget_grant import open_blocker_cited
+from scripts.review.budget_grant import finding_is_open, open_blocker_cited
 from scripts.review.review_contract import SCHEMA_RELATIVE_PATH, package_repo_root
 from scripts.review.review_lineage import ReviewRun
 
@@ -73,6 +73,21 @@ def _cited(reply: str, run_reply: str | None = None, **record: object) -> str | 
 def test_schema_bound_open_p1_admits() -> None:
     assert _cited(_reply(_finding())) == SHA
     assert _cited("```json\n" + _reply(_finding()) + "\n```") == SHA
+
+
+def test_hyphenated_compound_is_not_a_closing_word() -> None:
+    """A closing word inside a hyphenated compound must not close a still-open finding."""
+    for word in ("resolved", "fixed", "declined", "withdrawn", "closed", "addressed", "superseded"):
+        standalone = f"F4 still open: the guarantee is broken; {word}."
+        assert not finding_is_open(standalone)
+        assert _cited(_reply(_finding(body=standalone))) is None
+        for compound in (f"fail-{word}", f"{word}-form", f"fail-{word}-form"):
+            entry = f"F4 still open: the {compound} guarantee is broken."
+            assert finding_is_open(entry), entry
+            assert _cited(_reply(_finding(body=entry))) == SHA
+    closed = "F4 [P1] auto-resolved by the rebase."
+    assert not finding_is_open(closed)
+    assert _cited(_reply(_finding(body=closed))) is None
 
 
 @pytest.mark.parametrize(

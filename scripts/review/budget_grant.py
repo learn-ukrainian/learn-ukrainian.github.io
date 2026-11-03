@@ -339,20 +339,25 @@ _STILL_OPEN = re.compile(
     r"\bstill open\b|\bremains open\b|\bunresolved\b|\bnot (?:yet )?(?:resolved|fixed|addressed)\b", re.I
 )
 _CLOSED = re.compile(r"\b(?:resolved|fixed|declined|withdrawn|closed|addressed|superseded)\b", re.I)
+_STANDALONE_CLOSED = re.compile(rf"(?<!\w-){_CLOSED.pattern}(?!-\w)", re.I)
 
 
 def finding_is_open(entry: str) -> bool:
     """Whether an entry is unambiguous evidence that its finding is still open; ambiguity refuses.
 
-    Any closing word (``resolved``, ``fixed``, ``declined`` …) anywhere in the
-    entry closes it, whatever it is about, unless the word sits inside an
-    open phrase (``not resolved``, ``unresolved`` …). So a granted round
+    Any standalone closing word (``resolved``, ``fixed``, ``declined`` …)
+    anywhere in the entry closes it, whatever it is about, unless the word
+    sits inside an open phrase (``not resolved``, ``unresolved`` …).
+    With an explicit open phrase, closing words inside hyphenated compounds
+    (``fail-closed``, ``closed-form``, ``fixed-width`` …) do not close the entry.
+    Without an open phrase, compound closing words still refuse. So a granted round
     needs the reviewer to keep the finding open in plain words, such as
     ``still open: <reason>``, or to raise it new; mixed language never
     admits a round.
     """
     opened = [match.span() for match in _STILL_OPEN.finditer(entry)]
-    return not any(not any(start <= match.start() < end for start, end in opened) for match in _CLOSED.finditer(entry))
+    closing = _STANDALONE_CLOSED if opened else _CLOSED
+    return not any(not any(start <= match.start() < end for start, end in opened) for match in closing.finditer(entry))
 
 
 def _findings_schema_bound(record: Mapping[str, Any]) -> bool | None:
