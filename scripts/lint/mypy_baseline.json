@@ -1780,7 +1780,7 @@
     {
       "path": "scripts/api/delegate_router.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"_delegate_task_rows\" has incompatible type \"None | set[Literal['running', 'done', 'failed', 'timeout', 'spawning', 'needs_finalize', 'no_deliverable', 'crashed', 'cancelled', 'rate_limited', 'dry_run']]\"; expected \"None | set[str]\""
+      "message": "Argument 1 to \"_delegate_task_rows\" has incompatible type \"None | set[Literal['cancelled', 'crashed', 'done', 'dry_run', 'failed', 'needs_finalize', 'no_deliverable', 'rate_limited', 'running', 'spawning', 'timeout']]\"; expected \"None | set[str]\""
     },
     {
       "path": "scripts/api/delegate_router.py",
@@ -1915,7 +1915,7 @@
     {
       "path": "scripts/api/fleet_board/sources.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"SourceReport\" has incompatible type \"str\"; expected \"Literal['ok', 'stale', 'unavailable', 'not_configured']\""
+      "message": "Argument 2 to \"SourceReport\" has incompatible type \"str\"; expected \"Literal['not_configured', 'ok', 'stale', 'unavailable']\""
     },
     {
       "path": "scripts/api/fleet_board/view.py",
@@ -2865,7 +2865,7 @@
     {
       "path": "scripts/api/state_router.py",
       "code": "arg-type",
-      "message": "Argument \"transport\" to \"compute_routing_budget\" has incompatible type \"str\"; expected \"Literal['dispatch', 'acp']\""
+      "message": "Argument \"transport\" to \"compute_routing_budget\" has incompatible type \"str\"; expected \"Literal['acp', 'dispatch']\""
     },
     {
       "path": "scripts/api/state_router.py",
@@ -3700,7 +3700,7 @@
     {
       "path": "scripts/api/work_router.py",
       "code": "no-redef",
-      "message": "Name \"body\" already defined on line 756"
+      "message": "Name \"body\" already defined on line 817"
     },
     {
       "path": "scripts/api/work_router.py",
@@ -3735,7 +3735,7 @@
     {
       "path": "scripts/atlas/a1_vocabulary_inventory.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"StoreBinding\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"StoreBinding\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/atlas/a1_vocabulary_inventory.py",
@@ -3745,7 +3745,7 @@
     {
       "path": "scripts/atlas/a1_vocabulary_inventory.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/atlas/a1_vocabulary_inventory.py",
@@ -4015,17 +4015,17 @@
     {
       "path": "scripts/atlas/word_card_assembly.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"StoreBinding\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"StoreBinding\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/atlas/word_card_assembly.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/atlas/word_card_assembly.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/atlas/word_card_assembly.py",
@@ -4495,12 +4495,12 @@
     {
       "path": "scripts/audit/_judge_eval_lib.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"StoreBinding\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"StoreBinding\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/audit/_judge_eval_lib.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/audit/a1_v1_method_one.py",
@@ -4640,22 +4640,22 @@
     {
       "path": "scripts/audit/atlas_intake_gate.py",
       "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"str\", variable has type \"Literal['auto_approve', 'review_queue', 'reject']\")"
+      "message": "Incompatible types in assignment (expression has type \"str\", variable has type \"Literal['auto_approve', 'reject', 'review_queue']\")"
     },
     {
       "path": "scripts/audit/atlas_intake_gate.py",
       "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"str\", variable has type \"Literal['auto_approve', 'review_queue', 'reject']\")"
+      "message": "Incompatible types in assignment (expression has type \"str\", variable has type \"Literal['auto_approve', 'reject', 'review_queue']\")"
     },
     {
       "path": "scripts/audit/atlas_intake_gate.py",
       "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"str\", variable has type \"Literal['auto_approve', 'review_queue', 'reject']\")"
+      "message": "Incompatible types in assignment (expression has type \"str\", variable has type \"Literal['auto_approve', 'reject', 'review_queue']\")"
     },
     {
       "path": "scripts/audit/atlas_intake_gate.py",
       "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"tuple[str, str, str]\", variable has type \"tuple[Literal['auto_approve', 'review_queue', 'reject'], ...]\")"
+      "message": "Incompatible types in assignment (expression has type \"tuple[str, str, str]\", variable has type \"tuple[Literal['auto_approve', 'reject', 'review_queue'], ...]\")"
     },
     {
       "path": "scripts/audit/atlas_intake_gate.py",
@@ -4675,27 +4675,27 @@
     {
       "path": "scripts/audit/atlas_intake_registry.py",
       "code": "arg-type",
-      "message": "Argument \"id\" to \"SourceFamilyDefinition\" has incompatible type \"str\"; expected \"Literal['curriculum', 'teacher_lesson', 'textbook', 'ohoiko']\""
+      "message": "Argument \"id\" to \"SourceFamilyDefinition\" has incompatible type \"str\"; expected \"Literal['curriculum', 'ohoiko', 'teacher_lesson', 'textbook']\""
     },
     {
       "path": "scripts/audit/atlas_intake_registry.py",
       "code": "arg-type",
-      "message": "Argument \"id\" to \"SourceFamilyDefinition\" has incompatible type \"str\"; expected \"Literal['curriculum', 'teacher_lesson', 'textbook', 'ohoiko']\""
+      "message": "Argument \"id\" to \"SourceFamilyDefinition\" has incompatible type \"str\"; expected \"Literal['curriculum', 'ohoiko', 'teacher_lesson', 'textbook']\""
     },
     {
       "path": "scripts/audit/atlas_intake_registry.py",
       "code": "arg-type",
-      "message": "Argument \"id\" to \"SourceFamilyDefinition\" has incompatible type \"str\"; expected \"Literal['curriculum', 'teacher_lesson', 'textbook', 'ohoiko']\""
+      "message": "Argument \"id\" to \"SourceFamilyDefinition\" has incompatible type \"str\"; expected \"Literal['curriculum', 'ohoiko', 'teacher_lesson', 'textbook']\""
     },
     {
       "path": "scripts/audit/atlas_intake_registry.py",
       "code": "arg-type",
-      "message": "Argument \"id\" to \"SourceFamilyDefinition\" has incompatible type \"str\"; expected \"Literal['curriculum', 'teacher_lesson', 'textbook', 'ohoiko']\""
+      "message": "Argument \"id\" to \"SourceFamilyDefinition\" has incompatible type \"str\"; expected \"Literal['curriculum', 'ohoiko', 'teacher_lesson', 'textbook']\""
     },
     {
       "path": "scripts/audit/atlas_intake_registry.py",
       "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"tuple[str, str, str, str]\", variable has type \"tuple[Literal['curriculum', 'teacher_lesson', 'textbook', 'ohoiko'], ...]\")"
+      "message": "Incompatible types in assignment (expression has type \"tuple[str, str, str, str]\", variable has type \"tuple[Literal['curriculum', 'ohoiko', 'teacher_lesson', 'textbook'], ...]\")"
     },
     {
       "path": "scripts/audit/atlas_source_census.py",
@@ -10510,7 +10510,7 @@
     {
       "path": "scripts/ci/data_tier.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/ci/data_tier.py",
@@ -12295,7 +12295,7 @@
     {
       "path": "scripts/dispatcher/agy_canary.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/dispatcher/agy_sandbox.py",
@@ -13525,7 +13525,7 @@
     {
       "path": "scripts/etymology/extract_cognate_forms.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/etymology/extract_cognate_forms.py",
@@ -13550,7 +13550,7 @@
     {
       "path": "scripts/etymology/recover_latin_cognates.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/eval/human_eval_tracker.py",
@@ -14795,7 +14795,7 @@
     {
       "path": "scripts/fleet/usage.py",
       "code": "arg-type",
-      "message": "Argument \"transport\" to \"compute_routing_budget\" has incompatible type \"str\"; expected \"Literal['dispatch', 'acp']\""
+      "message": "Argument \"transport\" to \"compute_routing_budget\" has incompatible type \"str\"; expected \"Literal['acp', 'dispatch']\""
     },
     {
       "path": "scripts/fleet/usage.py",
@@ -15670,17 +15670,17 @@
     {
       "path": "scripts/fleet_comms/review_publication.py",
       "code": "return-value",
-      "message": "Incompatible return value type (got \"str\", expected \"Literal['success', 'failure', 'error', 'pending']\")"
+      "message": "Incompatible return value type (got \"str\", expected \"Literal['error', 'failure', 'pending', 'success']\")"
     },
     {
       "path": "scripts/fleet_comms/review_publication.py",
       "code": "return-value",
-      "message": "Incompatible return value type (got \"str\", expected \"Literal['success', 'failure', 'error', 'pending']\")"
+      "message": "Incompatible return value type (got \"str\", expected \"Literal['error', 'failure', 'pending', 'success']\")"
     },
     {
       "path": "scripts/fleet_comms/review_publication.py",
       "code": "return-value",
-      "message": "Incompatible return value type (got \"str\", expected \"Literal['success', 'failure', 'error', 'pending']\")"
+      "message": "Incompatible return value type (got \"str\", expected \"Literal['error', 'failure', 'pending', 'success']\")"
     },
     {
       "path": "scripts/fleet_comms/review_publisher.py",
@@ -16875,7 +16875,7 @@
     {
       "path": "scripts/ingest/antonenko_full_book_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/antonenko_full_book_ingest.py",
@@ -17090,7 +17090,7 @@
     {
       "path": "scripts/ingest/dictionary_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/esum_abbyy_parser.py",
@@ -17115,7 +17115,7 @@
     {
       "path": "scripts/ingest/esum_load.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/goroh_etymology_ingest.py",
@@ -17125,7 +17125,7 @@
     {
       "path": "scripts/ingest/goroh_etymology_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/goroh_etymology_ingest.py",
@@ -17175,7 +17175,7 @@
     {
       "path": "scripts/ingest/incremental_historical_source_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/incremental_textbook_ingest.py",
@@ -17190,12 +17190,12 @@
     {
       "path": "scripts/ingest/incremental_textbook_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/incremental_textbook_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/incremental_textbook_ingest.py",
@@ -17245,7 +17245,7 @@
     {
       "path": "scripts/ingest/ohoiko_to_jsonl.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/ohoiko_verbs_ingest.py",
@@ -17735,12 +17735,12 @@
     {
       "path": "scripts/ingest/slovnyk_me_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/slovnyk_me_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/slovnyk_me_ingest.py",
@@ -17825,7 +17825,7 @@
     {
       "path": "scripts/ingest/sum20_official_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/sum20_official_ingest.py",
@@ -17900,7 +17900,7 @@
     {
       "path": "scripts/ingest/sum20_quarantine_unverified.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/sum20_quarantine_unverified.py",
@@ -17935,7 +17935,7 @@
     {
       "path": "scripts/ingest/ulp_lesson_notes_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/ulp_lesson_notes_ingest.py",
@@ -17955,7 +17955,7 @@
     {
       "path": "scripts/ingest/ulp_to_jsonl.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/usage_advice_ingest.py",
@@ -18040,7 +18040,7 @@
     {
       "path": "scripts/ingest/wiktionary_etymology_ingest.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/ingest/wiktionary_etymology_ingest.py",
@@ -18940,7 +18940,7 @@
     {
       "path": "scripts/lexicon/import_ohoiko_vocab.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['sources', 'vesum', 'lexdata']\""
+      "message": "Argument 1 to \"resolve_store\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
     },
     {
       "path": "scripts/lexicon/import_ohoiko_vocab.py",
@@ -25250,7 +25250,7 @@
     {
       "path": "scripts/projects/open_model_data/phase3_rule_author_packets.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"require\" has incompatible type \"Any | Literal[False, '']\"; expected \"bool\""
+      "message": "Argument 1 to \"require\" has incompatible type \"Any | Literal['', False]\"; expected \"bool\""
     },
     {
       "path": "scripts/projects/open_model_data/phase3_rule_author_packets.py",
@@ -26850,7 +26850,7 @@
     {
       "path": "scripts/projects/open_model_data/review_build/build.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"replace\" of \"Candidate\" has incompatible type \"**dict[Any, tuple[Any, ...]]\"; expected \"Literal['accepted', 'rejected', 'withheld', 'excluded']\""
+      "message": "Argument 2 to \"replace\" of \"Candidate\" has incompatible type \"**dict[Any, tuple[Any, ...]]\"; expected \"Literal['accepted', 'excluded', 'rejected', 'withheld']\""
     },
     {
       "path": "scripts/projects/open_model_data/review_build/build.py",
@@ -26885,7 +26885,7 @@
     {
       "path": "scripts/projects/open_model_data/review_build/components/c1_ua_gec.py",
       "code": "arg-type",
-      "message": "Argument 3 to \"Candidate\" has incompatible type \"str\"; expected \"Literal['accepted', 'rejected', 'withheld', 'excluded']\""
+      "message": "Argument 3 to \"Candidate\" has incompatible type \"str\"; expected \"Literal['accepted', 'excluded', 'rejected', 'withheld']\""
     },
     {
       "path": "scripts/projects/open_model_data/review_build/components/c1_ua_gec.py",
@@ -26925,7 +26925,7 @@
     {
       "path": "scripts/projects/open_model_data/review_build/components/c6a_calque.py",
       "code": "arg-type",
-      "message": "Argument 3 to \"Candidate\" has incompatible type \"str\"; expected \"Literal['accepted', 'rejected', 'withheld', 'excluded']\""
+      "message": "Argument 3 to \"Candidate\" has incompatible type \"str\"; expected \"Literal['accepted', 'excluded', 'rejected', 'withheld']\""
     },
     {
       "path": "scripts/projects/open_model_data/review_build/components/c6a_calque.py",
@@ -27045,7 +27045,7 @@
     {
       "path": "scripts/projects/open_model_data/review_build/gate.py",
       "code": "index",
-      "message": "Invalid index type \"str\" for \"Counter[Literal['accepted', 'rejected', 'withheld', 'excluded']]\"; expected type \"Literal['accepted', 'rejected', 'withheld', 'excluded']\""
+      "message": "Invalid index type \"str\" for \"Counter[Literal['accepted', 'excluded', 'rejected', 'withheld']]\"; expected type \"Literal['accepted', 'excluded', 'rejected', 'withheld']\""
     },
     {
       "path": "scripts/projects/open_model_data/review_build/gate.py",
@@ -29170,12 +29170,12 @@
     {
       "path": "scripts/rag/activate_vesum_db.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/rag/activate_vesum_db.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/rag/annotate_images.py",
@@ -29485,7 +29485,7 @@
     {
       "path": "scripts/rag/migrate_add_literary_source_url.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/rag/prepare_antonenko.py",
@@ -29720,7 +29720,7 @@
     {
       "path": "scripts/rag/scrape_wikisource.py",
       "code": "arg-type",
-      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'staging', 'shadow']\""
+      "message": "Argument 2 to \"ExplicitStoreWriteTarget\" has incompatible type \"str\"; expected \"Literal['active', 'shadow', 'staging']\""
     },
     {
       "path": "scripts/rag/scrape_wikisource.py",
@@ -31105,7 +31105,7 @@
     {
       "path": "scripts/review/reviewer_resolver.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"result\" has incompatible type \"*tuple[str, str]\"; expected \"Literal['eligible', 'selected', 'advisory_only', 'excluded']\""
+      "message": "Argument 1 to \"result\" has incompatible type \"*tuple[str, str]\"; expected \"Literal['advisory_only', 'eligible', 'excluded', 'selected']\""
     },
     {
       "path": "scripts/review/reviewer_resolver.py",
@@ -31680,7 +31680,7 @@
     {
       "path": "scripts/scoring/report.py",
       "code": "typeddict-item",
-      "message": "Missing keys (\"name\", \"weight\", \"description\", \"measurement\", \"auto_fail_threshold\", \"cap_conditions\") for TypedDict \"CriterionConfig\""
+      "message": "Missing keys (\"auto_fail_threshold\", \"cap_conditions\", \"description\", \"measurement\", \"name\", \"weight\") for TypedDict \"CriterionConfig\""
     },
     {
       "path": "scripts/scoring/report.py",
