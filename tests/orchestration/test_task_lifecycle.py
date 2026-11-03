@@ -3096,3 +3096,95 @@ def test_learner_content_diff_refuses_code_behavior_receipt(tmp_path: Path) -> N
     local_blockers = " ".join(local_result["hard_blockers"])
     assert "ukrainian" in local_blockers
     assert "behavior_proof" not in local_result["valid_evidence"].get("AC-IMPL", set())
+
+
+def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_payloads(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A metadata-only receipt forced into linguistic review.
+
+    ``registry/lexicon/atlas-runtime-release.json`` carries schema, digests, counts
+    and membership of already-built artifacts and no learner text. Closeout accepts
+    an infra behavior-proof receipt for that exact path, including beside ordinary
+    code. The same manifest plus any other learner path still requires the Ukrainian
+    receipt and seat. Auto-deploy eligibility stays on the content prefix.
+    """
+    from scripts.deploy.auto_deploy_eligibility import decide_auto_deploy
+    from scripts.orchestration.integration_sweep import (
+        METADATA_ONLY_RELEASE_MANIFESTS,
+        changes_learner_content,
+    )
+
+    manifest = "registry/lexicon/atlas-runtime-release.json"
+    assert frozenset({manifest}) == METADATA_ONLY_RELEASE_MANIFESTS
+    payload = "curriculum/l2-uk-en/a2/liudyna-i-stosunky.mdx"
+    lookalike = "registry/lexicon/atlas-runtime-release.jsonl"
+    code = "scripts/deploy/prepare_atlas_runtime_release.py"
+    assert changes_learner_content([manifest]) is False
+    decision = decide_auto_deploy([manifest])
+    assert decision.deploy is False and decision.reason == "content_drift"
+
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates={"review_profile": "infra"})
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL",
+        "behavior_proof",
+        details=reference,
+    )
+
+    def evaluated(paths: list[str], *, local: bool = False) -> dict:
+        observation = _observation(_body())
+        if local:
+            observation["local"]["changed_paths"] = paths
+        else:
+            observation["github"]["pr"]["files"] = paths
+        return task_lifecycle.evaluate(ledger, observation)
+
+    for paths, local in (
+        ([manifest], False),
+        ([manifest, code], False),
+        ([manifest], True),
+    ):
+        result = evaluated(paths, local=local)
+        blockers = " ".join(result["hard_blockers"])
+        assert "behavior_proof" in result["valid_evidence"]["AC-IMPL"], blockers
+        assert "learner-content change requires a ukrainian behavior-proof receipt" not in blockers
+
+    for paths in ([manifest, payload], [lookalike], [manifest, lookalike]):
+        result = evaluated(paths)
+        blockers = " ".join(result["hard_blockers"])
+        assert "learner-content change requires a ukrainian behavior-proof receipt" in blockers
+        assert "behavior_proof" not in result["valid_evidence"].get("AC-IMPL", set())
+
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        monkeypatch.delenv(name, raising=False)
+    repo = tmp_path / "rename-repo"
+    repo.mkdir()
+
+    def git(*args: str) -> str:
+        return subprocess.run(
+            ["git", *args], cwd=repo, capture_output=True, text=True, check=True, timeout=30,
+        ).stdout.strip()
+
+    git("init", "-q", "-b", "main")
+    git("config", "user.name", "Test")
+    git("config", "user.email", "test@example.com")
+    git("config", "commit.gpgsign", "false")
+    git("config", "diff.renames", "true")
+    learner = repo / "curriculum" / "a.mdx"
+    learner.parent.mkdir()
+    learner.write_text("learner\n", encoding="utf-8")
+    git("add", "curriculum/a.mdx")
+    git("commit", "-qm", "base")
+    git("update-ref", "refs/remotes/origin/main", git("rev-parse", "HEAD"))
+    (repo / "registry" / "lexicon").mkdir(parents=True)
+    git("mv", "curriculum/a.mdx", manifest)
+    git("commit", "-qm", "rename learner file onto the release manifest")
+    observed = task_lifecycle.observe_local_git(
+        repo, head_sha=git("rev-parse", "HEAD"), branch="main", worktree=None,
+    )
+    assert set(observed["changed_paths"]) == {"curriculum/a.mdx", manifest}
+    renamed = evaluated(observed["changed_paths"], local=True)
+    renamed_blockers = " ".join(renamed["hard_blockers"])
+    assert "learner-content change requires a ukrainian behavior-proof receipt" in renamed_blockers
+    assert "behavior_proof" not in renamed["valid_evidence"].get("AC-IMPL", set())

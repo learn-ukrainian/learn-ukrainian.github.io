@@ -131,6 +131,113 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
         yield log_dir
 
 
+_GUARD_FREE_DISK_TEST = "test_snapshot_stops_when_free_disk_falls_below_the_floor"
+_guard_reads_production_free_disk = False
+# Same string as ``scripts.curriculum.evidence.config.FREE_DISK_FLOOR_ENV``.
+# The patch below checks that constant once ``Sources`` is imported.
+_FREE_DISK_FLOOR_ENV = "LU_EVIDENCE_FREE_DISK_FLOOR_BYTES"
+_SOURCES_MODULE = "scripts.curriculum.evidence.sources"
+
+
+def _patch_sources_free_disk(module: Any) -> None:
+    """Point ``Sources.free_disk_bytes`` at the recorded floor, not the runner disk."""
+    sources_cls = module.Sources
+    current = sources_cls.free_disk_bytes
+    if getattr(current, "_lu_reports_floor_instead_of_runner_disk", False):
+        return
+    evidence_config = sys.modules["scripts.curriculum.evidence.config"]
+    if evidence_config.FREE_DISK_FLOOR_ENV != _FREE_DISK_FLOOR_ENV:
+        raise RuntimeError(
+            f"{_SOURCES_MODULE} free-disk env is {evidence_config.FREE_DISK_FLOOR_ENV!r}, not {_FREE_DISK_FLOOR_ENV!r}"
+        )
+    real = current
+
+    def free_disk_bytes(self: Any) -> int:
+        if _guard_reads_production_free_disk:
+            return real(self)
+        return evidence_config.FREE_DISK_FLOOR_BYTES
+
+    free_disk_bytes._lu_reports_floor_instead_of_runner_disk = True
+    sources_cls.free_disk_bytes = free_disk_bytes
+
+
+class _SourcesFreeDiskLoader:
+    """Execute the real loader, then keep ``Sources`` off the runner's free disk."""
+
+    def __init__(self, loader: Any) -> None:
+        self._loader = loader
+
+    def create_module(self, spec: Any) -> Any:
+        create = getattr(self._loader, "create_module", None)
+        if create is None:
+            return None
+        return create(spec)
+
+    def exec_module(self, module: Any) -> None:
+        self._loader.exec_module(module)
+        _patch_sources_free_disk(module)
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._loader, name)
+
+
+class _SourcesFreeDiskImportHook:
+    """Patch evidence ``Sources`` on first import without importing it here (#12655)."""
+
+    def find_spec(self, fullname: str, path: Any, target: Any = None) -> Any:
+        if fullname != _SOURCES_MODULE:
+            return None
+        spec = importlib.machinery.PathFinder.find_spec(fullname, path, target)
+        if spec is None or spec.loader is None:
+            return None
+        if not isinstance(spec.loader, _SourcesFreeDiskLoader):
+            spec.loader = _SourcesFreeDiskLoader(spec.loader)
+        return spec
+
+
+def _install_sources_free_disk_hook() -> None:
+    if any(isinstance(hook, _SourcesFreeDiskImportHook) for hook in sys.meta_path):
+        return
+    module = sys.modules.get(_SOURCES_MODULE)
+    if module is not None and hasattr(module, "Sources"):
+        _patch_sources_free_disk(module)
+    sys.meta_path.insert(0, _SourcesFreeDiskImportHook())
+
+
+_install_sources_free_disk_hook()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def no_free_disk_floor() -> Generator[None, None, None]:
+    """Keep evidence ``Sources`` snapshots off the runner's free disk (#12640).
+
+    One fixture replaces the copies under ``tests/build`` and
+    ``tests/curriculum/evidence``. Session scope runs it before module-scoped
+    fixtures that open a snapshot. The floor environment is what a subprocess
+    inherits. Replacing ``free_disk_bytes`` keeps an in-process ``_guard`` off
+    ``shutil.disk_usage``. That replacement is installed on first import of
+    ``Sources``: importing it here would load ``ijson`` for every session,
+    including the deploy-idempotency job that does not install ``ijson``
+    (#12655). The guard's own test still calls the production reading for
+    the duration of its body.
+    """
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setenv(_FREE_DISK_FLOOR_ENV, "0")
+        yield
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_call(item: pytest.Item) -> Generator[None, object, object]:
+    """Let the free-disk guard test call the production reading (#12640)."""
+    global _guard_reads_production_free_disk
+    name = getattr(item, "originalname", item.name)
+    _guard_reads_production_free_disk = name == _GUARD_FREE_DISK_TEST
+    try:
+        return (yield)
+    finally:
+        _guard_reads_production_free_disk = False
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _lexicon_cap_test_unit_prefix() -> Generator[None, None, None]:
     """Name scopes created by the suite ``lexicon-captest-*`` (#9624).

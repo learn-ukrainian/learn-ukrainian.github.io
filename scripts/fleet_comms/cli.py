@@ -1158,12 +1158,15 @@ def cmd_retention(args: argparse.Namespace) -> int:
         raise FleetCommsCliError(
             f"retention refused: --unreferenced-days must be at least {UNREFERENCED_MIN_DAYS}"
         )
-    declared = (args.cited_from_tasks, args.cited_from_docs, args.cited_from_github)
+    declared = (
+        args.cited_from_tasks, args.cited_from_docs, args.cited_from_github,
+        args.cited_from_export, args.cited_from_batch_state,
+    )
     unreferenced = all(declared)
     if (any(declared) or args.unreferenced_days is not None) and not unreferenced:
         raise FleetCommsCliError(
             "retention refused: the unreferenced rule needs all of --cited-from-tasks, "
-            "--cited-from-docs and --cited-from-github"
+            "--cited-from-docs, --cited-from-github, --cited-from-export and --cited-from-batch-state"
         )
     if unreferenced and args.apply and backup_dir is None:
         raise FleetCommsCliError("retention refused: the unreferenced rule needs --backup-dir with --apply")
@@ -1187,6 +1190,8 @@ def cmd_retention(args: argparse.Namespace) -> int:
                         tasks_dir=Path(args.cited_from_tasks).expanduser(),
                         docs_dir=Path(args.cited_from_docs).expanduser(),
                         github_dump=Path(args.cited_from_github).expanduser(),
+                        citation_export=Path(args.cited_from_export).expanduser(),
+                        batch_state_dir=Path(args.cited_from_batch_state).expanduser(),
                     ),
                     accept_truncated=accept_truncated,
                 )
@@ -1305,10 +1310,11 @@ def build_parser() -> argparse.ArgumentParser:
             "Artifacts named by jobs, receipts, channel context or formal reviews, and every "
             "retention class other than message-body, historical-message, acpx-discussion and "
             "default, are kept.\n"
-            "Unreferenced rule (#12574): runs only when all three --cited-from-* sources are "
+            "Unreferenced rule (#12574, #12611): runs only when all five --cited-from-* sources are "
             "given. It removes the blob of an artifact that no row names, in an expiring class, "
             "older than --unreferenced-days and cited by none of: message text and linked blobs, "
-            "the tasks directory, the docs tree and a fresh GitHub dump. Any missing, empty, "
+            "the tasks directory, the docs tree, a fresh GitHub dump, a citation export file "
+            "and the batch_state tree (only this store's root is excluded and reported). Any missing, empty, "
             "stale, truncated or unreadable source refuses the whole run before any candidate, "
             "as does compressed content cut short; --accept-truncated-sha256 waives that only for a "
             "named message-linked blob cut at its end, reported in the receipt and kept by both rules. "
@@ -1319,6 +1325,18 @@ def build_parser() -> argparse.ArgumentParser:
             "{\"kind\": \"footer\", \"records\": <count>}; fetched_at must be under 24 h old."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.fleet_comms retention\n"
+            "  .venv/bin/python -m scripts.fleet_comms retention "
+            "--cited-from-tasks batch_state/tasks --cited-from-docs docs "
+            "--cited-from-github github.jsonl --cited-from-export citations.txt "
+            "--cited-from-batch-state batch_state\n"
+            "Outputs: JSON report with per-source coverage; dry runs write nothing. "
+            "With --apply, blob files are backed up and removed; rows remain.\n"
+            "Exit codes: 0 on success; nonzero on invalid arguments or an incomplete scan.\n"
+            "Related: docs/design/control-plane-storage-seam.md; #12574, #12611."
+        ),
     )
     retention.add_argument("--root", default=None, help="Plane root override")
     retention.add_argument(
@@ -1353,6 +1371,19 @@ def build_parser() -> argparse.ArgumentParser:
         "--cited-from-github",
         default=None,
         help="Fresh GitHub dump (.jsonl, format above) of issues, PRs and their comments",
+    )
+    retention.add_argument(
+        "--cited-from-export",
+        default=None,
+        help="Citation export file (text or JSON, e.g. citations.txt); required for the unreferenced rule, no default",
+    )
+    retention.add_argument(
+        "--cited-from-batch-state",
+        default=None,
+        help=(
+            "Batch_state directory, e.g. batch_state; only this store's root is excluded "
+            "and reported; a root inside the store refuses; required with no default"
+        ),
     )
     retention.add_argument(
         "--accept-truncated-sha256",

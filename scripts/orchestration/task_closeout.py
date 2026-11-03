@@ -294,25 +294,15 @@ class GhGitHubAdapter:
         return {"number": number, "repository": slug}
 
     def read_issue(self, repository: str, issue_number: int) -> dict[str, Any]:
-        issue = self._json(
-            [
-                "gh",
-                "issue",
-                "view",
-                str(issue_number),
-                "--repo",
-                repository,
-                "--json",
-                "number,state,body,url,closedAt",
-            ]
-        )
+        issue = self._json(Request("read-issue", repo=repository, number=issue_number))
         parent = self.read_issue_parent(repository, issue_number) or {}
         return {
             "number": issue.get("number"),
             "state": str(issue.get("state") or "").upper(),
+            "state_reason": str(issue.get("state_reason") or "").upper() or None,
             "body": issue.get("body") or "",
-            "url": issue.get("url"),
-            "closed_at": issue.get("closedAt"),
+            "url": issue.get("html_url"),
+            "closed_at": issue.get("closed_at"),
             "parent_epic": parent.get("number"),
             "parent_repository": parent.get("repository"),
         }
@@ -1086,20 +1076,27 @@ def cmd_init(args: argparse.Namespace) -> int:
         pr_number=args.pr,
     )
     path = _state_file(args, identity)
-    if path.exists() and not args.reuse:
-        raise task_lifecycle.LifecycleError(f"lifecycle ledger already exists: {path}; use --reuse")
-    if path.exists():
-        existing = task_lifecycle.load_lifecycle(path)
-        if existing["lifecycle_id"] != ledger["lifecycle_id"]:
-            raise task_lifecycle.LifecycleError("existing lifecycle ledger belongs to another identity")
-        if identity.get("origin") == "fresh" and existing["identity"] != identity:
-            raise task_lifecycle.LifecycleError("existing lifecycle ledger does not match the exact fresh task identity")
-        ledger = existing
-    _assert_live_memberships(
-        adapter, ledger, registered_epics=registered_epics,
-        membership_report=membership_report,
-    )
-    return _write_and_print(path, ledger)
+    with task_lifecycle.lifecycle_lock(path):
+        if path.exists() and not args.reuse:
+            raise task_lifecycle.LifecycleError(f"lifecycle ledger already exists: {path}; use --reuse")
+        if path.exists():
+            existing = task_lifecycle.load_lifecycle(path)
+            if existing["lifecycle_id"] != ledger["lifecycle_id"]:
+                raise task_lifecycle.LifecycleError("existing lifecycle ledger belongs to another identity")
+            if identity.get("origin") == "fresh" and existing["identity"] != identity:
+                raise task_lifecycle.LifecycleError("existing lifecycle ledger does not match the exact fresh task identity")
+            if existing["ac_snapshot"]["content_hash"] != snapshot["content_hash"]:
+                raise task_lifecycle.EvidencePolicyError(
+                    "AC_SNAPSHOT_MISMATCH",
+                    "--reuse requires the stored AC snapshot and effective policy; "
+                    "use correct-evidence-types to correct required evidence types",
+                )
+            ledger = existing
+        _assert_live_memberships(
+            adapter, ledger, registered_epics=registered_epics,
+            membership_report=membership_report,
+        )
+        return _write_and_print(path, ledger)
 
 
 def cmd_locate(args: argparse.Namespace) -> int:
@@ -1135,6 +1132,21 @@ def cmd_evidence(args: argparse.Namespace) -> int:
             recorded_at=args.now or utc_now(),
         )
         return _write_and_print(path, ledger, {"evidence": record})
+
+
+def cmd_correct_evidence_types(args: argparse.Namespace) -> int:
+    path = _state_file(args)
+    with task_lifecycle.lifecycle_lock(path):
+        ledger = task_lifecycle.load_lifecycle(path)
+        identity = ledger["identity"]
+        issue = GhGitHubAdapter(Path(args.repo_root)).read_issue(
+            identity["repository"], identity["github_issue_number"],
+        )
+        ledger, record, replayed = task_lifecycle.correct_evidence_types(
+            ledger, ac_id=args.ac_id, required_evidence=args.required_evidence,
+            actor=args.actor, reason=args.reason, issue=issue, now=args.now or utc_now(),
+        )
+        return _write_and_print(path, ledger, {"correction": record, "replayed": replayed})
 
 
 def cmd_remaining_scope(args: argparse.Namespace) -> int:
@@ -1291,7 +1303,7 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
     init.add_argument("--pr", type=int, help='Exact GitHub PR number; init defaults to unbound.')
     init.add_argument("--state-file", help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
     init.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
-    init.add_argument("--reuse", action="store_true", help='Reuse a ledger without resetting evidence; default refuses an existing ledger.')
+    init.add_argument("--reuse", action="store_true", help='Reuse only an identical effective AC snapshot/policy without resetting evidence; differences exit 2. Default refuses an existing ledger.')
     init.set_defaults(func=cmd_init)
 
     locate = sub.add_parser("locate", help="Resolve the shared ledger path from task-identity.v1.")
@@ -1314,6 +1326,20 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
     evidence.add_argument("--details", help="JSON object; review evidence records model families and verdict.")
     evidence.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     evidence.set_defaults(func=cmd_evidence)
+
+    correction = sub.add_parser(
+        "correct-evidence-types", help="Append an attributed correction to one criterion's required evidence types.",
+        description="Correct wrongly frozen required evidence types while retaining prior snapshots and proof.\nUse before the criterion is checked or the issue is completed; never substitutes for evidence.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.task_closeout correct-evidence-types --state-file ledger.json --ac-id AC-02 --required-evidence document --required-evidence review --actor codex/task --reason 'Documentation criterion'\nOutputs: Atomic local ledger update and append-only correction receipt; reads GitHub without mutating it.\nExit codes: 0: corrected or replayed; 2: typed refusal, ledger unchanged.\nRelated: task-lifecycle-closeout.md; #12608.",
+    )
+    correction.add_argument("--state-file", required=True, help="Existing lifecycle JSON ledger, e.g. ledger.json.")
+    correction.add_argument("--ac-id", required=True, help="Exact stable criterion ID, e.g. AC-02.")
+    correction.add_argument("--required-evidence", action="append", required=True, choices=sorted(task_lifecycle.EVIDENCE_TYPES), help="Correct required evidence type; repeat for each type, e.g. document and review.")
+    correction.add_argument("--actor", required=True, help="Correction attribution, e.g. codex/task-id.")
+    correction.add_argument("--reason", required=True, help="Reason the frozen types are wrong; non-empty text is required.")
+    correction.add_argument("--now", help="ISO 8601 correction time; default current UTC; cannot predate the ledger.")
+    correction.set_defaults(func=cmd_correct_evidence_types)
 
     remaining = sub.add_parser("remaining-scope", help="Record none/open/transferred remaining scope.")
     remaining.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
@@ -1358,7 +1384,10 @@ def main(argv: list[str] | None = None) -> int:
         with repository_context(args.repo_root):
             return args.func(args)
     except (task_lifecycle.LifecycleError, json.JSONDecodeError, OSError) as exc:
-        print(json.dumps({"error": str(exc)}, ensure_ascii=False, indent=2), file=sys.stderr)
+        error = {"error": str(exc)}
+        if isinstance(exc, task_lifecycle.EvidencePolicyError):
+            error["error_code"] = exc.code
+        print(json.dumps(error, ensure_ascii=False, indent=2), file=sys.stderr)
         return 2
 
 

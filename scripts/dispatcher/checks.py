@@ -356,7 +356,18 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
                 raise ValueError(str(exc)) from None
         return
     reviewer = _model_families().get(reviewer_model)
-    if not reviewer or reviewer in facts.excluded_families:
+    scope = facts
+    if facts.mixed_family and args.review_profile in {"code", "infra"}:
+        try:
+            scope = facts.reviewer_scope(reviewer)
+        except RecordError as exc:
+            raise ValueError(f"review independence: {exc}") from None
+        from scripts.review.reviewer_resolver import review_task_id_comparison_keys
+
+        reviewer_ids = review_task_id_comparison_keys(args.task_id or "", agent=args.agent)
+        if any(reviewer_ids & review_task_id_comparison_keys(task) for task in scope.author_task_ids):
+            raise ValueError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+    if not reviewer or reviewer in scope.excluded_families:
         raise ValueError(
             f"review independence: reviewer family {reviewer or 'unknown'} is not outside the branch's author "
             f"families {sorted(facts.excluded_families)}; choose a reviewer from another family"

@@ -1546,6 +1546,100 @@ def unrecorded_data_tier_checkout(worktree: Path, primary: Path) -> bool:
     return worktree.parent == primary / ".worktrees" / "data-tier" and bool(_DATA_TIER_CHECKOUT.fullmatch(worktree.name))
 
 
+def helper_untracked_files(worktree: Path) -> list[str]:
+    """Require clean tracked bytes, including present hidden index entries."""
+    status = artifacts.safe_git(
+        ["status", "--porcelain", "-z", "--untracked-files=all"], cwd=worktree,
+        capture_output=True, text=True, check=True, timeout=30,
+    ).stdout.split("\0")
+    hidden = artifacts.safe_git(
+        ["ls-files", "-v", "-z"], cwd=worktree, capture_output=True, text=True, check=True, timeout=30,
+    ).stdout.split("\0")
+    if any(entry and not entry.startswith("?? ") for entry in status) or any(
+        (entry[:1].islower() or entry[:1] == "S") and os.path.lexists(worktree / entry[2:])
+        for entry in hidden if entry
+    ):
+        raise ValueError("dirty tracked change; refusing helper worktree cleanup")
+    return sorted(entry[3:] for entry in status if entry.startswith("?? "))
+
+
+def preserve_helper_output(
+    worktree: Path, *, primary: Path, repo_root: Path, tasks_dir: Path,
+    creator_path: Path, creator: dict[str, Any], pending: bool = False,
+) -> dict[str, Any]:
+    """Use the existing verified-copy budget for a helper, without inventing a task."""
+    from scripts.orchestration.worktree_claims import (
+        helper_borrowers,
+        publish_helper_creator,
+        read_helper_creator,
+    )
+
+    members = helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir)
+    helper_untracked_files(worktree)
+    # The copy engine's identity is an artifact namespace, not a task record.
+    owner = {"task_id": creator["creator_id"]}
+    locator, created = capture_abandon_output(worktree, primary=primary, record=owner)
+    if created is not None:
+        publish_abandon_output(worktree, primary=primary, record=owner, locator=locator)
+    receipt = {
+        **locator, "schema": PRESERVED_ARTIFACTS_SCHEMA, "owner": creator["creator_id"],
+        "creator_id": creator["creator_id"], "count": len(locator["paths"]),
+        "bytes": sum(entry["size"] for entry in locator["paths"]),
+        "retention_disposition": "retrieved", "next_condition": "none",
+        "manifest_path": (primary / locator["location"]).with_suffix(".manifest.json").relative_to(primary).as_posix(),
+        "retrieval_proof_sha256": verify_retrieval(primary, locator),
+    }
+    if not _bound_residue_receipt(receipt):
+        raise ValueError("residue receipt metadata exceeds limit")
+    if helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir) != members:
+        raise ValueError("helper borrower records changed during preservation")
+    helper_untracked_files(worktree)
+    verify_abandon_output(worktree, primary=primary, record=owner, locator=locator)
+    if not pending:
+        if read_helper_creator(worktree, repo_root=repo_root) != (creator_path, creator):
+            raise ValueError("helper creator changed during preservation")
+        publish_helper_creator(creator_path, {**creator, "preserved_artifacts": receipt})
+    return receipt
+
+
+def release_helper_untracked(
+    worktree: Path, *, primary: Path, repo_root: Path, tasks_dir: Path, receipt: dict[str, Any],
+) -> None:
+    """Clear only verified untracked regular files, then let plain Git enforce guard 4."""
+    from scripts.orchestration.worktree_claims import helper_borrowers, read_helper_creator
+
+    helper = read_helper_creator(worktree, repo_root=repo_root)
+    if helper is None or helper[1].get("preserved_artifacts") != receipt:
+        raise ValueError("helper preservation receipt changed")
+    members = helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir)
+    names = helper_untracked_files(worktree)
+    paths = {entry["path"]: entry for entry in receipt["paths"]}
+    entries = []
+    for name in names:
+        entry = paths.get(name)
+        if entry is None or entry.get("type") == "symlink":
+            raise ValueError("untracked output is not a preserved regular file")
+        info = (worktree / name).lstat()
+        entries.append({**entry, "identity": [info.st_dev, info.st_ino, info.st_mtime_ns, info.st_ctime_ns]})
+
+    def recheck() -> None:
+        if read_helper_creator(worktree, repo_root=repo_root) != helper:
+            raise ValueError("helper creator changed before removal")
+        if helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir) != members:
+            raise ValueError("helper borrower records changed before removal")
+        if helper_untracked_files(worktree) != names:
+            raise ValueError("untracked output changed before removal")
+        verify_retrieval(primary, receipt)
+        verify_abandon_output(worktree, primary=primary, record={}, locator=receipt)
+
+    artifacts.unlink_archived_regular_files(worktree, entries, recheck=recheck)
+    if helper_untracked_files(worktree):
+        raise ValueError("untracked output appeared before removal")
+    remaining = [entry for entry in receipt["paths"] if entry["path"] not in names]
+    if _byte_identity(_abandon_output_inventory(worktree, primary=primary, record={})) != _byte_identity(remaining):
+        raise ValueError("ignored output changed before removal")
+
+
 def preserve_worktree_artifacts(
     worktree: Path,
     *,
@@ -1565,7 +1659,11 @@ def preserve_worktree_artifacts(
     Vanished paths require fresh lstat absence proof; byte changes still refuse.
     Caller records and task IDs are hints, never retention authority.
     """
-    from scripts.orchestration.worktree_claims import identity_cache_publication_allowed
+    from scripts.orchestration.worktree_claims import (
+        _created_worktree,
+        identity_cache_publication_allowed,
+        read_helper_creator,
+    )
 
     repo_root = primary if repo_root is None else repo_root
     record_path = None
@@ -1598,6 +1696,16 @@ def preserve_worktree_artifacts(
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
         matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+        # Task creators keep their existing attribution and retention rules.
+        # Only a cohort consisting entirely of borrowers may use helper custody.
+        if matches and not any(_created_worktree(member) for _, member in matches) and (worktree / ".git").is_file():
+            helper = read_helper_creator(worktree, repo_root=repo_root)
+            if helper is not None:
+                receipt = preserve_helper_output(
+                    worktree, primary=primary, repo_root=repo_root, tasks_dir=tasks_dir,
+                    creator_path=helper[0], creator=helper[1],
+                )
+                return True, "", receipt
         merged_preservation = any(
             isinstance(member.get("worktree_reap_proof"), dict) and "preservation" in member["worktree_reap_proof"]
             for _, member in _current_reuse_records(matches, tasks_dir)

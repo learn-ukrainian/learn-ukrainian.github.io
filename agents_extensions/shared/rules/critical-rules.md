@@ -182,4 +182,7 @@ Core technical requirements for protected branch workflows:
 Chromium CQ ceremony · chasing Scorecard/SLSA badge levels that require multiple humans · paid merge
 products before trying the native queue · classifying a full 12k-test suite without serialized landing.
 
+### 9. Replaced Things Point to Their Replacement
+A replaced tool, command, path or process points to its replacement on use and in its docs until it is removed. A silent legacy path is a defect: it answers as if live and hides the real one (the legacy bridge inbox read "0 unread" while Fleet Comms deliveries waited).
+
 </critical>

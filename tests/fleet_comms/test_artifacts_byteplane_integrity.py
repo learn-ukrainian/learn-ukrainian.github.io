@@ -100,6 +100,13 @@ def test_unreferenced_expiry_crash_keeps_rows_and_marker(
     assert (tmp_path / "backup" / rec.sha256[:2] / rec.sha256).read_bytes() == data
     with pytest.raises(ArtifactExpiredError):
         store.read_bytes(rec.artifact_id)
+    # #12622: storing the same bytes again rewrites the missing blob before
+    # the row is live. A live row must not outrun its payload.
+    revived = store.store_bytes(data, producer="t")
+    assert revived.artifact_id == rec.artifact_id
+    assert revived.retention_class == "default"
+    assert rec.blob_path.is_file()
+    assert store.read_bytes(rec.artifact_id) == data
 
 
 def test_orphan_sweep_respects_grace(store: ArtifactStore) -> None:
@@ -404,7 +411,8 @@ def _sources(
     kinds: tuple[str, ...] = ("issue", "pull_request", "issue_comment", "pr_review_comment"),
     footer: int | None = None,
 ) -> CitationSources:
-    tasks, docs = tmp_path / "tasks", tmp_path / "docs"
+    batch_state = tmp_path / "batch_state"
+    tasks, docs = batch_state / "tasks", tmp_path / "docs"
     tasks.mkdir(parents=True)
     docs.mkdir()
     (tasks / "task.json").write_text(json.dumps({"note": cite_in_tasks}))
@@ -415,7 +423,40 @@ def _sources(
     lines.append({"kind": "footer", "records": len(kinds) if footer is None else footer})
     dump = tmp_path / "github.jsonl"
     dump.write_text("".join(json.dumps(line) + "\n" for line in lines))
-    return CitationSources(tasks_dir=tasks, docs_dir=docs, github_dump=dump)
+    export = tmp_path / "citations.txt"
+    export.write_text("No exported citations.\n")
+    return CitationSources(
+        tasks_dir=tasks, docs_dir=docs, github_dump=dump,
+        citation_export=export, batch_state_dir=batch_state,
+    )
+
+
+def test_artifact_cited_only_in_export_file_is_held(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """#12611: retention must not expire an artifact cited only in an export file."""
+    from scripts.fleet_comms.cli import build_parser, cmd_retention
+
+    root = tmp_path / "batch_state" / "fleet-comms" / "v1"
+    with ArtifactStore(root=root) as store:
+        rec = store.store_bytes(b"handoff evidence", producer="t")
+        _age(store, rec.artifact_id)
+    sources = _sources(tmp_path / "sources")
+    batch_state = tmp_path / "batch_state"
+    (batch_state / "receipt.json").write_text("{}")
+    export = tmp_path / "citations.txt"
+    export.write_text(f"Handoff evidence: {rec.artifact_id}\n")
+    args = build_parser().parse_args([
+        "retention", "--root", str(root),
+        "--cited-from-tasks", str(sources.tasks_dir),
+        "--cited-from-docs", str(sources.docs_dir),
+        "--cited-from-github", str(sources.github_dump),
+    ])
+    args.cited_from_export = str(export)
+    args.cited_from_batch_state = str(batch_state)
+
+    assert cmd_retention(args) == 0
+    report = json.loads(capsys.readouterr().out)["unreferenced"]
+    assert (report["candidates"], report["held_cited"], report["removed"]) == (0, 1, 0)
+    assert rec.blob_path.is_file()
 
 
 def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
@@ -424,10 +465,10 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
     """#12574 T3 (CTO-approved). Defect class: the unreferenced rule starts or
     removes with a missing, empty, stale, incomplete or unreadable citation
     source, or removes a cited artifact."""
-    with ArtifactStore(root=tmp_path / "plane") as store:
+    with ArtifactStore(root=tmp_path / "good" / "batch_state" / "fleet-comms" / "v1") as store:
         names = (
             "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split",
-            "uncited", "padded", "inventory",
+            "by_receipt", "uncited", "padded", "inventory",
         )
         recs = {name: store.store_bytes(_payload(), producer="t") for name in names}
         for rec in recs.values():
@@ -460,6 +501,37 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         missing = _sources(tmp_path / "gone")
         missing.github_dump.unlink()
         refuses(missing, "cannot open")
+        missing_export = _sources(tmp_path / "missing-export")
+        missing_export.citation_export.unlink()
+        refuses(missing_export, "citation source export: cannot read")
+        empty_export = _sources(tmp_path / "empty-export")
+        empty_export.citation_export.write_text("")
+        refuses(empty_export, "citation source export: .* is empty")
+        missing_batch = _sources(tmp_path / "missing-batch")
+        refuses(
+            CitationSources(
+                tasks_dir=missing_batch.tasks_dir, docs_dir=missing_batch.docs_dir,
+                github_dump=missing_batch.github_dump, citation_export=missing_batch.citation_export,
+                batch_state_dir=tmp_path / "absent-batch",
+            ),
+            "citation source batch_state: .* is not a directory",
+        )
+        for inside in (store.root, store.blob_root):
+            refuses(
+                CitationSources(
+                    tasks_dir=missing_batch.tasks_dir, docs_dir=missing_batch.docs_dir,
+                    github_dump=missing_batch.github_dump, citation_export=missing_batch.citation_export,
+                    batch_state_dir=inside,
+                ),
+                "citation source batch_state: .* is inside the artifact store",
+            )
+        linked_export = _sources(tmp_path / "linked-export")
+        linked_export.citation_export.unlink()
+        linked_export.citation_export.symlink_to(linked_export.github_dump)
+        refuses(linked_export, "citation source export: .* is not a regular file")
+        linked_batch = _sources(tmp_path / "linked-batch")
+        (linked_batch.batch_state_dir / "alias").symlink_to(linked_batch.docs_dir, target_is_directory=True)
+        refuses(linked_batch, "citation source batch_state: .* is a symlink")
         linked_file = _sources(tmp_path / "linkfile")
         (linked_file.tasks_dir / "link.json").symlink_to(linked_file.tasks_dir / "task.json")
         refuses(linked_file, "not a regular file")
@@ -525,6 +597,13 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
             (locked.tasks_dir / "secret.json").write_text("{}")
             (locked.tasks_dir / "secret.json").chmod(0)
             refuses(locked, "cannot read")
+            locked_export = _sources(tmp_path / "locked-export")
+            locked_export.citation_export.chmod(0)
+            refuses(locked_export, "citation source export: cannot read")
+            locked_batch = _sources(tmp_path / "locked-batch")
+            (locked_batch.batch_state_dir / "receipt.json").write_text("{}")
+            (locked_batch.batch_state_dir / "receipt.json").chmod(0)
+            refuses(locked_batch, "citation source batch_state: cannot read")
 
         good = _sources(
             tmp_path / "good",
@@ -533,6 +612,9 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
             # a 65-character hex run is no token of its own.
             cite_in_tasks=f"{recs['by_sha'].sha256} {blob_path(recs['by_path'])} {recs['padded'].sha256}0",
         )
+        receipts = good.batch_state_dir / "review-closeout" / "archived"
+        receipts.mkdir(parents=True)
+        (receipts / "receipt.txt").write_text(recs["by_receipt"].artifact_id)
         # Every docs subtree is scanned, whatever its name or suffix, and
         # compressed content is scanned decompressed (found by magic bytes).
         (good.docs_dir / "data").mkdir()
@@ -591,7 +673,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         scan = store.scan_citations(good, now=now, accept_truncated=frozenset({cut_blob.sha256}))
         assert scan.cited == frozenset(
             recs[name].artifact_id
-            for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split")
+            for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split", "by_receipt")
         )
         # Every byte the decoder can produce before the cut was scanned.
         receipt = {
@@ -609,10 +691,18 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
             citations=scan, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
         )
         assert dry.acknowledged_truncated == report.acknowledged_truncated == [receipt]
-        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 12)
+        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 13)
         assert cut_blob.blob_path.is_file()
-        assert {entry["source"] for entry in report.sources} == {"store", "tasks", "docs", "github"}
-        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split"):
+        assert {entry["source"] for entry in dry.sources} == {
+            "store", "tasks", "docs", "github", "export", "batch_state",
+        }
+        assert dry.sources == report.sources
+        assert [entry["files"] for entry in dry.sources if entry["source"] == "export"] == [1]
+        assert [entry["files"] for entry in dry.sources if entry["source"] == "batch_state"] == [5]
+        assert [entry["excluded_subtrees"] for entry in dry.sources if entry["source"] == "batch_state"] == [
+            [{"path": str(store.root), "reason": "artifact_store"}],
+        ]
+        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split", "by_receipt"):
             assert recs[name].blob_path.is_file()
         for name in ("uncited", "padded", "inventory"):
             assert not recs[name].blob_path.is_file()

@@ -738,3 +738,24 @@ def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
     assert _channels.resolve_recipient_alias("") == ""
     assert _channels.resolve_recipient_alias("cursor-nosucharea") == "cursor-nosucharea"
     assert _channels.resolve_recipient_alias("cursor-infa") == "cursor-infa"
+
+
+def test_legacy_inbox_points_to_authority_deliveries_in_authority_mode(monkeypatch, capsys):
+    """Defect class: a legacy read path stays silent about its replacement."""
+    from scripts.ai_agent_bridge import _channels_cli
+
+    monkeypatch.setattr(_channels_cli, "queued_authority_delivery_count", lambda recipient: 3, raising=False)
+    assert _run_cli(["inbox", "--for", "codex"]) == 0
+    shadow_out = capsys.readouterr().out
+    assert "scripts.fleet_comms deliveries receive" not in shadow_out
+
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+    assert _run_cli(["inbox", "--for", "codex"]) == 0
+    first, *rest = capsys.readouterr().out.splitlines()
+    assert ".venv/bin/python -m scripts.fleet_comms deliveries receive --recipient codex" in first
+    assert "queued authority deliveries: 3" in first
+    assert any("No messages for codex" in line for line in rest)
+
+    monkeypatch.setattr(_channels_cli, "queued_authority_delivery_count", lambda recipient: None, raising=False)
+    assert _run_cli(["inbox", "--for", "codex"]) == 0
+    assert "queued authority deliveries: unknown" in capsys.readouterr().out.splitlines()[0]

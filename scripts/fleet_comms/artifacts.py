@@ -348,12 +348,14 @@ class UnreferencedReport:
 class CitationSources:
     """The declared outside-the-store places that may cite an artifact (#12574).
 
-    All three are required: the unreferenced rule never runs on a partial set.
+    All five are required: the unreferenced rule never runs on a partial set.
     """
 
     tasks_dir: Path
     docs_dir: Path
     github_dump: Path
+    citation_export: Path
+    batch_state_dir: Path
 
 
 @dataclass(frozen=True, slots=True)
@@ -1176,7 +1178,7 @@ class ArtifactStore:
                     f"{existing['artifact_id']!r}; refusing duplicate id "
                     f"{artifact_id!r}"
                 )
-            reused = self._reuse_existing_pg_blob(digest, retention_class)
+            reused = self._reuse_existing_pg_blob(digest, retention_class, data)
             if reused is not None:
                 return reused
 
@@ -1217,7 +1219,7 @@ class ArtifactStore:
                 # (rowcount 0). Upgrade that row under this same transaction.
                 # A row this statement inserted keeps the class it wrote.
                 if inserted.rowcount != 1:
-                    self._upgrade_pg_retention_locked(digest, retention_class)
+                    self._upgrade_pg_retention_locked(digest, retention_class, data)
         except psycopg.errors.UniqueViolation as exc:
             raise ArtifactStoreError(
                 f"artifact_id {aid!r} already exists with different content "
@@ -1228,23 +1230,32 @@ class ArtifactStore:
             raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
         return self._row_to_record(row)
 
-    def _reuse_existing_pg_blob(self, digest: str, retention_class: str) -> ArtifactRecord | None:
+    def _reuse_existing_pg_blob(
+        self, digest: str, retention_class: str, data: bytes
+    ) -> ArtifactRecord | None:
         """Upgrade an existing Postgres row under the store writer transaction.
 
         ``_transaction`` is the pg writer lock (a nested call is a savepoint),
         the same role as the ``BEGIN IMMEDIATE`` in ``_reuse_existing_blob``.
-        The class decision is ``_kept_retention_class``. Returns None when the
-        row vanished, so the caller inserts it.
+        The class decision is ``_kept_retention_class``. An expired row's
+        payload is rewritten from ``data`` before that marker is cleared, in
+        the same transaction, so a committed row is never live without its
+        bytes. Returns None when the row vanished, so the caller inserts it.
         """
         with self._transaction():
-            self._upgrade_pg_retention_locked(digest, retention_class)
+            self._upgrade_pg_retention_locked(digest, retention_class, data)
         row = self._pg_row_by_sha256(digest)
         if row is None:
             return None
         return self._row_to_record(row)
 
-    def _upgrade_pg_retention_locked(self, digest: str, requested: str) -> None:
-        """Write a stronger class for ``digest``. Caller holds ``_transaction``."""
+    def _upgrade_pg_retention_locked(self, digest: str, requested: str, data: bytes) -> None:
+        """Write a stronger class for ``digest``. Caller holds ``_transaction``.
+
+        When ``retention_class`` carries the expired marker, the payload is
+        rewritten from ``data`` before the marker is cleared. Both writes
+        share the caller's transaction, so neither commits alone.
+        """
         row = self._conn.execute(
             f"SELECT {self._PG_META_COLUMNS} FROM {_PG_BLOB_TABLE} "
             "WHERE sha256 = %s FOR UPDATE",
@@ -1254,12 +1265,23 @@ class ArtifactStore:
             return
         stored = str(row["retention_class"])
         chosen = _kept_retention_class(stored, requested)
-        if chosen == stored:
+        expired = stored.startswith(RETENTION_EXPIRED_PREFIX)
+        if not expired and chosen == stored:
             return
-        self._conn.execute(
-            f"UPDATE {_PG_BLOB_TABLE} SET retention_class = %s WHERE artifact_id = %s",
-            (chosen, row["artifact_id"]),
-        )
+        if expired:
+            if hashlib.sha256(data).hexdigest() != digest:
+                raise ArtifactStoreError(
+                    f"refusing to revive {digest}: bytes do not match the stored digest"
+                )
+            self._conn.execute(
+                f"UPDATE {_PG_BLOB_TABLE} SET payload = %s, bytes = %s WHERE artifact_id = %s",
+                (data, len(data), row["artifact_id"]),
+            )
+        if chosen != stored:
+            self._conn.execute(
+                f"UPDATE {_PG_BLOB_TABLE} SET retention_class = %s WHERE artifact_id = %s",
+                (chosen, row["artifact_id"]),
+            )
 
     # #7484 (Sol 1.15): metadata lookups must not drag the BYTEA payload over
     # the wire — a dedup probe against a 100 MB duplicate used to download all
@@ -1959,8 +1981,11 @@ class ArtifactStore:
         readable end to end, so the unreferenced rule cannot start on a
         partial or blind scan. Coverage is evidence; the refusal is the
         protection. Sources: the store itself (message text, message-linked
-        blobs), the tasks directory, the repository docs tree and a GitHub
-        dump (``_scan_github``).
+        blobs), the tasks directory, the repository docs tree, a GitHub dump
+        (``_scan_github``), a citation export file and the batch-state tree.
+        The batch-state scan excludes this store's own root: its artifact
+        index and unlinked blobs are not outside citations. Store citations
+        are scanned by ``_scan_store`` instead; coverage names the exclusion.
 
         Compressed content cut short refuses, with one exception:
         ``accept_truncated`` names message-linked blobs (by full sha256) whose
@@ -1982,6 +2007,11 @@ class ArtifactStore:
             self._scan_tree("tasks", sources.tasks_dir, state, required_suffix=".json", inventories=True),
             self._scan_tree("docs", sources.docs_dir, state, required_suffix=".md"),
             self._scan_github(sources.github_dump, state, now or datetime.now(UTC)),
+            self._scan_export(sources.citation_export, state),
+            self._scan_tree(
+                "batch_state", sources.batch_state_dir, state,
+                inventories=True, excluded_store_root=self.root,
+            ),
         ]
         if self._conn.in_transaction:
             self._conn.commit()
@@ -2100,19 +2130,35 @@ class ArtifactStore:
         return state.plain_bytes
 
     @staticmethod
+    def _scan_export(path: Path, state: _ScanState) -> dict[str, Any]:
+        """Scan the caller's citation export as content, without a format schema."""
+        try:
+            if not stat.S_ISREG(os.lstat(path).st_mode):
+                raise ArtifactStoreError(f"citation source export: {path} is not a regular file")
+            with open(path, "rb") as handle:
+                size = state.feed_stream(handle)
+        except OSError as exc:
+            raise ArtifactStoreError(f"citation source export: cannot read {path}: {exc}") from exc
+        if size == 0:
+            raise ArtifactStoreError(f"citation source export: {path} is empty")
+        return {"source": "export", "path": str(path), "files": 1, "bytes": size}
+
+    @staticmethod
     def _scan_tree(
         name: str,
         root: Path,
         state: _ScanState,
         *,
-        required_suffix: str,
+        required_suffix: str | None = None,
         inventories: bool = False,
+        excluded_store_root: Path | None = None,
     ) -> dict[str, Any]:
         """Scan every file under ``root`` end to end, or raise.
 
         Complete or refused: a symlink, a non-regular entry, an unreadable
-        or vanished file or directory, or a tree with no ``required_suffix``
-        file raises. Nothing is skipped. With ``inventories``, the blob-path
+        or vanished file or directory, or an empty tree raises. If given,
+        ``required_suffix`` must occur. Only ``excluded_store_root`` may be
+        skipped; its path and reason are reported. With ``inventories``, the blob-path
         listings inside the dispatcher's generated checkout inventories are
         not citations (``_INVENTORY_ENTRY``); they are counted in the coverage.
         """
@@ -2121,18 +2167,31 @@ class ArtifactStore:
             raise ArtifactStoreError(f"citation source {name}: cannot list {exc.filename}: {exc}")
 
         root = Path(root)
+        if root.is_symlink():
+            raise ArtifactStoreError(f"citation source {name}: {root} is a symlink")
         if not root.is_dir():
             raise ArtifactStoreError(f"citation source {name}: {root} is not a directory")
+        excluded_store_root = excluded_store_root.resolve() if excluded_store_root is not None else None
+        if excluded_store_root is not None and root.resolve().is_relative_to(excluded_store_root):
+            raise ArtifactStoreError(
+                f"citation source {name}: {root} is inside the artifact store; "
+                "refusing an incompletely scanned tree"
+            )
+        excluded_subtrees = []
         files = required = total = listings = 0
         digest = hashlib.sha256()
         for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=fail_walk):
             dirnames.sort()
-            for dirname in dirnames:
-                if os.path.islink(os.path.join(dirpath, dirname)):
+            for dirname in dirnames[:]:
+                child = Path(dirpath) / dirname
+                if child.is_symlink():
                     raise ArtifactStoreError(
                         f"citation source {name}: {dirpath}/{dirname} is a symlink; "
                         "refusing an incompletely scanned tree"
                     )
+                if excluded_store_root is not None and child.resolve() == excluded_store_root:
+                    dirnames.remove(dirname)
+                    excluded_subtrees.append({"path": str(excluded_store_root), "reason": "artifact_store"})
             for filename in sorted(filenames):
                 path = Path(dirpath) / filename
                 inventory = inventories and filename in _INVENTORY_SNAPSHOT_FILES
@@ -2158,11 +2217,12 @@ class ArtifactStore:
                     ) from exc
                 files += 1
                 total += size
-                required += path.suffix == required_suffix
+                required += required_suffix is None or path.suffix == required_suffix
                 digest.update(f"{path.relative_to(root)}\0{size}\n".encode())
         if required < 1:
+            expected = f"no {required_suffix} file" if required_suffix is not None else "no file"
             raise ArtifactStoreError(
-                f"citation source {name}: {root} holds no {required_suffix} file; "
+                f"citation source {name}: {root} holds {expected}; "
                 "refusing an empty or wrong tree"
             )
         return {
@@ -2171,6 +2231,7 @@ class ArtifactStore:
             "files": files,
             "bytes": total,
             "inventory_listings_ignored": listings,
+            "excluded_subtrees": excluded_subtrees,
             "digest": digest.hexdigest(),
         }
 
