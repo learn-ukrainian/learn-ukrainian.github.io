@@ -1558,6 +1558,46 @@ is_transient_sqlite_path() {
   [[ "$relative" == */pytest-*/* ]]
 }
 
+# Run `xargs -0 COMMAND...` over BATCH_PATHS and leave its NUL-separated records
+# in BATCH_RESULT. A path that is already gone is dropped first, as the per-file
+# tests did. A batch that fails is retried once against the files still present;
+# a second failure aborts, so a batch that did not run is never read as "nothing
+# found". The producer's own status travels as a final status: record, because
+# a process substitution's status does not reach the loop that reads it.
+BATCH_PATHS=()
+BATCH_RESULT=()
+run_path_batches() {
+  local path record status=""
+  local -a live
+
+  for _ in 1 2; do
+    live=()
+    for path in "${BATCH_PATHS[@]+"${BATCH_PATHS[@]}"}"; do
+      if [[ -e "$path" || -L "$path" ]]; then
+        live+=("$path")
+      fi
+    done
+    BATCH_RESULT=()
+    status=0
+    if ((${#live[@]} > 0)); then
+      status=""
+      while IFS= read -r -d '' record; do
+        if [[ "$record" == status:* ]]; then
+          status=${record#status:}
+        else
+          BATCH_RESULT+=("$record")
+        fi
+      done < <(
+        batch_status=0
+        printf '%s\0' "${live[@]}" | xargs -0 "$@" 2>/dev/null || batch_status=$?
+        printf 'status:%s\0' "$batch_status"
+      )
+    fi
+    [[ "$status" == 0 ]] && return 0
+  done
+  die "A batched file check failed (status ${status:-unknown}); refusing to treat it as an empty result."
+}
+
 # Sidecars are named beside the path SQLite opened, not beside every hard
 # link of the inode. Publishing the other name stores the main file and drops
 # committed WAL rows. Refuse before any snapshot is written.
@@ -1580,7 +1620,9 @@ refuse_hardlinked_sqlite_aliases() {
   ((${#considered[@]} > 0)) || return 0
   # Regular files only (find does not follow a symlink named on its command
   # line); a file that vanished is skipped, as the old per-file test did.
-  while IFS= read -r -d '' absolute; do
+  BATCH_PATHS=("${considered[@]}")
+  run_path_batches sh -c 'find "$@" -maxdepth 0 -type f -links +1 -print0' sh
+  for absolute in "${BATCH_RESULT[@]+"${BATCH_RESULT[@]}"}"; do
     is_ephemeral_home_path "$absolute" && continue
     is_sqlite_database "$absolute" || continue
     relative=${absolute#"$PROJECT_ROOT"/}
@@ -1589,8 +1631,7 @@ refuse_hardlinked_sqlite_aliases() {
     if ((links > 1)); then
       die "Refusing hard-linked SQLite database $relative (link count ${links}). Remove the extra name and retry; sidecars follow the path SQLite opened, so this alias would omit committed WAL rows."
     fi
-  done < <(printf '%s\0' "${considered[@]}" |
-    xargs -0 sh -c 'find "$@" -maxdepth 0 -type f -links +1 -print0' sh 2>/dev/null)
+  done
 }
 
 # Read NAME.tar.zst.manifest files from DB_ARCHIVE_DIR. Format:
@@ -2117,7 +2158,7 @@ source_tree_stats() {
 # processes, so the cost is not one subshell, find and jq per root. A root that
 # is missing, a symlink or not a regular file stays absent: zero files.
 collect_source_root_stats() {
-  local relative file kind size bytes files
+  local relative file kind size bytes files index
   local -a file_roots=()
 
   ROOT_STAT_FILES=()
@@ -2134,14 +2175,18 @@ collect_source_root_stats() {
     fi
   done
   ((${#file_roots[@]} > 0)) || return 0
-  while IFS= read -r -d '' kind && IFS= read -r -d '' size && IFS= read -r -d '' file; do
+  BATCH_PATHS=("${file_roots[@]}")
+  run_path_batches stat --printf='%F\0%s\0%n\0' --
+  for ((index = 0; index + 2 < ${#BATCH_RESULT[@]}; index += 3)); do
+    kind=${BATCH_RESULT[index]}
+    size=${BATCH_RESULT[index + 1]}
+    file=${BATCH_RESULT[index + 2]}
     [[ "$kind" == regular* ]] || continue
     source_tree_counts_file "$file" || continue
     relative=${file#"$PROJECT_ROOT"/}
     ROOT_STAT_BYTES[$relative]=$size
     ROOT_STAT_FILES[$relative]=1
-  done < <(printf '%s\0' "${file_roots[@]}" |
-    xargs -0 stat --printf='%F\0%s\0%n\0' -- 2>/dev/null)
+  done
 }
 
 backup_tree_size_bytes() {
