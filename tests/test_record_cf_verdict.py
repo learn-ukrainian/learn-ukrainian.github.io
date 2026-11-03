@@ -4269,12 +4269,17 @@ def test_cli_uses_primary_recorder_before_stale_imports(tmp_path, form, argv):
 
 
 @pytest.mark.parametrize("form", ["file", "module"])
-@pytest.mark.parametrize("failure", ["metadata", "missing-entry"])
+@pytest.mark.parametrize("failure", ["metadata", "missing-entry", "symlink-loop"])
 def test_cli_refuses_unavailable_primary_recorder(tmp_path, form, failure):
-    """Defect class: fail-open stale gate when linked metadata is malformed or the primary recorder is missing."""
+    """Defect classes: fail-open stale gate on missing primary; untyped bootstrap failure on symlink-loop metadata."""
     tree, _entry = recorder_cli_tree(tmp_path)
     if failure == "metadata":
         (tree / ".git").write_text("gitdir: /nonexistent/metadata\n")
+    elif failure == "symlink-loop":
+        first, second = tmp_path / "loop-a", tmp_path / "loop-b"
+        first.symlink_to(second)
+        second.symlink_to(first)
+        (tree / ".git").write_text(f"gitdir: {first}\n")
     done = run_recorder_cli(tree, form, ["budget-check", "--repository", REPOSITORY, "--pr", "42"])
     assert done.returncode == 2 and "Traceback" not in done.stderr, done.stderr
     refusal = json.loads(done.stdout)

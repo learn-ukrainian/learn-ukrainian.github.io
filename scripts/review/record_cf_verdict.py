@@ -31,7 +31,7 @@ if __name__ == "__main__":
         from scripts.dispatcher.primary import exec_primary
 
         exec_primary(sys.argv[1:], entry=Path("scripts/review/record_cf_verdict.py"))
-    except (ImportError, OSError, SystemExit) as exc:
+    except (ImportError, OSError, RuntimeError, SystemExit) as exc:
         print(json.dumps({"admitted": False, "refusal": f"RECORDER_PRIMARY_REFUSED: {exc}"}, sort_keys=True))
         raise SystemExit(2) from None
 
