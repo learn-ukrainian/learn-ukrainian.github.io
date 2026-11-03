@@ -547,6 +547,61 @@
       "count": 1
     },
     {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.build",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.build.fresh",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.build.fresh.manifest",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.curriculum.evidence",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.curriculum.evidence.codes",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.curriculum.evidence.lock",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.curriculum.evidence.sources",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.review.prompts.check",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.review.prompts.eligibility",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.review.receipts",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/worker.py",
+      "module": "scripts.review.receipts.ledger",
+      "count": 1
+    },
+    {
       "path": "scripts/eval/lesson_ab/core.py",
       "module": "scripts.verification",
       "count": 1

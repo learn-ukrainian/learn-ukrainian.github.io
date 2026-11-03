@@ -294,6 +294,9 @@ and records `worktree_disposition: retained` with one of these reasons:
 - `removal_refused`: the `worktree_claims` chokepoint refused (lock busy,
   another unfinished record claims the tree, or artifact preservation failed);
   `worktree_disposition_detail` carries its reason.
+- `settlement_code_unavailable`: settlement could not load its code (an
+  `ImportError`, for example after a dispatcher change merged while the worker
+  ran). The hourly hygiene run retries it from a fresh process.
 - `opsec_refused`: salvage's push would send a range the public push gate refuses
   (the same message scan and commit-range blob scan). The tree stays, the push
   does not happen, and the detail is a fixed phrase. This reason is not retried;

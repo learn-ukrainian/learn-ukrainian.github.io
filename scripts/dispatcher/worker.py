@@ -488,7 +488,141 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
                            "unpublished", "remote_mismatch", "unknown", "removal_refused",
                            "worktree_remove_failed", "settlement_failed",
                            "salvage_failed", "salvage_unverified", "large_ignored_output",
-                           "nested_repository_unpushed", "github_deferred"})
+                           "nested_repository_unpushed", "github_deferred", git.CODE_UNAVAILABLE})
+
+
+def _load_bound_review_code() -> None:
+    """Import what a bound formal review attempt (``review_attempt.run``) imports on demand.
+
+    Only that kind of run needs the build engine's manifest, the evidence sources, the review prompt checks and the agent runner with
+    its ``ai_llm`` package. The manifest import reaches ``scripts.wiki.dense_rerank``, which imports numpy, and numpy starts an
+    OpenBLAS thread pool in this process. The pool shares the file table. A supervisor that then holds review slots keeps those
+    flocks in the same table; SIGKILL makes the leader a zombie, which ``_identity`` treats as gone, while the pool still holds
+    the flocks, so the hold stays live. A bound attempt does not take review slots (``hold_review_test_slots`` returns immediately
+    when ``review_attempt`` is set), so only that run loads this code. The runner imports ``ai_llm`` from ``scripts/``, which
+    ``review_attempt.run`` puts on ``sys.path`` just before it imports the runner; do the same, and leave ``sys.path`` as it was.
+    """
+    scripts_dir = str(Path(__file__).resolve().parents[1])
+    added = scripts_dir not in sys.path
+    if added:
+        sys.path.insert(0, scripts_dir)
+    try:
+        with contextlib.suppress(Exception):
+            from scripts.build.fresh import manifest  # noqa: F401
+            from scripts.curriculum.evidence import sources  # noqa: F401
+            from scripts.review.prompts import check, eligibility  # noqa: F401
+        with contextlib.suppress(Exception):
+            from scripts.agent_runtime import runner  # noqa: F401
+    finally:
+        if added:
+            sys.path.remove(scripts_dir)
+
+
+def _load_provider_modules() -> None:
+    """Import the provider modules in their own scope.
+
+    ``load_post_start_code`` also imports ``scripts.agent_runtime.adapters`` under the names ``agy``, ``claude``, ``codex``,
+    ``cursor`` and ``muse``. Binding those names twice in one function is a mypy ``no-redef`` error. The imports stay
+    literal, and each module still lands in ``sys.modules``.
+    """
+    with contextlib.suppress(Exception):
+        from scripts.dispatcher.providers import agy, claude, codex, cursor, muse, opencode, stream_json  # noqa: F401
+
+
+def load_post_start_code(bound_review: bool = False) -> None:
+    """Import, as the worker starts, the modules its later steps import inside functions.
+
+    Settlement and the other steps after the provider runs import part of their code on demand, from the
+    primary checkout. A dispatcher change that merged while the worker ran gave them new modules next to
+    the old ones loaded at start, and removal failed on the mix (#12634). Loading them now makes the whole
+    run use the version it started with. The list holds the deferred imports of the modules a worker runs
+    after start (this one, ``git``, the provider registry, the settlement chain, review attempts and
+    their helpers) and the modules the dispatcher tests loaded after start. A new deferred import in
+    those steps belongs here; ``bound_review`` adds what only a bound review attempt imports. Each group is skipped whole when any module in it fails to import, whatever
+    the error, so the worker still starts; a step that then cannot load its code records
+    ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a fresh process.
+    """
+    with contextlib.suppress(Exception):
+        from scripts.agent_runtime import (  # noqa: F401
+            agy_hook_config,
+            attempt_boundary,
+            attempt_network,
+            binary_resolve,
+            codex_accounts,
+            env_sanitize,
+            failure_codes,
+            jsonl,
+            review_mcp,
+            sources_read_only,
+            telemetry,
+            tool_calls,
+        )
+        from scripts.agent_runtime.adapters import (  # noqa: F401
+            _output_schema,
+            agy,
+            base,
+            claude,
+            codex,
+            codex_events,
+            cursor,
+            muse,
+        )
+    if bound_review:
+        _load_bound_review_code()
+    with contextlib.suppress(Exception):
+        from scripts.common import fallback_substitutions, nofollow_walk, release_layout, safe_open  # noqa: F401
+        from scripts.curriculum.evidence import codes, lock  # noqa: F401
+        from scripts.guardrails import delegate_ownership  # noqa: F401
+        from scripts.lib import git_identity  # noqa: F401
+        from scripts.opsec import git_push  # noqa: F401
+        from scripts.session_supervisor import remote  # noqa: F401
+        from scripts.utils import claude_version  # noqa: F401
+    with contextlib.suppress(Exception):
+        from scripts.review import (  # noqa: F401
+            budget_grant,
+            capacity,
+            isolation,
+            record_cf_verdict,
+            render_contract,
+            repair_round,
+            review_contract,
+            reviewer_resolver,
+            role_resolution,
+            subject_seat,
+            verdict_parser,
+        )
+        from scripts.review.receipts import ledger, outcomes  # noqa: F401
+    with contextlib.suppress(Exception):
+        from scripts.dispatcher import checks, host_admission, output_schema, review_attempt, scope  # noqa: F401
+    _load_provider_modules()
+    with contextlib.suppress(Exception):
+        from scripts.fleet import (  # noqa: F401
+            credit_lane,
+            ignored_task_output,
+            pr_owner_check,
+            regenerable_output,
+            reset_reserve,
+            terminal_abandon,
+        )
+    with contextlib.suppress(Exception):
+        from scripts.orchestration import (  # noqa: F401
+            admission_shadow,
+            dead_worker_state,
+            dispatch_admission,
+            pool_headroom,
+            pr_ownership,
+            preparation_evidence,
+            reaper_lifecycle,
+            slot_routing,
+            task_record_causes,
+            worker_leftovers,
+            worktree_artifacts,
+            worktree_claims,
+            worktree_git,
+            worktree_prep,
+        )
+
+
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
 SETTLE_PATIENCE = 10
 # Extra fallback scans, 0.2 s apart, before an unreadable one keeps the worktree.
@@ -683,6 +817,10 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
 
     try:
         record.update(git.settle_worktree(record, borrowed=borrowed, salvage=salvage))
+    except ImportError as exc:
+        # Settlement's code could not be loaded: keep the tree and let the scheduled cleanup, a fresh process, finish.
+        record.update(worktree_disposition="retained", worktree_disposition_reason=git.CODE_UNAVAILABLE,
+                      worktree_disposition_detail=f"{type(exc).__name__}: {exc}")
     except Exception:
         record.update(worktree_disposition="error", worktree_disposition_reason="settlement_failed")
 
@@ -860,6 +998,7 @@ def _adopt_orphans() -> bool:
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
+    load_post_start_code(bool(record.get("review_attempt")))
     if record.get("require_review_verdict") is True:
         # The code this supervisor loaded; settlement records it again (#12399).
         record["dispatcher_code_start"] = _dispatcher_code()
