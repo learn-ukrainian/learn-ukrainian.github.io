@@ -24,7 +24,7 @@ TRUFFLEHOG_FLAGS=--results=verified,unknown,unverified --exclude-detectors=Lob -
 #   claude-cto decision on 2026-11-03 (#12682), for the private repository only.
 #   Reason: on the vendor's canary repository trufflesecurity/test_keys,
 #   TruffleHog 3.99.0 reports 3 results with verified,unknown and 8 with
-#   verified,unknown,unverified. The 4 extra AWS keys and the PrivateKey
+#   verified,unknown,unverified. The 4 extra cloud access keys and the PrivateKey
 #   result are unverified, so the narrower filter passes revoked, synthetic
 #   and most private-key secrets. That is fail-open. False positives go
 #   through the reviewed .trufflehogignore or an inline trufflehog:ignore with
