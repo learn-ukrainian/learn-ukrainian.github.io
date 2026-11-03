@@ -3,8 +3,6 @@
 import contextlib
 import ctypes
 import hashlib
-import importlib
-import importlib.util
 import json
 import os
 import re
@@ -491,70 +489,68 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
                            "worktree_remove_failed", "settlement_failed",
                            "salvage_failed", "salvage_unverified", "large_ignored_output",
                            "nested_repository_unpushed", "github_deferred", git.CODE_UNAVAILABLE})
-# Dispatcher-side packages whose deferred imports a worker follows when it loads its post-start code.
-POST_START_PACKAGES = frozenset({"dispatcher", "orchestration", "fleet", "guardrails", "opsec"})
-# An import inside a function (indented), with the names a "from" form takes.
-_DEFERRED_IMPORT = re.compile(
-    r"^[ \t]+(?:from[ \t]+(scripts(?:\.\w+)*)[ \t]+import[ \t]+(\([^)]*\)|[^\n]*)|import[ \t]+(scripts(?:\.\w+)*))",
-    re.MULTILINE)
-_post_start_code_loaded = False
-
-
-def _deferred_imports(source: str) -> set[str]:
-    """Modules (and, for a "from" form, each name that may be a submodule) imported inside functions."""
-    found = set()
-    for module, names, plain in _DEFERRED_IMPORT.findall(source):
-        found.add(module or plain)
-        for name in re.sub(r"#[^\n]*", "", names).strip("() \t\n").replace("\n", " ").split(","):
-            if name.split():
-                found.add(f"{module}.{name.split()[0]}")
-    return found
-
-
-def _module_source(name: str) -> Path | None:
-    try:
-        spec = importlib.util.find_spec(name)
-    except (ImportError, ValueError, AttributeError):
-        return None  # not a module (an imported name), or not importable
-    return Path(spec.origin) if spec and spec.origin and spec.origin.endswith(".py") else None
 
 
 def load_post_start_code() -> None:
-    """Import every module this worker's later steps import on demand, once, as it starts.
+    """Import, as the worker starts, the modules its later steps import inside functions.
 
-    Settlement and the other steps after the provider runs import part of their code inside functions,
-    from the primary checkout. A dispatcher change that merges while the worker runs would then give
-    them new modules next to the old ones loaded at start, and removal failed on the mix (#12634).
-    Loading it all now makes the whole run use the version it started with.
-    A module that cannot be imported is skipped: if a step needs it later, that step records
-    ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a fresh process.
+    Settlement and the other steps after the provider runs import part of their code on demand, from the
+    primary checkout. A dispatcher change that merged while the worker ran gave them new modules next to
+    the old ones loaded at start, and removal failed on the mix (#12634). Loading them now makes the whole
+    run use the version it started with. The list is every module a worker's later steps first load: the
+    deferred imports of this module, ``git`` and the provider registry, the settlement chain, and the modules
+    a run of the dispatcher tests loaded after start. A new deferred import belongs here; a step that still
+    cannot load its code records ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a
+    fresh process. A group that cannot be imported is skipped, so the worker still runs.
     """
-    global _post_start_code_loaded
-    if _post_start_code_loaded:
-        return
-    _post_start_code_loaded = True
-
-    def dispatcher_side(name: str) -> bool:
-        parts = name.split(".")
-        return len(parts) > 1 and parts[0] == "scripts" and parts[1] in POST_START_PACKAGES
-
-    # What is loaded now is the dispatcher the worker started with: follow all of its deferred imports,
-    # and the dispatcher-side deferred imports of whatever they reach.
-    roots = {name for name in sys.modules if dispatcher_side(name)} | {providers.__name__}
-    pending, seen = list(roots), set()
-    while pending:
-        name = pending.pop()
-        if name in seen:
-            continue
-        seen.add(name)
-        source = _module_source(name)
-        if source is None:
-            continue
-        with contextlib.suppress(Exception):  # one unimportable module must not stop the worker
-            importlib.import_module(name)
-        with contextlib.suppress(OSError, UnicodeDecodeError):
-            pending += [found for found in _deferred_imports(source.read_text())
-                        if name in roots or dispatcher_side(found)]
+    with contextlib.suppress(ImportError):
+        from scripts.agent_runtime import (  # noqa: F401
+            agy_hook_config,
+            attempt_boundary,
+            binary_resolve,
+            codex_accounts,
+            env_sanitize,
+            failure_codes,
+            jsonl,
+            sources_read_only,
+            tool_calls,
+        )
+        from scripts.agent_runtime.adapters import (  # noqa: F401
+            _output_schema,
+            agy,
+            base,
+            claude,
+            codex,
+            codex_events,
+            muse,
+        )
+    with contextlib.suppress(ImportError):
+        from scripts.common import nofollow_walk, release_layout, safe_open  # noqa: F401
+        from scripts.curriculum.evidence import codes, lock  # noqa: F401
+        from scripts.guardrails import delegate_ownership  # noqa: F401
+        from scripts.opsec import git_push  # noqa: F401
+        from scripts.review import review_contract, verdict_parser  # noqa: F401
+        from scripts.review.receipts import ledger, outcomes  # noqa: F401
+    with contextlib.suppress(ImportError):
+        from scripts.dispatcher import checks, host_admission, output_schema, review_attempt  # noqa: F401
+        from scripts.dispatcher.providers import agy, claude, codex, cursor, muse, opencode, stream_json  # noqa: F401
+    with contextlib.suppress(ImportError):
+        from scripts.fleet import ignored_task_output, regenerable_output, terminal_abandon  # noqa: F401
+    with contextlib.suppress(ImportError):
+        from scripts.orchestration import (  # noqa: F401
+            admission_shadow,
+            dead_worker_state,
+            dispatch_admission,
+            pool_headroom,
+            pr_ownership,
+            preparation_evidence,
+            reaper_lifecycle,
+            worker_leftovers,
+            worktree_artifacts,
+            worktree_claims,
+            worktree_git,
+            worktree_prep,
+        )
 
 
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
