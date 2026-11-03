@@ -5,12 +5,12 @@ from pathlib import Path
 
 import yaml
 
-from tests.dispatcher.test_core import run_git, sandbox  # noqa: F401  (the real-dispatcher fixture)
+from tests.dispatcher.conftest import run_git
 
 REGISTRY = ".agent/workspace-hygiene.json"
 
 
-def declared_repo(sandbox):  # noqa: F811
+def declared_repo(sandbox):
     """A sibling checkout whose fleet entry declares a registry that already holds other records."""
     config = sandbox.repo / "scripts/config/fleet_repos.yaml"
     catalog = yaml.safe_load(config.read_text())
@@ -32,7 +32,7 @@ def declared_repo(sandbox):  # noqa: F811
     return primary, registry, other
 
 
-def test_dispatched_worktree_is_registered_before_creation_and_archived_at_removal(sandbox):  # noqa: F811
+def test_dispatched_worktree_is_registered_before_creation_and_archived_at_removal(sandbox):
     primary, registry, other = declared_repo(sandbox)
     # A non-empty directory at the path makes creation fail after registration, which must not leave a phantom.
     (primary / ".worktrees/dispatch/codex/doomed").mkdir(parents=True)
@@ -65,7 +65,7 @@ def test_dispatched_worktree_is_registered_before_creation_and_archived_at_remov
     assert not Path(tree).exists()
 
 
-def test_register_confirms_branch_and_head_and_a_malformed_registry_is_refused(sandbox):  # noqa: F811
+def test_register_confirms_branch_and_head_and_a_malformed_registry_is_refused(sandbox):
     from scripts.dispatcher import git
 
     primary, registry, _ = declared_repo(sandbox)
@@ -89,7 +89,7 @@ def test_register_confirms_branch_and_head_and_a_malformed_registry_is_refused(s
         raise AssertionError("a malformed registry must be refused")
 
 
-def test_a_creation_that_fails_after_git_made_the_tree_leaves_the_record_active(sandbox, monkeypatch):  # noqa: F811
+def test_a_creation_that_fails_after_git_made_the_tree_leaves_the_record_active(sandbox, monkeypatch):
     from scripts.dispatcher import git
 
     primary, registry, _ = declared_repo(sandbox)
@@ -115,7 +115,7 @@ def test_a_creation_that_fails_after_git_made_the_tree_leaves_the_record_active(
     assert (entry["state"], entry["branch"], entry["head"]) == ("active", "codex/survivor", sha)
 
 
-def test_noncanonical_spelling_and_live_path(sandbox):  # noqa: F811
+def test_noncanonical_spelling_and_live_path(sandbox):
     from scripts.dispatcher import git
 
     primary, registry, _ = declared_repo(sandbox)
@@ -138,7 +138,7 @@ def test_noncanonical_spelling_and_live_path(sandbox):  # noqa: F811
     assert json.loads(registry.read_text())["worktrees"][canonical] == before
 
 
-def test_a_commit_refreshes_the_record_and_a_retained_tree_keeps_its_final_head(sandbox, monkeypatch):  # noqa: F811
+def test_a_commit_refreshes_the_record_and_a_retained_tree_keeps_its_final_head(sandbox, monkeypatch):
     from scripts.dispatcher import git, store
 
     monkeypatch.setattr(store, "retention_hold_disposition", lambda _record: None)  # no on-disk task record here
@@ -184,7 +184,7 @@ def test_a_commit_refreshes_the_record_and_a_retained_tree_keeps_its_final_head(
     assert data["worktrees"]["/elsewhere"] == other and data["artifacts"] == {"/scratch/a": {"keep": 1}}
 
 
-def test_refresh_keeps_configured_hooks_and_contains_registry_trouble(sandbox, monkeypatch):  # noqa: F811
+def test_refresh_keeps_configured_hooks_and_contains_registry_trouble(sandbox, monkeypatch):
     import fcntl
 
     from scripts.dispatcher import git, store
@@ -232,7 +232,7 @@ def test_refresh_keeps_configured_hooks_and_contains_registry_trouble(sandbox, m
     assert outcome["worktree_disposition_reason"] == "dirty" and outcome["worktree_registry"].startswith("failed: TimeoutError")
 
 
-def test_a_home_relative_hooks_path_keeps_its_guards(sandbox, monkeypatch, tmp_path):  # noqa: F811
+def test_a_home_relative_hooks_path_keeps_its_guards(sandbox, monkeypatch, tmp_path):
     from scripts.dispatcher import git
 
     primary, registry, _ = declared_repo(sandbox)

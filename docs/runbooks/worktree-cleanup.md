@@ -12,7 +12,7 @@ interpreter instead:
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/dispatcher/test_core.py
+"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/dispatcher/test_core*.py
 ```
 
 Do not substitute `python`, `.venv/bin/python`, or `python -m venv .venv`.
