@@ -19,6 +19,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.atlas import word_card_golden_set as gold
+from scripts.common.jsonl import jsonl_lines
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REVIEW_EVIDENCE_PATH = PROJECT_ROOT / "docs/atlas/word-cards/review-evidence-ledger.json"
@@ -485,7 +486,9 @@ def _verify_native50(inspection: dict, packet: dict, spec: dict, base: Path,
                  and agy.identity_failure(task["model"], parsed.resolved_model) is None,
                  "original50_transcript_model_or_result_mismatch")
     calls: dict[tuple, dict] = {}
-    for line in transcript.decode("utf-8").splitlines():
+    for line in jsonl_lines(transcript.decode("utf-8")):
+        if not line.strip():
+            continue
         event = json.loads(line)
         key = agy._completed_sources_call(event)
         if key is not None:

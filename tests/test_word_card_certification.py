@@ -134,12 +134,12 @@ def test_native_original50_untrusted_identity_freezer_and_per_card_sources_refus
             events.append({"event": "step_update", "step_update": {"conversation_id": "ENGINE", "state": "DONE",
                 "step_index": step, "tool_name": "call_mcp_tool", "tool_info": {
                     "parameters": {"ServerName": "sources", "ToolName": "query_sum20", "Arguments": {"word": "ENGINE"}},
-                    "output": "ENGINE source capture"}}})
+                    "output": "ENGINE source capture\u0085with\u2028Unicode\u2029separators"}}})
         judgments["items"].append(row)
     text = json.dumps(judgments)
     events.append({"event": "result", "result": {"status": "SUCCESS", "response": text}})
     transcript = task_root / "logs" / (producer["task_id"] + ".stdout.log")
-    transcript.write_text("\n".join(json.dumps(event) for event in events) + "\n")
+    transcript.write_text("\n".join(json.dumps(event, ensure_ascii=False) for event in events) + "\n")
     for actor in [*inspection["authors"], producer]:
         output = text.encode() if actor is producer else reply
         (task_root / (actor["task_id"] + ".result")).write_bytes(output)
