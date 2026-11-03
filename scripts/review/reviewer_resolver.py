@@ -481,7 +481,8 @@ class ResolverInputs:
     subject_evidence: tuple[str, ...] = ()
     # Complete branch authorship (#9739): every committed author family plus an
     # incoming writer's (``record_cf_verdict.collect_branch_review_facts``).
-    # Selection excludes the whole set. ``author_model``/``author_family`` may
+    # Selection checks the whole set and partitions the approved mixed-family pair.
+    # ``author_model``/``author_family`` may
     # add to it but never replace or shrink it. Empty keeps single-author mode.
     author_families: frozenset[str] = field(default_factory=frozenset)
     author_models: tuple[str | None, ...] = ()
@@ -517,7 +518,7 @@ class ResolverInputs:
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
-    """The author families selection excludes, or None for invalid/conflicting attribution.
+    """Complete author families before any per-seat partition, or None for conflicting attribution.
 
     Without ``inputs.author_families`` this is just ``single_family``.
     Unknown committed authors are reviewable by any known reviewer family (#9944).
@@ -545,6 +546,7 @@ def mixed_family_review(inputs: ResolverInputs) -> bool:
     """The approved two-family code/infra plan, never a red-team or unattested plan."""
     return (
         inputs.review_profile in {"code", "infra"}
+        and frozenset(family for _sha, family in inputs.author_commits) == MIXED_REVIEW_FAMILIES
         and complete_author_families(inputs, resolve_author_family(inputs.author_model, inputs.author_family))
         == MIXED_REVIEW_FAMILIES
     )
@@ -653,7 +655,8 @@ class ReviewerResolution:
     # reviewer selected, since there is nothing reliable to diff a
     # candidate's family against.
     fail_closed_reason: str | None = None
-    # Dual-family quorum plan for a generic unattested-harness author. ``selected`` stays None — there
+    # Two-seat plan. Mixed Anthropic/OpenAI authors carry review_scopes; the existing
+    # generic unattested-harness plan does not. ``selected`` stays None — there
     # is no single reviewer of record; BOTH quorum seats must independently
     # return an exact-head PASS verdict. Because the seats are from distinct
     # attested families and the hidden author is at most one family, at
@@ -1358,6 +1361,9 @@ def resolve_reviewer(
     if review_mode not in {"cross_family", "red_team"}:
         raise ValueError("unsupported review mode")
     resolution_type = RedTeamResolution if review_mode == "red_team" else ReviewerResolution
+    if review_mode == "red_team":
+        # Its outside-family probes retain whole-branch exclusions, without the new pair partition.
+        inputs = replace(inputs, author_commits=())
     if runtime_state is not None:
         # The state owner injects a transaction-consistent snapshot. This
         # module never reads a database or service to fill it in.
@@ -1504,7 +1510,8 @@ def resolve_reviewer(
             resolved_risk=risk,
             fail_closed_reason=(
                 "explicit reviewer pin cannot satisfy the dual-family quorum required "
-                "for this target — two distinct-family seats must be resolved"
+                + ("for this mixed-family target" if mixed_pair else "for an unattested-harness author")
+                + " — two distinct-family seats must be resolved"
             ),
         )
     if author_family in UNRESOLVED_AUTHOR_FAMILIES and not quorum_required and not inputs.author_families:
@@ -1674,6 +1681,7 @@ def resolve_reviewer(
         if first is None:
             quorum_failure = (
                 f"{plan} unsatisfiable: no eligible formal-review candidate"
+                + ("" if mixed_pair else " for an unattested-harness author")
             )
         else:
             second = _best_eligible(eligible_by_fit_and_tier, exclude_families=frozenset({first[0].family}))

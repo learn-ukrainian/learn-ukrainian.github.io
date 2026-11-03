@@ -441,14 +441,14 @@ def test_mixed_family_at_lower_risk_keeps_a_third_family(repo, tasks, monkeypatc
     assert fact.existing_families == {"anthropic", "openai"}
     assert fact.receipt()["commits"] == 2 and len(fact.commits) == 3
     assert fact.author_models == ("gpt-6.1-sol", "claude-opus-5-5", "gpt-6.1-sol")
-    assert selected(fact, "medium") == "gemini-3.8-flash-high"
-    receipt = record_verdict(
-        monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="medium", **GROK_RECEIPT
-    )
-    assert receipt["verdict"] == "APPROVED"
-    # Every author stays attributed: neither frontier family may approve.
+    resolution = recorder.structural_review_route(fact, risk="medium", claude_account=HOST_ACCOUNT)
+    assert resolution.selected is None and not resolution.quorum
+    assert "cannot partition a commit authored by both families" in resolution.fail_closed_reason
+    with pytest.raises(recorder.RecordError, match="mixed-family review requires"):
+        record_verdict(monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="medium", **GROK_RECEIPT)
+    # Neither family can review the shared commit independently.
     for agent, model in (("codex", "gpt-6.1-sol"), ("claude", "claude-opus-5-5")):
-        with pytest.raises(recorder.RecordError, match="equals an author family"):
+        with pytest.raises(recorder.RecordError, match="cannot partition a commit authored by both families"):
             record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, review_risk="medium")
 
 

@@ -1231,7 +1231,7 @@ def structural_review_route(
     review_profile: str = "code",
     review_mode: str = "cross_family",
 ) -> ReviewerResolution:
-    """Resolve a formal reviewer outside every author family under the live catalog floors.
+    """Resolve independent review, including the mixed-family pair, under the live catalog floors.
 
     Structural only (A2): no routing snapshot, so health and quota never decide
     feasibility; the resolver's own health semantics stay unchanged.

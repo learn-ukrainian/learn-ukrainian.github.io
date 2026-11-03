@@ -29,7 +29,7 @@ import sys
 from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
 from types import SimpleNamespace
@@ -764,6 +764,9 @@ def _resolve_review_target(
             subject_evidence=subject.evidence,
             claude_account=claude_account,
         )
+    if review_mode == "red_team":
+        # Preserve the existing whole-branch precedence probes, rather than resolving a pair here.
+        inputs = replace(inputs, author_commits=())
     author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
     if (
         trusted
