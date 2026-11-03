@@ -19,18 +19,58 @@ from tests.dispatcher.test_providers_b import _bwrap_usable, _launch, _linked_wo
 
 def test_review_checkout_exposes_project_interpreter(tmp_path):
     """Defect: literal .venv/bin/python is missing or an existing foreign interpreter is replaced."""
-    assert agy_sandbox._link_interpreter(tmp_path) is True
-    result = subprocess.run([str(tmp_path / ".venv/bin/python"), "-c", "print('review-interpreter-ok')"],
+    tmp_worktree, head = _linked_worktree(tmp_path)
+    assert agy_sandbox._link_interpreter(tmp_worktree) is True
+    result = subprocess.run([str(tmp_worktree / ".venv/bin/python"), "-c", "print('review-interpreter-ok')"],
                             capture_output=True, text=True, timeout=10)
     assert result.returncode == 0, result.stderr
     assert result.stdout == "review-interpreter-ok\n"
-    assert agy_sandbox._link_interpreter(tmp_path) is False  # the project link is kept, not recreated
+    assert agy_sandbox._link_interpreter(tmp_worktree) is False  # the project link is kept, not recreated
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": True}
+    untracked = tmp_worktree / ".venv-other"
+    untracked.write_text("not the interpreter\n")
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": False}
+    untracked.unlink()
+    (tmp_worktree / "README.md").write_text("changed\n")
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": False}
+    subprocess.run(["git", "-C", str(tmp_worktree), "add", "README.md"], check=True, timeout=30)
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": False}
+    subprocess.run(["git", "-C", str(tmp_worktree), "restore", "--staged", "--worktree", "README.md"],
+                   check=True, timeout=30)
+    subprocess.run(["git", "-C", str(tmp_worktree), "add", ".venv"], check=True, timeout=30)
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": False}
     other = tmp_path / "foreign"
     other.mkdir()
     (other / ".venv").mkdir()
     with pytest.raises(ValueError, match="not the project interpreter"):
         agy_sandbox._link_interpreter(other)
     assert (other / ".venv").is_dir() and not (other / ".venv").is_symlink()
+    (other / ".venv").rmdir()
+    (other / ".venv").symlink_to(tmp_path)
+    with pytest.raises(ValueError, match="not the project interpreter"):
+        agy_sandbox._link_interpreter(other)
+
+
+@pytest.mark.skipif(not _bwrap_usable(), reason="needs a usable unprivileged bubblewrap")
+def test_second_shell_command_runs_when_repo_does_not_ignore_venv(tmp_path):
+    """Defect class: the boundary's own interpreter link refuses later shell commands."""
+    worktree, head = _linked_worktree(tmp_path)
+    task_id = "repeated-shell"
+    for index, command in enumerate(("git rev-parse HEAD", "git diff HEAD", ".venv/bin/python -c 'print(42)'")):
+        argv, env, _cwd_file = _claude_shell(tmp_path, worktree, task_id, command)
+        run = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=60, check=False, cwd=worktree)
+        assert run.returncode == 0, run.stdout + run.stderr
+        assert run.stdout == (head + "\n" if index == 0 else "" if index == 1 else "42\n")
+    receipts = [json.loads(line) for line in (tmp_path / f"{task_id}.shell.jsonl").read_text().splitlines()]
+    assert len(receipts) == 3
+    for receipt in receipts:
+        assert receipt["status"] == "ran" and receipt["canary_passed"] is True
+        assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
+    assert (worktree / ".venv").resolve() == project_interpreter().parent.parent.resolve()
+    assert subprocess.run(["git", "-C", str(worktree), "status", "--porcelain=v1"], check=True,
+                          capture_output=True, text=True, timeout=30).stdout == "?? .venv\n"
+    assert subprocess.run(["git", "-C", str(worktree), "diff", "HEAD", "--exit-code"],
+                          check=False, timeout=30).returncode == 0
 
 
 _PY = ".venv/bin/python"
@@ -120,9 +160,6 @@ def test_review_boundary_refuses_bypass_classes_and_keeps_execution(tmp_path, ro
         return
     granted, template = _CASES[case]
     primary = tmp_path / "repo"
-    if route == "claude":  # as the project's .gitignore does; a shell command keeps the .venv link it adds
-        with (primary / ".git" / "info" / "exclude").open("a") as exclude:
-            exclude.write(".venv\n")
     (worktree / "test_probe.py").write_text("def test_probe():\n    assert 1 + 1 == 2\n")
     subprocess.run(["git", "-C", str(worktree), "add", "test_probe.py"], check=True, timeout=30)
     subprocess.run(["git", "-C", str(worktree), "-c", "user.email=s@example.invalid", "-c", "user.name=S",
