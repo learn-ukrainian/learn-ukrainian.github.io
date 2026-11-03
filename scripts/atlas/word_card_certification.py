@@ -27,6 +27,8 @@ SCHEMA_PATH = PROJECT_ROOT / "schemas/word-card-v1.schema.json"
 IMPLEMENTATION_PATHS = (
     *sorted(PROJECT_ROOT.glob("scripts/atlas/*.py")),
     PROJECT_ROOT / "scripts/audit/generate_practice_deck.py",
+    PROJECT_ROOT / "scripts/lexicon/teacher_deck_shard.py",
+    PROJECT_ROOT / "scripts/practice/densify_paradigm_from_lexemes.py",
     PROJECT_ROOT / "scripts/lexicon/runner/ulif_dictua_parse.py",
     PROJECT_ROOT / "scripts/lexicon/source_attribution.py",
     PROJECT_ROOT / "scripts/lexicon/ulif_raw_cache.py",

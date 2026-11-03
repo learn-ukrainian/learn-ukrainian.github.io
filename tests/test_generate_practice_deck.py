@@ -1750,6 +1750,7 @@ def test_requested_case_mismatch_cannot_emit_a_paradigm_answer() -> None:
     assert _build_paradigm_items(lexeme, verifier=verifier)
     lexeme["paradigm"] = bad
     assert _build_paradigm_items(lexeme, verifier=verifier) == []
+    assert _build_paradigm_items(lexeme) == []
 
 
 def test_source_inventory_rows_stay_out_of_practice_by_default() -> None:

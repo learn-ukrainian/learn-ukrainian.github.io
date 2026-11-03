@@ -76,7 +76,7 @@ def source_permission(assertion, record, register):
             return "refused", "mirror_role_invalid"
         if assertion["field"] == "stress":
             return "refused", "mirror_not_normative_stress"
-    elif role not in {None, "official", "admitted", "served_dictionary", "dictionary"}:
+    elif role not in {None, "official", "admitted"}:
         return "unresolved", "source_role_not_permitted"
     # An absent role is derived only from a registered, facet-qualified source,
     # never from a source-name substring or an assertion's claimed authority.
