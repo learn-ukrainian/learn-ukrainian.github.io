@@ -962,6 +962,58 @@ def test_evidence_type_correction_refused_after_criterion_checked(
     assert path.read_bytes() == before
 
 
+def test_evidence_type_correction_ignores_unread_historical_observation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys,
+) -> None:
+    """A transient error receipt must not permanently disable policy correction."""
+    _stub_fresh_init(tmp_path, monkeypatch)
+    assert task_closeout.main(_fresh_init_command(tmp_path)) == 0
+    path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    observation = _observation(body="")
+    observation["github"]["issue"]["state"] = None
+    observation["github"]["error"] = "temporary GitHub read failure"
+    ledger, receipt, _ = task_lifecycle.reconcile(task_lifecycle.load_lifecycle(path), observation, now=NOW)
+    task_lifecycle.write_lifecycle(path, ledger)
+
+    assert task_closeout.main([
+        "correct-evidence-types", "--state-file", str(path), "--ac-id", "AC-IMPL",
+        "--required-evidence", "document", "--actor", "codex/test", "--reason", "Documentation criterion",
+    ]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["correction"]["old_types"] == ["test"]
+    assert result["correction"]["new_types"] == ["document"]
+    assert task_lifecycle.load_lifecycle(path)["observation_receipts"] == [receipt]
+
+
+def test_evidence_type_correction_preserves_earlier_timestamped_ledger_writes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys,
+) -> None:
+    """A correction timestamp must not reject otherwise-valid unrelated ledger writes."""
+    _stub_fresh_init(tmp_path, monkeypatch)
+    assert task_closeout.main([*_fresh_init_command(tmp_path), "--pr", "77"]) == 0
+    path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    assert task_closeout.main([
+        "correct-evidence-types", "--state-file", str(path), "--ac-id", "AC-IMPL",
+        "--required-evidence", "document", "--actor", "codex/test", "--reason", "Documentation criterion",
+        "--now", "2026-07-16T10:05:00Z",
+    ]) == 0
+    correction = json.loads(capsys.readouterr().out)["correction"]
+
+    assert task_closeout.main([
+        "add-evidence", "--state-file", str(path), "--ac-id", "AC-IMPL", "--type", "document",
+        "--summary", "Documentation inspected", "--commit", HEAD, "--now", "2026-07-16T10:02:00Z",
+    ]) == 0
+    assert json.loads(capsys.readouterr().out)["evidence"]["summary"] == "Documentation inspected"
+    assert task_closeout.main([
+        "remaining-scope", "--state-file", str(path), "--status", "none", "--now", "2026-07-16T10:03:00Z",
+    ]) == 0
+    capsys.readouterr()
+    ledger = task_lifecycle.load_lifecycle(path)
+    assert ledger["updated_at"] == "2026-07-16T10:03:00Z"
+    assert ledger["evidence_type_corrections"] == [correction]
+    assert ledger["ac_snapshot"] == correction["new_snapshot"]
+
+
 def test_cli_fresh_init_carrier_and_read_only_reconcile_preserve_exact_identity(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys,
 ) -> None:

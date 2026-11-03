@@ -169,7 +169,11 @@ To correct wrongly frozen required evidence types, use:
 The command reads the authoritative issue under the ledger lock. It refuses a
 checked criterion (`AC_ALREADY_CHECKED`) or an issue closed as completed
 (`AC_ISSUE_COMPLETED`), including those facts retained in prior observation
-receipts. Unknown issue state or closure reason fails closed (`AC_ISSUE_UNREAD`).
+receipts. An unread historical observation supplies no issue facts and does not
+block a later correction. Historical checkbox inspection uses the same line
+grammar as live parsing; unrelated missing or malformed old criteria do not
+erase an observed checked criterion. Unknown live issue state or a closed
+issue's unknown closure reason fails closed (`AC_ISSUE_UNREAD`).
 It checks the current issue's criterion IDs, order and text against the snapshot.
 It does not reconstruct unobserved GitHub history.
 
@@ -180,7 +184,11 @@ all other snapshot fields, original evidence and observation receipts remain
 immutable. Loading validates the chain and the current snapshot against its tip.
 Old ledgers without this optional history remain valid. Repeating the latest
 identical correction while still eligible returns its receipt without appending.
-A correction cannot predate the ledger's last update.
+A correction cannot predate the ledger's last update or the previous correction.
+Loading validates chronology within the correction chain. It does not compare
+that history with `updated_at`, which other ledger operations may set from their
+own supplied timestamps. Existing timestamped evidence and reconciliation writes
+remain supported after a correction.
 
 This command corrects the evidence policy only. It supplies no evidence, checks
 no boxes, and changes neither supported evidence types nor evidence validity,
