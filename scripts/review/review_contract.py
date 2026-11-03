@@ -1417,7 +1417,8 @@ def validate_ukrainian_reply_claims(
         body = reply
     try:
         payload = yaml.safe_load(body)
-    except yaml.YAMLError as exc:
+    # Constructors raise ValueError (an invalid date or number) and deep nesting RecursionError.
+    except (yaml.YAMLError, ValueError, RecursionError) as exc:
         if tag:
             raise ContractError("CLAIM_PAYLOAD_MALFORMED: review payload is not readable") from exc
         payload = None
