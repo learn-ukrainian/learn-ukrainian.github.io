@@ -85,6 +85,9 @@ def test_hyphenated_compound_is_not_a_closing_word() -> None:
             entry = f"F4 still open: the {compound} guarantee is broken."
             assert finding_is_open(entry), entry
             assert _cited(_reply(_finding(body=entry))) == SHA
+    closed = "F4 [P1] auto-resolved by the rebase."
+    assert not finding_is_open(closed)
+    assert _cited(_reply(_finding(body=closed))) is None
 
 
 @pytest.mark.parametrize(
