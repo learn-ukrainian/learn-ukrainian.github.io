@@ -582,6 +582,9 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "resolved_risk": resolution.resolved_risk,
         "fail_closed_reason": resolution.fail_closed_reason,
     }
+    if resolution.review_scopes:
+        scopes = {scope.reviewer_family: asdict(scope) for scope in resolution.review_scopes}
+        payload["quorum"] = [{**asdict(seat), "scope": scopes[seat.family]} for seat in resolution.quorum]
     if not account.resolved:
         payload["claude_account_unresolved"] = account.refusal
         if resolution.selected is None and len(resolution.quorum) < 2:
@@ -601,7 +604,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     print(json.dumps(payload, indent=2))
     if payload["fail_closed_reason"]:
         return 1
-    # A dual-family quorum plan (unattested-harness author) is a successful
+    # A dual-family quorum or mixed-family pair is a successful
     # resolution: no single reviewer of record, both seats must PASS.
     if len(resolution.quorum) >= 2:
         return 0
@@ -1053,13 +1056,15 @@ def _build_parser() -> argparse.ArgumentParser:
 
     p_reviewer = sub.add_parser(
         "resolve-reviewer",
-        help="Resolve the cross-family reviewer for this author",
+        help="Resolve a cross-family reviewer or a scoped Anthropic/OpenAI pair",
         description=(
-            "Pick the formal cross-family reviewer for one author.\n"
+            "Resolve the formal reviewer or the two-seat mixed-family review plan.\n"
             "Resolve the target first in the same state file, or supply --owned-path. "
             "For a committed target (commit, branch, pr), every author named by the "
-            "target's X-Agent trailers and task records is excluded too, as the verdict "
-            "recorder requires (#9739); --author-model adds to them. "
+            "target's X-Agent trailers and task records contributes to independence checks; "
+            "--author-model adds to them. Anthropic/OpenAI branches return two quorum seats, "
+            "each scoped to the other family's commits with the whole diff as context. "
+            "Both must approve the same exact head. Single-family routing is unchanged. "
             "Use it after the author model is known. Pass --subject-seat, "
             "--subject-family, or --owned-path when the change governs a seat's "
             "adapter or reviewer hooks. Do not use it to hand-pick a lane, and do "

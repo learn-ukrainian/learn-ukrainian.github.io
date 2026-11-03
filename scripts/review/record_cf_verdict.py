@@ -94,12 +94,15 @@ from scripts.review.review_contract import (
 )
 from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_MODELS,
+    MIXED_REVIEW_FAMILIES,
     REVIEW_CANDIDATES,
     UNKNOWN_AUTHOR_FAMILY,
     UNRESOLVED_AUTHOR_FAMILIES,
     ResolverInputs,
     ReviewerResolution,
     evaluate_candidate,
+    mixed_family_review,
+    mixed_family_scope,
     normalize_review_task_id,
     red_team_seat_refusal,
     resolve_author_family,
@@ -891,6 +894,10 @@ class BranchReviewFacts:
         return self.author_families
 
     @property
+    def mixed_family(self) -> bool:
+        return self.excluded_families == MIXED_REVIEW_FAMILIES
+
+    @property
     def unresolved_authors(self) -> tuple[str, ...]:
         """Commits whose author family is unknown, so no reviewer can be proved outside it.
 
@@ -946,8 +953,11 @@ class BranchReviewFacts:
         overrides.setdefault("author_model", "")
         overrides.setdefault("unknown_history", self.unknown_history)
         overrides.setdefault("app_bot_commits", self.app_bot_commits)
+        if self.mixed_family:
+            overrides.setdefault("exact_head", self.head_sha)
         return ResolverInputs(
             author_families=self.excluded_families,
+            author_commits=tuple((commit.sha, commit.family) for commit in self.commits if commit.sha and commit.family),
             author_models=self.author_models,
             author_task_models=self.author_task_models,
             claude_account=claude_account,
@@ -959,6 +969,20 @@ class BranchReviewFacts:
             subject_families=self.subject_families,
             subject_evidence=self.subject_evidence,
             **overrides,
+        )
+
+    def reviewer_scope(self, family: str) -> BranchReviewFacts:
+        """The opposing family's commits, keeping the complete diff as protected context."""
+        try:
+            shas = mixed_family_scope(
+                ((commit.sha, commit.family) for commit in self.commits if commit.sha and commit.family), family
+            )
+        except ValueError as exc:
+            raise RecordError(str(exc)) from exc
+        commits = tuple(commit for commit in self.commits if commit.sha in shas)
+        return replace(
+            self, commits=commits, existing_families=frozenset(commit.family for commit in commits if commit.family),
+            incoming_writer=None, incoming_family=None,
         )
 
     def receipt(self) -> dict[str, Any]:
@@ -1607,6 +1631,8 @@ def _require_qualified_reviewer(
         claude_account=account_from_record(task, agent=agent),
         structural=True,
     )
+    if review_mode == "cross_family" and mixed_family_review(inputs):
+        facts.reviewer_scope(family)
     results = [evaluate_candidate(candidate, inputs, review_mode=review_mode) for candidate in candidates]
     if not any(result.status == "eligible" for result in results):
         reasons = "; ".join(sorted({str(result.reason) for result in results}))
@@ -1691,6 +1717,7 @@ def build_comment(
     void: str | None = None,
     residuals: Iterable[str] | None = None,
     repair_withheld: bool = False,
+    scope_commits: Iterable[str] | None = None,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1722,10 +1749,24 @@ def build_comment(
     # The score is advisory (C-3020): stored for calibration, never read by a gate.
     score_text = f"{score}/10" if score is not None else "absent"
     authors = sorted({author for author in author_models if author})
+    pair_field = pair_lines = ""
+    if scope_commits is not None:
+        scope = tuple(sorted(set(scope_commits)))
+        if (
+            family not in MIXED_REVIEW_FAMILIES
+            or not scope or any(not SHA.fullmatch(commit) for commit in scope)
+            or review_mode != "cross_family" or ukrainian or tokens is not None
+            or attested_author_families([{"author_models": authors}]) != MIXED_REVIEW_FAMILIES
+        ):
+            raise RecordError("invalid mixed-family review scope")
+        scope_token = ",".join(scope)
+        other = next(iter(MIXED_REVIEW_FAMILIES - {family}))
+        pair_field = f" review_pair=anthropic_openai scope_commits={scope_token}"
+        pair_lines = f"Review pair: anthropic_openai\nScope author family: {other}\nScope commits: {scope_token}\n"
     marker = (
         f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
         f"model={model} family={family}{mode_field}{history_field}{authorship_field}{profile_field}{sources_field}"
-        f"{coverage_field} -->"
+        f"{coverage_field}{pair_field} -->"
     )
     prefix = (
         ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
@@ -1746,6 +1787,7 @@ def build_comment(
         + (f"Authored by: {', '.join(authors)}\n" if authors else "")
         + f"Task id: {task_id}\n"
         + coverage_lines
+        + pair_lines
         + "\n"
     )
     residual_ids = tuple(residuals or ())
@@ -2836,7 +2878,9 @@ def record(
             raise RecordError("unknown history conflicts with completed review task")
     if not facts.existing_families:
         raise RecordError("PR has no attributed author commits")
-    if review_mode == "red_team":
+    mixed_pair = review_mode == "cross_family" and not ukrainian and facts.mixed_family
+    scope = facts.reviewer_scope(family) if mixed_pair else facts
+    if review_mode == "red_team" or mixed_pair:
         agent = str(task.get("agent") or "")
         reviewer_ids = {
             key
@@ -2844,9 +2888,10 @@ def record(
             if isinstance(identity, str)
             for key in review_task_id_comparison_keys(identity, agent=agent)
         }
-        author_ids = {key for identity in facts.author_task_ids for key in review_task_id_comparison_keys(identity)}
+        author_ids = {key for identity in scope.author_task_ids for key in review_task_id_comparison_keys(identity)}
         if reviewer_ids & author_ids:
             raise RecordError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+    if review_mode == "red_team":
         refusal = red_team_seat_refusal(
             (task.get("model"), task.get("resolved_model"), model),
             author_models=facts.author_models,
@@ -2857,7 +2902,7 @@ def record(
             raise RecordError(refusal)
     # Every mode, red team included (F9): an unresolved author has no model a seat rule can compare.
     require_resolved_branch_authors(facts)
-    if review_mode != "red_team" and family in facts.excluded_families:
+    if review_mode != "red_team" and family in scope.excluded_families:
         raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
     adapter = GitHubAdapter(Path.cwd())
@@ -2891,6 +2936,7 @@ def record(
         coverage=None if chunk is None else chunk.coverage,
         void=None if chunk is None else chunk.void,
         residuals=residuals,
+        scope_commits=tuple(commit.sha for commit in scope.commits) if mixed_pair else None,
     )
     comment = build_comment(**comment_fields)
     # A cut reply is not verbatim, so it cannot become an approval.
@@ -3021,6 +3067,7 @@ def record(
                         or list(marker.get("denominator") or ()) != list(chunk.denominator if chunk else ())
                         or list(marker.get("coverage") or ()) != list(chunk.coverage if chunk else ())
                         or marker.get("void") != (chunk.void if chunk else None)
+                        or tuple(marker.get("scope_commits") or ()) != tuple(sorted(set(comment_fields["scope_commits"] or ())))
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
@@ -3057,7 +3104,9 @@ def record(
             # count, so its own verdict does not decide the status.
             current = lookup_verdict(comments, sha, login)
             state = "success" if current.state == "APPROVED" else "failure" if current.state in REJECTED else "pending"
-            if current.state == NEEDS_SEAT:
+            if current.state == NEEDS_SEAT and mixed_pair:
+                pending_reason = "; awaiting Anthropic/OpenAI review pair"
+            elif current.state == NEEDS_SEAT:
                 profiled = [
                     marker
                     for item in comments

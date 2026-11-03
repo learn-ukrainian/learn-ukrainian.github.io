@@ -486,6 +486,8 @@ class ResolverInputs:
     author_families: frozenset[str] = field(default_factory=frozenset)
     author_models: tuple[str | None, ...] = ()
     author_task_models: tuple[str, ...] = ()
+    # Complete committed attribution, retained when a mixed-family pair divides review scope.
+    author_commits: tuple[tuple[str, str], ...] = ()
     # Commits whose authorship was not proven. A red-team-only seat refuses
     # these even when a receipt admitted them for ordinary red-team review.
     unknown_history: tuple[str, ...] = ()
@@ -534,6 +536,40 @@ def complete_author_families(inputs: ResolverInputs, single_family: str) -> froz
     ):
         return None
     return frozenset(members)
+
+
+MIXED_REVIEW_FAMILIES = frozenset({"anthropic", "openai"})
+
+
+def mixed_family_review(inputs: ResolverInputs) -> bool:
+    """The approved two-family code/infra plan, never a red-team or unattested plan."""
+    return (
+        inputs.review_profile in {"code", "infra"}
+        and complete_author_families(inputs, resolve_author_family(inputs.author_model, inputs.author_family))
+        == MIXED_REVIEW_FAMILIES
+    )
+
+
+def mixed_family_scope(author_commits: Iterable[tuple[str, str]], reviewer_family: str) -> tuple[str, ...]:
+    """Partition whole commits; a commit authored by both families has no independent seat."""
+    if reviewer_family not in MIXED_REVIEW_FAMILIES:
+        raise ValueError("mixed-family review requires an Anthropic or OpenAI seat")
+    commits = tuple(author_commits)
+    own = {sha for sha, family in commits if family == reviewer_family}
+    other = {sha for sha, family in commits if family in MIXED_REVIEW_FAMILIES - {reviewer_family}}
+    if not own or not other or any(not re.fullmatch(r"[0-9a-f]{40}", sha) for sha in own | other):
+        raise ValueError("mixed-family review requires complete commit scopes for both families")
+    if own & other:
+        raise ValueError("mixed-family review cannot partition a commit authored by both families")
+    return tuple(sorted(other))
+
+
+@dataclass(frozen=True)
+class CommitReviewScope:
+    reviewer_family: str
+    author_family: str
+    commits: tuple[str, ...]
+    context_head: str | None
 
 
 @dataclass(frozen=True)
@@ -624,6 +660,7 @@ class ReviewerResolution:
     # least one quorum verdict is necessarily cross-family.
     quorum: tuple[CandidateResult, ...] = ()
     quorum_rule: str | None = None
+    review_scopes: tuple[CommitReviewScope, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -1101,6 +1138,17 @@ def _evaluate_candidate(
             health=health,
             capacity=capacity,
         )
+    if review_mode == "cross_family" and mixed_family_review(inputs):
+        if candidate.family not in MIXED_REVIEW_FAMILIES:
+            return CandidateResult(
+                name=candidate.name, concrete_model=candidate.concrete_model, family=candidate.family,
+                route=candidate.route, transport=candidate.transport, invocation=candidate.invocation,
+                quality_tier=candidate.quality_tier, requires_silence_timeout=candidate.requires_silence_timeout,
+                status="excluded", reason="mixed-family review requires one Anthropic and one OpenAI seat",
+                health=health, capacity=capacity,
+            )
+        # Independence applies to the other family's commits; all paths still set the risk floor.
+        authors = authors - {candidate.family}
     advisory: CandidateResult | None = None
     for author in sorted(authors):
         # Only the recorder's prompt-bound red-team path opts into this.
@@ -1433,7 +1481,19 @@ def resolve_reviewer(
         )
     # A complete author set is already concrete; the single-author fallbacks below do not apply.
     quorum_required = author_family == UNATTESTED_AUTHOR_FAMILY and not inputs.author_families
-    if quorum_required and inputs.pinned_candidate:
+    mixed_pair = review_mode == "cross_family" and mixed_family_review(inputs)
+    if mixed_pair:
+        try:
+            for reviewer_family in sorted(MIXED_REVIEW_FAMILIES):
+                mixed_family_scope(inputs.author_commits, reviewer_family)
+        except ValueError as exc:
+            return resolution_type(
+                selected=None, advisory=(), trace=(), substitution_note=None,
+                policy_version=_SCHEDULER_POLICY_VERSION,
+                catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"], resolved_risk=risk,
+                fail_closed_reason=str(exc),
+            )
+    if (quorum_required or mixed_pair) and inputs.pinned_candidate:
         return resolution_type(
             selected=None,
             advisory=(),
@@ -1444,7 +1504,7 @@ def resolve_reviewer(
             resolved_risk=risk,
             fail_closed_reason=(
                 "explicit reviewer pin cannot satisfy the dual-family quorum required "
-                "for an unattested-harness author — two distinct-family seats must be resolved"
+                "for this target — two distinct-family seats must be resolved"
             ),
         )
     if author_family in UNRESOLVED_AUTHOR_FAMILIES and not quorum_required and not inputs.author_families:
@@ -1608,17 +1668,18 @@ def resolve_reviewer(
                 for row in trace
             ]
 
-    if quorum_required:
+    if quorum_required or mixed_pair:
+        plan = "mixed-family review pair" if mixed_pair else "dual-family quorum"
         first = _best_eligible(eligible_by_fit_and_tier)
         if first is None:
             quorum_failure = (
-                "dual-family quorum unsatisfiable: no eligible formal-review candidate for an unattested-harness author"
+                f"{plan} unsatisfiable: no eligible formal-review candidate"
             )
         else:
             second = _best_eligible(eligible_by_fit_and_tier, exclude_families=frozenset({first[0].family}))
             quorum_failure = (
                 (
-                    f"dual-family quorum unsatisfiable: only one eligible family ({first[0].family!r}) — "
+                    f"{plan} unsatisfiable: only one eligible family ({first[0].family!r}) — "
                     "two distinct attested, formal-review-eligible families are required"
                 )
                 if second is None
@@ -1652,7 +1713,20 @@ def resolve_reviewer(
             catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
             resolved_risk=risk,
             quorum=tuple(quorum_results),
-            quorum_rule=_DUAL_FAMILY_QUORUM_RULE,
+            quorum_rule=(
+                "Anthropic/OpenAI pair: each seat reviews the other family's commits with the whole diff "
+                "as context; both must APPROVE this exact head; one pair counts as one round"
+                if mixed_pair else _DUAL_FAMILY_QUORUM_RULE
+            ),
+            review_scopes=tuple(
+                CommitReviewScope(
+                    reviewer_family=seat.family,
+                    author_family=next(iter(MIXED_REVIEW_FAMILIES - {seat.family})),
+                    commits=mixed_family_scope(inputs.author_commits, seat.family),
+                    context_head=inputs.exact_head,
+                )
+                for seat in quorum_results
+            ) if mixed_pair else (),
         )
 
     if inputs.pinned_candidate:
