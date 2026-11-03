@@ -1,4 +1,4 @@
-# Phase 5 exact-artifact word-card certification
+# Phase 5 word-card certification
 
 This reference defines #10515 under programme #8977 and stream #6321.
 `scripts.atlas.word_card_certification` evaluates pinned evidence and refuses
@@ -10,7 +10,132 @@ It does not certify Ukrainian, establish complete source acquisition, accept a
 pilot, or authorize publication. The committed review ledger grants no cards
 approval until an independent authority admits their evidence.
 
-## Authority and prerequisite contracts
+## Code-first A1 contract, version 2
+
+Issue #12658 adds `word-card-certification-spec.v2` for the real A1 slice2–slice6
+receipt format. Version 1 below remains the legacy exact-card evaluation
+contract. Neither version grants deployment, practice admission, source
+admission, or permission to write steward evidence.
+
+`word_card_assertion_check.check_assertion` returns `supported`, `unresolved`,
+or `refused` for each assertion, with a reason and exact receipt references.
+`extraction: exact` records a bound quotation, not a semantic approval.
+The A1 verifier and Phase5 `evaluate_a1_assertions` use this same function.
+Phase5 also replays the existing pinned batch readers and compares the entire
+assembly with the existing assembler's result. No cohort data is migrated.
+
+The checker requires the exact asserted value, allocated entry and sense,
+source/version identity, and paradigm slot where applicable. Alternative form
+and label-segment receipts accompany the decision without changing original
+card bytes. Canonical sources resolve only through exact IDs, names, or
+aliases in the permissions register. Facets require the register's declared
+capabilities. An absent record role derives only from that registered facet;
+an unknown role remains unresolved. Soviet contrast evidence cannot supply
+any modern meaning, stress, form, or norm. Historical records remain retained.
+
+Stress follows ULIF, then official SUM20, then VTS. A lower source needs a
+captured higher-priority outcome. The checker binds ULIF entry, homonym,
+variant, and captured raw-identity evidence, then reuses the existing
+paradigm correspondence algorithm. Missing, ambiguous, or incomplete identity
+stays unresolved. VESUM supplies morphology, never normative stress.
+
+The practice consumer checks the request's case, number, and any supplied
+gender, person, or tense against the verified slot before emitting an answer.
+It uses the established VESUM slot parser, including its implicit singular
+convention. Lemma membership alone cannot answer another requested case.
+
+Version 2 has these closed-schema fields:
+
+| Field | Binding |
+| --- | --- |
+| `frozen` | Current implementation/rules fingerprints and digest of every batch's complete assembly, sources, and pinned manifest. |
+| `batches` | Unique A1 batch names with exact-byte `assembly` and `sources` references. All declared cards and assertions are reconciled. |
+| `original50_selection`, `original50_input` | Independently pinned original AC07 membership, exact versions, complete cards, and retained receipts. |
+| `original50_receipt` | Full legacy certification of those exact 50 artifacts, or null with an explicit hold. It replays gold custody, source completeness, all facets, controls, and independent evaluation. |
+| `complete_data_receipt` | The same independently accepted complete-data authority used by original50, or null with a hold. |
+| `mechanics_receipt` | Exact-batch mechanics under the existing contract and independently admitted actor, or null with a hold. |
+| `removal_snapshots` | Current overlay and suppression digests from existing steward authority, or null with a hold. |
+
+`evaluate_certification` consumes version 2 with null evaluation arguments.
+A supplied sample-pass argument is refused. The returned version 2 receipt
+contains every assertion disposition, counts, exact-card digests, the complete
+human packet, human audit status, and explicit holds. Missing prerequisites,
+source gaps, structural uncertainty, or a pending human decision cannot yield
+`CERTIFIED`. A context decision remains `unresolved` in the deterministic
+ledger even after a separately recorded human audit; an audit never fills an
+absent source attachment or changes an assertion's value.
+
+Current A1 inputs use the existing authority ledger's `snapshot_bindings`,
+with names qualified by batch, such as `S/slice2:batch` and
+`I/slice2:allocation`. `canonical_json: true` hashes the parsed JSON value,
+after any existing `json_keys` projection. Legacy bindings retain their old
+behavior. Every declared S/V/I/O binding must match current authority; overlay
+and suppression snapshots remain separately required. Missing authority holds
+the receipt while allowing the private diagnostic packet to be inspected.
+
+The export consumer routes the approved A1 build versions to the version 2
+receipt. It requires the same active steward approval, projection scope,
+exact card/build, implementation and rules fingerprints, current input and
+removal checks, and successful receipt replay. It does not require an embedded
+per-card model review or the pilot-only `rules-v1` input layout. Legacy records
+retain the complete version 1 path. Neither path admits an unapproved card.
+
+The retained original50 obligation currently has no accepted A1 inspection
+adapter. The legacy receipt reader can replay legacy inspection contracts;
+it cannot stand in for missing inspection of the unchanged A1 versions.
+Binding an actual qualified original50 inspection to its frozen selection,
+card versions, and source evidence remains an explicit integration residual.
+Its owner must establish that evidence contract before certification can pass.
+
+## Human residual audit and existing ledger
+
+The project owner's AC6 amendment is recorded in
+[#12658 comment 6608795153](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/12658#issuecomment-6608795153).
+The reviewer of record is the human project owner. No model review or optional
+model pre-check is launched by this tooling.
+
+The changed-card cap is 10,000 under one frozen fingerprint. Through 299
+judgment cards, the packet includes every judgment card. Above that threshold,
+`select_cards` requires a steward-held seed issued after the freeze and draws
+299 uniformly without replacement, then adds up to 12 per present judgment
+class. Class extras do not increase the random denominator. The currently
+admitted A1 batch readers retain their fixed populations; this contract does
+not admit new cohorts.
+
+The private packet preserves original50 as a separate obligation, including
+overlapping cards. Original versions are never replaced by current versions.
+Version differences and missing captured bodies remain visibly unresolved.
+Each judgment includes the exact card/version, assertion, canonical source,
+facet/role, complete source context, highlighted receipt span, snapshot and
+evidence hashes. The standalone HTML contains all retained evidence and uses
+no external assets or tool lookups. It does not truncate source context.
+
+The HTML exports a pending human decision proposal. Each selected card needs
+acceptance with an inspection reason, or rejection naming the field and
+reason. `decision_records` validates coverage and hashes and prepares rows for
+the existing review ledger's `approved_reviews` list. It writes no live
+authority. Those rows have `lane: human`, an actual reviewer record,
+`approved_for: []`, and a `human_audit` object binding packet digest, batch
+fingerprint, exact card version, assertion scope, evidence hash, and decision.
+They supply no site or dataset approval. The steward authenticates and admits
+the real human decision through the existing ledger workflow. An author
+proposal or self-declared human identity is never admission.
+
+Phase5 reads only steward-admitted rows from the existing authority ledger.
+Pending, missing, stale, withdrawn, or incomplete decisions hold the batch.
+Any recorded material rejection holds the entire fingerprint, even if other
+cards pass. Resolution requires investigation of the complete affected stratum
+and corrected evidence under a new fingerprint and review. No automatic retry
+or model fallback occurs. Original50 inspection and its existing completion
+criteria remain independently required.
+
+`word_card_human_audit --help` describes private rendering and proposal
+validation. Its output paths obey the existing host-only write guard. Public
+reporting uses `certification_summary`, which excludes card IDs, source bodies,
+receipt paths, and human inspection narratives. Freshness, withdrawals, export
+approvals, publication, and deployment remain separate gates.
+
+## Legacy authority and prerequisite contracts
 
 The independent steward supplies the specification and evaluation SHA-256 pins
 through the existing control channel. The assembler or code author cannot

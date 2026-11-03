@@ -6634,11 +6634,6 @@
     },
     {
       "path": "scripts/audit/generate_practice_deck.py",
-      "code": "no-redef",
-      "message": "Name \"verifier\" already defined on line 8670"
-    },
-    {
-      "path": "scripts/audit/generate_practice_deck.py",
       "code": "type-var",
       "message": "Value of type variable \"AnyStr\" of \"escape\" cannot be \"None | str\""
     },

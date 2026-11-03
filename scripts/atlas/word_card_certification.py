@@ -26,6 +26,7 @@ PERMISSIONS_REGISTER_PATH = PROJECT_ROOT / "docs/sources/permissions-register.ya
 SCHEMA_PATH = PROJECT_ROOT / "schemas/word-card-v1.schema.json"
 IMPLEMENTATION_PATHS = (
     *sorted(PROJECT_ROOT.glob("scripts/atlas/*.py")),
+    PROJECT_ROOT / "scripts/audit/generate_practice_deck.py",
     PROJECT_ROOT / "scripts/lexicon/runner/ulif_dictua_parse.py",
     PROJECT_ROOT / "scripts/lexicon/source_attribution.py",
     PROJECT_ROOT / "scripts/lexicon/ulif_raw_cache.py",
@@ -107,13 +108,13 @@ class CertificationAuthority:
             raise UncertifiedCardRefusal("snapshot authority must be repository relative")
         # A lock may name a canonical data digest instead of being the data.
         # Its bytes are still bound by the review's implementation fingerprint.
-        if "json_keys" in binding:
+        if "json_keys" in binding or binding.get("canonical_json") is True:
             if path not in self.json_values:
                 self.json_values[path] = json.loads(path.read_bytes())
             value = self.json_values[path]
-            for key in binding["json_keys"]:
+            for key in binding.get("json_keys", []):
                 value = value[key]
-            self.snapshots[category, name] = value
+            self.snapshots[category, name] = digest(value) if binding.get("canonical_json") is True else value
         else:
             self.snapshots[category, name] = self.file_hash(path)
         return self.snapshots[category, name]
@@ -161,6 +162,8 @@ def load_certified_card_for_export(card: Any, *, required_approval: str = "datas
         review = card["quality"]["linguistic_review"]
         build = card["build"]
         evidence = authority.reviews.get(card["card_id"], {})
+        if build["rules_version"] in {f"a1-slice{i}-v1" for i in range(2, 7)}:
+            return _load_code_first_card(card, evidence, authority, required_approval)
         if (card["state"] != "active" or card["quality"]["identity_confidence"] not in {"high", "medium"}
                 or not isinstance(review.get("record"), str) or not review["record"].strip()
                 or not isinstance(review.get("lane"), str) or not review["lane"].strip()
@@ -204,6 +207,32 @@ def load_certified_card_for_export(card: Any, *, required_approval: str = "datas
         raise
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         raise UncertifiedCardRefusal("missing or invalid certification authority") from exc
+
+
+def _load_code_first_card(card: dict, evidence: dict, authority: CertificationAuthority, required_approval: str) -> dict:
+    """Use exact A1 input bindings without requiring pilot-only serialization."""
+    build = card["build"]
+    if (card["state"] != "active" or card["quality"]["identity_confidence"] not in {"high", "medium"}
+            or evidence.get("status") != "active" or required_approval not in evidence.get("approved_for", [])
+            or not isinstance(evidence.get("record"), str) or not evidence["record"].strip()
+            or not isinstance(evidence.get("lane"), str) or not evidence["lane"].strip()
+            or evidence.get("card_version") != build["card_version"]
+            or build["card_version"] != "cv_" + digest({k: v for k, v in card.items() if k != "build"})[:24]
+            or evidence.get("build_sha256") != digest(build)
+            or evidence.get("implementation_sha256") != authority.implementation
+            or evidence.get("rules_sha256") != authority.rules):
+        raise UncertifiedCardRefusal("missing, withdrawn, stale or inapplicable code-first approval")
+    reference = evidence.get("certification_receipt")
+    if not isinstance(reference, dict):
+        raise UncertifiedCardRefusal("missing code-first certification receipt")
+    gold.validate(reference, gold.REF, "mandatory code-first certification receipt")
+    key = digest(reference)
+    if key not in authority.certifications:
+        authority.certifications[key] = verify_certification_receipt(reference, REVIEW_EVIDENCE_PATH.parent)
+    receipt = authority.certifications[key]
+    if receipt["schema_version"] != "word-card-certification-receipt.v2" or receipt["cards"].get(card["card_id"]) != digest(card):
+        raise UncertifiedCardRefusal("card is outside exact code-first certification")
+    return card
 
 
 @certification_run()
@@ -280,6 +309,19 @@ CERTIFICATION_SPEC = gold.obj({
     "controls": gold.array(gold.obj({"control_id": gold.TEXT, "case_id": gold.TEXT,
                                     "class": {"enum": list(CONTROL_FACETS)}, "card": gold.REF}), 3),
 })
+CODE_FIRST_SPEC = gold.obj({
+    "schema_version": {"const": "word-card-certification-spec.v2"},
+    "frozen": FROZEN,
+    "batches": gold.array(gold.obj({
+        "batch": {"enum": ["slice2", "slice3", "slice4", "slice5", "slice6"]},
+        "assembly": gold.REF, "sources": gold.REF,
+    })),
+    "original50_receipt": {"anyOf": [gold.REF, {"type": "null"}]},
+    "complete_data_receipt": {"anyOf": [gold.REF, {"type": "null"}]},
+    "mechanics_receipt": {"anyOf": [gold.REF, {"type": "null"}]},
+    "original50_selection": gold.REF, "original50_input": gold.REF,
+    "removal_snapshots": {"anyOf": [gold.obj({"overlay": gold.SHA, "suppressions": gold.SHA}), {"type": "null"}]},
+})
 MECHANICS = gold.obj({
     "schema_version": {"const": "word-card-mechanics-acceptance.v1"},
     "status": {"const": "MECHANICS_ACCEPTED"}, "frozen": FROZEN,
@@ -325,8 +367,147 @@ def frozen_artifact(authority: CertificationAuthority, cards: list[dict]) -> dic
             "inputs_sha256": digest({card["card_id"]: card["build"]["inputs"] for card in cards})}
 
 
+def evaluate_a1_assertions(assembly: dict, sources: dict, batch_name: str) -> dict:
+    """Replay the real A1 consumer on its unchanged, repository-pinned batch.
+
+    This is assertion evidence only. It grants no review, audit or export approval.
+    """
+    import importlib
+
+    from scripts.atlas import a1_word_cards as a1
+    from scripts.atlas import word_card_foundation as foundation
+
+    if batch_name == "slice2":
+        manifest = a1.load(a1.ROOT / a1.MANIFEST)
+        gold.require(a1.digest(manifest) == a1.MANIFEST_SHA256, "Reviewed manifest changed")
+        inventory = a1.load(a1.ROOT / "registry/atlas/a1-v1-inventory.json")
+        base = a1.load(a1.ROOT / "registry/atlas/identity/registry.json")
+        companion = a1.load(a1.ROOT / a1.COMPANION)
+        batch = None
+        validate = a1._inputs
+    else:
+        gold.require(batch_name in {"slice3", "slice4", "slice5", "slice6"}, "Unknown A1 batch")
+        reader = importlib.import_module("scripts.atlas.a1_" + batch_name + "_inputs")
+        manifest, inventory, base, companion, batch = reader.load_batch(a1.ROOT)
+        validate = batch.validate_inputs
+    effective, _ = validate(inventory, base, companion, manifest, sources, manifest["allocation_pins"])
+    foundation.registry_check(effective)
+    register = foundation.load_register(PERMISSIONS_REGISTER_PATH)
+    rebuilt = a1.build(inventory, base, companion, manifest, sources, manifest["allocation_pins"], register, batch=batch)
+    gold.require(a1.canonical(assembly) == a1.canonical(rebuilt), "Delivered A1 artifact changed")
+    # verify calls check_assertion for every assertion, including context fields.
+    result: dict = a1.verify(assembly, sources, manifest, batch=batch, register=register)
+    result["inputs_sha256"] = digest({"assembly": assembly, "sources": sources, "manifest": manifest})
+    return result
+
+
+def _evaluate_code_first(spec_path: Path, spec_sha256: str, spec: dict) -> dict:
+    from scripts.atlas import word_card_assertion_check as assertion_check
+
+    gold.validate(spec, CODE_FIRST_SPEC, "code-first certification specification")
+    base = spec_path.parent
+    state = _AUTHORITY.get()
+    authority = state.get("authority") if state is not None else None
+    if authority is None:
+        authority = CertificationAuthority()
+    decisions, cards, inputs, batches = [], [], {}, []
+    for row in spec["batches"]:
+        gold.require(row["batch"] not in inputs, "Duplicate A1 batch")
+        assembly = gold.decode(gold.reference(row["assembly"], base))
+        sources = gold.decode(gold.reference(row["sources"], base))
+        result = evaluate_a1_assertions(assembly, sources, row["batch"])
+        decisions.extend(result["assertion_decisions"])
+        cards.extend(assembly["cards"])
+        inputs[row["batch"]] = result["inputs_sha256"]
+        batches.append((assembly, sources))
+    gold.require(len({card["card_id"] for card in cards}) == len(cards), "Duplicate code-first card")
+    gold.require(len({d["assertion_id"] for d in decisions}) == len(decisions), "Duplicate code-first assertion")
+    frozen = {"implementation_sha256": authority.implementation, "rules_sha256": authority.rules,
+              "inputs_sha256": digest(inputs)}
+    gold.require(spec["frozen"] == frozen, "Frozen code-first artifact changed")
+    counts = assertion_check.summarize(decisions)
+    holds = []
+    # The existing steward ledger remains current-input authority. Names are
+    # batch-qualified because A1 uses the same input names across its slices.
+    for row, (assembly, _) in zip(spec["batches"], batches, strict=True):
+        for category in ("S", "V", "I", "O"):
+            for name, binding in assembly["cards"][0]["build"]["inputs"][category].items():
+                identity = row["batch"] + ":" + name
+                try:
+                    current = authority.snapshot(category, identity)
+                except (OSError, ValueError, KeyError, TypeError):
+                    holds.append("current_input_authority_missing:" + category + ":" + identity)
+                    continue
+                if binding["content_sha256"] != current:
+                    holds.append("current_input_changed:" + category + ":" + identity)
+    if spec["removal_snapshots"] is None:
+        holds.append("current_removal_authority_missing")
+    else:
+        for name, expected in spec["removal_snapshots"].items():
+            if expected != authority.snapshot("O", name):
+                holds.append("current_removal_snapshot_changed:" + name)
+    if any(d["status"] != "supported" and d["reason"] != "context_selection_requires_judgment" for d in decisions):
+        holds.append("unsupported_assertions_cannot_be_certified")
+    from scripts.atlas import word_card_foundation as foundation
+    from scripts.atlas import word_card_human_audit as human
+
+    packet = human.make_packet(cards, decisions, batches, foundation.load_register(PERMISSIONS_REGISTER_PATH), frozen,
+        gold.decode(gold.reference(spec["original50_selection"], base)),
+        gold.decode(gold.reference(spec["original50_input"], base)))
+    audit = human.audit_status(packet, authority.ledger)
+    if audit != "HUMAN_AUDIT_ACCEPTED":
+        holds.append(audit)
+    if any(not row["current_version_matches"] or any(a["missing"] for a in row["assertions"])
+           for row in packet["original50"]):
+        holds.append("original50_source_or_version_unresolved")
+    for name in ("original50_receipt", "complete_data_receipt", "mechanics_receipt"):
+        if spec[name] is None:
+            holds.append("missing_" + name)
+    # Original AC07 remains an independent exact-50 obligation, including its
+    # complete-data, gold custody, evaluator, freshness and control replays.
+    if spec["original50_receipt"] is not None:
+        original, _ = _read_certification_receipt(spec["original50_receipt"], base)
+        gold.require(original["schema_version"] == "word-card-certification-receipt.v1",
+                     "Original50 must use the full legacy inspection contract")
+        original = verify_certification_receipt(spec["original50_receipt"], base)
+        gold.require(original["case_count"] == 50, "Original50 denominator changed")
+        gold.require(original["cards"] == {row["card_id"]: digest(row["card"]) for row in packet["original50"]},
+                     "Certification does not cover the frozen original50 artifacts")
+        original_spec = gold.decode(gold.reference(original["spec"],
+            (base / spec["original50_receipt"]["path"]).parent))
+        gold.require(spec["complete_data_receipt"] is not None
+                     and spec["complete_data_receipt"]["sha256"] == original_spec["complete_data_receipt"]["sha256"],
+                     "Different complete-data authority")
+    if spec["mechanics_receipt"] is not None:
+        mechanics = gold.decode(gold.reference(spec["mechanics_receipt"], base))
+        gold.validate(mechanics, MECHANICS, "accepted code-first mechanics")
+        gold.require(mechanics["frozen"] == frozen and mechanics["cards_sha256"] == digest(cards),
+                     "Mechanics binds another code-first artifact")
+        # No new acceptance authority: the same independently accepted actor
+        # must already be admitted by the original50 mechanics contract.
+        if spec["original50_receipt"] is None:
+            holds.append("mechanics_independent_acceptance_unbound")
+        else:
+            old_base = (base / spec["original50_receipt"]["path"]).parent
+            old_spec_base = (old_base / original["spec"]["path"]).parent
+            accepted = gold.decode(gold.reference(original_spec["mechanics_receipt"], old_spec_base))
+            gold.require(mechanics["accepted_by"] == accepted["accepted_by"], "Unadmitted mechanics actor")
+        for ref in mechanics["evidence"]:
+            gold.reference(ref, (base / spec["mechanics_receipt"]["path"]).parent)
+    if spec["complete_data_receipt"] is not None:
+        gold.reference(spec["complete_data_receipt"], base)
+        if spec["original50_receipt"] is None:
+            holds.append("complete_data_independent_acceptance_unbound")
+    return {"schema_version": "word-card-certification-receipt.v2",
+            "status": "HELD" if holds else "CERTIFIED",
+            "spec": {"path": spec_path.name, "sha256": spec_sha256}, "frozen": frozen,
+            "case_count": len(cards), "assertion_counts": counts, "assertion_decisions": decisions,
+            "human_packet": packet, "human_audit_status": audit,
+            "holds": holds, "cards": {card["card_id"]: digest(card) for card in cards}}
+
+
 def evaluate_certification(spec_path: Path, spec_sha256: str,
-                           evaluation_path: Path, evaluation_sha256: str) -> dict:
+                           evaluation_path: Path | None, evaluation_sha256: str | None) -> dict:
     """Replay pinned prerequisites and return a deterministic private exact-artifact receipt.
 
     Trusted pins must come from the independent steward, never from the author.
@@ -336,6 +517,12 @@ def evaluate_certification(spec_path: Path, spec_sha256: str,
     No files, approvals, release state, or review ledger entries are written.
     """
     _, spec = gold.read(spec_path, spec_sha256)
+    if spec.get("schema_version") == "word-card-certification-spec.v2":
+        gold.require(evaluation_path is None and evaluation_sha256 is None,
+                     "Code-first evidence cannot consume a sample pass")
+        return _evaluate_code_first(spec_path, spec_sha256, spec)
+    if evaluation_path is None or evaluation_sha256 is None:
+        raise ValueError("Legacy certification requires a pinned evaluation")
     gold.validate(spec, CERTIFICATION_SPEC, "certification specification")
     base = spec_path.parent
     gold_path = base / spec["gold_spec"]["path"]
@@ -479,7 +666,7 @@ def evaluate_certification(spec_path: Path, spec_sha256: str,
 
 def _read_certification_receipt(ref: dict, base: Path) -> tuple[dict, Path]:
     """Validate the receipt envelope before dereferencing or replaying its evidence."""
-    shape = gold.obj({
+    legacy_shape = gold.obj({
         "schema_version": {"const": "word-card-certification-receipt.v1"},
         "spec": gold.REF, "evaluation": gold.REF,
         **{key: {} for key in ("status", "frozen", "gold_seal_sha256", "case_count", "strata",
@@ -487,7 +674,12 @@ def _read_certification_receipt(ref: dict, base: Path) -> tuple[dict, Path]:
     })
     try:
         receipt = gold.decode(gold.reference(ref, base))
-        gold.validate(receipt, shape, "exact-artifact receipt")
+        code_first_shape = gold.obj({
+            "schema_version": {"const": "word-card-certification-receipt.v2"}, "spec": gold.REF,
+            **{key: {} for key in ("status", "frozen", "case_count", "assertion_counts",
+                                  "assertion_decisions", "human_packet", "human_audit_status", "holds", "cards")},
+        })
+        gold.validate(receipt, {"oneOf": [legacy_shape, code_first_shape]}, "exact-artifact receipt")
     except (OSError, ValueError, TypeError) as exc:
         raise UncertifiedCardRefusal("Invalid exact-artifact receipt") from exc
     return receipt, (base / ref["path"]).parent
@@ -496,9 +688,10 @@ def _read_certification_receipt(ref: dict, base: Path) -> tuple[dict, Path]:
 def verify_certification_receipt(ref: dict, base: Path) -> dict:
     """Replay a pinned receipt against current evidence; a copied CERTIFIED is insufficient."""
     receipt, base = _read_certification_receipt(ref, base)
-    spec, evaluation = receipt["spec"], receipt["evaluation"]
+    spec, evaluation = receipt["spec"], receipt.get("evaluation")
     replay = evaluate_certification(base / spec["path"], spec["sha256"],
-                                    base / evaluation["path"], evaluation["sha256"])
+                                    base / evaluation["path"] if evaluation else None,
+                                    evaluation["sha256"] if evaluation else None)
     if gold.canonical(replay) != gold.canonical(receipt) or replay["status"] != "CERTIFIED":
         raise UncertifiedCardRefusal("Failed or stale certification receipt")
     return receipt
@@ -508,11 +701,17 @@ def certification_summary(ref: dict, base: Path) -> dict:
     """Return aggregate evaluation evidence without protected IDs, paths, or source text."""
     receipt, base = _read_certification_receipt(ref, base)
     # Failed evaluations remain publishable as failed, but their evidence must replay too.
-    spec, evaluation = receipt["spec"], receipt["evaluation"]
+    spec, evaluation = receipt["spec"], receipt.get("evaluation")
     replay = evaluate_certification(base / spec["path"], spec["sha256"],
-                                    base / evaluation["path"], evaluation["sha256"])
+                                    base / evaluation["path"] if evaluation else None,
+                                    evaluation["sha256"] if evaluation else None)
     if gold.canonical(replay) != gold.canonical(receipt):
         raise UncertifiedCardRefusal("Stale evaluation summary")
+    if receipt["schema_version"] == "word-card-certification-receipt.v2":
+        return {"schema_version": "word-card-certification-summary.v2", "status": receipt["status"],
+                "receipt_sha256": ref["sha256"], "case_count": receipt["case_count"],
+                "assertion_counts": receipt["assertion_counts"], "holds": receipt["holds"],
+                "human_audit_status": receipt["human_audit_status"]}
     codes: dict[str, int] = {}
     for row in receipt["findings"]:
         for finding in row["findings"]:

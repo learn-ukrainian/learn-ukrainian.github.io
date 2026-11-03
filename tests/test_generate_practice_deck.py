@@ -1730,6 +1730,28 @@ def test_unverified_paradigm_is_blanked_not_dropped() -> None:
     assert lexeme["paradigm"] == {"cases": {}}  # unverified paradigm blanked
 
 
+def test_requested_case_mismatch_cannot_emit_a_paradigm_answer() -> None:
+    """A VESUM member of the lemma cannot answer a different requested case, #12658 AC7."""
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    entry = copy.deepcopy(read_manifest(MANIFEST)[0])
+    # The old fixture has no VESUM accusative-plural reading. Keep only
+    # actually attested slots for the positive half of this regression.
+    entry["enrichment"]["morphology"]["paradigm"]["cases"]["accusative"].pop("plural")
+    paradigm = generate_practice_deck._paradigm(entry)
+    assert generate_practice_deck._verify_paradigm(_plain(entry["lemma"]), entry["pos"], paradigm, verifier)
+    bad = copy.deepcopy(paradigm)
+    cases = bad["cases"]
+    accusative = generate_practice_deck._case_form(paradigm, "accusative", "singular")
+    assert accusative and _plain(accusative) != _plain(entry["lemma"])
+    cases["accusative"] = {"singular": entry["lemma"]}
+    assert not generate_practice_deck._verify_paradigm(_plain(entry["lemma"]), entry["pos"], bad, verifier)
+    lexeme = _build_lexeme(entry, verifier)
+    assert lexeme is not None
+    assert _build_paradigm_items(lexeme, verifier=verifier)
+    lexeme["paradigm"] = bad
+    assert _build_paradigm_items(lexeme, verifier=verifier) == []
+
+
 def test_source_inventory_rows_stay_out_of_practice_by_default() -> None:
     entries = read_manifest(MANIFEST)
     source_entry = json.loads(json.dumps(entries[0]))
