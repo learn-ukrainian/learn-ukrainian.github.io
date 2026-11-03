@@ -4269,8 +4269,12 @@ def test_cli_uses_primary_recorder_before_stale_imports(tmp_path, form, argv):
 
 
 @pytest.mark.parametrize("form", ["file", "module"])
-@pytest.mark.parametrize("failure", ["metadata", "missing-entry", "symlink-loop"])
-def test_cli_refuses_unavailable_primary_recorder(tmp_path, form, failure):
+@pytest.mark.parametrize("failure, reason", [
+    ("metadata", "cannot resolve the primary checkout of linked worktree"),
+    ("missing-entry", "primary checkout has no entry point:"),
+    ("symlink-loop", "loop-a"),
+])
+def test_cli_refuses_unavailable_primary_recorder(tmp_path, form, failure, reason):
     """Defect classes: fail-open stale gate on missing primary; untyped bootstrap failure on symlink-loop metadata."""
     tree, _entry = recorder_cli_tree(tmp_path)
     if failure == "metadata":
@@ -4281,10 +4285,12 @@ def test_cli_refuses_unavailable_primary_recorder(tmp_path, form, failure):
         second.symlink_to(first)
         (tree / ".git").write_text(f"gitdir: {first}\n")
     done = run_recorder_cli(tree, form, ["budget-check", "--repository", REPOSITORY, "--pr", "42"])
-    assert done.returncode == 2 and "Traceback" not in done.stderr, done.stderr
+    assert done.returncode == 2 and done.stderr == "", done.stderr
+    assert len(done.stdout.splitlines()) == 1
     refusal = json.loads(done.stdout)
     assert refusal["admitted"] is False
     assert refusal["refusal"].startswith("RECORDER_PRIMARY_REFUSED:")
+    assert reason in refusal["refusal"]
 
 
 WITHHELD_FINDING = (
