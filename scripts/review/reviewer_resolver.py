@@ -663,6 +663,14 @@ class ReviewerResolution:
     # least one quorum verdict is necessarily cross-family.
     quorum: tuple[CandidateResult, ...] = ()
     quorum_rule: str | None = None
+
+    @property
+    def review_scopes(self) -> tuple[CommitReviewScope, ...]:
+        return ()
+
+
+@dataclass(frozen=True)
+class MixedFamilyResolution(ReviewerResolution):
     review_scopes: tuple[CommitReviewScope, ...] = ()
 
 
@@ -1712,7 +1720,17 @@ def resolve_reviewer(
                     trace[i] = promoted
                     break
             quorum_results.append(promoted)
-        return resolution_type(
+        quorum_type = MixedFamilyResolution if mixed_pair else resolution_type
+        scopes = tuple(
+            CommitReviewScope(
+                reviewer_family=seat.family,
+                author_family=next(iter(MIXED_REVIEW_FAMILIES - {seat.family})),
+                commits=mixed_family_scope(inputs.author_commits, seat.family),
+                context_head=inputs.exact_head,
+            )
+            for seat in quorum_results
+        ) if mixed_pair else ()
+        return quorum_type(
             selected=None,
             advisory=tuple(advisory),
             trace=tuple(trace),
@@ -1726,15 +1744,7 @@ def resolve_reviewer(
                 "as context; both must APPROVE this exact head; one pair counts as one round"
                 if mixed_pair else _DUAL_FAMILY_QUORUM_RULE
             ),
-            review_scopes=tuple(
-                CommitReviewScope(
-                    reviewer_family=seat.family,
-                    author_family=next(iter(MIXED_REVIEW_FAMILIES - {seat.family})),
-                    commits=mixed_family_scope(inputs.author_commits, seat.family),
-                    context_head=inputs.exact_head,
-                )
-                for seat in quorum_results
-            ) if mixed_pair else (),
+            **({"review_scopes": scopes} if mixed_pair else {}),
         )
 
     if inputs.pinned_candidate:

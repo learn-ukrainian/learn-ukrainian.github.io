@@ -6,7 +6,6 @@ import hashlib
 import json
 import os
 import subprocess
-import sys
 import time
 from pathlib import Path
 
@@ -1459,6 +1458,7 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
 def test_mixed_family_branch_resolves_one_seat_per_family(tmp_path, monkeypatch):
     """Defect: a mixed-family branch has no eligible reviewer without a third family."""
     from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+    from tests.test_review_closeout_cli import _run_cli
 
     repo = mini_repo(tmp_path, monkeypatch)
     anthropic = repo.commit(OPUS, message="Anthropic change")
@@ -1468,10 +1468,7 @@ def test_mixed_family_branch_resolves_one_seat_per_family(tmp_path, monkeypatch)
     snapshot.write_text('{"cursor": "unhealthy"}')
 
     def run(*args):
-        return subprocess.run(
-            [sys.executable, "-m", "scripts.review.closeout_cli", "--state-file", str(state), *args],
-            cwd=Path(__file__).resolve().parents[2], capture_output=True, text=True, timeout=30,
-        )
+        return _run_cli(state, *args)
 
     target = run("target", "--mode", "branch", "--branch", "feature", "--base", "origin/main",
                  "--repo-root", str(repo.root))
