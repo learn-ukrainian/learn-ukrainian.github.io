@@ -170,6 +170,24 @@ def test_writer_dedup_self_heals_a_missing_blob(store: ArtifactStore) -> None:
     assert store.read_bytes(rec.artifact_id) == data
 
 
+def test_dedup_upgrades_to_requested_stronger_retention_class(store: ArtifactStore) -> None:
+    """#12590. Defect class: dedup ignores a requested stronger retention class.
+
+    The same bytes stored again under a stronger class must upgrade the row.
+    A later weaker or default request must leave that class in place.
+    """
+    data = _payload()
+    first = store.store_bytes(data, producer="t", retention_class="default")
+    upgraded = store.store_bytes(data, producer="t", retention_class="retained-evidence")
+    assert upgraded.artifact_id == first.artifact_id
+    assert upgraded.retention_class == "retained-evidence"
+    assert store.get(first.artifact_id).retention_class == "retained-evidence"
+    kept = store.store_bytes(data, producer="other")
+    assert kept.artifact_id == first.artifact_id
+    assert kept.retention_class == "retained-evidence"
+    assert store.get(first.artifact_id).retention_class == "retained-evidence"
+
+
 def test_referenced_blob_of_open_delivery_is_never_removed(tmp_path: Path) -> None:
     """#12530 (pre-approved). Defect class: retention removing bytes a live
     reader still needs (the body of a queued delivery). The acknowledged

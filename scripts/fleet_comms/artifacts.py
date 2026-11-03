@@ -142,6 +142,39 @@ UNREFERENCED_EXPIRING_CLASSES = frozenset(
 # The approved window is a floor: the flag may lengthen it, never shorten it.
 UNREFERENCED_DEFAULT_DAYS = 90
 UNREFERENCED_MIN_DAYS = 90
+
+
+def _retention_rank(base_class: str) -> int:
+    """How long the existing rules keep this base class. Higher outranks.
+
+    Membership only, in the order the rules delete. ``RETENTION_COLLECTABLE_CLASSES``
+    are the message-blob rule's targets (the shorter window), so they rank
+    below the rest of ``UNREFERENCED_EXPIRING_CLASSES``. A class in neither
+    set is pinned. This is not a new class list.
+    """
+    if base_class in RETENTION_COLLECTABLE_CLASSES:
+        return 0
+    if base_class in UNREFERENCED_EXPIRING_CLASSES:
+        return 1
+    return 2
+
+
+def _kept_retention_class(current: str, requested: str) -> str:
+    """Class to persist when the same bytes are stored again (#12590).
+
+    A requested class that outranks the current base class replaces it.
+    A weaker or equal request, including the default, keeps the current
+    base class, so a hold is never downgraded. The ``expired:`` marker is
+    not a class: a revived row stores the base class, upgraded when the
+    request outranks it.
+    """
+    current_base = current.removeprefix(RETENTION_EXPIRED_PREFIX)
+    requested_base = requested.removeprefix(RETENTION_EXPIRED_PREFIX)
+    if _retention_rank(requested_base) > _retention_rank(current_base):
+        return requested_base
+    return current_base
+
+
 GITHUB_DUMP_MAX_AGE_SECONDS = 24 * 3600
 GITHUB_DUMP_KINDS = frozenset({"issue", "pull_request", "issue_comment", "pr_review_comment"})
 _CITE_ID = re.compile(rb"artifact_[0-9a-f]{32}")
@@ -1010,7 +1043,9 @@ class ArtifactStore:
             "SELECT * FROM artifacts WHERE sha256 = ?", (digest,)
         ).fetchone()
         if existing is not None:
-            reused = self._reuse_existing_blob(digest, dest, data, commit=commit)
+            reused = self._reuse_existing_blob(
+                digest, dest, data, commit=commit, retention_class=retention_class
+            )
             if reused is not None:
                 return reused
 
@@ -1059,6 +1094,7 @@ class ArtifactStore:
         data: bytes,
         *,
         commit: bool,
+        retention_class: str,
     ) -> ArtifactRecord | None:
         """Return a deduplicated row with its blob present and marked in use.
 
@@ -1070,6 +1106,11 @@ class ArtifactStore:
         rewritten from ``data`` and its class restored. Inside a caller-owned
         transaction a no-op UPDATE takes the same lock. Returns None when the
         row vanished, so the caller inserts it afresh.
+
+        #12590: the class written under that same lock is
+        ``_kept_retention_class`` of the row and the caller's
+        ``retention_class``. A stronger request upgrades the row before the
+        lock is released; a weaker or default request does not downgrade it.
         """
         own_transaction = commit and not self._conn.in_transaction
         if own_transaction:
@@ -1084,16 +1125,10 @@ class ArtifactStore:
                 "SELECT * FROM artifacts WHERE sha256 = ?", (digest,)
             ).fetchone()
             if row is not None:
-                retention_class = str(row["retention_class"])
-                if retention_class.startswith(RETENTION_EXPIRED_PREFIX):
+                stored = str(row["retention_class"])
+                chosen = _kept_retention_class(stored, retention_class)
+                if stored.startswith(RETENTION_EXPIRED_PREFIX):
                     self._write_blob_atomic(dest, data)
-                    self._conn.execute(
-                        "UPDATE artifacts SET retention_class = ? WHERE artifact_id = ?",
-                        (
-                            retention_class.removeprefix(RETENTION_EXPIRED_PREFIX),
-                            str(row["artifact_id"]),
-                        ),
-                    )
                 else:
                     try:
                         os.utime(dest)
@@ -1103,6 +1138,11 @@ class ArtifactStore:
                         # Not our file to touch; the bytes are present, which
                         # is all the pre-#12530 contract promised.
                         pass
+                if chosen != stored:
+                    self._conn.execute(
+                        "UPDATE artifacts SET retention_class = ? WHERE artifact_id = ?",
+                        (chosen, str(row["artifact_id"])),
+                    )
             if own_transaction:
                 self._conn.commit()
         except Exception:
@@ -1136,7 +1176,9 @@ class ArtifactStore:
                     f"{existing['artifact_id']!r}; refusing duplicate id "
                     f"{artifact_id!r}"
                 )
-            return self._row_to_record(existing)
+            reused = self._reuse_existing_pg_blob(digest, retention_class)
+            if reused is not None:
+                return reused
 
         aid = artifact_id or new_id("artifact")
         created = _utc_now()
@@ -1163,7 +1205,7 @@ class ArtifactStore:
 
         try:
             with self._transaction():
-                self._conn.execute(
+                inserted = self._conn.execute(
                     f"""INSERT INTO {_PG_BLOB_TABLE}(
                         artifact_id, sha256, bytes, mime_type, logical_filename,
                         producer, retention_class, created_at, payload
@@ -1171,6 +1213,11 @@ class ArtifactStore:
                     ON CONFLICT (sha256) DO NOTHING""",
                     (aid, digest, len(data), mime, logical_filename, producer, retention_class, created, data),
                 )
+                # A concurrent insert of the same digest wins the conflict
+                # (rowcount 0). Upgrade that row under this same transaction.
+                # A row this statement inserted keeps the class it wrote.
+                if inserted.rowcount != 1:
+                    self._upgrade_pg_retention_locked(digest, retention_class)
         except psycopg.errors.UniqueViolation as exc:
             raise ArtifactStoreError(
                 f"artifact_id {aid!r} already exists with different content "
@@ -1180,6 +1227,39 @@ class ArtifactStore:
         if row is None:
             raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
         return self._row_to_record(row)
+
+    def _reuse_existing_pg_blob(self, digest: str, retention_class: str) -> ArtifactRecord | None:
+        """Upgrade an existing Postgres row under the store writer transaction.
+
+        ``_transaction`` is the pg writer lock (a nested call is a savepoint),
+        the same role as the ``BEGIN IMMEDIATE`` in ``_reuse_existing_blob``.
+        The class decision is ``_kept_retention_class``. Returns None when the
+        row vanished, so the caller inserts it.
+        """
+        with self._transaction():
+            self._upgrade_pg_retention_locked(digest, retention_class)
+        row = self._pg_row_by_sha256(digest)
+        if row is None:
+            return None
+        return self._row_to_record(row)
+
+    def _upgrade_pg_retention_locked(self, digest: str, requested: str) -> None:
+        """Write a stronger class for ``digest``. Caller holds ``_transaction``."""
+        row = self._conn.execute(
+            f"SELECT {self._PG_META_COLUMNS} FROM {_PG_BLOB_TABLE} "
+            "WHERE sha256 = %s FOR UPDATE",
+            (digest,),
+        ).fetchone()
+        if row is None:
+            return
+        stored = str(row["retention_class"])
+        chosen = _kept_retention_class(stored, requested)
+        if chosen == stored:
+            return
+        self._conn.execute(
+            f"UPDATE {_PG_BLOB_TABLE} SET retention_class = %s WHERE artifact_id = %s",
+            (chosen, row["artifact_id"]),
+        )
 
     # #7484 (Sol 1.15): metadata lookups must not drag the BYTEA payload over
     # the wire — a dedup probe against a 100 MB duplicate used to download all
