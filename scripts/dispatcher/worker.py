@@ -529,11 +529,22 @@ def load_post_start_code() -> None:
             cursor,
             muse,
         )
-    with contextlib.suppress(Exception):  # alone: it needs a dependency that a lean checkout may lack
-        from scripts.agent_runtime import runner  # noqa: F401
+    # The runner imports the top-level ``ai_llm`` package from ``scripts/``, which review_attempt.run puts on
+    # sys.path just before it imports the runner; do the same, alone, and leave sys.path as it was.
+    scripts_dir = str(Path(__file__).resolve().parents[1])
+    added = scripts_dir not in sys.path
+    if added:
+        sys.path.insert(0, scripts_dir)
+    try:
+        with contextlib.suppress(Exception):
+            from scripts.agent_runtime import runner  # noqa: F401
+    finally:
+        if added:
+            sys.path.remove(scripts_dir)
     with contextlib.suppress(Exception):
-        from scripts.common import nofollow_walk, release_layout, safe_open  # noqa: F401
-        from scripts.curriculum.evidence import codes, lock  # noqa: F401
+        from scripts.build.fresh import manifest  # noqa: F401
+        from scripts.common import fallback_substitutions, nofollow_walk, release_layout, safe_open  # noqa: F401
+        from scripts.curriculum.evidence import codes, lock, sources  # noqa: F401
         from scripts.guardrails import delegate_ownership  # noqa: F401
         from scripts.lib import git_identity  # noqa: F401
         from scripts.opsec import git_push  # noqa: F401
@@ -542,10 +553,15 @@ def load_post_start_code() -> None:
     with contextlib.suppress(Exception):
         from scripts.review import (  # noqa: F401
             budget_grant,
+            capacity,
             isolation,
+            record_cf_verdict,
             render_contract,
             repair_round,
             review_contract,
+            reviewer_resolver,
+            role_resolution,
+            subject_seat,
             verdict_parser,
         )
         from scripts.review.prompts import check, eligibility  # noqa: F401
@@ -559,6 +575,7 @@ def load_post_start_code() -> None:
             ignored_task_output,
             pr_owner_check,
             regenerable_output,
+            reset_reserve,
             terminal_abandon,
         )
     with contextlib.suppress(Exception):
@@ -570,6 +587,7 @@ def load_post_start_code() -> None:
             pr_ownership,
             preparation_evidence,
             reaper_lifecycle,
+            slot_routing,
             task_record_causes,
             worker_leftovers,
             worktree_artifacts,
