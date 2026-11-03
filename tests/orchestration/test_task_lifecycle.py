@@ -3107,7 +3107,7 @@ def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_
     and membership of already-built artifacts and no learner text. Closeout accepts
     an infra behavior-proof receipt for that exact path, including beside ordinary
     code. The same manifest plus any other learner path still requires the Ukrainian
-    receipt. Auto-deploy and the Ukrainian seat classification stay on the content prefix.
+    receipt and seat. Auto-deploy eligibility stays on the content prefix.
     """
     from scripts.deploy.auto_deploy_eligibility import decide_auto_deploy
     from scripts.orchestration.integration_sweep import (
@@ -3120,7 +3120,7 @@ def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_
     payload = "curriculum/l2-uk-en/a2/liudyna-i-stosunky.mdx"
     lookalike = "registry/lexicon/atlas-runtime-release.jsonl"
     code = "scripts/deploy/prepare_atlas_runtime_release.py"
-    assert changes_learner_content([manifest]) is True
+    assert changes_learner_content([manifest]) is False
     decision = decide_auto_deploy([manifest])
     assert decision.deploy is False and decision.reason == "content_drift"
 
