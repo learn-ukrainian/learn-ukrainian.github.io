@@ -159,7 +159,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 
 Project-side:
 - `... ai_agent_bridge/__main__.py codex-usage`
-- `.venv/bin/python scripts/analytics/cost_report.py --all --markdown`
+- `.venv/bin/python scripts/telemetry/cost_report.py --all --markdown`
 - Dashboards: `dashboards/cost.html`, `runtime.html`, `delegate.html`
 - Raw: `batch_state/api_usage/*.jsonl`
 - API: `/api/health` (shows resilience/slows), `/api/runtime/agents`, `/api/runtime/recent`

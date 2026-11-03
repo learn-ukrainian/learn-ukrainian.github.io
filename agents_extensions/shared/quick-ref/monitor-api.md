@@ -29,7 +29,7 @@ curl -s http://localhost:8765/api/runtime/agents
 
 **Usage / limits view (project side; see also external CodexBar.app for 5h/weekly/monthly bars):**
 - `.../ai_agent_bridge/__main__.py codex-usage`
-- `.venv/bin/python scripts/analytics/cost_report.py --all --markdown`
+- `.venv/bin/python scripts/telemetry/cost_report.py --all --markdown`
 - Dashboards: cost.html, runtime.html
 - API: /api/health (resilience), /api/runtime/recent
 

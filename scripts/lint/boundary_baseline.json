@@ -122,16 +122,6 @@
       "count": 1
     },
     {
-      "path": "scripts/api/cost_router.py",
-      "module": "scripts.analytics",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/cost_router.py",
-      "module": "scripts.analytics.cost_report",
-      "count": 1
-    },
-    {
       "path": "scripts/api/dashboard_helpers.py",
       "module": "scripts.audit",
       "count": 1
@@ -374,16 +364,6 @@
     {
       "path": "scripts/api/state_issues.py",
       "module": "scripts.build.phase_constants",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "module": "scripts.analytics",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "module": "scripts.analytics.cost_report",
       "count": 1
     },
     {

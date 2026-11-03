@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.analytics.cost_report as cost_report
+import scripts.telemetry.cost_report as cost_report
 from scripts.api.main import app
 
 pytestmark = pytest.mark.reads_content

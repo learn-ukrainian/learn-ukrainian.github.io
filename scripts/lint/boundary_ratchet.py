@@ -21,24 +21,28 @@ Examples:
   .venv/bin/python -m scripts.lint.boundary_ratchet --write-baseline
 
 Outputs: one violation per new site, stale site, or unclassified name on
-stderr, or a one-line pass message on stdout. Exit 0 is a pass or a
-baseline written. Exit 1 is a violation or an unreadable tree.
+stderr, or a one-line pass message on stdout. A full-tree run then prints
+the population report: forward and reverse counts for direct, parent,
+file-load, fallback, dynamic, shared, and test, plus alias-only and
+fallback columns. Exit 0 is a pass or a baseline written. Exit 1 is a
+violation or an unreadable tree.
 """
 
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import subprocess
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
 
-from scripts.ci.components import scan_imports
+from scripts.ci.components import call_name, dependency_nodes, literal_target, scan_imports, scan_runtime_edges
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("boundary_baseline.json")
@@ -49,6 +53,8 @@ ROLES = frozenset({"machinery", "product", "shared"})
 _GIT_TIMEOUT_SECONDS = 30
 _SHRINK_REFS = ("HEAD", "HEAD^", "origin/main")
 _SKIP_DIRS = frozenset({"__pycache__"})
+_FALLBACK_NAMES = frozenset({"ImportError", "ModuleNotFoundError"})
+_EDGE_KINDS = frozenset({"direct", "parent", "file-load", "runtime"})
 
 
 @dataclass(frozen=True)
@@ -179,8 +185,61 @@ def _scripts_dir(root: Path) -> Path:
     return root / "scripts"
 
 
-def disk_names(root: Path) -> tuple[set[str], set[str]]:
-    """Top-level directory names and top-level ``*.py`` file names."""
+def _tracked_scripts(root: Path) -> set[str] | None:
+    """Git-tracked paths under ``scripts/``, or None when ``root`` is not a checkout."""
+
+    if not (root / ".git").exists():
+        return None
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", "scripts"],
+        cwd=root,
+        capture_output=True,
+        timeout=_GIT_TIMEOUT_SECONDS,
+        check=False,
+    )
+    if result.returncode != 0:
+        detail = result.stderr.decode("utf-8", errors="replace").strip()
+        raise ValueError(detail or f"git ls-files exited {result.returncode}")
+    return {item for item in result.stdout.decode("utf-8", errors="surrogateescape").split("\0") if item}
+
+
+def _names_from_python_paths(paths: set[str]) -> tuple[set[str], set[str]]:
+    packages: set[str] = set()
+    modules: set[str] = set()
+    for rel in paths:
+        path = Path(rel)
+        if path.suffix != ".py" or not _SKIP_DIRS.isdisjoint(path.parts):
+            continue
+        if len(path.parts) == 2 and path.parts[0] == "scripts":
+            modules.add(path.name)
+        elif len(path.parts) > 2 and path.parts[0] == "scripts":
+            packages.add(path.parts[1])
+    return packages, modules
+
+
+def _disk_python_names(root: Path) -> tuple[set[str], set[str]]:
+    """Python packages and modules on disk. A directory with no Python file is absent."""
+
+    scripts = _scripts_dir(root)
+    packages: set[str] = set()
+    modules: set[str] = set()
+    if not scripts.is_dir():
+        return packages, modules
+    for child in scripts.iterdir():
+        if child.name.startswith(".") or child.name in _SKIP_DIRS:
+            continue
+        if child.is_file() and child.suffix == ".py":
+            modules.add(child.name)
+        elif child.is_dir() and any(
+            path.is_file() and path.suffix == ".py" and _SKIP_DIRS.isdisjoint(path.parts)
+            for path in child.rglob("*.py")
+        ):
+            packages.add(child.name)
+    return packages, modules
+
+
+def _tree_names(root: Path) -> tuple[set[str], set[str]]:
+    """Directories and top-level modules that exist, including ones with no Python file."""
 
     scripts = _scripts_dir(root)
     packages: set[str] = set()
@@ -197,18 +256,34 @@ def disk_names(root: Path) -> tuple[set[str], set[str]]:
     return packages, modules
 
 
+def disk_names(root: Path) -> tuple[set[str], set[str]]:
+    """Packages and modules that must carry a boundary role.
+
+    A checkout counts a top-level name only when Git tracks a Python file
+    for it. An untracked directory, including one that holds only
+    ``__pycache__``, is not a package. A tree that is not a checkout counts
+    Python files on disk and still ignores a directory with no Python file.
+    """
+
+    tracked = _tracked_scripts(root)
+    if tracked is not None:
+        return _names_from_python_paths(tracked)
+    return _disk_python_names(root)
+
+
 def classification_violations(root: Path, config: Classified) -> list[str]:
-    """Fail closed: every top-level name is classified, and the config has no ghost."""
+    """Fail closed: every tracked Python name is classified, and the config has no ghost."""
 
     packages, modules = disk_names(root)
+    present_packages, present_modules = _tree_names(root)
     violations: list[str] = []
     for name in sorted(packages - set(config.packages)):
         violations.append(f"scripts/{name}: unclassified package")
-    for name in sorted(set(config.packages) - packages):
+    for name in sorted(set(config.packages) - present_packages):
         violations.append(f"scripts/{name}: classified package is not in the tree")
     for name in sorted(modules - set(config.modules)):
         violations.append(f"scripts/{name}: unclassified module")
-    for name in sorted(set(config.modules) - modules):
+    for name in sorted(set(config.modules) - present_modules):
         violations.append(f"scripts/{name}: classified module is not in the tree")
     for name in sorted(config.files):
         if not (root / name).is_file():
@@ -247,23 +322,40 @@ def importer_role(rel: Path, config: Classified) -> str | None:
 def _python_files(root: Path, targets: Sequence[str] | None) -> list[Path]:
     scripts = _scripts_dir(root)
     if targets is None:
-        return sorted(
-            path
-            for path in scripts.rglob("*.py")
-            if _SKIP_DIRS.isdisjoint(path.parts) and path.is_file()
-        )
+        return sorted(path for path in scripts.rglob("*.py") if _SKIP_DIRS.isdisjoint(path.parts) and path.is_file())
     files: list[Path] = []
     for target in targets:
         path = root / target
         if path.is_dir():
             files.extend(
-                child
-                for child in path.rglob("*.py")
-                if _SKIP_DIRS.isdisjoint(child.parts) and child.is_file()
+                child for child in path.rglob("*.py") if _SKIP_DIRS.isdisjoint(child.parts) and child.is_file()
             )
         elif path.suffix == ".py" and path.is_file():
             files.append(path)
     return sorted(set(files))
+
+
+def _read_sources(root: Path, paths: Sequence[Path]) -> tuple[dict[str, bytes], list[str]]:
+    fatal: list[str] = []
+    sources: dict[str, bytes] = {}
+    for path in paths:
+        try:
+            rel = path.relative_to(root).as_posix()
+        except ValueError:
+            fatal.append(f"{path}: outside the tree")
+            continue
+        try:
+            sources[rel] = path.read_bytes()
+        except OSError as exc:
+            fatal.append(f"{rel}: cannot read imports: {exc}")
+    return sources, fatal
+
+
+def _test_python_files(root: Path) -> list[Path]:
+    base = root / "tests"
+    if not base.is_dir():
+        return []
+    return sorted(path for path in base.rglob("*.py") if path.is_file() and _SKIP_DIRS.isdisjoint(path.parts))
 
 
 def collect_import_counts(
@@ -277,18 +369,7 @@ def collect_import_counts(
     only chooses which importer files are counted.
     """
 
-    fatal: list[str] = []
-    sources: dict[str, bytes] = {}
-    for path in _python_files(root, None):
-        try:
-            rel = path.relative_to(root).as_posix()
-        except ValueError:
-            fatal.append(f"{path}: outside the tree")
-            continue
-        try:
-            sources[rel] = path.read_bytes()
-        except OSError as exc:
-            fatal.append(f"{rel}: cannot read imports: {exc}")
+    sources, fatal = _read_sources(root, _python_files(root, None))
     if fatal:
         return Counter(), fatal
     graph = scan_imports(sources)
@@ -297,7 +378,9 @@ def collect_import_counts(
             fatal.append(f"{edge['path']}: cannot parse imports")
     if fatal:
         return Counter(), fatal
-    scope = {path.relative_to(root).as_posix() for path in _python_files(root, targets)} if targets is not None else None
+    scope = (
+        {path.relative_to(root).as_posix() for path in _python_files(root, targets)} if targets is not None else None
+    )
     counts: Counter[tuple[str, str]] = Counter()
     for importer, target in graph["file_edges"]:
         if scope is not None and importer not in scope:
@@ -491,6 +574,381 @@ def evaluate(
     return violations
 
 
+@dataclass(frozen=True)
+class _Edge:
+    """One classified import identity. ``kind`` is direct, parent, file-load, or runtime."""
+
+    importer: str
+    target: str
+    module: str
+    kind: str
+    fallback: bool
+    alias_only: bool
+
+
+def _handler_names(expr: ast.AST | None) -> set[str] | None:
+    if expr is None:
+        return None
+    if isinstance(expr, ast.Name):
+        return {expr.id}
+    if isinstance(expr, ast.Attribute):
+        return {expr.attr}
+    if isinstance(expr, ast.Tuple):
+        found: set[str] = set()
+        for elt in expr.elts:
+            part = _handler_names(elt)
+            if part is None:
+                return {"*bare*"}
+            found |= part
+        return found
+    return {"*other*"}
+
+
+def _fallback_lines(tree: ast.AST) -> set[int]:
+    """Lines inside a ``try`` whose handler is ImportError, ModuleNotFoundError, or bare."""
+
+    found: set[int] = set()
+
+    class Visitor(ast.NodeVisitor):
+        def visit_Try(self, node: ast.Try) -> None:
+            matched = False
+            for handler in node.handlers:
+                names = _handler_names(handler.type)
+                if names is None or (names and names <= _FALLBACK_NAMES):
+                    matched = True
+            if matched:
+                for stmt in node.body:
+                    for child in ast.walk(stmt):
+                        line = getattr(child, "lineno", None)
+                        if isinstance(line, int):
+                            found.add(line)
+            self.generic_visit(node)
+
+    Visitor().visit(tree)
+    return found
+
+
+def _collect_causes(sources: dict[str, bytes]) -> dict[tuple[str, str], list[tuple[str, int, bool]]]:
+    """Label each scanner edge direct, alias, parent, file-load, or runtime.
+
+    Source order is the dict order. A shim ``scripts/<name>.py`` and a package
+    ``scripts/<name>/__init__.py`` share a module key; the later path wins, so
+    the sorted path list keeps the shim and does not record the package's
+    parent edges.
+    """
+
+    modules = {path[:-3].replace("/", ".").removesuffix(".__init__"): path for path in sources}
+    causes: dict[tuple[str, str], list[tuple[str, int, bool]]] = defaultdict(list)
+
+    def resolve(module: str) -> str | None:
+        return modules.get(module) or modules.get("scripts." + module)
+
+    def add(importer: str, target: str, kind: str, line: int, fallback: bool) -> None:
+        causes[(importer, target)].append((kind, line, fallback))
+
+    def add_import(importer: str, module: str, *, line: int, kind: str, fallback: bool) -> None:
+        target = resolve(module)
+        if not target:
+            return
+        add(importer, target, kind, line, fallback)
+        canonical = target[:-3].replace("/", ".").removesuffix(".__init__")
+        for index in range(1, len(canonical.split("."))):
+            parent = modules.get(".".join(canonical.split(".")[:index]))
+            if parent and parent.endswith("/__init__.py"):
+                add(importer, parent, "parent", line, fallback)
+
+    known = set(sources)
+    for path, source in sources.items():
+        try:
+            tree = ast.parse(source, filename=path)
+        except (SyntaxError, ValueError):
+            continue
+        caught = _fallback_lines(tree)
+        bindings: dict[str, list[ast.AST]] = {}
+        nodes = dependency_nodes(tree)
+        has_specs = b"spec_from_file_location" in source
+        loaders: dict[str, tuple[str, int]] = {"__import__": ("module", 0)}
+        wrappers: set[str] = set()
+        for node in nodes:
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for assigned in targets:
+                    if isinstance(assigned, ast.Name) and node.value is not None:
+                        bindings.setdefault(assigned.id, []).append(node.value)
+            if isinstance(node, ast.ImportFrom) and node.module in {"importlib", "importlib.util", "runpy"}:
+                for alias in node.names:
+                    if alias.name in {"import_module", "spec_from_file_location", "run_path", "run_module"}:
+                        loaders[alias.asname or alias.name] = (
+                            "file" if alias.name in {"spec_from_file_location", "run_path"} else "module",
+                            1 if alias.name == "spec_from_file_location" else 0,
+                        )
+            if (
+                has_specs
+                and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and any(
+                    isinstance(child, ast.Call)
+                    and isinstance(child.func, ast.Attribute)
+                    and child.func.attr == "spec_from_file_location"
+                    for child in ast.walk(node)
+                )
+            ):
+                wrappers.add(node.name)
+        for _importer, runtime_target in scan_runtime_edges(path, nodes, bindings, known)[0]:
+            add(path, runtime_target, "runtime", 0, False)
+        for node in nodes:
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    add_import(path, alias.name, line=node.lineno, kind="direct", fallback=node.lineno in caught)
+            elif isinstance(node, ast.ImportFrom):
+                package = path[:-3].replace("/", ".").split(".")[:-1]
+                base = ".".join(package[: len(package) - node.level + 1]) if node.level else ""
+                base = ".".join(filter(None, (base, node.module)))
+                add_import(path, base, line=node.lineno, kind="direct", fallback=node.lineno in caught)
+                for alias in node.names:
+                    add_import(
+                        path,
+                        base + "." + alias.name,
+                        line=node.lineno,
+                        kind="alias",
+                        fallback=node.lineno in caught,
+                    )
+            if not isinstance(node, ast.Call):
+                continue
+            name = call_name(node.func)
+            leaf = name.split(".")[-1]
+            kind, index = loaders.get(name, (None, 0))
+            if leaf in {"import_module", "spec_from_file_location", "run_path", "run_module"}:
+                kind = "file" if leaf in {"spec_from_file_location", "run_path"} else "module"
+                index = 1 if leaf == "spec_from_file_location" else 0
+            if name in wrappers:
+                kind = "file"
+                index = 1
+            if not kind:
+                continue
+            keyword = (
+                "location"
+                if kind == "file" and index == 1
+                else "path_name"
+                if kind == "file"
+                else "mod_name"
+                if leaf == "run_module"
+                else "name"
+            )
+            expression = (
+                node.args[index]
+                if len(node.args) > index
+                else next(
+                    (kw.value for kw in node.keywords if kw.arg == keyword),
+                    None,
+                )
+            )
+            value = literal_target(expression, bindings, path) if expression is not None else None
+            if kind == "module" and value is not None:
+                resolved: str | None = resolve(str(value))
+            elif value is not None:
+                resolved = str(value)
+            else:
+                resolved = None
+            if resolved in sources:
+                if kind == "module":
+                    add_import(path, str(value), line=node.lineno, kind="direct", fallback=node.lineno in caught)
+                else:
+                    add(path, resolved, "fileload", node.lineno, node.lineno in caught)
+    return causes
+
+
+def _classify(causes: Mapping[tuple[str, str], list[tuple[str, int, bool]]]) -> list[_Edge]:
+    rows: list[_Edge] = []
+    for (importer, target), items in causes.items():
+        kinds = {kind for kind, _line, _fallback in items}
+        if "direct" in kinds or "alias" in kinds:
+            kind = "direct"
+            relevant = [item for item in items if item[0] in {"direct", "alias"}]
+            alias_only = all(item[0] == "alias" for item in relevant)
+        elif "fileload" in kinds:
+            kind = "file-load"
+            relevant = [item for item in items if item[0] == "fileload"]
+            alias_only = False
+        elif "parent" in kinds:
+            kind = "parent"
+            relevant = [item for item in items if item[0] == "parent"]
+            alias_only = False
+        elif "runtime" in kinds:
+            kind = "runtime"
+            relevant = [item for item in items if item[0] == "runtime"]
+            alias_only = False
+        else:
+            raise ValueError(f"unclassified {importer} -> {target}")
+        rows.append(
+            _Edge(
+                importer,
+                target,
+                _module_of(target),
+                kind,
+                all(item[2] for item in relevant),
+                alias_only,
+            )
+        )
+    return rows
+
+
+def _scan_classified(sources: dict[str, bytes]) -> tuple[dict[str, object], list[_Edge]]:
+    graph = scan_imports(sources)
+    causes = _collect_causes(sources)
+    got = {tuple(edge) for edge in graph["file_edges"]}
+    if set(causes) != got:
+        missing = len(got - set(causes))
+        extra = len(set(causes) - got)
+        raise ValueError(f"import labels differ from the scanner: missing {missing} extra {extra}")
+    return graph, _classify(causes)
+
+
+def _role_of(path: str, config: Classified) -> str | None:
+    if path.startswith("tests/"):
+        return "test"
+    return file_role(path, config)
+
+
+def _pair(rows: Sequence[_Edge], src: str, dst: str, config: Classified) -> list[_Edge]:
+    return [edge for edge in rows if _role_of(edge.importer, config) == src and _role_of(edge.target, config) == dst]
+
+
+def _scripts_module(edge: _Edge) -> bool:
+    return edge.module == "scripts"
+
+
+def _count_direct(rows: Sequence[_Edge]) -> int:
+    return sum(edge.kind == "direct" and not _scripts_module(edge) for edge in rows)
+
+
+def _count_parent(rows: Sequence[_Edge]) -> int:
+    return sum(edge.kind == "parent" and not _scripts_module(edge) for edge in rows)
+
+
+def _count_file_load(rows: Sequence[_Edge]) -> int:
+    return sum(edge.kind == "file-load" for edge in rows)
+
+
+def _count_fallback(rows: Sequence[_Edge]) -> int:
+    total = 0
+    for edge in rows:
+        if not edge.fallback or edge.kind not in _EDGE_KINDS:
+            continue
+        if edge.kind in {"direct", "parent"} and _scripts_module(edge):
+            continue
+        total += 1
+    return total
+
+
+def _dynamic_count(graph: Mapping[str, object], config: Classified, role: str) -> int:
+    unresolved = graph["unresolved_edges"]
+    if not isinstance(unresolved, list):
+        raise ValueError("scanner unresolved_edges is not a list")
+    return sum(
+        1
+        for edge in unresolved
+        if isinstance(edge, dict)
+        and edge.get("reason") == "nonliteral-or-missing-load"
+        and _role_of(str(edge.get("path", "")), config) == role
+    )
+
+
+def _column_line(label: str, name: str, chosen: Sequence[_Edge]) -> str:
+    fallback_only = sum(edge.fallback for edge in chosen)
+    alias_only = sum(edge.alias_only for edge in chosen)
+    return f"{label}.{name} identities={len(chosen)} fallback_only={fallback_only} alias_only={alias_only}"
+
+
+def _population_columns(label: str, rows: Sequence[_Edge]) -> list[str]:
+    direct = [edge for edge in rows if edge.kind == "direct" and not _scripts_module(edge)]
+    parent = [edge for edge in rows if edge.kind == "parent" and not _scripts_module(edge)]
+    file_load = [edge for edge in rows if edge.kind == "file-load"]
+    runtime = [edge for edge in rows if edge.kind == "runtime"]
+    fallback = [edge for edge in [*direct, *parent, *file_load, *runtime] if edge.fallback]
+    scripts_direct = [edge for edge in rows if edge.kind == "direct" and _scripts_module(edge)]
+    scripts_parent = [edge for edge in rows if edge.kind == "parent" and _scripts_module(edge)]
+    accounted = len(direct) + len(parent) + len(file_load) + len(runtime) + len(scripts_direct) + len(scripts_parent)
+    if accounted != len(rows):
+        raise ValueError(f"{label}: accounted {accounted} of {len(rows)}")
+    return [
+        _column_line(label, "direct", direct),
+        _column_line(label, "parent", parent),
+        _column_line(label, "file-load", file_load),
+        _column_line(label, "fallback", fallback),
+    ]
+
+
+def _seven_line(label: str, rows: Sequence[_Edge], dynamic: int, shared: int, test: int) -> str:
+    return (
+        f"{label} direct={_count_direct(rows)} parent={_count_parent(rows)} "
+        f"file-load={_count_file_load(rows)} fallback={_count_fallback(rows)} "
+        f"dynamic={dynamic} shared={shared} test={test}"
+    )
+
+
+def population_report(root: Path, config: Classified) -> str:
+    """Print each edge population as its own count.
+
+    Forward ``shared`` is machinery-to-shared direct. Forward ``test`` is
+    test-to-product direct. Reverse ``shared`` is product-to-shared direct.
+    Reverse ``test`` is test-to-machinery direct. ``dynamic`` counts
+    non-literal loads in that side's files. ``alias_only`` is a direct edge
+    whose every cause is an import alias. ``fallback`` is an edge whose
+    winning causes all sit in an ImportError ``try``. The forward identities
+    are the scanner's machinery-to-product set, so the two ``scripts.pipeline``
+    parents stay out while ``scripts/pipeline.py`` wins the module key.
+    """
+
+    script_paths = _python_files(root, None)
+    sources, fatal = _read_sources(root, script_paths)
+    if fatal:
+        raise ValueError("; ".join(fatal))
+    graph, rows = _scan_classified(sources)
+    unresolved = graph["unresolved_edges"]
+    if isinstance(unresolved, list) and any(
+        isinstance(edge, dict) and edge.get("reason") == "parse-error" for edge in unresolved
+    ):
+        raise ValueError("cannot parse imports")
+    forward = _pair(rows, "machinery", "product", config)
+    reverse = _pair(rows, "product", "machinery", config)
+    machinery_shared = _pair(rows, "machinery", "shared", config)
+    product_shared = _pair(rows, "product", "shared", config)
+    counts, count_fatal = collect_import_counts(root, config, None)
+    if count_fatal:
+        raise ValueError("; ".join(count_fatal))
+    if {(edge.importer, edge.module) for edge in forward} != set(counts):
+        raise ValueError(
+            f"population report forward identities {len(forward)} differ from the scanner {len(set(counts))}"
+        )
+    test_paths = [path for path in _test_python_files(root) if path not in set(script_paths)]
+    combined, combined_fatal = _read_sources(root, [*script_paths, *test_paths])
+    if combined_fatal:
+        raise ValueError("; ".join(combined_fatal))
+    _test_graph, test_rows = _scan_classified(combined)
+    tests = [edge for edge in test_rows if _role_of(edge.importer, config) == "test"]
+    test_product = [edge for edge in tests if _role_of(edge.target, config) == "product"]
+    test_machinery = [edge for edge in tests if _role_of(edge.target, config) == "machinery"]
+    lines = [
+        _seven_line(
+            "forward",
+            forward,
+            _dynamic_count(graph, config, "machinery"),
+            _count_direct(machinery_shared),
+            _count_direct(test_product),
+        ),
+        _seven_line(
+            "reverse",
+            reverse,
+            _dynamic_count(graph, config, "product"),
+            _count_direct(product_shared),
+            _count_direct(test_machinery),
+        ),
+        *_population_columns("forward", forward),
+        *_population_columns("reverse", reverse),
+    ]
+    return "\n".join(lines)
+
+
 def _summarize(counts: Mapping[tuple[str, str], int]) -> str:
     by_top: Counter[str] = Counter()
     for (_path, module), count in counts.items():
@@ -538,13 +996,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         targets = _normalize_targets(root, args.paths) if args.paths else None
         violations = evaluate(root, config_path, baseline, targets)
+        report = population_report(root, load_config(config_path)) if targets is None else ""
     except (OSError, ValueError, json.JSONDecodeError, subprocess.SubprocessError, yaml.YAMLError) as exc:
         print(f"boundary ratchet could not run: {exc}", file=sys.stderr)
         return 1
     if violations:
         print("\n".join(violations), file=sys.stderr)
+        if report:
+            print(report)
         return 1
     print("OK: package boundary ratchet matches the baseline")
+    if report:
+        print(report)
     return 0
 
 

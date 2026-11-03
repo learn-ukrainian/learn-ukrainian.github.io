@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-import scripts.analytics.cost_report as cost_report
+import scripts.telemetry.cost_report as cost_report
 
 pytestmark = pytest.mark.reads_content
 
