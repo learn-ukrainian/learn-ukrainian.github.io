@@ -533,9 +533,11 @@ def test_invalid_yaml_scalar_is_typed_malformed_refusal():
     """A reply that YAML parses but cannot construct gets the typed malformed refusal, not an exception (#12613)."""
     from scripts.review.review_contract import ContractError, validate_ukrainian_reply_claims
 
-    for body in ("x: 2024-13-45", "x: !!float abc", "[" * 5000 + "]" * 5000):
+    # ValueError, AttributeError, IndexError, KeyError, OverflowError and RecursionError from construction.
+    bodies = ("x: 2024-13-45", "x: !!float abc", "x: !!timestamp abc", 'x: !!int ""', "x: !!bool abc",
+              "x: !!float " + ":".join(["1"] * 400), "[" * 5000 + "]" * 5000)
+    for body in bodies:
         with pytest.raises(ContractError, match="CLAIM_PAYLOAD_MALFORMED: review payload is not readable"):
             validate_ukrainian_reply_claims(f"VERDICT: APPROVE\n```yaml\n{body}\n```\n")
-
-    reply = "VERDICT: APPROVE\nx: 2024-13-45\n"
-    assert validate_ukrainian_reply_claims(reply)[0] == reply
+        reply = f"VERDICT: APPROVE\n{body}\n"
+        assert validate_ukrainian_reply_claims(reply)[0] == reply
