@@ -1022,7 +1022,16 @@ def helper_creator_location(worktree: Path, *, repo_root: Path) -> tuple[Path, d
 
 def read_helper_creator(worktree: Path, *, repo_root: Path) -> tuple[Path, dict[str, Any]] | None:
     """Read only the canonical, incarnation-bound helper receipt; malformed evidence refuses."""
-    path, binding = helper_creator_location(worktree, repo_root=repo_root)
+    # This is optional evidence for legacy callers, including sibling maintenance
+    # whose repo_root is only a hint. Resolve the store from the checkout itself
+    # and leave existing attribution alone when no helper has ever recorded there.
+    owner = owning_repo_root(worktree, default=repo_root)
+    store = repository_lock_dir(owner).parent / "lu-worktree-creators"
+    if store.is_symlink():
+        raise ValueError("linked helper creator store")
+    if not store.exists():
+        return None
+    path, binding = helper_creator_location(worktree, repo_root=owner)
     try:
         if path.is_symlink() or path.parent.is_symlink():
             raise ValueError("linked helper creator record")
