@@ -90,7 +90,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
-        ("codex-account", None, "Codex account: sub or api (default: sub; api requires a private codex_accounts.json binding)"),
+        ("codex-account", None, "Codex route: sub or api (account a; also a-sub, a-api), b-sub (also b) or b-api (default: sub; every route but sub requires its entry in the private codex_accounts.json)"),
         ("claude-account", None, "Claude account: subscription a or b, or API key kk or szb (default: inherited configuration)"),
         ("max-budget-usd", None, "Spend cap in USD for a Claude API-key account, at most its configured amount "
          "(default: that amount)"),

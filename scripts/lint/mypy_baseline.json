@@ -12685,91 +12685,6 @@
     {
       "path": "scripts/dispatcher/git.py",
       "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "no-any-return",
       "message": "Returning Any from function declared to return \"str\""
     },
     {
@@ -12786,16 +12701,6 @@
       "path": "scripts/dispatcher/git.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"_HELD_WORKTREE_LOCKS\""
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"registry_note\" (hint: \"registry_note: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/dispatcher/git.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"seen_head\" (hint: \"seen_head: list[<type>] = ...\")"
     },
     {
       "path": "scripts/dispatcher/headroom.py",

@@ -668,7 +668,7 @@ def record_seat(tasks, tmp_path, task_id, **seat):
     recorder.record(task_id, pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
 
 
-def merge(monkeypatch, comments):
+def merge(monkeypatch, comments, *, files=None):
     """Run ``pr-merge`` on SHA with every check passing; only the recorded seats can refuse it."""
     from scripts.opsec import prepublish as gate
     from scripts.publish import github as pub
@@ -691,7 +691,7 @@ def merge(monkeypatch, comments):
             if "/issues/42/comments" in args[4]:
                 body = [comments]
             elif "/pulls/42/files" in args[4]:
-                body = [[{"filename": "scripts/example.py"}]]
+                body = [files if files is not None else [{"filename": "scripts/example.py"}]]
             else:
                 body = {"login": "fleet"}
         else:
@@ -701,6 +701,48 @@ def merge(monkeypatch, comments):
 
     pub.publish("pr-merge", repo="unit/public", number=42, runner=spy, env={})
     return writes
+
+
+def test_metadata_only_release_manifest_merges_without_a_ukrainian_seat(monkeypatch, tmp_path):
+    from scripts.deploy.auto_deploy_eligibility import decide_auto_deploy
+    from scripts.opsec import prepublish as gate
+
+    # PR #12629 at 02b0a5e3: the manifest is its only content-prefixed path.
+    paths = [
+        "docs/runbooks/word-atlas-static-api.md",
+        "registry/lexicon/atlas-runtime-release.json",
+        "scripts/audit/generate_search_index.py",
+        "scripts/deploy/prepare_atlas_runtime_release.py",
+        "scripts/deploy/runtime_source_report.py",
+        "tests/test_atlas_runtime_release.py",
+        "tests/test_generate_search_index.py",
+    ]
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    write_task(tasks, agent="claude", model="claude-opus-5-5", review_profile="infra", review_risk="critical")
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert sweep.lookup_verdict(comments, SHA, "fleet").ukrainian_seats == ()
+
+    payload = "curriculum/l2-uk-en/a2/example.mdx"
+    rows = [{"filename": path} for path in paths]
+    for files, needs_ukrainian in (
+        (rows, False),
+        ([*rows, {"filename": payload}], True),
+        ([*rows, {"filename": paths[1] + "l"}], True),
+        ([{**row, "status": "renamed", "previous_filename": payload} if row["filename"] == paths[1]
+          else row for row in rows], True),
+    ):
+        classified = sweep.pr_file_paths(files)
+        assert sweep.requires_ukrainian_behavior_receipt(classified) is needs_ukrainian
+        verdict = sweep.lookup_verdict(
+            comments, SHA, "fleet", learner_content=sweep.changes_learner_content(classified),
+        )
+        assert verdict.state == (sweep.NEEDS_SEAT if needs_ukrainian else "APPROVED")
+        if needs_ukrainian:
+            with pytest.raises(gate.PublishBlocked, match="Ukrainian review seat has not approved"):
+                merge(monkeypatch, comments, files=files)
+        else:
+            assert len(merge(monkeypatch, comments, files=files)) == 1
+        assert decide_auto_deploy(classified).reason == "content_drift"
 
 
 def test_one_ukrainian_seat_leaves_the_status_pending_and_the_merge_refused(monkeypatch, tmp_path):
