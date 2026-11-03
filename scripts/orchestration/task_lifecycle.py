@@ -1313,7 +1313,9 @@ def observe_local_git(
     if head_sha:
         try:
             commit_range = task_commit_range(root, head_sha, base_sha)
-            changed_raw = _run_git(root, ["diff", "--name-only", commit_range])
+            # Rename detection would hide a deleted learner path behind an exempt
+            # destination. Both sides stay on the list, matching pr_file_paths (#12653).
+            changed_raw = _run_git(root, ["diff", "--name-only", "--no-renames", commit_range])
             changed_paths = [line for line in changed_raw.splitlines() if line]
             log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", commit_range])
             for record in log.split("\x1e"):

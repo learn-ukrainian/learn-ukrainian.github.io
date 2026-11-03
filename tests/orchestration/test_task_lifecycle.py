@@ -3099,7 +3099,7 @@ def test_learner_content_diff_refuses_code_behavior_receipt(tmp_path: Path) -> N
 
 
 def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_payloads(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A metadata-only receipt forced into linguistic review.
 
@@ -3155,3 +3155,36 @@ def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_
         blockers = " ".join(result["hard_blockers"])
         assert "learner-content change requires a ukrainian behavior-proof receipt" in blockers
         assert "behavior_proof" not in result["valid_evidence"].get("AC-IMPL", set())
+
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        monkeypatch.delenv(name, raising=False)
+    repo = tmp_path / "rename-repo"
+    repo.mkdir()
+
+    def git(*args: str) -> str:
+        return subprocess.run(
+            ["git", *args], cwd=repo, capture_output=True, text=True, check=True, timeout=30,
+        ).stdout.strip()
+
+    git("init", "-q", "-b", "main")
+    git("config", "user.name", "Test")
+    git("config", "user.email", "test@example.com")
+    git("config", "commit.gpgsign", "false")
+    git("config", "diff.renames", "true")
+    learner = repo / "curriculum" / "a.mdx"
+    learner.parent.mkdir()
+    learner.write_text("learner\n", encoding="utf-8")
+    git("add", "curriculum/a.mdx")
+    git("commit", "-qm", "base")
+    git("update-ref", "refs/remotes/origin/main", git("rev-parse", "HEAD"))
+    (repo / "registry" / "lexicon").mkdir(parents=True)
+    git("mv", "curriculum/a.mdx", manifest)
+    git("commit", "-qm", "rename learner file onto the release manifest")
+    observed = task_lifecycle.observe_local_git(
+        repo, head_sha=git("rev-parse", "HEAD"), branch="main", worktree=None,
+    )
+    assert set(observed["changed_paths"]) == {"curriculum/a.mdx", manifest}
+    renamed = evaluated(observed["changed_paths"], local=True)
+    renamed_blockers = " ".join(renamed["hard_blockers"])
+    assert "learner-content change requires a ukrainian behavior-proof receipt" in renamed_blockers
+    assert "behavior_proof" not in renamed["valid_evidence"].get("AC-IMPL", set())
