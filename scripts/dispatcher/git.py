@@ -1064,6 +1064,16 @@ def _archive_removed(repo: Path, tree: Path, record: dict, head: str) -> str | N
         return f"failed: {type(exc).__name__}: {exc}"
 
 
+# Settlement could not load its code (a dispatcher change merged while the worker ran). The tree stays and
+# the scheduled cleanup, a fresh process, retries it (worker.RETRY_REASONS).
+CODE_UNAVAILABLE = "settlement_code_unavailable"
+
+
+def _code_load_failure(error: str | None) -> bool:
+    """Whether a removal error names a failed import; the chokepoint reports ``<ExceptionType>: <message>``."""
+    return (error or "").partition(":")[0] in {"ImportError", "ModuleNotFoundError"}
+
+
 def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
     """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
 
@@ -1170,6 +1180,8 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     if removal.action == "skipped":
         return disposition("retained", "removal_refused", removal.reason)
     if removal.action != "removed":
+        if _code_load_failure(removal.error):
+            return disposition("retained", CODE_UNAVAILABLE, removal.error)
         return disposition("error", "worktree_remove_failed", removal.error or removal.reason)
     try:
         # The task branch goes only when its tip is published or reachable from another ref.

@@ -125,6 +125,24 @@ def test_lingering_provider_process_is_ended_at_settlement_before_the_worktree_g
     assert not Path(record["worktree_path"]).exists()
 
 
+def test_settlement_after_a_dispatcher_module_changes_on_disk_removes_the_worktree(sandbox):
+    """Defect (#12634): a worker running while a dispatcher change landed settled with old in-memory and new
+    on-disk modules, so removal failed with an ImportError and left a clean tree. The worker now loads its
+    post-start code when it starts, so a later edit on disk never reaches its settlement."""
+    task = sandbox.dispatch("blocked")
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    # The change a merge brings: store gains a function, and the module that settlement loads imports it.
+    with (sandbox.repo / "scripts/dispatcher/store.py").open("a") as stream:
+        stream.write("\n\ndef added_after_the_worker_started():\n    return None\n")
+    consumer = sandbox.repo / "scripts/fleet/ignored_task_output.py"
+    consumer.write_text("from scripts.dispatcher.store import added_after_the_worker_started\n" + consumer.read_text())
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    record = sandbox.settle(task)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("removed", "clean"), (
+        record.get("worktree_disposition_detail"))
+    assert not Path(record["worktree_path"]).exists()
+
+
 def test_dispatch_and_worker_exit_leave_unrelated_retained_worktrees_unchanged(sandbox):
     """Defect: unrelated admission and exit repeatedly rewrite and retry retained worktrees."""
     record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)

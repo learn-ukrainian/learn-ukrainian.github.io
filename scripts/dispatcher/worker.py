@@ -3,6 +3,8 @@
 import contextlib
 import ctypes
 import hashlib
+import importlib
+import importlib.util
 import json
 import os
 import re
@@ -488,7 +490,73 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
                            "unpublished", "remote_mismatch", "unknown", "removal_refused",
                            "worktree_remove_failed", "settlement_failed",
                            "salvage_failed", "salvage_unverified", "large_ignored_output",
-                           "nested_repository_unpushed", "github_deferred"})
+                           "nested_repository_unpushed", "github_deferred", git.CODE_UNAVAILABLE})
+# Dispatcher-side packages whose deferred imports a worker follows when it loads its post-start code.
+POST_START_PACKAGES = frozenset({"dispatcher", "orchestration", "fleet", "guardrails", "opsec"})
+# An import inside a function (indented), with the names a "from" form takes.
+_DEFERRED_IMPORT = re.compile(
+    r"^[ \t]+(?:from[ \t]+(scripts(?:\.\w+)*)[ \t]+import[ \t]+(\([^)]*\)|[^\n]*)|import[ \t]+(scripts(?:\.\w+)*))",
+    re.MULTILINE)
+_post_start_code_loaded = False
+
+
+def _deferred_imports(source: str) -> set[str]:
+    """Modules (and, for a "from" form, each name that may be a submodule) imported inside functions."""
+    found = set()
+    for module, names, plain in _DEFERRED_IMPORT.findall(source):
+        found.add(module or plain)
+        for name in re.sub(r"#[^\n]*", "", names).strip("() \t\n").replace("\n", " ").split(","):
+            if name.split():
+                found.add(f"{module}.{name.split()[0]}")
+    return found
+
+
+def _module_source(name: str) -> Path | None:
+    try:
+        spec = importlib.util.find_spec(name)
+    except (ImportError, ValueError, AttributeError):
+        return None  # not a module (an imported name), or not importable
+    return Path(spec.origin) if spec and spec.origin and spec.origin.endswith(".py") else None
+
+
+def load_post_start_code() -> None:
+    """Import every module this worker's later steps import on demand, once, as it starts.
+
+    Settlement and the other steps after the provider runs import part of their code inside functions,
+    from the primary checkout. A dispatcher change that merges while the worker runs would then give
+    them new modules next to the old ones loaded at start, and removal failed on the mix (#12634).
+    Loading it all now makes the whole run use the version it started with.
+    A module that cannot be imported is skipped: if a step needs it later, that step records
+    ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a fresh process.
+    """
+    global _post_start_code_loaded
+    if _post_start_code_loaded:
+        return
+    _post_start_code_loaded = True
+
+    def dispatcher_side(name: str) -> bool:
+        parts = name.split(".")
+        return len(parts) > 1 and parts[0] == "scripts" and parts[1] in POST_START_PACKAGES
+
+    # What is loaded now is the dispatcher the worker started with: follow all of its deferred imports,
+    # and the dispatcher-side deferred imports of whatever they reach.
+    roots = {name for name in sys.modules if dispatcher_side(name)} | {providers.__name__}
+    pending, seen = list(roots), set()
+    while pending:
+        name = pending.pop()
+        if name in seen:
+            continue
+        seen.add(name)
+        source = _module_source(name)
+        if source is None:
+            continue
+        with contextlib.suppress(Exception):  # one unimportable module must not stop the worker
+            importlib.import_module(name)
+        with contextlib.suppress(OSError, UnicodeDecodeError):
+            pending += [found for found in _deferred_imports(source.read_text())
+                        if name in roots or dispatcher_side(found)]
+
+
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
 SETTLE_PATIENCE = 10
 # Extra fallback scans, 0.2 s apart, before an unreadable one keeps the worktree.
@@ -683,6 +751,10 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
 
     try:
         record.update(git.settle_worktree(record, borrowed=borrowed, salvage=salvage))
+    except ImportError as exc:
+        # Settlement's code could not be loaded: keep the tree and let the scheduled cleanup, a fresh process, finish.
+        record.update(worktree_disposition="retained", worktree_disposition_reason=git.CODE_UNAVAILABLE,
+                      worktree_disposition_detail=f"{type(exc).__name__}: {exc}")
     except Exception:
         record.update(worktree_disposition="error", worktree_disposition_reason="settlement_failed")
 
@@ -859,6 +931,7 @@ def _adopt_orphans() -> bool:
 
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
+    load_post_start_code()
     record = json.loads(path.read_text())
     if record.get("require_review_verdict") is True:
         # The code this supervisor loaded; settlement records it again (#12399).
