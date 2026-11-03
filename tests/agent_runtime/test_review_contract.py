@@ -518,6 +518,10 @@ def test_non_list_findings_envelope_is_refused_not_zero_claims():
         reply = "VERDICT: APPROVE\n```yaml\n" + json.dumps({"findings": findings}) + "\n```\n"
         with pytest.raises(ContractError, match="CLAIM_PAYLOAD_MALFORMED: findings"):
             validate_ukrainian_reply_claims(reply)
+    # A second payload under another tag is refused, not read as prose.
+    mixed = "VERDICT: APPROVE\n```yaml\n{}\n```\n```yml\n" + json.dumps({"findings": {"evidence": evidence}}) + "\n```\n"
+    with pytest.raises(ContractError, match="CLAIM_PAYLOAD_COUNT"):
+        validate_ukrainian_reply_claims(mixed)
 
     control = "VERDICT: APPROVE\n```yaml\n" + json.dumps({"findings": [{"evidence": evidence}]}) + "\n```\n"
     _, checked = validate_ukrainian_reply_claims(control)

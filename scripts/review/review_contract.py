@@ -1402,13 +1402,15 @@ def validate_ukrainian_reply_claims(
     """The same claim check at execution and publication, including prose outside the payload."""
     import yaml
 
-    tag = next((name for name in ("ukrainian-item-judgments", "yaml", "yml", "json") if _fenced(reply, name)), None)
+    # A second payload under another tag would be read as prose, skipping its findings checks.
+    tagged = [(name, body) for name in ("ukrainian-item-judgments", "yaml", "yml", "json")
+              for body in _fenced(reply, name)]
+    if len(tagged) > 1:
+        raise ContractError("CLAIM_PAYLOAD_COUNT: expected one review payload")
+    tag = tagged[0][0] if tagged else None
     outside = reply
     if tag:
-        bodies = _fenced(reply, tag)
-        if len(bodies) != 1:
-            raise ContractError("CLAIM_PAYLOAD_COUNT: expected one review payload")
-        body = bodies[0]
+        body = tagged[0][1]
         pattern = rf"^```{tag}[ \t]*\n.*?\n```[ \t]*$"
         outside = re.sub(pattern, "", reply, count=1, flags=re.M | re.S)
     else:
