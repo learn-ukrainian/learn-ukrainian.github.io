@@ -11,9 +11,7 @@ from pathlib import Path
 import pytest
 
 from scripts.dispatcher import cli, ownership, store, worker
-from tests.dispatcher.test_core import MERGED, run_git
-from tests.dispatcher.test_core import merged_delivery_world as merged_delivery_world
-from tests.dispatcher.test_core import sandbox as sandbox
+from tests.dispatcher.conftest import MERGED, run_git
 
 
 @pytest.fixture
