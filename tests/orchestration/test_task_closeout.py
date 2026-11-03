@@ -599,7 +599,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
     def transport(method, endpoint, headers, body, timeout):
         assert timeout == 60
         payload = None
-        if endpoint == "repos/org/repo/issues/42":
+        if endpoint == "repos/org/repo/issues/42?per_page=100":
             payload = {"number": 42, "state": "open", "body": _body(),
                        "html_url": "https://github.com/org/repo/issues/42", "closed_at": None,
                        "repository_url": "https://api.github.com/repos/org/repo"}
