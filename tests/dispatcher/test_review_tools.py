@@ -19,26 +19,26 @@ from tests.dispatcher.test_providers_b import _bwrap_usable, _launch, _linked_wo
 
 def test_review_checkout_exposes_project_interpreter(tmp_path):
     """Defect: literal .venv/bin/python is missing or an existing foreign interpreter is replaced."""
-    worktree, head = _linked_worktree(tmp_path)
-    assert agy_sandbox._link_interpreter(worktree) is True
-    result = subprocess.run([str(worktree / ".venv/bin/python"), "-c", "print('review-interpreter-ok')"],
+    tmp_worktree, head = _linked_worktree(tmp_path)
+    assert agy_sandbox._link_interpreter(tmp_worktree) is True
+    result = subprocess.run([str(tmp_worktree / ".venv/bin/python"), "-c", "print('review-interpreter-ok')"],
                             capture_output=True, text=True, timeout=10)
     assert result.returncode == 0, result.stderr
     assert result.stdout == "review-interpreter-ok\n"
-    assert agy_sandbox._link_interpreter(worktree) is False  # the project link is kept, not recreated
-    assert agy_sandbox._input_state(worktree) == {"head": head, "clean": True}
-    untracked = worktree / ".venv-other"
+    assert agy_sandbox._link_interpreter(tmp_worktree) is False  # the project link is kept, not recreated
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": True}
+    untracked = tmp_worktree / ".venv-other"
     untracked.write_text("not the interpreter\n")
-    assert agy_sandbox._input_state(worktree) == {"head": head, "clean": False}
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": False}
     untracked.unlink()
-    (worktree / "README.md").write_text("changed\n")
-    assert agy_sandbox._input_state(worktree) == {"head": head, "clean": False}
-    subprocess.run(["git", "-C", str(worktree), "add", "README.md"], check=True, timeout=30)
-    assert agy_sandbox._input_state(worktree) == {"head": head, "clean": False}
-    subprocess.run(["git", "-C", str(worktree), "restore", "--staged", "--worktree", "README.md"],
+    (tmp_worktree / "README.md").write_text("changed\n")
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": False}
+    subprocess.run(["git", "-C", str(tmp_worktree), "add", "README.md"], check=True, timeout=30)
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": False}
+    subprocess.run(["git", "-C", str(tmp_worktree), "restore", "--staged", "--worktree", "README.md"],
                    check=True, timeout=30)
-    subprocess.run(["git", "-C", str(worktree), "add", ".venv"], check=True, timeout=30)
-    assert agy_sandbox._input_state(worktree) == {"head": head, "clean": False}
+    subprocess.run(["git", "-C", str(tmp_worktree), "add", ".venv"], check=True, timeout=30)
+    assert agy_sandbox._input_state(tmp_worktree) == {"head": head, "clean": False}
     other = tmp_path / "foreign"
     other.mkdir()
     (other / ".venv").mkdir()
