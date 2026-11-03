@@ -752,6 +752,48 @@ def _legacy_writes_retired() -> bool:
     return resolve_plane_mode(None) == "authority"
 
 
+def queued_authority_delivery_count(recipient: str) -> int | None:
+    """Queued authority deliveries for *recipient*; ``None`` when they cannot be read."""
+    try:
+        from scripts.fleet_comms.efficiency_metrics import collect_delivery_backlog_authority
+        from scripts.fleet_comms.paths import default_plane_root, validate_plane_root
+
+        plane_db = validate_plane_root(default_plane_root()) / "comms.sqlite3"
+        payload = collect_delivery_backlog_authority(plane_db, limit=1_000_000, exclude_retired=False)
+        return sum(
+            1
+            for row in payload.get("rows", [])
+            if row.get("to_agent") == recipient and row.get("status") == "queued"
+        )
+    except Exception:
+        return None
+
+
+def authority_inbox_notice(recipient: str | None, *, file: Any = None) -> bool:
+    """In authority mode print one line pointing a legacy read path at Fleet Comms deliveries.
+
+    Returns whether the line was printed; outside authority mode nothing is printed.
+    """
+    from scripts.fleet_comms.message_plane import resolve_plane_mode
+
+    try:
+        if resolve_plane_mode(None) != "authority":
+            return False
+    except ValueError:
+        return False
+    slot = (recipient or "").strip().lower() or None
+    if slot:
+        slot = _channels.resolve_recipient_alias(slot)
+    count = queued_authority_delivery_count(slot) if slot else None
+    print(
+        "Legacy inbox is a read-only projection in authority mode; read your deliveries with "
+        f"`.venv/bin/python -m scripts.fleet_comms deliveries receive --recipient {slot or '<slot>'}` "
+        f"(queued authority deliveries: {'unknown' if count is None else count}).",
+        file=file or sys.stdout,
+    )
+    return True
+
+
 def _retired_legacy_write(command: str) -> int:
     print(
         f"legacy `{command}` writes are retired in authority mode; "
