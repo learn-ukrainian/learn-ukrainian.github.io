@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import gzip
+import io
 import json
 import os
 import time
 import uuid
+import zipfile
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -399,7 +402,10 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
     removes with a missing, empty, stale, incomplete or unreadable citation
     source, or removes a cited artifact."""
     with ArtifactStore(root=tmp_path / "plane") as store:
-        names = ("by_id", "by_sha", "by_path", "by_doc", "by_note", "uncited", "padded", "inventory")
+        names = (
+            "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_trunc",
+            "uncited", "padded", "inventory",
+        )
         recs = {name: store.store_bytes(_payload(), producer="t") for name in names}
         for rec in recs.values():
             _age(store, rec.artifact_id)
@@ -449,6 +455,18 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         monkeypatch.setattr(os, "lstat", lstat_then_vanish)
         refuses(vanishing, "vanished during the scan")
         monkeypatch.undo()
+        corrupt = _sources(tmp_path / "corrupt")
+        (corrupt.docs_dir / "bad.gz").write_bytes(b"\x1f\x8b\x08\x00" + b"not a gzip stream")
+        refuses(corrupt, "cannot decode compressed content")
+        zstd = _sources(tmp_path / "zstd")
+        (zstd.docs_dir / "x.zst").write_bytes(b"\x28\xb5\x2f\xfd" + b"\x00" * 16)
+        refuses(zstd, "cannot open zstd")
+        deep = _sources(tmp_path / "deep")
+        layered = b"artifact_" + b"a" * 32
+        for _ in range(4):
+            layered = gzip.compress(layered)
+        (deep.docs_dir / "deep.gz").write_bytes(layered)
+        refuses(deep, "nested deeper")
         if os.geteuid() != 0:
             locked = _sources(tmp_path / "locked")
             (locked.tasks_dir / "secret.json").write_text("{}")
@@ -462,9 +480,24 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
             # a 65-character hex run is no token of its own.
             cite_in_tasks=f"{recs['by_sha'].sha256} {blob_path(recs['by_path'])} {recs['padded'].sha256}0",
         )
-        # Every docs subtree is scanned, whatever its name or suffix.
+        # Every docs subtree is scanned, whatever its name or suffix, and
+        # compressed content is scanned decompressed (found by magic bytes).
         (good.docs_dir / "data").mkdir()
         (good.docs_dir / "data" / "evidence.mdx").write_text(recs["by_doc"].artifact_id)
+        (good.docs_dir / "data" / "evidence.bin").write_bytes(
+            gzip.compress(recs["by_gz"].artifact_id.encode())
+        )
+        # A stream that ends early was stored that way: what it holds is scanned
+        # (and counted); corrupt data refuses, as above.
+        (good.docs_dir / "data" / "cut.gz").write_bytes(
+            gzip.compress(recs["by_trunc"].artifact_id.encode())[:-8]
+        )
+        archive = io.BytesIO()
+        with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
+            bundle.writestr("inner.txt", gzip.compress(recs["by_zip"].artifact_id.encode()))
+        (good.tasks_dir / "bundle.dat").write_bytes(archive.getvalue())
+        attached = store.store_bytes(gzip.compress(recs["by_blob"].artifact_id.encode()), producer="t")
+        store.reference("message_attachment", attached.artifact_id)
         # The dispatcher's generated checkout inventory lists every blob path:
         # exactly those entries are not citations (and are counted). A citation
         # elsewhere in an inventory-named file still holds its artifact.
@@ -478,15 +511,16 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         )
         scan = store.scan_citations(good, now=now)
         assert scan.cited == frozenset(
-            recs[name].artifact_id for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note")
+            recs[name].artifact_id for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_trunc")
         )
         assert [e["inventory_listings_ignored"] for e in scan.coverage if e["source"] == "tasks"] == [2]
+        assert [e["truncated_streams"] for e in scan.coverage if e["source"] == "docs"] == [1]
         report = store.expire_unreferenced_blobs(
             citations=scan, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
         )
-        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 5)
+        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 9)
         assert {entry["source"] for entry in report.sources} == {"store", "tasks", "docs", "github"}
-        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note"):
+        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_trunc"):
             assert recs[name].blob_path.is_file()
         for name in ("uncited", "padded", "inventory"):
             assert not recs[name].blob_path.is_file()

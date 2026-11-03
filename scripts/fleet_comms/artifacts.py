@@ -27,9 +27,12 @@ and never an artifact a declared citation source names (``scan_citations``).
 
 from __future__ import annotations
 
+import bz2
 import contextlib
 import hashlib
+import io
 import json
+import lzma
 import mimetypes
 import os
 import re
@@ -37,6 +40,8 @@ import sqlite3
 import stat
 import tempfile
 import time
+import zipfile
+import zlib
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -143,6 +148,19 @@ _CITE_ID = re.compile(rb"artifact_[0-9a-f]{32}")
 # A sha256 is a citation only as a token of its own: not part of a longer hex run.
 _CITE_SHA = re.compile(rb"(?<![0-9a-f])([0-9a-f]{64})(?![0-9a-f])")
 _SCAN_CHUNK = 8 * 1024 * 1024
+# Compressed content is scanned decompressed, by magic bytes and never by suffix:
+# a citation inside a gzip, bzip2, xz or zip file is still a citation. Nesting and
+# the decompressed size of one top-level file are bounded; anything beyond them,
+# any decode error, an encrypted zip member and a format this scanner cannot
+# open (zstd, 7z, rar, lz4) refuses the run instead of being skipped.
+_ARCHIVE_MAX_DEPTH = 3
+_ARCHIVE_MAX_BYTES = 2 * 1024 * 1024 * 1024
+_UNSUPPORTED_MAGIC = {
+    b"\x28\xb5\x2f\xfd": "zstd",
+    b"7z\xbc\xaf\x27\x1c": "7z",
+    b"Rar!\x1a\x07": "rar",
+    b"\x04\x22\x4d\x18": "lz4",
+}
 _SCAN_OVERLAP = 96
 # The dispatcher writes a full inventory of the checkout (path -> git status) before
 # and after a read-only task, so it lists every ignored blob path. Only an entry of
@@ -307,6 +325,60 @@ class CitationScan:
     coverage: tuple[dict[str, Any], ...]
 
 
+class _GunzipReader(io.RawIOBase):
+    """Stream-decode gzip (all members) without the trailer check of ``GzipFile``.
+
+    ``GzipFile`` discards the bytes of its last read when the trailer is
+    missing, so a stream that was stored cut short would lose its tail.
+    This reader hands out everything the data decodes to and sets
+    ``truncated`` when the input ends inside a member. Corrupt data raises
+    ``zlib.error``.
+    """
+
+    def __init__(self, source: Any) -> None:
+        super().__init__()
+        self._source = source
+        self._decoder = zlib.decompressobj(31)
+        self._started = False
+        self._pending = b""
+        self._done = False
+        self.truncated = False
+
+    def readable(self) -> bool:
+        return True
+
+    def _inflate(self, data: bytes) -> bytes:
+        out = []
+        while data:
+            self._started = True
+            piece = self._decoder.decompress(data, _SCAN_CHUNK)
+            out.append(piece)
+            if self._decoder.eof:
+                data = self._decoder.unused_data
+                self._decoder = zlib.decompressobj(31)
+                self._started = False
+                if not data.strip(b"\x00"):  # gzip tolerates zero padding after a member
+                    break
+            else:
+                data = self._decoder.unconsumed_tail
+                if not piece and data:
+                    raise zlib.error("gzip decoder made no progress")
+        return b"".join(out)
+
+    def readinto(self, buffer: Any) -> int:
+        while not self._pending and not self._done:
+            raw = self._source.read(1024 * 1024)
+            if not raw:
+                self._done = True
+                self.truncated = self._started
+                break
+            self._pending = self._inflate(raw)
+        count = min(len(buffer), len(self._pending))
+        buffer[:count] = self._pending[:count]
+        self._pending = self._pending[count:]
+        return count
+
+
 class _ScanState:
     """Accumulates cited artifact ids while a scan streams bytes."""
 
@@ -314,6 +386,8 @@ class _ScanState:
         self.known_ids = known_ids
         self.sha_to_id = sha_to_id
         self.cited: set[str] = set()
+        self._decompressed = 0
+        self.truncated = 0
 
     def feed(self, data: bytes) -> None:
         for token in _CITE_ID.findall(data):
@@ -324,15 +398,86 @@ class _ScanState:
             if artifact_id is not None:
                 self.cited.add(artifact_id)
 
-    def feed_stream(self, handle: Any) -> int:
-        """Scan an open binary handle end to end; returns the bytes read."""
+    def feed_stream(self, handle: Any, depth: int = 0) -> int:
+        """Scan a binary handle end to end, looking inside compressed content.
+
+        Returns the bytes scanned (decompressed bytes for a compressed file).
+        Raises ``ArtifactStoreError`` for content it cannot scan completely.
+        """
+        if depth == 0:
+            self._decompressed = 0
+        if not hasattr(handle, "peek"):
+            handle = io.BufferedReader(handle)
+        head = handle.peek(8)[:8]
+        for magic, name in _UNSUPPORTED_MAGIC.items():
+            if head.startswith(magic):
+                raise ArtifactStoreError(f"citation scan cannot open {name} content; refusing")
+        opener = (
+            (lambda fileobj: io.BufferedReader(_GunzipReader(fileobj)))
+            if head.startswith(b"\x1f\x8b")
+            else bz2.BZ2File
+            if head.startswith(b"BZh")
+            else lzma.LZMAFile
+            if head.startswith(b"\xfd7zXZ\x00")
+            else None
+        )
+        if opener is None and not head.startswith((b"PK\x03\x04", b"PK\x05\x06")):
+            return self._feed_plain(handle, compressed=depth > 0)
+        if depth >= _ARCHIVE_MAX_DEPTH:
+            raise ArtifactStoreError(
+                f"citation scan: compressed content nested deeper than {_ARCHIVE_MAX_DEPTH}; refusing"
+            )
+        total = 0
+        try:
+            if opener is not None:
+                with opener(handle) as inner:
+                    total += self.feed_stream(inner, depth + 1)
+                    if isinstance(getattr(inner, "raw", None), _GunzipReader) and inner.raw.truncated:
+                        self.truncated += 1
+            else:
+                with zipfile.ZipFile(handle) as archive:
+                    for info in archive.infolist():
+                        if info.is_dir():
+                            continue
+                        if info.flag_bits & 0x1:
+                            raise ArtifactStoreError(
+                                f"citation scan: encrypted zip member {info.filename!r}; refusing"
+                            )
+                        with archive.open(info) as member:
+                            total += self.feed_stream(member, depth + 1)
+        except ArtifactStoreError:
+            raise
+        except (
+            OSError, EOFError, ValueError, RuntimeError, NotImplementedError,
+            zlib.error, lzma.LZMAError, zipfile.BadZipFile,
+        ) as exc:
+            raise ArtifactStoreError(f"citation scan cannot decode compressed content: {exc}") from exc
+        return total
+
+    def _feed_plain(self, handle: Any, *, compressed: bool) -> int:
         tail = b""
         total = 0
         while True:
-            chunk = handle.read(_SCAN_CHUNK)
+            try:
+                chunk = handle.read(_SCAN_CHUNK)
+            except EOFError:
+                # A compressed stream that simply ends early (stored that way):
+                # everything it holds was decoded and fed above. Corrupt data
+                # is a different error and refuses the run. Counted in coverage.
+                if not compressed:
+                    raise
+                self.truncated += 1
+                break
             if not chunk:
                 break
             total += len(chunk)
+            if compressed:
+                self._decompressed += len(chunk)
+                if self._decompressed > _ARCHIVE_MAX_BYTES:
+                    raise ArtifactStoreError(
+                        "citation scan: decompressed content exceeds "
+                        f"{_ARCHIVE_MAX_BYTES} bytes; refusing"
+                    )
             self.feed(tail + chunk)
             tail = chunk[-_SCAN_OVERLAP:]
         return total
@@ -1489,6 +1634,7 @@ class ArtifactStore:
                          WHERE body_artifact_id IS NOT NULL)"""
         ).fetchall()
         files = scanned = expired = 0
+        truncated_before = state.truncated
         for row in linked:
             path = self.blob_path_for(str(row["sha256"]))
             try:
@@ -1510,6 +1656,7 @@ class ArtifactStore:
             "blobs": files,
             "blobs_expired": expired,
             "bytes": scanned,
+            "truncated_streams": state.truncated - truncated_before,
         }
 
     @staticmethod
@@ -1537,6 +1684,7 @@ class ArtifactStore:
         if not root.is_dir():
             raise ArtifactStoreError(f"citation source {name}: {root} is not a directory")
         files = required = total = listings = 0
+        truncated_before = state.truncated
         digest = hashlib.sha256()
         for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=fail_walk):
             dirnames.sort()
@@ -1584,6 +1732,7 @@ class ArtifactStore:
             "files": files,
             "bytes": total,
             "inventory_listings_ignored": listings,
+            "truncated_streams": state.truncated - truncated_before,
             "digest": digest.hexdigest(),
         }
 
