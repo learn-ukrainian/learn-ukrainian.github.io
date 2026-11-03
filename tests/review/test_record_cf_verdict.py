@@ -1582,7 +1582,7 @@ def test_mixed_family_head_needs_both_family_approvals(tmp_path, monkeypatch):
 
 def test_single_family_branch_resolution_unchanged(tmp_path, monkeypatch):
     """Control: the pair rule changes single-family routing."""
-    from dataclasses import replace
+    from dataclasses import asdict, replace
 
     from scripts.review.reviewer_resolver import resolve_reviewer
     from tests.claude_route_accounts import HOST_ACCOUNT
@@ -1602,3 +1602,4 @@ def test_single_family_branch_resolution_unchanged(tmp_path, monkeypatch):
         legacy = resolve_reviewer(replace(inputs, author_model=model, author_families=frozenset(), author_commits=()))
         assert result == legacy and result.selected.family == expected
         assert not result.quorum and not result.review_scopes
+        assert "review_scopes" not in asdict(result)
