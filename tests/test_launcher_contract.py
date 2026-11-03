@@ -1291,6 +1291,17 @@ def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
     assert default == lane
     assert "Method playbook: load skill drive-epic (provider drivers inject the binding after lease + canary). " in lane
     assert cto == lane.replace("load skill drive-epic", "load skill cto")
+    # #12671: the closeout sentence names the proof that still exists.
+    closeout = (
+        "Closeout: use the task-prescribed interpreter with "
+        "`-m scripts.orchestration.merge_closeout <N> --apply`; "
+        "the cleanup proof is that command exiting 0 after the worker's task has settled "
+        "(its worktree removed by the dispatcher). "
+    )
+    assert closeout in lane
+    assert closeout in cto
+    assert "common-reaper" not in result.stdout
+    assert "post-task-reaper" not in result.stdout
 
 
 def test_compat_kimicc_rejects_harness_override() -> None:
