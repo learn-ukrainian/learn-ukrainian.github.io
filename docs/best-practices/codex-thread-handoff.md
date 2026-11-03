@@ -242,15 +242,27 @@ The bootstrap starts with a checklist that is deliberately hard to skip:
 - open PR list
 - current worktree hygiene via `git worktree list`
 
-The generated bootstrap also tells the replacement thread to read the
-orchestrator worker inbox:
+The generated bootstrap's local monitor follow-up tells the replacement
+thread to read its Fleet Comms authority deliveries. `--recipient` and
+`--worker-id` are both required:
 
 ```bash
-.venv/bin/python scripts/orchestration/orchestrator_control.py inbox --recent 20 --include-results
+.venv/bin/python -m scripts.fleet_comms deliveries receive --recipient <your-slot> --worker-id <your-slot>
 ```
 
-That inbox summarizes delegate task state and result excerpts so the new
-thread does not have to rediscover raw files under `batch_state/tasks/`.
+Delegate task state is still summarized by
+`scripts/orchestration/orchestrator_control.py inbox`, including result
+excerpts, so the new thread does not have to rediscover raw files under
+`batch_state/tasks/`. In authority mode that command prints this notice
+first, then the delegate summary:
+
+```text
+Legacy inbox is a read-only projection in authority mode; read your deliveries with `.venv/bin/python -m scripts.fleet_comms deliveries receive --recipient <slot>` (queued authority deliveries: N).
+```
+
+`<slot>` is `SESSION_HANDOFF_AGENT` when that variable is set, and `N` is
+the queued count, or `unknown` when the slot is unset or the authority
+store cannot be read.
 
 The replacement thread reads both durable role state and thread rollover state:
 
@@ -718,7 +730,18 @@ Attach an already-started delegate task:
   --task-id a1-existing-worker
 ```
 
-Read the worker inbox from any current or replacement thread:
+Read Fleet Comms authority deliveries from any current or replacement
+thread. `--recipient` and `--worker-id` are both required:
+
+```bash
+.venv/bin/python -m scripts.fleet_comms deliveries receive \
+  --recipient <slot> \
+  --worker-id <slot>
+```
+
+Delegate task state for a run is still printed by `inbox`. In authority
+mode the markdown form prints the same legacy-inbox notice first (the
+slot and queued count, or `unknown`), then the delegate summary:
 
 ```bash
 .venv/bin/python scripts/orchestration/orchestrator_control.py inbox \
@@ -726,9 +749,10 @@ Read the worker inbox from any current or replacement thread:
   --include-results
 ```
 
-Without `--run-id`, `inbox` shows recent delegate tasks. The markdown output is
-intended for humans; pass `--format json` when another tool needs a structured
-packet.
+Without `--run-id`, the summary after that notice is recent delegate
+tasks. The markdown output is intended for humans; pass `--format json`
+when another tool needs a structured packet. In that form the notice goes
+to stderr and stdout stays the delegate packet.
 
 Audit local Codex metadata:
 
