@@ -4,8 +4,10 @@
 Identity is ``(path, error code, message)``. Line and column are not part of
 it, so inserting a line above an existing error does not churn the baseline.
 A message that mypy no longer reports is a stale baseline entry and fails.
-Union member order and TypedDict key order are not part of the identity:
-mypy does not keep either stable. The run matches CI: wheels the CI env does
+Union member order, compact ``Literal`` member order, and TypedDict key-list
+order are not part of the identity: mypy does not keep them stable. A pipe
+inside a quoted literal stays part of the value. The run matches CI: wheels
+the CI env does
 not install are skipped, and the content ``wiki/`` tree is not a namespace
 package on the module path.
 Once ``origin/main`` contains the baseline, the committed multiset may only
@@ -168,37 +170,129 @@ def _sort_union_runs(text: str) -> str:
     return "".join(out)
 
 
-def _sort_unions(text: str) -> str:
-    """Order ``A | B`` members. mypy does not keep that order stable."""
+def _scan_quoted(text: str, start: int) -> int:
+    """Return the index just past the quoted span that opens at ``start``."""
+
+    quote = text[start]
+    j = start + 1
+    while j < len(text):
+        if text[j] == "\\" and j + 1 < len(text):
+            j += 2
+            continue
+        if text[j] == quote:
+            return j + 1
+        j += 1
+    return len(text)
+
+
+def _matching_bracket(text: str, start: int) -> int:
+    """Return the index just past the bracket that opens at ``start``."""
 
     opens = {"(": ")", "[": "]", "{": "}"}
+    stack = [opens[text[start]]]
+    quote = ""
+    j = start + 1
+    while j < len(text) and stack:
+        ch = text[j]
+        if quote:
+            if ch == "\\" and j + 1 < len(text):
+                j += 2
+                continue
+            if ch == quote:
+                quote = ""
+            j += 1
+            continue
+        if ch in "\"'":
+            quote = ch
+        elif ch in opens:
+            stack.append(opens[ch])
+        elif ch == stack[-1]:
+            stack.pop()
+        j += 1
+    return j
+
+
+def _split_top_commas(text: str) -> list[str]:
+    """Split on commas that are not inside quotes or brackets."""
+
+    parts: list[str] = []
+    buf: list[str] = []
+    stack: list[str] = []
+    opens = {"(": ")", "[": "]", "{": "}"}
+    closing = {")": "(", "]": "[", "}": "{"}
+    quote = ""
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if quote:
+            buf.append(ch)
+            if ch == "\\" and i + 1 < len(text):
+                buf.append(text[i + 1])
+                i += 2
+                continue
+            if ch == quote:
+                quote = ""
+            i += 1
+            continue
+        if ch in "\"'":
+            quote = ch
+        elif ch in opens:
+            stack.append(ch)
+        elif ch in closing and stack and stack[-1] == closing[ch]:
+            stack.pop()
+        elif ch == "," and not stack:
+            parts.append("".join(buf).strip())
+            buf = []
+            i += 1
+            continue
+        buf.append(ch)
+        i += 1
+    tail = "".join(buf).strip()
+    if tail:
+        parts.append(tail)
+    return parts
+
+
+def _sort_literal_items(inner: str) -> str:
+    """Order compact ``Literal`` members. mypy keeps source union order."""
+
+    return ", ".join(sorted(_split_top_commas(inner)))
+
+
+def _sort_unions(text: str) -> str:
+    """Order ``A | B`` members. mypy does not keep that order stable.
+
+    Single quotes are literal values (``'b | a'``) and stay byte for byte.
+    Double quotes wrap a type, so unions inside them are ordered. Brackets
+    are walked so ``dict[str, int | str]`` is ordered too.
+    """
+
     rebuilt: list[str] = []
     i = 0
     while i < len(text):
-        if text[i] in "\"'":
-            quote = text[i]
-            j = i + 1
-            while j < len(text):
-                if text[j] == "\\" and j + 1 < len(text):
-                    j += 2
-                    continue
-                if text[j] == quote:
-                    j += 1
-                    break
-                j += 1
-            rebuilt.append(quote + _sort_unions(text[i + 1 : j - 1]) + text[j - 1 : j])
+        if text[i] == "'":
+            j = _scan_quoted(text, i)
+            rebuilt.append(text[i:j])
             i = j
             continue
-        if text[i] in opens:
-            stack = [opens[text[i]]]
-            j = i + 1
-            while j < len(text) and stack:
-                if text[j] in opens:
-                    stack.append(opens[text[j]])
-                elif text[j] == stack[-1]:
-                    stack.pop()
-                j += 1
-            rebuilt.append(text[i] + _sort_unions(text[i + 1 : j - 1]) + text[j - 1 : j])
+        if text[i] == '"':
+            j = _scan_quoted(text, i)
+            rebuilt.append('"' + _sort_unions(text[i + 1 : j - 1]) + '"')
+            i = j
+            continue
+        if text[i] in "([{":
+            j = _matching_bracket(text, i)
+            inner = text[i + 1 : j - 1]
+            closer = text[j - 1 : j]
+            prefix = "".join(rebuilt)
+            literal = prefix.endswith("Literal") and (
+                len(prefix) == len("Literal")
+                or not (prefix[-len("Literal") - 1].isalnum() or prefix[-len("Literal") - 1] == "_")
+            )
+            if text[i] == "[" and literal:
+                rebuilt.append("[" + _sort_literal_items(inner) + closer)
+            else:
+                rebuilt.append(text[i] + _sort_unions(inner) + closer)
             i = j
             continue
         rebuilt.append(text[i])
@@ -206,16 +300,34 @@ def _sort_unions(text: str) -> str:
     return _sort_union_runs("".join(rebuilt))
 
 
+# Key lists follow TypedDict declaration order. The names are data, not types.
+_UNORDERED_KEYS = re.compile(
+    r"(?P<prefix>Missing keys|Extra keys|Non-required keys|expected one of|TypedDict keys)"
+    r" \((?P<body>[^)]*)\)"
+)
+_KEY_SLOT = re.compile("\ue000(\\d+)\ue001")
+
+
+def _sort_name_list(body: str) -> str:
+    ellipsis = body.rstrip().endswith("...")
+    names = re.findall(r'"((?:[^"\\]|\\.)*)"', body)
+    inner = ", ".join(f'"{name}"' for name in sorted(names))
+    if ellipsis:
+        return f"{inner}, ..." if inner else "..."
+    return inner
+
+
 def _normalize_message(message: str) -> str:
     """Drop order that mypy does not keep stable, and nothing else."""
 
-    def keys(match: re.Match[str]) -> str:
-        names = re.findall(r'"([^"]*)"', match.group(1))
-        inner = ", ".join(f'"{name}"' for name in sorted(names))
-        return f"expected one of ({inner})"
+    slots: list[str] = []
 
-    ordered = re.sub(r"expected one of \(([^)]*)\)", keys, message)
-    return _sort_unions(ordered)
+    def protect(match: re.Match[str]) -> str:
+        slots.append(f"{match.group('prefix')} ({_sort_name_list(match.group('body'))})")
+        return f"\ue000{len(slots) - 1}\ue001"
+
+    ordered = _sort_unions(_UNORDERED_KEYS.sub(protect, message))
+    return _KEY_SLOT.sub(lambda slot: slots[int(slot.group(1))], ordered)
 
 
 def _relative(root: Path, raw: str) -> str | None:
