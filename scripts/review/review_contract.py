@@ -1569,8 +1569,9 @@ def validate_item_claims(
                         ))) or (reference and isinstance(part, str))
                     ):
                         continue
-                    if children_handled and not path and field in {"items", "findings"}:
-                        for child in part if isinstance(part, list) else [part]:
+                    # Only list rows are validated below; any other shape stays free text here.
+                    if children_handled and not path and field in {"items", "findings"} and isinstance(part, list):
+                        for child in part:
                             if not isinstance(child, Mapping):
                                 yield from leaves(child, field_path)
                         continue
