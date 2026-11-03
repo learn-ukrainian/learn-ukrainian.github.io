@@ -26,6 +26,7 @@ from agents_extensions.shared.session_streams.model import (
     Lease,
     LeaseHolder,
     SessionState,
+    StreamDigest,
     entry_as_dict,
     isoformat_z,
     parse_timestamp,
@@ -287,6 +288,10 @@ def _registry_fields(store: SessionStreamStore, stream_id: str) -> dict[str, Any
         stream_id,
         snapshot_sha256=_registry_snapshot_for_response(store),
     )
+    return _registry_response_fields(metadata)
+
+
+def _registry_response_fields(metadata: dict[str, Any]) -> dict[str, Any]:
     return {
         "registered": bool(metadata["registered"]),
         "stream_name": _response_registry_text(metadata["stream_name"]),
@@ -413,7 +418,10 @@ def _lease_payload(lease: Lease, *, projection_state: str, session_state: str, n
 
 
 def _digest_payload(store: SessionStreamStore, stream_id: str, limit: int) -> dict[str, Any]:
-    digest = store.load_remote_digest(stream_id, limit=limit)
+    return _digest_response(store.load_remote_digest(stream_id, limit=limit))
+
+
+def _digest_response(digest: StreamDigest) -> dict[str, Any]:
     return {
         "stream_id": digest.stream_id,
         "limit": digest.limit,
@@ -470,8 +478,13 @@ def _response_host(value: Any) -> str | None:
 
 
 def _stream_response(store: SessionStreamStore, stream_id: str, limit: int) -> dict[str, Any]:
-    projection = store.remote_stream_projection(stream_id)
-    row = projection.get("lease")
+    # One read snapshot for every part of the status (#12627).
+    status = store.load_remote_epic_status(
+        stream_id,
+        limit=limit,
+        snapshot_sha256=_registry_snapshot_for_response(store),
+    )
+    row = status["projection"].get("lease")
     now = utc_now()
     lease_payload = None
     session_state = None
@@ -482,11 +495,11 @@ def _stream_response(store: SessionStreamStore, stream_id: str, limit: int) -> d
     return {
         "schema": SCHEMA,
         "stream_id": stream_id,
-        **_registry_fields(store, stream_id),
+        **_registry_response_fields(status["registry"]),
         "registry_status": registry_health_snapshot()["status"],
         "lease": lease_payload,
         "session_state": session_state,
-        "digest": _digest_payload(store, stream_id, limit),
+        "digest": _digest_response(status["digest"]),
     }
 
 

@@ -250,3 +250,42 @@ def test_cli_project_and_check_drift(tmp_path: Path, capsys) -> None:
     table = capsys.readouterr().out
     assert "stream_id" in table
     assert "epic:1001" in table
+
+
+def test_remote_epic_status_has_no_per_request_connection_fan_out(tmp_path: Path, monkeypatch) -> None:
+    """Defect class: per-request connection fan-out (#12627).
+
+    The epic status read opened one connection for each part of the response.
+    Every connection repeats its setup statements and each statement hands the
+    GIL back, so under CPU-bound API work the read stalled for seconds. One
+    status read now opens exactly one read-only connection.
+    """
+    from agents_extensions.shared.session_streams.model import EntryType
+    from scripts.api import epics_router
+
+    stream_id = "epic:4707"  # allow-hardcoded-epic: fixture stream, not a live epic
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "streams.sqlite3"), _process_probe=lambda _pid: True)
+    holder = LeaseHolder(agent="codex", harness="codex", instance_id="runtime-1", process_id=41001, task_id="task-1")
+    session = store.open_session(
+        stream_id=stream_id,
+        holder=holder,
+        lineage_id="lineage-epic",
+        ttl_seconds=60,
+        session_id="session-epic",
+        lease_id="lease-epic",
+    )
+    store.append_entry(session, entry_type=EntryType.STATE, body="working", idempotency_key="state-1")
+    monkeypatch.setattr(epics_router, "_REGISTRY_SNAPSHOT_SHA256", "a" * 64)
+    opened: list[bool] = []
+    real_connect = store.database.connect
+
+    def counting_connect(*args, **kwargs):
+        opened.append(bool(kwargs.get("read_only", False)))
+        return real_connect(*args, **kwargs)
+
+    monkeypatch.setattr(store.database, "connect", counting_connect)
+    response = epics_router._stream_response(store, stream_id, 20)
+
+    assert response["lease"] is not None
+    assert [entry["body"] for entry in response["digest"]["recent"]] == ["working"]
+    assert opened == [True]

@@ -514,6 +514,18 @@ def rollover_bundle_handoff_slots(provider: str, stream_id: str) -> frozenset[st
     return slots
 
 
+def _validate_remote_epic_stream(stream_id: str) -> str:
+    stream_id = validate_stream_id(stream_id)
+    if not stream_id.startswith("epic:"):
+        raise ValueError("remote projections require an epic:<positive-number> stream")
+    return stream_id
+
+
+def _validate_digest_limit(limit: int) -> None:
+    if limit < 0 or limit > 10_000:
+        raise ValueError("limit must be between 0 and 10000")
+
+
 class SessionStreamStore:
     """High-level API that keeps lifecycle projections fenced and auditable."""
 
@@ -2287,78 +2299,104 @@ class SessionStreamStore:
     def load_remote_digest(self, stream_id: str, *, limit: int) -> StreamDigest:
         """Load a bounded remote digest with latest state/decision/action entries."""
         stream_id = validate_stream_id(stream_id)
-        if limit < 0 or limit > 10_000:
-            raise ValueError("limit must be between 0 and 10000")
+        _validate_digest_limit(limit)
         with self._read_snapshot() as connection:
-            if connection.execute("SELECT 1 FROM streams WHERE stream_id = ?", (stream_id,)).fetchone() is None:
-                raise NotFoundError(f"stream not found: {stream_id}")
-            pinned_values = tuple(entry_type.value for entry_type in PINNED_ENTRY_TYPES)
-            placeholders = ",".join("?" for _ in pinned_values)
-            pinned_rows = connection.execute(
-                f"SELECT * FROM entries WHERE stream_id = ? AND type IN ({placeholders}) ORDER BY entry_id",
-                (stream_id, *pinned_values),
-            ).fetchall()
-            required_values = (
-                EntryType.STATE.value,
-                EntryType.DECISION.value,
-                EntryType.NEXT_ACTION.value,
-            )
-            required_rows: list[sqlite3.Row] = []
-            for entry_type in required_values:
-                row = connection.execute(
-                    "SELECT * FROM entries WHERE stream_id = ? AND type = ? ORDER BY entry_id DESC LIMIT 1",
-                    (stream_id, entry_type),
-                ).fetchone()
-                if row is not None:
-                    required_rows.append(row)
-            recent_rows = connection.execute(
-                f"SELECT * FROM entries WHERE stream_id = ? AND type NOT IN ({placeholders}) "
-                "ORDER BY entry_id DESC LIMIT ?",
-                (stream_id, *pinned_values, limit),
-            ).fetchall()
-            selected = {int(row["entry_id"]): row for row in (*required_rows, *recent_rows)}
-            recent = [
-                selected[key] for key in sorted(selected) if key not in {int(row["entry_id"]) for row in pinned_rows}
-            ]
-            high_water = int(
-                connection.execute(
-                    "SELECT COALESCE(MAX(entry_id), 0) FROM entries WHERE stream_id = ?",
-                    (stream_id,),
-                ).fetchone()[0]
-            )
-            return StreamDigest(
-                stream_id=stream_id,
-                limit=limit,
-                pinned=tuple(self._entry_from_row(connection, row) for row in pinned_rows),
-                recent=tuple(self._entry_from_row(connection, row) for row in recent),
-                high_water_entry_id=high_water,
-            )
+            return self._remote_digest_in(connection, stream_id, limit)
+
+    def _remote_digest_in(self, connection: sqlite3.Connection, stream_id: str, limit: int) -> StreamDigest:
+        if connection.execute("SELECT 1 FROM streams WHERE stream_id = ?", (stream_id,)).fetchone() is None:
+            raise NotFoundError(f"stream not found: {stream_id}")
+        pinned_values = tuple(entry_type.value for entry_type in PINNED_ENTRY_TYPES)
+        placeholders = ",".join("?" for _ in pinned_values)
+        pinned_rows = connection.execute(
+            f"SELECT * FROM entries WHERE stream_id = ? AND type IN ({placeholders}) ORDER BY entry_id",
+            (stream_id, *pinned_values),
+        ).fetchall()
+        required_values = (
+            EntryType.STATE.value,
+            EntryType.DECISION.value,
+            EntryType.NEXT_ACTION.value,
+        )
+        required_rows: list[sqlite3.Row] = []
+        for entry_type in required_values:
+            row = connection.execute(
+                "SELECT * FROM entries WHERE stream_id = ? AND type = ? ORDER BY entry_id DESC LIMIT 1",
+                (stream_id, entry_type),
+            ).fetchone()
+            if row is not None:
+                required_rows.append(row)
+        recent_rows = connection.execute(
+            f"SELECT * FROM entries WHERE stream_id = ? AND type NOT IN ({placeholders}) "
+            "ORDER BY entry_id DESC LIMIT ?",
+            (stream_id, *pinned_values, limit),
+        ).fetchall()
+        selected = {int(row["entry_id"]): row for row in (*required_rows, *recent_rows)}
+        recent = [
+            selected[key] for key in sorted(selected) if key not in {int(row["entry_id"]) for row in pinned_rows}
+        ]
+        high_water = int(
+            connection.execute(
+                "SELECT COALESCE(MAX(entry_id), 0) FROM entries WHERE stream_id = ?",
+                (stream_id,),
+            ).fetchone()[0]
+        )
+        return StreamDigest(
+            stream_id=stream_id,
+            limit=limit,
+            pinned=tuple(self._entry_from_row(connection, row) for row in pinned_rows),
+            recent=tuple(self._entry_from_row(connection, row) for row in recent),
+            high_water_entry_id=high_water,
+        )
 
     def remote_stream_projection(self, stream_id: str) -> dict[str, Any]:
         """Return one API-safe source projection without reading filesystem state."""
-        stream_id = validate_stream_id(stream_id)
-        if not stream_id.startswith("epic:"):
-            raise ValueError("remote projections require an epic:<positive-number> stream")
+        stream_id = _validate_remote_epic_stream(stream_id)
         with self._read_snapshot() as connection:
-            stream = connection.execute(
-                "SELECT stream_id, kind, epic_number FROM streams WHERE stream_id = ?",
-                (stream_id,),
-            ).fetchone()
-            if stream is None:
-                raise NotFoundError(f"stream not found: {stream_id}")
-            row = connection.execute(
-                "SELECT lease.*, session.state AS session_state, session.expired_at AS session_expired_at "
-                "FROM stream_leases AS lease JOIN sessions AS session "
-                "ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
-                "WHERE lease.stream_id = ?",
-                (stream_id,),
-            ).fetchone()
+            return self._remote_stream_projection_in(connection, stream_id)
+
+    def load_remote_epic_status(
+        self,
+        stream_id: str,
+        *,
+        limit: int,
+        snapshot_sha256: str | None,
+    ) -> dict[str, Any]:
+        """One read snapshot for one epic's status: projection, registry, digest.
+
+        The status read used to open a fresh connection for each part, and
+        every connection repeats its setup statements. Each statement hands
+        the GIL back, so under CPU-bound work in the API process the status
+        read stalled for seconds (#12627). The parts are unchanged.
+        """
+        stream_id = _validate_remote_epic_stream(stream_id)
+        _validate_digest_limit(limit)
+        with self._read_snapshot() as connection:
             return {
-                "stream_id": stream_id,
-                "kind": str(stream["kind"]),
-                "epic_number": int(stream["epic_number"]),
-                "lease": self._row_as_dict(row),
+                "projection": self._remote_stream_projection_in(connection, stream_id),
+                "registry": self._remote_registry_projection_in(connection, stream_id, snapshot_sha256),
+                "digest": self._remote_digest_in(connection, stream_id, limit),
             }
+
+    def _remote_stream_projection_in(self, connection: sqlite3.Connection, stream_id: str) -> dict[str, Any]:
+        stream = connection.execute(
+            "SELECT stream_id, kind, epic_number FROM streams WHERE stream_id = ?",
+            (stream_id,),
+        ).fetchone()
+        if stream is None:
+            raise NotFoundError(f"stream not found: {stream_id}")
+        row = connection.execute(
+            "SELECT lease.*, session.state AS session_state, session.expired_at AS session_expired_at "
+            "FROM stream_leases AS lease JOIN sessions AS session "
+            "ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
+            "WHERE lease.stream_id = ?",
+            (stream_id,),
+        ).fetchone()
+        return {
+            "stream_id": stream_id,
+            "kind": str(stream["kind"]),
+            "epic_number": int(stream["epic_number"]),
+            "lease": self._row_as_dict(row),
+        }
 
     def list_remote_projections(self) -> list[dict[str, Any]]:
         """Return all epic lease projections from the API-host store."""
@@ -2520,27 +2558,35 @@ class SessionStreamStore:
         """Return latest registry identity and whether it belongs to ``snapshot_sha256``."""
         stream_id = validate_stream_id(stream_id)
         with self._read_snapshot() as connection:
-            latest = connection.execute(
+            return self._remote_registry_projection_in(connection, stream_id, snapshot_sha256)
+
+    @staticmethod
+    def _remote_registry_projection_in(
+        connection: sqlite3.Connection,
+        stream_id: str,
+        snapshot_sha256: str | None,
+    ) -> dict[str, Any]:
+        latest = connection.execute(
+            "SELECT stream_name, title, source_sha256, receipt_id "
+            "FROM stream_inventory_receipts WHERE stream_id = ? "
+            "ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1",
+            (stream_id,),
+        ).fetchone()
+        current = None
+        if snapshot_sha256:
+            current = connection.execute(
                 "SELECT stream_name, title, source_sha256, receipt_id "
-                "FROM stream_inventory_receipts WHERE stream_id = ? "
+                "FROM stream_inventory_receipts WHERE stream_id = ? AND source_sha256 = ? "
                 "ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1",
-                (stream_id,),
+                (stream_id, snapshot_sha256),
             ).fetchone()
-            current = None
-            if snapshot_sha256:
-                current = connection.execute(
-                    "SELECT stream_name, title, source_sha256, receipt_id "
-                    "FROM stream_inventory_receipts WHERE stream_id = ? AND source_sha256 = ? "
-                    "ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1",
-                    (stream_id, snapshot_sha256),
-                ).fetchone()
-            chosen = current or latest
-            return {
-                "registered": current is not None,
-                "stream_name": None if chosen is None else str(chosen["stream_name"]),
-                "title": None if chosen is None else str(chosen["title"]),
-                "source_sha256": None if chosen is None else str(chosen["source_sha256"]),
-            }
+        chosen = current or latest
+        return {
+            "registered": current is not None,
+            "stream_name": None if chosen is None else str(chosen["stream_name"]),
+            "title": None if chosen is None else str(chosen["title"]),
+            "source_sha256": None if chosen is None else str(chosen["source_sha256"]),
+        }
 
     def dump_stream(self, stream_id: str) -> dict[str, Any]:
         """Return complete ordered stream history for the operator dump surface."""
