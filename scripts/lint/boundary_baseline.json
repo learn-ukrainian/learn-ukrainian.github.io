@@ -3,6 +3,11 @@
   "entries": [
     {
       "path": "scripts/agent_runtime/adapters/codex.py",
+      "module": "scripts.review.receipts",
+      "count": 1
+    },
+    {
+      "path": "scripts/agent_runtime/adapters/codex.py",
       "module": "scripts.review.receipts.ledger",
       "count": 1
     },
@@ -24,6 +29,11 @@
     {
       "path": "scripts/agent_runtime/attempt_boundary.py",
       "module": "scripts.review.prompts.eligibility",
+      "count": 1
+    },
+    {
+      "path": "scripts/agent_runtime/review_mcp.py",
+      "module": "scripts.review.receipts",
       "count": 1
     },
     {
@@ -528,6 +538,11 @@
     },
     {
       "path": "scripts/dispatcher/review_attempt.py",
+      "module": "scripts.review.receipts",
+      "count": 1
+    },
+    {
+      "path": "scripts/dispatcher/review_attempt.py",
       "module": "scripts.review.receipts.ledger",
       "count": 1
     },
@@ -573,6 +588,11 @@
     },
     {
       "path": "scripts/eval/uk_behaviour/binding.py",
+      "module": "scripts.review.receipts",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_behaviour/binding.py",
       "module": "scripts.review.receipts.ledger",
       "count": 1
     },
@@ -593,7 +613,17 @@
     },
     {
       "path": "scripts/eval/uk_behaviour/prove.py",
+      "module": "scripts.review.receipts",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_behaviour/prove.py",
       "module": "scripts.review.receipts.ledger",
+      "count": 1
+    },
+    {
+      "path": "scripts/eval/uk_behaviour/scorer.py",
+      "module": "scripts.review.receipts",
       "count": 1
     },
     {
@@ -772,53 +802,13 @@
       "count": 1
     },
     {
-      "path": "scripts/review/digest/__init__.py",
-      "module": "scripts.review.digest.codes",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/__init__.py",
-      "module": "scripts.review.digest.generator",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/__main__.py",
-      "module": "scripts.review.digest.codes",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/__main__.py",
-      "module": "scripts.review.digest.generator",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/schema.py",
-      "module": "scripts.review.digest.codes",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/digest/schema.py",
-      "module": "scripts.review.digest.generator",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/receipts/__init__.py",
-      "module": "scripts.review.receipts.ledger",
+      "path": "scripts/review/review_contract.py",
+      "module": "scripts.review.receipts",
       "count": 1
     },
     {
       "path": "scripts/review/review_contract.py",
       "module": "scripts.review.receipts.ledger",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/validate/__init__.py",
-      "module": "scripts.review.validate.validate",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/validate/__main__.py",
-      "module": "scripts.review.validate.validate",
       "count": 1
     },
     {

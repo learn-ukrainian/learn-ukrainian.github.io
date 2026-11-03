@@ -524,11 +524,20 @@ modules:
     reason: Activity YAML parser for the generator and the validator.
     role: product
 files:
+  scripts/review/digest/__init__.py:
+    reason: Re-exports the lesson-digest generator, which is product.
+    role: product
+  scripts/review/digest/__main__.py:
+    reason: Command line for the lesson-digest generator, which is product.
+    role: product
   scripts/review/digest/codes.py:
     reason: Outcome codes for the lesson-digest generator, which checks curriculum evidence.
     role: product
   scripts/review/digest/generator.py:
     reason: Aggregates recorded lesson decisions for one curriculum module.
+    role: product
+  scripts/review/digest/schema.py:
+    reason: Loads digest schemas and the lesson-digest generator, which is product.
     role: product
   scripts/review/fixloop.py:
     reason: Lesson-verdict and provenance report for a built curriculum module.
@@ -545,6 +554,9 @@ files:
   scripts/review/prompts/render.py:
     reason: Renders plan, lesson, and lexical review prompts from pinned curriculum files.
     role: product
+  scripts/review/receipts/__init__.py:
+    reason: Re-exports the language-claim receipt ledger, which is product.
+    role: product
   scripts/review/receipts/ledger.py:
     reason: Stores the sources and VESUM receipts for one language-claim review attempt.
     role: product
@@ -556,6 +568,12 @@ files:
     role: product
   scripts/review/settle.py:
     reason: Language-seat settle of one quoted construction or absence in a lesson or plan.
+    role: product
+  scripts/review/validate/__init__.py:
+    reason: Re-exports the lesson and plan review validator, which is product.
+    role: product
+  scripts/review/validate/__main__.py:
+    reason: Command line for the lesson and plan review validator, which is product.
     role: product
   scripts/review/validate/validate.py:
     reason: Checks a review return's quotes against the pinned lesson or plan.
