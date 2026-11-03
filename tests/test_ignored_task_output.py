@@ -778,11 +778,13 @@ def test_swapped_ancestor_cannot_publish_an_outside_symlink_target(checkout, mon
 
 
 def test_removal_does_not_follow_symlink(tmp_path):
+    from scripts.dispatcher.git import create_worktree
     from scripts.orchestration import worktree_claims as claims
-    from tests.orchestration.test_worktree_claims_cli import _linked, _primary, _record
+    from tests.orchestration.test_worktree_claims_cli import _git, _primary, _record
 
     primary = _primary(tmp_path)
-    tree = _linked(primary, "codex/output-task")
+    tree = primary / ".worktrees/dispatch/codex/output-task"
+    create_worktree(primary, tree, "codex/output-task", _git(primary, "rev-parse", "HEAD"))
     (primary / ".git/info/exclude").write_text("ignored/\n")
     outside = tmp_path / "outside-dir"
     outside.mkdir()
@@ -793,19 +795,23 @@ def test_removal_does_not_follow_symlink(tmp_path):
     link.parent.mkdir()
     link.symlink_to(outside, target_is_directory=True)
     (tree / "ignored/report.txt").write_bytes(b"preserve me")
-    _record(primary, "output-task", status="done", worktree_path=str(tree), worktree_reused=True)
+    _record(primary, "output-task", status="done", run_nonce="borrower-run", worktree_path=str(tree), worktree_reused=True)
+    creator_path, _ = claims.read_helper_creator(tree, repo_root=primary)
     result = claims.remove_unclaimed_worktree(
-        tree, repo_root=primary, reason="test #9889", owner_task_id=None, force=True
+        tree, repo_root=primary, reason="test #9889", owner_task_id=None,
     )
     assert result.action == "removed", result.reason
     assert not tree.exists()
     assert outside.is_dir() and marker.read_bytes() == b"do-not-follow" and marker.stat().st_ino == identity
-    record = json.loads((primary / "batch_state/tasks/output-task.json").read_text())
+    record = json.loads(creator_path.read_text())
     receipt = record["preserved_artifacts"]
     entry = next(item for item in receipt["paths"] if item["path"] == "ignored/outside")
     assert entry["type"] == "symlink" and entry["target"] == str(outside)
-    assert_record_only(receipt, {"ignored/outside": b"symlink\n" + os.fsencode(str(outside)), "ignored/report.txt": b"preserve me"})
-    assert not (primary / "batch_state/preserved").exists()
+    preserved = primary / receipt["location"]
+    assert (preserved / "ignored/outside").read_bytes() == b"symlink\n" + os.fsencode(str(outside))
+    assert (preserved / "ignored/report.txt").read_bytes() == b"preserve me"
+    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    assert "preserved_artifacts" not in json.loads((primary / "batch_state/tasks/output-task.json").read_text())
 
 
 def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout):

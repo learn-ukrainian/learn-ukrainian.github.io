@@ -98,6 +98,58 @@ def test_refuses_while_an_unfinished_task_claims_the_worktree(tmp_path, capsys):
     assert worktree.exists()
 
 
+def test_remove_accepts_helper_creator_record_when_borrowers_terminal(tmp_path, capsys):
+    """A helper-created tree with only terminal borrowers must not be retained forever."""
+    from scripts.dispatcher.git import create_worktree
+
+    primary = _primary(tmp_path)
+    worktree = primary / ".worktrees/dispatch/claude/helper-created"
+    create_worktree(primary, worktree, "claude/helper-created", _git(primary, "rev-parse", "HEAD"))
+    for task_id in ("borrower-one", "borrower-two"):
+        _record(
+            primary, task_id, status="done", run_nonce=task_id, worktree_path=str(worktree),
+            worktree_branch="claude/helper-created", worktree_reused=True,
+        )
+    (worktree / "batch_state").mkdir()
+    (worktree / "batch_state/proof.json").write_bytes(b'{"proof": true}\n')
+    (worktree / "report.txt").write_bytes(b"untracked evidence\n")
+
+    code, out, err = _remove(capsys, str(worktree), "--json")
+
+    assert code == worktree_claims.EXIT_REMOVED, err
+    result = json.loads(out)
+    assert result["action"] == "removed"
+    receipt = result["preserved_artifacts"]
+    preserved = primary / receipt["location"]
+    assert (preserved / "batch_state/proof.json").read_bytes() == b'{"proof": true}\n'
+    assert (preserved / "report.txt").read_bytes() == b"untracked evidence\n"
+    assert receipt["retrieval_proof_sha256"]
+    assert not worktree.exists()
+    assert _git(primary, "branch", "--list", "claude/helper-created")
+
+
+def test_remove_refuses_helper_tree_with_live_borrower(tmp_path, capsys):
+    """Creator attribution must never release a helper tree with a running borrower."""
+    from scripts.dispatcher.git import create_worktree
+
+    primary = _primary(tmp_path)
+    worktree = primary / ".worktrees/dispatch/claude/helper-live"
+    create_worktree(primary, worktree, "claude/helper-live", _git(primary, "rev-parse", "HEAD"))
+    for task_id, status in (("finished-borrower", "done"), ("live-borrower", "running")):
+        _record(
+            primary, task_id, status=status, run_nonce=task_id, worktree_path=str(worktree),
+            worktree_branch="claude/helper-live", worktree_reused=True,
+        )
+    (worktree / "report.txt").write_bytes(b"keep live work\n")
+
+    code, _out, err = _remove(capsys, str(worktree), "--json")
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "live-borrower" in err
+    assert (worktree / "report.txt").read_bytes() == b"keep live work\n"
+    assert not (primary / "batch_state/preserved").exists()
+
+
 def _fleet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
     """Public primary and its ``infra-private`` sibling checkout beside it (#8624)."""
     public = _primary(tmp_path)
@@ -472,18 +524,19 @@ def test_json_output_reports_every_outcome(tmp_path, capsys):
 
 
 def test_module_help_documents_exit_codes():
-    proc = subprocess.run(
-        [sys.executable, "-m", "scripts.orchestration.worktree_claims", "remove", "--help"],
-        cwd=PROJECT_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
+    for command, argument in (("remove", "--owner-task-id"), ("attribute-helper", "--actor")):
+        proc = subprocess.run(
+            [sys.executable, "-m", "scripts.orchestration.worktree_claims", command, "--help"],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+        )
 
-    assert proc.returncode == 0
-    for needle in ("--owner-task-id", "Exit codes:", "3  refused", "Outputs:", "Examples:"):
-        assert needle in proc.stdout
+        assert proc.returncode == 0
+        for needle in (argument, "Exit codes:", "3  refused", "Outputs:", "Examples:"):
+            assert needle in proc.stdout
 
 
 def _wt_sh_fixture(tmp_path: Path) -> tuple[Path, Path]:

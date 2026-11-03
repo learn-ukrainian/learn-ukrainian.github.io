@@ -29,7 +29,9 @@ import subprocess
 import sys
 import threading
 import time
+import uuid
 from collections.abc import Callable, Iterable, Iterator, Mapping
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, TypeGuard
 
@@ -719,6 +721,8 @@ def git_worktree_remove(
         preservation_receipt.update(metadata)
     if not ok:
         return refusal
+    if force and metadata is not None and metadata.get("creator_id"):
+        return "artifact preservation failed: helper worktree removal never forces; refusing worktree removal"
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     stager: RemovalStager = stage_removal if stage_removal is not None else contextlib.nullcontext
     try:
@@ -802,6 +806,24 @@ def remove_unclaimed_worktree(
     branch: str | None = None
     dirty: bool | None = None
     preservation_receipt: dict[str, Any] = {}
+    helper_locked = False
+
+    @contextlib.contextmanager
+    def preserved_stage(target: Path) -> Iterator[Path]:
+        if preservation_receipt.get("creator_id"):
+            from scripts.fleet.ignored_task_output import release_helper_untracked
+
+            try:
+                assert tasks_dir is not None
+                release_helper_untracked(
+                    target, primary=control_root or repo_root, repo_root=repo_root,
+                    tasks_dir=tasks_dir, receipt=preservation_receipt,
+                )
+            except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+                raise RemovalStageRefused(str(exc)) from exc
+        stager = stage_removal if stage_removal is not None else contextlib.nullcontext
+        with stager(target) as staged:
+            yield staged
 
     def outcome(action: str, why: str, *, error: str | None = None) -> WorktreeRemoval:
         return WorktreeRemoval(
@@ -816,6 +838,13 @@ def remove_unclaimed_worktree(
 
     with contextlib.ExitStack() as locks:
         try:
+            # Match the helper/--cwd attachment lock before taking the path lock.
+            # Settlement may already hold it; the dispatch lock is reentrant.
+            if (worktree / ".git").is_file() and read_helper_creator(worktree, repo_root=repo_root) is not None:
+                from scripts.dispatcher.git import worktree_lock as attachment_lock
+
+                locks.enter_context(attachment_lock(repo_root, timeout=DEFAULT_LOCK_TIMEOUT_S))
+                helper_locked = True
             if tasks_dir is None or lock_dir is None:
                 control_root = control_root if control_root is not None else control_plane_root(repo_root)
             if tasks_dir is None:
@@ -823,7 +852,9 @@ def remove_unclaimed_worktree(
             if lock_dir is None:
                 lock_dir = repository_lock_dir(control_root)
             locks.enter_context(worktree_lock(worktree, lock_dir=lock_dir, timeout_s=lock_timeout_s))
-        except ControlPlaneError as exc:
+            if not helper_locked and (worktree / ".git").is_file() and read_helper_creator(worktree, repo_root=repo_root) is not None:
+                return outcome("skipped", "helper creator appeared while locking; retry after creation settles")
+        except (ControlPlaneError, OSError, ValueError) as exc:
             return outcome("skipped", LOCK_UNAVAILABLE, error=str(exc))
         except WorktreeLockError as exc:
             return outcome("skipped", lock_refusal(exc), error=str(exc))
@@ -867,7 +898,7 @@ def remove_unclaimed_worktree(
                 task_id=owner_task_id,
                 task_record=task_record,
                 preservation_receipt=preservation_receipt,
-                stage_removal=stage_removal,
+                stage_removal=preserved_stage,
                 preserve_files=preserve_files,
                 **runner_options,
             )
@@ -964,6 +995,110 @@ def _created_worktree(record: Mapping[str, Any]) -> bool:
     )
 
 
+def helper_creator_location(worktree: Path, *, repo_root: Path) -> tuple[Path, dict[str, Any]]:
+    """Bind a helper receipt to this registered checkout incarnation, outside task state."""
+    main, registered = repository_registration(repo_root)
+    target = worktree.resolve(strict=True)
+    if target == main or target not in registered:
+        raise ValueError("helper attribution requires a registered linked worktree")
+    if worktree.absolute() != target or any(p.is_symlink() for p in (worktree, *worktree.parents)):
+        raise ValueError("helper attribution refuses symlink paths")
+    probe = _git_probe(["rev-parse", "--absolute-git-dir"], cwd=target)
+    if probe is None or probe.returncode:
+        raise ValueError("helper Git registration unavailable")
+    admin = Path(probe.stdout.strip())
+    common = repository_lock_dir(main).parent
+    if admin.parent != common / "worktrees" or admin.resolve(strict=True) != admin:
+        raise ValueError("helper Git registration is not local")
+    directory, registration = target.stat(), admin.stat()
+    binding = {
+        "repository": str(main), "worktree_path": str(target), "git_dir": str(admin),
+        "directory_identity": [directory.st_dev, directory.st_ino],
+        "registration_identity": [registration.st_dev, registration.st_ino],
+    }
+    key = hashlib.sha256(json.dumps(binding, sort_keys=True).encode()).hexdigest()
+    return common / "lu-worktree-creators" / f"{key}.json", binding
+
+
+def read_helper_creator(worktree: Path, *, repo_root: Path) -> tuple[Path, dict[str, Any]] | None:
+    """Read only the canonical, incarnation-bound helper receipt; malformed evidence refuses."""
+    path, binding = helper_creator_location(worktree, repo_root=repo_root)
+    try:
+        if path.is_symlink() or path.parent.is_symlink():
+            raise ValueError("linked helper creator record")
+        record = json.loads(path.read_bytes())
+    except FileNotFoundError:
+        return None
+    if (
+        not isinstance(record, dict)
+        or record.get("schema") != "helper-worktree-creator.v1"
+        or any(record.get(key) != value for key, value in binding.items())
+        or record.get("source") not in ("dispatcher_helper", "legacy_attribution")
+        or not isinstance(record.get("actor"), str) or not record["actor"].strip()
+        or not isinstance(record.get("created_at"), str) or not record["created_at"].strip()
+        or not isinstance(record.get("creator_id"), str)
+        or not re.fullmatch(r"helper-[0-9a-f]{32}", record["creator_id"])
+    ):
+        raise ValueError("invalid helper creator record")
+    return path, record
+
+
+def new_helper_creator(worktree: Path, *, repo_root: Path, actor: str, source: str, reason: str) -> tuple[Path, dict[str, Any]]:
+    """Prepare, but do not publish, the creator's audit record."""
+    if not actor.strip() or not reason.strip():
+        raise ValueError("helper attribution requires actor and reason")
+    path, binding = helper_creator_location(worktree, repo_root=repo_root)
+    if path.exists() or path.is_symlink():
+        raise ValueError("helper creator already attributed; refusing replacement")
+    return path, {
+        "schema": "helper-worktree-creator.v1", **binding, "creator_id": f"helper-{uuid.uuid4().hex}",
+        "actor": actor, "source": source, "reason": reason, "created_at": datetime.now(UTC).isoformat(),
+    }
+
+
+def publish_helper_creator(path: Path, record: dict[str, Any]) -> None:
+    """Publish under the attachment/removal locks, retaining a durable audit after removal."""
+    from scripts.orchestration.reaper_lifecycle import _atomic_write
+
+    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    if path.parent.is_symlink() or path.is_symlink():
+        raise ValueError("linked helper creator record")
+    _atomic_write(path, record)
+
+
+def helper_borrowers(worktree: Path, *, repo_root: Path, tasks_dir: Path) -> list[tuple[Path, dict[str, Any]]]:
+    """Every hot or archived reference must be a settled borrower, never a creator."""
+    from scripts.dispatcher.store import retention_hold_disposition
+    from scripts.fleet.ignored_task_output import matching_worktree_records
+
+    refusal = active_worktree_claim_refusal(worktree, tasks_dir=tasks_dir, repo_root=repo_root)
+    if refusal:
+        raise ValueError(refusal)
+    members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+    if not members:
+        raise ValueError("helper attribution requires borrower task records")
+    for _, member in members:
+        identity = member.get("task_id", "unknown")
+        options = member.get("options")
+        borrowed = member.get("worktree_reused") is True or (
+            member.get("worktree_reused") is None and member.get("schema_version") == 2
+            and isinstance(options, Mapping) and bool(options.get("cwd"))
+        )
+        if not borrowed or _created_worktree(member):
+            raise ValueError(f"task {identity} is not a proven helper borrower")
+        if not isinstance(member.get("status"), str) or member["status"] not in RELEASED_TASK_STATUSES or _worker_blocks_release(member):
+            raise ValueError(f"helper borrower {identity} is live or unknown")
+        if (member.get("schema_version") == 2 or member.get("pid") or member.get("provider_pgid")) and _provider_alive(member) is not False:
+            raise ValueError(f"helper borrower {identity} provider processes are live or unknown")
+        if retention_hold_disposition(member, tasks_root=tasks_dir) is not None:
+            raise ValueError(f"helper borrower {identity} has a retention hold or unknown retention")
+        if member.get("keep_worktree") or member.get("lease_state") == "active" or (
+            isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active"
+        ):
+            raise ValueError(f"helper borrower {identity} retains this worktree")
+    return members
+
+
 EXIT_REMOVED = 0
 EXIT_ERROR = 2
 EXIT_REFUSED = 3
@@ -981,6 +1116,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Commands:\n"
             "  remove PATH   Remove one linked worktree through the guarded chokepoint.\n"
             "                Run `remove --help` for its four guards.\n"
+            "  attribute-helper PATH   Attribute a legacy helper tree after verified output preservation.\n"
             "\n"
             "Examples:\n"
             "  .venv/bin/python -m scripts.orchestration.worktree_claims remove \\\n"
@@ -1022,6 +1158,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  1. PATH is a registered linked worktree of its repository, never the primary checkout.\n"
             "  2. With --owner-task-id: that task's record is finished, names PATH as its\n"
             "     worktree_path, and proves its dispatch created PATH (worktree_reused: false, or a dispatcher record).\n"
+            "     Without --owner-task-id, a helper creator receipt also attributes a terminal borrower-only tree.\n"
             "  3. No other unfinished task record in <public primary>/batch_state/tasks names PATH\n"
             "     (the public primary also holds the records and locks of --repo sibling worktrees, #8624).\n"
             "  4. Plain `git worktree remove`: git refuses modified, untracked, or locked checkouts.\n"
@@ -1064,7 +1201,65 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print the outcome as one JSON object on stdout for every outcome. Default: off.",
     )
+    attribute = commands.add_parser(
+        "attribute-helper", help="Attribute a legacy helper tree once, after preserving its output.",
+        description=(
+            "Attribute a pre-fix helper dispatch worktree and copy its untracked and ignored output.\n"
+            "Use only for a borrower-only tree with terminal tasks and clean tracked files; this never removes it."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.orchestration.worktree_claims attribute-helper \\\n"
+            "      .worktrees/dispatch/claude/source-author --actor claude-driver --reason 'legacy helper attribution' --json\n"
+            "  .venv/bin/python -m scripts.orchestration.worktree_claims remove \\\n"
+            "      .worktrees/dispatch/claude/source-author --json\n"
+            "Outputs:\n"
+            "  Verified copies in batch_state/preserved/helper-<id>/; a creator audit record under\n"
+            "  <git common dir>/lu-worktree-creators/. Existing creator records are never replaced.\n"
+            "  No task record or worktree file is changed. stdout reports attributed or a JSON outcome.\n"
+            "Exit codes:\n"
+            "  0  attributed and output preserved\n"
+            "  2  invalid arguments or error\n"
+            "  3  refused; no attribution published and no worktree removed\n"
+            "Related: docs/runbooks/worktree-cleanup.md; issue #12602."
+        ), formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    attribute.add_argument("path", metavar="PATH", help="Existing agent/task dispatch worktree root; relative to cwd.")
+    attribute.add_argument("--actor", required=True, help="Creating actor attesting legacy helper provenance; e.g. claude-driver.")
+    attribute.add_argument("--reason", required=True, help="Audit reason for this one-time attribution; e.g. 'legacy helper attribution'.")
+    attribute.add_argument("--json", action="store_true", help="Print one JSON outcome on stdout. Default: off.")
     return parser
+
+
+def _cli_attribution(args: argparse.Namespace, worktree: Path, *, repo_root: Path, control_root: Path) -> WorktreeRemoval:
+    from scripts.dispatcher.git import worktree_lock as attachment_lock
+    from scripts.fleet.ignored_task_output import preserve_helper_output
+
+    try:
+        with attachment_lock(repo_root, timeout=DEFAULT_LOCK_TIMEOUT_S), worktree_lock(worktree, lock_dir=repository_lock_dir(control_root)):
+            parent = repo_root / ".worktrees/dispatch"
+            if not worktree.is_relative_to(parent) or len(worktree.relative_to(parent).parts) != 2:
+                raise ValueError("legacy helper attribution requires an agent/task dispatch path")
+            path, creator = new_helper_creator(
+                worktree, repo_root=repo_root, actor=args.actor, source="legacy_attribution", reason=args.reason,
+            )
+            tasks_dir = control_root / "batch_state/tasks"
+            members = helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir)
+            if not members:
+                raise ValueError("legacy helper attribution requires borrower task records")
+            receipt = preserve_helper_output(
+                worktree, primary=control_root, repo_root=repo_root, tasks_dir=tasks_dir,
+                creator_path=path, creator=creator, pending=True,
+            )
+            current_path, binding = helper_creator_location(worktree, repo_root=repo_root)
+            if current_path != path or any(creator.get(key) != value for key, value in binding.items()) or path.exists():
+                raise ValueError("helper attribution changed during preservation")
+            if helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir) != members:
+                raise ValueError("helper borrower records changed during attribution")
+            publish_helper_creator(path, {**creator, "preserved_artifacts": receipt})
+            return WorktreeRemoval(action="attributed", path=str(worktree), reason=args.reason, preserved_artifacts=receipt)
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+        return WorktreeRemoval(action="skipped", path=str(worktree), reason=str(exc))
 
 
 def _cli_removal(args: argparse.Namespace, worktree: Path, *, repo_root: Path, control_root: Path) -> WorktreeRemoval:
@@ -1082,6 +1277,17 @@ def _cli_removal(args: argparse.Namespace, worktree: Path, *, repo_root: Path, c
         if worktree not in registered[1:]:
             return False, "not a registered linked worktree; refusing worktree removal"
         if args.owner_task_id is None:
+            from scripts.fleet.ignored_task_output import matching_worktree_records
+
+            helper = read_helper_creator(worktree, repo_root=repo_root)
+            if helper is not None:
+                members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+                if not any(_created_worktree(member) for _, member in members):
+                    try:
+                        helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir)
+                    except (OSError, ValueError, RuntimeError) as exc:
+                        return False, str(exc)
+                    return True, f"helper creator {helper[1]['creator_id']}"
             return True, ""
         refusal = owner_release_refusal(
             worktree, owner_task_id=args.owner_task_id, tasks_dir=tasks_dir, repo_root=repo_root
@@ -1115,12 +1321,13 @@ def _cli_remove(args: argparse.Namespace) -> int:
         except ControlPlaneError as exc:
             removal = WorktreeRemoval(action="skipped", path=str(worktree), reason=LOCK_UNAVAILABLE, error=str(exc))
         else:
-            removal = _cli_removal(args, worktree, repo_root=repo_root, control_root=control_root)
+            action = _cli_attribution if args.command == "attribute-helper" else _cli_removal
+            removal = action(args, worktree, repo_root=repo_root, control_root=control_root)
     if args.json:
         print(json.dumps(removal.as_record(), sort_keys=True))
-    if removal.action == "removed":
+    if removal.action in {"removed", "attributed"}:
         if not args.json:
-            print(f"removed: {removal.path} ({removal.reason})")
+            print(f"{removal.action}: {removal.path} ({removal.reason})")
         return EXIT_REMOVED
     if removal.action == "skipped":
         print(f"refused: {removal.path}: {removal.reason}", file=sys.stderr)

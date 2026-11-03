@@ -67,6 +67,49 @@ Matching scratch names do not permit removing linked worktrees outside the
 shared guard; ordinary disposable clones with their own `.git` directory
 retain their existing scratch-cleanup behavior.
 
+### Remove helper-created trees (#12602)
+
+`scripts.dispatcher.git.create_worktree` records the creating actor and checkout
+identity under the owning repository's Git common directory,
+`lu-worktree-creators/`. Callers can pass `creator_actor="claude-driver"`.
+The default actor is the dispatch task identity, or the local uid outside a task.
+These audit records survive removal. They are separate from task records and
+apply only when the tree has borrowers and no task creator.
+
+After every borrowing task is terminal, remove the tree without
+`--owner-task-id`:
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.orchestration.worktree_claims remove \
+    .worktrees/dispatch/claude/source-author --reason 'terminal helper borrowers' --json
+```
+
+The remover holds the dispatch attachment lock and the path lock. It checks hot
+and archived borrowers, provider liveness, and retention holds. No borrowers,
+unknown liveness, or an active or damaged retention hold refuses cleanup.
+It copies untracked and ignored output through the existing 256 MiB preservation
+budget, verifies retrieval, and publishes the receipt on the helper creator
+record. Only then does it clear verified untracked regular files and call plain
+Git removal. Untracked symlinks or unsupported file types retain the tree.
+Tracked changes, including present hidden index entries, also retain the tree.
+The remover never forces helper removal. Branch refs remain unchanged.
+
+For a helper tree created before this fix, attest its provenance once:
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.orchestration.worktree_claims attribute-helper \
+    .worktrees/dispatch/claude/source-author --actor claude-driver \
+    --reason 'pre-fix dispatcher helper creation' --json
+```
+
+This command requires a registered dispatch tree with terminal borrower records
+and clean tracked files. It preserves and verifies output before publishing the
+creator record. It neither clears files nor removes the tree. An existing creator
+record refuses replacement. After exit 0, use the `remove` command above.
+Both commands return exit 3 on refusal and JSON retrieval locators under
+`batch_state/preserved/helper-<id>/`. Keep those locators for recovery.
+If either command refuses, resolve its stated condition without forcing removal.
+
 ### Removal path audit (#9645)
 
 | Entry point / primitive | Disposition |
