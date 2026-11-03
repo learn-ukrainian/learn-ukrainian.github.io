@@ -3389,6 +3389,8 @@ def republish_withheld(
         current_head=False,
     )
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
+    mixed_pair = review_mode == "cross_family" and not review.ukrainian and facts.mixed_family
+    scope = facts.reviewer_scope(review.family) if mixed_pair else facts
     comment_fields = dict(
         sha=review.sha,
         task_id=task_id,
@@ -3404,6 +3406,7 @@ def republish_withheld(
         app_bot=bool(facts.app_bot_commits),
         score=review_score(reply),
         author_models=facts.author_models,
+        scope_commits=tuple(commit.sha for commit in scope.commits) if mixed_pair else None,
     )
     withheld = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=review.finding_count)
     comment = build_comment(**comment_fields)

@@ -1521,8 +1521,17 @@ def test_mixed_family_head_needs_both_family_approvals(tmp_path, monkeypatch):
 
     monkeypatch.setattr(github, "read", reads)
     row = {"headRefOid": head, "isDraft": False, "title": "Scoped review", "labels": [], "mergeStateStatus": "CLEAN"}
-    write_task(tasks, worktree_base_sha=head, review_risk="critical")
-    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    write_task(tasks, worktree_base_sha=head, review_risk="critical",
+               result_sha256=hashlib.sha256(b"VERDICT: APPROVE").hexdigest())
+    with monkeypatch.context() as publication:
+        def withhold_reply(_destination, texts, **_kwargs):
+            if any("<details>" in text for text in texts):
+                blocked = recorder.PublishBlocked("synthetic reply finding")
+                blocked.indices = frozenset({0})
+                raise blocked
+
+        publication.setattr(recorder, "check_texts", withhold_reply)
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert statuses == ["pending"]
     assert sweep.lookup_verdict(comments, head, "fleet").state == sweep.NEEDS_SEAT
     partial = sweep.lookup_verdict(comments, head, "fleet")
@@ -1532,10 +1541,16 @@ def test_mixed_family_head_needs_both_family_approvals(tmp_path, monkeypatch):
         github._refuse_incomplete_seats(REPOSITORY, 42, head, None, tmp_path, {})
     marker = sweep.parse_marker(comments[0]["body"])
     assert marker["review_pair"] == "anthropic_openai" and marker["scope_commits"] == (anthropic,)
+    assert "Findings are held privately." in comments[0]["body"]
+    assert recorder.republish_withheld(
+        "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+    )["comment"] == "posted"
+    assert sweep.parse_marker(comments[1]["body"]) == marker
+    assert statuses == ["pending"] and sweep.lookup_verdict(comments, head, "fleet").state == sweep.NEEDS_SEAT
     write_task(tasks, task_id="review-two", agent="claude", model="claude-opus-5-5",
                worktree_base_sha=head, review_risk="critical")
     recorder.record("review-two", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert statuses == ["pending", "success"] and calls["posts"] == 2
+    assert statuses == ["pending", "success"] and calls["posts"] == 3
     assert sweep.lookup_verdict(comments, head, "fleet").state == "APPROVED"
     assert keeper._reason(row, sweep.lookup_verdict(comments, head, "fleet"), "ok", 0, True) == "ready"
     github._refuse_incomplete_seats(REPOSITORY, 42, head, None, tmp_path, {})
