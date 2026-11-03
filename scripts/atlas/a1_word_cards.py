@@ -388,11 +388,11 @@ def build(inventory, base, companion, manifest, sources, pins, register, *, batc
               "receipts": list(receipts.values()), "assertion_receipts": assertion_receipts,
               "accounting": accounting, "rows": rows, "pending_examples": pending,
               "held_units": manifest["held_units"], "inputs_sha256": digest(build_inputs)}
-    verify(result, sources, manifest, batch=batch, register=register)
+    verify(result, sources, manifest, batch=batch, register=register, inventory=inventory)
     return result
 
 
-def verify(result, sources, manifest, *, batch=None, register=None):
+def verify(result, sources, manifest, *, batch=None, register=None, inventory=None):
     """Check delivered bytes against receipts and conservation, without rebuilding cards."""
     _definition_scopes(manifest)
     require(digest(sources) == manifest["sources_sha256"], "source_snapshot_drift")
@@ -404,7 +404,8 @@ def verify(result, sources, manifest, *, batch=None, register=None):
     require(sum(r["state"] == "card_produced" for r in result["rows"]) == selected_count, "row_selection_mismatch")
     require(sorted(c["card_id"] for c in result["cards"]) == manifest["card_ids"], "card_conservation")
     receipts = {r["receipt_id"]: r for r in result["receipts"]}
-    inventory = load(ROOT / "registry/atlas/a1-v1-inventory.json")
+    if inventory is None:
+        inventory = load(ROOT / "registry/atlas/a1-v1-inventory.json")
     require(digest(inventory) == manifest["inventory_sha256"], "inventory_digest_mismatch")
     row_cards = ({r["id"]: r["mapping"]["pilot"]["card_id"] for r in selected_rows(inventory)}
                  if batch is None else batch.row_card_ids)
@@ -558,7 +559,7 @@ Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
         else:
             result = build(inventory, base, companion, manifest, sources, manifest["allocation_pins"],
                            foundation.load_register(ROOT / "docs/sources/permissions-register.yaml"), batch=batch)
-        counts = verify(result, sources, manifest, batch=batch)
+        counts = verify(result, sources, manifest, batch=batch, inventory=inventory)
         if args.check and args.batch == "slice5":
             from scripts.atlas.a1_slice5_inputs import verify_projections
 

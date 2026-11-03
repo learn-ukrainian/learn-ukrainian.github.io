@@ -583,7 +583,7 @@ def evaluate_a1_assertions(assembly: dict, sources: dict, batch_name: str) -> di
     rebuilt = a1.build(inventory, base, companion, manifest, sources, manifest["allocation_pins"], register, batch=batch)
     gold.require(a1.canonical(assembly) == a1.canonical(rebuilt), "Delivered A1 artifact changed")
     # verify calls check_assertion for every assertion, including context fields.
-    result: dict = a1.verify(assembly, sources, manifest, batch=batch, register=register)
+    result: dict = a1.verify(assembly, sources, manifest, batch=batch, register=register, inventory=inventory)
     result["inputs_sha256"] = digest({"assembly": assembly, "sources": sources, "manifest": manifest})
     return result
 
