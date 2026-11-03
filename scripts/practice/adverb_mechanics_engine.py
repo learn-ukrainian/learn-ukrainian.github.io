@@ -38,6 +38,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 try:
     from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -45,12 +46,15 @@ except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
     # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
+    _scripts_dir = next(parent for parent in Path(__file__).resolve().parents if parent.name == "scripts")
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
     from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
+    _repo_root = _scripts_dir.parent
+    if str(_repo_root) not in sys.path:
+        sys.path.insert(0, str(_repo_root))
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -2587,27 +2591,30 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
     return cards
 
 
-def find_vesum_db(specified: Path | None = None) -> Path:
-    """Finds vesum.db checking specified path, local tree, or primary checkout."""
-    if specified and specified.exists() and specified.stat().st_size > 0:
-        return specified
-    candidates = [
-        PROJECT_ROOT / "data" / "vesum.db",
-        PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
-        Path("/home/ops/learn-ukrainian/data/vesum.db"),
-    ]
-    for c in candidates:
-        if c.exists() and c.stat().st_size > 0:
-            return c
-    return specified or (PROJECT_ROOT / "data" / "vesum.db")
+def find_vesum_db(specified: Path | str | None = None) -> StoreBinding | StoreRefusal:
+    """Resolve VESUM at call time. An explicit path is an injected read binding."""
+    binding = StoreBinding("vesum", Path(specified)) if specified is not None else None
+    return resolve_store("vesum", PROJECT_ROOT, binding=binding)
 
 
 def verify_deck_with_vesum(cards: list[AdverbCard], vesum_db_path: Path | str | None = None) -> dict[str, Any]:
     """Verify that all target vocabulary exists in VESUM and that every card contributes valid vocabulary."""
     import re
 
-    resolved_path = find_vesum_db(Path(vesum_db_path) if vesum_db_path else None)
-    if not resolved_path.exists() or resolved_path.stat().st_size < 1_000_000:
+    resolved = find_vesum_db(Path(vesum_db_path) if vesum_db_path else None)
+    if isinstance(resolved, StoreRefusal):
+        return {
+            "total_cards": len(cards),
+            "target_tokens_count": 0,
+            "missing_targets": [],
+            "empty_cards": [],
+            "distractor_tokens_count": 0,
+            "vesum_verified": None,
+            "status": "skipped",
+            "message": resolved.reason,
+        }
+    resolved_path = resolved.path
+    if resolved_path.stat().st_size < 1_000_000:
         return {
             "total_cards": len(cards),
             "target_tokens_count": 0,
