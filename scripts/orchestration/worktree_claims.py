@@ -1010,11 +1010,12 @@ def helper_creator_location(worktree: Path, *, repo_root: Path) -> tuple[Path, d
     common = repository_lock_dir(main).parent
     if admin.parent != common / "worktrees" or admin.resolve(strict=True) != admin:
         raise ValueError("helper Git registration is not local")
-    directory, registration = target.stat(), admin.stat()
+    directory, registration, pointer = target.stat(), admin.stat(), (target / ".git").lstat()
     binding = {
         "repository": str(main), "worktree_path": str(target), "git_dir": str(admin),
         "directory_identity": [directory.st_dev, directory.st_ino],
         "registration_identity": [registration.st_dev, registration.st_ino],
+        "pointer_identity": [pointer.st_dev, pointer.st_ino, pointer.st_ctime_ns],
     }
     key = hashlib.sha256(json.dumps(binding, sort_keys=True).encode()).hexdigest()
     return common / "lu-worktree-creators" / f"{key}.json", binding
