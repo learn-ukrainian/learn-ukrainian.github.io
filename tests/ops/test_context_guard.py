@@ -790,19 +790,20 @@ def test_a_failed_scope_lookup_holds_the_ordinary_relaunch_and_alerts_after_the_
     h.tick("cto")
     assert respawns(h) == [] and len(cto_alerts(h)) == 1
 
-    third = tmp_path / "third"
-    third.mkdir()
-    h = Harness(third, **{"cto": claude_pane(70)})
-    h.fake.override["cat"] = subprocess.CompletedProcess([], 0, "", "")  # a successful read without a cgroup line
-    h.tick("cto")
-    h.posted["claude-epics"] = cg.iso(h.moment)
-    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto", "Move to background and exit", "Exit and stop tasks")
-    h.advance(5)
-    h.tick("cto")  # an exit dialog is on screen, but nothing says which scope this agent holds
-    assert "exit_evidence" not in h.state["cto"] and "1" not in h.fake.typed("cto")
-    h.advance(UNKNOWN_BOUND_MINUTES)
-    h.tick("cto")
-    assert "1" not in h.fake.typed("cto") and len(cto_alerts(h)) == 1 and "exit dialog" in cto_alerts(h)[0]
+    for index, output in enumerate(("", "0::\n", "0::not-a-path\n")):  # successful reads that name no usable cgroup
+        third = tmp_path / f"third-{index}"
+        third.mkdir()
+        h = Harness(third, **{"cto": claude_pane(70)})
+        h.fake.override["cat"] = subprocess.CompletedProcess([], 0, output, "")
+        h.tick("cto")
+        h.posted["claude-epics"] = cg.iso(h.moment)
+        h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto", "Move to background and exit", "Exit and stop tasks")
+        h.advance(5)
+        h.tick("cto")  # an exit dialog is on screen, but nothing says which scope this agent holds
+        assert "exit_evidence" not in h.state["cto"] and "1" not in h.fake.typed("cto")
+        h.advance(UNKNOWN_BOUND_MINUTES)
+        h.tick("cto")
+        assert "1" not in h.fake.typed("cto") and len(cto_alerts(h)) == 1 and "exit dialog" in cto_alerts(h)[0]
 
     second = tmp_path / "second"
     second.mkdir()

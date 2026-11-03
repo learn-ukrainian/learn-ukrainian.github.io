@@ -347,12 +347,16 @@ class Tmux:
         """The ``lu-driver`` scope unit holding the agent ``<pid>@<start>``, or None when it is not in one.
 
         Raises ``TelemetryUnavailable`` when the cgroup cannot be read (for example the process just exited).
-        ``strict`` also treats output without a unified (``0::``) line as unreadable, not as "in no scope".
+        ``strict`` treats output without a unified (``0::``) line, or with a relative or deleted path, as
+        unreadable, not as "in no scope"; the forced relaunch keeps the lenient read.
         """
         pid = agent.split("@", 1)[0]
         for line in self._query(["cat", f"/proc/{pid}/cgroup"], "agent cgroup").splitlines():
             if line.startswith("0::"):
-                match = DRIVER_SCOPE_RE.search(line[3:])
+                path = line[3:]
+                if strict and not (path.startswith("/") and not path.endswith("(deleted)")):
+                    raise TelemetryUnavailable(f"agent cgroup: malformed unified path {path[:60]!r}")
+                match = DRIVER_SCOPE_RE.search(path)
                 return match.group(1) if match else None
         if strict:
             raise TelemetryUnavailable("agent cgroup: no unified cgroup line")
