@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import http.client
 import importlib.util
 import json
+import os
 import sqlite3
 from collections import Counter
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
@@ -282,7 +284,7 @@ def test_reconciliation_detects_missing_locator(database):
         catalogue.reconcile(database, catalogue.load_catalogues(ROOT / "docs/resources"))
 
 
-def test_cli_help_and_storage_guards(tmp_path, monkeypatch, capsys):
+def test_cli_help_and_storage_guards(tmp_path, publish_store, monkeypatch, capsys):
     with pytest.raises(SystemExit) as exit_info:
         catalogue.main(["--help"])
     assert exit_info.value.code == 0
@@ -294,7 +296,45 @@ def test_cli_help_and_storage_guards(tmp_path, monkeypatch, capsys):
     assert json.loads(capsys.readouterr().out)["rows_out"] == 1086
     with pytest.raises(SystemExit):
         catalogue.main([*args, "--workers", "0"])
+    # --publish is a separate mode: never with --db, and every binding is required and well formed.
+    selector, generation, root = publish_store
+    publish = _publish_args(selector, generation, root)
+    for invalid in (
+        [*publish, "--db", str(database)],
+        [*args, "--store", str(selector)],
+        [*args[:3], "--publish"],
+        [*publish[:5], "not-a-generation", *publish[6:]],
+        [*publish[:7], "0" * 63, *publish[8:]],
+    ):
+        with pytest.raises(SystemExit) as exit_info:
+            catalogue.main(invalid)
+        assert exit_info.value.code == 2
+    before = _store_files(selector)
     from scripts.storage import topology
+
+    for reason, store, patch in (
+        ("store_not_selector", selector.with_name("copy.db"), None),
+        ("locality_network", selector, ("store_locality", lambda path: "network")),
+        ("store_inside_live_data", selector, ("live_store_path", lambda: tmp_path / topology.SELECTOR_NAME)),
+        ("insufficient_free_space", selector, None),
+    ):
+        with monkeypatch.context() as scoped:
+            if patch:
+                scoped.setattr(topology, *patch)
+            if reason == "insufficient_free_space":
+                scoped.setenv("LU_EVIDENCE_FREE_DISK_FLOOR_BYTES", str(1 << 62))
+            assert catalogue.main([*publish[:3], str(store), *publish[4:]]) == 2
+        assert _failed(capsys)["reason"] == reason
+        assert _store_files(selector) == before
+    # The primary store is admitted only from the primary checkout, through the importer's default target.
+    from scripts.ingest import sum20_mirror_import as importer
+
+    with monkeypatch.context() as scoped:
+        scoped.setattr(topology, "live_store_path", lambda: selector)
+        scoped.setattr(importer, "main_checkout_root", lambda root: root / "primary")
+        assert catalogue.main(publish) == 2
+    assert _failed(capsys)["reason"] == "linked_worktree"
+    assert _store_files(selector) == before
 
     monkeypatch.setattr(topology, "is_network_filesystem_path", lambda path: True)
     with pytest.raises(SystemExit):
@@ -640,3 +680,296 @@ def test_all_33_publisher_pairings_are_free_and_preserve_source_hash(database):
 def test_free_access_requires_evidence(fields):
     with pytest.raises(ValueError, match="Free catalogue access"):
         catalogue._resource_entry({"title": "Unknown", "url": "https://example.org", **fields}, "test.yaml", "/0", {})
+
+
+# --- generation publication (#9471) ---------------------------------------------------------------------
+
+
+@pytest.fixture
+def publish_store(tmp_path, monkeypatch):
+    """A held fixture store behind its selector, with unrelated tables, and a private catalogue copy."""
+    from scripts.storage import generations
+
+    for name in ("LU_SOURCES_DB", "SOURCES_DB_PATH"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.delenv(generations.ENV_WRITER_FD, raising=False)
+    monkeypatch.delenv(generations.ENV_WRITER_SELECTOR, raising=False)
+    # The publisher's real margin is tested with the generations; these fixtures are tiny.
+    monkeypatch.setenv("LU_EVIDENCE_FREE_DISK_FLOOR_BYTES", "0")
+    monkeypatch.setenv("LU_EVIDENCE_WAL_CEILING_BYTES", "0")
+    data = tmp_path / "data"
+    data.mkdir()
+    seed = data / "seed.db"
+    with closing(sqlite3.connect(seed)) as conn:
+        conn.execute(
+            "CREATE TABLE external_articles(id INTEGER PRIMARY KEY,chunk_id TEXT,url TEXT,title TEXT,text TEXT,"
+            "source_file TEXT)"
+        )
+        conn.execute(
+            "INSERT INTO external_articles VALUES(1,'ext-ulp_youtube-302','https://www.youtube.com/watch?v=fixture2',"
+            "'ULP 1-02 | Formal Greetings','добрий день привіт дякую','ulp_youtube')"
+        )
+        conn.execute("CREATE TABLE textbooks(id INTEGER PRIMARY KEY, text TEXT, blob BLOB)")
+        conn.executemany("INSERT INTO textbooks(text, blob) VALUES(?, ?)", [("fixture chunk", b"\x00\x01")] * 3)
+        conn.execute("CREATE INDEX textbooks_text ON textbooks(text)")
+        conn.execute("CREATE VIRTUAL TABLE textbooks_fts USING fts5(text, content='textbooks', content_rowid='id')")
+        conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
+        conn.commit()
+        conn.execute("PRAGMA journal_mode=WAL")
+    selector = data / generations.SELECTOR_NAME
+    seed.rename(selector)
+    selector.chmod(0o444)
+    with generations.writer_lock(selector) as held:
+        generations.checkpoint_legacy_store(held)
+        generation = generations.publish_generation(selector, held, mode="bootstrap").generation
+    # A reader's open leaves read-only -wal/-shm companions beside the generation, as on the live store.
+    with closing(catalogue.open_readonly(generation)) as conn:
+        conn.execute("SELECT count(*) FROM textbooks").fetchone()
+    root = tmp_path / "resources"
+    for relative in catalogue.CATALOGUES:
+        (root / relative).parent.mkdir(parents=True, exist_ok=True)
+        (root / relative).write_bytes((ROOT / "docs/resources" / relative).read_bytes())
+    return selector, generation, root
+
+
+def _publish_args(selector, generation, root, digest=None):
+    digest = digest or catalogue.input_digest(catalogue.read_catalogue_inputs(root))
+    return [
+        "--ingest",
+        "--publish",
+        "--store",
+        str(selector),
+        "--expect-generation",
+        generation.name,
+        "--expect-input-sha256",
+        digest,
+        "--catalogue-root",
+        str(root),
+        "--no-network",
+    ]
+
+
+def _store_files(selector):
+    """Every file beside the selector and in its generation directory, with the selected name."""
+    from scripts.storage import generations
+
+    names = sorted(p.relative_to(selector.parent).as_posix() for p in selector.parent.rglob("*"))
+    return generations.inspect_selector(selector).generation.name, names
+
+
+def _failed(capsys):
+    return json.loads(capsys.readouterr().out)
+
+
+def test_publish_refuses_input_manifest_drift(publish_store, monkeypatch, capsys):
+    """Defect class: a catalogue changed after its digest was frozen is published, or later bytes are parsed."""
+    selector, generation, root = publish_store
+    frozen = catalogue.input_digest(catalogue.read_catalogue_inputs(root))
+    before = _store_files(selector)
+    drifted = root / "podcasts/raw_lists/seasons_1_3.txt"
+    original = drifted.read_bytes()
+    drifted.write_bytes(original + b"\n")
+    assert catalogue.main(_publish_args(selector, generation, root, frozen)) == 2
+    refusal = _failed(capsys)
+    actual = catalogue.input_digest(catalogue.read_catalogue_inputs(root))
+    assert refusal == {
+        "status": "refused",
+        "reason": "input_digest_mismatch",
+        "input_sha256": actual,
+        "selected": generation.name,
+    }
+    assert actual != frozen and _store_files(selector) == before
+    # The digest is the documented sha256sum listing of the files in CATALOGUES order.
+    drifted.write_bytes(original)
+    listing = "".join(
+        f"{hashlib.sha256((root / r).read_bytes()).hexdigest()}  docs/resources/{r}\n" for r in catalogue.CATALOGUES
+    )
+    assert hashlib.sha256(listing.encode()).hexdigest() == frozen
+    # A file changed after the digest was taken is not reread: the published rows are the digested bytes.
+    real_ingest = catalogue.ingest
+
+    def change_after_digest(*args, **kwargs):
+        drifted.write_bytes(b"not a catalogue line\n")
+        return real_ingest(*args, **kwargs)
+
+    monkeypatch.setattr(catalogue, "ingest", change_after_digest)
+    assert catalogue.main(_publish_args(selector, generation, root, frozen)) == 0
+    published = json.loads(capsys.readouterr().out)
+    assert published["input_sha256"] == frozen and published["report"]["rows_out"] == 1086
+    assert published["report"]["per_file"]["docs/resources/podcasts/raw_lists/seasons_1_3.txt"]["entries_in"] == 120
+
+
+def test_publish_refuses_changed_source_generation(publish_store, monkeypatch, capsys):
+    """Defect class: publishing over a selection other than the expected, held, unchanged one."""
+    from scripts.storage import generations
+    from scripts.storage.wal_permissions import hold_database, lift_database
+
+    selector, generation, root = publish_store
+    before = _store_files(selector)
+    other = generation.with_name("sources.20000101T000000Z-000000000000.db").name
+    args = _publish_args(selector, generation, root)
+    assert catalogue.main([*args[:5], other, *args[6:]]) == 2
+    assert _failed(capsys) == {
+        "status": "refused",
+        "reason": "selected_generation_mismatch",
+        "selected": generation.name,
+    }
+    with generations.writer_lock(selector):
+        assert catalogue.main(args) == 2
+    assert _failed(capsys)["reason"] == "writer_lock_busy"
+    lift_database(generation)
+    try:
+        assert catalogue.main(args) == 2
+        assert _failed(capsys)["reason"] == "current_generation_writable"
+    finally:
+        hold_database(generation)
+    real_ingest = catalogue.ingest
+
+    def change_selected_generation(*a, **kw):
+        report = real_ingest(*a, **kw)
+        stamp = generation.stat().st_mtime_ns + 10**9
+        os.utime(generation, ns=(stamp, stamp))
+        return report
+
+    monkeypatch.setattr(catalogue, "ingest", change_selected_generation)
+    assert catalogue.main(args) == 2
+    assert _failed(capsys) == {"status": "refused", "reason": "current_generation_changed", "selected": generation.name}
+    assert _store_files(selector) == before
+
+
+def test_publish_preserves_selected_generation_on_ingest_failure(publish_store, monkeypatch, capsys):
+    """Defect class: a failed ingest, verification or late space check changes the selection or leaves a candidate."""
+    from scripts.storage import generations
+
+    selector, generation, root = publish_store
+    before = _store_files(selector)
+    args = _publish_args(selector, generation, root)
+    real_deduplicate = catalogue.deduplicate
+
+    def invalid_rows(items):
+        rows = real_deduplicate(items)
+        rows[-1]["title"] = None
+        return rows
+
+    monkeypatch.setattr(catalogue, "deduplicate", invalid_rows)
+    assert catalogue.main(args) == 1
+    assert _failed(capsys) == {"status": "failed", "reason": "IntegrityError", "selected": generation.name}
+    assert _store_files(selector) == before
+    monkeypatch.setattr(catalogue, "deduplicate", real_deduplicate)
+    real_inventory = catalogue.preserved_inventory
+    calls = []
+
+    def changed_after_ingest(conn):
+        calls.append(conn)
+        inventory = real_inventory(conn)
+        return {**inventory, "external_articles_sha256": "changed"} if len(calls) > 1 else inventory
+
+    monkeypatch.setattr(catalogue, "preserved_inventory", changed_after_ingest)
+    assert catalogue.main(args) == 1
+    assert _failed(capsys) == {
+        "status": "verification_failed",
+        "reason": "external_articles_sha256_changed",
+        "selected": generation.name,
+    }
+    assert _store_files(selector) == before
+    monkeypatch.setattr(catalogue, "preserved_inventory", real_inventory)
+    real_space = generations.require_free_space
+    checks = []
+
+    def refuse_restore_room(directory, size):
+        checks.append(size)
+        if len(checks) == 2:  # the refresh with actual sizes, after the candidate exists
+            raise generations.GenerationError("insufficient_free_space")
+        real_space(directory, size)
+
+    monkeypatch.setattr(generations, "require_free_space", refuse_restore_room)
+    assert catalogue.main(args) == 2
+    assert _failed(capsys)["reason"] == "insufficient_free_space"
+    assert checks[0] == 2 * generation.stat().st_size and _store_files(selector) == before
+
+
+def test_publish_records_post_switch_failure_without_retry(publish_store, monkeypatch, capsys):
+    """Defect class: an error after the selector switch reported as unchanged, or the ingest retried."""
+    from scripts.storage import generations
+
+    selector, generation, root = publish_store
+    real_complete = generations._complete_receipt
+    real_ingest = catalogue.ingest
+    receipts, ingests = [], []
+
+    def fail_after_the_switch(path):
+        receipts.append(path)
+        if len(receipts) > 1:  # the first call completes the previous receipt, before the switch
+            raise generations.GenerationError("receipt_write_failed")
+        real_complete(path)
+
+    def counted(*args, **kwargs):
+        ingests.append(args)
+        return real_ingest(*args, **kwargs)
+
+    monkeypatch.setattr(generations, "_complete_receipt", fail_after_the_switch)
+    monkeypatch.setattr(catalogue, "ingest", counted)
+    assert catalogue.main(_publish_args(selector, generation, root)) == 3
+    selected, files = _store_files(selector)
+    assert selected != generation.name and len(ingests) == 1
+    assert _failed(capsys) == {
+        "status": "published_post_switch_failed",
+        "reason": "receipt_write_failed",
+        "generation": selected,
+        "previous": generation.name,
+    }
+    assert not [name for name in files if name.endswith(catalogue.CANDIDATE_SUFFIX)]
+    assert generation.exists() and generations.is_held(generation)
+    # An error raised while the writer lock is released, after a complete publication, is post-switch too.
+    monkeypatch.setattr(generations, "_complete_receipt", real_complete)
+    real_lock = generations.writer_lock
+
+    @contextmanager
+    def failing_release(*args, **kwargs):
+        with real_lock(*args, **kwargs) as held:
+            yield held
+        raise OSError("writer lock release failed")
+
+    monkeypatch.setattr(generations, "writer_lock", failing_release)
+    previous = generations.inspect_selector(selector).generation
+    assert catalogue.main(_publish_args(selector, previous, root)) == 3
+    released, _ = _store_files(selector)
+    assert released != previous.name and len(ingests) == 2
+    assert _failed(capsys) == {
+        "status": "published_post_switch_failed",
+        "reason": "OSError",
+        "generation": released,
+        "previous": previous.name,
+    }
+
+
+def test_publish_scratch_round_trip_preserves_non_catalogue_tables(publish_store, capsys):
+    """Defect class: publication loses non-catalogue data or the previous generation cannot be restored."""
+    from scripts.storage import cli as storage_cli
+    from scripts.storage import generations
+
+    selector, generation, root = publish_store
+    with closing(catalogue.open_readonly(generation)) as conn:
+        before = catalogue.preserved_inventory(conn)
+    assert catalogue.main(_publish_args(selector, generation, root)) == 0
+    published = json.loads(capsys.readouterr().out)
+    new = generations.inspect_selector(selector).generation
+    assert published["generation"] == new.name != generation.name and published["previous"] == generation.name
+    assert published["verification"]["external_articles_sha256"] == before["external_articles_sha256"]
+    assert published["verification"]["preserved_tables"] == len(before["table_counts"])
+    assert {"external_articles", "textbooks", "textbooks_fts_data"} <= before["table_counts"].keys()
+    assert generations.is_held(new) and generations.is_held(generation)
+    assert [g["receipt_state"] for g in generations.generation_status(selector)["generations"]] == ["published"] * 2
+    with closing(catalogue.open_readonly(new)) as conn:
+        assert catalogue.preserved_inventory(conn) == before
+        assert catalogue.reconcile(conn, catalogue.load_catalogues(root))["rows_out"] == 1086
+        hits = catalogue.search_resources(conn, "добрий день", kind="podcast")
+        assert hits[0]["discovery_evidence"][0]["chunk_id"] == "ext-ulp_youtube-302"
+    with closing(catalogue.open_readonly(generation)) as conn:
+        assert catalogue.preserved_inventory(conn) == before
+        with pytest.raises(catalogue.ResourceCatalogueMissingError):
+            catalogue.search_resources(conn, "привіт")
+    assert storage_cli.main(["restore-generation", "--store", str(selector), str(generation)]) == 0
+    assert generations.inspect_selector(selector).generation == generation
+    retained = {g["name"]: g["selected"] for g in generations.generation_status(selector)["generations"]}
+    assert retained == {generation.name: True, new.name: False}

@@ -434,12 +434,12 @@
   },
   {
     "path": "scripts/ingest/resource_catalogue_ingest.py",
-    "reference_count": 6,
+    "reference_count": 7,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "ingests/backfills authenticated source rows",
     "calls": [
-      "sqlite3.connect(f'{args.db.resolve().as_uri()}?mode=rw', uri=True)"
+      "sqlite3.connect(uri, uri=True)"
     ]
   },
   {

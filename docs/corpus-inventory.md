@@ -199,7 +199,50 @@ file's input entries and distinct output URLs. Every original locator, title and
 module mapping survives URL deduplication. `rows_out` per file overlaps other
 files; only the global count represents distinct resources. After a full corpus
 rebuild, rerun this incremental ingest as for the separately ingested ZNO tables.
-Activation of the live database remains a separate driver operation after merge.
+
+To change the Sources store itself, publish a new generation instead (#9471). The
+mode follows the СУМ-20 mirror importer (`scripts/ingest/sum20_mirror_import.py`)
+and the generation layout in `docs/runbooks/storage-topology.md`:
+
+```bash
+<shared-project-python> -m scripts.ingest.resource_catalogue_ingest --ingest --publish \
+  --store <selector> --expect-generation <selected generation name> \
+  --expect-input-sha256 <catalogue input digest>
+```
+
+- **Bindings.** `--store` names the selector explicitly; there is no default and no
+  environment override. The primary checkout's store is accepted only from the
+  primary checkout, and any other directory under its `data/` is refused.
+  `--expect-generation` must equal the generation the selector selects (see
+  `python -m scripts.storage generations --store <selector>`). The input digest is
+  `sha256sum` over every catalogue file in the module's `CATALOGUES` order, run
+  from the repository root and piped to `sha256sum` again. The run reads each file
+  once and parses those same bytes, so a change after the check cannot be ingested.
+- **Sequence.** It takes the store writer lock without lifting the selected
+  generation, so a busy lock is refused. It then checks the bindings and that the
+  generation is held read-only. Before copying, it needs room for two generations
+  plus the publisher's free-disk floor and WAL allowance. That covers the
+  candidate, the publisher's own guard, and a later `restore-generation`. It takes
+  an online SQLite backup of the complete selected database into a candidate beside
+  the selector and runs this ingest on the candidate only. The candidate must pass
+  a full `integrity_check`, an unchanged schema and row-count inventory of every
+  non-catalogue table, an unchanged full-row `external_articles` digest, FTS row
+  coverage and source-entry reconciliation. After it is sealed and the space check
+  is repeated with actual sizes, `publish_generation` switches the selector under
+  the same lock.
+- **Outcomes.** It prints one JSON object. Exit 0 means published, with the new
+  and previous generation names. Exit 1 means the ingest or verification failed,
+  and exit 2 means the run was refused. In both cases the selection is unchanged,
+  the candidate is removed, and the output reports the generation actually
+  selected. Exit 3 means the selector switched, then a later step failed. The new
+  generation is selected; reconcile through the publisher or `restore-generation`.
+  Never re-run the ingest. Nothing is retried automatically.
+- **Rollback.** The previous generation is retained and held. Restore it with
+  `python -m scripts.storage restore-generation --store <selector> <previous generation path>`.
+
+Live activation is still an operator-approved driver operation. It needs
+data-owner approval, the current production GO and the SRE preflight; merging this
+mode does not activate it.
 
 Use **`mcp__sources__search_resources`** with `query`, `kind`, `level`, `module`,
 `free_only` and optionally `live_only` and `mode`. The default `mode: text`

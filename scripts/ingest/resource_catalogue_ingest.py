@@ -1,13 +1,30 @@
-"""Index curated metadata and existing external article/transcript text (#9409)."""
+"""Index curated metadata and existing external article/transcript text (#9409).
+
+Two explicit modes. ``--db`` ingests into an existing local copy of the Sources
+store in place. ``--publish`` (#9471) builds a new Sources generation: it takes
+the store writer lock without lifting the selected generation, checks the
+expected generation name and catalogue-input digest, copies the complete
+selected database into a candidate beside the selector, ingests into the
+candidate only, verifies it and publishes it through
+``scripts.storage.generations.publish_generation``. The previous generation is
+kept, so ``python -m scripts.storage restore-generation --store <selector>``
+rolls back. This follows ``scripts.ingest.sum20_mirror_import.run_import`` and
+reuses its target, copy, seal and refusal helpers.
+"""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import re
+import secrets
 import sqlite3
 from collections import Counter
+from collections.abc import Mapping
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -16,7 +33,7 @@ from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 import yaml
 
 from scripts.curriculum.evidence import codes, sources
-from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly, refuse_writable_corpus_database
 
 CATALOGUES = (
     "podcasts/podcast_db.json",
@@ -173,15 +190,39 @@ def _walk_entries(node: Any, locator: str = "", context: dict | None = None):
             yield from _walk_entries(value, f"{locator}/{key}", child)
 
 
-def load_catalogues(root: Path) -> list[dict]:
-    """Parse every declared catalogue; absent or malformed files fail the run."""
+def read_catalogue_inputs(root: Path) -> dict[str, bytes]:
+    """Read every declared catalogue file once; an absent file fails the run."""
+    return {relative: (root / relative).read_bytes() for relative in CATALOGUES}
+
+
+def input_digest(inputs: Mapping[str, bytes]) -> str:
+    """SHA-256 of the ``sha256sum`` listing of every catalogue file, in ``CATALOGUES`` order.
+
+    From the repository root it equals
+    ``sha256sum docs/resources/<each CATALOGUES entry, in order> | sha256sum``.
+    """
+    listing = "".join(
+        f"{hashlib.sha256(inputs[relative]).hexdigest()}  docs/resources/{relative}\n" for relative in CATALOGUES
+    )
+    return hashlib.sha256(listing.encode("utf-8")).hexdigest()
+
+
+def load_catalogues(root: Path, inputs: Mapping[str, bytes] | None = None) -> list[dict]:
+    """Parse every declared catalogue; absent or malformed files fail the run.
+
+    ``inputs`` are bytes from ``read_catalogue_inputs``: publication parses the
+    exact bytes its digest bound, never a later reread.
+    """
+    inputs = read_catalogue_inputs(root) if inputs is None else inputs
     entries = []
     for relative in CATALOGUES:
         path = root / relative
         source_file = f"docs/resources/{relative}"
+        # The universal-newline translation that Path.read_text applies.
+        text = inputs[relative].decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
         if path.suffix == ".txt":
             parsed = []
-            for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            for number, line in enumerate(text.splitlines(), 1):
                 if not line.strip():
                     continue
                 match = re.fullmatch(r"(Season|Episode): (\d+), Title: (.+), URL: (https?://\S+)\s*", line)
@@ -199,7 +240,6 @@ def load_catalogues(root: Path) -> list[dict]:
                     )
                 )
         else:
-            text = path.read_text(encoding="utf-8")
             data = json.loads(text) if path.suffix == ".json" else yaml.safe_load(text)
             parsed = list(_walk_entries(data, context={"kind": "podcast"} if relative.startswith("podcasts/") else {}))
             if not parsed:
@@ -439,10 +479,16 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
 
 
 def ingest(
-    conn: sqlite3.Connection, root: Path, *, no_network: bool = False, workers: int = 8, timeout: float = 10
+    conn: sqlite3.Connection,
+    root: Path,
+    *,
+    no_network: bool = False,
+    workers: int = 8,
+    timeout: float = 10,
+    inputs: Mapping[str, bytes] | None = None,
 ) -> dict:
     """Validate all inputs before atomically replacing only this catalogue."""
-    entries = load_catalogues(root)
+    entries = load_catalogues(root, inputs)
     rows = deduplicate(entries)
     linked_resources = link_existing_text(conn, rows)
     if no_network:
@@ -612,17 +658,258 @@ def search_resources(
     return [_compact_hit(result) for result in rows]
 
 
+# --- generation publication (#9471) ----------------------------------------------------------------------
+
+CANDIDATE_SUFFIX = "resource-catalogue"
+
+
+def _open_writable(path: Path) -> sqlite3.Connection:
+    """The one writable open: an explicit local copy, or this mode's candidate."""
+    uri = f"{path.resolve().as_uri()}?mode=rw"
+    refuse_writable_corpus_database(uri, uri=True)
+    return sqlite3.connect(uri, uri=True)
+
+
+def preserved_inventory(conn: SQLiteConnection) -> dict[str, Any]:
+    """Schema objects and row counts outside this catalogue, and a full-row ``external_articles`` digest."""
+    objects = [
+        list(row)
+        for row in conn.execute("SELECT type, name, tbl_name, sql FROM sqlite_master ORDER BY type, name")
+        if not str(row[2]).startswith("resource_catalogue")
+    ]
+    tables = {
+        name: conn.execute(f'SELECT count(*) FROM "{name.replace(chr(34), chr(34) * 2)}"').fetchone()[0]
+        for kind, name, _, sql in objects
+        if kind == "table" and not str(sql or "").upper().startswith("CREATE VIRTUAL TABLE")
+    }
+    articles = None
+    columns = [str(row[1]) for row in conn.execute("PRAGMA table_info(external_articles)")]
+    if columns:
+        digest = hashlib.sha256(json.dumps(columns).encode("utf-8") + b"\n")
+        for row in conn.execute("SELECT * FROM external_articles ORDER BY rowid"):
+            values = [value.hex() if isinstance(value, bytes) else value for value in row]
+            digest.update(json.dumps(values, ensure_ascii=False).encode("utf-8") + b"\n")
+        articles = digest.hexdigest()
+    return {
+        "schema_sha256": hashlib.sha256(json.dumps(objects, ensure_ascii=False).encode("utf-8")).hexdigest(),
+        "table_counts": tables,
+        "external_articles_sha256": articles,
+    }
+
+
+def verify_candidate(path: Path, before: dict[str, Any], inputs: Mapping[str, bytes], report: dict) -> dict:
+    """Every check a candidate must pass before publication; ``path`` is only read."""
+    from scripts.ingest.sum20_mirror_import import VerificationFailed
+
+    failures = []
+    with closing(open_readonly(path)) as conn:
+        if conn.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
+            failures.append("integrity_check")
+        after = preserved_inventory(conn)
+        failures.extend(f"{key}_changed" for key in before if after[key] != before[key])
+        rows = conn.execute("SELECT count(*) FROM resource_catalogue").fetchone()[0]
+        if rows != report["rows_out"]:
+            failures.append("catalogue_rows_differ_from_ingest")
+        if conn.execute("SELECT count(*) FROM resource_catalogue_fts_docsize").fetchone()[0] != rows:
+            failures.append("fts_rows_differ_from_catalogue")
+        try:
+            reconcile(conn, load_catalogues(Path(), inputs))
+        except ValueError:
+            failures.append("provenance_reconciliation")
+    if failures:
+        raise VerificationFailed(",".join(sorted(failures)))
+    return {
+        "checks": "passed",
+        "catalogue_rows": rows,
+        "preserved_tables": len(after["table_counts"]),
+        "schema_sha256": after["schema_sha256"],
+        "external_articles_sha256": after["external_articles_sha256"],
+    }
+
+
+def publication_target(store: Path) -> Any:
+    """Resolve ``--store`` through the importer's explicit-directory checks; never an override.
+
+    The primary checkout's store is admitted only from the primary checkout
+    (the importer's own default target). Any other directory under the primary
+    ``data/`` is refused, so a scratch store cannot alias the live one.
+    """
+    from scripts.ingest import sum20_mirror_import as importer
+    from scripts.storage import topology
+
+    if store.name != topology.SELECTOR_NAME:
+        raise importer.Refused("store_not_selector")
+    target = importer.writer_target(test_data_dir=Path(os.path.abspath(store.parent)))
+    live = Path(os.path.realpath(topology.live_store_path().parent))
+    try:
+        same = os.path.samefile(target.data_dir, live)
+    except OSError:
+        same = target.data_dir == live
+    if same:
+        if importer.writer_target().data_dir != target.data_dir:
+            raise importer.Refused("live_store_alias")
+    elif target.data_dir.is_relative_to(live):
+        raise importer.Refused("store_inside_live_data")
+    return target
+
+
+def _build_candidate(
+    target: Any, current: Path, root: Path, inputs: Mapping[str, bytes], options: dict[str, Any]
+) -> tuple[Path, dict[str, Any]]:
+    """Copy ``current`` completely, ingest into the copy only and verify it; ``current`` is only read."""
+    from scripts.ingest import sum20_mirror_import as importer
+    from scripts.storage import topology
+
+    # Beside the selector: the publisher hard-links the candidate, so it must share the store's filesystem.
+    candidate = target.data_dir / f".{topology.SELECTOR_NAME}.{os.getpid()}.{secrets.token_hex(4)}.{CANDIDATE_SUFFIX}"
+    try:
+        with closing(open_readonly(current)) as live:
+            before = preserved_inventory(live)
+        importer._copy_live(current, candidate)
+        with closing(_open_writable(candidate)) as conn:
+            report = ingest(conn, root, inputs=inputs, **options)
+        verification = verify_candidate(candidate, before, inputs, report)
+        importer._seal(candidate)
+    except BaseException:
+        importer._remove([candidate, *importer._sidecars(candidate)])
+        raise
+    return candidate, {"report": report, "verification": verification}
+
+
+def publish(
+    target: Any,
+    root: Path,
+    *,
+    expect_generation: str,
+    expect_input_sha256: str,
+    no_network: bool = False,
+    workers: int = 8,
+    timeout: float = 10,
+) -> dict[str, Any]:
+    """Build, verify and publish one new generation, holding the store writer lock throughout.
+
+    The sequence is ``sum20_mirror_import.run_import``'s. Every refusal before
+    the switch leaves the selection as it was and removes the candidate. Any
+    error once the selector has switched, the writer lock's release included,
+    is a ``PostSwitchFailure`` naming the generation now selected; nothing is
+    retried.
+    """
+    from scripts.ingest import sum20_mirror_import as importer
+    from scripts.storage import generations
+
+    current: Path | None = None
+    try:
+        with generations.writer_lock(target.selector) as held:
+            if held.layout != "selector" or held.generation is None:
+                raise importer.Refused("publication_requires_selector")
+            current = held.generation
+            if current.name != expect_generation:
+                raise importer.Refused("selected_generation_mismatch", selected=current.name)
+            if not generations.is_held(current):
+                raise importer.Refused("current_generation_writable")
+            inputs = read_catalogue_inputs(root)
+            digest = input_digest(inputs)
+            if digest != expect_input_sha256.lower():
+                raise importer.Refused("input_digest_mismatch", input_sha256=digest)
+            size = current.stat().st_size
+            # The candidate, then the publisher's and the later restore-generation guard on what remains.
+            generations.require_free_space(target.data_dir, 2 * size)
+            options = {"no_network": no_network, "workers": workers, "timeout": timeout}
+            candidate, details = _build_candidate(target, current, root, inputs, options)
+            try:
+                # Refresh with actual sizes: after the switch a restore of ``current`` needs this much free.
+                generations.require_free_space(target.data_dir, max(candidate.stat().st_size, size))
+                publication = generations.publish_generation(candidate, held)
+            except BaseException:
+                try:
+                    importer._remove([candidate, *importer._sidecars(candidate)])
+                except OSError:
+                    # A cleanup error must not hide that the new generation is selected.
+                    if importer._switched_to(target, current) is None:
+                        raise
+                raise
+    except Exception as exc:
+        # Classify by the selection itself, so an error raised while the lock is released is classified too.
+        switched = None if current is None else importer._switched_to(target, current)
+        if switched is not None:
+            reason = exc.reason if isinstance(exc, generations.GenerationError) else type(exc).__name__
+            raise importer.PostSwitchFailure(reason, switched.name, current.name) from exc
+        if isinstance(exc, generations.GenerationError):
+            raise importer.Refused(exc.reason) from None
+        raise
+    return {
+        "status": "published",
+        "generation": publication.generation.name,
+        "previous": None if publication.previous is None else publication.previous.name,
+        "sha256": publication.sha256,
+        "input_sha256": digest,
+        **details,
+    }
+
+
+def _selected_name(selector: Path | None) -> str | None:
+    """The generation a selector selects now, read after a failure; never raises."""
+    from scripts.storage import topology
+
+    try:
+        state = topology.inspect_selector(selector) if selector is not None else None
+    except OSError:
+        return None
+    return None if state is None or state.generation is None else state.generation.name
+
+
+def _publish_main(args: argparse.Namespace) -> int:
+    from scripts.ingest import sum20_mirror_import as importer
+
+    selector = None
+    try:
+        target = publication_target(args.store)
+        selector = target.selector
+        payload = publish(
+            target,
+            args.catalogue_root,
+            expect_generation=args.expect_generation,
+            expect_input_sha256=args.expect_input_sha256,
+            no_network=args.no_network,
+            workers=args.workers,
+            timeout=args.timeout,
+        )
+    except importer.PostSwitchFailure as exc:
+        failure = {"status": "published_post_switch_failed", "reason": exc.reason}
+        print(json.dumps({**failure, "generation": exc.generation, "previous": exc.previous}, ensure_ascii=False))
+        return 3
+    except importer.Refused as exc:
+        code, outcome = 2, {"status": "refused", "reason": exc.reason, **exc.detail}
+    except importer.VerificationFailed as exc:
+        code, outcome = 1, {"status": "verification_failed", "reason": str(exc), **exc.detail}
+    except (OSError, ValueError, sqlite3.Error, yaml.YAMLError) as exc:
+        code, outcome = 1, {"status": "failed", "reason": type(exc).__name__}
+    else:
+        print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
+    print(json.dumps({**outcome, "selected": _selected_name(selector)}, ensure_ascii=False))
+    return code
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Index every curated catalogue into sources.db with provenance and FTS.\n"
-        "Use for discovery with existing external text; never downloads media or premium content.",
+        "Use for discovery with existing external text; never downloads media or premium content.\n"
+        "--db ingests into an explicit local copy; --publish builds and publishes a new Sources generation.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
   <shared-project-python> -m scripts.ingest.resource_catalogue_ingest --ingest --db data/sources-copy.db
   <shared-project-python> -m scripts.ingest.resource_catalogue_ingest --ingest --db data/sources-copy.db --no-network
-Outputs: resource_catalogue and resource_catalogue_fts in the explicit local DB; JSON count reconciliation on stdout.
-Exit codes: 0 reconciled; 1 input, storage, or database failure; 2 invalid arguments.
-Related: docs/corpus-inventory.md; docs/DICTIONARY-PIPELINE-STATUS.md; #9409.
+  <shared-project-python> -m scripts.ingest.resource_catalogue_ingest --ingest --publish --store <selector> \\
+      --expect-generation <selected generation name> --expect-input-sha256 <catalogue input digest>
+  <shared-project-python> -m scripts.storage restore-generation --store <selector> <previous generation path>  # rollback
+Outputs: --db: resource_catalogue and resource_catalogue_fts in the explicit local DB; JSON count reconciliation
+  on stdout. --publish: one JSON object on stdout; a new generation under the selector's sources-generations/.
+Input digest: from the repository root, sha256sum of every CATALOGUES file in order, piped to sha256sum.
+Exit codes: --db: 0 reconciled; 1 input, storage, or database failure; 2 invalid arguments.
+  --publish: 0 published; 1 ingest or verification failed (selection unchanged); 2 refused or invalid
+  arguments (selection unchanged); 3 published, but a step after the selector switch failed (new generation selected).
+Related: docs/corpus-inventory.md; docs/DICTIONARY-PIPELINE-STATUS.md; docs/runbooks/storage-topology.md; #9409; #9471.
 """,
     )
     parser.add_argument(
@@ -631,8 +918,25 @@ Related: docs/corpus-inventory.md; docs/DICTIONARY-PIPELINE-STATUS.md; #9409.
     parser.add_argument(
         "--db",
         type=Path,
-        required=True,
-        help="Explicit existing local SQLite database, e.g. data/sources-copy.db; no default.",
+        help="Explicit existing local SQLite database, e.g. data/sources-copy.db; no default. Not with --publish.",
+    )
+    parser.add_argument(
+        "--publish",
+        action="store_true",
+        help="Publish a new generation of --store instead of editing --db (default false).",
+    )
+    parser.add_argument(
+        "--store",
+        type=Path,
+        help="With --publish (required): the Sources store selector to publish behind; no default.",
+    )
+    parser.add_argument(
+        "--expect-generation",
+        help="With --publish (required): name of the generation the selector must select now.",
+    )
+    parser.add_argument(
+        "--expect-input-sha256",
+        help="With --publish (required): catalogue input digest the parsed bytes must match.",
     )
     parser.add_argument(
         "--catalogue-root",
@@ -652,6 +956,19 @@ Related: docs/corpus-inventory.md; docs/DICTIONARY-PIPELINE-STATUS.md; #9409.
     args = parser.parse_args(argv)
     if not 1 <= args.workers <= 16 or args.timeout <= 0:
         parser.error("workers must be 1–16 and timeout must be positive")
+    publication = (args.store, args.expect_generation, args.expect_input_sha256)
+    if args.publish:
+        from scripts.storage.topology import is_generation_name
+
+        if args.db is not None or None in publication:
+            parser.error("--publish takes --store, --expect-generation and --expect-input-sha256, never --db")
+        if not is_generation_name(args.expect_generation):
+            parser.error("--expect-generation must be a generation file name")
+        if not re.fullmatch(r"[0-9a-fA-F]{64}", args.expect_input_sha256):
+            parser.error("--expect-input-sha256 must be 64 hexadecimal digits")
+        return _publish_main(args)
+    if args.db is None or any(value is not None for value in publication):
+        parser.error("--db is required without --publish; --store and --expect-* need --publish")
     from scripts.storage.topology import is_network_filesystem_path
 
     if is_network_filesystem_path(args.db) or is_network_filesystem_path(args.db.resolve()):
@@ -659,8 +976,7 @@ Related: docs/corpus-inventory.md; docs/DICTIONARY-PIPELINE-STATUS.md; #9409.
     if not args.db.is_file():
         parser.error("database must already exist; use a local snapshot of sources.db")
     try:
-        refuse_writable_corpus_database(f"{args.db.resolve().as_uri()}?mode=rw", uri=True)
-        with sqlite3.connect(f"{args.db.resolve().as_uri()}?mode=rw", uri=True) as conn:
+        with closing(_open_writable(args.db)) as conn:
             report = ingest(
                 conn, args.catalogue_root, no_network=args.no_network, workers=args.workers, timeout=args.timeout
             )
