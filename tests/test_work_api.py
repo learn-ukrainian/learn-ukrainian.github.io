@@ -1109,11 +1109,12 @@ def test_next_successful_background_refresh_resets_age(monkeypatch):
     assert [r["work_id"] for r in second.json()["queue"]] == [_wid(6004), _wid(6001)]
 
 
-def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
-    """#6984: a build that never finishes must not wedge the single-flight slot.
+def test_next_hung_refresh_keeps_single_flight_until_the_thread_finishes(monkeypatch):
+    """A second kick does not start a build while the first thread runs.
 
-    The background build is bounded by NEXT_BUILD_TIMEOUT_S; once it times
-    out the slot frees and the next caller's refresh can succeed.
+    The single-flight slot stays until that thread returns, and that build's
+    result is the one that re-warms the cache (#12649). The old bound freed
+    the slot at NEXT_BUILD_TIMEOUT_S and the retry built again underneath it.
     """
     import threading
     import time
@@ -1125,89 +1126,110 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
     payload = _warm_next_cache()
     key = projection_cache_key({})
     _ttl_cache[key] = (time.monotonic() - (work_router.NEXT_MAX_STALE_S + 15.0), payload)
-    production_timeout = work_router.NEXT_BUILD_TIMEOUT_S
-    monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
 
-    # Block on an explicit event instead of a long sleep: the abandoned
-    # worker never runs to completion silently, and teardown always frees it.
     release_hung = threading.Event()
     hung_started = threading.Event()
     hung_exited = threading.Event()
+    builds: list[int] = []
 
     def hanging_build(**_kwargs):
+        builds.append(1)
         hung_started.set()
         try:
-            release_hung.wait(30.0)
+            assert release_hung.wait(15.0), "test did not release the hung build"
             return build_projection(_next_sections(), repository_id=REPO)
         finally:
             hung_exited.set()
 
-    # Capture every kick's single-flight handle at kick time. The slot is
-    # popped as soon as the worker future settles, so a healthy build that
-    # completes before its /next response returns is already gone from
-    # work_in_flight — reading the map afterwards is a fresh scheduling race
-    # of the very class this test removes (#7829).
-    kicked = []
-    real_kick = work_router._get_or_create_build_task
-
-    def recording_kick(kick_key, filters, ctx=None):
-        handle = real_kick(kick_key, filters, ctx)
-        kicked.append(handle)
-        return handle
-
-    monkeypatch.setattr(work_router, "_get_or_create_build_task", recording_kick)
     monkeypatch.setattr(work_router, "build_public_projection", hanging_build)
     try:
         first = client.get("/api/work/v1/next?stream=infra-harness")
         assert first.status_code == 503, first.text
         assert first.json()["error"] == "stale"
+        assert hung_started.wait(5.0), "hung build never started"
+        assert len(builds) == 1
+        assert key in app.state.ctx.stores.work_in_flight
 
-        # The hung build is abandoned at the timeout and the slot frees.
-        work_router.wait_for_in_flight_build(key)
-        assert key not in app.state.ctx.stores.work_in_flight, "hung build wedged the single-flight slot"
-        assert len(kicked) == 1, "stale /next did not kick exactly one refresh build"
-        kicked.clear()
-
-        # Only the hung build is bounded tightly. The bound is read when the
-        # build is kicked, so restoring the production value here leaves the
-        # hung build at 0.2s while the healthy retry gets the full budget —
-        # under CPU contention loop/thread scheduling alone can otherwise eat
-        # the whole 0.2s and abandon the retry too (#7829).
-        monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", production_timeout)
-
-        # A healthy retry rebuilds and serves 200.
-        def fast_build(*, filters=None, cache_age_s=0.0, **_kwargs):
-            return build_projection(_next_sections(), repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
-
-        monkeypatch.setattr(work_router, "build_public_projection", fast_build)
         retry = client.get("/api/work/v1/next?stream=infra-harness")
         assert retry.status_code == 503, retry.text
         assert retry.json()["error"] == "stale"
+        assert len(builds) == 1, "second kick started an overlapping build"
+        assert key in app.state.ctx.stores.work_in_flight
 
-        # Serve the retry from the handle captured at kick time, never from a
-        # post-hoc work_in_flight lookup: a healthy build may settle and pop
-        # its slot before the 503 response returns, so the map can legitimately
-        # be empty here. A failed retry build raises from result() instead of
-        # surfacing as a later 503.
-        assert len(kicked) == 1, "retry did not kick exactly one refresh build"
-        kicked[0].result(timeout=10.0)
+        release_hung.set()
+        assert hung_exited.wait(10.0), "hung build never finished"
+        work_router.wait_for_in_flight_build(key)
+        assert key not in app.state.ctx.stores.work_in_flight
+        assert len(builds) == 1
 
         second = client.get("/api/work/v1/next?stream=infra-harness")
-        assert second.status_code == 200, "slot stayed wedged after the hung build"
+        assert second.status_code == 200, second.text
         assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
+        assert [row["work_id"] for row in second.json()["queue"]] == [_wid(6004), _wid(6001)]
     finally:
         release_hung.set()
-        # Do not let the abandoned hung thread run into the next test.
         if hung_started.is_set():
             assert hung_exited.wait(10.0), "abandoned hung build never exited"
+
+
+def test_overlapping_rebuild_after_wait_timeout_discards_late_result(monkeypatch):
+    """A build past the caller bound keeps the slot, and its result is cached.
+
+    Defect class: overlapping projection rebuild after wait timeout discards
+    the late result. The old bound freed the slot at NEXT_BUILD_TIMEOUT_S,
+    the next kick started a second build, and the first thread's payload
+    never reached the cache.
+    """
+    import threading
+    import time
+
+    from scripts.api.state_helpers import cache_get_with_age
+
+    ctx = app.state.ctx
+    key = work_router.projection_cache_key({}, ctx)
+    monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
+    release = threading.Event()
+    started = threading.Event()
+    calls: list[str] = []
+
+    def slow_build(_filters, *, cache_age_s=0.0):
+        calls.append("run")
+        started.set()
+        assert release.wait(10.0), "test did not release the slow build"
+        return {"marker": "late-result", "cache_age_s": cache_age_s}
+
+    monkeypatch.setattr(work_router, "_build_sync", slow_build)
+    try:
+        handle = work_router._ensure_in_flight(key, {}, ctx)
+        assert started.wait(5.0), "build never started"
+        time.sleep(0.6)
+        assert key in ctx.stores.work_in_flight, "caller timeout freed the slot"
+        assert not handle.done(), "caller timeout settled the build before the thread returned"
+        assert calls == ["run"]
+
+        second = work_router._ensure_in_flight(key, {}, ctx)
+        assert second is handle
+        time.sleep(0.4)
+        assert calls == ["run"], "second kick started an overlapping build"
+
+        release.set()
+        payload = handle.result(timeout=5.0)
+        assert payload["marker"] == "late-result"
+        cached = cache_get_with_age(key, 30.0)
+        assert cached is not None, "late result was not cached"
+        assert cached[0]["marker"] == "late-result"
+        assert calls == ["run"]
+    finally:
+        release.set()
 
 
 @pytest.mark.parametrize("hung_first_build", [False, True])
 def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first_build):
     """#7697: lifespan timer rebuilds after TTL with no intervening HTTP calls.
 
-    A timed-out build must free the slot for the timer's next attempt, and
-    lifespan exit must cancel the timer before draining background work.
+    A caller timeout does not start a second build. The hung build's own
+    completion is the cache stamp, and lifespan exit must cancel the timer
+    before draining background work.
 
     Cache time is driven by an injected manual clock (#8583): the test ages
     the entry explicitly and waits on stamp/build completion signals, so a
@@ -1276,14 +1298,12 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     def build(**_kwargs):
         builds.append(time.monotonic())
         if len(builds) == 1:
-            # Only the first build is bounded tightly: the bound is read when
-            # the build is kicked, so restoring the production value here
-            # keeps build #1 at 0.2s while later timer builds get the full
-            # budget — CPU contention cannot then abandon a healthy build and
-            # starve the TTL window (#7829).
+            # Later ticks read the caller wait when they start waiting.
+            # Restore the production bound so the rest of the window is not
+            # a 0.2s spin. The in-flight build is not cancelled.
             monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", production_timeout)
         if hung_first_build and len(builds) == 1:
-            assert release_hung.wait(5.0)
+            assert release_hung.wait(15.0), "test did not release the hung build"
         return payload.copy()
 
     def record_cache_set(cache_key, value):
@@ -1319,14 +1339,22 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
             # Age the entry well past the TTL: the next tick kicks build #1.
             # Steps are 2x the TTL so float dust can never leave the age a
             # hair below the staleness threshold (0.1+0.1+0.1 != 0.3 in
-            # binary floating point). A hung first build times out at 0.2s
-            # and must free the slot so a later tick's build can land the
-            # first stamp (#6984).
+            # binary floating point). A hung first build keeps the slot
+            # through the caller wait; releasing it is what stamps the cache.
             step = 2 * work_router.CACHE_TTL_S
             clock.advance(step)
+            if hung_first_build:
+                deadline = time.monotonic() + 5.0
+                while time.monotonic() < deadline and len(builds) < 1:
+                    time.sleep(0.01)
+                assert builds, "hung refresh never started"
+                time.sleep(0.8)
+                assert len(builds) == 1, "timed-out caller started an overlapping build"
+                assert key in ctx.stores.work_in_flight, "caller timeout freed the single-flight slot"
+                release_hung.set()
             wait_for_stamps(1)
             if hung_first_build:
-                assert len(builds) >= 2, "timed-out build wedged the single-flight slot"
+                assert len(builds) == 1, "late completion must be the build that was already running"
 
             # Multiple successful refreshes over a whole max-stale window
             # prove that this is recurring maintenance, rather than another
