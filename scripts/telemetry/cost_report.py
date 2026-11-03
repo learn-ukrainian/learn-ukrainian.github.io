@@ -27,7 +27,7 @@ from scripts.agent_runtime.usage import _iter_usage_records
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 API_USAGE_DIR = PROJECT_ROOT / "batch_state" / "api_usage"
-COST_RATES_PATH = PROJECT_ROOT / "scripts" / "analytics" / "cost_rates.yaml"
+COST_RATES_PATH = PROJECT_ROOT / "scripts" / "telemetry" / "cost_rates.yaml"
 DEFAULT_DIVISOR = 3.8
 PROMPT_BLOAT_THRESHOLD = 30_000
 
@@ -382,7 +382,7 @@ def build_cost_summary(
     by_module: dict[str, dict[str, Any]] = defaultdict(_new_bucket)
     phase_prompt_sizes: dict[str, list[int]] = defaultdict(list)
     unknown_models: set[str] = set()
-    counts = Counter()
+    counts: Counter[str] = Counter()
 
     for record in filtered:
         _add_to_bucket(totals, record)

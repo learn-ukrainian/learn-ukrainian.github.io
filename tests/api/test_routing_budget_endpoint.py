@@ -16,11 +16,11 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from scripts.analytics.cost_report import CostRecord
 from scripts.api import claude_account_usage, state_helpers, state_router
 from scripts.api import subscription_usage as subscription_usage_mod
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet import reset_reserve
+from scripts.telemetry.cost_report import CostRecord
 
 
 @pytest.fixture(autouse=True)
