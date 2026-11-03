@@ -310,6 +310,16 @@ repos:
         files: ^tests/.*\.py$
         stages: [pre-commit]
 
+      # Same ratchet as the Checks job (#12642). Staged scripts Python is
+      # checked; staging only the baseline rechecks scripts/.
+      - id: mypy-ratchet
+        name: mypy ratchet (scripts/)
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.mypy_ratchet
+        language: system
+        files: ^scripts/.*\.py$|^scripts/lint/mypy_baseline\.json$
+        pass_filenames: true
+        stages: [pre-commit]
+
       # --- Repo-wide guards (B19, #9064; trimmed in #11315) ---
       # No push path runs pytest. CI Gate's pytest shards own repo-wide-marker-invariant
       # and task-store-resolver-guard. The required Checks job collects pytest on
