@@ -428,13 +428,12 @@ def test_artifact_cited_only_in_export_file_is_held(tmp_path: Path, capsys: pyte
     """#12611: retention must not expire an artifact cited only in an export file."""
     from scripts.fleet_comms.cli import build_parser, cmd_retention
 
-    root = tmp_path / "plane"
+    root = tmp_path / "batch_state" / "fleet-comms" / "v1"
     with ArtifactStore(root=root) as store:
         rec = store.store_bytes(b"handoff evidence", producer="t")
         _age(store, rec.artifact_id)
     sources = _sources(tmp_path / "sources")
     batch_state = tmp_path / "batch_state"
-    batch_state.mkdir()
     (batch_state / "receipt.json").write_text("{}")
     export = tmp_path / "citations.txt"
     export.write_text(f"Handoff evidence: {rec.artifact_id}\n")
@@ -459,7 +458,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
     """#12574 T3 (CTO-approved). Defect class: the unreferenced rule starts or
     removes with a missing, empty, stale, incomplete or unreadable citation
     source, or removes a cited artifact."""
-    with ArtifactStore(root=tmp_path / "plane") as store:
+    with ArtifactStore(root=tmp_path / "good" / "batch_state" / "fleet-comms" / "v1") as store:
         names = (
             "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split",
             "by_receipt", "uncited", "padded", "inventory",
@@ -510,6 +509,15 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
             ),
             "citation source batch_state: .* is not a directory",
         )
+        for inside in (store.root, store.blob_root):
+            refuses(
+                CitationSources(
+                    tasks_dir=missing_batch.tasks_dir, docs_dir=missing_batch.docs_dir,
+                    github_dump=missing_batch.github_dump, citation_export=missing_batch.citation_export,
+                    batch_state_dir=inside,
+                ),
+                "citation source batch_state: .* is inside the artifact store",
+            )
         linked_export = _sources(tmp_path / "linked-export")
         linked_export.citation_export.unlink()
         linked_export.citation_export.symlink_to(linked_export.github_dump)
@@ -684,6 +692,9 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         assert dry.sources == report.sources
         assert [entry["files"] for entry in dry.sources if entry["source"] == "export"] == [1]
         assert [entry["files"] for entry in dry.sources if entry["source"] == "batch_state"] == [5]
+        assert [entry["excluded_subtrees"] for entry in dry.sources if entry["source"] == "batch_state"] == [
+            [{"path": str(store.root), "reason": "artifact_store"}],
+        ]
         for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split", "by_receipt"):
             assert recs[name].blob_path.is_file()
         for name in ("uncited", "padded", "inventory"):

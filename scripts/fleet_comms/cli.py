@@ -1314,7 +1314,7 @@ def build_parser() -> argparse.ArgumentParser:
             "given. It removes the blob of an artifact that no row names, in an expiring class, "
             "older than --unreferenced-days and cited by none of: message text and linked blobs, "
             "the tasks directory, the docs tree, a fresh GitHub dump, a citation export file "
-            "and the full batch_state tree. Any missing, empty, "
+            "and the batch_state tree (only this store's root is excluded and reported). Any missing, empty, "
             "stale, truncated or unreadable source refuses the whole run before any candidate, "
             "as does compressed content cut short; --accept-truncated-sha256 waives that only for a "
             "named message-linked blob cut at its end, reported in the receipt and kept by both rules. "
@@ -1380,7 +1380,10 @@ def build_parser() -> argparse.ArgumentParser:
     retention.add_argument(
         "--cited-from-batch-state",
         default=None,
-        help="Full batch_state directory, e.g. batch_state; all files and subtrees scanned, required with no default",
+        help=(
+            "Batch_state directory, e.g. batch_state; only this store's root is excluded "
+            "and reported; a root inside the store refuses; required with no default"
+        ),
     )
     retention.add_argument(
         "--accept-truncated-sha256",

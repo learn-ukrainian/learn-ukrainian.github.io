@@ -99,13 +99,20 @@ Every source is scanned for artifact ids and sha256 tokens.
 | `--cited-from-docs` | Repository docs tree, every file and subtree; at least one `.md` file |
 | `--cited-from-github` | Complete GitHub JSONL export of issues, PRs and comments, fetched within 24 hours; format in `retention --help` |
 | `--cited-from-export` | Caller-supplied citation export file, plain text or JSON; handoff tooling exports its artifact citations here |
-| `--cited-from-batch-state` | Entire `batch_state/` tree, including receipts outside `tasks/` and archived subtrees; no subtree exclusions |
+| `--cited-from-batch-state` | `batch_state/` tree, including receipts outside `tasks/` and archived subtrees; only this store's own resolved root is excluded |
 
 The export must be non-empty, and the batch-state tree must contain at least
 one file. Pass the full batch-state root even when the tasks tree is inside it;
 each source has its own coverage entry. An artifact cited only in the export
 or in a receipt stays held as cited. The export has no required schema.
 No private store or location is built into the scanner.
+
+The batch-state scan excludes only the current `ArtifactStore` root. Its
+artifact index and unlinked blobs are not outside citations; message text
+and linked blobs remain covered by the store source. The batch-state coverage
+entry lists the excluded root in `excluded_subtrees` with reason
+`artifact_store`. Every other subtree is scanned completely. A batch-state
+root equal to or inside the store refuses the run.
 
 A dry run writes nothing and reports each source's path, scanned bytes and
 file or record counts in `unreferenced.sources`. The tree receipts also count

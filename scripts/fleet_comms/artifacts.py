@@ -1962,7 +1962,10 @@ class ArtifactStore:
         partial or blind scan. Coverage is evidence; the refusal is the
         protection. Sources: the store itself (message text, message-linked
         blobs), the tasks directory, the repository docs tree, a GitHub dump
-        (``_scan_github``), a citation export file and the full batch-state tree.
+        (``_scan_github``), a citation export file and the batch-state tree.
+        The batch-state scan excludes this store's own root: its artifact
+        index and unlinked blobs are not outside citations. Store citations
+        are scanned by ``_scan_store`` instead; coverage names the exclusion.
 
         Compressed content cut short refuses, with one exception:
         ``accept_truncated`` names message-linked blobs (by full sha256) whose
@@ -1985,7 +1988,10 @@ class ArtifactStore:
             self._scan_tree("docs", sources.docs_dir, state, required_suffix=".md"),
             self._scan_github(sources.github_dump, state, now or datetime.now(UTC)),
             self._scan_export(sources.citation_export, state),
-            self._scan_tree("batch_state", sources.batch_state_dir, state, inventories=True),
+            self._scan_tree(
+                "batch_state", sources.batch_state_dir, state,
+                inventories=True, excluded_store_root=self.root,
+            ),
         ]
         if self._conn.in_transaction:
             self._conn.commit()
@@ -2125,12 +2131,14 @@ class ArtifactStore:
         *,
         required_suffix: str | None = None,
         inventories: bool = False,
+        excluded_store_root: Path | None = None,
     ) -> dict[str, Any]:
         """Scan every file under ``root`` end to end, or raise.
 
         Complete or refused: a symlink, a non-regular entry, an unreadable
         or vanished file or directory, or an empty tree raises. If given,
-        ``required_suffix`` must occur. Nothing is skipped. With ``inventories``, the blob-path
+        ``required_suffix`` must occur. Only ``excluded_store_root`` may be
+        skipped; its path and reason are reported. With ``inventories``, the blob-path
         listings inside the dispatcher's generated checkout inventories are
         not citations (``_INVENTORY_ENTRY``); they are counted in the coverage.
         """
@@ -2143,16 +2151,27 @@ class ArtifactStore:
             raise ArtifactStoreError(f"citation source {name}: {root} is a symlink")
         if not root.is_dir():
             raise ArtifactStoreError(f"citation source {name}: {root} is not a directory")
+        excluded_store_root = excluded_store_root.resolve() if excluded_store_root is not None else None
+        if excluded_store_root is not None and root.resolve().is_relative_to(excluded_store_root):
+            raise ArtifactStoreError(
+                f"citation source {name}: {root} is inside the artifact store; "
+                "refusing an incompletely scanned tree"
+            )
+        excluded_subtrees = []
         files = required = total = listings = 0
         digest = hashlib.sha256()
         for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=fail_walk):
             dirnames.sort()
-            for dirname in dirnames:
-                if os.path.islink(os.path.join(dirpath, dirname)):
+            for dirname in dirnames[:]:
+                child = Path(dirpath) / dirname
+                if child.is_symlink():
                     raise ArtifactStoreError(
                         f"citation source {name}: {dirpath}/{dirname} is a symlink; "
                         "refusing an incompletely scanned tree"
                     )
+                if excluded_store_root is not None and child.resolve() == excluded_store_root:
+                    dirnames.remove(dirname)
+                    excluded_subtrees.append({"path": str(excluded_store_root), "reason": "artifact_store"})
             for filename in sorted(filenames):
                 path = Path(dirpath) / filename
                 inventory = inventories and filename in _INVENTORY_SNAPSHOT_FILES
@@ -2192,6 +2211,7 @@ class ArtifactStore:
             "files": files,
             "bytes": total,
             "inventory_listings_ignored": listings,
+            "excluded_subtrees": excluded_subtrees,
             "digest": digest.hexdigest(),
         }
 
