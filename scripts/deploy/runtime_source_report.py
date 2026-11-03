@@ -116,7 +116,7 @@ def validate_receipt(value: Any) -> dict[str, Any]:
         if set(summary) != {"count", "membership_sha256"} or type(summary["count"]) is not int or summary["count"] < 0:
             raise ValueError("invalid membership summary")
         digests.append(summary["membership_sha256"])
-        if summary["count"] == 0 and summary != membership([]):
+        if (summary["count"] == 0) != (summary["membership_sha256"] == membership([])["membership_sha256"]):
             raise ValueError("contradictory empty membership")
     if any(not isinstance(digest, str) or not _DIGEST.fullmatch(digest) for digest in digests):
         raise ValueError("invalid receipt digest")
