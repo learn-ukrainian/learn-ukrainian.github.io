@@ -338,15 +338,17 @@ def _claimed_pr(path: Path) -> Any:
 _STILL_OPEN = re.compile(
     r"\bstill open\b|\bremains open\b|\bunresolved\b|\bnot (?:yet )?(?:resolved|fixed|addressed)\b", re.I
 )
-_CLOSED = re.compile(r"\b(?:resolved|fixed|declined|withdrawn|closed|addressed|superseded)\b", re.I)
+_CLOSED = re.compile(r"(?<!\w-)\b(?:resolved|fixed|declined|withdrawn|closed|addressed|superseded)\b(?!-\w)", re.I)
 
 
 def finding_is_open(entry: str) -> bool:
     """Whether an entry is unambiguous evidence that its finding is still open; ambiguity refuses.
 
-    Any closing word (``resolved``, ``fixed``, ``declined`` …) anywhere in the
-    entry closes it, whatever it is about, unless the word sits inside an
-    open phrase (``not resolved``, ``unresolved`` …). So a granted round
+    Any standalone closing word (``resolved``, ``fixed``, ``declined`` …)
+    anywhere in the entry closes it, whatever it is about, unless the word
+    sits inside an open phrase (``not resolved``, ``unresolved`` …).
+    Closing words inside hyphenated compounds (``fail-closed``,
+    ``closed-form``, ``fixed-width`` …) do not close the entry. So a granted round
     needs the reviewer to keep the finding open in plain words, such as
     ``still open: <reason>``, or to raise it new; mixed language never
     admits a round.
