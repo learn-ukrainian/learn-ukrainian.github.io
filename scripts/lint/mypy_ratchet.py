@@ -4,8 +4,10 @@
 Identity is ``(path, error code, message)``. Line and column are not part of
 it, so inserting a line above an existing error does not churn the baseline.
 A message that mypy no longer reports is a stale baseline entry and fails.
-The run matches CI: wheels the CI env does not install are skipped, and the
-content ``wiki/`` tree is not a namespace package on the module path.
+Union member order and TypedDict key order are not part of the identity:
+mypy does not keep either stable. The run matches CI: wheels the CI env does
+not install are skipped, and the content ``wiki/`` tree is not a namespace
+package on the module path.
 Once ``origin/main`` contains the baseline, the committed multiset may only
 shrink. Before that first landing, the baseline has no predecessor; it must
 still equal the mypy census exactly, so entries mypy does not report fail.
@@ -87,6 +89,135 @@ class MypyError:
         return (self.path, self.code, self.message)
 
 
+def _sort_union_runs(text: str) -> str:
+    """Sort each ``A | B`` run. A depth-0 comma ends the run (``str | None, ...``)."""
+
+    tokens: list[tuple[str, str]] = []
+    buf: list[str] = []
+    stack: list[str] = []
+    closing = {")": "(", "]": "[", "}": "{"}
+
+    def flush() -> None:
+        if buf:
+            tokens.append(("content", "".join(buf)))
+            buf.clear()
+
+    i = 0
+    quote = ""
+    while i < len(text):
+        ch = text[i]
+        if quote:
+            buf.append(ch)
+            if ch == "\\" and i + 1 < len(text):
+                buf.append(text[i + 1])
+                i += 2
+                continue
+            if ch == quote:
+                quote = ""
+            i += 1
+            continue
+        if not stack and text.startswith(" | ", i):
+            flush()
+            tokens.append(("union", " | "))
+            i += 3
+            continue
+        if not stack and ch == ",":
+            flush()
+            tokens.append(("comma", ","))
+            i += 1
+            continue
+        buf.append(ch)
+        if ch in "\"'":
+            quote = ch
+        elif ch in "([{":
+            stack.append(ch)
+        elif ch in closing and stack and stack[-1] == closing[ch]:
+            stack.pop()
+        i += 1
+    flush()
+    out: list[str] = []
+    run: list[str] = []
+    pending = False
+
+    def flush_run() -> None:
+        if not run:
+            return
+        if len(run) == 1:
+            out.append(run[0])
+        else:
+            lead = run[0][: len(run[0]) - len(run[0].lstrip())]
+            out.append(lead + " | ".join(sorted(part.strip() for part in run if part.strip())))
+        run.clear()
+
+    for kind, token in tokens:
+        if kind == "comma":
+            flush_run()
+            pending = False
+            out.append(token)
+            continue
+        if kind == "union":
+            pending = True
+            continue
+        if pending:
+            run.append(token)
+            pending = False
+        else:
+            flush_run()
+            run.append(token)
+    flush_run()
+    return "".join(out)
+
+
+def _sort_unions(text: str) -> str:
+    """Order ``A | B`` members. mypy does not keep that order stable."""
+
+    opens = {"(": ")", "[": "]", "{": "}"}
+    rebuilt: list[str] = []
+    i = 0
+    while i < len(text):
+        if text[i] in "\"'":
+            quote = text[i]
+            j = i + 1
+            while j < len(text):
+                if text[j] == "\\" and j + 1 < len(text):
+                    j += 2
+                    continue
+                if text[j] == quote:
+                    j += 1
+                    break
+                j += 1
+            rebuilt.append(quote + _sort_unions(text[i + 1 : j - 1]) + text[j - 1 : j])
+            i = j
+            continue
+        if text[i] in opens:
+            stack = [opens[text[i]]]
+            j = i + 1
+            while j < len(text) and stack:
+                if text[j] in opens:
+                    stack.append(opens[text[j]])
+                elif text[j] == stack[-1]:
+                    stack.pop()
+                j += 1
+            rebuilt.append(text[i] + _sort_unions(text[i + 1 : j - 1]) + text[j - 1 : j])
+            i = j
+            continue
+        rebuilt.append(text[i])
+        i += 1
+    return _sort_union_runs("".join(rebuilt))
+
+
+def _normalize_message(message: str) -> str:
+    """Drop order that mypy does not keep stable, and nothing else."""
+
+    def keys(match: re.Match[str]) -> str:
+        names = re.findall(r'"([^"]*)"', match.group(1))
+        inner = ", ".join(f'"{name}"' for name in sorted(names))
+        return f"expected one of ({inner})"
+
+    ordered = re.sub(r"expected one of \(([^)]*)\)", keys, message)
+    return _sort_unions(ordered)
+
+
 def _relative(root: Path, raw: str) -> str | None:
     path = Path(raw)
     if path.is_absolute():
@@ -121,7 +252,7 @@ def parse_mypy_stdout(text: str, root: Path) -> tuple[list[MypyError], list[str]
         if rel is None or not code:
             unparsed.append(line)
             continue
-        errors.append(MypyError(rel, code, match.group("msg")))
+        errors.append(MypyError(rel, code, _normalize_message(match.group("msg"))))
     return errors, unparsed
 
 
@@ -351,7 +482,7 @@ def _entries_from_rows(rows: object, where: str) -> list[MypyError]:
             raise ValueError(f"{where}: an entry needs path, code, and message")
         if rel.startswith(("/", "\\")) or ".." in Path(rel).parts:
             raise ValueError(f"{where}: entry path is not relative: {rel}")
-        entries.append(MypyError(rel, code, message))
+        entries.append(MypyError(rel, code, _normalize_message(message)))
     return entries
 
 
