@@ -12,6 +12,7 @@ from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError
 from scripts.build import linear_pipeline
+from scripts.review.review_contract import captured_sources_events
 
 FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "agy"
 CONVERSATION_ID = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
@@ -276,8 +277,14 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
 
     pointer = f"The output was large and was saved to: {pointed.as_uri()}"
     stdout = json.dumps(event(34, None)) + "\n" + json.dumps(event(50, pointer)) + "\n"
+    captured = captured_sources_events(stdout)
+    assert [item["tool"] for item in captured] == ["search_text", "search_text"]
+    assert all(isinstance(item["arguments"], dict) for item in captured)
     merged, retained, missing = agy_module.merge_saved_step_outputs(stdout, saved)
     parsed = [json.loads(line) for line in merged.splitlines()]
+    assert parsed[0]["step_update"]["tool_name"] == "call_mcp_tool"
+    assert parsed[0]["step_update"]["tool_info"]["name"] == "call_mcp_tool"
+    assert parsed[0]["step_update"]["tool_info"]["parameters"]["Arguments"] == {}
     assert parsed[0]["step_update"]["tool_info"]["output"] == "kept body"
     assert parsed[1]["step_update"]["tool_info"]["output"] == "expanded body"
     assert "saved to:" not in merged
