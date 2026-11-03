@@ -21,6 +21,149 @@ def packet(tmp_path, certification):
     return CertificationFixture(root, certification)
 
 
+def _native50_engine_shape(tmp_path):
+    """Parser controls only: no task approval, live authority, or cohort certification."""
+    frozen = {key: "a" * 64 for key in ("implementation_sha256", "rules_sha256", "inputs_sha256")}
+    spec = {"frozen": frozen,
+            "original50_selection": {"path": "ENGINE", "sha256": cert.ORIGINAL50_SELECTION_SHA256},
+            "original50_input": {"path": "ENGINE", "sha256": cert.ORIGINAL50_INPUT_SHA256}}
+    population = {"original50": [{"card_id": f"ENGINE-{i}", "card_version": "ENGINE-v1",
+        "current_version_matches": True, "assertions": [],
+        "card": {"key_at_creation": {"spelling": "ENGINE"}}} for i in range(50)]}
+    actor = {"task_id": "ENGINE-AUTHOR", "run_nonce": "b" * 32, "model": "gpt-6.1-sol", "family": "openai"}
+    record = tmp_path / "engine-freeze.txt"
+    record.write_text("ENGINE-FREEZER gpt-6.1-sol")
+    freezer = {"identity": "ENGINE-FREEZER", "model": "gpt-6.1-sol", "task": None,
+               "identity_span": [0, 14], "model_identity_span": [0, 14], "model_span": [15, 26],
+               "record": {"path": str(record), "sha256": gold.sha(record.read_bytes())},
+               "model_record": {"path": str(record), "sha256": gold.sha(record.read_bytes())}}
+    opaque = {"path": "ENGINE", "sha256": "c" * 64}
+    inspection = {"schema_version": "a1-original50-inspection.v1", "frozen": frozen,
+        "selection_sha256": cert.ORIGINAL50_SELECTION_SHA256, "input_sha256": cert.ORIGINAL50_INPUT_SHA256,
+        "scope_sha256": cert.digest({"frozen": frozen, "original50": population["original50"]}),
+        "authors": [actor], "freezer": freezer, "producer": {**actor, "task_id": "ENGINE-PRODUCER", "family": "google"},
+        "transcript": opaque, "result": opaque}
+    return inspection, population, spec
+
+
+def test_native_original50_membership_version_and_source_drift_refuse(tmp_path):
+    """Granted native50 class A: the real adapter's exact scope never shrinks."""
+    inspection, population, spec = _native50_engine_shape(tmp_path)
+    assert cert._native50_scope(inspection, population, spec) == inspection["scope_sha256"]
+    for fault in ("membership", "version", "source"):
+        changed = copy.deepcopy(population)
+        if fault == "membership":
+            changed["original50"].pop()
+        elif fault == "version":
+            changed["original50"][0]["card_version"] = "ENGINE-v2"
+        else:
+            changed["original50"][0]["assertions"] = [{"source_changed": True}]
+        with pytest.raises(ValueError, match="original50_membership_version_or_source_changed"):
+            cert._native50_scope(inspection, changed, spec)
+
+
+def test_native_original50_untrusted_identity_freezer_and_per_card_sources_refuse(tmp_path, monkeypatch):
+    """Granted class B: no accepted human/model evidence is created by these controls."""
+    from scripts.review import record_cf_verdict as reviews
+
+    inspection, _, _ = _native50_engine_shape(tmp_path)
+    producer = inspection["producer"]
+    task_root = tmp_path / "tasks"
+    task_root.mkdir()
+    reply = b'ENGINE_FIXTURE_NOT_HUMAN_APPROVAL'
+    (task_root / (producer["task_id"] + ".result")).write_bytes(reply)
+    task = {"status": "done", "review_branch": "engine-control", "agent": "codex", "model": "gpt-6.1-sol",
+        "resolved_model": "gpt-6.1-sol", "resolved_model_known": True, "resolved_model_source": "codex-stream-json",
+        "repository": "learn-ukrainian/learn-ukrainian.github.io", "run_nonce": producer["run_nonce"],
+        "result_sha256": gold.sha(reply), "returncode": 0, "error": None}
+    for fault in ("unfinished", "nonce", "model-family"):
+        bad = {**task, **({"status": "cancelled"} if fault == "unfinished" else
+                         {"run_nonce": "d" * 32} if fault == "nonce" else {})}
+        (task_root / (producer["task_id"] + ".json")).write_text(json.dumps(bad))
+        reason = {"unfinished": "review task is not done", "nonce": "original50_task_identity_mismatch",
+                  "model-family": "original50_actor_model_mismatch"}[fault]
+        with pytest.raises((ValueError, reviews.RecordError), match=reason):
+            cert._native_task(producer, task_root)
+    freezer = inspection["freezer"]
+    # The corrected criterion allows the same model family, with a different traced identity.
+    cert._native50_freezer(freezer, inspection["authors"], producer, tmp_path)
+    for identity in (inspection["authors"][0]["task_id"], producer["task_id"], "UNTRACEABLE"):
+        changed = {**freezer, "identity": identity}
+        if identity != "UNTRACEABLE":
+            record = tmp_path / "same-task.txt"
+            record.write_text(identity + " " + freezer["model"])
+            changed.update(record={"path": str(record), "sha256": gold.sha(record.read_bytes())},
+                           model_record={"path": str(record), "sha256": gold.sha(record.read_bytes())},
+                           identity_span=[0, len(identity)], model_identity_span=[0, len(identity)],
+                           model_span=[len(identity) + 1, len(record.read_text())])
+        with pytest.raises(ValueError, match="original50_freezer"):
+            cert._native50_freezer(changed, inspection["authors"], producer, tmp_path)
+    score = {"reason": "ENGINE only", "calls": [{"conversation_id": "ENGINE", "step_index": 1,
+        "quote": "ENGINE", "span": [0, 6]}]}
+    call = {"parameters": {"ToolName": "query_sum20", "Arguments": {"word": "ENGINE"}}, "output": "ENGINE capture"}
+    for facet in ("meaning", "stress"):
+        for fault in ("absent", "wrong-card", "missing-body", "wrong-quote"):
+            altered = copy.deepcopy(call)
+            if fault == "wrong-card":
+                altered["parameters"]["Arguments"]["word"] = "OTHER"
+            elif fault == "missing-body":
+                altered["output"] = ""
+            elif fault == "wrong-quote":
+                altered["output"] = "OTHER capture"
+            with pytest.raises(ValueError, match=r"original50_(per_card_sources_missing|source_quote_unsupported)"):
+                cert._native50_sources(score, facet, "ENGINE", {} if fault == "absent" else {("ENGINE", 1): altered})
+    # A complete engine protocol exercises the real custody/parser boundary.
+    # These temporary records cannot enter evaluate_certification's real A1 path.
+    from types import SimpleNamespace
+
+    primary = tmp_path / "engine-primary"
+    task_root = primary / "batch_state/tasks"
+    (task_root / "logs").mkdir(parents=True)
+    monkeypatch.setattr(reviews, "_review_repository_root", lambda *_args: primary)
+    inspection, population, spec = _native50_engine_shape(tmp_path)
+    producer = inspection["producer"]
+    producer.update(model="gemini-3.8-flash-high", family="google")
+    judgments = {"schema_version": "a1-original50-judgments.v1", "scope_sha256": inspection["scope_sha256"], "items": []}
+    events = [{"event": "init", "init": {"model": producer["model"]}}]
+    for index, card in enumerate(population["original50"]):
+        row = {"card_id": card["card_id"], "card_version": card["card_version"]}
+        for offset, facet in enumerate(("meaning", "stress")):
+            step = index * 2 + offset
+            row[facet] = {"verdict": "pass", "reason": "ENGINE_FIXTURE_NOT_HUMAN_APPROVAL", "findings": [],
+                "calls": [{"conversation_id": "ENGINE", "step_index": step, "quote": "ENGINE", "span": [0, 6]}]}
+            events.append({"event": "step_update", "step_update": {"conversation_id": "ENGINE", "state": "DONE",
+                "step_index": step, "tool_name": "call_mcp_tool", "tool_info": {
+                    "parameters": {"ServerName": "sources", "ToolName": "query_sum20", "Arguments": {"word": "ENGINE"}},
+                    "output": "ENGINE source capture"}}})
+        judgments["items"].append(row)
+    text = json.dumps(judgments)
+    events.append({"event": "result", "result": {"status": "SUCCESS", "response": text}})
+    transcript = task_root / "logs" / (producer["task_id"] + ".stdout.log")
+    transcript.write_text("\n".join(json.dumps(event) for event in events) + "\n")
+    for actor in [*inspection["authors"], producer]:
+        output = text.encode() if actor is producer else reply
+        (task_root / (actor["task_id"] + ".result")).write_bytes(output)
+        record = {**task, "run_nonce": actor["run_nonce"], "model": actor["model"], "resolved_model": actor["model"],
+            "agent": "agy" if actor is producer else "codex", "result_sha256": gold.sha(output),
+            "resolved_model_source": "agy-stream-json" if actor is producer else "codex-stream-json",
+            "review_profile": "ukrainian", "sources_mcp_call_count": 100}
+        (task_root / (actor["task_id"] + ".json")).write_text(json.dumps(record))
+    result = task_root / (producer["task_id"] + ".result")
+    inspection.update(transcript={"path": str(transcript), "sha256": gold.sha(transcript.read_bytes())},
+                      result={"path": str(result), "sha256": gold.sha(result.read_bytes())})
+    spec["original50_receipt"] = {"path": "ENGINE_INSPECTION", "sha256": cert.digest(inspection)}
+    authority = SimpleNamespace(reviews={c["card_id"]: {"status": "active", "card_version": c["card_version"],
+        "record": "ENGINE_FIXTURE_NOT_HUMAN_APPROVAL", "original50_inspection": spec["original50_receipt"],
+        "original50_authors": inspection["authors"], "original50_freezer": inspection["freezer"]}
+        for c in population["original50"]})
+    assert cert._verify_native50(inspection, population, spec, tmp_path, authority) == [
+        {"id": inspection["authors"][0]["task_id"], "family": "openai"}]
+    broken = copy.deepcopy(inspection)
+    broken["transcript"]["sha256"] = "0" * 64
+    with pytest.raises(ValueError):
+        cert._verify_native50(broken, population, spec, tmp_path, authority)
+
+
 def test_exact_receipt_and_export(packet):
     result = packet.evaluate()
     assert result["status"] == "CERTIFIED"

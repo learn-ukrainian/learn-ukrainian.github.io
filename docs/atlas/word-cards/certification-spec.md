@@ -53,10 +53,11 @@ Version 2 has these closed-schema fields:
 | Field | Binding |
 | --- | --- |
 | `frozen` | Current implementation/rules fingerprints and digest of every batch's complete assembly, sources, and pinned manifest. |
+| `author` | Implementation author's existing actor ID and model family, authenticated by the steward. |
 | `batches` | Unique A1 batch names with exact-byte `assembly` and `sources` references. All declared cards and assertions are reconciled. |
 | `original50_selection`, `original50_input` | Independently pinned original AC07 membership, exact versions, complete cards, and retained receipts. |
-| `original50_receipt` | Full legacy certification of those exact 50 artifacts, or null with an explicit hold. It replays gold custody, source completeness, all facets, controls, and independent evaluation. |
-| `complete_data_receipt` | The same independently accepted complete-data authority used by original50, or null with a hold. |
+| `original50_receipt` | Native `a1-original50-inspection.v1` for the unchanged original50, or null with a hold. Legacy pilot certification cannot substitute for it. |
+| `complete_data_receipt` | `a1-complete-data-replay.v1`, replaying the existing source accounting and independent clearance, or null with a hold. |
 | `mechanics_receipt` | Exact-batch mechanics under the existing contract and independently admitted actor, or null with a hold. |
 | `removal_snapshots` | Current overlay and suppression digests from existing steward authority, or null with a hold. |
 
@@ -84,12 +85,54 @@ removal checks, and successful receipt replay. It does not require an embedded
 per-card model review or the pilot-only `rules-v1` input layout. Legacy records
 retain the complete version 1 path. Neither path admits an unapproved card.
 
-The retained original50 obligation currently has no accepted A1 inspection
-adapter. The legacy receipt reader can replay legacy inspection contracts;
-it cannot stand in for missing inspection of the unchanged A1 versions.
-Binding an actual qualified original50 inspection to its frozen selection,
-card versions, and source evidence remains an explicit integration residual.
-Its owner must establish that evidence contract before certification can pass.
+The native original50 adapter binds the original selection and input pins,
+the exact 50 card versions and all their assertion/source evidence, and the
+complete batch's implementation, parser, rules and input fingerprints. It
+requires real author task identities and a freezer identity traced to the
+original freeze record. The freezer's model is traced to a retained model
+record containing the same identity; the two records may be the same file.
+Identity and model spans identify the exact retained text. A task freezer
+also binds its full run nonce. Same model family is allowed for the freezer;
+the freezer must differ from every card-author task and inspection producer.
+The steward authenticates the original records and task/session relationships
+before admitting their pins. An author-created provenance proposal is not
+historical evidence.
+
+The producer must be a qualified, finished Google task through native AGY.
+Authors and freezer tasks need attested identity; they are not required to
+qualify as reviewers. The frozen implementation also covers the actual review
+task, AGY stream and Sources outcome readers. Rules bind the source register
+and model qualification catalogue.
+The existing review task loader checks its retained result and full nonce;
+the existing AGY parser checks runtime model and terminal stream provenance.
+The transcript must equal the runner-retained stream. The result must equal
+the task's retained result bytes and parse as `a1-original50-judgments.v1`.
+Every selected card needs an exact-version meaning and stress judgment, each
+with a nonempty reason, no material findings, and actual completed Sources
+calls. Each call binds conversation/step, exact requested word or batch member,
+complete captured output, and an exact quoted span. Missing bodies, saved-file
+pointers, mismatched models, incomplete runs, wrong versions, empty or
+unsupported citations, and reduced coverage refuse. A count or copied pass
+string cannot establish inspection. These quoted spans bind evidence; the
+qualified inspection and steward admission supply the linguistic judgment.
+
+Existing `approved_reviews` rows must be active and exact-version, with
+`original50_inspection`, `original50_authors`, and `original50_freezer`
+matching this inspection. They grant no projection scope by themselves.
+Every batch card separately needs an admitted `code_first_prerequisites`
+mapping containing the exact `frozen`, `complete_data_receipt` and
+`mechanics_receipt` bindings. The complete-data adapter carries the existing
+accounting `inputs`, `universe_count`, `candidate_entry_count`, and assembler
+actor, and calls `word_card_golden_set.complete_data` to replay accounting,
+census, clearance and retained prerequisites. Mechanics retains its existing
+exact-batch contract and independent accepting actor. Neither prerequisite is
+inferred from the original50 inspection or a human audit.
+
+There is no accepted current original50 inspection. Its original freezer model
+attestation and actual qualified inspection remain pending with codex-atlas;
+missing evidence yields `HELD`. Private refusal details remain in the receipt,
+while public summaries expose only hold codes. Genuine legacy artifacts retain
+their complete version 1 evaluation path.
 
 ## Human residual audit and existing ledger
 

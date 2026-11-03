@@ -26,6 +26,10 @@ PERMISSIONS_REGISTER_PATH = PROJECT_ROOT / "docs/sources/permissions-register.ya
 SCHEMA_PATH = PROJECT_ROOT / "schemas/word-card-v1.schema.json"
 IMPLEMENTATION_PATHS = (
     *sorted(PROJECT_ROOT.glob("scripts/atlas/*.py")),
+    *sorted(PROJECT_ROOT.glob("scripts/review/**/*.py")),
+    PROJECT_ROOT / "scripts/dispatcher/providers/agy.py",
+    PROJECT_ROOT / "scripts/dispatcher/types.py",
+    PROJECT_ROOT / "scripts/agent_runtime/adapters/agy.py",
     PROJECT_ROOT / "scripts/audit/generate_practice_deck.py",
     PROJECT_ROOT / "scripts/lexicon/teacher_deck_shard.py",
     PROJECT_ROOT / "scripts/practice/densify_paradigm_from_lexemes.py",
@@ -55,6 +59,8 @@ RULE_PATHS = (
     PROJECT_ROOT / "agents_extensions/shared/rules/ukrainian-linguistics.md",
     PROJECT_ROOT / "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
     PROJECT_ROOT / "registry/atlas/source-completeness/manifest-contract.md",
+    PROJECT_ROOT / "docs/sources/permissions-register.yaml",
+    PROJECT_ROOT / "scripts/config/model_catalog.yaml",
 )
 
 
@@ -313,7 +319,7 @@ CERTIFICATION_SPEC = gold.obj({
 })
 CODE_FIRST_SPEC = gold.obj({
     "schema_version": {"const": "word-card-certification-spec.v2"},
-    "frozen": FROZEN,
+    "frozen": FROZEN, "author": gold.ACTOR,
     "batches": gold.array(gold.obj({
         "batch": {"enum": ["slice2", "slice3", "slice4", "slice5", "slice6"]},
         "assembly": gold.REF, "sources": gold.REF,
@@ -330,6 +336,182 @@ MECHANICS = gold.obj({
     "cards_sha256": gold.SHA, "accepted_by": gold.ACTOR,
     "evidence": gold.array(gold.REF),
 })
+TASK_ACTOR = gold.obj({"task_id": gold.TEXT, "run_nonce": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+                       "model": gold.TEXT, "family": gold.TEXT})
+OFFSET = {"type": "integer", "minimum": 0}
+SPAN = {"type": "array", "items": OFFSET, "minItems": 2, "maxItems": 2}
+FREEZER = gold.obj({"identity": gold.TEXT, "model": gold.TEXT, "record": gold.REF, "model_record": gold.REF,
+    "identity_span": SPAN, "model_span": SPAN, "model_identity_span": SPAN,
+    "task": {"anyOf": [TASK_ACTOR, {"type": "null"}]}})
+NATIVE50 = gold.obj({
+    "schema_version": {"const": "a1-original50-inspection.v1"}, "frozen": FROZEN,
+    "selection_sha256": gold.SHA, "input_sha256": gold.SHA, "scope_sha256": gold.SHA,
+    "authors": gold.array(TASK_ACTOR), "freezer": FREEZER, "producer": TASK_ACTOR,
+    "transcript": gold.REF, "result": gold.REF,
+})
+NATIVE_CALL = gold.obj({"conversation_id": gold.TEXT, "step_index": OFFSET, "quote": gold.TEXT, "span": SPAN})
+NATIVE_SCORE = gold.obj({"verdict": {"const": "pass"}, "reason": gold.TEXT,
+    "findings": {"type": "array", "maxItems": 0}, "calls": gold.array(NATIVE_CALL)})
+NATIVE_JUDGMENTS = gold.obj({"schema_version": {"const": "a1-original50-judgments.v1"},
+    "scope_sha256": gold.SHA, "items": gold.array(gold.obj({"card_id": gold.TEXT,
+        "card_version": gold.TEXT, "meaning": NATIVE_SCORE, "stress": NATIVE_SCORE}), 50)})
+CODE_FIRST_DATA = gold.obj({"schema_version": {"const": "a1-complete-data-replay.v1"},
+    "inputs": gold.obj(dict.fromkeys(gold.INPUT_NAMES, gold.REF)), "universe_count": gold.COUNT,
+    "candidate_entry_count": gold.COUNT, "roles": gold.obj({"assembler": gold.ACTOR})})
+ORIGINAL50_SELECTION_SHA256 = "21ee21005e6d79025541d41db4484fa889b9c145154d3eec101c8357db9a8c21"
+ORIGINAL50_INPUT_SHA256 = "431c517ea6bde6b9df66bf4a2733cb5dba62097c31817e16f16207476f0cc15b"
+
+
+def _native50_scope(inspection: dict, packet: dict, spec: dict) -> str:
+    gold.validate(inspection, NATIVE50, "native original50 inspection")
+    gold.require(spec["original50_selection"]["sha256"] == inspection["selection_sha256"]
+                 == ORIGINAL50_SELECTION_SHA256
+                 and spec["original50_input"]["sha256"] == inspection["input_sha256"]
+                 == ORIGINAL50_INPUT_SHA256, "original50_selection_or_input_changed")
+    scope = digest({"frozen": spec["frozen"], "original50": packet["original50"]})
+    gold.require(len(packet["original50"]) == 50 and inspection["frozen"] == spec["frozen"]
+                 and inspection["scope_sha256"] == scope
+                 and all(r["current_version_matches"] and not any(a["missing"] for a in r["assertions"])
+                         for r in packet["original50"]), "original50_membership_version_or_source_changed")
+    return scope
+
+
+def _native_task(actor: dict, task_root: Path, *, qualified_reviewer: bool = False) -> tuple[dict, str]:
+    from scripts.review import record_cf_verdict as reviews
+
+    task, reply = reviews._task(actor["task_id"], task_root)
+    gold.require(task.get("run_nonce") == actor["run_nonce"] and bool(task.get("result_sha256"))
+                 and task.get("repository") == "learn-ukrainian/learn-ukrainian.github.io"
+                 and task.get("resolved_model_known") is True and task.get("returncode") == 0
+                 and task.get("error") is None,
+                 "original50_task_identity_mismatch")
+    model = task["resolved_model"]
+    if qualified_reviewer:
+        model, family = reviews.reviewer_identity({**task, "model": model})
+    else:
+        family = reviews._author_model_family(task["agent"], model)
+        gold.require(family not in reviews.UNRESOLVED_AUTHOR_FAMILIES, "original50_actor_model_unknown")
+    gold.require((model, family) == (actor["model"], actor["family"]), "original50_actor_model_mismatch")
+    return task, reply
+
+
+def _native50_freezer(freezer: dict, authors: list[dict], producer: dict, base: Path) -> None:
+    from scripts.review.record_cf_verdict import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
+
+    gold.require(resolve_family(freezer["model"]) not in UNRESOLVED_AUTHOR_FAMILIES,
+                 "original50_freezer_model_unknown")
+    freeze_record = gold.reference(freezer["record"], base).decode("utf-8")
+    model_record = gold.reference(freezer["model_record"], base).decode("utf-8")
+    for field, record, span in (("identity", freeze_record, "identity_span"),
+                               ("identity", model_record, "model_identity_span"),
+                               ("model", model_record, "model_span")):
+        start, end = freezer[span]
+        gold.require(0 <= start < end <= len(record) and record[start:end] == freezer[field],
+                     "original50_freezer_identity_untraceable")
+    gold.require(freezer["identity"].removeprefix("session:") not in
+                 {a["task_id"].removeprefix("session:") for a in [*authors, producer]},
+                 "original50_freezer_not_independent")
+
+
+def _native50_sources(score: dict, facet: str, lemma: str, calls: dict) -> None:
+    from scripts.agent_runtime.adapters.agy import _SAVED_OUTPUT_POINTER_RE
+    from scripts.review.receipts.outcomes import classify_outcome
+
+    gold.require(bool(score["reason"].strip()) and bool(score["calls"]), "original50_per_card_sources_missing")
+    for reference in score["calls"]:
+        call = calls.get((reference["conversation_id"], reference["step_index"]), {})
+        parameters = call.get("parameters", {})
+        tool = parameters.get("ToolName")
+        allowed = {"query_sum20", "query_ulif_records", "search_slovnyk_me"}
+        if facet == "stress":
+            allowed.add("verify_stress")
+        arguments = parameters.get("Arguments")
+        arguments = json.loads(arguments) if isinstance(arguments, str) else arguments
+        body = call.get("output")
+        subjects = [arguments.get(k) for k in ("word", "lemma", "query")] if isinstance(arguments, dict) else []
+        words = arguments.get("words") if isinstance(arguments, dict) else None
+        subjects.extend(words if isinstance(words, list) else [words])
+        gold.require(tool in allowed and isinstance(arguments, dict)
+                     and lemma in subjects
+                     and isinstance(body, str) and bool(body.strip()) and not call.get("output_missing")
+                     and _SAVED_OUTPUT_POINTER_RE.search(body) is None,
+                     "original50_per_card_sources_missing")
+        outcome = classify_outcome(tool, "ok", body)
+        start, end = reference["span"]
+        gold.require(outcome["status"] == "hits_found" and outcome["hits"] > 0
+                     and 0 <= start < end <= len(body) and body[start:end] == reference["quote"],
+                     "original50_source_quote_unsupported")
+
+
+def _verify_native50(inspection: dict, packet: dict, spec: dict, base: Path,
+                     authority: CertificationAuthority) -> list[dict]:
+    """Replay real task custody and per-card Sources evidence; write no authority."""
+    from scripts.dispatcher.providers import agy
+    from scripts.review import record_cf_verdict as reviews
+
+    scope = _native50_scope(inspection, packet, spec)
+    primary = reviews._review_repository_root("learn-ukrainian/learn-ukrainian.github.io", PROJECT_ROOT)
+    task_root = primary / "batch_state/tasks"
+    authors = inspection["authors"]
+    gold.require(len({a["task_id"] for a in authors}) == len(authors), "original50_duplicate_authors")
+    author_tasks = [_native_task(author, task_root)[0] for author in authors]
+    freezer, producer = inspection["freezer"], inspection["producer"]
+    _native50_freezer(freezer, authors, producer, base)
+    if freezer["task"] is not None:
+        _native_task(freezer["task"], task_root)
+        gold.require((freezer["identity"], freezer["model"]) ==
+                     (freezer["task"]["task_id"], freezer["task"]["model"]), "original50_freezer_identity_mismatch")
+    identities = {a["task_id"] for a in authors} | {producer["task_id"]}
+    identities.update(t["task_identity"]["task_id"] for t in author_tasks
+                      if isinstance(t.get("task_identity"), dict) and t["task_identity"].get("task_id"))
+    gold.require(freezer["identity"].removeprefix("session:") not in
+                 {identity.removeprefix("session:") for identity in identities}, "original50_freezer_not_independent")
+    task, reply = _native_task(producer, task_root, qualified_reviewer=True)
+    gold.require(task.get("agent") == "agy" and producer["family"] == "google"
+                 and producer["family"] not in {a["family"] for a in authors}
+                 and producer["task_id"] not in {a["task_id"] for a in authors}
+                 and reviews.is_ukrainian_review(task)
+                 and task.get("resolved_model_known") is True
+                 and task.get("resolved_model_source") == agy.MODEL_SOURCE
+                 and task.get("resolved_model") == producer["model"], "original50_untrusted_producer")
+    transcript = gold.reference(inspection["transcript"], base)
+    log = reviews._hot_or_archived(task_root, "logs/" + producer["task_id"] + ".stdout.log")
+    gold.require(transcript == log.read_bytes(), "original50_transcript_not_runner_bound")
+    result = gold.reference(inspection["result"], base)
+    gold.require(gold.sha(result) == task["result_sha256"] and gold.decode(result) == json.loads(reply),
+                 "original50_result_not_task_bound")
+    parsed = agy.parse(transcript.decode("utf-8"), "", 0, None)
+    gold.require(not parsed.error and parsed.text == reply and parsed.resolved_model == producer["model"]
+                 and agy.identity_failure(task["model"], parsed.resolved_model) is None,
+                 "original50_transcript_model_or_result_mismatch")
+    calls: dict[tuple, dict] = {}
+    for line in transcript.decode("utf-8").splitlines():
+        event = json.loads(line)
+        key = agy._completed_sources_call(event)
+        if key is not None:
+            gold.require(key not in calls or calls[key] == event["step_update"]["tool_info"],
+                         "original50_conflicting_sources_call")
+            calls[key] = event["step_update"]["tool_info"]
+    gold.require(task.get("sources_mcp_call_count") == parsed.sources_mcp_call_count == len(calls),
+                 "original50_sources_capture_count_mismatch")
+    judgments = gold.decode(result)
+    gold.validate(judgments, NATIVE_JUDGMENTS, "native original50 judgments")
+    expected = {row["card_id"]: row for row in packet["original50"]}
+    gold.require(judgments["scope_sha256"] == scope and len(judgments["items"]) == 50
+                 and len({r["card_id"] for r in judgments["items"]}) == 50
+                 and {r["card_id"] for r in judgments["items"]} == set(expected), "original50_judgment_denominator")
+    for row in judgments["items"]:
+        card = expected[row["card_id"]]
+        admission = authority.reviews.get(row["card_id"], {})
+        gold.require(row["card_version"] == card["card_version"], "original50_judgment_version_changed")
+        gold.require(admission.get("status") == "active" and admission.get("card_version") == row["card_version"]
+                     and bool(admission.get("record")) and admission.get("original50_inspection") == spec["original50_receipt"]
+                     and admission.get("original50_authors") == authors
+                     and admission.get("original50_freezer") == freezer, "original50_not_steward_admitted")
+        lemma = card["card"]["key_at_creation"]["spelling"]
+        for facet in ("meaning", "stress"):
+            _native50_sources(row[facet], facet, lemma, calls)
+    return [{"id": a["task_id"], "family": a["family"]} for a in authors]
 FINDING = gold.obj({"code": {"enum": ["invented_ukrainian", "wrong_identity", "material"]},
                     "owner": gold.TEXT, "dependency": gold.TEXT, "evidence": gold.REF})
 SCORE = gold.obj({"facet": {"enum": list(FACETS)}, "verdict": {"enum": ["pass", "fail"]},
@@ -465,46 +647,51 @@ def _evaluate_code_first(spec_path: Path, spec_sha256: str, spec: dict) -> dict:
     for name in ("original50_receipt", "complete_data_receipt", "mechanics_receipt"):
         if spec[name] is None:
             holds.append("missing_" + name)
-    # Original AC07 remains an independent exact-50 obligation, including its
-    # complete-data, gold custody, evaluator, freshness and control replays.
+    native_authors = []
+    original50_refusal = None
     if spec["original50_receipt"] is not None:
-        original, _ = _read_certification_receipt(spec["original50_receipt"], base)
-        gold.require(original["schema_version"] == "word-card-certification-receipt.v1",
-                     "Original50 must use the full legacy inspection contract")
-        original = verify_certification_receipt(spec["original50_receipt"], base)
-        gold.require(original["case_count"] == 50, "Original50 denominator changed")
-        gold.require(original["cards"] == {row["card_id"]: digest(row["card"]) for row in packet["original50"]},
-                     "Certification does not cover the frozen original50 artifacts")
-        original_spec = gold.decode(gold.reference(original["spec"],
-            (base / spec["original50_receipt"]["path"]).parent))
-        gold.require(spec["complete_data_receipt"] is not None
-                     and spec["complete_data_receipt"]["sha256"] == original_spec["complete_data_receipt"]["sha256"],
-                     "Different complete-data authority")
+        from scripts.review.record_cf_verdict import RecordError
+
+        try:
+            original = gold.decode(gold.reference(spec["original50_receipt"], base))
+            native_authors = _verify_native50(original, packet, spec,
+                (base / spec["original50_receipt"]["path"]).parent, authority)
+        except (OSError, ValueError, TypeError, KeyError, RecordError) as exc:
+            holds.append("original50_refused:" + type(exc).__name__)
+            original50_refusal = {"type": type(exc).__name__, "detail": str(exc)}
+    for name in ("complete_data_receipt", "mechanics_receipt"):
+        if spec[name] is not None:
+            for card in cards:
+                row = authority.reviews.get(card["card_id"], {})
+                prerequisites = row.get("code_first_prerequisites", {})
+                if (row.get("status") != "active" or not row.get("record")
+                        or row.get("card_version") != card["build"]["card_version"]
+                        or prerequisites.get("frozen") != frozen or prerequisites.get(name) != spec[name]):
+                    holds.append(name + "_not_steward_admitted")
+                    break
     if spec["mechanics_receipt"] is not None:
         mechanics = gold.decode(gold.reference(spec["mechanics_receipt"], base))
         gold.validate(mechanics, MECHANICS, "accepted code-first mechanics")
         gold.require(mechanics["frozen"] == frozen and mechanics["cards_sha256"] == digest(cards),
                      "Mechanics binds another code-first artifact")
-        # No new acceptance authority: the same independently accepted actor
-        # must already be admitted by the original50 mechanics contract.
-        if spec["original50_receipt"] is None:
+        if not native_authors:
             holds.append("mechanics_independent_acceptance_unbound")
         else:
-            old_base = (base / spec["original50_receipt"]["path"]).parent
-            old_spec_base = (old_base / original["spec"]["path"]).parent
-            accepted = gold.decode(gold.reference(original_spec["mechanics_receipt"], old_spec_base))
-            gold.require(mechanics["accepted_by"] == accepted["accepted_by"], "Unadmitted mechanics actor")
+            gold.require(all(mechanics["accepted_by"]["id"] != author["id"]
+                             and mechanics["accepted_by"]["family"] != author["family"]
+                             for author in [spec["author"], *native_authors]), "Self-accepted mechanics")
         for ref in mechanics["evidence"]:
             gold.reference(ref, (base / spec["mechanics_receipt"]["path"]).parent)
     if spec["complete_data_receipt"] is not None:
-        gold.reference(spec["complete_data_receipt"], base)
-        if spec["original50_receipt"] is None:
-            holds.append("complete_data_independent_acceptance_unbound")
+        data = gold.decode(gold.reference(spec["complete_data_receipt"], base))
+        gold.validate(data, CODE_FIRST_DATA, "code-first complete-data replay")
+        gold.complete_data(data, (base / spec["complete_data_receipt"]["path"]).parent)
     return {"schema_version": "word-card-certification-receipt.v2",
             "status": "HELD" if holds else "CERTIFIED",
             "spec": {"path": spec_path.name, "sha256": spec_sha256}, "frozen": frozen,
             "case_count": len(cards), "assertion_counts": counts, "assertion_decisions": decisions,
             "human_packet": packet, "human_audit_status": audit,
+            "original50_refusal": original50_refusal,
             "holds": holds, "cards": {card["card_id"]: digest(card) for card in cards}}
 
 
@@ -679,7 +866,8 @@ def _read_certification_receipt(ref: dict, base: Path) -> tuple[dict, Path]:
         code_first_shape = gold.obj({
             "schema_version": {"const": "word-card-certification-receipt.v2"}, "spec": gold.REF,
             **{key: {} for key in ("status", "frozen", "case_count", "assertion_counts",
-                                  "assertion_decisions", "human_packet", "human_audit_status", "holds", "cards")},
+                                  "assertion_decisions", "human_packet", "human_audit_status", "holds", "cards",
+                                  "original50_refusal")},
         })
         gold.validate(receipt, {"oneOf": [legacy_shape, code_first_shape]}, "exact-artifact receipt")
     except (OSError, ValueError, TypeError) as exc:

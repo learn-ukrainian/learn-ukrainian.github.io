@@ -465,7 +465,8 @@ def verify(result, sources, manifest, *, batch=None, register=None):
                 require(rid in receipts, "receipt_missing")
                 receipt = receipts[rid]
                 verify_receipt(receipt, sources["records"], claim["entry_id"], claim.get("source_sense_key"))
-                require(assertion["source_id"] == receipt["source_id"]
+                source_entry = assertion_check.canonical_source(assertion["source_id"], register)
+                require(source_entry is not None and source_entry == assertion_check.canonical_source(receipt["source_id"], register)
                         and assertion["snapshot_id"] == receipt["snapshot_id"], "assertion_source_mismatch")
         projected = copy.deepcopy(card)
         resolver._recompute(projected)
