@@ -46,10 +46,22 @@ JS_WHOLE_IMPORT = re.compile(
     rf"|import\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)(?!\s*\.\s*[A-Z])"
     rf"|require\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)"
 )
-PY_BROWSER_ATTRIBUTE = re.compile(r"\.\s*(?:chromium|firefox|webkit)\b")
+# Test fixtures that hand a spec a browser type it could launch itself.
+JS_BROWSER_FIXTURE = re.compile(r"async\s*\(\s*\{[^}]*\b(?:browserType|playwright)\b[^}]*\}")
+JS_PLAYWRIGHT_BROWSER_TYPE = re.compile(r"\bplaywright\s*\.\s*(?:chromium|firefox|webkit|_electron|_android)\b")
+PY_USES_PLAYWRIGHT = re.compile(
+    r"^\s*(?:from|import)\s+playwright\b|(?:import_module|__import__)\(\s*['\"]playwright", re.M
+)
+# In a Python file that uses Playwright: any browser-type reference (attribute, getattr or
+# subscript string) and any launch or connect call belong in the launcher.
+PY_BROWSER_ACCESS = re.compile(
+    r"\.\s*(?:chromium|firefox|webkit)\b|['\"](?:chromium|firefox|webkit)['\"]"
+    r"|\.\s*(?:launch|launch_persistent_context|launch_server|connect|connect_over_cdp)\s*\("
+)
+# Fail closed: a Chromium sandbox option set to anything but literal true, in any key spelling.
 SANDBOX_OFF = re.compile(
     r"--no-sandbox\b|--disable-(?:setuid|namespace|seccomp-filter|gpu)-sandbox\b|--no-zygote-sandbox\b"
-    r"|chromiumSandbox\s*:\s*false|chromium_sandbox\s*=\s*False"
+    r"|chromium_?[sS]andbox['\"\]]*\s*[:=](?!\s*(?:true|True)\b)"
 )
 BROWSER_DOWNLOAD = re.compile(r"\bplaywright(?:-core)?\s+install\b")
 PLAYWRIGHT_MCP = re.compile(r"@playwright/mcp|\bplaywright-mcp\b|mcp-server-playwright|mcp__playwright")
@@ -123,8 +135,10 @@ def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
                 if bad := _imported_names(match.group(1)) & BROWSER_TYPES:
                     offenders.append(f"{path}: imports {sorted(bad)} from Playwright")
             offenders += [f"{path}: {m.group(0)}" for m in JS_WHOLE_IMPORT.finditer(text)]
-        elif re.search(r"^\s*(?:from|import)\s+playwright\b", text, re.M):
-            offenders += [f"{path}: {m.group(0)}" for m in PY_BROWSER_ATTRIBUTE.finditer(text)]
+            offenders += [f"{path}: {m.group(0)}" for m in JS_BROWSER_FIXTURE.finditer(text)]
+            offenders += [f"{path}: {m.group(0)}" for m in JS_PLAYWRIGHT_BROWSER_TYPE.finditer(text)]
+        elif PY_USES_PLAYWRIGHT.search(text):
+            offenders += [f"{path}: {m.group(0)}" for m in PY_BROWSER_ACCESS.finditer(text)]
     assert not offenders, "launch browsers through the shared hardened launcher:\n" + "\n".join(offenders)
 
 

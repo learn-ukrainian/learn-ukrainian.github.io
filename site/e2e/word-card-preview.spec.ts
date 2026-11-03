@@ -154,7 +154,7 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
   const server = createServer((req, res) => {
     const path = decodeURIComponent(new URL(req.url || '/', 'http://localhost').pathname);
     const file = resolve(output, '.' + (path.endsWith('/') ? path + 'index.html' : path));
-    if (!file.startsWith(output + sep) || !existsSync(file)) { res.writeHead(404).end(); return; }
+    if (!file.startsWith(output + sep) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
     res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : file.endsWith('.json') ? 'application/json' : 'text/html');
     res.end(readFileSync(file));
   });
@@ -763,11 +763,13 @@ for (const prefix of ['', 'compare/']) for (const c of revisionCases()) test(`${
 
 test.describe('source fidelity refusals', () => {
   test.describe.configure({ timeout: 150_000 });
+  // Missing files get a 404 with a body, as GitHub Pages sends: installed Chrome turns an
+  // empty error response into a navigation error (net::ERR_HTTP_RESPONSE_CODE_FAILURE).
   async function serve(root: string): Promise<Server> {
     const server = createServer((req, res) => {
       const path = new URL(req.url || '/', 'http://localhost').pathname;
       const file = resolve(root, '.' + (path.endsWith('/') ? path + 'index.html' : path));
-      if (!file.startsWith(root + sep) || !existsSync(file)) { res.writeHead(404).end(); return; }
+      if (!file.startsWith(root + sep) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
       res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'text/html');
       res.end(readFileSync(file));
     });
@@ -942,7 +944,7 @@ test.describe('release controls R01-R16 and R10b', () => {
       const name = parts[1] === '__control__' ? parts[2] : 'base';
       const root = outputs[name || ''];
       const path = parts[1] === '__control__' ? '/' + parts.slice(3).join('/') : url.pathname;
-      if (!root) { res.writeHead(404).end(); return; }
+      if (!root) { res.writeHead(404).end('Absent'); return; }
       const file = resolve(root, '.' + (path.endsWith('/') ? path + 'index.html' : path));
       if (!file.startsWith(root + sep) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
       res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'text/html');

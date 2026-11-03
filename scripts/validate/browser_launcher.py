@@ -10,6 +10,7 @@ Two layers keep a page inside that allowlist:
 1. A context route aborts every other request and logs why.
 2. Chrome's resolver refuses every other host name or IP address, so requests a
    route never sees (redirect hops, service workers) still cannot leave the host.
+   Those refusals are logged too.
 
 Node has the same contract in ``site/e2e/support/hardened-browser.mjs``; the
 guard in ``tests/test_browser_hardening_guard.py`` keeps every launch on these two.
@@ -24,7 +25,7 @@ from typing import TYPE_CHECKING, Any
 from urllib.parse import urlsplit
 
 if TYPE_CHECKING:
-    from playwright.async_api import Browser, BrowserContext, Playwright, Route, WebSocketRoute
+    from playwright.async_api import Browser, BrowserContext, Playwright, Request, Route, WebSocketRoute
 
 LOGGER = logging.getLogger(__name__)
 
@@ -103,11 +104,20 @@ async def enforce_origin_allowlist(
         log(f"[origin-allowlist] blocked websocket {ws.url}: {reason(ws.url)}")
         await ws.close(code=1008, reason="origin not in allowlist")
 
+    # Requests the route never sees (redirect hops) die in the resolver; log those too.
+    def log_resolver_refusal(request: Request) -> None:
+        if not is_allowed_url(request.url) and request.failure == "net::ERR_NAME_NOT_RESOLVED":
+            log(
+                f"[origin-allowlist] blocked {request.resource_type} {request.url}: "
+                f"{reason(request.url)}; refused by the resolver"
+            )
+
     def not_allowed(url: str) -> bool:
         return not is_allowed_url(url)
 
     await context.route(not_allowed, block)
     await context.route_web_socket(not_allowed, block_socket)
+    context.on("requestfailed", log_resolver_refusal)
     return context
 
 
