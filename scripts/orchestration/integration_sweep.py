@@ -419,8 +419,8 @@ def pr_file_paths(rows: object) -> list[str]:
 # Exact release manifests under a content prefix. Each file carries schema,
 # SHA-256 digests, counts and membership of already-built artifacts, and no
 # learner-visible Ukrainian text. Exact paths only: no prefixes and no globs.
-# Auto-deploy eligibility and the Ukrainian seat gate still treat them as
-# content (#12653). Closeout uses ``requires_ukrainian_behavior_receipt``.
+# Ukrainian seats and behavior-proof receipts share this exemption (#12653).
+# Auto-deploy eligibility still treats these paths as content.
 METADATA_ONLY_RELEASE_MANIFESTS = frozenset(
     {
         # Schema, digests, counts and membership of already-built Atlas artifacts.
@@ -438,22 +438,19 @@ def changes_learner_content(paths: Iterable[str]) -> bool:
     """Whether a change to ``paths`` changes learner content, which takes the Ukrainian seats.
 
     The content surfaces are the auto-deploy ones, the repository's one list of
-    paths that can change published learner content (#12181). A metadata-only
-    release manifest stays in this set. The Ukrainian behavior-proof receipt
-    uses ``requires_ukrainian_behavior_receipt`` instead (#12653).
+    paths that can change published learner content (#12181). Only the exact
+    metadata-only release manifests are exempt from Ukrainian seats and receipts
+    (#12653). Auto-deploy eligibility uses its own classifier and stays unchanged.
     """
-    return any(_content_prefix_path(path) for path in paths)
+    return any(_content_prefix_path(path) and path not in METADATA_ONLY_RELEASE_MANIFESTS for path in paths)
 
 
 def requires_ukrainian_behavior_receipt(paths: Iterable[str]) -> bool:
     """Whether closeout requires a Ukrainian behavior-proof receipt (#12653).
 
-    Fail-closed on the same content prefixes as ``changes_learner_content``.
-    Exempt only when every learner-content path is an exact member of
-    ``METADATA_ONLY_RELEASE_MANIFESTS``. Any other learner path still requires
-    the Ukrainian receipt.
+    Share the Ukrainian seat classifier so closeout and merge admission agree.
     """
-    return any(_content_prefix_path(path) and path not in METADATA_ONLY_RELEASE_MANIFESTS for path in paths)
+    return changes_learner_content(paths)
 
 
 def ukrainian_seat_families(markers: Iterable[Mapping[str, Any]]) -> set[str]:
