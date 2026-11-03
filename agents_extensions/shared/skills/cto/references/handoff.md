@@ -16,11 +16,10 @@ the next one re-arms them from the tracker handoff.
 5. Prepare the rollover with the `thread-rollover` skill. Add one `handoff_note` item with
    `lu-driver-state add --lane cto --kind handoff_note`, an owner and a done condition.
    Include the details below in its statement and cite the work item IDs it names.
-   If the handoff names the Claude account the next seat must run on, set the CTO launcher's
-   saved default Claude account to it (see the private operations doc) before the seat restarts,
-   so a relaunch without an account argument starts on that account. That setting is separate
-   from the dispatch default account, and both must name the same account when the handoff
-   moves the seat.
+   If the handoff names the Claude account the next seat must run on, set the CTO launcher's saved
+   default Claude account to it (see the private operations doc) before the seat restarts, so a
+   relaunch with no account argument starts on it. That setting is separate from the dispatch
+   default account; both must name the same account when the handoff moves the seat.
 6. List every background Bash task and Monitor stream you started, then use `TaskStop`
    on each before posting HANDOFF-DONE. A running task makes the TUI ask before exit.
    Delegate workers are separate processes and keep running.
