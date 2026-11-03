@@ -545,7 +545,13 @@ def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
 
 
 def test_provider_process_lingering_after_its_final_result_settles_with_that_result(sandbox, monkeypatch):
-    """Defect class: a finished run held open until timeout."""
+    """Defect class: a finished run held open until timeout.
+
+    The supervisor waits one 1s terminal grace, then ``_end_lingering`` waits up to one more,
+    so the fixed path is a little over 2s. A loaded merge-group runner took 3.06s and missed a
+    bound of 3. The hard timeout is 60s and the bound is 15s: above that run, and below a run
+    that stays open until the timeout.
+    """
     from scripts.dispatcher import watchdog
     from scripts.dispatcher.providers import agy
     from scripts.dispatcher.types import Invocation
@@ -560,7 +566,7 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     monkeypatch.setattr(worker.agy_sandbox, "verify", lambda *_args: ({}, None, None))
     spec = TaskSpec("agy-final-hang", "agy", "gemini-3.8-flash-high", None, "read-only", sandbox.repo,
                     sandbox.repo / "agy-final-hang.prompt", sandbox.tasks / "agy-final-hang.result",
-                    options={"hard_timeout": "5", "silence_timeout": "0.5"})
+                    options={"hard_timeout": "60", "silence_timeout": "0.5"})
     spec.prompt_file.write_bytes(b"literal final response")
     log = sandbox.repo / "provider.log"
     code = (
@@ -587,9 +593,12 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     elapsed = time.monotonic() - started
 
     result = json.loads(path.read_text())
-    assert result["status"] == "done"
+    assert result["status"] == "done", (
+        f"status={result['status']} error={result.get('error')} elapsed={elapsed:.2f}"
+    )
     assert result["error"] is None
-    assert elapsed < 3
+    assert "kill_reason" not in result
+    assert elapsed < 15, f"elapsed={elapsed:.2f}s; a run held to the 60s timeout must not pass"
     assert worker._identity(result["provider_pgid"]) is None
     assert log.stat().st_size > 0
     assert spec.final_file.read_text() == "literal final response"
