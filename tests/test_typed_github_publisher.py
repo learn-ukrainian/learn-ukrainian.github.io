@@ -910,9 +910,65 @@ def test_issue_create_refuses_unreadable_acceptance_criterion_before_publishing(
         pub.publish("issue-create", repo="unit/public", title="clean", body=body, runner=lambda *a, **k: pytest.fail("send"))
 
 
-def test_issue_create_without_parent_is_refused_before_publishing(synthetic_opsec):
+def test_issue_create_without_parent_is_refused_before_publishing(synthetic_opsec, capsys):
     with pytest.raises(gate.PublishBlocked, match="PARENT_REQUIRED"):
         pub.publish("issue-create", repo="unit/public", title="clean", body="clean", runner=lambda *a, **k: pytest.fail("send"))
+    code = pub.main(
+        ["issue-create", "--repo", "unit/public", "--title", "clean", "--body", "clean"],
+        runner=lambda *a, **k: pytest.fail("send"),
+    )
+    assert code == 2
+    assert capsys.readouterr().err == (
+        "issue-create requires --parent <stream epic issue number>; the new issue is linked to it. "
+        "Nothing was created.\n"
+    )
+
+
+def test_registered_fleet_repository_without_stream_registry_receives_issue(synthetic_opsec, monkeypatch, capsys):
+    """A registered fleet repository with no stream registry of its own can receive an issue."""
+    catalog = {
+        **CATALOG,
+        "labs": {
+            "github": "unit/labs",
+            "default": False,
+            "local_name": "labs-fixture",
+            "role": "public-labs",
+            "verdict_recorder": False,
+        },
+    }
+    monkeypatch.setattr(gate, "catalog", lambda: catalog)
+    scanned = []
+    original = gate.check_texts
+
+    def record(destination, texts, **kwargs):
+        scanned.append(destination)
+        return original(destination, texts, **kwargs)
+
+    monkeypatch.setattr(gate, "check_texts", record)
+    calls = []
+    code = pub.main(
+        ["issue-create", "--repo", "unit/labs", "--title", "clean", "--body", "clean"],
+        runner=spy(calls),
+    )
+    captured = capsys.readouterr()
+    assert code == 0, captured.err
+    assert calls and calls[0]["argv"][:5] == ["gh", "issue", "create", "--repo", "unit/labs"]
+    assert not any(part.startswith("--parent") for part in calls[0]["argv"])
+    assert scanned == ["github.com/unit/labs"]
+    assert "requires --parent" not in captured.err
+
+
+def test_unregistered_repository_cannot_receive_publisher_issue(synthetic_opsec, capsys):
+    """A repository absent from fleet_repos.yaml is refused before any write."""
+    calls = []
+    code = pub.main(
+        ["issue-create", "--repo", "unit/stranger", "--title", "clean", "--body", "clean"],
+        runner=spy(calls),
+    )
+    captured = capsys.readouterr()
+    assert code == 2 and not calls
+    assert "REPO_REFUSED" in captured.err
+    assert "requires --parent" not in captured.err
 
 
 def test_scanned_label_list_is_frozen(synthetic_opsec, monkeypatch):

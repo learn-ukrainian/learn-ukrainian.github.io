@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
+from scripts.fleet_comms.artifacts import _PG_BLOB_TABLE, ArtifactStore, ArtifactStoreError
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -88,12 +88,25 @@ def test_read_bytes_succeeds_from_second_process_with_no_local_blob_dir(
 
 @pytest.mark.postgres
 def test_store_bytes_dedups_by_sha256(pg_authority: str, tmp_path: Path) -> None:
+    """Dedup keeps one row, and a stronger class upgrades it (#12590, #12622).
+
+    A later default request must not downgrade the class. This is the Postgres
+    branch of the same decision the SQLite byte-plane test already runs.
+    """
     data = _unique_payload("dedup")
     with ArtifactStore(root=tmp_path / "plane") as store:
-        first = store.store_bytes(data, producer="phase0b-test")
-        second = store.store_bytes(data, producer="phase0b-test-other")
+        first = store.store_bytes(data, producer="phase0b-test", retention_class="default")
+        second = store.store_bytes(
+            data, producer="phase0b-test-other", retention_class="retained-evidence"
+        )
         assert second.artifact_id == first.artifact_id
         assert second.producer == first.producer
+        assert second.retention_class == "retained-evidence"
+        assert store.get(first.artifact_id).retention_class == "retained-evidence"
+        kept = store.store_bytes(data, producer="phase0b-later")
+        assert kept.artifact_id == first.artifact_id
+        assert kept.retention_class == "retained-evidence"
+        assert store.read_bytes(first.artifact_id) == data
 
 
 @pytest.mark.postgres
@@ -114,6 +127,30 @@ def test_get_missing_artifact_raises(pg_authority: str, tmp_path: Path) -> None:
     with ArtifactStore(root=tmp_path / "plane") as store:
         with pytest.raises(ArtifactStoreError, match="not found"):
             store.get("no-such-artifact")
+
+
+@pytest.mark.postgres
+def test_restoring_expired_content_rewrites_payload_before_row_is_live(
+    pg_authority: str, tmp_path: Path
+) -> None:
+    """#12622. Defect class: a re-stored artifact is marked live without its payload.
+
+    Expiry can leave the row marked expired and the BYTEA empty. Storing the
+    same bytes again must put the payload back before that marker is cleared.
+    """
+    data = _unique_payload("expired-restore")
+    with ArtifactStore(root=tmp_path / "plane") as store:
+        rec = store.store_bytes(data, producer="phase0b-test", retention_class="default")
+        store._conn.execute(
+            f"UPDATE {_PG_BLOB_TABLE} SET retention_class = %s, payload = %s "
+            "WHERE artifact_id = %s",
+            ("expired:default", b"", rec.artifact_id),
+        )
+        revived = store.store_bytes(data, producer="phase0b-test")
+        assert revived.artifact_id == rec.artifact_id
+        assert not revived.retention_class.startswith("expired:")
+        assert revived.retention_class == "default"
+        assert store.read_bytes(rec.artifact_id) == data
 
 
 @pytest.mark.postgres

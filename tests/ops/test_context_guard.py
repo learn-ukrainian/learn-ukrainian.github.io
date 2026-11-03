@@ -38,6 +38,7 @@ def codex_text(pct: int, *lines: str, ready: bool = True) -> str:
     return "\n".join([*lines, "Ready" if ready else "Working (3s)", f"Context {pct}% used"])
 
 
+UNKNOWN_BOUND_MINUTES = getattr(cg, "UNKNOWN_SCOPE_ALERT_SECONDS", 600) / 60 + 1
 SCOPE = "lu-driver-claude-epics-05592eda-1b2c-4d3e-8f4a-5b6c7d8e9f01.scope"
 CGROUP = f"0::/user.slice/user-1000.slice/user@1000.service/lu.slice/lu-driver.slice/{SCOPE}/tools\n"
 
@@ -694,6 +695,153 @@ def test_the_wait_is_bounded_by_the_clock_including_slow_telemetry(tmp_path: Pat
     assert respawns(h) == [] and len(alerted_at) == 1
     polling_pass = 5 * 5 + 1  # the snapshot (3 reads), the scope state and the process table, plus the sleep
     assert alerted_at[0] - h.fake.stopped_at[0] <= cg.PREDECESSOR_EXIT_SECONDS + polling_pass + 5
+
+
+def exits_by_itself(tmp_path: Path) -> Harness:
+    """A cto lane with HANDOFF-DONE posted whose agent then exits on its own, before the next tick (#12569)."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.tick("cto")  # watch -> handoff
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    h.pane("cto").agent = None
+    h.advance(5)
+    return h
+
+
+def test_an_ordinary_exit_whose_scope_outlives_the_agent_is_relaunched_only_after_the_scope_exits(tmp_path: Path) -> None:
+    """AC-01: background tasks keep the scope active after the agent leaves; the successor would refuse (rc=3)."""
+    state_path = tmp_path / "state.json"
+    saved_before_exit: list[bool] = []
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.guard.checkpoint = lambda state: (
+        cg.save_state(state_path, state),
+        saved_before_exit.append("/exit" not in h.fake.typed("cto")),
+    )[0]
+    h.tick("cto")
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    assert h.fake.typed("cto")[-1] == "/exit"
+    # The scope was saved with the agent's pid and start time before /exit was typed.
+    assert saved_before_exit == [True]
+    assert cg.load_state(state_path)["cto"]["exit_evidence"] == {"agent": h.state["cto"]["agent_id"], "scope": SCOPE}
+
+    h.pane("cto").agent = None  # the agent exits; its background tasks keep the scope active
+    h.fake.live_scopes.add(SCOPE)
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and h.state["cto"]["phase"] == "handoff"
+    assert systemctl(h, "stop") == []  # the agent left by itself: its leftover tasks are held for, not killed
+    assert len(cto_alerts(h)) == 1 and "relaunch held" in cto_alerts(h)[0] and SCOPE in cto_alerts(h)[0]
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1
+    h.fake.live_scopes.clear()
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1 and h.fake.respawned_over_live_agent == [False]
+    assert h.state["cto"]["phase"] == "watch"
+
+    # An agent in no driver scope still has to be gone: a process outside the pane keeps its pid and start time.
+    detached = tmp_path / "detached"
+    detached.mkdir()
+    h = Harness(detached, **{"cto": Pane(text=claude_text(70), agent="claude", scope=None)})
+    h.tick("cto")
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    assert h.fake.typed("cto")[-1] == "/exit"
+    h.pane("cto").agent = None
+    outlives = [True]
+    run = h.guard.tmux.run
+
+    def ps_with_detached_agent(argv: list[str]) -> subprocess.CompletedProcess:
+        result = run(argv)
+        if "ps" in argv[:3] and outlives[0]:
+            return subprocess.CompletedProcess(argv, 0, result.stdout + "\n200 1 Fri Oct 16 11:00:00 2026 claude", "")
+        return result
+
+    h.guard.tmux.run = ps_with_detached_agent
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1 and "is still running" in cto_alerts(h)[0]
+    outlives[0] = False
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+
+
+def test_a_failed_scope_lookup_holds_the_ordinary_relaunch_and_alerts_after_the_bound(tmp_path: Path) -> None:
+    """AC-02: an agent whose scope was never read, or a scope whose state cannot be read, is unknown, not gone."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.fake.override["cat"] = subprocess.CompletedProcess([], 1, "", "No such file or directory")
+    h.tick("cto")
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    assert "/exit" not in h.fake.typed("cto") and cto_alerts(h) == []  # no evidence on disk: no exit, held quietly
+    h.advance(UNKNOWN_BOUND_MINUTES)
+    h.tick("cto")  # still alive and done, still unreadable: the hold alerts instead of stalling in silence
+    assert "/exit" not in h.fake.typed("cto")
+    assert len(cto_alerts(h)) == 1 and "could not be recorded" in cto_alerts(h)[0]
+    h.pane("cto").agent = None  # it exits on its own
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1
+
+    for index, output in enumerate(("", "0::\n", "0::not-a-path\n")):  # successful reads that name no usable cgroup
+        third = tmp_path / f"third-{index}"
+        third.mkdir()
+        h = Harness(third, **{"cto": claude_pane(70)})
+        h.fake.override["cat"] = subprocess.CompletedProcess([], 0, output, "")
+        h.tick("cto")
+        h.posted["claude-epics"] = cg.iso(h.moment)
+        h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto", "Move to background and exit", "Exit and stop tasks")
+        h.advance(5)
+        h.tick("cto")  # an exit dialog is on screen, but nothing says which scope this agent holds
+        assert "exit_evidence" not in h.state["cto"] and "1" not in h.fake.typed("cto")
+        h.advance(UNKNOWN_BOUND_MINUTES)
+        h.tick("cto")
+        assert "1" not in h.fake.typed("cto") and len(cto_alerts(h)) == 1 and "exit dialog" in cto_alerts(h)[0]
+
+    second = tmp_path / "second"
+    second.mkdir()
+    h = exits_by_itself(second)
+    run = h.guard.tmux.run
+    h.guard.tmux.run = lambda argv: (
+        subprocess.CompletedProcess(argv, 3, "unknown\n", "") if argv[:3] == ["systemctl", "--user", "is-active"] else run(argv)
+    )
+    h.tick("cto")
+    assert respawns(h) == [] and cto_alerts(h) == []
+    h.advance(UNKNOWN_BOUND_MINUTES)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1 and "scope state unknown" in cto_alerts(h)[0]
+
+
+def test_a_reused_pid_never_lends_its_scope_to_the_ordinary_relaunch(tmp_path: Path) -> None:
+    """AC-03: the agent exits as its cgroup is read and another process, in no driver scope, takes its pid."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+
+    def reuse_pid() -> None:
+        pane = h.pane("cto")
+        pane.agent_start, pane.scope = "Fri Oct 16 12:20:00 2026", None  # same pid, a different process
+
+    before_call(h.guard.tmux, "cat", reuse_pid)
+    h.tick("cto")
+    assert "exit_evidence" not in h.state["cto"]  # nothing was attributed to the exited agent
+    assert any("pid was reused" in line for line in h.logs)
+    assert "/exit" not in h.fake.typed("cto")
+
+    # The original agent is gone but its tasks keep the scope active. Had the other process's "no scope"
+    # been attributed to it, the relaunch would now pass blind.
+    pane = h.pane("cto")
+    pane.agent = None
+    h.fake.live_scopes.add(SCOPE)
+    h.posted["claude-epics"] = cg.iso(h.moment)
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == []
 
 
 def relaunched(tmp_path: Path) -> Harness:

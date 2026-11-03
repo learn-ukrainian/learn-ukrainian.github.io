@@ -912,6 +912,15 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
     return ledger
 
 
+def _normalized_issue_state(issue: Mapping[str, Any]) -> str:
+    """Issue state as reconcile and correction history both read it.
+
+    A hermetic receipt keeps the caller's spelling, so ``closed`` and ``CLOSED``
+    are one state.
+    """
+    return str(issue.get("state") or "").upper()
+
+
 def correct_evidence_types(
     payload: Mapping[str, Any], *, ac_id: str, required_evidence: list[str],
     actor: str, reason: str, issue: Mapping[str, Any], now: str,
@@ -939,14 +948,15 @@ def correct_evidence_types(
             if index == 0:
                 raise EvidencePolicyError("AC_ISSUE_UNREAD", "authoritative issue number does not match")
             continue
-        if index > 0 and item.get("state") not in {"OPEN", "CLOSED"}:
+        state = _normalized_issue_state(item)
+        if index > 0 and state not in {"OPEN", "CLOSED"}:
             continue
-        if item.get("state") == "CLOSED":
+        if state == "CLOSED":
             if item.get("state_reason") == "COMPLETED":
                 raise EvidencePolicyError("AC_ISSUE_COMPLETED", "completed issues cannot change evidence policy")
             if item.get("state_reason") != "NOT_PLANNED":
                 raise EvidencePolicyError("AC_ISSUE_UNREAD", "closed issue completion reason is unknown")
-        elif item.get("state") != "OPEN":
+        elif state != "OPEN":
             raise EvidencePolicyError("AC_ISSUE_UNREAD", "issue state is unknown")
         if index == 0:
             parsed = parse_issue_acceptance_criteria(item.get("body", ""))
@@ -1303,7 +1313,9 @@ def observe_local_git(
     if head_sha:
         try:
             commit_range = task_commit_range(root, head_sha, base_sha)
-            changed_raw = _run_git(root, ["diff", "--name-only", commit_range])
+            # Rename detection would hide a deleted learner path behind an exempt
+            # destination. Both sides stay on the list, matching pr_file_paths (#12653).
+            changed_raw = _run_git(root, ["diff", "--name-only", "--no-renames", commit_range])
             changed_paths = [line for line in changed_raw.splitlines() if line]
             log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", commit_range])
             for record in log.split("\x1e"):
@@ -1517,9 +1529,9 @@ def _behavior_proof_reference_error(
             or not all(isinstance(path, str) for path in changed_paths)
         ):
             return "behavior-proof learner-content file list is unreadable"
-        from scripts.orchestration.integration_sweep import changes_learner_content
+        from scripts.orchestration.integration_sweep import requires_ukrainian_behavior_receipt
 
-        if changes_learner_content(changed_paths) and receipt.get("review_profile") != "ukrainian":
+        if requires_ukrainian_behavior_receipt(changed_paths) and receipt.get("review_profile") != "ukrainian":
             return "learner-content change requires a ukrainian behavior-proof receipt"
     if receipt.get("review_profile") == "ukrainian":
         seat_error = _ukrainian_behavior_proof_error(
@@ -1985,7 +1997,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         and STATE_RANK[item["due_state"]] <= STATE_RANK[remote_goal_state]
         and not checked.get(item["id"], False)
     ]
-    if str(issue.get("state") or "").upper() == "CLOSED":
+    if _normalized_issue_state(issue) == "CLOSED":
         if not goal_reached or preclose_missing or preclose_unchecked or remaining["status"] == "open":
             hard.append("issue closed before terminal goal and pre-close AC proof were complete")
         else:

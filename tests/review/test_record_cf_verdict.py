@@ -1453,3 +1453,168 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
     marker = sweep.parse_marker(comments[0]["body"])
     assert marker["coverage"] == marker["denominator"] == ["item-a"]
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+
+
+def test_mixed_family_branch_resolves_one_seat_per_family(tmp_path, monkeypatch):
+    """Defect: a mixed-family branch has no eligible reviewer without a third family."""
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+    from tests.test_review_closeout_cli import _run_cli
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    anthropic = repo.commit(OPUS, message="Anthropic change")
+    openai = repo.commit(SOL, path="scripts/review/example.py", text="value = 2\n", message="OpenAI change")
+    state = tmp_path / "state.json"
+    snapshot = tmp_path / "routing.json"
+    snapshot.write_text('{"cursor": "unhealthy"}')
+
+    def run(*args):
+        return _run_cli(state, *args)
+
+    target = run("target", "--mode", "branch", "--branch", "feature", "--base", "origin/main",
+                 "--repo-root", str(repo.root))
+    assert target.returncode == 0, target.stderr
+    args = ("resolve-reviewer", "--author-model", "gpt-6.1-sol", "--repository", REPOSITORY,
+            "--task-root", str(tmp_path / "tasks"), "--risk", "low", "--domain", "infra",
+            "--review-profile", "infra", "--routing-snapshot-file", str(snapshot))
+    resolved = run(*args)
+    assert resolved.returncode == 0, resolved.stdout + resolved.stderr
+    payload = json.loads(resolved.stdout)
+    assert payload["selected"] is None and payload["resolved_risk"] == "critical"
+    assert len(payload["quorum"]) == 2
+    seats = {seat["family"]: seat for seat in payload["quorum"]}
+    assert set(seats) == {"anthropic", "openai"}
+    assert {seat["concrete_model"] for seat in seats.values()} == {"claude-opus-5-5", "gpt-6.1-sol"}
+    assert seats["anthropic"]["scope"] == {
+        "reviewer_family": "anthropic", "author_family": "openai", "commits": [openai], "context_head": openai,
+    }
+    assert seats["openai"]["scope"] == {
+        "reviewer_family": "openai", "author_family": "anthropic", "commits": [anthropic], "context_head": openai,
+    }
+    assert json.loads(state.read_text())["resolved_reviewer"] == payload
+    excluded = run(*args, "--subject-family", "openai")
+    assert excluded.returncode == 1 and not json.loads(excluded.stdout)["quorum"]
+
+
+def test_mixed_family_head_needs_both_family_approvals(tmp_path, monkeypatch):
+    """Defect: one family's APPROVE lands a mixed-family head."""
+    from dataclasses import replace
+
+    from scripts.publish import github
+    from tests.test_authoring_review_feasibility import OPUS, SOL, mini_repo
+    from tests.test_record_cf_verdict import REPOSITORY
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    anthropic = repo.commit(OPUS, message="Anthropic change")
+    head = repo.commit(SOL, message="OpenAI change")
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
+    facts = recorder.collect_branch_review_facts(
+        repository=REPOSITORY, repo_root=repo.root, base_tip_sha=repo.sha("origin/main"), head_sha=head, task_root=tasks,
+    )
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields["state"]))
+    monkeypatch.setattr(github.gate, "catalog", lambda: {"unit": {"github": REPOSITORY, "verdict_recorder": True}})
+
+    def reads(operation, **_kwargs):
+        value = {"comments": [comments], "pr-files": [[{"filename": "docs/a.md"}]], "identity": {"login": "fleet"}}
+        return subprocess.CompletedProcess([], 0, stdout=json.dumps(value[operation]), stderr="")
+
+    monkeypatch.setattr(github, "read", reads)
+    row = {"headRefOid": head, "isDraft": False, "title": "Scoped review", "labels": [], "mergeStateStatus": "CLEAN"}
+    write_task(tasks, worktree_base_sha=head, review_risk="critical",
+               result_sha256=hashlib.sha256(b"VERDICT: APPROVE").hexdigest())
+    with monkeypatch.context() as publication:
+        def withhold_reply(_destination, texts, **_kwargs):
+            if any("<details>" in text for text in texts):
+                blocked = recorder.PublishBlocked("synthetic reply finding")
+                blocked.indices = frozenset({0})
+                raise blocked
+
+        publication.setattr(recorder, "check_texts", withhold_reply)
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert statuses == ["pending"]
+    assert sweep.lookup_verdict(comments, head, "fleet").state == sweep.NEEDS_SEAT
+    partial = sweep.lookup_verdict(comments, head, "fleet")
+    assert keeper._reason(row, partial, "ok", 0, True) == "needs-CF"
+    assert keeper._revoke_reason(row, partial, "ok", True, True, queued=True) == "needs-CF"
+    with pytest.raises(github.gate.PublishBlocked):
+        github._refuse_incomplete_seats(REPOSITORY, 42, head, None, tmp_path, {})
+    marker = sweep.parse_marker(comments[0]["body"])
+    assert marker["review_pair"] == "anthropic_openai" and marker["scope_commits"] == (anthropic,)
+    assert "Findings are held privately." in comments[0]["body"]
+    assert recorder.republish_withheld(
+        "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+    )["comment"] == "posted"
+    assert sweep.parse_marker(comments[1]["body"]) == marker
+    assert statuses == ["pending"] and sweep.lookup_verdict(comments, head, "fleet").state == sweep.NEEDS_SEAT
+    write_task(tasks, task_id="review-two", agent="claude", model="claude-opus-5-5",
+               worktree_base_sha=head, review_risk="critical")
+    recorder.record("review-two", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert statuses == ["pending", "success"] and calls["posts"] == 3
+    assert sweep.lookup_verdict(comments, head, "fleet").state == "APPROVED"
+    assert keeper._reason(row, sweep.lookup_verdict(comments, head, "fleet"), "ok", 0, True) == "ready"
+    github._refuse_incomplete_seats(REPOSITORY, 42, head, None, tmp_path, {})
+    assert recorder.require_review_round_within_budget(comments, head, "fleet", budget=1, pr=42) == {}
+    moved = "d" * 40
+    with pytest.raises(recorder.RecordError, match=r"1 heads.*budget is 1 rounds"):
+        recorder.require_review_round_within_budget(comments, moved, "fleet", budget=1, pr=42)
+    assert sweep.lookup_verdict(comments, moved, "fleet").state == "CF-stale"
+    assert keeper._reason({**row, "headRefOid": moved}, sweep.lookup_verdict(comments, moved, "fleet"), "ok", 0, True) == "needs-CF"
+    with pytest.raises(github.gate.PublishBlocked):
+        github._refuse_incomplete_seats(REPOSITORY, 42, moved, None, tmp_path, {})
+
+    approved = list(comments)
+    for agent, model in (("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")):
+        comments[:] = approved
+        write_task(tasks, task_id="review-reject", agent=agent, model=model, worktree_base_sha=head,
+                   review_risk="critical", reply="VERDICT: REQUEST_CHANGES\nA blocking defect remains.")
+        recorder.record("review-reject", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert sweep.lookup_verdict(comments, head, "fleet").state == "CHANGES_REQUESTED"
+        assert statuses[-1] == "failure"
+        assert keeper._reason(row, sweep.lookup_verdict(comments, head, "fleet"), "ok", 0, True) == "CF-changes_requested"
+        with pytest.raises(github.gate.PublishBlocked):
+            github._refuse_incomplete_seats(REPOSITORY, 42, head, None, tmp_path, {})
+        with pytest.raises(recorder.RecordError, match="APPROVE_REFUSED"):
+            recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+    facts = replace(facts, commits=tuple(
+        replace(commit, task_id="review-one") if commit.family == "anthropic" else commit for commit in facts.commits
+    ))
+    with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from tests.claude_route_accounts import HOST_ACCOUNT
+
+    with pytest.raises(ReviewAdmissionRefused, match="SELF_REVIEW_DETECTED"):
+        resolve_and_admit(
+            ("codex",), model="gpt-6.1-sol", mode="read-only", review_dispatch=True,
+            review_risk="critical", review_task_id="review-one", review_facts=facts, claude_account=HOST_ACCOUNT,
+        )
+    monkeypatch.setattr(recorder, "_pr", lambda *_a, **_k: {"number": 42, "headRefName": "codex/42", "headRefOid": moved})
+    with pytest.raises(recorder.RecordError, match="head moved"):
+        recorder.record("review-two", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+
+def test_single_family_branch_resolution_unchanged(tmp_path, monkeypatch):
+    """Control: the pair rule changes single-family routing."""
+    from dataclasses import asdict, replace
+
+    from scripts.review.reviewer_resolver import resolve_reviewer
+    from tests.claude_route_accounts import HOST_ACCOUNT
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    for trailer, model, expected in ((OPUS, "claude-opus-5-5", "openai"), (SOL, "gpt-6.1-sol", "anthropic")):
+        directory = tmp_path / expected
+        directory.mkdir()
+        repo = mini_repo(directory, monkeypatch)
+        head = repo.commit(trailer)
+        facts = recorder.collect_branch_review_facts(
+            repository=REPOSITORY, repo_root=repo.root, base_tip_sha=repo.sha("origin/main"), head_sha=head,
+            task_root=directory / "tasks",
+        )
+        inputs = facts.resolver_inputs(risk="critical", review_profile="infra", claude_account=HOST_ACCOUNT, structural=True)
+        result = resolve_reviewer(inputs)
+        legacy = resolve_reviewer(replace(inputs, author_model=model, author_families=frozenset(), author_commits=()))
+        assert result == legacy and result.selected.family == expected
+        assert not result.quorum and not result.review_scopes
+        assert "review_scopes" not in asdict(result)

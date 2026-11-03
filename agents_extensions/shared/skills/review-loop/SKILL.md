@@ -177,7 +177,10 @@ the CTO with the refusal text; a dispute goes to the operator ([policy](referenc
 None of them is approval.
 
 Report: exact SHA reviewed, reviewer model, family and harness, verdict, rounds used against
-the tier, the ledger with each disposition, diff size before and after review, and who owns
-anything still open.
+the tier, the ledger with each disposition, diff size before and after review, who owns
+anything still open, and these review-yield fields
+([policy](references/policy.md#review-yield)): unique verified catches, false positives,
+escaped defects (found after approval), review and repair tokens, elapsed time, risk, and
+task family.
 
 Learned from tstack's `sol-loop` skill (MIT, Theo Browne); the text is our own.

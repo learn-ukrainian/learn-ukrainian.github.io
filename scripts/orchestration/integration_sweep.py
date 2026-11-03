@@ -84,7 +84,8 @@ MARKER = re.compile(
     r"(?: authorship=(?P<authorship>verified_app_bot))?"
     r"(?: review_profile=(?P<review_profile>ukrainian))?(?: sources_calls=(?P<sources_calls>[0-9]+))?"
     rf"(?: denominator=(?P<denominator>{_ITEM_LIST}))?(?: coverage=(?P<coverage>-|{_ITEM_LIST}))?"
-    rf"(?: void=(?P<void>{VOID_QUOTE_MISMATCH}|{VOID_REVIEWER_BOOKKEEPING}))? -->\Z"
+    rf"(?: void=(?P<void>{VOID_QUOTE_MISMATCH}|{VOID_REVIEWER_BOOKKEEPING}))?"
+    r"(?: review_pair=(?P<review_pair>anthropic_openai) scope_commits=(?P<scope_commits>[0-9a-f]{40}(?:,[0-9a-f]{40})*))? -->\Z"
 )
 MARKER_PREFIX = CF_VERDICT_MARKER_PREFIX
 # Stable reason codes for an ``unknown`` verdict (#11127); consumers may match on them.
@@ -259,6 +260,14 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     raw_denominator = item.pop("denominator")
     raw_coverage = item.pop("coverage")
     raw_void = item.pop("void")
+    pair = item.pop("review_pair")
+    raw_scope = item.pop("scope_commits")
+    scope = raw_scope.split(",") if raw_scope is not None else None
+    if scope is not None and (
+        scope != sorted(set(scope)) or item["family"] not in {"anthropic", "openai"}
+        or item["review_mode"] is not None or profile is not None or raw_denominator is not None
+    ):
+        return None
     if (raw_denominator is None) != (raw_coverage is None) or (raw_void is not None and raw_denominator is None):
         return None
     denominator = _item_ids(raw_denominator, empty=False)
@@ -324,6 +333,9 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         f"Reviewer model: {item['model']}",
         f"Task id: {item['task']}",
     ]
+    if pair is not None:
+        other = "openai" if item["family"] == "anthropic" else "anthropic"
+        identity.extend((f"Review pair: {pair}", f"Scope author family: {other}", f"Scope commits: {raw_scope}"))
     if raw_denominator is not None:
         identity.append(f"Denominator: {','.join(denominator or ())}")
         identity.append("Coverage: " + (",".join(coverage or ()) if coverage else "-"))
@@ -352,6 +364,11 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     if len(authored) > 1:
         return None
     item["author_models"] = tuple(authored[0].removeprefix("Authored by: ").split(", ")) if authored else ()
+    if pair is not None:
+        if attested_author_families([item]) != frozenset({"anthropic", "openai"}):
+            return None
+        item["review_pair"] = pair
+        item["scope_commits"] = tuple(scope)
     item["verdict"] = VERDICT_ALIASES.get(item["verdict"], item["verdict"])
     if raw_denominator is not None:
         item["denominator"] = denominator
@@ -399,13 +416,44 @@ def pr_file_paths(rows: object) -> list[str]:
     return paths
 
 
+# Exact release manifests under a content prefix. Each file carries schema,
+# SHA-256 digests, counts and membership of already-built artifacts, and no
+# learner-visible Ukrainian text. Exact paths only: no prefixes and no globs.
+# Auto-deploy eligibility and the Ukrainian seat gate still treat them as
+# content (#12653). Closeout uses ``requires_ukrainian_behavior_receipt``.
+METADATA_ONLY_RELEASE_MANIFESTS = frozenset(
+    {
+        # Schema, digests, counts and membership of already-built Atlas artifacts.
+        # No learner-visible Ukrainian text.
+        "registry/lexicon/atlas-runtime-release.json",
+    }
+)
+
+
+def _content_prefix_path(path: str) -> bool:
+    return path not in SITE_CODE_PATH_EXCEPTIONS and path.startswith(CONTENT_PATH_PREFIXES)
+
+
 def changes_learner_content(paths: Iterable[str]) -> bool:
     """Whether a change to ``paths`` changes learner content, which takes the Ukrainian seats.
 
     The content surfaces are the auto-deploy ones, the repository's one list of
-    paths that can change published learner content (#12181).
+    paths that can change published learner content (#12181). A metadata-only
+    release manifest stays in this set. The Ukrainian behavior-proof receipt
+    uses ``requires_ukrainian_behavior_receipt`` instead (#12653).
     """
-    return any(path not in SITE_CODE_PATH_EXCEPTIONS and path.startswith(CONTENT_PATH_PREFIXES) for path in paths)
+    return any(_content_prefix_path(path) for path in paths)
+
+
+def requires_ukrainian_behavior_receipt(paths: Iterable[str]) -> bool:
+    """Whether closeout requires a Ukrainian behavior-proof receipt (#12653).
+
+    Fail-closed on the same content prefixes as ``changes_learner_content``.
+    Exempt only when every learner-content path is an exact member of
+    ``METADATA_ONLY_RELEASE_MANIFESTS``. Any other learner path still requires
+    the Ukrainian receipt.
+    """
+    return any(_content_prefix_path(path) and path not in METADATA_ONLY_RELEASE_MANIFESTS for path in paths)
 
 
 def ukrainian_seat_families(markers: Iterable[Mapping[str, Any]]) -> set[str]:
@@ -511,6 +559,35 @@ def _repair_receipt_blocks(body: str, sha: str) -> bool:
         if attested != [data.get("delta_sha256")]:
             return True
     return False
+
+
+def _mixed_pair_pending(candidates: Sequence[tuple[datetime, tuple[datetime, int], dict[str, Any]]]) -> bool:
+    """A trusted mixed-family code record needs both scoped exact-head approvals."""
+    families = frozenset({"anthropic", "openai"})
+    markers = [item[2] for item in candidates]
+    if not any(
+        marker.get("review_pair") == "anthropic_openai"
+        or (
+            not is_ukrainian_review(marker)
+            and marker.get("review_mode", "cross_family") == "cross_family"
+            and attested_author_families([marker]) == families
+        )
+        for marker in markers
+    ):
+        return False
+    scopes = {
+        family: {
+            tuple(marker["scope_commits"])
+            for marker in markers
+            if marker.get("review_pair") == "anthropic_openai"
+            and marker["family"] == family and marker["verdict"] == "APPROVED"
+        }
+        for family in families
+    }
+    if any(len(family_scopes) != 1 for family_scopes in scopes.values()):
+        return True
+    anthropic, openai = (set(next(iter(scopes[family]))) for family in ("anthropic", "openai"))
+    return bool(anthropic & openai)
 
 
 def lookup_verdict(
@@ -631,6 +708,8 @@ def lookup_verdict(
         state, marker, seats, reason, index, started = covered
         if reason is not None:
             return unknown(reason, index, comments[index])
+        if state == "APPROVED" and _mixed_pair_pending(candidates):
+            state = NEEDS_SEAT
         return Verdict(
             state,
             marker["task"],
@@ -660,6 +739,8 @@ def lookup_verdict(
     if not standing and needs_seats and not required_ukrainian_seats(attested_author_families(profiled)) <= set(seats):
         # A Ukrainian head is approved only once every required seat has approved it. With no
         # Ukrainian verdict the authors are unattested, so both seats are required (#12181).
+        state = NEEDS_SEAT
+    if not standing and _mixed_pair_pending(candidates):
         state = NEEDS_SEAT
     return Verdict(
         state,
