@@ -199,3 +199,21 @@ def test_vesum_verification(requires_vesum_db):
         f"Corruption distractors matched valid standard words in VESUM: {dist_report.get('invalid_distractors', [])}"
     )
     assert dist_report["checked_distractor_count"] >= 100
+
+
+def test_missing_vesum_store_is_refused_not_replaced(tmp_path: Path, monkeypatch) -> None:
+    """A missing store reports StoreRefusal and is not opened or replaced."""
+
+    def fail_open(*_args, **_kwargs):
+        raise AssertionError("a refused VESUM store must not be opened")
+
+    monkeypatch.setattr(
+        "scripts.practice.adjective_mechanics_engine._open_readonly",
+        fail_open,
+    )
+    report = verify_deck_with_vesum([], tmp_path / "absent.db")
+    assert report == {
+        "verified": False,
+        "error": "store_missing",
+        "missing_forms": [],
+    }
