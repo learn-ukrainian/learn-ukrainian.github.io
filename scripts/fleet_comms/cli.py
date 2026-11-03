@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sqlite3
 import sys
 from collections.abc import Iterator
@@ -1166,6 +1167,14 @@ def cmd_retention(args: argparse.Namespace) -> int:
         )
     if unreferenced and args.apply and backup_dir is None:
         raise FleetCommsCliError("retention refused: the unreferenced rule needs --backup-dir with --apply")
+    accept_truncated = frozenset(args.accept_truncated_sha256 or ())
+    if accept_truncated and not unreferenced:
+        raise FleetCommsCliError("retention refused: --accept-truncated-sha256 needs the unreferenced rule")
+    malformed = sorted(d for d in accept_truncated if not re.fullmatch(r"[0-9a-f]{64}", d))
+    if malformed:
+        raise FleetCommsCliError(
+            f"retention refused: --accept-truncated-sha256 needs a full lowercase sha256: {', '.join(malformed)}"
+        )
     try:
         # A dry run opens read-only: it never migrates or writes the store.
         store = ArtifactStore(root=root) if args.apply else ArtifactStore.open_readonly(root=root)
@@ -1178,7 +1187,8 @@ def cmd_retention(args: argparse.Namespace) -> int:
                         tasks_dir=Path(args.cited_from_tasks).expanduser(),
                         docs_dir=Path(args.cited_from_docs).expanduser(),
                         github_dump=Path(args.cited_from_github).expanduser(),
-                    )
+                    ),
+                    accept_truncated=accept_truncated,
                 )
                 if unreferenced
                 else None
@@ -1294,7 +1304,9 @@ def build_parser() -> argparse.ArgumentParser:
             "given. It removes the blob of an artifact that no row names, in an expiring class, "
             "older than --unreferenced-days and cited by none of: message text and linked blobs, "
             "the tasks directory, the docs tree and a fresh GitHub dump. Any missing, empty, "
-            "stale, truncated or unreadable source refuses the whole run before any candidate. "
+            "stale, truncated or unreadable source refuses the whole run before any candidate, "
+            "as does compressed content cut short; --accept-truncated-sha256 waives that only for a "
+            "named message-linked blob cut at its end, reported in the receipt and never removed. "
             "Message rows and artifact rows (sha256, bytes) are never deleted.\n"
             "GitHub dump (.jsonl): line 1 {\"kind\": \"header\", \"fetched_at\": \"<UTC ISO-Z>\"}, "
             "then one object per line with kind issue, pull_request, issue_comment or "
@@ -1336,6 +1348,17 @@ def build_parser() -> argparse.ArgumentParser:
         "--cited-from-github",
         default=None,
         help="Fresh GitHub dump (.jsonl, format above) of issues, PRs and their comments",
+    )
+    retention.add_argument(
+        "--accept-truncated-sha256",
+        action="append",
+        default=None,
+        metavar="SHA256",
+        help=(
+            "Acknowledge one message-linked blob (full sha256, repeatable) whose compressed content "
+            "ends early: scanned up to the cut, listed in the receipt, never removed; an unused "
+            "or mismatched digest refuses the run"
+        ),
     )
     retention.add_argument(
         "--apply",

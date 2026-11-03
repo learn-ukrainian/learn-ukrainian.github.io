@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+import bz2
 import gzip
 import io
 import json
+import lzma
 import os
 import time
 import uuid
 import zipfile
+import zlib
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -21,6 +24,7 @@ from scripts.fleet_comms.artifacts import (
     ArtifactStoreError,
     CitationScan,
     CitationSources,
+    _unreferenced_candidate_sql,
 )
 
 pytestmark = pytest.mark.repo_invariant
@@ -403,7 +407,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
     source, or removes a cited artifact."""
     with ArtifactStore(root=tmp_path / "plane") as store:
         names = (
-            "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_trunc",
+            "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_concat", "by_cut",
             "uncited", "padded", "inventory",
         )
         recs = {name: store.store_bytes(_payload(), producer="t") for name in names}
@@ -458,6 +462,16 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         corrupt = _sources(tmp_path / "corrupt")
         (corrupt.docs_dir / "bad.gz").write_bytes(b"\x1f\x8b\x08\x00" + b"not a gzip stream")
         refuses(corrupt, "cannot decode compressed content")
+        # A stream cut short refuses in every format: its decoded tail is not
+        # proof that nothing after it cited an artifact. So does data after a
+        # stream that starts no supported stream.
+        for suffix, compress in (("gz", gzip.compress), ("bz2", bz2.compress), ("xz", lzma.compress)):
+            cut = _sources(tmp_path / f"cut-{suffix}")
+            (cut.docs_dir / f"cut.{suffix}").write_bytes(compress(b"artifact_" + b"a" * 32)[:-8])
+            refuses(cut, "ends before its end marker")
+        trailing = _sources(tmp_path / "trailing")
+        (trailing.docs_dir / "x.bz2").write_bytes(bz2.compress(b"text") + b"garbage")
+        refuses(trailing, "starts no supported stream")
         zstd = _sources(tmp_path / "zstd")
         (zstd.docs_dir / "x.zst").write_bytes(b"\x28\xb5\x2f\xfd" + b"\x00" * 16)
         refuses(zstd, "cannot open zstd")
@@ -487,10 +501,9 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         (good.docs_dir / "data" / "evidence.bin").write_bytes(
             gzip.compress(recs["by_gz"].artifact_id.encode())
         )
-        # A stream that ends early was stored that way: what it holds is scanned
-        # (and counted); corrupt data refuses, as above.
-        (good.docs_dir / "data" / "cut.gz").write_bytes(
-            gzip.compress(recs["by_trunc"].artifact_id.encode())[:-8]
+        # Every stream of a concatenated file is scanned, whatever its format.
+        (good.docs_dir / "data" / "joined.bz2").write_bytes(
+            bz2.compress(b"prefix") + gzip.compress(recs["by_concat"].artifact_id.encode())
         )
         archive = io.BytesIO()
         with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
@@ -506,21 +519,45 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         inventory_key = f"x/{blob_path(recs['inventory'])}"
         listing = f'"{inventory_key}":"!!"'
         (snapshots / "read_only_checkout_pre.json").write_text("{" + listing + "}")
-        (snapshots / "read_only_checkout_post.json").write_text(
-            json.dumps({"note": recs["by_note"].artifact_id, inventory_key: "!!"}, separators=(",", ":"))
+        # A compressed inventory is decoded before its listings are stripped.
+        (snapshots / "read_only_checkout_post.json").write_bytes(
+            gzip.compress(
+                json.dumps({"note": recs["by_note"].artifact_id, inventory_key: "!!"}, separators=(",", ":")).encode()
+            )
         )
-        scan = store.scan_citations(good, now=now)
+        # A linked blob cut short refuses unless its digest is acknowledged; an
+        # acknowledgement that matches no cut-short linked blob refuses too.
+        cut_bytes = gzip.compress(f"{recs['by_cut'].artifact_id}\n".encode() + os.urandom(4096))[:-100]
+        cut_blob = store.store_bytes(cut_bytes, producer="t")
+        store.reference("message_attachment", cut_blob.artifact_id)
+        refuses(good, "ends before its end marker")
+        with pytest.raises(ArtifactStoreError, match="names no message-linked blob"):
+            store.scan_citations(good, now=now, accept_truncated=frozenset({cut_blob.sha256, recs["uncited"].sha256}))
+        scan = store.scan_citations(good, now=now, accept_truncated=frozenset({cut_blob.sha256}))
         assert scan.cited == frozenset(
-            recs[name].artifact_id for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_trunc")
+            recs[name].artifact_id
+            for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_concat", "by_cut")
         )
+        # Every byte the decoder can produce before the cut was scanned.
+        receipt = {
+            "sha256": cut_blob.sha256,
+            "format": "gzip",
+            "blob_bytes": len(cut_bytes),
+            "decoded_bytes": len(zlib.decompressobj(31).decompress(cut_bytes)),
+            "stream_offset": 0,
+            "truncation_offset": len(cut_bytes),
+        }
+        assert scan.acknowledged_truncated == (receipt,)
         assert [e["inventory_listings_ignored"] for e in scan.coverage if e["source"] == "tasks"] == [2]
-        assert [e["truncated_streams"] for e in scan.coverage if e["source"] == "docs"] == [1]
+        dry = store.expire_unreferenced_blobs(citations=scan, apply=False, now=_LATER)
         report = store.expire_unreferenced_blobs(
             citations=scan, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
         )
-        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 9)
+        assert dry.acknowledged_truncated == report.acknowledged_truncated == [receipt]
+        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 10)
+        assert cut_blob.blob_path.is_file()
         assert {entry["source"] for entry in report.sources} == {"store", "tasks", "docs", "github"}
-        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_trunc"):
+        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_concat", "by_cut"):
             assert recs[name].blob_path.is_file()
         for name in ("uncited", "padded", "inventory"):
             assert not recs[name].blob_path.is_file()
@@ -533,3 +570,41 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         refuses_after = pytest.raises(ArtifactStoreError, match="is missing")
         with refuses_after:
             store.scan_citations(good, now=now)
+
+    # An acknowledgement covers only the end of the blob's own bytes, and only
+    # bytes that hash to the acknowledged digest.
+    nested = gzip.compress(gzip.compress(b"x" * 64)[:-8])
+    mismatched = gzip.compress(b"y" * 64)[:-8]
+    for plane, content, match in (
+        ("nested", nested, "complete but holds content cut short"),
+        ("mismatched", mismatched, "does not match"),
+    ):
+        with ArtifactStore(root=tmp_path / f"ack-{plane}") as other:
+            rec = other.store_bytes(content, producer="t")
+            other.reference("message_attachment", rec.artifact_id)
+            if plane == "mismatched":
+                rec.blob_path.chmod(0o600)
+                rec.blob_path.write_bytes(gzip.compress(b"z" * 64)[:-8])
+            with pytest.raises(ArtifactStoreError, match=match):
+                other.scan_citations(
+                    _sources(tmp_path / f"ack-{plane}-src"), now=now, accept_truncated=frozenset({rec.sha256})
+                )
+
+    # An acknowledged digest is never a candidate, in the tally or in the
+    # locked re-check, even for an otherwise expirable artifact.
+    with ArtifactStore(root=tmp_path / "ack-held") as other:
+        held = other.store_bytes(_payload(), producer="t")
+        _age(other, held.artifact_id)
+        acknowledged = CitationScan(frozenset(), (), ({"sha256": held.sha256},))
+        report = other.expire_unreferenced_blobs(
+            citations=acknowledged, apply=True, now=_LATER, backup_dir=tmp_path / "ack-held-backup"
+        )
+        assert (report.candidates, report.removed, report.held_acknowledged) == (0, 0, 1)
+        assert held.blob_path.is_file()
+        locked = {
+            "cutoff": (_LATER - timedelta(days=90)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "artifact_id": held.artifact_id,
+        }
+        single = _unreferenced_candidate_sql(single=True)
+        assert other._candidate_row(single, locked, frozenset()) is not None
+        assert other._candidate_row(single, locked, frozenset(), frozenset({held.sha256})) is None
