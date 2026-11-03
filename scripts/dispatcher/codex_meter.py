@@ -8,9 +8,11 @@ from decimal import Decimal
 from pathlib import Path
 
 from scripts.agent_runtime.codex_accounts import (
+    CODEX_ACCOUNT_ALIASES,
     CODEX_BOUND_ACCOUNTS,
     CodexAccountRefused,
     load_codex_account_binding,
+    resolve_codex_account_label,
 )
 from scripts.common.task_store_paths import tasks_dir
 from scripts.orchestration.task_record_store import iter_task_records, read_task_record
@@ -77,16 +79,18 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.dispatcher.codex_meter\n"
         "  .venv/bin/python -m scripts.dispatcher.codex_meter --json\n"
-        "  .venv/bin/python -m scripts.dispatcher.codex_meter --account b\n"
+        "  .venv/bin/python -m scripts.dispatcher.codex_meter --account b-sub\n"
         "Outputs: stdout only; reads task records and the private account binding, never credentials.\n"
         "Exit codes: 0 estimate printed; 1 configuration, store or usage incomplete.\n"
-        "Related: scripts/dispatch.py dispatch --codex-account api|b; scripts/config/model_catalog.yaml.",
+        "Related: scripts/dispatch.py dispatch --codex-account api|b-sub|b-api; scripts/config/model_catalog.yaml.",
     )
     parser.add_argument("--json", action="store_true", help="Print structured JSON (default: one meter line)")
-    parser.add_argument("--account", choices=CODEX_BOUND_ACCOUNTS, default="api",
-                        help="Bound account label to meter (default: api)")
+    bound = (*CODEX_BOUND_ACCOUNTS, *(name for name, label in CODEX_ACCOUNT_ALIASES.items() if label in CODEX_BOUND_ACCOUNTS))
+    parser.add_argument("--account", choices=bound, default="api",
+                        help="Bound Codex route to meter: api (account a), b-sub or b-api (default: api)")
     args = parser.parse_args(argv)
-    meter = f"{'Codex API' if args.account == 'api' else 'Codex subscription'} [{args.account}]"
+    args.account = resolve_codex_account_label(args.account)
+    meter = f"{'Codex API' if args.account.endswith('api') else 'Codex subscription'} [{args.account}]"
     try:
         report = estimate(tasks_dir(), load_codex_account_binding(label=args.account).budget_usd, args.account)
     except (CodexAccountRefused, OSError, ValueError):

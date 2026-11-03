@@ -18,11 +18,15 @@ from scripts.agent_runtime.attempt_boundary import (
 )
 
 DEFAULT_CODEX_ACCOUNT = "sub"
-# Each non-default label is bound by its own entry in the private codex_accounts.json.
-# "api" is the API-key home; every other bound label is a further subscription login.
-CODEX_SUBSCRIPTION_ACCOUNTS = ("b",)
-CODEX_BOUND_ACCOUNTS = ("api", *CODEX_SUBSCRIPTION_ACCOUNTS)
+# Routes are account {a, b} x kind {sub, api}. Account a keeps its original labels, "sub"
+# (the default home) and "api"; every other route is bound by its own entry, under its
+# recorded label, in the private codex_accounts.json.
+CODEX_BOUND_ACCOUNTS = ("api", "b-sub", "b-api")
 CODEX_ACCOUNT_LABELS = (DEFAULT_CODEX_ACCOUNT, *CODEX_BOUND_ACCOUNTS)
+# Accepted spellings, resolved to the recorded label before anything else reads them.
+CODEX_ACCOUNT_ALIASES = {"a-sub": "sub", "a-api": "api", "b": "b-sub"}
+# Account a's routes keep their original behaviour; account b's must show a login at admission.
+_LOGIN_PROBED_ACCOUNTS = ("b-sub", "b-api")
 _LOGIN_STATUS_TIMEOUT_S = 30
 _AUTH_ENV = ("OPENAI_API_KEY", "CODEX_API_KEY", "CODEX_ACCESS_TOKEN")
 
@@ -46,6 +50,8 @@ def resolve_codex_account_label(raw: object) -> str:
         return DEFAULT_CODEX_ACCOUNT
     if isinstance(raw, str) and raw in CODEX_ACCOUNT_LABELS:
         return raw
+    if isinstance(raw, str) and raw in CODEX_ACCOUNT_ALIASES:
+        return CODEX_ACCOUNT_ALIASES[raw]
     raise CodexAccountRefused("codex_account_unknown")
 
 
@@ -54,7 +60,8 @@ def _load_bindings(environ: Mapping[str, str] | None) -> dict[str, CodexAccountB
 
     Format: {"schema_version": 1, "accounts": {"<label>":
     {"codex_home": "<absolute private directory>", "budget_usd": 200}, ...}}, with one entry
-    per bound label (CODEX_BOUND_ACCOUNTS). budget_usd is the meter's reference budget.
+    per bound route label (CODEX_BOUND_ACCOUNTS); a route without one refuses as unbound.
+    budget_usd is the meter's reference budget.
     LU_CODEX_ACCOUNTS_FILE overrides the XDG learn-ukrainian config location.
     """
     path = _user_config_file(environ, "LU_CODEX_ACCOUNTS_FILE", "codex_accounts.json")
@@ -88,8 +95,8 @@ def _load_bindings(environ: Mapping[str, str] | None) -> dict[str, CodexAccountB
 
 
 def load_codex_account_binding(environ: Mapping[str, str] | None = None, label: str = "api") -> CodexAccountBinding:
-    """The binding of one bound label; a label the file does not bind refuses, never substitutes."""
-    binding = _load_bindings(environ).get(label)
+    """The binding of one route; a route the file does not bind refuses, never substitutes."""
+    binding = _load_bindings(environ).get(resolve_codex_account_label(label))
     if binding is None:
         raise CodexAccountRefused("codex_account_unbound")
     return binding
@@ -116,7 +123,7 @@ def codex_account_env(label: object, environ: Mapping[str, str]) -> dict[str, st
 
     Called at admission with the ambient environment and again at launch. No auth
     file is opened: Codex itself uses the login already stored in the selected home.
-    A subscription label must also report a login there (`codex login status`).
+    An account-b route must also report a login there (`codex login status`).
     """
     label = resolve_codex_account_label(label)
     if label == DEFAULT_CODEX_ACCOUNT:
@@ -143,6 +150,6 @@ def codex_account_env(label: object, environ: Mapping[str, str]) -> dict[str, st
         raise CodexAccountRefused("codex_account_home_unavailable") from None
     env = {name: value for name, value in environ.items() if name not in _AUTH_ENV}
     env["CODEX_HOME"] = str(directory)
-    if label in CODEX_SUBSCRIPTION_ACCOUNTS:
+    if label in _LOGIN_PROBED_ACCOUNTS:
         _require_login(env, directory)
     return env
