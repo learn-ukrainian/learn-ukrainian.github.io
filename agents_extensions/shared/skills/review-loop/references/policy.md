@@ -88,7 +88,12 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   no sealed finding; prose cannot attest. Otherwise the recorder refuses the APPROVE: a false or
   unverifiable delta claim is a rejection, and no other seat can approve that head. Security
   failures and the breakers still apply.
-- **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
+- **One full pass, then deltas; depth follows risk.** A change gets one independent
+  cross-family full pass (round 1), then only the exact-head delta verification that a fixed
+  blocker or a new head still requires, inside the budget above. Qualified deep review stays
+  for high and critical risk, security changes and Ukrainian semantics.
+- **Stop early when only advisory items remain:** no open blocker means no further round beyond
+  the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
   review out to helper agents. Learner-facing Ukrainian is the exception: its profile seats the
@@ -184,10 +189,30 @@ Use the primary recorder so the caller's branch age cannot select its rules.
   every required review still has to happen. A run with a published verdict cannot be
   reclassified, and a classified run's verdict cannot be published.
 
+## Before the review: frozen scope and cheap checks first
+
+Cheap deterministic checks run before any model review, and the reviewer's budget is not spent
+on what they already report.
+
+- **Frozen scope.** The frozen brief ([review-loop](../SKILL.md#steps) step 1, [brief](brief.md))
+  also names the applicable contracts, not only the outcome, acceptance criteria and non-goals.
+- **Author evidence at the exact head.** Before round 1 and before every delta round the
+  author supplies the results of the affected static checks (ruff, the repository's custom
+  lints under `scripts/hygiene`, `scripts/audit` and `scripts/lint`, and type checking where
+  it runs), the affected tests, the behaviour evidence the change needs and any required
+  canaries, as the brief's checks-already-run list. Reuse the same-head CI results instead of
+  re-running them.
+- **The reviewer spends no finding on what those checks report.** A defect a supplied check
+  already reports is the author's to fix before the round. The reviewer's own independent
+  held-out checks stay the reviewer's; the author's results do not replace them.
+
 ## Ledger and stable finding ids
 
 - Every finding gets a stable id (`F1`, `F2`, …) that keeps its number across rounds.
-- The ledger records, per id: severity, disposition (`in_scope_blocker`, `follow_up`,
+- Findings are collected by defect class: a round reports every instance of a class under one
+  id, not one instance per round.
+- The ledger records, per id: severity, defect class, evidence mode (probe or test output,
+  code-path proof, or source evidence), disposition (`in_scope_blocker`, `follow_up`,
   `stop_and_escalate`), the round that raised it, its state (open, fixed with evidence,
   declined with evidence, escalated) and its owner.
 - Before a PR exists the ledger lives in the task result with the review evidence. Once the PR
@@ -197,18 +222,35 @@ Use the primary recorder so the caller's branch age cannot select its rules.
 ## Delta scope
 
 - A delta review covers the open finding ids, the hunks changed since the last reviewed head,
-  and the callers those hunks affect, including weakened or deleted tests in the fix diff.
-- A new blocker in code that already passed review needs a concrete trigger: a failure the fix
-  diff introduced or exposed, shown with file:line or a test. Otherwise it is a follow-up.
+  the callers and invariants those hunks affect, and weakened or deleted tests in the fix diff.
+  It does not re-review code that already passed.
+- A finding the author fixed is reopened only with new evidence ([blocker
+  evidence](#severity)). A new blocker in code that already passed review needs a concrete
+  trigger: a P0, P1 or P2 failure the fix diff introduced or exposed, shown with file:line, a
+  test or probe output. A pre-existing defect the change did not introduce or expose is a
+  follow-up ([scope of blocking](#severity)).
 
 ## Severity
 
 Severity follows impact on behaviour or readers, ranked by impact and likelihood.
 
-1. P0, P1, and uncertainty about a material failure keep blocking.
-2. A demonstrated, unintended loss of previously correct behavior or of an existing refusal guarantee introduced by the PR blocks when its priority is P0, P1, or P2. Cite the pinned base and head, the same triggering inputs and preconditions, the contract violated, and a reproducer or complete code-path proof. An intentionally approved contract change, preference, or speculative difference is not a regression. An omitted or bounded trigger does not exempt a demonstrated P0, P1, or P2 regression. Disputed material contract applicability escalates. A P3 regression does not block.
+**Blocker evidence.** Every blocking finding states its severity, a reachable trigger, the
+expected and the actual behavior, the impact and its evidence. The evidence is observed probe
+or test output, a complete code-path proof from the trigger to the failure (file:line at each
+step), or authoritative source evidence that demonstrates the contradiction; a citation alone
+is not enough. Credible uncertainty about a material failure gets a bounded verification or an
+escalation. A capability the reviewer lacked is never approval.
+
+**Scope of blocking.** Items 1 to 3 below apply to a defect the change introduces, exposes or
+materially needs fixed. A defect at any priority that the change did not introduce or expose
+is tracked as a follow-up, unless the change materially needs it fixed. `SECURITY_VERDICT
+FAIL` always blocks, whatever introduced it.
+
+1. P0, P1, and credible uncertainty about a material failure keep blocking until verification
+   or escalation settles them.
+2. A demonstrated, unintended loss of previously correct behavior or of an existing refusal guarantee introduced by the PR blocks when its priority is P0, P1, or P2. Cite the pinned base and head, the same triggering inputs and preconditions and the contract violated, with the blocker evidence above. An intentionally approved contract change, preference, or speculative difference is not a regression. An omitted or bounded trigger does not exempt a demonstrated P0, P1, or P2 regression. Disputed material contract applicability escalates. A P3 regression does not block.
 3. Every other confirmed P2 defect is fixed in the PR or tracked before enqueue on an OPEN issue covering that finding. The worker or driver reports it through Fleet Comms; the CTO searches for and updates a matching open issue, or creates one under Work intake. The enqueue owner verifies its open state and coverage, and records the issue link, stable finding ID and owner in the ledger. A report awaiting CTO disposition is insufficient. Tracking alone requires no additional review round.
-4. P3 findings, including a P3 regression, nits, and preferences, never block and never open a review round. They are recorded as residuals on an open issue. A reply whose verdict is REQUEST_CHANGES and whose open findings are all P3 is recorded as an approval with those residuals listed: the findings stay verbatim and visible, and the `fleet/cross-family-review` status is success. The recorder reads the priority the reply already carries.
+4. P3 findings, including a P3 regression, nits, style and preferences, speculative future requirements and score-only shortfalls are advisory: they never block and never open a review round or widen the scope. They are recorded once, as residuals on an open issue. A new contract or design decision escalates before implementation ([breakers](#breakers-that-still-apply)). A reply whose verdict is REQUEST_CHANGES and whose open findings are all P3 is recorded as an approval with those residuals listed: the findings stay verbatim and visible, and the `fleet/cross-family-review` status is success. The recorder reads the priority the reply already carries.
 
 Review budgets, seats, ladders, and exact-head binding are unchanged. A P0, P1, or P2 finding, and a demonstrated regression at those priorities, keeps the handling in items 1 to 3. Round exhaustion does not turn that rejection into approval and grants no extra round. Reviewers keep the priority the impact supports: they do not raise a P3 to force another round, and they do not lower a P0, P1, or P2 to clear it. Filing or linking the residual issue consumes no review round.
 
@@ -243,3 +285,19 @@ The `local-code-review` checklist Step 6 breakers apply in every round, even whe
 finding count shrinks: the 2x scope-expansion breaker, the two-cycle convergence breaker, a
 contract or owner-boundary change, and a needed design decision. A contested verdict escalates
 (rules core P6).
+
+## Review yield
+
+- **Where it is recorded.** The PR-body ledger holds each finding, structured or prose, with
+  its evidence mode, severity and validated disposition; a prose observation is recorded even
+  when the findings array is empty. The round report of `review-loop` (its Stop and report
+  section, which already names reviewer model, family and harness) also records the catch
+  outcome, false positives, escaped defects (found after approval), review and repair tokens
+  and elapsed time, with the risk and task family. Per-model yield is aggregated from those
+  records.
+- Usage that was not reported stays `unknown`, never estimated. A small or confounded sample
+  does not justify a change of tier or seat.
+- **Recurring findings become checks.** A defect class that review catches a second time is
+  turned into a lint rule or a test, so review stops paying for it. The worker or driver
+  reports the class to the CTO through Fleet Comms as an issue proposal for that check; the
+  CTO files it. This is not a new round and does not hold the merge.
