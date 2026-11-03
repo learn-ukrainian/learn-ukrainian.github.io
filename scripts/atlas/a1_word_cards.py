@@ -5,6 +5,7 @@ Use for #11943 slices 2–6, never for certification, publication or expanding t
 
 import argparse
 import copy
+import hashlib
 import json
 import re
 import sys
@@ -13,6 +14,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from itertools import pairwise
 from pathlib import Path
+from urllib.parse import quote
 
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_foundation as foundation
@@ -51,6 +53,79 @@ class BatchContext:
     validate_inputs: Callable[[dict, dict, dict, dict, dict, dict], tuple[dict, list[dict]]]
     row_ledger: Mapping[str, Mapping] | None = None
     residual_owners: Mapping[str, str] | None = None
+
+
+@dataclass(frozen=True)
+class LessonCardLinks:
+    """Local preview links from verified batches and individually reviewed versions.
+
+    The independent steward supplies reviewed_versions after Sources review.
+    This context neither certifies a card nor grants practice or publication.
+    """
+
+    inventory: dict
+    batches: tuple[dict, ...]
+    release_rows: tuple[dict, ...]
+    reviewed_versions: Mapping[str, str]
+
+    def for_vocabulary(self, source: Path | None, items: list[dict]) -> tuple[dict[int, str], list[dict]]:
+        relative = ""
+        file_reason = "source_file_not_frozen"
+        if source is not None:
+            try:
+                relative = source.resolve().relative_to(ROOT.resolve()).as_posix()
+                frozen = next((f for f in self.inventory["freeze"]["files"] if f["path"] == relative), None)
+                if frozen is not None:
+                    file_reason = (None if hashlib.sha256(source.read_bytes()).hexdigest() == frozen["sha256"]
+                                   else "source_file_hash_mismatch")
+            except (OSError, ValueError):
+                file_reason = "source_file_unavailable"
+        frozen_rows = {row["id"]: row for row in self.inventory["rows"]}
+        row_cards = defaultdict(set)
+        versions = {}
+        for batch in self.batches:
+            own = {card["card_id"] for card in batch["cards"]}
+            versions.update({card["card_id"]: card["build"]["card_version"] for card in batch["cards"]})
+            for row in batch["rows"]:
+                if row["card_id"] in own:
+                    row_cards[row["inventory_row_id"]].add(row["card_id"])
+        released = {row["card_id"]: row for row in self.release_rows}
+        hrefs, observations = {}, []
+        for index, item in enumerate(items):
+            row_id = f"{relative}#/{index}"
+            reason, card_id = file_reason, None
+            original = frozen_rows.get(row_id)
+            choices = row_cards.get(row_id, set())
+            if reason is None:
+                if original is None or digest(original["source"]) != digest(item):
+                    reason = "source_row_mismatch"
+                elif len(choices) != 1:
+                    reason = "row_card_unresolved"
+                else:
+                    card_id = next(iter(choices))
+                    row = released.get(card_id)
+                    if card_id not in self.reviewed_versions:
+                        reason = "independent_review_pending"
+                    elif (row is None or self.reviewed_versions[card_id] != versions.get(card_id)
+                          or row["card_version"] != self.reviewed_versions[card_id]):
+                        reason = "reviewed_card_version_mismatch"
+                    else:
+                        spelling = {f["value"].lower() for f in row["fields"]
+                                    if f["field"] == "spelling" and isinstance(f["value"], str)
+                                    and f["subject"] == {"kind": "card", "id": card_id}}
+                        if len(spelling) != 1 or row["card_kind"] == "proper_name":
+                            reason = "learner_page_unavailable"
+                        else:
+                            key = next(iter(spelling))
+                            if not key or any(c in key for c in "/\\?#\0"):
+                                reason = "learner_page_unavailable"
+                            else:
+                                hrefs[index] = f"/lexicon-v2/word/{quote(key, safe='!~*()')}/#entry-{card_id}"
+            observations.append({"inventory_row_id": row_id, "card_id": card_id,
+                                 "href": hrefs.get(index), "reason": reason,
+                                 "dependency": None if reason is None else "exact source row and independently reviewed card version",
+                                 "owner": None if reason is None else "Atlas coordinator"})
+        return hrefs, observations
 
 
 def require(condition, reason):

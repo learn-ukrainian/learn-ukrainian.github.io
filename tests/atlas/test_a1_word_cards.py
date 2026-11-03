@@ -299,6 +299,59 @@ def test_site_projection_preserves_site_only_fields_without_exporting_them(batch
     assert site.manifest["source_breakdown"][VTS]["filter_reasons"] == {}
 
 
+def test_reviewed_lesson_links_require_exact_source_row_and_card_version(tmp_path, monkeypatch):
+    """A spelling match cannot replace the frozen source row or a reviewed version."""
+    from scripts.generate_mdx.core import generate_mdx
+
+    relative = "curriculum/l2-uk-en/a1-v1/fixture/vocabulary.yaml"
+    source = tmp_path / relative
+    source.parent.mkdir(parents=True)
+    items = [{"word": "same", "translation": "first"},
+             {"word": "same", "translation": "second"}, {"word": "unresolved"}]
+    original = yaml.safe_dump(items).encode()
+    source.write_bytes(original)
+    version = "cv_" + "1" * 24
+    other = "wc_qpcdgkctp7ne"
+    inventory = {"freeze": {"files": [{"path": relative,
+                    "sha256": hashlib.sha256(original).hexdigest()}]},
+                 "rows": [{"id": f"{relative}#/{i}", "source": item} for i, item in enumerate(items)]}
+    batch = {"cards": [{"card_id": key, "build": {"card_version": version}}
+                       for key in (TARGET, other)],
+             "rows": [{"inventory_row_id": f"{relative}#/{i}", "card_id": key}
+                      for i, key in enumerate((TARGET, other))]}
+    released = tuple({"card_id": key, "card_version": version, "card_kind": "lexeme",
+                      "fields": [{"field": "spelling", "value": "same",
+                                  "subject": {"kind": "card", "id": key}}]}
+                     for key in (TARGET, other))
+    monkeypatch.setattr(cards, "ROOT", tmp_path)
+    links = cards.LessonCardLinks(inventory, (batch,), released, {TARGET: version})
+    hrefs, observations = links.for_vocabulary(source, items)
+    assert hrefs == {0: f"/lexicon-v2/word/same/#entry-{TARGET}"}
+    assert [r["reason"] for r in observations] == [None, "independent_review_pending", "row_card_unresolved"]
+    assert [r["inventory_row_id"] for r in observations] == [f"{relative}#/{i}" for i in range(3)]
+    lesson = "---\ntitle: Fixture\nslug: fixture\n---\n# Fixture\n\nLiteral fixture content.\n"
+    options = {"vocab_items": items, "level": "a1", "vocabulary_source": source}
+    baseline = generate_mdx(lesson, 1, **options)
+    report = []
+    rendered = generate_mdx(lesson, 1, word_card_links=links, word_card_link_report=report, **options)
+    assert f"/lexicon-v2/word/same/#entry-{TARGET}" in rendered
+    assert f"entry-{other}" not in rendered
+    assert report == observations
+    unreviewed = cards.LessonCardLinks(inventory, (batch,), released, {})
+    assert generate_mdx(lesson, 1, word_card_links=unreviewed, **options) == baseline
+    changed = copy.deepcopy(items)
+    changed[0]["translation"] = "different row"
+    assert links.for_vocabulary(source, changed)[0] == {}
+    source.write_bytes(original + b"\n")
+    assert links.for_vocabulary(source, items)[0] == {}
+    source.write_bytes(original)
+    wrong_source = tmp_path / "another.yaml"
+    wrong_source.write_bytes(original)
+    assert links.for_vocabulary(wrong_source, items)[0] == {}
+    stale = cards.LessonCardLinks(inventory, (batch,), released, {TARGET: "cv_" + "2" * 24})
+    assert stale.for_vocabulary(source, items)[0] == {}
+
+
 def test_reconciles_frozen_rows_and_preserves_pilot_identities(batch):
     """Catch dropped occurrences, reminted identities and self-authenticating allocation swaps."""
     protected = ["registry/atlas/a1-v1-inventory.json", "registry/atlas/identity/registry.json",
