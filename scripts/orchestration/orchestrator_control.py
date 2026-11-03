@@ -747,6 +747,13 @@ def cmd_inbox(args: argparse.Namespace) -> int:
         max_result_chars=args.max_result_chars,
         max_log_chars=args.max_log_chars,
     )
+    from scripts.ai_agent_bridge._channels_cli import authority_inbox_notice
+
+    # JSON stays machine-parseable: its pointer goes to stderr.
+    authority_inbox_notice(
+        os.environ.get("SESSION_HANDOFF_AGENT"),
+        file=sys.stderr if args.format == "json" else None,
+    )
     if args.format == "json":
         print(json.dumps(payload, indent=2, default=str))
     else:

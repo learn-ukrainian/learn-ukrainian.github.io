@@ -2077,6 +2077,12 @@ def main():
     refusal = _kimi_request_error(args)
     if refusal:
         raise SystemExit(refusal)
+    if args.command in {"inbox", "read", "ack", "ack-all"}:
+        from ._channels_cli import authority_inbox_notice
+
+        authority_inbox_notice(
+            getattr(args, "agent", None) or getattr(args, "for_llm", None) or os.environ.get("SESSION_HANDOFF_AGENT")
+        )
     if args.command == "inbox":
         from ._channels_cli import _maybe_print_backlog_warnings
 

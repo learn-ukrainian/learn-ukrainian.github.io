@@ -4075,7 +4075,7 @@ def render_bootstrap_prompt(
                 "```bash",
                 "curl -sS http://127.0.0.1:8765/api/delegate/active",
                 "curl -sS http://127.0.0.1:8765/api/worktrees",
-                ".venv/bin/python scripts/orchestration/orchestrator_control.py inbox --recent 20 --include-results",
+                ".venv/bin/python -m scripts.fleet_comms deliveries receive --recipient <your-slot> --worker-id <your-slot>",
                 "```",
                 "",
                 "Use the compact capsule command card emitted by `detect --format session-start` for this packet.",
