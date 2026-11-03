@@ -194,7 +194,7 @@ def test_artifact_reference_default_commit_rolls_back_failed_stub(
         ).fetchone() is None
 
 
-def test_artifact_import_materialize_and_gc(tmp_path: Path) -> None:
+def test_artifact_import_materialize_and_reference(tmp_path: Path) -> None:
     src = tmp_path / "src.bin"
     src.write_bytes(b"payload-bytes")
     with ArtifactStore(root=tmp_path / "v1") as store:
@@ -204,17 +204,11 @@ def test_artifact_import_materialize_and_gc(tmp_path: Path) -> None:
         assert out.read_bytes() == b"payload-bytes"
         assert out.stat().st_mode & 0o222 == 0  # readonly
 
-        # Unreferenced + zero grace → GC deletes
-        deleted = store.garbage_collect_unreferenced(grace_seconds=0)
-        assert rec.artifact_id in deleted
-        with pytest.raises(ArtifactStoreError, match="not found"):
-            store.get(rec.artifact_id)
-
-        # Re-store and reference → GC spares it
+        # Unreferenced until a message names it (retention owns the rest, #12574)
+        assert not store.is_referenced(rec.artifact_id)
         rec2 = store.store_bytes(b"kept", producer="t")
         store.reference("message_keep_1", rec2.artifact_id)
-        deleted2 = store.garbage_collect_unreferenced(grace_seconds=0)
-        assert rec2.artifact_id not in deleted2
+        assert store.is_referenced(rec2.artifact_id)
         assert store.get(rec2.artifact_id).sha256 == hashlib.sha256(b"kept").hexdigest()
 
 
