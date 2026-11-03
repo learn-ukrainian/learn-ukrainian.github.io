@@ -4038,6 +4038,61 @@ def test_owner_request_grant_refuses(monkeypatch, tmp_path, ruling, reason):
     assert calls == {"posts": 0, "statuses": 0}
 
 
+# A withheld rejection's findings are its run's sealed reply (#12585); only ids and severities are read.
+WITHHELD_F5 = f"{OPEN_F5}\nF8 [P3] docs/readme.md:9 the withheld note."
+WITHHELD_START = "2026-09-23T11:00:00.000001+00:00"
+UNLISTED = r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*does not list F5"
+
+
+@pytest.mark.parametrize(
+    "defect,reason",
+    [
+        (None, None),
+        ("missing-run", UNLISTED),
+        ("unsealed-digest", UNLISTED),
+        # The recorder's own lineage read refuses an altered reply before any grant is checked.
+        ("altered-reply", r"LINEAGE_REFUSED: review task round-5 reply does not match its recorded digest"),
+        ("other-head", UNLISTED),
+        # Review round 1, F1: a digest proves the sealed reply intact, not complete.
+        ("truncated-reply", UNLISTED),
+        ("other-count", UNLISTED),
+        ("ambiguous-run", UNLISTED),
+    ],
+)
+def test_owner_request_grant_reads_a_withheld_rejection_from_its_sealed_run(monkeypatch, tmp_path, defect, reason):
+    changed = ("scripts/review/record_cf_verdict.py",)
+    tasks, comments, calls = owner_case(monkeypatch, tmp_path, spent=5, changed=changed)
+    write_grant(tasks, {**OWNER_RULING, "scope_paths": list(changed)})
+    comments[-1]["body"] = recorder.build_comment(
+        sha="5" * 40, task_id="round-5", started=WITHHELD_START, verdict="CHANGES_REQUESTED", model="claude-opus-5-5",
+        family="anthropic", reply="", withheld_findings=1 if defect == "other-count" else "unknown",
+    )
+    sealed = WITHHELD_F5 + (f"\n\n{recorder.TRUNCATION_FLAG}" if defect == "truncated-reply" else "")
+    run = dict(worktree_base_sha="6" * 40 if defect == "other-head" else "5" * 40, model="claude-opus-5-5",
+               agent="claude", started_at=WITHHELD_START, pr=42, review_mode="cross_family",
+               result_sha256=None if defect == "unsealed-digest" else hashlib.sha256(sealed.encode()).hexdigest())
+    if defect != "missing-run":
+        write_task(tasks, task_id="round-5", reply=sealed, **run)
+    if defect == "altered-reply":
+        (tasks / "round-5.result").write_text(WITHHELD_F5 + "\nF9 [P1] added later.")
+    if defect == "ambiguous-run":
+        write_task(tasks, task_id="round-5-copy", reply=WITHHELD_F5, **run)
+        record = json.loads((tasks / "round-5-copy.json").read_text())
+        (tasks / "round-5-copy.json").write_text(json.dumps({**record, "task_id": "round-5"}))
+    write_task(tasks, reply=OPEN_F5)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    if reason is None:
+        receipt = recorder.record("review-one", **kwargs)["budget_grant"]
+        assert receipt["round_allowance"] == 6 and receipt["cited_verdict_head"] == "5" * 40
+        # No withheld text reaches the receipt.
+        assert "withheld note" not in json.dumps(receipt) and "depth exhaustion" not in json.dumps(receipt)
+        assert calls["posts"] == 1
+        return
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", **kwargs)
+    assert calls == {"posts": 0, "statuses": 0}
+
+
 @pytest.mark.parametrize("stem", ["grant-approval", "grant-approval.20261029T010000Z.archived"])
 def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
     """Archiving moves the record and its result together and keeps the hot result_file (review round 1, F3)."""
