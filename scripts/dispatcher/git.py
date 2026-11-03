@@ -342,17 +342,36 @@ def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, wor
     return path, branch, sha
 
 
+_HELD_WORKTREE_LOCKS = contextvars.ContextVar("held_dispatch_worktree_locks", default=frozenset())
+
+
 @contextmanager
-def worktree_lock(repo: Path):
+def worktree_lock(repo: Path, *, timeout: float | None = None):
     """Serialize worktree creation, attachment (--cwd) and removal in one repository."""
+    key = (os.getpid(), str(repo.resolve()))
+    if key in _HELD_WORKTREE_LOCKS.get():
+        yield
+        return
     fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
     with os.fdopen(fd, "rb") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        yield
+        deadline = None if timeout is None else time.monotonic() + timeout
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | (0 if deadline is None else fcntl.LOCK_NB))
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError("dispatcher worktree attachment lock busy") from None
+                time.sleep(0.05)
+        token = _HELD_WORKTREE_LOCKS.set(_HELD_WORKTREE_LOCKS.get() | {key})
+        try:
+            yield
+        finally:
+            _HELD_WORKTREE_LOCKS.reset(token)
 
 
 def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=(),
-                    exact=False, registration: dict | None = None) -> None:
+                    exact=False, registration: dict | None = None, creator_actor: str | None = None) -> None:
     """Create a task worktree; ``registration`` (see register_worktree) also keeps its registry entry true.
 
     The entry is written before the tree exists and confirmed after, all under the worktree lock that
@@ -364,9 +383,13 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
 
     def run_git(where, *args):
         return _git(where, *no_replace, *args, isolate=True)
+    from scripts.orchestration import worktree_claims
+
     path.parent.mkdir(parents=True, exist_ok=True)
     # Serialize config enablement and keep sparse settings local to the new worktree.
-    with worktree_lock(repo):
+    with worktree_lock(repo), worktree_claims.worktree_lock(
+        path, lock_dir=worktree_claims.repository_lock_dir(worktree_claims.control_plane_root(repo)),
+    ):
         if registration:
             register_worktree(path=path, branch=branch, sha=sha, **registration)
         try:
@@ -377,6 +400,14 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
             else:
                 run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
             run_git(path, "reset", "--hard", sha)
+            from scripts.orchestration.worktree_claims import new_helper_creator, publish_helper_creator
+
+            receipt_path, receipt = new_helper_creator(
+                path.resolve(), repo_root=repo,
+                actor=creator_actor or os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID") or f"uid:{os.getuid()}",
+                source="dispatcher_helper", reason=f"dispatcher helper created {branch}",
+            )
+            publish_helper_creator(receipt_path, receipt)
             if registration:
                 confirm_worktree(registration["registry"], path)
                 _install_refresh_hooks(path, registration["registry"])
