@@ -14,7 +14,7 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
   (exact allowlisted hosts; host and loopback addresses refused);
 * runs AGY under bubblewrap (``review.isolation``). The root is empty except for read-only binds of
   the system runtime, the AGY binary, the task worktree, its Git metadata, the project virtual environment
-  (exposed as the worktree's ignored ``.venv`` link so reviews can run the interpreter and tests) and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
+  (exposed as the worktree's untracked ``.venv`` link so reviews can run the interpreter and tests) and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
   dropped and the root is remounted read-only, so the runtime (which holds TMPDIR) is the only
   writable path;
 * copies each explicit input's hashed bytes into the private scratch and bind-mounts that
@@ -535,11 +535,15 @@ def _git(worktree: Path, *args: str) -> str:
 
 
 def _input_state(worktree: Path) -> dict:
-    """The reviewed head and whether the worktree matches it (no staged, unstaged or untracked change)."""
+    """The reviewed head and clean state, allowing only the untracked project-interpreter link."""
     try:
         head = _git(worktree, "rev-parse", "--verify", "HEAD^{commit}").strip()
         status = _git(worktree, "status", "--porcelain=v1", "-z", "--ignore-submodules=none")
-    except (Refused, OSError, subprocess.SubprocessError):
+        if status == "?? .venv\0":
+            local = worktree / ".venv"
+            if local.is_symlink() and local.resolve(strict=True) == _venv():
+                status = ""
+    except (Refused, OSError, RuntimeError, subprocess.SubprocessError):
         return {"head": None, "clean": False}
     return {"head": head, "clean": status == ""}
 
@@ -1058,7 +1062,6 @@ class _Boundary:
         if not start["clean"]:
             raise Refused("the worktree differs from its head before launch")
         try:
-            # Ignored by the repository's .gitignore, so the head and status comparison is unchanged.
             created = _link_interpreter(self.worktree)
         except (OSError, ValueError) as exc:
             raise Refused("the project interpreter cannot be exposed in the worktree") from exc
