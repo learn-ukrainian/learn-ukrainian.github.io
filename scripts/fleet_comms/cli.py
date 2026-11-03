@@ -1193,11 +1193,16 @@ def cmd_retention(args: argparse.Namespace) -> int:
                 if unreferenced
                 else None
             )
+            # An acknowledged cut-short blob is kept by both rules in this run.
+            acknowledged = frozenset(
+                str(entry["sha256"]) for entry in (citations.acknowledged_truncated if citations else ())
+            )
             report = store.expire_message_blobs(
                 older_than_days=args.older_than_days,
                 grace_seconds=args.grace_seconds,
                 apply=args.apply,
                 backup_dir=backup_dir,
+                held_sha=acknowledged,
             )
             unreferenced_report = (
                 store.expire_unreferenced_blobs(
@@ -1306,7 +1311,7 @@ def build_parser() -> argparse.ArgumentParser:
             "the tasks directory, the docs tree and a fresh GitHub dump. Any missing, empty, "
             "stale, truncated or unreadable source refuses the whole run before any candidate, "
             "as does compressed content cut short; --accept-truncated-sha256 waives that only for a "
-            "named message-linked blob cut at its end, reported in the receipt and never removed. "
+            "named message-linked blob cut at its end, reported in the receipt and kept by both rules. "
             "Message rows and artifact rows (sha256, bytes) are never deleted.\n"
             "GitHub dump (.jsonl): line 1 {\"kind\": \"header\", \"fetched_at\": \"<UTC ISO-Z>\"}, "
             "then one object per line with kind issue, pull_request, issue_comment or "

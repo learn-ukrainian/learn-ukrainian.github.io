@@ -277,6 +277,7 @@ class RetentionReport:
     skipped_changed: int
     by_class: dict[str, dict[str, int]]
     backup_dir: str | None = None
+    held_acknowledged: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -499,17 +500,22 @@ class _HashingReader(io.RawIOBase):
 
 
 class _ChargedReader(io.RawIOBase):
-    """Pass a decoded handle through, charging every byte it yields to the size cap.
+    """Pass a zip member through, charging every decoded byte to the size cap.
 
-    Seeking is delegated, so a zip member that is itself a zip (which
-    ``zipfile`` must seek) stays readable; bytes read again after a seek are
-    charged again, which errs toward the cap.
+    A member that is itself a zip must be seekable for ``zipfile``. A seek
+    never lets the member decompress on its own (``ZipExtFile.seek`` would,
+    uncharged): moving back rewinds the member to its start, which decodes
+    nothing, and moving forward reads and discards through the charged path
+    in bounded chunks. ``size`` (the member's declared size) resolves a seek
+    from the end. Bytes decoded again after a seek are charged again.
     """
 
-    def __init__(self, source: Any, charge: Any) -> None:
+    def __init__(self, source: Any, charge: Any, size: int) -> None:
         super().__init__()
         self._source = source
         self._charge = charge
+        self._size = size
+        self._position = 0
 
     def readable(self) -> bool:
         return True
@@ -518,16 +524,72 @@ class _ChargedReader(io.RawIOBase):
         return self._source.seekable()
 
     def seek(self, offset: int, whence: int = io.SEEK_SET) -> int:
-        return self._source.seek(offset, whence)
+        base = {io.SEEK_SET: 0, io.SEEK_CUR: self._position, io.SEEK_END: self._size}[whence]
+        target = base + offset
+        if target < 0:
+            raise ValueError("negative seek position")
+        if target < self._position:
+            self._source.seek(0)
+            self._position = 0
+        while self._position < target:
+            data = self._source.read(min(_STREAM_READ, target - self._position))
+            if not data:
+                break
+            self._charge(len(data))
+            self._position += len(data)
+        return self._position
 
     def tell(self) -> int:
-        return self._source.tell()
+        return self._position
 
     def readinto(self, buffer: Any) -> int:
         data = self._source.read(len(buffer))
         self._charge(len(data))
+        self._position += len(data)
         buffer[: len(data)] = data
         return len(data)
+
+
+class _PrefixedReader(io.RawIOBase):
+    """Hand out ``prefix`` (bytes already read from ``source``), then the rest of ``source``."""
+
+    def __init__(self, prefix: bytes, source: Any) -> None:
+        super().__init__()
+        self._prefix = prefix
+        self._source = source
+
+    def readable(self) -> bool:
+        return True
+
+    def readinto(self, buffer: Any) -> int:
+        if self._prefix:
+            count = min(len(buffer), len(self._prefix))
+            buffer[:count] = self._prefix[:count]
+            self._prefix = self._prefix[count:]
+            return count
+        data = self._source.read(len(buffer))
+        buffer[: len(data)] = data
+        return len(data)
+
+
+_PREFIX_BYTES = 8
+
+
+def _with_full_prefix(handle: Any) -> tuple[bytes, Any]:
+    """Return the first bytes of ``handle`` for format detection, and a handle still holding them.
+
+    ``peek`` returns at most one read of the source, which for decoded output
+    can be shorter than a magic number (a stream whose first member decodes
+    to one byte). The prefix is therefore complete: ``_PREFIX_BYTES`` bytes,
+    or fewer only at the end of the data.
+    """
+    if not hasattr(handle, "peek"):
+        handle = io.BufferedReader(handle)
+    head = handle.peek(_PREFIX_BYTES)[:_PREFIX_BYTES]
+    if len(head) >= _PREFIX_BYTES:
+        return head, handle
+    head = handle.read(_PREFIX_BYTES)
+    return head, io.BufferedReader(_PrefixedReader(head, handle))
 
 
 class _ScanState:
@@ -567,9 +629,7 @@ class _ScanState:
         if depth == 0:
             self._decompressed = 0
             self.plain_bytes = 0
-        if not hasattr(handle, "peek"):
-            handle = io.BufferedReader(handle)
-        head = handle.peek(8)[:8]
+        head, handle = _with_full_prefix(handle)
         for magic, name in _UNSUPPORTED_MAGIC.items():
             if head.startswith(magic):
                 raise ArtifactStoreError(f"citation scan cannot open {name} content; refusing")
@@ -597,7 +657,9 @@ class _ScanState:
                             )
                         with archive.open(info) as member:
                             try:
-                                total += self.feed_stream(_ChargedReader(member, self.charge), depth + 1)
+                                total += self.feed_stream(
+                                    _ChargedReader(member, self.charge, info.file_size), depth + 1
+                                )
                             except _CutShort as exc:
                                 # The members after this one are unscanned: never waivable.
                                 raise ArtifactStoreError(
@@ -649,9 +711,7 @@ class _ScanState:
         """
         if depth == 0:
             self._decompressed = 0
-        if not hasattr(handle, "peek"):
-            handle = io.BufferedReader(handle)
-        head = handle.peek(8)[:8]
+        head, handle = _with_full_prefix(handle)
         fmt = _stream_format(head)
         if fmt is not None:
             if depth >= _ARCHIVE_MAX_DEPTH:
@@ -1513,6 +1573,7 @@ class ArtifactStore:
         apply: bool = False,
         now: datetime | None = None,
         backup_dir: Path | None = None,
+        held_sha: frozenset[str] = frozenset(),
     ) -> RetentionReport:
         """Remove blobs of finished messages older than the cutoff (#12530).
 
@@ -1531,6 +1592,10 @@ class ArtifactStore:
         so every removed blob has a durable verified copy (a rolled-back
         removal can leave an extra one). Restoring a copy through
         ``store_bytes`` rewrites the blob and clears the expired marker.
+
+        ``held_sha`` names blobs this run must keep whatever the rule says:
+        the cut-short blobs a citation scan acknowledged (#12574). They are
+        never candidates, in the tally or in the locked re-checks.
         """
         if older_than_days < 1:
             raise ArtifactStoreError("older_than_days must be at least 1")
@@ -1556,6 +1621,7 @@ class ArtifactStore:
             mtime_floor=moment.timestamp() - max(0, grace_seconds),
             apply=apply,
             backup_dir=backup_dir,
+            held_sha=held_sha,
         )
         return RetentionReport(
             applied=apply,
@@ -1572,6 +1638,7 @@ class ArtifactStore:
             skipped_changed=n["changed"],
             by_class=n["by_class"],
             backup_dir=str(backup_dir) if backup_dir is not None else None,
+            held_acknowledged=n["held_acknowledged"],
         )
 
     def expire_unreferenced_blobs(

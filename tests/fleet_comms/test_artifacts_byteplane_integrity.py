@@ -17,6 +17,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.fleet_comms import artifacts as artifacts_module
 from scripts.fleet_comms.artifacts import (
     MAX_ARTIFACT_BYTES,
     ArtifactExpiredError,
@@ -407,7 +408,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
     source, or removes a cited artifact."""
     with ArtifactStore(root=tmp_path / "plane") as store:
         names = (
-            "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut",
+            "by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split",
             "uncited", "padded", "inventory",
         )
         recs = {name: store.store_bytes(_payload(), producer="t") for name in names}
@@ -472,6 +473,26 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         trailing = _sources(tmp_path / "trailing")
         (trailing.docs_dir / "x.bz2").write_bytes(bz2.compress(b"text") + b"garbage")
         refuses(trailing, "starts no supported stream")
+        # Bytes a zip member decodes only because zipfile seeks across them
+        # (2 MiB between an inner zip's last member and its central directory)
+        # count against the cap too.
+        small_zip = io.BytesIO()
+        with zipfile.ZipFile(small_zip, "w", zipfile.ZIP_DEFLATED) as bundle:
+            bundle.writestr("x.txt", "artifact_" + "a" * 32)
+        raw = small_zip.getvalue()
+        end = raw.rfind(b"PK\x05\x06")
+        directory = int.from_bytes(raw[end + 16 : end + 20], "little")
+        gap = 2 * 1024 * 1024
+        spliced = (
+            raw[:directory] + b"\0" * gap + raw[directory : end + 16]
+            + (directory + gap).to_bytes(4, "little") + raw[end + 20 :]
+        )
+        seeking = _sources(tmp_path / "seeking")
+        with zipfile.ZipFile(seeking.tasks_dir / "outer.zip", "w", zipfile.ZIP_DEFLATED) as bundle:
+            bundle.writestr("inner.zip", spliced)
+        monkeypatch.setattr(artifacts_module, "_ARCHIVE_MAX_BYTES", 1024 * 1024)
+        refuses(seeking, "exceeds 1048576 bytes")
+        monkeypatch.undo()
         zstd = _sources(tmp_path / "zstd")
         (zstd.docs_dir / "x.zst").write_bytes(b"\x28\xb5\x2f\xfd" + b"\x00" * 16)
         refuses(zstd, "cannot open zstd")
@@ -501,6 +522,10 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         (good.docs_dir / "data" / "evidence.bin").write_bytes(
             gzip.compress(recs["by_gz"].artifact_id.encode())
         )
+        # The format of decoded content is judged on a full prefix, even when
+        # the first stream decodes to a single byte.
+        split = gzip.compress(recs["by_split"].artifact_id.encode())
+        (good.docs_dir / "data" / "split.gz").write_bytes(gzip.compress(split[:1]) + gzip.compress(split[1:]))
         # Every stream of a concatenated file is scanned, whatever its format.
         (good.docs_dir / "data" / "joined.bz2").write_bytes(
             bz2.compress(b"prefix") + gzip.compress(recs["by_concat"].artifact_id.encode())
@@ -527,7 +552,10 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         snapshots.mkdir()
         inventory_key = f"x/{blob_path(recs['inventory'])}"
         listing = f'"{inventory_key}":"!!"'
-        (snapshots / "read_only_checkout_pre.json").write_text("{" + listing + "}")
+        inventory_gz = gzip.compress(("{" + listing + "}").encode())
+        (snapshots / "read_only_checkout_pre.json").write_bytes(
+            gzip.compress(inventory_gz[:1]) + gzip.compress(inventory_gz[1:])
+        )
         # A compressed inventory is decoded before its listings are stripped.
         (snapshots / "read_only_checkout_post.json").write_bytes(
             gzip.compress(
@@ -545,7 +573,7 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         scan = store.scan_citations(good, now=now, accept_truncated=frozenset({cut_blob.sha256}))
         assert scan.cited == frozenset(
             recs[name].artifact_id
-            for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut")
+            for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split")
         )
         # Every byte the decoder can produce before the cut was scanned.
         receipt = {
@@ -563,10 +591,10 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
             citations=scan, apply=True, now=_LATER, backup_dir=tmp_path / "backup"
         )
         assert dry.acknowledged_truncated == report.acknowledged_truncated == [receipt]
-        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 11)
+        assert (report.candidates, report.removed, report.held_cited) == (3, 3, 12)
         assert cut_blob.blob_path.is_file()
         assert {entry["source"] for entry in report.sources} == {"store", "tasks", "docs", "github"}
-        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut"):
+        for name in ("by_id", "by_sha", "by_path", "by_doc", "by_note", "by_gz", "by_zip", "by_blob", "by_blobzip", "by_concat", "by_cut", "by_split"):
             assert recs[name].blob_path.is_file()
         for name in ("uncited", "padded", "inventory"):
             assert not recs[name].blob_path.is_file()
@@ -617,3 +645,13 @@ def test_unreferenced_retention_refuses_unverified_sources_and_keeps_cited(
         single = _unreferenced_candidate_sql(single=True)
         assert other._candidate_row(single, locked, frozenset()) is not None
         assert other._candidate_row(single, locked, frozenset(), frozenset({held.sha256})) is None
+        # The message rule keeps it too.
+        body = other.store_bytes(_payload(), producer="t")
+        other.reference("old-message", body.artifact_id)
+        later = datetime.now(UTC) + timedelta(days=60)
+        assert other.expire_message_blobs(now=later).candidates == 1
+        kept = other.expire_message_blobs(
+            apply=True, now=later, backup_dir=tmp_path / "ack-msg-backup", held_sha=frozenset({body.sha256})
+        )
+        assert (kept.candidates, kept.removed, kept.held_acknowledged) == (0, 0, 1)
+        assert body.blob_path.is_file()
