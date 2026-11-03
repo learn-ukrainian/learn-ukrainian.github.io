@@ -66,7 +66,7 @@ def source_permission(assertion, record, register):
         if assertion["field"] != "russification_exposed":
             return "refused", "soviet_normative_as_modern"
         return "unresolved", "historical_contrast_requires_context_review"
-    if source != entry:
+    if source != entry or assertion["source_id"] != entry["id"] or record["source_id"] != entry["id"]:
         return "refused", "assertion_source_mismatch"
     if not capabilities.intersection(FACET_CAPABILITIES.get(assertion["field"], set())):
         return "unresolved", "source_facet_not_permitted"

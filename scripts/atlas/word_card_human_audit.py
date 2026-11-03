@@ -268,7 +268,7 @@ Related: #12658, docs/atlas/word-cards/certification-spec.md
                                  'approved_reviews': decision_records(packet, submission)}, ensure_ascii=False, indent=2)
         else:
             output = render_packet(packet)
-        args.output.write_text(output)
+        args.output.write_text(output, encoding="utf-8")
         print(json.dumps({'status': 'PROPOSAL_ONLY' if args.decisions else 'PENDING_HUMAN',
                           'packet_sha256': args.sha256, 'output_sha256': hashlib.sha256(output.encode()).hexdigest()}))
         return 0
