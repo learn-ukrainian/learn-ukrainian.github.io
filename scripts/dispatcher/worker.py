@@ -497,22 +497,26 @@ def load_post_start_code() -> None:
     Settlement and the other steps after the provider runs import part of their code on demand, from the
     primary checkout. A dispatcher change that merged while the worker ran gave them new modules next to
     the old ones loaded at start, and removal failed on the mix (#12634). Loading them now makes the whole
-    run use the version it started with. The list is every module a worker's later steps first load: the
-    deferred imports of this module, ``git`` and the provider registry, the settlement chain, and the modules
-    a run of the dispatcher tests loaded after start. A new deferred import belongs here; a step that still
-    cannot load its code records ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a
-    fresh process. A group that cannot be imported is skipped, so the worker still runs.
+    run use the version it started with. The list holds the deferred imports of the modules a worker runs
+    after start (this one, ``git``, the provider registry, the settlement chain, review attempts and
+    their helpers) and the modules the dispatcher tests loaded after start. A new deferred import in
+    those steps belongs here. Each group is skipped whole when any module in it fails to import, whatever
+    the error, so the worker still starts; a step that then cannot load its code records
+    ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a fresh process.
     """
-    with contextlib.suppress(ImportError):
+    with contextlib.suppress(Exception):
         from scripts.agent_runtime import (  # noqa: F401
             agy_hook_config,
             attempt_boundary,
+            attempt_network,
             binary_resolve,
             codex_accounts,
             env_sanitize,
             failure_codes,
             jsonl,
+            review_mcp,
             sources_read_only,
+            telemetry,
             tool_calls,
         )
         from scripts.agent_runtime.adapters import (  # noqa: F401
@@ -522,21 +526,42 @@ def load_post_start_code() -> None:
             claude,
             codex,
             codex_events,
+            cursor,
             muse,
         )
-    with contextlib.suppress(ImportError):
+    with contextlib.suppress(Exception):  # alone: it needs a dependency that a lean checkout may lack
+        from scripts.agent_runtime import runner  # noqa: F401
+    with contextlib.suppress(Exception):
         from scripts.common import nofollow_walk, release_layout, safe_open  # noqa: F401
         from scripts.curriculum.evidence import codes, lock  # noqa: F401
         from scripts.guardrails import delegate_ownership  # noqa: F401
+        from scripts.lib import git_identity  # noqa: F401
         from scripts.opsec import git_push  # noqa: F401
-        from scripts.review import review_contract, verdict_parser  # noqa: F401
+        from scripts.session_supervisor import remote  # noqa: F401
+        from scripts.utils import claude_version  # noqa: F401
+    with contextlib.suppress(Exception):
+        from scripts.review import (  # noqa: F401
+            budget_grant,
+            isolation,
+            render_contract,
+            repair_round,
+            review_contract,
+            verdict_parser,
+        )
+        from scripts.review.prompts import check, eligibility  # noqa: F401
         from scripts.review.receipts import ledger, outcomes  # noqa: F401
-    with contextlib.suppress(ImportError):
-        from scripts.dispatcher import checks, host_admission, output_schema, review_attempt  # noqa: F401
+    with contextlib.suppress(Exception):
+        from scripts.dispatcher import checks, host_admission, output_schema, review_attempt, scope  # noqa: F401
         from scripts.dispatcher.providers import agy, claude, codex, cursor, muse, opencode, stream_json  # noqa: F401
-    with contextlib.suppress(ImportError):
-        from scripts.fleet import ignored_task_output, regenerable_output, terminal_abandon  # noqa: F401
-    with contextlib.suppress(ImportError):
+    with contextlib.suppress(Exception):
+        from scripts.fleet import (  # noqa: F401
+            credit_lane,
+            ignored_task_output,
+            pr_owner_check,
+            regenerable_output,
+            terminal_abandon,
+        )
+    with contextlib.suppress(Exception):
         from scripts.orchestration import (  # noqa: F401
             admission_shadow,
             dead_worker_state,
@@ -545,6 +570,7 @@ def load_post_start_code() -> None:
             pr_ownership,
             preparation_evidence,
             reaper_lifecycle,
+            task_record_causes,
             worker_leftovers,
             worktree_artifacts,
             worktree_claims,
