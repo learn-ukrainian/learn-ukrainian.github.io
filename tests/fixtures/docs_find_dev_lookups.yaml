@@ -230,8 +230,8 @@ lookups:
 
   # ---------------------------------------------------------------- process: where is it implemented
   - {id: L27, question: 'Where is the immersion band for a module computed?', kind: process, query: immersion band,
-     expect: [scripts/config.py],
-     verify: [{path: scripts/config.py, contains: def compute_immersion_band}]}
+     expect: [scripts/curriculum/pedagogy_config.py],
+     verify: [{path: scripts/curriculum/pedagogy_config.py, contains: def compute_immersion_band}]}
   - {id: L32, question: 'Where is the resolve-reviewer command implemented?', kind: process, query: resolve-reviewer,
      expect: [scripts/review/closeout_cli.py, scripts/review/reviewer_resolver.py],
      verify: [{path: scripts/review/closeout_cli.py, contains: resolve-reviewer}]}
