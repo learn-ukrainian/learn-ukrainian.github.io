@@ -1313,7 +1313,9 @@ def observe_local_git(
     if head_sha:
         try:
             commit_range = task_commit_range(root, head_sha, base_sha)
-            changed_raw = _run_git(root, ["diff", "--name-only", commit_range])
+            # Rename detection would hide a deleted learner path behind an exempt
+            # destination. Both sides stay on the list, matching pr_file_paths (#12653).
+            changed_raw = _run_git(root, ["diff", "--name-only", "--no-renames", commit_range])
             changed_paths = [line for line in changed_raw.splitlines() if line]
             log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", commit_range])
             for record in log.split("\x1e"):
@@ -1527,9 +1529,9 @@ def _behavior_proof_reference_error(
             or not all(isinstance(path, str) for path in changed_paths)
         ):
             return "behavior-proof learner-content file list is unreadable"
-        from scripts.orchestration.integration_sweep import changes_learner_content
+        from scripts.orchestration.integration_sweep import requires_ukrainian_behavior_receipt
 
-        if changes_learner_content(changed_paths) and receipt.get("review_profile") != "ukrainian":
+        if requires_ukrainian_behavior_receipt(changed_paths) and receipt.get("review_profile") != "ukrainian":
             return "learner-content change requires a ukrainian behavior-proof receipt"
     if receipt.get("review_profile") == "ukrainian":
         seat_error = _ukrainian_behavior_proof_error(
