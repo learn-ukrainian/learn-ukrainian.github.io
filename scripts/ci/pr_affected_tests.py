@@ -99,8 +99,15 @@ def safe_path(name: str, *, node: bool = False) -> str:
     return name
 
 
-def importing_tests(targets: set[str], deleted: set[str], base: str, entries: dict[str, str]) -> list[str]:
-    """Tests that directly import, load, read or run a changed file, by static scan.
+def importing_tests(
+    targets: set[str], deleted: set[str], base: str, entries: dict[str, str],
+) -> tuple[list[str], list[str]]:
+    """Tests that import, load, read or run a changed file, by static scan, in two tiers.
+
+    The first tier is the tests that do so themselves. The second is the tests that
+    only share a ``conftest.py`` that does: pytest loads a conftest for every test
+    file under its directory, so the code it imports or copies into a fixture is code
+    those tests run. The second tier lists no test twice.
 
     A test that loads a computed path also depends on every file under the
     directories its constants name (`components.directory_edges`).
@@ -124,14 +131,17 @@ def importing_tests(targets: set[str], deleted: set[str], base: str, entries: di
         scan = components.scan_imports(sources, set(tree))
         edges = [*edges, *(edge for edge in scan["file_edges"] if edge[1] in deleted)]
         directories = [*directories, *scan["directory_edges"]]
-    return sorted({
-        importer for importer, target in edges
-        if target in targets and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
-    } | {
+    regular = {name for name, mode in entries.items() if TEST.fullmatch(name) and mode in {"100644", "100755"}}
+    reached = {importer for importer, target in edges if target in targets} | {
         importer for importer, directory in directories
         if any(target.startswith(directory + "/") for target in targets)
-        and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
-    })
+    }
+    direct = reached & regular
+    scopes = {PurePosixPath(importer).parent.as_posix() for importer in reached
+              if PurePosixPath(importer).name == "conftest.py"}
+    shared = {name for name in regular
+              if any(scope == "." or name.startswith(scope + "/") for scope in scopes)}
+    return sorted(direct), sorted(shared - direct)
 
 
 def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
@@ -226,11 +236,12 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         for p in git("diff", "--no-renames", "--diff-filter=D", "--name-only", "-z", base, candidate, "--").split(b"\0")
         if p
     } & sources
-    imported = (
-        [p for p in importing_tests(sources, deleted, base, entries) if p not in run]
+    direct, shared = (
+        tuple([p for p in tier if p not in run] for tier in importing_tests(sources, deleted, base, entries))
         if importers and sources and not reason
-        else []
+        else ([], [])
     )
+    imported = direct + shared
     unknown += [p for p in imported if p not in durations]
     for p in imported:
         value = durations.get(p, default)
@@ -238,10 +249,13 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
             raise ValueError("invalid recorded duration")
     budget = estimate
     fill_limit = min(estimate + (CAP_SECONDS - estimate) * FILL_SHARE, SAFE_SECONDS)
-    for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
-        if budget + durations.get(p, default) <= fill_limit:
-            run.add(p)
-            budget += durations.get(p, default)
+    # Tests that import the code themselves fill first. Tests that only share a conftest
+    # with it are cheaper to name than to trust, so they never displace a direct importer.
+    for tier in (direct, shared):
+        for p in sorted(tier, key=lambda p: (durations.get(p, default), p)):
+            if budget + durations.get(p, default) <= fill_limit:
+                run.add(p)
+                budget += durations.get(p, default)
     if set(imported) - run:
         reason = BUDGET_REASON if fill_limit == SAFE_SECONDS else "recorded estimate exceeds 600 second cap"
     # A whole file already covers its pinned ids.
