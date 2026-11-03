@@ -32,7 +32,22 @@ refuse here too) when the file is:
   SHA-256 of the canonical JSON of every other field (``policy_digest_mismatch``).
   The digest proves completeness, not authorship; authorship is the reviewed
   commit that changed the file. ``python -m scripts.orchestration.product_policy
-  --digest PATH`` prints the value to record after an edit.
+  --digest PATH`` prints the value to record after an edit;
+- outside the v1 safety envelope (``policy_outside_v1_envelope``), even with a
+  recomputed digest.
+
+The v1 safety envelope is part of this interface's contract, not product data. A
+v1 policy may tighten within it, but never loosen it:
+
+- floors: every learner-payload pattern and every content agent type in the envelope
+  stays listed (more may be added);
+- ceilings: no Ukrainian content family and no Ukrainian review seat outside the
+  envelope (fewer is allowed);
+- receipts: for each author family, and for the default, the required reviewer
+  families include at least those the envelope requires.
+
+Loosening is an incompatible change: it needs schema v2 and a loader update here,
+reviewed as a change to dispatch admission (#12680 F1, CTO decision option B).
 
 The decisions on a loaded :class:`ProductPolicy` match names and paths exactly.
 An input that is not exact but folds to a policy entry (case, Unicode lookalike
@@ -80,6 +95,31 @@ _NAME_RE = re.compile(r"[a-z][a-z0-9]*(?:[-.][a-z0-9]+)*\Z")
 _PATTERN_SEGMENT = r"[A-Za-z0-9_.*-]+"
 _PATTERN_RE = re.compile(rf"{_PATTERN_SEGMENT}(?:/{_PATTERN_SEGMENT})*/?\Z")
 _SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
+
+# The v1 safety envelope (see the module docstring). Equal to the decisions in
+# force when v1 was cut; changing any value here is a schema change.
+_V1_LEARNER_PAYLOAD_FLOOR = frozenset({
+    "curriculum/",
+    "scripts/curriculum/",
+    "scripts/data/stress_overrides.yaml",
+    "scripts/verification/stress*",
+    "scripts/pipeline/stress_annotator.py",
+    "scripts/lexicon/",
+    "site/src/lib/lexicon/",
+    "scripts/review/prompts/",
+    "scripts/build/phases/",
+    "scripts/build/fresh/prompt*",
+    "docs/epics/fresh-build-*",
+    "schemas/activities-*",
+})
+_V1_CONTENT_AGENT_TYPE_FLOOR = frozenset({"curriculum-orchestrator"})
+_V1_UKRAINIAN_CONTENT_FAMILY_CEILING = frozenset({"anthropic", "google", "openai"})
+_V1_REVIEW_SEAT_CEILING = frozenset({("agy", "google"), ("codex", "openai")})
+_V1_RECEIPTS_BY_AUTHOR_FLOOR: Mapping[str, frozenset[str]] = MappingProxyType({
+    "google": frozenset({"openai"}),
+    "openai": frozenset({"google"}),
+})
+_V1_RECEIPTS_DEFAULT_FLOOR = frozenset({"google", "openai"})
 
 # Letters from other scripts that render like Latin ones, and dash and slash
 # variants. Used only to *detect* a lookalike, never to accept one.
@@ -233,8 +273,11 @@ def _read_bytes(path: Path) -> bytes:
         raise ProductPolicyError("policy_not_regular_file", f"{path} is not a regular file (symlinks are refused)")
     if info.st_size > MAX_POLICY_BYTES:
         raise ProductPolicyError("policy_too_large", f"{path} is {info.st_size} bytes (limit {MAX_POLICY_BYTES})")
+    # O_NONBLOCK: a FIFO or device swapped in after the lstat opens at once instead of
+    # blocking (and holding the admission lock); the fstat below then refuses it.
+    flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | getattr(os, "O_CLOEXEC", 0)
     try:
-        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0))
+        descriptor = os.open(path, flags)
     except OSError as exc:
         raise ProductPolicyError("policy_unreadable", f"{path}: {exc.strerror}") from None
     try:
@@ -309,6 +352,39 @@ def _unique_skeletons(entries: list[str], where: str) -> None:
         seen[folded] = entry
 
 
+def _require_v1_envelope(
+    *,
+    patterns: frozenset[str],
+    content_agent_types: frozenset[str],
+    content_families: frozenset[str],
+    review_seats: frozenset[tuple[str, str]],
+    by_author: Mapping[str, frozenset[str]],
+    default: frozenset[str],
+) -> None:
+    """Refuse a v1 policy that loosens the v1 safety envelope (it may only tighten)."""
+    loosened: list[str] = []
+    if missing := sorted(_V1_LEARNER_PAYLOAD_FLOOR - patterns):
+        loosened.append(f"learner_payload_paths drops {', '.join(missing)}")
+    if missing := sorted(_V1_CONTENT_AGENT_TYPE_FLOOR - content_agent_types):
+        loosened.append(f"content_agent_types drops {', '.join(missing)}")
+    if extra := sorted(content_families - _V1_UKRAINIAN_CONTENT_FAMILY_CEILING):
+        loosened.append(f"ukrainian_content_families adds {', '.join(extra)}")
+    if extra_seats := sorted(review_seats - _V1_REVIEW_SEAT_CEILING):
+        loosened.append(f"ukrainian_review_seats adds {', '.join(f'{r}/{f}' for r, f in extra_seats)}")
+    for author in sorted(set(by_author) | set(_V1_RECEIPTS_BY_AUTHOR_FLOOR)):
+        required = by_author.get(author, default)
+        floor = _V1_RECEIPTS_BY_AUTHOR_FLOOR.get(author, _V1_RECEIPTS_DEFAULT_FLOOR)
+        if missing := sorted(floor - required):
+            loosened.append(f"receipts for author {author} drop {', '.join(missing)}")
+    if missing := sorted(_V1_RECEIPTS_DEFAULT_FLOOR - default):
+        loosened.append(f"review_receipts_default drops {', '.join(missing)}")
+    if loosened:
+        raise ProductPolicyError(
+            "policy_outside_v1_envelope",
+            "; ".join(loosened) + " (loosening needs schema v2 and a loader update)",
+        )
+
+
 def parse_policy(document: Any, *, file_name: str | None = None) -> ProductPolicy:
     """Validate a decoded policy document. ``file_name`` is the name the file was read under."""
     top = _fields(document, _TOP_FIELDS, "policy")
@@ -375,6 +451,14 @@ def parse_policy(document: Any, *, file_name: str | None = None) -> ProductPolic
     default = _names(receipts["review_receipts_default"], "receipts.review_receipts_default")
     if not default <= seat_families:
         raise ProductPolicyError("policy_field_invalid", "receipts.review_receipts_default names a non-seat family")
+    _require_v1_envelope(
+        patterns=frozenset(patterns),
+        content_agent_types=content_agent_types,
+        content_families=content_families,
+        review_seats=frozenset((seat.route, seat.family) for seat in review_seats),
+        by_author=by_author,
+        default=default,
+    )
 
     return ProductPolicy(
         origin=top["origin"],
