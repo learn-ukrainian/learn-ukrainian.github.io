@@ -36,6 +36,16 @@ says so, because the governor command under `off` would otherwise refuse again.
 The check uses `workerinput` to recognize a real xdist worker. An inherited
 `PYTEST_XDIST_WORKER` on a new pytest does not exempt it.
 
+## Verification
+
+`tests/ci/test_pytest_fanout_refusal.py` and
+`tests/test_dispatch_xdist_cap.py` (`test_without_marker_explicit_n_above_the_cap_is_refused`)
+are the proof. A refusal is exit code 4, the governed command in the error, and no
+worker-configure or test-body sentinel. An admitted run records the xdist worker ids.
+The counted workers mirror xdist 3.8.0 `pytest_cmdline_main` and need a fresh check when
+that hook changes. Targeted command:
+`.venv/bin/python -m pytest -q tests/ci/test_pytest_fanout_refusal.py`.
+
 ## Limits
 
 This is one run's ceiling, not a sum across sibling processes. It does not stop a true `CI`

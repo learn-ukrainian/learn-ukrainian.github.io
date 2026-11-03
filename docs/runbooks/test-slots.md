@@ -48,6 +48,8 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
   Serial runs, `-n 0`, and a count at or under 2 are unchanged. `--collect-only`, `--help`,
   `--version` and `--markers` are unchanged. `--fixtures` and `--fixtures-per-test` are refused
   only when they would start more workers than the cap; a serial fixtures listing does not queue.
+  What proves the refusal is in the autopsy
+  `docs/bug-autopsies/unleased-pytest-worker-fanout.md` under Verification.
 - The governor never raises an existing `PYTEST_XDIST_AUTO_NUM_WORKERS`, such as a driver scope's
   memory cap. A value of `0` keeps `-n auto` serial.
 
