@@ -86,9 +86,11 @@ and when it does not match the runtime selected now. The generator writes `pinne
 (the runtime's data version and manifest digest, plus the SHA-256 of every canonical artifact and
 browse shard) only when one run wrote every canonical output, and the shared gate recomputes the
 digests, so any later write to the set (another run, an output override, an interrupted write) is
-refused whatever wrote it. The Node hydrate step records the digests of the search shards it derives
-into `public/lexicon/search/` in `.atlas-pinned/search-shards-source.json`, and the gate checks them
-too. A pinned build never falls back to the committed files.
+refused whatever wrote it. The digests are those of the exact bytes the generator wrote, and it refuses to certify a set
+another writer changed meanwhile. The Node hydrate step derives `public/lexicon/search/` only from
+inputs the marker certifies, then records the inputs and the digests of the shard bytes it wrote in
+`.atlas-pinned/search-shards-source.json`; the gate checks them too. A pinned build never falls back
+to the committed files.
 The Frontend CI build record binds `site/.atlas-pinned/` and records the
 selection, so a release build leaves `git status` empty and the worktree can be
 removed with the guarded remover. Do not set `ATLAS_SEARCH_RUNTIME_TREE` for

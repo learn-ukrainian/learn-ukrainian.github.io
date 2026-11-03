@@ -5,6 +5,7 @@ import hashlib
 import json
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -973,6 +974,20 @@ def test_pinned_run_writes_the_ignored_build_dir_and_never_the_committed_snapsho
     assert republished["files"]["lexicon-search-index.json"] != hashlib.sha256(
         (pinned_data / "lexicon-search-index.json").read_bytes()
     ).hexdigest()
+    # Another writer replacing a canonical file while this run is still writing: nothing is certified.
+    unchanged = marker_file.read_bytes()
+    real_write_browse = gsi.write_browse_outputs
+
+    def write_then_lose_the_index(*args: Any, **kwargs: Any) -> Any:
+        result = real_write_browse(*args, **kwargs)
+        (pinned_data / "lexicon-search-index.json").write_text("[]", encoding="utf-8")
+        return result
+
+    monkeypatch.setattr(gsi, "write_browse_outputs", write_then_lose_the_index)
+    with pytest.raises(SystemExit, match="changed on disk while it was being written"):
+        main(["--runtime-tree", str(tmp_path / "tree")])
+    assert marker_file.read_bytes() == unchanged
+    monkeypatch.setattr(gsi, "write_browse_outputs", real_write_browse)
     # The ignored directory name is shared with the site reader's selection module.
     selection = (PROJECT_ROOT / "site/src/lib/lexicon/atlas-artifact-selection.mjs").read_text(encoding="utf-8")
     declared = re.search(r"PINNED_ARTIFACT_DIRNAME = '([^']+)'", selection)

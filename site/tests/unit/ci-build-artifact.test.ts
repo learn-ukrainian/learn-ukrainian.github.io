@@ -26,6 +26,8 @@ import {
   PINNED_SELECTION_ENV,
   PINNED_SOURCE_MARKER,
   SELECTED_ARTIFACT_NAMES,
+  SHARD_INPUT_NAMES,
+  digestDerivedSearchShards,
   digestPinnedSet,
   readRuntimeTreeIdentity,
   recordDerivedSearchShards,
@@ -93,11 +95,15 @@ function makePinnedSet(fixture: BuildRoots, tag: string): { tree: string; pinned
   writeFileSync(join(fixture.siteDir, 'public/lexicon/search/a.json'), '[]\n');
   // What a completed pinned generation and hydrate record: runtime identity, digests, derived shards.
   const env = { [PINNED_SELECTION_ENV]: tree } as NodeJS.ProcessEnv;
+  const digests = digestPinnedSet(fixture.siteDir, env);
   writeFileSync(
     join(dataDir, PINNED_SOURCE_MARKER),
-    JSON.stringify({ ...readRuntimeTreeIdentity(tree), ...digestPinnedSet(fixture.siteDir, env) }),
+    JSON.stringify({ ...readRuntimeTreeIdentity(tree), ...digests }),
   );
-  recordDerivedSearchShards(fixture.siteDir, env);
+  recordDerivedSearchShards(fixture.siteDir, env, {
+    inputs: Object.fromEntries(SHARD_INPUT_NAMES.map((name) => [name, digests.files[name]])) as Record<string, string>,
+    searchShards: digestDerivedSearchShards(fixture.siteDir),
+  });
   return { tree, pinnedFile: join(dataDir, 'lexicon-search-index.json') };
 }
 

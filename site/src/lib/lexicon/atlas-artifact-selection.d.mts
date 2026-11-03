@@ -30,6 +30,16 @@ export function digestPinnedSet(siteRoot: string, env?: NodeJS.ProcessEnv): { fi
 export function digestDerivedSearchShards(siteRoot: string): Record<string, string>;
 export function browseShardFileNames(meta: unknown, metaPath: string): string[];
 export function assertSelectedArtifactsComplete(siteRoot: string, env?: NodeJS.ProcessEnv): void;
-export function recordDerivedSearchShards(siteRoot: string, env?: NodeJS.ProcessEnv): void;
+export const SHARD_INPUT_NAMES: readonly string[];
+export function readCertifiedArtifacts(
+  names: readonly string[],
+  siteRoot: string,
+  env?: NodeJS.ProcessEnv,
+): { texts: Record<string, string>; digests: Record<string, string> };
+export function recordDerivedSearchShards(
+  siteRoot: string,
+  env: NodeJS.ProcessEnv,
+  written: { inputs: Record<string, string>; searchShards: Record<string, string> },
+): void;
 export function installSelectedBrowseShards(distDir: string, siteRoot: string, env?: NodeJS.ProcessEnv): void;
 export function atlasArtifactSelectionPlugin(options: { siteRoot: string; env?: NodeJS.ProcessEnv }): Plugin;

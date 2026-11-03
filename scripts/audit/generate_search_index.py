@@ -1049,14 +1049,20 @@ def build_browse_outputs(
     return meta, shards, flagged_rows
 
 
-def write_index(rows: list[dict[str, Any]], out_path: Path) -> None:
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_bytes(_json_bytes(rows))
+def _write_digest(path: Path, data: bytes) -> str:
+    """Write `data` and return the SHA-256 of exactly those bytes (never re-read from disk)."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    return hashlib.sha256(data).hexdigest()
 
 
-def write_aliases(rows: list[dict[str, Any]], out_path: Path) -> None:
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_bytes(_json_bytes(rows))
+def write_index(rows: list[dict[str, Any]], out_path: Path) -> str:
+    return _write_digest(out_path, _json_bytes(rows))
+
+
+def write_aliases(rows: list[dict[str, Any]], out_path: Path) -> str:
+    return _write_digest(out_path, _json_bytes(rows))
 
 
 def write_search_shards(
@@ -1064,17 +1070,17 @@ def write_search_shards(
     shards: Mapping[str, list[dict[str, Any]]],
     out_path: Path,
     shard_dir: Path | None,
-) -> None:
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_bytes(_json_bytes(payload))
+) -> str:
+    digest = _write_digest(out_path, _json_bytes(payload))
     if shard_dir is None:
-        return
+        return digest
 
     shard_dir.mkdir(parents=True, exist_ok=True)
     for old_shard in shard_dir.glob("*.json"):
         old_shard.unlink()
     for key, rows in shards.items():
         (shard_dir / f"{key}.json").write_bytes(_json_bytes(rows))
+    return digest
 
 
 def write_browse_outputs(
@@ -1084,17 +1090,20 @@ def write_browse_outputs(
     meta_out: Path,
     flagged_out: Path,
     browse_dir: Path,
-) -> None:
-    meta_out.parent.mkdir(parents=True, exist_ok=True)
-    meta_out.write_bytes(_json_bytes(meta))
-    flagged_out.parent.mkdir(parents=True, exist_ok=True)
-    flagged_out.write_bytes(_json_bytes(flagged_rows))
+) -> dict[str, Any]:
+    """Write the browse outputs; return the SHA-256 of the exact bytes written for each."""
+
+    meta_digest = _write_digest(meta_out, _json_bytes(meta))
+    flagged_digest = _write_digest(flagged_out, _json_bytes(flagged_rows))
 
     browse_dir.mkdir(parents=True, exist_ok=True)
     for old_shard in browse_dir.glob("*.json"):
         old_shard.unlink()
-    for letter, rows in shards.items():
-        (browse_dir / f"{letter}.json").write_bytes(_json_bytes(rows))
+    shard_digests = {
+        f"{letter}.json": _write_digest(browse_dir / f"{letter}.json", _json_bytes(rows))
+        for letter, rows in shards.items()
+    }
+    return {"meta": meta_digest, "flagged": flagged_digest, "shards": shard_digests}
 
 
 def pinned_set_digests(data_dir: Path, browse_dir: Path) -> dict[str, dict[str, str]]:
@@ -1249,14 +1258,31 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
         rows, aliases, parity = build_pinned_search(args.runtime_tree)
         meta, browse_shards, flagged_rows = build_browse_outputs(rows)
         search_shards, search_shard_rows = build_search_shards(rows)
-        write_index(rows, args.out)
-        write_aliases(aliases, args.aliases_out)
-        write_search_shards(search_shards, search_shard_rows, args.search_shards_out, args.search_shard_dir)
-        write_browse_outputs(
+        index_digest = write_index(rows, args.out)
+        aliases_digest = write_aliases(aliases, args.aliases_out)
+        shards_digest = write_search_shards(search_shards, search_shard_rows, args.search_shards_out, args.search_shard_dir)
+        browse_digests = write_browse_outputs(
             meta, browse_shards, flagged_rows, args.browse_meta_out, args.browse_flagged_out, args.browse_dir
         )
         verify_browse_artifacts_written(args.browse_meta_out, args.browse_dir, meta["total"])
         if written_paths == canonical_paths:
+            # Certify the bytes this run produced, not whatever the files hold now, and refuse to
+            # certify when another writer replaced any of them in between.
+            produced = {
+                "files": {
+                    DEFAULT_SEARCH_OUT.name: index_digest,
+                    DEFAULT_SEARCH_ALIASES_OUT.name: aliases_digest,
+                    DEFAULT_SEARCH_SHARDS_OUT.name: shards_digest,
+                    DEFAULT_BROWSE_META_OUT.name: browse_digests["meta"],
+                    DEFAULT_BROWSE_FLAGGED_OUT.name: browse_digests["flagged"],
+                },
+                "browse": browse_digests["shards"],
+            }
+            if pinned_set_digests(PINNED_DATA_DIR, PINNED_BROWSE_DIR) != produced:
+                raise SystemExit(
+                    "pinned set changed on disk while it was being written; "
+                    f"not writing {PINNED_SOURCE_MARKER}, regenerate it"
+                )
             (PINNED_DATA_DIR / PINNED_SOURCE_MARKER).write_bytes(
                 _json_bytes(
                     {
@@ -1264,7 +1290,7 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
                         "schemaVersion": 2,
                         "dataVersion": parity["dataVersion"],
                         "runtimeManifestSha256": parity["runtimeManifestSha256"],
-                        **pinned_set_digests(PINNED_DATA_DIR, PINNED_BROWSE_DIR),
+                        **produced,
                     }
                 )
             )

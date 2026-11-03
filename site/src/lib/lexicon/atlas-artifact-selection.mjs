@@ -41,6 +41,8 @@ export const PINNED_SOURCE_MARKER = 'pinned-source.json';
  * from the selected set: the SHA-256 of the marker those shards came from and of each shard.
  */
 export const PINNED_SHARDS_SIDECAR = 'search-shards-source.json';
+/** The certified artifacts the search shards are derived from. */
+export const SHARD_INPUT_NAMES = Object.freeze(['lexicon-search-index.json', 'lexicon-search-shards.json']);
 /** The generated JSON files whose location depends on the selection. */
 export const SELECTED_ARTIFACT_NAMES = Object.freeze([
   'lexicon-search-index.json',
@@ -120,6 +122,51 @@ export function readSelectedArtifactText(name, siteRoot, env = process.env) {
  */
 export function readSelectedArtifactJson(name, siteRoot, env = process.env) {
   return JSON.parse(readSelectedArtifactText(name, siteRoot, env));
+}
+
+/**
+ * Read selected artifacts together with the SHA-256 of the exact bytes read. Under the pinned
+ * selection the bytes must be the ones `pinned-source.json` certified, so output derived from
+ * them (the search shards) is never certified from a foreign or half-written file.
+ * @param {readonly string[]} names
+ * @param {string} siteRoot
+ * @param {NodeJS.ProcessEnv} [env]
+ * @returns {{ texts: Record<string, string>, digests: Record<string, string> }}
+ */
+export function readCertifiedArtifacts(names, siteRoot, env = process.env) {
+  const { dataDir } = resolveSelectedArtifactLocations(siteRoot, env);
+  /** @type {Record<string, string>} */
+  const texts = {};
+  /** @type {Record<string, string>} */
+  const digests = {};
+  for (const name of names) {
+    const path = selectedArtifactPath(name, siteRoot, env);
+    if (isPinnedSelection(env) && !existsSync(path)) {
+      throw new AtlasArtifactSelectionError(
+        `${PINNED_SELECTION_ENV} is set but ${path} is missing; run the pinned hydrate (atlas:build-search) first`,
+      );
+    }
+    const bytes = readFileSync(path);
+    texts[name] = bytes.toString('utf8');
+    digests[name] = createHash('sha256').update(bytes).digest('hex');
+  }
+  if (isPinnedSelection(env)) {
+    const markerPath = join(dataDir, PINNED_SOURCE_MARKER);
+    if (!existsSync(markerPath)) {
+      throw new AtlasArtifactSelectionError(
+        `${PINNED_SELECTION_ENV} is set but ${markerPath} is missing; regenerate the pinned set first`,
+      );
+    }
+    const certified = JSON.parse(readFileSync(markerPath, 'utf8')).files ?? {};
+    const uncertified = names.filter((name) => certified[name] !== digests[name]);
+    if (uncertified.length > 0) {
+      throw new AtlasArtifactSelectionError(
+        `${uncertified.join(', ')} in ${dataDir} is not what ${PINNED_SOURCE_MARKER} certified;` +
+          ' regenerate the pinned set before deriving from it',
+      );
+    }
+  }
+  return { texts, digests };
 }
 
 /**
@@ -281,28 +328,45 @@ export function assertSelectedArtifactsComplete(siteRoot, env = process.env) {
   const sidecar = existsSync(sidecarPath) ? JSON.parse(readFileSync(sidecarPath, 'utf8')) : null;
   const markerSha256 = createHash('sha256').update(markerBytes).digest('hex');
   const shardChanges = sidecar ? digestDifferences('search shard', sidecar.searchShards, digestDerivedSearchShards(siteRoot)) : [];
-  if (!sidecar || sidecar.markerSha256 !== markerSha256 || shardChanges.length > 0) {
+  // The sidecar must also record that the shards were derived from the bytes the marker certifies.
+  const inputChanges = sidecar
+    ? digestDifferences(
+        'derivation input',
+        sidecar.inputs,
+        Object.fromEntries(SHARD_INPUT_NAMES.map((name) => [name, marker.files?.[name] ?? ''])),
+      )
+    : [];
+  if (!sidecar || sidecar.markerSha256 !== markerSha256 || shardChanges.length > 0 || inputChanges.length > 0) {
     throw new AtlasArtifactSelectionError(
       `public/lexicon/search was not derived from the pinned set in ${dataDir}` +
-        `${shardChanges.length > 0 ? ` (${shardChanges.slice(0, 5).join(', ')})` : ''};` +
+        `${shardChanges.length + inputChanges.length > 0 ? ` (${[...inputChanges, ...shardChanges].slice(0, 5).join(', ')})` : ''};` +
         ' run hydrate-lexicon-api-shards.ts with the pinned selection',
     );
   }
 }
 
 /**
- * Record, after the search shards under `public/lexicon/search` were derived from the pinned set,
- * the marker they came from and each shard's digest. A no-op for the committed selection: shards
- * derived from the committed copy simply fail the pinned gate's digest comparison.
+ * Record, after the search shards under `public/lexicon/search` were derived, the marker they came
+ * from, the digests of the certified inputs they were derived from and of the shard bytes the caller
+ * wrote. Refuses to record when the directory no longer holds exactly those bytes. A no-op for the
+ * committed selection: shards derived from the committed copy fail the pinned gate's comparison.
  * @param {string} siteRoot
- * @param {NodeJS.ProcessEnv} [env]
+ * @param {NodeJS.ProcessEnv} env
+ * @param {{ inputs: Record<string, string>, searchShards: Record<string, string> }} written
  */
-export function recordDerivedSearchShards(siteRoot, env = process.env) {
+export function recordDerivedSearchShards(siteRoot, env, written) {
   if (!isPinnedSelection(env)) return;
   const markerPath = join(resolveSelectedArtifactLocations(siteRoot, env).dataDir, PINNED_SOURCE_MARKER);
   if (!existsSync(markerPath)) {
     throw new AtlasArtifactSelectionError(
       `${PINNED_SELECTION_ENV} is set but ${markerPath} is missing; regenerate the pinned set before deriving search shards`,
+    );
+  }
+  const onDisk = digestDerivedSearchShards(siteRoot);
+  const changed = digestDifferences('search shard', written.searchShards, onDisk);
+  if (changed.length > 0) {
+    throw new AtlasArtifactSelectionError(
+      `public/lexicon/search changed while it was being written (${changed.slice(0, 5).join(', ')}); not recording it`,
     );
   }
   const sidecar = join(resolve(siteRoot), PINNED_ARTIFACT_DIRNAME, PINNED_SHARDS_SIDECAR);
@@ -311,9 +375,10 @@ export function recordDerivedSearchShards(siteRoot, env = process.env) {
     sidecar,
     `${JSON.stringify({
       schema: 'atlas-pinned-search-shards',
-      schemaVersion: 1,
+      schemaVersion: 2,
       markerSha256: sha256File(markerPath),
-      searchShards: digestDerivedSearchShards(siteRoot),
+      inputs: written.inputs,
+      searchShards: written.searchShards,
     })}\n`,
   );
 }

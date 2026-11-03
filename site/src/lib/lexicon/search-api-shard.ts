@@ -1,6 +1,7 @@
+import { createHash } from "node:crypto";
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { readSelectedArtifactJson, recordDerivedSearchShards } from "./atlas-artifact-selection.mjs";
+import { SHARD_INPUT_NAMES, readCertifiedArtifacts, recordDerivedSearchShards } from "./atlas-artifact-selection.mjs";
 import {
   buildSearchRowsByShard,
   type SearchRow,
@@ -16,10 +17,17 @@ export const SEARCH_API_JSON_HEADERS = {
  * Read through the shared artifact selection: this module also runs under plain
  * Node (hydrate), where Vite cannot redirect a static JSON import to the pinned set.
  */
-function readShardInputs(siteRoot: string): { manifest: SearchShardManifest; rows: SearchRow[] } {
+function readShardInputs(siteRoot: string): {
+  manifest: SearchShardManifest;
+  rows: SearchRow[];
+  inputDigests: Record<string, string>;
+} {
+  // Under the pinned selection these bytes must be the ones the pinned-source marker certified.
+  const { texts, digests } = readCertifiedArtifacts(SHARD_INPUT_NAMES, siteRoot);
   return {
-    manifest: readSelectedArtifactJson("lexicon-search-shards.json", siteRoot) as SearchShardManifest,
-    rows: readSelectedArtifactJson("lexicon-search-index.json", siteRoot) as SearchRow[],
+    manifest: JSON.parse(texts["lexicon-search-shards.json"]!) as SearchShardManifest,
+    rows: JSON.parse(texts["lexicon-search-index.json"]!) as SearchRow[],
+    inputDigests: digests,
   };
 }
 
@@ -29,22 +37,22 @@ export function getSearchRowsByShard(siteRoot: string = process.cwd()): Map<stri
 }
 
 export function writeSearchShardFiles(siteRoot: string): number {
-  const rowsByShard = getSearchRowsByShard(siteRoot);
+  const { manifest, rows, inputDigests } = readShardInputs(siteRoot);
+  const rowsByShard = buildSearchRowsByShard(manifest, rows);
   const searchShardDir = resolve(siteRoot, "public/lexicon/search");
   mkdirSync(searchShardDir, { recursive: true });
   // A shard the selected manifest no longer lists must not ship from an earlier hydrate.
   for (const stale of readdirSync(searchShardDir)) {
     if (stale.endsWith(".json")) rmSync(resolve(searchShardDir, stale));
   }
+  const written: Record<string, string> = {};
   for (const [shard, shardRows] of rowsByShard) {
-    writeFileSync(
-      resolve(searchShardDir, `${shard}.json`),
-      `${JSON.stringify(shardRows)}\n`,
-      "utf8",
-    );
+    const text = `${JSON.stringify(shardRows)}\n`;
+    writeFileSync(resolve(searchShardDir, `${shard}.json`), text, "utf8");
+    written[`${shard}.json`] = createHash("sha256").update(text, "utf8").digest("hex");
   }
-  // Record which pinned set these shards came from and their digests (a no-op when committed).
-  recordDerivedSearchShards(siteRoot);
+  // Record the certified inputs and the exact bytes written (a no-op unless pinned).
+  recordDerivedSearchShards(siteRoot, process.env, { inputs: inputDigests, searchShards: written });
   return rowsByShard.size;
 }
 
