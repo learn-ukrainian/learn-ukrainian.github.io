@@ -22,11 +22,20 @@ from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 from typing import Any, Literal
 
-import yaml
-
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+if __name__ == "__main__":
+    # Re-exec before importing recorder dependencies, as scripts/dispatch.py does.
+    try:
+        from scripts.dispatcher.primary import exec_primary
+
+        exec_primary(sys.argv[1:], entry=Path("scripts/review/record_cf_verdict.py"))
+    except (ImportError, OSError, SystemExit) as exc:
+        print(json.dumps({"admitted": False, "refusal": f"RECORDER_PRIMARY_REFUSED: {exc}"}, sort_keys=True))
+        raise SystemExit(2) from None
+
+import yaml
 from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
@@ -3201,17 +3210,23 @@ def dispatch_budget_check(
     return budget_check(repository, number, task_root=task_root, head=head)
 
 
+RECORDER_COMMAND = '"$PRIMARY_REPO/.venv/bin/python" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py"'
+RECORDER_EXAMPLES = (
+    'Examples:\n  PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"\n'
+)
+
+
 def budget_check_main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(
         prog="record_cf_verdict.py budget-check",
         description="Ask the verdict recorder whether a review round at the PR's current head would be admitted.\n"
         "Run it before dispatching a reviewer; it reads only and writes no receipt.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py budget-check "
+        epilog=f"{RECORDER_EXAMPLES}  {RECORDER_COMMAND} budget-check "
         "--repository learn-ukrainian/learn-ukrainian.github.io --pr 42\n"
         "Outputs: JSON on stdout: admitted, the budget, unrecorded_rounds (heads reviewed with no recorded verdict)\n"
         "  and any exemption, grant or repair-round receipt.\n"
-        "Exit codes: 0: admitted; 1: refused (the reason names what to escalate).\n"
+        "Exit codes: 0: admitted; 1: refused (the reason names what to escalate); 2: primary bootstrap refused.\n"
         "Related: agents_extensions/shared/skills/review-loop/references/policy.md",
     )
     parser.add_argument("--repository", required=True, help="GitHub owner/name of the PR")
@@ -3325,10 +3340,10 @@ def republish_withheld_main(argv: list[str]) -> int:
         description="Publish the findings of a verdict recorded as withheld, once the cause is fixed.\n"
         "Posts the sealed reply beside the withheld comment; records no new verdict, round or status.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py republish-withheld "
+        epilog=f"{RECORDER_EXAMPLES}  {RECORDER_COMMAND} republish-withheld "
         "--task-id review-unit --pr 42\n"
         "Outputs: JSON on stdout: the PR, head, task, verdict and whether a comment was posted.\n"
-        "Exit codes: 0: posted, or the findings were already published; 1: refused.\n"
+        "Exit codes: 0: posted, or the findings were already published; 1: refused; 2: primary bootstrap refused.\n"
         "Related: agents_extensions/shared/skills/review-loop/SKILL.md",
     )
     parser.add_argument("--task-id", required=True, help="Review task whose verdict was recorded withheld")
@@ -3364,20 +3379,20 @@ def main(argv: list[str] | None = None) -> int:
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
         "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
+        epilog=f"{RECORDER_EXAMPLES}  {RECORDER_COMMAND} --task-id review-unit --pr 1\n"
+        f"  {RECORDER_COMMAND} --task-id review-unit --pr 1 "
         "--review-mode red_team --red-team-prompt brief.md\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-check --repository owner/name --pr 1\n"
+        f"  {RECORDER_COMMAND} budget-check --repository owner/name --pr 1\n"
         "    (whether the next review round is admitted, before dispatch; see budget-check --help)\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-grant digest <ruling.json>\n"
+        f"  {RECORDER_COMMAND} budget-grant digest <ruling.json>\n"
         "    (an elevated-tier grant ruling's digest; see budget-grant --help)\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py republish-withheld --task-id review-unit --pr 1\n"
+        f"  {RECORDER_COMMAND} republish-withheld --task-id review-unit --pr 1\n"
         "    (publish the findings of a verdict recorded withheld; see republish-withheld --help)\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py capability-failure --task-id review-unit --pr 1 "
+        f"  {RECORDER_COMMAND} capability-failure --task-id review-unit --pr 1 "
         "--capability test-execution --authority claude-cto\n"
         "    (classify a finished run that only lacked a capability; see capability-failure --help)\n"
         "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
-        "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
+        "Exit codes: 0: recorded; 1: refused or status publication failed; 2: primary bootstrap refused.\nRelated: #9297, #9951",
     )
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")

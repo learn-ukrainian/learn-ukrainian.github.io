@@ -4166,6 +4166,11 @@ import json, runpy, subprocess, sys
 
 import scripts.orchestration.fleet_repos as fleet_repos
 import scripts.publish.github as github
+import scripts.dispatcher.primary as primary
+
+# This case isolates the package refusal classes; the primary-bootstrap cases below
+# exercise real re-exec in separate checkout fixtures.
+primary.exec_primary = lambda *_args, **_kwargs: None
 
 OPEN_PR = {"headRefOid": "a" * 40, "headRefName": "claude/x", "state": "OPEN"}
 
@@ -4204,6 +4209,77 @@ def test_cli_prints_the_typed_refusal_in_every_invocation_form(form):
     assert done.returncode == 1 and "Traceback" not in done.stderr, done.stderr
     refusal = json.loads(done.stdout)
     assert refusal["admitted"] is False and "refused by the fixture" in refusal["refusal"]
+
+
+def recorder_cli_tree(tmp_path):
+    source = Path(recorder.__file__).resolve().parents[2]
+    primary = tmp_path / "primary checkout"
+    tree = tmp_path / "older branch"
+    gitdir = primary / ".git/worktrees/older"
+    gitdir.mkdir(parents=True)
+    tree.mkdir()
+    (tree / ".git").write_text(f"gitdir: {gitdir}\n")
+    for relative in (
+        "scripts/review/record_cf_verdict.py",
+        "scripts/dispatcher/primary.py",
+        "scripts/common/repo_root.py",
+    ):
+        target = tree / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((source / relative).read_bytes())
+    for package in ("scripts", "scripts/review", "scripts/dispatcher", "scripts/common"):
+        (tree / package / "__init__.py").write_text("")
+    # A stale recorder dependency must never load before the primary bootstrap.
+    (tree / "yaml.py").write_text("raise RuntimeError('stale recorder dependency loaded')\n")
+    entry = primary / "scripts/review/record_cf_verdict.py"
+    entry.parent.mkdir(parents=True)
+    return tree, entry
+
+
+def run_recorder_cli(tree, form, argv):
+    entry = [str(tree / "scripts/review/record_cf_verdict.py")] if form == "file" else [
+        "-m", "scripts.review.record_cf_verdict"
+    ]
+    cwd = tree / "nested working directory"
+    cwd.mkdir()
+    return subprocess.run(
+        [sys.executable, *entry, *argv], cwd=cwd,
+        env={**os.environ, "PYTHONPATH": str(tree)},
+        text=True, capture_output=True, check=False, timeout=30,
+    )
+
+
+@pytest.mark.parametrize("form", ["file", "module"])
+@pytest.mark.parametrize("argv", [
+    ["budget-check", "--repository", REPOSITORY, "--pr", "42"],
+    ["--task-id", "review-current-head", "--pr", "42"],
+])
+def test_cli_uses_primary_recorder_before_stale_imports(tmp_path, form, argv):
+    """Defect class: branch-age-dependent recorder gate and stale dependency imports."""
+    tree, entry = recorder_cli_tree(tmp_path)
+    entry.write_text(
+        'import json, os, sys\n'
+        'print(json.dumps({"rules": "primary", "argv": sys.argv, "cwd": os.getcwd()}))\n'
+    )
+    done = run_recorder_cli(tree, form, argv)
+    assert done.returncode == 0, done.stderr
+    assert json.loads(done.stdout) == {
+        "rules": "primary", "argv": [str(entry), *argv], "cwd": str(tree / "nested working directory")
+    }
+
+
+@pytest.mark.parametrize("form", ["file", "module"])
+@pytest.mark.parametrize("failure", ["metadata", "missing-entry"])
+def test_cli_refuses_unavailable_primary_recorder(tmp_path, form, failure):
+    """Defect class: fail-open stale gate when linked metadata is malformed or the primary recorder is missing."""
+    tree, _entry = recorder_cli_tree(tmp_path)
+    if failure == "metadata":
+        (tree / ".git").write_text("gitdir: /nonexistent/metadata\n")
+    done = run_recorder_cli(tree, form, ["budget-check", "--repository", REPOSITORY, "--pr", "42"])
+    assert done.returncode == 2 and "Traceback" not in done.stderr, done.stderr
+    refusal = json.loads(done.stdout)
+    assert refusal["admitted"] is False
+    assert refusal["refusal"].startswith("RECORDER_PRIMARY_REFUSED:")
 
 
 WITHHELD_FINDING = (
