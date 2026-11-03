@@ -920,6 +920,27 @@ def test_publish_records_post_switch_failure_without_retry(publish_store, monkey
     }
     assert not [name for name in files if name.endswith(catalogue.CANDIDATE_SUFFIX)]
     assert generation.exists() and generations.is_held(generation)
+    # An error raised while the writer lock is released, after a complete publication, is post-switch too.
+    monkeypatch.setattr(generations, "_complete_receipt", real_complete)
+    real_lock = generations.writer_lock
+
+    @contextmanager
+    def failing_release(*args, **kwargs):
+        with real_lock(*args, **kwargs) as held:
+            yield held
+        raise OSError("writer lock release failed")
+
+    monkeypatch.setattr(generations, "writer_lock", failing_release)
+    previous = generations.inspect_selector(selector).generation
+    assert catalogue.main(_publish_args(selector, previous, root)) == 3
+    released, _ = _store_files(selector)
+    assert released != previous.name and len(ingests) == 2
+    assert _failed(capsys) == {
+        "status": "published_post_switch_failed",
+        "reason": "OSError",
+        "generation": released,
+        "previous": previous.name,
+    }
 
 
 def test_publish_scratch_round_trip_preserves_non_catalogue_tables(publish_store, capsys):

@@ -789,13 +789,15 @@ def publish(
     """Build, verify and publish one new generation, holding the store writer lock throughout.
 
     The sequence is ``sum20_mirror_import.run_import``'s. Every refusal before
-    the switch leaves the selection as it was and removes the candidate. An
-    error after the selector switch is a ``PostSwitchFailure`` naming the
-    generation now selected; nothing is retried.
+    the switch leaves the selection as it was and removes the candidate. Any
+    error once the selector has switched, the writer lock's release included,
+    is a ``PostSwitchFailure`` naming the generation now selected; nothing is
+    retried.
     """
     from scripts.ingest import sum20_mirror_import as importer
     from scripts.storage import generations
 
+    current: Path | None = None
     try:
         with generations.writer_lock(target.selector) as held:
             if held.layout != "selector" or held.generation is None:
@@ -818,20 +820,23 @@ def publish(
                 # Refresh with actual sizes: after the switch a restore of ``current`` needs this much free.
                 generations.require_free_space(target.data_dir, max(candidate.stat().st_size, size))
                 publication = generations.publish_generation(candidate, held)
-            except BaseException as exc:
-                # Read the selection first: a cleanup error must not hide that the new generation is selected.
-                switched = importer._switched_to(target, current) if isinstance(exc, Exception) else None
+            except BaseException:
                 try:
                     importer._remove([candidate, *importer._sidecars(candidate)])
                 except OSError:
-                    if switched is None:
+                    # A cleanup error must not hide that the new generation is selected.
+                    if importer._switched_to(target, current) is None:
                         raise
-                if switched is not None:
-                    reason = exc.reason if isinstance(exc, generations.GenerationError) else type(exc).__name__
-                    raise importer.PostSwitchFailure(reason, switched.name, current.name) from exc
                 raise
-    except generations.GenerationError as exc:
-        raise importer.Refused(exc.reason) from None
+    except Exception as exc:
+        # Classify by the selection itself, so an error raised while the lock is released is classified too.
+        switched = None if current is None else importer._switched_to(target, current)
+        if switched is not None:
+            reason = exc.reason if isinstance(exc, generations.GenerationError) else type(exc).__name__
+            raise importer.PostSwitchFailure(reason, switched.name, current.name) from exc
+        if isinstance(exc, generations.GenerationError):
+            raise importer.Refused(exc.reason) from None
+        raise
     return {
         "status": "published",
         "generation": publication.generation.name,
