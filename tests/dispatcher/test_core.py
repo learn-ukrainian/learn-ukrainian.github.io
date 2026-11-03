@@ -531,11 +531,19 @@ def test_initial_response_timeout_default_is_600():
 
 
 def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
-    """Ported from tests/test_delegate.py with the same test name, including process-tree cleanup."""
+    """Ported from tests/test_delegate.py with the same test name, including process-tree cleanup.
+
+    Defect class: a silent tree kept until the hard timeout.
+
+    The silence timer is 1s. Dispatch and reaping took the sibling startup check to 6.06s
+    on a loaded runner, past a bound of 6. The hard timeout is 60s and the bound is 15s:
+    above that run, and below a run that misses the silence timer.
+    """
     started = time.monotonic()
-    task = sandbox.dispatch("tree", "--hard-timeout", "30", "--silence-timeout", "1")
+    task = sandbox.dispatch("tree", "--hard-timeout", "60", "--silence-timeout", "1")
     record = sandbox.settle(task, expected=1)
-    assert time.monotonic() - started < 6
+    elapsed = time.monotonic() - started
+    assert elapsed < 15, f"elapsed={elapsed:.2f}s; a run held to the 60s hard timeout must not pass"
     assert record["returncode"] == -signal.SIGKILL
     assert record["status"] == "timeout"
     assert "stdout_silence_timeout" in record["stderr_excerpt"]
@@ -637,7 +645,12 @@ def test_a_run_settling_while_a_task_it_dispatched_still_runs_names_that_task(sa
 
 
 def test_agy_write_run_does_not_settle_while_its_child_is_running(sandbox, monkeypatch):
-    """Defect class: an AGY workspace-write run that exits 0 on an interim reply while a child task is still active settles done or no_deliverable."""
+    """Defect class: an AGY workspace-write run that exits 0 on an interim reply while a child task is still active settles done or no_deliverable.
+
+    The supervisor returns at its 2s deadline, a little over 2s. A bound of 8 sat a few
+    seconds above that. The bound is 15s: above that deadline on a loaded runner, and below
+    a run held to the 30s terminal grace or the default hard timeout.
+    """
     from scripts.dispatcher.providers import agy
     from scripts.dispatcher.types import Invocation
 
@@ -680,7 +693,9 @@ def test_agy_write_run_does_not_settle_while_its_child_is_running(sandbox, monke
     result = json.loads(path.read_text())
     assert result["status"] not in {"done", "no_deliverable"}
     assert "agy-write-review" in (result.get("error") or "")
-    assert elapsed < 8
+    assert elapsed < 15, (
+        f"elapsed={elapsed:.2f}s; a run held to the 30s terminal grace or the default hard timeout must not pass"
+    )
 
 
 @pytest.mark.parametrize(("inherited", "parent"), [("dispatching-run", "dispatching-run"), ("self-run", None),
@@ -695,12 +710,20 @@ def test_dispatch_records_the_run_it_was_dispatched_from_never_itself(sandbox, i
 
 
 def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):
-    """Ported from tests/test_delegate.py with the same test name."""
+    """Ported from tests/test_delegate.py with the same test name.
+
+    Defect class: a silent startup kept until the silence or hard timeout.
+
+    The initial-response timer is 1s. A loaded merge-group runner took 6.06s and missed a
+    bound of 6. Silence and hard timeout are 60s and the bound is 15s: above that run, and
+    below a run that misses the 1s timer.
+    """
     started = time.monotonic()
-    task = sandbox.dispatch("tree", "--hard-timeout", "30", "--silence-timeout", "30",
+    task = sandbox.dispatch("tree", "--hard-timeout", "60", "--silence-timeout", "60",
                             "--initial-response-timeout", "1")
     record = sandbox.settle(task, expected=1)
-    assert time.monotonic() - started < 6
+    elapsed = time.monotonic() - started
+    assert elapsed < 15, f"elapsed={elapsed:.2f}s; a run held to the 60s timeouts must not pass"
     assert record["returncode"] == -signal.SIGKILL
     assert record["status"] == "timeout"
     excerpt = record["stderr_excerpt"]
