@@ -1202,8 +1202,34 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
             sys.path.insert(0, str(PROJECT_ROOT))
         from scripts.deploy.vendor_atlas_tree import build_pinned_search
 
-        # No marker while the set is being rewritten: an interrupted run must read as stale.
-        (args.out.parent / PINNED_SOURCE_MARKER).unlink(missing_ok=True)
+        # The canonical marker certifies the whole canonical set. It goes before any canonical
+        # output is rewritten (an interrupted or partial run must read as stale) and returns
+        # only when every canonical output was regenerated together by this run.
+        canonical_paths = [
+            resolve_output_path(None, default, pinned=True).resolve()
+            for default in (
+                DEFAULT_SEARCH_OUT,
+                DEFAULT_SEARCH_ALIASES_OUT,
+                DEFAULT_SEARCH_SHARDS_OUT,
+                DEFAULT_BROWSE_META_OUT,
+                DEFAULT_BROWSE_FLAGGED_OUT,
+                DEFAULT_BROWSE_DIR,
+            )
+        ]
+        written_paths = [
+            path.resolve()
+            for path in (
+                args.out,
+                args.aliases_out,
+                args.search_shards_out,
+                args.browse_meta_out,
+                args.browse_flagged_out,
+                args.browse_dir,
+            )
+        ]
+        canonical_marker = PINNED_DATA_DIR / PINNED_SOURCE_MARKER
+        if any(path in canonical_paths for path in written_paths):
+            canonical_marker.unlink(missing_ok=True)
         rows, aliases, parity = build_pinned_search(args.runtime_tree)
         meta, browse_shards, flagged_rows = build_browse_outputs(rows)
         search_shards, search_shard_rows = build_search_shards(rows)
@@ -1214,16 +1240,17 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
             meta, browse_shards, flagged_rows, args.browse_meta_out, args.browse_flagged_out, args.browse_dir
         )
         verify_browse_artifacts_written(args.browse_meta_out, args.browse_dir, meta["total"])
-        (args.out.parent / PINNED_SOURCE_MARKER).write_bytes(
-            _json_bytes(
-                {
-                    "schema": "atlas-pinned-source",
-                    "schemaVersion": 1,
-                    "dataVersion": parity["dataVersion"],
-                    "runtimeManifestSha256": parity["runtimeManifestSha256"],
-                }
+        if written_paths == canonical_paths:
+            canonical_marker.write_bytes(
+                _json_bytes(
+                    {
+                        "schema": "atlas-pinned-source",
+                        "schemaVersion": 1,
+                        "dataVersion": parity["dataVersion"],
+                        "runtimeManifestSha256": parity["runtimeManifestSha256"],
+                    }
+                )
             )
-        )
         print(
             "atlas pinned search/browse artifacts: "
             f"articles={len(rows)} aliases={len(aliases)} browse_records={meta['total']} "

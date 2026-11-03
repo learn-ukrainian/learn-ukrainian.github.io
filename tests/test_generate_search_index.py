@@ -929,6 +929,20 @@ def test_pinned_run_writes_the_ignored_build_dir_and_never_the_committed_snapsho
         "dataVersion": "atlas-v1-test",
         "runtimeManifestSha256": "ab" * 32,
     }
+    # A later run that rewrites only some canonical outputs (an override elsewhere) must not
+    # leave the earlier marker certifying a mixed set, nor publish a marker of its own.
+    monkeypatch.setattr(
+        vendor,
+        "build_pinned_search",
+        lambda tree: ([row], [], {"dataVersion": "atlas-v1-other", "runtimeManifestSha256": "cd" * 32}),
+    )
+    assert main(["--runtime-tree", str(tmp_path / "tree"), "--aliases-out", str(tmp_path / "custom/aliases.json")]) == 0
+    assert not (pinned_data / gsi.PINNED_SOURCE_MARKER).exists()
+    assert (tmp_path / "custom/aliases.json").is_file()
+    assert main(["--runtime-tree", str(tmp_path / "tree")]) == 0
+    assert json.loads((pinned_data / gsi.PINNED_SOURCE_MARKER).read_bytes())["dataVersion"] == "atlas-v1-other"
+    assert main(["--runtime-tree", str(tmp_path / "tree"), "--out", str(tmp_path / "custom/search.json")]) == 0
+    assert not (pinned_data / gsi.PINNED_SOURCE_MARKER).exists()
     # The ignored directory name is shared with the site reader's selection module.
     selection = (PROJECT_ROOT / "site/src/lib/lexicon/atlas-artifact-selection.mjs").read_text(encoding="utf-8")
     declared = re.search(r"PINNED_ARTIFACT_DIRNAME = '([^']+)'", selection)
