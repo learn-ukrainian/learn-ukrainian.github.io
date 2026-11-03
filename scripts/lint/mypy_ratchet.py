@@ -4,6 +4,8 @@
 Identity is ``(path, error code, message)``. Line and column are not part of
 it, so inserting a line above an existing error does not churn the baseline.
 A message that mypy no longer reports is a stale baseline entry and fails.
+The run matches CI: wheels the CI env does not install are skipped, and the
+content ``wiki/`` tree is not a namespace package on the module path.
 Once ``origin/main`` contains the baseline, the committed multiset may only
 shrink. Before that first landing, the baseline has no predecessor; it must
 still equal the mypy census exactly, so entries mypy does not report fail.
@@ -29,6 +31,7 @@ import os
 import re
 import subprocess
 import sys
+import tomllib
 from collections import Counter
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
@@ -39,6 +42,28 @@ BASELINE_PATH = Path(__file__).with_name("mypy_baseline.json")
 SCHEMA = "mypy-ratchet-baseline.v1"
 DEFAULT_TARGET = "scripts"
 MYPY_TIMEOUT_SECONDS = 600
+# python-ci-env installs the lock without these wheels. Skipping them makes a
+# laptop venv that has them report the same errors as CI.
+_CI_ABSENT_MODULES = (
+    "torch",
+    "torch.*",
+    "torchvision",
+    "torchvision.*",
+    "open_clip",
+    "stanza",
+)
+# Top-level content trees with no Python. On a full checkout mypy treats them
+# as namespace packages, so `from wiki import name` (the scripts/wiki fallback)
+# becomes an attr-defined error. A sparse checkout that omits them does not.
+# The search root below leaves them out so both checkouts see the same census.
+_CONTENT_NAMESPACE_ROOTS = frozenset({"wiki"})
+_MYPY_KEYS = (
+    "python_version",
+    "warn_return_any",
+    "warn_unused_configs",
+    "ignore_missing_imports",
+    "exclude",
+)
 _GIT_TIMEOUT_SECONDS = 30
 _SHRINK_REFS = ("HEAD", "HEAD^", "origin/main")
 
@@ -118,10 +143,92 @@ def _normalize_targets(root: Path, paths: Sequence[str]) -> list[str]:
     return targets
 
 
+def _toml(value: object) -> str:
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, str):
+        return json.dumps(value)
+    if isinstance(value, list) and all(isinstance(item, str) for item in value):
+        return "[" + ", ".join(json.dumps(item) for item in value) + "]"
+    raise ValueError(f"unsupported mypy config value: {value!r}")
+
+
+def ratchet_config(root: Path) -> Path | None:
+    """Point mypy at the repo config plus overrides for wheels CI does not install.
+
+    ``files`` is omitted so the paths passed on the command line are the whole
+    check. An unknown ``[tool.mypy]`` key fails closed instead of being dropped.
+    """
+
+    pyproject = root / "pyproject.toml"
+    if not pyproject.is_file():
+        return None
+    tool = tomllib.loads(pyproject.read_text(encoding="utf-8")).get("tool", {}).get("mypy", {})
+    if not isinstance(tool, dict):
+        raise ValueError("pyproject [tool.mypy] is not a table")
+    unknown = sorted(set(tool) - set(_MYPY_KEYS) - {"files"})
+    if unknown:
+        raise ValueError("unhandled [tool.mypy] keys: " + ", ".join(unknown))
+    lines = ["[tool.mypy]"]
+    for key in _MYPY_KEYS:
+        # Unused-section notes have no line number, so a partial pre-commit
+        # (a file that never imports the skipped wheels) would fail closed.
+        # The flag only adds notes; it does not change type errors.
+        if key == "warn_unused_configs":
+            lines.append("warn_unused_configs = false")
+            continue
+        if key in tool:
+            lines.append(f"{key} = {_toml(tool[key])}")
+    lines.extend([
+        "",
+        "[[tool.mypy.overrides]]",
+        "module = " + _toml(list(_CI_ABSENT_MODULES)),
+        'follow_imports = "skip"',
+        "ignore_missing_imports = true",
+        "",
+    ])
+    dest = root / ".mypy_cache" / "mypy-ratchet" / "pyproject.toml"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text("\n".join(lines), encoding="utf-8")
+    return dest
+
+
+def search_root(root: Path) -> Path:
+    """A cwd whose top level is the repo minus content namespace trees.
+
+    mypy always puts the cwd on the module path and turns a directory without
+    ``__init__.py`` into a namespace package. Symlinks keep the cache and the
+    sources where they are; ``--cache-dir`` stays the repo ``.mypy_cache``.
+    """
+
+    dest = root / ".mypy_cache" / "mypy-ratchet" / "search"
+    dest.mkdir(parents=True, exist_ok=True)
+    wanted: dict[str, Path] = {}
+    for child in root.iterdir():
+        if child.name.startswith(".") or child.name in _CONTENT_NAMESPACE_ROOTS:
+            continue
+        wanted[child.name] = child.resolve()
+    for existing in list(dest.iterdir()):
+        target = wanted.get(existing.name)
+        try:
+            current = existing.resolve() if existing.is_symlink() else None
+        except OSError:
+            current = None
+        if target is not None and current == target:
+            wanted.pop(existing.name)
+            continue
+        if existing.is_symlink() or existing.is_file():
+            existing.unlink()
+    for name, target in wanted.items():
+        (dest / name).symlink_to(target)
+    return dest
+
+
 def mypy_command(
     targets: Sequence[str],
     *,
     config_file: Path | None,
+    cache_dir: Path,
     incremental: bool,
 ) -> list[str]:
     """The production mypy invocation. Flags that change the error set stay at
@@ -142,6 +249,8 @@ def mypy_command(
         "--hide-absolute-path",
         "--follow-imports",
         "normal",
+        "--cache-dir",
+        str(cache_dir),
     ]
     if config_file is not None:
         command.extend(["--config-file", str(config_file)])
@@ -165,12 +274,22 @@ def collect_errors(
     existing = [target for target in targets if (root / target).exists()]
     if not existing:
         return [], []
-    command = mypy_command(existing, config_file=config_file, incremental=incremental)
+    if config_file is None:
+        config_file = ratchet_config(root)
+    command = mypy_command(
+        existing,
+        config_file=config_file,
+        cache_dir=root / ".mypy_cache",
+        incremental=incremental,
+    )
     env = {**os.environ, "MYPY_FORCE_COLOR": "0"}
+    # A checkout path or MYPYPATH must not put the content tree back on the path.
+    env.pop("PYTHONPATH", None)
+    env.pop("MYPYPATH", None)
     try:
         result = subprocess.run(
             command,
-            cwd=root,
+            cwd=search_root(root),
             capture_output=True,
             text=True,
             timeout=MYPY_TIMEOUT_SECONDS,

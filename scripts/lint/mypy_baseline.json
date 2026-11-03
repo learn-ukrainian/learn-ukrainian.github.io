@@ -27254,18 +27254,8 @@
     },
     {
       "path": "scripts/projects/open_model_data/train_and_eval_real_model.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"DataLoader\" has incompatible type \"SFTDataset\"; expected \"Dataset[Never]\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/train_and_eval_real_model.py",
       "code": "dict-item",
       "message": "Dict entry 0 has incompatible type \"str\": \"Any | None\"; expected \"str\": \"str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/train_and_eval_real_model.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"dataloader\""
     },
     {
       "path": "scripts/projects/open_model_data/typesafe_corpus_firewall.py",
@@ -27976,11 +27966,6 @@
       "path": "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
       "code": "dict-item",
       "message": "Dict entry 9 has incompatible type \"str\": \"dict[str, object]\"; expected \"str\": \"tuple[int, list[str]]\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"Tensor\""
     },
     {
       "path": "scripts/projects/open_model_data/v4_production_shards_assembly.py",
@@ -29271,6 +29256,11 @@
       "path": "scripts/rag/benchmark_embeddings.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"bool\""
+    },
+    {
+      "path": "scripts/rag/benchmark_embeddings.py",
+      "code": "no-any-return",
+      "message": "Returning Any from function declared to return \"float\""
     },
     {
       "path": "scripts/rag/benchmark_embeddings.py",
