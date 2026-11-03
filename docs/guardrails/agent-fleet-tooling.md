@@ -15,6 +15,22 @@ Use these project entry points for agent fleet work:
 Gemini CLI and Gemini Code Assist are unsupported for this project. Do not
 document them as current fallback, review, dispatch, or restoration paths.
 
+## Browser Automation
+
+Operator decision 2026-11-03 (#12689): Playwright runs only against our own
+trusted content (the local site build on the loopback host, or
+`learn-ukrainian.github.io`), and only through the hardened launcher:
+`site/e2e/support/hardened-browser.mjs` for Node and
+`scripts/validate/browser_launcher.py` for Python. The launcher starts the
+system's installed, auto-updated Google Chrome with its sandbox on and aborts,
+with a logged reason, every request to any other origin.
+
+- Do not point Playwright at untrusted or open-web pages.
+- Do not use a Playwright MCP server.
+- Do not download Playwright's bundled browsers or turn the browser sandbox off.
+
+`tests/test_browser_hardening_guard.py` enforces this for every launch site.
+
 ## Stream Orchestration Model
 
 Long-running curriculum streams should have one orchestrator thread per stream

@@ -1,16 +1,14 @@
 // Browser proof for the rendered pilot page. Run from the worktree root:
 //   node audit/curriculum-upgrade/pilot-things-have-gender/browser_check.mjs
-// Uses site/node_modules/playwright. If chromium is missing: npx --prefix site playwright install chromium
+// Uses installed Google Chrome, sandbox on, through site/e2e/support/hardened-browser.mjs (#12689).
 // Asserts (not discovers): screens module + l1 + l2 + l3; each lesson screen has exactly four tabs;
 // clicking a tab shows exactly that panel; every panel has >= 40 words at 1200px and no horizontal
 // overflow at 400px; no page or console errors. Screenshots go to an UNTRACKED folder.
-import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const require = createRequire(path.resolve('site/package.json'));
-const { chromium } = require('playwright');
+const { launchHardenedChromium } = await import(pathToFileURL(path.resolve('site/e2e/support/hardened-browser.mjs')).href);
 
 // VERIFY_ROOT supports the pinned extracted fixture without writing product pages.
 const fixtureRoot = process.env.VERIFY_ROOT || process.cwd();
@@ -23,7 +21,7 @@ const failures = [];
 const errors = [];
 const results = [];
 
-const browser = await chromium.launch();
+const browser = await launchHardenedChromium();
 const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
 page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
 page.on('console', (m) => { if (m.type() === 'error') errors.push(`console: ${m.text()}`); });

@@ -6,9 +6,13 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh <lessons|atlas|practice|all>
 Drive existing site Playwright specs after launch.sh and doctor.sh.
 Example: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh practice
-Inputs: Node 22, site dependencies; LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
+Inputs: Node 22, site dependencies, installed Google Chrome;
+        LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
+Browser: site/playwright.config.ts runs installed Chrome with its sandbox on and
+blocks every origin except the loopback host and learn-ukrainian.github.io.
+Never downloads Playwright's bundled browsers.
 Outputs: playwright-<feature>.log and test-results copied into
-LU_VERIFY_EVIDENCE_DIR (default: skill artifacts/manual); may install Chromium.
+LU_VERIFY_EVIDENCE_DIR (default: skill artifacts/manual).
 Exit: 0 passed, 2 invalid feature, otherwise Playwright's failure code.
 Lessons includes the legacy sidebar contract; see ../features/lessons.md.
 Related: launch.sh, doctor.sh, ../SKILL.md.
@@ -63,8 +67,10 @@ case "$FEATURE" in
     ;;
 esac
 
-if ! compgen -G "$HOME/.cache/ms-playwright/chromium-*" >/dev/null; then
-  npx playwright install chromium
+# Installed Google Chrome only (#12689); its system updates carry the security fixes.
+if [[ ! -x /opt/google/chrome/chrome ]]; then
+  echo "drive-playwright: install Google Chrome from Google's signed apt repository; Playwright's bundled browsers are not used" >&2
+  exit 1
 fi
 
 ARGS=(npx playwright test "${SPECS[@]}")

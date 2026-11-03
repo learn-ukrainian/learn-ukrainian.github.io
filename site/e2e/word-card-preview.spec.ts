@@ -1,4 +1,5 @@
-import { expect, test as base, type Locator } from '@playwright/test';
+import type { Locator } from '@playwright/test';
+import { expect, test as base } from './support/hardened-browser.mjs';
 import { AxeBuilder } from '@axe-core/playwright';
 import { readFileSync, writeFileSync, mkdtempSync, existsSync, readdirSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
 import { createHash } from 'node:crypto';
