@@ -1091,16 +1091,22 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     claims admit it, and is removed only while its HEAD and content still equal what that branch holds;
     a failed or unproven salvage keeps it, and so does every hold _salvage_hold finds.
     """
-    registry_note = []  # what archiving the repository's registry entry did, once the tree is removed
-    seen_head = []  # the tree's HEAD once read: a retained tree's entry then records it (_refresh_at_settlement)
+    registry_note: list[str] = []  # what archiving the repository's registry entry did, once the tree is removed
+    seen_head: list[str] = []  # the tree's HEAD once read: a retained tree's entry then records it (_refresh_at_settlement)
 
-    def disposition(state, reason, detail=None):
+    def disposition(state: str, reason: str, detail: str | None = None) -> dict[str, str]:
         if (state == "retained" and seen_head and reason != "borrowed_worktree" and not registry_note
                 and (note := _refresh_at_settlement(record, Path(record["worktree_path"]), seen_head[0])) is not None):
             registry_note.append(note)
-        return dict(worktree_disposition=state, worktree_disposition_reason=reason,
-                    **({"worktree_disposition_detail": detail} if detail else {}),
-                    **({"worktree_registry": registry_note[0]} if registry_note else {}))
+        outcome: dict[str, str] = {
+            "worktree_disposition": state,
+            "worktree_disposition_reason": reason,
+        }
+        if detail:
+            outcome["worktree_disposition_detail"] = detail
+        if registry_note:
+            outcome["worktree_registry"] = registry_note[0]
+        return outcome
 
     # An owner hold is decided before any Git read, push, or removal. The disk
     # record wins when this copy is stale.
