@@ -100,6 +100,13 @@ def test_unreferenced_expiry_crash_keeps_rows_and_marker(
     assert (tmp_path / "backup" / rec.sha256[:2] / rec.sha256).read_bytes() == data
     with pytest.raises(ArtifactExpiredError):
         store.read_bytes(rec.artifact_id)
+    # #12622: storing the same bytes again rewrites the missing blob before
+    # the row is live. A live row must not outrun its payload.
+    revived = store.store_bytes(data, producer="t")
+    assert revived.artifact_id == rec.artifact_id
+    assert revived.retention_class == "default"
+    assert rec.blob_path.is_file()
+    assert store.read_bytes(rec.artifact_id) == data
 
 
 def test_orphan_sweep_respects_grace(store: ArtifactStore) -> None:

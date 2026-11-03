@@ -1178,7 +1178,7 @@ class ArtifactStore:
                     f"{existing['artifact_id']!r}; refusing duplicate id "
                     f"{artifact_id!r}"
                 )
-            reused = self._reuse_existing_pg_blob(digest, retention_class)
+            reused = self._reuse_existing_pg_blob(digest, retention_class, data)
             if reused is not None:
                 return reused
 
@@ -1219,7 +1219,7 @@ class ArtifactStore:
                 # (rowcount 0). Upgrade that row under this same transaction.
                 # A row this statement inserted keeps the class it wrote.
                 if inserted.rowcount != 1:
-                    self._upgrade_pg_retention_locked(digest, retention_class)
+                    self._upgrade_pg_retention_locked(digest, retention_class, data)
         except psycopg.errors.UniqueViolation as exc:
             raise ArtifactStoreError(
                 f"artifact_id {aid!r} already exists with different content "
@@ -1230,23 +1230,32 @@ class ArtifactStore:
             raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
         return self._row_to_record(row)
 
-    def _reuse_existing_pg_blob(self, digest: str, retention_class: str) -> ArtifactRecord | None:
+    def _reuse_existing_pg_blob(
+        self, digest: str, retention_class: str, data: bytes
+    ) -> ArtifactRecord | None:
         """Upgrade an existing Postgres row under the store writer transaction.
 
         ``_transaction`` is the pg writer lock (a nested call is a savepoint),
         the same role as the ``BEGIN IMMEDIATE`` in ``_reuse_existing_blob``.
-        The class decision is ``_kept_retention_class``. Returns None when the
-        row vanished, so the caller inserts it.
+        The class decision is ``_kept_retention_class``. An expired row's
+        payload is rewritten from ``data`` before that marker is cleared, in
+        the same transaction, so a committed row is never live without its
+        bytes. Returns None when the row vanished, so the caller inserts it.
         """
         with self._transaction():
-            self._upgrade_pg_retention_locked(digest, retention_class)
+            self._upgrade_pg_retention_locked(digest, retention_class, data)
         row = self._pg_row_by_sha256(digest)
         if row is None:
             return None
         return self._row_to_record(row)
 
-    def _upgrade_pg_retention_locked(self, digest: str, requested: str) -> None:
-        """Write a stronger class for ``digest``. Caller holds ``_transaction``."""
+    def _upgrade_pg_retention_locked(self, digest: str, requested: str, data: bytes) -> None:
+        """Write a stronger class for ``digest``. Caller holds ``_transaction``.
+
+        When ``retention_class`` carries the expired marker, the payload is
+        rewritten from ``data`` before the marker is cleared. Both writes
+        share the caller's transaction, so neither commits alone.
+        """
         row = self._conn.execute(
             f"SELECT {self._PG_META_COLUMNS} FROM {_PG_BLOB_TABLE} "
             "WHERE sha256 = %s FOR UPDATE",
@@ -1256,12 +1265,23 @@ class ArtifactStore:
             return
         stored = str(row["retention_class"])
         chosen = _kept_retention_class(stored, requested)
-        if chosen == stored:
+        expired = stored.startswith(RETENTION_EXPIRED_PREFIX)
+        if not expired and chosen == stored:
             return
-        self._conn.execute(
-            f"UPDATE {_PG_BLOB_TABLE} SET retention_class = %s WHERE artifact_id = %s",
-            (chosen, row["artifact_id"]),
-        )
+        if expired:
+            if hashlib.sha256(data).hexdigest() != digest:
+                raise ArtifactStoreError(
+                    f"refusing to revive {digest}: bytes do not match the stored digest"
+                )
+            self._conn.execute(
+                f"UPDATE {_PG_BLOB_TABLE} SET payload = %s, bytes = %s WHERE artifact_id = %s",
+                (data, len(data), row["artifact_id"]),
+            )
+        if chosen != stored:
+            self._conn.execute(
+                f"UPDATE {_PG_BLOB_TABLE} SET retention_class = %s WHERE artifact_id = %s",
+                (chosen, row["artifact_id"]),
+            )
 
     # #7484 (Sol 1.15): metadata lookups must not drag the BYTEA payload over
     # the wire — a dedup probe against a 100 MB duplicate used to download all

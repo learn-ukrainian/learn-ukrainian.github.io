@@ -9,6 +9,7 @@ mention the budget point here; do not restate it.
 A round is one reviewer dispatch at one exact head: round 1 is the full review, later
 rounds are deltas. A round is spent when its reviewer is dispatched, whether or not its
 verdict is ever recorded; more seats or a retry at a head already dispatched open no round.
+For the Anthropic/OpenAI pair below, both seat dispatches at that head count as one round.
 
 - **Default: three rounds** (`budget_tier: default` in the hand-off record). A target repository whose own review policy sets a different automatic budget declares it as `review_rounds` under `repositories` in `scripts/config/review_budget_policy.yaml` (kube-dojo: five), and the recorder applies that budget to its PRs.
 - **Up to five rounds** for a change to security, permissions, authentication, data loss, or
@@ -90,7 +91,7 @@ verdict is ever recorded; more seats or a retry at a head already dispatched ope
   failures and the breakers still apply.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
-- **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
+- **One reviewer of record per round, or the mixed-family pair below, and no sub-reviewers.** The reviewer does not fan the
   review out to helper agents. Learner-facing Ukrainian is the exception: its profile seats the
   independent reviewers named in `references/ukrainian.md`, § Seats. The advisory second reader in `review-loop` is not a reviewer
   and adds no round.
@@ -223,6 +224,18 @@ Review budgets, seats, ladders, and exact-head binding are unchanged. A P0, P1, 
 - The independent cross-family review at the exact pushed SHA is the gate of record. The
   reviewer always comes from the live resolver with every author and subject exclusion, never
   a fixed model.
+- **Anthropic/OpenAI mixed authorship (#10712, approved 2026-11-03).** For code and infra
+  branches authored by exactly these two families, `resolve-reviewer` returns two `quorum`
+  seats. Each seat's `scope` names the other author family, its commit SHAs, and the exact
+  `context_head`. Give each reviewer that scope and the whole PR diff as context. Resolve
+  one qualified Anthropic seat and one qualified OpenAI seat through the existing catalog;
+  risk floors, security sign-off roles, subject exclusions and `SELF_REVIEW_DETECTED` apply
+  per seat. Record both verdicts. Enqueue requires both APPROVEs at the same exact head;
+  either rejection blocks, and a moved head voids both. One pair counts as one round.
+  Verified app-bot commits have no model family and remain part of the whole-diff context.
+  A commit carrying both families' trailers cannot be partitioned without assigning a
+  reviewer its own family's work and fails closed. Single-family, red-team and zero-trailer
+  plans remain unchanged. This rule adds no reviewer seat or override.
 - A moved head needs a delta review and a fresh exact-head approval before enqueue.
 - The red-team exception in `workflow.md` § Merge policy is unchanged and is labelled
   `review_mode=red_team`, never cross-family.

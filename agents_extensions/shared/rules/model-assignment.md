@@ -1042,7 +1042,7 @@ Security paths and excluded activities remain refused. Haiku routine mechanical 
 `gemini-3.8-flash-high` on AGY is a general read-only and workspace-write worker and does not take that envelope (#12291). Current designated advice uses **Opus / Sol**;
 designated approval needs them to agree, and when one authored the proposal the other's approval completes it, and any other author needs both (#9583, #9616). Where #9275 requires an envelope, its advisor is Sol 6.1 alone; an envelope is not an approval.
 Kimi is retired (OO-58, #11327) and is not a coding lane. All GPT-6 models are OpenAI-family and
-cannot satisfy independent CF for an OpenAI-authored PR.
+cannot independently review OpenAI-authored commits.
 
 ## Claude reviewer-seat economics (2026-06-12)
 
@@ -1076,10 +1076,21 @@ The same table lives in `agents_extensions/shared/memory/MEMORY.md` rule #M0. Th
 Review rounds, settlement and recording: the `review-loop` skill; landing and cleanup:
 `full-send` and `workflow.md` § Merge policy. This file keeps only the routing policy.
 
+**Mixed Anthropic/OpenAI code and infra branches (#10712, approved 2026-11-03).**
+The resolver returns a pair using existing qualified seats: one Anthropic reviewer for the
+OpenAI-authored commits and one OpenAI reviewer for the Anthropic-authored commits. Each
+gets the whole PR diff as context. Both must APPROVE the same exact head before enqueue;
+either rejection blocks, and a head move voids both approvals. The pair counts as one round.
+Verified app-bot commits have no model family and remain part of the whole-diff context.
+Risk floors, security sign-off roles, subject exclusions and `SELF_REVIEW_DETECTED` bind per
+seat. A commit carrying both families' trailers cannot be independently partitioned and
+fails closed. Single-family routing, red-team and zero-trailer plans remain unchanged;
+there is no new seat or override. The `review-loop` policy defines the recording contract.
+
 **Shielded formal CF is RETIRED.** Do not run `review-pr` / `publish-review-verdict`
 / sealed `lu-review-*` / `shielded-reviews` clones — its commands were removed in #8520
-and the snapshot flow is refused with no bypass. Cross-family still means outside the author's
-model family; discussion and same-family chat are not the gate.
+and the snapshot flow is refused with no bypass. Cross-family means outside the author families
+in the seat's reviewed commit scope; discussion and same-family chat are not the gate.
 
 Code/infra formal reviews require a resolvable target before delegate admission
 (§ review target admission above); missing targets refuse. Ordinary ACP asks
