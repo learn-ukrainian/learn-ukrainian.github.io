@@ -152,8 +152,8 @@ def main(argv: list[str] | None = None) -> int:
                     "Use after hydrating the committed manifest/deck; this never downloads or publishes.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  .venv/bin/python scripts/deploy/prepare_atlas_runtime_release.py prepare --work ./scratch/work --prior-archive ./prior.zip --prior-sha256 <64hex> --out ./scratch/out
-  .venv/bin/python scripts/deploy/prepare_atlas_runtime_release.py verify --work ./scratch/replay --prior-archive ./prior.zip --prior-sha256 <64hex> --out ./scratch/verified
+  .venv/bin/python scripts/deploy/prepare_atlas_runtime_release.py prepare --work "$TMPDIR/prepare-work" --prior-archive ./prior.zip --prior-sha256 <64hex> --out "$TMPDIR/prepare-out"
+  .venv/bin/python scripts/deploy/prepare_atlas_runtime_release.py verify --work "$TMPDIR/replay-work" --prior-archive ./prior.zip --prior-sha256 <64hex> --out "$TMPDIR/replay-out"
 Outputs: atlas-tree.zip and atlas-runtime-release.json in --out; fresh DB, verified trees and projection in --work.
 Scratch directories must be fresh, outside the worktree. Hydration and prior acquisition are separate.
 Exit codes: 0 verified; 1 source, certification, vendor or reproducibility refusal; 2 usage error.
