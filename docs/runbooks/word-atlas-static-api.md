@@ -175,6 +175,11 @@ reuses the selected rows and runtime parity, validates the hydrated source
 against the pointers, and independently rebuilds source membership through a
 fresh DB. It neither exports nor re-vendors. The receipt bridges source digest
 and runtime identity; those different digests are never compared as equal.
+`--manifest` selects this independent source in both DB and runtime modes,
+even when `--db` supplies a different database. It must match the committed
+source pointers. Selected DB rows cannot stand in for source verification.
+Fixture runs bind a small source and receipt explicitly, including their
+pointers, so they exercise the report without rebuilding an unrelated corpus.
 
 - `current` requires every applicable binding, full membership and count to match.
 - `stale` lists every applicable fixed reason: `manifest_changed`,

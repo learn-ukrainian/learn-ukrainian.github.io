@@ -1167,7 +1167,8 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
 """,
     )
     parser.add_argument(
-        "--manifest", type=Path, default=DEFAULT_MANIFEST, help=f"Legacy input manifest (default: {DEFAULT_MANIFEST})."
+        "--manifest", type=Path, default=DEFAULT_MANIFEST,
+        help=f"Legacy input and independent freshness-report source in DB/runtime modes (default: {DEFAULT_MANIFEST})."
     )
     parser.add_argument(
         "--db",
