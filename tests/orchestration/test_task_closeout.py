@@ -599,7 +599,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
     def transport(method, endpoint, headers, body, timeout):
         assert timeout == 60
         payload = None
-        if endpoint == "repos/org/repo/issues/42?per_page=100":
+        if endpoint in {"repos/org/repo/issues/42?per_page=100", "repos/org/repo/issues/42"}:
             payload = {"number": 42, "state": "open", "body": _body(),
                        "html_url": "https://github.com/org/repo/issues/42", "closed_at": None,
                        "repository_url": "https://api.github.com/repos/org/repo"}
@@ -664,7 +664,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
     deployment_call = next(call for call in calls if f"/deployments?sha={MERGE}&per_page=100" in call[1])
     assert deployment_call[0] == "GET"
     assert [call[1] for call in calls if "/issues/42" in call[1]] == [
-        "repos/org/repo/issues/42", "repos/org/repo/issues/42", "repos/org/repo/issues/42/parent",
+        "repos/org/repo/issues/42?per_page=100", "repos/org/repo/issues/42", "repos/org/repo/issues/42/parent",
     ]
 
 
