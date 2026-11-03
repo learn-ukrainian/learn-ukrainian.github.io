@@ -112,6 +112,7 @@ passes sets `--hard-timeout 14400`, because the dispatcher default is 7200 secon
 `--silence-timeout` (default 3600 seconds) applies separately, so a quiet wait can still end after 3600 seconds of silence.
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before dispatch, check every owned path in the brief and the `--owned-path` flags with `git ls-files --error-unmatch <path>`, or mark it in the brief as a new file the worker creates.
+Before dispatching an open issue, run `git log origin/main --oneline --grep='#<N>'` and read the issue's linked PRs; if fixes already landed, verify the acceptance criteria on main and close or narrow the issue instead of dispatching.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
 update the tests that pin the changed behaviour.
