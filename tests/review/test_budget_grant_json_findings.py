@@ -131,6 +131,26 @@ def test_withheld_and_untrusted_records_still_refuse() -> None:
         assert open_blocker_cited(comments, LOGIN, "F4", run) is None
 
 
+@pytest.mark.parametrize(
+    "defect",
+    [None, "closed", "unsealed-digest", "truncated-reply", "other-head", "other-count", "ambiguous-run", "no-schema"],
+)
+def test_withheld_findings_come_from_the_bound_sealed_run(defect: str | None) -> None:
+    """A withheld rejection's open P1 is read from the sealed reply of the run it records, and only then (#12592)."""
+    sealed = _reply(_finding(body="F4 still open: in_scope_blocker; a retry skips every ancestor fsync.")
+                    if defect != "closed" else _finding(body="F4 is fixed at this head."))
+    if defect == "truncated-reply":
+        sealed += f"\n\n{recorder.TRUNCATION_FLAG}"
+    record = {**({} if defect == "no-schema" else SCHEMA), "status": "done", "model": "gpt-6.1-sol", "agent": "codex",
+              "worktree_base_sha": "b" * 40 if defect == "other-head" else SHA,
+              "result_sha256": None if defect == "unsealed-digest" else hashlib.sha256(sealed.encode()).hexdigest()}
+    runs = [_run(sealed, **record)] * (2 if defect == "ambiguous-run" else 1)
+    comments = _comments("", withheld=True)
+    if defect == "other-count":
+        comments[0]["body"] = str(comments[0]["body"]).replace("Withheld findings: 1\n", "Withheld findings: 2\n")
+    assert open_blocker_cited(comments, LOGIN, "F4", runs) == (SHA if defect is None else None)
+
+
 def test_a_run_without_an_output_schema_keeps_the_markdown_ledger() -> None:
     run = [_run(LEDGER)]
     assert open_blocker_cited(_comments(LEDGER), LOGIN, "F4", run) == SHA

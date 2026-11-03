@@ -377,13 +377,15 @@ def open_blocker_cited(
     The keeper must read that head as rejected (an edited or unattested
     marker reads as unknown), and the finding's last entry in the reply
     decides its disposition (:func:`finding_is_open`), and its last stated
-    severity must be P0 or P1. Withheld findings are no evidence.
+    severity must be P0 or P1.
 
     The reply format comes from the recorded run, never from the reply text (#12549). With
     ``runs`` (the PR's review runs), the marker must name exactly one run (task and start). A run
     bound to the ``code-review-findings.v1`` schema is read only from its sealed reply through
     the structured parser, and any failure refuses. A run with no output schema is read as a markdown
     ledger, and a run bound to another schema refuses. Without ``runs``, only the markdown ledger is read.
+    Withheld findings are evidence only from a schema-bound run that :func:`_withheld_reply` binds
+    to the comment, and only when that sealed reply is not cut (#12592).
     """
     markers = recorder._trusted_markers(comments, login)
     if not markers:
@@ -406,8 +408,12 @@ def open_blocker_cited(
         if bound is None:
             return None
     if bound:
-        reply = matches[0].reply
-        entries = structured_finding_entries(reply, finding_id) if published and isinstance(reply, str) else None
+        # A withheld verdict publishes no reply: only the sealed reply of the one run it records,
+        # bound as for the owner-request and p2 grants and not cut, is evidence (#12592).
+        reply = matches[0].reply if published else _withheld_reply(body, runs)
+        if not published and isinstance(reply, str) and recorder.TRUNCATION_FLAG in reply:
+            return None
+        entries = structured_finding_entries(reply, finding_id) if isinstance(reply, str) else None
         if entries is None:
             return None
     else:
