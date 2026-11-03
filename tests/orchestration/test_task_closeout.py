@@ -962,27 +962,28 @@ def test_evidence_type_correction_refused_after_criterion_checked(
     assert path.read_bytes() == before
 
 
-def test_evidence_type_correction_ignores_unread_historical_observation(
+def test_evidence_type_correction_treats_lowercase_closed_receipt_as_closed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys,
 ) -> None:
-    """A transient error receipt must not permanently disable policy correction."""
+    """A lowercase closed historical receipt is the same closed issue reconcile sees."""
     _stub_fresh_init(tmp_path, monkeypatch)
     assert task_closeout.main(_fresh_init_command(tmp_path)) == 0
     path = Path(json.loads(capsys.readouterr().out)["state_file"])
     observation = _observation(body="")
-    observation["github"]["issue"]["state"] = None
-    observation["github"]["error"] = "temporary GitHub read failure"
+    observation["github"]["issue"]["state"] = "closed"
+    observation["github"]["issue"]["state_reason"] = "COMPLETED"
     ledger, receipt, _ = task_lifecycle.reconcile(task_lifecycle.load_lifecycle(path), observation, now=NOW)
     task_lifecycle.write_lifecycle(path, ledger)
+    before = path.read_bytes()
+    assert receipt["observation"]["github"]["issue"]["state"] == "closed"
+    assert any("issue closed before" in blocker for blocker in receipt["hard_blockers"])
 
     assert task_closeout.main([
         "correct-evidence-types", "--state-file", str(path), "--ac-id", "AC-IMPL",
         "--required-evidence", "document", "--actor", "codex/test", "--reason", "Documentation criterion",
-    ]) == 0
-    result = json.loads(capsys.readouterr().out)
-    assert result["correction"]["old_types"] == ["test"]
-    assert result["correction"]["new_types"] == ["document"]
-    assert task_lifecycle.load_lifecycle(path)["observation_receipts"] == [receipt]
+    ]) == 2
+    assert json.loads(capsys.readouterr().err)["error_code"] == "AC_ISSUE_COMPLETED"
+    assert path.read_bytes() == before
 
 
 def test_evidence_type_correction_preserves_earlier_timestamped_ledger_writes(
