@@ -343,16 +343,19 @@ class Tmux:
                 stack.append(child)
         return PaneSnapshot(pane=f"{pid}@{starts[pid]}", agent=agent, busy=bool(children.get(pid)))
 
-    def agent_scope(self, agent: str) -> str | None:
+    def agent_scope(self, agent: str, *, strict: bool = False) -> str | None:
         """The ``lu-driver`` scope unit holding the agent ``<pid>@<start>``, or None when it is not in one.
 
         Raises ``TelemetryUnavailable`` when the cgroup cannot be read (for example the process just exited).
+        ``strict`` also treats output without a unified (``0::``) line as unreadable, not as "in no scope".
         """
         pid = agent.split("@", 1)[0]
         for line in self._query(["cat", f"/proc/{pid}/cgroup"], "agent cgroup").splitlines():
             if line.startswith("0::"):
                 match = DRIVER_SCOPE_RE.search(line[3:])
                 return match.group(1) if match else None
+        if strict:
+            raise TelemetryUnavailable("agent cgroup: no unified cgroup line")
         return None
 
     def scope_active(self, unit: str) -> bool:
@@ -893,11 +896,19 @@ class Guard:
             return CLAUDE_BUSY_RE.search(tail) is None
         return "Ready" in tail and "Working" not in tail
 
-    def _answer_exit_dialog(self, lane: Lane, text: str, pct: int | None, snap: PaneSnapshot) -> bool:
-        """Handle a visible Claude exit dialog, deferring if either guard refuses."""
+    def _answer_exit_dialog(
+        self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot, *, recorded: bool = True
+    ) -> bool:
+        """Handle a visible Claude exit dialog, deferring if either guard refuses.
+
+        Answering ends the agent, so an agent whose scope is not recorded (``recorded`` False) is held instead.
+        """
         tail = "\n".join(text.splitlines()[-8:])
         if lane.kind != "claude" or not any(marker in tail for marker in EXIT_DIALOG):
             return False
+        if not recorded:
+            self._hold_unknown(lane, s, "the agent's scope could not be recorded, so the exit dialog was not answered")
+            return True
         # "Move to background" keeps a lease-holding fork alive; always "Exit and stop tasks".
         # Delegate workers are separate tasks and keep running.
         if not self._human(lane) and self._unchanged(lane, snap, "the exit-dialog answer", pct):
@@ -962,7 +973,7 @@ class Guard:
         # After two swallowed exits an idle, completed handoff takes the guarded
         # relaunch path even if an exit dialog remains on screen.
         force_exit = lane.kind == "claude" and done and idle and int(s.get("quit_attempts", 0)) >= 2
-        if not force_exit and self._answer_exit_dialog(lane, text, pct, snap):
+        if not force_exit and self._answer_exit_dialog(lane, s, text, pct, snap, recorded=recorded):
             return
         quit_due = (
             lane.kind == "claude"
@@ -1017,7 +1028,7 @@ class Guard:
                         dialog = self.tmux.capture(lane.target)
                         if self.tmux.monotonic() - started >= self._exit_poll_remaining:
                             break
-                        if self._answer_exit_dialog(lane, dialog, pct, snap):
+                        if self._answer_exit_dialog(lane, s, dialog, pct, snap):
                             break
                     finally:
                         # One run shares this budget, including time spent reading telemetry.
@@ -1061,7 +1072,7 @@ class Guard:
         if isinstance(evidence, dict) and evidence.get("agent") == agent:
             return True
         try:
-            unit = self.tmux.agent_scope(agent)
+            unit = self.tmux.agent_scope(agent, strict=True)
             if not self.tmux.process_exists(agent):
                 raise TelemetryUnavailable(f"agent {agent} exited or its pid was reused while its scope was read")
         except TelemetryUnavailable as exc:
@@ -1147,8 +1158,6 @@ class Guard:
                     self._hold_unknown(lane, s, "no scope was recorded for the agent that exited")
                     return None
                 ordinary, watched, unit = True, evidence["agent"], evidence["scope"]
-                if unit is None:  # the agent was in no driver scope: nothing of it can outlive it
-                    return snap, None
         try:
             return self._wait_for_scope(lane, s, snap, pct, unit, watched, stop=not ordinary)
         except TelemetryUnavailable as exc:
@@ -1163,7 +1172,7 @@ class Guard:
         s: dict[str, Any],
         snap: PaneSnapshot,
         pct: int | None,
-        unit: str,
+        unit: str | None,
         watched: str | None,
         *,
         stop: bool,
@@ -1171,9 +1180,10 @@ class Guard:
         """Wait until ``unit`` is inactive, ``watched`` (``<pid>@<start>``) is gone and the launcher has exited.
 
         ``stop`` first queues the stop of an active scope (the forced relaunch); the ordinary relaunch
-        only waits, because the agent left by itself and its leftover tasks are not ours to kill.
+        only waits, because the agent left by itself and its leftover tasks are not ours to kill. A
+        ``unit`` of None (the agent was in no driver scope) skips the systemd calls, not the identity wait.
         """
-        if not stop and not self.tmux.scope_active(unit) and not (watched and self.tmux.process_exists(watched)):
+        if not stop and not (unit and self.tmux.scope_active(unit)) and not (watched and self.tmux.process_exists(watched)):
             return snap, unit  # already gone: the caller's own re-check of this snapshot guards the respawn
         deadline = self.tmux.monotonic() + PREDECESSOR_EXIT_SECONDS
         if stop and self.tmux.scope_active(unit):
@@ -1192,7 +1202,7 @@ class Guard:
                     f"(pane {snap.pane} -> {fresh.pane}, agent {snap.agent} -> {fresh.agent}); nothing respawned"
                 )
                 return None
-            if self.tmux.scope_active(unit):
+            if unit and self.tmux.scope_active(unit):
                 remaining = f"scope {unit} is still active"
             elif (watched is not None and self.tmux.process_exists(watched)) or fresh.agent is not None:
                 remaining = f"agent {watched or fresh.agent} is still running"
@@ -1201,7 +1211,9 @@ class Guard:
             else:
                 return fresh, unit
             if self.tmux.monotonic() >= deadline:
-                self._predecessor_alert(lane, s, f"{remaining} {PREDECESSOR_EXIT_SECONDS}s after the scope stop")
+                self._predecessor_alert(
+                    lane, s, f"{remaining} {PREDECESSOR_EXIT_SECONDS}s after the {'scope stop' if stop else 'agent exit'}"
+                )
                 return None
             self.tmux.sleep(1)
 

@@ -743,6 +743,34 @@ def test_an_ordinary_exit_whose_scope_outlives_the_agent_is_relaunched_only_afte
     assert len(respawns(h)) == 1 and h.fake.respawned_over_live_agent == [False]
     assert h.state["cto"]["phase"] == "watch"
 
+    # An agent in no driver scope still has to be gone: a process outside the pane keeps its pid and start time.
+    detached = tmp_path / "detached"
+    detached.mkdir()
+    h = Harness(detached, **{"cto": Pane(text=claude_text(70), agent="claude", scope=None)})
+    h.tick("cto")
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    assert h.fake.typed("cto")[-1] == "/exit"
+    h.pane("cto").agent = None
+    outlives = [True]
+    run = h.guard.tmux.run
+
+    def ps_with_detached_agent(argv: list[str]) -> subprocess.CompletedProcess:
+        result = run(argv)
+        if "ps" in argv[:3] and outlives[0]:
+            return subprocess.CompletedProcess(argv, 0, result.stdout + "\n200 1 Fri Oct 16 11:00:00 2026 claude", "")
+        return result
+
+    h.guard.tmux.run = ps_with_detached_agent
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1 and "is still running" in cto_alerts(h)[0]
+    outlives[0] = False
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+
 
 def test_a_failed_scope_lookup_holds_the_ordinary_relaunch_and_alerts_after_the_bound(tmp_path: Path) -> None:
     """AC-02: an agent whose scope was never read, or a scope whose state cannot be read, is unknown, not gone."""
@@ -761,6 +789,20 @@ def test_a_failed_scope_lookup_holds_the_ordinary_relaunch_and_alerts_after_the_
     h.advance(5)
     h.tick("cto")
     assert respawns(h) == [] and len(cto_alerts(h)) == 1
+
+    third = tmp_path / "third"
+    third.mkdir()
+    h = Harness(third, **{"cto": claude_pane(70)})
+    h.fake.override["cat"] = subprocess.CompletedProcess([], 0, "", "")  # a successful read without a cgroup line
+    h.tick("cto")
+    h.posted["claude-epics"] = cg.iso(h.moment)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto", "Move to background and exit", "Exit and stop tasks")
+    h.advance(5)
+    h.tick("cto")  # an exit dialog is on screen, but nothing says which scope this agent holds
+    assert "exit_evidence" not in h.state["cto"] and "1" not in h.fake.typed("cto")
+    h.advance(UNKNOWN_BOUND_MINUTES)
+    h.tick("cto")
+    assert "1" not in h.fake.typed("cto") and len(cto_alerts(h)) == 1 and "exit dialog" in cto_alerts(h)[0]
 
     second = tmp_path / "second"
     second.mkdir()
