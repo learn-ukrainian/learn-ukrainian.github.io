@@ -1292,7 +1292,7 @@ def _cli_removal(args: argparse.Namespace, worktree: Path, *, repo_root: Path, c
             helper = read_helper_creator(worktree, repo_root=repo_root)
             if helper is not None:
                 members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
-                if not any(_created_worktree(member) for _, member in members):
+                if members and not any(_created_worktree(member) for _, member in members):
                     try:
                         helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir)
                     except (OSError, ValueError, RuntimeError) as exc:

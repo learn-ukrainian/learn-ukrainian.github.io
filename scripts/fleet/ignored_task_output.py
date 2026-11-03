@@ -1698,7 +1698,7 @@ def preserve_worktree_artifacts(
         matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
         # Task creators keep their existing attribution and retention rules.
         # Only a cohort consisting entirely of borrowers may use helper custody.
-        if not any(_created_worktree(member) for _, member in matches) and (worktree / ".git").is_file():
+        if matches and not any(_created_worktree(member) for _, member in matches) and (worktree / ".git").is_file():
             helper = read_helper_creator(worktree, repo_root=repo_root)
             if helper is not None:
                 receipt = preserve_helper_output(

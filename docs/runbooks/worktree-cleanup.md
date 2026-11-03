@@ -85,8 +85,10 @@ After every borrowing task is terminal, remove the tree without
 ```
 
 The remover holds the dispatch attachment lock and the path lock. It checks hot
-and archived borrowers, provider liveness, and retention holds. No borrowers,
-unknown liveness, or an active or damaged retention hold refuses cleanup.
+and archived borrowers, provider liveness, and retention holds. Unknown liveness
+or an active or damaged retention hold refuses helper cleanup. With no borrower
+records, existing removal rules apply: a clean tree remains removable, while
+unattributed ignored output retains the tree.
 It copies untracked and ignored output through the existing 256 MiB preservation
 budget, verifies retrieval, and publishes the receipt on the helper creator
 record. Only then does it clear verified untracked regular files and call plain
