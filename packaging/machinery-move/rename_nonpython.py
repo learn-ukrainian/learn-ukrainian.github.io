@@ -52,7 +52,11 @@ DYNAMIC_NEXT = frozenset("${%<")
 INVOCATION_BEFORE = re.compile(r"(?:^|[\s\"'(\[,=])-m[\s\"',\-]*$")
 ENTRY_POINT_NEXT = re.compile(r":[A-Za-z_]")
 PREFIX_STOP = re.compile(r"[\s\"'=(\[{<>|&;,:`!]")
-CWD_BEFORE = re.compile(r"(?:^|[\s;&|(])(?:cd|pushd)\s+[\"']?$")
+# Commands and settings that change the working directory to the path that follows.
+CWD_BEFORE = re.compile(
+    r"(?:(?:^|[\s;&|(])(?:cd|pushd)(?:\s+-{1,2}[\w-]*)*\s+|WorkingDirectory=|(?:^|\s)-C\s*"
+    r"|(?:^|\s)--(?:directory|cwd|chdir|working-directory)(?:=|\s+))[\"']?$"
+)
 INTERPRETER_BEFORE = re.compile(
     r"(?:^|[\s;&|(\"'])(?:\S*python[0-9.]*|\"?\$\{?PY\w*\}?\"?|bash|sh|zsh|exec|source|\.|uv\s+run(?:\s+python[0-9.]*)?)\s+[\"']?$"
 )
@@ -161,22 +165,33 @@ def clean_path(token: str) -> str:
     return token
 
 
-def _is_dynamic(text: str, end: int, dynamic_tail: bool) -> bool:
-    """True when the name continues with something only known at run time."""
+def _is_dynamic(text: str, end: int, dynamic_tail: bool, shell: bool = False) -> bool:
+    """True when the name does not end where the match ends.
 
-    if end == len(text):
+    A shell word continues across quotes (``scripts/x.py"${S}"``, ``'scripts/x'.bak``): after
+    any run of quote characters, a variable, a placeholder, a backtick or more word characters
+    mean the real name is only known at run time or is longer than the match.
+    """
+
+    i = end
+    while i < len(text) and text[i] in "\"'":
+        i += 1
+    if i == len(text):
         return dynamic_tail
-    if text.startswith("</", end):
+    if text.startswith("</", i):
         return False  # a closing markup tag, not a ``<placeholder>``
-    return text[end] in DYNAMIC_NEXT
+    if text[i] in DYNAMIC_NEXT or (shell and text[i] == "`"):
+        return True  # in a shell file a backtick starts command substitution
+    return i > end and (text[i].isalnum() or text[i] in "_./-`")
 
 
 class Scanner:
     """Resolve module and path references in one text against the ownership map."""
 
-    def __init__(self, ownership: OwnershipMap, rel: str) -> None:
+    def __init__(self, ownership: OwnershipMap, rel: str, shell: bool = False) -> None:
         self.ownership = ownership
         self.rel = rel
+        self.shell = shell
         self.file_owner = ownership.file_owner(rel)
         self.root_anchored = PurePosixPath(rel).name in ROOT_ANCHORED_NAMES
 
@@ -201,7 +216,7 @@ class Scanner:
         for match in MODULE_START.finditer(text):
             start, comp, dot = match.start(), match.group("comp"), match.group("dot")
             end = match.end()
-            dynamic = _is_dynamic(text, end, dynamic_tail)
+            dynamic = _is_dynamic(text, end, dynamic_tail, self.shell)
             if not dynamic and dot:
                 end -= 1  # a full stop after the name
             if not comp and not dynamic:
@@ -256,7 +271,7 @@ class Scanner:
             token = clean_path(match.group(0))
             end = start + len(token)
             prefix = path_prefix(text, start)
-            if _is_dynamic(text, end, dynamic_tail):
+            if _is_dynamic(text, end, dynamic_tail, self.shell):
                 # A run-time suffix can climb out of any directory (``${NAME}`` = ``../x``), so the
                 # owner of the static part proves nothing: always reported, never rewritten.
                 yield Token(start, end, token + "…", "computed_path", "the path is completed at run time")
@@ -361,14 +376,16 @@ def scan_text(scanner: Scanner, text: str, kind: str, report: Report, shell_like
                     Finding(rel, line, "unsupported_file_type", token.text, detail="no rewrite rule for this file type")
                 )
             continue
+        if token.verdict == "resource_path" and scanner.changes_directory(text, token.start):
+            # Relative paths after a directory change depend on the old layout: left as written.
+            report.unresolved.append(
+                Finding(rel, line, "cwd_into_machinery", token.text, detail="a working-directory change into machinery")
+            )
+            continue
         if token.verdict in REWRITE_VERDICTS:
             after = NEW_ROOT + token.text[len(OLD_ROOT) :]
             edits.append(Edit(token.start, token.start + len(OLD_ROOT), NEW_ROOT))
             report.rewrites.append(Finding(rel, line, token.verdict, token.text, after))
-            if token.verdict == "resource_path" and scanner.changes_directory(text, token.start):
-                report.unresolved.append(
-                    Finding(rel, line, "cwd_into_machinery", token.text, after, "relative paths after this cd move too")
-                )
             if token.verdict == "resource_path" and scanner.is_direct_invocation(text, token.start, token.text):
                 report.inventory.append(
                     Finding(rel, line, "direct_script_invocation", token.text, after, "runs a machinery file by path")
@@ -408,6 +425,60 @@ def _callee_name(node: ast.AST) -> str:
     if isinstance(node, ast.Attribute):
         return node.attr
     return ""
+
+
+BUILDER_METHODS = frozenset({"format", "format_map", "join", "replace"})
+
+
+def _ast_parts(node: ast.AST) -> list[str | None] | None:
+    """Static texts of a string expression in order, None for run-time pieces; None if not a string."""
+
+    if isinstance(node, ast.Constant) and isinstance(node.value, (str, bytes)):
+        return [node.value.decode("latin-1") if isinstance(node.value, bytes) else node.value]
+    if isinstance(node, ast.JoinedStr):
+        return [v.value if isinstance(v, ast.Constant) and isinstance(v.value, str) else None for v in node.values]
+    if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Add, ast.Mod)):
+        left, right = _ast_parts(node.left), _ast_parts(node.right)
+        if isinstance(node.op, ast.Mod):
+            return None if left is None else [*left, None]
+        if left is not None or right is not None:
+            return (left if left is not None else [None]) + (right if right is not None else [None])
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr in BUILDER_METHODS:
+        receiver = _ast_parts(node.func.value)
+        return None if receiver is None else [*receiver, None]
+    return None
+
+
+def _ast_part_constants(node: ast.AST) -> list[ast.Constant]:
+    """The literals that make up the value in ``_ast_parts`` (not format arguments or nested keys)."""
+
+    if isinstance(node, ast.Constant):
+        return [node]
+    if isinstance(node, ast.JoinedStr):
+        return [v for v in node.values if isinstance(v, ast.Constant)]
+    if isinstance(node, ast.BinOp):
+        sides = (node.left,) if isinstance(node.op, ast.Mod) else (node.left, node.right)
+        return [c for side in sides if _ast_parts(side) is not None for c in _ast_part_constants(side)]
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+        return _ast_part_constants(node.func.value)
+    return []
+
+
+def _builder_runs(parts: list[str | None]) -> list[tuple[str, bool]]:
+    """Consecutive static texts of a built string, each with whether run-time text follows it."""
+
+    runs: list[tuple[str, bool]] = []
+    current: list[str] = []
+    for part in [*parts, None]:
+        if part is None:
+            if current:
+                runs.append(("".join(current), True))
+            current = []
+        else:
+            current.append(part)
+    if runs and parts and parts[-1] is not None:
+        runs[-1] = (runs[-1][0], False)
+    return runs
 
 
 def _owned_by_rename_python(value: str) -> bool:
@@ -451,6 +522,23 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
             return
         detail = "path assembled from parts" + (" with a computed part" if computed else "")
         unresolved(node, "split_path_component", path + ("/…" if computed else ""), detail)
+
+    # Built strings (``"scripts/" + "lib/" + name``, f-strings, % and str methods) are read whole:
+    # their paths are scanned with the run-time tail they really have; their module names are
+    # rename_python.py's.
+    for node in ast.walk(tree):
+        parts = None if isinstance(node, ast.Constant) else _ast_parts(node)
+        if parts is None or _ast_parts(parents.get(id(node))) is not None:
+            continue  # not a built string, or not the outermost one
+        skip.update(id(c) for c in _ast_part_constants(node))
+        for run, tail in _builder_runs(parts):
+            for token in scanner.path_tokens(run, dynamic_tail=tail):
+                if token.verdict in ("keep", "unknown_path"):
+                    continue
+                kind = (
+                    "python_string_reference" if token.verdict in REWRITE_VERDICTS | {"foreign_path"} else token.verdict
+                )
+                unresolved(node, kind, token.text, token.detail or "path in a string built in Python code")
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in skip:
@@ -551,12 +639,12 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
             skipped_binary += 1
             continue
         report.files_scanned += 1
-        scanner = Scanner(ownership, rel)
         kind = classify(rel, data[:256])
+        shell_like = is_shell_like(rel, data[:256])
+        scanner = Scanner(ownership, rel, shell=shell_like)
         if kind == PYTHON:
             scan_python(scanner, data, report)
             continue
-        shell_like = is_shell_like(rel, data[:256])
         edits = scan_text(scanner, text, kind, report, shell_like)
         if not edits:
             continue

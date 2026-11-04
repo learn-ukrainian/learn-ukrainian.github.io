@@ -58,7 +58,6 @@ LOADERS = {
     "builtins.__import__": "name",
     "runpy.run_module": "mod_name",
 }
-LOADER_NAMES = frozenset(name.rsplit(".", 1)[1] for name in LOADERS)
 MODULE_LITERAL = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
 # A module name followed by more text, such as ``scripts.api.main:app``.
 MODULE_PREFIX = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
@@ -66,8 +65,8 @@ MODULE_PREFIX = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
 MODULE_HEAD = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)*\.?")
 # A string that begins with the package name (not a ``scripts/`` path or a longer word).
 MODULE_START = re.compile(r"scripts(?![A-Za-z0-9_/\\\-])")
-# ``scripts`` as one piece of a module name somewhere inside a string being built.
-MODULE_PIECE = re.compile(r"(?<![A-Za-z0-9_/\\.\-])scripts(?=\.|$)")
+# A module name anywhere in a built string: ``scripts`` then dotted parts, or ``scripts`` at the end.
+MODULE_ANYWHERE = re.compile(r"(?<![A-Za-z0-9_/\\.\-])scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)*\.?(?![A-Za-z0-9_/\\\-])")
 STDLIB = frozenset(sys.stdlib_module_names)
 
 
@@ -175,7 +174,6 @@ class OwnershipMap:
         self._derive_modules()
         self._subtree_cache: dict[str, str | None] = {}
         self._module_subtree_cache: dict[str, str | None] = {}
-        self.root_names = frozenset(name.split(".")[1] for name in self.modules if name.count(".") >= 1)
 
     @classmethod
     def from_file(cls, path: Path) -> OwnershipMap:
@@ -506,24 +504,54 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
     ) -> str | None:
         """Decide one string expression; return the new value when a plain literal is to be rewritten.
 
-        ``parts`` is the value in order, with None for each piece only known at run time;
-        ``pieces`` is every literal piece inside the expression, arguments included.
-        A string with whitespace before its first run-time piece is prose or a command and
-        belongs to rename_nonpython.py, which reports module names inside it.
+        ``parts`` is the value in order, with None for each piece only known at run time; ``pieces``
+        is every literal piece of the expression in source order, arguments included.
+        A plain literal is ``rewritable``. A plain literal with whitespace before its first
+        run-time piece is prose or a command, and rename_nonpython.py reports module names in it.
+        A built string (``rewritable`` false) is always decided here, wherever the name sits.
         """
 
         static = "".join(itertools.takewhile(lambda part: part is not None, parts))
         computed = None in parts
         shown = _code(node)
-        if re.search(r"\s", static):
+        if rewritable and re.search(r"\s", static):
             return None
-        if not MODULE_START.match(static):
-            # No module name at the start; a built string may still use ``scripts`` as a piece.
-            if computed and any(MODULE_PIECE.search(p) and not re.search(r"\s", p) for p in pieces):
+        leading = bool(MODULE_START.match(static)) and not re.search(r"\s", static)
+        if leading:
+            reported = len(self.unresolved)
+            new_value = self._classify_leading_name(node, static, computed, rewritable, shown)
+            if rewritable or len(self.unresolved) > reported:
+                return new_value
+        if rewritable:
+            return None
+        # A built string: look for a module name anywhere in its value, or, when the value is only
+        # known at run time, in its literal pieces joined in source order (``"scr" + x + "ipts.y"``).
+        texts = [static] if not computed else ["".join(pieces), *pieces]
+        matches = [(text, m) for text in texts for m in MODULE_ANYWHERE.finditer(text)]
+        for text, match in matches:
+            if leading and text is static and match.start() == 0:
+                continue  # already judged as the leading name
+            name = match.group(0).rstrip(".")
+            if name == OLD_ROOT and not (match.group(0).endswith(".") or match.end() == len(text)):
+                continue  # the word "scripts" in prose
+            resolved = self.ownership.resolve(name)
+            if computed or match.group(0).endswith(".") or name == OLD_ROOT:
+                owner = self.ownership.subtree_owner(resolved[0].name) if resolved else AMBIGUOUS
+            else:
+                owner = resolved[0].owner if resolved else AMBIGUOUS
+            if owner != PRODUCT:
+                kind = "computed_module_string" if computed else "assembled_module_string"
                 self._unresolved(
-                    node, "computed_module_string", shown, "`scripts` is a piece of a module name built at run time"
+                    node, kind, shown, f"a module name ({match.group(0)}) inside a string built from parts"
                 )
-            return None
+                break
+        return None
+
+    def _classify_leading_name(
+        self, node: cst.CSTNode, static: str, computed: bool, rewritable: bool, shown: str
+    ) -> str | None:
+        """A string whose value starts with the package name."""
+
         if not computed and MODULE_LITERAL.fullmatch(static):
             entry = self.ownership.resolve(static)
             assert entry is not None
@@ -540,8 +568,8 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         if after in ("", "%", "{"):
             if not computed and after == "" and not text.endswith("."):
                 return None  # just ``scripts``: a word, not a module name
-            # ``"scripts.x."`` alone is a prefix completed elsewhere (``+=``, a later join).
-            # Completed at run time: a trailing dot fixes the parent; otherwise the last part may continue.
+            # Completed at run time, or a prefix completed elsewhere (``"scripts.x."``): a trailing dot
+            # fixes the parent; otherwise the last part may continue.
             base = text[:-1] if text.endswith(".") else text.rsplit(".", 1)[0] if "." in text else OLD_ROOT
             resolved = self.ownership.resolve(base)
             owner = self.ownership.subtree_owner(resolved[0].name) if resolved else None
@@ -1028,7 +1056,7 @@ def _string_parts(node: cst.CSTNode) -> list[str | None] | None:
             if template is not None and None not in values:
                 try:
                     return [template % tuple(values)]
-                except (TypeError, ValueError, KeyError):
+                except Exception:  # any failure leaves the value to run time
                     pass
             return [*left, None]
     if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute):
@@ -1041,14 +1069,13 @@ def _string_parts(node: cst.CSTNode) -> list[str | None] | None:
             if receiver_text is not None and None not in values:
                 try:
                     return [receiver_text.format(*values)]
-                except (IndexError, KeyError, ValueError):
+                except Exception:  # e.g. "{0.decode}" on a value read from bytes
                     pass
             return [*receiver, None]
         if node.func.attr.value == "replace":
             values = [_static_text(a.value) if a.keyword is None and not a.star else None for a in node.args]
-            if receiver_text is not None and None not in values and len(values) in (2, 3):
-                count = int(values[2]) if len(values) == 3 and values[2].lstrip("-").isdigit() else -1
-                return [receiver_text.replace(values[0], values[1], count)]
+            if receiver_text is not None and None not in values and len(values) == 2:
+                return [receiver_text.replace(values[0], values[1])]
             return [None]  # a replacement chosen at run time can produce any name
         if node.func.attr.value == "format_map":
             return [*receiver, None]
@@ -1108,6 +1135,8 @@ def _static_pieces(node: cst.CSTNode) -> list[str]:
             pieces.append(_literal_text(n))
         elif isinstance(n, cst.FormattedString):
             pieces.extend(_fstring_text(n, p.value) for p in n.parts if isinstance(p, cst.FormattedStringText))
+        elif n is not node and (text := _static_text(n)) is not None:
+            pieces.append(text)  # a nested constant expression, evaluated (``"scr" + "ipts"``)
     return pieces
 
 
@@ -1225,78 +1254,24 @@ def write_atomically(path: Path, data: bytes) -> None:
         raise
 
 
-SCRIPTS_NOT_PATH = re.compile(r"scripts(?![/\\])")
-
-
-def _ast_text(value: object) -> str:
-    return value.decode("latin-1") if isinstance(value, bytes) else str(value)
-
-
-def _ast_constants(node: ast.AST) -> Iterator[ast.Constant]:
-    """String constants below ``node`` in source order."""
-
-    for child in ast.iter_child_nodes(node):
-        if isinstance(child, ast.Constant) and isinstance(child.value, (str, bytes)):
-            yield child
-        else:
-            yield from _ast_constants(child)
-
-
-def needs_codemod(ownership: OwnershipMap, source: bytes) -> bool:
-    """Cheap, conservative stdlib pre-check: False only when the LibCST pass cannot act on the file.
-
-    LibCST metadata resolution costs about a second per thousand lines, so files whose
-    imports, names, strings and calls cannot touch a non-product ``scripts`` module skip it.
-    """
-
-    try:
-        tree = ast.parse(source)
-    except (SyntaxError, ValueError):
-        return True  # let LibCST report the parse error
-
-    def touches(dotted: str) -> bool:
-        top = dotted.split(".", 1)[0]
-        if top == OLD_ROOT:
-            return ownership.subtree_owner(dotted) != PRODUCT
-        return top in ownership.root_names
-
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            if any(touches(alias.name) for alias in node.names):
-                return True
-        elif isinstance(node, ast.ImportFrom):
-            if node.level or touches(node.module or ""):
-                return True
-            if any(alias.name in LOADER_NAMES for alias in node.names):
-                return True
-        elif isinstance(node, ast.Name):
-            if node.id == OLD_ROOT or node.id in LOADER_NAMES:
-                return True
-        elif isinstance(node, ast.Attribute):
-            if node.attr in LOADER_NAMES:
-                return True
-        elif (
-            isinstance(node, ast.Constant)
-            and isinstance(node.value, (str, bytes))
-            and SCRIPTS_NOT_PATH.search(_ast_text(node.value))
-        ):
-            return True
-        builds_string = isinstance(node, (ast.BinOp, ast.JoinedStr)) or (
-            isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr in ("format", "join")
-        )
-        # A name split across literals (``"scr" + "ipts.x"``): join them in source order.
-        if builds_string and OLD_ROOT in "".join(_ast_text(c.value) for c in _ast_constants(node)):
-            return True
-    return False
-
-
 def rename_source(
     ownership: OwnershipMap, rel_path: str, source: bytes, external_names: frozenset[str] | None = None
 ) -> tuple[bytes, list[Finding], list[Finding]]:
-    """Run the codemod over one file's bytes; return (new bytes, rewrites, unresolved)."""
+    """Run the codemod over one file's bytes; return (new bytes, rewrites, unresolved).
 
-    if not needs_codemod(ownership, source):
-        return source, [], []
+    Any exception inside the pass is reported for this file, which is then left unchanged.
+    """
+
+    try:
+        return _rename_source(ownership, rel_path, source, external_names)
+    except Exception as exc:  # one unexpected input must not stop the run or half-write a file
+        detail = f"the rename pass failed ({type(exc).__name__}: {exc}); file left unchanged"
+        return source, [], [Finding(rel_path, 1, "tool_error", rel_path, detail=detail)]
+
+
+def _rename_source(
+    ownership: OwnershipMap, rel_path: str, source: bytes, external_names: frozenset[str] | None
+) -> tuple[bytes, list[Finding], list[Finding]]:
     try:
         tree = cst.parse_module(source)
     except cst.ParserSyntaxError as exc:
