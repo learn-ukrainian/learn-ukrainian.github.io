@@ -144,6 +144,10 @@ def gh_shim_sandbox(tmp_path):
     workflow = root / ".github/workflows/ci.yml"
     workflow.parent.mkdir(parents=True)
     shutil.copy2(ROOT / ".github/workflows/ci.yml", workflow)
+    # The merge gate's learner-content check reads the deploy path policy data.
+    deploy_paths = scripts / "curriculum/deploy_paths.v1.json"
+    deploy_paths.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(ROOT / "scripts/curriculum/deploy_paths.v1.json", deploy_paths)
     shim = scripts / "agent_runtime/shims/gh"
     shim.parent.mkdir(parents=True)
     shutil.copy2(ROOT / "scripts/agent_runtime/shims/gh", shim)

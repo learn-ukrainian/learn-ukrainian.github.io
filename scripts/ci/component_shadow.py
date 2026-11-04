@@ -30,7 +30,7 @@ TOOLS = ("scripts/ci/component_shadow.py", "scripts/ci/components.py", "scripts/
          "scripts/ci/dependency_change_denominator.json", "scripts/ci/pytest_report.py",
          "scripts/ci/frontend_change_scope.py", "scripts/ci/frontend_change_denominator.json",
          "scripts/common/repo_root.py", "scripts/common/jsonl.py", "scripts/storage/test_baseline.py",
-         "scripts/deploy/auto_deploy_eligibility.py")
+         "scripts/ci/deploy_paths.py", "scripts/curriculum/deploy_paths.v1.json")
 REVIEW_EDGE_CENSUS = {
     "head_sha": "c3695226db3b18ec0e3ab42c9a7a3221e00df69c",
     "source": "claude-opus-5-5 review of record; measured selection, not the current census",
