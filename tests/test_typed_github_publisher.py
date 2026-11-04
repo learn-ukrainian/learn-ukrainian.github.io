@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 import statistics
 import subprocess
 import sys
@@ -1567,3 +1568,301 @@ def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_p
         assert not hasattr(result, "enqueue_cleanup")
         assert not (root / "batch_state/enqueue-cleanup").exists()
         assert "enqueue-cleanup" not in capsys.readouterr().err
+
+
+# --- issue-transfer (C-4682) ---------------------------------------------------------------
+
+TRANSFER_CATALOG = {
+    **CATALOG,
+    "second": {"github": "unit/second", "role": "public-content", "local_name": "second-fixture"},
+    "elsewhere": {"github": "other/private", "role": "private-infra", "local_name": "other-fixture"},
+    "unroled": {"github": "unit/unroled", "role": "monorepo", "local_name": "unroled-fixture"},
+}
+
+
+class FakeTransferGitHub:
+    """A synthetic GitHub with two repositories, issue #7 in unit/public and REST transfer redirects."""
+
+    def __init__(self):
+        self.repositories = {
+            "unit/public": {"id": "R_PUBLIC", "nameWithOwner": "unit/public", "visibility": "PUBLIC",
+                            "viewerPermission": "ADMIN", "isArchived": False, "labels": ["machinery", "triage"]},
+            "unit/private": {"id": "R_PRIVATE", "nameWithOwner": "unit/private", "visibility": "PRIVATE",
+                             "viewerPermission": "WRITE", "isArchived": False, "labels": ["bug", "machinery"]},
+        }
+        self.issues = {("unit/public", 7): {"node_id": "I_SOURCE", "state": "open", "labels": ["machinery", "triage"]}}
+        self.redirects = {}
+        self.mutations = []
+        self.mutation_result = None
+        self.failing_reads = set()
+        self.after_mutation = None
+
+    def reply(self, args, code, document):
+        return subprocess.CompletedProcess(args, code, json.dumps(document) if code == 0 else "", "" if code == 0 else "gh: failed")
+
+    def __call__(self, args, **kwargs):
+        if args[:5] == ["gh", "api", "--method", "POST", "graphql"]:
+            document = json.loads(Path(args[6]).read_text())
+            if document["query"].startswith("mutation"):
+                return self.transfer(args, document)
+            variables = document["variables"]
+            repository = f"{variables['owner']}/{variables['name']}"
+            if repository in self.failing_reads or repository not in self.repositories:
+                return self.reply(args, 1, None)
+            live = dict(self.repositories[repository])
+            labels = live.pop("labels")
+            # One label per page proves the cursor loop reads every page.
+            start = int(variables["cursor"] or 0)
+            page = {"totalCount": live.pop("totalCount", len(labels)),
+                    "pageInfo": {"hasNextPage": start + 1 < len(labels), "endCursor": str(start + 1)},
+                    "nodes": [{"name": name} for name in labels[start:start + 1]]}
+            return self.reply(args, 0, {"data": {"repository": {**live, "labels": page}}})
+        if args[:4] == ["gh", "api", "--method", "GET"]:
+            match = re.fullmatch(r"repos/([a-z]+/[a-z]+)/issues/(\d+)(/labels)?", args[4].split("?", 1)[0])
+            key = (match[1], int(match[2]))
+            if key in self.failing_reads:
+                return self.reply(args, 1, None)
+            key = self.redirects.get(key, key)
+            issue = self.issues.get(key)
+            if issue is None:
+                return self.reply(args, 1, None)
+            if match[3]:
+                return self.reply(args, 0, [[{"name": name} for name in issue["labels"]]])
+            repository, number = key
+            document = {
+                "number": number, "node_id": issue["node_id"], "state": issue["state"],
+                "html_url": f"https://github.com/{repository}/{'pull' if issue.get('pull') else 'issues'}/{number}",
+                "repository_url": f"https://api.github.com/repos/{repository}",
+            }
+            if issue.get("pull"):
+                document["pull_request"] = {}
+            return self.reply(args, 0, document)
+        pytest.fail(f"unexpected GitHub call {args[:5]}")
+
+    def transfer(self, args, document):
+        self.mutations.append(document)
+        if self.mutation_result is not None:
+            return self.mutation_result(args)
+        variables = document["variables"]
+        source = next(key for key, issue in self.issues.items() if issue["node_id"] == variables["issue"])
+        target = next(name for name, row in self.repositories.items() if row["id"] == variables["repository"])
+        moved = self.issues.pop(source)
+        kept = [label for label in moved["labels"] if label in self.repositories[target]["labels"]]
+        self.issues[(target, 42)] = {"node_id": "I_MOVED", "state": moved["state"], "labels": kept}
+        self.redirects[source] = (target, 42)
+        if self.after_mutation:
+            self.after_mutation()
+        issue = {"id": "I_MOVED", "number": 42, "url": f"https://github.com/{target}/issues/42",
+                 "repository": {"nameWithOwner": target}}
+        return self.reply(args, 0, {"data": {"transferIssue": {"issue": issue}}})
+
+
+@pytest.fixture
+def transfer(monkeypatch, tmp_path):
+    monkeypatch.setattr(gate, "catalog", lambda: TRANSFER_CATALOG)
+    probes = []
+
+    def probe(url):
+        probes.append(url)
+        return {"url": url, "final_url": url, "status": 404 if "/private/" in url else 200, "error": None}
+
+    monkeypatch.setattr(pub, "_anonymous_probe", probe)
+    fake = FakeTransferGitHub()
+    fake.probes, fake.receipts = probes, tmp_path / "receipts"
+
+    def run(**fields):
+        fields = {"repo": "public", "number": 7, "destination": "infra-private", **fields}
+        return pub.publish("issue-transfer", runner=fake, receipt_dir=str(fake.receipts), capture_output=True,
+                           text=True, **fields)
+
+    fake.run = run
+    return fake
+
+
+def _receipts(directory):
+    return [json.loads(path.read_text()) for path in sorted(directory.glob("*.json"))]
+
+
+def test_issue_transfer_moves_one_issue_with_one_mutation_and_a_private_receipt(transfer):
+    result = transfer.run()
+    assert result.returncode == 0
+    assert len(transfer.mutations) == 1
+    mutation = transfer.mutations[0]
+    assert "createLabelsIfMissing:false" in mutation["query"]
+    assert mutation["variables"] == {"issue": "I_SOURCE", "repository": "R_PRIVATE"}
+    (receipt,) = _receipts(transfer.receipts)
+    assert json.loads(result.stdout) == receipt
+    assert receipt["outcome"] == "transferred" and receipt["mutations_sent"] == 1
+    assert receipt["source"]["url"] == "https://github.com/unit/public/issues/7"
+    assert receipt["destination"] == {"alias": "infra-private", "repository": "unit/private", "number": 42,
+                                      "url": "https://github.com/unit/private/issues/42", "node_id": "I_MOVED"}
+    assert receipt["labels"] == {"source": ["machinery", "triage"], "destination_issue": ["machinery"],
+                                 "dropped": ["triage"], "predicted_dropped": ["triage"]}
+    assert [row["status"] for row in receipt["probes"]] == [200, 404]
+    assert "does not prove confidentiality" in receipt["probe_note"]
+    assert oct(transfer.receipts.stat().st_mode & 0o777) == "0o700"
+    assert all(oct(path.stat().st_mode & 0o777) == "0o600" for path in transfer.receipts.iterdir())
+
+
+def test_issue_transfer_second_call_is_idempotent_without_a_mutation(transfer):
+    assert transfer.run().returncode == 0
+    second = transfer.run(repo="unit/public")
+    assert second.returncode == 0
+    assert len(transfer.mutations) == 1
+    receipt = json.loads(second.stdout)
+    assert receipt["outcome"] == "already-transferred" and receipt["mutations_sent"] == 0
+    assert receipt["destination"]["url"] == "https://github.com/unit/private/issues/42"
+
+
+def test_issue_transfer_already_moved_closed_issue_is_still_idempotent(transfer):
+    assert transfer.run().returncode == 0
+    transfer.issues[("unit/private", 42)]["state"] = "closed"
+    assert transfer.run().returncode == 0
+    assert len(transfer.mutations) == 1
+
+
+def test_issue_transfer_dry_run_reports_label_drops_without_a_mutation(transfer):
+    result = transfer.run(dry_run=True)
+    assert result.returncode == 0 and transfer.mutations == []
+    receipt = json.loads(result.stdout)
+    assert receipt["outcome"] == "dry-run" and receipt["labels"]["predicted_dropped"] == ["triage"]
+
+
+@pytest.mark.parametrize(
+    "fields,reason",
+    [
+        ({"repo": "unit/unregistered"}, "not exactly one repository registered"),
+        ({"repo": "unknown-alias"}, "not exactly one repository registered"),
+        ({"destination": "unknown-alias"}, "not exactly one repository registered"),
+        ({"destination": "elsewhere"}, "same owner"),
+        ({"destination": "public"}, "destination is the source"),
+        ({"repo": "unit/public", "destination": "public"}, "destination is the source"),
+        ({"repo": "infra-private", "destination": "public"}, "private-role repository never moves"),
+        ({"repo": "unit/private", "destination": "second"}, "private-role repository never moves"),
+        ({"destination": "unroled"}, "no public-/private- role"),
+    ],
+)
+def test_issue_transfer_static_refusals_read_nothing(transfer, fields, reason):
+    with pytest.raises(gate.PublishBlocked, match=reason):
+        pub.publish("issue-transfer", **{"repo": "public", "number": 7, "destination": "infra-private", **fields},
+                    receipt_dir=str(transfer.receipts), runner=lambda *a, **k: pytest.fail("read or write"))
+    assert not transfer.receipts.exists()
+
+
+@pytest.mark.parametrize("fields", [{"destination": "unit/private"}, {"repo": "-x"}, {"number": 0}, {"dry_run": "yes"}])
+def test_issue_transfer_schema_refuses_malformed_fields(fields):
+    with pytest.raises(gate.PublishBlocked, match="invalid publisher field"):
+        pub.publish("issue-transfer", **{"repo": "public", "number": 7, "destination": "infra-private", **fields},
+                    runner=lambda *a, **k: pytest.fail("send"))
+
+
+def _drift(fake, side, **values):
+    fake.repositories[side].update(values)
+
+
+@pytest.mark.parametrize(
+    "change,reason",
+    [
+        (lambda f: _drift(f, "unit/private", visibility="PUBLIC"), "destination repository's live visibility"),
+        (lambda f: _drift(f, "unit/public", visibility="PRIVATE"), "source repository's live visibility"),
+        (lambda f: _drift(f, "unit/private", visibility="INTERNAL"), "destination repository's live visibility"),
+        (lambda f: _drift(f, "unit/public", nameWithOwner="unit/renamed"), "source repository's live identity"),
+        (lambda f: _drift(f, "unit/private", viewerPermission="READ"), "cannot write to the destination"),
+        (lambda f: _drift(f, "unit/public", viewerPermission=None), "cannot write to the source"),
+        (lambda f: _drift(f, "unit/private", isArchived=True), "destination repository is archived"),
+        (lambda f: _drift(f, "unit/private", totalCount=9), "repository read was unreadable"),
+        (lambda f: _drift(f, "unit/public", id=None), "repository read was unreadable"),
+        (lambda f: f.failing_reads.add("unit/private"), "repository read was unreadable"),
+        (lambda f: f.issues.clear(), "source issue is missing"),
+        (lambda f: f.failing_reads.add(("unit/public", 7)), "source issue is missing"),
+        (lambda f: f.issues[("unit/public", 7)].update(state="closed"), "source issue is closed"),
+        (lambda f: f.issues[("unit/public", 7)].update(pull=True), "is a pull request"),
+        (lambda f: f.issues[("unit/public", 7)].update(node_id="bad id"), "source issue is missing, unreadable"),
+    ],
+)
+def test_issue_transfer_fresh_read_refusals_never_mutate(transfer, change, reason):
+    change(transfer)
+    with pytest.raises(gate.PublishBlocked, match=reason):
+        transfer.run()
+    assert transfer.mutations == []
+    (receipt,) = _receipts(transfer.receipts)
+    assert receipt["outcome"] == "refused" and receipt["mutations_sent"] == 0 and reason in receipt["detail"]
+
+
+def test_issue_transfer_refuses_a_redirect_to_another_repository(transfer):
+    moved = transfer.issues.pop(("unit/public", 7))
+    transfer.issues[("unit/second", 3)] = moved
+    transfer.redirects[("unit/public", 7)] = ("unit/second", 3)
+    with pytest.raises(gate.PublishBlocked, match="redirects to a repository other than the destination"):
+        transfer.run()
+    assert transfer.mutations == []
+
+
+@pytest.mark.parametrize(
+    "result",
+    [
+        lambda args: subprocess.CompletedProcess(args, 1, "", "gh: timeout"),
+        lambda args: subprocess.CompletedProcess(args, 0, "not json", ""),
+        lambda args: subprocess.CompletedProcess(args, 0, json.dumps({"errors": [{"type": "FORBIDDEN"}]}), ""),
+        lambda args: (_ for _ in ()).throw(subprocess.TimeoutExpired(args, 60)),
+    ],
+)
+def test_issue_transfer_ambiguous_mutation_result_is_never_retried(transfer, result, capsys):
+    transfer.mutation_result = result
+    outcome = transfer.run()
+    assert outcome.returncode == pub.TRANSFER_UNSETTLED == 3
+    assert len(transfer.mutations) == 1
+    receipt = json.loads(outcome.stdout)
+    assert receipt["outcome"] == "ambiguous" and receipt["mutations_sent"] == 1
+    assert "do not retry" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "break_after",
+    [
+        lambda f: f.failing_reads.add(("unit/public", 7)),
+        lambda f: f.failing_reads.add(("unit/private", 42)),
+        lambda f: f.issues[("unit/private", 42)].update(node_id="I_OTHER"),
+    ],
+)
+def test_issue_transfer_failed_verification_is_unsettled_without_a_second_mutation(transfer, break_after):
+    transfer.after_mutation = lambda: break_after(transfer)
+    outcome = transfer.run()
+    assert outcome.returncode == 3 and len(transfer.mutations) == 1
+    assert json.loads(outcome.stdout)["outcome"] == "unverified"
+
+
+def test_issue_transfer_mutation_returning_another_repository_is_unverified(transfer):
+    def elsewhere(args):
+        issue = {"id": "I_X", "number": 5, "url": "https://example.invalid/x", "repository": {"nameWithOwner": "unit/x"}}
+        return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"transferIssue": {"issue": issue}}}), "")
+
+    transfer.mutation_result = elsewhere
+    outcome = transfer.run()
+    receipt = json.loads(outcome.stdout)
+    assert outcome.returncode == 3 and len(transfer.mutations) == 1
+    assert receipt["outcome"] == "unverified" and receipt["destination"]["url"] is None
+    assert transfer.probes == ["https://github.com/unit/public/issues/7"]
+
+
+@pytest.mark.parametrize("where", ["inside", "shared", "relative"])
+def test_issue_transfer_receipt_directory_must_be_private_and_outside_the_repository(transfer, tmp_path, where):
+    directory = {"inside": str(ROOT / "receipts"), "shared": str(tmp_path / "shared"), "relative": "receipts"}[where]
+    if where == "shared":
+        (tmp_path / "shared").mkdir(mode=0o755)
+        (tmp_path / "shared").chmod(0o755)
+    with pytest.raises(gate.PublishBlocked, match="receipt directory"):
+        pub.publish("issue-transfer", repo="public", number=7, destination="infra-private", receipt_dir=directory,
+                    runner=lambda *a, **k: pytest.fail("read or write"))
+    assert not (ROOT / "receipts").exists()
+
+
+def test_issue_transfer_cli_exit_codes(transfer, capsys):
+    argv = ["issue-transfer", "--repo", "public", "--number", "7", "--destination", "infra-private",
+            "--receipt-dir", str(transfer.receipts)]
+    assert pub.main([*argv, "--dry-run"], runner=transfer) == 0
+    assert json.loads(capsys.readouterr().out)["outcome"] == "dry-run"
+    assert pub.main([*argv[:-4], "--destination", "unit/private"], runner=transfer) == 2
+    transfer.mutation_result = lambda args: subprocess.CompletedProcess(args, 1, "", "gh: failed")
+    assert pub.main(argv, runner=transfer) == 3
+    assert len(transfer.mutations) == 1
