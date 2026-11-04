@@ -45,12 +45,17 @@ LAUNCH_CALL = re.compile(
     r"|\.\s*browserType\s*\(|\.\s*browser_type\b"
 )
 JS_NAMED_IMPORT = re.compile(rf"import\s*\{{([^}}]*)\}}\s*from\s*['\"]({PLAYWRIGHT_PACKAGE})['\"]")
-JS_WHOLE_IMPORT = re.compile(
-    rf"import\s+(?!type\b)(?:\*\s+as\s+)?\w+\s*(?:,\s*\{{[^}}]*\}})?\s*from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
-    # Any call taking a Playwright package name: import(), require(), a createRequire()
-    # result, require.resolve(). import('...').Page is a type position, so it is skipped.
-    rf"|[\w$]+\s*\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*(?:,|\)(?!\s*\.\s*[A-Z]))"
-    rf"|export\s+(?!type\b)[^;]*?from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
+# Outside the launcher, a JS file may name a Playwright package only in these places. Any
+# other mention (require(), import(), a createRequire() result, a default or namespace
+# import, a re-export) is refused whatever the call around it looks like, so a new call
+# shape cannot get past the guard. Only a package name built at runtime would.
+JS_PACKAGE_LITERAL = re.compile(rf"(['\"`]){PLAYWRIGHT_PACKAGE}\1")
+JS_ALLOWED_PACKAGE_USE = re.compile(
+    # A named import; its names are checked against JS_IMPORTABLE separately.
+    rf"import\s*\{{[^}}]*\}}\s*from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
+    rf"|(?:import|export)\s+type\b[^;'\"`]*?from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
+    # A type position such as import('@playwright/test').Page.
+    rf"|\bimport\s*\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)\s*\.\s*[A-Z]\w*"
 )
 # Test fixtures that hand a spec a browser type it could launch itself.
 JS_BROWSER_FIXTURE = re.compile(r"async\s*\(\s*\{[^}]*\b(?:browserType|playwright)\b[^}]*\}")
@@ -179,7 +184,12 @@ def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
                 allowed = JS_IMPORTABLE.get(match.group(2), set()) | {"test"}  # `test` has its own rule
                 if bad := _imported_names(match.group(1)) - allowed:
                     offenders.append(f"{path}: imports {sorted(bad)} from {match.group(2)}")
-            offenders += [f"{path}: {m.group(0)}" for m in JS_WHOLE_IMPORT.finditer(text)]
+            allowed_spans = [m.span() for m in JS_ALLOWED_PACKAGE_USE.finditer(text)]
+            offenders += [
+                f"{path}: names {m.group(0)} outside an allowed import"
+                for m in JS_PACKAGE_LITERAL.finditer(text)
+                if not any(start <= m.start() and m.end() <= end for start, end in allowed_spans)
+            ]
             offenders += [f"{path}: {m.group(0)}" for m in JS_BROWSER_FIXTURE.finditer(text)]
             offenders += [f"{path}: {m.group(0)}" for m in JS_PLAYWRIGHT_BROWSER_TYPE.finditer(text)]
         elif PY_USES_PLAYWRIGHT.search(text):
