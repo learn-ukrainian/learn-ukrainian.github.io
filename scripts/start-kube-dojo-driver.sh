@@ -3,10 +3,10 @@
 # drive-epic skill on the kube-dojo stream, so the CTO stops hand-briefing kube-dojo pages.
 # The kube-dojo work lives in kube-dojo/kube-dojo.github.io (sibling checkout, fleet repo
 # `kube-dojo`); the lease, slot (claude-kube-dojo) and Fleet Comms stay on this repository.
-# On this host, start it with the Claude account chosen through CLAUDE_CONFIG_DIR, in its own
-# tmux session, for example:
-#   tmux new-session -d -s kube-dojo -c /home/ops/learn-ukrainian \
-#     -e CLAUDE_CONFIG_DIR=/home/ops/.claude scripts/start-kube-dojo-driver.sh
+# From the repository root, with CLAUDE_CONFIG_DIR set to the chosen Claude account,
+# start it in its own tmux session, for example:
+#   tmux new-session -d -s kube-dojo -c "$PWD" \
+#     -e CLAUDE_CONFIG_DIR="$CLAUDE_CONFIG_DIR" scripts/start-kube-dojo-driver.sh
 # Roots (scripts/common/repo_root.py): ROOT below is the runtime root, the machinery
 # checkout this wrapper and launcher_core.sh ship in, so it is read from this file's
 # location. Everything the driver then targets comes from the machinery configuration

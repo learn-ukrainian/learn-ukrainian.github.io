@@ -96,7 +96,7 @@ def load_manifest(group: str, repo: Path = ROOT) -> dict:
         raise MissingArtifactError(
             group,
             "*",
-            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts manifest build --group {group} --pre <commit>",
+            f".venv/bin/python -m scripts.storage.artifacts manifest build --group {group} --pre <commit>",
             "manifest missing",
         )
     return validate_manifest(json.loads(path.read_text(encoding="utf-8")), group, str(path))
@@ -238,7 +238,7 @@ def find_entry(group: str, rel: str, repo: Path = ROOT) -> dict:
         raise MissingArtifactError(
             group,
             rel,
-            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}",
+            f".venv/bin/python -m scripts.storage.artifacts hydrate --group {group}",
             "no unique manifest entry",
         )
     return matches[0]
@@ -258,7 +258,7 @@ def hash_file(path: Path) -> str:
 
 
 def verify_file(path: Path, entry: dict, *, group: str, rel: str) -> None:
-    command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+    command = f".venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
     expected = checked_destination(path.parents[len(checked_rel(rel).parts)], f"data/{rel}", "data")
     if path != expected:
         raise ValueError(f"artifact path differs from {expected}: {path}")
@@ -283,7 +283,7 @@ def artifact_path(group: str, rel: str, *, repo: Path = ROOT) -> Path:
         raise MissingArtifactError(group, rel, "hydrate the artifact group", "no unique manifest entry")
     entry = matches[0]
     path = checked_destination(repo, f"data/{rel}", "data")
-    command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+    command = f".venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
     if not path.is_file() or path.is_symlink():
         raise MissingArtifactError(group, rel, command)
     stat = path.stat()
