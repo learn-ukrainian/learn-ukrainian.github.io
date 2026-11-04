@@ -220,7 +220,7 @@ def test_override_consumed_once_logged_privately(synthetic_opsec, tmp_path):
         )
 
 
-def test_an_override_authority_failure_never_admits(synthetic_opsec, tmp_path):
+def test_an_override_authority_failure_never_admits(synthetic_opsec, tmp_path, monkeypatch):
     """The synthetic authority cannot create its log here; any such failure is a refusal."""
     target = tmp_path / "not-a-directory"
     target.write_text("clean")
@@ -229,6 +229,16 @@ def test_an_override_authority_failure_never_admits(synthetic_opsec, tmp_path):
             "github.com/unit/public", [TOKEN], environment={"LU_OPSEC_OVERRIDE": "reason"}, log_path=target / "log"
         )
     assert error.value.indices == {0}
+    # Without a log path, a failure to resolve the primary checkout's audit root is the same refusal.
+    for failure in (OSError("synthetic root failure"), gate.PublishBlocked("synthetic root refusal")):
+
+        def unavailable(cwd=None, failure=failure):
+            raise failure
+
+        monkeypatch.setattr(gate, "primary_root", unavailable)
+        with pytest.raises(gate.PublishBlocked, match=r"OPSEC blocked: .*override was not admitted") as error:
+            gate.check_texts("github.com/unit/public", [TOKEN], environment={gate.OVERRIDE: "reason"})
+        assert error.value.indices == {0}
 
 
 # The private override module is loaded from private_tooling().parent (PUBLIC-1104 6(b)).

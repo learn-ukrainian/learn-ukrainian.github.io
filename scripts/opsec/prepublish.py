@@ -408,13 +408,14 @@ def _override_admitted(
     """Whether the private authority admits these policy hits; its refusal becomes PublishBlocked.
 
     The audit path is this checkout's primary root, shared by every worktree
-    and publisher, unless the caller names one. Only a literal True admits.
+    and publisher, unless the caller names one. Only a literal True admits;
+    any other failure, resolving that path included, admits nothing.
     """
     import contextlib
     import io
 
-    target = log_path or primary_root() / "batch_state/opsec/overrides.jsonl"
     try:
+        target = log_path or primary_root() / "batch_state/opsec/overrides.jsonl"
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
             admitted = authority.authorize(destination, list(blocks), reason, target)
     except authority.OverrideBlocked as exc:
