@@ -1031,7 +1031,8 @@ def stage_codex_account_auth(label: object, write_home: Path) -> dict[str, str]:
     The default account keeps its existing source. Any other label is read from its own bound home
     through the binder an ordinary launch uses (``codex_account_env``), which refuses an unknown label,
     an unbound, shared or default home, an ambient credential or home that conflicts with it, and a home
-    without a login. A bound home whose login is not a file refuses rather than launching unauthenticated.
+    without a login. A bound home that staging would read under another name, or whose login is not a
+    file, refuses rather than copying another directory's login or launching unauthenticated.
     """
     from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
 
@@ -1047,6 +1048,10 @@ def stage_codex_account_auth(label: object, write_home: Path) -> dict[str, str]:
         source = codex_account_env(label, os.environ)
     except CodexAccountRefused as exc:
         raise ReviewIsolationError(f"attempt_{exc.code}") from None
+    if label != DEFAULT_CODEX_ACCOUNT and source["CODEX_HOME"] != source["CODEX_HOME"].strip():
+        # stage_engine_auth strips CODEX_HOME, so it would copy from another directory than the one bound
+        # (a home bound as "$HOME/.codex " would yield account a's login). Refuse before copying anything.
+        raise ReviewIsolationError("attempt_codex_account_home_not_canonical")
     env = stage_engine_auth("codex", write_home=write_home, source_env=source)
     if label != DEFAULT_CODEX_ACCOUNT and not (write_home / ".codex" / "auth.json").is_file():
         raise ReviewIsolationError("attempt_codex_account_login_missing")

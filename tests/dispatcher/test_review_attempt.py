@@ -1057,3 +1057,27 @@ def test_bound_attempt_on_codex_b_runs_as_account_b(codex_accounts_ab, attempt, 
     assert seen == [("b-sub", str(b), "b-sub", (b / "auth.json").read_bytes())]
     assert seen[0][3] != (a / "auth.json").read_bytes()
     assert store.read("task")["status"] == "done"
+
+
+@pytest.mark.parametrize("suffix", [" ", " ", "　"])
+def test_attempt_boundary_refuses_a_bound_home_that_staging_would_rename(codex_accounts_ab, tmp_path, monkeypatch, suffix):
+    """F1 (#12732 round 1): a bound home named like account a's home plus trailing whitespace stays b's.
+
+    Defect class: staging normalizes the bound CODEX_HOME (``str.strip``) into another directory and copies
+    account a's login for b.
+    """
+    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from scripts.review.isolation import ReviewIsolationError
+
+    a, b = codex_accounts_ab
+    twin = a.parent / f".codex{suffix}"
+    twin.mkdir(mode=0o700)
+    (twin / "auth.json").write_bytes((b / "auth.json").read_bytes())
+    (twin / "auth.json").chmod(0o600)
+    binding = tmp_path / "codex_accounts.json"
+    binding.write_text(json.dumps({"schema_version": 1, "accounts": {"b-sub": {"codex_home": str(twin), "budget_usd": 200}}}))
+    staged = tmp_path / "staged"
+    with pytest.raises(ReviewIsolationError, match=r"^attempt_codex_account_home_not_canonical$"):
+        stage_codex_account_auth("b-sub", staged)
+    login = staged / ".codex" / "auth.json"
+    assert not login.exists() or login.read_bytes() != (a / "auth.json").read_bytes()
