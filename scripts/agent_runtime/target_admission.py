@@ -637,7 +637,7 @@ def _resolve_review_target(
     """
     from scripts.fleet.claude_account_lane import lane_record, select_account
     from scripts.review.capacity import review_capacity_action
-    from scripts.review.model_catalog import risk_reviewer_refusal
+    from scripts.review.model_catalog import load_model_catalog, risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
         REVIEW_CANDIDATES,
         REVIEW_LADDERS,
@@ -853,10 +853,15 @@ def _resolve_review_target(
     budget_blocked, _ = review_capacity_action(
         budget_seat, lane_info, (snapshot or {}).get("diagnostics"), budget_model
     )
+    # The resolver excludes candidates by quota bucket, not seat. The lane read above is the seat's
+    # catalog endpoint: ``agents.codex`` is account a, bucket ``codex:a``; account b keeps its own.
+    budget_bucket = (
+        load_model_catalog()["review_scheduler"]["endpoints"].get(budget_seat, {}).get("quota_bucket") or budget_seat
+    )
     resolution = resolve_reviewer(
         inputs,
         ladder=ladder,
-        excluded_quota_buckets=frozenset({budget_seat}) if snapshot and budget_blocked else frozenset(),
+        excluded_quota_buckets=frozenset({budget_bucket}) if snapshot and budget_blocked else frozenset(),
         review_mode=review_mode,
     )
     if resolution.fail_closed_reason:

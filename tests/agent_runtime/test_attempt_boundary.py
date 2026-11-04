@@ -1983,3 +1983,36 @@ def test_api_key_receipt_names_the_helper_method():
         "verified": True,
     }
     reset_claude_account_receipts()
+
+
+def test_attempt_boundary_authenticates_codex_seat_as_the_labelled_account(world, tmp_path, monkeypatch):
+    """A b-sub attempt's sealed home holds account b's login, never account a's (#12504, C-4635)."""
+    root, home = world
+    b = tmp_path / "codex-b"
+    b.mkdir(mode=0o700)
+    (b / "auth.json").write_bytes(b'{"login": "account-b"}')
+    (b / "auth.json").chmod(0o600)
+    binding = tmp_path / "codex_accounts.json"
+    binding.write_text(json.dumps({"schema_version": 1, "accounts": {"b-sub": {"codex_home": str(b), "budget_usd": 200}}}))
+    binding.chmod(0o600)
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "codex").write_text("#!/bin/sh\nexit 0\n")  # `codex login status` reports a login
+    (bin_dir / "codex").chmod(0o755)
+    monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(binding))
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "codex", review_access="full")
+    tc.update(review_cwd=str(root), codex_account="b-sub")
+    subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+    # The world's ambient CODEX_HOME is account a's home: the boundary refuses rather than substitute it.
+    with pytest.raises(ReviewIsolationError, match=r"^attempt_codex_account_ambient_conflict$"):
+        AttemptBoundary(agent="codex", tool_config=tc)
+    monkeypatch.delenv("CODEX_HOME")
+    for label, own in (("b-sub", b), (None, home / ".codex")):
+        boundary = AttemptBoundary(agent="codex", tool_config={**tc, "codex_account": label})
+        try:
+            staged = boundary.write_root / "home" / ".codex"
+            assert (staged / "auth.json").read_bytes() == (own / "auth.json").read_bytes()
+            assert boundary.env["CODEX_HOME"] == str(staged) == boundary.tool_config["codex_home_override"]
+        finally:
+            boundary.cleanup()
