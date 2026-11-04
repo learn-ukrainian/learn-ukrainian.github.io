@@ -7,6 +7,7 @@ There is no argv, arbitrary endpoint, GraphQL document or payload passthrough.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -120,6 +121,11 @@ SCHEMAS = {
         {**COMMON, "parent_id": "node", "child_id": "node", "replace_parent": "bool"},
     ),
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
+    # Both endpoints resolve through scripts/config/fleet_repos.yaml; the verb sends no text (C-4682).
+    "issue-transfer": (
+        {"repo", "number", "destination"},
+        {"repo": "endpoint", "number": "number", "destination": "alias", "receipt_dir": "path", "dry_run": "bool"},
+    ),
 }
 # Workflows this publisher may start. workflow_dispatch input names, required
 # flags, booleans and choice options are read from each workflow file. There
@@ -160,6 +166,9 @@ PATTERNS = {
     "sha": r"[0-9a-fA-F]{40}",
     "node": r"[A-Za-z0-9_=-]+",
     "color": r"[0-9a-fA-F]{6}",
+    # A registry alias, or owner/name; issue-transfer resolves either through the registry.
+    "alias": r"[a-z0-9][a-z0-9-]*",
+    "endpoint": r"[a-z0-9][a-z0-9-]*|[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+",
 }
 
 
@@ -832,6 +841,467 @@ def _link_created_issue(created, parent, parent_node, gh_repo, read_runner, runn
         )
 
 
+# --- issue-transfer (C-4682) ---------------------------------------------------------------
+# One open issue moves between two registered repositories of one owner. Static refusals
+# come first, then fresh reads, then exactly one transferIssue mutation. Nothing after the
+# mutation can send a second one; once it is sent, every failure exits TRANSFER_UNSETTLED.
+
+TRANSFER_REPOSITORY_QUERY = (
+    "query($owner:String!,$name:String!,$cursor:String){repository(owner:$owner,name:$name){"
+    "id nameWithOwner visibility viewerPermission isArchived "
+    "labels(first:100,after:$cursor){totalCount pageInfo{hasNextPage endCursor} nodes{name}}}}"
+)
+TRANSFER_ISSUE_LABELS_QUERY = (
+    "query($owner:String!,$name:String!,$number:Int!,$cursor:String){repository(owner:$owner,name:$name){"
+    "issue(number:$number){id labels(first:100,after:$cursor){totalCount pageInfo{hasNextPage endCursor} "
+    "nodes{name}}}}}"
+)
+TRANSFER_MUTATION = (
+    "mutation($issue:ID!,$repository:ID!){transferIssue(input:{issueId:$issue,repositoryId:$repository,"
+    "createLabelsIfMissing:false}){issue{id number url repository{nameWithOwner}}}}"
+)
+TRANSFER_WRITE_PERMISSIONS = frozenset({"ADMIN", "MAINTAIN", "WRITE"})
+TRANSFER_VISIBILITY = {"private": "PRIVATE", "public": "PUBLIC"}
+TRANSFER_UNSETTLED = 3
+TRANSFER_LABEL_PAGES = 50
+TRANSFER_PROBED = frozenset({"transferred", "already-transferred", "unverified", "ambiguous"})
+TRANSFER_PROBE_NOTE = (
+    "An anonymous HTTP status alone does not prove confidentiality: GitHub serves a transfer "
+    "banner at the old URL to readers without access to the destination."
+)
+_API_REPOSITORY = re.compile(r"https://api\.github\.com/repos/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)")
+
+
+def _transfer_refused(reason):
+    return gate.PublishBlocked(f"TRANSFER_REFUSED: {reason}; nothing was transferred.")
+
+
+def _transfer_endpoint(value, environment):
+    """Resolve a registry alias or owner/name to exactly one registered github.com repository."""
+    rows = gate.catalog()
+    if not isinstance(rows, dict):
+        raise _transfer_refused("the repository registry is unreadable")
+    if "/" in value:
+        wanted = gate.normalize_repository(value, environment.get("GH_HOST", "github.com"))
+        matches = [
+            (alias, row) for alias, row in rows.items()
+            if isinstance(row, dict) and isinstance(row.get("github"), str)
+            and gate.normalize_repository(row["github"]) == wanted != "unknown"
+        ]
+    else:
+        matches = [(value, rows[value])] if value in rows else []
+    if len(matches) != 1:
+        raise _transfer_refused(f"{value} is not exactly one repository registered in scripts/config/fleet_repos.yaml")
+    alias, row = matches[0]
+    github, role = (row.get("github"), row.get("role")) if isinstance(row, dict) else (None, None)
+    canonical = gate.normalize_repository(github) if isinstance(github, str) else "unknown"
+    privacy = None
+    if isinstance(role, str):
+        privacy = "private" if role.startswith("private-") else "public" if role.startswith("public-") else None
+    if not canonical.startswith("github.com/") or privacy is None:
+        raise _transfer_refused(f"the registry row for {alias} has no github.com repository or no public-/private- role")
+    repository_name = canonical.split("/", 1)[1]
+    return {"alias": alias, "repository": repository_name, "owner": repository_name.split("/", 1)[0], "privacy": privacy}
+
+
+def _transfer_checkouts():
+    checkouts = [gate.ROOT.resolve()]
+    with contextlib.suppress(NotAGitRepositoryError):
+        checkouts.append(resolve_main_root_without_git(gate.ROOT).resolve())
+    return checkouts
+
+
+def _reserve_transfer_receipt(value, source, number):
+    """Create a new 0600 receipt in a private directory outside every checkout.
+
+    The directory is opened once and checked through that descriptor (owner, mode, real
+    path), and the file is created relative to it, so a parent swapped after the check
+    cannot move the receipt into a checkout.
+    """
+    from datetime import UTC, datetime
+
+    if value is None:
+        state = os.environ.get("XDG_STATE_HOME", "")
+        base = Path(state) if os.path.isabs(state) else Path.home() / ".local" / "state"
+        directory = base / "learn-ukrainian" / "issue-transfer"
+    else:
+        directory = Path(value).expanduser()
+        if not directory.is_absolute():
+            raise _transfer_refused("the receipt directory must be an absolute path")
+    directory = Path(os.path.abspath(directory))
+    # Lexical check first, so nothing is ever created inside a checkout.
+    if any(directory.resolve().is_relative_to(root) for root in _transfer_checkouts()):
+        raise _transfer_refused("the receipt directory must be outside the repository")
+    try:
+        directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+        directory_fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError:
+        raise _transfer_refused("the receipt directory cannot be created or opened") from None
+    try:
+        info = os.fstat(directory_fd)
+        real = Path(os.readlink(f"/proc/self/fd/{directory_fd}"))
+        if not real.is_absolute() or any(real.is_relative_to(root) for root in _transfer_checkouts()):
+            raise _transfer_refused("the receipt directory must be outside the repository")
+        if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid() or info.st_mode & 0o077:
+            raise _transfer_refused("the receipt directory must be a mode 0700 directory owned by this user")
+        name = f"{source['repository'].replace('/', '-')}-{number}-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%fZ')}.json"
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+        return {"path": real / name, "fd": os.open(name, flags, 0o600, dir_fd=directory_fd)}
+    except OSError:
+        raise _transfer_refused("the receipt file cannot be created") from None
+    finally:
+        os.close(directory_fd)
+
+
+def _write_transfer_receipt(sink, receipt):
+    """Write the receipt once into its reserved file; False when it cannot be written."""
+    fd, sink["fd"] = sink["fd"], None
+    if fd is None:
+        return False
+    try:
+        handle = os.fdopen(fd, "w", encoding="utf-8")
+    except OSError:
+        os.close(fd)
+        return False
+    try:
+        with handle:
+            handle.write(json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+        return True
+    except OSError:
+        return False
+
+
+def _anonymous_probe(url):
+    """One credential-free GET: no token, cookie, netrc or proxy; record the final URL and status."""
+    import urllib.error
+    import urllib.request
+
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    request = urllib.request.Request(url, headers={"User-Agent": "learn-ukrainian-issue-transfer-probe"})
+    try:
+        with opener.open(request, timeout=20) as response:
+            return {"url": url, "final_url": response.geturl(), "status": response.status, "error": None}
+    except urllib.error.HTTPError as exc:
+        return {"url": url, "final_url": exc.geturl(), "status": exc.code, "error": None}
+    except Exception as exc:
+        return {"url": url, "final_url": None, "status": None, "error": type(exc).__name__}
+
+
+def _probe_failed(probe):
+    status = probe.get("status")
+    return probe.get("error") is not None or type(status) is not int or status >= 500
+
+
+def _transfer_resolution(endpoint, number, reader, cwd, environment):
+    """What source/number resolves to now; the REST read follows a transferred issue's redirect."""
+    result = read(
+        "issue", repo=endpoint["repository"], runner=reader, cwd=cwd, env=environment, capture_output=True,
+        text=True, check=False, timeout=30, number=number,
+    )
+    if result.returncode:
+        raise ValueError("issue unreadable")
+    document = json.loads(result.stdout)
+    resolved = {
+        "repository": None, "number": document["number"], "node_id": document["node_id"],
+        "state": document["state"], "url": document["html_url"], "pull_request": "pull_request" in document,
+    }
+    match = _API_REPOSITORY.fullmatch(document["repository_url"]) if isinstance(document["repository_url"], str) else None
+    if (
+        match is None or type(resolved["number"]) is not int or resolved["number"] <= 0
+        or not isinstance(resolved["node_id"], str) or not re.fullmatch(PATTERNS["node"], resolved["node_id"])
+        or resolved["state"] not in {"open", "closed"} or not isinstance(resolved["url"], str)
+    ):
+        raise ValueError("malformed issue")
+    resolved["repository"] = match[1]
+    if not resolved["pull_request"] and resolved["url"].casefold() != (
+        f"https://github.com/{match[1]}/issues/{resolved['number']}".casefold()
+    ):
+        raise ValueError("issue URL does not match its repository")
+    return resolved
+
+
+def _transfer_label_connection(query, variables, select, reader, cwd, environment, temp):
+    """Every label of one GraphQL label connection: paginated, count-checked and distinct.
+
+    ``select`` maps the repository object to (identity fields, label page); the identity must
+    stay the same on every page.
+    """
+    labels, cursor, identity, total = [], None, None, None
+    for _ in range(TRANSFER_LABEL_PAGES):
+        frozen = temp / "query.json"
+        frozen.write_bytes(json.dumps({"query": query, "variables": {**variables, "cursor": cursor}}).encode("utf-8"))
+        result = reader(
+            ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen)],
+            cwd=cwd, env=dict(environment), capture_output=True, text=True, check=False, timeout=30,
+        )
+        if result.returncode:
+            raise ValueError("label read unreadable")
+        document = json.loads(result.stdout)
+        if not isinstance(document, dict) or document.get("errors"):
+            raise ValueError("label read errors")
+        current, page = select(document["data"]["repository"])
+        if identity is None:
+            identity, total = current, page["totalCount"]
+        if current != identity or page["totalCount"] != total or type(total) is not int:
+            raise ValueError("labels changed while reading")
+        names = [node["name"] for node in page["nodes"]]
+        if not all(isinstance(label, str) and label for label in names):
+            raise ValueError("malformed label")
+        labels += names
+        more = page["pageInfo"]["hasNextPage"]
+        if more is False:
+            break
+        cursor = page["pageInfo"]["endCursor"]
+        if more is not True or not isinstance(cursor, str):
+            raise ValueError("malformed label page")
+    else:
+        raise ValueError("too many label pages")
+    # GitHub label names are unique without regard to case, so a repeat means a misread page.
+    if len(labels) != total or len({label.casefold() for label in labels}) != len(labels):
+        raise ValueError("incomplete or repeated labels")
+    return identity, labels
+
+
+def _transfer_repository(endpoint, reader, cwd, environment, temp):
+    """Fresh identity, visibility, permission and complete label names of one repository."""
+    owner, name = endpoint["repository"].split("/", 1)
+    fields = ("id", "nameWithOwner", "visibility", "viewerPermission", "isArchived")
+    identity, labels = _transfer_label_connection(
+        TRANSFER_REPOSITORY_QUERY, {"owner": owner, "name": name},
+        lambda repo: ({key: repo[key] for key in fields}, repo["labels"]), reader, cwd, environment, temp,
+    )
+    if not isinstance(identity["id"], str) or not identity["id"]:
+        raise ValueError("repository id unreadable")
+    return {**identity, "labels": labels}
+
+
+def _transfer_issue_labels(repository_name, number, node_id, reader, cwd, environment, temp):
+    """Complete label names of one issue, bound to the expected issue node id."""
+    owner, name = repository_name.split("/", 1)
+    identity, labels = _transfer_label_connection(
+        TRANSFER_ISSUE_LABELS_QUERY, {"owner": owner, "name": name, "number": number},
+        lambda repo: ({"id": repo["issue"]["id"]}, repo["issue"]["labels"]), reader, cwd, environment, temp,
+    )
+    if identity["id"] != node_id:
+        raise ValueError("the labels belong to another issue")
+    return labels
+
+
+def _missing_labels(labels, present):
+    kept = {name.casefold() for name in present}
+    return [name for name in labels if name.casefold() not in kept]
+
+
+def _same_repository(left, right):
+    return isinstance(left, str) and isinstance(right, str) and left.casefold() == right.casefold()
+
+
+def _transfer_result(receipt, code, capture_output, text):
+    encoded = json.dumps(receipt, indent=2, sort_keys=True) + "\n"
+    if code == TRANSFER_UNSETTLED:
+        with contextlib.suppress(OSError, ValueError):
+            print(
+                f"TRANSFER_UNSETTLED: {receipt['detail'] or 'the receipt is incomplete'}; a mutation was sent, so do "
+                "not retry. Re-run the verb only to read the state: an already transferred issue exits 0 unchanged.",
+                file=sys.stderr,
+            )
+    return subprocess.CompletedProcess(
+        ["github", "issue-transfer"], code,
+        (encoded if text else encoded.encode("utf-8")) if capture_output else None,
+        ("" if text else b"") if capture_output else None,
+    )
+
+
+def _issue_transfer(fields, *, runner, cwd, environment, capture_output, text):
+    """Transfer one open issue, or refuse before the mutation; leave a private receipt after the static checks."""
+    source = _transfer_endpoint(fields["repo"], environment)
+    destination = _transfer_endpoint(fields["destination"], environment)
+    if source["owner"] != destination["owner"]:
+        raise _transfer_refused("GitHub transfers issues only between repositories of the same owner")
+    if source["repository"] == destination["repository"]:
+        raise _transfer_refused("the destination is the source repository")
+    if source["privacy"] == "private" and destination["privacy"] != "private":
+        raise _transfer_refused("an issue in a private-role repository never moves to a public-role repository")
+    number = fields["number"]
+    environment["GH_HOST"] = "github.com"
+    receipt = {
+        "schema": "issue-transfer-receipt/v1",
+        "outcome": None,
+        "mutations_sent": 0,
+        "dry_run": bool(fields.get("dry_run")),
+        "source": {"alias": source["alias"], "repository": source["repository"], "number": number,
+                   "url": f"https://github.com/{source['repository']}/issues/{number}", "node_id": None},
+        "destination": {"alias": destination["alias"], "repository": destination["repository"],
+                        "number": None, "url": None, "node_id": None},
+        "labels": {"source": None, "destination_issue": None, "dropped": None, "predicted_dropped": None},
+        "probes": [],
+        "probe_note": TRANSFER_PROBE_NOTE,
+        "detail": None,
+    }
+    sink = {"fd": None, "path": None}
+    try:
+        with tempfile.TemporaryDirectory(
+            prefix="lu-transfer-", dir=ensure_scratch_root(), ignore_cleanup_errors=True
+        ) as directory:
+            sink.update(_reserve_transfer_receipt(fields.get("receipt_dir"), source, number))
+            return _transfer_checked(
+                fields, source, destination, receipt, sink, Path(directory),
+                runner=runner, cwd=cwd, environment=environment, capture_output=capture_output, text=text,
+            )
+    except Exception:
+        if not receipt["mutations_sent"]:
+            raise
+        # Every local failure after the mutation (receipt output, stdout, cleanup) stays unsettled.
+        if receipt["outcome"] in {None, "transferred"}:
+            receipt["outcome"] = "unverified"
+            receipt["detail"] = "a local step failed after the mutation was sent"
+        _write_transfer_receipt(sink, receipt)
+        return _transfer_result(receipt, TRANSFER_UNSETTLED, capture_output, text)
+    finally:
+        if sink["fd"] is not None:
+            os.close(sink["fd"])
+
+
+def _transfer_checked(fields, source, destination, receipt, sink, temp, *, runner, cwd, environment,
+                      capture_output, text):
+    """The fresh checks, the one mutation and its verification, with the receipt reserved."""
+    reader = merge_readiness_runner(runner)
+    number = fields["number"]
+
+    def settle(outcome, code, detail=None):
+        receipt["outcome"], receipt["detail"] = outcome, detail
+        if outcome in TRANSFER_PROBED and not receipt["dry_run"]:
+            urls = [receipt["source"]["url"], receipt["destination"]["url"]]
+            receipt["probes"] = [_anonymous_probe(url) for url in urls if url]
+            if receipt["mutations_sent"] and any(_probe_failed(probe) for probe in receipt["probes"]):
+                code = TRANSFER_UNSETTLED
+                if outcome == "transferred":
+                    receipt["outcome"], receipt["detail"] = "unverified", "an anonymous probe failed"
+        if not _write_transfer_receipt(sink, receipt):
+            print("TRANSFER_RECEIPT_UNWRITTEN: the receipt is on stdout only.", file=sys.stderr)
+            code = code or (TRANSFER_UNSETTLED if receipt["mutations_sent"] else 2)
+        print(f"issue-transfer: receipt {sink['path']}", file=sys.stderr)
+        result = _transfer_result(receipt, code, capture_output, text)
+        if not capture_output:
+            print(json.dumps(receipt, indent=2, sort_keys=True))
+        return result
+
+    try:
+        try:
+            repositories = {
+                side: _transfer_repository(endpoint, reader, cwd, environment, temp)
+                for side, endpoint in (("source", source), ("destination", destination))
+            }
+        except (gate.PublishBlocked, github_client.GitHubRateLimited):
+            raise
+        except Exception:
+            raise _transfer_refused("a repository read was unreadable, malformed or unknown") from None
+        for side, endpoint in (("source", source), ("destination", destination)):
+            live = repositories[side]
+            if not _same_repository(live["nameWithOwner"], endpoint["repository"]):
+                raise _transfer_refused(f"the {side} repository's live identity differs from the registry")
+            if live["visibility"] != TRANSFER_VISIBILITY[endpoint["privacy"]]:
+                raise _transfer_refused(f"the {side} repository's live visibility differs from its registry role")
+            if live["viewerPermission"] not in TRANSFER_WRITE_PERMISSIONS:
+                raise _transfer_refused(f"this login cannot write to the {side} repository")
+            if live["isArchived"] is not False:
+                raise _transfer_refused(f"the {side} repository is archived or its state is unknown")
+        try:
+            resolved = _transfer_resolution(source, number, reader, cwd, environment)
+        except (gate.PublishBlocked, github_client.GitHubRateLimited):
+            raise
+        except Exception:
+            raise _transfer_refused("the source issue is missing, unreadable or malformed") from None
+        if _same_repository(resolved["repository"], destination["repository"]) and not resolved["pull_request"]:
+            # Already moved: bind the redirect to the destination's own record of that issue.
+            try:
+                bound = _transfer_resolution(destination, resolved["number"], reader, cwd, environment)
+                if bound["node_id"] != resolved["node_id"] or bound["number"] != resolved["number"] or not (
+                    _same_repository(bound["repository"], destination["repository"])
+                ):
+                    raise _transfer_refused("the redirect does not match the destination's issue")
+                after = _transfer_issue_labels(
+                    destination["repository"], bound["number"], bound["node_id"], reader, cwd, environment, temp
+                )
+            except (gate.PublishBlocked, github_client.GitHubRateLimited):
+                raise
+            except Exception:
+                raise _transfer_refused("the transferred issue's destination record is unreadable") from None
+            receipt["destination"].update(number=bound["number"], url=bound["url"], node_id=bound["node_id"])
+            receipt["labels"]["destination_issue"] = after
+            return settle("already-transferred", 0, "source labels are no longer readable; drops unknown")
+        if not _same_repository(resolved["repository"], source["repository"]) or resolved["number"] != number:
+            raise _transfer_refused("the source issue redirects to a repository other than the destination")
+        if resolved["pull_request"]:
+            raise _transfer_refused("the source number is a pull request")
+        if resolved["state"] != "open":
+            raise _transfer_refused("the source issue is closed")
+        receipt["source"]["node_id"] = resolved["node_id"]
+        try:
+            labels = _transfer_issue_labels(
+                source["repository"], number, resolved["node_id"], reader, cwd, environment, temp
+            )
+        except (gate.PublishBlocked, github_client.GitHubRateLimited):
+            raise
+        except Exception:
+            raise _transfer_refused("the source issue's labels are unreadable or incomplete") from None
+        receipt["labels"]["source"] = labels
+        receipt["labels"]["predicted_dropped"] = _missing_labels(labels, repositories["destination"]["labels"])
+        if receipt["dry_run"]:
+            return settle("dry-run", 0, "every check passed; no mutation was sent")
+    except gate.PublishBlocked as exc:
+        settle("refused", 2, str(exc))
+        raise
+    except github_client.GitHubRateLimited:
+        settle("refused", 2, "a fresh read was refused by the GitHub rate limit")
+        raise
+    except Exception:
+        settle("refused", 2, "an unexpected error stopped the checks before any mutation")
+        raise
+
+    frozen = temp / "request.json"
+    variables = {"issue": resolved["node_id"], "repository": repositories["destination"]["id"]}
+    frozen.write_bytes(json.dumps({"query": TRANSFER_MUTATION, "variables": variables}).encode("utf-8"))
+    receipt["mutations_sent"] = 1
+    try:
+        result = _send(
+            ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen)],
+            environment=environment, runner=runner, cwd=cwd, capture_output=True, text=True, check=False,
+            timeout=60,
+        )
+        document = json.loads(result.stdout) if result.returncode == 0 else None
+        moved = document["data"]["transferIssue"]["issue"] if isinstance(document, dict) else None
+        if not isinstance(document, dict) or document.get("errors") or not isinstance(moved, dict):
+            raise ValueError
+    except Exception:
+        return settle("ambiguous", TRANSFER_UNSETTLED, "the transfer mutation's result is unknown")
+    try:
+        moved_number = moved["number"]
+        if (
+            type(moved_number) is not int or moved_number <= 0
+            or not isinstance(moved["id"], str) or not re.fullmatch(PATTERNS["node"], moved["id"])
+            or not _same_repository(moved["repository"]["nameWithOwner"], destination["repository"])
+            or not _same_repository(moved["url"], f"https://github.com/{destination['repository']}/issues/{moved_number}")
+        ):
+            raise ValueError("the mutation returned another issue or repository")
+        # Only a validated URL is recorded, so only a validated URL is probed.
+        receipt["destination"].update(number=moved_number, url=moved["url"], node_id=moved["id"])
+        now = _transfer_resolution(source, number, reader, cwd, environment)
+        if now["node_id"] != moved["id"] or now["number"] != moved_number or not (
+            _same_repository(now["repository"], destination["repository"])
+        ):
+            raise ValueError("the source URL does not resolve to the returned issue")
+        after = _transfer_issue_labels(
+            destination["repository"], moved_number, moved["id"], reader, cwd, environment, temp
+        )
+    except Exception as exc:
+        detail = str(exc) if isinstance(exc, ValueError) and str(exc) else "the transfer could not be verified"
+        return settle("unverified", TRANSFER_UNSETTLED, detail)
+    receipt["labels"]["destination_issue"] = after
+    receipt["labels"]["dropped"] = _missing_labels(labels, after)
+    return settle("transferred", 0)
+
+
 @github_client.rate_limited_command
 def publish(
     verb: str,
@@ -861,6 +1331,10 @@ def publish(
         raise gate.PublishBlocked("OPSEC: edit requires explicit fields; interactive publishing refused.")
     environment = _validated_environment(env)
     cwd = Path(cwd or Path.cwd())
+    if verb == "issue-transfer":
+        return _issue_transfer(
+            fields, runner=runner, cwd=cwd, environment=environment, capture_output=capture_output, text=text
+        )
     dest = "unknown" if verb == "gist-create" else repository(cwd, environment, fields.get("repo"))
     if dest == "unknown" and verb != "gist-create":
         raise gate.PublishBlocked("OPSEC: publisher repository unresolved; provide --repo.")
@@ -1334,8 +1808,52 @@ def main(argv=None, *, runner=None):
                 "  Other gh exit codes propagate.\n"
                 "Related: docs/dev/agent-public-text.md; read run; pr-update-branch."
             )
+        if verb == "issue-transfer":
+            sub.description = (
+                "Move one open issue between two repositories registered in scripts/config/fleet_repos.yaml\n"
+                "that share an owner, through one GitHub transferIssue mutation. Raw gh issue transfer stays refused.\n"
+                "Use for approved confidentiality or ownership moves only; never for bulk moves or private-to-public."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                "  .venv/bin/python -m scripts.publish issue-transfer --repo public --number 123 "
+                "--destination infra-private --dry-run\n"
+                "  .venv/bin/python -m scripts.publish issue-transfer --repo learn-ukrainian/learn-ukrainian.github.io "
+                "--number 123 --destination infra-private --receipt-dir /abs/private/dir\n"
+                "Checks, in order, before any mutation: both endpoints registered (alias or owner/name), same owner,\n"
+                "  different repositories, never a private- role to a public- role; then fresh reads: each\n"
+                "  repository's live name, visibility (PRIVATE or PUBLIC as its role says), write permission and\n"
+                "  archive state; the source number resolves to an open issue, not a pull request, in the source.\n"
+                "  If the source number already resolves to an issue in the destination, the verb reports it and\n"
+                "  exits 0 without a mutation; a redirect to any other repository is refused.\n"
+                "Outputs: one transferIssue mutation with createLabelsIfMissing false (labels missing at the\n"
+                "  destination are dropped; create them first with label-create). The receipt JSON goes to stdout\n"
+                "  and to a new 0600 file in the receipt directory: outcome, source and destination URLs, node ids,\n"
+                "  source labels, labels dropped (from complete label reads; predicted_dropped on a dry run), and\n"
+                "  credential-free anonymous HTTP probes of both URLs with final URL and status or error (none on\n"
+                "  a dry run). A status alone does not prove confidentiality: GitHub shows a transfer banner at\n"
+                "  the old URL. Label reads are paginated, count-checked and bound to the issue's node id.\n"
+                "  A refusal after the static checks leaves a receipt with outcome refused.\n"
+                "Exit codes: 0 transferred and verified, already transferred, or dry run passed;\n"
+                "  2 invalid input or refusal, no mutation sent; 3 mutation sent but its result is ambiguous or\n"
+                "  unverified (including a failed anonymous probe or any later local error): never retry, re-run\n"
+                "  only to read the state; 75 rate-limit refusal before the mutation.\n"
+                "Related: decision C-4682; machinery-move contract v3 step 10; label-create; read issue."
+            )
         for key, kind in schema.items():
             kwargs = {"default": argparse.SUPPRESS, "help": f"{key.replace('_', ' ')} ({kind}); omitted by default"}
+            if verb == "issue-transfer":
+                kwargs["help"] = {
+                    "repo": "Required source: registry alias (e.g. public) or owner/name; no GH_REPO or origin default",
+                    "number": "Required source issue number (e.g. 123); a pull request number is refused",
+                    "destination": "Required destination registry alias (e.g. infra-private); owner/name is refused",
+                    "receipt_dir": (
+                        "Absolute private directory for the receipt, created 0700 and outside the repository; "
+                        "default $XDG_STATE_HOME/learn-ukrainian/issue-transfer (else ~/.local/state/...)"
+                    ),
+                    "dry_run": "Run every check and the label analysis, write the receipt; no mutation, no probe; default off",
+                }[key]
             if verb == "comment-edit":
                 kwargs["action"] = StoreOnce
                 kwargs["help"] = {
