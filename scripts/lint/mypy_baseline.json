@@ -4948,11 +4948,6 @@
       "message": "Need type annotation for \"deleted\" (hint: \"deleted: set[<type>] = ...\")"
     },
     {
-      "path": "scripts/audit/check_node_modules_integrity.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
       "path": "scripts/audit/check_plan.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"issues\" (hint: \"issues: list[<type>] = ...\")"
@@ -4976,16 +4971,6 @@
       "path": "scripts/audit/check_plan.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"issues\" (hint: \"issues: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/audit/check_primary_integrity.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/audit/check_primary_integrity.py",
-      "code": "no-redef",
-      "message": "Name \"resolve_main_root\" already defined (possibly by an import)"
     },
     {
       "path": "scripts/audit/check_research_registry.py",
@@ -5146,31 +5131,6 @@
       "path": "scripts/audit/check_ua_eval_public_doc_language.py",
       "code": "arg-type",
       "message": "Argument 1 to \"append\" of \"list\" has incompatible type \"tuple[float | int | str, tuple[int, int]]\"; expected \"tuple[str, tuple[int, int]]\""
-    },
-    {
-      "path": "scripts/audit/check_venv_integrity.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/audit/check_worktree_cleanup_integrity.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_age_label\" has incompatible type \"None | timedelta\"; expected \"timedelta\""
-    },
-    {
-      "path": "scripts/audit/check_worktree_cleanup_integrity.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/audit/check_worktree_cleanup_integrity.py",
-      "code": "operator",
-      "message": "Unsupported operand types for <= (\"timedelta\" and \"None\")"
-    },
-    {
-      "path": "scripts/audit/check_worktree_cleanup_integrity.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | datetime\" has no attribute \"isoformat\""
     },
     {
       "path": "scripts/audit/checks/activities.py",

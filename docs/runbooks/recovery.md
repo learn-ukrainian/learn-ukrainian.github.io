@@ -603,5 +603,5 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
 Confirm the restored install:
 
 ```bash
-.venv/bin/python scripts/audit/check_node_modules_integrity.py
+.venv/bin/python scripts/hygiene/check_node_modules_integrity.py
 ```

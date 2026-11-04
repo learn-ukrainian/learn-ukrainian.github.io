@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.audit.check_worktree_cleanup_integrity import (
+from scripts.hygiene.check_worktree_cleanup_integrity import (
     STALE_AFTER,
     check_worktree_cleanup_integrity,
     latest_receipt_observed_at,

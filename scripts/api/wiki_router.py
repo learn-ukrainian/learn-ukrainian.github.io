@@ -15,25 +15,32 @@ import sqlite3
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from .config import LEVELS
 from .monitor_context import MonitorContext, get_ctx, resolve_context
-from .state_helpers import cache_get, cache_set
+from .state_helpers import cache_get, cache_set, monitor_surface
 
-# scripts/wiki is not a package, so we add the scripts/ root to sys.path
+# path_safety is a top-level module when scripts/ is on sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-import wiki.config as wiki_config
-import wiki.quality_gate as wiki_quality
-import wiki.sources as wiki_sources
-import wiki.state as wiki_state
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
+
+# scripts/api/main.py orient calls wiki_state.get_status_summary() on this
+# module. The name stays; the function is the product one, through the wrapper.
+class _WikiState:
+    @staticmethod
+    def get_status_summary() -> dict[str, Any]:
+        summary: dict[str, Any] = monitor_surface.wiki_status_summary()
+        return summary
+
+
+wiki_state = _WikiState()
 
 router = APIRouter(tags=["wiki"])
 
@@ -69,7 +76,7 @@ def _wiki_dir(ctx: MonitorContext | None = None) -> Path:
     resolved_ctx = resolve_context(ctx)
     if resolved_ctx.root is not None:
         return resolved_ctx.roots.project_root / "wiki"
-    return Path(wiki_config.WIKI_DIR)
+    return cast(Path, monitor_surface.wiki_dir())
 
 
 def _known_tracks(ctx: MonitorContext) -> list[str]:
@@ -104,13 +111,13 @@ def _ensure_track_exists(track: str, ctx: MonitorContext) -> None:
 
 def _track_slugs(track: str) -> list[str]:
     try:
-        return wiki_sources.list_discovery_slugs_readonly(track)
+        return monitor_surface.list_discovery_slugs_readonly(track)
     except Exception:
         return []
 
 
 def _build_article_candidates(wiki_dir: Path) -> dict[str, list[dict[str, Any]]]:
-    progress = wiki_state.load_progress().get("articles", {})
+    progress = monitor_surface.load_wiki_progress().get("articles", {})
     candidates: dict[str, list[dict[str, Any]]] = {}
 
     for progress_key, progress_info in progress.items():
@@ -155,7 +162,7 @@ def _list_article_candidates(
     """Return one context-scoped snapshot of the wiki article index."""
     resolved_ctx = resolve_context(ctx)
     wiki_dir = _wiki_dir(resolved_ctx)
-    state_dir = Path(wiki_state.WIKI_STATE_DIR)
+    state_dir = monitor_surface.wiki_state_dir()
     cache_key = f"wiki:article_candidates:{wiki_dir.resolve()}:{state_dir.resolve()}"
     return resolved_ctx.runtime.get_or_create_derived(
         cache_key,
@@ -164,7 +171,7 @@ def _list_article_candidates(
 
 
 def _matches_track_domain(track: str, rel_path: str) -> bool:
-    domains = wiki_config.TRACK_DOMAINS.get(track, [])
+    domains = monitor_surface.wiki_track_domains().get(track, [])
     if not domains:
         return True
     return any(rel_path.startswith(f"{domain}/") for domain in domains)
@@ -226,7 +233,7 @@ def _preload_article_word_counts(
     wiki_dir: Path | None = None,
 ) -> None:
     if wiki_dir is None:
-        wiki_dir = Path(wiki_config.WIKI_DIR)
+        wiki_dir = monitor_surface.wiki_dir()
     paths: list[Path] = []
     seen: set[Path] = set()
     for candidates in candidates_by_slug.values():
@@ -251,7 +258,7 @@ def _preload_article_word_counts(
 
 def _source_count(track: str, slug: str) -> int:
     try:
-        data = wiki_sources.gather_discovery_sources_readonly(track, slug)
+        data = monitor_surface.gather_discovery_sources_readonly(track, slug)
     except Exception:
         return 0
 
@@ -412,14 +419,14 @@ async def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_
 @router.get("/quality-gate")
 async def wiki_quality_gate(ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate wiki quality gate issues for all tracks."""
-    return {track: wiki_quality.scan_track(track) for track in _known_tracks(ctx)}
+    return {track: monitor_surface.scan_wiki_track(track) for track in _known_tracks(ctx)}
 
 
 @router.get("/quality-gate/{track}")
 async def wiki_quality_gate_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Quality gate issues for one track."""
     _ensure_track_exists(track, ctx)
-    return {track: wiki_quality.scan_track(track)}
+    return {track: monitor_surface.scan_wiki_track(track)}
 
 
 @router.get("/build-log")
@@ -431,7 +438,7 @@ async def wiki_build_log(
     """Recent wiki build log events."""
     if track is not None:
         _ensure_track_exists(track, ctx)
-    events = wiki_state.read_log(track=track, last_n=limit)
+    events = monitor_surface.read_wiki_log(track=track, last_n=limit)
     return {"events": events[-limit:]}
 
 
@@ -467,7 +474,7 @@ async def wiki_sources_module(
         raise HTTPException(status_code=404, detail=f"Article not found: {track}/{slug}")
 
     try:
-        data = wiki_sources.gather_discovery_sources_readonly(track, slug)
+        data = monitor_surface.gather_discovery_sources_readonly(track, slug)
     except Exception as exc:
         raise HTTPException(status_code=404, detail=f"Discovery not found: {track}/{slug}") from exc
 

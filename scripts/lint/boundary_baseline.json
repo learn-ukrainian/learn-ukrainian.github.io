@@ -2,66 +2,6 @@
   "schema": "boundary-ratchet-baseline.v1",
   "entries": [
     {
-      "path": "scripts/api/blue_router.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/blue_router.py",
-      "module": "scripts.audit.checks",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/blue_router.py",
-      "module": "scripts.audit.checks.activity_validation",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/blue_router.py",
-      "module": "scripts.slug_utils",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/blue_router.py",
-      "module": "scripts.yaml_activities",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/config.py",
-      "module": "scripts.wiki",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/config.py",
-      "module": "scripts.wiki.config",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "module": "scripts.audit.status_cache",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "module": "scripts.audit.config",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "module": "scripts.audit.status_cache",
-      "count": 1
-    },
-    {
       "path": "scripts/api/decisions_router.py",
       "module": "scripts.audit",
       "count": 1
@@ -122,31 +62,6 @@
       "count": 1
     },
     {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_node_modules_integrity",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_primary_integrity",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_venv_integrity",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_worktree_cleanup_integrity",
-      "count": 1
-    },
-    {
       "path": "scripts/api/sources_router.py",
       "module": "scripts.rag",
       "count": 1
@@ -154,31 +69,6 @@
     {
       "path": "scripts/api/sources_router.py",
       "module": "scripts.rag.query",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "module": "scripts.wiki",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "module": "scripts.wiki.config",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "module": "scripts.wiki.quality_gate",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "module": "scripts.wiki.sources",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "module": "scripts.wiki.state",
       "count": 1
     },
     {

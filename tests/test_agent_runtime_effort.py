@@ -54,7 +54,7 @@ def _stub_primary_integrity_sweep(monkeypatch):
     post-worker sweep runs real git against delegate._REPO_ROOT; a detached
     CI workspace reads as drift and leaks dispatch events / repair attempts).
     Covered for real in tests/test_delegate_primary_integrity.py."""
-    import scripts.audit.check_primary_integrity as cpi
+    import scripts.hygiene.check_primary_integrity as cpi
 
     monkeypatch.setattr(
         cpi,

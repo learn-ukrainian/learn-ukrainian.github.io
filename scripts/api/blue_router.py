@@ -6,11 +6,7 @@ Mounted at /api/blue/ in main.py. Gold team cannot conflict with these endpoints
 
 import json
 import subprocess
-
-# Import #561 status cache layer
-import sys
 from datetime import UTC, datetime
-from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -20,19 +16,7 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
 from .monitor_context import MonitorContext, get_ctx
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from audit.checks.activity_validation import (
-    check_fill_in_answer_in_options,
-    check_mark_the_words_answers_in_text,
-    check_quiz_single_correct,
-    check_select_min_correct,
-    check_translate_single_correct,
-    check_unjumble_out_of_scope_dative,
-    check_unjumble_runon_answer,
-)
-from slug_utils import to_bare_slug
-from yaml_activities import ActivityParser
+from .state_helpers import monitor_surface
 
 AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0
 
@@ -93,9 +77,7 @@ async def history():
 
 
 @router.get("/audit/{track_id}/{slug}")
-async def get_audit_status(
-    track_id: str, slug: str, fresh: bool = False, ctx: MonitorContext = Depends(get_ctx)
-):
+async def get_audit_status(track_id: str, slug: str, fresh: bool = False, ctx: MonitorContext = Depends(get_ctx)):
     """Return audit status for a module.
 
     Default: reads cached status/{slug}.json (instant).
@@ -103,7 +85,7 @@ async def get_audit_status(
 
     Returns structured JSON — no need to parse terminal output.
     """
-    bare = to_bare_slug(slug)
+    bare = monitor_surface.to_bare_slug(slug)
     project_root = ctx.roots.project_root
     try:
         track_dir = safe_join(ctx.roots.curriculum_root, track_id)
@@ -179,25 +161,16 @@ async def get_activity_errors(track_id: str, slug: str, ctx: MonitorContext = De
       MARK_THE_WORDS_ANSWER_NOT_IN_TEXT, UNJUMBLE_RUNON_SENTENCE,
       UNJUMBLE_POSSIBLE_OUT_OF_SCOPE_DATIVE
     """
-    bare = to_bare_slug(slug)
+    bare = monitor_surface.to_bare_slug(slug)
     activities_path = safe_join(ctx.roots.curriculum_root, track_id, "activities", f"{bare}.yaml")
 
     if not activities_path.exists():
         return {"track": track_id, "slug": slug, "error": "No activities file found", "violations": []}
 
     try:
-        parser = ActivityParser()
+        parser = monitor_surface.ActivityParser()
         activities = parser.parse(activities_path)
-
-        violations = (
-            check_select_min_correct(activities)
-            + check_quiz_single_correct(activities)
-            + check_fill_in_answer_in_options(activities)
-            + check_translate_single_correct(activities)
-            + check_mark_the_words_answers_in_text(activities)
-            + check_unjumble_runon_answer(activities)
-            + check_unjumble_out_of_scope_dative(activities)
-        )
+        violations = monitor_surface.activity_validation_violations(activities)
     except Exception:
         return {"track": track_id, "slug": slug, "error": "Validation failed", "violations": []}
 
@@ -230,7 +203,7 @@ async def get_final_review_summary(track_id: str, slug: str, ctx: MonitorContext
     Replaces: reading status JSON + running scan_activity_errors +
               checking review file + checking audit log separately.
     """
-    bare = to_bare_slug(slug)
+    bare = monitor_surface.to_bare_slug(slug)
     try:
         track_dir = safe_join(ctx.roots.curriculum_root, track_id)
     except ValueError:
@@ -281,16 +254,8 @@ async def get_final_review_summary(track_id: str, slug: str, ctx: MonitorContext
     activities_path = safe_join(track_dir, "activities", f"{bare}.yaml")
     if activities_path.exists():
         try:
-            activities = ActivityParser().parse(activities_path)
-            violations = (
-                check_select_min_correct(activities)
-                + check_quiz_single_correct(activities)
-                + check_fill_in_answer_in_options(activities)
-                + check_translate_single_correct(activities)
-                + check_mark_the_words_answers_in_text(activities)
-                + check_unjumble_runon_answer(activities)
-                + check_unjumble_out_of_scope_dative(activities)
-            )
+            activities = monitor_surface.ActivityParser().parse(activities_path)
+            violations = monitor_surface.activity_validation_violations(activities)
             activity_errors = {
                 "total_violations": len(violations),
                 "critical_count": sum(1 for v in violations if v.get("severity") == "critical"),

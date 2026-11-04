@@ -1133,11 +1133,11 @@ def _primary_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     """
     resolved_ctx = resolve_context(ctx)
     try:
-        from scripts.audit.check_primary_integrity import (  # noqa: PLC0415 — script-path fallback
+        from scripts.hygiene.check_primary_integrity import (  # noqa: PLC0415 — script-path fallback
             check_primary_integrity,
         )
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_primary_integrity import check_primary_integrity  # noqa: PLC0415 — script-path fallback
+        from hygiene.check_primary_integrity import check_primary_integrity  # noqa: PLC0415 — script-path fallback
     try:
         ok, message = check_primary_integrity(
             resolved_ctx.roots.project_root,
@@ -1163,11 +1163,11 @@ def _node_modules_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     """
     resolved_ctx = resolve_context(ctx)
     try:
-        from scripts.audit.check_node_modules_integrity import (  # noqa: PLC0415 — script-path fallback
+        from scripts.hygiene.check_node_modules_integrity import (  # noqa: PLC0415 — script-path fallback
             check_node_modules_integrity,
         )
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_node_modules_integrity import (  # noqa: PLC0415 — script-path fallback
+        from hygiene.check_node_modules_integrity import (  # noqa: PLC0415 — script-path fallback
             check_node_modules_integrity,
         )
     try:
@@ -1195,9 +1195,9 @@ def _venv_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     """
     resolved_ctx = resolve_context(ctx)
     try:
-        from scripts.audit.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
+        from scripts.hygiene.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
+        from hygiene.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
     try:
         ok, message = check_venv_integrity(
             resolved_ctx.roots.project_root,
@@ -1222,11 +1222,11 @@ def _worktree_cleanup_integrity_canary(ctx: MonitorContext | None = None) -> boo
     """
     resolved_ctx = resolve_context(ctx)
     try:
-        from scripts.audit.check_worktree_cleanup_integrity import (  # noqa: PLC0415 — script-path fallback
+        from scripts.hygiene.check_worktree_cleanup_integrity import (  # noqa: PLC0415 — script-path fallback
             check_worktree_cleanup_integrity,
         )
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_worktree_cleanup_integrity import (  # noqa: PLC0415 — script-path fallback
+        from hygiene.check_worktree_cleanup_integrity import (  # noqa: PLC0415 — script-path fallback
             check_worktree_cleanup_integrity,
         )
     try:

@@ -2,12 +2,11 @@
 
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
 from scripts.common.bridge_paths import configured_bridge_db_path
-from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
 # Project root is the immutable code snapshot when the API is release-served.
 # Mutable data remains reachable through the release's explicit symlinks.
@@ -41,7 +40,19 @@ DASHBOARDS_DIR = PROJECT_ROOT / "dashboards"
 
 # Textbook PDFs live under the resolved bulk raw-source root, never a
 # repository symlink (#8803; docs/runbooks/storage-topology.md).
-TEXTBOOKS_DIR = TEXTBOOK_PDFS_DIR
+# Resolved on first use: state_helpers imports this module before it has
+# finished loading the product wrapper.
+
+
+def __getattr__(name: str) -> Path:
+    if name != "TEXTBOOKS_DIR":
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    from .state_helpers import monitor_surface  # noqa: PLC0415
+
+    value = cast(Path, monitor_surface.textbook_pdfs_dir())
+    globals()["TEXTBOOKS_DIR"] = value
+    return value
+
 
 _KNOWN_LEVEL_NAMES = {
     "a1": "A1 - Beginner",

@@ -24,7 +24,10 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
 
     monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.config.WIKI_DIR", wiki_dir)
-    monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
+    monkeypatch.setattr(
+        "wiki.sources.list_discovery_slugs_readonly",
+        lambda track: ["kyivan-rus"] if track == "hist" else [],
+    )
     monkeypatch.setattr(
         "wiki.state.list_wiki_articles",
         lambda: [{"path": "periods/kyivan-rus.md"}],
