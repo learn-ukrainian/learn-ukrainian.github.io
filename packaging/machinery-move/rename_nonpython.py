@@ -52,6 +52,7 @@ DYNAMIC_NEXT = frozenset("${%<")
 INVOCATION_BEFORE = re.compile(r"(?:^|[\s\"'(\[,=])-m[\s\"',\-]*$")
 ENTRY_POINT_NEXT = re.compile(r":[A-Za-z_]")
 PREFIX_STOP = re.compile(r"[\s\"'=(\[{<>|&;,:`!]")
+CWD_BEFORE = re.compile(r"(?:^|[\s;&|(])(?:cd|pushd)\s+[\"']?$")
 INTERPRETER_BEFORE = re.compile(
     r"(?:^|[\s;&|(\"'])(?:\S*python[0-9.]*|\"?\$\{?PY\w*\}?\"?|bash|sh|zsh|exec|source|\.|uv\s+run(?:\s+python[0-9.]*)?)\s+[\"']?$"
 )
@@ -256,15 +257,9 @@ class Scanner:
             end = start + len(token)
             prefix = path_prefix(text, start)
             if _is_dynamic(text, end, dynamic_tail):
-                # Without a trailing slash the last component may continue at run time.
-                base = token.rstrip("/") if token.endswith("/") else token.rsplit("/", 1)[0]
-                owner = self.resolve_path(base)
-                if owner == PRODUCT:
-                    continue
-                if owner == MACHINERY and prefix_is_local(prefix, self.root_anchored):
-                    yield Token(start, end, token, "resource_path")
-                else:
-                    yield Token(start, end, token + "…", "computed_path", f"completed at run time below {base}")
+                # A run-time suffix can climb out of any directory (``${NAME}`` = ``../x``), so the
+                # owner of the static part proves nothing: always reported, never rewritten.
+                yield Token(start, end, token + "…", "computed_path", "the path is completed at run time")
                 continue
             owner = self.resolve_path(token)
             if owner == "root":
@@ -295,6 +290,10 @@ class Scanner:
             if text[line_start : match.start()].lstrip().startswith(("#", "//", ";")):
                 continue
             yield Token(match.start(), match.end(), OLD_ROOT, "root_reference", "the scripts/ root is split")
+
+    def changes_directory(self, text: str, start: int) -> bool:
+        before = text[: start - len(path_prefix(text, start))]
+        return bool(CWD_BEFORE.search(before[before.rfind("\n") + 1 :]))
 
     def is_direct_invocation(self, text: str, start: int, token: str) -> bool:
         if not token.endswith((".py", ".sh")):
@@ -366,6 +365,10 @@ def scan_text(scanner: Scanner, text: str, kind: str, report: Report, shell_like
             after = NEW_ROOT + token.text[len(OLD_ROOT) :]
             edits.append(Edit(token.start, token.start + len(OLD_ROOT), NEW_ROOT))
             report.rewrites.append(Finding(rel, line, token.verdict, token.text, after))
+            if token.verdict == "resource_path" and scanner.changes_directory(text, token.start):
+                report.unresolved.append(
+                    Finding(rel, line, "cwd_into_machinery", token.text, after, "relative paths after this cd move too")
+                )
             if token.verdict == "resource_path" and scanner.is_direct_invocation(text, token.start, token.text):
                 report.inventory.append(
                     Finding(rel, line, "direct_script_invocation", token.text, after, "runs a machinery file by path")
@@ -453,7 +456,10 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
         if isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in skip:
             value = node.value
             parent = parents.get(id(node))
-            if value in (OLD_ROOT, OLD_ROOT + "/") and not isinstance(parent, ast.JoinedStr):
+            concatenated = isinstance(parent, (ast.JoinedStr, ast.BinOp)) and not isinstance(
+                getattr(parent, "op", None), ast.Div
+            )
+            if value in (OLD_ROOT, OLD_ROOT + "/") and not concatenated:
                 components, computed = _following_components(node, parents)
                 if components is not None:
                     check_split(node, components, computed)
@@ -466,6 +472,8 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
             if isinstance(parent, ast.JoinedStr):
                 index = next(i for i, part in enumerate(parent.values) if part is node)
                 dynamic_tail = index + 1 < len(parent.values)
+            elif isinstance(parent, ast.BinOp) and isinstance(parent.op, ast.Add) and parent.left is node:
+                dynamic_tail = not isinstance(parent.right, ast.Constant)  # ``"scripts/" + name``
             for token in [*scanner.module_tokens(value, dynamic_tail), *scanner.path_tokens(value, dynamic_tail)]:
                 if token.verdict in ("keep", "unknown_module", "unknown_path"):
                     continue

@@ -64,6 +64,10 @@ MODULE_LITERAL = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
 MODULE_PREFIX = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
 # The start of a module name completed at run time: ``scripts.x.`` + name, ``scripts.%s``, ``scripts.{}``.
 MODULE_HEAD = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)*\.?")
+# A string that begins with the package name (not a ``scripts/`` path or a longer word).
+MODULE_START = re.compile(r"scripts(?![A-Za-z0-9_/\\\-])")
+# ``scripts`` as one piece of a module name somewhere inside a string being built.
+MODULE_PIECE = re.compile(r"(?<![A-Za-z0-9_/\\.\-])scripts(?=\.|$)")
 STDLIB = frozenset(sys.stdlib_module_names)
 
 
@@ -485,7 +489,7 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         self._visit_string_expression(node)
 
     def _visit_string_expression(self, node: cst.BaseExpression) -> None:
-        """Classify the outermost string expression; its string parts are then skipped."""
+        """Classify the outermost string expression; every string inside it is then skipped."""
 
         if id(node) in self._skip_strings:
             return
@@ -495,21 +499,31 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         _mark_parts(node, self._skip_strings)
         if self._import_depth or id(node) in self._docstrings or id(node) in self._loader_args:
             return
-        self._classify_string(node, parts, rewritable=False)
+        self._classify_string(node, parts, rewritable=False, pieces=_static_pieces(node))
 
-    def _classify_string(self, node: cst.CSTNode, parts: list[str | None], rewritable: bool) -> str | None:
+    def _classify_string(
+        self, node: cst.CSTNode, parts: list[str | None], rewritable: bool, pieces: Sequence[str] = ()
+    ) -> str | None:
         """Decide one string expression; return the new value when a plain literal is to be rewritten.
 
-        ``parts`` are the static texts, with None for each piece only known at run time.
-        Strings with whitespace before the first run-time piece are prose or commands and
-        belong to rename_nonpython.py, which reports module names inside them.
+        ``parts`` is the value in order, with None for each piece only known at run time;
+        ``pieces`` is every literal piece inside the expression, arguments included.
+        A string with whitespace before its first run-time piece is prose or a command and
+        belongs to rename_nonpython.py, which reports module names inside it.
         """
 
         static = "".join(itertools.takewhile(lambda part: part is not None, parts))
         computed = None in parts
-        if not static.startswith(OLD_ROOT) or re.search(r"\s", static):
-            return None
         shown = _code(node)
+        if re.search(r"\s", static):
+            return None
+        if not MODULE_START.match(static):
+            # No module name at the start; a built string may still use ``scripts`` as a piece.
+            if computed and any(MODULE_PIECE.search(p) and not re.search(r"\s", p) for p in pieces):
+                self._unresolved(
+                    node, "computed_module_string", shown, "`scripts` is a piece of a module name built at run time"
+                )
+            return None
         if not computed and MODULE_LITERAL.fullmatch(static):
             entry = self.ownership.resolve(static)
             assert entry is not None
@@ -518,29 +532,31 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
             elif entry[0].owner == MACHINERY:
                 if rewritable:
                     return renamed(static)
-                self._unresolved(node, "assembled_module_string", shown, "a machinery module name split across parts")
+                self._unresolved(node, "assembled_module_string", shown, "a machinery module name built from parts")
             return None
         head = MODULE_HEAD.match(static)
         assert head is not None
-        template = static[head.end() : head.end() + 1] in ("%", "{")
-        if computed or template:
-            if head.end() < len(static) and not template:
-                return None  # e.g. ``scriptsfoo`` + name: not a module name
-            text = head.group(0)
-            # Without a trailing dot the last component may continue at run time.
+        text, after = head.group(0), static[head.end() : head.end() + 1]
+        if after in ("", "%", "{"):
+            if not computed and after == "" and not text.endswith("."):
+                return None  # just ``scripts``: a word, not a module name
+            # ``"scripts.x."`` alone is a prefix completed elsewhere (``+=``, a later join).
+            # Completed at run time: a trailing dot fixes the parent; otherwise the last part may continue.
             base = text[:-1] if text.endswith(".") else text.rsplit(".", 1)[0] if "." in text else OLD_ROOT
             resolved = self.ownership.resolve(base)
             owner = self.ownership.subtree_owner(resolved[0].name) if resolved else None
-            if owner != PRODUCT:
-                self._unresolved(node, "computed_module_string", shown, "a module name completed at run time")
-            return None
-        prefix = MODULE_PREFIX.match(static)
-        if prefix is not None:
-            resolved = self.ownership.resolve(prefix.group(0))
-            if resolved is not None and resolved[0].owner != PRODUCT:
-                self._unresolved(
-                    node, "module_literal_suffix", shown, "a module name followed by other text, e.g. module:attribute"
-                )
+            kind, detail = "computed_module_string", "a module name completed at run time"
+            if base == OLD_ROOT and not computed:
+                kind, detail = "package_name_literal", "the package name used to build or test module names"
+        else:
+            # A separator follows (``module:attribute``): the module part is fixed.
+            resolved = self.ownership.resolve(text.rstrip("."))
+            owner = resolved[0].owner if resolved and resolved[0].name != OLD_ROOT else AMBIGUOUS
+            kind, detail = "module_literal_suffix", "a module name followed by other text, e.g. module:attribute"
+            if text.rstrip(".") == OLD_ROOT:
+                kind, detail = "package_name_literal", "the package name inside a pattern or text"
+        if owner != PRODUCT:
+            self._unresolved(node, kind, shown, detail)
         return None
 
     # -- pass 1: import nodes -------------------------------------------
@@ -792,44 +808,96 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
             )
         return updated_node
 
+    def visit_Attribute(self, node: cst.Attribute) -> None:
+        self._check_loader_value(node)
+
+    def visit_Name(self, node: cst.Name) -> None:
+        self._check_loader_value(node)
+
+    def _check_loader_value(self, node: cst.Attribute | cst.Name) -> None:
+        """A loader passed around as a value (``load = importlib.import_module``) hides every call."""
+
+        if self._import_depth or not _is_dotted_name(node):
+            return  # ``__import__("x").attr`` inherits the call's qualified name; it is not the loader
+        parent = self.get_metadata(ParentNodeProvider, node, None)
+        if isinstance(parent, cst.Call) and parent.func is node:
+            return  # a direct call: visit_Call checks its target
+        if isinstance(parent, cst.Attribute) and parent.value is node:
+            return  # the inner part of a longer name
+        if isinstance(parent, cst.Attribute) and parent.attr is node:
+            return  # the attribute name itself; the whole Attribute is checked
+        if isinstance(parent, (cst.Arg, cst.Param, cst.Decorator)) and getattr(parent, "keyword", None) is node:
+            return
+        qualified = {q.name for q in self.get_metadata(QualifiedNameProvider, node, set())}
+        if qualified & set(LOADERS):
+            self._unresolved(
+                node,
+                "loader_reference",
+                _code(parent) if parent else _code(node),
+                "a loader used as a value; its calls cannot be resolved",
+            )
+
     # -- pass 2: loader targets and module strings -----------------------
 
+    def _hold_loader_call(self, node: cst.Call) -> None:
+        """A reported loader call stays as written: none of its string arguments is rewritten."""
+
+        for arg in node.args:
+            _mark_parts(arg.value, self._skip_strings)
+            self._loader_args.add(id(arg.value))
+
     def visit_Call(self, node: cst.Call) -> None:
-        if isinstance(node.func, cst.Attribute) and node.func.attr.value == "format":
-            self._visit_string_expression(node)  # ``"scripts.{}".format(name)``
+        if isinstance(node.func, cst.Attribute) and node.func.attr.value in ("format", "format_map", "join", "replace"):
+            self._visit_string_expression(node)  # ``"scripts.{}".format(name)``, ``".".join([...])``
         if not _is_dotted_name(node.func):
             return  # ``__import__("x").attr(...)`` reports the inner call's name for the outer one
         qualified = {q.name for q in self.get_metadata(QualifiedNameProvider, node.func, set())}
         loaders = [name for name in qualified if name in LOADERS]
         if not loaders:
             return
-        keyword = LOADERS[loaders[0]]
+        loader = loaders[0]
+        keyword = LOADERS[loader]
         shown = _code(node)
-        target = None
-        starred = False
-        for arg in node.args:
-            if arg.keyword is not None and arg.keyword.value == keyword:
-                target = arg.value
-                break
-            if arg.keyword is None and arg.star == "" and target is None:
-                target = arg.value
-                break
-            if arg.star:
-                starred = True
-                if arg.star == "*" and target is None:
-                    break
+
+        def report(kind: str, detail: str) -> None:
+            self._hold_loader_call(node)
+            self._unresolved(node, kind, shown, detail)
+
+        # Read every argument: unpacking can hide the target, or __import__'s fromlist and level.
+        positional = [arg for arg in node.args if arg.keyword is None and not arg.star]
+        unpacked = [arg for arg in node.args if arg.star]
+        hidden_first = (
+            any(arg.star == "*" for arg in node.args[: node.args.index(positional[0])])
+            if positional
+            else bool(unpacked)
+        )
+        target = next(
+            (arg.value for arg in node.args if arg.keyword is not None and arg.keyword.value == keyword), None
+        )
+        if target is None and positional and not hidden_first:
+            target = positional[0].value
         if target is None:
-            if starred:
-                self._unresolved(node, "computed_loader", shown, "the loader target comes from unpacked arguments")
+            if unpacked:
+                report("computed_loader", "the loader target comes from unpacked arguments")
             return
+        if loader.endswith("__import__"):
+            if unpacked:
+                report("computed_loader", "unpacked arguments may set __import__'s fromlist or level")
+                return
+            level = next((a.value for a in node.args if a.keyword is not None and a.keyword.value == "level"), None)
+            if level is None and len(positional) > 4:
+                level = positional[4].value
+            if level is not None and not (isinstance(level, cst.Integer) and level.evaluated_value == 0):
+                report("relative_loader", "a non-zero or computed level makes the import relative")
+                return
         self._loader_args.add(id(target))
         _mark_parts(target, self._skip_strings)
         if not (isinstance(target, cst.SimpleString) and isinstance(target.evaluated_value, str)):
-            self._unresolved(node, "computed_loader", shown, "the loader target is computed at run time")
+            report("computed_loader", "the loader target is computed at run time")
             return
         value = target.evaluated_value
         if value.startswith("."):
-            self._unresolved(node, "relative_loader", shown, "a relative loader target depends on its package")
+            report("relative_loader", "a relative loader target depends on its package")
             return
         resolved = self.ownership.resolve(value)
         if resolved is None:
@@ -838,19 +906,19 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         entry, rest = resolved
         if rest:
             if self._missing_matters(value):
-                self._unresolved(node, "unknown_module", shown, f"the map has no module {value}")
+                report("unknown_module", f"the map has no module {value}")
             return
         owner = entry.owner
         main = self.ownership.module(f"{value}.__main__")
-        if loaders[0] == "runpy.run_module" and main is not None and main.owner != owner:
+        if loader == "runpy.run_module" and main is not None and main.owner != owner:
             owner = AMBIGUOUS  # run_module runs the package's __main__
-        has_fromlist = any(a.keyword is not None and a.keyword.value == "fromlist" for a in node.args) or (
-            len(node.args) > 3 and node.args[3].keyword is None
+        has_fromlist = (
+            any(a.keyword is not None and a.keyword.value == "fromlist" for a in node.args) or len(positional) > 3
         )
-        if loaders[0].endswith("__import__") and has_fromlist and self.ownership.subtree_owner(value) == AMBIGUOUS:
+        if loader.endswith("__import__") and has_fromlist and self.ownership.subtree_owner(value) == AMBIGUOUS:
             owner = AMBIGUOUS  # the fromlist may name submodules of either owner
         if owner == AMBIGUOUS:
-            self._unresolved(node, "ambiguous_module", shown, f"{value} has more than one owner for this loader")
+            report("ambiguous_module", f"{value} has more than one owner for this loader")
         elif owner == MACHINERY:
             self._loader_rewrites[id(target)] = renamed(value)
 
@@ -859,6 +927,7 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         if verdict == "rewrite":
             self._loader_rewrites[id(target)] = renamed(candidate)
         elif verdict not in ("external", "keep"):
+            self._hold_loader_call(node)
             self._unresolved(node, verdict, shown, detail)
 
     def leave_SimpleString(self, original_node: cst.SimpleString, updated_node: cst.SimpleString) -> cst.SimpleString:
@@ -869,14 +938,8 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         skipped = (self._docstrings, self._skip_strings, self._loader_args)
         if self._import_depth or any(id(original_node) in ids for ids in skipped):
             return updated_node
-        value = original_node.evaluated_value
-        if isinstance(value, bytes):
-            text = value.decode("ascii", "replace")
-            resolved = self.ownership.resolve(text) if MODULE_LITERAL.fullmatch(text) else None
-            if resolved is not None and resolved[0].owner != PRODUCT:
-                self._unresolved(original_node, "bytes_module_string", text, "a module name in a bytes literal")
-            return updated_node
-        new_value = self._classify_string(original_node, [value], rewritable=True)
+        value = _literal_text(original_node)
+        new_value = self._classify_string(original_node, [value], rewritable=True, pieces=[value])
         if new_value is None:
             return updated_node
         self._rewrite(original_node, "module_literal", value, new_value)
@@ -908,12 +971,39 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         return updated_node
 
 
+def _literal_text(node: cst.SimpleString) -> str:
+    """The value of a plain literal; bytes are read as Latin-1 so a module name in them is visible."""
+
+    value = node.evaluated_value
+    return value.decode("latin-1") if isinstance(value, bytes) else value
+
+
+def _fstring_text(node: cst.FormattedString, raw: str) -> str:
+    """Decode the escapes in one literal stretch of an f-string, as Python would."""
+
+    if "r" not in node.start.lower():
+        try:
+            decoded = ast.literal_eval(f"{node.end}{raw}{node.end}")
+        except (SyntaxError, ValueError):
+            decoded = raw
+        raw = decoded if isinstance(decoded, str) else raw
+    return raw.replace("{{", "{").replace("}}", "}")
+
+
+def _static_text(node: cst.BaseExpression) -> str | None:
+    parts = _string_parts(node)
+    return None if parts is None or None in parts else "".join(p for p in parts if p is not None)
+
+
 def _string_parts(node: cst.CSTNode) -> list[str | None] | None:
-    """Static text pieces of a string expression, None for each run-time piece; None if not a string."""
+    """The value of a string expression in order, None for each run-time piece; None if not a string.
+
+    Constant formatting is evaluated (``"%s.x" % "scripts"``, ``"{}.x".format("scripts")``,
+    ``".".join(["scripts", "x"])``), so a name split across pieces is still seen whole.
+    """
 
     if isinstance(node, cst.SimpleString):
-        value = node.evaluated_value
-        return [value] if isinstance(value, str) else None
+        return [_literal_text(node)]
     if isinstance(node, cst.ConcatenatedString):
         left, right = _string_parts(node.left), _string_parts(node.right)
         return None if left is None or right is None else left + right
@@ -921,7 +1011,9 @@ def _string_parts(node: cst.CSTNode) -> list[str | None] | None:
         parts: list[str | None] = []
         for part in node.parts:
             if isinstance(part, cst.FormattedStringText):
-                parts.append(part.value.replace("{{", "{").replace("}}", "}"))
+                parts.append(_fstring_text(node, part.value))
+            elif part.conversion is None and part.format_spec is None and _static_text(part.expression) is not None:
+                parts.append(_static_text(part.expression))  # ``f"{'scripts'}.x"``
             else:
                 parts.append(None)
         return parts
@@ -930,26 +1022,99 @@ def _string_parts(node: cst.CSTNode) -> list[str | None] | None:
         if isinstance(node.operator, cst.Add) and (left is not None or right is not None):
             return (left if left is not None else [None]) + (right if right is not None else [None])
         if isinstance(node.operator, cst.Modulo) and left is not None:
-            return [*left, None]  # ``"scripts.%s" % name``
-    if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute) and node.func.attr.value == "format":
+            template = None if None in left else "".join(p for p in left if p is not None)
+            args = node.right.elements if isinstance(node.right, cst.Tuple) else [cst.Element(node.right)]
+            values = [_static_text(e.value) for e in args]
+            if template is not None and None not in values:
+                try:
+                    return [template % tuple(values)]
+                except (TypeError, ValueError, KeyError):
+                    pass
+            return [*left, None]
+    if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute):
         receiver = _string_parts(node.func.value)
-        return None if receiver is None else [*receiver, None]
+        if receiver is None:
+            return None
+        receiver_text = None if None in receiver else "".join(p for p in receiver if p is not None)
+        if node.func.attr.value == "format":
+            values = [_static_text(a.value) if a.keyword is None and not a.star else None for a in node.args]
+            if receiver_text is not None and None not in values:
+                try:
+                    return [receiver_text.format(*values)]
+                except (IndexError, KeyError, ValueError):
+                    pass
+            return [*receiver, None]
+        if node.func.attr.value == "replace":
+            values = [_static_text(a.value) if a.keyword is None and not a.star else None for a in node.args]
+            if receiver_text is not None and None not in values and len(values) in (2, 3):
+                count = int(values[2]) if len(values) == 3 and values[2].lstrip("-").isdigit() else -1
+                return [receiver_text.replace(values[0], values[1], count)]
+            return [None]  # a replacement chosen at run time can produce any name
+        if node.func.attr.value == "format_map":
+            return [*receiver, None]
+        if node.func.attr.value == "join" and receiver_text is not None:
+            arg = node.args[0].value if len(node.args) == 1 and not node.args[0].star else None
+            if not isinstance(arg, (cst.List, cst.Tuple)):
+                return [None]
+            joined: list[str | None] = []
+            for i, element in enumerate(arg.elements):
+                if i:
+                    joined.append(receiver_text)
+                piece = _string_parts(element.value) if isinstance(element, cst.Element) else None
+                joined.extend(piece if piece is not None else [None])
+            return joined
     return None
 
 
-def _mark_parts(node: cst.CSTNode, ids: set[int]) -> None:
-    """Record a string expression and its string pieces (not the run-time expressions inside them)."""
+def _structure(node: cst.CSTNode) -> Iterator[cst.CSTNode]:
+    """The nodes that make up a string being built: operands, format and join arguments, constant
+    f-string expressions. An unrelated literal inside, such as a call argument, is not included."""
 
-    ids.add(id(node))
-    if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute) and node.func.attr.value == "format":
-        _mark_parts(node.func.value, ids)
-    elif isinstance(node, cst.ConcatenatedString):
-        _mark_parts(node.left, ids)
-        _mark_parts(node.right, ids)
-    elif isinstance(node, cst.BinaryOperation) and _string_parts(node) is not None:
-        for side in (node.left, node.right):
-            if _string_parts(side) is not None:
-                _mark_parts(side, ids)
+    yield node
+
+    def strings(*candidates: cst.CSTNode) -> Iterator[cst.CSTNode]:
+        for candidate in candidates:
+            if _string_parts(candidate) is not None:
+                yield from _structure(candidate)
+
+    if isinstance(node, cst.ConcatenatedString):
+        yield from strings(node.left, node.right)
+    elif isinstance(node, cst.FormattedString):
+        yield from strings(*(p.expression for p in node.parts if isinstance(p, cst.FormattedStringExpression)))
+    elif isinstance(node, cst.BinaryOperation):
+        yield from strings(node.left, node.right, *_container_values(node.right))
+    elif isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute):
+        yield from strings(node.func.value, *(a.value for a in node.args))
+        for arg in node.args:
+            yield from strings(*_container_values(arg.value))
+
+
+def _container_values(node: cst.CSTNode) -> list[cst.CSTNode]:
+    """Values of a literal list, tuple, set or dict (``% {"pkg": "scripts"}``, ``**{...}``)."""
+
+    if isinstance(node, (cst.List, cst.Tuple, cst.Set)):
+        return [e.value for e in node.elements]
+    if isinstance(node, cst.Dict):
+        return [e.value for e in node.elements if isinstance(e, cst.DictElement)]
+    return []
+
+
+def _static_pieces(node: cst.CSTNode) -> list[str]:
+    """Every literal piece of a string being built, arguments included."""
+
+    pieces: list[str] = []
+    for n in _structure(node):
+        if isinstance(n, cst.SimpleString):
+            pieces.append(_literal_text(n))
+        elif isinstance(n, cst.FormattedString):
+            pieces.extend(_fstring_text(n, p.value) for p in n.parts if isinstance(p, cst.FormattedStringText))
+    return pieces
+
+
+def _mark_parts(node: cst.CSTNode, ids: set[int]) -> None:
+    """Record a string expression and every string in its structure; the outermost one decides."""
+
+    ids.update(id(n) for n in _structure(node))
 
 
 def _is_dotted_name(node: cst.BaseExpression) -> bool:
@@ -1060,6 +1225,23 @@ def write_atomically(path: Path, data: bytes) -> None:
         raise
 
 
+SCRIPTS_NOT_PATH = re.compile(r"scripts(?![/\\])")
+
+
+def _ast_text(value: object) -> str:
+    return value.decode("latin-1") if isinstance(value, bytes) else str(value)
+
+
+def _ast_constants(node: ast.AST) -> Iterator[ast.Constant]:
+    """String constants below ``node`` in source order."""
+
+    for child in ast.iter_child_nodes(node):
+        if isinstance(child, ast.Constant) and isinstance(child.value, (str, bytes)):
+            yield child
+        else:
+            yield from _ast_constants(child)
+
+
 def needs_codemod(ownership: OwnershipMap, source: bytes) -> bool:
     """Cheap, conservative stdlib pre-check: False only when the LibCST pass cannot act on the file.
 
@@ -1093,11 +1275,18 @@ def needs_codemod(ownership: OwnershipMap, source: bytes) -> bool:
         elif isinstance(node, ast.Attribute):
             if node.attr in LOADER_NAMES:
                 return True
-        elif isinstance(node, ast.Constant) and isinstance(node.value, (str, bytes)):
-            value = node.value.decode("ascii", "replace") if isinstance(node.value, bytes) else node.value
-            # Any string that starts a module name: whole, assembled from parts, or a template.
-            if value.startswith(OLD_ROOT) and value[len(OLD_ROOT) : len(OLD_ROOT) + 1] in ("", ".", "{", "%"):
-                return True
+        elif (
+            isinstance(node, ast.Constant)
+            and isinstance(node.value, (str, bytes))
+            and SCRIPTS_NOT_PATH.search(_ast_text(node.value))
+        ):
+            return True
+        builds_string = isinstance(node, (ast.BinOp, ast.JoinedStr)) or (
+            isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr in ("format", "join")
+        )
+        # A name split across literals (``"scr" + "ipts.x"``): join them in source order.
+        if builds_string and OLD_ROOT in "".join(_ast_text(c.value) for c in _ast_constants(node)):
+            return True
     return False
 
 
