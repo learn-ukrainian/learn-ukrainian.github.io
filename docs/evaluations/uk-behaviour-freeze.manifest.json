@@ -784,7 +784,7 @@
     },
     {
       "path": "scripts/eval/uk_preamble/scoring.py",
-      "sha256": "1b48b05855e33093be18195ea524f6c2e5e0d79307dcc35dda2aef38facd598b"
+      "sha256": "0f2e4d68c3b46944effe8a5fa169e661da54c8b02f307955ba49fedfb55886c7"
     },
     {
       "path": "docs/north-star.md",
@@ -912,7 +912,7 @@
     },
     {
       "ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
-      "sha256": "0eb6355e0efd7debce63985e237db2b78823b6d8d9298716e9fc59d54f9bf370",
+      "sha256": "d64d82cb31fdde0a19f6b2c97ffa913f9a7225e32b9130f9a277882dfe2d0bbc",
       "status": "PINNED",
       "owner": "evaluation-maintainer"
     },
@@ -1290,11 +1290,11 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/adapters.py",
-        "sha256": "8acb6318c2c82032284c67efecc007f4cb4a419b68b6d6f9537e976262d50f7d"
+        "sha256": "91c10bd94b6c4cec3272dbade36370f9475efb1fde22f72696f39295d49c6d27"
       },
       {
         "path": "scripts/eval/uk_behaviour/binding.py",
-        "sha256": "e1263f2638c57b06013b38886a75dcc3a1db90565b7aea8148b9202dc815d705"
+        "sha256": "d95682945cb593cb34e9c41e4c826a7dd1a115e28f25ec01c0ab250986257283"
       },
       {
         "path": "scripts/eval/uk_behaviour/contract.py",
@@ -1314,7 +1314,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/prove.py",
-        "sha256": "52d8ccc0dadf9acdbb45d00a918ef668b94d5e0781692750f67f2a179dc404ce"
+        "sha256": "d14296dfe55fd4c306afeb717739e6ba4ff6af71e1614eb81c02465886ceaa28"
       },
       {
         "path": "scripts/eval/uk_behaviour/reward.py",

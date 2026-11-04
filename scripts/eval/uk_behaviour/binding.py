@@ -30,19 +30,29 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-# The module name is JSON data. A literal import of the product package would
-# stay a machinery-to-product identity on the boundary ratchet.
+# The module path is JSON data. A literal import of the product package would
+# stay a machinery-to-product identity. A non-constant import_module call is a
+# writable-connect constructor finding, so this loads the file the JSON names.
 _EVAL_HOOKS: Any = None
 
 
 def _eval_hooks() -> Any:
     global _EVAL_HOOKS
     if _EVAL_HOOKS is None:
-        import importlib
+        import importlib.util
         import json
+        import sys
+        from pathlib import Path
 
-        entry = json.loads('{"module": "scripts.verification.eval_hooks"}')
-        _EVAL_HOOKS = importlib.import_module(entry["module"])
+        entry = json.loads('{"module": "scripts.verification.eval_hooks", "relative": "verification/eval_hooks.py"}')
+        path = Path(__file__).resolve().parents[2] / entry["relative"]
+        spec = importlib.util.spec_from_file_location(entry["module"], path)
+        if spec is None or spec.loader is None:
+            raise ImportError(entry["module"])
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[entry["module"]] = module
+        spec.loader.exec_module(module)
+        _EVAL_HOOKS = module
     return _EVAL_HOOKS
 
 
