@@ -1043,7 +1043,7 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
     subscription_usage_mod._run_all_refreshes()  # must no-op while first is in flight
     release.set()
     worker.join(timeout=1.0)
-    assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)]
+    assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_REFRESH_KEYS)]
     assert claude_calls == []
 
 
@@ -1183,7 +1183,9 @@ def test_load_codex_oauth_token_reads_nested_tokens_shape(tmp_path, monkeypatch)
         json.dumps({"tokens": {"access_token": "fixture-nested-token", "refresh_token": "fixture-refresh"}}),
         encoding="utf-8",
     )
-    monkeypatch.setenv("CODEX_HOME", str(codex_home))
+    # Account a's home is $HOME/.codex; ambient CODEX_HOME is ignored (#12692).
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("CODEX_HOME", str(tmp_path / "elsewhere"))
 
     assert subscription_usage_mod._load_codex_oauth_token() == "fixture-nested-token"
 
@@ -1196,7 +1198,7 @@ def test_load_codex_oauth_token_still_reads_top_level_shape(tmp_path, monkeypatc
         json.dumps({"access_token": "fixture-flat-token"}),
         encoding="utf-8",
     )
-    monkeypatch.setenv("CODEX_HOME", str(codex_home))
+    monkeypatch.setenv("HOME", str(tmp_path))
 
     assert subscription_usage_mod._load_codex_oauth_token() == "fixture-flat-token"
 
@@ -3174,3 +3176,94 @@ def test_subscription_review_status_pill_escapes_label():
     pressure = _subscription_cells(_render_subscription_snapshot(snapshot))[0]
     assert '<img' not in pressure
     assert '>&quot;&gt;&lt;img src=x onerror=alert(1)&gt;&amp;&#39;</span>' in pressure
+
+
+# --- Codex account b (#12692): one usage row per subscription account ---------
+
+_CODEX_ACCOUNT_KEYS = ("codex", "codex:a", "codex:b")
+
+
+@pytest.fixture
+def two_codex_accounts(tmp_path, monkeypatch):
+    """Account a in $HOME/.codex and account b bound to its own private home; HTTP answers by bearer."""
+    home = tmp_path / "home"
+    (home / ".codex").mkdir(parents=True)
+    b_home = tmp_path / "codex-b"
+    b_home.mkdir(mode=0o700)
+    for directory, token in ((home / ".codex", "fixture-token-a"), (b_home, "fixture-token-b")):
+        auth = directory / "auth.json"
+        auth.write_text(json.dumps({"tokens": {"access_token": token}}), encoding="utf-8")
+        auth.chmod(0o600)
+    binding = tmp_path / "codex_accounts.json"
+    binding.write_text(
+        json.dumps({"schema_version": 1, "accounts": {"b-sub": {"codex_home": str(b_home), "budget_usd": 200}}})
+    )
+    binding.chmod(0o600)
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(binding))
+    # A Monitor started on account b's home must still report account a as ``codex``.
+    monkeypatch.setenv("CODEX_HOME", str(b_home))
+    for key in _CODEX_ACCOUNT_KEYS:
+        monkeypatch.delitem(subscription_usage_mod._last_good_data, key, raising=False)
+        monkeypatch.delitem(subscription_usage_mod._last_failure_data, key, raising=False)
+    cache_invalidate("codexbar_usage:")
+    answers = {"fixture-token-a": (11.0, 22.0), "fixture-token-b": (66.0, 77.0)}
+    rejected: set[str] = set()
+
+    def request(method, url, *, headers=None, **_kwargs):
+        token = (headers or {}).get("Authorization", "").removeprefix("Bearer ")
+        if token in rejected:
+            return 401, None, "HTTP 401"
+        if url.endswith("reset-credits"):
+            return 200, {"available_count": 0, "credits": []}, None
+        session, weekly = answers[token]
+        return 200, {
+            "rate_limit": {
+                "primary_window": {"used_percent": session, "limit_window_seconds": 18000},
+                "secondary_window": {"used_percent": weekly, "limit_window_seconds": 604800},
+            }
+        }, None
+
+    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", request)
+    yield rejected
+    cache_invalidate("codexbar_usage:")
+
+
+def test_two_codex_accounts_publish_two_rows_with_their_own_numbers(two_codex_accounts):
+    refreshed = subscription_usage_mod.refresh_provider_usage_data(_CODEX_ACCOUNT_KEYS, timeout_s=1.0)
+    assert set(refreshed) == set(_CODEX_ACCOUNT_KEYS)
+
+    rows = codexbar_usage_mod.codex_account_usage_snapshot(kick_refresh=False)
+    assert set(rows) == {"codex:a", "codex:b"}
+    a, b = rows["codex:a"], rows["codex:b"]
+    assert (a["codex_account"], a["primary_used_pct"], a["weekly_used_pct"]) == ("sub", 11.0, 22.0)
+    assert (b["codex_account"], b["primary_used_pct"], b["weekly_used_pct"]) == ("b-sub", 66.0, 77.0)
+    assert a["freshness"] == b["freshness"] == "fresh"
+    # Compatibility: ``codex`` keeps meaning account a until slice B moves its consumers.
+    legacy = subscription_usage_mod.get_provider_usage_data("codex", kick_refresh=False)
+    assert (legacy["codex_account"], legacy["weekly_used_pct"]) == ("sub", 22.0)
+    assert "fixture-token" not in json.dumps(rows) + json.dumps(legacy)
+
+
+@pytest.mark.parametrize(("expired", "healthy"), [("codex:b", "codex:a"), ("codex:a", "codex:b")])
+def test_expired_codex_token_marks_only_that_account_unavailable(two_codex_accounts, expired, healthy):
+    subscription_usage_mod.refresh_provider_usage_data(_CODEX_ACCOUNT_KEYS, timeout_s=1.0)
+    two_codex_accounts.add("fixture-token-b" if expired == "codex:b" else "fixture-token-a")
+    # The expired account has no earlier good reading to fall back to.
+    for key in subscription_usage_mod._stored_usage_keys(expired):
+        subscription_usage_mod._last_good_data.pop(key, None)
+        cache_invalidate(f"codexbar_usage:{key}")
+
+    refreshed = subscription_usage_mod.refresh_provider_usage_data(_CODEX_ACCOUNT_KEYS, timeout_s=1.0)
+    assert expired not in refreshed and healthy in refreshed
+
+    rows = codexbar_usage_mod.codex_account_usage_snapshot(kick_refresh=False)
+    dead, live = rows[expired], rows[healthy]
+    assert dead["status"] == "unavailable"
+    assert (dead["failure_kind"], dead["last_failure_code"]) == ("token_rejected", 401)
+    assert dead["weekly_used_pct"] is None and dead["primary_used_pct"] is None
+    assert dead["codex_account"] == ("b-sub" if expired == "codex:b" else "sub")
+    expected_numbers = (66.0, 77.0) if healthy == "codex:b" else (11.0, 22.0)
+    assert (live["primary_used_pct"], live["weekly_used_pct"]) == expected_numbers
+    assert live["failure_kind"] is None
+    assert "fixture-token" not in json.dumps(rows)
