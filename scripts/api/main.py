@@ -1079,9 +1079,9 @@ def _core_bare_canary(ctx: MonitorContext | None = None) -> bool:
     """
     resolved_ctx = resolve_context(ctx)
     try:
-        from scripts.audit.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
+        from scripts.hygiene.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
+        from hygiene.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
     try:
         ok, message = check_core_bare(resolved_ctx.roots.project_root, fix=True)
     except Exception:
@@ -1108,9 +1108,9 @@ def _self_symlink_canary(ctx: MonitorContext | None = None) -> bool:
     """
     resolved_ctx = resolve_context(ctx)
     try:
-        from scripts.audit.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
+        from scripts.hygiene.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
+        from hygiene.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
     try:
         ok, message = check_self_symlinks(resolved_ctx.roots.project_root, fix=False)
     except Exception:

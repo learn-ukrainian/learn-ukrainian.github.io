@@ -131,7 +131,7 @@ def main() -> int:
     if project_dir is None or not _may_be_bare(project_dir):
         return 0
 
-    script = project_dir / "scripts" / "audit" / "check_core_bare.py"
+    script = project_dir / "scripts" / "hygiene" / "check_core_bare.py"
     try:
         if str(project_dir) not in sys.path:
             sys.path.insert(0, str(project_dir))

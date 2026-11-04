@@ -44,15 +44,17 @@ def check_plan(agent: str, model: str, record: dict, *, review: bool = False) ->
     model_pause.refuse_model_roles(model, roles, shadow=bool(trial))
 
 
-def check_runtime(agent: str, model: str) -> None:
+def check_runtime(agent: str, model: str, *, codex_account: str | None = None) -> None:
     """Stop before provider construction on the shared recent rate-limit reading.
 
     has_headroom owns the event window, threshold and LU_BYPASS_RATE_LIMIT
-    override. Its key is (agent, model), not an account; a lane summary's
-    unattributed headroom_blocked flag is never an account's plan meter.
+    override. ``codex_account`` is the task record's label, passed through
+    with no further lookup: a Codex event counts only for that account.
+    A lane summary's unattributed headroom_blocked flag is never an
+    account's plan meter.
     """
     unreadable = {"files": 0, "lines": 0, "records": 0}
-    ok, reason = usage.has_headroom(agent, model, unreadable=unreadable)
+    ok, reason = usage.has_headroom(agent, model, unreadable=unreadable, codex_account=codex_account)
     if any(unreadable.values()):
         logging.getLogger(__name__).warning("Headroom check for %s/%s: unreadable usage records %s",
                                            agent, model, unreadable)
