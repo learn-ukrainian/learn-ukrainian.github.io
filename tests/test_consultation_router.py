@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api.main import app
 from scripts.api.monitor_context import fixture_context
+from scripts.api.state_helpers import monitor_surface
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -207,7 +208,7 @@ class TestApprove:
         )
 
         # Mock apply_template_patch to return failure
-        with patch("scripts.api.consultation_router.apply_template_patch", return_value=(False, 0)):
+        with patch.object(monitor_surface, "apply_template_patch", return_value=(False, 0)):
             resp = client.post(f"/api/consultation/queue/{filename}/approve?confirm=true")
 
         assert resp.status_code == 200

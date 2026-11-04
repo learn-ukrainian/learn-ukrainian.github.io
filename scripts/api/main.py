@@ -112,7 +112,7 @@ from .session_router import router as session_router
 from .session_streams_router import router as session_streams_router
 from .site_router import router as site_router
 from .sources_router import router as sources_router
-from .state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope
+from .state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope, load_phase_labels
 from .state_router import router as state_router
 from .state_router import schedule_state_scan_warmup
 from .telemetry.response import add_json_telemetry, session_id_from_request
@@ -1764,12 +1764,11 @@ def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> N
 
 @core_router.get("/api/config")
 async def get_config(request: Request, ctx: MonitorContext = Depends(get_ctx)):
-    # Import pipeline phase config — single source of truth
+    # Pipeline phase config from product data (scripts/curriculum/phase_labels.v1.json)
     try:
-        from scripts.build.phase_constants import PHASE_LABELS, PHASES  # noqa: PLC0415 — preserves endpoint fallback
-
-        pipeline_info = {"phases": PHASES, "phase_labels": PHASE_LABELS}
-    except ImportError:
+        phases, phase_labels = load_phase_labels()
+        pipeline_info = {"phases": phases, "phase_labels": phase_labels}
+    except (OSError, ValueError):
         pipeline_info = {}
     return {"levels": LEVELS, "api_version": request.app.version, "pipeline": pipeline_info}
 

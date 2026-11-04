@@ -22,6 +22,7 @@ import re
 import sqlite3
 import sys
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 import yaml
@@ -36,23 +37,99 @@ from .config import LEVELS, SEMINAR_TRACK_IDS
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from pipeline.state import is_complete as _phase_complete
-from pipeline.state import load_state as _load_pipeline_state
 from research_quality import assess_research_compat, find_research_path
+
+try:
+    from scripts.lib.readonly_sqlite import import_named_module
+except ImportError:
+    from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}
 
-# Canonical phase list for the CURRENT pipeline (v6). Imported from
-# the build module so the API and the pipeline can never drift out of
-# sync. If the import fails (e.g. tests running without the build
-# module on PYTHONPATH), we fall back to a frozen snapshot rather
-# than an empty list — an empty phase list silently breaks coverage
-# endpoints.
+
+# ==================== PRODUCT DATA AND ENTRY POINT ====================
+#
+# The Monitor is machinery. It reaches product code through one product
+# wrapper, named by data, and reads the v6 phase list from product data
+# (machinery move step 4, slice S2, #12504).
+
+_PRODUCT_DATA_DIR = Path(__file__).resolve().parents[1] / "curriculum"
+_PRODUCT_DATA_MAX_BYTES = 64 * 1024
+_PRODUCT_MODULE_RE = re.compile(r"scripts(?:\.[a-z_][a-z0-9_]*)+\Z", re.ASCII)
+
+
+def _unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    document: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in document:
+            raise ValueError(f"duplicate key {key!r}")
+        document[key] = value
+    return document
+
+
+def _read_product_data(name: str, schema: str, fields: frozenset[str]) -> dict[str, Any]:
+    """Read one version-1 product data file from ``scripts/curriculum/``.
+
+    Raises ``ValueError`` (or ``OSError``) for a symlink or non-regular file,
+    an oversized file, invalid UTF-8 or JSON, a duplicate key, a wrong schema
+    or version, and missing or unknown fields.
+    """
+    path = _PRODUCT_DATA_DIR / name
+    if path.is_symlink() or not path.is_file():
+        raise ValueError(f"{name}: not a regular file")
+    raw = path.read_bytes()
+    if len(raw) > _PRODUCT_DATA_MAX_BYTES:
+        raise ValueError(f"{name}: larger than {_PRODUCT_DATA_MAX_BYTES} bytes")
+    document = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_keys)
+    if not isinstance(document, dict) or set(document) != {"schema", "schema_version", *fields}:
+        raise ValueError(f"{name}: expected fields schema, schema_version, {', '.join(sorted(fields))}")
+    version = document["schema_version"]
+    if document["schema"] != schema or type(version) is not int or version != 1:
+        raise ValueError(f"{name}: expected {schema} version 1")
+    return document
+
+
+def load_phase_labels() -> tuple[list[str], dict[str, str]]:
+    """The v6 phase order and labels from ``scripts/curriculum/phase_labels.v1.json``."""
+    document = _read_product_data(
+        "phase_labels.v1.json",
+        "learn-ukrainian.monitor-phase-labels",
+        frozenset({"phases", "phase_labels"}),
+    )
+    phases, labels = document["phases"], document["phase_labels"]
+    if not (isinstance(phases, list) and phases and all(isinstance(phase, str) for phase in phases)):
+        raise ValueError("phase_labels.v1.json: phases must be a non-empty list of strings")
+    if not (isinstance(labels, dict) and all(isinstance(label, str) for label in labels.values())):
+        raise ValueError("phase_labels.v1.json: phase_labels must map phase ids to strings")
+    return phases, labels
+
+
+def _load_monitor_surface() -> ModuleType:
+    """Import the product wrapper named by ``scripts/curriculum/monitor_paths.v1.json``."""
+    document = _read_product_data(
+        "monitor_paths.v1.json",
+        "learn-ukrainian.monitor-paths",
+        frozenset({"monitor_surface"}),
+    )
+    name = document["monitor_surface"]
+    if not isinstance(name, str) or not _PRODUCT_MODULE_RE.fullmatch(name):
+        raise ValueError(f"monitor_paths.v1.json: monitor_surface is not a scripts module name: {name!r}")
+    return import_named_module(name)
+
+
+# Loaded once at import, so a missing or malformed entry point stops the
+# Monitor from starting, as a failed product import did before.
+monitor_surface = _load_monitor_surface()
+
+# Canonical phase list for the CURRENT pipeline (v6), from the product data
+# file that ``scripts/build/phase_constants.py`` also loads. If the file is
+# absent or malformed (e.g. a partial test tree), we fall back to a frozen
+# snapshot rather than an empty list — an empty phase list silently breaks
+# coverage endpoints.
 try:
-    from build.phase_constants import PHASE_LABELS as _V6_PHASE_LABELS
-    from build.phase_constants import PHASES as _V6_PHASES
-except ImportError:
+    _V6_PHASES, _V6_PHASE_LABELS = load_phase_labels()
+except (OSError, ValueError):
     _V6_PHASES = [
         "check",
         "research",
@@ -72,7 +149,7 @@ except ImportError:
         "publish",
         "audit",
     ]
-    _V6_PHASE_LABELS: dict[str, str] = {}
+    _V6_PHASE_LABELS = {}
 
 # Legacy v5 phase list — frozen snapshot. DO NOT use for new work;
 # only for reading state files from builds completed before v6
@@ -134,6 +211,7 @@ def plan_has_revision_log(plan_path: Path) -> bool:
 # Prefer ``V6_PHASE_ORDER`` for any new code.
 V5_PHASE_ORDER = _V5_PHASES
 V6_PHASE_ORDER = _V6_PHASES
+V6_PHASE_LABELS = _V6_PHASE_LABELS
 
 
 # ==================== TTL CACHE ====================
@@ -547,7 +625,7 @@ def load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
 
     ctx = StateCtx(track, slug, orch_dir)
     try:
-        return _load_pipeline_state(ctx)
+        return monitor_surface.load_pipeline_state(ctx)
     except Exception:
         return {"track": track, "slug": slug, "mode": "v5", "phases": {}}
 
@@ -682,9 +760,9 @@ def is_content_done(state: dict) -> bool:
 
     V6 uses 'write' phase instead of 'content', both with status='complete'.
     """
-    if _phase_complete(state, "content"):
+    if monitor_surface.phase_is_complete(state, "content"):
         return True
-    return _phase_complete(state, "write")
+    return monitor_surface.phase_is_complete(state, "write")
 
 
 def find_content_file(track_dir: Path, slug: str) -> Path | None:
