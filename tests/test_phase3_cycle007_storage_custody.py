@@ -29,6 +29,21 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_SUMMARY_SCHEMA = resolve_open_model_path(
     "data/projects/open_model_data/contracts/phase3_cycle007_storage_public_summary_v1.schema.json"
 )
+
+
+@pytest.fixture(autouse=True)
+def _controlled_available_bytes(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep free-space gates off the runner's live statvfs.
+
+    Fixture stages skip the live checks at the primary pack admission, then
+    ``finalize_source_deletion_auth_stage`` still requires the recorded
+    ``workstation_avail_after_bytes`` to be at least ``MIN_FREE_BYTES``.
+    Reporting the floor here makes that gate pass when the runner has less
+    than 10 GiB free. The capacity-refusal test replaces this reading.
+    """
+    monkeypatch.setattr(storage, "available_bytes", lambda _root: storage.MIN_FREE_BYTES)
+
+
 def _assert_no_host_filesystem_leak(payload: Mapping[str, Any], *, where: str) -> None:
     leaked = storage.public_summary_forbidden_fs_keys(payload)
     assert leaked == (), f"{where} leaked host filesystem keys: {leaked}"
