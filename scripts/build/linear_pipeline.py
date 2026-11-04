@@ -97,15 +97,15 @@ from scripts.build.module_size_policy import (
 )
 from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_prompt
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.common.review_loop import (
+from scripts.curriculum.pedagogy_config import get_immersion_policy, get_immersion_range, get_immersion_rule
+from scripts.curriculum.quality.review_loop import (
     aggregate_min as review_loop_aggregate_min,
 )
-from scripts.common.review_loop import (
+from scripts.curriculum.quality.review_loop import (
     best_round_index,
     min_score_regressed,
 )
-from scripts.common.thresholds import QG_DIMS, aggregate_review
-from scripts.curriculum.pedagogy_config import get_immersion_policy, get_immersion_range, get_immersion_rule
+from scripts.curriculum.quality.thresholds import QG_DIMS, aggregate_review
 from scripts.generate_mdx.core import generate_mdx
 from scripts.generate_mdx.resources import validate_and_clean_url
 from scripts.pipeline.learner_state import build_learner_state, format_learner_state

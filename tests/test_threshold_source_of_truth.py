@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 
 SCRIPTS_ROOT = Path(__file__).resolve().parent.parent / "scripts"
-SOURCE_OF_TRUTH = SCRIPTS_ROOT / "common" / "thresholds.py"
+SOURCE_OF_TRUTH = SCRIPTS_ROOT / "curriculum" / "quality" / "thresholds.py"
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content, pytest.mark.repo_wide]
 
 # Canonical names that must never be redeclared outside the source-of-truth.
@@ -158,7 +158,7 @@ def test_no_canonical_name_redeclared_outside_thresholds() -> None:
                 offenders.append(f"{rel}:{lineno} redeclares {name!r}")
 
     assert not offenders, (
-        "Canonical threshold names must live only in scripts/common/thresholds.py.\n"
+        "Canonical threshold names must live only in scripts/curriculum/quality/thresholds.py.\n"
         + "\n".join(offenders)
     )
 
@@ -183,7 +183,7 @@ def test_no_duplicate_target_words_module_level() -> None:
             offenders.append(f"{rel}:{lineno} — {match.group(0).strip()}")
 
     assert not offenders, (
-        "Module-level threshold names are reserved for scripts/common/thresholds.py.\n"
+        "Module-level threshold names are reserved for scripts/curriculum/quality/thresholds.py.\n"
         + "\n".join(offenders)
     )
 

@@ -8,7 +8,7 @@ import pytest
 
 from scripts.audit.llm_qg_store import latest_llm_qg, record_llm_qg
 from scripts.build import linear_pipeline, v7_build
-from scripts.common.thresholds import QG_DIMS
+from scripts.curriculum.quality.thresholds import QG_DIMS
 
 
 def _set_mtime_ns(path: Path, value: int) -> None:

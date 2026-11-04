@@ -18,7 +18,7 @@ import yaml
 
 from audit import config as audit_config
 from build.phases import wiki_compressor
-from common import thresholds
+from curriculum.quality import thresholds
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection

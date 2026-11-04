@@ -27,7 +27,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from common.repo_root import project_interpreter
-from common.thresholds import STYLE_REVIEW_TARGET
+from curriculum.quality.thresholds import STYLE_REVIEW_TARGET
 from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug

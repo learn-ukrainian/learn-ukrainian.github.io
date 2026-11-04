@@ -36,7 +36,7 @@ from scripts.build.phases.implementation_map import (
     seed_implementation_map,
     write_implementation_map,
 )
-from scripts.common.thresholds import QG_DIMS, terminal_dims_for
+from scripts.curriculum.quality.thresholds import QG_DIMS, terminal_dims_for
 from scripts.orchestration import worktree_git
 
 DEFAULT_WRITER_TIMEOUT_S = 1800

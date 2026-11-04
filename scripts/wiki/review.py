@@ -17,7 +17,7 @@ Invariants enforced here:
   floor fails the whole review. No weighted averaging — a wiki that
   scores 9/9/9/6 fails at 6, and the report names the failing dim.
 - **Threshold source-of-truth.** The PASS floor is
-  :data:`scripts.common.thresholds.REVIEW_PASS_FLOOR` — the single
+  :data:`scripts.curriculum.quality.thresholds.REVIEW_PASS_FLOOR` — the single
   central value shared with the module pipeline. CLI / kwarg overrides
   exist for experimentation; the default is never drift-prone.
 - **§8** Shadow mode remains available for testing (``shadow_mode=True``
@@ -69,8 +69,8 @@ from agent_runtime.errors import (
 from agent_runtime.json_parse import extract_json_object
 from agent_runtime.runner import invoke
 from agent_runtime.tool_config import build_mcp_tool_config
-from common.review_loop import aggregate_min, best_round_index, min_score_regressed
-from common.thresholds import REVIEW_PASS_FLOOR
+from curriculum.quality.review_loop import aggregate_min, best_round_index, min_score_regressed
+from curriculum.quality.thresholds import REVIEW_PASS_FLOOR
 from wiki.config import PROMPTS_DIR, WIKI_DIR
 from wiki.register_quote_exemption import find_attributed_verbatim_quote_spans
 from wiki.review_merger import (
@@ -111,7 +111,7 @@ DEFAULT_FALLBACKS: dict[str, tuple[str, ...]] = {
 }
 
 #: Per-dim PASS floor, sourced from the central
-#: :mod:`scripts.common.thresholds` (post-#1454). All dims share the same
+#: :mod:`scripts.curriculum.quality.thresholds` (post-#1454). All dims share the same
 #: floor; per-dim calibrated overrides from the Phase 3 benchmark land
 #: via CLI / kwarg in a subsequent change.
 WIKI_REVIEW_THRESHOLD: float = REVIEW_PASS_FLOOR
@@ -1093,7 +1093,7 @@ def main(argv: list[str] | None = None) -> int:
         metavar="DIM=N",
         help=(
             f"Override threshold for a dim (default {WIKI_REVIEW_THRESHOLD} "
-            "from scripts.common.thresholds.REVIEW_PASS_FLOOR)."
+            "from scripts.curriculum.quality.thresholds.REVIEW_PASS_FLOOR)."
         ),
     )
     parser.add_argument(

@@ -46,7 +46,7 @@ track starts. On Ctrl-C mid-track:
 Every track is invoked with `--review` (per-dim + MIN aggregation,
 post-#1455). Reports land in `wiki/.reviews/<domain>/<slug>.json` with
 the driving ``failing_dim`` named when ``min_score`` is below
-:data:`scripts.common.thresholds.REVIEW_PASS_FLOOR`. Review failures
+:data:`scripts.curriculum.quality.thresholds.REVIEW_PASS_FLOOR`. Review failures
 emit a ``review_fail`` event but do not abort the outer rebuild — the
 batch continues; operators triage failed articles from the JSON report.
 """
