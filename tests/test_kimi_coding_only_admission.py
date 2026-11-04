@@ -141,6 +141,9 @@ REFUSED_PATHS = (
     ".github/ISSUE_TEMPLATE/naturalness-quality.md",
     "site/package.json",
     "README.md",
+    # The Monitor's product half is not an allowlisted root (C-4687).
+    "scripts/project_api/hramatka_generator.py",
+    "scripts/project_api/sources_router.py",
     # Exclusions inside allowlisted roots.
     "scripts/agent_runtime/kimi_admission.py",
     "scripts/agent_runtime/kimi_boundary.py",
@@ -148,8 +151,6 @@ REFUSED_PATHS = (
     "scripts/agent_runtime/env_sanitize.py",
     "scripts/agent_runtime/adapters/kimi.py",
     "scripts/agent_runtime/profiles/acpx-grok-sealed-review.md",
-    "scripts/api/hramatka_generator.py",
-    "scripts/api/sources_router.py",
     "tests/api/test_hramatka_router.py",
     "scripts/orchestration/curriculum_readiness.py",
     "scripts/orchestration/prompt_contracts.py",
@@ -256,9 +257,8 @@ def test_a_cyrillic_free_component_is_admitted():
 @pytest.mark.parametrize(
     ("scope", "excluded"),
     [
-        ("scripts/api/**", "scripts/api/hramatka_"),
-        ("scripts/api", "scripts/api/sources_router.py"),
-        ("scripts/api/", "scripts/api/hramatka_"),
+        ("scripts/orchestration", "scripts/orchestration/curriculum_"),
+        ("scripts/orchestration/", "scripts/orchestration/curriculum_"),
         ("scripts/orchestration/**", "scripts/orchestration/curriculum_"),
         ("scripts/agent_runtime/**", "scripts/agent_runtime/kimi_admission.py"),
         ("tests/api/test_*.py", "tests/api/test_hramatka_"),

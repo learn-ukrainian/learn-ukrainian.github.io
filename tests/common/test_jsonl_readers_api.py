@@ -7,7 +7,7 @@ from jsonl_reader_cases import reader_case
 @pytest.mark.parametrize(
     "module, function, site",
     [
-        ("scripts.api.state_build", "compute_build_stats", 500),
+        ("scripts.project_api.state_build", "compute_build_stats", 500),
     ],
     ids=lambda value: str(value),
 )

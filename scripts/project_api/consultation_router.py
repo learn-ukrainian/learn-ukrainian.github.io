@@ -22,21 +22,24 @@ import sys
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any, cast
 
 import yaml
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
+from scripts.api.monitor_context import MonitorContext, get_ctx
+from scripts.api.state_helpers import cache_get, cache_set, ctx_cache_scope
+
 from .config import LEVELS
-from .monitor_context import MonitorContext, get_ctx
-from .state_helpers import cache_get, cache_set, ctx_cache_scope, monitor_surface, read_v2_state
+from .curriculum_state import monitor_surface, read_v2_state
 
 # state_helpers already inserts scripts/ into sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
 router = APIRouter(tags=["consultation"])
 
@@ -68,7 +71,7 @@ def _template_dir(ctx: MonitorContext) -> Path:
 def _parse_queue_file(path: Path) -> dict | None:
     """Parse a queue YAML file, return dict or None on error."""
     try:
-        return yaml.safe_load(path.read_text("utf-8"))
+        return cast("dict[Any, Any] | None", yaml.safe_load(path.read_text("utf-8")))
     except Exception:
         return None
 
@@ -146,8 +149,9 @@ def _collect_all_consultations(
     """Scan all state.json files and collect consultation entries."""
     cache_key = f"consultation_history_all{ctx_cache_scope(ctx)}"
     cached = cache_get(cache_key, ttl=30)
+    results: list[dict[Any, Any]]
     if cached is not None:
-        results = cached
+        results = cast(list[dict[Any, Any]], cached)
     else:
         results = []
         curriculum_root = ctx.roots.curriculum_root

@@ -9,8 +9,9 @@ from typing import Any
 import yaml
 from fastapi import APIRouter, Depends
 
-from .monitor_context import MonitorContext, get_ctx, resolve_context
-from .state_helpers import monitor_surface
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+
+from .curriculum_state import monitor_surface
 
 router = APIRouter(tags=["governance"])
 

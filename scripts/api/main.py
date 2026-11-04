@@ -17,9 +17,10 @@ import subprocess
 import threading
 import time
 import uuid
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Mapping
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager, suppress
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -51,27 +52,13 @@ from scripts.orchestration import issue_stream_audit as isa
 from . import delegate_router as delegate_api
 from . import runtime_router as runtime_api
 from . import state_router as state_api
-from . import wiki_router as wiki_api
 from ._signal_log import install_signal_logging
-from .admin_router import router as admin_router
 from .agent_monitor_router import router as agent_monitor_router
-from .agent_router import router as agent_router
-from .artifacts_router import router as artifacts_router
-from .atlas_jobs_router import router as atlas_jobs_router
-from .batch_router import router as batch_router
-from .build_events_router import router as build_events_router
 from .cluster_router import router as cluster_router
 from .codexbar_usage import scheduler_status, start_periodic_refresh, stop_periodic_refresh
 from .comms_router import ensure_broker_db_ready
 from .comms_router import router as comms_router
-from .config import (
-    LEVELS,
-)
-from .consultation_router import router as consultation_router
 from .coordination_router import router as coordination_router
-from .cost_router import router as cost_router
-from .dashboard_router import router as dashboard_router
-from .decisions_router import router as decisions_router
 from .delegate_router import router as delegate_router
 from .discussions_router import router as discussions_router
 from .docs_router import router as docs_router
@@ -81,9 +68,6 @@ from .fleet_board.router import router as fleet_board_router
 from .fleet_router import router as fleet_router
 from .fleet_workers_router import router as fleet_workers_router
 from .git_hygiene_router import router as git_hygiene_router
-from .governance_router import collect_governance_summary
-from .governance_router import router as governance_router
-from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
 from .monitor_context import MonitorContext, get_ctx, production_context, resolve_context
@@ -93,10 +77,10 @@ from .occupancy_local import resolve_launcher_host_id
 from .ops_router import router as ops_router
 from .opsec_sanitize import opsec_path_sanitizer_middleware
 from .preload import preload_all
+from .product_contribution import OrientSection, ProductContribution, install_providers, load_product
 from .project_state_router import router as project_state_router
 from .repository_authority import build_repository_authority, cwd_role
 from .resilience import get_resilience_snapshot, resilience_middleware
-from .reviewer_ghosts_router import router as reviewer_ghosts_router
 from .rollover_router import collect_rollover_orient_data
 from .rollover_router import router as rollover_router
 from .route_contracts import router as contracts_router
@@ -104,14 +88,11 @@ from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
 from .session_router import router as session_router
 from .session_streams_router import router as session_streams_router
-from .site_router import router as site_router
-from .sources_router import router as sources_router
-from .state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope, load_phase_labels
+from .state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope
 from .state_router import router as state_router
 from .state_router import schedule_state_scan_warmup
 from .telemetry.response import add_json_telemetry, session_id_from_request
 from .telemetry_router import router as telemetry_router
-from .wiki_router import router as wiki_router
 from .work_router import drain_context_background_work, refresh_projection_cache_periodically, warm_projection_cache
 from .work_router import router as work_router
 from .worktrees_router import router as worktrees_router
@@ -136,13 +117,14 @@ async def _lifespan(_app: FastAPI):
     seats do not write. Sqlite and shadow stay allowed.
     """
     ctx = _app.state.ctx
+    product: ProductContribution = _app.state.product
     projection_refresh_task = None
     try:
         # Reuse assert_component_supported; do not add a second allow-list.
         # ControlPlaneUnsupportedComponentError names the store and authority
         # and carries no connection string.
         assert_component_supported(StoreId.FLEET_COMMS, "authority_service")
-        preload_all()
+        preload_all(product.preload, product.preload_optional)
         install_signal_logging()
         ensure_broker_db_ready(ctx=ctx)
         seed_manifest_inventory(
@@ -160,7 +142,7 @@ async def _lifespan(_app: FastAPI):
         except Exception as exc:
             logger.warning("Work projection warmup schedule on startup failed: %s", exc)
         try:
-            schedule_state_scan_warmup(ctx)
+            schedule_state_scan_warmup(ctx, product.warmup)
         except Exception as exc:
             logger.warning("State scan warmup schedule on startup failed: %s", exc)
         projection_refresh_task = asyncio.create_task(
@@ -179,7 +161,7 @@ async def _lifespan(_app: FastAPI):
             try:
                 await drain_context_background_work(ctx)
             finally:
-                await ctx.runtime.close_resources(ctx.stores.image_store)
+                await ctx.runtime.close_resources()
 
 
 def _error_envelope(
@@ -314,18 +296,11 @@ ORIENT_SECTION_TTLS: dict[str, float] = {
     "git": 30.0,
     "issues": 120.0,
     "idle_prs": 60.0,
-    # Pipeline has TTL 0 on purpose — ``_collect_pipeline_orient_data``
-    # calls ``state_summary()`` which has its own 60 s cache. Stacking
-    # caches produced staleness up to 119 s with ``generated_at``
-    # labelled fresh (reviewer BLOCKER #1309 / B2).
-    "pipeline": 0.0,
     "runtime": 60.0,
     "delegate": 30.0,
     "capacity": 15.0,
     "bridge_pending": 15.0,
     "rollovers": 15.0,
-    "wiki": 120.0,
-    "governance": 120.0,
     "health": 15.0,
     "session_hints": 60.0,
 }
@@ -334,14 +309,11 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
     "git": "git",
     "issues": "gh",
     "idle_prs": "gh",
-    "pipeline": "fs",
     "runtime": "fs",
     "delegate": "fs",
     "capacity": "fs",
     "bridge_pending": "sqlite",
     "rollovers": "fs",
-    "wiki": "fs",
-    "governance": "fs",
     "health": "probe",
     "session_hints": "fs",
 }
@@ -365,6 +337,12 @@ _REVIEW_HEAD_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Machinery sections only. The product contribution adds pipeline, wiki and
+# governance (``ProductContribution.orient_sections``); ``_orient_layout``
+# composes both in the response order the endpoint always had. Pipeline has
+# TTL 0 on purpose: its collector wraps ``/api/state/summary``, which has its
+# own 60 s cache, and stacking both labelled up-to-119 s old data as fresh
+# (reviewer BLOCKER #1309 / B2).
 ORIENT_SECTION_KEYS: tuple[str, ...] = tuple(ORIENT_SECTION_TTLS.keys())
 
 # Lean cold-start preset (``?lean=true``): the small, lane-agnostic sections an agent needs to
@@ -382,7 +360,6 @@ LEAN_ORIENT_SECTIONS: tuple[str, ...] = (
     "capacity",
     "bridge_pending",
     "rollovers",
-    "governance",
     "health",
     "session_hints",
 )
@@ -903,11 +880,6 @@ async def _cached_detached_orient_section(
     return fallback, meta
 
 
-async def _collect_pipeline_orient_data(ctx: MonitorContext | None = None) -> dict:
-    resolved_ctx = resolve_context(ctx)
-    return {"summary": await state_api.state_summary(fresh=False, ctx=resolved_ctx)}
-
-
 def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved = resolve_context(ctx)
     # One shared counter across every usage read this section makes — agent
@@ -991,59 +963,6 @@ def _collect_bridge_pending_orient_data(ctx: MonitorContext | None = None) -> di
 def _collect_rollovers_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved_ctx = resolve_context(ctx)
     return collect_rollover_orient_data(live_repo_root=resolved_ctx.roots.live_repo_root)
-
-
-def _collect_wiki_orient_data(ctx: MonitorContext | None = None) -> dict:
-    """Per-track compiled article counts.
-
-    The previous implementation called ``_resolve_article`` inside the per-slug
-    loop (~22 tracks × ~80 slugs = ~1776 calls). Each ``_resolve_article``
-    rebuilds the full slug→candidates index from a wiki-tree scan, so the
-    1776 calls × ~4 ms = ~7 s consistently exceeded the 5 s
-    ``ORIENT_SECTION_HARD_TIMEOUT_S`` cap and the section returned
-    ``error: section_timeout_5.0s`` on every cold cache miss.
-
-    Fix: build the candidates index once (~6 ms) and resolve in pure dict
-    lookups + Path.exists() checks. Same answer, ~50× faster.
-    """
-    resolved_ctx = resolve_context(ctx)
-    wiki_api.wiki_state.get_status_summary()
-
-    candidates = wiki_api._list_article_candidates(resolved_ctx)  # one context-scoped full-tree scan
-    wiki_dir = wiki_api._wiki_dir(resolved_ctx)
-
-    by_track: dict[str, dict[str, Any]] = {}
-    known_tracks = wiki_api._known_tracks(ctx=ctx)
-    for track in known_tracks:
-        slugs = wiki_api._track_slugs(track)
-        if not slugs:
-            continue
-        compiled = 0
-        for slug in slugs:
-            slug_cands = candidates.get(slug)
-            if not slug_cands:
-                continue
-            # Mirror _resolve_article: prefer domain-matching candidates,
-            # fall back to any candidate. Take the lexicographically-first
-            # path within the chosen group, then check it actually exists.
-            domain_matches = [c for c in slug_cands if wiki_api._matches_track_domain(track, c["path"])]
-            chosen = sorted(
-                domain_matches or slug_cands,
-                key=lambda item: item["path"],
-            )[0]
-            if (wiki_dir / chosen["path"]).exists():
-                compiled += 1
-        total = len(slugs)
-        by_track[track] = {
-            "compiled": compiled,
-            "total": total,
-            "pct": round(compiled / total * 100, 1) if total else 0,
-        }
-    return {"by_track": by_track}
-
-
-def _collect_governance_orient_data(ctx: MonitorContext | None = None) -> dict[str, int]:
-    return collect_governance_summary(ctx=ctx)
 
 
 logger = logging.getLogger(__name__)
@@ -1286,7 +1205,10 @@ def _backup_last_run_health(batch_state_dir: Path, *, now: datetime | None = Non
     }
 
 
-def _collect_health_orient_data(ctx: MonitorContext | None = None) -> dict:
+def _collect_health_orient_data(
+    ctx: MonitorContext | None = None,
+    product_health: Callable[[MonitorContext], Mapping[str, Any]] | None = None,
+) -> dict:
     resolved_ctx = resolve_context(ctx)
     mcp_sources_ok = _port_open("127.0.0.1", 8766, 0.2)
     tmp_usability = _tmp_usability_canary()
@@ -1296,11 +1218,15 @@ def _collect_health_orient_data(ctx: MonitorContext | None = None) -> dict:
     node_modules_integrity_ok = _node_modules_integrity_canary(ctx=resolved_ctx)
     venv_integrity_ok = _venv_integrity_canary(ctx=resolved_ctx)
     worktree_cleanup_integrity_ok = _worktree_cleanup_integrity_canary(ctx=resolved_ctx)
-    return {
+    fields: dict[str, Any] = {
         "api": True,
         "mcp_sources": mcp_sources_ok,
         "mcp_rag": mcp_sources_ok,
-        "sources_db": _readable_file(resolved_ctx.roots.sources_db_path),
+    }
+    if product_health is not None:
+        fields.update(product_health(resolved_ctx))
+    return {
+        **fields,
         "message_broker": _readable_file(resolved_ctx.roots.message_db_path),
         "git_core_bare_ok": core_bare_ok,
         "node_modules_symlinks_ok": self_symlink_ok,
@@ -1405,6 +1331,8 @@ async def _cached_orient_section(
     *,
     is_async: bool = False,
     ctx: MonitorContext | None = None,
+    ttl: float | None = None,
+    source: str | None = None,
 ) -> tuple[Any, dict]:
     """Run one orient collector with TTL cache + hard timeout + fallback.
 
@@ -1415,14 +1343,17 @@ async def _cached_orient_section(
 
     Errors are NOT cached — the next call retries. This is intentional:
     a transient git/gh hiccup shouldn't poison a 2-minute TTL window.
+
+    ``ttl`` and ``source`` come from a product section; a machinery section
+    takes them from ``ORIENT_SECTION_TTLS`` and ``ORIENT_SECTION_SOURCES``.
     """
     if key == "idle_prs":
         return _cached_idle_pr_section(collector, fallback, ctx=ctx)  # type: ignore[arg-type]
     if key in DETACHED_ORIENT_SECTION_KEYS:
         return await _cached_detached_orient_section(key, collector, fallback, ctx=ctx)  # type: ignore[arg-type]
 
-    ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
-    source = ORIENT_SECTION_SOURCES.get(key, "fs")
+    ttl = ORIENT_SECTION_TTLS.get(key, 60.0) if ttl is None else ttl
+    source = ORIENT_SECTION_SOURCES.get(key, "fs") if source is None else source
     cache_key = f"orient_{key}{_ctx_cache_scope(ctx)}"
 
     # ttl == 0 means "don't cache at the orient layer". Skip both the
@@ -1483,21 +1414,50 @@ async def _cached_orient_section(
     return value, meta
 
 
-def _parse_orient_sections(sections_param: str | None, *, lean: bool = False) -> list[str]:
+@dataclass(frozen=True)
+class OrientLayout:
+    """The orient sections of one app: machinery sections plus the product's, in response order."""
+
+    keys: tuple[str, ...]
+    lean: tuple[str, ...]
+    specs: Mapping[str, tuple[Callable[..., Any], Any, bool]]
+    product: Mapping[str, OrientSection]
+
+
+def _orient_layout(product: ProductContribution) -> OrientLayout:
+    """Compose the machinery sections with the product's at their ``after`` anchors."""
+    specs: dict[str, tuple[Callable[..., Any], Any, bool]] = dict(_orient_section_specs(product))
+    sections = dict(product.orient_sections())
+    keys = list(ORIENT_SECTION_KEYS)
+    pending = dict(sections)
+    while pending:
+        placed = [key for key, section in pending.items() if section.after in keys]
+        if not placed:
+            raise RuntimeError(f"orient sections with unknown anchors: {sorted(pending)}")
+        for key in placed:
+            section = pending.pop(key)
+            keys.insert(keys.index(section.after) + 1, key)
+            specs[key] = (section.collector, section.fallback, section.is_async)
+    lean_keys = set(LEAN_ORIENT_SECTIONS) | {key for key, section in sections.items() if section.lean}
+    lean = tuple(key for key in keys if key in lean_keys)
+    return OrientLayout(tuple(keys), lean, specs, sections)
+
+
+def _parse_orient_sections(sections_param: str | None, *, lean: bool = False, layout: OrientLayout) -> list[str]:
     """Validate and expand the optional ``sections`` query param.
 
     An explicit ``sections`` list always wins. When it is absent, ``lean`` selects the
-    lightweight cold-start preset (``LEAN_ORIENT_SECTIONS``); otherwise the full payload.
+    lightweight cold-start preset (``layout.lean``); otherwise the full payload.
     """
-    default = list(LEAN_ORIENT_SECTIONS if lean else ORIENT_SECTION_KEYS)
+    default = list(layout.lean if lean else layout.keys)
     if sections_param is None:
         return default
     keys = [part.strip() for part in sections_param.split(",") if part.strip()]
     if not keys:
         return default
-    unknown = [key for key in keys if key not in ORIENT_SECTION_TTLS]
+    unknown = [key for key in keys if key not in layout.specs]
     if unknown:
-        valid = ", ".join(ORIENT_SECTION_KEYS)
+        valid = ", ".join(layout.keys)
         raise HTTPException(
             status_code=400,
             detail=f"Unknown orient section(s): {', '.join(unknown)}. Valid keys: {valid}",
@@ -1505,13 +1465,17 @@ def _parse_orient_sections(sections_param: str | None, *, lean: bool = False) ->
     return keys
 
 
-def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
-    """Return orient collector specs using live module attributes (test-friendly)."""
+def _orient_section_specs(product: ProductContribution) -> dict[str, tuple[Callable[..., Any], Any, bool]]:
+    """Return machinery orient collector specs using live module attributes (test-friendly)."""
+    health = (
+        _collect_health_orient_data
+        if product.health is None
+        else functools.partial(_collect_health_orient_data, product_health=product.health)
+    )
     return {
         "git": (_collect_git_orient_data, {}, False),
         "issues": (_collect_issues_orient_data, {"issues": []}, False),
         "idle_prs": (_collect_idle_prs_orient_data, {"idle_prs": []}, False),
-        "pipeline": (_collect_pipeline_orient_data, {"summary": {}}, True),
         "runtime": (_collect_runtime_orient_data, {}, False),
         "delegate": (_collect_delegate_orient_data, {"active_count": 0, "recent": []}, False),
         "capacity": (_collect_capacity_orient_data, {"lanes": {}}, False),
@@ -1521,20 +1485,7 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
             {"counts": {}, "actionable": [], "errors": []},
             False,
         ),
-        "wiki": (_collect_wiki_orient_data, {"by_track": {}}, False),
-        "governance": (
-            _collect_governance_orient_data,
-            {
-                "decisions_total": 0,
-                "decisions_stale": 0,
-                "decisions_approaching_expiry": 0,
-                "adrs_total": 0,
-                "adrs_warnings": 0,
-                "adrs_errors": 0,
-            },
-            False,
-        ),
-        "health": (_collect_health_orient_data, {"api": True}, False),
+        "health": (health, {"api": True}, False),
         "session_hints": (_collect_session_hints_orient_data, [], False),
     }
 
@@ -1639,8 +1590,9 @@ async def orient(
     if fresh:
         cache_invalidate("orient_")
 
-    selected = _parse_orient_sections(sections, lean=lean)
-    section_specs = _orient_section_specs()
+    layout = _orient_layout(request.app.state.product)
+    selected = _parse_orient_sections(sections, lean=lean, layout=layout)
+    section_specs = layout.specs
     # #7494: thread THIS app's context into every collector — the zero-arg
     # invocation made all 14 collectors fall back to production_context(),
     # defeating create_app() isolation (and rebuilding contexts per call).
@@ -1653,6 +1605,8 @@ async def orient(
                 section_specs[key][1],
                 is_async=section_specs[key][2],
                 ctx=request_ctx,
+                ttl=layout.product[key].ttl_s if key in layout.product else None,
+                source=layout.product[key].source if key in layout.product else None,
             )
             for key in selected
         ]
@@ -1674,36 +1628,17 @@ async def orient(
         "meta": section_metas,
     }
 
-    if "git" in section_data:
-        response["git"] = section_data["git"]
-    if "issues" in section_data:
-        issues_info = section_data["issues"]
-        response["issues"] = issues_info.get("issues", []) if isinstance(issues_info, dict) else []
-    if "idle_prs" in section_data:
-        idle_prs_info = section_data["idle_prs"]
-        response["idle_prs"] = idle_prs_info.get("idle_prs", []) if isinstance(idle_prs_info, dict) else []
-    if "pipeline" in section_data:
-        response["pipeline"] = section_data["pipeline"]
-    if "runtime" in section_data:
-        response["runtime"] = section_data["runtime"]
-    if "delegate" in section_data:
-        response["delegate"] = section_data["delegate"]
-    if "capacity" in section_data:
-        response["capacity"] = section_data["capacity"]
-    if "bridge_pending" in section_data:
-        response["bridge_pending"] = section_data["bridge_pending"]
-    if "rollovers" in section_data:
-        response["rollovers"] = section_data["rollovers"]
-    if "wiki" in section_data:
-        response["wiki"] = section_data["wiki"]
-    if "governance" in section_data:
-        governance_info = section_data["governance"]
-        response["governance"] = governance_info
-        section_metas["governance"] = {**section_metas["governance"], **governance_info}
-    if "health" in section_data:
-        response["health"] = section_data["health"]
-    if "session_hints" in section_data:
-        response["session_hints"] = section_data["session_hints"]
+    for key in layout.keys:
+        if key not in section_data:
+            continue
+        value = section_data[key]
+        if key in ("issues", "idle_prs"):
+            response[key] = value.get(key, []) if isinstance(value, dict) else []
+        else:
+            response[key] = value
+        product_section = layout.product.get(key)
+        if product_section is not None and product_section.merge_meta:
+            section_metas[key] = {**section_metas[key], **value}
 
     if "issues" in section_data:
         issues_info = section_data["issues"]
@@ -1756,21 +1691,7 @@ def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> N
         response.pop("research", None)
 
 
-@core_router.get("/api/config")
-async def get_config(request: Request, ctx: MonitorContext = Depends(get_ctx)):
-    # Pipeline phase config from product data (scripts/curriculum/phase_labels.v1.json)
-    try:
-        phases, phase_labels = load_phase_labels()
-        pipeline_info = {"phases": phases, "phase_labels": phase_labels}
-    except (OSError, ValueError):
-        pipeline_info = {}
-    return {"levels": LEVELS, "api_version": request.app.version, "pipeline": pipeline_info}
-
-
-# ==================== IMAGE SERVING ====================
-
-_ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
-_MIME_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
+# ==================== STATIC FILES (MUST BE LAST) ====================
 
 
 def _safe_join(base: Path, *parts: str | Path) -> Path | None:
@@ -1778,32 +1699,6 @@ def _safe_join(base: Path, *parts: str | Path) -> Path | None:
         return safe_join(base, *parts)
     except ValueError:
         return None
-
-
-@core_router.get("/images/{path:path}")
-async def serve_image(path: str, ctx: MonitorContext = Depends(get_ctx)):
-    """Serve textbook images with caching. Path relative to data/textbook_images/."""
-    image_dir = ctx.roots.images_dir or (ctx.roots.project_root / "data" / "textbook_images")
-    file_path = _safe_join(image_dir, path)
-    if file_path is None:
-        raise HTTPException(status_code=403, detail="Invalid image path")
-    if file_path.suffix.lower() not in _ALLOWED_IMG_EXT:
-        raise HTTPException(status_code=403, detail="Forbidden file type")
-    if not file_path.exists() or not file_path.is_file():
-        raise HTTPException(status_code=404)
-    # Prevent path traversal
-    try:
-        file_path.resolve().relative_to(image_dir.resolve())
-    except ValueError as e:
-        raise HTTPException(status_code=403, detail="Path traversal not allowed") from e
-    return FileResponse(
-        file_path,
-        media_type=_MIME_TYPES.get(file_path.suffix.lower(), "application/octet-stream"),
-        headers={"Cache-Control": "max-age=3600"},
-    )
-
-
-# ==================== STATIC FILES (MUST BE LAST) ====================
 
 
 @core_router.get("/{path:path}")
@@ -1945,9 +1840,20 @@ class PrometheusMetricsMiddleware:
             self._errors.labels(**labels).inc()
 
 
-def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
-    """Build a fresh Ops API app bound to one context."""
+def create_app(
+    context: MonitorContext,
+    *,
+    lifespan: Any = None,
+    product: ProductContribution | None = None,
+) -> FastAPI:
+    """Build a fresh Ops API app bound to one context.
+
+    ``product`` is the product contribution; when omitted it is loaded through
+    the configured product entry (``load_product``). Its routers are included
+    ahead of the machinery routers and the core catch-all stays last.
+    """
     factory_lifespan = _lifespan if lifespan is None else lifespan
+    product = load_product(context) if product is None else product
     factory_app = FastAPI(
         title="Ops API",
         version="2.0.0",
@@ -1966,6 +1872,8 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
         lifespan=factory_lifespan,
     )
     factory_app.state.ctx = context
+    factory_app.state.product = product
+    install_providers(product)
     factory_app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -1980,13 +1888,12 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
     factory_app.add_exception_handler(Exception, global_exception_handler)
 
-    # Mount team routers in the established order. The core router must remain
-    # last so its catch-all route keeps today's matching precedence.
-    factory_app.include_router(admin_router, prefix="/api/admin")
-    factory_app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
+    # Product routers first, then the machinery routers in their established
+    # order. The core router must remain last so its catch-all route keeps
+    # today's matching precedence.
+    for mount in product.routers:
+        factory_app.include_router(mount.router, prefix=mount.prefix, tags=list(mount.tags) or None)
     factory_app.include_router(agent_monitor_router, prefix="/api/agent-monitor")
-    factory_app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
-    factory_app.include_router(atlas_jobs_router, prefix="/api/atlas-jobs", tags=["atlas-jobs"])
     factory_app.include_router(occupancy_router, prefix="/api/occupancy", tags=["occupancy"])
     factory_app.include_router(observer_presence_router, prefix="/api/observer", tags=["observer"])
     factory_app.include_router(epics_router, prefix="/api/epics", tags=["epics"])
@@ -1997,42 +1904,24 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(fleet_board_router, prefix="/api/fleet/v1", tags=["fleet-v1"])
     factory_app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
     factory_app.include_router(coordination_router, prefix="/api/coordination")
-    factory_app.include_router(consultation_router, prefix="/api/consultation")
     factory_app.include_router(cluster_router, prefix="/api/cluster", tags=["cluster"])
-    factory_app.include_router(cost_router, prefix="/api/analytics/cost")
     factory_app.include_router(contracts_router, prefix="/api/contracts", tags=["contracts"])
-    factory_app.include_router(dashboard_router, prefix="/api/dashboard")
-    factory_app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])
     factory_app.include_router(delegate_router, prefix="/api/delegate")
     factory_app.include_router(docs_router, prefix="/artifacts")
     factory_app.include_router(docs_router, prefix="/files")
     factory_app.include_router(discussions_router, prefix="/api/discussions", tags=["discussions"])
     factory_app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
     factory_app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
-    factory_app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
-    factory_app.include_router(build_events_router, prefix="/api/build/events")
-    factory_app.include_router(images_router, prefix="/api/images")
     factory_app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
     factory_app.include_router(knowledge_router, prefix="/api/knowledge", tags=["knowledge"])
-    factory_app.include_router(sources_router, prefix="/api/sources", tags=["sources"])
-    # GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
-    # can discover it alongside the other state-query endpoints.
-    factory_app.include_router(
-        reviewer_ghosts_router,
-        prefix="/api/state/reviewer-ghosts",
-        tags=["reviewer-ghosts"],
-    )
     factory_app.include_router(rollover_router, prefix="/api/rollovers", tags=["rollovers"])
     factory_app.include_router(rules_router, prefix="/api/rules", tags=["rules"])
     factory_app.include_router(runtime_router, prefix="/api/runtime")
     factory_app.include_router(session_router, prefix="/api/session", tags=["session"])
-    factory_app.include_router(site_router, prefix="/api/site", tags=["site"])
     factory_app.include_router(state_router, prefix="/api/state")
     factory_app.include_router(telemetry_router)
-    factory_app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
     factory_app.include_router(worktrees_router, prefix="/api/worktrees", tags=["worktrees"])
     factory_app.include_router(work_router, prefix="/api/work", tags=["work"])
-    factory_app.include_router(batch_router)
     factory_app.include_router(core_router)
     return factory_app
 

@@ -10,23 +10,25 @@ import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
+from scripts.api.monitor_context import MonitorContext
+
 from .config import LEVELS, SEMINAR_TRACK_IDS
-from .monitor_context import MonitorContext
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 from research_quality import assess_research_compat, find_research_path, get_rubric
+from scripts.api.state_helpers import ctx_cache_scope
 
+from .curriculum_state import detect_pipeline_version, get_plan_slugs, monitor_surface, read_v2_state
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
-from .state_helpers import ctx_cache_scope, detect_pipeline_version, get_plan_slugs, monitor_surface, read_v2_state
 
 # Names stay on this module so existing tests can patch them. The functions
 # are the product ones, reached through the wrapper state_helpers loads once.
@@ -81,7 +83,7 @@ def read_yaml_file(path: Path) -> dict | None:
         return None
     try:
         with open(path) as f:
-            return yaml.load(f, Loader=_YAML_LOADER)
+            return cast("dict[Any, Any] | None", yaml.load(f, Loader=_YAML_LOADER))
     except Exception:
         return None
 
@@ -89,7 +91,7 @@ def read_yaml_file(path: Path) -> dict | None:
 def _safe_join(base: Path, *parts: str | Path) -> Path | None:
     """Return a safe child path under ``base`` or ``None`` if input is invalid."""
     try:
-        return safe_join(base, *parts)
+        return cast("Path | None", safe_join(base, *parts))
     except ValueError:
         return None
 
@@ -206,12 +208,12 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
 
     orch_dir = _safe_join(track_dir, "orchestration", slug)
     orch_exists = bool(orch_dir and orch_dir.exists())
-    pipeline_version = detect_pipeline_version(orch_dir) if orch_exists else "unbuilt"
+    pipeline_version = detect_pipeline_version(cast(Path, orch_dir)) if orch_exists else "unbuilt"
     review_info = extract_review_info(track_dir, slug)
     # Friction from friction.yaml (active count only, not glob of all friction files)
     friction_active = 0
     friction_resolved = 0
-    friction_path = _safe_join(orch_dir, "friction.yaml") if orch_exists else None
+    friction_path = _safe_join(cast(Path, orch_dir), "friction.yaml") if orch_exists else None
     if friction_path and friction_path.exists():
         try:
             fdata = yaml.safe_load(friction_path.read_text("utf-8"))
@@ -326,7 +328,7 @@ def stats_from_state_summary(summary_stats: dict, *, is_seminar: bool) -> dict:
 
 def compute_track_stats(modules: list, track_id: str) -> dict:
     """Aggregate per-module data into track-level stats."""
-    stats = {
+    stats: dict[str, Any] = {
         "pass": sum(1 for m in modules if m["status"] == "pass"),
         "content_complete": sum(1 for m in modules if m["status"] == "content-complete"),
         "fail": sum(1 for m in modules if m["status"] == "fail"),
@@ -517,7 +519,7 @@ def scan_track(
 
 def find_active_builds(ctx: MonitorContext) -> list[dict]:
     """Find orchestration dirs modified in last 15 minutes."""
-    active_builds = []
+    active_builds: list[dict] = []
     curriculum_root = ctx.roots.curriculum_root
     if not curriculum_root.exists():
         return active_builds
@@ -530,7 +532,7 @@ def find_active_builds(ctx: MonitorContext) -> list[dict]:
         for module_dir in orch_dir.iterdir():
             if not module_dir.is_dir():
                 continue
-            latest_mtime = 0
+            latest_mtime = 0.0
             latest_file = ""
             for f in module_dir.iterdir():
                 if f.is_file() and f.stat().st_mtime > latest_mtime:

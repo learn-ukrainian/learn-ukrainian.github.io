@@ -13,6 +13,7 @@ from fastapi.testclient import TestClient
 from scripts.ai_agent_bridge import _db
 from scripts.api.main import app
 from scripts.api.monitor_context import production_context
+from scripts.project_api.context import image_store, with_product_roots
 from tests.latency_budget import assert_under_budget
 
 SAMPLE_COUNT = 3
@@ -226,14 +227,14 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
     textbooks_dir = tmp_path / "textbooks"
     image_root.mkdir()
     textbooks_dir.mkdir()
-    test_ctx = base_ctx.with_roots(
-        message_db_path=broker_db,
+    test_ctx = with_product_roots(
+        base_ctx.with_roots(message_db_path=broker_db),
         images_dir=image_root,
         textbooks_dir=textbooks_dir,
     )
     monkeypatch.setattr(app.state, "ctx", test_ctx)
-    app.state.ctx.stores.image_store.index.reload()
-    app.state.ctx.stores.image_store.page_cache.clear()
+    image_store(app.state.ctx).index.reload()
+    image_store(app.state.ctx).page_cache.clear()
 
     client = TestClient(app, raise_server_exceptions=False)
     endpoint_timings: list[tuple[str, str, float]] = []
@@ -280,7 +281,7 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
 
 def test_overview_cold_last_good_does_not_report_all_missing(monkeypatch, tmp_path):
     """#7024: empty in-memory last-good + published_mdx>0 is not missing=total."""
-    import scripts.api.dashboard_router as dashboard_router
+    import scripts.project_api.dashboard_router as dashboard_router
 
     dashboard_router.reset_overview_state_for_tests()
     monkeypatch.setenv(

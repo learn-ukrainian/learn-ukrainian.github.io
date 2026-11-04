@@ -106,7 +106,9 @@ SITE_CONFIG_REASON = "site build and test configuration"
 _SITE_CONFIG_FILE = re.compile(r"^site/[^/]+\.config\.[^/]+$")
 
 # Paths inside an allowlisted root that are still refused. Keys match as
-# prefixes, so ``scripts/api/hramatka_`` covers every Hramatka module.
+# prefixes, so ``scripts/orchestration/curriculum_`` covers every curriculum lifecycle module.
+# The Monitor's product half (Hramatka, sources lookups, curriculum routers)
+# lives in scripts/project_api/, which is not an allowlisted root (C-4687).
 KIMI_EXCLUDED_PATHS: dict[str, str] = {
     "scripts/agent_runtime/kimi_admission.py": "the Kimi admission gate is routing policy",
     "scripts/agent_runtime/kimi_boundary.py": "the Kimi worktree boundary is routing policy",
@@ -119,9 +121,7 @@ KIMI_EXCLUDED_PATHS: dict[str, str] = {
     "tests/agent_runtime/adapters/test_kimi_adapter.py": "tests of Kimi's routing policy",
     "tests/agent_runtime/adapters/test_kimicc_headless.py": "tests of Kimi's routing policy",
     "scripts/agent_runtime/profiles/": "reviewer prompt profiles",
-    "scripts/api/hramatka_": "Hramatka lesson generation and grammar quality gates",
     "tests/api/test_hramatka_": "Hramatka lesson generation and grammar quality gates",
-    "scripts/api/sources_router.py": "Ukrainian dictionary and corpus lookups",
     "tests/api/test_sources_router": "Ukrainian dictionary and corpus lookups",
     "scripts/orchestration/curriculum_": "curriculum lifecycle, readiness and preparation",
     "tests/orchestration/test_curriculum_": "curriculum lifecycle, readiness and preparation",

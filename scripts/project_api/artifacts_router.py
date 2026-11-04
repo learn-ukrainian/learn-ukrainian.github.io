@@ -24,7 +24,7 @@ import asyncio
 import json
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
@@ -32,22 +32,22 @@ from fastapi.responses import JSONResponse
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
+
+from scripts.api.docs_router import collect_html_artifacts
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
 
 from .config import LEVELS
-from .docs_router import collect_html_artifacts
-from .monitor_context import MonitorContext, get_ctx, resolve_context
-from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
-from .state_compute import _get_review_score
-from .state_helpers import (
-    cache_get_or_compute_async,
-    ctx_scoped_ttl_key,
+from .curriculum_state import (
     find_content_file,
     get_audit_status,
     get_final_review_info,
     get_plan_slugs,
     get_word_target_from_plan,
 )
+from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
+from .state_compute import _get_review_score
 
 router = APIRouter(tags=["artifacts"])
 
@@ -231,11 +231,12 @@ def _compute_artifact_snapshot(track: str, slug: str, ctx: MonitorContext | None
 
     gates = {
         "content_exists": bool(content_path and content_path.is_file()),
-        "frontmatter_valid": bool(content_path) and _has_frontmatter(content_path),
+        "frontmatter_valid": bool(content_path) and _has_frontmatter(cast(Path, content_path)),
         "word_target_met": _word_target_met(audit, word_target),
         "audit_pass": str(audit.get("status") or "").lower() == "pass",
         "final_review_pass": _final_review_approved(final_review),
-        "plan_fresh": bool(content_path and plan_path) and _plan_not_changed_after_build(plan_path, content_path),
+        "plan_fresh": bool(content_path and plan_path)
+        and _plan_not_changed_after_build(cast(Path, plan_path), cast(Path, content_path)),
     }
 
     return {
@@ -614,9 +615,9 @@ def _classify_module_files(track: str, slug: str, ctx: MonitorContext | None = N
     _record(safe_join(base, "status", f"{slug}.json"), "generated")
     _record(safe_join(base, "research", f"{slug}-knowledge-packet.md"), "generated")
     if orch.is_dir():
-        keep = {"index.md", "friction.yaml"}
+        kept_files = {"index.md", "friction.yaml"}
         for f in sorted(orch.iterdir()):
-            if f.name in keep:
+            if f.name in kept_files:
                 continue
             _record(f, "generated")
 

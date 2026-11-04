@@ -14,7 +14,6 @@ from fastapi.testclient import TestClient
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.main import app
 from scripts.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
@@ -34,6 +33,7 @@ from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.occupancy_sanitize import safe_field as _safe_field
 from scripts.api.occupancy_sanitize import safe_summary as _safe_summary
 from scripts.lexicon.runner import atlas_job
+from scripts.project_api import atlas_jobs_router as load_mod
 from tests import _host_path_guard as guard
 
 client = TestClient(app, raise_server_exceptions=False)

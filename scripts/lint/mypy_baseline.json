@@ -1438,61 +1438,6 @@
       "message": "Item \"None\" of \"Any | None\" has no attribute \"__iter__\" (not iterable)"
     },
     {
-      "path": "scripts/api/admin_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"float\", variable has type \"int\")"
-    },
-    {
-      "path": "scripts/api/admin_router.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"by_ext\" (hint: \"by_ext: dict[<type>, <type>] = ...\")"
-    },
-    {
-      "path": "scripts/api/artifacts_router.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_has_frontmatter\" has incompatible type \"None | Path\"; expected \"Path\""
-    },
-    {
-      "path": "scripts/api/artifacts_router.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"_plan_not_changed_after_build\" has incompatible type \"None | Path\"; expected \"Path\""
-    },
-    {
-      "path": "scripts/api/artifacts_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"set[str]\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/api/atlas_jobs_router.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/atlas_jobs_router.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/atlas_jobs_router.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/batch_router.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"CompletedProcess[bytes]\", expected \"CompletedProcess[str]\")"
-    },
-    {
-      "path": "scripts/api/batch_router.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"active\" (hint: \"active: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/api/build_events_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
-    },
-    {
       "path": "scripts/api/claude_account_usage.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
@@ -1540,11 +1485,6 @@
     {
       "path": "scripts/api/comms_router.py",
       "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"list[Any]\", target has type \"None | dict[Any, dict[Any, Any]] | int | str\")"
-    },
-    {
-      "path": "scripts/api/comms_router.py",
-      "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"list[str]\", target has type \"int\")"
     },
     {
@@ -1576,196 +1516,6 @@
       "path": "scripts/api/comms_router.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"task_groups\" (hint: \"task_groups: dict[<type>, <type>] = ...\")"
-    },
-    {
-      "path": "scripts/api/config.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | dict[str, Any]\""
-    },
-    {
-      "path": "scripts/api/consultation_router.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"append\" of \"list\" has incompatible type \"dict[Any, Any]\"; expected \"Never\""
-    },
-    {
-      "path": "scripts/api/consultation_router.py",
-      "code": "attr-defined",
-      "message": "\"object\" has no attribute \"__iter__\"; maybe \"__dir__\" or \"__str__\"? (not iterable)"
-    },
-    {
-      "path": "scripts/api/consultation_router.py",
-      "code": "attr-defined",
-      "message": "\"object\" has no attribute \"__iter__\"; maybe \"__dir__\" or \"__str__\"? (not iterable)"
-    },
-    {
-      "path": "scripts/api/consultation_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/api/consultation_router.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"object\", expected \"list[dict[Any, Any]]\")"
-    },
-    {
-      "path": "scripts/api/dashboard_comms.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_safe_join\" has incompatible type \"None | Path\"; expected \"Path\""
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"detect_pipeline_version\" has incompatible type \"None | Path\"; expected \"Path\""
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[Any, Any]\", target has type \"int\")"
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"float\", variable has type \"int\")"
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | Path\""
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/api/dashboard_helpers.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"active_builds\" (hint: \"active_builds: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_apply_overview_summary_overlay\" has incompatible type \"object\"; expected \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Any | None\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Any | None\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Any | dict[Any, Any]\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | dict[Any, Any]\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | dict[Any, Any]\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[str, object]\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[str, object]\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"int\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"int\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "attr-defined",
-      "message": "\"object\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "attr-defined",
-      "message": "\"object\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "attr-defined",
-      "message": "\"object\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "index",
-      "message": "Unsupported target for indexed assignment (\"object\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "index",
-      "message": "Unsupported target for indexed assignment (\"object\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "operator",
-      "message": "Unsupported operand types for + (\"str\" and \"int\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "operator",
-      "message": "Unsupported operand types for + (\"str\" and \"int\")"
-    },
-    {
-      "path": "scripts/api/dashboard_router.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"tuple[object, str, float]\", expected \"tuple[dict[Any, Any], str, None | float]\")"
-    },
-    {
-      "path": "scripts/api/decisions_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/api/decisions_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"list[dict[Any, Any]]\""
     },
     {
       "path": "scripts/api/delegate_router.py",
@@ -1934,11 +1684,6 @@
     },
     {
       "path": "scripts/api/fleet_router.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_scan_track_progress\" has incompatible type \"MonitorContext | None\"; expected \"MonitorContext\""
-    },
-    {
-      "path": "scripts/api/fleet_router.py",
       "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"list[str]\", target has type \"None | dict[str, int] | int | list[dict[str, Any]] | str\")"
     },
@@ -2073,41 +1818,6 @@
       "message": "No overload variant of \"get\" of \"dict\" matches argument type \"dict[str, Any]\""
     },
     {
-      "path": "scripts/api/hramatka_generator.py",
-      "code": "no-redef",
-      "message": "Name \"StrEnum\" already defined (possibly by an import)"
-    },
-    {
-      "path": "scripts/api/hramatka_generator.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None\" has no attribute \"strip\""
-    },
-    {
-      "path": "scripts/api/hramatka_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/api/hramatka_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/api/hramatka_router.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"Connection\", expected \"SQLiteConnection\")"
-    },
-    {
-      "path": "scripts/api/images_router.py",
-      "code": "attr-defined",
-      "message": "\"object\" has no attribute \"close\""
-    },
-    {
-      "path": "scripts/api/images_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"ImageStore\""
-    },
-    {
       "path": "scripts/api/lane_health.py",
       "code": "attr-defined",
       "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
@@ -2156,16 +1866,6 @@
       "path": "scripts/api/load_samples.py",
       "code": "index",
       "message": "Value of type \"object\" is not indexable"
-    },
-    {
-      "path": "scripts/api/main.py",
-      "code": "arg-type",
-      "message": "Argument \"ctx\" to \"_known_tracks\" has incompatible type \"MonitorContext | None\"; expected \"MonitorContext\""
-    },
-    {
-      "path": "scripts/api/main.py",
-      "code": "arg-type",
-      "message": "Argument \"ctx\" to \"collect_governance_summary\" has incompatible type \"MonitorContext | None\"; expected \"MonitorContext\""
     },
     {
       "path": "scripts/api/main.py",
@@ -2643,149 +2343,14 @@
       "message": "Argument 2 to \"_resolve_session_path\" has incompatible type \"None | Path\"; expected \"Path\""
     },
     {
-      "path": "scripts/api/site_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"CompletedProcess[str]\""
-    },
-    {
-      "path": "scripts/api/sources_router.py",
-      "code": "arg-type",
-      "message": "Argument \"key\" to \"sort\" of \"list\" has incompatible type \"Callable[[dict[str, object]], object]\"; expected \"Callable[[dict[str, object]], SupportsDunderGT[Any] | SupportsDunderLT[Any]]\""
-    },
-    {
-      "path": "scripts/api/sources_router.py",
-      "code": "arg-type",
-      "message": "Argument \"key\" to \"sort\" of \"list\" has incompatible type \"Callable[[dict[str, object]], object]\"; expected \"Callable[[dict[str, object]], SupportsDunderGT[Any] | SupportsDunderLT[Any]]\""
-    },
-    {
-      "path": "scripts/api/sources_router.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"object\", expected \"SupportsDunderGT[Any] | SupportsDunderLT[Any]\")"
-    },
-    {
-      "path": "scripts/api/sources_router.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"object\", expected \"SupportsDunderGT[Any] | SupportsDunderLT[Any]\")"
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "code": "arg-type",
-      "message": "Argument \"key\" to \"sort\" of \"list\" has incompatible type \"Callable[[dict[str, object]], object]\"; expected \"Callable[[dict[str, object]], SupportsDunderGT[Any] | SupportsDunderLT[Any]]\""
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"object\", expected \"SupportsDunderGT[Any] | SupportsDunderLT[Any]\")"
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/state_helpers.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | Path\""
-    },
-    {
-      "path": "scripts/api/state_helpers.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | int\""
-    },
-    {
       "path": "scripts/api/state_helpers.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"T\""
     },
     {
-      "path": "scripts/api/state_helpers.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/api/state_helpers.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/api/state_helpers.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/api/state_helpers.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/api/state_issues.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/api/state_issues.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/api/state_issues.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/api/state_issues.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"issues\" (hint: \"issues: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/api/state_issues.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"pattern_counts\" (hint: \"pattern_counts: dict[<type>, <type>] = ...\")"
-    },
-    {
       "path": "scripts/api/state_router.py",
       "code": "arg-type",
       "message": "Argument \"transport\" to \"compute_routing_budget\" has incompatible type \"str\"; expected \"Literal['acp', 'dispatch']\""
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_with_state_meta\" has incompatible type \"object\"; expected \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_with_state_meta\" has incompatible type \"object\"; expected \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_with_state_meta\" has incompatible type \"object\"; expected \"dict[str, Any]\""
     },
     {
       "path": "scripts/api/state_router.py",
@@ -3175,11 +2740,6 @@
     {
       "path": "scripts/api/state_router.py",
       "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "union-attr",
       "message": "Item \"None\" of \"None | dict[str, Any] | dict[str, None | bool | str] | str\" has no attribute \"get\""
     },
     {
@@ -3466,41 +3026,6 @@
       "path": "scripts/api/telemetry_router.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"SQLiteConnection\""
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"_ensure_track_exists\" has incompatible type \"MonitorContext | None\"; expected \"MonitorContext\""
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | Path\""
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, list[dict[str, Any]]]\""
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"list[str]\""
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"list[str]\""
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | dict[str, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/wiki_router.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | dict[str, Any]\" has no attribute \"get\""
     },
     {
       "path": "scripts/api/work_router.py",

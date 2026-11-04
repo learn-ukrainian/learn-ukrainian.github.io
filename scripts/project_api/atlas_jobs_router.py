@@ -19,9 +19,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
 from scripts.ops.product_entry import load_configured_module
-
-from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 
 class _MonitorJobs(Protocol):
@@ -458,7 +457,7 @@ def results_jobs(
             if state is not None and item_state != state:
                 continue
 
-            summary_data = receipt.get("summary") if isinstance(receipt.get("summary"), dict) else {}
+            summary_data = cast(dict[str, Any], receipt.get("summary")) if isinstance(receipt.get("summary"), dict) else {}
             summary_row: dict[str, Any] = {
                 "id": safe_id,
                 "host": item_host,
@@ -568,3 +567,34 @@ def close_job(
         # Fail-closed: non-success still returns the receipt under 409.
         raise HTTPException(status_code=409, detail=response)
     return response
+
+
+class AtlasJobsProvider:
+    """The Atlas registry adapter and host-load cache that fleet occupancy and worker views read.
+
+    The product contribution injects this into the machinery collectors
+    (Monitor split, C-4687). Every call looks the module globals up when it
+    runs, so a test that replaces ``monitor_jobs`` or a cache helper here is
+    seen by those collectors too.
+    """
+
+    def canonical_host(self, host: str | None) -> str:
+        return monitor_jobs._canonical_host(host)
+
+    def is_self_host(self, host: str) -> bool:
+        return monitor_jobs.is_self_host(host)
+
+    def list_registry(self) -> list[dict[str, Any]]:
+        return monitor_jobs.list_registry()
+
+    def collect_host_load(self, *, run_root: Path) -> dict[str, Any]:
+        return monitor_jobs.collect_host_load(run_root=run_root)
+
+    def host_load_entry(self, canonical: str, *, fresh: bool) -> dict[str, Any]:
+        return _get_host_load_entry(canonical, fresh=fresh)
+
+    async def host_load_entry_async(self, canonical: str, *, fresh: bool) -> dict[str, Any]:
+        return await _get_host_load_entry_async(canonical, fresh=fresh)
+
+
+ATLAS_PROVIDER = AtlasJobsProvider()

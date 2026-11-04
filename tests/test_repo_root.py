@@ -110,7 +110,7 @@ def _link_worktree(primary: Path, worktree: Path) -> None:
 def test_project_interpreter_rejects_another_checkouts_venv(tmp_path, monkeypatch):
     """An explicit root must not inherit a different checkout's interpreter.
 
-    ``scripts.api.batch_router`` passes ``live_repo_root`` to
+    ``scripts.project_api.batch_router`` passes ``live_repo_root`` to
     ``project_interpreter`` (the dispatcher scan command). A missing checkout
     used to accept any running ``sys.executable`` ending in ``.venv/bin/python``,
     so ``project_interpreter(Path("/no-such-checkout"))`` returned this repo's

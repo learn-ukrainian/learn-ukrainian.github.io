@@ -31,10 +31,11 @@ from fastapi.responses import JSONResponse
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
-from . import config
-from .monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+
+from .context import product_roots
 
 router = APIRouter(tags=["admin"])
 START_TIME = time.time()
@@ -72,7 +73,7 @@ def _data_dir(ctx: MonitorContext) -> Path:
 
 
 def _image_dir(ctx: MonitorContext) -> Path:
-    return ctx.roots.images_dir or (_data_dir(ctx) / "textbook_images")
+    return product_roots(ctx).images_dir
 
 
 def _mcp_dir(ctx: MonitorContext) -> Path:
@@ -94,7 +95,7 @@ def _dir_size(path: Path) -> int:
     return total
 
 
-def _format_bytes(n: int) -> str:
+def _format_bytes(n: float) -> str:
     for unit in ("B", "KB", "MB", "GB"):
         if abs(n) < 1024:
             return f"{n:.1f} {unit}"
@@ -220,7 +221,7 @@ async def disk_usage(ctx: MonitorContext = Depends(get_ctx)):
     dirs = {
         "textbook_images": data_dir / "textbook_images",
         # Bulk-root PDFs (#8803); never a repository symlink.
-        "textbooks": ctx.roots.textbooks_dir or config.TEXTBOOKS_DIR,
+        "textbooks": product_roots(ctx).textbooks_dir,
         "literary_texts": data_dir / "literary_texts",
         "textbook_chunks": data_dir / "textbook_chunks",
         "backups": ctx.roots.backup_dir,
@@ -335,7 +336,7 @@ async def embedding_cache_stats(ctx: MonitorContext = Depends(get_ctx)):
     if not cache_dir.exists():
         return {"exists": False, "cached_files": 0, "total_size_bytes": 0}
 
-    by_ext = {}
+    by_ext: dict[str, dict[str, int]] = {}
     file_count = 0
     total_size = 0
     for f in cache_dir.iterdir():

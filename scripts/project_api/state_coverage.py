@@ -15,11 +15,12 @@ import yaml
 try:
     from path_safety import trusted_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import trusted_join  # scripts.api package import (production)
+    from ..path_safety import trusted_join  # scripts.project_api package import (production)
 
-from . import config
+from scripts.api import config
+
 from .config import LEVELS, SEMINAR_TRACK_IDS
-from .state_helpers import (
+from .curriculum_state import (
     PROFILE_MAP,
     V6_PHASE_LABELS,
     detect_pipeline_version,
@@ -32,7 +33,7 @@ from .state_helpers import (
     load_module_state,
     parse_phase_status_from_state,
 )
-from .state_helpers import V6_PHASE_ORDER as V6_PHASES
+from .curriculum_state import V6_PHASE_ORDER as V6_PHASES
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 

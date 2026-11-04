@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.api import config
+from scripts.project_api import config
 
 pytestmark = pytest.mark.reads_content
 

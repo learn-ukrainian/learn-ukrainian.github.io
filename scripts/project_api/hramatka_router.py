@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from uuid import UUID
 
 logger = logging.getLogger(__name__)
@@ -35,9 +35,10 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from .config import BATCH_STATE_DIR, PROJECT_ROOT
-from .resilience import connect_sqlite
-from .state_helpers import monitor_surface
+from scripts.api.config import BATCH_STATE_DIR, PROJECT_ROOT
+from scripts.api.resilience import connect_sqlite
+
+from .curriculum_state import monitor_surface
 
 router = APIRouter(prefix="/api/hramatka", tags=["hramatka"])
 
@@ -139,7 +140,7 @@ class VerifyFormsRequest(BaseModel):
 
 def _connect(db_path: Path | None = None) -> SQLiteConnection:
     path = db_path or HRAMATKA_DB_PATH
-    return connect_sqlite(str(path), timeout=5.0, isolation_level=None)
+    return cast(SQLiteConnection, connect_sqlite(str(path), timeout=5.0, isolation_level=None))
 
 
 def initialize_hramatka_store(db_path: Path | None = None) -> None:
@@ -258,7 +259,7 @@ def transition_lesson_job(
 
 
 def _load_support_schema() -> dict[str, Any]:
-    return json.loads(LESSON_SUPPORT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    return cast("dict[str, Any]", json.loads(LESSON_SUPPORT_SCHEMA_PATH.read_text(encoding="utf-8")))
 
 
 @router.get("/lessons/{lesson_id}/support")
@@ -286,7 +287,7 @@ def lesson_support(lesson_id: UUID, x_hramatka_owner: str = Header(...)) -> dict
         raise HTTPException(status_code=503, detail="lesson support unavailable") from exc
     if errors:
         raise HTTPException(status_code=503, detail="lesson support failed schema validation")
-    return sidecar
+    return cast("dict[str, Any]", sidecar)
 
 
 @router.post("/linguistics/verify")

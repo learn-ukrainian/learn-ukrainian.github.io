@@ -12,7 +12,7 @@ import re
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
@@ -25,15 +25,14 @@ from research_quality import (
     get_dimensions,
     get_rubric,
 )
-
-from . import config
+from scripts.api import config
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
-from .state_helpers import (
+from .curriculum_state import (
     V5_PHASE_ORDER,
     detect_pipeline_version,
     find_content_file,
@@ -45,7 +44,6 @@ from .state_helpers import (
     get_word_target_from_plan,
     has_research_file,
     monitor_surface,
-    # BACKWARD-COMPAT: v3/v2 parsers needed for modules not yet rebuilt on v6
     parse_v3_phase_status,
     parse_v5_phase_status,
     plan_has_revision_log,
@@ -119,7 +117,7 @@ def compute_research_detail(
                     }
                 )
 
-    upgrade_queue.sort(key=lambda x: x["score"] if x["score"] is not None else -1)
+    upgrade_queue.sort(key=lambda x: cast(float, x["score"]) if x["score"] is not None else -1)
     avg_score = round(sum(scores) / len(scores), 1) if scores else None
 
     return {
@@ -252,7 +250,7 @@ def _get_quick_verify(orch_dir: Path) -> dict:
     if not qv_path.exists():
         return {}
     try:
-        return json.loads(qv_path.read_text("utf-8"))
+        return cast("dict[Any, Any]", json.loads(qv_path.read_text("utf-8")))
     except Exception:
         return {}
 
@@ -330,7 +328,7 @@ def summarize_llm_qg(llm_qg: dict | None) -> dict | None:
     if not isinstance(llm_qg, dict):
         return None
 
-    aggregate = llm_qg.get("aggregate") if isinstance(llm_qg.get("aggregate"), dict) else {}
+    aggregate = cast(dict[str, Any], llm_qg.get("aggregate")) if isinstance(llm_qg.get("aggregate"), dict) else {}
     return {
         "verdict": aggregate.get("verdict"),
         "min_score": aggregate.get("min_score"),
@@ -364,9 +362,9 @@ def compute_llm_qg_track(
         status = read_module_status(track_dir, slug)
         has_llm_qg = llm_qg is not None
 
-        aggregate = llm_qg.get("aggregate") if has_llm_qg and isinstance(llm_qg.get("aggregate"), dict) else None
+        aggregate = llm_qg.get("aggregate") if llm_qg is not None and isinstance(llm_qg.get("aggregate"), dict) else None
         dimensions = _project_llm_qg_dimensions(
-            llm_qg.get("dimensions") if has_llm_qg else None,
+            llm_qg.get("dimensions") if llm_qg is not None else None,
             verbose=verbose,
         )
         verdict = aggregate.get("verdict") if isinstance(aggregate, dict) else None

@@ -26,8 +26,10 @@ from typing import Any
 import psutil
 
 from agents_extensions.shared.session_streams.model import LeaseHolder
-from scripts.api import agent_monitor_router, batch_router, project_state_router
+from scripts.api import agent_monitor_router, project_state_router
 from scripts.lexicon.runner import atlas_job
+from scripts.project_api import batch_router
+from scripts.project_api.context import image_store
 
 AGENT_MONITOR_TOKEN = "opsec-agent-monitor-token"
 ATLAS_JOB_ID = "opsec-atlas-job"
@@ -196,7 +198,7 @@ def _epic_lease_state(env: MutationEnv, stream_id: str) -> str:
 
 
 def _image_store(env: MutationEnv) -> Any:
-    return env.ctx.stores.image_store
+    return image_store(env.ctx)
 
 
 def _seed_images(env: MutationEnv) -> None:
@@ -754,7 +756,7 @@ RECIPES: dict[str, MutationRecipe] = {
         loopback=True,
     ),
     "POST /api/images/annotations/bulk": MutationRecipe(
-        store="fixture data/textbook_images annotations JSONL (ctx.stores.image_store)",
+        store="fixture data/textbook_images annotations JSONL (scripts.project_api.context.image_store)",
         expected_statuses=(200,),
         reason="bulk-annotates planted image rows",
         body_factory=lambda: {
@@ -773,7 +775,7 @@ RECIPES: dict[str, MutationRecipe] = {
         verify=_verify_image_cleanup,
     ),
     "POST /api/images/reload": MutationRecipe(
-        store="fixture data/textbook_images index (ctx.stores.image_store)",
+        store="fixture data/textbook_images index (scripts.project_api.context.image_store)",
         expected_statuses=(200,),
         reason="reloads the planted image index from the fixture tree",
         setup=_seed_images,
@@ -814,7 +816,7 @@ RECIPES: dict[str, MutationRecipe] = {
         verify=_verify_tool_timing,
     ),
     "PUT /api/images/annotations/{image_id}": MutationRecipe(
-        store="fixture data/textbook_images annotations JSONL (ctx.stores.image_store)",
+        store="fixture data/textbook_images annotations JSONL (scripts.project_api.context.image_store)",
         expected_statuses=(200,),
         reason="annotates one planted image row",
         path_values={"image_id": "opsec-img-1"},

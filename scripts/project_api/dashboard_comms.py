@@ -11,6 +11,7 @@ import json
 import os
 import sqlite3
 from pathlib import Path
+from typing import Any, cast
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
@@ -19,7 +20,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from .monitor_context import MonitorContext, resolve_context
+from scripts.api.monitor_context import MonitorContext, resolve_context
 
 # Schema column check cache for backward compat
 _BROKER_COLS: set | None = None
@@ -150,6 +151,6 @@ def read_dispatcher_state(ctx: MonitorContext | None = None) -> dict:
         return {}
     try:
         with open(ds_file) as f:
-            return json.load(f)
+            return cast("dict[Any, Any]", json.load(f))
     except Exception:
         return {}

@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from typing import cast
 
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
-from .monitor_context import MonitorContext, get_ctx
-from .state_helpers import monitor_surface
+from scripts.api.monitor_context import MonitorContext, get_ctx
+
+from .context import product_roots, sources_db
+from .curriculum_state import monitor_surface
 
 router = APIRouter(tags=["sources"])
 
@@ -17,9 +20,7 @@ ALLOWED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 
 
 def _image_dir(ctx: MonitorContext) -> Path:
-    if ctx.roots.images_dir is not None:
-        return ctx.roots.images_dir
-    return ctx.roots.project_root / "data" / "textbook_images"
+    return product_roots(ctx).images_dir
 
 
 @router.get("/search_text")
@@ -32,7 +33,7 @@ async def search_text(
     ctx: MonitorContext = Depends(get_ctx),
 ):
     return monitor_surface.search_sources_text(
-        ctx.stores.sources_db, q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit
+        sources_db(ctx), q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit
     )
 
 
@@ -46,13 +47,13 @@ async def search_literary(
     ctx: MonitorContext = Depends(get_ctx),
 ):
     return monitor_surface.search_sources_literary(
-        ctx.stores.sources_db, q, work=work, genre=genre, period=period, limit=limit
+        sources_db(ctx), q, work=work, genre=genre, period=period, limit=limit
     )
 
 
 @router.get("/stats")
 async def collection_stats(ctx: MonitorContext = Depends(get_ctx)):
-    return monitor_surface.sources_collection_stats(ctx.stores.sources_db)
+    return monitor_surface.sources_collection_stats(sources_db(ctx))
 
 
 @router.get("/browse_images")
@@ -106,9 +107,9 @@ async def browse_images(
             )
 
     if sort == "size":
-        images.sort(key=lambda item: item["size"])
+        images.sort(key=lambda item: cast(int, item["size"]))
     elif sort == "name":
-        images.sort(key=lambda item: item["name"])
+        images.sort(key=lambda item: cast(str, item["name"]))
     elif sort == "grade":
         images.sort(key=lambda item: (item["grade"], item["name"]))
 

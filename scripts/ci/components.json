@@ -1031,6 +1031,12 @@
       ]
     },
     {
+      "path": "scripts/project_api/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
       "path": "scripts/projects/open_model_data/",
       "components": [
         "open-model-data"

@@ -11,7 +11,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from scripts.api import hramatka_router
+from scripts.project_api import hramatka_router
 
 
 def _write_vesum_db(path: Path) -> None:

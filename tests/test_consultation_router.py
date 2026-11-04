@@ -14,7 +14,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api.main import app
 from scripts.api.monitor_context import fixture_context
-from scripts.api.state_helpers import monitor_surface
+from scripts.project_api.curriculum_state import monitor_surface
 
 client = TestClient(app, raise_server_exceptions=False)
 

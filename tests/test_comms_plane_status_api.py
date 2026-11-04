@@ -181,13 +181,13 @@ def _stub_api_startup(monkeypatch: pytest.MonkeyPatch) -> None:
     async def _idle(*_args, **_kwargs):
         return None
 
-    monkeypatch.setattr(api_main, "preload_all", lambda: None)
+    monkeypatch.setattr(api_main, "preload_all", lambda *_args: None)
     monkeypatch.setattr(api_main, "install_signal_logging", lambda: None)
     monkeypatch.setattr(api_main, "ensure_broker_db_ready", lambda **_kwargs: None)
     monkeypatch.setattr(api_main, "seed_manifest_inventory", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(api_main.isa, "schedule_refresh", lambda force=False: None)
     monkeypatch.setattr(api_main, "warm_projection_cache", lambda **_kwargs: None)
-    monkeypatch.setattr(api_main, "schedule_state_scan_warmup", lambda _ctx: None)
+    monkeypatch.setattr(api_main, "schedule_state_scan_warmup", lambda _ctx, _follow_ups=(): None)
     monkeypatch.setattr(api_main, "refresh_projection_cache_periodically", _idle)
     monkeypatch.setattr(api_main, "start_periodic_refresh", lambda: None)
     monkeypatch.setattr(api_main, "stop_periodic_refresh", lambda: None)

@@ -17,12 +17,14 @@ from __future__ import annotations
 import time
 from datetime import date
 from pathlib import Path
+from typing import Any, cast
 
 import yaml
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from .monitor_context import MonitorContext, get_ctx, resolve_context
-from .state_helpers import monitor_surface
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+
+from .curriculum_state import monitor_surface
 
 router = APIRouter(tags=["decisions"])
 
@@ -55,7 +57,7 @@ def _load_decisions(ctx: MonitorContext | None = None) -> list[dict]:
         and _cache.get("path") == path_key
         and (now - _cache["ts"]) < _CACHE_TTL
     ):
-        return _cache["data"]
+        return cast("list[dict[Any, Any]]", _cache["data"])
 
     if not decisions_file.exists():
         _cache["data"] = []
@@ -95,7 +97,7 @@ def _load_lineage(decision_id: str | None = None, ctx: MonitorContext | None = N
         and _lineage_cache.get("root") == root_key
         and (now - _lineage_cache["ts"]) < _CACHE_TTL
     ):
-        return _lineage_cache["data"]
+        return cast("dict[Any, Any]", _lineage_cache["data"])
 
     data: dict = monitor_surface.build_lineage_response(resolved.roots.live_repo_root, decision_id=decision_id)
     if decision_id is None:

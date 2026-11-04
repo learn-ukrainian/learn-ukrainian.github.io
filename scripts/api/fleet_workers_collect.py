@@ -21,7 +21,6 @@ except ModuleNotFoundError as exc:
 
 from agents_extensions.shared.session_streams.model import parse_timestamp
 from scripts.api import delegate_router
-from scripts.api.atlas_jobs_router import monitor_jobs
 from scripts.api.delegate_router import _derived_task_status
 from scripts.api.fleet_workers_models import (
     _AGENT_RE,
@@ -45,6 +44,7 @@ from scripts.api.occupancy_local import (
     session_streams_db_path,
 )
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID, opaque_host_id, safe_field
+from scripts.api.product_contribution import atlas_provider
 from scripts.api.project_state_store import (
     freshness_from_age,
     get_live_report,
@@ -391,14 +391,17 @@ def collect_job_workers(
     clock = now or datetime.now(UTC)
     rows: list[CollectedWorker] = []
     burn: dict[str, Any] | None = None
+    atlas = atlas_provider()
     try:
-        registry = monitor_jobs.list_registry()
+        if atlas is None:
+            raise LookupError("no Atlas provider")
+        registry = atlas.list_registry()
     except Exception:
         return rows, {"source": "job", "state": "unknown", "count": 0, "reason": "registry unreadable"}
     for item in registry:
         if not isinstance(item, dict):
             continue
-        if canonical_host is not None and monitor_jobs._canonical_host(item.get("host")) != canonical_host:
+        if canonical_host is not None and atlas.canonical_host(item.get("host")) != canonical_host:
             continue
         state = str(item.get("state") or "")
         mapped = _job_state(state)

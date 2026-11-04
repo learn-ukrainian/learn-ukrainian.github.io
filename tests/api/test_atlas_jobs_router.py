@@ -14,9 +14,9 @@ import pytest
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
-from scripts.api import atlas_jobs_router as router_mod
 from scripts.api.main import app
 from scripts.lexicon.runner import atlas_job
+from scripts.project_api import atlas_jobs_router as router_mod
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -167,7 +167,7 @@ def test_api_rejects_path_injection_job_id(
         assert close_resp.status_code == 400, (bad, close_resp.status_code, close_resp.text)
 
     # Explicit path-param values that CodeQL flags (handler-level, not URL routing).
-    from scripts.api import atlas_jobs_router as router_mod
+    from scripts.project_api import atlas_jobs_router as router_mod
 
     for bad in ("../../tmp", "../escape", "/etc/passwd"):
         with pytest.raises(HTTPException) as excinfo:

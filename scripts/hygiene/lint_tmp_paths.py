@@ -204,7 +204,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "d61cf614a1d4563709473adf907ddaf1d4b91ef2978797f5c6894aabd4d1fbef:1",
     ),
     (
-        "scripts/api/dashboard_router.py",
+        "scripts/project_api/dashboard_router.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "ceff49eeeeabf6388b91f671c47980f648800645c0776ad9db6677928480627e:1",
     ),

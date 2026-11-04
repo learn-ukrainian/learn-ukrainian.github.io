@@ -11,7 +11,6 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 
-from scripts.api import atlas_jobs_router as load_mod
 from scripts.api import occupancy as occupancy_mod
 from scripts.api import state_router
 from scripts.api.codexbar_usage import compute_weekly_pace_delta_pct, lane_is_under_weekly_pace
@@ -29,6 +28,7 @@ from scripts.api.project_state_store import (
     upsert_report,
 )
 from scripts.lexicon.runner import atlas_job
+from scripts.project_api import atlas_jobs_router as load_mod
 from tests.api.test_project_state import SHA_HEAD, SHA_MAIN, _document, _primary, _service
 
 loop_client = TestClient(

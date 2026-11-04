@@ -26,7 +26,7 @@ _import_path = sys.path[:]
 try:
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
-    from scripts.api.config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
+    from scripts.api.config import CURRICULUM_ROOT
     from scripts.audit.content_surface_gates import scan_module_surface
     from scripts.audit.llm_qg_canaries import evaluate_canaries
     from scripts.audit.llm_qg_store import (
@@ -37,6 +37,7 @@ try:
         latest_llm_qg,
         llm_qg_file_is_current_for_module,
     )
+    from scripts.project_api.config import LEVELS, SEMINAR_TRACK_IDS
 finally:
     sys.path[:] = _import_path
     del _import_path

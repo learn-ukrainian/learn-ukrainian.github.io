@@ -1,4 +1,4 @@
-"""Load failures on the cited comms_router sites stay on the response (#8521)."""
+"""Load failures on the cited comms_router and batch-progress sites stay on the response (#8521)."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api.comms_router import router as comms_router
 from scripts.api.monitor_context import fixture_context
+from scripts.project_api.batch_progress import router as batch_progress_router
 
 pytestmark = pytest.mark.reads_content
 
@@ -23,6 +24,7 @@ pytestmark = pytest.mark.reads_content
 def comms_client(tmp_path: Path) -> TestClient:
     app = FastAPI()
     app.state.ctx = fixture_context(tmp_path)
+    app.include_router(batch_progress_router, prefix="/api/comms")
     app.include_router(comms_router, prefix="/api/comms")
     return TestClient(app)
 
@@ -54,7 +56,7 @@ def test_corrupt_curriculum_yaml_surfaces_track_error(
     curriculum.mkdir(parents=True, exist_ok=True)
     (curriculum / "curriculum.yaml").write_text("levels: [", encoding="utf-8")
 
-    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
+    with caplog.at_level(logging.WARNING, logger="scripts.project_api.batch_progress"):
         resp = comms_client.get("/api/comms/batch-progress/a1")
 
     assert resp.status_code == 200
@@ -88,9 +90,9 @@ def test_ps_timeout_is_not_reported_as_zero_processes(
     def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
         raise subprocess.TimeoutExpired(cmd=["ps", "aux"], timeout=5)
 
-    monkeypatch.setattr("scripts.api.comms_router.subprocess.run", _timeout)
+    monkeypatch.setattr("scripts.project_api.batch_progress.subprocess.run", _timeout)
 
-    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
+    with caplog.at_level(logging.WARNING, logger="scripts.project_api.batch_progress"):
         resp = comms_client.get("/api/comms/batch-progress")
 
     assert resp.status_code == 200
@@ -118,7 +120,7 @@ def test_ps_timeout_does_not_mark_old_incomplete_log_dead(
     def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
         raise subprocess.TimeoutExpired(cmd=["ps", "aux"], timeout=5)
 
-    monkeypatch.setattr("scripts.api.comms_router.subprocess.run", _timeout)
+    monkeypatch.setattr("scripts.project_api.batch_progress.subprocess.run", _timeout)
 
     resp = comms_client.get("/api/comms/batch-progress")
 
@@ -139,7 +141,7 @@ def test_old_incomplete_log_stays_dead_when_process_probe_succeeds(
     def _empty_ps(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
         return subprocess.CompletedProcess(args=["ps", "aux"], returncode=0, stdout="", stderr="")
 
-    monkeypatch.setattr("scripts.api.comms_router.subprocess.run", _empty_ps)
+    monkeypatch.setattr("scripts.project_api.batch_progress.subprocess.run", _empty_ps)
 
     resp = comms_client.get("/api/comms/batch-progress")
 

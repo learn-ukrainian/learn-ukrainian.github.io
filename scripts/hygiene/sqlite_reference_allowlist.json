@@ -43,7 +43,7 @@
     ]
   },
   {
-    "path": "scripts/api/hramatka_cache.py",
+    "path": "scripts/project_api/hramatka_cache.py",
     "reference_count": 4,
     "kind": "writer",
     "target_db": "hramatka cache DB",
