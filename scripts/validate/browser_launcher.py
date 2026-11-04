@@ -137,6 +137,9 @@ async def hardened_browser(**overrides: Any) -> AsyncIterator[Browser]:
         raw_new_context = browser.new_context
 
         async def new_context(**options: Any) -> BrowserContext:
+            # A context proxy on the loopback host could carry requests the resolver would refuse.
+            if options.get("proxy"):
+                raise ValueError("hardened launcher: a context proxy is not allowed")
             context = await raw_new_context(**{**options, **HARDENED_CONTEXT_OPTIONS})
             return await enforce_origin_allowlist(context)
 

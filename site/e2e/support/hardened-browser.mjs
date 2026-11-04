@@ -131,6 +131,8 @@ export async function launchHardenedChromium(overrides = {}, { log = console.war
   const browser = await chromium.launch(hardenedLaunchOptions(overrides));
   const newContext = browser.newContext.bind(browser);
   browser.newContext = async (options = {}) => {
+    // A context proxy on the loopback host could carry requests the resolver would refuse.
+    if (options.proxy) throw new Error('hardened launcher: a context proxy is not allowed');
     const context = await newContext({ ...options, ...HARDENED_CONTEXT_OPTIONS });
     return enforceOriginAllowlist(context, { log });
   };
@@ -149,9 +151,30 @@ export const hardenedChromium = Object.freeze({
   launch: (options = {}) => launchHardenedChromium(options),
 });
 
-/** Playwright Test `test` whose every context enforces the allowlist. Specs import this. */
+// What the Playwright configs set; a spec's test.use() must not change it.
+function assertHardenedRun({ browserName, channel, launchOptions }) {
+  // The launcher's own resolver flag comes first; nothing after it may weaken the run.
+  const [resolverRules, ...extra] = launchOptions?.args ?? [];
+  if (browserName !== 'chromium' || channel !== 'chrome' || launchOptions?.channel !== 'chrome'
+    || launchOptions?.chromiumSandbox !== true || resolverRules !== hardenedLaunchOptions().args[0]
+    || extra.some((arg) => FORBIDDEN_ARG.test(String(arg)))) {
+    throw new Error('hardened launcher: this run must use installed Chrome with hardenedLaunchOptions() (see playwright.config.ts)');
+  }
+}
+
+/**
+ * Playwright Test `test` for every spec. It refuses a run whose browser options differ
+ * from the hardened config, and every context enforces the allowlist.
+ */
 export const test = base.extend({
-  context: async ({ context }, use) => {
+  browser: [async ({ browser, browserName, channel, launchOptions }, use) => {
+    assertHardenedRun({ browserName, channel, launchOptions });
+    await use(browser);
+  }, { scope: 'worker' }],
+  context: async ({ context, serviceWorkers, proxy }, use) => {
+    if (serviceWorkers !== 'block' || proxy) {
+      throw new Error("hardened launcher: contexts keep serviceWorkers 'block' and no proxy");
+    }
     await enforceOriginAllowlist(context);
     await use(context);
   },
