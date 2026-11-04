@@ -518,18 +518,14 @@ def _codex_access_token(data: dict[str, Any]) -> str | None:
 
 
 def _load_codex_oauth_token() -> str | None:
-    """Account a's token (label ``sub``), from ``$HOME/.codex``, never from ambient ``CODEX_HOME``.
+    """Account a's token (label ``sub``), only from ``$HOME/.codex/auth.json``.
 
-    A Monitor started with ``CODEX_HOME`` on account b's home would otherwise
-    publish b's window as account a's (#12692).
+    Never ambient ``CODEX_HOME`` and no other fallback location: a Monitor
+    started on account b's home, or b bound to any other directory, would
+    otherwise publish b's window as account a's (#12692).
     """
-    for candidate in (codex_account_home(DEFAULT_CODEX_ACCOUNT) / "auth.json", Path.home() / ".config" / "codex" / "auth.json"):
-        data = _read_json_file(candidate)
-        if data:
-            token = _codex_access_token(data)
-            if token:
-                return token
-    return None
+    data = _read_json_file(codex_account_home(DEFAULT_CODEX_ACCOUNT) / "auth.json")
+    return _codex_access_token(data) if data else None
 
 
 _CODEX_AUTH_FILE_LIMIT = 64 * 1024
@@ -552,9 +548,12 @@ def _load_codex_account_oauth_token(label: str) -> str | None:
         info = os.fstat(dir_fd)
         if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
             raise CodexAccountRefused("codex_account_home_not_private")
-        data = _read_private_json(Path("auth.json"), limit=_CODEX_AUTH_FILE_LIMIT, code="codex_account_auth", dir_fd=dir_fd)
+        # The shared reader only raises registered codes; its credentials code is renamed for Codex.
+        data = _read_private_json(
+            Path("auth.json"), limit=_CODEX_AUTH_FILE_LIMIT, code="claude_account_credentials", dir_fd=dir_fd
+        )
     except ClaudeAccountRefused as exc:
-        raise CodexAccountRefused(exc.code) from None
+        raise CodexAccountRefused(exc.code.replace("claude_account_credentials", "codex_account_auth")) from None
     finally:
         os.close(dir_fd)
     if data is None:
