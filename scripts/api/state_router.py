@@ -46,10 +46,6 @@ import yaml
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 
-from scripts.audit.llm_qg_store import (
-    current_payload_for_module,
-    llm_qg_file_is_current_for_module,
-)
 from scripts.telemetry.cost_report import CostRecord, load_cost_records
 
 try:
@@ -145,6 +141,7 @@ from .state_helpers import (
     get_plan_slugs,
     get_research_score,
     get_word_target_from_plan,
+    monitor_surface,
     read_v2_state,
     read_v3_state,
     schedule_cache_refresh,
@@ -2942,10 +2939,10 @@ def _read_llm_qg_scores(module_dir: Path) -> dict[str, Any]:
     """
     level = module_dir.parent.name
     slug = module_dir.name
-    data = current_payload_for_module(level, slug, module_dir)
+    data = monitor_surface.current_payload_for_module(level, slug, module_dir)
     path = module_dir / "llm_qg.json"
     if data is None:
-        if not llm_qg_file_is_current_for_module(module_dir, path):
+        if not monitor_surface.llm_qg_file_is_current_for_module(module_dir, path):
             return {"aggregate": None, "dimensions": {}}
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
