@@ -124,7 +124,7 @@ requires every tracked file under those roots to be covered by a family glob and
 catalogue changes, the generated family table in `docs/README.md` regenerated
 (`python -m scripts.docs.catalogue readme`).
 Retained evidence, evaluation material and anything a later session needs goes under
-`/home/ops/ops-state/<topic>/` (mode 0700 when private), never a session scratchpad, and the
+`<durable-state-root>/<topic>/` (mode 0700 when private), never a session scratchpad, and the
 brief names that path.
 Before writing a brief from a tracker item, read its full history with `lu-driver-state show <id>`
 (all notes): operator amendments are recorded as notes.
