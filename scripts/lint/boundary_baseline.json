@@ -42,26 +42,6 @@
       "count": 1
     },
     {
-      "path": "scripts/ai_agent_bridge/_citation_check.py",
-      "module": "scripts.wiki",
-      "count": 1
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_citation_check.py",
-      "module": "scripts.wiki.sources_db",
-      "count": 1
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_gemini.py",
-      "module": "scripts.batch_gemini_config",
-      "count": 1
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_inbox.py",
-      "module": "scripts.batch_gemini_config",
-      "count": 1
-    },
-    {
       "path": "scripts/api/atlas_jobs_router.py",
       "module": "scripts.lexicon",
       "count": 1

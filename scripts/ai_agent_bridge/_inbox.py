@@ -19,19 +19,6 @@ from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from batch_gemini_config import FLASH_MODEL, PRO_MODEL
-
-# Gemini capacity cascade: Pro → Flash. The retired Pro alias now names Flash,
-# so equal aliases produce no fallback edge. When a 429 /
-# capacity error comes back for one model, we retry the same prompt on
-# the next-smaller one before giving up. See #1231 / #1234 for the
-# original cascade design. This mapping is authoritative for
-# ``_invoke_gemini_thread_with_fallback`` — edit both sides if you
-# extend the cascade.
-_GEMINI_CAPACITY_CASCADE: dict[str, str] = (
-    {PRO_MODEL: FLASH_MODEL} if PRO_MODEL != FLASH_MODEL else {}
-)
-
 
 def _uses_gemini_capacity_cascade(model: str) -> bool:
     """Return True when *model* has a documented fallback target."""
@@ -97,6 +84,7 @@ from ._db import get_db
 from ._gemini import (
     _is_gemini_429_error,
     _prefix_gemini_response,
+    fleet_gemini_model,
 )
 from ._gemini_session_link import (
     GeminiSessionRecovery,
@@ -106,6 +94,14 @@ from ._gemini_session_link import (
 from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_commit
 from ._prompts import review_protocol_prefix
 from ._reconcile import reconcile_deliveries
+
+# Pro and Flash are one catalog id, so a 429 has no fallback edge.
+# Authoritative for ``_invoke_gemini_thread_with_fallback``.
+PRO_MODEL = fleet_gemini_model()
+FLASH_MODEL = PRO_MODEL
+_GEMINI_CAPACITY_CASCADE: dict[str, str] = (
+    {PRO_MODEL: FLASH_MODEL} if PRO_MODEL != FLASH_MODEL else {}
+)
 
 logger = logging.getLogger(__name__)
 
