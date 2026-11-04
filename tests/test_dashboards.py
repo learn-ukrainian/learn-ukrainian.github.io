@@ -11,6 +11,9 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 DASHBOARDS_DIR = ROOT / "dashboards"
+# Product pages moved to the product package (Monitor split, C-4687).
+PRODUCT_PAGES_DIR = ROOT / "scripts" / "project_api" / "static"
+PAGE_DIRS = (DASHBOARDS_DIR, PRODUCT_PAGES_DIR)
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts" / "generate_mdx"))
 
@@ -36,7 +39,7 @@ class TestParseWordCount:
 class TestHtmlValidation:
     """Validate dashboard HTML files have valid structure."""
 
-    HTML_FILES = sorted(DASHBOARDS_DIR.glob("*.html"))
+    HTML_FILES = sorted(path for page_dir in PAGE_DIRS for path in page_dir.glob("*.html"))
 
     def test_index_footer_has_no_hardcoded_host(self):
         """index.html must label its own origin dynamically (#8542).
@@ -45,7 +48,7 @@ class TestHtmlValidation:
         whenever the Monitor API is served from anywhere else. It now derives
         the label from ``location.host`` at render time.
         """
-        text = (DASHBOARDS_DIR / "index.html").read_text()
+        text = (PRODUCT_PAGES_DIR / "index.html").read_text()
         assert "localhost:8765" not in text
         assert "127.0.0.1" not in text
         assert 'id="footer-origin"' in text
@@ -119,7 +122,7 @@ class TestApiEndpoints:
     def test_fetch_calls_in_html(self):
         """Verify all fetch calls reference known endpoints."""
         all_endpoints = set()
-        for html_file in DASHBOARDS_DIR.glob("*.html"):
+        for html_file in (path for page_dir in PAGE_DIRS for path in page_dir.glob("*.html")):
             text = html_file.read_text()
             # Extract fetch URLs, strip query params
             fetches = re.findall(r"fetch\(['\"]([^'\"]+)['\"]", text)

@@ -119,23 +119,74 @@ def test_product_routes_come_from_product_modules_and_machinery_routes_from_mach
     assert not any(template.startswith("/api/hramatka") for _, template in _operations(full))
 
 
-def _dashboard_pages() -> list[str]:
-    root = REPO_ROOT / "dashboards"
-    return sorted(path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file())
+PRODUCT_STATIC = REPO_ROOT / "scripts" / "project_api" / "static"
 
 
-@pytest.mark.parametrize("page", _dashboard_pages())
-def test_every_dashboard_file_loads(tmp_path: Path, page: str) -> None:
+def _pages() -> list[tuple[str, Path]]:
+    machinery = REPO_ROOT / "dashboards"
+    rows = [(path.relative_to(machinery).as_posix(), path) for path in machinery.rglob("*") if path.is_file()]
+    rows += [(path.relative_to(PRODUCT_STATIC).as_posix(), path) for path in PRODUCT_STATIC.rglob("*") if path.is_file()]
+    return sorted(rows)
+
+
+@pytest.mark.parametrize(("page", "source"), _pages(), ids=[page for page, _ in _pages()])
+def test_every_dashboard_page_loads_from_its_owner(tmp_path: Path, page: str, source: Path) -> None:
     ctx = fixture_context(tmp_path).with_roots(dashboards_dir=REPO_ROOT / "dashboards")
     app = api_main.create_app(ctx, lifespan=_no_lifespan)
     with TestClient(app) as client:
         response = client.get(f"/{page}")
         assert response.status_code == 200
-        assert response.content == (REPO_ROOT / "dashboards" / page).read_bytes()
+        assert response.content == source.read_bytes()
         if page.endswith(".html") and "/" not in page:
             assert client.get(f"/{page.removesuffix('.html')}").content == response.content
         if page == "index.html":
             assert client.get("/").content == response.content
+
+
+def test_product_static_map_is_explicit_complete_and_disjoint_from_machinery_pages() -> None:
+    from scripts.project_api import entry
+
+    declared = set(entry.STATIC_FILES)
+    on_disk = {path.relative_to(PRODUCT_STATIC).as_posix() for path in PRODUCT_STATIC.rglob("*") if path.is_file()}
+    machinery = {path.relative_to(REPO_ROOT / "dashboards").as_posix() for path in (REPO_ROOT / "dashboards").rglob("*") if path.is_file()}
+    assert declared == on_disk
+    assert declared.isdisjoint(machinery)
+    assert len(machinery) == 12 and len(declared) == 13
+
+
+def test_undeclared_and_escaping_product_files_are_not_served(tmp_path: Path, monkeypatch) -> None:
+    product = load_product(fixture_context(tmp_path / "ctx"))
+    assert product_contribution.product_file(product, "../entry.py") is None
+    assert product_contribution.product_file(product, "entry.py") is None
+    assert product_contribution.product_file(product, "orient") == (PRODUCT_STATIC / "orient.html").resolve()
+
+    root = tmp_path / "product"
+    (root / "static").mkdir(parents=True)
+    outside = tmp_path / "outside.html"
+    outside.write_text("outside", encoding="utf-8")
+    (root / "static" / "escape.html").symlink_to(outside)
+    monkeypatch.setattr(product_contribution.config, "PRODUCT_ROOT", root)
+    escaping = ProductContribution(
+        static_files={"escape.html": root / "static" / "escape.html", "missing.html": root / "static" / "missing.html"}
+    )
+    assert product_contribution.product_file(escaping, "escape.html") is None
+    assert product_contribution.product_file(escaping, "missing.html") is None
+
+
+def test_contract_registry_composes_machinery_then_product_declarations(tmp_path: Path) -> None:
+    from scripts.api import route_contracts
+    from scripts.project_api import route_contracts as product_contracts
+
+    app = _app(tmp_path)
+    with TestClient(app) as client:
+        body = client.get("/api/contracts/routes").json()
+    patterns = [row["pattern"] for row in body["route_contracts"]]
+    expected = [c.pattern for c in (*route_contracts.ROUTE_CONTRACTS, *product_contracts.ROUTE_CONTRACTS)]
+    assert patterns == expected
+    pages = {row["file"] for row in body["page_contracts"]}
+    html_pages = {page for page, _ in _pages() if page.endswith(".html")}
+    assert html_pages <= pages
+    assert route_contracts.contract_for_route("/api/state/preparation").pattern == "/api/state/preparation"
 
 
 def test_no_machinery_api_module_imports_product_code() -> None:

@@ -42,6 +42,7 @@ from . import config
 
 if TYPE_CHECKING:
     from .monitor_context import MonitorContext
+    from .route_contracts import PageContract, RouteContract
 
 PRODUCT_DATA = Path("scripts") / "curriculum" / "monitor_paths.v1.json"
 ATLAS_REGISTRY_DATA = Path("scripts") / "lexicon" / "monitor_jobs.v1.json"
@@ -100,7 +101,11 @@ FleetBatches = Callable[["MonitorContext | None"], dict[str, Any]]
 class ProductContribution:
     """Everything the product adds to one Monitor app.
 
-    ``routers`` are included ahead of the machinery routers. ``preload`` and
+    ``routers`` are included ahead of the machinery routers. ``static_files``
+    maps each declared page or asset URL path (``"index.html"``,
+    ``"data/status.json"``) to its file; nothing else under the product root is
+    served. ``route_contracts`` and ``page_contracts`` join the machinery
+    registry at ``/api/contracts/routes``. ``preload`` and
     ``preload_optional`` join the machinery startup preload. ``warmup`` hooks
     run in the machinery state-scan warmup thread after the routing-budget
     warm. Product resources created through ``ctx.runtime`` close with the
@@ -110,6 +115,9 @@ class ProductContribution:
     """
 
     routers: tuple[RouterMount, ...] = ()
+    static_files: Mapping[str, Path] = field(default_factory=lambda: MappingProxyType({}))
+    route_contracts: tuple[RouteContract, ...] = ()
+    page_contracts: tuple[PageContract, ...] = ()
     preload: tuple[str, ...] = ()
     preload_optional: tuple[str, ...] = ()
     warmup: tuple[ContextHook, ...] = ()
@@ -171,15 +179,43 @@ def load_product(context: MonitorContext, *, product_root: Path | None = None) -
     return product
 
 
+def product_file(product: ProductContribution | None, name: str) -> Path | None:
+    """The declared product file for URL path ``name``, or ``None``.
+
+    An extension-less name also matches its ``.html`` page, as the static
+    catch-all always allowed. Only declared names match, so a traversal string
+    never reaches the filesystem; the declared file must still be a regular
+    file inside the product root once symlinks are resolved.
+    """
+    if product is None:
+        return None
+    path = product.static_files.get(name)
+    if path is None and name and not Path(name).suffix:
+        path = product.static_files.get(f"{name}.html")
+    if path is None:
+        return None
+    resolved = path.resolve()
+    if not resolved.is_file() or not resolved.is_relative_to(config.PRODUCT_ROOT.resolve()):
+        return None
+    return resolved
+
+
 _atlas: AtlasProvider | None = None
 _fleet_batches: FleetBatches | None = None
+_product: ProductContribution = EMPTY
 
 
 def install_providers(product: ProductContribution) -> None:
     """Record the process-wide providers of ``product`` for collectors outside a request."""
-    global _atlas, _fleet_batches
+    global _atlas, _fleet_batches, _product
     _atlas = product.atlas
     _fleet_batches = product.fleet_batches
+    _product = product
+
+
+def installed_product() -> ProductContribution:
+    """The product contribution an app was most recently built with, or :data:`EMPTY`."""
+    return _product
 
 
 class _RegistryOnlyAtlas:

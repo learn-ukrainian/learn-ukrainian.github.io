@@ -52,7 +52,7 @@
     "status:all": ".venv/bin/python scripts/generate_level_status.py all",
     "dashboards:data": ".venv/bin/python scripts/generate_dashboard_data.py",
     "dashboards:build": ".venv/bin/python scripts/build_dashboards.py",
-    "dashboards": "npm run dashboards:data && npm run dashboards:build && open dashboards/index.html",
+    "dashboards": "npm run dashboards:data && npm run dashboards:build && open scripts/project_api/static/index.html",
     "dashboard:serve": "npm run api:reload",
     "score:hist": ".venv/bin/python scripts/score_track.py hist",
     "score:bio": ".venv/bin/python scripts/score_track.py bio",
