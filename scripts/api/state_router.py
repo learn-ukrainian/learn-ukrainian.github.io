@@ -2133,7 +2133,7 @@ def _as_mapping(value: object) -> dict[str, Any]:
 def _ledger_codex_account(record: object) -> str:
     """``b-sub`` when the cost row names account b; otherwise account a."""
     raw = getattr(record, "codex_account", None)
-    return "b-sub" if raw in _CODEX_B_LEDGER else "sub"
+    return "b-sub" if isinstance(raw, str) and raw in _CODEX_B_LEDGER else "sub"
 
 
 def _spend_row_counts(record: object, agent: str, codex_account: str | None) -> bool:
@@ -2160,7 +2160,7 @@ def _task_codex_account(task: dict[str, Any], tasks_dir: Path | None) -> str:
         task_id = task.get("task_id")
         if isinstance(task_id, str):
             raw = _task_file_codex_account(tasks_dir, task_id)
-    return "b-sub" if raw in _CODEX_B_LEDGER else "sub"
+    return "b-sub" if isinstance(raw, str) and raw in _CODEX_B_LEDGER else "sub"
 
 
 def _task_file_codex_account(tasks_dir: Path, task_id: str) -> object:
@@ -2295,12 +2295,15 @@ def _codex_subscription_rows(
         is_stale=is_stale,
         in_flight=b_count,
     )
-    b_row["health"] = agents.get("codex", {}).get("health")
     try:
         b_row["runtime"] = summarize_lane_runtime("codex", usage_dir=usage_dir, codex_account="b-sub")
     except Exception as exc:  # telemetry must not drop the account row
         logging.getLogger("state_router").debug("account b runtime summary failed: %s", exc)
         b_row["runtime"] = {"source": "agent_runtime_jsonl", "headroom_blocked": None, "codex_account": "b-sub"}
+    # The seat health record is account a's. Copying it would mark b avoid when a failed.
+    runtime = b_row.get("runtime")
+    if isinstance(runtime, dict) and runtime.get("headroom_blocked") and b_row.get("status") in {None, "cool", "warm", "unknown"}:
+        b_row["status"] = "hot"
     _attach_credit_states({"codex:b": b_row}, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
     _attach_routing_facts({"codex:b": b_row}, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
     root = project_root or Path(__file__).resolve().parents[2]

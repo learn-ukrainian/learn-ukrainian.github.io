@@ -227,6 +227,26 @@ def _mirror_retired_quota(agents: dict[str, Any], lane: str, info: dict[str, Any
     return info, None
 
 
+def _live_task_codex_account(task_id: object) -> str | None:
+    """Account label on one task file. A bad id is not read."""
+    if not isinstance(task_id, str) or not task_id or task_id in {".", ".."} or "/" in task_id or "\\" in task_id:
+        return None
+    override = os.environ.get("LU_TASKS_DIR")
+    root = Path(override) if override else Path(__file__).resolve().parents[2] / "batch_state" / "tasks"
+    path = root / f"{task_id}.json"
+    try:
+        resolved = path.resolve()
+        if resolved.parent != root.resolve() or not resolved.is_file():
+            return None
+        payload = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    account = payload.get("codex_account")
+    return account if isinstance(account, str) else None
+
+
 def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int] | None:
     """Read /api/delegate/active → agent → count; None when it cannot be read (load unknown, not zero)."""
     url = f"{_monitor_base()}/api/delegate/active"
@@ -244,8 +264,12 @@ def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int] | None:
         agent = str(task.get("agent") or "").strip().lower()
         if not agent:
             continue
-        # The live summary counts account b on its own key when the task names it.
-        if agent == "codex" and task.get("codex_account") in {"b-sub", "b", "codex:b"}:
+        # The live summary often omits the account. The task file is the same
+        # source the budget uses, and a b-sub task must not fill account a.
+        account = task.get("codex_account")
+        if not isinstance(account, str):
+            account = _live_task_codex_account(task.get("task_id"))
+        if agent == "codex" and account in {"b-sub", "b", "codex:b"}:
             counts["codex:b"] = counts.get("codex:b", 0) + 1
             continue
         counts[agent] = counts.get(agent, 0) + 1
@@ -320,9 +344,7 @@ def build_lane_rows(
         if codex_reserve_account(supplied) != label:
             return unavailable_reserve()
         bounded = effective_reset_reserve({**supplied, "codex_account": label}, tagged)
-        # Keep the account on this copy so a later eligibility check cannot
-        # treat a bounded b reserve as account a. The loader's public result
-        # stays the historical field set.
+        # Account a's public result has no label. Keep b's label on this copy.
         if bounded.get("available") is True:
             bounded = {**bounded, "codex_account": label}
         return bounded

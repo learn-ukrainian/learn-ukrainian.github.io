@@ -61,6 +61,9 @@ def codex_reserve_account(value: object) -> str:
     """
     if isinstance(value, dict):
         value = value.get("codex_account")
+    # A list or object is not a label. Membership would raise, so fail closed.
+    if not isinstance(value, str) and value is not None:
+        return ""
     if value in _ACCOUNT_B_NAMES:
         return _ACCOUNT_B
     if value in _ACCOUNT_A_NAMES:
@@ -152,13 +155,18 @@ def effective_reset_reserve(
         return unavailable_reserve()
     if None not in live_expirations:
         expires_at = min(expires_at, max(expiry for expiry in live_expirations if expiry is not None))
-    return {
+    result = {
         "available": True,
         "provider": "codex",
         "remaining_resets": effective_count,
         "confirmed_at": confirmed_at.isoformat().replace("+00:00", "Z"),
         "expires_at": expires_at.isoformat().replace("+00:00", "Z"),
     }
+    # Account a keeps the historical field set. Account b keeps its label so a
+    # later check cannot treat this reserve as account a.
+    if info_account == _ACCOUNT_B:
+        result["codex_account"] = _ACCOUNT_B
+    return result
 
 
 def _one_reserve(entry: object) -> dict[str, Any] | None:

@@ -89,8 +89,13 @@ def test_a_reset_on_one_account_leaves_the_other_reserve_unchanged(tmp_path):
     loaded_a = load_reset_reserve(tmp_path, now=NOW, account="sub")
     loaded_b = load_reset_reserve(tmp_path, now=NOW, account="b-sub")
     assert loaded_a["available"] is True and loaded_a["remaining_resets"] == 2
+    assert "codex_account" not in loaded_a
     assert loaded_b["available"] is True and loaded_b["remaining_resets"] == 1
+    assert loaded_b["codex_account"] == "b-sub"
     assert load_reset_reserve(tmp_path, now=NOW, account="sub") == loaded_a
+    b_info = {**_eligible_codex(), "codex_account": "b-sub"}
+    assert effective_reset_reserve(loaded_b, b_info, now=NOW)["remaining_resets"] == 1
+    assert effective_reset_reserve(loaded_b, {**_eligible_codex(), "codex_account": "sub"}, now=NOW) == unavailable_reserve()
     assert loaded_b["remaining_resets"] == 1
     crossed = effective_reset_reserve(
         {"available": True, **{key: value for key, value in account_a.items() if key != "schema_version"}},
