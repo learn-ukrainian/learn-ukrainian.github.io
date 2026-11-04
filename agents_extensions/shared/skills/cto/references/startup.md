@@ -44,8 +44,12 @@ rollover candidate alone; archive one only through the `thread-rollover` skill.
 and the authority service refuses any publication to `claude-cto-<anything>`. Your session
 identity `claude-cto-<session id>` is only the consumer identity: pass it as `--worker-id`
 when you claim and acknowledge, never as a recipient and never to workers as an address.
-Drain the launcher's registered slot and the epics recipients: `claude-epics`
-(`scripts/config/area_assignments.yaml` `epics.slots`), `epics`, `cto` and `claude-cto`.
+The default drain covers `cto`, `epics` and `claude-cto`.
+`claude-epics` (`scripts/config/area_assignments.yaml` `epics.slots`) carries the launcher's
+supervisory deliveries. `scripts.fleet_comms deliveries claim` has no kind filter, so a drain
+of that slot claims a supervisory delivery before it can be recognised, and repeated claims
+exhaust its attempts. Read `claude-epics` first, read-only, with
+`.venv/bin/python -m scripts.fleet_comms backlog`, and claim only a named non-supervisory delivery.
 The Fleet authority service admits every exact recipient, even where a convenience CLI
 lists fewer. For each message run the authority-delivery procedure in
 `docs/runbooks/driver-seat-cli-move.md` § 5: claim, read the body, reconcile prior effects,

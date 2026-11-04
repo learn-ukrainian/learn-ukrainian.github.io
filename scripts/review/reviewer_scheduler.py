@@ -54,6 +54,18 @@ def _optional_integer(value: object) -> int | None:
     return int(number) if number is not None else None
 
 
+def codex_account_key(candidate: Any) -> str | None:
+    """The usage bucket named by the dispatch invocation; omitted means account a."""
+    if candidate.route != "codex":
+        return None
+    from scripts.review.role_resolution import invocation_codex_account
+
+    label = invocation_codex_account(getattr(candidate, "invocation", ""))
+    if label not in {"sub", "b-sub"}:
+        raise ValueError("Codex review requires a subscription account")
+    return "codex:b" if label == "b-sub" else "codex:a"
+
+
 def _route_record(
     candidate: Any, snapshot: Mapping[str, object] | None, *, prefer_route: bool = False
 ) -> Mapping[str, object]:
@@ -80,12 +92,24 @@ def _route_record(
         keys = (candidate.route, *keys)
     agents = snapshot.get("agents")
     if not isinstance(agents, Mapping):
+        # Account b must never inherit account a's flat health alias.
+        if codex_account_key(candidate) == "codex:b":
+            status = snapshot.get("codex:b")
+            return {"status": status.strip().lower()} if isinstance(status, str) else {}
         # Legacy injected maps carry status labels without allowance observations.
         for key in keys:
             status = snapshot.get(key)
             if isinstance(status, str):
                 return {"status": status.strip().lower()}
         return {}
+    account_key = codex_account_key(candidate)
+    if account_key:
+        accounts = snapshot.get("codex_accounts")
+        record = accounts.get(account_key) if isinstance(accounts, Mapping) else agents.get(account_key)
+        if isinstance(record, Mapping):
+            return record
+        if account_key == "codex:b":
+            return {}
     agents = credit_lane.shared_usage_agents(agents, catalog=catalog)
     if candidate.route == CLAUDE_LANE or any(is_claude_lane_key(key) for key in keys):
         require_bound(snapshot, reading=f"reviewer candidate {candidate.name}")
@@ -125,7 +149,8 @@ def metrics_for(candidate: Any, snapshot: Mapping[str, object] | None) -> Routin
     scheduler = record.get("scheduler") if isinstance(record.get("scheduler"), Mapping) else {}
     in_flight = snapshot.get("in_flight") if isinstance(snapshot, Mapping) else None
     # A snapshot ``in_flight`` map is an observation: an absent route there ran nothing.
-    inflight_value = in_flight.get(candidate.route, 0) if isinstance(in_flight, Mapping) else None
+    flight_key = "codex:b" if codex_account_key(candidate) == "codex:b" else candidate.route
+    inflight_value = in_flight.get(flight_key, 0) if isinstance(in_flight, Mapping) else None
 
     completed = scheduler.get("completed_input_bytes", record.get("completed_input_bytes"))
     reserved = scheduler.get("active_reserved_input_bytes", record.get("active_reserved_input_bytes"))

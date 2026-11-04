@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Practice Hub scouting harness (#8317). Standalone: NOT a Playwright test
 // (no *.spec.ts), so `playwright test` never picks it up.
-import { chromium, webkit, devices } from '@playwright/test';
+import { devices } from '@playwright/test';
+import { launchHardenedChromium } from '../support/hardened-browser.mjs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { checkProgress, evaluateSession } from './invariants.mjs';
@@ -463,7 +464,7 @@ async function detectRun(browser, profileName, base, out, budget) {
 }
 
 function toMarkdown(report) {
-  const L = [`# Scouting report — ${report.slice === 'DETECT' ? 'detector' : 'slice ' + report.slice}`, '', `- Target: ${report.base}${report.live ? ' (live)' : ' (local)'}`, `- Timestamp: ${report.timestamp}`, `- Commit: ${report.commit ?? 'unknown'}`, `- WebKit probe: ${report.webkit.available ? 'available' : 'unavailable'}${report.webkit.note ? ' — ' + report.webkit.note : ''}`, ''];
+  const L = [`# Scouting report — ${report.slice === 'DETECT' ? 'detector' : 'slice ' + report.slice}`, '', `- Target: ${report.base}${report.live ? ' (live)' : ' (local)'}`, `- Timestamp: ${report.timestamp}`, `- Commit: ${report.commit ?? 'unknown'}`, ''];
   if (report.verdict) {
     L.push(`## Verdict: ${report.verdict.ok ? 'PASS' : 'FAIL'}`, '', ...(report.verdict.ok ? ['- every rule held'] : report.verdict.violations.map((v) => `- ${v}`)), '');
   }
@@ -494,10 +495,9 @@ async function main() {
   const names = args.profile ? args.profile.split(',') : args.detect ? ['desktop'] : slice === 'C8' ? ['phone', 'android'] : DEFAULT_PROFILES;
   for (const n of names) if (!PROFILES[n]) throw new Error(`Unknown profile: ${n}`);
 
-  const wk = { available: false };
-  try { const b = await webkit.launch(); wk.available = true; await b.close(); } catch (e) { wk.note = String(e).split('\n')[0].slice(0, 160); }
-
-  const browser = await chromium.launch();
+  // Installed Chrome, sandbox on, own origins only (#12689). No WebKit probe: the
+  // bundled WebKit only updates with Playwright releases, so it is not launched.
+  const browser = await launchHardenedChromium();
   const results = [];
   try {
     for (const n of names) {
@@ -510,7 +510,7 @@ async function main() {
   let commit = process.env.SCOUT_COMMIT || null;
   // Detector: one verdict across profiles; any failing profile fails the process. Slices never do.
   const verdict = args.detect ? { ok: results.every((r) => r.verdict.ok), violations: results.flatMap((r) => r.verdict.violations.map((v) => `[${r.profile}] ${v}`)) } : undefined;
-  const report = { slice, base, live: !!args.live, timestamp: new Date().toISOString(), commit, webkit: wk, ...(verdict ? { budget, verdict } : {}), results };
+  const report = { slice, base, live: !!args.live, timestamp: new Date().toISOString(), commit, ...(verdict ? { budget, verdict } : {}), results };
   await writeFile(join(out, `${RUN_ID}-report-${slice.toLowerCase()}.json`), JSON.stringify(report, null, 2));
   await writeFile(join(out, `${RUN_ID}-report-${slice.toLowerCase()}.md`), toMarkdown(report));
   console.log(toMarkdown(report));

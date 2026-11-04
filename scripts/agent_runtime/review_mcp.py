@@ -101,8 +101,13 @@ from typing import Any
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
-from scripts.review.receipts.ledger import REVIEW_TOOLS, review_tools
+from scripts.review.product_hooks import attempt_hooks
 from scripts.review.render_contract import check_launch_contract, check_render_contract
+
+# The product receipt ledger's Sources tool sets, read through the review attempt hooks.
+_LEDGER = attempt_hooks().ledger()
+REVIEW_TOOLS: frozenset[str] = _LEDGER.REVIEW_TOOLS
+review_tools: Callable[..., frozenset[str]] = _LEDGER.review_tools
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
 ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"

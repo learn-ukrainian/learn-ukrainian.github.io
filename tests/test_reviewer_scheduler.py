@@ -38,6 +38,16 @@ def test_remaining_is_the_owner_tightest_window():
     }
     metrics = scheduler.metrics_for(_candidate(), _snapshot(record, diagnostics={"stale": False}))
     assert metrics.quota_remaining_pct == credit_lane.plan_remaining_pct(record) == 3.0
+    b = _candidate()
+    b.invocation = "dispatch --agent codex --codex-account b-sub"
+    snapshot = _snapshot(record, codex_accounts={"codex:b": {"remaining_pct": 67.0}},
+                         in_flight={"codex": 4, "codex:b": 1})
+    assert scheduler.metrics_for(b, snapshot).quota_remaining_pct == 67.0
+    assert scheduler.metrics_for(b, snapshot).inflight == 1
+    assert scheduler.metrics_for(_candidate(), snapshot).quota_remaining_pct == 3.0
+    assert scheduler.metrics_for(_candidate(), snapshot).inflight == 4
+    snapshot["codex_accounts"] = {}
+    assert scheduler.metrics_for(b, snapshot).quota_remaining_pct is None
 
 
 def test_scheduling_only_observation_cannot_loosen_the_plan_window():

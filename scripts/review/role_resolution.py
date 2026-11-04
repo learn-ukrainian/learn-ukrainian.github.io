@@ -38,6 +38,25 @@ _ROUTE_FIELDS = frozenset({
 })
 
 
+def invocation_codex_account(invocation: str) -> str:
+    """Canonical account identity for a catalogued Codex dispatch invocation."""
+    tokens = shell_split(invocation)
+    labels = []
+    for index, token in enumerate(tokens):
+        flag, separator, value = token.partition("=")
+        if flag == "--codex-account":
+            labels.append(value if separator else (tokens[index + 1] if index + 1 < len(tokens) else ""))
+    if len(labels) > 1:
+        raise ModelCatalogError("Codex route requires one account label")
+    if not labels:
+        return "sub"
+    if labels[0] in {"sub", "b-sub"}:
+        return labels[0]
+    from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
+
+    return resolve_codex_account_label(labels[0])
+
+
 def _mapping(value: Any, label: str) -> dict[str, Any]:
     if not isinstance(value, dict) or not value:
         raise ModelCatalogError(f"{label} must be a non-empty mapping")
@@ -159,7 +178,7 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
                     f"models.{model_id}.routing_wire_ids contains an unsupported transport or mismatched identity"
                 )
     legacy_names: set[str] = set()
-    identities: set[tuple[str, str, str]] = set()
+    identities: set[tuple[str, str, str, str | None]] = set()
     for name, raw in seats.items():
         if not isinstance(name, str) or not _STABLE_NAME.fullmatch(name):
             raise ModelCatalogError("seat names must be stable functional identifiers")
@@ -209,7 +228,10 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
             pinned = invocation_model(expanded["invocation"])
             if pinned and canonical_model_id(pinned, catalog) != model_id:
                 raise ModelCatalogError(f"seats.{name}.{route_name} invocation mismatches holder")
-            identity = (model_id, route["route"], transport)
+            account = None
+            if route["route"] == "codex":
+                account = invocation_codex_account(expanded["invocation"])
+            identity = (model_id, route["route"], transport, account)
             if identity in identities:
                 raise ModelCatalogError("seats contain duplicate expanded routes")
             identities.add(identity)
@@ -378,6 +400,12 @@ def _resolve_role(
         from scripts.review.reviewer_resolver import normalize_routing_snapshot
 
         normalized = normalize_routing_snapshot(health)
+        accounts = health.get("codex_accounts")
+        if isinstance(accounts, dict):
+            for key in ("codex:a", "codex:b"):
+                record = accounts.get(key)
+                if isinstance(record, dict):
+                    normalized.update(normalize_routing_snapshot({"agents": {key: record}}))
     spec = catalog["roles"].get(role, {})
     while "role" in spec:
         spec = catalog["roles"][spec["role"]]
@@ -426,6 +454,12 @@ def _resolve_role(
             model["family"],
             *sorted(route.get("health_keys", [])),
         ]
+        if route["route"] == "codex" and health is not None:
+            account = invocation_codex_account(route["invocation"])
+            if account == "b-sub":
+                keys = [route.get("legacy_name"), "codex:b"]
+            elif account == "sub" and "codex:a" in normalized:
+                keys = [route.get("legacy_name"), "codex:a", *keys]
         health_key = next((key for key in keys if key in normalized), None)
         observed = normalized.get(health_key)
         wire_id = model["routing_wire_ids"][route["transport"]]

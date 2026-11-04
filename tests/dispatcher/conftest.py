@@ -133,6 +133,9 @@ def sandbox(tmp_path, hermetic_monitor):
     )
     shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
     shutil.copy(SOURCE / "scripts/config/credit_lanes.yaml", config / "credit_lanes.yaml")
+    # The copied scripts/review loader reads the product's review hooks file next to it.
+    (repo / "scripts/curriculum").mkdir()
+    shutil.copy(SOURCE / "scripts/curriculum/review_hooks.v1.json", repo / "scripts/curriculum")
     schema_dir = repo / "schemas"
     schema_dir.mkdir()
     shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)

@@ -229,9 +229,34 @@ _SYNTHETIC_ROOT_GUARD = (
 )
 _ROOT_DETAIL = "Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard"
 # The lane self-test's literal verdict when the probed CLI is not on PATH.
-_CODEX_CLI_MISSING = (
-    "DISPATCH LANE SELF-TEST FAILED for codex: FileNotFoundError while building or spawning the adapter"
-)
+_CLI_MISSING_REASON = "FileNotFoundError while building or spawning the adapter"
+_CODEX_CLI_MISSING = f"DISPATCH LANE SELF-TEST FAILED for codex: {_CLI_MISSING_REASON}"
+# The hook's own text when run_bounded's outer bound exits 124 (#12725).
+_LANE_PROBE_TIMEOUT_REASON = "probe timed out after 3 s"
+# Stands in for scripts.agent_runtime.bounded_command only for the lane probe.
+# Every other bounded command is the real runner, so root hygiene still runs.
+_LANE_PROBE_RUNNER = """\
+import os
+import sys
+
+command = sys.argv[1:]
+if command[:1] == ["--timeout"]:
+    command = command[2:]
+if command[:1] == ["--"]:
+    command = command[1:]
+if "scripts.agent_runtime.lane_probe" in command:
+    outcome = os.environ.get("LANE_PROBE_OUTCOME", "")
+    if outcome == "timeout":
+        raise SystemExit(124)
+    if outcome == "missing":
+        sys.stdout.write(os.environ["LANE_PROBE_RESULT_JSON"])
+        raise SystemExit(1)
+    if outcome == "healthy":
+        raise SystemExit(0)
+    sys.stderr.write("unexpected LANE_PROBE_OUTCOME\\n")
+    raise SystemExit(2)
+os.execv(sys.executable, [sys.executable, os.environ["LANE_PROBE_REAL_RUNNER"], *sys.argv[1:]])
+"""
 
 
 def _path_without(executable: str) -> str:
@@ -250,14 +275,17 @@ def _start_with_root_names(
     synthetic: bool,
     lane_cli: bool = True,
     agent: str = "codex",
+    probe_outcome: str | None = None,
 ) -> tuple[subprocess.CompletedProcess[bytes], Path, dict[str, str]]:
     """Run ordinary SessionStart with ``names`` as unexpected root entries.
 
     ``agent`` is ``codex`` (deployed under ``.codex``) or ``claude``.
-    ``lane_cli`` puts a stub of the agent's CLI on PATH; without it, every
-    PATH directory that provides that CLI is removed, so the lane self-test
-    fails exactly as on a CI runner. Returns the hook result, the fixture
-    checkout and the hook environment.
+    The lane probe does not run the real interpreter: a bounded-runner double
+    returns the outcome immediately, so the contract does not depend on runner
+    speed. ``lane_cli`` selects a completed healthy probe or a completed
+    CLI-missing result. ``probe_outcome="timeout"`` is the outer-bound exit
+    (124, no JSON). Returns the hook result, the fixture checkout and the
+    hook environment.
     """
     project = tmp_path / "primary"
     project.mkdir()
@@ -326,6 +354,18 @@ def _start_with_root_names(
             "PATH": os.fspath(stub_bin) + os.pathsep + _path_without(agent),
         }
     )
+    if probe_outcome is None:
+        probe_outcome = "healthy" if lane_cli else "missing"
+    runner = tmp_path / "lane_probe_runner.py"
+    runner.write_text(_LANE_PROBE_RUNNER, encoding="utf-8")
+    environment["SESSION_BOUNDED_RUNNER"] = os.fspath(runner)
+    environment["LANE_PROBE_REAL_RUNNER"] = os.fspath(
+        REPO_ROOT / "scripts/agent_runtime/bounded_command.py"
+    )
+    environment["LANE_PROBE_OUTCOME"] = probe_outcome
+    environment["LANE_PROBE_RESULT_JSON"] = json.dumps(
+        {"probes": [{"agent": agent, "reason": _CLI_MISSING_REASON}]}
+    )
     model = "gpt-6.1-sol"
     if agent == "codex":
         environment["CODEX_CANONICAL_REPO_ROOT"] = os.fspath(project)
@@ -376,11 +416,13 @@ def test_ordinary_codex_start_bounds_root_hygiene_names(
 
     The ordinary SessionStart context must stay strictly under 500 bytes and
     valid UTF-8 for any names, also when the dispatch-lane self-test fails
-    beside it because the Codex CLI is missing, as on a CI runner (#10952).
-    Names appear inline only as a whole printable ASCII list of at most 11
-    bytes; otherwise the Detail command lists them and stderr gets every name
-    on one escaped line. A synthetic guard report stands in for 1,000 real
-    directories, which the guard cannot scan inside its deadline.
+    beside it because the probe completed without the Codex CLI (#10952).
+    The probe outcome is fixed by the test, so a slow runner cannot turn a
+    completed miss into a timeout. Names appear inline only as a whole
+    printable ASCII list of at most 11 bytes; otherwise the Detail command
+    lists them and stderr gets every name on one escaped line. A synthetic
+    guard report stands in for 1,000 real directories, which the guard cannot
+    scan inside its deadline.
     """
     started, project, environment = _start_with_root_names(tmp_path, names, synthetic=synthetic, lane_cli=lane_cli)
 
@@ -425,6 +467,32 @@ def test_ordinary_codex_start_bounds_root_hygiene_names(
     )
     assert compacted.returncode == 0, compacted.stderr
     assert compacted.stdout == ""
+
+
+def test_ordinary_codex_start_names_a_timed_out_lane_probe(tmp_path: Path) -> None:
+    """A probe killed at the outer bound names that timeout and still returns (#12725).
+
+    The bounded-runner double exits 124 with no JSON, which is what
+    ``run_bounded`` does when the 3s bound fires before the probe prints.
+    SessionStart stays advisory: exit 0, valid UTF-8, under 500 bytes, with
+    the root-hygiene line still present. The CLI-missing reason is only for a
+    probe that completes.
+    """
+    started, project, _environment = _start_with_root_names(
+        tmp_path, [".mypy_cache"], synthetic=False, probe_outcome="timeout"
+    )
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout.decode("utf-8"))["hookSpecificOutput"]["additionalContext"]
+    assert len(context.encode("utf-8")) < 500
+    assert _CODEX_SESSION_ID in context
+    assert f"\n- DISPATCH LANE SELF-TEST FAILED for codex: {_LANE_PROBE_TIMEOUT_REASON}\n" in context
+    assert _CLI_MISSING_REASON not in context
+    assert context.endswith(
+        "\n- ROOT HYGIENE: 1 unexpected primary-checkout root entries (.mypy_cache); "
+        f"manual removal only (#6863). {_ROOT_DETAIL}"
+    )
+    assert (project / ".mypy_cache").is_dir()
 
 
 @pytest.mark.parametrize("lane_cli", [True, False], ids=["codex-cli", "no-codex-cli"])

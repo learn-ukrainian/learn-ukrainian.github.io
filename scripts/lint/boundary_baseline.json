@@ -2,46 +2,6 @@
   "schema": "boundary-ratchet-baseline.v1",
   "entries": [
     {
-      "path": "scripts/agent_runtime/adapters/codex.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/agent_runtime/adapters/codex.py",
-      "module": "scripts.review.receipts.ledger",
-      "count": 1
-    },
-    {
-      "path": "scripts/agent_runtime/attempt_boundary.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/agent_runtime/attempt_boundary.py",
-      "module": "scripts.build.fresh",
-      "count": 1
-    },
-    {
-      "path": "scripts/agent_runtime/attempt_boundary.py",
-      "module": "scripts.build.fresh.manifest",
-      "count": 1
-    },
-    {
-      "path": "scripts/agent_runtime/attempt_boundary.py",
-      "module": "scripts.review.prompts.eligibility",
-      "count": 1
-    },
-    {
-      "path": "scripts/agent_runtime/review_mcp.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/agent_runtime/review_mcp.py",
-      "module": "scripts.review.receipts.ledger",
-      "count": 1
-    },
-    {
       "path": "scripts/api/blue_router.py",
       "module": "scripts.audit",
       "count": 1
@@ -247,101 +207,6 @@
       "count": 1
     },
     {
-      "path": "scripts/dispatcher/providers/codex.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/providers/codex.py",
-      "module": "scripts.audit.post_build_review",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/review_attempt.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/review_attempt.py",
-      "module": "scripts.build.fresh",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/review_attempt.py",
-      "module": "scripts.build.fresh.manifest",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/review_attempt.py",
-      "module": "scripts.review.prompts.check",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/review_attempt.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/review_attempt.py",
-      "module": "scripts.review.receipts.ledger",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.build.fresh",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.build.fresh.manifest",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.curriculum.evidence",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.curriculum.evidence.codes",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.curriculum.evidence.lock",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.curriculum.evidence.sources",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.review.prompts.check",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.review.prompts.eligibility",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/worker.py",
-      "module": "scripts.review.receipts.ledger",
-      "count": 1
-    },
-    {
       "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
       "module": "scripts.audit",
       "count": 1
@@ -439,16 +304,6 @@
     {
       "path": "scripts/orchestration/sources_watchdog.py",
       "module": "scripts.rag.hang_diagnostics",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/review_contract.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/review/review_contract.py",
-      "module": "scripts.review.receipts.ledger",
       "count": 1
     }
   ]

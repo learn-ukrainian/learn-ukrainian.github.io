@@ -81,9 +81,11 @@ def test_authorities_have_one_native_holder_per_family():
     result = resolve_role("designated_authorities", purpose="inspect")
     assert [(row.model_id, row.family, row.transport) for row in result.candidates] == [
         ("gpt-6.1-sol", "openai", "native_codex"),
+        ("gpt-6.1-sol", "openai", "native_codex"),
         ("claude-opus-5-5", "anthropic", "native_claude"),
         ("claude-opus-5-5", "anthropic", "agy"),
     ]
+    assert [row.route_name for row in result.candidates if row.family == "openai"] == ["native_b", "native"]
     assert all(row.decision_reference and row.qualification_reference is None for row in result.candidates)
 
 
@@ -168,7 +170,8 @@ def test_role_aliases_preserve_holder_and_constraints():
 ])
 def test_health_observation_is_separate_from_baseline_rank(health, observation, rank, diagnostic):
     for purpose in ("inspect", "launch"):
-        row = resolve_role("bounded_advisor", purpose=purpose, health=health).candidates[0]
+        row = next(row for row in resolve_role("bounded_advisor", purpose=purpose, health=health).candidates
+                   if row.route_name == "native")
         assert (row.health, row.health_rank, row.health_provenance["diagnostic"]) == (observation, rank, diagnostic)
         assert not row.exclusion_reasons  # no new universal health prerequisite
 
@@ -176,9 +179,17 @@ def test_health_observation_is_separate_from_baseline_rank(health, observation, 
 def test_health_evidence_does_not_echo_unrelated_account_fields():
     row = resolve_role("bounded_advisor", purpose="inspect", health={
         "agents": {"codex": {"status": "cool", "account": "private-account", "credit_balance": 9}},
-    }).candidates[0]
-    assert row.health == "healthy"
+    }).candidates[1]
+    assert row.route_name == "native" and row.health == "healthy"
     assert "private-account" not in json.dumps(row.health_provenance)
+    routes = resolve_role("bounded_advisor", purpose="launch", health={
+        "agents": {"codex": {"status": "unhealthy"}},
+        "codex_accounts": {"codex:b": {"status": "cool", "account": "private-account", "credit_balance": 9}},
+    }).candidates
+    assert routes[0].route_name == "native_b" and routes[0].health == "healthy"
+    assert routes[1].route_name == "native" and routes[1].health == "unhealthy"
+    assert routes[0].health_provenance["normalized_key"] == "codex:b"
+    assert "private-account" not in json.dumps(routes[0].health_provenance)
 
 
 def test_family_capability_isolation_subject_and_explicit_pin_exclusions():

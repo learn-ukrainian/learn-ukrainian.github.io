@@ -1,4 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './support/hardened-browser.mjs';
 
 /**
  * #5376 check 1 — locale purity (EN/UK chrome).
