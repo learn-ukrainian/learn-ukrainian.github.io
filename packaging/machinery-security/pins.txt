@@ -1,6 +1,8 @@
-# Scanner pins for the private learn-ukrainian/machinery security workflows
-# (issue #12682, machinery move contract v3 section 5). This file is the record;
-# secret-scan.yml and sast.yml carry the same values and are not read from here.
+# Scanner pins for the learn-ukrainian/machinery security workflows
+# (issue #12682, machinery move contract v3 section 5) and its pre-publication
+# gate (amendment PUBLIC-1104 item 3). This file is the record; secret-scan.yml,
+# sast.yml and prepublication-gate.sh carry the same values and are not read
+# from here.
 # Bump a pin by changing it here and in the workflow together, with the new
 # upstream evidence. Never move to an older release to clear a finding.
 # Upstream checks below were made on 2026-11-03.
@@ -13,6 +15,10 @@ TRUFFLEHOG_VERSION=3.99.0
 TRUFFLEHOG_LINUX_AMD64_SHA256=e35ae3fd1e4b7a0c1699d0fda1814282bf906d03379bd4337b092b3a84c6740b
 #   trufflehog_3.99.0_linux_amd64.tar.gz; equals the entry in the release's
 #   trufflehog_3.99.0_checksums.txt.
+TRUFFLEHOG_LINUX_AMD64_BINARY_SHA256=bcbdd2627c3f96e641edec60e3ccf36fc12afa4ffead5f32c98f8dbe7373cedc
+#   The trufflehog executable inside that tarball (checked 2026-11-04 after
+#   verifying the tarball against the pin above). prepublication-gate.sh
+#   refuses any other executable.
 TRUFFLEHOG_ACTION_SHA=31ce31ee1abbcc7dc8eee5764c17121c3044c8b2
 #   Commit of tag v3.99.7 of trufflesecurity/trufflehog (2026-10-24), the
 #   action script the public repository's .github/workflows/ci.yml pins.
@@ -39,6 +45,10 @@ SEMGREP_WHEEL_MANYLINUX_2_34_X86_64_SHA256=f36115c4d0cb43056ceb308273421a2f6a35e
 #   https://pypi.org/project/semgrep/1.183.0/ (uploaded 2026-10-29). sast.yml
 #   pins all 66 wheels of the dependency closure for CPython 3.12 on x86_64
 #   Linux by SHA-256.
+SEMGREP_CORE_LINUX_X86_64_SHA256=e19fedac1f7c292522b498a8f8394361e6ed389aeef9dd754c26d181bf3d8460
+#   semgrep-1.183.0.data/purelib/semgrep/bin/semgrep-core inside that wheel
+#   (checked 2026-11-04 after verifying the wheel against the pin above).
+#   prepublication-gate.sh refuses a Semgrep venv with any other engine.
 SEMGREP_PYTHON=3.12.14
 SEMGREP_RULES_REPOSITORY=https://github.com/semgrep/semgrep-rules
 SEMGREP_RULES_COMMIT=16b9e6d45f10649f6a531ec4838ed9924372c3bc
@@ -52,3 +62,15 @@ ACTIONS_CHECKOUT=3d3c42e5aac5ba805825da76410c181273ba90b1
 #   actions/checkout tag v7.0.1 (the latest release)
 ACTIONS_SETUP_PYTHON=6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
 #   actions/setup-python tag v7.1.0 (the latest release)
+
+# Pre-publication gate (prepublication-gate.sh beside this file)
+#   Run once on the rewritten clone before the first content push, with the
+#   exact refs to be pushed, then verify the clearance immediately before the
+#   push:
+#     prepublication-gate.sh scan --repo CLONE --ref refs/heads/main \
+#       --out PRIVATE_DIR --semgrep-venv SEMGREP_VENV
+#     prepublication-gate.sh verify --repo CLONE --ref refs/heads/main \
+#       --clearance PRIVATE_DIR/clearance.json
+#   It uses the TruffleHog flags, Semgrep version, rules commit and configs
+#   above, checks the two executable pins, and blocks on any finding or
+#   scanner error. --help lists every check, output and exit code.
