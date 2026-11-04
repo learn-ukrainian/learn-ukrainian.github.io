@@ -21,9 +21,8 @@ from pathlib import Path
 import yaml
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from scripts.audit.decision_lineage import build_lineage_response
-
 from .monitor_context import MonitorContext, get_ctx, resolve_context
+from .state_helpers import monitor_surface
 
 router = APIRouter(tags=["decisions"])
 
@@ -98,7 +97,7 @@ def _load_lineage(decision_id: str | None = None, ctx: MonitorContext | None = N
     ):
         return _lineage_cache["data"]
 
-    data = build_lineage_response(resolved.roots.live_repo_root, decision_id=decision_id)
+    data: dict = monitor_surface.build_lineage_response(resolved.roots.live_repo_root, decision_id=decision_id)
     if decision_id is None:
         _lineage_cache["data"] = data
         _lineage_cache["ts"] = now

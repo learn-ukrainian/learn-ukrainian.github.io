@@ -35,11 +35,9 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from scripts.rag import config as rag_config
-from scripts.verification import vesum
-
 from .config import BATCH_STATE_DIR, PROJECT_ROOT
 from .resilience import connect_sqlite
+from .state_helpers import monitor_surface
 
 router = APIRouter(prefix="/api/hramatka", tags=["hramatka"])
 
@@ -57,7 +55,8 @@ BAKER_STATE_PATH = Path(
 )
 def _vesum_path() -> Path:
     explicit = globals().get("VESUM_DB_PATH", os.environ.get("HRAMATKA_VESUM_DB_PATH"))
-    return vesum._resolve_vesum_db_path(explicit) if explicit is not None else rag_config.VESUM_DB_PATH
+    path: Path = monitor_surface.hramatka_vesum_path(explicit)
+    return path
 
 
 def __getattr__(name: str) -> Path:
@@ -294,7 +293,7 @@ def lesson_support(lesson_id: UUID, x_hramatka_owner: str = Header(...)) -> dict
 def verify_linguistics(payload: VerifyFormsRequest) -> dict[str, Any]:
     """Batch-attest up to 200 Ukrainian forms using the loaded VESUM dictionary."""
     try:
-        attestations = vesum.verify_words(payload.forms, pos_filter=payload.pos, db_path=_vesum_path())
+        attestations = monitor_surface.verify_hramatka_words(payload.forms, pos_filter=payload.pos, db_path=_vesum_path())
     except (FileNotFoundError, OSError, sqlite3.Error) as exc:
         raise HTTPException(status_code=503, detail="VESUM dictionary unavailable") from exc
     results = [
@@ -373,8 +372,7 @@ def _check_schemas() -> tuple[bool, str]:
 
 def _check_vesum() -> tuple[bool, str]:
     try:
-        conn = vesum.get_vesum_conn(_vesum_path())
-        count = int(conn.execute("SELECT COUNT(*) FROM forms").fetchone()[0])
+        count = monitor_surface.vesum_form_count(_vesum_path())
     except (FileNotFoundError, OSError, sqlite3.Error) as exc:
         logger.warning("vesum check failed: %s", exc)
         return False, "vesum dictionary unreadable or invalid"

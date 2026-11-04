@@ -9,9 +9,8 @@ from typing import Any
 import yaml
 from fastapi import APIRouter, Depends
 
-from scripts.audit import check_adrs
-
 from .monitor_context import MonitorContext, get_ctx, resolve_context
+from .state_helpers import monitor_surface
 
 router = APIRouter(tags=["governance"])
 
@@ -100,69 +99,19 @@ def collect_decision_governance(
     }
 
 
-def _matching_findings(findings: list[str], markers: tuple[str, ...]) -> list[str]:
-    return [
-        finding for finding in findings
-        if any(marker in finding for marker in markers)
-    ]
-
-
 def collect_adr_governance(ctx: MonitorContext | None = None) -> dict[str, Any]:
-    """Scan ADRs through ``check_adrs``.
-
-    A fixture context must not walk the production ADR tree (that was the
-    OPSEC ``collect_adr_governance`` sweep stub). Production and tests that
-    keep ``ctx.root is None`` still call ``check_adrs`` as before.
-    """
+    """Scan product ADRs unless the context owns an isolated fixture tree."""
     if resolve_context(ctx).root is not None:
         return dict(_EMPTY_ADR_GOVERNANCE)
-    result = check_adrs.run_check(check_promotions_flag=True)
-    broken_chains = _matching_findings(
-        result.errors,
-        ("claims supersede by ADR-", "supersedes ADR-"),
-    )
-    orphaned_refs = _matching_findings(
-        result.warnings,
-        ("Orphaned reference to ADR-",),
-    )
-    stale_proposed = _matching_findings(
-        result.warnings,
-        ("in Proposed/DRAFT status",),
-    )
-    return {
-        "total": len(result.adrs),
-        "stale_proposed_count": len(stale_proposed),
-        "error_count": len(result.errors),
-        "warning_count": len(result.warnings),
-        "broken_chains": broken_chains,
-        "orphaned_refs": orphaned_refs,
-        "promotion_candidates": result.promotion_candidates,
-        "index": [record.as_dict() for record in result.adrs],
-    }
+    data: dict[str, Any] = monitor_surface.collect_adr_governance()
+    return data
 
 
 def _collect_adr_governance_summary(ctx: MonitorContext | None = None) -> dict[str, int]:
     if resolve_context(ctx).root is not None:
         return {"adrs_total": 0, "adrs_warnings": 0, "adrs_errors": 0}
-    result = check_adrs.CheckResult()
-    result.adrs = check_adrs._load_adrs()
-    if not result.adrs:
-        result.warnings.append("No ADRs found")
-    else:
-        check_adrs._check_numbering(result.adrs, result)
-        check_adrs._check_required_fields(result.adrs, result)
-        check_adrs._check_stale_proposed(
-            result.adrs,
-            result,
-            check_adrs.STALE_PROPOSED_DAYS_DEFAULT,
-        )
-        check_adrs._check_supersede_chains(result.adrs, result)
-        check_adrs._check_index_drift(result.adrs, result)
-    return {
-        "adrs_total": len(result.adrs),
-        "adrs_warnings": len(result.warnings),
-        "adrs_errors": len(result.errors),
-    }
+    summary: dict[str, int] = monitor_surface.collect_adr_governance_summary()
+    return summary
 
 
 def collect_governance_state(ctx: MonitorContext | None = None) -> dict[str, Any]:
