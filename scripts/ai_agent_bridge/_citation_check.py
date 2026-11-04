@@ -54,9 +54,11 @@ Out of scope (v1, deferred to follow-ups if needed):
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 import sqlite3
+import unicodedata
 from collections.abc import Callable
 from contextvars import ContextVar
 from dataclasses import dataclass, field
@@ -306,6 +308,66 @@ def _esum_text_kept(text: object) -> bool:
     return not any(marker in body for marker in _ESUM_MOJIBAKE_MARKERS)
 
 
+_GARBLED_ESUM_CATALOG: dict[str, dict] | None = None
+_APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'", "`": "'"})
+
+
+def _esum_lookup_key(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", str(value or "").strip())
+    normalized = "".join(char for char in normalized if unicodedata.category(char) != "Mn")
+    normalized = unicodedata.normalize("NFC", normalized)
+    return normalized.translate(_APOSTROPHE_TRANSLATION).casefold()
+
+
+def _garbled_esum_catalog() -> dict[str, dict]:
+    """Curated lemma metadata. The file is data; the bridge does not import lexicon."""
+    global _GARBLED_ESUM_CATALOG
+    if _GARBLED_ESUM_CATALOG is not None:
+        return _GARBLED_ESUM_CATALOG
+    path = Path(__file__).resolve().parents[2] / "registry" / "lexicon" / "esum_garbled_etymologies.json"
+    catalog: dict[str, dict] = {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        payload = {}
+    for entry in payload.get("entries") or []:
+        lemma = str(entry.get("lemma") or "").strip() if isinstance(entry, dict) else ""
+        if lemma:
+            catalog[_esum_lookup_key(lemma)] = entry
+    _GARBLED_ESUM_CATALOG = catalog
+    return catalog
+
+
+def _strip_garbled_tail(text: str, entry: dict) -> str:
+    clean = str(text or "")
+    marker = str(entry.get("strip_after") or "")
+    if marker and marker in clean:
+        clean = clean.split(marker, 1)[0]
+    return re.sub(r"\s+", " ", clean.rstrip(" ,;:-—")).strip()
+
+
+def _goroh_override_present(conn, lemma: str) -> bool:
+    try:
+        row = conn.execute(
+            "SELECT 1 FROM goroh_etymology WHERE requested_lemma = ? AND etymology_text != '' LIMIT 1",
+            (lemma,),
+        ).fetchone()
+    except sqlite3.OperationalError:
+        return False
+    return row is not None
+
+
+def _esum_row_kept(conn, lemma: object, text: object) -> bool:
+    """Match the product cleaner's keep-or-drop choice for one ESUM row."""
+    head = str(lemma or "")
+    entry = _garbled_esum_catalog().get(_esum_lookup_key(head))
+    if entry is None:
+        return _esum_text_kept(text)
+    if _goroh_override_present(conn, head):
+        return True
+    return _esum_text_kept(_strip_garbled_tail(str(text or ""), entry))
+
+
 def _esum_rows(path: Path, query: str, limit: int) -> list[dict]:
     clean = _fold_key(query)
     if not clean:
@@ -346,7 +408,7 @@ def _esum_rows(path: Path, query: str, limit: int) -> list[dict]:
             "ORDER BY vol, page, lemma LIMIT ?",
             tuple(params),
         ).fetchall()
-        kept = [row for row in meta_rows if _esum_text_kept(row["etymology_text"])]
+        kept = [row for row in meta_rows if _esum_row_kept(conn, row["lemma"], row["etymology_text"])]
         if kept:
             return [{"lemma": row["lemma"]} for row in kept[:limit]]
         if not _like_is_safe(clean):
@@ -359,7 +421,7 @@ def _esum_rows(path: Path, query: str, limit: int) -> list[dict]:
             "ORDER BY rank, rowid LIMIT ?",
             (f'"{phrase}"', max(limit * 4, 30)),
         ).fetchall()
-        fts_rows = [row for row in fts_rows if _esum_text_kept(row["etymology_text"])]
+        fts_rows = [row for row in fts_rows if _esum_row_kept(conn, row["lemma"], row["etymology_text"])]
     except sqlite3.OperationalError as exc:
         logger.debug("citation-check: ESUM lookup failed: %s", exc)
         return []
