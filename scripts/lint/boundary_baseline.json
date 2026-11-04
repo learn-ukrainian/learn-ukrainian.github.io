@@ -317,16 +317,6 @@
       "count": 1
     },
     {
-      "path": "scripts/debug/debug_hash.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/debug/debug_hash.py",
-      "module": "scripts.audit.core",
-      "count": 1
-    },
-    {
       "path": "scripts/dispatcher/providers/codex.py",
       "module": "scripts.audit",
       "count": 1
@@ -559,31 +549,6 @@
     {
       "path": "scripts/pre_commit/regen_lexicon_fingerprint.py",
       "module": "scripts.lexicon.manifest_fingerprint",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/observability.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/observability.py",
-      "module": "scripts.audit.atlas_intake_registry",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/observability.py",
-      "module": "scripts.audit.check_research_registry",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/registry.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/registry.py",
-      "module": "scripts.audit.check_research_registry",
       "count": 1
     }
   ]

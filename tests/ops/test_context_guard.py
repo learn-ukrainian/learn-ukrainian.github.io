@@ -95,7 +95,9 @@ class ShellTmux(FakeTmux):
             pid = argv[1].split("/")[2]
             for pane in self.sessions.values():
                 if pane.agent and pane.agent_pid == pid:
-                    return self._ok(CGROUP if pane.scope == SCOPE else "0::/user.slice/user-1000.slice/session-3.scope\n")
+                    return self._ok(
+                        CGROUP if pane.scope == SCOPE else "0::/user.slice/user-1000.slice/session-3.scope\n"
+                    )
             return self._fail("No such file or directory")
         if argv[0] == "systemctl":
             self.calls.append(list(argv))
@@ -218,6 +220,12 @@ def test_every_lane_is_resolved_by_session_name_never_by_pane_id(tmp_path: Path)
         text = (REPO / path).read_text(encoding="utf-8")
         assert re.search(r"%\d", text) is None, path
         assert '"pane"' not in text, path
+    lanes = json.loads((REPO / "scripts/config/driver_lanes.json").read_text(encoding="utf-8"))
+    for lane in lanes["lanes"]:
+        if lane["kind"] == "codex":
+            assert lane["account"] == "sub"
+        else:
+            assert "account" not in lane
 
 
 def test_missing_session_is_logged_and_skipped(tmp_path: Path) -> None:
@@ -709,7 +717,9 @@ def exits_by_itself(tmp_path: Path) -> Harness:
     return h
 
 
-def test_an_ordinary_exit_whose_scope_outlives_the_agent_is_relaunched_only_after_the_scope_exits(tmp_path: Path) -> None:
+def test_an_ordinary_exit_whose_scope_outlives_the_agent_is_relaunched_only_after_the_scope_exits(
+    tmp_path: Path,
+) -> None:
     """AC-01: background tasks keep the scope active after the agent leaves; the successor would refuse (rc=3)."""
     state_path = tmp_path / "state.json"
     saved_before_exit: list[bool] = []
@@ -810,7 +820,9 @@ def test_a_failed_scope_lookup_holds_the_ordinary_relaunch_and_alerts_after_the_
     h = exits_by_itself(second)
     run = h.guard.tmux.run
     h.guard.tmux.run = lambda argv: (
-        subprocess.CompletedProcess(argv, 3, "unknown\n", "") if argv[:3] == ["systemctl", "--user", "is-active"] else run(argv)
+        subprocess.CompletedProcess(argv, 3, "unknown\n", "")
+        if argv[:3] == ["systemctl", "--user", "is-active"]
+        else run(argv)
     )
     h.tick("cto")
     assert respawns(h) == [] and cto_alerts(h) == []
@@ -971,7 +983,9 @@ def test_unreadable_agent_cgroup_is_unknown() -> None:
         tmux_with({"cat": ok("", 1)}).agent_scope("200@x")
 
 
-@pytest.mark.parametrize(("state", "active"), [("active", True), ("deactivating", True), ("inactive", False), ("failed", False)])
+@pytest.mark.parametrize(
+    ("state", "active"), [("active", True), ("deactivating", True), ("inactive", False), ("failed", False)]
+)
 def test_scope_state_reads_systemctl_is_active(state: str, active: bool) -> None:
     assert tmux_with({"is-active": ok(state + "\n", 0 if active else 3)}).scope_active(SCOPE) is active
 

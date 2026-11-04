@@ -23,10 +23,16 @@ import json
 import os
 import re
 from collections import deque
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+from scripts.agent_runtime.codex_accounts import (
+    CODEX_SUBSCRIPTION_ACCOUNTS,
+    CodexAccountRefused,
+    codex_account_home,
+)
 
 DEFAULT_LABEL = "local"
 DEFAULT_REPO = Path.home() / "projects" / "learn-ukrainian"
@@ -36,12 +42,33 @@ TAIL_LINES = 500
 SNIPPET_LIMIT = 16
 SNIPPET_CHARS = 220
 
-DEFAULT_ROOTS = (
-    Path.home() / ".codex" / "sessions",
-    Path.home() / ".claude" / "projects",
-    Path.home() / ".gemini" / "tmp",
-    Path.home() / ".config" / "gemini",
-)
+
+def default_roots(environ: Mapping[str, str] | None = None) -> list[tuple[str | None, Path]]:
+    """Default session roots. Account a is unlabeled; bound ``b-sub`` is ``codex:b``.
+
+    ``DIGEST_ROOTS`` bypasses this and stays unlabeled. Account a ignores
+    ambient ``CODEX_HOME``. An unbound ``b-sub`` adds no root.
+    """
+    env = os.environ if environ is None else environ
+    home = Path(env.get("HOME") or Path.home())
+    roots: list[tuple[str | None, Path]] = [
+        (None, codex_account_home("sub", env) / "sessions"),
+        (None, home / ".claude" / "projects"),
+        (None, home / ".gemini" / "tmp"),
+        (None, home / ".config" / "gemini"),
+    ]
+    bound = _bound_sessions("b-sub", env)
+    if bound is not None:
+        roots.append(("codex:b", bound))
+    return roots
+
+
+def _bound_sessions(label: str, env: Mapping[str, str]) -> Path | None:
+    try:
+        return codex_account_home(label, env) / "sessions"
+    except CodexAccountRefused:
+        return None
+
 
 # Material watch terms: blockers, failures, review/merge, fleet ops.
 _MATERIAL_RE = re.compile(
@@ -130,20 +157,24 @@ def env_repo(environ: dict[str, str] | None = None) -> Path:
     return Path(raw).expanduser()
 
 
-def env_roots(environ: dict[str, str] | None = None) -> list[Path]:
+def env_roots(environ: dict[str, str] | None = None) -> list[tuple[str | None, Path]]:
     env = os.environ if environ is None else environ
     raw = (env.get("DIGEST_ROOTS") or "").strip()
     if raw:
-        return [Path(part).expanduser() for part in raw.split(":") if part.strip()]
-    return [path.expanduser() for path in DEFAULT_ROOTS]
+        return [(None, Path(part).expanduser()) for part in raw.split(":") if part.strip()]
+    return default_roots(env)
 
 
-def collect_sources(roots: Iterable[Path], limit: int) -> list[Path]:
-    """Collect jsonl tails, newest mtime first; rollout name is tie-break only."""
-    found: list[Path] = []
+def collect_sources(roots: Iterable[tuple[str | None, Path]], limit: int) -> list[tuple[Path, str | None]]:
+    """Collect jsonl tails, newest mtime first; rollout name is tie-break only.
+
+    The account label travels with the file. It is ``None`` for account a and
+    for an explicit ``DIGEST_ROOTS`` list.
+    """
+    found: list[tuple[Path, str | None]] = []
     seen: set[Path] = set()
 
-    for root in roots:
+    for label, root in roots:
         if not root.is_dir():
             continue
         try:
@@ -160,10 +191,10 @@ def collect_sources(roots: Iterable[Path], limit: int) -> list[Path]:
             except OSError:
                 continue
             seen.add(resolved)
-            found.append(path)
+            found.append((path, label))
 
     # mtime newest first; rollout-* wins only when timestamps tie.
-    found.sort(key=lambda p: (-p.stat().st_mtime, 0 if "rollout-" in p.name else 1))
+    found.sort(key=lambda item: (-item[0].stat().st_mtime, 0 if "rollout-" in item[0].name else 1))
     return found[:limit]
 
 
@@ -213,6 +244,41 @@ def redact_opsec(text: str) -> str:
     return text
 
 
+def redact_home(text: str, home: Path) -> str:
+    """Replace one account's resolved home and its directory name."""
+    resolved = home.resolve()
+    for variant in (str(resolved), str(home)):
+        if variant:
+            text = text.replace(variant, "[codex-home]")
+    name = resolved.name
+    if name and name not in {".", ".."}:
+        text = re.sub(
+            rf"(?<![A-Za-z0-9._-]){re.escape(name)}(?![A-Za-z0-9._-])",
+            "[codex-home]",
+            text,
+        )
+    return text
+
+
+def subscription_homes(environ: Mapping[str, str] | None = None) -> tuple[Path, ...]:
+    """Every subscription home the loader accepts. Unbound labels are absent."""
+    env = os.environ if environ is None else environ
+    found: list[Path] = []
+    for label in CODEX_SUBSCRIPTION_ACCOUNTS:
+        try:
+            found.append(codex_account_home(label, env))
+        except CodexAccountRefused:
+            continue
+    return tuple(sorted(found, key=lambda path: len(str(path.resolve())), reverse=True))
+
+
+def redact_homes(text: str, homes: Iterable[Path]) -> str:
+    """Replace every resolved account home, longest path first."""
+    for home in homes:
+        text = redact_home(text, home)
+    return text
+
+
 def is_noise(text: str) -> bool:
     return bool(_NOISE_RE.search(text))
 
@@ -221,7 +287,12 @@ def is_material(text: str) -> bool:
     return bool(_MATERIAL_RE.search(text))
 
 
-def extract_snippets(lines: Iterable[str], limit: int = SNIPPET_LIMIT) -> list[str]:
+def extract_snippets(
+    lines: Iterable[str],
+    limit: int = SNIPPET_LIMIT,
+    *,
+    homes: Iterable[Path] = (),
+) -> list[str]:
     snippets: list[str] = []
     seen: set[str] = set()
     for line in lines:
@@ -229,6 +300,7 @@ def extract_snippets(lines: Iterable[str], limit: int = SNIPPET_LIMIT) -> list[s
             if is_noise(raw) or not is_material(raw):
                 continue
             cleaned = " ".join(redact_opsec(raw).split())
+            cleaned = redact_homes(cleaned, homes)
             if len(cleaned) > SNIPPET_CHARS:
                 cleaned = cleaned[: SNIPPET_CHARS - 1].rstrip() + "…"
             if not cleaned or cleaned in seen:
@@ -245,10 +317,17 @@ def source_label(path: Path) -> str:
     return "/".join(path.parts[-3:])
 
 
+def source_heading(path: Path, account: str | None) -> str:
+    """Account b is named on the filename only, so the home directory is not shown."""
+    if account:
+        return f"{account}/{path.name}"
+    return source_label(path)
+
+
 def render_digest(
     *,
     label: str,
-    sources: list[Path],
+    sources: list[tuple[Path, str | None]],
     generated: datetime,
 ) -> str:
     rows: list[str] = [
@@ -265,10 +344,12 @@ def render_digest(
         rows.append("")
         return "\n".join(rows)
 
-    for path in sources:
-        rows.append(f"## {source_label(path)}")
+    homes = subscription_homes()
+    for path, account in sources:
+        heading = redact_homes(source_heading(path, account), homes)
+        rows.append(f"## {heading}")
         rows.append("")
-        snippets = extract_snippets(tail_lines(path))
+        snippets = extract_snippets(tail_lines(path), homes=homes)
         if snippets:
             for snippet in snippets:
                 rows.append(f"- {snippet}")
@@ -308,7 +389,7 @@ def write_digest(
     *,
     label: str,
     repo: Path,
-    roots: list[Path],
+    roots: list[tuple[str | None, Path]],
     limit: int,
 ) -> tuple[Path, int, int]:
     digest_dir = repo / "logs" / "agent-digests"
