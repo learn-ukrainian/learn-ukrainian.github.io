@@ -42,13 +42,14 @@ import shutil
 import subprocess
 import tempfile
 import time
+from collections.abc import Callable
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
-from scripts.review.receipts.ledger import review_tools
+from scripts.review.product_hooks import attempt_hooks
 from scripts.secret_redactor import redact_text
 
 from ..read_only_tmp import validate_read_only_tmp_root
@@ -68,6 +69,9 @@ if TYPE_CHECKING:
     from scripts.review.isolation import SandboxCapability
 
 _logger = logging.getLogger(__name__)
+
+# The product receipt ledger's Sources tool sets, read through the review attempt hooks.
+review_tools: Callable[..., frozenset[str]] = attempt_hooks().ledger().review_tools
 
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _EXCERPT_CHARS = 500

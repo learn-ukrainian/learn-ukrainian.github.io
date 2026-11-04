@@ -1066,16 +1066,16 @@ def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]
     schema. A re-review additionally admits exactly previous review, previous
     ledger and diff. No file referred to by an input's contents is opened.
     """
-    from scripts.build.fresh.manifest import pinned_entries
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.prompts.eligibility import pin_refusals
+    from scripts.review.product_hooks import attempt_hooks
 
+    hooks = attempt_hooks()
     if manifest.get("kind") not in {"plan", "lesson", "lexical"}:
         raise ReviewIsolationError("attempt_manifest_kind")
-    if pin_refusals(manifest, root):
+    if hooks.pin_refusals(manifest, root):
         raise ReviewIsolationError("attempt_manifest_ineligible")
     copied: dict[str, bytes] = {}
-    for location, entry in pinned_entries(manifest):
+    for location, entry in hooks.pinned_entries(manifest):
         path = root / entry["path"]
         data = path.read_bytes()
         if hashlib.sha256(data).hexdigest() != entry["sha256"]:
@@ -1465,17 +1465,17 @@ def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:
     A separate review tree is allowed only when its pinned bytes match. Other
     repository files are context, never evidence without a sources receipt.
     """
-    from scripts.build.fresh.manifest import pinned_entries
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.prompts.eligibility import pin_refusals
+    from scripts.review.product_hooks import attempt_hooks
 
+    hooks = attempt_hooks()
     try:
         manifest = yaml.safe_load(manifest_path.read_bytes())
-        for _, entry in pinned_entries(manifest):
+        for _, entry in hooks.pinned_entries(manifest):
             data = safe_read_attempt_file(cwd / entry["path"], trusted_root=cwd)
             if hashlib.sha256(data).hexdigest() != entry["sha256"]:
                 raise ReviewIsolationError("full_review_tree_mismatch")
-        if pin_refusals(manifest, cwd):
+        if hooks.pin_refusals(manifest, cwd):
             raise ReviewIsolationError("full_review_manifest_ineligible")
         checkout = subprocess.run(
             ["git", "rev-parse", "--show-toplevel"], cwd=cwd, capture_output=True, text=True, timeout=30, check=False
