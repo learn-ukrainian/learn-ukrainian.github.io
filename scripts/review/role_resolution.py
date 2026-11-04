@@ -396,6 +396,12 @@ def _resolve_role(
         from scripts.review.reviewer_resolver import normalize_routing_snapshot
 
         normalized = normalize_routing_snapshot(health)
+        accounts = health.get("codex_accounts")
+        if isinstance(accounts, dict):
+            for key in ("codex:a", "codex:b"):
+                record = accounts.get(key)
+                if isinstance(record, dict):
+                    normalized.update(normalize_routing_snapshot({"agents": {key: record}}))
     spec = catalog["roles"].get(role, {})
     while "role" in spec:
         spec = catalog["roles"][spec["role"]]
@@ -444,6 +450,12 @@ def _resolve_role(
             model["family"],
             *sorted(route.get("health_keys", [])),
         ]
+        if route["route"] == "codex" and health is not None:
+            account = invocation_codex_account(route["invocation"])
+            if account == "b-sub":
+                keys = [route.get("legacy_name"), "codex:b"]
+            elif account == "sub" and "codex:a" in normalized:
+                keys = [route.get("legacy_name"), "codex:a", *keys]
         health_key = next((key for key in keys if key in normalized), None)
         observed = normalized.get(health_key)
         wire_id = model["routing_wire_ids"][route["transport"]]

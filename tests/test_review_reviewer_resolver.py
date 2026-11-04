@@ -1114,7 +1114,7 @@ def test_ladders_place_cursor_grok_directly_after_opus(risk):
         assert ladder[6][0].name == "claude-sonnet-5-5-agy"
         assert ladder[7][0].name == "gemini-3.8-flash-high"
         assert ladder[8][0].name == "muse"
-        assert len(ladder) == 8
+        assert len(ladder) == 9
         assert "muse" in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
