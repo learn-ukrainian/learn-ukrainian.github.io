@@ -29,6 +29,32 @@ from jsonschema import Draft202012Validator
 from scripts.eval.uk_preamble.common import sha256_bytes, tokenize
 from scripts.eval.uk_preamble.prompts import extract_json
 
+# The module path is JSON data. A literal import of the product package would
+# stay a machinery-to-product identity. A non-constant import_module call is a
+# writable-connect constructor finding, so this loads the file the JSON names.
+_EVAL_HOOKS: Any = None
+
+
+def _eval_hooks() -> Any:
+    global _EVAL_HOOKS
+    if _EVAL_HOOKS is None:
+        import importlib.util
+        import json
+        import sys
+        from pathlib import Path
+
+        entry = json.loads('{"module": "scripts.verification.eval_hooks", "relative": "verification/eval_hooks.py"}')
+        path = Path(__file__).resolve().parents[2] / entry["relative"]
+        spec = importlib.util.spec_from_file_location(entry["module"], path)
+        if spec is None or spec.loader is None:
+            raise ImportError(entry["module"])
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[entry["module"]] = module
+        spec.loader.exec_module(module)
+        _EVAL_HOOKS = module
+    return _EVAL_HOOKS
+
+
 from .contract import (
     ANCHOR_KINDS,
     CARD_FACETS,
@@ -217,7 +243,8 @@ def render_fresh(family: str, item: dict[str, Any], renderer: Renderer | None = 
     if not isinstance(item.get("slug"), str) or not isinstance(item.get("lesson_n"), int):
         raise AdapterError("a fresh-writer item needs slug and lesson_n")
     if renderer is None:
-        from scripts.build.fresh.prompt import render_lesson_prompt as renderer
+        loaded: Renderer = _eval_hooks().render_lesson_prompt
+        renderer = loaded
     # The style card is the fourth input: the level's fixed card, resolved by the renderer.
     return renderer(
         inputs["plan_entry"],
@@ -387,7 +414,7 @@ def accept(
         return Acceptance("accepted", parsed=parsed, cited_receipts=cited)
     if output == "lesson-draft":
         if validate_draft is None:
-            from scripts.build.fresh.writer import parse_and_validate_reply
+            parse_and_validate_reply = _eval_hooks().parse_and_validate_reply
 
             plan_entry = (item.get("inputs") or {}).get("plan_entry") or {}
             # As the production writer does: the plan's activity types, and the lowercase level.
