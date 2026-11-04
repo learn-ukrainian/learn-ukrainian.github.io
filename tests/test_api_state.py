@@ -9,16 +9,17 @@ import pytest
 
 @pytest.fixture
 def monitor_paths(tmp_path, monkeypatch):
-    from scripts.api import state_helpers
+    from scripts.project_api import curriculum_state
 
-    monkeypatch.setattr(state_helpers, "_PRODUCT_DATA_DIR", tmp_path)
+    monkeypatch.setattr(curriculum_state, "_PRODUCT_DATA_DIR", tmp_path)
     path = tmp_path / "monitor_paths.v1.json"
     path.write_text(json.dumps({
         "schema": "learn-ukrainian.monitor-paths",
         "schema_version": 1,
         "monitor_surface": "scripts.curriculum.monitor_surface",
+        "product_api": "scripts.project_api.entry",
     }))
-    return state_helpers, path
+    return curriculum_state, path
 
 
 @pytest.mark.parametrize("name", [None, 1, "sqlite3", "scripts.sqlite3", "scripts.Bad", ".scripts.api", "scripts/a", "scripts.a:main", "scripts.a\n"])
@@ -84,14 +85,21 @@ def test_configured_loader_accounting_covers_map_callers_once():
     from scripts.lint import boundary_ratchet
 
     root = Path(__file__).resolve().parents[1]
-    paths = ["scripts/api/state_helpers.py", "scripts/api/atlas_jobs_router.py", "scripts/pre_commit/product_entry.py"]
+    paths = [
+        "scripts/api/product_contribution.py",
+        "scripts/project_api/curriculum_state.py",
+        "scripts/project_api/atlas_jobs_router.py",
+        "scripts/pre_commit/product_entry.py",
+    ]
     sources = {path: (root / path).read_bytes() for path in paths}
     graph = scan_imports(sources)
-    assert [row["path"] for row in graph["configured_loads"]] == sorted(paths)
+    # product_contribution calls the loader twice: the product entry and the Atlas registry adapter.
+    assert [row["path"] for row in graph["configured_loads"]] == sorted([*paths, "scripts/api/product_contribution.py"])
     assert all(classify_source(source.decode(), path) == [] for path, source in sources.items())
     config = boundary_ratchet.load_config(root / "scripts/config/package_boundary.yaml")
-    assert boundary_ratchet._dynamic_count(graph, config, "machinery") == 3
-    assert boundary_ratchet._configured_line(graph) == "configured-entry-point implementation=0 callers=3"
+    assert boundary_ratchet._dynamic_count(graph, config, "machinery") == 2
+    assert boundary_ratchet._dynamic_count(graph, config, "product") == 2
+    assert boundary_ratchet._configured_line(graph) == "configured-entry-point implementation=0 callers=4"
 
 
 @pytest.fixture
@@ -108,7 +116,7 @@ def module_tree(tmp_path):
 
 class TestGetReviewScore:
     def test_with_score(self, module_tree):
-        from scripts.api.state_compute import _get_review_score
+        from scripts.project_api.state_compute import _get_review_score
 
         track_dir, _ = module_tree
         review_dir = track_dir / "review"
@@ -126,7 +134,7 @@ class TestComputeShippable:
     """
 
     def _health(self, tmp_path, *, mdx=None, verdict=None, write_complete=False, audit_pass=False):
-        from scripts.api.state_build import compute_track_health
+        from scripts.project_api.state_build import compute_track_health
 
         root = tmp_path
         curriculum = root / "curriculum" / "l2-uk-en"
@@ -210,7 +218,7 @@ class TestComputeShippable:
 
 class TestPlanRevisionLog:
     def test_block_style_plan_fixes_count_as_enriched(self, tmp_path):
-        from scripts.api.state_helpers import plan_has_revision_log
+        from scripts.project_api.curriculum_state import plan_has_revision_log
 
         plan = tmp_path / "plan.yaml"
         plan.write_text(
@@ -223,7 +231,7 @@ class TestPlanRevisionLog:
 
 class TestGetStressIssues:
     def test_with_stress_issues(self, module_tree):
-        from scripts.api.state_compute import _get_stress_issues
+        from scripts.project_api.state_compute import _get_stress_issues
 
         _, orch_dir = module_tree
         (orch_dir / "screen-result.json").write_text(

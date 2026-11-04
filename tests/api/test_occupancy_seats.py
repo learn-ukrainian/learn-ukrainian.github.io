@@ -13,11 +13,11 @@ from fastapi.testclient import TestClient
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.monitor_context import fixture_context
 from scripts.api.occupancy import router as occupancy_router
 from scripts.api.occupancy_local import write_marker
 from scripts.lexicon.runner import atlas_job
+from scripts.project_api import atlas_jobs_router as load_mod
 from tests import _host_path_guard as guard
 
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")

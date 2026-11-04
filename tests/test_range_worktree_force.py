@@ -13,10 +13,10 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.artifacts_router as artifacts_router
 import scripts.api.main as api_main
-import scripts.api.state_router as state_router
 import scripts.api.worktrees_router as worktrees_router
+import scripts.project_api.artifacts_router as artifacts_router
+import scripts.project_api.state_router as state_router
 
 pytestmark = pytest.mark.reads_content
 

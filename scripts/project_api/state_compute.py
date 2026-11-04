@@ -25,15 +25,14 @@ from research_quality import (
     get_dimensions,
     get_rubric,
 )
-
-from . import config
+from scripts.api import config
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
-from .state_helpers import (
+from .curriculum_state import (
     V5_PHASE_ORDER,
     detect_pipeline_version,
     find_content_file,
@@ -45,7 +44,6 @@ from .state_helpers import (
     get_word_target_from_plan,
     has_research_file,
     monitor_surface,
-    # BACKWARD-COMPAT: v3/v2 parsers needed for modules not yet rebuilt on v6
     parse_v3_phase_status,
     parse_v5_phase_status,
     plan_has_revision_log,

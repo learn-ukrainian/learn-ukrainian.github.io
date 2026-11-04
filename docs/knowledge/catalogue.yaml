@@ -2070,7 +2070,7 @@ entries:
     kind: data_store
     store: [data/backups/]
     producer: []
-    producer_note: No script in scripts/ writes it; it holds hand-made pre-migration copies of sources.db and leftover rehearsal sidecars. The Monitor admin router (scripts/api/admin_router.py, BACKUP_DIR) lists and deletes them.
+    producer_note: No script in scripts/ writes it; it holds hand-made pre-migration copies of sources.db and leftover rehearsal sidecars. The Monitor admin router (scripts/project_api/admin_router.py, BACKUP_DIR) lists and deletes them.
     local_only: true
     purpose: Pre-migration safety copies of local SQLite stores, plus leftover migration-rehearsal sidecar files.
     keywords: [backups, pre-migration copy, migration rehearsal]
@@ -2204,7 +2204,7 @@ entries:
   - id: data-telemetry
     kind: data_store
     store: [data/telemetry/]
-    producer: [scripts/api/telemetry_router.py, scripts/hygiene/check_primary_integrity.py]
+    producer: [scripts/api/telemetry_router.py, scripts/project_api/module_builds.py, scripts/hygiene/check_primary_integrity.py]
     local_only: true
     purpose: Runtime telemetry - tool timings, legacy comms route usage and integrity-watch events.
     keywords: [telemetry, tool timings, integrity watch]
@@ -2790,8 +2790,8 @@ store_registry:
       kind: operational
       activity: not_created
       presence: declared_absent
-      absent_reason: Default of HRAMATKA_DB_PATH in scripts/api/hramatka_router.py; created on the first lesson job.
-      writers: [scripts/api/hramatka_router.py:_connect]
+      absent_reason: Default of HRAMATKA_DB_PATH in scripts/project_api/hramatka_router.py; created on the first lesson job.
+      writers: [scripts/project_api/hramatka_router.py:_connect]
       journal: unknown
       busy_ms: 5000
       busy_source: explicit
@@ -2831,7 +2831,7 @@ store_registry:
       activity: not_created
       presence: declared_absent
       catalogue_entry: data-telemetry
-      absent_reason: Default in scripts/api/telemetry_router.py; created on the first module build event.
+      absent_reason: Default in scripts/project_api/module_builds.py; created on the first module build event.
       writers: [scripts/api/telemetry_router.py:_open_telemetry_db]
       journal: unknown
       busy_ms: 5000

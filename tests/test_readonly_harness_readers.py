@@ -112,7 +112,7 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
 
 
 def test_dashboard_broker_routes_through_monitor_context(tmp_path):
-    reader = "scripts/api/dashboard_comms.py"
+    reader = "scripts/project_api/dashboard_comms.py"
     tree = ast.parse((ROOT / reader).read_text())
     definition = next(
         node for node in tree.body

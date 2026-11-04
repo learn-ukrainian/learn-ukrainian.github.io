@@ -13,7 +13,7 @@ from enum import StrEnum
 from typing import Any, Protocol, cast
 from urllib.error import HTTPError, URLError
 
-from .state_helpers import monitor_surface
+from .curriculum_state import monitor_surface
 
 PRIMARY_MODEL = "gemini-3.8-flash-high"
 SECONDARY_MODEL = "gemini-3.8-flash-high"

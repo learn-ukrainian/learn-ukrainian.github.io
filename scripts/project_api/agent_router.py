@@ -11,9 +11,9 @@ from fastapi import APIRouter, Depends, HTTPException
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
-from .monitor_context import MonitorContext, get_ctx
+from scripts.api.monitor_context import MonitorContext, get_ctx
 
 logger = logging.getLogger(__name__)
 

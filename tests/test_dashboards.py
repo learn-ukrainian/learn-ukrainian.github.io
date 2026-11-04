@@ -84,14 +84,15 @@ class TestApiEndpoints:
     @pytest.mark.repo_wide
     def test_endpoints_defined_in_router(self):
         """Check that API endpoints are defined in router files."""
-        api_dir = ROOT / "scripts" / "api"
-        if not api_dir.exists():
+        api_dirs = [ROOT / "scripts" / "api", ROOT / "scripts" / "project_api"]
+        if not all(api_dir.exists() for api_dir in api_dirs):
             pytest.skip("API directory not found")
 
-        # Read all router files
+        # Read all router files: machinery and product halves of the Monitor API
         router_text = ""
-        for py_file in api_dir.glob("*.py"):
-            router_text += py_file.read_text()
+        for api_dir in api_dirs:
+            for py_file in api_dir.glob("*.py"):
+                router_text += py_file.read_text()
 
         missing = []
         for endpoint in self.EXPECTED_ENDPOINTS:
@@ -175,12 +176,12 @@ class TestOverviewLastGoodHonesty:
     """#7024: cold last-good + published_mdx must not report missing=total."""
 
     def setup_method(self):
-        import scripts.api.dashboard_router as dashboard_router
+        import scripts.project_api.dashboard_router as dashboard_router
 
         dashboard_router.reset_overview_state_for_tests()
 
     def teardown_method(self):
-        import scripts.api.dashboard_router as dashboard_router
+        import scripts.project_api.dashboard_router as dashboard_router
 
         dashboard_router.reset_overview_state_for_tests()
 
@@ -192,7 +193,7 @@ class TestOverviewLastGoodHonesty:
         return TestClient(app, raise_server_exceptions=False)
 
     def test_cold_process_published_is_not_all_missing(self, monkeypatch, tmp_path):
-        import scripts.api.dashboard_router as dashboard_router
+        import scripts.project_api.dashboard_router as dashboard_router
 
         monkeypatch.setenv(
             dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV,
@@ -229,7 +230,7 @@ class TestOverviewLastGoodHonesty:
         assert data["meta"].get("refreshing") is True
 
     def test_bounce_reloads_persisted_last_good(self, monkeypatch, tmp_path):
-        import scripts.api.dashboard_router as dashboard_router
+        import scripts.project_api.dashboard_router as dashboard_router
 
         last_good_path = tmp_path / "overview_last_good.json"
         monkeypatch.setenv(

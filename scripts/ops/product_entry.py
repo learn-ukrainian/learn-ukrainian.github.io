@@ -15,12 +15,15 @@ Contract of :func:`load_configured_module`:
 * ``name`` is an absolute, lowercase, dotted ``scripts.*`` module name.
 * A name with ``sqlite3`` or ``_sqlite3`` as a part is refused first, as
   ``scripts.lib.readonly_sqlite.import_named_module`` refuses it.
+* ``product_root`` is the product checkout the module must come from. It
+  defaults to the checkout this file is in. A given root must be an absolute
+  path to a directory that has a ``scripts/`` directory; it is checked before
+  anything is imported.
 * The module is imported with :func:`importlib.import_module`. It takes the
   per-module import lock, reuses ``sys.modules``, binds the module on its parent
   package, and removes a module whose import raised, ``BaseException`` included.
-* The module must be a file under the ``scripts/`` directory of the checkout this
-  file is in. A module cached from another checkout and a namespace package are
-  refused.
+* The module must be a file under the product root's ``scripts/`` directory. A
+  module cached from another checkout and a namespace package are refused.
 
 A refusal raises :class:`ConfiguredModuleError`, an ``ImportError``. An import
 that fails raises what the import raised. Callers keep their own data-file
@@ -46,19 +49,31 @@ class ConfiguredModuleError(ImportError):
     """A configured module name, or the module it resolved to, was refused."""
 
 
-def load_configured_module(name: str) -> ModuleType:
-    """Import the ``scripts.*`` module ``name`` from this checkout, or raise :class:`ConfiguredModuleError`."""
+def load_configured_module(name: str, *, product_root: Path | None = None) -> ModuleType:
+    """Import the ``scripts.*`` module ``name`` from ``product_root``, or raise :class:`ConfiguredModuleError`."""
     if not isinstance(name, str):
         raise ConfiguredModuleError(f"configured module name is not a string: {name!r}")
     if _SQLITE_MODULES.intersection(re.split(r"[.:]", name)):
         raise ConfiguredModuleError(f"SQLite modules are not loaded through this boundary: {name}", name=name)
     if _NAME_RE.fullmatch(name) is None:
         raise ConfiguredModuleError(f"configured module name is not a lowercase scripts.* name: {name!r}", name=name)
-    return _in_this_checkout(name, importlib.import_module(name))
+    scripts_dir = _scripts_dir(name, product_root)
+    return _in_this_checkout(name, importlib.import_module(name), scripts_dir)
 
 
-def _in_this_checkout(name: str, module: ModuleType) -> ModuleType:
+def _scripts_dir(name: str, product_root: Path | None) -> Path:
+    if product_root is None:
+        return CHECKOUT_ROOT / "scripts"
+    if not isinstance(product_root, Path) or not product_root.is_absolute():
+        raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}", name=name)
+    scripts_dir = product_root.resolve() / "scripts"
+    if not scripts_dir.is_dir():
+        raise ConfiguredModuleError(f"product root has no scripts/ directory: {product_root}", name=name)
+    return scripts_dir
+
+
+def _in_this_checkout(name: str, module: ModuleType, scripts_dir: Path) -> ModuleType:
     origin = getattr(module, "__file__", None)
-    if not isinstance(origin, str) or not Path(origin).resolve().is_relative_to(CHECKOUT_ROOT / "scripts"):
+    if not isinstance(origin, str) or not Path(origin).resolve().is_relative_to(scripts_dir):
         raise ConfiguredModuleError(f"{name} is not a file in this checkout's scripts/: {origin!r}", name=name)
     return module

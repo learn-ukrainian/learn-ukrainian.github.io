@@ -12,9 +12,8 @@ from typing import Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 
+from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.common.repo_root import project_interpreter
-
-from .monitor_context import MonitorContext, get_ctx
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,6 @@
 {
   "schema": "learn-ukrainian.monitor-paths",
   "schema_version": 1,
-  "monitor_surface": "scripts.curriculum.monitor_surface"
+  "monitor_surface": "scripts.curriculum.monitor_surface",
+  "product_api": "scripts.project_api.entry"
 }

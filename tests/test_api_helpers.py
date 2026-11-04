@@ -27,13 +27,13 @@ class TestExtractReviewScore:
     """extract_review_score parses various score formats."""
 
     def test_bold_overall_score(self):
-        from scripts.api.review_parsing import extract_review_score
+        from scripts.project_api.review_parsing import extract_review_score
 
         text = "Some text\n**Overall Score:** 8.5/10\nMore text"
         assert extract_review_score(text) == 8.5
 
     def test_no_score_returns_none(self):
-        from scripts.api.review_parsing import extract_review_score
+        from scripts.project_api.review_parsing import extract_review_score
 
         assert extract_review_score("No score here") is None
 
@@ -42,12 +42,12 @@ class TestExtractReviewVerdict:
     """extract_review_verdict parses PASS/FAIL."""
 
     def test_pass_verdict(self):
-        from scripts.api.review_parsing import extract_review_verdict
+        from scripts.project_api.review_parsing import extract_review_verdict
 
         assert extract_review_verdict("**Status:** PASS") == "PASS"
 
     def test_no_verdict(self):
-        from scripts.api.review_parsing import extract_review_verdict
+        from scripts.project_api.review_parsing import extract_review_verdict
 
         assert extract_review_verdict("No verdict here") is None
 
@@ -56,12 +56,12 @@ class TestExtractPlanVerdict:
     """extract_plan_verdict parses plan review verdicts."""
 
     def test_pass(self):
-        from scripts.api.review_parsing import extract_plan_verdict
+        from scripts.project_api.review_parsing import extract_plan_verdict
 
         assert extract_plan_verdict("**Verdict:** PASS") == "PASS"
 
     def test_no_verdict(self):
-        from scripts.api.review_parsing import extract_plan_verdict
+        from scripts.project_api.review_parsing import extract_plan_verdict
 
         assert extract_plan_verdict("no verdict") is None
 
@@ -70,7 +70,7 @@ class TestCountReviewIssues:
     """count_review_issues counts issue headers."""
 
     def test_counts_issues(self):
-        from scripts.api.review_parsing import count_review_issues
+        from scripts.project_api.review_parsing import count_review_issues
 
         text = "# Issue #1\ntext\n## Issue #2\ntext\n### Issue 3\ntext"
         assert count_review_issues(text) == 3
@@ -83,24 +83,24 @@ class TestDetectPipelineVersionHelpers:
     """detect_pipeline_version from state_helpers."""
 
     def test_v5_from_state_json(self, tmp_path):
-        from scripts.api.state_helpers import detect_pipeline_version
+        from scripts.project_api.curriculum_state import detect_pipeline_version
 
         (tmp_path / "state.json").write_text('{"mode": "v5", "phases": {}}')
         assert detect_pipeline_version(tmp_path) == "v5"
 
     def test_v3_from_state_v3(self, tmp_path):
-        from scripts.api.state_helpers import detect_pipeline_version
+        from scripts.project_api.curriculum_state import detect_pipeline_version
 
         (tmp_path / "state-v3.json").write_text('{"phases": {}}')
         assert detect_pipeline_version(tmp_path) == "v3"
 
     def test_unbuilt_empty_dir(self, tmp_path):
-        from scripts.api.state_helpers import detect_pipeline_version
+        from scripts.project_api.curriculum_state import detect_pipeline_version
 
         assert detect_pipeline_version(tmp_path) == "unbuilt"
 
     def test_invalid_json_returns_unbuilt(self, tmp_path):
-        from scripts.api.state_helpers import detect_pipeline_version
+        from scripts.project_api.curriculum_state import detect_pipeline_version
 
         (tmp_path / "state.json").write_text("not json{{{")
         assert detect_pipeline_version(tmp_path) == "unbuilt"
@@ -110,7 +110,7 @@ class TestReadStateFiles:
     """read_v3_state and read_v2_state."""
 
     def test_read_v3_state_valid(self, tmp_path):
-        from scripts.api.state_helpers import read_v3_state
+        from scripts.project_api.curriculum_state import read_v3_state
 
         data = {"phases": {"v3-A": {"status": "complete"}}}
         (tmp_path / "state-v3.json").write_text(json.dumps(data))
@@ -121,14 +121,14 @@ class TestParsePhaseStatus:
     """Phase status parsing functions."""
 
     def test_v5_complete(self):
-        from scripts.api.state_helpers import parse_v5_phase_status
+        from scripts.project_api.curriculum_state import parse_v5_phase_status
 
         v5 = {"phases": {"sandbox": {"status": "complete", "ts": "2026-02-01"}}}
         result = parse_v5_phase_status(v5, "sandbox")
         assert result["status"] == "complete"
 
     def test_v3_with_mode_and_attempts(self):
-        from scripts.api.state_helpers import parse_v3_phase_status
+        from scripts.project_api.curriculum_state import parse_v3_phase_status
 
         v3 = {"phases": {"v3-A": {"status": "complete", "mode": "gemini", "ts": "t1", "attempts": 2}}}
         result = parse_v3_phase_status(v3, "v3-A")
@@ -141,14 +141,14 @@ class TestGetAuditStatus:
     """get_audit_status reads status JSON files."""
 
     def test_not_run(self, tmp_path):
-        from scripts.api.state_helpers import get_audit_status
+        from scripts.project_api.curriculum_state import get_audit_status
 
         result = get_audit_status(tmp_path, "missing-slug")
         assert result["status"] == "not_run"
         assert result["word_count"] == 0
 
     def test_pass_status(self, tmp_path):
-        from scripts.api.state_helpers import get_audit_status
+        from scripts.project_api.curriculum_state import get_audit_status
 
         (tmp_path / "status").mkdir()
         data = {
@@ -162,7 +162,7 @@ class TestGetAuditStatus:
         assert result["word_target"] == 1500
 
     def test_fail_status_with_blocking(self, tmp_path):
-        from scripts.api.state_helpers import get_audit_status
+        from scripts.project_api.curriculum_state import get_audit_status
 
         (tmp_path / "status").mkdir()
         data = {
@@ -178,7 +178,7 @@ class TestGetAuditStatus:
         assert len(result["blocking_issues"]) == 2
 
     def test_invalid_json(self, tmp_path):
-        from scripts.api.state_helpers import get_audit_status
+        from scripts.project_api.curriculum_state import get_audit_status
 
         (tmp_path / "status").mkdir()
         (tmp_path / "status" / "test.json").write_text("broken json{{{")
@@ -190,14 +190,14 @@ class TestExtractContentHash:
     """extract_content_hash reads hash from review header."""
 
     def test_valid_hash(self, tmp_path):
-        from scripts.api.state_helpers import extract_content_hash
+        from scripts.project_api.curriculum_state import extract_content_hash
 
         review = tmp_path / "review.md"
         review.write_text("<!-- content-hash: abc123def456 -->\n# Review")
         assert extract_content_hash(review) == "abc123def456"
 
     def test_no_hash(self, tmp_path):
-        from scripts.api.state_helpers import extract_content_hash
+        from scripts.project_api.curriculum_state import extract_content_hash
 
         review = tmp_path / "review.md"
         review.write_text("# Review\nNo hash here")
@@ -210,7 +210,7 @@ class TestIsReviewStale:
     def test_not_stale_by_hash_match(self, tmp_path):
         import hashlib
 
-        from scripts.api.state_helpers import is_review_stale
+        from scripts.project_api.curriculum_state import is_review_stale
 
         content = tmp_path / "content.md"
         content.write_text("some content")
@@ -224,7 +224,7 @@ class TestGetWordTargetFromPlan:
     """get_word_target_from_plan reads plan YAML."""
 
     def test_reads_target(self, tmp_path):
-        from scripts.api.state_helpers import get_word_target_from_plan
+        from scripts.project_api.curriculum_state import get_word_target_from_plan
 
         plan_dir = tmp_path / "a1"
         plan_dir.mkdir()
@@ -236,7 +236,7 @@ class TestGetFinalReviewInfo:
     """get_final_review_info parses final review files."""
 
     def test_review_with_verdict_and_issues(self, tmp_path):
-        from scripts.api.state_helpers import get_final_review_info
+        from scripts.project_api.curriculum_state import get_final_review_info
 
         review_dir = tmp_path / "review"
         review_dir.mkdir()
@@ -253,7 +253,7 @@ class TestGetFinalReviewInfo:
         assert len(result["issues"]) == 2
 
     def test_review_no_verdict(self, tmp_path):
-        from scripts.api.state_helpers import get_final_review_info
+        from scripts.project_api.curriculum_state import get_final_review_info
 
         review_dir = tmp_path / "review"
         review_dir.mkdir()
@@ -270,8 +270,8 @@ class TestComputePipelineTrack:
     """compute_pipeline_track exposes canonical v6 phase shape."""
 
     def test_v6_phase_order_and_labels(self):
-        from scripts.api.state_coverage import compute_pipeline_track
         from scripts.build.phase_constants import PHASE_LABELS, PHASES
+        from scripts.project_api.state_coverage import compute_pipeline_track
 
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
         plan_slugs = [(1, "test-slug")]
@@ -284,14 +284,14 @@ class TestComputePipelineTrack:
         }
 
         with (
-            patch("scripts.api.state_coverage.get_plan_slugs", return_value=plan_slugs),
-            patch("scripts.api.state_coverage.detect_pipeline_version", return_value="v6"),
-            patch("scripts.api.state_coverage.load_module_state", return_value=state),
+            patch("scripts.project_api.state_coverage.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.project_api.state_coverage.detect_pipeline_version", return_value="v6"),
+            patch("scripts.project_api.state_coverage.load_module_state", return_value=state),
             patch(
-                "scripts.api.state_coverage.get_audit_status",
+                "scripts.project_api.state_coverage.get_audit_status",
                 return_value={"status": "pass", "word_count": 1234, "word_target": 1500},
             ),
-            patch("scripts.api.state_coverage.get_research_score", return_value=8),
+            patch("scripts.project_api.state_coverage.get_research_score", return_value=8),
         ):
             result = compute_pipeline_track("a1", level_cfg)
 
@@ -313,7 +313,7 @@ class TestGetPhasesForVersion:
     """get_phases_for_version returns correct phase dict per version."""
 
     def test_v5_phases(self, tmp_path):
-        from scripts.api.state_compute import get_phases_for_version
+        from scripts.project_api.state_compute import get_phases_for_version
 
         (tmp_path / "state.json").write_text(json.dumps({
             "mode": "v5",
@@ -331,7 +331,7 @@ class TestScanModulePhases:
     """scan_module_phases reads pipeline progress."""
 
     def test_v6_uses_full_phase_order(self, tmp_path):
-        from scripts.api.state_build import scan_module_phases
+        from scripts.project_api.state_build import scan_module_phases
 
         (tmp_path / "state.json").write_text(json.dumps({
             "mode": "v6",
@@ -347,7 +347,7 @@ class TestScanModulePhases:
         assert audit_status == "running"
 
     def test_v5_complete_phases(self, tmp_path):
-        from scripts.api.state_build import scan_module_phases
+        from scripts.project_api.state_build import scan_module_phases
 
         (tmp_path / "state.json").write_text(json.dumps({
             "mode": "v5",
@@ -363,7 +363,7 @@ class TestScanModulePhases:
         assert audit_status == "complete"
 
     def test_v3_phases(self, tmp_path):
-        from scripts.api.state_build import scan_module_phases
+        from scripts.project_api.state_build import scan_module_phases
 
         (tmp_path / "state-v3.json").write_text(json.dumps({
             "phases": {
@@ -380,7 +380,7 @@ class TestCheckBuildPhase:
     """_check_build_phase checks v3-B completion."""
 
     def test_complete(self, tmp_path):
-        from scripts.api.state_build import _check_build_phase
+        from scripts.project_api.state_build import _check_build_phase
 
         (tmp_path / "state-v3.json").write_text(json.dumps({
             "phases": {"v3-B": {"status": "complete", "ts": "2026-01-01"}},
@@ -394,7 +394,7 @@ class TestCheckAuditHealth:
     """_check_audit_health categorizes audit results."""
 
     def test_fail(self):
-        from scripts.api.state_build import _check_audit_health
+        from scripts.project_api.state_build import _check_audit_health
 
         audit = {"status": "fail", "blocking_issues": [{"gate": "words"}]}
         ap, af, att = _check_audit_health(audit, 1, "slug")
@@ -408,14 +408,14 @@ class TestCheckFinalReviewHealth:
     """_check_final_review_health checks final review outcomes."""
 
     def test_approved(self, tmp_path):
-        from scripts.api.state_build import _check_final_review_health
+        from scripts.project_api.state_build import _check_final_review_health
 
         review_dir = tmp_path / "review"
         review_dir.mkdir()
         (review_dir / "test-final-review.md").write_text(
             "===VERDICT=== APPROVE ===END_VERDICT==="
         )
-        with patch("scripts.api.state_build.get_final_review_info") as mock_fri:
+        with patch("scripts.project_api.state_build.get_final_review_info") as mock_fri:
             mock_fri.return_value = {"verdict": "APPROVE", "issue_count": 0, "issues": []}
             r, a, att = _check_final_review_health(tmp_path, 1, "test")
         assert r == 1
@@ -423,9 +423,9 @@ class TestCheckFinalReviewHealth:
         assert att is None
 
     def test_rejected(self, tmp_path):
-        from scripts.api.state_build import _check_final_review_health
+        from scripts.project_api.state_build import _check_final_review_health
 
-        with patch("scripts.api.state_build.get_final_review_info") as mock_fri:
+        with patch("scripts.project_api.state_build.get_final_review_info") as mock_fri:
             mock_fri.return_value = {"verdict": "REJECT", "issue_count": 3, "issues": []}
             r, a, att = _check_final_review_health(tmp_path, 1, "test")
         assert r == 1
@@ -440,7 +440,7 @@ class TestParseSingleIssueBlock:
     """_parse_single_issue_block extracts issue details."""
 
     def test_full_block(self):
-        from scripts.api.state_issues import _parse_single_issue_block
+        from scripts.project_api.state_issues import _parse_single_issue_block
 
         block = (
             "### Issue #1: Grammar error in section 3\n"
@@ -459,7 +459,7 @@ class TestParseReviewBlocks:
     """parse_review_blocks splits text into issues."""
 
     def test_multiple_issues(self):
-        from scripts.api.state_issues import parse_review_blocks
+        from scripts.project_api.state_issues import parse_review_blocks
 
         text = (
             "# Review\n"
@@ -475,7 +475,7 @@ class TestCollectAuditIssues:
     """collect_audit_issues adds audit failures."""
 
     def test_fail_adds_issues(self, tmp_path):
-        from scripts.api.state_issues import collect_audit_issues
+        from scripts.project_api.state_issues import collect_audit_issues
 
         (tmp_path / "status").mkdir()
         data = {
@@ -500,8 +500,8 @@ class TestScanTrackCached:
     """scan_track_cached returns cached results within TTL."""
 
     def test_cache_returns_same_result(self, tmp_path):
-        from scripts.api.dashboard_helpers import _track_cache, _track_cache_key, scan_track_cached
         from scripts.api.monitor_context import fixture_context
+        from scripts.project_api.dashboard_helpers import _track_cache, _track_cache_key, scan_track_cached
 
         ctx = fixture_context(tmp_path)
         # Pre-populate cache under the ctx-scoped key the lookup uses (#7494)
@@ -524,7 +524,7 @@ class TestReadDispatcherState:
     """read_dispatcher_state reads JSON from disk."""
 
     def test_valid_state(self, tmp_path):
-        from scripts.api.dashboard_comms import read_dispatcher_state
+        from scripts.project_api.dashboard_comms import read_dispatcher_state
 
         ctx = _dashboard_ctx(tmp_path)
         ctx.roots.batch_state_dir.mkdir(parents=True, exist_ok=True)
@@ -535,7 +535,7 @@ class TestReadDispatcherState:
         assert result["running"] is True
 
     def test_invalid_json(self, tmp_path):
-        from scripts.api.dashboard_comms import read_dispatcher_state
+        from scripts.project_api.dashboard_comms import read_dispatcher_state
 
         ctx = _dashboard_ctx(tmp_path)
         ctx.roots.batch_state_dir.mkdir(parents=True, exist_ok=True)
@@ -554,7 +554,7 @@ class TestCheckBuildPhaseV5:
     """_check_build_phase handles v5 content phase."""
 
     def test_v5_content_complete(self, tmp_path):
-        from scripts.api.state_build import _check_build_phase
+        from scripts.project_api.state_build import _check_build_phase
 
         (tmp_path / "state.json").write_text(json.dumps({
             "mode": "v5",
@@ -569,7 +569,7 @@ class TestComputeBuildStatusAllV5:
     """compute_build_status_all counts v5 modules."""
 
     def test_v5_module_counted_as_done(self, tmp_path):
-        from scripts.api.state_build import compute_build_status_all
+        from scripts.project_api.state_build import compute_build_status_all
 
         track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
         orch_dir = track_dir / "orchestration" / "test-slug"
@@ -587,8 +587,8 @@ class TestComputeBuildStatusAllV5:
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
 
         with (
-            patch("scripts.api.state_build.LEVELS", [level_cfg]),
-            patch("scripts.api.state_build.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.project_api.state_build.LEVELS", [level_cfg]),
+            patch("scripts.project_api.state_build.get_plan_slugs", return_value=plan_slugs),
         ):
             result = compute_build_status_all(curriculum_root=tmp_path / "curriculum")
 
@@ -596,7 +596,7 @@ class TestComputeBuildStatusAllV5:
         assert result["tracks"]["a1"]["building"] == 0
 
     def test_v5_running_module_counted_as_building(self, tmp_path):
-        from scripts.api.state_build import compute_build_status_all
+        from scripts.project_api.state_build import compute_build_status_all
 
         track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
         orch_dir = track_dir / "orchestration" / "test-slug"
@@ -613,8 +613,8 @@ class TestComputeBuildStatusAllV5:
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
 
         with (
-            patch("scripts.api.state_build.LEVELS", [level_cfg]),
-            patch("scripts.api.state_build.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.project_api.state_build.LEVELS", [level_cfg]),
+            patch("scripts.project_api.state_build.get_plan_slugs", return_value=plan_slugs),
         ):
             result = compute_build_status_all(curriculum_root=tmp_path / "curriculum")
 
@@ -626,7 +626,7 @@ class TestComputeFinalReviewsV5:
     """compute_final_reviews detects v5 modules pending review."""
 
     def test_v5_validate_complete_is_pending(self, tmp_path):
-        from scripts.api.state_issues import compute_final_reviews
+        from scripts.project_api.state_issues import compute_final_reviews
 
         track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
         orch_dir = track_dir / "orchestration" / "test-slug"
@@ -641,8 +641,8 @@ class TestComputeFinalReviewsV5:
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
 
         with (
-            patch("scripts.api.state_issues.get_plan_slugs", return_value=plan_slugs),
-            patch("scripts.api.state_issues.get_final_review_info", return_value=None),
+            patch("scripts.project_api.state_issues.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.project_api.state_issues.get_final_review_info", return_value=None),
         ):
             result = compute_final_reviews("a1", level_cfg, curriculum_root=tmp_path / "curriculum")
 
@@ -654,7 +654,7 @@ class TestComputeFinalReviewsV6:
     """compute_final_reviews detects v6 modules pending review."""
 
     def test_v6_audit_complete_is_pending(self, tmp_path):
-        from scripts.api.state_issues import compute_final_reviews
+        from scripts.project_api.state_issues import compute_final_reviews
 
         track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
         orch_dir = track_dir / "orchestration" / "test-slug"
@@ -669,8 +669,8 @@ class TestComputeFinalReviewsV6:
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
 
         with (
-            patch("scripts.api.state_issues.get_plan_slugs", return_value=plan_slugs),
-            patch("scripts.api.state_issues.get_final_review_info", return_value=None),
+            patch("scripts.project_api.state_issues.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.project_api.state_issues.get_final_review_info", return_value=None),
         ):
             result = compute_final_reviews("a1", level_cfg, curriculum_root=tmp_path / "curriculum")
 
@@ -682,7 +682,7 @@ class TestLoadCurriculum:
     """load_curriculum parses YAML safely with mtime caching and error handling."""
 
     def test_load_valid_curriculum(self, tmp_path):
-        from scripts.api.state_helpers import load_curriculum
+        from scripts.project_api.curriculum_state import load_curriculum
 
         yaml_file = tmp_path / "curriculum.yaml"
         yaml_file.write_text("levels:\n  a1:\n    modules:\n      - demo\n", encoding="utf-8")
@@ -691,7 +691,7 @@ class TestLoadCurriculum:
         assert data["levels"]["a1"]["modules"] == ["demo"]
 
     def test_load_corrupted_yaml_returns_empty(self, tmp_path):
-        from scripts.api.state_helpers import load_curriculum
+        from scripts.project_api.curriculum_state import load_curriculum
 
         yaml_file = tmp_path / "curriculum.yaml"
         yaml_file.write_text("broken: [unclosed list", encoding="utf-8")
@@ -707,7 +707,7 @@ class TestGetBrokerMessagesForSlug:
 
         from scripts.api.monitor_context import DatabaseHandle
         from scripts.api.resilience import connect_sqlite
-        from scripts.api.state_helpers import get_broker_messages_for_slug
+        from scripts.project_api.curriculum_state import get_broker_messages_for_slug
 
         db_path = tmp_path / "messages.sqlite3"
         conn = sqlite3.connect(str(db_path))

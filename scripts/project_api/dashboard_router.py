@@ -20,7 +20,17 @@ from typing import Any, cast
 import yaml
 from fastapi import APIRouter, Depends, HTTPException
 
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.state_helpers import (
+    cache_get_with_age,
+    cache_invalidate,
+    cache_set,
+    ctx_cache_scope,
+    ctx_scoped_ttl_key,
+)
+
 from .config import LEVELS, SEMINAR_TRACK_IDS
+from .curriculum_state import get_plan_slugs, monitor_surface
 from .dashboard_comms import (
     collect_stuck_tasks,
     ensure_broker_cols,
@@ -44,24 +54,14 @@ from .dashboard_helpers import (
     scan_track_summary_cached,
     stats_from_state_summary,
 )
-from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .state_coverage import compute_summary
-from .state_helpers import (
-    cache_get_with_age,
-    cache_invalidate,
-    cache_set,
-    ctx_cache_scope,
-    ctx_scoped_ttl_key,
-    get_plan_slugs,
-    monitor_surface,
-)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 from research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["dashboard"])

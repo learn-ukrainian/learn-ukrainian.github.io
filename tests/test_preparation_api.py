@@ -13,10 +13,10 @@ import pytest
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
 
-from scripts.api import preparation_state
 from scripts.api.main import app
 from scripts.api.repository_authority import build_repository_authority, cwd_role
 from scripts.orchestration import curriculum_readiness
+from scripts.project_api import preparation_state
 
 pytestmark = pytest.mark.reads_content
 

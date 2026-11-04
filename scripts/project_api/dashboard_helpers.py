@@ -14,19 +14,21 @@ from typing import Any, cast
 
 import yaml
 
+from scripts.api.monitor_context import MonitorContext
+
 from .config import LEVELS, SEMINAR_TRACK_IDS
-from .monitor_context import MonitorContext
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 from research_quality import assess_research_compat, find_research_path, get_rubric
+from scripts.api.state_helpers import ctx_cache_scope
 
+from .curriculum_state import detect_pipeline_version, get_plan_slugs, monitor_surface, read_v2_state
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
-from .state_helpers import ctx_cache_scope, detect_pipeline_version, get_plan_slugs, monitor_surface, read_v2_state
 
 # Names stay on this module so existing tests can patch them. The functions
 # are the product ones, reached through the wrapper state_helpers loads once.

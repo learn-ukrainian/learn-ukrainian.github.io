@@ -14,12 +14,13 @@ from typing import Any, cast
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
-from . import config
+from scripts.api import config
+
 from .config import LEVELS
-from .state_helpers import V6_PHASE_ORDER as V6_PHASES
-from .state_helpers import (
+from .curriculum_state import V6_PHASE_ORDER as V6_PHASES
+from .curriculum_state import (
     detect_pipeline_version,
     find_content_file,
     get_audit_status,

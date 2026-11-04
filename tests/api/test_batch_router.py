@@ -11,10 +11,10 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from scripts.api import batch_router as batch_router_mod
-from scripts.api.batch_router import DISPATCHER_SCAN_TIMEOUT_S
-from scripts.api.batch_router import router as batch_router
 from scripts.api.monitor_context import fixture_context
+from scripts.project_api import batch_router as batch_router_mod
+from scripts.project_api.batch_router import DISPATCHER_SCAN_TIMEOUT_S
+from scripts.project_api.batch_router import router as batch_router
 
 
 @pytest.fixture()
@@ -33,7 +33,7 @@ def test_corrupt_checkpoint_json_surfaces_track_error(
     (state_dir / "checkpoint_a1.json").write_text("{not-json", encoding="utf-8")
     (state_dir / "checkpoint_b1.json").write_text(json.dumps({"cp": 2}), encoding="utf-8")
 
-    with caplog.at_level(logging.WARNING, logger="scripts.api.batch_router"):
+    with caplog.at_level(logging.WARNING, logger="scripts.project_api.batch_router"):
         resp = batch_client.get("/api/batch/checkpoints")
 
     assert resp.status_code == 200

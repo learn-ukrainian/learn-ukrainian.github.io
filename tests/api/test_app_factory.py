@@ -18,11 +18,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.testclient import TestClient
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from scripts.api import dashboard_comms
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context, production_context
 from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
 from scripts.api.resilience import TimedSQLiteConnection, resilience_middleware
+from scripts.project_api import dashboard_comms
+from scripts.project_api.context import product_roots, sources_db
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
@@ -94,7 +95,7 @@ def test_fixture_context_resolves_roots_and_rejects_symlink_escape(tmp_path: Pat
             assert Path(path).resolve().is_relative_to(tmp_path.resolve())
 
     assert context.roots.plans_root == context.roots.curriculum_root / "plans"
-    assert context.stores.sources_db.path.resolve().is_relative_to(tmp_path.resolve())
+    assert sources_db(context).path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.message_db.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.session_streams_database.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.epics_database.path.resolve().is_relative_to(tmp_path.resolve())
@@ -370,8 +371,8 @@ def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
 
     _write_textbook_png(first_root, grade="grade-01", name="first.png")
     _write_textbook_png(second_root, grade="grade-02", name="second.png")
-    _seed_sources_db(first_ctx.roots.sources_db_path, rows=3)
-    _seed_sources_db(second_ctx.roots.sources_db_path, rows=7)
+    _seed_sources_db(product_roots(first_ctx).sources_db_path, rows=3)
+    _seed_sources_db(product_roots(second_ctx).sources_db_path, rows=7)
 
     first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
@@ -417,8 +418,8 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
     (second_dist / "sitemap-index.xml").write_text("<second/>", encoding="utf-8")
 
     for root, ctx in ((first_root, first_ctx), (second_root, second_ctx)):
-        ctx.roots.sources_db_path.parent.mkdir(parents=True, exist_ok=True)
-        with sqlite3.connect(str(ctx.roots.sources_db_path)) as conn:
+        product_roots(ctx).sources_db_path.parent.mkdir(parents=True, exist_ok=True)
+        with sqlite3.connect(str(product_roots(ctx).sources_db_path)) as conn:
             conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY)")
             count = 1 if root is first_root else 2
             conn.executemany("INSERT INTO textbooks DEFAULT VALUES", [()] * count)

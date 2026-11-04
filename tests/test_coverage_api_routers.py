@@ -13,6 +13,8 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from scripts.project_api.context import image_store
+
 pytestmark = pytest.mark.reads_content
 
 # ---------------------------------------------------------------------------
@@ -119,10 +121,12 @@ def _comms_ctx(project_root, **root_overrides):
 
 @pytest.fixture()
 def comms_client(_patch_config, mock_project_root):
-    """TestClient for comms router."""
+    """TestClient for the comms router and the product batch-progress routes under its prefix."""
     from scripts.api.comms_router import router
+    from scripts.project_api.batch_progress import router as batch_progress_router
     app = FastAPI()
     app.state.ctx = _comms_ctx(mock_project_root)
+    app.include_router(batch_progress_router, prefix="/api/comms")
     app.include_router(router, prefix="/api/comms")
     return TestClient(app)
 
@@ -130,7 +134,7 @@ def comms_client(_patch_config, mock_project_root):
 @pytest.fixture()
 def admin_app(_patch_config, mock_project_root):
     """Bare FastAPI app mounting admin_router against a fixture context."""
-    from scripts.api.admin_router import router
+    from scripts.project_api.admin_router import router
 
     app = FastAPI()
     app.state.ctx = _comms_ctx(mock_project_root)
@@ -147,8 +151,8 @@ def admin_client(admin_app):
 @pytest.fixture()
 def images_client(_patch_config, mock_project_root):
     """TestClient for images router."""
-    from scripts.api import images_router
     from scripts.api.monitor_context import fixture_context
+    from scripts.project_api import images_router
 
     app = FastAPI()
     app.state.ctx = fixture_context(mock_project_root)
@@ -160,7 +164,7 @@ def images_client(_patch_config, mock_project_root):
 def rag_client(mock_project_root):
     """TestClient for sources router."""
     from scripts.api.monitor_context import fixture_context
-    from scripts.api.sources_router import router
+    from scripts.project_api.sources_router import router
 
     app = FastAPI()
     app.state.ctx = fixture_context(mock_project_root)
@@ -348,7 +352,7 @@ class TestCommsBatchProgress:
         log_dir = mock_project_root / "logs" / "research-preseed"
         log_file = log_dir / "hist-20260301-0100.log"
         log_file.write_text("VERDICT: PASS\nVERDICT: PASS\nVERDICT: FAIL\nBATCH COMPLETE\nPassed: 2\n")
-        with patch("scripts.api.comms_router._check_build_processes", return_value=([], None)):
+        with patch("scripts.project_api.batch_progress._check_build_processes", return_value=([], None)):
             r = comms_client.get("/api/comms/batch-progress")
         data = r.json()
         assert "hist" in data["tracks"]
@@ -530,7 +534,7 @@ class TestImageIndex:
                 f.write(json.dumps(ann) + "\n")
 
         # Reset and reload
-        store = images_client.app.state.ctx.stores.image_store
+        store = image_store(images_client.app.state.ctx)
         store.index.reload()
 
         r = images_client.get("/api/images/stats")
@@ -543,13 +547,13 @@ class TestImagesAnnotationUpdate:
     """Tests for PUT /api/images/annotations/{image_id}."""
 
     def test_update_annotation(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
+        store = image_store(images_client.app.state.ctx)
         store.index._records = {
             "img1": {"image_id": "img1", "description_uk": "old"},
         }
         store.index._loaded = True
 
-        with patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
+        with patch("scripts.project_api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
             r = images_client.put("/api/images/annotations/img1", json={"description_uk": "new"})
         assert r.status_code == 200
         assert r.json()["updated_fields"] == ["description_uk"]
@@ -559,7 +563,7 @@ class TestImagesCleanup:
     """Tests for POST /api/images/cleanup."""
 
     def test_cleanup(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
+        store = image_store(images_client.app.state.ctx)
         img_path = mock_project_root / "data" / "textbook_images" / "test.png"
         img_path.write_bytes(b"PNG")
         store.index._records = {
@@ -571,8 +575,8 @@ class TestImagesCleanup:
         store.index._loaded = True
 
         with (
-            patch("scripts.api.images_router._remove_from_book_jsonls"),
-            patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock),
+            patch("scripts.project_api.images_router._remove_from_book_jsonls"),
+            patch("scripts.project_api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock),
         ):
             r = images_client.post("/api/images/cleanup", json={"image_ids": ["img1"]})
         data = r.json()
@@ -580,7 +584,7 @@ class TestImagesCleanup:
         assert not img_path.exists()
 
     def test_cleanup_rejects_path_traversal(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
+        store = image_store(images_client.app.state.ctx)
 
         outside_file = mock_project_root.parent / "outside.png"
         outside_file.write_bytes(b"PNG")
@@ -617,14 +621,14 @@ class TestImagesHelpers:
     def test_cache_page_render_eviction(self):
         from collections import OrderedDict
 
-        from scripts.api.images_router import _PAGE_CACHE_MAX, _cache_page_render
+        from scripts.project_api.images_router import _PAGE_CACHE_MAX, _cache_page_render
         page_cache = OrderedDict()
         for i in range(_PAGE_CACHE_MAX + 5):
             _cache_page_render(f"key:{i}", b"data", page_cache=page_cache)
         assert len(page_cache) == _PAGE_CACHE_MAX
 
     def test_remove_from_book_jsonls(self, mock_project_root, _patch_config):
-        from scripts.api.images_router import _remove_from_book_jsonls
+        from scripts.project_api.images_router import _remove_from_book_jsonls
         img_dir = mock_project_root / "data" / "textbook_images"
         grade_dir = img_dir / "grade-1"
         grade_dir.mkdir(exist_ok=True)
@@ -647,7 +651,7 @@ class TestImagesHelpers:
     def test_rewrite_annotations_jsonl_sync(self, mock_project_root, _patch_config):
         from scripts.api.monitor_context import fixture_context
         ctx = fixture_context(mock_project_root)
-        store = ctx.stores.image_store
+        store = image_store(ctx)
         ann_file = mock_project_root / "data" / "textbook_images" / "image_text_pairs.jsonl"
         ann_file.parent.mkdir(parents=True, exist_ok=True)
         ann_file.write_text('{"image_id": "old"}\n')
@@ -658,7 +662,7 @@ class TestImagesHelpers:
         }
         store.index._loaded = True
 
-        from scripts.api import images_router
+        from scripts.project_api import images_router
         images_router._rewrite_annotations_jsonl_sync(store=store)
 
         with open(ann_file) as f:
@@ -672,7 +676,7 @@ class TestCommsInternalHelpers:
     """Tests for internal helper functions in comms_router."""
 
     def test_check_build_processes_failure(self, _patch_config):
-        from scripts.api.comms_router import _check_build_processes
+        from scripts.project_api.batch_progress import _check_build_processes
         with patch("subprocess.run", side_effect=Exception("no ps")):
             processes, error = _check_build_processes()
         assert processes == []
@@ -684,7 +688,7 @@ class TestPDFPool:
 
     @pytest.mark.anyio
     async def test_pool_eviction(self):
-        from scripts.api.images_router import _PDFPool
+        from scripts.project_api.images_router import _PDFPool
         pool = _PDFPool(max_size=2)
         # Manually inject mock docs
         mock_doc1 = MagicMock()
@@ -701,7 +705,7 @@ class TestPDFPool:
 
     @pytest.mark.anyio
     async def test_pool_cache_hit(self):
-        from scripts.api.images_router import _PDFPool
+        from scripts.project_api.images_router import _PDFPool
         pool = _PDFPool(max_size=2)
         mock_doc = MagicMock()
         async with pool._lock:
@@ -723,7 +727,7 @@ class TestCommsPreseedLogParsing:
     """Test preseed log parsing with various formats."""
 
     def test_scan_preseed_logs_with_last_line(self, _patch_config, mock_project_root):
-        from scripts.api.comms_router import _scan_preseed_logs
+        from scripts.project_api.batch_progress import _scan_preseed_logs
         log_dir = mock_project_root / "logs" / "research-preseed"
         log_content = (
             "Starting batch...\n"
@@ -742,7 +746,7 @@ class TestCommsPreseedLogParsing:
         assert result[0]["complete"] is False
 
     def test_scan_preseed_logs_no_timestamp_match(self, _patch_config, mock_project_root):
-        from scripts.api.comms_router import _scan_preseed_logs
+        from scripts.project_api.batch_progress import _scan_preseed_logs
         log_dir = mock_project_root / "logs" / "research-preseed"
         (log_dir / "random.log").write_text("no timestamp\n")
         result = _scan_preseed_logs(_comms_ctx(mock_project_root))

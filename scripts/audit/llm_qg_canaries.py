@@ -16,7 +16,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.api.config import SEMINAR_TRACK_IDS
+from scripts.project_api.config import SEMINAR_TRACK_IDS
 
 _NORMALIZE_RE = re.compile(r"[^A-Z0-9_]")
 

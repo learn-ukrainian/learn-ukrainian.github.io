@@ -20,7 +20,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from .monitor_context import MonitorContext, resolve_context
+from scripts.api.monitor_context import MonitorContext, resolve_context
 
 # Schema column check cache for backward compat
 _BROKER_COLS: set | None = None

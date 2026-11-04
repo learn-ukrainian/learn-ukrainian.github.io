@@ -9,6 +9,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 import scripts.api.telemetry_router as telemetry_router
+import scripts.project_api.module_builds as product_module_builds
 from scripts.api.main import app
 from scripts.api.monitor_context import fixture_context
 
@@ -28,7 +29,7 @@ def _use_temp_db(tmp_path: Path, monkeypatch) -> Path:
 
 def _use_temp_module_db(tmp_path: Path, monkeypatch) -> Path:
     ctx = _bind_fixture_ctx(tmp_path, monkeypatch)
-    return telemetry_router._module_build_db_path(ctx)
+    return product_module_builds._module_build_db_path(ctx)
 
 
 def test_ingest_valid_payload(tmp_path, monkeypatch):

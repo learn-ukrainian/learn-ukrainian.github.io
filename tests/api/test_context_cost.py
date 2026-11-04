@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import threading
 import time
-from dataclasses import replace
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock
 
@@ -38,7 +37,7 @@ def test_lifespan_closes_context_resources_for_repeated_apps(monkeypatch, tmp_pa
     for index in range(2):
         context = fixture_context(tmp_path / f"app-{index}")
         resource = AsyncMock()
-        context = replace(context, stores=replace(context.stores, image_store=resource))
+        context.runtime.register_resource(resource)
         resources.append(resource)
         app = api_main.create_app(context)
         with TestClient(app):

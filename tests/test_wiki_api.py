@@ -5,10 +5,11 @@ import sqlite3
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.wiki_router as wiki_router
+import scripts.project_api.wiki_router as wiki_router
 from scripts.api.main import app
 from scripts.api.monitor_context import fixture_context
 from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH
+from scripts.project_api.context import product_roots
 
 pytestmark = pytest.mark.reads_content
 
@@ -76,7 +77,7 @@ def test_sources_endpoint_handles_missing_table(tmp_path, monkeypatch):
     conn.close()
 
     ctx = fixture_context(tmp_path)
-    sources_path = ctx.roots.sources_db_path
+    sources_path = product_roots(ctx).sources_db_path
     sources_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.replace(sources_path)
     monkeypatch.setattr(app.state, "ctx", ctx)

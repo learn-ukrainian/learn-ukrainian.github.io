@@ -19,9 +19,12 @@ from typing import Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.state_helpers import cache_get, cache_set
+
 from .config import LEVELS
-from .monitor_context import MonitorContext, get_ctx, resolve_context
-from .state_helpers import cache_get, cache_set, monitor_surface
+from .context import sources_db
+from .curriculum_state import monitor_surface
 
 # path_safety is a top-level module when scripts/ is on sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -29,7 +32,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
 # scripts/api/main.py orient calls wiki_state.get_status_summary() on this
 # module. The name stays; the function is the product one, through the wrapper.
@@ -446,7 +449,7 @@ async def wiki_build_log(
 @router.get("/sources")
 async def wiki_sources_inventory(ctx: MonitorContext = Depends(get_ctx)):
     """Row counts for the sources SQLite database."""
-    handle = ctx.stores.sources_db
+    handle = sources_db(ctx)
     if handle is None or not handle.path.exists():
         return {"tables": [], "total_entries": 0}
 

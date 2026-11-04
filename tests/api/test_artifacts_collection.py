@@ -10,8 +10,9 @@ import pytest
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
-from scripts.api import artifacts_router, docs_router
+from scripts.api import docs_router
 from scripts.api.monitor_context import MonitorContext, fixture_context, get_ctx
+from scripts.project_api import artifacts_router
 
 
 @pytest.fixture()

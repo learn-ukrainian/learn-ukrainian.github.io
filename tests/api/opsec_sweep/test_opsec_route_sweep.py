@@ -31,7 +31,6 @@ from starlette.requests import Request
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from scripts.api import (
-    dashboard_helpers,
     epics_router,
     fleet_router,
     issues_router,
@@ -44,6 +43,7 @@ from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
 from scripts.docs import catalogue as docs_catalogue
 from scripts.fleet_comms import message_plane
+from scripts.project_api import dashboard_helpers
 from scripts.wiki import sources_db
 
 from . import mutation_recipes, registry, tracking_issues
@@ -468,7 +468,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         return isolated_plane_root
 
     for module_name, module in tuple(sys.modules.items()):
-        if not module_name.startswith("scripts.api") or module is None:
+        if not module_name.startswith(("scripts.api", "scripts.project_api")) or module is None:
             continue
         if "default_plane_root" in vars(module):
             monkeypatch.setattr(module, "default_plane_root", isolated_plane_resolver)

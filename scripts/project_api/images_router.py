@@ -22,14 +22,16 @@ import urllib.parse
 from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response
 from pydantic import BaseModel
 
-from .monitor_context import MonitorContext, get_ctx, resolve_context
-from .state_helpers import monitor_surface
+from scripts.api.monitor_context import MonitorContext, get_ctx
+
+from .context import image_store
+from .curriculum_state import monitor_surface
 
 router = APIRouter(tags=["images"])
 
@@ -273,24 +275,7 @@ class ImageStore:
 
 
 def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
-    resolved_ctx = resolve_context(ctx)
-    if resolved_ctx.stores.image_store is not None:
-        return resolved_ctx.stores.image_store
-    roots = resolved_ctx.roots
-    images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
-    annotations_file = images_dir / "image_text_pairs.jsonl"
-    return cast(
-        ImageStore,
-        resolved_ctx.runtime.get_or_create_resource(
-            "image_store:fallback",
-            lambda: ImageStore(
-                images_dir=images_dir,
-                textbooks_dir=roots.textbooks_dir,
-                annotations_file=annotations_file,
-                project_root=roots.project_root,
-            ),
-        ),
-    )
+    return image_store(ctx)
 
 
 def _render_url(record: dict[str, Any], pdf_catalog: dict[str, dict]) -> str | None:

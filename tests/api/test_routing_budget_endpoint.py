@@ -1722,10 +1722,6 @@ def test_startup_warmup_fills_dispatch_routing_budget_key_cold_start_timeout(mon
     ctx = fixture_context(tmp_path)
     (ctx.roots.batch_state_dir / "tasks").mkdir(parents=True)
     monkeypatch.setattr(state_router, "compute_routing_budget", lambda **_kw: {"agents": {}})
-    monkeypatch.setattr(state_router, "_compute_pipeline_versions_payload", lambda *_a: {})
-    monkeypatch.setattr(state_router, "_compute_weak_points_payload", lambda *_a: {})
-    monkeypatch.setattr(state_router, "compute_summary", lambda **_kw: {})
-    monkeypatch.setattr(state_router, "compute_research_coverage", lambda **_kw: {})
 
     key = state_router._ctx_cache_key(ctx, "routing-budget", "dispatch", 0)
     assert state_helpers.cache_get(key, state_router.ROUTING_BUDGET_TTL_S) is None

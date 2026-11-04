@@ -32,22 +32,22 @@ from fastapi.responses import JSONResponse
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
+
+from scripts.api.docs_router import collect_html_artifacts
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
 
 from .config import LEVELS
-from .docs_router import collect_html_artifacts
-from .monitor_context import MonitorContext, get_ctx, resolve_context
-from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
-from .state_compute import _get_review_score
-from .state_helpers import (
-    cache_get_or_compute_async,
-    ctx_scoped_ttl_key,
+from .curriculum_state import (
     find_content_file,
     get_audit_status,
     get_final_review_info,
     get_plan_slugs,
     get_word_target_from_plan,
 )
+from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
+from .state_compute import _get_review_score
 
 router = APIRouter(tags=["artifacts"])
 

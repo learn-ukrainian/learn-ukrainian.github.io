@@ -29,7 +29,7 @@ def mock_project_root(tmp_path):
 @pytest.fixture()
 def admin_client(mock_project_root):
     """TestClient for admin router with disk-usage paths pointed at tmp_path."""
-    from scripts.api.admin_router import router
+    from scripts.project_api.admin_router import router
 
     app = FastAPI()
     app.state.ctx = fixture_context(mock_project_root)

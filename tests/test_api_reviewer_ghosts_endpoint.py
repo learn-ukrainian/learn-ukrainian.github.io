@@ -70,7 +70,7 @@ def _ghost_finding(
 @pytest.fixture
 def client(tmp_path: Path) -> TestClient:
     """Mount the reviewer_ghosts_router against a tmp curriculum root."""
-    from scripts.api import reviewer_ghosts_router as rgr
+    from scripts.project_api import reviewer_ghosts_router as rgr
 
     app = FastAPI()
     app.state.ctx = fixture_context(tmp_path)

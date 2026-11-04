@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 import scripts.api.delegate_router as delegate_router
 import scripts.api.main as api_main
 import scripts.api.state_helpers as state_helpers
+import scripts.project_api.orient as product_orient
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -70,13 +71,13 @@ def _patch_non_delegate_orient_sources(monkeypatch) -> None:
     async def fake_pipeline(*a, **k):
         return {"summary": {}}
 
-    monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", fake_pipeline)
+    monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", fake_pipeline)
     monkeypatch.setattr(api_main, "_collect_runtime_orient_data", lambda *a, **k: {})
     monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda *a, **k: {})
-    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
+    monkeypatch.setattr(product_orient, "collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
     monkeypatch.setattr(
-        api_main,
-        "_collect_governance_orient_data",
+        product_orient,
+        "collect_governance_orient_data",
         lambda *a, **k: {
             "decisions_total": 0,
             "decisions_stale": 0,

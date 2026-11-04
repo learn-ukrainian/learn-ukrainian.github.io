@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 import scripts.api.state_helpers as state_helpers
+import scripts.project_api.orient as product_orient
 from tests.latency_budget import assert_under_budget
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
@@ -57,7 +58,7 @@ def _patch_orient_sources(monkeypatch) -> None:
     async def fake_pipeline(ctx=None):
         return {"summary": {"totals": {"total": 1}}}
 
-    monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", fake_pipeline)
+    monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", fake_pipeline)
     monkeypatch.setattr(
         api_main,
         "_collect_runtime_orient_data",
@@ -85,8 +86,8 @@ def _patch_orient_sources(monkeypatch) -> None:
         lambda ctx=None: {"counts": {"total": 0, "live_pending": 0}, "actionable": [], "errors": []},
     )
     monkeypatch.setattr(
-        api_main,
-        "_collect_wiki_orient_data",
+        product_orient,
+        "collect_wiki_orient_data",
         lambda ctx=None: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}},
     )
     monkeypatch.setattr(
@@ -212,14 +213,14 @@ def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
         await asyncio.sleep(5.0)
         return {"summary": {}}
 
-    monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", hang_forever)
+    monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", hang_forever)
 
     async def immediate_runtime(ctx=None):
         return {"agents": ["codex"]}
 
-    section_specs = api_main._orient_section_specs()
+    section_specs = api_main._orient_section_specs(api_main.app.state.product)
     section_specs["runtime"] = (immediate_runtime, {}, True)
-    monkeypatch.setattr(api_main, "_orient_section_specs", lambda: section_specs)
+    monkeypatch.setattr(api_main, "_orient_section_specs", lambda _product: section_specs)
 
     start = time.perf_counter()
     response = client.get("/api/orient?sections=pipeline,runtime")
@@ -360,7 +361,7 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
         calls["pipeline"] += 1
         return {"summary": {"run": calls["pipeline"]}}
 
-    monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", counting_pipeline)
+    monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", counting_pipeline)
 
     client.get("/api/orient")
     client.get("/api/orient")

@@ -31,10 +31,11 @@ from fastapi.responses import JSONResponse
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
-from . import config
-from .monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+
+from .context import product_roots
 
 router = APIRouter(tags=["admin"])
 START_TIME = time.time()
@@ -72,7 +73,7 @@ def _data_dir(ctx: MonitorContext) -> Path:
 
 
 def _image_dir(ctx: MonitorContext) -> Path:
-    return ctx.roots.images_dir or (_data_dir(ctx) / "textbook_images")
+    return product_roots(ctx).images_dir
 
 
 def _mcp_dir(ctx: MonitorContext) -> Path:
@@ -220,7 +221,7 @@ async def disk_usage(ctx: MonitorContext = Depends(get_ctx)):
     dirs = {
         "textbook_images": data_dir / "textbook_images",
         # Bulk-root PDFs (#8803); never a repository symlink.
-        "textbooks": ctx.roots.textbooks_dir or config.TEXTBOOKS_DIR,
+        "textbooks": product_roots(ctx).textbooks_dir,
         "literary_texts": data_dir / "literary_texts",
         "textbook_chunks": data_dir / "textbook_chunks",
         "backups": ctx.roots.backup_dir,

@@ -74,7 +74,7 @@ class AllowedReference:
 # non-constant import_module. The kind pins that one call site and no other.
 CONFIGURED_ENTRY_POINT_KIND = "configured_entry_point"
 CONFIGURED_ENTRY_POINTS = {
-    "scripts/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name))"),
+    "scripts/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name), scripts_dir)"),
 }
 # The helper refuses SQLite module names, so a call with a non-constant name is
 # not a finding. A call with a constant SQLite name is, as for any loader.

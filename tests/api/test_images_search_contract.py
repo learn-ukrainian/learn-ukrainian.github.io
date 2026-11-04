@@ -9,8 +9,8 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from scripts.api.images_router import router
 from scripts.api.monitor_context import fixture_context
+from scripts.project_api.images_router import router
 
 ROUTE = "/api/images/annotations"
 

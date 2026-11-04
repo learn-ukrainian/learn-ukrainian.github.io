@@ -14,12 +14,13 @@ from pathlib import Path
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
+from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
-from .config import LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
-from .state_helpers import (
+from .config import LEVELS
+from .curriculum_state import (
     V5_PHASE_ORDER,
     V6_PHASE_ORDER,
     detect_pipeline_version,

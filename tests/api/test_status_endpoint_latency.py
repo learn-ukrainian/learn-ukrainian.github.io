@@ -22,14 +22,16 @@ import pytest
 from fastapi import APIRouter, FastAPI
 from httpx import ASGITransport
 
-from scripts.api import artifacts_router, delegate_router, epics_router, state_helpers, state_router
+from scripts.api import delegate_router, epics_router, state_helpers, state_router
 from scripts.api.monitor_context import fixture_context
+from scripts.project_api import artifacts_router
+from scripts.project_api import state_router as product_state_router
 
 _BURST = 20
 # Attempt bound for observable polls. Not a latency budget: the loop exits
 # when the condition is true, and a loaded runner only makes each yield slower.
 _ATTEMPTS = 10_000
-_COLD_ROUTERS = (delegate_router, state_router, artifacts_router, epics_router)
+_COLD_ROUTERS = (delegate_router, state_router, product_state_router, artifacts_router, epics_router)
 
 
 @pytest.fixture(autouse=True)
@@ -200,33 +202,33 @@ _BURST_ROUTES: dict[str, tuple[types.ModuleType, str, APIRouter, str, str, dict[
         {"total": 0, "tasks": []},
     ),
     "state_summary": (
-        state_router,
+        product_state_router,
         "compute_summary",
-        state_router.router,
+        product_state_router.router,
         "/api/state",
         "/api/state/summary",
         {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}, "totals": {}},
     ),
     "pipeline_versions": (
-        state_router,
+        product_state_router,
         "_compute_pipeline_versions_payload",
-        state_router.router,
+        product_state_router.router,
         "/api/state",
         "/api/state/pipeline-versions",
         {"generated_at": "2026-01-01T00:00:00Z", "total": 0, "counts": {}},
     ),
     "weak_points": (
-        state_router,
+        product_state_router,
         "_compute_weak_points_payload",
-        state_router.router,
+        product_state_router.router,
         "/api/state",
         "/api/state/weak-points",
         {"count": 0, "modules": []},
     ),
     "research_coverage": (
-        state_router,
+        product_state_router,
         "compute_research_coverage",
-        state_router.router,
+        product_state_router.router,
         "/api/state",
         "/api/state/research-coverage",
         {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}},
@@ -259,7 +261,7 @@ _BURST_ROUTES: dict[str, tuple[types.ModuleType, str, APIRouter, str, str, dict[
 
 
 def _warmup_claim() -> None:
-    """Claim a foreign key the way ``state_router._run_state_scan_warmup`` does."""
+    """Claim a foreign key the way the state-scan warmup (``warm_state_scans``) does."""
     state_helpers.cache_get_or_compute("state-scan-warmup:research_coverage#11366", 60.0, lambda: {"warm": True})
 
 

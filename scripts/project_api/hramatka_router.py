@@ -35,9 +35,10 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from .config import BATCH_STATE_DIR, PROJECT_ROOT
-from .resilience import connect_sqlite
-from .state_helpers import monitor_surface
+from scripts.api.config import BATCH_STATE_DIR, PROJECT_ROOT
+from scripts.api.resilience import connect_sqlite
+
+from .curriculum_state import monitor_surface
 
 router = APIRouter(prefix="/api/hramatka", tags=["hramatka"])
 

@@ -192,6 +192,9 @@ packages:
   pre_push:
     reason: operator classification
     role: machinery
+  project_api:
+    reason: Product half of the Monitor API and its product pages, loaded through the configured product entry.
+    role: product
   projects:
     reason: Open-model-data and Ukrainian eval projects used by atlas, ingest, and wiki.
     role: product

@@ -73,7 +73,7 @@ def test_configured_entry_point_kind_names_only_the_helper():
     configured = [entry.path for entry in lint.load_allowlist() if entry.kind == lint.CONFIGURED_ENTRY_POINT_KIND]
     assert configured == ["scripts/ops/product_entry.py"]
     assert lint.CONFIGURED_ENTRY_POINTS == {
-        "scripts/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name))"),
+        "scripts/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name), scripts_dir)"),
     }
 
 

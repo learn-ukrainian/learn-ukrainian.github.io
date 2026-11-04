@@ -26,9 +26,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
-from scripts.api import atlas_jobs_router as load_mod
 from scripts.api import config
-from scripts.api.atlas_jobs_router import monitor_jobs
 from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
@@ -40,6 +38,7 @@ from scripts.api.occupancy_local import OccupancyRead, read_markers, read_sessio
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID, RETIRED_HOST_IDS
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
+from scripts.api.product_contribution import atlas_provider
 from scripts.api.project_state_store import (
     REPORT_TTL_SECONDS,
     ReportStore,
@@ -176,7 +175,7 @@ def _in_process_load_run_root() -> Path:
 
     The API systemd unit does not set ``ATLAS_RUN_ROOT``. ``collect_host_load``
     only uses the path for local disk_usage, so the Monitor checkout is a safe
-    checkout-mode default — never call ``monitor_jobs._run_root()`` here.
+    checkout-mode default — never call the Atlas job runner's ``_run_root()`` here.
     """
     override = os.environ.get("ATLAS_RUN_ROOT", "").strip()
     if override:
@@ -187,8 +186,11 @@ def _in_process_load_run_root() -> Path:
 def _in_process_api_host_load(*, now: datetime | None = None) -> dict[str, Any]:
     """Collect load for the empty-map production Linux glance row (no SSH)."""
     clock = now or datetime.now(UTC)
+    atlas = atlas_provider()
+    if atlas is None:
+        return _unavailable_load_entry(now=clock)
     try:
-        metrics = monitor_jobs.collect_host_load(run_root=_in_process_load_run_root())
+        metrics = atlas.collect_host_load(run_root=_in_process_load_run_root())
     except Exception:
         return _unavailable_load_entry(now=clock)
     if not isinstance(metrics, dict):
@@ -210,8 +212,11 @@ def _load_entry_for_selected(
     fresh: bool,
     now: datetime,
 ) -> dict[str, Any]:
+    atlas = atlas_provider()
+    if canonical is not None and atlas is not None:
+        return atlas.host_load_entry(canonical, fresh=fresh)
     if canonical is not None:
-        return load_mod._get_host_load_entry(canonical, fresh=fresh)
+        return _unavailable_load_entry(now=now)
     if fills_in_process_api_host(opaque, mapping):
         return _in_process_api_host_load(now=now)
     return _unavailable_load_entry(now=now)
@@ -225,8 +230,11 @@ async def _load_entry_for_selected_async(
     fresh: bool,
     now: datetime,
 ) -> dict[str, Any]:
+    atlas = atlas_provider()
+    if canonical is not None and atlas is not None:
+        return await atlas.host_load_entry_async(canonical, fresh=fresh)
     if canonical is not None:
-        return await load_mod._get_host_load_entry_async(canonical, fresh=fresh)
+        return _unavailable_load_entry(now=now)
     if fills_in_process_api_host(opaque, mapping):
         return await asyncio.to_thread(_in_process_api_host_load, now=now)
     return _unavailable_load_entry(now=now)
@@ -243,12 +251,13 @@ def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
     mapping: dict[str, str] = {}
     if not text:
         return mapping
+    atlas = atlas_provider()
     for part in text.split(","):
         item = part.strip()
         if not item or "=" not in item:
             continue
         canonical_raw, opaque_raw = item.split("=", 1)
-        canonical = monitor_jobs._canonical_host(canonical_raw.strip())
+        canonical = atlas.canonical_host(canonical_raw.strip()) if atlas is not None else canonical_raw.strip()
         opaque = opaque_raw.strip().lower()
         if not _opaque_host_id(opaque):
             continue
@@ -277,14 +286,17 @@ def _read_occupants_from_registry(
 ) -> tuple[list[dict[str, str | None]], bool]:
     occupants: list[dict[str, str | None]] = []
     seen: set[tuple[str, str, str]] = set()
+    atlas = atlas_provider()
+    if atlas is None:
+        return [], False
     try:
-        rows = monitor_jobs.list_registry()
+        rows = atlas.list_registry()
     except Exception:
         return [], False
     for row in rows:
         if not isinstance(row, dict):
             continue
-        if monitor_jobs._canonical_host(row.get("host")) != canonical:
+        if atlas.canonical_host(row.get("host")) != canonical:
             continue
         state = str(row.get("state") or "")
         if state not in {"running", "queued", "submitted", "needs_finalize"}:

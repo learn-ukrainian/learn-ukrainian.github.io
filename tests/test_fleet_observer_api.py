@@ -11,6 +11,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 import scripts.api.fleet_router as fleet_router
+import scripts.project_api.batch_progress as product_batch_progress
 from scripts.api.monitor_context import MonitorContext, fixture_context
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
@@ -796,7 +797,7 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
 
     monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", fake_processes)
     monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", fake_zombies)
-    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", fake_batches)
+    monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", fake_batches)
 
     response = client.get("/api/fleet/operations")
 
@@ -861,7 +862,7 @@ def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
 
     monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", unavailable)
     monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", unavailable)
-    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", unavailable_batch)
+    monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", unavailable_batch)
 
     response = client.get("/api/fleet/operations")
 
@@ -882,7 +883,7 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
 ) -> None:
     ctx = fixture_context(tmp_path)
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_preseed_logs",
         lambda ctx: [
             {
@@ -895,12 +896,12 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
         ],
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_check_build_processes",
         lambda: ([{"track": "hist", "pid": 123, "cmd": "private command"}], None),
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_track_progress",
         lambda ctx, track: {
             "track": track,
@@ -918,7 +919,7 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
         lambda *_args, **_kwargs: pytest.fail("operations snapshot must not write cache state"),
     )
 
-    snapshot = fleet_router._legacy_batch_snapshot(ctx)
+    snapshot = product_batch_progress.fleet_batch_snapshot(ctx)
 
     assert snapshot["running_processes"] == 1
     assert snapshot["tracks"]["hist"]["health"] == "healthy"
@@ -943,22 +944,22 @@ def test_legacy_batch_snapshot_old_log_is_unknown_when_process_probe_fails(
 ) -> None:
     ctx = fixture_context(tmp_path)
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_preseed_logs",
         lambda ctx: [{"track": "hist", "complete": False, "age_seconds": 1200}],
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_check_build_processes",
         lambda: ([], "ps: TimeoutExpired"),
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_track_progress",
         lambda ctx, track: _batch_progress_stub(track),
     )
 
-    snapshot = fleet_router._legacy_batch_snapshot(ctx)
+    snapshot = product_batch_progress.fleet_batch_snapshot(ctx)
 
     assert snapshot["running_processes"] is None
     assert snapshot["errors"] == ["ps: TimeoutExpired"]
@@ -972,22 +973,22 @@ def test_legacy_batch_snapshot_old_log_stays_dead_when_process_probe_succeeds(
 ) -> None:
     ctx = fixture_context(tmp_path)
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_preseed_logs",
         lambda ctx: [{"track": "hist", "complete": False, "age_seconds": 1200}],
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_check_build_processes",
         lambda: ([], None),
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_track_progress",
         lambda ctx, track: _batch_progress_stub(track),
     )
 
-    snapshot = fleet_router._legacy_batch_snapshot(ctx)
+    snapshot = product_batch_progress.fleet_batch_snapshot(ctx)
 
     assert snapshot["running_processes"] == 0
     assert "errors" not in snapshot
@@ -1027,7 +1028,7 @@ def test_operations_timed_out_process_probe_degrades_batch_section(
 
     monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", empty_processes)
     monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", empty_zombies)
-    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", timed_out_batches)
+    monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", timed_out_batches)
 
     response = client.get("/api/fleet/operations")
 

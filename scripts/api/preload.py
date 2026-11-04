@@ -1,10 +1,17 @@
-"""Preload the import closure for API startup resilience."""
+"""Preload the import closure for API startup resilience.
+
+The machinery lists below cover ``scripts/api/**``. The product contribution
+adds its own required and optional module names (``ProductContribution.preload``
+and ``preload_optional``), and :func:`preload_all` loads them with the same
+rules (Monitor split, C-4687).
+"""
 
 from __future__ import annotations
 
 import logging
 import sqlite3
 import time
+from collections.abc import Sequence
 from pathlib import Path
 
 try:
@@ -31,7 +38,6 @@ PRELOAD_MODULES = [
     "pathlib",
     "fastapi.responses",
     # Internal required modules
-    "scripts.api.state_build",
     "scripts.api.state_helpers",
     "scripts.api.rules_router",
     "scripts.api.session_router",
@@ -41,11 +47,7 @@ PRELOAD_MODULES = [
     "scripts.api.fleet_workers_collect",
     "scripts.api.fleet_workers_router",
     "sqlite3",
-    "scripts.api.review_parsing",
     "scripts.orchestration",
-    "audit.config",
-    "audit.checks.activity_validation",
-    "yaml_activities",
     "scripts.guardrails",
     "scripts.hygiene.check_core_bare",
     "hygiene.check_core_bare",
@@ -61,22 +63,13 @@ PRELOAD_MODULES = [
     "hygiene.check_worktree_cleanup_integrity",
     "scripts.hygiene.check_tmp_usability",
     "hygiene.check_tmp_usability",
-    "scripts.build.phase_constants",
     "agent_runtime.adapters.gemini",
-    "research_quality",
-    "research.research_markdown_utils",
     "scripts.research.registry",
     "scripts.audit.check_research_registry",
 ]
 
 # Heavy or optional dependencies (try/except ImportError, record skipped)
 OPTIONAL_MODULES = [
-    "pymupdf",
-    # Not the deprecated `fitz` alias: its import calls pymupdf.message_warning,
-    # which writes to the stream captured when pymupdf was imported. A closed
-    # pytest capture stream then raises ValueError and aborts API startup.
-    "rag.poc_pair_page",
-    "rag.query",
     # Bridge modules use the canonical `scripts.` identity only (#6812):
     # preloading the bare `ai_agent_bridge` name would create a second,
     # divergent sys.modules identity in the long-lived API process.
@@ -123,10 +116,12 @@ STRATEGIES = {
 }
 
 
-def preload_all() -> None:
+def preload_all(product_modules: Sequence[str] = (), product_optional: Sequence[str] = ()) -> None:
     """Preload all static and dynamic modules in the API import closure.
 
-    Aborts startup loudly if any required module fails to load.
+    ``product_modules`` and ``product_optional`` are the product
+    contribution's required and optional names. Aborts startup loudly if any
+    required module fails to load.
     """
     start_time = time.perf_counter()
     pinned_count = 0
@@ -134,7 +129,7 @@ def preload_all() -> None:
     skipped_names = []
 
     # 1. Load required static modules
-    for name in PRELOAD_MODULES:
+    for name in [*PRELOAD_MODULES, *product_modules]:
         try:
             # sqlite3 is the stdlib module itself. The named-module boundary
             # refuses it; a direct import warms the same module without exposing
@@ -150,7 +145,7 @@ def preload_all() -> None:
             raise RuntimeError(f"Required module preload failed: {name}") from e
 
     # 2. Load optional/heavy static modules
-    for name in OPTIONAL_MODULES:
+    for name in [*OPTIONAL_MODULES, *product_optional]:
         try:
             import_named_module(name)
             pinned_count += 1
