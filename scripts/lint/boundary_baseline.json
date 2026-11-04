@@ -672,11 +672,6 @@
       "count": 1
     },
     {
-      "path": "scripts/lint/lint_prompts.py",
-      "module": "scripts.validate.seminar_prompt_suite_refs",
-      "count": 1
-    },
-    {
       "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
       "module": "scripts.audit",
       "count": 1
