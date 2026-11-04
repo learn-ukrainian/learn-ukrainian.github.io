@@ -33,8 +33,10 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
 import re
+import unicodedata
 from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -641,7 +643,7 @@ def _owner_round(
     before, opened, rest = body.partition(REPLY_OPENER)
     reply, _, after = rest.rpartition(REPLY_CLOSER) if opened else ("", "", "")
     reply = reply if opened else _withheld_reply(body, runs) or ""
-    if read is None or recorder._security_verdict_blocks(before + after) or _security_not_pass(reply):
+    if read is None or _security_not_pass(before + after) or _security_not_pass(reply):
         raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the cited approval's reply is cut, unreadable, "
                                     "withheld without its bound sealed run, or has a non-PASS security verdict")
     # Heads A, B, then A again: the latest approval is at B, yet A was approved already (Sol condition 2).
@@ -658,7 +660,9 @@ def _security_not_pass(reply: str) -> bool:
     one at a time, so a JSON escape cannot hide a verdict and a closing quote cannot spoil a PASS. The
     rest of the reply is read exactly as written, with each decoded span replaced by a character that
     is neither PASS nor whitespace, so no text is dropped and a verdict cannot run across a span.
-    A repeated key or a value nested too deeply to decode refuses.
+    Only text that is not JSON at all stays in the rest. JSON the decoder cannot finish (a repeated
+    key, a number past the conversion limit, nesting too deep) refuses, since its strings go unread.
+    Each text is also read as it renders, with character references and backslash escapes resolved.
     """
     decoder = json.JSONDecoder(object_pairs_hook=recorder._unique_keys)
     texts: list[str] = []
@@ -669,15 +673,18 @@ def _security_not_pass(reply: str) -> bool:
             continue
         try:
             value, end = decoder.raw_decode(reply, match.start())
-        except (recorder._DuplicateKey, RecursionError):
-            return True
-        except ValueError:
+            decoded = list(_decoded_texts(value))
+        except json.JSONDecodeError:
             continue
-        texts.extend(_decoded_texts(value))
+        except (ValueError, RecursionError):
+            return True
+        texts.extend(decoded)
         rest.append(reply[position:match.start()] + "\N{OBJECT REPLACEMENT CHARACTER}")
         position = end
     rest.append(reply[position:])
-    return any(recorder._security_verdict_blocks(text) for text in [*texts, "".join(rest)])
+    return any(recorder._security_verdict_blocks(reading)
+               for text in [*texts, "".join(rest)]
+               for reading in (text, unicodedata.normalize("NFKC", html.unescape(text)).replace("\\", "")))
 
 
 def _decoded_texts(value: Any) -> Iterator[str]:

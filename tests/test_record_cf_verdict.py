@@ -4255,6 +4255,12 @@ def test_owner_request_citing_an_approval_refuses_an_already_approved_head(monke
         ("key-holds-fail", BAD_REPLY),
         ("array-fail-escaped", BAD_REPLY),
         ("verdict-across-object", BAD_REPLY),
+        # Review round 3: JSON the decoder cannot finish stays unread, so it refuses; rendered escapes are resolved.
+        ("integer-limit-object", BAD_REPLY),
+        ("integer-limit-array", BAD_REPLY),
+        ("deep-nesting", BAD_REPLY),
+        ("markdown-escaped-fail", BAD_REPLY),
+        ("html-reference-fail", BAD_REPLY),
         ("withheld-unbound", BAD_REPLY),
         ("rejection-with-null-finding", NOT_APPROVE),
         ("approval-with-finding", r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*is not an unedited "
@@ -4288,6 +4294,17 @@ def test_owner_request_citing_an_approval_refuses(monkeypatch, tmp_path, case, r
         history[-1] = (H3, "APPROVED", 'VERDICT: APPROVE\n\n["SECURITY\\u005fVERDICT: FAIL"]')
     elif case == "verdict-across-object":
         history[-1] = (H3, "APPROVED", 'VERDICT: APPROVE\n\nSECURITY_VERDICT: {"note": "see below"} PASS')
+    elif case in ("integer-limit-object", "integer-limit-array"):
+        # A valid number past Python's integer conversion limit stops the decoder before the escaped string.
+        big, note = "1" * 4301, '"SECURITY\\u005fVERDICT: FAIL"'
+        held = f'{{"number": {big}, "note": {note}}}' if case == "integer-limit-object" else f"[{big}, {note}]"
+        history[-1] = (H3, "APPROVED", f"VERDICT: APPROVE\n\n{held}")
+    elif case == "deep-nesting":
+        history[-1] = (H3, "APPROVED", "VERDICT: APPROVE\n\n" + "[" * 1100 + "0" + "]" * 1100)
+    elif case == "markdown-escaped-fail":
+        history[-1] = (H3, "APPROVED", envelope("SECURITY\\_VERDICT: FAIL"))
+    elif case == "html-reference-fail":
+        history[-1] = (H3, "APPROVED", envelope("SECURITY&#95;VERDICT: FAIL"))
     elif case == "rejection-with-null-finding":
         history[-1] = (H3, "CHANGES_REQUESTED", OPEN_F5)
     tasks, comments, calls = approval_case(monkeypatch, tmp_path, history)
