@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import stat
 import sys
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
@@ -20,11 +22,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.audit import lint_bio_dossier_xref
-from scripts.audit.wiki_completeness_gate import check_wiki_completeness
-from scripts.build import linear_pipeline
 from scripts.common.schema_check import check_schema as check_schema_memoised
-from scripts.level_config import base_level, resolve_manifest_module_track
+from scripts.ops.product_entry import load_configured_module
 from scripts.orchestration import prompt_contracts
 from scripts.orchestration.preparation_evidence import (
     RegistryValidationError,
@@ -32,9 +31,70 @@ from scripts.orchestration.preparation_evidence import (
     load_yaml_mapping,
 )
 from scripts.research import research_quality
-from scripts.validate import check_discovery_integrity, check_wiki_subject, lint_seminar_quality
-from scripts.wiki.domains import resolve_write_domain
-from scripts.wiki.sources_schema import load_sources_registry, validate_sources_registry
+
+READINESS_GATES_PATH = Path(__file__).resolve().parents[1] / "curriculum/readiness_gates.v1.json"
+_GATES_MAX_BYTES = 4096
+
+
+def _gates_module_name(path: Path = READINESS_GATES_PATH) -> str:
+    """Read this checkout's strict, bounded product configuration before startup."""
+    info = path.lstat()
+    if not stat.S_ISREG(info.st_mode):
+        raise ImportError("readiness gates configuration must be a regular file, not a symlink")
+    if info.st_size > _GATES_MAX_BYTES:
+        raise ImportError("readiness gates configuration is too large")
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as handle:
+        opened = os.fstat(handle.fileno())
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino):
+            raise ImportError("readiness gates configuration changed while opening")
+        raw = handle.read(_GATES_MAX_BYTES + 1)
+    if len(raw) > _GATES_MAX_BYTES:
+        raise ImportError("readiness gates configuration is too large")
+
+    def unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        document: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in document:
+                raise ValueError("duplicate key")
+            document[key] = value
+        return document
+
+    def no_constants(token: str) -> Any:
+        raise ValueError(f"non-finite number {token}")
+
+    try:
+        document = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_keys, parse_constant=no_constants)
+    except (UnicodeDecodeError, ValueError, RecursionError) as exc:
+        raise ImportError("readiness gates configuration must be strict UTF-8 JSON") from exc
+    if not isinstance(document, dict) or set(document) != {"schema", "schema_version", "origin", "module"}:
+        raise ImportError("readiness gates configuration fields mismatch")
+    if document["schema"] != "learn-ukrainian.readiness-gates" or type(document["schema_version"]) is not int:
+        raise ImportError("readiness gates configuration schema mismatch")
+    if document["schema_version"] != 1:
+        raise ImportError("readiness gates configuration version mismatch")
+    if document["origin"] != "scripts/curriculum/readiness_gates.v1.json":
+        raise ImportError("readiness gates configuration origin mismatch")
+    name = document["module"]
+    if not isinstance(name, str) or re.fullmatch(r"scripts(?:\.[a-z_][a-z0-9_]*)+", name) is None:
+        raise ImportError("readiness gates configuration module must be a lowercase scripts.* name")
+    return name
+
+
+# Bind at startup, just as the former direct imports did.
+_gates = load_configured_module(_gates_module_name())
+
+lint_bio_dossier_xref = _gates.lint_bio_dossier_xref
+check_wiki_completeness = _gates.check_wiki_completeness
+linear_pipeline = _gates.linear_pipeline
+base_level = _gates.base_level
+resolve_manifest_module_track = _gates.resolve_manifest_module_track
+check_discovery_integrity = _gates.check_discovery_integrity
+check_wiki_subject = _gates.check_wiki_subject
+lint_seminar_quality = _gates.lint_seminar_quality
+resolve_write_domain = _gates.resolve_write_domain
+load_sources_registry = _gates.load_sources_registry
+validate_sources_registry = _gates.validate_sources_registry
 
 CONFIG_PATH = Path("agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml")
 CONFIG_SCHEMA_PATH = Path(

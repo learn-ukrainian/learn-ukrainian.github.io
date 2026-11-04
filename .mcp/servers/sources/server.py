@@ -2437,7 +2437,7 @@ def _call_governor() -> CallGovernor:
     """
     global _CALL_GOVERNOR
     if _CALL_GOVERNOR is None:
-        from scripts.rag.hang_diagnostics import resolve_dump_dir
+        from scripts.curriculum.readiness_gates import resolve_dump_dir
 
         _CALL_GOVERNOR = CallGovernor(
             GovernorLimits.from_environ(),
@@ -4664,7 +4664,8 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     import uvicorn
 
     # All-thread stack dump on SIGUSR1 for the hang watchdog (#10674).
-    from scripts.rag.hang_diagnostics import install_signal_dump, resolve_dump_dir
+    from scripts.curriculum.readiness_gates import resolve_dump_dir
+    from scripts.rag.hang_diagnostics import install_signal_dump
 
     try:
         print(f"Thread dump on SIGUSR1: {install_signal_dump(resolve_dump_dir(PROJECT_ROOT))}")

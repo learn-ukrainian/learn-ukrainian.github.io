@@ -43,7 +43,9 @@ import argparse
 import contextlib
 import json
 import os
+import re
 import shutil
+import stat
 import subprocess
 import sys
 import time
@@ -60,12 +62,64 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.rag.hang_diagnostics import (
-    DUMP_SIGNAL,
-    ensure_dump_dir,
-    faulthandler_log_path,
-    resolve_dump_dir,
-)
+from scripts.ops.product_entry import load_configured_module
+
+READINESS_GATES_PATH = Path(__file__).resolve().parents[1] / "curriculum/readiness_gates.v1.json"
+_GATES_MAX_BYTES = 4096
+
+
+def _gates_module_name(path: Path = READINESS_GATES_PATH) -> str:
+    """Read this checkout's strict, bounded product configuration before startup."""
+    info = path.lstat()
+    if not stat.S_ISREG(info.st_mode):
+        raise ImportError("readiness gates configuration must be a regular file, not a symlink")
+    if info.st_size > _GATES_MAX_BYTES:
+        raise ImportError("readiness gates configuration is too large")
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as handle:
+        opened = os.fstat(handle.fileno())
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino):
+            raise ImportError("readiness gates configuration changed while opening")
+        raw = handle.read(_GATES_MAX_BYTES + 1)
+    if len(raw) > _GATES_MAX_BYTES:
+        raise ImportError("readiness gates configuration is too large")
+
+    def unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        document: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in document:
+                raise ValueError("duplicate key")
+            document[key] = value
+        return document
+
+    def no_constants(token: str) -> Any:
+        raise ValueError(f"non-finite number {token}")
+
+    try:
+        document = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_keys, parse_constant=no_constants)
+    except (UnicodeDecodeError, ValueError, RecursionError) as exc:
+        raise ImportError("readiness gates configuration must be strict UTF-8 JSON") from exc
+    if not isinstance(document, dict) or set(document) != {"schema", "schema_version", "origin", "module"}:
+        raise ImportError("readiness gates configuration fields mismatch")
+    if document["schema"] != "learn-ukrainian.readiness-gates" or type(document["schema_version"]) is not int:
+        raise ImportError("readiness gates configuration schema mismatch")
+    if document["schema_version"] != 1:
+        raise ImportError("readiness gates configuration version mismatch")
+    if document["origin"] != "scripts/curriculum/readiness_gates.v1.json":
+        raise ImportError("readiness gates configuration origin mismatch")
+    name = document["module"]
+    if not isinstance(name, str) or re.fullmatch(r"scripts(?:\.[a-z_][a-z0-9_]*)+", name) is None:
+        raise ImportError("readiness gates configuration module must be a lowercase scripts.* name")
+    return name
+
+
+# Bind at startup, just as the former direct imports did.
+_gates = load_configured_module(_gates_module_name())
+
+DUMP_SIGNAL = _gates.DUMP_SIGNAL
+ensure_dump_dir = _gates.ensure_dump_dir
+faulthandler_log_path: Callable[[Path, int], Path] = _gates.faulthandler_log_path
+resolve_dump_dir = _gates.resolve_dump_dir
 
 UNIT = "learn-ukrainian-sources.service"
 # The units this tool may probe, dump or restart. Checked where the action

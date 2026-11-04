@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.curriculum import readiness_gates as gates
 from scripts.orchestration import sources_watchdog as wd
 from scripts.rag import hang_diagnostics as hd
 
@@ -390,8 +391,24 @@ def test_prune_keeps_newest_incidents_and_drops_dead_pid_logs(tmp_path: Path) ->
 
 
 def test_resolve_dump_dir_default_and_override(tmp_path: Path) -> None:
-    assert hd.resolve_dump_dir(tmp_path, {}) == tmp_path / "batch_state" / "sources-dumps"
-    assert hd.resolve_dump_dir(tmp_path, {hd.DUMP_DIR_ENV: str(tmp_path / "x")}) == tmp_path / "x"
+    assert gates.resolve_dump_dir(tmp_path, {}) == tmp_path / "batch_state" / "sources-dumps"
+    assert gates.resolve_dump_dir(tmp_path, {gates.DUMP_DIR_ENV: str(tmp_path / "x")}) == tmp_path / "x"
+
+
+def test_watchdog_helpers_share_the_product_owner_and_stay_pinned(monkeypatch, tmp_path: Path) -> None:
+    assert hd.readiness_gates is gates
+    assert wd.resolve_dump_dir is gates.resolve_dump_dir
+    assert wd.faulthandler_log_path is gates.faulthandler_log_path
+    assert wd.ensure_dump_dir is gates.ensure_dump_dir
+    assert wd.DUMP_SIGNAL is gates.DUMP_SIGNAL
+    assert wd.DUMP_SIGNAL == signal.SIGUSR1
+    assert gates.faulthandler_log_path(tmp_path, 123) == tmp_path / "faulthandler-123.log"
+    private = tmp_path / "private"
+    assert gates.ensure_dump_dir(private) == private
+    assert private.stat().st_mode & 0o777 == 0o700
+    original = wd.resolve_dump_dir
+    monkeypatch.setattr(gates, "resolve_dump_dir", lambda *_args, **_kwargs: tmp_path)
+    assert wd.resolve_dump_dir is original
 
 
 HUNG_CHILD = textwrap.dedent(
@@ -548,7 +565,7 @@ def test_no_signal_without_a_registered_handler(tmp_path: Path) -> None:
         sent: list[int] = []
         assert "no faulthandler log" in wd.capture_python_stacks(child.pid, dump_dir, send=lambda p, s: sent.append(s))
         # A stale log from a reused pid is not proof of a handler: SigCgt decides.
-        hd.faulthandler_log_path(dump_dir, child.pid).write_text("", encoding="utf-8")
+        gates.faulthandler_log_path(dump_dir, child.pid).write_text("", encoding="utf-8")
         assert "has no SIGUSR1 handler" in wd.capture_python_stacks(
             child.pid, dump_dir, send=lambda p, s: sent.append(s)
         )

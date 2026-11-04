@@ -17,44 +17,24 @@ from __future__ import annotations
 
 import faulthandler
 import os
-import signal
-from collections.abc import Mapping
 from pathlib import Path
 from typing import TextIO
 
-DUMP_DIR_ENV = "LU_SOURCES_DUMP_DIR"
-DEFAULT_DUMP_SUBDIR = Path("batch_state") / "sources-dumps"
-DUMP_SIGNAL = signal.SIGUSR1
+from scripts.curriculum import readiness_gates
 
 # faulthandler keeps its own reference, but the file object must stay open for
 # the life of the process; keep one here too so it is never collected.
 _DUMP_FILE: TextIO | None = None
 
 
-def resolve_dump_dir(project_root: Path, environ: Mapping[str, str] | None = None) -> Path:
-    environ = os.environ if environ is None else environ
-    override = environ.get(DUMP_DIR_ENV, "").strip()
-    return Path(override) if override else project_root / DEFAULT_DUMP_SUBDIR
-
-
-def faulthandler_log_path(dump_dir: Path, pid: int) -> Path:
-    return dump_dir / f"faulthandler-{pid}.log"
-
-
-def ensure_dump_dir(dump_dir: Path) -> Path:
-    dump_dir.mkdir(parents=True, exist_ok=True)
-    os.chmod(dump_dir, 0o700)
-    return dump_dir
-
-
-def install_signal_dump(dump_dir: Path, *, signum: int = DUMP_SIGNAL) -> Path:
+def install_signal_dump(dump_dir: Path, *, signum: int = readiness_gates.DUMP_SIGNAL) -> Path:
     """Register an all-thread stack dump on ``signum`` and on fatal signals.
 
     Returns the per-process log the dumps are appended to.
     """
     global _DUMP_FILE
-    ensure_dump_dir(dump_dir)
-    path = faulthandler_log_path(dump_dir, os.getpid())
+    readiness_gates.ensure_dump_dir(dump_dir)
+    path = readiness_gates.faulthandler_log_path(dump_dir, os.getpid())
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
     handle = os.fdopen(fd, "a", encoding="utf-8")
     faulthandler.register(signum, file=handle, all_threads=True, chain=False)
