@@ -805,16 +805,6 @@
       "path": "scripts/review/review_contract.py",
       "module": "scripts.review.receipts.ledger",
       "count": 1
-    },
-    {
-      "path": "scripts/storage/generations.py",
-      "module": "scripts.curriculum.evidence",
-      "count": 1
-    },
-    {
-      "path": "scripts/storage/generations.py",
-      "module": "scripts.curriculum.evidence.config",
-      "count": 1
     }
   ]
 }
