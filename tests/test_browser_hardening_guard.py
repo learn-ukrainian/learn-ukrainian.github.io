@@ -99,6 +99,39 @@ def _read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8", errors="replace")
 
 
+def _strip_js_comments(text: str) -> str:
+    """Drop JS comments (a comment can sit inside an import); strings and templates stay intact."""
+    out, i, quote = [], 0, ""
+    while i < len(text):
+        char = text[i]
+        if quote:
+            out.append(char)
+            if char == "\\":
+                out.append(text[i + 1 : i + 2])
+                i += 1
+            elif char == quote:
+                quote = ""
+        elif char in "'\"`":
+            quote = char
+            out.append(char)
+        elif text.startswith("/*", i):
+            end = text.find("*/", i + 2)
+            i = len(text) if end < 0 else end + 1
+            out.append(" ")
+        elif text.startswith("//", i):
+            end = text.find("\n", i)
+            i = (len(text) if end < 0 else end) - 1
+        else:
+            out.append(char)
+        i += 1
+    return "".join(out)
+
+
+def _read_code(path: str) -> str:
+    text = _read(path)
+    return _strip_js_comments(text) if path.endswith(JS_SUFFIXES) else text
+
+
 def _files(suffixes: tuple[str, ...]) -> list[str]:
     return [p for p in _candidates() if p.endswith(suffixes)]
 
@@ -137,7 +170,7 @@ def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
     for path in _files((*JS_SUFFIXES, ".py")):
         if path in LAUNCHERS:
             continue
-        text = _read(path)
+        text = _read_code(path)
         offenders += [f"{path}: {m.group(0)}" for m in LAUNCH_CALL.finditer(text)]
         if path.endswith(JS_SUFFIXES):
             for match in JS_NAMED_IMPORT.finditer(text):
@@ -157,7 +190,7 @@ def test_playwright_test_files_use_the_hardened_fixture() -> None:
     for path in _files(JS_SUFFIXES):
         if path == NODE_LAUNCHER:
             continue
-        for match in JS_NAMED_IMPORT.finditer(_read(path)):
+        for match in JS_NAMED_IMPORT.finditer(_read_code(path)):
             if "test" in _imported_names(match.group(1)):
                 offenders.append(f"{path}: import test from {NODE_LAUNCHER}")
     assert not offenders, "\n".join(offenders)
@@ -168,7 +201,7 @@ def test_playwright_configs_use_the_hardened_launch_options() -> None:
     assert configs, "expected at least one Playwright config"
     offenders = []
     for path in configs:
-        text = _read(path)
+        text = _read_code(path)
         projects = text.count("launchOptions: hardenedLaunchOptions(")
         if projects == 0 or text.count("launchOptions:") != projects:
             offenders.append(f"{path}: every launchOptions must be hardenedLaunchOptions()")
@@ -183,7 +216,7 @@ def test_libraries_that_launch_chrome_get_the_hardened_browser_type() -> None:
     offenders = [
         path
         for path in _files(JS_SUFFIXES)
-        if re.search(r"from\s*['\"](?:rehype-mermaid|mermaid-isomorphic)['\"]", text := _read(path))
+        if re.search(r"from\s*['\"](?:rehype-mermaid|mermaid-isomorphic)['\"]", text := _read_code(path))
         and "browserType: hardenedChromium" not in text
     ]
     assert not offenders, "pass { browserType: hardenedChromium } to rehype-mermaid: " + ", ".join(offenders)

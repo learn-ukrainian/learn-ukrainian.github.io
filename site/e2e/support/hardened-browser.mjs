@@ -123,12 +123,8 @@ function originOf(url) {
   }
 }
 
-/**
- * Launch installed Chrome, sandbox on. Every context and page it creates
- * blocks service workers and enforces the origin allowlist.
- */
-export async function launchHardenedChromium(overrides = {}, { log = console.warn } = {}) {
-  const browser = await chromium.launch(hardenedLaunchOptions(overrides));
+/** Make every context and page `browser` creates block service workers and enforce the allowlist. */
+function hardenBrowser(browser, { log = console.warn } = {}) {
   const newContext = browser.newContext.bind(browser);
   browser.newContext = async (options = {}) => {
     // A context proxy on the loopback host could carry requests the resolver would refuse.
@@ -146,6 +142,11 @@ export async function launchHardenedChromium(overrides = {}, { log = console.war
   return browser;
 }
 
+/** Launch installed Chrome, sandbox on, with every context and page hardened. */
+export async function launchHardenedChromium(overrides = {}, { log = console.warn } = {}) {
+  return hardenBrowser(await chromium.launch(hardenedLaunchOptions(overrides)), { log });
+}
+
 /** A `browserType` for libraries that launch their own browser (rehype-mermaid). */
 export const hardenedChromium = Object.freeze({
   launch: (options = {}) => launchHardenedChromium(options),
@@ -155,7 +156,9 @@ export const hardenedChromium = Object.freeze({
 function assertHardenedRun({ browserName, channel, launchOptions }) {
   // The launcher's own resolver flag comes first; nothing after it may weaken the run.
   const [resolverRules, ...extra] = launchOptions?.args ?? [];
-  if (browserName !== 'chromium' || channel !== 'chrome' || launchOptions?.channel !== 'chrome'
+  // Fail closed on any other launch option, such as a launch-level proxy.
+  const unknown = Object.keys(launchOptions ?? {}).filter((key) => !CALLER_OPTIONS.has(key) && key !== 'channel' && key !== 'chromiumSandbox');
+  if (unknown.length || browserName !== 'chromium' || channel !== 'chrome' || launchOptions?.channel !== 'chrome'
     || launchOptions?.chromiumSandbox !== true || resolverRules !== hardenedLaunchOptions().args[0]
     || extra.some((arg) => FORBIDDEN_ARG.test(String(arg)))) {
     throw new Error('hardened launcher: this run must use installed Chrome with hardenedLaunchOptions() (see playwright.config.ts)');
@@ -169,7 +172,7 @@ function assertHardenedRun({ browserName, channel, launchOptions }) {
 export const test = base.extend({
   browser: [async ({ browser, browserName, channel, launchOptions }, use) => {
     assertHardenedRun({ browserName, channel, launchOptions });
-    await use(browser);
+    await use(hardenBrowser(browser));
   }, { scope: 'worker' }],
   context: async ({ context, serviceWorkers, proxy }, use) => {
     if (serviceWorkers !== 'block' || proxy) {
