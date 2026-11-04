@@ -397,16 +397,16 @@ def test_snapshot_stops_when_free_disk_falls_below_the_floor(synthetic_sources):
 
 
 def test_snapshot_limits_come_from_config_and_environment(monkeypatch, synthetic_sources):
-    from scripts.curriculum.evidence import config
+    from scripts.storage import generations
 
-    assert config.WAL_CEILING_BYTES == 4 * 1024**3
-    assert config.FREE_DISK_FLOOR_BYTES == 10 * 1024**3
-    monkeypatch.setenv(config.WAL_CEILING_ENV, "12345")
-    monkeypatch.setenv(config.FREE_DISK_FLOOR_ENV, "0")
+    assert generations.WAL_CEILING_BYTES == 4 * 1024**3
+    assert generations.FREE_DISK_FLOOR_BYTES == 10 * 1024**3
+    monkeypatch.setenv(generations.WAL_CEILING_ENV, "12345")
+    monkeypatch.setenv(generations.FREE_DISK_FLOOR_ENV, "0")
     api = sources.Sources(sources_db=synthetic_sources)
     assert (api.wal_ceiling_bytes, api.free_disk_floor_bytes) == (12345, 0)
-    monkeypatch.setenv(config.WAL_CEILING_ENV, "-1")
-    with pytest.raises(ValueError, match=config.WAL_CEILING_ENV):
+    monkeypatch.setenv(generations.WAL_CEILING_ENV, "-1")
+    with pytest.raises(ValueError, match=generations.WAL_CEILING_ENV):
         sources.Sources(sources_db=synthetic_sources)
 
 

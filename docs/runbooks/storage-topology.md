@@ -158,7 +158,7 @@ an accident of whichever ingest last touched the file (#8527):
   Readers print `journal_mode`, WAL size at start and end, and the snapshot duration in
   their progress output, and abort with `snapshot_limit` before the next read if the WAL
   exceeds 4 GiB or free disk on the data volume falls below 10 GiB
-  (`scripts/curriculum/evidence/config.py`).
+  (`scripts/storage/generations.py`).
 - **Check it.** `.venv/bin/python -m scripts.storage status` prints `journal_mode: wal`
   from the SQLite header (bytes 18–19 = `2 2`) without opening a connection; the same
   fact by hand: `od -A d -t u1 -j 18 -N 2 data/sources.db` → `2 2`.
@@ -240,7 +240,7 @@ then:
 2. Refuses unless free space is at least the generation size, plus the 10 GiB
    evidence free-disk floor, plus a 4 GiB WAL allowance
    (`insufficient_free_space`; both limits come from
-   `scripts/curriculum/evidence/config.py`).
+   `scripts/storage/generations.py`).
 3. Puts the candidate in WAL mode, holds it read-only, and hard-links it into the
    generation directory under its new name. It fsyncs the file and the directory,
    and writes a `staged` receipt.
