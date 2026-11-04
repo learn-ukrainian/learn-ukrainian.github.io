@@ -1966,7 +1966,7 @@ def test_issue_transfer_receipt_is_created_in_the_checked_directory(transfer, tm
     assert not list((checkout / "receipts").iterdir()) and not list((outside / "receipts").iterdir())
 
 
-@pytest.mark.parametrize("lag,code", [(3, 0), (len(pub.TRANSFER_VERIFY_DELAYS), 3)])
+@pytest.mark.parametrize("lag,code", [(6, 0), (len(pub.TRANSFER_VERIFY_DELAYS), 3)])
 def test_issue_transfer_verification_waits_out_a_lagging_redirect_without_a_second_mutation(transfer, lag, code):
     transfer.redirect_lag = lag
     outcome = transfer.run()
@@ -1979,4 +1979,4 @@ def test_issue_transfer_verification_waits_out_a_lagging_redirect_without_a_seco
     else:
         assert receipt["outcome"] == "unverified"
         assert receipt["detail"] == "the source URL does not resolve to the returned issue"
-        assert sum(transfer.sleeps) == 60
+        assert sum(transfer.sleeps) == 180

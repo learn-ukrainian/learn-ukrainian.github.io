@@ -176,6 +176,52 @@ and rebuilt, because without it every read is charged in full and budget observa
 other callers; the call itself continues in memory. Only the damaged file is moved, under a directory
 lock a client never waits for: a fresh file another process already put in its place is left alone.
 
+## Issue transfer (`scripts.publish issue-transfer`)
+
+The typed publisher's `issue-transfer` verb moves one open issue between two repositories
+registered in `scripts/config/fleet_repos.yaml` that share an owner, through one GitHub
+`transferIssue` mutation (decision C-4682). It is the only transfer path: raw
+`gh issue transfer` stays refused. Use it for approved confidentiality or ownership moves,
+never for bulk moves. Run `--dry-run` first; it makes every check and writes a receipt with
+the labels the move would drop, but sends no mutation.
+
+```bash
+.venv/bin/python -m scripts.publish issue-transfer --repo public --number 123 --destination infra-private --dry-run
+```
+
+- **Refusals (exit 2, nothing sent).** The verb refuses an endpoint that is not exactly one
+  registered github.com repository with a `public-` or `private-` role, two different owners,
+  the same repository on both sides, and any move from a private-role repository to a
+  public-role one. It then reads both repositories fresh and refuses when the live name,
+  visibility (`PRIVATE` or `PUBLIC`, as the role says), write permission or archive state
+  disagrees with the registry. It also refuses when the source number is a pull request, a
+  closed issue, unreadable, or redirects to a repository other than the destination.
+- **Idempotency.** When the source number already resolves to an issue in the destination,
+  the verb confirms that the destination holds the same issue and exits 0 with outcome
+  `already-transferred`, without a mutation. After any exit 3, re-run the verb only to read
+  the state; never retry by other means.
+- **One mutation, then verification.** The mutation sets `createLabelsIfMissing` to false, so
+  labels missing at the destination are dropped; create them first with `label-create`.
+  GitHub serves the old URL's redirect and the moved issue's labels some time after the
+  mutation returns (one issue took about 85 s on 2026-11-04). The verb re-reads them with a
+  bounded backoff, up to eight times over about 180 s, and never sends a second mutation.
+  The receipt's `verification_reads` counts the reads.
+- **Receipt.** A new 0600 JSON file in `--receipt-dir` (an absolute 0700 directory outside the
+  repository), by default `$XDG_STATE_HOME/learn-ukrainian/issue-transfer`, else
+  `~/.local/state/learn-ukrainian/issue-transfer`. The same JSON goes to stdout. It records
+  the outcome, both URLs and node ids, source labels, dropped labels, the verification reads
+  and anonymous HTTP probes of both URLs. A refusal after the static checks also leaves a
+  receipt, with outcome `refused`.
+- **The anonymous probe.** An anonymous `200` at the old URL is GitHub's transfer banner,
+  which tells a reader without access that the issue moved; it is not the issue's content.
+  On 2026-11-04 the titles of six transferred issues were absent from all six banner pages.
+  A status alone still proves nothing about confidentiality, so read the destination's
+  visibility, not the probe, for that.
+- **Exit codes.** `0` transferred and verified, already transferred, or dry run passed; `2`
+  invalid input or refusal, no mutation sent; `3` the mutation was sent but its result is
+  ambiguous or unverified (including an exhausted verification window, a failed anonymous
+  probe or any later local error); `75` a rate-limit refusal before the mutation.
+
 ## Git hooks
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in

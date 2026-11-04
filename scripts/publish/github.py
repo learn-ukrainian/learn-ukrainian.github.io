@@ -865,9 +865,10 @@ TRANSFER_WRITE_PERMISSIONS = frozenset({"ADMIN", "MAINTAIN", "WRITE"})
 TRANSFER_VISIBILITY = {"private": "PRIVATE", "public": "PUBLIC"}
 TRANSFER_UNSETTLED = 3
 TRANSFER_LABEL_PAGES = 50
-# GitHub serves the source redirect and the moved issue's labels shortly after the mutation
-# returns, so verification re-reads with a bounded backoff: six fresh reads over 60 seconds.
-TRANSFER_VERIFY_DELAYS = (0, 2, 4, 8, 16, 30)
+# GitHub serves the source redirect and the moved issue's labels some time after the mutation
+# returns (one issue took about 85 s on 2026-11-04), so verification re-reads with a bounded
+# backoff: eight fresh reads over 180 seconds.
+TRANSFER_VERIFY_DELAYS = (0, 2, 4, 8, 16, 30, 60, 60)
 _transfer_sleep = time.sleep
 TRANSFER_PROBED = frozenset({"transferred", "already-transferred", "unverified", "ambiguous"})
 TRANSFER_PROBE_NOTE = (
@@ -1856,8 +1857,8 @@ def main(argv=None, *, runner=None):
                 "  credential-free anonymous HTTP probes of both URLs with final URL and status or error (none on\n"
                 "  a dry run). A status alone does not prove confidentiality: GitHub shows a transfer banner at\n"
                 "  the old URL. Label reads are paginated, count-checked and bound to the issue's node id.\n"
-                "  After the mutation, the source redirect and labels are re-read up to six times over about\n"
-                "  60 s, because GitHub serves them shortly after the transfer; verification_reads counts them.\n"
+                "  After the mutation, the source redirect and labels are re-read up to eight times over about\n"
+                "  180 s, because GitHub can take over a minute to serve them; verification_reads counts them.\n"
                 "  A refusal after the static checks leaves a receipt with outcome refused.\n"
                 "Exit codes: 0 transferred and verified, already transferred, or dry run passed;\n"
                 "  2 invalid input or refusal, no mutation sent; 3 mutation sent but its result is ambiguous or\n"
