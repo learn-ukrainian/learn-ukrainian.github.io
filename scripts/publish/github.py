@@ -1131,7 +1131,8 @@ def _transfer_result(receipt, code, capture_output, text):
         with contextlib.suppress(OSError, ValueError):
             print(
                 f"TRANSFER_UNSETTLED: {receipt['detail'] or 'the receipt is incomplete'}; a mutation was sent, so do "
-                "not retry. Re-run the verb only to read the state: an already transferred issue exits 0 unchanged.",
+                "not retry. Read the state only with --dry-run, which sends no mutation: an already transferred issue "
+                "exits 0 as already-transferred.",
                 file=sys.stderr,
             )
     return subprocess.CompletedProcess(
@@ -1862,8 +1863,9 @@ def main(argv=None, *, runner=None):
                 "  A refusal after the static checks leaves a receipt with outcome refused.\n"
                 "Exit codes: 0 transferred and verified, already transferred, or dry run passed;\n"
                 "  2 invalid input or refusal, no mutation sent; 3 mutation sent but its result is ambiguous or\n"
-                "  unverified (including a failed anonymous probe or any later local error): never retry, re-run\n"
-                "  only to read the state; 75 rate-limit refusal before the mutation.\n"
+                "  unverified (including a failed anonymous probe or any later local error): never retry; read the\n"
+                "  state only with --dry-run, because a plain re-run sends a new mutation if the issue did not move;\n"
+                "  75 rate-limit refusal before the mutation.\n"
                 "Related: decision C-4682; machinery-move contract v3 step 10; label-create; read issue."
             )
         for key, kind in schema.items():

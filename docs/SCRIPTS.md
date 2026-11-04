@@ -198,8 +198,9 @@ the labels the move would drop, but sends no mutation.
   closed issue, unreadable, or redirects to a repository other than the destination.
 - **Idempotency.** When the source number already resolves to an issue in the destination,
   the verb confirms that the destination holds the same issue and exits 0 with outcome
-  `already-transferred`, without a mutation. After any exit 3, re-run the verb only to read
-  the state; never retry by other means.
+  `already-transferred`, without a mutation. After any exit 3, never retry: read the state
+  only with `--dry-run`, which sends no mutation and reports `already-transferred` when the
+  issue moved. A plain re-run sends a new mutation when the first one did not move the issue.
 - **One mutation, then verification.** The mutation sets `createLabelsIfMissing` to false, so
   labels missing at the destination are dropped; create them first with `label-create`.
   GitHub serves the old URL's redirect and the moved issue's labels some time after the
