@@ -60,7 +60,7 @@ from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh.cli import main as fresh_cli
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.common.repo_root import project_interpreter, resolve_repo_root
+from scripts.common.repo_root import project_interpreter, resolve_repo_root, runtime_primary_root
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.evidence.sources import Sources
@@ -91,6 +91,8 @@ from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsuppo
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PRIMARY = resolve_repo_root(Path(__file__), 2)  # batch_state lives here, never in a worktree copy
+# The dispatcher entry comes from this code's own primary, never the configured target (#12681).
+DISPATCH_ENTRY = runtime_primary_root(Path(__file__).resolve().parents[2]) / "scripts" / "dispatch.py"
 # where a receipt-recording seat writes its ledger: prepare_review_attempt anchors it to the primary checkout
 PYTHON = project_interpreter()
 STATE_NAME = "integration-state.json"
@@ -1010,7 +1012,7 @@ def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review
         raise ValueError(f"no configured v2 review model for {agent!r}")
     return [
         str(PYTHON),
-        str(PRIMARY / "scripts" / "dispatch.py"),
+        str(DISPATCH_ENTRY),
         "dispatch",
         "--agent",
         agent,
@@ -1153,7 +1155,7 @@ def render_card(out: Path, card: dict[str, Any]) -> str:
     card["dispatch_cmd"] = shlex.join(card["dispatch"])
     card["record_cmd"] = f"cd {shlex.quote(str(REPO_ROOT))} && {shlex.join(card['record'])}"
     (cards / f"{card['case']}.json").write_text(json.dumps(card, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    wait = shlex.join([str(PYTHON), str(PRIMARY / "scripts" / "dispatch.py"), "wait", card["task_id"]])
+    wait = shlex.join([str(PYTHON), str(DISPATCH_ENTRY), "wait", card["task_id"]])
     finish = shlex.join([str(PYTHON), "-m", "scripts.review.integration_check", "finish-real", "--out", str(out)])
     lines = [
         f"=== DISPATCH CARD ({card['case']}) {card['title']} ===",

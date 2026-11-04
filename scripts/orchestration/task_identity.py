@@ -11,10 +11,13 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from scripts.common.repo_root import github_slug
+
 IDENTITY_SCHEMA_VERSION = "task-identity.v1"
 TITLE_TRANSITION_SCHEMA_VERSION = "rollover-title-transition.v1"
 VISIBLE_TITLE_MAX_CHARS = 60
-DEFAULT_REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
+# The configured GitHub slug (``LEARN_UKRAINIAN_GITHUB_SLUG``), else this repository; read at import.
+DEFAULT_REPOSITORY = github_slug()
 TERMINAL_GOALS = frozenset({"merge", "deploy", "certify"})
 LEGACY_TERMINAL_GOAL = "unknown"
 FALLBACK_CARRIERS = (
@@ -27,6 +30,7 @@ FALLBACK_CARRIERS = (
 )
 NATIVE_TITLE_HARNESSES = frozenset({"codex-app"})
 
+# The schema ships with this code, so it is read beside this file (the runtime checkout).
 _ROOT = Path(__file__).resolve().parents[2]
 _SCHEMA_PATH = _ROOT / "agents_extensions" / "shared" / "schemas" / "task-identity.v1.schema.json"
 _IDENTITY_SCHEMA = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))

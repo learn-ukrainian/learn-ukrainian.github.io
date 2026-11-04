@@ -4,12 +4,16 @@ One loader for every seat: launchers (``scripts/lib/rules_core.sh``), legacy dis
 workers and review dispatches, ACP asks and discussion legs
 (``agent_runtime.runner.invoke_inter_agent``), the legacy bridge prompt builders,
 and ``GET /api/rules?scope=...``. Everything here is offline: files come from the
-checkout this module runs from (or an explicit ``root``), never from the environment,
-the working directory or the Monitor API.
+checkout this module runs from (or an explicit ``root``), never from the working
+directory or the Monitor API. The one exception is the rules directory: the operator's
+machinery configuration (``LEARN_UKRAINIAN_RULES_DIR``, see
+``scripts/common/repo_root.py``) names it for every root, so machinery installed outside
+the checkout serves the configured rules. Unset, it is ``<root>/agents_extensions/shared/rules``.
 
 Seats:
-    core     ``agents_extensions/shared/rules/core.md``
-    content  the core plus ``core-curriculum.md`` (curriculum seats)
+    core     ``core.md`` in the rules directory
+    content  the core plus ``core-curriculum.md`` from the same directory (curriculum
+             seats); a rules directory without it refuses a content seat
 
 An absent, unreadable or empty core file refuses: every entry point raises
 ``RulesCoreMissing`` (naming the repo-relative path) before any side effect, and the
@@ -45,7 +49,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-RULES_DIR_REL = "agents_extensions/shared/rules"
+if __package__ in (None, "") and str(ROOT) not in sys.path:  # run as a file by rules_core.sh
+    sys.path.insert(0, str(ROOT))
+
+from scripts.common.repo_root import RULES_DIR_REL, rules_dir
+
 CORE_REL = f"{RULES_DIR_REL}/core.md"
 CONTENT_ADDENDUM_REL = f"{RULES_DIR_REL}/core-curriculum.md"
 SEATS = ("core", "content")
@@ -137,8 +145,8 @@ def resolve_seat(
 
 
 def core_dir(root: Path | None = None) -> Path:
-    """Directory holding the core files: the rules directory of ``root``, else of this checkout."""
-    return (ROOT if root is None else Path(root)) / RULES_DIR_REL
+    """The rules directory: the configured one, else that of ``root``, else of this checkout."""
+    return rules_dir(ROOT if root is None else Path(root))
 
 
 def seat_sources(seat: str) -> tuple[str, ...]:
@@ -162,8 +170,10 @@ def scope_sources(scope: str) -> tuple[str, ...]:
 
 
 def source_path(rel: str, root: Path | None = None) -> Path:
-    if rel in (CORE_REL, CONTENT_ADDENDUM_REL):
-        return core_dir(root) / Path(rel).name
+    """Path of a repo-relative source; a source under the rules directory is read from :func:`core_dir`."""
+    rel_path = Path(rel)
+    if rel_path.is_relative_to(RULES_DIR_REL):
+        return core_dir(root) / rel_path.relative_to(RULES_DIR_REL)
     return (ROOT if root is None else Path(root)) / rel
 
 

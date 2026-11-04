@@ -6,9 +6,11 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import NoReturn
 
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import configured_interpreter, main_checkout_root
 
 ENTRY = Path("scripts/dispatch.py")
+# The checkout this dispatcher code runs from, read from this file.
+RUNTIME_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _refuse(message: str) -> NoReturn:
@@ -27,8 +29,14 @@ def exec_primary(
     Returns in the primary checkout and in a checkout without Git metadata; exits 2 when a
     linked worktree's primary cannot be resolved. A caller may supply a non-returning
     refusal handler to format the reason itself.
+
+    The primary here is the running code's own primary, read from its Git metadata:
+    the configured target primary (``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT``) never
+    chooses which dispatcher code runs. The re-exec uses the configured interpreter
+    (``LEARN_UKRAINIAN_PYTHON``) when one is set, else this process's interpreter;
+    an unusable configured interpreter also exits 2.
     """
-    root = Path(__file__).resolve().parents[2]
+    root = RUNTIME_ROOT
     try:
         primary = main_checkout_root(root).resolve()
     except ValueError as exc:  # undecodable metadata, or a NUL in its gitdir target
@@ -40,4 +48,11 @@ def exec_primary(
     entry = primary / entry
     if not entry.is_file():
         refuse(f"primary checkout has no entry point: {entry}")
-    os.execv(sys.executable, [sys.executable, str(entry), *argv])
+    try:
+        configured = configured_interpreter()
+    except ValueError as exc:
+        refuse(str(exc))
+    if configured is not None and not configured.is_file():
+        refuse(f"configured interpreter is not a file: {configured}")
+    interpreter = sys.executable if configured is None else str(configured)
+    os.execv(interpreter, [interpreter, str(entry), *argv])
