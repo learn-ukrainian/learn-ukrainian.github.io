@@ -6,6 +6,7 @@ import copy
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -277,6 +278,54 @@ def test_capacity_pick_marks_logout_cursor_avoid(monkeypatch):
     rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget)}
     assert rows["cursor"]["avoid"] is True
     assert "NEED_LOGIN" in rows["cursor"]["notes"]
+
+
+def test_b_sub_spend_and_in_flight_stay_off_account_a(monkeypatch, tmp_path: Path) -> None:
+    """A b-sub task's dollars and in-flight count land on account b and leave account a unchanged."""
+    budget_path = _configure_base(monkeypatch, tmp_path)
+    now = datetime(2026, 8, 26, 12, 0, tzinfo=UTC)
+    monkeypatch.setattr(
+        state_router,
+        "load_cost_records",
+        lambda **_kwargs: [
+            SimpleNamespace(agent="codex", mtime=now, cost_usd_est=4.0, prompt_tokens_est=1, codex_account="sub"),
+            SimpleNamespace(agent="codex", mtime=now, cost_usd_est=9.0, prompt_tokens_est=1, codex_account="b-sub"),
+        ],
+    )
+    monkeypatch.setattr(state_router.delegate_api, "_pid_alive", lambda pid: True)
+    monkeypatch.setattr(
+        state_router,
+        "summarize_fleet_burn",
+        lambda agent, **kwargs: {
+            "source": "agent_runtime_jsonl",
+            "agent": agent,
+            "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+        },
+    )
+    tasks = tmp_path / "tasks"
+    (tasks / "a-task.json").write_text(
+        json.dumps({"task_id": "a-task", "agent": "codex", "status": "running", "pid": 111, "codex_account": "sub"}),
+        encoding="utf-8",
+    )
+    (tasks / "b-task.json").write_text(
+        json.dumps({"task_id": "b-task", "agent": "codex", "status": "running", "pid": 222, "codex_account": "b-sub"}),
+        encoding="utf-8",
+    )
+    data = state_router.compute_routing_budget(
+        now,
+        budget_config_path=budget_path,
+        tasks_dir=tasks,
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+    assert data["agents"]["codex"]["spent_7d_usd"] == 4.0
+    assert "codex_account" not in data["agents"]["codex"]
+    assert data["codex_accounts"]["codex:a"]["spent_7d_usd"] == 4.0
+    assert data["codex_accounts"]["codex:b"]["spent_7d_usd"] == 9.0
+    assert data["codex_accounts"]["codex:b"]["codex_account"] == "b-sub"
+    assert data["in_flight"]["codex"] == 1
+    assert data["in_flight"]["codex:b"] == 1
 
 
 def test_in_flight_excludes_zombie_running_tasks(tmp_path: Path, monkeypatch) -> None:

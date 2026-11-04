@@ -81,6 +81,25 @@ def test_invalid_or_expired_assertions_fail_closed(tmp_path, changes):
     assert load_reset_reserve(tmp_path, now=now) == unavailable_reserve()
 
 
+def test_a_reset_on_one_account_leaves_the_other_reserve_unchanged(tmp_path):
+    """A free reset stored for one Codex account does not change the other's reserve."""
+    account_a = {**_assertion(), "remaining_resets": 2, "codex_account": "sub"}
+    account_b = {**_assertion(), "remaining_resets": 1, "codex_account": "b-sub"}
+    _write_assertion(tmp_path, {"schema_version": SCHEMA_VERSION, "reserves": [account_a, account_b]})
+    loaded_a = load_reset_reserve(tmp_path, now=NOW, account="sub")
+    loaded_b = load_reset_reserve(tmp_path, now=NOW, account="b-sub")
+    assert loaded_a["available"] is True and loaded_a["remaining_resets"] == 2
+    assert loaded_b["available"] is True and loaded_b["remaining_resets"] == 1
+    assert load_reset_reserve(tmp_path, now=NOW, account="sub") == loaded_a
+    assert loaded_b["remaining_resets"] == 1
+    crossed = effective_reset_reserve(
+        {"available": True, **{key: value for key, value in account_a.items() if key != "schema_version"}},
+        {**_eligible_codex(), "codex_account": "b-sub"},
+        now=NOW,
+    )
+    assert crossed == unavailable_reserve()
+
+
 def test_valid_assertion_is_sanitized_without_mutation(tmp_path):
     now = datetime(2026, 9, 23, 12, tzinfo=UTC)
     path = _write_assertion(tmp_path, _assertion())

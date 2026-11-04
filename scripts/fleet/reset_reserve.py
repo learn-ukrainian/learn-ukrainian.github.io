@@ -27,6 +27,13 @@ except ImportError:  # pragma: no cover - script path fallback
 SCHEMA_VERSION = "operator-reset-reserve.v1"
 MAX_PROVIDER_AGE_SECONDS = 15 * 60
 RESERVE_RELATIVE_PATH = Path("batch_state/routing_budget/operator_reset_reserve.json")
+# Account a keeps the historical file, which has no account field. Account b is
+# ``b-sub`` (also ``b`` / ``codex:b``). A reserve relaxes only the account it names.
+_ACCOUNT_A = "sub"
+_ACCOUNT_B = "b-sub"
+_ACCOUNT_A_NAMES = frozenset({None, "", "sub", "a-sub", "codex", "codex:a"})
+_ACCOUNT_B_NAMES = frozenset({"b-sub", "b", "codex:b"})
+_RESERVE_KEYS = frozenset({"schema_version", "provider", "remaining_resets", "confirmed_at", "expires_at"})
 
 
 def utc_datetime(value: object) -> datetime | None:
@@ -43,6 +50,22 @@ def utc_datetime(value: object) -> datetime | None:
     if parsed.tzinfo is None or parsed.utcoffset() != UTC.utcoffset(parsed):
         return None
     return parsed.astimezone(UTC)
+
+
+def codex_reserve_account(value: object) -> str:
+    """The Codex subscription a reserve or probe belongs to.
+
+    A missing label is account a (``sub``), which is what the historical
+    ``provider: codex`` assertion means. An unknown label is empty so the
+    reserve fails closed instead of landing on the other account.
+    """
+    if isinstance(value, dict):
+        value = value.get("codex_account")
+    if value in _ACCOUNT_B_NAMES:
+        return _ACCOUNT_B
+    if value in _ACCOUNT_A_NAMES:
+        return _ACCOUNT_A
+    return ""
 
 
 def unavailable_reserve() -> dict[str, Any]:
@@ -66,6 +89,14 @@ def effective_reset_reserve(
     """
     current = (now or datetime.now(UTC)).astimezone(UTC)
     if not isinstance(reserve, dict) or reserve.get("available") is not True:
+        return unavailable_reserve()
+    # A free reset on one subscription does not relax the other (#12696).
+    info_account = (
+        codex_reserve_account(codex_info)
+        if isinstance(codex_info, dict) and "codex_account" in codex_info
+        else _ACCOUNT_A
+    )
+    if codex_reserve_account(reserve) != info_account or not info_account:
         return unavailable_reserve()
     remaining = reserve.get("remaining_resets")
     confirmed_at = utc_datetime(reserve.get("confirmed_at"))
@@ -130,16 +161,67 @@ def effective_reset_reserve(
     }
 
 
-def load_reset_reserve(
-    repo_root: Path, *, now: datetime | None = None, codex_info: dict[str, Any] | None = None
-) -> dict[str, Any]:
-    """Load the primary checkout assertion and expose only its safe fields.
+def _one_reserve(entry: object) -> dict[str, Any] | None:
+    """One assertion object, or None when its shape or account label is not ours."""
+    if not isinstance(entry, dict):
+        return None
+    keys = set(entry)
+    if keys != _RESERVE_KEYS and keys != _RESERVE_KEYS | {"codex_account"}:
+        return None
+    remaining = entry.get("remaining_resets")
+    if (
+        entry.get("schema_version") != SCHEMA_VERSION
+        or entry.get("provider") != "codex"
+        or isinstance(remaining, bool)
+        or not isinstance(remaining, int)
+        or remaining <= 0
+        or not codex_reserve_account(entry)
+    ):
+        return None
+    return entry
 
-    The assertion is never changed or consumed. Invalid, absent, expired, or
-    unknown/stale live inventory produces the same unavailable result. CLI
-    consumers pass their Monitor provider snapshot; in-process API consumers
-    use the shared provider cache.
+
+def _reserve_entries(payload: dict[str, Any]) -> list[dict[str, Any]] | None:
+    """The file's assertions: one legacy object, or a ``reserves`` list of them.
+
+    The legacy object is account a. A list holds one assertion per account.
     """
+    keys = set(payload)
+    if keys == _RESERVE_KEYS or keys == _RESERVE_KEYS | {"codex_account"}:
+        one = _one_reserve(payload)
+        return None if one is None else [one]
+    if keys != {"schema_version", "reserves"} or payload.get("schema_version") != SCHEMA_VERSION:
+        return None
+    raw = payload.get("reserves")
+    if not isinstance(raw, list) or not raw:
+        return None
+    entries: list[dict[str, Any]] = []
+    for item in raw:
+        one = _one_reserve(item)
+        if one is None:
+            return None
+        entries.append(one)
+    return entries
+
+
+def load_reset_reserve(
+    repo_root: Path,
+    *,
+    now: datetime | None = None,
+    codex_info: dict[str, Any] | None = None,
+    account: str | None = None,
+) -> dict[str, Any]:
+    """Load one account's assertion from the primary checkout and expose its safe fields.
+
+    ``account`` defaults to account a (``sub``). The assertion is never changed
+    or consumed. Invalid, absent, expired, or unknown/stale live inventory
+    produces the same unavailable result, as does an assertion for the other
+    account. CLI consumers pass their Monitor provider snapshot; in-process API
+    consumers use the shared provider cache for the account they asked for.
+    """
+    label = _ACCOUNT_A if account is None else codex_reserve_account(account)
+    if not label:
+        return unavailable_reserve()
     path = main_checkout_root(Path(repo_root).resolve()) / RESERVE_RELATIVE_PATH
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -147,24 +229,29 @@ def load_reset_reserve(
         return unavailable_reserve()
     if not isinstance(payload, dict):
         return unavailable_reserve()
-    expected = {"schema_version", "provider", "remaining_resets", "confirmed_at", "expires_at"}
-    if set(payload) != expected:
+    entries = _reserve_entries(payload)
+    if entries is None:
         return unavailable_reserve()
-    remaining = payload.get("remaining_resets")
-    if (
-        payload.get("schema_version") != SCHEMA_VERSION
-        or payload.get("provider") != "codex"
-        or isinstance(remaining, bool)
-        or not isinstance(remaining, int)
-        or remaining <= 0
-    ):
+    chosen: dict[str, Any] | None = None
+    for entry in entries:
+        if codex_reserve_account(entry) != label:
+            continue
+        if chosen is not None:
+            return unavailable_reserve()
+        chosen = entry
+    if chosen is None:
         return unavailable_reserve()
     if codex_info is None:
         try:
-            codex_info = get_provider_usage_data("codex")
+            usage_key = "codex:b" if label == _ACCOUNT_B else "codex"
+            codex_info = get_provider_usage_data(usage_key)
         except (OSError, ValueError):
             return unavailable_reserve()
-    return effective_reset_reserve({**payload, "available": True}, codex_info, now=now)
+    checked = dict(codex_info) if isinstance(codex_info, dict) else {}
+    if "codex_account" in checked and codex_reserve_account(checked) != label:
+        return unavailable_reserve()
+    checked["codex_account"] = label
+    return effective_reset_reserve({**chosen, "available": True, "codex_account": label}, checked, now=now)
 
 
 def codex_reset_reserve_eligible(

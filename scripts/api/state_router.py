@@ -40,7 +40,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 import yaml
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
@@ -546,12 +546,12 @@ def _sum_agent_spend(
     records: list[CostRecord],
     *,
     agent: str,
-    since: datetime,
+    since: datetime, codex_account: str | None = None,
 ) -> tuple[float, int]:
     spent = 0.0
     missing = 0
     for record in records:
-        if _agent_key(getattr(record, "agent", None)) != agent:
+        if not _spend_row_counts(record, agent, codex_account):
             continue
         if getattr(record, "mtime", datetime.min.replace(tzinfo=UTC)) < since:
             continue
@@ -633,7 +633,6 @@ def _in_flight_by_agent(
     tasks_dir: Path | None = None, *, task_generation: list[str] | None = None,
 ) -> dict[str, int] | None:
     """Count active delegate tasks, optionally scoped to a MonitorContext tasks dir.
-
     When *tasks_dir* is set, preserve the same PID-liveness semantics as
     ``delegate_api.active_delegate_tasks`` (dead ``running`` PIDs → zombie, not in-flight).
     None when active work cannot be observed (missing tasks dir, read failure):
@@ -659,7 +658,8 @@ def _in_flight_by_agent(
     for task in tasks:
         agent = normalize_seat(str(task.get("agent") or ""))
         if agent:
-            in_flight[agent] = in_flight.get(agent, 0) + 1
+            key = _in_flight_agent_key(agent, task, tasks_dir)
+            in_flight[key] = in_flight.get(key, 0) + 1
     return in_flight
 
 
@@ -1516,7 +1516,8 @@ def _compute_dispatch_routing_budget(
     cb_max_age_s = None
     cb_freshness: dict[str, str] = {}
     cb_had_any_before_notebook = False
-    refreshed_codexbar = refresh_provider_usage_data(SUBSCRIPTION_LANES) if fresh_codexbar else {}
+    # ``codex`` refreshes account a (stored with ``codex:a``). ``codex:b`` is the other subscription.
+    refreshed_codexbar = refresh_provider_usage_data((*SUBSCRIPTION_LANES, "codex:b")) if fresh_codexbar else {}
 
     for lane in SUBSCRIPTION_LANES:
         if lane == "cursor":
@@ -2031,9 +2032,26 @@ def _compute_dispatch_routing_budget(
     blocked_ranked = [x for x in ranked if _runtime_blocked(x)]
     ranked = free_ranked + blocked_ranked
 
+    codex_accounts, b_missing = _codex_subscription_rows(
+        agents,
+        budgets=budgets,
+        records=records,
+        window_start=window_start,
+        resets_at=resets_at,
+        current_time=current_time,
+        usage_dir=usage_dir,
+        in_flight=in_flight_by_agent,
+        fresh_probe=refreshed_codexbar.get("codex:b") if fresh_codexbar else None,
+        is_stale=is_stale,
+        project_root=project_root,
+        account_a_reserve=reset_reserve,
+    )
+    missing_cost_records += b_missing
+
     return {
         "generated_at": _isoformat_z(current_time),
         "agents": agents,
+        "codex_accounts": codex_accounts,
         "reset_reserve": reset_reserve,
         "api_accounts": api_accounts,
         "in_flight": in_flight_by_agent,
@@ -2073,6 +2091,221 @@ def _compute_dispatch_routing_budget(
         },
         "ranked_by_headroom": ranked,
     }
+
+
+_CODEXBAR_PUBLIC_FIELDS = (
+    "primary_used_pct",
+    "primary_remaining_pct",
+    "secondary_used_pct",
+    "secondary_remaining_pct",
+    "tertiary_used_pct",
+    "tertiary_remaining_pct",
+    "weekly_used_pct",
+    "weekly_remaining_pct",
+    "windows",
+    "provider_windows",
+    "credit_balance",
+    "reset_credits",
+    "weekly_resets_at",
+    "weekly_pace_delta_pct",
+    "weekly_expected_pct",
+    "will_last_to_reset",
+    "pace_summary",
+    "stale",
+    "freshness",
+    "age_s",
+    "fetched_at",
+    "failure_kind",
+    "last_failure_at",
+    "last_failure_code",
+    "source",
+)
+
+
+# Ledger labels for Codex account b. An unlabelled row stays on account a.
+_CODEX_B_LEDGER = frozenset({"b-sub", "b", "codex:b"})
+
+
+def _as_mapping(value: object) -> dict[str, Any]:
+    return cast(dict[str, Any], value) if isinstance(value, dict) else {}
+
+
+def _ledger_codex_account(record: object) -> str:
+    """``b-sub`` when the cost row names account b; otherwise account a."""
+    raw = getattr(record, "codex_account", None)
+    return "b-sub" if raw in _CODEX_B_LEDGER else "sub"
+
+
+def _spend_row_counts(record: object, agent: str, codex_account: str | None) -> bool:
+    """Whether this cost row belongs on the requested lane and Codex account."""
+    if _agent_key(getattr(record, "agent", None)) != agent:
+        return False
+    if agent != "codex":
+        return True
+    wanted = "b-sub" if codex_account in _CODEX_B_LEDGER else "sub"
+    return _ledger_codex_account(record) == wanted
+
+
+def _in_flight_agent_key(agent: str, task: dict[str, Any], tasks_dir: Path | None) -> str:
+    """``codex:b`` for a b-sub task. Every other seat keeps its agent name."""
+    if agent == "codex" and _task_codex_account(task, tasks_dir) == "b-sub":
+        return "codex:b"
+    return agent
+
+
+def _task_codex_account(task: dict[str, Any], tasks_dir: Path | None) -> str:
+    """Account of one active Codex task. The summary omits the field, so read the task file."""
+    raw = task.get("codex_account")
+    if raw is None and tasks_dir is not None:
+        task_id = task.get("task_id")
+        if isinstance(task_id, str):
+            raw = _task_file_codex_account(tasks_dir, task_id)
+    return "b-sub" if raw in _CODEX_B_LEDGER else "sub"
+
+
+def _task_file_codex_account(tasks_dir: Path, task_id: str) -> object:
+    if not task_id or task_id in {".", ".."} or "/" in task_id or "\\" in task_id:
+        return None
+    path = tasks_dir / f"{task_id}.json"
+    try:
+        resolved = path.resolve()
+        root = tasks_dir.resolve()
+    except OSError:
+        return None
+    if resolved.parent != root or not resolved.is_file():
+        return None
+    try:
+        payload = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    return payload.get("codex_account")
+
+
+def _codex_account_cap(budgets: dict[str, Any], account: str) -> float:
+    """Weekly dollar cap for one Codex subscription. Account b uses its own entry."""
+    config = _as_mapping(budgets.get("codex"))
+    if account == "b-sub":
+        row = _as_mapping(_as_mapping(config.get("accounts")).get("b"))
+        raw = row.get("weekly_cap_usd")
+        if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
+            return float(raw)
+    raw = config.get("weekly_cap_usd")
+    if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
+        return float(raw)
+    return 0.0
+
+
+def _codex_account_probe_row(
+    probe: dict[str, Any] | None,
+    *,
+    label: str,
+    spent: float,
+    cap: float,
+    resets_at: str,
+    current_time: datetime,
+    usage_dir: Path | None,
+    is_stale: bool,
+    in_flight: int | None,
+) -> dict[str, Any]:
+    """One Codex subscription's pace and ledger. ``label`` is ``sub`` or ``b-sub``."""
+    has_cap = cap > 0
+    burn = _burn_pct(spent, cap) if has_cap else None
+    status = _status_from_burn(burn, has_cap=has_cap)
+    if not has_cap:
+        status = "unknown"
+        burn = None
+    source = "ledger_burn"
+    row: dict[str, Any] = {
+        "codex_account": label,
+        "spent_7d_usd": _round_money(spent),
+        "weekly_cap_usd": _round_money(cap) if has_cap else None,
+        "burn_pct_7d": burn,
+        "status": status,
+        "status_source": source,
+        "resets_at": resets_at,
+        "remaining_pct": (100.0 - burn) if burn is not None else None,
+        "in_flight": in_flight,
+    }
+    if not isinstance(probe, dict):
+        return row
+    used = _capacity_used_pct(probe)
+    if used is not None:
+        row["status"] = _status_from_weekly_used(
+            used,
+            probe,
+            lane="codex:b" if label == "b-sub" else "codex",
+            info={**probe, "codexbar": probe},
+            now=current_time,
+            snapshot_stale=bool(probe.get("stale")) or is_stale,
+            usage_dir=usage_dir,
+        )
+        row["burn_pct_7d"] = used
+        row["remaining_pct"] = 100.0 - used
+        row["status_source"] = "weekly_pace"
+    if probe.get("weekly_resets_at"):
+        row["resets_at"] = probe["weekly_resets_at"]
+    row["codexbar"] = {key: probe.get(key) for key in _CODEXBAR_PUBLIC_FIELDS}
+    row["freshness"] = probe.get("freshness", "unavailable")
+    row["age_s"] = probe.get("age_s")
+    row["stale"] = bool(probe.get("stale"))
+    for name in ("credit_balance", "reset_credits"):
+        row[name] = probe.get(name)
+    return row
+
+
+def _codex_subscription_rows(
+    agents: dict[str, Any],
+    *,
+    budgets: dict[str, Any],
+    records: list[CostRecord],
+    window_start: datetime,
+    resets_at: str,
+    current_time: datetime,
+    usage_dir: Path | None,
+    in_flight: dict[str, int] | None,
+    fresh_probe: dict[str, Any] | None,
+    is_stale: bool,
+    project_root: Path | None,
+    account_a_reserve: dict[str, Any],
+) -> tuple[dict[str, Any], int]:
+    """``codex:a`` mirrors account a (the ``codex`` key). ``codex:b`` is account b's own row.
+
+    Account b's numbers are not written onto ``agents.codex``.
+    """
+    a_count = None if in_flight is None else in_flight.get("codex", 0)
+    a_row = {
+        **agents.get("codex", {}),
+        "codex_account": "sub",
+        "in_flight": a_count,
+        "reset_reserve": account_a_reserve,
+    }
+    b_spent, b_missing = _sum_agent_spend(records, agent="codex", since=window_start, codex_account="b-sub")
+    probe = fresh_probe if isinstance(fresh_probe, dict) else get_provider_usage_data("codex:b")
+    b_count = None if in_flight is None else in_flight.get("codex:b", 0)
+    b_row = _codex_account_probe_row(
+        probe if isinstance(probe, dict) else None,
+        label="b-sub",
+        spent=b_spent,
+        cap=_codex_account_cap(budgets, "b-sub"),
+        resets_at=resets_at,
+        current_time=current_time,
+        usage_dir=usage_dir,
+        is_stale=is_stale,
+        in_flight=b_count,
+    )
+    b_row["health"] = agents.get("codex", {}).get("health")
+    try:
+        b_row["runtime"] = summarize_lane_runtime("codex", usage_dir=usage_dir, codex_account="b-sub")
+    except Exception as exc:  # telemetry must not drop the account row
+        logging.getLogger("state_router").debug("account b runtime summary failed: %s", exc)
+        b_row["runtime"] = {"source": "agent_runtime_jsonl", "headroom_blocked": None, "codex_account": "b-sub"}
+    _attach_credit_states({"codex:b": b_row}, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
+    _attach_routing_facts({"codex:b": b_row}, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
+    root = project_root or Path(__file__).resolve().parents[2]
+    b_row["reset_reserve"] = load_reset_reserve(root, now=current_time, codex_info=b_row, account="b-sub")
+    return {"codex:a": a_row, "codex:b": b_row}, b_missing
 
 
 def compute_routing_budget(
@@ -2202,7 +2435,11 @@ def compute_routing_budget(
 
 
 def _aged_routing_budget(
-    payload: object, age_s: float, *, stale: bool = True, claude_fields: dict[str, Any] | None = None,
+    payload: object,
+    age_s: float,
+    *,
+    stale: bool = True,
+    claude_fields: dict[str, Any] | None = None,
 ) -> object:
     """Publish the real age of a stored routing snapshot without adding keys.
 
@@ -2278,11 +2515,13 @@ async def _with_live_lane_errors(payload: object, tasks_dir: Path, cache_key: st
     # Only snapshots displaying a failure need a second read. Healthy warm
     # reads retain the cheap cache path; new failures arrive with the refresh.
     if not any(
-        isinstance(info, dict) and isinstance(info.get("health"), dict)
+        isinstance(info, dict)
+        and isinstance(info.get("health"), dict)
         and (info["health"].get("last_error") or info["health"].get("error"))
         for info in payload["agents"].values()
     ):
         return payload
+
     def _scan() -> LaneHealthScan:
         try:
             return scan_lane_health(tasks_dir)
@@ -2410,14 +2649,17 @@ async def routing_budget(
         value = await _with_live_lane_errors(value, tasks_dir, cache_key)
         claude_fields = await revalidated_routing_budget_fields()
         return _aged_routing_budget(
-            value, state_helpers._ttl_clock() - observed.started_at,
+            value,
+            state_helpers._ttl_clock() - observed.started_at,
             stale=age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set(),
             claude_fields=claude_fields,
         )
     observed, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
     claude_fields = await revalidated_routing_budget_fields()
     return _aged_routing_budget(
-        value, state_helpers._ttl_clock() - observed.started_at, stale=observed.invalidated.is_set(),
+        value,
+        state_helpers._ttl_clock() - observed.started_at,
+        stale=observed.invalidated.is_set(),
         claude_fields=claude_fields,
     )
 
