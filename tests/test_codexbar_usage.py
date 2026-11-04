@@ -2862,7 +2862,7 @@ def _render_subscription_snapshot(snapshot):
     return result.stdout
 
 
-def _subscription_cells(rendered, lane='codex'):
+def _subscription_cells(rendered, lane='codex:a'):
     import re
 
     row = re.search(rf'<tr>\s*<td class="mono">{lane}</td>(.*?)</tr>', rendered, re.S)
@@ -2924,6 +2924,17 @@ def test_subscription_actual_cap_uses_measured_window():
     assert '5h' in quota and '100% used · 0% left' in quota
     assert 'weekly' in quota and '30% used · 70% left' in quota
     assert '>healthy</span>' in health
+    import copy
+    b = copy.deepcopy(agent)
+    b["status"] = "cool"
+    b["codexbar"]["windows"] = {"secondary": {"window_minutes": 10080, "used_pct": 17, "remaining_pct": 83}}
+    snapshot["codex_accounts"] = {"codex:a": agent, "codex:b": b}
+    snapshot["in_flight"]["codex:b"] = 1
+    rendered = _render_subscription_snapshot(snapshot)
+    _, b_quota, _, _, b_flight = _subscription_cells(rendered, "codex:b")
+    assert "17% used · 83% left" in b_quota
+    assert b_flight == "1"
+    assert "100% used · 0% left" in _subscription_cells(rendered)[1]
 
 
 def test_subscription_runtime_failure_keeps_quota_independent():

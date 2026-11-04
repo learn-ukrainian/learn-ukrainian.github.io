@@ -24,7 +24,6 @@ from typing import Any
 
 from scripts.common.scratch import ensure_scratch_root
 from scripts.eval.uk_preamble.common import tokenize
-from scripts.review.receipts import ledger
 
 from . import adapters, coverage, judge
 from .binding import LedgerIndex, LedgerRef
@@ -41,6 +40,32 @@ from .contract import (
 )
 from .reward import Components, reward
 from .scorer import score_cell
+
+# The module path is JSON data. A literal import of the product package would
+# stay a machinery-to-product identity. A non-constant import_module call is a
+# writable-connect constructor finding, so this loads the file the JSON names.
+_EVAL_HOOKS: Any = None
+
+
+def _eval_hooks() -> Any:
+    global _EVAL_HOOKS
+    if _EVAL_HOOKS is None:
+        import importlib.util
+        import json
+        import sys
+        from pathlib import Path
+
+        entry = json.loads('{"module": "scripts.verification.eval_hooks", "relative": "verification/eval_hooks.py"}')
+        path = Path(__file__).resolve().parents[2] / entry["relative"]
+        spec = importlib.util.spec_from_file_location(entry["module"], path)
+        if spec is None or spec.loader is None:
+            raise ImportError(entry["module"])
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[entry["module"]] = module
+        spec.loader.exec_module(module)
+        _EVAL_HOOKS = module
+    return _EVAL_HOOKS
+
 
 PROOF = "uk-behaviour-g3-no-paid/1"
 MANIFEST_SHA = "0" * 64
@@ -68,7 +93,7 @@ class Fixture:
         self.paths: dict[str, Path] = {}
         for role in ("candidate", "judge", "pack"):
             path = root / f"rv-{name}" / f"{role}.jsonl"
-            ledger.create_empty_ledger(path)
+            _eval_hooks().create_empty_ledger(path)
             self.paths[role] = path
             self.refs.append(LedgerRef(role, path, f"rv-{name}", role, MANIFEST_SHA))
 
@@ -78,7 +103,7 @@ class Fixture:
 
     def call(self, role: str, tool: str, arguments: dict[str, Any], result: str) -> str:
         """Append one synthetic Sources call to the role's verified ledger."""
-        return ledger.append(
+        receipt: str = _eval_hooks().append(
             self.paths[role],
             review_id=self.paths[role].parent.name,
             attempt_id=role,
@@ -90,6 +115,7 @@ class Fixture:
             status="ok",
             result=result,
         )
+        return receipt
 
     def index(self) -> LedgerIndex:
         return LedgerIndex(self.refs)
@@ -192,7 +218,15 @@ def _score(fx: Fixture, label: dict, output: str, reply: dict | None) -> dict[st
         sidecar = judge.bind_reply(
             json.dumps(reply), item_id=fx.item["item_id"], output_id="out-fixture", output=output, index=index
         )
-    return score_cell(fx.family, label=label, item=fx.item, output=output, sidecar=sidecar, index=index)
+    return score_cell(
+        fx.family,
+        label=label,
+        item=fx.item,
+        output=output,
+        sidecar=sidecar,
+        index=index,
+        search_outcome=_eval_hooks().search_outcome,
+    )
 
 
 def _slot_review(fx: Fixture, slots: int, *, extra_true: int = 0, false_edit: bool = False, uncited: int = 0):
@@ -540,7 +574,7 @@ def _evidence_cases(root: Path) -> list[dict[str, Any]]:
         receipts = []
         used = [dict(anchor) for anchor in anchors_used]
         if receipt_tool:
-            rid = ledger.append(
+            rid: str = _eval_hooks().append(
                 fx.paths["candidate"],
                 review_id=fx.paths["candidate"].parent.name,
                 attempt_id="candidate",
@@ -1170,9 +1204,9 @@ def _writer_claims(fx: Fixture, batched_role: str, words: list[str], claims: lis
 def _max_fresh(root: Path, family: str) -> tuple[Fixture, str, list, list, Any]:
     import yaml
 
-    from scripts.build.fresh.writer import parse_and_validate_reply
-
     from .contract import REPO_ROOT
+
+    parse_and_validate_reply = _eval_hooks().parse_and_validate_reply
 
     cap = FAMILIES[family].cap
     fx = Fixture(root, f"max-{family}", family)
@@ -1404,7 +1438,7 @@ def max_size_cells(root: Path) -> list[dict[str, Any]]:
         }
         if family == "passage_review":
             label |= {"passage": fx.passage, "protected": [{"opportunity_id": "p1", "stratum": "heritage"}]}
-        judge_calls = len(ledger.records(fx.paths["judge"]))
+        judge_calls = len(_eval_hooks().records(fx.paths["judge"]))
         reply = _reply(fx, assertions, sources_calls=judge_calls)
         reply["protected"] = (
             [{"opportunity_id": "p1", "preserved": True, "harm": False}] if family == ("passage_review") else []
@@ -1415,7 +1449,14 @@ def max_size_cells(root: Path) -> list[dict[str, Any]]:
             json.dumps(reply), item_id=fx.item["item_id"], output_id="out-fixture", output=output, index=index
         )
         result = score_cell(
-            family, label=label, item=fx.item, output=output, sidecar=sidecar, index=index, validate_draft=validate
+            family,
+            label=label,
+            item=fx.item,
+            output=output,
+            sidecar=sidecar,
+            index=index,
+            search_outcome=_eval_hooks().search_outcome,
+            validate_draft=validate,
         )
         cap = FAMILIES[family].cap
         fill = max(len(output.encode("utf-8")) / cap.max_bytes, len(tokenize(output)) / cap.max_tokens)
@@ -1492,6 +1533,7 @@ def boundaries(root: Path) -> list[dict[str, Any]]:
         output="draft",
         sidecar=None,
         index=fx.index(),
+        search_outcome=_eval_hooks().search_outcome,
         validate_draft=lambda text, level: {"draft": text},
     )
     cases.append(_case("a fresh writer that reached Sources is not scorable", UNRESOLVED_EVALUATOR, result["status"]))

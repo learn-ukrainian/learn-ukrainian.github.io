@@ -1,6 +1,6 @@
 // Build and browse generated lesson MDX with the real Astro/React components.
 // Usage from repository root: node tests/build/upgrade_browser_check.mjs PATH_TO_MDX
-// Requires site dependencies and Playwright Chromium. No network/model calls.
+// Requires site dependencies and installed Google Chrome. No network/model calls.
 // Emits JSON evidence; exits nonzero on route, tab, build, or browser errors.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -13,7 +13,8 @@ import { pathToFileURL } from 'node:url';
 const root = process.cwd();
 const site = path.join(root, 'site');
 const require = createRequire(path.join(site, 'package.json'));
-const { chromium } = require('playwright');
+// Installed Chrome, sandbox on, own origins only (#12689).
+const { launchHardenedChromium } = await import(pathToFileURL(path.join(site, 'e2e/support/hardened-browser.mjs')).href);
 const source = path.resolve(process.argv[2] || 'batch_state/cu-p1-gold/assembled');
 // Keep output below site so prerender resolves the same installed dependencies.
 const temp = fs.mkdtempSync(path.join(site, '.upgrade-browser-'));
@@ -69,7 +70,7 @@ const server = http.createServer((request, response) => {
   }
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-const browser = await chromium.launch();
+const browser = await launchHardenedChromium();
 const page = await browser.newPage();
 const errors = [];
 const facts = [];

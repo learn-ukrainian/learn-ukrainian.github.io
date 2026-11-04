@@ -12,14 +12,14 @@ from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
 from scripts.agent_runtime.adapters.codex_events import classify_provider_message
 from scripts.agent_runtime.attempt_safe_read import safe_read_attempt_file
 from scripts.agent_runtime.read_only_tmp import dispatch_lease
-from scripts.audit.post_build_review import (
-    OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS as _POST_BUILD_FORBIDDEN_KEYWORDS,
-)
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.providers.stream_json import SOURCES_SERVER
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+from scripts.review.product_hooks import attempt_hooks
 
-OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = _POST_BUILD_FORBIDDEN_KEYWORDS | frozenset({"$schema", "$id"})
+OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = (
+    attempt_hooks().openai_structured_output_forbidden_keywords() | frozenset({"$schema", "$id"})
+)
 
 # Failure codes (agent_runtime) for a provider that cannot take the run now: usage limits and no capacity.
 _OUT_OF_CAPACITY = frozenset({"rate_limited", "provider_overloaded"})

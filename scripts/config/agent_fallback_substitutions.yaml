@@ -10,8 +10,10 @@
 # agent→agent only.
 dispatch_fallbacks:
   claude: codex
-  # Mechanical shed when Codex is hot or in weekly deficit while free seats
-  # (Cursor) sit idle — operator 2026-08-12 / stream #4707.
+  # This legacy agent-only row describes account a. Account-aware callers
+  # choose a usable Codex subscription before shedding to Cursor. C-4606:
+  # new Sol work uses --codex-account b-sub first, then sub when admitted.
+  # Read codex_accounts["codex:b"] and ["codex:a"] independently.
   codex: cursor
   # PERMANENT retirement, not a hot/deficit-only shed: the gemini CLI is not
   # supported and will not be installed (operator 2026-08-18). Legacy admission
@@ -60,7 +62,7 @@ substitutions:
     fallback: |
       (a) Routine non-security code: Codex via `scripts/dispatch.py dispatch --agent codex --model gpt-6.1-terra`; reserved work uses explicit Sol 6.1, OR
       (b) inline by orchestrator if context-continuity gives it an edge
-    budget_bucket: "Codex weekly quota OR interactive"
+    budget_bucket: "codex:b (b-sub) first for new Sol work; codex:a (sub) separately; OR interactive"
 
   - currently_uses: "ab ask-claude (one-shot consult)"
     fallback: |
@@ -77,10 +79,13 @@ substitutions:
 
   - currently_uses: "scripts/dispatch.py dispatch --agent codex"
     fallback: |
-      When Codex is hot / near_cap / weekly deficit: hard auto-sub to
-      `scripts/dispatch.py dispatch --agent cursor` via dispatch_fallbacks (operator 2026-08-12).
-      Otherwise Codex weekly quota is independent of Claude interactive.
-    budget_bucket: "Codex weekly → Cursor when shed"
+      New Sol work first uses `--agent codex --codex-account b-sub` (C-4606).
+      A hot / near_cap / weekly-deficit account a does not shed account b.
+      Check codex_accounts["codex:b"] and ["codex:a"] separately; switch to
+      the other admitted account with an explicit --codex-account and record
+      the substitution. Shed to `--agent cursor` only when neither account
+      admits the work. The legacy agent-only codex row remains account a.
+    budget_bucket: "codex:b (b-sub) or codex:a (sub), never a shared window"
 
   - currently_uses: "scripts/dispatch.py dispatch --agent gemini"
     fallback: |

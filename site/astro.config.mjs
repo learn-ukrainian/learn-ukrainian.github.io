@@ -16,12 +16,14 @@ import {
 } from './src/lib/lexicon/atlas-artifact-selection.mjs';
 import remarkAdmonitions from './plugins/remark-admonitions.mjs';
 import { rawAtlasShardTransport } from './plugins/raw-atlas-shard-transport.mjs';
+import { hardenedChromium } from './e2e/support/hardened-browser.mjs';
 import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
 
 const remarkPlugins = [remarkDirective, remarkAdmonitions, remarkGfm, vocabEtymologyLinker];
 const markdownProcessor = unified({
   remarkPlugins,
-  rehypePlugins: [rehypeMermaid],
+  // Mermaid renders in installed Chrome, sandbox on, own origins only (#12689).
+  rehypePlugins: [[rehypeMermaid, { browserType: hardenedChromium }]],
 });
 const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
 const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules', import.meta.url)));

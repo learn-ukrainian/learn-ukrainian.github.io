@@ -181,6 +181,17 @@ def test_only_fresh_probe_readings_count(monkeypatch) -> None:
     fresh = {"stale": False, "freshness": "fresh", "weekly_used_pct": 91}
     ok = {"diagnostics": {"stale": False}, "agents": {"claude": {"status": "hot", "codexbar": fresh}}}
     assert _budget(monkeypatch, ok) == 91.0
+    accounts = {"codex:a": {"status": "hot", "codexbar": fresh},
+                "codex:b": {"status": "cool", "codexbar": {**fresh, "weekly_used_pct": 17}}}
+    _serve(monkeypatch, {**ok, "codex_accounts": accounts})
+    assert mp.routing_budget_used_pct("codex:a", account=HOST_ACCOUNT) == 91.0
+    assert mp.routing_budget_used_pct("codex:b", account=HOST_ACCOUNT) == 17.0
+    monkeypatch.setattr(mp, "load_policy", lambda: {"headroom": [
+        {"lane": "codex:a", "pattern": "gpt-*", "max_weekly_used_pct": 87},
+        {"lane": "codex:b", "pattern": "gpt-*", "max_weekly_used_pct": 87},
+    ]})
+    assert [entry["lane"] for entry in mp.policy_for_seat("codex", codex_account="b-sub")["headroom"]] == ["codex:b"]
+    assert [entry["lane"] for entry in mp.policy_for_seat("codex", codex_account="sub")["headroom"]] == ["codex:a"]
     for bad in (
         {**ok, "agents": {"claude": {"status": "near_cap", "codexbar": {**fresh, "stale": True}}}},
         {**ok, "agents": {"claude": {"status": "near_cap", "codexbar": {**fresh, "freshness": "stale_last_good"}}}},

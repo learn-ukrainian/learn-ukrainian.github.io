@@ -53,7 +53,7 @@ from scripts.review.model_catalog import (
     retired_model_refusal,
     risk_reviewer_refusal,
 )
-from scripts.review.reviewer_scheduler import _route_record, circuit_exclusion_reason, selection_key
+from scripts.review.reviewer_scheduler import _route_record, circuit_exclusion_reason, codex_account_key, selection_key
 from scripts.review.security_paths import effective_review_risk, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
@@ -276,7 +276,7 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
     exclusion_reason = str(endpoint.get("formal_review_exclusion_reason", ""))
     if endpoint_formal and not model_formal:
         exclusion_reason = f"sealed endpoint {raw['route']!r} is not pinned for model {model_id!r}"
-    return ReviewerCandidate(
+    candidate = ReviewerCandidate(
         name=name,
         family=model["family"],
         concrete_model=model_id,
@@ -309,6 +309,10 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         credential_limit=int(endpoint.get("credential_limit", 0)),
         capacity_weight=float(endpoint.get("capacity_weight", 0)),
     )
+
+    if account_key := codex_account_key(candidate):
+        candidate = replace(candidate, quota_bucket=account_key, credential_bucket=account_key)
+    return candidate
 
 
 REVIEW_CANDIDATES: dict[str, ReviewerCandidate] = {
@@ -600,12 +604,16 @@ class CandidateResult:
     @property
     def quota_bucket(self) -> str:
         """Canonical quota bucket for persistence with this pure receipt."""
+        if self.route == "codex":
+            return codex_account_key(self) or ""
         endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
         return str(endpoint.get("quota_bucket", ""))
 
     @property
     def credential_bucket(self) -> str:
         """Credential-sharing bucket bound to the sealed ACP participant."""
+        if self.route == "codex":
+            return codex_account_key(self) or ""
         endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
         return str(endpoint.get("credential_bucket", ""))
 
@@ -853,6 +861,9 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
         return f"missing required capabilities: {sorted(missing)}"
     if inputs.isolation_required and "isolation" not in candidate.capabilities:
         return "isolation required but candidate does not support process isolation"
+    if (codex_account_key(candidate) == "codex:b"
+            and not _route_record(candidate, inputs.routing_snapshot, prefer_route=True)):
+        return "Codex account b capacity is unavailable"
     return None
 
 
@@ -986,6 +997,9 @@ def _evaluate_candidate(
         author_family if author_family is not None else resolve_author_family(inputs.author_model, inputs.author_family)
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
+    if codex_account_key(candidate) == "codex:b":
+        record = _route_record(candidate, inputs.routing_snapshot, prefer_route=True)
+        normalized_snapshot = normalize_routing_snapshot({"agents": {"codex": record}})
     health = _health_of(candidate, normalized_snapshot)
     if review_mode == "red_team":
         refusal = red_team_seat_refusal(
@@ -1336,6 +1350,16 @@ def _best_eligible(
         for fit_key, entries in filtered.items()
         if (kept := [item for item in entries if item[0].transport_fallback_for not in primary_names])
     }
+    b_models = {
+        candidate.concrete_model for entries in filtered.values() for candidate, _, _ in entries
+        if codex_account_key(candidate) == "codex:b"
+    }
+    filtered = {
+        key: kept for key, entries in filtered.items()
+        if (kept := [item for item in entries if not (
+            codex_account_key(item[0]) == "codex:a" and item[0].concrete_model in b_models
+        )])
+    }
     if not filtered:
         return None
     best_fit_and_tier = min(filtered)
@@ -1610,7 +1634,8 @@ def resolve_reviewer(
                 # contract. Admission can recheck all hard gates without
                 # dispatch capacity exclusions only for the sole eligible lane.
                 agents = (inputs.routing_snapshot or {}).get("agents", {})
-                info = agents.get(candidate.route, {})
+                info = (_route_record(candidate, inputs.routing_snapshot, prefer_route=True)
+                        if candidate.route == "codex" else agents.get(candidate.route, {}))
                 diagnostics = (inputs.routing_snapshot or {}).get("diagnostics")
                 capacity = review_capacity(info, diagnostics)
                 pace_retention_available |= (

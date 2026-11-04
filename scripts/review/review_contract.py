@@ -1470,8 +1470,9 @@ def validate_item_claims(
     of that receipt's stored result. Unsupported and foreign-attempt citations are dropped,
     recorded with reasons for audit, and counted.
     """
-    from scripts.review.receipts import ledger
+    from scripts.review.product_hooks import attempt_hooks
 
+    ledger = attempt_hooks().ledger()
     indexed: dict[str, dict[str, Any]] = {}
     foreign: dict[str, dict[str, Any]] = {}
     if ledger_path is not None and Path(ledger_path).exists():

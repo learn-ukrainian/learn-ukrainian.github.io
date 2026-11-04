@@ -33,7 +33,8 @@ def check_plan(agent: str, model: str, record: dict, *, review: bool = False) ->
         except ClaudeAccountRefused as exc:
             raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {exc.code}") from None
     model_pause.refuse_paused_models(
-        [model], policy=model_pause.policy_for_seat(agent, review=review, plan_metered=not api_key),
+        [model], policy=model_pause.policy_for_seat(
+            agent, review=review, plan_metered=not api_key, codex_account=record.get("codex_account")),
         used_pct=model_pause.account_used_pct(account),
     )
     from scripts.dispatcher import checks

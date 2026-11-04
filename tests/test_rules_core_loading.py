@@ -9,8 +9,9 @@ are in it. Bytes carried per row are printed (``pytest -s``).
 The core is ``agents_extensions/shared/rules/core.md`` when this checkout has it;
 otherwise ``tests/fixtures/rules_core/`` stands in: in-process through the loader's
 ``core_dir`` resolver, and for launcher and CLI subprocesses through a checkout view
-(``tests/rules_core_view.py``) whose rules directory holds the fixture. Nothing in the
-environment can move the core.
+(``tests/rules_core_view.py``) whose rules directory holds the fixture. Only the machinery
+roots configuration (``LEARN_UKRAINIAN_RULES_DIR``) can move the core; the old
+``LU_RULES_CORE_DIR`` override has no effect.
 
 A missing core refuses: each entry point (launcher, ``delegate.py`` dispatch, ACP call and
 discussion, bridge builder, ``ask-*`` prompt, ``/api/rules`` scope) is exercised without the
@@ -784,7 +785,7 @@ def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
     body = api_client.get("/api/rules?scope=full&format=json").json()
     assert set(body) >= {"hash", "bytes", "sources", "markdown"}
     assert body["scope"] == "full"
-    assert body["sources"] == [rel for rel in rules_router.RULE_SOURCES if (REPO / rel).is_file()]
+    assert body["sources"] == [rel for rel in rules_router.RULE_SOURCES if rules_core.source_path(rel, REPO).is_file()]
     expected, sources, digest = rules_router._assemble_rules(REPO)
     assert (body["markdown"], body["sources"], body["hash"]) == (expected, sources, digest)
     assert body["hash"] == hashlib.sha256(body["markdown"].encode("utf-8")).hexdigest()
