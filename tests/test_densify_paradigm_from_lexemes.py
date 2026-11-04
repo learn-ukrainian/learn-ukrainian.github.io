@@ -78,7 +78,9 @@ def test_densify_level_promotes_syncretic_adjective(tmp_path: Path) -> None:
         },
     )
 
-    stats = densify_level(practice_dir, level)
+    from tests.test_generate_practice_deck import _captured_paradigm_verifier
+
+    stats = densify_level(practice_dir, level, verifier=_captured_paradigm_verifier())
     assert stats["after_unique"] == 1
     assert stats["items"] >= 4
 

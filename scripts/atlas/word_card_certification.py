@@ -19,6 +19,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.atlas import word_card_golden_set as gold
+from scripts.common.jsonl import jsonl_lines
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REVIEW_EVIDENCE_PATH = PROJECT_ROOT / "docs/atlas/word-cards/review-evidence-ledger.json"
@@ -26,6 +27,13 @@ PERMISSIONS_REGISTER_PATH = PROJECT_ROOT / "docs/sources/permissions-register.ya
 SCHEMA_PATH = PROJECT_ROOT / "schemas/word-card-v1.schema.json"
 IMPLEMENTATION_PATHS = (
     *sorted(PROJECT_ROOT.glob("scripts/atlas/*.py")),
+    *sorted(PROJECT_ROOT.glob("scripts/review/**/*.py")),
+    PROJECT_ROOT / "scripts/dispatcher/providers/agy.py",
+    PROJECT_ROOT / "scripts/dispatcher/types.py",
+    PROJECT_ROOT / "scripts/agent_runtime/adapters/agy.py",
+    PROJECT_ROOT / "scripts/audit/generate_practice_deck.py",
+    PROJECT_ROOT / "scripts/lexicon/teacher_deck_shard.py",
+    PROJECT_ROOT / "scripts/practice/densify_paradigm_from_lexemes.py",
     PROJECT_ROOT / "scripts/lexicon/runner/ulif_dictua_parse.py",
     PROJECT_ROOT / "scripts/lexicon/source_attribution.py",
     PROJECT_ROOT / "scripts/lexicon/ulif_raw_cache.py",
@@ -52,6 +60,8 @@ RULE_PATHS = (
     PROJECT_ROOT / "agents_extensions/shared/rules/ukrainian-linguistics.md",
     PROJECT_ROOT / "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
     PROJECT_ROOT / "registry/atlas/source-completeness/manifest-contract.md",
+    PROJECT_ROOT / "docs/sources/permissions-register.yaml",
+    PROJECT_ROOT / "scripts/config/model_catalog.yaml",
 )
 
 
@@ -107,13 +117,13 @@ class CertificationAuthority:
             raise UncertifiedCardRefusal("snapshot authority must be repository relative")
         # A lock may name a canonical data digest instead of being the data.
         # Its bytes are still bound by the review's implementation fingerprint.
-        if "json_keys" in binding:
+        if "json_keys" in binding or binding.get("canonical_json") is True:
             if path not in self.json_values:
                 self.json_values[path] = json.loads(path.read_bytes())
             value = self.json_values[path]
-            for key in binding["json_keys"]:
+            for key in binding.get("json_keys", []):
                 value = value[key]
-            self.snapshots[category, name] = value
+            self.snapshots[category, name] = digest(value) if binding.get("canonical_json") is True else value
         else:
             self.snapshots[category, name] = self.file_hash(path)
         return self.snapshots[category, name]
@@ -161,6 +171,8 @@ def load_certified_card_for_export(card: Any, *, required_approval: str = "datas
         review = card["quality"]["linguistic_review"]
         build = card["build"]
         evidence = authority.reviews.get(card["card_id"], {})
+        if build["rules_version"] in {f"a1-slice{i}-v1" for i in range(2, 7)}:
+            return _load_code_first_card(card, evidence, authority, required_approval)
         if (card["state"] != "active" or card["quality"]["identity_confidence"] not in {"high", "medium"}
                 or not isinstance(review.get("record"), str) or not review["record"].strip()
                 or not isinstance(review.get("lane"), str) or not review["lane"].strip()
@@ -204,6 +216,32 @@ def load_certified_card_for_export(card: Any, *, required_approval: str = "datas
         raise
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         raise UncertifiedCardRefusal("missing or invalid certification authority") from exc
+
+
+def _load_code_first_card(card: dict, evidence: dict, authority: CertificationAuthority, required_approval: str) -> dict:
+    """Use exact A1 input bindings without requiring pilot-only serialization."""
+    build = card["build"]
+    if (card["state"] != "active" or card["quality"]["identity_confidence"] not in {"high", "medium"}
+            or evidence.get("status") != "active" or required_approval not in evidence.get("approved_for", [])
+            or not isinstance(evidence.get("record"), str) or not evidence["record"].strip()
+            or not isinstance(evidence.get("lane"), str) or not evidence["lane"].strip()
+            or evidence.get("card_version") != build["card_version"]
+            or build["card_version"] != "cv_" + digest({k: v for k, v in card.items() if k != "build"})[:24]
+            or evidence.get("build_sha256") != digest(build)
+            or evidence.get("implementation_sha256") != authority.implementation
+            or evidence.get("rules_sha256") != authority.rules):
+        raise UncertifiedCardRefusal("missing, withdrawn, stale or inapplicable code-first approval")
+    reference = evidence.get("certification_receipt")
+    if not isinstance(reference, dict):
+        raise UncertifiedCardRefusal("missing code-first certification receipt")
+    gold.validate(reference, gold.REF, "mandatory code-first certification receipt")
+    key = digest(reference)
+    if key not in authority.certifications:
+        authority.certifications[key] = verify_certification_receipt(reference, REVIEW_EVIDENCE_PATH.parent)
+    receipt = authority.certifications[key]
+    if receipt["schema_version"] != "word-card-certification-receipt.v2" or receipt["cards"].get(card["card_id"]) != digest(card):
+        raise UncertifiedCardRefusal("card is outside exact code-first certification")
+    return card
 
 
 @certification_run()
@@ -280,12 +318,203 @@ CERTIFICATION_SPEC = gold.obj({
     "controls": gold.array(gold.obj({"control_id": gold.TEXT, "case_id": gold.TEXT,
                                     "class": {"enum": list(CONTROL_FACETS)}, "card": gold.REF}), 3),
 })
+CODE_FIRST_SPEC = gold.obj({
+    "schema_version": {"const": "word-card-certification-spec.v2"},
+    "frozen": FROZEN, "author": gold.ACTOR,
+    "batches": gold.array(gold.obj({
+        "batch": {"enum": ["slice2", "slice3", "slice4", "slice5", "slice6"]},
+        "assembly": gold.REF, "sources": gold.REF,
+    })),
+    "original50_receipt": {"anyOf": [gold.REF, {"type": "null"}]},
+    "complete_data_receipt": {"anyOf": [gold.REF, {"type": "null"}]},
+    "mechanics_receipt": {"anyOf": [gold.REF, {"type": "null"}]},
+    "original50_selection": gold.REF, "original50_input": gold.REF,
+    "removal_snapshots": {"anyOf": [gold.obj({"overlay": gold.SHA, "suppressions": gold.SHA}), {"type": "null"}]},
+})
 MECHANICS = gold.obj({
     "schema_version": {"const": "word-card-mechanics-acceptance.v1"},
     "status": {"const": "MECHANICS_ACCEPTED"}, "frozen": FROZEN,
     "cards_sha256": gold.SHA, "accepted_by": gold.ACTOR,
     "evidence": gold.array(gold.REF),
 })
+TASK_ACTOR = gold.obj({"task_id": gold.TEXT, "run_nonce": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+                       "model": gold.TEXT, "family": gold.TEXT})
+OFFSET = {"type": "integer", "minimum": 0}
+SPAN = {"type": "array", "items": OFFSET, "minItems": 2, "maxItems": 2}
+FREEZER = gold.obj({"identity": gold.TEXT, "model": gold.TEXT, "record": gold.REF, "model_record": gold.REF,
+    "identity_span": SPAN, "model_span": SPAN, "model_identity_span": SPAN,
+    "task": {"anyOf": [TASK_ACTOR, {"type": "null"}]}})
+NATIVE50 = gold.obj({
+    "schema_version": {"const": "a1-original50-inspection.v1"}, "frozen": FROZEN,
+    "selection_sha256": gold.SHA, "input_sha256": gold.SHA, "scope_sha256": gold.SHA,
+    "authors": gold.array(TASK_ACTOR), "freezer": FREEZER, "producer": TASK_ACTOR,
+    "transcript": gold.REF, "result": gold.REF,
+})
+NATIVE_CALL = gold.obj({"conversation_id": gold.TEXT, "step_index": OFFSET, "quote": gold.TEXT, "span": SPAN})
+NATIVE_SCORE = gold.obj({"verdict": {"const": "pass"}, "reason": gold.TEXT,
+    "findings": {"type": "array", "maxItems": 0}, "calls": gold.array(NATIVE_CALL)})
+NATIVE_JUDGMENTS = gold.obj({"schema_version": {"const": "a1-original50-judgments.v1"},
+    "scope_sha256": gold.SHA, "items": gold.array(gold.obj({"card_id": gold.TEXT,
+        "card_version": gold.TEXT, "meaning": NATIVE_SCORE, "stress": NATIVE_SCORE}), 50)})
+CODE_FIRST_DATA = gold.obj({"schema_version": {"const": "a1-complete-data-replay.v1"},
+    "inputs": gold.obj(dict.fromkeys(gold.INPUT_NAMES, gold.REF)), "universe_count": gold.COUNT,
+    "candidate_entry_count": gold.COUNT, "roles": gold.obj({"assembler": gold.ACTOR})})
+ORIGINAL50_SELECTION_SHA256 = "21ee21005e6d79025541d41db4484fa889b9c145154d3eec101c8357db9a8c21"
+ORIGINAL50_INPUT_SHA256 = "431c517ea6bde6b9df66bf4a2733cb5dba62097c31817e16f16207476f0cc15b"
+
+
+def _native50_scope(inspection: dict, packet: dict, spec: dict) -> str:
+    gold.validate(inspection, NATIVE50, "native original50 inspection")
+    gold.require(spec["original50_selection"]["sha256"] == inspection["selection_sha256"]
+                 == ORIGINAL50_SELECTION_SHA256
+                 and spec["original50_input"]["sha256"] == inspection["input_sha256"]
+                 == ORIGINAL50_INPUT_SHA256, "original50_selection_or_input_changed")
+    scope = digest({"frozen": spec["frozen"], "original50": packet["original50"]})
+    gold.require(len(packet["original50"]) == 50 and inspection["frozen"] == spec["frozen"]
+                 and inspection["scope_sha256"] == scope
+                 and all(r["current_version_matches"] and not any(a["missing"] for a in r["assertions"])
+                         for r in packet["original50"]), "original50_membership_version_or_source_changed")
+    return scope
+
+
+def _native_task(actor: dict, task_root: Path, *, qualified_reviewer: bool = False) -> tuple[dict, str]:
+    from scripts.review import record_cf_verdict as reviews
+
+    task, reply = reviews._task(actor["task_id"], task_root)
+    gold.require(task.get("run_nonce") == actor["run_nonce"] and bool(task.get("result_sha256"))
+                 and task.get("repository") == "learn-ukrainian/learn-ukrainian.github.io"
+                 and task.get("resolved_model_known") is True and task.get("returncode") == 0
+                 and task.get("error") is None,
+                 "original50_task_identity_mismatch")
+    model = task["resolved_model"]
+    if qualified_reviewer:
+        model, family = reviews.reviewer_identity({**task, "model": model})
+    else:
+        family = reviews._author_model_family(task["agent"], model)
+        gold.require(family not in reviews.UNRESOLVED_AUTHOR_FAMILIES, "original50_actor_model_unknown")
+    gold.require((model, family) == (actor["model"], actor["family"]), "original50_actor_model_mismatch")
+    return task, reply
+
+
+def _native50_freezer(freezer: dict, authors: list[dict], producer: dict, base: Path) -> None:
+    from scripts.review.record_cf_verdict import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
+
+    gold.require(resolve_family(freezer["model"]) not in UNRESOLVED_AUTHOR_FAMILIES,
+                 "original50_freezer_model_unknown")
+    freeze_record = gold.reference(freezer["record"], base).decode("utf-8")
+    model_record = gold.reference(freezer["model_record"], base).decode("utf-8")
+    for field, record, span in (("identity", freeze_record, "identity_span"),
+                               ("identity", model_record, "model_identity_span"),
+                               ("model", model_record, "model_span")):
+        start, end = freezer[span]
+        gold.require(0 <= start < end <= len(record) and record[start:end] == freezer[field],
+                     "original50_freezer_identity_untraceable")
+    gold.require(freezer["identity"].removeprefix("session:") not in
+                 {a["task_id"].removeprefix("session:") for a in [*authors, producer]},
+                 "original50_freezer_not_independent")
+
+
+def _native50_sources(score: dict, facet: str, lemma: str, calls: dict) -> None:
+    from scripts.agent_runtime.adapters.agy import _SAVED_OUTPUT_POINTER_RE
+    from scripts.review.receipts.outcomes import classify_outcome
+
+    gold.require(bool(score["reason"].strip()) and bool(score["calls"]), "original50_per_card_sources_missing")
+    for reference in score["calls"]:
+        call = calls.get((reference["conversation_id"], reference["step_index"]), {})
+        parameters = call.get("parameters", {})
+        tool = parameters.get("ToolName")
+        allowed = {"query_sum20", "query_ulif_records", "search_slovnyk_me"}
+        if facet == "stress":
+            allowed.add("verify_stress")
+        arguments = parameters.get("Arguments")
+        arguments = json.loads(arguments) if isinstance(arguments, str) else arguments
+        body = call.get("output")
+        subjects = [arguments.get(k) for k in ("word", "lemma", "query")] if isinstance(arguments, dict) else []
+        words = arguments.get("words") if isinstance(arguments, dict) else None
+        subjects.extend(words if isinstance(words, list) else [words])
+        gold.require(tool in allowed and isinstance(arguments, dict)
+                     and lemma in subjects
+                     and isinstance(body, str) and bool(body.strip()) and not call.get("output_missing")
+                     and _SAVED_OUTPUT_POINTER_RE.search(body) is None,
+                     "original50_per_card_sources_missing")
+        outcome = classify_outcome(tool, "ok", body)
+        start, end = reference["span"]
+        gold.require(outcome["status"] == "hits_found" and outcome["hits"] > 0
+                     and 0 <= start < end <= len(body) and body[start:end] == reference["quote"],
+                     "original50_source_quote_unsupported")
+
+
+def _verify_native50(inspection: dict, packet: dict, spec: dict, base: Path,
+                     authority: CertificationAuthority) -> list[dict]:
+    """Replay real task custody and per-card Sources evidence; write no authority."""
+    from scripts.dispatcher.providers import agy
+    from scripts.review import record_cf_verdict as reviews
+
+    scope = _native50_scope(inspection, packet, spec)
+    primary = reviews._review_repository_root("learn-ukrainian/learn-ukrainian.github.io", PROJECT_ROOT)
+    task_root = primary / "batch_state/tasks"
+    authors = inspection["authors"]
+    gold.require(len({a["task_id"] for a in authors}) == len(authors), "original50_duplicate_authors")
+    author_tasks = [_native_task(author, task_root)[0] for author in authors]
+    freezer, producer = inspection["freezer"], inspection["producer"]
+    _native50_freezer(freezer, authors, producer, base)
+    if freezer["task"] is not None:
+        _native_task(freezer["task"], task_root)
+        gold.require((freezer["identity"], freezer["model"]) ==
+                     (freezer["task"]["task_id"], freezer["task"]["model"]), "original50_freezer_identity_mismatch")
+    identities = {a["task_id"] for a in authors} | {producer["task_id"]}
+    identities.update(t["task_identity"]["task_id"] for t in author_tasks
+                      if isinstance(t.get("task_identity"), dict) and t["task_identity"].get("task_id"))
+    gold.require(freezer["identity"].removeprefix("session:") not in
+                 {identity.removeprefix("session:") for identity in identities}, "original50_freezer_not_independent")
+    task, reply = _native_task(producer, task_root, qualified_reviewer=True)
+    gold.require(task.get("agent") == "agy" and producer["family"] == "google"
+                 and producer["family"] not in {a["family"] for a in authors}
+                 and producer["task_id"] not in {a["task_id"] for a in authors}
+                 and reviews.is_ukrainian_review(task)
+                 and task.get("resolved_model_known") is True
+                 and task.get("resolved_model_source") == agy.MODEL_SOURCE
+                 and task.get("resolved_model") == producer["model"], "original50_untrusted_producer")
+    transcript = gold.reference(inspection["transcript"], base)
+    log = reviews._hot_or_archived(task_root, "logs/" + producer["task_id"] + ".stdout.log")
+    gold.require(transcript == log.read_bytes(), "original50_transcript_not_runner_bound")
+    result = gold.reference(inspection["result"], base)
+    gold.require(gold.sha(result) == task["result_sha256"] and gold.decode(result) == json.loads(reply),
+                 "original50_result_not_task_bound")
+    parsed = agy.parse(transcript.decode("utf-8"), "", 0, None)
+    gold.require(not parsed.error and parsed.text == reply and parsed.resolved_model == producer["model"]
+                 and agy.identity_failure(task["model"], parsed.resolved_model) is None,
+                 "original50_transcript_model_or_result_mismatch")
+    calls: dict[tuple, dict] = {}
+    for line in jsonl_lines(transcript.decode("utf-8")):
+        if not line.strip():
+            continue
+        event = json.loads(line)
+        key = agy._completed_sources_call(event)
+        if key is not None:
+            gold.require(key not in calls or calls[key] == event["step_update"]["tool_info"],
+                         "original50_conflicting_sources_call")
+            calls[key] = event["step_update"]["tool_info"]
+    gold.require(task.get("sources_mcp_call_count") == parsed.sources_mcp_call_count == len(calls),
+                 "original50_sources_capture_count_mismatch")
+    judgments = gold.decode(result)
+    gold.validate(judgments, NATIVE_JUDGMENTS, "native original50 judgments")
+    expected = {row["card_id"]: row for row in packet["original50"]}
+    gold.require(judgments["scope_sha256"] == scope and len(judgments["items"]) == 50
+                 and len({r["card_id"] for r in judgments["items"]}) == 50
+                 and {r["card_id"] for r in judgments["items"]} == set(expected), "original50_judgment_denominator")
+    for row in judgments["items"]:
+        card = expected[row["card_id"]]
+        admission = authority.reviews.get(row["card_id"], {})
+        gold.require(row["card_version"] == card["card_version"], "original50_judgment_version_changed")
+        gold.require(admission.get("status") == "active" and admission.get("card_version") == row["card_version"]
+                     and bool(admission.get("record")) and admission.get("original50_inspection") == spec["original50_receipt"]
+                     and admission.get("original50_authors") == authors
+                     and admission.get("original50_freezer") == freezer, "original50_not_steward_admitted")
+        lemma = card["card"]["key_at_creation"]["spelling"]
+        for facet in ("meaning", "stress"):
+            _native50_sources(row[facet], facet, lemma, calls)
+    return [{"id": a["task_id"], "family": a["family"]} for a in authors]
 FINDING = gold.obj({"code": {"enum": ["invented_ukrainian", "wrong_identity", "material"]},
                     "owner": gold.TEXT, "dependency": gold.TEXT, "evidence": gold.REF})
 SCORE = gold.obj({"facet": {"enum": list(FACETS)}, "verdict": {"enum": ["pass", "fail"]},
@@ -325,8 +554,152 @@ def frozen_artifact(authority: CertificationAuthority, cards: list[dict]) -> dic
             "inputs_sha256": digest({card["card_id"]: card["build"]["inputs"] for card in cards})}
 
 
+def evaluate_a1_assertions(assembly: dict, sources: dict, batch_name: str) -> dict:
+    """Replay the real A1 consumer on its unchanged, repository-pinned batch.
+
+    This is assertion evidence only. It grants no review, audit or export approval.
+    """
+    from scripts.atlas import a1_slice3_inputs, a1_slice4_inputs, a1_slice5_inputs, a1_slice6_inputs
+    from scripts.atlas import a1_word_cards as a1
+    from scripts.atlas import word_card_foundation as foundation
+
+    if batch_name == "slice2":
+        manifest = a1.load(a1.ROOT / a1.MANIFEST)
+        gold.require(a1.digest(manifest) == a1.MANIFEST_SHA256, "Reviewed manifest changed")
+        inventory = a1.load(a1.ROOT / "registry/atlas/a1-v1-inventory.json")
+        base = a1.load(a1.ROOT / "registry/atlas/identity/registry.json")
+        companion = a1.load(a1.ROOT / a1.COMPANION)
+        batch = None
+        validate = a1._inputs
+    else:
+        gold.require(batch_name in {"slice3", "slice4", "slice5", "slice6"}, "Unknown A1 batch")
+        reader = {"slice3": a1_slice3_inputs, "slice4": a1_slice4_inputs,
+                  "slice5": a1_slice5_inputs, "slice6": a1_slice6_inputs}[batch_name]
+        manifest, inventory, base, companion, batch = reader.load_batch(a1.ROOT)
+        validate = batch.validate_inputs
+    effective, _ = validate(inventory, base, companion, manifest, sources, manifest["allocation_pins"])
+    foundation.registry_check(effective)
+    register = foundation.load_register(PERMISSIONS_REGISTER_PATH)
+    rebuilt = a1.build(inventory, base, companion, manifest, sources, manifest["allocation_pins"], register, batch=batch)
+    gold.require(a1.canonical(assembly) == a1.canonical(rebuilt), "Delivered A1 artifact changed")
+    # verify calls check_assertion for every assertion, including context fields.
+    result: dict = a1.verify(assembly, sources, manifest, batch=batch, register=register, inventory=inventory)
+    result["inputs_sha256"] = digest({"assembly": assembly, "sources": sources, "manifest": manifest})
+    return result
+
+
+def _evaluate_code_first(spec_path: Path, spec_sha256: str, spec: dict) -> dict:
+    from scripts.atlas import word_card_assertion_check as assertion_check
+
+    gold.validate(spec, CODE_FIRST_SPEC, "code-first certification specification")
+    base = spec_path.parent
+    state = _AUTHORITY.get()
+    authority = state.get("authority") if state is not None else None
+    if authority is None:
+        authority = CertificationAuthority()
+    decisions, cards, inputs, batches = [], [], {}, []
+    for row in spec["batches"]:
+        gold.require(row["batch"] not in inputs, "Duplicate A1 batch")
+        assembly = gold.decode(gold.reference(row["assembly"], base))
+        sources = gold.decode(gold.reference(row["sources"], base))
+        result = evaluate_a1_assertions(assembly, sources, row["batch"])
+        decisions.extend(result["assertion_decisions"])
+        cards.extend(assembly["cards"])
+        inputs[row["batch"]] = result["inputs_sha256"]
+        batches.append((assembly, sources))
+    gold.require(len({card["card_id"] for card in cards}) == len(cards), "Duplicate code-first card")
+    gold.require(len({d["assertion_id"] for d in decisions}) == len(decisions), "Duplicate code-first assertion")
+    frozen = {"implementation_sha256": authority.implementation, "rules_sha256": authority.rules,
+              "inputs_sha256": digest(inputs)}
+    gold.require(spec["frozen"] == frozen, "Frozen code-first artifact changed")
+    counts = assertion_check.summarize(decisions)
+    holds = []
+    # The existing steward ledger remains current-input authority. Names are
+    # batch-qualified because A1 uses the same input names across its slices.
+    for row, (assembly, _) in zip(spec["batches"], batches, strict=True):
+        for category in ("S", "V", "I", "O"):
+            for name, binding in assembly["cards"][0]["build"]["inputs"][category].items():
+                identity = row["batch"] + ":" + name
+                try:
+                    current = authority.snapshot(category, identity)
+                except (OSError, ValueError, KeyError, TypeError):
+                    holds.append("current_input_authority_missing:" + category + ":" + identity)
+                    continue
+                if binding["content_sha256"] != current:
+                    holds.append("current_input_changed:" + category + ":" + identity)
+    if spec["removal_snapshots"] is None:
+        holds.append("current_removal_authority_missing")
+    else:
+        for name, expected in spec["removal_snapshots"].items():
+            if expected != authority.snapshot("O", name):
+                holds.append("current_removal_snapshot_changed:" + name)
+    if any(d["status"] != "supported" and d["reason"] != "context_selection_requires_judgment" for d in decisions):
+        holds.append("unsupported_assertions_cannot_be_certified")
+    from scripts.atlas import word_card_foundation as foundation
+    from scripts.atlas import word_card_human_audit as human
+
+    packet = human.make_packet(cards, decisions, batches, foundation.load_register(PERMISSIONS_REGISTER_PATH), frozen,
+        gold.decode(gold.reference(spec["original50_selection"], base)),
+        gold.decode(gold.reference(spec["original50_input"], base)))
+    audit = human.audit_status(packet, authority.ledger)
+    if audit != "HUMAN_AUDIT_ACCEPTED":
+        holds.append(audit)
+    if any(not row["current_version_matches"] or any(a["missing"] for a in row["assertions"])
+           for row in packet["original50"]):
+        holds.append("original50_source_or_version_unresolved")
+    for name in ("original50_receipt", "complete_data_receipt", "mechanics_receipt"):
+        if spec[name] is None:
+            holds.append("missing_" + name)
+    native_authors = []
+    original50_refusal = None
+    if spec["original50_receipt"] is not None:
+        from scripts.review.record_cf_verdict import RecordError
+
+        try:
+            original = gold.decode(gold.reference(spec["original50_receipt"], base))
+            native_authors = _verify_native50(original, packet, spec,
+                (base / spec["original50_receipt"]["path"]).parent, authority)
+        except (OSError, ValueError, TypeError, KeyError, RecordError) as exc:
+            holds.append("original50_refused:" + type(exc).__name__)
+            original50_refusal = {"type": type(exc).__name__, "detail": str(exc)}
+    for name in ("complete_data_receipt", "mechanics_receipt"):
+        if spec[name] is not None:
+            for card in cards:
+                row = authority.reviews.get(card["card_id"], {})
+                prerequisites = row.get("code_first_prerequisites", {})
+                if (row.get("status") != "active" or not row.get("record")
+                        or row.get("card_version") != card["build"]["card_version"]
+                        or prerequisites.get("frozen") != frozen or prerequisites.get(name) != spec[name]):
+                    holds.append(name + "_not_steward_admitted")
+                    break
+    if spec["mechanics_receipt"] is not None:
+        mechanics = gold.decode(gold.reference(spec["mechanics_receipt"], base))
+        gold.validate(mechanics, MECHANICS, "accepted code-first mechanics")
+        gold.require(mechanics["frozen"] == frozen and mechanics["cards_sha256"] == digest(cards),
+                     "Mechanics binds another code-first artifact")
+        if not native_authors:
+            holds.append("mechanics_independent_acceptance_unbound")
+        else:
+            gold.require(all(mechanics["accepted_by"]["id"] != author["id"]
+                             and mechanics["accepted_by"]["family"] != author["family"]
+                             for author in [spec["author"], *native_authors]), "Self-accepted mechanics")
+        for ref in mechanics["evidence"]:
+            gold.reference(ref, (base / spec["mechanics_receipt"]["path"]).parent)
+    if spec["complete_data_receipt"] is not None:
+        data = gold.decode(gold.reference(spec["complete_data_receipt"], base))
+        gold.validate(data, CODE_FIRST_DATA, "code-first complete-data replay")
+        gold.complete_data(data, (base / spec["complete_data_receipt"]["path"]).parent)
+    return {"schema_version": "word-card-certification-receipt.v2",
+            "status": "HELD" if holds else "CERTIFIED",
+            "spec": {"path": spec_path.name, "sha256": spec_sha256}, "frozen": frozen,
+            "case_count": len(cards), "assertion_counts": counts, "assertion_decisions": decisions,
+            "human_packet": packet, "human_audit_status": audit,
+            "original50_refusal": original50_refusal,
+            "holds": holds, "cards": {card["card_id"]: digest(card) for card in cards}}
+
+
 def evaluate_certification(spec_path: Path, spec_sha256: str,
-                           evaluation_path: Path, evaluation_sha256: str) -> dict:
+                           evaluation_path: Path | None, evaluation_sha256: str | None) -> dict:
     """Replay pinned prerequisites and return a deterministic private exact-artifact receipt.
 
     Trusted pins must come from the independent steward, never from the author.
@@ -336,6 +709,12 @@ def evaluate_certification(spec_path: Path, spec_sha256: str,
     No files, approvals, release state, or review ledger entries are written.
     """
     _, spec = gold.read(spec_path, spec_sha256)
+    if spec.get("schema_version") == "word-card-certification-spec.v2":
+        gold.require(evaluation_path is None and evaluation_sha256 is None,
+                     "Code-first evidence cannot consume a sample pass")
+        return _evaluate_code_first(spec_path, spec_sha256, spec)
+    if evaluation_path is None or evaluation_sha256 is None:
+        raise ValueError("Legacy certification requires a pinned evaluation")
     gold.validate(spec, CERTIFICATION_SPEC, "certification specification")
     base = spec_path.parent
     gold_path = base / spec["gold_spec"]["path"]
@@ -479,7 +858,7 @@ def evaluate_certification(spec_path: Path, spec_sha256: str,
 
 def _read_certification_receipt(ref: dict, base: Path) -> tuple[dict, Path]:
     """Validate the receipt envelope before dereferencing or replaying its evidence."""
-    shape = gold.obj({
+    legacy_shape = gold.obj({
         "schema_version": {"const": "word-card-certification-receipt.v1"},
         "spec": gold.REF, "evaluation": gold.REF,
         **{key: {} for key in ("status", "frozen", "gold_seal_sha256", "case_count", "strata",
@@ -487,7 +866,13 @@ def _read_certification_receipt(ref: dict, base: Path) -> tuple[dict, Path]:
     })
     try:
         receipt = gold.decode(gold.reference(ref, base))
-        gold.validate(receipt, shape, "exact-artifact receipt")
+        code_first_shape = gold.obj({
+            "schema_version": {"const": "word-card-certification-receipt.v2"}, "spec": gold.REF,
+            **{key: {} for key in ("status", "frozen", "case_count", "assertion_counts",
+                                  "assertion_decisions", "human_packet", "human_audit_status", "holds", "cards",
+                                  "original50_refusal")},
+        })
+        gold.validate(receipt, {"oneOf": [legacy_shape, code_first_shape]}, "exact-artifact receipt")
     except (OSError, ValueError, TypeError) as exc:
         raise UncertifiedCardRefusal("Invalid exact-artifact receipt") from exc
     return receipt, (base / ref["path"]).parent
@@ -496,9 +881,10 @@ def _read_certification_receipt(ref: dict, base: Path) -> tuple[dict, Path]:
 def verify_certification_receipt(ref: dict, base: Path) -> dict:
     """Replay a pinned receipt against current evidence; a copied CERTIFIED is insufficient."""
     receipt, base = _read_certification_receipt(ref, base)
-    spec, evaluation = receipt["spec"], receipt["evaluation"]
+    spec, evaluation = receipt["spec"], receipt.get("evaluation")
     replay = evaluate_certification(base / spec["path"], spec["sha256"],
-                                    base / evaluation["path"], evaluation["sha256"])
+                                    base / evaluation["path"] if evaluation else None,
+                                    evaluation["sha256"] if evaluation else None)
     if gold.canonical(replay) != gold.canonical(receipt) or replay["status"] != "CERTIFIED":
         raise UncertifiedCardRefusal("Failed or stale certification receipt")
     return receipt
@@ -508,11 +894,17 @@ def certification_summary(ref: dict, base: Path) -> dict:
     """Return aggregate evaluation evidence without protected IDs, paths, or source text."""
     receipt, base = _read_certification_receipt(ref, base)
     # Failed evaluations remain publishable as failed, but their evidence must replay too.
-    spec, evaluation = receipt["spec"], receipt["evaluation"]
+    spec, evaluation = receipt["spec"], receipt.get("evaluation")
     replay = evaluate_certification(base / spec["path"], spec["sha256"],
-                                    base / evaluation["path"], evaluation["sha256"])
+                                    base / evaluation["path"] if evaluation else None,
+                                    evaluation["sha256"] if evaluation else None)
     if gold.canonical(replay) != gold.canonical(receipt):
         raise UncertifiedCardRefusal("Stale evaluation summary")
+    if receipt["schema_version"] == "word-card-certification-receipt.v2":
+        return {"schema_version": "word-card-certification-summary.v2", "status": receipt["status"],
+                "receipt_sha256": ref["sha256"], "case_count": receipt["case_count"],
+                "assertion_counts": receipt["assertion_counts"], "holds": receipt["holds"],
+                "human_audit_status": receipt["human_audit_status"]}
     codes: dict[str, int] = {}
     for row in receipt["findings"]:
         for finding in row["findings"]:
