@@ -24,18 +24,26 @@ The content prefixes are evaluated before the site-code prefixes, so the
 denylist wins. The file is read from a fixed path relative to this module; the
 ``path`` argument exists for tests. :func:`load_deploy_paths` raises
 :class:`DeployPathsError` when the file is missing, not strict JSON, of another
-schema or version, missing a field, carrying an unknown one, or holding a list
-that is empty, duplicated or not canonical repository-relative paths, so a
-broken policy stops the eligibility step instead of deciding.
+schema or version (the version must be the integer 1, not ``true`` or ``1.0``),
+missing a field, carrying an unknown one, or holding a list that is empty or
+duplicated, or an entry outside the path grammar, so a broken policy stops the
+eligibility step instead of deciding.
+
+The path grammar is an allowlist: canonical repository-relative segments of
+ASCII letters, digits, ``.``, ``_`` and ``-``, no ``.`` or ``..`` segment, and a
+trailing ``/`` for a directory prefix. An entry that no Git path can match (a
+NUL or other control character, a Unicode lookalike letter, whitespace) would
+silently fall through to the broader site-code prefix, so it is refused.
 """
 
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import lru_cache
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
 SCHEMA = "learn-ukrainian.deploy-paths"
 SCHEMA_VERSION = 1
@@ -43,6 +51,7 @@ POLICY_REL = "scripts/curriculum/deploy_paths.v1.json"
 DEFAULT_POLICY_PATH = Path(__file__).resolve().parents[2] / POLICY_REL
 _LIST_FIELDS = ("content_path_prefixes", "site_code_path_exceptions", "site_code_path_prefixes")
 _FIELDS = frozenset({"schema", "schema_version", *_LIST_FIELDS})
+_PATH_RE = re.compile(r"[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*/?\Z")
 
 
 class DeployPathsError(ValueError):
@@ -81,10 +90,8 @@ def _path_list(data: dict[str, object], field: str) -> tuple[str, ...]:
     for value in values:
         if not isinstance(value, str) or not value:
             raise DeployPathsError(f"deploy path policy field {field} holds a non-path entry")
-        path = PurePosixPath(value)
-        canonical = path.as_posix() + ("/" if value.endswith("/") else "")
-        if path.is_absolute() or ".." in path.parts or canonical != value:
-            raise DeployPathsError(f"deploy path policy field {field} holds a non-canonical path: {value!r}")
+        if not _PATH_RE.match(value) or {".", ".."} & set(value.rstrip("/").split("/")):
+            raise DeployPathsError(f"deploy path policy field {field} holds a path outside the grammar: {value!r}")
     if len(values) != len(set(values)):
         raise DeployPathsError(f"deploy path policy field {field} holds a duplicate entry")
     return tuple(values)
@@ -99,7 +106,8 @@ def load_deploy_paths(path: Path = DEFAULT_POLICY_PATH) -> DeployPaths:
         raise DeployPathsError(f"deploy path policy unreadable: {path}: {exc}") from exc
     if not isinstance(data, dict):
         raise DeployPathsError("deploy path policy must be a JSON object")
-    if data.get("schema") != SCHEMA or data.get("schema_version") != SCHEMA_VERSION:
+    version = data.get("schema_version")
+    if data.get("schema") != SCHEMA or type(version) is not int or version != SCHEMA_VERSION:
         raise DeployPathsError(f"deploy path policy must be {SCHEMA} version {SCHEMA_VERSION}")
     if set(data) != _FIELDS:
         raise DeployPathsError(f"deploy path policy fields must be exactly {sorted(_FIELDS)}")
