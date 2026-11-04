@@ -19,6 +19,7 @@ import hashlib
 import itertools
 import json
 import multiprocessing
+import operator
 import os
 import re
 import sys
@@ -491,21 +492,32 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
 
         if id(node) in self._skip_strings:
             return
-        parts = _string_parts(node)
-        if parts is None:
+        evaluator = Evaluator()
+        expr = cst_expr(node)
+        value = evaluator.value(expr)
+        if not is_string(value):
             return
-        _mark_parts(node, self._skip_strings)
+        self._skip_strings.update(id(member.origin) for member in evaluator.structure(expr))
         if self._import_depth or id(node) in self._docstrings or id(node) in self._loader_args:
             return
-        self._classify_string(node, parts, rewritable=False, pieces=_static_pieces(node))
+        if evaluator.failures:
+            self._unresolved(
+                node,
+                "unevaluable_string",
+                _code(node),
+                f"evaluating this string failed ({evaluator.failures[0]}); it may build a module name",
+            )
+            return
+        parts = text_parts(value)  # type: ignore[arg-type]
+        self._classify_string(node, parts, rewritable=False, pieces=evaluator.search_texts(expr))
 
     def _classify_string(
-        self, node: cst.CSTNode, parts: list[str | None], rewritable: bool, pieces: Sequence[str] = ()
+        self, node: cst.CSTNode, parts: list[str | None], rewritable: bool, pieces: Sequence[tuple[str, bool]] = ()
     ) -> str | None:
         """Decide one string expression; return the new value when a plain literal is to be rewritten.
 
         ``parts`` is the value in order, with None for each piece only known at run time; ``pieces``
-        is every literal piece of the expression in source order, arguments included.
+        are the texts to search when the value is not fully known (``Evaluator.search_texts``).
         A plain literal is ``rewritable``. A plain literal with whitespace before its first
         run-time piece is prose or a command, and rename_nonpython.py reports module names in it.
         A built string (``rewritable`` false) is always decided here, wherever the name sits.
@@ -525,17 +537,18 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         if rewritable:
             return None
         # A built string: look for a module name anywhere in its value, or, when the value is only
-        # known at run time, in its literal pieces joined in source order (``"scr" + x + "ipts.y"``).
-        texts = [static] if not computed else ["".join(pieces), *pieces]
-        matches = [(text, m) for text in texts for m in MODULE_ANYWHERE.finditer(text)]
-        for text, match in matches:
-            if leading and text is static and match.start() == 0:
-                continue  # already judged as the leading name
+        # known at run time, in the texts that may hold one (``Evaluator.search_texts``).
+        texts = list(pieces) if computed else [(static, False)]
+        matches = [(i, text, more, m) for i, (text, more) in enumerate(texts) for m in MODULE_ANYWHERE.finditer(text)]
+        for index, text, more, match in matches:
+            if leading and index == 0 and match.start() == 0:
+                continue  # already judged as the leading name (the first known run)
             name = match.group(0).rstrip(".")
-            if name == OLD_ROOT and not (match.group(0).endswith(".") or match.end() == len(text)):
+            continues = more and match.end() == len(text)  # run-time text may extend the name
+            if name == OLD_ROOT and not (match.group(0).endswith(".") or continues):
                 continue  # the word "scripts" in prose
             resolved = self.ownership.resolve(name)
-            if computed or match.group(0).endswith(".") or name == OLD_ROOT:
+            if continues or match.group(0).endswith(".") or name == OLD_ROOT:
                 owner = self.ownership.subtree_owner(resolved[0].name) if resolved else AMBIGUOUS
             else:
                 owner = resolved[0].owner if resolved else AMBIGUOUS
@@ -875,7 +888,7 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
             self._loader_args.add(id(arg.value))
 
     def visit_Call(self, node: cst.Call) -> None:
-        if isinstance(node.func, cst.Attribute) and node.func.attr.value in ("format", "format_map", "join", "replace"):
+        if isinstance(node.func, cst.Attribute) and node.func.attr.value in STR_METHODS:
             self._visit_string_expression(node)  # ``"scripts.{}".format(name)``, ``".".join([...])``
         if not _is_dotted_name(node.func):
             return  # ``__import__("x").attr(...)`` reports the inner call's name for the outer one
@@ -1018,132 +1031,435 @@ def _fstring_text(node: cst.FormattedString, raw: str) -> str:
     return raw.replace("{{", "{").replace("}}", "}")
 
 
-def _static_text(node: cst.BaseExpression) -> str | None:
-    parts = _string_parts(node)
-    return None if parts is None or None in parts else "".join(p for p in parts if p is not None)
+# -- strings built from parts: one evaluator for both tools ----------------
+
+# str and bytes methods that return a new string from their receiver and arguments alone.
+STR_METHODS = frozenset(
+    {
+        "capitalize",
+        "casefold",
+        "center",
+        "decode",
+        "encode",
+        "expandtabs",
+        "format",
+        "format_map",
+        "join",
+        "ljust",
+        "lower",
+        "lstrip",
+        "removeprefix",
+        "removesuffix",
+        "replace",
+        "rjust",
+        "rstrip",
+        "strip",
+        "swapcase",
+        "title",
+        "upper",
+        "zfill",
+    }
+)
+# Larger counts or widths could build a huge string; such a value is left to run time.
+MAX_EVAL_INT = 10_000
+WIDE_FORMAT = re.compile(r"\d{5,}")
+# Stand-ins for run-time pieces while a partly known string is evaluated (see Evaluator._apply).
+SENTINEL = re.compile("\x00\\d+\x01*\x00")
+CONVERSIONS = {None: lambda value: value, "s": str, "r": repr, "a": ascii}
 
 
-def _string_parts(node: cst.CSTNode) -> list[str | None] | None:
-    """The value of a string expression in order, None for each run-time piece; None if not a string.
+@dataclass(eq=False)
+class Expr:
+    """A string-building expression in a tree-neutral form, built from LibCST (``cst_expr``) or ast (``ast_expr``).
 
-    Constant formatting is evaluated (``"%s.x" % "scripts"``, ``"{}.x".format("scripts")``,
-    ``".".join(["scripts", "x"])``), so a name split across pieces is still seen whole.
+    ``kind`` is lit, fstr, field, add, mod, mul, call, seq, map or unknown; ``origin`` is the source node.
+    ``items`` are the operands in source order (for a call: the receiver, then the arguments; for a map:
+    key, value, key, value). ``data`` is a literal's value, an f-string field's conversion, a call's
+    (method, how each argument is passed: "", "*", "**" or "=name") or a container's (type, has unpacking).
     """
 
-    if isinstance(node, cst.SimpleString):
-        return [_literal_text(node)]
+    kind: str
+    origin: object
+    items: tuple[Expr, ...] = ()
+    data: object = None
+
+
+@dataclass(frozen=True)
+class Static:
+    """A value known before run time."""
+
+    value: object
+
+
+@dataclass(frozen=True)
+class Partial:
+    """A string with pieces known only at run time, each shown as None."""
+
+    parts: tuple[str | bytes | None, ...]
+
+
+@dataclass(frozen=True)
+class Container:
+    """A literal list, tuple, set or dict with some run-time values (dict: key, value, key, value)."""
+
+    kind: str
+    values: tuple[object, ...]
+
+
+UNKNOWN_STRING = Partial((None,))
+
+
+def is_string(value: object) -> bool:
+    return isinstance(value, Partial) or (isinstance(value, Static) and isinstance(value.value, (str, bytes)))
+
+
+def text_parts(value: Static | Partial) -> list[str | None]:
+    """A string value in order, bytes read as Latin-1 so a module name in them is visible."""
+
+    raw = value.parts if isinstance(value, Partial) else (value.value,)
+    return [part.decode("latin-1") if isinstance(part, bytes) else part for part in raw]
+
+
+def _pieces_of(value: object) -> tuple[str | bytes | None, ...]:
+    if isinstance(value, Partial):
+        return value.parts
+    if is_string(value):
+        return (value.value,)  # type: ignore[union-attr]
+    return (None,)
+
+
+def _joined(pieces: Iterable[str | bytes | None]) -> Static | Partial:
+    """Merge neighbouring known pieces (and neighbouring unknown ones); a fully known string is Static."""
+
+    merged: list[str | bytes | None] = []
+    for piece in pieces:
+        if piece == "" or piece == b"":
+            continue
+        last = merged[-1] if merged else ""
+        if merged and piece is None and last is None:
+            continue
+        if merged and piece is not None and last is not None and type(piece) is type(last):
+            merged[-1] = last + piece  # type: ignore[operator]
+        else:
+            merged.append(piece)
+    if not merged:
+        return Static("")
+    if None not in merged and len(merged) == 1:
+        return Static(merged[0])
+    return Partial(tuple(merged))
+
+
+def _container(kind: str, values: Sequence[object]) -> object:
+    if kind == "dict":
+        return dict(zip(values[0::2], values[1::2], strict=True))
+    return {"list": list, "tuple": tuple, "set": set}[kind](values)
+
+
+class _Opaque(Exception):
+    """A run-time piece that cannot be stood in for (inside bytes)."""
+
+
+def _stand_in(value: object, counter: Iterator[int], width: int) -> object:
+    """A concrete object for one input, with a sentinel for each run-time piece."""
+
+    if isinstance(value, Static):
+        return value.value
+    if value is None:
+        return f"\x00{next(counter)}{chr(1) * width}\x00"
+    if isinstance(value, Partial):
+        if any(isinstance(part, bytes) for part in value.parts):
+            raise _Opaque
+        return "".join(part if part is not None else str(_stand_in(None, counter, width)) for part in value.parts)
+    assert isinstance(value, Container)
+    return _container(value.kind, [_stand_in(v, counter, width) for v in value.values])
+
+
+def _split_stand_ins(text: str) -> list[str | None] | None:
+    """Known text and run-time pieces of a result; None when a sentinel was cut or reshaped."""
+
+    parts: list[str | None] = []
+    position = 0
+    for match in SENTINEL.finditer(text):
+        parts.extend((text[position : match.start()], None))
+        position = match.end()
+    parts.append(text[position:])
+    if any(part is not None and ("\x00" in part or "\x01" in part) for part in parts):
+        return None
+    return [part for part in parts if part != ""]
+
+
+class Evaluator:
+    """Evaluate a string expression as Python would; a piece only known at run time stays unknown.
+
+    Literals, ``+``, ``%``, ``*``, f-strings, containers and the methods in ``STR_METHODS`` are
+    evaluated. Anything else (names, other calls, attributes) is a run-time piece. An operation
+    on known values that raises is recorded in ``failures``; the caller reports it.
+    """
+
+    def __init__(self) -> None:
+        self.failures: list[str] = []
+        # Set when a known piece was given up (an operation the sentinels could not follow).
+        self.lossy = False
+        self._memo: dict[int, object] = {}
+
+    def value(self, expr: Expr) -> object:
+        """Static, Partial, Container, or None (a run-time value not known to be a string)."""
+
+        key = id(expr)
+        if key not in self._memo:
+            try:
+                self._memo[key] = self._value(expr)
+            except Exception as exc:  # never a silent pass: the caller reports the failure
+                self.failures.append(f"{type(exc).__name__}: {exc}")
+                self._memo[key] = UNKNOWN_STRING
+        return self._memo[key]
+
+    def _value(self, expr: Expr) -> object:
+        kind, items = expr.kind, expr.items
+        if kind == "lit":
+            return Static(expr.data)
+        if kind in ("seq", "map"):
+            container_kind, unpacked = expr.data  # type: ignore[misc]
+            if unpacked:
+                self.lossy = True
+                return None
+            values = [self.value(item) for item in items]
+            if all(isinstance(v, Static) for v in values):
+                return Static(_container(container_kind, [v.value for v in values]))  # type: ignore[union-attr]
+            return Container(container_kind, tuple(values))
+        if kind == "fstr":
+            return _joined(piece for item in items for piece in _pieces_of(self.value(item)))
+        if kind == "field":
+            convert = CONVERSIONS[expr.data]  # type: ignore[index]
+            spec = self.value(items[1]) if len(items) > 1 else Static("")
+            return self._apply(lambda v, s: format(convert(v), s), [self.value(items[0]), spec], template=1)
+        if kind in ("add", "mul"):
+            left, right = self.value(items[0]), self.value(items[1])
+            if isinstance(left, Static) and isinstance(right, Static):
+                return self._apply(operator.add if kind == "add" else operator.mul, [left, right])
+            if not (is_string(left) or is_string(right)):
+                return None
+            if kind == "mul":
+                self.lossy = True
+                return UNKNOWN_STRING
+            return _joined([*_pieces_of(left), *_pieces_of(right)])
+        if kind == "mod":
+            template = self.value(items[0])
+            if not is_string(template):
+                return None  # arithmetic
+            return self._apply(operator.mod, [template, self.value(items[1])], template=0)
+        if kind == "call":
+            method, passing = expr.data  # type: ignore[misc]
+            receiver = self.value(items[0])
+            if not is_string(receiver):
+                return None
+
+            def call(target: object, *args: object) -> object:
+                positional: list[object] = []
+                keywords: dict[str, object] = {}
+                for how, arg in zip(passing, args, strict=True):
+                    if how == "*":
+                        positional.extend(arg)  # type: ignore[call-overload]
+                    elif how == "**":
+                        keywords.update(arg)  # type: ignore[call-overload]
+                    elif how:
+                        keywords[how[1:]] = arg
+                    else:
+                        positional.append(arg)
+                return getattr(target, method)(*positional, **keywords)
+
+            arguments = [self.value(item) for item in items[1:]]
+            return self._apply(call, [receiver, *arguments], template=0 if method.startswith("format") else None)
+        return None
+
+    def _apply(self, function: object, inputs: list[object], template: int | None = None) -> object:
+        """Run one operation; with run-time inputs, run it on sentinels and keep what is known for certain."""
+
+        shown = [text_parts(v) for v in inputs if is_string(v)]  # type: ignore[arg-type]
+        big = [v for v in inputs if isinstance(v, Static) and type(v.value) is int and abs(v.value) > MAX_EVAL_INT]
+        if not shown:
+            # No string goes in (``2 * 3``, ``[a] + [b]``): not a string being built.
+            if big or not all(isinstance(v, Static) for v in inputs):
+                return None
+            try:
+                return Static(function(*(v.value for v in inputs)))  # type: ignore[operator, union-attr]
+            except Exception:
+                return None
+        if template is not None and is_string(inputs[template]):
+            fixed = "".join(p for p in text_parts(inputs[template]) if p is not None)  # type: ignore[arg-type]
+            if WIDE_FORMAT.search(fixed):
+                self.lossy = True
+                return UNKNOWN_STRING
+        if big or sum(len(p or "") for parts in shown for p in parts) > 1_000_000:
+            self.lossy = True
+            return UNKNOWN_STRING
+        if all(isinstance(v, Static) for v in inputs):
+            try:
+                return Static(function(*(v.value for v in inputs)))  # type: ignore[operator, union-attr]
+            except Exception as exc:
+                self.failures.append(f"{type(exc).__name__}: {exc}")
+                return UNKNOWN_STRING
+        # Run it twice with sentinels of two lengths: text that moves with a run-time piece's length
+        # (padding, truncation) differs between the runs and is not taken as known.
+        results = []
+        for width in (0, 3):
+            counter = itertools.count()
+            try:
+                result = function(*(_stand_in(v, counter, width) for v in inputs))  # type: ignore[operator]
+            except Exception:  # e.g. ``%d`` given a run-time piece: its type is not known here
+                self.lossy = True
+                return UNKNOWN_STRING
+            if not isinstance(result, str):
+                self.lossy = True
+                return UNKNOWN_STRING
+            results.append(_split_stand_ins(result))
+        if results[0] is None or results[0] != results[1]:
+            self.lossy = True
+            return UNKNOWN_STRING
+        return _joined(results[0])
+
+    def structure(self, expr: Expr) -> list[Expr]:
+        """The expression and the parts its value is built from, in source order.
+
+        A literal that only feeds a run-time piece (an argument of another call) is not included.
+        """
+
+        members = [expr]
+        for item in expr.items:
+            if item.kind in ("seq", "map", "field") or (item.kind != "unknown" and is_string(self.value(item))):
+                members.extend(self.structure(item))
+        return members
+
+    def leaves(self, expr: Expr) -> list[str]:
+        """Every string literal in the structure, in source order (bytes read as Latin-1)."""
+
+        return [
+            m.data.decode("latin-1") if isinstance(m.data, bytes) else m.data
+            for m in self.structure(expr)
+            if m.kind == "lit" and isinstance(m.data, (str, bytes))
+        ]
+
+    def search_texts(self, expr: Expr, joined: bool = True) -> list[tuple[str, bool]]:
+        """Texts to search for names in a string whose value is not fully known, each with whether
+        run-time text may follow it.
+
+        These are the known runs of the value; with ``joined``, the literals joined in source order
+        (``"scr" + x + "ipts.y"`` when x is empty); and, when the evaluation gave up a piece
+        (``lossy``), each literal and the known parts of every evaluated sub-expression.
+        """
+
+        parts = text_parts(self.value(expr))  # type: ignore[arg-type]
+        texts = static_runs(parts)
+        leaves = self.leaves(expr)
+        if joined:
+            texts.append(("".join(leaves), parts[-1] is None))
+        if self.lossy:
+            texts.extend((leaf, True) for leaf in leaves)
+            texts.extend(
+                (part, True)
+                for member in self.structure(expr)
+                if member.kind != "lit" and is_string(self.value(member))
+                for part in text_parts(self.value(member))  # type: ignore[arg-type]
+                if part
+            )
+        return texts
+
+
+def static_runs(parts: Sequence[str | None]) -> list[tuple[str, bool]]:
+    """Consecutive known texts of a string, each with whether run-time text follows it."""
+
+    runs: list[tuple[str, bool]] = []
+    for index, part in enumerate(parts):
+        if part is not None:
+            runs.append((part, index + 1 < len(parts)))  # ``_joined`` keeps known and run-time pieces apart
+    return runs
+
+
+def cst_expr(node: cst.CSTNode) -> Expr:
+    """The tree-neutral form of a LibCST expression."""
+
+    if isinstance(node, (cst.SimpleString, cst.Integer, cst.Float)):
+        return Expr("lit", node, data=node.evaluated_value)
     if isinstance(node, cst.ConcatenatedString):
-        left, right = _string_parts(node.left), _string_parts(node.right)
-        return None if left is None or right is None else left + right
+        return Expr("add", node, (cst_expr(node.left), cst_expr(node.right)))
     if isinstance(node, cst.FormattedString):
-        parts: list[str | None] = []
-        for part in node.parts:
-            if isinstance(part, cst.FormattedStringText):
-                parts.append(_fstring_text(node, part.value))
-            elif part.conversion is None and part.format_spec is None and _static_text(part.expression) is not None:
-                parts.append(_static_text(part.expression))  # ``f"{'scripts'}.x"``
-            else:
-                parts.append(None)
-        return parts
+        return Expr("fstr", node, tuple(_cst_fstring_items(node, node.parts)))
     if isinstance(node, cst.BinaryOperation):
-        left, right = _string_parts(node.left), _string_parts(node.right)
-        if isinstance(node.operator, cst.Add) and (left is not None or right is not None):
-            return (left if left is not None else [None]) + (right if right is not None else [None])
-        if isinstance(node.operator, cst.Modulo) and left is not None:
-            template = None if None in left else "".join(p for p in left if p is not None)
-            args = node.right.elements if isinstance(node.right, cst.Tuple) else [cst.Element(node.right)]
-            values = [_static_text(e.value) for e in args]
-            if template is not None and None not in values:
-                try:
-                    return [template % tuple(values)]
-                except Exception:  # any failure leaves the value to run time
-                    pass
-            return [*left, None]
-    if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute):
-        receiver = _string_parts(node.func.value)
-        if receiver is None:
-            return None
-        receiver_text = None if None in receiver else "".join(p for p in receiver if p is not None)
-        if node.func.attr.value == "format":
-            values = [_static_text(a.value) if a.keyword is None and not a.star else None for a in node.args]
-            if receiver_text is not None and None not in values:
-                try:
-                    return [receiver_text.format(*values)]
-                except Exception:  # e.g. "{0.decode}" on a value read from bytes
-                    pass
-            return [*receiver, None]
-        if node.func.attr.value == "replace":
-            values = [_static_text(a.value) if a.keyword is None and not a.star else None for a in node.args]
-            if receiver_text is not None and None not in values and len(values) == 2:
-                return [receiver_text.replace(values[0], values[1])]
-            return [None]  # a replacement chosen at run time can produce any name
-        if node.func.attr.value == "format_map":
-            return [*receiver, None]
-        if node.func.attr.value == "join" and receiver_text is not None:
-            arg = node.args[0].value if len(node.args) == 1 and not node.args[0].star else None
-            if not isinstance(arg, (cst.List, cst.Tuple)):
-                return [None]
-            joined: list[str | None] = []
-            for i, element in enumerate(arg.elements):
-                if i:
-                    joined.append(receiver_text)
-                piece = _string_parts(element.value) if isinstance(element, cst.Element) else None
-                joined.extend(piece if piece is not None else [None])
-            return joined
-    return None
-
-
-def _structure(node: cst.CSTNode) -> Iterator[cst.CSTNode]:
-    """The nodes that make up a string being built: operands, format and join arguments, constant
-    f-string expressions. An unrelated literal inside, such as a call argument, is not included."""
-
-    yield node
-
-    def strings(*candidates: cst.CSTNode) -> Iterator[cst.CSTNode]:
-        for candidate in candidates:
-            if _string_parts(candidate) is not None:
-                yield from _structure(candidate)
-
-    if isinstance(node, cst.ConcatenatedString):
-        yield from strings(node.left, node.right)
-    elif isinstance(node, cst.FormattedString):
-        yield from strings(*(p.expression for p in node.parts if isinstance(p, cst.FormattedStringExpression)))
-    elif isinstance(node, cst.BinaryOperation):
-        yield from strings(node.left, node.right, *_container_values(node.right))
-    elif isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute):
-        yield from strings(node.func.value, *(a.value for a in node.args))
-        for arg in node.args:
-            yield from strings(*_container_values(arg.value))
-
-
-def _container_values(node: cst.CSTNode) -> list[cst.CSTNode]:
-    """Values of a literal list, tuple, set or dict (``% {"pkg": "scripts"}``, ``**{...}``)."""
-
+        kind = {cst.Add: "add", cst.Modulo: "mod", cst.Multiply: "mul"}.get(type(node.operator))
+        if kind is not None:
+            return Expr(kind, node, (cst_expr(node.left), cst_expr(node.right)))
+    if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute) and node.func.attr.value in STR_METHODS:
+        items = (cst_expr(node.func.value), *(cst_expr(arg.value) for arg in node.args))
+        passing = tuple(f"={arg.keyword.value}" if arg.keyword is not None else str(arg.star) for arg in node.args)
+        return Expr("call", node, items, (node.func.attr.value, passing))
     if isinstance(node, (cst.List, cst.Tuple, cst.Set)):
-        return [e.value for e in node.elements]
+        kind = {cst.List: "list", cst.Tuple: "tuple", cst.Set: "set"}[type(node)]
+        unpacked = any(isinstance(e, cst.StarredElement) for e in node.elements)
+        return Expr("seq", node, tuple(cst_expr(e.value) for e in node.elements), (kind, unpacked))
     if isinstance(node, cst.Dict):
-        return [e.value for e in node.elements if isinstance(e, cst.DictElement)]
-    return []
+        pairs = [e for e in node.elements if isinstance(e, cst.DictElement)]
+        items = tuple(x for e in pairs for x in (cst_expr(e.key), cst_expr(e.value)))
+        return Expr("map", node, items, ("dict", len(pairs) != len(node.elements)))
+    return Expr("unknown", node)
 
 
-def _static_pieces(node: cst.CSTNode) -> list[str]:
-    """Every literal piece of a string being built, arguments included."""
+def _cst_fstring_items(node: cst.FormattedString, parts: Sequence[cst.BaseFormattedStringContent]) -> Iterator[Expr]:
+    for part in parts:
+        if isinstance(part, cst.FormattedStringText):
+            yield Expr("lit", part, data=_fstring_text(node, part.value))
+        elif isinstance(part, cst.FormattedStringExpression) and part.equal is None:
+            items = [cst_expr(part.expression)]
+            if part.format_spec is not None:
+                items.append(Expr("fstr", part, tuple(_cst_fstring_items(node, part.format_spec))))
+            yield Expr("field", part, tuple(items), part.conversion)
+        else:
+            yield Expr("unknown", part)  # ``f"{x=}"`` and future forms
 
-    pieces: list[str] = []
-    for n in _structure(node):
-        if isinstance(n, cst.SimpleString):
-            pieces.append(_literal_text(n))
-        elif isinstance(n, cst.FormattedString):
-            pieces.extend(_fstring_text(n, p.value) for p in n.parts if isinstance(p, cst.FormattedStringText))
-        elif n is not node and (text := _static_text(n)) is not None:
-            pieces.append(text)  # a nested constant expression, evaluated (``"scr" + "ipts"``)
-    return pieces
+
+def ast_expr(node: ast.AST) -> Expr:
+    """The tree-neutral form of an ast expression (rename_nonpython.py reads Python files with ast)."""
+
+    if isinstance(node, ast.Constant) and type(node.value) in (str, bytes, int, float):
+        return Expr("lit", node, data=node.value)
+    if isinstance(node, ast.JoinedStr):
+        return Expr("fstr", node, tuple(_ast_fstring_items(node.values)))
+    if isinstance(node, ast.BinOp):
+        kind = {ast.Add: "add", ast.Mod: "mod", ast.Mult: "mul"}.get(type(node.op))
+        if kind is not None:
+            return Expr(kind, node, (ast_expr(node.left), ast_expr(node.right)))
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr in STR_METHODS:
+        args = [(a.value, "*") if isinstance(a, ast.Starred) else (a, "") for a in node.args]
+        args += [(k.value, "**" if k.arg is None else f"={k.arg}") for k in node.keywords]
+        items = (ast_expr(node.func.value), *(ast_expr(value) for value, _ in args))
+        return Expr("call", node, items, (node.func.attr, tuple(how for _, how in args)))
+    if isinstance(node, (ast.List, ast.Tuple, ast.Set)):
+        kind = {ast.List: "list", ast.Tuple: "tuple", ast.Set: "set"}[type(node)]
+        unpacked = any(isinstance(e, ast.Starred) for e in node.elts)
+        return Expr("seq", node, tuple(ast_expr(e) for e in node.elts), (kind, unpacked))
+    if isinstance(node, ast.Dict):
+        pairs = [(k, v) for k, v in zip(node.keys, node.values, strict=True) if k is not None]
+        items = tuple(x for k, v in pairs for x in (ast_expr(k), ast_expr(v)))
+        return Expr("map", node, items, ("dict", len(pairs) != len(node.keys)))
+    return Expr("unknown", node)
+
+
+def _ast_fstring_items(values: Sequence[ast.expr]) -> Iterator[Expr]:
+    for value in values:
+        if isinstance(value, ast.Constant):
+            yield Expr("lit", value, data=value.value)
+        elif isinstance(value, ast.FormattedValue):
+            items = [ast_expr(value.value)]
+            if value.format_spec is not None:
+                items.append(ast_expr(value.format_spec))
+            yield Expr("field", value, tuple(items), None if value.conversion == -1 else chr(value.conversion))
+        else:
+            yield Expr("unknown", value)
 
 
 def _mark_parts(node: cst.CSTNode, ids: set[int]) -> None:
     """Record a string expression and every string in its structure; the outermost one decides."""
 
-    ids.update(id(n) for n in _structure(node))
+    ids.update(id(member.origin) for member in Evaluator().structure(cst_expr(node)))
 
 
 def _is_dotted_name(node: cst.BaseExpression) -> bool:

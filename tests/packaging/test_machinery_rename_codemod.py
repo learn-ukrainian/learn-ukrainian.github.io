@@ -1,7 +1,9 @@
 """Machinery move step 6: the lu_machinery rename codemod keeps product on scripts.
 
 Covers the held-out cases of contract v3 step 6 rename items 1-4, idempotence on the
-filter-repo layout, a computed loader target and a mixed ``from scripts import``.
+filter-repo layout, a computed loader target, a mixed ``from scripts import``, and one
+case per class of review round 3 findings F3 (built module strings) and F6 (run-time
+paths and directory changes).
 """
 
 from __future__ import annotations
@@ -353,3 +355,106 @@ def test_mixed_from_scripts_import_is_split_by_owner(tree: tuple[Path, Path]) ->
         ")\n"
     )
     assert [item["kind"] for item in report["rewrites"]] == ["import_from_split", "import_from_split"]
+
+
+def _add(root: Path, map_path: Path, rel: str, owner: str, content: str) -> None:
+    (root / rel).parent.mkdir(parents=True, exist_ok=True)
+    (root / rel).write_text(content, encoding="utf-8")
+    ownership = json.loads(map_path.read_text(encoding="utf-8"))
+    map_path.write_text(json.dumps({**ownership, rel: owner}), encoding="utf-8")
+
+
+def _kinds(report: dict) -> list[str]:
+    return [item["kind"] for item in report["unresolved"]]
+
+
+# Review round 3, F3: module names in strings built from parts.
+
+
+def test_f3_replace_builder_is_evaluated_without_a_prefilter(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = 'TARGET = "scrXipts.dispatch".replace("X", "")\n'
+    _add(root, map_path, "scripts/review/built.py", M, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/review/built.py")
+
+    assert code == 1
+    assert _kinds(report) == ["assembled_module_string"]
+    assert _read(root, "scripts/review/built.py") == source
+
+
+def test_f3_nested_pieces_in_format_arguments_are_evaluated(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = 'A = "%s.%s" % ("scr" + "ipts", name)\nB = "{}.{}".format("scr" + "ipts", name)\n'
+    _add(root, map_path, "scripts/review/built.py", M, source)
+
+    code, report = _run(rename_python, map_path, root, "check", "scripts/review/built.py")
+
+    assert code == 1
+    assert [(item["kind"], item["line"]) for item in report["unresolved"]] == [
+        ("computed_module_string", 1),
+        ("computed_module_string", 2),
+    ]
+
+
+def test_f3_evaluation_errors_are_reported_never_raised(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    # Bytes stay bytes, as in Python: this value is a method's repr, with no module name in it.
+    # An operation Python itself would reject is reported, not skipped.
+    source = 'A = "{0.decode}".format(b"scripts")\nB = "%s %s" % ("scripts.dispatch",)\n'
+    _add(root, map_path, "scripts/review/built.py", M, source)
+
+    code, report = _run(rename_python, map_path, root, "check", "scripts/review/built.py")
+
+    assert code == 1
+    assert [(item["kind"], item["line"]) for item in report["unresolved"]] == [("unevaluable_string", 2)]
+
+
+# Review round 3, F6: resource paths completed at run time, and directory changes.
+
+
+def test_f6_python_plus_chain_with_a_later_run_time_tail(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/pipeline/paths.py", P, 'name = "rules_core.sh"\np = "scripts/" + "lib/" + name\n')
+
+    code, report = _run(rename_nonpython, map_path, root, "check", "scripts/pipeline/paths.py")
+
+    assert code == 1
+    assert [(item["kind"], item["before"]) for item in report["unresolved"]] == [("computed_path", "scripts/lib/…")]
+
+
+def test_f6_shell_word_continuing_across_quotes_is_computed(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    script = 'SUFFIX=.in\ncat scripts/dispatch.py"${SUFFIX}"\ncat "scripts/dispatch.py"${SUFFIX}\n'
+    _add(root, map_path, "scripts/tools/show.sh", M, script)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/show.sh")
+
+    assert code == 1
+    assert _kinds(report) == ["computed_path", "computed_path"]
+    assert _read(root, "scripts/tools/show.sh") == script
+
+
+def test_f6_directory_change_options_are_recognised(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    script = "cd -- scripts/lib\npushd -n scripts/lib\n"
+    _add(root, map_path, "scripts/tools/enter.sh", M, script)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/enter.sh")
+
+    assert code == 1
+    assert _kinds(report) == ["cwd_into_scripts", "cwd_into_scripts"]
+    assert _read(root, "scripts/tools/enter.sh") == script
+
+
+def test_f6_directory_change_keeps_its_report_after_apply(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    script = "cd scripts/lib && cat ../audit/x.py\n"
+    _add(root, map_path, "scripts/tools/enter.sh", M, script)
+
+    first = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/enter.sh")
+    second = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/enter.sh")
+
+    assert first[0] == second[0] == 1
+    assert _kinds(first[1]) == _kinds(second[1]) == ["cwd_into_scripts"]
+    assert _read(root, "scripts/tools/enter.sh") == script

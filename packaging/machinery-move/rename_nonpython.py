@@ -42,19 +42,24 @@ OLD_ROOT, NEW_ROOT = rp.OLD_ROOT, rp.NEW_ROOT
 Finding, OwnershipMap, Report = rp.Finding, rp.OwnershipMap, rp.Report
 
 # ``scripts`` starting a dotted module name; ``-mscripts.x`` (no space) is also an invocation.
-MODULE_START = re.compile(r"(?:(?<=-m)|(?<![\w.\-/$@\\]))scripts(?P<comp>(?:\.[A-Za-z_][A-Za-z0-9_]*)*)(?P<dot>\.)?")
+# A shell default (``${MOD:-scripts.x}``) starts a name after ``:-``.
+MODULE_START = re.compile(
+    r"(?:(?<=-m)|(?<=:-)|(?<![\w.\-/$@\\]))scripts(?P<comp>(?:\.[A-Za-z_][A-Za-z0-9_]*)*)(?P<dot>\.)?"
+)
 # ``scripts/...`` (glob characters included) or a ``/scripts`` directory at the end of a path.
-PATH_START = re.compile(r"(?<![\w.\-\\])scripts(?:(?P<rest>/[\w.\-*?\[\]/]*)|(?![\w.\-]))")
+PATH_START = re.compile(r"(?<![\w.\\])(?<!(?<!:)-)scripts(?:(?P<rest>/[\w.\-*?\[\]/]*)|(?![\w.\-]))")
 BACKSLASH_PATH = re.compile(r"(?<![\w.\-\\/])scripts\\[\w.\-\\]+")
-BARE_WORD = re.compile(r"(?<![\w.\-/$@\\])scripts(?![\w.\-/\\])")
+BARE_WORD = re.compile(r"(?:(?<=:-)|(?<![\w.\-/$@\\]))scripts(?![\w.\-/\\])")
 # Text that completes a name at run time: shell or template variables and placeholders.
 DYNAMIC_NEXT = frozenset("${%<")
+# Shell operators that end a word.
+SHELL_WORD_END = frozenset(";&|()<>")
 INVOCATION_BEFORE = re.compile(r"(?:^|[\s\"'(\[,=])-m[\s\"',\-]*$")
 ENTRY_POINT_NEXT = re.compile(r":[A-Za-z_]")
 PREFIX_STOP = re.compile(r"[\s\"'=(\[{<>|&;,:`!]")
 # Commands and settings that change the working directory to the path that follows.
 CWD_BEFORE = re.compile(
-    r"(?:(?:^|[\s;&|(])(?:cd|pushd)(?:\s+-{1,2}[\w-]*)*\s+|WorkingDirectory=|(?:^|\s)-C\s*"
+    r"(?:(?:^|[\s;&|(`\"'])(?:cd|pushd)(?:\s+-{1,2}[\w-]*)*\s+|WorkingDirectory=|(?:^|\s)-C\s*"
     r"|(?:^|\s)--(?:directory|cwd|chdir|working-directory)(?:=|\s+))[\"']?$"
 )
 INTERPRETER_BEFORE = re.compile(
@@ -146,6 +151,8 @@ def path_prefix(text: str, start: int) -> str:
     i = start
     while i > 0 and not PREFIX_STOP.match(text[i - 1]):
         i -= 1
+    if text.startswith("-", i) and i > 0 and text[i - 1] == ":":
+        i += 1  # ``${X:-scripts/...}``: the default starts after ``:-``
     return text[i:start]
 
 
@@ -165,24 +172,72 @@ def clean_path(token: str) -> str:
     return token
 
 
-def _is_dynamic(text: str, end: int, dynamic_tail: bool, shell: bool = False) -> bool:
+@dataclass(frozen=True)
+class ShellContext:
+    """Where a position sits on its shell line: inside quotes or a comment, ``${`` depth, backticks."""
+
+    quoted: bool
+    comment: bool
+    braces: int
+    backtick: bool
+
+
+def shell_context(text: str, position: int) -> ShellContext:
+    line_start = text.rfind("\n", 0, position) + 1
+    single = double = backtick = False
+    braces = 0
+    i = line_start
+    while i < position:
+        char = text[i]
+        if char == "\\" and not single:
+            i += 2
+            continue
+        if char == "'" and not double:
+            single = not single
+        elif char == '"' and not single:
+            double = not double
+        elif not single and char == "`":
+            backtick = not backtick
+        elif not single and text.startswith("${", i):
+            braces += 1
+        elif not single and char == "}" and braces:
+            braces -= 1
+        elif char == "#" and not (single or double) and (i == line_start or text[i - 1].isspace()):
+            return ShellContext(False, True, braces, backtick)
+        i += 1
+    return ShellContext(single or double, False, braces, backtick)
+
+
+def _is_dynamic(text: str, end: int, dynamic_tail: bool, shell: bool = False, start: int | None = None) -> bool:
     """True when the name does not end where the match ends.
 
-    A shell word continues across quotes (``scripts/x.py"${S}"``, ``'scripts/x'.bak``): after
-    any run of quote characters, a variable, a placeholder, a backtick or more word characters
-    mean the real name is only known at run time or is longer than the match.
+    A word continues across quotes (``scripts/x.py"${S}"``, ``'scripts/x'.bak``): after any run of
+    quote characters, a variable, a placeholder or more name characters mean the real name is only
+    known at run time or is longer than the match. In a shell file an unquoted argument outside a
+    comment is one word up to the next blank or operator (``;&|()<>``), the ``}`` that closes a
+    ``${...}`` or the closing backtick of a command substitution: anything else continues it.
     """
 
+    context = shell_context(text, start) if shell and start is not None else None
     i = end
-    while i < len(text) and text[i] in "\"'":
-        i += 1
+    while i < len(text) and text[i] in "\"'" and not (context and context.comment):
+        i += 1  # in a shell comment a quote is an apostrophe (``scripts.x's``)
     if i == len(text):
         return dynamic_tail
     if text.startswith("</", i):
         return False  # a closing markup tag, not a ``<placeholder>``
-    if text[i] in DYNAMIC_NEXT or (shell and text[i] == "`"):
-        return True  # in a shell file a backtick starts command substitution
-    return i > end and (text[i].isalnum() or text[i] in "_./-`")
+    following = text[i]
+    if following in DYNAMIC_NEXT:
+        return True
+    if context is not None and not (context.quoted or context.comment):
+        if following.isspace() or following in SHELL_WORD_END:
+            return False
+        if following == "}" and context.braces:
+            return False  # the end of a default such as ``${X:-scripts/x.py}``
+        return not (following == "`" and context.backtick)
+    if following == "." and (i + 1 == len(text) or text[i + 1].isspace()):
+        return False  # a full stop after a quoted name (``'scripts/x.py'.``)
+    return i > end and (following.isalnum() or following in "_./-")
 
 
 class Scanner:
@@ -216,7 +271,11 @@ class Scanner:
         for match in MODULE_START.finditer(text):
             start, comp, dot = match.start(), match.group("comp"), match.group("dot")
             end = match.end()
-            dynamic = _is_dynamic(text, end, dynamic_tail, self.shell)
+            # ``module:attribute`` (an entry point) ends the module name even inside one shell word.
+            # The shell-word rule needs a dotted name: a bare ``scripts`` before ``/`` or ``-`` is a path or a word.
+            dynamic = _is_dynamic(text, end, dynamic_tail, self.shell and bool(comp), start) and not (
+                not dot and ENTRY_POINT_NEXT.match(text, end)
+            )
             if not dynamic and dot:
                 end -= 1  # a full stop after the name
             if not comp and not dynamic:
@@ -271,7 +330,7 @@ class Scanner:
             token = clean_path(match.group(0))
             end = start + len(token)
             prefix = path_prefix(text, start)
-            if _is_dynamic(text, end, dynamic_tail, self.shell):
+            if _is_dynamic(text, end, dynamic_tail, self.shell, start):
                 # A run-time suffix can climb out of any directory (``${NAME}`` = ``../x``), so the
                 # owner of the static part proves nothing: always reported, never rewritten.
                 yield Token(start, end, token + "…", "computed_path", "the path is completed at run time")
@@ -284,6 +343,8 @@ class Scanner:
                 yield Token(start, end, token, "unknown_path", "the map has no file or directory here")
             elif owner == AMBIGUOUS:
                 yield Token(start, end, token, "ambiguous_path", "the path or glob covers files of both owners")
+            elif owner == PRODUCT:
+                yield Token(start, end, token, "product_path")
             elif owner == MACHINERY:
                 if prefix_is_local(prefix, self.root_anchored):
                     yield Token(start, end, token, "resource_path")
@@ -361,9 +422,21 @@ def scan_text(scanner: Scanner, text: str, kind: str, report: Report, shell_like
         fenced = markdown_code_regions(text, fenced_only=True)
         tokens.extend(t for t in scanner.bare_words(text) if in_regions(fenced, t.start, t.end))
     for token in sorted(tokens, key=lambda t: (t.start, t.end)):
-        if token.verdict == "keep":
-            continue
         line = line_of(text, token.start)
+        in_code = kind == CODE or (kind == MARKDOWN and in_regions(regions, token.start, token.end))
+        if (
+            in_code
+            and token.verdict in ("resource_path", "product_path")
+            and scanner.changes_directory(text, token.start)
+        ):
+            # Relative paths used after a directory change into scripts/ depend on the old layout
+            # (``cd scripts/lib && cat ../audit/x.py``): the target stays as written and is reported.
+            report.unresolved.append(
+                Finding(rel, line, "cwd_into_scripts", token.text, detail="a working-directory change into scripts/")
+            )
+            continue
+        if token.verdict in ("keep", "product_path"):
+            continue
         if kind == MARKDOWN and not in_regions(regions, token.start, token.end):
             if token.verdict in MACHINERY_VERDICTS:
                 report.inventory.append(
@@ -375,12 +448,6 @@ def scan_text(scanner: Scanner, text: str, kind: str, report: Report, shell_like
                 report.unresolved.append(
                     Finding(rel, line, "unsupported_file_type", token.text, detail="no rewrite rule for this file type")
                 )
-            continue
-        if token.verdict == "resource_path" and scanner.changes_directory(text, token.start):
-            # Relative paths after a directory change depend on the old layout: left as written.
-            report.unresolved.append(
-                Finding(rel, line, "cwd_into_machinery", token.text, detail="a working-directory change into machinery")
-            )
             continue
         if token.verdict in REWRITE_VERDICTS:
             after = NEW_ROOT + token.text[len(OLD_ROOT) :]
@@ -427,60 +494,6 @@ def _callee_name(node: ast.AST) -> str:
     return ""
 
 
-BUILDER_METHODS = frozenset({"format", "format_map", "join", "replace"})
-
-
-def _ast_parts(node: ast.AST) -> list[str | None] | None:
-    """Static texts of a string expression in order, None for run-time pieces; None if not a string."""
-
-    if isinstance(node, ast.Constant) and isinstance(node.value, (str, bytes)):
-        return [node.value.decode("latin-1") if isinstance(node.value, bytes) else node.value]
-    if isinstance(node, ast.JoinedStr):
-        return [v.value if isinstance(v, ast.Constant) and isinstance(v.value, str) else None for v in node.values]
-    if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Add, ast.Mod)):
-        left, right = _ast_parts(node.left), _ast_parts(node.right)
-        if isinstance(node.op, ast.Mod):
-            return None if left is None else [*left, None]
-        if left is not None or right is not None:
-            return (left if left is not None else [None]) + (right if right is not None else [None])
-    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr in BUILDER_METHODS:
-        receiver = _ast_parts(node.func.value)
-        return None if receiver is None else [*receiver, None]
-    return None
-
-
-def _ast_part_constants(node: ast.AST) -> list[ast.Constant]:
-    """The literals that make up the value in ``_ast_parts`` (not format arguments or nested keys)."""
-
-    if isinstance(node, ast.Constant):
-        return [node]
-    if isinstance(node, ast.JoinedStr):
-        return [v for v in node.values if isinstance(v, ast.Constant)]
-    if isinstance(node, ast.BinOp):
-        sides = (node.left,) if isinstance(node.op, ast.Mod) else (node.left, node.right)
-        return [c for side in sides if _ast_parts(side) is not None for c in _ast_part_constants(side)]
-    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-        return _ast_part_constants(node.func.value)
-    return []
-
-
-def _builder_runs(parts: list[str | None]) -> list[tuple[str, bool]]:
-    """Consecutive static texts of a built string, each with whether run-time text follows it."""
-
-    runs: list[tuple[str, bool]] = []
-    current: list[str] = []
-    for part in [*parts, None]:
-        if part is None:
-            if current:
-                runs.append(("".join(current), True))
-            current = []
-        else:
-            current.append(part)
-    if runs and parts and parts[-1] is not None:
-        runs[-1] = (runs[-1][0], False)
-    return runs
-
-
 def _owned_by_rename_python(value: str) -> bool:
     """Strings that start with a module name and contain no whitespace are rename_python.py's."""
 
@@ -523,18 +536,34 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
         detail = "path assembled from parts" + (" with a computed part" if computed else "")
         unresolved(node, "split_path_component", path + ("/…" if computed else ""), detail)
 
-    # Built strings (``"scripts/" + "lib/" + name``, f-strings, % and str methods) are read whole:
-    # their paths are scanned with the run-time tail they really have; their module names are
-    # rename_python.py's.
+    # Built strings (``"scripts/" + "lib/" + name``, f-strings, %, * and str methods) are evaluated
+    # whole with rename_python.py's evaluator: their paths are scanned with the run-time tail they
+    # really have. Their module names are rename_python.py's. ast.walk meets an outer expression
+    # before its parts, so each string is judged once, by its outermost expression.
+    covered: set[int] = set()
     for node in ast.walk(tree):
-        parts = None if isinstance(node, ast.Constant) else _ast_parts(node)
-        if parts is None or _ast_parts(parents.get(id(node))) is not None:
-            continue  # not a built string, or not the outermost one
-        skip.update(id(c) for c in _ast_part_constants(node))
-        for run, tail in _builder_runs(parts):
+        if not isinstance(node, ast.expr) or isinstance(node, ast.Constant) or id(node) in covered:
+            continue
+        evaluator = rp.Evaluator()
+        expr = rp.ast_expr(node)
+        value = evaluator.value(expr)
+        if not rp.is_string(value):
+            continue
+        members = {id(member.origin) for member in evaluator.structure(expr)}
+        covered |= members
+        if id(node) in skip:
+            continue  # a loader target: rename_python.py decides it
+        skip.update(members)
+        if evaluator.failures:
+            detail = f"evaluating this string failed ({evaluator.failures[0]}); it may build a path"
+            unresolved(node, "unevaluable_string", ast.unparse(node)[:160], detail)
+            continue
+        found: set[tuple[str, str]] = set()
+        for run, tail in evaluator.search_texts(expr, joined=False):
             for token in scanner.path_tokens(run, dynamic_tail=tail):
-                if token.verdict in ("keep", "unknown_path"):
+                if token.verdict in ("keep", "product_path", "unknown_path") or (token.verdict, token.text) in found:
                     continue
+                found.add((token.verdict, token.text))
                 kind = (
                     "python_string_reference" if token.verdict in REWRITE_VERDICTS | {"foreign_path"} else token.verdict
                 )
@@ -556,14 +585,9 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
                 continue
             if _owned_by_rename_python(value):
                 continue
-            dynamic_tail = False
-            if isinstance(parent, ast.JoinedStr):
-                index = next(i for i, part in enumerate(parent.values) if part is node)
-                dynamic_tail = index + 1 < len(parent.values)
-            elif isinstance(parent, ast.BinOp) and isinstance(parent.op, ast.Add) and parent.left is node:
-                dynamic_tail = not isinstance(parent.right, ast.Constant)  # ``"scripts/" + name``
-            for token in [*scanner.module_tokens(value, dynamic_tail), *scanner.path_tokens(value, dynamic_tail)]:
-                if token.verdict in ("keep", "unknown_module", "unknown_path"):
+            # A literal that is part of a built string was judged with the whole string above.
+            for token in [*scanner.module_tokens(value), *scanner.path_tokens(value)]:
+                if token.verdict in ("keep", "product_path", "unknown_module", "unknown_path"):
                     continue
                 kind = (
                     "python_string_reference" if token.verdict in REWRITE_VERDICTS | {"foreign_path"} else token.verdict
@@ -614,6 +638,23 @@ def _following_components(node: ast.Constant, parents: dict[int, ast.AST]) -> tu
 # -- driving ---------------------------------------------------------------
 
 
+def scan_file(ownership: OwnershipMap, rel: str, data: bytes, text: str, report: Report) -> str | None:
+    """Report one file's references; return its rewritten text, or None when nothing changes."""
+
+    kind = classify(rel, data[:256])
+    shell_like = is_shell_like(rel, data[:256])
+    scanner = Scanner(ownership, rel, shell=shell_like)
+    if kind == PYTHON:
+        scan_python(scanner, data, report)
+        return None
+    edits = scan_text(scanner, text, kind, report, shell_like)
+    if not edits:
+        return None
+    new_text = apply_edits(text, edits)
+    check_fixed_point(scanner, new_text, kind, report, shell_like)
+    return new_text
+
+
 def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool) -> Report:
     report = Report("rename_nonpython", "apply" if apply else "check", ownership.sha256)
     skipped_binary = skipped_large = 0
@@ -639,20 +680,21 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
             skipped_binary += 1
             continue
         report.files_scanned += 1
-        kind = classify(rel, data[:256])
-        shell_like = is_shell_like(rel, data[:256])
-        scanner = Scanner(ownership, rel, shell=shell_like)
-        if kind == PYTHON:
-            scan_python(scanner, data, report)
+        file_report = Report(report.tool, report.mode, report.map_sha256)
+        try:
+            new_text = scan_file(ownership, rel, data, text, file_report)
+        except Exception as exc:  # one unexpected input must not stop the run or half-write a file
+            detail = f"the scan failed ({type(exc).__name__}: {exc}); file left unchanged"
+            report.unresolved.append(Finding(rel, 1, "tool_error", rel, detail=detail))
             continue
-        edits = scan_text(scanner, text, kind, report, shell_like)
-        if not edits:
+        report.rewrites.extend(file_report.rewrites)
+        report.unresolved.extend(file_report.unresolved)
+        report.inventory.extend(file_report.inventory)
+        if new_text is None:
             continue
         report.files_changed.append(rel)
-        text = apply_edits(text, edits)
-        check_fixed_point(scanner, text, kind, report, shell_like)
         if apply:
-            rp.write_atomically(path, text.encode("utf-8"))
+            rp.write_atomically(path, new_text.encode("utf-8"))
     report.notes.append(f"skipped binary files containing 'scripts': {skipped_binary}")
     report.notes.append(f"skipped files over {MAX_BYTES} bytes: {skipped_large}")
     return report

@@ -14,6 +14,26 @@ Comments, docstrings and Markdown prose are never changed. A reference is rename
 the map says the file Python binds for it (or the path names) is machinery. Each tool's
 `--help` lists the full set of rules.
 
+Nothing is guessed:
+
+- **Strings built in Python.** Both tools share one evaluator (in `rename_python.py`). It
+  works out a string built with `+`, `%`, `*`, f-strings, literal lists and dicts, and the
+  `str` and `bytes` methods that only reshape text (`format`, `join`, `replace`, `lower` and
+  similar), as Python would. A piece known only at run time stays unknown. A module name or path
+  that the value may contain is reported, never rewritten. Values passed through variables are
+  not traced. When an operation on known values fails, the tool reports `unevaluable_string`.
+- **Shell words.** A name or path is rewritten only when it ends where its word ends. If a
+  variable, placeholder or more text continues the word, even across quotes
+  (`scripts/x.py"${S}"`, `'scripts/x.py'.bak`), the tool reports `computed_path`.
+- **Directory changes.** A `cd`, `pushd`, `-C`, `--directory=` or `WorkingDirectory=` target
+  under `scripts/` is reported as `cwd_into_scripts` and left as written, because relative
+  paths used after it depend on the old layout.
+- **Tool errors.** If anything goes wrong while one file is processed, that file is reported
+  as `tool_error` and left unchanged. The run still exits `1`.
+
+Every Python file goes through LibCST; there is no fast pre-check. On a 16-core machine, a
+whole-repository `rename_python.py --check --jobs 16` takes about eight minutes.
+
 ## Inputs
 
 - **Ownership map**: a JSON object that maps each repository-relative file path to
@@ -62,7 +82,8 @@ Keep the lock file next to the environment and record its SHA-256 with the run.
 ## Tests
 
 `tests/packaging/test_machinery_rename_codemod.py` covers the contract's rename held-out
-cases, idempotence, a computed loader target and a mixed import split. The project
+cases, idempotence, a computed loader target, a mixed import split, and one case for each
+class of built string, run-time path and directory change found in review. The project
 environment skips it because LibCST is absent. Run it with the tool environment:
 
 ```bash
