@@ -47,9 +47,9 @@ LAUNCH_CALL = re.compile(
 JS_NAMED_IMPORT = re.compile(rf"import\s*\{{([^}}]*)\}}\s*from\s*['\"]({PLAYWRIGHT_PACKAGE})['\"]")
 JS_WHOLE_IMPORT = re.compile(
     rf"import\s+(?!type\b)(?:\*\s+as\s+)?\w+\s*(?:,\s*\{{[^}}]*\}})?\s*from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
-    # import('...').Page is a type position; a runtime dynamic import is not followed by .Type.
-    rf"|import\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)(?!\s*\.\s*[A-Z])"
-    rf"|require\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)"
+    # Any call taking a Playwright package name: import(), require(), a createRequire()
+    # result, require.resolve(). import('...').Page is a type position, so it is skipped.
+    rf"|[\w$]+\s*\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)(?!\s*\.\s*[A-Z])"
     rf"|export\s+(?!type\b)[^;]*?from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
 )
 # Test fixtures that hand a spec a browser type it could launch itself.
