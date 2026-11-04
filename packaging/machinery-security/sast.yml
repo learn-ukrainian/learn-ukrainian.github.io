@@ -1,6 +1,6 @@
-# DRAFT for the private learn-ukrainian/machinery repository (issue #12682,
+# DRAFT for the public learn-ukrainian/machinery repository (issue #12682,
 # machinery move contract v3 section 5). Install it there as
-# .github/workflows/sast.yml. It is not a check in the public repository.
+# .github/workflows/sast.yml. It is not a check in this source repository.
 #
 # Blocking SAST with Semgrep CE 1.183.0 and the semgrep/semgrep-rules checkout
 # at a pinned commit. Pins and their upstream evidence are recorded in
