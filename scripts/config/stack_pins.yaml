@@ -119,7 +119,7 @@ pins:
     source: host
     owner: DevOps
     review_by: "2026-11-16"
-    note: Playwright drives the host's installed Google Chrome (apt, auto-updated), sandbox on, never bundled browsers (#12689). npm playwright and pip playwright are 1.64.1; the pip pin is Dependabot's.
+    note: Playwright drives the host's installed Google Chrome (apt, auto-updated), sandbox on, never bundled browsers (#12689). The npm and pip Playwright packages are 1.64.1; the pip pin is Dependabot's.
   - name: deployment-tooling
     pinned: unknown
     source: host

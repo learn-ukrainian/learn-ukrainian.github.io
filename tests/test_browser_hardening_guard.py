@@ -14,10 +14,12 @@ import ast
 import json
 import re
 import subprocess
+import tomllib
 from functools import cache
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.validate import browser_launcher
 
@@ -49,11 +51,20 @@ LAUNCH_CALL = re.compile(
     r"|\.\s*browserType\s*\(|\.\s*browser_type\b"
 )
 JS_NAMED_IMPORT = re.compile(rf"import\s*\{{([^}}]*)\}}\s*from\s*['\"]({PLAYWRIGHT_PACKAGE})['\"]")
-# Outside the launcher, a JS file may name a Playwright package only in these places. Any
-# other mention (require(), import(), a createRequire() result, a default or namespace
-# import, a re-export) is refused whatever the call around it looks like, so a new call
-# shape cannot get past the guard. Only a package name built at runtime would.
-JS_PACKAGE_LITERAL = re.compile(rf"(['\"`]){PLAYWRIGHT_PACKAGE}\1")
+# Outside the launchers, a Playwright package may be named only in these places. The guard
+# keys on the package name itself, wherever it appears in code: in an import, a require(),
+# a string, an embedded command or another language's snippet, in any quoting. A new call
+# shape or quoting cannot get past it; only a package name built at runtime could.
+PLAYWRIGHT_TOKEN = re.compile(
+    r"(?<![\w-])(?:@playwright/test|playwright(?:-core)?)(?![\w-])"
+    # Config file names such as playwright.config.ts are not the package.
+    r"(?!\.(?:[\w-]+\.)*config\b)"
+)
+# Another package with playwright in its name, such as @axe-core/playwright.
+OTHER_SCOPED_PACKAGE = re.compile(r"@(?!playwright/)[\w.-]+/[\w.-]+")
+# `playwright test` runs the specs through the Playwright configs, which the guard pins.
+PLAYWRIGHT_TEST_CLI = re.compile(r"\bplaywright\s+test\b")
+# In JS, the allowed places are these.
 JS_ALLOWED_PACKAGE_USE = re.compile(
     # A named import; its names are checked against JS_IMPORTABLE separately.
     rf"import\s*\{{[^}}]*\}}\s*from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
@@ -83,18 +94,20 @@ SANDBOX_OPTION = re.compile(r"chromium_?[sS]andbox")
 # Runtime Playwright entry points a Python module could launch a browser from.
 PY_RUNTIME_ENTRY = {"async_playwright", "sync_playwright", "async_api", "sync_api", "_impl", "*"}
 BROWSER_DOWNLOAD = re.compile(r"\bplaywright(?:-core)?\s+install\b")
-# Code can also sit inside a string: a package.json script, a shell `node -e` or `python -c`,
-# a CI `run:` step, or one language spawning the other. There a Playwright package may not
-# be named at all, in any quoting, and the CLI commands that open a browser are refused
-# (`playwright test` goes through the config).
-FOREIGN_PLAYWRIGHT = re.compile(
-    r"\b(?:from|import)\s+playwright\b"
-    r"|\bplaywright(?:-core)?\s+(?:open|codegen|screenshot|pdf|cr|ff|wk|show-trace|launch-server|run-server)\b"
-)
-EMBEDDED_PLAYWRIGHT = re.compile(rf"[\\'\"`]{PLAYWRIGHT_PACKAGE}[\\'\"`]|{FOREIGN_PLAYWRIGHT.pattern}")
 # A browser Playwright Test connects to was started elsewhere, unhardened.
 REMOTE_BROWSER = re.compile(r"\bconnectOptions\b|\bPW_TEST_CONNECT_WS_ENDPOINT\b")
 PLAYWRIGHT_MCP = re.compile(r"@playwright/mcp|\bplaywright-mcp\b|mcp-server-playwright|mcp__playwright")
+
+# Files that name a Playwright package for a reason other than loading it, with the exact
+# number of mentions; one more fails, one fewer asks to update the count.
+PLAYWRIGHT_TOKEN_EXEMPT = {
+    "scripts/agent_runtime/npm_guard.py": (1, "the npx program allowlist names the playwright program"),
+    "tests/agent_runtime/test_npm_shim.py": (3, "argv cases for that npx allowlist"),
+    "tests/fixtures/ci_timings/sample_ci_runs.json": (13, "recorded CI job names"),
+    "docs/l2-uk-en/v4-seminar-section-templates.yaml": (1, "the English word playwright in seminar prose"),
+}
+# npm writes lockfiles and never runs anything from them; they only record dependencies.
+LOCKFILE_NAMES = ("package-lock.json",)
 
 # Files that name a sandbox flag for a reason other than a browser launch.
 SANDBOX_FLAG_EXEMPT = {
@@ -165,19 +178,75 @@ def _json_strings(node: object) -> list[str]:
     return [node] if isinstance(node, str) else []
 
 
-def _embedded_code(path: str) -> list[str]:
-    """Text that may hold runnable code in a shell, YAML, TOML or JSON file.
+def _strip_shell_comments(text: str) -> str:
+    """Drop shell comments: a `#` that starts a word outside quotes, to the end of the line."""
+    out, i, quote = [], 0, ""
+    while i < len(text):
+        char = text[i]
+        if quote:
+            if char == "\\" and quote == '"':
+                out.append(text[i : i + 2])
+                i += 2
+                continue
+            if char == quote:
+                quote = ""
+        elif char == "\\":
+            out.append(text[i : i + 2])
+            i += 2
+            continue
+        elif char in "'\"":
+            quote = char
+        elif char == "#" and (i == 0 or text[i - 1] in " \t\n;&|()"):
+            end = text.find("\n", i)
+            i = len(text) if end < 0 else end
+            continue
+        out.append(char)
+        i += 1
+    return "".join(out)
 
-    For JSON that is every string value (package.json scripts among them); keys such as
-    dependency names are not code. A file that does not parse as JSON is read whole.
+
+def _code_strings(path: str) -> list[str]:
+    """The parts of a file that can hold runnable code, comments left out.
+
+    JS: the text. Python: every string constant (code itself is checked by its imports).
+    JSON, YAML and TOML: every string value, such as package.json scripts or a CI `run:`
+    step; keys such as dependency names are not code. Shell: the text. A data file that
+    does not parse is read whole.
     """
-    text = _read(path)
-    if path.endswith(".json"):
-        try:
+    text = _read_code(path)
+    if path.endswith(JS_SUFFIXES):
+        return [text]
+    if path.endswith(".py"):
+        tree = ast.parse(text, filename=path)
+        return [n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str)]
+    try:
+        if path.endswith(".json"):
             return _json_strings(json.loads(text))
-        except ValueError:
-            pass
-    return [text]
+        if path.endswith((".yml", ".yaml")):
+            return [s for doc in yaml.safe_load_all(text) for s in _json_strings(doc)]
+        if path.endswith(".toml"):
+            return _json_strings(tomllib.loads(text))
+    except (ValueError, yaml.YAMLError):
+        return [text]
+    return [_strip_shell_comments(text)]
+
+
+def _playwright_mentions(path: str) -> list[str]:
+    """Each place `path` names a Playwright package outside the allowed places."""
+    if path in LAUNCHERS or path.endswith(LOCKFILE_NAMES):
+        return []
+    mentions = []
+    for code in _code_strings(path):
+        code = OTHER_SCOPED_PACKAGE.sub(lambda m: " " * len(m.group(0)), code)
+        allowed = [m.span() for m in PLAYWRIGHT_TEST_CLI.finditer(code)]
+        if path.endswith(JS_SUFFIXES):
+            allowed += [m.span() for m in JS_ALLOWED_PACKAGE_USE.finditer(code)]
+        mentions += [
+            " ".join(code[max(0, m.start() - 40) : m.end() + 20].split())
+            for m in PLAYWRIGHT_TOKEN.finditer(code)
+            if not any(start <= m.start() and m.end() <= end for start, end in allowed)
+        ]
+    return mentions
 
 
 def _imported_names(clause: str) -> set[str]:
@@ -222,35 +291,22 @@ def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
                 allowed = JS_IMPORTABLE.get(match.group(2), set()) | {"test"}  # `test` has its own rule
                 if bad := _imported_names(match.group(1)) - allowed:
                     offenders.append(f"{path}: imports {sorted(bad)} from {match.group(2)}")
-            allowed_spans = [m.span() for m in JS_ALLOWED_PACKAGE_USE.finditer(text)]
-            offenders += [
-                f"{path}: names {m.group(0)} outside an allowed import"
-                for m in JS_PACKAGE_LITERAL.finditer(text)
-                if not any(start <= m.start() and m.end() <= end for start, end in allowed_spans)
-            ]
             offenders += [f"{path}: {m.group(0)}" for m in JS_BROWSER_FIXTURE.finditer(text)]
             offenders += [f"{path}: {m.group(0)}" for m in JS_PLAYWRIGHT_BROWSER_TYPE.finditer(text)]
-            offenders += [f"{path}: embedded {m.group(0)}" for m in FOREIGN_PLAYWRIGHT.finditer(text)]
-        else:
-            if PY_USES_PLAYWRIGHT.search(text):
-                offenders += [f"{path}: {m.group(0)}" for m in PY_BROWSER_ACCESS.finditer(text)]
-            # A Python string holding JS or a shell command, such as a subprocess running node -e.
-            strings = [n for n in ast.walk(ast.parse(text, filename=path)) if isinstance(n, ast.Constant)]
-            offenders += [
-                f"{path}:{n.lineno}: embedded {m.group(0)}"
-                for n in strings
-                if isinstance(n.value, str)
-                for m in EMBEDDED_PLAYWRIGHT.finditer(n.value)
-            ]
+        elif PY_USES_PLAYWRIGHT.search(text):
+            offenders += [f"{path}: {m.group(0)}" for m in PY_BROWSER_ACCESS.finditer(text)]
     for path in _files(CODE_SUFFIXES):
-        if path.endswith((*JS_SUFFIXES, ".py")):
+        if path in LAUNCHERS:
             continue
-        for code in _embedded_code(path):
-            offenders += [f"{path}: embedded {m.group(0)}" for m in EMBEDDED_PLAYWRIGHT.finditer(code)]
-            offenders += [f"{path}: embedded {m.group(0)}" for m in LAUNCH_CALL.finditer(code)]
-    for path in _files(CODE_SUFFIXES):
-        if path not in LAUNCHERS:
-            offenders += [f"{path}: {m.group(0)}" for m in REMOTE_BROWSER.finditer(_read_code(path))]
+        if not path.endswith((*JS_SUFFIXES, ".py")):
+            for code in _code_strings(path):
+                offenders += [f"{path}: embedded {m.group(0)}" for m in LAUNCH_CALL.finditer(code)]
+        offenders += [f"{path}: {m.group(0)}" for m in REMOTE_BROWSER.finditer(_read_code(path))]
+        mentions = _playwright_mentions(path)
+        expected = PLAYWRIGHT_TOKEN_EXEMPT.get(path, (0, ""))[0]
+        if len(mentions) != expected:
+            offenders += [f"{path}: names a Playwright package outside an allowed import: {m}" for m in mentions]
+            offenders += [f"{path}: expected {expected} exempt mentions, found {len(mentions)}"] if expected else []
     assert not offenders, "launch browsers through the shared hardened launcher:\n" + "\n".join(offenders)
 
 
