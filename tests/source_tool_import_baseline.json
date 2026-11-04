@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 487,
-    "probe_count": 974,
+    "cli_count": 486,
+    "probe_count": 972,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/env_sanitize.py",
@@ -394,7 +394,6 @@
       "scripts/practice/densify_paradigm_from_lexemes.py",
       "scripts/practice/typesafe_distractor_validator.py",
       "scripts/practice_deck/publish.py",
-      "scripts/pre_commit/regen_lesson_schema.py",
       "scripts/projects/open_model_data/adoption_cli.py",
       "scripts/projects/open_model_data/correction_protection_consumer.py",
       "scripts/projects/open_model_data/correction_protection_factory.py",
@@ -492,7 +491,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "c0115520bc2c2ded3261784e08ce2a111c6adb9c4651e9382ddd9df95f51f4db"
+    "cli_paths_sha256": "b93ac96784aed207c07aba2a2d07d065e1b00ff40af36125b165f8ee188bf656"
   },
   "failures": [
     {

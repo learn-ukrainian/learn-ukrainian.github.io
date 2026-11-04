@@ -42,26 +42,6 @@
       "count": 1
     },
     {
-      "path": "scripts/ai_agent_bridge/_citation_check.py",
-      "module": "scripts.wiki",
-      "count": 1
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_citation_check.py",
-      "module": "scripts.wiki.sources_db",
-      "count": 1
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_gemini.py",
-      "module": "scripts.batch_gemini_config",
-      "count": 1
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_inbox.py",
-      "module": "scripts.batch_gemini_config",
-      "count": 1
-    },
-    {
       "path": "scripts/api/blue_router.py",
       "module": "scripts.audit",
       "count": 1
@@ -442,111 +422,6 @@
       "count": 1
     },
     {
-      "path": "scripts/eval/lesson_ab/core.py",
-      "module": "scripts.verification",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/lesson_ab/core.py",
-      "module": "scripts.verification.check_text",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/lesson_ab/core.py",
-      "module": "scripts.verification.stress",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/lesson_ab/core.py",
-      "module": "scripts.verification.vesum",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/adapters.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/adapters.py",
-      "module": "scripts.build.fresh",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/adapters.py",
-      "module": "scripts.build.fresh.prompt",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/adapters.py",
-      "module": "scripts.build.fresh.writer",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/binding.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/binding.py",
-      "module": "scripts.review.receipts.ledger",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/prove.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/prove.py",
-      "module": "scripts.build.fresh",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/prove.py",
-      "module": "scripts.build.fresh.writer",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/prove.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/prove.py",
-      "module": "scripts.review.receipts.ledger",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/scorer.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_preamble/scoring.py",
-      "module": "scripts.verification",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_preamble/scoring.py",
-      "module": "scripts.verification.check_text",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_preamble/scoring.py",
-      "module": "scripts.verification.vesum",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_preamble/scoring.py",
-      "module": "scripts.wiki",
-      "count": 1
-    },
-    {
-      "path": "scripts/eval/uk_preamble/scoring.py",
-      "module": "scripts.wiki.sources_db",
-      "count": 1
-    },
-    {
       "path": "scripts/orchestration/integration_sweep.py",
       "module": "scripts.deploy",
       "count": 1
@@ -554,26 +429,6 @@
     {
       "path": "scripts/orchestration/integration_sweep.py",
       "module": "scripts.deploy.auto_deploy_eligibility",
-      "count": 1
-    },
-    {
-      "path": "scripts/pre_commit/regen_lesson_schema.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/pre_commit/regen_lesson_schema.py",
-      "module": "scripts.build.generate_lesson_schema",
-      "count": 1
-    },
-    {
-      "path": "scripts/pre_commit/regen_lexicon_fingerprint.py",
-      "module": "scripts.lexicon",
-      "count": 1
-    },
-    {
-      "path": "scripts/pre_commit/regen_lexicon_fingerprint.py",
-      "module": "scripts.lexicon.manifest_fingerprint",
       "count": 1
     },
     {
