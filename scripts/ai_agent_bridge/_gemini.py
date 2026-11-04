@@ -14,6 +14,8 @@ import sys
 import time
 from pathlib import Path
 
+import yaml
+
 from agent_runtime.errors import (
     AgentStalledError,
     AgentTimeoutError,
@@ -21,7 +23,6 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
-from batch_gemini_config import PRO_MODEL
 from common.http_status import has_http_status
 from common.repo_root import project_interpreter
 from secret_redactor import redact_text
@@ -52,6 +53,33 @@ from ._messaging import (
 )
 from ._model import _detect_model_error
 from ._prompts import build_gemini_prompt, require_core_or_exit
+
+_FLEET_GEMINI_MODEL: str | None = None
+
+
+def fleet_gemini_model() -> str:
+    """Return the AGY fleet catalog id.
+
+    The curriculum batch table used to supply this string. Pro and Flash
+    are one subscribed pin, so both bridge aliases read the AGY orchestrator
+    seat from ``scripts/config/model_catalog.yaml``.
+    """
+    global _FLEET_GEMINI_MODEL
+    if _FLEET_GEMINI_MODEL is not None:
+        return _FLEET_GEMINI_MODEL
+    path = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
+    catalog = yaml.safe_load(path.read_text(encoding="utf-8"))
+    seat_name = catalog["orchestrator_seats"]["agy"]["model_id"]["seat"]
+    model_id = catalog["seats"][seat_name]["model_id"]
+    if not isinstance(model_id, str) or model_id not in catalog["models"]:
+        raise RuntimeError(f"AGY fleet model id {model_id!r} is missing from {path}")
+    _FLEET_GEMINI_MODEL = model_id
+    return model_id
+
+
+# Retired Pro alias and Flash are the same catalog id, so the capacity
+# cascade has no edge while this pin is shared.
+PRO_MODEL = fleet_gemini_model()
 
 
 def converse_gemini(
