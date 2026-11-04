@@ -1,4 +1,4 @@
-"""Hourly, privacy-safe weekly-allowance history for the five quota slots (#11144).
+"""Hourly, privacy-safe weekly-allowance history for the seven quota slots (#11144, #12696).
 
 ``collect`` appends one allowlisted JSON line per slot from the Monitor's ``/api/state/routing-budget``.
 ``resets`` reports observed used-percent drops and reset-timestamp jumps with weekdays; it infers no schedule.
@@ -22,7 +22,8 @@ from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.common.safe_unit_install import InstallError, open_unit_dir
 
 WINDOW = "weekly"
-SLOT_PROVIDER = {slot: slot.split(":")[0] for slot in ("codex", "claude:a", "claude:b", "grok", "antigravity")}
+SLOTS = ("codex", "codex:a", "codex:b", "claude:a", "claude:b", "grok", "antigravity")
+SLOT_PROVIDER = {slot: slot.split(":")[0] for slot in SLOTS}
 STATUSES = ("known", "stale", "unknown")
 # Fixed codes only: exception text and payload values are never persisted or printed.
 REASONS = frozenset(
@@ -124,19 +125,27 @@ def _slot_fields(slot: str, payload: dict[str, Any], observed: dt.datetime) -> d
 
     ``known`` needs a fresh label, an explicit ``stale: false``, a source time that is valid, not
     after ``observed`` and no older than the snapshot's age bound, and a valid value.
-    Agent rows also need the snapshot itself within that threshold; the per-account Claude rows
-    are re-read live by the Monitor on every request, so a stored snapshot's age does not apply.
+    Agent rows also need the snapshot itself within that threshold; the per-account Claude and
+    Codex rows keep their own evidence, so a stored snapshot's age does not apply to them.
     """
     threshold, snapshot_expired = _snapshot_bounds(payload)
-    if slot.startswith("claude:"):
-        row = _node(payload, "claude_accounts", slot)
+    if slot.startswith("claude:") or slot.startswith("codex:"):
+        family = slot.split(":", 1)[0]
+        row = _node(payload, f"{family}_accounts", slot)
         if row is None:
             return _fields("unknown", "row_missing")
-        window = _node(row, "weekly") or {}
-        left = _pct(window.get("left_pct"))
-        used = None if left is None else 100.0 - left
-        source, resets = row.get("updated"), window.get("resets_at")
-        label, stale_flag = row.get("status"), row.get("stale")
+        if family == "claude":
+            window = _node(row, "weekly") or {}
+            left = _pct(window.get("left_pct"))
+            used = None if left is None else 100.0 - left
+            source, resets = row.get("updated"), window.get("resets_at")
+            label, stale_flag = row.get("status"), row.get("stale")
+        else:
+            # Same rule as the Claude account rows: this account's own probe, not ``agents.codex``.
+            account_meta = _node(row, "codexbar") or {}
+            used = _pct(account_meta.get("weekly_used_pct"))
+            source, resets = account_meta.get("fetched_at"), account_meta.get("weekly_resets_at")
+            label, stale_flag = account_meta.get("freshness"), account_meta.get("stale")
         snapshot_expired = False
     else:
         # The antigravity slot reads the Monitor's aggregate ``gemini`` agent row.
@@ -162,7 +171,7 @@ def _slot_fields(slot: str, payload: dict[str, Any], observed: dt.datetime) -> d
 
 
 def collect(base: str, timeout: float, now: dt.datetime | None = None) -> list[dict[str, Any]]:
-    """One bounded fetch, five rows in slot order. An unreachable Monitor yields five explicit unknowns.
+    """One bounded fetch, one row per slot. An unreachable Monitor yields one explicit unknown per slot.
 
     The observation time is taken after the response arrives (or is ``now``), so a source sample
     refreshed while the request was in flight is never later than it.

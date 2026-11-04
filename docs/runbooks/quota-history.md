@@ -1,18 +1,18 @@
 # Quota history
 
-An hourly, privacy-safe record of the weekly allowance for the five quota slots, and a reader that reports
+An hourly, privacy-safe record of the weekly allowance for the seven quota slots, and a reader that reports
 where the observed used-percentage dropped or the reported reset timestamp moved, with the weekday.
 
 Tracking: #11144 (stream #10844).
 
 ## What is recorded
 
-One JSON line per slot per run, always five lines per run:
+One JSON line per slot per run, always seven lines per run:
 
 | Field | Meaning |
 | --- | --- |
 | `provider` | `codex`, `claude`, `grok` or `antigravity` |
-| `slot` | `codex`, `claude:a`, `claude:b`, `grok` or `antigravity` (configured slot label, not an identity) |
+| `slot` | `codex`, `codex:a`, `codex:b`, `claude:a`, `claude:b`, `grok` or `antigravity` (configured slot label, not an identity) |
 | `window` | always `weekly` |
 | `observed_at` | UTC time the collector ran |
 | `source_observed_at` | UTC time the provider data was fetched, or null |
@@ -28,20 +28,20 @@ nested field of the Monitor projection are dropped before writing and are never 
 these hold; otherwise the row is an explicit `unknown` or `stale` and nothing is inferred or carried forward:
 
 - The Monitor labels it fresh and reports `stale: false`. A missing or non-boolean flag is `not_fresh`.
-- Its source time (`fetched_at` for agent rows, `updated` for Claude account rows) is a valid
+- Its source time (`fetched_at` for agent rows and for `codex:a` / `codex:b`, `updated` for Claude account rows) is a valid
   timezone-aware timestamp that is not after the collector's observation (`source_time_invalid`), and no
   older than the snapshot's `diagnostics.stale_threshold_s` (`stale`, `source_stale`). When that
   threshold is missing or unusable, the Monitor's own 900-second bound applies, as it does in the Monitor.
 - For agent rows (`codex`, `grok`, `antigravity`), the snapshot's own `diagnostics.data_age_s` is not past
   the threshold; past it the Monitor withdraws the snapshot's lane authority, and these rows are `stale`.
-  Claude account rows are re-read live by the Monitor on every request, so they keep their own evidence.
+  Claude account rows and the Codex account rows (`codex:a`, `codex:b`) keep their own evidence, so a stored snapshot's age does not apply to them. The legacy `codex` slot is account a and still reads `agents.codex`.
   Because `data_age_s` is the oldest agent sample, one long-stale agent lane marks every agent row stale
   until that lane refreshes.
 - The value is a finite number between 0 and 100. Booleans and numbers too large for a float are
   `value_invalid`.
 
 A timestamp whose UTC value falls outside the years 1 to 9999 is invalid, never a crash. One hostile value
-affects only its own slot; an unparseable Monitor document gives five `source_unavailable` rows.
+affects only its own slot; an unparseable Monitor document gives seven `source_unavailable` rows.
 
 ## Where it is stored
 
@@ -118,7 +118,7 @@ Verify the rendered units without installing: `systemd-analyze verify <rendered-
 
 ## Limits
 
-- A run during a Monitor outage writes five explicit `unknown` rows with `source_unavailable`. This is
+- A run during a Monitor outage writes seven explicit `unknown` rows with `source_unavailable`. This is
   intentional: an outage is visible history, not a gap to fill.
 - The first `known` sample of a slot is only a baseline. It never produces an event.
 - The history is only as long as the timer has run. An empty or all-unknown history cannot establish

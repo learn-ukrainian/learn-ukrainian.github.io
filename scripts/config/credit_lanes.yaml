@@ -44,7 +44,12 @@ reset_hold_hours: 48
 
 lanes:
   codex:
-    # Credit-period policy: the Codex lane receives only these catalog ids.
+    # Account a (`sub`). Credit-period policy: this subscription receives only these catalog ids.
+    allowed_models:
+      - gpt-6.1-sol
+      - gpt-6-luna
+  "codex:b":
+    # Account b (`b-sub`). Its balance and rate limits are not account a's.
     allowed_models:
       - gpt-6.1-sol
       - gpt-6-luna
