@@ -9,7 +9,7 @@ import pytest
 import yaml
 
 from scripts.build import linear_pipeline
-from scripts.common.thresholds import QG_DIMS
+from scripts.curriculum.quality.thresholds import QG_DIMS
 
 pytestmark = pytest.mark.reads_content
 

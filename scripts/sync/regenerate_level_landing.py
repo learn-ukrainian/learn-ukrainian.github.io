@@ -14,7 +14,7 @@ preference (their working tree carries manual edits). This script
 preserves a1 by skipping it.
 
 Levels currently supported (data-present in `curriculum.yaml` +
-`scripts/common/thresholds.LEVEL_THRESHOLDS`): a2, b1. b2/c1/c2 will
+`scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS`): a2, b1. b2/c1/c2 will
 work once those have plan files + `LEVEL_TITLE_UK` entries below.
 
 Usage:
@@ -42,7 +42,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from scripts.common.thresholds import LEVEL_THRESHOLDS
+from scripts.curriculum.quality.thresholds import LEVEL_THRESHOLDS
 
 DOCS_DIR = ROOT / "site" / "src" / "content" / "docs"
 CURRICULUM_YAML = ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"

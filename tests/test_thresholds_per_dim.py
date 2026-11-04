@@ -9,7 +9,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from common.thresholds import (
+from curriculum.quality.thresholds import (
     aggregate_review,
     terminal_dims_for,
 )

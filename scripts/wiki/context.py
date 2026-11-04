@@ -7,7 +7,7 @@ context for injection into build prompts (all tracks — core and seminar).
 import re
 from pathlib import Path
 
-from common.text_utils import strip_ukrainian_stress
+from curriculum.quality.text_utils import strip_ukrainian_stress
 
 from .config import TRACK_DOMAINS, WIKI_DIR
 from .sources_schema import load_sources_registry, registry_path_for

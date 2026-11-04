@@ -744,7 +744,7 @@
     ]
   },
   {
-    "path": "scripts/migrations/2026-05-06-broker-indexes.py",
+    "path": "scripts/ai_agent_bridge/broker_indexes.py",
     "reference_count": 4,
     "kind": "writer",
     "target_db": "legacy broker DB",

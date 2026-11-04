@@ -17,7 +17,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.thresholds import seminar_promote_floors_for
+from scripts.curriculum.quality.thresholds import seminar_promote_floors_for
 from scripts.pipeline.module_archetypes import SEMINAR_TRACKS
 
 

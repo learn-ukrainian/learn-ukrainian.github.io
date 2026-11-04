@@ -29,7 +29,6 @@ import threading
 import time
 import uuid
 from datetime import UTC, datetime
-from importlib import util as importlib_util
 
 import yaml
 
@@ -53,6 +52,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
+from scripts.ai_agent_bridge.broker_indexes import apply as apply_broker_indexes
 from scripts.control_plane.storage import ControlPlaneError
 from scripts.fleet_comms.agent_success_metrics import collect_agent_success
 from scripts.fleet_comms.efficiency_metrics import (
@@ -129,13 +129,7 @@ def ensure_broker_db_ready(ctx: MonitorContext | None = None) -> None:
         return
     try:
         _tune_db_connection(conn, writable=True)
-        migration_path = ctx.roots.project_root / "scripts" / "migrations" / "2026-05-06-broker-indexes.py"
-        if migration_path.exists():
-            spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
-            if spec is not None and spec.loader is not None:
-                module = importlib_util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-                module.apply(conn)
+        apply_broker_indexes(conn)
         conn.commit()
         apply_migrations(conn)
     finally:

@@ -15,7 +15,7 @@ from typing import Any
 # Ensure scripts/ is importable (matches the pattern used elsewhere in audit/).
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.thresholds import get_level_thresholds
+from curriculum.quality.thresholds import get_level_thresholds
 
 # Constants
 SENSITIVE_TAGS = {
