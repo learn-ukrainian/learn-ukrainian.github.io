@@ -45,15 +45,12 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def _product_hooks() -> Any:
-    """Load the product hook. The name is built at runtime so this file has no product import."""
-    import runpy
-    import types
+    """Load the product hook named by this checkout's bakeoff configuration."""
+    from scripts.ops.product_entry import load_configured_module
 
-    name = ".".join(("scripts", "build", "bakeoff_hooks"))
-    loaded = runpy.run_module(name)
-    module = types.ModuleType(name)
-    module.__dict__.update(loaded)
-    return module
+    path = PROJECT_ROOT / "scripts/build/bakeoff_hooks.v1.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return load_configured_module(payload["module"])
 
 
 def main() -> int:
