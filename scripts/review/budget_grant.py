@@ -638,8 +638,10 @@ def _owner_round(
                                         f"{request['finding_id']}")
         return receipt
     body = str(comment.get("body"))
-    sealed = "" if REPLY_OPENER in body else _withheld_reply(body, runs) or ""
-    if read is None or recorder._security_verdict_blocks(body) or recorder._security_verdict_blocks(sealed):
+    before, opened, rest = body.partition(REPLY_OPENER)
+    reply, _, after = rest.rpartition(REPLY_CLOSER) if opened else ("", "", "")
+    reply = reply if opened else _withheld_reply(body, runs) or ""
+    if read is None or recorder._security_verdict_blocks(before + after) or _security_not_pass(reply):
         raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the cited approval's reply is cut, unreadable, "
                                     "withheld without its bound sealed run, or has a non-PASS security verdict")
     # Heads A, B, then A again: the latest approval is at B, yet A was approved already (Sol condition 2).
@@ -647,6 +649,39 @@ def _owner_round(
             or lookup_verdict(comments, head, login).state == "APPROVED"):
         raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: head {head} already has a recorded approval")
     return {**receipt, "cited_verdict": "APPROVED"}
+
+
+def _security_not_pass(reply: str) -> bool:
+    """Whether a reply declares a security verdict that is not PASS, reading every JSON object's decoded strings.
+
+    The decoded strings of a JSON object at any brace are read, so a JSON escape cannot hide a verdict
+    and a closing quote cannot spoil a PASS. In a canonical reply (bare JSON, one fenced object or the
+    review-loop envelope) the prose outside the object is read as written; any other reply is also
+    read whole as written, so a PASS inside its JSON may refuse. A repeated key refuses, since the
+    parser keeps only one of its values.
+    """
+    from scripts.review.review_contract import parse_reviewer_json
+    from scripts.review.verdict_parser import _without_code_fences
+
+    decoder = json.JSONDecoder(object_pairs_hook=recorder._unique_keys)
+    texts: list[str] = []
+    for match in re.finditer(r"\{", reply):
+        try:
+            value, _ = decoder.raw_decode(reply, match.start())
+        except recorder._DuplicateKey:
+            return True
+        except (ValueError, RecursionError):
+            continue
+        texts.extend(recorder._strings(value))
+    stripped = reply.strip()
+    try:
+        parse_reviewer_json(reply)
+    except (recorder.ContractError, recorder.ReviewPublicationError, ValueError, RecursionError):
+        texts.append(reply)
+    else:
+        if not stripped.startswith("{"):
+            texts.append(_without_code_fences(stripped, keep_unclosed=False))
+    return any(recorder._security_verdict_blocks(text) for text in texts)
 
 
 def capability_charge_adjustments(

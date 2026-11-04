@@ -4175,8 +4175,20 @@ SPENT_THEN_APPROVED = [(H1, "CHANGES_REQUESTED", OPEN_F5), (H2, "CHANGES_REQUEST
                        (H3, "APPROVED", "VERDICT: APPROVE")]
 
 
-def test_owner_request_citing_an_older_approval_admits_its_rounds_and_no_more(monkeypatch, tmp_path):
-    tasks, _comments, calls = approval_case(monkeypatch, tmp_path, SPENT_THEN_APPROVED)
+def structured_approval(explanation):
+    """A findings-schema APPROVE whose explanation is ``explanation`` as raw JSON string text (escapes stay escapes)."""
+    return ('{"schema_version": "code-review-findings.v1", "overall": {"correctness": "correct", '
+            f'"explanation": "{explanation}", "confidence": 0.9}}, "findings": []}}')
+
+
+# The security verdict is read from decoded JSON strings (review round 1, F1).
+STRUCTURED_PASS = structured_approval("Reviewed the diff. SECURITY_VERDICT: PASS")
+ESCAPED_FAIL = structured_approval("SECURITY\\u005fVERDICT: FAIL")
+
+
+@pytest.mark.parametrize("reply", ["VERDICT: APPROVE", STRUCTURED_PASS], ids=["prose", "structured-pass"])
+def test_owner_request_citing_an_older_approval_admits_its_rounds_and_no_more(monkeypatch, tmp_path, reply):
+    tasks, _comments, calls = approval_case(monkeypatch, tmp_path, [*SPENT_THEN_APPROVED[:2], (H3, "APPROVED", reply)])
     write_grant(tasks, APPROVAL_RULING)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     receipt = recorder.record("review-one", **kwargs)["budget_grant"]
@@ -4227,6 +4239,10 @@ def test_owner_request_citing_an_approval_refuses_an_already_approved_head(monke
         ("edited", NOT_APPROVE),
         ("unknown", NOT_APPROVE),
         ("security-fail", BAD_REPLY),
+        ("security-fail-escaped", BAD_REPLY),
+        ("conditional-pass-escaped", BAD_REPLY),
+        ("envelope-prose-fail", BAD_REPLY),
+        ("embedded-object-fail-escaped", BAD_REPLY),
         ("withheld-unbound", BAD_REPLY),
         ("rejection-with-null-finding", NOT_APPROVE),
         ("approval-with-finding", r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*is not an unedited "
@@ -4242,6 +4258,16 @@ def test_owner_request_citing_an_approval_refuses(monkeypatch, tmp_path, case, r
         history[-1] = (H3, "BLOCKED", "VERDICT: BLOCKED")
     elif case == "security-fail":
         history[-1] = (H3, "APPROVED", "VERDICT: APPROVE\n\nSECURITY_VERDICT: FAIL (unchecked input)")
+    elif case == "security-fail-escaped":
+        history[-1] = (H3, "APPROVED", ESCAPED_FAIL)
+    elif case == "conditional-pass-escaped":
+        history[-1] = (H3, "APPROVED", structured_approval("SECURITY\\u005fVERDICT: PASS_WITH_CONDITIONS"))
+    elif case == "envelope-prose-fail":
+        history[-1] = (H3, "APPROVED", f"VERDICT: APPROVE\nSCORE: 9/10\nSECURITY_VERDICT: FAIL\n\n```json\n"
+                                       f"{STRUCTURED_PASS}\n```")
+    elif case == "embedded-object-fail-escaped":
+        # Not a canonical reply: an object inside prose is still decoded.
+        history[-1] = (H3, "APPROVED", f"VERDICT: APPROVE\n\n```json\n{ESCAPED_FAIL}\n```")
     elif case == "rejection-with-null-finding":
         history[-1] = (H3, "CHANGES_REQUESTED", OPEN_F5)
     tasks, comments, calls = approval_case(monkeypatch, tmp_path, history)
@@ -4260,6 +4286,27 @@ def test_owner_request_citing_an_approval_refuses(monkeypatch, tmp_path, case, r
                 decision={"decision": "REJECT"} if case == "advisor-rejects" else ())
     with pytest.raises(recorder.RecordError, match=reason):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("sealed,admitted", [(STRUCTURED_PASS, True), (ESCAPED_FAIL, False)],
+                         ids=["pass", "escaped-fail"])
+def test_owner_request_reads_a_withheld_approval_from_its_bound_sealed_run(monkeypatch, tmp_path, sealed, admitted):
+    tasks, comments, calls = approval_case(monkeypatch, tmp_path, SPENT_THEN_APPROVED)
+    comments[-1]["body"] = recorder.build_comment(
+        sha=H3, task_id="round-3", started=WITHHELD_START, verdict="APPROVED", model="claude-opus-5-5",
+        family="anthropic", reply="", withheld_findings=0,
+    )
+    write_task(tasks, task_id="round-3", reply=sealed, worktree_base_sha=H3, model="claude-opus-5-5", agent="claude",
+               started_at=WITHHELD_START, pr=42, review_mode="cross_family",
+               result_sha256=hashlib.sha256(sealed.encode()).hexdigest())
+    write_grant(tasks, APPROVAL_RULING)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    if admitted:
+        assert recorder.record("review-one", **kwargs)["budget_grant"]["cited_verdict"] == "APPROVED"
+        return
+    with pytest.raises(recorder.RecordError, match=BAD_REPLY):
+        recorder.record("review-one", **kwargs)
     assert calls == {"posts": 0, "statuses": 0}
 
 
