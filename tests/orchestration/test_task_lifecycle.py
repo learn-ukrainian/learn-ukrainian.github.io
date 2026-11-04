@@ -3109,7 +3109,7 @@ def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_
     code. The same manifest plus any other learner path still requires the Ukrainian
     receipt and seat. Auto-deploy eligibility stays on the content prefix.
     """
-    from scripts.deploy.auto_deploy_eligibility import decide_auto_deploy
+    from scripts.ci.deploy_paths import decide_auto_deploy
     from scripts.orchestration.integration_sweep import (
         METADATA_ONLY_RELEASE_MANIFESTS,
         changes_learner_content,

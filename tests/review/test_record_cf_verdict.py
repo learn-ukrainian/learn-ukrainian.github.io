@@ -704,7 +704,7 @@ def merge(monkeypatch, comments, *, files=None):
 
 
 def test_metadata_only_release_manifest_merges_without_a_ukrainian_seat(monkeypatch, tmp_path):
-    from scripts.deploy.auto_deploy_eligibility import decide_auto_deploy
+    from scripts.ci.deploy_paths import decide_auto_deploy
     from scripts.opsec import prepublish as gate
 
     # PR #12629 at 02b0a5e3: the manifest is its only content-prefixed path.

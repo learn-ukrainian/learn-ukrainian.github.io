@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from scripts.ci import components
-from scripts.deploy import auto_deploy_eligibility as pages
+from scripts.ci import deploy_paths as pages
 
 
 @pytest.mark.parametrize(("path", "deploy", "reason"), [

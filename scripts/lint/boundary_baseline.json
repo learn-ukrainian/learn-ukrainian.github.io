@@ -452,16 +452,6 @@
       "count": 1
     },
     {
-      "path": "scripts/ci/components.py",
-      "module": "scripts.deploy",
-      "count": 1
-    },
-    {
-      "path": "scripts/ci/components.py",
-      "module": "scripts.deploy.auto_deploy_eligibility",
-      "count": 1
-    },
-    {
       "path": "scripts/debug/debug_hash.py",
       "module": "scripts.audit",
       "count": 1
@@ -754,16 +744,6 @@
     {
       "path": "scripts/orchestration/curriculum_readiness.py",
       "module": "scripts.wiki.sources_schema",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/integration_sweep.py",
-      "module": "scripts.deploy",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/integration_sweep.py",
-      "module": "scripts.deploy.auto_deploy_eligibility",
       "count": 1
     },
     {
