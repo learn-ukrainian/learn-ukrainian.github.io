@@ -6,6 +6,12 @@ system's installed Google Chrome with its sandbox on and blocks every origin
 except the loopback host and learn-ukrainian.github.io. This guard fails when a
 file launches Playwright any other way, disables a browser sandbox, downloads
 Playwright's bundled browsers, or configures a Playwright MCP server.
+
+This static guard is a good-faith tripwire, not the control of record. It reads
+every tracked text file except prose formats (.md, .txt, .html, .csv, .rst),
+data files under curriculum/ and registry/, and npm lockfiles. It cannot see a
+package name built at runtime. Runtime enforcement of the Chromium sandbox at
+launch is tracked separately.
 """
 
 from __future__ import annotations
@@ -31,7 +37,7 @@ PY_LAUNCHER = "scripts/validate/browser_launcher.py"
 LAUNCHERS = {NODE_LAUNCHER, PY_LAUNCHER}
 SELF = "tests/test_browser_hardening_guard.py"
 
-JS_SUFFIXES = (".js", ".mjs", ".cjs", ".ts", ".tsx", ".mts", ".cts")
+JS_SUFFIXES = (".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".mts", ".cts")
 CODE_SUFFIXES = (*JS_SUFFIXES, ".py", ".sh", ".bash", ".yml", ".yaml", ".json", ".toml")
 # Cheap pre-filter; every rule below only looks at files matching it.
 CANDIDATE = (
@@ -105,7 +111,12 @@ PLAYWRIGHT_TOKEN_EXEMPT = {
     "tests/agent_runtime/test_npm_shim.py": (3, "argv cases for that npx allowlist"),
     "tests/fixtures/ci_timings/sample_ci_runs.json": (13, "recorded CI job names"),
     "docs/l2-uk-en/v4-seminar-section-templates.yaml": (1, "the English word playwright in seminar prose"),
+    "site/.gitignore": (1, "the ignore pattern for Playwright's cache directory"),
 }
+# The token rule reads every tracked text file, whatever its type: code also lives in .jsx,
+# .astro frontmatter, .mdx, .vue, extensionless scripts and more. Only prose formats, which
+# nothing executes, are left out.
+PROSE_SUFFIXES = (".md", ".txt", ".html", ".csv", ".rst")
 # npm writes lockfiles and never runs anything from them; they only record dependencies.
 LOCKFILE_NAMES = ("package-lock.json",)
 # Learner content and lexicon data files: nothing executes them, and their prose uses the
@@ -132,6 +143,20 @@ def _candidates() -> tuple[str, ...]:
     )
     assert result.returncode in (0, 1), result.stderr
     return tuple(sorted(p for p in result.stdout.split("\0") if p.endswith(CODE_SUFFIXES) and p != SELF))
+
+
+@cache
+def _token_files() -> tuple[str, ...]:
+    result = subprocess.run(
+        ["git", "grep", "-lIz", "-e", "playwright", "--", "."],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert result.returncode in (0, 1), result.stderr
+    return tuple(sorted(p for p in result.stdout.split("\0") if p and not p.endswith(PROSE_SUFFIXES) and p != SELF))
 
 
 def _read(path: str) -> str:
@@ -282,6 +307,7 @@ def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
             for code in _code_strings(path):
                 offenders += [f"{path}: embedded {m.group(0)}" for m in LAUNCH_CALL.finditer(code)]
         offenders += [f"{path}: {m.group(0)}" for m in REMOTE_BROWSER.finditer(_read_code(path))]
+    for path in _token_files():
         mentions = _playwright_mentions(path)
         expected = PLAYWRIGHT_TOKEN_EXEMPT.get(path, (0, ""))[0]
         if len(mentions) != expected:
