@@ -64,6 +64,10 @@ SLOW_FLAG_ENV = "MQ_KEEPER_SLOW_FLAG"
 SLOW_INTERVAL_SECONDS = 300
 # Timer jitter allowance so a throttled minute timer still runs on the fifth minute.
 INTERVAL_SLACK_SECONDS = 15
+# Per ``"<pr>:<head>"`` state for the P4 limit of one re-enqueue per head (#12728):
+# when the keeper re-enqueued it, the failing merge_group run of each removal, and
+# when the second removal was alerted to the CTO.
+REQUEUE_STATE = ("keeper_requeues", "drop_runs", "ejection_alerts")
 AGGREGATE_JOBS = frozenset({"CI Gate"})
 # Job and check names and failed-test identifiers come from workflow files and CI
 # logs, so any PR author controls them; gate reasons embed check names, and
@@ -476,7 +480,14 @@ def _reason(
     drops: int,
     queue_enabled: bool | None,
     canary: str | None = None,
+    requeued: bool = False,
 ) -> str:
+    """Why the head may not enter the queue, or ``ready``.
+
+    P4 allows one re-enqueue per unchanged approved head after an ejection (#12728):
+    a second removal of the head is ``second-drop``, and a head the keeper already
+    re-enqueued (``requeued``) stays out even before that removal is counted.
+    """
     if queue_enabled is not True:
         return "no-merge-queue" if queue_enabled is False else "queue-unknown"
     if not isinstance(row.get("headRefOid"), str) or not SHA.fullmatch(row["headRefOid"]):
@@ -495,8 +506,10 @@ def _reason(
         return check_state
     if row.get("mergeStateStatus") in {"DIRTY", "UNKNOWN"} or not isinstance(row.get("mergeStateStatus"), str):
         return "merge-state-unknown" if row.get("mergeStateStatus") != "DIRTY" else "merge-conflict"
-    if drops >= 3:
-        return "third-drop"
+    if drops >= 2:
+        return "second-drop"
+    if requeued:
+        return "requeue-spent"
     return "ready"
 
 
@@ -553,8 +566,12 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("pending_comments", {}), dict)
         or not isinstance(data.get("flake_issue_updates", {}), dict)
         or not isinstance(data.get("last_removal", {}), dict)
+        or not all(isinstance(data.get(name, {}), dict) for name in REQUEUE_STATE)
     ):
         raise KeeperError("keeper state malformed")
+    # Records of the deleted recovery-evidence and grant ceremony (#11648). They
+    # carried that ceremony's "spent" reasons, so loading them would hold heads
+    # nothing can clear. The P4 count lives in ``keeper_requeues`` instead.
     for name in ("requeued", "shared_pass", "shared_requeues"):
         data.pop(name, None)
     return data
@@ -670,6 +687,32 @@ def _comment_once(
     message = "was previously removed from the queue" if reason == "queue-drop" else f"was not queued because {shown}"
     gh.comment(number, f"Merge queue keeper: #{number} {message}.{detail}\n\n{marker}")
     comments.append({"body": marker, "user": {"login": login}})
+
+
+def _run_ids(runs: Sequence[int]) -> str:
+    return ", ".join(map(str, runs)) or "unknown"
+
+
+def _alert_cto(number: int, head: str, runs: Sequence[int]) -> None:
+    """Queue one CTO inbox request for a second removal of ``head`` on the ownership outbox.
+
+    ``pr_ownership.keeper_tick`` delivers that outbox after the queue pass, retrying
+    unchanged entries. The key is minted only here, from the PR and head, so a retry
+    after an unsaved keeper state is the same entry and is never a second alert.
+    """
+    key = f"merge-queue-keeper:second-drop:{number}:{head}"
+    body = (
+        f"Merge queue keeper: #{number} head {head[:12]} left the merge queue a second time "
+        f"(merge_group runs: {_run_ids(runs)}). P4 allows one re-enqueue per unchanged approved head, "
+        "so the keeper left it out of the queue. The owner diagnoses and pushes a fix, which starts a "
+        "fresh count, or requests direction."
+    )
+    try:
+        with pr_ownership.locked(pr_ownership.state_path()) as data:
+            if all(entry.get("key") != key for entry in data["outbox"]):
+                data["outbox"].append({"kind": "queue-ejection", "key": key, "body": body})
+    except (pr_ownership.OwnershipError, OSError) as exc:
+        raise KeeperError(f"CTO alert not queued: {type(exc).__name__}") from exc
 
 
 def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]) -> None:
@@ -1101,13 +1144,18 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
                 detail, failed_jobs, failed_tests, failed_run = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
+                seen_runs = previous.setdefault("drop_runs", {}).setdefault(prior_drop_key, [])
+                if failed_run is not None and failed_run not in seen_runs:
+                    seen_runs.append(failed_run)
                 if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
                 else:
                     detail = " Queue removal diagnosis unknown."
             except KeeperError as exc:
                 detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
-        reason = _reason(pr, verdict, checks, drops, queue_enabled, canary)
+        # The keeper's one re-enqueue of this head is spent; a queued head is left alone.
+        requeued = queued is not True and drop_key in previous.get("keeper_requeues", {})
+        reason = _reason(pr, verdict, checks, drops, queue_enabled, canary, requeued)
         if reason == "ready" and queued is not True and not armed:
             try:
                 reason = _gate_hold(gh, number, head, previous) or reason
@@ -1190,7 +1238,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 except KeeperError:
                     current_checks = "CI-unknown"
                 reason = (
-                    _reason(current, current_verdict, current_checks, drops, queue_enabled, canary)
+                    _reason(current, current_verdict, current_checks, drops, queue_enabled, canary, requeued)
                     if verdict_lookup_ok
                     else "fresh-evidence-unknown"
                 )
@@ -1249,6 +1297,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict)
                                  + (f" ({canary})" if reason == contract_canary.REASON else ""))
             elif reason == "ready":
+                if drops >= 1:
+                    # Spend the one re-enqueue on disk before the mutation, so neither a
+                    # later tick nor a restart after a crash can enqueue this head again.
+                    previous.setdefault("keeper_requeues", {})[drop_key] = observed
+                    _save(state_path, previous)
                 jumped = gh.enqueue(number, head)
                 if not gh.membership(number):
                     after_enqueue = gh.current(number)
@@ -1261,6 +1314,16 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     lines.append(f"#{number} enqueued" + (" at the front (priority)" if jumped else ""))
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
+            runs = previous.get("drop_runs", {}).get(drop_key, [])
+            if reason == "second-drop":
+                detail += (
+                    f" Merge_group runs of its removals: {_run_ids(runs)}. P4 allows one re-enqueue per"
+                    " unchanged approved head; push a fix (a new head starts a fresh count) or request direction."
+                )
+                if queued is False and drop_key not in previous.get("ejection_alerts", {}):
+                    _alert_cto(number, head, runs)
+                    previous.setdefault("ejection_alerts", {})[drop_key] = observed
+                    lines.append(f"#{number} second-drop alerted to the CTO: runs={_run_ids(runs)}")
             if (
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
                 and comment_safe
@@ -1287,7 +1350,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
-        for name in ("squash_revoked", "undiagnosed", "pending_comments", "last_removal"):
+        for name in ("squash_revoked", "undiagnosed", "pending_comments", "last_removal", *REQUEUE_STATE):
             if name in previous:
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
@@ -1371,7 +1434,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state, and runs the\nownerless-PR alert to the CTO inbox (pr_ownership.py, every 5 minutes).\nEnvironment: MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state, and runs the\nownerless-PR alert to the CTO inbox (pr_ownership.py, every 5 minutes).\nAn ejected head is re-enqueued at most once (P4); a second removal holds it and alerts the PR and the CTO inbox.\nEnvironment: MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--report", action="store_true", help="Read-only report (default).")

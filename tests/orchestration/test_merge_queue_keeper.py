@@ -777,15 +777,103 @@ def test_help_epilog_documents_hold_mechanisms() -> None:
     assert "[hold]" in epilog
 
 
-def test_third_drop_stops_and_comments(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_second_drop_stops_and_comments(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGitHub()
     path = tmp_path / "state.json"
-    path.write_text(json.dumps({"queued": {}, "drops": {f"42:{HEAD_A}": 3}}))
+    path.write_text(json.dumps({"queued": {}, "drops": {f"42:{HEAD_A}": 2}}))
     lines, failed = run(fake, path, monkeypatch)
-    assert not failed and "reason=third-drop" in lines[0]
+    assert not failed and "reason=second-drop" in lines[0]
     assert mutations(fake) == ["comment"]
-    assert "was not queued because third-drop." in _keeper_comment(fake)
-    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 3
+    assert "was not queued because second-drop." in _keeper_comment(fake)
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 2
+
+
+def _eject(fake: FakeGitHub, event_id: int, run_id: int) -> None:
+    """GitHub removes the PR from the queue after merge_group run ``run_id`` fails."""
+    stamp = f"2099-01-01T00:00:{event_id:02d}Z"  # After every keeper observation in the test.
+    fake.row["isInMergeQueue"] = False
+    fake.events.append({"id": event_id, "event": "removed_from_merge_queue", "created_at": stamp})
+    fake.run_rows.append({
+        "id": run_id, "event": "merge_group", "conclusion": "failure", "created_at": stamp, "updated_at": stamp,
+        "head_branch": "gh-readonly-queue/main/pr-42-deadbeef", "html_url": f"https://github.com/example/runs/{run_id}",
+    })
+
+
+def _cto_outbox() -> list[dict[str, str]]:
+    return keeper.pr_ownership.load(keeper.pr_ownership.state_path())["outbox"]
+
+
+def _ejected_state(path: Path) -> None:
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
+
+
+def test_one_requeue_per_head_and_second_ejection_stays_out_with_alert(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """P4: one re-enqueue per unchanged approved head (#12728)."""
+    fake = FakeGitHub()
+    path = tmp_path / "state.json"
+    _ejected_state(path)
+    _eject(fake, 1, 111)
+    run(fake, path, monkeypatch)
+    assert mutations(fake).count("enqueue") == 1
+    assert f"42:{HEAD_A}" in json.loads(path.read_text())["keeper_requeues"]
+
+    fake.row["isInMergeQueue"] = True
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "#42 remains queued" in lines
+    _eject(fake, 2, 222)
+    alerts = []
+    for _ in range(2):  # A later tick neither re-enqueues nor alerts again.
+        lines, failed = run(fake, path, monkeypatch)
+        assert not failed and "reason=second-drop" in lines[0]
+        alerts += [line for line in lines if "alerted to the CTO" in line]
+    assert mutations(fake).count("enqueue") == 1
+    assert alerts == ["#42 second-drop alerted to the CTO: runs=111, 222"]
+    comments = [body for kind, body in fake.actions if kind == "comment" and "second-drop" in body]
+    assert len(comments) == 1 and "Merge_group runs of its removals: 111, 222." in comments[0]
+    outbox = _cto_outbox()
+    assert [entry["key"] for entry in outbox] == [f"merge-queue-keeper:second-drop:42:{HEAD_A}"]
+    assert "#42" in outbox[0]["body"] and "merge_group runs: 111, 222" in outbox[0]["body"]
+
+
+def test_new_head_starts_a_fresh_requeue_count(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGitHub(pr(headRefOid=HEAD_B))
+    path = tmp_path / "state.json"
+    spent = "2026-09-23T00:00:00+00:00"
+    path.write_text(json.dumps({
+        "queued": {}, "drops": {f"42:{HEAD_A}": 2, f"42:{HEAD_B}": 1},
+        "keeper_requeues": {f"42:{HEAD_A}": spent}, "ejection_alerts": {f"42:{HEAD_A}": spent},
+    }))
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+    assert set(json.loads(path.read_text())["keeper_requeues"]) == {f"42:{HEAD_A}", f"42:{HEAD_B}"}
+    assert _cto_outbox() == []
+
+
+def test_spent_requeue_survives_a_keeper_restart(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The re-enqueue is on disk before the mutation, so a crash after it cannot repeat it."""
+    fake = FakeGitHub()
+    path = tmp_path / "state.json"
+    _ejected_state(path)
+    _eject(fake, 1, 111)
+
+    def crash(number: int, head: str) -> None:
+        fake.actions.append(("enqueue", (number, head)))
+        raise SystemExit("keeper killed after the enqueue mutation")
+
+    monkeypatch.setattr(fake, "enqueue", crash)
+    with pytest.raises(SystemExit):
+        run(fake, path, monkeypatch)
+    assert f"42:{HEAD_A}" in json.loads(path.read_text())["keeper_requeues"]
+
+    restarted = FakeGitHub()  # A new process; GitHub has not recorded a second removal yet.
+    restarted.events, restarted.run_rows = fake.events, fake.run_rows
+    lines, failed = run(restarted, path, monkeypatch)
+    assert not failed and "reason=requeue-spent" in lines[0]
+    assert "enqueue" not in mutations(restarted)
+    assert _cto_outbox() == []
 
 
 def test_comment_once_per_reason(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1361,10 +1449,9 @@ def _dropped_state(path: Path, **extra: Any) -> None:
 
 
 @pytest.mark.parametrize("apply", [False, True])
-@pytest.mark.parametrize("drops", [1, 2])
-def test_first_two_drops_admit_approved_green_head_without_recovery(tmp_path, monkeypatch, apply, drops):
+def test_first_drop_admits_approved_green_head_without_recovery(tmp_path, monkeypatch, apply):
     path = tmp_path / "state.json"
-    _dropped_state(path, drops={f"42:{HEAD_A}": drops})
+    _dropped_state(path)
     fake = FakeGitHub()
     fake.comments_rows = [fake.comments_rows[0]]  # Current-head approval without a recovery receipt.
     lines, failed = run(fake, path, monkeypatch, apply=apply)
@@ -1389,7 +1476,7 @@ def test_obsolete_gate_without_grant_does_not_block_enqueue(tmp_path, monkeypatc
 
 
 
-@pytest.mark.parametrize("drops", [0, 1, 2])
+@pytest.mark.parametrize("drops", [0, 1])
 @pytest.mark.parametrize("configured", [False, True])
 def test_obsolete_used_grant_does_not_block_enqueue(tmp_path, monkeypatch, drops, configured):
     path = tmp_path / "state.json"
@@ -1735,13 +1822,13 @@ def test_cycle_ejections_are_counted_once_and_never_readded(tmp_path: Path) -> N
             assert not any(kind in {"enqueue", "cleanup"} for kind, _ in fake.actions)
     fake.row["isInMergeQueue"] = False
     lines, failed = keeper.run(fake, path, apply=True)
-    assert not failed and "reason=third-drop" in lines[0]
+    assert not failed and "reason=second-drop" in lines[0]
     assert not any(kind in {"enqueue", "cleanup"} for kind, _ in fake.actions)
 
     # All three removals can also arrive between two observations.
     path.write_text(json.dumps(initial))
     lines, failed = keeper.run(fake, path, apply=True)
-    assert not failed and "reason=third-drop" in lines[0]
+    assert not failed and "reason=second-drop" in lines[0]
     assert json.loads(path.read_text())["drops"][f"12225:{head}"] == 3
     assert not any(kind in {"enqueue", "cleanup"} for kind, _ in fake.actions)
 
