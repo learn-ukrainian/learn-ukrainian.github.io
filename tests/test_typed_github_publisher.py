@@ -1595,10 +1595,19 @@ class FakeTransferGitHub:
         self.mutations = []
         self.mutation_result = None
         self.failing_reads = set()
+        self.failing_label_reads = set()
         self.after_mutation = None
 
     def reply(self, args, code, document):
         return subprocess.CompletedProcess(args, code, json.dumps(document) if code == 0 else "", "" if code == 0 else "gh: failed")
+
+    @staticmethod
+    def page(labels, cursor, total=None):
+        # One label per page proves the cursor loop reads every page.
+        start = int(cursor or 0)
+        return {"totalCount": len(labels) if total is None else total,
+                "pageInfo": {"hasNextPage": start + 1 < len(labels), "endCursor": str(start + 1)},
+                "nodes": [{"name": name} for name in labels[start:start + 1]]}
 
     def __call__(self, args, **kwargs):
         if args[:5] == ["gh", "api", "--method", "POST", "graphql"]:
@@ -1607,18 +1616,21 @@ class FakeTransferGitHub:
                 return self.transfer(args, document)
             variables = document["variables"]
             repository = f"{variables['owner']}/{variables['name']}"
+            if "issue(number:" in document["query"]:
+                # GraphQL never follows a transfer: only an issue's current repository answers.
+                key = (repository, variables["number"])
+                issue = self.issues.get(key)
+                if key in self.failing_label_reads or issue is None:
+                    return self.reply(args, 1, None)
+                labels = self.page(issue["labels"], variables["cursor"], issue.get("totalCount"))
+                return self.reply(args, 0, {"data": {"repository": {"issue": {"id": issue["node_id"], "labels": labels}}}})
             if repository in self.failing_reads or repository not in self.repositories:
                 return self.reply(args, 1, None)
             live = dict(self.repositories[repository])
-            labels = live.pop("labels")
-            # One label per page proves the cursor loop reads every page.
-            start = int(variables["cursor"] or 0)
-            page = {"totalCount": live.pop("totalCount", len(labels)),
-                    "pageInfo": {"hasNextPage": start + 1 < len(labels), "endCursor": str(start + 1)},
-                    "nodes": [{"name": name} for name in labels[start:start + 1]]}
-            return self.reply(args, 0, {"data": {"repository": {**live, "labels": page}}})
+            labels = self.page(live.pop("labels"), variables["cursor"], live.pop("totalCount", None))
+            return self.reply(args, 0, {"data": {"repository": {**live, "labels": labels}}})
         if args[:4] == ["gh", "api", "--method", "GET"]:
-            match = re.fullmatch(r"repos/([a-z]+/[a-z]+)/issues/(\d+)(/labels)?", args[4].split("?", 1)[0])
+            match = re.fullmatch(r"repos/([a-z]+/[a-z]+)/issues/(\d+)", args[4].split("?", 1)[0])
             key = (match[1], int(match[2]))
             if key in self.failing_reads:
                 return self.reply(args, 1, None)
@@ -1626,8 +1638,6 @@ class FakeTransferGitHub:
             issue = self.issues.get(key)
             if issue is None:
                 return self.reply(args, 1, None)
-            if match[3]:
-                return self.reply(args, 0, [[{"name": name} for name in issue["labels"]]])
             repository, number = key
             document = {
                 "number": number, "node_id": issue["node_id"], "state": issue["state"],
@@ -1778,6 +1788,10 @@ def _drift(fake, side, **values):
         (lambda f: f.issues[("unit/public", 7)].update(state="closed"), "source issue is closed"),
         (lambda f: f.issues[("unit/public", 7)].update(pull=True), "is a pull request"),
         (lambda f: f.issues[("unit/public", 7)].update(node_id="bad id"), "source issue is missing, unreadable"),
+        (lambda f: f.issues[("unit/public", 7)].update(totalCount=3), "labels are unreadable or incomplete"),
+        (lambda f: f.failing_label_reads.add(("unit/public", 7)), "labels are unreadable or incomplete"),
+        (lambda f: _drift(f, "unit/private", labels=["machinery", "machinery"]), "repository read was unreadable"),
+        (lambda f: _drift(f, "unit/private", labels=["machinery", "Machinery"]), "repository read was unreadable"),
     ],
 )
 def test_issue_transfer_fresh_read_refusals_never_mutate(transfer, change, reason):
@@ -1821,8 +1835,9 @@ def test_issue_transfer_ambiguous_mutation_result_is_never_retried(transfer, res
     "break_after",
     [
         lambda f: f.failing_reads.add(("unit/public", 7)),
-        lambda f: f.failing_reads.add(("unit/private", 42)),
+        lambda f: f.failing_label_reads.add(("unit/private", 42)),
         lambda f: f.issues[("unit/private", 42)].update(node_id="I_OTHER"),
+        lambda f: f.issues[("unit/private", 42)].update(totalCount=5),
     ],
 )
 def test_issue_transfer_failed_verification_is_unsettled_without_a_second_mutation(transfer, break_after):
@@ -1866,3 +1881,76 @@ def test_issue_transfer_cli_exit_codes(transfer, capsys):
     transfer.mutation_result = lambda args: subprocess.CompletedProcess(args, 1, "", "gh: failed")
     assert pub.main(argv, runner=transfer) == 3
     assert len(transfer.mutations) == 1
+
+
+def test_issue_transfer_dry_run_on_a_moved_issue_sends_no_probe(transfer):
+    assert transfer.run().returncode == 0
+    probes = len(transfer.probes)
+    result = transfer.run(dry_run=True)
+    assert result.returncode == 0 and len(transfer.mutations) == 1
+    receipt = json.loads(result.stdout)
+    assert receipt["outcome"] == "already-transferred" and receipt["probes"] == [] and receipt["dry_run"] is True
+    assert len(transfer.probes) == probes
+
+
+def test_issue_transfer_failed_probe_after_the_mutation_is_unsettled(transfer, monkeypatch):
+    monkeypatch.setattr(pub, "_anonymous_probe", lambda url: {"url": url, "final_url": None, "status": None,
+                                                              "error": "TimeoutError"})
+    outcome = transfer.run()
+    receipt = json.loads(outcome.stdout)
+    assert outcome.returncode == 3 and len(transfer.mutations) == 1
+    assert receipt["outcome"] == "unverified" and receipt["detail"] == "an anonymous probe failed"
+
+
+@pytest.mark.parametrize("failure", ["stdout", "cleanup"])
+def test_issue_transfer_local_failure_after_the_mutation_exits_unsettled(transfer, monkeypatch, failure):
+    if failure == "stdout":
+        class Closed(io.StringIO):
+            def write(self, text):
+                raise BrokenPipeError
+
+        monkeypatch.setattr(sys, "stdout", Closed())
+    else:
+        def refuse_cleanup(self, *args):
+            raise PermissionError
+
+        monkeypatch.setattr(pub.tempfile.TemporaryDirectory, "__exit__", refuse_cleanup)
+    argv = ["issue-transfer", "--repo", "public", "--number", "7", "--destination", "infra-private",
+            "--receipt-dir", str(transfer.receipts)]
+    assert pub.main(argv, runner=transfer) == 3
+    assert len(transfer.mutations) == 1
+    (receipt,) = _receipts(transfer.receipts)
+    assert receipt["mutations_sent"] == 1 and receipt["outcome"] in {"transferred", "unverified"}
+
+
+def test_issue_transfer_scratch_failure_reserves_no_receipt(transfer, monkeypatch):
+    def unavailable():
+        raise OSError("scratch")
+
+    monkeypatch.setattr(pub, "ensure_scratch_root", unavailable)
+    with pytest.raises(OSError):
+        transfer.run()
+    assert transfer.mutations == [] and not transfer.receipts.exists()
+
+
+def test_issue_transfer_receipt_is_created_in_the_checked_directory(transfer, tmp_path, monkeypatch):
+    # A parent symlink swapped after the path check cannot move the receipt into a checkout.
+    outside, checkout = tmp_path / "outside", tmp_path / "checkout"
+    for root in (outside, checkout):
+        (root / "receipts").mkdir(parents=True, mode=0o700)
+    link = tmp_path / "link"
+    link.symlink_to(outside)
+    monkeypatch.setattr(pub, "_transfer_checkouts", lambda: [checkout.resolve()])
+    real_open = os.open
+
+    def swap_then_open(path, flags, *args, **kwargs):
+        if flags & os.O_DIRECTORY:
+            link.unlink()
+            link.symlink_to(checkout)
+        return real_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(pub.os, "open", swap_then_open)
+    with pytest.raises(gate.PublishBlocked, match="outside the repository"):
+        pub.publish("issue-transfer", repo="public", number=7, destination="infra-private",
+                    receipt_dir=str(link / "receipts"), runner=lambda *a, **k: pytest.fail("read or write"))
+    assert not list((checkout / "receipts").iterdir()) and not list((outside / "receipts").iterdir())
