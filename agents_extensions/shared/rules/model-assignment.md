@@ -783,7 +783,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 | **agy** (Gemini 3.8 Flash default) | Ukrainian review and well-defined implementation tasks; **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
 | **grok-4.7** | daily driver (Cursor `grok-4.7-high` code/infra CF at every risk with runtime attestation; never a QG judge) | native Grok dispatch is retired; don't solo multi-file when free workers exist |
 | **kimi** (**retired**, OO-58) | no dispatch | catalog refuses every Kimi id; do not substitute |
-| **codex** Sol (1–4 drivers) | Sol drivers and review; Terra 6.1 default routine non-security Codex coder, including `multi_agent_v2` (default author: the C-2903 paragraph at the top of this file); explicit Luna read-only recon/classification and workspace-write bounded implementation under a driver brief; other bounded work under a Sol envelope; Opus / Sol for advice | **throttle mechanical when near_cap / paused unless a verified operator reset reserve applies**; shed implementation to Cursor `grok-4.7-high`; code/infra review goes to the resolver's pick (native or attested Cursor Grok at every risk, #9769) |
+| **codex** Sol (1–4 drivers) | Sol drivers and review; Terra 6.1 default routine non-security Codex coder, including `multi_agent_v2` (default author: the C-2903 paragraph at the top of this file); explicit Luna read-only recon/classification and workspace-write bounded implementation under a driver brief; other bounded work under a Sol envelope; Opus / Sol for advice | **throttle the depleted account when near_cap / paused unless its verified operator reset reserve applies**; new Sol work uses b-sub first, then an admitted sub; shed implementation to Cursor `grok-4.7-high`; code/infra review goes to the resolver's pick (native or attested Cursor Grok at every risk, #9769) |
 
 **Throttle (do not feed more mechanical work):** any lane at/ahead of pace, thin reserve, or
 timed-paused (e.g. Codex near_cap until return-at). **Widen:** `farBehind` + meaningful reserve +
@@ -803,7 +803,9 @@ no multi-GB shielded `lu-review-*` trees — formal CF is direct `ask-*` only).
 ### Worker priority ladder — first pick per work type (user standing order 2026-07-11: stop re-deriving this)
 
 Route by FIT, then shed from HOT lanes — fanout WIDTH is decided by native **pace + reserve**
-(`python -m scripts.fleet.usage json`; read `agents[lane].codexbar.{pace_summary,weekly_pace_delta_pct,will_last_to_reset}`),
+(`.venv/bin/python -m scripts.fleet.usage json`; for Codex read each
+`codex_accounts["codex:a"|"codex:b"].codexbar` separately, otherwise read
+`agents[lane].codexbar.{pace_summary,weekly_pace_delta_pct,will_last_to_reset}`),
 and it is TWO-SIDED (operator 2026-07-26):
 
 - **Lower bound — no idle paid capacity:** a lane sitting at `in_flight=0` while work queues behind
@@ -1006,6 +1008,30 @@ Gemini 3.7, 3.6 and 3.5 Flash are retired; use Gemini 3.8 Flash.
 
 ## Codex routing — GPT-6 driver, workers, reviewer, and advisor
 
+Codex has two Pro 20x subscriptions with separate credentials and capacity.
+Account a is `sub`, usage key `codex:a`; account b is `b-sub`, usage key
+`codex:b`. New Sol work goes to `--codex-account b-sub` first (C-4606).
+Read `codex_accounts["codex:a"]` and `codex_accounts["codex:b"]` from the
+routing-budget independently, including quota, pace, reset reserve and in-flight
+work. `agents.codex` and a pool source `codex` still mean account a. A depleted
+account a does not pause or shed account b. Record account substitutions and
+pass the intended label to dispatch; the existing account binder owns the home.
+API labels `api` and `b-api` are distinct from these subscription windows;
+`b-api` is planned and unset.
+
+The catalog exposes Sol review routes for both accounts with separate quota and
+credential buckets. The resolver prefers eligible b-sub, then sub for standard
+PR code/infra reviews. These reviews use `--branch`, `--pr` and
+`--require-review-verdict` through the ordinary dispatcher, which already binds
+`--codex-account b-sub`. They do not use `--review-attempt`: dispatch rejects
+combining a bound attempt with `--branch` or `--pr`. The resolver's PR selection
+therefore creates no bound-attempt binding or admission grant.
+
+Bound Contract 1 plan and Contract 2 lesson attempts use their separate rendered
+manifest and admission path. That path still refuses b-sub; its account support
+remains owned by the follow-up after S14r. It does not block standard PR reviews.
+
+
 | Role | Model id | Effort |
 | --- | --- | --- |
 | Default driver and eligible code worker | `gpt-6.1-sol` | `high` |
@@ -1014,8 +1040,9 @@ Gemini 3.7, 3.6 and 3.5 Flash are retired; use Gemini 3.8 Flash.
 | Ukrainian content authoring | `gpt-6.1-sol` | `high` |
 | Consequential advisor and difficult Ukrainian adjudication | `gpt-6.1-sol` | `high` |
 
-Codex runtime routes accept exactly `gpt-6.1-sol` and `gpt-6-luna`. Omitted implementation and
-ordinary `ask-codex` model selections use GPT-6.1 Sol; in-session subagents of a Sol parent default to Sol; explicit Luna profiles remain available.
+Codex runtime routes follow the live catalog. Routine non-security coding uses
+Terra 6.1; reserved roles pin Sol 6.1, and explicit Luna profiles remain available.
+Account choice does not change model qualification or review independence.
 The Ukrainian assignment is a routing starting point, not a GPT-6 language
 quality benchmark. Apply VESUM, sources, Russian-shadow, CEFR, and track
 immersion checks before accepting content.

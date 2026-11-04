@@ -1095,17 +1095,17 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert "cannot partition a commit authored by both families" in body["fail_closed_reason"]
 
 
-# Re-pinned after native Grok dispatch retirement; Cursor remains in automatic traces.
+# Re-pinned for the added b-sub trace/advisory row; every other receipt field is unchanged.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "be44e33d6c9f42b5fb3776ff977149b958d1d1cf2e8a68befedc2b0fb792d662"),
-        ("claude-opus-5-5", "low", "ordinary.py", "5bcd41439d238f63a96eedb8f0ec634db4f230cc63e1d2ab977f4b593ccaa3f8"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "a98c84f5ee425271460b56334404a6a23a1151c2ef8ee970a3efeb93028757bc"),
+        ("claude-opus-5-5", "low", "ordinary.py", "6f682db78cc0e58e84a0845e718327df2704a22e3b313ab409657e86c4bbc103"),
         (
             "gpt-6.1-sol",
             "low",
             "scripts/agent_runtime/target_admission.py",
-            "c3d81093d6ca5d3fde36502dc5eba5bb1b434ed668d4232278add2a2f42c0599",
+            "38c2b1c6a728246c3fdeade34fa141381bde4a0617b50f0cfed7cddcd0c2df6d",
         ),
     ],
 )
