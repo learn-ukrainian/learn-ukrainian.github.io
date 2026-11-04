@@ -22,7 +22,7 @@ import yaml
 from build.io_utils import write_text_atomic
 from build.prompt_literals import _format_prompt_literal_block, _strip_prompt_control_tags
 from common.repo_root import project_interpreter
-from common.thresholds import STYLE_REVIEW_TARGET
+from curriculum.quality.thresholds import STYLE_REVIEW_TARGET
 from gemini_output import extract_delimited
 from tools.plan_autofix import _bump_version
 

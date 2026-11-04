@@ -15,8 +15,8 @@ _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(_PROJECT_ROOT) not in _sys.path:
     _sys.path.insert(0, str(_PROJECT_ROOT))
 
-from scripts.common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
 from scripts.curriculum import pedagogy_config as _shared_config
+from scripts.curriculum.quality.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
 from scripts.level_config import base_level
 
 shared_get_immersion_range = _shared_config.get_immersion_range
@@ -211,7 +211,7 @@ PROPER_NAME_WHITELIST: set[str] = {
 VESUM_MIN_WORD_LENGTH = 3
 
 # Gate thresholds — audit-side knobs.
-# Per-level review floors live in scripts/common/thresholds.LEVEL_THRESHOLDS
+# Per-level review floors live in scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS
 # (single source of truth). The ``naturalness_min_score`` sub-dict below is a
 # read-only view derived from there so existing AUDIT_THRESHOLDS[...] call
 # sites keep working without duplicating numbers.
@@ -1384,7 +1384,7 @@ EXCLUDE_KEYWORDS = ["activities", "activity", "production", "vocabulary", "check
 # get_level_config excludes them from active audit requirements.
 LEVEL_CONFIG = {
     "A1": {
-        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (1200).
+        # Family target sourced from scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS (1200).
         # Mar 2026: lowered from 2000 — A1 teaches letters/basics, activities do the heavy lifting.
         "target_words": LEVEL_THRESHOLDS["A1"].target_words,
         "min_activities": 1,  # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
@@ -1397,7 +1397,7 @@ LEVEL_CONFIG = {
         "priority_types": {"fill-in", "match-up", "anagram", "unjumble", "quiz", "watch-and-repeat", "image-to-letter"},
     },
     "A2": {
-        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (2000).
+        # Family target sourced from scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS (2000).
         # Mar 2026: lowered from 3000 — prose should be concise at A2.
         "target_words": LEVEL_THRESHOLDS["A2"].target_words,
         "min_activities": 1,  # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
@@ -1514,7 +1514,7 @@ LEVEL_CONFIG = {
         "priority_types": {"match-up", "mark-the-words", "translate", "quiz", "group-sort"},
     },
     "B1": {
-        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
+        # Family target sourced from scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS (4000).
         # Feb 2026: raised to 4000 minimum for all B1+.
         "target_words": LEVEL_THRESHOLDS["B1"].target_words,
         "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
@@ -1599,7 +1599,7 @@ LEVEL_CONFIG = {
         "priority_types": {"reading", "match-up", "mark-the-words", "translate", "quiz"},  # Added reading
     },
     "B2": {
-        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
+        # Family target sourced from scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS (4000).
         # Feb 2026: raised to 4000 minimum for all B1+.
         "target_words": LEVEL_THRESHOLDS["B2"].target_words,
         "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
@@ -1706,7 +1706,7 @@ LEVEL_CONFIG = {
         "priority_types": {"quiz", "fill-in", "cloze", "error-correction"},
     },
     "C1": {
-        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
+        # Family target sourced from scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS (4000).
         # Feb 2026: raised to 4000 minimum for all B1+.
         "target_words": LEVEL_THRESHOLDS["C1"].target_words,
         "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
@@ -1845,7 +1845,7 @@ LEVEL_CONFIG = {
     },
     "C2": {
         # C2 Track: Seminar style - production-focused
-        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (5000).
+        # Family target sourced from scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS (5000).
         # Feb 2026: seminars raised to 5000 minimum.
         "target_words": LEVEL_THRESHOLDS["C2"].target_words,
         "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)

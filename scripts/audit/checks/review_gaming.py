@@ -27,7 +27,7 @@ from pathlib import Path
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from common.thresholds import REVIEW_PASS_FLOOR
+from curriculum.quality.thresholds import REVIEW_PASS_FLOOR
 from slug_utils import review_path as _review_path
 from slug_utils import to_bare_slug
 

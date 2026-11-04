@@ -132,7 +132,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.curriculum.learner_state band a1 1 1\n"
             "  .venv/bin/python -m scripts.curriculum.learner_state band a1 1 1 --cumulative-count 250\n"
             "  .venv/bin/python -m scripts.curriculum.learner_state band a2 1 1 --json\n\n"
-            "Related: docs/epics/fresh-build-plan-schema.md §4; scripts/config.py; issues #8414, #8397. Outcome codes:\n"
+            "Related: docs/epics/fresh-build-plan-schema.md §4; scripts/curriculum/pedagogy_config.py; issues #8414, #8397. Outcome codes:\n"
             + codes.help_text()
         ),
     )
