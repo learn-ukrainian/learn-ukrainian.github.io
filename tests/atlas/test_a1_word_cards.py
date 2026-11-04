@@ -361,6 +361,21 @@ def test_rejects_wrong_lexeme_sense_span_and_source_role(batch):
             cards.verify(altered, batch["sources"], batch["manifest"])
 
 
+def test_soviet_normative_as_modern_is_refused_on_every_assertion_path(batch):
+    """#12658 AC7: a registered Soviet source cannot supply any modern facet."""
+    result = assemble(batch)
+    for card in result["cards"]:
+        for assertion in card["assertions"]:
+            bad = copy.deepcopy(result)
+            modified = next(a for c in bad["cards"] for a in c["assertions"]
+                            if a["assertion_id"] == assertion["assertion_id"])
+            modified["source_id"] = "sum11"
+            changed_card = next(c for c in bad["cards"] if c["card_id"] == card["card_id"])
+            changed_card["build"]["card_version"] = resolver.card_version(changed_card)
+            with pytest.raises(Refusal, match="soviet_normative_as_modern"):
+                cards.verify(bad, batch["sources"], batch["manifest"])
+
+
 def test_stress_fallback_and_forms_require_independent_receipts(batch):
     """Catch skipped stress authorities, discarded doublets and foreign-entry or unreceipted accented forms."""
     for source, text in (("ulif", "яйце" + ACUTE), ("sum20", "яйце" + ACUTE), (VTS, "яйце" + ACUTE)):

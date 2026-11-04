@@ -62,21 +62,6 @@
       "count": 1
     },
     {
-      "path": "scripts/api/atlas_jobs_router.py",
-      "module": "scripts.lexicon",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/atlas_jobs_router.py",
-      "module": "scripts.lexicon.runner",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/atlas_jobs_router.py",
-      "module": "scripts.lexicon.runner.atlas_job",
-      "count": 1
-    },
-    {
       "path": "scripts/api/blue_router.py",
       "module": "scripts.audit",
       "count": 1
@@ -149,21 +134,6 @@
     {
       "path": "scripts/api/decisions_router.py",
       "module": "scripts.audit.decision_lineage",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/fleet_workers_collect.py",
-      "module": "scripts.lexicon",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/fleet_workers_collect.py",
-      "module": "scripts.lexicon.runner",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/fleet_workers_collect.py",
-      "module": "scripts.lexicon.runner.atlas_job",
       "count": 1
     },
     {
@@ -267,36 +237,6 @@
       "count": 1
     },
     {
-      "path": "scripts/api/occupancy.py",
-      "module": "scripts.lexicon",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/occupancy.py",
-      "module": "scripts.lexicon.runner",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/occupancy.py",
-      "module": "scripts.lexicon.runner.atlas_job",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/occupancy_local.py",
-      "module": "scripts.lexicon",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/occupancy_local.py",
-      "module": "scripts.lexicon.runner",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/occupancy_local.py",
-      "module": "scripts.lexicon.runner.atlas_job",
-      "count": 1
-    },
-    {
       "path": "scripts/api/sources_router.py",
       "module": "scripts.rag",
       "count": 1
@@ -394,61 +334,6 @@
     {
       "path": "scripts/api/wiki_router.py",
       "module": "scripts.wiki.state",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/run_b1_writer.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/run_b1_writer.py",
-      "module": "scripts.build.linear_pipeline",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/run_b1_writer.py",
-      "module": "scripts.build.phases",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/run_b1_writer.py",
-      "module": "scripts.build.phases.implementation_map",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.audit.wiki_coverage_gate",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.build.linear_pipeline",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.build.phases",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.build.phases.implementation_map",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.yaml_activities",
       "count": 1
     },
     {
