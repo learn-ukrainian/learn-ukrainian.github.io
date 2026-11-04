@@ -38,6 +38,8 @@ BROWSER_TYPES = {"chromium", "firefox", "webkit", "_electron", "_android"}
 LAUNCH_CALL = re.compile(
     r"\b(?:chromium|firefox|webkit|_electron|_android|browser_?[tT]ype)\s*\.\s*"
     r"(?:launch\w*|connect\w*)\s*\(|\bconnect(?:OverCDP|_over_cdp)\s*\("
+    # A launched browser hands back its browser type: browser.browserType() / browser.browser_type.
+    r"|\.\s*browserType\s*\(|\.\s*browser_type\b"
 )
 JS_NAMED_IMPORT = re.compile(rf"import\s*\{{([^}}]*)\}}\s*from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]")
 JS_WHOLE_IMPORT = re.compile(
@@ -55,14 +57,17 @@ PY_USES_PLAYWRIGHT = re.compile(
 # In a Python file that uses Playwright: any browser-type reference (attribute, getattr or
 # subscript string) and any launch or connect call belong in the launcher.
 PY_BROWSER_ACCESS = re.compile(
-    r"\.\s*(?:chromium|firefox|webkit)\b|['\"](?:chromium|firefox|webkit)['\"]"
+    r"\.\s*(?:chromium|firefox|webkit)\b|['\"][^'\"\n]*\b(?:chromium|firefox|webkit)\b"
     r"|\.\s*(?:launch|launch_persistent_context|launch_server|connect|connect_over_cdp)\s*\("
 )
-# Fail closed: a Chromium sandbox option set to anything but literal true, in any key spelling.
-SANDBOX_OFF = re.compile(
+SANDBOX_FLAG = re.compile(
     r"--no-sandbox\b|--disable-(?:setuid|namespace|seccomp-filter|gpu)-sandbox\b|--no-zygote-sandbox\b"
-    r"|chromium_?[sS]andbox['\"\]]*\s*[:=](?!\s*(?:true|True)\b)"
 )
+# Only the launchers set the Chromium sandbox option, so its name appears nowhere else,
+# whatever the value or spelling.
+SANDBOX_OPTION = re.compile(r"chromium_?[sS]andbox")
+# Runtime Playwright entry points a Python module could launch a browser from.
+PY_RUNTIME_ENTRY = {"async_playwright", "sync_playwright", "async_api", "sync_api", "_impl", "*"}
 BROWSER_DOWNLOAD = re.compile(r"\bplaywright(?:-core)?\s+install\b")
 PLAYWRIGHT_MCP = re.compile(r"@playwright/mcp|\bplaywright-mcp\b|mcp-server-playwright|mcp__playwright")
 
@@ -182,11 +187,14 @@ def test_libraries_that_launch_chrome_get_the_hardened_browser_type() -> None:
 def test_no_file_disables_a_browser_sandbox() -> None:
     offenders = []
     for path in _candidates():
-        hits = [m.group(0) for m in SANDBOX_OFF.finditer(_read(path))]
-        if hits and path not in SANDBOX_FLAG_EXEMPT:
+        text = _read(path)
+        hits = [m.group(0) for m in SANDBOX_FLAG.finditer(text)] if path not in SANDBOX_FLAG_EXEMPT else []
+        if path not in LAUNCHERS:
+            hits += [m.group(0) for m in SANDBOX_OPTION.finditer(text)]
+        if hits:
             offenders.append(f"{path}: {sorted(set(hits))}")
     assert not offenders, "the browser sandbox stays on everywhere:\n" + "\n".join(offenders)
-    stale = [p for p in SANDBOX_FLAG_EXEMPT if not SANDBOX_OFF.search(_read(p))]
+    stale = [p for p in SANDBOX_FLAG_EXEMPT if not SANDBOX_FLAG.search(_read(p))]
     assert not stale, f"drop stale exemptions: {stale}"
 
 
@@ -201,16 +209,23 @@ def test_nothing_downloads_playwright_browsers_or_configures_playwright_mcp() ->
     )
 
 
-def test_python_playwright_users_import_the_launcher() -> None:
+def _is_playwright(module: str) -> bool:
+    return module == "playwright" or module.startswith("playwright.")
+
+
+def test_python_modules_reach_playwright_only_through_the_launcher() -> None:
+    """Outside the launcher, Python imports Playwright types only, never its driver."""
     offenders = []
     for path in _files((".py",)):
         if path in LAUNCHERS:
             continue
-        tree = ast.parse(_read(path), filename=path)
-        modules = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module} | {
-            alias.name for node in ast.walk(tree) if isinstance(node, ast.Import) for alias in node.names
-        }
-        uses_playwright = any(m == "playwright" or m.startswith("playwright.") for m in modules)
-        if uses_playwright and not any(m.endswith("browser_launcher") for m in modules):
-            offenders.append(path)
-    assert not offenders, f"Python files using Playwright must launch through {PY_LAUNCHER}: {offenders}"
+        for node in ast.walk(ast.parse(_read(path), filename=path)):
+            if isinstance(node, ast.Import):
+                offenders += [f"{path}:{node.lineno}: import {a.name}" for a in node.names if _is_playwright(a.name)]
+            elif isinstance(node, ast.ImportFrom) and node.module and _is_playwright(node.module):
+                entry = {a.name for a in node.names} & PY_RUNTIME_ENTRY
+                offenders += [f"{path}:{node.lineno}: from {node.module} import {sorted(entry)}"] if entry else []
+            elif isinstance(node, ast.Call):
+                strings = [a.value for a in node.args if isinstance(a, ast.Constant) and isinstance(a.value, str)]
+                offenders += [f"{path}:{node.lineno}: dynamic import of {v}" for v in strings if _is_playwright(v)]
+    assert not offenders, f"Python reaches Playwright's driver only through {PY_LAUNCHER}:\n" + "\n".join(offenders)

@@ -20,12 +20,13 @@ from __future__ import annotations
 
 import logging
 import re
-from collections.abc import Callable, Iterable
+from collections.abc import AsyncIterator, Callable, Iterable
+from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlsplit
 
 if TYPE_CHECKING:
-    from playwright.async_api import Browser, BrowserContext, Playwright, Request, Route, WebSocketRoute
+    from playwright.async_api import Browser, BrowserContext, Request, Route, WebSocketRoute
 
 LOGGER = logging.getLogger(__name__)
 
@@ -121,9 +122,20 @@ async def enforce_origin_allowlist(
     return context
 
 
-async def launch_hardened_chromium(playwright: Playwright, **overrides: Any) -> Browser:
-    """Launch installed Chrome with the sandbox on. Open contexts with ``new_hardened_context``."""
-    return await playwright.chromium.launch(**hardened_launch_options(**overrides))
+@asynccontextmanager
+async def hardened_browser(**overrides: Any) -> AsyncIterator[Browser]:
+    """Installed Chrome with the sandbox on. Open contexts with ``new_hardened_context``.
+
+    The launcher owns the Playwright driver, so no other module needs ``async_playwright``.
+    """
+    from playwright.async_api import async_playwright
+
+    async with async_playwright() as playwright:
+        browser = await playwright.chromium.launch(**hardened_launch_options(**overrides))
+        try:
+            yield browser
+        finally:
+            await browser.close()
 
 
 async def new_hardened_context(browser: Browser, **options: Any) -> BrowserContext:
