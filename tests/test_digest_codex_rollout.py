@@ -31,7 +31,6 @@ def _write_jsonl(path: Path, rows: list[object]) -> None:
 
 
 class DigestCodexRolloutTests(unittest.TestCase):
-
     def test_redacts_ip_and_user_host(self) -> None:
         text = digest.redact_opsec("blocked ssh deploy@internal-node on 203.0.113.50")
         self.assertNotIn("203.0.113.50", text)
@@ -49,9 +48,7 @@ class DigestCodexRolloutTests(unittest.TestCase):
             [
                 {
                     "type": "assistant",
-                    "message": {
-                        "content": [{"type": "text", "text": "lease expired; dispatch stuck"}]
-                    },
+                    "message": {"content": [{"type": "text", "text": "lease expired; dispatch stuck"}]},
                 },
                 {"text": "Loading CLAUDE.md and MEMORY.md"},
             ],
@@ -88,6 +85,55 @@ class DigestCodexRolloutTests(unittest.TestCase):
         index = (repo / "logs" / "agent-digests" / "index.md").read_text(encoding="utf-8")
         self.assertIn("watchdesk", index)
         self.assertIn("watchdesk-latest.md", index)
+
+        home_dir = tmp / "homes"
+        account_a = home_dir / "a"
+        account_b = home_dir / "bound-account"
+        (account_a / ".codex" / "sessions" / "2026" / "11").mkdir(parents=True)
+        (account_b / "sessions" / "2026" / "11").mkdir(parents=True)
+        account_b.chmod(0o700)
+        accounts = tmp / "codex_accounts.json"
+        accounts.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "accounts": {"b-sub": {"codex_home": str(account_b), "budget_usd": 1}},
+                }
+            ),
+            encoding="utf-8",
+        )
+        accounts.chmod(0o600)
+        material = '{"text": "dispatch stuck while the lease expired and review could not merge"}\n'
+        (account_a / ".codex" / "sessions" / "2026" / "11" / "rollout-a.jsonl").write_text(material, encoding="utf-8")
+        (account_b / "sessions" / "2026" / "11" / "rollout-b.jsonl").write_text(material, encoding="utf-8")
+        repo_b = tmp / "repo-b"
+        saved = {
+            key: os.environ.get(key)
+            for key in ("HOME", "LU_CODEX_ACCOUNTS_FILE", "DIGEST_ROOTS", "DIGEST_LABEL", "DIGEST_REPO", "DIGEST_MAX")
+        }
+        os.environ.pop("DIGEST_ROOTS", None)
+        os.environ["HOME"] = str(account_a)
+        os.environ["LU_CODEX_ACCOUNTS_FILE"] = str(accounts)
+        os.environ["DIGEST_LABEL"] = "local"
+        os.environ["DIGEST_REPO"] = str(repo_b)
+        os.environ["DIGEST_MAX"] = "12"
+        try:
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                self.assertEqual(digest.main(), 0)
+            body = (repo_b / "logs" / "agent-digests" / "local-latest.md").read_text(encoding="utf-8")
+            self.assertIn("## codex:b/rollout-b.jsonl", body)
+            self.assertIn("rollout-a.jsonl", body)
+            self.assertNotIn("## codex:b/rollout-a.jsonl", body)
+            self.assertNotIn("bound-account", body)
+            self.assertNotIn(str(account_a), body)
+            self.assertNotIn(str(account_b), body)
+        finally:
+            for key, value in saved.items():
+                if value is None:
+                    os.environ.pop(key, None)
+                else:
+                    os.environ[key] = value
 
     def _tmp(self) -> str:
         import tempfile

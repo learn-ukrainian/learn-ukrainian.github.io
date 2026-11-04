@@ -171,6 +171,30 @@ def test_dry_run_observes_old_thread_and_protects_pinned(tmp_path: Path) -> None
         ],
     )
 
+    account_a = tmp_path / "homes" / "a"
+    account_b = tmp_path / "homes" / "b"
+    (account_a / ".codex").mkdir(parents=True)
+    account_b.mkdir()
+    account_b.chmod(0o700)
+    accounts = tmp_path / "codex_accounts.json"
+    accounts.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "accounts": {"b-sub": {"codex_home": str(account_b), "budget_usd": 1}},
+            }
+        ),
+        encoding="utf-8",
+    )
+    accounts.chmod(0o600)
+    env = {"HOME": str(account_a), "LU_CODEX_ACCOUNTS_FILE": str(accounts)}
+    selected = cleanup.cleanup_homes(environ=env)
+    assert [label for label, _path in selected] == ["sub", "b-sub"]
+    assert selected[0][1] == account_a / ".codex"
+    assert selected[1][1] == account_b
+    explicit = cleanup.cleanup_homes(codex_home=home, environ=env)
+    assert explicit == [(None, home)]
+
     receipt = cleanup.run_cleanup(
         codex_home=home,
         db_path=db,

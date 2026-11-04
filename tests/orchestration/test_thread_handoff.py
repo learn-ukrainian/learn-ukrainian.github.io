@@ -3010,6 +3010,32 @@ def test_inspect_codex_home_reports_thread_metadata(tmp_path: Path):
     assert audit["recent_threads"][0]["id"] == "thread-1"
     assert audit["automation_toml_files"] == []
 
+    account_a = tmp_path / "homes" / "a"
+    account_b = tmp_path / "homes" / "b"
+    (account_a / ".codex").mkdir(parents=True)
+    account_b.mkdir()
+    account_b.chmod(0o700)
+    accounts = tmp_path / "codex_accounts.json"
+    accounts.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "accounts": {"b-sub": {"codex_home": str(account_b), "budget_usd": 1}},
+            }
+        ),
+        encoding="utf-8",
+    )
+    accounts.chmod(0o600)
+    found = th.codex_account_audits({"HOME": str(account_a), "LU_CODEX_ACCOUNTS_FILE": str(accounts)})
+    assert set(found) == {"sub", "b-sub"}
+    assert found["b-sub"]["exists"] is True
+    assert "codex_home" not in found["b-sub"]
+    rendered = json.dumps(found)
+    assert str(account_a) not in rendered
+    assert str(account_b) not in rendered
+    missing = th.codex_account_audits({"HOME": str(account_a), "LU_CODEX_ACCOUNTS_FILE": str(tmp_path / "absent.json")})
+    assert set(missing) == {"sub"}
+
 
 def test_v2_state_has_unique_rollover_and_lineage_runtime_paths():
     state = prepared()
