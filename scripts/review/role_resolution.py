@@ -40,8 +40,6 @@ _ROUTE_FIELDS = frozenset({
 
 def invocation_codex_account(invocation: str) -> str:
     """Canonical account identity for a catalogued Codex dispatch invocation."""
-    from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
-
     tokens = shell_split(invocation)
     labels = []
     for index, token in enumerate(tokens):
@@ -50,7 +48,13 @@ def invocation_codex_account(invocation: str) -> str:
             labels.append(value if separator else (tokens[index + 1] if index + 1 < len(tokens) else ""))
     if len(labels) > 1:
         raise ModelCatalogError("Codex route requires one account label")
-    return resolve_codex_account_label(labels[0] if labels else None)
+    if not labels:
+        return "sub"
+    if labels[0] in {"sub", "b-sub"}:
+        return labels[0]
+    from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
+
+    return resolve_codex_account_label(labels[0])
 
 
 def _mapping(value: Any, label: str) -> dict[str, Any]:
