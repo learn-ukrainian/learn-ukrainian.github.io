@@ -3015,6 +3015,12 @@ def test_inspect_codex_home_reports_thread_metadata(tmp_path: Path):
     (account_a / ".codex").mkdir(parents=True)
     account_b.mkdir()
     account_b.chmod(0o700)
+    with sqlite3.connect(account_a / ".codex" / "state_1.sqlite") as conn:
+        conn.execute("create table threads (id text, title text, cwd text, archived integer, updated_at integer)")
+        conn.execute(
+            "insert into threads values (?, ?, ?, ?, ?)",
+            ("thread-a", f"dispatch blocked under {account_b} in bound-account", str(account_b), 0, 100),
+        )
     with sqlite3.connect(account_b / "state_1.sqlite") as conn:
         conn.execute("create table threads (id text, title text, cwd text, archived integer, updated_at integer)")
         conn.execute(

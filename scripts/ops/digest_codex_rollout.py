@@ -28,7 +28,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.codex_accounts import CodexAccountRefused, codex_account_home
+from scripts.agent_runtime.codex_accounts import (
+    CODEX_SUBSCRIPTION_ACCOUNTS,
+    CodexAccountRefused,
+    codex_account_home,
+)
 
 DEFAULT_LABEL = "local"
 DEFAULT_REPO = Path.home() / "projects" / "learn-ukrainian"
@@ -240,14 +244,6 @@ def redact_opsec(text: str) -> str:
     return text
 
 
-def _session_home(path: Path) -> Path | None:
-    """Codex home for a file under ``<home>/sessions``. Other roots have none."""
-    for parent in path.parents:
-        if parent.name == "sessions":
-            return parent.parent
-    return None
-
-
 def redact_home(text: str, home: Path) -> str:
     """Replace one account's resolved home and its directory name."""
     resolved = home.resolve()
@@ -264,6 +260,25 @@ def redact_home(text: str, home: Path) -> str:
     return text
 
 
+def subscription_homes(environ: Mapping[str, str] | None = None) -> tuple[Path, ...]:
+    """Every subscription home the loader accepts. Unbound labels are absent."""
+    env = os.environ if environ is None else environ
+    found: list[Path] = []
+    for label in CODEX_SUBSCRIPTION_ACCOUNTS:
+        try:
+            found.append(codex_account_home(label, env))
+        except CodexAccountRefused:
+            continue
+    return tuple(sorted(found, key=lambda path: len(str(path.resolve())), reverse=True))
+
+
+def redact_homes(text: str, homes: Iterable[Path]) -> str:
+    """Replace every resolved account home, longest path first."""
+    for home in homes:
+        text = redact_home(text, home)
+    return text
+
+
 def is_noise(text: str) -> bool:
     return bool(_NOISE_RE.search(text))
 
@@ -276,7 +291,7 @@ def extract_snippets(
     lines: Iterable[str],
     limit: int = SNIPPET_LIMIT,
     *,
-    home: Path | None = None,
+    homes: Iterable[Path] = (),
 ) -> list[str]:
     snippets: list[str] = []
     seen: set[str] = set()
@@ -285,8 +300,7 @@ def extract_snippets(
             if is_noise(raw) or not is_material(raw):
                 continue
             cleaned = " ".join(redact_opsec(raw).split())
-            if home is not None:
-                cleaned = redact_home(cleaned, home)
+            cleaned = redact_homes(cleaned, homes)
             if len(cleaned) > SNIPPET_CHARS:
                 cleaned = cleaned[: SNIPPET_CHARS - 1].rstrip() + "…"
             if not cleaned or cleaned in seen:
@@ -330,14 +344,12 @@ def render_digest(
         rows.append("")
         return "\n".join(rows)
 
+    homes = subscription_homes()
     for path, account in sources:
-        home = _session_home(path)
-        heading = source_heading(path, account)
-        if home is not None:
-            heading = redact_home(heading, home)
+        heading = redact_homes(source_heading(path, account), homes)
         rows.append(f"## {heading}")
         rows.append("")
-        snippets = extract_snippets(tail_lines(path), home=home)
+        snippets = extract_snippets(tail_lines(path), homes=homes)
         if snippets:
             for snippet in snippets:
                 rows.append(f"- {snippet}")

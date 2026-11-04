@@ -31,7 +31,7 @@ import urllib.error
 import urllib.request
 import uuid
 import zlib
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from contextlib import closing, contextmanager, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -8036,15 +8036,24 @@ def _redact_home(text: str, home: Path) -> str:
     return text
 
 
-def _public_codex_audit(codex_home: Path, account: str) -> dict[str, Any]:
+def _redact_homes(text: str, homes: Iterable[Path]) -> str:
+    """Replace every resolved account home, longest path first."""
+    ordered = sorted(homes, key=lambda path: len(str(path.resolve())), reverse=True)
+    for home in ordered:
+        text = _redact_home(text, home)
+    return text
+
+
+def _public_codex_audit(codex_home: Path, account: str, homes: Iterable[Path] | None = None) -> dict[str, Any]:
     """Thread facts for one account. Paths stay out of this object."""
     raw = inspect_codex_home(codex_home)
+    covered = (codex_home,) if homes is None else homes
     threads = []
     for row in raw.get("recent_threads", []):
         if isinstance(row, dict):
             title = row.get("title")
             if isinstance(title, str):
-                title = _redact_home(title, codex_home)
+                title = _redact_homes(title, covered)
             threads.append({"id": row.get("id"), "title": title, "archived": row.get("archived")})
     return {
         "account": account,
@@ -8068,14 +8077,15 @@ def codex_account_audits(environ: Mapping[str, str] | None = None) -> dict[str, 
         codex_account_home,
     )
 
-    found: dict[str, dict[str, Any]] = {}
+    resolved: list[tuple[str, Path]] = []
     for label in CODEX_SUBSCRIPTION_ACCOUNTS:
         try:
             home = codex_account_home(label, environ)
         except CodexAccountRefused:
             continue
-        found[label] = _public_codex_audit(home, label)
-    return found
+        resolved.append((label, home))
+    homes = tuple(path for _, path in resolved)
+    return {label: _public_codex_audit(home, label, homes) for label, home in resolved}
 
 
 def _begin_codex_audit(args: argparse.Namespace) -> dict[str, Any]:

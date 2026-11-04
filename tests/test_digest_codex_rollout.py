@@ -104,10 +104,14 @@ class DigestCodexRolloutTests(unittest.TestCase):
         )
         accounts.chmod(0o600)
         sentence = "dispatch stuck while the lease expired and review could not merge"
-        material_a = json.dumps({"text": f"{sentence} under {account_a / '.codex'}"}) + "\n"
-        material_b = json.dumps({"text": f"{sentence} under {account_b} in bound-account"}) + "\n"
+        leaked = f"{sentence} under {account_b} in bound-account"
+        material_a = json.dumps({"text": f"{leaked} and {account_a / '.codex'}"}) + "\n"
+        material_b = json.dumps({"text": leaked}) + "\n"
         (account_a / ".codex" / "sessions" / "2026" / "11" / "rollout-a.jsonl").write_text(material_a, encoding="utf-8")
         (account_b / "sessions" / "2026" / "11" / "rollout-b.jsonl").write_text(material_b, encoding="utf-8")
+        claude = account_a / ".claude" / "projects" / "session.jsonl"
+        claude.parent.mkdir(parents=True)
+        claude.write_text(json.dumps({"text": leaked}) + "\n", encoding="utf-8")
         repo_b = tmp / "repo-b"
         saved = {
             key: os.environ.get(key)
