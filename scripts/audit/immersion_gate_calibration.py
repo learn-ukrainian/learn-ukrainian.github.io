@@ -29,7 +29,7 @@ from scripts.build.linear_pipeline import (
     _strip_frontmatter_and_headings,
     _unsupported_run_segments,
 )
-from scripts.config import get_immersion_policy
+from scripts.curriculum.pedagogy_config import get_immersion_policy
 
 A1_ARCHIVE = ROOT / "curriculum/l2-uk-en/_archive/a1-backup-2026-04-08/content"
 CURRICULUM = ROOT / "curriculum/l2-uk-en/curriculum.yaml"

@@ -177,9 +177,9 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts import config
 from scripts.audit.check_no_internal_ids import DOCS_DIR, scan_text
 from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.curriculum import pedagogy_config as config
 from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.evidence.word_records import printed

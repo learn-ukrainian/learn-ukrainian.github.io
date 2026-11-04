@@ -21,7 +21,7 @@ from typing import Any
 
 import yaml
 
-from scripts.config import (
+from scripts.curriculum.pedagogy_config import (
     WIKI_COVERAGE_DEFAULT_MIN_PCT,
     WIKI_COVERAGE_HARD_FAIL,
     WIKI_COVERAGE_MIN_PCT_BY_LEVEL,

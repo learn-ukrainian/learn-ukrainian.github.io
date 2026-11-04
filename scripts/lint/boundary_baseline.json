@@ -467,16 +467,6 @@
       "count": 1
     },
     {
-      "path": "scripts/config.py",
-      "module": "scripts.batch_gemini_config",
-      "count": 1
-    },
-    {
-      "path": "scripts/config.py",
-      "module": "scripts.level_config",
-      "count": 1
-    },
-    {
       "path": "scripts/debug/debug_hash.py",
       "module": "scripts.audit",
       "count": 1

@@ -3,7 +3,7 @@ generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
   components_sha256: bfecc7e9a009e26c288151ac309c08def3ea301060da4976645ffab323d7b98a
-  config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
+  config_tables_sha256: 630f93d171d2daa5a6b90fc452350fe1915a503db02207c72716ad38e570bad1
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
   Anagram:
