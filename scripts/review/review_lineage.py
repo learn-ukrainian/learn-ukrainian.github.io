@@ -362,21 +362,60 @@ def superseded_runs(
     return _supersede(runs, markers, events)
 
 
-def dispatched_rounds(
-    *, runs: Sequence[ReviewRun], comments: Sequence[Mapping[str, Any]], login: str, exclude_head: str | None = None
-) -> dict[str, list[str]]:
-    """Each head a review run on record was dispatched at, with its runs' task ids, recorded or not (#12098).
+def capability_exemption(
+    *,
+    runs: Sequence[ReviewRun],
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+    adjusted: Sequence[tuple[str, str]] = (),
+) -> tuple[str, str] | None:
+    """The lineage's one uncharged capability failure, as its run's task and start; None when it has none (#12717).
 
-    A round is one reviewer dispatch at one exact head (review-loop policy), so a run counts from its
-    dispatch, whatever its status and whether its verdict was ever published. A writing task is not
-    a reviewer dispatch, and a run whose published capability failure classifies it opens no round.
-    ``exclude_head`` drops the round being decided.
+    The candidates are the runs a published capability-failure event classifies and the published
+    runs a sealed charging adjustment (``budget_grant.capability_charge_adjustments``) names,
+    ``adjusted``. Only the earliest-started candidate on record is uncharged, whatever order the
+    events and rulings arrived in: every later one, a replacement that failed again included,
+    stays charged, so retries, concurrent claims, other reviewers and new heads never add a second.
     """
     try:
         events = {(e.task, e.started) for e in capability_failure.events(comments, login)}
     except recorder.RecordError:
         # Unreadable events classify no run here, so more heads count; check_lineage refuses them.
         events = set()
+    known = {(run.task_id, started) for run in runs if (started := _started(run.record)) is not None}
+    candidates = sorted((events | set(adjusted)) & known, key=lambda key: (key[1], key[0]))
+    return candidates[0] if candidates else None
+
+
+def capability_candidates_only(runs: Sequence[ReviewRun], head: str) -> bool:
+    """Whether every review run at ``head`` is a finished zero-finding BLOCKED, which an exemption may uncharge.
+
+    The dispatcher reads no PR comments, so such a head may be uncharged; any other run makes it a charged round.
+    """
+    at_head = [run for run in runs if run.record.get("worktree_base_sha") == head
+               and run.record.get("mode") != "workspace-write"]
+    return bool(at_head) and all(
+        (evidence := _finished_verdict(run)) is not None and evidence[1:3] == ("BLOCKED", 0) for run in at_head
+    )
+
+
+def dispatched_rounds(
+    *,
+    runs: Sequence[ReviewRun],
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+    exclude_head: str | None = None,
+    adjusted: Sequence[tuple[str, str]] = (),
+) -> dict[str, list[str]]:
+    """Each head a review run on record was dispatched at, with its runs' task ids, recorded or not (#12098).
+
+    A round is one reviewer dispatch at one exact head (review-loop policy), so a run counts from its
+    dispatch, whatever its status and whether its verdict was ever published. A writing task is not
+    a reviewer dispatch, and the lineage's one uncharged capability failure (:func:`capability_exemption`,
+    with the sealed charging adjustments ``adjusted``) opens no round. ``exclude_head`` drops the round
+    being decided.
+    """
+    exempt = capability_exemption(runs=runs, comments=comments, login=login, adjusted=adjusted)
     rounds: dict[str, list[str]] = {}
     for run in runs:
         head = run.record.get("worktree_base_sha")
@@ -384,7 +423,7 @@ def dispatched_rounds(
             continue
         if run.record.get("mode") == "workspace-write":
             continue
-        if (run.task_id, _started(run.record)) not in events:
+        if (run.task_id, _started(run.record)) != exempt:
             rounds.setdefault(head, []).append(run.task_id)
     return rounds
 

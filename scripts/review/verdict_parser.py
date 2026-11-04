@@ -25,7 +25,8 @@ ACCEPTED_VERDICT_TOKENS = (
 # so it never hides the reply's verdict; the classifier checks its form. The
 # verdict recorder accepts it only on a BLOCKED reply (``checked_findings_payload``).
 MISSING_CAPABILITIES_FIELD = "missing_capabilities"
-REVIEW_CAPABILITIES = frozenset({"sources-mcp", "test-execution", "shell", "browser", "checkout-data"})
+# ``ci-logs``: the reviewer could not read the CI or execution logs its review needed (#12717).
+REVIEW_CAPABILITIES = frozenset({"sources-mcp", "test-execution", "shell", "browser", "checkout-data", "ci-logs"})
 
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and

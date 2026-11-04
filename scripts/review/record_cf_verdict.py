@@ -2287,6 +2287,10 @@ def require_review_round_within_budget(
     repair: Callable[[], dict[str, Any] | None] | None = None,
     repair_heads: frozenset[str] = frozenset(),
     dispatched_heads: Callable[[], frozenset[str]] | None = None,
+    exemption: Callable[[], dict[str, Any] | None] | None = None,
+    recording_seat: tuple[str, str] | None = None,
+    exemption_refusals: Callable[[], Sequence[str]] | None = None,
+    recording_run: tuple[str, str] | None = None,
 ) -> dict[str, Any]:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
@@ -2312,12 +2316,68 @@ def require_review_round_within_budget(
     repair-verification round (``scripts/review/repair_round.py``) is outside
     the budget: ``repair`` returns its receipt or refuses, and ``repair_heads``
     names the heads it already admitted, which count as no budgeted round.
+
+    The lineage's one uncharged capability failure (``exemption`` returns it, or None; #12717)
+    opens no round: its run is left out of ``dispatched_heads`` and its published verdict, if any,
+    is left out here, so its head counts only through another run or verdict at it. A head whose
+    only verdict is that run's is therefore no already reviewed head: a replacement there is a
+    round like any other. When only the exemption admits the round, the round is its one
+    replacement, and at recording (``recording_seat``, the reviewer's family and review profile)
+    it must be the exempt run's seat. The exempt run itself (``recording_run``, its task and run
+    nonce) charges nothing, so a retried publication of its own verdict is admitted. The verdict
+    itself stays as published: a BLOCKED is cleared only by an APPROVE at a new head.
     Returns the result fields that record the exception used, else nothing.
     """
-    recorded = _trusted_verdict_shas(comments, login)
-    if sha in recorded:
+    markers = _trusted_markers(comments, login)
+    at_head = {(marker["task"], marker["started"], marker["verdict"]) for _, marker in markers if marker["sha"] == sha}
+    # Only a head whose one verdict is one run's BLOCKED can be the exempt head; any other reviewed head opens no round.
+    if at_head and (len(at_head) > 1 or next(iter(at_head))[2] != "BLOCKED"):
+        return {}
+    uncharged = exemption() if exemption is not None else None
+    exempt_key = (uncharged["task"], uncharged["started"]) if uncharged is not None else None
+    recorded = {marker["sha"] for _, marker in markers if (marker["task"], marker["started"]) != exempt_key}
+    if sha in recorded or (uncharged is not None and recording_run == (uncharged["task"], uncharged["run_nonce"])):
         return {}
     heads = recorded | (dispatched_heads() if dispatched_heads is not None else frozenset())
+    decide = partial(
+        _round_decision, comments, sha, login, budget=budget, pr=pr, prove_merge_only=prove_merge_only, grant=grant,
+        repair=repair, repair_heads=repair_heads, exemption_refusals=exemption_refusals,
+    )
+    receipt = decide(recorded, heads, exempt_key)
+    if uncharged is None or uncharged["head"] == sha or uncharged["head"] in heads:
+        # The exemption frees no head here: a round at the exempt head charges that head itself.
+        return receipt
+    try:
+        # The same decision with the exempt run charged, through every admission path.
+        decide({marker["sha"] for _, marker in markers}, heads | {uncharged["head"]}, None)
+    except RecordError:
+        # Only the exemption admits this round, so it is the one replacement and must be the exempt run's seat.
+        if recording_seat is not None and recording_seat != uncharged["seat"]:
+            raise RecordError(
+                f"CAPABILITY_REPLACEMENT_REFUSED: PR #{pr}'s one replacement for the capability failure of "
+                f"{uncharged['task']} must be its seat {uncharged['seat']}, not {recording_seat}"
+            ) from None
+        return {**receipt, "capability_exemption": dict(uncharged)}
+    return receipt
+
+
+def _round_decision(
+    comments: Sequence[Mapping[str, Any]],
+    sha: str,
+    login: str,
+    recorded: set[str],
+    heads: set[str] | frozenset[str],
+    exempt_key: tuple[str, str] | None,
+    *,
+    budget: int,
+    pr: int,
+    prove_merge_only: Callable[[str, str], list[str] | None] | None,
+    grant: Callable[[], dict[str, Any] | None] | None,
+    repair: Callable[[], dict[str, Any] | None] | None,
+    repair_heads: frozenset[str],
+    exemption_refusals: Callable[[], Sequence[str]] | None,
+) -> dict[str, Any]:
+    """:func:`require_review_round_within_budget`'s decision for one count of the charged heads."""
     if len(heads) < budget:
         return {}
     exempt = (
@@ -2338,6 +2398,8 @@ def require_review_round_within_budget(
         note = ""
     if exempt:
         note += f" (and {len(exempt)} clean base merge head(s), which consume no round)"
+    if exempt_key is not None:
+        note += f" (the capability failure of {exempt_key[0]} consumes no round; its one replacement is spent)"
     exhausted = (
         f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(counted)} heads{note} and its budget "
         f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(counted) + 1}"
@@ -2365,6 +2427,8 @@ def require_review_round_within_budget(
                 refusals.append(f"BUDGET_GRANT_REFUSED[allowance]: grant allows {receipt['round_allowance']} rounds")
                 continue
             return {field: receipt}
+    if exemption_refusals is not None:
+        refusals.extend(f"capability charge adjustment refused: {item}" for item in exemption_refusals())
     raise RecordError("; ".join([exhausted, *refusals]))
 
 
@@ -2382,7 +2446,16 @@ def _repair_round(**kwargs: Any) -> dict[str, Any] | None:
     return admit_repair_round(**kwargs)
 
 
-def _dispatched_rounds(
+@dataclass(frozen=True)
+class _Charging:
+    """The rounds a PR's review runs charge, beside the lineage's one uncharged capability failure (#12717)."""
+
+    rounds: dict[str, list[str]]
+    exemption: dict[str, Any] | None
+    refusals: tuple[str, ...] = ()
+
+
+def _charging(
     *,
     task_root: Path,
     repository: str,
@@ -2391,16 +2464,44 @@ def _dispatched_rounds(
     comments: Sequence[Mapping[str, Any]],
     login: str,
     sha: str,
-) -> dict[str, list[str]]:
+    changed_paths: Sequence[str],
+) -> _Charging:
     """Heads other than ``sha`` that a review run on record was dispatched at, with its task ids (#12098).
 
-    An unreadable task ledger or reply refuses: those heads cannot be counted.
+    ``exemption`` is the lineage's one uncharged capability failure (``review_lineage.capability_exemption``)
+    with its head and seat, read from the PR's capability-failure events and its sealed charging
+    adjustments (``budget_grant.capability_charge_adjustments``); ``refusals`` names each adjustment
+    that does not hold. An unreadable task ledger or reply refuses: those heads cannot be counted.
     """
     # The lineage reader builds on this module, so it is imported only when a new head is counted.
-    from scripts.review.review_lineage import dispatched_rounds, lineage_runs
+    from scripts.review.budget_grant import capability_charge_adjustments
+    from scripts.review.capability_failure import run_started
+    from scripts.review.review_lineage import capability_exemption, dispatched_rounds, lineage_runs
 
     runs = lineage_runs(task_root, repository=repository, number=number, branch=branch)
-    return dispatched_rounds(runs=runs, comments=comments, login=login, exclude_head=sha)
+    adjustments, refusals = capability_charge_adjustments(
+        repository=repository, number=number, branch=branch, changed_paths=changed_paths, comments=comments,
+        login=login, task_root=task_root, runs=runs,
+    )
+    adjusted = [(item["task"], item["started"]) for item in adjustments]
+    key = capability_exemption(runs=runs, comments=comments, login=login, adjusted=adjusted)
+    exemption = None
+    if key is not None:
+        run = next(run for run in runs if (run.task_id, run_started(run.record)) == key)
+        try:
+            seat: tuple[str, str] | None = (reviewer_identity(run.record)[1],
+                                            "ukrainian" if is_ukrainian_review(run.record) else "code")
+        except RecordError:
+            seat = None
+        adjustment = next((item for item in adjustments if (item["task"], item["started"]) == key), None)
+        exemption = {
+            "task": key[0], "started": key[1], "run_nonce": run.record.get("run_nonce"),
+            "head": run.record.get("worktree_base_sha"), "seat": seat,
+            "source": "charge-adjustment" if adjustment is not None else "capability-failure-event",
+            **({"adjustment": adjustment} if adjustment is not None else {}),
+        }
+    rounds = dispatched_rounds(runs=runs, comments=comments, login=login, exclude_head=sha, adjusted=adjusted)
+    return _Charging(rounds, exemption, tuple(refusals))
 
 
 def _repair_receipts(task_root: Path) -> Path:
@@ -2422,16 +2523,18 @@ def budget_admission(
     task_root: Path,
     review_root: Path,
     fetch: bool = True,
-    dispatched: Callable[[], dict[str, list[str]]] | None = None,
+    charging: Callable[[], _Charging] | None = None,
     recording_run: tuple[str, str] | None = None,
+    recording_seat: tuple[str, str] | None = None,
 ) -> dict[str, Any]:
     """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``.
 
     It writes nothing; ``fetch=False`` also leaves the default-branch ref as it is.
-    ``dispatched`` is the caller's own :func:`_dispatched_rounds` read, when it reports them too.
+    ``charging`` is the caller's own :func:`_charging` read, when it reports it too.
+    ``recording_seat`` is the recorded reviewer's family and review profile, None at dispatch.
     """
-    rounds = dispatched or partial(
-        _dispatched_rounds,
+    rounds = charging or cache(partial(
+        _charging,
         task_root=task_root,
         repository=repository,
         number=number,
@@ -2439,7 +2542,8 @@ def budget_admission(
         comments=comments,
         login=login,
         sha=sha,
-    )
+        changed_paths=facts.changed_paths,
+    ))
     from scripts.review.repair_round import repair_heads
 
     budget = review_round_budget(facts, repository)
@@ -2480,7 +2584,11 @@ def budget_admission(
             fetch=fetch,
         ),
         repair_heads=repair_heads(receipts, repository=repository, number=number, branch=branch),
-        dispatched_heads=lambda: frozenset(rounds()),
+        dispatched_heads=lambda: frozenset(rounds().rounds),
+        exemption=lambda: rounds().exemption,
+        recording_seat=recording_seat,
+        exemption_refusals=lambda: rounds().refusals,
+        recording_run=recording_run,
     )
 
 
@@ -3002,6 +3110,7 @@ def record(
             task_root=task_root,
             review_root=review_root,
             recording_run=(task_id, task["run_nonce"]) if isinstance(task.get("run_nonce"), str) else None,
+            recording_seat=(family, "ukrainian" if ukrainian else "code"),
         )
         granted_route = budget_receipt.get("budget_grant", {}).get("retry_route")
         if granted_route is not None and {
@@ -3206,10 +3315,9 @@ def budget_check(
         comments = adapter.comments(repository, number)
     except SweepError as exc:
         raise RecordError(f"comment lookup failed: {exc}") from exc
-    heads = _trusted_verdict_shas(comments, login)
-    dispatched = cache(
+    charging = cache(
         partial(
-            _dispatched_rounds,
+            _charging,
             task_root=task_root,
             repository=repository,
             number=number,
@@ -3217,6 +3325,7 @@ def budget_check(
             comments=comments,
             login=login,
             sha=sha,
+            changed_paths=facts.changed_paths,
         )
     )
     receipt = budget_admission(
@@ -3230,11 +3339,16 @@ def budget_check(
         task_root=task_root,
         review_root=review_root,
         fetch=False,
-        dispatched=dispatched,
+        charging=charging,
     )
+    uncharged = charging().exemption
+    exempt_key = (uncharged["task"], uncharged["started"]) if uncharged is not None else None
+    # The uncharged capability failure's own verdict reviews no head (#12717).
+    heads = {marker["sha"] for _, marker in _trusted_markers(comments, login)
+             if (marker["task"], marker["started"]) != exempt_key}
     already = sha in heads
-    unrecorded = {head: tasks for head, tasks in dispatched().items() if head not in heads}
-    return {
+    unrecorded = {head: tasks for head, tasks in charging().rounds.items() if head not in heads}
+    result = {
         "pr": number,
         "head": sha,
         "admitted": True,
@@ -3244,6 +3358,11 @@ def budget_check(
         "head_already_reviewed": already,
         **receipt,
     }
+    if uncharged is not None:
+        result["uncharged_capability_failure"] = uncharged
+    if charging().refusals:
+        result["capability_charge_refusals"] = list(charging().refusals)
+    return result
 
 
 def _open_pr_number(repository: str, branch: str) -> int | None:
@@ -3285,7 +3404,12 @@ def dispatch_budget_check(
     tier, a clean base merge, a designated grant or the lineage's repair round may still admit it.
     A branch with no open PR gets the repository's budget.
     """
-    from scripts.review.review_lineage import dispatched_rounds, lineage_runs, review_records
+    from scripts.review.review_lineage import (
+        capability_candidates_only,
+        dispatched_rounds,
+        lineage_runs,
+        review_records,
+    )
 
     records = review_records(task_root, repository=repository)
     if not records:
@@ -3299,7 +3423,11 @@ def dispatch_budget_check(
         branch = _pr(repository, "", number)["headRefName"]
     runs = lineage_runs(task_root, repository=repository, number=number, branch=branch, records=records)
     heads = dispatched_rounds(runs=runs, comments=(), login="")
-    if head in heads or len(heads) < budget:
+    if len(heads) < budget:
+        return None
+    # A head already dispatched opens no round, unless its only runs are zero-finding BLOCKEDs: those may be
+    # the lineage's uncharged capability failure, which only the PR's comments and rulings decide (#12717).
+    if head in heads and (number is None or not capability_candidates_only(runs, head)):
         return None
     if number is None:
         raise RecordError(

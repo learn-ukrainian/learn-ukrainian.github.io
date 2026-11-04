@@ -49,7 +49,11 @@ interpreter does not select the primary checkout's Python modules.
    non-goals, threat and input model, dispositions. If an optional DeepSeek author pre-check
    (DS-PRECHECK-1101) was run, list its findings and their dispositions as author context only.
    Record the budget tier ([policy](references/policy.md#budget)); later rounds reuse the
-   frozen sections unchanged.
+   frozen sections unchanged. **A read-only Codex reviewer cannot read CI logs**, so every
+   brief for one inlines the CI evidence of the exact head: the head SHA, the run and job ids,
+   their conclusions, and the test output or log excerpts the review needs, never conclusions
+   alone where the logs matter. A reviewer still blocked by it replies BLOCKED with
+   `missing_capabilities: ["ci-logs"]`.
 2. **Resolve the target and the reviewer live.** Never pick a fixed model. Derive the review
    profile from the target and record it in the hand-off record (`review.profile`) and the
    frozen brief: `infra` when the change touches the build pipeline, gates, CI, deploy, the
@@ -128,6 +132,11 @@ interpreter does not select the primary checkout's Python modules.
    that the complete delta is only that repair. Exit 1 is the stop below. A recorded rejection is cleared only at a new
    head ([policy](references/policy.md#clearing-a-recorded-rejection)). The delta brief carries
    the ledger and the fix diff ([brief](references/brief.md#delta-rounds-round-2-and-later)).
+   A BLOCKED with no findings that only a missing capability caused charges no round, once per
+   lineage, and admits one same-seat replacement whose brief carries the missing evidence
+   inline: the CTO records a capability failure for an unpublished run, or a sealed
+   capability-charge adjustment for a published one
+   ([policy](references/policy.md#budget)). A second such reply is charged.
 7. **Record the verdict on the open PR** (it is open and CI-green at the reviewed head, `full-send` step 4):
 
    ```bash

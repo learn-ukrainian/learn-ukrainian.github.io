@@ -314,12 +314,21 @@ if [ -f "$LANE_PROBE_SCRIPT" ]; then
   # HANDOFF_AGENT for identity, inbox, and rollover operations below (#9580).
   LANE_PROBE_AGENT="$HANDOFF_AGENT"
   LANE_PROBE_RC=0
-  LANE_PROBE_JSON=$(run_bounded 3 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
+  # The outer bound is the number in this message. A timeout exits 124 with no
+  # JSON, and jq prints nothing for empty input (it does not use the // default),
+  # which used to leave the SessionStart reason blank (#12725).
+  LANE_PROBE_BOUND=3
+  LANE_PROBE_JSON=$(run_bounded "$LANE_PROBE_BOUND" env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
     -m scripts.agent_runtime.lane_probe --handoff-agent "$HANDOFF_AGENT" --cwd "$PROJECT_DIR" --timeout 2 2>/dev/null) || LANE_PROBE_RC=$?
   if [ "$LANE_PROBE_RC" -ne 0 ]; then
     LANE_PROBE_AGENT=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].agent // empty' 2>/dev/null || true)
     LANE_PROBE_AGENT="${LANE_PROBE_AGENT:-$HANDOFF_AGENT}"
-    LANE_PROBE_REASON=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].reason // "probe did not return a result"' 2>/dev/null || true)
+    if [ "$LANE_PROBE_RC" -eq 124 ]; then
+      LANE_PROBE_REASON="probe timed out after ${LANE_PROBE_BOUND} s"
+    else
+      LANE_PROBE_REASON=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].reason // "probe did not return a result"' 2>/dev/null || true)
+      [ -n "$LANE_PROBE_REASON" ] || LANE_PROBE_REASON="probe did not return a result"
+    fi
     # The ordinary Codex context is contracted under 500 bytes (#10952); there
     # a handoff identity equal to the probed lane repeats it, so it is omitted.
     if [ "${CODEX_NORMAL_TASK:-0}" = "1" ] && [ "$LANE_PROBE_AGENT" = "$HANDOFF_AGENT" ]; then
@@ -328,7 +337,7 @@ if [ -f "$LANE_PROBE_SCRIPT" ]; then
       ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $LANE_PROBE_AGENT (handoff identity $HANDOFF_AGENT): $LANE_PROBE_REASON")
     fi
   fi
-  unset LANE_PROBE_AGENT LANE_PROBE_RC LANE_PROBE_JSON LANE_PROBE_REASON
+  unset LANE_PROBE_AGENT LANE_PROBE_RC LANE_PROBE_JSON LANE_PROBE_REASON LANE_PROBE_BOUND
 fi
 unset LANE_PROBE_SCRIPT
 

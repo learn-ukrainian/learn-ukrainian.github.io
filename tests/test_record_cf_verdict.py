@@ -3370,6 +3370,50 @@ def test_a_repair_round_approve_must_verify_the_delta(monkeypatch, tmp_path, rep
     assert receipts(tasks) == [] and calls == {"posts": 0, "statuses": 0}
 
 
+def structured_repair_reply(explanation, *, finding_body=None):
+    """A whole ``code-review-findings.v1`` reply, one JSON line as a reviewer writes it."""
+    findings = [] if finding_body is None else [{
+        "id": "F1", "title": "Note", "body": finding_body, "priority": "P3", "confidence": 0.9,
+        "category": "docs", "location": {"path": "shared.txt", "start_line": 1, "end_line": 1, "claim_type": "present"},
+        "verbatim": "line", "why_wrong": "Wording.", "smallest_fix": "Reword.", "sources": ["none"],
+    }]
+    return json.dumps({"schema_version": "code-review-findings.v1",
+                       "overall": {"correctness": "correct", "explanation": explanation, "confidence": 0.99},
+                       "findings": findings})
+
+
+def test_a_structured_repair_round_approve_attests_in_its_explanation(monkeypatch, tmp_path):
+    """A one-line structured APPROVE whose explanation carries the attestation is recorded (#12726)."""
+    from scripts.review import repair_round
+
+    tasks, _comments, calls, approved, head, _run = repair_case(monkeypatch, tmp_path)
+    digest = repair_round._diff_sha256(tmp_path / "repair-repo", approved, head)
+    write_task(tasks, worktree_base_sha=head,
+               reply=structured_repair_reply(f"REPAIR_VERIFIED: {digest}\nThe delta is only the conflict resolution."))
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "APPROVED" and result["repair_round"]["delta_sha256"] == digest
+    assert {item["state"] for item in receipts(tasks)} == {"consumed"} and calls["posts"] == 1
+
+
+@pytest.mark.parametrize("case", ["none", "two", "other-digest", "finding-only", "prose-without-line"])
+def test_a_repair_round_attestation_is_exactly_one_explanation_line(case):
+    """Only overall.explanation attests in a structured reply, once and naming the receipt digest (#12726)."""
+    from scripts.review import repair_round
+
+    digest = "a" * 64
+    line = f"REPAIR_VERIFIED: {digest}"
+    reply = {
+        "none": structured_repair_reply("The delta is only the repair."),
+        "two": structured_repair_reply(f"{line}\n{line}"),
+        "other-digest": structured_repair_reply("REPAIR_VERIFIED: " + "b" * 64),
+        "finding-only": structured_repair_reply("The delta is only the repair.", finding_body=line),
+        "prose-without-line": "VERDICT: APPROVE\nThe delta is only the repair.",
+    }[case]
+    with pytest.raises(repair_round.RepairRefused, match=r"\[verification\].*overall\.explanation"):
+        repair_round.require_repair_verified(reply, {"delta_sha256": digest})
+    repair_round.require_repair_verified(structured_repair_reply(f"{line}\nChecked."), {"delta_sha256": digest})
+
+
 def test_a_repair_round_rejection_needs_no_attestation_and_spends_the_round(monkeypatch, tmp_path):
     tasks, _comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
     write_task(tasks, worktree_base_sha=head, reply="VERDICT: REQUEST_CHANGES\nF1 [P1] shared.txt:1 the merge drops a line.")
