@@ -123,6 +123,7 @@ _FAKE_CLAUDE = textwrap.dedent(
             status.update(authMethod="api_key", apiKeySource="ANTHROPIC_API_KEY")
         elif os.path.exists(os.path.join(config_dir, ".credentials.json")):
             status["authMethod"] = "claude.ai"
+            status["loginExpiresAt"] = "2026-11-12T20:16:18.529Z"  # the stored sign-in's end (2.1.318)
             # The plan Claude Code resolves for the login is the one stored with its credential.
             oauth = load(os.path.join(config_dir, ".credentials.json")).get("claudeAiOauth") or {}
             plan = "team" if mode == "team_plan" else oauth.get("subscriptionType")
@@ -142,6 +143,8 @@ _FAKE_CLAUDE = textwrap.dedent(
             else:
                 lines = ["Login method: Claude Max account"] if status["authMethod"] == "claude.ai" else []
                 lines += ["Email: fixture@example.invalid"]
+                if "loginExpiresAt" in status:  # 2.1.318 prints the end date beside the login
+                    lines.append("Sign-in ends: between 2026-11-09 and 2026-11-12 (2026-11-12T20:16:18.529Z)")
             if env.get("ANTHROPIC_BASE_URL"):
                 lines.append("Anthropic base URL: " + env["ANTHROPIC_BASE_URL"])
             if env.get("HTTPS_PROXY"):
