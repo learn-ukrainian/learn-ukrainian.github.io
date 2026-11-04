@@ -21,6 +21,7 @@ except ModuleNotFoundError as exc:
 
 from agents_extensions.shared.session_streams.model import parse_timestamp
 from scripts.api import delegate_router
+from scripts.api.atlas_jobs_router import monitor_jobs
 from scripts.api.delegate_router import _derived_task_status
 from scripts.api.fleet_workers_models import (
     _AGENT_RE,
@@ -49,7 +50,6 @@ from scripts.api.project_state_store import (
     get_live_report,
     workers_status_from_document,
 )
-from scripts.lexicon.runner import atlas_job
 from scripts.orchestration.task_record_store import iter_task_records
 
 WORKERS_SCHEMA = "monitor-fleet-workers.v1"
@@ -392,13 +392,13 @@ def collect_job_workers(
     rows: list[CollectedWorker] = []
     burn: dict[str, Any] | None = None
     try:
-        registry = atlas_job.list_registry()
+        registry = monitor_jobs.list_registry()
     except Exception:
         return rows, {"source": "job", "state": "unknown", "count": 0, "reason": "registry unreadable"}
     for item in registry:
         if not isinstance(item, dict):
             continue
-        if canonical_host is not None and atlas_job._canonical_host(item.get("host")) != canonical_host:
+        if canonical_host is not None and monitor_jobs._canonical_host(item.get("host")) != canonical_host:
             continue
         state = str(item.get("state") or "")
         mapped = _job_state(state)

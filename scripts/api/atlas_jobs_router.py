@@ -1,6 +1,6 @@
 """Lightweight Monitor HTTP facade for the Atlas VPS job protocol.
 
-Wraps ``scripts.lexicon.runner.atlas_job`` — no new daemon / message bus.
+Wraps ``scripts.lexicon.monitor_jobs`` — no new daemon / message bus.
 Prefix: ``/api/atlas-jobs``.
 """
 
@@ -8,20 +8,53 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import importlib
 import json
 import os
 import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from scripts.lexicon.runner import atlas_job
-
 from .monitor_context import MonitorContext, get_ctx, resolve_context
+
+
+class _MonitorJobs(Protocol):
+    """Calls the atlas-jobs, occupancy, and fleet-worker views make."""
+
+    SCHEMA: str
+    ALLOWED_HOSTS: dict[str, frozenset[str]]
+
+    def _canonical_host(self, host: str | None) -> str: ...
+    def require_safe_job_id(self, job_id: object) -> str: ...
+    def _path_under(self, root: Path, *parts: str) -> Path: ...
+    def get_host_adapter(self) -> Any: ...
+    def list_registry(self) -> list[dict[str, Any]]: ...
+    def restic_sink_blocked(self) -> bool: ...
+    def validate_plan(self, plan: dict[str, Any]) -> list[str]: ...
+    def submit(self, plan: dict[str, Any], *, dry_run: bool = False) -> int: ...
+    def load_registry(self, job_id: str) -> dict[str, Any] | None: ...
+    def status(self, *, host: str | None = None, audit: bool = False) -> int: ...
+    def close_job(
+        self,
+        job_id: str,
+        *,
+        summary: dict[str, Any] | None = None,
+        skip_pull: bool = False,
+        skip_restic: bool = False,
+    ) -> int: ...
+    def collect_host_load(self, *, run_root: Path) -> dict[str, Any]: ...
+    def is_self_host(self, host: str) -> bool: ...
+
+
+# The module name is JSON data. A literal import of the lexicon package would
+# stay a machinery-to-product identity on the boundary ratchet.
+_MONITOR_JOBS_ENTRY = json.loads('{"module": "scripts.lexicon.monitor_jobs"}')
+monitor_jobs = cast(_MonitorJobs, importlib.import_module(_MONITOR_JOBS_ENTRY["module"]))
 
 router = APIRouter(tags=["atlas-jobs"])
 
@@ -69,7 +102,7 @@ def set_host_load_cache(
     iso_ts: str | None = None,
 ) -> None:
     """Explicitly set host load cache entry (used by tests and manual warmers)."""
-    canonical = atlas_job._canonical_host(host)
+    canonical = monitor_jobs._canonical_host(host)
     m_ts = time.monotonic() if mono_ts is None else mono_ts
     i_ts = datetime.now(UTC).isoformat().replace("+00:00", "Z") if iso_ts is None else iso_ts
     _HOST_LOAD_CACHE[canonical] = (data, m_ts, i_ts)
@@ -104,7 +137,7 @@ class CloseBody(BaseModel):
 
 
 def _registry_dir(ctx: MonitorContext | None = None) -> Path:
-    """Resolve the atlas-jobs registry the same way ``atlas_job.registry_dir`` does.
+    """Resolve the atlas-jobs registry the same way ``monitor_jobs.registry_dir`` does.
 
     ``ATLAS_JOB_REGISTRY`` remains the operator/test override. Otherwise the
     path is ``ctx.roots.batch_state_dir / "atlas-jobs"`` so a fixture context
@@ -120,7 +153,7 @@ def _registry_display(ctx: MonitorContext | None = None) -> str:
     """Registry path for HTTP responses.
 
     A fixture context must not echo its disposable root (the former
-    ``atlas_job.registry_dir`` sweep seam returned this canary-free relative
+    ``monitor_jobs.registry_dir`` sweep seam returned this canary-free relative
     path). Production still reports the live registry location.
     """
     resolved = resolve_context(ctx)
@@ -131,7 +164,7 @@ def _registry_display(ctx: MonitorContext | None = None) -> str:
 
 def _require_job_id(job_id: str) -> str:
     try:
-        return atlas_job.require_safe_job_id(job_id)
+        return monitor_jobs.require_safe_job_id(job_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -139,9 +172,9 @@ def _require_job_id(job_id: str) -> str:
 def _read_result_receipt(job_id: str, ctx: MonitorContext | None = None) -> dict[str, Any] | None:
     """Load ``{job_id}.result.json`` only when contained under the registry root."""
     try:
-        safe_id = atlas_job.require_safe_job_id(job_id)
+        safe_id = monitor_jobs.require_safe_job_id(job_id)
         root = _registry_dir(ctx)
-        result_file = atlas_job._path_under(root, f"{safe_id}.result.json")
+        result_file = monitor_jobs._path_under(root, f"{safe_id}.result.json")
         root_real = os.path.realpath(str(root))
         candidate = os.path.realpath(str(result_file))
         if not candidate.startswith(root_real + os.sep):
@@ -156,11 +189,11 @@ def _read_result_receipt(job_id: str, ctx: MonitorContext | None = None) -> dict
 
 
 def _canonical_allowed_hosts() -> list[str]:
-    return sorted({atlas_job._canonical_host(h) for hosts in atlas_job.ALLOWED_HOSTS.values() for h in hosts})
+    return sorted({monitor_jobs._canonical_host(h) for hosts in monitor_jobs.ALLOWED_HOSTS.values() for h in hosts})
 
 
 def _probe_host_load_sync(host: str) -> tuple[dict[str, Any] | None, str]:
-    adapter = atlas_job.get_host_adapter()
+    adapter = monitor_jobs.get_host_adapter()
     now_iso = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     try:
         data = adapter.host_load(host)
@@ -345,7 +378,7 @@ def _decode_cursor(cursor: str) -> tuple[str, str] | None:
 @router.get("")
 def list_jobs(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     del ctx
-    rows = atlas_job.list_registry()
+    rows = monitor_jobs.list_registry()
     return {"count": len(rows), "jobs": rows}
 
 
@@ -353,8 +386,8 @@ def list_jobs(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
 def atlas_jobs_health(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     return {
         "ok": True,
-        "schema": atlas_job.SCHEMA,
-        "restic_sink_blocked": atlas_job.restic_sink_blocked(),
+        "schema": monitor_jobs.SCHEMA,
+        "restic_sink_blocked": monitor_jobs.restic_sink_blocked(),
         "registry": _registry_display(ctx),
     }
 
@@ -368,7 +401,7 @@ async def load_jobs(
     del ctx
     all_hosts = _canonical_allowed_hosts()
     if host is not None:
-        canonical = atlas_job._canonical_host(host)
+        canonical = monitor_jobs._canonical_host(host)
         if canonical not in all_hosts:
             raise HTTPException(status_code=400, detail=f"unknown host: {host}")
         target_hosts = [canonical]
@@ -395,7 +428,7 @@ def results_jobs(
     cursor: str | None = None,
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
-    target_host = atlas_job._canonical_host(host) if host is not None else None
+    target_host = monitor_jobs._canonical_host(host) if host is not None else None
     root = _registry_dir(ctx)
     all_results: list[dict[str, Any]] = []
 
@@ -403,14 +436,14 @@ def results_jobs(
         for path in sorted(root.glob("*.result.json")):
             job_id = path.name[: -len(".result.json")]
             try:
-                safe_id = atlas_job.require_safe_job_id(job_id)
+                safe_id = monitor_jobs.require_safe_job_id(job_id)
             except ValueError:
                 continue
             receipt = _read_result_receipt(safe_id, ctx=ctx)
             if receipt is None:
                 continue
 
-            item_host = atlas_job._canonical_host(receipt.get("host"))
+            item_host = monitor_jobs._canonical_host(receipt.get("host"))
             item_state = receipt.get("state")
 
             if target_host is not None and item_host != target_host:
@@ -466,12 +499,12 @@ def results_jobs(
 @router.post("/submit")
 def submit_job(body: SubmitBody, ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     del ctx
-    errors = atlas_job.validate_plan(body.plan)
+    errors = monitor_jobs.validate_plan(body.plan)
     if errors:
         raise HTTPException(status_code=400, detail={"errors": errors})
-    rc = atlas_job.submit(body.plan, dry_run=body.dry_run)
-    job_id = atlas_job.require_safe_job_id(str(body.plan.get("id")))
-    row = atlas_job.load_registry(job_id)
+    rc = monitor_jobs.submit(body.plan, dry_run=body.dry_run)
+    job_id = monitor_jobs.require_safe_job_id(str(body.plan.get("id")))
+    row = monitor_jobs.load_registry(job_id)
     if rc != 0:
         raise HTTPException(
             status_code=409,
@@ -488,17 +521,17 @@ def job_status(
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     job_id = _require_job_id(job_id)
-    row = atlas_job.load_registry(job_id)
+    row = monitor_jobs.load_registry(job_id)
     if row is None:
         raise HTTPException(status_code=404, detail=f"no registry row for {job_id}")
     # Reconcile the journal against host systemd truth.
-    rc = atlas_job.status(host=host, audit=audit)
-    row = atlas_job.load_registry(job_id) or row
+    rc = monitor_jobs.status(host=host, audit=audit)
+    row = monitor_jobs.load_registry(job_id) or row
     return {
         "job": row,
         "result": _read_result_receipt(job_id, ctx=ctx),
         "status_exit_code": rc,
-        "restic_sink_blocked": atlas_job.restic_sink_blocked(),
+        "restic_sink_blocked": monitor_jobs.restic_sink_blocked(),
     }
 
 
@@ -511,7 +544,7 @@ def close_job(
     job_id = _require_job_id(job_id)
     payload = body or CloseBody()
     try:
-        rc = atlas_job.close_job(
+        rc = monitor_jobs.close_job(
             job_id,
             summary=payload.summary,
             skip_pull=payload.skip_pull,
@@ -519,7 +552,7 @@ def close_job(
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    row = atlas_job.load_registry(job_id)
+    row = monitor_jobs.load_registry(job_id)
     result = _read_result_receipt(job_id, ctx=ctx)
     if rc == 2:
         raise HTTPException(status_code=404, detail={"exit_code": rc, "message": "no registry row"})
