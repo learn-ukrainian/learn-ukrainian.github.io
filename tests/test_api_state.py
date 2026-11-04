@@ -33,7 +33,8 @@ def test_monitor_loader_refuses_malformed_names(monitor_paths, name):
 
 @pytest.mark.parametrize("raw", [
     b"\xff", b"{", b"[]", b"{}", b'[' * 1200,
-    b'{"schema":0,"schema":0}',
+    (b'{"schema":"learn-ukrainian.monitor-paths","schema":"learn-ukrainian.monitor-paths",'
+     b'"schema_version":1,"monitor_surface":"scripts.curriculum.monitor_surface"}'),
     b'{"schema":"learn-ukrainian.monitor-paths","schema_version":true,"monitor_surface":"scripts.api"}',
     b'{"schema":"wrong","schema_version":1,"monitor_surface":"scripts.api"}',
     b'{"schema":"learn-ukrainian.monitor-paths","schema_version":2,"monitor_surface":"scripts.api"}',

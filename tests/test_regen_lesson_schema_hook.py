@@ -41,7 +41,11 @@ def test_pre_commit_loader_keeps_entry_grammar_refusals(entry_file, name):
 
 
 @pytest.mark.parametrize("raw", [
-    b"\xff", b"{", b"[]", b"{}", b'{"schema":0,"schema":0}', b'{"number":NaN}', b'{"number":Infinity}',
+    b"\xff", b"{", b"[]", b"{}",
+    (b'{"schema":"learn-ukrainian.pre-commit-entry-points","schema":"learn-ukrainian.pre-commit-entry-points",'
+     b'"schema_version":1,"origin":"scripts/build/pre_commit_entry_points.v1.json",'
+     b'"entry_points":{"test-hook":{"entry_point":"scripts.build.generate_lesson_schema:main","argv":[]}}}'),
+    b'{"number":NaN}', b'{"number":Infinity}',
 ])
 def test_pre_commit_loader_keeps_strict_json_refusals(entry_file, raw):
     entry_file.write_bytes(raw)
