@@ -48,6 +48,7 @@ from scripts.ci.components import (
     CONFIGURED_LOADER,
     CONFIGURED_LOADER_PATH,
     call_name,
+    configured_call,
     dependency_nodes,
     literal_target,
     scan_imports,
@@ -774,7 +775,8 @@ def _collect_causes(sources: dict[str, bytes]) -> dict[tuple[str, str], list[tup
             if name in wrappers:
                 kind = "file"
                 index = 1
-            if leaf == CONFIGURED_LOADER or name in configured_names:
+            configured = configured_call(name, configured_names, loaders, wrappers)
+            if configured:
                 kind, index = "module", 0
             if not kind:
                 continue
@@ -784,7 +786,7 @@ def _collect_causes(sources: dict[str, bytes]) -> dict[tuple[str, str], list[tup
                 else "path_name"
                 if kind == "file"
                 else "mod_name"
-                if leaf == "run_module"
+                if leaf == "run_module" and not configured
                 else "name"
             )
             expression = (

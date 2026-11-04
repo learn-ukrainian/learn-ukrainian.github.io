@@ -199,6 +199,35 @@ def test_population_report_counts_each_configured_caller_once(tmp_path: Path) ->
     assert forward is not None and forward.group(1) == "1"
 
 
+def test_configured_alias_keeps_scanner_parity(tmp_path: Path) -> None:
+    """The ratchet labels the same edges as the scanner when a helper alias shares another loader's name."""
+
+    root, config_path, _baseline = _tree(
+        tmp_path,
+        {
+            "mach/mixed.py": (
+                "def run():\n    from runpy import run_path as load\n    load('scripts/prod/runner.py')\n\n"
+                "def hooks():\n    from scripts.ops.product_entry import load_configured_module as load\n"
+                "    load('scripts.prod.widget')\n"
+            ),
+            "mach/renamed.py": (
+                "from scripts.ops.product_entry import load_configured_module as run_module\n"
+                "run_module(name='scripts.prod.widget')\n"
+            ),
+            "prod/__init__.py": "",
+            "prod/runner.py": "R = 1\n",
+            "prod/widget.py": "W = 1\n",
+        },
+        {"mach": "machinery", "prod": "product"},
+    )
+    (root / "tests").mkdir()
+    report = population_report(root, load_config(config_path))
+    forward = re.search(r"^forward direct=(\d+) parent=(\d+) file-load=(\d+) .* dynamic=(\d+) ", report, re.MULTILINE)
+    assert forward is not None
+    # renamed.py -> widget is direct; mixed.py -> runner is a file load; mixed.py's helper call stays dynamic.
+    assert forward.group(1, 3, 4) == ("1", "1", "1")
+
+
 def test_untracked_scripts_directory_is_not_classified(tmp_path: Path) -> None:
     """A top-level scripts directory with no Git-tracked Python file is not classified."""
 

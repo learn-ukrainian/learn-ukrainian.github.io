@@ -20,7 +20,7 @@ import sys
 import tempfile
 import xml.etree.ElementTree as ET
 from collections import deque
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
@@ -42,6 +42,19 @@ NODE_IDS = (
 # aliased or qualified; a name the scanner cannot prove stays unresolved.
 CONFIGURED_LOADER = "load_configured_module"
 CONFIGURED_LOADER_PATH = "scripts/ops/product_entry.py"
+
+
+def configured_call(name: str, configured_names: set[str], loaders: Mapping[str, object], wrappers: set[str]) -> bool:
+    """True when a call named ``name`` is the configured-entry-point loader.
+
+    A qualified call ends in the loader's name; a bare name is the loader or an
+    alias imported from any module. Aliases are file-wide, so a name the file
+    also binds to another loader, or defines as a loading wrapper, keeps that
+    loader's reading: the helper never reinterprets another loader's call.
+    """
+    if name in loaders or name in wrappers:
+        return False
+    return name.rpartition(".")[2] == CONFIGURED_LOADER or name in configured_names
 
 
 def repo_path(value: str) -> str:
@@ -404,7 +417,7 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
             if name in wrappers:
                 kind = "file"
                 index = 1
-            configured = leaf == CONFIGURED_LOADER or name in configured_names
+            configured = configured_call(name, configured_names, loaders, wrappers)
             if configured:
                 kind, index = "module", 0
             if not kind:
@@ -412,7 +425,7 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
             expression = node.args[index] if len(node.args) > index else next(
                 (kw.value for kw in node.keywords if kw.arg == (
                     "location" if kind == "file" and index == 1 else
-                    "path_name" if kind == "file" else "mod_name" if leaf == "run_module" else "name"
+                    "path_name" if kind == "file" else "mod_name" if leaf == "run_module" and not configured else "name"
                 )), None)
             value = literal_target(expression, bindings, path) if expression is not None else None
             target = resolve(str(value)) if kind == "module" and value is not None else str(value)

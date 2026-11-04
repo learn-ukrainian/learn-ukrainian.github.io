@@ -470,6 +470,34 @@ def test_configured_entry_point_calls_are_module_loads():
     assert c.CONFIGURED_LOADER_PATH in sources
 
 
+@pytest.mark.parametrize("loader", ["from runpy import run_path as load", "from importlib.util import spec_from_file_location as load"])
+def test_configured_alias_never_reinterprets_another_loader(loader):
+    """A file-wide helper alias that shares a name with another loader keeps that loader's reading."""
+    call = "load('scripts/prod/runner.py')" if "run_path" in loader else "load('runner', 'scripts/prod/runner.py')"
+    sources = {
+        "scripts/__init__.py": b"",
+        "scripts/prod/__init__.py": b"",
+        "scripts/prod/runner.py": b"R = 1\n",
+        "scripts/prod/widget.py": b"W = 1\n",
+        "scripts/mixed.py": (
+            f"def run():\n    {loader}\n    {call}\n\n"
+            "def hooks():\n    from scripts.ops.product_entry import load_configured_module as load\n"
+            "    load('scripts.prod.widget')\n"
+        ).encode(),
+        "scripts/renamed.py": (
+            b"from scripts.ops.product_entry import load_configured_module as run_module\n"
+            b"run_module(name='scripts.prod.widget')\n"
+        ),
+    }
+    graph = c.scan_imports(sources)
+    assert ("scripts/mixed.py", "scripts/prod/runner.py") in graph["file_edges"]
+    # Read as the other loader, the helper's literal is unprovable, so it stays an unresolved load.
+    assert {"path": "scripts/mixed.py", "line": 7, "reason": "nonliteral-or-missing-load"} in graph["unresolved_edges"]
+    assert ("scripts/renamed.py", "scripts/prod/widget.py") in graph["file_edges"]
+    assert not [edge for edge in graph["unresolved_edges"]
+                if edge["path"] == "scripts/renamed.py" and edge["reason"] == "nonliteral-or-missing-load"]
+
+
 def test_skips_never_hide_a_failed_command(repo, monkeypatch):
     monkeypatch.setattr(c, "project_interpreter", lambda root: Path(sys.executable))
     (repo / "tests/test_fixture.py").write_text(
