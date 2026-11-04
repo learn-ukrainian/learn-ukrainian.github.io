@@ -786,6 +786,13 @@
     ]
   },
   {
+    "path": "scripts/ops/product_entry.py",
+    "reference_count": 1,
+    "kind": "configured_entry_point",
+    "target_db": null,
+    "reason": "The one configured entry point (#12504, LOADER-1104). load_configured_module imports the scripts.* module that product data names; it refuses SQLite module names first. This is not a SQLite constructor. The kind pins this one call site."
+  },
+  {
     "path": "scripts/orchestration/thread_handoff.py",
     "reference_count": 1,
     "kind": "writer",

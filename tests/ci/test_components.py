@@ -441,6 +441,35 @@ def test_imported_parent_initializers_relative_missing_and_keyword_loads():
     ]
 
 
+def test_configured_entry_point_calls_are_module_loads():
+    """Plain, aliased and qualified helper calls load by name; a non-literal name stays unresolved."""
+    sources = {
+        "scripts/__init__.py": b"",
+        "scripts/ops/product_entry.py": (
+            b"import importlib\n\ndef load_configured_module(name):\n    return importlib.import_module(name)\n"
+        ),
+        "scripts/review/hooks.py": b"X = 1\n",
+        "scripts/plain.py": b"from scripts.ops.product_entry import load_configured_module\nload_configured_module(name)\n",
+        "scripts/aliased.py": (
+            b"from scripts.ops.product_entry import load_configured_module as load\n"
+            b"load(first)\nload(name=second)\n"
+        ),
+        "scripts/qualified.py": b"import scripts.ops.product_entry as entry\nentry.load_configured_module('scripts.review.hooks')\n",
+        "scripts/module_alias.py": b"from scripts.ops import product_entry\nproduct_entry.load_configured_module(name='scripts.review.hooks')\n",
+        "scripts/other.py": b"from importlib import import_module as load\nload(name)\n",
+    }
+    graph = c.scan_imports(sources)
+    assert ("scripts/qualified.py", "scripts/review/hooks.py") in graph["file_edges"]
+    assert ("scripts/module_alias.py", "scripts/review/hooks.py") in graph["file_edges"]
+    unresolved = {(edge["path"], edge["line"]) for edge in graph["unresolved_edges"]
+                  if edge["reason"] == "nonliteral-or-missing-load"}
+    configured = {(edge["path"], edge["line"]) for edge in graph["configured_loads"]}
+    assert configured == {("scripts/plain.py", 2), ("scripts/aliased.py", 2), ("scripts/aliased.py", 3)}
+    # The implementation and an unrelated import_module alias stay ordinary non-literal loads.
+    assert unresolved == configured | {("scripts/ops/product_entry.py", 4), ("scripts/other.py", 2)}
+    assert c.CONFIGURED_LOADER_PATH in sources
+
+
 def test_skips_never_hide_a_failed_command(repo, monkeypatch):
     monkeypatch.setattr(c, "project_interpreter", lambda root: Path(sys.executable))
     (repo / "tests/test_fixture.py").write_text(
