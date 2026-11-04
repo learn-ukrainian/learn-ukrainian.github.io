@@ -687,24 +687,40 @@ def _security_not_pass(reply: str) -> bool:
 
 
 # The words of a security verdict joined by anything that is not a letter or digit, read only to find one.
-_LOOSE_VERDICT = re.compile(r"(?i)security[^a-z0-9]{1,8}verdict")
+_LOOSE_VERDICT = re.compile(r"(?i)security[^a-z0-9]+verdict")
 _MARKUP = re.compile(r"<!--.*?-->|<[^>]*>", re.S)
 
 
 def _hidden_verdict(text: str) -> bool:
-    """Whether the text, as it may render, spells a security verdict a different number of times than it states.
+    """Whether the text, as it may render, shows any security verdict other than exactly the ones it states.
 
     Tags and comments, character references, compatibility forms, invisible format characters,
-    backslashes and inline markup are removed only to look for the words; no value is read from that
-    form, so it can add refusals but never turn a value into PASS. Confusable letters from other
-    scripts are outside this reading, as they are for every security-verdict reader in the repository.
+    backslashes and inline markup are removed only to find the verdicts that may be shown. Each one,
+    with the rest of its line, must match the verdict stated as written at the same place in order
+    (emphasis aside), so a verdict shown only after removal, or a stated one that removal hides,
+    refuses. No value is read from the removed form, so it can add refusals but never turn a value
+    into PASS. Confusable letters from other scripts are outside this reading, as they are for every
+    security-verdict reader in the repository.
     """
     shown = _MARKUP.sub("", html.unescape(_MARKUP.sub("", text)))
     shown = "".join(char for char in unicodedata.normalize("NFKC", shown) if unicodedata.category(char) != "Cf")
     shown = re.sub(r"[\\*`~]", "", shown)
     # As written, a tag or comment separates text rather than joining it, and a verdict inside one is not shown.
     stated = _MARKUP.sub("\N{OBJECT REPLACEMENT CHARACTER}", text)
-    return len(_LOOSE_VERDICT.findall(shown)) != len(recorder._SECURITY_VERDICT.findall(stated))
+    starts = [match.start() + len(match.group()) - len(match.group().lstrip("*"))
+              for match in recorder._SECURITY_VERDICT.finditer(stated)]
+    return (_verdict_lines(shown, [match.start() for match in _LOOSE_VERDICT.finditer(shown)])
+            != _verdict_lines(stated, starts))
+
+
+def _verdict_lines(text: str, starts: Sequence[int]) -> list[str]:
+    """Each security verdict starting at ``starts``, with the rest of its line and no emphasis marks."""
+    lines = []
+    for start in starts:
+        words = _LOOSE_VERDICT.match(text, start)
+        end = words.end() if words is not None else start
+        lines.append((text[start:end] + text[end:].split("\n", 1)[0]).replace("*", ""))
+    return lines
 
 
 def _decoded_texts(value: Any) -> Iterator[str]:
