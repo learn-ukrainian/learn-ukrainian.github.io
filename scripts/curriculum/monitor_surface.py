@@ -14,11 +14,17 @@ from typing import Any
 
 # ``pipeline.*`` uses bare imports (``from pipeline.core import log``), so
 # scripts/ must be importable. These are the module objects the Monitor used
-# before this wrapper existed.
+# before this wrapper existed. The wiki compiler is the top-level ``wiki``
+# package on that path. ``scripts.wiki`` is a second module object, and the
+# route sweep rewrites state paths on ``wiki``, so this wrapper imports ``wiki``.
 _SCRIPTS_DIR = str(Path(__file__).resolve().parents[1])
 if _SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, _SCRIPTS_DIR)
 
+import wiki.config as wiki_config
+import wiki.quality_gate as wiki_quality
+import wiki.sources as wiki_sources
+import wiki.state as wiki_state
 from pipeline.consultation import TemplateChange
 from pipeline.consultation import apply_template_patch as _apply_template_patch
 from pipeline.state import is_complete as phase_is_complete
@@ -44,10 +50,6 @@ from scripts.audit.llm_qg_store import (
 )
 from scripts.audit.status_cache import get_source_paths, read_status
 from scripts.slug_utils import to_bare_slug
-from scripts.wiki import config as wiki_config
-from scripts.wiki import quality_gate as wiki_quality
-from scripts.wiki import sources as wiki_sources
-from scripts.wiki import state as wiki_state
 from scripts.yaml_activities import ActivityParser
 
 __all__ = [
@@ -135,7 +137,8 @@ def wiki_track_domains() -> dict[str, list[str]]:
 
 def list_discovery_slugs_readonly(track: str) -> list[str]:
     """Track slugs from plans and discovery files, without writing discovery."""
-    return list(wiki_sources.list_discovery_slugs_readonly(track))
+    slugs: list[str] = list(wiki_sources.list_discovery_slugs_readonly(track))
+    return slugs
 
 
 def gather_discovery_sources_readonly(track: str, slug: str) -> dict[str, Any]:
@@ -158,7 +161,8 @@ def read_wiki_log(*, track: str | None = None, last_n: int = 200) -> list[dict[s
 
 def scan_wiki_track(track: str) -> dict[str, list[str]]:
     """Quality-gate issues for one wiki track."""
-    return wiki_quality.scan_track(track)
+    issues: dict[str, list[str]] = wiki_quality.scan_track(track)
+    return issues
 
 
 def activity_validation_violations(activities: list[Any]) -> list[Any]:
