@@ -16,7 +16,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -51,7 +51,7 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch", for_display
     )
 
     with ThreadPoolExecutor(max_workers=2) as executor:
-        subscription = executor.submit(refresh_provider_usage_data, SUBSCRIPTION_PROVIDERS)
+        subscription = executor.submit(refresh_provider_usage_data, (*SUBSCRIPTION_PROVIDERS, "codex:b"))
         prepaid = executor.submit(refresh_api_account_data, API_ACCOUNT_PROVIDERS)
         subscription.result()
         prepaid.result()
@@ -289,7 +289,7 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
             f"active={agentic.get('active')}"
         )
 
-    if lane == "codex":
+    if lane == "codex" or lane.startswith("codex:"):
         balance = info.get("credit_balance", native.get("credit_balance"))
         inventory = info.get("reset_credits", native.get("reset_credits")) or {}
         count = inventory.get("available_count")
@@ -434,20 +434,35 @@ def _lane_tips(lane: str, info: dict[str, Any], *, fail: str) -> list[str]:
     return tips
 
 
+def _budget_mapping(value: object) -> dict[str, Any]:
+    return cast(dict[str, Any], value) if isinstance(value, dict) else {}
+
+
 def format_human(budget: dict[str, Any], *, for_display: bool = False) -> str:
     """Render an authoritative budget; optional diagnostics never count as routing signals."""
     routing_agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
+    accounts = _budget_mapping(budget.get("codex_accounts"))
+    account_b_raw = accounts.get("codex:b")
+    account_b = cast(dict[str, Any], account_b_raw) if isinstance(account_b_raw, dict) else None
     usable = sum(_lane_has_usable_allotment(info) for info in routing_agents.values() if isinstance(info, dict))
+    if account_b is not None and _lane_has_usable_allotment(account_b):
+        usable += 1
     if for_display:
         budget = _attach_status_observations(budget)
+        accounts = _budget_mapping(budget.get("codex_accounts"))
+        refreshed_b = accounts.get("codex:b")
+        if isinstance(refreshed_b, dict):
+            account_b = refreshed_b
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     lines = [
         f"source: {budget.get('source', 'unknown')}",
         "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
         "lane | status | remaining% | freshness | age_s | fail",
     ]
-    for lane in sorted(agents):
-        info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
+    rows = [(lane, agents.get(lane) if isinstance(agents.get(lane), dict) else {}) for lane in sorted(agents)]
+    if account_b is not None:
+        rows.append(("codex:b", account_b))
+    for lane, info in rows:
         freshness, age = _observation(info)
         status = _display_status(info, freshness=freshness)
         rem = info.get("remaining_pct")
@@ -597,7 +612,31 @@ def doctor() -> str:
         "Notebook tip: if `usage show --fresh` ImportErrors on learn_ukrainian_v4_runtime, "
         "run `.venv/bin/pip install -e packages/v4-runtime` (Monitor-backed `show` needs no v4)."
     )
+    lines.extend(_codex_account_auth_presence())
     return "\n".join(lines)
+
+
+def _codex_account_auth_presence() -> list[str]:
+    """Presence of each Codex subscription's auth file. No path and no contents.
+
+    Account b's home comes from the private binding. A missing binding is
+    ``unbound``, not account a's file.
+    """
+    from scripts.agent_runtime.codex_accounts import CodexAccountRefused, codex_account_home
+
+    lines: list[str] = []
+    for label, account in (("a", "sub"), ("b", "b-sub")):
+        try:
+            path = codex_account_home(account) / "auth.json"
+        except CodexAccountRefused:
+            lines.append(f"codex account {label} auth.json: unbound")
+            continue
+        try:
+            present = path.is_file()
+        except OSError:
+            present = False
+        lines.append(f"codex account {label} auth.json: {'present' if present else 'absent'}")
+    return lines
 
 
 def qa_snapshot(budget: dict[str, Any]) -> tuple[int, str]:

@@ -31,11 +31,13 @@ ETag.
 from __future__ import annotations
 
 import fnmatch
+import importlib.util
 import json
 import logging
 import math
 import os
 import re
+import sys
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
@@ -43,9 +45,95 @@ from typing import Any
 
 import yaml
 
-from scripts.audit import check_research_registry as crr
-
 logger = logging.getLogger("research.registry")
+
+# Product checker. The module name is data in scripts/audit/research_check.v1.json,
+# loaded here so this machinery package does not import a product module.
+_CHECK_SCHEMA = "learn-ukrainian.research-check.v1"
+_CHECK_KEYS = ("check_module", "corpus_module")
+_MODULE_NAME_RE = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
+_CHECK_CONFIG_PATH = Path(__file__).resolve().parents[1] / "audit" / "research_check.v1.json"
+
+
+def research_check_config() -> dict[str, str]:
+    """Return the check and corpus module names from the product data file."""
+    try:
+        payload = json.loads(_CHECK_CONFIG_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError("research check config is unreadable") from exc
+    if not isinstance(payload, dict) or payload.get("schema") != _CHECK_SCHEMA:
+        raise RuntimeError("research check config schema mismatch")
+    if set(payload) != {"schema", *_CHECK_KEYS}:
+        raise RuntimeError("research check config fields mismatch")
+    names: dict[str, str] = {}
+    for key in _CHECK_KEYS:
+        value = payload[key]
+        if not isinstance(value, str) or _MODULE_NAME_RE.fullmatch(value) is None:
+            raise RuntimeError(f"research check config {key} is not a module name")
+        names[key] = value
+    return names
+
+
+def _module_path(name: str) -> Path:
+    root = Path(__file__).resolve().parents[2]
+    relative = root.joinpath(*name.split("."))
+    package_init = relative / "__init__.py"
+    if package_init.is_file():
+        return package_init
+    return relative.with_suffix(".py")
+
+
+def _exec_configured_file(name: str) -> Any:
+    location = _module_path(name)
+    package = location.name == "__init__.py"
+    spec = importlib.util.spec_from_file_location(
+        name,
+        location,
+        submodule_search_locations=[str(location.parent)] if package else None,
+    )
+    if spec is None or spec.loader is None:
+        raise RuntimeError("research check module is missing")
+    module = importlib.util.module_from_spec(spec)
+    # Register before exec so a class body can find its module.
+    sys.modules[name] = module
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        sys.modules.pop(name, None)
+        raise
+    return module
+
+
+def _load_configured_module(key: str) -> Any:
+    """Load one product module named by the research-check data file.
+
+    The name stays in that data file. A computed ``import_module`` is a sqlite
+    constructor reference, so the file is loaded by path and linked onto its
+    parent packages the way a normal import would.
+    """
+    name = research_check_config()[key]
+    parts = name.split(".")
+    module: Any = None
+    for end in range(1, len(parts) + 1):
+        qualified = ".".join(parts[:end])
+        module = sys.modules.get(qualified)
+        if module is None:
+            module = _exec_configured_file(qualified)
+        if end > 1:
+            setattr(sys.modules[".".join(parts[: end - 1])], parts[end - 1], module)
+    return module
+
+
+_DEFAULT_CHECK_MODULE = _load_configured_module("check_module")
+
+
+def configured_check_module() -> Any:
+    """The product registry checker named by the research-check data file."""
+    return _DEFAULT_CHECK_MODULE
+
+
+def _resolve_check(check: Any | None) -> Any:
+    return _DEFAULT_CHECK_MODULE if check is None else check
 
 # --------------------------------------------------------------------------- #
 # Kill switch (ADR-011 §"Runtime kill switch")
@@ -239,7 +327,7 @@ class RegistryRuntime:
         return sha256(canonical_json_bytes(items)).hexdigest()
 
 
-def load_runtime(*, root: Path | None = None) -> RegistryRuntime | None:
+def load_runtime(*, root: Path | None = None, check: Any | None = None) -> RegistryRuntime | None:
     """Load the registry and validate it via P1's ``validate_registry`` — the single
     semantic authority for schema, lifecycle, supersession, consumer, ownership, and
     digest-policy invariants (this module never duplicates that logic).
@@ -252,15 +340,16 @@ def load_runtime(*, root: Path | None = None) -> RegistryRuntime | None:
     reports drift and nothing else, the runtime is still built and only the drifted
     ids are marked ``valid=False`` so healthy records keep routing.
     """
+    checker = _resolve_check(check)
     root = root if root is not None else _live_repo_root()
     path = _registry_path(root)
     try:
-        raw, data = crr.load_registry(path)
+        raw, data = checker.load_registry(path)
     except (OSError, ValueError, yaml.YAMLError, RecursionError) as exc:
         logger.warning("research registry: cannot load %s (%s); no research surface", path, exc)
         return None
     try:
-        result = crr.validate_registry(data, project_root=root, raw_text=raw)
+        result = checker.validate_registry(data, project_root=root, raw_text=raw)
     except (OSError, ValueError, yaml.YAMLError, RecursionError, KeyError, TypeError) as exc:
         logger.warning(
             "research registry: %s failed validation (%s); no research surface",
@@ -281,7 +370,7 @@ def load_runtime(*, root: Path | None = None) -> RegistryRuntime | None:
     return RegistryRuntime(root=root, pairs=pairs)
 
 
-def load_runtime_safe(*, root: Path | None = None) -> RegistryRuntime | None:
+def load_runtime_safe(*, root: Path | None = None, check: Any | None = None) -> RegistryRuntime | None:
     """Fail-open boundary around :func:`load_runtime` for every HTTP-facing caller.
 
     ``load_runtime`` already turns known-bad input (missing file, malformed YAML,
@@ -292,7 +381,7 @@ def load_runtime_safe(*, root: Path | None = None) -> RegistryRuntime | None:
     must check :func:`is_enabled` first; this function does not gate on the flag.
     """
     try:
-        return load_runtime(root=root)
+        return load_runtime(root=root, check=check)
     except Exception as exc:
         logger.warning(
             "research registry: unexpected %s loading runtime; no research surface",
@@ -544,7 +633,9 @@ def _slug_ok(record_id: str) -> bool:
     return _SLUG_RE.fullmatch(record_id) is not None
 
 
-def record_body(runtime: RegistryRuntime, record_id: str) -> tuple[str, str] | None:
+def record_body(
+    runtime: RegistryRuntime, record_id: str, *, check: Any | None = None
+) -> tuple[str, str] | None:
     """Return (markdown_body, etag_hex) for a record, or ``None`` if unavailable.
 
     ``None`` (→ generic 404 at the API) covers: malformed id, unknown/invalid/
@@ -559,10 +650,11 @@ def record_body(runtime: RegistryRuntime, record_id: str) -> tuple[str, str] | N
         return None
     if record.get("access_class") == "private-local":
         return None
+    checker = _resolve_check(check)
     try:
-        raw_projection = crr._record_projection(record, runtime.root)
-        body = crr.normalize_digest_projection(raw_projection)
-    except crr.ProvenanceError:
+        raw_projection = checker._record_projection(record, runtime.root)
+        body = checker.normalize_digest_projection(raw_projection)
+    except checker.ProvenanceError:
         return None
     body_bytes = body.encode("utf-8")
     if len(body_bytes) > MAX_RECORD_BYTES:
@@ -580,7 +672,7 @@ def record_body(runtime: RegistryRuntime, record_id: str) -> tuple[str, str] | N
     # ETag and serving unreconciled bytes. A fresh load_runtime() call would
     # exclude this record entirely; this call must not do less.
     stored = record["content_hash"]
-    if crr.compute_content_hash(body) != stored:
+    if checker.compute_content_hash(body) != stored:
         logger.warning(
             "research registry: record %r content changed since load_runtime(); refusing to serve",
             record_id,

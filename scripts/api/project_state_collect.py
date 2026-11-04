@@ -295,6 +295,11 @@ def collect_service_row(
     return row
 
 
+# Account keys from slice A. ``codex`` in SUBSCRIPTION_PROVIDERS stays account a.
+# ``codex:b`` is account b. The sanitizer drops a lane token it does not allow.
+_CODEX_ACCOUNT_USAGE_KEYS = ("codex:b",)
+
+
 def _lane_usage_row_from_provider(provider: str) -> dict[str, Any] | None:
     data = fetch_codexbar_usage(provider)
     if not isinstance(data, dict) or data.get("status") != "healthy":
@@ -303,9 +308,10 @@ def _lane_usage_row_from_provider(provider: str) -> dict[str, Any] | None:
     resets_at = data.get("weekly_resets_at")
     if weekly_used is None or not isinstance(resets_at, str):
         return None
+    lane = provider if provider in _CODEX_ACCOUNT_USAGE_KEYS else (data.get("lane") or provider)
     return sanitize_lane_usage_entry(
         {
-            "lane": data.get("lane") or provider,
+            "lane": lane,
             "window": "weekly",
             "used_pct": weekly_used,
             "resets_at": resets_at,
@@ -315,7 +321,7 @@ def _lane_usage_row_from_provider(provider: str) -> dict[str, Any] | None:
 
 def collect_lane_usage() -> list[dict[str, Any]] | None:
     rows: list[dict[str, Any]] = []
-    for provider in SUBSCRIPTION_PROVIDERS:
+    for provider in (*SUBSCRIPTION_PROVIDERS, *_CODEX_ACCOUNT_USAGE_KEYS):
         row = _lane_usage_row_from_provider(provider)
         if row is not None:
             rows.append(row)

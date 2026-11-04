@@ -347,16 +347,6 @@
       "count": 1
     },
     {
-      "path": "scripts/debug/debug_hash.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/debug/debug_hash.py",
-      "module": "scripts.audit.core",
-      "count": 1
-    },
-    {
       "path": "scripts/dispatcher/providers/codex.py",
       "module": "scripts.audit",
       "count": 1
@@ -654,31 +644,6 @@
     {
       "path": "scripts/orchestration/sources_watchdog.py",
       "module": "scripts.rag.hang_diagnostics",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/observability.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/observability.py",
-      "module": "scripts.audit.atlas_intake_registry",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/observability.py",
-      "module": "scripts.audit.check_research_registry",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/registry.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/research/registry.py",
-      "module": "scripts.audit.check_research_registry",
       "count": 1
     },
     {
