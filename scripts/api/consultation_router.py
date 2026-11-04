@@ -29,16 +29,14 @@ from fastapi.responses import JSONResponse
 
 from .config import LEVELS
 from .monitor_context import MonitorContext, get_ctx
-from .state_helpers import cache_get, cache_set, ctx_cache_scope, read_v2_state
+from .state_helpers import cache_get, cache_set, ctx_cache_scope, monitor_surface, read_v2_state
 
-# Import TemplateChange and apply_template_patch at module level.
-# state_helpers already inserts scripts/ into sys.path, so this import works.
+# state_helpers already inserts scripts/ into sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
-from pipeline.consultation import TemplateChange, apply_template_patch
 
 router = APIRouter(tags=["consultation"])
 
@@ -250,20 +248,12 @@ def _apply_proposal(proposal: dict, ctx: MonitorContext) -> tuple[bool, int, lis
     Returns (success, num_applied, errors).
     """
     template_dir = _template_dir(ctx)
-    changes = [
-        TemplateChange(
-            find=c.get("find", ""),
-            replace=c.get("replace", ""),
-            file=c.get("file", ""),
-            rationale=c.get("rationale", ""),
-        )
-        for c in proposal.get("proposed_changes", [])
-    ]
 
     # Group changes by target template
-    templates: dict[str, list[TemplateChange]] = {}
-    for change in changes:
-        name = Path(change.file).name if change.file else ""
+    templates: dict[str, list[dict]] = {}
+    for change in proposal.get("proposed_changes", []):
+        file_field = change.get("file", "")
+        name = Path(file_field).name if file_field else ""
         if name:
             templates.setdefault(name, []).append(change)
 
@@ -278,7 +268,7 @@ def _apply_proposal(proposal: dict, ctx: MonitorContext) -> tuple[bool, int, lis
             continue
         # Write patched version alongside original
         output_path = template_dir / f"consultation-patched-{now}-{template_name}"
-        ok, applied = apply_template_patch(template_path, tpl_changes, output_path)
+        ok, applied = monitor_surface.apply_template_patch(template_path, tpl_changes, output_path)
         if not ok:
             errors.append(f"patch failed for {template_name}")
         else:

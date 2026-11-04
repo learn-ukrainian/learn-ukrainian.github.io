@@ -25,10 +25,6 @@ from research_quality import (
     get_dimensions,
     get_rubric,
 )
-from scripts.audit.llm_qg_store import (
-    current_payload_for_module,
-    llm_qg_file_is_current_for_module,
-)
 
 from . import config
 
@@ -48,6 +44,7 @@ from .state_helpers import (
     get_research_score,
     get_word_target_from_plan,
     has_research_file,
+    monitor_surface,
     # BACKWARD-COMPAT: v3/v2 parsers needed for modules not yet rebuilt on v6
     parse_v3_phase_status,
     parse_v5_phase_status,
@@ -280,13 +277,13 @@ def read_llm_qg(track_dir: Path, slug: str) -> dict | None:
     """
     try:
         module_dir = safe_join(track_dir, slug)
-        current = current_payload_for_module(track_dir.name, slug, module_dir)
+        current = monitor_surface.current_payload_for_module(track_dir.name, slug, module_dir)
         if current is not None:
             return {**current, "_qg_authoritative": True, "_qg_source": "current_db"}
         path = safe_join(module_dir, "llm_qg.json")
     except ValueError:
         return None
-    if not llm_qg_file_is_current_for_module(module_dir, path):
+    if not monitor_surface.llm_qg_file_is_current_for_module(module_dir, path):
         return None
     observed = _read_json_file(path)
     if observed is None:

@@ -138,6 +138,10 @@ def screen(policy_path: Path | None = None, *, redact: bool = False) -> str:
         if not left or any(status in left for status in ("NOT CHECKED", "STALE", "POOL EXHAUSTED")):
             check = (pool.check_command if pool else "") or (
                 f"codexbar usage --provider {shlex.quote(provider)} --format json --no-color")
+            if provider == "codex" and not (pool and pool.check_command):
+                usage_key = "codex:b" if source.startswith("codex:b") else "codex:a"
+                check = ('.venv/bin/python -m scripts.fleet.usage json --fresh '
+                         f'| jq \'.codex_accounts["{usage_key}"]\'')
             if provider == "private" and not (pool and pool.check_command):
                 check = ('jq -e ".pools[] | select(.operator_reading_confirmed == true)" '
                          '"${XDG_CONFIG_HOME:-$HOME/.config}/learn-ukrainian/budget_pools.json"')
