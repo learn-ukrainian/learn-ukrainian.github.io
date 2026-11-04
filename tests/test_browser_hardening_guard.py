@@ -9,9 +9,9 @@ Playwright's bundled browsers, or configures a Playwright MCP server.
 
 This static guard is a good-faith tripwire, not the control of record. It reads
 every tracked text file except prose formats (.md, .txt, .html, .csv, .rst),
-data files under curriculum/ and registry/, and npm lockfiles. It cannot see a
-package name built at runtime. Runtime enforcement of the Chromium sandbox at
-launch is tracked separately.
+data files under curriculum/ and registry/ (a package.json is never data), and
+npm lockfiles. It cannot see a package name built at runtime. Runtime
+enforcement of the Chromium sandbox at launch is tracked in #12714.
 """
 
 from __future__ import annotations
@@ -121,9 +121,11 @@ PROSE_SUFFIXES = (".md", ".txt", ".html", ".csv", ".rst")
 LOCKFILE_NAMES = ("package-lock.json",)
 # Learner content and lexicon data files: nothing executes them, and their prose uses the
 # English word playwright. A runnable file under these trees still gets the token rule, and
-# every other rule still reads them all.
+# every other rule still reads them all. A package.json is never data, wherever it sits:
+# npm runs its scripts.
 DATA_TREES = ("curriculum/", "registry/")
 DATA_SUFFIXES = (".json", ".yaml", ".yml", ".toml")
+NPM_MANIFEST_NAME = "package.json"
 
 # Files that name a sandbox flag for a reason other than a browser launch.
 SANDBOX_FLAG_EXEMPT = {
@@ -238,7 +240,8 @@ def _playwright_mentions(path: str) -> list[str]:
     """Each place `path` names a Playwright package outside the allowed places."""
     if path in LAUNCHERS or path.endswith(LOCKFILE_NAMES):
         return []
-    if path.startswith(DATA_TREES) and path.endswith(DATA_SUFFIXES):
+    is_npm_manifest = path.rsplit("/", 1)[-1] == NPM_MANIFEST_NAME
+    if path.startswith(DATA_TREES) and path.endswith(DATA_SUFFIXES) and not is_npm_manifest:
         return []
     mentions = []
     for code in _code_strings(path):
