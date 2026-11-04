@@ -73,6 +73,7 @@ __all__ = [
     "to_bare_slug",
     "wiki_dir",
     "wiki_state_dir",
+    "wiki_status_summary",
     "wiki_track_domains",
 ]
 
@@ -114,6 +115,16 @@ def wiki_dir() -> Path:
 def wiki_state_dir() -> Path:
     """Wiki compiler state directory."""
     return Path(wiki_state.WIKI_STATE_DIR)
+
+
+def wiki_status_summary() -> dict[str, Any]:
+    """Compilation summary from ``scripts.wiki.state.get_status_summary``.
+
+    The wiki router keeps a ``wiki_state`` name so ``scripts/api/main.py`` orient
+    can call ``wiki_state.get_status_summary()`` without importing product code.
+    """
+    summary: dict[str, Any] = wiki_state.get_status_summary()
+    return summary
 
 
 def wiki_track_domains() -> dict[str, list[str]]:

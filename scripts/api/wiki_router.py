@@ -31,6 +31,17 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
+# scripts/api/main.py orient calls wiki_state.get_status_summary() on this
+# module. The name stays; the function is the product one, through the wrapper.
+class _WikiState:
+    @staticmethod
+    def get_status_summary() -> dict[str, Any]:
+        summary: dict[str, Any] = monitor_surface.wiki_status_summary()
+        return summary
+
+
+wiki_state = _WikiState()
+
 router = APIRouter(tags=["wiki"])
 
 _TABLE_NAMES = [
