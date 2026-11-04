@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import re
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 from unicodedata import normalize
@@ -30,7 +31,6 @@ from unicodedata import normalize
 from scripts.eval.uk_preamble.common import sha256_text
 from scripts.eval.uk_preamble.dataset import ReviewItem, _review_item
 from scripts.eval.uk_preamble.scoring import review_counts
-from scripts.review.receipts.outcomes import search_outcome
 
 from . import adapters
 from .binding import SUM11_POSITIVE, VERIFIED, LedgerIndex, check_binding
@@ -127,6 +127,7 @@ def _candidate_evidence(
     item: dict[str, Any],
     evidence: dict[str, str],
     index: LedgerIndex,
+    search_outcome: Callable[[str, dict[str, Any]], str | None],
 ) -> bool:
     """Whether the finding carries its own checkable evidence (protocol lines 362-378).
 
@@ -158,7 +159,11 @@ def _candidate_evidence(
             return derived is not None and finding.get("key_positions") == derived and answer_position_pattern(derived)
         return defect in EXERCISE_REQUEST_DEFECTS or own(EXERCISE_DEFECT_FACETS[defect])
     kinds = {entry["id"]: entry.get("kind") for entry in item.get("norm_evidence") or [] if isinstance(entry, dict)}
-    satisfied = {anchor["kind"] for anchor in finding["anchors"] if _anchor_ok(anchor, finding, evidence, kinds, index)}
+    satisfied = {
+        anchor["kind"]
+        for anchor in finding["anchors"]
+        if _anchor_ok(anchor, finding, evidence, kinds, index, search_outcome)
+    }
     return all(any(kind in satisfied for kind in part) for part in PEDAGOGY_ANCHORS[finding["defect"]])
 
 
@@ -168,6 +173,7 @@ def _anchor_ok(
     evidence: dict[str, str],
     kinds: dict[str, Any],
     index: LedgerIndex,
+    search_outcome: Callable[[str, dict[str, Any]], str | None],
 ) -> bool:
     """One anchor through the single source its kind permits (``contract.ANCHOR_*``)."""
     kind, receipt, source = anchor["kind"], anchor["receipt"], anchor["evidence"]
@@ -222,6 +228,7 @@ def score_cell(
     output: str | None,
     sidecar: dict[str, Any] | None,
     index: LedgerIndex,
+    search_outcome: Callable[[str, dict[str, Any]], str | None],
     validate_draft: Any = None,
 ) -> dict[str, Any]:
     """Score one item-repeat. Every status but ``COMPLETE`` leaves the reward provisional.
@@ -361,7 +368,9 @@ def score_cell(
             )
             continue
         if contract.candidate_receipts_required:
-            has_receipt = finding is not None and _candidate_evidence(family, finding, verified, item, evidence, index)
+            has_receipt = finding is not None and _candidate_evidence(
+                family, finding, verified, item, evidence, index, search_outcome
+            )
         else:
             has_receipt = bool(verified)
         if a["verdict"] == "unchecked":
