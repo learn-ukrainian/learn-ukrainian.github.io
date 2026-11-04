@@ -9,12 +9,19 @@ regression checks the shared pytest hook forbids real data/*.db writable opens.
 from __future__ import annotations
 
 import ast
+import importlib
 import subprocess
+import sys
+import threading
+import uuid
 from pathlib import Path
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
+import scripts
 from scripts.hygiene import lint_source_db_writable_connects as lint
+from scripts.ops import product_entry
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -47,7 +54,7 @@ def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
         assert set(entry.functions) == {"resolve_store", "resolve_active_sources_db", "resolve_store_for_write", "_prepare_store_write_target"}
         assert entry.reference_count == 0
     else:
-        assert entry.kind in {"reader_pending_migration_9662", "fixture_factory"}
+        assert entry.kind in {"reader_pending_migration_9662", "fixture_factory", lint.CONFIGURED_ENTRY_POINT_KIND}
         assert entry.target_db is None
         calls = [
             ast.unparse(n)
@@ -55,6 +62,19 @@ def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
             if isinstance(n, ast.Call) and ast.unparse(n.func) == "sqlite3.connect"
         ]
         assert calls == list(entry.calls)
+        if entry.kind == lint.CONFIGURED_ENTRY_POINT_KIND:
+            pinned = lint.CONFIGURED_ENTRY_POINTS[entry.path]
+            assert entry.reference_count == pinned[0]
+            assert [finding.snippet for finding in lint.classify_source(source, entry.path)] == [pinned[1]]
+
+
+def test_configured_entry_point_kind_names_only_the_helper():
+    """The kind pins one import site: the shared helper's, in the allowlist and in the lint."""
+    configured = [entry.path for entry in lint.load_allowlist() if entry.kind == lint.CONFIGURED_ENTRY_POINT_KIND]
+    assert configured == ["scripts/ops/product_entry.py"]
+    assert lint.CONFIGURED_ENTRY_POINTS == {
+        "scripts/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name))"),
+    }
 
 
 FORBIDDEN = (
@@ -114,6 +134,14 @@ FORBIDDEN = (
         'from builtins import __import__ as loader\nname = "sqlite3"\nloader(name)',
         'import builtins as loader\nname = "_sqlite3"\nloader.__import__(name)',
     ]
+    + [
+        # The configured-entry-point helper, plain, aliased or qualified, with a constant SQLite name.
+        'from scripts.ops.product_entry import load_configured_module\nload_configured_module("sqlite3:connect")',
+        'from scripts.ops.product_entry import load_configured_module as load\nload("scripts.lib.sqlite3")',
+        'import scripts.ops.product_entry as entry\nentry.load_configured_module(name="sqlite3.dbapi2")',
+        'from scripts.ops import product_entry\ndb = product_entry.load_configured_module("_sqlite3")\ndb.connect(path)',
+        'from scripts.ops.product_entry import load_configured_module as load\ndb = load("sqlite3:x")\ndb.Connection',
+    ]
 )
 
 
@@ -135,10 +163,50 @@ def test_any_constructor_reference_fails_in_injected_scripts(source, tmp_path):
         "from scripts.lib.readonly_sqlite import open_readonly\nconn = open_readonly(path)",
         'def connect(path): pass\nconnect("cache.db")',
         '# sqlite3.connect(path)\nexample = "sqlite3.Connection"',
+        # The helper refuses SQLite names, so a configured name is not a finding.
+        "from scripts.ops.product_entry import load_configured_module\nhooks = load_configured_module(name)\nhooks.connect(path)",
+        "from scripts.ops.product_entry import load_configured_module as load\nhooks = load(name=config['module'])",
+        "import scripts.ops.product_entry as entry\nhooks = entry.load_configured_module(name)",
+        "from scripts.ops import product_entry\nproduct_entry.load_configured_module('scripts.review.hooks')",
     ],
 )
 def test_unrelated_syntax_passes(source):
     assert lint.classify_source(source, "scripts/reader.py") == []
+
+
+def test_configured_entry_point_pin_rejects_other_files_and_extra_sites(tmp_path, monkeypatch):
+    """Constructor rejection stays everywhere but the helper's one pinned call site."""
+    import json
+
+    helper = (REPO_ROOT / "scripts/ops/product_entry.py").read_text()
+    (tmp_path / "scripts" / "ops").mkdir(parents=True)
+    pinned = lint.AllowedReference("scripts/ops/product_entry.py", 1, lint.CONFIGURED_ENTRY_POINT_KIND, None, "fixture")
+    (tmp_path / "scripts/ops/product_entry.py").write_text(helper)
+    assert lint.find_violations(tmp_path, (pinned,)) == ([], [])
+    # Without its entry, the helper's own import is a finding.
+    assert lint.find_violations(tmp_path, ())[0]
+    # A second import site, or a changed one, in the pinned file fails.
+    (tmp_path / "scripts/ops/product_entry.py").write_text(helper + "\n\ndef extra(n):\n    return importlib.import_module(n)\n")
+    assert any("pinned 1 references, found 2" in v for v in lint.find_violations(tmp_path, (pinned,))[0])
+    (tmp_path / "scripts/ops/product_entry.py").write_text(helper.replace("importlib.import_module(name)", "importlib.import_module(name + '')"))
+    assert any("differs from the pinned call site" in v for v in lint.find_violations(tmp_path, (pinned,))[0])
+    # The same code in another file stays a finding, and the kind cannot name that file.
+    (tmp_path / "scripts/ops/product_entry.py").write_text(helper)
+    (tmp_path / "scripts" / "copy.py").write_text(helper)
+    other = lint.AllowedReference("scripts/copy.py", 1, lint.CONFIGURED_ENTRY_POINT_KIND, None, "fixture")
+    assert any("scripts/copy.py:" in v for v in lint.find_violations(tmp_path, (pinned,))[0])
+    assert any("scripts/copy.py: configured entry point differs" in v for v in lint.find_violations(tmp_path, (pinned, other))[0])
+    manifest = tmp_path / "allowlist.json"
+    monkeypatch.setattr(lint, "REFERENCE_MANIFEST", manifest)
+    row = {"path": "scripts/ops/product_entry.py", "reference_count": 1, "kind": lint.CONFIGURED_ENTRY_POINT_KIND,
+           "target_db": None, "reason": "fixture"}
+    manifest.write_text(json.dumps([row]))
+    assert [entry.path for entry in lint.load_allowlist()] == ["scripts/ops/product_entry.py"]
+    for change in ({"path": "scripts/copy.py"}, {"reference_count": 2}, {"target_db": "sources.db"},
+                   {"calls": ["sqlite3.connect(path)"]}, {"functions": ["load_configured_module"]}):
+        manifest.write_text(json.dumps([{**row, **change}]))
+        with pytest.raises(ValueError, match="invalid"):
+            lint.load_allowlist()
 
 
 @pytest.mark.parametrize("kind", ["writer", "reader_pending_migration_9662"])
@@ -747,3 +815,133 @@ def test_rebound_reader_alias_still_reports_collection_access():
     assert len(findings) == 1
     assert findings[0].kind == 'test_import_access'
     assert findings[0].scope == '<module>'
+
+
+# --- scripts.ops.product_entry.load_configured_module (#12504, LOADER-1104) ---
+
+
+@pytest.fixture
+def configured_module(tmp_path, monkeypatch):
+    """Write a scripts.* module into a tree bound as this checkout; drop it again afterwards."""
+    root = tmp_path / "checkout"
+    (root / "scripts").mkdir(parents=True)
+    monkeypatch.setattr(scripts, "__path__", [*scripts.__path__, str(root / "scripts")])
+    monkeypatch.setattr(product_entry, "CHECKOUT_ROOT", root)
+    leaves = []
+
+    def write(source: str) -> str:
+        leaves.append(f"lu_configured_{uuid.uuid4().hex}")
+        (root / "scripts" / f"{leaves[-1]}.py").write_text(source)
+        importlib.invalidate_caches()
+        return f"scripts.{leaves[-1]}"
+
+    yield write
+    for leaf in leaves:
+        sys.modules.pop(f"scripts.{leaf}", None)
+        if leaf in vars(scripts):
+            delattr(scripts, leaf)
+
+
+def _no_import(monkeypatch):
+    def refuse(name):
+        raise AssertionError(f"import attempted for {name!r}")
+
+    monkeypatch.setattr(product_entry, "importlib", SimpleNamespace(import_module=refuse))
+
+
+@pytest.mark.parametrize(
+    "name",
+    [None, 7, b"scripts.lib", "", "scripts", "scripts.", ".scripts.lib", "scripts..lib", "Scripts.lib",
+     "scripts.Lib", "scripts.lib-x", "scripts.1lib", "os.path", "json", "scripts.lib\n", " scripts.lib",
+     "scripts.lib.readonly_sqlite:import_named_module", "scripts/lib", "scriptsx.lib", "scripts.lib.é"],
+)
+def test_configured_module_refuses_malformed_names_before_importing(name, monkeypatch):
+    _no_import(monkeypatch)
+    with pytest.raises(product_entry.ConfiguredModuleError):
+        product_entry.load_configured_module(name)
+
+
+@pytest.mark.parametrize(
+    "name", ["sqlite3", "_sqlite3", "sqlite3.dbapi2", "sqlite3:connect", "scripts.sqlite3", "scripts.lib._sqlite3"]
+)
+def test_configured_module_refuses_sqlite_names_before_importing(name, monkeypatch):
+    _no_import(monkeypatch)
+    with pytest.raises(ImportError, match="SQLite modules are not loaded"):
+        product_entry.load_configured_module(name)
+
+
+def test_configured_module_loads_a_module_of_this_checkout():
+    assert REPO_ROOT.resolve() == product_entry.CHECKOUT_ROOT
+    real = product_entry.load_configured_module("scripts.lib.readonly_sqlite")
+    assert real is sys.modules["scripts.lib.readonly_sqlite"]
+
+
+def test_configured_module_loads_and_binds_the_parent(configured_module):
+    name = configured_module("VALUE = 41\n")
+    module = product_entry.load_configured_module(name)
+    assert module.VALUE == 41
+    assert sys.modules[name] is module
+    assert getattr(scripts, name.rpartition(".")[2]) is module
+    assert product_entry.load_configured_module(name) is module
+
+
+def test_configured_module_refuses_a_foreign_cached_module(tmp_path, monkeypatch):
+    """A module cached from another checkout, or one with no file, is not this checkout's."""
+    leaf = f"lu_foreign_{uuid.uuid4().hex}"
+    foreign = ModuleType(f"scripts.{leaf}")
+    foreign.__file__ = str(tmp_path / "other-checkout" / "scripts" / f"{leaf}.py")
+    monkeypatch.setitem(sys.modules, f"scripts.{leaf}", foreign)
+    with pytest.raises(product_entry.ConfiguredModuleError, match="not a file in this checkout"):
+        product_entry.load_configured_module(f"scripts.{leaf}")
+    assert sys.modules[f"scripts.{leaf}"] is foreign
+    namespace = ModuleType(f"scripts.{leaf}_ns")
+    monkeypatch.setitem(sys.modules, f"scripts.{leaf}_ns", namespace)
+    with pytest.raises(product_entry.ConfiguredModuleError, match="None"):
+        product_entry.load_configured_module(f"scripts.{leaf}_ns")
+
+
+def test_configured_module_refuses_a_module_found_in_another_checkout(configured_module, monkeypatch):
+    """The scripts package path reaching another checkout does not rebind the loader."""
+    name = configured_module("VALUE = 1\n")
+    monkeypatch.setattr(product_entry, "CHECKOUT_ROOT", REPO_ROOT)
+    with pytest.raises(product_entry.ConfiguredModuleError, match="not a file in this checkout"):
+        product_entry.load_configured_module(name)
+
+
+def test_configured_module_concurrent_imports_run_the_module_once(configured_module, tmp_path):
+    runs = tmp_path / "runs.txt"
+    name = configured_module(
+        f"import time\nwith open({str(runs)!r}, 'a') as handle:\n    handle.write('run\\n')\ntime.sleep(0.2)\nREADY = True\n"
+    )
+    barrier = threading.Barrier(8)
+    results, errors = [], []
+
+    def load():
+        barrier.wait()
+        try:
+            results.append(product_entry.load_configured_module(name))
+        except BaseException as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=load) for _ in range(8)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=30)
+    assert errors == []
+    assert len(results) == 8 and all(module is results[0] and module.READY for module in results)
+    assert runs.read_text() == "run\n"
+
+
+def test_configured_module_rolls_back_a_base_exception(configured_module):
+    """A module whose import raises a BaseException is neither cached nor bound on its parent."""
+    name = configured_module("raise SystemExit(7)\n")
+    leaf = name.rpartition(".")[2]
+    with pytest.raises(SystemExit):
+        product_entry.load_configured_module(name)
+    assert name not in sys.modules
+    assert leaf not in vars(scripts)
+    (product_entry.CHECKOUT_ROOT / "scripts" / f"{leaf}.py").write_text("VALUE = 2\n")
+    importlib.invalidate_caches()
+    sys.modules.pop(name, None)
+    assert product_entry.load_configured_module(name).VALUE == 2

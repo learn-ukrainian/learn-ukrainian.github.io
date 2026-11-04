@@ -26,7 +26,7 @@ Outputs: one violation per new site, stale site, or unclassified name on
 stderr, or a one-line pass message on stdout. A full-tree run then prints
 the population report: forward and reverse counts for direct, parent,
 file-load, fallback, dynamic, shared, and test, plus alias-only and
-fallback columns. Exit 0 is a pass or a baseline written. Exit 1 is a
+fallback columns, and the configured-entry-point loader's own line. Exit 0 is a pass or a baseline written. Exit 1 is a
 violation or an unreadable tree.
 """
 
@@ -44,7 +44,16 @@ from pathlib import Path
 
 import yaml
 
-from scripts.ci.components import call_name, dependency_nodes, literal_target, scan_imports, scan_runtime_edges
+from scripts.ci.components import (
+    CONFIGURED_LOADER,
+    CONFIGURED_LOADER_PATH,
+    call_name,
+    configured_call,
+    dependency_nodes,
+    literal_target,
+    scan_imports,
+    scan_runtime_edges,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("boundary_baseline.json")
@@ -706,6 +715,7 @@ def _collect_causes(sources: dict[str, bytes]) -> dict[tuple[str, str], list[tup
         nodes = dependency_nodes(tree)
         has_specs = b"spec_from_file_location" in source
         loaders: dict[str, tuple[str, int]] = {"__import__": ("module", 0)}
+        configured_names: set[str] = set()
         wrappers: set[str] = set()
         for node in nodes:
             if isinstance(node, (ast.Assign, ast.AnnAssign)):
@@ -720,6 +730,10 @@ def _collect_causes(sources: dict[str, bytes]) -> dict[tuple[str, str], list[tup
                             "file" if alias.name in {"spec_from_file_location", "run_path"} else "module",
                             1 if alias.name == "spec_from_file_location" else 0,
                         )
+            if isinstance(node, ast.ImportFrom):
+                configured_names.update(
+                    alias.asname or alias.name for alias in node.names if alias.name == CONFIGURED_LOADER
+                )
             if (
                 has_specs
                 and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
@@ -761,6 +775,9 @@ def _collect_causes(sources: dict[str, bytes]) -> dict[tuple[str, str], list[tup
             if name in wrappers:
                 kind = "file"
                 index = 1
+            configured = configured_call(name, configured_names, loaders, wrappers)
+            if configured:
+                kind, index = "module", 0
             if not kind:
                 continue
             keyword = (
@@ -769,7 +786,7 @@ def _collect_causes(sources: dict[str, bytes]) -> dict[tuple[str, str], list[tup
                 else "path_name"
                 if kind == "file"
                 else "mod_name"
-                if leaf == "run_module"
+                if leaf == "run_module" and not configured
                 else "name"
             )
             expression = (
@@ -878,17 +895,47 @@ def _count_fallback(rows: Sequence[_Edge]) -> int:
     return total
 
 
-def _dynamic_count(graph: Mapping[str, object], config: Classified, role: str) -> int:
+def _nonliteral_loads(graph: Mapping[str, object]) -> tuple[list[tuple[str, object]], set[tuple[str, object]]]:
+    """The scanner's non-literal load sites, and those that call the configured-entry-point loader."""
     unresolved = graph["unresolved_edges"]
-    if not isinstance(unresolved, list):
-        raise ValueError("scanner unresolved_edges is not a list")
-    return sum(
-        1
+    configured = graph["configured_loads"]
+    if not isinstance(unresolved, list) or not isinstance(configured, list):
+        raise ValueError("scanner unresolved_edges or configured_loads is not a list")
+    loads = [
+        (str(edge.get("path", "")), edge.get("line"))
         for edge in unresolved
-        if isinstance(edge, dict)
-        and edge.get("reason") == "nonliteral-or-missing-load"
-        and _role_of(str(edge.get("path", "")), config) == role
-    )
+        if isinstance(edge, dict) and edge.get("reason") == "nonliteral-or-missing-load"
+    ]
+    return loads, {(str(edge.get("path", "")), edge.get("line")) for edge in configured if isinstance(edge, dict)}
+
+
+def _dynamic_count(graph: Mapping[str, object], config: Classified, role: str) -> int:
+    """Count non-literal loads in ``role`` files.
+
+    A file that calls the configured-entry-point loader counts once for all of
+    those calls. The loader's own import is not a caller; ``_configured_line``
+    reports it apart.
+    """
+    loads, configured = _nonliteral_loads(graph)
+    other = 0
+    callers: set[str] = set()
+    for site in loads:
+        path = site[0]
+        if path == CONFIGURED_LOADER_PATH or _role_of(path, config) != role:
+            continue
+        if site in configured:
+            callers.add(path)
+        else:
+            other += 1
+    return other + len(callers)
+
+
+def _configured_line(graph: Mapping[str, object]) -> str:
+    """The configured-entry-point loader's own non-literal imports, and the files that call it."""
+    loads, configured = _nonliteral_loads(graph)
+    implementation = sum(path == CONFIGURED_LOADER_PATH for path, _line in loads)
+    callers = {path for path, _line in configured if path != CONFIGURED_LOADER_PATH}
+    return f"configured-entry-point implementation={implementation} callers={len(callers)}"
 
 
 def _column_line(label: str, name: str, chosen: Sequence[_Edge]) -> str:
@@ -930,7 +977,10 @@ def population_report(root: Path, config: Classified) -> str:
     Forward ``shared`` is machinery-to-shared direct. Forward ``test`` is
     test-to-product direct. Reverse ``shared`` is product-to-shared direct.
     Reverse ``test`` is test-to-machinery direct. ``dynamic`` counts
-    non-literal loads in that side's files. ``alias_only`` is a direct edge
+    non-literal loads in that side's files; a file calling the
+    configured-entry-point loader with a non-literal name counts once, and the
+    ``configured-entry-point`` line reports the loader's own import and those
+    callers apart. ``alias_only`` is a direct edge
     whose every cause is an import alias. ``fallback`` is an edge whose
     winning causes all sit in an ImportError ``try``. The forward identities
     are the scanner's machinery-to-product set, so the two ``scripts.pipeline``
@@ -983,6 +1033,7 @@ def population_report(root: Path, config: Classified) -> str:
         ),
         *_population_columns("forward", forward),
         *_population_columns("reverse", reverse),
+        _configured_line(graph),
     ]
     return "\n".join(lines)
 

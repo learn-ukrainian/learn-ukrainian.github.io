@@ -165,6 +165,69 @@ def test_population_report_counts_each_edge_kind(tmp_path: Path) -> None:
     assert fallback.groups() == ("1", "1", "0")
 
 
+def test_population_report_counts_each_configured_caller_once(tmp_path: Path) -> None:
+    """A configured caller counts once however many helper calls it makes; the helper is reported apart."""
+
+    helper = "import importlib\n\n\ndef load_configured_module(name):\n    return importlib.import_module(name)\n"
+    root, config_path, _baseline = _tree(
+        tmp_path,
+        {
+            "ops/product_entry.py": helper,
+            "mach/hooks.py": (
+                "from scripts.ops.product_entry import load_configured_module as load\n"
+                "import scripts.ops.product_entry as entry\n"
+                "\n"
+                "first = load(config['first'])\n"
+                "second = entry.load_configured_module(name=config['second'])\n"
+            ),
+            "mach/plain.py": "from scripts.ops.product_entry import load_configured_module\nload_configured_module(name)\n",
+            "mach/other.py": "import importlib\n\nimportlib.import_module(a)\nimportlib.import_module(b)\n",
+            "mach/literal.py": "from scripts.ops import product_entry\nproduct_entry.load_configured_module('scripts.prod.widget')\n",
+            "prod/__init__.py": "",
+            "prod/widget.py": "W = 1\n",
+            "prod/caller.py": "from scripts.ops.product_entry import load_configured_module as load\nload(x)\nload(y)\n",
+        },
+        {"mach": "machinery", "ops": "machinery", "prod": "product"},
+    )
+    (root / "tests").mkdir()
+    report = population_report(root, load_config(config_path))
+    dynamic = dict(re.findall(r"^(forward|reverse) .* dynamic=(\d+) ", report, re.MULTILINE))
+    # forward: hooks.py once, plain.py once, other.py twice; the helper's own import is not counted.
+    assert dynamic == {"forward": "4", "reverse": "1"}
+    assert "configured-entry-point implementation=1 callers=3" in report.splitlines()
+    forward = re.search(r"^forward direct=(\d+) ", report, re.MULTILINE)
+    assert forward is not None and forward.group(1) == "1"
+
+
+def test_configured_alias_keeps_scanner_parity(tmp_path: Path) -> None:
+    """The ratchet labels the same edges as the scanner when a helper alias shares another loader's name."""
+
+    root, config_path, _baseline = _tree(
+        tmp_path,
+        {
+            "mach/mixed.py": (
+                "def run():\n    from runpy import run_path as load\n    load('scripts/prod/runner.py')\n\n"
+                "def hooks():\n    from scripts.ops.product_entry import load_configured_module as load\n"
+                "    load('scripts.prod.widget')\n"
+            ),
+            "mach/renamed.py": (
+                "from scripts.ops.product_entry import load_configured_module as run_module\n"
+                "run_module(name='scripts.prod.widget')\n"
+            ),
+            "prod/__init__.py": "",
+            "prod/runner.py": "R = 1\n",
+            "prod/widget.py": "W = 1\n",
+        },
+        {"mach": "machinery", "prod": "product"},
+    )
+    (root / "tests").mkdir()
+    report = population_report(root, load_config(config_path))
+    forward = re.search(r"^forward direct=(\d+) parent=(\d+) file-load=(\d+) .* dynamic=(\d+) ", report, re.MULTILINE)
+    assert forward is not None
+    # renamed.py -> widget is direct; mixed.py -> runner is a file load; mixed.py's helper call stays dynamic.
+    assert forward.group(1, 3, 4) == ("1", "1", "1")
+
+
 def test_untracked_scripts_directory_is_not_classified(tmp_path: Path) -> None:
     """A top-level scripts directory with no Git-tracked Python file is not classified."""
 

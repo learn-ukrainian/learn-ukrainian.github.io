@@ -68,6 +68,19 @@ class AllowedReference:
     functions: tuple[str, ...] = ()
 
 
+# Configured entry point (#12504, LOADER-1104). Product data names a module and
+# scripts.ops.product_entry.load_configured_module imports it. That import's
+# argument is not a string constant, so this lint reports it like every other
+# non-constant import_module. The kind pins that one call site and no other.
+CONFIGURED_ENTRY_POINT_KIND = "configured_entry_point"
+CONFIGURED_ENTRY_POINTS = {
+    "scripts/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name))"),
+}
+# The helper refuses SQLite module names, so a call with a non-constant name is
+# not a finding. A call with a constant SQLite name is, as for any loader.
+CONFIGURED_LOADER = "load_configured_module"
+
+
 def load_allowlist() -> tuple[AllowedReference, ...]:
     entries = tuple(
         AllowedReference(**{**row, "calls": tuple(row.get("calls", ())), "functions": tuple(row.get("functions", ()))})
@@ -84,6 +97,10 @@ def load_allowlist() -> tuple[AllowedReference, ...]:
         elif entry.kind == "fixture_factory":
             invalid = (not entry.path.startswith("tests/") or entry.reference_count < 1
                        or entry.target_db is not None or not entry.calls or bool(entry.functions))
+        elif entry.kind == CONFIGURED_ENTRY_POINT_KIND:
+            pinned = CONFIGURED_ENTRY_POINTS.get(entry.path)
+            invalid = (pinned is None or entry.reference_count != pinned[0]
+                       or entry.target_db is not None or bool(entry.calls) or bool(entry.functions))
         else:
             invalid = (entry.kind not in {"writer", "reader_pending_migration_9662"}
                        or entry.reference_count < 1 or not entry.path.startswith("scripts/")
@@ -195,12 +212,13 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
     # Every reference/loader branch below needs one of these AST anchors.
     # Check syntax rather than source text, retaining aliased and dynamic imports.
     anchors = SQLITE_MODULES | {"__import__", "importlib", "pkgutil", "builtins",
-                                "import_module", "resolve_name"}
+                                "import_module", "resolve_name", CONFIGURED_LOADER}
     if not (syntax.names & anchors or syntax.strings & SQLITE_MODULES):
         return []
     lines = source.splitlines()
     modules = set(SQLITE_MODULES)
     loaders = {"__import__", "importlib.import_module", "pkgutil.resolve_name"}
+    configured = {CONFIGURED_LOADER}
     findings: dict[tuple[int, int], Finding] = {}
     constructors = set()
 
@@ -247,6 +265,18 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
                 for alias in node.names:
                     if alias.name == "__import__":
                         loaders.add(alias.asname or alias.name)
+            configured.update(alias.asname or alias.name for alias in node.names if alias.name == CONFIGURED_LOADER)
+
+    def configured_sqlite_load(node: ast.AST) -> bool:
+        """A call of the configured-entry-point helper (plain, aliased or qualified) with a constant SQLite name."""
+        if not isinstance(node, ast.Call):
+            return False
+        name = _dotted(node.func)
+        if name not in configured and not name.endswith(f".{CONFIGURED_LOADER}"):
+            return False
+        target = node.args[0] if node.args else next((k.value for k in node.keywords if k.arg == "name"), None)
+        return (isinstance(target, ast.Constant) and isinstance(target.value, str)
+                and not SQLITE_MODULES.isdisjoint(re.split(r"[.:]", target.value)))
 
     parents = syntax.parents
     assignments = [node for node in nodes if isinstance(node, (ast.Assign, ast.AnnAssign))]
@@ -258,7 +288,7 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
         for node in assignments:
             if node.value is not None:
                 value = _dotted(node.value)
-                dynamic_module = False
+                dynamic_module = configured_sqlite_load(node.value)
                 if isinstance(node.value, ast.Call) and _dotted(node.value.func) in loaders:
                     target = (
                         node.value.args[0]
@@ -327,6 +357,8 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
                 and target.value.split(":", 1)[0] in SQLITE_MODULES
             ) or (not isinstance(target, ast.Constant)):
                 report(node)
+        if configured_sqlite_load(node):
+            report(node)
     return sorted(findings.values(), key=lambda finding: finding.line_no)
 
 
@@ -860,6 +892,11 @@ def _scan_file(job: tuple[str, str, AllowedReference | None, list[StoreFinding],
                 violations.append(f"{rel}: pinned {entry.reference_count} references, found {len(references)}")
             if entry.kind == "writer":
                 violations.extend(writer_target_violations(source, entry, references, syntax=syntax))
+            elif entry.kind == CONFIGURED_ENTRY_POINT_KIND:
+                expected = CONFIGURED_ENTRY_POINTS.get(rel)
+                snippets = [finding.snippet for finding in references]
+                if expected is None or snippets != [expected[1]]:
+                    violations.append(f"{rel}: configured entry point differs from the pinned call site")
             else:
                 calls = [
                     ast.unparse(n)

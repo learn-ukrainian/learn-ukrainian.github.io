@@ -20,7 +20,7 @@ import sys
 import tempfile
 import xml.etree.ElementTree as ET
 from collections import deque
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
@@ -36,6 +36,25 @@ NODE_IDS = (
     "open-model-data", "atlas-data", "atlas-frontend", "practice-frontend",
     "curriculum-generation", "curriculum-display", "harness", "shared-core",
 )
+# The one configured-entry-point loader (#12504, LOADER-1104):
+# scripts.ops.product_entry.load_configured_module(name) imports the scripts.*
+# module that product data names. A call is a module load by name, plain,
+# aliased or qualified; a name the scanner cannot prove stays unresolved.
+CONFIGURED_LOADER = "load_configured_module"
+CONFIGURED_LOADER_PATH = "scripts/ops/product_entry.py"
+
+
+def configured_call(name: str, configured_names: set[str], loaders: Mapping[str, object], wrappers: set[str]) -> bool:
+    """True when a call named ``name`` is the configured-entry-point loader.
+
+    A qualified call ends in the loader's name; a bare name is the loader or an
+    alias imported from any module. Aliases are file-wide, so a name the file
+    also binds to another loader, or defines as a loading wrapper, keeps that
+    loader's reading: the helper never reinterprets another loader's call.
+    """
+    if name in loaders or name in wrappers:
+        return False
+    return name.rpartition(".")[2] == CONFIGURED_LOADER or name in configured_names
 
 
 def repo_path(value: str) -> str:
@@ -312,6 +331,7 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                 for index in range(1, len(name.split(".")))}
     edges = set()
     unresolved = set()
+    configured_loads = set()
     loads_unproven = {}
     bare_packages = {name.split(".")[1] for name in packages if name.startswith("scripts.")}
 
@@ -346,6 +366,7 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
         nodes = dependency_nodes(tree)
         has_specs = b"spec_from_file_location" in source
         loaders = {"__import__": ("module", 0)}
+        configured_names: set[str] = set()
         wrappers = set()
         for node in nodes:
             if isinstance(node, (ast.Assign, ast.AnnAssign)):
@@ -360,6 +381,9 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                             "file" if alias.name in {"spec_from_file_location", "run_path"} else "module",
                             1 if alias.name == "spec_from_file_location" else 0,
                         )
+            if isinstance(node, ast.ImportFrom):
+                configured_names.update(alias.asname or alias.name
+                                        for alias in node.names if alias.name == CONFIGURED_LOADER)
             if (has_specs
                 and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and any(
                 isinstance(child, ast.Call) and isinstance(child.func, ast.Attribute)
@@ -393,12 +417,15 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
             if name in wrappers:
                 kind = "file"
                 index = 1
+            configured = configured_call(name, configured_names, loaders, wrappers)
+            if configured:
+                kind, index = "module", 0
             if not kind:
                 continue
             expression = node.args[index] if len(node.args) > index else next(
                 (kw.value for kw in node.keywords if kw.arg == (
                     "location" if kind == "file" and index == 1 else
-                    "path_name" if kind == "file" else "mod_name" if leaf == "run_module" else "name"
+                    "path_name" if kind == "file" else "mod_name" if leaf == "run_module" and not configured else "name"
                 )), None)
             value = literal_target(expression, bindings, path) if expression is not None else None
             target = resolve(str(value)) if kind == "module" and value is not None else str(value)
@@ -409,12 +436,15 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                     edges.add((path, target))
             elif value is None or kind == "file" or str(value).startswith("scripts."):
                 unresolved.add((path, node.lineno, "nonliteral-or-missing-load"))
+                if configured:
+                    configured_loads.add((path, node.lineno))
                 if kind == "file":
                     loads_unproven[path] = bindings
     return {"file_edges": sorted(edges), "unresolved_edges": [
         {"path": path, "line": line, "reason": reason} for path, line, reason in sorted(unresolved)
     ], "directory_edges": directory_edges(set(sources) if known_paths is None else known_paths, loads_unproven),
-        "python_files": len(sources)}
+        "python_files": len(sources),
+        "configured_loads": [{"path": path, "line": line} for path, line in sorted(configured_loads)]}
 
 
 def directory_edges(known_paths: set[str], loaders: dict[str, dict]) -> list[tuple[str, str]]:
