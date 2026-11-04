@@ -10,6 +10,7 @@ import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -18,8 +19,6 @@ from .monitor_context import MonitorContext
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from audit.status_cache import get_source_paths, read_status
-
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
@@ -27,7 +26,12 @@ except ImportError:
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
-from .state_helpers import ctx_cache_scope, detect_pipeline_version, get_plan_slugs, read_v2_state
+from .state_helpers import ctx_cache_scope, detect_pipeline_version, get_plan_slugs, monitor_surface, read_v2_state
+
+# Names stay on this module so existing tests can patch them. The functions
+# are the product ones, reached through the wrapper state_helpers loads once.
+get_source_paths: Any = monitor_surface.get_source_paths
+read_status: Any = monitor_surface.read_status
 
 # Simple TTL cache for scan_track results — keyed by context scope + track_id (#7494)
 _track_cache: dict[str, tuple[float, dict]] = {}

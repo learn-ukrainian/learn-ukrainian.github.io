@@ -19,10 +19,6 @@ from pathlib import Path
 import yaml
 from fastapi import APIRouter, Depends, HTTPException
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
-from audit.config import ACTIVITY_COMPLEXITY, ACTIVITY_RESTRICTIONS, LEVEL_CONFIG, VALID_ACTIVITY_TYPES
-
 from .config import LEVELS, SEMINAR_TRACK_IDS
 from .dashboard_comms import (
     collect_stuck_tasks,
@@ -56,11 +52,10 @@ from .state_helpers import (
     ctx_cache_scope,
     ctx_scoped_ttl_key,
     get_plan_slugs,
+    monitor_surface,
 )
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
-from audit.status_cache import get_source_paths, read_status
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
@@ -677,12 +672,12 @@ async def module_detail(track_id: str, slug: str, ctx: MonitorContext = Depends(
             detail=f"Invalid track/slug: {track_id}/{slug}",
         ) from exc
 
-    sp = get_source_paths(track_dir, slug)
+    sp = monitor_surface.get_source_paths(track_dir, slug)
     try:
         status_file = safe_join(track_dir, "status", f"{slug}.json")
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=f"Invalid track/slug: {track_id}/{slug}") from exc
-    status_result = read_status(status_file, source_paths=sp)
+    status_result = monitor_surface.read_status(status_file, source_paths=sp)
     result["status"] = status_result.data if status_result else None
     result["status_is_fresh"] = status_result.is_fresh if status_result else None
     result["status_stale_sources"] = status_result.stale_sources if status_result else []
@@ -775,8 +770,8 @@ async def pipeline_status(ctx: MonitorContext = Depends(get_ctx)):
 async def activity_config(_ctx: MonitorContext = Depends(get_ctx)):
     """Activity type reference: types, min items per level, forbidden types."""
     types = []
-    for act_type in VALID_ACTIVITY_TYPES:
-        complexity = ACTIVITY_COMPLEXITY.get(act_type, {})
+    for act_type in monitor_surface.VALID_ACTIVITY_TYPES:
+        complexity = monitor_surface.ACTIVITY_COMPLEXITY.get(act_type, {})
         available_levels = list(complexity.keys()) if complexity else []
         types.append(
             {
@@ -787,7 +782,7 @@ async def activity_config(_ctx: MonitorContext = Depends(get_ctx)):
         )
 
     levels = {}
-    for level_key, cfg in LEVEL_CONFIG.items():
+    for level_key, cfg in monitor_surface.LEVEL_CONFIG.items():
         levels[level_key] = {
             "target_words": cfg.get("target_words", 0),
             "min_activities": cfg.get("min_activities", 0),
@@ -799,7 +794,7 @@ async def activity_config(_ctx: MonitorContext = Depends(get_ctx)):
         }
 
     restrictions = {}
-    for level_key, r in ACTIVITY_RESTRICTIONS.items():
+    for level_key, r in monitor_surface.ACTIVITY_RESTRICTIONS.items():
         restrictions[level_key] = {
             "forbidden": list(r.get("forbidden", [])),
         }
