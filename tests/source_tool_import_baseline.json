@@ -79,6 +79,7 @@
       "scripts/audit/curriculum_qg_harness.py",
       "scripts/audit/cursor_judge_calibration.py",
       "scripts/audit/damage_report.py",
+      "scripts/audit/debug_hash.py",
       "scripts/audit/decision_lineage.py",
       "scripts/audit/errorcorrection_embed_scan.py",
       "scripts/audit/finalize_activity_quality.py",
@@ -196,7 +197,6 @@
       "scripts/curriculum/resolver/__main__.py",
       "scripts/curriculum/validate/__main__.py",
       "scripts/curriculum/validate/validate.py",
-      "scripts/debug/debug_hash.py",
       "scripts/etymology/bulk_ocr_gemini.py",
       "scripts/eval/uk_preamble/__main__.py",
       "scripts/eval/zno_nmt/__main__.py",
@@ -400,7 +400,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "90e4e941365f0d77bc0cf733ecf4251054fcc75b885bfbb543ba63af60ddda58"
+    "cli_paths_sha256": "313a73e8940b3c7e7daf37c6db79c39eb3b36541672741dfb4dfdba8ff96426a"
   },
   "failures": [
     {
