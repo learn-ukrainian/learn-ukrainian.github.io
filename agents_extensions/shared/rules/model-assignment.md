@@ -1020,9 +1020,16 @@ API labels `api` and `b-api` are distinct from these subscription windows;
 `b-api` is planned and unset.
 
 The catalog exposes Sol review routes for both accounts with separate quota and
-credential buckets. The resolver prefers eligible b-sub, then sub. Bound review
-attempt admission for b-sub remains owned by slice S14r and its follow-up;
-resolver selection alone does not prove that admission accepts the account.
+credential buckets. The resolver prefers eligible b-sub, then sub for standard
+PR code/infra reviews. These reviews use `--branch`, `--pr` and
+`--require-review-verdict` through the ordinary dispatcher, which already binds
+`--codex-account b-sub`. They do not use `--review-attempt`: dispatch rejects
+combining a bound attempt with `--branch` or `--pr`. The resolver's PR selection
+therefore creates no bound-attempt binding or admission grant.
+
+Bound Contract 1 plan and Contract 2 lesson attempts use their separate rendered
+manifest and admission path. That path still refuses b-sub; its account support
+remains owned by the follow-up after S14r. It does not block standard PR reviews.
 
 
 | Role | Model id | Effort |
