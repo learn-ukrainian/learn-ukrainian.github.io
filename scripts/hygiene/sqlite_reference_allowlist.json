@@ -786,6 +786,20 @@
     ]
   },
   {
+    "path": "scripts/orchestration/curriculum_readiness.py",
+    "reference_count": 1,
+    "kind": "configured_entry_point",
+    "target_db": null,
+    "reason": "Machinery-move step 4 configured entry point. importlib.import_module loads the product module named by a JSON field. This is not a SQLite constructor. The kind pins this one call site."
+  },
+  {
+    "path": "scripts/orchestration/sources_watchdog.py",
+    "reference_count": 1,
+    "kind": "configured_entry_point",
+    "target_db": null,
+    "reason": "Machinery-move step 4 configured entry point. importlib.import_module loads the product module named by a JSON field. This is not a SQLite constructor. The kind pins this one call site."
+  },
+  {
     "path": "scripts/orchestration/thread_handoff.py",
     "reference_count": 1,
     "kind": "writer",

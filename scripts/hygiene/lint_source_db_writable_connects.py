@@ -68,6 +68,17 @@ class AllowedReference:
     functions: tuple[str, ...] = ()
 
 
+# Machinery-move step 4 configured entry point. The module name is a JSON
+# field, so import_module's argument is not a string constant. The SQLite
+# lint refuses every non-constant import_module because it will not infer
+# the name. These two call sites are the whole set this kind can name.
+CONFIGURED_ENTRY_POINT_KIND = "configured_entry_point"
+CONFIGURED_ENTRY_POINTS = {
+    "scripts/orchestration/curriculum_readiness.py": (1, "return importlib.import_module(module)"),
+    "scripts/orchestration/sources_watchdog.py": (1, "return importlib.import_module(module)"),
+}
+
+
 def load_allowlist() -> tuple[AllowedReference, ...]:
     entries = tuple(
         AllowedReference(**{**row, "calls": tuple(row.get("calls", ())), "functions": tuple(row.get("functions", ()))})
@@ -84,6 +95,10 @@ def load_allowlist() -> tuple[AllowedReference, ...]:
         elif entry.kind == "fixture_factory":
             invalid = (not entry.path.startswith("tests/") or entry.reference_count < 1
                        or entry.target_db is not None or not entry.calls or bool(entry.functions))
+        elif entry.kind == CONFIGURED_ENTRY_POINT_KIND:
+            pinned = CONFIGURED_ENTRY_POINTS.get(entry.path)
+            invalid = (pinned is None or entry.reference_count != pinned[0]
+                       or entry.target_db is not None or bool(entry.calls) or bool(entry.functions))
         else:
             invalid = (entry.kind not in {"writer", "reader_pending_migration_9662"}
                        or entry.reference_count < 1 or not entry.path.startswith("scripts/")
@@ -860,6 +875,11 @@ def _scan_file(job: tuple[str, str, AllowedReference | None, list[StoreFinding],
                 violations.append(f"{rel}: pinned {entry.reference_count} references, found {len(references)}")
             if entry.kind == "writer":
                 violations.extend(writer_target_violations(source, entry, references, syntax=syntax))
+            elif entry.kind == CONFIGURED_ENTRY_POINT_KIND:
+                expected = CONFIGURED_ENTRY_POINTS.get(rel)
+                snippets = [finding.snippet for finding in references]
+                if expected is None or snippets != [expected[1]]:
+                    violations.append(f"{rel}: configured entry point differs from the pinned call site")
             else:
                 calls = [
                     ast.unparse(n)

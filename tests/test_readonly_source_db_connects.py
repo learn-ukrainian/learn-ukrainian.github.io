@@ -47,7 +47,11 @@ def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
         assert set(entry.functions) == {"resolve_store", "resolve_active_sources_db", "resolve_store_for_write", "_prepare_store_write_target"}
         assert entry.reference_count == 0
     else:
-        assert entry.kind in {"reader_pending_migration_9662", "fixture_factory"}
+        assert entry.kind in {
+            "reader_pending_migration_9662",
+            "fixture_factory",
+            lint.CONFIGURED_ENTRY_POINT_KIND,
+        }
         assert entry.target_db is None
         calls = [
             ast.unparse(n)
@@ -55,6 +59,18 @@ def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
             if isinstance(n, ast.Call) and ast.unparse(n.func) == "sqlite3.connect"
         ]
         assert calls == list(entry.calls)
+        if entry.kind == lint.CONFIGURED_ENTRY_POINT_KIND:
+            pinned = lint.CONFIGURED_ENTRY_POINTS[entry.path]
+            assert pinned == (1, "return importlib.import_module(module)")
+            assert entry.reference_count == pinned[0]
+            assert [finding.snippet for finding in lint.classify_source(source, entry.path)] == [pinned[1]]
+            configured = [
+                item.path for item in lint.load_allowlist() if item.kind == lint.CONFIGURED_ENTRY_POINT_KIND
+            ]
+            assert configured == [
+                "scripts/orchestration/curriculum_readiness.py",
+                "scripts/orchestration/sources_watchdog.py",
+            ]
 
 
 FORBIDDEN = (
