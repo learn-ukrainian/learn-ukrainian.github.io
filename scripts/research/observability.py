@@ -30,7 +30,6 @@ Only ``generated_at``/``generated_ts`` carry wall-clock, by design.
 from __future__ import annotations
 
 import codecs
-import importlib
 import json
 import logging
 import re
@@ -57,7 +56,7 @@ class _Check(NamedTuple):
 
 
 def _load_named_check(key: str) -> Any:
-    return importlib.import_module(reg.research_check_config()[key])
+    return reg._load_configured_module(key)
 
 
 def _configured_check() -> _Check:
