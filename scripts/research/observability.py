@@ -30,6 +30,7 @@ Only ``generated_at``/``generated_ts`` carry wall-clock, by design.
 from __future__ import annotations
 
 import codecs
+import importlib
 import json
 import logging
 import re
@@ -37,17 +38,42 @@ from collections import Counter
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 import yaml
 
-from scripts.audit import atlas_intake_registry
-from scripts.audit import check_research_registry as crr
 from scripts.orchestration import issue_stream_audit as isa
 from scripts.research import consumption
 from scripts.research import registry as reg
 
 logger = logging.getLogger("research.observability")
+
+
+class _Check(NamedTuple):
+    """Product registry checker plus the corpus-family resolver."""
+
+    registry: Any
+    is_registered_source_family: Callable[[object], bool]
+
+
+def _load_named_check(key: str) -> Any:
+    return importlib.import_module(reg.research_check_config()[key])
+
+
+def _configured_check() -> _Check:
+    corpus = _load_named_check("corpus_module")
+    return _Check(
+        registry=_load_named_check("check_module"),
+        is_registered_source_family=corpus.is_registered_source_family,
+    )
+
+
+_DEFAULT_CHECK = _configured_check()
+
+
+def _resolve_check(check: Any | None) -> _Check:
+    return _DEFAULT_CHECK if check is None else check
+
 
 # Consumer kinds P1 resolves deterministically OFFLINE (file/symbol/decision), PLUS
 # ``corpus`` — the declared Atlas intake source-family registry is itself a static,
@@ -86,7 +112,9 @@ def _valid_record_id(value: object) -> bool:
     )
 
 
-def _load_raw_records(root: Path) -> tuple[list[dict[str, Any]] | None, str, int]:
+def _load_raw_records(
+    root: Path, check: _Check
+) -> tuple[list[dict[str, Any]] | None, str, int]:
     """Return (records, status, invalid_id_count). ``status`` ∈
     ok/missing/unreadable/invalid.
 
@@ -102,7 +130,7 @@ def _load_raw_records(root: Path) -> tuple[list[dict[str, Any]] | None, str, int
     if not path.exists():
         return None, "missing", 0
     try:
-        _raw, data = crr.load_registry(path)
+        _raw, data = check.registry.load_registry(path)
     except (OSError, ValueError, yaml.YAMLError, RecursionError):
         return None, "unreadable", 0
     records = data.get("records")
@@ -123,6 +151,7 @@ def _consumer_status(
     root: Path,
     decision_ids: set[str],
     issue_resolver: Callable[[str], bool] | None,
+    check: _Check,
 ) -> str:
     """Classify an adopted record's typed consumer: alive/dead/unverified/none.
 
@@ -140,11 +169,11 @@ def _consumer_status(
     kind = consumer["kind"]
     if kind in _OFFLINE_CONSUMER_KINDS:
         try:
-            errs = crr.validate_consumer(
+            errs = check.registry.validate_consumer(
                 record,
                 project_root=root,
                 decision_ids=decision_ids,
-                corpus_resolver=atlas_intake_registry.is_registered_source_family,
+                corpus_resolver=check.is_registered_source_family,
             )
         except Exception:  # defensive: a malformed ref must not 500 the monitor
             return "dead"
@@ -153,7 +182,7 @@ def _consumer_status(
         if issue_resolver is None:
             return "unverified"  # no fresh cache — cannot prove OR disprove
         try:
-            errs = crr.validate_consumer(
+            errs = check.registry.validate_consumer(
                 record, project_root=root, decision_ids=decision_ids,
                 issue_resolver=issue_resolver,
             )
@@ -163,8 +192,8 @@ def _consumer_status(
     return "dead"  # unknown kind — cannot resolve
 
 
-def _lifecycle_and_adoption(root: Path, max_age_s: int) -> dict[str, Any]:
-    records, status, invalid_ids = _load_raw_records(root)
+def _lifecycle_and_adoption(root: Path, max_age_s: int, check: _Check) -> dict[str, Any]:
+    records, status, invalid_ids = _load_raw_records(root, check)
     if records is None:
         return {
             "lifecycle": {
@@ -186,11 +215,11 @@ def _lifecycle_and_adoption(root: Path, max_age_s: int) -> dict[str, Any]:
         }
 
     try:
-        streams = crr.load_streams(root / "scripts" / "config" / "issue_streams.yaml")
+        streams = check.registry.load_streams(root / "scripts" / "config" / "issue_streams.yaml")
     except (OSError, ValueError, yaml.YAMLError):
         streams = {}
     try:
-        decision_ids = crr.load_decision_ids(root / "docs" / "decisions" / "decisions.yaml")
+        decision_ids = check.registry.load_decision_ids(root / "docs" / "decisions" / "decisions.yaml")
     except (OSError, ValueError, yaml.YAMLError):
         decision_ids = set()
 
@@ -228,7 +257,7 @@ def _lifecycle_and_adoption(root: Path, max_age_s: int) -> dict[str, Any]:
         # adoption, and must be visible as invalid — not silently folded into
         # whatever state the record happens to claim (ADR-011 P4 review).
         try:
-            provenance_errs = crr.validate_provenance(rec, root)
+            provenance_errs = check.registry.validate_provenance(rec, root)
         except Exception:
             provenance_errs = [f"{rid}: provenance check raised"]
         if provenance_errs:
@@ -239,7 +268,7 @@ def _lifecycle_and_adoption(root: Path, max_age_s: int) -> dict[str, Any]:
         # Hash drift ("stale") — only meaningful now that provenance is sound.
         drifted = False
         try:
-            drifted = rec.get("content_hash") != crr.expected_content_hash(rec, root)
+            drifted = rec.get("content_hash") != check.registry.expected_content_hash(rec, root)
         except Exception:
             drifted = False
         if drifted:
@@ -255,10 +284,10 @@ def _lifecycle_and_adoption(root: Path, max_age_s: int) -> dict[str, Any]:
         elif state == "superseded":
             superseded.append(rid)
         elif state == "proposed":
-            _classify_ownership(rec, streams, resolver, orphaned, ownership_unverified)
+            _classify_ownership(rec, streams, resolver, orphaned, ownership_unverified, check)
         elif state == "adopted":
             adopted += 1
-            cstatus = _consumer_status(rec, root, decision_ids, issue_consumer_resolver)
+            cstatus = _consumer_status(rec, root, decision_ids, issue_consumer_resolver, check)
             if cstatus == "unverified":
                 unverified_consumers.append(rid)
             elif cstatus in {"dead", "none"}:
@@ -312,6 +341,7 @@ def _classify_ownership(
     resolver: isa.MembershipResolver | None,
     orphaned: list[str],
     ownership_unverified: list[str],
+    check: _Check,
 ) -> None:
     """Split a proposed record into orphaned (structurally un-owned) vs
     ownership_unverified (plausible owner not confirmable offline).
@@ -325,7 +355,7 @@ def _classify_ownership(
         orphaned.append(rid)
         return
     try:
-        structural_errs = crr.validate_ownership(record, streams, None)
+        structural_errs = check.registry.validate_ownership(record, streams, None)
     except Exception:
         orphaned.append(rid)
         return
@@ -784,6 +814,7 @@ def build_monitor(
     root: Path | None = None,
     now: datetime | None = None,
     ownership_max_age_s: int = OWNERSHIP_CACHE_MAX_AGE_S,
+    check: Any | None = None,
 ) -> dict[str, Any]:
     """Build the full deterministic monitor payload. Never raises — every failure
     mode degrades to a safe, bounded section (the endpoint must never 500)."""
@@ -797,7 +828,7 @@ def build_monitor(
         discovery_enabled = False
 
     try:
-        registry_view = _lifecycle_and_adoption(root, ownership_max_age_s)
+        registry_view = _lifecycle_and_adoption(root, ownership_max_age_s, _resolve_check(check))
     except Exception as exc:
         logger.warning("research observability: lifecycle build failed (%s)", type(exc).__name__)
         registry_view = {
