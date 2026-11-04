@@ -240,6 +240,30 @@ def redact_opsec(text: str) -> str:
     return text
 
 
+def _session_home(path: Path) -> Path | None:
+    """Codex home for a file under ``<home>/sessions``. Other roots have none."""
+    for parent in path.parents:
+        if parent.name == "sessions":
+            return parent.parent
+    return None
+
+
+def redact_home(text: str, home: Path) -> str:
+    """Replace one account's resolved home and its directory name."""
+    resolved = home.resolve()
+    for variant in (str(resolved), str(home)):
+        if variant:
+            text = text.replace(variant, "[codex-home]")
+    name = resolved.name
+    if name and name not in {".", ".."}:
+        text = re.sub(
+            rf"(?<![A-Za-z0-9._-]){re.escape(name)}(?![A-Za-z0-9._-])",
+            "[codex-home]",
+            text,
+        )
+    return text
+
+
 def is_noise(text: str) -> bool:
     return bool(_NOISE_RE.search(text))
 
@@ -248,7 +272,12 @@ def is_material(text: str) -> bool:
     return bool(_MATERIAL_RE.search(text))
 
 
-def extract_snippets(lines: Iterable[str], limit: int = SNIPPET_LIMIT) -> list[str]:
+def extract_snippets(
+    lines: Iterable[str],
+    limit: int = SNIPPET_LIMIT,
+    *,
+    home: Path | None = None,
+) -> list[str]:
     snippets: list[str] = []
     seen: set[str] = set()
     for line in lines:
@@ -256,6 +285,8 @@ def extract_snippets(lines: Iterable[str], limit: int = SNIPPET_LIMIT) -> list[s
             if is_noise(raw) or not is_material(raw):
                 continue
             cleaned = " ".join(redact_opsec(raw).split())
+            if home is not None:
+                cleaned = redact_home(cleaned, home)
             if len(cleaned) > SNIPPET_CHARS:
                 cleaned = cleaned[: SNIPPET_CHARS - 1].rstrip() + "…"
             if not cleaned or cleaned in seen:
@@ -300,9 +331,13 @@ def render_digest(
         return "\n".join(rows)
 
     for path, account in sources:
-        rows.append(f"## {source_heading(path, account)}")
+        home = _session_home(path)
+        heading = source_heading(path, account)
+        if home is not None:
+            heading = redact_home(heading, home)
+        rows.append(f"## {heading}")
         rows.append("")
-        snippets = extract_snippets(tail_lines(path))
+        snippets = extract_snippets(tail_lines(path), home=home)
         if snippets:
             for snippet in snippets:
                 rows.append(f"- {snippet}")

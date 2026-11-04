@@ -103,9 +103,11 @@ class DigestCodexRolloutTests(unittest.TestCase):
             encoding="utf-8",
         )
         accounts.chmod(0o600)
-        material = '{"text": "dispatch stuck while the lease expired and review could not merge"}\n'
-        (account_a / ".codex" / "sessions" / "2026" / "11" / "rollout-a.jsonl").write_text(material, encoding="utf-8")
-        (account_b / "sessions" / "2026" / "11" / "rollout-b.jsonl").write_text(material, encoding="utf-8")
+        sentence = "dispatch stuck while the lease expired and review could not merge"
+        material_a = json.dumps({"text": f"{sentence} under {account_a / '.codex'}"}) + "\n"
+        material_b = json.dumps({"text": f"{sentence} under {account_b} in bound-account"}) + "\n"
+        (account_a / ".codex" / "sessions" / "2026" / "11" / "rollout-a.jsonl").write_text(material_a, encoding="utf-8")
+        (account_b / "sessions" / "2026" / "11" / "rollout-b.jsonl").write_text(material_b, encoding="utf-8")
         repo_b = tmp / "repo-b"
         saved = {
             key: os.environ.get(key)
@@ -127,6 +129,8 @@ class DigestCodexRolloutTests(unittest.TestCase):
             self.assertNotIn("## codex:b/rollout-a.jsonl", body)
             self.assertNotIn("bound-account", body)
             self.assertNotIn(str(account_a), body)
+            self.assertNotIn(str(account_b), body)
+            self.assertIn("[codex-home]", body)
             self.assertNotIn(str(account_b), body)
         finally:
             for key, value in saved.items():

@@ -697,12 +697,39 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _public_protection_code(error: str) -> str:
+    """Value-free code for a protection error. The private receipt keeps the text."""
+    text = error.casefold()
+    if "global state" in text:
+        return "codex_global_state_unavailable"
+    if "non-uuid" in text:
+        return "pin_registry_invalid_id"
+    if "pin registry" in text:
+        return "pin_registry_malformed"
+    if "workspace root" in text:
+        return "workspace_roots_malformed"
+    if "automation registry" in text:
+        return "automation_registry_unavailable"
+    if "cannot read automation" in text:
+        return "automation_unreadable"
+    if "automation cwds" in text:
+        return "automation_cwds_malformed"
+    if "rollover lease" in text:
+        return "rollover_lease_unreadable"
+    if "exact uuid" in text:
+        return "protection_uuid_missing"
+    return "protection_error"
+
+
 def _stdout_receipt(receipt: Mapping[str, Any], *, apply: bool, include_path: bool) -> dict[str, Any]:
+    errors = receipt["protection_errors"]
+    if not include_path:
+        errors = [_public_protection_code(str(item)) for item in errors]
     body: dict[str, Any] = {
         "status": "blocked" if apply and receipt["protection_errors"] else "ok",
         "mode": receipt["mode"],
         "summary": receipt["summary"],
-        "protection_errors": receipt["protection_errors"],
+        "protection_errors": errors,
     }
     if include_path:
         body["receipt_path"] = receipt["receipt_path"]

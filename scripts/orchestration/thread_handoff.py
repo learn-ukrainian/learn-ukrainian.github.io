@@ -8020,15 +8020,20 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
-    apply_lane_slot(args)
-    return args.func(args)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+def _redact_home(text: str, home: Path) -> str:
+    """Replace one account's resolved home and its directory name."""
+    resolved = home.resolve()
+    for variant in (str(resolved), str(home)):
+        if variant:
+            text = text.replace(variant, "[codex-home]")
+    name = resolved.name
+    if name and name not in {".", ".."}:
+        text = re.sub(
+            rf"(?<![A-Za-z0-9._-]){re.escape(name)}(?![A-Za-z0-9._-])",
+            "[codex-home]",
+            text,
+        )
+    return text
 
 
 def _public_codex_audit(codex_home: Path, account: str) -> dict[str, Any]:
@@ -8037,7 +8042,10 @@ def _public_codex_audit(codex_home: Path, account: str) -> dict[str, Any]:
     threads = []
     for row in raw.get("recent_threads", []):
         if isinstance(row, dict):
-            threads.append({"id": row.get("id"), "title": row.get("title"), "archived": row.get("archived")})
+            title = row.get("title")
+            if isinstance(title, str):
+                title = _redact_home(title, codex_home)
+            threads.append({"id": row.get("id"), "title": title, "archived": row.get("archived")})
     return {
         "account": account,
         "exists": bool(raw.get("exists")),
@@ -8082,3 +8090,14 @@ def _begin_codex_audit(args: argparse.Namespace) -> dict[str, Any]:
     if len(accounts) > 1:
         audit["codex_accounts"] = accounts
     return audit
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    apply_lane_slot(args)
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

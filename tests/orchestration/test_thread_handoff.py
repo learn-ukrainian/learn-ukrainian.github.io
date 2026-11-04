@@ -3011,10 +3011,16 @@ def test_inspect_codex_home_reports_thread_metadata(tmp_path: Path):
     assert audit["automation_toml_files"] == []
 
     account_a = tmp_path / "homes" / "a"
-    account_b = tmp_path / "homes" / "b"
+    account_b = tmp_path / "homes" / "bound-account"
     (account_a / ".codex").mkdir(parents=True)
     account_b.mkdir()
     account_b.chmod(0o700)
+    with sqlite3.connect(account_b / "state_1.sqlite") as conn:
+        conn.execute("create table threads (id text, title text, cwd text, archived integer, updated_at integer)")
+        conn.execute(
+            "insert into threads values (?, ?, ?, ?, ?)",
+            ("thread-b", f"notes about {account_b} in bound-account", str(account_b), 0, 100),
+        )
     accounts = tmp_path / "codex_accounts.json"
     accounts.write_text(
         json.dumps(
@@ -3033,8 +3039,36 @@ def test_inspect_codex_home_reports_thread_metadata(tmp_path: Path):
     rendered = json.dumps(found)
     assert str(account_a) not in rendered
     assert str(account_b) not in rendered
+    assert "bound-account" not in rendered
+    assert found["b-sub"]["recent_threads"][0]["title"] == "notes about [codex-home] in [codex-home]"
     missing = th.codex_account_audits({"HOME": str(account_a), "LU_CODEX_ACCOUNTS_FILE": str(tmp_path / "absent.json")})
     assert set(missing) == {"sub"}
+
+    env = os.environ.copy()
+    env["HOME"] = str(account_a)
+    env["LU_CODEX_ACCOUNTS_FILE"] = str(accounts)
+    env.pop("CODEX_HOME", None)
+    audited = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.orchestration.thread_handoff",
+            "--repo-root",
+            str(tmp_path),
+            "audit",
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=120,
+        check=False,
+    )
+    assert audited.returncode == 0, audited.stderr
+    assert "NameError" not in audited.stderr
+    public = json.dumps(json.loads(audited.stdout)["codex_accounts"])
+    assert str(account_b) not in public
+    assert "bound-account" not in public
 
 
 def test_v2_state_has_unique_rollover_and_lineage_runtime_paths():
