@@ -28,7 +28,7 @@ SCRIPT_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
 from audit.report import append_html_errors_to_report
-from validate.browser_launcher import hardened_browser, new_hardened_context
+from validate.browser_launcher import hardened_browser
 
 PROJECT_ROOT = SCRIPT_DIR.parent
 STARLIGHT_DIR = PROJECT_ROOT / "site"
@@ -272,7 +272,7 @@ async def validate_level(level: str, lang_pair: str, target_module: int | None =
 
     # Installed Chrome, sandbox on, own origins only (#12689).
     async with hardened_browser() as browser:
-        context = await new_hardened_context(browser)
+        context = await browser.new_context()
         page = await context.new_page()
 
         for mdx_file in module_files:

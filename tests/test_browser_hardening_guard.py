@@ -34,19 +34,23 @@ CODE_SUFFIXES = (*JS_SUFFIXES, ".py", ".sh", ".bash", ".yml", ".yaml", ".json", 
 CANDIDATE = r"playwright|puppeteer|chromium|webkit|firefox|sandbox|connectOverCDP|connect_over_cdp|mermaid"
 
 PLAYWRIGHT_PACKAGE = r"(?:@playwright/test|playwright(?:-core)?)(?:/[^'\"]*)?"
-BROWSER_TYPES = {"chromium", "firefox", "webkit", "_electron", "_android"}
+# Outside the launcher, these are the only runtime values a file may import from a Playwright
+# package; type-only imports are always fine. Everything else, including `default`, could
+# reach a browser type.
+JS_IMPORTABLE = {"@playwright/test": {"expect", "devices", "defineConfig"}}
 LAUNCH_CALL = re.compile(
     r"\b(?:chromium|firefox|webkit|_electron|_android|browser_?[tT]ype)\s*\.\s*"
     r"(?:launch\w*|connect\w*)\s*\(|\bconnect(?:OverCDP|_over_cdp)\s*\("
     # A launched browser hands back its browser type: browser.browserType() / browser.browser_type.
     r"|\.\s*browserType\s*\(|\.\s*browser_type\b"
 )
-JS_NAMED_IMPORT = re.compile(rf"import\s*\{{([^}}]*)\}}\s*from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]")
+JS_NAMED_IMPORT = re.compile(rf"import\s*\{{([^}}]*)\}}\s*from\s*['\"]({PLAYWRIGHT_PACKAGE})['\"]")
 JS_WHOLE_IMPORT = re.compile(
     rf"import\s+(?!type\b)(?:\*\s+as\s+)?\w+\s*(?:,\s*\{{[^}}]*\}})?\s*from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
     # import('...').Page is a type position; a runtime dynamic import is not followed by .Type.
     rf"|import\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)(?!\s*\.\s*[A-Z])"
     rf"|require\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)"
+    rf"|export\s+(?!type\b)[^;]*?from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
 )
 # Test fixtures that hand a spec a browser type it could launch itself.
 JS_BROWSER_FIXTURE = re.compile(r"async\s*\(\s*\{[^}]*\b(?:browserType|playwright)\b[^}]*\}")
@@ -137,8 +141,9 @@ def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
         offenders += [f"{path}: {m.group(0)}" for m in LAUNCH_CALL.finditer(text)]
         if path.endswith(JS_SUFFIXES):
             for match in JS_NAMED_IMPORT.finditer(text):
-                if bad := _imported_names(match.group(1)) & BROWSER_TYPES:
-                    offenders.append(f"{path}: imports {sorted(bad)} from Playwright")
+                allowed = JS_IMPORTABLE.get(match.group(2), set()) | {"test"}  # `test` has its own rule
+                if bad := _imported_names(match.group(1)) - allowed:
+                    offenders.append(f"{path}: imports {sorted(bad)} from {match.group(2)}")
             offenders += [f"{path}: {m.group(0)}" for m in JS_WHOLE_IMPORT.finditer(text)]
             offenders += [f"{path}: {m.group(0)}" for m in JS_BROWSER_FIXTURE.finditer(text)]
             offenders += [f"{path}: {m.group(0)}" for m in JS_PLAYWRIGHT_BROWSER_TYPE.finditer(text)]

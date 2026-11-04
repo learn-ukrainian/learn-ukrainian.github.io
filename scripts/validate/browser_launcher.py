@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Any
 from urllib.parse import urlsplit
 
 if TYPE_CHECKING:
-    from playwright.async_api import Browser, BrowserContext, Request, Route, WebSocketRoute
+    from playwright.async_api import Browser, BrowserContext, Page, Request, Route, WebSocketRoute
 
 LOGGER = logging.getLogger(__name__)
 
@@ -124,21 +124,29 @@ async def enforce_origin_allowlist(
 
 @asynccontextmanager
 async def hardened_browser(**overrides: Any) -> AsyncIterator[Browser]:
-    """Installed Chrome with the sandbox on. Open contexts with ``new_hardened_context``.
+    """Installed Chrome with the sandbox on.
 
-    The launcher owns the Playwright driver, so no other module needs ``async_playwright``.
+    Every context and page the yielded browser opens blocks service workers and
+    enforces the origin allowlist. The launcher owns the Playwright driver, so no
+    other module needs ``async_playwright``.
     """
     from playwright.async_api import async_playwright
 
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch(**hardened_launch_options(**overrides))
+        raw_new_context = browser.new_context
+
+        async def new_context(**options: Any) -> BrowserContext:
+            context = await raw_new_context(**{**options, **HARDENED_CONTEXT_OPTIONS})
+            return await enforce_origin_allowlist(context)
+
+        async def new_page(**options: Any) -> Page:
+            # Unlike Browser.new_page, the context stays open until the browser closes.
+            return await (await new_context(**options)).new_page()
+
+        setattr(browser, "new_context", new_context)  # noqa: B010 - replaces the instance method
+        setattr(browser, "new_page", new_page)  # noqa: B010 - replaces the instance method
         try:
             yield browser
         finally:
             await browser.close()
-
-
-async def new_hardened_context(browser: Browser, **options: Any) -> BrowserContext:
-    """A context that blocks service workers and enforces the origin allowlist."""
-    context = await browser.new_context(**{**options, **HARDENED_CONTEXT_OPTIONS})
-    return await enforce_origin_allowlist(context)
