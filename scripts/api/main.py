@@ -4,10 +4,6 @@ FastAPI server for playground dashboards.
 Architecture:
   - main.py: shared endpoints (config, static files, health, orient)
   - batch_router.py: batch state, dispatcher, and websocket
-  - blue_router.py: Blue team endpoints at /api/blue/...
-  - gold_router.py: Gold team endpoints at /api/gold/...
-
-Each team owns their router file. No conflicts.
 """
 
 import asyncio
@@ -63,7 +59,6 @@ from .agent_router import router as agent_router
 from .artifacts_router import router as artifacts_router
 from .atlas_jobs_router import router as atlas_jobs_router
 from .batch_router import router as batch_router
-from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
 from .cluster_router import router as cluster_router
 from .codexbar_usage import scheduler_status, start_periodic_refresh, stop_periodic_refresh
@@ -86,7 +81,6 @@ from .fleet_board.router import router as fleet_board_router
 from .fleet_router import router as fleet_router
 from .fleet_workers_router import router as fleet_workers_router
 from .git_hygiene_router import router as git_hygiene_router
-from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
 from .governance_router import router as governance_router
 from .images_router import router as images_router
@@ -1996,7 +1990,6 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(occupancy_router, prefix="/api/occupancy", tags=["occupancy"])
     factory_app.include_router(observer_presence_router, prefix="/api/observer", tags=["observer"])
     factory_app.include_router(epics_router, prefix="/api/epics", tags=["epics"])
-    factory_app.include_router(blue_router, prefix="/api/blue")
     factory_app.include_router(comms_router, prefix="/api/comms")
     factory_app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])
     factory_app.include_router(project_state_router, prefix="/api/fleet", tags=["fleet"])
@@ -2016,7 +2009,6 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(discussions_router, prefix="/api/discussions", tags=["discussions"])
     factory_app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
     factory_app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
-    factory_app.include_router(gold_router, prefix="/api/gold")
     factory_app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
     factory_app.include_router(build_events_router, prefix="/api/build/events")
     factory_app.include_router(images_router, prefix="/api/images")

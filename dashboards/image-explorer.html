@@ -164,14 +164,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 
 .search-results-info { font-size: 13px; color: var(--text2); margin-bottom: 12px; }
 
-.search-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
 .search-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: all 0.15s; }
 .search-card:hover { border-color: var(--blue); transform: translateY(-1px); }
-.search-card img { width: 100%; height: 180px; object-fit: contain; background: #fff; display: block; cursor: pointer; }
-.search-card .info { padding: 8px; font-size: 11px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
-.search-card .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 80px; color: var(--text2); }
-.search-card .score-badge { background: var(--purple); color: #fff; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
-.search-card .grade-badge { background: var(--bg3); padding: 1px 5px; border-radius: 3px; font-size: 10px; }
 
 .text-result { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 10px; }
 .text-result .meta-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--text2); }
@@ -278,13 +272,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 <!-- ============ Tab: Search ============ -->
 <div class="panel" id="panel-search">
   <div class="search-box">
-    <input type="text" id="search-input" placeholder="Search images in Ukrainian (e.g., яблуко, буква А, тварини)..." />
+    <input type="text" id="search-input" placeholder="Search textbook text in Ukrainian (e.g., яблуко, буква А, тварини)..." />
     <button id="search-btn" onclick="doSearch()">Search</button>
   </div>
 
   <div class="search-type-toggle">
-    <button class="search-type-btn active" data-type="images" onclick="setSearchType(this, 'images')">Images</button>
-    <button class="search-type-btn" data-type="text" onclick="setSearchType(this, 'text')">Text</button>
+    <button class="search-type-btn active" data-type="text" onclick="setSearchType(this, 'text')">Text</button>
     <button class="search-type-btn" data-type="literary" onclick="setSearchType(this, 'literary')">Literary</button>
   </div>
 
@@ -332,7 +325,7 @@ let annPerPage = 50;
 let selectedIds = new Set();
 
 // Search state
-let searchType = 'images';
+let searchType = 'text';
 let searchGrade = '';
 let searchGradeButtonsBuilt = false;
 
@@ -859,36 +852,22 @@ async function doSearch() {
     const results = Array.isArray(data) ? data : [];
     info.textContent = `${results.length} results for "${q}" (${searchType})`;
 
-    if (searchType === 'images') {
-      gallery.className = 'search-gallery';
-      gallery.innerHTML = results.map(hit => `
-        <div class="search-card">
-          <img src="/images/${hit.image_path}" loading="lazy" onclick="openLightbox('/images/${hit.image_path}')" alt="${hit.image_id}" />
-          <div class="info">
-            <span class="name" title="${hit.image_id}">${hit.image_id}</span>
-            <span class="score-badge">${hit.score.toFixed(3)}</span>
-            <span class="grade-badge">G${hit.grade}</span>
-            <span style="color:var(--text3)">${hit.width}x${hit.height}</span>
+    gallery.className = '';
+    gallery.innerHTML = '';
+    for (const hit of results) {
+      const meta = searchType === 'literary'
+        ? `<span style="color:var(--purple)">${hit.work || ''}</span> &middot; ${hit.genre || ''} &middot; ${hit.language_period || ''}`
+        : `Grade ${hit.grade || '?'} &middot; ${hit.section_title || ''} &middot; ${hit.author || ''}`;
+      gallery.innerHTML += `
+        <div class="text-result">
+          <div class="meta-line">
+            <div>${meta}</div>
+            <span class="search-card score-badge" style="background:var(--purple);color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;">${hit.score.toFixed(3)}</span>
           </div>
-        </div>`).join('') || '<div class="loading">No results</div>';
-    } else {
-      gallery.className = '';
-      gallery.innerHTML = '';
-      for (const hit of results) {
-        const meta = searchType === 'literary'
-          ? `<span style="color:var(--purple)">${hit.work || ''}</span> &middot; ${hit.genre || ''} &middot; ${hit.language_period || ''}`
-          : `Grade ${hit.grade || '?'} &middot; ${hit.section_title || ''} &middot; ${hit.author || ''}`;
-        gallery.innerHTML += `
-          <div class="text-result">
-            <div class="meta-line">
-              <div>${meta}</div>
-              <span class="search-card score-badge" style="background:var(--purple);color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;">${hit.score.toFixed(3)}</span>
-            </div>
-            <div class="body">${escapeHtml(hit.text || '')}</div>
-          </div>`;
-      }
-      if (!results.length) gallery.innerHTML = '<div class="loading">No results</div>';
+          <div class="body">${escapeHtml(hit.text || '')}</div>
+        </div>`;
     }
+    if (!results.length) gallery.innerHTML = '<div class="loading">No results</div>';
   } catch (e) {
     gallery.innerHTML = `<div class="loading" style="color:var(--red)">Error: ${e.message}</div>`;
     info.textContent = '';

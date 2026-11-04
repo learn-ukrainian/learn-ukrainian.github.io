@@ -142,10 +142,7 @@ class TestDashboardInventory:
         "progress.html",
         "quality.html",
         "admin.html",
-        "comms.html",
-        "audit-dashboard.html",
         "curriculum-dashboard.html",
-        "track-health.html",
     }
 
 

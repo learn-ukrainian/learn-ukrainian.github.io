@@ -1412,9 +1412,6 @@ curl -s http://localhost:8765/api/dashboard/track/hist
 # Deep module inspection (plan + meta + gates + orchestration)
 curl -s http://localhost:8765/api/dashboard/module/a1/my-world-objects
 
-# Deep module inspection (legacy gold)
-curl -s http://localhost:8765/api/gold/inspect/hist/trypillian-civilization
-
 # Research coverage (detailed per-module scores)
 curl -s http://localhost:8765/api/dashboard/research
 ```
@@ -3201,6 +3198,8 @@ The following legacy endpoints and route aliases have been completely retired an
 | Retired Route | Canonical Replacement | Status | Notes |
 |---|---|---|---|
 | `GET /api/blue/live-status` | `GET /api/state/build-status` | 404 Not Found | Retired in #7942 (#7945); callers migrated to `/api/state/build-status` |
+| `GET /api/blue/*` | `GET /api/state/*`, `GET /api/artifacts/*` | 404 Not Found | Router removed in the Monitor cull (C-4686, C-4687); no runtime caller and no access-log hit since 2026-11-03 |
+| `GET /api/gold/*` | `GET /api/dashboard/module/{track}/{slug}`, `GET /api/state/*` | 404 Not Found | Router removed in the Monitor cull (C-4686, C-4687); no runtime caller and no access-log hit since 2026-11-03 |
 | `GET /api/rag/*` | `GET /api/sources/*` | 404 Not Found | Retired in #7942 (#7945); alias prefix unmounted, canonical endpoints are under `/api/sources/*` |
 | `GET /api/state/ready-to-build` | `GET /api/state/preparation` | 404 Not Found | Retired in #7947; callers migrated to `/api/state/preparation` |
 | `GET /api/cost/*` | `GET /api/analytics/cost/*` | 404 Not Found | Retired in #7947; duplicate mount unmounted, canonical endpoints are under `/api/analytics/cost/*` |
@@ -3592,11 +3591,8 @@ process does not pick up this behavior until restart.
 | Page | URL | Data source |
 |------|-----|-------------|
 | Home | `/` | `/api/dashboard/overview`, `/api/state/summary` (warm cache; no per-load `fresh=true`), `/api/state/pipeline-versions`, `/api/orient`, … — client abort budget **20s** (#7976) |
-| Audit Dashboard | `/audit-dashboard.html` | `/api/dashboard/overview`, `/api/dashboard/track/{id}` |
 | Progress | `/progress.html` | `/api/state/summary?fresh=true`, `/api/state/pipeline-versions?fresh=true`, `/api/state/pipeline/{track}?fresh=true` |
-| Agent Comms | `/comms.html` | redirects to `/fleet.html` (retired Broker Ops chrome) |
 | Quality | `/quality.html` | `/api/state/research-coverage`, `/api/state/review-coverage`, `/api/state/issues`, `/api/state/weak-points` |
-| Track Health | `/track-health.html` | `/api/state/track-health/{track}`, `/api/state/build-status`, `/api/state/enrichment-status` |
 | Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview` |
 | Consultation | `/consultation.html` | `/api/consultation/queue`, `/api/consultation/history`, `/api/consultation/metrics` |
 | API Docs | `/docs` | FastAPI auto-generated OpenAPI (**Ops API 2.0.0**) |
@@ -3605,17 +3601,15 @@ Dashboard consolidation status:
 - `/progress.html` is the canonical fast visual overview for current
   track/module state. It surfaces cache freshness, dossier coverage,
   generated/published state, stale audit warnings, and next-action hints.
-- `/audit-dashboard.html` remains because it drills into QA gate
-  breakdowns through `/api/dashboard/track/{id}`.
 - `/quality.html` remains because it is a fix queue over research,
   reviews, issues, and weak-point endpoints rather than a status overview.
-- `/track-health.html` remains because it uses build-status and
-  enrichment endpoints that are not shown in the progress overview.
 - `/curriculum-dashboard.html` remains for plan/meta inspection. It is
   overlapping, but deleting it would remove a distinct module-inspection
   workflow.
-- No page is removed in this slice; the safe consolidation is to make
-  `/progress.html` trustworthy and leave the specialized pages explicit.
+- The redirect-only pages `/audit-dashboard.html`, `/track-health.html`,
+  `/channels.html`, `/comms.html` and `/images.html` were removed in the
+  Monitor cull (C-4686, C-4687) and now return 404. Use `/quality.html`,
+  `/progress.html`, `/fleet.html` and `/image-explorer.html` instead.
 
 ---
 
