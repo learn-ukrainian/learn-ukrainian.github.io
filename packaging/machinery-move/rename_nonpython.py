@@ -3,7 +3,7 @@
 
 Uses the ownership model in ``rename_python.py`` (same map, same module names).
 Shell scripts, git hooks, systemd and launchd units, configuration files and
-Markdown code spans are rewritten at token boundaries: ``scripts.<machinery
+Markdown code spans are rewritten where a whole name or path matches: ``scripts.<machinery
 module>`` becomes ``lu_machinery.<module>`` and ``scripts/<machinery path>``
 becomes ``lu_machinery/<path>``. Python files are only inventoried: path
 strings, split path components and ``-m`` argument lists are reported for
@@ -41,15 +41,21 @@ AMBIGUOUS, MACHINERY, PRODUCT = rp.AMBIGUOUS, rp.MACHINERY, rp.PRODUCT
 OLD_ROOT, NEW_ROOT = rp.OLD_ROOT, rp.NEW_ROOT
 Finding, OwnershipMap, Report = rp.Finding, rp.OwnershipMap, rp.Report
 
-# ``scripts.a.b`` not glued to a longer word, path or variable.
-MODULE_TOKEN = re.compile(r"(?<![\w.\-/$@])scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
-# ``scripts/...`` or a trailing ``/scripts`` directory, not glued to a longer word.
-PATH_TOKEN = re.compile(r"(?<![\w.\-])scripts(?:/[\w.\-*/]*)?(?![\w.\-])")
-INVOCATION_BEFORE = re.compile(r"(?:^|[\s\"'(\[,=])-m[\s\"',]*$")
+# ``scripts`` starting a dotted module name; ``-mscripts.x`` (no space) is also an invocation.
+MODULE_START = re.compile(r"(?:(?<=-m)|(?<![\w.\-/$@\\]))scripts(?P<comp>(?:\.[A-Za-z_][A-Za-z0-9_]*)*)(?P<dot>\.)?")
+# ``scripts/...`` (glob characters included) or a ``/scripts`` directory at the end of a path.
+PATH_START = re.compile(r"(?<![\w.\-\\])scripts(?:(?P<rest>/[\w.\-*?\[\]/]*)|(?![\w.\-]))")
+BACKSLASH_PATH = re.compile(r"(?<![\w.\-\\/])scripts\\[\w.\-\\]+")
+BARE_WORD = re.compile(r"(?<![\w.\-/$@\\])scripts(?![\w.\-/\\])")
+# Text that completes a name at run time: shell or template variables and placeholders.
+DYNAMIC_NEXT = frozenset("${%<")
+INVOCATION_BEFORE = re.compile(r"(?:^|[\s\"'(\[,=])-m[\s\"',\-]*$")
+ENTRY_POINT_NEXT = re.compile(r":[A-Za-z_]")
 PREFIX_STOP = re.compile(r"[\s\"'=(\[{<>|&;,:`!]")
 INTERPRETER_BEFORE = re.compile(
     r"(?:^|[\s;&|(\"'])(?:\S*python[0-9.]*|\"?\$\{?PY\w*\}?\"?|bash|sh|zsh|exec|source|\.|uv\s+run(?:\s+python[0-9.]*)?)\s+[\"']?$"
 )
+GLOB_CHARS = frozenset("*?[")
 FENCE = re.compile(r"^\s*(`{3,}|~{3,})")
 INLINE_CODE = re.compile(r"(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 
@@ -77,6 +83,9 @@ MARKDOWN_SUFFIXES = (".md", ".markdown", ".mdx")
 MAX_BYTES = 4 * 1024 * 1024
 
 CODE, MARKDOWN, PYTHON, OTHER = "code", "markdown", "python", "other"
+REWRITE_VERDICTS = frozenset({"module_invocation", "module_reference", "resource_path"})
+# Verdicts that name a machinery or mixed target (worth listing in prose and unsupported files).
+MACHINERY_VERDICTS = REWRITE_VERDICTS | {"ambiguous_module", "ambiguous_path", "computed_module", "computed_path"}
 
 
 @dataclass(frozen=True)
@@ -84,6 +93,29 @@ class Edit:
     start: int
     end: int
     replacement: str
+
+
+@dataclass(frozen=True)
+class Token:
+    """One reference found in a text: where it is, what it says and what to do with it."""
+
+    start: int
+    end: int
+    text: str
+    verdict: str
+    detail: str = ""
+
+
+def is_shell_like(rel: str, head: bytes) -> bool:
+    """Files whose words are shell arguments, so a bare ``scripts`` names the directory."""
+
+    name = PurePosixPath(rel).name
+    if name.endswith(SHELL_SUFFIXES) or name in ("Makefile", "Dockerfile", "justfile", "Procfile"):
+        return True
+    if head.startswith(b"#!"):
+        return b"python" not in head.split(b"\n", 1)[0]
+    parts = PurePosixPath(rel).parts
+    return "." not in name and any(part in (".githooks", "hooks") for part in parts[:-1])
 
 
 def classify(rel: str, head: bytes) -> str:
@@ -121,13 +153,25 @@ def prefix_is_local(prefix: str, root_anchored: bool = False) -> bool:
 
 
 def clean_path(token: str) -> str:
-    while token and token[-1] in ".,":
+    """Drop sentence punctuation and an unbalanced closing bracket (Markdown link text)."""
+
+    while token and (token[-1] in ".," or (token[-1] == "]" and token.count("[") < token.count("]"))):
         token = token[:-1]
     return token
 
 
+def _is_dynamic(text: str, end: int, dynamic_tail: bool) -> bool:
+    """True when the name continues with something only known at run time."""
+
+    if end == len(text):
+        return dynamic_tail
+    if text.startswith("</", end):
+        return False  # a closing markup tag, not a ``<placeholder>``
+    return text[end] in DYNAMIC_NEXT
+
+
 class Scanner:
-    """Resolve module and path tokens in one text against the ownership map."""
+    """Resolve module and path references in one text against the ownership map."""
 
     def __init__(self, ownership: OwnershipMap, rel: str) -> None:
         self.ownership = ownership
@@ -136,12 +180,12 @@ class Scanner:
         self.root_anchored = PurePosixPath(rel).name in ROOT_ANCHORED_NAMES
 
     def resolve_path(self, token: str) -> str | None:
-        """Owner of a ``scripts/...`` path: machinery, product, AMBIGUOUS, ``root`` or None (unknown)."""
+        """Owner of a ``scripts/...`` path or glob: machinery, product, AMBIGUOUS, ``root`` or None (unknown)."""
 
         stripped = token.rstrip("/")
         if stripped == OLD_ROOT:
             return "root"
-        if "*" in stripped:
+        if GLOB_CHARS & set(stripped):
             owners = set()
             for key, owner in self.ownership.files.items():
                 parents = [p.as_posix() for p in PurePosixPath(key).parents]
@@ -150,60 +194,107 @@ class Scanner:
             return None if not owners else owners.pop() if len(owners) == 1 else AMBIGUOUS
         return self.ownership.path_owner(stripped)
 
-    def module_tokens(self, text: str) -> Iterator[tuple[int, int, str, str, str]]:
-        """Yield (start, end, token, verdict, detail); verdict is rename, keep, or an unresolved kind."""
+    def module_tokens(self, text: str, dynamic_tail: bool = False) -> Iterator[Token]:
+        """Dotted ``scripts.`` names; ``dynamic_tail`` means run-time text follows the end of ``text``."""
 
-        for match in MODULE_TOKEN.finditer(text):
-            token = match.group(0)
-            invocation = bool(INVOCATION_BEFORE.search(text[max(0, match.start() - 40) : match.start()]))
-            resolved = self.ownership.resolve(token)
-            if resolved is None:
-                verdict, detail = ("unknown_module", "the map has no scripts package") if invocation else ("keep", "")
-            else:
-                entry, rest = resolved
-                owner = entry.owner
-                if invocation:
-                    main = self.ownership.module(f"{entry.name}.__main__")
-                    if main is not None and main.owner != owner:
-                        owner = AMBIGUOUS
-                if entry.name == OLD_ROOT or (invocation and rest):
-                    verdict, detail = (
-                        ("unknown_module", f"no module {token} in the map") if invocation else ("keep", "")
-                    )
-                elif owner == AMBIGUOUS:
-                    verdict, detail = "ambiguous_module", f"{entry.name} has more than one owner"
-                elif owner == MACHINERY:
-                    verdict, detail = ("module_invocation" if invocation else "module_reference"), ""
-                else:
-                    verdict, detail = "keep", ""
-            yield match.start(), match.end(), token, verdict, detail
+        for match in MODULE_START.finditer(text):
+            start, comp, dot = match.start(), match.group("comp"), match.group("dot")
+            end = match.end()
+            dynamic = _is_dynamic(text, end, dynamic_tail)
+            if not dynamic and dot:
+                end -= 1  # a full stop after the name
+            if not comp and not dynamic:
+                continue  # the word "scripts", or a path
+            name = text[start:end]
+            before = text[max(0, start - 40) : start]
+            invocation = before.endswith("-m") or bool(INVOCATION_BEFORE.search(before))
+            if dynamic:
+                dotted = name.rstrip(".")
+                base = dotted if name.endswith(".") else dotted.rsplit(".", 1)[0] if "." in dotted else OLD_ROOT
+                resolved = self.ownership.resolve(base)
+                owner = self.ownership.subtree_owner(resolved[0].name) if resolved else None
+                verdict = {MACHINERY: "module_invocation" if invocation else "module_reference", PRODUCT: "keep"}.get(
+                    owner or "", "computed_module"
+                )
+                detail = (
+                    "" if verdict != "computed_module" else f"completed at run time below {base}, whose owners differ"
+                )
+                yield Token(start, end, name + "…", verdict, detail)
+                continue
+            if not invocation and ENTRY_POINT_NEXT.match(text, end):
+                invocation = True  # ``module:attribute`` names a module to import
+            yield Token(start, end, name, *self._module_verdict(name, invocation))
 
-    def path_tokens(self, text: str) -> Iterator[tuple[int, int, str, str, str]]:
-        """Yield (start, end, token, verdict, detail) for ``scripts/...`` paths."""
+    def _module_verdict(self, name: str, invocation: bool) -> tuple[str, str]:
+        resolved = self.ownership.resolve(name)
+        if resolved is None:
+            return ("unknown_module", "the map has no scripts package") if invocation else ("keep", "")
+        entry, rest = resolved
+        if invocation and rest:
+            return "unknown_module", f"no module {name} in the map"
+        if entry.name == OLD_ROOT:
+            return "keep", ""  # e.g. ``scripts.sh``: a file name, not a module under scripts
+        owner = entry.owner
+        if invocation:
+            main = self.ownership.module(f"{entry.name}.__main__")
+            if main is not None and main.owner != owner:
+                owner = AMBIGUOUS
+        if owner == AMBIGUOUS:
+            return "ambiguous_module", f"{entry.name} has more than one owner"
+        if owner == MACHINERY:
+            return ("module_invocation" if invocation else "module_reference"), ""
+        return "keep", ""
 
-        for match in PATH_TOKEN.finditer(text):
-            raw = match.group(0)
-            if raw == OLD_ROOT and (match.start() == 0 or text[match.start() - 1] != "/"):
-                continue  # the bare word "scripts"
-            token = clean_path(raw)
-            end = match.start() + len(token)
-            owner = self.resolve_path(token)
-            prefix = path_prefix(text, match.start())
-            if owner == "root":
-                if self.file_owner == PRODUCT:
+    def path_tokens(self, text: str, dynamic_tail: bool = False) -> Iterator[Token]:
+        """``scripts/...`` paths and globs, and a ``.../scripts`` directory at the end of a path."""
+
+        for match in PATH_START.finditer(text):
+            start = match.start()
+            if match.group("rest") is None and (start == 0 or text[start - 1] != "/"):
+                continue  # the bare word; see bare_words
+            token = clean_path(match.group(0))
+            end = start + len(token)
+            prefix = path_prefix(text, start)
+            if _is_dynamic(text, end, dynamic_tail):
+                # Without a trailing slash the last component may continue at run time.
+                base = token.rstrip("/") if token.endswith("/") else token.rsplit("/", 1)[0]
+                owner = self.resolve_path(base)
+                if owner == PRODUCT:
                     continue
-                verdict, detail = "root_reference", "the scripts/ root is split between both owners"
+                if owner == MACHINERY and prefix_is_local(prefix, self.root_anchored):
+                    yield Token(start, end, token, "resource_path")
+                else:
+                    yield Token(start, end, token + "…", "computed_path", f"completed at run time below {base}")
+                continue
+            owner = self.resolve_path(token)
+            if owner == "root":
+                if self.file_owner != PRODUCT:
+                    yield Token(start, end, token, "root_reference", "the scripts/ root is split between both owners")
             elif owner is None:
-                verdict, detail = "unknown_path", "the map has no file or directory here"
+                yield Token(start, end, token, "unknown_path", "the map has no file or directory here")
             elif owner == AMBIGUOUS:
-                verdict, detail = "ambiguous_path", "the directory holds files of both owners"
-            elif owner == PRODUCT:
-                verdict, detail = "keep", ""
-            elif not prefix_is_local(prefix, self.root_anchored):
-                verdict, detail = "foreign_path", f"prefix {prefix!r} is not this repository's root"
-            else:
-                verdict, detail = "resource_path", ""
-            yield match.start(), end, token, verdict, detail
+                yield Token(start, end, token, "ambiguous_path", "the path or glob covers files of both owners")
+            elif owner == MACHINERY:
+                if prefix_is_local(prefix, self.root_anchored):
+                    yield Token(start, end, token, "resource_path")
+                else:
+                    yield Token(start, end, token, "foreign_path", f"prefix {prefix!r} is not this repository's root")
+        for match in BACKSLASH_PATH.finditer(text):
+            token = clean_path(match.group(0))
+            owner = self.resolve_path(token.replace("\\", "/"))
+            if owner in (MACHINERY, AMBIGUOUS):
+                yield Token(match.start(), match.start() + len(token), token, "backslash_path", "Windows-style path")
+
+    def bare_words(self, text: str) -> Iterator[Token]:
+        """The word ``scripts`` as a directory argument, outside comment lines (``cd scripts``)."""
+
+        if self.file_owner == PRODUCT:
+            return  # the product tree keeps its scripts/ directory
+        for match in BARE_WORD.finditer(text):
+            line_start = text.rfind("\n", 0, match.start()) + 1
+            if text[line_start : match.start()].lstrip().startswith(("#", "//", ";")):
+                continue
+            yield Token(match.start(), match.end(), OLD_ROOT, "root_reference", "the scripts/ root is split")
 
     def is_direct_invocation(self, text: str, start: int, token: str) -> bool:
         if not token.endswith((".py", ".sh")):
@@ -217,7 +308,9 @@ def line_of(text: str, offset: int) -> int:
     return text.count("\n", 0, offset) + 1
 
 
-def markdown_code_regions(text: str) -> list[tuple[int, int]]:
+def markdown_code_regions(text: str, fenced_only: bool = False) -> list[tuple[int, int]]:
+    """Character ranges of fenced blocks and (unless ``fenced_only``) inline code spans."""
+
     regions: list[tuple[int, int]] = []
     offset = 0
     fence: str | None = None
@@ -229,7 +322,7 @@ def markdown_code_regions(text: str) -> list[tuple[int, int]]:
         elif fence is not None and match and match.group(1)[0] == fence[0] and len(match.group(1)) >= len(fence):
             regions.append((fence_start, offset))
             fence = None
-        elif fence is None:
+        elif fence is None and not fenced_only:
             regions.extend((offset + m.start(2), offset + m.end(2)) for m in INLINE_CODE.finditer(line))
         offset += len(line)
     if fence is not None:
@@ -241,53 +334,62 @@ def in_regions(regions: list[tuple[int, int]], start: int, end: int) -> bool:
     return any(a <= start and end <= b for a, b in regions)
 
 
-def scan_text(scanner: Scanner, text: str, kind: str, report: Report) -> list[Edit]:
-    """Rewrite or report every token in a non-Python text file."""
+def scan_text(scanner: Scanner, text: str, kind: str, report: Report, shell_like: bool = False) -> list[Edit]:
+    """Rewrite or report every reference in a non-Python text file."""
 
     regions = markdown_code_regions(text) if kind == MARKDOWN else []
     edits: list[Edit] = []
     rel = scanner.rel
     tokens = [*scanner.module_tokens(text), *scanner.path_tokens(text)]
-    for start, end, token, verdict, detail in sorted(tokens):
-        if verdict == "keep":
+    if kind == CODE and shell_like:
+        tokens.extend(scanner.bare_words(text))
+    elif kind == MARKDOWN:
+        fenced = markdown_code_regions(text, fenced_only=True)
+        tokens.extend(t for t in scanner.bare_words(text) if in_regions(fenced, t.start, t.end))
+    for token in sorted(tokens, key=lambda t: (t.start, t.end)):
+        if token.verdict == "keep":
             continue
-        line = line_of(text, start)
-        rewritable = kind == CODE or (kind == MARKDOWN and in_regions(regions, start, end))
-        if kind == MARKDOWN and not rewritable:
-            if verdict in (
-                "module_invocation",
-                "module_reference",
-                "resource_path",
-                "ambiguous_module",
-                "ambiguous_path",
-            ):
+        line = line_of(text, token.start)
+        if kind == MARKDOWN and not in_regions(regions, token.start, token.end):
+            if token.verdict in MACHINERY_VERDICTS:
                 report.inventory.append(
-                    Finding(rel, line, "prose_mention", token, detail="Markdown prose is left as written")
+                    Finding(rel, line, "prose_mention", token.text, detail="Markdown prose is left as written")
                 )
             continue
         if kind == OTHER:
-            if verdict in (
-                "module_invocation",
-                "module_reference",
-                "resource_path",
-                "ambiguous_module",
-                "ambiguous_path",
-            ):
+            if token.verdict in MACHINERY_VERDICTS:
                 report.unresolved.append(
-                    Finding(rel, line, "unsupported_file_type", token, detail="no rewrite rule for this file type")
+                    Finding(rel, line, "unsupported_file_type", token.text, detail="no rewrite rule for this file type")
                 )
             continue
-        if verdict in ("module_invocation", "module_reference", "resource_path"):
-            after = NEW_ROOT + token[len(OLD_ROOT) :]
-            edits.append(Edit(start, start + len(OLD_ROOT), NEW_ROOT))
-            report.rewrites.append(Finding(rel, line, verdict, token, after))
-            if verdict == "resource_path" and scanner.is_direct_invocation(text, start, token):
+        if token.verdict in REWRITE_VERDICTS:
+            after = NEW_ROOT + token.text[len(OLD_ROOT) :]
+            edits.append(Edit(token.start, token.start + len(OLD_ROOT), NEW_ROOT))
+            report.rewrites.append(Finding(rel, line, token.verdict, token.text, after))
+            if token.verdict == "resource_path" and scanner.is_direct_invocation(text, token.start, token.text):
                 report.inventory.append(
-                    Finding(rel, line, "direct_script_invocation", token, after, "runs a machinery file by path")
+                    Finding(rel, line, "direct_script_invocation", token.text, after, "runs a machinery file by path")
                 )
         else:
-            report.unresolved.append(Finding(rel, line, verdict, token, detail=detail))
+            report.unresolved.append(Finding(rel, line, token.verdict, token.text, detail=token.detail))
     return edits
+
+
+def apply_edits(text: str, edits: list[Edit]) -> str:
+    for edit in sorted(edits, key=lambda e: e.start, reverse=True):
+        text = text[: edit.start] + edit.replacement + text[edit.end :]
+    return text
+
+
+def check_fixed_point(scanner: Scanner, new_text: str, kind: str, report: Report, shell_like: bool = False) -> None:
+    """Post-condition: scanning the rewritten text finds nothing more to rewrite."""
+
+    second = Report("rename_nonpython", "check", "")
+    scan_text(scanner, new_text, kind, second, shell_like)
+    report.unresolved.extend(
+        Finding(scanner.rel, f.line, "rewrite_not_applied", f.before, detail="still pending after the rewrite")
+        for f in second.rewrites
+    )
 
 
 # -- Python files: inventory only ----------------------------------------
@@ -303,6 +405,12 @@ def _callee_name(node: ast.AST) -> str:
     if isinstance(node, ast.Attribute):
         return node.attr
     return ""
+
+
+def _owned_by_rename_python(value: str) -> bool:
+    """Strings that start with a module name and contain no whitespace are rename_python.py's."""
+
+    return value.startswith(OLD_ROOT + ".") and not re.search(r"\s", value)
 
 
 def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
@@ -334,10 +442,8 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
             return
         if owner == PRODUCT and not computed:
             return
-        if computed and owner not in (None, "root"):
-            subtree = scanner.ownership.path_owner(path)
-            if subtree == PRODUCT:
-                return
+        if computed and owner not in (None, "root") and scanner.ownership.path_owner(path) == PRODUCT:
+            return
         if owner is None and not computed:
             return
         detail = "path assembled from parts" + (" with a computed part" if computed else "")
@@ -347,39 +453,40 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
         if isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in skip:
             value = node.value
             parent = parents.get(id(node))
-            if value in (OLD_ROOT, OLD_ROOT + "/"):
+            if value in (OLD_ROOT, OLD_ROOT + "/") and not isinstance(parent, ast.JoinedStr):
                 components, computed = _following_components(node, parents)
                 if components is not None:
                     check_split(node, components, computed)
-                    continue
-            if rp.MODULE_LITERAL.fullmatch(value):
-                continue  # rename_python rewrites exact module strings
-            if (
-                isinstance(parent, ast.JoinedStr)
-                and parent.values
-                and parent.values[0] is node
-                and re.fullmatch(r"scripts(?:\.[A-Za-z_]\w*)*\.", value)
-                and scanner.ownership.subtree_owner(value.rstrip(".")) != PRODUCT
-            ):
-                unresolved(node, "computed_module_string", value + "{…}", "module name assembled at run time")
+                elif scanner.file_owner != PRODUCT:
+                    unresolved(node, "root_reference", value, "the scripts/ root is split between both owners")
                 continue
-            for _s, _e, token, verdict, detail in [*scanner.module_tokens(value), *scanner.path_tokens(value)]:
-                if verdict in ("keep", "unknown_module", "unknown_path"):
+            if _owned_by_rename_python(value):
+                continue
+            dynamic_tail = False
+            if isinstance(parent, ast.JoinedStr):
+                index = next(i for i, part in enumerate(parent.values) if part is node)
+                dynamic_tail = index + 1 < len(parent.values)
+            for token in [*scanner.module_tokens(value, dynamic_tail), *scanner.path_tokens(value, dynamic_tail)]:
+                if token.verdict in ("keep", "unknown_module", "unknown_path"):
                     continue
                 kind = (
-                    "python_string_reference"
-                    if verdict in ("module_invocation", "module_reference", "resource_path", "foreign_path")
-                    else verdict
+                    "python_string_reference" if token.verdict in REWRITE_VERDICTS | {"foreign_path"} else token.verdict
                 )
-                unresolved(node, kind, token, detail or "string in Python code; rename_python does not rewrite it")
+                unresolved(
+                    node, kind, token.text, token.detail or "string in Python code; rename_python does not rewrite it"
+                )
         elif isinstance(node, (ast.List, ast.Tuple)):
             elts = node.elts
             for i, elt in enumerate(elts[:-1]):
                 nxt = elts[i + 1]
-                if isinstance(elt, ast.Constant) and elt.value == "-m" and not isinstance(nxt, ast.Constant):
-                    unresolved(
-                        node, "subprocess_computed_module", ast.unparse(node)[:160], "-m target computed at run time"
-                    )
+                if not (isinstance(elt, ast.Constant) and elt.value == "-m") or isinstance(nxt, ast.Constant):
+                    continue
+                first = nxt.values[0] if isinstance(nxt, ast.JoinedStr) and nxt.values else None
+                if isinstance(first, ast.Constant) and _owned_by_rename_python(str(first.value)):
+                    continue  # rename_python reports the computed module string
+                unresolved(
+                    node, "subprocess_computed_module", ast.unparse(node)[:160], "-m target computed at run time"
+                )
 
 
 def _following_components(node: ast.Constant, parents: dict[int, ast.AST]) -> tuple[list[str] | None, bool]:
@@ -441,12 +548,13 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
         if kind == PYTHON:
             scan_python(scanner, data, report)
             continue
-        edits = scan_text(scanner, text, kind, report)
+        shell_like = is_shell_like(rel, data[:256])
+        edits = scan_text(scanner, text, kind, report, shell_like)
         if not edits:
             continue
         report.files_changed.append(rel)
-        for edit in sorted(edits, key=lambda e: e.start, reverse=True):
-            text = text[: edit.start] + edit.replacement + text[edit.end :]
+        text = apply_edits(text, edits)
+        check_fixed_point(scanner, text, kind, report, shell_like)
         if apply:
             rp.write_atomically(path, text.encode("utf-8"))
     report.notes.append(f"skipped binary files containing 'scripts': {skipped_binary}")

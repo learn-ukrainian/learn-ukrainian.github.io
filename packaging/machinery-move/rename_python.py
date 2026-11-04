@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import ast
 import hashlib
+import itertools
 import json
 import multiprocessing
 import os
@@ -59,6 +60,10 @@ LOADERS = {
 }
 LOADER_NAMES = frozenset(name.rsplit(".", 1)[1] for name in LOADERS)
 MODULE_LITERAL = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
+# A module name followed by more text, such as ``scripts.api.main:app``.
+MODULE_PREFIX = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
+# The start of a module name completed at run time: ``scripts.x.`` + name, ``scripts.%s``, ``scripts.{}``.
+MODULE_HEAD = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)*\.?")
 STDLIB = frozenset(sys.stdlib_module_names)
 
 
@@ -351,6 +356,8 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         self._skip_strings: set[int] = set()
         self._loader_args: set[int] = set()
         self._loader_rewrites: dict[int, str] = {}
+        self._consumed_splits: set[int] = set()
+        self._split_origin: dict[int, tuple[int, str]] = {}
         self._splits: dict[int, list[cst.ImportFrom]] = {}
         self._renamed_chain = False
         self._kept_chain = False
@@ -466,15 +473,75 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
     def visit_ImportFrom(self, node: cst.ImportFrom) -> None:
         self._import_depth += 1
 
+    # -- module strings built from parts ------------------------------
+
     def visit_ConcatenatedString(self, node: cst.ConcatenatedString) -> None:
-        # A module name assembled from parts is computed; rename_nonpython reports it.
-        stack: list[cst.CSTNode] = [node.left, node.right]
-        while stack:
-            part = stack.pop()
-            if isinstance(part, cst.ConcatenatedString):
-                stack.extend((part.left, part.right))
-            else:
-                self._skip_strings.add(id(part))
+        self._visit_string_expression(node)
+
+    def visit_FormattedString(self, node: cst.FormattedString) -> None:
+        self._visit_string_expression(node)
+
+    def visit_BinaryOperation(self, node: cst.BinaryOperation) -> None:
+        self._visit_string_expression(node)
+
+    def _visit_string_expression(self, node: cst.BaseExpression) -> None:
+        """Classify the outermost string expression; its string parts are then skipped."""
+
+        if id(node) in self._skip_strings:
+            return
+        parts = _string_parts(node)
+        if parts is None:
+            return
+        _mark_parts(node, self._skip_strings)
+        if self._import_depth or id(node) in self._docstrings or id(node) in self._loader_args:
+            return
+        self._classify_string(node, parts, rewritable=False)
+
+    def _classify_string(self, node: cst.CSTNode, parts: list[str | None], rewritable: bool) -> str | None:
+        """Decide one string expression; return the new value when a plain literal is to be rewritten.
+
+        ``parts`` are the static texts, with None for each piece only known at run time.
+        Strings with whitespace before the first run-time piece are prose or commands and
+        belong to rename_nonpython.py, which reports module names inside them.
+        """
+
+        static = "".join(itertools.takewhile(lambda part: part is not None, parts))
+        computed = None in parts
+        if not static.startswith(OLD_ROOT) or re.search(r"\s", static):
+            return None
+        shown = _code(node)
+        if not computed and MODULE_LITERAL.fullmatch(static):
+            entry = self.ownership.resolve(static)
+            assert entry is not None
+            if entry[0].owner == AMBIGUOUS:
+                self._unresolved(node, "ambiguous_module", shown, entry[0].note or "no single owner")
+            elif entry[0].owner == MACHINERY:
+                if rewritable:
+                    return renamed(static)
+                self._unresolved(node, "assembled_module_string", shown, "a machinery module name split across parts")
+            return None
+        head = MODULE_HEAD.match(static)
+        assert head is not None
+        template = static[head.end() : head.end() + 1] in ("%", "{")
+        if computed or template:
+            if head.end() < len(static) and not template:
+                return None  # e.g. ``scriptsfoo`` + name: not a module name
+            text = head.group(0)
+            # Without a trailing dot the last component may continue at run time.
+            base = text[:-1] if text.endswith(".") else text.rsplit(".", 1)[0] if "." in text else OLD_ROOT
+            resolved = self.ownership.resolve(base)
+            owner = self.ownership.subtree_owner(resolved[0].name) if resolved else None
+            if owner != PRODUCT:
+                self._unresolved(node, "computed_module_string", shown, "a module name completed at run time")
+            return None
+        prefix = MODULE_PREFIX.match(static)
+        if prefix is not None:
+            resolved = self.ownership.resolve(prefix.group(0))
+            if resolved is not None and resolved[0].owner != PRODUCT:
+                self._unresolved(
+                    node, "module_literal_suffix", shown, "a module name followed by other text, e.g. module:attribute"
+                )
+        return None
 
     # -- pass 1: import nodes -------------------------------------------
 
@@ -559,6 +626,14 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
 
         groups: dict[str, list[cst.ImportAlias]] = {}
         if isinstance(updated_node.names, cst.ImportStar):
+            if self.ownership.subtree_owner(absolute) == AMBIGUOUS:
+                self._unresolved(
+                    original_node,
+                    "ambiguous_module",
+                    shown,
+                    f"star import from {absolute}, whose submodules have both owners",
+                )
+                return updated_node
             owners = [entry.owner]
         else:
             owners = []
@@ -613,29 +688,54 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         if all(piece.module is updated_node.module and piece.relative is updated_node.relative for piece in pieces):
             return updated_node  # every group keeps the same spelling; nothing to split
         self._splits[id(original_node)] = pieces
+        self._split_origin[id(original_node)] = (self._line(original_node), shown)
         self._rewrite(original_node, "import_from_split", shown, " | ".join(_code(p) for p in pieces))
         return updated_node
+
+    def _expand_splits(
+        self, original_body: Sequence[cst.BaseSmallStatement], updated_body: Sequence[cst.BaseSmallStatement]
+    ) -> list[cst.BaseSmallStatement]:
+        """Replace each split import by its pieces, joined with semicolons on the same line."""
+
+        body: list[cst.BaseSmallStatement] = []
+        for original, updated in zip(original_body, updated_body, strict=True):
+            pieces = self._splits.get(id(original))
+            if pieces is None:
+                body.append(updated)
+                continue
+            self._consumed_splits.add(id(original))
+            last = len(pieces) - 1
+            body.extend(
+                piece.with_changes(semicolon=updated.semicolon if i == last else cst.MaybeSentinel.DEFAULT)
+                for i, piece in enumerate(pieces)
+            )
+        return body
 
     def leave_SimpleStatementLine(
         self, original_node: cst.SimpleStatementLine, updated_node: cst.SimpleStatementLine
     ) -> cst.BaseStatement | cst.FlattenSentinel[cst.BaseStatement]:
-        split_at = [i for i, stmt in enumerate(original_node.body) if id(stmt) in self._splits]
-        if not split_at:
+        if not any(id(stmt) in self._splits for stmt in original_node.body):
             return updated_node
-        if len(original_node.body) != 1:
-            for i in split_at:
-                stmt = original_node.body[i]
-                self.rewrites = [
-                    f for f in self.rewrites if not (f.kind == "import_from_split" and f.before == _code(stmt))
+        if len(original_node.body) == 1:
+            # A lone split import becomes one line per owner.
+            pieces = self._splits[id(original_node.body[0])]
+            self._consumed_splits.add(id(original_node.body[0]))
+            return cst.FlattenSentinel(
+                [
+                    updated_node.with_changes(body=[piece], leading_lines=updated_node.leading_lines if i == 0 else ())
+                    for i, piece in enumerate(pieces)
                 ]
-                self._unresolved(stmt, "split_in_compound_line", _code(stmt), "split it onto its own line first")
+            )
+        return updated_node.with_changes(body=self._expand_splits(original_node.body, updated_node.body))
+
+    def leave_SimpleStatementSuite(
+        self, original_node: cst.SimpleStatementSuite, updated_node: cst.SimpleStatementSuite
+    ) -> cst.SimpleStatementSuite:
+        """``if ready: from scripts import a, b`` keeps one line, with the pieces joined by semicolons."""
+
+        if not any(id(stmt) in self._splits for stmt in original_node.body):
             return updated_node
-        pieces = self._splits[id(original_node.body[0])]
-        lines = [
-            updated_node.with_changes(body=[piece], leading_lines=updated_node.leading_lines if i == 0 else ())
-            for i, piece in enumerate(pieces)
-        ]
-        return cst.FlattenSentinel(lines)
+        return updated_node.with_changes(body=self._expand_splits(original_node.body, updated_node.body))
 
     # -- bound names: ``import scripts.x`` then ``scripts.x.f`` ----------
 
@@ -672,35 +772,87 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         self._rewrite(original_node, "bound_name", dotted, renamed(dotted))
         return _replace_root(updated_node, NEW_ROOT)
 
+    def leave_Name(self, original_node: cst.Name, updated_node: cst.Name) -> cst.Name:
+        """A bare use of the package bound by ``import scripts...`` cannot be resolved statically."""
+
+        if self._import_depth or original_node.value != OLD_ROOT:
+            return updated_node
+        parent = self.get_metadata(ParentNodeProvider, original_node, None)
+        if isinstance(parent, cst.Attribute) and (parent.value is original_node or parent.attr is original_node):
+            return updated_node  # a chain root (leave_Attribute) or an attribute name
+        if isinstance(parent, cst.Arg) and parent.keyword is original_node:
+            return updated_node
+        qualified = self.get_metadata(QualifiedNameProvider, original_node, set())
+        if any(q.source == QualifiedNameSource.IMPORT for q in qualified):
+            self._unresolved(
+                original_node,
+                "bare_package_use",
+                _code(parent) if isinstance(parent, cst.CSTNode) else OLD_ROOT,
+                "uses the package object bound by `import scripts...`; what it reaches cannot be resolved",
+            )
+        return updated_node
+
     # -- pass 2: loader targets and module strings -----------------------
 
     def visit_Call(self, node: cst.Call) -> None:
+        if isinstance(node.func, cst.Attribute) and node.func.attr.value == "format":
+            self._visit_string_expression(node)  # ``"scripts.{}".format(name)``
         if not _is_dotted_name(node.func):
             return  # ``__import__("x").attr(...)`` reports the inner call's name for the outer one
         qualified = {q.name for q in self.get_metadata(QualifiedNameProvider, node.func, set())}
-        keywords = {LOADERS[name] for name in qualified if name in LOADERS}
-        if not keywords:
+        loaders = [name for name in qualified if name in LOADERS]
+        if not loaders:
             return
+        keyword = LOADERS[loaders[0]]
+        shown = _code(node)
         target = None
+        starred = False
         for arg in node.args:
-            if arg.keyword is None and arg.star == "":
+            if arg.keyword is not None and arg.keyword.value == keyword:
                 target = arg.value
                 break
-            if arg.keyword is not None and arg.keyword.value in keywords:
+            if arg.keyword is None and arg.star == "" and target is None:
                 target = arg.value
                 break
+            if arg.star:
+                starred = True
+                if arg.star == "*" and target is None:
+                    break
         if target is None:
+            if starred:
+                self._unresolved(node, "computed_loader", shown, "the loader target comes from unpacked arguments")
             return
         self._loader_args.add(id(target))
-        shown = _code(node)
-        if isinstance(target, cst.SimpleString) and isinstance(target.evaluated_value, str):
-            value = target.evaluated_value
-            if value.startswith("."):
-                self._unresolved(node, "relative_loader", shown, "a relative loader target depends on its package")
-            elif self.ownership.resolve(value) is None:
-                self._unprefixed_loader(node, target, value, shown)
-        else:
+        _mark_parts(target, self._skip_strings)
+        if not (isinstance(target, cst.SimpleString) and isinstance(target.evaluated_value, str)):
             self._unresolved(node, "computed_loader", shown, "the loader target is computed at run time")
+            return
+        value = target.evaluated_value
+        if value.startswith("."):
+            self._unresolved(node, "relative_loader", shown, "a relative loader target depends on its package")
+            return
+        resolved = self.ownership.resolve(value)
+        if resolved is None:
+            self._unprefixed_loader(node, target, value, shown)
+            return
+        entry, rest = resolved
+        if rest:
+            if self._missing_matters(value):
+                self._unresolved(node, "unknown_module", shown, f"the map has no module {value}")
+            return
+        owner = entry.owner
+        main = self.ownership.module(f"{value}.__main__")
+        if loaders[0] == "runpy.run_module" and main is not None and main.owner != owner:
+            owner = AMBIGUOUS  # run_module runs the package's __main__
+        has_fromlist = any(a.keyword is not None and a.keyword.value == "fromlist" for a in node.args) or (
+            len(node.args) > 3 and node.args[3].keyword is None
+        )
+        if loaders[0].endswith("__import__") and has_fromlist and self.ownership.subtree_owner(value) == AMBIGUOUS:
+            owner = AMBIGUOUS  # the fromlist may name submodules of either owner
+        if owner == AMBIGUOUS:
+            self._unresolved(node, "ambiguous_module", shown, f"{value} has more than one owner for this loader")
+        elif owner == MACHINERY:
+            self._loader_rewrites[id(target)] = renamed(value)
 
     def _unprefixed_loader(self, node: cst.Call, target: cst.SimpleString, value: str, shown: str) -> None:
         verdict, candidate, detail = self._unprefixed_decision(value, None)
@@ -712,30 +864,32 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
     def leave_SimpleString(self, original_node: cst.SimpleString, updated_node: cst.SimpleString) -> cst.SimpleString:
         if id(original_node) in self._loader_rewrites:
             new_value = self._loader_rewrites[id(original_node)]
-            self._rewrite(original_node, "loader", original_node.evaluated_value, new_value)
+            self._rewrite(original_node, "loader", str(original_node.evaluated_value), new_value)
             return _with_string_value(original_node, updated_node, new_value)
-        if id(original_node) in self._docstrings or id(original_node) in self._skip_strings or self._import_depth:
+        skipped = (self._docstrings, self._skip_strings, self._loader_args)
+        if self._import_depth or any(id(original_node) in ids for ids in skipped):
             return updated_node
         value = original_node.evaluated_value
-        if not isinstance(value, str) or not MODULE_LITERAL.fullmatch(value):
+        if isinstance(value, bytes):
+            text = value.decode("ascii", "replace")
+            resolved = self.ownership.resolve(text) if MODULE_LITERAL.fullmatch(text) else None
+            if resolved is not None and resolved[0].owner != PRODUCT:
+                self._unresolved(original_node, "bytes_module_string", text, "a module name in a bytes literal")
             return updated_node
-        resolved = self.ownership.resolve(value)
-        if resolved is None:
+        new_value = self._classify_string(original_node, [value], rewritable=True)
+        if new_value is None:
             return updated_node
-        entry, _rest = resolved
-        kind = "loader" if id(original_node) in self._loader_args else "module_literal"
-        if entry.owner == AMBIGUOUS:
-            self._unresolved(original_node, "ambiguous_module", value, entry.note)
-            return updated_node
-        if entry.owner != MACHINERY:
-            return updated_node
-        new_value = renamed(value)
-        self._rewrite(original_node, kind, value, new_value)
+        self._rewrite(original_node, "module_literal", value, new_value)
         return _with_string_value(original_node, updated_node, new_value)
 
     # -- binding check --------------------------------------------------
 
     def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
+        for split_id in sorted(set(self._splits) - self._consumed_splits):
+            line, shown = self._split_origin[split_id]
+            self.unresolved.append(
+                Finding(self.rel_path, line, "split_not_applied", shown, detail="a split import was not placed")
+            )
         bound = _unaliased_import_roots(updated_node)
         if self._renamed_chain and NEW_ROOT not in bound:
             self._unresolved(
@@ -752,6 +906,50 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
                 "a product attribute chain lost its `import scripts...`",
             )
         return updated_node
+
+
+def _string_parts(node: cst.CSTNode) -> list[str | None] | None:
+    """Static text pieces of a string expression, None for each run-time piece; None if not a string."""
+
+    if isinstance(node, cst.SimpleString):
+        value = node.evaluated_value
+        return [value] if isinstance(value, str) else None
+    if isinstance(node, cst.ConcatenatedString):
+        left, right = _string_parts(node.left), _string_parts(node.right)
+        return None if left is None or right is None else left + right
+    if isinstance(node, cst.FormattedString):
+        parts: list[str | None] = []
+        for part in node.parts:
+            if isinstance(part, cst.FormattedStringText):
+                parts.append(part.value.replace("{{", "{").replace("}}", "}"))
+            else:
+                parts.append(None)
+        return parts
+    if isinstance(node, cst.BinaryOperation):
+        left, right = _string_parts(node.left), _string_parts(node.right)
+        if isinstance(node.operator, cst.Add) and (left is not None or right is not None):
+            return (left if left is not None else [None]) + (right if right is not None else [None])
+        if isinstance(node.operator, cst.Modulo) and left is not None:
+            return [*left, None]  # ``"scripts.%s" % name``
+    if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute) and node.func.attr.value == "format":
+        receiver = _string_parts(node.func.value)
+        return None if receiver is None else [*receiver, None]
+    return None
+
+
+def _mark_parts(node: cst.CSTNode, ids: set[int]) -> None:
+    """Record a string expression and its string pieces (not the run-time expressions inside them)."""
+
+    ids.add(id(node))
+    if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute) and node.func.attr.value == "format":
+        _mark_parts(node.func.value, ids)
+    elif isinstance(node, cst.ConcatenatedString):
+        _mark_parts(node.left, ids)
+        _mark_parts(node.right, ids)
+    elif isinstance(node, cst.BinaryOperation) and _string_parts(node) is not None:
+        for side in (node.left, node.right):
+            if _string_parts(side) is not None:
+                _mark_parts(side, ids)
 
 
 def _is_dotted_name(node: cst.BaseExpression) -> bool:
@@ -895,9 +1093,10 @@ def needs_codemod(ownership: OwnershipMap, source: bytes) -> bool:
         elif isinstance(node, ast.Attribute):
             if node.attr in LOADER_NAMES:
                 return True
-        elif isinstance(node, ast.Constant) and isinstance(node.value, str) and MODULE_LITERAL.fullmatch(node.value):
-            resolved = ownership.resolve(node.value)
-            if resolved is not None and resolved[0].owner != PRODUCT:
+        elif isinstance(node, ast.Constant) and isinstance(node.value, (str, bytes)):
+            value = node.value.decode("ascii", "replace") if isinstance(node.value, bytes) else node.value
+            # Any string that starts a module name: whole, assembled from parts, or a template.
+            if value.startswith(OLD_ROOT) and value[len(OLD_ROOT) : len(OLD_ROOT) + 1] in ("", ".", "{", "%"):
                 return True
     return False
 
@@ -914,8 +1113,22 @@ def rename_source(
     except cst.ParserSyntaxError as exc:
         return source, [], [Finding(rel_path, exc.raw_line, "parse_error", rel_path, detail=exc.message)]
     command = MachineryRenameCommand(CodemodContext(filename=rel_path), ownership, rel_path, external_names)
-    new_tree = command.transform_module(tree)
-    return new_tree.bytes, command.rewrites, command.unresolved
+    new_source = command.transform_module(tree).bytes
+    unresolved = list(command.unresolved)
+    if new_source != source or command.rewrites:
+        # Post-condition: the output parses and is a fixed point. A rewrite that was reported
+        # but not placed shows up again on the second pass.
+        try:
+            second = MachineryRenameCommand(CodemodContext(filename=rel_path), ownership, rel_path, external_names)
+            second.transform_module(cst.parse_module(new_source))
+        except cst.ParserSyntaxError as exc:
+            detail = f"the rewritten file does not parse ({exc.message}); left unchanged"
+            return source, [], [*unresolved, Finding(rel_path, exc.raw_line, "invalid_output", rel_path, detail=detail)]
+        unresolved.extend(
+            Finding(rel_path, f.line, "rewrite_not_applied", f.before, detail="still pending after the rewrite")
+            for f in second.rewrites
+        )
+    return new_source, command.rewrites, unresolved
 
 
 _WORKER_STATE: tuple[OwnershipMap, frozenset[str] | None] | None = None
