@@ -24,9 +24,9 @@ checkout's real ``node_modules``) resolves fine and is left untouched; a real
 
 Usage::
 
-    python scripts/audit/check_self_symlinks.py          # check only; exit 1 if a loop exists
-    python scripts/audit/check_self_symlinks.py --fix     # remove looping links; exit 0
-    python scripts/audit/check_self_symlinks.py --fix -q  # silent unless it had to fix
+    python scripts/hygiene/check_self_symlinks.py          # check only; exit 1 if a loop exists
+    python scripts/hygiene/check_self_symlinks.py --fix     # remove looping links; exit 0
+    python scripts/hygiene/check_self_symlinks.py --fix -q  # silent unless it had to fix
 """
 
 from __future__ import annotations

@@ -90,7 +90,7 @@ fi
 # docs/bug-autopsies/node-modules-eloop-symlink.md.
 for _nm in "$_LU_REPO/node_modules" "$_LU_REPO/site/node_modules"; do
   if [ -L "$_nm" ] && [ "$(readlink "$_nm" 2>/dev/null)" = "$_nm" ]; then
-    echo "WARNING: self-referential symlink detected at $_nm (npm spawn ELOOP). Inspect it, then run: .venv/bin/python scripts/audit/check_self_symlinks.py --fix" >&2
+    echo "WARNING: self-referential symlink detected at $_nm (npm spawn ELOOP). Inspect it, then run: .venv/bin/python scripts/hygiene/check_self_symlinks.py --fix" >&2
   fi
 done
 

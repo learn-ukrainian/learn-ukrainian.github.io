@@ -154,7 +154,7 @@ def _init_orient_git_repo(tmp_path: Path) -> Path:
 
 def test_health_canaries_do_not_apply_general_repairs(monkeypatch):
     import scripts.audit.check_primary_integrity as primary_check
-    import scripts.audit.check_self_symlinks as symlink_check
+    import scripts.hygiene.check_self_symlinks as symlink_check
 
     fix_values: list[bool] = []
 

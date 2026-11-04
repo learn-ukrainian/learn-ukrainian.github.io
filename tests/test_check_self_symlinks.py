@@ -1,4 +1,4 @@
-"""Tests for the node_modules ELOOP canary (scripts/audit/check_self_symlinks.py).
+"""Tests for the node_modules ELOOP canary (scripts/hygiene/check_self_symlinks.py).
 
 The lethal bug: a self-referential ``node_modules`` symlink (``X -> X``) makes
 every ``npm`` build die with ``spawn ELOOP``. The canary must detect and remove
@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from scripts.audit.check_self_symlinks import (
+from scripts.hygiene.check_self_symlinks import (
     check_self_symlinks,
     find_looping_symlinks,
 )
