@@ -666,11 +666,6 @@
           "description": "Python package installation"
         },
         {
-          "pattern": "playwright install *",
-          "permission": "allow",
-          "description": "Playwright browser installation"
-        },
-        {
           "pattern": "[ * ]",
           "permission": "allow",
           "description": "Test conditions"

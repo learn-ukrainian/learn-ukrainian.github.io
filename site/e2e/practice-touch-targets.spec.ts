@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './support/hardened-browser.mjs';
 
 const phoneDevices = [
   { name: 'iPhone 14', viewport: { width: 390, height: 844 } },

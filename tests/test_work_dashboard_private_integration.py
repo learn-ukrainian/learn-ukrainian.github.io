@@ -121,7 +121,8 @@ def _puppeteer_launch_options(
     options: dict[str, Any] = {
         "headless": "new",
         # CI containers can have a small /dev/shm and contend during cold start.
-        "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+        # The Chrome sandbox stays on: no sandbox-disabling flags (#12689).
+        "args": ["--disable-dev-shm-usage"],
         "timeout": CHROME_LAUNCH_TIMEOUT_MS,
     }
     executable = _resolve_chrome_executable(

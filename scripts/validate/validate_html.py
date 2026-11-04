@@ -21,13 +21,14 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from playwright.async_api import ConsoleMessage, Page, async_playwright
+from playwright.async_api import ConsoleMessage, Page
 
 # Add scripts directory to path for audit imports
 SCRIPT_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
 from audit.report import append_html_errors_to_report
+from validate.browser_launcher import hardened_browser
 
 PROJECT_ROOT = SCRIPT_DIR.parent
 STARLIGHT_DIR = PROJECT_ROOT / "site"
@@ -269,8 +270,8 @@ async def validate_level(level: str, lang_pair: str, target_module: int | None =
         print(f"  No modules in {level}")
         return results
 
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+    # Installed Chrome, sandbox on, own origins only (#12689).
+    async with hardened_browser() as browser:
         context = await browser.new_context()
         page = await context.new_page()
 
@@ -310,8 +311,6 @@ async def validate_level(level: str, lang_pair: str, target_module: int | None =
                 extra = f" - {result.errors[0]}" if result.errors else ""
 
             print(f"  {status} Module {module_num:02d}{extra}")
-
-        await browser.close()
 
     return results
 
