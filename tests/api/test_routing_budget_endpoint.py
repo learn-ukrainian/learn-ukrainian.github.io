@@ -269,6 +269,8 @@ _ROUTING_BUDGET_TOP_LEVEL_KEYS = frozenset(
         # Per-account Claude view (#10630); additive, display only.
         "claude_accounts",
         "preferred_claude_account",
+        # Per-account Codex view (#12696). ``agents.codex`` stays account a.
+        "codex_accounts",
     }
 )
 _ROUTING_BUDGET_RECOMMENDATION_KEYS = frozenset(
@@ -1160,7 +1162,11 @@ def _restart_scheduler(monkeypatch, *, bound_generation: bytes) -> tuple[list[st
 
     @contextlib.contextmanager
     def _binding(_label, *, verified=None):
-        yield claude_account_usage._Binding(Path("/nonexistent"), "acct", claude_account_usage._Watch(roots=(), entries=(), generation=bound_generation, credentials=None))
+        yield claude_account_usage._Binding(
+            Path("/nonexistent"),
+            "acct",
+            claude_account_usage._Watch(roots=(), entries=(), generation=bound_generation, credentials=None),
+        )
 
     claude_account_usage._reset_for_tests()
     subscription_usage_mod._claude_account_probe_started_at = None
