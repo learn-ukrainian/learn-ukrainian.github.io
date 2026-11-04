@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './support/hardened-browser.mjs';
 
 test.describe.configure({ mode: 'serial' });
 

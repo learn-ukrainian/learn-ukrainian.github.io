@@ -1,5 +1,5 @@
 import { AxeBuilder } from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './support/hardened-browser.mjs';
 
 // The accepted public denominator. These are real routes, never fixture replacements.
 const entries = [

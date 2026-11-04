@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { HARDENED_CONTEXT_OPTIONS, hardenedLaunchOptions } from './e2e/support/hardened-browser.mjs';
 
 const PORT = process.env.PLAYWRIGHT_PORT ? Number(process.env.PLAYWRIGHT_PORT) : 4321;
 const host = '127.0.0.1';
@@ -25,7 +26,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      // Installed Google Chrome, sandbox on, own origins only (#12689; e2e/support/hardened-browser.mjs).
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chrome',
+        launchOptions: hardenedLaunchOptions(),
+        ...HARDENED_CONTEXT_OPTIONS,
+      },
     },
   ],
 });

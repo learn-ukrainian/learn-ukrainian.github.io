@@ -52,6 +52,8 @@ Doctor checks: project `.venv` present, Node 22.x on PATH, site HTTP up, `/a1/`,
 
 Feature recipes live in `features/`. Prefer stable routes and the existing Playwright specs over ad-hoc clicks.
 
+Playwright runs only against our own site: installed Google Chrome (`/opt/google/chrome/chrome`, from Google's signed apt repository) with its sandbox on, and every origin except the loopback host and `learn-ukrainian.github.io` is blocked (`site/e2e/support/hardened-browser.mjs`). Never run `playwright install`, pass `--no-sandbox`, or use Playwright MCP.
+
 ```bash
 source "$LU_VERIFY_STATE_DIR/env.sh"
 # Green path on current main: HTTP route smoke + practice Playwright

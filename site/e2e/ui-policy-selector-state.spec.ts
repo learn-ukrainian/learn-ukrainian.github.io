@@ -1,4 +1,5 @@
-import { expect, test, type Locator, type Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
+import { expect, test } from './support/hardened-browser.mjs';
 
 /**
  * #5376 check 2 — selector-state rule.
