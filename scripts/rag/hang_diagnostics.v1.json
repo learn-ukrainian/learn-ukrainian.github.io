@@ -1,0 +1,6 @@
+{
+  "schema": "learn-ukrainian.hang-diagnostics",
+  "schema_version": 1,
+  "origin": "scripts/rag/hang_diagnostics.v1.json",
+  "module": "scripts.rag.hang_diagnostics"
+}

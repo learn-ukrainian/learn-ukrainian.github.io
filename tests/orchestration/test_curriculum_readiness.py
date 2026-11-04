@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
+import runpy
 import shutil
+import sys
 from collections.abc import Mapping
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 import yaml
@@ -14,6 +18,138 @@ pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BIO_SLUG = "borys-hrinchenko"
+
+
+@pytest.fixture(params=["readiness", "pilot"])
+def gates_importer(request):
+    from scripts.orchestration import curriculum_lifecycle_pilot
+
+    return {
+        "readiness": readiness,
+        "pilot": curriculum_lifecycle_pilot,
+    }[request.param]
+
+
+def _gates_document(**changes: object) -> str:
+    return json.dumps({
+        "schema": "learn-ukrainian.readiness-gates",
+        "schema_version": 1,
+        "origin": "scripts/curriculum/readiness_gates.v1.json",
+        "module": "scripts.curriculum.readiness_gates",
+        **changes,
+    })
+
+
+@pytest.mark.parametrize("raw", [
+    b"\xff", b"{", b"[]", b"null", b"{}",
+    _gates_document(extra=True).encode(),
+    _gates_document(schema="other").encode(),
+    _gates_document(schema_version=True).encode(),
+    _gates_document(schema_version=1.0).encode(),
+    _gates_document(schema_version=2).encode(),
+    _gates_document(origin="elsewhere.json").encode(),
+    _gates_document(module=None).encode(),
+    b'{"schema": "first", "schema": "second"}',
+    _gates_document(module=float("nan")).encode(),
+    _gates_document(module=float("inf")).encode(),
+    _gates_document(module=float("-inf")).encode(),
+    b"[" * 1500 + b"]" * 1500,
+])
+def test_readiness_gates_refuse_invalid_json(gates_importer, tmp_path: Path, raw: bytes) -> None:
+    path = tmp_path / "readiness_gates.v1.json"
+    path.write_bytes(raw)
+    with pytest.raises(ImportError, match="readiness gates configuration"):
+        gates_importer._gates_module_name(path)
+
+
+@pytest.mark.parametrize("field", ["schema", "schema_version", "origin", "module"])
+def test_readiness_gates_refuse_each_missing_field(gates_importer, tmp_path: Path, field: str) -> None:
+    document = json.loads(_gates_document())
+    del document[field]
+    path = tmp_path / "readiness_gates.v1.json"
+    path.write_text(json.dumps(document))
+    with pytest.raises(ImportError, match="fields mismatch"):
+        gates_importer._gates_module_name(path)
+
+
+@pytest.mark.parametrize("name", [
+    "", "scripts", "os", ".scripts.curriculum", "scripts..curriculum", "scripts.Curriculum",
+    " scripts.curriculum", "scripts.curriculum\n", "scripts.curriculum:main", "scripts.сurriculum",
+    "scripts.foo-bar", "scripts./curriculum", "scripts.sqlite3", "scripts._sqlite3",
+])
+def test_readiness_gates_refuse_malformed_or_sqlite_names(gates_importer, tmp_path: Path, name: str) -> None:
+    path = tmp_path / "readiness_gates.v1.json"
+    path.write_text(_gates_document(module=name))
+    with pytest.raises(ImportError):
+        gates_importer.load_configured_module(gates_importer._gates_module_name(path))
+
+
+@pytest.mark.parametrize("kind", ["missing", "directory", "symlink", "fifo", "oversized"])
+def test_readiness_gates_refuse_unsafe_data_files(gates_importer, tmp_path: Path, kind: str) -> None:
+    path = tmp_path / "readiness_gates.v1.json"
+    if kind == "directory":
+        path.mkdir()
+    elif kind == "symlink":
+        target = tmp_path / "target.json"
+        target.write_text(_gates_document())
+        path.symlink_to(target)
+    elif kind == "fifo":
+        os.mkfifo(path)
+    elif kind == "oversized":
+        path.write_bytes(b" " * (gates_importer._GATES_MAX_BYTES + 1))
+    with pytest.raises((ImportError, OSError)):
+        gates_importer._gates_module_name(path)
+
+
+def test_readiness_gates_refuse_replaced_file(gates_importer, tmp_path: Path, monkeypatch) -> None:
+    path = tmp_path / "readiness_gates.v1.json"
+    path.write_text(_gates_document())
+    replacement = tmp_path / "replacement.json"
+    replacement.write_text(_gates_document())
+    real_open = os.open
+
+    def replace_before_open(target, flags):
+        replacement.replace(path)
+        return real_open(target, flags)
+
+    monkeypatch.setattr(gates_importer.os, "open", replace_before_open)
+    with pytest.raises(ImportError, match="changed while opening"):
+        gates_importer._gates_module_name(path)
+
+
+def test_readiness_gates_refuse_file_growth(gates_importer, tmp_path: Path, monkeypatch) -> None:
+    path = tmp_path / "readiness_gates.v1.json"
+    path.write_text(_gates_document())
+    real_open = os.open
+
+    def grow_before_open(target, flags):
+        path.write_bytes(b" " * (gates_importer._GATES_MAX_BYTES + 1))
+        return real_open(target, flags)
+
+    monkeypatch.setattr(gates_importer.os, "open", grow_before_open)
+    with pytest.raises(ImportError, match="too large"):
+        gates_importer._gates_module_name(path)
+
+
+@pytest.mark.parametrize("origin", [None, "foreign/readiness_gates.py"])
+def test_readiness_gates_refuse_foreign_cache_at_startup(
+    gates_importer, tmp_path: Path, monkeypatch, origin: str | None,
+) -> None:
+    module = ModuleType("scripts.curriculum.readiness_gates")
+    module.__file__ = str(tmp_path / origin) if origin else None
+    monkeypatch.setitem(sys.modules, module.__name__, module)
+    with pytest.raises(ImportError, match="not a file in this checkout"):
+        runpy.run_path(gates_importer.__file__, run_name="startup_probe")
+
+
+def test_readiness_gate_startup_bindings_remain_pinned(monkeypatch) -> None:
+    from scripts.curriculum import readiness_gates
+
+    original = readiness.base_level
+    assert original is readiness_gates.base_level
+    assert readiness._gates_module_name() == "scripts.curriculum.readiness_gates"
+    monkeypatch.setattr(readiness_gates, "base_level", lambda *_args, **_kwargs: "changed")
+    assert readiness.base_level is original
 
 
 def _copy(repo_root: Path, relative: str | Path) -> None:

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import os
+import runpy
+import shutil
 import signal
 import subprocess
 import sys
@@ -11,6 +13,7 @@ import textwrap
 import time
 from collections.abc import Callable
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 
@@ -31,6 +34,118 @@ PROC_NET_TCP = textwrap.dedent(
        5: 0100007F:1F90 00000000:0000 0A 00000000:00000003 00:00000000 00000000  1000        0 6 1
     """
 )
+
+
+def _diagnostics_document(**changes: object) -> str:
+    return json.dumps({
+        "schema": "learn-ukrainian.hang-diagnostics",
+        "schema_version": 1,
+        "origin": "scripts/rag/hang_diagnostics.v1.json",
+        "module": "scripts.rag.hang_diagnostics",
+        **changes,
+    })
+
+
+@pytest.mark.parametrize("raw", [
+    b"\xff", b"{", b"[]", b"null", b"{}",
+    _diagnostics_document(extra=True).encode(),
+    _diagnostics_document(schema="other").encode(),
+    _diagnostics_document(schema_version=True).encode(),
+    _diagnostics_document(schema_version=1.0).encode(),
+    _diagnostics_document(schema_version=2).encode(),
+    _diagnostics_document(origin="elsewhere.json").encode(),
+    _diagnostics_document(module=None).encode(),
+    b'{"schema": "first", "schema": "second"}',
+    _diagnostics_document(module=float("nan")).encode(),
+    _diagnostics_document(module=float("inf")).encode(),
+    _diagnostics_document(module=float("-inf")).encode(),
+    b"[" * 1500 + b"]" * 1500,
+])
+def test_diagnostics_refuse_invalid_json(tmp_path: Path, raw: bytes) -> None:
+    path = tmp_path / "hang_diagnostics.v1.json"
+    path.write_bytes(raw)
+    with pytest.raises(ImportError, match="hang diagnostics configuration"):
+        wd._gates_module_name(path)
+
+
+@pytest.mark.parametrize("field", ["schema", "schema_version", "origin", "module"])
+def test_diagnostics_refuse_each_missing_field(tmp_path: Path, field: str) -> None:
+    document = json.loads(_diagnostics_document())
+    del document[field]
+    path = tmp_path / "hang_diagnostics.v1.json"
+    path.write_text(json.dumps(document))
+    with pytest.raises(ImportError, match="fields mismatch"):
+        wd._gates_module_name(path)
+
+
+@pytest.mark.parametrize("name", [
+    "", "scripts", "os", ".scripts.curriculum", "scripts..curriculum", "scripts.Curriculum",
+    " scripts.curriculum", "scripts.curriculum\n", "scripts.curriculum:main", "scripts.сurriculum",
+    "scripts.foo-bar", "scripts./curriculum", "scripts.sqlite3", "scripts._sqlite3",
+])
+def test_diagnostics_refuse_malformed_or_sqlite_names(tmp_path: Path, name: str) -> None:
+    path = tmp_path / "hang_diagnostics.v1.json"
+    path.write_text(_diagnostics_document(module=name))
+    with pytest.raises(ImportError):
+        wd.load_configured_module(wd._gates_module_name(path))
+
+
+@pytest.mark.parametrize("kind", ["missing", "directory", "symlink", "fifo", "oversized"])
+def test_diagnostics_refuse_unsafe_data_files(tmp_path: Path, kind: str) -> None:
+    path = tmp_path / "hang_diagnostics.v1.json"
+    if kind == "directory":
+        path.mkdir()
+    elif kind == "symlink":
+        target = tmp_path / "target.json"
+        target.write_text(_diagnostics_document())
+        path.symlink_to(target)
+    elif kind == "fifo":
+        os.mkfifo(path)
+    elif kind == "oversized":
+        path.write_bytes(b" " * (wd._GATES_MAX_BYTES + 1))
+    with pytest.raises((ImportError, OSError)):
+        wd._gates_module_name(path)
+
+
+def test_diagnostics_refuse_replaced_file(tmp_path: Path, monkeypatch) -> None:
+    path = tmp_path / "hang_diagnostics.v1.json"
+    path.write_text(_diagnostics_document())
+    replacement = tmp_path / "replacement.json"
+    replacement.write_text(_diagnostics_document())
+    real_open = os.open
+
+    def replace_before_open(target, flags):
+        replacement.replace(path)
+        return real_open(target, flags)
+
+    monkeypatch.setattr(wd.os, "open", replace_before_open)
+    with pytest.raises(ImportError, match="changed while opening"):
+        wd._gates_module_name(path)
+
+
+def test_diagnostics_refuse_file_growth(tmp_path: Path, monkeypatch) -> None:
+    path = tmp_path / "hang_diagnostics.v1.json"
+    path.write_text(_diagnostics_document())
+    real_open = os.open
+
+    def grow_before_open(target, flags):
+        path.write_bytes(b" " * (wd._GATES_MAX_BYTES + 1))
+        return real_open(target, flags)
+
+    monkeypatch.setattr(wd.os, "open", grow_before_open)
+    with pytest.raises(ImportError, match="too large"):
+        wd._gates_module_name(path)
+
+
+@pytest.mark.parametrize("origin", [None, "foreign/hang_diagnostics.py"])
+def test_diagnostics_refuse_foreign_cache_at_startup(
+    tmp_path: Path, monkeypatch, origin: str | None,
+) -> None:
+    module = ModuleType("scripts.rag.hang_diagnostics")
+    module.__file__ = str(tmp_path / origin) if origin else None
+    monkeypatch.setitem(sys.modules, module.__name__, module)
+    with pytest.raises(ImportError, match="not a file in this checkout"):
+        runpy.run_path(wd.__file__, run_name="startup_probe")
 
 
 def test_parse_proc_net_tcp_counts_server_side_states_and_backlog() -> None:
@@ -394,6 +509,21 @@ def test_resolve_dump_dir_default_and_override(tmp_path: Path) -> None:
     assert hd.resolve_dump_dir(tmp_path, {hd.DUMP_DIR_ENV: str(tmp_path / "x")}) == tmp_path / "x"
 
 
+def test_watchdog_helpers_share_the_product_owner_and_stay_pinned(monkeypatch, tmp_path: Path) -> None:
+    assert wd.resolve_dump_dir is hd.resolve_dump_dir
+    assert wd.faulthandler_log_path is hd.faulthandler_log_path
+    assert wd.ensure_dump_dir is hd.ensure_dump_dir
+    assert wd.DUMP_SIGNAL is hd.DUMP_SIGNAL
+    assert wd.DUMP_SIGNAL == signal.SIGUSR1
+    assert hd.faulthandler_log_path(tmp_path, 123) == tmp_path / "faulthandler-123.log"
+    private = tmp_path / "private"
+    assert hd.ensure_dump_dir(private) == private
+    assert private.stat().st_mode & 0o777 == 0o700
+    original = wd.resolve_dump_dir
+    monkeypatch.setattr(hd, "resolve_dump_dir", lambda *_args, **_kwargs: tmp_path)
+    assert wd.resolve_dump_dir is original
+
+
 HUNG_CHILD = textwrap.dedent(
     """\
     import sys, threading
@@ -572,3 +702,61 @@ def test_handles_signal_reads_sigcgt(tmp_path: Path) -> None:
 def test_proc_snapshot_of_self_lists_threads() -> None:
     text = wd.proc_snapshot(os.getpid(), 1)
     assert f"{os.getpid()} " in text and "== socket states on port 1" in text
+
+
+@pytest.fixture
+def malformed_policy_repo(tmp_path: Path) -> Path:
+    repo = tmp_path / "repo"
+    for relative in ("scripts", "agents_extensions", ".mcp/servers/sources"):
+        shutil.copytree(
+            PROJECT_ROOT / relative, repo / relative,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
+    policy = repo / "agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml"
+    policy.write_text("not: [valid", encoding="utf-8")
+    return repo
+
+
+@pytest.mark.parametrize("probe", ["watchdog", "diagnostics", "governor"])
+def test_diagnostics_survive_malformed_curriculum_policy(malformed_policy_repo: Path, probe: str) -> None:
+    if probe == "watchdog":
+        args = ["-m", "scripts.orchestration.sources_watchdog", "--help"]
+        expected = "usage:"
+    elif probe == "diagnostics":
+        args = ["-c", "import scripts.rag.hang_diagnostics; print('diagnostics imported')"]
+        expected = "diagnostics imported"
+    else:
+        args = ["-c", textwrap.dedent("""\
+            import runpy
+            server = runpy.run_path('.mcp/servers/sources/server.py', run_name='sources_probe')
+            governor = server['_call_governor']()
+            assert isinstance(governor, server['CallGovernor'])
+            assert server['_call_governor']() is governor
+            print('governor initialized')
+        """)]
+        expected = "governor initialized"
+    result = subprocess.run(
+        [sys.executable, *args], cwd=malformed_policy_repo,
+        env={**os.environ, "PYTHONPATH": str(malformed_policy_repo)},
+        capture_output=True, text=True, timeout=60, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert expected in result.stdout
+
+
+def test_hang_diagnostics_imports_no_curriculum_build_or_audit() -> None:
+    result = subprocess.run(
+        [sys.executable, "-c", textwrap.dedent("""\
+            import sys
+            import scripts.rag.hang_diagnostics
+            forbidden = ('scripts.curriculum', 'scripts.build', 'scripts.audit')
+            loaded = sorted(name for name in sys.modules
+                            if any(name == prefix or name.startswith(prefix + '.') for prefix in forbidden))
+            assert loaded == [], loaded
+            print('stdlib diagnostics imported')
+        """)], cwd=PROJECT_ROOT,
+        env={**os.environ, "PYTHONPATH": str(PROJECT_ROOT)},
+        capture_output=True, text=True, timeout=60, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout.strip() == "stdlib diagnostics imported"
