@@ -108,6 +108,9 @@ PLAYWRIGHT_TOKEN_EXEMPT = {
 }
 # npm writes lockfiles and never runs anything from them; they only record dependencies.
 LOCKFILE_NAMES = ("package-lock.json",)
+# Learner content and lexicon data: nothing executes them, and their prose uses the English
+# word playwright. Every other rule still reads them.
+DATA_TREES = ("curriculum/", "registry/")
 
 # Files that name a sandbox flag for a reason other than a browser launch.
 SANDBOX_FLAG_EXEMPT = {
@@ -233,7 +236,7 @@ def _code_strings(path: str) -> list[str]:
 
 def _playwright_mentions(path: str) -> list[str]:
     """Each place `path` names a Playwright package outside the allowed places."""
-    if path in LAUNCHERS or path.endswith(LOCKFILE_NAMES):
+    if path in LAUNCHERS or path.endswith(LOCKFILE_NAMES) or path.startswith(DATA_TREES):
         return []
     mentions = []
     for code in _code_strings(path):
