@@ -4261,6 +4261,12 @@ def test_owner_request_citing_an_approval_refuses_an_already_approved_head(monke
         ("deep-nesting", BAD_REPLY),
         ("markdown-escaped-fail", BAD_REPLY),
         ("html-reference-fail", BAD_REPLY),
+        # Review round 4: a value is judged only as written; a verdict only markup or escapes spell refuses outright.
+        ("escaped-keyword-non-pass", BAD_REPLY),
+        ("reference-keyword-non-pass", BAD_REPLY),
+        ("invisible-character-keyword", BAD_REPLY),
+        ("tag-split-keyword", BAD_REPLY),
+        ("tag-masked-keyword", BAD_REPLY),
         ("withheld-unbound", BAD_REPLY),
         ("rejection-with-null-finding", NOT_APPROVE),
         ("approval-with-finding", r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*is not an unedited "
@@ -4305,6 +4311,17 @@ def test_owner_request_citing_an_approval_refuses(monkeypatch, tmp_path, case, r
         history[-1] = (H3, "APPROVED", envelope("SECURITY\\_VERDICT: FAIL"))
     elif case == "html-reference-fail":
         history[-1] = (H3, "APPROVED", envelope("SECURITY&#95;VERDICT: FAIL"))
+    elif case == "escaped-keyword-non-pass":
+        history[-1] = (H3, "APPROVED", envelope("SECURITY\\_VERDICT: PA\\SS"))
+    elif case == "reference-keyword-non-pass":
+        history[-1] = (H3, "APPROVED", envelope("SECURITY&#95;VERDICT: PA\\SS"))
+    elif case == "invisible-character-keyword":
+        history[-1] = (H3, "APPROVED", envelope("SECURITY\u200b_VERDICT: FAIL"))
+    elif case == "tag-split-keyword":
+        history[-1] = (H3, "APPROVED", envelope("SECU<b></b>RITY_VERDICT: FAIL"))
+    elif case == "tag-masked-keyword":
+        # A passing verdict hidden in a tag cannot balance a shown one spelled by a reference.
+        history[-1] = (H3, "APPROVED", envelope('<x a="SECURITY_VERDICT: PASS\n"> SECURITY&#95;VERDICT: FAIL'))
     elif case == "rejection-with-null-finding":
         history[-1] = (H3, "CHANGES_REQUESTED", OPEN_F5)
     tasks, comments, calls = approval_case(monkeypatch, tmp_path, history)

@@ -662,7 +662,8 @@ def _security_not_pass(reply: str) -> bool:
     is neither PASS nor whitespace, so no text is dropped and a verdict cannot run across a span.
     Only text that is not JSON at all stays in the rest. JSON the decoder cannot finish (a repeated
     key, a number past the conversion limit, nesting too deep) refuses, since its strings go unread.
-    Each text is also read as it renders, with character references and backslash escapes resolved.
+    A value is judged only as written. A verdict that only markup, references, escapes or invisible
+    characters spell refuses whatever its value (:func:`_hidden_verdict`).
     """
     decoder = json.JSONDecoder(object_pairs_hook=recorder._unique_keys)
     texts: list[str] = []
@@ -682,9 +683,28 @@ def _security_not_pass(reply: str) -> bool:
         rest.append(reply[position:match.start()] + "\N{OBJECT REPLACEMENT CHARACTER}")
         position = end
     rest.append(reply[position:])
-    return any(recorder._security_verdict_blocks(reading)
-               for text in [*texts, "".join(rest)]
-               for reading in (text, unicodedata.normalize("NFKC", html.unescape(text)).replace("\\", "")))
+    return any(recorder._security_verdict_blocks(text) or _hidden_verdict(text) for text in [*texts, "".join(rest)])
+
+
+# The words of a security verdict joined by anything that is not a letter or digit, read only to find one.
+_LOOSE_VERDICT = re.compile(r"(?i)security[^a-z0-9]{1,8}verdict")
+_MARKUP = re.compile(r"<!--.*?-->|<[^>]*>", re.S)
+
+
+def _hidden_verdict(text: str) -> bool:
+    """Whether the text, as it may render, spells a security verdict a different number of times than it states.
+
+    Tags and comments, character references, compatibility forms, invisible format characters,
+    backslashes and inline markup are removed only to look for the words; no value is read from that
+    form, so it can add refusals but never turn a value into PASS. Confusable letters from other
+    scripts are outside this reading, as they are for every security-verdict reader in the repository.
+    """
+    shown = _MARKUP.sub("", html.unescape(_MARKUP.sub("", text)))
+    shown = "".join(char for char in unicodedata.normalize("NFKC", shown) if unicodedata.category(char) != "Cf")
+    shown = re.sub(r"[\\*`~]", "", shown)
+    # As written, a tag or comment separates text rather than joining it, and a verdict inside one is not shown.
+    stated = _MARKUP.sub("\N{OBJECT REPLACEMENT CHARACTER}", text)
+    return len(_LOOSE_VERDICT.findall(shown)) != len(recorder._SECURITY_VERDICT.findall(stated))
 
 
 def _decoded_texts(value: Any) -> Iterator[str]:
