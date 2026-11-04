@@ -133,7 +133,7 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
 
 _GUARD_FREE_DISK_TEST = "test_snapshot_stops_when_free_disk_falls_below_the_floor"
 _guard_reads_production_free_disk = False
-# Same string as ``scripts.curriculum.evidence.config.FREE_DISK_FLOOR_ENV``.
+# Same string as ``scripts.storage.generations.FREE_DISK_FLOOR_ENV``.
 # The patch below checks that constant once ``Sources`` is imported.
 _FREE_DISK_FLOOR_ENV = "LU_EVIDENCE_FREE_DISK_FLOOR_BYTES"
 _SOURCES_MODULE = "scripts.curriculum.evidence.sources"
@@ -145,7 +145,7 @@ def _patch_sources_free_disk(module: Any) -> None:
     current = sources_cls.free_disk_bytes
     if getattr(current, "_lu_reports_floor_instead_of_runner_disk", False):
         return
-    evidence_config = sys.modules["scripts.curriculum.evidence.config"]
+    evidence_config = sys.modules["scripts.storage.generations"]
     if evidence_config.FREE_DISK_FLOOR_ENV != _FREE_DISK_FLOOR_ENV:
         raise RuntimeError(
             f"{_SOURCES_MODULE} free-disk env is {evidence_config.FREE_DISK_FLOOR_ENV!r}, not {_FREE_DISK_FLOOR_ENV!r}"

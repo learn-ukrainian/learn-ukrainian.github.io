@@ -152,22 +152,40 @@ def _check_no_retired_refs(errors: list[str]) -> None:
                 errors.append(f"{rel_path}: references retired template path {marker}")
 
 
-def validate() -> list[str]:
+def _violation(message: str) -> dict:
+    """One prompt-lint record for a seminar prompt-suite finding."""
+    return {
+        "rule": "SEMINAR_PROMPT_SUITE_REFS",
+        "severity": "error",
+        "file": str(Path(__file__).resolve().relative_to(PROJECT_ROOT)),
+        "line": 1,
+        "message": message,
+        "content": message[:120],
+    }
+
+
+def scan_seminar_prompt_suite_refs() -> list[dict]:
+    """Return seminar prompt-suite findings in the prompt-lint record shape."""
     errors: list[str] = []
     _check_required_prompt_files(errors)
     _check_retired_templates_absent(errors)
     _check_template_mappings(errors)
     _check_no_retired_refs(errors)
-    return errors
+    return [_violation(error) for error in errors]
+
+
+def validate() -> list[dict]:
+    """Return the same violation records prompt lint used to report."""
+    return scan_seminar_prompt_suite_refs()
 
 
 def main() -> int:
-    errors = validate()
+    records = validate()
 
-    if errors:
+    if records:
         print("Seminar prompt-suite reference validation failed:")
-        for error in errors:
-            print(f"- {error}")
+        for record in records:
+            print(f"- {record['message']}")
         return 1
 
     print("Seminar prompt-suite reference validation passed.")
