@@ -4154,6 +4154,133 @@ def test_owner_request_grant_reads_a_withheld_rejection_from_its_sealed_run(monk
     assert calls == {"posts": 0, "statuses": 0}
 
 
+# An owner request may cite an approval at an older head instead of a finding (OWNER-REQ-APPROVED-HEAD-1104).
+APPROVAL_RULING = {**OWNER_RULING, "finding_id": None, "scope_paths": ["docs/readme.md"]}
+H1, H2, H3 = "1" * 40, "2" * 40, "3" * 40
+NOT_APPROVE = r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*is not an unedited trusted APPROVE"
+BAD_REPLY = r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*cited approval's reply"
+
+
+def approval_case(monkeypatch, tmp_path, history):
+    """Recorded verdicts ``(sha, verdict, reply)`` on a default-tier change, and the next round at SHA."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    monkeypatch.setattr(recorder, "_budget_grant", _REAL_BUDGET_GRANT)
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts_for({"google"}, changed_paths=("docs/readme.md",)))
+    comments.extend(verdict_with_reply(sha, verdict, reply, task_id=f"round-{n}")
+                    for n, (sha, verdict, reply) in enumerate(history, 1))
+    return tasks, comments, calls
+
+
+SPENT_THEN_APPROVED = [(H1, "CHANGES_REQUESTED", OPEN_F5), (H2, "CHANGES_REQUESTED", OPEN_F5),
+                       (H3, "APPROVED", "VERDICT: APPROVE")]
+
+
+def test_owner_request_citing_an_older_approval_admits_its_rounds_and_no_more(monkeypatch, tmp_path):
+    tasks, _comments, calls = approval_case(monkeypatch, tmp_path, SPENT_THEN_APPROVED)
+    write_grant(tasks, APPROVAL_RULING)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    receipt = recorder.record("review-one", **kwargs)["budget_grant"]
+    assert receipt["round_allowance"] == 4 and receipt["finding_id"] is None
+    assert receipt["cited_verdict_head"] == H3 and receipt["cited_verdict"] == "APPROVED"
+    assert receipt["owner_request"] == {"tracker_item": "C-4100", "rounds": 1}
+    # SHA is approved now and the head moves again: the grant still cites an older approval, but its one round is spent.
+    move_head(monkeypatch, "f" * 40)
+    write_task(tasks, task_id="round-over", worktree_base_sha="f" * 40)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[allowance\]: "
+                                                   r"grant allows 4 rounds"):
+        recorder.record("round-over", **kwargs)
+    assert calls["posts"] == 1
+
+
+def admit_at(tasks, comments, head):
+    from scripts.review.budget_grant import admit_grant_round
+
+    return admit_grant_round(repository=REPOSITORY, number=42, branch=BRANCH, changed_paths=["docs/readme.md"],
+                             comments=comments, login="fleet", task_root=tasks, head=head, budget=3)
+
+
+@pytest.mark.parametrize(
+    "history",
+    [
+        [(H1, "CHANGES_REQUESTED", OPEN_F5), (H2, "CHANGES_REQUESTED", OPEN_F5), (SHA, "APPROVED", "VERDICT: APPROVE")],
+        # Heads A, B, then A again: the latest approval is at B, yet A, the head under review, was approved first.
+        [(H1, "CHANGES_REQUESTED", OPEN_F5), (SHA, "APPROVED", "VERDICT: APPROVE"), (H3, "APPROVED", "VERDICT: APPROVE")],
+    ],
+    ids=["approved-at-current-head", "a-b-a"],
+)
+def test_owner_request_citing_an_approval_refuses_an_already_approved_head(monkeypatch, tmp_path, history):
+    # The recorder admits a further round at an already recorded head without any grant; the grant itself refuses.
+    from scripts.review.budget_grant import GrantRefused
+
+    tasks, comments, _calls = approval_case(monkeypatch, tmp_path, history)
+    write_grant(tasks, APPROVAL_RULING)
+    with pytest.raises(GrantRefused, match=rf"\[blocker\].*head {SHA} already has a recorded approval"):
+        admit_at(tasks, comments, SHA)
+    # The same ledger admits a head that was never approved.
+    assert admit_at(tasks, comments, "f" * 40)["cited_verdict"] == "APPROVED"
+
+
+@pytest.mark.parametrize(
+    "case,reason",
+    [
+        ("blocked", NOT_APPROVE),
+        ("edited", NOT_APPROVE),
+        ("unknown", NOT_APPROVE),
+        ("security-fail", BAD_REPLY),
+        ("withheld-unbound", BAD_REPLY),
+        ("rejection-with-null-finding", NOT_APPROVE),
+        ("approval-with-finding", r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*is not an unedited "
+                                  r"trusted rejection"),
+        ("unsealed", r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[approval\]"),
+        ("edited-seal", r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[approval\]"),
+        ("advisor-rejects", r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[approval\].*not 'APPROVE'"),
+    ],
+)
+def test_owner_request_citing_an_approval_refuses(monkeypatch, tmp_path, case, reason):
+    history = list(SPENT_THEN_APPROVED)
+    if case == "blocked":
+        history[-1] = (H3, "BLOCKED", "VERDICT: BLOCKED")
+    elif case == "security-fail":
+        history[-1] = (H3, "APPROVED", "VERDICT: APPROVE\n\nSECURITY_VERDICT: FAIL (unchecked input)")
+    elif case == "rejection-with-null-finding":
+        history[-1] = (H3, "CHANGES_REQUESTED", OPEN_F5)
+    tasks, comments, calls = approval_case(monkeypatch, tmp_path, history)
+    if case == "edited":
+        comments[-1]["updated_at"] = "2026-09-23T11:45:00Z"
+    elif case == "unknown":
+        # An edited earlier record at the cited head makes the keeper read that head as unknown.
+        comments.insert(2, recorded_verdict(H3, "APPROVED", task_id="round-3-early", edited=True))
+    elif case == "withheld-unbound":
+        comments[-1]["body"] = recorder.build_comment(
+            sha=H3, task_id="round-3", started=WITHHELD_START, verdict="APPROVED", model="claude-opus-5-5",
+            family="anthropic", reply="", withheld_findings="unknown",
+        )
+    ruling = {**APPROVAL_RULING, "finding_id": "F5"} if case == "approval-with-finding" else APPROVAL_RULING
+    write_grant(tasks, ruling, seal=case != "unsealed", edited=case == "edited-seal",
+                decision={"decision": "REJECT"} if case == "advisor-rejects" else ())
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("cited", ["APPROVED", "BLOCKED"])
+def test_dispatcher_and_recorder_agree_on_an_approval_citing_owner_request(monkeypatch, tmp_path, cited):
+    history = [*SPENT_THEN_APPROVED[:2], (H3, cited, f"VERDICT: {'APPROVE' if cited == 'APPROVED' else cited}")]
+    tasks, _comments, _calls = approval_case(monkeypatch, tmp_path, history)
+    for n, (sha, _verdict, reply) in enumerate(history, 1):
+        write_task(tasks, task_id=f"round-{n}", worktree_base_sha=sha, reply=reply, pr=42, review_mode="cross_family",
+                   started_at="2026-09-23T11:00:00.000001+00:00")
+    write_grant(tasks, APPROVAL_RULING)
+    dispatch = partial(recorder.dispatch_budget_check, REPOSITORY, number=42, branch=BRANCH, head=SHA, task_root=tasks)
+    record = partial(recorder.record, "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    if cited == "BLOCKED":
+        for check in (dispatch, record):
+            with pytest.raises(recorder.RecordError, match=NOT_APPROVE):
+                check()
+        return
+    assert dispatch()["budget_grant"] == record()["budget_grant"]
+
+
 @pytest.mark.parametrize("stem", ["grant-approval", "grant-approval.20261029T010000Z.archived"])
 def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
     """Archiving moves the record and its result together and keeps the hot result_file (review round 1, F3)."""

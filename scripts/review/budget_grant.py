@@ -13,7 +13,9 @@ consumed at dispatch (issue #12548; CTO proposal, Sol 6.1 APPROVE in task
 cto-f932-rule-p2round2-sol). An owner-request ruling seals the tracker item recording
 the project owner's request and the round count it records; it admits the PR's own
 tier budget plus exactly that count, past five when the tier is already five, while
-the latest recorded rejection lists the cited finding (issue #12551, tracker C-4100).
+the latest recorded rejection lists the cited finding (issue #12551, tracker C-4100), or, citing no
+finding, while the latest recorded verdict is an approval at an older head and the head under review
+was never approved (OWNER-REQ-APPROVED-HEAD-1104; CTO proposal, Sol 6.1 APPROVE WITH CONDITIONS).
 A capability-charge ruling admits no round: it seals one published run whose complete
 reply is a structured, empty-findings BLOCKED that only a missing capability caused, with the
 advisor's semantic attestation, so that run stops charging a round as the lineage's one
@@ -171,6 +173,9 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
         # The adjusted reply lists no finding, so the ruling cites none.
         if request["finding_id"] is not None:
             raise GrantRefused(REQUEST, f"{label} finding_id must be null for {CAPABILITY_CHARGE}")
+    elif request.get("blocker_class") == OWNER_REQUEST and request["finding_id"] is None:
+        # An owner request that cites an approval at an older head names no finding (_owner_round).
+        pass
     elif not isinstance(request["finding_id"], str) or not FINDING_ID.fullmatch(request["finding_id"]):
         raise GrantRefused(REQUEST, f"{label} finding_id must match {FINDING_ID.pattern}")
     if not isinstance(request["blocker_class"], str) or request["blocker_class"] not in BLOCKER_CLASSES:
@@ -554,7 +559,8 @@ def _admit(
                                          repo_root=repo_root, recording_run=recording_run)
         cited = withheld_receipt["cited_verdict_head"]
     elif request["blocker_class"] == OWNER_REQUEST:
-        withheld_receipt = _owner_round(grant, comments=comments, login=login, task_root=task_root, budget=budget)
+        withheld_receipt = _owner_round(grant, comments=comments, login=login, task_root=task_root, head=head,
+                                        budget=budget)
         cited = withheld_receipt["cited_verdict_head"]
     else:
         from scripts.review import review_lineage as lineage
@@ -585,12 +591,16 @@ def _admit(
 
 
 def _owner_round(
-    grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, task_root: Path, budget: int
+    grant: Grant, *, comments: Sequence[Mapping[str, Any]], login: str, task_root: Path, head: str, budget: int
 ) -> dict[str, Any]:
-    """The owner's recorded rounds on top of the PR's tier budget, while its latest rejection lists the finding.
+    """The owner's recorded rounds on top of the PR's tier budget, after its latest rejection or an older approval.
 
     The designated advisor confirms the sealed count is the one the tracker item records;
     this checks only that the round follows an unedited trusted rejection naming the cited finding.
+    A ruling with a null finding_id cites an approval instead (OWNER-REQ-APPROVED-HEAD-1104): the latest
+    recorded verdict is an unedited trusted APPROVE that the keeper also reads as approved, its reply is
+    intact (a withheld one only through its bound sealed run) with no non-PASS security verdict, and
+    ``head`` has never been approved.
     """
     request = grant.request
     markers = recorder._trusted_markers(comments, login)
@@ -598,8 +608,15 @@ def _owner_round(
         raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: no recorded verdict")
     index, latest = markers[-1]
     comment = comments[index]
-    if (latest["verdict"] not in REJECTED or lookup_verdict(comments, latest["sha"], login).state not in REJECTED
-            or comment.get("created_at") != comment.get("updated_at")):
+    unedited = comment.get("created_at") == comment.get("updated_at")
+    cites_approval = request["finding_id"] is None
+    if cites_approval:
+        if (latest["verdict"] != "APPROVED" or lookup_verdict(comments, latest["sha"], login).state != "APPROVED"
+                or not unedited):
+            raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the latest recorded verdict is not an unedited "
+                                        "trusted APPROVE")
+    elif (latest["verdict"] not in REJECTED or lookup_verdict(comments, latest["sha"], login).state not in REJECTED
+            or not unedited):
         raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the latest recorded verdict is not an unedited "
                                     "trusted rejection")
     runs = None
@@ -613,11 +630,23 @@ def _owner_round(
         except lineage.LineageRefused as exc:
             raise GrantRefused(EVIDENCE, f"grant {grant.task_id!r}: review runs unreadable: {exc}") from None
     read = _recorded_findings(comment, runs)
-    if read is None or request["finding_id"] not in read[1]:
-        raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the latest recorded rejection does not list "
-                                    f"{request['finding_id']}")
     owner = request[OWNER_FIELD]
-    return {"cited_verdict_head": latest["sha"], "round_allowance": budget + owner["rounds"], OWNER_FIELD: dict(owner)}
+    receipt = {"cited_verdict_head": latest["sha"], "round_allowance": budget + owner["rounds"], OWNER_FIELD: dict(owner)}
+    if not cites_approval:
+        if read is None or request["finding_id"] not in read[1]:
+            raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the latest recorded rejection does not list "
+                                        f"{request['finding_id']}")
+        return receipt
+    body = str(comment.get("body"))
+    sealed = "" if REPLY_OPENER in body else _withheld_reply(body, runs) or ""
+    if read is None or recorder._security_verdict_blocks(body) or recorder._security_verdict_blocks(sealed):
+        raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: the cited approval's reply is cut, unreadable, "
+                                    "withheld without its bound sealed run, or has a non-PASS security verdict")
+    # Heads A, B, then A again: the latest approval is at B, yet A was approved already (Sol condition 2).
+    if (any(marker["sha"] == head and marker["verdict"] == "APPROVED" for _, marker in markers)
+            or lookup_verdict(comments, head, login).state == "APPROVED"):
+        raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: head {head} already has a recorded approval")
+    return {**receipt, "cited_verdict": "APPROVED"}
 
 
 def capability_charge_adjustments(

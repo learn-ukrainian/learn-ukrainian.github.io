@@ -39,7 +39,12 @@ For the Anthropic/OpenAI pair below, both seat dispatches at that head count as 
   past five when the budget is already five, and never resets spent rounds. A rejection recorded
   with its findings withheld lists what the sealed reply of the one review run its marker names
   lists, when that run's digest, head, verdict, reviewer and finding count match the comment and
-  its reply is not truncated; otherwise it lists nothing (#12585).
+  its reply is not truncated; otherwise it lists nothing (#12585). An owner request may instead
+  set `finding_id` to null when the PR was approved at an older head and has moved since. The
+  latest recorded verdict must then be an unedited trusted APPROVE that the keeper also reads as
+  approved. Its reply must be intact; a withheld reply counts only through the sealed run, as
+  above. It must carry no security verdict other than PASS, and the PR's current head must never
+  have been approved. The allowance is the same (OWNER-REQ-APPROVED-HEAD-1104).
 - **Withheld-capability recovery.** A sealed grant with `blocker_class: withheld-capability`
   uses the same ruling and approval machinery and names the finding awaiting verification,
   at any severity. Its `withheld_capability` object names the missing `capability`, cites
