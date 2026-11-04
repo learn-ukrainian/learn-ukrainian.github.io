@@ -16,13 +16,13 @@ missing or unknown field, or names a module outside ``scripts``.
 from __future__ import annotations
 
 import functools
-import importlib.util
 import json
 import re
 import stat
-import sys
 from pathlib import Path
 from types import ModuleType
+
+from scripts.ops.product_entry import load_configured_module
 
 SCHEMA = "learn-ukrainian.review-hooks"
 SCHEMA_VERSION = 1
@@ -80,27 +80,11 @@ def _module_name(path: Path) -> str:
 
 @functools.cache
 def attempt_hooks() -> ModuleType:
-    """The product module holding the review checks machinery review attempts call, loaded once.
-
-    The SQLite boundary scan (``scripts.hygiene.lint_source_db_writable_connects``) refuses a
-    computed ``import_module``, so the configured module is imported through its spec, as an import
-    statement would: an already imported module is reused, and a new one is registered in
-    ``sys.modules`` and on its parent package.
-    """
+    """Validate and load the product's review checks once through the configured entry point."""
     name = _module_name(HOOKS_PATH)
-    loaded = sys.modules.get(name)
-    if loaded is not None:
-        return loaded
-    spec = importlib.util.find_spec(name)
-    if spec is None or spec.loader is None:
-        raise ProductHooksError("hooks_module_missing", f"{HOOKS_REL}: no module {name!r}")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
     try:
-        spec.loader.exec_module(module)
-    except BaseException:
-        sys.modules.pop(name, None)
+        return load_configured_module(name)
+    except ModuleNotFoundError as exc:
+        if exc.name == name:
+            raise ProductHooksError("hooks_module_missing", f"{HOOKS_REL}: no module {name!r}") from None
         raise
-    parent, _, child = name.rpartition(".")
-    setattr(sys.modules[parent], child, module)
-    return module

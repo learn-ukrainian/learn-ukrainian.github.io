@@ -30,20 +30,21 @@ ETag.
 
 from __future__ import annotations
 
+import errno
 import fnmatch
-import importlib.util
 import json
 import logging
 import math
 import os
 import re
-import sys
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+from scripts.ops.product_entry import load_configured_module
 
 logger = logging.getLogger("research.registry")
 
@@ -74,54 +75,16 @@ def research_check_config() -> dict[str, str]:
     return names
 
 
-def _module_path(name: str) -> Path:
-    root = Path(__file__).resolve().parents[2]
-    relative = root.joinpath(*name.split("."))
-    package_init = relative / "__init__.py"
-    if package_init.is_file():
-        return package_init
-    return relative.with_suffix(".py")
-
-
-def _exec_configured_file(name: str) -> Any:
-    location = _module_path(name)
-    package = location.name == "__init__.py"
-    spec = importlib.util.spec_from_file_location(
-        name,
-        location,
-        submodule_search_locations=[str(location.parent)] if package else None,
-    )
-    if spec is None or spec.loader is None:
-        raise RuntimeError("research check module is missing")
-    module = importlib.util.module_from_spec(spec)
-    # Register before exec so a class body can find its module.
-    sys.modules[name] = module
-    try:
-        spec.loader.exec_module(module)
-    except Exception:
-        sys.modules.pop(name, None)
-        raise
-    return module
-
-
 def _load_configured_module(key: str) -> Any:
-    """Load one product module named by the research-check data file.
-
-    The name stays in that data file. A computed ``import_module`` is a sqlite
-    constructor reference, so the file is loaded by path and linked onto its
-    parent packages the way a normal import would.
-    """
+    """Validate the research-check data and load its configured product module."""
     name = research_check_config()[key]
-    parts = name.split(".")
-    module: Any = None
-    for end in range(1, len(parts) + 1):
-        qualified = ".".join(parts[:end])
-        module = sys.modules.get(qualified)
-        if module is None:
-            module = _exec_configured_file(qualified)
-        if end > 1:
-            setattr(sys.modules[".".join(parts[: end - 1])], parts[end - 1], module)
-    return module
+    try:
+        return load_configured_module(name)
+    except ModuleNotFoundError as exc:
+        if exc.name and (name == exc.name or name.startswith(exc.name + ".")):
+            location = Path(__file__).resolve().parents[2].joinpath(*exc.name.split(".")).with_suffix(".py")
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), str(location)) from None
+        raise
 
 
 _DEFAULT_CHECK_MODULE = _load_configured_module("check_module")
