@@ -37,7 +37,6 @@ Read-only status (never materializes cloud-only files):
 # Primary checkout (or any tree that already has the shared project venv)
 .venv/bin/python -m scripts.storage status
 .venv/bin/python -m scripts.storage status --json
-
 ```
 
 In a dispatch worktree, use the primary checkout interpreter supplied by the

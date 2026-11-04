@@ -27,6 +27,15 @@ Have the operator verify them without exposing their paths or values. A
 refused wrapper or account binding blocks that lane's relaunch. Do not edit
 credentials or substitute an identity during maintenance.
 
+A generic wrapper is one executable path or a list of command words. Each word
+may contain only letters, digits and `_@%+=:,./-`. The launcher passes those
+words as arguments, without shell parsing. Spaces, shell separators, command
+substitution, redirections and newlines are refused. The lane is logged and
+not started; `--dry-run` reports it as `refused`. Environment diagnostics show
+only key names, never values. The ignored local configuration may supply a
+wrapper or environment overrides; its path, identity bindings and actual
+values stay in private operational configuration.
+
 ## 1. Before the reboot (go/no-go)
 
 All checks must pass before the upgrade starts:

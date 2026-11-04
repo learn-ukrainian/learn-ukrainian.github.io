@@ -234,6 +234,12 @@ Use this when the primary checkout is still present and its shared
 so every command below runs in the primary checkout only. Never run them from
 a dispatch worktree.
 
+Before either block below, set `PRIMARY_CHECKOUT` to the verified primary
+checkout path relative to the directory where you will run the block, such as
+`./primary-checkout`. It must identify the existing shared installation, not
+the fresh `./recovery-checkout` clone. Both blocks refuse an unset or missing
+primary path before invoking npm or touching the browser cache.
+
 `.nvmrc` pins Node 22 and `package.json` `engines.node` is `22.x`. The block
 exits unless `node` matches `.nvmrc` and satisfies `engines.node`, and unless
 `npm` resolves inside that Node's prefix (the npm that ships with it). A
@@ -242,7 +248,7 @@ failed `cd` exits before `npm ci`.
 ```bash
 (
   set -euo pipefail
-  cd ./recovery-checkout || exit 1
+  cd "${PRIMARY_CHECKOUT:?set PRIMARY_CHECKOUT to the verified primary checkout}" || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
   node_version="$(node --version)"
@@ -387,7 +393,7 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
 ```bash
 (
   set -euo pipefail
-  cd ./recovery-checkout || exit 1
+  cd "${PRIMARY_CHECKOUT:?set PRIMARY_CHECKOUT to the verified primary checkout}" || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
   node_version="$(node --version)"
