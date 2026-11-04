@@ -1,0 +1,6 @@
+{
+  "schema": "learn-ukrainian.review-hooks",
+  "schema_version": 1,
+  "origin": "scripts/curriculum/review_hooks.v1.json",
+  "attempt_hooks": "scripts.curriculum.review_attempt_hooks"
+}
