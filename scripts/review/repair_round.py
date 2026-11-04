@@ -58,6 +58,7 @@ from typing import Any
 from scripts.orchestration.integration_sweep import SHA
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.review_lineage import LineageRefused, check_lineage, lineage_runs, superseded_runs
+from scripts.review.verdict_parser import _structured_explanation
 
 RECEIPT_DIR = "review-repair-rounds"
 RECEIPT_SCHEMA = "review-repair-round.v1"
@@ -475,14 +476,20 @@ def receipt_at(receipt_root: Path, *, repository: str, number: int, branch: str,
 
 
 def require_repair_verified(reply: str, receipt: Mapping[str, Any]) -> None:
-    """An APPROVE in the repair round names the delta it verified as only the repair."""
-    attested = REPAIR_VERIFIED.findall(reply)
+    """An APPROVE in the repair round names the delta it verified as only the repair.
+
+    A whole ``code-review-findings.v1`` reply attests only in the lines of its
+    ``overall.explanation``, the reviewer's statement about the change; a finding describes a
+    defect and never attests (#12726). Any other reply is read whole, line by line.
+    """
+    explanation = _structured_explanation(reply)
+    attested = REPAIR_VERIFIED.findall(reply if explanation is None else explanation)
     if attested != [receipt.get("delta_sha256")]:
         raise RepairRefused(
             VERIFICATION,
             "an APPROVE in the repair round needs exactly one line "
             f"`REPAIR_VERIFIED: {receipt.get('delta_sha256')}`, the reviewer's statement that the complete "
-            "delta is only the repair it names",
+            "delta is only the repair it names; a structured reply carries it in overall.explanation",
         )
 
 
