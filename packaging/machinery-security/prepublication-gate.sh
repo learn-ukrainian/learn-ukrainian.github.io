@@ -8,8 +8,10 @@
 # - TruffleHog CLI 3.99.0 scans the full history reachable from every proposed
 #   ref with the flags recorded in pins.txt and the reviewed .trufflehogignore
 #   beside this script: its git source once per ref, and its filesystem source
-#   over every distinct (path, blob) version, because the git source does not
-#   read content that only a merge commit introduces.
+#   over every distinct (path, blob) version and over the raw contents of every
+#   reachable commit and annotated tag object plus every path name, because
+#   the git source reads neither content that only a merge commit introduces
+#   nor annotated tags.
 # - Semgrep CE 1.183.0 runs the configurations that sast.yml lists, from the
 #   semgrep-rules checkout at the pinned commit, over the final tree of every
 #   ref and over every distinct (path, blob) version reachable from the refs.
@@ -120,11 +122,14 @@ What scan checks:
   TruffleHog $TRUFFLEHOG_VERSION with
     ${TRUFFLEHOG_FLAGS[*]}
     --exclude-paths=<.trufflehogignore beside this script> --fail --no-update:
-    the git source once per ref over all history reachable from it, and the
+    the git source once per ref over all history reachable from it; the
     filesystem source over every distinct (path, blob) version in that history
-    (the git source skips content that only a merge commit introduces). In
-    the filesystem pass a version's path is <work dir>/history/N/<path>, so an
-    ignore pattern anchored to the repository root excludes nothing there.
+    (the git source skips content that only a merge commit introduces); and
+    the filesystem source over the raw contents of every reachable commit and
+    annotated tag object plus every path name (the git source never reads tag
+    objects). In the filesystem passes a version's path is
+    <work dir>/history/N/<path>, so an ignore pattern anchored to the
+    repository root excludes nothing there.
   Semgrep $SEMGREP_VERSION with --strict --error --metrics=off and the configs
     ${SEMGREP_CONFIGS[*]}
     from semgrep-rules $SEMGREP_RULES_COMMIT, over each ref's final
@@ -149,7 +154,7 @@ Outputs (scan, all inside --out, mode 0700):
   summary.json         Decision, ref map, digest and counts. No raw findings.
   clearance.json       Written only on a pass.
   refs.txt             Ref index used in the file names below.
-  trufflehog/ref-N.*, trufflehog/history.*
+  trufflehog/ref-N.*, trufflehog/history.*, trufflehog/metadata.*
                        Raw TruffleHog results (.jsonl) and stderr (.stderr).
   semgrep/tree-N.*, semgrep/history.*
                        Raw Semgrep results (.json) and stderr (.stderr).
@@ -521,6 +526,18 @@ else
   note_fail_closed "no historical source versions were found"
 fi
 
+# History text that is not a blob: the raw contents of every reachable commit
+# and annotated tag object (messages, identities, nested tags) and every
+# distinct path name. TruffleHog's git source never reads tag objects, so the
+# filesystem source scans these files too.
+metadata_src="$work/src/metadata"
+mkdir -p "$metadata_src"
+awk '$2 == "commit" || $2 == "tag" { print $1 }' "$work/object-types" |
+  gitx -- --git-dir="$scan_git" cat-file --batch > "$metadata_src/objects.txt" ||
+  abort "the reachable commit and tag objects could not be read"
+tr '\0' '\n' < "$work/pairs" | cut -f2- | sort -u > "$metadata_src/paths.txt"
+[ -s "$metadata_src/objects.txt" ] || abort "the commit and tag object dump is empty"
+
 # --- scan: TruffleHog -----------------------------------------------------------
 
 trufflehog_findings=0
@@ -560,15 +577,16 @@ run_trufflehog() {
   trufflehog_findings=$((trufflehog_findings + count))
 }
 
-# The git source scans each ref's commits and diffs. It does not read content
-# that only a merge commit introduces, so the filesystem source also scans
-# every historical version checked out above.
+# The git source scans each ref's commits, messages and diffs. It does not
+# read content that only a merge commit introduces, nor annotated tags, so the
+# filesystem source also scans every historical version and the metadata dump.
 for ((i = 1; i <= ref_count; i++)); do
   run_trufflehog "ref-$i" git "file://$scan_repo" --branch "${ref_commits[$((i - 1))]}"
 done
 if [ -n "$history_src" ]; then
   run_trufflehog history filesystem "$history_src"
 fi
+run_trufflehog metadata filesystem "$metadata_src"
 findings_count=$((findings_count + trufflehog_findings))
 
 # --- scan: Semgrep rules ---------------------------------------------------------
