@@ -6,7 +6,11 @@ it; each module enters the manifest by the SHA-256 of its source bytes, so a
 changed module changes the digest even when nobody bumps its declared version.
 ``undeclared_imports`` scans every registered module with ``ast`` and reports a
 project import that is not registered in the same manifest, so an undeclared
-dependency cannot escape the digest. The build refuses to run while one exists.
+dependency cannot escape the digest. Imports inside ``main`` or under
+``if __name__ == "__main__"`` are that file's command-line entry. The L1 build
+loads adapter factories and does not run those entries, so their imports are
+not transform dependencies. The build refuses to run while an undeclared
+import exists.
 
 Slices register here, in reviewed changes: parsers in ``PARSERS``, list
 grammars in ``LIST_GRAMMARS`` and sources in ``SOURCES``. F registers none; the Ohoiko slice registers four.
@@ -83,25 +87,17 @@ PRODUCTION_NORMALIZER = NormalizerBinding(
 )
 
 # Slice (a)/(b): Ohoiko 1000 words / 500 verbs, Oho! A1 Словничок, ULP lesson notes. One module
-# holds all four adapters, so they share its full project-import closure (the manifest_io chain
-# is reached through the ohoiko_quality_enrichment CLI).
+# holds all four adapters, so they share the project modules imported while that module loads.
+# The enrichment CLI's ``main`` imports the lexicon manifest loader, and that loader imports
+# Atlas word-card certification. Neither runs when an adapter factory is loaded, so those
+# product modules are not part of this transform.
 _OHOIKO_PARSER_MODULES = (
     "scripts/lexicon/import_ohoiko_vocab.py",
     "scripts/lexicon/oho_workbook_glossary_parse.py",
     "scripts/lexicon/ohoiko_quality_enrichment.py",
     "scripts/lexicon/lemma_normalization.py",
-    "scripts/lexicon/manifest_io.py",
-    "scripts/atlas/word_card_certification.py",
-    "scripts/atlas/word_card_golden_set.py",
-    "scripts/common/github_client.py",
-    "scripts/common/github_usage.py",
     "scripts/common/repo_root.py",
-    "scripts/common/scratch.py",
-    "scripts/github_check_rollup.py",
     "scripts/lib/readonly_sqlite.py",
-    "scripts/opsec/gh_snapshot.py",
-    "scripts/opsec/prepublish.py",
-    "scripts/projects/open_model_data/source_completeness_manifest.py",
     "scripts/storage/topology.py",
 )
 _OHOIKO_REPAIR_PROPOSERS = ("scripts/lexicon/ulp_glossary_parse.py",)  # repair_ukrainian, join_split_stress
@@ -251,12 +247,42 @@ def _resolve_import(root: Path, name: str) -> str | None:
     return None
 
 
+def _is_cli_entrypoint(node: ast.AST) -> bool:
+    """A ``main`` function or ``if __name__ == "__main__"`` block.
+
+    Those entries are how the file is run as a command. The L1 build never calls
+    them: it loads the adapter factory. Imports that exist only there must not
+    pull product modules into the transform digest.
+    """
+    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == "main":
+        return True
+    if not isinstance(node, ast.If) or not isinstance(node.test, ast.Compare):
+        return False
+    test = node.test
+    if len(test.ops) != 1 or len(test.comparators) != 1:
+        return False
+    compared = test.comparators[0]
+    return (
+        isinstance(test.left, ast.Name)
+        and test.left.id == "__name__"
+        and isinstance(test.ops[0], ast.Eq)
+        and isinstance(compared, ast.Constant)
+        and compared.value == "__main__"
+    )
+
+
 def module_imports(root: Path, rel: str) -> set[str]:
-    """Project modules imported by one module (absolute and relative imports)."""
+    """Project modules imported by one module (absolute and relative imports).
+
+    Command-line entries are omitted; see ``_is_cli_entrypoint``.
+    """
     tree = ast.parse((root / rel).read_text(encoding="utf-8"), filename=rel)
     package = rel.rsplit("/", 1)[0].replace("/", ".")
     found: set[str] = set()
-    for node in ast.walk(tree):
+
+    def walk(node: ast.AST) -> None:
+        if _is_cli_entrypoint(node):
+            return
         if isinstance(node, ast.Import):
             found.update(path for alias in node.names if (path := _resolve_import(root, alias.name)))
         elif isinstance(node, ast.ImportFrom):
@@ -270,6 +296,10 @@ def module_imports(root: Path, rel: str) -> set[str]:
                 path = _resolve_import(root, f"{module}.{alias.name}") or _resolve_import(root, module)
                 if path:
                     found.add(path)
+        for child in ast.iter_child_nodes(node):
+            walk(child)
+
+    walk(tree)
     found.discard(rel)
     # A package __init__ that holds only a docstring carries no transform code.
     return {path for path in found if not path.endswith("__init__.py") or _is_code(root / path)}
