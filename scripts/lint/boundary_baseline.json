@@ -777,26 +777,6 @@
       "count": 1
     },
     {
-      "path": "scripts/pre_commit/regen_lesson_schema.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/pre_commit/regen_lesson_schema.py",
-      "module": "scripts.build.generate_lesson_schema",
-      "count": 1
-    },
-    {
-      "path": "scripts/pre_commit/regen_lexicon_fingerprint.py",
-      "module": "scripts.lexicon",
-      "count": 1
-    },
-    {
-      "path": "scripts/pre_commit/regen_lexicon_fingerprint.py",
-      "module": "scripts.lexicon.manifest_fingerprint",
-      "count": 1
-    },
-    {
       "path": "scripts/research/observability.py",
       "module": "scripts.audit",
       "count": 1
