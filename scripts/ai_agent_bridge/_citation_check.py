@@ -165,8 +165,8 @@ def _normalize_word(word: str) -> str:
 # look like "headword not found" and flag every citation.
 # ──────────────────────────────────────────────────────────────────────
 
-_SOURCES_DB_PATH = Path(__file__).resolve().parents[2] / "data" / "sources.db"
 _caller_sources: ContextVar[object | None] = ContextVar("citation_sources_db", default=None)
+_REPOSITORY_SOURCES_DB: Path | None = None
 _LIKE_PATTERN_LIMIT = 50_000
 # Same high-confidence markers the product cleaner uses to drop a row.
 _ESUM_MOJIBAKE_MARKERS = (
@@ -238,7 +238,23 @@ class _SourcesProbe:
         return _esum_rows(self.SOURCES_DB_PATH, query, limit)
 
 
-def _open_sources(path: Path) -> sqlite3.Connection | None:
+def _repository_sources_db() -> Path:
+    """Return this checkout's sources database path.
+
+    ``scripts.storage.topology`` already owns that path. An empty env keeps
+    the lookup on the checkout file, which is the file the product module
+    opens. This module does not build the path itself.
+    """
+    global _REPOSITORY_SOURCES_DB
+    if _REPOSITORY_SOURCES_DB is None:
+        from scripts.storage.topology import resolve_active_sources_db
+
+        root = Path(__file__).resolve().parents[2]
+        _REPOSITORY_SOURCES_DB = resolve_active_sources_db(root, env={}, refuse_network=False).path
+    return _REPOSITORY_SOURCES_DB
+
+
+def _open_sources(path: Path):
     if not path.exists():
         return None
     try:
@@ -369,7 +385,7 @@ def _try_load_sources_db():
     supplied = _caller_sources.get()
     if supplied is not None:
         return _sources_if_db_present(supplied)
-    return _sources_if_db_present(_SourcesProbe(_SOURCES_DB_PATH))
+    return _sources_if_db_present(_SourcesProbe(_repository_sources_db()))
 
 
 # Правопис verifier is intentionally NOT plumbed into the v1 lookup
