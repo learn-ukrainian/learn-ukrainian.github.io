@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 import threading
 import time
 from datetime import UTC, datetime, timedelta
@@ -2920,9 +2921,11 @@ def private_binding(tmp_path, monkeypatch):
     monkeypatch.setattr(prepublish, "catalog", lambda: {"infra-private": {"local_name": "private"}})
     directory = tmp_path / "private" / "tools" / "fleet_usage"
     directory.mkdir(parents=True)
+    monkeypatch.delitem(sys.modules, "_lu_private_fleet_usage", raising=False)
     subscription_usage_mod._load_private_usage.cache_clear()
     yield directory / "usage.py"
     subscription_usage_mod._load_private_usage.cache_clear()
+    sys.modules.pop("_lu_private_fleet_usage", None)
 
 
 _REQUIRED_PRIVATE_ENTRY_POINTS = (
@@ -3040,11 +3043,16 @@ def test_path_loaded_private_module_normalizes_data(private_binding, capsys):
         },
     }
     private_binding.write_text(
-        _private_module_source()
+        "from __future__ import annotations\n"
+        "from dataclasses import dataclass\n"
+        "@dataclass\n"
+        "class Outcome:\n"
+        "    value: dict\n"
+        + _private_module_source()
         + "\nprint('SYNTHETIC_PRIVATE_DETAIL')\n"
         + "def probe_subscription(provider, *, timeout_s, account=None):\n"
         + "    assert (provider, timeout_s, account) == ('codex', 3, 'b-sub')\n"
-        + f"    return {outcome!r}\n"
+        + f"    return Outcome({outcome!r}).value\n"
     )
     result = subscription_usage_mod.fetch_provider_usage("codex:b", timeout_s=3)
     assert result["status"] == "healthy"

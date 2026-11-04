@@ -15,6 +15,7 @@ import math
 import os
 import shutil
 import subprocess
+import sys
 import threading
 import time
 from collections.abc import Callable, Iterable
@@ -403,9 +404,6 @@ def refresh_provider_usage_data(
     return refreshed
 
 
-_CODEX_AUTH_FILE_LIMIT = 64 * 1024
-
-
 _PRIVATE_USAGE_ENTRY_POINTS = (
     "probe_subscription",
     "probe_api_account",
@@ -425,23 +423,26 @@ def _private_usage() -> ModuleType | None:
 
 @functools.lru_cache(maxsize=1)
 def _load_private_usage() -> ModuleType | None:
+    name = "_lu_private_fleet_usage"
     try:
         from scripts.opsec.prepublish import catalog, primary_root  # noqa: PLC0415  # lazy-ok: private binding lookup
 
         path = primary_root().parent / catalog()["infra-private"]["local_name"] / "tools/fleet_usage/usage.py"
-        spec = importlib.util.spec_from_file_location("_lu_private_fleet_usage", path)
+        spec = importlib.util.spec_from_file_location(name, path)
         if spec is None or spec.loader is None:
-            return None
+            raise ImportError
         module = importlib.util.module_from_spec(spec)
+        sys.modules[name] = module
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
             exec(compile(path.read_bytes(), "<private-fleet-usage>", "exec"), module.__dict__)
         version = getattr(module, "INTERFACE_VERSION", None)
         if type(version) is not int or version != 1:
-            return None
+            raise ValueError
         if not all(callable(getattr(module, name, None)) for name in _PRIVATE_USAGE_ENTRY_POINTS):
-            return None
+            raise ValueError
         return module
     except Exception:
+        sys.modules.pop(name, None)
         return None
 
 
@@ -499,9 +500,6 @@ def _coerce_float(value: Any) -> float | None:
     if math.isnan(result) or math.isinf(result):
         return None
     return result
-
-
-_as_optional_float = _coerce_float
 
 
 def _empty_openrouter_account(probe_state: str = "NEED_PROBE") -> dict[str, Any]:
