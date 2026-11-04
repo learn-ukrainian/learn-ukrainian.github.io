@@ -2,16 +2,6 @@
   "schema": "boundary-ratchet-baseline.v1",
   "entries": [
     {
-      "path": "scripts/agent_runtime/adapters/codex.py",
-      "module": "scripts.review.receipts",
-      "count": 1
-    },
-    {
-      "path": "scripts/agent_runtime/adapters/codex.py",
-      "module": "scripts.review.receipts.ledger",
-      "count": 1
-    },
-    {
       "path": "scripts/api/blue_router.py",
       "module": "scripts.audit",
       "count": 1
@@ -294,16 +284,6 @@
     {
       "path": "scripts/ci/components.py",
       "module": "scripts.deploy.auto_deploy_eligibility",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/providers/codex.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/dispatcher/providers/codex.py",
-      "module": "scripts.audit.post_build_review",
       "count": 1
     },
     {

@@ -48,7 +48,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
-from scripts.review.receipts.ledger import review_tools
+from scripts.review.product_hooks import attempt_hooks
 from scripts.secret_redactor import redact_text
 
 from ..read_only_tmp import validate_read_only_tmp_root
@@ -231,7 +231,10 @@ def _argv_can_call_sources_mcp(argv: list[str]) -> bool:
         return True
     if any(
         all(flag in argv for flag in _sources_read_only_flags(tools))
-        for tools in (tuple(sorted(review_tools())), tuple(sorted(review_tools("full"))))
+        for tools in (
+            tuple(sorted(attempt_hooks().ledger().review_tools())),
+            tuple(sorted(attempt_hooks().ledger().review_tools("full"))),
+        )
     ):
         return True
     return all(flag in argv for flag in _sources_read_only_flags())
@@ -511,7 +514,7 @@ class CodexAdapter:
             # Formal scoped homes use the receipt contract, including when the
             # parent AttemptBoundary replaces their server with a stdio proxy.
             if tc.get("codex_home_override") and tc.get("mcp_config_path"):
-                tools = tuple(sorted(review_tools(tc.get("review_access", "isolated"))))
+                tools = tuple(sorted(attempt_hooks().ledger().review_tools(tc.get("review_access", "isolated"))))
             else:
                 tools = sources_tool_sets()[0]
             cmd.extend(_sources_read_only_flags(tools))
