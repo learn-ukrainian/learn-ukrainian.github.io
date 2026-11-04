@@ -23,7 +23,7 @@ import sqlite3
 import sys
 from pathlib import Path
 from types import ModuleType
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
@@ -622,13 +622,13 @@ def load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
         try:
             data = json.loads(state_file.read_text())
             if data.get("mode") == "v6":
-                return data
+                return cast("dict[Any, Any]", data)
         except Exception:
             pass
 
     ctx = StateCtx(track, slug, orch_dir)
     try:
-        return monitor_surface.load_pipeline_state(ctx)
+        return cast("dict[Any, Any]", monitor_surface.load_pipeline_state(ctx))
     except Exception:
         return {"track": track, "slug": slug, "mode": "v5", "phases": {}}
 
@@ -765,7 +765,7 @@ def is_content_done(state: dict) -> bool:
     """
     if monitor_surface.phase_is_complete(state, "content"):
         return True
-    return monitor_surface.phase_is_complete(state, "write")
+    return cast("bool", monitor_surface.phase_is_complete(state, "write"))
 
 
 def find_content_file(track_dir: Path, slug: str) -> Path | None:
@@ -777,7 +777,7 @@ def find_content_file(track_dir: Path, slug: str) -> Path | None:
         return None
 
     if direct_path.exists():
-        return direct_path
+        return cast("Path | None", direct_path)
 
     try:
         track_mtime = track_dir.stat().st_mtime
@@ -876,7 +876,7 @@ def get_research_score(track_dir: Path, slug: str, track_id: str) -> int | None:
         return None
     result = assess_research_compat(rp, track_id, None)
     if result and result.get("score") is not None:
-        return result["score"]
+        return cast("int | None", result["score"])
     return None
 
 
@@ -898,7 +898,7 @@ def get_word_target_from_plan(
         return 0
     try:
         data = yaml.load(plan_file.read_text(), Loader=_YAML_LOADER) or {}
-        return data.get("word_target", 0)
+        return cast("int", data.get("word_target", 0))
     except Exception:
         return 0
 

@@ -90,7 +90,7 @@ def _known_tracks(ctx: MonitorContext) -> list[str]:
         extras = sorted(existing - set(configured))
         return ordered + extras
 
-    return ctx.runtime.get_or_create_derived(cache_key, build)
+    return cast("list[str]", ctx.runtime.get_or_create_derived(cache_key, build))
 
 
 def _track_exists(track: str, ctx: MonitorContext) -> bool:
@@ -99,7 +99,7 @@ def _track_exists(track: str, ctx: MonitorContext) -> bool:
 
 def _safe_join(base: Path, *parts: str | Path) -> Path | None:
     try:
-        return safe_join(base, *parts)
+        return cast("Path | None", safe_join(base, *parts))
     except ValueError:
         return None
 
@@ -111,7 +111,7 @@ def _ensure_track_exists(track: str, ctx: MonitorContext) -> None:
 
 def _track_slugs(track: str) -> list[str]:
     try:
-        return monitor_surface.list_discovery_slugs_readonly(track)
+        return cast("list[str]", monitor_surface.list_discovery_slugs_readonly(track))
     except Exception:
         return []
 
@@ -164,9 +164,9 @@ def _list_article_candidates(
     wiki_dir = _wiki_dir(resolved_ctx)
     state_dir = monitor_surface.wiki_state_dir()
     cache_key = f"wiki:article_candidates:{wiki_dir.resolve()}:{state_dir.resolve()}"
-    return resolved_ctx.runtime.get_or_create_derived(
-        cache_key,
-        lambda: _build_article_candidates(wiki_dir),
+    return cast(
+        "dict[str, list[dict[str, Any]]]",
+        resolved_ctx.runtime.get_or_create_derived(cache_key, lambda: _build_article_candidates(wiki_dir)),
     )
 
 
@@ -278,7 +278,7 @@ def _track_status_rows(
     word_count_cache: dict[Path, int] | None = None,
     ctx: MonitorContext | None = None,
 ) -> list[dict[str, Any]]:
-    _ensure_track_exists(track, ctx)
+    _ensure_track_exists(track, resolve_context(ctx))
     slugs = _track_slugs(track)
     article_candidates = (
         _list_article_candidates(ctx) if candidates_by_slug is None else candidates_by_slug
@@ -292,8 +292,9 @@ def _track_status_rows(
         word_count = 0
 
         if compiled:
-            progress_word_count = article.get("word_count")
-            if progress_word_count is None and article.get("from_progress") and article_path:
+            resolved_article = cast(dict[str, Any], article)
+            progress_word_count = resolved_article.get("word_count")
+            if progress_word_count is None and resolved_article.get("from_progress") and article_path:
                 cache = word_count_cache if word_count_cache is not None else {}
                 word_count = _read_article_word_count(article_path, cache)
             else:

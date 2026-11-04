@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from typing import cast
 
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
@@ -106,9 +107,9 @@ async def browse_images(
             )
 
     if sort == "size":
-        images.sort(key=lambda item: item["size"])
+        images.sort(key=lambda item: cast(int, item["size"]))
     elif sort == "name":
-        images.sort(key=lambda item: item["name"])
+        images.sort(key=lambda item: cast(str, item["name"]))
     elif sort == "grade":
         images.sort(key=lambda item: (item["grade"], item["name"]))
 

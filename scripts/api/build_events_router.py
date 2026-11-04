@@ -6,7 +6,7 @@ import asyncio
 import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import APIRouter, Depends, Query
 
@@ -122,7 +122,7 @@ def _current_phase_from_state(state: dict[str, Any]) -> str | None:
         if not isinstance(info, dict):
             continue
         if info.get("status") != "complete":
-            return phase
+            return cast("str | None", phase)
     return "publish"
 
 

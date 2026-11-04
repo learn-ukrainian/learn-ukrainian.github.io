@@ -9,20 +9,9 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Protocol
+from enum import StrEnum
+from typing import Any, Protocol, cast
 from urllib.error import HTTPError, URLError
-
-try:
-    from enum import StrEnum
-except ImportError:
-    from enum import Enum
-
-    class StrEnum(str, Enum):  # noqa: UP042
-        """Fallback StrEnum implementation for Python 3.10 support."""
-
-        def __str__(self) -> str:
-            return str(self.value)
-
 
 from .state_helpers import monitor_surface
 
@@ -204,7 +193,7 @@ def generate_qualified_lesson(
             and all(
                 isinstance(block, Mapping)
                 and isinstance(block.get("type"), str)
-                and bool(block.get("type").strip())
+                and bool(cast(str, block.get("type")).strip())
                 for block in blocks
             )
         )

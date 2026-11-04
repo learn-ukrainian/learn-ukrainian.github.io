@@ -8,7 +8,7 @@ import logging
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 
@@ -48,12 +48,12 @@ def _with_load_errors(payload: dict[str, Any], errors: list[str]) -> dict[str, A
 
 
 def _run_dispatcher_scan(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    return cast("subprocess.CompletedProcess[str]", subprocess.run(
         cmd,  # lock-lint: ok the dispatcher scan runs the project interpreter via asyncio.to_thread
         cwd=cwd,
         timeout=DISPATCHER_SCAN_TIMEOUT_S,
         check=False,
-    )
+    ))
 
 
 @router.get("/api/batch/dispatcher")
@@ -67,7 +67,7 @@ async def get_dispatcher_state(ctx: MonitorContext = Depends(get_ctx)):
 
 @router.get("/api/batch/active")
 async def get_active_orchestration(ctx: MonitorContext = Depends(get_ctx)):
-    active = []
+    active: list[dict[str, Any]] = []
     if not ctx.roots.curriculum_root.exists():
         return active
     for track_dir in ctx.roots.curriculum_root.iterdir():

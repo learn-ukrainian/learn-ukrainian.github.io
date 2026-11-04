@@ -94,7 +94,7 @@ def _dir_size(path: Path) -> int:
     return total
 
 
-def _format_bytes(n: int) -> str:
+def _format_bytes(n: float) -> str:
     for unit in ("B", "KB", "MB", "GB"):
         if abs(n) < 1024:
             return f"{n:.1f} {unit}"
@@ -335,7 +335,7 @@ async def embedding_cache_stats(ctx: MonitorContext = Depends(get_ctx)):
     if not cache_dir.exists():
         return {"exists": False, "cached_files": 0, "total_size_bytes": 0}
 
-    by_ext = {}
+    by_ext: dict[str, dict[str, int]] = {}
     file_count = 0
     total_size = 0
     for f in cache_dir.iterdir():

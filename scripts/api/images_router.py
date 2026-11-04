@@ -22,7 +22,7 @@ import urllib.parse
 from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response
@@ -215,7 +215,7 @@ class _PDFPool:
     """LRU pool of open pymupdf.Document objects."""
 
     def __init__(self, max_size: int = 10):
-        self._pool: OrderedDict[str, object] = OrderedDict()
+        self._pool: OrderedDict[str, Any] = OrderedDict()
         self._max_size = max_size
         self._lock = asyncio.Lock()
 
@@ -279,13 +279,16 @@ def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
     roots = resolved_ctx.roots
     images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
     annotations_file = images_dir / "image_text_pairs.jsonl"
-    return resolved_ctx.runtime.get_or_create_resource(
-        "image_store:fallback",
-        lambda: ImageStore(
-            images_dir=images_dir,
-            textbooks_dir=roots.textbooks_dir,
-            annotations_file=annotations_file,
-            project_root=roots.project_root,
+    return cast(
+        ImageStore,
+        resolved_ctx.runtime.get_or_create_resource(
+            "image_store:fallback",
+            lambda: ImageStore(
+                images_dir=images_dir,
+                textbooks_dir=roots.textbooks_dir,
+                annotations_file=annotations_file,
+                project_root=roots.project_root,
+            ),
         ),
     )
 

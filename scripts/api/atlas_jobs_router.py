@@ -458,7 +458,7 @@ def results_jobs(
             if state is not None and item_state != state:
                 continue
 
-            summary_data = receipt.get("summary") if isinstance(receipt.get("summary"), dict) else {}
+            summary_data = cast(dict[str, Any], receipt.get("summary")) if isinstance(receipt.get("summary"), dict) else {}
             summary_row: dict[str, Any] = {
                 "id": safe_id,
                 "host": item_host,

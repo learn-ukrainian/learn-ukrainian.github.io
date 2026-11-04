@@ -9,6 +9,7 @@ from __future__ import annotations
 import re
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any, cast
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
@@ -62,13 +63,13 @@ def _is_ready_for_final_review(orch_dir, version: str) -> bool:
     if version == "v6":
         phases = read_v2_state(orch_dir).get("phases", {})
         terminal_phase = V6_PHASES[-1] if V6_PHASES else "audit"
-        return phases.get(terminal_phase, {}).get("status") == "complete"
+        return cast("bool", phases.get(terminal_phase, {}).get("status") == "complete")
     if version == "v5":
         phases = read_v2_state(orch_dir).get("phases", {})
-        return phases.get("validate", {}).get("status") == "complete"
+        return cast("bool", phases.get("validate", {}).get("status") == "complete")
     if version == "v3":
         phases = read_v3_state(orch_dir).get("phases", {})
-        return phases.get("v3-audit", {}).get("status") == "complete"
+        return cast("bool", phases.get("v3-audit", {}).get("status") == "complete")
     return False
 
 
@@ -126,7 +127,7 @@ def compute_final_reviews(
 
 def count_issue_patterns(all_issues: list) -> dict:
     """Count keyword patterns across issue summaries."""
-    pattern_counts = {}
+    pattern_counts: dict[str, int] = {}
     for issue in all_issues:
         summary = issue["summary"].upper()
         for keyword in ISSUE_PATTERN_KEYWORDS:
@@ -145,7 +146,7 @@ def compute_issues(
     """Compute aggregated outstanding issues."""
     if curriculum_root is None:
         curriculum_root = config.CURRICULUM_ROOT
-    issues = []
+    issues: list[dict[str, Any]] = []
     level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
 
     for level_cfg in level_cfgs:

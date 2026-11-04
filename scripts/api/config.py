@@ -90,7 +90,7 @@ def _read_manifest_levels(repo_root: Path | None = None) -> dict[str, Any] | Non
         try:
             data = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
             if isinstance(data, dict) and isinstance(data.get("levels"), dict):
-                return data["levels"]
+                return cast("dict[str, Any] | None", data["levels"])
         except Exception:
             pass
     return None

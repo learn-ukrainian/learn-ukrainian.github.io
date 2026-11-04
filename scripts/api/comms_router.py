@@ -29,6 +29,7 @@ import threading
 import time
 import uuid
 from datetime import UTC, datetime
+from typing import Any
 
 import yaml
 
@@ -1104,7 +1105,7 @@ async def batch_progress(ctx: MonitorContext = Depends(get_ctx)):
             track_row["reason"] = process_error
         track_progress[track] = track_row
 
-    result = {
+    result: dict[str, Any] = {
         "generated_at": datetime.now(UTC).isoformat(),
         "running_processes": None if process_error else len(processes),
         "tracks": track_progress,

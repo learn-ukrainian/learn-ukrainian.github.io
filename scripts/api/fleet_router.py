@@ -884,7 +884,7 @@ def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
     }
     tracks: dict[str, dict[str, Any]] = {}
     for track in sorted(all_tracks):
-        progress = legacy_comms._scan_track_progress(ctx, track)
+        progress = legacy_comms._scan_track_progress(resolved_ctx, track)
         log = next(
             (item for item in logs if isinstance(item, dict) and item.get("track") == track),
             None,

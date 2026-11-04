@@ -15,6 +15,7 @@ import tempfile
 import threading
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any, cast
 
 import yaml
 from fastapi import APIRouter, Depends, HTTPException
@@ -149,7 +150,7 @@ def _peek_state_summary(ctx: MonitorContext | None = None) -> tuple[dict, str, f
     cached = cache_get_with_age(_summary_cache_key(ctx), ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
     if cached is not None:
         value, age_s = cached
-        return value, "hit", age_s
+        return cast(dict[Any, Any], value), "hit", age_s
     return {}, "miss", None
 
 
@@ -366,8 +367,10 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
     manifest = load_manifest(resolved)
     levels = manifest.get("levels", {})
     cached = cache_get_with_age(_summary_cache_key(resolved), ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
+    state_summary: dict[str, Any]
     if cached is not None:
-        state_summary, age_s = cached
+        cached_summary, age_s = cached
+        state_summary = cast(dict[str, Any], cached_summary)
         cache_state = "hit"
     else:
         state_summary = compute_summary()
@@ -505,7 +508,7 @@ async def overview(ctx: MonitorContext = Depends(get_ctx)):
     cached = cache_get_with_age(_overview_cache_key(ctx), ttl=DASHBOARD_OVERVIEW_TTL_S)
     if cached is not None:
         value, overview_age_s = cached
-        payload = copy.deepcopy(value)
+        payload = copy.deepcopy(cast(dict[str, Any], value))
         payload["timestamp"] = datetime.now(UTC).isoformat()
         meta = dict(payload.get("meta") or {})
         meta["cache"] = cache_state
@@ -661,7 +664,7 @@ async def module_detail(track_id: str, slug: str, ctx: MonitorContext = Depends(
         track_dir = safe_join(curriculum_root, level_cfg["path"])
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=f"Invalid track path for {track_id}") from exc
-    result = {"slug": slug, "track": track_id}
+    result: dict[str, Any] = {"slug": slug, "track": track_id}
 
     try:
         result["plan"] = read_yaml_file(safe_join(curriculum_root, "plans", track_id, f"{slug}.yaml"))

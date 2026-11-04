@@ -2716,7 +2716,7 @@ async def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: Monitor
     if cached is not None:
         value, age_s = cached
         return _with_state_meta(
-            value,
+            cast(dict[str, Any], value),
             source="fs:orchestration+audit+research",
             stale_after_s=STATE_PIPELINE_TTL_S,
             cache="hit",
@@ -3082,7 +3082,7 @@ async def research_detail(
     if cached is not None:
         value, age_s = cached
         return _with_state_meta(
-            value,
+            cast(dict[str, Any], value),
             source="fs:research+dossiers",
             stale_after_s=STATE_RESEARCH_DETAIL_TTL_S,
             cache="hit",
@@ -3117,7 +3117,7 @@ async def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depe
     if cached is not None:
         value, age_s = cached
         return _with_state_meta(
-            value,
+            cast(dict[str, Any], value),
             source="fs:review+audit",
             stale_after_s=STATE_REVIEW_COVERAGE_TTL_S,
             cache="hit",
@@ -3353,7 +3353,7 @@ async def module_detail_by_slug(
             if isinstance(val, int):
                 retry_count = max(retry_count, val)
         if status == "in_progress":
-            exec_ = data.get("executor") if isinstance(data.get("executor"), dict) else {}
+            exec_ = cast(dict[str, Any], data.get("executor")) if isinstance(data.get("executor"), dict) else {}
             current_worker = exec_.get("agent")
 
     audit = full.get("audit") or {}

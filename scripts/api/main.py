@@ -1013,7 +1013,7 @@ def _collect_wiki_orient_data(ctx: MonitorContext | None = None) -> dict:
     wiki_dir = wiki_api._wiki_dir(resolved_ctx)
 
     by_track: dict[str, dict[str, Any]] = {}
-    known_tracks = wiki_api._known_tracks(ctx=ctx)
+    known_tracks = wiki_api._known_tracks(ctx=resolved_ctx)
     for track in known_tracks:
         slugs = wiki_api._track_slugs(track)
         if not slugs:
@@ -1043,7 +1043,7 @@ def _collect_wiki_orient_data(ctx: MonitorContext | None = None) -> dict:
 
 
 def _collect_governance_orient_data(ctx: MonitorContext | None = None) -> dict[str, int]:
-    return collect_governance_summary(ctx=ctx)
+    return collect_governance_summary(ctx=resolve_context(ctx))
 
 
 logger = logging.getLogger(__name__)

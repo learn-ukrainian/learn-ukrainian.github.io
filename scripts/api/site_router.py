@@ -28,7 +28,7 @@ import urllib.error
 import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import APIRouter, Depends, Query
 
@@ -144,14 +144,14 @@ def _run(
     """
     cwd = _run_cwd(cmd, ctx)
     try:
-        return github_client.run(
+        return cast("subprocess.CompletedProcess[str]", github_client.run(
             cmd,
             cwd=cwd,
             capture_output=True,
             text=True,
             timeout=timeout_s,
             check=False,
-        )
+        ))
     except subprocess.TimeoutExpired as exc:
         return subprocess.CompletedProcess(
             args=cmd,
