@@ -143,8 +143,8 @@ Routers are mounted by domain from `scripts/api/main.py`:
   `consultation_router.py`, `artifacts_router.py`.
 - Agent bootstrap: `rules_router.py`, `session_router.py`, `/api/orient`, and
   `/api/state/manifest`.
-- Older team dashboards and compatibility endpoints: `blue_router.py`,
-  `gold_router.py`, `agent_router.py`, `reviewer_ghosts_router.py`.
+- Older compatibility endpoints: `agent_router.py`,
+  `reviewer_ghosts_router.py`.
 
 The full route and playground consumer inventory lives in
 `docs/api-endpoint-consumer-map-2026-05-06.md`.
