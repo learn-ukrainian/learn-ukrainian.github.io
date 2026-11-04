@@ -66,7 +66,7 @@
   cites (`built_with.sources_db_scheme: rows-v2`), never a digest of the file. While a
   session is open the WAL cannot be checkpointed past its read mark, so the reader stops
   itself (`snapshot_limit`) if `sources.db-wal` exceeds 4 GiB or free disk on the data
-  volume drops below 10 GiB (`scripts/curriculum/evidence/config.py`; env overrides
+  volume drops below 10 GiB (`scripts/storage/generations.py`; env overrides
   `LU_EVIDENCE_WAL_CEILING_BYTES` / `LU_EVIDENCE_FREE_DISK_FLOOR_BYTES`).
 - **Bulk raw-source root** (legacy name `GDRIVE_DATA` in `scripts/wiki/config.py`)
   is resolved by `scripts.storage.topology.resolve_bulk_root`:
