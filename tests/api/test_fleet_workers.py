@@ -368,7 +368,8 @@ def test_workers_route_keeps_unattributed_unknown_with_fresh_self_snapshot(
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "fixture-local=unattributed,teach-box=host-teacher")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "unattributed" if self_identity == "explicit" else "local")
     monkeypatch.setattr(
-        collect_mod.atlas_job, "is_self_host", lambda alias: self_identity == "alias" and alias == "fixture-local"
+        "scripts.lexicon.runner.atlas_job.is_self_host",
+        lambda alias: self_identity == "alias" and alias == "fixture-local",
     )
     assert collect_mod._self_host_ids() == {UNATTRIBUTED_HOST_ID}
     monkeypatch.setattr(state_router_mod, "collect_local_document", lambda host_id: _document(host_id, workers=[]))
