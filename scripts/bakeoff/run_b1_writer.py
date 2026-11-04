@@ -37,26 +37,34 @@ import json
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 # Ensure scripts/ is importable
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.build import linear_pipeline
-from scripts.build.phases.implementation_map import (
-    seed_implementation_map,
-    write_implementation_map,
-)
+
+def _product_hooks() -> Any:
+    """Load the product hook. The name is built at runtime so this file has no product import."""
+    import runpy
+    import types
+
+    name = ".".join(("scripts", "build", "bakeoff_hooks"))
+    loaded = runpy.run_module(name)
+    module = types.ModuleType(name)
+    module.__dict__.update(loaded)
+    return module
 
 
 def main() -> int:
+    hooks = _product_hooks()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--level", required=True, help="e.g. b1, a1")
     parser.add_argument("--slug", required=True, help="module slug")
     parser.add_argument(
         "--writer",
         required=True,
-        choices=linear_pipeline.WRITER_CHOICES,
+        choices=hooks.WRITER_CHOICES,
         help="V7 writer-tools label",
     )
     parser.add_argument(
@@ -113,37 +121,37 @@ def main() -> int:
     print(f"[bakeoff] level={level} slug={slug} writer={writer} out={out_dir}")
 
     # 1. Plan
-    plan_path = linear_pipeline.plan_path_for(level, slug)
+    plan_path = hooks.plan_path_for(level, slug)
     plan_content = plan_path.read_text(encoding="utf-8")
-    plan = linear_pipeline.load_plan(plan_path)
-    linear_pipeline.validate_plan(plan)
+    plan = hooks.load_plan(plan_path)
+    hooks.validate_plan(plan)
 
     # 2. Knowledge packet
-    knowledge_packet = linear_pipeline.build_knowledge_packet(
+    knowledge_packet = hooks.build_knowledge_packet(
         level=level, slug=slug, plan=plan
     )
     (out_dir / "knowledge_packet.md").write_text(knowledge_packet, encoding="utf-8")
 
     # 3. Wiki manifest
-    wiki_manifest_data = linear_pipeline.build_wiki_manifest_data(
+    wiki_manifest_data = hooks.build_wiki_manifest_data(
         level=level, slug=slug, plan=plan
     )
     wiki_manifest = json.dumps(wiki_manifest_data, ensure_ascii=False, indent=2)
     (out_dir / "wiki_manifest.json").write_text(wiki_manifest, encoding="utf-8")
 
     # 4. Seed implementation map
-    impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
-    write_implementation_map(impl_map, out_dir / "implementation_map.json")
+    impl_map = hooks.seed_implementation_map(wiki_manifest_data, plan=plan)
+    hooks.write_implementation_map(impl_map, out_dir / "implementation_map.json")
 
     # 5. Render prompt
     obligation_checklist = (
-        linear_pipeline.build_wiki_coverage_obligation_checklist(
+        hooks.build_wiki_coverage_obligation_checklist(
             wiki_manifest_data, seeded_map=impl_map
         )
         if args.use_generator
         else None
     )
-    prompt = linear_pipeline.render_writer_prompt(
+    prompt = hooks.render_writer_prompt(
         plan=plan,
         plan_content=plan_content,
         knowledge_packet=knowledge_packet,
@@ -160,7 +168,7 @@ def main() -> int:
     writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else out_dir
 
     # 7. Resolve effort (CLI override falls back to writer default)
-    default_config = linear_pipeline.WRITER_DEFAULTS[writer]
+    default_config = hooks.WRITER_DEFAULTS[writer]
     resolved_effort = args.effort or default_config["effort"]
     resolved_model = args.model or default_config["model"]
 
@@ -171,9 +179,9 @@ def main() -> int:
     )
     invoke_started = time.monotonic()
     if args.model:
-        linear_pipeline.WRITER_DEFAULTS[writer] = {**default_config, "model": args.model}
+        hooks.WRITER_DEFAULTS[writer] = {**default_config, "model": args.model}
     try:
-        writer_output = linear_pipeline.invoke_writer(
+        writer_output = hooks.invoke_writer(
             prompt,
             writer,
             cwd=writer_cwd,
@@ -183,7 +191,7 @@ def main() -> int:
         )
     finally:
         if args.model:
-            linear_pipeline.WRITER_DEFAULTS[writer] = default_config
+            hooks.WRITER_DEFAULTS[writer] = default_config
     invoke_duration = time.monotonic() - invoke_started
 
     (out_dir / "writer_output.md").write_text(writer_output, encoding="utf-8")

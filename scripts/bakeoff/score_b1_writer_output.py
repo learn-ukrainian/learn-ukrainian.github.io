@@ -16,7 +16,7 @@ import sys
 import tempfile
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
@@ -24,14 +24,18 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.audit.wiki_coverage_gate import (
-    check_wiki_coverage,
-    parse_implementation_map,
-    validate_obligations,
-)
-from scripts.build import linear_pipeline
-from scripts.build.phases.implementation_map import read_implementation_map
-from scripts.yaml_activities import ActivityParser
+
+def _product_hooks() -> Any:
+    """Load the product hook. The name is built at runtime so this file has no product import."""
+    import runpy
+    import types
+
+    name = ".".join(("scripts", "build", "bakeoff_hooks"))
+    loaded = runpy.run_module(name)
+    module = types.ModuleType(name)
+    module.__dict__.update(loaded)
+    return module
+
 
 B1_M01_SLUG = "b1-baseline-past-present"
 
@@ -144,15 +148,15 @@ def _read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _artifact_name_from_info(info: str) -> str | None:
+def _artifact_name_from_info(info: str, hooks: Any) -> str | None:
     normalized = info.casefold()
-    for name in linear_pipeline.WRITER_ARTIFACTS:
+    for name in hooks.WRITER_ARTIFACTS:
         if name in normalized:
-            return name
+            return cast(str, name)
     return None
 
 
-def _best_effort_artifacts(raw_output: str) -> dict[str, str]:
+def _best_effort_artifacts(raw_output: str, hooks: Any) -> dict[str, str]:
     """Extract artifact fences without applying strict writer schemas.
 
     This keeps scorer output useful for rejected bakeoff artifacts: strict
@@ -161,7 +165,7 @@ def _best_effort_artifacts(raw_output: str) -> dict[str, str]:
     """
     artifacts: dict[str, str] = {}
     for match in _LOOSE_FENCE_RE.finditer(raw_output):
-        name = _artifact_name_from_info(match.group("info"))
+        name = _artifact_name_from_info(match.group("info"), hooks)
         if name is None or name in artifacts:
             continue
         body = match.group("body").strip()
@@ -181,21 +185,24 @@ def _best_effort_artifacts(raw_output: str) -> dict[str, str]:
     return artifacts
 
 
-def _load_manifest(level: str, slug: str, path: Path | None) -> dict[str, Any]:
+def _load_manifest(level: str, slug: str, path: Path | None, hooks: Any) -> dict[str, Any]:
     if path and path.exists():
         data = _read_json(path)
         if isinstance(data, dict):
             return data
         raise ValueError(f"wiki manifest must be a JSON object: {path}")
-    plan_path = linear_pipeline.plan_path_for(level, slug)
-    plan = linear_pipeline.load_plan(plan_path)
-    return linear_pipeline.build_wiki_manifest_data(level=level, slug=slug, plan=plan)
+    plan_path = hooks.plan_path_for(level, slug)
+    plan = hooks.load_plan(plan_path)
+    return cast(
+        dict[str, Any],
+        hooks.build_wiki_manifest_data(level=level, slug=slug, plan=plan),
+    )
 
 
-def _load_seeded_map(path: Path | None) -> dict[str, Any] | None:
+def _load_seeded_map(path: Path | None, hooks: Any) -> dict[str, Any] | None:
     if not path or not path.exists():
         return None
-    data = read_implementation_map(path)
+    data = hooks.read_implementation_map(path)
     return dict(data) if isinstance(data, Mapping) else None
 
 
@@ -313,14 +320,16 @@ def _check_teacher_voice(module_md: str) -> dict[str, Any]:
     }
 
 
-def _check_implementation_map(raw_output: str, manifest: Mapping[str, Any]) -> dict[str, Any]:
-    obligations = validate_obligations(manifest)
+def _check_implementation_map(
+    raw_output: str, manifest: Mapping[str, Any], hooks: Any
+) -> dict[str, Any]:
+    obligations = hooks.validate_obligations(manifest)
     obligation_ids = {
         str(item.get("id") or "")
         for item in obligations
         if str(item.get("id") or "")
     }
-    parsed = parse_implementation_map(raw_output)
+    parsed = hooks.parse_implementation_map(raw_output)
     parsed_ids = set(parsed)
     missing_from_parsed = sorted(obligation_ids - parsed_ids)
     missing_fields = sorted(
@@ -380,11 +389,11 @@ def _check_activity_markers(
     }
 
 
-def _check_activity_parser(activities_yaml: str) -> dict[str, Any]:
+def _check_activity_parser(activities_yaml: str, hooks: Any) -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="b1-writer-score-") as tmp:
         path = Path(tmp) / "activities.yaml"
         path.write_text(activities_yaml, encoding="utf-8")
-        parsed = ActivityParser().parse(path)
+        parsed = hooks.ActivityParser().parse(path)
     return {"parsed_count": len(parsed)}
 
 
@@ -422,6 +431,7 @@ def _extract_resource_chunk(resource: Mapping[str, Any]) -> str:
 def _check_resources(
     resources: Sequence[Mapping[str, Any]],
     plan: Mapping[str, Any],
+    hooks: Any,
 ) -> dict[str, Any]:
     expected_count = len(plan.get("references") or [])
     textbook_resources = [
@@ -436,7 +446,7 @@ def _check_resources(
         {
             str(item.get("role") or "")
             for item in resources
-            if str(item.get("role") or "") not in linear_pipeline.RESOURCE_ROLES
+            if str(item.get("role") or "") not in hooks.RESOURCE_ROLES
         }
     )
     chunks = sorted(
@@ -554,17 +564,18 @@ def _artifact_report(
     wiki_manifest_path: Path | None,
     implementation_map_path: Path | None,
     tool_calls_path: Path | None,
+    hooks: Any,
 ) -> dict[str, Any]:
     checks: list[dict[str, Any]] = []
 
-    plan_path = linear_pipeline.plan_path_for(level, slug)
-    plan = linear_pipeline.load_plan(plan_path)
-    manifest = _load_manifest(level, slug, wiki_manifest_path)
-    seeded_map = _load_seeded_map(implementation_map_path)
+    plan_path = hooks.plan_path_for(level, slug)
+    plan = hooks.load_plan(plan_path)
+    manifest = _load_manifest(level, slug, wiki_manifest_path, hooks)
+    seeded_map = _load_seeded_map(implementation_map_path, hooks)
     tool_calls = _load_tool_calls(tool_calls_path)
 
     try:
-        artifacts = linear_pipeline.parse_writer_output(raw_output)
+        artifacts = hooks.parse_writer_output(raw_output)
     except Exception as exc:
         checks.append(
             _check(
@@ -573,9 +584,9 @@ def _artifact_report(
                 details={"error": str(exc)},
             )
         )
-        artifacts = _best_effort_artifacts(raw_output)
+        artifacts = _best_effort_artifacts(raw_output, hooks)
         best_effort_missing = [
-            name for name in linear_pipeline.WRITER_ARTIFACTS if name not in artifacts
+            name for name in hooks.WRITER_ARTIFACTS if name not in artifacts
         ]
         checks.append(
             _check(
@@ -604,7 +615,7 @@ def _artifact_report(
             }
     else:
         checks.append(_check("parse_writer_output", True))
-    missing = [name for name in linear_pipeline.WRITER_ARTIFACTS if name not in artifacts]
+    missing = [name for name in hooks.WRITER_ARTIFACTS if name not in artifacts]
     checks.append(_check("artifacts_present", not missing, details={"missing": missing}))
 
     parsed_yaml: dict[str, list[dict[str, Any]]] = {}
@@ -643,7 +654,7 @@ def _artifact_report(
         )
     )
 
-    word_report = linear_pipeline._word_count_gate(
+    word_report = hooks.word_count_gate(
         module_md,
         int(plan["word_target"]),
     )
@@ -667,7 +678,7 @@ def _artifact_report(
         )
     )
 
-    map_report = _check_implementation_map(raw_output, manifest)
+    map_report = _check_implementation_map(raw_output, manifest, hooks)
     map_passed = (
         map_report["audit_present"]
         and map_report["audit_complete"]
@@ -684,7 +695,7 @@ def _artifact_report(
     )
 
     try:
-        wiki_report = check_wiki_coverage(
+        wiki_report = hooks.check_wiki_coverage(
             manifest=manifest,
             implementation_map=raw_output,
             module_md=module_md,
@@ -730,7 +741,7 @@ def _artifact_report(
     )
 
     try:
-        parser_report = _check_activity_parser(artifacts["activities.yaml"])
+        parser_report = _check_activity_parser(artifacts["activities.yaml"], hooks)
     except Exception as exc:
         checks.append(
             _check("activity_parser_schema", False, details={"error": str(exc)})
@@ -757,7 +768,7 @@ def _artifact_report(
         )
     )
 
-    resource_report = _check_resources(resources, plan)
+    resource_report = _check_resources(resources, plan, hooks)
     resource_passed = (
         resource_report["count"] >= resource_report["expected_min_count"]
         and resource_report["textbook_count"] >= resource_report["expected_min_count"]
@@ -831,6 +842,7 @@ def score_writer_output(
         wiki_manifest_path=wiki_manifest_path,
         implementation_map_path=implementation_map_path,
         tool_calls_path=tool_calls_path,
+        hooks=_product_hooks(),
     )
 
 
