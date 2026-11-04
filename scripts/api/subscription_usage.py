@@ -6,22 +6,22 @@ Provides background-threaded asynchronous caching of provider dashboard metrics.
 
 from __future__ import annotations
 
+import contextlib
 import functools
+import importlib.util
+import io
 import json
 import math
 import os
-import platform
 import shutil
-import stat
 import subprocess
 import threading
 import time
-import urllib.error
-import urllib.request
 from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 from scripts.api.state_helpers import cache_get_with_age, cache_invalidate, cache_set
@@ -57,26 +57,15 @@ except ImportError:  # pragma: no cover
     from common.repo_root import main_checkout_root
 
 try:
-    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, _read_private_json
     from scripts.agent_runtime.codex_accounts import (
         CODEX_SUBSCRIPTION_ACCOUNTS,
         DEFAULT_CODEX_ACCOUNT,
-        CodexAccountRefused,
-        codex_account_home,
     )
 except ImportError:  # pragma: no cover
-    from agent_runtime.attempt_boundary import ClaudeAccountRefused, _read_private_json  # type: ignore
     from agent_runtime.codex_accounts import (  # type: ignore
         CODEX_SUBSCRIPTION_ACCOUNTS,
         DEFAULT_CODEX_ACCOUNT,
-        CodexAccountRefused,
-        codex_account_home,
     )
-
-try:
-    from scripts.lib import kimi_coding_oauth
-except ImportError:  # pragma: no cover
-    from lib import kimi_coding_oauth  # type: ignore
 
 # Live-measured 2026-08-04: `codexbar usage --json --provider claude` took
 # ~17s end-to-end twice in a row (its own dashboard-fetch latency, not a
@@ -414,310 +403,80 @@ def refresh_provider_usage_data(
     return refreshed
 
 
-def _http_json_request(
-    method: str,
-    url: str,
-    *,
-    headers: dict[str, str] | None = None,
-    body: bytes | None = None,
-    timeout_s: float = 10.0,
-) -> tuple[int, Any, str | None]:
-    """Perform a bounded HTTP request; return (status, parsed_json_or_none, error_text)."""
-    req_headers = dict(headers or {})
-    if body is not None and "Content-Type" not in req_headers:
-        req_headers["Content-Type"] = "application/json"
-    try:
-        req = urllib.request.Request(url, data=body, headers=req_headers, method=method)
-        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-            raw = resp.read(4 * 1024 * 1024 + 1)
-            if len(raw) > 4 * 1024 * 1024:
-                return resp.status, None, "response too large"
-            if not raw:
-                return resp.status, None, None
-            return resp.status, json.loads(raw.decode("utf-8")), None
-    except urllib.error.HTTPError as exc:
-        # Provider bodies/reasons may echo credentials and identifiers. Keep only
-        # the numeric status, including when the body happens to be valid JSON.
-        return exc.code, None, f"HTTP {exc.code}"
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
-        if isinstance(exc, TimeoutError) or (
-            isinstance(exc, urllib.error.URLError) and isinstance(exc.reason, TimeoutError)
-        ):
-            return 0, None, "request timed out"
-        return 0, None, "request failed"
-
-
-def _read_json_file(path: Path) -> dict[str, Any] | None:
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError, ValueError):
-        return None
-    return data if isinstance(data, dict) else None
-
-
-def _load_claude_oauth_token() -> str | None:
-    for env_name in ("CLAUDE_CODE_OAUTH_TOKEN", "ANTHROPIC_AUTH_TOKEN"):
-        raw = os.environ.get(env_name, "").strip()
-        if raw.startswith("sk-ant-oat"):
-            return raw
-    cred_path = Path.home() / ".claude" / ".credentials.json"
-    cred = _read_json_file(cred_path)
-    if cred:
-        oauth = cred.get("claudeAiOauth")
-        if isinstance(oauth, dict):
-            token = oauth.get("accessToken")
-            if isinstance(token, str) and token.strip():
-                return token.strip()
-    if platform.system() == "Darwin":
-        security = Path("/usr/bin/security")
-        if security.is_file():
-            try:
-                completed = subprocess.run(
-                    [
-                        str(security),
-                        "find-generic-password",
-                        "-s",
-                        "Claude Code-credentials",
-                        "-w",
-                    ],
-                    capture_output=True,
-                    text=True,
-                    timeout=5,
-                    check=False,
-                )
-                if completed.returncode == 0 and completed.stdout.strip():
-                    payload = json.loads(completed.stdout)
-                    oauth = payload.get("claudeAiOauth") if isinstance(payload, dict) else None
-                    if isinstance(oauth, dict):
-                        token = oauth.get("accessToken")
-                        if isinstance(token, str) and token.strip():
-                            return token.strip()
-            except Exception:
-                pass
-    return None
-
-
-def _codex_access_token(data: dict[str, Any]) -> str | None:
-    """The OAuth access token of one Codex ``auth.json`` object, or ``None``."""
-    for key in ("access_token", "accessToken", "token"):
-        val = data.get(key)
-        if isinstance(val, str) and val.strip():
-            return val.strip()
-    # Codex CLI's current auth.json shape nests the OAuth token set under
-    # "tokens" (e.g. {"tokens": {"access_token": ..., "refresh_token":
-    # ...}, "last_refresh": ...}). Only the top-level keys above were
-    # read, so a nested-shape auth.json probed as NEED_LOGIN even with a
-    # valid, unexpired access_token on disk.
-    nested = data.get("tokens")
-    if isinstance(nested, dict):
-        for key in ("access_token", "accessToken", "token"):
-            val = nested.get(key)
-            if isinstance(val, str) and val.strip():
-                return val.strip()
-    return None
-
-
-def _load_codex_oauth_token() -> str | None:
-    """Account a's token (label ``sub``), only from ``$HOME/.codex/auth.json``.
-
-    Never ambient ``CODEX_HOME`` and no other fallback location: a Monitor
-    started on account b's home, or b bound to any other directory, would
-    otherwise publish b's window as account a's (#12692).
-    """
-    data = _read_json_file(codex_account_home(DEFAULT_CODEX_ACCOUNT) / "auth.json")
-    return _codex_access_token(data) if data else None
-
-
 _CODEX_AUTH_FILE_LIMIT = 64 * 1024
 
 
-def _load_codex_account_oauth_token(label: str) -> str | None:
-    """A bound account's token, read only from its own validated home; ``None`` when not logged in.
+_PRIVATE_USAGE_ENTRY_POINTS = (
+    "probe_subscription",
+    "probe_api_account",
+    "api_key_present",
+    "prepaid_remaining_usd",
+    "prove_claude_owner",
+    "credential_inventory",
+)
+_private_usage_lock = threading.Lock()
 
-    The home is opened without following links and checked again through the
-    open descriptor, and ``auth.json`` is read relative to it as an owner-only
-    regular file. There is no fallback location: another account's credentials
-    can never stand in. Raises value-free ``CodexAccountRefused``.
-    """
-    home = codex_account_home(label)
+
+def _private_usage() -> ModuleType | None:
+    """Load the versioned private usage boundary once, including an unavailable result."""
+    with _private_usage_lock:
+        return _load_private_usage()
+
+
+@functools.lru_cache(maxsize=1)
+def _load_private_usage() -> ModuleType | None:
     try:
-        dir_fd = os.open(home, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
-    except OSError:
-        raise CodexAccountRefused("codex_account_home_unavailable") from None
-    try:
-        info = os.fstat(dir_fd)
-        if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
-            raise CodexAccountRefused("codex_account_home_not_private")
-        # The shared reader only raises registered codes; its credentials code is renamed for Codex.
-        data = _read_private_json(
-            Path("auth.json"), limit=_CODEX_AUTH_FILE_LIMIT, code="claude_account_credentials", dir_fd=dir_fd
+        from scripts.opsec.prepublish import catalog, primary_root  # noqa: PLC0415  # lazy-ok: private binding lookup
+
+        path = primary_root().parent / catalog()["infra-private"]["local_name"] / "tools/fleet_usage/usage.py"
+        spec = importlib.util.spec_from_file_location("_lu_private_fleet_usage", path)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            exec(compile(path.read_bytes(), "<private-fleet-usage>", "exec"), module.__dict__)
+        version = getattr(module, "INTERFACE_VERSION", None)
+        if type(version) is not int or version != 1:
+            return None
+        if not all(callable(getattr(module, name, None)) for name in _PRIVATE_USAGE_ENTRY_POINTS):
+            return None
+        return module
+    except Exception:
+        return None
+
+
+def _private_subscription(
+    provider: str, *, timeout_s: float, usage_key: str | None = None, account: str | None = None
+) -> dict[str, Any]:
+    key = usage_key or provider
+    module = _private_usage()
+    if module is None:
+        return _normalize_provider_error(
+            key,
+            {
+                "message": "private usage tooling unavailable",
+                "kind": "unavailable",
+                "code": "PRIVATE_TOOLING_UNAVAILABLE",
+            },
         )
-    except ClaudeAccountRefused as exc:
-        raise CodexAccountRefused(exc.code.replace("claude_account_credentials", "codex_account_auth")) from None
-    finally:
-        os.close(dir_fd)
-    if data is None:
-        return None
-    if not isinstance(data, dict):
-        raise CodexAccountRefused("codex_account_auth_invalid")
-    return _codex_access_token(data)
+    outcome = module.probe_subscription(provider, timeout_s=timeout_s, account=account)
+    if outcome["outcome"] == "error":
+        return _normalize_provider_error(key, outcome["error"])
+    result = _normalize_provider_data(key, outcome["record"])
+    if "product_usage" in outcome:
+        result["product_usage"] = outcome["product_usage"]
+    return result
 
 
-def _load_kimi_static_bearer() -> str | None:
-    """Last-resort read of a stored access_token when refresh is unavailable."""
-    data = _read_json_file(kimi_coding_oauth._credentials_path())
-    if not data:
-        return None
-    flat = kimi_coding_oauth._flatten_credential_fields(data)
-    token = flat.get("access_token")
-    if isinstance(token, str) and token.strip():
-        return token.strip()
-    return None
-
-
-def _load_kimi_bearer(*, force_refresh: bool = False) -> str | None:
-    """Return a Kimi Code bearer from env or the current login artifacts.
-
-    ``KIMI_CODE_API_KEY`` wins (static key). Otherwise reuse the Kimi Code
-    OAuth helper so a valid ``kimi login`` on the host is refreshed before
-    the usages probe, matching the CLI path. A stale access_token alone is
-    not enough — those live ~15 minutes.
-    """
-    api_key = os.environ.get("KIMI_CODE_API_KEY", "").strip()
-    if api_key:
-        return api_key
-    try:
-        if force_refresh:
-            return kimi_coding_oauth.force_refresh_token()
-        return kimi_coding_oauth.resolve_access_token()
-    except (
-        kimi_coding_oauth.NoCredentialsError,
-        kimi_coding_oauth.RefreshFailedError,
-        OSError,
-        ValueError,
-    ):
-        return _load_kimi_static_bearer()
-
-
-def _load_grok_bearer() -> str | None:
-    env = os.environ.get("GROK_OAUTH_TOKEN", "").strip()
-    if env:
-        return env
-    grok_home = Path(os.environ.get("GROK_HOME", Path.home() / ".grok")).expanduser()
-    data = _read_json_file(grok_home / "auth.json")
-    if not data:
-        return None
-    for _scope_key, entry in data.items():
-        if not isinstance(entry, dict):
-            continue
-        key = entry.get("key")
-        if isinstance(key, str) and key.strip():
-            return key.strip()
-    return None
-
-
-def _load_first_line_secret(path: Path) -> str | None:
-    try:
-        if path.is_file():
-            lines = path.read_text(encoding="utf-8").strip().splitlines()
-            line = lines[0].strip() if lines else ""
-            if line:
-                return line
-    except OSError:
-        pass
-    return None
-
-
-def _secret_file_candidates(name: str) -> list[Path]:
-    """Prefer ``~/.secrets`` (host layout) then legacy ``~/.secret``."""
-    home = Path.home()
-    return [home / ".secrets" / name, home / ".secret" / name]
-
-
-def _load_named_secret_file(name: str) -> str | None:
-    for path in _secret_file_candidates(name):
-        secret = _load_first_line_secret(path)
-        if secret:
-            return secret
-    return None
-
-
-def _load_secret_preferring_secrets_dir(names: tuple[str, ...]) -> str | None:
-    """Prefer ``~/.secrets`` for *any* alias before falling back to ``~/.secret``.
-
-    Filename-first search can pick a stale ``~/.secret/deepseek.key`` over a
-    current ``~/.secrets/deekseep.key``. Directory-first matches operator layout.
-    """
-    home = Path.home()
-    for directory in (home / ".secrets", home / ".secret"):
-        for name in names:
-            secret = _load_first_line_secret(directory / name)
-            if secret:
-                return secret
-    return None
-
-
-def _load_glm_api_key() -> str | None:
-    for env_name in ("ZAI_API_KEY", "ZHIPU_API_KEY", "GLM_API_KEY", "BIGMODEL_API_KEY"):
-        val = os.environ.get(env_name, "").strip()
-        if val:
-            return val
-    secret = _load_named_secret_file("zai.key")
-    if secret:
-        return secret
-    for path in (
-        Path.home() / ".coding-relay" / "glm-api-key",
-        Path.home() / ".config" / "bigmodel" / "api_key",
-        Path.home() / ".config" / "zhipu" / "api_key",
-    ):
-        try:
-            if path.is_file():
-                line = path.read_text(encoding="utf-8").strip().splitlines()[0].strip()
-                if line:
-                    return line
-        except OSError:
-            continue
-    return None
-
-
-def _load_opencode_provider_key(provider: str) -> str | None:
-    path = Path.home() / ".local" / "share" / "opencode" / "auth.json"
-    data = _read_json_file(path)
-    if not data:
-        return None
-    entry = data.get(provider)
-    if isinstance(entry, dict):
-        key = entry.get("key")
-        if isinstance(key, str) and key.strip():
-            return key.strip()
-    return None
-
-
-def _load_openrouter_api_key() -> str | None:
-    env = os.environ.get("OPENROUTER_API_KEY", "").strip()
-    if env:
-        return env
-    key = _load_opencode_provider_key("openrouter")
-    if key:
-        return key
-    return _load_named_secret_file("openrouter.key")
-
-
-def _load_openrouter_management_api_key() -> str | None:
-    env = os.environ.get("OPENROUTER_MANAGEMENT_API_KEY", "").strip()
-    if env:
-        return env
-    return _load_opencode_provider_key("openrouter-management") or _load_named_secret_file("openrouter-management.key")
-
-
-def _load_deepseek_api_key() -> str | None:
-    env = os.environ.get("DEEPSEEK_API_KEY", "").strip()
-    if env:
-        return env
-    key = _load_opencode_provider_key("deepseek")
-    if key:
-        return key
-    return _load_secret_preferring_secrets_dir(("deepseek.key", "deekseep.key"))
+def _private_api_account(provider: str, *, timeout_s: float) -> dict[str, Any]:
+    module = _private_usage()
+    if module is not None:
+        result = module.probe_api_account(provider, timeout_s=timeout_s)
+        if isinstance(result, dict):
+            return result
+    result = _empty_openrouter_account() if provider == "openrouter" else _empty_deepseek_account()
+    result["auth_error"] = "private usage tooling unavailable"
+    return result
 
 
 def _coerce_float(value: Any) -> float | None:
@@ -777,116 +536,11 @@ def _empty_deepseek_account(probe_state: str = "NEED_PROBE") -> dict[str, Any]:
 
 
 def _probe_openrouter_native(*, timeout_s: float) -> dict[str, Any]:
-    fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
-    api_key = _load_openrouter_api_key()
-    if not api_key:
-        return _empty_openrouter_account("NEED_KEY")
-    status, payload, err = _http_json_request(
-        "GET",
-        "https://openrouter.ai/api/v1/key",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Accept": "application/json",
-        },
-        timeout_s=timeout_s,
-    )
-    if status != 200 or not isinstance(payload, dict):
-        result = _empty_openrouter_account("NEED_PROBE")
-        result["fetched_at"] = fetched_at
-        result["auth_error"] = err or f"OpenRouter key HTTP {status}"
-        return result
-    data = payload.get("data") if isinstance(payload.get("data"), dict) else payload
-    if not isinstance(data, dict):
-        result = _empty_openrouter_account("NEED_PROBE")
-        result["fetched_at"] = fetched_at
-        result["auth_error"] = "OpenRouter key response unparseable"
-        return result
-    result = {
-        "kind": "prepaid_credits",
-        "probe_state": "ok",
-        "usage_usd": _as_optional_float(data.get("usage")),
-        "usage_daily_usd": _as_optional_float(data.get("usage_daily")),
-        "usage_weekly_usd": _as_optional_float(data.get("usage_weekly")),
-        "usage_monthly_usd": _as_optional_float(data.get("usage_monthly")),
-        "limit_usd": _as_optional_float(data.get("limit")),
-        "limit_remaining_usd": _as_optional_float(data.get("limit_remaining")),
-        "limit_reset": data.get("limit_reset"),
-        "is_free_tier": bool(data.get("is_free_tier")),
-        "account_remaining_usd": None,
-        "fetched_at": fetched_at,
-    }
-    management_key = _load_openrouter_management_api_key()
-    result["balance_probe_state"] = "NEED_PROBE" if management_key else "NEED_KEY"
-    if management_key:
-        credits_status, credits_payload, _ = _http_json_request(
-            "GET",
-            "https://openrouter.ai/api/v1/credits",
-            headers={
-                "Authorization": f"Bearer {management_key}",
-                "Accept": "application/json",
-            },
-            timeout_s=timeout_s,
-        )
-        if credits_status == 200 and isinstance(credits_payload, dict):
-            credits_data = credits_payload.get("data")
-            if not isinstance(credits_data, dict):
-                credits_data = credits_payload
-            if isinstance(credits_data, dict):
-                total = _as_optional_float(credits_data.get("total_credits"))
-                used = _as_optional_float(credits_data.get("total_usage"))
-                if total is not None and used is not None:
-                    result["account_remaining_usd"] = round(total - used, 4)
-                    result["balance_probe_state"] = "ok"
-        if result["balance_probe_state"] != "ok":
-            result["probe_state"] = "NEED_PROBE"
-    return result
+    return _private_api_account("openrouter", timeout_s=timeout_s)
 
 
 def _probe_deepseek_native(*, timeout_s: float) -> dict[str, Any]:
-    fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
-    api_key = _load_deepseek_api_key()
-    if not api_key:
-        return _empty_deepseek_account("NEED_KEY")
-    status, payload, err = _http_json_request(
-        "GET",
-        "https://api.deepseek.com/user/balance",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Accept": "application/json",
-        },
-        timeout_s=timeout_s,
-    )
-    if status != 200 or not isinstance(payload, dict):
-        result = _empty_deepseek_account("NEED_PROBE")
-        result["fetched_at"] = fetched_at
-        result["auth_error"] = err or f"DeepSeek balance HTTP {status}"
-        return result
-    balance_infos = payload.get("balance_infos")
-    rows = balance_infos if isinstance(balance_infos, list) else []
-    usd_row = None
-    fallback_row = None
-    for row in rows:
-        if not isinstance(row, dict):
-            continue
-        if fallback_row is None:
-            fallback_row = row
-        currency = str(row.get("currency") or "").upper()
-        if currency == "USD":
-            usd_row = row
-            break
-    chosen = usd_row or fallback_row
-    result = {
-        "kind": "prepaid_credits",
-        "probe_state": "ok",
-        "local_only": True,
-        "is_available": bool(payload.get("is_available")),
-        "currency": chosen.get("currency") if isinstance(chosen, dict) else None,
-        "total_balance": _as_optional_float(chosen.get("total_balance")) if isinstance(chosen, dict) else None,
-        "granted_balance": _as_optional_float(chosen.get("granted_balance")) if isinstance(chosen, dict) else None,
-        "topped_up_balance": _as_optional_float(chosen.get("topped_up_balance")) if isinstance(chosen, dict) else None,
-        "fetched_at": fetched_at,
-    }
-    return result
+    return _private_api_account("deepseek", timeout_s=timeout_s)
 
 
 _API_ACCOUNT_PROBES = {
@@ -954,7 +608,7 @@ def _probe_api_account_live(provider: str, *, timeout_s: float | None = None) ->
             else _empty_deepseek_account("NEED_PROBE")
         )
         empty["fetched_at"] = datetime.now(UTC).isoformat().replace("+00:00", "Z")
-        empty["auth_error"] = f"API account probe failed: {exc}"
+        empty["auth_error"] = f"API account probe failed: {type(exc).__name__}"
         return empty
 
 
@@ -1068,123 +722,7 @@ def _window_from_used_pct(used_pct: float, *, window_minutes: int, resets_at: st
 
 
 def _probe_claude_native(*, timeout_s: float) -> dict[str, Any]:
-    token = _load_claude_oauth_token()
-    if not token:
-        return _normalize_provider_error(
-            "claude",
-            {"message": "Claude OAuth credentials unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
-        )
-    status, payload, err = _http_json_request(
-        "GET",
-        "https://api.anthropic.com/api/oauth/usage",
-        headers={
-            "Authorization": f"Bearer {token}",
-            "anthropic-beta": "oauth-2025-04-20",
-            "anthropic-version": "2023-06-01",
-        },
-        timeout_s=timeout_s,
-    )
-    if status == 401 or status == 403:
-        return _normalize_provider_error(
-            "claude",
-            {"message": "Claude OAuth token rejected", "kind": "provider", "code": status},
-        )
-    if status != 200 or not isinstance(payload, dict):
-        return _normalize_provider_error(
-            "claude",
-            {
-                "message": "Claude usage request timed out"
-                if status == 0 and "timed out" in (err or "")
-                else f"Claude usage HTTP {status}",
-                "kind": "fetch_error",
-                "code": status or "FETCH_ERROR",
-            },
-        )
-    limits = payload.get("limits") if isinstance(payload.get("limits"), list) else []
-    primary = None
-    weekly = None
-    for item in limits:
-        if not isinstance(item, dict):
-            continue
-        window_type = str(item.get("type") or item.get("window_type") or "").lower()
-        used = next((item[k] for k in ("utilization", "used_percent", "usedPercent") if item.get(k) is not None), None)
-        if used is None and isinstance(item.get("used"), (int, float)):
-            total = item.get("limit") or item.get("total")
-            if isinstance(total, (int, float)) and total:
-                used = float(item["used"]) / float(total) * 100.0
-        if not isinstance(used, (int, float)):
-            continue
-        resets = item.get("resets_at") or item.get("resetsAt")
-        if window_type in {"five_hour", "5h", "primary"} or item.get("window_minutes") == 300:
-            primary = _window_from_used_pct(float(used), window_minutes=300, resets_at=resets)
-        elif window_type in {"seven_day", "weekly", "secondary"} or item.get("window_minutes") == 10080:
-            weekly = _window_from_used_pct(float(used), window_minutes=10080, resets_at=resets)
-    # Anthropic OAuth shape also exposes five_hour / seven_day top-level keys.
-    for key, win_mins in (("five_hour", 300), ("seven_day", 10080)):
-        block = payload.get(key)
-        if isinstance(block, dict) and block.get("utilization") is not None:
-            target = primary if win_mins <= 300 else weekly
-            if target is None:
-                target = _window_from_used_pct(
-                    float(block["utilization"]),
-                    window_minutes=win_mins,
-                    resets_at=block.get("resets_at") or block.get("resetsAt"),
-                )
-                if win_mins <= 300:
-                    primary = target
-                else:
-                    weekly = target
-    fable = None
-    for item in limits:
-        if not isinstance(item, dict) or item.get("kind") != "weekly_scoped" or item.get("group") != "weekly":
-            continue
-        scope = item.get("scope") if isinstance(item.get("scope"), dict) else {}
-        model = scope.get("model") if isinstance(scope.get("model"), dict) else {}
-        if model.get("display_name") != "Fable":
-            continue
-        used = _coerce_float(item.get("percent"))
-        if used is not None:
-            fable = _window_from_used_pct(used, window_minutes=WEEKLY_WINDOW_MINUTES, resets_at=item.get("resets_at"))
-            break
-    usage = {"primary": primary, "secondary": weekly, "fable_weekly": fable}
-    return _normalize_provider_data(
-        "claude",
-        {"provider": "claude", "source": "claude_oauth", "usage": usage},
-    )
-
-
-def _codex_reset_inventory(payload: Any, *, now: datetime | None = None) -> dict[str, Any] | None:
-    """Read CodexBar's GET inventory; discard identifiers and expired credits.
-
-    The provider count alone cannot prove availability after expiry. Malformed
-    inventory stays unknown; an explicit empty inventory is a valid zero.
-    """
-    if not isinstance(payload, dict) or not isinstance(payload.get("credits"), list):
-        return None
-    count = payload.get("available_count")
-    if not isinstance(count, int) or isinstance(count, bool) or count < 0:
-        return None
-    current = now or datetime.now(UTC)
-    expirations = []
-    for credit in payload["credits"]:
-        if not isinstance(credit, dict):
-            return None
-        if not isinstance(credit.get("status"), str):
-            return None
-        if credit.get("status") != "available":
-            continue
-        raw_expiry = credit.get("expires_at")
-        expiry = _parse_resets_at_any(raw_expiry)
-        if raw_expiry is not None and expiry is None:
-            return None
-        if expiry is None or expiry > current:
-            expirations.append(expiry.isoformat().replace("+00:00", "Z") if expiry else None)
-    expirations = sorted(expirations, key=lambda value: value or "9999")
-    return {
-        "available_count": len(expirations),
-        "expires_at": expirations,
-        "fetched_at": current.isoformat().replace("+00:00", "Z"),
-    }
+    return _private_subscription("claude", timeout_s=timeout_s)
 
 
 def _probe_codex_native(*, timeout_s: float, usage_key: str = "codex") -> dict[str, Any]:
@@ -1203,327 +741,15 @@ def _probe_codex_native(*, timeout_s: float, usage_key: str = "codex") -> dict[s
 
 
 def _probe_codex_account(label: str, *, usage_key: str, timeout_s: float) -> dict[str, Any]:
-    if label == DEFAULT_CODEX_ACCOUNT:
-        token = _load_codex_oauth_token()
-    else:
-        try:
-            token = _load_codex_account_oauth_token(label)
-        except CodexAccountRefused as exc:
-            return _normalize_provider_error(
-                usage_key,
-                {"message": f"Codex account {label} unavailable: {exc.code}", "kind": "account_unavailable", "code": exc.code},
-            )
-    if not token:
-        return _normalize_provider_error(
-            usage_key,
-            {"message": "Codex OAuth credentials unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
-        )
-    status, payload, err = _http_json_request(
-        "GET",
-        "https://chatgpt.com/backend-api/wham/usage",
-        headers={"Authorization": f"Bearer {token}"},
-        timeout_s=timeout_s,
-    )
-    if status in {401, 403}:
-        # An expired access token answers 401 until one Codex call on that
-        # account refreshes it; the probe never refreshes (that would rotate the
-        # account's refresh token under a running Codex).
-        return _normalize_provider_error(
-            usage_key,
-            {
-                "message": "Codex OAuth token rejected (expired or revoked); one Codex call on this account refreshes it",
-                "kind": "token_rejected",
-                "code": status,
-            },
-        )
-    if status != 200 or not isinstance(payload, dict):
-        return _normalize_provider_error(
-            usage_key,
-            {
-                "message": "Codex usage request timed out"
-                if status == 0 and "timed out" in (err or "")
-                else f"Codex usage HTTP {status}",
-                "kind": "fetch_error",
-                "code": status or "FETCH_ERROR",
-            },
-        )
-    rate = payload.get("rate_limit") if isinstance(payload.get("rate_limit"), dict) else payload
-    primary = rate.get("primary_window") if isinstance(rate, dict) else None
-    secondary = rate.get("secondary_window") if isinstance(rate, dict) else None
-
-    def _map_win(win: dict[str, Any] | None, *, default_minutes: int) -> dict[str, Any] | None:
-        """Map ChatGPT wham rate windows; honor ``limit_window_seconds`` (CodexBar).
-
-        Live payloads often omit ``window_minutes`` and only send
-        ``limit_window_seconds`` (e.g. 604800 = weekly). Defaulting that to 300
-        mislabels weekly as 5h and hides pace (reset is days out).
-        """
-        if not isinstance(win, dict):
-            return None
-        used = win.get("used_percent") if win.get("used_percent") is not None else win.get("usedPercent")
-        if used is None and isinstance(win.get("used"), (int, float)):
-            limit = win.get("limit")
-            if isinstance(limit, (int, float)) and limit:
-                used = float(win["used"]) / float(limit) * 100.0
-        if not isinstance(used, (int, float)):
-            return None
-        win_mins: int | None = None
-        for key in ("window_minutes", "windowMinutes"):
-            raw = win.get(key)
-            if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
-                win_mins = int(raw)
-                break
-        if win_mins is None:
-            for key in ("limit_window_seconds", "limitWindowSeconds"):
-                raw = win.get(key)
-                if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
-                    win_mins = max(1, int(raw) // 60)
-                    break
-        if win_mins is None:
-            win_mins = default_minutes
-        reset = win.get("reset_at") or win.get("resetsAt") or win.get("resetAt")
-        return _window_from_used_pct(float(used), window_minutes=win_mins, resets_at=reset)
-
-    # CodexBar: primary = session (~5h), secondary = weekly (~7d).
-    primary_mapped = _map_win(primary, default_minutes=300) or _map_win(
-        rate.get("primary") if isinstance(rate, dict) else None, default_minutes=300
-    )
-    secondary_mapped = _map_win(secondary, default_minutes=WEEKLY_WINDOW_MINUTES) or _map_win(
-        rate.get("secondary") if isinstance(rate, dict) else None,
-        default_minutes=WEEKLY_WINDOW_MINUTES,
-    )
-    # When ChatGPT only returns one window, slot it by duration (weekly vs session)
-    # instead of duplicating it as a fake 5h secondary.
-    if primary_mapped is not None and secondary_mapped is None:
-        mins = int(primary_mapped.get("windowMinutes") or 0)
-        if mins > 400:  # longer than a session window → weekly/long
-            secondary_mapped = primary_mapped
-            primary_mapped = None
-    elif secondary_mapped is not None and primary_mapped is None:
-        mins = int(secondary_mapped.get("windowMinutes") or 0)
-        if mins <= 400:
-            primary_mapped = secondary_mapped
-            secondary_mapped = None
-
-    reset_status, reset_payload, _ = _http_json_request(
-        "GET",
-        "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits",
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Accept": "application/json",
-            "OpenAI-Beta": "codex-1",
-            "originator": "Codex Desktop",
-        },
-        timeout_s=timeout_s,
-    )
-    reset_credits = _codex_reset_inventory(reset_payload if reset_status == 200 else None)
-    credits = payload.get("credits") if isinstance(payload.get("credits"), dict) else {}
-    credit_balance = _coerce_float(credits.get("balance"))
-    usage = {"primary": primary_mapped, "secondary": secondary_mapped}
-    if usage["primary"] is None and usage["secondary"] is None:
-        return _normalize_provider_error(
-            usage_key,
-            {
-                "message": "Codex usage payload missing rate windows",
-                "kind": "unparseable_schema",
-                "code": "UNPARSEABLE_SCHEMA",
-            },
-        )
-    return _normalize_provider_data(
-        usage_key,
-        {
-            "provider": "codex",
-            "source": "codex_oauth",
-            "usage": usage,
-            "openaiDashboard": {},
-            "reset_credits": reset_credits,
-            "credit_balance": credit_balance,
-        },
-    )
-
-
-def _kimi_used_and_limit(block: dict[str, Any]) -> tuple[float | None, float | None]:
-    """Coerce Kimi used/limit; derive used from limit - remaining when used absent."""
-    used = _coerce_float(block.get("used"))
-    limit = _coerce_float(block.get("limit"))
-    remaining = _coerce_float(block.get("remaining"))
-    if used is None and limit is not None and remaining is not None:
-        used = limit - remaining
-    return used, limit
-
-
-def _kimi_window_minutes(item: dict[str, Any]) -> int:
-    """Parse limits[].window {duration, timeUnit}; default 300 minutes."""
-    window = item.get("window")
-    if isinstance(window, dict):
-        duration = _coerce_float(window.get("duration") or window.get("number"))
-        unit = str(window.get("timeUnit") or window.get("unit") or "").lower()
-        if duration is not None:
-            if "minute" in unit:
-                return int(duration)
-            if "hour" in unit:
-                return int(duration) * 60
-            if "day" in unit:
-                return int(duration) * 1440
-    return 300
-
-
-def _kimi_usages_request(token: str, *, timeout_s: float) -> tuple[int, Any, str | None]:
-    return _http_json_request(
-        "GET",
-        "https://api.kimi.com/coding/v1/usages",
-        headers={"Authorization": f"Bearer {token}"},
-        timeout_s=timeout_s,
-    )
+    return _private_subscription("codex", usage_key=usage_key, account=label, timeout_s=timeout_s)
 
 
 def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
-    used_env_key = bool(os.environ.get("KIMI_CODE_API_KEY", "").strip())
-    token = _load_kimi_bearer()
-    if not token:
-        return _normalize_provider_error(
-            "kimi",
-            {"message": "Kimi Code credentials unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
-        )
-    status, payload, err = _kimi_usages_request(token, timeout_s=timeout_s)
-    # Access tokens last ~15 min. A still-listed expires_at can still 401;
-    # one refresh-token grant rebinds the bearer the CLI already uses.
-    if status in {401, 403} and not used_env_key:
-        refreshed = _load_kimi_bearer(force_refresh=True)
-        if refreshed and refreshed != token:
-            status, payload, err = _kimi_usages_request(refreshed, timeout_s=timeout_s)
-    if status in {401, 403}:
-        return _normalize_provider_error(
-            "kimi",
-            {"message": "Kimi credential rejected", "kind": "provider", "code": status},
-        )
-    if status != 200 or not isinstance(payload, dict):
-        return _normalize_provider_error(
-            "kimi",
-            {"message": err or f"Kimi usage HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
-        )
-    usage_block = payload.get("usage") if isinstance(payload.get("usage"), dict) else {}
-    limits = payload.get("limits") if isinstance(payload.get("limits"), list) else []
-    weekly_used = None
-    weekly_reset = None
-    if usage_block:
-        used, limit = _kimi_used_and_limit(usage_block)
-        if used is not None and limit is not None and limit:
-            weekly_used = float(used) / float(limit) * 100.0
-        weekly_reset = usage_block.get("resetTime") or usage_block.get("reset_time")
-    primary = None
-    for item in limits:
-        if not isinstance(item, dict):
-            continue
-        detail = item.get("detail") if isinstance(item.get("detail"), dict) else {}
-        used, limit = _kimi_used_and_limit(detail)
-        if used is None or limit is None or not limit:
-            continue
-        primary = _window_from_used_pct(
-            float(used) / float(limit) * 100.0,
-            window_minutes=_kimi_window_minutes(item),
-            resets_at=detail.get("resetTime") or detail.get("reset_time"),
-        )
-        break
-    secondary = (
-        _window_from_used_pct(weekly_used, window_minutes=10080, resets_at=weekly_reset)
-        if weekly_used is not None
-        else None
-    )
-    if primary is None and secondary is None:
-        return _normalize_provider_error(
-            "kimi",
-            {
-                "message": "Kimi usage payload missing rate windows",
-                "kind": "unparseable_schema",
-                "code": "UNPARSEABLE_SCHEMA",
-            },
-        )
-    return _normalize_provider_data(
-        "kimi",
-        {"provider": "kimi", "source": "kimi_code_api", "usage": {"primary": primary, "secondary": secondary}},
-    )
-
-
-def _grok_product_usage(raw: Any) -> list[dict[str, Any]] | None:
-    """Per-product percents from a Grok billing ``productUsage`` list.
-
-    A non-list payload returns ``None`` so the caller leaves the credit window
-    alone. A list always returns a list. Entries without a non-empty string
-    ``product`` are dropped. A missing, non-numeric or out-of-range
-    ``usagePercent`` stays ``None`` (unknown), never 0.
-    """
-    if not isinstance(raw, list):
-        return None
-    products: list[dict[str, Any]] = []
-    for entry in raw:
-        if not isinstance(entry, dict):
-            continue
-        name = entry.get("product")
-        if not isinstance(name, str) or name == "":
-            continue
-        products.append({"product": name, "usage_percent": _public_percent(entry.get("usagePercent"))})
-    return products
+    return _private_subscription("kimi", timeout_s=timeout_s)
 
 
 def _probe_grok_native(*, timeout_s: float) -> dict[str, Any]:
-    token = _load_grok_bearer()
-    if not token:
-        return _normalize_provider_error(
-            "grok",
-            {"message": "Grok OAuth credentials unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
-        )
-    status, payload, err = _http_json_request(
-        "GET",
-        "https://cli-chat-proxy.grok.com/v1/billing?format=credits",
-        headers={
-            "Authorization": f"Bearer {token}",
-            "x-xai-token-auth": "xai-grok-cli",
-            "Accept": "application/json",
-        },
-        timeout_s=timeout_s,
-    )
-    if status in {401, 403}:
-        return _normalize_provider_error(
-            "grok",
-            {"message": "Grok credential rejected", "kind": "provider", "code": status},
-        )
-    if status != 200 or not isinstance(payload, dict):
-        return _normalize_provider_error(
-            "grok",
-            {"message": err or f"Grok billing HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
-        )
-    config = payload.get("config") if isinstance(payload.get("config"), dict) else {}
-    used_pct = config.get("creditUsagePercent")
-    if used_pct is None:
-        on_demand_used = config.get("onDemandUsed")
-        on_demand_cap = config.get("onDemandCap")
-        if isinstance(on_demand_used, dict) and isinstance(on_demand_cap, dict):
-            used_val = on_demand_used.get("val")
-            cap_val = on_demand_cap.get("val")
-            if isinstance(used_val, (int, float)) and isinstance(cap_val, (int, float)) and cap_val:
-                used_pct = float(used_val) / float(cap_val) * 100.0
-    resets_at = None
-    current_period = config.get("currentPeriod")
-    if isinstance(current_period, dict):
-        resets_at = current_period.get("end")
-    if not resets_at:
-        resets_at = config.get("billingPeriodEnd")
-    weekly = (
-        _window_from_used_pct(float(used_pct), window_minutes=10080, resets_at=resets_at)
-        if isinstance(used_pct, (int, float))
-        else None
-    )
-    # Product percents are display-only: attach them after the credit window is
-    # built so the product list cannot change creditUsagePercent's weekly number.
-    result = _normalize_provider_data(
-        "grok",
-        {"provider": "grok", "source": "grok_cli_proxy", "usage": {"secondary": weekly}},
-    )
-    products = _grok_product_usage(config.get("productUsage"))
-    if products is not None:
-        result["product_usage"] = products
-    return result
+    return _private_subscription("grok", timeout_s=timeout_s)
 
 
 def _agy_cli_bin() -> str | None:
@@ -1954,75 +1180,7 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
 
 
 def _probe_glm_native(*, timeout_s: float) -> dict[str, Any]:
-    api_key = _load_glm_api_key()
-    if not api_key:
-        return _normalize_provider_error(
-            "glm",
-            {"message": "GLM/Z.AI API key unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
-        )
-    host = os.environ.get("Z_AI_API_HOST", "api.z.ai").strip() or "api.z.ai"
-    if not host.startswith("http"):
-        host = f"https://{host}"
-    quota_url = os.environ.get("Z_AI_QUOTA_URL", f"{host.rstrip('/')}/api/monitor/usage/quota/limit")
-    status, payload, err = _http_json_request(
-        "GET",
-        quota_url,
-        headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json"},
-        timeout_s=timeout_s,
-    )
-    if status in {401, 403}:
-        return _normalize_provider_error(
-            "glm",
-            {"message": "GLM API key rejected", "kind": "provider", "code": status},
-        )
-    if status != 200 or not isinstance(payload, dict):
-        return _normalize_provider_error(
-            "glm",
-            {"message": err or f"GLM quota HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
-        )
-    data = payload.get("data") if isinstance(payload.get("data"), dict) else payload
-    limits = data.get("limits") if isinstance(data.get("limits"), list) else []
-    token_limits: list[tuple[int, dict[str, Any]]] = []
-    for item in limits:
-        if not isinstance(item, dict) or item.get("type") != "TOKENS_LIMIT":
-            continue
-        unit = str(item.get("unit") or item.get("timeUnit") or "").lower()
-        number = item.get("number") or item.get("duration")
-        minutes = 300
-        if unit in {"minute", "minutes", "time_unit_minute"} and isinstance(number, (int, float)):
-            minutes = int(number)
-        elif unit in {"hour", "hours"} and isinstance(number, (int, float)):
-            minutes = int(number) * 60
-        elif unit in {"day", "days"} and isinstance(number, (int, float)):
-            minutes = int(number) * 1440
-        used = item.get("usedPercent") or item.get("used_percent")
-        if (
-            used is None
-            and isinstance(item.get("usage"), (int, float))
-            and isinstance(item.get("limit"), (int, float))
-            and item["limit"]
-        ):
-            used = float(item["usage"]) / float(item["limit"]) * 100.0
-        if not isinstance(used, (int, float)):
-            continue
-        resets = item.get("nextResetTime") or item.get("next_reset_time")
-        if isinstance(resets, (int, float)) and resets > 10_000_000_000:
-            resets = datetime.fromtimestamp(float(resets) / 1000.0, tz=UTC).isoformat().replace("+00:00", "Z")
-        token_limits.append(
-            (
-                minutes,
-                _window_from_used_pct(
-                    float(used), window_minutes=minutes, resets_at=resets if isinstance(resets, str) else None
-                ),
-            )
-        )
-    token_limits.sort(key=lambda pair: pair[0])
-    primary = token_limits[0][1] if token_limits else None
-    secondary = token_limits[1][1] if len(token_limits) > 1 else None
-    return _normalize_provider_data(
-        "glm",
-        {"provider": "glm", "source": "zai_quota_api", "usage": {"primary": primary, "secondary": secondary}},
-    )
+    return _private_subscription("glm", timeout_s=timeout_s)
 
 
 def _codexbar_bin() -> str | None:
@@ -2497,7 +1655,7 @@ def fetch_provider_usage(provider: str, *, timeout_s: float | None = None) -> di
             _note_agy_quota_failure("fetch_error", "FETCH_ERROR")
         label = _CODEX_LABEL_BY_USAGE_KEY.get(provider)
         # A Codex account row names the exception type only: its text could carry a home path.
-        detail = type(exc).__name__ if label else str(exc)
+        detail = type(exc).__name__
         result = _normalize_provider_error(
             provider,
             {"message": f"Native probe failed: {detail}", "kind": "fetch_error", "code": "FETCH_ERROR"},

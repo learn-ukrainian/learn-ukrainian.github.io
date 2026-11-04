@@ -536,107 +536,17 @@ def format_human(budget: dict[str, Any], *, for_display: bool = False) -> str:
 
 
 def doctor() -> str:
-    """Inspect credential locations only; never load or display credential contents."""
-    home = Path.home()
-    env_names = (
-        "CLAUDE_CODE_OAUTH_TOKEN",
-        "ANTHROPIC_AUTH_TOKEN",
-        "KIMI_CODE_API_KEY",
-        "GROK_OAUTH_TOKEN",
-        "CURSOR_API_KEY",
-        "OPENROUTER_API_KEY",
-        "OPENROUTER_MANAGEMENT_API_KEY",
-        "DEEPSEEK_API_KEY",
-    )
-    paths = [
-        home / ".claude/.credentials.json",
-        Path(os.environ.get("CODEX_HOME", str(home / ".codex"))).expanduser() / "auth.json",
-        home / ".config/codex/auth.json",
-        Path(os.environ.get("GROK_HOME", str(home / ".grok"))).expanduser() / "auth.json",
-        Path(
-            os.environ.get(
-                "KIMI_CODE_CREDENTIALS_PATH",
-                str(
-                    Path(os.environ.get("KIMI_CODE_HOME", str(home / ".kimi-code"))).expanduser()
-                    / "credentials/kimi-code.json"
-                ),
-            )
-        ).expanduser(),
-        home / ".gemini/antigravity-cli/antigravity-oauth-token",
-        home / ".agy/credentials.json",
-        home / ".config/agy/credentials.json",
-        home / ".config/cursor/auth.json",
-        home / ".config/cursor-agent/api.key.env",
-        home / ".local/share/opencode/auth.json",
-    ]
-    for name in (
-        "openrouter.key",
-        "openrouter-management.key",
-        "deepseek.key",
-        "deekseep.key",
-        "zai.key",
-    ):
-        # ~/.secrets is the current host layout; ~/.secret is the legacy path.
-        paths.append(home / ".secrets" / name)
-        paths.append(home / ".secret" / name)
-    lines = ["Credential presence only (does not verify login or balance):"]
-    lines.extend(f"env {name}: {'present' if os.environ.get(name, '').strip() else 'absent'}" for name in env_names)
-    for path in paths:
-        try:
-            present = "present" if path.is_file() else "absent"
-        except OSError:
-            present = "unavailable"
-        label = "~/" + str(path.relative_to(home)) if path.is_relative_to(home) else "configured credential path"
-        lines.append(f"file {label}: {present}")
-    lines.append(
-        "OpenCode management entry: openrouter-management (key); presence of auth.json does not verify its entries."
-    )
-    cursor_auth = home / ".config/cursor/auth.json"
-    cursor_key = home / ".config/cursor-agent/api.key.env"
-    has_session = False
-    if cursor_auth.is_file():
-        try:
-            data = json.loads(cursor_auth.read_text(encoding="utf-8"))
-            tok = data.get("accessToken") if isinstance(data, dict) else None
-            has_session = isinstance(tok, str) and bool(tok.strip())
-        except (OSError, json.JSONDecodeError):
-            has_session = False
-    has_api_key = bool(os.environ.get("CURSOR_API_KEY", "").strip()) or cursor_key.is_file()
-    if has_api_key and not has_session:
-        lines.append(
-            "Cursor tip: CURSOR_API_KEY is present but ~/.config/cursor/auth.json has no accessToken — "
-            "run `agent login` for Auto/API/Grok Bot allotment meters (API key alone cannot call "
-            "GetCurrentPeriodUsage)."
-        )
+    """Report the private inventory's presence-only diagnostics."""
+    from scripts.api.subscription_usage import _private_usage
+
+    module = _private_usage()
+    lines = ["Credential inventory unavailable."] if module is None else module.credential_inventory()
+    lines = list(lines)
     lines.append(
         "Notebook tip: if `usage show --fresh` ImportErrors on learn_ukrainian_v4_runtime, "
         "run `.venv/bin/pip install -e packages/v4-runtime` (Monitor-backed `show` needs no v4)."
     )
-    lines.extend(_codex_account_auth_presence())
     return "\n".join(lines)
-
-
-def _codex_account_auth_presence() -> list[str]:
-    """Presence of each Codex subscription's auth file. No path and no contents.
-
-    Account b's home comes from the private binding. A missing binding is
-    ``unbound``, not account a's file.
-    """
-    from scripts.agent_runtime.codex_accounts import CodexAccountRefused, codex_account_home
-
-    lines: list[str] = []
-    for label, account in (("a", "sub"), ("b", "b-sub")):
-        try:
-            path = codex_account_home(account) / "auth.json"
-        except CodexAccountRefused:
-            lines.append(f"codex account {label} auth.json: unbound")
-            continue
-        try:
-            present = path.is_file()
-        except OSError:
-            present = False
-        lines.append(f"codex account {label} auth.json: {'present' if present else 'absent'}")
-    return lines
 
 
 def qa_snapshot(budget: dict[str, Any]) -> tuple[int, str]:

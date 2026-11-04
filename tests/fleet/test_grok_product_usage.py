@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -16,27 +17,25 @@ CREDIT = 37.5
 _MISSING = object()
 _TOKEN = "probe-token-not-printed"
 _PRODUCTS = [
-    {"product": "builder", "usagePercent": 12.5},
-    {"product": "fast", "usagePercent": 40},
-    {"product": "voice"},
-    {"product": "image", "usagePercent": 101},
+    {"product": "builder", "usage_percent": 12.5},
+    {"product": "fast", "usage_percent": 40.0},
+    {"product": "voice", "usage_percent": None},
+    {"product": "image", "usage_percent": None},
 ]
 
 
-def _payload(product_usage: object) -> dict[str, Any]:
-    config: dict[str, Any] = {"creditUsagePercent": CREDIT}
-    if product_usage is not _MISSING:
-        config["productUsage"] = product_usage
-    return {"config": config}
-
-
 def _probe(monkeypatch: pytest.MonkeyPatch, product_usage: object) -> dict[str, Any]:
-    monkeypatch.setattr(probes, "_load_grok_bearer", lambda: _TOKEN)
-
-    def _request(*_args: Any, **_kwargs: Any) -> tuple[int, dict[str, Any], None]:
-        return 200, _payload(product_usage), None
-
-    monkeypatch.setattr(probes, "_http_json_request", _request)
+    outcome = {
+        "outcome": "data",
+        "record": {
+            "provider": "grok",
+            "source": "grok_cli_proxy",
+            "usage": {"secondary": {"windowMinutes": 10080, "usedPercent": CREDIT, "resetsAt": None}},
+        },
+    }
+    if product_usage is not _MISSING:
+        outcome["product_usage"] = product_usage
+    monkeypatch.setattr(probes, "_private_usage", lambda: SimpleNamespace(probe_subscription=lambda *a, **kw: outcome))
     return probes._probe_grok_native(timeout_s=1)
 
 
@@ -67,26 +66,10 @@ def test_product_list_does_not_change_weekly_credit_line(monkeypatch: pytest.Mon
     assert with_products == baseline
 
 
-@pytest.mark.parametrize("raw", [_MISSING, None, "builder", {"product": "builder"}])
-def test_absent_or_non_list_products_add_no_key(monkeypatch: pytest.MonkeyPatch, raw: object) -> None:
-    record = _probe(monkeypatch, raw)
-
+def test_absent_private_products_add_no_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    record = _probe(monkeypatch, _MISSING)
     assert "product_usage" not in record
     assert record["weekly_used_pct"] == CREDIT
-
-
-def test_entries_without_a_product_name_are_dropped(monkeypatch: pytest.MonkeyPatch) -> None:
-    raw = [
-        {"product": "", "usagePercent": 4},
-        {"usagePercent": 4},
-        "image",
-        None,
-        {"product": "fast", "usagePercent": 3},
-    ]
-
-    record = _probe(monkeypatch, raw)
-
-    assert record["product_usage"] == [{"product": "fast", "usage_percent": 3.0}]
 
 
 def test_show_prints_one_line_per_product_and_no_token(monkeypatch: pytest.MonkeyPatch) -> None:
