@@ -23,14 +23,17 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
     article_path.write_text("# Kyivan Rus\n\nKyiv was a major political center.\n", encoding="utf-8")
 
     monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
-    monkeypatch.setattr("wiki.config.WIKI_DIR", wiki_dir)
-    monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
+    monkeypatch.setattr("scripts.wiki.config.WIKI_DIR", wiki_dir)
     monkeypatch.setattr(
-        "wiki.state.list_wiki_articles",
+        "scripts.wiki.sources.list_discovery_slugs_readonly",
+        lambda track: ["kyivan-rus"] if track == "hist" else [],
+    )
+    monkeypatch.setattr(
+        "scripts.wiki.state.list_wiki_articles",
         lambda: [{"path": "periods/kyivan-rus.md"}],
     )
     monkeypatch.setattr(
-        "wiki.state.load_progress",
+        "scripts.wiki.state.load_progress",
         lambda: {
             "articles": {
                 "periods/kyivan-rus": {
@@ -42,7 +45,7 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
         },
     )
     monkeypatch.setattr(
-        "wiki.sources.gather_discovery_sources_readonly",
+        "scripts.wiki.sources.gather_discovery_sources_readonly",
         lambda track, slug: {
             "literary_chunks": [],
             "textbook_chunks": [{"chunk_id": "text-1"}],
@@ -94,10 +97,10 @@ def test_status_read_only_does_not_generate_discovery_files(tmp_path, monkeypatc
     (plans_dir / "plan-only.yaml").write_text("title: Plan Only\n", encoding="utf-8")
 
     monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
-    monkeypatch.setattr("wiki.sources.CURRICULUM_DIR", curriculum_dir)
-    monkeypatch.setattr("wiki.state.get_status_summary", lambda: {})
-    monkeypatch.setattr("wiki.state.list_wiki_articles", lambda: [])
-    monkeypatch.setattr("wiki.state.load_progress", lambda: {"articles": {}})
+    monkeypatch.setattr("scripts.wiki.sources.CURRICULUM_DIR", curriculum_dir)
+    monkeypatch.setattr("scripts.wiki.state.get_status_summary", lambda: {})
+    monkeypatch.setattr("scripts.wiki.state.list_wiki_articles", lambda: [])
+    monkeypatch.setattr("scripts.wiki.state.load_progress", lambda: {"articles": {}})
 
     response = client.get("/api/wiki/status/hist")
 
