@@ -24,7 +24,15 @@ import pytest
 
 from scripts.opsec import git_push
 from scripts.opsec import prepublish as gate
-from tests.opsec_fixtures import CATALOG, MATCHER, ROOT, TOKEN, make_tooling, synthetic_rules
+from tests.opsec_fixtures import (
+    CATALOG,
+    MATCHER,
+    ROOT,
+    TOKEN,
+    install_override,
+    make_tooling,
+    synthetic_rules,
+)
 
 REAL_GIT = shutil.which("git", path=os.defpath)
 pytestmark = pytest.mark.skipif(REAL_GIT is None, reason="git unavailable")
@@ -776,22 +784,46 @@ def test_clean_hook_runs_the_caller_hook_with_the_same_input_and_no_override(pus
     assert data == (" ".join(record) + "\n").encode() and "LU_OPSEC_OVERRIDE" not in environment
 
 
-def test_clean_push_with_an_override_needs_no_claimant(push_sandbox, monkeypatch, tmp_path):
-    """#9678: a clean push never looks up the command, so a failed lookup cannot refuse it."""
+# An override authority that refuses every flagged write it is offered.
+REFUSING_OVERRIDE = """OVERRIDE = "LU_OPSEC_OVERRIDE"
+class OverrideBlocked(RuntimeError):
+    pass
+def authorize(destination, blocks, reason, log_path):
+    raise OverrideBlocked("OPSEC: synthetic refusal.")
+"""
+
+
+def test_clean_push_with_an_override_never_asks_the_authority(push_sandbox, monkeypatch):
+    """#9678: a clean push never reaches the override authority, so its refusal cannot refuse it."""
     push_sandbox.commit("clean subject")
-    monkeypatch.setattr(gate, "PROC", tmp_path / "no-proc")
+    install_override(push_sandbox.tooling, REFUSING_OVERRIDE)
     status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
     assert status == 0 and len(chained) == 1 and "LU_OPSEC_OVERRIDE" not in chained[0][2]
     assert not (push_sandbox.root / "batch_state/opsec").exists()
 
 
-def test_flagged_push_with_a_failed_claimant_lookup_is_refused(push_sandbox, monkeypatch, capfd, tmp_path):
+def test_flagged_push_refused_by_the_override_authority_is_refused(push_sandbox, monkeypatch, capfd):
     push_sandbox.commit("subject " + TOKEN)
-    monkeypatch.setattr(gate, "PROC", tmp_path / "no-proc")
+    install_override(push_sandbox.tooling, REFUSING_OVERRIDE)
     status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
     err = capfd.readouterr().err
-    assert status == 1 and not chained and "override is unidentifiable; write refused" in err, err
-    assert not (push_sandbox.root / "batch_state/opsec/overrides.jsonl").exists()
+    assert status == 1 and not chained and "OPSEC: synthetic refusal." in err, err
+    assert TOKEN not in err and not (push_sandbox.root / "batch_state/opsec").exists()
+
+
+def test_without_the_override_module_a_flagged_push_is_refused_and_a_clean_one_sent(push_sandbox, monkeypatch, capfd):
+    """No private override module: no override is possible, and the push is still scanned."""
+    (push_sandbox.tooling.parent / "opsec_override/override.py").unlink()
+    flagged = push_sandbox.commit("subject " + TOKEN)
+    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
+    err = capfd.readouterr().err
+    assert status == 1 and not chained, err
+    assert f"field=commit[{flagged[:12]}].message" in err and "override was not admitted" in err, err
+    _git(push_sandbox.work, "reset", "-q", "--hard", "HEAD~1")
+    push_sandbox.commit("clean subject")
+    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
+    assert status == 0 and len(chained) == 1, capfd.readouterr().err
+    assert not (push_sandbox.root / "batch_state/opsec").exists()
 
 
 def test_flagged_push_claims_and_logs_the_override_once(push_sandbox, monkeypatch, capfd):
