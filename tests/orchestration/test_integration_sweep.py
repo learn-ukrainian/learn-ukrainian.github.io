@@ -191,13 +191,20 @@ def test_learner_content_needs_its_ukrainian_seats_without_a_ukrainian_verdict(r
 @pytest.mark.parametrize(
     "paths,learner_content",
     [
+        (["registry/artifacts/classification-v1.meta.json"], False),
+        (["curriculum/l2-uk-en/curriculum_manifest.sha256.json"], False),
+        (["registry/artifacts/classification-v1.meta.json", "curriculum/l2-uk-en/a1/lesson.md"], True),
+        (["curriculum/l2-uk-en/curriculum_manifest.sha256.json", "site/src/content/docs/lesson.mdx"], True),
+        (["registry/artifacts/classification-v1.tsv"], True),
+        (["registry/artifacts/classification-v1.meta.json.bak"], True),
         (["site/src/data/lexicon-manifest.fingerprint.json", "registry/lexicon/atlas-runtime-release.json"], False),
         (["site/src/data/lexicon-manifest.fingerprint.json", "site/src/data/lexicon-search-index.json"], True),
     ],
 )
 def test_metadata_only_manifests_do_not_change_learner_content(paths, learner_content):
-    # #12687: the lexicon fingerprint sidecar holds code paths and digests only; a learner path beside it still counts.
+    """Metadata-only manifests avoid language review; payloads and lookalikes still require it."""
     assert sweep.changes_learner_content(paths) is learner_content
+    assert sweep.requires_ukrainian_behavior_receipt(paths) is learner_content
 
 
 def pr(**updates):

@@ -424,6 +424,13 @@ def pr_file_paths(rows: object) -> list[str]:
 # paths as content.
 METADATA_ONLY_RELEASE_MANIFESTS = frozenset(
     {
+        # Integrity canary: schema version, fixed scope, and file paths with
+        # SHA-256 digests from scripts/audit/curriculum_manifest_canary.py.
+        # No learner-visible text; the manifest only checks artifact integrity.
+        "curriculum/l2-uk-en/curriculum_manifest.sha256.json",
+        # Storage classification sidecar: base and generator Git hashes, table
+        # SHA-256, and row/byte counts per class. No learner-visible text (#12750).
+        "registry/artifacts/classification-v1.meta.json",
         # Schema, digests, counts and membership of already-built Atlas artifacts.
         # No learner-visible Ukrainian text.
         "registry/lexicon/atlas-runtime-release.json",
