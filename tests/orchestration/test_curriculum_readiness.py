@@ -20,14 +20,13 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 BIO_SLUG = "borys-hrinchenko"
 
 
-@pytest.fixture(params=["readiness", "pilot", "watchdog"])
+@pytest.fixture(params=["readiness", "pilot"])
 def gates_importer(request):
-    from scripts.orchestration import curriculum_lifecycle_pilot, sources_watchdog
+    from scripts.orchestration import curriculum_lifecycle_pilot
 
     return {
         "readiness": readiness,
         "pilot": curriculum_lifecycle_pilot,
-        "watchdog": sources_watchdog,
     }[request.param]
 
 
