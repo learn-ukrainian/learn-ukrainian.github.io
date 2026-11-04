@@ -231,8 +231,9 @@ def _live_task_codex_account(task_id: object) -> str | None:
     """Account label on one task file. A bad id is not read."""
     if not isinstance(task_id, str) or not task_id or task_id in {".", ".."} or "/" in task_id or "\\" in task_id:
         return None
-    override = os.environ.get("LU_TASKS_DIR")
-    root = Path(override) if override else Path(__file__).resolve().parents[2] / "batch_state" / "tasks"
+    # The shared store, including a dispatch worktree with LU_TASKS_DIR unset.
+    # A worktree-local batch_state/tasks does not hold the live records.
+    root = default_tasks_dir()
     path = root / f"{task_id}.json"
     try:
         resolved = path.resolve()
