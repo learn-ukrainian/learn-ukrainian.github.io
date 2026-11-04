@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "The tmux driver lanes: one record per lane, read by the context guard (scripts/ops/context_guard.py), the boot relaunch (scripts/ops/lane_relaunch.py) and any keeper through scripts/ops/driver_lanes.py. Launchers are repo-relative; machine-specific wrappers and account selection come from the ignored local config named in docs/runbooks/maintenance-window.md (#10814).",
+  "description": "The tmux driver lanes: one record per lane, read by the context guard (scripts/ops/context_guard.py), the boot relaunch (scripts/ops/lane_relaunch.py) and any keeper through scripts/ops/driver_lanes.py. Launchers are repo-relative. A Codex lane may set account to a loader label (sub for account a, b-sub for account b); a Codex lane with no account is account a (sub). The home directory stays in the ignored local config named in docs/runbooks/maintenance-window.md (#10814).",
   "guard_sender": "claude-cto",
   "claude_handoff_pct": 70,
   "codex_max_compactions": 3,
@@ -49,6 +49,7 @@
       "model": "gpt-6.1-sol",
       "effort": "high",
       "account_env": ["CODEX_HOME"],
+      "account": "sub",
       "path_prepend": ["scripts/agent_runtime/shims"]
     },
     {
@@ -62,6 +63,7 @@
       "model": "gpt-6.1-sol",
       "effort": "high",
       "account_env": ["CODEX_HOME"],
+      "account": "sub",
       "path_prepend": ["scripts/agent_runtime/shims"]
     },
     {
@@ -75,6 +77,7 @@
       "model": "gpt-6.1-sol",
       "effort": "high",
       "account_env": ["CODEX_HOME"],
+      "account": "sub",
       "path_prepend": ["scripts/agent_runtime/shims"]
     },
     {
@@ -102,6 +105,7 @@
       "model": "gpt-6.1-sol",
       "effort": "medium",
       "account_env": ["CODEX_HOME"],
+      "account": "sub",
       "path_prepend": ["scripts/agent_runtime/shims"]
     },
     {

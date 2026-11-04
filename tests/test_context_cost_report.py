@@ -312,6 +312,44 @@ def test_freeze_floor_window_exclusions_and_privacy(tmp_path, capsys):
     assert summary["sessions"] == 0
     assert summary["excluded"]["below_paired_floor"] == 1
 
+    # Default roots follow the accounts loader: account a stays harness codex,
+    # and a bound b-sub is harness codex:b. Neither home is printed.
+    home_dir = tmp_path / "homes"
+    account_a = home_dir / "a"
+    account_b = home_dir / "b"
+    (account_a / ".codex").mkdir(parents=True)
+    account_b.mkdir()
+    account_b.chmod(0o700)
+    accounts = tmp_path / "codex_accounts.json"
+    accounts.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "accounts": {"b-sub": {"codex_home": str(account_b), "budget_usd": 1}},
+            }
+        ),
+        encoding="utf-8",
+    )
+    accounts.chmod(0o600)
+    env = {"HOME": str(account_a), "LU_CODEX_ACCOUNTS_FILE": str(accounts)}
+    both = tmp_path / "both.json"
+    for directory, name in ((account_a / ".codex" / "sessions", "a"), (account_b / "sessions", "b")):
+        directory.mkdir(parents=True)
+        rows = [metadata("codex")]
+        for i in range(20):
+            rows += pair("codex", f"{name}-{i}")
+        transcript(directory, "codex", rows, f"rollout-{name}.jsonl")
+    later = datetime.now(UTC) + timedelta(seconds=2)
+    summary = c.freeze(both, run_start=later, environ=env)
+    assert summary["sessions"] == 2
+    attributed = c.report(both)
+    assert attributed["harnesses"]["codex"]["sessions"] == 1
+    assert attributed["harnesses"]["codex:b"]["sessions"] == 1
+    rendered = json.dumps(attributed)
+    assert str(account_a) not in rendered
+    assert str(account_b) not in rendered
+    assert "codex:b" not in out["harnesses"]
+
 
 @pytest.mark.parametrize("mutation", ["size", "mtime"])
 def test_stale_manifest_never_rescans(tmp_path, mutation):

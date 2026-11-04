@@ -156,7 +156,7 @@ def _runner(db: Path, transcript_by_id: dict[str, Path], *, fail: set[str] | Non
     return run, commands
 
 
-def test_dry_run_observes_old_thread_and_protects_pinned(tmp_path: Path) -> None:
+def test_dry_run_observes_old_thread_and_protects_pinned(tmp_path: Path, capsys, monkeypatch) -> None:
     home = _codex_home(tmp_path / "codex", pinned=[THREAD_B])
     state_dir = tmp_path / "cleanup"
     first = tmp_path / "first.jsonl"
@@ -170,6 +170,30 @@ def test_dry_run_observes_old_thread_and_protects_pinned(tmp_path: Path) -> None
             _row(THREAD_B, second, archived_at=NOW - timedelta(days=90)),
         ],
     )
+
+    account_a = tmp_path / "homes" / "a"
+    account_b = tmp_path / "homes" / "bound-account"
+    (account_a / ".codex").mkdir(parents=True)
+    account_b.mkdir()
+    account_b.chmod(0o700)
+    accounts = tmp_path / "codex_accounts.json"
+    accounts.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "accounts": {"b-sub": {"codex_home": str(account_b), "budget_usd": 1}},
+            }
+        ),
+        encoding="utf-8",
+    )
+    accounts.chmod(0o600)
+    env = {"HOME": str(account_a), "LU_CODEX_ACCOUNTS_FILE": str(accounts)}
+    selected = cleanup.cleanup_homes(environ=env)
+    assert [label for label, _path in selected] == ["sub", "b-sub"]
+    assert selected[0][1] == account_a / ".codex"
+    assert selected[1][1] == account_b
+    explicit = cleanup.cleanup_homes(codex_home=home, environ=env)
+    assert explicit == [(None, home)]
 
     receipt = cleanup.run_cleanup(
         codex_home=home,
@@ -188,6 +212,25 @@ def test_dry_run_observes_old_thread_and_protects_pinned(tmp_path: Path) -> None
     state = json.loads((state_dir / "state-v1.json").read_text(encoding="utf-8"))
     assert list(state["observations"]) == [THREAD_A]
     assert Path(receipt["receipt_path"]).is_file()
+
+    for bound_home in (account_a / ".codex", account_b):
+        transcript = bound_home / "thread.jsonl"
+        transcript.write_bytes(b"x" * 64)
+        _database(
+            bound_home / "state_5.sqlite",
+            [_row(THREAD_A, transcript, archived_at=NOW - timedelta(days=31))],
+        )
+    monkeypatch.setenv("HOME", str(account_a))
+    monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(accounts))
+    monkeypatch.delenv("CODEX_HOME", raising=False)
+    assert cleanup.main([]) == 0
+    published = json.loads(capsys.readouterr().out)
+    published_text = json.dumps(published)
+    assert str(account_a) not in published_text
+    assert str(account_b) not in published_text
+    assert "bound-account" not in published_text
+    assert published["accounts"]["sub"]["protection_errors"] == ["codex_global_state_unavailable"]
+    assert published["accounts"]["b-sub"]["protection_errors"] == ["codex_global_state_unavailable"]
 
 
 def test_second_unchanged_observation_deletes_through_exact_cli(tmp_path: Path) -> None:
