@@ -52,11 +52,6 @@
       "count": 1
     },
     {
-      "path": "scripts/ai_agent_bridge/_db.py",
-      "module": "scripts.migrations.2026-05-06-broker-indexes",
-      "count": 1
-    },
-    {
       "path": "scripts/ai_agent_bridge/_gemini.py",
       "module": "scripts.batch_gemini_config",
       "count": 1

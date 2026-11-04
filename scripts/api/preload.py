@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import sqlite3
 import time
-from importlib import util as importlib_util
 from pathlib import Path
 
 try:
@@ -84,6 +83,7 @@ OPTIONAL_MODULES = [
     "scripts.ai_agent_bridge",
     "scripts.ai_agent_bridge._channels",
     "scripts.ai_agent_bridge._db",
+    "scripts.ai_agent_bridge.broker_indexes",
 ]
 
 DYNAMIC_LOADERS = {
@@ -94,11 +94,6 @@ DYNAMIC_LOADERS = {
             {"func": "import_module", "caller": "list_routing_assignments"},
             {"func": "spec_from_file_location", "caller": "_load_registry_default_models"},
         ],
-    },
-    "scripts.api.comms_router": {
-        "description": "Loads broker migration files dynamically using spec_from_file_location",
-        "strategy": "load_migration",
-        "calls": [{"func": "spec_from_file_location", "caller": "ensure_broker_db_ready"}],
     },
 }
 
@@ -123,28 +118,8 @@ def _walk_adapters_strategy() -> tuple[int, int, list[str]]:
     return pinned, skipped, skipped_names
 
 
-def _load_migration_strategy() -> tuple[int, int, list[str]]:
-    pinned = 0
-    skipped = 0
-    skipped_names = []
-    api_dir = Path(__file__).resolve().parent
-    migration_path = api_dir.parent / "migrations" / "2026-05-06-broker-indexes.py"
-    if migration_path.exists():
-        try:
-            spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
-            if spec is not None and spec.loader is not None:
-                module = importlib_util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-                pinned += 1
-        except Exception:
-            skipped += 1
-            skipped_names.append("broker_indexes_20260506")
-    return pinned, skipped, skipped_names
-
-
 STRATEGIES = {
     "walk_adapters": _walk_adapters_strategy,
-    "load_migration": _load_migration_strategy,
 }
 
 
