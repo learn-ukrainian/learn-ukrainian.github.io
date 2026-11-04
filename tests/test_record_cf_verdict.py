@@ -4186,7 +4186,13 @@ STRUCTURED_PASS = structured_approval("Reviewed the diff. SECURITY_VERDICT: PASS
 ESCAPED_FAIL = structured_approval("SECURITY\\u005fVERDICT: FAIL")
 
 
-@pytest.mark.parametrize("reply", ["VERDICT: APPROVE", STRUCTURED_PASS], ids=["prose", "structured-pass"])
+def envelope(prose):
+    """A canonical review-loop envelope around STRUCTURED_PASS with ``prose`` outside its JSON fence."""
+    return f"VERDICT: APPROVE\nSCORE: 9/10\n\n{prose}\n\n```json\n{STRUCTURED_PASS}\n```"
+
+
+@pytest.mark.parametrize("reply", ["VERDICT: APPROVE", STRUCTURED_PASS, envelope("SECURITY_VERDICT: PASS")],
+                         ids=["prose", "structured-pass", "envelope-pass"])
 def test_owner_request_citing_an_older_approval_admits_its_rounds_and_no_more(monkeypatch, tmp_path, reply):
     tasks, _comments, calls = approval_case(monkeypatch, tmp_path, [*SPENT_THEN_APPROVED[:2], (H3, "APPROVED", reply)])
     write_grant(tasks, APPROVAL_RULING)
@@ -4243,6 +4249,12 @@ def test_owner_request_citing_an_approval_refuses_an_already_approved_head(monke
         ("conditional-pass-escaped", BAD_REPLY),
         ("envelope-prose-fail", BAD_REPLY),
         ("embedded-object-fail-escaped", BAD_REPLY),
+        # Review round 2, F1: no text outside the JSON is dropped, and keys are read too.
+        ("block-quoted-prose-fail", BAD_REPLY),
+        ("indented-prose-fail", BAD_REPLY),
+        ("key-holds-fail", BAD_REPLY),
+        ("array-fail-escaped", BAD_REPLY),
+        ("verdict-across-object", BAD_REPLY),
         ("withheld-unbound", BAD_REPLY),
         ("rejection-with-null-finding", NOT_APPROVE),
         ("approval-with-finding", r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED\[blocker\].*is not an unedited "
@@ -4263,11 +4275,19 @@ def test_owner_request_citing_an_approval_refuses(monkeypatch, tmp_path, case, r
     elif case == "conditional-pass-escaped":
         history[-1] = (H3, "APPROVED", structured_approval("SECURITY\\u005fVERDICT: PASS_WITH_CONDITIONS"))
     elif case == "envelope-prose-fail":
-        history[-1] = (H3, "APPROVED", f"VERDICT: APPROVE\nSCORE: 9/10\nSECURITY_VERDICT: FAIL\n\n```json\n"
-                                       f"{STRUCTURED_PASS}\n```")
+        history[-1] = (H3, "APPROVED", envelope("SECURITY_VERDICT: FAIL"))
     elif case == "embedded-object-fail-escaped":
         # Not a canonical reply: an object inside prose is still decoded.
         history[-1] = (H3, "APPROVED", f"VERDICT: APPROVE\n\n```json\n{ESCAPED_FAIL}\n```")
+    elif case in ("block-quoted-prose-fail", "indented-prose-fail"):
+        prose = "> SECURITY_VERDICT: FAIL" if case == "block-quoted-prose-fail" else "    SECURITY_VERDICT: FAIL"
+        history[-1] = (H3, "APPROVED", envelope(prose))
+    elif case == "key-holds-fail":
+        history[-1] = (H3, "APPROVED", '{"SECURITY_VERDICT: FAIL": "Reviewed."}')
+    elif case == "array-fail-escaped":
+        history[-1] = (H3, "APPROVED", 'VERDICT: APPROVE\n\n["SECURITY\\u005fVERDICT: FAIL"]')
+    elif case == "verdict-across-object":
+        history[-1] = (H3, "APPROVED", 'VERDICT: APPROVE\n\nSECURITY_VERDICT: {"note": "see below"} PASS')
     elif case == "rejection-with-null-finding":
         history[-1] = (H3, "CHANGES_REQUESTED", OPEN_F5)
     tasks, comments, calls = approval_case(monkeypatch, tmp_path, history)
@@ -4289,13 +4309,18 @@ def test_owner_request_citing_an_approval_refuses(monkeypatch, tmp_path, case, r
     assert calls == {"posts": 0, "statuses": 0}
 
 
-@pytest.mark.parametrize("sealed,admitted", [(STRUCTURED_PASS, True), (ESCAPED_FAIL, False)],
-                         ids=["pass", "escaped-fail"])
+@pytest.mark.parametrize(
+    "sealed,admitted",
+    [(STRUCTURED_PASS, True), (envelope("SECURITY_VERDICT: PASS"), True), (ESCAPED_FAIL, False),
+     (envelope("> SECURITY_VERDICT: FAIL"), False)],
+    ids=["pass", "envelope-pass", "escaped-fail", "block-quoted-fail"],
+)
 def test_owner_request_reads_a_withheld_approval_from_its_bound_sealed_run(monkeypatch, tmp_path, sealed, admitted):
     tasks, comments, calls = approval_case(monkeypatch, tmp_path, SPENT_THEN_APPROVED)
     comments[-1]["body"] = recorder.build_comment(
         sha=H3, task_id="round-3", started=WITHHELD_START, verdict="APPROVED", model="claude-opus-5-5",
-        family="anthropic", reply="", withheld_findings=0,
+        # The recorder counts an envelope's findings as unknown, and the marker records that count.
+        family="anthropic", reply="", withheld_findings="unknown" if sealed.startswith("VERDICT:") else 0,
     )
     write_task(tasks, task_id="round-3", reply=sealed, worktree_base_sha=H3, model="claude-opus-5-5", agent="claude",
                started_at=WITHHELD_START, pr=42, review_mode="cross_family",

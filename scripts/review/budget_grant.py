@@ -35,7 +35,7 @@ import argparse
 import hashlib
 import json
 import re
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -652,36 +652,45 @@ def _owner_round(
 
 
 def _security_not_pass(reply: str) -> bool:
-    """Whether a reply declares a security verdict that is not PASS, reading every JSON object's decoded strings.
+    """Whether a reply declares a security verdict that is not PASS, in its text or in any JSON it holds.
 
-    The decoded strings of a JSON object at any brace are read, so a JSON escape cannot hide a verdict
-    and a closing quote cannot spoil a PASS. In a canonical reply (bare JSON, one fenced object or the
-    review-loop envelope) the prose outside the object is read as written; any other reply is also
-    read whole as written, so a PASS inside its JSON may refuse. A repeated key refuses, since the
-    parser keeps only one of its values.
+    Each JSON object or array that decodes at a ``{`` or ``[`` is read as its decoded keys and strings,
+    one at a time, so a JSON escape cannot hide a verdict and a closing quote cannot spoil a PASS. The
+    rest of the reply is read exactly as written, with each decoded span replaced by a character that
+    is neither PASS nor whitespace, so no text is dropped and a verdict cannot run across a span.
+    A repeated key or a value nested too deeply to decode refuses.
     """
-    from scripts.review.review_contract import parse_reviewer_json
-    from scripts.review.verdict_parser import _without_code_fences
-
     decoder = json.JSONDecoder(object_pairs_hook=recorder._unique_keys)
     texts: list[str] = []
-    for match in re.finditer(r"\{", reply):
-        try:
-            value, _ = decoder.raw_decode(reply, match.start())
-        except recorder._DuplicateKey:
-            return True
-        except (ValueError, RecursionError):
+    rest: list[str] = []
+    position = 0
+    for match in re.finditer(r"[{\[]", reply):
+        if match.start() < position:
             continue
-        texts.extend(recorder._strings(value))
-    stripped = reply.strip()
-    try:
-        parse_reviewer_json(reply)
-    except (recorder.ContractError, recorder.ReviewPublicationError, ValueError, RecursionError):
-        texts.append(reply)
-    else:
-        if not stripped.startswith("{"):
-            texts.append(_without_code_fences(stripped, keep_unclosed=False))
-    return any(recorder._security_verdict_blocks(text) for text in texts)
+        try:
+            value, end = decoder.raw_decode(reply, match.start())
+        except (recorder._DuplicateKey, RecursionError):
+            return True
+        except ValueError:
+            continue
+        texts.extend(_decoded_texts(value))
+        rest.append(reply[position:match.start()] + "\N{OBJECT REPLACEMENT CHARACTER}")
+        position = end
+    rest.append(reply[position:])
+    return any(recorder._security_verdict_blocks(text) for text in [*texts, "".join(rest)])
+
+
+def _decoded_texts(value: Any) -> Iterator[str]:
+    """Every decoded key and string in a JSON value."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            yield key
+            yield from _decoded_texts(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _decoded_texts(item)
 
 
 def capability_charge_adjustments(
