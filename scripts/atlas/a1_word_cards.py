@@ -15,6 +15,7 @@ from itertools import pairwise
 from pathlib import Path
 
 from scripts.atlas import word_card_assembly as assembly
+from scripts.atlas import word_card_assertion_check as assertion_check
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_resolver as resolver
 from scripts.atlas import word_card_sources as source_rules
@@ -387,19 +388,28 @@ def build(inventory, base, companion, manifest, sources, pins, register, *, batc
               "receipts": list(receipts.values()), "assertion_receipts": assertion_receipts,
               "accounting": accounting, "rows": rows, "pending_examples": pending,
               "held_units": manifest["held_units"], "inputs_sha256": digest(build_inputs)}
-    verify(result, sources, manifest, batch=batch)
+    verify(result, sources, manifest, batch=batch, register=register, inventory=inventory)
     return result
 
 
-def verify(result, sources, manifest, *, batch=None):
+def verify(result, sources, manifest, *, batch=None, register=None, inventory=None):
     """Check delivered bytes against receipts and conservation, without rebuilding cards."""
     _definition_scopes(manifest)
+    require(digest(sources) == manifest["sources_sha256"], "source_snapshot_drift")
+    if register is None:
+        register = foundation.load_register(ROOT / "docs/sources/permissions-register.yaml")
     version = VERSION if batch is None else batch.version
     selected_count = 19 if batch is None else len(batch.row_card_ids)
     require(len(result["rows"]) == 2144 and len({r["inventory_row_id"] for r in result["rows"]}) == 2144, "row_conservation")
     require(sum(r["state"] == "card_produced" for r in result["rows"]) == selected_count, "row_selection_mismatch")
     require(sorted(c["card_id"] for c in result["cards"]) == manifest["card_ids"], "card_conservation")
     receipts = {r["receipt_id"]: r for r in result["receipts"]}
+    if inventory is None:
+        inventory = load(ROOT / "registry/atlas/a1-v1-inventory.json")
+    require(digest(inventory) == manifest["inventory_sha256"], "inventory_digest_mismatch")
+    row_cards = ({r["id"]: r["mapping"]["pilot"]["card_id"] for r in selected_rows(inventory)}
+                 if batch is None else batch.row_card_ids)
+    entry_ids = {row_cards[r["id"]]: r["mapping"]["entry_id"] for r in inventory["rows"] if r["id"] in row_cards}
     accounts = {(r["card_id"], r["sense_id"], r["field"]): r for r in result["accounting"]}
     require(len(accounts) == len(result["accounting"]), "duplicate_field_accounting")
     claims = [c for c in manifest["claims"] if c["field"] != "stress"]
@@ -426,6 +436,7 @@ def verify(result, sources, manifest, *, batch=None):
     require(sorted(r["receipt"]["receipt_id"] for r in result["pending_examples"]) == sorted(expected_pending),
             "pending_example_mismatch")
     observed = set()
+    decisions = []
     for card in result["cards"]:
         require(card["build"]["card_version"] == resolver.card_version(card), "card_version_mismatch")
         for assertion in card["assertions"]:
@@ -433,6 +444,13 @@ def verify(result, sources, manifest, *, batch=None):
             require(aid in expected and aid not in observed, "unexpected_or_duplicate_assertion")
             observed.add(aid)
             claim, expected_receipt, value, norm, subject, locator = expected[aid]
+            decision = assertion_check.check_assertion(
+                card, assertion, claim, sources, manifest, receipts,
+                result["assertion_receipts"].get(aid), batch=batch, register=register,
+                expected_entry_id=entry_ids[card["card_id"]],
+            )
+            decisions.append(decision)
+            require(decision["status"] != "refused", decision["reason"])
             require(claim["card_id"] == card["card_id"] and assertion["subject"] == subject
                     and assertion["field"] == claim["field"], "assertion_subject_mismatch")
             require(assertion["value"] == value and assertion["value_norm"] == norm,
@@ -448,7 +466,8 @@ def verify(result, sources, manifest, *, batch=None):
                 require(rid in receipts, "receipt_missing")
                 receipt = receipts[rid]
                 verify_receipt(receipt, sources["records"], claim["entry_id"], claim.get("source_sense_key"))
-                require(assertion["source_id"] == receipt["source_id"]
+                source_entry = assertion_check.canonical_source(assertion["source_id"], register)
+                require(source_entry is not None and assertion["source_id"] == source_entry["id"] == receipt["source_id"]
                         and assertion["snapshot_id"] == receipt["snapshot_id"], "assertion_source_mismatch")
         projected = copy.deepcopy(card)
         resolver._recompute(projected)
@@ -472,6 +491,7 @@ def verify(result, sources, manifest, *, batch=None):
         for assertion in card["assertions"]:
             by_field[assertion["field"]].update(result["assertion_receipts"][assertion["assertion_id"]])
     return {"cards": len(result["cards"]), "rows": len(result["rows"]), "receipts": len(receipts),
+            "assertion_decisions": decisions, "assertion_counts": assertion_check.summarize(decisions),
             "fields": dict(Counter(r["state"] for r in result["accounting"])),
             "receipts_per_field": {field: len(by_field[field]) for field in sorted(set(CARD_FIELDS + SENSE_FIELDS))},
             "assertions_per_field": dict(Counter(a["field"] for c in result["cards"] for a in c["assertions"]))}
@@ -539,7 +559,7 @@ Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
         else:
             result = build(inventory, base, companion, manifest, sources, manifest["allocation_pins"],
                            foundation.load_register(ROOT / "docs/sources/permissions-register.yaml"), batch=batch)
-        counts = verify(result, sources, manifest, batch=batch)
+        counts = verify(result, sources, manifest, batch=batch, inventory=inventory)
         if args.check and args.batch == "slice5":
             from scripts.atlas.a1_slice5_inputs import verify_projections
 

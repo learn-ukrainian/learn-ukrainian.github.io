@@ -1230,7 +1230,7 @@ def _paradigm(entry: dict[str, Any]) -> dict[str, Any]:
                 clean_forms[number] = value
         if clean_forms:
             clean_cases[case_key] = clean_forms
-    return {"cases": clean_cases}
+    return {"cases": clean_cases, **{key: paradigm[key] for key in ("gender", "person", "tense") if key in paradigm}}
 
 
 def _vesum_form_preference(tags: str, pos: str | None) -> int:
@@ -1436,12 +1436,23 @@ def _verify_paradigm(
     if not forms:
         return False
     verified = verifier.verify_words(forms, _vesum_pos(pos))
-    for form in forms:
-        matches = verified.get(form, [])
-        if not matches:
+    from scripts.atlas.word_card_assertion_check import requested_slot_matches
+
+    for case_name, case_forms in paradigm["cases"].items():
+        case_key = _paradigm_slot_case_key(case_name)
+        case_en = next((key for key, value in CASE_LABELS_UA.items() if value == case_key), None)
+        if case_en is None:
             return False
-        if not any(_plain(str(match.get("lemma") or "")) == lemma_plain for match in matches):
-            return False
+        for number, form in case_forms.items():
+            if number not in NUMBER_KEYS or not isinstance(form, str):
+                return False
+            request = {"case": CASE_VESUM_TAGS[case_en],
+                       "number": {"singular": "s", "plural": "p"}[number]}
+            request.update({key: paradigm[key] for key in ("gender", "person", "tense") if key in paradigm})
+            if not any(_plain(str(match.get("lemma") or "")) == lemma_plain
+                       and requested_slot_matches(match.get("tags"), request)
+                       for match in verified.get(form, [])):
+                return False
     return True
 
 
@@ -2258,7 +2269,8 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     paradigm = _paradigm(entry)
     if not _verify_paradigm(lemma_plain, pos, paradigm, verifier):
         searched = _paradigm_from_vesum_lemma_search(lemma_plain, pos, verifier)
-        paradigm = searched if _all_paradigm_forms(searched) else {"cases": {}}
+        searched.update({key: paradigm[key] for key in ("gender", "person", "tense") if key in paradigm})
+        paradigm = searched if _verify_paradigm(lemma_plain, pos, searched, verifier) else {"cases": {}}
     lexeme: dict[str, Any] = {
         "lemmaId": _stable_lemma_id(entry),
         "lemma": lemma,
@@ -3688,6 +3700,7 @@ def _all_valid_forms_for_slot(
 def _build_paradigm_items(
     lexeme: dict[str, Any],
     require_vesum: bool = False,
+    verifier: VesumVerifier | None = None,
 ) -> list[dict[str, Any]]:
     """Build case/number MC cards from a lexeme paradigm.
 
@@ -3711,6 +3724,11 @@ def _build_paradigm_items(
         return []
     cases = lexeme.get("paradigm", {}).get("cases")
     if not isinstance(cases, dict):
+        return []
+    if not _verify_paradigm(
+        _plain(str(lexeme.get("lemmaPlain") or lexeme.get("lemma") or "")),
+        lexeme.get("pos"), lexeme["paradigm"], verifier if verifier is not None else RealVesumVerifier(),
+    ):
         return []
     preferred_keys = list(CASE_LABELS_UA.keys()) + list(CASE_LABELS_UA.values())
     ordered_case_names: list[str] = []
@@ -6755,7 +6773,7 @@ def build_practice_shards(
             pos_residuals=pos_residuals,
         )
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
-        paradigm_items = _build_paradigm_items(lexeme)
+        paradigm_items = _build_paradigm_items(lexeme, verifier=verifier)
         mode_by_level[lexeme["cefr"]]["paradigm"].extend(paradigm_items)
 
     with closing(_imperative_connection(verifier)) as imperative_conn:
@@ -8667,12 +8685,12 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         if not synonym_verdicts:
             print("ERROR: synonym verdicts required for --nominate-a2", file=sys.stderr)
             return 1
-        verifier = (
+        nomination_verifier = (
             JsonVesumVerifier.from_path(args.vesum_fixture) if args.vesum_fixture else RealVesumVerifier(args.vesum_db)
         )
         _lexemes_by_entry, all_lexemes, by_plain_lemma, _lexemes_by_id = _select_practice_lexemes(
             entries,
-            verifier,
+            nomination_verifier,
             BuildConfig(target=args.target),
         )
         nominations = nominate_a2_synonym_pairs(entries, synonym_verdicts, all_lexemes, by_plain_lemma)

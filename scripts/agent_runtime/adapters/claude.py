@@ -336,15 +336,17 @@ LABELLED_ACCOUNT_SETTING_SOURCES = "project,local"
 _LABELLED_AUTH_STATUS = {"loggedIn": True, "authMethod": "claude.ai", "apiProvider": "firstParty"}
 # Every key the JSON status may carry for that login. Claude Code adds
 # ``apiKeySource``, ``allowedProviders`` or ``forcedLoginMethod`` only when a
-# key, provider policy or login policy is in force; each refuses.
+# key, provider policy or login policy is in force; each refuses. Since 2.1.318
+# it also reports the date the stored sign-in ends (``loginExpiresAt``).
 _LABELLED_AUTH_STATUS_KEYS = frozenset(
     {*_LABELLED_AUTH_STATUS, "analyticsDisabled", "projectsDirectory", "configDirectory"}
-    | {"email", "orgId", "orgName", "subscriptionType"}
+    | {"email", "orgId", "orgName", "subscriptionType", "loginExpiresAt"}
 )
-# Every line label the text status may print for that login. It prints a line
-# for each endpoint, proxy, certificate, token, key or provider override in
-# effect (JSON reports none of those), so any other line refuses.
-_LABELLED_STATUS_TEXT_LABELS = frozenset({"Login method", "Organization", "Email"})
+# Every line label the text status may print for that login, including the
+# sign-in end date (2.1.318). It prints a line for each endpoint, proxy,
+# certificate, token, key or provider override in effect (JSON reports none of
+# those), so any other line refuses.
+_LABELLED_STATUS_TEXT_LABELS = frozenset({"Login method", "Organization", "Email", "Sign-in ends"})
 # An API-key label's run (C-2643): the key helper from its bound settings file and nothing else.
 # Claude Code 2.1.312 reports exactly these keys and the one text line below for it.
 _API_KEY_AUTH_STATUS = {

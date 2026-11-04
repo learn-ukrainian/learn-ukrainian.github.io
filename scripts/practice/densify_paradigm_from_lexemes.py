@@ -19,8 +19,12 @@ if str(ROOT) not in sys.path:
 
 from scripts.audit.generate_practice_deck import (
     DRILL_MODES,
+    RealVesumVerifier,
+    VesumVerifier,
     _build_paradigm_items,
     _json_bytes,
+    _plain,
+    _verify_paradigm,
 )
 
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
@@ -34,7 +38,8 @@ def _load(path: Path) -> dict[str, Any]:
     return payload
 
 
-def densify_level(practice_dir: Path, level: str) -> dict[str, int]:
+def densify_level(practice_dir: Path, level: str, verifier: VesumVerifier | None = None) -> dict[str, int]:
+    verifier = verifier if verifier is not None else RealVesumVerifier()
     lexemes_path = practice_dir / f"practice-lexemes.{level}.json"
     paradigm_path = practice_dir / f"practice-paradigm.{level}.json"
     index_path = practice_dir / f"practice-index.{level}.json"
@@ -55,7 +60,13 @@ def densify_level(practice_dir: Path, level: str) -> dict[str, int]:
     for lexeme in lexemes:
         if not isinstance(lexeme, dict):
             continue
-        items = _build_paradigm_items(lexeme)
+        paradigm = lexeme.get("paradigm") or {}
+        if paradigm.get("cases") and not _verify_paradigm(
+            _plain(str(lexeme.get("lemmaPlain") or lexeme.get("lemma") or "")),
+            lexeme.get("pos"), paradigm, verifier,
+        ):
+            raise ValueError("unverified_requested_paradigm_slot:" + str(lexeme.get("lemmaId", "")))
+        items = _build_paradigm_items(lexeme, verifier=verifier)
         if not items:
             continue
         lemma_id = str(lexeme.get("lemmaId") or "").strip()

@@ -151,6 +151,10 @@ def project_budget(raw: Mapping[str, Any], *, now: datetime | None = None) -> di
     for lane in state_router.SUBSCRIPTION_LANES:
         info = agents.get(lane)
         rows.append(_subscription(lane, info if isinstance(info, Mapping) else {}, now=moment))
+    # ``codex`` above is account a. Account b is its own row when the budget published one.
+    accounts = raw.get("codex_accounts")
+    if isinstance(accounts, Mapping) and isinstance(accounts.get("codex:b"), Mapping):
+        rows.append(_subscription("codex:b", accounts["codex:b"], now=moment))
     return {"subscriptions": rows}
 
 

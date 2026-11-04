@@ -26,7 +26,7 @@ import urllib.request
 from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -34,16 +34,20 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 try:
     from scripts.fleet.reset_reserve import (
         codex_is_threatened,
+        codex_reserve_account,
         codex_reset_reserve_eligible,
         effective_reset_reserve,
         load_reset_reserve,
+        unavailable_reserve,
     )
 except ImportError:  # pragma: no cover - script path fallback
     from reset_reserve import (  # type: ignore
         codex_is_threatened,
+        codex_reserve_account,
         codex_reset_reserve_eligible,
         effective_reset_reserve,
         load_reset_reserve,
+        unavailable_reserve,
     )
 
 try:
@@ -80,6 +84,7 @@ _COOL_STATUSES = frozenset({"cool", "warm", "idle"})
 # affects stable table/tie-break display among AVOID rows.
 _CODE_LANE_PRIORITY = {
     "codex": 0,
+    "codex:b": 0,
     "claude": 1,
     "cursor": 2,
     "grok": 3,
@@ -222,6 +227,27 @@ def _mirror_retired_quota(agents: dict[str, Any], lane: str, info: dict[str, Any
     return info, None
 
 
+def _live_task_codex_account(task_id: object) -> str | None:
+    """Account label on one task file. A bad id is not read."""
+    if not isinstance(task_id, str) or not task_id or task_id in {".", ".."} or "/" in task_id or "\\" in task_id:
+        return None
+    # The shared store, including a dispatch worktree with LU_TASKS_DIR unset.
+    # A worktree-local batch_state/tasks does not hold the live records.
+    root = default_tasks_dir()
+    path = root / f"{task_id}.json"
+    try:
+        resolved = path.resolve()
+        if resolved.parent != root.resolve() or not resolved.is_file():
+            return None
+        payload = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    account = payload.get("codex_account")
+    return account if isinstance(account, str) else None
+
+
 def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int] | None:
     """Read /api/delegate/active → agent → count; None when it cannot be read (load unknown, not zero)."""
     url = f"{_monitor_base()}/api/delegate/active"
@@ -238,6 +264,14 @@ def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int] | None:
             continue
         agent = str(task.get("agent") or "").strip().lower()
         if not agent:
+            continue
+        # The live summary often omits the account. The task file is the same
+        # source the budget uses, and a b-sub task must not fill account a.
+        account = task.get("codex_account")
+        if not isinstance(account, str):
+            account = _live_task_codex_account(task.get("task_id"))
+        if agent == "codex" and account in {"b-sub", "b", "codex:b"}:
+            counts["codex:b"] = counts.get("codex:b", 0) + 1
             continue
         counts[agent] = counts.get(agent, 0) + 1
     return counts
@@ -292,16 +326,34 @@ def build_lane_rows(
     ``in_flight`` is None when no active-work observation exists.
     """
     agents = credit_lane.shared_usage_agents(budget.get("agents") if isinstance(budget.get("agents"), dict) else {})
-    reserve = (
-        reset_reserve
-        if reset_reserve is not None
-        else load_reset_reserve(Path(__file__).resolve().parents[2], codex_info=agents.get("codex"))
-    )
-    reserve = effective_reset_reserve(reserve, agents.get("codex"))
+    raw_accounts = budget.get("codex_accounts")
+    accounts = cast(dict[str, Any], raw_accounts) if isinstance(raw_accounts, dict) else {}
+    lane_list = list(lanes)
+    if "codex:b" not in lane_list and isinstance(accounts.get("codex:b"), dict):
+        insert_at = lane_list.index("codex") + 1 if "codex" in lane_list else len(lane_list)
+        lane_list.insert(insert_at, "codex:b")
+    reserve_root = Path(__file__).resolve().parents[2]
+
+    def _account_reserve(label: str, info: dict[str, Any]) -> dict[str, Any]:
+        """The reserve that names this account. The other account's assertion does not apply."""
+        tagged = {**info, "codex_account": info.get("codex_account") or label}
+        supplied = (
+            reset_reserve
+            if reset_reserve is not None
+            else load_reset_reserve(reserve_root, codex_info=tagged, account=label)
+        )
+        if codex_reserve_account(supplied) != label:
+            return unavailable_reserve()
+        bounded = effective_reset_reserve({**supplied, "codex_account": label}, tagged)
+        # Account a's public result has no label. Keep b's label on this copy.
+        if bounded.get("available") is True:
+            bounded = {**bounded, "codex_account": label}
+        return bounded
+
     diagnostics = budget.get("diagnostics") if isinstance(budget.get("diagnostics"), dict) else {}
     snapshot_stale = bool(diagnostics.get("stale"))
     rows: list[dict[str, Any]] = []
-    for lane in lanes:
+    for lane in lane_list:
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
         quota_source: str | None = None
         if lane == "deepseek":
@@ -323,17 +375,26 @@ def build_lane_rows(
                 info["eligible"] = False
         else:
             info, quota_source = _mirror_retired_quota(agents, lane, info)
+        if lane == "codex:b":
+            picked: Any | None | dict[Any, Any] = accounts.get("codex:b")
+            info = picked if isinstance(picked, dict) else info
+            quota_source = None
         if budget.get("transport") == "acp" and info.get("eligible") is not True:
             info = {**info, "eligible": False}
         facts = credit_lane.routing_facts(
             lane, info, model=None, snapshot_metadata=diagnostics, policy=credit_policy, now=now
         )
         retired_target = RETIRED_AGENT_ALIASES.get(lane)
+        lane_reserve = (
+            _account_reserve("b-sub" if lane == "codex:b" else "sub", cast(dict[str, Any], info))
+            if lane in {"codex", "codex:b"}
+            else unavailable_reserve()
+        )
         reserve_relaxes = (
-            lane == "codex"
+            lane in {"codex", "codex:b"}
             and codex_is_threatened(info)
             and codex_reset_reserve_eligible(
-                reserve, info, owner_capacity=facts.capacity, snapshot_stale=snapshot_stale
+                lane_reserve, info, owner_capacity=facts.capacity, snapshot_stale=snapshot_stale
             )
         )
         credit = facts.credit
@@ -352,11 +413,17 @@ def build_lane_rows(
         # The reserve needs the owner's verified capacity (#9740), so it only ranks Codex first and
         # never lifts an AVOID.
         retired_default = lane == "kimi" and is_avoid_lane(info, lane=lane, facts=facts)
-        avoid = retired_default or ((bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes)
+        avoid = retired_default or (
+            (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes
+        )
         if avoid:
             capacity = {
                 "state": credit_lane.CAPACITY_AVOID,
-                "reason": "catalog-retired default model" if retired_default else f"retired→{retired_target}" if retired_target else facts.capacity_reason,
+                "reason": "catalog-retired default model"
+                if retired_default
+                else f"retired→{retired_target}"
+                if retired_target
+                else facts.capacity_reason,
             }
         elif retired_target is None and facts.capacity == credit_lane.CAPACITY_AVOID and credit_relaxes:
             capacity = {"state": credit_lane.CAPACITY_VERIFIED, "reason": facts.capacity_reason}
@@ -379,12 +446,12 @@ def build_lane_rows(
         # still requires the separately asserted operator reserve above.
         # An unreadable policy cannot supply inventory freshness bounds, so
         # policy_error deliberately suppresses this informational note too.
-        if lane == "codex" and codex_is_threatened(info):
+        if lane in {"codex", "codex:b"} and codex_is_threatened(info):
             available = (credit.get("reset_advice") or {}).get("free_resets_available")
             if isinstance(available, int) and available > 0:
                 notes.append(f"free full reset available ({available}; operator decision)")
         if reserve_relaxes:
-            notes.append(f"reset reserve eligible ({reserve.get('remaining_resets')} remaining)")
+            notes.append(f"reset reserve eligible ({lane_reserve.get('remaining_resets')} remaining)")
         if stale_advisory:
             notes.append(facts.capacity_reason)
         if facts.health == credit_lane.UNKNOWN:
@@ -666,10 +733,14 @@ def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
     for row in rows:
         lane = str(row["lane"])
         pool = usage_pool_for_seat(lane, catalog)
-        if not row.get("avoid") and pool not in seen and (
-            row.get("status") in _COOL_STATUSES
-            or row.get("reset_reserve_eligible")
-            or row.get("status") == credit_lane.CREDIT_BALANCE_PRESENT
+        if (
+            not row.get("avoid")
+            and pool not in seen
+            and (
+                row.get("status") in _COOL_STATUSES
+                or row.get("reset_reserve_eligible")
+                or row.get("status") == credit_lane.CREDIT_BALANCE_PRESENT
+            )
         ):
             cooler.append(lane)
             seen.add(pool)

@@ -28,6 +28,7 @@ from fastapi.responses import JSONResponse
 
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api import config
+from scripts.api.atlas_jobs_router import monitor_jobs
 from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
@@ -46,7 +47,6 @@ from scripts.api.project_state_store import (
     any_lane_under_weekly_pace,
     get_freshest_lane_usage,
 )
-from scripts.lexicon.runner import atlas_job
 
 router = APIRouter(tags=["occupancy"])
 
@@ -176,7 +176,7 @@ def _in_process_load_run_root() -> Path:
 
     The API systemd unit does not set ``ATLAS_RUN_ROOT``. ``collect_host_load``
     only uses the path for local disk_usage, so the Monitor checkout is a safe
-    checkout-mode default — never call ``atlas_job._run_root()`` here.
+    checkout-mode default — never call ``monitor_jobs._run_root()`` here.
     """
     override = os.environ.get("ATLAS_RUN_ROOT", "").strip()
     if override:
@@ -188,7 +188,7 @@ def _in_process_api_host_load(*, now: datetime | None = None) -> dict[str, Any]:
     """Collect load for the empty-map production Linux glance row (no SSH)."""
     clock = now or datetime.now(UTC)
     try:
-        metrics = atlas_job.collect_host_load(run_root=_in_process_load_run_root())
+        metrics = monitor_jobs.collect_host_load(run_root=_in_process_load_run_root())
     except Exception:
         return _unavailable_load_entry(now=clock)
     if not isinstance(metrics, dict):
@@ -248,7 +248,7 @@ def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
         if not item or "=" not in item:
             continue
         canonical_raw, opaque_raw = item.split("=", 1)
-        canonical = atlas_job._canonical_host(canonical_raw.strip())
+        canonical = monitor_jobs._canonical_host(canonical_raw.strip())
         opaque = opaque_raw.strip().lower()
         if not _opaque_host_id(opaque):
             continue
@@ -278,13 +278,13 @@ def _read_occupants_from_registry(
     occupants: list[dict[str, str | None]] = []
     seen: set[tuple[str, str, str]] = set()
     try:
-        rows = atlas_job.list_registry()
+        rows = monitor_jobs.list_registry()
     except Exception:
         return [], False
     for row in rows:
         if not isinstance(row, dict):
             continue
-        if atlas_job._canonical_host(row.get("host")) != canonical:
+        if monitor_jobs._canonical_host(row.get("host")) != canonical:
             continue
         state = str(row.get("state") or "")
         if state not in {"running", "queued", "submitted", "needs_finalize"}:

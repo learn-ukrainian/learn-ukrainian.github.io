@@ -276,7 +276,9 @@ def plan_remaining_pct(info: Mapping[str, Any] | None) -> float | None:
 
 
 def shared_usage_agents(
-    agents: Mapping[str, Any], *, catalog: Mapping[str, Any] | None = None,
+    agents: Mapping[str, Any],
+    *,
+    catalog: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Read each catalogued usage pool once, retaining each transport's health.
 
@@ -290,15 +292,21 @@ def shared_usage_agents(
     source_catalog = catalog if catalog is not None else load_model_catalog()
     result = dict(agents)
     meter_fields = (
-        "codexbar", "pace", "freshness", "age_s", "stale", "fetched_at",
-        "resets_at", "burn_pct_7d", "status_source",
+        "codexbar",
+        "pace",
+        "freshness",
+        "age_s",
+        "stale",
+        "fetched_at",
+        "resets_at",
+        "burn_pct_7d",
+        "status_source",
     )
     for pool in source_catalog.get("usage_pools", {}).values():
         observed = [
             (remaining, seat, record)
             for seat in pool["seats"]
-            if isinstance(record := agents.get(seat), Mapping)
-            and (remaining := plan_remaining_pct(record)) is not None
+            if isinstance(record := agents.get(seat), Mapping) and (remaining := plan_remaining_pct(record)) is not None
         ]
         if not observed:
             continue
@@ -316,9 +324,19 @@ def shared_usage_agents(
             # A route's runtime block is not a usage-pool block.
             own_runtime = own.get("runtime") if isinstance(own.get("runtime"), Mapping) else {}
             meter_runtime = meter.get("runtime") if isinstance(meter.get("runtime"), Mapping) else {}
-            if own.get("status") in {None, "unknown", "cool", "warm", "idle", "near_cap", "hot"} and not own_runtime.get("headroom_blocked"):
+            if own.get("status") in {
+                None,
+                "unknown",
+                "cool",
+                "warm",
+                "idle",
+                "near_cap",
+                "hot",
+            } and not own_runtime.get("headroom_blocked"):
                 meter_status = meter.get("status")
-                if meter_status not in {"cool", "warm", "idle", "near_cap", "hot"} or meter_runtime.get("headroom_blocked"):
+                if meter_status not in {"cool", "warm", "idle", "near_cap", "hot"} or meter_runtime.get(
+                    "headroom_blocked"
+                ):
                     meter_status = allowance_status(remaining)
                 merged["status"] = meter_status
             if seat not in agents and merged.get("status") not in {"hot", "near_cap"}:
@@ -446,6 +464,20 @@ def _fresh_probe(info: dict[str, Any], policy: CreditPolicy, *, snapshot_stale: 
     return state == FRESH, reason
 
 
+def _rate_limit_subject(lane: str) -> tuple[str, str | None]:
+    """Runtime agent and, for Codex, the account whose rate limits count.
+
+    ``codex`` and ``codex:a`` are account a (``sub``). ``codex:b`` is account b.
+    A limit on one account is not evidence about the other.
+    """
+    key = lane.strip().lower()
+    if key in {"codex", "codex:a"}:
+        return "codex", "sub"
+    if key == "codex:b":
+        return "codex", "b-sub"
+    return lane, None
+
+
 def read_recent_rate_limits(
     lane: str, window_s: float, *, now: datetime | None = None, usage_dir: Path | None = None
 ) -> dict[str, Any]:
@@ -454,12 +486,17 @@ def read_recent_rate_limits(
     ``usage_dir`` defaults to the shared runtime usage directory. ``unreadable``
     counts relevant records that could not be read (see
     ``summarize_lane_runtime``); a count of 0 with ``unreadable["total"] > 0``
-    is not "no rate limits".
+    is not "no rate limits". Codex lanes read only that account's records.
     """
     from scripts.agent_runtime.usage import summarize_lane_runtime
 
+    agent, account = _rate_limit_subject(lane)
     summary = summarize_lane_runtime(
-        lane, window_s=window_s, usage_dir=usage_dir, now=now.timestamp() if now is not None else None
+        agent,
+        window_s=window_s,
+        usage_dir=usage_dir,
+        now=now.timestamp() if now is not None else None,
+        **({} if account is None else {"codex_account": account}),
     )
     return {
         "count": int(summary["rate_limited"]),
@@ -702,7 +739,12 @@ def pace_deficit_state(
             return result
         if raw is not False or will_last is not False:
             return result
-    if raw is True and status in {"cool", "warm", "hot"} and remaining is not None and remaining > _NEAR_CAP_REMAINING_PCT:
+    if (
+        raw is True
+        and status in {"cool", "warm", "hot"}
+        and remaining is not None
+        and remaining > _NEAR_CAP_REMAINING_PCT
+    ):
         result["status"] = "hot"
     if not lane.strip():
         return {**result, "reason": result["reason"] + ": lane identity missing"}

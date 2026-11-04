@@ -25,12 +25,12 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import parse_timestamp
 from scripts.api import config
+from scripts.api.atlas_jobs_router import monitor_jobs
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.occupancy_sanitize import producer_identity
 from scripts.api.occupancy_sanitize import safe_field as _safe_field
 from scripts.api.repository_authority import preparation_data_root
-from scripts.lexicon.runner import atlas_job
 
 ENV_DRIVER_HOST_ID = "MONITOR_OCCUPANCY_DRIVER_HOST_ID"
 ENV_MARKERS = "MONITOR_OCCUPANCY_MARKERS"
@@ -75,7 +75,7 @@ def self_host_opaque_ids(mapping: dict[str, str]) -> set[str]:
     """Opaque ids whose canonical token is this process (no remote guess)."""
     claimed: set[str] = set()
     for canonical, opaque in mapping.items():
-        if atlas_job.is_self_host(canonical) and _opaque_host_id(opaque):
+        if monitor_jobs.is_self_host(canonical) and _opaque_host_id(opaque):
             claimed.add(opaque)
     return claimed
 
