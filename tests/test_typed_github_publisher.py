@@ -1597,6 +1597,8 @@ class FakeTransferGitHub:
         self.failing_reads = set()
         self.failing_label_reads = set()
         self.after_mutation = None
+        self.redirect_lag = 0
+        self.stale = None
 
     def reply(self, args, code, document):
         return subprocess.CompletedProcess(args, code, json.dumps(document) if code == 0 else "", "" if code == 0 else "gh: failed")
@@ -1634,11 +1636,16 @@ class FakeTransferGitHub:
             key = (match[1], int(match[2]))
             if key in self.failing_reads:
                 return self.reply(args, 1, None)
-            key = self.redirects.get(key, key)
-            issue = self.issues.get(key)
-            if issue is None:
-                return self.reply(args, 1, None)
-            repository, number = key
+            if self.stale and key == self.stale[0] and self.redirect_lag > 0:
+                # GitHub can still serve the pre-transfer issue right after the mutation.
+                self.redirect_lag -= 1
+                issue, (repository, number) = self.stale[1], key
+            else:
+                key = self.redirects.get(key, key)
+                issue = self.issues.get(key)
+                if issue is None:
+                    return self.reply(args, 1, None)
+                repository, number = key
             document = {
                 "number": number, "node_id": issue["node_id"], "state": issue["state"],
                 "html_url": f"https://github.com/{repository}/{'pull' if issue.get('pull') else 'issues'}/{number}",
@@ -1657,6 +1664,7 @@ class FakeTransferGitHub:
         source = next(key for key, issue in self.issues.items() if issue["node_id"] == variables["issue"])
         target = next(name for name, row in self.repositories.items() if row["id"] == variables["repository"])
         moved = self.issues.pop(source)
+        self.stale = (source, dict(moved))
         kept = [label for label in moved["labels"] if label in self.repositories[target]["labels"]]
         self.issues[(target, 42)] = {"node_id": "I_MOVED", "state": moved["state"], "labels": kept}
         self.redirects[source] = (target, 42)
@@ -1678,6 +1686,8 @@ def transfer(monkeypatch, tmp_path):
 
     monkeypatch.setattr(pub, "_anonymous_probe", probe)
     fake = FakeTransferGitHub()
+    fake.sleeps = []
+    monkeypatch.setattr(pub, "_transfer_sleep", fake.sleeps.append)
     fake.probes, fake.receipts = probes, tmp_path / "receipts"
 
     def run(**fields):
@@ -1954,3 +1964,19 @@ def test_issue_transfer_receipt_is_created_in_the_checked_directory(transfer, tm
         pub.publish("issue-transfer", repo="public", number=7, destination="infra-private",
                     receipt_dir=str(link / "receipts"), runner=lambda *a, **k: pytest.fail("read or write"))
     assert not list((checkout / "receipts").iterdir()) and not list((outside / "receipts").iterdir())
+
+
+@pytest.mark.parametrize("lag,code", [(3, 0), (len(pub.TRANSFER_VERIFY_DELAYS), 3)])
+def test_issue_transfer_verification_waits_out_a_lagging_redirect_without_a_second_mutation(transfer, lag, code):
+    transfer.redirect_lag = lag
+    outcome = transfer.run()
+    receipt = json.loads(outcome.stdout)
+    assert outcome.returncode == code and len(transfer.mutations) == 1
+    reads = min(lag + 1, len(pub.TRANSFER_VERIFY_DELAYS))
+    assert receipt["verification_reads"] == reads and transfer.sleeps == list(pub.TRANSFER_VERIFY_DELAYS[:reads])
+    if code == 0:
+        assert receipt["outcome"] == "transferred" and receipt["labels"]["dropped"] == ["triage"]
+    else:
+        assert receipt["outcome"] == "unverified"
+        assert receipt["detail"] == "the source URL does not resolve to the returned issue"
+        assert sum(transfer.sleeps) == 60
