@@ -1,9 +1,10 @@
 """Checkout views whose rules directory carries a chosen rules core, or none.
 
-The rules core is read from the checkout the code runs from (``scripts/lib/rules_core.py``);
-nothing in the environment can point it elsewhere, and a missing core refuses every
-launch, dispatch and ask. A launcher test that needs a different core therefore runs the
-launcher from a different checkout: a view.
+The rules core is read from the rules directory of the checkout the code runs from
+(``scripts/lib/rules_core.py``) unless the machinery roots configuration names another one
+(``LEARN_UKRAINIAN_RULES_DIR``, ``scripts/common/repo_root.py``), and a missing core refuses
+every launch, dispatch and ask. A launcher test that needs a different core and leaves the
+configuration unset therefore runs the launcher from a different checkout: a view.
 
 Every entry of the real checkout is a symlink in the view, except the paths named in
 ``overrides``: a file linked to another file, written from text, or left out. The view is

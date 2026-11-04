@@ -29,7 +29,10 @@ on ``/api/state/manifest`` and only refetch when rules actually change.
 Source of truth is the Claude extensions rule directory — `.claude/rules/`,
 `.agent/rules/`, and `.gemini/rules/` are deployed copies
 (``npm run agents:deploy``). We read the source so a fresh checkout
-(or a worktree that hasn't deployed) still gets the current rules.
+(or a worktree that hasn't deployed) still gets the current rules. Every scope,
+``full`` included, reads a rules-directory source from the machinery rules root
+(``LEARN_UKRAINIAN_RULES_DIR``, via ``rules_core.source_path``) and any other
+source from the checkout.
 """
 
 from __future__ import annotations
@@ -109,11 +112,10 @@ _FILE_SEP = "\n\n---\n\n"
 
 def _read_rule_files(project_root: Path) -> tuple[list[str], list[str]]:
     """Return (present_paths, file_contents) for every file that exists."""
-    root = project_root
     present_paths: list[str] = []
     contents: list[str] = []
     for rel in RULE_SOURCES:
-        path = root / rel
+        path = rules_core.source_path(rel, project_root)
         if not path.exists() or not path.is_file():
             continue
         try:
