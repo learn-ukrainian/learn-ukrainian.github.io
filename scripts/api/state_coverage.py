@@ -21,6 +21,7 @@ from . import config
 from .config import LEVELS, SEMINAR_TRACK_IDS
 from .state_helpers import (
     PROFILE_MAP,
+    V6_PHASE_LABELS,
     detect_pipeline_version,
     find_content_file,
     get_audit_status,
@@ -31,38 +32,13 @@ from .state_helpers import (
     load_module_state,
     parse_phase_status_from_state,
 )
+from .state_helpers import V6_PHASE_ORDER as V6_PHASES
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from research_quality import assess_research_compat, find_research_path
 
 from .review_parsing import count_review_issues, extract_plan_verdict, extract_review_score, extract_review_verdict
-
-# Import canonical phase list from pipeline
-try:
-    from scripts.build.phase_constants import PHASE_LABELS as V6_PHASE_LABELS
-    from scripts.build.phase_constants import PHASES as V6_PHASES
-except ImportError:
-    V6_PHASES = [
-        "check",
-        "research",
-        "skeleton",
-        "pre-verify",
-        "write",
-        "exercises",
-        "activities",
-        "repair",
-        "verify-exercises",
-        "annotate",
-        "vocab",
-        "enrich",
-        "verify",
-        "review",
-        "stress",
-        "publish",
-        "audit",
-    ]
-    V6_PHASE_LABELS = {}
 
 
 def compute_summary(

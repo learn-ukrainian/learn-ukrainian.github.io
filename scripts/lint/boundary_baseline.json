@@ -37,11 +37,6 @@
       "count": 1
     },
     {
-      "path": "scripts/api/consultation_router.py",
-      "module": "scripts.pipeline.consultation",
-      "count": 1
-    },
-    {
       "path": "scripts/api/dashboard_helpers.py",
       "module": "scripts.audit",
       "count": 1
@@ -167,16 +162,6 @@
       "count": 1
     },
     {
-      "path": "scripts/api/main.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.build.phase_constants",
-      "count": 1
-    },
-    {
       "path": "scripts/api/sources_router.py",
       "module": "scripts.rag",
       "count": 1
@@ -184,71 +169,6 @@
     {
       "path": "scripts/api/sources_router.py",
       "module": "scripts.rag.query",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_build.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_build.py",
-      "module": "scripts.build.phase_constants",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_compute.py",
-      "module": "scripts.audit.llm_qg_store",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_coverage.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_coverage.py",
-      "module": "scripts.build.phase_constants",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_helpers.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_helpers.py",
-      "module": "scripts.build.phase_constants",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_helpers.py",
-      "module": "scripts.pipeline.state",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_issues.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_issues.py",
-      "module": "scripts.build.phase_constants",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "module": "scripts.audit.llm_qg_store",
       "count": 1
     },
     {

@@ -17,6 +17,7 @@ except ImportError:
 
 from . import config
 from .config import LEVELS
+from .state_helpers import V6_PHASE_ORDER as V6_PHASES
 from .state_helpers import (
     detect_pipeline_version,
     find_content_file,
@@ -27,29 +28,6 @@ from .state_helpers import (
     read_v2_state,
     read_v3_state,
 )
-
-try:
-    from scripts.build.phase_constants import PHASES as V6_PHASES
-except ImportError:
-    V6_PHASES = [
-        "check",
-        "research",
-        "skeleton",
-        "pre-verify",
-        "write",
-        "exercises",
-        "activities",
-        "repair",
-        "verify-exercises",
-        "annotate",
-        "vocab",
-        "enrich",
-        "verify",
-        "review",
-        "stress",
-        "publish",
-        "audit",
-    ]
 
 CRITICAL_KEYWORDS = frozenset(
     {

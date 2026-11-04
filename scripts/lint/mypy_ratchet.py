@@ -306,6 +306,9 @@ _UNORDERED_KEYS = re.compile(
     r" \((?P<body>[^)]*)\)"
 )
 _KEY_SLOT = re.compile("\ue000(\\d+)\ue001")
+# mypy names the line of an earlier definition inside some messages
+# ("already defined on line 12"). Lines are not part of the identity.
+_LINE_REFERENCE = re.compile(r" on line \d+\b")
 
 
 def _sort_name_list(body: str) -> str:
@@ -318,8 +321,9 @@ def _sort_name_list(body: str) -> str:
 
 
 def _normalize_message(message: str) -> str:
-    """Drop order that mypy does not keep stable, and nothing else."""
+    """Drop order that mypy does not keep stable and line references, and nothing else."""
 
+    message = _LINE_REFERENCE.sub("", message)
     slots: list[str] = []
 
     def protect(match: re.Match[str]) -> str:

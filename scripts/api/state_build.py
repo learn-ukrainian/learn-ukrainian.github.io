@@ -21,6 +21,7 @@ from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from .config import LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
 from .state_helpers import (
     V5_PHASE_ORDER,
+    V6_PHASE_ORDER,
     detect_pipeline_version,
     get_audit_status,
     get_final_review_info,
@@ -29,29 +30,6 @@ from .state_helpers import (
     read_v2_state,
     read_v3_state,
 )
-
-try:
-    from scripts.build.phase_constants import PHASES as V6_PHASE_ORDER
-except ImportError:
-    V6_PHASE_ORDER = [
-        "check",
-        "research",
-        "skeleton",
-        "pre-verify",
-        "write",
-        "exercises",
-        "activities",
-        "repair",
-        "verify-exercises",
-        "annotate",
-        "vocab",
-        "enrich",
-        "verify",
-        "review",
-        "stress",
-        "publish",
-        "audit",
-    ]
 
 
 def compute_build_status_track(

@@ -2828,11 +2828,6 @@
       "message": "Returning Any from function declared to return \"int\""
     },
     {
-      "path": "scripts/api/state_helpers.py",
-      "code": "no-redef",
-      "message": "Name \"_V6_PHASE_LABELS\" already defined (possibly by an import)"
-    },
-    {
       "path": "scripts/api/state_issues.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"bool\""
