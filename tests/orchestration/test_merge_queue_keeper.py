@@ -861,7 +861,8 @@ def test_second_ejection_stays_out_and_alerts_once_with_run_ids(
     path = tmp_path / "state.json"
     key = f"42:{HEAD_A}"
     _ejected_state(path, drops={key: 1}, keeper_requeues={key: "2099-01-01T00:00:00+00:00"}, ejections={key: [111]})
-    _eject(fake, 2, None)  # The failing run has not concluded yet.
+    _eject(fake, 2, None)  # Its failing run has not concluded; the first removal's run 111 still matches.
+    _conclude(fake, 111, "2099-01-01T00:00:01Z")
     lines, failed = run(fake, path, monkeypatch)
     assert not failed and f"reason={'hold' if held else 'second-drop'}" in lines[0]
     assert "cto_outbox" not in json.loads(path.read_text())

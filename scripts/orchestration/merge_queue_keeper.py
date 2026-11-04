@@ -1185,8 +1185,13 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 since = previous["undiagnosed"][prior_drop_key]
                 detail, failed_jobs, failed_tests, failed_run, run_ids = _drop_detail(gh, number, head, since)
                 seen_runs = previous.setdefault("ejections", {}).setdefault(prior_drop_key, [])
-                seen_runs.extend(run_id for run_id in run_ids if run_id not in seen_runs)
-                if failed_run is not None or (detail and not _run_lookup_open(since)):
+                new_runs = [run_id for run_id in run_ids if run_id not in seen_runs]
+                seen_runs.extend(new_runs)
+                if failed_run is not None and failed_run not in new_runs:
+                    # An earlier removal's run, already diagnosed and recorded: it says
+                    # nothing about this removal, whose own run may still be running.
+                    failed_jobs, failed_tests = [], {}
+                if new_runs or (detail and not _run_lookup_open(since)):
                     previous["undiagnosed"].pop(prior_drop_key)
                 elif not detail:
                     detail = " Queue removal diagnosis unknown."
