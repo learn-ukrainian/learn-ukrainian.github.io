@@ -11,7 +11,8 @@ npm run preview &  node e2e/scouting/run.mjs --slice C1 --out /tmp/scout-c1   # 
 
 Flags: `--slice C1..C8`, `--out <dir>`,
 `--profile desktop|phone|android|fast|explorer` (comma list; default `desktop,phone,android`),
-`--live`, `--base <url>`. `SCOUT_COMMIT=<sha>` tags the report with the deployed commit.
+`--live`, `--base <url>` (loopback or `learn-ukrainian.github.io` only; other origins are blocked).
+`SCOUT_COMMIT=<sha>` tags the report with the deployed commit.
 
 Every journey runs in a fresh context (clean storage) with its own trace. All artifacts are named
 `<run-timestamp>-<slice>-<profile>-<journey>` so reruns never overwrite earlier evidence.
@@ -69,9 +70,10 @@ timestamped and immutable: never overwrite or `--clobber` an uploaded asset; a r
 ## Mobile emulation caveat
 
 Phone profiles use Playwright device descriptors (`iPhone 14`, `Pixel 7`, touch enabled) running in
-**Chromium**. This is emulation only. It is not a substitute for a physical iPhone in Safari, real
-WebKit rendering, or on-screen-keyboard behaviour. The harness probes for Playwright WebKit and
-records whether it is installed (`npx playwright install webkit` to add it).
+installed **Google Chrome**. This is emulation only. It is not a substitute for a physical iPhone in
+Safari, real WebKit rendering, or on-screen-keyboard behaviour. The harness launches only installed
+Chrome with its sandbox on and our own origins allowed (`../support/hardened-browser.mjs`, #12689);
+Playwright's bundled WebKit is not probed or used, because it only updates with Playwright releases.
 
 ## Native speech device check (#10706)
 

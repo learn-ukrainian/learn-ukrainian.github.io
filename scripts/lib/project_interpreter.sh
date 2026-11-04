@@ -2,8 +2,12 @@
 # Project-interpreter resolution for shell callers (#9118).
 #
 # Mirrors scripts/common/repo_root.py `main_checkout_root` + `project_interpreter`
-# without asking git, so no environment variable and no worktree-controlled
-# `commondir` file can redirect the lookup to a planted interpreter:
+# without asking git, so no worktree-controlled `commondir` file can redirect the
+# lookup to a planted interpreter. The one environment input is the machinery
+# roots configuration's interpreter (#12681): a non-empty LEARN_UKRAINIAN_PYTHON
+# wins for every checkout, as it does in Python. It is operator-set environment,
+# trusted like PATH; a relative path or a path that is not an executable file
+# refuses instead of falling back. Unset or empty, the order is:
 #   - a linked worktree is accepted only when its `.git` gitfile says
 #     `gitdir: <primary>/.git/worktrees/<name>`, `<primary>/.git` is a real
 #     directory (not a symlink, no symlinked `worktrees/<name>`), and that
@@ -28,6 +32,10 @@
 # project_primary_root_resolve <checkout-root>
 #   stdout: absolute physical primary checkout root (exit 0)
 #   stderr: "Error: untrusted git metadata: <reason>" (exit 1)
+#
+# project_interpreter_configured
+#   stdout: the configured LEARN_UKRAINIAN_PYTHON, or nothing when unset (exit 0)
+#   stderr: "Error: project interpreter not found: <reason>" (exit 1)
 #
 # project_interpreter_resolve <checkout-root>
 #   stdout: absolute interpreter path (exit 0)
@@ -149,9 +157,32 @@ project_primary_root_resolve() {
     printf '%s\n' "$primary"
 }
 
-project_interpreter_resolve() {
-    local root primary primary_python tried
+project_interpreter_configured() {
+    local configured="${LEARN_UKRAINIAN_PYTHON:-}"
 
+    [ -n "$configured" ] || return 0
+    case "$configured" in
+        /*) ;;
+        *)
+            echo "Error: project interpreter not found: LEARN_UKRAINIAN_PYTHON must be an absolute path, got $configured" >&2
+            return 1
+            ;;
+    esac
+    if [ ! -f "$configured" ] || [ ! -x "$configured" ]; then
+        echo "Error: project interpreter not found: LEARN_UKRAINIAN_PYTHON=$configured is not an executable file" >&2
+        return 1
+    fi
+    printf '%s\n' "$configured"
+}
+
+project_interpreter_resolve() {
+    local root primary primary_python tried configured
+
+    configured="$(project_interpreter_configured)" || return 1
+    if [ -n "$configured" ]; then
+        printf '%s\n' "$configured"
+        return 0
+    fi
     root="$(cd -P "${1:?project_interpreter_resolve: checkout root required}" 2>/dev/null && pwd)" || {
         echo "Error: project interpreter not found: checkout root $1 does not exist" >&2
         return 1

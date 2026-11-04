@@ -34,6 +34,7 @@ from scripts.dispatcher.watchdog import (
     liveness_paths,
 )
 from scripts.review.model_catalog import advisory_role_policy
+from scripts.review.product_hooks import attempt_hooks
 
 
 def _seal_advisory_result(record: dict, result: Path) -> None:
@@ -508,9 +509,7 @@ def _load_bound_review_code() -> None:
         sys.path.insert(0, scripts_dir)
     try:
         with contextlib.suppress(Exception):
-            from scripts.build.fresh import manifest  # noqa: F401
-            from scripts.curriculum.evidence import sources  # noqa: F401
-            from scripts.review.prompts import check, eligibility  # noqa: F401
+            attempt_hooks().bind_bound_review_modules()
         with contextlib.suppress(Exception):
             from scripts.agent_runtime import runner  # noqa: F401
     finally:
@@ -571,7 +570,8 @@ def load_post_start_code(bound_review: bool = False) -> None:
         _load_bound_review_code()
     with contextlib.suppress(Exception):
         from scripts.common import fallback_substitutions, nofollow_walk, release_layout, safe_open  # noqa: F401
-        from scripts.curriculum.evidence import codes, lock  # noqa: F401
+
+        attempt_hooks().bind_evidence_modules()
         from scripts.guardrails import delegate_ownership  # noqa: F401
         from scripts.lib import git_identity  # noqa: F401
         from scripts.opsec import git_push  # noqa: F401
@@ -591,7 +591,8 @@ def load_post_start_code(bound_review: bool = False) -> None:
             subject_seat,
             verdict_parser,
         )
-        from scripts.review.receipts import ledger, outcomes  # noqa: F401
+
+        attempt_hooks().bind_receipt_modules()
     with contextlib.suppress(Exception):
         from scripts.dispatcher import checks, host_admission, output_schema, review_attempt, scope  # noqa: F401
     _load_provider_modules()

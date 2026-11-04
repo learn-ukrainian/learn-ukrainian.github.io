@@ -16,6 +16,12 @@ staged. After that, drift cannot reach ``main``.
 Deliberately lives in ``scripts/pre_commit/`` rather than ``scripts/lexicon/``:
 the latter is the hashed glob, so a maintainer script there would churn the very
 fingerprint it maintains.
+
+This machinery wrapper does not import the product fingerprint code: the
+product names ``manifest_fingerprint.main --write`` in
+``scripts/build/pre_commit_entry_points.v1.json`` and
+``scripts.pre_commit.product_entry`` runs it. That entry point writes the
+sidecar and prints the confirmation line.
 """
 
 from __future__ import annotations
@@ -27,17 +33,13 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
+from scripts.pre_commit.product_entry import run_entry_point
+
+HOOK_ID = "atlas-lexicon-fingerprint-drift"
 
 
 def main() -> int:
-    payload = write_fingerprint(DEFAULT_FINGERPRINT, root=ROOT)
-    print(
-        "Atlas lexicon fingerprint written: "
-        f"{payload['fingerprint']} "
-        f"({payload['stats']['lexicon_code_files']} lexicon code files)."
-    )
-    return 0
+    return run_entry_point(HOOK_ID)
 
 
 if __name__ == "__main__":
