@@ -689,11 +689,11 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
         gate.check_texts(dest, texts, environment={}, field_names=names)
     except gate.PublishBlocked as error:
         if reason.strip() and error.indices:
-            # Only a flagged push uses the override: the blocked texts are
-            # checked again with the reason, so the override is claimed once
-            # for the command that set it (gate.command_keys) and logged before
-            # anything is sent. A clean push never reaches this, so a failed
-            # process lookup cannot refuse it.
+            # Only a flagged push offers the override: the blocked texts are
+            # checked again with the reason, and the private override module
+            # decides whether it admits them and audits it before anything is
+            # sent. A clean push never reaches this, so no override failure can
+            # refuse it.
             flagged = sorted(error.indices)
             gate.check_texts(
                 dest,
