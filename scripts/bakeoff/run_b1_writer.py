@@ -46,9 +46,14 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 def _product_hooks() -> Any:
     """Load the product hook. The name is built at runtime so this file has no product import."""
-    import importlib
+    import runpy
+    import types
 
-    return importlib.import_module(".".join(("scripts", "build", "bakeoff_hooks")))
+    name = ".".join(("scripts", "build", "bakeoff_hooks"))
+    loaded = runpy.run_module(name)
+    module = types.ModuleType(name)
+    module.__dict__.update(loaded)
+    return module
 
 
 def main() -> int:
