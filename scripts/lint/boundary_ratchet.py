@@ -12,8 +12,10 @@ target never pays for a different one. Line numbers are not part of the
 identity. A non-literal load is not an identity.
 
 Once origin/main contains the baseline, the committed counts may only
-shrink. Before that first landing there is no predecessor; the baseline
-must still equal the census, so a stale entry fails.
+shrink against that branch and the merge base with it. A later commit on
+the same branch may put rows back when origin/main still has them.
+Before the first landing there is no predecessor; the baseline must still
+equal the census, so a stale entry fails.
 
 Examples:
   .venv/bin/python -m scripts.lint.boundary_ratchet
@@ -51,7 +53,6 @@ SCHEMA = "boundary-ratchet-baseline.v1"
 CONFIG_SCHEMA = "package-boundary.v1"
 ROLES = frozenset({"machinery", "product", "shared"})
 _GIT_TIMEOUT_SECONDS = 30
-_SHRINK_REFS = ("HEAD", "HEAD^", "origin/main")
 _SKIP_DIRS = frozenset({"__pycache__"})
 _FALLBACK_NAMES = frozenset({"ImportError", "ModuleNotFoundError"})
 _EDGE_KINDS = frozenset({"direct", "parent", "file-load", "runtime"})
@@ -479,8 +480,45 @@ def _is_subset(current: Mapping[tuple[str, str], int], previous: Mapping[tuple[s
     return all(count <= previous.get(key, 0) for key, count in current.items())
 
 
+def _git_line(root: Path, args: Sequence[str]) -> str | None:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=_GIT_TIMEOUT_SECONDS,
+        check=False,
+    )
+    if result.returncode != 0:
+        return None
+    line = result.stdout.strip()
+    return line or None
+
+
+def _shrink_refs(root: Path) -> tuple[str, ...]:
+    """origin/main, plus the merge base when that commit is a different one.
+
+    HEAD is the commit a pre-commit hook has not created yet, so a working
+    tree that puts removed rows back fails against it. HEAD^ is that
+    commit's parent, so the restore commit fails the same way. On main, and
+    on a merge commit made from current main, the merge base is origin/main.
+    """
+
+    main = _git_line(root, ["rev-parse", "--verify", "--quiet", "origin/main"])
+    base = _git_line(root, ["merge-base", "HEAD", "origin/main"])
+    refs: list[str] = []
+    if base and base != main:
+        refs.append(base)
+    refs.append("origin/main")
+    return tuple(refs)
+
+
 def shrink_violations(root: Path, baseline: Path, counts: Mapping[tuple[str, str], int]) -> list[str]:
-    """Reject growth against a baseline that has already landed on origin/main."""
+    """Reject growth against the baseline this checkout will merge into.
+
+    A missing ``.git`` and a baseline not yet on origin/main have no
+    predecessor. A ``git show`` miss skips that ref.
+    """
 
     if not (root / ".git").exists():
         return []
@@ -491,7 +529,7 @@ def shrink_violations(root: Path, baseline: Path, counts: Mapping[tuple[str, str
     if _baseline_at(root, "origin/main", rel) is None:
         return []
     violations: list[str] = []
-    for ref in _SHRINK_REFS:
+    for ref in _shrink_refs(root):
         try:
             previous = _baseline_at(root, ref, rel)
         except (json.JSONDecodeError, ValueError) as exc:
