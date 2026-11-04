@@ -19,6 +19,7 @@ import threading
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -152,7 +153,7 @@ def _write_login_record(path: Path, account: str | None) -> None:
 
 _TOKEN_PREFIX = "synthetic-access-token-"
 # token -> its expiresAt (ms) as last written; the fixture provider refuses an expired one.
-_ISSUED: dict[str, int] = {}
+_SYNTHETIC_OWNERS: dict[tuple[int, int], tuple[str, int]] = {}
 
 
 def _token(account: str, serial: int = 0) -> str:
@@ -165,11 +166,14 @@ def _write_credentials(
 ) -> None:
     """The directory's Claude credentials file, holding a token of ``account`` (none: removed)."""
     path = directory / ".credentials.json"
+    info = directory.stat()
+    key = (info.st_dev, info.st_ino)
     if account is None:
         path.unlink(missing_ok=True)
+        _SYNTHETIC_OWNERS.pop(key, None)
         return
     token, expires_at = _token(account, serial), int((time.time() + expires_in_s) * 1000)
-    _ISSUED[token] = expires_at
+    _SYNTHETIC_OWNERS[key] = (account, expires_at)
     record = {"accessToken": token, "expiresAt": expires_at}
     if refresh:
         record["refreshToken"] = "synthetic-refresh"
@@ -177,24 +181,31 @@ def _write_credentials(
 
 
 class _Provider:
-    """The provider's answer to "whose token is this?" for synthetic tokens; never the network."""
+    """A fake private proof keyed by fixture-directory identity, with no credential reads."""
 
     def __init__(self):
         self.calls = 0
         self.down = False
 
-    def __call__(self, token: str) -> tuple[str, object]:
+    def __call__(self, directory: int, account: str) -> None:
         self.calls += 1
-        if self.down or not token.startswith(_TOKEN_PREFIX) or _ISSUED.get(token, 0) <= time.time() * 1000:
+        info = os.fstat(directory)
+        owner = _SYNTHETIC_OWNERS.get((info.st_dev, info.st_ino))
+        if self.down:
             raise cau.ClaudeAccountRefused("claude_account_identity_unavailable")
-        return token.split(":", 1)[1], None
+        if owner is None:
+            raise cau.ClaudeAccountRefused("claude_account_credentials_missing")
+        if owner[1] <= time.time() * 1000:
+            raise cau.ClaudeAccountRefused("claude_account_credentials_expired")
+        if owner[0] != account:
+            raise cau.ClaudeAccountRefused("claude_account_unverified")
 
 
 @pytest.fixture
 def provider(monkeypatch) -> _Provider:
     answer = _Provider()
-    _ISSUED.clear()
-    monkeypatch.setattr(cau, "_claude_selected_identity", answer)
+    _SYNTHETIC_OWNERS.clear()
+    monkeypatch.setattr(cau, "_private_usage", lambda: SimpleNamespace(prove_claude_owner=answer))
     return answer
 
 
@@ -1713,18 +1724,20 @@ def test_answer_without_provider_proof_is_withheld(bound, identity):
 # Fails on af927d37bd: rows whose credentials could not be shown to belong to the
 # bound account were published ``ok``.
 @pytest.mark.parametrize(
-    ("break_proof", "reason"),
+    "code",
     [
-        (lambda bound, provider: _write_credentials(bound.dirs["b"], _ACCOUNT_B, expires_in_s=-60), "expired"),
-        (lambda bound, provider: setattr(provider, "down", True), "identity_unavailable"),
-        (lambda bound, provider: (bound.dirs["b"] / ".credentials.json").chmod(0o644), "not_private"),
-        (lambda bound, provider: (bound.dirs["b"] / ".credentials.json").write_text("{"), "invalid"),
+        "claude_account_credentials_expired",
+        "claude_account_identity_unavailable",
+        "claude_account_credentials_not_private",
+        "claude_account_credentials_invalid",
     ],
 )
-def test_unprovable_credentials_withhold_the_row(bound, provider, break_proof, reason):
-    break_proof(bound, provider)
+def test_private_proof_refusal_withholds_the_row(bound, monkeypatch, code):
+    def refuse(directory, account):
+        raise cau.ClaudeAccountRefused(code)
+
+    monkeypatch.setattr(cau, "_private_usage", lambda: SimpleNamespace(prove_claude_owner=refuse))
     cau.refresh_claude_account_usage()
-    code = f"claude_account_{reason}" if reason == "identity_unavailable" else f"claude_account_credentials_{reason}"
     _assert_not_published(cau.routing_budget_fields(), "b", reason=code)
 
 
@@ -1796,7 +1809,7 @@ def _forbid_reads(monkeypatch) -> _NoRead:
         (builtins, "open"),
     ):
         monkeypatch.setattr(module, name, guard(f"{module.__name__}.{name}"))
-    for name in ("account_binding", "_claude_selected_identity", "probe_account"):
+    for name in ("account_binding", "_prove_owner", "probe_account"):
         monkeypatch.setattr(cau, name, guard(f"cau.{name}"))
     return guard
 
@@ -2212,3 +2225,10 @@ def test_renewal_refused_before_spawn_when_launch_gate_refuses(bound, provider, 
     (tmp_path / "machine-policy" / "managed-settings.json").unlink()
     cau.refresh_claude_account_usage()
     assert renewals == [bound.dirs["b"]]  # with every gate passing, the same login is renewed
+
+
+def test_absent_private_tooling_cannot_prove_owner(monkeypatch):
+    monkeypatch.setattr(cau, "_private_usage", lambda: None)
+    with pytest.raises(cau.ClaudeAccountRefused) as exc:
+        cau._prove_owner(-1, "SYNTHETIC_ACCOUNT")
+    assert exc.value.code == "claude_account_unverified"

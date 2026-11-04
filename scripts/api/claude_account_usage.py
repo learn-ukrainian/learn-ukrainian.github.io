@@ -92,9 +92,7 @@ from scripts.agent_runtime.attempt_boundary import (
     CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS,
     DEFAULT_CLAUDE_ACCOUNT,
     ClaudeAccountRefused,
-    _claude_access_token,
     _claude_config_account_uuid,
-    _claude_selected_identity,
     _open_claude_directory,
     claude_accounts_file,
     load_claude_account_binding,
@@ -106,6 +104,7 @@ from scripts.api.subscription_usage import (
     _codexbar_refresh_interval_s,
     _parse_resets_at_any,
     _periodic_refresh_enabled,
+    _private_usage,
     _routing_budget_state_dir,
 )
 from scripts.common import scratch
@@ -301,23 +300,11 @@ def _generation(label: str, config_dir: Path, directory: Facts, account: str) ->
 
 
 def _prove_owner(directory: int, account: str) -> None:
-    """Refuse unless the provider names ``account`` as the owner of the directory's access token.
-
-    The token is the one CodexBar's OAuth source reads from this directory. It
-    stays in this frame; refusals carry fixed codes only.
-    """
-    from scripts.review.isolation import ReviewIsolationError  # noqa: PLC0415  # lazy-ok: review stack off API import
-
-    try:
-        token = _claude_access_token(Path(_CREDENTIALS), dir_fd=directory)
-    except ReviewIsolationError as exc:
-        suffix = str(exc).removeprefix("attempt_claude_auth_")
-        raise ClaudeAccountRefused(f"claude_account_credentials_{suffix}") from None
-    if token is None:
-        raise ClaudeAccountRefused("claude_account_credentials_missing")
-    identity, _organization = _claude_selected_identity(token)
-    if identity != account:
+    """Require the private credential boundary to prove this directory's owner."""
+    module = _private_usage()
+    if module is None:
         raise ClaudeAccountRefused("claude_account_unverified")
+    module.prove_claude_owner(directory, account)
 
 
 def _proven(

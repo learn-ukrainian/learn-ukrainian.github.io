@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import json
+import sys
 import threading
 import time
 from datetime import UTC, datetime, timedelta
-from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -23,6 +24,15 @@ from scripts.api.subscription_usage import (
     pace_is_visible,
 )
 from scripts.telemetry.cost_report import CostRecord
+
+
+def _fake_private(monkeypatch, outcome=None, *, api_account=None):
+    module = SimpleNamespace(
+        probe_subscription=lambda *a, **kw: outcome,
+        probe_api_account=lambda *a, **kw: api_account,
+    )
+    monkeypatch.setattr(subscription_usage_mod, "_private_usage", lambda: module)
+    return module
 
 
 @pytest.mark.parametrize("used_pct", [90.0, 98.99, 99.0, 100.0])
@@ -590,15 +600,9 @@ def test_normalize_kimi_healthy_shape():
 
 def test_kimi_provider_error_surfaces_unknown(monkeypatch):
     """Credential/provider error -> status='unknown' + auth_error, never zero usage."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (
-            401,
-            {"error": "expired"},
-            "Kimi Code CLI credential is expired, please re-authenticate",
-        ),
+    _fake_private(
+        monkeypatch,
+        {"outcome": "error", "error": {"kind": "provider", "code": 401, "message": "Kimi credential rejected"}},
     )
     codexbar_usage_mod._last_good_data.pop("kimi", None)
 
@@ -626,7 +630,13 @@ def test_healthy_record_carries_error_shape_defaults():
 
 def test_missing_credentials_returns_need_login(monkeypatch):
     """Missing native credentials must surface NEED_LOGIN, not missing_binary."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "error",
+            "error": {"kind": "need_login", "code": "NEED_LOGIN", "message": "Codex OAuth credentials unavailable"},
+        },
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
@@ -638,7 +648,13 @@ def test_missing_credentials_returns_need_login(monkeypatch):
 
 def test_native_probe_unavailable_missing_credentials(monkeypatch):
     """Regression: missing credentials must not masquerade as a healthy 0% lane."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "error",
+            "error": {"kind": "need_login", "code": "NEED_LOGIN", "message": "Codex OAuth credentials unavailable"},
+        },
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
@@ -681,11 +697,9 @@ def test_native_probe_unavailable_missing_credentials(monkeypatch):
 
 def test_codexbar_unavailable_timeout(monkeypatch):
     """Regression test for timeout: must surface status='unavailable' and auth_error."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (0, None, "timed out after 1s"),
+    _fake_private(
+        monkeypatch,
+        {"outcome": "error", "error": {"kind": "fetch_error", "code": "FETCH_ERROR", "message": "request timed out"}},
     )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
@@ -729,12 +743,13 @@ def test_codexbar_unavailable_timeout(monkeypatch):
 
 def test_codexbar_unavailable_malformed_json(monkeypatch):
     """Regression test for malformed JSON: must surface status='unavailable' and auth_error."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
-
-    def _bad_json(*args, **kwargs):
-        raise json.JSONDecodeError("bad", "doc", 0)
-
-    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _bad_json)
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "error",
+            "error": {"kind": "fetch_error", "code": "FETCH_ERROR", "message": "Native probe failed: JSONDecodeError"},
+        },
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
@@ -776,11 +791,16 @@ def test_codexbar_unavailable_malformed_json(monkeypatch):
 
 def test_codexbar_unavailable_unparseable_schema(monkeypatch):
     """Regression test for empty schema: must surface status='unavailable'."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (200, {}, None),
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "error",
+            "error": {
+                "kind": "unparseable_schema",
+                "code": "UNPARSEABLE_SCHEMA",
+                "message": "Codex usage payload missing rate windows",
+            },
+        },
     )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
@@ -1074,43 +1094,37 @@ DEEPSEEK_BALANCE_FIXTURE = {
 
 
 def test_openrouter_missing_key_returns_need_key(monkeypatch):
-    monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: None)
-    codexbar_usage_mod._api_account_last_good.pop("openrouter", None)
-    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
+    account = subscription_usage_mod._empty_openrouter_account("NEED_KEY")
+    _fake_private(monkeypatch, api_account=account)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1)
     assert result["probe_state"] == "NEED_KEY"
-    assert result["usage_usd"] is None
-    assert result["limit_remaining_usd"] is None
+    assert result["usage_usd"] is None and result["limit_remaining_usd"] is None
 
 
 def test_openrouter_key_probe_success(monkeypatch):
-    monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: "fixture-openrouter-key")
-
-    def _fake_http(method, url, **kwargs):
-        if url.endswith("/key"):
-            return 200, dict(OPENROUTER_KEY_FIXTURE), None
-        return 0, None, "unexpected url"
-
-    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _fake_http)
-    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
-    assert result["probe_state"] == "ok"
-    assert result["usage_usd"] == 12.5
-    assert result["limit_remaining_usd"] == 87.5
-    assert result["is_free_tier"] is False
+    account = {
+        **subscription_usage_mod._empty_openrouter_account("ok"),
+        "usage_usd": 12.5,
+        "limit_remaining_usd": 87.5,
+        "is_free_tier": False,
+    }
+    _fake_private(monkeypatch, api_account=account)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1)
+    assert result == account
+    assert result["usage_usd"] == 12.5 and result["limit_remaining_usd"] == 87.5
 
 
 def test_deepseek_balance_probe_success(monkeypatch):
-    monkeypatch.setattr(subscription_usage_mod, "_load_deepseek_api_key", lambda: "fixture-deepseek-key")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (200, dict(DEEPSEEK_BALANCE_FIXTURE), None),
-    )
-    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1.0)
-    assert result["probe_state"] == "ok"
-    assert result["local_only"] is True
-    assert result["currency"] == "USD"
-    assert result["total_balance"] == 42.5
-    assert result["is_available"] is True
+    account = {
+        **subscription_usage_mod._empty_deepseek_account("ok"),
+        "currency": "USD",
+        "total_balance": 42.5,
+        "is_available": True,
+    }
+    _fake_private(monkeypatch, api_account=account)
+    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1)
+    assert result == account
+    assert result["local_only"] is True and result["total_balance"] == 42.5
 
 
 def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
@@ -1175,280 +1189,6 @@ def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
 # --- routing-budget stale/wrong lane state regressions (#7646) --------------
 
 
-def test_load_codex_oauth_token_reads_nested_tokens_shape(tmp_path, monkeypatch):
-    """Codex CLI's current auth.json nests the OAuth set under "tokens"."""
-    codex_home = tmp_path / ".codex"
-    codex_home.mkdir()
-    (codex_home / "auth.json").write_text(
-        json.dumps({"tokens": {"access_token": "fixture-nested-token", "refresh_token": "fixture-refresh"}}),
-        encoding="utf-8",
-    )
-    # Account a's home is $HOME/.codex; ambient CODEX_HOME is ignored (#12692).
-    monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setenv("CODEX_HOME", str(tmp_path / "elsewhere"))
-
-    assert subscription_usage_mod._load_codex_oauth_token() == "fixture-nested-token"
-
-
-def test_load_codex_oauth_token_still_reads_top_level_shape(tmp_path, monkeypatch):
-    """Backward compat: a flat top-level access_token must still resolve."""
-    codex_home = tmp_path / ".codex"
-    codex_home.mkdir()
-    (codex_home / "auth.json").write_text(
-        json.dumps({"access_token": "fixture-flat-token"}),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("HOME", str(tmp_path))
-
-    assert subscription_usage_mod._load_codex_oauth_token() == "fixture-flat-token"
-
-
-def test_load_kimi_bearer_reads_credentials_file(tmp_path, monkeypatch):
-    """Kimi credential loader must succeed from kimi-code.json's access_token."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    cred_path = tmp_path / "kimi-code.json"
-    cred_path.write_text(json.dumps({"access_token": "fixture-kimi-token"}), encoding="utf-8")
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
-
-    assert subscription_usage_mod._load_kimi_bearer() == "fixture-kimi-token"
-
-
-def test_load_kimi_bearer_reads_nested_tokens_shape(tmp_path, monkeypatch):
-    """Some CLI artifacts nest the OAuth set under tokens / camelCase keys."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    cred_path = tmp_path / "kimi-code.json"
-    cred_path.write_text(
-        json.dumps({"tokens": {"accessToken": "fixture-nested-kimi"}}),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
-
-    assert subscription_usage_mod._load_kimi_bearer() == "fixture-nested-kimi"
-
-
-def test_load_kimi_bearer_uses_kimi_code_home(tmp_path, monkeypatch):
-    """Honor KIMI_CODE_HOME the same way the native Kimi adapter does."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    monkeypatch.delenv("KIMI_CODE_CREDENTIALS_PATH", raising=False)
-    home = tmp_path / "kimi-home"
-    cred_dir = home / "credentials"
-    cred_dir.mkdir(parents=True)
-    (cred_dir / "kimi-code.json").write_text(
-        json.dumps({"access_token": "fixture-home-token"}),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("KIMI_CODE_HOME", str(home))
-
-    assert subscription_usage_mod._load_kimi_bearer() == "fixture-home-token"
-
-
-class _KimiOAuthRefreshServer:
-    """Minimal /api/oauth/token endpoint for bearer-refresh unit tests."""
-
-    def __init__(self, payload: dict, status: int = 200) -> None:
-        self.payload = payload
-        self.status = status
-        self.bodies: list[str] = []
-        outer = self
-
-        class Handler(BaseHTTPRequestHandler):
-            def do_POST(self) -> None:
-                length = int(self.headers.get("Content-Length", "0"))
-                outer.bodies.append(self.rfile.read(length).decode("utf-8"))
-                body = json.dumps(outer.payload).encode("utf-8")
-                self.send_response(outer.status)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Content-Length", str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
-
-            def log_message(self, *args: object) -> None:
-                pass
-
-        self.server = HTTPServer(("127.0.0.1", 0), Handler)
-        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
-
-    @property
-    def url(self) -> str:
-        host, port = self.server.server_address
-        return f"http://{host}:{port}"
-
-    def __enter__(self) -> _KimiOAuthRefreshServer:
-        self.thread.start()
-        return self
-
-    def __exit__(self, *exc: object) -> None:
-        self.server.shutdown()
-        self.server.server_close()
-        self.thread.join(timeout=5)
-
-
-def test_load_kimi_bearer_refreshes_expired_oauth_token(tmp_path, monkeypatch):
-    """Expired access_token + refresh_token must rebind via the OAuth helper."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    cred_path = tmp_path / "kimi-code.json"
-    cred_path.write_text(
-        json.dumps(
-            {
-                "access_token": "stale-access",
-                "refresh_token": "fixture-refresh",
-                "expires_at": time.time() - 30,
-                "token_type": "Bearer",
-                "scope": "kimi-code",
-            }
-        ),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
-    payload = {
-        "access_token": "rotated-access",
-        "refresh_token": "rotated-refresh",
-        "expires_in": 900,
-        "token_type": "Bearer",
-        "scope": "kimi-code",
-    }
-    with _KimiOAuthRefreshServer(payload) as server:
-        monkeypatch.setenv("KIMI_CODE_OAUTH_HOST", server.url)
-        assert subscription_usage_mod._load_kimi_bearer() == "rotated-access"
-
-    stored = json.loads(cred_path.read_text(encoding="utf-8"))
-    assert stored["access_token"] == "rotated-access"
-    assert stored["refresh_token"] == "rotated-refresh"
-
-
-def test_kimi_probe_retries_usages_after_401_refresh(tmp_path, monkeypatch):
-    """Usages 401 with a listed expires_at still force-refreshes once and recovers."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    cred_path = tmp_path / "kimi-code.json"
-    cred_path.write_text(
-        json.dumps(
-            {
-                "access_token": "stale-but-unexpired",
-                "refresh_token": "fixture-refresh",
-                "expires_at": time.time() + 3600,
-                "token_type": "Bearer",
-                "scope": "kimi-code",
-            }
-        ),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
-    live_shape = {
-        "usage": {
-            "used": "40",
-            "limit": "100",
-            "remaining": "60",
-            "resetTime": "2026-09-10T00:00:00Z",
-        },
-        "limits": [
-            {
-                "detail": {
-                    "limit": "100",
-                    "remaining": "55",
-                    "resetTime": "2026-09-03T10:00:00Z",
-                },
-                "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
-            }
-        ],
-    }
-    payload = {
-        "access_token": "rotated-access",
-        "refresh_token": "rotated-refresh",
-        "expires_in": 900,
-        "token_type": "Bearer",
-        "scope": "kimi-code",
-    }
-    usages_auths: list[str] = []
-
-    def _fake_http(method, url, **kwargs):
-        usages_auths.append(kwargs.get("headers", {}).get("Authorization", ""))
-        if len(usages_auths) == 1:
-            return (401, None, "unauthorized")
-        return (200, live_shape, None)
-
-    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _fake_http)
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    with _KimiOAuthRefreshServer(payload) as server:
-        monkeypatch.setenv("KIMI_CODE_OAUTH_HOST", server.url)
-        res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-
-    assert res["status"] == "healthy"
-    assert usages_auths == ["Bearer stale-but-unexpired", "Bearer rotated-access"]
-    assert res["primary_used_pct"] == 45.0
-
-
-def test_kimi_missing_credentials_file_is_need_login(tmp_path, monkeypatch):
-    """No credential file anywhere → honest NEED_LOGIN, not a fetch_error."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(tmp_path / "missing-kimi-code.json"))
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["status"] == "unavailable"
-    assert res["error_kind"] == "need_login"
-    assert res["probe_state"] == "NEED_LOGIN"
-
-
-def test_kimi_credentials_present_but_http_failure_is_fetch_error_not_need_login(monkeypatch):
-    """A present, loadable credential file that fails at the network layer must
-    surface fetch_error/unavailable — never re-claim NEED_LOGIN, which would
-    wrongly tell the operator to log in again."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (0, None, "connection reset"),
-    )
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["status"] == "unavailable"
-    assert res["error_kind"] == "fetch_error"
-    assert res["error_kind"] != "need_login"
-
-
-def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
-    """Live Kimi shape (2026-09-03): string used/limit/remaining; detail lacks used;
-    window is {duration, timeUnit: TIME_UNIT_MINUTE}. Must parse, not NEED_LOGIN.
-    """
-    live_shape = {
-        "usage": {
-            "used": "40",
-            "limit": "100",
-            "remaining": "60",
-            "resetTime": "2026-09-10T00:00:00Z",
-        },
-        "limits": [
-            {
-                "detail": {
-                    "limit": "100",
-                    "remaining": "55",
-                    "resetTime": "2026-09-03T10:00:00Z",
-                },
-                "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
-            }
-        ],
-    }
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (200, live_shape, None),
-    )
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["status"] == "healthy"
-    assert res["error_kind"] != "need_login"
-    assert res["error_kind"] is None
-    # detail used derived: 100 - 55 = 45 → 45%
-    assert res["primary_used_pct"] == 45.0
-    # usage.used/limit strings → 40%
-    assert res["weekly_used_pct"] == 40.0
-    assert res["windows"]["primary"]["window_minutes"] == 300
-
-
 def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
     assert subscription_usage_mod._coerce_float(" 42.5 ") == 42.5
     assert subscription_usage_mod._coerce_float(7) == 7.0
@@ -1456,41 +1196,6 @@ def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
     assert subscription_usage_mod._coerce_float("") is None
     assert subscription_usage_mod._coerce_float("nope") is None
     assert subscription_usage_mod._coerce_float(None) is None
-
-
-def test_kimi_http_200_nan_used_is_unparseable_not_healthy(monkeypatch):
-    """HTTP 200 with used=NaN must not become healthy with nan percents."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (
-            200,
-            {
-                "usage": {
-                    "used": "NaN",
-                    "limit": "100",
-                },
-                "limits": [
-                    {
-                        "detail": {
-                            "used": "NaN",
-                            "limit": "100",
-                        },
-                        "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
-                    }
-                ],
-            },
-            None,
-        ),
-    )
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["error_kind"] == "unparseable_schema"
-    assert res["status"] != "healthy"
-    assert res["primary_used_pct"] is None
-    assert res["weekly_used_pct"] is None
 
 
 def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
@@ -1594,36 +1299,6 @@ def test_prepaid_failure_preserves_last_good_and_retries_quickly(monkeypatch):
     cache_invalidate("api_account:deepseek")
 
 
-def test_management_key_loaders_and_balance(monkeypatch, tmp_path):
-    mod = subscription_usage_mod
-    monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    monkeypatch.delenv("OPENROUTER_MANAGEMENT_API_KEY", raising=False)
-    secret = tmp_path / ".secret/openrouter-management.key"
-    secret.parent.mkdir()
-    secret.write_text("")
-    assert mod._load_openrouter_management_api_key() is None
-    secret.write_text("file-fixture\n")
-    assert mod._load_openrouter_management_api_key() == "file-fixture"
-    auth = tmp_path / ".local/share/opencode/auth.json"
-    auth.parent.mkdir(parents=True)
-    auth.write_text(json.dumps({"openrouter-management": {"key": "opencode-fixture"}}))
-    assert mod._load_openrouter_management_api_key() == "opencode-fixture"
-    monkeypatch.setenv("OPENROUTER_MANAGEMENT_API_KEY", "env-fixture")
-    assert mod._load_openrouter_management_api_key() == "env-fixture"
-    monkeypatch.setattr(mod, "_load_openrouter_api_key", lambda: "ordinary-fixture")
-
-    def http(method, url, **kwargs):
-        if url.endswith("/credits"):
-            assert kwargs["headers"]["Authorization"] == "Bearer env-fixture"
-            return 200, {"data": {"total_credits": 100, "total_usage": 100}}, None
-        return 200, {"data": {"limit_remaining": 70}}, None
-
-    monkeypatch.setattr(mod, "_http_json_request", http)
-    result = mod._probe_openrouter_native(timeout_s=1)
-    assert result["account_remaining_usd"] == 0
-    assert result["balance_probe_state"] == "ok"
-
-
 def test_cursor_explicit_refresh_is_blocking(monkeypatch):
     mod = subscription_usage_mod
     calls = []
@@ -1652,18 +1327,11 @@ def test_subscription_login_failure_clears_on_success(monkeypatch):
 
 
 def test_management_balance_failure_is_not_a_good_prepaid_sample(monkeypatch):
-    mod = subscription_usage_mod
-    monkeypatch.setattr(mod, "_load_openrouter_api_key", lambda: "ordinary-fixture")
-    monkeypatch.setattr(mod, "_load_openrouter_management_api_key", lambda: "management-fixture")
-
-    def http(method, url, **kwargs):
-        return (200, {"data": {"limit_remaining": 100}}, None) if url.endswith("/key") else (503, None, "unavailable")
-
-    monkeypatch.setattr(mod, "_http_json_request", http)
-    result = mod._probe_openrouter_native(timeout_s=1)
-    assert result["probe_state"] == "NEED_PROBE"
-    assert result["balance_probe_state"] == "NEED_PROBE"
-    assert not mod._api_account_is_cacheable(result)
+    account = {**subscription_usage_mod._empty_openrouter_account("NEED_PROBE"), "balance_probe_state": "NEED_PROBE"}
+    _fake_private(monkeypatch, api_account=account)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1)
+    assert result["probe_state"] == result["balance_probe_state"] == "NEED_PROBE"
+    assert not subscription_usage_mod._api_account_is_cacheable(result)
 
 
 def test_management_key_missing_uses_short_cache_ttl(monkeypatch):
@@ -1951,48 +1619,38 @@ def test_normalize_claude_shape_fallback_pace_uses_codexbar_summary_format(monke
     assert "pace delta" not in res["pace_summary"]
 
 
-def test_codex_wham_weekly_only_window_uses_limit_window_seconds(monkeypatch):
-    """ChatGPT wham often returns only primary_window with limit_window_seconds=604800
-    (weekly) and secondary_window=null. Do not default that to a fake 5h window."""
-    from scripts.api import subscription_usage as su
-
-    # Freeze the pace clock: reset_at is derived from frozen now + reset_after_seconds
-    # so the window stays open no matter when the suite runs.
-    frozen = datetime(2026, 9, 15, 12, 0, tzinfo=UTC)
-    reset_after_seconds = 313014
-    payload = {
-        "rate_limit": {
-            "allowed": True,
-            "limit_reached": False,
-            "primary_window": {
-                "used_percent": 40,
-                "limit_window_seconds": 604800,
-                "reset_after_seconds": reset_after_seconds,
-                "reset_at": int(frozen.timestamp()) + reset_after_seconds,
+def test_codex_private_weekly_window_keeps_weekly_pace(monkeypatch):
+    frozen = datetime(2026, 9, 15, 12, tzinfo=UTC)
+    real = subscription_usage_mod.compute_usage_pace
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "compute_usage_pace",
+        lambda used, reset, **kw: real(used, reset, **{**kw, "now": frozen}),
+    )
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "data",
+            "record": {
+                "provider": "codex",
+                "source": "codex_oauth",
+                "openaiDashboard": {},
+                "usage": {
+                    "primary": None,
+                    "secondary": {
+                        "windowMinutes": 10080,
+                        "usedPercent": 40,
+                        "resetsAt": int(frozen.timestamp()) + 313014,
+                    },
+                },
             },
-            "secondary_window": None,
-        }
-    }
-
-    def fake_http(method, url, headers=None, body=None, timeout_s=None):
-        return 200, payload, None
-
-    real = su.compute_usage_pace
-
-    def _paced(used_pct, resets_at, *, window_minutes=None, now=None):
-        return real(used_pct, resets_at, window_minutes=window_minutes, now=now or frozen)
-
-    monkeypatch.setattr(su, "compute_usage_pace", _paced)
-    monkeypatch.setattr(su, "_load_codex_oauth_token", lambda: "tok")
-    monkeypatch.setattr(su, "_http_json_request", fake_http)
-    res = su._probe_codex_native(timeout_s=5)
-    assert res["status"] == "healthy"
-    assert res["primary_used_pct"] is None
-    assert res["weekly_used_pct"] == 40.0
-    assert res["windows"]["secondary"]["window_minutes"] == 10080
-    assert res["pace_summary"] is not None
-    assert "Expected" in res["pace_summary"]
-    assert res["will_last_to_reset"] is not None
+        },
+    )
+    result = subscription_usage_mod._probe_codex_native(timeout_s=5)
+    assert result["status"] == "healthy"
+    assert result["primary_used_pct"] is None and result["weekly_used_pct"] == 40.0
+    assert result["windows"]["secondary"]["window_minutes"] == 10080
+    assert "Expected" in result["pace_summary"] and result["will_last_to_reset"] is not None
 
 
 def test_agy_nonzero_exit_does_not_leak_stdout_stderr(monkeypatch, tmp_path):
@@ -2032,22 +1690,6 @@ def test_compute_usage_pace_rejects_expired_and_out_of_window():
     )
     ok = compute_usage_pace(25.0, (now + timedelta(seconds=150 * 60)).isoformat(), window_minutes=300, now=now)
     assert ok is not None
-
-
-def test_deepseek_prefers_secrets_dir_over_secret_alias(monkeypatch, tmp_path):
-    from scripts.api import subscription_usage as su
-
-    secrets = tmp_path / ".secrets"
-    secret = tmp_path / ".secret"
-    secrets.mkdir()
-    secret.mkdir()
-    (secret / "deepseek.key").write_text("OLD_KEY\n", encoding="utf-8")
-    (secrets / "deekseep.key").write_text("NEW_KEY\n", encoding="utf-8")
-    monkeypatch.setenv("HOME", str(tmp_path))
-    for env in ("DEEPSEEK_API_KEY",):
-        monkeypatch.delenv(env, raising=False)
-    monkeypatch.setattr(su, "_load_opencode_provider_key", lambda _p: None)
-    assert su._load_deepseek_api_key() == "NEW_KEY"
 
 
 _MUSE_EMAIL = "secret-email-do-not-leak@example.com"
@@ -3195,47 +2837,38 @@ _CODEX_ACCOUNT_KEYS = ("codex", "codex:a", "codex:b")
 
 
 @pytest.fixture
-def two_codex_accounts(tmp_path, monkeypatch):
-    """Account a in $HOME/.codex and account b bound to its own private home; HTTP answers by bearer."""
-    home = tmp_path / "home"
-    (home / ".codex").mkdir(parents=True)
-    b_home = tmp_path / "codex-b"
-    b_home.mkdir(mode=0o700)
-    for directory, token in ((home / ".codex", "fixture-token-a"), (b_home, "fixture-token-b")):
-        auth = directory / "auth.json"
-        auth.write_text(json.dumps({"tokens": {"access_token": token}}), encoding="utf-8")
-        auth.chmod(0o600)
-    binding = tmp_path / "codex_accounts.json"
-    binding.write_text(
-        json.dumps({"schema_version": 1, "accounts": {"b-sub": {"codex_home": str(b_home), "budget_usd": 200}}})
-    )
-    binding.chmod(0o600)
-    monkeypatch.setenv("HOME", str(home))
-    monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(binding))
-    # A Monitor started on account b's home must still report account a as ``codex``.
-    monkeypatch.setenv("CODEX_HOME", str(b_home))
+def two_codex_accounts(monkeypatch):
+    """The private boundary answers by account label, without any credential fixture."""
     for key in _CODEX_ACCOUNT_KEYS:
         monkeypatch.delitem(subscription_usage_mod._last_good_data, key, raising=False)
         monkeypatch.delitem(subscription_usage_mod._last_failure_data, key, raising=False)
     cache_invalidate("codexbar_usage:")
-    answers = {"fixture-token-a": (11.0, 22.0), "fixture-token-b": (66.0, 77.0)}
-    rejected: set[str] = set()
+    rejected = set()
+    answers = {"sub": (11.0, 22.0), "b-sub": (66.0, 77.0)}
 
-    def request(method, url, *, headers=None, **_kwargs):
-        token = (headers or {}).get("Authorization", "").removeprefix("Bearer ")
-        if token in rejected:
-            return 401, None, "HTTP 401"
-        if url.endswith("reset-credits"):
-            return 200, {"available_count": 0, "credits": []}, None
-        session, weekly = answers[token]
-        return 200, {
-            "rate_limit": {
-                "primary_window": {"used_percent": session, "limit_window_seconds": 18000},
-                "secondary_window": {"used_percent": weekly, "limit_window_seconds": 604800},
+    def probe(provider, *, timeout_s, account=None):
+        assert provider == "codex" and timeout_s == 1
+        if account in rejected:
+            return {
+                "outcome": "error",
+                "error": {"kind": "token_rejected", "code": 401, "message": "Codex OAuth token rejected"},
             }
-        }, None
+        session, weekly = answers[account]
+        return {
+            "outcome": "data",
+            "record": {
+                "provider": "codex",
+                "source": "codex_oauth",
+                "openaiDashboard": {},
+                "usage": {
+                    "primary": {"windowMinutes": 300, "usedPercent": session, "resetsAt": None},
+                    "secondary": {"windowMinutes": 10080, "usedPercent": weekly, "resetsAt": None},
+                },
+            },
+        }
 
-    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", request)
+    module = _fake_private(monkeypatch)
+    module.probe_subscription = probe
     yield rejected
     cache_invalidate("codexbar_usage:")
 
@@ -3259,7 +2892,7 @@ def test_two_codex_accounts_publish_two_rows_with_their_own_numbers(two_codex_ac
 @pytest.mark.parametrize(("expired", "healthy"), [("codex:b", "codex:a"), ("codex:a", "codex:b")])
 def test_expired_codex_token_marks_only_that_account_unavailable(two_codex_accounts, expired, healthy):
     subscription_usage_mod.refresh_provider_usage_data(_CODEX_ACCOUNT_KEYS, timeout_s=1.0)
-    two_codex_accounts.add("fixture-token-b" if expired == "codex:b" else "fixture-token-a")
+    two_codex_accounts.add("b-sub" if expired == "codex:b" else "sub")
     # The expired account has no earlier good reading to fall back to.
     for key in subscription_usage_mod._stored_usage_keys(expired):
         subscription_usage_mod._last_good_data.pop(key, None)
@@ -3278,3 +2911,153 @@ def test_expired_codex_token_marks_only_that_account_unavailable(two_codex_accou
     assert (live["primary_used_pct"], live["weekly_used_pct"]) == expected_numbers
     assert live["failure_kind"] is None
     assert "fixture-token" not in json.dumps(rows)
+
+
+@pytest.fixture
+def private_binding(tmp_path, monkeypatch):
+    from scripts.opsec import prepublish
+
+    monkeypatch.setattr(prepublish, "primary_root", lambda: tmp_path / "public")
+    monkeypatch.setattr(prepublish, "catalog", lambda: {"infra-private": {"local_name": "private"}})
+    directory = tmp_path / "private" / "tools" / "fleet_usage"
+    directory.mkdir(parents=True)
+    monkeypatch.delitem(sys.modules, "_lu_private_fleet_usage", raising=False)
+    subscription_usage_mod._load_private_usage.cache_clear()
+    yield directory / "usage.py"
+    subscription_usage_mod._load_private_usage.cache_clear()
+    sys.modules.pop("_lu_private_fleet_usage", None)
+
+
+_REQUIRED_PRIVATE_ENTRY_POINTS = (
+    "probe_subscription",
+    "probe_api_account",
+    "api_key_present",
+    "prepaid_remaining_usd",
+    "prove_claude_owner",
+    "credential_inventory",
+)
+
+
+def _private_module_source(*, version="1", missing=None):
+    lines = [f"INTERFACE_VERSION = {version}"]
+    for name in _REQUIRED_PRIVATE_ENTRY_POINTS:
+        if name != missing:
+            lines.append(f"def {name}(*args, **kwargs): return None")
+    return "\n".join(lines)
+
+
+@pytest.mark.parametrize("version", ["0", "2", "True", "1.0", "'1'"])
+def test_private_binding_incompatible_version_is_unavailable(private_binding, version):
+    private_binding.write_text(_private_module_source(version=version))
+    result = subscription_usage_mod.fetch_provider_usage("codex:b", timeout_s=1)
+    assert result["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+    assert result["codex_account"] == "b-sub"
+    assert result["weekly_used_pct"] is None
+
+
+@pytest.mark.parametrize("missing", _REQUIRED_PRIVATE_ENTRY_POINTS)
+def test_private_binding_missing_entry_point_is_unavailable(private_binding, missing):
+    private_binding.write_text(_private_module_source(missing=missing))
+    result = subscription_usage_mod.fetch_provider_usage("claude", timeout_s=1)
+    assert result["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+    assert result["status"] == "unavailable"
+    assert result["weekly_used_pct"] is None
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "codex:a", "codex:b", "kimi", "grok"])
+def test_absent_private_binding_subscription_fails_closed(private_binding, provider, monkeypatch):
+    monkeypatch.setattr(Path, "home", lambda: pytest.fail("public probe must never discover credentials"))
+    result = subscription_usage_mod.fetch_provider_usage(provider, timeout_s=1)
+    assert result["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+    assert result["error_kind"] == "unavailable"
+    assert result["auth_error"] == "private usage tooling unavailable"
+    assert result["primary_used_pct"] is None and result["weekly_used_pct"] is None
+    assert subscription_usage_mod._probe_glm_native(timeout_s=1)["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+
+
+@pytest.mark.parametrize("provider", ["openrouter", "deepseek"])
+def test_absent_private_binding_prepaid_needs_probe(private_binding, provider):
+    result = subscription_usage_mod._probe_api_account_live(provider, timeout_s=1)
+    assert result["probe_state"] == "NEED_PROBE"
+    assert result["auth_error"] == "private usage tooling unavailable"
+    assert result.get("total_balance") is None and result.get("account_remaining_usd") is None
+
+
+def test_private_binding_load_failure_is_quiet_and_unavailable(private_binding, capsys):
+    private_binding.write_text("print('SYNTHETIC_PRIVATE_DETAIL')\nraise RuntimeError('SYNTHETIC_PRIVATE_DETAIL')")
+    result = subscription_usage_mod.fetch_provider_usage("claude", timeout_s=1)
+    assert result["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+    assert capsys.readouterr() == ("", "")
+    assert "SYNTHETIC_PRIVATE_DETAIL" not in json.dumps(result)
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "codex:a", "codex:b", "kimi", "grok"])
+def test_private_outcome_keeps_public_normalization(monkeypatch, provider):
+    outcome = {
+        "outcome": "data",
+        "record": {
+            "provider": "codex" if provider.startswith("codex") else provider,
+            "source": "synthetic",
+            "openaiDashboard": {},
+            "usage": {
+                "primary": {"windowMinutes": 300, "usedPercent": 12.5, "resetsAt": None},
+                "secondary": {"windowMinutes": 10080, "usedPercent": 37.5, "resetsAt": None},
+            },
+            "credit_balance": 0,
+            "reset_credits": {"available_count": 0, "expires_at": []},
+        },
+    }
+    seen = []
+    module = _fake_private(monkeypatch)
+
+    def probe(name, *, timeout_s, account=None):
+        seen.append((name, timeout_s, account))
+        return outcome
+
+    module.probe_subscription = probe
+    result = subscription_usage_mod.fetch_provider_usage(provider, timeout_s=3)
+    assert result["status"] == "healthy"
+    assert result["primary_used_pct"] == 12.5 and result["weekly_used_pct"] == 37.5
+    assert result["primary_remaining_pct"] == 87.5 and result["weekly_remaining_pct"] == 62.5
+    assert result["windows"]["secondary"]["window_minutes"] == 10080
+    if provider.startswith("codex"):
+        label = "b-sub" if provider == "codex:b" else "sub"
+        assert seen == [("codex", 3, label)]
+        assert result["codex_account"] == label
+        assert result["credit_balance"] == 0 and result["reset_credits"]["available_count"] == 0
+    else:
+        assert seen == [(provider, 3, None)]
+
+
+def test_path_loaded_private_module_normalizes_data(private_binding, capsys):
+    outcome = {
+        "outcome": "data",
+        "record": {
+            "provider": "codex",
+            "source": "synthetic",
+            "openaiDashboard": {},
+            "usage": {
+                "primary": {"windowMinutes": 300, "usedPercent": 12.5, "resetsAt": None},
+                "secondary": {"windowMinutes": 10080, "usedPercent": 37.5, "resetsAt": None},
+            },
+        },
+    }
+    private_binding.write_text(
+        "from __future__ import annotations\n"
+        "from dataclasses import dataclass\n"
+        "@dataclass\n"
+        "class Outcome:\n"
+        "    value: dict\n"
+        + _private_module_source()
+        + "\nprint('SYNTHETIC_PRIVATE_DETAIL')\n"
+        + "def probe_subscription(provider, *, timeout_s, account=None):\n"
+        + "    assert (provider, timeout_s, account) == ('codex', 3, 'b-sub')\n"
+        + f"    return Outcome({outcome!r}).value\n"
+    )
+    result = subscription_usage_mod.fetch_provider_usage("codex:b", timeout_s=3)
+    assert result["status"] == "healthy"
+    assert result["codex_account"] == "b-sub"
+    assert (result["primary_used_pct"], result["weekly_used_pct"]) == (12.5, 37.5)
+    assert (result["primary_remaining_pct"], result["weekly_remaining_pct"]) == (87.5, 62.5)
+    assert result["source"] == "synthetic"
+    assert capsys.readouterr() == ("", "")
