@@ -24,7 +24,7 @@ except ImportError:
             return str(self.value)
 
 
-from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER, scan_hramatka_lesson
+from .state_helpers import monitor_surface
 
 PRIMARY_MODEL = "gemini-3.8-flash-high"
 SECONDARY_MODEL = "gemini-3.8-flash-high"
@@ -130,7 +130,7 @@ def passes_all_hramatka_qg_rules(evidence: Mapping[str, Any]) -> bool:
     dimensions = evidence.get("dimensions")
     if not isinstance(dimensions, Mapping):
         return False
-    for dimension in DIMENSION_ORDER:
+    for dimension in monitor_surface.hramatka_dimension_order():
         result = dimensions.get(dimension)
         if not isinstance(result, Mapping):
             return False
@@ -164,7 +164,7 @@ def generate_qualified_lesson(
     request: Mapping[str, Any],
     *,
     transport: ProviderTransport,
-    qg_scan: QualityGate = scan_hramatka_lesson,
+    qg_scan: QualityGate = monitor_surface.scan_hramatka_lesson,
     primary_model: str = PRIMARY_MODEL,
     secondary_model: str = SECONDARY_MODEL,
 ) -> GenerationResult:

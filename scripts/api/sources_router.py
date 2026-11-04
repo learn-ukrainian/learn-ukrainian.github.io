@@ -3,22 +3,13 @@
 from __future__ import annotations
 
 import re
-import sqlite3
-import sys
-from collections.abc import Callable
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
-from .config import PROJECT_ROOT
 from .monitor_context import MonitorContext, get_ctx
-
-# PROJECT_ROOT stays imported so the optional ``rag.query`` path works and
-# the remaining path_loop seam is the config import, not IMAGE_DIR.
-_scripts_dir = str(PROJECT_ROOT / "scripts")
-if _scripts_dir not in sys.path:
-    sys.path.insert(0, _scripts_dir)
+from .state_helpers import monitor_surface
 
 router = APIRouter(tags=["sources"])
 
@@ -31,22 +22,6 @@ def _image_dir(ctx: MonitorContext) -> Path:
     return ctx.roots.project_root / "data" / "textbook_images"
 
 
-def _run_sources_query[T](ctx: MonitorContext, callback: Callable[[], T]) -> T:
-    """Run a RAG query against the context-owned sources handle."""
-    from rag.query import sources_db as query_sources_db  # noqa: PLC0415 — optional RAG dependency
-
-    handle = ctx.stores.sources_db
-    if handle is None or not handle.path.exists():
-        raise FileNotFoundError("data/sources.db not found")
-    connection = handle.connect(read_only=True)
-    connection.row_factory = sqlite3.Row
-    try:
-        with query_sources_db.using_connection(connection):
-            return callback()
-    finally:
-        connection.close()
-
-
 @router.get("/search_text")
 async def search_text(
     q: str = Query(..., description="Search query in Ukrainian"),
@@ -56,17 +31,9 @@ async def search_text(
     limit: int = Query(5, ge=1, le=20),
     ctx: MonitorContext = Depends(get_ctx),
 ):
-    from rag.query import search_text as _search_text  # noqa: PLC0415 — optional RAG dependency
-
-    try:
-        return _run_sources_query(
-            ctx,
-            lambda: _search_text(
-                q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit
-            ),
-        )
-    except FileNotFoundError:
-        return []
+    return monitor_surface.search_sources_text(
+        ctx.stores.sources_db, q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit
+    )
 
 
 @router.get("/search_literary")
@@ -78,25 +45,14 @@ async def search_literary(
     limit: int = Query(5, ge=1, le=20),
     ctx: MonitorContext = Depends(get_ctx),
 ):
-    from rag.query import search_literary as _search_literary  # noqa: PLC0415 — optional RAG dependency
-
-    try:
-        return _run_sources_query(
-            ctx,
-            lambda: _search_literary(q, work=work, genre=genre, period=period, limit=limit),
-        )
-    except FileNotFoundError:
-        return []
+    return monitor_surface.search_sources_literary(
+        ctx.stores.sources_db, q, work=work, genre=genre, period=period, limit=limit
+    )
 
 
 @router.get("/stats")
 async def collection_stats(ctx: MonitorContext = Depends(get_ctx)):
-    from rag.query import collection_stats as _collection_stats  # noqa: PLC0415 — optional RAG dependency
-
-    try:
-        return _run_sources_query(ctx, _collection_stats)
-    except FileNotFoundError:
-        return {"sources_db": {"error": "data/sources.db not found"}}
+    return monitor_surface.sources_collection_stats(ctx.stores.sources_db)
 
 
 @router.get("/browse_images")

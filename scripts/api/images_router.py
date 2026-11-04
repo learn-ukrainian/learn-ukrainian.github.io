@@ -18,7 +18,6 @@ from __future__ import annotations
 import asyncio
 import json
 import shutil
-import sys
 import urllib.parse
 from collections import OrderedDict
 from datetime import datetime
@@ -30,11 +29,7 @@ from fastapi.responses import Response
 from pydantic import BaseModel
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
-
-# Ensure scripts/ is importable for rag.poc_pair_page
-_scripts_dir = str(Path(__file__).resolve().parents[1])
-if _scripts_dir not in sys.path:
-    sys.path.insert(0, _scripts_dir)
+from .state_helpers import monitor_surface
 
 router = APIRouter(tags=["images"])
 
@@ -431,20 +426,8 @@ async def get_page_context(
     if page_num < 1 or page_num > len(doc):
         raise HTTPException(400, f"Page {page_num} out of range (1-{len(doc)})")
 
-    def _extract(doc, page_num):
-        from rag.poc_pair_page import (  # noqa: PLC0415  — optional RAG dependency
-            SCALE,
-            extract_images,
-            extract_text_blocks,
-        )
-        page = doc[page_num - 1]
-        text_blocks = extract_text_blocks(page)
-        images = extract_images(page)
-        rect = page.rect
-        return text_blocks, images, rect, SCALE
-
     text_blocks, images, rect, scale = await asyncio.to_thread(
-        _extract, doc, page_num
+        monitor_surface.extract_image_page_context, doc, page_num
     )
 
     # Merge with annotation data
@@ -509,13 +492,7 @@ async def render_page_png(
     if page_num < 1 or page_num > len(doc):
         raise HTTPException(400, f"Page {page_num} out of range (1-{len(doc)})")
 
-    def _render(doc, page_num):
-        from rag.poc_pair_page import RENDER_DPI  # noqa: PLC0415  — optional RAG dependency
-        page = doc[page_num - 1]
-        pix = page.get_pixmap(dpi=RENDER_DPI)
-        return pix.tobytes("png")
-
-    png_bytes = await asyncio.to_thread(_render, doc, page_num)
+    png_bytes = await asyncio.to_thread(monitor_surface.render_image_page_png, doc, page_num)
     _cache_page_render(cache_key, png_bytes, store.page_cache)
 
     return Response(
