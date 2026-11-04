@@ -40,9 +40,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from research_quality import assess_research_compat, find_research_path
 
 try:
-    from scripts.lib.readonly_sqlite import import_named_module
+    from scripts.ops.product_entry import load_configured_module
 except ImportError:
-    from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
+    from ops.product_entry import load_configured_module  # type: ignore[no-redef]
 
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}
@@ -118,7 +118,7 @@ def _load_monitor_surface() -> ModuleType:
     name = document["monitor_surface"]
     if not isinstance(name, str) or not _PRODUCT_MODULE_RE.fullmatch(name):
         raise ValueError(f"monitor_paths.v1.json: monitor_surface is not a scripts module name: {name!r}")
-    return import_named_module(name)
+    return load_configured_module(name)
 
 
 # Loaded once at import, so a missing or malformed entry point stops the

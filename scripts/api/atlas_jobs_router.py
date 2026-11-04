@@ -8,10 +8,8 @@ from __future__ import annotations
 
 import asyncio
 import base64
-import importlib.util
 import json
 import os
-import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -20,6 +18,8 @@ from typing import Any, Protocol, cast
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+
+from scripts.ops.product_entry import load_configured_module
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 
@@ -52,23 +52,16 @@ class _MonitorJobs(Protocol):
     def is_self_host(self, host: str) -> bool: ...
 
 
-# The module path is JSON data. A literal import of the lexicon package would
-# stay a machinery-to-product identity. A non-constant import_module call is a
-# writable-connect constructor finding, so this loads the file the JSON names.
-_MONITOR_JOBS_ENTRY = json.loads(
-    '{"module": "scripts.lexicon.monitor_jobs", "relative": "lexicon/monitor_jobs.py"}'
-)
-_monitor_jobs_path = Path(__file__).resolve().parents[1] / _MONITOR_JOBS_ENTRY["relative"]
-_monitor_jobs_spec = importlib.util.spec_from_file_location(
-    _MONITOR_JOBS_ENTRY["module"],
-    _monitor_jobs_path,
-)
-if _monitor_jobs_spec is None or _monitor_jobs_spec.loader is None:
-    raise ImportError(_MONITOR_JOBS_ENTRY["module"])
-_monitor_jobs_module = importlib.util.module_from_spec(_monitor_jobs_spec)
-sys.modules[_MONITOR_JOBS_ENTRY["module"]] = _monitor_jobs_module
-_monitor_jobs_spec.loader.exec_module(_monitor_jobs_module)
-monitor_jobs = cast(_MonitorJobs, _monitor_jobs_module)
+_MONITOR_JOBS_ENTRY_PATH = Path(__file__).resolve().parents[1] / "lexicon" / "monitor_jobs.v1.json"
+
+
+def _load_monitor_jobs() -> _MonitorJobs:
+    entry = json.loads(_MONITOR_JOBS_ENTRY_PATH.read_text(encoding="utf-8"))
+    return cast(_MonitorJobs, load_configured_module(entry["module"]))
+
+
+# Pin the configured module at startup, as the file-spec loader did.
+monitor_jobs = _load_monitor_jobs()
 
 router = APIRouter(tags=["atlas-jobs"])
 

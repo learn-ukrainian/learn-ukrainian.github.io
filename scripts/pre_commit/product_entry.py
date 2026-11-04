@@ -5,7 +5,7 @@ files with product code. Machinery does not import that code. The product
 names each hook's entry point in one data file,
 ``scripts/build/pre_commit_entry_points.v1.json``, and this module is the only
 reader: it validates the file, imports the named module through the shared
-``scripts.lib.readonly_sqlite.import_named_module`` boundary (which refuses
+``scripts.ops.product_entry.load_configured_module`` boundary (which refuses
 SQLite modules) and calls the named function with the recorded arguments.
 
 The file is trusted because of where it is read from: the path is fixed
@@ -36,7 +36,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.lib.readonly_sqlite import import_named_module
+from scripts.ops.product_entry import load_configured_module
 
 SCHEMA = "learn-ukrainian.pre-commit-entry-points"
 SCHEMA_VERSION = 1
@@ -136,7 +136,7 @@ def _entry_point(hook_id: str, raw: Any) -> EntryPoint:
 def run_entry_point(hook_id: str) -> int:
     """Import and call the product entry point for ``hook_id``; return its exit code."""
     entry = load_entry_point(hook_id)
-    function: Callable[[list[str]], object] | None = getattr(import_named_module(entry.module), entry.function, None)
+    function: Callable[[list[str]], object] | None = getattr(load_configured_module(entry.module), entry.function, None)
     if not callable(function):
         raise EntryPointError(f"{entry.module} has no callable {entry.function!r}")
     result = function(list(entry.argv))
