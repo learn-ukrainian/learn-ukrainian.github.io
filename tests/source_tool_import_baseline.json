@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 489,
-    "probe_count": 978,
+    "cli_count": 487,
+    "probe_count": 974,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/env_sanitize.py",
@@ -60,7 +60,6 @@
       "scripts/audit/check_atlas_manifest_enrichment.py",
       "scripts/audit/check_ci_dependencies.py",
       "scripts/audit/check_content_spelling.py",
-      "scripts/audit/check_core_bare.py",
       "scripts/audit/check_decisions.py",
       "scripts/audit/check_framing_compliance_changed.py",
       "scripts/audit/check_locked_module_not_published.py",
@@ -78,7 +77,6 @@
       "scripts/audit/check_research_registry.py",
       "scripts/audit/check_research_registry_pilot.py",
       "scripts/audit/check_review_issues.py",
-      "scripts/audit/check_self_symlinks.py",
       "scripts/audit/check_static_practice_assets.py",
       "scripts/audit/check_teacher_cloze_content.py",
       "scripts/audit/check_teacher_deck.py",
@@ -494,7 +492,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "1b6a3e6e9fd7b7adf450685b707b5bd6e8a6cdf6ae2d30ef46cb0f09018eba66"
+    "cli_paths_sha256": "8b78a625e168685c5fcd3d2ad182ce8569129e0ddb3350b5d2de7c3731c33831"
   },
   "failures": [
     {

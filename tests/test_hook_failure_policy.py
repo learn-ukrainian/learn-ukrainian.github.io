@@ -511,9 +511,9 @@ def _heal_fixture(tmp_path: Path, bare: str) -> tuple[Path, Path]:
         encoding="utf-8",
     )
     spawned = tmp_path / "spawned"
-    audit = root / "scripts/audit"
-    audit.mkdir()
-    (audit / "check_core_bare.py").write_text(
+    hygiene = root / "scripts/hygiene"
+    hygiene.mkdir()
+    (hygiene / "check_core_bare.py").write_text(
         f"from pathlib import Path\nPath({str(spawned)!r}).write_text('yes')\n", encoding="utf-8"
     )
     (root / ".git").mkdir()
