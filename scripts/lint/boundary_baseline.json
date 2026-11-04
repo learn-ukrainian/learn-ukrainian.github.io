@@ -148,11 +148,6 @@
     },
     {
       "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_tmp_usability",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
       "module": "scripts.audit.check_venv_integrity",
       "count": 1
     },
