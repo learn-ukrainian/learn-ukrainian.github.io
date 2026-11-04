@@ -72,8 +72,8 @@ def _read_product_data(name: str, schema: str, fields: frozenset[str]) -> dict[s
     """Read one version-1 product data file from ``scripts/curriculum/``.
 
     Raises ``ValueError`` (or ``OSError``) for a symlink or non-regular file,
-    an oversized file, invalid UTF-8 or JSON, a duplicate key, a wrong schema
-    or version, and missing or unknown fields.
+    an oversized file, invalid UTF-8 or JSON, nesting too deep to decode, a
+    duplicate key, a wrong schema or version, and missing or unknown fields.
     """
     path = _PRODUCT_DATA_DIR / name
     if path.is_symlink() or not path.is_file():
@@ -81,7 +81,10 @@ def _read_product_data(name: str, schema: str, fields: frozenset[str]) -> dict[s
     raw = path.read_bytes()
     if len(raw) > _PRODUCT_DATA_MAX_BYTES:
         raise ValueError(f"{name}: larger than {_PRODUCT_DATA_MAX_BYTES} bytes")
-    document = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_keys)
+    try:
+        document = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_keys)
+    except RecursionError as exc:
+        raise ValueError(f"{name}: nested too deeply") from exc
     if not isinstance(document, dict) or set(document) != {"schema", "schema_version", *fields}:
         raise ValueError(f"{name}: expected fields schema, schema_version, {', '.join(sorted(fields))}")
     version = document["schema_version"]

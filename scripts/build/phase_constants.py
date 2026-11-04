@@ -7,7 +7,8 @@ importing the build entrypoint.
 The data lives in ``scripts/curriculum/phase_labels.v1.json``, which the
 Monitor API (machinery) reads directly; this module loads the same file, so
 there is one source of truth (machinery move step 4, slice S2, #12504). A
-missing or malformed file raises at import.
+missing or malformed file (including a symlink, an oversized file or a
+duplicate key) raises at import.
 
 Pure data only — this module must never import build/runtime code (keeping it
 dependency-free is what lets callers import it cheaply).
@@ -18,10 +19,27 @@ from pathlib import Path
 
 _PHASE_LABELS_PATH = Path(__file__).resolve().parents[1] / "curriculum" / "phase_labels.v1.json"
 _SCHEMA = "learn-ukrainian.monitor-phase-labels"
+_MAX_BYTES = 64 * 1024
+
+
+def _unique_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    document: dict[str, object] = {}
+    for key, value in pairs:
+        if key in document:
+            raise ValueError(f"{_PHASE_LABELS_PATH.name}: duplicate key {key!r}")
+        document[key] = value
+    return document
 
 
 def _load() -> tuple[list[str], dict[str, str]]:
-    document = json.loads(_PHASE_LABELS_PATH.read_text(encoding="utf-8"))
+    # The same file classes the Monitor reader (scripts/api/state_helpers.py)
+    # refuses, so both readers see one document or neither does.
+    if _PHASE_LABELS_PATH.is_symlink() or not _PHASE_LABELS_PATH.is_file():
+        raise ValueError(f"{_PHASE_LABELS_PATH.name}: not a regular file")
+    raw = _PHASE_LABELS_PATH.read_bytes()
+    if len(raw) > _MAX_BYTES:
+        raise ValueError(f"{_PHASE_LABELS_PATH.name}: larger than {_MAX_BYTES} bytes")
+    document = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_keys)
     if (
         not isinstance(document, dict)
         or set(document) != {"schema", "schema_version", "phases", "phase_labels"}
