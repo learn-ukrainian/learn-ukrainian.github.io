@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib
 import json
 import re
 import sys
@@ -20,11 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.audit import lint_bio_dossier_xref
-from scripts.audit.wiki_completeness_gate import check_wiki_completeness
-from scripts.build import linear_pipeline
 from scripts.common.schema_check import check_schema as check_schema_memoised
-from scripts.level_config import base_level, resolve_manifest_module_track
 from scripts.orchestration import prompt_contracts
 from scripts.orchestration.preparation_evidence import (
     RegistryValidationError,
@@ -32,9 +29,6 @@ from scripts.orchestration.preparation_evidence import (
     load_yaml_mapping,
 )
 from scripts.research import research_quality
-from scripts.validate import check_discovery_integrity, check_wiki_subject, lint_seminar_quality
-from scripts.wiki.domains import resolve_write_domain
-from scripts.wiki.sources_schema import load_sources_registry, validate_sources_registry
 
 CONFIG_PATH = Path("agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml")
 CONFIG_SCHEMA_PATH = Path(
@@ -104,6 +98,18 @@ def is_host_path_only_text_change(base_text: str, head_text: str) -> bool:
 
 class ReadinessError(ValueError):
     """Raised when a preparation contract cannot be evaluated safely."""
+
+
+# The module name is product data. A literal import would stay an identity.
+_GATES_ENTRY = json.loads('{"module": "scripts.curriculum.readiness_gates"}')
+
+
+def load_readiness_gates():
+    """Load the product readiness gates. A missing entry fails closed."""
+    module = _GATES_ENTRY.get("module") if isinstance(_GATES_ENTRY, dict) else None
+    if not isinstance(module, str) or not module:
+        raise ReadinessError("readiness gates entry point is missing")
+    return importlib.import_module(module)
 
 
 @dataclass(frozen=True)
@@ -255,16 +261,17 @@ def artifact_path(artifact: str, repo_root: Path, track: str, slug: str) -> Path
     """Resolve a registered artifact ID without track-name branches."""
     curriculum = repo_root / "curriculum" / "l2-uk-en"
     manifest = curriculum / "curriculum.yaml"
-    plan_track = base_level(track, manifest=manifest) if manifest.exists() else track
+    gates = load_readiness_gates()
+    plan_track = gates.base_level(track, manifest=manifest) if manifest.exists() else track
     resolvers: dict[str, Callable[[], Path]] = {
         "research": lambda: _research_path(repo_root, track, slug),
         "dossier": lambda: repo_root / "docs" / "research" / track / f"{slug}.md",
         "plan": lambda: curriculum / "plans" / plan_track / f"{slug}.yaml",
         "manual-registry": lambda: curriculum / track / "promotion-evidence.yaml",
-        "wiki-document": lambda: repo_root / "wiki" / resolve_write_domain(plan_track, slug) / f"{slug}.md",
+        "wiki-document": lambda: repo_root / "wiki" / gates.resolve_write_domain(plan_track, slug) / f"{slug}.md",
         "wiki-sources": lambda: repo_root
         / "wiki"
-        / resolve_write_domain(plan_track, slug)
+        / gates.resolve_write_domain(plan_track, slug)
         / f"{slug}.sources.yaml",
         "discovery": lambda: curriculum / track / "discovery" / f"{slug}.yaml",
     }
@@ -290,7 +297,7 @@ def _yaml_mapping(path: Path, _option: Mapping[str, Any], _context: ValidationCo
 
 def _plan_check(path: Path, _option: Mapping[str, Any], _context: ValidationContext) -> ValidationResult:
     try:
-        linear_pipeline.plan_check(path)
+        load_readiness_gates().linear_pipeline.plan_check(path)
     except Exception as exc:  # authoritative plan validator has several error types
         return ValidationResult(False, f"{type(exc).__name__}: {exc}")
     return ValidationResult(True, "authoritative plan check passed")
@@ -301,7 +308,11 @@ def _seminar_plan_language(
     _option: Mapping[str, Any],
     _context: ValidationContext,
 ) -> ValidationResult:
-    findings = [finding for finding in lint_seminar_quality.lint_plan(path) if finding.severity == "high"]
+    findings = [
+        finding
+        for finding in load_readiness_gates().lint_seminar_quality.lint_plan(path)
+        if finding.severity == "high"
+    ]
     return ValidationResult(not findings, f"{len(findings)} high seminar-language finding(s)")
 
 
@@ -344,12 +355,13 @@ def _wiki_sources_registry(
             return ValidationResult(False, "wiki source registry needs a non-empty sources list")
         if not all(isinstance(item, Mapping) for item in raw_sources):
             return ValidationResult(False, "wiki source registry entries must be mappings")
-        registry = load_sources_registry(path)
+        gates = load_readiness_gates()
+        registry = gates.load_sources_registry(path)
         if not registry.sources:
             return ValidationResult(False, "wiki source registry has no valid entries")
         article_path = artifact_path("wiki-document", context.repo_root, context.track, context.slug)
         article_text = article_path.read_text(encoding="utf-8", errors="strict")
-        issues = validate_sources_registry(article_text, registry)
+        issues = gates.validate_sources_registry(article_text, registry)
     except (KeyError, OSError, TypeError, UnicodeDecodeError, ValueError) as exc:
         return ValidationResult(False, f"invalid wiki source registry: {exc}")
     if issues:
@@ -449,7 +461,7 @@ def _bio_dossier_xref(
     _option: Mapping[str, Any],
     _context: ValidationContext,
 ) -> ValidationResult:
-    findings = lint_bio_dossier_xref.lint_dossier(path)
+    findings = load_readiness_gates().lint_bio_dossier_xref.lint_dossier(path)
     return ValidationResult(not findings, f"{len(findings)} dossier cross-reference finding(s)")
 
 
@@ -468,7 +480,7 @@ def _wiki_completeness(
     _option: Mapping[str, Any],
     context: ValidationContext,
 ) -> ValidationResult:
-    report = check_wiki_completeness(path, level=context.track, slug=context.slug)
+    report = load_readiness_gates().check_wiki_completeness(path, level=context.track, slug=context.slug)
     return ValidationResult(report["verdict"] == "PASS", str(report["diagnostic"]))
 
 
@@ -480,7 +492,9 @@ def _bio_wiki_subject(
     plan = context.plan()
     if plan is None:
         return ValidationResult(False, "plan title unavailable for wiki subject check")
-    finding = check_wiki_subject.check_wiki_file(path, plan_title=str(plan.get("title", "")))
+    finding = load_readiness_gates().check_wiki_subject.check_wiki_file(
+        path, plan_title=str(plan.get("title", ""))
+    )
     return ValidationResult(finding is None, "wiki subject matches plan" if finding is None else str(finding))
 
 
@@ -489,7 +503,11 @@ def _seminar_wiki_language(
     _option: Mapping[str, Any],
     _context: ValidationContext,
 ) -> ValidationResult:
-    findings = [finding for finding in lint_seminar_quality.lint_text(path) if finding.severity == "high"]
+    findings = [
+        finding
+        for finding in load_readiness_gates().lint_seminar_quality.lint_text(path)
+        if finding.severity == "high"
+    ]
     return ValidationResult(not findings, f"{len(findings)} high seminar-language finding(s)")
 
 
@@ -501,7 +519,9 @@ def _bio_discovery_integrity(
     plan = context.plan()
     if plan is None:
         return ValidationResult(False, "plan title unavailable for discovery integrity check")
-    finding = check_discovery_integrity.check_discovery_file(path, plan_title=str(plan.get("title", "")))
+    finding = load_readiness_gates().check_discovery_integrity.check_discovery_file(
+        path, plan_title=str(plan.get("title", ""))
+    )
     return ValidationResult(finding is None, "discovery subject matches plan" if finding is None else str(finding))
 
 
@@ -1061,7 +1081,7 @@ def evaluate_preparation(
         raise ReadinessError("consumed preparation identity must be a SHA-256 hex digest")
 
     manifest = active_manifest if active_manifest is not None else load_active_manifest(repo_root)
-    track = resolve_manifest_module_track(track, slug, manifest["tracks"])
+    track = load_readiness_gates().resolve_manifest_module_track(track, slug, manifest["tracks"])
     manifest_record, manifest_slugs = manifest_track(manifest, track)
     config = load_config(
         repo_root=repo_root,

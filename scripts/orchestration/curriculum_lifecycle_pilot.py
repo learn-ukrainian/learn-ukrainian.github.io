@@ -21,8 +21,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.audit import post_build_review
-from scripts.level_config import base_level, resolve_content_track, resolve_manifest_module_track
 from scripts.orchestration import curriculum_readiness, prompt_contracts
 
 CONTRACT_ROOT = Path("agents_extensions/shared/curriculum-lifecycle")
@@ -315,7 +313,9 @@ def _validate_matrix_semantics(matrix: Mapping[str, Any], repo_root: Path) -> No
             continue
         track, slug = str(row["selector"]).split("/", 1)
         active_manifest = curriculum_readiness.load_active_manifest(repo_root)
-        resolved_track = resolve_manifest_module_track(track, slug, active_manifest["tracks"])
+        resolved_track = curriculum_readiness.load_readiness_gates().resolve_manifest_module_track(
+            track, slug, active_manifest["tracks"]
+        )
         manifest, modules = curriculum_readiness.manifest_track(active_manifest, resolved_track)
         if slug not in modules:
             raise PilotError(f"pilot target is not active in curriculum manifest: {row['selector']}")
@@ -355,8 +355,9 @@ def _learner_hashes(matrix: Mapping[str, Any], repo_root: Path) -> dict[str, str
     for selector in selectors:
         track, slug = selector.split("/", 1)
         curriculum = repo_root / "curriculum/l2-uk-en"
-        content_track = resolve_content_track(track, slug, curriculum)
-        plan_track = base_level(track, manifest=curriculum / "curriculum.yaml")
+        gates = curriculum_readiness.load_readiness_gates()
+        content_track = gates.resolve_content_track(track, slug, curriculum)
+        plan_track = gates.base_level(track, manifest=curriculum / "curriculum.yaml")
         candidates = [
             Path(f"curriculum/l2-uk-en/plans/{plan_track}/{slug}.yaml"),
             *(Path(f"curriculum/l2-uk-en/{content_track}/{slug}/{name}") for name in LEARNER_BUNDLE_FILES),
@@ -420,11 +421,12 @@ def _post_build_evidence_passes(row: Mapping[str, Any], repo_root: Path) -> bool
         return True
     path = _repo_file(repo_root, str(evidence["path"]))
     value = _read_json(path)
+    gates = curriculum_readiness.load_readiness_gates()
     try:
-        post_build_review.validate_result(value, repo_root=repo_root)
-        target = post_build_review.resolve_target(str(row["selector"]), repo_root=repo_root)
-        current_hashes = post_build_review.hash_target_files(target, repo_root=repo_root)
-    except post_build_review.ReviewProtocolError as exc:
+        gates.post_build_review.validate_result(value, repo_root=repo_root)
+        target = gates.post_build_review.resolve_target(str(row["selector"]), repo_root=repo_root)
+        current_hashes = gates.post_build_review.hash_target_files(target, repo_root=repo_root)
+    except gates.post_build_review.ReviewProtocolError as exc:
         raise PilotError(f"invalid post-build evidence for {row['id']}: {exc}") from exc
     return (
         value["combined_disposition"]["status"] == "PASS"

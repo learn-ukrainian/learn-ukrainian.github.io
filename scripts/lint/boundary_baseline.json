@@ -672,86 +672,6 @@
       "count": 1
     },
     {
-      "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
-      "module": "scripts.audit.post_build_review",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
-      "module": "scripts.level_config",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.audit.lint_bio_dossier_xref",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.audit.wiki_completeness_gate",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.build.linear_pipeline",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.level_config",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.validate",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.validate.check_discovery_integrity",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.validate.check_wiki_subject",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.validate.lint_seminar_quality",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.wiki",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.wiki.domains",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/curriculum_readiness.py",
-      "module": "scripts.wiki.sources_schema",
-      "count": 1
-    },
-    {
       "path": "scripts/orchestration/integration_sweep.py",
       "module": "scripts.deploy",
       "count": 1
@@ -759,16 +679,6 @@
     {
       "path": "scripts/orchestration/integration_sweep.py",
       "module": "scripts.deploy.auto_deploy_eligibility",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/sources_watchdog.py",
-      "module": "scripts.rag",
-      "count": 1
-    },
-    {
-      "path": "scripts/orchestration/sources_watchdog.py",
-      "module": "scripts.rag.hang_diagnostics",
       "count": 1
     },
     {

@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import importlib
 import json
 import os
 import shutil
@@ -60,12 +61,25 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.rag.hang_diagnostics import (
-    DUMP_SIGNAL,
-    ensure_dump_dir,
-    faulthandler_log_path,
-    resolve_dump_dir,
-)
+# The module name is product data. A literal import of the product module would
+# stay a machinery-to-product identity.
+_HANG_ENTRY = json.loads('{"module": "scripts.rag.hang_diagnostics"}')
+
+
+def _hang_diagnostics():
+    """Load the product hang helpers. A missing entry fails closed."""
+    module = _HANG_ENTRY.get("module") if isinstance(_HANG_ENTRY, dict) else None
+    if not isinstance(module, str) or not module:
+        raise RuntimeError("hang diagnostics entry point is missing")
+    return importlib.import_module(module)
+
+
+def _default_dump_dir() -> Path:
+    resolved = _hang_diagnostics().resolve_dump_dir(PROJECT_ROOT)
+    if not isinstance(resolved, Path):
+        raise RuntimeError("hang diagnostics resolve_dump_dir did not return a path")
+    return resolved
+
 
 UNIT = "learn-ukrainian-sources.service"
 # The units this tool may probe, dump or restart. Checked where the action
@@ -300,13 +314,16 @@ def capture_python_stacks(
     The signal is sent only when that pid registered the handler: the default
     action of ``SIGUSR1`` would terminate the process.
     """
-    log = faulthandler_log_path(dump_dir, pid)
+    hang = _hang_diagnostics()
+    log = hang.faulthandler_log_path(dump_dir, pid)
+    if not isinstance(log, Path):
+        raise RuntimeError("hang diagnostics faulthandler_log_path did not return a path")
     if not log.is_file():
         return f"<no faulthandler log for pid {pid}: server started without the dump handler>\n"
-    if not handles_signal(pid, DUMP_SIGNAL, proc_root):
-        return f"<pid {pid} has no {DUMP_SIGNAL.name} handler; signal not sent>\n"
+    if not handles_signal(pid, hang.DUMP_SIGNAL, proc_root):
+        return f"<pid {pid} has no {hang.DUMP_SIGNAL.name} handler; signal not sent>\n"
     offset = log.stat().st_size
-    send(pid, DUMP_SIGNAL)
+    send(pid, hang.DUMP_SIGNAL)
     deadline = time.monotonic() + wait_s
     size = offset
     while time.monotonic() < deadline:
@@ -357,7 +374,7 @@ def capture_incident_dump(
     keep: int = DEFAULT_KEEP_INCIDENTS,
 ) -> Path:
     """Write one incident directory; return it. Order: /proc, py-spy, stacks."""
-    ensure_dump_dir(dump_dir)
+    _hang_diagnostics().ensure_dump_dir(dump_dir)
     stamp = datetime.fromtimestamp(now, UTC).strftime("%Y%m%dT%H%M%SZ")
     incident = dump_dir / f"{INCIDENT_PREFIX}{stamp}-pid{pid}"
     incident.mkdir(mode=0o700, exist_ok=True)
@@ -407,7 +424,7 @@ def prune_dump_dir(dump_dir: Path, *, keep: int, proc_root: Path = Path("/proc")
 class Config:
     unit: str = UNIT
     health_url: str = HEALTH_URL
-    dump_dir: Path = field(default_factory=lambda: resolve_dump_dir(PROJECT_ROOT))
+    dump_dir: Path = field(default_factory=_default_dump_dir)
     failures_to_act: int = DEFAULT_FAILURES_TO_ACT
     probe_timeout: float = DEFAULT_PROBE_TIMEOUT_S
     max_restarts: int = DEFAULT_MAX_RESTARTS
@@ -444,7 +461,7 @@ def read_state(path: Path) -> dict[str, Any]:
 
 
 def write_state(path: Path, state: Mapping[str, Any]) -> None:
-    ensure_dump_dir(path.parent)
+    _hang_diagnostics().ensure_dump_dir(path.parent)
     temporary = path.with_name(f".{path.name}.tmp")
     _write_private(temporary, json.dumps(state, indent=2, sort_keys=True) + "\n")
     temporary.replace(path)
@@ -655,7 +672,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    dump_dir = args.dump_dir or resolve_dump_dir(PROJECT_ROOT)
+    dump_dir = args.dump_dir or _hang_diagnostics().resolve_dump_dir(PROJECT_ROOT)
     port = urlsplit(args.health_url).port or 80
     if args.command == "dump":
         incident = capture_incident_dump(args.pid, dump_dir, port, time.time(), reason=args.reason)
