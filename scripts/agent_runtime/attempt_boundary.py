@@ -60,6 +60,8 @@ from .env_sanitize import (
 # one this host has always used. Which account a non-default label means lives
 # only in private local configuration (see ``load_claude_account_binding``).
 CLAUDE_ACCOUNT_KEY = "claude_account"
+# The Codex account label of a bound attempt (``codex_accounts``); omitted means the default account.
+CODEX_ACCOUNT_KEY = "codex_account"
 DEFAULT_CLAUDE_ACCOUNT = "a"
 # Subscription logins: the host's own (``a``) and a second consumer login.
 CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS = ("a", "b")
@@ -1023,6 +1025,34 @@ def _run_claude_renewal(config_dir: Path) -> None:
             proc.wait()
 
 
+def stage_codex_account_auth(label: object, write_home: Path) -> dict[str, str]:
+    """Stage exactly ``label``'s Codex login into ``write_home``; never another account's.
+
+    The default account keeps its existing source. Any other label is read from its own bound home
+    through the binder an ordinary launch uses (``codex_account_env``), which refuses an unknown label,
+    an unbound, shared or default home, an ambient credential or home that conflicts with it, and a home
+    without a login. A bound home whose login is not a file refuses rather than launching unauthenticated.
+    """
+    from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
+
+    from .codex_accounts import (
+        DEFAULT_CODEX_ACCOUNT,
+        CodexAccountRefused,
+        codex_account_env,
+        resolve_codex_account_label,
+    )
+
+    try:
+        label = resolve_codex_account_label(label)
+        source = codex_account_env(label, os.environ)
+    except CodexAccountRefused as exc:
+        raise ReviewIsolationError(f"attempt_{exc.code}") from None
+    env = stage_engine_auth("codex", write_home=write_home, source_env=source)
+    if label != DEFAULT_CODEX_ACCOUNT and not (write_home / ".codex" / "auth.json").is_file():
+        raise ReviewIsolationError("attempt_codex_account_login_missing")
+    return env
+
+
 def linux_claude_auth(account: str | None = None) -> dict[str, str]:
     """Select only a fresh access token; --bare ignores file-backed login.
 
@@ -1265,7 +1295,9 @@ class AttemptBoundary:
             (self.write_root / "tmp").mkdir()
             self.env = build_agent_env(provider=agent)
             home.mkdir()
-            if agent != "agy":
+            if agent == "codex":
+                self.env.update(stage_codex_account_auth(tool_config.get(CODEX_ACCOUNT_KEY), home))
+            elif agent != "agy":
                 self.env.update(stage_engine_auth(agent, write_home=home))
             if agent == "claude":
                 self.env.update(linux_claude_auth(tool_config.get(CLAUDE_ACCOUNT_KEY)))

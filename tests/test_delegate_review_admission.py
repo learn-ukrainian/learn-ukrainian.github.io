@@ -171,3 +171,36 @@ def test_review_admission_refuses_a_route_ignoring_the_reviewer_selector():
 
 
 # --- #9739: a trusted review reads the target branch's complete authorship ------------------------
+
+
+def test_budget_blocked_codex_seat_excludes_account_a_quota_bucket(monkeypatch):
+    """R1 (#12504): the budget guard excludes the blocked lane's quota bucket, ``codex:a``, never seat ``codex``.
+
+    ``agents.codex`` is account a's lane, so account b's bucket stays selectable.
+    """
+    import contextlib
+
+    from scripts.review import capacity, reviewer_resolver
+
+    excluded = []
+    real = reviewer_resolver.resolve_reviewer
+
+    def resolve(inputs, **kwargs):
+        excluded.append(kwargs.get("excluded_quota_buckets"))
+        return real(inputs, **kwargs)
+
+    monkeypatch.setattr(capacity, "review_capacity_action", lambda *_a, **_k: (True, "fixture exhausted"))
+    monkeypatch.setattr(reviewer_resolver, "resolve_reviewer", resolve)
+    with contextlib.suppress(ReviewAdmissionRefused):
+        target_admission._resolve_review_target(
+            "codex",
+            "gpt-6.1-sol",
+            author_model="claude-opus-5-5",
+            risk="medium",
+            profile="code",
+            attempt=False,
+            snapshot={"agents": {}},
+            budget_seat="codex",
+            claude_account=HOST_ACCOUNT,
+        )
+    assert frozenset({"codex:a"}) in excluded and all("codex" not in buckets for buckets in excluded if buckets)

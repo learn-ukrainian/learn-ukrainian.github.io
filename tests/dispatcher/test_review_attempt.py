@@ -882,3 +882,178 @@ def test_ukrainian_claim_text_cannot_hide_behind_valid_receipt_quote(attempt, tm
     row = json.loads(final_text.split("```ukrainian-item-judgments\n")[1].split("\n```")[0])["items"][0]
     assert row["_approval_void"] is True
     assert row["evidence"] == [{"receipt": rec["receipt_id"], "quote": output}]
+
+
+# --- Codex account b in bound attempts (#12504, C-4635) -------------------------------------------------------------
+
+
+@pytest.fixture
+def codex_accounts_ab(tmp_path, monkeypatch):
+    """Account a's default home and account b's bound home, each holding its own distinct login."""
+    import os
+
+    a = tmp_path / "home" / ".codex"
+    a.mkdir(parents=True)
+    b = tmp_path / "codex-b"
+    b.mkdir(mode=0o700)
+    for home, body in ((a, b'{"login": "account-a"}'), (b, b'{"login": "account-b"}')):
+        (home / "auth.json").write_bytes(body)
+        (home / "auth.json").chmod(0o600)
+    binding = tmp_path / "codex_accounts.json"
+    binding.write_text(json.dumps({"schema_version": 1, "accounts": {"b-sub": {"codex_home": str(b), "budget_usd": 200}}}))
+    binding.chmod(0o600)
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "codex").write_text("#!/bin/sh\nexit 0\n")  # `codex login status` reports a login
+    (bin_dir / "codex").chmod(0o755)
+    monkeypatch.setenv("HOME", str(a.parent))
+    monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(binding))
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    for name in ("CODEX_HOME", "OPENAI_API_KEY", "CODEX_API_KEY", "CODEX_ACCESS_TOKEN"):
+        monkeypatch.setenv(name, "unset")  # recorded, so teardown also undoes the supervisor's own CODEX_HOME
+        monkeypatch.delenv(name)
+    return a, b
+
+
+@pytest.mark.parametrize("label,admitted", [
+    (None, True), ("sub", True), ("b-sub", True), ("api", False), ("b-api", False),
+])
+def test_bound_attempt_admits_only_subscription_codex_accounts(label, admitted):
+    """Defect class: a bound attempt refuses account b, or runs on an API-billed route with no spending cap."""
+    from types import SimpleNamespace
+
+    from scripts.dispatcher import review_attempt
+
+    args = SimpleNamespace(review_access=None, full_checkout=False, output_schema=None, codex_account=label,
+                           prompt_file=None)
+    expected = "review_attempt_prompt_file_required" if admitted else "review_attempt_account_unsupported"
+    with pytest.raises(ValueError, match=expected):
+        review_attempt.admit(args, b"", {}, None, "a" * 40)
+
+
+def test_unknown_codex_account_refuses_a_bound_attempt_before_it_is_spent(attempt, tmp_path, monkeypatch, capsys):
+    """Defect class: an unknown account label is substituted by a known one, or spends the attempt id."""
+    launch = Mock()
+    monkeypatch.setattr(worker, "start", launch)
+    assert invoke(attempt, "--codex-account", "c-sub") == 2
+    assert "codex_account_unknown" in capsys.readouterr().err
+    launch.assert_not_called()
+    assert not (tmp_path / "tasks").exists()
+
+
+@pytest.mark.parametrize("label", ["c-sub", "API", ""])
+def test_attempt_boundary_refuses_an_unknown_codex_account_without_staging(codex_accounts_ab, tmp_path, label):
+    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from scripts.review.isolation import ReviewIsolationError
+
+    with pytest.raises(ReviewIsolationError, match="attempt_codex_account_unknown"):
+        stage_codex_account_auth(label, tmp_path / "staged")
+    assert not (tmp_path / "staged").exists()
+
+
+def test_attempt_boundary_stages_each_codex_account_own_login(codex_accounts_ab, tmp_path):
+    """Defect class: a b-sub attempt authenticates with account a's login, or the default account changes source."""
+    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+
+    a, b = codex_accounts_ab
+    for label, own in ((None, a), ("sub", a), ("b-sub", b), ("b", b)):
+        staged = tmp_path / f"staged-{label}"
+        env = stage_codex_account_auth(label, staged)
+        assert (staged / ".codex" / "auth.json").read_bytes() == (own / "auth.json").read_bytes()
+        assert env["CODEX_HOME"] == str(staged / ".codex")
+
+
+@pytest.mark.parametrize("case,code", [
+    ("ambient_home", "attempt_codex_account_ambient_conflict"),
+    ("ambient_key", "attempt_codex_account_ambient_conflict"),
+    ("unbound", "attempt_codex_account_binding_missing"),
+    ("logged_out", "attempt_codex_account_not_logged_in"),
+    ("keyring_login", "attempt_codex_account_login_missing"),
+])
+def test_attempt_boundary_never_substitutes_account_a_for_b(codex_accounts_ab, tmp_path, monkeypatch, case, code):
+    """Defect class: when account b's login cannot be staged, account a's (or an ambient credential) is used."""
+    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from scripts.review.isolation import ReviewIsolationError
+
+    a, b = codex_accounts_ab
+    if case == "ambient_home":
+        monkeypatch.setenv("CODEX_HOME", str(a))
+    elif case == "ambient_key":
+        monkeypatch.setenv("OPENAI_API_KEY", "fixture-credential")
+    elif case == "unbound":
+        monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(tmp_path / "absent.json"))
+    elif case == "logged_out":
+        codex = tmp_path / "bin" / "codex"
+        codex.write_text("#!/bin/sh\nexit 1\n")
+    else:
+        (b / "auth.json").unlink()  # `codex login status` passes, but the login is not a stageable file
+    staged = tmp_path / "staged"
+    with pytest.raises(ReviewIsolationError) as refused:
+        stage_codex_account_auth("b-sub", staged)
+    assert str(refused.value) == code
+    login = staged / ".codex" / "auth.json"
+    assert not login.exists() or login.read_bytes() != (a / "auth.json").read_bytes()
+
+
+def test_bound_attempt_on_codex_b_runs_as_account_b(codex_accounts_ab, attempt, tmp_path, monkeypatch):
+    """A b-sub attempt routes its label into the boundary, and the supervisor runs, stages and is metered as b.
+
+    Defect class: a bound attempt on b stages account a's login, or its usage and rate limits count against a.
+    """
+    import os
+    from types import SimpleNamespace
+
+    from scripts.agent_runtime import attempt_boundary, review_mcp, runner, usage
+    from scripts.dispatcher import headroom
+
+    a, b = codex_accounts_ab
+    args = cli.build_parser().parse_args(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", *attempt,
+                                          "--codex-account", "b-sub", "--review-access", "full"])
+    binding = store.review_binding(vars(args))
+    rendered = b"Rendered review prompt\nattempt: review/attempt\n"
+    prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
+    prompt.content = rendered
+    workspace = tmp_path / "checkout"
+    workspace.mkdir()
+    spec = TaskSpec("task", "codex", "gpt-6.1-sol", "high", "read-only", workspace, prompt,
+                    tmp_path / "tasks" / "task.result", options=dict(review_attempt=str(tmp_path / "manifest.yaml")),
+                    codex_account="b-sub")
+    record = store.new_record(spec, dict(key="public", github="example/public"), "codex/task", "a" * 40,
+                              dict(vars(args), research_owned_path=[]), binding=binding)
+    assert record["codex_account"] == "b-sub"
+    record["review_contract"] = dict(input_root=str(tmp_path))
+    path = store.create(record, rendered)
+    for name in ("check_plan", "check_runtime"):
+        monkeypatch.setattr(headroom, name, lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "settle_left_worktrees", lambda *_a, **_k: None)
+    monkeypatch.setattr(git, "snapshot_delivery", lambda *_a: {})
+    monkeypatch.setattr(attempt_boundary, "verify_full_review_tree", lambda *a: None)
+    receipts = tmp_path / "review-receipts" / "review"
+
+    def prepare(review_id, attempt_id, manifest, harness, **kwargs):
+        config = receipts / "attempt.mcp.json"
+        config.write_text("{}")
+        (receipts / "attempt.jsonl.sha256").write_text(store.digest(b"") + "\n")
+        return review_mcp.ReviewMcpPlan(config, {}, receipts / "attempt.jsonl", receipts / "attempt.jsonl.sha256",
+                                        binding["manifest_sha256"], review_id, attempt_id, harness)
+
+    monkeypatch.setattr(review_mcp, "prepare_review_attempt", prepare)
+    seen = []
+
+    def invoke_runtime(agent, text, **kwargs):
+        label = kwargs["tool_config"][attempt_boundary.CODEX_ACCOUNT_KEY]
+        staged = tmp_path / "boundary-home"
+        attempt_boundary.stage_codex_account_auth(label, staged)  # what AttemptBoundary stages for this label
+        seen.append((label, os.environ["CODEX_HOME"], usage.current_codex_account(),
+                     (staged / ".codex" / "auth.json").read_bytes()))
+        return SimpleNamespace(ok=True, response="review: done\n", identity_state="unknown", observed_model=None,
+                               observed_model_source=None, failure_code=None, stderr_excerpt=None)
+
+    monkeypatch.setattr(runner, "invoke", invoke_runtime)
+    worker.supervise(path, {}, 60)
+
+    assert store.read("task")["error"] is None, store.read("task")["error"]
+    assert seen == [("b-sub", str(b), "b-sub", (b / "auth.json").read_bytes())]
+    assert seen[0][3] != (a / "auth.json").read_bytes()
+    assert store.read("task")["status"] == "done"
