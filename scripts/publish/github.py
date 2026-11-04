@@ -16,6 +16,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 import zipfile
 from pathlib import Path
 from urllib.parse import quote
@@ -864,6 +865,10 @@ TRANSFER_WRITE_PERMISSIONS = frozenset({"ADMIN", "MAINTAIN", "WRITE"})
 TRANSFER_VISIBILITY = {"private": "PRIVATE", "public": "PUBLIC"}
 TRANSFER_UNSETTLED = 3
 TRANSFER_LABEL_PAGES = 50
+# GitHub serves the source redirect and the moved issue's labels shortly after the mutation
+# returns, so verification re-reads with a bounded backoff: six fresh reads over 60 seconds.
+TRANSFER_VERIFY_DELAYS = (0, 2, 4, 8, 16, 30)
+_transfer_sleep = time.sleep
 TRANSFER_PROBED = frozenset({"transferred", "already-transferred", "unverified", "ambiguous"})
 TRANSFER_PROBE_NOTE = (
     "An anonymous HTTP status alone does not prove confidentiality: GitHub serves a transfer "
@@ -1096,6 +1101,29 @@ def _same_repository(left, right):
     return isinstance(left, str) and isinstance(right, str) and left.casefold() == right.casefold()
 
 
+def _transfer_verify(source, destination, number, moved, receipt, reader, cwd, environment, temp):
+    """Bind the source URL and the moved issue's labels to the returned issue; nothing here writes.
+
+    Each attempt is a fresh read. The last failure's detail is raised once the attempts run out.
+    """
+    detail = "the transfer could not be verified"
+    for attempt, delay in enumerate(TRANSFER_VERIFY_DELAYS, start=1):
+        _transfer_sleep(delay)
+        receipt["verification_reads"] = attempt
+        try:
+            now = _transfer_resolution(source, number, reader, cwd, environment)
+            if now["node_id"] != moved["id"] or now["number"] != moved["number"] or not (
+                _same_repository(now["repository"], destination["repository"])
+            ):
+                raise ValueError("the source URL does not resolve to the returned issue")
+            return _transfer_issue_labels(
+                destination["repository"], moved["number"], moved["id"], reader, cwd, environment, temp
+            )
+        except Exception as exc:
+            detail = str(exc) if isinstance(exc, ValueError) and str(exc) else "the transfer could not be verified"
+    raise ValueError(detail)
+
+
 def _transfer_result(receipt, code, capture_output, text):
     encoded = json.dumps(receipt, indent=2, sort_keys=True) + "\n"
     if code == TRANSFER_UNSETTLED:
@@ -1136,6 +1164,7 @@ def _issue_transfer(fields, *, runner, cwd, environment, capture_output, text):
         "labels": {"source": None, "destination_issue": None, "dropped": None, "predicted_dropped": None},
         "probes": [],
         "probe_note": TRANSFER_PROBE_NOTE,
+        "verification_reads": 0,
         "detail": None,
     }
     sink = {"fd": None, "path": None}
@@ -1286,14 +1315,7 @@ def _transfer_checked(fields, source, destination, receipt, sink, temp, *, runne
             raise ValueError("the mutation returned another issue or repository")
         # Only a validated URL is recorded, so only a validated URL is probed.
         receipt["destination"].update(number=moved_number, url=moved["url"], node_id=moved["id"])
-        now = _transfer_resolution(source, number, reader, cwd, environment)
-        if now["node_id"] != moved["id"] or now["number"] != moved_number or not (
-            _same_repository(now["repository"], destination["repository"])
-        ):
-            raise ValueError("the source URL does not resolve to the returned issue")
-        after = _transfer_issue_labels(
-            destination["repository"], moved_number, moved["id"], reader, cwd, environment, temp
-        )
+        after = _transfer_verify(source, destination, number, moved, receipt, reader, cwd, environment, temp)
     except Exception as exc:
         detail = str(exc) if isinstance(exc, ValueError) and str(exc) else "the transfer could not be verified"
         return settle("unverified", TRANSFER_UNSETTLED, detail)
@@ -1834,6 +1856,8 @@ def main(argv=None, *, runner=None):
                 "  credential-free anonymous HTTP probes of both URLs with final URL and status or error (none on\n"
                 "  a dry run). A status alone does not prove confidentiality: GitHub shows a transfer banner at\n"
                 "  the old URL. Label reads are paginated, count-checked and bound to the issue's node id.\n"
+                "  After the mutation, the source redirect and labels are re-read up to six times over about\n"
+                "  60 s, because GitHub serves them shortly after the transfer; verification_reads counts them.\n"
                 "  A refusal after the static checks leaves a receipt with outcome refused.\n"
                 "Exit codes: 0 transferred and verified, already transferred, or dry run passed;\n"
                 "  2 invalid input or refusal, no mutation sent; 3 mutation sent but its result is ambiguous or\n"
