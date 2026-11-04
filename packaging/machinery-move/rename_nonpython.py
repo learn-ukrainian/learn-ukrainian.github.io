@@ -17,7 +17,7 @@ import ast
 import importlib.util
 import re
 import sys
-from collections.abc import Iterator, Sequence
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
@@ -48,6 +48,8 @@ MODULE_START = re.compile(
 )
 # ``scripts/...`` (glob characters included) or a ``/scripts`` directory at the end of a path.
 PATH_START = re.compile(r"(?<![\w.\\])(?<!(?<!:)-)scripts(?:(?P<rest>/[\w.\-*?\[\]/]*)|(?![\w.\-]))")
+# ``scripts/`` anywhere in a literal, in any case: used when a run-time value may reshape the literal.
+LOOSE_PATH = re.compile(r"scripts/[\w.\-*?\[\]/]*", re.IGNORECASE)
 BACKSLASH_PATH = re.compile(r"(?<![\w.\-\\/])scripts\\[\w.\-\\]+")
 BARE_WORD = re.compile(r"(?:(?<=:-)|(?<![\w.\-/$@\\]))scripts(?![\w.\-/\\])")
 # Text that completes a name at run time: shell or template variables and placeholders.
@@ -59,8 +61,9 @@ ENTRY_POINT_NEXT = re.compile(r":[A-Za-z_]")
 PREFIX_STOP = re.compile(r"[\s\"'=(\[{<>|&;,:`!]")
 # Commands and settings that change the working directory to the path that follows.
 CWD_BEFORE = re.compile(
-    r"(?:(?:^|[\s;&|(`\"'])(?:cd|pushd)(?:\s+-{1,2}[\w-]*)*\s+|WorkingDirectory=|(?:^|\s)-C\s*"
-    r"|(?:^|\s)--(?:directory|cwd|chdir|working-directory)(?:=|\s+))[\"']?$"
+    r"(?:(?:^|[\s;&|(`\"'])(?:cd|pushd)(?:\s+-{1,2}[\w-]*)*\s+|WorkingDirectory=|(?:^|\s)WORKDIR\s+|(?:^|\s)-C\s*"
+    r"|(?:^|\s)--(?:directory|cwd|chdir|workdir|working-directory)(?:=|\s+)"
+    r"|(?:^|[\s{,\"'])(?i:cwd|chdir|workdir|working[-_]directory)[\"']?\s*[:=]\s*)[\"']?$"
 )
 INTERPRETER_BEFORE = re.compile(
     r"(?:^|[\s;&|(\"'])(?:\S*python[0-9.]*|\"?\$\{?PY\w*\}?\"?|bash|sh|zsh|exec|source|\.|uv\s+run(?:\s+python[0-9.]*)?)\s+[\"']?$"
@@ -174,51 +177,175 @@ def clean_path(token: str) -> str:
 
 @dataclass(frozen=True)
 class ShellContext:
-    """Where a position sits on its shell line: inside quotes or a comment, ``${`` depth, backticks."""
+    """Where a position sits on its shell line: the open quote (and where it opened), a comment,
+    the ``${`` depth and an open backtick."""
 
-    quoted: bool
+    quote: str | None
+    quote_start: int
     comment: bool
     braces: int
     backtick: bool
 
 
-def shell_context(text: str, position: int) -> ShellContext:
+HEREDOC = re.compile(r"<<(?P<dash>-?)\s*(?P<q>[\"']?)(?P<word>[A-Za-z_][A-Za-z0-9_]*)(?P=q)")
+
+
+def line_entry_states(text: str, regions: Sequence[tuple[int, int]]) -> dict[int, str | None]:
+    """For each line start in the shell regions: the quote still open there (``"`` or ``'``),
+    ``heredoc`` inside a heredoc body, or None. Quotes and heredocs span lines; comments do not."""
+
+    states: dict[int, str | None] = {}
+    for region_start, region_end in regions:
+        quote: str | None = None
+        outer: list[str | None] = []  # quotes around each open ``$(``
+        pending: list[tuple[str, bool]] = []
+        i = line_start = region_start
+        states[i] = None
+        while i < region_end:
+            char = text[i]
+            if char == "\n":
+                i += 1
+                if quote is None and pending:
+                    word, dash = pending.pop(0)
+                    while i < region_end:  # the heredoc body, up to its delimiter line
+                        states[i] = "heredoc"
+                        line_end = text.find("\n", i, region_end)
+                        line_end = region_end if line_end < 0 else line_end
+                        line = text[i:line_end]
+                        i = line_end + 1
+                        if (line.lstrip("\t") if dash else line) == word:
+                            break
+                    pending.clear()
+                line_start = i
+                states[i] = quote
+                continue
+            if char == "\\" and quote != "'":
+                i += 2
+                continue
+            if quote != "'" and text.startswith("$(", i):
+                outer.append(quote)  # a command substitution starts a fresh quoting context
+                quote = None
+                i += 2
+                continue
+            if quote is not None:
+                if char == quote:
+                    quote = None
+            elif char == ")" and outer:
+                quote = outer.pop()
+            elif char in "\"'":
+                quote = char
+            elif char == "#" and (i == line_start or text[i - 1].isspace()):
+                next_line = text.find("\n", i, region_end)
+                i = region_end if next_line < 0 else next_line
+                continue
+            elif char == "<" and not text.startswith("<<<", i) and (match := HEREDOC.match(text, i)):
+                pending.append((match.group("word"), bool(match.group("dash"))))
+            i += 1
+    return states
+
+
+def shell_context(text: str, position: int, entry: str | None = None) -> ShellContext:
+    """The shell state at ``position``, starting from ``entry``, the state its line starts in."""
+
     line_start = text.rfind("\n", 0, position) + 1
-    single = double = backtick = False
+    if entry == "heredoc":
+        return ShellContext("heredoc", -1, False, 0, False)  # heredoc text: read like a quoted message
+    quote: str | None = entry
+    quote_start = -1  # opened on an earlier line
+    outer: list[tuple[str | None, int]] = []  # quotes around each open ``$(``
+    backtick = False
     braces = 0
     i = line_start
     while i < position:
         char = text[i]
-        if char == "\\" and not single:
+        if char == "\\" and quote != "'":
             i += 2
             continue
-        if char == "'" and not double:
-            single = not single
-        elif char == '"' and not single:
-            double = not double
-        elif not single and char == "`":
+        if quote != "'" and text.startswith("$(", i):
+            outer.append((quote, quote_start))  # a command substitution starts a fresh quoting context
+            quote, quote_start = None, -1
+            i += 2
+            continue
+        if quote is None and char == ")" and outer:
+            quote, quote_start = outer.pop()
+            i += 1
+            continue
+        if quote is not None:
+            if char == quote:
+                quote = None
+            elif quote == '"' and char == "`":
+                backtick = not backtick
+            elif quote == '"' and text.startswith("${", i):
+                braces += 1
+            elif quote == '"' and char == "}" and braces:
+                braces -= 1
+        elif char in "\"'":
+            quote, quote_start = char, i
+        elif char == "`":
             backtick = not backtick
-        elif not single and text.startswith("${", i):
+        elif text.startswith("${", i):
             braces += 1
-        elif not single and char == "}" and braces:
+        elif char == "}" and braces:
             braces -= 1
-        elif char == "#" and not (single or double) and (i == line_start or text[i - 1].isspace()):
-            return ShellContext(False, True, braces, backtick)
+        elif char == "#" and (i == line_start or text[i - 1].isspace()):
+            return ShellContext(None, -1, True, braces, backtick)
         i += 1
-    return ShellContext(single or double, False, braces, backtick)
+    return ShellContext(quote, quote_start, False, braces, backtick)
 
 
-def _is_dynamic(text: str, end: int, dynamic_tail: bool, shell: bool = False, start: int | None = None) -> bool:
+def _shell_word_continues(text: str, end: int, dynamic_tail: bool, context: ShellContext) -> bool:
+    """Whether the shell argument holding a name goes on past ``end`` (quotes followed as the shell does)."""
+
+    quote = context.quote
+    i = end
+    while i < len(text):
+        char = text[i]
+        if quote is not None:
+            if char == quote:
+                quote = None
+            elif quote == '"' and char in "$`":
+                return True  # expansion inside double quotes
+            elif quote == '"' and char == "}" and context.braces:
+                return False  # ``"${X:-scripts/x.py}"``
+            else:
+                return not char.isspace()  # a blank inside quotes ends the name; anything else extends it
+            i += 1
+            continue
+        if char in "\"'":
+            quote = char
+            i += 1
+            continue
+        if char in DYNAMIC_NEXT:
+            return True
+        if char.isspace() or char in SHELL_WORD_END:
+            return False
+        if char == "}" and context.braces:
+            return False  # the end of a default such as ``${X:-scripts/x.py}``
+        return not (char == "`" and context.backtick)  # a closing backtick ends the word
+    return dynamic_tail
+
+
+def _is_dynamic(
+    text: str, end: int, dynamic_tail: bool, context: ShellContext | None = None, start: int | None = None
+) -> bool:
     """True when the name does not end where the match ends.
 
-    A word continues across quotes (``scripts/x.py"${S}"``, ``'scripts/x'.bak``): after any run of
-    quote characters, a variable, a placeholder or more name characters mean the real name is only
-    known at run time or is longer than the match. In a shell file an unquoted argument outside a
-    comment is one word up to the next blank or operator (``;&|()<>``), the ``}`` that closes a
-    ``${...}`` or the closing backtick of a command substitution: anything else continues it.
+    In shell code (a shell file, or a shell-tagged Markdown fence) outside comments, the unit is the
+    shell argument: anything before the next unquoted blank or operator (``;&|()<>``), the ``}``
+    that closes a ``${...}`` or the closing backtick extends it, across quotes as the shell reads
+    them. A quoted message (text before the name inside the same quotes) and every other file
+    use the word rule: after any run of quote characters, a variable, a placeholder or more name
+    characters mean the real name is only known at run time or is longer than the match.
     """
 
-    context = shell_context(text, start) if shell and start is not None else None
+    if context is not None and not context.comment:
+        # A quote opened on an earlier line, a heredoc, or text before the name inside the quotes: a message.
+        message = context.quote is not None and (
+            context.quote_start < 0
+            or bool(re.search(r"\s", text[context.quote_start + 1 : start - len(path_prefix(text, start))]))  # type: ignore[operator]
+        )
+        if not message:
+            return _shell_word_continues(text, end, dynamic_tail, context)
     i = end
     while i < len(text) and text[i] in "\"'" and not (context and context.comment):
         i += 1  # in a shell comment a quote is an apostrophe (``scripts.x's``)
@@ -229,12 +356,6 @@ def _is_dynamic(text: str, end: int, dynamic_tail: bool, shell: bool = False, st
     following = text[i]
     if following in DYNAMIC_NEXT:
         return True
-    if context is not None and not (context.quoted or context.comment):
-        if following.isspace() or following in SHELL_WORD_END:
-            return False
-        if following == "}" and context.braces:
-            return False  # the end of a default such as ``${X:-scripts/x.py}``
-        return not (following == "`" and context.backtick)
     if following == "." and (i + 1 == len(text) or text[i + 1].isspace()):
         return False  # a full stop after a quoted name (``'scripts/x.py'.``)
     return i > end and (following.isalnum() or following in "_./-")
@@ -247,6 +368,9 @@ class Scanner:
         self.ownership = ownership
         self.rel = rel
         self.shell = shell
+        # Shell-tagged Markdown fences, set by scan_text: shell rules apply inside them.
+        self.shell_regions: list[tuple[int, int]] = []
+        self._states: tuple[str, dict[int, str | None]] | None = None
         self.file_owner = ownership.file_owner(rel)
         self.root_anchored = PurePosixPath(rel).name in ROOT_ANCHORED_NAMES
 
@@ -273,9 +397,9 @@ class Scanner:
             end = match.end()
             # ``module:attribute`` (an entry point) ends the module name even inside one shell word.
             # The shell-word rule needs a dotted name: a bare ``scripts`` before ``/`` or ``-`` is a path or a word.
-            dynamic = _is_dynamic(text, end, dynamic_tail, self.shell and bool(comp), start) and not (
-                not dot and ENTRY_POINT_NEXT.match(text, end)
-            )
+            dynamic = _is_dynamic(
+                text, end, dynamic_tail, self._context(text, start) if comp else None, start
+            ) and not (not dot and ENTRY_POINT_NEXT.match(text, end))
             if not dynamic and dot:
                 end -= 1  # a full stop after the name
             if not comp and not dynamic:
@@ -327,10 +451,10 @@ class Scanner:
             start = match.start()
             if match.group("rest") is None and (start == 0 or text[start - 1] != "/"):
                 continue  # the bare word; see bare_words
-            token = clean_path(match.group(0))
+            token = self._mapped_extension(text, start, clean_path(match.group(0)))
             end = start + len(token)
             prefix = path_prefix(text, start)
-            if _is_dynamic(text, end, dynamic_tail, self.shell, start):
+            if _is_dynamic(text, end, dynamic_tail, self._context(text, start), start):
                 # A run-time suffix can climb out of any directory (``${NAME}`` = ``../x``), so the
                 # owner of the static part proves nothing: always reported, never rewritten.
                 yield Token(start, end, token + "…", "computed_path", "the path is completed at run time")
@@ -339,6 +463,8 @@ class Scanner:
             if owner == "root":
                 if self.file_owner != PRODUCT:
                     yield Token(start, end, token, "root_reference", "the scripts/ root is split between both owners")
+                else:
+                    yield Token(start, end, token, "product_path")  # kept, unless a directory change enters it
             elif owner is None:
                 yield Token(start, end, token, "unknown_path", "the map has no file or directory here")
             elif owner == AMBIGUOUS:
@@ -356,16 +482,48 @@ class Scanner:
             if owner in (MACHINERY, AMBIGUOUS):
                 yield Token(match.start(), match.start() + len(token), token, "backslash_path", "Windows-style path")
 
+    def _context(self, text: str, position: int) -> ShellContext | None:
+        """The shell state at ``position`` in a shell file or a shell-tagged fence; None elsewhere."""
+
+        if self.shell:
+            regions = [(0, len(text))]
+        elif in_regions(self.shell_regions, position, position):
+            regions = self.shell_regions
+        else:
+            return None
+        if self._states is None or self._states[0] is not text:
+            self._states = (text, line_entry_states(text, regions))
+        line_start = text.rfind("\n", 0, position) + 1
+        return shell_context(text, position, self._states[1].get(line_start))
+
+    def _mapped_extension(self, text: str, start: int, token: str) -> str:
+        """The longest mapped file or directory spelled out from ``start`` past ``token``
+        (``scripts/dispatch.py,v`` when the map has that file), else ``token``."""
+
+        if GLOB_CHARS & set(token):
+            return token
+        prefixes = self.ownership.name_prefixes()
+        best = token
+        i = start + len(token)
+        while i < len(text) and text[start : i + 1] in prefixes:
+            i += 1
+            name = text[start:i]
+            if name in self.ownership.files or name + "/" in prefixes:
+                best = name
+        return best
+
     def bare_words(self, text: str) -> Iterator[Token]:
         """The word ``scripts`` as a directory argument, outside comment lines (``cd scripts``)."""
 
-        if self.file_owner == PRODUCT:
-            return  # the product tree keeps its scripts/ directory
         for match in BARE_WORD.finditer(text):
             line_start = text.rfind("\n", 0, match.start()) + 1
             if text[line_start : match.start()].lstrip().startswith(("#", "//", ";")):
                 continue
-            yield Token(match.start(), match.end(), OLD_ROOT, "root_reference", "the scripts/ root is split")
+            if self.file_owner == PRODUCT:
+                # The product tree keeps its scripts/ directory; only a directory change into it is reported.
+                yield Token(match.start(), match.end(), OLD_ROOT, "product_path")
+            else:
+                yield Token(match.start(), match.end(), OLD_ROOT, "root_reference", "the scripts/ root is split")
 
     def changes_directory(self, text: str, start: int) -> bool:
         before = text[: start - len(path_prefix(text, start))]
@@ -405,6 +563,33 @@ def markdown_code_regions(text: str, fenced_only: bool = False) -> list[tuple[in
     return regions
 
 
+SHELL_FENCE_INFO = frozenset({"bash", "sh", "shell", "zsh", "console", "shell-session", "sh-session", "terminal"})
+
+
+def shell_fence_regions(text: str) -> list[tuple[int, int]]:
+    """Character ranges of fenced blocks tagged as shell (``bash``, ``sh``, ``console`` ...)."""
+
+    regions: list[tuple[int, int]] = []
+    offset = 0
+    fence: str | None = None
+    fence_start = 0
+    shellish = False
+    for line in text.splitlines(keepends=True):
+        match = FENCE.match(line)
+        if fence is None and match:
+            info = line[match.end() :].strip().split(None, 1)
+            fence, fence_start = match.group(1), offset + len(line)
+            shellish = (info[0].strip("{}.").lower() if info else "") in SHELL_FENCE_INFO
+        elif fence is not None and match and match.group(1)[0] == fence[0] and len(match.group(1)) >= len(fence):
+            if shellish:
+                regions.append((fence_start, offset))
+            fence = None
+        offset += len(line)
+    if fence is not None and shellish:
+        regions.append((fence_start, len(text)))
+    return regions
+
+
 def in_regions(regions: list[tuple[int, int]], start: int, end: int) -> bool:
     return any(a <= start and end <= b for a, b in regions)
 
@@ -413,6 +598,8 @@ def scan_text(scanner: Scanner, text: str, kind: str, report: Report, shell_like
     """Rewrite or report every reference in a non-Python text file."""
 
     regions = markdown_code_regions(text) if kind == MARKDOWN else []
+    scanner.shell_regions = shell_fence_regions(text) if kind == MARKDOWN else []
+    scanner._states = None
     edits: list[Edit] = []
     rel = scanner.rel
     tokens = [*scanner.module_tokens(text), *scanner.path_tokens(text)]
@@ -426,7 +613,7 @@ def scan_text(scanner: Scanner, text: str, kind: str, report: Report, shell_like
         in_code = kind == CODE or (kind == MARKDOWN and in_regions(regions, token.start, token.end))
         if (
             in_code
-            and token.verdict in ("resource_path", "product_path")
+            and token.verdict in ("resource_path", "product_path", "root_reference")
             and scanner.changes_directory(text, token.start)
         ):
             # Relative paths used after a directory change into scripts/ depend on the old layout
@@ -500,6 +687,47 @@ def _owned_by_rename_python(value: str) -> bool:
     return value.startswith(OLD_ROOT + ".") and not re.search(r"\s", value)
 
 
+def _scan_built_string(
+    scanner: Scanner,
+    evaluator: rp.Evaluator,
+    expr: rp.Expr,
+    value: object,
+    unresolved: Callable[[str, str, str], None],
+) -> None:
+    """Report the paths a string built in Python code may hold, each once."""
+
+    found: set[str] = set()
+
+    def report(token: Token, kind: str | None = None, detail: str = "") -> None:
+        if token.verdict in ("keep", "product_path", "unknown_path") or token.text.rstrip("…") in found:
+            return
+        found.add(token.text.rstrip("…"))
+        if kind is None:
+            kind = "python_string_reference" if token.verdict in REWRITE_VERDICTS | {"foreign_path"} else token.verdict
+        unresolved(kind, token.text, detail or token.detail or "path in a string built in Python code")
+
+    if evaluator.transformed:
+        # A run-time pattern, template or bound may reshape any literal: every scripts/ in one is reported.
+        for text in evaluator.literal_texts(expr):
+            for match in LOOSE_PATH.finditer(text):
+                loose = Token(0, 0, match.group(0) + "…", "computed_path")
+                report(loose, "computed_path", "a string holding this path is reshaped at run time")
+    for run, tail in evaluator.search_texts(expr, joined=False):
+        for token in scanner.path_tokens(run, dynamic_tail=tail):
+            report(token)
+    parts = rp.text_parts(value)  # type: ignore[arg-type]
+    if None in parts:
+        # ``"scr" + piece + "ipts/x.py"``: the literals alone, as when every run-time piece is empty.
+        joined = "".join(evaluator.leaves(expr))
+        for token in scanner.path_tokens(joined, dynamic_tail=parts[-1] is None):
+            text = token.text.rstrip("…")
+            if token.verdict in ("keep", "product_path", "unknown_path") or any(
+                text.startswith(seen) or seen.startswith(text) for seen in found
+            ):
+                continue  # the same path, already reported from a known run
+            report(token, "computed_path", "a path assembled across a run-time piece")
+
+
 def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
     rel = scanner.rel
     try:
@@ -546,6 +774,8 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
             continue
         evaluator = rp.Evaluator()
         expr = rp.ast_expr(node)
+        if expr.kind in ("choice", "same"):
+            continue  # ``a or "scripts/x"``: each operand is a whole value, judged on its own
         value = evaluator.value(expr)
         if not rp.is_string(value):
             continue
@@ -558,16 +788,9 @@ def scan_python(scanner: Scanner, source: bytes, report: Report) -> None:
             detail = f"evaluating this string failed ({evaluator.failures[0]}); it may build a path"
             unresolved(node, "unevaluable_string", ast.unparse(node)[:160], detail)
             continue
-        found: set[tuple[str, str]] = set()
-        for run, tail in evaluator.search_texts(expr, joined=False):
-            for token in scanner.path_tokens(run, dynamic_tail=tail):
-                if token.verdict in ("keep", "product_path", "unknown_path") or (token.verdict, token.text) in found:
-                    continue
-                found.add((token.verdict, token.text))
-                kind = (
-                    "python_string_reference" if token.verdict in REWRITE_VERDICTS | {"foreign_path"} else token.verdict
-                )
-                unresolved(node, kind, token.text, token.detail or "path in a string built in Python code")
+        _scan_built_string(
+            scanner, evaluator, expr, value, lambda kind, text, detail, at=node: unresolved(at, kind, text, detail)
+        )
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in skip:

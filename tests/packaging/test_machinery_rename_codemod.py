@@ -373,13 +373,14 @@ def _kinds(report: dict) -> list[str]:
 
 def test_f3_replace_builder_is_evaluated_without_a_prefilter(tree: tuple[Path, Path]) -> None:
     root, map_path = tree
-    source = 'TARGET = "scrXipts.dispatch".replace("X", "")\n'
+    # A known pattern is evaluated; a run-time pattern may turn the product name into a machinery one.
+    source = 'TARGET = "scrXipts.dispatch".replace("X", "")\nOTHER = "scripts.audit".replace(old, "dispatch")\n'
     _add(root, map_path, "scripts/review/built.py", M, source)
 
     code, report = _run(rename_python, map_path, root, "apply", "scripts/review/built.py")
 
     assert code == 1
-    assert _kinds(report) == ["assembled_module_string"]
+    assert _kinds(report) == ["assembled_module_string", "computed_module_string"]
     assert _read(root, "scripts/review/built.py") == source
 
 
@@ -415,23 +416,27 @@ def test_f3_evaluation_errors_are_reported_never_raised(tree: tuple[Path, Path])
 
 def test_f6_python_plus_chain_with_a_later_run_time_tail(tree: tuple[Path, Path]) -> None:
     root, map_path = tree
-    _add(root, map_path, "scripts/pipeline/paths.py", P, 'name = "rules_core.sh"\np = "scripts/" + "lib/" + name\n')
+    source = 'name = "rules_core.sh"\np = "scripts/" + "lib/" + name\nq = "scr" + piece + "ipts/lib/rules_core.sh"\n'
+    _add(root, map_path, "scripts/pipeline/paths.py", P, source)
 
     code, report = _run(rename_nonpython, map_path, root, "check", "scripts/pipeline/paths.py")
 
     assert code == 1
-    assert [(item["kind"], item["before"]) for item in report["unresolved"]] == [("computed_path", "scripts/lib/…")]
+    assert [(item["kind"], item["before"]) for item in report["unresolved"]] == [
+        ("computed_path", "scripts/lib/…"),
+        ("computed_path", "scripts/lib/rules_core.sh"),
+    ]
 
 
 def test_f6_shell_word_continuing_across_quotes_is_computed(tree: tuple[Path, Path]) -> None:
     root, map_path = tree
-    script = 'SUFFIX=.in\ncat scripts/dispatch.py"${SUFFIX}"\ncat "scripts/dispatch.py"${SUFFIX}\n'
+    script = 'SUFFIX=.in\ncat scripts/dispatch.py"${SUFFIX}"\ncat "scripts/dispatch.py"${SUFFIX}\ncat "scripts/dispatch.py:x"\n'
     _add(root, map_path, "scripts/tools/show.sh", M, script)
 
     code, report = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/show.sh")
 
     assert code == 1
-    assert _kinds(report) == ["computed_path", "computed_path"]
+    assert _kinds(report) == ["computed_path", "computed_path", "computed_path"]
     assert _read(root, "scripts/tools/show.sh") == script
 
 

@@ -17,17 +17,32 @@ the map says the file Python binds for it (or the path names) is machinery. Each
 Nothing is guessed:
 
 - **Strings built in Python.** Both tools share one evaluator (in `rename_python.py`). It
-  works out a string built with `+`, `%`, `*`, f-strings, literal lists and dicts, and the
-  `str` and `bytes` methods that only reshape text (`format`, `join`, `replace`, `lower` and
-  similar), as Python would. A piece known only at run time stays unknown. A module name or path
-  that the value may contain is reported, never rewritten. Values passed through variables are
-  not traced. When an operation on known values fails, the tool reports `unevaluable_string`.
-- **Shell words.** A name or path is rewritten only when it ends where its word ends. If a
-  variable, placeholder or more text continues the word, even across quotes
-  (`scripts/x.py"${S}"`, `'scripts/x.py'.bak`), the tool reports `computed_path`.
-- **Directory changes.** A `cd`, `pushd`, `-C`, `--directory=` or `WorkingDirectory=` target
-  under `scripts/` is reported as `cwd_into_scripts` and left as written, because relative
-  paths used after it depend on the old layout.
+  evaluates strings built from literals as Python would. It covers `+`, `%`, `*`, f-strings,
+  `str.format`, literal lists and dicts, slices, `a if c else b` and `a or b`, `str()`, `sorted()`
+  and similar builtins, and the `str` and `bytes` methods that return text. A piece known only
+  at run time stays unknown, and a module name or path the value may contain is reported, never
+  rewritten.
+  - **Inserted content.** A run-time value that is only inserted, as a format field, a joined
+    element or a `replace` replacement, cannot change the text around it.
+  - **Controlling values.** A run-time value that steers an operation can change any literal.
+    Examples are a `replace` pattern, `strip` characters, a template, a slice bound, a width or
+    precision applied to partly known text, or a method the evaluator does not follow. Every `scripts.` or `scripts/`
+    in the literals of such a string is then reported.
+  - **Not traced:** values in variables, comprehensions and other function calls.
+  - **Failures:** when an operation on known values fails, the tool reports `unevaluable_string`.
+- **Shell words.** A name or path is rewritten only when it ends where its shell argument ends.
+  This applies in shell files and in Markdown fences tagged `bash`, `sh`, `shell`, `zsh` or
+  `console`. The argument ends at an unquoted blank or operator, at the `}` of a `${...}`, or at a
+  closing backtick. Quotes are followed across lines. Anything else that continues the argument
+  makes the path `computed_path`: `scripts/x.py"${S}"`, `"scripts/x.py:x"`, `'scripts/x.py'.bak`.
+  Text inside a quoted message, a comment or a heredoc is read word by word instead.
+- **Names longer than the match.** A path is read as far as the map spells it, so a mapped file
+  such as `scripts/x.py,v` is resolved as itself and is not mistaken for `scripts/x.py`.
+- **Directory changes.** The tool reports these targets under `scripts/` (machinery, product or
+  the root itself) as `cwd_into_scripts` and leaves them as written: `cd` or `pushd` (with
+  options), `-C`, `--directory`, `--cwd`, `WorkingDirectory=`, `WORKDIR`, and
+  `working-directory:` or `cwd:` keys. Relative paths used after the change depend on the old
+  layout.
 - **Tool errors.** If anything goes wrong while one file is processed, that file is reported
   as `tool_error` and left unchanged. The run still exits `1`.
 

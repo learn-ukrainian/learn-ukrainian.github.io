@@ -22,6 +22,7 @@ import multiprocessing
 import operator
 import os
 import re
+import string
 import sys
 import tempfile
 from collections.abc import Iterable, Iterator, Mapping, Sequence
@@ -258,6 +259,15 @@ class OwnershipMap:
         self._subtree_cache[path] = result
         return result
 
+    def name_prefixes(self) -> frozenset[str]:
+        """Every leading part of every mapped path, for spelling a name out character by character."""
+
+        cached: frozenset[str] | None = getattr(self, "_name_prefixes", None)
+        if cached is None:
+            cached = frozenset(key[:i] for key in self.files for i in range(1, len(key) + 1))
+            self._name_prefixes = cached
+        return cached
+
     # -- modules ----------------------------------------------------------
 
     def module(self, dotted: str) -> ModuleEntry | None:
@@ -487,6 +497,9 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
     def visit_BinaryOperation(self, node: cst.BinaryOperation) -> None:
         self._visit_string_expression(node)
 
+    def visit_Subscript(self, node: cst.Subscript) -> None:
+        self._visit_string_expression(node)  # ``"scripts.dispatchX"[:-1]``
+
     def _visit_string_expression(self, node: cst.BaseExpression) -> None:
         """Classify the outermost string expression; every string inside it is then skipped."""
 
@@ -508,6 +521,13 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
                 f"evaluating this string failed ({evaluator.failures[0]}); it may build a module name",
             )
             return
+        if evaluator.transformed:
+            # A run-time pattern, template or bound may turn any literal into another name.
+            loose = next((t for t in evaluator.literal_texts(expr) if LOOSE_MODULE.search(t)), None)
+            if loose is not None:
+                detail = f"a string containing {LOOSE_MODULE.search(loose).group(0)}… is reshaped at run time"  # type: ignore[union-attr]
+                self._unresolved(node, "computed_module_string", _code(node), detail)
+                return
         parts = text_parts(value)  # type: ignore[arg-type]
         self._classify_string(node, parts, rewritable=False, pieces=evaluator.search_texts(expr))
 
@@ -888,7 +908,9 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
             self._loader_args.add(id(arg.value))
 
     def visit_Call(self, node: cst.Call) -> None:
-        if isinstance(node.func, cst.Attribute) and node.func.attr.value in STR_METHODS:
+        if isinstance(node.func, cst.Attribute) and (
+            node.func.attr.value in STR_METHODS or _cst_stringish(node.func.value)
+        ):
             self._visit_string_expression(node)  # ``"scripts.{}".format(name)``, ``".".join([...])``
         if not _is_dotted_name(node.func):
             return  # ``__import__("x").attr(...)`` reports the inner call's name for the outer one
@@ -1033,7 +1055,7 @@ def _fstring_text(node: cst.FormattedString, raw: str) -> str:
 
 # -- strings built from parts: one evaluator for both tools ----------------
 
-# str and bytes methods that return a new string from their receiver and arguments alone.
+# str and bytes methods that return a new string, or a list of strings, from their receiver and arguments alone.
 STR_METHODS = frozenset(
     {
         "capitalize",
@@ -1051,28 +1073,60 @@ STR_METHODS = frozenset(
         "removeprefix",
         "removesuffix",
         "replace",
+        "partition",
         "rjust",
+        "rpartition",
+        "rsplit",
         "rstrip",
+        "split",
+        "splitlines",
         "strip",
         "swapcase",
         "title",
+        "translate",
         "upper",
         "zfill",
     }
 )
+# A module name or its start anywhere in a literal, in any case: used when a run-time value may reshape it.
+LOOSE_MODULE = re.compile(r"scripts\.", re.IGNORECASE)
 # Larger counts or widths could build a huge string; such a value is left to run time.
 MAX_EVAL_INT = 10_000
 WIDE_FORMAT = re.compile(r"\d{5,}")
 # Stand-ins for run-time pieces while a partly known string is evaluated (see Evaluator._apply).
 SENTINEL = re.compile("\x00\\d+\x01*\x00")
 CONVERSIONS = {None: lambda value: value, "s": str, "r": repr, "a": ascii}
+# One ``%`` conversion: ``%(key)-10.3s``.
+PERCENT_FIELD = re.compile(
+    r"%(?:\((?P<key>[^)]*)\))?(?P<flags>[#0\- +]*)(?P<width>\*|\d+)?(?P<precision>\.(?:\*|\d+))?[hlL]?(?P<type>.)", re.S
+)
+# str and bytes methods that return no string (their literals cannot reach a module name).
+STR_PREDICATES = frozenset(
+    {"count", "endswith", "find", "hex", "index", "rfind", "rindex", "startswith"}
+    | {name for name in dir(str) if name.startswith("is")}
+    | {"__contains__", "__eq__", "__ge__", "__gt__", "__hash__", "__le__", "__len__", "__lt__", "__ne__", "__sizeof__"}
+)
+# Pure builtins over literals.
+BUILTINS = {
+    "ascii": ascii,
+    "chr": chr,
+    "format": format,
+    "list": list,
+    "repr": repr,
+    "reversed": lambda value: list(reversed(value)),
+    "sorted": sorted,
+    "str": str,
+    "tuple": tuple,
+}
 
 
 @dataclass(eq=False)
 class Expr:
     """A string-building expression in a tree-neutral form, built from LibCST (``cst_expr``) or ast (``ast_expr``).
 
-    ``kind`` is lit, fstr, field, add, mod, mul, call, seq, map or unknown; ``origin`` is the source node.
+    ``kind`` is lit, fstr, field, add, mod, mul, call, builtin, index, choice, same, seq, map or unknown; ``origin`` is the
+    source node. ``index`` is a subscript (receiver, then the index or the slice bounds); ``choice`` is one of
+    its operands (``a if c else b``, ``a or b``).
     ``items`` are the operands in source order (for a call: the receiver, then the arguments; for a map:
     key, value, key, value). ``data`` is a literal's value, an f-string field's conversion, a call's
     (method, how each argument is passed: "", "*", "**" or "=name") or a container's (type, has unpacking).
@@ -1191,15 +1245,28 @@ def _split_stand_ins(text: str) -> list[str | None] | None:
 class Evaluator:
     """Evaluate a string expression as Python would; a piece only known at run time stays unknown.
 
-    Literals, ``+``, ``%``, ``*``, f-strings, containers and the methods in ``STR_METHODS`` are
-    evaluated. Anything else (names, other calls, attributes) is a run-time piece. An operation
-    on known values that raises is recorded in ``failures``; the caller reports it.
+    Literals, ``+``, ``%``, ``*``, f-strings, containers, subscripts, ``str()``, choices and the
+    methods in ``STR_METHODS`` are evaluated. Anything else (names, other calls, attributes) is a
+    run-time piece. An operation on known values that raises is recorded in ``failures``; the
+    caller reports it.
+
+    A run-time piece is stood in for by a sentinel only where the operation inserts it as content
+    (concatenation, a format or ``%`` value, a join element or separator, a ``replace``
+    replacement, the receiver of a per-character case change or of padding). There the result
+    depends on the piece only through its position and length, which two runs with sentinels of
+    two lengths check. Every other input controls the operation; a run-time control input makes
+    the value unknown and sets ``transformed``.
     """
 
     def __init__(self) -> None:
         self.failures: list[str] = []
-        # Set when a known piece was given up (an operation the sentinels could not follow).
+        # Set when a known piece was given up (an operation the sentinels could not follow): the
+        # literals are still in the value, but where they sit is not known.
         self.lossy = False
+        # Set when a run-time value controls an operation (a ``replace`` pattern, ``strip`` characters,
+        # a template, a slice bound), or when the sentinels could not follow one (a run-time width or
+        # precision, a type only known at run time): the literals themselves may be changed.
+        self.transformed = False
         self._memo: dict[int, object] = {}
 
     def value(self, expr: Expr) -> object:
@@ -1230,9 +1297,8 @@ class Evaluator:
         if kind == "fstr":
             return _joined(piece for item in items for piece in _pieces_of(self.value(item)))
         if kind == "field":
-            convert = CONVERSIONS[expr.data]  # type: ignore[index]
             spec = self.value(items[1]) if len(items) > 1 else Static("")
-            return self._apply(lambda v, s: format(convert(v), s), [self.value(items[0]), spec], template=1)
+            return self._field(self.value(items[0]), expr.data, spec)  # type: ignore[arg-type]
         if kind in ("add", "mul"):
             left, right = self.value(items[0]), self.value(items[1])
             if isinstance(left, Static) and isinstance(right, Static):
@@ -1247,12 +1313,27 @@ class Evaluator:
             template = self.value(items[0])
             if not is_string(template):
                 return None  # arithmetic
-            return self._apply(operator.mod, [template, self.value(items[1])], template=0)
+            values = self.value(items[1])
+            if isinstance(template, Static) and isinstance(values, Static):
+                return self._apply(operator.mod, [template, values], template=0)
+            return self._percent(template, values)
         if kind == "call":
             method, passing = expr.data  # type: ignore[misc]
             receiver = self.value(items[0])
             if not is_string(receiver):
                 return None
+            arguments = [self.value(item) for item in items[1:]]
+            if method not in STR_METHODS:
+                if method in STR_PREDICATES:
+                    return None  # a number or a truth value, not a string
+                self.lossy = self.transformed = True  # a method the evaluator does not follow
+                return UNKNOWN_STRING
+            if method in ("format", "format_map") and not all(isinstance(v, Static) for v in [receiver, *arguments]):
+                return self._format(receiver, method, passing, arguments)
+            if method == "join" and passing == ("",) and arguments[0] is None:
+                # Run-time elements: the result is run-time content; the separator literal is kept inside it.
+                self.lossy = True
+                return UNKNOWN_STRING
 
             def call(target: object, *args: object) -> object:
                 positional: list[object] = []
@@ -1268,12 +1349,196 @@ class Evaluator:
                         positional.append(arg)
                 return getattr(target, method)(*positional, **keywords)
 
-            arguments = [self.value(item) for item in items[1:]]
-            return self._apply(call, [receiver, *arguments], template=0 if method.startswith("format") else None)
+            call.method = method  # type: ignore[attr-defined]
+            template = 0 if method.startswith("format") else None
+            return self._apply(call, [receiver, *arguments], template=template, control=_controls(method, passing))
+        if kind == "index":
+            receiver = self.value(items[0])
+            bounds = [self.value(item) for item in items[1:]]
+            if isinstance(receiver, Static) and not is_string(receiver):
+                # ``"a.b".split(".")[0]``: a known list or tuple, indexed by known values.
+                if not all(isinstance(b, Static) for b in bounds) or not isinstance(receiver.value, (list, tuple)):
+                    return None
+                key = bounds[0].value if expr.data is None else slice(*(b.value for b in bounds))  # type: ignore[union-attr]
+                try:
+                    return Static(receiver.value[key])  # type: ignore[index]
+                except Exception:
+                    return None
+            if not is_string(receiver):
+                return None
+
+            def index(target: object, *values: object) -> object:
+                key = values[0] if expr.data is None else slice(*values)
+                return target[key]  # type: ignore[index]
+
+            return self._apply(index, [receiver, *bounds], control=set(range(1, len(items))))
+        if kind == "choice":
+            options = [self.value(item) for item in items]
+            if not any(is_string(option) for option in options):
+                return None
+            if all(isinstance(o, Static) for o in options) and len({repr(o.value) for o in options}) == 1:  # type: ignore[union-attr]
+                return options[0]
+            self.lossy = True  # one of several values: each literal is kept, but which one is not known
+            return UNKNOWN_STRING
+        if kind == "builtin":
+            values = [self.value(item) for item in items]
+            if all(isinstance(v, Static) for v in values):
+                function = BUILTINS[expr.data]  # type: ignore[index]
+                return self._apply(lambda *args: function(*args), values, control=set(range(len(values))))
+            name = expr.data
+            if name == "str" and len(values) == 1 and is_string(values[0]):
+                return values[0]
+            if (
+                name in ("list", "tuple", "sorted", "reversed")
+                and len(values) == 1
+                and isinstance(values[0], Container)
+            ):
+                # Whole elements, reordered at most: each literal is kept as it is.
+                elements = values[0].values if values[0].kind != "dict" else values[0].values[0::2]
+                if name == "sorted":
+                    self.lossy = True  # the order depends on run-time values
+                kind_name = "tuple" if name == "tuple" else "list"
+                return Container(kind_name, tuple(reversed(elements)) if name == "reversed" else tuple(elements))
+            if name in ("repr", "ascii") and len(values) == 1 and is_string(values[0]):
+                self.lossy = True  # quoted: the literals are kept, their positions move
+                return UNKNOWN_STRING
+            if any(is_string(v) or isinstance(v, Container) for v in values):
+                self.lossy = self.transformed = True  # literals re-encoded or cut at run time
+                return UNKNOWN_STRING
+            return UNKNOWN_STRING if name in ("str", "repr", "ascii", "format", "chr") else None
+        if kind == "same":
+            return self.value(items[0])
         return None
 
-    def _apply(self, function: object, inputs: list[object], template: int | None = None) -> object:
-        """Run one operation; with run-time inputs, run it on sentinels and keep what is known for certain."""
+    def _field(self, value: object, conversion: str | None, spec: object) -> object:
+        """One replacement field. Run-time content stays one unknown piece: formatting it cannot
+        change the text around it. A value holding literals passes through only unformatted."""
+
+        if isinstance(value, Static) and isinstance(spec, Static):
+            return self._apply(lambda v, s: format(CONVERSIONS[conversion](v), s), [value, spec], template=1)
+        if not _holds_literals(value):
+            return UNKNOWN_STRING
+        if conversion in (None, "s") and spec == Static("") and is_string(value):
+            return value
+        self.lossy = self.transformed = True  # a width, precision or conversion may cut or reshape the literals
+        return UNKNOWN_STRING
+
+    def _format(self, template: object, method: str, passing: Sequence[str], arguments: list[object]) -> object:
+        """``str.format`` and ``format_map`` with some run-time values, one field at a time."""
+
+        if not (isinstance(template, Static) and isinstance(template.value, str)):
+            self.lossy = self.transformed = True  # a run-time template
+            return UNKNOWN_STRING
+        positional: list[object] = []
+        keywords: dict[str, object] = {}
+        opaque = False  # unpacked run-time arguments: which value a field gets is not known
+        pairs = (
+            [("**", arguments[0])]
+            if method == "format_map" and arguments
+            else list(zip(passing, arguments, strict=True))
+        )
+        for how, argument in pairs:
+            if how in ("*", "**"):
+                entries = _entries(argument, mapping=how == "**")
+                if entries is None:
+                    opaque = True
+                elif how == "*":
+                    positional.extend(entries)  # type: ignore[arg-type]
+                else:
+                    keywords.update(entries)  # type: ignore[arg-type]
+            elif how:
+                keywords[how[1:]] = argument
+            else:
+                positional.append(argument)
+        pieces: list[str | bytes | None] = []
+        auto = 0
+        try:
+            fields = list(string.Formatter().parse(template.value))
+        except ValueError as exc:
+            self.failures.append(f"ValueError: {exc}")
+            return UNKNOWN_STRING
+        for literal, name, spec, conversion in fields:
+            pieces.append(literal)
+            if name is None:
+                continue
+            first = re.match(r"[^.\[]*", name).group(0)  # type: ignore[union-attr]
+            key: int | str = auto if first == "" else int(first) if first.isdigit() else first
+            auto += first == ""
+            missing = (key >= len(positional)) if isinstance(key, int) else key not in keywords
+            value = None if missing else positional[key] if isinstance(key, int) else keywords[key]
+            if missing and not opaque:
+                self.failures.append(f"{'IndexError' if isinstance(key, int) else 'KeyError'}: {key!r}")
+                return UNKNOWN_STRING
+            spec_value: object = Static(spec) if "{" not in spec else None  # a nested field: a run-time spec
+            access = name[len(first) :]
+            if access:
+                # ``{0.attr}``, ``{0[key]}``: only a known value is looked into.
+                if isinstance(value, Static) and isinstance(spec_value, Static):
+                    mini = "{0" + access + (f"!{conversion}" if conversion else "") + ":" + str(spec_value.value) + "}"
+                    pieces.extend(_pieces_of(self._apply(lambda v, t=mini: t.format(v), [value])))
+                elif value is None or not (is_string(value) or isinstance(value, Container)):
+                    pieces.append(None)
+                else:
+                    self.lossy = self.transformed = True
+                    pieces.append(None)
+                continue
+            pieces.extend(_pieces_of(self._field(value, conversion, spec_value)))
+        return _joined(pieces)
+
+    def _percent(self, template: object, values: object) -> object:
+        """``template % values`` with some run-time values, one conversion at a time."""
+
+        if not (isinstance(template, Static) and isinstance(template.value, str)):
+            self.lossy = self.transformed = True  # a run-time template (or bytes)
+            return UNKNOWN_STRING
+        text = template.value
+        positional: list[object] | None = None  # None: the run-time shape decides which value a field gets
+        mapping: dict[object, object] | None = None
+        if isinstance(values, Static):
+            positional = [Static(v) for v in values.value] if isinstance(values.value, tuple) else [values]
+            if isinstance(values.value, dict):
+                mapping = {k: Static(v) for k, v in values.value.items()}
+        elif isinstance(values, Container):
+            positional = list(values.values) if values.kind == "tuple" else [values]
+            if values.kind == "dict":
+                mapping = _entries(values, mapping=True)  # type: ignore[assignment]
+        elif isinstance(values, Partial):
+            positional = [values]  # one string
+        pieces: list[str | bytes | None] = []
+        position = index = 0
+        for match in PERCENT_FIELD.finditer(text):
+            pieces.append(text[position : match.start()])
+            position = match.end()
+            if match.group("type") == "%":
+                pieces.append("%")
+                continue
+            conversion = "%" + "".join(match.group(g) or "" for g in ("flags", "width", "precision", "type"))
+            if match.group("key") is not None:
+                value = mapping.get(match.group("key")) if mapping is not None else None
+            elif positional is not None and "*" not in conversion:
+                value = positional[index] if index < len(positional) else None
+                index += 1
+            else:
+                value, positional = None, None  # run-time shape (or a ``*`` width): later fields are unknown too
+            if isinstance(value, Static):
+                pieces.extend(_pieces_of(self._apply(lambda v, c=conversion: c % (v,), [value])))
+            elif value is None:
+                pieces.append(None)
+            elif conversion == "%s" and is_string(value):
+                pieces.extend(_pieces_of(value))
+            else:
+                self.lossy = self.transformed = True
+                pieces.append(None)
+        pieces.append(text[position:])
+        return _joined(pieces)
+
+    def _apply(
+        self, function: object, inputs: list[object], template: int | None = None, control: Iterable[int] = ()
+    ) -> object:
+        """Run one operation; with run-time inputs, run it on sentinels and keep what is known for certain.
+
+        ``control`` lists the inputs that steer the operation rather than being inserted into its result.
+        """
 
         shown = [text_parts(v) for v in inputs if is_string(v)]  # type: ignore[arg-type]
         big = [v for v in inputs if isinstance(v, Static) and type(v.value) is int and abs(v.value) > MAX_EVAL_INT]
@@ -1288,10 +1553,10 @@ class Evaluator:
         if template is not None and is_string(inputs[template]):
             fixed = "".join(p for p in text_parts(inputs[template]) if p is not None)  # type: ignore[arg-type]
             if WIDE_FORMAT.search(fixed):
-                self.lossy = True
+                self.lossy = self.transformed = True
                 return UNKNOWN_STRING
         if big or sum(len(p or "") for parts in shown for p in parts) > 1_000_000:
-            self.lossy = True
+            self.lossy = self.transformed = True
             return UNKNOWN_STRING
         if all(isinstance(v, Static) for v in inputs):
             try:
@@ -1299,6 +1564,12 @@ class Evaluator:
             except Exception as exc:
                 self.failures.append(f"{type(exc).__name__}: {exc}")
                 return UNKNOWN_STRING
+        if control and _one_character_pattern(function, inputs):
+            control = set(control) - {0}  # a one-character pattern cannot match across a run-time piece
+        if any(not isinstance(inputs[i], Static) for i in control if i < len(inputs)):
+            # Two sentinels that agree prove nothing about a run-time pattern, template or bound.
+            self.lossy = self.transformed = True
+            return UNKNOWN_STRING
         # Run it twice with sentinels of two lengths: text that moves with a run-time piece's length
         # (padding, truncation) differs between the runs and is not taken as known.
         results = []
@@ -1307,14 +1578,14 @@ class Evaluator:
             try:
                 result = function(*(_stand_in(v, counter, width) for v in inputs))  # type: ignore[operator]
             except Exception:  # e.g. ``%d`` given a run-time piece: its type is not known here
-                self.lossy = True
+                self.lossy = self.transformed = True
                 return UNKNOWN_STRING
             if not isinstance(result, str):
-                self.lossy = True
+                self.lossy = self.transformed = True
                 return UNKNOWN_STRING
             results.append(_split_stand_ins(result))
         if results[0] is None or results[0] != results[1]:
-            self.lossy = True
+            self.lossy = self.transformed = True
             return UNKNOWN_STRING
         return _joined(results[0])
 
@@ -1354,15 +1625,76 @@ class Evaluator:
         if joined:
             texts.append(("".join(leaves), parts[-1] is None))
         if self.lossy:
-            texts.extend((leaf, True) for leaf in leaves)
-            texts.extend(
-                (part, True)
-                for member in self.structure(expr)
-                if member.kind != "lit" and is_string(self.value(member))
-                for part in text_parts(self.value(member))  # type: ignore[arg-type]
-                if part
-            )
+            texts.extend((text, True) for text in self.literal_texts(expr))
         return texts
+
+    def literal_texts(self, expr: Expr) -> list[str]:
+        """Each literal and the known parts of every evaluated sub-expression."""
+
+        return [*self.leaves(expr)] + [
+            part
+            for member in self.structure(expr)
+            if member.kind != "lit" and is_string(self.value(member))
+            for part in text_parts(self.value(member))  # type: ignore[arg-type]
+            if part
+        ]
+
+
+def _holds_literals(value: object) -> bool:
+    """Whether a value carries known text that formatting could cut or reshape."""
+
+    if isinstance(value, Static):
+        return True
+    if isinstance(value, Partial):
+        return any(part is not None for part in value.parts)
+    if isinstance(value, Container):
+        return any(_holds_literals(v) for v in value.values)
+    return False
+
+
+def _entries(value: object, mapping: bool) -> list[object] | dict[object, object] | None:
+    """The values of a literal sequence, or the entries of a literal mapping; None when not known."""
+
+    if isinstance(value, Static) and mapping and isinstance(value.value, dict):
+        return {k: Static(v) for k, v in value.value.items()}
+    if isinstance(value, Static) and not mapping and isinstance(value.value, (list, tuple)):
+        return [Static(v) for v in value.value]
+    if isinstance(value, Container) and mapping and value.kind == "dict":
+        keys = value.values[0::2]
+        if not all(isinstance(k, Static) for k in keys):
+            return None
+        return {k.value: v for k, v in zip(keys, value.values[1::2], strict=True)}  # type: ignore[union-attr]
+    if isinstance(value, Container) and not mapping and value.kind != "dict":
+        return list(value.values)
+    return None
+
+
+def _one_character_pattern(function: object, inputs: Sequence[object]) -> bool:
+    """``text.replace(old, new)`` whose known ``old`` is at most one character long."""
+
+    if getattr(function, "method", None) != "replace" or len(inputs) < 2:
+        return False
+    old = inputs[1]
+    return isinstance(old, Static) and isinstance(old.value, (str, bytes)) and len(old.value) <= 1
+
+
+def _controls(method: str, passing: Sequence[str]) -> set[int]:
+    """Inputs (0 = the receiver, then the arguments) that steer a method rather than being inserted."""
+
+    arguments = set(range(1, len(passing) + 1))
+    if method in ("format", "format_map"):
+        return {0}  # the template; the values are inserted
+    if method == "join":
+        return set()  # the separator and the elements are inserted
+    if method in ("lower", "upper", "casefold", "swapcase"):
+        return arguments  # per character: the receiver is content
+    if method in ("center", "ljust", "rjust"):
+        return arguments  # padding depends only on the receiver's length
+    if method == "replace":
+        positional = [i + 1 for i, how in enumerate(passing) if how == ""]
+        new = positional[1] if len(positional) > 1 and passing[: positional[1]].count("*") == 0 else None
+        return {0} | {i for i in arguments if i != new}  # only the replacement is inserted; see _apply
+    return {0} | arguments
 
 
 def static_runs(parts: Sequence[str | None]) -> list[tuple[str, bool]]:
@@ -1388,10 +1720,36 @@ def cst_expr(node: cst.CSTNode) -> Expr:
         kind = {cst.Add: "add", cst.Modulo: "mod", cst.Multiply: "mul"}.get(type(node.operator))
         if kind is not None:
             return Expr(kind, node, (cst_expr(node.left), cst_expr(node.right)))
-    if isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute) and node.func.attr.value in STR_METHODS:
+    if (
+        isinstance(node, cst.Call)
+        and isinstance(node.func, cst.Attribute)
+        and (node.func.attr.value in STR_METHODS or _cst_stringish(node.func.value))
+    ):
         items = (cst_expr(node.func.value), *(cst_expr(arg.value) for arg in node.args))
         passing = tuple(f"={arg.keyword.value}" if arg.keyword is not None else str(arg.star) for arg in node.args)
         return Expr("call", node, items, (node.func.attr.value, passing))
+    if isinstance(node, cst.Subscript) and len(node.slice) == 1:
+        element = node.slice[0].slice
+        if isinstance(element, cst.Index) and element.star is None:
+            return Expr("index", node, (cst_expr(node.value), cst_expr(element.value)))
+        if isinstance(element, cst.Slice):
+            bounds = (element.lower, element.upper, element.step)
+            items = tuple(cst_expr(b) if b is not None else Expr("lit", node, data=None) for b in bounds)
+            return Expr("index", node, (cst_expr(node.value), *items), "slice")
+    if isinstance(node, cst.IfExp):
+        return Expr("choice", node, (cst_expr(node.body), cst_expr(node.orelse)))
+    if isinstance(node, cst.BooleanOperation):
+        return Expr("choice", node, (cst_expr(node.left), cst_expr(node.right)))
+    if isinstance(node, cst.NamedExpr):
+        return Expr("same", node, (cst_expr(node.value),))
+    if (
+        isinstance(node, cst.Call)
+        and isinstance(node.func, cst.Name)
+        and node.func.value in BUILTINS
+        and node.args
+        and all(arg.keyword is None and not arg.star for arg in node.args)
+    ):
+        return Expr("builtin", node, tuple(cst_expr(arg.value) for arg in node.args), node.func.value)
     if isinstance(node, (cst.List, cst.Tuple, cst.Set)):
         kind = {cst.List: "list", cst.Tuple: "tuple", cst.Set: "set"}[type(node)]
         unpacked = any(isinstance(e, cst.StarredElement) for e in node.elements)
@@ -1401,6 +1759,19 @@ def cst_expr(node: cst.CSTNode) -> Expr:
         items = tuple(x for e in pairs for x in (cst_expr(e.key), cst_expr(e.value)))
         return Expr("map", node, items, ("dict", len(pairs) != len(node.elements)))
     return Expr("unknown", node)
+
+
+def _cst_stringish(node: cst.CSTNode) -> bool:
+    """Syntax that may evaluate to a string the evaluator can see into (not a name or attribute)."""
+
+    return isinstance(
+        node,
+        (cst.SimpleString, cst.ConcatenatedString, cst.FormattedString, cst.BinaryOperation, cst.Subscript, cst.Call),
+    )
+
+
+def _ast_stringish(node: ast.AST) -> bool:
+    return isinstance(node, (ast.Constant, ast.JoinedStr, ast.BinOp, ast.Subscript, ast.Call))
 
 
 def _cst_fstring_items(node: cst.FormattedString, parts: Sequence[cst.BaseFormattedStringContent]) -> Iterator[Expr]:
@@ -1427,11 +1798,36 @@ def ast_expr(node: ast.AST) -> Expr:
         kind = {ast.Add: "add", ast.Mod: "mod", ast.Mult: "mul"}.get(type(node.op))
         if kind is not None:
             return Expr(kind, node, (ast_expr(node.left), ast_expr(node.right)))
-    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr in STR_METHODS:
+    if (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and (node.func.attr in STR_METHODS or _ast_stringish(node.func.value))
+    ):
         args = [(a.value, "*") if isinstance(a, ast.Starred) else (a, "") for a in node.args]
         args += [(k.value, "**" if k.arg is None else f"={k.arg}") for k in node.keywords]
         items = (ast_expr(node.func.value), *(ast_expr(value) for value, _ in args))
         return Expr("call", node, items, (node.func.attr, tuple(how for _, how in args)))
+    if isinstance(node, ast.Subscript):
+        if isinstance(node.slice, ast.Slice):
+            bounds = (node.slice.lower, node.slice.upper, node.slice.step)
+            items = tuple(ast_expr(b) if b is not None else Expr("lit", node, data=None) for b in bounds)
+            return Expr("index", node, (ast_expr(node.value), *items), "slice")
+        return Expr("index", node, (ast_expr(node.value), ast_expr(node.slice)))
+    if isinstance(node, ast.IfExp):
+        return Expr("choice", node, (ast_expr(node.body), ast_expr(node.orelse)))
+    if isinstance(node, ast.BoolOp):
+        return Expr("choice", node, tuple(ast_expr(value) for value in node.values))
+    if isinstance(node, ast.NamedExpr):
+        return Expr("same", node, (ast_expr(node.value),))
+    if (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id in BUILTINS
+        and node.args
+        and not node.keywords
+        and not any(isinstance(arg, ast.Starred) for arg in node.args)
+    ):
+        return Expr("builtin", node, tuple(ast_expr(arg) for arg in node.args), node.func.id)
     if isinstance(node, (ast.List, ast.Tuple, ast.Set)):
         kind = {ast.List: "list", ast.Tuple: "tuple", ast.Set: "set"}[type(node)]
         unpacked = any(isinstance(e, ast.Starred) for e in node.elts)
