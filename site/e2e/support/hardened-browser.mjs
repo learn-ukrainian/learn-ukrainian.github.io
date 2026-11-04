@@ -28,11 +28,11 @@ const LOCAL_SCHEMES = new Set(['data:', 'blob:', 'about:', 'file:']);
 // also covers IP literals, so http://1.1.1.1/ fails as well as example.com.
 export const HOST_RESOLVER_RULES = ['MAP * ~NOTFOUND', ...ALLOWED_HOSTS.map((host) => `EXCLUDE ${host}`)].join(', ');
 
-// Flags that turn a sandbox layer off or move traffic around the resolver rules.
-const FORBIDDEN_ARG = /^--(no-sandbox|disable-setuid-sandbox|disable-namespace-sandbox|disable-seccomp-filter-sandbox|disable-gpu-sandbox|no-zygote-sandbox|no-zygote|single-process|host-resolver-rules|host-rules|proxy-server|proxy-pac-url|proxy-bypass-list)(=|$)/;
-// Launch options a caller may set. Everything else (channel, executablePath,
-// chromiumSandbox, ignoreDefaultArgs, proxy, env, ...) stays under our control.
-const CALLER_OPTIONS = new Set(['headless', 'timeout', 'slowMo', 'args']);
+// Launch options a caller may set. Everything else (channel, executablePath, chromiumSandbox,
+// args, ignoreDefaultArgs, proxy, env, ...) stays under our control. Callers pass no Chrome
+// flags at all: Chrome accepts several spellings of each switch, so a denylist cannot hold.
+const CALLER_OPTIONS = new Set(['headless', 'timeout', 'slowMo']);
+const RESOLVER_ARG = `--host-resolver-rules=${HOST_RESOLVER_RULES}`;
 
 /** True when a request to `url` may proceed. */
 export function isAllowedUrl(url) {
@@ -48,22 +48,13 @@ export function isAllowedUrl(url) {
   return ALLOWED_HOSTS.includes(host);
 }
 
-/** Launch options for installed Chrome with the sandbox on; refuses anything that weakens them. */
+/** Launch options for installed Chrome with the sandbox on; refuses any other option. */
 export function hardenedLaunchOptions(overrides = {}) {
   for (const key of Object.keys(overrides)) {
     if (!CALLER_OPTIONS.has(key)) throw new Error(`hardened launcher: launch option "${key}" is not allowed`);
   }
   // headless stays unset unless given: Playwright defaults to headless and `--headed` keeps working.
-  const { args: extra = [], ...scalars } = overrides;
-  for (const arg of extra) {
-    if (FORBIDDEN_ARG.test(String(arg))) throw new Error(`hardened launcher: Chrome flag "${arg}" is not allowed`);
-  }
-  return {
-    ...scalars,
-    channel: 'chrome',
-    chromiumSandbox: true,
-    args: [`--host-resolver-rules=${HOST_RESOLVER_RULES}`, ...extra],
-  };
+  return { ...overrides, channel: 'chrome', chromiumSandbox: true, args: [RESOLVER_ARG] };
 }
 
 /** Context options every hardened context uses; service workers would bypass routes. */
@@ -154,13 +145,11 @@ export const hardenedChromium = Object.freeze({
 
 // What the Playwright configs set; a spec's test.use() must not change it.
 function assertHardenedRun({ browserName, channel, launchOptions }) {
-  // The launcher's own resolver flag comes first; nothing after it may weaken the run.
-  const [resolverRules, ...extra] = launchOptions?.args ?? [];
-  // Fail closed on any other launch option, such as a launch-level proxy.
-  const unknown = Object.keys(launchOptions ?? {}).filter((key) => !CALLER_OPTIONS.has(key) && key !== 'channel' && key !== 'chromiumSandbox');
+  // Fail closed on any other launch option (a launch-level proxy, extra Chrome flags, ...).
+  const args = launchOptions?.args ?? [];
+  const unknown = Object.keys(launchOptions ?? {}).filter((key) => !CALLER_OPTIONS.has(key) && !['channel', 'chromiumSandbox', 'args'].includes(key));
   if (unknown.length || browserName !== 'chromium' || channel !== 'chrome' || launchOptions?.channel !== 'chrome'
-    || launchOptions?.chromiumSandbox !== true || resolverRules !== hardenedLaunchOptions().args[0]
-    || extra.some((arg) => FORBIDDEN_ARG.test(String(arg)))) {
+    || launchOptions?.chromiumSandbox !== true || args.length !== 1 || args[0] !== RESOLVER_ARG) {
     throw new Error('hardened launcher: this run must use installed Chrome with hardenedLaunchOptions() (see playwright.config.ts)');
   }
 }

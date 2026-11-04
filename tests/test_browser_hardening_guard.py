@@ -49,7 +49,7 @@ JS_WHOLE_IMPORT = re.compile(
     rf"import\s+(?!type\b)(?:\*\s+as\s+)?\w+\s*(?:,\s*\{{[^}}]*\}})?\s*from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
     # Any call taking a Playwright package name: import(), require(), a createRequire()
     # result, require.resolve(). import('...').Page is a type position, so it is skipped.
-    rf"|[\w$]+\s*\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*\)(?!\s*\.\s*[A-Z])"
+    rf"|[\w$]+\s*\(\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]\s*(?:,|\)(?!\s*\.\s*[A-Z]))"
     rf"|export\s+(?!type\b)[^;]*?from\s*['\"]{PLAYWRIGHT_PACKAGE}['\"]"
 )
 # Test fixtures that hand a spec a browser type it could launch itself.
@@ -64,8 +64,9 @@ PY_BROWSER_ACCESS = re.compile(
     r"\.\s*(?:chromium|firefox|webkit)\b|['\"][^'\"\n]*\b(?:chromium|firefox|webkit)\b"
     r"|\.\s*(?:launch|launch_persistent_context|launch_server|connect|connect_over_cdp)\s*\("
 )
+# Chrome accepts a switch with one or two leading dashes.
 SANDBOX_FLAG = re.compile(
-    r"--no-sandbox\b|--disable-(?:setuid|namespace|seccomp-filter|gpu)-sandbox\b|--no-zygote-sandbox\b"
+    r"(?<![\w-])--?(?:no-sandbox|disable-(?:setuid|namespace|seccomp-filter|gpu)-sandbox|no-zygote-sandbox)\b"
 )
 # Only the launchers set the Chromium sandbox option, so its name appears nowhere else,
 # whatever the value or spelling.
@@ -160,9 +161,10 @@ def test_the_launchers_pin_installed_chrome_sandbox_and_allowlist() -> None:
     assert options["channel"] == "chrome"
     assert options["chromium_sandbox"] is True
     assert options["args"] == [f"--host-resolver-rules={browser_launcher.HOST_RESOLVER_RULES}"]
-    for flag in ("--no-sandbox", "--disable-setuid-sandbox", "--proxy-server=http://x", "--host-resolver-rules=x"):
-        with pytest.raises(ValueError):
-            browser_launcher.hardened_launch_options(args=[flag])
+    # Callers cannot pass Chrome flags at all.
+    with pytest.raises(TypeError):
+        browser_launcher.hardened_launch_options(args=["-no-sandbox"])  # type: ignore[call-arg]
+    assert "'args'" not in node.split("const CALLER_OPTIONS = new Set(")[1].split(")")[0]
 
 
 def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:

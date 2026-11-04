@@ -19,8 +19,7 @@ guard in ``tests/test_browser_hardening_guard.py`` keeps every launch on these t
 from __future__ import annotations
 
 import logging
-import re
-from collections.abc import AsyncIterator, Callable, Iterable
+from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlsplit
@@ -39,12 +38,6 @@ _LOCAL_SCHEMES = frozenset({"data", "blob", "about", "file"})
 # covers IP literals, so http://1.1.1.1/ fails as well as example.com.
 HOST_RESOLVER_RULES = ", ".join(["MAP * ~NOTFOUND", *(f"EXCLUDE {host}" for host in ALLOWED_HOSTS)])
 
-# Flags that turn a sandbox layer off or move traffic around the resolver rules.
-_FORBIDDEN_ARG = re.compile(
-    r"^--(no-sandbox|disable-setuid-sandbox|disable-namespace-sandbox|disable-seccomp-filter-sandbox"
-    r"|disable-gpu-sandbox|no-zygote-sandbox|no-zygote|single-process|host-resolver-rules|host-rules"
-    r"|proxy-server|proxy-pac-url|proxy-bypass-list)(=|$)"
-)
 HARDENED_CONTEXT_OPTIONS: dict[str, Any] = {"service_workers": "block"}
 
 
@@ -65,17 +58,16 @@ def hardened_launch_options(
     headless: bool | None = None,
     timeout: float | None = None,
     slow_mo: float | None = None,
-    args: Iterable[str] = (),
 ) -> dict[str, Any]:
-    """Launch options for installed Chrome with the sandbox on; refuses weakening flags."""
-    extra = list(args)
-    for arg in extra:
-        if _FORBIDDEN_ARG.match(arg):
-            raise ValueError(f'hardened launcher: Chrome flag "{arg}" is not allowed')
+    """Launch options for installed Chrome with the sandbox on.
+
+    Callers pass no Chrome flags at all: Chrome accepts several spellings of each
+    switch, so a denylist of weakening flags cannot hold.
+    """
     options: dict[str, Any] = {
         "channel": "chrome",
         "chromium_sandbox": True,
-        "args": [f"--host-resolver-rules={HOST_RESOLVER_RULES}", *extra],
+        "args": [f"--host-resolver-rules={HOST_RESOLVER_RULES}"],
     }
     for key, value in (("headless", headless), ("timeout", timeout), ("slow_mo", slow_mo)):
         if value is not None:
