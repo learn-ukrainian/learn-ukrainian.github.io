@@ -25,7 +25,7 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "enum": ["sources-mcp", "test-execution", "shell", "browser", "checkout-data"]
+        "enum": ["sources-mcp", "test-execution", "shell", "browser", "checkout-data", "ci-logs"]
       }
     }
   },

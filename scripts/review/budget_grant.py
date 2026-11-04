@@ -14,6 +14,11 @@ cto-f932-rule-p2round2-sol). An owner-request ruling seals the tracker item reco
 the project owner's request and the round count it records; it admits the PR's own
 tier budget plus exactly that count, past five when the tier is already five, while
 the latest recorded rejection lists the cited finding (issue #12551, tracker C-4100).
+A capability-charge ruling admits no round: it seals one published run whose complete
+reply is a structured, empty-findings BLOCKED that only a missing capability caused, with the
+advisor's semantic attestation, so that run stops charging a round as the lineage's one
+uncharged capability failure (issue #12717; CTO proposal, Sol 6.1 APPROVE WITH CONDITIONS in
+task cto-69bb-adv12717-sol). The published verdict and reply stay as they are.
 No path resets spent rounds or changes existing verdicts.
 
 The designated advisor judges the semantics of the complete bound evidence;
@@ -67,8 +72,11 @@ OWNER_REQUEST = "owner-request"
 OWNER_FIELD = "owner_request"
 OWNER_FIELDS = frozenset({"tracker_item", "rounds"})
 TRACKER_ITEM = re.compile(r"C-[1-9][0-9]{0,5}")
+# One published capability-only BLOCKED run that stops charging a round (#12717); it admits no round itself.
+CAPABILITY_CHARGE = "capability-charge"
+CHARGED_RUN = "uncharged_run"
 LEGACY_CLASSES = frozenset({"security", "permissions", "authentication", "data-loss", "state-concurrency"})
-BLOCKER_CLASSES = LEGACY_CLASSES | {WITHHELD_CAPABILITY, P2_FIX, OWNER_REQUEST}
+BLOCKER_CLASSES = LEGACY_CLASSES | {WITHHELD_CAPABILITY, P2_FIX, OWNER_REQUEST, CAPABILITY_CHARGE}
 # The single fix-verification round is round 4: the default budget plus one.
 P2_ROUND_ALLOWANCE = recorder.DEFAULT_REVIEW_ROUNDS + 1
 P2_RECEIPT_DIR = "review-p2-fix-rounds"
@@ -110,6 +118,16 @@ EXCLUSION_ATTESTATION = {
     "no_substantive_defect": True,
     "no_security_fail": True,
 }
+# The advisor's sealed reading of a capability-charge ruling's complete published reply (#12717).
+CHARGE_ATTESTATION = {
+    "complete_reply_capability_obstruction_only": True,
+    "no_substantive_defect": True,
+    "no_unresolved_material_uncertainty": True,
+    "no_security_fail": True,
+}
+# The findings schema's digest before ``ci-logs`` joined its capability list (#12717): a strict subset of
+# today's schema, so a run dispatched under it stays schema-bound.
+PRIOR_SCHEMA_SHA256 = frozenset({"49e01c901c54b988a0310f2cc19fb667c908ea826406a5cde981be05115e8ff6"})
 
 
 class GrantRefused(recorder.RecordError):
@@ -126,7 +144,7 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
     # Rulings sealed before a field existed keep their shape; a p2 or owner-request ruling always carries its own.
     blocker = request.get("blocker_class") if isinstance(request, dict) else None
     shapes = [REQUEST_FIELDS]
-    if blocker != OWNER_REQUEST:
+    if blocker not in (OWNER_REQUEST, CAPABILITY_CHARGE):
         shapes.append(REQUEST_FIELDS - {OWNER_FIELD})
         if blocker != P2_FIX:
             shapes.append(REQUEST_FIELDS - {OWNER_FIELD, P2_FIELD})
@@ -149,7 +167,11 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
         or paths != sorted(set(paths))
     ):
         raise GrantRefused(REQUEST, f"{label} scope_paths must be a sorted list of distinct repository paths")
-    if not isinstance(request["finding_id"], str) or not FINDING_ID.fullmatch(request["finding_id"]):
+    if request.get("blocker_class") == CAPABILITY_CHARGE:
+        # The adjusted reply lists no finding, so the ruling cites none.
+        if request["finding_id"] is not None:
+            raise GrantRefused(REQUEST, f"{label} finding_id must be null for {CAPABILITY_CHARGE}")
+    elif not isinstance(request["finding_id"], str) or not FINDING_ID.fullmatch(request["finding_id"]):
         raise GrantRefused(REQUEST, f"{label} finding_id must match {FINDING_ID.pattern}")
     if not isinstance(request["blocker_class"], str) or request["blocker_class"] not in BLOCKER_CLASSES:
         raise GrantRefused(REQUEST, f"{label} blocker_class must be one of {sorted(BLOCKER_CLASSES)}")
@@ -160,7 +182,12 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
     if not isinstance(request["issued_at"], str) or stamp is None or stamp.tzinfo is None:
         raise GrantRefused(REQUEST, f"{label} issued_at must be an ISO-8601 time with a timezone")
     withheld = request.get("withheld_capability")
-    if request["blocker_class"] != WITHHELD_CAPABILITY:
+    if request["blocker_class"] == CAPABILITY_CHARGE:
+        if (not isinstance(withheld, dict) or set(withheld) != {"capability", CHARGED_RUN}
+                or not isinstance(withheld["capability"], str) or withheld["capability"] not in REVIEW_CAPABILITIES):
+            raise GrantRefused(REQUEST, f"{label} withheld_capability needs a known capability and {CHARGED_RUN}")
+        _parse_run(withheld[CHARGED_RUN], set(), label)
+    elif request["blocker_class"] != WITHHELD_CAPABILITY:
         if withheld is not None:
             raise GrantRefused(REQUEST, f"{label} withheld_capability must be null for other classes")
     else:
@@ -317,7 +344,11 @@ def check_grant(task_id: str, path: Path, record: Mapping[str, Any]) -> Grant:
         )
     attestation = decision.get("admission_exclusion_attestation")
     exclusion = (request.get("withheld_capability") or {}).get("admission_exclusion")
-    if exclusion is not None:
+    if request["blocker_class"] == CAPABILITY_CHARGE:
+        if (not isinstance(attestation, dict) or set(attestation) != set(CHARGE_ATTESTATION)
+                or any(value is not True for value in attestation.values())):
+            raise GrantRefused(APPROVAL, "a capability charge needs the advisor's sealed complete-reply attestation")
+    elif exclusion is not None:
         if (not isinstance(attestation, dict) or set(attestation) != set(EXCLUSION_ATTESTATION)
                 or any(value is not True for value in attestation.values())):
             raise GrantRefused(APPROVAL, "exclusion needs the advisor's sealed complete-reply semantic attestation")
@@ -326,13 +357,14 @@ def check_grant(task_id: str, path: Path, record: Mapping[str, Any]) -> Grant:
     return Grant(task_id, request, digest, advisor, sealed.result_sha256, attestation)
 
 
-def _claimed_pr(path: Path) -> Any:
-    """The PR a refused grant's result names, read without any check: it only decides who hears the refusal."""
+def _claimed(path: Path) -> tuple[Any, Any]:
+    """The PR and class a grant's result names, read without any check: they only decide who hears a refusal."""
     try:
         policy = advisory_role_policy(REVIEW_BUDGET_ELEVATION_ROLE)
-        return fenced_object(path.with_suffix(".result").read_text(encoding="utf-8"), policy.fence).get("pr")
+        claimed = fenced_object(path.with_suffix(".result").read_text(encoding="utf-8"), policy.fence)
+        return claimed.get("pr"), claimed.get("blocker_class")
     except (AdvisoryRefused, KeyError, OSError, UnicodeDecodeError, AttributeError):
-        return None
+        return None, None
 
 
 _STILL_OPEN = re.compile(
@@ -369,7 +401,7 @@ def _findings_schema_bound(record: Mapping[str, Any]) -> bool | None:
         return False
     expected = hashlib.sha256((package_repo_root() / SCHEMA_RELATIVE_PATH).read_bytes()).hexdigest()
     if (not isinstance(path, str) or not Path(path).as_posix().endswith("/" + SCHEMA_RELATIVE_PATH)
-            or record.get("output_schema_sha256") != expected):
+            or record.get("output_schema_sha256") not in PRIOR_SCHEMA_SHA256 | {expected}):
         return None
     return True
 
@@ -450,11 +482,15 @@ def admit_grant_round(
     grants: list[Grant] = []
     refusals: list[GrantRefused] = []
     for task_id, path, record in _grant_records(task_root):
+        claimed_pr, claimed_class = _claimed(path)
+        if claimed_class == CAPABILITY_CHARGE:
+            # It admits no round; the round count reads it (:func:`capability_charge_adjustments`).
+            continue
         try:
             grant = check_grant(task_id, path, record)
         except GrantRefused as exc:
             # A refused grant for another PR is not this PR's concern; an unreadable one names no PR.
-            if _claimed_pr(path) == number:
+            if claimed_pr == number:
                 refusals.append(exc)
             continue
         if grant.request["pr"] == number:
@@ -582,6 +618,105 @@ def _owner_round(
                                     f"{request['finding_id']}")
     owner = request[OWNER_FIELD]
     return {"cited_verdict_head": latest["sha"], "round_allowance": budget + owner["rounds"], OWNER_FIELD: dict(owner)}
+
+
+def capability_charge_adjustments(
+    *,
+    repository: str,
+    number: int,
+    branch: str,
+    changed_paths: Sequence[str],
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+    task_root: Path,
+    runs: Sequence[Any],
+) -> tuple[list[dict[str, Any]], list[str]]:
+    """This PR's sealed capability-charge adjustments that hold, and why each other one of them is refused.
+
+    Each adjustment names one published run (``review_lineage.capability_exemption`` keeps only the
+    lineage's earliest uncharged capability failure). A refused one adjusts nothing, so its run stays charged.
+    The ledger of rulings is read only when the PR has a published BLOCKED, the one verdict an adjustment can name.
+    """
+    if not any(marker["verdict"] == "BLOCKED" for _, marker in recorder._trusted_markers(comments, login)):
+        return [], []
+    adjusted: list[dict[str, Any]] = []
+    refusals: list[str] = []
+    for task_id, path, record in _grant_records(task_root):
+        claimed_pr, claimed_class = _claimed(path)
+        if claimed_class != CAPABILITY_CHARGE or claimed_pr != number:
+            continue
+        try:
+            grant = check_grant(task_id, path, record)
+            if grant.request["blocker_class"] == CAPABILITY_CHARGE and grant.request["pr"] == number:
+                adjusted.append(_charge_adjustment(
+                    grant, repository=repository, branch=branch, changed_paths=changed_paths, comments=comments,
+                    login=login, runs=runs,
+                ))
+        except GrantRefused as exc:
+            refusals.append(str(exc))
+    return adjusted, refusals
+
+
+def _charge_adjustment(
+    grant: Grant, *, repository: str, branch: str, changed_paths: Sequence[str],
+    comments: Sequence[Mapping[str, Any]], login: str, runs: Sequence[Any],
+) -> dict[str, Any]:
+    """One sealed adjustment's binding to its published run, or why it does not hold.
+
+    The advisor attests the complete reply holds only the capability obstruction; this checks the
+    structure that attestation rests on: the bound run's intact verbatim publication is a structured
+    BLOCKED with no finding, no severity and no non-PASS security verdict in any decoded string, and a
+    reply that declares missing capabilities declares the ruled one. A reply that declares none is a
+    legacy reply: nothing is inferred from it, and only this sealed attestation adjusts its charge.
+    """
+    from scripts.review import review_lineage as lineage
+    from scripts.review.capability_failure import obstruction_refusal
+    from scripts.review.verdict_parser import MISSING_CAPABILITIES_FIELD
+
+    request = grant.request
+    if normalize_repository(request["repository"]) != normalize_repository(repository):
+        raise GrantRefused(BINDING, f"grant {grant.task_id!r} names repository {request['repository']!r}")
+    if request["lineage_id"] != branch:
+        raise GrantRefused(
+            BINDING, f"grant {grant.task_id!r} follows lineage {request['lineage_id']!r}, not this PR's {branch!r}"
+        )
+    outside = sorted(set(changed_paths) - set(request["scope_paths"]))
+    if outside:
+        raise GrantRefused(SCOPE, f"grant {grant.task_id!r} does not cover changed paths {outside}")
+    capability = request["withheld_capability"]["capability"]
+    evidence = request["withheld_capability"][CHARGED_RUN]
+    try:
+        run, marker = lineage.bound_published_run(
+            evidence, runs=runs, comments=comments, login=login,
+            repository=request["repository"], number=request["pr"], branch=request["lineage_id"],
+        )
+    except lineage.LineageRefused as exc:
+        raise GrantRefused(EVIDENCE, f"grant {grant.task_id!r}: {exc.detail}") from None
+    reply, started = run.reply, lineage._started(run.record)
+    if reply is None or started is None:
+        raise GrantRefused(EVIDENCE, f"grant {grant.task_id!r}: {run.task_id} has no reply or start on record")
+    try:
+        payload = json.loads(reply, object_pairs_hook=recorder._unique_keys, parse_constant=recorder._not_json_constant)
+    except (TypeError, ValueError, RecursionError):
+        payload = None
+    derived = lineage._finished_verdict(run)
+    if (not isinstance(payload, dict) or payload.get("schema_version") != recorder.REVIEW_SCHEMA_VERSION
+            or payload.get("findings") != [] or derived is None or derived[1:3] != ("BLOCKED", 0)
+            or marker["verdict"] != "BLOCKED" or recognized_verdicts(reply) != ["BLOCKED"]
+            or obstruction_refusal(reply) is not None):
+        raise GrantRefused(BLOCKER, f"grant {grant.task_id!r}: {run.task_id} is not a published structured "
+                                    "empty-findings BLOCKED with no severity and no non-PASS security verdict")
+    declared = payload.get(MISSING_CAPABILITIES_FIELD)
+    if declared is not None and (not isinstance(declared, list) or capability not in declared):
+        raise GrantRefused(CAPABILITY, f"grant {grant.task_id!r}: {run.task_id} declares missing capabilities "
+                                       f"without {capability}")
+    if datetime.fromisoformat(started) >= datetime.fromisoformat(request["issued_at"].replace("Z", "+00:00")):
+        raise GrantRefused(EVIDENCE, f"grant {grant.task_id!r} must be issued after the run it adjusts")
+    return {
+        "task": run.task_id, "started": started, "head": marker["sha"], "capability": capability,
+        "grant_task": grant.task_id, "request_sha256": grant.request_sha256, "advisor_model": grant.advisor_model,
+        "approval_result_sha256": grant.result_sha256,
+    }
 
 
 def _admission_exclusion(

@@ -135,6 +135,39 @@ For the Anthropic/OpenAI pair below, both seat dispatches at that head count as 
   decision for the PR's current head (admitted, with any exemption, grant or repair-round
   receipt, or the refusal that names what to escalate), lists each head reviewed without a
   recorded verdict under `unrecorded_rounds`, and writes nothing.
+- **A review that could not happen charges no round, once per lineage** (#12717). The
+  lineage's one uncharged capability failure is the earliest-started run that either carries a
+  capability-failure event ([below](#a-blocked-that-only-lacked-a-capability)) or, when its
+  BLOCKED verdict is already published, a sealed capability-charge adjustment (below). That run
+  opens no round, and its published verdict, if any, does not make its head a reviewed head. It
+  admits exactly one replacement: the next round, spent like any other when its reviewer is
+  dispatched, failed or not. When only the exemption admits that round, the recorder accepts it
+  only from the exempt run's seat (family and review profile). Every later capability failure,
+  the failed replacement included, stays charged, so retries, concurrent dispatches or claims,
+  another reviewer and a moved head never add a second. The dispatcher and the recorder apply
+  the same count; `budget-check` names the exempt run under `uncharged_capability_failure` and
+  any refused adjustment under `capability_charge_refusals`.
+- **Capability-charge adjustment for a published BLOCKED.** A published verdict and its reply
+  are never changed or reclassified. The CTO issues a sealed ruling with `blocker_class:
+  capability-charge`, `finding_id: null`, null `p2_fix_verification` and `owner_request`, and a
+  `withheld_capability` object naming the missing `capability` and the `uncharged_run` by
+  `task_id`, `run_nonce`, `reviewed_sha` and `reply_sha256`, bound to the repository, PR,
+  lineage and changed paths like any grant. The designated advisor's sealed APPROVE carries an
+  `admission_exclusion_attestation` of exactly `{complete_reply_capability_obstruction_only,
+  no_substantive_defect, no_unresolved_material_uncertainty, no_security_fail}`, each true, after
+  reading the complete published reply. The recorder also requires that the run's intact,
+  verbatim publication is a structured BLOCKED with `findings: []`, no severity and no non-PASS
+  security verdict in any decoded string, and that a reply declaring `missing_capabilities`
+  declares the ruled one. A reply declaring none is a legacy reply: nothing is inferred from its
+  prose, and only this attestation adjusts its charge. The ruling admits no round itself and must
+  be issued after the run. The BLOCKED stays until an APPROVE at a new head
+  ([clearing](#clearing-a-recorded-rejection)); the capability failure gives no security
+  sign-off and fills no seat.
+- **The replacement carries the missing evidence inline.** Its brief answers the question the
+  failed run could not: for `ci-logs`, the exact head SHA, the CI run and job ids, their
+  conclusions, and the relevant test output or log excerpts. Conclusions alone are not enough
+  when the review needed the logs. A replacement that is again blocked for the same reason is
+  charged.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a
   replacement PR or a new session does not reset them.
 
@@ -176,19 +209,22 @@ Use the primary recorder so the caller's branch age cannot select its rules.
 
 ```bash
 "$PY" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py" capability-failure --task-id "$REVIEW_TASK" --pr "$PR" \
-  --capability <sources-mcp|test-execution|shell|browser|checkout-data> --authority claude-cto
+  --capability <sources-mcp|test-execution|shell|browser|checkout-data|ci-logs> --authority claude-cto
 ```
 
 - It qualifies only when the reply is `BLOCKED` with a known count of zero findings, which only a
   structured `code-review-findings.v1` reply proves, and the missing capability is evidenced:
   `sources-mcp` by the run's recorded count of zero Sources MCP calls on the Ukrainian profile,
-  any other capability by the reply's `missing_capabilities` list beside its findings. A prose
-  reply, any finding (P3 included) or "no in-scope blocker" does not qualify, and that BLOCKED is
-  handled as today.
+  any other capability by the reply's `missing_capabilities` list beside its findings. `ci-logs`
+  means the reviewer could not read the CI or execution logs its review needed. A prose
+  reply, any finding (P3 included), a severity or a non-PASS security verdict in any decoded
+  string, or "no in-scope blocker" does not qualify, and that BLOCKED is handled as today.
 - The event is bound to the run, its reviewed head and its reply digest; the reply stays as it is.
-  It is not a verdict: it approves nothing, rejects nothing, opens no round and fills no seat, so
-  every required review still has to happen. A run with a published verdict cannot be
-  reclassified, and a classified run's verdict cannot be published.
+  It is not a verdict: it approves nothing, rejects nothing and fills no seat, so every required
+  review still has to happen. Only the lineage's first capability failure opens no round
+  ([budget](#budget)). A run with a published verdict cannot be reclassified, and a classified
+  run's verdict cannot be published; a published capability-only BLOCKED uses the
+  capability-charge adjustment instead.
 
 ## Before the review: frozen scope and cheap checks first
 
