@@ -43,6 +43,13 @@ def ledger() -> ModuleType:
     return receipts_ledger
 
 
+def openai_structured_output_forbidden_keywords() -> frozenset[str]:
+    """The review-output keywords that OpenAI's strict schema does not support."""
+    from scripts.audit.post_build_review import OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS
+
+    return OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS
+
+
 # ``scripts.dispatcher.worker.load_post_start_code`` calls the three functions below as the worker
 # starts, each inside the import group it replaces, so a checkout change while the worker runs cannot
 # mix module versions (#12634).

@@ -64,7 +64,11 @@ def _module_name(path: Path) -> str:
         raise ProductHooksError("hooks_not_json", f"{HOOKS_REL}: {exc}") from None
     if not isinstance(payload, dict) or set(payload) != _FIELDS:
         raise ProductHooksError("hooks_fields", f"{HOOKS_REL} must hold exactly {sorted(_FIELDS)}")
-    if payload["schema"] != SCHEMA or payload["schema_version"] != SCHEMA_VERSION:
+    if (
+        payload["schema"] != SCHEMA
+        or type(payload["schema_version"]) is not int
+        or payload["schema_version"] != SCHEMA_VERSION
+    ):
         raise ProductHooksError("hooks_schema_mismatch", f"{HOOKS_REL} is not {SCHEMA} v{SCHEMA_VERSION}")
     if payload["origin"] != HOOKS_REL:
         raise ProductHooksError("hooks_origin_mismatch", f"{HOOKS_REL} names origin {payload['origin']!r}")

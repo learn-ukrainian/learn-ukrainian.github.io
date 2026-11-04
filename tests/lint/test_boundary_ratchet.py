@@ -1,9 +1,10 @@
-"""Gate defects for the scripts/ package-boundary ratchet (#12660, #12677)."""
+"""Gate defects for the scripts/ package-boundary ratchet (#12660, #12677, #12720)."""
 
 from __future__ import annotations
 
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 import yaml
@@ -15,6 +16,9 @@ from scripts.lint.boundary_ratchet import (
     population_report,
     write_baseline,
 )
+
+_REPO = Path(__file__).resolve().parents[2]
+_GROWTH = "baseline may only shrink; freeze/growth differs from origin/main"
 
 _SCHEMA = "package-boundary.v1"
 
@@ -187,3 +191,105 @@ def test_untracked_scripts_directory_is_not_classified(tmp_path: Path) -> None:
     assert "scripts/ghost: unclassified package" not in violations
     assert "scripts/pycache_only: unclassified package" not in violations
     assert "scripts/loose: unclassified package" in violations
+
+
+def _git(root: Path, *args: str) -> None:
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "-c",
+            "user.name=Boundary Fixture",
+            "-c",
+            "user.email=boundary@example.invalid",
+            *args,
+        ],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+
+def _commit(root: Path, message: str) -> None:
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", message)
+
+
+def _ratchet(root: Path, baseline: Path, config: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.lint.boundary_ratchet",
+            "--root",
+            str(root),
+            "--baseline",
+            str(baseline),
+            "--config",
+            str(config),
+        ],
+        cwd=_REPO,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+
+def test_remove_then_restore_matches_origin_main_and_growth_still_fails(tmp_path: Path) -> None:
+    """Restoring rows the branch itself removed is reported as growth against HEAD or HEAD^."""
+
+    imported = "from scripts.prod.widget import name\n"
+    root, config, _empty = _tree(
+        tmp_path,
+        {
+            "mach/a.py": imported,
+            "prod/__init__.py": "",
+            "prod/widget.py": "name = 1\n",
+            "prod/other.py": "other = 1\n",
+        },
+        {"mach": "machinery", "prod": "product"},
+    )
+    baseline = root / "scripts" / "lint" / "boundary_baseline.json"
+    baseline.parent.mkdir(parents=True, exist_ok=True)
+    counts, fatal = collect_import_counts(root, load_config(config))
+    assert fatal == []
+    assert counts
+    write_baseline(baseline, counts)
+    _git(root, "init", "-q", "-b", "main")
+    _commit(root, "base")
+    _git(root, "update-ref", "refs/remotes/origin/main", "HEAD")
+
+    landed = _ratchet(root, baseline, config)
+    assert landed.returncode == 0, landed.stderr
+    assert landed.stdout.startswith("OK: package boundary ratchet matches the baseline")
+
+    (root / "scripts" / "mach" / "a.py").write_text("name = 1\n", encoding="utf-8")
+    write_baseline(baseline, {})
+    _commit(root, "remove the row")
+    shrunk = _ratchet(root, baseline, config)
+    assert shrunk.returncode == 0, shrunk.stderr
+
+    (root / "scripts" / "mach" / "a.py").write_text(imported, encoding="utf-8")
+    write_baseline(baseline, counts)
+    dirty = _ratchet(root, baseline, config)
+    assert dirty.returncode == 0, dirty.stderr
+    assert "differs from" not in dirty.stderr
+
+    _commit(root, "restore the origin/main rows")
+    restored = _ratchet(root, baseline, config)
+    assert restored.returncode == 0, restored.stderr
+    assert restored.stdout.startswith("OK: package boundary ratchet matches the baseline")
+    assert "differs from" not in restored.stderr
+
+    source = root / "scripts" / "mach" / "a.py"
+    source.write_text(imported + "from scripts.prod.other import other\n", encoding="utf-8")
+    grown, grown_fatal = collect_import_counts(root, load_config(config))
+    assert grown_fatal == []
+    assert set(grown) > set(counts)
+    write_baseline(baseline, grown)
+    violation = _ratchet(root, baseline, config)
+    assert violation.returncode == 1
+    assert violation.stderr.splitlines() == [f"scripts/lint/boundary_baseline.json: {_GROWTH}"]
+    assert "differs from HEAD" not in violation.stderr

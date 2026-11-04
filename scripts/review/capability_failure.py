@@ -23,10 +23,14 @@ recording authority may publish this classification for the run instead.
    exactly from the record and reply, and refuses a missing event, an event
    with no run, several events for one run, or an event beside a published
    verdict. The verdict recorder refuses to publish a verdict for a classified
-   run. Round counting skips a classified run and the merge-queue keeper reads
-   only verdict markers, so a capability failure opens no round, approves
-   nothing, rejects nothing and fills no reviewer seat: every required review
-   still has to happen.
+   run. The merge-queue keeper reads only verdict markers, so a capability
+   failure approves nothing, rejects nothing and fills no reviewer seat: every
+   required review still has to happen. Round counting skips only the lineage's
+   earliest-started capability failure (``review_lineage.capability_exemption``,
+   issue #12717): it opens no round and admits one replacement, which is spent
+   at its dispatch; any later one, a failed replacement included, stays charged.
+   A zero-finding reply that names a severity or a non-PASS security verdict in
+   any decoded string is not an obstruction only (:func:`obstruction_refusal`).
 
 Cooperative threat model, as in ``scripts/agent_runtime/bounded_advisory.py``:
 the authority is recorded, not authenticated, so a process that rewrites task
@@ -75,6 +79,7 @@ FINDINGS = "findings"
 CAPABILITY = "capability"
 AUTHORITY = "authority"
 PUBLICATION = "publication"
+SUBSTANCE = "substance"
 
 
 class CapabilityFailureRefused(recorder.RecordError):
@@ -140,6 +145,24 @@ def _declared(reply: str) -> frozenset[str]:
     return frozenset(declared)
 
 
+def obstruction_refusal(reply: str) -> str | None:
+    """Why a zero-finding reply is more than a capability obstruction, or None.
+
+    Every decoded string of the reply is read, so a JSON escape cannot hide a severity
+    (``P0`` to ``P3``) or a security verdict whose value is not exactly PASS.
+    """
+    try:
+        payload = json.loads(reply, object_pairs_hook=recorder._unique_keys, parse_constant=recorder._not_json_constant)
+    except (ValueError, RecursionError):
+        return "the reply is not one structured findings object"
+    texts = list(recorder._strings(payload))
+    if any(recorder._security_verdict_blocks(text) for text in texts):
+        return "the reply carries a security verdict that is not PASS"
+    if any(re.search(r"\bP[0-3]\b", text) for text in texts):
+        return "the reply names a finding severity"
+    return None
+
+
 def classify(
     task_id: str, record: Mapping[str, Any], reply: str, *, capability: str, authority: str
 ) -> CapabilityFailure:
@@ -183,6 +206,11 @@ def classify(
         )
     if count:
         raise CapabilityFailureRefused(FINDINGS, f"review task {task_id} carries {count} finding(s)")
+    # Empty findings are necessary, not sufficient: a severity or a non-PASS security verdict anywhere
+    # in the reply's decoded text is a substantive outcome, which stays charged and blocking (#12717).
+    substance = obstruction_refusal(reply)
+    if substance is not None:
+        raise CapabilityFailureRefused(SUBSTANCE, f"review task {task_id}: {substance}")
     declared = _declared(reply)
     if capability == SOURCES_MCP:
         calls = record.get("sources_mcp_call_count")

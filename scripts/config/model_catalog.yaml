@@ -175,8 +175,8 @@ review_scheduler:
       adapter_transport: acp
       catalog_transport: native_codex
       sealed_executable: agent_runtime.runner:invoke_inter_agent
-      quota_bucket: codex
-      credential_bucket: codex
+      quota_bucket: codex:a
+      credential_bucket: codex:a
       quota_limit: 1
       credential_limit: 1
       capacity_weight: 1.0
@@ -1203,6 +1203,7 @@ review_candidates:
   openai_red_team_exception: {role: legacy_reviewers, seat: openai_red_team_exception, route_name: native, field: candidate}
   muse: {role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: candidate}
   openai_frontier: {role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: candidate}
+  openai_frontier_b: {role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: candidate}
   grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
   claude-opus-5-5: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: candidate}
   claude-opus-5-5-agy: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: candidate}
@@ -1349,6 +1350,7 @@ review_ladders:
   # Grok reviews security code statically: CI is its execution proof and the
   # review requests no execution (core.md P2; D-129, #10464).
   critical:
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: legacy_label}]
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
@@ -1356,11 +1358,13 @@ review_ladders:
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # no seat is eligible the resolver returns no reviewer with a stated reason.
   high:
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: legacy_label}]
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
   medium: &practical_first_code_review
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: legacy_label}]
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
@@ -1425,6 +1429,21 @@ seats:
     priority: 10
     decision_reference: agents_extensions/shared/rules/operator-expectations.md#12
     routes:
+      native_b:
+        legacy_name: openai_frontier_b
+        effort: high
+        route: codex
+        transport: native_codex
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent codex --codex-account b-sub --model {wire_id} --effort high
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+        - isolation
+        - sealed_evidence
+        advisory_only_for_author_families:
+        - openai
       native:
         legacy_name: openai_frontier
         effort: high
@@ -1616,6 +1635,7 @@ roles:
   code_review_low:
     routes:
     - meta_reviewer/native
+    - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
@@ -1628,6 +1648,7 @@ roles:
   code_review_medium:
     routes:
     - meta_reviewer/native
+    - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
@@ -1639,6 +1660,7 @@ roles:
     risk: medium
   code_review_high:
     routes:
+    - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
@@ -1647,6 +1669,7 @@ roles:
     risk: high
   code_review_critical:
     routes:
+    - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
