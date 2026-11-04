@@ -1,6 +1,6 @@
 """Tests for the primary-checkout integrity watchdog.
 
-scripts/audit/check_primary_integrity.py — #5803 follow-up: detection +
+scripts/hygiene/check_primary_integrity.py — #5803 follow-up: detection +
 CONSERVATIVE repair of primary-checkout drift. The repair gate is the whole
 point: repair ONLY when detached + clean + idle + no running dispatch + main
 stable; alert and preserve evidence (never touch) otherwise.
@@ -19,7 +19,7 @@ import pytest
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
-from audit.check_primary_integrity import (
+from hygiene.check_primary_integrity import (
     _append_event,
     _save_state,
     check_primary_integrity,

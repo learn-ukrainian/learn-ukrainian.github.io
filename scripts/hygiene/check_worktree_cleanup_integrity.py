@@ -39,9 +39,11 @@ def _load_sibling(module_name: str, filename: str):
     if module_name in sys.modules:
         return sys.modules[module_name]
     spec = importlib.util.spec_from_file_location(module_name, Path(__file__).resolve().parent / filename)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load sibling module {filename}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
-    spec.loader.exec_module(module)  # type: ignore[union-attr]
+    spec.loader.exec_module(module)
     return module
 
 
@@ -207,7 +209,7 @@ def check_worktree_cleanup_integrity(
 
     last_observed = latest_receipt_observed_at(receipt_dir(home_root))
     receipt_age = (observed_now - last_observed) if last_observed is not None else None
-    receipt_stale = last_observed is None or receipt_age >= STALE_AFTER
+    receipt_stale = receipt_age is None or receipt_age >= STALE_AFTER
     last_exit = snapshot["last_exit"]
     launchd_red = bool(
         snapshot["needs_lwcr_update"]
@@ -215,7 +217,7 @@ def check_worktree_cleanup_integrity(
         or (last_exit is not None and last_exit != 0)
     )
 
-    if not launchd_red and not receipt_stale:
+    if not launchd_red and not receipt_stale and last_observed is not None:
         return True, (
             f"worktree-cleanup integrity ok (last receipt {last_observed.isoformat().replace('+00:00', 'Z')})"
         )
@@ -242,7 +244,7 @@ def check_worktree_cleanup_integrity(
         reasons.append(f"last scheduled exit {last_exit}")
     if last_observed is None:
         reasons.append(f"no successful receipt under {receipt_dir(home_root)}")
-    elif receipt_stale:
+    elif receipt_stale and receipt_age is not None:
         reasons.append(
             f"last successful receipt {last_observed.isoformat().replace('+00:00', 'Z')} "
             f"is {_age_label(receipt_age)} old (stale after {_age_label(STALE_AFTER)})"
@@ -262,7 +264,7 @@ def main(argv: list[str] | None = None) -> int:
         "Use for read-only macOS checks; never repairs or reloads launchd.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python -m scripts.audit.check_worktree_cleanup_integrity --quiet\n"
+        "  .venv/bin/python -m scripts.hygiene.check_worktree_cleanup_integrity --quiet\n"
         "Outputs: alerts and local telemetry events for red or dark jobs.\n"
         "Exit codes: 0 healthy or not applicable; 1 red, dark or unsafe job.\n"
         "Related: #9894; docs/runbooks/launchd-inventory.md",

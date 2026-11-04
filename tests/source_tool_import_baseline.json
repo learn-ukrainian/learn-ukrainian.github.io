@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 487,
-    "probe_count": 974,
+    "cli_count": 484,
+    "probe_count": 968,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/env_sanitize.py",
@@ -69,10 +69,8 @@
       "scripts/audit/check_module_continuity.py",
       "scripts/audit/check_no_internal_ids.py",
       "scripts/audit/check_no_private_source_review_exports.py",
-      "scripts/audit/check_node_modules_integrity.py",
       "scripts/audit/check_plan.py",
       "scripts/audit/check_postmortems.py",
-      "scripts/audit/check_primary_integrity.py",
       "scripts/audit/check_promote_quality_changed.py",
       "scripts/audit/check_research_registry.py",
       "scripts/audit/check_research_registry_pilot.py",
@@ -82,8 +80,6 @@
       "scripts/audit/check_teacher_deck.py",
       "scripts/audit/check_ua_eval_public_doc_language.py",
       "scripts/audit/check_untrusted_workflow_interpolation.py",
-      "scripts/audit/check_venv_integrity.py",
-      "scripts/audit/check_worktree_cleanup_integrity.py",
       "scripts/audit/checks/language_salad.py",
       "scripts/audit/classify_atlas_source_gaps.py",
       "scripts/audit/classify_grounding_failures.py",
@@ -262,6 +258,7 @@
       "scripts/github_graphql_budget.py",
       "scripts/hooks/session_start_gate.py",
       "scripts/hygiene/branch_sweep.py",
+      "scripts/hygiene/check_primary_integrity.py",
       "scripts/hygiene/preserved_retention.py",
       "scripts/hygiene/retention_engine.py",
       "scripts/hygiene/tmp_sweep.py",
@@ -492,7 +489,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "8b78a625e168685c5fcd3d2ad182ce8569129e0ddb3350b5d2de7c3731c33831"
+    "cli_paths_sha256": "ebe34042c460a9e3209d896ff0ae49bbc0ba5429e6d10cb613e4e32222a39548"
   },
   "failures": [
     {

@@ -933,7 +933,7 @@ A red or missing scheduled run surfaces on the existing integrity canary
 pre-flight warning). Probe:
 
 ```bash
-.venv/bin/python scripts/audit/check_worktree_cleanup_integrity.py
+.venv/bin/python scripts/hygiene/check_worktree_cleanup_integrity.py
 ```
 
 ## Uninstall

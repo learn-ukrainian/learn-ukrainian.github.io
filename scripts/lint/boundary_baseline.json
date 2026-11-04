@@ -122,31 +122,6 @@
       "count": 1
     },
     {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_node_modules_integrity",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_primary_integrity",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_venv_integrity",
-      "count": 1
-    },
-    {
-      "path": "scripts/api/main.py",
-      "module": "scripts.audit.check_worktree_cleanup_integrity",
-      "count": 1
-    },
-    {
       "path": "scripts/api/sources_router.py",
       "module": "scripts.rag",
       "count": 1

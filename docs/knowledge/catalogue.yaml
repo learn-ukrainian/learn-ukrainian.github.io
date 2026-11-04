@@ -2204,7 +2204,7 @@ entries:
   - id: data-telemetry
     kind: data_store
     store: [data/telemetry/]
-    producer: [scripts/api/telemetry_router.py, scripts/audit/check_primary_integrity.py]
+    producer: [scripts/api/telemetry_router.py, scripts/hygiene/check_primary_integrity.py]
     local_only: true
     purpose: Runtime telemetry - tool timings, legacy comms route usage and integrity-watch events.
     keywords: [telemetry, tool timings, integrity watch]
