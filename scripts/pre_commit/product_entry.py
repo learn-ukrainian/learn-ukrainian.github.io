@@ -16,7 +16,8 @@ file is missing, a symlink, not a regular file or too large; is not strict
 UTF-8 JSON (a duplicate key counts); has another schema, schema version or
 origin; carries a missing or unknown field; or names a hook that is not
 listed, an entry point outside ``scripts.<module>:<function>`` or an argument
-that is not a string.
+that is not a string. :func:`run_entry_point` also raises it when the named
+function is missing or does not return an integer exit code.
 
 Example:
   .venv/bin/python -c "from scripts.pre_commit.product_entry import load_entry_point as l; print(l('lesson-schema-drift'))"
@@ -71,7 +72,8 @@ def _read(path: Path) -> Any:
     except OSError as exc:
         raise EntryPointError(f"cannot read {path}: {exc.strerror}") from None
     with os.fdopen(descriptor, "rb") as handle:
-        if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+        opened = os.fstat(handle.fileno())
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino):
             raise EntryPointError(f"{path} changed while it was opened")
         data = handle.read(MAX_BYTES + 1)
     if len(data) > MAX_BYTES:
@@ -120,5 +122,12 @@ def load_entry_point(hook_id: str, path: Path = ENTRY_POINTS_PATH) -> EntryPoint
 def run_entry_point(hook_id: str) -> int:
     """Import and call the product entry point for ``hook_id``; return its exit code."""
     entry = load_entry_point(hook_id)
-    function: Callable[[list[str]], int] = getattr(importlib.import_module(entry.module), entry.function)
-    return function(list(entry.argv))
+    function: Callable[[list[str]], object] | None = getattr(
+        importlib.import_module(entry.module), entry.function, None
+    )
+    if not callable(function):
+        raise EntryPointError(f"{entry.module} has no callable {entry.function!r}")
+    result = function(list(entry.argv))
+    if type(result) is not int:
+        raise EntryPointError(f"{entry.module}:{entry.function} returned {type(result).__name__}, not an exit code")
+    return result
