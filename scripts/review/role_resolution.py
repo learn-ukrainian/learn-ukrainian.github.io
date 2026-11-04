@@ -38,6 +38,21 @@ _ROUTE_FIELDS = frozenset({
 })
 
 
+def invocation_codex_account(invocation: str) -> str:
+    """Canonical account identity for a catalogued Codex dispatch invocation."""
+    from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
+
+    tokens = shell_split(invocation)
+    labels = []
+    for index, token in enumerate(tokens):
+        flag, separator, value = token.partition("=")
+        if flag == "--codex-account":
+            labels.append(value if separator else (tokens[index + 1] if index + 1 < len(tokens) else ""))
+    if len(labels) > 1:
+        raise ModelCatalogError("Codex route requires one account label")
+    return resolve_codex_account_label(labels[0] if labels else None)
+
+
 def _mapping(value: Any, label: str) -> dict[str, Any]:
     if not isinstance(value, dict) or not value:
         raise ModelCatalogError(f"{label} must be a non-empty mapping")
@@ -159,7 +174,7 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
                     f"models.{model_id}.routing_wire_ids contains an unsupported transport or mismatched identity"
                 )
     legacy_names: set[str] = set()
-    identities: set[tuple[str, str, str]] = set()
+    identities: set[tuple[str, str, str, str | None]] = set()
     for name, raw in seats.items():
         if not isinstance(name, str) or not _STABLE_NAME.fullmatch(name):
             raise ModelCatalogError("seat names must be stable functional identifiers")
@@ -209,7 +224,10 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
             pinned = invocation_model(expanded["invocation"])
             if pinned and canonical_model_id(pinned, catalog) != model_id:
                 raise ModelCatalogError(f"seats.{name}.{route_name} invocation mismatches holder")
-            identity = (model_id, route["route"], transport)
+            account = None
+            if route["route"] == "codex":
+                account = invocation_codex_account(expanded["invocation"])
+            identity = (model_id, route["route"], transport, account)
             if identity in identities:
                 raise ModelCatalogError("seats contain duplicate expanded routes")
             identities.add(identity)

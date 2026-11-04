@@ -834,7 +834,7 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
 def test_kimi_never_receives_automatic_review_load():
     """Kimi seats admit web, UI and backend coding only: no Kimi candidate is ever evaluated or selected."""
     counts = {"openai_frontier": 0}
-    assigned_bytes = {"codex": 0, "kimi": 0}
+    assigned_bytes = {"codex:a": 0, "kimi": 0}
 
     for index in range(20):
         runtime_state = {
@@ -864,7 +864,7 @@ def test_kimi_never_receives_automatic_review_load():
         assert not [item for item in resolution.trace if item.quota_bucket == "kimi"]
 
     assert counts == {"openai_frontier": 20}
-    assert assigned_bytes == {"codex": 20_000, "kimi": 0}
+    assert assigned_bytes == {"codex:a": 20_000, "kimi": 0}
 
 
 def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier(practical_astra, monkeypatch):
@@ -912,7 +912,7 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practica
     assert circuit.selected.name == "claude-sonnet-5-5"
     assert "circuit is open" in next(item.reason for item in circuit.trace if item.name == "synthetic-practical-astra")
 
-    bucket = resolve_reviewer(inputs, ladder=ladder, excluded_quota_buckets=frozenset({"codex"}))
+    bucket = resolve_reviewer(inputs, ladder=ladder, excluded_quota_buckets=frozenset({"codex:a"}))
     assert bucket.selected.name == "claude-sonnet-5-5"
     assert "already reserved" in next(item.reason for item in bucket.trace if item.name == "synthetic-practical-astra")
 
@@ -1066,9 +1066,19 @@ def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing()
     assert selected.participant == "codex"
     assert selected.adapter_transport == "acp"
     assert selected.sealed_executable == "agent_runtime.runner:invoke_inter_agent"
-    assert selected.quota_bucket == "codex"
-    assert selected.credential_bucket == "codex"
+    assert selected.quota_bucket == "codex:a"
+    assert selected.credential_bucket == "codex:a"
     assert selected.quota_limit == selected.credential_limit == 1
+    inputs = ResolverInputs(author_model="claude", risk="high", claude_account=HOST_ACCOUNT,
+                            routing_snapshot={"agents": {"codex": {"status": "healthy"}},
+                                "codex_accounts": {"codex:b": {"status": "healthy", "remaining_pct": 83}}})
+    b = resolve_reviewer(inputs).selected
+    assert b is not None and b.name == "openai_frontier_b"
+    assert b.quota_bucket == b.credential_bucket == "codex:b"
+    assert "--codex-account b-sub" in b.invocation
+    a = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"codex:b"})).selected
+    assert a is not None and a.name == "openai_frontier"
+    assert a.quota_bucket == a.credential_bucket == "codex:a"
 
     # Kimi seats admit web, UI and backend coding only: no review candidate binds a Kimi participant.
     assert not [c for c in REVIEW_CANDIDATES.values() if c.participant in {"kimi", "kimicc"}]
@@ -1087,22 +1097,23 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 def test_ladders_place_cursor_grok_directly_after_opus(risk):
     ladder = REVIEW_LADDERS[risk]
     # No Claude model reviews through Cursor (D-129, #10464): Grok's Cursor route is the last frontier rung.
-    assert [rung[0].name for rung in ladder[:4]] == [
+    assert [rung[0].name for rung in ladder[:5]] == [
+        "openai_frontier_b",
         "openai_frontier",
         "claude-opus-5-5",
         "claude-opus-5-5-agy",
         "grok-4.7-cursor-fallback",
     ]
     if risk == "critical":
-        assert len(ladder) == 4
+        assert len(ladder) == 5
     elif risk == "high":
-        assert len(ladder) == 4
+        assert len(ladder) == 5
         assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
     else:
-        assert ladder[4][0].name == "claude-sonnet-5-5"
-        assert ladder[5][0].name == "claude-sonnet-5-5-agy"
-        assert ladder[6][0].name == "gemini-3.8-flash-high"
-        assert ladder[7][0].name == "muse"
+        assert ladder[5][0].name == "claude-sonnet-5-5"
+        assert ladder[6][0].name == "claude-sonnet-5-5-agy"
+        assert ladder[7][0].name == "gemini-3.8-flash-high"
+        assert ladder[8][0].name == "muse"
         assert len(ladder) == 8
         assert "muse" in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
@@ -1140,7 +1151,7 @@ def test_astra_authors_never_receive_openai_cross_family_review():
         assert resolution.selected.family != "openai"
         for entry in resolution.trace:
             if REVIEW_CANDIDATES[entry.name].family == "openai":
-                assert entry.status == ("advisory_only" if entry.name == "openai_frontier" else "excluded")
+                assert entry.status == ("advisory_only" if entry.name in {"openai_frontier", "openai_frontier_b"} else "excluded")
 
 
 def test_sealed_executable_catalog_and_resolver_parity():
@@ -1769,6 +1780,7 @@ def test_grok_critical_review_admitted_with_explicit_pin_and_custom_ladder(candi
 
 _SOL_OPUS_GROK = {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
 _HIGH_SEATS = {
+    "openai_frontier_b",
     "openai_frontier",
     "claude-opus-5-5",
     "claude-opus-5-5-agy",

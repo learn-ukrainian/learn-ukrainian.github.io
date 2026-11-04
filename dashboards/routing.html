@@ -89,7 +89,7 @@ tr:last-child td { border-bottom:none; }
 
   <section class="section panel">
     <h2>Subscriptions</h2>
-    <p class="sub" style="margin-bottom:10px">Routing pressure includes its source. Measured provider quota and runtime health have separate freshness markers. Fleet burn counts dispatch calls.</p>
+    <p class="sub" style="margin-bottom:10px">Routing pressure includes its source. Measured provider quota and runtime health have separate freshness markers. Codex a (sub) and b (b-sub) have independent windows and credentials. Fleet burn counts dispatch calls.</p>
     <div id="subscriptions-table"></div>
   </section>
 
@@ -618,10 +618,13 @@ function resolveSubscriptionInFlight(inFlight, name) {
 }
 
 function renderSubscriptions(routing) {
-  const agents = routing.agents || {};
-  const inFlight = routing.in_flight || {};
+  const accounts = routing.codex_accounts || {};
+  const agents = {...(routing.agents || {}), ...accounts};
+  agents['codex:a'] = accounts['codex:a'] || agents['codex:a'] || agents.codex;
+  const inFlight = {...(routing.in_flight || {})};
+  inFlight['codex:a'] = inFlight['codex:a'] ?? inFlight.codex;
   // Live subscription lanes only — retired gemini CLI / glm stay off the roster.
-  const subscriptionLanes = ['cursor', 'claude', 'codex', 'grok', 'kimi', 'agy'];
+  const subscriptionLanes = ['cursor', 'claude', 'codex:a', 'codex:b', 'grok', 'kimi', 'agy'];
   const rows = subscriptionLanes
     .map(name => {
       const agent = resolveSubscriptionAgent(agents, name) || {};

@@ -81,9 +81,11 @@ def test_authorities_have_one_native_holder_per_family():
     result = resolve_role("designated_authorities", purpose="inspect")
     assert [(row.model_id, row.family, row.transport) for row in result.candidates] == [
         ("gpt-6.1-sol", "openai", "native_codex"),
+        ("gpt-6.1-sol", "openai", "native_codex"),
         ("claude-opus-5-5", "anthropic", "native_claude"),
         ("claude-opus-5-5", "anthropic", "agy"),
     ]
+    assert [row.route_name for row in result.candidates if row.family == "openai"] == ["native_b", "native"]
     assert all(row.decision_reference and row.qualification_reference is None for row in result.candidates)
 
 

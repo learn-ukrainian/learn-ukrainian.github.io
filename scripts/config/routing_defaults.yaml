@@ -4,6 +4,9 @@ schema_version: 1
 # Orchestrator lane changes stay off until the harness gates are landed.
 apply_orchestrator_defaults: false
 roles:
+  # Codex is the family, not a shared quota: C-4606 puts new Sol work on
+  # --codex-account b-sub first; sub remains account a. Read codex_accounts
+  # codex:b / codex:a independently before choosing or shedding either one.
   worker:
     lanes: [claude, codex, agy, cursor, grok]
   orchestrator:

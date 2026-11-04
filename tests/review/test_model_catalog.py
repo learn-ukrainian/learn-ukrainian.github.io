@@ -989,7 +989,7 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
 # the #10262 explicit AGY review-risk refusals in both configurations, and the #10630
 # capture-driver account; see SPEC.md.
 PINNED_DIGESTS = {
-    "v2-baseline.json.gz": "399cf15d4a0efa36bff57c143a66638a085b792d069c38ccb07955c1dee068ab",
+    "v2-baseline.json.gz": "827a3045a73365fb45b9626cfadc22d17ee4aa4a59204b1287d4eb669f225d76",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
     "SPEC.md": "c0e7d80b83e40e32b230d0fe9baf6a168f32a5965636f1a22f6639421f55823f",
@@ -1042,22 +1042,10 @@ def assert_frozen_routing_fixture_pinned(root: Path) -> None:
 # The current fixture contains only the expanded catalog and the existing 1432
 # reviewer cases. It was computed with pure resolver calls, without launching workers.
 _V2_BASELINE_PATH = FIXTURE / "v2-baseline.json.gz"
-assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "399cf15d4a0efa36bff57c143a66638a085b792d069c38ccb07955c1dee068ab"
+assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "827a3045a73365fb45b9626cfadc22d17ee4aa4a59204b1287d4eb669f225d76"
 _V2_BASELINE = json.loads(gzip.decompress(_V2_BASELINE_PATH.read_bytes()))
 CURRENT_BASELINE = _V2_BASELINE["baseline"]
 CURRENT_INPUTS = _V2_BASELINE["inputs"]
-# Gemini 3.8 Flash High is a general worker (#12291). The gzip fixture stays
-# byte-identical; the loaded catalog drops the retired fallback block so frozen
-# compares and re-validation match the live route keys.
-CURRENT_BASELINE["catalog"]["execution_routing"]["sol_advised_bounded"].pop("bounded_fallback_worker")
-# The Hermes runtime path is removed (#12410). The gzip fixture stays
-# byte-identical; the loaded catalog drops the retired transport so frozen
-# compares match the live route.
-CURRENT_BASELINE["catalog"]["models"]["deepseek-v4.1-flash"]["transports"].remove("hermes")
-# Drop only the removed transport's ban wording from the historical receipt.
-_catalog_notes = CURRENT_BASELINE["catalog"]["policy"]["notes"]
-assert _catalog_notes[2].count("Hermes and OpenRouter") == 1
-_catalog_notes[2] = _catalog_notes[2].replace("Hermes and OpenRouter", "OpenRouter")
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
@@ -1161,12 +1149,22 @@ def refresh_current_baseline():
     catalog["models"].pop("gemini-4-carbon")
     catalog["models"].pop("gpt-6.1-terra")
     _pop_budget_elevation_role(catalog)
+    # Keep the previously approved overlays outside this current-baseline refresh.
+    catalog["review_candidates"].pop("openai_red_team_exception")
+    catalog["review_scheduler"]["endpoints"]["codex"]["models"] = ["gpt-6.1-sol"]
+    catalog["models"]["gpt-6-astra"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gpt-6-astra"])
+    for risk in ("low", "medium"):
+        assert catalog["review_ladders"][risk].pop() == ["muse"]
+    catalog["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])
+    catalog["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
     capture["baseline"]["catalog"] = catalog
     usage_dir = _V2_BASELINE_PATH.parent / ".recapture-no-live-usage"
     assert not usage_dir.exists()
     receipts = []
     with (
         patch("scripts.agent_runtime.model_pause.load_policy", return_value={}),
+        # Match conftest's hermetic AGY Claude window instead of reading the host.
+        patch("scripts.agent_runtime.model_pause.routing_budget_used_pct", return_value=0.0),
         patch.object(credit_lane, "routing_facts", partial(credit_lane.routing_facts, now=FIXED_NOW, usage_dir=usage_dir)),
         patch.object(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief, now=FIXED_NOW)),
     ):

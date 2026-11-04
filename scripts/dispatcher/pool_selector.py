@@ -258,7 +258,11 @@ def budget_sources(budget: dict, now: datetime) -> dict[str, Meter]:
                                timestamp(row.get(name, {}).get("resets_at"))) for name in ("session5h", "weekly"))
         result[key] = Meter(timestamp(row.get("updated")), windows,
                             "ok" if row.get("status") == "ok" and row.get("stale") is False else "unknown")
-    for key, row in budget.get("agents", {}).items():
+    agents = dict(budget.get("agents", {}))
+    for key, row in budget.get("codex_accounts", {}).items():
+        if key in {"codex:a", "codex:b"}:
+            agents[key] = row
+    for key, row in agents.items():
         if key == "claude":
             continue  # account-unattributed Claude capacity is never usable
         raw = row.get("codexbar") or {}
