@@ -108,9 +108,11 @@ PLAYWRIGHT_TOKEN_EXEMPT = {
 }
 # npm writes lockfiles and never runs anything from them; they only record dependencies.
 LOCKFILE_NAMES = ("package-lock.json",)
-# Learner content and lexicon data: nothing executes them, and their prose uses the English
-# word playwright. Every other rule still reads them.
+# Learner content and lexicon data files: nothing executes them, and their prose uses the
+# English word playwright. A runnable file under these trees still gets the token rule, and
+# every other rule still reads them all.
 DATA_TREES = ("curriculum/", "registry/")
+DATA_SUFFIXES = (".json", ".yaml", ".yml", ".toml")
 
 # Files that name a sandbox flag for a reason other than a browser launch.
 SANDBOX_FLAG_EXEMPT = {
@@ -181,40 +183,13 @@ def _json_strings(node: object) -> list[str]:
     return [node] if isinstance(node, str) else []
 
 
-def _strip_shell_comments(text: str) -> str:
-    """Drop shell comments: a `#` that starts a word outside quotes, to the end of the line."""
-    out, i, quote = [], 0, ""
-    while i < len(text):
-        char = text[i]
-        if quote:
-            if char == "\\" and quote == '"':
-                out.append(text[i : i + 2])
-                i += 2
-                continue
-            if char == quote:
-                quote = ""
-        elif char == "\\":
-            out.append(text[i : i + 2])
-            i += 2
-            continue
-        elif char in "'\"":
-            quote = char
-        elif char == "#" and (i == 0 or text[i - 1] in " \t\n;&|()"):
-            end = text.find("\n", i)
-            i = len(text) if end < 0 else end
-            continue
-        out.append(char)
-        i += 1
-    return "".join(out)
-
-
 def _code_strings(path: str) -> list[str]:
-    """The parts of a file that can hold runnable code, comments left out.
+    """The parts of a file that can hold runnable code.
 
-    JS: the text. Python: every string constant (code itself is checked by its imports).
-    JSON, YAML and TOML: every string value, such as package.json scripts or a CI `run:`
-    step; keys such as dependency names are not code. Shell: the text. A data file that
-    does not parse is read whole.
+    JS: the text without comments. Python: every string constant (code itself is checked by
+    its imports). JSON, YAML and TOML: every string value, such as package.json scripts or a
+    CI `run:` step; keys such as dependency names are not code. Shell: the whole text, since
+    a `#` inside a heredoc can be code. A data file that does not parse is read whole.
     """
     text = _read_code(path)
     if path.endswith(JS_SUFFIXES):
@@ -231,12 +206,14 @@ def _code_strings(path: str) -> list[str]:
             return _json_strings(tomllib.loads(text))
     except (ValueError, yaml.YAMLError):
         return [text]
-    return [_strip_shell_comments(text)]
+    return [text]
 
 
 def _playwright_mentions(path: str) -> list[str]:
     """Each place `path` names a Playwright package outside the allowed places."""
-    if path in LAUNCHERS or path.endswith(LOCKFILE_NAMES) or path.startswith(DATA_TREES):
+    if path in LAUNCHERS or path.endswith(LOCKFILE_NAMES):
+        return []
+    if path.startswith(DATA_TREES) and path.endswith(DATA_SUFFIXES):
         return []
     mentions = []
     for code in _code_strings(path):
