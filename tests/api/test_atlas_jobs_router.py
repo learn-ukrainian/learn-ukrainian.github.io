@@ -5,8 +5,10 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+import sys
 import threading
 import time
+from types import ModuleType
 
 import pytest
 from fastapi import HTTPException
@@ -17,6 +19,38 @@ from scripts.api.main import app
 from scripts.lexicon.runner import atlas_job
 
 client = TestClient(app, raise_server_exceptions=False)
+
+
+@pytest.mark.parametrize("name", [None, "sqlite3", "scripts._sqlite3", "scripts.Bad", ".scripts.api", "scripts/a", "scripts.a:main"])
+def test_jobs_loader_refuses_malformed_names(tmp_path, monkeypatch, name):
+    path = tmp_path / "monitor_jobs.v1.json"
+    path.write_text(json.dumps({"module": name}))
+    monkeypatch.setattr(router_mod, "_MONITOR_JOBS_ENTRY_PATH", path)
+    with pytest.raises(ImportError):
+        router_mod._load_monitor_jobs()
+
+
+def test_jobs_loader_refuses_bad_json_and_missing_module(tmp_path, monkeypatch):
+    path = tmp_path / "monitor_jobs.v1.json"
+    monkeypatch.setattr(router_mod, "_MONITOR_JOBS_ENTRY_PATH", path)
+    path.write_text("{")
+    with pytest.raises(json.JSONDecodeError):
+        router_mod._load_monitor_jobs()
+    path.write_text(json.dumps({"module": "scripts.lexicon.no_such_jobs_module"}))
+    with pytest.raises(ModuleNotFoundError):
+        router_mod._load_monitor_jobs()
+
+
+def test_jobs_loader_reuses_module_and_refuses_foreign_cache(monkeypatch, tmp_path):
+    name = "scripts.lexicon.monitor_jobs"
+    pinned = router_mod.monitor_jobs
+    assert router_mod._load_monitor_jobs() is pinned
+    foreign = ModuleType(name)
+    foreign.__file__ = str(tmp_path / "foreign.py")
+    monkeypatch.setitem(sys.modules, name, foreign)
+    with pytest.raises(ImportError, match="not a file in this checkout"):
+        router_mod._load_monitor_jobs()
+    assert router_mod.monitor_jobs is pinned
 
 
 def _plan(**overrides: object) -> dict:
