@@ -1,4 +1,4 @@
-"""Quota history collector and reader: five-slot projection, privacy allowlist, and observed-change reports (#11144)."""
+"""Quota history collector and reader: seven-slot projection, privacy allowlist, and observed-change reports (#11144, #12696)."""
 
 from __future__ import annotations
 
@@ -104,7 +104,10 @@ def _direct_localhost(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_five_slots_map_to_observed_fields_and_nested_identity_is_dropped() -> None:
     rows = _by_slot(_collect_from_payload(_payload()))
-    assert list(rows) == ["codex", "claude:a", "claude:b", "grok", "antigravity"]
+    assert list(rows) == ["codex", "codex:a", "codex:b", "claude:a", "claude:b", "grok", "antigravity"]
+    # The legacy payload has no ``codex_accounts`` map, so the new slots stay explicit unknowns.
+    assert (rows["codex:a"]["status"], rows["codex:a"]["reason"]) == ("unknown", "row_missing")
+    assert (rows["codex:b"]["status"], rows["codex:b"]["reason"]) == ("unknown", "row_missing")
     assert all(set(row) == qh.RECORD_FIELDS for row in rows.values())
     assert rows["codex"] == {
         "provider": "codex",
@@ -122,6 +125,40 @@ def test_five_slots_map_to_observed_fields_and_nested_identity_is_dropped() -> N
     assert rows["grok"]["status"] == "known" and rows["grok"]["resets_at"] is None
     assert (rows["antigravity"]["status"], rows["antigravity"]["reason"]) == ("stale", "source_stale")
     assert rows["antigravity"]["used_percent"] is None and rows["antigravity"]["resets_at"] is None
+
+
+def test_quota_history_records_both_codex_accounts() -> None:
+    """Account a and account b are separate known rows, and nested identity is not stored."""
+    payload = _payload()
+    payload["codex_accounts"] = {
+        "codex:a": {
+            "codexbar": {
+                "weekly_used_pct": 40,
+                "weekly_resets_at": "2026-10-22T10:00:00Z",
+                "fetched_at": "2026-10-20T07:55:00Z",
+                "stale": False,
+                "freshness": "fresh",
+                "identity": SENTINELS[1],
+            }
+        },
+        "codex:b": {
+            "codexbar": {
+                "weekly_used_pct": 11,
+                "weekly_resets_at": "2026-10-24T10:00:00Z",
+                "fetched_at": "2026-10-20T07:56:00Z",
+                "stale": False,
+                "freshness": "fresh",
+                "identity": SENTINELS[2],
+            }
+        },
+    }
+    rows = _by_slot(_collect_from_payload(payload))
+    assert (rows["codex:a"]["status"], rows["codex:a"]["used_percent"]) == ("known", 40.0)
+    assert rows["codex:a"]["resets_at"] == "2026-10-22T10:00:00Z"
+    assert (rows["codex:b"]["status"], rows["codex:b"]["used_percent"]) == ("known", 11.0)
+    assert rows["codex:b"]["resets_at"] == "2026-10-24T10:00:00Z"
+    stored = json.dumps([rows["codex:a"], rows["codex:b"]])
+    assert SENTINELS[1] not in stored and SENTINELS[2] not in stored
 
 
 def _collect_from_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -159,7 +196,7 @@ def test_missing_rows_and_non_fresh_labels_are_explicit_unknowns() -> None:
 
 def test_unreachable_monitor_yields_five_unknowns_and_a_non_object_payload_does_too() -> None:
     unreachable = qh.collect("http://127.0.0.1:9", 1, now=NOW)
-    assert [row["reason"] for row in unreachable] == ["source_unavailable"] * 5
+    assert [row["reason"] for row in unreachable] == ["source_unavailable"] * len(qh.SLOT_PROVIDER)
     assert all(row["status"] == "unknown" and row["used_percent"] is None for row in unreachable)
     with _MonitorFixture([1, 2, 3]) as base:
         assert {row["reason"] for row in qh.collect(base, 5, now=NOW)} == {"source_unavailable"}
@@ -197,7 +234,8 @@ def test_append_is_append_only_private_and_one_write_per_collection(tmp_path: Pa
     qh.append(store, rows)
     qh.append(store, rows)
     lines = store.read_text(encoding="utf-8").splitlines()
-    assert len(lines) == 10 and lines[:5] == lines[5:]  # second collection appended after the first, unchanged
+    width = len(qh.SLOT_PROVIDER)
+    assert len(lines) == width * 2 and lines[:width] == lines[width:]  # second collection appended, unchanged
     assert stat.S_IMODE(store.stat().st_mode) == 0o600
     assert stat.S_IMODE(store.parent.stat().st_mode) == 0o700
 
@@ -407,9 +445,21 @@ def test_expired_snapshot_marks_agent_rows_stale_but_keeps_live_account_rows() -
     for slot in ("claude:a", "claude:b"):
         payload["claude_accounts"][slot]["updated"] = "2026-10-20T07:58:00Z"
     payload["agents"]["codex"]["codexbar"]["fetched_at"] = "2026-10-20T07:59:30Z"  # a recent label cannot outvote it
+    fresh = {
+        "weekly_resets_at": "2026-10-22T10:00:00Z",
+        "fetched_at": "2026-10-20T07:58:00Z",
+        "stale": False,
+        "freshness": "fresh",
+    }
+    payload["codex_accounts"] = {
+        "codex:a": {"codexbar": {**fresh, "weekly_used_pct": 40}},
+        "codex:b": {"codexbar": {**fresh, "weekly_used_pct": 11}},
+    }
     rows = _five(payload)
     assert {slot: row["status"] for slot, row in rows.items()} == {
         "codex": "stale",
+        "codex:a": "known",
+        "codex:b": "known",
         "claude:a": "known",
         "claude:b": "known",
         "grok": "stale",
@@ -540,7 +590,7 @@ def test_one_hostile_scalar_never_aborts_the_other_four_slots(field: str, value:
 def test_an_unparseable_monitor_document_is_five_explicit_unknowns(raw: bytes) -> None:
     with _MonitorFixture(None, raw=raw) as base:
         rows = qh.collect(base, 5, now=NOW)
-    assert [_status(row) for row in rows] == [("unknown", "source_unavailable")] * 5
+    assert [_status(row) for row in rows] == [("unknown", "source_unavailable")] * len(qh.SLOT_PROVIDER)
 
 
 def test_a_malformed_http_response_is_five_explicit_unknowns() -> None:
@@ -557,7 +607,7 @@ def test_a_malformed_http_response_is_five_explicit_unknowns() -> None:
         finally:
             server.shutdown()
             thread.join()
-    assert [_status(row) for row in rows] == [("unknown", "source_unavailable")] * 5
+    assert [_status(row) for row in rows] == [("unknown", "source_unavailable")] * len(qh.SLOT_PROVIDER)
 
 
 def test_reader_counts_hostile_and_unproven_records_as_malformed_and_keeps_valid_history(
@@ -688,7 +738,7 @@ def test_concurrent_appending_processes_each_land_whole_records(tmp_path: Path) 
     ]
     assert [worker.wait(timeout=60) for worker in workers] == [0] * 6
     samples, malformed = qh.load(store)
-    assert len(samples) == 6 * 20 * 5 and malformed == 0
+    assert len(samples) == 6 * 20 * len(qh.SLOT_PROVIDER) and malformed == 0
     assert stat.S_IMODE(store.stat().st_mode) == 0o600 and stat.S_IMODE(store.parent.stat().st_mode) == 0o700
 
 

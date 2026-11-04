@@ -1,0 +1,5 @@
+{
+  "schema": "learn-ukrainian.research-check.v1",
+  "check_module": "scripts.audit.check_research_registry",
+  "corpus_module": "scripts.audit.atlas_intake_registry"
+}

@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 485,
-    "probe_count": 970,
+    "cli_count": 487,
+    "probe_count": 974,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/env_sanitize.py",
@@ -94,6 +94,7 @@
       "scripts/audit/curriculum_qg_harness.py",
       "scripts/audit/cursor_judge_calibration.py",
       "scripts/audit/damage_report.py",
+      "scripts/audit/debug_hash.py",
       "scripts/audit/decision_lineage.py",
       "scripts/audit/errorcorrection_embed_scan.py",
       "scripts/audit/finalize_activity_quality.py",
@@ -217,7 +218,6 @@
       "scripts/curriculum/resolver/__main__.py",
       "scripts/curriculum/validate/__main__.py",
       "scripts/curriculum/validate/validate.py",
-      "scripts/debug/debug_hash.py",
       "scripts/deploy/prepare_atlas_runtime_release.py",
       "scripts/deploy/vendor_atlas_tree.py",
       "scripts/dispatch.py",
@@ -357,7 +357,9 @@
       "scripts/open_dataset/hydrate.py",
       "scripts/open_dataset/publish.py",
       "scripts/ops/budget_screen.py",
+      "scripts/ops/context_cost_report.py",
       "scripts/ops/context_guard.py",
+      "scripts/ops/digest_codex_rollout.py",
       "scripts/ops/lane_relaunch.py",
       "scripts/opsec/git_push.py",
       "scripts/orchestration/agent_ledger.py",
@@ -490,7 +492,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "78f224aaa77d95bd6d2c1b1df165b7049a97fac1541a08803a07db4a0378229e"
+    "cli_paths_sha256": "c0115520bc2c2ded3261784e08ce2a111c6adb9c4651e9382ddd9df95f51f4db"
   },
   "failures": [
     {

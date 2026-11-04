@@ -31,7 +31,7 @@ import urllib.error
 import urllib.request
 import uuid
 import zlib
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from contextlib import closing, contextmanager, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -5842,8 +5842,8 @@ def cmd_check(args: argparse.Namespace) -> int:
 
 
 def cmd_audit(args: argparse.Namespace) -> int:
-    codex_home = Path(args.codex_home).expanduser().resolve()
-    audit = inspect_codex_home(codex_home)
+    audit = _begin_codex_audit(args)
+    # Account homes come from the loader unless --codex-home names one.
     audit["monitor"] = gather_monitor_state(args.monitor_base_url) if args.include_monitor else "skipped"
     try:
         _, state_root = resolve_roots(args.repo_root)
@@ -7890,7 +7890,14 @@ def build_parser() -> argparse.ArgumentParser:
     check.set_defaults(func=cmd_check)
 
     audit = subparsers.add_parser("audit", help="Inspect local task identity plus Codex thread/automation metadata.")
-    audit.add_argument("--codex-home", default=os.environ.get("CODEX_HOME", str(Path.home() / ".codex")))
+    audit.add_argument(
+        "--codex-home",
+        default=None,
+        help=(
+            "Inspect this one Codex home. The default inspects account a and, when the "
+            "accounts loader binds it, account b (b-sub). Ambient CODEX_HOME is not used."
+        ),
+    )
     audit.add_argument("--include-monitor", action="store_true")
     audit.set_defaults(func=cmd_audit)
 
@@ -8011,6 +8018,88 @@ def build_parser() -> argparse.ArgumentParser:
     )
     refresh_heartbeat_parser.set_defaults(func=cmd_refresh_thread_lease_heartbeat)
     return parser
+
+
+def _redact_home(text: str, home: Path) -> str:
+    """Replace one account's resolved home and its directory name."""
+    resolved = home.resolve()
+    for variant in (str(resolved), str(home)):
+        if variant:
+            text = text.replace(variant, "[codex-home]")
+    name = resolved.name
+    if name and name not in {".", ".."}:
+        text = re.sub(
+            rf"(?<![A-Za-z0-9._-]){re.escape(name)}(?![A-Za-z0-9._-])",
+            "[codex-home]",
+            text,
+        )
+    return text
+
+
+def _redact_homes(text: str, homes: Iterable[Path]) -> str:
+    """Replace every resolved account home, longest path first."""
+    ordered = sorted(homes, key=lambda path: len(str(path.resolve())), reverse=True)
+    for home in ordered:
+        text = _redact_home(text, home)
+    return text
+
+
+def _public_codex_audit(codex_home: Path, account: str, homes: Iterable[Path] | None = None) -> dict[str, Any]:
+    """Thread facts for one account. Paths stay out of this object."""
+    raw = inspect_codex_home(codex_home)
+    covered = (codex_home,) if homes is None else homes
+    threads = []
+    for row in raw.get("recent_threads", []):
+        if isinstance(row, dict):
+            title = row.get("title")
+            if isinstance(title, str):
+                title = _redact_homes(title, covered)
+            threads.append({"id": row.get("id"), "title": title, "archived": row.get("archived")})
+    return {
+        "account": account,
+        "exists": bool(raw.get("exists")),
+        "thread_count": raw.get("thread_count"),
+        "recent_threads": threads,
+        "state_database_count": len(raw.get("state_databases") or []),
+        "automation_count": len(raw.get("automation_toml_files") or []),
+    }
+
+
+def codex_account_audits(environ: Mapping[str, str] | None = None) -> dict[str, dict[str, Any]]:
+    """One public audit per subscription account whose home the loader resolves.
+
+    Account a (``sub``) is always present. ``b-sub`` is present only when its
+    binding resolves. Ambient ``CODEX_HOME`` is not an account.
+    """
+    from scripts.agent_runtime.codex_accounts import (
+        CODEX_SUBSCRIPTION_ACCOUNTS,
+        CodexAccountRefused,
+        codex_account_home,
+    )
+
+    resolved: list[tuple[str, Path]] = []
+    for label in CODEX_SUBSCRIPTION_ACCOUNTS:
+        try:
+            home = codex_account_home(label, environ)
+        except CodexAccountRefused:
+            continue
+        resolved.append((label, home))
+    homes = tuple(path for _, path in resolved)
+    return {label: _public_codex_audit(home, label, homes) for label, home in resolved}
+
+
+def _begin_codex_audit(args: argparse.Namespace) -> dict[str, Any]:
+    """Account a, plus account b when the loader binds it. One explicit home stays one."""
+    from scripts.agent_runtime.codex_accounts import codex_account_home
+
+    if args.codex_home:
+        audit = inspect_codex_home(Path(args.codex_home).expanduser().resolve())
+        return audit
+    audit = inspect_codex_home(codex_account_home("sub").resolve())
+    accounts = codex_account_audits()
+    if len(accounts) > 1:
+        audit["codex_accounts"] = accounts
+    return audit
 
 
 def main(argv: list[str] | None = None) -> int:
