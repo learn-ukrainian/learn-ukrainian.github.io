@@ -1050,7 +1050,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             return
         try:
             headroom.check_plan(spec.agent, spec.model, record, review=admission.review_typed(record))
-            headroom.check_runtime(spec.agent, spec.model)
+            headroom.check_runtime(spec.agent, spec.model, codex_account=record.get("codex_account"))
         except ValueError as exc:
             status, error = "failed", str(exc)
             return
