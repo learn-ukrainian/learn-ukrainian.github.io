@@ -35,9 +35,10 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.curriculum.evidence import codes, config, db_identity, tags
+from scripts.curriculum.evidence import codes, db_identity, tags
 from scripts.lexicon.runner.ulif_dictua_parse import lookup_ulif_label
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
+from scripts.storage import generations as _storage_generations
 from scripts.verification import stress, vesum
 from scripts.wiki.sources_db import normalize_ulif_dictua_query, using_connection
 from scripts.wiki.sum20_official import live_article_predicate_for
@@ -828,9 +829,13 @@ class Sources:
         )
         self.mapper = tags.TagMapper(report=report)
         self.report = report
-        self.wal_ceiling_bytes = int(wal_ceiling_bytes) if wal_ceiling_bytes is not None else config.wal_ceiling_bytes()
+        self.wal_ceiling_bytes = (
+            int(wal_ceiling_bytes) if wal_ceiling_bytes is not None else _storage_generations.wal_ceiling_bytes()
+        )
         self.free_disk_floor_bytes = (
-            int(free_disk_floor_bytes) if free_disk_floor_bytes is not None else config.free_disk_floor_bytes()
+            int(free_disk_floor_bytes)
+            if free_disk_floor_bytes is not None
+            else _storage_generations.free_disk_floor_bytes()
         )
         self._conn: SQLiteConnection | None = None
         self._fingerprints: dict[Path, tuple[tuple, str, dict]] = {}
