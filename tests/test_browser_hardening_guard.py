@@ -11,6 +11,7 @@ Playwright's bundled browsers, or configures a Playwright MCP server.
 from __future__ import annotations
 
 import ast
+import json
 import re
 import subprocess
 from functools import cache
@@ -31,7 +32,10 @@ SELF = "tests/test_browser_hardening_guard.py"
 JS_SUFFIXES = (".js", ".mjs", ".cjs", ".ts", ".tsx", ".mts", ".cts")
 CODE_SUFFIXES = (*JS_SUFFIXES, ".py", ".sh", ".bash", ".yml", ".yaml", ".json", ".toml")
 # Cheap pre-filter; every rule below only looks at files matching it.
-CANDIDATE = r"playwright|puppeteer|chromium|webkit|firefox|sandbox|connectOverCDP|connect_over_cdp|mermaid"
+CANDIDATE = (
+    r"playwright|puppeteer|chromium|webkit|firefox|sandbox|connectOverCDP|connect_over_cdp|connectOptions"
+    r"|PW_TEST_CONNECT|mermaid"
+)
 
 PLAYWRIGHT_PACKAGE = r"(?:@playwright/test|playwright(?:-core)?)(?:/[^'\"]*)?"
 # Outside the launcher, these are the only runtime values a file may import from a Playwright
@@ -79,6 +83,17 @@ SANDBOX_OPTION = re.compile(r"chromium_?[sS]andbox")
 # Runtime Playwright entry points a Python module could launch a browser from.
 PY_RUNTIME_ENTRY = {"async_playwright", "sync_playwright", "async_api", "sync_api", "_impl", "*"}
 BROWSER_DOWNLOAD = re.compile(r"\bplaywright(?:-core)?\s+install\b")
+# Code can also sit inside a string: a package.json script, a shell `node -e` or `python -c`,
+# a CI `run:` step, or one language spawning the other. There a Playwright package may not
+# be named at all, in any quoting, and the CLI commands that open a browser are refused
+# (`playwright test` goes through the config).
+FOREIGN_PLAYWRIGHT = re.compile(
+    r"\b(?:from|import)\s+playwright\b"
+    r"|\bplaywright(?:-core)?\s+(?:open|codegen|screenshot|pdf|cr|ff|wk|show-trace|launch-server|run-server)\b"
+)
+EMBEDDED_PLAYWRIGHT = re.compile(rf"[\\'\"`]{PLAYWRIGHT_PACKAGE}[\\'\"`]|{FOREIGN_PLAYWRIGHT.pattern}")
+# A browser Playwright Test connects to was started elsewhere, unhardened.
+REMOTE_BROWSER = re.compile(r"\bconnectOptions\b|\bPW_TEST_CONNECT_WS_ENDPOINT\b")
 PLAYWRIGHT_MCP = re.compile(r"@playwright/mcp|\bplaywright-mcp\b|mcp-server-playwright|mcp__playwright")
 
 # Files that name a sandbox flag for a reason other than a browser launch.
@@ -142,6 +157,29 @@ def _files(suffixes: tuple[str, ...]) -> list[str]:
     return [p for p in _candidates() if p.endswith(suffixes)]
 
 
+def _json_strings(node: object) -> list[str]:
+    if isinstance(node, dict):
+        return [s for value in node.values() for s in _json_strings(value)]
+    if isinstance(node, list):
+        return [s for value in node for s in _json_strings(value)]
+    return [node] if isinstance(node, str) else []
+
+
+def _embedded_code(path: str) -> list[str]:
+    """Text that may hold runnable code in a shell, YAML, TOML or JSON file.
+
+    For JSON that is every string value (package.json scripts among them); keys such as
+    dependency names are not code. A file that does not parse as JSON is read whole.
+    """
+    text = _read(path)
+    if path.endswith(".json"):
+        try:
+            return _json_strings(json.loads(text))
+        except ValueError:
+            pass
+    return [text]
+
+
 def _imported_names(clause: str) -> set[str]:
     """Value names bound by an import clause; type-only names are skipped."""
     names = set()
@@ -192,8 +230,27 @@ def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
             ]
             offenders += [f"{path}: {m.group(0)}" for m in JS_BROWSER_FIXTURE.finditer(text)]
             offenders += [f"{path}: {m.group(0)}" for m in JS_PLAYWRIGHT_BROWSER_TYPE.finditer(text)]
-        elif PY_USES_PLAYWRIGHT.search(text):
-            offenders += [f"{path}: {m.group(0)}" for m in PY_BROWSER_ACCESS.finditer(text)]
+            offenders += [f"{path}: embedded {m.group(0)}" for m in FOREIGN_PLAYWRIGHT.finditer(text)]
+        else:
+            if PY_USES_PLAYWRIGHT.search(text):
+                offenders += [f"{path}: {m.group(0)}" for m in PY_BROWSER_ACCESS.finditer(text)]
+            # A Python string holding JS or a shell command, such as a subprocess running node -e.
+            strings = [n for n in ast.walk(ast.parse(text, filename=path)) if isinstance(n, ast.Constant)]
+            offenders += [
+                f"{path}:{n.lineno}: embedded {m.group(0)}"
+                for n in strings
+                if isinstance(n.value, str)
+                for m in EMBEDDED_PLAYWRIGHT.finditer(n.value)
+            ]
+    for path in _files(CODE_SUFFIXES):
+        if path.endswith((*JS_SUFFIXES, ".py")):
+            continue
+        for code in _embedded_code(path):
+            offenders += [f"{path}: embedded {m.group(0)}" for m in EMBEDDED_PLAYWRIGHT.finditer(code)]
+            offenders += [f"{path}: embedded {m.group(0)}" for m in LAUNCH_CALL.finditer(code)]
+    for path in _files(CODE_SUFFIXES):
+        if path not in LAUNCHERS:
+            offenders += [f"{path}: {m.group(0)}" for m in REMOTE_BROWSER.finditer(_read_code(path))]
     assert not offenders, "launch browsers through the shared hardened launcher:\n" + "\n".join(offenders)
 
 

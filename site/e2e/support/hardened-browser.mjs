@@ -144,7 +144,12 @@ export const hardenedChromium = Object.freeze({
 });
 
 // What the Playwright configs set; a spec's test.use() must not change it.
-function assertHardenedRun({ browserName, channel, launchOptions }) {
+function assertHardenedRun({ browserName, channel, launchOptions, connectOptions }) {
+  // A connected browser was started elsewhere, so nothing here can show it is sandboxed.
+  // Playwright also reads this from PW_TEST_CONNECT_WS_ENDPOINT.
+  if (connectOptions) {
+    throw new Error('hardened launcher: connecting to a browser started elsewhere is not allowed (connectOptions, PW_TEST_CONNECT_WS_ENDPOINT)');
+  }
   // Fail closed on any other launch option (a launch-level proxy, extra Chrome flags, ...).
   const args = launchOptions?.args ?? [];
   const unknown = Object.keys(launchOptions ?? {}).filter((key) => !CALLER_OPTIONS.has(key) && !['channel', 'chromiumSandbox', 'args'].includes(key));
@@ -157,12 +162,23 @@ function assertHardenedRun({ browserName, channel, launchOptions }) {
 /**
  * Playwright Test `test` for every spec. It refuses a run whose browser options differ
  * from the hardened config, and every context enforces the allowlist.
+ *
+ * The browser fixture does not take Playwright's own browser: that one is launched or
+ * connected before this fixture could check anything. It checks first, then launches
+ * through launchHardenedChromium. Playwright Test's defaults (headless, traces and
+ * artifacts directories) still apply, because both use the same Playwright instance.
  */
 export const test = base.extend({
-  browser: [async ({ browser, browserName, channel, launchOptions }, use) => {
-    assertHardenedRun({ browserName, channel, launchOptions });
-    await use(hardenBrowser(browser));
-  }, { scope: 'worker' }],
+  browser: [async ({ browserName, channel, launchOptions, connectOptions }, use) => {
+    assertHardenedRun({ browserName, channel, launchOptions, connectOptions });
+    const callerOptions = Object.fromEntries(Object.entries(launchOptions).filter(([key]) => CALLER_OPTIONS.has(key)));
+    const browser = await launchHardenedChromium(callerOptions);
+    try {
+      await use(browser);
+    } finally {
+      await browser.close({ reason: 'Test ended.' });
+    }
+  }, { scope: 'worker', timeout: 0 }],
   context: async ({ context, serviceWorkers, proxy }, use) => {
     if (serviceWorkers !== 'block' || proxy) {
       throw new Error("hardened launcher: contexts keep serviceWorkers 'block' and no proxy");
