@@ -124,6 +124,21 @@ def test_the_one_replacement_must_be_the_exempt_runs_seat(monkeypatch, tmp_path)
     with pytest.raises(recorder.RecordError, match="CAPABILITY_REPLACEMENT_REFUSED"):
         record(tasks, tmp_path)
     assert calls["posts"] == 0
+    # Round 1 F1: a grant (or repair or clean-merge exemption) that admits the round only because the
+    # exempt run is uncharged is the same replacement, so the seat rule applies on that path too.
+    comments = [recorded_verdict(H1, "CHANGES_REQUESTED", task_id="round-1"),
+                recorded_verdict(H2, "CHANGES_REQUESTED", task_id="round-2")]
+    exempt = {"task": "r3", "started": R3_STARTED, "run_nonce": "r3-run", "head": H3, "seat": ("openai", "code")}
+
+    def decide(seat):
+        return recorder.require_review_round_within_budget(
+            comments, NEXT, "fleet", budget=3, pr=42, grant=lambda: {"round_allowance": 4},
+            dispatched_heads=lambda: frozenset({"5" * 40}), exemption=lambda: exempt, recording_seat=seat,
+        )
+
+    with pytest.raises(recorder.RecordError, match="CAPABILITY_REPLACEMENT_REFUSED"):
+        decide(("anthropic", "code"))
+    assert decide(("openai", "code"))["capability_exemption"]["task"] == "r3"
 
 
 def test_a_run_dispatched_under_the_pre_change_schema_stays_schema_bound():

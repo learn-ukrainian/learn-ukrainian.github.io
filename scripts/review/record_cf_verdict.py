@@ -2339,16 +2339,47 @@ def require_review_round_within_budget(
     if sha in recorded or (uncharged is not None and recording_run == (uncharged["task"], uncharged["run_nonce"])):
         return {}
     heads = recorded | (dispatched_heads() if dispatched_heads is not None else frozenset())
-    if len(heads) < budget:
-        if uncharged is None or uncharged["head"] == sha or uncharged["head"] in heads or len(heads) + 1 < budget:
-            return {}
-        # Charged, the exempt head would fill the budget: this round is its one replacement.
+    decide = partial(
+        _round_decision, comments, sha, login, budget=budget, pr=pr, prove_merge_only=prove_merge_only, grant=grant,
+        repair=repair, repair_heads=repair_heads, exemption_refusals=exemption_refusals,
+    )
+    receipt = decide(recorded, heads, exempt_key)
+    if uncharged is None or uncharged["head"] == sha or uncharged["head"] in heads:
+        # The exemption frees no head here: a round at the exempt head charges that head itself.
+        return receipt
+    try:
+        # The same decision with the exempt run charged, through every admission path.
+        decide({marker["sha"] for _, marker in markers}, heads | {uncharged["head"]}, None)
+    except RecordError:
+        # Only the exemption admits this round, so it is the one replacement and must be the exempt run's seat.
         if recording_seat is not None and recording_seat != uncharged["seat"]:
             raise RecordError(
                 f"CAPABILITY_REPLACEMENT_REFUSED: PR #{pr}'s one replacement for the capability failure of "
                 f"{uncharged['task']} must be its seat {uncharged['seat']}, not {recording_seat}"
-            )
-        return {"capability_exemption": dict(uncharged)}
+            ) from None
+        return {**receipt, "capability_exemption": dict(uncharged)}
+    return receipt
+
+
+def _round_decision(
+    comments: Sequence[Mapping[str, Any]],
+    sha: str,
+    login: str,
+    recorded: set[str],
+    heads: set[str] | frozenset[str],
+    exempt_key: tuple[str, str] | None,
+    *,
+    budget: int,
+    pr: int,
+    prove_merge_only: Callable[[str, str], list[str] | None] | None,
+    grant: Callable[[], dict[str, Any] | None] | None,
+    repair: Callable[[], dict[str, Any] | None] | None,
+    repair_heads: frozenset[str],
+    exemption_refusals: Callable[[], Sequence[str]] | None,
+) -> dict[str, Any]:
+    """:func:`require_review_round_within_budget`'s decision for one count of the charged heads."""
+    if len(heads) < budget:
+        return {}
     exempt = (
         budget_exempt_heads(comments, sha, login, prove=prove_merge_only, unrecorded=heads - recorded)
         if prove_merge_only
