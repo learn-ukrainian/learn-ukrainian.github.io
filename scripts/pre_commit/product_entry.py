@@ -14,10 +14,11 @@ Changing an entry point is a reviewed commit to that file.
 
 Fail closed. :func:`load_entry_point` raises :class:`EntryPointError` when the
 file is missing, a symlink, not a regular file or too large; is not strict
-UTF-8 JSON (a duplicate key counts); has another schema, schema version or
-origin; carries a missing or unknown field; or names a hook that is not
-listed, an entry point outside ``scripts.<module>:<function>`` or an argument
-that is not a string. :func:`run_entry_point` also raises it when the named
+UTF-8 JSON (a duplicate key or a non-finite number counts); has another
+schema, schema version or origin; carries a missing or unknown field in any
+entry; has any entry outside ``scripts.<module>:<function>`` or with an
+argument that is not a string; or does not list the requested hook. Every
+entry is checked, not only the requested one. :func:`run_entry_point` also raises it when the named
 function is missing or does not return an integer exit code.
 
 Example:
@@ -87,8 +88,11 @@ def _read(path: Path) -> Any:
             raise EntryPointError(f"{path} repeats a key")
         return dict(pairs)
 
+    def no_constants(token: str) -> Any:
+        raise EntryPointError(f"{path} has a non-finite number {token}")
+
     try:
-        return json.loads(data.decode("utf-8"), object_pairs_hook=no_duplicates)
+        return json.loads(data.decode("utf-8"), object_pairs_hook=no_duplicates, parse_constant=no_constants)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise EntryPointError(f"{path} is not UTF-8 JSON: {exc}") from None
 
@@ -109,9 +113,17 @@ def load_entry_point(hook_id: str, path: Path = ENTRY_POINTS_PATH) -> EntryPoint
     if document["origin"] != ENTRY_POINTS_REL or path.name != Path(ENTRY_POINTS_REL).name:
         raise EntryPointError(f"origin and file name must be {ENTRY_POINTS_REL!r}")
     entries = document["entry_points"]
-    if not isinstance(entries, dict) or hook_id not in entries:
+    if not isinstance(entries, dict):
+        raise EntryPointError("entry_points must be an object")
+    # Validate every entry, so a malformed sibling refuses the whole file.
+    validated = {name: _entry_point(name, raw) for name, raw in entries.items()}
+    if hook_id not in validated:
         raise EntryPointError(f"no entry point for hook {hook_id!r}")
-    entry = _fields(entries[hook_id], _ENTRY_FIELDS, f"entry point {hook_id!r}")
+    return validated[hook_id]
+
+
+def _entry_point(hook_id: str, raw: Any) -> EntryPoint:
+    entry = _fields(raw, _ENTRY_FIELDS, f"entry point {hook_id!r}")
     match = _ENTRY_POINT_RE.match(entry["entry_point"]) if isinstance(entry["entry_point"], str) else None
     if match is None:
         raise EntryPointError(f"entry point {hook_id!r} must be 'scripts.<module>:<function>'")
