@@ -1247,7 +1247,7 @@ def build_grammar(
     classify = _build_classify_items(article, gated, vesum_aspect=CLASSIFY_ASPECT.get(aspect or ""))
     for item in _source_aspect_classify(classify, aspect):
         modes["classify"].append(tag(item, "classifyId", "classify"))
-    for index, item in enumerate(_build_paradigm_items(gated)):
+    for index, item in enumerate(_build_paradigm_items(gated, verifier=verifier)):
         modes["paradigm"].append(tag(item, "paradigmId", f"paradigm:{index}"))
     if sense["usable"]:
         approved, _rejected = verdicts
