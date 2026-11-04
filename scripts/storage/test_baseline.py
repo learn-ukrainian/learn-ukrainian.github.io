@@ -353,8 +353,8 @@ def build_parser() -> argparse.ArgumentParser:
         description="Capture CI JUnit baselines and compare test IDs across jobs.\nUse at each migration phase; never infer missing CI outcomes from a local run.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.test_baseline capture --junit pytest.xml --job pytest-1 --source-sha abc123 --output baseline.json
-  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.test_baseline compare --old old.json --new new.json --dispositions dispositions.json
+  .venv/bin/python -m scripts.storage.test_baseline capture --junit pytest.xml --job pytest-1 --source-sha abc123 --output baseline.json
+  .venv/bin/python -m scripts.storage.test_baseline compare --old old.json --new new.json --dispositions dispositions.json
 
 Outputs: capture writes deterministic JSON with per-job IDs; compare reports passing additions
 and skipped -> passed improvements (passed -> skipped still needs a disposition).

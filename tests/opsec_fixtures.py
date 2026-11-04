@@ -32,6 +32,45 @@ class Matcher:
 """
 
 
+# A synthetic stand-in for the private override module the public guard loads
+# from private_tooling().parent (PUBLIC-1104 6(b)). It admits one flagged write
+# per reason and appends an audit row; the private module scopes admission per
+# command and is tested privately.
+OVERRIDE = """import hashlib, json, os
+OVERRIDE = "LU_OPSEC_OVERRIDE"
+class OverrideBlocked(RuntimeError):
+    pass
+def internal_environment(source=None):
+    return {k: v for k, v in (os.environ if source is None else source).items() if k != OVERRIDE}
+def take_override(environment):
+    return environment.pop(OVERRIDE, "")
+def command_keys(reason):
+    return ["synthetic-command"]
+def authorize(destination, blocks, reason, log_path):
+    if not reason.strip():
+        return False
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    claim = log_path.parent / ("consumed-" + hashlib.sha256(reason.encode()).hexdigest())
+    try:
+        claim.open("x").close()
+    except FileExistsError:
+        raise OverrideBlocked("OPSEC: override already consumed; use a fresh command-scoped reason.") from None
+    row = {"timestamp": "synthetic", "destination": destination,
+           "rule_ids": sorted({rule for rule, _ in blocks}), "reason": reason}
+    with log_path.open("a") as stream:
+        stream.write(json.dumps(row) + "\\n")
+    return True
+"""
+
+
+def install_override(tooling, source=OVERRIDE):
+    """Write an override module where the guard looks for it, beside the private tooling."""
+    path = tooling.parent / "opsec_override" / "override.py"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(source)
+    return path
+
+
 def synthetic_rules(rule="synthetic-rule", level=1, pattern=TOKEN):
     policy = json.loads((ROOT / "scripts/opsec/blocking.json").read_text())
     rules = {"6": {"patterns": [{"id": name, "regex": r"(?!)"} for name in policy["class6_block_ids"]]}}
@@ -71,6 +110,7 @@ def make_tooling(directory):
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "matcher.py").write_text(MATCHER)
     (directory / "rules.json").write_text(json.dumps(RULES))
+    install_override(directory)
     return directory
 
 
