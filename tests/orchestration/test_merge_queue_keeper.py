@@ -851,9 +851,9 @@ def test_one_requeue_per_head_even_before_the_timeline_shows_the_removal(
     assert mutations(fake).count("enqueue") == 1
 
 
-@pytest.mark.parametrize("held", [False, True])
+@pytest.mark.parametrize(("held", "both_unseen"), [(False, False), (True, False), (False, True)])
 def test_second_ejection_stays_out_and_alerts_once_with_run_ids(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, held: bool
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, held: bool, both_unseen: bool
 ) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     if held:  # Another hold reason must not hide the second removal.
@@ -863,6 +863,9 @@ def test_second_ejection_stays_out_and_alerts_once_with_run_ids(
     _ejected_state(path, drops={key: 1}, keeper_requeues={key: "2099-01-01T00:00:00+00:00"}, ejections={key: [111]})
     _eject(fake, 2, None)  # Its failing run has not concluded; the first removal's run 111 still matches.
     _conclude(fake, 111, "2099-01-01T00:00:01Z")
+    if both_unseen:  # Both removals arrive between two observations, neither run recorded yet.
+        path.write_text(json.dumps({**json.loads(path.read_text()), "drops": {}, "ejections": {}}))
+        fake.events.insert(0, {"id": 1, "event": "removed_from_merge_queue", "created_at": "2099-01-01T00:00:01Z"})
     lines, failed = run(fake, path, monkeypatch)
     assert not failed and f"reason={'hold' if held else 'second-drop'}" in lines[0]
     assert "cto_outbox" not in json.loads(path.read_text())

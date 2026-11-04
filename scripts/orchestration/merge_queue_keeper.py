@@ -1191,7 +1191,9 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     # An earlier removal's run, already diagnosed and recorded: it says
                     # nothing about this removal, whose own run may still be running.
                     failed_jobs, failed_tests = [], {}
-                if new_runs or (detail and not _run_lookup_open(since)):
+                # Settled once every counted removal of the head has its run, or the window ended.
+                removals = max(1, int(previous["drops"].get(prior_drop_key, 0)))
+                if (failed_run is not None and len(seen_runs) >= removals) or (detail and not _run_lookup_open(since)):
                     previous["undiagnosed"].pop(prior_drop_key)
                 elif not detail:
                     detail = " Queue removal diagnosis unknown."
