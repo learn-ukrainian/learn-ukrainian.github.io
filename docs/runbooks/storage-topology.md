@@ -18,36 +18,16 @@ unavailable (no guessing).
 
 ## Linux repository data volume (#8804)
 
-The migration window moves the entire repository `data/` tree to a 40 GB
-attached cloud volume and bind-mounts it back at `<repo>/data`. Application paths
-stay the same, and SQLite remains on a local filesystem. Hosts
-before migration have no `/etc/learn-ukrainian/data-volume.uuid` file.
+Keep the repository's `data/` path stable when moving it to a local
+volume. Never relocate active SQLite to a network filesystem. The operator
+owns volume provisioning, mount identity, marker placement and service
+installation; consult the private runbook before a migration.
 
-Before writing the UUID marker, make `/etc/learn-ukrainian` searchable by the
-service user (for example, mode 0755 or membership in its access group) and
-make the marker readable by that user. An unreadable marker or parent refuses
-service starts with exit 78. After the volume and bind mount are verified, the
-driver restarts the listener services; a guard refusal does not retry
-automatically. Restart any timer service that failed before the mount as well.
-
-Once the UUID file exists, `scripts/storage/data_volume_guard.sh` checks the
-UUID reported by `findmnt -no UUID,SOURCE -T <repo>/data`. It exits 78 if the
-mount is absent, unreadable, or from a different volume. `services.sh`
-checks before `start`, `restart`, and `fix` on both systemd and direct-process
-paths; `status` prints the observed `data: volume <uuid>` or
-`data: root disk` (and `data: unknown` if mount identity cannot be read).
-The systemd user-service drop-ins in `packaging/systemd/dropins/` wrap
-each original `ExecStart` with the same guard and set
-`RestartPreventExitStatus=78`. This covers loopback listeners and
-timer-triggered services, including backup, OpenCode retention, and data-tier tests, without changing
-the timer files. Preview
-the rendered `/etc/systemd/user/` files with
-`<primary-checkout>/.venv/bin/python scripts/storage/install_data_volume_dropins.py`;
-the driver runs `--apply` from the primary checkout during the migration window,
-then reloads the user manager. `--apply` refuses dispatch worktrees. The
-installer does not mount, move data, reload, or start services. The reporter
-drop-in uses the resolved primary checkout for its guard, command, and working
-directory.
+The data-volume guard must refuse service starts when the configured mount
+is absent, unreadable or has the wrong identity. Verify the mount and guard
+before restarting clients. A guard refusal requires diagnosis rather than an
+automatic restart loop. Use the tracked installer to preview service
+drop-ins; only the authorized operator applies them from the primary checkout.
 
 ## Agent / developer commands (Mac)
 
@@ -57,10 +37,10 @@ Read-only status (never materializes cloud-only files):
 # Primary checkout (or any tree that already has the shared project venv)
 .venv/bin/python -m scripts.storage status
 .venv/bin/python -m scripts.storage status --json
-
-# Dispatch worktree: use the primary checkout interpreter, never a worktree .venv
-<path-to-primary-checkout>/.venv/bin/python -m scripts.storage status
 ```
+
+In a dispatch worktree, use the primary checkout interpreter supplied by the
+task contract. Do not create a worktree virtual environment.
 
 Environment overrides (optional):
 
@@ -143,7 +123,7 @@ an accident of whichever ingest last touched the file (#8527):
   explicit deferred `BEGIN` whose first read fixes the read mark, held until the tool
   closes. In WAL a writer keeps committing past a pinned reader and the reader keeps
   seeing the rows it started with. In **DELETE (rollback-journal) mode the same pinned
-  read holds a SHARED lock**: the ULIF walk's commit waits `busy_timeout` (30 s) and then
+  read holds a SHARED lock**: the ULIF walk's commit waits `busy_timeout` and then
   raises `database is locked` — a snapshot reader would stall the writer.
 - **Who declares it.** The generation publisher (`scripts/storage/generations.py`)
   puts every candidate in WAL before it publishes it, so a published generation
@@ -153,12 +133,10 @@ an accident of whichever ingest last touched the file (#8527):
   `prepare_database` sets `PRAGMA journal_mode=WAL` on every walk start. Both assert the
   PRAGMA **returns** `wal` and fail loudly otherwise. WAL is a persistent file property,
   so these are no-ops on a file that is already WAL.
-- **Cost of a pinned reader.** The WAL cannot be checkpointed past the reader's mark, so
-  `sources.db-wal` grows for the minutes a build or verify runs (steady state ≈16 MB).
-  Readers print `journal_mode`, WAL size at start and end, and the snapshot duration in
-  their progress output, and abort with `snapshot_limit` before the next read if the WAL
-  exceeds 4 GiB or free disk on the data volume falls below 10 GiB
-  (`scripts/storage/generations.py`).
+- **Cost of a pinned reader.** A pinned reader prevents checkpointing past
+  its read mark, so the WAL can grow while writers commit. Readers report WAL
+  size and snapshot duration and refuse with `snapshot_limit` at the configured
+  limits. Verify the approved resource thresholds privately before long runs.
 - **Check it.** `.venv/bin/python -m scripts.storage status` prints `journal_mode: wal`
   from the SQLite header (bytes 18–19 = `2 2`) without opening a connection; the same
   fact by hand: `od -A d -t u1 -j 18 -N 2 data/sources.db` → `2 2`.
@@ -207,7 +185,7 @@ lock is the refusal `writer_lock_busy`.
 - **In-process writers** use `generations.store_writer(path)`. It locks, makes
   the selected generation writable, yields it, and on exit closes tracked
   connections and holds the generation again. The ULIF walk (`run`, `walk`,
-  `parse`) and `python -m scripts.wiki.sources_db --migrate` do this.
+  `parse`) and `.venv/bin/python -m scripts.wiki.sources_db --migrate` do this.
 - **Every other script** that opens the store writable calls the write guard
   (`scripts.lib.readonly_sqlite.refuse_writable_corpus_database`) first. For
   the store it refuses unless this process holds the lock, and only the
@@ -221,7 +199,7 @@ lock is the refusal `writer_lock_busy`.
   `write` refuses if the lock is busy. It makes the selected generation
   writable, runs the command with the locked descriptor inherited, then holds
   the generation again and releases the lock. The writer is killed after
-  `--timeout` seconds (default 24 hours, exit 124); SQLite rolls back an
+  `--timeout` seconds (exit 124); SQLite rolls back an
   interrupted transaction.
 - Fixtures, staged copies and any path that is not the store are not affected.
 
@@ -237,10 +215,9 @@ then:
    (`current_generation_changed`), when it is writable
    (`current_generation_writable`), or when the selector is still a regular file
    (`selector_is_regular_file`; only the bootstrap accepts that).
-2. Refuses unless free space is at least the generation size, plus the 10 GiB
-   evidence free-disk floor, plus a 4 GiB WAL allowance
-   (`insufficient_free_space`; both limits come from
-   `scripts/storage/generations.py`).
+2. Refuses when free space cannot cover the generation plus the configured
+   evidence free-disk floor and WAL allowance (`insufficient_free_space`).
+   Confirm those limits using private operational evidence before publication.
 3. Puts the candidate in WAL mode, holds it read-only, and hard-links it into the
    generation directory under its new name. It fsyncs the file and the directory,
    and writes a `staged` receipt.
@@ -268,7 +245,7 @@ the selected generation, whether it is held, and each retained generation with
 its receipt state. Backup and restore are described in
 [`data-backup.md`](data-backup.md): a backup copies only the selected
 generation; a restore puts it back under its own name and switches the selector
-with `python -m scripts.storage restore-generation`.
+with `.venv/bin/python -m scripts.storage restore-generation`.
 
 ### Bootstrap (one maintenance window)
 
@@ -282,10 +259,10 @@ once, from the primary checkout, with every Sources reader and writer stopped.
 
    ```bash
    ./services.sh stop sources
-   systemctl --user stop learn-ukrainian-sources-watchdog.timer learn-ukrainian-data-tier.timer learn-ukrainian-backup.timer
    ```
 
-   Stop any ULIF walk, ingest, rebuild or evidence run.
+   Stop every configured timer that reads the store, using the private service
+   inventory. Stop any ULIF walk, ingest, rebuild or evidence run.
 2. **Prove that nothing has the store open.** This prints nothing when the
    store is free:
 
@@ -316,7 +293,7 @@ once, from the primary checkout, with every Sources reader and writer stopped.
    This takes the writer lock and folds the WAL into the file. It refuses with
    `store_in_use` (exit 3) if any other connection still has the file open, idle
    or reading. It then hashes the
-   file (about a minute for the current store), links it into
+   file, links it into
    `data/sources-generations/`, and replaces `data/sources.db` with the
    selector. Last, it removes the empty legacy `-wal`/`-shm` names. It prints
    `selector now selects sources.<utc>-<sha12>.db`.
@@ -331,7 +308,7 @@ once, from the primary checkout, with every Sources reader and writer stopped.
    ```
 
 7. **Restart** what step 1 stopped (`./services.sh start sources`,
-   `systemctl --user start` for the three timers, then the dispatcher). Then
+   the configured timers, then the dispatcher). Then
    check one Sources MCP lookup.
 
 **Rollback** (before anything has written to the new layout): with every client
@@ -473,7 +450,7 @@ The store-access ratchet covers `scripts/` and `tests/`. Reproduce its frozen
 baseline with the project interpreter:
 
 ```bash
-<primary-checkout>/.venv/bin/python -m scripts.hygiene.lint_source_db_writable_connects --census <base-commit>
+.venv/bin/python -m scripts.hygiene.lint_source_db_writable_connects --census <base-commit>
 ```
 
 It reads tracked commit
@@ -495,7 +472,7 @@ functions may build new repository store paths.
 The 88 selected caller identities and frozen additional consumers use declared
 store contracts. Policy identities, the legacy Sources resolver, the mirror
 publisher and the nine explicit-input ingest writers retain their recorded
-#9937 dispositions; this slice does not claim a universal writer migration.
+issue #9937 dispositions; this slice does not claim a universal writer migration.
 
 Readers resolve `StoreBinding` at call time with `resolve_store` and open it
 through `open_readonly`. `WriteStoreBinding` is a separate type. Writers call
@@ -546,3 +523,5 @@ private or writable sidecars and never uses `immutable=1`. The positive canary
 resolves, opens read-only and queries inside the sandbox. If read-only WAL
 access cannot work without sidecars it returns a typed refusal; the Sources
 relay remains available. Existing write-denial, secret and network probes bind.
+
+Operational details are in the private infra repository's `runbooks/storage-topology.md`.
