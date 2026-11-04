@@ -1251,9 +1251,9 @@ def _tmp_usability_canary() -> dict:
     Never raises: the canary must not break health collection.
     """
     try:
-        from scripts.audit.check_tmp_usability import probe_tmp_usability  # noqa: PLC0415 — script-path fallback
+        from scripts.hygiene.check_tmp_usability import probe_tmp_usability  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_tmp_usability import probe_tmp_usability  # noqa: PLC0415 — script-path fallback
+        from hygiene.check_tmp_usability import probe_tmp_usability  # noqa: PLC0415 — script-path fallback
     try:
         return probe_tmp_usability()
     except Exception:
