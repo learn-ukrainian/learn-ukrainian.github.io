@@ -1,18 +1,14 @@
 # Recovery after a local checkout or data loss
 
-This runbook formalizes the 2026-07-29 incident recovery order
-([#6013](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6013),
-primary checkout deleted by an unknown actor). It restores a fresh checkout and
-its locally held data without overwriting an active repository, inventing
-missing data, or reactivating stale agent state. It does not install an APFS
-snapshot LaunchAgent; host-level snapshot and backup-rotation policy is an
-operator decision tracked outside this runbook.
+Use this guide to restore a fresh checkout and verified local data without
+overwriting an active repository or reactivating stale agent state. The
+operator authorizes host-level restoration, backup selection and service
+installation through the private recovery procedure.
 
 Related runbooks:
 
-- [Data backup and recovery](data-backup.md) — restic snapshots of
-  `batch_state/`, `.agent/`, `.claude/*-epic/`, and `data/`, with the restore
-  drill used when a release asset is not the right recovery source.
+- [Data backup and recovery](data-backup.md) covers snapshot verification and
+  the restore drill when a release asset is not the right recovery source.
 - [launchd inventory](launchd-inventory.md) — the scheduled jobs to reinstall
   and verify after a full machine-local loss.
 - [Worktree cleanup](worktree-cleanup.md) — reaper rescue refs for recovering
@@ -25,7 +21,7 @@ damaged directory as evidence when space permits. Work from a new clone and a
 new empty staging directory; never restore an archive directly over a live
 checkout, its `data/` directory, the repository root, or a home directory.
 
-The published `hramatka-data-releases` assets are the source for recoverable
+The published data-release assets are the source for recoverable
 database files. Select the asset and database names from the release manifest
 or its checksums, not from memory. If an expected asset is absent or a checksum
 does not match, stop: a partial release is not a substitute for the missing
@@ -33,12 +29,18 @@ database.
 
 ## 1. Recreate the checkout and Python environment
 
+The examples use `./recovery-checkout` and `./recovery-release-stage` relative
+to an approved recovery workspace. Both destinations must be new and empty;
+run each installation block from that workspace. For an existing primary
+checkout, choose its verified project-relative path instead. Do not execute
+these examples in a dispatch worktree to repair the primary installation.
+
 ```bash
 (
   set -euo pipefail
   git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git \
-    /absolute/path/to/clean/learn-ukrainian
-  cd /absolute/path/to/clean/learn-ukrainian || exit 1
+    ./recovery-checkout
+  cd ./recovery-checkout || exit 1
   git switch main
   git pull --ff-only
 
@@ -77,18 +79,22 @@ tools that shell out to a script's own directory — see the dual-identity
 note in `check_node_modules_integrity.py` and #6812). Outside pytest — a
 direct venv `python -c "import ..."`, an MCP server subprocess, a cron job —
 nothing sets either path up. A `.pth` file in site-packages is the standard
-mechanism for adding paths to every interpreter start in a venv:
+mechanism for adding paths to every interpreter start in a venv. Run the
+following block from the new checkout:
 
 ```bash
-cat > .venv/lib/python3.12/site-packages/learn-ukrainian-paths.pth <<'EOF'
-/absolute/path/to/clean/learn-ukrainian
-/absolute/path/to/clean/learn-ukrainian/scripts
-EOF
+.venv/bin/python - <<'PYTHON'
+from pathlib import Path
+import sysconfig
+checkout = Path.cwd().resolve()
+pth = Path(sysconfig.get_path("purelib")) / "learn-ukrainian-paths.pth"
+pth.write_text(f"{checkout}\n{checkout / 'scripts'}\n", encoding="utf-8")
+PYTHON
 ```
 
-Use the venv's actual `python3.NN` directory name (`ls .venv/lib/`) and the
-clone's real absolute path — a `.pth` is not portable across clones or Python
-minor versions; regenerate it, don't copy it from another checkout. #6812
+The command resolves this checkout and the active venv's site-packages
+directory. A `.pth` is not portable across clones or Python minor versions;
+regenerate it instead of copying it from another checkout. #6812
 tracks retiring the bare `scripts/`-rooted identity, which will let this file
 shrink to the repo-root line only.
 
@@ -97,14 +103,14 @@ using its tracked installation instructions.
 
 ## 2. Restore data databases from the release
 
-Download the chosen `hramatka-data-releases` release asset into an empty
+Download the chosen data-release asset into an empty
 directory outside the checkout. Verify its published checksum before unpacking.
 Then inspect SQLite copies before selectively copying only the verified files
 into the fresh checkout.
 
 ```bash
-RELEASE_STAGE=/absolute/path/to/empty/hramatka-data-release-stage
-PROJECT_DIR=/absolute/path/to/clean/learn-ukrainian
+RELEASE_STAGE=./recovery-release-stage
+PROJECT_DIR=./recovery-checkout
 
 mkdir -p "$RELEASE_STAGE"
 mkdir -p "$PROJECT_DIR/data"
@@ -129,7 +135,7 @@ The tracked agent-extension sources regenerate local ignored deployment files:
 ```bash
 (
   set -euo pipefail
-  cd /absolute/path/to/clean/learn-ukrainian || exit 1
+  cd ./recovery-checkout || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
   node_version="$(node --version)"
@@ -181,21 +187,15 @@ project hooks through the relevant local tool interface.
 
 ## 4. Restore Git identity and prove readiness
 
-Set the identity deliberately for this clone; use the email address associated
-with the account that will sign and push commits. Do not copy another person's
-identity or any credential file.
+The operator restores the approved clone identity through the private
+procedure. Agents must not choose an account or copy credentials as a recovery
+step. Keep names, email addresses and raw identity output out of public evidence.
+
+From the recovered checkout, inspect only non-secret readiness:
 
 ```bash
-(
-  set -euo pipefail
-  cd /absolute/path/to/clean/learn-ukrainian || exit 1
-  git config user.name "Your name"
-  git config user.email "your-verified-email@example.invalid"
-  git config --get user.name
-  git config --get user.email
-  git status --short --branch
-  .venv/bin/python -c "import sqlite3; print(sqlite3.sqlite_version)"
-)
+git status --short --branch
+.venv/bin/python -c "import sqlite3; print(sqlite3.sqlite_version)"
 ```
 
 Finally run the smallest relevant test or application health check for the
@@ -217,14 +217,11 @@ job, its installer, and its log locations.
   --repo-root "$PWD"
 ```
 
-The backup job (`com.learn-ukrainian.backup`) is host-managed: its plist runs
-the private wrapper `~/.local/bin/learn-ukrainian-backup`, which sources the
-environment file under `~/.secrets/` before invoking
-`scripts/backup-data.sh backup --execute`. Recreate that wrapper and
-environment on the host and confirm them with
-`./scripts/backup-data.sh doctor` per
-[Data backup and recovery](data-backup.md); never commit the environment file
-or wrapper.
+Restore private backup wrappers and their environment only through the
+operator's approved secret-provisioning procedure. Verify the backup setup
+with `./scripts/backup-data.sh doctor` per
+[Data backup and recovery](data-backup.md); keep raw diagnostics private.
+Never commit the environment file or wrapper.
 
 After reinstalling, verify each service with its installer `status` command
 and confirm the first receipts appear at the log and receipt paths listed in
@@ -245,7 +242,7 @@ failed `cd` exits before `npm ci`.
 ```bash
 (
   set -euo pipefail
-  cd /absolute/path/to/primary/learn-ukrainian || exit 1
+  cd ./recovery-checkout || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
   node_version="$(node --version)"
@@ -346,8 +343,8 @@ it again. Exit 124 is a failed probe. Do not quarantine after it.
 
 On lsof 4.99.4 an idle directory and a directory with a held file
 descriptor both exit 1. Idle writes no file lines. A holder is listed on
-standard output. Both can warn `can't stat() … file system` (tracefs on
-this host) and `Output information may be incomplete.` That warning does
+standard output. Both can warn `can't stat() … file system` (for example, an auxiliary
+filesystem) and `Output information may be incomplete.` That warning does
 not hide a holder. An unreadable directory, a missing directory, and an
 invalid option also exit 1, with a different diagnostic. Idle is exit
 status 1, no file lines, and no diagnostic other than that
@@ -373,9 +370,8 @@ calls `renameatu` with `RENAME_NOREPLACE`. If that returns `EEXIST` and
 `-n` is set, it returns before the later replacing `renameat`. Those
 versions print `not replacing` and exit 1. NEWS 9.2 made the skip a
 failure; NEWS 9.3 added that diagnostic.
-Coreutils 9.5 made `mv -n` a silent skip that exits 0. GNU mv 9.7 on this
-host matches that later skip: one `renameat2(RENAME_NOREPLACE)`, no second
-rename, and exit 0 when the destination exists. The block therefore ignores
+Coreutils 9.5 made `mv -n` a silent skip that exits 0. GNU mv 9.7 follows
+that later skip: one `renameat2(RENAME_NOREPLACE)`, no second rename, and exit 0 when the destination exists. The block therefore ignores
 `mv`'s status. It continues only when the source path is gone and the
 destination is a directory and not a symlink. Otherwise it refuses. Plain
 `mv -T` is not used. On 9.7 it follows the refused noreplace with a
@@ -391,7 +387,7 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
 ```bash
 (
   set -euo pipefail
-  cd /absolute/path/to/primary/learn-ukrainian || exit 1
+  cd ./recovery-checkout || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
   node_version="$(node --version)"
@@ -605,3 +601,5 @@ Confirm the restored install:
 ```bash
 .venv/bin/python scripts/hygiene/check_node_modules_integrity.py
 ```
+
+Operational details are in the private infra repository's `runbooks/recovery.md`.
