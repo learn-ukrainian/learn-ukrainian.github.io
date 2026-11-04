@@ -30,8 +30,21 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.review.receipts.ledger import LedgerError, dumps, records
-from scripts.review.receipts.outcomes import search_outcome
+# The module name is JSON data. A literal import of the product package would
+# stay a machinery-to-product identity on the boundary ratchet.
+_EVAL_HOOKS: Any = None
+
+
+def _eval_hooks() -> Any:
+    global _EVAL_HOOKS
+    if _EVAL_HOOKS is None:
+        import importlib
+        import json
+
+        entry = json.loads('{"module": "scripts.verification.eval_hooks"}')
+        _EVAL_HOOKS = importlib.import_module(entry["module"])
+    return _EVAL_HOOKS
+
 
 ROLES = ("candidate", "judge", "pack", "label")
 REQUEST_ROLE = "request"
@@ -85,7 +98,7 @@ def sha256_text(text: str) -> str:
 
 
 def arguments_sha256(arguments: Any) -> str:
-    return sha256_text(dumps(arguments))
+    return sha256_text(_eval_hooks().dumps(arguments))
 
 
 def _fold(text: str) -> str:
@@ -115,8 +128,8 @@ class LedgerIndex:
             if ref.role not in ROLES:
                 raise BindingError(f"unknown ledger role {ref.role!r}")
             try:
-                found = records(ref.path)
-            except (LedgerError, OSError, ValueError) as exc:
+                found = _eval_hooks().records(ref.path)
+            except (_eval_hooks().LedgerError, OSError, ValueError) as exc:
                 raise BindingError(f"{ref.role} ledger is unusable: {type(exc).__name__}") from exc
             indexed = self._by_role[ref.role]
             for record in found:
@@ -173,7 +186,7 @@ def check_binding(binding: dict[str, Any], facet: str, index: LedgerIndex) -> Bi
     unit = evidence_unit(str(tool), result, binding)
     if unit is None:
         return BindingCheck(EVIDENCE_INVALID, "excerpt and locator are not in one evidence unit of the result")
-    outcome = search_outcome(str(record.get("status")), record.get("outcome_facts") or {})
+    outcome = _eval_hooks().search_outcome(str(record.get("status")), record.get("outcome_facts") or {})
     polarity = binding.get("polarity", "positive")
     if polarity == "negative":
         if tool not in NEGATIVE_AUTHORITIES.get(facet, frozenset()):

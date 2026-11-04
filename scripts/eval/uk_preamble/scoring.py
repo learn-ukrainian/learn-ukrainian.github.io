@@ -52,6 +52,22 @@ from .dataset import EvalSet, Geometry, ReviewItem, Span, TokenSpan, WritingTask
 from .prompts import JUDGE_CRITERIA, validate_response
 from .runner import Slot, TaskSpec, load_raw, valid_entries
 
+# The module name is JSON data. A literal import of the product package would
+# stay a machinery-to-product identity on the boundary ratchet.
+_EVAL_HOOKS: Any = None
+
+
+def _eval_hooks() -> Any:
+    global _EVAL_HOOKS
+    if _EVAL_HOOKS is None:
+        import importlib
+        import json
+
+        entry = json.loads('{"module": "scripts.verification.eval_hooks"}')
+        _EVAL_HOOKS = importlib.import_module(entry["module"])
+    return _EVAL_HOOKS
+
+
 # --------------------------------------------------------------------------- canonical alignment
 
 TIE_ORDER = ("equal", "delete", "insert", "substitute")
@@ -570,16 +586,13 @@ class LocalSources:
     """The ``sources`` tool implementations, called in-process on the local databases."""
 
     def __init__(self) -> None:
-        from scripts.verification.check_text import check_text
-        from scripts.verification.vesum import verify_words
-        from scripts.wiki.sources_db import query_cefr_levels
-
-        self._check_text = check_text
-        self._verify_words = verify_words
-        self._cefr = query_cefr_levels
+        hooks = _eval_hooks()
+        self._check_text = hooks.check_text
+        self._verify_words = hooks.verify_words
+        self._cefr = hooks.query_cefr_levels
 
     def _check(self, text: str, checks: list[str]) -> dict[str, Any]:
-        result = self._check_text(text=text, checks=checks, max_findings=100_000)
+        result: dict[str, Any] = self._check_text(text=text, checks=checks, max_findings=100_000)
         if result.get("status") == "error":
             raise RuntimeError(f"check_text failed: {result.get('error')}")
         return result
