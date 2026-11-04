@@ -47,7 +47,7 @@ This module is DETECTION ONLY, mirroring ``check_primary_integrity.py`` /
 
 Usage::
 
-    python scripts/audit/check_venv_integrity.py
+    python scripts/hygiene/check_venv_integrity.py
 
 Available as a local diagnostic and through the Monitor API health-orient
 canary (``scripts/api/main.py``). Callers fail open on any probe exception —
@@ -74,9 +74,11 @@ def _load_sibling(module_name: str, filename: str):
     if module_name in sys.modules:
         return sys.modules[module_name]
     spec = importlib.util.spec_from_file_location(module_name, Path(__file__).resolve().parent / filename)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load sibling module {filename}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
-    spec.loader.exec_module(module)  # type: ignore[union-attr]
+    spec.loader.exec_module(module)
     return module
 
 

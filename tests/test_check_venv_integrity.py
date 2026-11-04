@@ -1,6 +1,6 @@
 """Tests for the primary-venv integrity probe (#6830).
 
-scripts/audit/check_venv_integrity.py — detection ONLY of an empty/broken
+scripts/hygiene/check_venv_integrity.py — detection ONLY of an empty/broken
 primary venv: (a) a curated set of lightweight core modules failing to
 import, (b) console-script launchers whose embedded interpreter doesn't
 match the venv's own. No repair path exists here; a detection is always an
@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.audit.check_venv_integrity import (
+from scripts.hygiene.check_venv_integrity import (
     check_sentinel_imports,
     check_venv_integrity,
     find_broken_console_scripts,
@@ -135,7 +135,7 @@ def test_non_launcher_files_are_ignored(tmp_path: Path) -> None:
 
 
 def test_sentinel_imports_detects_missing_module(monkeypatch: pytest.MonkeyPatch) -> None:
-    import scripts.audit.check_venv_integrity as mod
+    import scripts.hygiene.check_venv_integrity as mod
 
     monkeypatch.setattr(
         mod,
@@ -161,7 +161,7 @@ def test_sentinel_imports_missing_interpreter_reports_error(tmp_path: Path) -> N
 
 
 def test_healthy_venv_is_ok(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import scripts.audit.check_venv_integrity as mod
+    import scripts.hygiene.check_venv_integrity as mod
 
     monkeypatch.setattr(mod, "CORE_SENTINEL_MODULES", {"json": "stdlib"})
     repo = tmp_path / "repo"
@@ -177,7 +177,7 @@ def test_healthy_venv_is_ok(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_broken_launcher_is_alerted_and_recorded(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import scripts.audit.check_venv_integrity as mod
+    import scripts.hygiene.check_venv_integrity as mod
 
     monkeypatch.setattr(mod, "CORE_SENTINEL_MODULES", {"json": "stdlib"})
     repo = tmp_path / "repo"
@@ -205,7 +205,7 @@ def test_py_test_and_pytest_dedupe_to_one_package(tmp_path: Path, monkeypatch: p
     """py.test and pytest are both launchers from the SAME `pytest`
     distribution — the repair command must not suggest installing a
     nonexistent `py.test` package."""
-    import scripts.audit.check_venv_integrity as mod
+    import scripts.hygiene.check_venv_integrity as mod
 
     monkeypatch.setattr(mod, "CORE_SENTINEL_MODULES", {"json": "stdlib"})
     repo = tmp_path / "repo"
@@ -233,7 +233,7 @@ def test_py_test_and_pytest_dedupe_to_one_package(tmp_path: Path, monkeypatch: p
 
 
 def test_cli_exit_codes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import scripts.audit.check_venv_integrity as mod
+    import scripts.hygiene.check_venv_integrity as mod
 
     monkeypatch.setattr(mod, "CORE_SENTINEL_MODULES", {"json": "stdlib"})
     repo = tmp_path / "repo"

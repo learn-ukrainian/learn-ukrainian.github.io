@@ -29,8 +29,8 @@ So this module is **detection + conservative repair**, not prevention:
 
 Usage::
 
-    python scripts/audit/check_primary_integrity.py          # check only
-    python scripts/audit/check_primary_integrity.py --fix    # repair when safe
+    python scripts/hygiene/check_primary_integrity.py          # check only
+    python scripts/hygiene/check_primary_integrity.py --fix    # repair when safe
 
 Available as a read-only local diagnostic and through the Monitor API
 health-orient canary (``scripts/api/main.py``). ``--fix`` is an explicit
@@ -105,7 +105,7 @@ def _resolve_main_root(repo: Path) -> Path:
     try:
         from scripts.guardrails.worktree_containment import resolve_main_root
     except ImportError:  # path-flavoured import for test/script contexts
-        # Invoked as a file path (python scripts/audit/...py): sys.path[0] is
+        # Invoked as a file path (python scripts/hygiene/...py): sys.path[0] is
         # the script's own directory, so neither `scripts.` nor `guardrails.`
         # resolves until the repo root is on sys.path.
         _repo_candidate = Path(__file__).resolve().parents[2]
@@ -115,9 +115,13 @@ def _resolve_main_root(repo: Path) -> Path:
             from scripts.guardrails.worktree_containment import resolve_main_root
         except ImportError:
             try:
-                from guardrails.worktree_containment import resolve_main_root
+                from guardrails.worktree_containment import (
+                    resolve_main_root as _bare_resolve_main_root,
+                )
             except ImportError:
                 resolve_main_root = None  # type: ignore[assignment]
+            else:
+                resolve_main_root = _bare_resolve_main_root
     if resolve_main_root is not None:
         try:
             return resolve_main_root(repo)
@@ -233,9 +237,10 @@ def _load_state(state_dir: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     try:
-        return json.loads(path.read_text())
+        state: dict[str, Any] = json.loads(path.read_text())
     except (OSError, ValueError):
         return {}
+    return state
 
 
 def _save_state(state_dir: Path, state: dict[str, Any]) -> None:
@@ -435,11 +440,11 @@ def main(argv: list[str] | None = None) -> int:
         "Use for attachment checks; repair requires an explicit --fix and a safe, idle checkout.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python -m scripts.audit.check_primary_integrity --quiet\n"
-        "  .venv/bin/python -m scripts.audit.check_primary_integrity --fix\n"
+        "  .venv/bin/python -m scripts.hygiene.check_primary_integrity --quiet\n"
+        "  .venv/bin/python -m scripts.hygiene.check_primary_integrity --fix\n"
         "Outputs: local telemetry state and events; --fix may reattach a safe detached HEAD.\n"
         "Exit codes: 0 healthy or safely repaired; 1 unrepaired drift.\n"
-        "Related: #9894; scripts/audit/check_worktree_cleanup_integrity.py",
+        "Related: #9894; scripts/hygiene/check_worktree_cleanup_integrity.py",
     )
     parser.add_argument(
         "--fix",
