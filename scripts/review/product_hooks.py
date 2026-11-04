@@ -19,6 +19,7 @@ import functools
 import json
 import re
 import stat
+import sys
 from pathlib import Path
 from types import ModuleType
 
@@ -85,6 +86,6 @@ def attempt_hooks() -> ModuleType:
     try:
         return load_configured_module(name)
     except ModuleNotFoundError as exc:
-        if exc.name == name:
+        if exc.name == name and hasattr(sys.modules.get(name.rpartition(".")[0]), "__path__"):
             raise ProductHooksError("hooks_module_missing", f"{HOOKS_REL}: no module {name!r}") from None
         raise

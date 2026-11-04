@@ -123,10 +123,14 @@ def test_hooks_refuses_foreign_cached_module_without_repinning(tmp_path, monkeyp
 
 
 @pytest.mark.parametrize(
-    ("name", "expected"),
-    [("scripts.audit.loader_slice_missing", "hooks_module_missing"), ("scripts.loader_slice_missing.child", None)],
+    ("name", "expected", "missing"),
+    [
+        ("scripts.audit.loader_slice_missing", "hooks_module_missing", None),
+        ("scripts.loader_slice_missing.child", None, "scripts.loader_slice_missing"),
+        ("scripts.ops.product_entry.child", None, "scripts.ops.product_entry.child"),
+    ],
 )
-def test_hooks_missing_target_keeps_leaf_error_and_parent_error(tmp_path, monkeypatch, name, expected):
+def test_hooks_missing_target_keeps_leaf_error_and_parent_error(tmp_path, monkeypatch, name, expected, missing):
     from scripts.review import product_hooks as hooks
 
     path = tmp_path / "hooks.json"
@@ -139,7 +143,7 @@ def test_hooks_missing_target_keeps_leaf_error_and_parent_error(tmp_path, monkey
     else:
         with pytest.raises(ModuleNotFoundError) as caught:
             hooks.attempt_hooks.__wrapped__()
-        assert caught.value.name == "scripts.loader_slice_missing"
+        assert caught.value.name == missing
 
 
 def test_hooks_existing_module_dependency_error_is_not_translated(tmp_path, monkeypatch):
