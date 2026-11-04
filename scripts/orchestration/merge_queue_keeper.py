@@ -13,7 +13,7 @@ import subprocess
 import sys
 import unicodedata
 from collections import defaultdict
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -65,9 +65,12 @@ SLOW_INTERVAL_SECONDS = 300
 # Timer jitter allowance so a throttled minute timer still runs on the fifth minute.
 INTERVAL_SLACK_SECONDS = 15
 # Per ``"<pr>:<head>"`` state for the P4 limit of one re-enqueue per head (#12728):
-# when the keeper re-enqueued it, the failing merge_group run of each removal, and
-# when the second removal was alerted to the CTO.
-REQUEUE_STATE = ("keeper_requeues", "drop_runs", "ejection_alerts")
+# when the keeper re-enqueued it, every observed queue exit with the failing
+# merge_group runs found for it, and when a second removal was alerted.
+REQUEUE_STATE = ("keeper_requeues", "ejections", "ejection_alerts")
+# How long a confirmed removal's failing run is looked up again before the
+# diagnosis settles as unknown. The run concludes after the queue removes the PR.
+RUN_LOOKUP_WINDOW = timedelta(minutes=30)
 AGGREGATE_JOBS = frozenset({"CI Gate"})
 # Job and check names and failed-test identifiers come from workflow files and CI
 # logs, so any PR author controls them; gate reasons embed check names, and
@@ -567,6 +570,7 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("flake_issue_updates", {}), dict)
         or not isinstance(data.get("last_removal", {}), dict)
         or not all(isinstance(data.get(name, {}), dict) for name in REQUEUE_STATE)
+        or not isinstance(data.get("cto_outbox", []), list)
     ):
         raise KeeperError("keeper state malformed")
     # Records of the deleted recovery-evidence and grant ceremony (#11648). They
@@ -693,12 +697,12 @@ def _run_ids(runs: Sequence[int]) -> str:
     return ", ".join(map(str, runs)) or "unknown"
 
 
-def _alert_cto(number: int, head: str, runs: Sequence[int]) -> None:
-    """Queue one CTO inbox request for a second removal of ``head`` on the ownership outbox.
+def _queue_cto_alert(previous: dict[str, Any], number: int, head: str, runs: Sequence[int]) -> None:
+    """Freeze one CTO inbox request for a second removal of ``head`` in the keeper state.
 
-    ``pr_ownership.keeper_tick`` delivers that outbox after the queue pass, retrying
-    unchanged entries. The key is minted only here, from the PR and head, so a retry
-    after an unsaved keeper state is the same entry and is never a second alert.
+    ``_deliver_alerts`` sends it after the queue pass through the ownership alert's
+    ``pr_ownership.deliver``. The key is minted only here, from the PR and head, so a
+    retry is the same request and is never a second alert.
     """
     key = f"merge-queue-keeper:second-drop:{number}:{head}"
     body = (
@@ -707,12 +711,32 @@ def _alert_cto(number: int, head: str, runs: Sequence[int]) -> None:
         "so the keeper left it out of the queue. The owner diagnoses and pushes a fix, which starts a "
         "fresh count, or requests direction."
     )
+    outbox = previous.setdefault("cto_outbox", [])
+    if all(entry.get("key") != key for entry in outbox):
+        outbox.append({"kind": "queue-ejection", "key": key, "body": body})
+
+
+def _alert_service() -> Any:
+    from scripts.fleet_comms.authority import AuthorityService
+
+    return AuthorityService(root=None)
+
+
+def _deliver_alerts(state_path: Path, service_factory: Callable[[], Any] = _alert_service) -> list[str]:
+    """Send the keeper's frozen CTO inbox requests; an undelivered one stays for the next run."""
+    state = _load(state_path)
+    outbox = state.get("cto_outbox")
+    if not outbox:
+        return []
     try:
-        with pr_ownership.locked(pr_ownership.state_path()) as data:
-            if all(entry.get("key") != key for entry in data["outbox"]):
-                data["outbox"].append({"kind": "queue-ejection", "key": key, "body": body})
-    except (pr_ownership.OwnershipError, OSError) as exc:
-        raise KeeperError(f"CTO alert not queued: {type(exc).__name__}") from exc
+        with service_factory() as service:
+            errors = pr_ownership.deliver(outbox, service)
+    except Exception as exc:  # the inbox being down never hides the queue pass
+        errors = [f"CTO inbox unavailable: {type(exc).__name__}"]
+    if not outbox:
+        state.pop("cto_outbox")
+    _save(state_path, state)
+    return [f"CTO alert delivery FAILED: {error}" for error in errors]
 
 
 def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]) -> None:
@@ -755,8 +779,20 @@ def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]
     previous.setdefault("last_removal", {})[key] = cursor
 
 
-def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str], dict[str, list[str]], int | None]:
-    """Return the diagnosis text, the failed job names and all failed tests per job, and run ID."""
+def _run_lookup_open(since: str) -> bool:
+    """Whether a removal observed after ``since`` may still get its failing run."""
+    try:
+        start = datetime.fromisoformat(since.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return start.tzinfo is not None and datetime.now(UTC) - start < RUN_LOOKUP_WINDOW
+
+
+def _drop_detail(
+    gh: GitHub, number: int, head: str, since: str
+) -> tuple[str, list[str], dict[str, list[str]], int | None, list[int]]:
+    """Return the diagnosis text, the failed job names and all failed tests per job, the latest
+    run ID, and the IDs of every matching failed run, oldest first."""
     timeline = gh.timeline(number)
     events = [
         item
@@ -784,15 +820,16 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         and extract_pr_number(str(item.get("head_branch", ""))) == number
     ]
     if not runs:
-        return (" Queue removal confirmed; failing merge_group run unknown." if events else ""), [], {}, None
+        return (" Queue removal confirmed; failing merge_group run unknown." if events else ""), [], {}, None, []
     run = max(runs, key=lambda item: item.get("created_at", ""))
     if not isinstance(run.get("id"), int):
         raise KeeperError("matching merge_group run has no valid id")
+    run_ids = [item["id"] for item in sorted(runs, key=lambda item: item.get("created_at", "")) if type(item.get("id")) is int]
     run_detail = f" Failing merge_group: {run.get('html_url') or run['id']}"
     try:
         jobs = gh.jobs(run["id"])
     except KeeperError as exc:
-        return f"{run_detail}; failing job lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}.", [], {}, run["id"]
+        return f"{run_detail}; failing job lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}.", [], {}, run["id"], run_ids
     failed = sorted(
         {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
     )
@@ -809,7 +846,7 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
                 tests[str(job["name"])] = nodes
         except KeeperError:
             pass  # Optional log enrichment must not hide the run/job diagnosis.
-    return detail, failed, tests, run["id"]
+    return detail, failed, tests, run["id"], run_ids
 
 
 def _flaky_jobs(failures: Any) -> dict[str, tuple[list[int], list[str]]]:
@@ -1138,18 +1175,20 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         if dropped:
             dropped_head = previous["queued"][key]
             previous.setdefault("undiagnosed", {}).setdefault(f"{number}:{dropped_head}", previous.get("observed", ""))
+            # The exit counts before GitHub's timeline shows the removal (#12728).
+            previous.setdefault("ejections", {}).setdefault(f"{number}:{dropped_head}", [])
         else:
             dropped_head = head
         prior_drop_key = f"{number}:{dropped_head}"
         if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
-                detail, failed_jobs, failed_tests, failed_run = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
-                seen_runs = previous.setdefault("drop_runs", {}).setdefault(prior_drop_key, [])
-                if failed_run is not None and failed_run not in seen_runs:
-                    seen_runs.append(failed_run)
-                if detail:
+                since = previous["undiagnosed"][prior_drop_key]
+                detail, failed_jobs, failed_tests, failed_run, run_ids = _drop_detail(gh, number, head, since)
+                seen_runs = previous.setdefault("ejections", {}).setdefault(prior_drop_key, [])
+                seen_runs.extend(run_id for run_id in run_ids if run_id not in seen_runs)
+                if failed_run is not None or (detail and not _run_lookup_open(since)):
                     previous["undiagnosed"].pop(prior_drop_key)
-                else:
+                elif not detail:
                     detail = " Queue removal diagnosis unknown."
             except KeeperError as exc:
                 detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
@@ -1297,7 +1336,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict)
                                  + (f" ({canary})" if reason == contract_canary.REASON else ""))
             elif reason == "ready":
-                if drops >= 1:
+                if drops >= 1 or drop_key in previous.get("ejections", {}):
                     # Spend the one re-enqueue on disk before the mutation, so neither a
                     # later tick nor a restart after a crash can enqueue this head again.
                     previous.setdefault("keeper_requeues", {})[drop_key] = observed
@@ -1314,18 +1353,27 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     lines.append(f"#{number} enqueued" + (" at the front (priority)" if jumped else ""))
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
-            runs = previous.get("drop_runs", {}).get(drop_key, [])
-            if reason == "second-drop":
-                detail += (
+            # A second removal is announced once, whatever else holds the head, after its
+            # failing runs are collected and only while the PR is out of the queue.
+            if (
+                drops >= 2
+                and queued is False
+                and comment_safe
+                and not _run_lookup_open(previous.get("undiagnosed", {}).get(drop_key, ""))
+                and drop_key not in previous.get("ejection_alerts", {})
+            ):
+                runs = previous.get("ejections", {}).get(drop_key, [])
+                _comment_once(gh, number, head, "second-drop", comments, login, (
                     f" Merge_group runs of its removals: {_run_ids(runs)}. P4 allows one re-enqueue per"
                     " unchanged approved head; push a fix (a new head starts a fresh count) or request direction."
-                )
-                if queued is False and drop_key not in previous.get("ejection_alerts", {}):
-                    _alert_cto(number, head, runs)
-                    previous.setdefault("ejection_alerts", {})[drop_key] = observed
-                    lines.append(f"#{number} second-drop alerted to the CTO: runs={_run_ids(runs)}")
+                ))
+                _queue_cto_alert(previous, number, head, runs)
+                previous.setdefault("ejection_alerts", {})[drop_key] = observed
+                lines.append(f"#{number} second-drop alerted to the CTO: runs={_run_ids(runs)}")
             if (
-                reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
+                reason not in {
+                    "ready", "second-drop", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown",
+                }
                 and comment_safe
                 and (_ever_approved(comments, login) or dropped)
             ):
@@ -1489,6 +1537,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             lines, failed = [f"merge queue keeper: skipped reset_at={exc.reset_at}"], False
         except KeeperError as exc:
             lines, failed = [f"merge queue keeper failed: {exc}"], True
+        try:
+            alert_lines = _deliver_alerts(state_path)
+        except KeeperError as exc:
+            alert_lines = [f"CTO alert delivery FAILED: {exc}"]
+        lines, failed = [*lines, *alert_lines], failed or bool(alert_lines)
         # The ownerless-PR alert runs on its own cadence, whatever the queue pass did, and
         # never hides the queue pass's result.
         try:
