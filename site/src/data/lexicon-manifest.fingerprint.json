@@ -298,6 +298,10 @@
         "sha256": "32105cc172a017b5f1575d0d51aa7b8a4583360f8f62ee302aeca8b388287a63"
       },
       {
+        "path": "scripts/lexicon/monitor_jobs.py",
+        "sha256": "9e6750277352abf627ad3236748e8dde462e6bfa9837de37ab86398b0eec5c9c"
+      },
+      {
         "path": "scripts/lexicon/obvious_noise_classifier.py",
         "sha256": "0946c3f307f121a474216d3c06156bd4f6ed5844b5225e5b968b09a4c23f695b"
       },
@@ -403,7 +407,7 @@
       },
       {
         "path": "scripts/lexicon/teacher_deck_shard.py",
-        "sha256": "07b5318c36085a0f47211decc9f4344a3236e1981a56c352fa59635aabf91ad3"
+        "sha256": "6931bef25fc7a128c7ce47736c0c505edbdeca9d9054e07df119e900b5bed798"
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",
