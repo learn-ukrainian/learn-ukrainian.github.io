@@ -68,9 +68,6 @@ INTERVAL_SLACK_SECONDS = 15
 # when the keeper re-enqueued it, every observed queue exit with the failing
 # merge_group runs found for it, and when a second removal was alerted.
 REQUEUE_STATE = ("keeper_requeues", "ejections", "ejection_alerts")
-# How long a confirmed removal's failing run is looked up again before the
-# diagnosis settles as unknown. The run concludes after the queue removes the PR.
-RUN_LOOKUP_WINDOW = timedelta(minutes=30)
 AGGREGATE_JOBS = frozenset({"CI Gate"})
 # Job and check names and failed-test identifiers come from workflow files and CI
 # logs, so any PR author controls them; gate reasons embed check names, and
@@ -707,7 +704,8 @@ def _queue_cto_alert(previous: dict[str, Any], number: int, head: str, runs: Seq
     key = f"merge-queue-keeper:second-drop:{number}:{head}"
     body = (
         f"Merge queue keeper: #{number} head {head[:12]} left the merge queue a second time "
-        f"(merge_group runs: {_run_ids(runs)}). P4 allows one re-enqueue per unchanged approved head, "
+        f"(merge_group runs found: {_run_ids(runs)}; a run still finishing may be missing). P4 allows one "
+        "re-enqueue per unchanged approved head, "
         "so the keeper left it out of the queue. The owner diagnoses and pushes a fix, which starts a "
         "fresh count, or requests direction."
     )
@@ -777,15 +775,6 @@ def _count_removals(gh: GitHub, number: int, head: str, previous: dict[str, Any]
             previous["drops"][drop_key] = int(previous["drops"].get(drop_key, 0)) + 1
         cursor["created_at"], cursor["id"] = stamp.isoformat(), event_id
     previous.setdefault("last_removal", {})[key] = cursor
-
-
-def _run_lookup_open(since: str) -> bool:
-    """Whether a removal observed after ``since`` may still get its failing run."""
-    try:
-        start = datetime.fromisoformat(since.replace("Z", "+00:00"))
-    except ValueError:
-        return False
-    return start.tzinfo is not None and datetime.now(UTC) - start < RUN_LOOKUP_WINDOW
 
 
 def _drop_detail(
@@ -1191,11 +1180,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     # An earlier removal's run, already diagnosed and recorded: it says
                     # nothing about this removal, whose own run may still be running.
                     failed_jobs, failed_tests = [], {}
-                # Settled when a run new to the head arrives and every counted removal then has
-                # a run, or when the window ends. An earlier removal's run never settles a later
-                # one, even before the timeline counts it.
-                removals = max(1, int(previous["drops"].get(prior_drop_key, 0)))
-                if (new_runs and len(seen_runs) >= removals) or (detail and not _run_lookup_open(since)):
+                if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
                 elif not detail:
                     detail = " Queue removal diagnosis unknown."
@@ -1362,18 +1347,19 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     lines.append(f"#{number} enqueued" + (" at the front (priority)" if jumped else ""))
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
-            # A second removal is announced once, whatever else holds the head, after its
-            # failing runs are collected and only while the PR is out of the queue.
+            # A second removal is announced once, whatever else holds the head, while the PR
+            # is out of the queue, with the runs found by then. GitHub does not link a removal
+            # to its run, so a run still finishing is named as possibly missing, never awaited.
             if (
                 drops >= 2
                 and queued is False
                 and comment_safe
-                and not _run_lookup_open(previous.get("undiagnosed", {}).get(drop_key, ""))
                 and drop_key not in previous.get("ejection_alerts", {})
             ):
                 runs = previous.get("ejections", {}).get(drop_key, [])
                 _comment_once(gh, number, head, "second-drop", comments, login, (
-                    f" Merge_group runs of its removals: {_run_ids(runs)}. P4 allows one re-enqueue per"
+                    f" Merge_group runs found for its removals: {_run_ids(runs)} (a run still finishing may be"
+                    " missing). P4 allows one re-enqueue per"
                     " unchanged approved head; push a fix (a new head starts a fresh count) or request direction."
                 ))
                 _queue_cto_alert(previous, number, head, runs)

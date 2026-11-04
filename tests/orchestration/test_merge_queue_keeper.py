@@ -852,10 +852,18 @@ def test_one_requeue_per_head_even_before_the_timeline_shows_the_removal(
 
 
 @pytest.mark.parametrize(
-    ("held", "both_unseen", "timeline_lags"), [(False, False, False), (True, False, False), (False, True, False), (False, False, True)]
+    ("held", "both_unseen", "timeline_lags", "run_pending"),
+    [
+        (False, False, False, False),
+        (True, False, False, False),
+        (False, True, False, False),
+        (False, False, True, False),
+        (False, False, False, True),
+    ],
 )
 def test_second_ejection_stays_out_and_alerts_once_with_run_ids(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, held: bool, both_unseen: bool, timeline_lags: bool
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, held: bool, both_unseen: bool, timeline_lags: bool,
+    run_pending: bool,
 ) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     if held:  # Another hold reason must not hide the second removal.
@@ -863,8 +871,8 @@ def test_second_ejection_stays_out_and_alerts_once_with_run_ids(
     path = tmp_path / "state.json"
     key = f"42:{HEAD_A}"
     _ejected_state(path, drops={key: 1}, keeper_requeues={key: "2099-01-01T00:00:00+00:00"}, ejections={key: [111]})
-    _eject(fake, 2, None)  # Its failing run has not concluded; the first removal's run 111 still matches.
-    _conclude(fake, 111, "2099-01-01T00:00:01Z")
+    _conclude(fake, 111, "2099-01-01T00:00:01Z")  # The first removal's run still matches by time.
+    _eject(fake, 2, None if run_pending else 222)
     if both_unseen:  # Both removals arrive between two observations, neither run recorded yet.
         path.write_text(json.dumps({**json.loads(path.read_text()), "drops": {}, "ejections": {}}))
         fake.events.insert(0, {"id": 1, "event": "removed_from_merge_queue", "created_at": "2099-01-01T00:00:01Z"})
@@ -872,27 +880,29 @@ def test_second_ejection_stays_out_and_alerts_once_with_run_ids(
         removal = fake.events.pop()
         lines, failed = run(fake, path, monkeypatch)
         assert not failed and "reason=requeue-spent" in lines[0]
+        assert "cto_outbox" not in json.loads(path.read_text())
         fake.events.append(removal)
-    lines, failed = run(fake, path, monkeypatch)
-    assert not failed and f"reason={'hold' if held else 'second-drop'}" in lines[0]
-    assert "cto_outbox" not in json.loads(path.read_text())
-    _conclude(fake, 222, "2099-01-01T00:00:02Z")
     alerts = []
-    for _ in range(2):  # A later run neither re-enqueues nor alerts again.
+    for _ in range(2):  # Announced at the first run that sees the second removal, and never again.
+        if run_pending and alerts:
+            _conclude(fake, 222, "2099-01-01T00:00:02Z")
         lines, failed = run(fake, path, monkeypatch)
-        assert not failed
+        assert not failed and f"reason={'hold' if held else 'second-drop'}" in lines[0]
         alerts += [line for line in lines if "alerted to the CTO" in line]
+    runs = "111" if run_pending else "111, 222"
     assert "enqueue" not in mutations(fake)
-    assert alerts == ["#42 second-drop alerted to the CTO: runs=111, 222"]
+    assert alerts == [f"#42 second-drop alerted to the CTO: runs={runs}"]
     comments = [body for kind, body in fake.actions if kind == "comment" and "second-drop" in body]
-    assert len(comments) == 1 and "Merge_group runs of its removals: 111, 222." in comments[0]
+    assert len(comments) == 1
+    assert f"Merge_group runs found for its removals: {runs} (a run still finishing may be missing)." in comments[0]
 
     sent: list[dict[str, Any]] = []
     for _ in range(2):
         assert keeper._deliver_alerts(path, lambda: FakeInbox(sent)) == []
     assert [message["recipients"] for message in sent] == [("claude-cto",)]
     assert sent[0]["idempotency_key"] == f"merge-queue-keeper:second-drop:42:{HEAD_A}"
-    assert "#42" in sent[0]["body"] and "merge_group runs: 111, 222" in sent[0]["body"]
+    assert "#42" in sent[0]["body"]
+    assert f"merge_group runs found: {runs}; a run still finishing may be missing" in sent[0]["body"]
     assert "cto_outbox" not in json.loads(path.read_text())
 
 
