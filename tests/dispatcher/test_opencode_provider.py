@@ -28,23 +28,14 @@ def spec(tmp_path):
 
 @pytest.fixture
 def funded(monkeypatch):
-    """Both endpoints have a key and a balance; a probe of any other URL fails the test."""
-    keys = {"deepseek": "stub-deepseek", "openrouter": "stub-openrouter"}
-    monkeypatch.setattr(usage, "_load_deepseek_api_key", lambda: keys["deepseek"])
-    monkeypatch.setattr(usage, "_load_openrouter_api_key", lambda: keys["openrouter"])
+    """Both endpoints receive only presence and balance from the private boundary."""
+    keys = {"deepseek": True, "openrouter": True}
     balances = {"deepseek": 3.0, "openrouter": 7.0}
-    monkeypatch.setattr(usage, "_probe_deepseek_native", lambda **_: dict(
-        probe_state="ok", currency="USD", is_available=True, total_balance=balances["deepseek"]))
-
-    def request(method, url, headers, timeout_s):
-        assert headers["Authorization"] == f"Bearer {keys['openrouter']}"
-        if url.endswith("/credits"):
-            return 200, {"data": {"total_credits": balances["openrouter"], "total_usage": 0}}, None
-        assert url.endswith("/key")
-        return 200, {"data": {"limit": None, "limit_remaining": None}}, None  # a key without a cap
-
-    monkeypatch.setattr(usage, "_http_json_request", request)
-    # The OpenRouter launch resolves to the injected pins alone: no inherited override, no checkout config.
+    module = SimpleNamespace(
+        api_key_present=lambda provider: bool(keys[provider]),
+        prepaid_remaining_usd=lambda provider, **kw: balances[provider],
+    )
+    monkeypatch.setattr(usage, "_private_usage", lambda: module)
     monkeypatch.setattr(opencode, "_resolved_config", lambda env: json.loads(opencode._OPENROUTER_CONFIG))
     monkeypatch.setattr(opencode, "_project_config", lambda *a: [])
     return SimpleNamespace(keys=keys, balances=balances)
@@ -134,3 +125,11 @@ def test_unknown_provider_refused(spec, funded, dispatch, capsys, provider):
         opencode.build(replace(spec, provider=provider), {})
     dispatch("--provider", provider, expected=2)
     assert "opencode_endpoint_unknown" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("provider", ["deepseek", "openrouter"])
+def test_endpoint_absent_private_binding_refuses_without_credential_fallback(monkeypatch, provider):
+    monkeypatch.setattr(usage, "_private_usage", lambda: None)
+    assert opencode.endpoint_refusal(provider) == (
+        f"opencode_endpoint_balance_unknown: {provider} balance could not be read"
+    )

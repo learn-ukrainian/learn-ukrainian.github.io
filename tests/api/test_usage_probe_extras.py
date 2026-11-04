@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import copy
-import io
 import json
 import subprocess
-import urllib.error
 from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from fastapi import FastAPI
@@ -28,8 +27,33 @@ IDENTIFIER = "SYNTHETIC_IDENTIFIER_SENTINEL"
 
 @pytest.fixture
 def payloads():
+    """Sanitized private outcomes; authenticated response parsing is covered privately."""
     return {
-        name: json.loads((FIXTURES / f"{name}.json").read_text()) for name in ("codex", "codex_resets", "claude", "agy")
+        "codex": {
+            "provider": "codex",
+            "source": "codex_oauth",
+            "openaiDashboard": {},
+            "usage": {
+                "primary": None,
+                "secondary": {"windowMinutes": 10080, "usedPercent": 54, "resetsAt": 1791046702},
+            },
+            "credit_balance": 62500.0,
+            "reset_credits": {
+                "available_count": 2,
+                "expires_at": ["2026-10-22T21:07:26.659782Z", "2026-10-29T19:15:04.620993Z"],
+                "fetched_at": "2026-09-30T08:00:00Z",
+            },
+        },
+        "claude": {
+            "provider": "claude",
+            "source": "claude_oauth",
+            "usage": {
+                "primary": {"windowMinutes": 300, "usedPercent": 10, "resetsAt": "2026-09-30T11:19:59Z"},
+                "secondary": {"windowMinutes": 10080, "usedPercent": 67, "resetsAt": "2026-10-05T06:59:59Z"},
+                "fable_weekly": {"windowMinutes": 10080, "usedPercent": 42, "resetsAt": "2026-10-05T06:59:59Z"},
+            },
+        },
+        "agy": json.loads((FIXTURES / "agy.json").read_text()),
     }
 
 
@@ -40,19 +64,14 @@ def _probe(monkeypatch, payloads, lane, *, error=None):
             return NOW
 
     monkeypatch.setattr(probes, "datetime", Clock)
-    monkeypatch.setattr(probes, "_load_codex_oauth_token", lambda: SENTINEL)
-    monkeypatch.setattr(probes, "_load_claude_oauth_token", lambda: SENTINEL)
     monkeypatch.setattr(probes, "_agy_cli_bin", lambda: "fixture-agy")
-    calls = []
-
-    def request(method, url, **kwargs):
-        calls.append((method, url, kwargs))
-        if error:
-            return error
-        key = "codex_resets" if url.endswith("reset-credits") else lane
-        return 200, payloads[key], None
-
-    monkeypatch.setattr(probes, "_http_json_request", request)
+    outcome = {"outcome": "data", "record": payloads.get(lane)}
+    if error:
+        outcome = {
+            "outcome": "error",
+            "error": {"kind": "fetch_error", "code": error[0], "message": f"HTTP {error[0]}"},
+        }
+    monkeypatch.setattr(probes, "_private_usage", lambda: SimpleNamespace(probe_subscription=lambda *a, **kw: outcome))
     monkeypatch.setattr(
         probes.subprocess, "run", lambda *a, **kw: subprocess.CompletedProcess(a, 0, json.dumps(payloads["agy"]), "")
     )
@@ -62,7 +81,7 @@ def _probe(monkeypatch, payloads, lane, *, error=None):
         "gemini": probes._probe_antigravity_native,
     }[lane](timeout_s=1)
     result.update(freshness="fresh", age_s=0, stale=False)
-    return result, calls
+    return result, []
 
 
 def _api_cli(monkeypatch, tmp_path, capsys, lane, result):
@@ -89,10 +108,7 @@ def test_recordings_reach_api_and_usage_show(monkeypatch, tmp_path, capsys, payl
     for body in payloads.values():
         body["account_id"] = IDENTIFIER
         body["debug"] = SENTINEL
-    for credit in payloads["codex_resets"]["credits"]:
-        credit.update(id=IDENTIFIER, title=SENTINEL, description=SENTINEL)
-    payloads["claude"]["limits"][0]["scope"]["model"]["id"] = IDENTIFIER
-    result, calls = _probe(monkeypatch, payloads, lane)
+    result, _ = _probe(monkeypatch, payloads, lane)
     budget, human = _api_cli(monkeypatch, tmp_path, capsys, lane, result)
     info = budget["agents"][lane]
     assert SENTINEL not in json.dumps(budget) + human
@@ -100,12 +116,9 @@ def test_recordings_reach_api_and_usage_show(monkeypatch, tmp_path, capsys, payl
     if lane == "codex":
         assert info["credit_balance"] == 62500
         assert info["reset_credits"]["available_count"] == 2
-        assert info["reset_credits"]["expires_at"] == [c["expires_at"] for c in payloads["codex_resets"]["credits"]]
+        assert info["reset_credits"]["expires_at"] == payloads["codex"]["reset_credits"]["expires_at"]
         assert info["codexbar"]["reset_credits"] == info["reset_credits"]
         assert "balance=62500.0" in human and "free full resets: available=2" in human
-        assert all(method == "GET" for method, _, _ in calls)
-        assert calls[1][2]["headers"]["OpenAI-Beta"] == "codex-1"
-        assert calls[1][2]["headers"]["originator"] == "Codex Desktop"
     elif lane == "claude":
         assert info["fable_weekly"]["used_pct"] == 42
         assert info["fable_weekly"]["window_minutes"] == 10080
@@ -121,56 +134,37 @@ def test_recordings_reach_api_and_usage_show(monkeypatch, tmp_path, capsys, payl
         assert "Claude/GPT (weekly): used=0.0%" in human
 
 
-@pytest.mark.parametrize("case", ["zero", "missing", "expired", "failed_inventory"])
+@pytest.mark.parametrize("case", ["zero", "missing", "empty_inventory"])
 def test_codex_credit_edges(monkeypatch, tmp_path, capsys, payloads, case):
+    record = payloads["codex"]
     if case == "zero":
-        payloads["codex"]["credits"]["balance"] = "0"
-        payloads["codex"]["rate_limit"]["primary_window"]["used_percent"] = 0
-        payloads["codex_resets"] = {"available_count": 0, "credits": []}
+        record["credit_balance"] = 0
+        record["usage"]["secondary"]["usedPercent"] = 0
     elif case == "missing":
-        payloads["codex"].pop("credits")
-        payloads["codex_resets"] = {}
-    elif case == "expired":
-        for credit in payloads["codex_resets"]["credits"]:
-            credit["expires_at"] = "2026-09-29T00:00:00Z"
+        record["credit_balance"] = None
+        record["reset_credits"] = None
+    if case in {"zero", "empty_inventory"}:
+        record["reset_credits"] = {"available_count": 0, "expires_at": [], "fetched_at": "2026-09-30T08:00:00Z"}
     result, _ = _probe(monkeypatch, payloads, "codex")
-    if case == "failed_inventory":
-
-        def request(method, url, **kwargs):
-            if url.endswith("reset-credits"):
-                return 500, {"error": SENTINEL}, IDENTIFIER
-            return 200, payloads["codex"], None
-
-        monkeypatch.setattr(probes, "_http_json_request", request)
-        result = probes._probe_codex_native(timeout_s=1)
-        result.update(freshness="fresh")
     budget, human = _api_cli(monkeypatch, tmp_path, capsys, "codex", result)
     info = budget["agents"]["codex"]
-    if case in {"missing", "failed_inventory"}:
-        assert info["reset_credits"] is None
-        assert "free full resets: available=unknown" in human
+    if case == "missing":
+        assert info["reset_credits"] is None and info["credit_balance"] is None
+        assert "free full resets: available=unknown" in human and "balance=unknown" in human
     else:
         assert info["reset_credits"]["available_count"] == 0
         assert "free full resets: available=0" in human
-    if case == "missing":
-        assert info["credit_balance"] is None and "balance=unknown" in human
     if case == "zero":
-        assert info["credit_balance"] == 0
-        assert info["codexbar"]["weekly_used_pct"] == 0
-    assert SENTINEL not in json.dumps(budget) + human
-    assert IDENTIFIER not in json.dumps(budget) + human
+        assert info["credit_balance"] == 0 and info["codexbar"]["weekly_used_pct"] == 0
 
 
-@pytest.mark.parametrize("case", ["zero", "missing", "wrong_kind", "wrong_group"])
+@pytest.mark.parametrize("case", ["zero", "missing"])
 def test_fable_window_edges(monkeypatch, tmp_path, capsys, payloads, case):
+    window = payloads["claude"]["usage"]["fable_weekly"]
     if case == "zero":
-        payloads["claude"]["limits"][0]["percent"] = 0
-    elif case == "missing":
-        payloads["claude"].pop("limits")
-    elif case == "wrong_kind":
-        payloads["claude"]["limits"][0]["kind"] = "session"
+        window["usedPercent"] = 0
     else:
-        payloads["claude"]["limits"][0]["group"] = "monthly"
+        payloads["claude"]["usage"]["fable_weekly"] = None
     result, _ = _probe(monkeypatch, payloads, "claude")
     budget, human = _api_cli(monkeypatch, tmp_path, capsys, "claude", result)
     assert budget["agents"]["claude"]["fable_weekly"]["used_pct"] == (0 if case == "zero" else None)
@@ -206,51 +200,6 @@ def test_provider_error_forwarding_drops_secrets(monkeypatch, tmp_path, capsys, 
     assert str(status) in result["auth_error"]
     assert SENTINEL not in json.dumps(budget) + human
     assert IDENTIFIER not in json.dumps(budget) + human
-
-
-@pytest.mark.parametrize("exception", ["http", "network", "timeout", "json"])
-def test_http_errors_do_not_return_provider_body_or_reason(monkeypatch, exception):
-    def fail(*a, **kw):
-        if exception == "http":
-            raise urllib.error.HTTPError(
-                "https://example.invalid", 500, IDENTIFIER, {}, io.BytesIO(json.dumps({"error": SENTINEL}).encode())
-            )
-        if exception == "network":
-            raise urllib.error.URLError(SENTINEL + IDENTIFIER)
-        if exception == "timeout":
-            raise TimeoutError(SENTINEL)
-        raise json.JSONDecodeError(SENTINEL, IDENTIFIER, 0)
-
-    monkeypatch.setattr(probes.urllib.request, "urlopen", fail)
-    status, body, error = probes._http_json_request("GET", "https://example.invalid")
-    assert status == (500 if exception == "http" else 0)
-    assert body is None
-    assert SENTINEL not in error and IDENTIFIER not in error
-
-
-@pytest.mark.parametrize(
-    "payload",
-    [
-        None,
-        {},
-        {"available_count": True, "credits": []},
-        {"available_count": 1, "credits": [None]},
-        {"available_count": 1, "credits": [{"status": "available", "expires_at": SENTINEL}]},
-    ],
-)
-def test_malformed_reset_inventory_unknown(payload):
-    assert probes._codex_reset_inventory(payload, now=NOW) is None
-
-
-def test_reset_inventory_filters_status_and_accepts_no_expiry():
-    result = probes._codex_reset_inventory(
-        {
-            "available_count": 1,
-            "credits": [{"status": "redeemed", "expires_at": None}, {"status": "available", "expires_at": None}],
-        },
-        now=NOW,
-    )
-    assert result["available_count"] == 1 and result["expires_at"] == [None]
 
 
 @pytest.mark.parametrize("has_fetch_time,policy_error", [(True, False), (False, False), (True, True)])
@@ -302,7 +251,7 @@ def test_inventory_note_never_changes_reserve_or_admission(
 
 
 def test_recorded_codex_near_cap_reaches_note_without_relaxing(monkeypatch, tmp_path, capsys, payloads):
-    payloads["codex"]["rate_limit"]["primary_window"]["used_percent"] = 95
+    payloads["codex"]["usage"]["secondary"]["usedPercent"] = 95
     result, _ = _probe(monkeypatch, payloads, "codex")
     budget, _ = _api_cli(monkeypatch, tmp_path, capsys, "codex", result)
     reserve = {"remaining_resets": 0, "asserted_at": None}

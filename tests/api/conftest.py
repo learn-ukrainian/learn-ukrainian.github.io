@@ -17,6 +17,7 @@ a test builds below ``tmp_path``.
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -37,7 +38,7 @@ def _judge_git_below_tmp_path(tmp_path, monkeypatch):
     monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
 
 
-def _no_provider(_token: str) -> tuple[str, object]:
+def _no_provider(directory: int, account: str) -> None:
     from scripts.api.claude_account_usage import ClaudeAccountRefused
 
     raise ClaudeAccountRefused("claude_account_identity_unavailable")
@@ -50,7 +51,9 @@ def _isolate_status_ttl_cache(monkeypatch):
 
     cache_invalidate()
     claude_account_usage._reset_for_tests()
-    monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", _no_provider)
+    monkeypatch.setattr(
+        claude_account_usage, "_private_usage", lambda: SimpleNamespace(prove_claude_owner=_no_provider)
+    )
     yield
     cache_invalidate()
     claude_account_usage._reset_for_tests()

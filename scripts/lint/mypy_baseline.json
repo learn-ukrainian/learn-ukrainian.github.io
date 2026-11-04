@@ -3415,11 +3415,6 @@
     {
       "path": "scripts/api/subscription_usage.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"_kimi_used_and_limit\" has incompatible type \"Any | None | dict[Any, Any]\"; expected \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "arg-type",
       "message": "Argument 1 to \"_with_api_account_observation_metadata\" has incompatible type \"object\"; expected \"dict[str, Any]\""
     },
     {
@@ -3521,81 +3516,6 @@
       "path": "scripts/api/subscription_usage.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | list[Any]\" has no attribute \"__iter__\" (not iterable)"
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | list[Any]\" has no attribute \"__iter__\" (not iterable)"
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | list[Any]\" has no attribute \"__iter__\" (not iterable)"
-    },
-    {
-      "path": "scripts/api/subscription_usage.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | list[Any]\" has no attribute \"__iter__\" (not iterable)"
     },
     {
       "path": "scripts/api/subscription_usage.py",

@@ -380,18 +380,22 @@ def test_prepaid_rejects_non_usd_deepseek():
     assert api_lane_status_from_account("deepseek", account) == "cool"
 
 
-def test_doctor_does_not_read_credentials_or_print_values(monkeypatch, tmp_path, capsys):
-    monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    secret = tmp_path / ".secret/openrouter-management.key"
-    secret.parent.mkdir()
-    secret.write_text("secret-file-marker")
-    monkeypatch.setenv("OPENROUTER_MANAGEMENT_API_KEY", "secret-env-marker")
-    monkeypatch.setattr(Path, "read_text", lambda *a, **kw: pytest.fail("doctor must not read credential contents"))
+def test_doctor_does_not_read_credentials_or_print_values(monkeypatch, capsys):
+    from types import SimpleNamespace
+
+    from scripts.api import subscription_usage
+
+    monkeypatch.setattr(
+        subscription_usage,
+        "_private_usage",
+        lambda: SimpleNamespace(
+            credential_inventory=lambda: ["env SYNTHETIC_PROVIDER: present", "file synthetic label: absent"]
+        ),
+    )
+    monkeypatch.setattr(Path, "read_text", lambda *a, **kw: pytest.fail("public doctor must not read credentials"))
     assert usage.main(["doctor"]) == 0
     text = capsys.readouterr().out
-    assert "env OPENROUTER_MANAGEMENT_API_KEY: present" in text
-    assert "file ~/.secret/openrouter-management.key: present" in text
-    assert "secret-file-marker" not in text and "secret-env-marker" not in text
+    assert "env SYNTHETIC_PROVIDER: present" in text and "file synthetic label: absent" in text
 
 
 def test_refresh_failure_is_nonzero_and_does_not_echo_exception(monkeypatch, capsys):
@@ -1367,3 +1371,11 @@ def test_cli_qa_rejects_missing_or_malformed_routing_despite_fresh_diagnostics(m
         else "QA FAIL:\n- codex: not an object\n- no usable subscription allotment rows (mix-max blind)\n"
     )
     assert capsys.readouterr().out == expected
+
+
+def test_doctor_absent_private_binding_reports_unavailable(monkeypatch, capsys):
+    from scripts.api import subscription_usage
+
+    monkeypatch.setattr(subscription_usage, "_private_usage", lambda: None)
+    assert usage.main(["doctor"]) == 0
+    assert "Credential inventory unavailable." in capsys.readouterr().out

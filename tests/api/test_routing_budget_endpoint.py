@@ -10,6 +10,7 @@ import threading
 import time
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
+from types import SimpleNamespace
 
 import httpx
 import pytest
@@ -37,12 +38,12 @@ def _isolate_routing_budget_test_state(tmp_path: Path, monkeypatch: pytest.Monke
             )
         return any(claude_account_usage._git_tree(directory) for directory in (resolved, *resolved.parents))
 
-    def no_provider(_token: str) -> tuple[str, object]:
+    def no_provider(directory: int, account: str) -> None:
         raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
 
     state_helpers.cache_invalidate()
     claude_account_usage._reset_for_tests()
-    monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", no_provider)
+    monkeypatch.setattr(claude_account_usage, "_private_usage", lambda: SimpleNamespace(prove_claude_owner=no_provider))
     monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
     # These tests stand in for the Monitor scheduler, the only prober (#12542).
     monkeypatch.setattr(claude_account_usage, "_is_probe_owner", lambda: True)
@@ -1425,11 +1426,14 @@ def _write_private_json(path: Path, value: object) -> None:
 _SYNTHETIC_TOKEN_PREFIX = "synthetic-access-token:"
 
 
-def _synthetic_token_owner(token: str) -> tuple[str, object]:
-    """The provider's answer for the fixture tokens; never the network."""
-    if not token.startswith(_SYNTHETIC_TOKEN_PREFIX):
-        raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
-    return token.removeprefix(_SYNTHETIC_TOKEN_PREFIX), None
+_SYNTHETIC_DIRECTORY_ACCOUNTS = {}
+
+
+def _synthetic_token_owner(directory: int, account: str) -> None:
+    """Fake private proof for fixture directories, without reading a credential."""
+    info = os.fstat(directory)
+    if _SYNTHETIC_DIRECTORY_ACCOUNTS.get((info.st_dev, info.st_ino)) != account:
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_unverified")
 
 
 def _account_dirs(monkeypatch, tmp_path: Path) -> dict[str, Path]:
@@ -1439,15 +1443,20 @@ def _account_dirs(monkeypatch, tmp_path: Path) -> dict[str, Path]:
     home = tmp_path / "account-home"
     dirs = {"a": home / ".claude", "b": tmp_path / "account-b"}
     expires_at = int((time.time() + 3600) * 1000)
+    _SYNTHETIC_DIRECTORY_ACCOUNTS.clear()
     for label, directory in dirs.items():
         directory.mkdir(parents=True, exist_ok=True)
+        info = directory.stat()
+        _SYNTHETIC_DIRECTORY_ACCOUNTS[(info.st_dev, info.st_ino)] = _ACCOUNT_UUIDS[label]
         record = home / ".claude.json" if label == "a" else directory / ".claude.json"
         _write_private_json(record, {"oauthAccount": {"accountUuid": _ACCOUNT_UUIDS[label]}})
         token = _SYNTHETIC_TOKEN_PREFIX + _ACCOUNT_UUIDS[label]
         _write_private_json(
             directory / ".credentials.json", {"claudeAiOauth": {"accessToken": token, "expiresAt": expires_at}}
         )
-    monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", _synthetic_token_owner)
+    monkeypatch.setattr(
+        claude_account_usage, "_private_usage", lambda: SimpleNamespace(prove_claude_owner=_synthetic_token_owner)
+    )
     binding = tmp_path / "claude-accounts.json"
     entry = {"config_dir": str(dirs["b"]), "account_uuid": _ACCOUNT_UUIDS["b"]}
     _write_private_json(binding, {"schema_version": 1, "accounts": {"b": entry}})

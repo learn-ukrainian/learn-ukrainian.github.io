@@ -78,38 +78,11 @@ def endpoint(provider: str | None) -> str:
 
 
 def _remaining_usd(selected: str, key: str) -> float | None:
-    """The endpoint's remaining prepaid USD, or None when it cannot be read. Keys are never logged."""
-    from scripts.api import subscription_usage as usage
+    """Read sanitized prepaid USD; the legacy key argument is unused."""
+    from scripts.api.subscription_usage import _private_usage
 
-    if selected == "deepseek":
-        account = usage._probe_deepseek_native(timeout_s=_PROBE_TIMEOUT_S)
-        if account.get("probe_state") != "ok" or str(account.get("currency") or "").upper() != "USD":
-            return None
-        return 0.0 if account.get("is_available") is False else account.get("total_balance")
-    headers = {"Authorization": f"Bearer {key}", "Accept": "application/json"}
-    status, payload, _ = usage._http_json_request(
-        "GET", "https://openrouter.ai/api/v1/credits", headers=headers, timeout_s=_PROBE_TIMEOUT_S
-    )
-    data = payload.get("data") if isinstance(payload, dict) else None
-    if status != 200 or not isinstance(data, dict):
-        return None
-    total, used = (usage._coerce_float(data.get(name)) for name in ("total_credits", "total_usage"))
-    if total is None or used is None:
-        return None
-    # A key spending cap can be lower than the account balance.
-    status, payload, _ = usage._http_json_request(
-        "GET", "https://openrouter.ai/api/v1/key", headers=headers, timeout_s=_PROBE_TIMEOUT_S
-    )
-    data = payload.get("data") if isinstance(payload, dict) else None
-    if status != 200 or not isinstance(data, dict):
-        return None
-    # OpenRouter reports a key without a cap as both fields null; anything else unreadable is unknown.
-    if "limit" not in data or "limit_remaining" not in data:
-        return None
-    if data["limit"] is None and data["limit_remaining"] is None:
-        return total - used
-    cap = usage._coerce_float(data["limit_remaining"])
-    return None if cap is None else min(total - used, cap)
+    module = _private_usage()
+    return None if module is None else module.prepaid_remaining_usd(selected, timeout_s=_PROBE_TIMEOUT_S)
 
 
 def _config_conflict(resolved: object) -> str | None:
@@ -170,8 +143,12 @@ def _project_config(worktree: Path, repo: Path | None, sha: str | None) -> list[
 
 
 def endpoint_refusal(
-    provider: str | None, env: dict[str, str] | None = None, *,
-    worktree: Path | None = None, repo: Path | None = None, sha: str | None = None,
+    provider: str | None,
+    env: dict[str, str] | None = None,
+    *,
+    worktree: Path | None = None,
+    repo: Path | None = None,
+    sha: str | None = None,
 ) -> str | None:
     """The typed refusal for the selected endpoint before spawn, or None when it may run.
 
@@ -185,9 +162,10 @@ def endpoint_refusal(
     from scripts.api import subscription_usage as usage
 
     selected = endpoint(provider)
-    loader = usage._load_deepseek_api_key if selected == "deepseek" else usage._load_openrouter_api_key
-    key = loader()
-    if not key:
+    module = usage._private_usage()
+    if module is None:
+        return f"opencode_endpoint_balance_unknown: {selected} balance could not be read"
+    if not module.api_key_present(selected):
         return f"opencode_endpoint_no_access: {selected} has no configured API key"
     if selected == "openrouter":
         project = _project_config(worktree, repo, sha) if worktree is not None else []
@@ -198,7 +176,7 @@ def endpoint_refusal(
         if conflict := _config_conflict(_resolved_config(env or {})):
             return f"opencode_endpoint_config_conflict: openrouter: {conflict}"
     floor = float((yaml.safe_load(_BUDGETS.read_text(encoding="utf-8")) or {})[selected]["dispatch_floor_usd"])
-    remaining = _remaining_usd(selected, key)
+    remaining = _remaining_usd(selected, "")
     if not isinstance(remaining, (int, float)) or isinstance(remaining, bool) or not math.isfinite(remaining):
         return f"opencode_endpoint_balance_unknown: {selected} balance could not be read"
     if remaining < floor:
