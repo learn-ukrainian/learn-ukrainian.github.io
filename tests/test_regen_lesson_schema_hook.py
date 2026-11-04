@@ -23,16 +23,16 @@ def _lesson_schema_hook() -> dict[str, object]:
 
 
 def test_regen_lesson_schema_uses_canonical_generator(monkeypatch, capsys):
-    calls: list[tuple[object, ...]] = []
+    calls: list[list[str]] = []
 
-    def fake_main() -> int:
-        calls.append(())
+    def fake_main(argv: list[str]) -> int:
+        calls.append(argv)
         return 0
 
-    monkeypatch.setattr(regen_lesson_schema.generate_lesson_schema, "main", fake_main)
+    monkeypatch.setattr(generate_lesson_schema, "main", fake_main)
 
     assert regen_lesson_schema.main() == 0
-    assert calls == [()]
+    assert calls == [[]]
     assert capsys.readouterr().out == "Lesson schema written: docs/lesson-schema.yaml\n"
 
 

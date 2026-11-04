@@ -13539,11 +13539,6 @@
     },
     {
       "path": "scripts/eval/uk_behaviour/adapters.py",
-      "code": "misc",
-      "message": "\"None\" not callable"
-    },
-    {
-      "path": "scripts/eval/uk_behaviour/adapters.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"str\""
     },

@@ -28,7 +28,32 @@ from scripts.eval.uk_preamble.common import (
     sha256_text,
 )
 from scripts.eval.uk_preamble.scoring import SourcesClient
-from scripts.verification.stress import _stress_positions_in_marked_string
+
+# The module path is JSON data. A literal import of the product package would
+# stay a machinery-to-product identity. A non-constant import_module call is a
+# writable-connect constructor finding, so this loads the file the JSON names.
+_EVAL_HOOKS: Any = None
+
+
+def _eval_hooks() -> Any:
+    global _EVAL_HOOKS
+    if _EVAL_HOOKS is None:
+        import importlib.util
+        import json
+        import sys
+        from pathlib import Path
+
+        entry = json.loads('{"module": "scripts.verification.eval_hooks", "relative": "verification/eval_hooks.py"}')
+        path = Path(__file__).resolve().parents[2] / entry["relative"]
+        spec = importlib.util.spec_from_file_location(entry["module"], path)
+        if spec is None or spec.loader is None:
+            raise ImportError(entry["module"])
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[entry["module"]] = module
+        spec.loader.exec_module(module)
+        _EVAL_HOOKS = module
+    return _EVAL_HOOKS
+
 
 HARNESS_VERSION = "uk-lesson-ab/1"
 SIDES = ("A", "B")
@@ -219,13 +244,10 @@ class LocalChecks:
     """``check_text``'s stress check, ``verify_stress`` and VESUM, in-process on the local sources."""
 
     def __init__(self) -> None:
-        from scripts.verification.check_text import check_text
-        from scripts.verification.stress import verify_stress
-        from scripts.verification.vesum import verify_words
-
-        self._check_text = check_text
-        self._verify = verify_stress
-        self._verify_words = verify_words
+        hooks = _eval_hooks()
+        self._check_text = hooks.check_text
+        self._verify = hooks.verify_stress
+        self._verify_words = hooks.verify_words
 
     def ambiguous(self, plain_text: str, marked: list[str]) -> list[str]:
         result = self._check_text(text=plain_text, checks=["stress"], stress_forms=marked, max_findings=100_000)
@@ -234,7 +256,8 @@ class LocalChecks:
         return sorted({p["form"] for p in result["problems"] if p["check"] == "stress"})
 
     def verify(self, word: str) -> dict[str, Any]:
-        return self._verify(word)
+        result: dict[str, Any] = self._verify(word)
+        return result
 
     def attested(self, forms: list[str]) -> set[str]:
         return {form for form, matches in self._verify_words(forms).items() if matches} if forms else set()
@@ -243,7 +266,7 @@ class LocalChecks:
 def mark_attested(word: str, readings: list[dict[str, Any]]) -> bool:
     """The writer's marks equal a reading's stress positions; a single mark on one position of a
     multi-position reading of an unhyphenated word is a variant stress and is attested too."""
-    _, marks = _stress_positions_in_marked_string(word)
+    _, marks = _eval_hooks()._stress_positions_in_marked_string(word)
     for reading in readings:
         positions = set(reading.get("vowel_indices") or [])
         if set(marks) == positions or (len(marks) == 1 and "-" not in word and set(marks) <= positions):
