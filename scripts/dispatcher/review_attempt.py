@@ -35,7 +35,7 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
     """Refuse a bound launch whose prompt, tools or pinned inputs do not match; return its review contract."""
     from scripts.agent_runtime.review_mcp import check_review_contract, check_review_tool_requirements
     from scripts.orchestration.worktree_claims import required_review_input_root
-    from scripts.review.prompts.check import check_prompt
+    from scripts.review.product_hooks import attempt_hooks
     from scripts.review.render_contract import ReviewContractError
 
     access = args.review_access or "isolated"
@@ -52,7 +52,7 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
     ids = dict(review_id=binding["review_id"], attempt_id=binding["attempt_id"])
     try:
         contract = check_review_contract(Path(args.prompt_file), text, **ids)
-        checked = check_prompt(
+        checked = attempt_hooks().check_prompt(
             text,
             Path(args.review_attempt),
             repo_root=Path(required_review_input_root(contract)),
@@ -80,9 +80,9 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
 
 def _check_pins_at_commit(repo: Path, sha: str, manifest_path: Path) -> None:
     """Every manifest pin must hold the dispatch commit's bytes, before a worktree or record exists."""
-    from scripts.build.fresh.manifest import pinned_entries
+    from scripts.review.product_hooks import attempt_hooks
 
-    for _, entry in pinned_entries(yaml.safe_load(manifest_path.read_bytes())):
+    for _, entry in attempt_hooks().pinned_entries(yaml.safe_load(manifest_path.read_bytes())):
         shown = subprocess.run(
             ["git", "-C", str(repo), "cat-file", "blob", f"{sha}:{entry['path']}"],
             capture_output=True, timeout=60, check=False,
@@ -118,8 +118,9 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     )
     from scripts.agent_runtime.review_mcp import prepare_review_attempt, review_attempt_tool_config
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.receipts import ledger
+    from scripts.review.product_hooks import attempt_hooks
 
+    ledger = attempt_hooks().ledger()
     binding, access = record["review_attempt"], record.get("review_access") or "isolated"
     manifest = Path(record["options"]["review_attempt"])
     workspace = Path(record["worktree_path"])
