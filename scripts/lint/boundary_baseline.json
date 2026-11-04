@@ -337,61 +337,6 @@
       "count": 1
     },
     {
-      "path": "scripts/bakeoff/run_b1_writer.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/run_b1_writer.py",
-      "module": "scripts.build.linear_pipeline",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/run_b1_writer.py",
-      "module": "scripts.build.phases",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/run_b1_writer.py",
-      "module": "scripts.build.phases.implementation_map",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.audit",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.audit.wiki_coverage_gate",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.build",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.build.linear_pipeline",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.build.phases",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.build.phases.implementation_map",
-      "count": 1
-    },
-    {
-      "path": "scripts/bakeoff/score_b1_writer_output.py",
-      "module": "scripts.yaml_activities",
-      "count": 1
-    },
-    {
       "path": "scripts/ci/components.py",
       "module": "scripts.deploy",
       "count": 1
