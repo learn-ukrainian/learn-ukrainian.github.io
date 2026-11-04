@@ -54,8 +54,8 @@ from pathlib import Path
 from typing import Any
 
 from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
+from scripts.ci.deploy_paths import load_deploy_paths
 from scripts.common.github_client import GitHubRateLimited, timer
-from scripts.deploy.auto_deploy_eligibility import CONTENT_PATH_PREFIXES, SITE_CODE_PATH_EXCEPTIONS
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.publish.github import CF_VERDICT_MARKER_PREFIX, Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
@@ -437,7 +437,8 @@ METADATA_ONLY_RELEASE_MANIFESTS = frozenset(
 
 
 def _content_prefix_path(path: str) -> bool:
-    return path not in SITE_CODE_PATH_EXCEPTIONS and path.startswith(CONTENT_PATH_PREFIXES)
+    policy = load_deploy_paths()
+    return path not in policy.site_code_path_exceptions and path.startswith(policy.content_path_prefixes)
 
 
 def changes_learner_content(paths: Iterable[str]) -> bool:

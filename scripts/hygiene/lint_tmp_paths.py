@@ -264,11 +264,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "b49d0c597a2d26febf8fad108c8cfa7e897b9305406322f86fcd21219fa5f7fd:1 bb84f6a9a5b2631e60e5c1fadc95095e7fc757834e84a003427c5f52d4ca91fd:1",
     ),
     (
-        "scripts/audit/check_tmp_usability.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "68879d7367a938c34b0396a745974e853a597e2f89258e57cfefcfb97ce5db65:1 68ea47e29cd51c13df5b21d939e71e98ac2fb884722139765f33fd12d668d454:1 90fb6be782315eaedfd593db7baf663eb9c2322e8da931b4ede84609316533b9:1",
-    ),
-    (
         "scripts/audit/check_workflows.sh",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "c56cfefbf063a967029718ef699daba75bc10766c62bdf4bde8f1b09e00d62cc:1",
@@ -561,6 +556,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "scripts/generate_mdx/generate_plan_markdown.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "4c64dcfc00853598399469b30d558cf6365d315319f9cc68898b81b5ba9cf17d:1",
+    ),
+    (
+        "scripts/hygiene/check_tmp_usability.py",
+        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
+        "68879d7367a938c34b0396a745974e853a597e2f89258e57cfefcfb97ce5db65:1 68ea47e29cd51c13df5b21d939e71e98ac2fb884722139765f33fd12d668d454:1 90fb6be782315eaedfd593db7baf663eb9c2322e8da931b4ede84609316533b9:1",
     ),
     (
         "scripts/hygiene/tmp_sweep.py",

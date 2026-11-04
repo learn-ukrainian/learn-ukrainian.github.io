@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -43,8 +44,11 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
         raise ValueError("review_attempt_full_checkout_required: full review access needs --full-checkout")
     if args.output_schema is not None:
         raise ValueError("attempt_output_schema_unsupported: a bound attempt returns its review document")
-    if args.codex_account not in (None, "sub"):
-        # The runtime boundary stages only the default Codex login; another account is refused, never substituted.
+    from scripts.agent_runtime.codex_accounts import CODEX_SUBSCRIPTION_ACCOUNTS
+
+    if args.codex_account not in (None, *CODEX_SUBSCRIPTION_ACCOUNTS):
+        # The runtime boundary stages the named subscription account's own login (_route); an API-billed route
+        # has no per-attempt spending cap, so it is refused, never substituted.
         raise ValueError(f"review_attempt_account_unsupported: codex account {args.codex_account!r}")
     if args.prompt_file in (None, "-"):
         raise ValueError("review_attempt_prompt_file_required: a bound attempt's prompt is a rendered --prompt-file")
@@ -136,6 +140,7 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     try:
         if access == "full":
             verify_full_review_tree(manifest, workspace)
+        _bind_codex_account(spec)  # before the claim, so a refused account leaves the attempt id unspent
         store.check_review_attempt(binding, claim=True, owner=record["task_id"])
         plan = prepare_review_attempt(
             binding["review_id"], binding["attempt_id"], manifest, spec.agent,
@@ -214,12 +219,38 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
                    _ledger_count(ledger, plan.ledger_path), identity, trace)
 
 
+def _bind_codex_account(spec: Any) -> None:
+    """Run this supervisor as the attempt's Codex account; the default account keeps its environment.
+
+    The runtime runs the attempt in this process, which supervises only this task, and attributes its
+    usage and rate limits to the account of this process's ``CODEX_HOME`` (``usage.current_codex_account``).
+    The binder refuses an unbound home, an ambient conflict or a missing login.
+    """
+    if spec.agent != "codex":
+        return
+    from scripts.agent_runtime.codex_accounts import (
+        DEFAULT_CODEX_ACCOUNT,
+        codex_account_env,
+        resolve_codex_account_label,
+    )
+
+    label = resolve_codex_account_label(spec.codex_account)
+    if label != DEFAULT_CODEX_ACCOUNT:
+        os.environ["CODEX_HOME"] = codex_account_env(label, os.environ)["CODEX_HOME"]
+
+
 def _route(spec: Any, record: dict) -> dict:
     """The admitted credential route, carried into the runtime exactly as dispatch recorded it."""
     from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
     from scripts.dispatcher import admission
 
     route: dict = {"run_nonce": record["run_nonce"]}
+    if spec.agent == "codex":
+        from scripts.agent_runtime.attempt_boundary import CODEX_ACCOUNT_KEY
+        from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
+
+        # The boundary stages this account's own login and no other (stage_codex_account_auth).
+        route[CODEX_ACCOUNT_KEY] = resolve_codex_account_label(spec.codex_account)
     if spec.agent == "claude":
         # The boundary authenticates as this label and verifies its binding again at use.
         route[CLAUDE_ACCOUNT_KEY] = resolve_claude_account_label(spec.claude_account)

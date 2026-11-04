@@ -1028,8 +1028,8 @@ combining a bound attempt with `--branch` or `--pr`. The resolver's PR selection
 therefore creates no bound-attempt binding or admission grant.
 
 Bound Contract 1 plan and Contract 2 lesson attempts use their separate rendered
-manifest and admission path. That path still refuses b-sub; its account support
-remains owned by the follow-up after S14r. It does not block standard PR reviews.
+manifest and admission path. That path admits b-sub and stages only that
+account's own login. It does not block standard PR reviews.
 
 
 | Role | Model id | Effort |

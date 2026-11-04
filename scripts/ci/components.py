@@ -24,11 +24,10 @@ from collections.abc import Sequence
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
-from scripts.ci import frontend_change_scope
+from scripts.ci import deploy_paths, frontend_change_scope
 from scripts.ci.junit_results import parse_junit
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import project_interpreter
-from scripts.deploy import auto_deploy_eligibility
 from scripts.storage.test_baseline import nodeid_to_junit_id
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -505,7 +504,7 @@ def parity_gaps(paths: Sequence[str], manifest: dict, root: Path = ROOT, graph: 
     graph = graph if graph is not None else import_graph(manifest, root)
     for path in paths:
         requires_front = frontend_change_scope.path_in_denominator(path, patterns)
-        deploy = auto_deploy_eligibility.decide_auto_deploy([path]).deploy
+        deploy = deploy_paths.decide_auto_deploy([path]).deploy
         owners, _ = assign_path(path, manifest)
         # Check the declared boundary independently of all-node fallback.
         selected = set(owners)

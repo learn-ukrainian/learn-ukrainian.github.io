@@ -1,102 +1,24 @@
-"""Fail-closed eligibility decision for Pages auto-deploys (#5356, #8306).
+"""Pages auto-deploy eligibility CLI for the deploy-pages workflow (#5356, #8306).
 
-Curriculum certification remains authoritative for learner-facing content.  This
-module permits the Pages workflow to redeploy a main revision automatically only
-when *every* path since the last successful deployment is known site code.  The
-denylist takes precedence over the site allowlist and an unknown path is drift.
+The decision and its fail-closed rule live in the machinery reader
+``scripts/ci/deploy_paths.py``; which paths are content and which are site code
+is product data in ``scripts/curriculum/deploy_paths.v1.json``. This command
+reads the NUL-delimited changed-path list, asks the reader, and writes the
+fixed-format workflow outputs and job summary.
 """
 
 from __future__ import annotations
 
 import argparse
 import os
-from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
+import sys
+from collections.abc import Sequence
 from pathlib import Path
 
-# These paths can change published learner content even though some live under
-# ``site/`` or ``data/``. Keep this list explicit: a new content surface must
-# be added here before an automatic deployment can cross it.
-CONTENT_PATH_PREFIXES = (
-    "curriculum/",
-    "data/",
-    "registry/",
-    "site/src/content/",
-    "site/src/data/",
-    "site/src/lib/lexicon/curated-heteronyms.ts",
-)
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-# Exact release-pointer files under ``site/src/data/``.  A pointer bump only
-# retargets an already-published Release asset; it is not curriculum/content
-# drift.  Everything else under ``site/src/data/`` stays denied (#6733).
-SITE_CODE_PATH_EXCEPTIONS = frozenset(
-    {
-        "site/src/data/lexicon-practice-deck.pointer.json",
-        "site/src/data/lexicon-manifest.pointer.json",
-    }
-)
-
-# This is deliberately broad enough for regular Astro UI, style, asset, and
-# dependency changes, but it does not grant permission to any path outside the
-# site tree or shared frontend packages.  ``CONTENT_PATH_PREFIXES`` is always
-# evaluated first unless the path is an exact ``SITE_CODE_PATH_EXCEPTIONS`` entry.
-SITE_CODE_PATH_PREFIXES = (
-    "site/",
-    "packages/activity-kit/",
-)
-
-
-@dataclass(frozen=True)
-class AutoDeployDecision:
-    """A machine-readable result safe to write to ``GITHUB_OUTPUT``."""
-
-    deploy: bool
-    reason: str
-    offending_paths: tuple[str, ...] = ()
-
-
-def _has_prefix(path: str, prefixes: tuple[str, ...]) -> bool:
-    return any(path.startswith(prefix) for prefix in prefixes)
-
-
-def decide_auto_deploy(changed_paths: Iterable[str]) -> AutoDeployDecision:
-    """Classify a NUL-safe git path sequence with a deny-by-default policy."""
-    paths = tuple(changed_paths)
-    if not paths:
-        return AutoDeployDecision(deploy=False, reason="no_changed_paths", offending_paths=())
-
-    content_drift_paths: list[str] = []
-    unknown_paths: list[str] = []
-
-    for path in paths:
-        if path in SITE_CODE_PATH_EXCEPTIONS:
-            # Still require the site-code prefix so a typo'd exception cannot
-            # open non-site paths.
-            if not _has_prefix(path, SITE_CODE_PATH_PREFIXES):
-                unknown_paths.append(path)
-            continue
-        if _has_prefix(path, CONTENT_PATH_PREFIXES):
-            content_drift_paths.append(path)
-            continue
-        if not _has_prefix(path, SITE_CODE_PATH_PREFIXES):
-            unknown_paths.append(path)
-            continue
-
-    if content_drift_paths:
-        return AutoDeployDecision(
-            deploy=False,
-            reason="content_drift",
-            offending_paths=tuple(content_drift_paths),
-        )
-
-    if unknown_paths:
-        return AutoDeployDecision(
-            deploy=False,
-            reason="unknown_path",
-            offending_paths=tuple(unknown_paths),
-        )
-
-    return AutoDeployDecision(deploy=True, reason="site_code_only", offending_paths=())
+from scripts.ci.deploy_paths import AutoDeployDecision, decide_auto_deploy
 
 
 def read_nul_delimited_paths(path: Path) -> tuple[str, ...]:
