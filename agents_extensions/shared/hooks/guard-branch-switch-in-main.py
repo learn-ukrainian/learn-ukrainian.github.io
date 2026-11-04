@@ -136,10 +136,14 @@ def _configured_primary_root() -> Path | None:
     """The primary checkout named by the machinery roots configuration, else ``None``.
 
     Read through ``scripts/common/repo_root.py`` of this hook's own source tree, the
-    one reader of ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`` (#12681). A value it refuses,
-    or a set value with no reader beside this hook, raises, so the command is blocked
-    rather than judged against the wrong checkout.
+    one reader of ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`` (#12681). Unset or empty, the
+    reader is not loaded at all, so the guard behaves exactly as without the
+    configuration. A value the reader refuses, or a set value with no reader beside
+    this hook, raises, so the command is blocked rather than judged against the
+    wrong checkout.
     """
+    if not os.environ.get("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"):
+        return None
     here = Path(__file__).resolve()
     reader = next(
         (
@@ -150,9 +154,7 @@ def _configured_primary_root() -> Path | None:
         None,
     )
     if reader is None:
-        if os.environ.get("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"):
-            raise RootsConfigurationError("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT is set but no roots reader is installed")
-        return None
+        raise RootsConfigurationError("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT is set but no roots reader is installed")
     name = "_guard_branch_switch_repo_root"
     try:
         module = sys.modules.get(name)
