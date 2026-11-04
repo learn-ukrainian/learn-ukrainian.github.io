@@ -71,6 +71,7 @@ class CostRecord:
     rate_model: str
     used_default_rate: bool
     cost_usd_est: float
+    codex_account: str | None = None
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -241,6 +242,7 @@ def _record_from_meta(path: Path, meta: dict[str, Any], rates: dict[str, dict[st
         rate_model=rate_model,
         used_default_rate=rate_model == "default",
         cost_usd_est=cost_usd_est,
+        codex_account=meta.get("codex_account") if isinstance(meta.get("codex_account"), str) else None,
     )
 
 

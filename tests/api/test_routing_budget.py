@@ -6,12 +6,12 @@ import copy
 import json
 from datetime import UTC, datetime
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
 from scripts.api import state_router
 from scripts.fleet import capacity_pick, credit_lane
+from scripts.telemetry import cost_report
 
 # Captured at import, before the conftest autouse fixture stubs the reader.
 REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits
@@ -283,15 +283,23 @@ def test_capacity_pick_marks_logout_cursor_avoid(monkeypatch):
 def test_b_sub_spend_and_in_flight_stay_off_account_a(monkeypatch, tmp_path: Path) -> None:
     """A b-sub task's dollars and in-flight count land on account b and leave account a unchanged."""
     budget_path = _configure_base(monkeypatch, tmp_path)
+    monkeypatch.setattr(state_router, "load_cost_records", cost_report.load_cost_records)
     now = datetime(2026, 8, 26, 12, 0, tzinfo=UTC)
-    monkeypatch.setattr(
-        state_router,
-        "load_cost_records",
-        lambda **_kwargs: [
-            SimpleNamespace(agent="codex", mtime=now, cost_usd_est=4.0, prompt_tokens_est=1, codex_account="sub"),
-            SimpleNamespace(agent="codex", mtime=now, cost_usd_est=9.0, prompt_tokens_est=1, codex_account="b-sub"),
-        ],
-    )
+    dispatch = tmp_path / "a1" / "orchestration" / "probe" / "dispatch"
+    dispatch.mkdir(parents=True)
+    for name, account, tokens in (("a-meta.json", "sub", 1000), ("b-meta.json", "b-sub", 4000)):
+        (dispatch / name).write_text(
+            json.dumps(
+                {
+                    "agent": "codex",
+                    "model": "gpt-6.1-sol",
+                    "ok": True,
+                    "prompt_tokens_est": tokens,
+                    "codex_account": account,
+                }
+            ),
+            encoding="utf-8",
+        )
     monkeypatch.setattr(state_router.delegate_api, "_pid_alive", lambda pid: True)
     monkeypatch.setattr(
         state_router,
@@ -319,10 +327,15 @@ def test_b_sub_spend_and_in_flight_stay_off_account_a(monkeypatch, tmp_path: Pat
         curriculum_root=tmp_path,
         batch_state_dir=tmp_path,
     )
-    assert data["agents"]["codex"]["spent_7d_usd"] == 4.0
+    loaded = {
+        record.codex_account: state_router._round_money(record.cost_usd_est)
+        for record in cost_report.load_cost_records(root=tmp_path)
+    }
+    assert loaded["sub"] > 0 and loaded["b-sub"] > loaded["sub"]
+    assert data["agents"]["codex"]["spent_7d_usd"] == loaded["sub"]
     assert "codex_account" not in data["agents"]["codex"]
-    assert data["codex_accounts"]["codex:a"]["spent_7d_usd"] == 4.0
-    assert data["codex_accounts"]["codex:b"]["spent_7d_usd"] == 9.0
+    assert data["codex_accounts"]["codex:a"]["spent_7d_usd"] == loaded["sub"]
+    assert data["codex_accounts"]["codex:b"]["spent_7d_usd"] == loaded["b-sub"]
     assert data["codex_accounts"]["codex:b"]["codex_account"] == "b-sub"
     assert data["in_flight"]["codex"] == 1
     assert data["in_flight"]["codex:b"] == 1
