@@ -546,6 +546,7 @@ def _stub_acp_host(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> list[obje
     monkeypatch.setattr(acpx_module, "_ACPX_BINARY", binary)
     monkeypatch.setattr(acpx_module, "_probe_acpx_cli_compatibility", lambda _b, *, builtin_agent: ("0.13.0", ()))
     monkeypatch.setattr(acpx_module, "_require_non_primary_worktree", lambda *_a, **_k: None)
+    monkeypatch.setattr(acpx_module, "_require_codex_cli", lambda: ("/installed/codex", "0.159.2"))
     monkeypatch.setattr(
         acpx_module,
         "_require_local_claude_acp_adapter",
@@ -751,7 +752,7 @@ def _discuss(controller, tmp_path: Path, key: str):
         correlation_id=TASK,
         idempotency_key=key,
         rounds=1,
-        participants=("codex", "grok"),
+        participants=("codex", "claude"),
         models={"codex": ASTRA},
         source="claude-cto",
     )
