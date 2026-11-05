@@ -11,6 +11,7 @@ Python files belong to rename_python.py; files that ``rename_structured.py`` kno
 from __future__ import annotations
 
 import argparse
+import bisect
 import importlib.util
 import os
 import re
@@ -75,8 +76,18 @@ SHELL_FENCE_INFO = frozenset({"bash", "sh", "shell", "zsh", "console", "shell-se
 ESCAPE = re.compile(
     r"\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8}|\\x[0-9a-fA-F]{2}|\\[0-7]{1,3}|&#[0-9]{1,7};|&#[xX][0-9a-fA-F]{1,6};|%[0-9a-fA-F]{2}"
 )
-# Files worth reading: the name in any case, or an escape that may spell it.
-PREFILTER = re.compile(rb"(?i)scripts|\\u[0-9a-f]{4}|\\x[0-9a-f]{2}|\\[0-7]|&#|%[0-9a-f]{2}")
+# What a reader joins or removes before a name shows: line continuations, escapes, run-time pieces (taken
+# as empty: shell expansions and substitutions, template fields) and a backslash before a character.
+HIDING = re.compile(
+    r"\\[ \t]*\r?\n\s*|"
+    + ESCAPE.pattern
+    + r"|\$\{[^}\n]*\}|\$\([^)\n]*\)|\$[A-Za-z_][A-Za-z0-9_]*|`[^`\n]*`|\{\{[^}\n]*\}\}|\{%[^%\n]*%\}"
+    + r"|\\(?=\S)"
+)
+# A quoted piece glued to a word: the shell drops its quotes and joins it (``scr""ipts``, ``scr"i"pts``).
+# A lone apostrophe (``script's``) is no quoted piece.
+QUOTED_PIECE = re.compile(r"(?<=\S)([\"'])[^\"'\s]*\1|([\"'])[^\"'\s]*\2(?=\S)")
+HIDDEN_WORD = re.compile(r"(?:(?<![A-Za-z0-9_])|(?<=-m))(?i:scripts)(?![A-Za-z0-9_])")
 ANY_CASE = re.compile(r"(?i)scripts")
 ANY_BYTES_CASE = re.compile(rb"(?i)scripts")
 DIGEST_FIELD = re.compile(
@@ -612,33 +623,80 @@ def _unescape_one(token: str) -> str:
         return token
 
 
-def unescaped(text: str) -> str:
-    """The text with every escape in ``ESCAPE`` decoded."""
+@dataclass(frozen=True)
+class JoinedView:
+    """A text with every way of splitting or disguising a word undone, and where each part came from."""
 
-    return ESCAPE.sub(lambda match: _unescape_one(match.group(0)), text)
+    text: str
+    segments: list[tuple[int, int, int, bool]]  # (start in the view, start in the source, length in the view, verbatim)
+
+    def source_offset(self, position: int) -> int:
+        index = bisect.bisect_right([segment[0] for segment in self.segments], position) - 1
+        view_start, source_start, _length, verbatim = self.segments[index]
+        return source_start + (position - view_start if verbatim else 0)
+
+    def verbatim(self, start: int, end: int) -> bool:
+        """Whether ``[start, end)`` of the view is copied unchanged from one stretch of the source."""
+
+        index = bisect.bisect_right([segment[0] for segment in self.segments], start) - 1
+        view_start, _source, length, verbatim = self.segments[index]
+        return verbatim and end <= view_start + length
 
 
-def hidden_references(ownership: OwnershipMap, rel: str, text: str, report: Report) -> None:
-    """A line whose escapes decode to a ``scripts`` name is reported; escaped text is never rewritten."""
+def joined_view(text: str) -> JoinedView:
+    """Undo line continuations, escapes, quote removal and run-time pieces (taken as empty), as a shell,
+    a YAML or TOML reader or a template engine would, so that a name split by them shows."""
 
-    offset = 0
-    for line in text.splitlines(keepends=True):
-        if ESCAPE.search(line):
-            decoded = unescaped(line)
-            if len(ANY_CASE.findall(decoded)) > len(ANY_CASE.findall(line)):
-                mentions = [ref for ref in rp.text_references(ownership, decoded) if ref.target != PRODUCT]
-                if mentions:
-                    report.unresolved.append(
-                        Finding(
-                            rel,
-                            text.count("\n", 0, offset) + 1,
-                            "escaped_reference",
-                            ", ".join(ref.text for ref in mentions),
-                            detail="spelled with escapes; rename it by hand",
-                            target=rp.worst_target(mentions),
-                        )
-                    )
-        offset += len(line)
+    events = [(m.start(), m.end(), m.group(0)) for m in HIDING.finditer(text)]
+    for match in QUOTED_PIECE.finditer(text):
+        events += [(match.start(), match.start() + 1, ""), (match.end() - 1, match.end(), "")]  # the two quotes
+    pieces: list[str] = []
+    segments: list[tuple[int, int, int, bool]] = []
+    view = position = 0
+    for start, end, token in sorted(events):
+        if start < position:
+            continue  # inside a piece already undone
+        if start > position:
+            segments.append((view, position, start - position, True))
+            pieces.append(text[position:start])
+            view += start - position
+        replacement = _unescape_one(token) if token and ESCAPE.fullmatch(token) else ""
+        segments.append((view, start, len(replacement), False))
+        pieces.append(replacement)
+        view += len(replacement)
+        position = end
+    segments.append((view, position, len(text) - position, True))
+    pieces.append(text[position:])
+    return JoinedView("".join(pieces), segments)
+
+
+def hidden_references(ownership: OwnershipMap, rel: str, text: str, view: JoinedView, report: Report) -> None:
+    """A name that only shows once escapes, continuations, quotes or run-time pieces are undone is reported.
+
+    Such a name is never rewritten.
+    """
+
+    seen: set[int] = set()
+    for match in HIDDEN_WORD.finditer(view.text):
+        if view.verbatim(match.start(), match.end()):
+            continue  # an ordinary occurrence; scan_text decides it
+        line = text.count("\n", 0, view.source_offset(match.start())) + 1
+        if line in seen:
+            continue
+        seen.add(line)
+        tail = view.text[match.start() : match.start() + 200].split(None, 1)[0]
+        mentions = [ref for ref in rp.text_references(ownership, tail.lower()) if ref.target != PRODUCT]
+        if mentions:
+            report.unresolved.append(
+                Finding(
+                    rel,
+                    line,
+                    "hidden_reference",
+                    ", ".join(ref.text for ref in mentions),
+                    detail="spelled across escapes, quotes, line continuations or run-time pieces; rename it by hand",
+                    target=rp.worst_target(mentions),
+                )
+            )
 
 
 def case_variants(ownership: OwnershipMap, rel: str, text: str, kind: str, report: Report) -> None:
@@ -664,7 +722,8 @@ def case_variants(ownership: OwnershipMap, rel: str, text: str, kind: str, repor
 def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: Report) -> list[Edit]:
     """Rewrite or report every ``scripts`` word in a non-Python text."""
 
-    hidden_references(ownership, rel, text, report)
+    view = joined_view(text)
+    hidden_references(ownership, rel, text, view, report)
     case_variants(ownership, rel, text, kind, report)
     scan = FileScan(ownership, rel, text, kind)
     found = list(occurrences(text))
@@ -678,7 +737,7 @@ def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: R
         scan.json_strings = json_strings(text)
     if scan.shell_regions:
         scan.contexts = ShellLexer(text, scan.shell_regions).contexts([o.start for o in found])
-    digest_bound = kind in (JSON, TEXT) and bool(DIGEST_FIELD.search(text) or DIGEST_FIELD.search(unescaped(text)))
+    digest_bound = kind in (JSON, TEXT) and bool(DIGEST_FIELD.search(text) or DIGEST_FIELD.search(view.text))
     edits: list[Edit] = []
     for occ in found:
         line = text.count("\n", 0, occ.start) + 1
@@ -765,16 +824,12 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
             continue
         size = path.stat().st_size
         if size > MAX_BYTES:
-            with path.open("rb") as handle:
-                if PREFILTER.search(handle.read()):
-                    report.unresolved.append(
-                        Finding(rel, 1, "skipped_large_file", rel, detail=f"{size} bytes; inspect by hand")
-                    )
+            # Too large to scan; any text may hold or hide the name, so every such file is listed.
+            detail = f"{size} bytes, over the {MAX_BYTES}-byte scan limit; inspect by hand"
+            report.unresolved.append(Finding(rel, 1, "skipped_large_file", rel, detail=detail, target="unknown"))
             skipped_large += 1
             continue
-        data = path.read_bytes()
-        if not PREFILTER.search(data):
-            continue
+        data = path.read_bytes()  # every file is read: a split or escaped name has no fixed bytes
         try:
             if b"\0" in data:
                 raise UnicodeDecodeError("utf-8", data, 0, 1, "binary")

@@ -55,8 +55,14 @@ An attribute chain follows its real binding. `import scripts.x` binds `scripts`,
 submodule of the other owner.
 
 A file is left unchanged when its rewrites depend on one another through a binding: a bare
-use of the package, a rebound name, a missing binding, or an alias that reaches the other
-owner. Each of its rewrites is then reported as `held_rewrite`.
+use of the package, a rebound name, a missing binding, an alias that reaches the other owner,
+or a non-ASCII identifier that Python reads as `scripts` (identifiers are NFKC-normalised).
+Each of its rewrites is then reported as `held_rewrite`.
+
+The exact evaluator bounds every operation's result before it runs it, assuming the worst
+growth (ten characters per character for `ascii()`, `repr()` and escaping codecs). An operation
+that could exceed one million characters is not evaluated; the expression is then judged by its
+literals.
 
 ## Plain tokens outside Python
 
@@ -84,7 +90,11 @@ These are reported and never rewritten:
 - `cd`, `pushd`, `-C`, `WorkingDirectory=`, `WORKDIR`, `working-directory:` and `cwd:` targets
   under `scripts/`;
 - the `scripts/` root itself, and unknown or mixed-owner names;
-- names spelled with escapes (`\u0073`, `&#115;`, `%73`), and the root in another case (`Scripts/`);
+- names that only show once a reader joins the word: escapes (`\u0073`, `&#115;`, `%73`), line
+  continuations (`scr\` then `ipts` on the next line, in shell, YAML or TOML), quoted pieces glued to
+  the word (`scr""ipts`), a backslash before a letter, and run-time pieces taken as empty (`$X`,
+  `${X}`, `$(…)`, backticks, `{{ … }}`);
+- the root in another case (`Scripts/`);
 - binary or non-UTF-8 files that may name `scripts`, and symlinks whose target names it.
 
 A module name must be exact. A package whose `__main__` has the other owner is reported, because

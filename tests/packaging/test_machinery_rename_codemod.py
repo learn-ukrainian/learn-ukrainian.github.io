@@ -967,9 +967,9 @@ def test_r1_f2_attribute_chains_follow_their_real_binding(
 @pytest.mark.parametrize(
     ("rel", "text", "kind"),
     [
-        ("config/escaped.json", '{"x": "\\u0073cripts.dispatcher.primary"}\n', "escaped_reference"),
-        ("config/escaped.json", '{"x": "scr\\u0069pts/dispatch.py"}\n', "escaped_reference"),
-        ("launchd/escaped.plist", "<string>scr&#105;pts/dispatch.py</string>\n", "escaped_reference"),
+        ("config/escaped.json", '{"x": "\\u0073cripts.dispatcher.primary"}\n', "hidden_reference"),
+        ("config/escaped.json", '{"x": "scr\\u0069pts/dispatch.py"}\n', "hidden_reference"),
+        ("launchd/escaped.plist", "<string>scr&#105;pts/dispatch.py</string>\n", "hidden_reference"),
         (
             "config/escaped.json",
             '{"p": ["scripts/dispatch.py"], "s\\u0068a256": "' + "a" * 64 + '"}\n',
@@ -1088,3 +1088,79 @@ def test_try_except_import_fallback_keeps_its_rewrites(tree: tuple[Path, Path]) 
     assert _kinds(report) == ["unprefixed_cross_owner"]
     assert "    from lu_machinery.dispatcher.primary import ROUTES\n" in _read(root, "scripts/pipeline/fallback.py")
     assert "ROUTES.get('x')\n" in _read(root, "scripts/pipeline/fallback.py")
+
+
+# -- PR 12764 review round 2 ----------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("rel", "text"),
+    [
+        # F3: escaped names continued across lines (TOML and YAML), and the other ways a reader joins a word.
+        ("config/continued.toml", 'target = """\\u0073cr\\\n    ipts/dispatch.py"""\n'),
+        ("config/continued.yaml", 'target: "\\u0073cr\\\n  ipts/dispatch.py"\n'),
+        ("config/continued.toml", 't = """scr\\\n    ipts/dispatch.py"""\n'),
+        ("scripts/tools/joined.sh", 'cat scr""ipts/dispatch.py\n'),
+        ("scripts/tools/joined.sh", 'cat scr"i"pts/dispatch.py\n'),
+        ("scripts/tools/joined.sh", "cat scr\\ipts/dispatch.py\n"),
+        ("scripts/tools/joined.sh", "cat scr\\\nipts/dispatch.py\n"),
+        ("scripts/tools/joined.sh", "cat scr${EMPTY}ipts/dispatch.py\n"),
+        ("scripts/tools/joined.sh", "cat scr$(true)ipts/dispatch.py\n"),
+        ("scripts/tools/joined.sh", "cat scr`true`ipts/dispatch.py\n"),
+        ("scripts/tools/joined.sh", "echo $'\\163cripts/dispatch.py'\n"),
+        ("config/joined.j2", "path: scr{{ x }}ipts/dispatch.py\n"),
+    ],
+)
+def test_r2_f3_names_joined_by_a_reader_are_reported(tree: tuple[Path, Path], rel: str, text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, rel, M if rel.startswith("scripts/") else P, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", rel)
+
+    assert code == 1
+    assert _read(root, rel) == text
+    assert _kinds(report) == ["hidden_reference"]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "echo the script's own output\n",  # an apostrophe joins nothing
+        'cat scr""ipts/audit/probe_uk_writing_score.py\n',  # a joined product path names nothing to rename
+    ],
+)
+def test_r2_f3_joined_view_controls_stay_quiet(tree: tuple[Path, Path], text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/tools/quiet.sh", M, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/quiet.sh")
+
+    assert code == 0, report["unresolved"]
+    assert _read(root, "scripts/tools/quiet.sh") == text
+
+
+def test_r2_f4_escaping_conversions_are_bounded_before_they_run(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = (
+        'A = ascii(("\\U00010000" * 1000) * 100) + "scripts.dispatcher.primary"\n'
+        'B = (("\\U00010000" * 1000) * 101).encode("raw_unicode_escape") + b"scripts.dispatcher.primary"\n'
+    )
+    _add(root, map_path, "scripts/pipeline/escaping.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/escaping.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/escaping.py") == source
+    assert _kinds(report) == ["computed_string", "computed_string"]
+
+
+def test_python_identifier_that_normalises_to_scripts_holds_the_file(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = "import ｓｃｒｉｐｔｓ.dispatcher.primary\nimport scripts.dispatcher.primary\n"
+    _add(root, map_path, "scripts/pipeline/nfkc.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/nfkc.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/nfkc.py") == source
+    assert _kinds(report) == ["unicode_identifier", "held_rewrite"]

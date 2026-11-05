@@ -25,6 +25,7 @@ import re
 import string
 import sys
 import tempfile
+import unicodedata
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
@@ -934,6 +935,10 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
 
     def visit_Name(self, node: cst.Name) -> None:
         self._check_loader_value(node)
+        if not node.value.isascii() and WORD in unicodedata.normalize("NFKC", node.value).lower():
+            # Python reads identifiers in NFKC form (PEP 3131): this name may be the scripts package.
+            detail = f"{node.value!r} reads as {unicodedata.normalize('NFKC', node.value)!r}"
+            self._unresolved(node, "unicode_identifier", node.value, detail, AMBIGUOUS)
 
     def _check_loader_value(self, node: cst.Attribute | cst.Name) -> None:
         """A loader passed around as a value (``load = importlib.import_module``) hides every call."""
@@ -1162,6 +1167,9 @@ SAFE_OPERATORS = {
 MAX_EVAL_INT = 10_000
 MAX_EVAL_LEN = 1_000_000
 WIDE_FIELD = re.compile(r"\d{5,}")
+# The most characters one character can become: ``ascii``, ``repr`` and the escaping codecs write
+# ``\U0001f600`` (ten) for one; padding and case changes write fewer.
+ESCAPE_GROWTH = 10
 CONVERSIONS: dict[str | None, Callable[[object], object]] = {None: lambda value: value, "s": str, "r": repr, "a": ascii}
 
 
@@ -1206,9 +1214,9 @@ def _result_bound(function: object, args: Sequence[object], kwargs: Mapping[str,
         return abs(sizes[0] * sizes[1]) if all(isinstance(n, int) for n in sizes) else inputs  # type: ignore[operator]
     if function is operator.mod and args and isinstance(args[0], (str, bytes)):
         template = _text(args[0])
-        return len(template) + 6 * inputs + MAX_EVAL_INT * template.count("%")
+        return len(template) + ESCAPE_GROWTH * inputs + MAX_EVAL_INT * template.count("%")
     if not isinstance(receiver, (str, bytes)):
-        return 6 * inputs + MAX_EVAL_INT  # an operator or builtin over guarded inputs
+        return ESCAPE_GROWTH * inputs + MAX_EVAL_INT  # an operator or builtin over guarded inputs
     size = len(receiver)
     values = [*args, *kwargs.values()]
     if method == "replace":
@@ -1227,8 +1235,8 @@ def _result_bound(function: object, args: Sequence[object], kwargs: Mapping[str,
         return size * max(tab if isinstance(tab, int) else MAX_EVAL_LEN, 1)
     if method in ("format", "format_map"):
         fields = _text(receiver).count("{")
-        return size + inputs * (fields + 1) + MAX_EVAL_INT * fields
-    return 4 * (size + inputs) + MAX_EVAL_INT  # padding, case changes, encodings, splits
+        return size + ESCAPE_GROWTH * inputs * (fields + 1) + MAX_EVAL_INT * fields
+    return ESCAPE_GROWTH * (size + inputs) + MAX_EVAL_INT  # padding, case changes, encodings, splits
 
 
 def _call_static(function: Callable[..., object], *args: object, **kwargs: object) -> object:
@@ -1772,6 +1780,7 @@ HOLDING_KINDS = frozenset(
         "binding_missing",
         "rebound_name",
         "split_not_applied",
+        "unicode_identifier",
     }
 )
 
