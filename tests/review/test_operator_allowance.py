@@ -46,7 +46,9 @@ def _stamp(moment: datetime) -> str:
 
 
 def _keygen(path: Path) -> Path:
-    subprocess.run(["ssh-keygen", "-q", "-t", "ed25519", "-N", "", "-C", "test", "-f", str(path)], check=True, timeout=30)
+    subprocess.run(
+        ["ssh-keygen", "-q", "-t", "ed25519", "-N", "", "-C", "test", "-f", str(path)], check=True, timeout=30
+    )
     return path
 
 
@@ -715,3 +717,74 @@ def test_adapter_allow_lists_refuse_without_the_installed_allowance(
 def test_cursor_allow_list_ignores_an_installed_allowance(harness: Harness, monkeypatch: pytest.MonkeyPatch) -> None:
     assert acpx_module.AcpxCursorShadowAdapter.operator_allowance_eligible is False
     assert acpx_module.AcpxClaudeShadowAdapter.operator_allowance_eligible is True
+
+
+def _discussion(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    from scripts.agent_runtime import acpx_discuss
+
+    monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *_a, **_k: "dispatch_worktree")
+    synthesis = Mock(
+        side_effect=lambda *_a, **_k: runner.Result(
+            ok=True,
+            agent="synthesis",
+            model="fixture",
+            mode="read-only",
+            response="synthesis",
+            stderr_excerpt=None,
+            duration_s=0.01,
+            session_id=None,
+            rate_limited=False,
+            stalled=False,
+            returncode=0,
+            usage_record={"outcome": "ok"},
+        )
+    )
+    controller = acpx_discuss.AcpxDiscussionController(root=tmp_path / "plane", synthesis_call=synthesis)
+    return acpx_discuss, controller
+
+
+def _discuss(controller, tmp_path: Path, key: str):
+    return controller.run(
+        prompt="Compare two bounded options.",
+        cwd=tmp_path,
+        task_id=TASK,
+        correlation_id=TASK,
+        idempotency_key=key,
+        rounds=1,
+        participants=("codex", "grok"),
+        models={"codex": ASTRA},
+        source="claude-cto",
+    )
+
+
+def test_a1_discussion_refuses_astra_without_an_allowance(
+    harness: Harness, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    plans = _stub_acp_host(monkeypatch, tmp_path)
+    acpx_discuss, controller = _discussion(tmp_path, monkeypatch)
+    try:
+        with pytest.raises(acpx_discuss.AcpxDiscussionError) as raised:
+            _discuss(controller, tmp_path, "idem-discuss-none")
+    finally:
+        controller.close()
+    assert str(raised.value) == f"invalid ACP participant selection for 'codex': {ASTRA_REFUSAL}"
+    assert plans == [[]]
+
+
+def test_a2_a5_discussion_leg_runs_astra_under_an_allowance_and_records_it(
+    harness: Harness, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    harness.write(harness.record(model=ASTRA, scope={"kind": "task", "task_id": TASK}))
+    plans = _stub_acp_host(monkeypatch, tmp_path)
+    records = plans.pop()
+    _acpx_discuss, controller = _discussion(tmp_path, monkeypatch)
+    try:
+        payload = _discuss(controller, tmp_path, "idem-discuss-allowed")
+    finally:
+        controller.close()
+    assert payload["state"] == "COMPLETE", payload
+    pinned = [("--model", ASTRA) in list(zip(plan.cmd, plan.cmd[1:], strict=False)) for plan in plans]
+    assert pinned.count(True) == 1 and len(plans) == 2
+    allowed = [record["operator_allowance"] for record in records if "operator_allowance" in record]
+    assert allowed and all(entry["model"] == ASTRA and entry["scope"]["task_id"] == TASK for entry in allowed)
+    assert all("operator_allowance" not in record for record in records if record.get("model") != ASTRA)

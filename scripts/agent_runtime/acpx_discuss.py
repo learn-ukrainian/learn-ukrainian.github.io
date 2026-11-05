@@ -50,6 +50,7 @@ from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, R
 from scripts.agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.result import Result
 from scripts.agent_runtime.runner import (
+    CONSULT_PURPOSE,
     _invoke_native_once,
     invoke_inter_agent,
     resolve_inter_agent_route,
@@ -786,6 +787,8 @@ class AcpxDiscussionController:
                         model=model_overrides.get(participant),
                         effort=effort_overrides.get(participant),
                         hard_timeout=timeout,
+                        # A discussion leg is a non-authoritative consult (operator allowance scope).
+                        purpose=CONSULT_PURPOSE,
                     )
                 else:
                     # Preserve the injectable legacy callback contract for
@@ -941,6 +944,8 @@ class AcpxDiscussionController:
                     participant,
                     model=model_overrides.get(participant),
                     effort=effort_overrides.get(participant),
+                    purpose=CONSULT_PURPOSE,
+                    task_id=task_id,
                 )
             except Exception as exc:
                 raise AcpxDiscussionError(
