@@ -250,13 +250,15 @@ def check_admissions(entries: list[dict], previous: list[dict], *, repository: s
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = argparse.ArgumentParser(
         description="Verify changed flake quarantine admissions against GitHub baseline evidence.\n"
         "Use before adding or renewing an entry; pytest itself performs only offline lint.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.common.flake_quarantine --base-ref origin/main\n"
+            f"  .venv/bin/python {entry} --base-ref origin/main\n"
             "Outputs: admission counts on stdout; temporary JUnit downloads, no GitHub writes.\n"
             "Exit codes: 0 verified; nonzero malformed entries, missing evidence or unavailable GitHub.\n"
             "Related: tests/flake_quarantine.yaml; docs/runbooks/flake-quarantine.md; #10608."

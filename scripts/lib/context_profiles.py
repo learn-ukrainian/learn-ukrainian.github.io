@@ -12,8 +12,9 @@ from typing import Any
 
 import yaml
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-CONFIG_PATH = PROJECT_ROOT / "scripts" / "config" / "context_profiles.yaml"
+# The shell resolver runs this file by path, outside the package, so it finds the
+# machinery package from its own location, as ``common.repo_root.machinery_root`` does.
+CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "context_profiles.yaml"
 REGISTRY_VERSION = 1
 # ``continuation``: the agent prepares a rollover and starts the harness's
 # supported continuation itself. ``operator_restart``: the agent prepares the

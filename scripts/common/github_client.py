@@ -48,6 +48,7 @@ from typing import Any
 from urllib.parse import quote, quote_plus, urlencode, urlsplit
 
 from scripts.common import github_usage
+from scripts.common.repo_root import machinery_path
 
 CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
 CACHE_MAX_BYTES = 64 * 1024 * 1024
@@ -913,26 +914,25 @@ class _DeferredBody:
 # The current landing operation, opened only by this module's vetted sites.
 _LANDING_FLOW = contextvars.ContextVar("github_landing_flow", default=None)
 _THIS_MODULE = os.path.realpath(__file__)
-_REPOSITORY = Path(__file__).resolve().parents[2]
-# Vetted landing entry points outside this module, by repository file and function. Every
-# request made while one runs on the current thread belongs to its landing flow, and the
-# declaration ends when the function returns. No tag, flag, header or environment value a
-# caller passes can add to this list; only an edit here can.
+# Vetted landing entry points outside this module, by machinery-package file and function.
+# Every request made while one runs on the current thread belongs to its landing flow, and
+# the declaration ends when the function returns. No tag, flag, header or environment value
+# a caller passes can add to this list; only an edit here can.
 _LANDING_ENTRY_POINTS = {
-    ("scripts/orchestration/merge_queue_keeper.py", "run"): "merge-queue-keeper",
-    ("scripts/fleet_comms/review_publisher.py", "fetch_pr_head_sha"): "verdict-publication",
-    ("scripts/fleet_comms/review_publisher.py", "execute_publication"): "verdict-publication",
-    ("scripts/fleet_comms/review_publisher.py", "publish_sealed_verdict"): "verdict-publication",
-    ("scripts/review/record_cf_verdict.py", "record"): "verdict-publication",
+    ("orchestration/merge_queue_keeper.py", "run"): "merge-queue-keeper",
+    ("fleet_comms/review_publisher.py", "fetch_pr_head_sha"): "verdict-publication",
+    ("fleet_comms/review_publisher.py", "execute_publication"): "verdict-publication",
+    ("fleet_comms/review_publisher.py", "publish_sealed_verdict"): "verdict-publication",
+    ("review/record_cf_verdict.py", "record"): "verdict-publication",
 }
 # The publisher's ``publish`` (wrapped by rate_limited_command) and its verbs that land a PR:
 # such a verb's readiness and recovery reads belong to it.
-_PUBLISHER_ENTRY_POINT = ("scripts/publish/github.py", "publish")
+_PUBLISHER_ENTRY_POINT = ("publish/github.py", "publish")
 _PUBLISHER_LANDING_VERBS = frozenset(
     {"pr-merge", "pr-update-branch", "pr-review", "run-rerun", "commit-status", "pr-dequeue", "pr-disarm"}
 )
 _ENTRY_POINT_CODE = {
-    (os.path.realpath(_REPOSITORY / path), name): flow for (path, name), flow in _LANDING_ENTRY_POINTS.items()
+    (os.path.realpath(machinery_path(path)), name): flow for (path, name), flow in _LANDING_ENTRY_POINTS.items()
 }
 _ENTRY_POINT_NAMES = frozenset(name for _, name in _LANDING_ENTRY_POINTS)
 _VETTED_CODE = {}
@@ -4214,7 +4214,7 @@ def rate_limited_command(function):
 
     code = getattr(function, "__code__", None)
     vetted = code is not None and _code_identity(code) == (
-        os.path.realpath(_REPOSITORY / _PUBLISHER_ENTRY_POINT[0]),
+        os.path.realpath(machinery_path(_PUBLISHER_ENTRY_POINT[0])),
         _PUBLISHER_ENTRY_POINT[1],
     )
 

@@ -15,10 +15,42 @@ LC_WRAPPER_PROVIDER_ARGS=()
 # lane is refused before side effects, whatever option spelling reached it (#12553).
 LC_WRAPPER_FIXED_EPIC=''
 
+# The machinery package directory: the parent of the directory this file was sourced
+# from, as a physical path (directory symlinks resolved, so it is the same directory
+# however the checkout was reached). A symlink to this file is not followed: its own
+# directory supplies the helpers, as the sourced sibling paths always did. Sourced
+# helpers come from here; neither the working directory nor any configured root can
+# choose them. Prints the directory; fails when it cannot be entered.
+launcher_machinery_dir() {
+  (CDPATH='' cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" 2>/dev/null && cd -P .. && pwd -P)
+}
+
+# Readonly once set. Sourcing this file again from the same place keeps the value; from
+# another place it refuses. An inherited environment value is replaced, never trusted.
+if ! _lc_machinery_dir="$(launcher_machinery_dir)" || [ -z "$_lc_machinery_dir" ]; then
+  printf 'launcher: cannot resolve the machinery directory of %s\n' "${BASH_SOURCE[0]}" >&2
+  unset _lc_machinery_dir
+  return 1
+fi
+_lc_machinery_flags="$(declare -p LC_MACHINERY_DIR 2>/dev/null)" || _lc_machinery_flags=''
+_lc_machinery_flags="${_lc_machinery_flags#declare -}"
+_lc_machinery_flags="${_lc_machinery_flags%% *}"
+if [[ "$_lc_machinery_flags" == *r* ]]; then
+  if [ "$LC_MACHINERY_DIR" != "$_lc_machinery_dir" ]; then
+    printf 'launcher: LC_MACHINERY_DIR is already %s; refusing a second machinery directory %s\n' \
+      "$LC_MACHINERY_DIR" "$_lc_machinery_dir" >&2
+    unset _lc_machinery_dir _lc_machinery_flags
+    return 1
+  fi
+else
+  readonly LC_MACHINERY_DIR="$_lc_machinery_dir"
+fi
+unset _lc_machinery_dir _lc_machinery_flags
+
 launcher_usage() {
   if [ "$LC_PROVIDER" = muse ]; then
     # shellcheck source=scripts/launchers/muse.sh
-    source "$(dirname "${BASH_SOURCE[0]}")/../launchers/muse.sh"
+    source "$LC_MACHINERY_DIR/launchers/muse.sh"
     launcher_muse_usage
     return
   fi
@@ -247,12 +279,12 @@ launcher_print_argv() {
 launcher_load_rules_core() {
   local lane=""
   LC_RULES_CORE_TOML=""
-  if [ ! -r "$LC_ROOT/scripts/lib/rules_core.sh" ]; then
-    launcher_error "refusing to launch ${LC_PROVIDER}: rules core unavailable ($LC_ROOT/scripts/lib/rules_core.sh is missing)."
+  if [ ! -r "$LC_MACHINERY_DIR/lib/rules_core.sh" ]; then
+    launcher_error "refusing to launch ${LC_PROVIDER}: rules core unavailable ($LC_MACHINERY_DIR/lib/rules_core.sh is missing)."
     exit 1
   fi
   # shellcheck source=scripts/lib/rules_core.sh
-  source "$LC_ROOT/scripts/lib/rules_core.sh"
+  source "$LC_MACHINERY_DIR/lib/rules_core.sh"
   if [ "$LC_MODE" = driver ] && [ "$LC_GOVERNOR" = 0 ]; then
     lane="$LC_EPIC"
   fi
@@ -570,7 +602,7 @@ launcher_resolve_roots() {
   LC_SESSION_ROOT="$LC_ROOT"
   LC_DURABLE_HELPER_ROOT=""
   # shellcheck source=scripts/lib/project_interpreter.sh
-  source "$(dirname "${BASH_SOURCE[0]}")/project_interpreter.sh"
+  source "$LC_MACHINERY_DIR/lib/project_interpreter.sh"
   if [ "${LC_PROVIDER:-}" = codex ] && [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
     LC_DURABLE_HELPER_ROOT="$(launcher_canonical_override_root "$CODEX_CANONICAL_REPO_ROOT")" || exit 1
   elif ! LC_DURABLE_HELPER_ROOT="$(project_primary_root_resolve "$LC_ROOT")"; then
@@ -913,7 +945,7 @@ launcher_claim_driver_lease() {
     return 0
   fi
   # shellcheck source=scripts/lib/session_supervisor.sh
-  source "$LC_ROOT/scripts/lib/session_supervisor.sh"
+  source "$LC_MACHINERY_DIR/lib/session_supervisor.sh"
   task_id="${SESSION_TASK_ID:-launcher-${LC_PROVIDER}-driver}"
   instance_id="${SESSION_INSTANCE_ID:-${LC_PROVIDER}-$$}"
   claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC" || return 1
@@ -1411,9 +1443,9 @@ launcher_bind_drive_epic() {
   if [ "${0##*/}" = start-claude-cto.sh ]; then
     state_lane=cto entry_skill=cto work_clause=''
   fi
-  if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
+  if [ -r "$LC_MACHINERY_DIR/lib/fleet_comms_cold_start.sh" ]; then
     # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
-    source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
+    source "$LC_MACHINERY_DIR/lib/fleet_comms_cold_start.sh"
   fi
   if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
     # shellcheck disable=SC2155  # export of resolved plane mode is intentional
@@ -1603,9 +1635,9 @@ launcher_main() {
   # sourcing the richer cold-start clause whenever the full checkout is
   # present. Neither path starts an ACP process.
   export LU_AGENT_COMM_TRANSPORT="${LU_AGENT_COMM_TRANSPORT:-acp}"
-  if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
+  if [ -r "$LC_MACHINERY_DIR/lib/fleet_comms_cold_start.sh" ]; then
     # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
-    source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
+    source "$LC_MACHINERY_DIR/lib/fleet_comms_cold_start.sh"
   fi
   launcher_clear_foreign_route_state
   launcher_defaults
@@ -1635,11 +1667,11 @@ launcher_main() {
   launcher_publication_path
   launcher_normalize_model
   # shellcheck source=scripts/lib/handoff_identity.sh
-  source "$LC_ROOT/scripts/lib/handoff_identity.sh"
+  source "$LC_MACHINERY_DIR/lib/handoff_identity.sh"
   # Muse admission runs before generic slot errors and any scope, deploy,
   # lease or CLI activity. Its real-session guard gate has no override.
   if [ "$LC_PROVIDER" = muse ]; then
-    source "$LC_ROOT/scripts/launchers/muse.sh"
+    source "$LC_MACHINERY_DIR/launchers/muse.sh"
     launcher_adapter_validate
     launcher_adapter_preflight
   fi
@@ -1657,14 +1689,14 @@ launcher_main() {
     fi
   else
     # shellcheck source=scripts/lib/driver_scope.sh
-    source "$LC_ROOT/scripts/lib/driver_scope.sh" || exit 6
+    source "$LC_MACHINERY_DIR/lib/driver_scope.sh" || exit 6
     launcher_enter_driver_scope || exit 6
   fi
   # Before any adapter check, plane probe or deploy: no core, no launch.
   launcher_load_rules_core
   launcher_export_git_identity || exit 3
   # shellcheck disable=SC1090
-  source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
+  source "$LC_MACHINERY_DIR/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate
   # Refuse an unclassified provider option before deploy, import, lease,
   # canary or seed can leave side effects behind a failed launch.
@@ -1687,7 +1719,7 @@ launcher_main() {
     echo "LAUNCHER_DRY_RUN=1: would deploy agent extensions (agents:deploy)"
   else
     # shellcheck source=scripts/lib/deploy_extensions.sh
-    source "$LC_ROOT/scripts/lib/deploy_extensions.sh"
+    source "$LC_MACHINERY_DIR/lib/deploy_extensions.sh"
     if ! deploy_agent_extensions "$LC_ROOT" agents:deploy; then
       launcher_error "refusing to launch ${LC_PROVIDER}: the agent-extensions deploy failed."
       exit 1
