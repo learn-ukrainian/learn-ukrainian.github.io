@@ -48,10 +48,10 @@ from typing import Any
 
 import yaml
 
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import machinery_path, main_checkout_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PARAMETERS_PATH = REPO_ROOT / "scripts" / "config" / "review_parameters.yaml"
+PARAMETERS_PATH = machinery_path("config/review_parameters.yaml")
 SCHEMA_VERSION = 5
 DB_DIRECTORY = ("batch_state", "review-findings")
 LEVEL_RE = re.compile(r"[a-z0-9][a-z0-9-]{0,31}\Z")

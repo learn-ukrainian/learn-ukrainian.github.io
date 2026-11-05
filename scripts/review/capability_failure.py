@@ -380,7 +380,7 @@ def main(argv: list[str]) -> int:
         description="Record that a finished review run stopped only for a missing capability, with no finding.\n"
         "It publishes a typed event on the run's PR; it is never a verdict or an approval.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py capability-failure "
+        epilog=f"Examples:\n  .venv/bin/python {recorder.RECORDER_PATH} capability-failure "
         "--task-id review-unit --pr 42 --capability test-execution --authority claude-cto\n"
         "Outputs: JSON receipt on stdout naming the event's bindings.\n"
         "Exit codes: 0: recorded or already recorded; 1: refused (the reason names the unmet condition).\n"

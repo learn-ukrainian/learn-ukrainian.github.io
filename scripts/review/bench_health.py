@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from collections.abc import Mapping
 from pathlib import Path
@@ -23,6 +24,10 @@ if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, REVIEW_LADDERS, ResolverInputs, evaluate_candidate
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
 
 AUTHOR_FAMILIES = (
     "anthropic",
@@ -126,6 +131,12 @@ def _bench_inventory(
 
 
 def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] | None = None) -> int:
+    # Named as it was started: by import name under ``-m``, else by file; the sibling the same way.
+    if __spec__ is not None:
+        entry, closeout = f"-m {__spec__.name}", f"{__spec__.parent}.closeout_cli"
+    else:
+        entry, closeout = os.fspath(__file__), os.fspath(Path(__file__).with_name("closeout_cli.py"))
+    catalog = f"{_MACHINERY}/config/model_catalog.yaml"
     parser = argparse.ArgumentParser(
         description=(
             "Count formal reviewers eligible for automatic routing across author families.\n"
@@ -133,15 +144,15 @@ def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] |
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.bench_health\n"
-            "  .venv/bin/python -m scripts.review.bench_health --profile infra --risk critical\n"
+            f"  .venv/bin/python {entry}\n"
+            f"  .venv/bin/python {entry} --profile infra --risk critical\n"
             "Outputs: stdout automatic seat counts and expected single-seat labels;\n"
             "stderr JSON shortfall findings with exclusion reasons.\n"
             "Read-only, no files written or reviewers dispatched.\n"
             "Exit codes: 0 = every family meets its required minimum; 1 = insufficient bench capacity.\n"
             "Minimum: 2 eligible seats, except Anthropic/OpenAI authors at high/critical risk\n"
             "accept 1 eligible seat (#9423, #9538, #9583). Zero seats always fails.\n"
-            "Related: scripts/config/model_catalog.yaml; scripts.review.closeout_cli resolve-reviewer; #9394; #9423."
+            f"Related: {catalog}; {closeout} resolve-reviewer; #9394; #9423."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
