@@ -58,7 +58,7 @@ SQLITE_SIDECARS = ('-wal', '-shm', '-journal')
 SQLITE_MAGIC = b'SQLite format 3\x00'
 HEADER_BYTES = 100
 GIT_COMMON_DIR = '<git-common-dir>'
-ALLOWLIST_PATH = 'scripts/config/backup-allowlist.json'
+ALLOWLIST_PATH = f"{Path(__file__).parents[1].name}/config/backup-allowlist.json"
 # Header byte 18 (file format write version): 1 for a rollback journal, 2 for WAL.
 JOURNAL_HEADER = {'delete': 1, 'wal': 2}
 # task_record_is_staged in scripts/backup-data.sh: the only batch_state/tasks files the nightly stages.

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Literal
 
 from fastapi import APIRouter, Depends, Request
@@ -24,6 +25,19 @@ from .product_contribution import ProductContribution, installed_product
 ContractKind = Literal["http", "websocket"]
 MatchType = Literal["exact", "prefix"]
 RouteLocality = Literal["host_affine", "cluster_authoritative", "mixed"]
+
+
+def _top() -> str:
+    """Unresolved name of this file's top package directory."""
+    return Path(__file__).parents[1].name
+
+
+def _rel(*parts: str) -> str:
+    return "/".join((_top(), *parts))
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_top(), *parts))
 
 
 @dataclass(frozen=True)
@@ -85,7 +99,8 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "prefix",
         "http",
         "Remote TTL-fenced epic registry, lease claim, heartbeat, handoff, release, and bounded digest projection.",
-        "API-host SessionStreamStore seeded at process start from the release snapshot's scripts/config/issue_streams.yaml; no PID probe and no GitHub enrichment.",
+        "API-host SessionStreamStore seeded at process start from the release snapshot's "
+        f"{_rel('config', 'issue_streams.yaml')}; no PID probe and no GitHub enrichment.",
         "Registry identity is fresh at the last successful API restart; lease state and bounded digest are read per request.",
         ("remote orchestrators", "launchers", "Monitor"),
         "Complements local session-supervisor hooks; it is the remote authority for v1 epic leases and a snapshot projection for registry identity.",
@@ -114,10 +129,10 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Host test-slot pool (#10662): slots in use, holders by task, the FIFO queue with positions, and wait times.",
         "This host's private test-slot pool directory: flock-live holder records and queue tickets "
-        "(scripts/common/test_slots.py).",
+        f"({_rel('common', 'test_slots.py')}).",
         "Read live per request; flock decides liveness, so a crashed holder disappears at once. No cache.",
         ("operators", "dispatch", "agents"),
-        "Same data as `python -m scripts.common.test_slots status --json`; dispatch admission reads the queue depth.",
+        f"Same data as `python -m {_mod('common', 'test_slots')} status --json`; dispatch admission reads the queue depth.",
         "low; read-only and path-free",
         "keep",
         response_schema_version="test-slots.status.v1",
@@ -385,7 +400,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Per-agent soft-cap burn and routing recommendation.",
-        "scripts/config/agent_budgets.yaml, cost records, delegate in-flight state, and the process-local CodexBar snapshot.",
+        f"{_rel('config', 'agent_budgets.yaml')}, cost records, delegate in-flight state, and the process-local CodexBar snapshot.",
         "No route cache for ledger/runtime; CodexBar allotment is a 12-minute TTL snapshot refreshed in the background. HTTP ?fresh_codexbar=true kicks a refresh and still returns cache/LKG — it never waits for the CLI.",
         ("routing.html", "agents"),
         "Overlaps runtime usage and cost summaries but adds routing recommendation.",
@@ -626,7 +641,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Cluster readiness: reports storage-seam authority and ability to open authority stores for cluster-authoritative reads without claiming multi-host HA.",
-        "scripts/control_plane/storage.py authority resolution and authority store connectivity.",
+        f"{_rel('control_plane', 'storage.py')} authority resolution and authority store connectivity.",
         "Evaluated per request; no cache.",
         ("agents", "orchestrators", "monitor client", "tests"),
         "Complements host-affine /api/health; distinct cluster-authoritative readiness contract.",

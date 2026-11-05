@@ -34,7 +34,8 @@ async def retention_latest(ctx: MonitorContext = Depends(get_ctx)) -> dict:
             "missing": True,
             "plan_dir": str(plan_dir),
             "hint": (
-                ".venv/bin/python scripts/hygiene/retention_engine.py plan"
+                ".venv/bin/python "
+                f"{Path(__file__).parents[1].name}/hygiene/retention_engine.py plan"
             ),
         }
     try:

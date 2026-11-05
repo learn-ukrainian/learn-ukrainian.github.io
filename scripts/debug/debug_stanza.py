@@ -1,10 +1,10 @@
 
 import sys
 
-import stanza
-
 
 def debug_stanza_lemma(text_input):
+    import stanza
+
     nlp = stanza.Pipeline('uk', processors='tokenize,mwt,pos,lemma', verbose=False)
 
     print(f"\n--- Isolated Test: '{text_input}' ---")

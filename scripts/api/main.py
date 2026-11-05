@@ -36,6 +36,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 import scripts.github_rest_cache as github_rest
 from scripts.common.jsonl import physical_lines
 from scripts.common.release_layout import is_release_root
+from scripts.common.repo_root import machinery_path
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
@@ -58,6 +59,7 @@ from .cluster_router import router as cluster_router
 from .codexbar_usage import scheduler_status, start_periodic_refresh, stop_periodic_refresh
 from .comms_router import ensure_broker_db_ready
 from .comms_router import router as comms_router
+from .config import PRODUCT_ROOT
 from .coordination_router import router as coordination_router
 from .delegate_router import router as delegate_router
 from .discussions_router import router as discussions_router
@@ -77,7 +79,14 @@ from .occupancy_local import resolve_launcher_host_id
 from .ops_router import router as ops_router
 from .opsec_sanitize import opsec_path_sanitizer_middleware
 from .preload import preload_all
-from .product_contribution import OrientSection, ProductContribution, install_providers, load_product, product_file
+from .product_contribution import (
+    PRODUCT_DATA,
+    OrientSection,
+    ProductContribution,
+    install_providers,
+    load_product,
+    product_file,
+)
 from .project_state_router import router as project_state_router
 from .repository_authority import build_repository_authority, cwd_role
 from .resilience import get_resilience_snapshot, resilience_middleware
@@ -926,7 +935,7 @@ def _collect_delegate_orient_data(ctx: MonitorContext | None = None) -> dict:
 def _collect_capacity_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved_ctx = resolve_context(ctx)
     budget = state_api.compute_routing_budget(
-        budget_config_path=resolved_ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+        budget_config_path=machinery_path("config/agent_budgets.yaml"),
         tasks_dir=resolved_ctx.roots.batch_state_dir / "tasks",
         project_root=resolved_ctx.roots.project_root,
         curriculum_root=resolved_ctx.roots.curriculum_root,
@@ -1943,4 +1952,17 @@ def create_app(
     return factory_app
 
 
-app = create_app(production_context())
+# Build the production app at import when its product data is in this checkout.
+# An extracted machinery tree has no product file, so import stays product-free
+# and the first use of app builds it. A missing file still refuses that build.
+_monitor_paths = PRODUCT_ROOT / PRODUCT_DATA
+if not _monitor_paths.is_symlink() and _monitor_paths.is_file():
+    app = create_app(production_context())
+else:
+
+    def __getattr__(name: str) -> Any:
+        if name != "app":
+            raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+        application = create_app(production_context())
+        globals()["app"] = application
+        return application

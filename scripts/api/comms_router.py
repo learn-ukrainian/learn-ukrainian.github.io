@@ -217,7 +217,10 @@ def _run_delivery_expiry_sweep(message_db: "os.PathLike[str]") -> None:
         from scripts.ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
         from scripts.ai_agent_bridge import _db as _ch_db  # noqa: PLC0415 — optional broker bridge
     except Exception:
-        logger.exception("bridge delivery-expiry sweep: scripts.ai_agent_bridge not importable")
+        logger.exception(
+            "bridge delivery-expiry sweep: %s.ai_agent_bridge not importable",
+            Path(__file__).parents[1].name,
+        )
         return
 
     # `_db.get_db()` reads its own module-level DB_PATH, bound once from
@@ -336,13 +339,19 @@ def _append_event_snapshot(activity: dict[str, dict], row, limit: int) -> None:
         )
 
 
+def _bridge_script() -> str:
+    """Checkout-relative identity of the bridge entrypoint."""
+    return f"{Path(__file__).parents[1].name}/ai_agent_bridge/__main__.py"
+
+
 def _add_agent_activity_actions(activity: dict[str, dict]) -> None:
+    bridge = _bridge_script()
     for agent, snapshot in activity.items():
         if snapshot["pending"]:
             snapshot["next_actions"].append(
                 {
                     "kind": "drain_inbox",
-                    "command": (f".venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run {agent} --until-idle"),
+                    "command": (f".venv/bin/python {bridge} inbox run {agent} --until-idle"),
                 }
             )
         processing_threads = {
@@ -356,7 +365,7 @@ def _add_agent_activity_actions(activity: dict[str, dict]) -> None:
                     "kind": "watch_thread",
                     "thread_id": thread_id,
                     "command": (
-                        ".venv/bin/python scripts/ai_agent_bridge/__main__.py "
+                        f".venv/bin/python {bridge} "
                         f"channel watch {thread_id} --follow --event-stream"
                     ),
                 }
