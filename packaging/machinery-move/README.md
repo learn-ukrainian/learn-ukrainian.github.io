@@ -95,7 +95,8 @@ These are reported and never rewritten:
   the word (`scr""ipts`), a backslash before a letter, and run-time pieces taken as empty (`$X`,
   `${X}`, `$(…)`, backticks, `{{ … }}`);
 - the root in another case (`Scripts/`);
-- binary or non-UTF-8 files that may name `scripts`, and symlinks whose target names it.
+- binary or non-UTF-8 files that may name `scripts` (also as UTF-16), compressed archives (gzip, bzip2,
+  xz, zip) whose contents name it, and symlinks whose target names it.
 
 A module name must be exact. A package whose `__main__` has the other owner is reported, because
 `-m` runs that file.

@@ -8,6 +8,7 @@ rewritten exactly or left unchanged and reported, never partly rewritten.
 
 from __future__ import annotations
 
+import gzip
 import importlib.util
 import json
 import sys
@@ -1164,3 +1165,32 @@ def test_python_identifier_that_normalises_to_scripts_holds_the_file(tree: tuple
     assert code == 1
     assert _read(root, "scripts/pipeline/nfkc.py") == source
     assert _kinds(report) == ["unicode_identifier", "held_rewrite"]
+
+
+def test_nonpython_compressed_archives_are_opened_and_reported(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    (root / "fixtures").mkdir()
+    (root / "fixtures" / "baseline.json.gz").write_bytes(gzip.compress(b'{"path": "scripts/dispatch.py"}'))
+    (root / "fixtures" / "other.json.gz").write_bytes(gzip.compress(b'{"path": "docs/x.md"}'))
+    (root / "fixtures" / "utf16.txt").write_bytes("scripts/dispatch.py\n".encode("utf-16"))
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "fixtures")
+
+    assert code == 1
+    assert [(item["kind"], item["path"]) for item in report["unresolved"]] == [
+        ("compressed_file", "fixtures/baseline.json.gz"),
+        ("binary_file", "fixtures/utf16.txt"),
+    ]
+
+
+def test_nonpython_second_hidden_name_on_a_line_is_not_lost(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    text = 'cat scr""ipts/audit/probe_uk_writing_score.py scr""ipts/dispatch.py\n'
+    _add(root, map_path, "scripts/tools/two.sh", M, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "check", "scripts/tools/two.sh")
+
+    assert code == 1
+    assert [(item["kind"], item["before"]) for item in report["unresolved"]] == [
+        ("hidden_reference", "scripts/dispatch.py")
+    ]

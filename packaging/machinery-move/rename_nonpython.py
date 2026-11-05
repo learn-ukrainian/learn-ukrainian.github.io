@@ -12,10 +12,15 @@ from __future__ import annotations
 
 import argparse
 import bisect
+import bz2
+import gzip
 import importlib.util
+import io
+import lzma
 import os
 import re
 import sys
+import zipfile
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from fnmatch import fnmatchcase
@@ -89,7 +94,9 @@ HIDING = re.compile(
 QUOTED_PIECE = re.compile(r"(?<=\S)([\"'])[^\"'\s]*\1|([\"'])[^\"'\s]*\2(?=\S)")
 HIDDEN_WORD = re.compile(r"(?:(?<![A-Za-z0-9_])|(?<=-m))(?i:scripts)(?![A-Za-z0-9_])")
 ANY_CASE = re.compile(r"(?i)scripts")
-ANY_BYTES_CASE = re.compile(rb"(?i)scripts")
+# The name in bytes: in any case, or as UTF-16 text (little or big endian).
+ANY_BYTES_CASE = re.compile(rb"(?i)scripts|s\0c\0r\0i\0p\0t\0s|\0s\0c\0r\0i\0p\0t\0s")
+MAX_UNPACKED = 64 * 1024 * 1024
 DIGEST_FIELD = re.compile(
     r"(?i)(?:sha256|sha1|sha512|digest|fingerprint|checksum|hash)[\"']?\s*[:=]\s*[\"']?[0-9a-f]{40,}"
 )
@@ -683,10 +690,10 @@ def hidden_references(ownership: OwnershipMap, rel: str, text: str, view: Joined
         line = text.count("\n", 0, view.source_offset(match.start())) + 1
         if line in seen:
             continue
-        seen.add(line)
         tail = view.text[match.start() : match.start() + 200].split(None, 1)[0]
         mentions = [ref for ref in rp.text_references(ownership, tail.lower()) if ref.target != PRODUCT]
         if mentions:
+            seen.add(line)
             report.unresolved.append(
                 Finding(
                     rel,
@@ -835,10 +842,10 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
                 raise UnicodeDecodeError("utf-8", data, 0, 1, "binary")
             text = data.decode("utf-8")
         except UnicodeDecodeError:
-            if ANY_BYTES_CASE.search(data):  # text escapes mean nothing in a binary file; the name itself does
+            kind, detail = binary_verdict(data)
+            if kind:
                 skipped_binary += 1
-                detail = "binary or not UTF-8; no rewrite rule; inspect it by hand"
-                report.unresolved.append(Finding(rel, 1, "binary_file", rel, detail=detail, target="unknown"))
+                report.unresolved.append(Finding(rel, 1, kind, rel, detail=detail, target="unknown"))
             continue
         report.files_scanned += 1
         file_report = Report(report.tool, report.mode, report.map_sha256)
@@ -861,6 +868,40 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
     report.notes.append(f"skipped files over {MAX_BYTES} bytes: {skipped_large}")
     report.notes.append(f"skipped files that rename_structured.py owns: {skipped_structured}")
     return report
+
+
+def _unpacked(data: bytes) -> list[bytes] | None:
+    """The members of a gzip, bzip2, xz or zip file, bounded in size; None when it is none of these."""
+
+    try:
+        if data.startswith(b"\x1f\x8b"):
+            return [gzip.GzipFile(fileobj=io.BytesIO(data)).read(MAX_UNPACKED)]
+        if data.startswith(b"BZh"):
+            return [bz2.BZ2Decompressor().decompress(data, MAX_UNPACKED)]
+        if data.startswith(b"\xfd7zXZ\x00"):
+            return [lzma.LZMADecompressor().decompress(data, MAX_UNPACKED)]
+        if data.startswith(b"PK\x03\x04"):
+            with zipfile.ZipFile(io.BytesIO(data)) as archive:
+                return [archive.open(info).read(MAX_UNPACKED) for info in archive.infolist()]
+    except Exception:  # a damaged archive is listed whole
+        return [b"scripts"]
+    return None
+
+
+def binary_verdict(data: bytes) -> tuple[str, str]:
+    """(kind, detail) for a file that is not UTF-8 text, or ("", "") when it cannot name scripts.
+
+    Text escapes mean nothing in a binary file; the name itself does, also inside a compressed archive.
+    """
+
+    members = _unpacked(data)
+    if members is not None:
+        if any(ANY_BYTES_CASE.search(member) for member in members):
+            return "compressed_file", "a compressed archive whose contents may name scripts; inspect it by hand"
+        return "", ""
+    if ANY_BYTES_CASE.search(data):
+        return "binary_file", "binary or not UTF-8; no rewrite rule; inspect it by hand"
+    return "", ""
 
 
 def symlink_findings(root: Path, targets: Sequence[str]) -> list[Finding]:
