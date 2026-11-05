@@ -38,11 +38,10 @@ from typing import NamedTuple
 
 from scripts.ci._location import checkout_relative, module_name
 from scripts.ci.test_source_cache import parse_test_source, read_test_source
-from scripts.common.repo_root import machinery_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 _ALLOWLIST_REL = checkout_relative("ci", "subprocess_timeout_allowlist.txt")
-_PACKAGE_NAME = machinery_root().name
+_PACKAGE_NAME = Path(__file__).parents[1].name
 BOUNDED_FUNCS = frozenset({"run", "check_output", "call", "check_call"})
 SHAPE_HASH_HEX_LEN = 16
 ALLOWLIST_KEY_PARTS = 4

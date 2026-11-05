@@ -59,12 +59,6 @@ except ImportError:
     from common.test_thread_caps import apply as apply_thread_caps
 
 
-try:
-    from scripts.common.repo_root import machinery_root
-except ImportError:
-    from common.repo_root import machinery_root  # type: ignore[no-redef]
-
-
 DISPATCH_TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 LOCK_ENV = "LU_PYTEST_FULL_SUITE_LOCK"
 MAX_PROCESSES = 2
@@ -87,7 +81,8 @@ _NO_TEST_OPTIONS = ("help", "version", "markers")
 # ``--fixtures`` and ``--fixtures-per-test`` start workers when ``-n`` / ``--tx`` ask
 # for them. A serial invocation of either still executes no test and must not queue.
 _FIXTURE_OPTIONS = ("showfixtures", "show_fixtures_per_test")
-GOVERNED_PYTEST = f".venv/bin/python -m {machinery_root().name}.common.test_slots run -- .venv/bin/python -m pytest ..."
+_PACKAGE_NAME = Path(__file__).parents[1].name
+GOVERNED_PYTEST = f".venv/bin/python -m {_PACKAGE_NAME}.common.test_slots run -- .venv/bin/python -m pytest ..."
 
 _lock_fd: int | None = None
 

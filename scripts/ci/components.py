@@ -28,12 +28,12 @@ from scripts.ci import deploy_paths, frontend_change_scope
 from scripts.ci._location import checkout_relative, module_name
 from scripts.ci.junit_results import parse_junit
 from scripts.common.jsonl import jsonl_lines
-from scripts.common.repo_root import machinery_root, project_interpreter
+from scripts.common.repo_root import project_interpreter
 from scripts.storage.test_baseline import nodeid_to_junit_id
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / checkout_relative("ci", "components.json")
-_PACKAGE_NAME = machinery_root().name
+_PACKAGE_NAME = Path(__file__).parents[1].name
 _PACKAGE_PREFIX = f"{_PACKAGE_NAME}."
 NODE_IDS = (
     "open-model-data", "atlas-data", "atlas-frontend", "practice-frontend",

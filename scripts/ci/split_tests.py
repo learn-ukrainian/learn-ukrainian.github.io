@@ -63,32 +63,16 @@ from xml.etree import ElementTree
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci._location import checkout_relative, module_name
 from scripts.common import github_client
 
-# Duration refresh checks this file out without scripts/common/repo_root.py, so
-# these paths come from this file's own directory.
-_PACKAGE_DIR = Path(__file__).resolve().parents[1]
-
-
-def _module_name() -> str:
-    top = _PACKAGE_DIR.name
-    spec = __spec__
-    if spec is not None and spec.name and spec.name != "__main__":
-        name = spec.name
-        if name == top or name.startswith(f"{top}."):
-            return name
-        return f"{top}.{name}"
-    relative = Path(__file__).resolve().relative_to(_PACKAGE_DIR).with_suffix("")
-    parts = [top, *relative.parts]
-    if parts[-1] == "__init__":
-        parts.pop()
-    return ".".join(parts)
-
-
+# Duration refresh checks this file out without scripts/common/repo_root.py.
+# _location derives the package name from its own unresolved path and imports
+# nothing from that module.
 DEFAULT_DURATIONS = Path(__file__).with_name("pytest-file-durations.json")
 # Repo-relative path the workflow passes to ``split``. It names DEFAULT_DURATIONS
 # without putting a runner path in the job log.
-COMMITTED_DURATION_PATH = Path(_PACKAGE_DIR.name, "ci", "pytest-file-durations.json")
+COMMITTED_DURATION_PATH = checkout_relative("ci", "pytest-file-durations.json")
 DEFAULT_HISTORY = Path(__file__).with_name("history-tests.txt")
 HISTORY_SHARD = 1  # ci.yml: the one pytest shard with a full-history checkout
 TIMING_ARTIFACT = "pytest-file-durations"
@@ -385,12 +369,12 @@ def main(argv: list[str] | None = None) -> int:
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=f"""Examples:
-  .venv/bin/python -m {_module_name()} split --shard 1 --of 16 < files.txt
-  .venv/bin/python -m {_module_name()} durations junit/*.xml > durations.json
-  .venv/bin/python -m {_module_name()} durations --shards ci-artifacts/shards > durations.json
-  .venv/bin/python -m {_module_name()} refresh --repo owner/repo --output snapshot.json
-  .venv/bin/python -m {_module_name()} validate snapshot.json
-  .venv/bin/python -m {_module_name()} duration-source --refresh-result success --snapshot ci-artifacts/pytest-file-durations.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} split --shard 1 --of 16 < files.txt
+  .venv/bin/python -m {module_name(__spec__, __file__)} durations junit/*.xml > durations.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} durations --shards ci-artifacts/shards > durations.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} refresh --repo owner/repo --output snapshot.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} validate snapshot.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} duration-source --refresh-result success --snapshot ci-artifacts/pytest-file-durations.json
 Outputs: file paths or timing JSON on stdout; refresh writes one immutable timing snapshot.
 duration-source prints the weights path every shard must use, or ``snapshot`` / ``committed`` with ``--decide``.
 Exit codes: 0 = success (including refresh fallback and a committed duration source); 1 = invalid data, or the refresh job succeeded and the shared snapshot is missing or invalid; 2 = CLI usage error.

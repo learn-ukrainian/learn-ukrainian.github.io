@@ -119,7 +119,7 @@ def _packaged_script(name: str) -> str:
     The coverage-ref workflow copies this file out of the checkout and runs that
     copy. A copy's parent is not ``ci``, so help names the file alone.
     """
-    here = Path(__file__).resolve()
+    here = Path(__file__)
     if here.parent.name != "ci":
         return name
     return f"{here.parents[1].name}/ci/{name}"

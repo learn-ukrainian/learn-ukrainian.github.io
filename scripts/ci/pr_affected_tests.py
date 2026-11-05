@@ -19,8 +19,8 @@ from pathlib import Path, PurePosixPath
 from scripts.ci.gate import event_tier
 
 # This file is copied alone into a fixture checkout, so its paths come from
-# the directory that contains it (the same directory machinery_root() names).
-_PACKAGE_DIR = Path(__file__).resolve().parents[1]
+# this file's own directory, with symlinks left unresolved.
+_PACKAGE_DIR = Path(__file__).parents[1]
 
 
 def _checkout_relative(*parts: str) -> Path:
@@ -35,7 +35,7 @@ def _module_name() -> str:
         if name == top or name.startswith(f"{top}."):
             return name
         return f"{top}.{name}"
-    relative = Path(__file__).resolve().relative_to(_PACKAGE_DIR).with_suffix("")
+    relative = Path(__file__).relative_to(_PACKAGE_DIR).with_suffix("")
     parts = [top, *relative.parts]
     if parts[-1] == "__init__":
         parts.pop()
