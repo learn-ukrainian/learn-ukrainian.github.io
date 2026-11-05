@@ -23,8 +23,11 @@ _REPO_ROOT = str(Path(__file__).resolve().parents[2])
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, REVIEW_LADDERS, ResolverInputs, evaluate_candidate
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
 
 AUTHOR_FAMILIES = (
     "anthropic",
@@ -132,8 +135,8 @@ def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] |
     if __spec__ is not None:
         entry, closeout = f"-m {__spec__.name}", f"{__spec__.parent}.closeout_cli"
     else:
-        entry, closeout = os.fspath(__file__), os.fspath(machinery_path("review/closeout_cli.py"))
-    catalog = machinery_path("config/model_catalog.yaml").relative_to(machinery_root().parent).as_posix()
+        entry, closeout = os.fspath(__file__), os.fspath(Path(__file__).with_name("closeout_cli.py"))
+    catalog = f"{_MACHINERY}/config/model_catalog.yaml"
     parser = argparse.ArgumentParser(
         description=(
             "Count formal reviewers eligible for automatic routing across author families.\n"

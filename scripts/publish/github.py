@@ -24,22 +24,17 @@ from urllib.parse import quote
 import yaml
 
 from scripts.common import github_client
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails.worktree_containment import NotAGitRepositoryError, resolve_main_root_without_git
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
 
-
-def _checkout_relative(relative: str) -> str:
-    """The checkout-relative name of machinery file ``relative``, as refusals and help text show it."""
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
-
-
-# The repository registry and the verdict recorder, named wherever the machinery package is.
-_FLEET_REPOS = _checkout_relative("config/fleet_repos.yaml")
-_RECORDER = _checkout_relative("review/record_cf_verdict.py")
+# The repository registry and the verdict recorder, by their checkout-relative paths. Those
+# start with the machinery package's import name, the directory checkout paths use.
+_MACHINERY = __name__.partition(".")[0]
+_FLEET_REPOS = f"{_MACHINERY}/config/fleet_repos.yaml"
+_RECORDER = f"{_MACHINERY}/review/record_cf_verdict.py"
 # This publisher's import name, as ``python -m`` runs it.
 _PUBLISHER = __package__
 

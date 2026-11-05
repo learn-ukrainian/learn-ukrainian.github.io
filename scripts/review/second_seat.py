@@ -36,7 +36,6 @@ except ModuleNotFoundError as exc:
 
 import yaml
 
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.review import findings_db
 from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_author_family
 
@@ -249,7 +248,10 @@ def record_agreement(
 def build_parser() -> argparse.ArgumentParser:
     # Named as it was started: by its import name under ``-m``, else by its file.
     entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
-    parameters = machinery_path("config/review_parameters.yaml").relative_to(machinery_root().parent).as_posix()
+    # Its parameters file by checkout path: the package's import name (its unresolved directory
+    # when run as a file) is the directory checkout paths use.
+    package = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+    parameters = f"{package}/config/review_parameters.yaml"
     parser = argparse.ArgumentParser(
         prog=f"python {entry}",
         formatter_class=argparse.RawDescriptionHelpFormatter,

@@ -12,13 +12,14 @@ from collections.abc import Iterable
 from fnmatch import fnmatchcase
 from pathlib import Path
 
-from scripts.common.repo_root import machinery_root
 from scripts.review.target_resolution import TargetResolutionError, _run_git
 
 # Machinery files are matched by their checkout-relative paths, which start with the
-# machinery package's directory whatever it is called. The literal ``scripts/`` entries
-# are product-repository files and stay where they are.
-_MACHINERY = machinery_root().name
+# machinery package's import name: the directory Git, owned paths and the catalog name,
+# taken from this module's name rather than the resolved package directory, so a symlinked
+# package keeps its checkout name. The literal ``scripts/`` entries are product-repository
+# files and stay where they are.
+_MACHINERY = __name__.partition(".")[0]
 
 SECURITY_SENSITIVE_PATHS = (
     ".githooks/**",

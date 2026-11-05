@@ -46,7 +46,6 @@ from scripts.agent_runtime.bounded_advisory import (
     fenced_object,
     load_sealed_result,
 )
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.opsec.prepublish import normalize_repository
 from scripts.orchestration.integration_sweep import REJECTED, REPLY_CLOSER, REPLY_OPENER, lookup_verdict
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
@@ -61,8 +60,9 @@ from scripts.review.verdict_parser import (
     structured_finding_entries,
 )
 
-# This module's checkout-relative path, for its help text.
-_THIS_FILE = machinery_path("review/budget_grant.py").relative_to(machinery_root().parent).as_posix()
+# This module's checkout-relative path, for its help text: its package's import name is the
+# directory checkout paths use.
+_THIS_FILE = f"{__name__.partition('.')[0]}/review/budget_grant.py"
 # The CTO seat's stable Fleet Comms identity; session-specific slots are not issuers.
 ISSUERS = frozenset({"claude-cto"})
 # The change classes review-loop references/policy.md § Budget elevates.

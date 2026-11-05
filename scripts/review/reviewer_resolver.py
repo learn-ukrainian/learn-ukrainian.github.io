@@ -40,7 +40,6 @@ from typing import Literal
 
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.fleet import credit_lane
 from scripts.fleet.claude_account_lane import ClaudeAccount, bind_snapshot, require_account
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT
@@ -61,8 +60,9 @@ from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclu
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
 # Native AGY and Muse reviews run through the dispatcher, which the catalog names by its
-# checkout-relative path: that path, wherever the machinery package is and whatever it is called.
-_NATIVE_REVIEW_EXECUTABLE = machinery_path("dispatch.py").relative_to(machinery_root().parent).as_posix()
+# checkout-relative path. Its first component is the machinery package's import name, not
+# the resolved package directory, so a symlinked package keeps its checkout name.
+_NATIVE_REVIEW_EXECUTABLE = f"{__name__.partition('.')[0]}/dispatch.py"
 
 
 def normalize_review_task_id(task_id: str, *, agent: str = "") -> str:

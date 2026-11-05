@@ -29,7 +29,6 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.git_context import sanitized_git_env
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.fleet import claude_account_lane, credit_lane
 from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
@@ -908,13 +907,18 @@ def _cmd_behavior_proof_receipt(args: argparse.Namespace) -> int:
     return 0
 
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+
+
 def _checkout_relative(relative: str) -> str:
     """The checkout-relative name of machinery file ``relative``, as help text shows it."""
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+    return f"{_MACHINERY}/{relative}"
 
 
 # Help-text names: this CLI as it was started (its import name under ``-m``, else its file),
-# and machinery files wherever the machinery package is and whatever it is called.
+# and machinery files by their checkout-relative paths.
 _ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
 _EXAMPLE_OWNED_PATH = _checkout_relative("agent_runtime/adapters/grok_build.py")
 _RESOLVER_FILE = _checkout_relative("review/reviewer_resolver.py")

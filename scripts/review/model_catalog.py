@@ -1565,12 +1565,14 @@ def resolve_glm_model(model: str, catalog: dict[str, Any] | None = None) -> tupl
 
 
 def _checkout_relative(relative: str) -> str:
-    """The checkout-relative name of machinery file ``relative``, wherever the package is.
+    """The checkout-relative name of machinery file ``relative``.
 
-    The package directory is found from this file, as ``repo_root.machinery_root`` finds it:
-    launchers and standalone catalog copies run this module without ``common/``.
+    It starts with the package's import name, the directory checkout paths use (its unresolved
+    directory when run as a file). This module does not import ``repo_root``: launchers and
+    standalone catalog copies run it without ``common/``.
     """
-    return (Path(__file__).resolve().parents[1] / relative).relative_to(PROJECT_ROOT).as_posix()
+    package = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+    return f"{package}/{relative}"
 
 
 def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
