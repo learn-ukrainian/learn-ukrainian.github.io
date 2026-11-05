@@ -918,3 +918,122 @@ def test_structured_schema_mismatch_changes_nothing(tree: tuple[Path, Path]) -> 
     assert code == 1
     assert _read(root, "scripts/lint/mypy_baseline.json") == text
     assert _kinds(report) == ["schema_mismatch"]
+
+
+# -- PR 12764 review round 1 ----------------------------------------------------------
+
+
+def test_r1_f1_structured_file_behind_a_directory_symlink_is_not_written(tmp_path: Path) -> None:
+    root = tmp_path / "clone"
+    outside = tmp_path / "outside"
+    (outside / "lint").mkdir(parents=True)
+    root.mkdir()
+    text = _baseline([{"path": "scripts/dispatch.py", "code": "index", "message": "x"}])
+    (outside / "lint" / "mypy_baseline.json").write_text(text, encoding="utf-8")
+    (root / "scripts").symlink_to(outside, target_is_directory=True)
+    map_path = tmp_path / "ownership.json"
+    map_path.write_text(json.dumps({"scripts/dispatch.py": M, "scripts/lint/mypy_baseline.json": M}), encoding="utf-8")
+
+    code, report = _run(rename_structured, map_path, root, "apply")
+
+    assert code == 1
+    assert _kinds(report) == ["symlinked_path"]
+    assert (outside / "lint" / "mypy_baseline.json").read_text(encoding="utf-8") == text
+
+
+@pytest.mark.parametrize(
+    ("source", "kinds"),
+    [
+        # ``scripts`` aliases the product package: ``scripts.dispatch`` is its attribute, not the machinery module.
+        ("import scripts.audit as scripts\nimport lu_machinery.dispatcher.primary\nresult = scripts.dispatch()\n", []),
+        ("from scripts import audit as scripts\nresult = scripts.dispatch()\n", []),
+        # An alias of a machinery package that reaches a product submodule breaks when the import is renamed.
+        ("import scripts.review as review\nreview.prompts.load()\n", ["alias_crosses_owner", "held_rewrite"]),
+        ("from scripts import review\nreview.prompts.load()\n", ["alias_crosses_owner", "held_rewrite"]),
+    ],
+)
+def test_r1_f2_attribute_chains_follow_their_real_binding(
+    tree: tuple[Path, Path], source: str, kinds: list[str]
+) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/pipeline/alias.py", P, source)
+
+    _code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/alias.py")
+
+    assert _read(root, "scripts/pipeline/alias.py") == source
+    assert _kinds(report) == kinds
+
+
+@pytest.mark.parametrize(
+    ("rel", "text", "kind"),
+    [
+        ("config/escaped.json", '{"x": "\\u0073cripts.dispatcher.primary"}\n', "escaped_reference"),
+        ("config/escaped.json", '{"x": "scr\\u0069pts/dispatch.py"}\n', "escaped_reference"),
+        ("launchd/escaped.plist", "<string>scr&#105;pts/dispatch.py</string>\n", "escaped_reference"),
+        (
+            "config/escaped.json",
+            '{"p": ["scripts/dispatch.py"], "s\\u0068a256": "' + "a" * 64 + '"}\n',
+            "digest_bound_file",
+        ),
+        ("scripts/tools/case.sh", "cat Scripts/dispatch.py\n", "case_variant"),
+    ],
+)
+def test_r1_f3_escaped_and_case_variant_names_are_reported(
+    tree: tuple[Path, Path], rel: str, text: str, kind: str
+) -> None:
+    root, map_path = tree
+    _add(root, map_path, rel, M if rel.startswith("scripts/") else P, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", rel)
+
+    assert code == 1
+    assert _read(root, rel) == text
+    assert _kinds(report) == [kind]
+
+
+def test_r1_f4_expanding_operations_are_bounded_before_they_run(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = (
+        'A = ("a" * 1000 * 1000).replace("a", "b" * 1000 * 1000) + "scripts.dispatcher.primary"\n'
+        'B = ("b" * 1000).join(["a"] * 1000 * 1000) + "scripts.dispatcher.primary"\n'
+        'C = ("x" * 1000).translate({120: "y" * 10000}) + "scripts.dispatcher.primary"\n'
+    )
+    _add(root, map_path, "scripts/pipeline/large.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/large.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/large.py") == source
+    assert _kinds(report) == ["computed_string", "computed_string", "computed_string"]
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        'def f(): "scripts.dispatcher.primary"\n',
+        'class C: "scripts.dispatcher.primary"\n',
+        '"scripts.dispatcher.primary"; x = 1\n',
+        'def f():\n    "scripts.dispatcher.primary"; y = 2\n',
+    ],
+)
+def test_r1_f5_every_docstring_form_is_left_as_written(tree: tuple[Path, Path], source: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/pipeline/doc.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/doc.py")
+
+    assert code == 0
+    assert _read(root, "scripts/pipeline/doc.py") == source
+    assert [item["kind"] for item in report["inventory"]] == ["docstring_mention"]
+
+
+def test_r1_f5_python_comments_are_listed(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = "x = 1  # see scripts.dispatcher.primary\n"
+    _add(root, map_path, "scripts/pipeline/comment.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/comment.py")
+
+    assert code == 0
+    assert _read(root, "scripts/pipeline/comment.py") == source
+    assert [item["kind"] for item in report["inventory"]] == ["comment_mention"]

@@ -13,7 +13,7 @@ is reported. No reference is ever partly rewritten.
 | --- | --- | --- |
 | `rename_python.py` (LibCST), every `*.py` file | `import` and `from … import` statements (qualified, unprefixed and relative; a mixed `from scripts import …` is split by owner); names bound by `import scripts.x`; `import_module`, `run_module` and `__import__` targets; string values that are exactly a machinery module name. | Every other string that may hold a `scripts` name or path, computed or relative loader targets, ambiguous owners, unknown modules, map gaps, and unprefixed imports whose target cannot be pinned down. |
 | `rename_nonpython.py`, every other text file | A `scripts.<module>` name or `scripts/<path>` that is a complete plain token, in shell scripts, hooks, systemd and launchd units, configuration files, JSON and Markdown code. | Every other `scripts` name or path. |
-| `rename_structured.py`, the files it knows | The path fields of `scripts/lint/mypy_baseline.json`. | Machinery names in messages, unmapped paths, and any file that does not match its schema. |
+| `rename_structured.py`, the files it knows | The path fields of `scripts/lint/mypy_baseline.json`. | Machinery names in messages, unmapped paths, a file reached through a symlink, and any file that does not match its schema. |
 
 Comments, docstrings and Markdown prose are never changed. Machinery mentions in them are
 listed in the inventory. Each tool's `--help` lists its rules.
@@ -45,9 +45,14 @@ is the receiver of a method or subscript, or is an argument of a `str` method or
 Elsewhere it is a whole value, for example an assignment, an argument of another call, a
 comparison or an index.
 
-A file is left unchanged when its rewrites depend on one another through the `scripts`
-binding: a bare use of the package, a rebound name or a missing binding. Each of its rewrites
-is then reported as `held_rewrite`.
+An attribute chain follows its real binding. `import scripts.x` binds `scripts`, so
+`scripts.x.f` is renamed with the import. An alias (`import scripts.x as a`,
+`from scripts import x`) keeps its name, so `a.f` needs no change, unless `a.y` reaches a
+submodule of the other owner.
+
+A file is left unchanged when its rewrites depend on one another through a binding: a bare
+use of the package, a rebound name, a missing binding, or an alias that reaches the other
+owner. Each of its rewrites is then reported as `held_rewrite`.
 
 ## Plain tokens outside Python
 
@@ -74,7 +79,8 @@ These are reported and never rewritten:
   types;
 - `cd`, `pushd`, `-C`, `WorkingDirectory=`, `WORKDIR`, `working-directory:` and `cwd:` targets
   under `scripts/`;
-- the `scripts/` root itself, and unknown or mixed-owner names.
+- the `scripts/` root itself, and unknown or mixed-owner names;
+- names spelled with escapes (`\u0073`, `&#115;`, `%73`), and the root in another case (`Scripts/`).
 
 A module name must be exact. A package whose `__main__` has the other owner is reported, because
 `-m` runs that file.

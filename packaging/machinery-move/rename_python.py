@@ -324,14 +324,22 @@ def _code(node: cst.CSTNode) -> str:
 
 
 def _docstring_expr(body: Sequence[cst.CSTNode]) -> cst.CSTNode | None:
+    """The docstring of a module, class or function body: its first statement, if that is a str literal.
+
+    The first small statement counts even when others follow it on the line (``"doc"; x = 1``), and in a
+    one-line suite (``def f(): "doc"``).
+    """
+
     if not body:
         return None
     first = body[0]
-    if isinstance(first, cst.SimpleStatementLine) and len(first.body) == 1:
-        expr = first.body[0]
-        if isinstance(expr, cst.Expr) and isinstance(expr.value, (cst.SimpleString, cst.ConcatenatedString)):
-            return expr.value
-    return None
+    expr = first.body[0] if isinstance(first, cst.SimpleStatementLine) and first.body else first
+    if not (isinstance(expr, cst.Expr) and isinstance(expr.value, (cst.SimpleString, cst.ConcatenatedString))):
+        return None
+    try:
+        return expr.value if isinstance(static_value(expr.value), str) else None  # a bytes literal is no docstring
+    except (NotStatic, StaticError):
+        return None
 
 
 class MachineryRenameCommand(VisitorBasedCodemodCommand):
@@ -473,10 +481,29 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         self._collect_string_roots(node)
 
     def visit_ClassDef(self, node: cst.ClassDef) -> None:
-        self._mark_docstring(node.body.body if isinstance(node.body, cst.IndentedBlock) else ())
+        self._mark_docstring(node.body.body)  # an indented block's statements, or a one-line suite's
 
     def visit_FunctionDef(self, node: cst.FunctionDef) -> None:
-        self._mark_docstring(node.body.body if isinstance(node.body, cst.IndentedBlock) else ())
+        self._mark_docstring(node.body.body)
+
+    def visit_Comment(self, node: cst.Comment) -> None:
+        """Comments are never changed; a machinery or unknown name in one is listed in the inventory."""
+
+        if WORD not in node.value.lower():
+            return
+        mentions = [ref for ref in text_references(self.ownership, node.value) if ref.target != PRODUCT]
+        if mentions:
+            shown = ", ".join(ref.text for ref in mentions)
+            self.inventory.append(
+                Finding(
+                    self.rel_path,
+                    self._line(node),
+                    "comment_mention",
+                    node.value[:160],
+                    detail=f"left as written: {shown}",
+                    target=worst_target(mentions),
+                )
+            )
 
     def _mark_docstring(self, body: Sequence[cst.CSTNode]) -> None:
         doc = _docstring_expr(body)
@@ -829,16 +856,22 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         root = original_node
         while isinstance(root, cst.Attribute):
             root = root.value
-        if not (isinstance(root, cst.Name) and root.value == OLD_ROOT):
+        if not isinstance(root, cst.Name):
             return updated_node
         qualified = self.get_metadata(QualifiedNameProvider, original_node, set())
-        sources = {q.source for q in qualified}
-        if not qualified or QualifiedNameSource.IMPORT not in sources:
-            return updated_node  # a local variable called scripts
+        imported = {q.name for q in qualified if q.source == QualifiedNameSource.IMPORT}
+        ours = {name for name in imported if name == OLD_ROOT or name.startswith(OLD_ROOT + ".")}
+        if not ours:
+            return updated_node  # not bound to a scripts module (a local, or another package)
         dotted = get_full_name_for_node(original_node) or ""
-        if sources != {QualifiedNameSource.IMPORT}:
-            self._unresolved(original_node, "rebound_name", dotted, "scripts is bound by an import and by a local")
+        if len(qualified) != 1:
+            detail = f"{root.value} is bound in more than one way here ({', '.join(sorted(q.name for q in qualified))})"
+            self._unresolved(original_node, "rebound_name", dotted, detail)
             return updated_node
+        (name,) = ours
+        if not (root.value == OLD_ROOT and name == dotted):
+            self._check_aliased_chain(original_node, root.value, dotted, name)
+            return updated_node  # the alias keeps its name; the import that binds it is renamed on its own
         resolved = self.ownership.resolve(dotted)
         if resolved is None:
             return updated_node
@@ -853,6 +886,27 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         self._rewrite(original_node, "bound_name", dotted, renamed(dotted))
         return _replace_root(updated_node, NEW_ROOT)
 
+    def _check_aliased_chain(self, node: cst.Attribute, alias: str, dotted: str, qualified: str) -> None:
+        """``import scripts.x as a`` or ``from scripts import x as a``, then ``a.y``.
+
+        Renaming the import keeps ``a``, so the chain still works unless it reaches a module of the
+        other owner (``a.y`` where ``scripts.x.y`` is a submodule of the other side): that is reported.
+        """
+
+        suffix = dotted[len(alias) :]
+        if not qualified.endswith(suffix):
+            self._unresolved(node, "rebound_name", dotted, f"{alias} is bound to {qualified}")
+            return
+        bound = self.ownership.resolve(qualified[: len(qualified) - len(suffix)])
+        reached = self.ownership.resolve(qualified)
+        if bound is None or reached is None:
+            return
+        if AMBIGUOUS in (bound[0].owner, reached[0].owner):
+            self._unresolved(node, "ambiguous_binding", dotted, f"{qualified} has no single owner")
+        elif reached[0].name != bound[0].name and reached[0].owner != bound[0].owner:
+            detail = f"{alias} is {bound[0].name} ({bound[0].owner}), but {qualified} is in {reached[0].name} ({reached[0].owner})"
+            self._unresolved(node, "alias_crosses_owner", dotted, detail)
+
     def leave_Name(self, original_node: cst.Name, updated_node: cst.Name) -> cst.Name:
         """A bare use of the package bound by ``import scripts...`` cannot be resolved statically."""
 
@@ -864,7 +918,7 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         if isinstance(parent, cst.Arg) and parent.keyword is original_node:
             return updated_node
         qualified = self.get_metadata(QualifiedNameProvider, original_node, set())
-        if any(q.source == QualifiedNameSource.IMPORT for q in qualified):
+        if any(q.source == QualifiedNameSource.IMPORT and q.name == OLD_ROOT for q in qualified):
             self._unresolved(
                 original_node,
                 "bare_package_use",
@@ -1055,6 +1109,8 @@ MODULE_LITERAL = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
 WORD = "scripts"
 # ``scripts`` as a word: not inside a longer identifier, except right after a glued ``-m``.
 WORD_AT = re.compile(r"(?:(?<![A-Za-z0-9_])|(?<=-m))scripts(?![A-Za-z0-9_])")
+# ``Scripts/x.py`` in another case: the same file on a case-insensitive file system.
+CASE_VARIANT = re.compile(r"(?<![A-Za-z0-9_])(?!scripts)(?i:scripts)(?=/)")
 IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 PATH_CHARS = re.compile(r"[A-Za-z0-9_.\-/]*")
 GLOB_CHARS = frozenset("*?[")
@@ -1123,13 +1179,61 @@ def _guard(value: object) -> object:
     return value
 
 
+def _size(value: object) -> int:
+    """An upper bound on the text a value can put into a result."""
+
+    if isinstance(value, (str, bytes)):
+        return len(value)
+    if isinstance(value, dict):
+        return sum(_size(k) + _size(v) + 4 for k, v in value.items()) + 2
+    if isinstance(value, (list, tuple, set, frozenset)):
+        return sum(_size(v) + 2 for v in value) + 2
+    return len(repr(value))
+
+
+def _result_bound(function: object, args: Sequence[object], kwargs: Mapping[str, object]) -> int:
+    """An upper bound on the size of an operation's result, computed before running it."""
+
+    inputs = sum(_size(v) for v in (*args, *kwargs.values()))
+    method = getattr(function, "__name__", "")
+    receiver = getattr(function, "__self__", None)
+    if function in (operator.add, operator.getitem):
+        return inputs
+    if function is operator.mul:
+        sizes = [_size(a) if isinstance(a, (str, bytes, list, tuple)) else a for a in args]
+        return abs(sizes[0] * sizes[1]) if all(isinstance(n, int) for n in sizes) else inputs  # type: ignore[operator]
+    if function is operator.mod and args and isinstance(args[0], (str, bytes)):
+        template = _text(args[0])
+        return len(template) + 6 * inputs + MAX_EVAL_INT * template.count("%")
+    if not isinstance(receiver, (str, bytes)):
+        return 6 * inputs + MAX_EVAL_INT  # an operator or builtin over guarded inputs
+    size = len(receiver)
+    values = [*args, *kwargs.values()]
+    if method == "replace":
+        new = args[1] if len(args) > 1 else kwargs.get("new", "")
+        return size + (size + 1) * _size(new)
+    if method == "join":
+        items = args[0] if args else ()
+        count = len(items) if isinstance(items, (str, bytes, list, tuple, set, frozenset, dict)) else MAX_EVAL_LEN
+        return inputs + size * count
+    if method == "translate":
+        table = args[0] if args else {}
+        widest = max((_size(v) for v in table.values()), default=1) if isinstance(table, dict) else MAX_EVAL_LEN
+        return size * max(widest, 1)
+    if method == "expandtabs":
+        tab = values[0] if values else 8
+        return size * max(tab if isinstance(tab, int) else MAX_EVAL_LEN, 1)
+    if method in ("format", "format_map"):
+        fields = _text(receiver).count("{")
+        return size + inputs * (fields + 1) + MAX_EVAL_INT * fields
+    return 4 * (size + inputs) + MAX_EVAL_INT  # padding, case changes, encodings, splits
+
+
 def _call_static(function: Callable[..., object], *args: object, **kwargs: object) -> object:
     for value in (*args, *kwargs.values()):
         _guard(value)
-    if function is operator.mul and len(args) == 2:
-        sizes = [len(a) if isinstance(a, (str, bytes, list, tuple)) else a for a in args]
-        if all(isinstance(n, int) for n in sizes) and abs(sizes[0] * sizes[1]) > MAX_EVAL_LEN:  # type: ignore[operator]
-            raise NotStatic
+    if _result_bound(function, args, kwargs) > MAX_EVAL_LEN:
+        raise NotStatic  # the result could be too large to build
     try:
         return _guard(function(*args, **kwargs))
     except NotStatic:
@@ -1214,9 +1318,14 @@ def static_value(node: cst.CSTNode) -> object:
 
 
 def _static_fstring_parts(node: cst.FormattedString, parts: Sequence[cst.BaseFormattedStringContent]) -> Iterator[str]:
+    total = 0
     for part in parts:
+        if total > MAX_EVAL_LEN:
+            raise NotStatic
         if isinstance(part, cst.FormattedStringText):
-            yield _fstring_text(node, part.value)
+            text = _fstring_text(node, part.value)
+            total += len(text)
+            yield text
             continue
         if not isinstance(part, cst.FormattedStringExpression) or part.equal is not None:
             raise NotStatic
@@ -1225,7 +1334,9 @@ def _static_fstring_parts(node: cst.FormattedString, parts: Sequence[cst.BaseFor
         if WIDE_FIELD.search(spec):
             raise NotStatic
         converted = _call_static(CONVERSIONS[part.conversion], value)
-        yield str(_call_static(format, converted, spec))
+        text = str(_call_static(format, converted, spec))
+        total += len(text)
+        yield text
 
 
 def _static_call(node: cst.Call) -> object:
@@ -1242,6 +1353,8 @@ def _static_call(node: cst.Call) -> object:
         else:
             args.append(value)
     if isinstance(node.func, cst.Name) and node.func.value in SAFE_BUILTINS:
+        if node.func.value == "format" and any(isinstance(a, str) and WIDE_FIELD.search(a) for a in args[1:]):
+            raise NotStatic
         return _call_static(SAFE_BUILTINS[node.func.value], *args, **kwargs)
     if not isinstance(node.func, cst.Attribute):
         raise NotStatic
@@ -1360,6 +1473,9 @@ def text_references(ownership: OwnershipMap, text: str) -> list[Reference]:
                 )
         elif stripped in (WORD, WORD + ".", WORD + "/"):
             found.append(Reference(stripped, "root", AMBIGUOUS))
+    for match in CASE_VARIANT.finditer(text):
+        core = PATH_CHARS.match(text, match.end()).group(0)  # type: ignore[union-attr]
+        found.append(Reference(match.group(0) + core, "case_variant", path_target(ownership, WORD + core)))
     return found
 
 
@@ -1482,7 +1598,7 @@ def decide_string(
         )
     forms = {ref.form for ref in references if ref.target != PRODUCT}
     single = len(references) == 1 and texts == [references[0].text]
-    if forms <= {"path", "glob"}:
+    if forms <= {"path", "glob", "case_variant"}:
         kind = "path_string" if single else "path_in_text"
     elif forms == {"root"}:
         kind = "root_reference"
@@ -1643,7 +1759,16 @@ def write_atomically(path: Path, data: bytes) -> None:
 
 Result = tuple[bytes, list[Finding], list[Finding], list[Finding]]
 # Findings that make the other rewrites in the same file unsafe: the file is left unchanged.
-HOLDING_KINDS = frozenset({"bare_package_use", "rebound_name", "binding_missing", "split_not_applied"})
+HOLDING_KINDS = frozenset(
+    {
+        "alias_crosses_owner",
+        "ambiguous_binding",
+        "bare_package_use",
+        "binding_missing",
+        "rebound_name",
+        "split_not_applied",
+    }
+)
 
 
 def rename_source(

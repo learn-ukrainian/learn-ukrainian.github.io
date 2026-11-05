@@ -70,6 +70,13 @@ FENCE = re.compile(r"^\s*(`{3,}|~{3,})")
 INLINE_CODE = re.compile(r"(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 SHELL_FENCE_INFO = frozenset({"bash", "sh", "shell", "zsh", "console", "shell-session", "sh-session", "terminal"})
 # A field that records a digest: the file's paths are bound to it and must not change by text edits.
+# Escapes that can spell a name without its letters appearing: JSON/YAML/TOML/shell, XML entities, URLs.
+ESCAPE = re.compile(
+    r"\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8}|\\x[0-9a-fA-F]{2}|\\[0-7]{1,3}|&#[0-9]{1,7};|&#[xX][0-9a-fA-F]{1,6};|%[0-9a-fA-F]{2}"
+)
+# Files worth reading: the name in any case, or an escape that may spell it.
+PREFILTER = re.compile(rb"(?i)scripts|\\u[0-9a-f]{4}|\\x[0-9a-f]{2}|\\[0-7]|&#|%[0-9a-f]{2}")
+ANY_CASE = re.compile(r"(?i)scripts")
 DIGEST_FIELD = re.compile(
     r"(?i)(?:sha256|sha1|sha512|digest|fingerprint|checksum|hash)[\"']?\s*[:=]\s*[\"']?[0-9a-f]{40,}"
 )
@@ -588,9 +595,75 @@ def markdown_regions(text: str) -> tuple[list[tuple[int, int]], list[tuple[int, 
     return code, shell
 
 
+def _unescape_one(token: str) -> str:
+    try:
+        if token.startswith("&#"):
+            code = int(token[3:-1], 16) if token[2] in "xX" else int(token[2:-1])
+        elif token.startswith("%"):
+            code = int(token[1:], 16)
+        elif token[1] in "uUx":
+            code = int(token[2:], 16)
+        else:
+            code = int(token[1:], 8)
+        return chr(code)
+    except (ValueError, OverflowError):
+        return token
+
+
+def unescaped(text: str) -> str:
+    """The text with every escape in ``ESCAPE`` decoded."""
+
+    return ESCAPE.sub(lambda match: _unescape_one(match.group(0)), text)
+
+
+def hidden_references(ownership: OwnershipMap, rel: str, text: str, report: Report) -> None:
+    """A line whose escapes decode to a ``scripts`` name is reported; escaped text is never rewritten."""
+
+    offset = 0
+    for line in text.splitlines(keepends=True):
+        if ESCAPE.search(line):
+            decoded = unescaped(line)
+            if len(ANY_CASE.findall(decoded)) > len(ANY_CASE.findall(line)):
+                mentions = [ref for ref in rp.text_references(ownership, decoded) if ref.target != PRODUCT]
+                if mentions:
+                    report.unresolved.append(
+                        Finding(
+                            rel,
+                            text.count("\n", 0, offset) + 1,
+                            "escaped_reference",
+                            ", ".join(ref.text for ref in mentions),
+                            detail="spelled with escapes; rename it by hand",
+                            target=rp.worst_target(mentions),
+                        )
+                    )
+        offset += len(line)
+
+
+def case_variants(ownership: OwnershipMap, rel: str, text: str, kind: str, report: Report) -> None:
+    """``Scripts/x.py`` names scripts/x.py on a case-insensitive file system: reported, never rewritten."""
+
+    prose = markdown_regions(text)[0] if kind == MARKDOWN else None
+    for match in rp.CASE_VARIANT.finditer(text):
+        tail = TOKEN_CHARS.match(text, match.end()).group(0)  # type: ignore[union-attr]
+        target = rp.path_target(ownership, OLD_ROOT + tail)
+        if target == PRODUCT:
+            continue
+        finding = Finding(
+            rel,
+            text.count("\n", 0, match.start()) + 1,
+            "case_variant" if prose is None or _in_regions(prose, match.start()) else "prose_mention",
+            match.group(0) + tail,
+            detail="the scripts root in another case",
+            target=target,
+        )
+        (report.unresolved if finding.kind == "case_variant" else report.inventory).append(finding)
+
+
 def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: Report) -> list[Edit]:
     """Rewrite or report every ``scripts`` word in a non-Python text."""
 
+    hidden_references(ownership, rel, text, report)
+    case_variants(ownership, rel, text, kind, report)
     scan = FileScan(ownership, rel, text, kind)
     found = list(occurrences(text))
     if not found:
@@ -603,7 +676,7 @@ def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: R
         scan.json_strings = json_strings(text)
     if scan.shell_regions:
         scan.contexts = ShellLexer(text, scan.shell_regions).contexts([o.start for o in found])
-    digest_bound = kind in (JSON, TEXT) and bool(DIGEST_FIELD.search(text))
+    digest_bound = kind in (JSON, TEXT) and bool(DIGEST_FIELD.search(text) or DIGEST_FIELD.search(unescaped(text)))
     edits: list[Edit] = []
     for occ in found:
         line = text.count("\n", 0, occ.start) + 1
@@ -691,14 +764,14 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
         size = path.stat().st_size
         if size > MAX_BYTES:
             with path.open("rb") as handle:
-                if OLD_ROOT.encode() in handle.read():
+                if PREFILTER.search(handle.read()):
                     report.unresolved.append(
                         Finding(rel, 1, "skipped_large_file", rel, detail=f"{size} bytes; inspect by hand")
                     )
             skipped_large += 1
             continue
         data = path.read_bytes()
-        if OLD_ROOT.encode() not in data:
+        if not PREFILTER.search(data):
             continue
         if b"\0" in data:
             skipped_binary += 1

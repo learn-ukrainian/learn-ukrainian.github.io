@@ -248,7 +248,15 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
             path = root / rel
             if wanted and not any(rel == w or rel.startswith(w + "/") for w in wanted):
                 continue
-            if path.is_symlink() or not path.is_file():
+            if not path.exists() and not path.is_symlink():
+                continue
+            if path.resolve() != root.resolve().joinpath(rel) or not path.is_file():
+                # A symlink on the way (the file or a directory above it) could lead outside --root.
+                report.unresolved.append(
+                    Finding(
+                        rel, 1, "symlinked_path", rel, detail="a symlink on the path; left unchanged", target="unknown"
+                    )
+                )
                 continue
             report.files_scanned += 1
             try:
