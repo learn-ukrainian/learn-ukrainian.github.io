@@ -32,6 +32,11 @@ from scripts.orchestration.curriculum_readiness import (
     module_bundle_state,
 )
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agents_extensions/shared/curriculum-lifecycle/config/coordinator.v1.yaml"
 CONFIG_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/curriculum-lifecycle/schema/coordinator-config.v1.schema.json"
@@ -624,7 +629,7 @@ def compact_status(ledger: Mapping[str, Any]) -> dict[str, Any]:
         "last_event": ledger["history"][-1]["event"],
         "event_count": len(ledger["history"]),
         "resume_command": (
-            ".venv/bin/python scripts/orchestration/curriculum_coordinator.py resume "
+            f".venv/bin/python {_PACKAGE_DIR}/curriculum_coordinator.py resume "
             f"--run-id {shlex.quote(str(ledger['run_id']))} "
             f"--owner {shlex.quote(str(ledger['owner']))}"
         ),

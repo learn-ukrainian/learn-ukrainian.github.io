@@ -121,6 +121,10 @@ from scripts.common import test_slots
 from scripts.orchestration import admission_shadow, pool_headroom, product_policy, task_record_store, worktree_prep
 from scripts.orchestration.dispatch_isolation import slice_usage_clause
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+
 _logger = logging.getLogger(__name__)
 
 WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
@@ -364,7 +368,7 @@ class AdmissionDecision:
             return (
                 f"dispatch admission refused for a {self.mode} worker: {'; '.join(self.failures)}. "
                 "Free space on the .worktrees filesystem (remove settled dispatch worktrees "
-                "with `python -m scripts.orchestration.worktree_claims remove`) and retry; --force-admission cannot override a full disk."
+                f"with `python -m {_PACKAGE}.worktree_claims remove`) and retry; --force-admission cannot override a full disk."
             )
         return (
             f"dispatch admission refused for a {self.mode} worker: {'; '.join(self.failures)}. "
@@ -919,7 +923,7 @@ def maybe_alert_disk(
         ]
         lines.append(
             "Act: remove settled dispatch worktrees with "
-            "`python -m scripts.orchestration.worktree_claims remove` and clear other disk use. "
+            f"`python -m {_PACKAGE}.worktree_claims remove` and clear other disk use. "
             f"Next alert no sooner than {DISK_ALERT_INTERVAL_S / 3600:g} h from now."
         )
         try:

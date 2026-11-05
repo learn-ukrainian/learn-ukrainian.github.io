@@ -13,6 +13,12 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 SCHEMA = "admission-shadow.v1"
 DIRECTORY_ENV = "DISPATCH_PSI_SHADOW_DIR"
 MAX_DAY_BYTES = 16 * 1024 * 1024
@@ -215,9 +221,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Compare one UTC day of admission PSI shadow samples.\nUse after observation; this cannot authorize PSI enforcement.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.admission_shadow --directory <journal-dir> --day 2026-10-20\n"
+        epilog=f"Examples:\n  .venv/bin/python -m {_MODULE} --directory <journal-dir> --day 2026-10-20\n"
         "Outputs: JSON comparison on stdout; reads bounded journals only.\nExit codes: 0 report, 1 unavailable or invalid journal.\n"
-        "Related: #10802; scripts/orchestration/dispatch_admission.py",
+        f"Related: #10802; {_PACKAGE_DIR}/dispatch_admission.py",
     )
     parser.add_argument(
         "--directory", required=True, type=Path, help="Local shadow journal directory, e.g. <journal-dir>."

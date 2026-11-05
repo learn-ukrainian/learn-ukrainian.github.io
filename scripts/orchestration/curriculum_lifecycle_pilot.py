@@ -14,6 +14,7 @@ import sys
 from collections.abc import Mapping, Sequence
 from itertools import pairwise
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 import yaml
@@ -23,15 +24,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.ops.product_entry import load_configured_module
+from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
 from scripts.orchestration import curriculum_readiness, prompt_contracts
 
-READINESS_GATES_PATH = Path(__file__).resolve().parents[1] / "curriculum/readiness_gates.v1.json"
+# The product data file that names the readiness gates module, relative to the product root.
+READINESS_GATES_FILE = Path("scripts/curriculum/readiness_gates.v1.json")
 _GATES_MAX_BYTES = 4096
 
 
-def _gates_module_name(path: Path = READINESS_GATES_PATH) -> str:
-    """Read this checkout's strict, bounded product configuration before startup."""
+def _gates_module_name(path: Path) -> str:
+    """Read the strict, bounded product configuration at ``path``."""
     info = path.lstat()
     if not stat.S_ISREG(info.st_mode):
         raise ImportError("readiness gates configuration must be a regular file, not a symlink")
@@ -75,13 +77,19 @@ def _gates_module_name(path: Path = READINESS_GATES_PATH) -> str:
     return name
 
 
-# Bind at startup, just as the former direct imports did.
-_gates = load_configured_module(_gates_module_name())
+def readiness_gates(*, product_root: Path | None = None) -> ModuleType:
+    """The product's readiness gates module, loaded when the pilot needs it, never at import.
 
-post_build_review = _gates.post_build_review
-base_level = _gates.base_level
-resolve_content_track = _gates.resolve_content_track
-resolve_manifest_module_track = _gates.resolve_manifest_module_track
+    Its name comes from ``READINESS_GATES_FILE`` under ``product_root`` (an absolute path;
+    default: this checkout), read strictly at each call, and the module must come from that
+    root. A missing or invalid configuration raises (``ImportError`` or ``OSError``) and so
+    refuses the operation that asked for the gates.
+    """
+    if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
+        raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
+    root = PROJECT_ROOT if product_root is None else product_root
+    return load_configured_module(_gates_module_name(root / READINESS_GATES_FILE), product_root=product_root)
+
 
 CONTRACT_ROOT = Path("agents_extensions/shared/curriculum-lifecycle")
 DEFAULT_MATRIX_PATH = CONTRACT_ROOT / "config/pilot-matrix.v1.yaml"
@@ -373,7 +381,7 @@ def _validate_matrix_semantics(matrix: Mapping[str, Any], repo_root: Path) -> No
             continue
         track, slug = str(row["selector"]).split("/", 1)
         active_manifest = curriculum_readiness.load_active_manifest(repo_root)
-        resolved_track = resolve_manifest_module_track(track, slug, active_manifest["tracks"])
+        resolved_track = readiness_gates().resolve_manifest_module_track(track, slug, active_manifest["tracks"])
         manifest, modules = curriculum_readiness.manifest_track(active_manifest, resolved_track)
         if slug not in modules:
             raise PilotError(f"pilot target is not active in curriculum manifest: {row['selector']}")
@@ -409,12 +417,13 @@ def load_matrix(*, repo_root: Path = PROJECT_ROOT, matrix_path: Path = DEFAULT_M
 
 def _learner_hashes(matrix: Mapping[str, Any], repo_root: Path) -> dict[str, str]:
     hashes: dict[str, str] = {}
+    gates = readiness_gates()
     selectors = sorted({str(row["selector"]) for row in matrix["rows"] if row["kind"] in {"repository", "historical"}})
     for selector in selectors:
         track, slug = selector.split("/", 1)
         curriculum = repo_root / "curriculum/l2-uk-en"
-        content_track = resolve_content_track(track, slug, curriculum)
-        plan_track = base_level(track, manifest=curriculum / "curriculum.yaml")
+        content_track = gates.resolve_content_track(track, slug, curriculum)
+        plan_track = gates.base_level(track, manifest=curriculum / "curriculum.yaml")
         candidates = [
             Path(f"curriculum/l2-uk-en/plans/{plan_track}/{slug}.yaml"),
             *(Path(f"curriculum/l2-uk-en/{content_track}/{slug}/{name}") for name in LEARNER_BUNDLE_FILES),
@@ -478,6 +487,7 @@ def _post_build_evidence_passes(row: Mapping[str, Any], repo_root: Path) -> bool
         return True
     path = _repo_file(repo_root, str(evidence["path"]))
     value = _read_json(path)
+    post_build_review = readiness_gates().post_build_review
     try:
         post_build_review.validate_result(value, repo_root=repo_root)
         target = post_build_review.resolve_target(str(row["selector"]), repo_root=repo_root)

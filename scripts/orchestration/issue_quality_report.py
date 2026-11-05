@@ -17,10 +17,15 @@ if __package__ in (None, ""):
 
 from scripts.ci import check_issue_task_quality as checker
 from scripts.common import github_client
-from scripts.common.repo_root import project_interpreter
+from scripts.common.repo_root import machinery_path, project_interpreter
 from scripts.orchestration import fleet_repos
 from scripts.orchestration import issue_stream_audit as audit
 from scripts.publish.github import read
+
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
 
 ROOT = Path(__file__).resolve().parents[2]
 LIMIT = 500
@@ -201,7 +206,7 @@ def summarize_repository(
 def build_report() -> dict:
     repos = fleet_repos.load_fleet_repos()
     try:
-        registry = audit.load_registry(ROOT / "scripts/config/issue_streams.yaml", audit_only=True)
+        registry = audit.load_registry(machinery_path("config/issue_streams.yaml"), audit_only=True)
     except (OSError, ValueError):
         registry = {}
     source = subprocess.run(
@@ -275,7 +280,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Prepare daily counts-only issue quality for all fleet repositories.\nUse --publish from the daily timer; default only persists and prints.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.issue_quality_report\n  .venv/bin/python -m scripts.orchestration.issue_quality_report --publish --sender devops\nOutputs: ignored batch_state/reports/issue-quality-report-<UTC date>.json; --publish sends the same bytes on retry.\nComplete conflict-free membership audits atomically refresh shared batch_state/issue_stream_audit.json (3600s freshness).\nExit codes: 0 = persisted/published; 1 = preparation or publication failed; 2 = invalid usage.\nRelated: #10565, #10793, docs/best-practices/task-quality.md.",
+        epilog=f"Examples:\n  .venv/bin/python -m {_MODULE}\n  .venv/bin/python -m {_MODULE} --publish --sender devops\nOutputs: ignored batch_state/reports/issue-quality-report-<UTC date>.json; --publish sends the same bytes on retry.\nComplete conflict-free membership audits atomically refresh shared batch_state/issue_stream_audit.json (3600s freshness).\nExit codes: 0 = persisted/published; 1 = preparation or publication failed; 2 = invalid usage.\nRelated: #10565, #10793, docs/best-practices/task-quality.md.",
     )
     parser.add_argument("--publish", action="store_true", help="Publish persisted payload to epics (default: false)")
     parser.add_argument("--sender", default="devops", help="Fleet Comms sender (default: devops)")

@@ -50,7 +50,7 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
+for _path in (PROJECT_ROOT, Path(__file__).resolve().parents[1]):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
@@ -61,6 +61,13 @@ from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
 from scripts.orchestration.dead_worker_state import task_state_lock
+
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MACHINERY = _PACKAGE.partition(".")[0]
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
 
 ARCHIVE_DIR_NAME = task_record_store.ARCHIVE_DIR_NAME
 NEEDS_FINALIZE = "needs_finalize"
@@ -318,7 +325,7 @@ def collect_repo_facts(slug: str, checkout: Path | None, target: FetchTarget | N
         facts.error = f"no local checkout for repository {slug}"
         return facts
     if target is None:
-        facts.error = f"repository {slug} is not in scripts/config/fleet_repos.yaml"
+        facts.error = f"repository {slug} is not in {_MACHINERY}/config/fleet_repos.yaml"
         return facts
     facts.fetch_error = _fetch_scan_refs(checkout, target)
     if facts.fetch_error is not None:
@@ -1217,11 +1224,11 @@ def restore_archived(tasks_dir: Path, names: Iterable[str], *, apply: bool = Fal
 # CLI
 # ---------------------------------------------------------------------------
 
-_PROG = "python -m scripts.orchestration.stale_task_records"
+_PROG = f"python -m {_MODULE}"
 _RELATED = (
-    "Related: scripts/dispatch.py (current dispatcher),\n"
-    "  scripts/orchestration/worktree_claims.py (claim scan, RELEASED_TASK_STATUSES),\n"
-    "  scripts/orchestration/task_record_store.py (hot/archive layout; which readers see the archive),\n"
+    f"Related: {_MACHINERY}/dispatch.py (current dispatcher),\n"
+    f"  {_PACKAGE_DIR}/worktree_claims.py (claim scan, RELEASED_TASK_STATUSES),\n"
+    f"  {_PACKAGE_DIR}/task_record_store.py (hot/archive layout; which readers see the archive),\n"
     "  batch_state/tasks/report-8625.result (classification report), issue #8625."
 )
 
@@ -1254,10 +1261,10 @@ def _build_parser() -> argparse.ArgumentParser:
             "  restore        Move archived records back into batch_state/tasks/.\n"
             "\n"
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records settle-stale --json\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records settle-stale --apply\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records archive --min-age-days 30 --apply\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records restore review-7393-r3 --apply\n"
+            f"  .venv/bin/python -m {_MODULE} settle-stale --json\n"
+            f"  .venv/bin/python -m {_MODULE} settle-stale --apply\n"
+            f"  .venv/bin/python -m {_MODULE} archive --min-age-days 30 --apply\n"
+            f"  .venv/bin/python -m {_MODULE} restore review-7393-r3 --apply\n"
             "\n"
             "Outputs:\n"
             "  stdout: a summary (or with --json the full report with per-record evidence).\n"
@@ -1307,7 +1314,7 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records settle-stale --json\n"
+            f"  .venv/bin/python -m {_MODULE} settle-stale --json\n"
             "Outputs: repository evidence report; fetch updates only the private scan refs.\n"
             "Exit codes: 0 reported, 2 bad arguments.\n" + _RELATED
         ),
@@ -1343,8 +1350,8 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records archive --json | head -c 1500\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records archive --apply\n"
+            f"  .venv/bin/python -m {_MODULE} archive --json | head -c 1500\n"
+            f"  .venv/bin/python -m {_MODULE} archive --apply\n"
             "\n"
             "Outputs: moves files into <tasks-dir>/archive/ (with --apply only); a clashing name gets\n"
             "a .<stamp>.archived suffix, nothing is overwritten.\n"
@@ -1364,8 +1371,8 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records restore review-7393-r3\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records restore review-7393-r3.json --apply\n"
+            f"  .venv/bin/python -m {_MODULE} restore review-7393-r3\n"
+            f"  .venv/bin/python -m {_MODULE} restore review-7393-r3.json --apply\n"
             "\n"
             "Outputs: moves files from <tasks-dir>/archive/ back (with --apply only).\n"
             "Exit codes: 0 finished, 1 a move failed, 2 bad arguments.\n" + _RELATED
