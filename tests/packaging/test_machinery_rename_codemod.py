@@ -1069,3 +1069,22 @@ def test_nonpython_binary_files_and_symlink_targets_are_reported(tree: tuple[Pat
         ("symlink_target", "bin/dispatch"),
     ]
     assert (root / "assets" / "blob.bin").read_bytes() == b"\0scripts/dispatch.py"
+
+
+def test_try_except_import_fallback_keeps_its_rewrites(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = (
+        "try:\n"
+        "    from scripts.dispatcher.primary import ROUTES\n"
+        "except ImportError:\n"
+        "    from dispatcher.primary import ROUTES\n"
+        "ROUTES.get('x')\n"
+    )
+    _add(root, map_path, "scripts/pipeline/fallback.py", P, source)
+
+    _code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/fallback.py")
+
+    # Without --external-names the unprefixed fallback is reported; the chain on the alias is not.
+    assert _kinds(report) == ["unprefixed_cross_owner"]
+    assert "    from lu_machinery.dispatcher.primary import ROUTES\n" in _read(root, "scripts/pipeline/fallback.py")
+    assert "ROUTES.get('x')\n" in _read(root, "scripts/pipeline/fallback.py")

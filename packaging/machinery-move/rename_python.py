@@ -864,14 +864,16 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         if not ours:
             return updated_node  # not bound to a scripts module (a local, or another package)
         dotted = get_full_name_for_node(original_node) or ""
+        if not (root.value == OLD_ROOT and dotted in ours):
+            # An alias (``import scripts.x as a``, ``from scripts import x``, or the same name imported two
+            # ways in a try/except fallback) keeps its name: each scripts binding is checked on its own.
+            for name in sorted(ours):
+                self._check_aliased_chain(original_node, root.value, dotted, name)
+            return updated_node
         if len(qualified) != 1:
-            detail = f"{root.value} is bound in more than one way here ({', '.join(sorted(q.name for q in qualified))})"
+            detail = f"scripts is bound in more than one way here ({', '.join(sorted(q.name for q in qualified))})"
             self._unresolved(original_node, "rebound_name", dotted, detail)
             return updated_node
-        (name,) = ours
-        if not (root.value == OLD_ROOT and name == dotted):
-            self._check_aliased_chain(original_node, root.value, dotted, name)
-            return updated_node  # the alias keeps its name; the import that binds it is renamed on its own
         resolved = self.ownership.resolve(dotted)
         if resolved is None:
             return updated_node
