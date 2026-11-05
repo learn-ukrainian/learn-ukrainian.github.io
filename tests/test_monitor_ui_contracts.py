@@ -8,6 +8,8 @@ pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[1]
 DASHBOARDS = ROOT / "dashboards"
+# Product pages moved to the product package (Monitor split, C-4687).
+PRODUCT_PAGES = ROOT / "scripts" / "project_api" / "static"
 
 
 def test_orient_hosts_preserve_null_error_and_source_age():
@@ -24,7 +26,7 @@ def test_orient_hosts_preserve_null_error_and_source_age():
 
 
 def test_orient_page_renders_active_discussions_widget():
-    html = (DASHBOARDS / "orient.html").read_text(encoding="utf-8")
+    html = (PRODUCT_PAGES / "orient.html").read_text(encoding="utf-8")
     assert "Active Discussions" in html
     assert "/api/discussions/active" in html
     assert "Promise.allSettled" in html
@@ -40,7 +42,7 @@ def test_orient_page_renders_active_discussions_widget():
 
 def test_launchpad_defers_orient_off_first_paint_promise_all() -> None:
     """Home must not block first paint on ~4–5s /api/orient (#7975 residual)."""
-    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    html = (PRODUCT_PAGES / "index.html").read_text(encoding="utf-8")
     assert "async function loadOrientStat()" in html
     assert "void loadOrientStat();" in html
     assert "safeFetch('/api/orient')" in html
@@ -102,8 +104,8 @@ def test_acp_page_groups_duplicate_fanout_and_keeps_protocol_order():
 
 def test_launchpad_and_progress_avoid_zero_backlog_when_pipeline_versions_unavailable():
     """Missing or timed-out pipeline-versions must not stringify as '0 backlog'."""
-    index_html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
-    progress_html = (DASHBOARDS / "progress.html").read_text(encoding="utf-8")
+    index_html = (PRODUCT_PAGES / "index.html").read_text(encoding="utf-8")
+    progress_html = (PRODUCT_PAGES / "progress.html").read_text(encoding="utf-8")
 
     for html in (index_html, progress_html):
         assert "BACKLOG_PENDING_LABEL = 'backlog pending'" in html
@@ -171,14 +173,14 @@ def test_delegate_detail_pane_projects_observer_safe_task_json() -> None:
 
 def test_orient_failure_path_clears_stranded_loading_skeletons() -> None:
     """A failed /api/orient load must not leave sections promising data forever (#7976)."""
-    html = (DASHBOARDS / "orient.html").read_text(encoding="utf-8")
+    html = (PRODUCT_PAGES / "orient.html").read_text(encoding="utf-8")
     assert "Unavailable — session snapshot failed to load" in html
     assert 'node.textContent.trim() === \'Loading...\'' in html
 
 
 def test_launchpad_hides_api_surfaces_strip_until_populated() -> None:
     """No orphan empty chrome: the contracts note stays hidden until it has content (#7976)."""
-    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    html = (PRODUCT_PAGES / "index.html").read_text(encoding="utf-8")
     assert 'id="api-surfaces" class="contracts-note" hidden' in html
     assert "el.hidden = false;" in html
 
@@ -189,7 +191,7 @@ def test_launchpad_passing_stat_is_honest_when_no_audit_data() -> None:
     Unaudited-only totals (pass=0, fail=0, unaudited=N) must NOT count as
     recorded audits — that state still shows Passing · no audit data.
     """
-    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    html = (PRODUCT_PAGES / "index.html").read_text(encoding="utf-8")
     assert "Passing · no audit data" in html
     assert "acc.fail += stats.fail || 0;" in html
     assert "acc.unaudited += stats.unaudited || 0;" in html

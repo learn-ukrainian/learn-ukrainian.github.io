@@ -106,7 +106,7 @@ assert usage.redact_value is redactor.redact_value
 
 def test_cost_html_hero_never_shows_zero_dollar_when_ledger_empty():
     """renderSummary must not present a $0 week when ledger_empty (#7086)."""
-    html_path = Path(__file__).resolve().parent.parent / "dashboards" / "cost.html"
+    html_path = Path(__file__).resolve().parent.parent / "scripts" / "project_api" / "static" / "cost.html"
     html = html_path.read_text(encoding="utf-8")
     helpers = html[html.index("let activeWindow") : html.index("function renderWindow")]
     script = f"""

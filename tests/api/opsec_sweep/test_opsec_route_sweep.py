@@ -483,6 +483,12 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         dashboards_root,
         dirs_exist_ok=True,
     )
+    # The product pages moved to the product package (C-4687); scan them too.
+    shutil.copytree(
+        Path(__file__).resolve().parents[3] / "scripts" / "project_api" / "static",
+        dashboards_root,
+        dirs_exist_ok=True,
+    )
 
     # The source and the injected seams must both carry the planted canary
     # before any response is considered safe to scan.
