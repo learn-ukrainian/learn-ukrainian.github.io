@@ -241,9 +241,8 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
     report = Report("rename_structured", "apply" if apply else "check", ownership.sha256)
     wanted = {Path(t).as_posix().strip("/") for t in targets}
     for original in sorted(SCHEMAS):
-        candidates = [original]
-        if ownership.files.get(original) == MACHINERY:
-            candidates.append(NEW_ROOT + original[len(OLD_ROOT) :])  # filter-repo may already have moved it
+        # filter-repo may already have moved it, whatever the map says about the file itself
+        candidates = [original, NEW_ROOT + original[len(OLD_ROOT) :]]
         for rel in candidates:
             path = root / rel
             if wanted and not any(rel == w or rel.startswith(w + "/") for w in wanted):

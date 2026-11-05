@@ -45,8 +45,6 @@ AMBIGUOUS, MACHINERY, PRODUCT = rp.AMBIGUOUS, rp.MACHINERY, rp.PRODUCT
 OLD_ROOT, NEW_ROOT = rp.OLD_ROOT, rp.NEW_ROOT
 Finding, OwnershipMap, Report = rp.Finding, rp.OwnershipMap, rp.Report
 
-# ``scripts`` as a word (not inside a longer name), or glued to ``-m``.
-WORD_AT = rp.WORD_AT
 # The characters a plain token may contain after ``scripts``.
 TOKEN_CHARS = re.compile(r"[A-Za-z0-9_.\-/]*")
 # An entry point after a module name: ``scripts.api.main:app``.
@@ -62,18 +60,20 @@ AFTER_OK = frozenset(" \t\n;&|)")  # ``<`` or ``>`` glued on may be a placeholde
 # Closing punctuation that may follow a name in a message without continuing it.
 CLOSING = frozenset(".,:;!?)]}>'\"`")
 HEREDOC = re.compile(
-    r"<<(?!<)(?P<dash>-?)[ \t]*(?:(?P<q>[\"'])(?P<qword>[^\"'\n]+)(?P=q)|\\?(?P<word>[A-Za-z_][A-Za-z0-9_]*))"
+    r"<<(?!<)(?P<dash>-?)[ \t]*(?:(?P<q>[\"'])(?P<qword>[^\"'\n]+)(?P=q)|\\?(?P<word>[^\s;&|<>()\"'`]+))"
 )
 # Commands and settings that change the working directory to the path that follows.
 CWD_BEFORE = re.compile(
     r"(?:(?:^|[\s;&|(`\"'])(?:cd|pushd)(?:\s+-{1,2}[\w-]*)*\s+|WorkingDirectory=|(?:^|\s)WORKDIR\s+|(?:^|\s)-C\s*"
-    r"|(?:^|\s)--(?:directory|cwd|chdir|workdir|working-directory)(?:=|\s+)"
-    r"|(?:^|[\s{,\"'])(?i:cwd|chdir|workdir|working[-_]directory)[\"']?\s*[:=]\s*)[\"']?$"
+    r"|(?:^|\s)--(?:directory|cwd|chdir|workdir|working-directory|prefix)(?:=|\s+)|(?:^|\s)-w\s*"
+    r"|(?:^|[\s{,\"'])(?i:cwd|chdir|workdir|working[-_]dir(?:ectory)?|changedir|rootdir)[\"']?\s*[:=]\s*)[\"']?$"
 )
 INTERPRETER_BEFORE = re.compile(
     r"(?:^|[\s;&|(\"'])(?:\S*python[0-9.]*|\"?\$\{?PY\w*\}?\"?|bash|sh|zsh|exec|source|\.|uv\s+run(?:\s+python[0-9.]*)?)\s+[\"']?$"
 )
 FENCE = re.compile(r"^\s*(`{3,}|~{3,})")
+FROM_IMPORT_AFTER = re.compile(r"[ \t]+import\b")
+INDENTED_CODE = re.compile(r"^(?: {4}|\t)\s*\S")
 INLINE_CODE = re.compile(r"(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 SHELL_FENCE_INFO = frozenset({"bash", "sh", "shell", "zsh", "console", "shell-session", "sh-session", "terminal"})
 # A field that records a digest: the file's paths are bound to it and must not change by text edits.
@@ -92,7 +92,6 @@ HIDING = re.compile(
 # A quoted piece glued to a word: the shell drops its quotes and joins it (``scr""ipts``, ``scr"i"pts``).
 # A lone apostrophe (``script's``) is no quoted piece.
 QUOTED_PIECE = re.compile(r"(?<=\S)([\"'])[^\"'\s]*\1|([\"'])[^\"'\s]*\2(?=\S)")
-HIDDEN_WORD = re.compile(r"(?:(?<![A-Za-z0-9_])|(?<=-m))(?i:scripts)(?![A-Za-z0-9_])")
 ANY_CASE = re.compile(r"(?i)scripts")
 # The name in bytes: in any case, or as UTF-16 text (little or big endian).
 ANY_BYTES_CASE = re.compile(rb"(?i)scripts|s\0c\0r\0i\0p\0t\0s|\0s\0c\0r\0i\0p\0t\0s")
@@ -322,7 +321,7 @@ class Occurrence:
 
 def occurrences(text: str) -> Iterator[Occurrence]:
     covered = -1  # the end of the last token: a ``scripts`` inside it (``scripts/a/scripts/b``) is part of it
-    for match in WORD_AT.finditer(text):
+    for match in rp.word_matches(text):
         start = match.start()
         if start < covered:
             continue
@@ -387,6 +386,7 @@ class FileScan:
     shell_regions: list[tuple[int, int]] = field(default_factory=list)  # where the shell lexer applies
     contexts: dict[int, Context] = field(default_factory=dict)
     json_strings: list[tuple[int, int, str | None]] = field(default_factory=list)
+    comment_regions: list[tuple[int, int]] = field(default_factory=list)  # INI ``;`` lines, Jinja ``{# #}``
 
     @property
     def root_anchored(self) -> bool:
@@ -412,6 +412,8 @@ def judge(scan: FileScan, occ: Occurrence) -> Verdict:
         detail = "a Python file without a .py suffix" if scan.kind == PYTHON else "no rewrite rule for this file type"
         return Verdict("unresolved", "unsupported_file_type", detail, target)
     context = scan.contexts.get(occ.start)
+    if _in_regions(scan.comment_regions, occ.start):
+        context = Context("top", -1, comment=True)
     if context is not None and context.comment:
         if target == PRODUCT:
             return Verdict("keep")
@@ -432,6 +434,9 @@ def judge(scan: FileScan, occ: Occurrence) -> Verdict:
         )
     if target == PRODUCT:
         return Verdict("keep")
+    if form == "module" and FROM_IMPORT_AFTER.match(text, occ.end):
+        # ``from scripts.x import y`` in documentation or a template: y may have the other owner.
+        return Verdict("unresolved", "python_import_in_text", "a Python from-import; split it by hand", target)
     if target == MACHINERY:
         return Verdict("rewrite", "module_name" if form == "module" else "resource_path", target=MACHINERY)
     kinds = {"glob": "glob_path", "path": "unknown_path", "module": "unknown_module"}
@@ -575,6 +580,32 @@ def json_strings(text: str) -> list[tuple[int, int, str | None]]:
         i = j + 1
 
 
+_LINE_STARTS: dict[int, tuple[str, list[int]]] = {}
+
+
+def line_number(text: str, offset: int) -> int:
+    """The 1-based line of ``offset``; line starts are computed once per text."""
+
+    cached = _LINE_STARTS.get(id(text))
+    if cached is None or cached[0] is not text:
+        _LINE_STARTS.clear()
+        cached = (text, [0, *(m.end() for m in re.finditer("\n", text))])
+        _LINE_STARTS[id(text)] = cached
+    return bisect.bisect_right(cached[1], offset)
+
+
+def extra_comment_regions(rel: str, text: str) -> list[tuple[int, int]]:
+    """Comments the shell lexer does not know: ``;`` lines in INI-style files, ``{# … #}`` in Jinja templates."""
+
+    regions: list[tuple[int, int]] = []
+    name = PurePosixPath(rel).name
+    if name.endswith((".ini", ".cfg", ".conf")):
+        regions += [m.span() for m in re.finditer(r"(?m)^[ \t]*;.*$", text)]
+    if name.endswith((".j2", ".jinja", ".html")):
+        regions += [m.span() for m in re.finditer(r"\{#.*?#\}", text, re.S)]
+    return regions
+
+
 def _in_regions(regions: Sequence[tuple[int, int]], position: int) -> bool:
     return any(a <= position < b for a, b in regions)
 
@@ -592,22 +623,36 @@ def markdown_regions(text: str) -> tuple[list[tuple[int, int]], list[tuple[int, 
     fence: str | None = None
     fence_start = 0
     shellish = False
+    previous = ""
+    indented = False
     for line in text.splitlines(keepends=True):
         match = FENCE.match(line)
         if fence is None and match:
+            indented = False
             info = line[match.end() :].strip().split(None, 1)
             fence, fence_start = match.group(1), offset + len(line)
             shellish = (info[0].strip("{}.").lower() if info else "") in SHELL_FENCE_INFO
-        elif fence is not None and match and match.group(1)[0] == fence[0] and len(match.group(1)) >= len(fence):
+        elif (
+            fence is not None
+            and match
+            and match.group(1)[0] == fence[0]
+            and len(match.group(1)) >= len(fence)
+            and not line[match.end() :].strip()  # a closing fence has no info string
+        ):
             code.append((fence_start, offset))
             if shellish:
                 shell.append((fence_start, offset))
             fence = None
+        elif fence is None and INDENTED_CODE.match(line) and (not previous.strip() or indented):
+            code.append((offset, offset + len(line)))  # an indented code block: code in no known language
+            indented = True
         elif fence is None:
+            indented = False
             for m in INLINE_CODE.finditer(line):
                 code.append((offset + m.start(2), offset + m.end(2)))
                 shell.append((offset + m.start(2), offset + m.end(2)))
         offset += len(line)
+        previous = line
     if fence is not None:
         code.append((fence_start, len(text)))
         if shellish:
@@ -630,22 +675,26 @@ def _unescape_one(token: str) -> str:
         return token
 
 
-@dataclass(frozen=True)
+@dataclass
 class JoinedView:
     """A text with every way of splitting or disguising a word undone, and where each part came from."""
 
     text: str
     segments: list[tuple[int, int, int, bool]]  # (start in the view, start in the source, length in the view, verbatim)
+    starts: list[int] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        self.starts[:] = [segment[0] for segment in self.segments]
 
     def source_offset(self, position: int) -> int:
-        index = bisect.bisect_right([segment[0] for segment in self.segments], position) - 1
+        index = bisect.bisect_right(self.starts, position) - 1
         view_start, source_start, _length, verbatim = self.segments[index]
         return source_start + (position - view_start if verbatim else 0)
 
     def verbatim(self, start: int, end: int) -> bool:
         """Whether ``[start, end)`` of the view is copied unchanged from one stretch of the source."""
 
-        index = bisect.bisect_right([segment[0] for segment in self.segments], start) - 1
+        index = bisect.bisect_right(self.starts, start) - 1
         view_start, _source, length, verbatim = self.segments[index]
         return verbatim and end <= view_start + length
 
@@ -684,10 +733,10 @@ def hidden_references(ownership: OwnershipMap, rel: str, text: str, view: Joined
     """
 
     seen: set[int] = set()
-    for match in HIDDEN_WORD.finditer(view.text):
+    for match in rp.word_matches(view.text, ignore_case=True):
         if view.verbatim(match.start(), match.end()):
             continue  # an ordinary occurrence; scan_text decides it
-        line = text.count("\n", 0, view.source_offset(match.start())) + 1
+        line = line_number(text, view.source_offset(match.start()))
         if line in seen:
             continue
         tail = view.text[match.start() : match.start() + 200].split(None, 1)[0]
@@ -717,7 +766,7 @@ def case_variants(ownership: OwnershipMap, rel: str, text: str, kind: str, repor
             continue
         finding = Finding(
             rel,
-            text.count("\n", 0, match.start()) + 1,
+            line_number(text, match.start()),
             "case_variant" if prose is None or _in_regions(prose, match.start()) else "prose_mention",
             match.group(0) + tail,
             detail="the scripts root in another case",
@@ -744,10 +793,11 @@ def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: R
         scan.json_strings = json_strings(text)
     if scan.shell_regions:
         scan.contexts = ShellLexer(text, scan.shell_regions).contexts([o.start for o in found])
+    scan.comment_regions = extra_comment_regions(rel, text)
     digest_bound = kind in (JSON, TEXT) and bool(DIGEST_FIELD.search(text) or DIGEST_FIELD.search(view.text))
     edits: list[Edit] = []
     for occ in found:
-        line = text.count("\n", 0, occ.start) + 1
+        line = line_number(text, occ.start)
         if (
             kind == MARKDOWN
             and _in_regions(scan.code_regions, occ.start)
@@ -870,21 +920,44 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
     return report
 
 
-def _unpacked(data: bytes) -> list[bytes] | None:
-    """The members of a gzip, bzip2, xz or zip file, bounded in size; None when it is none of these."""
+def _archive_names_scripts(data: bytes) -> bool | None:
+    """Whether a gzip, bzip2, xz or zip file's contents name scripts; None when it is none of these.
 
+    Contents are read in chunks, at most ``MAX_UNPACKED`` bytes in all, and the search stops at the
+    first match. An archive that cannot be read, or holds more than that, counts as naming it.
+    """
+
+    def search(stream: object, budget: list[int]) -> bool:
+        tail = b""
+        while budget[0] > 0:
+            chunk = stream.read(min(1 << 20, budget[0]))  # type: ignore[attr-defined]
+            if not chunk:
+                return False
+            budget[0] -= len(chunk)
+            if ANY_BYTES_CASE.search(tail + chunk):
+                return True
+            tail = chunk[-16:]
+        return True  # too large to read in full
+
+    budget = [MAX_UNPACKED]
     try:
         if data.startswith(b"\x1f\x8b"):
-            return [gzip.GzipFile(fileobj=io.BytesIO(data)).read(MAX_UNPACKED)]
+            return search(gzip.GzipFile(fileobj=io.BytesIO(data)), budget)
         if data.startswith(b"BZh"):
-            return [bz2.BZ2Decompressor().decompress(data, MAX_UNPACKED)]
+            return search(bz2.BZ2File(io.BytesIO(data)), budget)
         if data.startswith(b"\xfd7zXZ\x00"):
-            return [lzma.LZMADecompressor().decompress(data, MAX_UNPACKED)]
+            return search(lzma.LZMAFile(io.BytesIO(data)), budget)
         if data.startswith(b"PK\x03\x04"):
             with zipfile.ZipFile(io.BytesIO(data)) as archive:
-                return [archive.open(info).read(MAX_UNPACKED) for info in archive.infolist()]
+                for info in archive.infolist():
+                    if ANY_BYTES_CASE.search(info.filename.encode("utf-8", "replace")):
+                        return True
+                    with archive.open(info) as member:
+                        if search(member, budget):
+                            return True
+                return False
     except Exception:  # a damaged archive is listed whole
-        return [b"scripts"]
+        return True
     return None
 
 
@@ -894,9 +967,9 @@ def binary_verdict(data: bytes) -> tuple[str, str]:
     Text escapes mean nothing in a binary file; the name itself does, also inside a compressed archive.
     """
 
-    members = _unpacked(data)
-    if members is not None:
-        if any(ANY_BYTES_CASE.search(member) for member in members):
+    archive = _archive_names_scripts(data)
+    if archive is not None:
+        if archive:
             return "compressed_file", "a compressed archive whose contents may name scripts; inspect it by hand"
         return "", ""
     if ANY_BYTES_CASE.search(data):
@@ -944,7 +1017,7 @@ Examples:
 
 Rules:
   A complete plain token is a whole word, or a whole word inside one pair of quotes, with a blank, the line
-  start or `=` before it (or before its opening quote) and a blank, the line end or one of ; & | ) < > after it
+  start or `=` before it (or before its opening quote) and a blank, the line end or one of ; & | ) after it
   (or after its closing quote). It may start with one root prefix: ./, ../, $NAME/, ${NAME}/ or @NAME@/. JSON
   strings and plist <string> elements count when the name is their whole text. Such a token is renamed when
   the map says it names a machinery file, directory or module (`-m` also checks the package's __main__).

@@ -1194,3 +1194,165 @@ def test_nonpython_second_hidden_name_on_a_line_is_not_lost(tree: tuple[Path, Pa
     assert [(item["kind"], item["before"]) for item in report["unresolved"]] == [
         ("hidden_reference", "scripts/dispatch.py")
     ]
+
+
+# -- author pre-check before review round 3 -------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("rel", "text"),
+    [
+        ("scripts/tools/glued.sh", "printf 'header\\nscripts/dispatch.py\\n'\n"),
+        ("scripts/tools/glued.sh", "python -Bmscripts.dispatcher.primary\n"),
+        ("scripts/tools/glued.sh", "x=.%2Fscripts%2Fdispatch.py\n"),
+        ("config/glued.json", '{"cmd": "set -e\\nscripts/dispatch.py"}\n'),
+        ("config/glued.yaml", "  files: '\\bscripts/lib/'\n"),
+    ],
+)
+def test_names_glued_to_an_escape_letter_or_option_cluster_are_reported(
+    tree: tuple[Path, Path], rel: str, text: str
+) -> None:
+    root, map_path = tree
+    _add(root, map_path, rel, M if rel.startswith("scripts/") else P, text)
+
+    code, _report = _run(rename_nonpython, map_path, root, "apply", rel)
+
+    assert code == 1
+    assert _read(root, rel) == text
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        'PAT = re.compile(r"\\bscripts/dispatch\\.py\\b")\n',
+        'ARGS = [sys.executable, "-Bmscripts.dispatcher.primary"]\n',
+        'T = "hcraeser.stpircs"[::-1] + suffix\n',  # a literal-only part inside a run-time expression
+    ],
+)
+def test_python_glued_and_transformed_literals_are_reported(tree: tuple[Path, Path], source: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/pipeline/glued.py", P, source)
+
+    code, _report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/glued.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/glued.py") == source
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "def f(scripts):\n    return scripts.dispatcher.primary\n",
+        "def f():\n    scripts = load()\n    return scripts.dispatcher.primary\n",
+        "f = lambda scripts: scripts.dispatcher.primary\n",
+        "x = [scripts.dispatcher.primary for scripts in objs]\n",
+        "for scripts in objs:\n    pass\nscripts.dispatcher.primary.run()\n",
+        "import scripts.audit as scripts\nscripts.dispatcher.primary.run()\n",
+        "scripts = object()\nscripts.dispatcher.primary.run()\n",
+    ],
+)
+def test_shadowed_scripts_name_holds_the_file(tree: tuple[Path, Path], body: str) -> None:
+    root, map_path = tree
+    source = "import scripts.dispatcher.primary\n" + body
+    _add(root, map_path, "scripts/pipeline/shadow.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/shadow.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/shadow.py") == source
+    assert "rebound_name" in _kinds(report) and "held_rewrite" in _kinds(report)
+
+
+def test_comprehension_variable_does_not_shadow_the_module_import(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = "import scripts.dispatcher.primary\nx = [scripts for scripts in y]\nscripts.dispatcher.primary.run()\n"
+    _add(root, map_path, "scripts/pipeline/comp.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/comp.py")
+
+    assert code == 0, report["unresolved"]
+    assert _read(root, "scripts/pipeline/comp.py").endswith("lu_machinery.dispatcher.primary.run()\n")
+
+
+def test_machinery_file_importing_a_product_sibling_is_reported(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = "import prompts\n"  # scripts/review/prompts is product; the importer is machinery
+    _add(root, map_path, "scripts/review/loader.py", M, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/review/loader.py")
+
+    assert code == 1
+    assert _read(root, "scripts/review/loader.py") == source
+    assert _kinds(report) == ["unprefixed_cross_owner"]
+
+
+def test_mixed_package_name_is_not_renamed(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = 'T = resources.files("scripts.review") / "prompts" / "plan-review.md.j2"\n'
+    _add(root, map_path, "scripts/pipeline/res.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/res.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/res.py") == source
+    assert _kinds(report) == ["ambiguous_module"]
+
+
+@pytest.mark.parametrize(
+    ("rel", "text", "kind"),
+    [
+        ("docs/imports.md", "Use `from scripts.review import prompts` here.\n", "python_import_in_text"),
+        ("docs/imports.md", "```bash\n>>> from scripts.review import prompts\n```\n", "python_import_in_text"),
+        ("scripts/tools/cwd.sh", "docker run -w scripts/lib img\n", "cwd_into_scripts"),
+        ("compose.yml", "    working_dir: scripts/lib\n", "cwd_into_scripts"),
+        ("tox.ini", "changedir = scripts/lib\n", "cwd_into_scripts"),
+        ("scripts/tools/cwd.sh", "npm --prefix scripts/lib run build\n", "cwd_into_scripts"),
+        ("docs/fence.md", "```bash\n```text\ncat scripts/dispatch.py:x\n```\n", "not_plain"),
+        ("docs/indented.md", "Text.\n\n    cat scripts/dispatch.py\n", "non_shell_fence"),
+        ("scripts/tools/doc.sh", "cat <<END-X\nEND\ncat scripts/dispatch.py:x\nEND-X\n", "heredoc_text"),
+    ],
+)
+def test_more_contexts_are_reported_not_rewritten(tree: tuple[Path, Path], rel: str, text: str, kind: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, rel, M if rel.startswith("scripts/") else P, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", rel)
+
+    assert code == 1
+    assert _read(root, rel) == text
+    assert kind in _kinds(report)
+
+
+@pytest.mark.parametrize(
+    ("rel", "text"),
+    [("setup.cfg", "; python -m scripts.dispatcher.primary\n"), ("page.j2", "{# see scripts/dispatch.py #}\n")],
+)
+def test_ini_and_jinja_comments_are_left_as_written(tree: tuple[Path, Path], rel: str, text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, rel, P, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", rel)
+
+    assert code == 0
+    assert _read(root, rel) == text
+    assert [item["kind"] for item in report["inventory"]] == ["comment_mention"]
+
+
+def test_split_literal_search_takes_linear_time() -> None:
+    texts = ["s"] + ["c", "r", "i", "p", "t"] * 200
+    assert rename_python.spells_word(texts)
+    assert not rename_python.spells_word(["c", "r", "i", "p", "t"] * 200)
+
+
+def test_structured_reads_the_moved_location_without_a_map_key(tmp_path: Path) -> None:
+    root = tmp_path / "clone"
+    (root / "lu_machinery" / "lint").mkdir(parents=True)
+    text = _baseline([{"path": "scripts/dispatch.py", "code": "index", "message": "x"}])
+    (root / "lu_machinery" / "lint" / "mypy_baseline.json").write_text(text, encoding="utf-8")
+    map_path = tmp_path / "ownership.json"
+    map_path.write_text(json.dumps({"scripts/dispatch.py": M}), encoding="utf-8")
+
+    code, report = _run(rename_structured, map_path, root, "check")
+
+    assert code == 0
+    assert [item["after"] for item in report["rewrites"]] == ["lu_machinery/dispatch.py"]

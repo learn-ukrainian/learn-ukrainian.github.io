@@ -35,10 +35,12 @@ import libcst as cst
 from libcst.codemod import CodemodContext, VisitorBasedCodemodCommand
 from libcst.helpers import get_full_name_for_node
 from libcst.metadata import (
+    ImportAssignment,
     ParentNodeProvider,
     PositionProvider,
     QualifiedNameProvider,
     QualifiedNameSource,
+    ScopeProvider,
 )
 
 OLD_ROOT = "scripts"
@@ -347,7 +349,7 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
     """Rewrite import nodes, bound names, loader targets and exact module literals."""
 
     DESCRIPTION = "Rename machinery modules from scripts to lu_machinery using a file ownership map."
-    METADATA_DEPENDENCIES = (PositionProvider, QualifiedNameProvider, ParentNodeProvider)
+    METADATA_DEPENDENCIES = (PositionProvider, QualifiedNameProvider, ParentNodeProvider, ScopeProvider)
 
     def __init__(
         self,
@@ -445,6 +447,19 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
             return "ambiguous_module", "", f"{' or '.join(candidates)} has no single owner"
         if len(candidates) > 1 and len(owners) > 1:
             return "ambiguous_module", "", f"sys.path can bind {' or '.join(candidates)}, which have different owners"
+        siblings = [
+            c
+            for c in candidates
+            if self.importer_package not in ("", OLD_ROOT) and c.startswith(self.importer_package + ".")
+        ]
+        if self.importer_owner == MACHINERY and siblings and PRODUCT in owners:
+            # Found next to the importer (its own directory on sys.path); after the move the importer sits in
+            # lu_machinery/ and the product module does not. The section-2 imports through scripts/ stay as they are.
+            return (
+                "unprefixed_cross_owner",
+                "",
+                f"a machinery file imports the product module {' or '.join(siblings)} from its own directory",
+            )
         if MACHINERY not in owners or self.importer_owner == MACHINERY:
             return "keep", "", ""
         top = dotted.split(".", 1)[0]
@@ -871,8 +886,8 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
             for name in sorted(ours):
                 self._check_aliased_chain(original_node, root.value, dotted, name)
             return updated_node
-        if len(qualified) != 1:
-            detail = f"scripts is bound in more than one way here ({', '.join(sorted(q.name for q in qualified))})"
+        if len(qualified) != 1 or not self._bound_only_by_package_imports(root):
+            detail = "scripts is also bound here by something other than `import scripts...`"
             self._unresolved(original_node, "rebound_name", dotted, detail)
             return updated_node
         resolved = self.ownership.resolve(dotted)
@@ -888,6 +903,29 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         self._renamed_chain = True
         self._rewrite(original_node, "bound_name", dotted, renamed(dotted))
         return _replace_root(updated_node, NEW_ROOT)
+
+    def _bound_only_by_package_imports(self, name: cst.Name) -> bool:
+        """Whether every binding of this ``scripts`` that reaches here is an unaliased ``import scripts.x``.
+
+        A parameter, a loop or comprehension variable, an assignment or an alias named ``scripts`` in a
+        scope this use sees means the chain may not be the package.
+        """
+
+        scope = self.get_metadata(ScopeProvider, name, None)
+        if scope is None:
+            return False
+        bindings = scope[name.value]
+        if not bindings:
+            return False
+        for binding in bindings:
+            if not (isinstance(binding, ImportAssignment) and isinstance(binding.node, cst.Import)):
+                return False
+            aliases = binding.node.names
+            if any(
+                isinstance(a.asname, cst.AsName) and getattr(a.asname.name, "value", "") == name.value for a in aliases
+            ):
+                return False
+        return True
 
     def _check_aliased_chain(self, node: cst.Attribute, alias: str, dotted: str, qualified: str) -> None:
         """``import scripts.x as a`` or ``from scripts import x as a``, then ``a.y``.
@@ -1115,7 +1153,23 @@ def _fstring_text(node: cst.FormattedString, raw: str) -> str:
 MODULE_LITERAL = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
 WORD = "scripts"
 # ``scripts`` as a word: not inside a longer identifier, except right after a glued ``-m``.
-WORD_AT = re.compile(r"(?:(?<![A-Za-z0-9_])|(?<=-m))scripts(?![A-Za-z0-9_])")
+WORD_TAIL = re.compile(r"scripts(?![A-Za-z0-9_])")
+WORD_TAIL_ANY_CASE = re.compile(r"(?i:scripts)(?![A-Za-z0-9_])")
+# Text glued in front of the name that still lets it start there: an escape letter (``\n``, ``\b``), an
+# option cluster ending in ``m`` (``-m``, ``-Bm``), or an encoded slash (``%2F``, ``\u002f``, ``\x2f``).
+GLUED_START = re.compile(r"(?:\\[A-Za-z]|(?:^|[^A-Za-z0-9_])-[A-Za-z]*m|%2[Ff]|\\u002[Ff]|\\x2[Ff])$")
+
+
+def word_matches(text: str, ignore_case: bool = False) -> Iterator[re.Match[str]]:
+    """Each ``scripts`` that starts a word (or follows glued text in ``GLUED_START``) and ends one."""
+
+    for match in (WORD_TAIL_ANY_CASE if ignore_case else WORD_TAIL).finditer(text):
+        start = match.start()
+        word_before = start > 0 and (text[start - 1].isalnum() or text[start - 1] == "_")
+        if not word_before or GLUED_START.search(text, max(0, start - 16), start):
+            yield match
+
+
 # ``Scripts/x.py`` in another case: the same file on a case-insensitive file system.
 CASE_VARIANT = re.compile(r"(?<![A-Za-z0-9_])(?!scripts)(?i:scripts)(?=/)")
 IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
@@ -1400,6 +1454,25 @@ def _strings_in(value: object) -> Iterator[str]:
             yield from _strings_in(item)
 
 
+def static_parts(node: cst.CSTNode, budget: list[int] | None = None) -> list[str]:
+    """The texts of the largest literal-only parts of an expression (``"stpircs"[::-1]`` in ``x + "stpircs"[::-1]``)."""
+
+    budget = budget if budget is not None else [200]
+    found: list[str] = []
+    for child in node.children:
+        if budget[0] <= 0:
+            break
+        if not isinstance(child, cst.BaseExpression) or isinstance(child, (cst.SimpleString, cst.Name)):
+            found.extend(static_parts(child, budget) if not isinstance(child, (cst.SimpleString, cst.Name)) else [])
+            continue
+        budget[0] -= 1
+        try:
+            found.extend(_strings_in(static_value(child)))
+        except (NotStatic, StaticError):
+            found.extend(static_parts(child, budget))
+    return found
+
+
 def is_plain_concatenation(node: cst.CSTNode) -> bool:
     """Literals joined by implicit concatenation, ``+`` or an f-string without fields."""
 
@@ -1419,25 +1492,21 @@ def spells_word(texts: Sequence[str], word: str = WORD) -> bool:
     text, zero or more whole texts and the start of another, in any order (so run-time pieces
     between them, or a reordering, may join them)."""
 
-    lowered = [t.lower() for t in texts if t]
+    lowered = sorted({t.lower() for t in texts if t})
     if any(word in t for t in lowered):
         return True
-
-    def extend(position: int, used: frozenset[int]) -> bool:
+    # A text may be used more than once here, which can only report more. The search is over the
+    # positions in ``word``, so it takes linear time in the number of texts.
+    reachable = {cut for cut in range(1, len(word)) if any(t.endswith(word[:cut]) for t in lowered)}
+    for position in range(1, len(word)):
+        if position not in reachable:
+            continue
         rest = word[position:]
-        for index, text in enumerate(lowered):
-            if index in used:
-                continue
-            if rest.startswith(text) and len(text) < len(rest) and extend(position + len(text), used | {index}):
-                return True  # a whole text in the middle
+        for text in lowered:
             if text.startswith(rest):
                 return True  # the start of a text ends the word
-        return False
-
-    for index, text in enumerate(lowered):
-        for cut in range(1, len(word)):
-            if text.endswith(word[:cut]) and extend(cut, frozenset({index})):
-                return True
+            if rest.startswith(text):
+                reachable.add(position + len(text))  # a whole text in the middle
     return False
 
 
@@ -1460,7 +1529,7 @@ def text_references(ownership: OwnershipMap, text: str) -> list[Reference]:
 
     found: list[Reference] = []
     stripped = text.strip()
-    for match in WORD_AT.finditer(text):
+    for match in word_matches(text):
         start, end = match.start(), match.end()
         following = text[end : end + 1]
         if following == "." and IDENT.match(text, end + 1):
@@ -1509,7 +1578,22 @@ def module_target(ownership: OwnershipMap, name: str, exact: bool = False) -> st
     main = ownership.module(f"{entry.name}.__main__")
     if not rest and main is not None and main.owner != entry.owner:
         return AMBIGUOUS
+    if not rest and is_mixed_package(ownership, entry):
+        return AMBIGUOUS
     return entry.owner
+
+
+def is_mixed_package(ownership: OwnershipMap, entry: ModuleEntry) -> bool:
+    """A package whose directory holds files of both owners (modules or resources such as templates).
+
+    Its name also anchors resources (``importlib.resources.files("scripts.x")``) and submodules reached
+    through it, so renaming the name alone could point at files that stay on the other side.
+    """
+
+    if entry.bound_file is not None and not entry.bound_file.endswith("/__init__.py"):
+        return False
+    directory = entry.name.replace(".", "/")
+    return ownership.path_owner(directory) == AMBIGUOUS
 
 
 def _subtree_target(ownership: OwnershipMap, name: str) -> str:
@@ -1568,6 +1652,7 @@ def decide_string(
     try:
         value = static_value(node)
     except (NotStatic, StaticError) as exc:
+        leaves = [*leaves, *static_parts(node)]
         if not spells_word(leaves):
             return StringDecision("none")
         target = _likely_target(ownership, leaves)

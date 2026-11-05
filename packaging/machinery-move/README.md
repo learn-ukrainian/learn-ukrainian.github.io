@@ -11,19 +11,21 @@ is reported. No reference is ever partly rewritten.
 
 | Tool | Rewrites | Reports |
 | --- | --- | --- |
-| `rename_python.py` (LibCST), every `*.py` file | `import` and `from … import` statements (qualified, unprefixed and relative; a mixed `from scripts import …` is split by owner); names bound by `import scripts.x`; `import_module`, `run_module` and `__import__` targets; string values that are exactly a machinery module name. | Every other string that may hold a `scripts` name or path, computed or relative loader targets, ambiguous owners, unknown modules, map gaps, and unprefixed imports whose target cannot be pinned down. |
+| `rename_python.py` (LibCST), every `*.py` file | `import` and `from … import` statements (qualified, unprefixed and relative; a mixed `from scripts import …` is split by owner); names bound by `import scripts.x`; `import_module`, `run_module` and `__import__` targets; string values that are exactly a machinery module name. | Every other string that may hold a `scripts` name or path, computed or relative loader targets, ambiguous owners, unknown modules, map gaps, unprefixed imports whose target cannot be pinned down, and a machinery file importing a product module from its own directory. |
 | `rename_nonpython.py`, every other text file | A `scripts.<module>` name or `scripts/<path>` that is a complete plain token, in shell scripts, hooks, systemd and launchd units, configuration files, JSON and Markdown code. | Every other `scripts` name or path. |
 | `rename_structured.py`, the files it knows | The path fields of `scripts/lint/mypy_baseline.json`. | Machinery names in messages, unmapped paths, a file reached through a symlink, and any file that does not match its schema. |
 
-Comments, docstrings and Markdown prose are never changed. Machinery mentions in them are
-listed in the inventory. Each tool's `--help` lists its rules.
+Comments (including INI `;` lines and Jinja `{# #}`), docstrings and Markdown prose are never
+changed. Machinery mentions in them are listed in the inventory. Each tool's `--help` lists its rules.
 
 ## Python strings
 
 A string expression is rewritten only when it is a plain literal, or literals joined by
 implicit concatenation, `+` or an f-string without fields, and its exact value is one
 machinery module name. A module name followed by attributes counts, such as
-`scripts.engine.control.launch`. Joined literals become one literal, unless a comment sits
+`scripts.engine.control.launch`. A package whose directory holds files of both owners is
+reported, not renamed: its name also anchors resources and submodules that stay on the other
+side (`importlib.resources.files("scripts.review")`). Joined literals become one literal, unless a comment sits
 between them.
 
 A known value is searched for module names and paths. The bare word `scripts` counts as the
@@ -50,7 +52,9 @@ Elsewhere it is a whole value, for example an assignment, an argument of another
 comparison or an index.
 
 An attribute chain follows its real binding. `import scripts.x` binds `scripts`, so
-`scripts.x.f` is renamed with the import. An alias (`import scripts.x as a`,
+`scripts.x.f` is renamed with the import, but only when every binding of `scripts` that the use
+sees is such an import: a parameter, a local or loop variable, or an alias named `scripts`
+holds the file instead. An alias (`import scripts.x as a`,
 `from scripts import x`) keeps its name, so `a.f` needs no change, unless `a.y` reaches a
 submodule of the other owner.
 
@@ -84,11 +88,14 @@ code spans.
 These are reported and never rewritten:
 
 - names in heredoc bodies, inside longer quoted text, inside `${…}`, `$((…))` or backticks;
-- names with anything glued on, such as `scripts/x.py:3`, `scripts/x.py"$S"` or `<name>`;
-- globs, Markdown fences in other languages, files that record digests, and unsupported file
-  types;
-- `cd`, `pushd`, `-C`, `WorkingDirectory=`, `WORKDIR`, `working-directory:` and `cwd:` targets
-  under `scripts/`;
+- names with anything glued on, such as `scripts/x.py:3`, `scripts/x.py"$S"` or `<name>`, or glued
+  to the text before them (`\nscripts/x.py`, `-Bmscripts.x`, `%2Fscripts`);
+- globs, Markdown fences in other languages and indented code blocks, files that record
+  digests, and unsupported file types;
+- `cd`, `pushd`, `-C`, `-w`, `--prefix`, `WorkingDirectory=`, `WORKDIR`, `working-directory:`,
+  `working_dir:`, `changedir =` and `cwd:` targets under `scripts/`;
+- a module named by a Python `from … import` in text (`from scripts.x import y`): `y` may have
+  the other owner;
 - the `scripts/` root itself, and unknown or mixed-owner names;
 - names that only show once a reader joins the word: escapes (`\u0073`, `&#115;`, `%73`), line
   continuations (`scr\` then `ipts` on the next line, in shell, YAML or TOML), quoted pieces glued to
