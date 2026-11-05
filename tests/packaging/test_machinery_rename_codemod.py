@@ -1522,6 +1522,32 @@ def test_r4_f3_names_split_by_a_nested_run_time_piece_are_reported(tree: tuple[P
 @pytest.mark.parametrize(
     "text",
     [
+        # F3: ANSI-C quoting with an escape in the split name, every hex width the shell reads, and an
+        # ANSI-C quote taken as an empty run-time piece.
+        "cat $'scri'${EMPTY}pts/dispatch.py\n",
+        "echo \"$(cat $'scri'${EMPTY}pts/dispatch.py)\"\n",
+        "cat $'scr\\u0069'${EMPTY}pts/dispatch.py\n",
+        "cat $'scr\\u69'${EMPTY}pts/dispatch.py\n",
+        "cat $'scr\\u069pts/dispatch.py'\n",
+        "cat $'scr\\U69pts/dispatch.py'\n",
+        "echo \"$(cat $'scr\\u69'pts/dispatch.py)\"\n",
+        "cat scr$'\\n'ipts/dispatch.py\n",
+    ],
+)
+def test_r4_f3_ansi_c_quotes_in_a_split_name_are_reported(tree: tuple[Path, Path], text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/tools/ansi.sh", M, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/ansi.sh")
+
+    assert code == 1
+    assert _read(root, "scripts/tools/ansi.sh") == text
+    assert "hidden_reference" in _kinds(report), report["unresolved"]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
         'echo "$(cat ${REPO}/scripts/dispatch.py)"\n',  # the name is whole: no piece splits it
         "cat ${REPO}/scripts/dispatch.py\n",
         'echo "$(cat ${A:-${B}}/scripts/dispatch.py)"\n',
@@ -1542,6 +1568,7 @@ def test_r4_f3_whole_names_beside_a_piece_are_no_hidden_reference(tree: tuple[Pa
         'echo "$(cat ${REPO}/README.md)"\n',
         'echo "$(cat scr$(true)ipts/audit/probe_uk_writing_score.py)"\n',  # a joined product path
         "echo $(echo it's unclosed scr\n",  # an opening that never closes is no piece
+        "printf '%s' $'\\t' \"$(cat README.md)\"\n",
     ],
 )
 def test_r4_f3_nested_views_stay_quiet(tree: tuple[Path, Path], text: str) -> None:

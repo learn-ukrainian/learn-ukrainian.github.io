@@ -77,16 +77,21 @@ INDENTED_CODE = re.compile(r"^(?: {4}|\t)\s*\S")
 INLINE_CODE = re.compile(r"(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 SHELL_FENCE_INFO = frozenset({"bash", "sh", "shell", "zsh", "console", "shell-session", "sh-session", "terminal"})
 # A field that records a digest: the file's paths are bound to it and must not change by text edits.
-# Escapes that can spell a name without its letters appearing: JSON/YAML/TOML/shell, XML entities, URLs.
+# Escapes that can spell a name without its letters appearing: JSON/YAML/TOML/shell, XML entities, URLs. The
+# shell's ``$'…'`` and printf read one to four (``\u``) or eight (``\U``) hex digits, as many as follow.
 ESCAPE = re.compile(
-    r"\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8}|\\x[0-9a-fA-F]{2}|\\[0-7]{1,3}|&#[0-9]{1,7};|&#[xX][0-9a-fA-F]{1,6};|%[0-9a-fA-F]{2}"
+    r"\\u[0-9a-fA-F]{1,4}|\\U[0-9a-fA-F]{1,8}|\\x[0-9a-fA-F]{2}|\\[0-7]{1,3}|&#[0-9]{1,7};|&#[xX][0-9a-fA-F]{1,6};|%[0-9a-fA-F]{2}"
 )
 # What a reader joins or removes before a name shows: line continuations, escapes and a backslash before a
 # character. Run-time pieces are found by ``run_time_pieces``, which balances nested ones.
 HIDING = re.compile(r"\\[ \t]*\r?\n\s*|" + ESCAPE.pattern + r"|\\(?=\S)")
 # Where a run-time piece starts: a substitution or expansion (``$(``, ``$((``, ``${``, backticks), which
-# can nest, or a leaf that cannot: a variable (``$X``, ``$1``, ``$@``) or a template field.
-PIECE_START = re.compile(r"\$\(|\$\{|`|\$[A-Za-z_][A-Za-z0-9_]*|\$[0-9@*#?!]|\{\{[^}\n]*\}\}|\{%[^%\n]*%\}")
+# can nest, or a leaf that cannot: a variable (``$X``, ``$1``, ``$@``), a template field, or a ``$'…'`` quote with
+# an escape in it, whose characters are known only once the shell reads the escapes.
+PIECE_START = re.compile(
+    r"\$\(|\$\{|`|\$'[^'\\]{0,4096}(?:\\[\s\S][^'\\]{0,4096}){1,256}'"
+    r"|\$[A-Za-z_][A-Za-z0-9_]*|\$[0-9@*#?!]|\{\{[^}\n]*\}\}|\{%[^%\n]*%\}"
+)
 OPENINGS = {"$(": ")", "${": "}", "`": "`"}
 # What may end, nest in or quote a piece body, outside double quotes and inside them.
 BODY_STOPS = {")": re.compile(r"[\\'\"`$(){}]"), "}": re.compile(r"[\\'\"`$(){}]"), "`": re.compile(r"[\\`$]")}
@@ -711,7 +716,7 @@ class Piece:
     """A run-time piece in a text, with the pieces nested in its body.
 
     ``opening`` and ``closing`` are the lengths of its delimiters (``$(`` and ``)``); both are 0 for a leaf,
-    a variable or a template field, whose text is never a word of its own.
+    a variable, a template field or an escaped ``$'…'`` quote (``escaped``), whose text is never a word of its own.
     """
 
     start: int
@@ -719,6 +724,7 @@ class Piece:
     opening: int = 0
     closing: int = 0
     children: tuple[Piece, ...] = ()
+    escaped: bool = False
 
 
 def run_time_pieces(text: str) -> list[Piece]:
@@ -756,7 +762,7 @@ class _PieceScanner:
         if match is None:
             return None
         if match.group(0) not in OPENINGS:
-            return Piece(start, match.end())
+            return Piece(start, match.end(), escaped=match.group(0).startswith("$'"))
         if start in self.memo:
             return self.memo[start]
         if nesting >= MAX_NESTING:
@@ -783,6 +789,8 @@ class _PieceScanner:
             elif char == closer and not quoted:
                 depth -= 1
                 position += 1
+            elif quoted and text.startswith("$'", position):
+                position += 1  # inside double quotes ``$'`` is no quote
             elif char in "$`" or text.startswith(("{{", "{%"), position):
                 match = PIECE_START.match(text, position)
                 child = self.piece_at(position, nesting + 1)
@@ -824,32 +832,35 @@ def _ansi_quote_end(text: str, position: int, limit: int) -> int | None:
     return None
 
 
-def _pieces_at_level(pieces: list[Piece], level: int) -> tuple[list[Piece], list[Piece]]:
-    """The pieces ``level + 1`` deep, and the substitutions above them whose delimiters go at that level."""
+def _pieces_at_level(pieces: list[Piece], level: int, empty_quotes: bool) -> tuple[list[Piece], list[Piece]]:
+    """The pieces ``level + 1`` deep that are taken as empty, and the substitutions above them whose delimiters
+    go at that level. An escaped ``$'…'`` quote is taken as empty only with ``empty_quotes``; otherwise its
+    escapes are read."""
 
     frontier, opened = pieces, []
     for _ in range(level):
         containers = [piece for piece in frontier if piece.opening]
         opened += containers
         frontier = [child for piece in containers for child in piece.children]
-    return frontier, opened
+    return [piece for piece in frontier if empty_quotes or not piece.escaped], opened
 
 
-def joined_view(text: str, pieces: list[Piece] | None = None, level: int = 0) -> JoinedView:
+def joined_view(text: str, pieces: list[Piece] | None = None, level: int = 0, empty_quotes: bool = False) -> JoinedView:
     r"""Undo line continuations, escapes, quote removal and run-time pieces, as a shell, a YAML or TOML
     reader or a template engine would, so that a name split by them shows.
 
     Level 0 takes each outermost run-time piece as empty. Level n (n >= 1) also opens the substitutions
     n deep or less: their delimiters go and their bodies stay, while the pieces n + 1 deep are taken as
     empty, so a name split inside a substitution body, at any depth, shows. Without ``pieces`` every
-    piece stays as written, so a name hidden inside one (``$(cat $'scripts/x.py')``) shows instead.
-    Quotes glued to an emptied piece go with it (``scr"$(echo a b)"ipts``).
+    piece stays as written, so a name hidden inside one (``$(cat $'scr\u0069pts/x.py')``) shows instead.
+    Quotes glued to an emptied piece go with it (``scr"$(echo a b)"ipts``). With ``empty_quotes`` an escaped
+    ``$'…'`` quote is taken as empty like any run-time piece; otherwise its escapes are read.
     """
 
     events = [(m.start(), m.end(), m.group(0)) for m in HIDING.finditer(text)]
     quoting = text
     if pieces is not None:
-        emptied, opened = _pieces_at_level(pieces, level)
+        emptied, opened = _pieces_at_level(pieces, level, empty_quotes)
         events += [(piece.start, piece.end, "") for piece in emptied]
         for piece in opened:
             events += [(piece.start, piece.start + piece.opening, ""), (piece.end - piece.closing, piece.end, "")]
@@ -881,14 +892,20 @@ def joined_view(text: str, pieces: list[Piece] | None = None, level: int = 0) ->
 
 
 def joined_views(text: str) -> Iterator[JoinedView]:
-    """Every view ``hidden_references`` reads: each level that takes some piece as empty, then the pieces kept."""
+    """Every view ``hidden_references`` reads: each level that takes some piece as empty, with escaped
+    ``$'…'`` quotes read and, when the text has one, taken as empty; then the pieces kept."""
 
     pieces = run_time_pieces(text)
-    level = 0
-    while level == 0 or _pieces_at_level(pieces, level)[0]:
-        yield joined_view(text, pieces, level)
-        level += 1
+    for empty_quotes in (False, True) if _has_escaped_quote(pieces) else (False,):
+        level = 0
+        while level == 0 or _pieces_at_level(pieces, level, empty_quotes)[0]:
+            yield joined_view(text, pieces, level, empty_quotes)
+            level += 1
     yield joined_view(text)
+
+
+def _has_escaped_quote(pieces: Sequence[Piece]) -> bool:
+    return any(piece.escaped or _has_escaped_quote(piece.children) for piece in pieces)
 
 
 def hidden_references(

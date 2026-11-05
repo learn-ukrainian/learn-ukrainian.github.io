@@ -99,12 +99,14 @@ These are reported and never rewritten:
 - a module named by a Python `from … import` in text (`from scripts.x import y`): `y` may have
   the other owner;
 - the `scripts/` root itself, and unknown or mixed-owner names;
-- names that only show once a reader joins the word: escapes (`\u0073`, `&#115;`, `%73`), line
+- names that only show once a reader joins the word: escapes (`\u0073`, the shell's shorter `\u73`
+  and `\U73`, `&#115;`, `%73`), line
   continuations (`scr\` then `ipts` on the next line, in shell, YAML or TOML), quoted pieces glued to
   the word (`scr""ipts`), a backslash before a letter, and run-time pieces taken as empty (`$X`,
   `${X}`, `$(…)`, `$((…))`, backticks, `{{ … }}`). Pieces are found by a balanced scan, so nested
   ones count (`scr${A:-${B}}ipts`), and every substitution body is read at each depth with the pieces
-  nested in it taken as empty (`"$(cat scr$(true)ipts/x.py)"`, `scr"$(echo a b)"ipts`);
+  nested in it taken as empty (`"$(cat scr$(true)ipts/x.py)"`, `scr"$(echo a b)"ipts`). A `$'…'` quote
+  with an escape is read, and is also taken as empty like a run-time piece;
 - the root in another case (`Scripts/`);
 - binary or non-UTF-8 files that may name `scripts` (also as UTF-16), compressed archives (gzip, bzip2,
   xz, zip) whose contents name it, and symlinks whose target names it.
