@@ -46,13 +46,12 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.common.jsonl import jsonl_lines
-from scripts.common.repo_root import machinery_root
 
 
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mod(*parts: str) -> str:

@@ -47,7 +47,6 @@ from typing import Any
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import machinery_root
 from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, resolve_scratch_root
 from scripts.common.task_scratch import TaskScratchError, mount_points
 from scripts.common.task_store_paths import tasks_dir
@@ -86,7 +85,7 @@ from scripts.orchestration.worktree_claims import _SUPERSEDED_RECORD_RE
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mod(*parts: str) -> str:

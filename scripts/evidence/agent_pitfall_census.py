@@ -18,14 +18,11 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
-from scripts.common.repo_root import machinery_path, machinery_root
-
 
 def _mp(relative: str) -> str:
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return f"{top or Path(__file__).parents[1].name}/{relative}"
 
 
 # Windows chosen from the measured X-Agent adoption curve in this script:

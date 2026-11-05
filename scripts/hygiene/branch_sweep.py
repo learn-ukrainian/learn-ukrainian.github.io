@@ -38,7 +38,6 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
 from scripts.common.jsonl import jsonl_lines, physical_lines
-from scripts.common.repo_root import machinery_root
 from scripts.common.scratch import ensure_scratch_root
 from scripts.orchestration import worktree_git as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
@@ -50,7 +49,7 @@ from scripts.storage import topology as storage_topology
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mod(*parts: str) -> str:

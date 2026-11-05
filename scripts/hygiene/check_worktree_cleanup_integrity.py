@@ -55,18 +55,17 @@ _append_event = _check_primary_integrity._append_event
 _resolve_main_root = _check_primary_integrity._resolve_main_root
 _running_dispatches = _check_primary_integrity._running_dispatches
 
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.common.safe_unit_install import InstallError, check_state_paths, load_unit
 
 
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mp(relative: str) -> str:
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+    return f"{_machinery_top()}/{relative}"
 
 
 def _mod(*parts: str) -> str:

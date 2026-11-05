@@ -21,18 +21,18 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from scripts.common.repo_root import machinery_path, machinery_root, resolve_repo_root
+from scripts.common.repo_root import resolve_repo_root
 from scripts.common.task_scratch import mount_points
 
 
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mp(relative: str) -> str:
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+    return f"{_machinery_top()}/{relative}"
 
 
 def _mod(*parts: str) -> str:

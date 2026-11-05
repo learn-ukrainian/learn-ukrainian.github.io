@@ -24,17 +24,12 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import machinery_path, machinery_root
+from scripts.common.repo_root import machinery_path
 from scripts.review.role_resolution import resolve_routing_reference
 
-
-def _mp(relative: str) -> str:
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
-
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-CATALOG_PATH = PROJECT_ROOT / _mp("config/model_catalog.yaml")
-COMMS_PATH = PROJECT_ROOT / _mp("config/fleet_communications.yaml")
+CATALOG_PATH = machinery_path("config/model_catalog.yaml")
+COMMS_PATH = machinery_path("config/fleet_communications.yaml")
 
 # Source rules only (not deploy copies under .claude/.agent/.gemini).
 DEFAULT_PROJECTION_PATHS = (

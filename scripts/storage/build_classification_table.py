@@ -18,14 +18,13 @@ from pathlib import Path
 if __package__ in (None, ""):  # run as a file: make `scripts.*` importable
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import machinery_root
 from scripts.common.scratch import ensure_scratch_root
 
 
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mod(*parts: str) -> str:

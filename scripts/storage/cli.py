@@ -17,7 +17,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-from scripts.common.repo_root import machinery_root
 from scripts.storage import generations
 from scripts.storage.topology import resolve_topology
 from scripts.storage.wal_permissions import hold_database, lift_database
@@ -26,7 +25,7 @@ from scripts.storage.wal_permissions import hold_database, lift_database
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mod(*parts: str) -> str:

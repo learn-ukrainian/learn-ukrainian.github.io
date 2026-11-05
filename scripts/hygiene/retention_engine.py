@@ -36,7 +36,6 @@ GATE5_TARGET_DAYS = 7
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.hygiene.lane_disk_retention import (
     scan_dispatch_worktrees,
     scan_home_session_hints,
@@ -48,11 +47,11 @@ from scripts.path_safety import assert_delete_target
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mp(relative: str) -> str:
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+    return f"{_machinery_top()}/{relative}"
 
 
 def _mod(*parts: str) -> str:

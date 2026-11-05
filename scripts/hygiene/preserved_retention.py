@@ -18,7 +18,6 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
-from scripts.common.repo_root import machinery_root
 from scripts.common.task_scratch import ContainmentError, _remove_invocation_dir, fd_mount_id
 from scripts.fleet import ignored_task_output, pr_identity
 from scripts.hygiene.batch_state_retention import default_batch_root
@@ -28,7 +27,7 @@ from scripts.orchestration.worktree_git import _TERMINAL_DISPATCH_STATUSES
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mod(*parts: str) -> str:

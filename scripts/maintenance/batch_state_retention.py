@@ -31,14 +31,15 @@ for _path in (REPO_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.orchestration import worktree_claims
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES, WorktreeLockError
 
 
 def _mp(relative: str) -> str:
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return f"{top or Path(__file__).parents[1].name}/{relative}"
 
 
 DEFAULT_BATCH_STATE = REPO_ROOT / "batch_state"

@@ -16,20 +16,15 @@ from collections import Counter, deque
 from dataclasses import dataclass
 from pathlib import Path
 
-if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
-from scripts.common.repo_root import machinery_path, machinery_root
-
 
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mp(relative: str) -> str:
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+    return f"{_machinery_top()}/{relative}"
 
 
 def _mod(*parts: str) -> str:

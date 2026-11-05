@@ -49,22 +49,20 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.common.repo_root import machinery_path, machinery_root
     from scripts.common.safe_unit_install import InstallError, install_unit, open_state_log
 except ModuleNotFoundError:  # direct file-path invocation
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from scripts.common.repo_root import machinery_path, machinery_root
     from scripts.common.safe_unit_install import InstallError, install_unit, open_state_log
 
 
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mp(relative: str) -> str:
-    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+    return f"{_machinery_top()}/{relative}"
 
 
 def _mod(*parts: str) -> str:

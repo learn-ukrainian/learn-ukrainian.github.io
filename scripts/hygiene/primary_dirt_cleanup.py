@@ -30,7 +30,6 @@ import stat
 import sys
 from pathlib import Path
 
-from scripts.common.repo_root import machinery_root
 from scripts.guardrails import primary_dirt_audit as audit
 from scripts.guardrails import worktree_containment as wc
 
@@ -38,7 +37,7 @@ from scripts.guardrails import worktree_containment as wc
 def _machinery_top() -> str:
     package = __package__ or ""
     top = package.partition(".")[0]
-    return top or machinery_root().name
+    return top or Path(__file__).parents[1].name
 
 
 def _mod(*parts: str) -> str:
