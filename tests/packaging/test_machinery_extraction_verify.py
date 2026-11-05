@@ -649,6 +649,17 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
             "    from . import util\n"
             '    importlib.import_module("product_ns.child")\n'
             '    return __import__(name="pkg.worker")\n'
+            "\n\ndef loaders(name):\n"
+            "    import importlib\n"
+            '    importlib.import_module(".product_child", "lu_machinery.lib")\n'
+            '    importlib.import_module(name=".product_child", package=__package__)\n'
+            '    __import__("product_child", globals(), locals(), [], 1)\n'
+            '    __import__("lib", fromlist=["product_child"])\n'
+            "    from lu_machinery.lib import product_child\n"
+            "    import lu_machinery.pkg.worker\n"
+            '    importlib.import_module(".util", "lu_machinery.lib")\n'
+            '    importlib.util.find_spec(".x", name)\n'
+            '    return __import__("x", None, None, [], name)\n'
         )
         return {"lu_machinery/lib/util.py": util}
 
@@ -677,6 +688,17 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     assert "lu_machinery/lib/util.py:15: lib.util" in notes  # unprefixed machinery import: a note, not a finding
     assert "lu_machinery/lib/util.py:26: import of product_ns.child is a product package" in text  # loader call
     assert f"lu_machinery/lib/util.py:27: import of pkg.worker {parent}" in text
+    # Loader calls resolve relative targets, levels, fromlists and lu_machinery-qualified names.
+    child = "is a product package (scripts/lib/product_child)"
+    assert f"lu_machinery/lib/util.py:32: relative import of scripts.lib.product_child {child}" in text
+    assert f"lu_machinery/lib/util.py:33: relative import of scripts.lib.product_child {child}" in text
+    assert f"lu_machinery/lib/util.py:34: relative import of scripts.lib.product_child {child}" in text
+    assert f"lu_machinery/lib/util.py:35: import of lib.product_child {child}" in text
+    assert f"lu_machinery/lib/util.py:36: import of lu_machinery.lib.product_child {child}" in text
+    assert f"lu_machinery/lib/util.py:37: import of lu_machinery.pkg.worker {parent}" in text
+    assert "lu_machinery/lib/util.py:38:" not in text  # a machinery sibling through a loader
+    assert "lu_machinery/lib/util.py:39: relative loader target '.x' cannot be resolved statically" in text
+    assert "lu_machinery/lib/util.py:40: __import__ level is not a literal integer" in text
     assert "scripts/product_mod.py" not in text  # a product path literal is allowed
     assert "lu_machinery/dispatch.py" not in text  # its docstring prose keeps scripts.dispatch
 
@@ -973,6 +995,37 @@ def test_read_only_report_cannot_alias_an_input(world: World, where: str) -> Non
     assert not (world.src / "report.json").exists()
     assert not (world.extract / ".git" / "report.json").exists()
     assert not (world.tmp / "shared2.git/objects/report.json").exists()
+
+
+@pytest.mark.parametrize("pointer", ["gitdir", "commondir", "alternate"])
+def test_read_only_git_pointer_spellings_git_reads_differently_are_refused(tmp_path: Path, pointer: str) -> None:
+    """Git keeps a trailing blank in a pointer path; protecting the stripped path would miss it."""
+    module = _load_verifier()
+    repo = tmp_path / "repo"
+    git_dir = tmp_path / "private "
+    (git_dir / "objects" / "info").mkdir(parents=True)
+    repo.mkdir()
+    if pointer == "gitdir":
+        (repo / ".git").write_text(f"gitdir: {git_dir}\n", encoding="utf-8")
+    elif pointer == "commondir":
+        (repo / ".git").mkdir()
+        (repo / ".git" / "commondir").write_text(f"{git_dir}\n", encoding="utf-8")
+    else:
+        (repo / ".git" / "objects" / "info").mkdir(parents=True)
+        (repo / ".git" / "objects" / "info" / "alternates").write_text(f"{git_dir}\n", encoding="utf-8")
+    with pytest.raises(module.Unusable, match=f"unsupported {pointer} spelling"):
+        module.repo_storage(repo)
+
+
+def test_read_only_alternates_are_protected_and_cross_checked_with_git(world: World) -> None:
+    git(world.tmp, "init", "--quiet", "--bare", str(world.tmp / "shared.git"))
+    (world.extract / ".git/objects/info/alternates").write_text("../../../shared.git/objects\n")
+    code, _checks, output = world.run()
+    assert code == 0, output  # git's own git dir, common dir and alternate list are all protected
+    (world.extract / ".git/objects/info/alternates").write_text("../../../shared.git/objects \n")
+    code, _checks, output = world.run()
+    assert code == 2, output
+    assert "unsupported alternate spelling" in output
 
 
 def test_read_only_report_staging_never_follows_a_planted_link(tmp_path: Path, monkeypatch) -> None:

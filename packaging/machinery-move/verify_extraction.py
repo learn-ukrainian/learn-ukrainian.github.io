@@ -70,8 +70,10 @@ ZERO_OID = re.compile(r"0{40}(?:0{24})?")
 # A ``scripts.<name>`` module reference; ``scripts.py`` and other file names are not modules.
 MODULE_REF = re.compile(r"(?<![\w.\-/])scripts(?:\.[A-Za-z_]\w*)+")
 FILE_SUFFIXES = frozenset({"py", "pyc", "sh", "md", "json", "yaml", "yml", "txt", "toml", "cfg", "ini", "log"})
-# Calls whose literal first argument (or name=/mod_name=) is a module that gets imported.
-LOADERS = frozenset({"import_module", "__import__", "run_module"})
+# Calls whose literal first argument (or name=/mod_name=) names a module that gets imported, with its
+# parent packages: importlib.import_module and importlib.util.find_spec (relative with a package),
+# __import__ (level and fromlist), runpy.run_module and pkgutil.resolve_name ("module:attribute").
+LOADERS = frozenset({"import_module", "find_spec", "__import__", "run_module", "resolve_name"})
 PATH_REF = re.compile(r"(?<![\w.\-])(?:\./)?scripts/([\w.\-/]*)")
 # Environment variables that would let a source checkout or another repository leak in.
 STRIPPED_ENV_PREFIXES = ("PYTHON", "GIT_", "PYTEST_")
@@ -563,27 +565,55 @@ def require_worktree_equals_head(repo: Path, why: str) -> None:
         )
 
 
+def pointer_value(path: Path, text: str, what: str) -> str:
+    """A git pointer value, spelled exactly as git reads it, or exit 2 for a spelling git might read otherwise.
+
+    Git strips only line terminators from a .git file, commondir and an alternates line; every other
+    character, a trailing blank included, is part of the path. Any value with surrounding whitespace, a
+    carriage return, a control character or a quote is refused, so the path protected here is the one git
+    uses.
+    """
+    value = text.rstrip("\n")
+    if (
+        not value
+        or value != value.strip()
+        or value.startswith('"')
+        or any(ord(char) < 32 or ord(char) == 127 for char in value)
+    ):
+        raise Unusable(f"{path}: unsupported {what} spelling {value!r} (surrounding blanks, controls or quotes)")
+    return value
+
+
+def read_pointer_file(path: Path) -> str:
+    try:
+        return path.read_bytes().decode("utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise Unusable(f"cannot read {path}: {exc}") from exc
+
+
 def repo_storage(repo: Path) -> list[Path]:
     """The repository's git directory, common directory and every object store its alternates reach.
 
-    Found by reading files, without running git. A relative alternate is resolved against the object
-    store that names it, as git does, and alternates of alternates are followed (git stops at depth 5).
+    Found by reading files, without running git, and spelled as git reads them (see pointer_value). A
+    relative alternate is resolved against the object store that names it, as git does, and alternates of
+    alternates are followed (git stops at depth 5). check_storage_against_git later compares this with
+    git's own answer.
     """
     dot = repo / ".git"
-    if dot.is_dir():
+    if dot.is_dir() and not dot.is_symlink():
         git_dir = dot
-    elif dot.is_file():
-        text = dot.read_text(encoding="utf-8", errors="replace").strip()
-        if not text.startswith("gitdir:"):
-            return []
-        git_dir = Path(text[len("gitdir:") :].strip())
-        git_dir = git_dir if git_dir.is_absolute() else repo / git_dir
+    elif dot.is_file() or dot.is_symlink():
+        text = read_pointer_file(dot)
+        if not text.startswith("gitdir: "):
+            raise Unusable(f"{dot}: not a 'gitdir: ' pointer")
+        named = Path(pointer_value(dot, text[len("gitdir: ") :], "gitdir"))
+        git_dir = named if named.is_absolute() else repo / named
     else:
         return []
     common = git_dir
     pointer = git_dir / "commondir"
-    if pointer.is_file():
-        named = Path(pointer.read_text(encoding="utf-8", errors="replace").strip())
+    if pointer.exists():
+        named = Path(pointer_value(pointer, read_pointer_file(pointer), "commondir"))
         common = named if named.is_absolute() else git_dir / named
     found = [git_dir, common]
     seen: set[str] = set()
@@ -596,17 +626,26 @@ def repo_storage(repo: Path) -> list[Path]:
         seen.add(real)
         found.append(Path(real))
         alternates = Path(real) / "info" / "alternates"
-        if not alternates.is_file():
+        if not alternates.exists():
             continue
-        for line in alternates.read_text(encoding="utf-8", errors="replace").splitlines():
-            entry = line.strip()
-            if not entry or entry.startswith("#"):
+        for line in read_pointer_file(alternates).split("\n"):
+            if not line or line.startswith("#"):
                 continue
-            if entry.startswith('"'):
-                raise Unusable(f"{alternates} has a quoted entry; quoted alternates are not supported")
-            target = Path(entry)
+            target = Path(pointer_value(alternates, line, "alternate"))
             queue.append((target if target.is_absolute() else Path(real) / target, depth + 1))
     return [Path(os.path.realpath(path)) for path in found]
+
+
+def check_storage_against_git(repo: Path, protected: Sequence[Path]) -> None:
+    """Exit 2 unless every git directory and object store git itself reports is protected."""
+    reported = git_text(repo, "rev-parse", "--path-format=absolute", "--git-dir", "--git-common-dir")
+    paths = [Path(line) for line in reported.split("\n") if line]
+    out = git(repo, "count-objects", "-v").stdout.decode("utf-8", "surrogateescape")
+    paths += [Path(line[len("alternate: ") :]) for line in out.split("\n") if line.startswith("alternate: ")]
+    for path in paths:
+        real = Path(os.path.realpath(path))
+        if not any(real == root or inside(real, root) for root in protected):
+            raise Unusable(f"git uses {real} for {repo}, which the protected set misses; refusing to continue")
 
 
 def protected_paths(args: argparse.Namespace) -> list[Path]:
@@ -737,6 +776,9 @@ def load_inputs(args: argparse.Namespace) -> Inputs:
         tools_dir=tools_dir,
     )
     inputs.head = resolve_commit(repo, "HEAD", "--repo HEAD")
+    protected = protected_paths(args)
+    for checked in (repo, source_repo):
+        check_storage_against_git(checked, protected)
     if git(source_repo, "cat-file", "-e", f"{inputs.source}:{DISPATCH_SOURCE}", check=False).returncode != 0:
         raise Unusable(f"--source {inputs.source} has no {DISPATCH_SOURCE}")
     if inputs.run_tests:
@@ -1051,14 +1093,61 @@ class OwnershipIndex:
         return None
 
 
-def relative_base(rel: str, level: int) -> list[str] | None:
-    """The scripts/-relative package a relative import of this level starts from, or None outside lu_machinery/."""
+def file_package(rel: str) -> list[str] | None:
+    """The scripts/-relative package (__package__) of a file under lu_machinery/, or None elsewhere."""
     if not rel.startswith(NEW_PREFIX):
         return None
-    package = rel[len(NEW_PREFIX) :].split("/")[:-1]  # a module's and an __init__.py's package is its directory
-    if level - 1 > len(package):
+    return rel[len(NEW_PREFIX) :].split("/")[:-1]  # a module's and an __init__.py's package is its directory
+
+
+def climb(package: list[str] | None, level: int) -> list[str] | None:
+    """The package a relative import of this level starts from, or None when it leaves the tree."""
+    if package is None or level - 1 > len(package):
         return None
     return package[: len(package) - (level - 1)]
+
+
+def relative_base(rel: str, level: int) -> list[str] | None:
+    """The scripts/-relative package a relative import of this level starts from, or None outside lu_machinery/."""
+    return climb(file_package(rel), level)
+
+
+def extracted_name(name: str) -> str | None:
+    """The scripts/-relative name of a lu_machinery-qualified module name, or None for any other name."""
+    root = NEW_PREFIX.rstrip("/")
+    if name == root:
+        return ""
+    return name[len(root) + 1 :] if name.startswith(root + ".") else None
+
+
+def package_argument(node: ast.expr | None, rel: str) -> list[str] | None:
+    """The scripts/-relative package a loader's package argument names, when it is statically known."""
+    if isinstance(node, ast.Name) and node.id == "__package__":
+        return file_package(rel)
+    if isinstance(node, ast.Attribute) and node.attr == "parent" and isinstance(node.value, ast.Name):
+        return file_package(rel) if node.value.id == "__spec__" else None
+    if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value:
+        inner = extracted_name(node.value)
+        if inner is not None:
+            return inner.split(".") if inner else []
+        if node.value == "scripts" or node.value.startswith("scripts."):
+            return node.value.split(".")[1:]
+        return node.value.split(".")
+    return None
+
+
+def call_argument(call: ast.Call, index: int, *names: str) -> ast.expr | None:
+    found = call.args[index] if len(call.args) > index else None
+    for keyword in call.keywords:
+        if keyword.arg in names:
+            found = keyword.value
+    return found
+
+
+def literal_strings(node: ast.expr | None) -> list[str]:
+    if isinstance(node, ast.List | ast.Tuple | ast.Set):
+        return [item.value for item in node.elts if isinstance(item, ast.Constant) and isinstance(item.value, str)]
+    return []
 
 
 def scan_python_source(
@@ -1073,10 +1162,15 @@ def scan_python_source(
     findings: list[str] = []
     prose = docstring_nodes(tree)
 
-    def check_import(name: str, line: int, *, relative: bool = False) -> bool:
-        if not relative and (name == "scripts" or name.startswith("scripts.")):
-            findings.append(f"{rel}:{line}: import of {name}")
-            return True
+    def check_import(name: str, line: int, *, relative: bool = False, shown: str = "") -> bool:
+        """Report an import that needs product code. relative: name is already scripts/-relative."""
+        if not relative:
+            if name == "scripts" or name.startswith("scripts."):
+                findings.append(f"{rel}:{line}: import of {name}")
+                return True
+            inner = extracted_name(name)
+            if inner is not None:  # lu_machinery.<x> is scripts/<x> in the ownership map
+                return bool(inner) and check_import(inner, line, relative=True, shown=f"import of {name}")
         reason = index.product_dependency(name, relative=relative)
         if reason is None:
             top = name.split(".")[0]
@@ -1084,16 +1178,53 @@ def scan_python_source(
             if unprefixed is not None and not relative and plain and index.module_owner(name) == MACHINERY:
                 unprefixed.append(f"{rel}:{line}: {name}")
             return False
-        shown = f"relative import of scripts.{name}" if relative else f"import of {name}"
-        findings.append(f"{rel}:{line}: {shown} {reason}")
+        label = shown or (f"relative import of scripts.{name}" if relative else f"import of {name}")
+        findings.append(f"{rel}:{line}: {label} {reason}")
         return True
 
-    def check_from(module: str, names: Sequence[ast.alias], line: int, *, relative: bool) -> None:
-        if module and check_import(module, line, relative=relative):
+    def check_from(module: str, names: Sequence[str], line: int, *, relative: bool, shown: str = "") -> None:
+        if module and check_import(module, line, relative=relative, shown=shown):
             return
-        for alias in names:
-            if alias.name != "*":  # a submodule can have another owner than its package
-                check_import(f"{module}.{alias.name}" if module else alias.name, line, relative=relative)
+        for name in names:
+            if name != "*":  # a submodule can have another owner than its package
+                child = f"{module}.{name}" if module else name
+                check_import(child, line, relative=relative, shown=f"{shown}.{name}" if shown else "")
+
+    def check_relative(base: list[str] | None, rest: str, names: Sequence[str], line: int, what: str) -> None:
+        if base is None:
+            findings.append(f"{rel}:{line}: {what} cannot be resolved statically; its owner is unknown")
+            return
+        module = ".".join([*base, *(rest.split(".") if rest else [])])
+        check_from(module, names, line, relative=True)
+
+    def check_loader(call: ast.Call, called: str) -> None:
+        line = call.lineno
+        target_node = call_argument(call, 0, "name", "mod_name")
+        target = target_node.value if isinstance(target_node, ast.Constant) else None
+        if not isinstance(target, str) or not target:
+            return  # computed targets are beyond a static scan (the rename tools report them)
+        if called in ("import_module", "find_spec"):
+            if target.startswith("."):
+                level = len(target) - len(target.lstrip("."))
+                base = climb(package_argument(call_argument(call, 1, "package"), rel), level)
+                check_relative(base, target.lstrip("."), [], line, f"relative loader target {target!r}")
+            else:
+                check_import(target, line)
+        elif called == "__import__":
+            level_node = call_argument(call, 4, "level")
+            raw_level = 0 if level_node is None else level_node.value if isinstance(level_node, ast.Constant) else None
+            fromlist = literal_strings(call_argument(call, 3, "fromlist"))
+            if not isinstance(raw_level, int) or isinstance(raw_level, bool) or raw_level < 0:
+                findings.append(f"{rel}:{line}: __import__ level is not a literal integer; its owner is unknown")
+            elif raw_level > 0:
+                what = f"__import__({target!r}, level={raw_level})"
+                check_relative(relative_base(rel, raw_level), target, fromlist, line, what)
+            else:
+                check_from(target, fromlist, line, relative=False)
+        elif called == "resolve_name":
+            check_import(target.split(":", 1)[0], line)
+        else:
+            check_import(target, line)
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -1103,23 +1234,17 @@ def scan_python_source(
             for alias in node.names:
                 findings.append(f"{rel}:{node.lineno}: import of scripts.{alias.name}")
         elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
-            check_from(node.module, node.names, node.lineno, relative=False)
+            check_from(node.module, [alias.name for alias in node.names], node.lineno, relative=False)
         elif isinstance(node, ast.ImportFrom) and node.level > 0:
             base = relative_base(rel, node.level)
-            if base is not None:
-                module = ".".join([*base, *(node.module.split(".") if node.module else [])])
-                check_from(module, node.names, node.lineno, relative=True)
+            if base is not None:  # outside lu_machinery/ a relative import cannot reach scripts/
+                names = [alias.name for alias in node.names]
+                check_relative(base, node.module or "", names, node.lineno, "relative import")
         elif isinstance(node, ast.Call):
             func = node.func
             called = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
             if called in LOADERS:
-                target = node.args[0] if node.args else None
-                for keyword in node.keywords:
-                    if keyword.arg in ("name", "mod_name"):
-                        target = keyword.value
-                literal = target.value if isinstance(target, ast.Constant) else None
-                if isinstance(literal, str) and literal and not literal.startswith("."):
-                    check_import(literal, node.lineno)
+                check_loader(node, called)
         elif isinstance(node, ast.Constant) and isinstance(node.value, str | bytes) and id(node) not in prose:
             text = node.value if isinstance(node.value, str) else node.value.decode("latin-1")
             for match in MODULE_REF.finditer(text):
@@ -1690,7 +1815,10 @@ Checks (every finding is printed; nothing stops at the first one):
   V4  static AST scan of every .py file at HEAD: imports of scripts, and any import that needs product code
       per --map. That covers a product module or namespace package, a product __init__.py that Python
       initializes on the way to a machinery module, a from-import's product submodule, a relative import
-      resolved under scripts/, and the literal target of import_module/__import__/run_module. Also
+      resolved under scripts/, a lu_machinery-qualified name mapped back to scripts/, and the literal target
+      of import_module/find_spec (relative ones through a literal package or __package__), __import__
+      (level and fromlist), run_module and pkgutil.resolve_name; a relative target that cannot be resolved
+      statically is a finding. Also
       `scripts.<module>` in string literals, and string literals naming machinery scripts/ files or
       directories, the scripts/ root included.
       Docstrings and comments are prose and are not scanned; paths split into components are not literals.
