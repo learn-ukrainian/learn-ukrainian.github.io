@@ -13,6 +13,13 @@ from packaging.requirements import InvalidRequirement, Requirement
 from packaging.utils import canonicalize_name
 from packaging.version import Version
 
+
+def _mp(relative: str) -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return f"{top or Path(__file__).parents[1].name}/{relative}"
+
+
 DEFAULT_LOCK = Path(__file__).resolve().parents[2] / "requirements-lock.txt"
 
 
@@ -108,9 +115,9 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /path/to/project/.venv/bin/python scripts/maintenance/venv_lock_drift.py "
+            f"  /path/to/project/.venv/bin/python {_mp('maintenance/venv_lock_drift.py')} "
             "--python /path/to/project/.venv/bin/python\n"
-            "  /path/to/project/.venv/bin/python scripts/maintenance/venv_lock_drift.py "
+            f"  /path/to/project/.venv/bin/python {_mp('maintenance/venv_lock_drift.py')} "
             "--python /path/to/venv/bin/python --lock requirements-lock.txt\n\n"
             "Outputs: Compact counts and sample distribution names; writes no files. "
             "Requires uv on PATH. Run uv pip check separately for dependency consistency.\n"

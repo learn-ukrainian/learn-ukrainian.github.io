@@ -21,6 +21,17 @@ from pathlib import Path
 from scripts.common import github_client as owner
 
 
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or Path(__file__).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
+
 class _Refused(Exception):
     """A fixed, privacy-safe refusal code, never a filesystem or SQL message."""
 
@@ -227,9 +238,9 @@ def main(argv: list[str] | None = None) -> int:
         description="Report physical GitHub cache storage, or explicitly reclaim free pages.\n"
         "Use for owner-cache maintenance, never for arbitrary databases or row eviction.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.maintenance.github_cache
-  .venv/bin/python -m scripts.maintenance.github_cache --apply --timeout-seconds 60
+        epilog=f"""Examples:
+  .venv/bin/python -m {_mod('maintenance', 'github_cache')}
+  .venv/bin/python -m {_mod('maintenance', 'github_cache')} --apply --timeout-seconds 60
 Outputs: one aggregate JSON receipt; --apply runs journaled VACUUM in place.
 Exit codes: 0 report/reclaimed/no_op; 2 refused; 130 interrupted.
 Related: docs/runbooks/github-cache-maintenance.md; issue #11362.
