@@ -32,13 +32,18 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     __package__ = "scripts.ai_agent_bridge"
 
 try:
-    from scripts.common.repo_root import machinery_path
     from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from common.repo_root import machinery_path  # type: ignore[no-redef]
     from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+
+try:
+    from scripts.common.repo_root import machinery_path
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from common.repo_root import machinery_path  # type: ignore[no-redef]
 
 from agent_runtime.agent_identity import seat_read_aliases
 from secret_redactor import redact_text
