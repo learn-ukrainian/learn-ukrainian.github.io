@@ -36,6 +36,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 import scripts.github_rest_cache as github_rest
 from scripts.common.jsonl import physical_lines
 from scripts.common.release_layout import is_release_root
+from scripts.common.repo_root import machinery_path
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
@@ -926,7 +927,7 @@ def _collect_delegate_orient_data(ctx: MonitorContext | None = None) -> dict:
 def _collect_capacity_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved_ctx = resolve_context(ctx)
     budget = state_api.compute_routing_budget(
-        budget_config_path=resolved_ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+        budget_config_path=machinery_path("config/agent_budgets.yaml"),
         tasks_dir=resolved_ctx.roots.batch_state_dir / "tasks",
         project_root=resolved_ctx.roots.project_root,
         curriculum_root=resolved_ctx.roots.curriculum_root,

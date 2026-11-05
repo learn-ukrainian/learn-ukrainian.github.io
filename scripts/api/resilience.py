@@ -158,11 +158,14 @@ def _record_slow_sql(query: str, elapsed_ms: float, caller: str) -> None:
 
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
+_SELF_SUFFIX = (
+    f"{Path(__file__).parents[1].name}/{Path(__file__).parent.name}/{Path(__file__).name}"
+)
 
 
 def _caller() -> str:
     for frame in inspect.stack()[2:8]:
-        if not frame.filename.endswith("scripts/api/resilience.py"):
+        if not frame.filename.endswith(_SELF_SUFFIX):
             return _sanitize_caller(frame.filename, frame.lineno)
     return "unknown"
 

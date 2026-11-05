@@ -85,8 +85,12 @@ def _get_login_env() -> dict:
         _LOGIN_ENV_CACHE = _capture_login_env()
     return _LOGIN_ENV_CACHE
 
-# Configuration
-VENV_PYTHON = project_interpreter()
+
+def _project_python() -> Path:
+    """Resolve the project interpreter when a child is launched, not at import."""
+    return project_interpreter()
+
+
 DB_PATH = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/messages.db"
 PID_FILE = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/watcher.pid"
 LOG_FILE = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/watcher.log"
@@ -340,7 +344,7 @@ def trigger_agent(agent: str, message_id: int, task_id: str | None = None, from_
     try:
         bridge_cmd = agents[agent]["bridge_command"]
         cmd = [
-            str(VENV_PYTHON),
+            str(_project_python()),
             str(BRIDGE_SCRIPT),
             bridge_cmd,
             str(message_id)

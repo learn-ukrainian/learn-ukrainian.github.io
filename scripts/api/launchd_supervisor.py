@@ -26,6 +26,7 @@ from typing import Any
 from xml.parsers.expat import ExpatError
 
 from scripts.api.release_snapshot import build_release, prune_releases
+from scripts.common.repo_root import machinery_path
 from scripts.common.safe_unit_install import (
     InstallError,
     check_state_paths,
@@ -51,6 +52,20 @@ _STOP_UNLOAD_TIMEOUT_SECONDS = 12.0
 _STOP_UNLOAD_POLL_SECONDS = 0.1
 LAUNCHCTL_TIMEOUT_SECONDS: float = 15.0
 GIT_REV_PARSE_TIMEOUT_SECONDS: float = 15.0
+
+
+def _package_top() -> str:
+    """Unresolved name of this file's top package directory."""
+    return Path(__file__).parents[1].name
+
+
+def _self_module() -> str:
+    here = Path(__file__)
+    return f"{here.parents[1].name}.{here.parent.name}.{here.stem}"
+
+
+def _api_app() -> str:
+    return f"{_package_top()}.{Path(__file__).parent.name}.main:app"
 
 
 class LaunchdError(RuntimeError):
@@ -165,7 +180,7 @@ def _validate_runtime(repo_root: Path) -> None:
     # Intentional: the LaunchAgent is bound to this repo_root, which may not
     # be the process's primary checkout.
     interpreter = repo_root / ".venv" / "bin" / "python"
-    supervisor = repo_root / "scripts" / "api" / "launchd_supervisor.py"
+    supervisor = machinery_path("api/launchd_supervisor.py")
     wrapper = wrapper_path(repo_root)
     if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
         raise LaunchdError(f"required interpreter is missing or not executable: {interpreter}")
@@ -509,13 +524,13 @@ def _prepare_api_command(repo_root: Path, *, live_mode: bool, port: int) -> tupl
         "-B",
         "-m",
         "uvicorn",
-        "scripts.api.main:app",
+        _api_app(),
         "--host",
         "127.0.0.1",
         "--port",
         str(port),
         "--log-config",
-        "scripts/api/logging.json",
+        str(machinery_path("api/logging.json")),
         "--timeout-graceful-shutdown",
         "8",
     ]
@@ -635,8 +650,8 @@ def build_parser() -> argparse.ArgumentParser:
         description=__doc__ + "\nUse status for read-only checks; start/stop change the local service.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python -m scripts.api.launchd_supervisor status\n"
-        "  .venv/bin/python -m scripts.api.launchd_supervisor install --dry-render\n"
+        f"  .venv/bin/python -m {_self_module()} status\n"
+        f"  .venv/bin/python -m {_self_module()} install --dry-render\n"
         "Outputs: JSON state, or rendered plist; install/start/stop/uninstall mutate local service state.\n"
         "Exit codes: 0 success or healthy status; 1 failure or unhealthy/unsafe status.\n"
         "Related: #9894; docs/runbooks/launchd-inventory.md",
