@@ -23,6 +23,11 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.common.safe_unit_install import InstallError, ensure_state_dirs, install_unit, load_unit
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 LABEL = "com.learn-ukrainian.project-state-reporter"
 DEFAULT_INTERVAL_MINUTES = 5
 DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS = 30.0
@@ -44,7 +49,7 @@ def plist_path(home: Path) -> Path:
 
 
 def wrapper_path(repo_root: Path) -> Path:
-    return repo_root / "scripts" / "orchestration" / WRAPPER_NAME
+    return repo_root / _PACKAGE_DIR / WRAPPER_NAME
 
 
 def build_plist(*, repo_root: Path, home: Path, interval_minutes: int) -> dict[str, Any]:

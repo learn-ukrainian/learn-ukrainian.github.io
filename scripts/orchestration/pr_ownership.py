@@ -44,6 +44,13 @@ from scripts.common import github_client
 from scripts.common.github_client import GitHubRateLimited
 from scripts.common.task_store_paths import tasks_dir
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MACHINERY = _PACKAGE.partition(".")[0]
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 GRACE = timedelta(minutes=15)
 REMINDER = timedelta(minutes=60)
 TICK_INTERVAL = timedelta(minutes=5)
@@ -314,7 +321,7 @@ def _message(kind: str, rows: list[dict[str, Any]]) -> str:
     lines = {
         "alert": "Ownerless PRs: no live owning task for 15 minutes. Seat one owner per PR, or record "
                  "custody with a reason and a decision owner "
-                 "(python -m scripts.orchestration.pr_ownership accept --pr N --reason ... "
+                 f"(python -m {_MODULE} accept --pr N --reason ... "
                  "--decision-owner ...). The alert stays outstanding until that acceptance is recorded.",
         "reminder": "Still ownerless PRs: no successor has accepted the handoff yet.",
         "cleared": "Ownerless-PR alerts cleared.",
@@ -881,13 +888,13 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  python -m scripts.orchestration.pr_ownership check\n"
-            "  python -m scripts.orchestration.pr_ownership status\n"
-            "  python -m scripts.orchestration.pr_ownership accept --pr 42\n"
-            "  python -m scripts.orchestration.pr_ownership accept --pr 42 --custody --from TASK\n"
-            "  python -m scripts.orchestration.pr_ownership accept --pr 42 --reason REASON --decision-owner OWNER\n"
-            "  python -m scripts.orchestration.pr_ownership accept --pr 42 --release\n"
-            "  python -m scripts.orchestration.pr_ownership queue-exit --pr 42\n\n"
+            f"  python -m {_MODULE} check\n"
+            f"  python -m {_MODULE} status\n"
+            f"  python -m {_MODULE} accept --pr 42\n"
+            f"  python -m {_MODULE} accept --pr 42 --custody --from TASK\n"
+            f"  python -m {_MODULE} accept --pr 42 --reason REASON --decision-owner OWNER\n"
+            f"  python -m {_MODULE} accept --pr 42 --release\n"
+            f"  python -m {_MODULE} queue-exit --pr 42\n\n"
             "accept --reason and --decision-owner records coordinator custody with no dispatch task.\n"
             "--release drops that custody. The PR is not alerted again while it stays open.\n"
             "Other accept and queue-exit act as the dispatch task named by LEARN_UKRAINIAN_DISPATCH_TASK_ID.\n"
@@ -896,7 +903,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Exit codes: 0 accepted / may exit / every PR owned / status printed;\n"
             "  1 refused / keep waiting / a PR is ownerless;\n"
             "  2 GitHub, task records or ownership state unreadable, or an owner unobservable (unknown).\n"
-            "Related: scripts/fleet/pr_owner_check.py, scripts/orchestration/merge_queue_keeper.py, "
+            f"Related: {_MACHINERY}/fleet/pr_owner_check.py, {_PACKAGE_DIR}/merge_queue_keeper.py, "
             "full-send references/pr-watch.md, epic #10453."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

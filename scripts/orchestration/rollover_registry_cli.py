@@ -17,6 +17,11 @@ from scripts.orchestration import thread_handoff
 from scripts.orchestration.task_family import rollover_registry as registry
 from scripts.orchestration.task_family.storage import advisory_lock
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 
 def _roots(repo_root: Path | None) -> tuple[Path, Path]:
     return thread_handoff.resolve_roots(repo_root)
@@ -318,8 +323,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/orchestration/rollover_registry_cli.py audit\n"
-            "  .venv/bin/python scripts/orchestration/rollover_registry_cli.py dispose-exited-successor-exact "
+            f"  .venv/bin/python {_PACKAGE_DIR}/rollover_registry_cli.py audit\n"
+            f"  .venv/bin/python {_PACKAGE_DIR}/rollover_registry_cli.py dispose-exited-successor-exact "
             "--agent codex-infra --lineage-id lineage-a1 --rollover-id rollover-r1 --plan --proof-file proof.json\n"
             "Outputs: JSON; authorized apply writes registry state, immutable plans, intents and receipts. "
             "Lease files are preserved.\n"
@@ -393,7 +398,7 @@ def build_parser() -> argparse.ArgumentParser:
                 "Use the canonical exited-successor command when a runtime exists."
             ),
             epilog=(
-                "Example: .venv/bin/python scripts/orchestration/rollover_registry_cli.py "
+                f"Example: .venv/bin/python {_PACKAGE_DIR}/rollover_registry_cli.py "
                 "dispose-legacy-resumed-exact --agent codex-infra --lineage-id lineage-a1 "
                 "--rollover-id rollover-r1 --plan --proof-file operator-proof.json\n"
                 "Outputs: immutable plan; --apply writes the registry disposition, intent and receipt. "

@@ -18,10 +18,9 @@ from mcp.server.mcpserver import MCPServer
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-from scripts.common.repo_root import project_interpreter
+from scripts.common.repo_root import machinery_path, project_interpreter
 
-TRAIL_RUNNER = PROJECT_ROOT / "scripts" / "orchestration" / "trail_runner.py"
-PYTHON_BIN = project_interpreter()
+TRAIL_RUNNER = machinery_path("orchestration/trail_runner.py")
 _RUNNER_TIMEOUT_SECONDS = 90
 
 mcp = MCPServer(
@@ -45,10 +44,15 @@ def _require_identifier(value: str, *, field: str) -> str:
 
 def _run_runner(*args: str) -> dict[str, Any]:
     """Call one fixed P3 runner verb and preserve its JSON result verbatim."""
-    if not PYTHON_BIN.is_file() or not TRAIL_RUNNER.is_file():
+    # The interpreter is resolved for each call, never at import.
+    try:
+        python_bin = project_interpreter()
+    except (FileNotFoundError, ValueError) as exc:
+        raise TrailMcpError(f"parent-owned TrailSpec runner is unavailable: {exc}") from exc
+    if not python_bin.is_file() or not TRAIL_RUNNER.is_file():
         raise TrailMcpError("parent-owned TrailSpec runner is unavailable")
     completed = subprocess.run(
-        [str(PYTHON_BIN), str(TRAIL_RUNNER), *args],
+        [str(python_bin), str(TRAIL_RUNNER), *args],
         cwd=PROJECT_ROOT,
         capture_output=True,
         check=False,

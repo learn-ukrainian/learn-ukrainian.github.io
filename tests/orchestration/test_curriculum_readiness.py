@@ -132,24 +132,23 @@ def test_readiness_gates_refuse_file_growth(gates_importer, tmp_path: Path, monk
 
 
 @pytest.mark.parametrize("origin", [None, "foreign/readiness_gates.py"])
-def test_readiness_gates_refuse_foreign_cache_at_startup(
+def test_readiness_gates_refuse_foreign_cache_when_loaded(
     gates_importer, tmp_path: Path, monkeypatch, origin: str | None,
 ) -> None:
     module = ModuleType("scripts.curriculum.readiness_gates")
     module.__file__ = str(tmp_path / origin) if origin else None
     monkeypatch.setitem(sys.modules, module.__name__, module)
+    runpy.run_path(gates_importer.__file__, run_name="startup_probe")
     with pytest.raises(ImportError, match="not a file in this checkout"):
-        runpy.run_path(gates_importer.__file__, run_name="startup_probe")
+        gates_importer.readiness_gates()
 
 
-def test_readiness_gate_startup_bindings_remain_pinned(monkeypatch) -> None:
+def test_readiness_gates_load_the_configured_product_module() -> None:
     from scripts.curriculum import readiness_gates
 
-    original = readiness.base_level
-    assert original is readiness_gates.base_level
-    assert readiness._gates_module_name() == "scripts.curriculum.readiness_gates"
-    monkeypatch.setattr(readiness_gates, "base_level", lambda *_args, **_kwargs: "changed")
-    assert readiness.base_level is original
+    assert readiness._gates_module_name(REPO_ROOT / readiness.READINESS_GATES_FILE) == "scripts.curriculum.readiness_gates"
+    assert readiness.readiness_gates() is readiness_gates
+    assert readiness.readiness_gates(product_root=REPO_ROOT) is readiness_gates
 
 
 def _copy(repo_root: Path, relative: str | Path) -> None:

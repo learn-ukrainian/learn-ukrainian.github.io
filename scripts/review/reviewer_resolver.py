@@ -59,6 +59,10 @@ from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclu
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
+# Native AGY and Muse reviews run through the dispatcher, which the catalog names by its
+# checkout-relative path. Its first component is the machinery package's import name, not
+# the resolved package directory, so a symlinked package keeps its checkout name.
+_NATIVE_REVIEW_EXECUTABLE = f"{__name__.partition('.')[0]}/dispatch.py"
 
 
 def normalize_review_task_id(task_id: str, *, agent: str = "") -> str:
@@ -805,7 +809,7 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
                 candidate.participant != "agy"
                 or candidate.catalog_transport != "agy"
                 or candidate.transport != "agy"
-                or candidate.sealed_executable != "scripts/dispatch.py"
+                or candidate.sealed_executable != _NATIVE_REVIEW_EXECUTABLE
             ):
                 return "native AGY review endpoint identity is invalid"
         elif native_muse:
@@ -813,7 +817,7 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
                 candidate.participant != "muse"
                 or candidate.catalog_transport != "native_muse"
                 or candidate.transport != "native_muse"
-                or candidate.sealed_executable != "scripts/dispatch.py"
+                or candidate.sealed_executable != _NATIVE_REVIEW_EXECUTABLE
             ):
                 return "native Muse review endpoint identity is invalid"
             if not _contributor_mode_off(candidate.invocation):

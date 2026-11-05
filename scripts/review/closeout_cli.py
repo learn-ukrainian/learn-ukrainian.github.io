@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -906,14 +907,32 @@ def _cmd_behavior_proof_receipt(args: argparse.Namespace) -> int:
     return 0
 
 
-_CLOSEOUT_EPILOG = """\
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+
+
+def _checkout_relative(relative: str) -> str:
+    """The checkout-relative name of machinery file ``relative``, as help text shows it."""
+    return f"{_MACHINERY}/{relative}"
+
+
+# Help-text names: this CLI as it was started (its import name under ``-m``, else its file),
+# and machinery files by their checkout-relative paths.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+_EXAMPLE_OWNED_PATH = _checkout_relative("agent_runtime/adapters/grok_build.py")
+_RESOLVER_FILE = _checkout_relative("review/reviewer_resolver.py")
+_SUBJECT_SEAT_FILE = _checkout_relative("review/subject_seat.py")
+_CATALOG_FILE = _checkout_relative("config/model_catalog.yaml")
+
+_CLOSEOUT_EPILOG = f"""\
 Examples:
-  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
+  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\
     target --mode pr --pr 8946 --repo-root .
-  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
+  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\
     resolve-reviewer --author-model codex:gpt-6.1-sol --risk high --domain infra \\
-    --owned-path scripts/agent_runtime/adapters/grok_build.py
-  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
+    --owned-path {_EXAMPLE_OWNED_PATH}
+  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\
     resolve-reviewer --author-model claude --subject-seat grok
 
 NOTE: --state-file is a global argument and must precede the subcommand.
@@ -931,15 +950,15 @@ Exit codes:
 
 Related:
   agents_extensions/shared/skills/local-code-review/local-code-review-checklist.md
-  scripts/review/reviewer_resolver.py
-  scripts/config/model_catalog.yaml
+  {_RESOLVER_FILE}
+  {_CATALOG_FILE}
   issue #8946 (subject-seat exclusion) under epic #8875
 """
 
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog=".venv/bin/python -m scripts.review.closeout_cli",
+        prog=f".venv/bin/python {_ENTRY}",
         description=(
             "Drive one local code-review closeout from a single state file.\n"
             "Use it for target, scope freeze, findings, and cross-family reviewer "
@@ -1007,7 +1026,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p_freeze.add_argument(
         "--owner-boundary",
         required=True,
-        help="Paths or surfaces this change owns. Example: scripts/review",
+        help=f"Paths or surfaces this change owns. Example: {_checkout_relative('review')}",
     )
     p_freeze.add_argument(
         "--review-profile",
@@ -1072,12 +1091,12 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
+            f"  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\\n"
             "    resolve-reviewer --author-model claude --risk high\n"
-            "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
+            f"  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\\n"
             "    resolve-reviewer --author-model codex:gpt-6.1-sol --domain infra --risk high \\\n"
-            "    --owned-path scripts/agent_runtime/adapters/grok_build.py\n"
-            "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
+            f"    --owned-path {_EXAMPLE_OWNED_PATH}\n"
+            f"  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\\n"
             "    resolve-reviewer --author-model claude --subject-seat grok --subject-family xai\n"
             "\n"
             "Outputs:\n"
@@ -1094,9 +1113,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "     seat/family, an unreadable default-account file, or no eligible reviewer)\n"
             "\n"
             "Related:\n"
-            "  scripts/review/reviewer_resolver.py\n"
-            "  scripts/review/subject_seat.py\n"
-            "  scripts/config/model_catalog.yaml\n"
+            f"  {_RESOLVER_FILE}\n"
+            f"  {_SUBJECT_SEAT_FILE}\n"
+            f"  {_CATALOG_FILE}\n"
             "  agents_extensions/shared/skills/local-code-review/local-code-review-checklist.md\n"
             "  issue #8946\n"
         ),
@@ -1191,7 +1210,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Repo path owned by the change (repeatable). Default: none, so nothing "
             "is inferred and selection is unchanged. Example: "
-            "--owned-path scripts/agent_runtime/adapters/grok_build.py. "
+            f"--owned-path {_EXAMPLE_OWNED_PATH}. "
             "An unambiguous per-seat adapter or reviewer hook infers that seat. "
             "An ambiguous path (shared acpx.py, base.py, guard-reviewer-publish.py) "
             "fails closed unless --subject-seat or --subject-family is also set."
@@ -1272,9 +1291,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Proof status. Example: pass. n/a requires --reason.",
     )
     command_or_step = behavior_record.add_mutually_exclusive_group()
-    command_or_step.add_argument(
-        "--command", help="Command that was run. Example: .venv/bin/python -m scripts.review.closeout_cli --help"
-    )
+    command_or_step.add_argument("--command", help=f"Command that was run. Example: .venv/bin/python {_ENTRY} --help")
     command_or_step.add_argument(
         "--step", help="Non-command step that was exercised. Example: clicked the submit control"
     )

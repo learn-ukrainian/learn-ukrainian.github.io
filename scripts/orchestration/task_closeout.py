@@ -38,6 +38,12 @@ from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration import lifecycle_observation, task_identity, task_lifecycle
 from scripts.publish.github import Request, request_run
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_MACHINERY = _PACKAGE.partition(".")[0]
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 Runner = Callable[[list[str], str | None], str]
 
 
@@ -224,7 +230,7 @@ class GhGitHubAdapter:
             # Closed epics stay in the file for launcher and Work API consumers.
             # Membership roots are the audit registry only (#12176).
             registry = issue_stream_audit.load_registry(
-                self.repo_root / "scripts" / "config" / "issue_streams.yaml",
+                self.repo_root / _MACHINERY / "config" / "issue_streams.yaml",
                 audit_only=True,
             )
         except (OSError, ValueError) as exc:
@@ -1254,7 +1260,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.task_closeout init --help\n  .venv/bin/python -m scripts.orchestration.task_closeout carrier --state-file ledger.json\n  .venv/bin/python -m scripts.orchestration.task_closeout reconcile --state-file ledger.json\nOutputs: Local lifecycle ledgers and JSON receipts; only mutate can change GitHub.\nExit codes: 0: command succeeded; >=1: refused or failed (locate: 1 if absent).\nRelated: task-identity.md, task-lifecycle-closeout.md; #9297, #10143",
+        epilog=f"Examples:\n  .venv/bin/python -m {_MODULE} init --help\n  .venv/bin/python -m {_MODULE} carrier --state-file ledger.json\n  .venv/bin/python -m {_MODULE} reconcile --state-file ledger.json\nOutputs: Local lifecycle ledgers and JSON receipts; only mutate can change GitHub.\nExit codes: 0: command succeeded; >=1: refused or failed (locate: 1 if absent).\nRelated: task-identity.md, task-lifecycle-closeout.md; #9297, #10143",
     )
     parser.add_argument("--repo-root", type=Path, default=repo_root_from_file(), help='Repository worktree root; defaults to this checkout.')
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1262,8 +1268,8 @@ def build_parser() -> argparse.ArgumentParser:
         "recover-local", help="Legacy tasks only: append a verified local observation for an already-reaped merged task.",
         description="Legacy tasks only: recover historical dispatch facts from a verified preservation bundle, after removal.\nDispatch v2 tasks need no recovery; mutate close-issue observes the cleanup of a merged task itself.\nChild association and historical common-closeout recovery read GitHub; ordinary recovery is offline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Example:
-  .venv/bin/python -m scripts.orchestration.task_closeout recover-local --state-file ledger.json --task-record task.json --preserved-manifest batch_state/preserved/task/attempt.manifest.json --push-record push.json
+        epilog=f"""Example:
+  .venv/bin/python -m {_MODULE} recover-local --state-file ledger.json --task-record task.json --preserved-manifest batch_state/preserved/task/attempt.manifest.json --push-record push.json
 Outputs: One append-only lifecycle receipt, or the existing verified receipt on retry.
 Exit codes: 0 = recovered/replayed; 2 = typed refusal; no GitHub mutation.
 Related: docs/runbooks/worktree-cleanup.md; #10752.
@@ -1331,7 +1337,7 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
         "correct-evidence-types", help="Append an attributed correction to one criterion's required evidence types.",
         description="Correct wrongly frozen required evidence types while retaining prior snapshots and proof.\nUse before the criterion is checked or the issue is completed; never substitutes for evidence.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.task_closeout correct-evidence-types --state-file ledger.json --ac-id AC-02 --required-evidence document --required-evidence review --actor codex/task --reason 'Documentation criterion'\nOutputs: Atomic local ledger update and append-only correction receipt; reads GitHub without mutating it.\nExit codes: 0: corrected or replayed; 2: typed refusal, ledger unchanged.\nRelated: task-lifecycle-closeout.md; #12608.",
+        epilog=f"Examples:\n  .venv/bin/python -m {_MODULE} correct-evidence-types --state-file ledger.json --ac-id AC-02 --required-evidence document --required-evidence review --actor codex/task --reason 'Documentation criterion'\nOutputs: Atomic local ledger update and append-only correction receipt; reads GitHub without mutating it.\nExit codes: 0: corrected or replayed; 2: typed refusal, ledger unchanged.\nRelated: task-lifecycle-closeout.md; #12608.",
     )
     correction.add_argument("--state-file", required=True, help="Existing lifecycle JSON ledger, e.g. ledger.json.")
     correction.add_argument("--ac-id", required=True, help="Exact stable criterion ID, e.g. AC-02.")
