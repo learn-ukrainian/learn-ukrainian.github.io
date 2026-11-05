@@ -32,9 +32,12 @@ def _packaged_script(name: str) -> str:
     """Checkout-relative path of a sibling while this file is still in the package.
 
     The coverage-ref workflow copies this file out of the checkout and runs that
-    copy, so the path is taken from this file and nothing else is imported.
+    copy. A copy's parent is not ``ci``, so help names the file alone.
     """
-    return f"{Path(__file__).resolve().parents[1].name}/ci/{name}"
+    here = Path(__file__).resolve()
+    if here.parent.name != "ci":
+        return name
+    return f"{here.parents[1].name}/ci/{name}"
 
 
 class CollectionRecorder:
