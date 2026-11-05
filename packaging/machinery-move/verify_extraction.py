@@ -1073,16 +1073,22 @@ def rename_args(inputs: Inputs, tool: str, mode: str, root: Path, report: Path, 
 
 def check_v5(inputs: Inputs, scratch: Path) -> CheckResult:
     result = CheckResult("V5", "held-out rename expectations hold; rename tools find nothing left to rewrite")
-    tree = set(tree_paths(inputs.repo, "HEAD"))
+    blob_ids: dict[str, str] = {}
+    for line in git_z(inputs.repo, "ls-tree", "-r", "-z", "--full-tree", "HEAD"):
+        meta, path = line.split("\t", 1)
+        mode, kind, oid = meta.split()
+        if kind == "blob" and mode in ("100644", "100755"):
+            blob_ids[path] = oid
+    wanted = sorted({blob_ids[row.dest] for row in inputs.expectations if row.dest in blob_ids})
+    contents = read_blobs(inputs.repo, wanted)  # the final-tree bytes, never a file reached through a link
     per_class = dict.fromkeys(CLASSES, 0)
     for row in inputs.expectations:
         per_class[row.klass] += 1
         where = f"expectation line {row.line} ({row.klass} {row.dest})"
-        if row.dest not in tree:
-            result.fail(f"{where}: file is not in the final tree")
+        if row.dest not in blob_ids:
+            result.fail(f"{where}: no regular file at this path in the final tree")
             continue
-        content = (inputs.repo / row.dest).read_bytes()
-        found = row.literal.encode("utf-8") in content
+        found = row.literal.encode("utf-8") in contents[blob_ids[row.dest]]
         if row.present and not found:
             result.fail(f"{where}: expected literal {row.literal!r} is missing")
         elif not row.present and found:

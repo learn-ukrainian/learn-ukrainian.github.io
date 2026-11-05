@@ -669,7 +669,10 @@ def test_v5_rename_defect_failed_expectation_rows(world: World) -> None:
     text = findings(checks, "V5")
     assert "line 6 (module-strings lu_machinery/lib/util.py): forbidden literal" in text
     assert "line 7 (resource-paths agents_extensions/shared/rules/core.md): expected literal" in text
-    assert "line 8 (non-python agents_extensions/shared/rules/absent.md): file is not in the final tree" in text
+    assert (
+        "line 8 (non-python agents_extensions/shared/rules/absent.md): no regular file at this path in the final tree"
+        in text
+    )
 
 
 def test_v5_rename_defect_missing_class_is_unusable_input(world: World) -> None:
