@@ -324,7 +324,8 @@ jobs:
         run: rm -rf "$RUNNER_TEMP/zizmor" "$RUNNER_TEMP/zizmor-venv" "$RUNNER_TEMP/zizmor-requirements.txt"
 
   # From secret-scan.yml: same pins, flags, failure handling and redaction. Added
-  # here: the hosted runner and the scanned commit count.
+  # here: the hosted runner, the scanned commit count and the exclusion
+  # coverage check.
   secret-scan:
     name: Secret scan (TruffleHog)
     runs-on: ubuntu-24.04
@@ -334,6 +335,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      # For the exclusion coverage check only; the scanner is a Go binary.
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12.15"
 
       - name: Install TruffleHog (pinned, checksum-verified)
         run: |
@@ -393,6 +399,92 @@ jobs:
           rm -rf "$work"
           mkdir -p "$work/home" "$work/tmp"
           findings="$work/findings.jsonl"
+
+          # Exclusion coverage. TruffleHog reports no per-file coverage, so the
+          # exclusions are applied here to the head tree the way TruffleHog
+          # 3.99.0 applies them (pkg/common/filter.go and pkg/sources/git/git.go:
+          # comment and blank lines are skipped, every other line is a regular
+          # expression searched in the repository-relative path, and a match
+          # skips the file). The job fails unless Python and workflow files
+          # remain in scope. Patterns are limited to a syntax subset that
+          # Python's re (ASCII mode) and Go's regexp read the same way; any
+          # other pattern fails the job. Only counts and line numbers are
+          # printed. Files changed in the scanned range are counted for the
+          # log only: a pull request that changes only documentation, or only
+          # deletes files, is still scanned and can pass.
+          ignore="${GITHUB_WORKSPACE}/.trufflehogignore"
+          if [ ! -f "$ignore" ]; then
+            echo "::error::.trufflehogignore is missing at the repository root; the scan cannot run"
+            exit 1
+          fi
+          git ls-tree -r -z --name-only "$head" > "$work/head-paths"
+          if [ -n "$base" ]; then
+            git diff -z --name-only --no-renames --diff-filter=d "$base" "$head" > "$work/range-paths"
+          else
+            : > "$work/range-paths"
+          fi
+          python -I - "$ignore" "$work/head-paths" "$work/range-paths" "${base:+range}" <<'PY'
+          import re
+          import sys
+
+          # Escapes both engines read alike; groups with flags, POSIX classes,
+          # {,n} (a quantifier in Python, a literal in Go) and non-ASCII text
+          # are refused.
+          ESCAPES = set(".^$*+?()[]{}|\\/-dDwWsS")
+          # Go's \s is [\t\n\f\r ]; Go's line scanner drops one trailing \r.
+          SKIP = re.compile(r"[\t\n\f\r ]*(#|$)")
+
+          def supported(line):
+              if any(not " " <= c <= "~" for c in line) or "(?" in line or "[:" in line or "{," in line:
+                  return False
+              i = 0
+              while i < len(line):
+                  if line[i] == "\\":
+                      if i + 1 == len(line) or line[i + 1] not in ESCAPES:
+                          return False
+                      i += 2
+                  else:
+                      i += 1
+              return True
+
+          rules = []
+          with open(sys.argv[1], encoding="utf-8") as stream:
+              lines = stream.read().split("\n")
+          for number, line in enumerate(lines, 1):
+              line = line.removesuffix("\r")
+              if SKIP.match(line):
+                  continue
+              rule = None
+              if supported(line):
+                  try:
+                      rule = re.compile(line, re.ASCII)
+                  except re.error:
+                      rule = None
+              if rule is None:
+                  print(f"::error::.trufflehogignore line {number} uses regular expression syntax this check does not support")
+                  sys.exit(1)
+              rules.append(rule)
+
+          def paths(name):
+              with open(name, "rb") as stream:
+                  return [p.decode("utf-8", "surrogateescape") for p in stream.read().split(b"\0") if p]
+
+          def kept(items):
+              return [p for p in items if not any(rule.search(p) for rule in rules)]
+
+          tree = paths(sys.argv[2])
+          python = [p for p in tree if p.endswith(".py")]
+          workflows = [p for p in tree if re.fullmatch(r"\.github/workflows/[^/]+\.ya?ml", p)]
+          kept_python, kept_workflows = kept(python), kept(workflows)
+          print(f"Exclusions: {len(rules)} pattern(s). In scope at head: {len(kept_python)} of"
+                f" {len(python)} Python file(s), {len(kept_workflows)} of {len(workflows)} workflow file(s).")
+          if sys.argv[4]:
+              changed = paths(sys.argv[3])
+              print(f"Files added or modified in the range: {len(kept(changed))} of {len(changed)} in scope.")
+          if not kept_python or not kept_workflows:
+              print("::error::The exclusions leave no Python or no workflow files in scope; failing closed")
+              sys.exit(1)
+          PY
           args=(
             git "file://${GITHUB_WORKSPACE}"
             --branch "$head"
