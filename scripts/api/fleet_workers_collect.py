@@ -50,6 +50,10 @@ from scripts.api.project_state_store import (
     get_live_report,
     workers_status_from_document,
 )
+from scripts.orchestration.dispatch_admission import _ACTIVE_STATUS_MARKERS
+from scripts.orchestration.dispatch_admission import (
+    ACTIVE_STATUSES as _DELEGATE_ACTIVE_STATUSES,
+)
 from scripts.orchestration.task_record_store import iter_task_records
 
 WORKERS_SCHEMA = "monitor-fleet-workers.v1"
@@ -203,6 +207,32 @@ def _job_state(state: str) -> str | None:
     return None
 
 
+def _record_may_name_active_status(path: Path) -> bool:
+    """Whether ``path``'s bytes can name a stored ``running`` or ``spawning`` status.
+
+    Same prefilter as ``dispatch_admission.iter_active_records``: a file whose
+    bytes do not contain those quoted statuses is not parsed. A read error stays
+    a candidate so ``_read_task_state`` still retries it.
+    """
+    try:
+        raw = path.read_bytes()
+    except OSError:
+        return True
+    return any(marker in raw for marker in _ACTIVE_STATUS_MARKERS)
+
+
+def _stored_delegate_status(status: Any) -> str | None:
+    """Return a stored status that can map to a delegate row.
+
+    ``ACTIVE_STATUSES`` is a set, so membership hashes the value. A list or
+    dict status must be rejected before that test: hashing it raises
+    ``TypeError`` and would abort the scan. Only these two strings map.
+    """
+    if not isinstance(status, str) or status not in _DELEGATE_ACTIVE_STATUSES:
+        return None
+    return status
+
+
 def collect_delegate_workers(
     tasks_dir: Path,
     *,
@@ -214,11 +244,16 @@ def collect_delegate_workers(
     if not tasks_dir.is_dir():
         return rows
     for entry in iter_task_records(tasks_dir, include_archive=False):
+        if not _record_may_name_active_status(entry):
+            continue
         task = delegate_router._read_task_state(str(entry), tasks_dir=tasks_dir)
         if task is None:
             continue
-        status, alive = _derived_task_status(task)
-        mapped = _delegate_state(str(task.get("status") or status), alive=alive, pid=task.get("pid"))
+        stored = _stored_delegate_status(task.get("status"))
+        if stored is None:
+            continue
+        alive = _derived_task_status(task)[1]
+        mapped = _delegate_state(stored, alive=alive, pid=task.get("pid"))
         if mapped is None:
             continue
         task_id = _worker_id_token(task.get("task_id") or entry.stem, tally=tally)
