@@ -659,7 +659,11 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
             "    import lu_machinery.pkg.worker\n"
             '    importlib.import_module(".util", "lu_machinery.lib")\n'
             '    importlib.util.find_spec(".x", name)\n'
-            '    return __import__("x", None, None, [], name)\n'
+            '    __import__("x", None, None, [], name)\n'
+            '    __import__("", globals(), locals(), ["product_child"], 1)\n'
+            '    __import__(name="", fromlist=("product_child",), level=1)\n'
+            '    __import__("scripts", fromlist=["dispatch"])\n'
+            '    return "scripts." + "dispatch"\n'
         )
         return {"lu_machinery/lib/util.py": util}
 
@@ -685,8 +689,9 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     parent = "initializes product package pkg (scripts/pkg/__init__.py)"
     assert f"lu_machinery/lib/util.py:21: import of pkg.worker {parent}" in text
     assert f"lu_machinery/lib/util.py:22: import of pkg.worker {parent}" in text
-    assert "lu_machinery/lib/util.py:23: relative import of scripts.product_mod is a product package" in text
-    assert "lu_machinery/lib/util.py:24: relative import of scripts.lib.product_child is a product package" in text
+    absent = "names product code absent from the machinery tree"
+    assert f"lu_machinery/lib/util.py:23: relative import of scripts.product_mod {absent}" in text
+    assert f"lu_machinery/lib/util.py:24: relative import of scripts.lib.product_child {absent}" in text
     assert "lu_machinery/lib/util.py:25:" not in text  # a relative import of a machinery sibling
     notes = "\n".join(checks["V4"]["notes"])
     assert "lu_machinery/lib/util.py:15: lib.util" in notes  # unprefixed machinery import: a note, not a finding
@@ -696,21 +701,73 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     assert "lu_machinery/lib/util.py:26:" not in text
     # Loader calls resolve relative targets, levels, fromlists and lu_machinery-qualified names.
     child = "is a product package (scripts/lib/product_child)"
-    assert f"lu_machinery/lib/util.py:32: relative import of scripts.lib.product_child {child}" in text
-    assert f"lu_machinery/lib/util.py:33: relative import of scripts.lib.product_child {child}" in text
-    assert f"lu_machinery/lib/util.py:34: relative import of scripts.lib.product_child {child}" in text
+    inside = f"{absent} (scripts/lib/product_child.py)"
+    assert f"lu_machinery/lib/util.py:32: relative import of scripts.lib.product_child {inside}" in text
+    assert f"lu_machinery/lib/util.py:33: relative import of scripts.lib.product_child {inside}" in text
+    assert f"lu_machinery/lib/util.py:34: relative import of scripts.lib.product_child {inside}" in text
     assert f"lu_machinery/lib/util.py:35: loader target lib.product_child {child}" in allowed
-    assert f"lu_machinery/lib/util.py:36: import of lu_machinery.lib.product_child {child}" in text
-    assert f"lu_machinery/lib/util.py:37: import of lu_machinery.pkg.worker {parent}" in text
+    assert f"lu_machinery/lib/util.py:36: import of lu_machinery.lib.product_child {inside}" in text
+    # Inside the lu_machinery namespace an unextracted product __init__.py runs nothing (namespace package).
+    assert "lu_machinery/lib/util.py:37:" not in text
     assert "lu_machinery/lib/util.py:38:" not in text  # a machinery sibling through a loader
     assert "lu_machinery/lib/util.py:39: relative loader target '.x' cannot be resolved statically" in text
     assert "lu_machinery/lib/util.py:40: __import__ level is not a literal integer" in text
-    assert "scripts/product_mod.py" not in text  # a product path literal is allowed
+    # An empty name with a level imports the package, then its fromlist (positional and keyword spellings).
+    assert f"lu_machinery/lib/util.py:41: relative import of scripts.lib.product_child {inside}" in text
+    assert f"lu_machinery/lib/util.py:42: relative import of scripts.lib.product_child {inside}" in text
+    # A name assembled from a target and its fromlist, and literals joined by +, are judged like literals.
+    assert "lu_machinery/lib/util.py:43: loader target scripts.dispatch names machinery (missed rename)" in text
+    assert "lu_machinery/lib/util.py:44: string references machinery module scripts.dispatch (missed rename)" in text
+    assert "string holds machinery path scripts/product_mod.py" not in text  # a product path literal is allowed
     assert "lu_machinery/dispatch.py" not in text  # its docstring prose keeps scripts.dispatch
 
 
 def _index(module):
     return module.OwnershipIndex(OWNERSHIP, {"lu_machinery", "agents_extensions"}, [s for s, _d in MANIFEST])
+
+
+def test_v4_unextracted_product_init_is_a_namespace_inside_lu_machinery() -> None:
+    """scripts/tools/__init__.py is product while scripts/tools/agent_watcher.py is machinery (real map)."""
+    module = _load_verifier()
+    ownership = {**OWNERSHIP, "scripts/tools/__init__.py": "product", "scripts/tools/agent_watcher.py": "machinery"}
+    extracted = [*(s for s, _d in MANIFEST), "scripts/tools/agent_watcher.py"]
+    index = module.OwnershipIndex(ownership, {"lu_machinery", "agents_extensions"}, extracted)
+    inside = b"def later():\n    from lu_machinery.tools import agent_watcher\n    from . import agent_watcher\n"
+    assert module.scan_python_source("lu_machinery/tools/x.py", inside, index) == []
+    outside = b"def later():\n    from tools import agent_watcher\n"
+    # Outside that namespace the unprefixed name resolves through scripts/, whose tools/__init__.py is product.
+    assert module.scan_python_source("lu_machinery/tools/x.py", outside, index) == [
+        "lu_machinery/tools/x.py:2: import of tools is a product package (scripts/tools)"
+    ]
+
+
+def test_v4_static_expressions_split_paths_and_anchored_loaders_are_judged() -> None:
+    module = _load_verifier()
+    source = (
+        b"import importlib, os\n"
+        b"def later(ROOT):\n"
+        b'    a = "%s.%s" % ("scripts", "dispatch")\n'
+        b'    b = ".".join(["scripts", "dispatch"])\n'
+        b"    c = f\"scripts.{'dispatch'}\"\n"
+        b'    d = ROOT / "scripts" / "dispatch.py"\n'
+        b'    e = os.path.join(ROOT, "scripts", "product_mod.py")\n'
+        b'    f = importlib.import_module(".child", "scripts.product_ns")\n'
+        b'    g = importlib.import_module(".util", "scripts.lib")\n'
+    )
+    listed: list[str] = []
+    found = module.scan_python_source("lu_machinery/x.py", source, _index(module), listed=listed)
+    machinery = "string references machinery module scripts.dispatch (missed rename)"
+    assert sorted(found) == [
+        f"lu_machinery/x.py:3: {machinery}",
+        f"lu_machinery/x.py:4: {machinery}",
+        f"lu_machinery/x.py:5: {machinery}",
+        "lu_machinery/x.py:6: string holds machinery path scripts/dispatch.py (missed rename)",
+        "lu_machinery/x.py:9: loader target scripts.lib.util names machinery (missed rename)",
+        # The package literal itself names the machinery package scripts.lib, which leaves the product.
+        "lu_machinery/x.py:9: string references machinery module scripts.lib (missed rename)",
+    ]
+    assert "lu_machinery/x.py:7: product path reference scripts/product_mod.py" in listed
+    assert "lu_machinery/x.py:8: product loader target scripts.product_ns.child" in listed
 
 
 def test_v4_a1_import_statements_of_scripts_or_product_code_fail() -> None:
@@ -1062,6 +1119,44 @@ def test_read_only_git_pointer_spellings_git_reads_differently_are_refused(tmp_p
         module.repo_storage(repo)
 
 
+@pytest.mark.parametrize("pointer", ["gitdir", "commondir", "alternates"])
+def test_read_only_symlinked_git_pointer_files_are_protected(tmp_path: Path, pointer: str) -> None:
+    """A pointer file reached through a symlink is repository storage; its target joins the protected set."""
+    module = _load_verifier()
+    repo = tmp_path / "repo"
+    git_dir = tmp_path / "private.git"
+    (git_dir / "objects" / "info").mkdir(parents=True)
+    (tmp_path / "shared" / "objects").mkdir(parents=True)
+    external = tmp_path / "elsewhere" / "pointer"
+    external.parent.mkdir()
+    repo.mkdir()
+    if pointer == "gitdir":
+        external.write_text(f"gitdir: {git_dir}\n", encoding="utf-8")
+        (repo / ".git").symlink_to(external)
+    elif pointer == "commondir":
+        (repo / ".git" / "objects").mkdir(parents=True)
+        external.write_text(f"{git_dir}\n", encoding="utf-8")
+        (repo / ".git" / "commondir").symlink_to(external)
+    else:
+        (repo / ".git" / "objects" / "info").mkdir(parents=True)
+        external.write_text(f"{tmp_path / 'shared' / 'objects'}\n", encoding="utf-8")
+        (repo / ".git" / "objects" / "info" / "alternates").symlink_to(external)
+    assert external.resolve() in module.repo_storage(repo)
+
+
+def test_read_only_symlink_targets_inside_git_storage_are_protected(world: World) -> None:
+    config = world.extract / ".git" / "config"
+    external = world.tmp / "external-config"
+    external.write_bytes(config.read_bytes())
+    config.unlink()
+    config.symlink_to(external)
+    before = external.read_bytes()
+    code, _checks, output = world.run(**{"--report": str(external)})
+    assert code == 2, output
+    assert "--report" in output and "read-only" in output
+    assert external.read_bytes() == before
+
+
 def test_read_only_alternates_are_protected_and_cross_checked_with_git(world: World) -> None:
     git(world.tmp, "init", "--quiet", "--bare", str(world.tmp / "shared.git"))
     (world.extract / ".git/objects/info/alternates").write_text("../../../shared.git/objects\n")
@@ -1071,6 +1166,20 @@ def test_read_only_alternates_are_protected_and_cross_checked_with_git(world: Wo
     code, _checks, output = world.run()
     assert code == 2, output
     assert "unsupported alternate spelling" in output
+
+
+def test_read_only_report_overwrites_only_its_own_earlier_report(world: World) -> None:
+    own = world.tmp / "own-report.json"
+    code, _checks, output = world.run(**{"--report": str(own)})
+    assert code == 0, output
+    code, _checks, output = world.run(**{"--report": str(own)})  # a rerun replaces its own report
+    assert code == 0, output
+    other = world.tmp / "someone-elses.cfg"
+    other.write_text("[include]\n\tpath = x\n", encoding="utf-8")
+    code, _checks, output = world.run(**{"--report": str(other)})
+    assert code == 2, output
+    assert "is not an earlier verify_extraction report" in output
+    assert other.read_text(encoding="utf-8") == "[include]\n\tpath = x\n"
 
 
 def test_read_only_report_staging_never_follows_a_planted_link(tmp_path: Path, monkeypatch) -> None:

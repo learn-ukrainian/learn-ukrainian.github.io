@@ -79,6 +79,8 @@ PATH_REF = re.compile(r"(?<![\w.\-])(?:\./)?scripts/([\w.\-/]*)")
 STRIPPED_ENV_PREFIXES = ("PYTHON", "GIT_", "PYTEST_")
 GIT_TIMEOUT = 1800
 LISTED_SHOWN = 20
+REPORT_MAX_BYTES = 64 * 1024 * 1024
+STATIC_MAX = 4096
 NOT_EXTRACTED = "not-extracted"
 UNKNOWN = "unknown"
 
@@ -591,6 +593,8 @@ def pointer_value(path: Path, text: str, what: str) -> str:
 
 def read_pointer_file(path: Path) -> str:
     try:
+        if not stat.S_ISREG(path.stat().st_mode):  # follows a link: the file git reads must be regular
+            raise Unusable(f"{path} is not a regular file")
         return path.read_bytes().decode("utf-8")
     except (OSError, UnicodeDecodeError) as exc:
         raise Unusable(f"cannot read {path}: {exc}") from exc
@@ -601,13 +605,16 @@ def repo_storage(repo: Path) -> list[Path]:
 
     Found by reading files, without running git, and spelled as git reads them (see pointer_value). A
     relative alternate is resolved against the object store that names it, as git does, and alternates of
-    alternates are followed (git stops at depth 5). check_storage_against_git later compares this with
-    git's own answer.
+    alternates are followed (git stops at depth 5). The pointer files themselves (.git, commondir and each
+    alternates file) are included by their resolved paths, so a pointer reached through a symlink is
+    protected too. check_storage_against_git later compares this with git's own answer.
     """
     dot = repo / ".git"
+    pointers: list[Path] = []
     if dot.is_dir() and not dot.is_symlink():
         git_dir = dot
     elif dot.is_file() or dot.is_symlink():
+        pointers.append(dot)
         text = read_pointer_file(dot)
         if not text.startswith("gitdir: "):
             raise Unusable(f"{dot}: not a 'gitdir: ' pointer")
@@ -617,7 +624,8 @@ def repo_storage(repo: Path) -> list[Path]:
         return []
     common = git_dir
     pointer = git_dir / "commondir"
-    if pointer.exists():
+    if pointer.exists() or pointer.is_symlink():
+        pointers.append(pointer)
         named = Path(pointer_value(pointer, read_pointer_file(pointer), "commondir"))
         common = named if named.is_absolute() else git_dir / named
     found = [git_dir, common]
@@ -631,14 +639,34 @@ def repo_storage(repo: Path) -> list[Path]:
         seen.add(real)
         found.append(Path(real))
         alternates = Path(real) / "info" / "alternates"
-        if not alternates.exists():
+        if not alternates.exists() and not alternates.is_symlink():
             continue
+        pointers.append(alternates)
         for line in read_pointer_file(alternates).split("\n"):
             if not line or line.startswith("#"):
                 continue
             target = Path(pointer_value(alternates, line, "alternate"))
             queue.append((target if target.is_absolute() else Path(real) / target, depth + 1))
+    found += pointers
     return [Path(os.path.realpath(path)) for path in found]
+
+
+def storage_link_targets(roots: Iterable[Path]) -> list[Path]:
+    """The resolved targets of every symlink inside the given git storage directories.
+
+    A file git reads for a repository (config, a ref, a pack) can be a link to a file elsewhere; that
+    file is repository storage too, so it joins the protected set.
+    """
+    targets: list[Path] = []
+    for root in roots:
+        if not root.is_dir():
+            continue
+        for directory, dirs, files in os.walk(root, followlinks=False):
+            for name in [*dirs, *files]:
+                entry = os.path.join(directory, name)
+                if os.path.islink(entry):
+                    targets.append(Path(os.path.realpath(entry)))
+    return targets
 
 
 def check_storage_against_git(repo: Path, protected: Sequence[Path]) -> None:
@@ -659,7 +687,8 @@ def protected_paths(args: argparse.Namespace) -> list[Path]:
     if args.history_policy is not None:
         paths.append(args.history_policy.parent)  # its replacements/ directory
     for repo in (args.repo, args.source_repo):
-        paths += repo_storage(Path(repo))
+        storage = repo_storage(Path(repo))
+        paths += storage + storage_link_targets(path for path in storage if path.is_dir())
     return [Path(os.path.realpath(path)) for path in paths]
 
 
@@ -680,6 +709,16 @@ def check_report_path(report: Path, protected: Sequence[Path], files: Sequence[P
     for root in protected:
         if target == root or inside(target, root):
             raise Unusable(f"--report {report} lies inside {root}, which is read-only")
+    if report.exists():
+        # Overwrite only a report this tool wrote: whatever path an input or git file hides behind, its
+        # bytes are never replaced.
+        try:
+            size = report.stat().st_size
+            earlier = json.loads(report.read_bytes()) if size <= REPORT_MAX_BYTES else None
+        except (OSError, ValueError):
+            earlier = None
+        if not (isinstance(earlier, dict) and {"verdict", "exit", "checks"} <= set(earlier)):
+            raise Unusable(f"--report {report} exists and is not an earlier verify_extraction report; not overwriting")
 
 
 def write_report(report: Path, payload: dict[str, Any]) -> None:
@@ -1132,6 +1171,24 @@ class OwnershipIndex:
             return f"is a {owner} package (scripts/{dotted.replace('.', '/')})"
         return None
 
+    def extracted_dependency(self, dotted: str) -> str | None:
+        """Why an import inside the lu_machinery namespace needs product code, or None.
+
+        Inside the extracted tree only extracted files exist. A parent whose __init__.py was not extracted
+        (scripts/tools/__init__.py is product while its modules are machinery) is a namespace package there
+        and runs nothing, so only the target matters: it is a finding when it does not exist in the final
+        tree and the map says it is product code. An attribute import resolves to its existing module.
+        """
+        base = OLD_PREFIX + "/".join(dotted.split("."))
+        if base + "/__init__.py" in self.extracted or base + ".py" in self.extracted or base in self.extracted_dirs:
+            return None
+        for candidate in (base + "/__init__.py", base + ".py"):
+            if self.files.get(candidate) == PRODUCT:
+                return f"names product code absent from the machinery tree ({candidate})"
+        if self.dir_owners.get(base) == {PRODUCT}:
+            return f"names a product package absent from the machinery tree ({base}/)"
+        return None
+
 
 def file_package(rel: str) -> list[str] | None:
     """The scripts/-relative package (__package__) of a file under lu_machinery/, or None elsewhere."""
@@ -1160,20 +1217,28 @@ def extracted_name(name: str) -> str | None:
     return name[len(root) + 1 :] if name.startswith(root + ".") else None
 
 
-def package_argument(node: ast.expr | None, rel: str) -> list[str] | None:
-    """The scripts/-relative package a loader's package argument names, when it is statically known."""
+def package_argument(node: ast.expr | None, rel: str) -> tuple[str, list[str]] | None:
+    """A loader's package argument when statically known: its namespace and its scripts/-relative parts.
+
+    "extracted" is the lu_machinery namespace (a lu_machinery-qualified name, __package__ or
+    __spec__.parent of a file under lu_machinery/); "scripts" is a scripts.-anchored name, resolved under
+    the product checkout; "plain" is an unprefixed name, resolved through scripts/ on sys.path.
+    """
     if isinstance(node, ast.Name) and node.id == "__package__":
-        return file_package(rel)
+        package = file_package(rel)
+        return ("extracted", package) if package is not None else None
     if isinstance(node, ast.Attribute) and node.attr == "parent" and isinstance(node.value, ast.Name):
-        return file_package(rel) if node.value.id == "__spec__" else None
-    if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value:
-        inner = extracted_name(node.value)
-        if inner is not None:
-            return inner.split(".") if inner else []
-        if node.value == "scripts" or node.value.startswith("scripts."):
-            return node.value.split(".")[1:]
-        return node.value.split(".")
-    return None
+        package = file_package(rel) if node.value.id == "__spec__" else None
+        return ("extracted", package) if package is not None else None
+    value = static_string(node)
+    if not value:
+        return None
+    inner = extracted_name(value)
+    if inner is not None:
+        return "extracted", inner.split(".") if inner else []
+    if value == "scripts" or value.startswith("scripts."):
+        return "scripts", value.split(".")[1:]
+    return "plain", value.split(".")
 
 
 def call_argument(call: ast.Call, index: int, *names: str) -> ast.expr | None:
@@ -1186,7 +1251,7 @@ def call_argument(call: ast.Call, index: int, *names: str) -> ast.expr | None:
 
 def literal_strings(node: ast.expr | None) -> list[str]:
     if isinstance(node, ast.List | ast.Tuple | ast.Set):
-        return [item.value for item in node.elts if isinstance(item, ast.Constant) and isinstance(item.value, str)]
+        return [value for value in (static_string(item) for item in node.elts) if value is not None]
     return []
 
 
@@ -1206,7 +1271,7 @@ def scan_python_source(
     to listed. Unprefixed machinery imports, which resolve only while scripts/ is on sys.path, are
     appended to unprefixed.
     """
-    allowed: list[str] = listed if listed is not None else []
+    allowed: list[str] = []
     try:
         tree = ast.parse(source, filename=rel)
     except (SyntaxError, ValueError) as exc:
@@ -1223,7 +1288,7 @@ def scan_python_source(
             inner = extracted_name(name)
             if inner is not None:  # lu_machinery.<x> is scripts/<x> in the ownership map
                 return bool(inner) and check_import(inner, line, relative=True, shown=f"import of {name}")
-        reason = index.product_dependency(name, relative=relative)
+        reason = index.extracted_dependency(name) if relative else index.product_dependency(name)
         if reason is None:
             top = name.split(".")[0]
             plain = top not in sys.stdlib_module_names and top not in index.extracted_tops
@@ -1249,10 +1314,38 @@ def scan_python_source(
         module = ".".join([*base, *(rest.split(".") if rest else [])])
         check_from(module, names, line, relative=True)
 
-    def check_reference(target: str, line: int) -> None:
-        """An absolute loader target: scripts.<x> is judged by the string scan; a lu_machinery-qualified
-        target must not name product code; an unprefixed product target is an allowed, listed reference."""
+    def scan_text(text: str, line: int) -> None:
+        """A1 (b): scripts.<module> and scripts/<path> in a string value; machinery fails, the rest is listed."""
+        for match in MODULE_REF.finditer(text):
+            ref = match.group(0)
+            last = ref.rsplit(".", 1)[-1]
+            if ref.count(".") == 1 and last in FILE_SUFFIXES:
+                continue
+            owner = index.module_reference(ref[len("scripts.") :])
+            if owner == MACHINERY:
+                findings.append(f"{rel}:{line}: string references machinery module {ref} (missed rename)")
+            else:
+                allowed.append(f"{rel}:{line}: {owner} module reference {ref}")
+        for match in PATH_REF.finditer(text):
+            rest = match.group(1).rstrip("/")
+            shown = f"scripts/{rest}" if rest else "scripts/"
+            owner = index.path_reference((OLD_PREFIX + rest).rstrip("/"))
+            if owner == MACHINERY:
+                findings.append(f"{rel}:{line}: string holds machinery path {shown} (missed rename)")
+            else:
+                allowed.append(f"{rel}:{line}: {owner} path reference {shown}")
+
+    def check_reference(target: str, line: int, *, assembled: bool = False) -> None:
+        """An absolute loader target. A lu_machinery-qualified target must not name product code; an
+        unprefixed product target is an allowed, listed reference. A scripts.<x> literal is judged by the
+        string scan; a name assembled from a target and its fromlist is judged here the same way (A1 b)."""
         if target == "scripts" or target.startswith("scripts."):
+            if assembled and target != "scripts":
+                owner = index.module_reference(target[len("scripts.") :])
+                if owner == MACHINERY:
+                    findings.append(f"{rel}:{line}: loader target {target} names machinery (missed rename)")
+                else:
+                    allowed.append(f"{rel}:{line}: {owner} loader target {target}")
             return
         if extracted_name(target) is not None:
             check_import(target, line)
@@ -1266,14 +1359,23 @@ def scan_python_source(
     def check_loader(call: ast.Call, called: str) -> None:
         line = call.lineno
         target_node = call_argument(call, 0, "name", "mod_name")
-        target = target_node.value if isinstance(target_node, ast.Constant) else None
-        if not isinstance(target, str) or not target:
+        target = static_string(target_node)
+        if not isinstance(target, str) or (not target and called != "__import__"):
             return  # computed targets are beyond a static scan (the rename tools report them)
         if called in ("import_module", "find_spec"):
             if target.startswith("."):
                 level = len(target) - len(target.lstrip("."))
-                base = climb(package_argument(call_argument(call, 1, "package"), rel), level)
-                check_relative(base, target.lstrip("."), [], line, f"relative loader target {target!r}")
+                package = package_argument(call_argument(call, 1, "package"), rel)
+                base = climb(package[1], level) if package is not None else None
+                rest = target.lstrip(".")
+                if package is None or base is None or package[0] == "extracted":
+                    check_relative(base, rest, [], line, f"relative loader target {target!r}")
+                else:  # anchored on scripts. or an unprefixed package: a reference resolved outside lu_machinery
+                    name = ".".join([*base, *(rest.split(".") if rest else [])])
+                    if package[0] == "scripts":
+                        check_reference(f"scripts.{name}" if name else "scripts", line, assembled=True)
+                    elif name:
+                        check_reference(name, line)
             else:
                 check_reference(target, line)
         elif called == "__import__":
@@ -1282,15 +1384,18 @@ def scan_python_source(
             fromlist = literal_strings(call_argument(call, 3, "fromlist"))
             if not isinstance(raw_level, int) or isinstance(raw_level, bool) or raw_level < 0:
                 findings.append(f"{rel}:{line}: __import__ level is not a literal integer; its owner is unknown")
-            elif raw_level > 0:
+            elif raw_level > 0:  # an empty name with a level imports the package itself, then the fromlist
                 what = f"__import__({target!r}, level={raw_level})"
                 check_relative(relative_base(rel, raw_level), target, fromlist, line, what)
+            elif not target:
+                return  # an empty absolute name raises ValueError and imports nothing
             elif extracted_name(target) is not None:
                 check_from(target, fromlist, line, relative=False)
             else:
                 check_reference(target, line)
                 for name in fromlist:
-                    check_reference(f"{target}.{name}", line)
+                    if name != "*":
+                        check_reference(f"{target}.{name}", line, assembled=True)
         elif called == "resolve_name":
             check_reference(target.split(":", 1)[0], line)
         else:
@@ -1316,26 +1421,120 @@ def scan_python_source(
             if called in LOADERS:
                 check_loader(node, called)
         elif isinstance(node, ast.Constant) and isinstance(node.value, str | bytes) and id(node) not in prose:
-            text = node.value if isinstance(node.value, str) else node.value.decode("latin-1")
-            for match in MODULE_REF.finditer(text):
-                ref = match.group(0)
-                last = ref.rsplit(".", 1)[-1]
-                if ref.count(".") == 1 and last in FILE_SUFFIXES:
-                    continue
-                owner = index.module_reference(ref[len("scripts.") :])
-                if owner == MACHINERY:
-                    findings.append(f"{rel}:{node.lineno}: string references machinery module {ref} (missed rename)")
+            scan_text(node.value if isinstance(node.value, str) else node.value.decode("latin-1"), node.lineno)
+        if isinstance(node, ast.BinOp | ast.JoinedStr | ast.Call) and id(node) not in prose:
+            # "scripts." + "dispatch", "%s.%s" % (...), ROOT / "scripts" / "dispatch.py" and the like name a
+            # module or path that no single literal holds.
+            for value in {static_string(node), static_path(node)} - {None}:
+                scan_text(value, node.lineno)  # type: ignore[arg-type]
+    if listed is not None:
+        listed.extend(dict.fromkeys(allowed))
+    return list(dict.fromkeys(findings))
+
+
+STR_METHODS = frozenset(
+    {"join", "format", "replace", "strip", "lstrip", "rstrip", "lower", "upper", "removeprefix", "removesuffix"}
+)
+PATH_CALLS = frozenset({"Path", "PurePath", "PurePosixPath", "PosixPath"})
+
+
+def _static(node: ast.AST, depth: int = 0) -> Any:
+    """The value of an expression built only from literals, or None (see static_string)."""
+    if depth > 32:
+        return None
+    if isinstance(node, ast.Constant):
+        return node.value if isinstance(node.value, str | int) and not isinstance(node.value, bool) else None
+    if isinstance(node, ast.Tuple | ast.List):
+        items = [_static(item, depth + 1) for item in node.elts]
+        return tuple(items) if all(item is not None for item in items) else None
+    if isinstance(node, ast.BinOp):
+        left, right = _static(node.left, depth + 1), _static(node.right, depth + 1)
+        if left is None or right is None:
+            return None
+        if isinstance(node.op, ast.Add) and isinstance(left, str) and isinstance(right, str):
+            return left + right
+        if isinstance(node.op, ast.Mod) and isinstance(left, str):
+            return left % right
+        if isinstance(node.op, ast.Mult) and {type(left), type(right)} == {str, int}:
+            text, count = (left, right) if isinstance(left, str) else (right, left)
+            return text * count if len(text) * max(count, 0) <= STATIC_MAX else None
+        return None
+    if isinstance(node, ast.JoinedStr):
+        parts = []
+        for value in node.values:
+            if isinstance(value, ast.FormattedValue):
+                inner = _static(value.value, depth + 1)
+                if inner is None or value.format_spec is not None or value.conversion not in (-1, 115):
+                    return None
+                parts.append(str(inner))
+            else:
+                part = _static(value, depth + 1)
+                if not isinstance(part, str):
+                    return None
+                parts.append(part)
+        return "".join(parts)
+    if isinstance(node, ast.Call) and not any(keyword.arg is None for keyword in node.keywords):
+        args = [_static(arg, depth + 1) for arg in node.args]
+        kwargs = {str(keyword.arg): _static(keyword.value, depth + 1) for keyword in node.keywords}
+        if any(arg is None for arg in args) or any(value is None for value in kwargs.values()):
+            return None
+        func = node.func
+        if isinstance(func, ast.Name) and func.id == "str" and len(args) == 1 and not kwargs:
+            return str(args[0])
+        if isinstance(func, ast.Attribute) and func.attr in STR_METHODS:
+            receiver = _static(func.value, depth + 1)
+            if isinstance(receiver, str):
+                return getattr(receiver, func.attr)(*args, **kwargs)
+    return None
+
+
+def static_string(node: ast.AST | None) -> str | None:
+    """The exact value of a string expression built only from literals: implicit concatenation, + and % and
+    * with literals, f-strings whose fields are literals, and str(), join, format, replace, strip, lower,
+    upper, removeprefix and removesuffix on literals. Anything else (a name, an attribute, another call)
+    makes the value unknown."""
+    if node is None:
+        return None
+    try:
+        value = _static(node)
+    except Exception:  # an expression Python itself would reject is not a reference
+        return None
+    return value if isinstance(value, str) and len(value) <= STATIC_MAX else None
+
+
+def static_path(node: ast.AST) -> str | None:
+    """A path assembled from literals by Path(...), os.path.join(...) or the / operator.
+
+    A non-literal leading part (ROOT / "scripts" / "dispatch.py") becomes an anonymous root, so the
+    literal tail still reads "/scripts/dispatch.py" and names the file.
+    """
+    if isinstance(node, ast.Call) and not node.keywords:
+        func = node.func
+        name = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
+        owner = func.value if isinstance(func, ast.Attribute) else None
+        is_join = name == "join" and isinstance(owner, ast.Attribute) and owner.attr == "path"
+        if name in PATH_CALLS or is_join:
+            tail: list[str] = []
+            anchored = True
+            for arg in node.args:
+                value = static_string(arg)
+                if value is None:
+                    tail, anchored = [], False
                 else:
-                    allowed.append(f"{rel}:{node.lineno}: {owner} module reference {ref}")
-            for match in PATH_REF.finditer(text):
-                rest = match.group(1).rstrip("/")
-                shown = f"scripts/{rest}" if rest else "scripts/"
-                owner = index.path_reference((OLD_PREFIX + rest).rstrip("/"))
-                if owner == MACHINERY:
-                    findings.append(f"{rel}:{node.lineno}: string holds machinery path {shown} (missed rename)")
-                else:
-                    allowed.append(f"{rel}:{node.lineno}: {owner} path reference {shown}")
-    return findings
+                    tail.append(value)
+            if tail:
+                joined = "/".join(tail)
+                return joined if anchored else "/" + joined
+        return None
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        right = static_string(node.right)
+        if right is None:
+            return None
+        left = static_path(node.left)
+        if left is None:
+            left = static_string(node.left) or ""
+        return left + "/" + right
+    return None
 
 
 def check_v4(inputs: Inputs) -> CheckResult:
@@ -1890,20 +2089,28 @@ Checks (every finding is printed; nothing stops at the first one):
       any module file outside --repo and the interpreter's own prefixes is a finding. Then
       `python -m {DISPATCH_MODULE} --help` must exit 0.
   V4  static AST scan of every .py file at HEAD (brief amendment A1). Fails only on:
-      (a) an import statement of scripts, or of product code per --map: a product module or namespace
-          package, a product __init__.py that Python initializes on the way to a machinery module, a
-          from-import's product submodule, a relative import resolved under scripts/, or a
-          lu_machinery-qualified name mapped back to scripts/. Loader targets inside the lu_machinery
-          namespace count too: relative import_module/find_spec targets (through a literal package or
-          __package__), __import__ with a level, and lu_machinery-qualified targets. A relative target
-          that cannot be resolved statically is a finding.
+      (a) an import statement of scripts, or one that needs product code per --map. For an absolute
+          unprefixed name (resolved through scripts/ on sys.path): a product module or namespace package,
+          a product __init__.py Python initializes on the way, or a from-import's product submodule. For a
+          name inside the lu_machinery namespace (relative, or lu_machinery-qualified): a target that does
+          not exist in the final tree and names product code (a parent whose __init__.py was not extracted
+          is a namespace package there and runs nothing). Loader targets inside that namespace count too:
+          relative import_module/find_spec targets (through a literal package or __package__), __import__
+          with a level (an empty name included) and its fromlist, and lu_machinery-qualified targets. A
+          relative target or level that cannot be resolved statically is a finding.
       (b) a `scripts.<module>` reference or `scripts/<path>` literal that names a machinery file of the tree
-          manifest, or a directory holding only such files (a missed rename).
+          manifest, or a directory holding only such files (a missed rename): in a string literal; in a
+          string expression built only from literals (+, %, *, f-string fields that are literals, str(),
+          join, format, replace, strip, lower, upper, removeprefix, removesuffix); in a path assembled from
+          literals by Path(...), os.path.join(...) or / (a non-literal leading part such as ROOT counts as a
+          root); in a loader package anchored on scripts.; or assembled from an __import__ target and its
+          fromlist.
       References that name product code (for example a module passed to a subprocess that runs under the
       product checkout), mixed directories such as the scripts/ root, and other unextracted names are
       allowed: they are listed with file:line and a count (all of them in --report). Unprefixed imports of
       machinery modules (resolved only while scripts/ is on sys.path) are a note. Docstrings and comments
-      are prose and are not scanned; paths split into components are not literals.
+      are prose and are not scanned; values known only at run time (a variable, an attribute, a call to
+      anything else) are beyond a static scan.
   V5  every --expectations row holds; then {", ".join(RENAME_TOOLS)} --check on --repo report zero pending
       rewrites (idempotence). Their unresolved counts are printed as notes.
   V6  every commit of `git -C SRC log --follow SOURCE -- {DISPATCH_SOURCE}` maps through --commit-map to a commit of
@@ -1934,7 +2141,12 @@ repositories are full (not shallow, no grafts) top-level clones; every file in -
 HEAD by bytes and mode, with nothing untracked or ignored (hashed directly; index flags such as
 assume-unchanged or skip-worktree are not trusted); --source holds {DISPATCH_SOURCE}; the rename tools (and
 {HISTORY_POLICY_TOOL} for --history-policy) sit next to this tool; --report is not a symlink, an input file,
-or inside either repository, its git storage or the tools directory.
+or inside either repository, its git storage or the tools directory, and an existing --report must be an earlier
+report of this tool (anything else is never overwritten). Git storage is read as git reads it: the
+.git file, commondir and every alternates file (relative entries against their object store, indirect ones
+followed), each a regular file whose value has no surrounding blanks, controls or quotes; the pointer files
+themselves and the targets of every symlink inside the storage are protected too; git's own git dir, common
+dir and alternate list must agree. $TMPDIR may not lie inside any protected path.
 
 Outputs:
   stdout: one block per check with PASS/FAIL/SKIPPED, its inspected counts, findings and notes, then a verdict.
