@@ -393,6 +393,9 @@ def _walk_history(repo: str, tip: str, expected: dict[str, bytes]) -> tuple[set[
         return data
 
     def tree_entries(oid: str) -> list[tuple[bytes, str, str]]:
+        # (name, kind, object id) per entry, kind canonicalized as git's tree walk does:
+        # strict octal mode; any directory mode is a tree, a regular file or symlink is a
+        # blob, and every other mode is a gitlink.
         if oid not in entries_by_tree:
             data = load(oid, "tree")
             entries: list[tuple[bytes, str, str]] = []
@@ -400,8 +403,17 @@ def _walk_history(repo: str, tip: str, expected: dict[str, bytes]) -> tuple[set[
             while data is not None and position < len(data):
                 space = data.index(b" ", position)
                 nul = data.index(b"\0", space)
-                mode = data[position:space].decode()
-                entries.append((data[space + 1 : nul], mode, data[nul + 1 : nul + 21].hex()))
+                mode = data[position:space]
+                if not re.fullmatch(rb"[0-7]+", mode) or nul + 21 > len(data):
+                    raise InputError(f"malformed tree {oid}")
+                kind = int(mode, 8) & 0o170000
+                if kind == 0o040000:
+                    kind_name = "tree"
+                elif kind in (0o100000, 0o120000):
+                    kind_name = "blob"
+                else:
+                    kind_name = "gitlink"
+                entries.append((data[space + 1 : nul], kind_name, data[nul + 1 : nul + 21].hex()))
                 position = nul + 21
             entries_by_tree[oid] = entries
         return entries_by_tree[oid]
@@ -419,23 +431,34 @@ def _walk_history(repo: str, tip: str, expected: dict[str, bytes]) -> tuple[set[
             data = load(commit, "commit")
             if data is None:
                 continue
+            # Every tree and parent reference in the header is followed (git accepts either
+            # hex case); a reference git could not parse is a finding, never skipped.
+            trees = 0
             for line in data.split(b"\n\n", 1)[0].split(b"\n"):
                 field, _, value = line.partition(b" ")
-                if field == b"tree" and re.fullmatch(rb"[0-9a-f]{40}", value):
-                    pending_trees.append((b"", value.decode()))
-                elif field == b"parent" and re.fullmatch(rb"[0-9a-f]{40}", value):
-                    pending_commits.append(value.decode())
+                if field not in (b"tree", b"parent"):
+                    continue
+                if not re.fullmatch(rb"[0-9a-fA-F]{40}", value):
+                    findings.append(f"malformed-commit oid={commit} field={field.decode()}")
+                    continue
+                if field == b"tree":
+                    trees += 1
+                    pending_trees.append((b"", value.decode().lower()))
+                else:
+                    pending_commits.append(value.decode().lower())
+            if trees == 0:
+                findings.append(f"malformed-commit oid={commit} field=tree")
         while pending_trees:
             prefix, tree = pending_trees.pop()
             if (prefix, tree) in seen_trees:
                 continue
             seen_trees.add((prefix, tree))
-            for name, mode, oid in tree_entries(tree):
-                if mode == "40000":
+            for name, kind, oid in tree_entries(tree):
+                if kind == "tree":
                     pending_trees.append((prefix + name + b"/", oid))
                     continue
                 pairs.add(((prefix + name).decode("utf-8", "surrogateescape"), oid))
-                if mode == "160000" or oid in checked_blobs:
+                if kind == "gitlink" or oid in checked_blobs:
                     continue  # a gitlink names a commit of another repository
                 checked_blobs.add(oid)
                 content = load(oid, "blob")
@@ -613,8 +636,10 @@ Subcommands:
                 commit-graph, grafts or ls-tree), ignores replacement refs and inherited
                 GIT_* variables, never fetches missing objects, and re-hashes every
                 reachable commit, tree and blob: a missing object, a hash or type mismatch,
-                or replacement bytes that differ from the frozen file are findings. A
-                shallow repository is refused (exit 2).
+                or replacement bytes that differ from the frozen file are findings. Commit
+                references and tree modes are read as git reads them (either hex case;
+                canonical modes); a reference git cannot parse is a finding. A shallow
+                repository or a malformed tree is refused (exit 2).
 
 Examples:
   .venv/bin/python packaging/machinery-move/history_policy.py check-policy \\

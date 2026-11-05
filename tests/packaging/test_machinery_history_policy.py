@@ -396,6 +396,108 @@ def test_verify_corrupted_or_missing_objects_are_findings(source: Repo, tmp_path
         loose.write_bytes(original)
 
 
+def _new_repo(tmp_path: Path, home: Path, name: str) -> Repo:
+    repo = Repo(tmp_path / name, home)
+    repo.path.mkdir()
+    repo.git("init", "--quiet", "--initial-branch=main", "--object-format=sha1")
+    return repo
+
+
+def _write_commit_map(repo: Repo, commits: list[str]) -> None:
+    commit_map = repo.path / ".git" / "filter-repo" / "commit-map"
+    commit_map.parent.mkdir(parents=True, exist_ok=True)
+    rows = "".join(f"{number:040x} {sha}\n" for number, sha in enumerate(commits, 1))
+    commit_map.write_text(f"{'old':<40} new\n" + rows)
+
+
+def _store(repo: Repo, kind: str, data: bytes) -> str:
+    return repo.git("hash-object", "-t", kind, "-w", "--literally", "--stdin", stdin=data)
+
+
+def test_verify_follows_uppercase_or_noncanonical_references_and_flags_malformed_ones(
+    tmp_path: Path, home: Path
+) -> None:
+    # Git reads either hex case in commit headers and canonicalizes tree modes; verify must
+    # walk exactly the history git would publish, and flag a reference git could not parse.
+    omitted = b"omitted version\n"
+    policy = Policy(tmp_path / "policy")
+    policy.add("scripts/a.py", blob_id(b"public\n"), "retain")
+    policy.add("scripts/b.py", blob_id(omitted), "omit")
+    digest = policy.freeze()
+    survivor = f"omitted-version-survives path='lu_machinery/b.py' blob={blob_id(omitted)}"
+
+    def crafted_tip(repo: Repo, old: bytes, new: bytes) -> str:
+        raw = subprocess.run(
+            ["git", "-C", str(repo.path), "cat-file", "commit", "HEAD"],
+            capture_output=True,
+            check=True,
+            timeout=60,
+            env=repo.env,
+        ).stdout
+        assert old in raw
+        tip = _store(repo, "commit", raw.replace(old, new, 1))
+        repo.git("update-ref", "refs/heads/main", tip)
+        return tip
+
+    # An uppercase parent reference leads to an ancestor that still holds the omitted version.
+    repo = _new_repo(tmp_path, home, "upper-parent")
+    first = repo.commit({"lu_machinery/a.py": b"public\n", "lu_machinery/b.py": omitted}, "c1")
+    repo.commit({"lu_machinery/b.py": None}, "c2")
+    tip = crafted_tip(repo, f"parent {first}".encode(), f"parent {first.upper()}".encode())
+    assert repo.git("rev-list", "--count", tip) == "2", "git follows the uppercase parent"
+    _write_commit_map(repo, [first, tip])
+    checked = verify(repo, policy, digest)
+    assert checked.returncode == 1 and survivor in checked.stdout and "commits=2" in checked.stdout
+
+    # An uppercase tree reference names the tip's own tree, which holds the omitted version.
+    repo = _new_repo(tmp_path, home, "upper-tree")
+    first = repo.commit({"lu_machinery/a.py": b"public\n"}, "c1")
+    repo.commit({"lu_machinery/b.py": omitted}, "c2")
+    tree = repo.git("rev-parse", "HEAD^{tree}")
+    tip = crafted_tip(repo, f"tree {tree}".encode(), f"tree {tree.upper()}".encode())
+    _write_commit_map(repo, [first, tip])
+    checked = verify(repo, policy, digest)
+    assert checked.returncode == 1 and survivor in checked.stdout
+
+    # An ancestor whose parent reference git cannot parse is a finding, not a skipped edge.
+    repo = _new_repo(tmp_path, home, "bad-parent")
+    first = repo.commit({"lu_machinery/a.py": b"public\n"}, "c1")
+    second = repo.commit({"lu_machinery/b.py": omitted}, "c2")
+    raw = subprocess.run(
+        ["git", "-C", str(repo.path), "cat-file", "commit", second],
+        capture_output=True,
+        check=True,
+        timeout=60,
+        env=repo.env,
+    ).stdout
+    malformed = _store(repo, "commit", raw.replace(f"parent {first}".encode(), f"parent {first[:39]}g".encode()))
+    tip = repo.git("commit-tree", f"{first}^{{tree}}", "-p", malformed, "-m", "wrap", stdin=b"")
+    repo.git("update-ref", "refs/heads/main", tip)
+    _write_commit_map(repo, [first, malformed, tip])
+    checked = verify(repo, policy, digest)
+    assert checked.returncode == 1
+    assert f"malformed-commit oid={malformed} field=parent" in checked.stdout
+    assert survivor in checked.stdout, "the malformed commit's own tree is still checked"
+
+    # A zero-padded directory mode is still a directory to git, so its files are checked.
+    repo = _new_repo(tmp_path, home, "padded-mode")
+    inner = repo.git(
+        "mktree",
+        stdin=(
+            f"100644 blob {_store(repo, 'blob', b'public\n')}\ta.py\n"
+            f"100644 blob {_store(repo, 'blob', omitted)}\tb.py\n"
+        ).encode(),
+    )
+    outer = _store(repo, "tree", b"040000 lu_machinery\x00" + bytes.fromhex(inner))
+    tip = repo.git("commit-tree", outer, "-m", "padded", stdin=b"")
+    repo.git("update-ref", "refs/heads/main", tip)
+    assert blob_id(omitted) in repo.reachable_objects(), "git walks the zero-padded directory"
+    _write_commit_map(repo, [tip])
+    checked = verify(repo, policy, digest)
+    assert checked.returncode == 1 and survivor in checked.stdout
+    assert "object-type-mismatch" not in checked.stdout
+
+
 # --- rewrites with the real git-filter-repo 2.47.0 ---------------------------------------
 
 
