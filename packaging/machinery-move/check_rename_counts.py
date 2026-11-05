@@ -31,6 +31,21 @@ IMPORT_LINE = re.compile(
     + NAME
     + rb")*)[ \t]+import[ \t]+([^\n#()]+?)[ \t]*(?:#[^\n]*)?"
 )
+# I7: the module operand of an import statement. ``WS`` is Python's inline white space, a backslash continuation
+# included. The prefix runs from the start of the logical line to the operand: an optional statement before it
+# that ends in ``;`` or ``:`` (``if x: from lib import y``) and holds no ``#``, then the keyword. A plain
+# ``import`` may list earlier modules, each with an optional ``as`` alias, before this one.
+WS = rb"(?:[ \t\f]|\\\r?\n)"
+STATEMENT = rb"(?:[^#]*?[;:])?" + WS + rb"*"
+ALIAS = WS + rb"+as" + WS + rb"+" + NAME
+FROM_PREFIX = re.compile(STATEMENT + rb"from" + WS + rb"+")
+IMPORT_PREFIX = re.compile(
+    STATEMENT + rb"import" + WS + rb"+(?:" + DOTTED.pattern + rb"(?:" + ALIAS + rb")?" + WS + rb"*," + WS + rb"*)*"
+)
+FROM_SUFFIX = re.compile(WS + rb"+import(?![A-Za-z0-9_])")
+IMPORT_SUFFIX = re.compile(ALIAS + rb"|" + WS + rb"*(?:[,;#]|\r?\n|\Z)")
+MAX_LOGICAL_LINES = 64  # a longer backslash-continued statement is no import operand
+QUOTE_LEAD = 8  # how many lines before its entry's line a quoted text may start
 # A proper fragment of ``scripts`` next to a quote, a backtick, ``$``, a brace, a backslash or a line end.
 NEXT = rb"['\"`${}\\]"
 FRAGMENT = re.compile(
@@ -94,8 +109,39 @@ class Owners:
         return sorted(s for s in starts if self.token(data, s)[0] == "machinery")
 
 
+def _logical_line_start(data: bytes, offset: int) -> int | None:
+    """Where the logical line holding ``data[offset]`` starts: back over backslash continuations, at most
+    ``MAX_LOGICAL_LINES`` physical lines; None when it is longer."""
+
+    start = data.rfind(b"\n", 0, offset) + 1
+    for _ in range(MAX_LOGICAL_LINES):
+        if data.endswith(b"\\\n", 0, start) or data.endswith(b"\\\r\n", 0, start):
+            start = data.rfind(b"\n", 0, start - 2) + 1
+        else:
+            return start
+    return None
+
+
+def import_operand(data: bytes, start: int, end: int, *, plain_import: bool = True) -> bool:
+    """I7: whether ``data[start:end]`` is a module operand of an import statement.
+
+    That is the text between ``from`` and ``import``, or one comma-separated module of a plain ``import``
+    statement (its ``as`` alias excluded). Names after ``from X import``, aliases and parenthesised imported names
+    are no operands. A bounded check by regular expressions: strings and comments are not parsed."""
+
+    line = _logical_line_start(data, start)
+    if line is None:
+        return False
+    if FROM_PREFIX.fullmatch(data, line, start) and FROM_SUFFIX.match(data, end):
+        return True
+    return plain_import and bool(IMPORT_PREFIX.fullmatch(data, line, start) and IMPORT_SUFFIX.match(data, end))
+
+
 def _form(owners: Owners, rel: str, a: bytes, b: bytes, i: int, j: int) -> tuple[str, str, str | None, int, int] | None:
-    """(form, token, owner, end in a, end in b) of a mapped substitution starting at ``a[i]`` and ``b[j]``."""
+    """(form, token, owner, end in a, end in b) of a mapped substitution starting at ``a[i]`` and ``b[j]``.
+
+    ``i`` is the true start of the hit (``substitutions`` steps back over a shared token prefix), so the I7
+    context test of the unprefixed and relative forms looks at the bytes in front of the whole operand."""
 
     if i and a[i - 1] in IDENT:
         return None
@@ -104,15 +150,21 @@ def _form(owners: Owners, rel: str, a: bytes, b: bytes, i: int, j: int) -> tuple
         return "plain", text, owner, i + len(OLD), j + len(NEW)
     if i and a[i - 1] == 46:  # ``.``: inside a dotted name, so no import token starts here
         return None
-    if (token := DOTTED.match(a, i)) and b.startswith(NEW + b"." + token.group(0), j):  # unprefixed import
-        text = token.group(0).decode()
+    token = DOTTED.match(a, i)
+    if token and b.startswith(NEW + b"." + token.group(0), j) and import_operand(a, i, token.end()):
+        text = token.group(0).decode()  # an unprefixed import
         return "unprefixed", text, owners.module("scripts." + text, a, token.end()), token.end(), j + 13 + len(text)
     relative, absolute = RELATIVE.match(a, i), ABSOLUTE.match(b, j)
     package = rel.split("/")[:-1]
     if relative and absolute and package[:1] == ["scripts"] and len(relative.group(1)) <= len(package):
         base = package[: len(package) - len(relative.group(1)) + 1]
         rest = relative.group(2).decode().split(".") if relative.group(2) else []
-        if absolute.group(0).decode() == ".".join(["lu_machinery", *base[1:], *rest]):
+        if absolute.group(0).decode() == ".".join(["lu_machinery", *base[1:], *rest]) and import_operand(
+            a,
+            i,
+            relative.end(),
+            plain_import=False,  # a relative module is an operand of ``from`` only
+        ):
             owner = owners.module(".".join(["scripts", *base[1:], *rest]), a, relative.end())
             return "relative", relative.group(0).decode(), owner, relative.end(), absolute.end()
     return None
@@ -191,6 +243,119 @@ def _line(data: bytes, offset: int) -> int:
     return data.count(b"\n", 0, offset) + 1
 
 
+def _canon(text: str) -> str:
+    """One spelling for a name: ``scripts import x`` (a ``from scripts import x`` token) is ``scripts.x``."""
+
+    return re.sub(r"^scripts import \(? ?", "scripts.", text)
+
+
+def _line_starts(data: bytes) -> list[int]:
+    return [0, *(m.end() for m in re.finditer(rb"\n", data))]
+
+
+def _matches(data: bytes, starts: list[int], line: int, shown: bytes) -> list[list[int]]:
+    """Each match of an entry's quoted text that holds a byte of ``line``, as the offset in ``data`` of each byte
+    of it. A match may start up to ``QUOTE_LEAD`` lines earlier: a tool gives a parenthesised expression the line
+    of what is inside, and quotes the ``(`` before it.
+
+    The tools quote source text with its white space collapsed, so a quoted space matches any white space or
+    none."""
+
+    words = shown.split()
+    if not words or not 1 <= line <= len(starts):
+        return []
+    begin, end, found = starts[line - 1], _eol(data, starts[line - 1]), []
+    pattern = re.compile(rb"\s*".join(re.escape(word) for word in words))
+    for match in pattern.finditer(data, starts[max(0, line - 1 - QUOTE_LEAD)]):
+        if match.start() > end:
+            break
+        if match.end() <= begin:
+            continue
+        where, k = [], match.start()
+        for char in shown:
+            while char == 32 and data[k : k + 1].isspace():
+                k += 1
+            where.append(k)
+            k += char != 32
+        found.append(where)
+    return found
+
+
+Entry = tuple[int, int, str, str, list[tuple[int, str, bool]]]  # report, line, quoted text, kind, tokens
+
+
+def residue_entries(owners: Owners, reports: list[dict]) -> dict[str, list[Entry]]:
+    """I8: the residue entries of each file with their mentions. A mention is one token inside one entry's
+    quoted ``before`` text, as (offset in that text, token, whether it names machinery).
+
+    An unresolved entry, and an inventory entry without ``after``, is residue: its text is left as written. An
+    inventory entry with ``after`` records a rewrite that was applied, so it is no residue."""
+
+    found: dict[str, list[Entry]] = defaultdict(list)
+    for number, report in enumerate(reports):
+        for entry in report["unresolved"] + [entry for entry in report["inventory"] if "after" not in entry]:
+            shown = " ".join((entry.get("before") or "").split())
+            data = shown.encode()
+            tokens = []
+            for start in sorted(
+                {m.start() for m in TOKEN.finditer(data)} | {m.start() for m in FROM_IMPORT.finditer(data)}
+            ):
+                owner, text = owners.token(data, start)
+                tokens.append((start, _canon(text), owner == "machinery"))
+            if tokens:
+                found[entry["path"]].append((number, int(entry["line"]), shown, entry["kind"], tokens))
+    return found
+
+
+def match_residue(
+    rel: str, a: bytes, b: bytes, occurrences: list[tuple[int, str]], entries: list[Entry]
+) -> tuple[list[dict], list[dict]]:
+    """I8: every output occurrence of an old name consumes exactly one residue mention of its file.
+
+    Each mention is placed at its token's offset in the input file by finding the entry's quoted text on the
+    entry's line, longer entries first: at the first match whose tokens its own report has placed least often.
+    Mentions at one offset with one token are one occurrence, however many entries or reports quote it (an
+    expression and a literal inside it, say), and equal entries of one report on one line take successive
+    matches. A mention whose text is not found there covers nothing (a machinery one is unbalanced). Occurrences and mentions pair by token text in
+    file order, not by line, so line shifts do not matter. Returns what is left on each side: (unreported
+    occurrences, unbalanced machinery mentions)."""
+
+    starts = _line_starts(a)
+    order: dict[tuple[int, str], tuple[int, bool, str]] = {}  # (offset in a, token) -> (line, machinery, kind)
+    unbalanced: list[dict] = []
+    placed: dict[int, set[int]] = defaultdict(set)  # report -> token offsets in a its entries took
+    for number, line, shown, kind, tokens in sorted(entries, key=lambda entry: -len(entry[2])):
+        matches = _matches(a, starts, line, shown.encode())
+        if not matches:  # fail closed: a mention not found where its entry says covers nothing
+            unbalanced += [
+                {"path": rel, "line": line, "token": text, "kind": kind, "reason": "the quoted text is not there"}
+                for _start, text, machinery in tokens
+                if machinery
+            ]
+            continue
+        where = min(matches, key=lambda where: sum(where[start] in placed[number] for start, _t, _m in tokens))
+        for start, text, machinery in tokens:
+            placed[number].add(where[start])
+            order.setdefault((where[start], text), (line, machinery, kind))
+    side: dict[str, list[tuple[int, int, bool, str]]] = defaultdict(list)
+    for (offset, text), (line, machinery, kind) in order.items():
+        side[text].append((offset, line, machinery, kind))
+    used: Counter[str] = Counter()
+    unreported = []
+    for offset, text in occurrences:  # in file order
+        if used[text] < len(side[text]):
+            used[text] += 1
+        else:
+            unreported.append({"path": rel, "line": _line(b, offset), "token": text})
+    unbalanced += [
+        {"path": rel, "line": line, "token": text, "kind": kind, "reason": "no occurrence is left for it"}
+        for text, mentions in side.items()
+        for _offset, line, machinery, kind in sorted(mentions)[used[text] :]
+        if machinery
+    ]
+    return unreported, unbalanced
+
+
 def _files(root: Path) -> set[str]:
     found = set()
     for directory, dirnames, filenames in os.walk(root):
@@ -204,11 +369,12 @@ def _files(root: Path) -> set[str]:
 
 
 def check(owners: Owners, before: Path, after: Path, reports: list[dict]) -> dict:
-    residue: dict[str, list[tuple[int, str]]] = defaultdict(list)
+    entry_lines: dict[str, set[int]] = defaultdict(set)
     for report in reports:
         for entry in report["unresolved"] + report["inventory"]:
-            residue[entry["path"]].append((int(entry["line"]), " ".join((entry.get("before") or "").split())))
-    unsound, incomplete, uncovered, fragments = [], [], [], []
+            entry_lines[entry["path"]].add(int(entry["line"]))
+    residue = residue_entries(owners, reports)
+    unsound, incomplete, uncovered, unbalanced, fragments = [], [], [], [], []
     forms: Counter[str] = Counter()
     totals: Counter[str] = Counter()
     inputs, outputs = _files(before), _files(after)
@@ -222,11 +388,12 @@ def check(owners: Owners, before: Path, after: Path, reports: list[dict]) -> dic
                 "path": rel,
                 "line": _line(a, m.start()),
                 "fragment": m.group(0).decode("utf-8", "replace"),
-                "covered": any(line == _line(a, m.start()) for line, _ in residue[rel]),
+                "covered": _line(a, m.start()) in entry_lines[rel],
             }
             for m in FRAGMENT.finditer(a)
         ]
         if OLD not in a and a == b:
+            unbalanced += match_residue(rel, a, b, [], residue.get(rel, []))[1]
             continue
         subs, split_spans, failed = substitutions(owners, rel, a, b) if a != b else ([], [], None)
         if failed is not None:
@@ -252,17 +419,24 @@ def check(owners: Owners, before: Path, after: Path, reports: list[dict]) -> dic
         totals.update(input_tokens=len(left_in), plain=plain, output_tokens=len(left_out))
         if len(left_in) != plain + len(left_out):
             incomplete.append({"path": rel, "input": len(left_in), "plain": plain, "output": len(left_out)})
-        for offset in left_out:
-            line, text = _line(b, offset), owners.token(b, offset)[1]
-            texts = {text, text.replace("scripts import ", "scripts.")}  # a report may name either spelling
-            if not any(at <= line and any(t in shown for t in texts) for at, shown in residue[rel]):
-                uncovered.append({"path": rel, "line": line, "token": text})
+        occurrences = [(offset, _canon(owners.token(b, offset)[1])) for offset in left_out]
+        unreported, left = match_residue(rel, a, b, occurrences, residue.get(rel, []))
+        uncovered += unreported
+        unbalanced += left
+    unbalanced += [
+        {"path": rel, "line": line, "token": text, "kind": kind, "reason": "the file is in no tree"}
+        for rel in sorted(set(residue) - inputs - outputs)
+        for _n, line, _s, kind, tokens in residue[rel]
+        for _start, text, machinery in tokens
+        if machinery
+    ]
     return {
         "totals": dict(totals),
         "substitutions": dict(forms),
         "unsound": unsound,
         "incomplete": incomplete,
         "uncovered": uncovered,
+        "unbalanced_mentions": unbalanced,
         "fragments": fragments,
     }
 
@@ -286,20 +460,32 @@ Checks (no parsing: bytes, regular expressions and the map):
                 lu_machinery.T where scripts.T is a machinery module (unprefixed import); a relative module ->
                 lu_machinery.<the module it names from the file's path> (relative import); one line
                 `from scripts.P import x, y` -> one line for each owner with the same indent and names (split).
-  completeness  per file, machinery tokens in --input = plain substitutions + machinery tokens in --output,
-                and every machinery token left in --output is named, with its exact text, by an unresolved or
-                inventory entry of the --report files for its file at or before its line.
+                I7: an unprefixed or relative substitution is sound only as the module operand of an import
+                statement: the text between `from` and `import`, or one comma-separated module of a plain
+                `import` (its `as` alias excluded; relative only after `from`). The keyword starts the logical
+                line after indentation, `;` or a one-line `if x:`, and may be followed by a backslash
+                continuation. Imported names, aliases, parenthesised names and every other place are unsound.
+  completeness  per file, machinery tokens in --input = plain substitutions + machinery tokens in --output.
+                I8: every machinery token left in --output consumes exactly one residue mention: one token
+                inside the quoted `before` text of one unresolved entry, or of one inventory entry without
+                `after` (an entry with `after` records an applied rewrite). Each mention is placed in --input by
+                finding its entry's text on the entry's line; one occurrence quoted by several entries or reports
+                counts once, and a mention not found there covers nothing. Tokens and mentions pair by text in
+                file order, never by line. A token left over is uncovered; a machinery mention left over or not
+                found (a name the tools rewrote, or text not in the file) is an unbalanced mention.
   fragments     every proper fragment of scripts (scr, scri, scrip at a word start; ipts, ripts, cripts at a
                 word end) next to a quote, a backtick, $, a brace, a backslash or a line end in --input, and
                 whether an entry covers its line (listed; it does not change the exit code).
 
 Outputs:
-  stdout: the tree SHA and a JSON summary. --out: the summary with every failure and fragment as JSON.
+  stdout: the tree SHA and a JSON summary (counts only). --out: the summary with every failure and fragment,
+  each with its file and line, as JSON.
 
 Exit codes:
   0  soundness and completeness hold
   1  at least one unsound change, unbalanced file or uncovered machinery token
   2  usage error, or an unreadable map, tree or report
+  3  only unbalanced mentions: a residue entry names a machinery token that is not left in --output
 
 Related:
   packaging/machinery-move/README.md, rename_python.py, rename_nonpython.py, rename_structured.py;
@@ -333,12 +519,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     summary = {"tree_sha": args.tree_sha, **{k: result[k] for k in ("totals", "substitutions")}}
-    summary |= {k: len(result[k]) for k in ("unsound", "incomplete", "uncovered", "fragments")}
+    summary |= {k: len(result[k]) for k in ("unsound", "incomplete", "uncovered", "unbalanced_mentions", "fragments")}
     summary["fragments_uncovered"] = sum(1 for f in result["fragments"] if not f["covered"])
     args.out.write_text(json.dumps({"summary": summary, **result}, indent=1) + "\n", encoding="utf-8")
     print(f"tree {args.tree_sha}")
     print(json.dumps(summary, indent=1))
-    return 1 if result["unsound"] or result["incomplete"] or result["uncovered"] else 0
+    if result["unsound"] or result["incomplete"] or result["uncovered"]:
+        return 1
+    return 3 if result["unbalanced_mentions"] else 0
 
 
 if __name__ == "__main__":

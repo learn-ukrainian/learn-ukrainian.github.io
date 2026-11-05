@@ -199,13 +199,26 @@ untouched tree and reads the three reports. It parses nothing: it compares bytes
   `scripts` becomes `lu_machinery` at a machinery token. It may also be an unprefixed import
   (`lib.x` to `lu_machinery.lib.x`), a relative import (resolved from the file's own path), or a
   mixed `from scripts.P import x, y` split into one line for each owner.
+  **I7:** an unprefixed or relative substitution is sound only as the module operand of an import
+  statement. That is the text between `from` and `import`, or one comma-separated module of a
+  plain `import` (without its `as` alias). The keyword starts the logical line, after indentation,
+  `;` or a one-line `if x:`, and may be followed by a backslash continuation. Imported names,
+  aliases, parenthesised names and every other place are unsound.
 - **Completeness.** In each file, the machinery tokens before equal the plain substitutions plus
-  the machinery tokens left after. Every token left is named, with its exact text, by an
-  unresolved or inventory entry of its file at or before its line.
+  the machinery tokens left after. **I8:** every token left consumes exactly one residue mention.
+  A mention is one token inside the quoted `before` text of one unresolved entry, or of one
+  inventory entry without `after` (an entry with `after` records an applied rewrite). Each mention
+  is placed in the untouched file by finding its entry's text on the entry's line, so one
+  occurrence quoted by several entries or reports counts once; a mention not found there covers
+  nothing. Tokens and mentions pair by text in file order, never by line. A token left over is
+  uncovered. A machinery mention left over or not found (a name the tools rewrote, or text not in
+  the file) is an unbalanced mention.
 - **Fragments.** Each proper fragment of `scripts` next to a quote, a backtick, `$`, a brace, a
   backslash or a line end is listed with whether an entry covers its line.
 
-It prints the tree SHA and exits 1 when soundness or completeness fails.
+It prints the tree SHA and the counts, and writes each failure with its file and line to `--out`.
+It exits 1 when soundness or completeness fails, and 3 when the only failures are unbalanced
+mentions.
 
 ## Isolated LibCST environment
 

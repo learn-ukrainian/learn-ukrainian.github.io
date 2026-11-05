@@ -1838,18 +1838,28 @@ COUNT_FORMS = [
 ]
 
 
-def _count(tmp_path: Path, pairs: list[tuple[str, str, str]], residue: list[dict] | None = None) -> tuple[int, dict]:
+def _count(
+    tmp_path: Path,
+    pairs: list[tuple[str, str, str]],
+    residue: list[dict] | None = None,
+    *more_residue: list[dict],
+) -> tuple[int, dict]:
+    """Run the checker on a toy tree; ``residue`` and each of ``more_residue`` are one tool report's entries."""
+
     before, after = tmp_path / "before", tmp_path / "after"
     for rel, old, new in pairs:
         for root, text in ((before, old), (after, new)):
             (root / rel).parent.mkdir(parents=True, exist_ok=True)
             with (root / rel).open("a", encoding="utf-8") as handle:
                 handle.write(text)
-    map_path, report, out = tmp_path / "map.json", tmp_path / "report.json", tmp_path / "out.json"
+    map_path, out = tmp_path / "map.json", tmp_path / "out.json"
     map_path.write_text(json.dumps(COUNT_MAP), encoding="utf-8")
-    report.write_text(json.dumps({"rewrites": [], "unresolved": residue or [], "inventory": []}), encoding="utf-8")
     argv = ["--tree-sha", "0" * 40, "--map", str(map_path), "--input", str(before), "--output", str(after)]
-    code = check_rename_counts.main([*argv, "--report", str(report), "--out", str(out)])
+    for number, entries in enumerate([residue or [], *more_residue]):
+        report = tmp_path / f"report{number}.json"
+        report.write_text(json.dumps({"rewrites": [], "unresolved": entries, "inventory": []}), encoding="utf-8")
+        argv += ["--report", str(report)]
+    code = check_rename_counts.main([*argv, "--out", str(out)])
     return code, json.loads(out.read_text(encoding="utf-8"))
 
 
@@ -1887,3 +1897,150 @@ def test_counting_checks_fail_on_each_defect(tmp_path: Path, pair: tuple[str, st
 
     assert code == 1
     assert result["summary"][failure] >= 1, result
+
+
+# I7: (file, input statement, output statement, form); the mapped spelling is the import statement's module operand.
+I7_OPERANDS = [
+    ("scripts/app/run.py", "from lib.db import open_db", "from lu_machinery.lib.db import open_db", "unprefixed"),
+    ("scripts/app/run.py", "from lib import db", "from lu_machinery.lib import db", "unprefixed"),
+    ("scripts/app/run.py", "import lib.db as c", "import lu_machinery.lib.db as c", "unprefixed"),
+    ("scripts/app/run.py", "import os, lib.db", "import os, lu_machinery.lib.db", "unprefixed"),
+    (
+        "scripts/app/run.py",
+        "import os as o, lib.db as c, sys",
+        "import os as o, lu_machinery.lib.db as c, sys",
+        "unprefixed",
+    ),
+    ("scripts/app/run.py", "from ..lib import db", "from lu_machinery.lib import db", "relative"),
+    ("scripts/review/cli.py", "from . import findings", "from lu_machinery.review import findings", "relative"),
+    ("scripts/review/cli.py", "from .findings import x", "from lu_machinery.review.findings import x", "relative"),
+]
+# The same mapped spellings substituted anywhere else: a definition, an expression, a name after
+# ``from X import``, a parenthesised name, an alias, ``yield from`` and ``raise ... from``, a comment, and a
+# stray ``.`` in code.
+I7_ELSEWHERE = [
+    ("scripts/orchestration/trail_runner.py", "def dispatch(args):", "def lu_machinery.dispatch(args):"),
+    ("scripts/app/run.py", "x = lib.db", "x = lu_machinery.lib.db"),
+    ("scripts/app/run.py", "print(dispatch)", "print(lu_machinery.dispatch)"),
+    ("scripts/app/run.py", "from os import lib", "from os import lu_machinery.lib"),
+    ("scripts/app/run.py", "from os import (lib)", "from os import (lu_machinery.lib)"),
+    ("scripts/app/run.py", "import os as lib", "import os as lu_machinery.lib"),
+    ("scripts/app/run.py", "x = yield from lib.db", "x = yield from lu_machinery.lib.db"),
+    ("scripts/app/run.py", "raise E from dispatch", "raise E from lu_machinery.dispatch"),
+    ("scripts/app/run.py", "# from lib.db import open_db", "# from lu_machinery.lib.db import open_db"),
+    ("scripts/review/cli.py", "x(.findings)", "x(lu_machinery.review.findings)"),
+    ("scripts/review/cli.py", "foo(.5)", "foo(lu_machinery.review.5)"),
+]
+# Where the statement stands: at the start, indented, after ``;``, after ``if x:`` on one line, and with a
+# backslash continuation after its first ``from`` or ``import`` keyword.
+I7_CONTEXTS = ["{}", "    {}", "x = 1; {}", "if x: {}", "continued"]
+
+
+def _i7_place(context: str, statement: str) -> str | None:
+    if context != "continued":
+        return context.format(statement)
+    keywords = [k for k in ("from ", "import ") if k in statement]
+    if not keywords:
+        return None
+    first = min(keywords, key=statement.index)
+    return statement.replace(first, first.rstrip() + " \\\n    ", 1)
+
+
+def test_i7_mapped_spelling_is_sound_only_as_an_import_operand(tmp_path: Path) -> None:
+    """I7, defect class "mapped spelling accepted outside an import operand" (round-6 F7: ``def dispatch(`` ->
+    ``def lu_machinery.dispatch(`` passed). An unprefixed or relative substitution is sound only as the module
+    operand of an import statement. Generated over the statement kind, its context, its position (lines before it)
+    and its multiplicity: every operand is accepted with its form counted; every other place is unsound at its
+    line."""
+
+    cases = 0
+    for (rel, old, new, *form), context, shift, times in (
+        (case, context, shift, times)
+        for case in [*I7_OPERANDS, *I7_ELSEWHERE]
+        for context in I7_CONTEXTS
+        for shift in (0, 2)
+        for times in (1, 2)
+    ):
+        placed = _i7_place(context, old), _i7_place(context, new)
+        if placed[0] is None or placed[1] is None:
+            continue
+        head = "pass\n" * shift
+        pair = (rel, head + (placed[0] + "\n") * times, head + (placed[1] + "\n") * times)
+        cases += 1
+        code, result = _count(tmp_path / f"case{cases}", [pair])
+        label = (rel, context, shift, times, old)
+        if form:
+            assert code == 0, (label, result["unsound"])
+            assert result["substitutions"] == {form[0]: times}, label
+        else:
+            assert code == 1, label
+            differ = next(n for n, (x, y) in enumerate(zip(*placed, strict=False)) if x != y)
+            line = shift + 1 + placed[0].count("\n", 0, differ)  # a continuation moves the operand down a line
+            assert [(u["path"], u["line"]) for u in result["unsound"]] == [(rel, line)], (label, result)
+    assert cases == 20 * (len(I7_OPERANDS) + len(I7_ELSEWHERE)) - 4 * 5  # five statements have no keyword
+
+
+def test_i8_each_left_occurrence_consumes_one_residue_mention(tmp_path: Path) -> None:
+    """I8, defect class "one residue entry covering several occurrences" (round-6 F8: deleting the entry for
+    the second of two equal names still passed). Every output occurrence of an old name consumes exactly one
+    mention, matched by text and file order. One occurrence quoted again (an expression around it, another
+    report) counts once. A mention of a name the tools rewrote is unbalanced (exit 3), and an entry whose text is
+    not on its line covers nothing (a forged entry cannot stand in for a dropped one). Generated over the
+    number of occurrences, their layout (own lines or one line), a line shift before them (plain lines, or a split
+    import that adds an output line) and the residue variant."""
+
+    rel, name = "scripts/app/run.py", "scripts/dispatch.py"
+    heads = {
+        "none": ("", ""),
+        "lines": ("pass\npass\n", "pass\npass\n"),
+        "split": (
+            "from scripts.review import findings, fixloop\n",
+            "from lu_machinery.review import findings\nfrom scripts.review import fixloop\n",
+        ),
+    }
+    cases = 0
+    for count, layout, (shift, (head_in, head_out)) in (
+        (count, layout, head) for count in (1, 2, 3) for layout in ("lines", "one_line") for head in heads.items()
+    ):
+        first = head_in.count("\n") + 1
+        if layout == "lines":
+            statements = [f'x{n} = "{name}"' for n in range(count)]
+            lines = [first + n for n in range(count)]
+        else:
+            statements = ["x = [" + ", ".join(f'"{name}"' for _ in range(count)) + "]"]
+            lines = [first] * count
+        body = "".join(s + "\n" for s in statements)
+        entries = [{"path": rel, "line": line, "kind": "path_string", "before": f'"{name}"'} for line in lines]
+        outer = {"path": rel, "line": first, "kind": "computed_string", "before": statements[0]}
+        rewritten_line = first + len(statements)
+        rewritten = (f'y = "{name}"\n', 'y = "lu_machinery/dispatch.py"\n')
+        variants: list[tuple[str, list, list, tuple[str, str], int, str | None]] = [
+            ("all", entries, [], ("", ""), 0, None),
+            ("outer", [*entries, outer], [], ("", ""), 0, None),
+            ("other-report", entries, entries[:1], ("", ""), 0, None),
+            ("rewritten", [*entries, {**entries[0], "line": rewritten_line}], [], rewritten, 3, "unbalanced"),
+        ]
+        forged = {**entries[-1], "before": f'"{name}" + forged'}  # not in the file, so it covers nothing
+        variants.append(("forged", [*entries[:-1], forged], [], ("", ""), 1, "uncovered"))
+        if layout == "one_line":
+            variants.append(("one-entry", [{**outer, "kind": "path_in_text"}], [], ("", ""), 0, None))
+        variants += [(f"drop{n}", entries[:n] + entries[n + 1 :], [], ("", ""), 1, "uncovered") for n in range(count)]
+        for variant, residue, other, (tail_in, tail_out), expected, failure in variants:
+            pair = (rel, head_in + body + tail_in, head_out + body + tail_out)
+            cases += 1
+            code, result = _count(tmp_path / f"case{cases}", [pair], residue, other)
+            label = (count, layout, shift, variant)
+            assert code == expected, (label, result)
+            assert result["summary"]["unsound"] == result["summary"]["incomplete"] == 0, (label, result)
+            if variant == "forged":
+                assert [u["reason"] for u in result["unbalanced_mentions"]] == ["the quoted text is not there"]
+            if failure == "uncovered":
+                # Pairing is by file order, so the occurrence left over is the last one, at its output line.
+                out_line = lines[-1] + head_out.count("\n") - head_in.count("\n")
+                assert [(u["path"], u["line"]) for u in result["uncovered"]] == [(rel, out_line)], (label, result)
+            elif failure == "unbalanced":
+                assert [(u["line"], u["token"]) for u in result["unbalanced_mentions"]] == [(rewritten_line, name)]
+                assert result["uncovered"] == [], label
+            else:
+                assert result["uncovered"] == result["unbalanced_mentions"] == [], (label, result)
+    assert cases == 3 * sum(5 + count + 5 + 1 + count for count in (1, 2, 3))  # per shift: own lines, one line
