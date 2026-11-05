@@ -406,7 +406,7 @@ def build_parser() -> argparse.ArgumentParser:
             "--plan-dir; every subcommand prints JSON to stdout.\n"
             "Exit codes: 0 success; 2 invalid usage.\n"
             "Related: Sol PR-L retention Gate 5; #9737; docs/runbooks/tmp-retention.md; "
-            "scripts/hygiene/lane_disk_retention.py."
+            f"{_mp('hygiene/lane_disk_retention.py')}."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True, metavar="{plan,latest}")
