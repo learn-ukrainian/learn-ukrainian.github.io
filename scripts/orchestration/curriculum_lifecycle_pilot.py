@@ -7,8 +7,6 @@ import argparse
 import hashlib
 import json
 import os
-import re
-import stat
 import subprocess
 import sys
 from collections.abc import Mapping, Sequence
@@ -24,78 +22,22 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
 from scripts.orchestration import curriculum_readiness, prompt_contracts
 
-# The product data file that names the readiness gates module, relative to the product root.
-READINESS_GATES_FILE = Path("scripts/curriculum/readiness_gates.v1.json")
-_GATES_MAX_BYTES = 4096
 # The product API the pilot uses. A configured module without any of it is refused.
 _GATE_EXPORTS = ("post_build_review", "base_level", "resolve_content_track", "resolve_manifest_module_track")
-
-
-def _gates_module_name(path: Path) -> str:
-    """Read the strict, bounded product configuration at ``path``."""
-    info = path.lstat()
-    if not stat.S_ISREG(info.st_mode):
-        raise ImportError("readiness gates configuration must be a regular file, not a symlink")
-    if info.st_size > _GATES_MAX_BYTES:
-        raise ImportError("readiness gates configuration is too large")
-    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
-    with os.fdopen(descriptor, "rb") as handle:
-        opened = os.fstat(handle.fileno())
-        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino):
-            raise ImportError("readiness gates configuration changed while opening")
-        raw = handle.read(_GATES_MAX_BYTES + 1)
-    if len(raw) > _GATES_MAX_BYTES:
-        raise ImportError("readiness gates configuration is too large")
-
-    def unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
-        document: dict[str, Any] = {}
-        for key, value in pairs:
-            if key in document:
-                raise ValueError("duplicate key")
-            document[key] = value
-        return document
-
-    def no_constants(token: str) -> Any:
-        raise ValueError(f"non-finite number {token}")
-
-    try:
-        document = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_keys, parse_constant=no_constants)
-    except (UnicodeDecodeError, ValueError, RecursionError) as exc:
-        raise ImportError("readiness gates configuration must be strict UTF-8 JSON") from exc
-    if not isinstance(document, dict) or set(document) != {"schema", "schema_version", "origin", "module"}:
-        raise ImportError("readiness gates configuration fields mismatch")
-    if document["schema"] != "learn-ukrainian.readiness-gates" or type(document["schema_version"]) is not int:
-        raise ImportError("readiness gates configuration schema mismatch")
-    if document["schema_version"] != 1:
-        raise ImportError("readiness gates configuration version mismatch")
-    if document["origin"] != "scripts/curriculum/readiness_gates.v1.json":
-        raise ImportError("readiness gates configuration origin mismatch")
-    name = document["module"]
-    if not isinstance(name, str) or re.fullmatch(r"scripts(?:\.[a-z_][a-z0-9_]*)+", name) is None:
-        raise ImportError("readiness gates configuration module must be a lowercase scripts.* name")
-    return name
 
 
 def readiness_gates(*, product_root: Path | None = None) -> ModuleType:
     """The product's readiness gates module, loaded when the pilot needs it, never at import.
 
-    Its name comes from ``READINESS_GATES_FILE`` under ``product_root`` (an absolute path;
-    default: this checkout), read strictly at each call; the module must come from that root
-    and provide every name in ``_GATE_EXPORTS``. A missing or invalid configuration, or a module
-    without that API, raises (``ImportError`` or ``OSError``) and so refuses the operation
-    that asked for the gates.
+    The readiness checks' strict loader (:func:`curriculum_readiness.load_readiness_gates`)
+    reads the configuration under ``product_root`` (an absolute path; default: this checkout)
+    at each call and refuses a module without every name in ``_GATE_EXPORTS``. A missing or
+    invalid configuration, or a module without that API, raises (``ImportError`` or
+    ``OSError``) and so refuses the operation that asked for the gates.
     """
-    if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
-        raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
-    root = PROJECT_ROOT if product_root is None else product_root
-    module = load_configured_module(_gates_module_name(root / READINESS_GATES_FILE), product_root=product_root)
-    missing = [name for name in _GATE_EXPORTS if not hasattr(module, name)]
-    if missing:
-        raise ConfiguredModuleError(f"{module.__name__} does not provide {', '.join(missing)}", name=module.__name__)
-    return module
+    return curriculum_readiness.load_readiness_gates(_GATE_EXPORTS, product_root=product_root)
 
 
 CONTRACT_ROOT = Path("agents_extensions/shared/curriculum-lifecycle")

@@ -97,23 +97,32 @@ def _gates_module_name(path: Path) -> str:
     return name
 
 
-def readiness_gates(*, product_root: Path | None = None) -> ModuleType:
-    """The product's readiness gates module, loaded when a check needs it, never at import.
+def load_readiness_gates(exports: tuple[str, ...], *, product_root: Path | None = None) -> ModuleType:
+    """The product's readiness gates module, which must provide every name in ``exports``.
 
     Its name comes from ``READINESS_GATES_FILE`` under ``product_root`` (an absolute path;
-    default: this checkout), read strictly at each call; the module must come from that root
-    and provide every name in ``_GATE_EXPORTS``. A missing or invalid configuration, or a module
-    without that API, raises (``ImportError`` or ``OSError``) and so refuses the operation
-    that asked for the gates.
+    default: this checkout), read strictly at each call; the module must come from that root.
+    A missing or invalid configuration, or a module without one of ``exports``, raises
+    (``ImportError`` or ``OSError``) and so refuses the operation that asked for the gates.
+    Each consumer passes the product API it uses (``_GATE_EXPORTS`` here, the lifecycle
+    pilot's own list there), so this is the one reader of the configuration.
     """
     if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
         raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
     root = PROJECT_ROOT if product_root is None else product_root
     module = load_configured_module(_gates_module_name(root / READINESS_GATES_FILE), product_root=product_root)
-    missing = [name for name in _GATE_EXPORTS if not hasattr(module, name)]
+    missing = [name for name in exports if not hasattr(module, name)]
     if missing:
         raise ConfiguredModuleError(f"{module.__name__} does not provide {', '.join(missing)}", name=module.__name__)
     return module
+
+
+def readiness_gates(*, product_root: Path | None = None) -> ModuleType:
+    """The product's readiness gates module, loaded when a check needs it, never at import.
+
+    It must provide every name in ``_GATE_EXPORTS``; see :func:`load_readiness_gates`.
+    """
+    return load_readiness_gates(_GATE_EXPORTS, product_root=product_root)
 
 
 CONFIG_PATH = Path("agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml")
