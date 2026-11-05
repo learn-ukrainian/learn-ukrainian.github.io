@@ -12,17 +12,15 @@ import os
 from pathlib import Path
 from typing import Any
 
+from scripts.common.repo_root import machinery_path
+
 DEFAULT_NEAR_CAP_USD = 5.0
 DEFAULT_WARM_USD = 20.0
 DEFAULT_API_ACCOUNT_CACHE_TTL_S = 600.0
 
 
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
-
-
 def load_prepaid_budgets(budget_config_path: Path | None = None) -> dict[str, Any]:
-    path = budget_config_path or (_repo_root() / "scripts" / "config" / "agent_budgets.yaml")
+    path = budget_config_path or machinery_path("config/agent_budgets.yaml")
     try:
         import yaml
     except ImportError:  # pragma: no cover

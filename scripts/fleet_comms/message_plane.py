@@ -36,6 +36,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.common.repo_root import machinery_path
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneError,
@@ -104,8 +105,7 @@ def _configured_default_plane_mode() -> PlaneMode:
     except ImportError:  # pragma: no cover
         return "off"
 
-    # scripts/fleet_comms/message_plane.py → parents[2] = checkout root
-    cfg_path = Path(__file__).resolve().parents[2] / "scripts" / "config" / "fleet_communications.yaml"
+    cfg_path = machinery_path("config/fleet_communications.yaml")
     if not cfg_path.is_file():
         return "off"
     try:

@@ -80,6 +80,11 @@ from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_u
 from scripts.common.task_store_paths import tasks_dir
 from scripts.orchestration.task_record_store import read_task_record
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parent.name
+_DISPATCH = f"{_MACHINERY}/dispatch.py"
+
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
 MIN_WORKERS_ENV = "LU_DRIVER_MIN_WORKERS"
@@ -99,7 +104,7 @@ POLICY = f"""## {POLICY_TITLE}
 - Never ask for an admission or gate override; the answer is always no. Use the clean path (fresh recorded branch, rebase, new commit).
 - When you list an action for yourself, do it in the same turn; never end a turn on a plan.
 - Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
-- End every turn with the privately configured worker target met and a wake-up armed (a background `scripts/dispatch.py wait` or the `schedule` tool), never with a question.
+- End every turn with the privately configured worker target met and a wake-up armed (a background `{_DISPATCH} wait` or the `schedule` tool), never with a question.
 """
 # Keep the existing envelope limit after removing the retired posting protocol.
 MAX_ENVELOPE_CHARS = 9_381
@@ -652,7 +657,7 @@ def _stop_policy(path: Path, conversation: str, text: str, *, fully_idle: bool, 
         reasons.append(f"{why}; decide per the policy and execute it now")
     if not reasons and fully_idle:
         reasons.append(
-            "nothing is armed to wake you; start a background `scripts/dispatch.py wait` or set a `schedule` timer, then end the turn"
+            f"nothing is armed to wake you; start a background `{_DISPATCH} wait` or set a `schedule` timer, then end the turn"
         )
     if not reasons:
         with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
@@ -732,19 +737,21 @@ def cmd_whoami(path: Path | None) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = argparse.ArgumentParser(
         prog="driver_state",
         description="Pinned per-epic driver state survives context compaction.\nUse in launcher-owned drivers; ordinary sessions receive no driver policy.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.driver_state whoami
-  .venv/bin/python -m scripts.driver_state init --epic infra
-  .venv/bin/python -m scripts.driver_state packet --epic infra
-  .venv/bin/python -m scripts.driver_state agy-stop-hook < hook-payload.json
-  .venv/bin/python -m scripts.driver_state claude-hook < hook-payload.json
+        epilog=f"""Examples:
+  .venv/bin/python {entry} whoami
+  .venv/bin/python {entry} init --epic infra
+  .venv/bin/python {entry} packet --epic infra
+  .venv/bin/python {entry} agy-stop-hook < hook-payload.json
+  .venv/bin/python {entry} claude-hook < hook-payload.json
 Outputs: init writes private driver state; hooks emit JSON and private failure/counter records.
 Exit codes: 0 success (hooks report failures in JSON); 1 invalid epic, missing state or refused overwrite.
-Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
+Related: {_MACHINERY}/agy_hooks/driver_state_inject.sh; #10201, #10297.
 """,
     )
     sub = parser.add_subparsers(dest="cmd", required=True)

@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 import uuid
 from dataclasses import asdict, dataclass, field
@@ -36,6 +37,12 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root
 from scripts.fleet import credit_lane
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -981,8 +988,8 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet.idle_settle report --since-hours 24\n"
-            "  .venv/bin/python -m scripts.fleet.idle_settle admission --snapshot-json snapshot.json\n"
+            f"  .venv/bin/python {_ENTRY} report --since-hours 24\n"
+            f"  .venv/bin/python {_ENTRY} admission --snapshot-json snapshot.json\n"
             "Outputs: evaluate appends JSONL by default; report and admission print to stdout.\n"
             "Exit codes: 0 success; 2 invalid input, rejected disposition, or blocked admission.\n"
             "Related: agents_extensions/shared/rules/fleet-driver-routing.md; issues #6976/#6998."
@@ -1025,11 +1032,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Print report-only idle/disposition telemetry",
         description="Summarize idle-settle events. Use --since-hours for a recent window; no idle-time gate runs.",
         epilog=(
-            "Example: .venv/bin/python -m scripts.fleet.idle_settle report --since-hours 24 --json\n"
+            f"Example: .venv/bin/python {_ENTRY} report --since-hours 24 --json\n"
             "Outputs: report on stdout; no files written.\n"
             "Exit codes: 0 success (a missing or unreadable store reports zero events); "
             "2 invalid arguments, including a non-positive --since-hours.\n"
-            "Related: scripts.fleet.driver_breadth_report; issue #8819."
+            f"Related: {_MACHINERY}.fleet.driver_breadth_report; issue #8819."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

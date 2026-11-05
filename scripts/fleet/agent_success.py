@@ -4,12 +4,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from scripts.common.task_store_paths import tasks_dir
 from scripts.fleet_comms.agent_success_metrics import collect_agent_success
 from scripts.fleet_comms.efficiency_metrics import _parse_timestamp
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
 
 
 def _instant(value: str) -> datetime:
@@ -25,12 +32,12 @@ def main(argv: list[str] | None = None) -> int:
         "Use for metadata comparisons; missing evidence stays unknown. Do not use to infer routing quality from unequal task mixes.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python -m scripts.fleet.agent_success\n"
-        "  .venv/bin/python -m scripts.fleet.agent_success --window 14d --json\n"
-        "  .venv/bin/python -m scripts.fleet.agent_success --since 2026-10-25 --until 2026-10-28\n"
+        f"  .venv/bin/python {_ENTRY}\n"
+        f"  .venv/bin/python {_ENTRY} --window 14d --json\n"
+        f"  .venv/bin/python {_ENTRY} --since 2026-10-25 --until 2026-10-28\n"
         "Outputs: stdout only; hot and archived task records and final review results are read-only. No network calls.\n"
         "Exit codes: 0 complete cohort; 1 unavailable/partial ledger; 2 invalid arguments.\n"
-        "Related: #10468; docs/dev/agent-success-metrics.md; scripts.fleet_comms.efficiency_metrics.",
+        f"Related: #10468; docs/dev/agent-success-metrics.md; {_MACHINERY}.fleet_comms.efficiency_metrics.",
     )
     parser.add_argument(
         "--tasks-dir",

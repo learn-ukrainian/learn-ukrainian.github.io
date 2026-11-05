@@ -62,6 +62,10 @@ from scripts.review.target_resolution import (
     resolve_review_target,
 )
 
+# This tool's checkout-relative path, for its help text: the machinery package's import name
+# (the directory checkout paths use), or its unresolved directory when run as a file.
+_THIS_FILE = f"{__package__.partition('.')[0] if __package__ else Path(__file__).parent.name}/verify_review.py"
+
 FORBIDDEN_RECEIPT_MARKERS = (
     "/status/",
     "/audit/",
@@ -223,9 +227,9 @@ def build_parser() -> argparse.ArgumentParser:
             "Use after review to produce a receipt, or before review to emit a target fingerprint."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python scripts/verify_review.py --emit-target-manifest --mode commit --commit HEAD
-  .venv/bin/python scripts/verify_review.py --review-file reply.txt --mode commit --commit HEAD
+        epilog=f"""Examples:
+  .venv/bin/python {_THIS_FILE} --emit-target-manifest --mode commit --commit HEAD
+  .venv/bin/python {_THIS_FILE} --review-file reply.txt --mode commit --commit HEAD
 
 Outputs: receipt JSON on stdout; --receipt-path writes a file; --post-comment opts into GitHub posting.
 Exit codes: 0 clean; 1 actionable; 2 invalid; 3 incomplete; 4 stale; 5 unverifiable.

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -198,6 +199,8 @@ def probe_graphql_budget(
 
 
 def _parser() -> argparse.ArgumentParser:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = argparse.ArgumentParser(
         description=(
             "Read the authenticated GitHub GraphQL primary budget from REST resources.graphql.\n"
@@ -205,8 +208,8 @@ def _parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.github_graphql_budget\n"
-            "  .venv/bin/python -m scripts.github_graphql_budget --json\n\n"
+            f"  .venv/bin/python {entry}\n"
+            f"  .venv/bin/python {entry} --json\n\n"
             "Outputs: one probe object on stdout; shared conditional cache and budget state are updated.\n"
             "Exit codes: 0 healthy, 2 exhausted, 3 unknown/probe failure.\n"
             "Related: GitHub GraphQL rate limits; issue #8535 item 4."

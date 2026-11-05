@@ -171,10 +171,10 @@ def test_open_readonly_pg_maps_missing_schema_not_undefined_table(
         pytest.skip(f"{_PG_DSN_ENV} unset/empty — Postgres tests skipped")
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
 
+    import learn_ukrainian_v4_runtime.pg_schema as pg_schema_mod
     import psycopg.errors
 
     import scripts.fleet_comms.artifacts as artifacts_mod
-    import scripts.fleet_comms.pg_schema as pg_schema_mod
 
     def forbid_apply(_conn):
         raise AssertionError("readonly pg open must not apply_pg_schema")

@@ -177,11 +177,8 @@ def test_configured_default_fail_open_on_malformed_yaml(
     (cfg_dir / "fleet_communications.yaml").write_text(
         "message_plane: [\n  not: valid\n", encoding="utf-8"
     )
-    fake_file = checkout / "scripts" / "fleet_comms" / "message_plane.py"
-    fake_file.parent.mkdir(parents=True)
-    fake_file.write_text("# stub\n", encoding="utf-8")
     monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
-    monkeypatch.setattr(mp, "__file__", str(fake_file))
+    monkeypatch.setattr(mp, "machinery_path", lambda relative: checkout / "scripts" / relative)
     assert mp._configured_default_plane_mode() == "off"
     assert mp.resolve_plane_mode(None) == "off"
 
