@@ -32,8 +32,6 @@ import time
 from contextlib import suppress
 from pathlib import Path
 
-from scripts.common.repo_root import machinery_path
-
 RETENTION_SECONDS = 6 * 60 * 60
 TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 SCHEMA = (
@@ -41,8 +39,10 @@ SCHEMA = (
     "CREATE INDEX usage_at ON usage(at)",
 )
 _REPOSITORY = Path(__file__).resolve().parents[2]
-# The ``gh`` shim's entry script, as the repository-relative name ``_script_name`` reports.
-_GH_ENTRY = machinery_path("opsec/gh_entry.py").relative_to(_REPOSITORY).as_posix()
+# The ``gh`` shim's entry script, as the repository-relative name ``_script_name`` reports. The
+# machinery package is this file's parent package directory (``repo_root.machinery_root``);
+# workflows check this module out with a minimal file set, so it does not import repo_root.
+_GH_ENTRY = (Path(__file__).resolve().parents[1] / "opsec" / "gh_entry.py").relative_to(_REPOSITORY).as_posix()
 _PYTHON = re.compile(r"python[0-9.]*")
 _SHELL = re.compile(r"bash|dash|sh|zsh")
 _CORRUPT = frozenset({11, 26})

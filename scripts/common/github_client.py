@@ -48,7 +48,6 @@ from typing import Any
 from urllib.parse import quote, quote_plus, urlencode, urlsplit
 
 from scripts.common import github_usage
-from scripts.common.repo_root import machinery_path
 
 CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
 CACHE_MAX_BYTES = 64 * 1024 * 1024
@@ -914,6 +913,9 @@ class _DeferredBody:
 # The current landing operation, opened only by this module's vetted sites.
 _LANDING_FLOW = contextvars.ContextVar("github_landing_flow", default=None)
 _THIS_MODULE = os.path.realpath(__file__)
+# The machinery package directory, found from this file as ``repo_root.machinery_root`` finds
+# it. Workflows check this module out with a minimal file set, so it does not import repo_root.
+_MACHINERY = Path(__file__).resolve().parents[1]
 # Vetted landing entry points outside this module, by machinery-package file and function.
 # Every request made while one runs on the current thread belongs to its landing flow, and
 # the declaration ends when the function returns. No tag, flag, header or environment value
@@ -932,7 +934,7 @@ _PUBLISHER_LANDING_VERBS = frozenset(
     {"pr-merge", "pr-update-branch", "pr-review", "run-rerun", "commit-status", "pr-dequeue", "pr-disarm"}
 )
 _ENTRY_POINT_CODE = {
-    (os.path.realpath(machinery_path(path)), name): flow for (path, name), flow in _LANDING_ENTRY_POINTS.items()
+    (os.path.realpath(_MACHINERY / path), name): flow for (path, name), flow in _LANDING_ENTRY_POINTS.items()
 }
 _ENTRY_POINT_NAMES = frozenset(name for _, name in _LANDING_ENTRY_POINTS)
 _VETTED_CODE = {}
@@ -4214,7 +4216,7 @@ def rate_limited_command(function):
 
     code = getattr(function, "__code__", None)
     vetted = code is not None and _code_identity(code) == (
-        os.path.realpath(machinery_path(_PUBLISHER_ENTRY_POINT[0])),
+        os.path.realpath(_MACHINERY / _PUBLISHER_ENTRY_POINT[0]),
         _PUBLISHER_ENTRY_POINT[1],
     )
 
