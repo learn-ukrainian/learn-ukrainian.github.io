@@ -26,6 +26,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from scripts.ci._location import checkout_relative, module_name
 from scripts.ci.audit_dependencies import (
     filter_npm_audit_vulnerabilities,
     load_npm_audit_ignores,
@@ -166,7 +167,7 @@ def run_collect(
     req_file = repo_root / "requirements-lock.txt"
     if not req_file.exists():
         raise RuntimeError(f"{req_file} not found; missing required inputs fail closed")
-    pip_ignore = pip_ignore_file or repo_root / "scripts" / "config" / "pip-audit-ignore.yaml"
+    pip_ignore = pip_ignore_file or repo_root / checkout_relative("config", "pip-audit-ignore.yaml")
     pip_cmd = [
         sys.executable,
         "-m",
@@ -186,7 +187,7 @@ def run_collect(
         raise RuntimeError(f"pip-audit failed with exit code {pip_code}")
     findings.extend(collect_python_findings(pip_report))
 
-    npm_ignore = npm_ignore_file or repo_root / "scripts" / "config" / "npm-audit-ignore.yaml"
+    npm_ignore = npm_ignore_file or repo_root / checkout_relative("config", "npm-audit-ignore.yaml")
     ignored_ids = load_npm_audit_ignores(npm_ignore) if npm_ignore.exists() else []
     for label, target_dir in (("root", repo_root), ("site", repo_root / "site")):
         if not (target_dir / "package.json").exists() or not (target_dir / "package-lock.json").exists():
@@ -241,7 +242,8 @@ def build_issue_body(findings: list[Finding]) -> str:
     lines += [
         "",
         "Resolve by upgrading the affected package or adding an audited suppression to "
-        "`scripts/config/pip-audit-ignore.yaml` / `scripts/config/npm-audit-ignore.yaml`. "
+        f"`{checkout_relative('config', 'pip-audit-ignore.yaml').as_posix()}` / "
+        f"`{checkout_relative('config', 'npm-audit-ignore.yaml').as_posix()}`. "
         "This issue updates on each scheduled run and closes automatically when the audit is clean.",
         "",
         f"_Maintained by the scheduled security audit (#9871). Label: `{ISSUE_LABEL}`._",
@@ -283,8 +285,8 @@ def main(argv: list[str] | None = None) -> int:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ci.dependency_advisory_issue collect --out ci-artifacts/dependency-findings.json\n"
-            "  .venv/bin/python -m scripts.ci.dependency_advisory_issue plan --findings ci-artifacts/dependency-findings.json --issue-number 123 --body-out ci-artifacts/advisory-issue-body.md\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} collect --out ci-artifacts/dependency-findings.json\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} plan --findings ci-artifacts/dependency-findings.json --issue-number 123 --body-out ci-artifacts/advisory-issue-body.md\n"
             "\n"
             "Outputs:\n"
             "  collect: writes a {\"findings\": [...]} JSON file to --out.\n"
@@ -297,8 +299,9 @@ def main(argv: list[str] | None = None) -> int:
             "  never close the tracking issue.\n"
             "\n"
             "Related:\n"
-            "  Suppression logic: scripts/ci/audit_dependencies.py with\n"
-            "  scripts/config/pip-audit-ignore.yaml and scripts/config/npm-audit-ignore.yaml.\n"
+            f"  Suppression logic: {checkout_relative('ci', 'audit_dependencies.py').as_posix()} with\n"
+            f"  {checkout_relative('config', 'pip-audit-ignore.yaml').as_posix()} and "
+            f"{checkout_relative('config', 'npm-audit-ignore.yaml').as_posix()}.\n"
             "  Workflow: the advisory-issue job in .github/workflows/security-audit.yml (#9871)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

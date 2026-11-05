@@ -44,6 +44,7 @@ from __future__ import annotations
 
 import atexit
 import fcntl
+import importlib
 import os
 from collections.abc import Generator, Mapping
 from pathlib import Path
@@ -57,6 +58,21 @@ try:
 except ImportError:
     from common.test_thread_caps import THREAD_CAPS
     from common.test_thread_caps import apply as apply_thread_caps
+
+
+def _machinery_package() -> str:
+    """Package directory name, including when this plugin loads as ``ci.*``."""
+    for name in ("scripts.common.repo_root", "common.repo_root"):
+        try:
+            module = importlib.import_module(name)
+        except ImportError:
+            continue
+        package = vars(module)["machinery_root"]().name
+        if not isinstance(package, str):
+            raise TypeError(package)
+        return package
+    raise ImportError("scripts.common.repo_root")
+
 
 DISPATCH_TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 LOCK_ENV = "LU_PYTEST_FULL_SUITE_LOCK"
@@ -80,7 +96,7 @@ _NO_TEST_OPTIONS = ("help", "version", "markers")
 # ``--fixtures`` and ``--fixtures-per-test`` start workers when ``-n`` / ``--tx`` ask
 # for them. A serial invocation of either still executes no test and must not queue.
 _FIXTURE_OPTIONS = ("showfixtures", "show_fixtures_per_test")
-GOVERNED_PYTEST = ".venv/bin/python -m scripts.common.test_slots run -- .venv/bin/python -m pytest ..."
+GOVERNED_PYTEST = f".venv/bin/python -m {_machinery_package()}.common.test_slots run -- .venv/bin/python -m pytest ..."
 
 _lock_fd: int | None = None
 

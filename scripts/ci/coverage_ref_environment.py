@@ -113,6 +113,15 @@ def install() -> None:
     sys.addaudithook = add_measurement_hook
 
 
+def _packaged_script(name: str) -> str:
+    """Checkout-relative path of a sibling while this file is still in the package.
+
+    The coverage-ref workflow copies this file out of the checkout and runs that
+    copy, so the path is taken from this file and nothing else is imported.
+    """
+    return f"{Path(__file__).resolve().parents[1].name}/ci/{name}"
+
+
 def main(argv: list[str] | None = None) -> None:
     """Install startup handling in the workflow's disposable venv, never the source tree."""
     parser = argparse.ArgumentParser(
@@ -122,11 +131,11 @@ def main(argv: list[str] | None = None) -> None:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: .venv/bin/python scripts/ci/coverage_ref_environment.py\n"
+            f"Example: .venv/bin/python {_packaged_script('coverage_ref_environment.py')}\n"
             "Outputs: coverage_ref_environment.py and .pth in the disposable runner venv.\n"
             "Exit codes: 0 = installed or help; 2 = usage error.\n"
             "Requires: a disposable coverage-ref interpreter; do not install in a shared venv.\n"
-            "Related: .github/workflows/coverage-ref.yml; scripts/ci/coverage_ref.py."
+            f"Related: .github/workflows/coverage-ref.yml; {_packaged_script('coverage_ref.py')}."
         ),
     )
     parser.parse_args(argv)

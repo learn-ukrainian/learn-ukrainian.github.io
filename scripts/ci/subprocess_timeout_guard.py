@@ -36,9 +36,13 @@ from functools import lru_cache
 from pathlib import Path
 from typing import NamedTuple
 
+from scripts.ci._location import checkout_relative, module_name
 from scripts.ci.test_source_cache import parse_test_source, read_test_source
+from scripts.common.repo_root import machinery_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+_ALLOWLIST_REL = checkout_relative("ci", "subprocess_timeout_allowlist.txt")
+_PACKAGE_NAME = machinery_root().name
 BOUNDED_FUNCS = frozenset({"run", "check_output", "call", "check_call"})
 SHAPE_HASH_HEX_LEN = 16
 ALLOWLIST_KEY_PARTS = 4
@@ -61,7 +65,7 @@ UNALLOWLISTED_PREAMBLE = (
 )
 
 STALE_PREAMBLE = (
-    "Stale entries in scripts/ci/subprocess_timeout_allowlist.txt (issue #7176).\n"
+    f"Stale entries in {_ALLOWLIST_REL.as_posix()} (issue #7176).\n"
     "The allowlist is shrink-only. When a subprocess call is given a timeout=, "
     "removed, or renamed (file moved or enclosing function/qualname changed), "
     "its entry must be removed or replaced with the new paste-ready key "
@@ -71,8 +75,8 @@ STALE_PREAMBLE = (
 SORT_ADVICE = (
     "subprocess timeout allowlist must be sorted in C-locale byte order "
     "(LC_ALL=C). Re-sort with: LC_ALL=C sort -o "
-    "scripts/ci/subprocess_timeout_allowlist.txt "
-    "scripts/ci/subprocess_timeout_allowlist.txt"
+    f"{_ALLOWLIST_REL.as_posix()} "
+    f"{_ALLOWLIST_REL.as_posix()}"
 )
 
 
@@ -283,7 +287,7 @@ def check_paths(
         tuple of (test_offenders, unallowlisted_script_lines, syntax_errors)
     """
     root = (repo_root or REPO_ROOT).resolve()
-    allowlist = (allowlist_path or (root / "scripts" / "ci" / "subprocess_timeout_allowlist.txt")).resolve()
+    allowlist = (allowlist_path or (root / _ALLOWLIST_REL)).resolve()
 
     test_offenders: list[str] = []
     syntax_errors: list[str] = []
@@ -305,7 +309,7 @@ def check_paths(
                 for hit in hits:
                     test_offenders.append(f"{rel}:{hit.lineno} {hit.name}")
 
-        scripts_root = root / "scripts"
+        scripts_root = root / _PACKAGE_NAME
         if scripts_root.is_dir():
             hits_by_key, scan_errors = scan_scripts(scripts_root, root)
             syntax_errors.extend(scan_errors)
@@ -330,15 +334,15 @@ def check_paths(
         try:
             rel = path.resolve().relative_to(root).as_posix()
             is_test = rel.startswith("tests/")
-            is_script = rel.startswith("scripts/")
+            is_script = rel.startswith(f"{_PACKAGE_NAME}/")
         except ValueError:
             parts = path.resolve().parts
             if "tests" in parts:
                 rel = "/".join(parts[parts.index("tests") :])
                 is_test = True
                 is_script = False
-            elif "scripts" in parts:
-                rel = "/".join(parts[parts.index("scripts") :])
+            elif _PACKAGE_NAME in parts:
+                rel = "/".join(parts[parts.index(_PACKAGE_NAME) :])
                 is_test = False
                 is_script = True
             else:
@@ -378,9 +382,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     epilog = (
         "Examples:\n"
-        "  .venv/bin/python -m scripts.ci.subprocess_timeout_guard tests/test_foo.py\n"
-        "  .venv/bin/python -m scripts.ci.subprocess_timeout_guard scripts/ci/bar.py\n"
-        "  .venv/bin/python -m scripts.ci.subprocess_timeout_guard\n\n"
+        f"  .venv/bin/python -m {module_name(__spec__, __file__)} tests/test_foo.py\n"
+        f"  .venv/bin/python -m {module_name(__spec__, __file__)} {checkout_relative('ci', 'bar.py').as_posix()}\n"
+        f"  .venv/bin/python -m {module_name(__spec__, __file__)}\n\n"
         "Outputs:\n"
         "  Prints paste-ready violation messages to stderr when timeout-less calls are found.\n"
         "  No files written or modified.\n\n"
@@ -390,7 +394,7 @@ def build_parser() -> argparse.ArgumentParser:
         "  2: Usage or syntax error (invalid arguments, missing path, or Python syntax error)\n\n"
         "Related:\n"
         "  tests/test_subprocess_timeout_guard.py (CI backstop test)\n"
-        "  scripts/ci/subprocess_timeout_allowlist.txt (shrink-only allowlist)\n"
+        f"  {_ALLOWLIST_REL.as_posix()} (shrink-only allowlist)\n"
         "  Issues #5740, #7176, #8750"
     )
     parser = argparse.ArgumentParser(
@@ -414,7 +418,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--allowlist",
         type=Path,
         default=None,
-        help="Path to timeout allowlist file (default: scripts/ci/subprocess_timeout_allowlist.txt under root)",
+        help=f"Path to timeout allowlist file (default: {_ALLOWLIST_REL.as_posix()} under root)",
     )
     return parser
 
@@ -424,7 +428,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     root = (args.root or REPO_ROOT).resolve()
-    allowlist_path = (args.allowlist or (root / "scripts" / "ci" / "subprocess_timeout_allowlist.txt")).resolve()
+    allowlist_path = (args.allowlist or (root / _ALLOWLIST_REL)).resolve()
 
     test_offenders, unallowlisted, syntax_errors = check_paths(
         paths=args.paths if args.paths else None,

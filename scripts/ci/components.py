@@ -25,13 +25,16 @@ from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
 from scripts.ci import deploy_paths, frontend_change_scope
+from scripts.ci._location import checkout_relative, module_name
 from scripts.ci.junit_results import parse_junit
 from scripts.common.jsonl import jsonl_lines
-from scripts.common.repo_root import project_interpreter
+from scripts.common.repo_root import machinery_root, project_interpreter
 from scripts.storage.test_baseline import nodeid_to_junit_id
 
 ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = ROOT / "scripts/ci/components.json"
+MANIFEST = ROOT / checkout_relative("ci", "components.json")
+_PACKAGE_NAME = machinery_root().name
+_PACKAGE_PREFIX = f"{_PACKAGE_NAME}."
 NODE_IDS = (
     "open-model-data", "atlas-data", "atlas-frontend", "practice-frontend",
     "curriculum-generation", "curriculum-display", "harness", "shared-core",
@@ -41,7 +44,7 @@ NODE_IDS = (
 # module that product data names. A call is a module load by name, plain,
 # aliased or qualified; a name the scanner cannot prove stays unresolved.
 CONFIGURED_LOADER = "load_configured_module"
-CONFIGURED_LOADER_PATH = "scripts/ops/product_entry.py"
+CONFIGURED_LOADER_PATH = checkout_relative("ops", "product_entry.py").as_posix()
 
 
 def configured_call(name: str, configured_names: set[str], loaders: Mapping[str, object], wrappers: set[str]) -> bool:
@@ -333,11 +336,11 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
     unresolved = set()
     configured_loads = set()
     loads_unproven = {}
-    bare_packages = {name.split(".")[1] for name in packages if name.startswith("scripts.")}
+    bare_packages = {name.split(".")[1] for name in packages if name.startswith(_PACKAGE_PREFIX)}
 
     def resolve(module):
         # Legacy sys.path entries expose scripts packages without scripts.*.
-        return modules.get(module) or modules.get("scripts." + module)
+        return modules.get(module) or modules.get(_PACKAGE_PREFIX + module)
 
     def add_import(importer, module, *, required, line):
         target = resolve(module)
@@ -349,9 +352,9 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                 parent = modules.get(".".join(canonical.split(".")[:index]))
                 if parent and parent.endswith("/__init__.py"):
                     edges.add((importer, parent))
-        elif required and module not in packages and "scripts." + module not in packages and (
-            module == "scripts" or module.startswith("scripts.")
-            or "scripts." + module in packages
+        elif required and module not in packages and _PACKAGE_PREFIX + module not in packages and (
+            module == _PACKAGE_NAME or module.startswith(_PACKAGE_PREFIX)
+            or _PACKAGE_PREFIX + module in packages
             or module.split(".")[0] in bare_packages
         ):
             unresolved.add((importer, line, "missing-local-import"))
@@ -434,7 +437,7 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                     add_import(path, str(value), required=True, line=node.lineno)
                 else:
                     edges.add((path, target))
-            elif value is None or kind == "file" or str(value).startswith("scripts."):
+            elif value is None or kind == "file" or str(value).startswith(_PACKAGE_PREFIX):
                 unresolved.add((path, node.lineno, "nonliteral-or-missing-load"))
                 if configured:
                     configured_loads.add((path, node.lineno))
@@ -701,7 +704,7 @@ def current_identities(component: str, manifest: dict, root: Path = ROOT) -> dic
              if PurePosixPath(path).name in {"package-lock.json", "requirements-lock.txt", ".python-version", ".nvmrc"}}
     return {"source": digest(sources), "config": digest(configs), "lockfiles": digest(locks),
             "tools": digest({"node": manifest["components"][component], "manifest": manifest,
-                             "runner": hashlib.sha256((root / "scripts/ci/components.py").read_bytes()).hexdigest()})}
+                             "runner": hashlib.sha256((root / checkout_relative("ci", "components.py")).read_bytes()).hexdigest()})}
 
 
 def verify_inputs(path: Path, component: str, manifest: dict, root: Path = ROOT) -> dict[str, Path]:
@@ -803,7 +806,7 @@ def run_commands(commands: list[dict], root: Path, output_dir: Path | None,
             junit = Path(scratch) / "junit.xml"
             journal = Path(scratch) / "results.jsonl"
             is_pytest = "pytest" in argv
-            executed = [*argv, "-p", "scripts.ci.components", f"--junitxml={junit}"] if is_pytest else argv
+            executed = [*argv, "-p", module_name(__spec__, __file__), f"--junitxml={junit}"] if is_pytest else argv
             timeout = command.get("timeout", None if command["scope"].startswith("complete-node-") else 1800)
             env = os.environ | {"PYTHON": str(project_interpreter(root))}
             if is_pytest:
@@ -890,12 +893,15 @@ def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str],
 
 def parser() -> argparse.ArgumentParser:
     """Expose the complete wrapper contract in root and subcommand help."""
+    self_module = module_name(__spec__, __file__)
+    manifest = checkout_relative("ci", "components.json").as_posix()
     examples = (
-        "Examples:\n  .venv/bin/python -m scripts.ci.components inventory --check\n"
-        "  .venv/bin/python -m scripts.ci.components test --component atlas-data --workers 2\n"
-        "  .venv/bin/python -m scripts.ci.components junit --junit artifacts/pytest-shard-1.xml\n"
-        "  .venv/bin/python -m scripts.ci.components test --component atlas-frontend --list\n"
-        "  .venv/bin/python -m scripts.ci.components build --component atlas-frontend "
+        "Examples:\n"
+        f"  .venv/bin/python -m {self_module} inventory --check\n"
+        f"  .venv/bin/python -m {self_module} test --component atlas-data --workers 2\n"
+        f"  .venv/bin/python -m {self_module} junit --junit artifacts/pytest-shard-1.xml\n"
+        f"  .venv/bin/python -m {self_module} test --component atlas-frontend --list\n"
+        f"  .venv/bin/python -m {self_module} build --component atlas-frontend "
         "--inputs inputs.json --output-dir site/dist\n"
         "Defaults: complete-node pytest uses two workers; collection has a 15-minute timeout, "
         "complete-node commands no wall timeout (pytest per-test timeouts apply), other commands 30 minutes.\n"
@@ -908,7 +914,7 @@ def parser() -> argparse.ArgumentParser:
         "has a unique logical name, repository-relative path and sha256. Required families and exact\n"
         "build argv are exposed by list. Verify without --inputs runs code contracts only; an exit 0\n"
         "does not certify artifact readiness, independence or learner behavior.\n"
-        "Related: scripts/ci/components.json; plans/component-separation-9721.md v2; #9884."
+        f"Related: {manifest}; plans/component-separation-9721.md v2; #9884."
     )
     description = (
         "Inventory tracked paths and run explicit component contract suites/consumer commands.\n"
@@ -942,7 +948,7 @@ def parser() -> argparse.ArgumentParser:
                              help="Positive wall timeout in seconds, e.g. 7200; default: none (pytest per-test timeouts apply)")
             sub.add_argument("--list", action="store_true", help="List complete resolved pytest/Vitest file sets and counts without execution; default: run all")
         if operation == "affected":
-            sub.add_argument("paths", nargs="*", help="Changed repository-relative paths, e.g. scripts/config.py; default: empty set")
+            sub.add_argument("paths", nargs="*", help=f"Changed repository-relative paths, e.g. {checkout_relative('config.py').as_posix()}; default: empty set")
             sub.add_argument("--paths-file", type=Path, help="NUL-delimited git diff path list, e.g. changed.z; default: positional paths only")
     return result
 
