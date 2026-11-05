@@ -940,6 +940,7 @@ def _absolute_module_cases(parts: tuple[str, ...]) -> list[tuple[str, bool]]:
         parent = _dotted("lu_machinery", *parts[:-1])
         cases += [
             (f"import {name}", expected),
+            (f"value = {name}.attribute", oracle_module((*parts, "attribute"))),  # an attribute chain
             (f"from {parent} import {parts[-1]}", expected),
             (
                 f"from {parent} import ({parts[-1]} as alias, other_name)",
@@ -1199,6 +1200,13 @@ REVIEWER_PROBES = [
         "string references machinery module scripts.dispatch (missed rename)",
         None,
     ),
+    # An attribute chain on the bare name is a lu_machinery-qualified name too.
+    (
+        "lu_machinery/x.py",
+        "import lu_machinery\nVALUE = lu_machinery.product_mod.VALUE\n",
+        "attribute reference lu_machinery.product_mod.VALUE names product code",
+        None,
+    ),
     # Beyond the namespace root, a relative name cannot be resolved: a finding.
     (
         "lu_machinery/x.py",
@@ -1235,6 +1243,7 @@ def test_v4_invariant_namespace_exemption_and_package_attributes_are_clean() -> 
         b"    from lu_machinery.lib.util import VALUE\n"
         b'    importlib.import_module("lu_machinery.tools.agent_watcher")\n'
         b'    pkgutil.resolve_name("lu_machinery.lib.util.VALUE")\n'
+        b"    return lu_machinery.__file__, lu_machinery.tools.agent_watcher, lu_machinery.lib.util.VALUE\n"
     )
     listed: list[str] = []
     assert module.scan_python_source("lu_machinery/tools/z.py", source, _gen_index(module), listed=listed) == []

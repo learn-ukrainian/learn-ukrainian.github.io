@@ -22,8 +22,8 @@ tool's scratch directory.
 V4 is fail-closed: whatever it cannot classify exactly is reported (failed or listed), never treated as
 safe or as prose. Its two invariants:
 
-1. Every lu_machinery-qualified name (in an import statement, a loader target or any string value) and
-   every relative name in a file under lu_machinery/ resolves by its LONGEST prefix that exists in the
+1. Every lu_machinery-qualified name (in an import statement, an attribute chain on the name
+   ``lu_machinery``, a loader target or any string value) and every relative name in a file under lu_machinery/ resolves by its LONGEST prefix that exists in the
    final tree: an extracted module file, a package or a directory (a namespace package); the bare
    ``lu_machinery`` is the package. The name is clean when that prefix is the whole name or a module
    file (the rest is an attribute). Otherwise the next component is a finding when the ownership map
@@ -1656,8 +1656,8 @@ def scan_python_source(
     """V4 findings for one file (brief amendment A1 and the module docstring's invariants 1 and 2).
 
     Findings: (a) import statements of scripts or of product code, and every name inside the lu_machinery
-    namespace (import statement, loader target, any string value) that invariant 1 resolves to code the
-    final tree lacks; (b) scripts.<module> references and scripts/ path literals that name a machinery
+    namespace (import statement, attribute chain on the name lu_machinery, loader target, any string
+    value) that invariant 1 resolves to code the final tree lacks; (b) scripts.<module> references and scripts/ path literals that name a machinery
     file of the tree manifest (a missed rename). References that name product code (for example a module
     passed to a subprocess under the product checkout), compositions with an unknown part (invariant 2)
     and loader targets that are not statically known are appended to listed. Unprefixed machinery imports,
@@ -1679,7 +1679,8 @@ def scan_python_source(
                 return True
             inner = extracted_name(name)
             if inner is not None:  # lu_machinery.<x> is scripts/<x> in the ownership map
-                return check_import(inner, line, relative=True, shown=f"import of {name}")
+                what = "attribute reference" if shown == "attribute" else "import of"
+                return check_import(inner, line, relative=True, shown=f"{what} {name}")
         reason = index.extracted_dependency(name) if relative else index.product_dependency(name)
         if reason is None:
             top = name.split(".")[0]
@@ -1836,6 +1837,7 @@ def scan_python_source(
             check_reference(target, line)
 
     evaluator = Evaluator()
+    chained: set[int] = set()
     for node in ast.walk(tree):  # breadth-first: a composition is read before the operands it holds
         if isinstance(node, ast.Import):
             for alias in node.names:
@@ -1855,6 +1857,15 @@ def scan_python_source(
             called = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
             if called in LOADERS:
                 check_loader(node, called)
+        elif isinstance(node, ast.Attribute) and id(node) not in chained:
+            attributes: list[str] = []
+            inner: ast.expr = node
+            while isinstance(inner, ast.Attribute):  # the outermost attribute of a chain comes first
+                chained.add(id(inner))
+                attributes.append(inner.attr)
+                inner = inner.value
+            if isinstance(inner, ast.Name) and inner.id == NEW_PREFIX.rstrip("/"):
+                check_import(".".join(["lu_machinery", *reversed(attributes)]), node.lineno, shown="attribute")
         if id(node) in prose or id(node) in evaluator.consumed:
             continue
         if _literal(node) or composer(node):  # the single choke point: every string value passes here once
@@ -2428,8 +2439,9 @@ Checks (every finding is printed; nothing stops at the first one):
       (a) an import statement of scripts, or one that needs product code per --map. For an absolute
           unprefixed name (resolved through scripts/ on sys.path): a product module or namespace package,
           a product __init__.py Python initializes on the way, or a from-import's product submodule.
-          Invariant 1, for every name inside the lu_machinery namespace (an import statement, a loader
-          target, -m arguments and any other string value; relative names in files under lu_machinery/):
+          Invariant 1, for every name inside the lu_machinery namespace (an import statement, an attribute
+          chain on the name lu_machinery, a loader target, -m arguments and any other string value;
+          relative names in files under lu_machinery/):
           the name resolves by its longest prefix that exists in the final tree (a module file, a package
           or a directory; bare lu_machinery is the package). After a module file the rest is an
           attribute; otherwise the next component fails when --map lists it (product code, or source the
