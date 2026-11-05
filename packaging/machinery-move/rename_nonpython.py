@@ -395,7 +395,8 @@ def judge(scan: FileScan, occ: Occurrence) -> Verdict:
         )
     reason = plain_reason(scan, occ, context)
     if reason:
-        return _unless_product(text, occ, target, "not_plain", reason)
+        # The bare root in running text is usually the English word; its own kind lets it be triaged apart.
+        return _unless_product(text, occ, target, "root_in_text" if form == "root" else "not_plain", reason)
     if form == "root":
         return Verdict("unresolved", "root_reference", "the scripts/ root is split between both owners", AMBIGUOUS)
     if CWD_BEFORE.search(text[text.rfind("\n", 0, occ.prefix_start) + 1 : _quote_start(scan, occ, context)]):
