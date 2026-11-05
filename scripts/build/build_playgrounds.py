@@ -4,7 +4,8 @@
 import json
 from pathlib import Path
 
-DASHBOARDS_DIR = Path(__file__).parent.parent.parent / "dashboards"
+# Product pages and their data live in the product static root (Monitor split, C-4687).
+DASHBOARDS_DIR = Path(__file__).parent.parent / "project_api" / "static"
 DATA_FILE = DASHBOARDS_DIR / "data" / "status.json"
 
 
@@ -747,7 +748,7 @@ def main():
     """Build legacy static dashboard HTML with embedded status data."""
     print("Building dashboards with real data...\n")
     build_status_dashboard()
-    print("\nDone! Open dashboards/index.html to see the launchpad.")
+    print("\nDone! Open scripts/project_api/static/index.html to see the launchpad.")
 
 
 if __name__ == "__main__":

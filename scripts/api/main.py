@@ -77,7 +77,7 @@ from .occupancy_local import resolve_launcher_host_id
 from .ops_router import router as ops_router
 from .opsec_sanitize import opsec_path_sanitizer_middleware
 from .preload import preload_all
-from .product_contribution import OrientSection, ProductContribution, install_providers, load_product
+from .product_contribution import OrientSection, ProductContribution, install_providers, load_product, product_file
 from .project_state_router import router as project_state_router
 from .repository_authority import build_repository_authority, cwd_role
 from .resilience import get_resilience_snapshot, resilience_middleware
@@ -1702,10 +1702,24 @@ def _safe_join(base: Path, *parts: str | Path) -> Path | None:
 
 
 @core_router.get("/{path:path}")
-async def serve_static(path: str, ctx: MonitorContext = Depends(get_ctx)):
+async def serve_static(path: str, request: Request, ctx: MonitorContext = Depends(get_ctx)):
+    """Serve a machinery dashboard file, else a file the product declares (C-4687).
+
+    Machinery files come from ``ctx.roots.dashboards_dir`` with traversal and
+    symlink confinement. A product page or asset is served only when the
+    product contribution declares its URL path; ``/`` is the product home
+    unless the machinery directory has its own ``index.html``.
+    """
     dashboards_dir = ctx.roots.dashboards_dir
+    product = getattr(request.app.state, "product", None)
     if not path or path == "/":
-        return FileResponse(dashboards_dir / "index.html")
+        machinery_index = dashboards_dir / "index.html"
+        if machinery_index.is_file():
+            return FileResponse(machinery_index)
+        product_index = product_file(product, "index.html")
+        if product_index is not None:
+            return FileResponse(product_index)
+        return FileResponse(machinery_index)
     file_path = _safe_join(dashboards_dir, path)
     if file_path is None:
         raise HTTPException(status_code=403, detail="Path traversal not allowed")
@@ -1725,6 +1739,9 @@ async def serve_static(path: str, ctx: MonitorContext = Depends(get_ctx)):
             and html_candidate.is_file()
         ):
             return FileResponse(html_candidate)
+    declared = product_file(product, path)
+    if declared is not None:
+        return FileResponse(declared)
     raise HTTPException(status_code=404)
 
 

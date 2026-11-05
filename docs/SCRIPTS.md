@@ -1745,7 +1745,7 @@ The Monitor API exposes the same read-only JSON at `/api/decisions/lineage`.
 | --- | --- |
 | `scripts/generate_dashboard_data.py` | Aggregate audit cache into dashboard data |
 | `scripts/build_dashboards.py` | Build HTML dashboards with embedded data |
-| `npm run dashboards:data` | Regenerate `dashboards/data/status.json` |
+| `npm run dashboards:data` | Regenerate `scripts/project_api/static/data/status.json` |
 | `npm run dashboards:build` | Rebuild dashboard HTML |
 
 ---
@@ -1834,7 +1834,7 @@ Use the explicit bridge path. Do not rely on `ab`; on some machines it resolves 
 - `sync <agent>` drains the **channel deliveries queue** — this is how AGY and Codex actually receive channel posts when running headless.
 - `inbox` (in the Legacy broker section below) reads the **old 1:1 message queue ONLY**. It does NOT show channel messages. If you expected channel posts and `inbox` is empty, run `sync` instead.
 
-Web dashboard at `http://localhost:8765/channels.html` (localhost-only, read + post).
+Browser view: the Fleet observer at `http://localhost:8765/fleet.html` (localhost-only); the former `channels.html` page was removed in the Monitor cull (C-4686).
 
 ### One-off `ask-*`
 

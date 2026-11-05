@@ -10,6 +10,8 @@ Example:
 
 from __future__ import annotations
 
+from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 
 from scripts.api.monitor_context import MonitorContext
@@ -33,10 +35,30 @@ from . import (
     module_builds,
     orient,
     reviewer_ghosts_router,
+    route_contracts,
     site_router,
     sources_router,
     state_router,
     wiki_router,
+)
+
+# The product pages and assets the Monitor serves, by URL path. Only these are
+# served; the static catch-all never lists or walks this directory.
+STATIC_ROOT = Path(__file__).resolve().parent / "static"
+STATIC_FILES = (
+    "index.html",
+    "admin.html",
+    "artifacts.html",
+    "build-events.html",
+    "consultation.html",
+    "cost.html",
+    "curriculum-dashboard.html",
+    "image-explorer.html",
+    "orient.html",
+    "progress.html",
+    "quality.html",
+    "wiki.html",
+    "data/status.json",
 )
 
 # Product modules whose import closure the startup preload warms.
@@ -109,6 +131,9 @@ def build_api(context: MonitorContext) -> ProductContribution:
     """
     return ProductContribution(
         routers=ROUTERS,
+        static_files=MappingProxyType({name: STATIC_ROOT / name for name in STATIC_FILES}),
+        route_contracts=route_contracts.ROUTE_CONTRACTS,
+        page_contracts=route_contracts.PAGE_CONTRACTS,
         preload=PRELOAD_MODULES,
         preload_optional=OPTIONAL_PRELOAD_MODULES,
         warmup=(_warm_state_scans,),

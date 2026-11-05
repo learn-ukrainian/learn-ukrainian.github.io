@@ -630,22 +630,15 @@ queued asks use ACP, including detached <code>process-ask</code> workers.</p>
 <p>Bridge telemetry, Broker Ops, and legacy HTTP routes remain in place. #6106
 stays open until measured zero use and operator approval permit retirement.</p>
 <h2>Web dashboard</h2>
-<p><code>dashboards/channels.html</code> — read-only monitor plus post form,
-localhost only. Shows:</p>
-<ul>
-<li>All channels with message counts + pending deliveries + last activity</li>
-<li>Per-channel message feed (auto-refresh every 5s)</li>
-<li>Context preview with sha256 short-hash</li>
-<li>Post form for dropping messages in from the browser</li>
-</ul>
-<p>Served by <code>scripts/api/main.py</code> at <code>http://localhost:8765</code>. The
-browser POST endpoint is <code>/api/comms/channels/{name}/post</code> — user-only,
-gated by localhost binding. Agents still post via CLI.</p>
-<p><code>dashboards/comms.html</code> is the legacy operational dashboard for live
-activity, DM-style broker messages, zombie detection, and batch progress.
-Its hot message endpoints are bounded by server-side <code>limit</code> defaults
-and keyset cursors; keep client polling paced so heavy views refresh no
-more often than every 30 seconds.</p>
+<p>The Fleet observer at <code>http://localhost:8765/fleet.html</code>
+(<code>dashboards/fleet.html</code>) is the browser view of channels and
+deliveries. The former <code>channels.html</code> and <code>comms.html</code>
+pages were removed in the Monitor cull (C-4686, C-4687). The browser POST
+endpoint <code>/api/comms/channels/{name}/post</code> stays: user-only, gated
+by localhost binding. Agents still post via CLI.</p>
+<p>The broker message endpoints that the old comms page polled are bounded by
+server-side <code>limit</code> defaults and keyset cursors; keep client
+polling paced so heavy views refresh no more often than every 30 seconds.</p>
 <h2>Broker storage hygiene</h2>
 <p>SQLite remains the broker store for the localhost-only bridge. The
 performance bottleneck in the comms dashboard was unindexed scans plus

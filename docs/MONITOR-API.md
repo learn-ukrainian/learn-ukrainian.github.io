@@ -9,9 +9,35 @@ Base URL: `http://localhost:8765`
 FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI; title **Ops API**)
 and `http://localhost:8765/redoc` (ReDoc).
 
-**Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every `dashboards/*.html` page).
+**Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every dashboard page).
 
-This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/*.py` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
+This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/**` and `scripts/project_api/**` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
+
+## Code layout: machinery and product halves (C-4687)
+
+One Monitor process on port 8765 serves both halves, so every URL is the same
+for the operator and for agents.
+
+- **Machinery** — `scripts/api/`: fleet, runtime, delegate, comms, epics,
+  occupancy, rules, session, orient composition, static delivery and the
+  contract registry. It never imports product code.
+- **Product** — `scripts/project_api/`: curriculum state (`/api/state/*`
+  except `routing-budget`, `github-budget` and `manifest`), dashboard,
+  artifacts, consultation, cost, decisions, governance, build events, images,
+  sources, site, wiki, batch, atlas jobs, `/api/comms/batch-progress*`,
+  `/api/telemetry/module-builds*`, `/api/config` and `/images/*`.
+- **The one product entry** — `scripts/curriculum/monitor_paths.v1.json` names
+  `product_api` (`scripts.project_api.entry`). `scripts/api/product_contribution.py`
+  imports it through `scripts.ops.product_entry.load_configured_module(name,
+  product_root=...)` and calls `build_api(context)`. The returned
+  contribution carries the product routers (mounted ahead of the machinery
+  routers, with the static catch-all last), the explicit static-file map,
+  route and page contracts, orient sections, preload names, warmup hooks,
+  and the Atlas provider and fleet batch projection that fleet views read.
+- **Pages** — the 12 machinery files stay in `dashboards/`. The 13 product
+  files (the home `index.html`, progress, quality, orient and the others, plus
+  `data/status.json`) live in `scripts/project_api/static/`. They are served only
+  when the entry declares them.
 
 ## Where agents onboard (not the HTML dashboards)
 

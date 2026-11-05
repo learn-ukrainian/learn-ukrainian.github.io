@@ -2,7 +2,7 @@ const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const html = fs.readFileSync('dashboards/orient.html', 'utf8');
+const html = fs.readFileSync('scripts/project_api/static/orient.html', 'utf8');
 function setup(fetchJson = async () => { throw Error('offline'); }) {
   const nodes = {};
   const context = vm.createContext({
