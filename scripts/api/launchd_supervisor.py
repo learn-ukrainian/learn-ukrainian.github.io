@@ -26,7 +26,6 @@ from typing import Any
 from xml.parsers.expat import ExpatError
 
 from scripts.api.release_snapshot import build_release, prune_releases
-from scripts.common.repo_root import machinery_path
 from scripts.common.safe_unit_install import (
     InstallError,
     check_state_paths,
@@ -180,7 +179,7 @@ def _validate_runtime(repo_root: Path) -> None:
     # Intentional: the LaunchAgent is bound to this repo_root, which may not
     # be the process's primary checkout.
     interpreter = repo_root / ".venv" / "bin" / "python"
-    supervisor = machinery_path("api/launchd_supervisor.py")
+    supervisor = repo_root / _package_top() / Path(__file__).parent.name / "launchd_supervisor.py"
     wrapper = wrapper_path(repo_root)
     if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
         raise LaunchdError(f"required interpreter is missing or not executable: {interpreter}")
@@ -530,7 +529,7 @@ def _prepare_api_command(repo_root: Path, *, live_mode: bool, port: int) -> tupl
         "--port",
         str(port),
         "--log-config",
-        str(machinery_path("api/logging.json")),
+        f"{_package_top()}/{Path(__file__).parent.name}/logging.json",
         "--timeout-graceful-shutdown",
         "8",
     ]
