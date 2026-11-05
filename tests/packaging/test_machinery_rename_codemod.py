@@ -1586,3 +1586,221 @@ def test_r4_f3_piece_scan_is_bounded() -> None:
     pieces = rename_nonpython.run_time_pieces(text)
 
     assert [(piece.start, piece.end) for piece in pieces][-1:] == [(text.index("${E}"), text.index("${E}") + 4)]
+
+
+# -- PR 12764 review round 6: the invariant for refused run-time pieces ----------------------
+#
+# Invariant: a $(, ${ or backtick piece is read only inside the readable subset; every other opening is
+# refused and read as a wildcard, and a letter run glued to it that could spell scripts with it is
+# reported. The generator combines the primitives of the shell class: each opening with each way out of
+# the subset, each way of gluing the letters, each split of the name, each context; then the size and
+# nesting bounds on their own. A shell checks every positive (the refused piece expands to nothing, so
+# the word is scripts/dispatch.py), and the tool must then report it and change nothing.
+
+NAME = "scripts/dispatch.py"
+WORD = "scripts"
+# Bodies a shell expands to nothing that the scanner refuses, by opening.
+REFUSED_PIECES = [
+    "$(# '\ntrue)",  # a quote in a comment
+    "$(# )\ntrue)",  # a closer in a comment
+    '$(# "\ntrue)',
+    "$(case x in x) true;; esac)",  # a case pattern's closer
+    "$(case x in (x) true;; esac)",
+    "$(: <<E\n)\nE\n)",  # a closer in a heredoc
+    "$(: <<<')')",
+    "$( ((1)) )",  # arithmetic
+    "$(: $[ ) ])",  # a closer in old-style arithmetic
+    "$(: \\\n)",  # a line continuation
+    "$(: ${#x})",  # a refused piece nested in a readable one
+    "${x//')'/}",  # a single quote in ${...}
+    "${x#*}",
+    "${x:-$(# '\n)}",
+    "`# '`",
+    "`case x in x) true;; esac`",
+    "`: <<E\n)\nE\n`",
+    "`: $((1))`",
+]
+# Globs and brace expansions that may expand to nothing between two fragments (the shell runs in a directory
+# that holds the file, so the glob matches it).
+GLOB_PIECES = ["*", "{,}", "{,x}"]
+
+
+def _plain(head: str, tail: str) -> tuple[str, str]:
+    return head, tail
+
+
+def _quoted(head: str, tail: str) -> tuple[str, str]:
+    return f'"{head}"', f"'{tail}'"
+
+
+def _read_piece_between(head: str, tail: str) -> tuple[str, str]:
+    return head + "${EMPTY}$X", "$(true)" + tail
+
+
+def _backslash(head: str, tail: str) -> tuple[str, str]:
+    return head[:-1] + "\\" + head[-1:], tail
+
+
+def _continuation(head: str, tail: str) -> tuple[str, str]:
+    return head + "\\\n", tail
+
+
+def _empty_quotes(head: str, tail: str) -> tuple[str, str]:
+    return head + "$''", '$""' + tail
+
+
+GLUES = [_plain, _quoted, _read_piece_between, _backslash, _continuation, _empty_quotes]
+# (file, text template, the command a shell runs to print the word)
+CONTEXTS = [
+    ("scripts/tools/split.sh", "cat {w}\n", "printf '%s\\n' {w}"),
+    ("scripts/tools/split.sh", 'echo "$(cat {w})"\n', "printf '%s\\n' \"$(printf '%s' {w})\""),
+    ("docs/split.md", "Run:\n\n```bash\ncat {w}\n```\n", "printf '%s\\n' {w}"),
+]
+
+
+def _piece_of_length(length: int) -> str:
+    return "$(: " + "x" * (length - 5) + ")"
+
+
+def _nested(depth: int) -> str:
+    return "$(echo " * (depth - 1) + "$(true)" + ")" * (depth - 1)
+
+
+def _invariant_cases() -> tuple[list[tuple[str, str, str, str | None]], list[tuple[str, str]]]:
+    """(positives as (file, text, shell command, expected kind or None), negatives as (file, text))."""
+
+    positives: list[tuple[str, str, str, str | None]] = []
+    for piece in REFUSED_PIECES + GLOB_PIECES:
+        for rel, template, command in CONTEXTS:
+            for glue in GLUES:
+                for split in range(1, len(WORD)):
+                    head, tail = glue(WORD[:split], WORD[split:] + NAME[len(WORD) :])
+                    word = head + piece + tail
+                    positives.append((rel, template.format(w=word), command.format(w=word), None))
+            for split in (0, len(WORD)):  # the whole word on one side of the piece
+                word = WORD[:split] + piece + NAME[split:]
+                positives.append((rel, template.format(w=word), command.format(w=word), None))
+        for first in range(1, len(WORD)):  # a slice between two refused pieces
+            for second in range(first + 1, len(WORD)):
+                word = WORD[:first] + piece + WORD[first:second] + piece + NAME[second:]
+                positives.append(("scripts/tools/split.sh", f"cat {word}\n", f"printf '%s\\n' {word}", None))
+    max_piece, max_nesting = rename_nonpython.MAX_PIECE, rename_nonpython.MAX_NESTING
+    for length in (max_piece - 1, max_piece, max_piece + 1):  # the size bound alone
+        word = "scr" + _piece_of_length(length) + "ipts/dispatch.py"
+        kind = "hidden_reference" if length <= max_piece else "refused_piece"
+        positives.append(("scripts/tools/split.sh", f"cat {word}\n", f"printf '%s\\n' {word}", kind))
+    for depth in (max_nesting - 1, max_nesting, max_nesting + 1):  # the nesting bound alone
+        word = "scr" + _nested(depth) + "ipts/dispatch.py"
+        kind = "hidden_reference" if depth <= max_nesting else "refused_piece"
+        positives.append(("scripts/tools/split.sh", f"cat {word}\n", f"printf '%s\\n' {word}", kind))
+    negatives = [
+        (rel, template.format(w="foo" + piece + "bar/dispatch.py"))
+        for piece in REFUSED_PIECES + GLOB_PIECES
+        for rel, template, _c in CONTEXTS
+    ]
+    negatives += [
+        (rel, template.format(w="foo" + piece + "bar"))
+        for piece in ("$(true)", "${X:-a}", "`true`")
+        for rel, template, _c in CONTEXTS
+    ]
+    return positives, negatives
+
+
+# Earlier probes of the class, each reported whatever its expansion: the round-5 cases (PR 12764), the
+# siblings a pre-dispatch critic named, the ANSI-C and locale quotes between two fragments, and globs and
+# brace expansions that replace letters.
+FIXED_PROBES = [
+    "cat scr$(# '\ntrue)ipts/dispatch.py\n",
+    "cat scr$(# )\ntrue)ipts/dispatch.py\n",
+    "cat scr$(case x in x) true;; esac)ipts/dispatch.py\n",
+    "cat scr$(#" + "x" * 65536 + "\n:)ipts/dispatch.py\n",
+    "cat scr$(" + "echo $(" * 64 + "true" + ")" * 65 + "ipts/dispatch.py\n",
+    "cat scr${x//')'/}ipts/dispatch.py\n",
+    "echo \"scr${x//')'/}ipts/dispatch.py\"\n",
+    "cat scr$(cat <<E\nE\n)ipts/dispatch.py\n",
+    "cat scr$((0))ipts/dispatch.py\n",
+    "cat scr$(case x in x) :;; esac)ipts/dispatch.py\n",
+    "cat $(# '\necho scr)ipts/dispatch.py\n",  # the refused body may print the front of the name
+    "cat scr$''ipts/dispatch.py\n",
+    'cat scr$""ipts/dispatch.py\n',
+    "cat scr$'\\x69'pts/dispatch.py\n",
+    "python -mscr$(# '\n)ipts.dispatch\n",
+    "cat scr?pts/dispatch.py\n",
+    "cat scr[i]pts/dispatch.py\n",
+    "cat {scr,}ipts/dispatch.py\n",
+    "cat s*s/dispatch.py\n",
+    "cat {s,{c,x}}ripts/dispatch.py\n",
+    "cat $FOO\\\nscripts/dispatch.py\n",  # a line continuation glues the name to a variable name
+    'cat `# \'`"$(true)"scrip*ts/dispatch.py\n',  # a glob after a quote the lexer misreads
+    "x=$(cat ${E}$(# '\ntrue)sc${x//')'/}ripts/dispatch.py) && y\n",  # a refused piece inside a refused one
+    "cat scr$(: $[ ) ])ipts/dispatch.py\n",
+]
+
+
+def _scan(rel: str, text: str) -> tuple[list, list]:
+    ownership = rename_python.OwnershipMap({NAME: M, "scripts/x.py": P, "README.md": P})
+    kind = rename_nonpython.classify(rel, text.encode()[:256])
+    report = rename_python.Report("rename_nonpython", "check", "")
+    edits = rename_nonpython.scan_text(ownership, rel, text, kind, report)
+    return edits, report.unresolved
+
+
+def test_r6_f3_refused_pieces_invariant_holds_for_every_combination(tmp_path: Path) -> None:
+    import shutil
+    import subprocess
+    import time
+
+    bash = shutil.which("bash")
+    if bash is None:
+        pytest.skip("the oracle needs bash")
+    started = time.monotonic()
+    positives, negatives = _invariant_cases()
+    assert len(positives) + len(negatives) <= 3000
+    expanded: dict[str, str] = {}
+    oracle_root = tmp_path / "oracle"
+    (oracle_root / "scripts").mkdir(parents=True)
+    (oracle_root / NAME).write_text("", encoding="utf-8")
+    for rel, text, command, kind in positives:
+        if command not in expanded:
+            run = subprocess.run(
+                [bash, "--norc", "--noprofile", "-c", command],
+                capture_output=True,
+                text=True,
+                check=False,
+                cwd=oracle_root,
+                timeout=30,
+            )
+            expanded[command] = run.stdout
+        assert NAME in expanded[command], (command, expanded[command])  # the oracle: a shell spells it
+        edits, unresolved = _scan(rel, text)
+        assert edits == [], text[:200]
+        assert unresolved, text[:200]
+        if kind is not None:
+            assert kind in [finding.kind for finding in unresolved], (text[:120], unresolved)
+    for rel, text in negatives:
+        edits, unresolved = _scan(rel, text)
+        assert (edits, unresolved) == ([], []), text
+    assert time.monotonic() - started < 60
+
+
+@pytest.mark.parametrize("text", FIXED_PROBES, ids=[f"{i:02d}" for i in range(len(FIXED_PROBES))])
+def test_r6_f3_fixed_probes_are_reported(text: str) -> None:
+    edits, unresolved = _scan("scripts/tools/split.sh", text)
+
+    assert edits == []
+    assert unresolved
+
+
+def test_r6_f3_refusal_is_decided_at_the_choke_point() -> None:
+    scan = rename_nonpython.scan_pieces("a $(true) b $(# x\n) c ${#x} d `case` e $(echo")
+    reasons = [refusal.reason for refusal in scan.refusals()]
+
+    assert [piece.refused for piece in scan.pieces] == ["", "holds '#'", "holds '#'", "holds 'case'"]
+    # The scan goes on inside a refused piece, so the closing backtick of the refused `case` opens one too.
+    assert reasons == [
+        "holds '#'",
+        "holds '#'",
+        "holds 'case'",
+        "holds an opening that is refused (never closes)",
+        "never closes",
+    ]

@@ -106,13 +106,44 @@ These are reported and never rewritten:
   `${X}`, `$(…)`, `$((…))`, backticks, `{{ … }}`). Pieces are found by a balanced scan, so nested
   ones count (`scr${A:-${B}}ipts`), and every substitution body is read at each depth with the pieces
   nested in it taken as empty (`"$(cat scr$(true)ipts/x.py)"`, `scr"$(echo a b)"ipts`). A `$'…'` quote
-  with an escape is read, and is also taken as empty like a run-time piece;
+  with an escape is read, and is also taken as empty like a run-time piece; an empty `$''` or `$""`
+  quote goes like any other quotes;
+- names split by a piece the scanner refuses to read (`refused_piece`), or by an unquoted glob or
+  brace expansion (`glob_split`: `scr*ipts`, `scr{,}ipts`), see below;
 - the root in another case (`Scripts/`);
 - binary or non-UTF-8 files that may name `scripts` (also as UTF-16), compressed archives (gzip, bzip2,
   xz, zip) whose contents name it, and symlinks whose target names it.
 
 A module name must be exact. A package whose `__main__` has the other owner is reported, because
 `-m` runs that file.
+
+### Pieces the scanner refuses
+
+The tool reads a `$(…)`, `${…}` or backtick piece only when its text stays inside a readable
+subset. Every other opening is refused, and a refused opening is never taken as text:
+
+- **Readable subset.** Quotes balance, every nested piece is itself readable, and the text holds
+  none of `#`, `case`, `<<`, `;;`, `((`, `$[` or a line continuation. A `${…}` piece holds no single
+  quote, because a shell reads one differently inside and outside double quotes. A piece nested in
+  backticks holds no backtick, because a shell ends the backticks there. The piece is at most
+  64 KiB long and nests at most 64 levels deep.
+- **Refused.** Any other piece is refused, and so is an opening that does not close within those
+  bounds. A comment, a case pattern, a heredoc or a quote may move the place where a shell ends
+  such a piece, so the tool does not guess where it ends.
+- **Wildcard.** A refused piece is read as a wildcard of unknown length, which may end after any
+  later `)`, `}` or backtick of its kind. A letter run glued to it is reported as `refused_piece`
+  when it could spell `scripts` with the wildcard. That is a run in front of it that starts the
+  word `scripts` (`scr$(# '…)ipts`), a suffix of `scripts` after a place where it may end, or a
+  slice of `scripts` between two refused pieces. Quotes, escapes, line continuations and readable
+  pieces between the letters and the piece do not separate them.
+- **Globs and braces.** An unquoted, unescaped glob (`*`, `?`, `[…]`) or brace expansion (`{a,b}`,
+  `{a..b}`) in shell text is a wildcard too, and ends with its own text. Letters glued to it are
+  reported as `glob_split` by the same rule (`scr*ipts`, `scr{,}ipts`, `{scr,}ipts`).
+- **Not reported.** A readable piece with no name split by it is not reported. Neither is a refused
+  piece or glob whose glued letters cannot spell `scripts` (`foo$(# '…)bar`, `*.py`).
+
+In Markdown, only code spans and shell fences are shell, so only they are scanned this way.
+Markdown backticks are not substitutions.
 
 ## Inputs
 

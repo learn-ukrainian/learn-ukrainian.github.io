@@ -6,6 +6,15 @@ Uses the ownership model in ``rename_python.py`` (same map, same module names). 
 word, or a whole quoted word, with nothing glued to it and nothing that the shell or the file
 format could expand or continue. Every other ``scripts`` module name or path is reported.
 Python files belong to rename_python.py; files that ``rename_structured.py`` knows belong to it.
+
+Invariant for run-time pieces (``scan_pieces`` is the one place every opening passes through): a ``$(``,
+``${`` or backtick piece is read only when its text stays inside the readable subset (balanced quotes, nested
+pieces of the same subset, none of ``#``, ``case``, ``<<``, ``;;``, ``((``, ``$[`` or a line continuation, no single
+quote in ``${...}``, no backtick in a piece nested in backticks, at most ``MAX_PIECE`` characters and
+``MAX_NESTING`` levels); every other opening is refused. A refused opening is never text: ``refused_glue``
+reads it as a wildcard, like every unquoted glob and brace expansion in shell text, and reports every letter
+run glued to a wildcard that could spell ``scripts`` with it (a prefix in front of it, a suffix after a place
+where it may end, or a slice between two), and never rewrites it.
 """
 
 from __future__ import annotations
@@ -44,6 +53,7 @@ rs = _load("machinery_move_rename_structured", "rename_structured.py")
 AMBIGUOUS, MACHINERY, PRODUCT = rp.AMBIGUOUS, rp.MACHINERY, rp.PRODUCT
 OLD_ROOT, NEW_ROOT = rp.OLD_ROOT, rp.NEW_ROOT
 Finding, OwnershipMap, Report = rp.Finding, rp.OwnershipMap, rp.Report
+WORD = rp.WORD
 
 # The characters a plain token may contain after ``scripts``.
 TOKEN_CHARS = re.compile(r"[A-Za-z0-9_.\-/]*")
@@ -82,9 +92,10 @@ SHELL_FENCE_INFO = frozenset({"bash", "sh", "shell", "zsh", "console", "shell-se
 ESCAPE = re.compile(
     r"\\u[0-9a-fA-F]{1,4}|\\U[0-9a-fA-F]{1,8}|\\x[0-9a-fA-F]{2}|\\[0-7]{1,3}|&#[0-9]{1,7};|&#[xX][0-9a-fA-F]{1,6};|%[0-9a-fA-F]{2}"
 )
-# What a reader joins or removes before a name shows: line continuations, escapes and a backslash before a
-# character. Run-time pieces are found by ``run_time_pieces``, which balances nested ones.
-HIDING = re.compile(r"\\[ \t]*\r?\n\s*|" + ESCAPE.pattern + r"|\\(?=\S)")
+# What a reader joins or removes before a name shows: line continuations, escapes, a backslash before a
+# character, and the ``$`` that starts a ``$'…'`` or ``$"…"`` quote (the quotes go as quoted pieces). Run-time
+# pieces are found by ``scan_pieces``, which balances nested ones.
+HIDING = re.compile(r"\\[ \t]*\r?\n\s*|" + ESCAPE.pattern + r"|\\(?=\S)|\$(?=['\"])")
 # Where a run-time piece starts: a substitution or expansion (``$(``, ``$((``, ``${``, backticks), which
 # can nest, or a leaf that cannot: a variable (``$X``, ``$1``, ``$@``), a template field, or a ``$'…'`` quote with
 # an escape in it, whose characters are known only once the shell reads the escapes.
@@ -96,8 +107,18 @@ OPENINGS = {"$(": ")", "${": "}", "`": "`"}
 # What may end, nest in or quote a piece body, outside double quotes and inside them.
 BODY_STOPS = {")": re.compile(r"[\\'\"`$(){}]"), "}": re.compile(r"[\\'\"`$(){}]"), "`": re.compile(r"[\\`$]")}
 DOUBLE_QUOTED_STOPS = re.compile(r"[\\\"`${]")
-MAX_PIECE = 64 * 1024  # a longer body is no piece: its opening stays as written, and its inner pieces still count
-MAX_NESTING = 64
+MAX_PIECE = 64 * 1024  # a longer piece is refused: the scanner does not know where it ends
+MAX_NESTING = 64  # a piece nested deeper is refused, and so is every piece around it
+# The readable subset: a piece is read only when its text holds none of these. A comment, a case clause, a heredoc,
+# arithmetic (``((``, ``$[``) and a line continuation each change where a shell ends the piece, so a piece with one
+# is refused.
+OUTSIDE_SUBSET = re.compile(r"#|<<|;;|\(\(|\$\[|\\\r?\n|(?<![A-Za-z0-9_])case(?![A-Za-z0-9_])")
+# A refused opening in the glue view: a wildcard of unknown length, never text.
+WILDCARD = "\0"
+# Other shell expansions the tool does not compute: a glob (``*``, ``?``, ``[...]``) and a brace expansion
+# (``{a,b}``, ``{a..b}``). Their extent is known, so each is one wildcard that ends where its text ends.
+GLOB_START = re.compile(r"[*?\[{]")
+LETTERS = re.compile(r"[A-Za-z]+")
 # A quoted piece glued to a word: the shell drops its quotes and joins it (``scr""ipts``, ``scr"i"pts``).
 # A lone apostrophe (``script's``) is no quoted piece.
 QUOTED_PIECE = re.compile(r"(?<=\S)([\"'])[^\"'\s]*\1|([\"'])[^\"'\s]*\2(?=\S)")
@@ -547,7 +568,15 @@ def _before(scan: FileScan, position: int) -> str:
 
     if position <= 0 or (scan.kind == MARKDOWN and any(start == position for start, _ in scan.code_regions)):
         return "\n"
-    return scan.text[position - 1]
+    text = scan.text
+    if text[position - 1] == "\n":  # a line continuation joins the word to the end of the line before
+        i = position - 2 - (position >= 2 and text[position - 2] == "\r")
+        backslashes = 0
+        while i - backslashes >= 0 and text[i - backslashes] == "\\":
+            backslashes += 1
+        if backslashes % 2:
+            return "\\"
+    return text[position - 1]
 
 
 def _after(scan: FileScan, position: int) -> str:
@@ -717,6 +746,7 @@ class Piece:
 
     ``opening`` and ``closing`` are the lengths of its delimiters (``$(`` and ``)``); both are 0 for a leaf,
     a variable, a template field or an escaped ``$'…'`` quote (``escaped``), whose text is never a word of its own.
+    ``refused`` says why a substitution that closes is still outside the readable subset ("" when it is read).
     """
 
     start: int
@@ -725,39 +755,93 @@ class Piece:
     closing: int = 0
     children: tuple[Piece, ...] = ()
     escaped: bool = False
+    refused: str = ""
 
 
-def run_time_pieces(text: str) -> list[Piece]:
-    """The outermost run-time pieces of a text, each with its nested pieces, found by a balanced scan.
+@dataclass(frozen=True)
+class Refusal:
+    """A refused opening: where it starts, the length of its delimiter and why the scanner refuses it."""
 
-    An opening that never closes is no piece, and neither is one whose body holds such an opening: the scan
-    goes on right after it, so the pieces in what would have been its body still count.
+    start: int
+    opening: int
+    reason: str
+
+
+@dataclass(frozen=True)
+class PieceScan:
+    """Every run-time piece of a text, and every opening the scanner refuses.
+
+    ``pieces`` are the outermost pieces that close, read or refused, each with its nested pieces; the views
+    use them as before. ``glue`` is what the glue rule reads: the same scan, except that it goes on inside a
+    refused piece instead of after it, because a refused piece's end is not known; so every opening in the
+    text that no read piece holds is in it. ``unclosed`` are the openings that do not close within
+    ``MAX_PIECE`` and ``MAX_NESTING``.
+    """
+
+    pieces: list[Piece]
+    glue: list[Piece]
+    unclosed: list[Refusal]
+
+    def refusals(self) -> list[Refusal]:
+        """Every refused opening the glue rule reads as a wildcard."""
+
+        refused = [Refusal(piece.start, piece.opening, piece.refused) for piece in self.glue if piece.refused]
+        return sorted([*self.unclosed, *refused], key=lambda refusal: refusal.start)
+
+
+def scan_pieces(text: str) -> PieceScan:
+    """Find the run-time pieces of a text by a balanced scan, and every opening outside the readable subset.
+
+    This is the one place every ``$(``, ``${`` and backtick opening passes through. An opening is read only
+    when its piece closes within ``MAX_PIECE`` characters and ``MAX_NESTING`` levels, its quotes balance,
+    every piece nested in it is read, and its text holds nothing in ``OUTSIDE_SUBSET`` (nor, for ``${``,
+    a single quote, which a shell reads differently inside and outside double quotes, nor, for a backtick,
+    a backtick inside a nested piece). Every other opening is refused. A refused opening that does not
+    close is no piece: the scan goes on right after it, so the pieces in what would have been its body
+    still count.
     """
 
     scanner = _PieceScanner(text)
-    pieces: list[Piece] = []
-    position = 0
-    while (match := PIECE_START.search(text, position)) is not None:
-        piece = scanner.piece_at(match.start(), 0)
-        if piece is None:
-            position = match.start() + 1
-        else:
-            pieces.append(piece)
-            position = piece.end
-    return pieces
+
+    def scan(enter_refused: bool) -> tuple[list[Piece], list[Refusal]]:
+        pieces: list[Piece] = []
+        unclosed: list[Refusal] = []
+        position = 0
+        while (match := PIECE_START.search(text, position)) is not None:
+            piece = scanner.piece_at(match.start(), 0)
+            if isinstance(piece, Piece):
+                pieces.append(piece)
+                position = match.start() + 1 if enter_refused and piece.refused else piece.end
+            else:
+                if isinstance(piece, str):
+                    unclosed.append(Refusal(match.start(), len(match.group(0)), piece))
+                position = match.start() + 1
+        return pieces, unclosed
+
+    pieces = scan(enter_refused=False)[0]
+    glue, unclosed = scan(enter_refused=True)
+    return PieceScan(pieces, glue, unclosed)
+
+
+def run_time_pieces(text: str) -> list[Piece]:
+    """The outermost run-time pieces of a text that close, read or refused, each with its nested pieces."""
+
+    return scan_pieces(text).pieces
 
 
 class _PieceScanner:
     """Scans piece bodies as a shell does: nested pieces, quotes, backslashes and balanced brackets.
 
-    Each opening is scanned once (``memo``), so the scan stays linear in the text times ``MAX_PIECE``.
+    ``piece_at`` returns the piece at an opening, or why the opening does not close (a string), or None when
+    no piece starts there. Each opening is scanned once (``memo``), so the scan stays linear in the text
+    times ``MAX_PIECE``.
     """
 
     def __init__(self, text: str) -> None:
         self.text = text
-        self.memo: dict[int, Piece | None] = {}
+        self.memo: dict[int, Piece | str] = {}
 
-    def piece_at(self, start: int, nesting: int) -> Piece | None:
+    def piece_at(self, start: int, nesting: int) -> Piece | str | None:
         match = PIECE_START.match(self.text, start)
         if match is None:
             return None
@@ -766,43 +850,50 @@ class _PieceScanner:
         if start in self.memo:
             return self.memo[start]
         if nesting >= MAX_NESTING:
-            return None  # not remembered: from a shallower start it may close
+            return f"nested more than {MAX_NESTING} deep"  # not remembered: from a shallower start it may close
         piece = self.memo[start] = self._closed(start, match.group(0), nesting)
         return piece
 
-    def _closed(self, start: int, opening: str, nesting: int) -> Piece | None:
+    def _closed(self, start: int, opening: str, nesting: int) -> Piece | str:
         text, closer = self.text, OPENINGS[opening]
         limit = min(len(text), start + MAX_PIECE)
+        unclosed = f"longer than {MAX_PIECE} characters" if limit < len(text) else "never closes"
         children: list[Piece] = []
+        refused = ""  # why a nested piece puts this one outside the readable subset
         depth = 0  # open brackets of the closer's kind inside the body
         quoted = False  # inside double quotes (never in backticks, which end at the next unescaped backtick)
         position = start + len(opening)
         while True:
             stop = (DOUBLE_QUOTED_STOPS if quoted else BODY_STOPS[closer]).search(text, position, limit)
             if stop is None:
-                return None  # unclosed, or too long
+                return unclosed
             position, char = stop.start(), stop.group(0)
             if char == "\\":
                 position += 2
             elif char == closer and not quoted and depth == 0:
-                return Piece(start, position + 1, len(opening), 1, tuple(children))
+                end = position + 1
+                refused = refused or _outside_subset(text, start, end, opening)
+                return Piece(start, end, len(opening), 1, tuple(children), refused=refused)
             elif char == closer and not quoted:
                 depth -= 1
                 position += 1
             elif quoted and text.startswith("$'", position):
                 position += 1  # inside double quotes ``$'`` is no quote
             elif char in "$`" or text.startswith(("{{", "{%"), position):
-                match = PIECE_START.match(text, position)
                 child = self.piece_at(position, nesting + 1)
-                if child is not None:
+                if isinstance(child, Piece):
                     children.append(child)
                     position = child.end
-                elif match is not None and match.group(0) in OPENINGS:
-                    return None  # a nested opening that never closes leaves this one open too
+                    if child.refused:
+                        refused = refused or "holds a refused piece"
+                    elif closer == "`" and "`" in text[child.start : child.end]:
+                        refused = refused or "a nested piece holds a backtick"  # a shell ends the backticks there
+                elif isinstance(child, str):
+                    return f"holds an opening that is refused ({child})"
                 elif char == "$" and not quoted and text.startswith("$'", position):
                     close = _ansi_quote_end(text, position + 2, limit)
                     if close is None:
-                        return None
+                        return unclosed
                     position = close
                 else:
                     position += 1
@@ -812,11 +903,21 @@ class _PieceScanner:
             elif char == "'":
                 close = text.find("'", position + 1, limit)
                 if close < 0:
-                    return None
+                    return unclosed
                 position = close + 1
             else:  # a bracket: only the closer's own kind nests
                 depth += char == {")": "(", "}": "{"}[closer] and not quoted
                 position += 1
+
+
+def _outside_subset(text: str, start: int, end: int, opening: str) -> str:
+    """Why a closed piece's text is outside the readable subset, or "" when it is inside."""
+
+    if match := OUTSIDE_SUBSET.search(text, start, end):
+        return f"holds {match.group(0)!r}"
+    if opening == "${" and "'" in text[start:end]:
+        return "a single quote inside ${...}"
+    return ""
 
 
 def _ansi_quote_end(text: str, position: int, limit: int) -> int | None:
@@ -874,7 +975,7 @@ def joined_view(text: str, pieces: list[Piece] | None = None, level: int = 0, em
     parts: list[str] = []
     segments: list[tuple[int, int, int, bool]] = []
     view = position = 0
-    for start, end, token in sorted(events):
+    for start, end, token in sorted(events, key=lambda event: (event[0], -event[1])):  # a longer span covers
         if start < position:
             continue  # inside a piece already undone
         if start > position:
@@ -891,11 +992,14 @@ def joined_view(text: str, pieces: list[Piece] | None = None, level: int = 0, em
     return JoinedView("".join(parts), segments)
 
 
-def joined_views(text: str) -> Iterator[JoinedView]:
+def joined_views(text: str, pieces: list[Piece] | None = None) -> Iterator[JoinedView]:
     """Every view ``hidden_references`` reads: each level that takes some piece as empty, with escaped
-    ``$'…'`` quotes read and, when the text has one, taken as empty; then the pieces kept."""
+    ``$'…'`` quotes read and, when the text has one, taken as empty; then the pieces kept.
 
-    pieces = run_time_pieces(text)
+    A refused piece that closes is taken here like a read one, at the end the scan found; that can only add
+    a report. A refused opening is read as a wildcard by ``refused_glue``, never as text."""
+
+    pieces = run_time_pieces(text) if pieces is None else pieces
     for empty_quotes in (False, True) if _has_escaped_quote(pieces) else (False,):
         level = 0
         while level == 0 or _pieces_at_level(pieces, level, empty_quotes)[0]:
@@ -945,6 +1049,255 @@ def hidden_references(
             )
 
 
+@dataclass(frozen=True)
+class Wildcard:
+    """A place in the glue view whose text a shell computes: a refused piece, a glob or a brace expansion."""
+
+    view: int  # its position in the glue view
+    closer: str  # the character after which it may end; "" when it ends right where it starts (``*``, ``?``)
+    kind: str  # the finding kind: refused_piece or glob_split
+    detail: str
+
+
+def glue_view(
+    text: str, scan: PieceScan, globs: Sequence[tuple[int, int]] = (), level: int = 0
+) -> tuple[JoinedView, list[Wildcard], list[tuple[int, str]]]:
+    """The text as a shell joins it around the parts it computes: (view, wildcards, ends).
+
+    Every refused opening becomes ``WILDCARD``, and so does each glob or brace expansion in ``globs`` (its
+    whole text); a refused piece's body stays, read the same way. A read substitution ``level`` or fewer
+    deep is opened (its delimiters go, its body stays), as in ``joined_view``; every other read piece is
+    taken as empty. An escaped ``$'…'`` quote is read, every quote character goes, and line continuations,
+    escapes and backslashes are undone. ``ends`` are the view positions right after a read piece that a
+    closer ends (with that closer), where a refused piece of the same kind may also end, since its own end
+    is unknown.
+    """
+
+    # (start, rank, end, token, wildcard): at one start a piece goes before a glob character inside it.
+    events: list[tuple[int, int, int, str, tuple[str, str, str] | None]] = [
+        (m.start(), 1, m.end(), m.group(0), None) for m in HIDING.finditer(text)
+    ]
+    events += [(m.start(), 1, m.end(), "", None) for m in re.finditer(r"['\"]", text)]
+    for start, end in globs:
+        detail = f"glued to a glob or brace expansion ({text[start:end][:40]!r}) that may spell it; rename it by hand"
+        events.append((start, 1, end, WILDCARD, ("", "glob_split", detail)))
+    cut_closers: dict[int, str] = {}  # source end of a read piece -> its closer
+
+    def refused(start: int, opening: str, reason: str) -> None:
+        detail = f"glued to a run-time piece the scanner refuses to read ({reason}); rename it by hand"
+        events.append((start, 0, start + len(opening), WILDCARD, (OPENINGS[opening], "refused_piece", detail)))
+
+    stack = [(piece, 0) for piece in scan.glue]  # with the read substitutions around it
+    while stack:
+        piece, depth = stack.pop()
+        if piece.refused:  # what it holds is in ``scan.glue`` on its own
+            refused(piece.start, text[piece.start : piece.start + piece.opening], piece.refused)
+        elif piece.escaped:
+            continue  # an escaped ``$'…'`` quote is read: its ``$``, quotes and escapes go as everywhere else
+        elif piece.opening and depth < level:
+            events.append((piece.start, 0, piece.start + piece.opening, "", None))
+            events.append((piece.end - piece.closing, 0, piece.end, "", None))
+            stack.extend((child, depth + 1) for child in piece.children)
+        else:
+            events.append((piece.start, 0, piece.end, "", None))
+            if piece.closing:
+                cut_closers[piece.end] = text[piece.end - 1]
+    for refusal in scan.unclosed:
+        refused(refusal.start, text[refusal.start : refusal.start + refusal.opening], refusal.reason)
+    parts: list[str] = []
+    segments: list[tuple[int, int, int, bool]] = []
+    wildcards: list[Wildcard] = []
+    ends: list[tuple[int, str]] = []
+    view = position = 0
+    for start, _rank, end, token, wildcard in sorted(events, key=lambda event: event[:3]):
+        if start < position:
+            continue  # inside a piece already taken as empty
+        if start > position:
+            segments.append((view, position, start - position, True))
+            parts.append(text[position:start])
+            view += start - position
+        if wildcard is not None:
+            wildcards.append(Wildcard(view, *wildcard))
+            replacement = WILDCARD
+        else:
+            replacement = _unescape_one(token) if token and ESCAPE.fullmatch(token) else ""
+        segments.append((view, start, len(replacement), False))
+        parts.append(replacement)
+        view += len(replacement)
+        if end in cut_closers:
+            ends.append((view, cut_closers[end]))
+        position = end
+    segments.append((view, position, len(text) - position, True))
+    parts.append(text[position:])
+    return JoinedView("".join(parts), segments), wildcards, ends
+
+
+def refused_glue(
+    rel: str,
+    text: str,
+    report: Report,
+    scan: PieceScan | None = None,
+    span: tuple[int, int] | None = None,
+    shell: bool = False,
+    seen: set[int] | None = None,
+) -> None:
+    """Report every word where a part a shell computes may join letters of ``scripts`` into a name.
+
+    Each refused piece is a wildcard of unknown text: it starts at its opening and may end after any later
+    closer of its kind. In ``shell`` text, each glob or brace expansion is a wildcard that ends with its text. A
+    letter run is reported when it is glued in front of a wildcard and, with the wildcard taken as the rest
+    of the name, starts the word ``scripts`` (``rp.word_matches``); when it starts where a wildcard may end
+    and is a suffix of ``scripts``; or when it lies between the two and is a slice of ``scripts``. Such a
+    word is never rewritten. ``span`` limits the scan to one shell region of the text (a Markdown code span
+    or fence); ``seen`` holds the lines already reported, shared across the regions of one file.
+    """
+
+    offset, end = span if span is not None else (0, len(text))
+    region = text[offset:end]
+    scan = scan_pieces(region) if scan is None else scan
+    refusals = scan.refusals()
+    globs: list[tuple[int, int]] = []
+    if shell:
+        # The lexer's quoting is trusted only before the first construct it may misread.
+        untrusted = min([len(region), *(refusal.start for refusal in refusals[:1]), *_find(region, "$'")])
+        globs = [
+            (start - offset, stop - offset) for start, stop in glob_spans(text, [(offset, end)], offset + untrusted)
+        ]
+    if not globs and not refusals:
+        return
+    seen = set() if seen is None else seen  # lines already reported
+    for level in range(_read_depth(scan.glue) + 1):
+        joined, wildcards, cut_ends = glue_view(region, scan, globs, level)
+        if wildcards:
+            _report_glue(rel, text, offset, region, joined, wildcards, cut_ends, report, seen)
+
+
+def _read_depth(pieces: Sequence[Piece]) -> int:
+    """How deep read substitutions nest, through refused ones."""
+
+    depth, stack = 0, [(piece, 0) for piece in pieces]
+    while stack:
+        piece, outer = stack.pop()
+        inner = outer + bool(piece.opening and not piece.refused)
+        depth = max(depth, inner)
+        stack.extend((child, inner) for child in piece.children)
+    return depth
+
+
+def _report_glue(
+    rel: str,
+    text: str,
+    offset: int,
+    region: str,
+    joined: JoinedView,
+    wildcards: list[Wildcard],
+    cut_ends: list[tuple[int, str]],
+    report: Report,
+    seen: set[int],
+) -> None:
+    view = joined.text
+    first: dict[str, int] = {}  # the first wildcard each closer can end
+    for wildcard in wildcards:
+        first.setdefault(wildcard.closer, wildcard.view)
+    at = {wildcard.view: wildcard for wildcard in wildcards}  # by position: an escape such as ``\0`` reads as NUL
+    positions = [wildcard.view for wildcard in wildcards]
+    ends = sorted(
+        {p + 1 for p, char in enumerate(view) if char in first and first[char] < p}
+        | {p for p, closer in cut_ends if closer in first and first[closer] < p}
+        | {wildcard.view + 1 for wildcard in wildcards if not wildcard.closer}
+    )
+    for run in LETTERS.finditer(view):
+        a, b = run.span()
+        letters = run.group(0).lower()
+        glued_front = b in at
+        fragment = ""
+        if glued_front:
+            for k in range(min(len(letters), len(WORD)), 0, -1):
+                if letters.endswith(WORD[:k]) and _starts_word(region, joined.source_offset(b - k)):
+                    fragment = letters[-k:]
+                    break
+        for k in ends[bisect.bisect_left(ends, a) : bisect.bisect_left(ends, b)]:
+            piece = letters[k - a :]
+            if not fragment and ((piece in WORD) if glued_front else WORD.endswith(piece)):
+                fragment = piece
+        if not fragment:
+            continue
+        line = line_number(text, offset + joined.source_offset(a))
+        if line in seen:
+            continue
+        seen.add(line)
+        # The wildcard it is glued to: the one right after it, or else the last one before it.
+        wildcard = at[b] if glued_front else wildcards[max(0, bisect.bisect_left(positions, a) - 1)]
+        report.unresolved.append(Finding(rel, line, wildcard.kind, fragment, detail=wildcard.detail, target="unknown"))
+
+
+def _find(text: str, needle: str) -> list[int]:
+    index = text.find(needle)
+    return [] if index < 0 else [index]
+
+
+def glob_spans(text: str, regions: Sequence[tuple[int, int]], untrusted: int | None = None) -> list[tuple[int, int]]:
+    """Every glob (``*``, ``?``, ``[...]``) and brace expansion (``{a,b}``, ``{a..b}``) a shell may expand in
+    ``regions``: unescaped and, before ``untrusted``, unquoted and outside comments and heredoc bodies as the
+    shell lexer reads them. From ``untrusted`` on the lexer may have misread the text, so every one counts."""
+
+    candidates: list[tuple[int, int]] = []
+    for start, end in regions:
+        for match in GLOB_START.finditer(text, start, end):
+            i = match.start()
+            backslashes = i - start - len(text[start:i].rstrip("\\"))
+            if backslashes % 2 or (match.group(0) in "*?{" and i > start and text[i - 1] == "$"):
+                continue  # escaped, or the ``$*``, ``$?`` or ``${`` of a run-time piece
+            close = i + 1 if match.group(0) in "*?" else _bracket_end(text, i, end, match.group(0))
+            if close is not None:
+                candidates.append((i, close))
+    if not candidates:
+        return []
+    contexts = ShellLexer(text, regions).contexts([start for start, _ in candidates])
+    return [
+        (start, close)
+        for start, close in candidates
+        if (untrusted is not None and start >= untrusted)
+        or (
+            (context := contexts.get(start)) is not None
+            and context.frame in ("top", "$(", "`")
+            and not context.comment
+            and not context.heredoc
+        )
+    ]
+
+
+def _bracket_end(text: str, start: int, end: int, opening: str) -> int | None:
+    """Where a ``[...]`` bracket expression or a ``{a,b}`` brace expansion ends, or None when it is neither."""
+
+    if opening == "[":
+        match = re.compile(r"\[[!^]?\]?[^\]\s/]*\]").match(text, start, end)
+        return match.end() if match else None
+    depth, expands, i = 0, False, start
+    while i < end and not text[i].isspace():
+        char = text[i]
+        if char == "\\":
+            i += 2
+            continue
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return i + 1 if expands else None
+        elif depth == 1 and (char == "," or text.startswith("..", i)):
+            expands = True
+        i += 1
+    return None
+
+
+def _starts_word(text: str, position: int) -> bool:
+    """Whether ``scripts`` starting at ``position`` would start a word, as ``rp.word_matches`` reads it."""
+
+    probe = text[max(0, position - 16) : position] + WORD
+    return any(match.end() == len(probe) for match in rp.word_matches(probe, ignore_case=True))
+
+
 def case_variants(ownership: OwnershipMap, rel: str, text: str, kind: str, report: Report) -> None:
     """``Scripts/x.py`` names scripts/x.py on a case-insensitive file system: reported, never rewritten."""
 
@@ -968,7 +1321,8 @@ def case_variants(ownership: OwnershipMap, rel: str, text: str, kind: str, repor
 def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: Report) -> list[Edit]:
     """Rewrite or report every ``scripts`` word in a non-Python text."""
 
-    views = joined_views(text)
+    pieces = scan_pieces(text)  # the choke point: every opening is read or refused here
+    views = joined_views(text, pieces.pieces)
     view = next(views)  # level 0: every outermost piece taken as empty
     found = list(occurrences(text))
     covered = {o.start for o in found}
@@ -978,11 +1332,17 @@ def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: R
         hidden_references(ownership, rel, text, joined, covered, report, reported)
     case_variants(ownership, rel, text, kind, report)
     scan = FileScan(ownership, rel, text, kind)
+    if kind == MARKDOWN:
+        # Markdown is shell only in its code spans and shell fences; its backticks are no substitutions.
+        scan.code_regions, scan.shell_regions = markdown_regions(text)
+        glued_lines: set[int] = set()
+        for region in scan.shell_regions:
+            refused_glue(rel, text, report, span=region, shell=True, seen=glued_lines)
+    else:
+        refused_glue(rel, text, report, scan=pieces, shell=kind in (SHELL, TEXT))
     if not found:
         return []
-    if kind == MARKDOWN:
-        scan.code_regions, scan.shell_regions = markdown_regions(text)
-    elif kind in (SHELL, TEXT):
+    if kind in (SHELL, TEXT):
         scan.shell_regions = [(0, len(text))]
     elif kind == JSON:
         scan.json_strings = json_strings(text)
@@ -1219,6 +1579,10 @@ Rules:
   Reported instead: names in heredoc bodies, in longer quoted text, inside ${...}, $(( )) or backticks, with
   anything glued to them, in fences of other languages, in files that record digests, in unsupported file
   types, directory changes into scripts/, the scripts/ root itself, globs, and unknown or mixed-owner names.
+  A $(...), ${...} or backtick piece with a comment, case clause, heredoc, ((, $[, ;; or a line continuation in
+  it, or longer than 64 KiB or nested over 64 deep, is refused: letters glued to it that could spell scripts
+  are reported as refused_piece (README: "Pieces the scanner refuses"), and letters glued to an unquoted
+  glob or brace expansion (scr*ipts, scr{,}ipts) as glob_split.
   Comments and Markdown prose are never changed; machinery mentions there go to the inventory.
   Python files (*.py) belong to rename_python.py; files rename_structured.py knows belong to it.
 
