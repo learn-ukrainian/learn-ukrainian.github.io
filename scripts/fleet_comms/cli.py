@@ -73,6 +73,10 @@ from scripts.fleet_comms.opsec_store import (
 from scripts.fleet_comms.paths import PlaneRootAnchorError
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
 
+# This package's import name, as ``python -m`` runs it: from this module's package, or from
+# its unresolved location when run as a file.
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+
 EXIT_OK = 0
 EXIT_USAGE = 2
 EXIT_NOT_FOUND = 1
@@ -873,11 +877,11 @@ def _add_deliveries_parser(sub: Any) -> None:
     )
     epilog = (
         "Examples:\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries claim --recipient codex --worker-id seat-1\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries receive --recipient worker-task --worker-id worker-task\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries consume DELIVERY --worker-id seat-1 --fence-token 1 --driver-generation gen-1\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries ack DELIVERY --worker-id seat-1 --fence-token 1\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries read DELIVERY --worker-id seat-1 --fence-token 1\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries claim --recipient codex --worker-id seat-1\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries receive --recipient worker-task --worker-id worker-task\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries consume DELIVERY --worker-id seat-1 --fence-token 1 --driver-generation gen-1\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries ack DELIVERY --worker-id seat-1 --fence-token 1\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries read DELIVERY --worker-id seat-1 --fence-token 1\n"
         "Outputs: JSON on stdout; message bodies only from read and receive.\n"
         "  Receive claims and reads in one call: {delivery: {delivery_id, fence_token, sender, body, ...},\n"
         "  content_included: true}. Empty receive returns {delivery: null, content_included: false}.\n"
@@ -893,7 +897,7 @@ def _add_deliveries_parser(sub: Any) -> None:
         "  These commands open the authority store, initializing/migrating it if necessary.\n"
         "Exit codes: 0 = success, 1 = no claimable delivery or delivery not found,\n"
         "  2 = usage error, 3 = operation refused or storage error.\n"
-        "Related: scripts.fleet_comms.authority.AuthorityService; channels publish; plane-status."
+        f"Related: {_PACKAGE}.authority.AuthorityService; channels publish; plane-status."
     )
     deliveries = sub.add_parser(
         "deliveries", help="Process fenced authority deliveries (read/receive include bodies)",
@@ -1236,7 +1240,7 @@ def cmd_retention(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.fleet_comms",
+        prog=f"python -m {_PACKAGE}",
         description=(
             "Inspect Fleet Comms status, requests, metrics, and review jobs.\n"
             "Use read commands for diagnostics; delivery processing and explicit accept/import commands perform writes."
@@ -1244,13 +1248,13 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet_comms plane-status\n"
-            "  .venv/bin/python -m scripts.fleet_comms fleet status\n"
-            "  .venv/bin/python -m scripts.fleet_comms metrics\n"
+            f"  .venv/bin/python -m {_PACKAGE} plane-status\n"
+            f"  .venv/bin/python -m {_PACKAGE} fleet status\n"
+            f"  .venv/bin/python -m {_PACKAGE} metrics\n"
             "Outputs: JSON on stdout. Plane-status/metrics reads do not initialize stores.\n"
             "Exit codes: 0 = report produced (inspect health/error fields), "
             "1 = not found/no delivery, 2 = usage error, 3 = operation error.\n"
-            "Related: scripts.fleet_comms.message_plane; fleet help."
+            f"Related: {_PACKAGE}.message_plane; fleet help."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1327,8 +1331,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet_comms retention\n"
-            "  .venv/bin/python -m scripts.fleet_comms retention "
+            f"  .venv/bin/python -m {_PACKAGE} retention\n"
+            f"  .venv/bin/python -m {_PACKAGE} retention "
             "--cited-from-tasks batch_state/tasks --cited-from-docs docs "
             "--cited-from-github github.jsonl --cited-from-export citations.txt "
             "--cited-from-batch-state batch_state\n"

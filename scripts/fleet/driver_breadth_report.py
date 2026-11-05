@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections import Counter
@@ -20,6 +21,9 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 
 from scripts.fleet import idle_settle as idle_settle
 from scripts.orchestration.task_record_store import iter_task_records, read_task_record
+
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -180,8 +184,8 @@ def main(argv: list[str] | None = None) -> int:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator claude-infra --since-hours 24 --enforce\n"
-            "  .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --json\n"
+            f"  .venv/bin/python {_ENTRY} --initiator claude-infra --since-hours 24 --enforce\n"
+            f"  .venv/bin/python {_ENTRY} --initiator grok --json\n"
             "Outputs: report on stdout; no files written.\n"
             "Exit codes: 0 success; 2 failed breadth or idle disposition enforcement, or invalid arguments\n"
             "  (including a non-positive --since-hours).\n"
