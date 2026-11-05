@@ -24,11 +24,24 @@ from urllib.parse import quote
 import yaml
 
 from scripts.common import github_client
+from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails.worktree_containment import NotAGitRepositoryError, resolve_main_root_without_git
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
+
+
+def _checkout_relative(relative: str) -> str:
+    """The checkout-relative name of machinery file ``relative``, as refusals and help text show it."""
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
+# The repository registry and the verdict recorder, named wherever the machinery package is.
+_FLEET_REPOS = _checkout_relative("config/fleet_repos.yaml")
+_RECORDER = _checkout_relative("review/record_cf_verdict.py")
+# This publisher's import name, as ``python -m`` runs it.
+_PUBLISHER = __package__
 
 # Each field has one type and one meaning; strings never select gh flags.
 COMMON = {"repo": "repo"}
@@ -375,9 +388,7 @@ def _refuse_verdict_markers(verb, fields):
         return
     if verb == CF_VERDICT_RECORD_VERB and type(value) is CfVerdictRecord:
         return
-    raise gate.PublishBlocked(
-        "CF_VERDICT_MARKER_REFUSED: review-verdict markers are written only by scripts/review/record_cf_verdict.py."
-    )
+    raise gate.PublishBlocked(f"CF_VERDICT_MARKER_REFUSED: review-verdict markers are written only by {_RECORDER}.")
 
 
 class Asset:
@@ -543,7 +554,7 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
         raise gate.PublishBlocked(f"OPSEC: merge refused: recorded review verdict is {state} at this head.")
     if state == "needs-CF" and recorder:
         raise gate.PublishBlocked(
-            f"OPSEC: merge refused: no cross-family APPROVE from scripts/review/record_cf_verdict.py is recorded at {head}."
+            f"OPSEC: merge refused: no cross-family APPROVE from {_RECORDER} is recorded at {head}."
         )
     from scripts.review import contract_canary
 
@@ -897,7 +908,7 @@ def _transfer_endpoint(value, environment):
     else:
         matches = [(value, rows[value])] if value in rows else []
     if len(matches) != 1:
-        raise _transfer_refused(f"{value} is not exactly one repository registered in scripts/config/fleet_repos.yaml")
+        raise _transfer_refused(f"{value} is not exactly one repository registered in {_FLEET_REPOS}")
     alias, row = matches[0]
     github, role = (row.get("github"), row.get("role")) if isinstance(row, dict) else (None, None)
     canonical = gate.normalize_repository(github) if isinstance(github, str) else "unknown"
@@ -1392,7 +1403,7 @@ def publish(
             if policy == "unregistered":
                 raise gate.PublishBlocked(
                     "REPO_REFUSED: issue-create only targets a repository registered in "
-                    "scripts/config/fleet_repos.yaml; nothing was created."
+                    f"{_FLEET_REPOS}; nothing was created."
                 )
             if policy == "stream":
                 if "parent" not in fields:
@@ -1755,7 +1766,7 @@ def main(argv=None, *, runner=None):
     parser = PublisherParser(
         description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh reads use native CLI arguments.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md\n  .venv/bin/python -m scripts.publish read code-scanning-alerts --number 9781\n  .venv/bin/python -m scripts.publish read check-annotations --number 112001533549\nOutputs: GitHub mutation for write verbs; JSON on stdout for reads; temporary snapshots removed on exit.\nExit codes: 0 success; 1 gh failure; 2 schema or publishing refusal.\nRelated: docs/dev/agent-public-text.md; #9297; #9792",
+        epilog=f"Examples:\n  .venv/bin/python -m {_PUBLISHER} issue-comment --repo unit/public --number 1 --body-file reply.md\n  .venv/bin/python -m {_PUBLISHER} read code-scanning-alerts --number 9781\n  .venv/bin/python -m {_PUBLISHER} read check-annotations --number 112001533549\nOutputs: GitHub mutation for write verbs; JSON on stdout for reads; temporary snapshots removed on exit.\nExit codes: 0 success; 1 gh failure; 2 schema or publishing refusal.\nRelated: docs/dev/agent-public-text.md; #9297; #9792",
         allow_abbrev=False,
     )
     verbs = parser.add_subparsers(dest="verb", required=True)
@@ -1770,8 +1781,8 @@ def main(argv=None, *, runner=None):
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish comment-edit --repo unit/public --comment-id 123456 --body-file reply.md\n"
-                "  .venv/bin/python -m scripts.publish comment-edit --repo unit/public --comment-id 123456 --body-file -\n"
+                f"  .venv/bin/python -m {_PUBLISHER} comment-edit --repo unit/public --comment-id 123456 --body-file reply.md\n"
+                f"  .venv/bin/python -m {_PUBLISHER} comment-edit --repo unit/public --comment-id 123456 --body-file -\n"
                 "Outputs: PATCH the same comment ID with the scanned body; temporary payload removed on exit.\n"
                 "Exit codes: 0 success; 1 GitHub failure; 2 invalid input, publishing refusal or transport error.\n"
                 "Related: docs/dev/agent-public-text.md; read comment."
@@ -1784,7 +1795,7 @@ def main(argv=None, *, runner=None):
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish workflow-run --repo unit/public --workflow ci.yml --ref main "
+                f"  .venv/bin/python -m {_PUBLISHER} workflow-run --repo unit/public --workflow ci.yml --ref main "
                 "--inputs '{\"secret_scan_mode\": \"full-history-audit\"}'\n"
                 "Outputs: a workflow_dispatch request. A choice value must be one of the options that input declares.\n"
                 "  Other workflows and other values are refused before transport.\n"
@@ -1799,8 +1810,8 @@ def main(argv=None, *, runner=None):
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901\n"
-                "  .venv/bin/python -m scripts.publish run-cancel --repo unit/public --number 12345678901\n"
+                f"  .venv/bin/python -m {_PUBLISHER} read run --repo unit/public --number 12345678901\n"
+                f"  .venv/bin/python -m {_PUBLISHER} run-cancel --repo unit/public --number 12345678901\n"
                 "Outputs: requests ordinary cancellation; can interrupt work and eject a merge-group run from the queue.\n"
                 "  Request acceptance does not prove terminal cancellation; read back the run state.\n"
                 "  Cancellation does not satisfy CI or merge gates and does not consume or reset recovery allowances.\n"
@@ -1817,8 +1828,8 @@ def main(argv=None, *, runner=None):
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901\n"
-                "  .venv/bin/python -m scripts.publish run-rerun --repo unit/public --number 12345678901\n"
+                f"  .venv/bin/python -m {_PUBLISHER} read run --repo unit/public --number 12345678901\n"
+                f"  .venv/bin/python -m {_PUBLISHER} run-rerun --repo unit/public --number 12345678901\n"
                 "Outputs: requests a GitHub rerun with --failed on the original pinned run, not the latest PR head.\n"
                 "  PR recovery requires an eligible failed run, current-head approval and posted failure evidence.\n"
                 "  It consumes the one PR-head recovery allowance for reruns before sending the write.\n"
@@ -1834,16 +1845,16 @@ def main(argv=None, *, runner=None):
             )
         if verb == "issue-transfer":
             sub.description = (
-                "Move one open issue between two repositories registered in scripts/config/fleet_repos.yaml\n"
+                f"Move one open issue between two repositories registered in {_FLEET_REPOS}\n"
                 "that share an owner, through one GitHub transferIssue mutation. Raw gh issue transfer stays refused.\n"
                 "Use for approved confidentiality or ownership moves only; never for bulk moves or private-to-public."
             )
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish issue-transfer --repo public --number 123 "
+                f"  .venv/bin/python -m {_PUBLISHER} issue-transfer --repo public --number 123 "
                 "--destination infra-private --dry-run\n"
-                "  .venv/bin/python -m scripts.publish issue-transfer --repo learn-ukrainian/learn-ukrainian.github.io "
+                f"  .venv/bin/python -m {_PUBLISHER} issue-transfer --repo learn-ukrainian/learn-ukrainian.github.io "
                 "--number 123 --destination infra-private --receipt-dir /abs/private/dir\n"
                 "Checks, in order, before any mutation: both endpoints registered (alias or owner/name), same owner,\n"
                 "  different repositories, never a private- role to a public- role; then fresh reads: each\n"
@@ -1928,7 +1939,7 @@ def main(argv=None, *, runner=None):
             "takes no selectors, and emits one complete JSON array with only number, state, package, "
             "ecosystem, manifest, GHSA, severity, affected range and fixed version (possibly null). "
             "It rejects withdrawn advisories and malformed responses; failures emit no alert rows. "
-            "Example: .venv/bin/python -m scripts.publish read dependabot-alerts"
+            f"Example: .venv/bin/python -m {_PUBLISHER} read dependabot-alerts"
         ),
     )
     read_parser.add_argument(
@@ -2405,7 +2416,7 @@ def read(
         if _dependabot_repository(cwd, environment, repo) != (dest, physical_identity):
             raise gate.PublishBlocked("DEPENDABOT_IDENTITY_CHANGED: physical checkout changed during read.")
         if result.returncode:
-            refusal = "OPSEC: API read refused; use python -m scripts.publish read <name>."
+            refusal = f"OPSEC: API read refused; use python -m {_PUBLISHER} read <name>."
             if (result.stderr or "").strip() == refusal:
                 raise gate.PublishBlocked(refusal)
             raise gate.PublishBlocked("OPSEC: Dependabot read failed; no complete alert inventory.")

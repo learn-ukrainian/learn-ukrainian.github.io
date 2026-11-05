@@ -27,23 +27,33 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.repo_root import machinery_path, machinery_root
+
+
+def _checkout_relative(relative: str) -> str:
+    """The checkout-relative path of machinery file ``relative``, as a change lists it."""
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
 # The one declaration of the review output contract: bound schemas, the receipt gate, the
 # verdict parser, the recorder, settlement, and each reviewer provider's schema or reply handling.
+# Machinery files are named wherever the machinery package is and whatever it is called;
+# the schema and settlement are product-repository files.
 CONTRACT_PATHS: tuple[str, ...] = (
-    "scripts/review/contract_canary.py",  # this gate: a change to it is proven on live routes too
+    _checkout_relative("review/contract_canary.py"),  # this gate: a change to it is proven on live routes too
     "schemas/code-review-findings.v1.schema.json",
-    "scripts/review/review_contract.py",
-    "scripts/review/verdict_parser.py",
-    "scripts/review/record_cf_verdict.py",
+    _checkout_relative("review/review_contract.py"),
+    _checkout_relative("review/verdict_parser.py"),
+    _checkout_relative("review/record_cf_verdict.py"),
     "scripts/review/settle.py",
-    "scripts/dispatcher/worker.py",
-    "scripts/dispatcher/output_schema.py",
-    "scripts/dispatcher/providers/agy.py",
-    "scripts/dispatcher/providers/claude.py",
-    "scripts/dispatcher/providers/codex.py",
-    "scripts/dispatcher/providers/cursor.py",
-    "scripts/dispatcher/providers/muse.py",
-    "scripts/dispatcher/providers/stream_json.py",
+    _checkout_relative("dispatcher/worker.py"),
+    _checkout_relative("dispatcher/output_schema.py"),
+    _checkout_relative("dispatcher/providers/agy.py"),
+    _checkout_relative("dispatcher/providers/claude.py"),
+    _checkout_relative("dispatcher/providers/codex.py"),
+    _checkout_relative("dispatcher/providers/cursor.py"),
+    _checkout_relative("dispatcher/providers/muse.py"),
+    _checkout_relative("dispatcher/providers/stream_json.py"),
 )
 
 REASON = "needs-contract-canary"

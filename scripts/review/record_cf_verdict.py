@@ -28,10 +28,13 @@ if __package__ in (None, ""):
 if __name__ == "__main__":
     # Re-exec before importing recorder dependencies, as scripts/dispatch.py does.
     try:
+        from scripts.common.repo_root import machinery_path, machinery_root
         from scripts.dispatcher.primary import exec_primary
 
-        exec_primary(sys.argv[1:], entry=Path("scripts/review/record_cf_verdict.py"), refuse=sys.exit)
-    except (ImportError, OSError, RuntimeError, SystemExit) as exc:
+        # This file in the primary checkout, by its checkout-relative path.
+        entry = machinery_path("review/record_cf_verdict.py").relative_to(machinery_root().parent)
+        exec_primary(sys.argv[1:], entry=entry, refuse=sys.exit)
+    except (ImportError, OSError, RuntimeError, SystemExit, ValueError) as exc:
         print(json.dumps({"admitted": False, "refusal": f"RECORDER_PRIMARY_REFUSED: {exc}"}, sort_keys=True))
         raise SystemExit(2) from None
 
@@ -41,6 +44,7 @@ from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
 from scripts.common.jsonl import jsonl_lines
+from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.fleet.claude_account_lane import ClaudeAccount, account_from_record
 from scripts.fleet_comms.review_publication import (
     DEFAULT_STATUS_CONTEXT,
@@ -158,7 +162,7 @@ NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
 DEFAULT_REVIEW_ROUNDS = 3
 ELEVATED_REVIEW_ROUNDS = 5
 # A target repository whose own review policy sets another automatic budget declares it here (#12584).
-REVIEW_BUDGET_POLICY = Path(__file__).resolve().parents[2] / "scripts" / "config" / "review_budget_policy.yaml"
+REVIEW_BUDGET_POLICY = machinery_path("config/review_budget_policy.yaml")
 
 
 class RecordError(RuntimeError):
@@ -3437,7 +3441,9 @@ def dispatch_budget_check(
     return budget_check(repository, number, task_root=task_root, head=head)
 
 
-RECORDER_COMMAND = '"$PRIMARY_REPO/.venv/bin/python" "$PRIMARY_REPO/scripts/review/record_cf_verdict.py"'
+# This recorder's checkout-relative path, wherever the machinery package is and whatever it is called.
+RECORDER_PATH = machinery_path("review/record_cf_verdict.py").relative_to(machinery_root().parent).as_posix()
+RECORDER_COMMAND = f'"$PRIMARY_REPO/.venv/bin/python" "$PRIMARY_REPO/{RECORDER_PATH}"'
 RECORDER_EXAMPLES = (
     'Examples:\n  PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"\n'
 )
