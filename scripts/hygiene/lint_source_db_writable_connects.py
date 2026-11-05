@@ -103,6 +103,9 @@ def load_allowlist() -> tuple[AllowedReference, ...]:
     )
     if len({entry.path for entry in entries}) != len(entries):
         raise ValueError("duplicate SQLite allowlist path")
+    # Product writer rows stay under scripts/. Machinery rows use this package's
+    # directory name, which is the same prefix in this checkout.
+    machinery_prefix = f"{_machinery_top()}/"
     for entry in entries:
         common_invalid = ".." in Path(entry.path).parts or not entry.reason.strip()
         if entry.kind == "store_resolver":
@@ -118,7 +121,8 @@ def load_allowlist() -> tuple[AllowedReference, ...]:
                        or entry.target_db is not None or bool(entry.calls) or bool(entry.functions))
         else:
             invalid = (entry.kind not in {"writer", "reader_pending_migration_9662"}
-                       or entry.reference_count < 1 or not entry.path.startswith("scripts/")
+                       or entry.reference_count < 1
+                       or not (entry.path.startswith("scripts/") or entry.path.startswith(machinery_prefix))
                        or bool(entry.functions)
                        or (entry.kind == "writer" and (not entry.target_db or not entry.calls))
                        or (entry.kind != "writer" and entry.target_db is not None))

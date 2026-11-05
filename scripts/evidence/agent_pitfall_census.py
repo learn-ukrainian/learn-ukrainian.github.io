@@ -135,13 +135,16 @@ def _path_bucket(path: str) -> str | None:
         return "ci_yml"
     if path.startswith(".github/workflows/"):
         return "workflows_other"
+    # scripts/review/ stays a product prefix. That directory is split: product
+    # files remain there after extraction, so a generated machinery prefix
+    # would miss them (#12785 F2). scripts/delegate.py is that file's path in
+    # the closed census window; the file was deleted later (#11807).
     if (
         path.startswith("scripts/delegate.py")
         or path.startswith("scripts/review/")
         or path.startswith(_mp("orchestration") + '/')
         or path.startswith(_mp("fleet") + '/')
         or path.startswith(_mp("agent_runtime") + '/')
-        or path.startswith("scripts/runtime/")
         or "/hooks/" in path
     ):
         return "delivery"

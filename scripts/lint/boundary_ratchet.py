@@ -56,6 +56,13 @@ from scripts.ci.components import (
 )
 from scripts.common.repo_root import machinery_path
 
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or Path(__file__).parents[1].name
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("boundary_baseline.json")
 CONFIG_PATH = machinery_path("config/package_boundary.yaml")
@@ -420,7 +427,7 @@ def _entries_from_rows(rows: object, where: str) -> Counter[tuple[str, str]]:
         count = row.get("count")
         if (
             not isinstance(path, str)
-            or not path.startswith("scripts/")
+            or not path.startswith(f"{_machinery_top()}/")
             or path.startswith(("/", "\\"))
             or ".." in Path(path).parts
             or not isinstance(module, str)
@@ -429,7 +436,7 @@ def _entries_from_rows(rows: object, where: str) -> Counter[tuple[str, str]]:
             or isinstance(count, bool)
             or count < 1
         ):
-            raise ValueError(f"{where}: an entry needs a scripts path, scripts module, and count >= 1")
+            raise ValueError(f"{where}: an entry needs a machinery package path, a scripts module, and count >= 1")
         key = (path, module)
         if key in seen:
             raise ValueError(f"{where}: duplicate entry {path} {module}")
