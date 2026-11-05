@@ -39,6 +39,7 @@ from ._config import (
     _MODEL_CACHE,
     _MODEL_CACHE_TTL,
     _PARENT_ENV,
+    BRIDGE_ENTRY,
     REPO_ROOT,
     default_gemini_model,
 )
@@ -181,7 +182,7 @@ def ask_gemini(
     if async_mode:
         print(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
         print("   Gemini will see this in his inbox when he starts a session.")
-        print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge/__main__.py process {msg_id}")
+        print(f"   To trigger manually: .venv/bin/python {BRIDGE_ENTRY} process {msg_id}")
     else:
         if not stdout_only:
             print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
@@ -263,10 +264,14 @@ def _send_gemini_message(content, task_id, msg_type, data, from_llm, from_model,
 
 def _extract_and_print(response: str, extract_tags: list):
     """Extract delimited content from response and print it."""
-    from gemini_output import ALL_TAGS, find_complete_pairs
-    from gemini_output import extract_delimited as _extract
+    # The extractor is product code. Load it through the configured product entry point,
+    # from the product checkout this bridge runs in, never by an import of its name.
+    from scripts.ops.product_entry import load_configured_module
 
-    tags = extract_tags if extract_tags else find_complete_pairs(response, ALL_TAGS)
+    gemini_output = load_configured_module("scripts.gemini_output", product_root=Path(__file__).resolve().parents[2])
+    _extract = gemini_output.extract_delimited
+
+    tags = extract_tags if extract_tags else gemini_output.find_complete_pairs(response, gemini_output.ALL_TAGS)
     if tags:
         print(f"\n{'═' * 40}")
         print(f"EXTRACTED ({', '.join(tags)}):")

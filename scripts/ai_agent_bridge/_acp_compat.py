@@ -18,8 +18,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from agent_runtime.target_admission import COMPAT_TARGETS as _TARGETS  # noqa: F401  (legacy ask names, read-only)
+from scripts.common.repo_root import machinery_path
 
-from ._config import REPO_ROOT
+from ._config import DISPATCH_ENTRY, REPO_ROOT
 
 if TYPE_CHECKING:
     from agent_runtime.target_admission import AdmittedTarget
@@ -133,7 +134,7 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
             raise ValueError(
                 f"AGY ACP supports only its registered model pin {pin!r}; "
                 f"cannot honor explicit model {model!r}. Use "
-                f"`scripts/dispatch.py dispatch --agent agy --model {accepted_model}` "
+                f"`{DISPATCH_ENTRY} dispatch --agent agy --model {accepted_model}` "
                 "to run a model accepted by AGY."
             )
     return model
@@ -152,7 +153,7 @@ def ask_hard_timeout(command_target: str) -> int:
     return ASK_HARD_TIMEOUT_PROFILES.get(command_target, ASK_HARD_TIMEOUT_DEFAULT_S)
 
 
-_FALLBACK_SUBS_PATH = REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
+_FALLBACK_SUBS_PATH = machinery_path("config/agent_fallback_substitutions.yaml")
 
 # Quota substitution (#8499) is decided from typed signals only — the parser's
 # typed failure code, the runner's rate_limited result flag, a rate_limited

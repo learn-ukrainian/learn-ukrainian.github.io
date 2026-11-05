@@ -5,8 +5,8 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from pathlib import Path
 
-from ai_llm.agent_runtime_call import call_agent_with_fallback
-from ai_llm.fallback import CallResult
+from .agent_runtime_call import call_agent_with_fallback
+from .fallback import CallResult
 
 CODEX_MODEL_LADDER = ("gpt-6.1-sol",)
 
