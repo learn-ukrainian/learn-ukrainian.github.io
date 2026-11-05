@@ -40,12 +40,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.common.repo_root import machinery_path
-
 # The machinery package's import name, which is also the directory its files have in checkout
-# paths: from this module's package, or from its unresolved location when run as a file.
+# paths: from this module's package, or from its unresolved location when run as a file. The
+# lane data is found from it rather than through ``common/``: hooks load this module from a
+# minimal copy (its package marker, this file and the lane data).
 _MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
-DATA_FILE = machinery_path("config/driver_lanes.json")
+DATA_FILE = REPO_ROOT / _MACHINERY / "config" / "driver_lanes.json"
 LOCAL_ENV = "LU_DRIVER_LANES_LOCAL"
 KINDS = frozenset({"claude", "codex"})
 SESSION_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*\Z")
