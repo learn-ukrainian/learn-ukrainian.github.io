@@ -25,6 +25,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.repo_root import machinery_path
 from scripts.orchestration.red_ci_known_failures import (
     VALID_STOP_CODES,
     RedCIKnownFailuresValidationError,
@@ -47,9 +48,9 @@ STEP_RECEIPT_V11_SCHEMA_PATH = (
 COMMAND_RECEIPT_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/command-receipt.v1.schema.json"
 )
-SEAT_TAXONOMY_PATH = PROJECT_ROOT / "scripts/config/fleet_communications.yaml"
+SEAT_TAXONOMY_PATH = machinery_path("config/fleet_communications.yaml")
 DEFAULT_EXAMPLE_TRAIL_PATH = (
-    PROJECT_ROOT / "scripts/config/trails/rb3-pr-lifecycle.trail.yaml"
+    machinery_path("config/trails/rb3-pr-lifecycle.trail.yaml")
 )
 DECISION_TABLES_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/decision-tables.v0.schema.json"
@@ -61,13 +62,13 @@ ESTATE_REGISTRY_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/estate-registry.v1.schema.json"
 )
 DEFAULT_DECISION_TABLES_PATH = (
-    PROJECT_ROOT / "scripts/config/trails/decision-tables.v0.yaml"
+    machinery_path("config/trails/decision-tables.v0.yaml")
 )
 DEFAULT_DECISION_TABLES_V1_PATH = (
-    PROJECT_ROOT / "scripts/config/trails/decision-tables.v1.yaml"
+    machinery_path("config/trails/decision-tables.v1.yaml")
 )
 DEFAULT_ESTATE_REGISTRY_PATH = (
-    PROJECT_ROOT / "scripts/config/trails/estate.v1.yaml"
+    machinery_path("config/trails/estate.v1.yaml")
 )
 
 _TRAIL_SCHEMA_PATHS = {

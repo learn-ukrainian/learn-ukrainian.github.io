@@ -47,6 +47,13 @@ from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.task_record_store import parse_task_record, task_record_path
 from scripts.path_safety import assert_delete_target
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MACHINERY = _PACKAGE.partition(".")[0]
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 # Lock files live in ``<git common dir>/<LOCK_DIR_NAME>`` so every checkout of
 # the repository contends on the same file.
 LOCK_DIR_NAME = "lu-worktree-locks"
@@ -1124,7 +1131,7 @@ EXIT_REFUSED = 3
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.orchestration.worktree_claims",
+        prog=f"python -m {_MODULE}",
         description=(
             "Guarded git worktree removal: remove a checkout only when no unfinished task claims it (#8610).\n"
             "Use it from shell and YAML callers instead of raw `git worktree remove`; Python callers\n"
@@ -1137,9 +1144,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "  attribute-helper PATH   Attribute a legacy helper tree after verified output preservation.\n"
             "\n"
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.worktree_claims remove \\\n"
+            f"  .venv/bin/python -m {_MODULE} remove \\\n"
             "      .worktrees/dispatch/codex/impl-123 --owner-task-id impl-123 --reason 'rb2 failed-dispatch cleanup'\n"
-            "  .venv/bin/python -m scripts.orchestration.worktree_claims remove ../learn-ukrainian-wt-817 --json\n"
+            f"  .venv/bin/python -m {_MODULE} remove ../learn-ukrainian-wt-817 --json\n"
             "\n"
             "Outputs:\n"
             "  remove deletes the checkout and its git worktree registration; branch refs are never touched.\n"
@@ -1151,7 +1158,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  3  refused: a guard failed and nothing was removed\n"
             "\n"
             "Related: dispatch holds the same per-worktree lock,\n"
-            "  scripts/dispatcher/git.py (settlement removal),\n"
+            f"  {_MACHINERY}/dispatcher/git.py (settlement removal),\n"
             "  tests/orchestration/test_worktree_removal_invariant.py, issue #8610."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1166,11 +1173,11 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.worktree_claims remove \\\n"
+            f"  .venv/bin/python -m {_MODULE} remove \\\n"
             "      .worktrees/dispatch/codex/impl-123 --owner-task-id impl-123 --reason 'rb2 failed-dispatch cleanup'\n"
-            "  .venv/bin/python -m scripts.orchestration.worktree_claims remove ../learn-ukrainian-wt-817 \\\n"
+            f"  .venv/bin/python -m {_MODULE} remove ../learn-ukrainian-wt-817 \\\n"
             "      --reason 'wt.sh clean 817'\n"
-            "  .venv/bin/python -m scripts.orchestration.worktree_claims remove .worktrees/dispatch/claude/x --json\n"
+            f"  .venv/bin/python -m {_MODULE} remove .worktrees/dispatch/claude/x --json\n"
             "\n"
             "Guards, all checked while holding <public git common dir>/lu-worktree-locks/<key>.lock:\n"
             "  1. PATH is a registered linked worktree of its repository, never the primary checkout.\n"
@@ -1192,7 +1199,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  2  error: git failed to remove PATH, or the arguments are unusable\n"
             "  3  refused: a guard failed and nothing was removed\n"
             "\n"
-            "Related: remove_unclaimed_worktree() in scripts/orchestration/worktree_claims.py; issue #8610."
+            f"Related: remove_unclaimed_worktree() in {_PACKAGE_DIR}/worktree_claims.py; issue #8610."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -1227,9 +1234,9 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.worktree_claims attribute-helper \\\n"
+            f"  .venv/bin/python -m {_MODULE} attribute-helper \\\n"
             "      .worktrees/dispatch/claude/source-author --actor claude-driver --reason 'legacy helper attribution' --json\n"
-            "  .venv/bin/python -m scripts.orchestration.worktree_claims remove \\\n"
+            f"  .venv/bin/python -m {_MODULE} remove \\\n"
             "      .worktrees/dispatch/claude/source-author --json\n"
             "Outputs:\n"
             "  Verified copies in batch_state/preserved/helper-<id>/; a creator audit record under\n"

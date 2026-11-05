@@ -14,7 +14,14 @@ import os
 import sys
 import urllib.error
 import urllib.request
+from pathlib import Path
 from typing import Any, Literal
+
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MACHINERY = _PACKAGE.partition(".")[0]
 
 ENV_SKIP = "LU_SKIP_PLANE_TUNNEL_CHECK"
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
@@ -92,16 +99,16 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/orchestration/plane_tunnel_gate.py\n"
-            "  LU_SKIP_PLANE_TUNNEL_CHECK=1 .venv/bin/python scripts/orchestration/plane_tunnel_gate.py\n\n"
+            f"  .venv/bin/python {_PACKAGE_DIR}/plane_tunnel_gate.py\n"
+            f"  LU_SKIP_PLANE_TUNNEL_CHECK=1 .venv/bin/python {_PACKAGE_DIR}/plane_tunnel_gate.py\n\n"
             "Outputs:\n"
             "  Prints a one-line plane status. Degraded probes still exit 0 so "
             "drivers start on the Mac; they never reopen retired sqlite.\n\n"
             "Exit codes:\n"
             "  0 after a probe (ok, degraded, or skipped); 2 on CLI misuse.\n\n"
             "Related:\n"
-            "  Dispatch: scripts/orchestration/job_host_exec.py\n"
-            "  Fleet: scripts/lib/fleet_comms_cold_start.sh\n"
+            f"  Dispatch: {_PACKAGE_DIR}/job_host_exec.py\n"
+            f"  Fleet: {_MACHINERY}/lib/fleet_comms_cold_start.sh\n"
             "  Issue: #7177\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

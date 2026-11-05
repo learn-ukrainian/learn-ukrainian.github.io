@@ -32,6 +32,12 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Literal
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MACHINERY = _PACKAGE.partition(".")[0]
+
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
@@ -375,7 +381,7 @@ def _build_remote_dispatch_script(
     remote_repo: str,
     payloads: list[tuple[str, str, bytes]],
     extra_exports: list[str],
-    entrypoint: str = "scripts/dispatch.py",
+    entrypoint: str = f"{_MACHINERY}/dispatch.py",
 ) -> bytes:
     """Build the SSH-stdin bash program for a forwarded dispatch.
 
@@ -494,7 +500,7 @@ def forward_dispatch(
         remote_repo=repo,
         extra_exports=extra_exports,
         payloads=payloads,
-        entrypoint=f"scripts/{entrypoint}",
+        entrypoint=f"{_MACHINERY}/{entrypoint}",
     )
     try:
         completed = subprocess.run(
@@ -543,10 +549,10 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/orchestration/job_host_exec.py -- "
-            ".venv/bin/python scripts/dispatch.py dispatch --agent codex "
+            f"  .venv/bin/python {_PACKAGE_DIR}/job_host_exec.py -- "
+            f".venv/bin/python {_MACHINERY}/dispatch.py dispatch --agent codex "
             "--model gpt-6.1-sol --task-id review-123 --prompt-file brief.md --mode read-only\n"
-            "  .venv/bin/python scripts/orchestration/job_host_exec.py "
+            f"  .venv/bin/python {_PACKAGE_DIR}/job_host_exec.py "
             "--host-id host-job -- .venv/bin/python -m pytest tests/orchestration/test_job_host_exec.py\n\n"
             "Outputs:\n"
             "  Runs the remote command in the occupancy checkout. Dispatch argv "
@@ -566,7 +572,7 @@ def build_parser() -> argparse.ArgumentParser:
             "remote command.\n\n"
             "Related:\n"
             "  Occupancy: GET /api/occupancy\n"
-            "  Dispatch: scripts/dispatch.py\n"
+            f"  Dispatch: {_MACHINERY}/dispatch.py\n"
             "  Issue: #7062, #7230\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

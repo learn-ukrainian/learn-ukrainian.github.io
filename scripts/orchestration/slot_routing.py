@@ -45,6 +45,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
+from scripts.common.repo_root import machinery_path
 from scripts.orchestration.fleet_taxonomy import (
     UnknownAreaError,
     resolve_area,
@@ -54,7 +55,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SESSION_DB_PATH = (
     PROJECT_ROOT / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
 )
-DEFAULT_ASSIGNMENTS_PATH = PROJECT_ROOT / "scripts" / "config" / "area_assignments.yaml"
+DEFAULT_ASSIGNMENTS_PATH = machinery_path("config/area_assignments.yaml")
 
 
 @dataclass(frozen=True, slots=True)

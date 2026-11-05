@@ -15,6 +15,11 @@ import sys
 import time
 from pathlib import Path
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 SESSION_QUERY = "SELECT id, parent_id AS parent, time_updated AS updated FROM session ORDER BY time_updated ASC"
 
 
@@ -243,7 +248,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Delete OpenCode session families whose every session is older than N days using the OpenCode CLI.\nFamilies with recent sessions are skipped; use on an idle host and inspect with --dry-run first.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --dry-run\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --days 14\nOutputs: read-only OpenCode CLI queries for sessions and SQLite page statistics; stdout/journal IDs, DB/WAL bytes and freelist pages before/after. Apply deletes via CLI and checkpoints the WAL. Freed pages are reused by later inserts; the main DB need not shrink. VACUUM is intentionally not run.\nExit codes: 0 successful deletion/checkpoint, dry run, or idle skip; 1 CLI, process-check, verification, or checkpoint failure.\nRelated: packaging/systemd/README.md; issue #8920.",
+        epilog=f"Examples:\n  .venv/bin/python {_PACKAGE_DIR}/opencode_session_retention.py --dry-run\n  .venv/bin/python {_PACKAGE_DIR}/opencode_session_retention.py --days 14\nOutputs: read-only OpenCode CLI queries for sessions and SQLite page statistics; stdout/journal IDs, DB/WAL bytes and freelist pages before/after. Apply deletes via CLI and checkpoints the WAL. Freed pages are reused by later inserts; the main DB need not shrink. VACUUM is intentionally not run.\nExit codes: 0 successful deletion/checkpoint, dry run, or idle skip; 1 CLI, process-check, verification, or checkpoint failure.\nRelated: packaging/systemd/README.md; issue #8920.",
     )
     parser.add_argument("--days", type=int, default=7, help="retention age in whole days (default: 7; example: 14)")
     parser.add_argument(

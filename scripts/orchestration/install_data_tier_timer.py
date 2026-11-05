@@ -18,6 +18,11 @@ from pathlib import Path
 
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_DIR = PROJECT_ROOT / "packaging" / "systemd"
 UNITS = ("learn-ukrainian-data-tier.service", "learn-ukrainian-data-tier.timer")
@@ -101,8 +106,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  <project-python> -m scripts.orchestration.install_data_tier_timer --check\n"
-            "  <project-python> -m scripts.orchestration.install_data_tier_timer --apply --enable\n"
+            f"  <project-python> -m {_MODULE} --check\n"
+            f"  <project-python> -m {_MODULE} --apply --enable\n"
             "Outputs: owner-only units in the user systemd directory, replaced by rename; a symlinked unit "
             "file, or a symlink in any directory from home down to the unit directory, is refused; "
             "--apply reloads the user manager.\n"

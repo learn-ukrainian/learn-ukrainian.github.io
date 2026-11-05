@@ -30,6 +30,11 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 TEMPLATE_DIR = PROJECT_ROOT / "packaging" / "systemd"
 UNIT_NAMES = (
     "learn-ukrainian-backup.service",
@@ -151,9 +156,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary
-  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary --apply
+        epilog=f"""Examples:
+  .venv/bin/python {_PACKAGE_DIR}/install_backup_timer.py --repo-root /path/to/primary
+  .venv/bin/python {_PACKAGE_DIR}/install_backup_timer.py --repo-root /path/to/primary --apply
 
 Outputs: preview only by default; --apply writes owner-only unit files, reloads
 systemd, and disables and stops both retired timers. No backup data is removed.
