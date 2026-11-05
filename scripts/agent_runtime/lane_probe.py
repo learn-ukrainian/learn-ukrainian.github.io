@@ -202,8 +202,8 @@ def probe_lanes(agents: list[str], *, cwd: Path, timeout_seconds: int) -> dict[s
 
 
 def build_parser() -> argparse.ArgumentParser:
-    # Named as it was started: by its import name under ``-m``, else by its file.
-    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    entry = f"-m {Path(__file__).absolute().parents[1].name}.agent_runtime.lane_probe"
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,

@@ -49,7 +49,7 @@ class _PromptPath(type(Path())):
 
 # The entry points as a user runs them: the wrapper by its checkout path, this module by its import name.
 _DISPATCH = f"{Path(__file__).absolute().parents[1].name}/dispatch.py"
-_CLI = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(Path(__file__))
+_CLI = f"-m {Path(__file__).absolute().parents[1].name}.dispatcher.cli"
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -114,8 +114,8 @@ def emit_decision(harness: str, allowed: bool, message: str) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    # Named as it was started: by its import name under ``-m``, else by its file.
-    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    # Named canonically, by its checkout path under the unresolved package directory name.
+    entry = f"{Path(__file__).absolute().parents[1].name}/agent_runtime/secret_print_hook.py"
     parser = HookParser(
         description="Check one native shell event with the shared no-print guard.\n"
         "Use as a pre-tool hook; this command does not install harness wiring.",

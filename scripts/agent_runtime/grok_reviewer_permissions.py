@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -86,8 +85,8 @@ def reviewer_tool_allowed(payload: object, review_root: Path) -> bool:
 
 
 def main() -> int:
-    # Named as it was started: by its import name under ``-m``, else by its file.
-    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    entry = f"-m {Path(__file__).absolute().parents[1].name}.agent_runtime.grok_reviewer_permissions"
     try:
         parser = argparse.ArgumentParser(
             description=(

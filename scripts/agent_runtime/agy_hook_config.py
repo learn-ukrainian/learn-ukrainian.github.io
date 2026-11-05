@@ -256,8 +256,8 @@ def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, 
 
 
 def main(argv: list[str] | None = None) -> int:
-    # Named as it was started: by its import name under ``-m``, else by its file.
-    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    entry = f"-m {Path(__file__).absolute().parents[1].name}.agent_runtime.agy_hook_config"
     parser = argparse.ArgumentParser(
         description="Read effective AGY hooks files and refuse missing no-print wiring.",
         epilog=f"Example: .venv/bin/python {entry} --cwd .\n"

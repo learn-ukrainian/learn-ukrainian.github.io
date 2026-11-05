@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 from decimal import Decimal
 from pathlib import Path
 
@@ -74,9 +73,9 @@ def estimate(directory: Path, budget: Decimal, account: str = "api") -> dict:
 
 
 def main(argv: list[str] | None = None) -> int:
-    # Named as they are run: this module by its import name, the dispatcher and catalog by checkout path.
-    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    # Named canonically, under the unresolved name of the package directory this file is in.
     package = Path(__file__).absolute().parents[1].name
+    entry = f"-m {package}.dispatcher.codex_meter"
     dispatch, catalog = f"{package}/dispatch.py", f"{package}/config/model_catalog.yaml"
     parser = argparse.ArgumentParser(
         description="Estimate spend and remaining budget for one bound Codex account's dispatch tasks.\n"

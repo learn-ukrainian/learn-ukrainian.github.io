@@ -645,11 +645,9 @@ def send(
 
 
 def cli_main(argv: list[str] | None = None) -> int:
-    # Named as it was started: by its import name under ``-m``, else by its file; the watcher beside it.
-    if __spec__ is not None:
-        entry, watcher = f"-m {__spec__.name}", f"{__spec__.name.rpartition('.')[0]}._inbox_watch"
-    else:
-        entry, watcher = os.fspath(__file__), os.fspath(Path(__file__).with_name("_inbox_watch.py"))
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    package = Path(__file__).absolute().parents[1].name
+    entry, watcher = f"-m {package}.ai_agent_bridge._ui_codex", f"{package}.ai_agent_bridge._inbox_watch"
     parser = argparse.ArgumentParser(
         prog="ab send-codex-ui",
         description=(
