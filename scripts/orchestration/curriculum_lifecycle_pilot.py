@@ -30,6 +30,8 @@ from scripts.orchestration import curriculum_readiness, prompt_contracts
 # The product data file that names the readiness gates module, relative to the product root.
 READINESS_GATES_FILE = Path("scripts/curriculum/readiness_gates.v1.json")
 _GATES_MAX_BYTES = 4096
+# The product API the pilot uses. A configured module without any of it is refused.
+_GATE_EXPORTS = ("post_build_review", "base_level", "resolve_content_track", "resolve_manifest_module_track")
 
 
 def _gates_module_name(path: Path) -> str:
@@ -81,14 +83,19 @@ def readiness_gates(*, product_root: Path | None = None) -> ModuleType:
     """The product's readiness gates module, loaded when the pilot needs it, never at import.
 
     Its name comes from ``READINESS_GATES_FILE`` under ``product_root`` (an absolute path;
-    default: this checkout), read strictly at each call, and the module must come from that
-    root. A missing or invalid configuration raises (``ImportError`` or ``OSError``) and so
-    refuses the operation that asked for the gates.
+    default: this checkout), read strictly at each call; the module must come from that root
+    and provide every name in ``_GATE_EXPORTS``. A missing or invalid configuration, or a module
+    without that API, raises (``ImportError`` or ``OSError``) and so refuses the operation
+    that asked for the gates.
     """
     if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
         raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
     root = PROJECT_ROOT if product_root is None else product_root
-    return load_configured_module(_gates_module_name(root / READINESS_GATES_FILE), product_root=product_root)
+    module = load_configured_module(_gates_module_name(root / READINESS_GATES_FILE), product_root=product_root)
+    missing = [name for name in _GATE_EXPORTS if not hasattr(module, name)]
+    if missing:
+        raise ConfiguredModuleError(f"{module.__name__} does not provide {', '.join(missing)}", name=module.__name__)
+    return module
 
 
 CONTRACT_ROOT = Path("agents_extensions/shared/curriculum-lifecycle")
@@ -408,6 +415,7 @@ def _validate_matrix_semantics(matrix: Mapping[str, Any], repo_root: Path) -> No
 
 
 def load_matrix(*, repo_root: Path = PROJECT_ROOT, matrix_path: Path = DEFAULT_MATRIX_PATH) -> dict[str, Any]:
+    readiness_gates()  # every pilot operation loads the matrix: refuse first when the gates are unavailable
     path = _repository_backed_file(repo_root, matrix_path)
     matrix = _read_yaml(path)
     _validate(matrix, _repo_file(repo_root, MATRIX_SCHEMA_PATH), "pilot matrix")

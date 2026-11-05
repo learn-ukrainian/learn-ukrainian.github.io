@@ -68,6 +68,8 @@ from scripts.ops.product_entry import ConfiguredModuleError, load_configured_mod
 # The product data file that names the hang-diagnostics module, relative to the product root.
 HANG_DIAGNOSTICS_FILE = Path("scripts/rag/hang_diagnostics.v1.json")
 _GATES_MAX_BYTES = 4096
+# The product API the watchdog uses. A configured module without any of it is refused.
+_DIAGNOSTICS_EXPORTS = ("DUMP_SIGNAL", "ensure_dump_dir", "faulthandler_log_path", "resolve_dump_dir")
 
 
 def _gates_module_name(path: Path) -> str:
@@ -119,14 +121,19 @@ def hang_diagnostics(*, product_root: Path | None = None) -> ModuleType:
     """The product's hang-diagnostics module, loaded when a dump or state write needs it, never at import.
 
     Its name comes from ``HANG_DIAGNOSTICS_FILE`` under ``product_root`` (an absolute path;
-    default: this checkout), read strictly at each call, and the module must come from that
-    root. A missing or invalid configuration raises (``ImportError`` or ``OSError``); ``main``
-    loads it before acting, so such a configuration refuses the whole run as before.
+    default: this checkout), read strictly at each call; the module must come from that root
+    and provide every name in ``_DIAGNOSTICS_EXPORTS``. A missing or invalid configuration, or
+    a module without that API, raises (``ImportError`` or ``OSError``); ``main`` and
+    ``run_once`` load it before acting, so such a configuration refuses the whole run as before.
     """
     if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
         raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
     root = PROJECT_ROOT if product_root is None else product_root
-    return load_configured_module(_gates_module_name(root / HANG_DIAGNOSTICS_FILE), product_root=product_root)
+    module = load_configured_module(_gates_module_name(root / HANG_DIAGNOSTICS_FILE), product_root=product_root)
+    missing = [name for name in _DIAGNOSTICS_EXPORTS if not hasattr(module, name)]
+    if missing:
+        raise ConfiguredModuleError(f"{module.__name__} does not provide {', '.join(missing)}", name=module.__name__)
+    return module
 
 
 UNIT = "learn-ukrainian-sources.service"
@@ -583,6 +590,8 @@ def _recheck_before_signal(config: Config, host: Host, unit: UnitState) -> str |
 
 def run_once(config: Config, host: Host) -> str:
     require_sources_unit(config.unit)
+    # Refuse before any notification, probe, state write or restart when the diagnostics are unavailable.
+    hang_diagnostics()
     state_path = config.dump_dir / STATE_FILE
     state = read_state(state_path)
     now = host.now()
