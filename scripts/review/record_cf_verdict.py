@@ -153,10 +153,10 @@ SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
 # Kimi never reviews. Native Grok requires its own runtime attestation (#9769).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
-# Review rounds per PR, counted on the reviewed heads of the current PR (C-2902);
-# a security-sensitive change gets the elevated budget.
+# Review rounds per PR lineage, counted on the reviewed heads of the current PR (C-2902): three for
+# every change, security-sensitive ones included. A target repository's own policy may declare up to five.
 DEFAULT_REVIEW_ROUNDS = 3
-ELEVATED_REVIEW_ROUNDS = 5
+MAX_DECLARED_REVIEW_ROUNDS = 5
 # A target repository whose own review policy sets another automatic budget declares it here (#12584).
 REVIEW_BUDGET_POLICY = Path(__file__).resolve().parents[2] / "scripts" / "config" / "review_budget_policy.yaml"
 
@@ -2098,7 +2098,7 @@ def _review_budget_policy(policy: Path) -> dict[str, int]:
 
     The whole file is validated, whichever repository is asked about: an integer ``version`` of 1,
     no repeated key at any level, every repository a distinct known owner/name, and every
-    ``review_rounds`` an integer from 1 to ``ELEVATED_REVIEW_ROUNDS``.
+    ``review_rounds`` an integer from 1 to ``MAX_DECLARED_REVIEW_ROUNDS``.
     """
     try:
         document = yaml.load(policy.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
@@ -2112,10 +2112,10 @@ def _review_budget_policy(policy: Path) -> dict[str, int]:
     for name, row in listed.items():
         key = normalize_repository(name) if isinstance(name, str) else "unknown"
         rounds = row.get("review_rounds") if isinstance(row, Mapping) else None
-        if key == "unknown" or key in budgets or type(rounds) is not int or not 1 <= rounds <= ELEVATED_REVIEW_ROUNDS:
+        if key == "unknown" or key in budgets or type(rounds) is not int or not 1 <= rounds <= MAX_DECLARED_REVIEW_ROUNDS:
             raise RecordError(
                 f"review budget unavailable: policy entry {name!r} needs a distinct owner/name and one "
-                f"review_rounds integer from 1 to {ELEVATED_REVIEW_ROUNDS}"
+                f"review_rounds integer from 1 to {MAX_DECLARED_REVIEW_ROUNDS}"
             )
         budgets[key] = rounds
     return budgets
@@ -2130,22 +2130,6 @@ def repository_review_rounds(repository: str, policy: Path | None = None) -> int
     """
     budgets = _review_budget_policy(REVIEW_BUDGET_POLICY if policy is None else policy)
     return budgets.get(normalize_repository(repository), DEFAULT_REVIEW_ROUNDS)
-
-
-def review_round_budget(facts: BranchReviewFacts, repository: str) -> int:
-    """Rounds one PR may spend: 5 on a security-sensitive change, else its repository's budget (C-2902, #12584).
-
-    The tier comes from the branch's own changed paths, the shared rule that
-    raises a security-sensitive target to critical. The review task's
-    caller-supplied risk never raises it: the dispatcher of a review can be
-    the author. Otherwise the budget is the one ``repository``, the PR's target,
-    declares (:func:`repository_review_rounds`), 3 when it declares none.
-    """
-    # Read first: a policy that cannot be read refuses every budget decision, the elevated tier's too.
-    declared = repository_review_rounds(repository)
-    if is_security_sensitive_change(facts.changed_paths, facts.scope_paths):
-        return ELEVATED_REVIEW_ROUNDS
-    return declared
 
 
 def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[int, dict[str, Any]]]:
@@ -2283,13 +2267,11 @@ def require_review_round_within_budget(
     budget: int,
     pr: int,
     prove_merge_only: Callable[[str, str], list[str] | None] | None = None,
-    grant: Callable[[], dict[str, Any] | None] | None = None,
     repair: Callable[[], dict[str, Any] | None] | None = None,
     repair_heads: frozenset[str] = frozenset(),
     dispatched_heads: Callable[[], frozenset[str]] | None = None,
     exemption: Callable[[], dict[str, Any] | None] | None = None,
     recording_seat: tuple[str, str] | None = None,
-    exemption_refusals: Callable[[], Sequence[str]] | None = None,
     recording_run: tuple[str, str] | None = None,
 ) -> dict[str, Any]:
     """Refuse a verdict that would open a review round beyond this PR's budget.
@@ -2308,11 +2290,7 @@ def require_review_round_within_budget(
     A head that only merges the base branch cleanly after the last fully
     approved head consumes no round (:func:`budget_exempt_heads`, proven with
     ``prove_merge_only``); it is checked only once the counted heads reach the
-    budget. A sealed elevated-tier grant (``scripts/review/budget_grant.py``)
-    admits rounds up to its receipt's ``round_allowance`` in total, which is
-    ``ELEVATED_REVIEW_ROUNDS`` at most except for an owner-request grant (the
-    budget plus the rounds the owner's request records): ``grant`` returns its
-    receipt, None when the PR has no grant, or refuses. The lineage's one
+    budget. No grant or request adds a round. The lineage's one
     repair-verification round (``scripts/review/repair_round.py``) is outside
     the budget: ``repair`` returns its receipt or refuses, and ``repair_heads``
     names the heads it already admitted, which count as no budgeted round.
@@ -2340,8 +2318,8 @@ def require_review_round_within_budget(
         return {}
     heads = recorded | (dispatched_heads() if dispatched_heads is not None else frozenset())
     decide = partial(
-        _round_decision, comments, sha, login, budget=budget, pr=pr, prove_merge_only=prove_merge_only, grant=grant,
-        repair=repair, repair_heads=repair_heads, exemption_refusals=exemption_refusals,
+        _round_decision, comments, sha, login, budget=budget, pr=pr, prove_merge_only=prove_merge_only,
+        repair=repair, repair_heads=repair_heads,
     )
     receipt = decide(recorded, heads, exempt_key)
     if uncharged is None or uncharged["head"] == sha or uncharged["head"] in heads:
@@ -2372,10 +2350,8 @@ def _round_decision(
     budget: int,
     pr: int,
     prove_merge_only: Callable[[str, str], list[str] | None] | None,
-    grant: Callable[[], dict[str, Any] | None] | None,
     repair: Callable[[], dict[str, Any] | None] | None,
     repair_heads: frozenset[str],
-    exemption_refusals: Callable[[], Sequence[str]] | None,
 ) -> dict[str, Any]:
     """:func:`require_review_round_within_budget`'s decision for one count of the charged heads."""
     if len(heads) < budget:
@@ -2404,39 +2380,15 @@ def _round_decision(
         f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(counted)} heads{note} and its budget "
         f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(counted) + 1}"
     )
-    refusals: list[str] = []
-    admissions = (
-        # Past the budget; the receipt's own round_allowance bounds the round below.
-        ("budget_grant", grant, True),
-        # Once per lineage: only a retry of the round already admitted at this head may run it again.
-        ("repair_round", repair, not repair_heads - {sha}),
-    )
-    for field, admit, applies in admissions:
-        if admit is None or not applies:
-            continue
+    # Once per lineage: only a retry of the round already admitted at this head may run it again.
+    if repair is not None and not repair_heads - {sha}:
         try:
-            receipt = admit()
+            receipt = repair()
         except RecordError as exc:
-            refusals.append(str(exc))
-            continue
+            raise RecordError(f"{exhausted}; {exc}") from None
         if receipt is not None:
-            if field == "budget_grant" and not set(receipt.get("qualifying_heads", ())).issubset(counted):
-                refusals.append("BUDGET_GRANT_REFUSED[evidence]: credited head is not a charged round")
-                continue
-            if field == "budget_grant" and len(counted) + 1 > receipt["round_allowance"]:
-                refusals.append(f"BUDGET_GRANT_REFUSED[allowance]: grant allows {receipt['round_allowance']} rounds")
-                continue
-            return {field: receipt}
-    if exemption_refusals is not None:
-        refusals.extend(f"capability charge adjustment refused: {item}" for item in exemption_refusals())
-    raise RecordError("; ".join([exhausted, *refusals]))
-
-
-def _budget_grant(**kwargs: Any) -> dict[str, Any] | None:
-    # The grant check builds on this module, so it is imported only when the default budget is spent.
-    from scripts.review.budget_grant import admit_grant_round
-
-    return admit_grant_round(**kwargs)
+            return {"repair_round": receipt}
+    raise RecordError(exhausted)
 
 
 def _repair_round(**kwargs: Any) -> dict[str, Any] | None:
@@ -2452,7 +2404,6 @@ class _Charging:
 
     rounds: dict[str, list[str]]
     exemption: dict[str, Any] | None
-    refusals: tuple[str, ...] = ()
 
 
 def _charging(
@@ -2464,27 +2415,19 @@ def _charging(
     comments: Sequence[Mapping[str, Any]],
     login: str,
     sha: str,
-    changed_paths: Sequence[str],
 ) -> _Charging:
     """Heads other than ``sha`` that a review run on record was dispatched at, with its task ids (#12098).
 
     ``exemption`` is the lineage's one uncharged capability failure (``review_lineage.capability_exemption``)
-    with its head and seat, read from the PR's capability-failure events and its sealed charging
-    adjustments (``budget_grant.capability_charge_adjustments``); ``refusals`` names each adjustment
-    that does not hold. An unreadable task ledger or reply refuses: those heads cannot be counted.
+    with its head and seat, read from the PR's capability-failure events. An unreadable task ledger or
+    reply refuses: those heads cannot be counted.
     """
     # The lineage reader builds on this module, so it is imported only when a new head is counted.
-    from scripts.review.budget_grant import capability_charge_adjustments
     from scripts.review.capability_failure import run_started
     from scripts.review.review_lineage import capability_exemption, dispatched_rounds, lineage_runs
 
     runs = lineage_runs(task_root, repository=repository, number=number, branch=branch)
-    adjustments, refusals = capability_charge_adjustments(
-        repository=repository, number=number, branch=branch, changed_paths=changed_paths, comments=comments,
-        login=login, task_root=task_root, runs=runs,
-    )
-    adjusted = [(item["task"], item["started"]) for item in adjustments]
-    key = capability_exemption(runs=runs, comments=comments, login=login, adjusted=adjusted)
+    key = capability_exemption(runs=runs, comments=comments, login=login)
     exemption = None
     if key is not None:
         run = next(run for run in runs if (run.task_id, run_started(run.record)) == key)
@@ -2493,15 +2436,12 @@ def _charging(
                                             "ukrainian" if is_ukrainian_review(run.record) else "code")
         except RecordError:
             seat = None
-        adjustment = next((item for item in adjustments if (item["task"], item["started"]) == key), None)
         exemption = {
             "task": key[0], "started": key[1], "run_nonce": run.record.get("run_nonce"),
-            "head": run.record.get("worktree_base_sha"), "seat": seat,
-            "source": "charge-adjustment" if adjustment is not None else "capability-failure-event",
-            **({"adjustment": adjustment} if adjustment is not None else {}),
+            "head": run.record.get("worktree_base_sha"), "seat": seat, "source": "capability-failure-event",
         }
-    rounds = dispatched_rounds(runs=runs, comments=comments, login=login, exclude_head=sha, adjusted=adjusted)
-    return _Charging(rounds, exemption, tuple(refusals))
+    rounds = dispatched_rounds(runs=runs, comments=comments, login=login, exclude_head=sha)
+    return _Charging(rounds, exemption)
 
 
 def _repair_receipts(task_root: Path) -> Path:
@@ -2542,34 +2482,17 @@ def budget_admission(
         comments=comments,
         login=login,
         sha=sha,
-        changed_paths=facts.changed_paths,
     ))
     from scripts.review.repair_round import repair_heads
 
-    budget = review_round_budget(facts, repository)
     receipts = _repair_receipts(task_root)
     return require_review_round_within_budget(
         comments,
         sha,
         login,
-        budget=budget,
+        budget=repository_review_rounds(repository),
         pr=number,
         prove_merge_only=_clean_merge_descent_prover(review_root, sha, fetch=fetch),
-        # A change whose paths already give it five rounds needs a grant only past five (owner request).
-        grant=partial(
-            _budget_grant,
-            repository=repository,
-            number=number,
-            branch=branch,
-            changed_paths=facts.changed_paths,
-            comments=comments,
-            login=login,
-            task_root=task_root,
-            head=sha,
-            recording_run=recording_run,
-            repo_root=review_root,
-            budget=budget,
-        ),
         repair=partial(
             _repair_round,
             repository=repository,
@@ -2587,7 +2510,6 @@ def budget_admission(
         dispatched_heads=lambda: frozenset(rounds().rounds),
         exemption=lambda: rounds().exemption,
         recording_seat=recording_seat,
-        exemption_refusals=lambda: rounds().refusals,
         recording_run=recording_run,
     )
 
@@ -3112,29 +3034,14 @@ def record(
             recording_run=(task_id, task["run_nonce"]) if isinstance(task.get("run_nonce"), str) else None,
             recording_seat=(family, "ukrainian" if ukrainian else "code"),
         )
-        granted_route = budget_receipt.get("budget_grant", {}).get("retry_route")
-        if granted_route is not None and {
-            "agent": task.get("agent"), "model": model, "mode": task.get("mode")
-        } != granted_route:
-            raise RecordError("BUDGET_GRANT_REFUSED[capability]: retry route differs from demonstrated route")
-        from scripts.review.budget_grant import p2_round_at, record_p2_round, require_p2_verified
         from scripts.review.repair_round import receipt_at, record_admission, require_repair_verified
 
-        # The lineage's p2 fix round is spent before its verdict exists, whatever that verdict is (#12548).
-        p2_round = budget_receipt.get("budget_grant", {}).get("p2_fix_round")
-        if p2_round is not None:
-            record_p2_round(task_root, p2_round)
-        p2_held = p2_round or p2_round_at(task_root, repository=repository, number=number, branch=branch, head=sha)
         repair = budget_receipt.get("repair_round")
         repaired = repair or receipt_at(
             _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
         )
-        verify = (
-            partial(require_repair_verified, reply, repaired) if repaired is not None
-            else partial(require_p2_verified, reply, p2_held) if p2_held is not None
-            else None
-        )
-        # A repair or p2 fix head stays changes-requested unless the reply attests its delta.
+        verify = partial(require_repair_verified, reply, repaired) if repaired is not None else None
+        # A repair head stays changes-requested unless the reply attests its delta.
         # The note is written even when the mapping was already dropped, so lookup cannot approve the body later.
         # A withheld skeleton stays withheld: rebuilding from the original fields would put the blocked text back.
         if verify is not None and stated != "APPROVED" and not withheld_comment:
@@ -3325,7 +3232,6 @@ def budget_check(
             comments=comments,
             login=login,
             sha=sha,
-            changed_paths=facts.changed_paths,
         )
     )
     receipt = budget_admission(
@@ -3354,14 +3260,12 @@ def budget_check(
         "admitted": True,
         "reviewed_heads": len(heads | set(unrecorded)),
         "unrecorded_rounds": [{"head": head, "tasks": tasks} for head, tasks in sorted(unrecorded.items())],
-        "budget": review_round_budget(facts, repository),
+        "budget": repository_review_rounds(repository),
         "head_already_reviewed": already,
         **receipt,
     }
     if uncharged is not None:
         result["uncharged_capability_failure"] = uncharged
-    if charging().refusals:
-        result["capability_charge_refusals"] = list(charging().refusals)
     return result
 
 
@@ -3401,7 +3305,7 @@ def dispatch_budget_check(
     already has a run opens no round, and while the other dispatched heads stay under the
     repository's budget (:func:`repository_review_rounds`) the round is admitted. From there the
     recorder's own decision at the PR's current head applies (:func:`budget_check`), so the PR's
-    tier, a clean base merge, a designated grant or the lineage's repair round may still admit it.
+    budget, a clean base merge or the lineage's repair round may still admit it.
     A branch with no open PR gets the repository's budget.
     """
     from scripts.review.review_lineage import (
@@ -3452,7 +3356,7 @@ def budget_check_main(argv: list[str]) -> int:
         epilog=f"{RECORDER_EXAMPLES}  {RECORDER_COMMAND} budget-check "
         "--repository learn-ukrainian/learn-ukrainian.github.io --pr 42\n"
         "Outputs: JSON on stdout: admitted, the budget, unrecorded_rounds (heads reviewed with no recorded verdict)\n"
-        "  and any exemption, grant or repair-round receipt.\n"
+        "  and any exemption or repair-round receipt.\n"
         "Exit codes: 0: admitted; 1: refused (the reason names what to escalate); 2: primary bootstrap refused.\n"
         "Related: agents_extensions/shared/skills/review-loop/references/policy.md",
     )
@@ -3595,11 +3499,6 @@ def main(argv: list[str] | None = None) -> int:
         return budget_check_main(argv[1:])
     if argv[:1] == ["republish-withheld"]:
         return republish_withheld_main(argv[1:])
-    if argv[:1] == ["budget-grant"]:
-        # The grant verb builds on this module, so it is imported only when chosen.
-        from scripts.review.budget_grant import main as budget_grant_main
-
-        return budget_grant_main(argv[1:])
     if argv[:1] == ["capability-failure"]:
         # The capability failure verb builds on this module, so it is imported only when chosen.
         from scripts.review.capability_failure import main as capability_failure_main
@@ -3614,8 +3513,6 @@ def main(argv: list[str] | None = None) -> int:
         "--review-mode red_team --red-team-prompt brief.md\n"
         f"  {RECORDER_COMMAND} budget-check --repository owner/name --pr 1\n"
         "    (whether the next review round is admitted, before dispatch; see budget-check --help)\n"
-        f"  {RECORDER_COMMAND} budget-grant digest <ruling.json>\n"
-        "    (an elevated-tier grant ruling's digest; see budget-grant --help)\n"
         f"  {RECORDER_COMMAND} republish-withheld --task-id review-unit --pr 1\n"
         "    (publish the findings of a verdict recorded withheld; see republish-withheld --help)\n"
         f"  {RECORDER_COMMAND} capability-failure --task-id review-unit --pr 1 "

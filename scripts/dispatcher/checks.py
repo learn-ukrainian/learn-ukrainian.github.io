@@ -375,21 +375,13 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
 
 
 def check_review_budget(args, repository: dict, head_sha: str) -> None:
-    """Refuse a review dispatch past its PR's review round budget, recorded verdicts or not (#12098).
-
-    A p2 fix-verification round is spent here, at dispatch, before its reviewer runs (#12548).
-    """
+    """Refuse a review dispatch past its PR's review round budget, recorded verdicts or not (#12098)."""
     from scripts.orchestration.integration_sweep import SweepError
     from scripts.review.record_cf_verdict import RecordError, dispatch_budget_check
 
     try:
-        decision = dispatch_budget_check(repository["github"], number=args.pr, branch=args.branch, head=head_sha,
-                                         task_root=store.tasks_dir())
-        p2_round = ((decision or {}).get("budget_grant") or {}).get("p2_fix_round")
-        if p2_round is not None:
-            from scripts.review.budget_grant import record_p2_round
-
-            record_p2_round(store.tasks_dir(), p2_round)
+        dispatch_budget_check(repository["github"], number=args.pr, branch=args.branch, head=head_sha,
+                              task_root=store.tasks_dir())
     except (RecordError, SweepError, OSError, subprocess.SubprocessError) as exc:
         raise ValueError(f"review dispatch refused: {exc}") from None
 

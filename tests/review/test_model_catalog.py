@@ -1052,22 +1052,14 @@ MUSE_REVIEW_CANDIDATE = {
     "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high --contributor-mode off",
     "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
 }
-def _pop_budget_elevation_role(catalog):
-    """Remove the elevated-tier grant role (cto-7923-adv-clog-sol, item 3b) and return what it added."""
-    role = "review_budget_elevation"
-    # The envelope role is the one advisory_roles entry of the bounded route; it is checked against the
-    # route's advisor, not frozen here, and the elevation's frozen receipt stays what it was.
+def _pop_advisory_roles(catalog):
+    """Remove the ``advisory_roles`` section, which the frozen catalogs predate."""
+    # The envelope role is the one advisory_roles entry, of the bounded route; it is checked against the
+    # route's advisor, not frozen here. The removed budget elevation role left no other entry.
     envelope = catalog["advisory_roles"].pop("bounded_advisory_envelope")
     advisor = catalog["execution_routing"]["sol_advised_bounded"]["advisor"]
     assert (envelope["effort"], envelope["output_fields"]) == (advisor["effort"], advisor["output_fields"])
-    catalog["review_scheduler"]["activity_roles"]["consult"].remove(role)
-    holders = sorted(model_id for model_id, model in catalog["models"].items() if role in model["roles"])
-    for model_id in holders:
-        catalog["models"][model_id]["roles"].remove(role)
-    entry = catalog["advisory_roles"].pop(role)
-    # It is the only advisory role left once the envelope role is popped, so its key goes too.
     assert catalog.pop("advisory_roles") == {}
-    return {"advisory_role": entry, "consult": role, "holders": holders}
 
 
 def with_advisory_roles(frozen):
@@ -1092,7 +1084,7 @@ def with_advisory_roles(frozen):
 def without_advisory_roles(catalog):
     """``with_advisory_roles`` undone: the frozen catalog the overlay was built from."""
     catalog = deepcopy(catalog)
-    _pop_budget_elevation_role(catalog)
+    _pop_advisory_roles(catalog)
     return catalog
 
 
@@ -1117,10 +1109,8 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
-            # The elevated-tier grant role is a consult role held by Sol and Opus; it moves no seat,
-            # route or review ranking. It replaced the retired budget extension role.
-            elevation = _pop_budget_elevation_role(value)
-            assert hashlib.sha256(encode(elevation)).hexdigest() == "c4c6af852a668fafe093e1464504ec8db3e5fcbc17f11fb6eb9b5571c6f08dd0"
+            # The advisory_roles section moves no seat, route or review ranking.
+            _pop_advisory_roles(value)
             # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off
             if value["review_ladders"]["low"] and value["review_ladders"]["low"][-1] == ["muse"]:
                 assert value["review_ladders"]["low"].pop() == ["muse"]
@@ -1148,7 +1138,7 @@ def refresh_current_baseline():
     catalog = plain(expanded_legacy_view())
     catalog["models"].pop("gemini-4-carbon")
     catalog["models"].pop("gpt-6.1-terra")
-    _pop_budget_elevation_role(catalog)
+    _pop_advisory_roles(catalog)
     # Keep the previously approved overlays outside this current-baseline refresh.
     catalog["review_candidates"].pop("openai_red_team_exception")
     catalog["review_scheduler"]["endpoints"]["codex"]["models"] = ["gpt-6.1-sol"]
