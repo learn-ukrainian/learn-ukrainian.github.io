@@ -78,6 +78,9 @@ PATH_REF = re.compile(r"(?<![\w.\-])(?:\./)?scripts/([\w.\-/]*)")
 # Environment variables that would let a source checkout or another repository leak in.
 STRIPPED_ENV_PREFIXES = ("PYTHON", "GIT_", "PYTEST_")
 GIT_TIMEOUT = 1800
+LISTED_SHOWN = 20
+NOT_EXTRACTED = "not-extracted"
+UNKNOWN = "unknown"
 
 
 class Unusable(Exception):
@@ -94,6 +97,7 @@ class CheckResult:
     inspected: dict[str, int] = field(default_factory=dict)
     findings: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    listed: list[str] = field(default_factory=list)  # allowed references reported in full (V4 product references)
 
     def fail(self, message: str) -> None:
         self.findings.append(message)
@@ -107,6 +111,7 @@ class CheckResult:
             "inspected": self.inspected,
             "findings": self.findings,
             "notes": self.notes,
+            "listed": self.listed,
         }
 
 
@@ -1039,9 +1044,14 @@ def docstring_nodes(tree: ast.AST) -> set[int]:
 class OwnershipIndex:
     """Answers who owns a scripts/ module or path, from the frozen ownership map."""
 
-    def __init__(self, ownership: dict[str, str], extracted_tops: set[str]) -> None:
+    def __init__(self, ownership: dict[str, str], extracted_tops: set[str], extracted: Iterable[str] = ()) -> None:
         self.files = {key: owner for key, owner in ownership.items() if key.startswith(OLD_PREFIX)}
         self.extracted_tops = extracted_tops
+        # Machinery per the tree manifest: the scripts/ source paths that are in the final tree.
+        self.extracted = {path for path in extracted if path.startswith(OLD_PREFIX)}
+        self.extracted_dirs = {
+            "/".join(path.split("/")[:depth]) for path in self.extracted for depth in range(1, path.count("/") + 1)
+        }
         self.dir_owners: dict[str, set[str]] = {}
         for key, owner in self.files.items():
             parts = key.split("/")
@@ -1071,6 +1081,36 @@ class OwnershipIndex:
         if path in self.files:
             return self.files[path] == MACHINERY
         return MACHINERY in self.dir_owners.get(path, set())
+
+    def path_reference(self, path: str) -> str:
+        """What a scripts/ path literal names: machinery (in the final tree), product, mixed, or other.
+
+        A file is machinery when the tree manifest extracts it. A directory is machinery when it holds
+        extracted files and no product file, mixed when it holds both (the scripts/ root does).
+        """
+        path = path.rstrip("/")
+        if path in self.extracted:
+            return MACHINERY
+        if path in self.files:
+            return PRODUCT if self.files[path] == PRODUCT else NOT_EXTRACTED
+        if path in self.extracted_dirs:
+            return MIXED if PRODUCT in self.dir_owners.get(path, set()) else MACHINERY
+        owners = self.dir_owners.get(path)
+        if owners:
+            return PRODUCT if owners == {PRODUCT} else NOT_EXTRACTED
+        return UNKNOWN
+
+    def module_reference(self, dotted: str) -> str:
+        """What a scripts.<dotted> module name names, by its longest resolvable prefix (see path_reference)."""
+        parts = dotted.split(".")
+        for depth in range(len(parts), 0, -1):
+            base = OLD_PREFIX + "/".join(parts[:depth])
+            for candidate in (base + "/__init__.py", base + ".py"):
+                if candidate in self.extracted or candidate in self.files:
+                    return self.path_reference(candidate)
+            if base in self.extracted_dirs or base in self.dir_owners:
+                return self.path_reference(base)
+        return UNKNOWN
 
     def product_dependency(self, dotted: str, *, relative: bool = False) -> str | None:
         """Why importing dotted (a name under scripts/) needs product code, or None.
@@ -1151,10 +1191,22 @@ def literal_strings(node: ast.expr | None) -> list[str]:
 
 
 def scan_python_source(
-    rel: str, source: bytes, index: OwnershipIndex, unprefixed: list[str] | None = None
+    rel: str,
+    source: bytes,
+    index: OwnershipIndex,
+    unprefixed: list[str] | None = None,
+    listed: list[str] | None = None,
 ) -> list[str]:
-    """V4 findings for one file. Unprefixed machinery imports, which resolve only while scripts/ is on
-    sys.path and are neither product nor scripts references, are appended to unprefixed when given."""
+    """V4 findings for one file (brief amendment A1).
+
+    Findings: (a) import statements of scripts or of product code, and loader targets inside the
+    lu_machinery namespace that name product code; (b) scripts.<module> references and scripts/ path
+    literals that name a machinery file of the tree manifest (a missed rename). References that name
+    product code (for example a module passed to a subprocess under the product checkout) are appended
+    to listed. Unprefixed machinery imports, which resolve only while scripts/ is on sys.path, are
+    appended to unprefixed.
+    """
+    allowed: list[str] = listed if listed is not None else []
     try:
         tree = ast.parse(source, filename=rel)
     except (SyntaxError, ValueError) as exc:
@@ -1197,6 +1249,20 @@ def scan_python_source(
         module = ".".join([*base, *(rest.split(".") if rest else [])])
         check_from(module, names, line, relative=True)
 
+    def check_reference(target: str, line: int) -> None:
+        """An absolute loader target: scripts.<x> is judged by the string scan; a lu_machinery-qualified
+        target must not name product code; an unprefixed product target is an allowed, listed reference."""
+        if target == "scripts" or target.startswith("scripts."):
+            return
+        if extracted_name(target) is not None:
+            check_import(target, line)
+            return
+        reason = index.product_dependency(target)
+        if reason is not None:
+            allowed.append(f"{rel}:{line}: loader target {target} {reason}")
+        else:
+            check_import(target, line)  # records an unprefixed machinery target in unprefixed
+
     def check_loader(call: ast.Call, called: str) -> None:
         line = call.lineno
         target_node = call_argument(call, 0, "name", "mod_name")
@@ -1209,7 +1275,7 @@ def scan_python_source(
                 base = climb(package_argument(call_argument(call, 1, "package"), rel), level)
                 check_relative(base, target.lstrip("."), [], line, f"relative loader target {target!r}")
             else:
-                check_import(target, line)
+                check_reference(target, line)
         elif called == "__import__":
             level_node = call_argument(call, 4, "level")
             raw_level = 0 if level_node is None else level_node.value if isinstance(level_node, ast.Constant) else None
@@ -1219,12 +1285,16 @@ def scan_python_source(
             elif raw_level > 0:
                 what = f"__import__({target!r}, level={raw_level})"
                 check_relative(relative_base(rel, raw_level), target, fromlist, line, what)
-            else:
+            elif extracted_name(target) is not None:
                 check_from(target, fromlist, line, relative=False)
+            else:
+                check_reference(target, line)
+                for name in fromlist:
+                    check_reference(f"{target}.{name}", line)
         elif called == "resolve_name":
-            check_import(target.split(":", 1)[0], line)
+            check_reference(target.split(":", 1)[0], line)
         else:
-            check_import(target, line)
+            check_reference(target, line)
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -1252,20 +1322,27 @@ def scan_python_source(
                 last = ref.rsplit(".", 1)[-1]
                 if ref.count(".") == 1 and last in FILE_SUFFIXES:
                     continue
-                findings.append(f"{rel}:{node.lineno}: string references module {ref}")
+                owner = index.module_reference(ref[len("scripts.") :])
+                if owner == MACHINERY:
+                    findings.append(f"{rel}:{node.lineno}: string references machinery module {ref} (missed rename)")
+                else:
+                    allowed.append(f"{rel}:{node.lineno}: {owner} module reference {ref}")
             for match in PATH_REF.finditer(text):
                 rest = match.group(1).rstrip("/")
-                if index.path_is_machinery((OLD_PREFIX + rest).rstrip("/")):
-                    shown = f"scripts/{rest}" if rest else "scripts/ (the root, which holds machinery files)"
-                    findings.append(f"{rel}:{node.lineno}: string holds machinery path {shown}")
+                shown = f"scripts/{rest}" if rest else "scripts/"
+                owner = index.path_reference((OLD_PREFIX + rest).rstrip("/"))
+                if owner == MACHINERY:
+                    findings.append(f"{rel}:{node.lineno}: string holds machinery path {shown} (missed rename)")
+                else:
+                    allowed.append(f"{rel}:{node.lineno}: {owner} path reference {shown}")
     return findings
 
 
 def check_v4(inputs: Inputs) -> CheckResult:
-    result = CheckResult("V4", "no scripts module references, machinery scripts/ paths or product imports")
+    result = CheckResult("V4", "no scripts or product imports, no missed machinery renames (A1)")
     tree = tree_paths(inputs.repo, "HEAD")
     tops = {path.split("/")[0].removesuffix(".py") for path in tree}
-    index = OwnershipIndex(inputs.ownership, tops)
+    index = OwnershipIndex(inputs.ownership, tops, (source for source, _dest in inputs.manifest))
     scanned = 0
     unprefixed: list[str] = []
     for rel in sorted(path for path in tree if path.endswith(".py")):
@@ -1274,7 +1351,7 @@ def check_v4(inputs: Inputs) -> CheckResult:
             result.fail(f"{rel}: not a regular file in the working tree")
             continue
         scanned += 1
-        for finding in scan_python_source(rel, path.read_bytes(), index, unprefixed):
+        for finding in scan_python_source(rel, path.read_bytes(), index, unprefixed, result.listed):
             result.fail(finding)
     if unprefixed:
         result.notes.append(
@@ -1812,19 +1889,21 @@ Checks (every finding is printed; nothing stops at the first one):
       must be that file); other files load from their path under a synthetic name. A loaded `scripts` module or
       any module file outside --repo and the interpreter's own prefixes is a finding. Then
       `python -m {DISPATCH_MODULE} --help` must exit 0.
-  V4  static AST scan of every .py file at HEAD: imports of scripts, and any import that needs product code
-      per --map. That covers a product module or namespace package, a product __init__.py that Python
-      initializes on the way to a machinery module, a from-import's product submodule, a relative import
-      resolved under scripts/, a lu_machinery-qualified name mapped back to scripts/, and the literal target
-      of import_module/find_spec (relative ones through a literal package or __package__), __import__
-      (level and fromlist), run_module and pkgutil.resolve_name; a relative target that cannot be resolved
-      statically is a finding. Also
-      `scripts.<module>` in string literals, and string literals naming machinery scripts/ files or
-      directories, the scripts/ root included.
-      Docstrings and comments are prose and are not scanned; paths split into components are not literals.
-      Unprefixed imports of machinery modules (resolved only while scripts/ is on sys.path) are listed as a
-      note, not a finding: they are neither product coupling nor scripts references.
-      Each finding is file:line.
+  V4  static AST scan of every .py file at HEAD (brief amendment A1). Fails only on:
+      (a) an import statement of scripts, or of product code per --map: a product module or namespace
+          package, a product __init__.py that Python initializes on the way to a machinery module, a
+          from-import's product submodule, a relative import resolved under scripts/, or a
+          lu_machinery-qualified name mapped back to scripts/. Loader targets inside the lu_machinery
+          namespace count too: relative import_module/find_spec targets (through a literal package or
+          __package__), __import__ with a level, and lu_machinery-qualified targets. A relative target
+          that cannot be resolved statically is a finding.
+      (b) a `scripts.<module>` reference or `scripts/<path>` literal that names a machinery file of the tree
+          manifest, or a directory holding only such files (a missed rename).
+      References that name product code (for example a module passed to a subprocess that runs under the
+      product checkout), mixed directories such as the scripts/ root, and other unextracted names are
+      allowed: they are listed with file:line and a count (all of them in --report). Unprefixed imports of
+      machinery modules (resolved only while scripts/ is on sys.path) are a note. Docstrings and comments
+      are prose and are not scanned; paths split into components are not literals.
   V5  every --expectations row holds; then {", ".join(RENAME_TOOLS)} --check on --repo report zero pending
       rewrites (idempotence). Their unresolved counts are printed as notes.
   V6  every commit of `git -C SRC log --follow SOURCE -- {DISPATCH_SOURCE}` maps through --commit-map to a commit of
@@ -1953,6 +2032,12 @@ def print_result(result: CheckResult) -> None:
         print(f"  - {finding}")
     for note in result.notes:
         print(f"  note: {note}")
+    if result.listed:
+        print(f"  listed ({len(result.listed)}, allowed; all in --report):")
+        for item in result.listed[:LISTED_SHOWN]:
+            print(f"    {item}")
+        if len(result.listed) > LISTED_SHOWN:
+            print(f"    ... {len(result.listed) - LISTED_SHOWN} more")
 
 
 def run_checks(inputs: Inputs, scratch: Path) -> list[CheckResult]:

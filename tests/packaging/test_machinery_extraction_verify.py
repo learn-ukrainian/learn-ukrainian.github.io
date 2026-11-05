@@ -667,16 +667,20 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     code, checks, output = world.run()
     assert code == 1, output
     text = findings(checks, "V4")
+    allowed = "\n".join(checks["V4"]["listed"])
     assert "lu_machinery/lib/util.py:6: import of product_mod is a product package" in text
     assert "lu_machinery/lib/util.py:7: import of scripts.lib.legacy" in text
-    assert "lu_machinery/lib/util.py:8: string references module scripts.lib.util" in text
-    assert "lu_machinery/lib/util.py:8: string holds machinery path scripts/dispatch.py" in text
-    assert "lu_machinery/lib/util.py:8: string holds machinery path scripts/lib" in text
+    # Amendment A1: a string naming an extracted machinery file is a missed rename; product, mixed and
+    # unextracted names are listed, not failed.
+    assert "lu_machinery/lib/util.py:8: string references machinery module scripts.lib.util (missed rename)" in text
+    assert "lu_machinery/lib/util.py:8: string holds machinery path scripts/dispatch.py (missed rename)" in text
+    assert "lu_machinery/lib/util.py:8: product path reference scripts/product_mod.py" in allowed
+    assert "lu_machinery/lib/util.py:8: mixed path reference scripts/lib" in allowed
     assert "lu_machinery/lib/util.py:12: import of product_ns is a product package" in text  # namespace package
     assert "lu_machinery/lib/util.py:13: import of product_ns is a product package" in text
     assert "lu_machinery/lib/util.py:14: import of lib.product_child is a product package" in text  # product child
     assert "lu_machinery/lib/util.py:15:" not in text  # a machinery child of a machinery package
-    assert "lu_machinery/lib/util.py:16: string holds machinery path scripts/ (the root" in text
+    assert "lu_machinery/lib/util.py:16: mixed path reference scripts/" in allowed  # the root holds product too
     # A machinery module under a product package still runs the product __init__.py first.
     parent = "initializes product package pkg (scripts/pkg/__init__.py)"
     assert f"lu_machinery/lib/util.py:21: import of pkg.worker {parent}" in text
@@ -686,14 +690,16 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     assert "lu_machinery/lib/util.py:25:" not in text  # a relative import of a machinery sibling
     notes = "\n".join(checks["V4"]["notes"])
     assert "lu_machinery/lib/util.py:15: lib.util" in notes  # unprefixed machinery import: a note, not a finding
-    assert "lu_machinery/lib/util.py:26: import of product_ns.child is a product package" in text  # loader call
-    assert f"lu_machinery/lib/util.py:27: import of pkg.worker {parent}" in text
+    # An unprefixed loader target that names product code is an allowed reference under A1.
+    assert "lu_machinery/lib/util.py:26: loader target product_ns.child is a product package" in allowed
+    assert f"lu_machinery/lib/util.py:27: loader target pkg.worker {parent}" in allowed
+    assert "lu_machinery/lib/util.py:26:" not in text
     # Loader calls resolve relative targets, levels, fromlists and lu_machinery-qualified names.
     child = "is a product package (scripts/lib/product_child)"
     assert f"lu_machinery/lib/util.py:32: relative import of scripts.lib.product_child {child}" in text
     assert f"lu_machinery/lib/util.py:33: relative import of scripts.lib.product_child {child}" in text
     assert f"lu_machinery/lib/util.py:34: relative import of scripts.lib.product_child {child}" in text
-    assert f"lu_machinery/lib/util.py:35: import of lib.product_child {child}" in text
+    assert f"lu_machinery/lib/util.py:35: loader target lib.product_child {child}" in allowed
     assert f"lu_machinery/lib/util.py:36: import of lu_machinery.lib.product_child {child}" in text
     assert f"lu_machinery/lib/util.py:37: import of lu_machinery.pkg.worker {parent}" in text
     assert "lu_machinery/lib/util.py:38:" not in text  # a machinery sibling through a loader
@@ -701,6 +707,45 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     assert "lu_machinery/lib/util.py:40: __import__ level is not a literal integer" in text
     assert "scripts/product_mod.py" not in text  # a product path literal is allowed
     assert "lu_machinery/dispatch.py" not in text  # its docstring prose keeps scripts.dispatch
+
+
+def _index(module):
+    return module.OwnershipIndex(OWNERSHIP, {"lu_machinery", "agents_extensions"}, [s for s, _d in MANIFEST])
+
+
+def test_v4_a1_import_statements_of_scripts_or_product_code_fail() -> None:
+    module = _load_verifier()
+    source = b"def later():\n    import product_mod\n    from scripts.build import verify_shippable\n"
+    assert module.scan_python_source("lu_machinery/x.py", source, _index(module)) == [
+        "lu_machinery/x.py:2: import of product_mod is a product package (scripts/product_mod)",
+        "lu_machinery/x.py:3: import of scripts.build",
+    ]
+
+
+def test_v4_a1_references_to_extracted_machinery_files_fail_as_missed_renames() -> None:
+    module = _load_verifier()
+    source = b'TARGET = "scripts.dispatch"\nPATH = "scripts/lib/util.py"\n'
+    assert module.scan_python_source("lu_machinery/x.py", source, _index(module)) == [
+        "lu_machinery/x.py:1: string references machinery module scripts.dispatch (missed rename)",
+        "lu_machinery/x.py:2: string holds machinery path scripts/lib/util.py (missed rename)",
+    ]
+
+
+def test_v4_a1_references_to_product_code_are_listed_not_failed() -> None:
+    module = _load_verifier()
+    source = (
+        b"import subprocess, sys\n"
+        b'subprocess.run([sys.executable, "-m", "scripts.product_mod"], check=True, timeout=60)\n'
+        b'TEMPLATE = "scripts/product_mod.py"\n'
+        b'UNKNOWN = "scripts.build.verify_shippable"\n'
+    )
+    listed: list[str] = []
+    assert module.scan_python_source("lu_machinery/x.py", source, _index(module), listed=listed) == []
+    assert sorted(listed) == [
+        "lu_machinery/x.py:2: product module reference scripts.product_mod",
+        "lu_machinery/x.py:3: product path reference scripts/product_mod.py",
+        "lu_machinery/x.py:4: unknown module reference scripts.build.verify_shippable",
+    ]
 
 
 def test_v5_rename_defect_failed_expectation_rows(world: World) -> None:
