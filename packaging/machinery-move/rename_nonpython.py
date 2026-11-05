@@ -89,6 +89,9 @@ HIDING = re.compile(
     + r"|\$\{[^}\n]*\}|\$\([^)\n]*\)|\$[A-Za-z_][A-Za-z0-9_]*|`[^`\n]*`|\{\{[^}\n]*\}\}|\{%[^%\n]*%\}"
     + r"|\\(?=\S)"
 )
+# The same without the run-time pieces: their bodies stay in the view, so a name hidden inside one
+# (``$(cat $'scr\u0069pts/x.py')``) shows too.
+HIDING_INNER = re.compile(r"\\[ \t]*\r?\n\s*|" + ESCAPE.pattern + r"|\\(?=\S)")
 # A quoted piece glued to a word: the shell drops its quotes and joins it (``scr""ipts``, ``scr"i"pts``).
 # A lone apostrophe (``script's``) is no quoted piece.
 QUOTED_PIECE = re.compile(r"(?<=\S)([\"'])[^\"'\s]*\1|([\"'])[^\"'\s]*\2(?=\S)")
@@ -275,7 +278,9 @@ class ShellLexer:
                 i = comment_until
                 continue
             elif char == "<" and (match := HEREDOC.match(text, i)):
-                word = match.group("qword") or re.sub(r"[\"'\\]", "", match.group("word"))
+                word = match.group("qword") or match.group("word")
+                if match.group("word") and re.search(r"[\"'\\]", word):
+                    word = None  # quotes or backslashes inside the word: not followed; the rest is its body
                 pending.append((word, bool(match.group("dash"))))
                 i = match.end()
                 continue
@@ -700,11 +705,14 @@ class JoinedView:
         return verbatim and end <= view_start + length
 
 
-def joined_view(text: str) -> JoinedView:
+def joined_view(text: str, keep_pieces: bool = False) -> JoinedView:
     """Undo line continuations, escapes, quote removal and run-time pieces (taken as empty), as a shell,
-    a YAML or TOML reader or a template engine would, so that a name split by them shows."""
+    a YAML or TOML reader or a template engine would, so that a name split by them shows.
 
-    events = [(m.start(), m.end(), m.group(0)) for m in HIDING.finditer(text)]
+    With ``keep_pieces`` the run-time pieces stay, so that a name hidden inside one shows instead.
+    """
+
+    events = [(m.start(), m.end(), m.group(0)) for m in (HIDING_INNER if keep_pieces else HIDING).finditer(text)]
     for match in QUOTED_PIECE.finditer(text):
         events += [(match.start(), match.start() + 1, ""), (match.end() - 1, match.end(), "")]  # the two quotes
     pieces: list[str] = []
@@ -728,14 +736,20 @@ def joined_view(text: str) -> JoinedView:
 
 
 def hidden_references(
-    ownership: OwnershipMap, rel: str, text: str, view: JoinedView, seen_starts: set[int], report: Report
+    ownership: OwnershipMap,
+    rel: str,
+    text: str,
+    view: JoinedView,
+    seen_starts: set[int],
+    report: Report,
+    seen: set[int] | None = None,
 ) -> None:
     """A name that only shows once escapes, continuations, quotes or run-time pieces are undone is reported.
 
     Such a name is never rewritten.
     """
 
-    seen: set[int] = set()
+    seen = set() if seen is None else seen  # lines already reported
     for match in rp.word_matches(view.text, ignore_case=True):
         if view.verbatim(match.start(), match.end()) and view.source_offset(match.start()) in seen_starts:
             continue  # an ordinary occurrence; scan_text decides it
@@ -785,7 +799,9 @@ def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: R
     found = list(occurrences(text))
     covered = {o.start for o in found}
     covered |= {m.start() for m in rp.word_matches(text, ignore_case=True)}  # seen raw (case variants too)
-    hidden_references(ownership, rel, text, view, covered, report)
+    reported: set[int] = set()
+    hidden_references(ownership, rel, text, view, covered, report, reported)
+    hidden_references(ownership, rel, text, joined_view(text, keep_pieces=True), covered, report, reported)
     case_variants(ownership, rel, text, kind, report)
     scan = FileScan(ownership, rel, text, kind)
     if not found:

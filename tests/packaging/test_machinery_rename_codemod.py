@@ -1429,3 +1429,44 @@ def test_mixed_package_object_through_a_binding_holds_the_file(tree: tuple[Path,
     assert code == 1
     assert _read(root, "scripts/pipeline/anchor.py") == source
     assert "mixed_package_use" in _kinds(report)
+
+
+# -- PR 12764 review round 3 ----------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "echo \"$(cat $'scr\\u0069pts/dispatch.py')\"\n",
+        "echo `cat $'scr\\u0069pts/dispatch.py'`\n",
+        "echo \"${X:-$'scr\\u0069pts/dispatch.py'}\"\n",
+        'echo "$(cat scr""ipts/dispatch.py)"\n',
+    ],
+)
+def test_r3_f3_names_hidden_inside_a_run_time_piece_are_reported(tree: tuple[Path, Path], text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/tools/inner.sh", M, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/inner.sh")
+
+    assert code == 1
+    assert _read(root, "scripts/tools/inner.sh") == text
+    assert "hidden_reference" in _kinds(report)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "cat <<E'\\'F\nEF\ncat scripts/dispatch.py\nE\\F\n",
+        "cat <<E\"'\"F\nEF\ncat scripts/dispatch.py\nE'F\n",
+    ],
+)
+def test_r3_f6_heredoc_word_with_inner_quotes_keeps_the_body_reported(tree: tuple[Path, Path], text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/tools/delim.sh", M, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/delim.sh")
+
+    assert code == 1
+    assert _read(root, "scripts/tools/delim.sh") == text
+    assert "heredoc_text" in _kinds(report)
