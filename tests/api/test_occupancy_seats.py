@@ -13,6 +13,7 @@ from fastapi.testclient import TestClient
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
+from scripts.api import product_contribution
 from scripts.api.monitor_context import fixture_context
 from scripts.api.occupancy import router as occupancy_router
 from scripts.api.occupancy_local import write_marker
@@ -45,6 +46,15 @@ def _isolate_local_occupants(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
         "scripts.api.occupancy_local.session_streams_db_path",
         lambda: tmp_path / "missing-session-streams.sqlite3",
     )
+    # An app built by an earlier test installs the product's Atlas provider for
+    # the whole process; start every test from the registry-only adapter.
+    monkeypatch.setattr(product_contribution, "_atlas", None)
+
+
+@pytest.fixture
+def _product_host_load(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Read host load from the product's cache, which these tests seed through ``load_mod``."""
+    monkeypatch.setattr(product_contribution, "_atlas", load_mod.ATLAS_PROVIDER)
 
 
 def _open_driver_lease(db_path: Path, *, agent: str = "claude", task_id: str = "infra-drive") -> None:
@@ -65,6 +75,7 @@ def _open_driver_lease(db_path: Path, *, agent: str = "claude", task_id: str = "
     )
 
 
+@pytest.mark.usefixtures("_product_host_load")
 def test_occupancy_session_stream_driver_keeps_low_load_host_busy(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -106,6 +117,7 @@ def test_occupancy_session_stream_driver_keeps_low_load_host_busy(
         load_mod.clear_host_load_cache()
 
 
+@pytest.mark.usefixtures("_product_host_load")
 def test_occupancy_driver_lease_without_host_claim_stays_idle(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
@@ -131,6 +143,7 @@ def test_occupancy_driver_lease_without_host_claim_stays_idle(tmp_path: Path, mo
         load_mod.clear_host_load_cache()
 
 
+@pytest.mark.usefixtures("_product_host_load")
 def test_occupancy_foundry_marker_keeps_low_load_host_busy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
