@@ -1,6 +1,7 @@
 """Codex exec flags and JSONL output, extracted from the existing adapter."""
 
 import copy
+import functools
 import hashlib
 import json
 import os
@@ -17,9 +18,13 @@ from scripts.dispatcher.providers.stream_json import SOURCES_SERVER
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 from scripts.review.product_hooks import attempt_hooks
 
-OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = (
-    attempt_hooks().openai_structured_output_forbidden_keywords() | frozenset({"$schema", "$id"})
-)
+
+@functools.cache
+def _openai_structured_output_forbidden_keywords() -> frozenset[str]:
+    """The product's review-output keywords OpenAI strict mode refuses, read when first needed."""
+    product: frozenset[str] = attempt_hooks().openai_structured_output_forbidden_keywords()
+    return product | frozenset({"$schema", "$id"})
+
 
 # Failure codes (agent_runtime) for a provider that cannot take the run now: usage limits and no capacity.
 _OUT_OF_CAPACITY = frozenset({"rate_limited", "provider_overloaded"})
@@ -79,7 +84,7 @@ def _normalize_codex_strict_node(value: object) -> None:
         return
     if "oneOf" in value and "anyOf" not in value:
         value["anyOf"] = value.pop("oneOf")
-    for keyword in OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS:
+    for keyword in _openai_structured_output_forbidden_keywords():
         value.pop(keyword, None)
     if "$ref" in value:
         reference = value["$ref"]
@@ -101,7 +106,7 @@ def _normalize_codex_strict_node(value: object) -> None:
 
 def _needs_openai_strict(node: object) -> bool:
     if isinstance(node, dict):
-        if bool(OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS & node.keys()):
+        if bool(_openai_structured_output_forbidden_keywords() & node.keys()):
             return True
         for key, value in node.items():
             if key in {"properties", "$defs"} and isinstance(value, Mapping):
