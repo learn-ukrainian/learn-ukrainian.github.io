@@ -1564,21 +1564,35 @@ def resolve_glm_model(model: str, catalog: dict[str, Any] | None = None) -> tupl
     return model_id, source["models"][model_id]["glm_routes"]
 
 
+def _checkout_relative(relative: str) -> str:
+    """The checkout-relative name of machinery file ``relative``.
+
+    It starts with the package's import name, the directory checkout paths use (its unresolved
+    directory when run as a file). This module does not import ``repo_root``: launchers and
+    standalone catalog copies run it without ``common/``.
+    """
+    package = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+    return f"{package}/{relative}"
+
+
 def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
+    launcher = _checkout_relative("launchers/kimi.sh")
+    route_helper = _checkout_relative("lib/kimicc_route.sh")
+    adapter_file = _checkout_relative("agent_runtime/adapters/kimi.py")
     consumers = {
         # BOTH kimi harness branches must resolve aliases through the catalog:
         # the native branch via --resolve-kimi-model --format native (review
         # finding on #5958 r3 — this requirement was narrowed away in the
         # cutover, blinding the guard while the native branch regressed), the
         # claude-code branch via kimicc_configure_route.
-        "scripts/launchers/kimi.sh": (
+        launcher: (
             "kimicc_configure_route",
             "--resolve-kimi-model",
             "--format native",
         ),
-        "scripts/lib/kimicc_route.sh": ("--resolve-kimi-model", "--format kimicc"),
-        "scripts/agent_runtime/adapters/kimi.py": ("kimi_model_aliases()",),
+        route_helper: ("--resolve-kimi-model", "--format kimicc"),
+        adapter_file: ("kimi_model_aliases()",),
     }
     for relative_path, required_snippets in consumers.items():
         path = project_root / relative_path
@@ -1592,13 +1606,13 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
                 f"{relative_path} must resolve Kimi aliases through model_catalog.yaml; missing {missing}"
             )
 
-    kimi_adapter = (project_root / "scripts" / "launchers" / "kimi.sh").read_text(encoding="utf-8")
+    kimi_adapter = (project_root / launcher).read_text(encoding="utf-8")
     if "resolve_kimi_model() {\n  case" in kimi_adapter:
         raise ModelCatalogError("Kimi launcher adapter contains a local Kimi alias case map")
-    adapter = (project_root / "scripts/agent_runtime/adapters/kimi.py").read_text(encoding="utf-8")
+    adapter = (project_root / adapter_file).read_text(encoding="utf-8")
     if "KIMI_MODEL_ALIASES: dict[str, str] = {" in adapter:
         raise ModelCatalogError("KimiAdapter contains a local Kimi alias map")
-    kimicc_helper = (project_root / "scripts" / "lib" / "kimicc_route.sh").read_text(encoding="utf-8")
+    kimicc_helper = (project_root / route_helper).read_text(encoding="utf-8")
     if 'case "$MODEL_ALIAS"' in kimicc_helper:
         raise ModelCatalogError("KimiCC route helper contains a local Kimi alias case map")
 
@@ -1606,7 +1620,7 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
 def validate_glm_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all GLM surfaces stay catalog-backed."""
     consumers = {
-        "scripts/lib/glmcc_route.sh": ("--resolve-glm-model", "--format glmcc"),
+        _checkout_relative("lib/glmcc_route.sh"): ("--resolve-glm-model", "--format glmcc"),
     }
     for relative_path, required_snippets in consumers.items():
         path = project_root / relative_path
@@ -1624,7 +1638,11 @@ def validate_glm_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
 def _main() -> int:
     """Expose catalog-backed model resolution for shell launchers."""
     import argparse
+    import os
 
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    related = f"{_checkout_relative('config/model_catalog.yaml')}; {_checkout_relative('lib/kimicc_route.sh')}"
     parser = argparse.ArgumentParser(
         description=(
             "Resolve routing roles or Kimi/GLM aliases and refuse retired models for shell launchers.\n"
@@ -1633,13 +1651,13 @@ def _main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.model_catalog --resolve-kimi-model k3\n"
-            "  .venv/bin/python -m scripts.review.model_catalog --resolve-glm-model glm --format glmcc\n"
-            "  .venv/bin/python -m scripts.review.model_catalog --check-retired-model claude-fable-5\n"
-            "  .venv/bin/python -m scripts.review.model_catalog --resolve-role bounded_advisor\n"
+            f"  .venv/bin/python {entry} --resolve-kimi-model k3\n"
+            f"  .venv/bin/python {entry} --resolve-glm-model glm --format glmcc\n"
+            f"  .venv/bin/python {entry} --check-retired-model claude-fable-5\n"
+            f"  .venv/bin/python {entry} --resolve-role bounded_advisor\n"
             "Outputs: model id, tab-separated alias route fields, or role-resolution JSON on stdout; no writes.\n"
             "Exit codes: 0 resolved or launcher-admitted; 2 refused model, invalid arguments or unknown route.\n"
-            "Related: scripts/config/model_catalog.yaml; scripts/lib/kimicc_route.sh."
+            f"Related: {related}."
         ),
     )
     group = parser.add_mutually_exclusive_group(required=True)
