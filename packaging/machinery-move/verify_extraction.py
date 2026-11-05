@@ -19,6 +19,29 @@ tool's scratch directory.
 * V9 HEAD is the single transformation commit on top of the rewrite tip, with the frozen tree;
 * HP (``--history-policy``) ``history_policy.py verify`` passes up to the rewrite tip.
 
+V4 is fail-closed: whatever it cannot classify exactly is reported (failed or listed), never treated as
+safe or as prose. Its two invariants:
+
+1. Every lu_machinery-qualified name (in an import statement, a loader target or any string value) and
+   every relative name in a file under lu_machinery/ resolves by its LONGEST prefix that exists in the
+   final tree: an extracted module file, a package or a directory (a namespace package); the bare
+   ``lu_machinery`` is the package. The name is clean when that prefix is the whole name or a module
+   file (the rest is an attribute). Otherwise the next component is a finding when the ownership map
+   lists it (product code, or source the tree manifest does not extract) and an attribute of the
+   package when the map does not list it.
+2. Every string value passes one evaluator once, in its outermost composition. An exact value is judged
+   exactly (invariant 1, and amendment A1 for ``scripts.`` and ``scripts/`` references). A composition
+   with an unknown part is LISTED (file:line, counted in a note) when one of its known literal parts
+   holds ``scripts``, ``lu_machinery``, a manifest path or a component-wise prefix of one; the complete
+   references inside its known parts are still judged. Listed items do not fail the run; the listing is
+   the evaluator's to review. A loader target or fromlist that is not statically known is listed too.
+
+Loaders: the import statement, ``import_module``/``find_spec``, ``__import__``, ``pkgutil.resolve_name``,
+``runpy`` and ``-m`` (their literal targets are string values, so invariant 1 judges them; targets
+assembled from a package, a level or a fromlist are judged by invariant 1 directly). Out of scope: a value
+bound to a variable, attribute or alias is unknown (no constant propagation); docstrings and comments are
+prose.
+
 Run ``verify_extraction.py --help`` for inputs, formats and exit codes.
 """
 
@@ -30,6 +53,7 @@ import contextlib
 import hashlib
 import json
 import os
+import posixpath
 import re
 import secrets
 import shutil
@@ -1080,22 +1104,46 @@ def docstring_nodes(tree: ast.AST) -> set[int]:
     return ids
 
 
-class OwnershipIndex:
-    """Answers who owns a scripts/ module or path, from the frozen ownership map."""
+def _parent_dirs(paths: Iterable[str]) -> set[str]:
+    return {"/".join(path.split("/")[:depth]) for path in paths for depth in range(1, path.count("/") + 1)}
 
-    def __init__(self, ownership: dict[str, str], extracted_tops: set[str], extracted: Iterable[str] = ()) -> None:
+
+class OwnershipIndex:
+    """Answers who owns a scripts/ module or path (the frozen ownership map) and what the final tree holds."""
+
+    def __init__(
+        self,
+        ownership: dict[str, str],
+        extracted_tops: set[str],
+        extracted: Iterable[str] = (),
+        final_tree: Iterable[str] | None = None,
+        manifest_paths: Iterable[str] = (),
+    ) -> None:
         self.files = {key: owner for key, owner in ownership.items() if key.startswith(OLD_PREFIX)}
         self.extracted_tops = extracted_tops
         # Machinery per the tree manifest: the scripts/ source paths that are in the final tree.
         self.extracted = {path for path in extracted if path.startswith(OLD_PREFIX)}
-        self.extracted_dirs = {
-            "/".join(path.split("/")[:depth]) for path in self.extracted for depth in range(1, path.count("/") + 1)
-        }
+        self.extracted_dirs = _parent_dirs(self.extracted)
         self.dir_owners: dict[str, set[str]] = {}
         for key, owner in self.files.items():
             parts = key.split("/")
             for depth in range(1, len(parts)):
                 self.dir_owners.setdefault("/".join(parts[:depth]), set()).add(owner)
+        # The final tree's lu_machinery/ files, written in scripts/ form (the namespace of the map). Without
+        # an explicit final tree the extracted sources' renamed destinations stand for it.
+        tree = list(final_tree) if final_tree is not None else [renamed(path) for path in self.extracted]
+        self.final = {OLD_PREFIX + path[len(NEW_PREFIX) :] for path in tree if path.startswith(NEW_PREFIX)}
+        self.final_dirs = _parent_dirs(self.final)
+        known = {*self.extracted, *(renamed(path) for path in self.extracted), *tree, *manifest_paths} - {ADDITION}
+        self.path_prefixes = {
+            tuple(parts[:depth]) for parts in (path.split("/") for path in known) for depth in range(1, len(parts) + 1)
+        }
+        self.module_prefixes: set[tuple[str, ...]] = set()
+        for path in known:
+            if path.endswith(".py"):
+                parts = path[: -len(".py")].split("/")
+                parts = parts[:-1] if parts[-1] == "__init__" else parts
+                self.module_prefixes.update(tuple(parts[:depth]) for depth in range(1, len(parts) + 1))
 
     def module_owner(self, dotted: str) -> str | None:
         """The owner of the file Python binds for dotted (resolved under scripts/), or mixed, or None.
@@ -1114,12 +1162,6 @@ class OwnershipIndex:
             if owners:
                 return next(iter(owners)) if len(owners) == 1 else MIXED
         return None
-
-    def path_is_machinery(self, path: str) -> bool:
-        path = path.rstrip("/")
-        if path in self.files:
-            return self.files[path] == MACHINERY
-        return MACHINERY in self.dir_owners.get(path, set())
 
     def path_reference(self, path: str) -> str:
         """What a scripts/ path literal names: machinery (in the final tree), product, mixed, or other.
@@ -1171,23 +1213,72 @@ class OwnershipIndex:
             return f"is a {owner} package (scripts/{dotted.replace('.', '/')})"
         return None
 
-    def extracted_dependency(self, dotted: str) -> str | None:
-        """Why an import inside the lu_machinery namespace needs product code, or None.
+    def _final_kind(self, parts: Sequence[str], path: bool) -> str | None:
+        """'file' or 'package' when lu_machinery/<parts> exists in the final tree, else None.
 
-        Inside the extracted tree only extracted files exist. A parent whose __init__.py was not extracted
-        (scripts/tools/__init__.py is product while its modules are machinery) is a namespace package there
-        and runs nothing, so only the target matters: it is a finding when it does not exist in the final
-        tree and the map says it is product code. An attribute import resolves to its existing module.
+        For a module name Python's order applies: a regular package, a module file, then a directory (a
+        namespace package, also when the source's __init__.py was not extracted).
         """
-        base = OLD_PREFIX + "/".join(dotted.split("."))
-        if base + "/__init__.py" in self.extracted or base + ".py" in self.extracted or base in self.extracted_dirs:
-            return None
-        for candidate in (base + "/__init__.py", base + ".py"):
-            if self.files.get(candidate) == PRODUCT:
-                return f"names product code absent from the machinery tree ({candidate})"
-        if self.dir_owners.get(base) == {PRODUCT}:
+        base = OLD_PREFIX + "/".join(parts)
+        if path:
+            return "file" if base in self.final else "package" if base in self.final_dirs else None
+        if base + "/__init__.py" in self.final:
+            return "package"
+        if base + ".py" in self.final:
+            return "file"
+        return "package" if base in self.final_dirs else None
+
+    def _map_entry(self, parts: Sequence[str], path: bool) -> str | None:
+        """Why lu_machinery/<parts>, absent from the final tree, is a dependency: the map lists it, or None."""
+        base = OLD_PREFIX + "/".join(parts)
+        for candidate in (base,) if path else (base + "/__init__.py", base + ".py"):
+            if candidate in self.files:
+                if self.files[candidate] == PRODUCT:
+                    return f"names product code absent from the machinery tree ({candidate})"
+                return f"names {candidate}, which the tree manifest does not extract"
+        owners = self.dir_owners.get(base)
+        if owners == {PRODUCT}:
             return f"names a product package absent from the machinery tree ({base}/)"
+        if owners:
+            return f"names {base}/, which the machinery tree does not contain"
         return None
+
+    def extracted_dependency(self, name: str, *, path: bool = False) -> str | None:
+        """Invariant (1): why a name inside the lu_machinery namespace needs code the final tree lacks, or None.
+
+        name is scripts/-relative: dotted for a module, slash-separated for a path; empty for lu_machinery
+        itself. It resolves by its longest prefix that exists in the final tree; the bare lu_machinery is
+        the package. The name is clean when that prefix is the whole name or a module file (the rest is an
+        attribute). Otherwise the next component is a finding when the ownership map lists it (product
+        code, or source the tree manifest does not extract), and an attribute of the package when the map
+        does not list it (the map lists every scripts/ file of the source, so it names no source code).
+        """
+        parts = [part for part in name.split("/" if path else ".") if part]
+        depth = len(parts)
+        while depth and self._final_kind(parts[:depth], path) is None:
+            depth -= 1
+        if depth == len(parts) or (depth and self._final_kind(parts[:depth], path) == "file"):
+            return None
+        return self._map_entry(parts[: depth + 1], path)
+
+    def names_known_location(self, text: str) -> bool:
+        """Invariant (2): text holds scripts, lu_machinery, a manifest path or a component-wise prefix of one.
+
+        Each path-like token is split into path components ("/") and each of those into dotted components
+        ("."); it qualifies when a component is scripts or lu_machinery, or when some trailing run of its
+        path components, or of one path component's dotted components, is a manifest path or a
+        component-wise prefix of one (source or destination; path or dotted module form).
+        """
+        for token in KNOWN_TOKEN.findall(text):
+            segments = [part for part in token.split("/") if part not in ("", ".")]
+            forms = [(tuple(segments), self.path_prefixes)]
+            forms += [
+                (tuple(part for part in segment.split(".") if part), self.module_prefixes) for segment in segments
+            ]
+            for parts, prefixes in forms:
+                if ROOT_NAMES.intersection(parts) or any(parts[start:] in prefixes for start in range(len(parts))):
+                    return True
+        return False
 
 
 def file_package(rel: str) -> list[str] | None:
@@ -1249,10 +1340,310 @@ def call_argument(call: ast.Call, index: int, *names: str) -> ast.expr | None:
     return found
 
 
-def literal_strings(node: ast.expr | None) -> list[str]:
-    if isinstance(node, ast.List | ast.Tuple | ast.Set):
-        return [value for value in (static_string(item) for item in node.elts) if value is not None]
-    return []
+def literal_strings(node: ast.expr | None) -> list[str] | None:
+    """The exact strings of a literal sequence (an __import__ fromlist), or None when any is unknown."""
+    if node is None or (isinstance(node, ast.Constant) and node.value is None):
+        return []
+    value = Evaluator().value(node)
+    if isinstance(value, tuple) and all(isinstance(item, str) for item in value):
+        return list(value)
+    return None
+
+
+# --------------------------------------------------------------------------- V4 string and path values
+
+# Methods evaluated on an exact receiver; any other operation makes its result unknown.
+STR_METHODS = frozenset(
+    {
+        "join", "format", "replace", "strip", "lstrip", "rstrip", "lower", "upper", "casefold", "title",
+        "capitalize", "swapcase", "removeprefix", "removesuffix", "zfill", "center", "ljust", "rjust",
+        "__add__", "__mod__", "__mul__", "__rmul__", "__format__", "__str__",
+    }
+)  # fmt: skip
+TEMPLATE_METHODS = frozenset({"format", "__format__", "__mod__"})
+PATH_METHODS = frozenset(
+    {"joinpath", "with_name", "with_suffix", "with_stem", "as_posix", "__truediv__", "__rtruediv__"}
+)
+PATH_ATTRS = frozenset({"parent", "name", "stem", "suffix"})
+PATH_CALLS = frozenset({"Path", "PurePath", "PurePosixPath", "PosixPath", "PureWindowsPath", "WindowsPath"})
+PATH_MODULES = frozenset({"path", "posixpath", "ntpath"})
+FUNCTIONS = frozenset({"str", "format", "fspath"})
+ROOT_NAMES = frozenset({OLD_PREFIX.rstrip("/"), NEW_PREFIX.rstrip("/")})
+KNOWN_TOKEN = re.compile(r"[\w.\-/]+")
+LU_MODULE_REF = re.compile(r"(?<![\w.\-/])lu_machinery((?:\.[A-Za-z_]\w*)*)")
+LU_PATH_REF = re.compile(r"(?<![\w.\-])(?:\./)?lu_machinery/([\w.\-/]*)")
+DIGITS = re.compile(r"\d+")
+
+
+@dataclass(frozen=True)
+class Partial:
+    """A composed value with unknown parts: its known text pieces in order, None for each unknown run."""
+
+    parts: tuple[str | None, ...]
+
+
+UNKNOWN_VALUE = Partial((None,))
+
+
+def _parts(value: Any) -> tuple[str | None, ...]:
+    if isinstance(value, Partial):
+        return value.parts
+    if isinstance(value, tuple):  # its items' order in the result is unknown: keep each one separate
+        return (None, *(piece for item in value for piece in (*_parts(item), None)))
+    return (str(value),)
+
+
+def _pieces(pieces: Iterable[str | None]) -> Any:
+    """Merge adjacent known text and adjacent unknown runs; the exact string when nothing is unknown."""
+    merged: list[str | None] = []
+    for piece in pieces:
+        if piece == "":
+            continue
+        if merged and piece is not None and merged[-1] is not None:
+            merged[-1] += piece
+        elif not (merged and piece is None and merged[-1] is None):
+            merged.append(piece)
+    if None not in merged:  # literal text is bounded by the source; computed operations bound themselves
+        return "".join(piece for piece in merged if piece is not None)
+    return Partial(tuple(merged))
+
+
+def _fallback(*values: Any) -> Partial:
+    """An operation outside the evaluated set: its result is unknown, its known operands stay listed apart."""
+    return Partial(_pieces([None, *(piece for value in values for piece in (*_parts(value), None))]).parts)
+
+
+def _exact(value: Any) -> bool:
+    if isinstance(value, tuple):
+        return all(_exact(item) for item in value)
+    return not isinstance(value, Partial)
+
+
+def _bounded(*values: Any, template: bool = False) -> bool:
+    """No operand can make an exact evaluation large: integers stay within STATIC_MAX, and so do the digit
+    runs (field widths and precisions) of every string a format operation reads as a template."""
+    for value in values:
+        if isinstance(value, tuple) and not _bounded(*value, template=template):
+            return False
+        if isinstance(value, int) and abs(value) > STATIC_MAX:
+            return False
+        if template and isinstance(value, str) and any(int(run) > STATIC_MAX for run in DIGITS.findall(value)):
+            return False
+    return True
+
+
+def _result(compute: Any, *operands: Any) -> Any:
+    """compute() when it returns a string or path within STATIC_MAX; otherwise (it raises as Python would,
+    or yields another type) the result is unknown and the operands stay listed apart."""
+    try:
+        value = compute()
+    except Exception:
+        return _fallback(*operands)
+    if isinstance(value, str | PurePosixPath) and len(str(value)) <= STATIC_MAX:
+        return value
+    return _fallback(*operands)
+
+
+def _path_join(values: Sequence[Any]) -> Any:
+    """Join path operands with /; an exact absolute operand discards everything before it."""
+    pieces: list[str | None] = []
+    for value in values:
+        if _exact(value) and isinstance(value, str | PurePosixPath) and str(value).startswith("/"):
+            pieces = [str(value)]
+            continue
+        if pieces and not (isinstance(pieces[-1], str) and pieces[-1].endswith("/")):
+            pieces.append("/")
+        pieces.extend(_parts(value))
+    return _pieces(pieces)
+
+
+def composer(node: ast.AST) -> bool:
+    """A node that composes a string or path value from its operands (the evaluated operations)."""
+    if isinstance(node, ast.BinOp | ast.JoinedStr):
+        return True
+    if isinstance(node, ast.Attribute):
+        return node.attr in PATH_ATTRS and (composer(node.value) or _literal(node.value))
+    if not isinstance(node, ast.Call):
+        return False
+    func = node.func
+    if isinstance(func, ast.Name):
+        return func.id in PATH_CALLS or func.id in FUNCTIONS
+    return isinstance(func, ast.Attribute) and (
+        func.attr in PATH_CALLS or func.attr in FUNCTIONS or func.attr in STR_METHODS or func.attr in PATH_METHODS
+    )
+
+
+def _literal(node: ast.AST) -> bool:
+    return isinstance(node, ast.Constant) and isinstance(node.value, str | bytes)
+
+
+def _path_module(node: ast.AST) -> bool:
+    """os.path, posixpath, ntpath or a bare path module name: the receiver of a path join function."""
+    if isinstance(node, ast.Name):
+        return node.id in PATH_MODULES
+    return isinstance(node, ast.Attribute) and node.attr in PATH_MODULES
+
+
+class Evaluator:
+    """The single reader of string and path values in V4 (invariant 2).
+
+    value() returns an expression's exact value (str, int, tuple or PurePosixPath) or a Partial: known text
+    pieces and unknown runs. Literals, the evaluated operations (BinOp, f-strings, Path(...) and the path
+    module joins, str(), format(), os.fspath(), the methods in STR_METHODS and PATH_METHODS, PATH_ATTRS) and
+    literal sequences are operands; anything else (a name, an attribute, another call, a subscript, a
+    conditional) is an unknown run and is not read. Every operand node is recorded in consumed, so the scan
+    judges each literal once, in the outermost composition that holds it.
+    """
+
+    def __init__(self) -> None:
+        self.consumed: set[int] = set()
+
+    def value(self, node: ast.AST | None, depth: int = 0) -> Any:
+        if node is None or depth > 64:
+            return UNKNOWN_VALUE
+        if isinstance(node, ast.Constant):
+            value = node.value.decode("latin-1") if isinstance(node.value, bytes) else node.value
+            if isinstance(value, bool) or not isinstance(value, str | int):
+                return UNKNOWN_VALUE
+            self.consumed.add(id(node))
+            return value
+        if isinstance(node, ast.Tuple | ast.List | ast.Set):
+            self.consumed.add(id(node))
+            items: list[Any] = []
+            for item in node.elts:
+                if isinstance(item, ast.Starred):
+                    inner = self.value(item.value, depth + 1)
+                    items.extend(inner if isinstance(inner, tuple) else [UNKNOWN_VALUE])
+                else:
+                    items.append(self.value(item, depth + 1))
+            if isinstance(node, ast.Set) and len(items) > 1:  # iteration order is unknown
+                return (_fallback(*items),)
+            return tuple(items)
+        if not composer(node):
+            return UNKNOWN_VALUE
+        self.consumed.add(id(node))
+        if isinstance(node, ast.BinOp):
+            return self._binop(node.op, self.value(node.left, depth + 1), self.value(node.right, depth + 1))
+        if isinstance(node, ast.JoinedStr):
+            pieces: list[str | None] = []
+            for item in node.values:
+                part = (
+                    self._field(item, depth + 1)
+                    if isinstance(item, ast.FormattedValue)
+                    else self.value(item, depth + 1)
+                )
+                pieces.extend(_parts(part))
+            return _pieces(pieces)
+        if isinstance(node, ast.Attribute):
+            receiver = self.value(node.value, depth + 1)
+            if isinstance(receiver, PurePosixPath):
+                return _result(lambda: getattr(receiver, node.attr), receiver)
+            return _fallback(receiver)
+        assert isinstance(node, ast.Call)
+        return self._call(node, depth + 1)
+
+    def _field(self, item: ast.FormattedValue, depth: int) -> Any:
+        value = self.value(item.value, depth)
+        spec = self.value(item.format_spec, depth) if item.format_spec is not None else ""
+        if _exact(value) and isinstance(spec, str) and _bounded(value) and _bounded(spec, template=True):
+            conversions = {
+                -1: lambda: value,
+                115: lambda: str(value),
+                114: lambda: repr(value),
+                97: lambda: ascii(value),
+            }
+            convert = conversions.get(item.conversion, conversions[-1])
+            return _result(lambda: format(convert(), spec), value, spec)
+        if item.conversion == -1 and spec == "":
+            return value
+        return _fallback(value, spec)
+
+    def _binop(self, op: ast.operator, left: Any, right: Any) -> Any:
+        exact = _exact(left) and _exact(right) and _bounded(left, right)
+        if isinstance(op, ast.Div):
+            if not exact:
+                return _path_join([left, right])
+            if isinstance(left, PurePosixPath) or isinstance(right, PurePosixPath):
+                return _result(lambda: PurePosixPath(left) / right, left, right)
+            return _fallback(left, right)  # str / str raises TypeError
+        if isinstance(op, ast.Add) and isinstance(left, tuple) and isinstance(right, tuple):
+            return left + right
+        if isinstance(op, ast.Add) and not isinstance(left, tuple | int) and not isinstance(right, tuple | int):
+            if exact and type(left) is not type(right):
+                return _fallback(left, right)  # str + Path raises TypeError
+            return _pieces([*_parts(left), *_parts(right)])
+        if exact and isinstance(op, ast.Mod) and isinstance(left, str) and _bounded(left, right, template=True):
+            return _result(lambda: left % right, left, right)
+        if exact and isinstance(op, ast.Mult) and {type(left), type(right)} == {str, int}:
+            text, count = (left, right) if isinstance(left, str) else (right, left)
+            if len(text) * max(count, 0) <= STATIC_MAX:
+                return text * count
+        return _fallback(left, right)
+
+    def _call(self, node: ast.Call, depth: int) -> Any:
+        func = node.func
+        args: list[Any] = []
+        for arg in node.args:
+            if isinstance(arg, ast.Starred):
+                inner = self.value(arg.value, depth)
+                args.extend(inner if isinstance(inner, tuple) else [UNKNOWN_VALUE])
+            else:
+                args.append(self.value(arg, depth))
+        kwargs = {keyword.arg: self.value(keyword.value, depth) for keyword in node.keywords if keyword.arg}
+        if any(keyword.arg is None for keyword in node.keywords):
+            kwargs["**"] = UNKNOWN_VALUE
+        operands = [*args, *kwargs.values()]
+        name = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
+        is_function = isinstance(func, ast.Name) or name in PATH_CALLS or name == "fspath"
+        is_function = is_function or (name == "join" and isinstance(func, ast.Attribute) and _path_module(func.value))
+        receiver = self.value(func.value, depth) if isinstance(func, ast.Attribute) and not is_function else None
+        exact = all(_exact(value) for value in operands) and _bounded(*operands)
+        if is_function:
+            if name in PATH_CALLS or name == "join":
+                if kwargs:
+                    return _fallback(*operands)
+                if not exact:
+                    return _path_join(args)
+                join = PurePosixPath if name in PATH_CALLS else posixpath.join
+                return _result(lambda: join(*args), *operands)
+            if len(args) == 1 and not kwargs and name in ("str", "fspath"):
+                value = args[0]
+                if not exact:
+                    return value
+                return _result(lambda: str(value) if isinstance(value, str | int | PurePosixPath) else None, value)
+            if name == "format" and 1 <= len(args) <= 2 and not kwargs and exact and _bounded(*args, template=True):
+                return _result(lambda: format(*args), *operands)
+            return _fallback(*operands)
+        template = name in TEMPLATE_METHODS
+        evaluated = (isinstance(receiver, str) and name in STR_METHODS) or (
+            isinstance(receiver, PurePosixPath) and name in PATH_METHODS
+        )
+        if evaluated and exact and _bounded(receiver, *operands, template=template) and "**" not in kwargs:
+            return _result(lambda: getattr(receiver, name)(*args, **kwargs), receiver, *operands)
+        if (
+            name == "join"
+            and isinstance(receiver, str)
+            and len(args) == 1
+            and not kwargs
+            and isinstance(args[0], tuple)
+        ):
+            pieces: list[str | None] = []
+            for index, item in enumerate(args[0]):
+                pieces.extend(([receiver] if index else []) + list(_parts(item)))
+            return _pieces(pieces)
+        if name in ("joinpath", "__truediv__") and not kwargs:
+            return _path_join([receiver, *args])
+        if name == "__rtruediv__" and len(args) == 1 and not kwargs:
+            return _path_join([args[0], receiver])
+        if name == "__add__" and len(args) == 1 and not kwargs:
+            return _pieces([*_parts(receiver), *_parts(args[0])])
+        return _fallback(receiver, *operands)
+
+
+def static_string(node: ast.AST | None) -> str | None:
+    """The exact string value of an expression built only from literals by the evaluated operations, or None."""
+    value = Evaluator().value(node)
+    return value if isinstance(value, str) else None
 
 
 def scan_python_source(
@@ -1262,14 +1653,15 @@ def scan_python_source(
     unprefixed: list[str] | None = None,
     listed: list[str] | None = None,
 ) -> list[str]:
-    """V4 findings for one file (brief amendment A1).
+    """V4 findings for one file (brief amendment A1 and the module docstring's invariants 1 and 2).
 
-    Findings: (a) import statements of scripts or of product code, and loader targets inside the
-    lu_machinery namespace that name product code; (b) scripts.<module> references and scripts/ path
-    literals that name a machinery file of the tree manifest (a missed rename). References that name
-    product code (for example a module passed to a subprocess under the product checkout) are appended
-    to listed. Unprefixed machinery imports, which resolve only while scripts/ is on sys.path, are
-    appended to unprefixed.
+    Findings: (a) import statements of scripts or of product code, and every name inside the lu_machinery
+    namespace (import statement, loader target, any string value) that invariant 1 resolves to code the
+    final tree lacks; (b) scripts.<module> references and scripts/ path literals that name a machinery
+    file of the tree manifest (a missed rename). References that name product code (for example a module
+    passed to a subprocess under the product checkout), compositions with an unknown part (invariant 2)
+    and loader targets that are not statically known are appended to listed. Unprefixed machinery imports,
+    which resolve only while scripts/ is on sys.path, are appended to unprefixed.
     """
     allowed: list[str] = []
     try:
@@ -1287,7 +1679,7 @@ def scan_python_source(
                 return True
             inner = extracted_name(name)
             if inner is not None:  # lu_machinery.<x> is scripts/<x> in the ownership map
-                return bool(inner) and check_import(inner, line, relative=True, shown=f"import of {name}")
+                return check_import(inner, line, relative=True, shown=f"import of {name}")
         reason = index.extracted_dependency(name) if relative else index.product_dependency(name)
         if reason is None:
             top = name.split(".")[0]
@@ -1314,9 +1706,14 @@ def scan_python_source(
         module = ".".join([*base, *(rest.split(".") if rest else [])])
         check_from(module, names, line, relative=True)
 
-    def scan_text(text: str, line: int) -> None:
-        """A1 (b): scripts.<module> and scripts/<path> in a string value; machinery fails, the rest is listed."""
-        for match in MODULE_REF.finditer(text):
+    def judge_text(text: str, line: int, *, open_left: bool = False, open_right: bool = False) -> None:
+        """Judge every complete reference in a known text; open_*: an unknown run touches that edge, so a
+        reference touching it is incomplete and left to the composition listing."""
+
+        def complete(match: re.Match[str]) -> bool:
+            return not ((open_left and match.start() == 0) or (open_right and match.end() == len(text)))
+
+        for match in filter(complete, MODULE_REF.finditer(text)):
             ref = match.group(0)
             last = ref.rsplit(".", 1)[-1]
             if ref.count(".") == 1 and last in FILE_SUFFIXES:
@@ -1326,7 +1723,7 @@ def scan_python_source(
                 findings.append(f"{rel}:{line}: string references machinery module {ref} (missed rename)")
             else:
                 allowed.append(f"{rel}:{line}: {owner} module reference {ref}")
-        for match in PATH_REF.finditer(text):
+        for match in filter(complete, PATH_REF.finditer(text)):
             rest = match.group(1).rstrip("/")
             shown = f"scripts/{rest}" if rest else "scripts/"
             owner = index.path_reference((OLD_PREFIX + rest).rstrip("/"))
@@ -1334,11 +1731,41 @@ def scan_python_source(
                 findings.append(f"{rel}:{line}: string holds machinery path {shown} (missed rename)")
             else:
                 allowed.append(f"{rel}:{line}: {owner} path reference {shown}")
+        for match in filter(complete, LU_MODULE_REF.finditer(text)):
+            reason = index.extracted_dependency(match.group(1).lstrip("."))
+            if reason is not None:
+                findings.append(f"{rel}:{line}: string reference {match.group(0)} {reason}")
+        for match in filter(complete, LU_PATH_REF.finditer(text)):
+            rest = posixpath.normpath(match.group(1)) if match.group(1) else "."
+            if rest == ".." or rest.startswith("../"):
+                continue  # it leaves lu_machinery/; the scripts/ scan reads what it names
+            reason = index.extracted_dependency("" if rest == "." else rest, path=True)
+            if reason is not None:
+                findings.append(f"{rel}:{line}: string path {match.group(0)} {reason}")
+
+    def judge(value: Any, line: int) -> None:
+        """Invariant 2: an exact value is judged exactly; a composition with an unknown part judges its
+        complete references and is listed when a known part names scripts, lu_machinery or a manifest path."""
+        if isinstance(value, tuple):
+            for item in value:
+                judge(item, line)
+        elif isinstance(value, Partial):
+            pieces = value.parts
+            for position, piece in enumerate(pieces):
+                if piece is not None:
+                    left = position > 0 and pieces[position - 1] is None
+                    right = position + 1 < len(pieces) and pieces[position + 1] is None
+                    judge_text(piece, line, open_left=left, open_right=right)
+            if any(piece is not None and index.names_known_location(piece) for piece in pieces):
+                shown = "".join("<?>" if piece is None else piece for piece in pieces)
+                allowed.append(f"{rel}:{line}: composition with an unknown part {shown!r}")
+        elif isinstance(value, str | PurePosixPath):
+            judge_text(str(value), line)
 
     def check_reference(target: str, line: int, *, assembled: bool = False) -> None:
-        """An absolute loader target. A lu_machinery-qualified target must not name product code; an
-        unprefixed product target is an allowed, listed reference. A scripts.<x> literal is judged by the
-        string scan; a name assembled from a target and its fromlist is judged here the same way (A1 b)."""
+        """An absolute loader target. A literal target is judged with every other string value; a name
+        assembled from a target and its fromlist or package is judged here the same way. An unprefixed
+        product target is an allowed, listed reference (A1)."""
         if target == "scripts" or target.startswith("scripts."):
             if assembled and target != "scripts":
                 owner = index.module_reference(target[len("scripts.") :])
@@ -1348,7 +1775,8 @@ def scan_python_source(
                     allowed.append(f"{rel}:{line}: {owner} loader target {target}")
             return
         if extracted_name(target) is not None:
-            check_import(target, line)
+            if assembled:
+                check_import(target, line)
             return
         reason = index.product_dependency(target)
         if reason is not None:
@@ -1359,9 +1787,14 @@ def scan_python_source(
     def check_loader(call: ast.Call, called: str) -> None:
         line = call.lineno
         target_node = call_argument(call, 0, "name", "mod_name")
+        if target_node is None:
+            return
         target = static_string(target_node)
-        if not isinstance(target, str) or (not target and called != "__import__"):
-            return  # computed targets are beyond a static scan (the rename tools report them)
+        if target is None:
+            allowed.append(f"{rel}:{line}: {called} target is not statically known")
+            return
+        if not target and called != "__import__":
+            return  # an empty name raises ValueError and imports nothing
         if called in ("import_module", "find_spec"):
             if target.startswith("."):
                 level = len(target) - len(target.lstrip("."))
@@ -1382,6 +1815,9 @@ def scan_python_source(
             level_node = call_argument(call, 4, "level")
             raw_level = 0 if level_node is None else level_node.value if isinstance(level_node, ast.Constant) else None
             fromlist = literal_strings(call_argument(call, 3, "fromlist"))
+            if fromlist is None:
+                allowed.append(f"{rel}:{line}: __import__ fromlist is not statically known")
+                fromlist = []
             if not isinstance(raw_level, int) or isinstance(raw_level, bool) or raw_level < 0:
                 findings.append(f"{rel}:{line}: __import__ level is not a literal integer; its owner is unknown")
             elif raw_level > 0:  # an empty name with a level imports the package itself, then the fromlist
@@ -1389,8 +1825,6 @@ def scan_python_source(
                 check_relative(relative_base(rel, raw_level), target, fromlist, line, what)
             elif not target:
                 return  # an empty absolute name raises ValueError and imports nothing
-            elif extracted_name(target) is not None:
-                check_from(target, fromlist, line, relative=False)
             else:
                 check_reference(target, line)
                 for name in fromlist:
@@ -1401,7 +1835,8 @@ def scan_python_source(
         else:
             check_reference(target, line)
 
-    for node in ast.walk(tree):
+    evaluator = Evaluator()
+    for node in ast.walk(tree):  # breadth-first: a composition is read before the operands it holds
         if isinstance(node, ast.Import):
             for alias in node.names:
                 check_import(alias.name, node.lineno)
@@ -1411,137 +1846,30 @@ def scan_python_source(
         elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
             check_from(node.module, [alias.name for alias in node.names], node.lineno, relative=False)
         elif isinstance(node, ast.ImportFrom) and node.level > 0:
-            base = relative_base(rel, node.level)
-            if base is not None:  # outside lu_machinery/ a relative import cannot reach scripts/
+            if file_package(rel) is not None:  # outside lu_machinery/ a relative import cannot reach scripts/
                 names = [alias.name for alias in node.names]
+                base = relative_base(rel, node.level)  # None: the level climbs past lu_machinery, a finding
                 check_relative(base, node.module or "", names, node.lineno, "relative import")
         elif isinstance(node, ast.Call):
             func = node.func
             called = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
             if called in LOADERS:
                 check_loader(node, called)
-        elif isinstance(node, ast.Constant) and isinstance(node.value, str | bytes) and id(node) not in prose:
-            scan_text(node.value if isinstance(node.value, str) else node.value.decode("latin-1"), node.lineno)
-        if isinstance(node, ast.BinOp | ast.JoinedStr | ast.Call) and id(node) not in prose:
-            # "scripts." + "dispatch", "%s.%s" % (...), ROOT / "scripts" / "dispatch.py" and the like name a
-            # module or path that no single literal holds.
-            for value in {static_string(node), static_path(node)} - {None}:
-                scan_text(value, node.lineno)  # type: ignore[arg-type]
+        if id(node) in prose or id(node) in evaluator.consumed:
+            continue
+        if _literal(node) or composer(node):  # the single choke point: every string value passes here once
+            judge(evaluator.value(node), getattr(node, "lineno", 0))
     if listed is not None:
         listed.extend(dict.fromkeys(allowed))
     return list(dict.fromkeys(findings))
-
-
-STR_METHODS = frozenset(
-    {"join", "format", "replace", "strip", "lstrip", "rstrip", "lower", "upper", "removeprefix", "removesuffix"}
-)
-PATH_CALLS = frozenset({"Path", "PurePath", "PurePosixPath", "PosixPath"})
-
-
-def _static(node: ast.AST, depth: int = 0) -> Any:
-    """The value of an expression built only from literals, or None (see static_string)."""
-    if depth > 32:
-        return None
-    if isinstance(node, ast.Constant):
-        return node.value if isinstance(node.value, str | int) and not isinstance(node.value, bool) else None
-    if isinstance(node, ast.Tuple | ast.List):
-        items = [_static(item, depth + 1) for item in node.elts]
-        return tuple(items) if all(item is not None for item in items) else None
-    if isinstance(node, ast.BinOp):
-        left, right = _static(node.left, depth + 1), _static(node.right, depth + 1)
-        if left is None or right is None:
-            return None
-        if isinstance(node.op, ast.Add) and isinstance(left, str) and isinstance(right, str):
-            return left + right
-        if isinstance(node.op, ast.Mod) and isinstance(left, str):
-            return left % right
-        if isinstance(node.op, ast.Mult) and {type(left), type(right)} == {str, int}:
-            text, count = (left, right) if isinstance(left, str) else (right, left)
-            return text * count if len(text) * max(count, 0) <= STATIC_MAX else None
-        return None
-    if isinstance(node, ast.JoinedStr):
-        parts = []
-        for value in node.values:
-            if isinstance(value, ast.FormattedValue):
-                inner = _static(value.value, depth + 1)
-                if inner is None or value.format_spec is not None or value.conversion not in (-1, 115):
-                    return None
-                parts.append(str(inner))
-            else:
-                part = _static(value, depth + 1)
-                if not isinstance(part, str):
-                    return None
-                parts.append(part)
-        return "".join(parts)
-    if isinstance(node, ast.Call) and not any(keyword.arg is None for keyword in node.keywords):
-        args = [_static(arg, depth + 1) for arg in node.args]
-        kwargs = {str(keyword.arg): _static(keyword.value, depth + 1) for keyword in node.keywords}
-        if any(arg is None for arg in args) or any(value is None for value in kwargs.values()):
-            return None
-        func = node.func
-        if isinstance(func, ast.Name) and func.id == "str" and len(args) == 1 and not kwargs:
-            return str(args[0])
-        if isinstance(func, ast.Attribute) and func.attr in STR_METHODS:
-            receiver = _static(func.value, depth + 1)
-            if isinstance(receiver, str):
-                return getattr(receiver, func.attr)(*args, **kwargs)
-    return None
-
-
-def static_string(node: ast.AST | None) -> str | None:
-    """The exact value of a string expression built only from literals: implicit concatenation, + and % and
-    * with literals, f-strings whose fields are literals, and str(), join, format, replace, strip, lower,
-    upper, removeprefix and removesuffix on literals. Anything else (a name, an attribute, another call)
-    makes the value unknown."""
-    if node is None:
-        return None
-    try:
-        value = _static(node)
-    except Exception:  # an expression Python itself would reject is not a reference
-        return None
-    return value if isinstance(value, str) and len(value) <= STATIC_MAX else None
-
-
-def static_path(node: ast.AST) -> str | None:
-    """A path assembled from literals by Path(...), os.path.join(...) or the / operator.
-
-    A non-literal leading part (ROOT / "scripts" / "dispatch.py") becomes an anonymous root, so the
-    literal tail still reads "/scripts/dispatch.py" and names the file.
-    """
-    if isinstance(node, ast.Call) and not node.keywords:
-        func = node.func
-        name = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
-        owner = func.value if isinstance(func, ast.Attribute) else None
-        is_join = name == "join" and isinstance(owner, ast.Attribute) and owner.attr == "path"
-        if name in PATH_CALLS or is_join:
-            tail: list[str] = []
-            anchored = True
-            for arg in node.args:
-                value = static_string(arg)
-                if value is None:
-                    tail, anchored = [], False
-                else:
-                    tail.append(value)
-            if tail:
-                joined = "/".join(tail)
-                return joined if anchored else "/" + joined
-        return None
-    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
-        right = static_string(node.right)
-        if right is None:
-            return None
-        left = static_path(node.left)
-        if left is None:
-            left = static_string(node.left) or ""
-        return left + "/" + right
-    return None
 
 
 def check_v4(inputs: Inputs) -> CheckResult:
     result = CheckResult("V4", "no scripts or product imports, no missed machinery renames (A1)")
     tree = tree_paths(inputs.repo, "HEAD")
     tops = {path.split("/")[0].removesuffix(".py") for path in tree}
-    index = OwnershipIndex(inputs.ownership, tops, (source for source, _dest in inputs.manifest))
+    manifest_paths = [path for row in inputs.manifest for path in row]
+    index = OwnershipIndex(inputs.ownership, tops, (source for source, _dest in inputs.manifest), tree, manifest_paths)
     scanned = 0
     unprefixed: list[str] = []
     for rel in sorted(path for path in tree if path.endswith(".py")):
@@ -1556,6 +1884,13 @@ def check_v4(inputs: Inputs) -> CheckResult:
         result.notes.append(
             f"{len(unprefixed)} unprefixed import(s) of machinery modules resolve only while scripts/ is on "
             f"sys.path (not product coupling; V3 proves the module-level ones): {unprefixed[:20]}"
+        )
+    unresolved = sum(1 for item in result.listed if ": composition with an unknown part " in item)
+    unknown_targets = sum(1 for item in result.listed if "is not statically known" in item)
+    if unresolved or unknown_targets:
+        result.notes.append(
+            f"{unresolved} composition(s) with an unknown part and {unknown_targets} loader argument(s) that are "
+            "not statically known are listed, not failed (invariant 2); review them in the listing"
         )
     result.inspected = {"python_files": scanned}
     return result
@@ -2088,29 +2423,34 @@ Checks (every finding is printed; nothing stops at the first one):
       must be that file); other files load from their path under a synthetic name. A loaded `scripts` module or
       any module file outside --repo and the interpreter's own prefixes is a finding. Then
       `python -m {DISPATCH_MODULE} --help` must exit 0.
-  V4  static AST scan of every .py file at HEAD (brief amendment A1). Fails only on:
+  V4  static AST scan of every .py file at HEAD (brief amendment A1), fail-closed by two invariants (the
+      module docstring states them in full). Fails only on:
       (a) an import statement of scripts, or one that needs product code per --map. For an absolute
           unprefixed name (resolved through scripts/ on sys.path): a product module or namespace package,
-          a product __init__.py Python initializes on the way, or a from-import's product submodule. For a
-          name inside the lu_machinery namespace (relative, or lu_machinery-qualified): a target that does
-          not exist in the final tree and names product code (a parent whose __init__.py was not extracted
-          is a namespace package there and runs nothing). Loader targets inside that namespace count too:
-          relative import_module/find_spec targets (through a literal package or __package__), __import__
-          with a level (an empty name included) and its fromlist, and lu_machinery-qualified targets. A
-          relative target or level that cannot be resolved statically is a finding.
+          a product __init__.py Python initializes on the way, or a from-import's product submodule.
+          Invariant 1, for every name inside the lu_machinery namespace (an import statement, a loader
+          target, -m arguments and any other string value; relative names in files under lu_machinery/):
+          the name resolves by its longest prefix that exists in the final tree (a module file, a package
+          or a directory; bare lu_machinery is the package). After a module file the rest is an
+          attribute; otherwise the next component fails when --map lists it (product code, or source the
+          tree manifest does not extract). Relative targets resolve through a literal package,
+          __package__ or __spec__.parent; __import__ levels (an empty name included) and fromlists are
+          followed. A relative target or level that cannot be resolved statically is a finding.
       (b) a `scripts.<module>` reference or `scripts/<path>` literal that names a machinery file of the tree
-          manifest, or a directory holding only such files (a missed rename): in a string literal; in a
-          string expression built only from literals (+, %, *, f-string fields that are literals, str(),
-          join, format, replace, strip, lower, upper, removeprefix, removesuffix); in a path assembled from
-          literals by Path(...), os.path.join(...) or / (a non-literal leading part such as ROOT counts as a
-          root); in a loader package anchored on scripts.; or assembled from an __import__ target and its
-          fromlist.
+          manifest, or a directory holding only such files (a missed rename), in any string value.
+      Invariant 2, string values: every string value is read once, in its outermost composition, by one
+      evaluator (+, %, *, /, f-strings with conversions and format specs, Path(...) and the other pathlib
+      classes, os.path/posixpath join, str(), format(), os.fspath() and str and path methods such as join,
+      format, replace, strip, joinpath, with_name). An exact value is judged by (a) and (b). A composition
+      with an unknown part is listed when a known literal part holds scripts, lu_machinery, a manifest
+      path or a component-wise prefix of one; complete references inside its known parts are still judged.
       References that name product code (for example a module passed to a subprocess that runs under the
-      product checkout), mixed directories such as the scripts/ root, and other unextracted names are
-      allowed: they are listed with file:line and a count (all of them in --report). Unprefixed imports of
-      machinery modules (resolved only while scripts/ is on sys.path) are a note. Docstrings and comments
-      are prose and are not scanned; values known only at run time (a variable, an attribute, a call to
-      anything else) are beyond a static scan.
+      product checkout), mixed directories such as the scripts/ root, other unextracted names, those
+      compositions and loader targets or fromlists that are not statically known are allowed: they are
+      listed with file:line and counted (all of them in --report); listed items never fail the run.
+      Unprefixed imports of machinery modules (resolved only while scripts/ is on sys.path) are a note.
+      Docstrings and comments are prose and are not scanned; a value bound to a variable, attribute or
+      alias is unknown (no constant propagation).
   V5  every --expectations row holds; then {", ".join(RENAME_TOOLS)} --check on --repo report zero pending
       rewrites (idempotence). Their unresolved counts are printed as notes.
   V6  every commit of `git -C SRC log --follow SOURCE -- {DISPATCH_SOURCE}` maps through --commit-map to a commit of

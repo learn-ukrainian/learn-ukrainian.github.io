@@ -707,8 +707,10 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     assert f"lu_machinery/lib/util.py:34: relative import of scripts.lib.product_child {inside}" in text
     assert f"lu_machinery/lib/util.py:35: loader target lib.product_child {child}" in allowed
     assert f"lu_machinery/lib/util.py:36: import of lu_machinery.lib.product_child {inside}" in text
-    # Inside the lu_machinery namespace an unextracted product __init__.py runs nothing (namespace package).
-    assert "lu_machinery/lib/util.py:37:" not in text
+    # Invariant 1: lu_machinery.pkg has no extracted prefix (the synthetic manifest extracts neither
+    # scripts/pkg/__init__.py nor scripts/pkg/worker.py), so the next component names product code. The
+    # namespace exemption for an extracted directory is test_v4_unextracted_product_init_is_a_namespace_*.
+    assert f"lu_machinery/lib/util.py:37: import of lu_machinery.pkg.worker {absent} (scripts/pkg/__init__.py)" in text
     assert "lu_machinery/lib/util.py:38:" not in text  # a machinery sibling through a loader
     assert "lu_machinery/lib/util.py:39: relative loader target '.x' cannot be resolved statically" in text
     assert "lu_machinery/lib/util.py:40: __import__ level is not a literal integer" in text
@@ -803,6 +805,449 @@ def test_v4_a1_references_to_product_code_are_listed_not_failed() -> None:
         "lu_machinery/x.py:3: product path reference scripts/product_mod.py",
         "lu_machinery/x.py:4: unknown module reference scripts.build.verify_shippable",
     ]
+
+
+# --------------------------------------------------------------------------- V4 invariants, generative
+#
+# The oracles below restate the module docstring's invariants from the synthetic map and tree alone; they
+# share no code with the verifier. Every case is one statement in one file of the lu_machinery namespace.
+
+GEN_OWNERSHIP = {**OWNERSHIP, "scripts/tools/__init__.py": "product", "scripts/tools/agent_watcher.py": "machinery"}
+GEN_EXTRACTED = [*(source for source, _dest in MANIFEST), "scripts/tools/agent_watcher.py"]
+# Invariant 1 inputs, in scripts/-relative components: what exists in the final tree, and what the map lists.
+GEN_FINAL_MODULES = {
+    (): "package",  # the bare lu_machinery
+    ("lib",): "package",
+    ("lib", "util"): "file",
+    ("dispatch",): "file",
+    ("tools",): "package",  # a namespace directory: scripts/tools/__init__.py is product and not extracted
+    ("tools", "agent_watcher"): "file",
+}
+GEN_MAPPED_MODULES = {
+    ("product_mod",), ("lib", "product_child"), ("lib", "legacy"), ("product_ns",), ("product_ns", "child"),
+    ("pkg",), ("pkg", "worker"), ("tools",), ("tools", "agent_watcher"), ("dispatch",), ("lib",), ("lib", "util"),
+}  # fmt: skip
+GEN_FINAL_PATHS = {
+    (): "dir", ("lib",): "dir", ("lib", "__init__.py"): "file", ("lib", "util.py"): "file",
+    ("dispatch.py",): "file", ("tools",): "dir", ("tools", "agent_watcher.py"): "file",
+}  # fmt: skip
+GEN_MAPPED_PATHS = {
+    ("__init__.py",), ("product_mod.py",), ("lib", "product_child.py"), ("lib", "legacy.py"), ("product_ns",),
+    ("product_ns", "child.py"), ("pkg",), ("pkg", "__init__.py"), ("pkg", "worker.py"), ("tools", "__init__.py"),
+}  # fmt: skip
+GEN_TARGETS = [
+    (), ("CONST",), ("lib",), ("lib", "CONST"), ("lib", "util"), ("lib", "util", "VALUE"),
+    ("lib", "util", "VALUE", "deep"), ("dispatch",), ("dispatch", "main"), ("tools",), ("tools", "CONST"),
+    ("tools", "agent_watcher"), ("tools", "agent_watcher", "X"), ("product_mod",), ("product_mod", "VALUE"),
+    ("product_mod", "VALUE", "deep"), ("lib", "product_child"), ("lib", "product_child", "X"), ("lib", "legacy"),
+    ("lib", "legacy", "X"), ("product_ns",), ("product_ns", "child"), ("product_ns", "child", "X"), ("pkg",),
+    ("pkg", "worker"), ("pkg", "worker", "run"),
+]  # fmt: skip
+GEN_PATH_TARGETS = [
+    "", "lib", "lib/util.py", "dispatch.py", "tools", "tools/agent_watcher.py", "product_mod.py",
+    "lib/product_child.py", "lib/legacy.py", "product_ns", "product_ns/child.py", "pkg/worker.py", "data/x.json",
+]  # fmt: skip
+GEN_FILES = {"lu_machinery/x.py": (), "lu_machinery/lib/y.py": ("lib",), "lu_machinery/tools/z.py": ("tools",)}
+GEN_WRAPPERS = [
+    "{}\n",
+    "def later():\n    {}\n",
+    "class Lazy:\n    def method(self):\n        try:\n            {}\n        except ImportError:\n            pass\n",
+]
+GEN_MAX_CASES = 1500
+GEN_MAX_SECONDS = 30.0
+GEN_MANIFEST_PATHS = [path for row in MANIFEST for path in row if path != "-"] + ["scripts/tools/agent_watcher.py"]
+
+
+def _gen_index(module):
+    tops = {"lu_machinery", "agents_extensions"}
+    return module.OwnershipIndex(GEN_OWNERSHIP, tops, GEN_EXTRACTED, manifest_paths=GEN_MANIFEST_PATHS)
+
+
+def oracle_name(parts: tuple[str, ...], kinds: dict, mapped: set, file_kind: str) -> bool:
+    """Invariant 1: True when the name is a finding."""
+    depth = max(depth for depth in range(len(parts) + 1) if parts[:depth] in kinds)
+    if depth == len(parts) or kinds[parts[:depth]] == file_kind:
+        return False
+    return parts[: depth + 1] in mapped
+
+
+def oracle_module(parts: tuple[str, ...]) -> bool:
+    return oracle_name(parts, GEN_FINAL_MODULES, GEN_MAPPED_MODULES, "file")
+
+
+def oracle_path(path: str) -> bool:
+    parts = tuple(part for part in path.split("/") if part)
+    return oracle_name(parts, GEN_FINAL_PATHS, GEN_MAPPED_PATHS, "file")
+
+
+GEN_SCRIPTS_MODULES = {  # the map's modules and packages: True when the tree manifest extracts machinery there
+    ("dispatch",): True, ("lib",): True, ("lib", "util"): True, ("tools", "agent_watcher"): True,
+    ("lib", "legacy"): False, ("lib", "product_child"): False, ("product_mod",): False, ("pkg",): False,
+    ("pkg", "worker"): False, ("tools",): False, ("product_ns",): False, ("product_ns", "child"): False,
+}  # fmt: skip
+
+
+def oracle_scripts_module(parts: tuple[str, ...]) -> bool:
+    """A1 (b): scripts.<name> fails when its longest map prefix is extracted machinery (a package's
+    __init__.py included: scripts.lib.CONST reads the extracted scripts/lib/__init__.py)."""
+    for depth in range(len(parts), 0, -1):
+        if parts[:depth] in GEN_SCRIPTS_MODULES:
+            return GEN_SCRIPTS_MODULES[parts[:depth]]
+    return False
+
+
+def oracle_scripts_path(path: str) -> bool:
+    """A1 (b): scripts/<path> fails when it names an extracted machinery file (lib/ and tools/ also hold product)."""
+    return path in {"lib/util.py", "dispatch.py", "tools/agent_watcher.py", "lib/__init__.py"}
+
+
+def oracle_composition_listed(known: str) -> bool:
+    """Invariant 2: a known part holds scripts, lu_machinery, a manifest path or a component-wise prefix of one."""
+    prefixes = set()
+    for path in GEN_MANIFEST_PATHS + [p.replace("scripts/", "lu_machinery/", 1) for p in GEN_MANIFEST_PATHS]:
+        parts = path.split("/")
+        prefixes |= {tuple(parts[:depth]) for depth in range(1, len(parts) + 1)}
+        if path.endswith(".py"):
+            dotted = path[:-3].split("/")
+            dotted = dotted[:-1] if dotted[-1] == "__init__" else dotted
+            prefixes |= {tuple(dotted[:depth]) for depth in range(1, len(dotted) + 1)}
+    words = [word for word in known.replace("/", " ").replace(".", " ").split() if word]
+    if {"scripts", "lu_machinery"} & set(words):
+        return True
+    tails = [tuple(part for part in known.split("/") if part)]
+    tails.append(tuple(part for part in known.split(".") if part))
+    return any(tail[start:] in prefixes for tail in tails for start in range(len(tail)))
+
+
+def _dotted(*parts: str) -> str:
+    return ".".join(part for part in parts if part)
+
+
+def _absolute_module_cases(parts: tuple[str, ...]) -> list[tuple[str, bool]]:
+    """Every name form and loader for lu_machinery.<parts>, and literal compositions of the name."""
+    name = _dotted("lu_machinery", *parts)
+    tail = ".".join(parts)
+    expected = oracle_module(parts)
+    cases = [
+        (f"value = importlib.import_module({name!r})", expected),
+        (f"value = importlib.util.find_spec({name!r})", expected),
+        (f"value = __import__({name!r})", expected),
+        (f"value = pkgutil.resolve_name({name!r})", expected),
+        (f"value = runpy.run_module({name!r})", expected),
+        (f"value = subprocess.run([sys.executable, '-m', {name!r}], check=False)", expected),
+    ]
+    if parts:
+        parent = _dotted("lu_machinery", *parts[:-1])
+        cases += [
+            (f"import {name}", expected),
+            (f"from {parent} import {parts[-1]}", expected),
+            (
+                f"from {parent} import ({parts[-1]} as alias, other_name)",
+                expected or oracle_module((*parts[:-1], "other_name")),
+            ),
+            (f"value = __import__({parent!r}, globals(), locals(), [{parts[-1]!r}], 0)", expected),
+            (f"value = __import__({parent!r}, fromlist=({parts[-1]!r},))", expected),
+            (f"value = importlib.import_module('lu_machinery.' + {tail!r})", expected),
+            (f'value = f"lu_machinery.{{{tail!r}}}"', expected),
+            (f"value = '.'.join(['lu_machinery', *{list(parts)!r}])", expected),
+            (f"value = '%s.%s' % ('lu_machinery', {tail!r})", expected),
+            (f"value = '{{}}.{{}}'.format('lu_machinery', {tail!r})", expected),
+            (f"value = f\"{{'lu_machinery'}}.{{{tail!r}:s}}\"", expected),
+            (f"value = str('lu_machinery').__add__('.' + {tail!r})", expected),
+        ]
+        if len(parts) > 1:  # pkgutil's module:attribute spelling imports only the module part
+            module_part = _dotted("lu_machinery", *parts[:-1])
+            cases.append(
+                (f"value = pkgutil.resolve_name({module_part + ':' + parts[-1]!r})", oracle_module(parts[:-1]))
+            )
+    return cases
+
+
+def _relative_module_cases(rel: str, package: tuple[str, ...], parts: tuple[str, ...]) -> list[tuple[str, str, bool]]:
+    """Relative spellings of lu_machinery.<parts> from a file whose package is package, at every level up to
+    the namespace root (lu_machinery/tools/z.py stops at level 1: its level 2 equals lu_machinery/lib/y.py's)."""
+    cases = []
+    top = 1 if package == ("tools",) else len(package) + 1
+    for level in range(1, top + 1):
+        base = package[: len(package) - (level - 1)]
+        if parts[: len(base)] != base or len(parts) <= len(base):
+            continue
+        rest = parts[len(base) :]
+        dots = "." * level
+        anchor = _dotted("lu_machinery", *package)  # import_module climbs from the package it is given
+        expected = oracle_module(parts)
+        cases += [
+            (rel, f"from {dots}{'.'.join(rest[:-1])} import {rest[-1]}", expected),
+            (rel, f"from {dots}{'.'.join(rest)} import attribute", oracle_module((*parts, "attribute"))),
+            (rel, f"value = importlib.import_module({dots + '.'.join(rest)!r}, __package__)", expected),
+            (rel, f"value = importlib.import_module({dots + '.'.join(rest)!r}, {anchor!r})", expected),
+            (rel, f"value = importlib.util.find_spec({dots + '.'.join(rest)!r}, package={anchor!r})", expected),
+            (
+                rel,
+                f"value = __import__({'.'.join(rest[:-1])!r}, globals(), locals(), [{rest[-1]!r}], {level})",
+                expected,
+            ),
+            (rel, f"value = __import__({'.'.join(rest)!r}, globals(), locals(), [], {level})", expected),
+        ]
+    return cases
+
+
+def _scripts_module_cases(parts: tuple[str, ...]) -> list[tuple[str, bool]]:
+    """A1 (b) through the same evaluator: scripts.<parts> as a literal, a loader target and compositions."""
+    if not parts:
+        return []
+    name, tail = _dotted("scripts", *parts), ".".join(parts)
+    expected = oracle_scripts_module(parts)
+    return [
+        (f"value = {name!r}", expected),
+        (f"value = subprocess.run([sys.executable, '-m', {name!r}], check=False)", expected),
+        (f"value = 'scripts.' + {tail!r}", expected),
+        (f"value = f\"{{'scripts'}}.{{{tail!r}:s}}\"", expected),
+        (f"value = '{{}}.{{}}'.format('scripts', {tail!r})", expected),
+    ]
+
+
+def _path_cases(root: str, path: str) -> list[tuple[str, bool]]:
+    """Every path composition of root/path; an empty path is the root itself."""
+    expected = oracle_path(path) if root == "lu_machinery" else oracle_scripts_path(path)
+    full = f"{root}/{path}" if path else f"{root}/"
+    cases = [(f"value = {full!r}", expected), (f"value = runpy.run_path({full!r})", expected)]
+    if path:
+        cases += [
+            (f"value = Path({root!r}) / {path!r}", expected),
+            (f"value = Path({root!r}) / Path({path!r})", expected),
+            (f"value = Path(Path({root!r}), {path!r})", expected),
+            (f"value = Path({root!r}, {path!r})", expected),
+            (f"value = Path({root!r}).joinpath({path!r})", expected),
+            (f"value = os.path.join({root!r}, {path!r})", expected),
+            (f"value = {root + '/'!r} + {path!r}", expected),
+            (f'value = f"{{{root!r}}}/{{{path!r}:s}}"', expected),
+            (f"value = '/'.join([{root!r}, {path!r}])", expected),
+            (f"value = ROOT / {root!r} / {path!r}", expected),  # an unknown leading root keeps the literal tail
+        ]
+    return cases
+
+
+COMPOSITION_KNOWN = [
+    "scripts", "scripts/", "scripts.", "a/scripts/", "lu_machinery", "lu_machinery/", "lu_machinery.lib.",
+    "agents_extensions", "agents_extensions/shared", "x/scripts", "docs", "data/",
+]  # fmt: skip
+COMPOSITION_TEMPLATES = [
+    "Path(name) / {k}", "Path({k}) / name", "Path(Path({k}), name)", "os.path.join(name, {k})",
+    "os.path.join({k}, name)", "{k} + name", "name + {k}", "f'{{name}}{{{k}}}'", "f'{{{k}}}{{name}}'",
+    "'%s%s' % ({k}, name)", "'{{}}{{}}'.format({k}, name)", "'/'.join([{k}, name])", "Path({k}).joinpath(name)",
+]  # fmt: skip
+
+
+def _generated_cases() -> list[tuple[str, str, str, bool]]:
+    """(file, statement, kind, expected) where kind is exact (expected: a finding) or partial (expected: listed)."""
+    cases: list[tuple[str, str, str, bool]] = []
+    for parts in GEN_TARGETS:
+        cases += [("lu_machinery/x.py", stmt, "exact", want) for stmt, want in _absolute_module_cases(parts)]
+        cases += [("lu_machinery/lib/y.py", stmt, "exact", want) for stmt, want in _scripts_module_cases(parts)]
+        for rel, package in GEN_FILES.items():
+            cases += [(r, s, "exact", w) for r, s, w in _relative_module_cases(rel, package, parts)]
+    for root in ("lu_machinery", "scripts"):
+        for path in GEN_PATH_TARGETS:
+            cases += [("lu_machinery/x.py", stmt, "exact", want) for stmt, want in _path_cases(root, path)]
+    for known in COMPOSITION_KNOWN:
+        for template in COMPOSITION_TEMPLATES:
+            stmt = "value = " + template.format(k=repr(known))
+            cases.append(("lu_machinery/x.py", stmt, "partial", oracle_composition_listed(known)))
+    return cases
+
+
+def test_v4_invariants_hold_for_every_generated_combination() -> None:
+    """Class-first proof: every combination of name form, relative level, attribute suffix, loader, wrapper
+    and literal composition obeys invariants 1 and 2 (module docstring), within the stated case and time bounds."""
+    import time
+
+    module = _load_verifier()
+    index = _gen_index(module)
+    cases = _generated_cases()
+    assert 1000 <= len(cases) <= GEN_MAX_CASES, len(cases)
+    started = time.monotonic()
+    wrong: list[str] = []
+    for number, (rel, statement, kind, expected) in enumerate(cases):
+        wrapper = GEN_WRAPPERS[number % len(GEN_WRAPPERS)]
+        indent = wrapper.split("{}")[0].rsplit("\n", 1)[-1]
+        source = wrapper.format(statement.replace("\n", "\n" + indent))
+        listed: list[str] = []
+        found = module.scan_python_source(rel, source.encode(), index, listed=listed)
+        if kind == "exact":
+            ok = bool(found) == expected
+        else:
+            composed = [item for item in listed if ": composition with an unknown part " in item]
+            ok = not found and bool(composed) == expected
+        if not ok:
+            wrong.append(f"{rel}: {statement!r} ({kind}, expected {expected}): {found} {listed}")
+    elapsed = time.monotonic() - started
+    assert wrong == [], f"{len(wrong)} of {len(cases)} cases break the invariant:\n" + "\n".join(wrong[:40])
+    assert elapsed < GEN_MAX_SECONDS, elapsed
+
+
+# Every V4 probe of review rounds 1-5, fixed: (file, source, expected findings substring or None, listed substring).
+REVIEWER_PROBES = [
+    # Round 1: namespace packages, imported children, the scripts/ root.
+    (
+        "lu_machinery/x.py",
+        "def f():\n    from product_ns import child\n",
+        "import of product_ns is a product package",
+        None,
+    ),
+    ("lu_machinery/x.py", "def f():\n    import product_ns\n", "import of product_ns is a product package", None),
+    (
+        "lu_machinery/x.py",
+        "def f():\n    from lib import product_child\n",
+        "import of lib.product_child is a product",
+        None,
+    ),
+    ("lu_machinery/x.py", 'ROOT = "scripts/"\n', None, "mixed path reference scripts/"),
+    # Round 2: product parent packages.
+    ("lu_machinery/x.py", "def f():\n    import pkg.worker\n", "initializes product package pkg", None),
+    ("lu_machinery/x.py", "def f():\n    from pkg.worker import run\n", "initializes product package pkg", None),
+    # Round 3: relative loader targets and lu_machinery-qualified names.
+    (
+        "lu_machinery/lib/y.py",
+        'def f():\n    importlib.import_module(".product_child", "lu_machinery.lib")\n',
+        "scripts.lib.product_child names product code",
+        None,
+    ),
+    (
+        "lu_machinery/lib/y.py",
+        'def f():\n    importlib.import_module(name=".product_child", package="lu_machinery.lib")\n',
+        "scripts.lib.product_child names product code",
+        None,
+    ),
+    (
+        "lu_machinery/lib/y.py",
+        'def f():\n    __import__("product_child", globals(), locals(), [], 1)\n',
+        "scripts.lib.product_child names product code",
+        None,
+    ),
+    (
+        "lu_machinery/lib/y.py",
+        'def f():\n    __import__("lib", fromlist=["product_child"])\n',
+        None,
+        "loader target lib.product_child is a product package",
+    ),
+    (
+        "lu_machinery/lib/y.py",
+        "def f():\n    from lu_machinery.lib import product_child\n",
+        "import of lu_machinery.lib.product_child names product code",
+        None,
+    ),
+    # Round 4: empty relative names and assembled targets.
+    (
+        "lu_machinery/lib/y.py",
+        'def f():\n    __import__("", globals(), locals(), ["product_child"], 1)\n',
+        "scripts.lib.product_child names product code",
+        None,
+    ),
+    (
+        "lu_machinery/lib/y.py",
+        'def f():\n    __import__(name="", fromlist=("product_child",), level=1)\n',
+        "scripts.lib.product_child names product code",
+        None,
+    ),
+    (
+        "lu_machinery/x.py",
+        'def f():\n    __import__("scripts", fromlist=["dispatch"])\n',
+        "loader target scripts.dispatch names machinery (missed rename)",
+        None,
+    ),
+    # Round 5: product modules behind an attribute suffix, and composed literals.
+    (
+        "lu_machinery/x.py",
+        'def f():\n    pkgutil.resolve_name("lu_machinery.product_mod.VALUE")\n',
+        "lu_machinery.product_mod.VALUE names product code absent from the machinery tree (scripts/product_mod.py)",
+        None,
+    ),
+    (
+        "lu_machinery/x.py",
+        "def f():\n    import lu_machinery.product_mod.VALUE\n",
+        "import of lu_machinery.product_mod.VALUE names product code",
+        None,
+    ),
+    (
+        "lu_machinery/x.py",
+        'def f():\n    __import__("lu_machinery.product_mod.VALUE")\n',
+        "lu_machinery.product_mod.VALUE names product code",
+        None,
+    ),
+    (
+        "lu_machinery/x.py",
+        "def f():\n    from .product_mod.VALUE import anything\n",
+        "relative import of scripts.product_mod.VALUE names product code",
+        None,
+    ),
+    (
+        "lu_machinery/x.py",
+        'P = Path("scripts") / Path("dispatch.py")\n',
+        "string holds machinery path scripts/dispatch.py (missed rename)",
+        None,
+    ),
+    (
+        "lu_machinery/x.py",
+        'P = Path(Path("scripts"), "dispatch.py")\n',
+        "string holds machinery path scripts/dispatch.py (missed rename)",
+        None,
+    ),
+    (
+        "lu_machinery/x.py",
+        "P = f\"{'scripts'}.{'dispatch':s}\"\n",
+        "string references machinery module scripts.dispatch (missed rename)",
+        None,
+    ),
+    # Beyond the namespace root, a relative name cannot be resolved: a finding.
+    (
+        "lu_machinery/x.py",
+        "def f():\n    from .. import anything\n",
+        "relative import cannot be resolved statically",
+        None,
+    ),
+]
+
+
+@pytest.mark.parametrize(("rel", "source", "finding", "listing"), REVIEWER_PROBES)
+def test_v4_invariants_hold_for_every_earlier_reviewer_probe(rel: str, source: str, finding, listing) -> None:
+    module = _load_verifier()
+    listed: list[str] = []
+    found = module.scan_python_source(rel, source.encode(), _gen_index(module), listed=listed)
+    if finding is None:
+        assert found == []
+    else:
+        assert any(finding in item for item in found), found
+    if listing is not None:
+        assert any(listing in item for item in listed), listed
+
+
+def test_v4_invariant_namespace_exemption_and_package_attributes_are_clean() -> None:
+    """Invariant 1: a bare lu_machinery or an extracted namespace directory resolves to the package."""
+    module = _load_verifier()
+    source = (
+        b"def later():\n"
+        b"    from lu_machinery import CONST\n"  # defined in the added lu_machinery/__init__.py
+        b"    import lu_machinery\n"
+        b"    import lu_machinery.tools\n"  # scripts/tools/__init__.py is product and not extracted
+        b"    from lu_machinery.tools import agent_watcher\n"
+        b"    from lu_machinery.tools import CONST\n"
+        b"    from lu_machinery.lib.util import VALUE\n"
+        b'    importlib.import_module("lu_machinery.tools.agent_watcher")\n'
+        b'    pkgutil.resolve_name("lu_machinery.lib.util.VALUE")\n'
+    )
+    listed: list[str] = []
+    assert module.scan_python_source("lu_machinery/tools/z.py", source, _gen_index(module), listed=listed) == []
+    assert listed == []
+
+
+def test_v4_invariant_scope_variable_bound_values_are_unknown() -> None:
+    """Constant propagation is out of scope: a variable is an unknown part; only a qualifying known part lists."""
+    module = _load_verifier()
+    source = b'x = "scripts"\nP = Path(x) / "dispatch.py"\nQ = Path(x) / "scripts" / name\n'
+    listed: list[str] = []
+    assert module.scan_python_source("lu_machinery/x.py", source, _gen_index(module), listed=listed) == []
+    assert listed == ["lu_machinery/x.py:3: composition with an unknown part '<?>/scripts/<?>'"]
 
 
 def test_v5_rename_defect_failed_expectation_rows(world: World) -> None:
