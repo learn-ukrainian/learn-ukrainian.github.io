@@ -78,6 +78,7 @@ ESCAPE = re.compile(
 # Files worth reading: the name in any case, or an escape that may spell it.
 PREFILTER = re.compile(rb"(?i)scripts|\\u[0-9a-f]{4}|\\x[0-9a-f]{2}|\\[0-7]|&#|%[0-9a-f]{2}")
 ANY_CASE = re.compile(r"(?i)scripts")
+ANY_BYTES_CASE = re.compile(rb"(?i)scripts")
 DIGEST_FIELD = re.compile(
     r"(?i)(?:sha256|sha1|sha512|digest|fingerprint|checksum|hash)[\"']?\s*[:=]\s*[\"']?[0-9a-f]{40,}"
 )
@@ -779,9 +780,10 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
                 raise UnicodeDecodeError("utf-8", data, 0, 1, "binary")
             text = data.decode("utf-8")
         except UnicodeDecodeError:
-            skipped_binary += 1
-            detail = "binary or not UTF-8; no rewrite rule; inspect it by hand"
-            report.unresolved.append(Finding(rel, 1, "binary_file", rel, detail=detail, target="unknown"))
+            if ANY_BYTES_CASE.search(data):  # text escapes mean nothing in a binary file; the name itself does
+                skipped_binary += 1
+                detail = "binary or not UTF-8; no rewrite rule; inspect it by hand"
+                report.unresolved.append(Finding(rel, 1, "binary_file", rel, detail=detail, target="unknown"))
             continue
         report.files_scanned += 1
         file_report = Report(report.tool, report.mode, report.map_sha256)
