@@ -287,8 +287,22 @@ class InputError(Exception):
     pass
 
 
+def _git_env() -> dict[str, str]:
+    # The rewritten repository is untrusted. Ignore inherited GIT_* redirection, never let
+    # replacement refs substitute objects, and never fetch missing objects from a promisor.
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(GIT_NO_REPLACE_OBJECTS="1", GIT_NO_LAZY_FETCH="1")
+    return env
+
+
+def _git_argv(repo: str, *args: str) -> list[str]:
+    return ["git", "--no-replace-objects", "-C", repo, *args]
+
+
 def _git(repo: str, *args: str, stdin: bytes | None = None) -> bytes:
-    result = subprocess.run(["git", "-C", repo, *args], input=stdin, capture_output=True, check=False, timeout=3600)
+    result = subprocess.run(
+        _git_argv(repo, *args), input=stdin, capture_output=True, check=False, timeout=3600, env=_git_env()
+    )
     if result.returncode != 0:
         message = result.stderr.decode("utf-8", "replace").strip()
         raise InputError("git {} failed: {}".format(" ".join(args[:2]), message))
@@ -321,23 +335,117 @@ def _missing_commits(repo: str, oids: list[str]) -> list[str]:
     return [oid for oid, kind in zip(oids, kinds, strict=True) if kind != "commit"]
 
 
-def _history_pairs(repo: str, rev: str) -> tuple[set[tuple[str, str]], int]:
-    # Every distinct (path, object id) a tree entry holds in any commit reachable from rev.
-    tip = _git(repo, "rev-parse", "--verify", "--end-of-options", rev + "^{commit}").decode().strip()
-    listing = _git(repo, "rev-list", "--format=%T", tip).decode().split()
-    # rev-list --format prints "commit <oid>" then the formatted tree id for each commit.
-    trees = {listing[i + 2] for i in range(0, len(listing), 3)}
-    commits = len(listing) // 3
+class _ObjectReader:
+    # Raw object reads through one `git cat-file --batch`. Raw reads bypass the commit-graph,
+    # grafts and shallow boundaries; replacement refs are disabled by _git_env and _git_argv.
+    def __init__(self, repo: str) -> None:
+        self._process = subprocess.Popen(
+            _git_argv(repo, "cat-file", "--batch"), stdin=subprocess.PIPE, stdout=subprocess.PIPE, env=_git_env()
+        )
+
+    def read(self, oid: str) -> tuple[str, bytes] | None:
+        assert self._process.stdin is not None and self._process.stdout is not None
+        try:
+            self._process.stdin.write(oid.encode() + b"\n")
+            self._process.stdin.flush()
+        except BrokenPipeError as exc:
+            raise InputError(f"git cat-file stopped before reading {oid}") from exc
+        header = self._process.stdout.readline().split()
+        if len(header) == 2 and header[1] == b"missing":
+            return None
+        if len(header) != 3 or header[0].decode() != oid:
+            raise InputError(f"git cat-file could not read {oid} (corrupt or unreadable object)")
+        size = int(header[2])
+        data = self._process.stdout.read(size)
+        if len(data) != size or self._process.stdout.read(1) != b"\n":
+            raise InputError(f"git cat-file returned a truncated {oid}")
+        return header[1].decode(), data
+
+    def close(self) -> None:
+        assert self._process.stdin is not None
+        self._process.stdin.close()
+        self._process.wait(timeout=60)
+
+
+def _walk_history(repo: str, tip: str, expected: dict[str, bytes]) -> tuple[set[tuple[str, str]], int, list[str]]:
+    # Walks every commit and tree reachable from tip by parsing raw objects, and authenticates
+    # each commit, tree and blob by recomputing its object id from its bytes. Returns the
+    # distinct (path, object id) tree entries, the commit count and integrity findings.
+    # `expected` maps replacement blob ids to their frozen bytes, compared byte for byte.
+    reader = _ObjectReader(repo)
+    findings: list[str] = []
+    entries_by_tree: dict[str, list[tuple[bytes, str, str]]] = {}
+    checked_blobs: set[str] = set()
     pairs: set[tuple[str, str]] = set()
-    for tree in sorted(trees):
-        for record in _git(repo, "ls-tree", "-r", "-z", "--full-tree", tree).split(b"\0"):
-            if not record:
+
+    def load(oid: str, kind: str) -> bytes | None:
+        found = reader.read(oid)
+        if found is None:
+            findings.append(f"missing-object oid={oid} type={kind}")
+            return None
+        actual_kind, data = found
+        if hashlib.sha1(b"%s %d\x00" % (actual_kind.encode(), len(data)) + data).hexdigest() != oid:
+            findings.append(f"object-hash-mismatch oid={oid} type={actual_kind}")
+            return None
+        if actual_kind != kind:
+            findings.append(f"object-type-mismatch oid={oid} expected={kind} found={actual_kind}")
+            return None
+        return data
+
+    def tree_entries(oid: str) -> list[tuple[bytes, str, str]]:
+        if oid not in entries_by_tree:
+            data = load(oid, "tree")
+            entries: list[tuple[bytes, str, str]] = []
+            position = 0
+            while data is not None and position < len(data):
+                space = data.index(b" ", position)
+                nul = data.index(b"\0", space)
+                mode = data[position:space].decode()
+                entries.append((data[space + 1 : nul], mode, data[nul + 1 : nul + 21].hex()))
+                position = nul + 21
+            entries_by_tree[oid] = entries
+        return entries_by_tree[oid]
+
+    try:
+        commits: set[str] = set()
+        pending_commits = [tip]
+        pending_trees: list[tuple[bytes, str]] = []
+        seen_trees: set[tuple[bytes, str]] = set()
+        while pending_commits:
+            commit = pending_commits.pop()
+            if commit in commits:
                 continue
-            meta, raw_path = record.split(b"\t", 1)
-            _mode, kind, oid = meta.decode().split(" ")
-            if kind in ("blob", "commit"):
-                pairs.add((raw_path.decode("utf-8", "surrogateescape"), oid))
-    return pairs, commits
+            commits.add(commit)
+            data = load(commit, "commit")
+            if data is None:
+                continue
+            for line in data.split(b"\n\n", 1)[0].split(b"\n"):
+                field, _, value = line.partition(b" ")
+                if field == b"tree" and re.fullmatch(rb"[0-9a-f]{40}", value):
+                    pending_trees.append((b"", value.decode()))
+                elif field == b"parent" and re.fullmatch(rb"[0-9a-f]{40}", value):
+                    pending_commits.append(value.decode())
+        while pending_trees:
+            prefix, tree = pending_trees.pop()
+            if (prefix, tree) in seen_trees:
+                continue
+            seen_trees.add((prefix, tree))
+            for name, mode, oid in tree_entries(tree):
+                if mode == "40000":
+                    pending_trees.append((prefix + name + b"/", oid))
+                    continue
+                pairs.add(((prefix + name).decode("utf-8", "surrogateescape"), oid))
+                if mode == "160000" or oid in checked_blobs:
+                    continue  # a gitlink names a commit of another repository
+                checked_blobs.add(oid)
+                content = load(oid, "blob")
+                if content is not None and oid in expected and content != expected[oid]:
+                    findings.append(f"replacement-bytes-differ oid={oid}")
+    except (ValueError, IndexError) as exc:
+        raise InputError(f"unparseable tree object: {exc}") from exc
+    finally:
+        reader.close()
+    return pairs, len(commits), findings
 
 
 def verify(args: argparse.Namespace) -> int:
@@ -354,10 +462,14 @@ def verify(args: argparse.Namespace) -> int:
         object_format = _git(args.repo, "rev-parse", "--show-object-format").decode().strip()
         if object_format != "sha1":
             raise InputError(f"repository object format is {object_format}; the policy holds sha1 blob ids")
+        if _git(args.repo, "rev-parse", "--is-shallow-repository").decode().strip() != "false":
+            raise InputError("repository is shallow; verify needs the complete ancestry")
         commit_map = _read_commit_map(args.commit_map)
         rewritten = sorted({new_oid for _old, new_oid in commit_map if new_oid != NULL_OID})
         missing = _missing_commits(args.repo, rewritten)
-        pairs, commits = _history_pairs(args.repo, args.rev)
+        tip = _git(args.repo, "rev-parse", "--verify", "--end-of-options", args.rev + "^{commit}").decode().strip()
+        expected = {git_blob_id(content): content for content in blobs.values()}
+        pairs, commits, integrity = _walk_history(args.repo, tip, expected)
     except (InputError, subprocess.TimeoutExpired) as exc:
         print(f"verify: unusable input: {exc}", file=sys.stderr)
         return EXIT_UNUSABLE
@@ -366,7 +478,7 @@ def verify(args: argparse.Namespace) -> int:
     for (path, _blob), (action, sha) in entries.items():
         if action == "replace":
             replacement_ids.setdefault(path, set()).add(git_blob_id(blobs[sha]))
-    findings = [f"commit-map-names-missing-commit new={oid}" for oid in missing]
+    findings = [f"commit-map-names-missing-commit new={oid}" for oid in missing] + integrity
     retained = replaced = 0
     for output, oid in sorted(pairs):
         source = inverse.get(output)
@@ -497,7 +609,12 @@ Subcommands:
                 blob of its path, if an omitted version survives, if an output path does
                 not invert to a policy source path, or if the commit map names a rewritten
                 commit that does not exist (all-zero pruned entries are skipped).
-                Zero checked pairs fails.
+                Zero checked pairs fails. The walk parses raw objects itself (no
+                commit-graph, grafts or ls-tree), ignores replacement refs and inherited
+                GIT_* variables, never fetches missing objects, and re-hashes every
+                reachable commit, tree and blob: a missing object, a hash or type mismatch,
+                or replacement bytes that differ from the frozen file are findings. A
+                shallow repository is refused (exit 2).
 
 Examples:
   .venv/bin/python packaging/machinery-move/history_policy.py check-policy \\

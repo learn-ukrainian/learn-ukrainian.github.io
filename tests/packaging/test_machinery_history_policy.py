@@ -14,6 +14,7 @@ import os
 import shutil
 import subprocess
 import sys
+import zlib
 from pathlib import Path
 
 import pytest
@@ -309,6 +310,90 @@ def test_h6_policy_keyed_on_output_paths_is_refused(tmp_path: Path) -> None:
 
     assert result.returncode == 2
     assert "inside the rename target" in result.stderr
+
+
+# --- verify against an untrusted object database (no git-filter-repo needed) -------------
+
+
+def _rewritten_like(source: Repo, tmp_path: Path, history: list[dict[str, bytes | None]]) -> tuple[Repo, list[str]]:
+    """Commit output-path history directly and write a commit map for it, as git-filter-repo would."""
+    commits = [source.commit(files, f"c{number}") for number, files in enumerate(history, 1)]
+    commit_map = source.path / ".git" / "filter-repo" / "commit-map"
+    commit_map.parent.mkdir(parents=True)
+    rows = "".join(f"{number:040x} {sha}\n" for number, sha in enumerate(commits, 1))
+    commit_map.write_text(f"{'old':<40} new\n" + rows)
+    return source, commits
+
+
+def _loose_object(repo: Repo, oid: str) -> Path:
+    path = repo.path / ".git" / "objects" / oid[:2] / oid[2:]
+    assert path.is_file(), f"{oid} is not a loose object"
+    path.chmod(0o644)
+    return path
+
+
+def test_verify_replace_refs_grafts_and_shallow_boundaries_cannot_hide_an_omitted_version(
+    source: Repo, tmp_path: Path
+) -> None:
+    omitted = b"omitted version\n"
+    repo, (first, tip) = _rewritten_like(
+        source,
+        tmp_path,
+        [{"lu_machinery/a.py": b"public\n", "lu_machinery/b.py": omitted}, {"lu_machinery/b.py": None}],
+    )
+    policy = Policy(tmp_path / "policy")
+    policy.add("scripts/a.py", blob_id(b"public\n"), "retain")
+    policy.add("scripts/b.py", blob_id(omitted), "omit")
+    digest = policy.freeze()
+    survivor = f"omitted-version-survives path='lu_machinery/b.py' blob={blob_id(omitted)}"
+    baseline = verify(repo, policy, digest)
+    assert baseline.returncode == 1 and survivor in baseline.stdout
+
+    repo.git("replace", repo.git("rev-parse", f"{first}^{{tree}}"), repo.git("rev-parse", f"{tip}^{{tree}}"))
+    repo.git("replace", "--graft", tip)
+    assert repo.git("rev-list", "--count", "HEAD") == "1", "plain git now hides the first commit"
+    replaced = verify(repo, policy, digest)
+    assert replaced.returncode == 1 and survivor in replaced.stdout
+    assert "commits=2" in replaced.stdout
+
+    for ref in repo.git("for-each-ref", "--format=%(refname)", "refs/replace/").splitlines():
+        repo.git("update-ref", "-d", ref)
+    (repo.path / ".git" / "info").mkdir(exist_ok=True)
+    (repo.path / ".git" / "info" / "grafts").write_text(tip + "\n")
+    grafted = verify(repo, policy, digest)
+    assert grafted.returncode == 1 and survivor in grafted.stdout
+
+    (repo.path / ".git" / "info" / "grafts").unlink()
+    (repo.path / ".git" / "shallow").write_text(tip + "\n")
+    shallow = verify(repo, policy, digest)
+    assert shallow.returncode == 2
+    assert "repository is shallow" in shallow.stderr
+
+
+def test_verify_corrupted_or_missing_objects_are_findings(source: Repo, tmp_path: Path) -> None:
+    approved, sanitized = b"approved version\n", b"sanitized replacement version\n"
+    repo, _ = _rewritten_like(source, tmp_path, [{"lu_machinery/a.py": approved, "lu_machinery/r.py": sanitized}])
+    policy = Policy(tmp_path / "policy")
+    policy.add("scripts/a.py", blob_id(approved), "retain")
+    policy.add("scripts/r.py", "1" * 40, "replace", sanitized)
+    digest = policy.freeze()
+    clean = verify(repo, policy, digest)
+    assert clean.returncode == 0, clean.stdout + clean.stderr
+    assert "retained=1 replaced=1" in clean.stdout
+
+    for oid in (blob_id(approved), blob_id(sanitized)):
+        loose = _loose_object(repo, oid)
+        original = loose.read_bytes()
+        unapproved = b"unapproved bytes under an approved id\n"
+        loose.write_bytes(zlib.compress(b"blob %d\x00" % len(unapproved) + unapproved))
+        corrupted = verify(repo, policy, digest)
+        assert corrupted.returncode == 1
+        assert f"object-hash-mismatch oid={oid} type=blob" in corrupted.stdout
+        loose.unlink()
+        removed = verify(repo, policy, digest)
+        assert removed.returncode == 1
+        assert f"missing-object oid={oid} type=blob" in removed.stdout
+        loose.write_bytes(original)
 
 
 # --- rewrites with the real git-filter-repo 2.47.0 ---------------------------------------
