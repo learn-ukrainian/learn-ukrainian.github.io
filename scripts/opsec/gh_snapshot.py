@@ -6,14 +6,18 @@ credential, file-upload and external-host protections belong here.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from dataclasses import dataclass
+from pathlib import Path
 
 from scripts.opsec.prepublish import PublishBlocked, check_texts, internal_environment, is_private, normalize_repository
 
-# The publisher's import name, as ``python -m`` runs it: the machinery package's own publish package.
-_PUBLISHER = f"{__name__.partition('.')[0]}.publish"
+# The publisher's import name, as ``python -m`` runs it: the machinery package's own publish
+# package, named from this file's unresolved location (a short ``opsec.gh_snapshot`` import
+# would shorten ``__name__``).
+_PUBLISHER = f"{Path(os.path.abspath(__file__)).parents[1].name}.publish"
 
 # Write grammars retain their closed fields and private-destination proof.
 REPO = {"--repo": True, "-R": True}

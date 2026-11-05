@@ -103,10 +103,13 @@ if __name__ == "__main__":
 _MERGE_GUARD_MODULE = "scripts.publish.merge_guard"
 _PUBLISHER = _MERGE_GUARD_MODULE.rpartition(".")[0]
 
-for parent in Path(__file__).resolve().parents:
-    if parent.joinpath(*_PUBLISHER.split(".")).is_dir():
-        sys.path.insert(0, str(parent))
-        break
+# The checkout that owns this hook; the machinery imports below come only from it.
+_MACHINERY_ROOT = next(
+    (parent for parent in Path(__file__).resolve().parents if parent.joinpath(*_PUBLISHER.split(".")).is_dir()),
+    None,
+)
+if _MACHINERY_ROOT is not None:
+    sys.path.insert(0, str(_MACHINERY_ROOT))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
@@ -128,6 +131,11 @@ try:
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
+
+if _MACHINERY_ROOT is None:
+    # No owning checkout: never import the merge rules from elsewhere on sys.path.
+    print("guard dependency unavailable: merge readiness", file=sys.stderr)
+    raise SystemExit(2)
 
 try:
     from scripts.ci.advisory_checks import is_advisory as is_advisory

@@ -16,6 +16,7 @@ posts a redacted, action-required system alert to the ``fleet-comms`` channel.
 
 from __future__ import annotations
 
+import os
 import sys
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -28,9 +29,10 @@ if str(ROOT) not in sys.path:
 from scripts.ai_agent_bridge import _channels
 from scripts.lib import kimi_coding_oauth
 
-# The machinery package's import name, which is also the directory its files have in checkout
-# paths: from this module's package, or from its unresolved location when run as a file.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 ALERT_CHANNEL = "fleet-comms"
 # Kimi is not a bridge recipient; the infra seat owns credential alerts.

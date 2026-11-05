@@ -218,11 +218,13 @@ def _load_containment():
     ``sys.path``. The caller blocks if containment cannot be loaded.
     """
     here = Path(__file__).resolve()
-    for candidate in (here.parent, *here.parents):
-        if (candidate / _module_file(_CONTAINMENT_MODULE)).exists():
-            if str(candidate) not in sys.path:
-                sys.path.insert(0, str(candidate))
-            break
+    marker = _module_file(_CONTAINMENT_MODULE)
+    root = next((c for c in (here.parent, *here.parents) if (c / marker).exists()), None)
+    if root is None:
+        # No owning checkout: never import containment from elsewhere on sys.path.
+        return None
+    # The owning checkout comes first, even when PYTHONPATH already lists it later.
+    sys.path[:] = [str(root), *(entry for entry in sys.path if entry != str(root))]
     try:
         from scripts.guardrails import worktree_containment as wc
     except Exception:  # pragma: no cover - defensive import failure

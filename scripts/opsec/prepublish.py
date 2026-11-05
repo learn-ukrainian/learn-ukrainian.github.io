@@ -22,10 +22,11 @@ from itertools import pairwise
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-# The machinery package's import name, which is also the directory its files have under any
-# checkout. Taken from this module's name rather than imported: workflows check this module out
-# with a minimal file list.
-_MACHINERY = __name__.partition(".")[0]
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' paths under any checkout. Taken from this file's unresolved location (not from
+# ``__name__``, which a short ``opsec.prepublish`` import shortens, and not by importing
+# ``common/``, which minimal workflow checkouts omit).
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 POLICY = Path(__file__).with_name("blocking.json")

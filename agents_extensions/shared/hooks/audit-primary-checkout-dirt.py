@@ -57,8 +57,8 @@ def _repo_root() -> Path | None:
 
 
 def _load_audit(root: Path):
-    if str(root) not in sys.path:
-        sys.path.insert(0, str(root))
+    # The owning checkout comes first, even when PYTHONPATH already lists it later.
+    sys.path[:] = [str(root), *(entry for entry in sys.path if entry != str(root))]
     from scripts.guardrails import primary_dirt_audit
 
     return primary_dirt_audit

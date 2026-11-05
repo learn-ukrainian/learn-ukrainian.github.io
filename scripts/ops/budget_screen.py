@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shlex
 import sys
 from collections import Counter
@@ -14,9 +15,10 @@ if __package__ in {None, ""}:
 
 from scripts.dispatcher import pool_selector as selector
 
-# The machinery package's import name, which is also the directory its files have in checkout
-# paths: from this module's package, or from its unresolved location when run as a file.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 
 def shadow_history(now: datetime, pool_sources: dict[str, str], records: list[dict]) -> tuple[Counter, dict]:
