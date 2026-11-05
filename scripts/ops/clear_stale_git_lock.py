@@ -12,6 +12,10 @@ from pathlib import Path
 
 import psutil
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+
 MIN_AGE_SECONDS = 600
 
 
@@ -112,8 +116,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --dry-run\n"
-            "  .venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --apply\n\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.clear_stale_git_lock --repo . --dry-run\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.clear_stale_git_lock --repo . --apply\n\n"
             "Outputs: inspection/removal receipt to stdout; --apply removes one Git lock.\n"
             "Exit codes: 0 eligible or removed; 1 unsafe or failed.\n"
             "Related: docs/runbooks/clear-stale-git-lock.md; issues #8887 and #8874."

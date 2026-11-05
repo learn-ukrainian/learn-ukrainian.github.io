@@ -28,6 +28,10 @@ if str(ROOT) not in sys.path:
 from scripts.ai_agent_bridge import _channels
 from scripts.lib import kimi_coding_oauth
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+
 ALERT_CHANNEL = "fleet-comms"
 # Kimi is not a bridge recipient; the infra seat owns credential alerts.
 ALERT_RECIPIENTS = ["claude-infra"]
@@ -55,7 +59,7 @@ def post_failure_alert(failure_kind: str) -> bool:
     body = (
         "ACTION REQUIRED: Kimi OAuth refresh canary failed. "
         f"component=kimi_oauth_refresh; failure_kind={failure_kind}. "
-        "Run `.venv/bin/python -m scripts.canary.kimi_oauth_canary`; if credentials are invalid, run `kimi login`."
+        f"Run `.venv/bin/python -m {_MACHINERY}.canary.kimi_oauth_canary`; if credentials are invalid, run `kimi login`."
     )
     try:
         _channels.post(

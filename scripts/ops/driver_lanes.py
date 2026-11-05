@@ -40,7 +40,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-DATA_FILE = REPO_ROOT / "scripts" / "config" / "driver_lanes.json"
+from scripts.common.repo_root import machinery_path
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+DATA_FILE = machinery_path("config/driver_lanes.json")
 LOCAL_ENV = "LU_DRIVER_LANES_LOCAL"
 KINDS = frozenset({"claude", "codex"})
 SESSION_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*\Z")
@@ -349,19 +354,19 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ops.driver_lanes\n"
-            "  .venv/bin/python scripts/ops/driver_lanes.py --data scripts/config/driver_lanes.json\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.driver_lanes\n"
+            f"  .venv/bin/python {_MACHINERY}/ops/driver_lanes.py --data {_MACHINERY}/config/driver_lanes.json\n"
             "Outputs: JSON on stdout; nothing is written.\n"
             "Exit codes: 0 valid; 1 invalid lane data; 2 invalid arguments.\n"
-            "Related: scripts/config/driver_lanes.json, scripts/ops/context_guard.py, "
-            "scripts/ops/lane_relaunch.py, issue #10814."
+            f"Related: {_MACHINERY}/config/driver_lanes.json, {_MACHINERY}/ops/context_guard.py, "
+            f"{_MACHINERY}/ops/lane_relaunch.py, issue #10814."
         ),
     )
     parser.add_argument(
         "--data",
         type=Path,
         default=DATA_FILE,
-        help="Lane data file (default: scripts/config/driver_lanes.json).",
+        help=f"Lane data file (default: {_MACHINERY}/config/driver_lanes.json).",
     )
     args = parser.parse_args(argv)
     try:

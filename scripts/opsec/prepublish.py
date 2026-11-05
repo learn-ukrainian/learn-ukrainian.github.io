@@ -22,6 +22,11 @@ from itertools import pairwise
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+# The machinery package: its directory for file reads, and its import name, which is also the
+# directory name its files have under any checkout. Found from this file, not imported: workflows
+# check this module out with a minimal file list.
+_PACKAGE_DIR = Path(__file__).resolve().parents[1]
+_MACHINERY = __name__.partition(".")[0]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 POLICY = Path(__file__).with_name("blocking.json")
@@ -104,7 +109,7 @@ def catalog() -> dict:
             return super().construct_mapping(node, deep=deep)
 
     try:
-        return yaml.load((ROOT / "scripts/config/fleet_repos.yaml").read_text(), Loader=UniqueLoader)["repos"]
+        return yaml.load((_PACKAGE_DIR / "config" / "fleet_repos.yaml").read_text(), Loader=UniqueLoader)["repos"]
     except Exception:
         raise PublishBlocked("OPSEC: repository allowlist unavailable; write refused.") from None
 
@@ -445,8 +450,8 @@ def real_gh(environment: Mapping[str, str]) -> str:
             path.is_absolute()
             and path.is_file()
             and os.access(path, os.X_OK)
-            and path != (ROOT / "scripts/agent_runtime/shims/gh").resolve()
-            and path.parts[-4:] != ("scripts", "agent_runtime", "shims", "gh")
+            and path != (_PACKAGE_DIR / "agent_runtime" / "shims" / "gh").resolve()
+            and path.parts[-4:] != (_MACHINERY, "agent_runtime", "shims", "gh")
         ):
             return str(path)
     raise PublishBlocked("OPSEC: real gh executable unavailable; write refused.")
@@ -455,7 +460,7 @@ def real_gh(environment: Mapping[str, str]) -> str:
 def publish_environment(source: Mapping[str, str], *, root: Path = ROOT) -> dict[str, str]:
     """Keep the publishing shim first without propagating command-scoped overrides."""
     env = internal_environment(source)
-    shim = str(root / "scripts/agent_runtime/shims")
+    shim = str(root / _MACHINERY / "agent_runtime" / "shims")
     env["PATH"] = os.pathsep.join([shim, *[p for p in env.get("PATH", "").split(os.pathsep) if p and p != shim]])
     try:
         env["AGENT_REAL_GH"] = real_gh(source)

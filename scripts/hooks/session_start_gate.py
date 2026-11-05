@@ -39,6 +39,10 @@ import traceback
 from pathlib import Path
 from typing import Any
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+
 
 def _parse_protocol_payload(out: str, err: str) -> dict[str, Any] | None:
     """Parse a JSON protocol payload from stdout, falling back to stderr.
@@ -181,7 +185,7 @@ def phase_primary_main(args: argparse.Namespace) -> dict[str, Any]:
             "verdict": (
                 "PRIMARY HEAD is detached or not on main (#4857). Inspect it, then run the "
                 "explicit doctor if appropriate: .venv/bin/python "
-                "scripts/guardrails/assert_primary_on_main.py --heal."
+                f"{_MACHINERY}/guardrails/assert_primary_on_main.py --heal."
             ),
         }
     return {"status": "ok"}

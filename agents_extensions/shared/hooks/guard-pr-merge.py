@@ -98,8 +98,13 @@ if __name__ == "__main__":
         sys.exit(0)
 
 
+# The merge rules' module, by import name; under a checkout its package is the directory of the
+# same dotted path (this hook is outside the machinery package). The publisher is that package.
+_MERGE_GUARD_MODULE = "scripts.publish.merge_guard"
+_PUBLISHER = _MERGE_GUARD_MODULE.rpartition(".")[0]
+
 for parent in Path(__file__).resolve().parents:
-    if (parent / "scripts/publish").is_dir():
+    if parent.joinpath(*_PUBLISHER.split(".")).is_dir():
         sys.path.insert(0, str(parent))
         break
 
@@ -1412,7 +1417,7 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             f"PR {pr} is a DRAFT",
             "Draft PRs are never merged or armed — a draft is by definition not review-ready\n"
             "(the #189 incident: a draft was squash-merged before anyone reviewed it). Mark it\n"
-            "ready (`python -m scripts.publish pr-ready --number <N>`) and get the review gate first.",
+            f"ready (`python -m {_PUBLISHER} pr-ready --number <N>`) and get the review gate first.",
         )
     if reason == "check states unverifiable":
         return _block_msg(

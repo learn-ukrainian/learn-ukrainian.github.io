@@ -97,6 +97,9 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -1384,13 +1387,13 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ops.context_guard tick\n"
-            "  .venv/bin/python scripts/ops/context_guard.py tick --lane infra-muse\n"
-            "  .venv/bin/python -m scripts.ops.context_guard handoff-sessions\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.context_guard tick\n"
+            f"  .venv/bin/python {_MACHINERY}/ops/context_guard.py tick --lane infra-muse\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.context_guard handoff-sessions\n"
             "Outputs: tick types into lane panes, posts to Fleet Comms, respawns exited lanes, and writes\n"
             "  state.json and guard.log under the state directory; handoff-sessions prints a JSON list.\n"
             "Exit codes: 0 done (or another tick holds the lock); 1 invalid lane data; 2 invalid arguments.\n"
-            "Related: scripts/config/driver_lanes.json, packaging/systemd/learn-ukrainian-context-guard.timer,\n"
+            f"Related: {_MACHINERY}/config/driver_lanes.json, packaging/systemd/learn-ukrainian-context-guard.timer,\n"
             "  docs/runbooks/maintenance-window.md, issue #10814."
         ),
     )
@@ -1415,7 +1418,7 @@ def main(argv: list[str] | None = None) -> int:
         "--data",
         type=Path,
         default=None,
-        help="Lane data file (default: scripts/config/driver_lanes.json).",
+        help=f"Lane data file (default: {_MACHINERY}/config/driver_lanes.json).",
     )
     args = parser.parse_args(argv)
     state_dir = args.state_dir or default_state_dir()

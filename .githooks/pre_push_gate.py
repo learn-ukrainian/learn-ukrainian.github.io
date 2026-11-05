@@ -57,6 +57,10 @@ MAX_CONCURRENT_RUNS_ENV = "LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS"
 MEASUREMENT_SCHEMA = "pre-push-measurement.v3"  # v3: no test-stage fields (#11276)
 SCOPE_MEMORY_MAX = 6 * 1024**3
 CGROUP_ROOT = Path("/sys/fs/cgroup")
+# The publication scanner package, by import name. Its first component is the machinery package,
+# which is also the directory machinery files have under a checkout (this file is outside it).
+_SCANNER_PACKAGE = "scripts.opsec"
+_MACHINERY = _SCANNER_PACKAGE.partition(".")[0]
 # The blocking stage gets its own allowance from its own start (#10642); the run budget caps what every ref
 # update of one push spends together. A timeout is typed by the load observed at it (``stage_timeout``) and
 # is never green.
@@ -1761,7 +1765,7 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__.splitlines()[0] + "\nInvoked by the tracked pre-push hook, with Git ref updates on stdin.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Example:\n  pre_push_gate.py --launcher scripts/pre_commit/project_python.sh "
+        epilog=f"Example:\n  pre_push_gate.py --launcher {_MACHINERY}/pre_commit/project_python.sh "
         "--config .pre-commit-config.yaml < ref-updates.txt\n"
         "Outputs: private gate receipts and measurements; refusal diagnostics on stderr.\n"
         "Exit codes: 0 green; 1 refused; 75 validation incomplete.\n"
@@ -1906,7 +1910,7 @@ def message_gate(arguments: list[str]) -> int:
             hooks = repository.run("rev-parse", "--git-path", "hooks")
             scanner_hooks = {
                 git_push.HOOKS.resolve(),
-                (prepublish.primary_root() / "scripts/opsec/push_hooks").resolve(),
+                prepublish.primary_root().joinpath(*git_push.__name__.split(".")[:-1], git_push.HOOKS.name).resolve(),
             }
             # When Git selected the shared scanner's hook, it scanned these
             # updates before chaining here. Scanning twice would consume its

@@ -39,14 +39,19 @@ sys.dont_write_bytecode = True
 from tool_names import is_shell_tool
 
 MAX_LISTED = 20
+# The machinery modules this hook loads and names, by import name; under a checkout their files
+# are at the same dotted path (this hook is outside the package).
+_AUDIT_MODULE = "scripts.guardrails.primary_dirt_audit"
+_CLEANUP_MODULE = "scripts.hygiene.primary_dirt_cleanup"
 # The phase comes from the payload, so the wired command stays a plain hook path.
 PHASES = {"PreToolUse": "pre", "PostToolUse": "post", "PostToolUseFailure": "post"}
 
 
 def _repo_root() -> Path | None:
     here = Path(__file__).resolve()
+    audit_file = Path(*_AUDIT_MODULE.split(".")).with_suffix(".py")
     for candidate in (here.parent, *here.parents):
-        if (candidate / "scripts" / "guardrails" / "primary_dirt_audit.py").exists():
+        if (candidate / audit_file).exists():
             return candidate
     return None
 
@@ -102,7 +107,7 @@ def _report(records: list[dict], session_id: str) -> str:
             "files this call created (only those; dry run first, then --apply):"
         )
         lines.append(
-            "    .venv/bin/python -m scripts.hygiene.primary_dirt_cleanup "
+            f"    .venv/bin/python -m {_CLEANUP_MODULE} "
             f"--session {shlex.quote(session_id)} --record {shlex.quote(record['record_id'])} [--apply]"
         )
         if any(entry["kind"] == "tracked" for entry in entries):

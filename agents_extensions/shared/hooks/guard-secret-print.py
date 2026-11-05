@@ -1401,7 +1401,7 @@ def _worker_env_reason(seg: list[str]) -> str | None:
                 and _strip_quotes(args[index + 1]) == WORKER_ENV_MODULE
                 and any(_strip_quotes(candidate) == WORKER_ENV_COMMAND for candidate in args[index + 2 :])
             ):
-                return "`python -m scripts.session_supervisor worker-env` can print environment values"
+                return f"`python -m {WORKER_ENV_MODULE} {WORKER_ENV_COMMAND}` can print environment values"
     return None
 
 

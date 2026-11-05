@@ -45,6 +45,10 @@ except ImportError:
 
 # These guards run inside git hooks; a wedged git or hook installer must exit
 # loudly instead of hanging the session (#7213).
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+
 _GIT_TIMEOUT_S = 30
 _HOOK_INSTALL_TIMEOUT_S = 60
 
@@ -245,7 +249,7 @@ def check_guard() -> None:
 def install_hooks() -> None:
     """Delegate hook installation to the repository's tracked hook installer."""
     main_root = check_primary_checkout_root(hook_mode=False)
-    installer = main_root / "scripts" / "install_git_hooks.sh"
+    installer = main_root / _MACHINERY / "install_git_hooks.sh"
     if not installer.is_file():
         print(f"Tracked Git hook installer not found at {installer}", file=sys.stderr)
         sys.exit(1)
