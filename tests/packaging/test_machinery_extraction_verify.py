@@ -595,6 +595,77 @@ def test_v2_exclusion_defect_history_only_path_in_final_tree(build: Build) -> No
     )
 
 
+def _object(repo: Path, *args: str, stdin: str | None = None, index: Path | None = None) -> str:
+    env = {**_git_env(), **({"GIT_INDEX_FILE": str(index)} if index is not None else {})}
+    proc = subprocess.run(
+        ["git", "-C", str(repo), *args], input=stdin, capture_output=True, text=True, env=env, timeout=120, check=True
+    )
+    return proc.stdout.strip()
+
+
+def _side_tree(repo: Path, files: dict[str, str]) -> str:
+    """HEAD's tree plus files, written through a temporary index outside the repository (worktree untouched)."""
+    index = repo.parent / "side.index"
+    _object(repo, "read-tree", "HEAD", index=index)
+    for path, content in files.items():
+        blob = _object(repo, "hash-object", "-w", "--stdin", stdin=content)
+        _object(repo, "update-index", "--add", "--cacheinfo", f"100644,{blob},{path}", index=index)
+    tree = _object(repo, "write-tree", index=index)
+    index.unlink()
+    return tree
+
+
+def _side_commit(repo: Path, files: dict[str, str], parents: list[str], message: str) -> str:
+    args = [arg for parent in parents for arg in ("-p", parent)]
+    return _object(repo, "commit-tree", _side_tree(repo, files), *args, "-m", message)
+
+
+SECRET = {"docs/runbooks/secret.md": "confidential operational notes\n"}
+OUTSIDE = "is reachable from a ref but is neither in the rewritten history nor HEAD"
+
+
+def test_v2_exclusion_defect_on_a_nested_annotated_tag_off_every_branch(world: World) -> None:
+    side = _side_commit(world.extract, SECRET, [world.tip], "side")
+    git(world.extract, "tag", "-a", "inner", "-m", "inner", side)
+    git(world.extract, "tag", "-a", "outer", "-m", "outer", "inner")  # a tag of a tag
+    git(world.extract, "tag", "-d", "inner")  # only the outer tag still reaches the commit
+    code, checks, output = world.run()
+    assert code == 1, output
+    text = findings(checks, "V2")
+    assert "excluded docs/runbooks/secret.md is in the extracted history as docs/runbooks/secret.md" in text
+    assert f"commit {side} {OUTSIDE}" in text
+    assert checks["V9"]["status"] == "pass" and checks["V1"]["status"] == "pass"  # HEAD itself is correct
+    assert checks["V2"]["inspected"]["refs"] == 3  # HEAD, refs/heads/main, refs/tags/outer
+
+
+def test_v2_exclusion_defect_only_a_merge_on_another_branch_introduces(world: World) -> None:
+    clean = _side_commit(world.extract, {}, [world.tip], "clean side")
+    head = git(world.extract, "rev-parse", "HEAD")
+    merge = _side_commit(world.extract, SECRET, [head, clean], "merge adds content neither parent has")
+    git(world.extract, "update-ref", "refs/heads/evil", merge)
+    code, checks, output = world.run()
+    assert code == 1, output
+    text = findings(checks, "V2")
+    assert "excluded docs/runbooks/secret.md is in the extracted history as docs/runbooks/secret.md" in text
+    assert f"commit {merge} {OUTSIDE}" in text and f"commit {clean} {OUTSIDE}" in text
+
+
+def test_v2_exclusion_defect_refs_to_trees_blobs_and_notes(world: World) -> None:
+    tree = _side_tree(world.extract, SECRET)
+    blob = _object(world.extract, "hash-object", "-w", "--stdin", stdin="confidential operational notes\n")
+    git(world.extract, "tag", "tree-tag", tree)
+    git(world.extract, "tag", "-a", "blob-tag", "-m", "blob", blob)
+    git(world.extract, "notes", "add", "-m", "a note", "HEAD")
+    notes = git(world.extract, "rev-parse", "refs/notes/commits")
+    code, checks, output = world.run()
+    assert code == 1, output
+    text = findings(checks, "V2")
+    assert f"ref refs/tags/tree-tag points to a tree ({tree}), not a commit" in text
+    assert "excluded path docs/runbooks/secret.md is in the tree that ref refs/tags/tree-tag points to" in text
+    assert f"ref refs/tags/blob-tag points to a blob ({blob}), not a commit" in text
+    assert f"commit {notes} {OUTSIDE}" in text
+
+
 def test_v3_import_origin_defect_out_of_root_module_is_found(build: Build, tmp_path: Path) -> None:
     outside = tmp_path / "outside"
     outside.mkdir()
@@ -1206,6 +1277,13 @@ REVIEWER_PROBES = [
         "import lu_machinery\nVALUE = lu_machinery.product_mod.VALUE\n",
         "attribute reference lu_machinery.product_mod.VALUE names product code",
         None,
+    ),
+    # Round 6: a starred operand of unknown length keeps its known parts in the listing.
+    (
+        "lu_machinery/x.py",
+        "def f(count):\n    return Path(*(['scripts'] * count), 'dispatch.py')\n",
+        None,
+        "composition with an unknown part",
     ),
     # Beyond the namespace root, a relative name cannot be resolved: a finding.
     (

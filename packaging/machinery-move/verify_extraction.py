@@ -8,7 +8,8 @@ every git call and every child process runs in a bubblewrap sandbox whose only w
 tool's scratch directory.
 
 * V1 the final tree is exactly the tree manifest;
-* V2 excluded paths appear nowhere, history-only paths are absent from the final tree;
+* V2 excluded paths appear in no ref's history, every ref holds only the rewritten history and HEAD,
+  history-only paths are absent from the final tree;
 * V3 every manifest Python module imports from the extracted root alone;
 * V4 no extracted Python file still references ``scripts`` modules, machinery ``scripts/`` paths
   or product packages;
@@ -35,6 +36,14 @@ safe or as prose. Its two invariants:
    holds ``scripts``, ``lu_machinery``, a manifest path or a component-wise prefix of one; the complete
    references inside its known parts are still judged. Listed items do not fail the run; the listing is
    the evaluator's to review. A loader target or fromlist that is not statically known is listed too.
+
+Residual (severity MINOR under C-4715: no instance in the frozen tree; recorded, not implemented):
+
+* a module component that is not an ASCII identifier (a non-ASCII letter, a dash, a leading digit) in a
+  literal ``lu_machinery`` name: the token pattern ends the name before it, so ``lu_machinery.продукт``
+  reads as the bare package;
+* ``PureWindowsPath`` and ``WindowsPath`` values are evaluated with POSIX semantics (a backslash is no
+  separator).
 
 Loaders: the import statement, ``import_module``/``find_spec``, ``__import__``, ``pkgutil.resolve_name``,
 ``runpy`` and ``-m`` (their literal targets are string values, so invariant 1 judges them; targets
@@ -903,9 +912,10 @@ def _matches(path: str, entry: str) -> bool:
     return path.startswith(entry) if entry.endswith("/") else path == entry
 
 
-def history_paths_seen(repo: Path, rev: str = "HEAD") -> set[str]:
-    """Every path that any commit reachable from rev adds, changes or deletes (merges against each parent)."""
-    paths = git_z(
+def history_paths_seen(repo: Path, *revs: str) -> set[str]:
+    """Every path that any commit reachable from revs adds, changes or deletes (merges against each parent,
+    so content only a merge introduces is seen)."""
+    out = git(
         repo,
         "log",
         "-z",
@@ -914,17 +924,65 @@ def history_paths_seen(repo: Path, rev: str = "HEAD") -> set[str]:
         "--no-renames",
         "--root",
         "--diff-merges=separate",
-        rev,
-    )
-    return {item.strip("\n") for item in paths if item.strip("\n")}
+        "--stdin",
+        stdin="".join(f"{rev}\n" for rev in revs).encode(),
+    ).stdout.decode("utf-8", "surrogateescape")
+    return {item.strip("\n") for item in out.split("\0") if item.strip("\n")}
+
+
+def ref_targets(repo: Path) -> list[tuple[str, str, str]]:
+    """(name, object id, type) of HEAD and of every ref (branches, tags, notes, stash, replace and any other
+    namespace), each peeled through every tag level; a missing object has type "missing"."""
+    names = ["HEAD", *git_text(repo, "for-each-ref", "--format=%(refname)").splitlines()]
+    out = git(
+        repo,
+        "cat-file",
+        "--batch-check=%(objectname) %(objecttype)",
+        stdin="".join(f"{name}^{{}}\n" for name in names).encode(),
+    ).stdout.decode("utf-8", "surrogateescape")
+    targets = []
+    for name, line in zip(names, out.splitlines(), strict=True):
+        oid, _, kind = line.partition(" ")
+        targets.append((name, oid, kind) if kind in ("commit", "tree", "blob") else (name, "", "missing"))
+    return targets
 
 
 def check_v2(inputs: Inputs) -> CheckResult:
     result = CheckResult("V2", "excluded paths appear nowhere; history-only paths not in the final tree")
     tree = tree_paths(inputs.repo, "HEAD")
-    history = history_paths_seen(inputs.repo)
+    # Every ref is publishable, so every ref is history: branches, annotated and lightweight tags (peeled
+    # through every level), notes, stash, replace refs. A ref to a tree or blob carries content outside any
+    # commit; any commit outside the rewritten history (ancestors of --rewrite-tip, which HP verifies) and
+    # other than HEAD (which V9 binds) carries content no check covers.
+    targets = ref_targets(inputs.repo)
+    tips = sorted({oid for _name, oid, kind in targets if kind == "commit"})
+    for name, oid, kind in targets:
+        if kind == "missing":
+            result.fail(f"ref {name} points to a missing object")
+        elif kind != "commit":
+            result.fail(f"ref {name} points to a {kind} ({oid}), not a commit: its content is outside the history")
+    for name, oid, kind in targets:
+        if kind == "tree":
+            for path in git_z(inputs.repo, "ls-tree", "-r", "-z", "--name-only", oid):
+                if any(_matches(path, form) for entry in inputs.exclude for form in _forms(entry)):
+                    result.fail(f"excluded path {path} is in the tree that ref {name} points to")
+    head = resolve_commit(inputs.repo, "HEAD", "HEAD")
+    outside = git(
+        inputs.repo,
+        "rev-list",
+        "--stdin",
+        stdin="".join(f"{oid}\n" for oid in [*tips, "^" + inputs.rewrite_tip]).encode(),
+    )
+    unapproved = sorted(set(outside.stdout.decode().split()) - {head})
+    for oid in unapproved[:LISTED_SHOWN]:
+        result.fail(f"commit {oid} is reachable from a ref but is neither in the rewritten history nor HEAD")
+    if len(unapproved) > LISTED_SHOWN:
+        result.fail(f"... {len(unapproved) - LISTED_SHOWN} more commits outside the rewritten history and HEAD")
+    history = history_paths_seen(inputs.repo, *tips)
     rewritten = history_paths_seen(inputs.repo, inputs.rewrite_tip)
-    commits = int(git_text(inputs.repo, "rev-list", "--count", "HEAD").strip())
+    commits = len(
+        git(inputs.repo, "rev-list", "--stdin", stdin="".join(f"{oid}\n" for oid in tips).encode()).stdout.split()
+    )
     additions = {dest for source, dest in inputs.manifest if source == ADDITION}
     for entry in inputs.exclude:
         for form in sorted(_forms(entry)):
@@ -946,6 +1004,7 @@ def check_v2(inputs: Inputs) -> CheckResult:
     result.inspected = {
         "exclude_entries": len(inputs.exclude),
         "history_only_entries": len(inputs.history_paths),
+        "refs": len(targets),
         "history_commits": commits,
         "history_paths": len(history),
     }
@@ -1513,7 +1572,7 @@ class Evaluator:
             for item in node.elts:
                 if isinstance(item, ast.Starred):
                     inner = self.value(item.value, depth + 1)
-                    items.extend(inner if isinstance(inner, tuple) else [UNKNOWN_VALUE])
+                    items.extend(inner if isinstance(inner, tuple) else [_fallback(inner)])  # length unknown
                 else:
                     items.append(self.value(item, depth + 1))
             if isinstance(node, ast.Set) and len(items) > 1:  # iteration order is unknown
@@ -1586,7 +1645,7 @@ class Evaluator:
         for arg in node.args:
             if isinstance(arg, ast.Starred):
                 inner = self.value(arg.value, depth)
-                args.extend(inner if isinstance(inner, tuple) else [UNKNOWN_VALUE])
+                args.extend(inner if isinstance(inner, tuple) else [_fallback(inner)])  # length unknown
             else:
                 args.append(self.value(arg, depth))
         kwargs = {keyword.arg: self.value(keyword.value, depth) for keyword in node.keywords if keyword.arg}
@@ -2425,10 +2484,14 @@ Input formats:
 
 Checks (every finding is printed; nothing stops at the first one):
   V1  HEAD's tracked paths equal the manifest dest paths; missing and extra paths are both reported.
-  V2  no --exclude path, as written or renamed {PATH_RENAME}, is in the final tree or in any commit reachable
-      from HEAD (every added, changed or deleted path, merges diffed against each parent); no --history-paths
-      entry is in the final tree. A form that is a manifest addition row (scripts/__init__.py renames onto
-      lu_machinery/__init__.py) may exist only after the rewrite tip, which V9 binds to the frozen tree.
+  V2  every ref is history: HEAD, branches, annotated and lightweight tags (peeled through every level), notes,
+      stash, replace refs and any other namespace. No --exclude path, as written or renamed {PATH_RENAME}, is in
+      the final tree or in any commit reachable from any ref (every added, changed or deleted path, merges
+      diffed against each parent, so content only a merge introduces counts); no --history-paths entry is in
+      the final tree. A form that is a manifest addition row (scripts/__init__.py renames onto
+      lu_machinery/__init__.py) may exist only after the rewrite tip, which V9 binds to the frozen tree. A ref
+      that points to a tree, a blob or a missing object is a finding, and so is any commit reachable from a
+      ref that is neither in the rewritten history (an ancestor of --rewrite-tip, which HP verifies) nor HEAD.
   V3  each manifest .py file imports in its own `python -I -B` child (--python), cwd an empty temp dir, HOME and
       TMPDIR temporary, only --repo prepended to sys.path. Dotted names import by name (the resolved __file__
       must be that file); other files load from their path under a synthetic name. A loaded `scripts` module or
