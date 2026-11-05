@@ -12,9 +12,14 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+if __package__ in {None, ""}:  # run as a file (launchers do): the repository root holds the package
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.repo_root import machinery_path
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-TAXONOMY_PATH = PROJECT_ROOT / "scripts/config/fleet_taxonomy.yaml"
-ASSIGNMENTS_PATH = PROJECT_ROOT / "scripts/config/area_assignments.yaml"
+TAXONOMY_PATH = machinery_path("config/fleet_taxonomy.yaml")
+ASSIGNMENTS_PATH = machinery_path("config/area_assignments.yaml")
 TAXONOMY_SCHEMA_PATH = (
     PROJECT_ROOT / "agents_extensions/shared/schemas/fleet-taxonomy.v1.schema.json"
 )

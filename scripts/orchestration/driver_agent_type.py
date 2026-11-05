@@ -19,9 +19,14 @@ from pathlib import Path
 
 import yaml
 
+if __package__ in {None, ""}:  # run as a file (launchers do): the repository root holds the package
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.repo_root import machinery_path
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_ASSIGNMENTS_PATH = PROJECT_ROOT / "scripts" / "config" / "area_assignments.yaml"
-DEFAULT_TAXONOMY_PATH = PROJECT_ROOT / "scripts" / "config" / "fleet_taxonomy.yaml"
+DEFAULT_ASSIGNMENTS_PATH = machinery_path("config/area_assignments.yaml")
+DEFAULT_TAXONOMY_PATH = machinery_path("config/fleet_taxonomy.yaml")
 
 
 def _canonical_area_for_alias(lane: str, taxonomy_path: Path) -> str | None:

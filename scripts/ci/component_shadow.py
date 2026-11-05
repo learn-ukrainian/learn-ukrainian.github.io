@@ -17,6 +17,7 @@ from pathlib import Path
 
 from scripts.ci import components, pytest_report
 from scripts.ci import dependency_change_scope as dependency
+from scripts.ci._location import checkout_relative, module_name
 from scripts.ci.junit_results import parse_junit
 from scripts.common import github_client
 
@@ -25,12 +26,16 @@ BASELINE = "2026-10-03T00:00:00Z..2026-10-06T11:14:28Z"
 FLAKE_RULE = "Every full-JUnit failure counts, including flaky tests; no post-hoc reclassification."
 BASE_RULE = "Exempt only the same failing ID in an artifact-complete first-attempt rerun of the event base SHA."
 INJECTION_COVERAGE = set(components.NODE_IDS) | {"shared-fixture", "dynamic-load", "subprocess", "stale-artifact"}
-TOOLS = ("scripts/ci/component_shadow.py", "scripts/ci/components.py", "scripts/ci/components.json",
-         "scripts/ci/junit_results.py", "scripts/ci/dependency_change_scope.py",
-         "scripts/ci/dependency_change_denominator.json", "scripts/ci/pytest_report.py",
-         "scripts/ci/frontend_change_scope.py", "scripts/ci/frontend_change_denominator.json",
-         "scripts/common/repo_root.py", "scripts/common/jsonl.py", "scripts/storage/test_baseline.py",
-         "scripts/ci/deploy_paths.py", "scripts/curriculum/deploy_paths.v1.json")
+def _tool(*parts: str) -> str:
+    return checkout_relative(*parts).as_posix()
+
+
+TOOLS = (_tool("ci", "component_shadow.py"), _tool("ci", "components.py"), _tool("ci", "components.json"),
+         _tool("ci", "junit_results.py"), _tool("ci", "dependency_change_scope.py"),
+         _tool("ci", "dependency_change_denominator.json"), _tool("ci", "pytest_report.py"),
+         _tool("ci", "frontend_change_scope.py"), _tool("ci", "frontend_change_denominator.json"),
+         _tool("common", "repo_root.py"), _tool("common", "jsonl.py"), _tool("storage", "test_baseline.py"),
+         _tool("ci", "deploy_paths.py"), "scripts/curriculum/deploy_paths.v1.json")
 REVIEW_EDGE_CENSUS = {
     "head_sha": "c3695226db3b18ec0e3ab42c9a7a3221e00df69c",
     "source": "claude-opus-5-5 review of record; measured selection, not the current census",
@@ -103,7 +108,7 @@ def select(base: str, head: str, event: str, root: Path = components.ROOT) -> di
         except (dependency.MergeBaseError, subprocess.SubprocessError, OSError):
             reason = "diff-unavailable"
     patterns = dependency.load_denominator(components.ROOT / dependency.DENOMINATOR_REL)["paths"]
-    if any(path.startswith((".github/", "scripts/ci/")) or dependency_input(path, patterns) for path in paths):
+    if any(path.startswith((".github/", f"{checkout_relative('ci').as_posix()}/")) or dependency_input(path, patterns) for path in paths):
         reason = "workflow-tool-or-dependency"
     affected = components.affected(paths, manifest, graph)
     if not reason and (affected["fallback_reasons"] or "shared-core" in affected["components"]):
@@ -449,12 +454,15 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Compute advisory selection and score full-run failures.\nUse before PR narrowing; this tool never executes tests.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  $P -m scripts.ci.component_shadow select --base origin/main --head HEAD\n"
-               "  $P -m scripts.ci.component_shadow register --baseline baseline.json --output registration.json\n"
-               "  $P -m scripts.ci.component_shadow check --registration registration.json --receipts shadow/\n"
+        epilog=(
+               "Examples:\n"
+               f"  $P -m {module_name(__spec__, __file__)} select --base origin/main --head HEAD\n"
+               f"  $P -m {module_name(__spec__, __file__)} register --baseline baseline.json --output registration.json\n"
+               f"  $P -m {module_name(__spec__, __file__)} check --registration registration.json --receipts shadow/\n"
                "Outputs: ignored JSON registration/census/receipts; no test or Git mutations.\n"
                "Exit codes: 0 report-only or complete zero-miss check; 1 incomplete/missed; 2 invalid input.\n"
-               "Related: #9721 slice 6; docs/runbooks/ci-gate.md. $P is the prescribed project interpreter.")
+               "Related: #9721 slice 6; docs/runbooks/ci-gate.md. $P is the prescribed project interpreter."),
+    )
     commands = parser.add_subparsers(dest="command", required=True)
     for command in ("select", "report", "register", "inventory", "check"):
         sub = commands.add_parser(command, help={"select": "Print would-run selection", "report": "Write an ignored receipt, always exit 0",

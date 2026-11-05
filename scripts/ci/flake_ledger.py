@@ -14,6 +14,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci._location import checkout_relative
 from scripts.ci.junit_results import parse_junit
 from scripts.common import github_client
 from scripts.common.flake_quarantine import REGISTRY, load_registry
@@ -153,9 +154,9 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/ci/flake_ledger.py --nightly-junit ci-artifacts/slow-junit.xml "
+            f"  .venv/bin/python {checkout_relative('ci', 'flake_ledger.py').as_posix()} --nightly-junit ci-artifacts/slow-junit.xml "
             "--fetch-queue --output ci-artifacts/flake-ledger.json\n"
-            "  .venv/bin/python scripts/ci/flake_ledger.py --nightly-junit sample.xml "
+            f"  .venv/bin/python {checkout_relative('ci', 'flake_ledger.py').as_posix()} --nightly-junit sample.xml "
             "--queue-dir queue-artifacts --dry-run --output ledger.json\n"
             "Outputs: JSON ledger; may reopen/comment/label fix issues unless --dry-run.\n"
             "Exit codes: 0 success; nonzero invalid input, missing evidence, or GitHub failure.\n"

@@ -21,6 +21,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci._location import checkout_relative, module_name
 from scripts.common import github_client
 from scripts.common.repo_root import main_checkout_root
 from scripts.orchestration import fleet_repos, postmerge_criteria
@@ -145,7 +146,7 @@ def registry_for(repository: str) -> dict[str, list[int]] | None:
     for repo in fleet_repos.load_fleet_repos().values():
         if repo.github.casefold() == repository.casefold() and repo.role == "public-monorepo":
             try:
-                return audit.load_registry(ROOT / "scripts/config/issue_streams.yaml", audit_only=True)
+                return audit.load_registry(ROOT / checkout_relative("config", "issue_streams.yaml"), audit_only=True)
             except FileNotFoundError:
                 return {}
     return None
@@ -716,14 +717,17 @@ def main(argv: list[str] | None = None) -> int:
         description="Check DoR, stable-ID DoD structure and live issue membership.\n"
         "Use --issue for dispatch; body-only modes leave membership unchecked.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.ci.check_issue_task_quality --issue 10565 --strict --json\n"
-        "  .venv/bin/python -m scripts.ci.check_issue_task_quality --body-file card.md\n"
-        "Outputs: stdout; successful complete live membership audits atomically refresh batch_state/issue_stream_audit.json.\n"
+        epilog=(
+            "Examples:\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} --issue 10565 --strict --json\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} --body-file card.md\n"
+            "Outputs: stdout; successful complete live membership audits atomically refresh batch_state/issue_stream_audit.json.\n"
         "Issue fetch and membership each have a 60-second budget.\n"
         "Parentless targets try a validated audit cache (maximum age 3600s) before a live audit.\n"
         "Timeout codes identify the target fetch, cache validation, or live audit root and issue.\n"
         "Exit codes: 0 = advisory or PASS; 1 = strict WARN; 2 = invalid arguments.\n"
-        "Related: docs/best-practices/task-quality.md, issue #10565.",
+            "Related: docs/best-practices/task-quality.md, issue #10565."
+        ),
     )
     src = parser.add_mutually_exclusive_group(required=True)
     src.add_argument("--issue", type=int, help="GitHub issue number (uses gh)")

@@ -22,6 +22,11 @@ from pathlib import Path
 
 from scripts.orchestration.fleet_repos import FleetRepo, load_fleet_repos
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_MACHINERY = _PACKAGE.partition(".")[0]
+
 GIT = shutil.which("git", path=os.defpath) or "/usr/bin/git"
 CANONICAL_ORIGIN = "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git"
 
@@ -405,7 +410,7 @@ class SafeGitContext:
         hooks.mkdir(parents=True)
         driver = getattr(self, "driver_base", base)
         self.receive_trees([driver])
-        paths = self.checked("ls-tree", "-r", "-z", driver, "--", ".githooks", "scripts/common/test_slots.py")
+        paths = self.checked("ls-tree", "-r", "-z", driver, "--", ".githooks", f"{_MACHINERY}/common/test_slots.py")
         self._receive([row.split("\t", 1)[0].split()[2] for row in paths.split("\0") if row])
         for row in paths.split("\0"):
             if not row:

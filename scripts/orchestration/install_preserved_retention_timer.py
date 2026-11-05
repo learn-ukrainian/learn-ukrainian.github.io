@@ -11,6 +11,12 @@ from pathlib import Path
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 from scripts.orchestration.install_data_tier_timer import systemctl_user, verify_units
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_MACHINERY = _PACKAGE.partition(".")[0]
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_DIR = PROJECT_ROOT / "packaging/systemd"
 UNITS = ("learn-ukrainian-preserved-retention.service", "learn-ukrainian-preserved-retention.timer")
@@ -49,11 +55,11 @@ def main(argv: list[str] | None = None) -> int:
         description="Install daily preserved residue backstop user units. Default: read-only check. Enable after merge.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Examples:\n  .venv/bin/python -m scripts.orchestration.install_preserved_retention_timer --check\n"
-            "  .venv/bin/python -m scripts.orchestration.install_preserved_retention_timer --apply --enable\n"
+            f"Examples:\n  .venv/bin/python -m {_MODULE} --check\n"
+            f"  .venv/bin/python -m {_MODULE} --apply --enable\n"
             "Outputs: owner-only user units; --apply reloads systemd; --enable starts the timer.\n"
             "Exit codes: 0 current/applied, 1 drift or install error, 2 invalid usage.\n"
-            "Related: C-2481, scripts.hygiene.preserved_retention, install_tmp_sweep_timer."
+            f"Related: C-2481, {_MACHINERY}.hygiene.preserved_retention, install_tmp_sweep_timer."
         ),
     )
     parser.add_argument(

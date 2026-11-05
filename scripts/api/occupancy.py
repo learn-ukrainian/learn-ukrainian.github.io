@@ -214,7 +214,12 @@ def _load_entry_for_selected(
 ) -> dict[str, Any]:
     atlas = atlas_provider()
     if canonical is not None and atlas is not None:
-        return atlas.host_load_entry(canonical, fresh=fresh)
+        try:
+            return atlas.host_load_entry(canonical, fresh=fresh)
+        except LookupError:
+            # The registry-only provider raises this: the host-load cache
+            # belongs to the product routes, which this app did not mount.
+            return _unavailable_load_entry(now=now)
     if canonical is not None:
         return _unavailable_load_entry(now=now)
     if fills_in_process_api_host(opaque, mapping):
@@ -232,7 +237,11 @@ async def _load_entry_for_selected_async(
 ) -> dict[str, Any]:
     atlas = atlas_provider()
     if canonical is not None and atlas is not None:
-        return await atlas.host_load_entry_async(canonical, fresh=fresh)
+        try:
+            return await atlas.host_load_entry_async(canonical, fresh=fresh)
+        except LookupError:
+            # See _load_entry_for_selected: no product routes, no host-load cache.
+            return _unavailable_load_entry(now=now)
     if canonical is not None:
         return _unavailable_load_entry(now=now)
     if fills_in_process_api_host(opaque, mapping):
