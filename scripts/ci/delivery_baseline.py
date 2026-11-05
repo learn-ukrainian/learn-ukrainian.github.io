@@ -34,6 +34,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.ci._location import module_name
+
 SCHEMA_VERSION = "delivery-baseline-input.v1"
 ARMS = ("before", "after")
 STRATA = (
@@ -404,9 +409,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ci.delivery_baseline cohort.json\n"
-            "  .venv/bin/python -m scripts.ci.delivery_baseline tests/fixtures/delivery_baseline/stratum_floor.json\n"
-            "  .venv/bin/python -m scripts.ci.delivery_baseline cohort.json > report.json\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} cohort.json\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} tests/fixtures/delivery_baseline/stratum_floor.json\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} cohort.json > report.json\n"
             "\n"
             "Outputs:\n"
             "  stdout: a delivery-baseline-report.v1 JSON document (records, denominators, per-stratum\n"
