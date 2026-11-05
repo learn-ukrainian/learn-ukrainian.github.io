@@ -18,6 +18,7 @@ from pathlib import Path
 from scripts.ci import components, pytest_report
 from scripts.ci import dependency_change_scope as dependency
 from scripts.ci._location import checkout_relative, module_name
+from scripts.ci.deploy_paths import POLICY_REL
 from scripts.ci.junit_results import parse_junit
 from scripts.common import github_client
 
@@ -35,7 +36,7 @@ TOOLS = (_tool("ci", "component_shadow.py"), _tool("ci", "components.py"), _tool
          _tool("ci", "dependency_change_denominator.json"), _tool("ci", "pytest_report.py"),
          _tool("ci", "frontend_change_scope.py"), _tool("ci", "frontend_change_denominator.json"),
          _tool("common", "repo_root.py"), _tool("common", "jsonl.py"), _tool("storage", "test_baseline.py"),
-         _tool("ci", "deploy_paths.py"), "scripts/curriculum/deploy_paths.v1.json")
+         _tool("ci", "deploy_paths.py"), POLICY_REL)
 REVIEW_EDGE_CENSUS = {
     "head_sha": "c3695226db3b18ec0e3ab42c9a7a3221e00df69c",
     "source": "claude-opus-5-5 review of record; measured selection, not the current census",

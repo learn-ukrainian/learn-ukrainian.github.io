@@ -11,9 +11,10 @@ from pathlib import Path
 
 from scripts.ci._location import module_name
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.repo_root import rules_dir
 from scripts.review.target_resolution import is_test_path
 
-POLICY = Path(__file__).resolve().parents[2] / "agents_extensions/shared/rules/workflow.md"
+POLICY = rules_dir() / "workflow.md"
 SHA = re.compile(r"[0-9a-fA-F]{40}")
 
 
