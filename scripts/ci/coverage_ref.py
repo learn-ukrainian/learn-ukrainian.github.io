@@ -28,6 +28,18 @@ from collections.abc import Generator
 from pathlib import Path
 
 
+def _packaged_script(name: str) -> str:
+    """Checkout-relative path of a sibling while this file is still in the package.
+
+    The coverage-ref workflow copies this file out of the checkout and runs that
+    copy. A copy's parent is not ``ci``, so help names the file alone.
+    """
+    here = Path(__file__)
+    if here.parent.name != "ci":
+        return name
+    return f"{here.parents[1].name}/ci/{name}"
+
+
 class CollectionRecorder:
     """Retain selected node IDs on the controller, including with xdist workers."""
 
@@ -362,14 +374,14 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/ci/coverage_ref.py run --output raw --shard 1 -- tests/test_example.py\n"
-            "  .venv/bin/python scripts/ci/coverage_ref.py combine --input raw --output combined "
+            f"  .venv/bin/python {_packaged_script('coverage_ref.py')} run --output raw --shard 1 -- tests/test_example.py\n"
+            f"  .venv/bin/python {_packaged_script('coverage_ref.py')} combine --input raw --output combined "
             "--sha <40-hex> --matrix-result success\n"
             "Outputs: receipt.json, manifest.json and coverage.json from all valid available data.\n"
             "Exit codes: 0 = complete measurement (tests may fail); 1 = incomplete; 2 = usage error.\n"
             "Requires: GITHUB_RUN_ID, GITHUB_RUN_ATTEMPT, COVERAGE_RCFILE; run also needs the CI duration snapshot.\n"
             "Contexts: set COVERAGE_REF_CONTEXTS=true to record pytest-cov per-test contexts.\n"
-            "Related: .github/workflows/coverage-ref.yml; scripts/ci/coverage_diff.py; #11226."
+            f"Related: .github/workflows/coverage-ref.yml; {_packaged_script('coverage_diff.py')}; #11226."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)

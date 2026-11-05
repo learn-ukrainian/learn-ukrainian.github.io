@@ -17,6 +17,12 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.common.safe_unit_install import InstallError, install_unit, load_unit
 
+
+def _mp(relative: str) -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return f"{top or Path(__file__).parents[1].name}/{relative}"
+
 TEMPLATE_ROOT = REPO_ROOT / "packaging" / "systemd" / "dropins"
 DEFAULT_DESTINATION = Path("/etc/systemd/user")
 # Every user's manager reads /etc/systemd/user, so drop-ins stay world-readable.
@@ -39,9 +45,9 @@ def main() -> int:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python "
-            "scripts/storage/install_data_volume_dropins.py\n"
+            f"{_mp('storage/install_data_volume_dropins.py')}\n"
             "  .venv/bin/python "
-            "scripts/storage/install_data_volume_dropins.py --apply\n"
+            f"{_mp('storage/install_data_volume_dropins.py')} --apply\n"
             "Outputs: prints each target and complete rendered content; --apply writes "
             "nineteen data-volume.conf files (mode 0644, replaced by rename) under the destination; "
             "a symlinked drop-in or a symlinked directory on the way to it is refused.\n"

@@ -16,6 +16,11 @@ from typing import Any
 PACKET_MAX_BYTES = 16384
 _ORDER_LIMIT = 500
 _TEXT_LIMITS = (200, 80, 40, 24)
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parent.name
+_PLANE_STATUS = f".venv/bin/python -m {_MACHINERY}.fleet_comms plane-status"
+_DELIVERIES_HELP = f".venv/bin/python -m {_MACHINERY}.fleet_comms deliveries --help"
 
 
 def json_bytes(payload: dict[str, Any], *, newline: bool = False) -> bytes:
@@ -95,7 +100,7 @@ def _plane_source(observed_at: str) -> dict[str, Any]:
         mode = str(resolve_plane_mode(None))
         return {
             "name": "plane",
-            "locator": ".venv/bin/python -m scripts.fleet_comms plane-status",
+            "locator": _PLANE_STATUS,
             "observed_at": observed_at,
             "freshness": "live",
             "mode": mode,
@@ -103,7 +108,7 @@ def _plane_source(observed_at: str) -> dict[str, Any]:
     except Exception:
         return {
             "name": "plane",
-            "locator": ".venv/bin/python -m scripts.fleet_comms plane-status",
+            "locator": _PLANE_STATUS,
             "observed_at": None,
             "freshness": "unknown",
         }
@@ -270,7 +275,7 @@ def _fit(packet: dict[str, Any], state_locator: str) -> dict[str, Any]:
         kept.append(entry)
     if dropped:
         packet["orders"] = kept
-        _note(packet, ".venv/bin/python -m scripts.fleet_comms deliveries --help", dropped)
+        _note(packet, _DELIVERIES_HELP, dropped)
         # The omission note is applied after the fit check. Drop further ids
         # until the note itself fits. Hold and stop ids are not in this list.
         while packet["orders"] and len(json_bytes(packet, newline=True)) > PACKET_MAX_BYTES:
@@ -286,7 +291,7 @@ def _fit(packet: dict[str, Any], state_locator: str) -> dict[str, Any]:
         while packet[key] and oversized():
             packet[key].pop()
             packet["omitted"]["count"] += 1
-    return cap_response(packet, locator=f".venv/bin/python -m scripts.driver_state packet --epic {packet['epic']}")
+    return cap_response(packet, locator=f".venv/bin/python -m {_MACHINERY}.driver_state packet --epic {packet['epic']}")
 
 
 def build_packet(
@@ -362,7 +367,7 @@ def build_packet(
             },
             {
                 "name": "orders",
-                "locator": ".venv/bin/python -m scripts.fleet_comms deliveries --help",
+                "locator": _DELIVERIES_HELP,
                 "observed_at": generated_at if probe_ok else None,
                 "freshness": "live" if probe_ok else "unknown",
             },
@@ -380,7 +385,7 @@ def build_packet(
             },
             {
                 "name": "live_workers",
-                "locator": ".venv/bin/python scripts/dispatch.py list --status running",
+                "locator": f".venv/bin/python {_MACHINERY}/dispatch.py list --status running",
                 "observed_at": None,
                 "freshness": "unknown",
             },
@@ -393,7 +398,7 @@ def build_packet(
         packet["omitted"]["count"] += 1
     elif truncated or missing_orders:
         packet["complete"] = False
-        packet["omitted"]["locators"].append(".venv/bin/python -m scripts.fleet_comms deliveries --help")
+        packet["omitted"]["locators"].append(_DELIVERIES_HELP)
     if state_freshness != "live":
         packet["complete"] = False
         packet["omitted"]["locators"].append(state_locator)

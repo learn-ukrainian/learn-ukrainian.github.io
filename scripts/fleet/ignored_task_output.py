@@ -28,6 +28,7 @@ from typing import Any
 
 import yaml
 
+from scripts.common.repo_root import machinery_path
 from scripts.fleet.regenerable_output import committed_release_pins, is_regenerable_ignored_path
 from scripts.orchestration import worktree_artifacts as artifacts
 from scripts.orchestration.preparation_evidence import UniqueKeyLoader
@@ -45,7 +46,7 @@ MAX_RESIDUE_RECEIPT_BYTES = 10 * 1024 * 1024
 MAX_DETACHED_BUNDLE_BYTES = MAX_PRESERVED_BYTES
 
 # Reviewed creator-initiator -> canonical stream map for lane succession (#10617).
-SUCCESSION_MAP = Path(__file__).resolve().parents[2] / "scripts/config/terminal_abandon_succession.yaml"
+SUCCESSION_MAP = machinery_path("config/terminal_abandon_succession.yaml")
 _SUCCESSION_STREAM = re.compile(r"epic:[1-9][0-9]*")
 _SUCCESSION_INITIATOR = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 

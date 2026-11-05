@@ -21,13 +21,24 @@ from scripts.storage import generations
 from scripts.storage.topology import resolve_topology
 from scripts.storage.wal_permissions import hold_database, lift_database
 
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or Path(__file__).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 # A writer run through ``write`` is killed after this long unless --timeout says otherwise.
 WRITER_TIMEOUT_SECONDS = 24 * 60 * 60
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.storage",
+        prog=f"python -m {_mod('storage')}",
         description=(
             "Report storage topology or hold/lift SQLite database permissions.\n"
             "Use status for debugging and hold/lift for quiesced maintenance; "
@@ -36,14 +47,14 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.storage status\n"
-            "  .venv/bin/python -m scripts.storage status --json\n"
-            "  .venv/bin/python -m scripts.storage hold example.db --json\n"
-            "  .venv/bin/python -m scripts.storage generations --json\n"
-            "  .venv/bin/python -m scripts.storage write -- .venv/bin/python scripts/ingest/x.py --db data/sources.db\n"
+            f"  .venv/bin/python -m {_mod('storage')} status\n"
+            f"  .venv/bin/python -m {_mod('storage')} status --json\n"
+            f"  .venv/bin/python -m {_mod('storage')} hold example.db --json\n"
+            f"  .venv/bin/python -m {_mod('storage')} generations --json\n"
+            f"  .venv/bin/python -m {_mod('storage')} write -- .venv/bin/python scripts/ingest/x.py --db data/sources.db\n"
             "\n"
             "From a dispatch worktree, use the primary checkout interpreter:\n"
-            "  <primary-checkout>/.venv/bin/python -m scripts.storage status\n"
+            f"  <primary-checkout>/.venv/bin/python -m {_mod('storage')} status\n"
             "Never create or use a worktree-local .venv for project commands.\n"
             "\n"
             "Outputs:\n"
@@ -92,7 +103,7 @@ def build_parser() -> argparse.ArgumentParser:
             ),
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog=(
-                f"Example: .venv/bin/python -m scripts.storage {command} example.db --json\n"
+                f"Example: .venv/bin/python -m {_mod('storage')} {command} example.db --json\n"
                 "Outputs: changed path/mode pairs on stdout; file modes changed.\n"
                 "Exit codes: 0 success; 1 filesystem/rollback failure; 2 invalid arguments.\n"
                 "Related: docs/runbooks/storage-topology.md; issue #11284."

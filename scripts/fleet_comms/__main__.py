@@ -4,4 +4,5 @@ from __future__ import annotations
 
 from scripts.fleet_comms.cli import main
 
-raise SystemExit(main())
+if __name__ == "__main__":
+    raise SystemExit(main())

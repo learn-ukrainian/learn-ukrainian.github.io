@@ -17,6 +17,8 @@ from functools import lru_cache
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from scripts.common.repo_root import machinery_path
+
 from .app_lifecycle import VerifiedAppLifecycleProof
 from .db import SessionStreamDatabase
 from .model import (
@@ -47,7 +49,7 @@ ROLLOVER_BUNDLE_SCHEMA = "rollover-bundle.v1"
 ROLLOVER_BUNDLE_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 ROLLOVER_BUNDLE_LINEAGE_ROOT = ".agent/thread-rollovers"
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-_HANDOFF_IDENTITY_SH = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
+_HANDOFF_IDENTITY_SH = machinery_path("lib/handoff_identity.sh")
 # Lease holders carry the provider id; each provider mints its handoff slot
 # through its own launcher helper in scripts/lib/handoff_identity.sh.
 _HANDOFF_SLOT_HELPERS = {

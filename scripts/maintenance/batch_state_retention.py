@@ -35,6 +35,13 @@ from scripts.orchestration import worktree_claims
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES, WorktreeLockError
 
+
+def _mp(relative: str) -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return f"{top or Path(__file__).parents[1].name}/{relative}"
+
+
 DEFAULT_BATCH_STATE = REPO_ROOT / "batch_state"
 # A clean verdict already lives on the task record, so the full JSON has no
 # forensic value after a day. Seven days reclaimed nothing: the dirs are younger.
@@ -772,8 +779,8 @@ def _parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/maintenance/batch_state_retention.py\n"
-            "  .venv/bin/python scripts/maintenance/batch_state_retention.py \\\n"
+            f"  .venv/bin/python {_mp('maintenance/batch_state_retention.py')}\n"
+            f"  .venv/bin/python {_mp('maintenance/batch_state_retention.py')} \\\n"
             "      --min-age-days 0 --apply\n"
             "\n"
             "Outputs:\n"
@@ -790,7 +797,7 @@ def _parser() -> argparse.ArgumentParser:
             "\n"
             "Related:\n"
             "  Legacy read-only snapshot sidecars (#7203, #8783)\n"
-            "  scripts/orchestration/stale_task_records.py archive (moves sidecars, does not shrink them)\n"
+            f"  {_mp('orchestration/stale_task_records.py')} archive (moves sidecars, does not shrink them)\n"
         ),
     )
     parser.add_argument(

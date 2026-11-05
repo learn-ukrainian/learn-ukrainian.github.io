@@ -28,6 +28,11 @@ from collections.abc import Iterable, Sequence
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.ci._location import checkout_relative
+
 SHARD_COUNT = 4
 PLAYGROUND_PERF_TEST = "tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast"
 SERIAL_TESTS = (PLAYGROUND_PERF_TEST,)
@@ -600,11 +605,11 @@ def _parser() -> argparse.ArgumentParser:
         formatter_class=formatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/ci/pytest_shards.py plan-shard --snapshot ci-artifacts/pytest-duration-snapshot.json --shard-id 1 --output-dir ci-artifacts\n"
-            "  .venv/bin/python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir ci-artifacts --expected-source-sha $GITHUB_SHA --require-plan-metadata --require-execution-receipt\n"
+            f"  .venv/bin/python {checkout_relative('ci', 'pytest_shards.py').as_posix()} plan-shard --snapshot ci-artifacts/pytest-duration-snapshot.json --shard-id 1 --output-dir ci-artifacts\n"
+            f"  .venv/bin/python {checkout_relative('ci', 'pytest_shards.py').as_posix()} verify-artifacts --artifact-dir ci-artifacts --expected-source-sha $GITHUB_SHA --require-plan-metadata --require-execution-receipt\n"
             "Outputs: shard plans, node-ID lists, execution receipts, duration JSON, and validation errors.\n"
             "Exit codes: 0 means the requested operation passed; 1 means an input, partition, or test failed; 2 means CLI usage failed.\n"
-            "Related: scripts/ci/cursor_cloud_full_pytest.sh and docs/runbooks/ci-gate.md."
+            f"Related: {checkout_relative('ci', 'cursor_cloud_full_pytest.sh').as_posix()} and docs/runbooks/ci-gate.md."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True, title="commands")
