@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any
 
 from agent_runtime.errors import AgentStalledError, AgentTimeoutError
-from common.repo_root import project_interpreter
+from common.repo_root import machinery_path, project_interpreter
 
 from . import _config
 from ._ask_contract import MAX_TOTAL_ASK_RETRIES
@@ -398,7 +398,7 @@ def launch_background_ask(message_id: int, target: str, options: dict[str, Any])
             proc = subprocess.Popen(
                 [
                     str(project_interpreter()),
-                    str(REPO_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"),
+                    str(machinery_path("ai_agent_bridge/__main__.py")),
                     "process-ask",
                     str(message_id),
                     target,

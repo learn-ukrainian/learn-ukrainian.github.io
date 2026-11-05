@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -85,6 +86,8 @@ def reviewer_tool_allowed(payload: object, review_root: Path) -> bool:
 
 
 def main() -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     try:
         parser = argparse.ArgumentParser(
             description=(
@@ -92,7 +95,7 @@ def main() -> int:
                 "Used as a PreToolUse hook; reads one Grok JSON event from stdin."
             ),
             epilog=(
-                "Usage: <project-interpreter> -m scripts.agent_runtime.grok_reviewer_permissions --review-root <checkout> < event.json\n"
+                f"Usage: <project-interpreter> {entry} --review-root <checkout> < event.json\n"
                 "Outputs: path-free refusal on stderr; no files or network writes.\n"
                 "Exit codes: 0 admitted, 2 denied or unreadable event.\n"
                 "Related: adapters/grok_build.py; #9987."

@@ -114,12 +114,14 @@ def emit_decision(harness: str, allowed: bool, message: str) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = HookParser(
         description="Check one native shell event with the shared no-print guard.\n"
         "Use as a pre-tool hook; this command does not install harness wiring.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example:\n"
-        "  .venv/bin/python scripts/agent_runtime/secret_print_hook.py --harness cursor < event.json\n"
+        f"  .venv/bin/python {entry} --harness cursor < event.json\n"
         "Outputs: native decision on stdout when required; denial text on stderr. No files written.\n"
         "Exit codes: AGY returns 0 with allow/deny JSON; others return 0 to allow, 2 to deny.\n"
         "Related: agents_extensions/shared/hooks/guard-secret-print.py",

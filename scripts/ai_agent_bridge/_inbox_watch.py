@@ -32,10 +32,12 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     __package__ = "scripts.ai_agent_bridge"
 
 try:
+    from scripts.common.repo_root import machinery_path, machinery_root
     from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
+    from common.repo_root import machinery_path, machinery_root  # type: ignore[no-redef]
     from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
 
 from agent_runtime.agent_identity import seat_read_aliases
@@ -43,7 +45,7 @@ from secret_redactor import redact_text
 
 from . import _config
 from ._channels import resolve_recipient_alias
-from ._config import PRIMARY_REPO_ROOT
+from ._config import MACHINERY_PACKAGE, PRIMARY_REPO_ROOT
 
 if TYPE_CHECKING:
     from agents_extensions.shared.session_streams.model import Lease
@@ -51,6 +53,8 @@ if TYPE_CHECKING:
     from scripts.session_supervisor import SessionSupervisor
     from scripts.session_supervisor.remote import RemoteEpicClient
 
+# The watcher's own launcher wrapper, as the checkout names it (whatever the package is called).
+WATCH_ENTRY = machinery_path("ai_agent_bridge/inbox_watch.sh").relative_to(machinery_root().parent).as_posix()
 DEFAULT_POLL_INTERVAL_SECONDS = 15.0
 _MONITOR_BACKOFF_MAX_SECONDS = 300.0
 MAX_PREVIEW_CHARS = 240
@@ -392,6 +396,8 @@ def wake_driver_once(
 def preflight_supervisory_successor() -> bool:
     """Check the same captured launcher request before spending a delivery attempt."""
     helper = Path(__file__).resolve().parents[1] / "lib/session_supervisor.sh"
+    # This code's own launcher core, passed to the shell as an argument (never found through LC_ROOT).
+    launcher_core = machinery_path("lib/launcher_core.sh")
     try:
         entrypoint = os.environ.get("LC_SUPERVISORY_ENTRYPOINT", "supervisory-preflight")
         script = 'source "$1"; session_supervisor_preflight_successor'
@@ -410,10 +416,10 @@ def preflight_supervisory_successor() -> bool:
             if not captured.endswith(b"\0"):
                 raise ValueError("invalid captured launcher arguments")
             script = (
-                'source "$LC_ROOT/scripts/lib/launcher_core.sh"; mapfile -d "" -t LC_DRIVER_ORIGINAL_ARGS; ' + script
+                'source "$2"; mapfile -d "" -t LC_DRIVER_ORIGINAL_ARGS; ' + script
             )
         result = subprocess.run(
-            ["bash", "-c", script, entrypoint, str(helper)],
+            ["bash", "-c", script, entrypoint, str(helper), str(launcher_core)],
             input=captured,
             check=False,
             stdout=subprocess.DEVNULL,
@@ -483,8 +489,8 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
 
     repo_root = Path(__file__).resolve().parents[2]
     resolved = subprocess.run(
-        ["bash", "-c", 'source "$1/scripts/lib/handoff_identity.sh"; launcher_selector_stream "$2"',
-         "supervisory-selector", str(repo_root), epic],
+        ["bash", "-c", 'source "$1"; launcher_selector_stream "$2"',
+         "supervisory-selector", str(machinery_path("lib/handoff_identity.sh")), epic],
         check=True, capture_output=True, text=True, timeout=30,
     )
     stream_id = resolved.stdout.strip()
@@ -813,7 +819,7 @@ def acquire_watcher_lock(agent: str, lock_dir: Path = DEFAULT_LOCK_DIR) -> Watch
         pid_detail = f" (pid {existing_pid})" if existing_pid is not None else ""
         raise WatcherAlreadyRunningError(
             f"inbox watcher already running for {slot!r}{pid_detail}; "
-            f"stop it with scripts/ai_agent_bridge/inbox_watch.sh --stop {slot}"
+            f"stop it with {WATCH_ENTRY} --stop {slot}"
         ) from exc
 
     try:
@@ -935,15 +941,15 @@ def build_parser() -> argparse.ArgumentParser:
     """Build the one-command watcher interface used by harness Monitor tools."""
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  scripts/ai_agent_bridge/inbox_watch.sh grok-infra
-  scripts/ai_agent_bridge/inbox_watch.sh grok-infra --wake-driver grok --epic infra
+        epilog=f"""Examples:
+  {WATCH_ENTRY} grok-infra
+  {WATCH_ENTRY} grok-infra --wake-driver grok --epic infra
 
 Outputs: bounded notifications; supervisory modes consume Fleet Comms events,
 prepare durable handoffs, resume live Codex threads, or invoke offline driver launchers.
 Exit codes: 0 success; 2 refusal/error; 75 launcher-owned restart prepared;
 76 transient Monitor failure (launcher may restart the live watcher).
-Related: docs/runbooks/session-supervisor.md; scripts.session_supervisor.
+Related: docs/runbooks/session-supervisor.md; {MACHINERY_PACKAGE}.session_supervisor.
 """,
     )
     parser.add_argument("agent", help="driver handoff agent slot to watch")

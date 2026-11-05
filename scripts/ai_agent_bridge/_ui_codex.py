@@ -645,6 +645,11 @@ def send(
 
 
 def cli_main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file; the watcher beside it.
+    if __spec__ is not None:
+        entry, watcher = f"-m {__spec__.name}", f"{__spec__.name.rpartition('.')[0]}._inbox_watch"
+    else:
+        entry, watcher = os.fspath(__file__), os.fspath(Path(__file__).with_name("_inbox_watch.py"))
     parser = argparse.ArgumentParser(
         prog="ab send-codex-ui",
         description=(
@@ -654,13 +659,13 @@ def cli_main(argv: list[str] | None = None) -> int:
             "Use for explicit delivery to a known thread; use the inbox watcher for gated driver wakes."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.ai_agent_bridge._ui_codex --thread <UUID> "ping"
-  .venv/bin/python -m scripts.ai_agent_bridge._ui_codex --thread <UUID> --from-file relay.md
+        epilog=f"""Examples:
+  .venv/bin/python {entry} --thread <UUID> "ping"
+  .venv/bin/python {entry} --thread <UUID> --from-file relay.md
 
 Outputs: a resume turn in the persisted thread; final response or JSON receipt on stdout.
 Exit codes: Codex subprocess status; timeout is -1 (shell 255); 2 invalid arguments.
-Related: scripts.ai_agent_bridge._inbox_watch; docs/runbooks/session-supervisor.md; #10217.
+Related: {watcher}; docs/runbooks/session-supervisor.md; #10217.
 """,
     )
     parser.add_argument(

@@ -69,22 +69,24 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
-from scripts.common.repo_root import main_checkout_root, project_interpreter
+from scripts.common.repo_root import machinery_path, machinery_root, main_checkout_root, project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 
 ROOT = Path(__file__).resolve().parents[2]
+# The machinery package's canonical import name: its directory's name.
+_PACKAGE = machinery_root().name
 SCHEMA = 1
 REFUSED = 125
 RECEIPT_SUFFIX = ".sandbox.json"
 # Run by path under -I so neither the worktree (the launch cwd) nor PYTHONPATH supplies this code.
 _BOOTSTRAP = (
     "import sys; sys.path.insert(0, sys.argv[1]); "
-    "from scripts.dispatcher.agy_sandbox import main; raise SystemExit(main(sys.argv[2:]))"
+    f"from {_PACKAGE}.dispatcher.agy_sandbox import main; raise SystemExit(main(sys.argv[2:]))"
 )
 _PROJECTED = {
-    "canary.py": ROOT / "scripts" / "dispatcher" / "agy_canary.py",
-    "forwarder.py": ROOT / "scripts" / "agent_runtime" / "attempt_forwarder.py",
-    "stdio.py": ROOT / "scripts" / "agent_runtime" / "attempt_proxy.py",
+    "canary.py": machinery_path("dispatcher/agy_canary.py"),
+    "forwarder.py": machinery_path("agent_runtime/attempt_forwarder.py"),
+    "stdio.py": machinery_path("agent_runtime/attempt_proxy.py"),
 }
 _TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 _AGY_AUTH = ("AGY_API_KEY", "AGY_TOKEN", "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY")
@@ -109,7 +111,7 @@ MAX_INPUTS = 8
 MAX_INPUT_BYTES = 8 << 20
 # Native Claude's shell (shell_main). providers/claude.py sets these variables on the Claude process;
 # Claude Code passes its environment to the prefix, and the boundary passes none of it inside.
-SHELL_PREFIX = ROOT / "scripts" / "dispatcher" / "claude_review_shell"
+SHELL_PREFIX = machinery_path("dispatcher/claude_review_shell")
 SHELL_ENV_PYTHON, SHELL_ENV_TASK, SHELL_ENV_WORKTREE, SHELL_ENV_LOG = (
     "LU_REVIEW_SHELL_PYTHON", "LU_REVIEW_SHELL_TASK", "LU_REVIEW_SHELL_WORKTREE", "LU_REVIEW_SHELL_LOG",
 )
@@ -1099,9 +1101,10 @@ class _Boundary:
         if self.shell:
             projected["bin/gh"] = _GH_SHIM.format(interpreter=interpreter).encode()
         # The canary imports these trusted contracts, never branch-controlled code.
-        for relative in ("scripts/storage/topology.py", "scripts/lib/readonly_sqlite.py", "scripts/common/repo_root.py"):
-            projected[f"store_contract/{relative}"] = (ROOT / relative).read_bytes()
-        for package in ("scripts", "scripts/storage", "scripts/lib", "scripts/common"):
+        # They keep their package-relative places under the machinery package's own name.
+        for relative in ("storage/topology.py", "lib/readonly_sqlite.py", "common/repo_root.py"):
+            projected[f"store_contract/{_PACKAGE}/{relative}"] = machinery_path(relative).read_bytes()
+        for package in (_PACKAGE, f"{_PACKAGE}/storage", f"{_PACKAGE}/lib", f"{_PACKAGE}/common"):
             projected[f"store_contract/{package}/__init__.py"] = b""
         import psutil
 

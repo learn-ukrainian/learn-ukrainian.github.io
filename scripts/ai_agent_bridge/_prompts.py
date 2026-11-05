@@ -2,7 +2,7 @@
 
 from scripts.lib import rules_core
 
-from ._config import REPO_ROOT
+from ._config import MACHINERY_PACKAGE, REPO_ROOT
 
 
 def review_protocol_prefix(
@@ -287,7 +287,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
     )
 
 
-_CODEX_STANDING_RULES = """\
+_CODEX_STANDING_RULES = f"""\
 # NON-NEGOTIABLE RULES FOR CODEX (apply to EVERY task from this bridge)
 
 ## Git branch safety — HARD CONSTRAINT
@@ -314,7 +314,7 @@ Perform authorized edits only in the assigned dispatch worktree:
 - Be concise. Report what you did, what you verified, and what remains.
 
 ## Runtime / architecture tasks
-- If the task involves `scripts/agent_runtime/`, READ `docs/agent-runtime-guide.md` FIRST.
+- If the task involves `{MACHINERY_PACKAGE}/agent_runtime/`, READ `docs/agent-runtime-guide.md` FIRST.
   The guide is the single source of truth for the runtime design; violating its rules
   (session resume policy, mode vocabulary, adapter protocol shape) causes silent bugs.
 """

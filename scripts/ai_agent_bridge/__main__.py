@@ -21,6 +21,5 @@ if __name__ == "__main__":
     from ai_agent_bridge._cli import main
     main()
 else:
-    # When imported as part of the package (python -m ai_agent_bridge)
+    # Imported, not run (``python -m`` runs the branch above): expose the entry point only.
     from ._cli import main
-    main()

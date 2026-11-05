@@ -31,6 +31,8 @@ from scripts.fleet_comms.paths import (
     local_plane_is_retired,
 )
 
+from ._config import BRIDGE_ENTRY
+
 if TYPE_CHECKING:
     from agent_runtime.target_admission import AdmittedTarget
 
@@ -141,7 +143,7 @@ def _build_remote_ask_script(
     """
     argv = [
         ".venv/bin/python",
-        "scripts/ai_agent_bridge/__main__.py",
+        BRIDGE_ENTRY,
         f"ask-{command_target}",
         "-",
         "--task-id",

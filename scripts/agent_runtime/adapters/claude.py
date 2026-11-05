@@ -262,6 +262,11 @@ from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
 
+try:
+    from scripts.common.repo_root import machinery_root
+except ImportError:  # agent_runtime loaded with scripts/ on path
+    from common.repo_root import machinery_root  # type: ignore[no-redef]
+
 if TYPE_CHECKING:
     from scripts.agent_runtime.attempt_boundary import ClaudeAccountBinding
 
@@ -364,9 +369,11 @@ _AUTH_STATUS_TIMEOUT_S = 30
 # isolated from the worker's Python environment variables and working
 # directory. That module imports the standard library only, so the guard
 # needs no virtual environment (the runner resolves the interpreter link).
+# The guard is named under the machinery package's canonical import name (its
+# directory's name), whichever name this module was imported by.
 _LAUNCH_GUARD_CODE = (
     "import sys; sys.path.insert(0, sys.argv.pop(1)); "
-    "from scripts.agent_runtime.env_sanitize import run_claude_launch_guard; "
+    f"from {machinery_root().name}.agent_runtime.env_sanitize import run_claude_launch_guard; "
     "run_claude_launch_guard(sys.argv[1:])"
 )
 _CODE_ROOT = Path(__file__).resolve().parents[3]

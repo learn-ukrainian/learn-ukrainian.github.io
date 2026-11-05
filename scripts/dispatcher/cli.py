@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
+from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.dispatcher import (
     admission,
     checks,
@@ -47,15 +48,20 @@ class _PromptPath(type(Path())):
         return self.content.decode(encoding or "utf-8", errors or "strict")
 
 
+# The entry points as a user runs them: the wrapper by its checkout path, this module by its import name.
+_DISPATCH = machinery_path("dispatch.py").relative_to(machinery_root().parent).as_posix()
+_CLI = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(Path(__file__))
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Run provider CLIs in detached dispatch worktrees.\nUse for new tasks; legacy tasks retain their supervisor.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.dispatcher.cli dispatch --agent sol --model gpt-6.1-sol --prompt 'Explain X'\n"
-        "  .venv/bin/python scripts/dispatch.py wait TASK --run-nonce NONCE --timeout 60\n"
-        "  .venv/bin/python scripts/dispatch.py grant-paths TASK --run-nonce NONCE --owned-path tests/fix.py "
+        epilog=f"Examples:\n  .venv/bin/python {_CLI} dispatch --agent sol --model gpt-6.1-sol --prompt 'Explain X'\n"
+        f"  .venv/bin/python {_DISPATCH} wait TASK --run-nonce NONCE --timeout 60\n"
+        f"  .venv/bin/python {_DISPATCH} grant-paths TASK --run-nonce NONCE --owned-path tests/fix.py "
         "--reason 'Approved fixture change' --approval-ref message-id\n"
-        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --set\n"
+        f"  .venv/bin/python {_DISPATCH} retain-worktree TASK --set\n"
         "Outputs: task JSON, prompt, result and logs; new branch/worktree on dispatch.\n"
         "Exit codes: 0 success, 1 terminal failure, 2 invalid/refused request,\n"
         "  3 host admission refused (retryable), 4 worktree disk full, 124 client timeout.\n"
@@ -68,9 +74,9 @@ def build_parser() -> argparse.ArgumentParser:
         description="Start a detached provider task.\nUse --dry-run to inspect its command without creating task files.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 "
+        f"  .venv/bin/python {_DISPATCH} dispatch --agent muse --model muse-wonder-full-1.0 "
         "--prompt 'Explain X' --contributor-mode on --dry-run\n"
-        "  .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high --prompt 'Explain X'\n"
+        f"  .venv/bin/python {_DISPATCH} dispatch --agent cursor --model grok-4.7-high --prompt 'Explain X'\n"
         "Outputs: task ID and nonce; task JSON, prompt, result, logs and dispatch worktree.\n"
         "  Muse task JSON records the effective contributor_mode. --dry-run prints a plan and creates nothing.\n"
         "Exit codes: 0 task started or plan printed, 1 hold publication failed, 2 invalid/refused request,\n"
@@ -192,7 +198,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Append an attributable owned-path grant to a running write task.\n"
         "Coordinator use only; refuses self/descendants, sealed envelopes and settling tasks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py grant-paths TASK --run-nonce NONCE "
+        epilog=f"Examples:\n  .venv/bin/python {_DISPATCH} grant-paths TASK --run-nonce NONCE "
         "--owned-path tests/fix.py --reason 'Approved fixture change' --approval-ref message-id\n"
         "Outputs: JSON receipt with task, nonce, grant id, paths and effective scope.\n"
         "Side effects: appends a grant to the canonical task record; never changes sparse checkout.\n"
@@ -222,8 +228,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Exit 0 only for a confirmed running task",
         description="Verify task state and supervisor process identity.\n"
         "Use for liveness guardrails; use status to inspect terminal records.",
-        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py status-or-fail TASK\n"
-        "  .venv/bin/python scripts/dispatch.py status-or-fail TASK --run-nonce NONCE --verbose\n"
+        epilog=f"Examples:\n  .venv/bin/python {_DISPATCH} status-or-fail TASK\n"
+        f"  .venv/bin/python {_DISPATCH} status-or-fail TASK --run-nonce NONCE --verbose\n"
         "Outputs: quiet by default; --verbose prints legacy-shaped status JSON. No records changed.\n"
         "Exit codes: 0 confirmed running; 1 not running, missing, stale or nonce mismatch; "
         "2 unavailable or invalid state.\n"
@@ -238,8 +244,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="List linked worktrees with their owning task",
         description="List every linked worktree of a repository with its owning task record.\n"
         "Read-only: changes no record and removes nothing.",
-        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py worktrees\n"
-        "  .venv/bin/python scripts/dispatch.py worktrees --repo public --all\n"
+        epilog=f"Examples:\n  .venv/bin/python {_DISPATCH} worktrees\n"
+        f"  .venv/bin/python {_DISPATCH} worktrees --repo public --all\n"
         "Outputs: JSON list; per tree: path, task_id, borrowers, status, worktree_disposition,\n"
         "  worktree_disposition_reason, age_s, size_bytes and no_task_record (no record names it).\n"
         "Exit codes: 0 listed, 2 repository or records unavailable.\n"
@@ -256,8 +262,8 @@ def build_parser() -> argparse.ArgumentParser:
         "leave it untouched. Do not use this command to publish, delete, or inspect the worktree.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --set\n"
-        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --clear\n"
+        f"  .venv/bin/python {_DISPATCH} retain-worktree TASK --set\n"
+        f"  .venv/bin/python {_DISPATCH} retain-worktree TASK --clear\n"
         "Outputs: JSON with task_id and worktree_retention_hold. Writes the task record only.\n"
         "Side effects: --set stores the hold and a non-retry retained disposition; --clear removes the "
         "hold and any retention_hold or retention_hold_invalid disposition. Neither pushes "

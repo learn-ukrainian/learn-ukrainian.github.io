@@ -6,9 +6,10 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import NoReturn
 
-from scripts.common.repo_root import configured_interpreter, main_checkout_root
+from scripts.common.repo_root import configured_interpreter, machinery_path, machinery_root, main_checkout_root
 
-ENTRY = Path("scripts/dispatch.py")
+# The dispatcher entry point, relative to a checkout (the machinery package, whatever it is called).
+ENTRY = machinery_path("dispatch.py").relative_to(machinery_root().parent)
 # The checkout this dispatcher code runs from, read from this file.
 RUNTIME_ROOT = Path(__file__).resolve().parents[2]
 

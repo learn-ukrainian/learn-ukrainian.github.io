@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from decimal import Decimal
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from scripts.agent_runtime.codex_accounts import (
     load_codex_account_binding,
     resolve_codex_account_label,
 )
+from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.common.task_store_paths import tasks_dir
 from scripts.orchestration.task_record_store import iter_task_records, read_task_record
 
@@ -73,16 +75,22 @@ def estimate(directory: Path, budget: Decimal, account: str = "api") -> dict:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as they are run: this module by its import name, the dispatcher and catalog by checkout path.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    dispatch, catalog = (
+        machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+        for relative in ("dispatch.py", "config/model_catalog.yaml")
+    )
     parser = argparse.ArgumentParser(
         description="Estimate spend and remaining budget for one bound Codex account's dispatch tasks.\n"
         "Use for fleet usage meters, not provider billing or an authoritative credit balance.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.dispatcher.codex_meter\n"
-        "  .venv/bin/python -m scripts.dispatcher.codex_meter --json\n"
-        "  .venv/bin/python -m scripts.dispatcher.codex_meter --account b-sub\n"
+        epilog=f"Examples:\n  .venv/bin/python {entry}\n"
+        f"  .venv/bin/python {entry} --json\n"
+        f"  .venv/bin/python {entry} --account b-sub\n"
         "Outputs: stdout only; reads task records and the private account binding, never credentials.\n"
         "Exit codes: 0 estimate printed; 1 configuration, store or usage incomplete.\n"
-        "Related: scripts/dispatch.py dispatch --codex-account api|b-sub|b-api; scripts/config/model_catalog.yaml.",
+        f"Related: {dispatch} dispatch --codex-account api|b-sub|b-api; {catalog}.",
     )
     parser.add_argument("--json", action="store_true", help="Print structured JSON (default: one meter line)")
     bound = (*CODEX_BOUND_ACCOUNTS, *(name for name, label in CODEX_ACCOUNT_ALIASES.items() if label in CODEX_BOUND_ACCOUNTS))

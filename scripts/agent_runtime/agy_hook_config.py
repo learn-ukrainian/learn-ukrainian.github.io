@@ -13,12 +13,13 @@ from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.common.repo_root import main_checkout_root, project_interpreter
+from scripts.common.repo_root import machinery_path, machinery_root, main_checkout_root, project_interpreter
 from scripts.common.safe_open import safe_open_below
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARD_NAME = "shell-secret-print-guard"
-ENTRY_POINT = Path("scripts/agent_runtime/secret_print_hook.py")
+# Checkout-relative: the machinery package directory (whatever it is called) and the hook.
+ENTRY_POINT = machinery_path("agent_runtime/secret_print_hook.py").relative_to(machinery_root().parent)
 GUARD_TIMEOUT_FLOOR = 10
 
 
@@ -254,9 +255,11 @@ def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, 
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = argparse.ArgumentParser(
         description="Read effective AGY hooks files and refuse missing no-print wiring.",
-        epilog="Example: .venv/bin/python -m scripts.agent_runtime.agy_hook_config --cwd .\n"
+        epilog=f"Example: .venv/bin/python {entry} --cwd .\n"
         "Outputs: PASS or REFUSE with a reason code. Writes: none. Exit: 0 PASS, 2 REFUSE.",
     )
     parser.add_argument("--cwd", type=Path, required=True, help="AGY workspace directory.")
