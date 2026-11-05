@@ -25,7 +25,8 @@ implicit concatenation, `+` or an f-string without fields, and its exact value i
 machinery module name. A module name followed by attributes counts, such as
 `scripts.engine.control.launch`. A package whose directory holds files of both owners is
 reported, not renamed: its name also anchors resources and submodules that stay on the other
-side (`importlib.resources.files("scripts.review")`). Joined literals become one literal, unless a comment sits
+side (`importlib.resources.files("scripts.review")`). The same holds for the package object
+reached through an import (`files(review)`, `scripts.review.__file__`): the file is held. Joined literals become one literal, unless a comment sits
 between them.
 
 A known value is searched for module names and paths. The bare word `scripts` counts as the
@@ -89,7 +90,8 @@ These are reported and never rewritten:
 
 - names in heredoc bodies, inside longer quoted text, inside `${…}`, `$((…))` or backticks;
 - names with anything glued on, such as `scripts/x.py:3`, `scripts/x.py"$S"` or `<name>`, or glued
-  to the text before them (`\nscripts/x.py`, `-Bmscripts.x`, `%2Fscripts`);
+  to the text before them (`\nscripts/x.py`, `-Bmscripts.x`, `%2Fscripts`, a colour code such as
+  `\033[1m`);
 - globs, Markdown fences in other languages and indented code blocks, files that record
   digests, and unsupported file types;
 - `cd`, `pushd`, `-C`, `-w`, `--prefix`, `WorkingDirectory=`, `WORKDIR`, `working-directory:`,

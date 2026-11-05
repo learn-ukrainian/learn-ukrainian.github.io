@@ -1356,3 +1356,76 @@ def test_structured_reads_the_moved_location_without_a_map_key(tmp_path: Path) -
 
     assert code == 0
     assert [item["after"] for item in report["rewrites"]] == ["lu_machinery/dispatch.py"]
+
+
+@pytest.mark.parametrize(
+    ("rel", "text", "kind"),
+    [
+        ("scripts/tools/colour.sh", 'echo -e "\\033[1mscripts/dispatch.py\\033[0m"\n', "not_plain"),
+        (
+            "scripts/tools/url.sh",
+            'curl "https://x/run?cmd=python%20-m%20scripts.dispatcher.primary"\n',
+            "hidden_reference",
+        ),
+        ("config/space.json", '{"cmd": "python\\u0020-m\\u0020scripts.dispatcher.primary"}\n', "hidden_reference"),
+        ("scripts/tools/letter.sh", "x=файлscripts/dispatch.py\n", "not_plain"),
+        ("scripts/tools/doc.sh", 'cat <<E"O"F\nE\ncat scripts/dispatch.py\nEOF\n', "heredoc_text"),
+        ("scripts/tools/root.sh", "pytest --rootdir=scripts/lib\n", "cwd_into_scripts"),
+    ],
+)
+def test_second_precheck_contexts_are_reported(tree: tuple[Path, Path], rel: str, text: str, kind: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, rel, M if rel.startswith("scripts/") else P, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", rel)
+
+    assert code == 1
+    assert _read(root, rel) == text
+    assert kind in _kinds(report)
+
+
+def test_dollar_hash_in_a_template_is_no_jinja_comment(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    text = "echo ${#arr[@]}\npython -m scripts.dispatcher.primary\n{# note #}\n"
+    _add(root, map_path, "templates/run.sh.j2", P, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "templates/run.sh.j2")
+
+    assert code == 0, report["unresolved"]
+    assert "python -m lu_machinery.dispatcher.primary\n" in _read(root, "templates/run.sh.j2")
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        'print(f"\\033[1mscripts/dispatch.py\\033[0m")\n',
+        'T = "файлscripts.dispatcher.primary"\n',
+    ],
+)
+def test_python_colour_codes_and_letters_before_the_name_are_reported(tree: tuple[Path, Path], source: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/pipeline/glued2.py", P, source)
+
+    code, _report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/glued2.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/glued2.py") == source
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        'import scripts.review\nT = resources.files(scripts.review) / "prompts"\n',
+        'from scripts import review\nT = resources.files(review) / "prompts"\n',
+        'import scripts.review\nT = Path(scripts.review.__file__).parent / "prompts"\n',
+    ],
+)
+def test_mixed_package_object_through_a_binding_holds_the_file(tree: tuple[Path, Path], source: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/pipeline/anchor.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/anchor.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/anchor.py") == source
+    assert "mixed_package_use" in _kinds(report)

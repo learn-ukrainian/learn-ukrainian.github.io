@@ -60,12 +60,12 @@ AFTER_OK = frozenset(" \t\n;&|)")  # ``<`` or ``>`` glued on may be a placeholde
 # Closing punctuation that may follow a name in a message without continuing it.
 CLOSING = frozenset(".,:;!?)]}>'\"`")
 HEREDOC = re.compile(
-    r"<<(?!<)(?P<dash>-?)[ \t]*(?:(?P<q>[\"'])(?P<qword>[^\"'\n]+)(?P=q)|\\?(?P<word>[^\s;&|<>()\"'`]+))"
+    r"<<(?!<)(?P<dash>-?)[ \t]*(?:(?P<q>[\"'])(?P<qword>[^\"'\n]+)(?P=q)|\\?(?P<word>(?:[^\s;&|<>()\"'`]|\"[^\"\n]*\"|'[^'\n]*')+))"
 )
 # Commands and settings that change the working directory to the path that follows.
 CWD_BEFORE = re.compile(
     r"(?:(?:^|[\s;&|(`\"'])(?:cd|pushd)(?:\s+-{1,2}[\w-]*)*\s+|WorkingDirectory=|(?:^|\s)WORKDIR\s+|(?:^|\s)-C\s*"
-    r"|(?:^|\s)--(?:directory|cwd|chdir|workdir|working-directory|prefix)(?:=|\s+)|(?:^|\s)-w\s*"
+    r"|(?:^|\s)--(?:directory|cwd|chdir|workdir|working-directory|prefix|rootdir)(?:=|\s+)|(?:^|\s)-w\s*"
     r"|(?:^|[\s{,\"'])(?i:cwd|chdir|workdir|working[-_]dir(?:ectory)?|changedir|rootdir)[\"']?\s*[:=]\s*)[\"']?$"
 )
 INTERPRETER_BEFORE = re.compile(
@@ -275,7 +275,8 @@ class ShellLexer:
                 i = comment_until
                 continue
             elif char == "<" and (match := HEREDOC.match(text, i)):
-                pending.append((match.group("qword") or match.group("word"), bool(match.group("dash"))))
+                word = match.group("qword") or re.sub(r"[\"'\\]", "", match.group("word"))
+                pending.append((word, bool(match.group("dash"))))
                 i = match.end()
                 continue
             elif text.startswith("<<", i) and not text.startswith("<<<", i):
@@ -602,7 +603,7 @@ def extra_comment_regions(rel: str, text: str) -> list[tuple[int, int]]:
     if name.endswith((".ini", ".cfg", ".conf")):
         regions += [m.span() for m in re.finditer(r"(?m)^[ \t]*;.*$", text)]
     if name.endswith((".j2", ".jinja", ".html")):
-        regions += [m.span() for m in re.finditer(r"\{#.*?#\}", text, re.S)]
+        regions += [m.span() for m in re.finditer(r"(?<!\$)\{#.*?#\}", text, re.S)]
     return regions
 
 
@@ -726,7 +727,9 @@ def joined_view(text: str) -> JoinedView:
     return JoinedView("".join(pieces), segments)
 
 
-def hidden_references(ownership: OwnershipMap, rel: str, text: str, view: JoinedView, report: Report) -> None:
+def hidden_references(
+    ownership: OwnershipMap, rel: str, text: str, view: JoinedView, seen_starts: set[int], report: Report
+) -> None:
     """A name that only shows once escapes, continuations, quotes or run-time pieces are undone is reported.
 
     Such a name is never rewritten.
@@ -734,7 +737,7 @@ def hidden_references(ownership: OwnershipMap, rel: str, text: str, view: Joined
 
     seen: set[int] = set()
     for match in rp.word_matches(view.text, ignore_case=True):
-        if view.verbatim(match.start(), match.end()):
+        if view.verbatim(match.start(), match.end()) and view.source_offset(match.start()) in seen_starts:
             continue  # an ordinary occurrence; scan_text decides it
         line = line_number(text, view.source_offset(match.start()))
         if line in seen:
@@ -779,10 +782,12 @@ def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: R
     """Rewrite or report every ``scripts`` word in a non-Python text."""
 
     view = joined_view(text)
-    hidden_references(ownership, rel, text, view, report)
+    found = list(occurrences(text))
+    covered = {o.start for o in found}
+    covered |= {m.start() for m in rp.word_matches(text, ignore_case=True)}  # seen raw (case variants too)
+    hidden_references(ownership, rel, text, view, covered, report)
     case_variants(ownership, rel, text, kind, report)
     scan = FileScan(ownership, rel, text, kind)
-    found = list(occurrences(text))
     if not found:
         return []
     if kind == MARKDOWN:

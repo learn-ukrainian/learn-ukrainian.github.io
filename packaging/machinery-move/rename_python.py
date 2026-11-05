@@ -65,6 +65,7 @@ LOADERS = {
 }
 STDLIB = frozenset(sys.stdlib_module_names)
 # What an import or loader finding names, for counting the machinery part of the residue.
+MIXED_PACKAGE_DETAIL = "the object of a package with files of both owners; its resources may stay on the other side"
 KIND_TARGETS = {"unprefixed_cross_owner": MACHINERY, "unknown_module": "unknown", "unmapped_importer": "unknown"}
 
 
@@ -893,9 +894,12 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
         resolved = self.ownership.resolve(dotted)
         if resolved is None:
             return updated_node
-        entry, _rest = resolved
+        entry, rest = resolved
         if entry.owner == AMBIGUOUS:
             self._unresolved(original_node, "ambiguous_module", dotted, entry.note)
+            return updated_node
+        if self._mixed_package_object(entry, rest):
+            self._unresolved(original_node, "mixed_package_use", dotted, MIXED_PACKAGE_DETAIL)
             return updated_node
         if entry.owner != MACHINERY:
             self._kept_chain = True
@@ -927,6 +931,11 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
                 return False
         return True
 
+    def _mixed_package_object(self, entry: ModuleEntry, rest: str) -> bool:
+        """The package object itself (or a dunder such as ``__file__``) of a package with files of both owners."""
+
+        return (not rest or rest.split(".", 1)[0].startswith("__")) and is_mixed_package(self.ownership, entry)
+
     def _check_aliased_chain(self, node: cst.Attribute, alias: str, dotted: str, qualified: str) -> None:
         """``import scripts.x as a`` or ``from scripts import x as a``, then ``a.y``.
 
@@ -944,6 +953,8 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
             return
         if AMBIGUOUS in (bound[0].owner, reached[0].owner):
             self._unresolved(node, "ambiguous_binding", dotted, f"{qualified} has no single owner")
+        elif self._mixed_package_object(*reached):
+            self._unresolved(node, "mixed_package_use", dotted, MIXED_PACKAGE_DETAIL)
         elif reached[0].name != bound[0].name and reached[0].owner != bound[0].owner:
             detail = f"{alias} is {bound[0].name} ({bound[0].owner}), but {qualified} is in {reached[0].name} ({reached[0].owner})"
             self._unresolved(node, "alias_crosses_owner", dotted, detail)
@@ -951,12 +962,20 @@ class MachineryRenameCommand(VisitorBasedCodemodCommand):
     def leave_Name(self, original_node: cst.Name, updated_node: cst.Name) -> cst.Name:
         """A bare use of the package bound by ``import scripts...`` cannot be resolved statically."""
 
-        if self._import_depth or original_node.value != OLD_ROOT:
+        if self._import_depth:
             return updated_node
         parent = self.get_metadata(ParentNodeProvider, original_node, None)
         if isinstance(parent, cst.Attribute) and (parent.value is original_node or parent.attr is original_node):
             return updated_node  # a chain root (leave_Attribute) or an attribute name
         if isinstance(parent, cst.Arg) and parent.keyword is original_node:
+            return updated_node
+        if original_node.value != OLD_ROOT:
+            # ``from scripts import review`` then ``files(review)``: the object of a mixed package used as a value.
+            for name in self.get_metadata(QualifiedNameProvider, original_node, set()):
+                resolved = self.ownership.resolve(name.name) if name.source == QualifiedNameSource.IMPORT else None
+                if resolved is not None and self._mixed_package_object(*resolved):
+                    self._unresolved(original_node, "mixed_package_use", original_node.value, MIXED_PACKAGE_DETAIL)
+                    break
             return updated_node
         qualified = self.get_metadata(QualifiedNameProvider, original_node, set())
         if any(q.source == QualifiedNameSource.IMPORT and q.name == OLD_ROOT for q in qualified):
@@ -1154,10 +1173,11 @@ MODULE_LITERAL = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
 WORD = "scripts"
 # ``scripts`` as a word: not inside a longer identifier, except right after a glued ``-m``.
 WORD_TAIL = re.compile(r"scripts(?![A-Za-z0-9_])")
+ASCII_WORD = frozenset(string.ascii_letters + string.digits + "_")
 WORD_TAIL_ANY_CASE = re.compile(r"(?i:scripts)(?![A-Za-z0-9_])")
 # Text glued in front of the name that still lets it start there: an escape letter (``\n``, ``\b``), an
 # option cluster ending in ``m`` (``-m``, ``-Bm``), or an encoded slash (``%2F``, ``\u002f``, ``\x2f``).
-GLUED_START = re.compile(r"(?:\\[A-Za-z]|(?:^|[^A-Za-z0-9_])-[A-Za-z]*m|%2[Ff]|\\u002[Ff]|\\x2[Ff])$")
+GLUED_START = re.compile(r"(?:\\[A-Za-z]|(?:^|[^A-Za-z0-9_])-[A-Za-z]*m|\[[0-9;]*m|%2[Ff]|\\u002[Ff]|\\x2[Ff])$")
 
 
 def word_matches(text: str, ignore_case: bool = False) -> Iterator[re.Match[str]]:
@@ -1165,7 +1185,7 @@ def word_matches(text: str, ignore_case: bool = False) -> Iterator[re.Match[str]
 
     for match in (WORD_TAIL_ANY_CASE if ignore_case else WORD_TAIL).finditer(text):
         start = match.start()
-        word_before = start > 0 and (text[start - 1].isalnum() or text[start - 1] == "_")
+        word_before = start > 0 and text[start - 1] in ASCII_WORD  # only an ASCII name continues it
         if not word_before or GLUED_START.search(text, max(0, start - 16), start):
             yield match
 
@@ -1457,7 +1477,7 @@ def _strings_in(value: object) -> Iterator[str]:
 def static_parts(node: cst.CSTNode, budget: list[int] | None = None) -> list[str]:
     """The texts of the largest literal-only parts of an expression (``"stpircs"[::-1]`` in ``x + "stpircs"[::-1]``)."""
 
-    budget = budget if budget is not None else [200]
+    budget = budget if budget is not None else [5000]
     found: list[str] = []
     for child in node.children:
         if budget[0] <= 0:
@@ -1864,6 +1884,7 @@ HOLDING_KINDS = frozenset(
         "bare_package_use",
         "binding_missing",
         "rebound_name",
+        "mixed_package_use",
         "split_not_applied",
         "unicode_identifier",
     }
