@@ -26,6 +26,10 @@ machinery module name. A module name followed by attributes counts, such as
 `scripts.engine.control.launch`. Joined literals become one literal, unless a comment sits
 between them.
 
+A known value is searched for module names and paths. The bare word `scripts` counts as the
+root when it is the whole value, and as `root_in_text` inside longer text, such as
+`"cd scripts && …"` or a regular expression.
+
 Every other string expression is reported when it may hold `scripts`:
 
 - **Exact values.** An expression built only from literals and simple operations has one exact
@@ -80,7 +84,8 @@ These are reported and never rewritten:
 - `cd`, `pushd`, `-C`, `WorkingDirectory=`, `WORKDIR`, `working-directory:` and `cwd:` targets
   under `scripts/`;
 - the `scripts/` root itself, and unknown or mixed-owner names;
-- names spelled with escapes (`\u0073`, `&#115;`, `%73`), and the root in another case (`Scripts/`).
+- names spelled with escapes (`\u0073`, `&#115;`, `%73`), and the root in another case (`Scripts/`);
+- binary or non-UTF-8 files that may name `scripts`, and symlinks whose target names it.
 
 A module name must be exact. A package whose `__main__` has the other owner is reported, because
 `-m` runs that file.

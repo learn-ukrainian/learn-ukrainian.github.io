@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import os
 import re
 import sys
 from collections.abc import Iterator, Sequence
@@ -773,13 +774,14 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
         data = path.read_bytes()
         if not PREFILTER.search(data):
             continue
-        if b"\0" in data:
-            skipped_binary += 1
-            continue
         try:
+            if b"\0" in data:
+                raise UnicodeDecodeError("utf-8", data, 0, 1, "binary")
             text = data.decode("utf-8")
         except UnicodeDecodeError:
             skipped_binary += 1
+            detail = "binary or not UTF-8; no rewrite rule; inspect it by hand"
+            report.unresolved.append(Finding(rel, 1, "binary_file", rel, detail=detail, target="unknown"))
             continue
         report.files_scanned += 1
         file_report = Report(report.tool, report.mode, report.map_sha256)
@@ -797,10 +799,33 @@ def run(ownership: OwnershipMap, root: Path, targets: Sequence[str], apply: bool
         report.files_changed.append(rel)
         if apply:
             rp.write_atomically(path, new_text.encode("utf-8"))
-    report.notes.append(f"skipped binary files containing 'scripts': {skipped_binary}")
+    report.unresolved.extend(symlink_findings(root, targets))
+    report.notes.append(f"binary or non-UTF-8 files that may name scripts (reported): {skipped_binary}")
     report.notes.append(f"skipped files over {MAX_BYTES} bytes: {skipped_large}")
     report.notes.append(f"skipped files that rename_structured.py owns: {skipped_structured}")
     return report
+
+
+def symlink_findings(root: Path, targets: Sequence[str]) -> list[Finding]:
+    """A symlink whose target names scripts breaks when machinery moves: reported, never changed."""
+
+    root = root.resolve()
+    wanted = [Path(t).as_posix().strip("/") for t in targets]
+    findings: list[Finding] = []
+    for directory, dirnames, filenames in os.walk(root):
+        dirnames[:] = sorted(d for d in dirnames if d not in rp.SKIPPED_DIRS)
+        for name in sorted([*dirnames, *filenames]):
+            path = Path(directory) / name
+            if not path.is_symlink():
+                continue
+            rel = path.relative_to(root).as_posix()
+            if wanted and not any(rel == w or rel.startswith(w + "/") for w in wanted):
+                continue
+            target = os.readlink(path)
+            if ANY_CASE.search(target) or ANY_CASE.search(rel):
+                detail = f"a symlink to {target}; links are not followed or changed"
+                findings.append(Finding(rel, 1, "symlink_target", rel, detail=detail, target="unknown"))
+    return findings
 
 
 def build_parser() -> argparse.ArgumentParser:

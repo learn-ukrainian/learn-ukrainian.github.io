@@ -1443,8 +1443,9 @@ class Reference:
 def text_references(ownership: OwnershipMap, text: str) -> list[Reference]:
     """Every ``scripts`` module name or path in a known text.
 
-    A bare word ``scripts`` is a reference only when it is the whole text (optionally with a final
-    ``.`` or ``/``): elsewhere it is the English word.
+    A bare word ``scripts`` is the root (``root``) when it is the whole text, optionally with a final
+    ``.`` or ``/``. Inside longer text (``cd scripts``, a regular expression, or the English word) it is
+    ``root_in_text``: it may name the shared root, so it is reported too.
     """
 
     found: list[Reference] = []
@@ -1473,6 +1474,8 @@ def text_references(ownership: OwnershipMap, text: str) -> list[Reference]:
                 )
         elif stripped in (WORD, WORD + ".", WORD + "/"):
             found.append(Reference(stripped, "root", AMBIGUOUS))
+        else:
+            found.append(Reference(WORD, "root_in_text", AMBIGUOUS))
     for match in CASE_VARIANT.finditer(text):
         core = PATH_CHARS.match(text, match.end()).group(0)  # type: ignore[union-attr]
         found.append(Reference(match.group(0) + core, "case_variant", path_target(ownership, WORD + core)))
@@ -1600,8 +1603,8 @@ def decide_string(
     single = len(references) == 1 and texts == [references[0].text]
     if forms <= {"path", "glob", "case_variant"}:
         kind = "path_string" if single else "path_in_text"
-    elif forms == {"root"}:
-        kind = "root_reference"
+    elif forms <= {"root", "root_in_text"}:
+        kind = "root_reference" if "root" in forms else "root_in_text"
     elif forms == {"module_prefix"}:
         kind = "module_prefix"
     else:

@@ -1037,3 +1037,35 @@ def test_r1_f5_python_comments_are_listed(tree: tuple[Path, Path]) -> None:
     assert code == 0
     assert _read(root, "scripts/pipeline/comment.py") == source
     assert [item["kind"] for item in report["inventory"]] == ["comment_mention"]
+
+
+def test_python_bare_root_inside_text_is_reported(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    source = (
+        'subprocess.run("cd scripts && python dispatcher/primary.py", shell=True)\n'
+        'MATCH = re.compile(r"scripts\\.dispatcher\\.primary")\n'
+    )
+    _add(root, map_path, "scripts/pipeline/shell.py", P, source)
+
+    code, report = _run(rename_python, map_path, root, "apply", "scripts/pipeline/shell.py")
+
+    assert code == 1
+    assert _read(root, "scripts/pipeline/shell.py") == source
+    assert _kinds(report) == ["root_in_text", "root_in_text"]
+
+
+def test_nonpython_binary_files_and_symlink_targets_are_reported(tree: tuple[Path, Path]) -> None:
+    root, map_path = tree
+    (root / "assets").mkdir()
+    (root / "assets" / "blob.bin").write_bytes(b"\0scripts/dispatch.py")
+    (root / "bin").mkdir()
+    (root / "bin" / "dispatch").symlink_to("../scripts/dispatch.py")
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "assets", "bin")
+
+    assert code == 1
+    assert [(item["kind"], item["path"]) for item in report["unresolved"]] == [
+        ("binary_file", "assets/blob.bin"),
+        ("symlink_target", "bin/dispatch"),
+    ]
+    assert (root / "assets" / "blob.bin").read_bytes() == b"\0scripts/dispatch.py"
