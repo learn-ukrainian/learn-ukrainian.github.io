@@ -79,7 +79,7 @@ from ._channels_watch import (
     emit_reply_complete,
     emit_reply_started,
 )
-from ._config import CLAUDE_CMD, REPO_ROOT
+from ._config import CLAUDE_CMD, MACHINERY_PACKAGE, REPO_ROOT
 from ._db import get_db
 from ._gemini import (
     _is_gemini_429_error,
@@ -909,7 +909,7 @@ def run_inbox(
     if not _HAS_RUNTIME or runtime_invoke is None:
         raise RuntimeError(
             "agent_runtime is required for inbox draining. "
-            "Install it or add scripts/ to PYTHONPATH."
+            f"Install it or add {MACHINERY_PACKAGE}/ to PYTHONPATH."
         )
 
     # Inbox replies are consults and discussions; a Kimi inbox is refused

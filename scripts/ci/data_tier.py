@@ -31,6 +31,7 @@ import pytest
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci._location import module_name
 from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import resolve_scratch_root
@@ -866,8 +867,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  <project-python> -m scripts.ci.data_tier run\n"
-            "  <project-python> -m scripts.ci.data_tier run --only tests/test_citation_resolution_invariant.py --no-report\n"
+            f"  <project-python> -m {module_name(__spec__, __file__)} run\n"
+            f"  <project-python> -m {module_name(__spec__, __file__)} run --only tests/test_citation_resolution_invariant.py --no-report\n"
             "Outputs: JUnit, run log, collection receipt and JSON summary under batch_state/data-tier/.\n"
             "Exit codes: 0 = tests passed; 1 = tests failed or run incomplete; 2 = invalid usage.\n"
             "Related: issues #9229, #9218 and #8403."

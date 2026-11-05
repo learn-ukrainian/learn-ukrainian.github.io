@@ -56,6 +56,8 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from pathlib import Path
 
+from scripts.common.repo_root import machinery_path
+
 # Every lane handoff the selector knows by name. A file of this shape that
 # exists in the epic directory is included even when a caller omits it.
 LANE_HANDOFF_NAMES: tuple[str, ...] = (
@@ -302,7 +304,6 @@ DRIVER_STATE_CLI_DEFAULT = "lu-driver-state"
 DRIVER_STATE_TIMEOUT_SECONDS = 60
 DRIVER_STATE_SNAPSHOT_NAME = "driver-state-handoff-note.md"
 _NUMBERED_ITEM_RE = re.compile(r"^\s*\d+[.)]\s+(.+?)\s*$")
-_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _warn(message: str) -> None:
@@ -331,7 +332,7 @@ def codex_lane_slot(epic: str) -> str | None:
                 "-c",
                 'source "$1" && handoff_identity_for_codex_epic "$2"',
                 "codex-slot",
-                str(_ROOT / "scripts/lib/handoff_identity.sh"),
+                str(machinery_path("lib/handoff_identity.sh")),
                 epic,
             ],
             capture_output=True,

@@ -17,7 +17,12 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import yaml
+
+from scripts.ci._location import checkout_relative
 
 
 def load_pip_audit_ignores(ignore_file: Path) -> list[str]:
@@ -421,13 +426,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.ignore_file:
         ignore_file = args.ignore_file.resolve()
     else:
-        config_path = repo_root / "scripts" / "config" / "pip-audit-ignore.yaml"
+        config_path = repo_root / checkout_relative("config", "pip-audit-ignore.yaml")
         ignore_file = config_path if config_path.exists() else repo_root / ".pip-audit-ignore.yaml"
 
     if args.npm_ignore_file:
         npm_ignore_file = args.npm_ignore_file.resolve()
     else:
-        npm_config_path = repo_root / "scripts" / "config" / "npm-audit-ignore.yaml"
+        npm_config_path = repo_root / checkout_relative("config", "npm-audit-ignore.yaml")
         npm_ignore_file = npm_config_path if npm_config_path.exists() else repo_root / ".npm-audit-ignore.yaml"
 
     exit_code = 0

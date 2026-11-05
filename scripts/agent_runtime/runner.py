@@ -52,13 +52,22 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
-from ai_llm.fallback import (
-    AttemptOutcome,
-    CallResult,
-    GeminiRung,
-    resolve_allowed_auth_modes,
-    run_gemini_fallback_ladder,
-)
+if __package__ == "agent_runtime":  # the historical top-level alias, imported with scripts/ on sys.path
+    from ai_llm.fallback import (
+        AttemptOutcome,
+        CallResult,
+        GeminiRung,
+        resolve_allowed_auth_modes,
+        run_gemini_fallback_ladder,
+    )
+else:
+    from ..ai_llm.fallback import (  # type: ignore[assignment]
+        AttemptOutcome,
+        CallResult,
+        GeminiRung,
+        resolve_allowed_auth_modes,
+        run_gemini_fallback_ladder,
+    )
 
 # Registry adapter paths are canonicalized under ``scripts.agent_runtime``.
 # Import the ACP scope from that same module identity even when this runner is
@@ -108,7 +117,7 @@ from .failover import (
 from .failure_codes import RUNTIME_FAILURE_CODES
 from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
 from .primary_tree_watch import PrimaryTreeWatch
-from .registry import AGENTS, get_agent_entry
+from .registry import AGENTS, MACHINERY_PACKAGE, get_agent_entry
 from .result import AgyModelIdentity, ParseResult, Result
 from .target_admission import resolve_and_admit
 from .telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
@@ -1025,7 +1034,7 @@ def _load_adapter(name: str, *, allow_direct_only: bool = False) -> AgentAdapter
     module_path, class_name = dotted_path.split(":", 1)
 
     # Try the registered dotted path first. If that fails and the path
-    # starts with "scripts." (which requires the repo root on sys.path,
+    # starts with the machinery package (which requires the repo root on sys.path,
     # not just `scripts/`), fall back to the path without that prefix.
     # This lets the runner work whether it's invoked via
     # `python -m scripts.agent_runtime.runner` (repo root on path) or
@@ -1033,8 +1042,8 @@ def _load_adapter(name: str, *, allow_direct_only: bool = False) -> AgentAdapter
     module = None
     import_errors: list[str] = []
     candidates = [module_path]
-    if module_path.startswith("scripts."):
-        candidates.append(module_path.removeprefix("scripts."))
+    if module_path.startswith(f"{MACHINERY_PACKAGE}."):
+        candidates.append(module_path.removeprefix(f"{MACHINERY_PACKAGE}."))
     for candidate in candidates:
         try:
             module = import_named_module(candidate)
@@ -3175,7 +3184,7 @@ def _ensure_write_cwd_isolated(cwd: Path, *, mode: str, agent_name: str) -> None
         raise ValueError(
             f"cannot verify worktree isolation for write-capable mode={mode!r} "
             f"(agent {agent_name!r}): the containment predicate "
-            f"(scripts.guardrails.worktree_containment, #4444) failed to import. "
+            f"({MACHINERY_PACKAGE}.guardrails.worktree_containment, #4444) failed to import. "
             f"Refusing to spawn. {_WRITE_CWD_HINT}"
         )
     resolved = wc.canonicalize(cwd)

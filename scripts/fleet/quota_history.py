@@ -362,7 +362,9 @@ def _render(report: dict[str, Any]) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="python -m scripts.fleet.quota_history", description=__doc__.split("\n")[0])
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    parser = argparse.ArgumentParser(prog=f"python {entry}", description=__doc__.split("\n")[0])
     commands = parser.add_subparsers(dest="command", required=True)
     collect_cmd = commands.add_parser("collect", help="append one sanitized row per slot (hourly timer)")
     collect_cmd.add_argument("--timeout", type=float, default=10.0, help="Monitor request timeout in seconds")

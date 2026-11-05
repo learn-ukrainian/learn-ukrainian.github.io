@@ -27,6 +27,12 @@ from scripts.orchestration import worktree_claims as claims
 from scripts.orchestration import worktree_git as rw
 from scripts.orchestration.task_record_store import locate_task_record
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+
 
 class Refusal(ValueError):
     """A stable, privacy-safe refusal suitable for the owner's receipt."""
@@ -511,7 +517,7 @@ def main(argv: list[str] | None = None) -> int:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example:\n  .venv/bin/python -m scripts.fleet.terminal_abandon --task-id owner-task "
+            f"Example:\n  .venv/bin/python {_ENTRY} --task-id owner-task "
             "--head <40-hex-sha> --reason 'superseded implementation' "
             "--preservation-bundle batch_state/abandon/owner-task/bundle.json\n\n"
             "Bundle JSON: base_sha (40 hex), head_patch, index_patch, working_patch. Each patch is\n"
@@ -521,7 +527,7 @@ def main(argv: list[str] | None = None) -> int:
             "Run from the owner's session in another checkout. Caller comes from the existing\n"
             "runtime/session attribution resolver and must match the creator's initiator.\n"
             "Lane succession: a non-creator is admitted only while its launcher session holds the\n"
-            "Monitor-verified current lease of the stream that scripts/config/\n"
+            f"Monitor-verified current lease of the stream that {_MACHINERY}/config/\n"
             "terminal_abandon_succession.yaml maps the creator's initiator to. It keeps the\n"
             "creator identity and nonce, appends a succession receipt and copies untracked and\n"
             "ignored output below batch_state/preserved/<task> before publishing, with a hash-bound\n"
@@ -538,7 +544,7 @@ def main(argv: list[str] | None = None) -> int:
             "No retention release, tree removal, lease change or creator invention. Monitor must be available.\n"
             "Exit codes: 0 recorded/already_recorded; 2 typed refusal with no abandon record written\n"
             "(NOT_CREATOR, STREAM_UNMAPPED, CROSS_STREAM, STALE_AUTHORITY, AUTHORITY_UNKNOWN, ...).\n"
-            "Related: #10594, #10617; scripts/fleet/ignored_task_output.py; docs/runbooks/worktree-cleanup.md"
+            f"Related: #10594, #10617; {_MACHINERY}/fleet/ignored_task_output.py; docs/runbooks/worktree-cleanup.md"
         ),
     )
     parser.add_argument("--task-id", required=True, help="Creator's canonical owner task id, e.g. owner-task")

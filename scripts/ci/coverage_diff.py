@@ -12,6 +12,7 @@ from pathlib import Path, PurePosixPath
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci._location import checkout_relative
 from scripts.lib.readonly_sqlite import open_readonly
 
 SOURCES = ("scripts", ".mcp", "agents_extensions", "packages")
@@ -262,14 +263,14 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/ci/coverage_diff.py baseline/coverage.json candidate/coverage.json\n"
-            "  .venv/bin/python scripts/ci/coverage_diff.py baseline/coverage.json candidate/coverage.json \\\n"
+            f"  .venv/bin/python {checkout_relative('ci', 'coverage_diff.py').as_posix()} baseline/coverage.json candidate/coverage.json\n"
+            f"  .venv/bin/python {checkout_relative('ci', 'coverage_diff.py').as_posix()} baseline/coverage.json candidate/coverage.json \\\n"
             "    --baseline-data baseline/.coverage --git-range <base>..<head>\n"
             "Outputs: JSON to stdout with every lost identity, covering baseline tests, candidate_tests, "
             "a greedy restore_set and unrestorable_identities; "
             "no files written. The baseline .coverage must have per-test contexts.\n"
             "Exit codes: 0 = no loss; 1 = lost coverage; 2 = invalid input.\n"
-            "Related: .github/workflows/coverage-ref.yml; scripts/ci/coverage_ref.py; #11226. "
+            f"Related: .github/workflows/coverage-ref.yml; {checkout_relative('ci', 'coverage_ref.py').as_posix()}; #11226. "
             "Requires a sibling manifest.json with complete: true for both reports.\n"
             "Line/arc numbers are literal identities: source edits that move lines require review."
         ),

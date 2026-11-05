@@ -15,6 +15,10 @@ from scripts.common.epic_selector import validate_epic
 from scripts.orchestration.launcher_aliases import load_launcher_aliases
 from scripts.session_canary import grok_lane
 
+# This package's import name, as ``python -m`` names its modules: from this module's package,
+# or from its unresolved location when run as a file.
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+
 ROOT = Path(__file__).resolve().parents[2]
 MODEL = "muse-wonder-full-1.0"
 
@@ -24,8 +28,8 @@ def build_parser() -> argparse.ArgumentParser:
         description=__doc__,
         epilog=(
             "Examples:\n"
-            "  <project-python> -m scripts.session_canary.muse_lane mint --epic devops\n"
-            "  <project-python> -m scripts.session_canary.muse_lane score --epic devops --answers answers.json\n"
+            f"  <project-python> -m {_PACKAGE}.muse_lane mint --epic devops\n"
+            f"  <project-python> -m {_PACKAGE}.muse_lane score --epic devops --answers answers.json\n"
             "Outputs: recall artifacts and handoff diary; never a provider call or lease mutation.\n"
             "Exit codes: 0 PASS/minted; 1 missing anchors or artifacts; 2 refused/FAIL-HANDOFF.\n"
             "Related: docs/runbooks/muse-driver.md (#10553, #10511). The launcher owns the lease."

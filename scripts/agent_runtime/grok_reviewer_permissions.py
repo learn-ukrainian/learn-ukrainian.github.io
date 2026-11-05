@@ -85,6 +85,8 @@ def reviewer_tool_allowed(payload: object, review_root: Path) -> bool:
 
 
 def main() -> int:
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    entry = f"-m {Path(__file__).absolute().parents[1].name}.agent_runtime.grok_reviewer_permissions"
     try:
         parser = argparse.ArgumentParser(
             description=(
@@ -92,7 +94,7 @@ def main() -> int:
                 "Used as a PreToolUse hook; reads one Grok JSON event from stdin."
             ),
             epilog=(
-                "Usage: <project-interpreter> -m scripts.agent_runtime.grok_reviewer_permissions --review-root <checkout> < event.json\n"
+                f"Usage: <project-interpreter> {entry} --review-root <checkout> < event.json\n"
                 "Outputs: path-free refusal on stderr; no files or network writes.\n"
                 "Exit codes: 0 admitted, 2 denied or unreadable event.\n"
                 "Related: adapters/grok_build.py; #9987."
