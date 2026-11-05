@@ -1,5 +1,6 @@
 """Module entry point for the common session supervisor."""
 
-from scripts.session_supervisor import main
+from . import main
 
-raise SystemExit(main())
+if __name__ == "__main__":
+    raise SystemExit(main())

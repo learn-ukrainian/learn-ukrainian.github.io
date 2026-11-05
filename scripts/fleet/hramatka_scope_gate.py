@@ -115,6 +115,10 @@ class GateDecision:
 
 from scripts.publish.github import read
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+
 
 class IssueLookupUnavailable(RuntimeError):
     """GitHub did not return a trusted issue observation."""
@@ -126,7 +130,7 @@ IssueReader = Callable[[IssueRef], IssueObservation]
 def load_stream_registry(repo_root: Path = REPO_ROOT) -> dict[str, list[int]]:
     """Read the canonical stream-to-epic registry without making a network call."""
 
-    return issue_stream_audit.load_registry(repo_root / "scripts" / "config" / "issue_streams.yaml")
+    return issue_stream_audit.load_registry(repo_root / _MACHINERY / "config" / "issue_streams.yaml")
 
 
 def _gh_issue_observation(issue: IssueRef) -> IssueObservation:

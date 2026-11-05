@@ -20,6 +20,7 @@ from .dual_write import (
 )
 from .hooks import clean_exit_hook, heartbeat_hook, lease_from_environment
 from .inventory import (
+    DEFAULT_STREAMS_YAML,
     epic_handoff_map,
     inventory_covers_issue_streams,
     inventory_snapshot,
@@ -592,7 +593,7 @@ def _dual_write_status(args: argparse.Namespace) -> int:
                 "streams_with_file": present,
                 "inventory_covers_issue_streams": ok,
                 "missing_epics": missing,
-                "source": "scripts/config/issue_streams.yaml",
+                "source": str(DEFAULT_STREAMS_YAML),
                 "cutover": "blocked — dual-write only; file handoffs remain authoritative",
             },
             sort_keys=True,

@@ -23,9 +23,13 @@ from scripts.lib.readonly_sqlite import open_readonly
 from scripts.orchestration.handoff_slot_registry import is_registered_slot, registry_readable
 
 ROOT = Path(__file__).resolve().parents[1]
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parent.name
+_AUTHORITY_HELP = f".venv/bin/python -m {_MACHINERY}.fleet_comms deliveries --help"
 UNKNOWN_LINE = (
     "PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; "
-    "authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+    f"authority: {_AUTHORITY_HELP}"
 )
 LEGACY_PENDING = "COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_driver, 0) = 0"
 AUTHORITY_WHERE = """recipient = ? AND state IN ('queued', 'running')
@@ -126,7 +130,7 @@ def hook(stdin_text: str, recipient: str) -> dict:
             if result["stores"]["legacy"]:
                 suffix += f"; legacy: ai_agent_bridge inbox --for {resolve_recipient_alias(recipient)}"
             if result["stores"]["authority"]:
-                suffix += "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+                suffix += f"; authority: {_AUTHORITY_HELP}"
             prefix = f"PENDING ORDERS: {result['count']} (ids "
             shown = []
             for identifier in result["ids"]:
@@ -150,12 +154,14 @@ class _SilentParser(argparse.ArgumentParser):
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = _SilentParser(
         description="Report pending orders without bodies or writes.\nUse for per-call announcements, never to consume or acknowledge orders.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            'Examples:\n  .venv/bin/python -m scripts.inbox_pending --recipient "$SESSION_HANDOFF_AGENT"\n'
-            "  .venv/bin/python -m scripts.inbox_pending --agy-hook < hook-input.json\n"
+            f'Examples:\n  .venv/bin/python {entry} --recipient "$SESSION_HANDOFF_AGENT"\n'
+            f"  .venv/bin/python {entry} --agy-hook < hook-input.json\n"
             "Outputs: JSON on stdout; no files or database writes.\n"
             "Exit codes: 0 including unknown probes; argparse help exits 0.\n"
             "Related: #10558, docs/agent-runtime-guide.md."

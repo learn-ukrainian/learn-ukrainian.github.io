@@ -17,6 +17,10 @@ from pathlib import Path
 
 from scripts.session_canary import handoff_select
 
+# This package's import name, as ``python -m`` names its modules: from this module's package,
+# or from its unresolved location when run as a file.
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+
 DIARY_MARKER = "## 📔 Diary — reverse chrono (newest first)"
 NEXT_DRIVE_MARKER = "## Next Drive"
 WORKING_SET_MARKER = "## Active Working Set"
@@ -508,7 +512,7 @@ def format_handback_block(
         f"\n### Worktrees\n{bullets(worktrees)}"
         f"\n### Notes\n{bullets(notes)}"
         f"\n> Successor: load this block + stream tail, then "
-        f"`.venv/bin/python -m scripts.session_canary.grok_lane mint --epic {epic}`.\n"
+        f"`.venv/bin/python -m {_PACKAGE}.grok_lane mint --epic {epic}`.\n"
         f"> Do **not** invent the queue from chat memory alone.\n"
     )
 
