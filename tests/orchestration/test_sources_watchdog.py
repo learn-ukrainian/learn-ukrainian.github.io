@@ -138,14 +138,15 @@ def test_diagnostics_refuse_file_growth(tmp_path: Path, monkeypatch) -> None:
 
 
 @pytest.mark.parametrize("origin", [None, "foreign/hang_diagnostics.py"])
-def test_diagnostics_refuse_foreign_cache_at_startup(
+def test_diagnostics_refuse_foreign_cache_when_loaded(
     tmp_path: Path, monkeypatch, origin: str | None,
 ) -> None:
     module = ModuleType("scripts.rag.hang_diagnostics")
     module.__file__ = str(tmp_path / origin) if origin else None
     monkeypatch.setitem(sys.modules, module.__name__, module)
+    runpy.run_path(wd.__file__, run_name="startup_probe")
     with pytest.raises(ImportError, match="not a file in this checkout"):
-        runpy.run_path(wd.__file__, run_name="startup_probe")
+        wd.hang_diagnostics()
 
 
 def test_parse_proc_net_tcp_counts_server_side_states_and_backlog() -> None:
@@ -509,19 +510,14 @@ def test_resolve_dump_dir_default_and_override(tmp_path: Path) -> None:
     assert hd.resolve_dump_dir(tmp_path, {hd.DUMP_DIR_ENV: str(tmp_path / "x")}) == tmp_path / "x"
 
 
-def test_watchdog_helpers_share_the_product_owner_and_stay_pinned(monkeypatch, tmp_path: Path) -> None:
-    assert wd.resolve_dump_dir is hd.resolve_dump_dir
-    assert wd.faulthandler_log_path is hd.faulthandler_log_path
-    assert wd.ensure_dump_dir is hd.ensure_dump_dir
-    assert wd.DUMP_SIGNAL is hd.DUMP_SIGNAL
-    assert wd.DUMP_SIGNAL == signal.SIGUSR1
+def test_watchdog_helpers_share_the_product_owner(tmp_path: Path) -> None:
+    assert wd.hang_diagnostics() is hd
+    assert wd._gates_module_name(wd.PROJECT_ROOT / wd.HANG_DIAGNOSTICS_FILE) == "scripts.rag.hang_diagnostics"
+    assert hd.DUMP_SIGNAL == signal.SIGUSR1
     assert hd.faulthandler_log_path(tmp_path, 123) == tmp_path / "faulthandler-123.log"
     private = tmp_path / "private"
     assert hd.ensure_dump_dir(private) == private
     assert private.stat().st_mode & 0o777 == 0o700
-    original = wd.resolve_dump_dir
-    monkeypatch.setattr(hd, "resolve_dump_dir", lambda *_args, **_kwargs: tmp_path)
-    assert wd.resolve_dump_dir is original
 
 
 HUNG_CHILD = textwrap.dedent(

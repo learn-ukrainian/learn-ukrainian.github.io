@@ -60,6 +60,9 @@ from scripts.review.verdict_parser import (
     structured_finding_entries,
 )
 
+# This module's checkout-relative path, for its help text: its package's import name is the
+# directory checkout paths use.
+_THIS_FILE = f"{__name__.partition('.')[0]}/review/budget_grant.py"
 # The CTO seat's stable Fleet Comms identity; session-specific slots are not issuers.
 ISSUERS = frozenset({"claude-cto"})
 # The change classes review-loop references/policy.md § Budget elevates.
@@ -1228,9 +1231,9 @@ def main(argv: list[str] | None = None) -> int:
         description="Inspect an elevated-tier review budget grant ruling.\n"
         "The recorder admits the granted rounds itself; this verb only prints the digest to bind.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py budget-grant digest ruling.json\n"
+        epilog=f"Examples:\n  .venv/bin/python {recorder.RECORDER_PATH} budget-grant digest ruling.json\n"
         "Outputs: the ruling's canonical SHA-256 on stdout, for --advisory-binding.\n"
-        "Exit codes: 0: valid ruling; 1: invalid ruling.\nRelated: scripts/review/budget_grant.py",
+        f"Exit codes: 0: valid ruling; 1: invalid ruling.\nRelated: {_THIS_FILE}",
     )
     verbs = parser.add_subparsers(dest="verb", required=True)
     digest = verbs.add_parser("digest", help="Validate a ruling file and print its canonical SHA-256")

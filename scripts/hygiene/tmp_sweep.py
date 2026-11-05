@@ -81,6 +81,17 @@ from scripts.orchestration.tmp_leak_sweep import (
 )
 from scripts.orchestration.worktree_claims import _SUPERSEDED_RECORD_RE
 
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or Path(__file__).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 # Unsettled deliverables (needs_finalize), blocked work and dry-run records are held.
 REAPABLE_STATES = frozenset({"done", "failed", "timeout", "cancelled", "crashed", "rate_limited", "no_deliverable"})
@@ -1618,7 +1629,7 @@ def _quarantine_days_argument(parser: argparse.ArgumentParser) -> None:
 
 def build_ledger_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.hygiene.tmp_sweep",
+        prog=f"python -m {_mod('hygiene', 'tmp_sweep')}",
         description=(
             "Inspect the temp sweep's deletion ledger and quarantine, or restore a quarantined entry.\n"
             "Use to find what the sweep removed and bring it back within the window; "
@@ -1627,14 +1638,14 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep ledger --path my-scratch --since 2026-10-01\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep quarantine --json\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore 3f9c2a7b1d04\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} ledger --path my-scratch --since 2026-10-01\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} quarantine --json\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} restore 3f9c2a7b1d04\n"
             "Outputs: stdout table or JSON; restore renames one entry back and appends ledger records.\n"
             "Exit codes: 0 success; 1 restore refused, failed or different, or ledger unavailable; "
             "2 invalid arguments or unknown ledger id; 3 restored, but files above the digest limit "
             "matched by size and mtime only (unverified).\n"
-            "Related: #9887; docs/runbooks/tmp-retention.md; scripts.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; docs/runbooks/tmp-retention.md; {_mod('hygiene', 'tmp_sweep_ledger')}."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True)
@@ -1648,10 +1659,10 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep ledger --run-id 20261006T053012Z-a1b2c3 --json\n"
+            f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} ledger --run-id 20261006T053012Z-a1b2c3 --json\n"
             "Outputs: stdout table or JSON records (manifests only with --manifest). Exit codes: 0; 1 ledger unreadable.\n"
             "Related: #9887; docs/runbooks/tmp-retention.md (Deletion ledger and quarantine); "
-            "scripts.hygiene.tmp_sweep_ledger."
+            f"{_mod('hygiene', 'tmp_sweep_ledger')}."
         ),
     )
     ledger.add_argument("--path", help="Substring of the original path (example: hand-made-scratch).")
@@ -1674,9 +1685,9 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep quarantine --quarantine-days 7\n"
+            f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} quarantine --quarantine-days 7\n"
             "Outputs: stdout table or JSON. Exit codes: 0; 1 ledger unreadable.\n"
-            "Related: #9887; docs/runbooks/tmp-retention.md (Purge); scripts.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; docs/runbooks/tmp-retention.md (Purge); {_mod('hygiene', 'tmp_sweep_ledger')}."
         ),
     )
     quarantine.add_argument("--json", action="store_true", help="Print JSON instead of a table (default table).")
@@ -1693,13 +1704,13 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep restore 3f9c2a7b1d04\n"
+            f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} restore 3f9c2a7b1d04\n"
             "Outputs: stdout JSON result with `verification` (verified, unverified_digest_skipped, mismatch "
             "or unreadable); ledger records restore and restored (or restore_failed).\n"
             "Exit codes: 0 restored and byte-verified; 1 refused, failed, restored but different, or a sweep "
             "holds the ledger; 2 unknown ledger id; 3 restored, but files above the digest limit matched "
             "by size and mtime only (listed in digest_unverified).\n"
-            "Related: #9887; docs/runbooks/tmp-retention.md (Restore); scripts.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; docs/runbooks/tmp-retention.md (Restore); {_mod('hygiene', 'tmp_sweep_ledger')}."
         ),
     )
     restore_parser.add_argument("ledger_id", help="Ledger id from `ledger` or `quarantine` (example 3f9c2a7b1d04).")
@@ -1770,18 +1781,18 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --json\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --summary\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --batch-state --summary\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore <ledger-id>\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} --json\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} --unattributed-scratch --summary\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} --unattributed-scratch --apply --summary\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} --batch-state --summary\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} restore <ledger-id>\n"
             "Outputs: stdout inventory (or --summary counts) with ledger location, quarantine and purge totals; "
             "with --apply, appends to the ledger, moves proven entries into quarantine and deletes only "
             "expired, re-verified quarantined entries and inactive, unheld pytest run folders.\n"
             "Exit codes: 0 inventory complete; 1 scan/quarantine/purge errors (including entries kept as "
             "purge_kept_ambiguous until restored or removed by hand) or ledger unavailable; 2 invalid arguments.\n"
-            "Related: #8755, #9737, #9887, #11297; docs/runbooks/tmp-retention.md; scripts.hygiene.retention_engine; "
-            "scripts.hygiene.tmp_sweep_ledger; packaging/systemd/learn-ukrainian-tmp-sweep.*."
+            f"Related: #8755, #9737, #9887, #11297; docs/runbooks/tmp-retention.md; {_mod('hygiene', 'retention_engine')}; "
+            f"{_mod('hygiene', 'tmp_sweep_ledger')}; packaging/systemd/learn-ukrainian-tmp-sweep.*."
         ),
     )
     parser.add_argument(

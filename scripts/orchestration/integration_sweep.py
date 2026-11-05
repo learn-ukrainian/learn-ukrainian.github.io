@@ -66,6 +66,13 @@ from scripts.review.ukrainian_seats import (
     required_ukrainian_seats,
 )
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MACHINERY = _PACKAGE.partition(".")[0]
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 # Item ids on a coverage marker. One token, no spaces; the recorder uses ITEM_ID_RE.
@@ -1199,11 +1206,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         description="Report exact-head PR review, CI and queue state without mutations.\n"
         "Use for landing evidence; the local keeper owns queue changes.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --report\n"
-        "  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --json\n"
+        epilog=f"Examples:\n  .venv/bin/python -m {_MODULE} --repo owner/repo --report\n"
+        f"  .venv/bin/python -m {_MODULE} --repo owner/repo --json\n"
         "Outputs: Read-only GitHub PR state report on stdout; no writes.\n"
         "Exit codes: 0: report complete; 1: lookup failed; 2: retired --apply refused.\n"
-        "Related: scripts/review/record_cf_verdict.py, scripts/orchestration/merge_queue_keeper.py; #9951",
+        f"Related: {_MACHINERY}/review/record_cf_verdict.py, {_PACKAGE_DIR}/merge_queue_keeper.py; #9951",
     )
     parser.add_argument("--repo", required=True, help="GitHub owner/repository")
     parser.add_argument("--report", action="store_true", help="Print the read-only PR state report (default behavior)")

@@ -54,10 +54,11 @@ from scripts.ci.components import (
     scan_imports,
     scan_runtime_edges,
 )
+from scripts.common.repo_root import machinery_path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("boundary_baseline.json")
-CONFIG_PATH = REPO_ROOT / "scripts" / "config" / "package_boundary.yaml"
+CONFIG_PATH = machinery_path("config/package_boundary.yaml")
 SCHEMA = "boundary-ratchet-baseline.v1"
 CONFIG_SCHEMA = "package-boundary.v1"
 ROLES = frozenset({"machinery", "product", "shared"})

@@ -13,6 +13,7 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.repo_root import machinery_path
 from scripts.orchestration.trails.executor import TrailExecutor
 from scripts.orchestration.trails.models import ExitClass, TrailRunnerError, TrailRunResult
 from scripts.orchestration.trails.store import TrailStore
@@ -20,7 +21,7 @@ from scripts.orchestration.trails.store import TrailStore
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RUNS_DATABASE_PATH = PROJECT_ROOT / "batch_state/trails/runs.sqlite3"
 RECEIPTS_ROOT = PROJECT_ROOT / "batch_state/trails/receipts"
-TRAILS_ROOT = PROJECT_ROOT / "scripts/config/trails"
+TRAILS_ROOT = machinery_path("config/trails")
 
 
 class JsonArgumentParser(argparse.ArgumentParser):

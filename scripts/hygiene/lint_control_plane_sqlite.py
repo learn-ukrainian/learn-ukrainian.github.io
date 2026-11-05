@@ -21,34 +21,49 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or Path(__file__).parents[1].name
+
+
+def _mp(relative: str) -> str:
+    return f"{_machinery_top()}/{relative}"
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 _SCAN_ROOTS: tuple[str, ...] = (
     "scripts",
     "agents_extensions/shared/session_streams",
 )
-_CONTROL_PLANE_PACKAGE = "scripts/control_plane"
+_CONTROL_PLANE_PACKAGE = _mp("control_plane")
 _SKIP_PATH_PREFIXES: tuple[str, ...] = ("tests/",)
 
 # Exact ``(path, stripped snippet, max_occurrences)`` for remaining direct opens.
 _ALLOWLIST: tuple[tuple[str, str, int], ...] = (
     (
-        "scripts/agent_runtime/acpx_discuss.py",
+        _mp("agent_runtime/acpx_discuss.py"),
         'connection = sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True)',
         1,
     ),
     (
-        "scripts/api/fleet_router.py",
+        _mp("api/fleet_router.py"),
         "connection = sqlite3.connect(",
         1,
     ),
     (
-        "scripts/api/fleet_workers_collect.py",
+        _mp("api/fleet_workers_collect.py"),
         "conn = sqlite3.connect(str(path))",
         1,
     ),
     (
-        "scripts/api/runtime_router.py",
+        _mp("api/runtime_router.py"),
         'connection = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True)',
         1,
     ),
@@ -221,17 +236,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Flag direct control-plane SQLite opens outside the counted allowlist.\n"
-            "Use before review; route new opens through scripts/control_plane/."
+            f"Use before review; route new opens through {_mp('control_plane')}/."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.hygiene.lint_control_plane_sqlite\n"
-            "  .venv/bin/python -m scripts.hygiene.lint_control_plane_sqlite scripts/example.py\n"
-            "  .venv/bin/python -m scripts.hygiene.lint_control_plane_sqlite --changed-from origin/main\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'lint_control_plane_sqlite')}\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'lint_control_plane_sqlite')} scripts/example.py\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'lint_control_plane_sqlite')} --changed-from origin/main\n"
             "Outputs: findings on stderr or a clean summary on stdout; no writes.\n"
             "Exit codes: 0 clean; 1 findings; 2 invalid arguments or Git diff error.\n"
-            "Related: #7365; #11091; scripts/control_plane/."
+            f"Related: #7365; #11091; {_mp('control_plane')}/."
         ),
     )
     parser.add_argument(
@@ -282,7 +297,7 @@ def main(argv: list[str] | None = None) -> int:
         print("OK: no unallowlisted control-plane sqlite3.connect opens")
         return 0
     print(
-        "Unallowlisted control-plane sqlite3.connect (route through scripts/control_plane/):",
+        f"Unallowlisted control-plane sqlite3.connect (route through {_mp('control_plane')}/):",
         file=sys.stderr,
     )
     for key, detail in violations:

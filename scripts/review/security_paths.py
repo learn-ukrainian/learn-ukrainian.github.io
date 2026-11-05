@@ -14,6 +14,13 @@ from pathlib import Path
 
 from scripts.review.target_resolution import TargetResolutionError, _run_git
 
+# Machinery files are matched by their checkout-relative paths, which start with the
+# machinery package's import name: the directory Git, owned paths and the catalog name,
+# taken from this module's name rather than the resolved package directory, so a symlinked
+# package keeps its checkout name. The literal ``scripts/`` entries are product-repository
+# files and stay where they are.
+_MACHINERY = __name__.partition(".")[0]
+
 SECURITY_SENSITIVE_PATHS = (
     ".githooks/**",
     ".github/workflows/**",
@@ -25,39 +32,40 @@ SECURITY_SENSITIVE_PATHS = (
     "start-*.sh",
     "run-dispatcher.sh",
     "services.sh",
-    "scripts/start-*.sh",
-    "scripts/session_start.sh",
-    "scripts/install_git_hooks.sh",
-    "scripts/launchers/**",
-    "scripts/launchd/**",
-    "scripts/lib/*.sh",
-    "scripts/lib/kimi_coding_oauth.py",
-    "scripts/hooks/**",
-    "scripts/guardrails/**",
+    f"{_MACHINERY}/start-*.sh",
+    f"{_MACHINERY}/session_start.sh",
+    f"{_MACHINERY}/install_git_hooks.sh",
+    f"{_MACHINERY}/launchers/**",
+    f"{_MACHINERY}/launchd/**",
+    f"{_MACHINERY}/lib/*.sh",
+    f"{_MACHINERY}/lib/kimi_coding_oauth.py",
+    f"{_MACHINERY}/hooks/**",
+    f"{_MACHINERY}/guardrails/**",
     "scripts/lexical_sandbox.py",
-    "scripts/agent_runtime/**",
-    "scripts/session_supervisor/**",
+    f"{_MACHINERY}/agent_runtime/**",
+    f"{_MACHINERY}/session_supervisor/**",
     "scripts/delegate.py",
-    "scripts/dispatch.py",
-    "scripts/dispatcher/**",
-    "scripts/orchestration/dispatch_admission.py",
-    "scripts/api/delegate_router.py",
-    "scripts/opsec/**",
-    "scripts/secret_redactor.py",
+    f"{_MACHINERY}/dispatch.py",
+    f"{_MACHINERY}/dispatcher/**",
+    f"{_MACHINERY}/orchestration/dispatch_admission.py",
+    f"{_MACHINERY}/api/delegate_router.py",
+    f"{_MACHINERY}/opsec/**",
+    f"{_MACHINERY}/secret_redactor.py",
     "scripts/audit/secret_scan_local.py",
-    "scripts/ci/secret_scan_scope.py",
+    f"{_MACHINERY}/ci/secret_scan_scope.py",
     "scripts/ocr/_credentials.py",
     "packages/v4-runtime/src/learn_ukrainian_v4_runtime/credential_custody.py",
+    f"{_MACHINERY}/review/*.py",
     "scripts/review/*.py",
     "scripts/review/receipts/**",
     "scripts/review/validate/**",
     "scripts/build/cf_preflight.py",
-    "scripts/publish/**",
-    "scripts/ai_agent_bridge/_review*.py",
-    "scripts/ai_agent_bridge/routing_guard.py",
-    "scripts/config/model_catalog.yaml",
-    "scripts/config/agent_runtime*.yaml",
-    "scripts/config/agent_fallback_substitutions.yaml",
+    f"{_MACHINERY}/publish/**",
+    f"{_MACHINERY}/ai_agent_bridge/_review*.py",
+    f"{_MACHINERY}/ai_agent_bridge/routing_guard.py",
+    f"{_MACHINERY}/config/model_catalog.yaml",
+    f"{_MACHINERY}/config/agent_runtime*.yaml",
+    f"{_MACHINERY}/config/agent_fallback_substitutions.yaml",
 )
 
 

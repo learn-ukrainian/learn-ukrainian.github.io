@@ -37,6 +37,11 @@ from scripts.orchestration.task_record_store import (
     relocated_result_file,
 )
 
+# This package's import name; its dotted parts are also its directories in checkout-relative
+# paths (from the unresolved file location when this module runs as a file).
+_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+_MACHINERY = _PACKAGE.partition(".")[0]
+
 SCHEMA_VERSION = 1
 PYTHON = ".venv/bin/python"
 # Dispatch v2 has no grok alias (grok-build is the Grok TUI); the Grok seat runs as the Cursor TUI.
@@ -547,7 +552,7 @@ def resolve_prompt_file(repo_root: Path, args: argparse.Namespace) -> Path:
 def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[str]:
     command = [
         PYTHON,
-        "scripts/dispatch.py",
+        f"{_MACHINERY}/dispatch.py",
         "dispatch",
         "--agent",
         SEAT_PROVIDERS.get(args.agent, args.agent),
@@ -785,7 +790,7 @@ def build_parser() -> argparse.ArgumentParser:
         "dispatch",
         help="Dispatch a v2 worker and record it in a run ledger.",
         description=(
-            "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
+            f"Launch via {_MACHINERY}/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
             "budget ceilings, lifecycle-file propagation, "
             "and authoring-review-risk. Unset authoring-review-risk is unchecked, unlike legacy critical admission. "
             "Seats grok-build, qwen, kimi are refused. "
