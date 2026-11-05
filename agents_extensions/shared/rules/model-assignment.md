@@ -3,7 +3,7 @@
 <critical>
 
 **Review admission:** `claude-fable-5` and `grok-4.6` are retired.
-Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. It is never routed or selected by a resolver, substitution or ladder and holds no advisory, approval or review role (operator decision 2026-10-21). Operator decision 2026-10-05 (#9769):
+Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. It is never routed or selected by a resolver, substitution or ladder and holds no advisory, approval or review role (operator decision 2026-10-21). An operator-signed allowance can admit Fable 5.1 or Astra to an ACP consult seat for its signed scope only (see below). Operator decision 2026-10-05 (#9769):
 Grok 4.7 is a regular code/infra reviewer at every risk, including critical, through
 Cursor `--agent cursor --model grok-4.7-high`. Native Grok dispatch is retired;
 `dispatch.py` has no `grok` agent and rejects `--agent grok`; callers use
@@ -230,6 +230,7 @@ hard scouting task). Read-only recon/classification and workspace-write bounded 
 other Luna work needs the complete Sol envelope (#9275; see below). **Operator 2026-09-29 (#9230), advisory effort set to high 2026-09-30 (#9360):** GPT-6.1 Sol is the only Sol and also holds
 the former GPT-6 Astra advisory seat. Review, critique and design input use
 **Opus 5.5 / Sol 6.1**; Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. Astra (`gpt-6-astra`) has only the time-boxed Codex red-team code-review exception for Sol-authored PRs under workflow.md § Merge policy, #10437, operator decision 2026-10-31 recorded by the CTO. It expires at 2026-11-04T00:00Z and requires the resolver to find no eligible outside-family reviewer. It is labelled `review_mode=red_team`, never cross-family review, and grants no Ukrainian review, security final sign-off, advice, approval, design, implementation or driver role. Author-task/model refusals, toolful exact-head binding, risk floors, CI and merge-queue gates stay unchanged. `gpt-6-sol` remains retired.
+**Operator consult allowance:** when the operator allows it, a parked or non-active catalog model such as Fable 5.1 or Astra may take an ACP ask, consult or discussion seat. The operator signs a record naming the canonical model id, the `consult` activity, one task id or a window of at most 24 hours, and the order reference; `scripts/review/operator_allowance.py` verifies it with `ssh-keygen -Y verify` against the root-owned signer file, and every admitted call records the allowance in its usage record and ACP receipt. It never admits a review, critique or approval of record, a sealed review, an advisory role, resolver, ladder or substitution selection, or execution, writer or driver work. Without a valid record, both models are refused as above. Operator steps: `docs/guardrails/operator-allowance.md`.
 Token prices under
 272K are Sol $2/$10 and Luna $0.10/$0.50 per million input/output tokens.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable. Review selection

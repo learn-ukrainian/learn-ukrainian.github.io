@@ -184,6 +184,29 @@ CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
 # advisory or review role (operator decision 2026-10-03, #9583).
 CLAUDE_ACP_OPUS_MODEL = "claude-opus-5-5"
 CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, CLAUDE_ACP_OPUS_MODEL})
+# Codex ACP pins. A model outside a seat's pins runs only under the operator
+# allowance invoke_inter_agent() installed for that consult (operator_allowance).
+CODEX_ACP_MODELS = frozenset({"gpt-6-luna", "gpt-6.1-sol"})
+
+
+def _operator_consult_allowed(
+    model: str | None,
+    *,
+    task_id: str | None,
+    tool_config: Mapping[str, Any] | None,
+    sealed_review_mcp_config: str | None,
+) -> bool:
+    """True when the verified allowance installed for this ACP consult admits ``model`` and ``task_id``.
+
+    Never for a sealed review or a call outside the runner-owned ACP transport.
+    """
+    if model is None or sealed_review_mcp_config is not None:
+        return False
+    if not isinstance(tool_config, Mapping) or tool_config.get("acpx_transport") is not True:
+        return False
+    from scripts.review.operator_allowance import active_consult_allowance
+
+    return active_consult_allowance(model, task_id=task_id) is not None
 # The ACP Claude seat launches the host Claude Code executable (#10500). This is
 # the single per-model floor table: a pinned executable below its model's floor
 # is refused before prompt delivery. Models without an entry use the global
@@ -2922,8 +2945,17 @@ class AcpxAdapter:
         ``stdin_payload``, and are never published to fleet-comms, dispatch
         authority, or review evidence.
         """
-        approved_models = frozenset({"gpt-6-luna", "gpt-6.1-sol"})
-        if model is not None and model not in approved_models:
+        approved_models = CODEX_ACP_MODELS
+        if (
+            model is not None
+            and model not in approved_models
+            and not _operator_consult_allowed(
+                model,
+                task_id=task_id,
+                tool_config=tool_config,
+                sealed_review_mcp_config=(tool_config or {}).get("sealed_review_mcp_config"),
+            )
+        ):
             raise AcpxShadowRefusalError(
                 f"AcpxAdapter: model={model!r} rejected; approved models are {', '.join(sorted(approved_models))}"
             )
@@ -3380,6 +3412,8 @@ class _AcpxDiscussionAdapter:
     target_agent: str
     fixed_model: str | None = None
     allowed_models: frozenset[str] = frozenset()
+    # Only the Claude seat lets an operator consult allowance extend allowed_models.
+    operator_allowance_eligible: bool = False
     acpx_model: str | None = None
     fixed_effort: str | None = None
     forward_model_to_acpx: bool = True
@@ -3453,7 +3487,20 @@ class _AcpxDiscussionAdapter:
                 model = apply_cursor_model_pins(model or self.default_model)
             except ModelCatalogError as exc:
                 raise AcpxShadowRefusalError(f"{type(self).__name__}: {exc}") from exc
-        if self.allowed_models and model is not None and model not in self.allowed_models:
+        if (
+            self.allowed_models
+            and model is not None
+            and model not in self.allowed_models
+            and not (
+                self.operator_allowance_eligible
+                and _operator_consult_allowed(
+                    model,
+                    task_id=task_id,
+                    tool_config=tc,
+                    sealed_review_mcp_config=sealed_review_mcp_config,
+                )
+            )
+        ):
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: model={model!r} rejected; allowed pins are {sorted(self.allowed_models)!r}"
             )
@@ -3559,6 +3606,7 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-claude-shadow"
     target_agent = "claude"
     allowed_models = CLAUDE_ACP_MODELS
+    operator_allowance_eligible = True
     default_model = CLAUDE_ACP_MODEL
     fixed_effort = "high"
     sealed_review_tool_names = _CLAUDE_SEALED_REVIEW_TOOL_NAMES

@@ -468,6 +468,9 @@ models:
     family: openai
     tier: frontier_authority
     lifecycle: fallback
+    # Its ACP consult seat (codex participant) opens only under an operator-signed
+    # allowance for this exact id (scripts/review/operator_allowance.py). The
+    # red_team_only review exception below is separate and unchanged.
     roles: [standard_review]
     transports: [native_codex]
     routing_wire_ids:
@@ -559,6 +562,8 @@ models:
     lifecycle: active
     # #9583: no architecture/advisory or review role; launchable model only.
     # Historical alias retained; explicit pins use only the native Claude CLI.
+    # Its ACP consult seat (claude participant) opens only under an operator-signed
+    # allowance for this exact id (scripts/review/operator_allowance.py); never review.
     aliases: [claude-fable-5-1-thinking-high]
     roles: [long_horizon_coding, orchestration]
     transports: [native_claude]

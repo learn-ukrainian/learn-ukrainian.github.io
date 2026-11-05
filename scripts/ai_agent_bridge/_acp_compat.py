@@ -367,6 +367,11 @@ def _result_receipt(
         "transport_metadata": getattr(result, "transport_metadata", None),
         "transport_outcome": getattr(result, "transport_outcome", None),
     }
+    usage = getattr(result, "usage_record", None)
+    allowance = usage.get("operator_allowance") if isinstance(usage, dict) else None
+    if isinstance(allowance, dict):
+        # The runner-sealed operator allowance that admitted this consult: durable and auditable.
+        payload["operator_allowance"] = allowance
     if seat_substitution is not None:
         payload["seat_substitution"] = seat_substitution
     if substitution_decision is not None:
@@ -409,6 +414,8 @@ def _replay_result(raw: bytes) -> object:
         "harness": payload.get("harness") or "acp",
     }
     provenance.update({"replayed": True, "transport": "acp"})
+    if isinstance(payload.get("operator_allowance"), dict):
+        provenance["operator_allowance"] = payload["operator_allowance"]
     decision = payload.get("substitution_decision")
     if isinstance(decision, dict) and "substitute" in decision:
         stored_reason = decision.get("reason")
@@ -909,6 +916,8 @@ def _run_single_acp_job(
                         model=model,
                         effort=effort,
                         hard_timeout=hard_timeout,
+                        # A review ask is never a consult; only a plain ask may use an operator allowance.
+                        purpose=None if review else "consult",
                     )
             except BaseException as exc:
                 # Persist the substitution decision and the typed failure code

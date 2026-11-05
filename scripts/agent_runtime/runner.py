@@ -185,6 +185,8 @@ _INVOCATION_NONCE: contextvars.ContextVar[str | None] = contextvars.ContextVar(
     "agent_runtime_invocation_nonce", default=None
 )
 _INTER_AGENT_TRANSPORT_NAME = "acp"
+# The one explicit non-authoritative purpose that may carry an operator allowance (ask, consult, discussion).
+CONSULT_PURPOSE = "consult"
 _RESERVED_TRANSPORT_PROVENANCE = frozenset({"source", "agent", "via"})
 
 
@@ -1212,6 +1214,11 @@ def _build_usage_record(
         # The context is installed only by invoke_inter_agent(); no caller
         # metadata is permitted to supply or overwrite these fields.
         record["transport"] = transport.metadata()
+        from scripts.review.operator_allowance import active_allowance
+
+        if (allowance := active_allowance()) is not None:
+            # Installed only by invoke_inter_agent() after signature verification.
+            record["operator_allowance"] = allowance.receipt()
     if isinstance(agy_telemetry, AgyTelemetry) and not privacy_limited:
         record.update(agy_telemetry.task_fields())
     if (agent == "agy" or agy_killed_commands or agy_attempt_count > 1 or agy_retry_reason) and not privacy_limited:
@@ -3624,7 +3631,9 @@ def _invoke_impl(
         )
 
     # Catalog retirement binds explicit pins and the retired Kimi defaults.
-    _refuse_retired_launch_model(agent_name, model, tool_config)
+    _refuse_retired_launch_model(
+        agent_name, model, tool_config, consult_task_id=task_id if allow_direct_only else None,
+    )
 
     # ---------- 3. Validate cwd for write modes ----------
     if mode in _WRITE_CAPABLE_MODES:
@@ -3893,12 +3902,17 @@ def _invoke_impl(
     )
 
 
-def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config: dict | None) -> None:
+def _refuse_retired_launch_model(
+    agent_name: str, model: str | None, tool_config: dict | None, *, consult_task_id: str | None = None,
+) -> None:
     """Refuse the model public ``invoke`` would run, before ``_invoke_impl``.
 
     Direct ``_invoke_impl`` callers keep the same check. Omitted Kimi and Muse
     models use their defaults; other adapter defaults are admitted during planning.
-    Coding-only admission still runs first.
+    Coding-only admission still runs first. Only the direct-only ACP transport
+    launch passes ``consult_task_id``; the operator allowance that
+    :func:`invoke_inter_agent` installed for this model and task then lifts the
+    retirement refusal.
     """
     requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None
     if agent_name == "muse":
@@ -3925,7 +3939,12 @@ def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config
         effective_model = default_model
     from scripts.review.model_catalog import retired_model_refusal
 
-    refusal = retired_model_refusal(effective_model)
+    allowance = None
+    if consult_task_id is not None and isinstance(tool_config, dict) and tool_config.get("acpx_transport") is True:
+        from scripts.review.operator_allowance import active_consult_allowance
+
+        allowance = active_consult_allowance(effective_model, task_id=consult_task_id)
+    refusal = retired_model_refusal(effective_model, consult_allowance=allowance, consult_task_id=consult_task_id)
     if refusal:
         raise ValueError(f"Agent {agent_name!r}: {refusal}")
     if agent_name == "muse":
@@ -4057,6 +4076,8 @@ class InterAgentRoute:
     target_agent: str
     model: str | None
     effort: str | None
+    # A verified operator allowance that admitted ``model`` for one ACP consult; None by default.
+    allowance: Any = None
 
 
 def _require_acp_transport(transport: str | None) -> None:
@@ -4092,8 +4113,16 @@ def _validate_catalog_model(
     *,
     participant: str,
     model: str,
+    allowance: Any = None,
+    task_id: str | None = None,
 ) -> None:
-    """Require a current active catalog model on the adapter's real route that may consult (#9583)."""
+    """Require a current active catalog model on the adapter's real route that may consult (#9583).
+
+    ``allowance`` is a verified operator allowance found by
+    :func:`_validate_catalog_model_for_consult`; for exactly this model and ``task_id`` it
+    lifts the lifecycle, retirement and consult-role refusals. The catalog
+    route and transport checks always apply.
+    """
     try:
         from scripts.review.model_catalog import (
             CONSULT_ACTIVITY,
@@ -4115,7 +4144,10 @@ def _validate_catalog_model(
         raise InterAgentTransportError(
             f"ACP participant {participant!r} has no enabled catalog route for model {model!r}"
         ) from exc
-    if model_entry.get("lifecycle") != "active":
+    from scripts.review.operator_allowance import is_verified
+
+    allowed = is_verified(allowance) and allowance.admits(model, activity=CONSULT_ACTIVITY, task_id=task_id)
+    if model_entry.get("lifecycle") != "active" and not allowed:
         raise InterAgentTransportError(f"ACP participant {participant!r} refuses non-active model {model!r}")
     if catalog_transport not in model_entry.get("transports", []):
         raise InterAgentTransportError(
@@ -4123,8 +4155,43 @@ def _validate_catalog_model(
             f"{catalog_transport!r} for model {model!r}"
         )
     # ACP carries asks, consults, discussions and sealed reviews only.
-    if refusal := activity_role_refusal(model, CONSULT_ACTIVITY, catalog):
+    if refusal := activity_role_refusal(
+        model, CONSULT_ACTIVITY, catalog, consult_allowance=allowance if allowed else None, consult_task_id=task_id,
+    ):
         raise InterAgentTransportError(f"ACP participant {participant!r} refuses {refusal}")
+
+
+def _validate_catalog_model_for_consult(
+    *,
+    participant: str,
+    model: str,
+    purpose: str | None,
+    task_id: str | None,
+    sealed_review: bool,
+) -> Any:
+    """Validate ``model``; on a catalog refusal, look for an operator allowance once.
+
+    Returns the verified allowance that admitted the model, or ``None`` when the
+    catalog admitted it unaided. A refusal with no allowance for this explicit
+    consult purpose and task is raised unchanged, so default behaviour and
+    messages stay exactly as before.
+    """
+    try:
+        _validate_catalog_model(participant=participant, model=model)
+        return None
+    except InterAgentTransportError as refusal:
+        if task_id is None:
+            raise
+        from scripts.review.operator_allowance import find_consult_allowance
+
+        allowance = find_consult_allowance(model, task_id=task_id, purpose=purpose, sealed_review=sealed_review)
+        if allowance is None:
+            raise
+        try:
+            _validate_catalog_model(participant=participant, model=model, allowance=allowance, task_id=task_id)
+        except InterAgentTransportError:
+            raise refusal from None
+        return allowance
 
 
 def resolve_inter_agent_route(
@@ -4132,6 +4199,9 @@ def resolve_inter_agent_route(
     *,
     model: str | None = None,
     effort: str | None = None,
+    purpose: str | None = None,
+    task_id: str | None = None,
+    sealed_review: bool = False,
 ) -> InterAgentRoute:
     """Validate one ACP participant/model/effort selection without spawning.
 
@@ -4139,7 +4209,15 @@ def resolve_inter_agent_route(
     only the pinned ACP adapter registry is considered, and an override may
     only repeat that adapter's current exact pin.  This prevents model catalog
     presence from inventing a new ACP provider route.
+
+    ``purpose="consult"`` with a validated ``task_id`` and no sealed review
+    lets an operator-signed allowance (``scripts.review.operator_allowance``)
+    admit a model the catalog otherwise refuses; the route then carries it.
     """
+    if purpose not in {None, CONSULT_PURPOSE}:
+        raise InterAgentTransportError(
+            f"inter-agent purpose must be omitted or {CONSULT_PURPOSE!r}; got {purpose!r}"
+        )
     participant = str(agent).strip().lower()
     try:
         # The participant, its registered adapter agent and pin, and the override, admitted together.
@@ -4165,16 +4243,21 @@ def resolve_inter_agent_route(
         raise InterAgentTransportError(f"ACP participant {participant!r} is not an enabled confined direct-only route")
 
     selected_model = pinned_model
+    allowance = None
     if pinned_model is None:
         if model is not None:
-            _validate_catalog_model(participant=participant, model=model)
+            allowance = _validate_catalog_model_for_consult(
+                participant=participant, model=model, purpose=purpose, task_id=task_id, sealed_review=sealed_review,
+            )
             selected_model = model
     elif model is not None and model != pinned_model:
         raise InterAgentTransportError(
             f"ACP participant {participant!r} only supports its registered model pin {pinned_model!r}; got {model!r}"
         )
     else:
-        _validate_catalog_model(participant=participant, model=pinned_model)
+        allowance = _validate_catalog_model_for_consult(
+            participant=participant, model=pinned_model, purpose=purpose, task_id=task_id, sealed_review=sealed_review,
+        )
 
     pinned_effort = ACPX_PARTICIPANT_EFFORTS.get(participant)
     if effort is not None and effort != pinned_effort:
@@ -4192,6 +4275,7 @@ def resolve_inter_agent_route(
         target_agent=target_agent,
         model=selected_model,
         effort=pinned_effort,
+        allowance=allowance,
     )
 
 
@@ -4240,6 +4324,7 @@ def invoke_inter_agent(
     metadata: Mapping[str, object] | None = None,
     sealed_review_mcp_config: Path | None = None,
     hard_timeout: int = 300,
+    purpose: str | None = None,
 ) -> Result:
     """Invoke one confined ACP participant through the normal communication seam.
 
@@ -4248,6 +4333,12 @@ def invoke_inter_agent(
     and never retries a failed ACP request through the legacy bridge.  The
     returned :class:`Result` carries runner-sealed ``transport_metadata``
     (Source, Agent, Via) and a normalized ``transport_outcome``.
+
+    ``purpose="consult"`` declares a non-authoritative ask, consult or
+    discussion leg. Only then, bound to the validated ``task_id`` and never with
+    ``sealed_review_mcp_config``, may an operator-signed allowance admit a model
+    the catalog refuses; the result's usage record then names it under
+    ``operator_allowance``.
     """
     _require_acp_transport(transport)
     _validate_transport_metadata(metadata)
@@ -4266,7 +4357,14 @@ def invoke_inter_agent(
     validated_idempotency_key = _require_local_metadata_field(
         "idempotency_key", idempotency_key, adapter_label="InterAgentTransport"
     )
-    route = resolve_inter_agent_route(agent, model=model, effort=effort)
+    route = resolve_inter_agent_route(
+        agent,
+        model=model,
+        effort=effort,
+        purpose=purpose,
+        task_id=validated_task_id,
+        sealed_review=sealed_config is not None,
+    )
     # Every ACP ask, discussion leg and sealed review starts with the rules core
     # (seat from $LU_RULES_SEAT); without it the call is refused as a typed
     # transport error, before any provenance is bound or a process is spawned.
@@ -4285,13 +4383,15 @@ def invoke_inter_agent(
         agent=route.participant,
         target_agent=route.target_agent,
     )
+    from scripts.review.operator_allowance import activate as activate_allowance
+
     transport_token = _INTER_AGENT_TRANSPORT.set(provenance)
     try:
         with active_communication_scope(
             source=trusted_source,
             agent=route.participant,
             target_agent=route.target_agent,
-        ):
+        ), activate_allowance(route.allowance):
             result = _invoke_direct_only(
                 route.seat,
                 prompt,
@@ -4312,6 +4412,8 @@ def invoke_inter_agent(
             )
             usage_record = dict(result.usage_record)
             usage_record.setdefault("transport", provenance.metadata())
+            if route.allowance is not None:
+                usage_record["operator_allowance"] = route.allowance.receipt()
             return replace(
                 result,
                 usage_record=usage_record,

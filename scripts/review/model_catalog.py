@@ -1352,13 +1352,28 @@ def runtime_model_matches_requested(
     return bool(model_id and runtime_model in catalog["models"][model_id].get("runtime_model_ids", []))
 
 
+def _consult_allowance_admits(allowance: Any, model: str, task_id: str | None) -> bool:
+    """True when ``allowance`` is a verified operator allowance for an ACP consult of exactly ``model``."""
+    if allowance is None:
+        return False
+    from scripts.review.operator_allowance import CONSULT_ACTIVITY as ALLOWANCE_ACTIVITY
+    from scripts.review.operator_allowance import is_verified
+
+    return is_verified(allowance) and allowance.admits(model, activity=ALLOWANCE_ACTIVITY, task_id=task_id)
+
+
 def retired_model_refusal(
     model: Any, catalog: dict[str, Any] | None = None, *, review_context: Mapping[str, Any] | None = None,
+    consult_allowance: Any = None, consult_task_id: str | None = None,
 ) -> str | None:
     """Refuse retired ids using the same canonical identity as review admission.
 
     Delegate, the runner and adapter model guards call this before side effects.
-    Unknown ids return None; transport gates own them.
+    Unknown ids return None; transport gates own them. ``consult_allowance`` is
+    passed only by the ACP consult entry and launch check: a verified operator
+    allowance for exactly this model and ``consult_task_id`` lifts retirement and
+    an expired or unmet red-team restriction. It is ignored with a
+    ``review_context``, so it never admits a review.
     """
     text = str(model or "").strip()
     if not text:
@@ -1369,6 +1384,8 @@ def retired_model_refusal(
     if model_id is None:
         return None
     entry = models[model_id]
+    if review_context is None and _consult_allowance_admits(consult_allowance, text, consult_task_id):
+        return None
     if restriction := entry.get("red_team_only"):
         expiry = datetime.fromisoformat(restriction["expires_at"].replace("Z", "+00:00"))
         if datetime.now(UTC) >= expiry:
@@ -1400,6 +1417,7 @@ def retired_model_refusal(
 def activity_role_refusal(
     model: Any, activity: str, catalog: dict[str, Any] | None = None, *,
     review_context: Mapping[str, Any] | None = None,
+    consult_allowance: Any = None, consult_task_id: str | None = None,
 ) -> str | None:
     """Refuse a model pin whose catalog ``roles`` admit no ``activity`` (#9583).
 
@@ -1407,7 +1425,9 @@ def activity_role_refusal(
     ``consult`` (an ACP ask, consult or discussion, which the review roles also
     admit); ``review_scheduler.activity_roles`` names the roles each admits. A
     retired model holds no role. Unknown ids return None; transport and
-    resolver gates own them.
+    resolver gates own them. Only the ACP consult entry passes
+    ``consult_allowance``: a verified operator allowance for exactly this model
+    and ``consult_task_id`` admits the ``consult`` activity; ``review`` ignores it.
     """
     text = str(model or "").strip()
     if not text:
@@ -1415,6 +1435,8 @@ def activity_role_refusal(
     catalog = catalog or load_model_catalog()
     model_id = resolve_catalog_model_id(text, catalog)
     if model_id is None:
+        return None
+    if activity == CONSULT_ACTIVITY and _consult_allowance_admits(consult_allowance, text, consult_task_id):
         return None
     if refusal := retired_model_refusal(
         model_id, catalog, review_context=review_context if activity == REVIEW_ACTIVITY else None,
