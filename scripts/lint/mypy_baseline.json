@@ -10395,11 +10395,6 @@
     {
       "path": "scripts/ci/pr_size_warning.py",
       "code": "call-overload",
-      "message": "No overload variant of \"__getitem__\" of \"list\" matches argument type \"str\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "call-overload",
       "message": "No overload variant of \"next\" matches argument type \"list[bytes]\""
     },
     {
@@ -10410,27 +10405,7 @@
     {
       "path": "scripts/ci/pr_size_warning.py",
       "code": "index",
-      "message": "Invalid index type \"str\" for \"str\"; expected type \"SupportsIndex | slice[None | SupportsIndex, None | SupportsIndex, None | SupportsIndex]\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "index",
       "message": "Value of type \"None | list[Any] | str\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "index",
-      "message": "Value of type \"None | list[Any] | str\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "operator",
-      "message": "Unsupported operand types for < (\"str\" and \"None\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "operator",
-      "message": "Unsupported operand types for > (\"list[Any]\" and \"str\")"
     },
     {
       "path": "scripts/ci/pr_size_warning.py",

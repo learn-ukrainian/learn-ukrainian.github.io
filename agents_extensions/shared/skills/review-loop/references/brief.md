@@ -1,6 +1,6 @@
 # Review brief for a review-loop round
 
-The section layout of every review brief (target, outcome, threat and input model,
+The section layout of every review brief (target, outcome, input contract,
 dispositions, reviewer duties, breakers) is the
 [review brief template](../../drive-epic/references/review-merge-cleanup.md#review-brief-template-10665).
 Use it unchanged. This file lists only what review-loop adds to it.
@@ -9,7 +9,7 @@ Use it unchanged. This file lists only what review-loop adds to it.
 
 Add to the template's **Target** section:
 
-- the review round (`round 1 of <tier>`), the budget tier and who recorded it;
+- the review round (`round 1 of 3`, or of the budget the repository declares);
 - the author model of every commit on the branch, the catalog risk and the review profile;
 - the base ref and merge-base SHA, so the reviewer reviews `merge-base..exact head`;
 - the checks already run, with their results or CI run ids (reviewers do not re-run suites).
