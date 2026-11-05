@@ -42,6 +42,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sqlite3
 import statistics
 import sys
@@ -833,8 +834,10 @@ def report_path(seat: str, day: date, repo_root: Path | None = None) -> Path:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.review.seeds.score",
+        prog=f"python {entry}",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
             "Score one reviewer seat on a measurement set from the findings database and the adjudications, and print\n"
@@ -844,8 +847,8 @@ def main(argv: list[str] | None = None) -> int:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.seeds.score --seat codex --set first\n"
-            "  .venv/bin/python -m scripts.review.seeds.score --seat agy --set rolling --json\n"
+            f"  .venv/bin/python {entry} --seat codex --set first\n"
+            f"  .venv/bin/python {entry} --seat agy --set rolling --json\n"
             "\nOutputs: the markdown report (or JSON) on stdout. Exit codes: 0 scored; 2 refused (error and code on stderr)."
         ),
     )
