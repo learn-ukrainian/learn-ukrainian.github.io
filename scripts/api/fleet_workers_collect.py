@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import copy
+import errno
 import hashlib
+import os
 import sqlite3
 import threading
 import time
@@ -207,18 +209,48 @@ def _job_state(state: str) -> str | None:
     return None
 
 
-def _record_may_name_active_status(path: Path) -> bool:
-    """Whether ``path``'s bytes can name a stored ``running`` or ``spawning`` status.
+def _prefilter_bytes(raw: bytes) -> bool:
+    """True when the bytes can spell a stored running or spawning status.
 
-    Same prefilter as ``dispatch_admission.iter_active_records``: a file whose
-    bytes do not contain those quoted statuses is not parsed. A read error stays
-    a candidate so ``_read_task_state`` still retries it.
+    The quoted markers are the ones ``dispatch_admission`` already uses.
+    ``json.loads`` also accepts ``\\u0072unning`` as ``running``, which those
+    markers miss, so a JSON ``\\u`` escape stays a candidate.
+    """
+    return any(marker in raw for marker in _ACTIVE_STATUS_MARKERS) or b"\\u" in raw
+
+
+def _record_may_name_active_status(path: Path, tasks_root: str) -> bool:
+    """Whether ``path`` can name a stored ``running`` or ``spawning`` status.
+
+    A symlink is resolved and rejected before its target is read when the
+    real path is outside ``tasks_root``, the same containment as
+    ``delegate_router._read_task_state``. A regular file is opened with
+    ``O_NOFOLLOW``, so a directory entry cannot follow a link out of the
+    directory. A read error stays a candidate so ``_read_task_state`` still
+    retries it.
     """
     try:
-        raw = path.read_bytes()
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+    except OSError as exc:
+        if exc.errno != errno.ELOOP:
+            return True
+        try:
+            fullpath = os.path.realpath(path)
+        except OSError:
+            return True
+        if not fullpath.startswith(tasks_root + os.sep):
+            return False
+        try:
+            raw = Path(fullpath).read_bytes()
+        except OSError:
+            return True
+        return _prefilter_bytes(raw)
+    try:
+        with os.fdopen(fd, "rb") as handle:
+            raw = handle.read()
     except OSError:
         return True
-    return any(marker in raw for marker in _ACTIVE_STATUS_MARKERS)
+    return _prefilter_bytes(raw)
 
 
 def _stored_delegate_status(status: Any) -> str | None:
@@ -243,8 +275,12 @@ def collect_delegate_workers(
     rows: list[CollectedWorker] = []
     if not tasks_dir.is_dir():
         return rows
+    try:
+        tasks_root = os.path.realpath(tasks_dir)
+    except OSError:
+        tasks_root = None
     for entry in iter_task_records(tasks_dir, include_archive=False):
-        if not _record_may_name_active_status(entry):
+        if tasks_root is not None and not _record_may_name_active_status(entry, tasks_root):
             continue
         task = delegate_router._read_task_state(str(entry), tasks_dir=tasks_dir)
         if task is None:
