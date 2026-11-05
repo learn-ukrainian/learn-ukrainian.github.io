@@ -26,10 +26,12 @@ from __future__ import annotations
 
 import argparse
 import ast
+import contextlib
 import hashlib
 import json
 import os
 import re
+import secrets
 import shutil
 import stat
 import subprocess
@@ -68,6 +70,8 @@ ZERO_OID = re.compile(r"0{40}(?:0{24})?")
 # A ``scripts.<name>`` module reference; ``scripts.py`` and other file names are not modules.
 MODULE_REF = re.compile(r"(?<![\w.\-/])scripts(?:\.[A-Za-z_]\w*)+")
 FILE_SUFFIXES = frozenset({"py", "pyc", "sh", "md", "json", "yaml", "yml", "txt", "toml", "cfg", "ini", "log"})
+# Calls whose literal first argument (or name=/mod_name=) is a module that gets imported.
+LOADERS = frozenset({"import_module", "__import__", "run_module"})
 PATH_REF = re.compile(r"(?<![\w.\-])(?:\./)?scripts/([\w.\-/]*)")
 # Environment variables that would let a source checkout or another repository leak in.
 STRIPPED_ENV_PREFIXES = ("PYTHON", "GIT_", "PYTEST_")
@@ -559,40 +563,114 @@ def require_worktree_equals_head(repo: Path, why: str) -> None:
         )
 
 
-def git_storage(repo: Path) -> list[Path]:
-    """The repository's git directory, common directory and object alternates."""
-    found = []
-    for flag in ("--absolute-git-dir", "--git-common-dir"):
-        value = Path(git_text(repo, "rev-parse", "--path-format=absolute", flag).strip())
-        found.append(value)
-    alternates = found[-1] / "objects" / "info" / "alternates"
-    if alternates.is_file():
+def repo_storage(repo: Path) -> list[Path]:
+    """The repository's git directory, common directory and every object store its alternates reach.
+
+    Found by reading files, without running git. A relative alternate is resolved against the object
+    store that names it, as git does, and alternates of alternates are followed (git stops at depth 5).
+    """
+    dot = repo / ".git"
+    if dot.is_dir():
+        git_dir = dot
+    elif dot.is_file():
+        text = dot.read_text(encoding="utf-8", errors="replace").strip()
+        if not text.startswith("gitdir:"):
+            return []
+        git_dir = Path(text[len("gitdir:") :].strip())
+        git_dir = git_dir if git_dir.is_absolute() else repo / git_dir
+    else:
+        return []
+    common = git_dir
+    pointer = git_dir / "commondir"
+    if pointer.is_file():
+        named = Path(pointer.read_text(encoding="utf-8", errors="replace").strip())
+        common = named if named.is_absolute() else git_dir / named
+    found = [git_dir, common]
+    seen: set[str] = set()
+    queue: list[tuple[Path, int]] = [(common / "objects", 0)]
+    while queue:
+        objects, depth = queue.pop(0)
+        real = os.path.realpath(objects)
+        if real in seen or depth > 5:
+            continue
+        seen.add(real)
+        found.append(Path(real))
+        alternates = Path(real) / "info" / "alternates"
+        if not alternates.is_file():
+            continue
         for line in alternates.read_text(encoding="utf-8", errors="replace").splitlines():
-            if line.strip() and not line.startswith("#"):
-                found.append(Path(line.strip()))
-    return found
+            entry = line.strip()
+            if not entry or entry.startswith("#"):
+                continue
+            if entry.startswith('"'):
+                raise Unusable(f"{alternates} has a quoted entry; quoted alternates are not supported")
+            target = Path(entry)
+            queue.append((target if target.is_absolute() else Path(real) / target, depth + 1))
+    return [Path(os.path.realpath(path)) for path in found]
 
 
-def check_report_path(report: Path, inputs: Inputs, input_files: Sequence[Path]) -> None:
-    """--report may not alias an input file, a repository, its git storage or the tools directory."""
+def protected_paths(args: argparse.Namespace) -> list[Path]:
+    """Everything the verifier must never write: inputs, both repositories and their git storage, the tools."""
+    paths = [args.repo, args.source_repo, HERE, *input_files(args)]
+    if args.history_policy is not None:
+        paths.append(args.history_policy.parent)  # its replacements/ directory
+    for repo in (args.repo, args.source_repo):
+        paths += repo_storage(Path(repo))
+    return [Path(os.path.realpath(path)) for path in paths]
+
+
+def check_report_path(report: Path, protected: Sequence[Path], files: Sequence[Path]) -> None:
+    """--report may not alias an input file or lie inside a repository, its git storage or the tools."""
     if report.is_symlink():
         raise Unusable(f"--report {report} is a symlink")
     if report.exists() and not report.is_file():
         raise Unusable(f"--report {report} exists and is not a regular file")
-    target = Path(os.path.realpath(report))
-    if any(target == Path(os.path.realpath(path)) for path in input_files):
-        raise Unusable(f"--report {report} is an input file")
-    protected = [inputs.repo, inputs.source_repo, inputs.tools_dir]
-    protected += git_storage(inputs.repo) + git_storage(inputs.source_repo)
+    parent = Path(os.path.realpath(report.parent))
+    if not parent.is_dir():
+        raise Unusable(f"--report {report}: its directory does not exist")
+    target = parent / report.name
+    for path in files:
+        real = Path(os.path.realpath(path))
+        if target == real or (report.exists() and real.exists() and os.path.samefile(report, real)):
+            raise Unusable(f"--report {report} is an input file")
     for root in protected:
-        if inside(target, root):
+        if target == root or inside(target, root):
             raise Unusable(f"--report {report} lies inside {root}, which is read-only")
 
 
 def write_report(report: Path, payload: dict[str, Any]) -> None:
-    temporary = report.with_name(f".{report.name}.{os.getpid()}.tmp")
-    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    os.replace(temporary, report)
+    """Write through a freshly created file in the report's directory, then rename it into place.
+
+    The staging name is random and created exclusively without following links, and the rename replaces
+    a directory entry, so neither a planted staging link nor a hard link can carry the write elsewhere.
+    """
+    data = (json.dumps(payload, indent=2) + "\n").encode("utf-8")
+    directory = os.open(os.path.realpath(report.parent), os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        staging = f".{report.name}.{secrets.token_hex(8)}.tmp"
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+        descriptor = os.open(staging, flags, 0o644, dir_fd=directory)
+        try:
+            with os.fdopen(descriptor, "wb") as handle:
+                handle.write(data)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(staging, report.name, src_dir_fd=directory, dst_dir_fd=directory)
+        except BaseException:
+            with contextlib.suppress(FileNotFoundError):
+                os.unlink(staging, dir_fd=directory)
+            raise
+    finally:
+        os.close(directory)
+
+
+def read_child_json(path: Path) -> Any:
+    """Read a JSON file a sandboxed child wrote, refusing links and anything but a regular file."""
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as handle:
+        if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+            raise ValueError(f"{path} is not a regular file")
+        return json.loads(handle.read().decode("utf-8"))
 
 
 def require_python(executable: str, flag: str) -> str:
@@ -666,8 +744,6 @@ def load_inputs(args: argparse.Namespace) -> Inputs:
         absent = [path for path in tests_run + tests_support if path not in present]
         if absent:
             raise Unusable(f"{TESTS_LIST} names files absent at --source {inputs.source}: {absent[:10]}")
-    if args.report is not None:
-        check_report_path(args.report, inputs, input_files(args))
     require_worktree_equals_head(repo, "is not usable")
     return inputs
 
@@ -678,21 +754,13 @@ def input_files(args: argparse.Namespace) -> list[Path]:
     return files
 
 
-def visible_roots(args: argparse.Namespace) -> list[Path]:
+def visible_roots(args: argparse.Namespace, protected: Sequence[Path]) -> list[Path]:
     """Paths the sandbox must show; only those under /dev need binding back (bwrap gives a private /dev)."""
-    roots = [args.repo, args.source_repo, HERE, *input_files(args)]
-    if args.history_policy is not None:
-        roots.append(args.history_policy.parent)  # its replacements/ directory
+    roots = list(protected)
     for executable in (args.python, args.tool_python):
         found = shutil.which(executable)
         if found:
             roots += [Path(found).parent.parent, Path(os.path.realpath(found)).parent.parent]
-    for repo in (args.repo, args.source_repo):
-        alternates = repo / ".git" / "objects" / "info" / "alternates"
-        if alternates.is_file():
-            roots += [
-                Path(line.strip()) for line in alternates.read_text(errors="replace").splitlines() if line.strip()
-            ]
     return roots
 
 
@@ -876,7 +944,10 @@ def check_v3(inputs: Inputs, scratch: Path) -> CheckResult:
         if not out.is_file():
             tail = proc.stderr.decode("utf-8", "replace").strip().splitlines()[-1:]
             return dest, None, f"the import child exited {proc.returncode} without a result {tail}"
-        return dest, json.loads(out.read_text(encoding="utf-8")), ""
+        try:
+            return dest, read_child_json(out), ""
+        except (OSError, ValueError) as exc:
+            return dest, None, f"unreadable import result: {exc}"
 
     reported = 0
     with ThreadPoolExecutor(max_workers=inputs.jobs) as pool:
@@ -959,14 +1030,42 @@ class OwnershipIndex:
             return self.files[path] == MACHINERY
         return MACHINERY in self.dir_owners.get(path, set())
 
-    def is_product_import(self, dotted: str) -> bool:
-        top = dotted.split(".")[0]
-        if top in sys.stdlib_module_names or top in self.extracted_tops:
-            return False
-        return self.module_owner(dotted) in (PRODUCT, MIXED)
+    def product_dependency(self, dotted: str, *, relative: bool = False) -> str | None:
+        """Why importing dotted (a name under scripts/) needs product code, or None.
+
+        Python initializes every parent package before the module, so a product-owned __init__.py on the
+        way is a dependency even when the module itself is machinery. An absolute name whose top level is
+        a standard-library module or a top-level name of the extracted tree is not resolved under scripts/;
+        a relative import always is.
+        """
+        parts = dotted.split(".")
+        if not relative and (parts[0] in sys.stdlib_module_names or parts[0] in self.extracted_tops):
+            return None
+        for depth in range(1, len(parts)):
+            init = OLD_PREFIX + "/".join(parts[:depth]) + "/__init__.py"
+            if self.files.get(init) == PRODUCT:
+                return f"initializes product package {'.'.join(parts[:depth])} ({init})"
+        owner = self.module_owner(dotted)
+        if owner in (PRODUCT, MIXED):
+            return f"is a {owner} package (scripts/{dotted.replace('.', '/')})"
+        return None
 
 
-def scan_python_source(rel: str, source: bytes, index: OwnershipIndex) -> list[str]:
+def relative_base(rel: str, level: int) -> list[str] | None:
+    """The scripts/-relative package a relative import of this level starts from, or None outside lu_machinery/."""
+    if not rel.startswith(NEW_PREFIX):
+        return None
+    package = rel[len(NEW_PREFIX) :].split("/")[:-1]  # a module's and an __init__.py's package is its directory
+    if level - 1 > len(package):
+        return None
+    return package[: len(package) - (level - 1)]
+
+
+def scan_python_source(
+    rel: str, source: bytes, index: OwnershipIndex, unprefixed: list[str] | None = None
+) -> list[str]:
+    """V4 findings for one file. Unprefixed machinery imports, which resolve only while scripts/ is on
+    sys.path and are neither product nor scripts references, are appended to unprefixed when given."""
     try:
         tree = ast.parse(source, filename=rel)
     except (SyntaxError, ValueError) as exc:
@@ -974,15 +1073,27 @@ def scan_python_source(rel: str, source: bytes, index: OwnershipIndex) -> list[s
     findings: list[str] = []
     prose = docstring_nodes(tree)
 
-    def check_import(name: str, line: int) -> bool:
-        if name == "scripts" or name.startswith("scripts."):
+    def check_import(name: str, line: int, *, relative: bool = False) -> bool:
+        if not relative and (name == "scripts" or name.startswith("scripts.")):
             findings.append(f"{rel}:{line}: import of {name}")
             return True
-        if index.is_product_import(name):
-            owner = index.module_owner(name)
-            findings.append(f"{rel}:{line}: import of {owner} package {name} (scripts/{name.replace('.', '/')})")
-            return True
-        return False
+        reason = index.product_dependency(name, relative=relative)
+        if reason is None:
+            top = name.split(".")[0]
+            plain = top not in sys.stdlib_module_names and top not in index.extracted_tops
+            if unprefixed is not None and not relative and plain and index.module_owner(name) == MACHINERY:
+                unprefixed.append(f"{rel}:{line}: {name}")
+            return False
+        shown = f"relative import of scripts.{name}" if relative else f"import of {name}"
+        findings.append(f"{rel}:{line}: {shown} {reason}")
+        return True
+
+    def check_from(module: str, names: Sequence[ast.alias], line: int, *, relative: bool) -> None:
+        if module and check_import(module, line, relative=relative):
+            return
+        for alias in names:
+            if alias.name != "*":  # a submodule can have another owner than its package
+                check_import(f"{module}.{alias.name}" if module else alias.name, line, relative=relative)
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -992,10 +1103,23 @@ def scan_python_source(rel: str, source: bytes, index: OwnershipIndex) -> list[s
             for alias in node.names:
                 findings.append(f"{rel}:{node.lineno}: import of scripts.{alias.name}")
         elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
-            if not check_import(node.module, node.lineno):
-                for alias in node.names:
-                    if alias.name != "*":  # a submodule can have another owner than its package
-                        check_import(f"{node.module}.{alias.name}", node.lineno)
+            check_from(node.module, node.names, node.lineno, relative=False)
+        elif isinstance(node, ast.ImportFrom) and node.level > 0:
+            base = relative_base(rel, node.level)
+            if base is not None:
+                module = ".".join([*base, *(node.module.split(".") if node.module else [])])
+                check_from(module, node.names, node.lineno, relative=True)
+        elif isinstance(node, ast.Call):
+            func = node.func
+            called = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
+            if called in LOADERS:
+                target = node.args[0] if node.args else None
+                for keyword in node.keywords:
+                    if keyword.arg in ("name", "mod_name"):
+                        target = keyword.value
+                literal = target.value if isinstance(target, ast.Constant) else None
+                if isinstance(literal, str) and literal and not literal.startswith("."):
+                    check_import(literal, node.lineno)
         elif isinstance(node, ast.Constant) and isinstance(node.value, str | bytes) and id(node) not in prose:
             text = node.value if isinstance(node.value, str) else node.value.decode("latin-1")
             for match in MODULE_REF.finditer(text):
@@ -1018,14 +1142,20 @@ def check_v4(inputs: Inputs) -> CheckResult:
     tops = {path.split("/")[0].removesuffix(".py") for path in tree}
     index = OwnershipIndex(inputs.ownership, tops)
     scanned = 0
+    unprefixed: list[str] = []
     for rel in sorted(path for path in tree if path.endswith(".py")):
         path = inputs.repo / rel
         if path.is_symlink() or not path.is_file():
             result.fail(f"{rel}: not a regular file in the working tree")
             continue
         scanned += 1
-        for finding in scan_python_source(rel, path.read_bytes(), index):
+        for finding in scan_python_source(rel, path.read_bytes(), index, unprefixed):
             result.fail(finding)
+    if unprefixed:
+        result.notes.append(
+            f"{len(unprefixed)} unprefixed import(s) of machinery modules resolve only while scripts/ is on "
+            f"sys.path (not product coupling; V3 proves the module-level ones): {unprefixed[:20]}"
+        )
     result.inspected = {"python_files": scanned}
     return result
 
@@ -1049,8 +1179,8 @@ def run_tool(inputs: Inputs, tool: str, args: Sequence[str], report: Path, cwd: 
     if proc.returncode not in (0, 1) or not report.is_file():
         raise Unusable(f"{tool} could not run (exit {proc.returncode}): {stderr.splitlines()[-3:]}")
     try:
-        data = json.loads(report.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
+        data = read_child_json(report)
+    except (OSError, ValueError) as exc:
         raise Unusable(f"{tool} wrote an unreadable report: {exc}") from exc
     if not isinstance(data, dict):
         raise Unusable(f"{tool} wrote a report that is not a JSON object")
@@ -1243,8 +1373,9 @@ def check_history_policy(inputs: Inputs, scratch: Path) -> CheckResult:
 
 # --------------------------------------------------------------------------- V8 harness
 
-# Runs pytest on the whole [run] files and records what was collected, deselected and run, so no
-# configuration or conftest can shrink the run unnoticed.
+# Runs pytest on the whole [run] files and records every collected node id before any filtering and the
+# terminal outcome of each, so no configuration (for example addopts = --collect-only or -k) and no conftest
+# (deselecting, or silently dropping items) can shrink the run unnoticed.
 _PYTEST_CHILD = r"""
 import json, sys
 harness, root, out, *files = sys.argv[1:]
@@ -1254,10 +1385,13 @@ import pytest
 
 class Recorder:
     def __init__(self):
-        self.collected = []
+        self.collected = []  # every item as collected, before any hook filters, deselects or reorders it
         self.deselected = 0
         self.collect_errors = 0
-        self.outcomes = {"passed": 0, "failed": 0, "skipped": 0, "errors": 0, "xfailed": 0, "xpassed": 0}
+        self.results = {}  # node id -> terminal outcome
+
+    def pytest_itemcollected(self, item):
+        self.collected.append(item.nodeid)
 
     def pytest_collectreport(self, report):
         if report.failed:
@@ -1266,19 +1400,21 @@ class Recorder:
     def pytest_deselected(self, items):
         self.deselected += len(items)
 
-    def pytest_collection_finish(self, session):
-        self.collected = [item.nodeid for item in session.items]
-
     def pytest_runtest_logreport(self, report):
-        if report.when == "call":
-            if hasattr(report, "wasxfail"):
-                self.outcomes["xfailed" if report.skipped else "xpassed"] += 1
+        node = report.nodeid
+        xfail = hasattr(report, "wasxfail")
+        if report.when == "setup":
+            if report.failed:
+                self.results[node] = "errors"
+            elif report.skipped:
+                self.results[node] = "xfailed" if xfail else "skipped"
+        elif report.when == "call":
+            if xfail:
+                self.results[node] = "xfailed" if report.skipped else "xpassed"
             else:
-                self.outcomes[report.outcome] += 1
+                self.results[node] = report.outcome
         elif report.failed:
-            self.outcomes["errors"] += 1
-        elif report.skipped and report.when == "setup":
-            self.outcomes["skipped"] += 1
+            self.results[node] = "errors"
 
 
 recorder = Recorder()
@@ -1290,7 +1426,7 @@ with open(out, "w", encoding="utf-8") as handle:
             "collected": recorder.collected,
             "deselected": recorder.deselected,
             "collect_errors": recorder.collect_errors,
-            "outcomes": recorder.outcomes,
+            "results": recorder.results,
         },
         handle,
     )
@@ -1403,29 +1539,41 @@ def check_v8(inputs: Inputs, scratch: Path) -> CheckResult:
         return result
     output = (proc.stdout + proc.stderr).decode("utf-8", "replace").strip().splitlines()
     run_record: dict[str, Any] = {}
-    if record.is_file():
-        run_record = json.loads(record.read_text(encoding="utf-8"))
-    else:
-        result.fail(f"pytest wrote no run record (exit {proc.returncode}): {output[-15:]}")
+    try:
+        run_record = read_child_json(record)
+    except (OSError, ValueError) as exc:
+        result.fail(f"pytest wrote no readable run record (exit {proc.returncode}, {exc}): {output[-15:]}")
     collected = [str(item) for item in run_record.get("collected") or []]
-    outcomes: dict[str, int] = dict(run_record.get("outcomes") or {})
+    results: dict[str, str] = {str(k): str(v) for k, v in dict(run_record.get("results") or {}).items()}
     deselected = int(run_record.get("deselected") or 0)
     collect_errors = int(run_record.get("collect_errors") or 0)
-    result.notes.append(f"pytest exit {proc.returncode}; collected {len(collected)}; {outcomes}")
-    if proc.returncode != 0 and record.is_file():
+    outcomes = {key: 0 for key in ("passed", "failed", "errors", "skipped", "xfailed", "xpassed")}
+    for node in collected:
+        if node in results:
+            outcomes[results[node]] = outcomes.get(results[node], 0) + 1
+    not_run = [node for node in dict.fromkeys(collected) if node not in results]
+    result.notes.append(
+        f"pytest exit {proc.returncode}; collected {len(collected)}; not run {len(not_run)}; {outcomes}"
+    )
+    if proc.returncode != 0 and run_record:
         result.fail(f"pytest exited {proc.returncode}: {output[-15:]}")
     if not collected:
         result.fail("pytest collected zero tests")
+    if not_run:
+        result.fail(f"{len(not_run)} collected test(s) never ran (deselected, dropped or collect-only): {not_run[:10]}")
     if deselected:
         result.fail(f"{deselected} test(s) were deselected; every test of the listed files must run")
     if collect_errors:
         result.fail(f"{collect_errors} collection error(s)")
     for path in inputs.tests_run:
-        if not any(nodeid == path or nodeid.startswith(path + "::") for nodeid in collected):
+        nodes = [node for node in collected if node == path or node.startswith(path + "::")]
+        if not nodes:
             result.fail(f"{path}: no test collected from this listed file")
-    failed, errored = outcomes.get("failed", 0), outcomes.get("errors", 0)
-    if failed or errored or outcomes.get("xpassed", 0):
-        result.fail(f"{failed} test(s) failed, {errored} errored, {outcomes.get('xpassed', 0)} unexpectedly passed")
+        elif not any(results.get(node) == "passed" for node in nodes):
+            result.fail(f"{path}: no test of this listed file passed (all skipped, xfailed, failed or not run)")
+    failed, errored = outcomes["failed"], outcomes["errors"]
+    if failed or errored or outcomes["xpassed"]:
+        result.fail(f"{failed} test(s) failed, {errored} errored, {outcomes['xpassed']} unexpectedly passed")
     problems = worktree_mismatches(inputs.repo)
     if problems:
         result.fail(f"--repo changed while the tests ran: {problems[:10]}")
@@ -1438,6 +1586,7 @@ def check_v8(inputs: Inputs, scratch: Path) -> CheckResult:
         "tests_skipped": outcomes.get("skipped", 0),
         "tests_xfailed": outcomes.get("xfailed", 0),
         "tests_deselected": deselected,
+        "tests_not_run": len(not_run),
     }
     return result
 
@@ -1538,9 +1687,15 @@ Checks (every finding is printed; nothing stops at the first one):
       must be that file); other files load from their path under a synthetic name. A loaded `scripts` module or
       any module file outside --repo and the interpreter's own prefixes is a finding. Then
       `python -m {DISPATCH_MODULE} --help` must exit 0.
-  V4  static AST scan of every .py file at HEAD: imports of scripts or of product packages (per --map),
-      `scripts.<module>` in string literals, and string literals naming machinery scripts/ files or directories.
+  V4  static AST scan of every .py file at HEAD: imports of scripts, and any import that needs product code
+      per --map. That covers a product module or namespace package, a product __init__.py that Python
+      initializes on the way to a machinery module, a from-import's product submodule, a relative import
+      resolved under scripts/, and the literal target of import_module/__import__/run_module. Also
+      `scripts.<module>` in string literals, and string literals naming machinery scripts/ files or
+      directories, the scripts/ root included.
       Docstrings and comments are prose and are not scanned; paths split into components are not literals.
+      Unprefixed imports of machinery modules (resolved only while scripts/ is on sys.path) are listed as a
+      note, not a finding: they are neither product coupling nor scripts references.
       Each finding is file:line.
   V5  every --expectations row holds; then {", ".join(RENAME_TOOLS)} --check on --repo report zero pending
       rewrites (idempotence). Their unresolved counts are printed as notes.
@@ -1551,9 +1706,11 @@ Checks (every finding is printed; nothing stops at the first one):
   V8  (--run-tests) clone --repo (--shared) into a temp harness outside it, copy the {TESTS_LIST} files
       from --source over it (never through a symlink), apply the rename tools to those copies with --map, run
       pytest on the whole [run] files with the harness and --repo on sys.path (--python -I, no extra pytest
-      arguments). Fails on a nonzero pytest exit, any failed, errored or strict-unexpectedly-passing test, zero
-      collected tests, any deselected test, a collection error, a [run] file with no collected test, or --repo
-      changing during the run. Skips are allowed and counted.
+      arguments). A plugin records every collected node id before any filtering and each one's outcome. Fails
+      on a nonzero pytest exit, zero collected tests, any collected test that never ran (deselected, dropped by
+      a hook, or a collect-only configuration), a collection error, a [run] file with no collected test or with
+      no passing test, any failed, errored or unexpectedly passing test, or --repo changing during the run.
+      Skips and expected failures are allowed and counted when the file also has a passing test.
   V9  HEAD has exactly one parent, the --rewrite-tip, and is the only commit after it; HEAD^{{tree}} equals
       --final-tree; its diff against the tip only adds manifest addition rows (new at the tip), modifies manifest
       paths and deletes nothing the manifest keeps.
@@ -1693,9 +1850,16 @@ def run_checks(inputs: Inputs, scratch: Path) -> list[CheckResult]:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        protected = protected_paths(args)
+        temp_root = Path(os.path.realpath(tempfile.gettempdir()))
+        for root in protected:
+            if temp_root == root or inside(temp_root, root):
+                raise Unusable(f"the temporary directory {temp_root} lies inside {root}; set TMPDIR elsewhere")
+        if args.report is not None:
+            check_report_path(args.report, protected, input_files(args))
         with tempfile.TemporaryDirectory(prefix="lu-verify-extraction-") as tmp:
             scratch = Path(os.path.realpath(tmp))
-            _SANDBOX.append(Sandbox(scratch, visible_roots(args)))
+            _SANDBOX.append(Sandbox(scratch, visible_roots(args, protected)))
             try:
                 inputs = load_inputs(args)
                 results = run_checks(inputs, scratch)

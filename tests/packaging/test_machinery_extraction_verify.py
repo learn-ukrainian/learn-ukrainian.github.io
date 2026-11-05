@@ -171,6 +171,8 @@ OWNERSHIP = {
     "scripts/lib/legacy.py": "machinery",
     "scripts/lib/product_child.py": "product",
     "scripts/product_ns/child.py": "product",
+    "scripts/pkg/__init__.py": "product",
+    "scripts/pkg/worker.py": "machinery",
 }
 TESTS_LIST_STUB = "# [run]\ntests/test_machinery.py\n# [support]\ntests/__init__.py\ntests/helper_data.txt\n"
 POLICY_SHA = "a" * 64
@@ -319,6 +321,9 @@ def build_source(src: Path) -> list[str]:
             "tests/helper_data.txt": "fixture\n",
             "tests/deselecting/conftest.py": DESELECTING_CONFTEST,
             "tests/deselecting/test_two.py": "def test_first():\n    pass\n\n\ndef test_second():\n    assert False\n",
+            "tests/dropping/conftest.py": "def pytest_collection_modifyitems(config, items):\n    items[:] = items[:1]\n",
+            "tests/dropping/test_two.py": "def test_first():\n    pass\n\n\ndef test_second():\n    assert False\n",
+            "tests/skipping/test_skipped.py": "import pytest\n\n\n@pytest.mark.skip(reason='x')\ndef test_one():\n    assert False\n",
         },
         "c1 initial",
     )
@@ -635,6 +640,15 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
             "    from lib import product_child\n"
             "    from lib import util\n"
             '    return "scripts/"\n'
+            "\n\ndef parents_relative_loaders(name):\n"
+            "    import importlib\n"
+            "    import pkg.worker\n"
+            "    from pkg.worker import run\n"
+            "    from ..product_mod import PRODUCT\n"
+            "    from . import product_child\n"
+            "    from . import util\n"
+            '    importlib.import_module("product_ns.child")\n'
+            '    return __import__(name="pkg.worker")\n'
         )
         return {"lu_machinery/lib/util.py": util}
 
@@ -642,16 +656,27 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     code, checks, output = world.run()
     assert code == 1, output
     text = findings(checks, "V4")
-    assert "lu_machinery/lib/util.py:6: import of product package product_mod" in text
+    assert "lu_machinery/lib/util.py:6: import of product_mod is a product package" in text
     assert "lu_machinery/lib/util.py:7: import of scripts.lib.legacy" in text
     assert "lu_machinery/lib/util.py:8: string references module scripts.lib.util" in text
     assert "lu_machinery/lib/util.py:8: string holds machinery path scripts/dispatch.py" in text
     assert "lu_machinery/lib/util.py:8: string holds machinery path scripts/lib" in text
-    assert "lu_machinery/lib/util.py:12: import of product package product_ns" in text  # namespace package
-    assert "lu_machinery/lib/util.py:13: import of product package product_ns" in text
-    assert "lu_machinery/lib/util.py:14: import of product package lib.product_child" in text  # product child
+    assert "lu_machinery/lib/util.py:12: import of product_ns is a product package" in text  # namespace package
+    assert "lu_machinery/lib/util.py:13: import of product_ns is a product package" in text
+    assert "lu_machinery/lib/util.py:14: import of lib.product_child is a product package" in text  # product child
     assert "lu_machinery/lib/util.py:15:" not in text  # a machinery child of a machinery package
     assert "lu_machinery/lib/util.py:16: string holds machinery path scripts/ (the root" in text
+    # A machinery module under a product package still runs the product __init__.py first.
+    parent = "initializes product package pkg (scripts/pkg/__init__.py)"
+    assert f"lu_machinery/lib/util.py:21: import of pkg.worker {parent}" in text
+    assert f"lu_machinery/lib/util.py:22: import of pkg.worker {parent}" in text
+    assert "lu_machinery/lib/util.py:23: relative import of scripts.product_mod is a product package" in text
+    assert "lu_machinery/lib/util.py:24: relative import of scripts.lib.product_child is a product package" in text
+    assert "lu_machinery/lib/util.py:25:" not in text  # a relative import of a machinery sibling
+    notes = "\n".join(checks["V4"]["notes"])
+    assert "lu_machinery/lib/util.py:15: lib.util" in notes  # unprefixed machinery import: a note, not a finding
+    assert "lu_machinery/lib/util.py:26: import of product_ns.child is a product package" in text  # loader call
+    assert f"lu_machinery/lib/util.py:27: import of pkg.worker {parent}" in text
     assert "scripts/product_mod.py" not in text  # a product path literal is allowed
     assert "lu_machinery/dispatch.py" not in text  # its docstring prose keeps scripts.dispatch
 
@@ -791,6 +816,28 @@ def test_v8_harness_defect_deselected_tests_are_a_finding(world: World) -> None:
     assert checks["V8"]["inspected"]["tests_deselected"] == 1
 
 
+@pytest.mark.parametrize("case", ["dropping-hook", "collect-only", "all-skipped"])
+def test_v8_harness_defect_tests_that_never_execute_are_a_finding(build: Build, case: str) -> None:
+    def collect_only(extract: Path) -> dict[str, str | None]:
+        return {"pytest.ini": "[pytest]\naddopts = --collect-only\n"}
+
+    world = build(edit=collect_only) if case == "collect-only" else build()
+    run = {
+        "dropping-hook": "# [run]\ntests/dropping/test_two.py\n# [support]\ntests/dropping/conftest.py\n",
+        "collect-only": TESTS_LIST_STUB,
+        "all-skipped": "# [run]\ntests/skipping/test_skipped.py\n",
+    }[case]
+    (world.kit / "machinery_tests.txt").write_text(run, encoding="utf-8")
+    code, checks, output = world.run("--run-tests")
+    assert code == 1, output
+    text = findings(checks, "V8")
+    if case == "all-skipped":
+        assert "tests/skipping/test_skipped.py: no test of this listed file passed" in text
+    else:
+        assert "collected test(s) never ran (deselected, dropped or collect-only)" in text
+        assert checks["V8"]["inspected"]["tests_not_run"] >= 1
+
+
 def test_v8_harness_defect_listed_file_absent_at_source_is_unusable(world: World) -> None:
     (world.kit / "machinery_tests.txt").write_text("# [run]\ntests/test_missing.py\n", encoding="utf-8")
     code, _checks, output = world.run("--run-tests")
@@ -890,12 +937,28 @@ def test_unusable_input_exits_2(world: World, defect: str) -> None:
         assert "lu_machinery/lib/util.py: 100644" in output
 
 
-@pytest.mark.parametrize("where", ["input-file", "source-repo", "extract-git-dir", "symlink"])
+@pytest.mark.parametrize(
+    "where",
+    ["input-file", "hardlink", "source-repo", "extract-git-dir", "symlink", "alternate", "indirect-alternate"],
+)
 def test_read_only_report_cannot_alias_an_input(world: World, where: str) -> None:
     manifest = world.inputs["manifest.tsv"]
     before = manifest.read_bytes()
+    if where in ("alternate", "indirect-alternate"):
+        # Relative alternates resolve against the object store that names them, as git does.
+        for name in ("shared.git", "shared2.git"):
+            git(world.tmp, "init", "--quiet", "--bare", str(world.tmp / name))
+        (world.extract / ".git/objects/info/alternates").write_text("../../../shared.git/objects\n")
+        (world.tmp / "shared.git/objects/info/alternates").write_text("../../shared2.git/objects\n")
     if where == "input-file":
         report = manifest
+    elif where == "hardlink":
+        report = world.tmp / "hard.json"
+        os.link(manifest, report)
+    elif where == "alternate":
+        report = world.tmp / "shared.git/objects/report.json"
+    elif where == "indirect-alternate":
+        report = world.tmp / "shared2.git/objects/report.json"
     elif where == "source-repo":
         report = world.src / "report.json"
     elif where == "extract-git-dir":
@@ -909,6 +972,28 @@ def test_read_only_report_cannot_alias_an_input(world: World, where: str) -> Non
     assert manifest.read_bytes() == before
     assert not (world.src / "report.json").exists()
     assert not (world.extract / ".git" / "report.json").exists()
+    assert not (world.tmp / "shared2.git/objects/report.json").exists()
+
+
+def test_read_only_report_staging_never_follows_a_planted_link(tmp_path: Path, monkeypatch) -> None:
+    module = _load_verifier()
+    victim = tmp_path / "input.tsv"
+    victim.write_text("frozen\n", encoding="utf-8")
+    monkeypatch.setattr(module.secrets, "token_hex", lambda _size: "fixed")
+    (tmp_path / ".report.json.fixed.tmp").symlink_to(victim)
+    with pytest.raises(FileExistsError):
+        module.write_report(tmp_path / "report.json", {"verdict": "pass"})
+    assert victim.read_text(encoding="utf-8") == "frozen\n"
+    assert not (tmp_path / "report.json").exists()
+
+
+def test_read_only_scratch_never_lands_inside_the_source_repository(world: World) -> None:
+    inside = world.src / "tmpdir"
+    inside.mkdir()
+    code, _checks, output = world.run(env={"TMPDIR": str(inside)})
+    assert code == 2, output
+    assert "set TMPDIR elsewhere" in output
+    assert list(inside.iterdir()) == []
 
 
 def test_read_only_imported_module_cannot_write_the_source_repository(build: Build) -> None:
