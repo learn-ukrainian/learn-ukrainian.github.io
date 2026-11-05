@@ -13,13 +13,14 @@ from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.common.repo_root import machinery_path, machinery_root, main_checkout_root, project_interpreter
+from scripts.common.repo_root import main_checkout_root, project_interpreter
 from scripts.common.safe_open import safe_open_below
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARD_NAME = "shell-secret-print-guard"
-# Checkout-relative: the machinery package directory (whatever it is called) and the hook.
-ENTRY_POINT = machinery_path("agent_runtime/secret_print_hook.py").relative_to(machinery_root().parent)
+# Checkout-relative: the machinery package directory as this file was imported from it
+# (unresolved, whatever the package is called), then the hook.
+ENTRY_POINT = Path(Path(__file__).absolute().parents[1].name, "agent_runtime", "secret_print_hook.py")
 GUARD_TIMEOUT_FLOOR = 10
 
 

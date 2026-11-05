@@ -69,12 +69,12 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
-from scripts.common.repo_root import machinery_path, machinery_root, main_checkout_root, project_interpreter
+from scripts.common.repo_root import machinery_path, main_checkout_root, project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 
 ROOT = Path(__file__).resolve().parents[2]
-# The machinery package's canonical import name: its directory's name.
-_PACKAGE = machinery_root().name
+# The machinery package's canonical import name: the unresolved name of its directory.
+_PACKAGE = Path(__file__).absolute().parents[1].name
 SCHEMA = 1
 REFUSED = 125
 RECEIPT_SUFFIX = ".sandbox.json"

@@ -32,12 +32,12 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     __package__ = "scripts.ai_agent_bridge"
 
 try:
-    from scripts.common.repo_root import machinery_path, machinery_root
+    from scripts.common.repo_root import machinery_path
     from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from common.repo_root import machinery_path, machinery_root  # type: ignore[no-redef]
+    from common.repo_root import machinery_path  # type: ignore[no-redef]
     from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
 
 from agent_runtime.agent_identity import seat_read_aliases
@@ -54,7 +54,7 @@ if TYPE_CHECKING:
     from scripts.session_supervisor.remote import RemoteEpicClient
 
 # The watcher's own launcher wrapper, as the checkout names it (whatever the package is called).
-WATCH_ENTRY = machinery_path("ai_agent_bridge/inbox_watch.sh").relative_to(machinery_root().parent).as_posix()
+WATCH_ENTRY = f"{MACHINERY_PACKAGE}/ai_agent_bridge/inbox_watch.sh"
 DEFAULT_POLL_INTERVAL_SECONDS = 15.0
 _MONITOR_BACKOFF_MAX_SECONDS = 300.0
 MAX_PREVIEW_CHARS = 240

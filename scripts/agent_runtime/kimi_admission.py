@@ -42,11 +42,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
-try:
-    from scripts.common.repo_root import machinery_root
-except ImportError:  # agent_runtime loaded with scripts/ on path
-    from common.repo_root import machinery_root  # type: ignore[no-redef]
-
 from .deepseek_admission import refuse_deepseek_if_disallowed
 from .redacted_env import RedactedEnv
 
@@ -73,8 +68,8 @@ _MODE_ACTIVITIES = {
     BRIDGE_MODE: "bridge messages, channel posts and inbox drains (Kimi is not a bridge recipient)",
 }
 
-# The machinery package directory as the checkout names it, whatever it is called.
-_MACHINERY_DIR = machinery_root().name
+# The machinery package directory as the checkout names it (unresolved, whatever it is called).
+_MACHINERY_DIR = Path(__file__).absolute().parents[1].name
 
 # Backend/tooling packages verified to hold no Ukrainian-language data,
 # prompts or grammar. Each admits the package and its tests under tests/<same>/.

@@ -20,17 +20,14 @@ Issue: #1184
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import NotRequired, TypedDict
 
-try:
-    from scripts.common.repo_root import machinery_root
-except ImportError:  # agent_runtime loaded with scripts/ on path
-    from common.repo_root import machinery_root  # type: ignore[no-redef]
-
-# The machinery package's canonical import name is its directory's name. Adapter
-# targets are always named under it, even when this registry is reached through the
-# historical top-level ``agent_runtime`` alias, so every caller loads one module object.
-MACHINERY_PACKAGE = machinery_root().name
+# The machinery package's canonical import name is the (unresolved) name of the package
+# directory this file is in. Adapter targets are always named under it, even when this
+# registry is reached through the historical top-level ``agent_runtime`` alias, so every
+# caller loads one module object.
+MACHINERY_PACKAGE = Path(__file__).absolute().parents[1].name
 _ADAPTERS = f"{MACHINERY_PACKAGE}.agent_runtime.adapters"
 
 

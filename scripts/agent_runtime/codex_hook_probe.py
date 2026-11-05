@@ -27,6 +27,7 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.agent_runtime.jsonl import jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
+PROJECT_PYTHON = project_interpreter()
 DEFAULT_TIMEOUT_SECONDS = 180
 TEMP_PARENT = Path("/private/tmp") if Path("/private/tmp").is_dir() else Path(tempfile.gettempdir())
 
@@ -182,7 +183,7 @@ def _prepare_probe_repo(parent: Path) -> Path:
     venv_bin.mkdir(parents=True)
     python_wrapper = venv_bin / "python"
     python_wrapper.write_text(
-        f'#!/usr/bin/env bash\nexec {shlex.quote(str(project_interpreter()))} "$@"\n',
+        f'#!/usr/bin/env bash\nexec {shlex.quote(str(PROJECT_PYTHON))} "$@"\n',
         encoding="utf-8",
     )
     python_wrapper.chmod(0o755)
@@ -325,11 +326,8 @@ def main() -> int:
     if args.self_test:
         return _self_test()
 
-    # Resolved when the probe runs, never at import.
-    try:
-        project_interpreter()
-    except FileNotFoundError as exc:
-        raise SystemExit(f"missing project interpreter: {exc}") from None
+    if not PROJECT_PYTHON.exists():
+        raise SystemExit(f"missing project interpreter: {PROJECT_PYTHON}")
     if not shutil.which("codex"):
         raise SystemExit("codex CLI not found on PATH")
 

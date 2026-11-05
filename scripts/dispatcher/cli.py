@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.dispatcher import (
     admission,
     checks,
@@ -49,7 +48,7 @@ class _PromptPath(type(Path())):
 
 
 # The entry points as a user runs them: the wrapper by its checkout path, this module by its import name.
-_DISPATCH = machinery_path("dispatch.py").relative_to(machinery_root().parent).as_posix()
+_DISPATCH = f"{Path(__file__).absolute().parents[1].name}/dispatch.py"
 _CLI = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(Path(__file__))
 
 

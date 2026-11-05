@@ -98,9 +98,9 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 try:
-    from scripts.common.repo_root import machinery_path, machinery_root, project_interpreter
+    from scripts.common.repo_root import machinery_path, project_interpreter
 except ImportError:  # agent_runtime loaded with scripts/ on path
-    from common.repo_root import machinery_path, machinery_root, project_interpreter  # type: ignore[no-redef]
+    from common.repo_root import machinery_path, project_interpreter  # type: ignore[no-redef]
 
 from ..binary_resolve import resolve_agent_binary
 from ..jsonl import jsonl_lines
@@ -1617,10 +1617,9 @@ _CLAUDE_ACP_BACKGROUND_TOOL_ENV = {"CLAUDE_CODE_DISABLE_CRON": "1", "CLAUDE_CODE
 # writer running as the same user, who already controls the host binary, the
 # user configuration and the checkout (see docs/agent-runtime-guide.md).
 _CLAUDE_ACP_LAUNCHER_ANCHOR = _REPO_ROOT
-# Checkout-relative: the machinery package directory (whatever it is called) and the launcher.
-_CLAUDE_ACP_LAUNCHER_RELPATH = PurePosixPath(
-    machinery_path("agent_runtime/claude_acp_exec.sh").relative_to(machinery_root().parent).as_posix()
-)
+# Checkout-relative: the machinery package directory as this file was imported from it
+# (unresolved, whatever the package is called), then the launcher.
+_CLAUDE_ACP_LAUNCHER_RELPATH = PurePosixPath(Path(__file__).absolute().parents[2].name, "agent_runtime/claude_acp_exec.sh")
 # Adapter-launcher compatibility pin: the SHA-256 of every repository file the
 # launcher runs, sources or execs. The launcher is self-contained, so the
 # closure is the launcher alone. Launcher bytes and digest change together.

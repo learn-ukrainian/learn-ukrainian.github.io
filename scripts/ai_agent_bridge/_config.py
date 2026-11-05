@@ -13,13 +13,14 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.common.bridge_paths import configured_bridge_db_path
-from scripts.common.repo_root import machinery_path, machinery_root, resolve_repo_root
+from scripts.common.repo_root import resolve_repo_root
 
-# Checkout-relative entry points of the machinery package (whatever its directory is called),
-# for commands and the instructions that name them.
-MACHINERY_PACKAGE = machinery_root().name
-DISPATCH_ENTRY = machinery_path("dispatch.py").relative_to(machinery_root().parent).as_posix()
-BRIDGE_ENTRY = machinery_path("ai_agent_bridge/__main__.py").relative_to(machinery_root().parent).as_posix()
+# The machinery package as the checkout names it (the unresolved name of the package
+# directory this file is in, whatever it is called), and its checkout-relative entry
+# points, for commands and the instructions that name them.
+MACHINERY_PACKAGE = Path(__file__).absolute().parents[1].name
+DISPATCH_ENTRY = f"{MACHINERY_PACKAGE}/dispatch.py"
+BRIDGE_ENTRY = f"{MACHINERY_PACKAGE}/ai_agent_bridge/__main__.py"
 
 # Repo root for path resolution
 REPO_ROOT = Path(os.environ.get("AB_REPO_ROOT", str(Path(__file__).parent.parent.parent)))
