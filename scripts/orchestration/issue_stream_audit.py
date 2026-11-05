@@ -61,7 +61,11 @@ _PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).par
 _PACKAGE_DIR = _PACKAGE.replace(".", "/")
 _MACHINERY = _PACKAGE.partition(".")[0]
 
-ROOT = Path(__file__).resolve().parents[2]
+# The product checkout this module was reached from: the directory that holds the package
+# entry, resolved itself (an immutable release snapshot reached through ``current`` stays
+# that snapshot) without following a symlinked package directory, so that the registry
+# under ``_MACHINERY``, the issues, the docs and the cache all belong to that checkout.
+ROOT = Path(os.path.abspath(__file__)).parents[2].resolve()
 REGISTRY_PATH = machinery_path("config/issue_streams.yaml")
 WORKSTREAMS_PATH = ROOT / "docs" / "WORKSTREAMS.md"
 CACHE_PATH = ROOT / "batch_state" / "issue_stream_audit.json"
