@@ -5,7 +5,9 @@ git-filter-repo would (path filter plus the scripts/ -> lu_machinery/ rename, wi
 map), adds one transformation commit, and runs the verifier as a CLI. The verifier is copied
 next to stand-in rename tools and a stand-in history_policy.py that keep the real tools'
 interfaces (PR 12764 and the parallel history-policy brief), so no case needs LibCST,
-git-filter-repo, the network or live repository state.
+git-filter-repo, the network or live repository state. The verifier runs every git call and
+child process in bubblewrap; the cases that run it skip, with the reason, where bwrap cannot
+start a sandbox.
 """
 
 from __future__ import annotations
@@ -47,7 +49,7 @@ CONTRACT_SECTION_4_TESTS = {
 
 # A stand-in for the three PR 12764 rename tools: same CLI, same report keys, token rewrites only.
 STUB_RENAME = r"""
-import argparse, hashlib, json, sys
+import argparse, hashlib, json, os, sys
 from pathlib import Path
 NAME = Path(__file__).name
 TOKENS = [
@@ -67,8 +69,9 @@ parser.add_argument("--jobs")
 parser.add_argument("--external-names")
 parser.add_argument("paths", nargs="*")
 args = parser.parse_args()
-with open(Path(__file__).with_suffix(".calls"), "a", encoding="utf-8") as log:
-    log.write(json.dumps(sys.argv[1:]) + "\n")
+expected_names = os.environ.get("STUB_EXPECT_EXTERNAL_NAMES")
+if NAME == "rename_python.py" and expected_names and args.external_names != expected_names:
+    sys.exit(2)  # the verifier must pass --external-names through
 root = Path(args.root)
 files = []
 for target in [root / p for p in args.paths] or [root]:
@@ -110,7 +113,7 @@ STUB_HISTORY_POLICY = r"""
 import json, sys
 from pathlib import Path
 here = Path(__file__).parent
-(here / "history_policy.calls").write_text(json.dumps(sys.argv[1:]), encoding="utf-8")
+print("HP-ARGV " + json.dumps(sys.argv[1:]))
 code = here / "history_policy.exit"
 sys.exit(int(code.read_text()) if code.exists() else 0)
 """
@@ -135,6 +138,11 @@ if __name__ == "__main__":
 '''
 
 UTIL = 'VALUE = 1\nMODULE = "scripts.dispatch"\n'
+DESELECTING_CONFTEST = """def pytest_collection_modifyitems(config, items):
+    dropped = [item for item in items if item.name == "test_second"]
+    config.hook.pytest_deselected(items=dropped)
+    items[:] = [item for item in items if item not in dropped]
+"""
 CORE = "Run `python -m scripts.dispatch`; see scripts/dispatch.py.\n"
 PORTED_TEST = "from scripts.lib import util\n\n\ndef test_value():\n    assert util.VALUE == 1\n"
 
@@ -161,6 +169,8 @@ OWNERSHIP = {
     "scripts/lib/__init__.py": "machinery",
     "scripts/lib/util.py": "machinery",
     "scripts/lib/legacy.py": "machinery",
+    "scripts/lib/product_child.py": "product",
+    "scripts/product_ns/child.py": "product",
 }
 TESTS_LIST_STUB = "# [run]\ntests/test_machinery.py\n# [support]\ntests/__init__.py\ntests/helper_data.txt\n"
 POLICY_SHA = "a" * 64
@@ -272,7 +282,7 @@ class World:
             out += [key, value]
         return [*out, *extra]
 
-    def run(self, *extra: str, **overrides: str) -> tuple[int, dict[str, dict], str]:
+    def run(self, *extra: str, env: dict[str, str] | None = None, **overrides: str) -> tuple[int, dict[str, dict], str]:
         report = self.tmp / "report.json"
         report.unlink(missing_ok=True)
         proc = subprocess.run(
@@ -280,7 +290,7 @@ class World:
             capture_output=True,
             text=True,
             timeout=540,
-            env={k: v for k, v in os.environ.items() if not k.startswith("GIT_")},
+            env={**{k: v for k, v in os.environ.items() if not k.startswith("GIT_")}, **(env or {})},
             check=False,
         )
         output = proc.stdout + proc.stderr
@@ -307,6 +317,8 @@ def build_source(src: Path) -> list[str]:
             "tests/test_machinery.py": PORTED_TEST,
             "tests/test_empty.py": "# collects no tests\n",
             "tests/helper_data.txt": "fixture\n",
+            "tests/deselecting/conftest.py": DESELECTING_CONFTEST,
+            "tests/deselecting/test_two.py": "def test_first():\n    pass\n\n\ndef test_second():\n    assert False\n",
         },
         "c1 initial",
     )
@@ -356,6 +368,33 @@ def transform(extract: Path) -> dict[str, str | None]:
     }
 
 
+def _sandbox_unavailable() -> str:
+    """Why the verifier's bubblewrap sandbox cannot start here, or an empty string."""
+    bwrap = shutil.which("bwrap")
+    if bwrap is None:
+        return "bubblewrap (bwrap) is not installed; the verifier refuses to run without its sandbox"
+    probe = subprocess.run(
+        [
+            bwrap,
+            "--die-with-parent",
+            "--unshare-all",
+            "--ro-bind",
+            "/",
+            "/",
+            "--dev",
+            "/dev",
+            "--proc",
+            "/proc",
+            "true",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    return "" if probe.returncode == 0 else f"bubblewrap cannot start a sandbox here: {probe.stderr.strip()}"
+
+
 Base = tuple[Path, list[str], list[str], list[str]]
 BaseFactory = Callable[[frozenset[str]], Base]
 Build = Callable[..., World]
@@ -364,6 +403,9 @@ Build = Callable[..., World]
 @pytest.fixture(scope="module")
 def bases(tmp_path_factory: pytest.TempPathFactory) -> BaseFactory:
     """Source repository and filter-repo replay, built once per kept-path set and copied by each case."""
+    reason = _sandbox_unavailable()
+    if reason:
+        pytest.skip(reason)
     cache: dict[frozenset[str], Base] = {}
 
     def get(keep_extra: frozenset[str]) -> Base:
@@ -459,14 +501,16 @@ def test_help_documents_inputs_checks_formats_and_exit_codes() -> None:
 
 def test_correct_extraction_passes_every_check_and_reports_denominators(world: World) -> None:
     head = git(world.extract, "rev-parse", "HEAD")
+    names = world.write_input("names.txt", "json\n")
     code, checks, output = world.run(
         "--run-tests",
         "--external-names",
-        str(world.write_input("names.txt", "json\n")),
+        str(names),
         "--history-policy",
         str(world.inputs["policy.tsv"]),
         "--policy-sha256",
         POLICY_SHA,
+        env={"STUB_EXPECT_EXTERNAL_NAMES": str(names.resolve())},
     )
     assert code == 0, output
     assert {name: item["status"] for name, item in checks.items()} == dict.fromkeys(checks, "pass")
@@ -481,7 +525,8 @@ def test_correct_extraction_passes_every_check_and_reports_denominators(world: W
     assert checks["V8"]["inspected"]["tests_passed"] == 1
     assert checks["V9"]["inspected"]["commits_after_tip"] == 1
     # The history-policy tool receives exactly the agreed interface.
-    hp_args = json.loads((world.kit / "history_policy.calls").read_text())
+    hp_lines = [note for note in checks["HP"]["notes"] if note.startswith("HP-ARGV ")]
+    hp_args = json.loads(hp_lines[0][len("HP-ARGV ") :])
     assert hp_args == [
         "verify",
         "--repo",
@@ -497,8 +542,6 @@ def test_correct_extraction_passes_every_check_and_reports_denominators(world: W
         "--path-rename",
         "scripts/:lu_machinery/",
     ]
-    python_calls = (world.kit / "rename_python.calls").read_text().splitlines()
-    assert any("--check" in call and "--external-names" in call for call in python_calls)
     # Read-only: the extraction is unchanged and still clean.
     assert git(world.extract, "rev-parse", "HEAD") == head
     assert git(world.extract, "status", "--porcelain", "--ignored", "--untracked-files=all") == ""
@@ -586,6 +629,12 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
             "    import product_mod\n"
             "    import scripts.lib.legacy\n"
             '    return "scripts.lib.util", "scripts/dispatch.py", "scripts/product_mod.py", "$ROOT/scripts/lib/"\n'
+            "\n\ndef namespace_and_children():\n"
+            "    import product_ns\n"
+            "    from product_ns import child\n"
+            "    from lib import product_child\n"
+            "    from lib import util\n"
+            '    return "scripts/"\n'
         )
         return {"lu_machinery/lib/util.py": util}
 
@@ -598,6 +647,11 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     assert "lu_machinery/lib/util.py:8: string references module scripts.lib.util" in text
     assert "lu_machinery/lib/util.py:8: string holds machinery path scripts/dispatch.py" in text
     assert "lu_machinery/lib/util.py:8: string holds machinery path scripts/lib" in text
+    assert "lu_machinery/lib/util.py:12: import of product package product_ns" in text  # namespace package
+    assert "lu_machinery/lib/util.py:13: import of product package product_ns" in text
+    assert "lu_machinery/lib/util.py:14: import of product package lib.product_child" in text  # product child
+    assert "lu_machinery/lib/util.py:15:" not in text  # a machinery child of a machinery package
+    assert "lu_machinery/lib/util.py:16: string holds machinery path scripts/ (the root" in text
     assert "scripts/product_mod.py" not in text  # a product path literal is allowed
     assert "lu_machinery/dispatch.py" not in text  # its docstring prose keeps scripts.dispatch
 
@@ -700,7 +754,7 @@ def test_v8_harness_defect_failing_ported_test(build: Build) -> None:
     assert code == 1, output
     assert checks["V8"]["inspected"]["tests_collected"] == 1
     assert checks["V8"]["inspected"]["tests_failed"] == 1
-    assert "1 test(s) failed and 0 errored" in findings(checks, "V8")
+    assert "1 test(s) failed, 0 errored, 0 unexpectedly passed" in findings(checks, "V8")
 
 
 def test_v8_harness_defect_zero_collected_tests(world: World) -> None:
@@ -709,6 +763,29 @@ def test_v8_harness_defect_zero_collected_tests(world: World) -> None:
     assert code == 1, output
     assert "pytest collected zero tests" in findings(checks, "V8")
     assert "V8 inspected zero tests_collected" in findings(checks, "V7")
+
+
+def test_v8_harness_defect_symlinked_test_directory_is_never_written_through(build: Build) -> None:
+    def link_tests(extract: Path) -> dict[str, str | None]:
+        (extract / "tests").symlink_to(extract.parent / "src" / "scripts")
+        return {}
+
+    world = build(edit=link_tests)
+    before = sorted(path.name for path in (world.src / "scripts").iterdir())
+    code, checks, output = world.run("--run-tests")
+    assert code == 1, output
+    assert "the extracted tree blocks the harness" in findings(checks, "V8")
+    assert sorted(path.name for path in (world.src / "scripts").iterdir()) == before
+
+
+def test_v8_harness_defect_deselected_tests_are_a_finding(world: World) -> None:
+    (world.kit / "machinery_tests.txt").write_text(
+        "# [run]\ntests/deselecting/test_two.py\n# [support]\ntests/deselecting/conftest.py\n", encoding="utf-8"
+    )
+    code, checks, output = world.run("--run-tests")
+    assert code == 1, output
+    assert "1 test(s) were deselected; every test of the listed files must run" in findings(checks, "V8")
+    assert checks["V8"]["inspected"]["tests_deselected"] == 1
 
 
 def test_v8_harness_defect_listed_file_absent_at_source_is_unusable(world: World) -> None:
@@ -771,13 +848,32 @@ def test_history_policy_findings_fail_and_unusable_policy_exits_2(world: World) 
     assert code == 2, output
 
 
-@pytest.mark.parametrize("defect", ["missing-manifest", "dirty-tree", "bad-commit-map", "shallow-source"])
+@pytest.mark.parametrize(
+    "defect",
+    [
+        "missing-manifest",
+        "dirty-tree",
+        "ignored-file",
+        "assume-unchanged",
+        "skip-worktree",
+        "bad-commit-map",
+        "shallow-source",
+    ],
+)
 def test_unusable_input_exits_2(world: World, defect: str) -> None:
     overrides: dict[str, str] = {}
     if defect == "missing-manifest":
         overrides["--tree-manifest"] = str(world.tmp / "absent.tsv")
     elif defect == "dirty-tree":
         (world.extract / "untracked.py").write_text("X = 1\n", encoding="utf-8")
+    elif defect == "ignored-file":
+        (world.extract / ".git" / "info" / "exclude").write_text("*.pyc\n", encoding="utf-8")
+        (world.extract / "lu_machinery" / "stale.pyc").write_bytes(b"\0")
+    elif defect in ("assume-unchanged", "skip-worktree"):
+        # The index flag hides the edit from git status; the byte comparison must still see it.
+        git(world.extract, "update-index", f"--{defect}", "lu_machinery/lib/util.py")
+        (world.extract / "lu_machinery/lib/util.py").write_text("VALUE = 999\n", encoding="utf-8")
+        assert git(world.extract, "status", "--porcelain") == ""
     elif defect == "bad-commit-map":
         world.write_input("commit-map", "not a map\n")
     else:
@@ -787,6 +883,50 @@ def test_unusable_input_exits_2(world: World, defect: str) -> None:
     code, _checks, output = world.run(**overrides)
     assert code == 2, output
     assert "UNUSABLE INPUT" in output
+    if defect in ("assume-unchanged", "skip-worktree"):
+        assert "lu_machinery/lib/util.py: 100644" in output
+
+
+@pytest.mark.parametrize("where", ["input-file", "source-repo", "extract-git-dir", "symlink"])
+def test_read_only_report_cannot_alias_an_input(world: World, where: str) -> None:
+    manifest = world.inputs["manifest.tsv"]
+    before = manifest.read_bytes()
+    if where == "input-file":
+        report = manifest
+    elif where == "source-repo":
+        report = world.src / "report.json"
+    elif where == "extract-git-dir":
+        report = world.extract / ".git" / "report.json"
+    else:
+        report = world.tmp / "link.json"
+        report.symlink_to(manifest)
+    code, _checks, output = world.run(**{"--report": str(report)})
+    assert code == 2, output
+    assert "--report" in output
+    assert manifest.read_bytes() == before
+    assert not (world.src / "report.json").exists()
+    assert not (world.extract / ".git" / "report.json").exists()
+
+
+def test_read_only_imported_module_cannot_write_the_source_repository(build: Build) -> None:
+    target_holder: dict[str, Path] = {}
+
+    def write_source(extract: Path) -> dict[str, str | None]:
+        target = extract.parent / "src" / "scripts" / "product_mod.py"
+        target_holder["path"] = target
+        util = f"open({str(target)!r}, 'w').write('overwritten')\n" + UTIL.replace(
+            '"scripts.dispatch"', '"lu_machinery.dispatch"'
+        )
+        return {"lu_machinery/lib/util.py": util}
+
+    world = build(edit=write_source)
+    target = target_holder["path"]
+    before = target.read_bytes()
+    code, checks, output = world.run("--run-tests")
+    assert code == 1, output
+    assert target.read_bytes() == before  # the sandbox kept the source read-only
+    assert "import of lu_machinery.lib.util failed: OSError" in findings(checks, "V3")
+    assert git(world.src, "status", "--porcelain") == ""
 
 
 def _load_verifier():

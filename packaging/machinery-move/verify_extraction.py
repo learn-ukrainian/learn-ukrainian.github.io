@@ -4,6 +4,8 @@
 Step 6 of the machinery move rewrites a clone of the product repository with git-filter-repo,
 then adds one transformation commit (the ``scripts`` -> ``lu_machinery`` rename, the approved
 additions). This tool checks the result against frozen inputs and never writes to any of them:
+every git call and every child process runs in a bubblewrap sandbox whose only writable path is the
+tool's scratch directory.
 
 * V1 the final tree is exactly the tree manifest;
 * V2 excluded paths appear nowhere, history-only paths are absent from the final tree;
@@ -29,14 +31,15 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
-import xml.etree.ElementTree as ET
 from collections.abc import Iterable, Sequence
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
+from typing import Any
 
 EXIT_PASS = 0
 EXIT_FINDING = 1
@@ -53,6 +56,7 @@ CLASSES = ("imports", "module-strings", "non-python", "resource-paths")
 PYTHON_CLASSES = frozenset({"imports", "module-strings"})
 MACHINERY = "machinery"
 PRODUCT = "product"
+MIXED = "mixed"
 
 HERE = Path(__file__).resolve().parent
 RENAME_TOOLS = ("rename_python.py", "rename_nonpython.py", "rename_structured.py")
@@ -135,7 +139,6 @@ class Inputs:
     jobs: int
     import_timeout: int
     test_timeout: int
-    pytest_args: list[str]
     tools_dir: Path
     head: str = ""
 
@@ -166,14 +169,116 @@ def clean_env(**extra: str) -> dict[str, str]:
     return env
 
 
-def git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
-    """Run a read-only git command; replace refs are ignored and no optional lock is taken."""
+class Sandbox:
+    """Runs every git call and child process with the whole filesystem read-only except the scratch directory.
+
+    bubblewrap binds / read-only, gives a private /dev (with a private /dev/shm) and /proc, unshares every
+    namespace (no network) and binds only the scratch directory writable. Inputs that live under /dev are
+    bound back read-only. Imported machinery code, ported tests, rename tools, history_policy.py, git and
+    any repository-configured git helper therefore cannot write to an input.
+    """
+
+    def __init__(self, scratch: Path, visible: Iterable[Path]) -> None:
+        executable = shutil.which("bwrap")
+        if executable is None:
+            raise Unusable("bubblewrap (bwrap) is required: every git call and child process runs read-only in it")
+        self.scratch = scratch
+        self.home = scratch / "home"
+        self.tmp = scratch / "tmp"
+        self.home.mkdir(exist_ok=True)
+        self.tmp.mkdir(exist_ok=True)
+        anchors: list[str] = []
+        for path in visible:
+            real = os.path.realpath(path)
+            if real != "/dev" and not real.startswith("/dev/"):
+                continue
+            anchor = "/".join(real.split("/")[:4]) if real.startswith("/dev/shm/") else real
+            if os.path.exists(anchor) and anchor not in anchors:
+                anchors.append(anchor)
+        binds = [arg for anchor in sorted(anchors) for arg in ("--ro-bind", anchor, anchor)]
+        self.prefix = [
+            executable,
+            "--die-with-parent",
+            "--new-session",
+            "--unshare-all",
+            "--ro-bind",
+            "/",
+            "/",
+            "--dev",
+            "/dev",
+            "--proc",
+            "/proc",
+            *binds,
+            "--bind",
+            str(scratch),
+            str(scratch),
+        ]
+        try:
+            probe = self.run(["true"], cwd=scratch, env=self.env(), timeout=60)
+        except subprocess.TimeoutExpired as exc:
+            raise Unusable("bubblewrap did not start a sandbox within 60s") from exc
+        if probe.returncode != 0:
+            detail = probe.stderr.decode("utf-8", "replace").strip()
+            raise Unusable(f"bubblewrap cannot start the read-only sandbox here: {detail}")
+
+    def env(self, **extra: str) -> dict[str, str]:
+        """The cleaned environment with HOME, TMPDIR and XDG directories inside the scratch directory."""
+        return clean_env(
+            HOME=str(self.home),
+            TMPDIR=str(self.tmp),
+            XDG_CONFIG_HOME=str(self.home / ".config"),
+            XDG_CACHE_HOME=str(self.home / ".cache"),
+            **extra,
+        )
+
+    def run(
+        self, cmd: Sequence[str], *, cwd: Path, env: dict[str, str], timeout: int, stdin: bytes | None = None
+    ) -> subprocess.CompletedProcess[bytes]:
+        argv = [*self.prefix, "--chdir", str(cwd), "--", *cmd]
+        if stdin is None:
+            return subprocess.run(
+                argv,
+                cwd=self.scratch,
+                env=env,
+                stdin=subprocess.DEVNULL,
+                capture_output=True,
+                timeout=timeout,
+                check=False,
+            )
+        return subprocess.run(
+            argv, cwd=self.scratch, env=env, input=stdin, capture_output=True, timeout=timeout, check=False
+        )
+
+
+_SANDBOX: list[Sandbox] = []
+
+
+def sandbox() -> Sandbox:
+    if not _SANDBOX:
+        raise RuntimeError("the sandbox is not set up")
+    return _SANDBOX[-1]
+
+
+def git(repo: Path, *args: str, check: bool = True, stdin: bytes | None = None) -> subprocess.CompletedProcess[bytes]:
+    """Run a read-only git command in the sandbox; replace refs, signatures and fsmonitor are off."""
     executable = shutil.which("git")
     if executable is None:
         raise Unusable("git is not on PATH")
-    cmd = [executable, "--no-pager", "-c", "core.fsmonitor=false", "-C", str(repo), *args]
+    box = sandbox()
+    cmd = [
+        executable,
+        "--no-pager",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        "log.showSignature=false",
+        "-C",
+        str(repo),
+        *args,
+    ]
+    env = box.env(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull)
     try:
-        proc = subprocess.run(cmd, capture_output=True, env=clean_env(), check=False, timeout=GIT_TIMEOUT)
+        proc = box.run(cmd, cwd=box.scratch, env=env, timeout=GIT_TIMEOUT, stdin=stdin)
     except subprocess.TimeoutExpired as exc:
         raise Unusable(f"git {' '.join(args)} in {repo} timed out after {GIT_TIMEOUT}s") from exc
     if check and proc.returncode != 0:
@@ -388,13 +493,106 @@ def require_repo(path: Path, flag: str) -> Path:
     return path
 
 
-def require_clean(repo: Path, why: str) -> None:
-    status = git(repo, "status", "--porcelain=v1", "-z", "--untracked-files=all", "--ignored=matching").stdout
-    if status:
-        entries = [item for item in status.decode("utf-8", "replace").split("\0") if item][:10]
+def worktree_mismatches(repo: Path) -> list[str]:
+    """Every difference between the files on disk and HEAD's tree, by bytes and mode.
+
+    The comparison reads the working tree directly and hashes each file as a git blob. It trusts no
+    index entry, so assume-unchanged and skip-worktree flags cannot hide a change, and it runs no git
+    filter. Any file or symlink on disk that HEAD does not track, ignored files included, is a mismatch;
+    empty directories carry no bytes and are not.
+    """
+    object_format = git_text(repo, "rev-parse", "--show-object-format").strip()
+    digest = {"sha1": hashlib.sha1, "sha256": hashlib.sha256}.get(object_format)
+    if digest is None:
+        raise Unusable(f"{repo} uses an unsupported object format {object_format!r}")
+    expected: dict[str, tuple[str, str]] = {}
+    for line in git_z(repo, "ls-tree", "-r", "-z", "--full-tree", "HEAD"):
+        meta, path = line.split("\t", 1)
+        mode, _kind, oid = meta.split()
+        expected[path] = (mode, oid)
+    problems = [f"{path}: submodules are not supported" for path, (mode, _oid) in expected.items() if mode == "160000"]
+    seen: set[str] = set()
+    pending: list[tuple[str, str]] = [(str(repo), "")]
+    while pending:
+        directory, rel = pending.pop()
+        with os.scandir(directory) as entries:
+            items = sorted(entries, key=lambda entry: entry.name)
+        for entry in items:
+            path = f"{rel}/{entry.name}" if rel else entry.name
+            if not rel and entry.name == ".git":
+                continue
+            if entry.is_symlink():
+                mode, data = "120000", os.fsencode(os.readlink(entry.path))
+            elif entry.is_dir(follow_symlinks=False):
+                if path in expected:
+                    problems.append(f"{path}: a directory where HEAD has a file")
+                else:
+                    pending.append((entry.path, path))  # git tracks no directories; their files are judged
+                continue
+            elif entry.is_file(follow_symlinks=False):
+                executable = entry.stat(follow_symlinks=False).st_mode & stat.S_IXUSR
+                mode = "100755" if executable else "100644"
+                with open(entry.path, "rb") as handle:
+                    data = handle.read()
+            else:
+                problems.append(f"{path}: not a regular file, directory or symlink")
+                continue
+            seen.add(path)
+            want = expected.get(path)
+            oid = digest(b"blob %d\0" % len(data) + data).hexdigest()
+            if want is None:
+                problems.append(f"{path}: not tracked at HEAD")
+            elif want != (mode, oid):
+                problems.append(f"{path}: {mode} {oid} on disk, {want[0]} {want[1]} at HEAD")
+    for path in sorted(set(expected) - seen):
+        if expected[path][0] != "160000":
+            problems.append(f"{path}: missing from the working tree")
+    return problems
+
+
+def require_worktree_equals_head(repo: Path, why: str) -> None:
+    problems = worktree_mismatches(repo)
+    if problems:
         raise Unusable(
-            f"{repo} {why}: the working tree must equal HEAD with nothing untracked or ignored; got {entries}"
+            f"{repo} {why}: the working tree must equal HEAD byte for byte, with nothing untracked or ignored "
+            f"(index flags are not trusted); {len(problems)} difference(s): {problems[:10]}"
         )
+
+
+def git_storage(repo: Path) -> list[Path]:
+    """The repository's git directory, common directory and object alternates."""
+    found = []
+    for flag in ("--absolute-git-dir", "--git-common-dir"):
+        value = Path(git_text(repo, "rev-parse", "--path-format=absolute", flag).strip())
+        found.append(value)
+    alternates = found[-1] / "objects" / "info" / "alternates"
+    if alternates.is_file():
+        for line in alternates.read_text(encoding="utf-8", errors="replace").splitlines():
+            if line.strip() and not line.startswith("#"):
+                found.append(Path(line.strip()))
+    return found
+
+
+def check_report_path(report: Path, inputs: Inputs, input_files: Sequence[Path]) -> None:
+    """--report may not alias an input file, a repository, its git storage or the tools directory."""
+    if report.is_symlink():
+        raise Unusable(f"--report {report} is a symlink")
+    if report.exists() and not report.is_file():
+        raise Unusable(f"--report {report} exists and is not a regular file")
+    target = Path(os.path.realpath(report))
+    if any(target == Path(os.path.realpath(path)) for path in input_files):
+        raise Unusable(f"--report {report} is an input file")
+    protected = [inputs.repo, inputs.source_repo, inputs.tools_dir]
+    protected += git_storage(inputs.repo) + git_storage(inputs.source_repo)
+    for root in protected:
+        if inside(target, root):
+            raise Unusable(f"--report {report} lies inside {root}, which is read-only")
+
+
+def write_report(report: Path, payload: dict[str, Any]) -> None:
+    temporary = report.with_name(f".{report.name}.{os.getpid()}.tmp")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    os.replace(temporary, report)
 
 
 def require_python(executable: str, flag: str) -> str:
@@ -458,7 +656,6 @@ def load_inputs(args: argparse.Namespace) -> Inputs:
         jobs=args.jobs,
         import_timeout=args.import_timeout,
         test_timeout=args.test_timeout,
-        pytest_args=list(args.pytest_arg),
         tools_dir=tools_dir,
     )
     inputs.head = resolve_commit(repo, "HEAD", "--repo HEAD")
@@ -469,10 +666,34 @@ def load_inputs(args: argparse.Namespace) -> Inputs:
         absent = [path for path in tests_run + tests_support if path not in present]
         if absent:
             raise Unusable(f"{TESTS_LIST} names files absent at --source {inputs.source}: {absent[:10]}")
-    if args.report is not None and inside(args.report.resolve().parent, repo):
-        raise Unusable(f"--report {args.report} must be outside --repo, which is read-only")
-    require_clean(repo, "is not clean")
+    if args.report is not None:
+        check_report_path(args.report, inputs, input_files(args))
+    require_worktree_equals_head(repo, "is not usable")
     return inputs
+
+
+def input_files(args: argparse.Namespace) -> list[Path]:
+    files = [args.commit_map, args.tree_manifest, args.history_paths, args.exclude, args.expectations, args.map]
+    files += [path for path in (args.history_policy, args.external_names) if path is not None]
+    return files
+
+
+def visible_roots(args: argparse.Namespace) -> list[Path]:
+    """Paths the sandbox must show; only those under /dev need binding back (bwrap gives a private /dev)."""
+    roots = [args.repo, args.source_repo, HERE, *input_files(args)]
+    if args.history_policy is not None:
+        roots.append(args.history_policy.parent)  # its replacements/ directory
+    for executable in (args.python, args.tool_python):
+        found = shutil.which(executable)
+        if found:
+            roots += [Path(found).parent.parent, Path(os.path.realpath(found)).parent.parent]
+    for repo in (args.repo, args.source_repo):
+        alternates = repo / ".git" / "objects" / "info" / "alternates"
+        if alternates.is_file():
+            roots += [
+                Path(line.strip()) for line in alternates.read_text(errors="replace").splitlines() if line.strip()
+            ]
+    return roots
 
 
 # --------------------------------------------------------------------------- V1 final tree
@@ -621,15 +842,11 @@ def import_target(dest: str) -> tuple[str, str]:
     return "path", synthetic
 
 
-def isolated_env(scratch: Path) -> dict[str, str]:
-    home = scratch / "home"
-    tmp = scratch / "tmp"
-    home.mkdir(exist_ok=True)
-    tmp.mkdir(exist_ok=True)
+def isolated_env(box: Sandbox) -> dict[str, str]:
     return {
         "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
-        "HOME": str(home),
-        "TMPDIR": str(tmp),
+        "HOME": str(box.home),
+        "TMPDIR": str(box.tmp),
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",
         "GIT_NO_REPLACE_OBJECTS": "1",
@@ -642,25 +859,18 @@ def check_v3(inputs: Inputs, scratch: Path) -> CheckResult:
     cwd.mkdir()
     results_dir = scratch / "v3-results"
     results_dir.mkdir()
-    env = isolated_env(scratch)
+    box = sandbox()
+    env = isolated_env(box)
     root = inputs.repo.resolve()
     dests = inputs.python_dests
 
-    def run_one(index_dest: tuple[int, str]) -> tuple[str, dict[str, object] | None, str]:
+    def run_one(index_dest: tuple[int, str]) -> tuple[str, dict[str, Any] | None, str]:
         index, dest = index_dest
         mode, target = import_target(dest)
         out = results_dir / f"{index}.json"
         cmd = [inputs.python, "-I", "-B", "-c", _IMPORT_CHILD, str(root), mode, target, dest, str(out)]
         try:
-            proc = subprocess.run(
-                cmd,
-                cwd=cwd,
-                env=env,
-                stdin=subprocess.DEVNULL,
-                capture_output=True,
-                timeout=inputs.import_timeout,
-                check=False,
-            )
+            proc = box.run(cmd, cwd=cwd, env=env, timeout=inputs.import_timeout)
         except subprocess.TimeoutExpired:
             return dest, None, f"timed out after {inputs.import_timeout}s"
         if not out.is_file():
@@ -683,21 +893,13 @@ def check_v3(inputs: Inputs, scratch: Path) -> CheckResult:
                 expected = str((root / dest).resolve())
                 if loaded != expected:
                     result.fail(f"{dest}: {target} resolved to {loaded}, not {expected}")
-            for name in data.get("scripts_modules") or []:  # type: ignore[union-attr]
+            for name in data.get("scripts_modules") or []:
                 result.fail(f"{dest}: importing {target} loaded product module {name}")
-            for item in data.get("outside") or []:  # type: ignore[union-attr]
+            for item in data.get("outside") or []:
                 result.fail(f"{dest}: importing {target} loaded {item}, outside the extracted root")
     help_cmd = [inputs.python, "-I", "-B", "-c", _DISPATCH_HELP_CHILD, str(root), DISPATCH_MODULE]
     try:
-        proc = subprocess.run(
-            help_cmd,
-            cwd=cwd,
-            env=env,
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            timeout=inputs.import_timeout,
-            check=False,
-        )
+        proc = box.run(help_cmd, cwd=cwd, env=env, timeout=inputs.import_timeout)
         if proc.returncode != 0:
             tail = proc.stderr.decode("utf-8", "replace").strip().splitlines()[-3:]
             result.fail(f"python -m {DISPATCH_MODULE} --help exited {proc.returncode}: {tail}")
@@ -730,16 +932,25 @@ class OwnershipIndex:
         self.dir_owners: dict[str, set[str]] = {}
         for key, owner in self.files.items():
             parts = key.split("/")
-            for depth in range(2, len(parts)):
+            for depth in range(1, len(parts)):
                 self.dir_owners.setdefault("/".join(parts[:depth]), set()).add(owner)
 
     def module_owner(self, dotted: str) -> str | None:
+        """The owner of the file Python binds for dotted (resolved under scripts/), or mixed, or None.
+
+        Python prefers a regular package, then a module, then a namespace package (a directory without
+        __init__.py); a namespace package belongs to its files' owner, or is mixed when they differ. The
+        longest resolvable prefix decides, so an attribute import resolves to its module's owner.
+        """
         parts = dotted.split(".")
         for depth in range(len(parts), 0, -1):
             base = OLD_PREFIX + "/".join(parts[:depth])
             for candidate in (base + "/__init__.py", base + ".py"):
                 if candidate in self.files:
                     return self.files[candidate]
+            owners = self.dir_owners.get(base)
+            if owners:
+                return next(iter(owners)) if len(owners) == 1 else MIXED
         return None
 
     def path_is_machinery(self, path: str) -> bool:
@@ -752,7 +963,7 @@ class OwnershipIndex:
         top = dotted.split(".")[0]
         if top in sys.stdlib_module_names or top in self.extracted_tops:
             return False
-        return self.module_owner(dotted) == PRODUCT
+        return self.module_owner(dotted) in (PRODUCT, MIXED)
 
 
 def scan_python_source(rel: str, source: bytes, index: OwnershipIndex) -> list[str]:
@@ -763,11 +974,15 @@ def scan_python_source(rel: str, source: bytes, index: OwnershipIndex) -> list[s
     findings: list[str] = []
     prose = docstring_nodes(tree)
 
-    def check_import(name: str, line: int) -> None:
+    def check_import(name: str, line: int) -> bool:
         if name == "scripts" or name.startswith("scripts."):
             findings.append(f"{rel}:{line}: import of {name}")
-        elif index.is_product_import(name):
-            findings.append(f"{rel}:{line}: import of product package {name} (scripts/{name.replace('.', '/')})")
+            return True
+        if index.is_product_import(name):
+            owner = index.module_owner(name)
+            findings.append(f"{rel}:{line}: import of {owner} package {name} (scripts/{name.replace('.', '/')})")
+            return True
+        return False
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -777,7 +992,10 @@ def scan_python_source(rel: str, source: bytes, index: OwnershipIndex) -> list[s
             for alias in node.names:
                 findings.append(f"{rel}:{node.lineno}: import of scripts.{alias.name}")
         elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
-            check_import(node.module, node.lineno)
+            if not check_import(node.module, node.lineno):
+                for alias in node.names:
+                    if alias.name != "*":  # a submodule can have another owner than its package
+                        check_import(f"{node.module}.{alias.name}", node.lineno)
         elif isinstance(node, ast.Constant) and isinstance(node.value, str | bytes) and id(node) not in prose:
             text = node.value if isinstance(node.value, str) else node.value.decode("latin-1")
             for match in MODULE_REF.finditer(text):
@@ -788,8 +1006,9 @@ def scan_python_source(rel: str, source: bytes, index: OwnershipIndex) -> list[s
                 findings.append(f"{rel}:{node.lineno}: string references module {ref}")
             for match in PATH_REF.finditer(text):
                 rest = match.group(1).rstrip("/")
-                if rest and index.path_is_machinery(OLD_PREFIX + rest):
-                    findings.append(f"{rel}:{node.lineno}: string holds machinery path scripts/{rest}")
+                if index.path_is_machinery((OLD_PREFIX + rest).rstrip("/")):
+                    shown = f"scripts/{rest}" if rest else "scripts/ (the root, which holds machinery files)"
+                    findings.append(f"{rel}:{node.lineno}: string holds machinery path {shown}")
     return findings
 
 
@@ -814,15 +1033,16 @@ def check_v4(inputs: Inputs) -> CheckResult:
 # --------------------------------------------------------------------------- tool runner
 
 
-def run_tool(inputs: Inputs, tool: str, args: Sequence[str], report: Path, cwd: Path) -> dict[str, object]:
+def run_tool(inputs: Inputs, tool: str, args: Sequence[str], report: Path, cwd: Path) -> dict[str, Any]:
     """Run one packaging/machinery-move tool; exit 2 (Unusable) unless it ran and wrote its report."""
     script = inputs.tools_dir / tool
     if not script.is_file():
         raise Unusable(f"{script} is absent")
     cmd = [inputs.tool_python, "-B", str(script), *args]
     timeout = inputs.test_timeout
+    box = sandbox()
     try:
-        proc = subprocess.run(cmd, cwd=cwd, env=clean_env(), capture_output=True, timeout=timeout, check=False)
+        proc = box.run(cmd, cwd=cwd, env=box.env(), timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         raise Unusable(f"{tool} timed out after {timeout}s") from exc
     stderr = proc.stderr.decode("utf-8", "replace").strip()
@@ -861,8 +1081,8 @@ def check_v5(inputs: Inputs, scratch: Path) -> CheckResult:
         if row.dest not in tree:
             result.fail(f"{where}: file is not in the final tree")
             continue
-        data = (inputs.repo / row.dest).read_bytes()
-        found = row.literal.encode("utf-8") in data
+        content = (inputs.repo / row.dest).read_bytes()
+        found = row.literal.encode("utf-8") in content
         if row.present and not found:
             result.fail(f"{where}: expected literal {row.literal!r} is missing")
         elif not row.present and found:
@@ -1000,10 +1220,9 @@ def check_history_policy(inputs: Inputs, scratch: Path) -> CheckResult:
         "--path-rename",
         PATH_RENAME,
     ]
+    box = sandbox()
     try:
-        proc = subprocess.run(
-            cmd, cwd=scratch, env=clean_env(), capture_output=True, timeout=inputs.test_timeout, check=False
-        )
+        proc = box.run(cmd, cwd=scratch, env=box.env(), timeout=inputs.test_timeout)
     except subprocess.TimeoutExpired as exc:
         raise Unusable(f"{HISTORY_POLICY_TOOL} verify timed out after {inputs.test_timeout}s") from exc
     output = (proc.stdout + proc.stderr).decode("utf-8", "replace").strip().splitlines()
@@ -1018,41 +1237,117 @@ def check_history_policy(inputs: Inputs, scratch: Path) -> CheckResult:
 
 # --------------------------------------------------------------------------- V8 harness
 
+# Runs pytest on the whole [run] files and records what was collected, deselected and run, so no
+# configuration or conftest can shrink the run unnoticed.
 _PYTEST_CHILD = r"""
-import sys
-harness, root, junit, *rest = sys.argv[1:]
+import json, sys
+harness, root, out, *files = sys.argv[1:]
 sys.path[:0] = [harness, root]
 import pytest
-sys.exit(pytest.main(["-p", "no:cacheprovider", "--rootdir", harness, "--junitxml", junit, *rest]))
+
+
+class Recorder:
+    def __init__(self):
+        self.collected = []
+        self.deselected = 0
+        self.collect_errors = 0
+        self.outcomes = {"passed": 0, "failed": 0, "skipped": 0, "errors": 0, "xfailed": 0, "xpassed": 0}
+
+    def pytest_collectreport(self, report):
+        if report.failed:
+            self.collect_errors += 1
+
+    def pytest_deselected(self, items):
+        self.deselected += len(items)
+
+    def pytest_collection_finish(self, session):
+        self.collected = [item.nodeid for item in session.items]
+
+    def pytest_runtest_logreport(self, report):
+        if report.when == "call":
+            if hasattr(report, "wasxfail"):
+                self.outcomes["xfailed" if report.skipped else "xpassed"] += 1
+            else:
+                self.outcomes[report.outcome] += 1
+        elif report.failed:
+            self.outcomes["errors"] += 1
+        elif report.skipped and report.when == "setup":
+            self.outcomes["skipped"] += 1
+
+
+recorder = Recorder()
+code = int(pytest.main(["-p", "no:cacheprovider", "--rootdir", harness, *files], plugins=[recorder]))
+with open(out, "w", encoding="utf-8") as handle:
+    json.dump(
+        {
+            "exit": code,
+            "collected": recorder.collected,
+            "deselected": recorder.deselected,
+            "collect_errors": recorder.collect_errors,
+            "outcomes": recorder.outcomes,
+        },
+        handle,
+    )
+sys.exit(code)
 """
 
 
+class HarnessPathError(Exception):
+    """A harness path would be written through a symlink or over a non-file."""
+
+
+def harness_target(root: Path, rel: str) -> Path:
+    """The path to write rel at under root, refusing any symlinked or non-directory component."""
+    current = root
+    parts = rel.split("/")
+    for part in parts[:-1]:
+        current = current / part
+        if current.is_symlink() or (current.exists() and not current.is_dir()):
+            raise HarnessPathError(f"{rel}: harness component {current.relative_to(root)} is a symlink or a file")
+    target = current / parts[-1]
+    if target.is_symlink() or (target.exists() and not target.is_file()):
+        raise HarnessPathError(f"{rel}: harness path is a symlink or not a regular file")
+    return target
+
+
+def read_blobs(repo: Path, oids: Sequence[str]) -> dict[str, bytes]:
+    """Blob contents by id, through one git cat-file --batch call."""
+    out = git(repo, "cat-file", "--batch", stdin="".join(f"{oid}\n" for oid in oids).encode()).stdout
+    blobs: dict[str, bytes] = {}
+    position = 0
+    for oid in oids:
+        header_end = out.index(b"\n", position)
+        header = out[position:header_end].decode().split()
+        if len(header) != 3 or header[1] != "blob":
+            raise Unusable(f"git cat-file returned {header} for {oid}")
+        size = int(header[2])
+        start = header_end + 1
+        blobs[oid] = out[start : start + size]
+        position = start + size + 1
+    return blobs
+
+
 def copy_from_source(inputs: Inputs, paths: Iterable[str], dest_root: Path) -> int:
+    """Write the listed files from --source into the harness; never through a symlink."""
     wanted = set(paths)
-    copied = 0
+    entries = []
     for line in git_z(inputs.source_repo, "ls-tree", "-r", "-z", inputs.source, "--", *sorted(wanted)):
         meta, path = line.split("\t", 1)
         mode, kind, oid = meta.split()
-        if path not in wanted or kind != "blob" or mode == "120000":
-            continue
-        target = dest_root / path
+        if path in wanted and kind == "blob" and mode in ("100644", "100755"):
+            entries.append((path, mode, oid))
+    blobs = read_blobs(inputs.source_repo, [oid for _path, _mode, oid in entries])
+    targets = [(harness_target(dest_root, path), mode, oid) for path, mode, oid in entries]
+    for target, mode, oid in targets:
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(git(inputs.source_repo, "cat-file", "blob", oid).stdout)
-        if mode == "100755":
-            target.chmod(0o755)
-        copied += 1
-    return copied
-
-
-def junit_counts(path: Path) -> dict[str, int]:
-    counts = {"tests": 0, "failures": 0, "errors": 0, "skipped": 0}
-    root = ET.parse(path).getroot()
-    suites = [root] if root.tag == "testsuite" else root.findall("testsuite")
-    for suite in suites:
-        for key in counts:
-            counts[key] += int(suite.get(key, "0") or 0)
-    counts["passed"] = counts["tests"] - counts["failures"] - counts["errors"] - counts["skipped"]
-    return counts
+        if target.parent.is_symlink() or not inside(target.parent, dest_root):
+            raise HarnessPathError(f"{target}: harness directory escapes the harness")
+        flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW
+        descriptor = os.open(target, flags, 0o755 if mode == "100755" else 0o644)
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(blobs[oid])
+        target.chmod(0o755 if mode == "100755" else 0o644)
+    return len(targets)
 
 
 def check_v8(inputs: Inputs, scratch: Path) -> CheckResult:
@@ -1064,19 +1359,22 @@ def check_v8(inputs: Inputs, scratch: Path) -> CheckResult:
     harness = scratch / "harness"
     if inside(harness, inputs.repo):
         raise Unusable(f"the temporary harness {harness} would be inside --repo; set TMPDIR elsewhere")
-    clone = git(
-        Path(scratch), "clone", "--quiet", "--shared", "--no-checkout", str(inputs.repo), str(harness), check=False
-    )
+    clone = git(scratch, "clone", "--quiet", "--shared", "--no-checkout", str(inputs.repo), str(harness), check=False)
     if clone.returncode != 0:
         raise Unusable(f"cannot clone --repo into the harness: {clone.stderr.decode('utf-8', 'replace').strip()}")
     git(harness, "checkout", "--quiet", "--detach", inputs.head)
     listed = inputs.tests_run + inputs.tests_support
-    overlaid = sorted(path for path in listed if (harness / path).exists())
+    overlaid = sorted(path for path in listed if (harness / path).exists() or (harness / path).is_symlink())
     if overlaid:
         result.notes.append(f"{len(overlaid)} listed test file(s) replace extracted copies: {overlaid[:10]}")
-    copied = copy_from_source(inputs, listed, harness)
+    try:
+        copied = copy_from_source(inputs, listed, harness)
+    except HarnessPathError as exc:
+        result.fail(f"the extracted tree blocks the harness: {exc}")
+        result.inspected = {"files_copied": 0, "tests_collected": 0}
+        return result
     if copied != len(listed):
-        raise Unusable(f"copied {copied} of {len(listed)} {TESTS_LIST} files from --source")
+        raise Unusable(f"copied {copied} of {len(listed)} {TESTS_LIST} files (regular files) from --source")
     for tool in RENAME_TOOLS:
         report = scratch / f"v8-{tool}.json"
         args = rename_args(inputs, tool, "--apply", harness, report, listed)
@@ -1087,43 +1385,53 @@ def check_v8(inputs: Inputs, scratch: Path) -> CheckResult:
             f"{tool} --apply on the test copies: {len(rewrites) if isinstance(rewrites, list) else '?'} rewrites, "
             f"{len(unresolved) if isinstance(unresolved, list) else '?'} unresolved"
         )
-    junit = scratch / "v8-junit.xml"
-    cmd = [inputs.python, "-I", "-B", "-c", _PYTEST_CHILD, str(harness), str(inputs.repo), str(junit)]
-    cmd += [*inputs.pytest_args, *inputs.tests_run]
+    record = scratch / "v8-pytest.json"
+    cmd = [inputs.python, "-I", "-B", "-c", _PYTEST_CHILD, str(harness), str(inputs.repo), str(record)]
+    cmd += inputs.tests_run
+    box = sandbox()
     try:
-        proc = subprocess.run(
-            cmd,
-            cwd=harness,
-            env=clean_env(),
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            timeout=inputs.test_timeout,
-            check=False,
-        )
+        proc = box.run(cmd, cwd=harness, env=box.env(), timeout=inputs.test_timeout)
     except subprocess.TimeoutExpired:
         result.fail(f"the harness pytest run timed out after {inputs.test_timeout}s")
         result.inspected = {"files_copied": copied, "tests_collected": 0}
         return result
     output = (proc.stdout + proc.stderr).decode("utf-8", "replace").strip().splitlines()
-    counts = junit_counts(junit) if junit.is_file() else {"tests": 0, "failures": 0, "errors": 0, "skipped": 0}
-    result.notes.append(f"pytest exit {proc.returncode}; {counts}")
-    if proc.returncode != 0:
+    run_record: dict[str, Any] = {}
+    if record.is_file():
+        run_record = json.loads(record.read_text(encoding="utf-8"))
+    else:
+        result.fail(f"pytest wrote no run record (exit {proc.returncode}): {output[-15:]}")
+    collected = [str(item) for item in run_record.get("collected") or []]
+    outcomes: dict[str, int] = dict(run_record.get("outcomes") or {})
+    deselected = int(run_record.get("deselected") or 0)
+    collect_errors = int(run_record.get("collect_errors") or 0)
+    result.notes.append(f"pytest exit {proc.returncode}; collected {len(collected)}; {outcomes}")
+    if proc.returncode != 0 and record.is_file():
         result.fail(f"pytest exited {proc.returncode}: {output[-15:]}")
-    if counts["tests"] == 0:
+    if not collected:
         result.fail("pytest collected zero tests")
-    if counts["failures"] or counts["errors"]:
-        result.fail(f"{counts['failures']} test(s) failed and {counts['errors']} errored")
-    try:
-        require_clean(inputs.repo, "changed while the tests ran")
-    except Unusable as exc:
-        result.fail(str(exc))
+    if deselected:
+        result.fail(f"{deselected} test(s) were deselected; every test of the listed files must run")
+    if collect_errors:
+        result.fail(f"{collect_errors} collection error(s)")
+    for path in inputs.tests_run:
+        if not any(nodeid == path or nodeid.startswith(path + "::") for nodeid in collected):
+            result.fail(f"{path}: no test collected from this listed file")
+    failed, errored = outcomes.get("failed", 0), outcomes.get("errors", 0)
+    if failed or errored or outcomes.get("xpassed", 0):
+        result.fail(f"{failed} test(s) failed, {errored} errored, {outcomes.get('xpassed', 0)} unexpectedly passed")
+    problems = worktree_mismatches(inputs.repo)
+    if problems:
+        result.fail(f"--repo changed while the tests ran: {problems[:10]}")
     result.inspected = {
         "files_copied": copied,
-        "tests_collected": counts["tests"],
-        "tests_passed": counts.get("passed", 0),
-        "tests_failed": counts["failures"],
-        "tests_errored": counts["errors"],
-        "tests_skipped": counts["skipped"],
+        "tests_collected": len(collected),
+        "tests_passed": outcomes.get("passed", 0),
+        "tests_failed": failed,
+        "tests_errored": errored,
+        "tests_skipped": outcomes.get("skipped", 0),
+        "tests_xfailed": outcomes.get("xfailed", 0),
+        "tests_deselected": deselected,
     }
     return result
 
@@ -1234,24 +1542,34 @@ Checks (every finding is printed; nothing stops at the first one):
       `git -C EXTRACT log --follow -- {DISPATCH_DEST}`; unmapped and pruned commits are findings.
   V7  denominators: V1 must inspect the manifest row count, V3 and V4 the manifest .py count; any check that ran
       with a zero count fails.
-  V8  (--run-tests) clone --repo (--shared, read-only) into a temp harness outside it, copy the
-      {TESTS_LIST} files from --source over it, apply the rename tools to those copies with --map, run pytest
-      on the [run] files with the harness and --repo on sys.path (--python -I). Fails on any failed or errored test,
-      a nonzero pytest exit, zero collected tests, or --repo changing during the run; counts are reported.
+  V8  (--run-tests) clone --repo (--shared) into a temp harness outside it, copy the {TESTS_LIST} files
+      from --source over it (never through a symlink), apply the rename tools to those copies with --map, run
+      pytest on the whole [run] files with the harness and --repo on sys.path (--python -I, no extra pytest
+      arguments). Fails on a nonzero pytest exit, any failed, errored or strict-unexpectedly-passing test, zero
+      collected tests, any deselected test, a collection error, a [run] file with no collected test, or --repo
+      changing during the run. Skips are allowed and counted.
   V9  HEAD has exactly one parent, the --rewrite-tip, and is the only commit after it; HEAD^{{tree}} equals
       --final-tree; its diff against the tip only adds manifest addition rows (new at the tip), modifies manifest
       paths and deletes nothing the manifest keeps.
   HP  (--history-policy) runs {HISTORY_POLICY_TOOL} verify --repo EXTRACT --rev REWRITE_TIP --policy FILE
       --policy-sha256 HEX --commit-map FILE --path-rename {PATH_RENAME}; its nonzero exit fails.
 
-Preconditions (exit 2 otherwise): every input exists and parses; both repositories are full (not shallow,
-no grafts) top-level clones; --repo's working tree equals HEAD with nothing untracked or ignored; --source holds
-{DISPATCH_SOURCE}; the rename tools (and {HISTORY_POLICY_TOOL} for --history-policy) sit next to this tool.
-Replace refs are ignored (GIT_NO_REPLACE_OBJECTS=1) and git takes no optional locks.
+Read-only enforcement: every git call, V3 import child, rename tool, {HISTORY_POLICY_TOOL} run and the V8
+pytest run executes in bubblewrap (bwrap): / read-only, private /dev and /proc, every namespace unshared (no
+network), HOME and TMPDIR in the scratch directory, which is the only writable path. Replace refs are ignored
+(GIT_NO_REPLACE_OBJECTS=1), signatures are not checked, no global or system git config is read.
+
+Preconditions (exit 2 otherwise): bwrap can start that sandbox; every input exists and parses; both
+repositories are full (not shallow, no grafts) top-level clones; every file in --repo's working tree equals
+HEAD by bytes and mode, with nothing untracked or ignored (hashed directly; index flags such as
+assume-unchanged or skip-worktree are not trusted); --source holds {DISPATCH_SOURCE}; the rename tools (and
+{HISTORY_POLICY_TOOL} for --history-policy) sit next to this tool; --report is not a symlink, an input file,
+or inside either repository, its git storage or the tools directory.
 
 Outputs:
   stdout: one block per check with PASS/FAIL/SKIPPED, its inspected counts, findings and notes, then a verdict.
-  --report writes the same as JSON. Temporary files live under $TMPDIR and are removed. Nothing else is written.
+  --report writes the same as JSON (atomic replace). The scratch directory lives under $TMPDIR and is removed.
+  Nothing else is written.
 
 Exit codes:
   0  every check that ran passed
@@ -1333,13 +1651,6 @@ Related:
         default=3600,
         help="Seconds for each tool run and the V8 pytest run (default: 3600).",
     )
-    opt.add_argument(
-        "--pytest-arg",
-        action="append",
-        default=[],
-        metavar="ARG",
-        help="Extra argument for the V8 pytest run, repeatable, e.g. --pytest-arg=-n4. Default: none.",
-    )
     opt.add_argument("--report", type=Path, metavar="OUT.json", help="Also write the results as JSON. Default: none.")
     return parser
 
@@ -1353,22 +1664,21 @@ def print_result(result: CheckResult) -> None:
         print(f"  note: {note}")
 
 
-def run_checks(inputs: Inputs) -> list[CheckResult]:
-    with tempfile.TemporaryDirectory(prefix="lu-verify-extraction-") as tmp:
-        scratch = Path(tmp)
-        if inside(scratch, inputs.repo):
-            raise Unusable(f"the temporary directory {scratch} is inside --repo; set TMPDIR elsewhere")
-        results = [
-            check_v1(inputs),
-            check_v2(inputs),
-            check_v3(inputs, scratch),
-            check_v4(inputs),
-            check_v5(inputs, scratch),
-            check_v6(inputs),
-            check_v8(inputs, scratch),
-            check_v9(inputs),
-            check_history_policy(inputs, scratch),
-        ]
+def run_checks(inputs: Inputs, scratch: Path) -> list[CheckResult]:
+    for root in (inputs.repo, inputs.source_repo):
+        if inside(scratch, root):
+            raise Unusable(f"the scratch directory {scratch} is inside {root}; set TMPDIR elsewhere")
+    results = [
+        check_v1(inputs),
+        check_v2(inputs),
+        check_v3(inputs, scratch),
+        check_v4(inputs),
+        check_v5(inputs, scratch),
+        check_v6(inputs),
+        check_v8(inputs, scratch),
+        check_v9(inputs),
+        check_history_policy(inputs, scratch),
+    ]
     results.append(check_v7(inputs, results))
     order = ["V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "HP"]
     return sorted(results, key=lambda item: order.index(item.check))
@@ -1377,8 +1687,14 @@ def run_checks(inputs: Inputs) -> list[CheckResult]:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        inputs = load_inputs(args)
-        results = run_checks(inputs)
+        with tempfile.TemporaryDirectory(prefix="lu-verify-extraction-") as tmp:
+            scratch = Path(os.path.realpath(tmp))
+            _SANDBOX.append(Sandbox(scratch, visible_roots(args)))
+            try:
+                inputs = load_inputs(args)
+                results = run_checks(inputs, scratch)
+            finally:
+                _SANDBOX.pop()
     except Unusable as exc:
         print(f"error: {exc}", file=sys.stderr)
         print("verdict: UNUSABLE INPUT (exit 2)")
@@ -1399,7 +1715,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "rewrite_tip": inputs.rewrite_tip,
             "checks": [result.as_dict() for result in results],
         }
-        args.report.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+        write_report(args.report, payload)
     return code
 
 
