@@ -38,6 +38,10 @@ from scripts.ci.stack_currency_report import (
 from scripts.common.github_client import run as github_run
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 BUDGET_SECONDS = 1.5
 PROBE_TIMEOUT_SECONDS = 0.25
 _PREDICTABLE_TEMP = "report.json.tmp"
@@ -440,7 +444,7 @@ def write_report(
     destination = directory / "report.json"
     _refuse_linked_file(destination)
     _refuse_linked_file(directory / _PREDICTABLE_TEMP)
-    pins_path = repo_root / "scripts" / "config" / "stack_pins.yaml"
+    pins_path = repo_root / _MACHINERY / "config" / "stack_pins.yaml"
     complete = True
     if read is None:
         scan_deadline = time.monotonic() + BUDGET_SECONDS
@@ -485,8 +489,8 @@ def main(argv: list[str] | None = None) -> int:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ops.host_stack_drift\n"
-            "  .venv/bin/python -m scripts.ops.host_stack_drift --repo-root .\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.host_stack_drift\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.host_stack_drift --repo-root .\n"
             "\n"
             "Outputs:\n"
             "  report.json under $XDG_STATE_HOME/learn-ukrainian/stack-drift "
@@ -498,9 +502,9 @@ def main(argv: list[str] | None = None) -> int:
             "  1 when the report would land inside the repository or cannot be written.\n"
             "\n"
             "Related:\n"
-            "  Pin file: scripts/config/stack_pins.yaml.\n"
+            f"  Pin file: {_MACHINERY}/config/stack_pins.yaml.\n"
             "  Policy: docs/best-practices/stack-currency.md section 2.\n"
-            "  Caller: scripts/hooks/session_start_gate.py (#10862)."
+            f"  Caller: {_MACHINERY}/hooks/session_start_gate.py (#10862)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -508,7 +512,7 @@ def main(argv: list[str] | None = None) -> int:
         "--repo-root",
         type=Path,
         default=REPO_ROOT,
-        help="checkout whose scripts/config/stack_pins.yaml is the pin source (default: this repo)",
+        help=f"checkout whose {_MACHINERY}/config/stack_pins.yaml is the pin source (default: this repo)",
     )
     args = parser.parse_args(argv)
     try:

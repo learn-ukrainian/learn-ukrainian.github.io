@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shlex
 import sys
 from collections import Counter
@@ -13,6 +14,11 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.dispatcher import pool_selector as selector
+
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 
 def shadow_history(now: datetime, pool_sources: dict[str, str], records: list[dict]) -> tuple[Counter, dict]:
@@ -140,7 +146,7 @@ def screen(policy_path: Path | None = None, *, redact: bool = False) -> str:
                 f"codexbar usage --provider {shlex.quote(provider)} --format json --no-color")
             if provider == "codex" and not (pool and pool.check_command):
                 usage_key = "codex:b" if source.startswith("codex:b") else "codex:a"
-                check = ('.venv/bin/python -m scripts.fleet.usage json --fresh '
+                check = (f'.venv/bin/python -m {_MACHINERY}.fleet.usage json --fresh '
                          f'| jq \'.codex_accounts["{usage_key}"]\'')
             if provider == "private" and not (pool and pool.check_command):
                 check = ('jq -e ".pools[] | select(.operator_reading_confirmed == true)" '
@@ -167,11 +173,11 @@ def main(argv=None) -> int:
         description="Print one funding table from existing cached meters and shadow task records.\n"
                     "Use for budget inspection; this command never refreshes meters or changes dispatch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/ops/budget_screen.py\n"
-               "  .venv/bin/python scripts/ops/budget_screen.py --redact\n"
+        epilog=f"Examples:\n  .venv/bin/python {_MACHINERY}/ops/budget_screen.py\n"
+               f"  .venv/bin/python {_MACHINERY}/ops/budget_screen.py --redact\n"
                "Outputs: one table on stdout; no files, provider calls or state changes.\n"
                "Exit codes: 0 table printed, 2 invalid arguments. Missing inputs appear as NOT CHECKED.\n"
-               "Related: scripts/dispatcher/pool_selector.py describes the private policy schema.",
+               f"Related: {_MACHINERY}/dispatcher/pool_selector.py describes the private policy schema.",
     )
     parser.add_argument("--config", type=Path, default=None,
                         help="Private policy JSON, e.g. ./private-policy.json (default: host budget_pools.json)")
