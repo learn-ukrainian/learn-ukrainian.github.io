@@ -81,17 +81,18 @@ SHELL_FENCE_INFO = frozenset({"bash", "sh", "shell", "zsh", "console", "shell-se
 ESCAPE = re.compile(
     r"\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8}|\\x[0-9a-fA-F]{2}|\\[0-7]{1,3}|&#[0-9]{1,7};|&#[xX][0-9a-fA-F]{1,6};|%[0-9a-fA-F]{2}"
 )
-# What a reader joins or removes before a name shows: line continuations, escapes, run-time pieces (taken
-# as empty: shell expansions and substitutions, template fields) and a backslash before a character.
-HIDING = re.compile(
-    r"\\[ \t]*\r?\n\s*|"
-    + ESCAPE.pattern
-    + r"|\$\{[^}\n]*\}|\$\([^)\n]*\)|\$[A-Za-z_][A-Za-z0-9_]*|`[^`\n]*`|\{\{[^}\n]*\}\}|\{%[^%\n]*%\}"
-    + r"|\\(?=\S)"
-)
-# The same without the run-time pieces: their bodies stay in the view, so a name hidden inside one
-# (``$(cat $'scr\u0069pts/x.py')``) shows too.
-HIDING_INNER = re.compile(r"\\[ \t]*\r?\n\s*|" + ESCAPE.pattern + r"|\\(?=\S)")
+# What a reader joins or removes before a name shows: line continuations, escapes and a backslash before a
+# character. Run-time pieces are found by ``run_time_pieces``, which balances nested ones.
+HIDING = re.compile(r"\\[ \t]*\r?\n\s*|" + ESCAPE.pattern + r"|\\(?=\S)")
+# Where a run-time piece starts: a substitution or expansion (``$(``, ``$((``, ``${``, backticks), which
+# can nest, or a leaf that cannot: a variable (``$X``, ``$1``, ``$@``) or a template field.
+PIECE_START = re.compile(r"\$\(|\$\{|`|\$[A-Za-z_][A-Za-z0-9_]*|\$[0-9@*#?!]|\{\{[^}\n]*\}\}|\{%[^%\n]*%\}")
+OPENINGS = {"$(": ")", "${": "}", "`": "`"}
+# What may end, nest in or quote a piece body, outside double quotes and inside them.
+BODY_STOPS = {")": re.compile(r"[\\'\"`$(){}]"), "}": re.compile(r"[\\'\"`$(){}]"), "`": re.compile(r"[\\`$]")}
+DOUBLE_QUOTED_STOPS = re.compile(r"[\\\"`${]")
+MAX_PIECE = 64 * 1024  # a longer body is no piece: its opening stays as written, and its inner pieces still count
+MAX_NESTING = 64
 # A quoted piece glued to a word: the shell drops its quotes and joins it (``scr""ipts``, ``scr"i"pts``).
 # A lone apostrophe (``script's``) is no quoted piece.
 QUOTED_PIECE = re.compile(r"(?<=\S)([\"'])[^\"'\s]*\1|([\"'])[^\"'\s]*\2(?=\S)")
@@ -705,17 +706,161 @@ class JoinedView:
         return verbatim and end <= view_start + length
 
 
-def joined_view(text: str, keep_pieces: bool = False) -> JoinedView:
-    """Undo line continuations, escapes, quote removal and run-time pieces (taken as empty), as a shell,
-    a YAML or TOML reader or a template engine would, so that a name split by them shows.
+@dataclass(frozen=True)
+class Piece:
+    """A run-time piece in a text, with the pieces nested in its body.
 
-    With ``keep_pieces`` the run-time pieces stay, so that a name hidden inside one shows instead.
+    ``opening`` and ``closing`` are the lengths of its delimiters (``$(`` and ``)``); both are 0 for a leaf,
+    a variable or a template field, whose text is never a word of its own.
     """
 
-    events = [(m.start(), m.end(), m.group(0)) for m in (HIDING_INNER if keep_pieces else HIDING).finditer(text)]
-    for match in QUOTED_PIECE.finditer(text):
+    start: int
+    end: int
+    opening: int = 0
+    closing: int = 0
+    children: tuple[Piece, ...] = ()
+
+
+def run_time_pieces(text: str) -> list[Piece]:
+    """The outermost run-time pieces of a text, each with its nested pieces, found by a balanced scan.
+
+    An opening that never closes is no piece, and neither is one whose body holds such an opening: the scan
+    goes on right after it, so the pieces in what would have been its body still count.
+    """
+
+    scanner = _PieceScanner(text)
+    pieces: list[Piece] = []
+    position = 0
+    while (match := PIECE_START.search(text, position)) is not None:
+        piece = scanner.piece_at(match.start(), 0)
+        if piece is None:
+            position = match.start() + 1
+        else:
+            pieces.append(piece)
+            position = piece.end
+    return pieces
+
+
+class _PieceScanner:
+    """Scans piece bodies as a shell does: nested pieces, quotes, backslashes and balanced brackets.
+
+    Each opening is scanned once (``memo``), so the scan stays linear in the text times ``MAX_PIECE``.
+    """
+
+    def __init__(self, text: str) -> None:
+        self.text = text
+        self.memo: dict[int, Piece | None] = {}
+
+    def piece_at(self, start: int, nesting: int) -> Piece | None:
+        match = PIECE_START.match(self.text, start)
+        if match is None:
+            return None
+        if match.group(0) not in OPENINGS:
+            return Piece(start, match.end())
+        if start in self.memo:
+            return self.memo[start]
+        if nesting >= MAX_NESTING:
+            return None  # not remembered: from a shallower start it may close
+        piece = self.memo[start] = self._closed(start, match.group(0), nesting)
+        return piece
+
+    def _closed(self, start: int, opening: str, nesting: int) -> Piece | None:
+        text, closer = self.text, OPENINGS[opening]
+        limit = min(len(text), start + MAX_PIECE)
+        children: list[Piece] = []
+        depth = 0  # open brackets of the closer's kind inside the body
+        quoted = False  # inside double quotes (never in backticks, which end at the next unescaped backtick)
+        position = start + len(opening)
+        while True:
+            stop = (DOUBLE_QUOTED_STOPS if quoted else BODY_STOPS[closer]).search(text, position, limit)
+            if stop is None:
+                return None  # unclosed, or too long
+            position, char = stop.start(), stop.group(0)
+            if char == "\\":
+                position += 2
+            elif char == closer and not quoted and depth == 0:
+                return Piece(start, position + 1, len(opening), 1, tuple(children))
+            elif char == closer and not quoted:
+                depth -= 1
+                position += 1
+            elif char in "$`" or text.startswith(("{{", "{%"), position):
+                match = PIECE_START.match(text, position)
+                child = self.piece_at(position, nesting + 1)
+                if child is not None:
+                    children.append(child)
+                    position = child.end
+                elif match is not None and match.group(0) in OPENINGS:
+                    return None  # a nested opening that never closes leaves this one open too
+                elif char == "$" and not quoted and text.startswith("$'", position):
+                    close = _ansi_quote_end(text, position + 2, limit)
+                    if close is None:
+                        return None
+                    position = close
+                else:
+                    position += 1
+            elif char == '"':
+                quoted = not quoted
+                position += 1
+            elif char == "'":
+                close = text.find("'", position + 1, limit)
+                if close < 0:
+                    return None
+                position = close + 1
+            else:  # a bracket: only the closer's own kind nests
+                depth += char == {")": "(", "}": "{"}[closer] and not quoted
+                position += 1
+
+
+def _ansi_quote_end(text: str, position: int, limit: int) -> int | None:
+    """The position after the quote that closes ``$'…'`` (a backslash escapes the next character)."""
+
+    while position < limit:
+        if text[position] == "\\":
+            position += 2
+        elif text[position] == "'":
+            return position + 1
+        else:
+            position += 1
+    return None
+
+
+def _pieces_at_level(pieces: list[Piece], level: int) -> tuple[list[Piece], list[Piece]]:
+    """The pieces ``level + 1`` deep, and the substitutions above them whose delimiters go at that level."""
+
+    frontier, opened = pieces, []
+    for _ in range(level):
+        containers = [piece for piece in frontier if piece.opening]
+        opened += containers
+        frontier = [child for piece in containers for child in piece.children]
+    return frontier, opened
+
+
+def joined_view(text: str, pieces: list[Piece] | None = None, level: int = 0) -> JoinedView:
+    r"""Undo line continuations, escapes, quote removal and run-time pieces, as a shell, a YAML or TOML
+    reader or a template engine would, so that a name split by them shows.
+
+    Level 0 takes each outermost run-time piece as empty. Level n (n >= 1) also opens the substitutions
+    n deep or less: their delimiters go and their bodies stay, while the pieces n + 1 deep are taken as
+    empty, so a name split inside a substitution body, at any depth, shows. Without ``pieces`` every
+    piece stays as written, so a name hidden inside one (``$(cat $'scripts/x.py')``) shows instead.
+    Quotes glued to an emptied piece go with it (``scr"$(echo a b)"ipts``).
+    """
+
+    events = [(m.start(), m.end(), m.group(0)) for m in HIDING.finditer(text)]
+    quoting = text
+    if pieces is not None:
+        emptied, opened = _pieces_at_level(pieces, level)
+        events += [(piece.start, piece.end, "") for piece in emptied]
+        for piece in opened:
+            events += [(piece.start, piece.start + piece.opening, ""), (piece.end - piece.closing, piece.end, "")]
+        if emptied:  # an emptied piece is one glued character to the quotes around it
+            chars = list(text)
+            for piece in emptied:
+                chars[piece.start : piece.end] = "x" * (piece.end - piece.start)
+            quoting = "".join(chars)
+    for match in QUOTED_PIECE.finditer(quoting):
         events += [(match.start(), match.start() + 1, ""), (match.end() - 1, match.end(), "")]  # the two quotes
-    pieces: list[str] = []
+    parts: list[str] = []
     segments: list[tuple[int, int, int, bool]] = []
     view = position = 0
     for start, end, token in sorted(events):
@@ -723,16 +868,27 @@ def joined_view(text: str, keep_pieces: bool = False) -> JoinedView:
             continue  # inside a piece already undone
         if start > position:
             segments.append((view, position, start - position, True))
-            pieces.append(text[position:start])
+            parts.append(text[position:start])
             view += start - position
         replacement = _unescape_one(token) if token and ESCAPE.fullmatch(token) else ""
         segments.append((view, start, len(replacement), False))
-        pieces.append(replacement)
+        parts.append(replacement)
         view += len(replacement)
         position = end
     segments.append((view, position, len(text) - position, True))
-    pieces.append(text[position:])
-    return JoinedView("".join(pieces), segments)
+    parts.append(text[position:])
+    return JoinedView("".join(parts), segments)
+
+
+def joined_views(text: str) -> Iterator[JoinedView]:
+    """Every view ``hidden_references`` reads: each level that takes some piece as empty, then the pieces kept."""
+
+    pieces = run_time_pieces(text)
+    level = 0
+    while level == 0 or _pieces_at_level(pieces, level)[0]:
+        yield joined_view(text, pieces, level)
+        level += 1
+    yield joined_view(text)
 
 
 def hidden_references(
@@ -795,13 +951,14 @@ def case_variants(ownership: OwnershipMap, rel: str, text: str, kind: str, repor
 def scan_text(ownership: OwnershipMap, rel: str, text: str, kind: str, report: Report) -> list[Edit]:
     """Rewrite or report every ``scripts`` word in a non-Python text."""
 
-    view = joined_view(text)
+    views = joined_views(text)
+    view = next(views)  # level 0: every outermost piece taken as empty
     found = list(occurrences(text))
     covered = {o.start for o in found}
     covered |= {m.start() for m in rp.word_matches(text, ignore_case=True)}  # seen raw (case variants too)
     reported: set[int] = set()
-    hidden_references(ownership, rel, text, view, covered, report, reported)
-    hidden_references(ownership, rel, text, joined_view(text, keep_pieces=True), covered, report, reported)
+    for joined in (view, *views):
+        hidden_references(ownership, rel, text, joined, covered, report, reported)
     case_variants(ownership, rel, text, kind, report)
     scan = FileScan(ownership, rel, text, kind)
     if not found:

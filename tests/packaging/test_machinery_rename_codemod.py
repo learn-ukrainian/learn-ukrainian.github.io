@@ -1470,3 +1470,92 @@ def test_r3_f6_heredoc_word_with_inner_quotes_keeps_the_body_reported(tree: tupl
     assert code == 1
     assert _read(root, "scripts/tools/delim.sh") == text
     assert "heredoc_text" in _kinds(report)
+
+
+# -- PR 12764 review round 4 ----------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        # F3: the four round-4 held-outs, a run-time piece splitting a name inside a substitution body.
+        "echo \"$(cat $'scr\\u0069'${EMPTY}pts/dispatch.py)\"\n",
+        'echo "$(cat scr${EMPTY}ipts/dispatch.py)"\n',
+        'echo "$(cat scr$(true)ipts/dispatch.py)"\n',
+        'echo "$(cat scr`true`ipts/dispatch.py)"\n',
+        # Nested two levels deep, and inside each kind of substitution.
+        'echo "$(echo $(cat scr${EMPTY}ipts/dispatch.py))"\n',
+        'echo "$(echo "$(cat scr$(true)ipts/dispatch.py)")"\n',
+        "echo `cat scr${EMPTY}ipts/dispatch.py`\n",
+        'echo "${X:-scr${EMPTY}ipts/dispatch.py}"\n',
+        # A nested expansion splitting the name, outside and inside a substitution.
+        "cat scr${A:-${B}}ipts/dispatch.py\n",
+        'echo "$(cat scr${A:-${B}}ipts/dispatch.py)"\n',
+        'echo "$(cat scr$(echo $(true))ipts/dispatch.py)"\n',
+        "cat scr$((0))ipts/dispatch.py\n",
+        'echo "$(cat scr$((1 + (2)))ipts/dispatch.py)"\n',
+        # A piece at the start or the end of a word in the body.
+        'echo "$(${EMPTY}cat scr${EMPTY}ipts/dispatch.py)"\n',
+        'echo "$(cat ${A}scr${EMPTY}ipts/dispatch.py${B})"\n',
+        'echo "$(scr$(true)ipts/dispatch.py)"\n',
+        # A piece across a quote boundary, at the top level and in a body.
+        'cat scr"$(echo a b)"ipts/dispatch.py\n',
+        'echo "$(cat scr"$(echo a b)"ipts/dispatch.py)"\n',
+        "cat 'scr'\"${EMPTY}\"'ipts/dispatch.py'\n",
+        # A body over several lines, and a closer quoted inside the body.
+        'echo "$(\n  cat scr${EMPTY}ipts/dispatch.py\n)"\n',
+        'echo "$(echo ")" ; cat scr$(true)ipts/dispatch.py)"\n',
+    ],
+)
+def test_r4_f3_names_split_by_a_nested_run_time_piece_are_reported(tree: tuple[Path, Path], text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/tools/nested.sh", M, text)
+
+    for mode in ("check", "apply"):
+        code, report = _run(rename_nonpython, map_path, root, mode, "scripts/tools/nested.sh")
+
+        assert code == 1, mode
+        assert _read(root, "scripts/tools/nested.sh") == text
+        assert "hidden_reference" in _kinds(report), (mode, report["unresolved"])
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        'echo "$(cat ${REPO}/scripts/dispatch.py)"\n',  # the name is whole: no piece splits it
+        "cat ${REPO}/scripts/dispatch.py\n",
+        'echo "$(cat ${A:-${B}}/scripts/dispatch.py)"\n',
+    ],
+)
+def test_r4_f3_whole_names_beside_a_piece_are_no_hidden_reference(tree: tuple[Path, Path], text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/tools/whole.sh", M, text)
+
+    _code, report = _run(rename_nonpython, map_path, root, "check", "scripts/tools/whole.sh")
+
+    assert "hidden_reference" not in _kinds(report)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        'echo "$(cat ${REPO}/README.md)"\n',
+        'echo "$(cat scr$(true)ipts/audit/probe_uk_writing_score.py)"\n',  # a joined product path
+        "echo $(echo it's unclosed scr\n",  # an opening that never closes is no piece
+    ],
+)
+def test_r4_f3_nested_views_stay_quiet(tree: tuple[Path, Path], text: str) -> None:
+    root, map_path = tree
+    _add(root, map_path, "scripts/tools/quiet.sh", M, text)
+
+    code, report = _run(rename_nonpython, map_path, root, "apply", "scripts/tools/quiet.sh")
+
+    assert code == 0, report["unresolved"]
+    assert _read(root, "scripts/tools/quiet.sh") == text
+
+
+def test_r4_f3_piece_scan_is_bounded() -> None:
+    text = "$(" * 5000 + "scr${E}ipts/dispatch.py"
+    pieces = rename_nonpython.run_time_pieces(text)
+
+    assert [(piece.start, piece.end) for piece in pieces][-1:] == [(text.index("${E}"), text.index("${E}") + 4)]

@@ -102,7 +102,9 @@ These are reported and never rewritten:
 - names that only show once a reader joins the word: escapes (`\u0073`, `&#115;`, `%73`), line
   continuations (`scr\` then `ipts` on the next line, in shell, YAML or TOML), quoted pieces glued to
   the word (`scr""ipts`), a backslash before a letter, and run-time pieces taken as empty (`$X`,
-  `${X}`, `$(…)`, backticks, `{{ … }}`);
+  `${X}`, `$(…)`, `$((…))`, backticks, `{{ … }}`). Pieces are found by a balanced scan, so nested
+  ones count (`scr${A:-${B}}ipts`), and every substitution body is read at each depth with the pieces
+  nested in it taken as empty (`"$(cat scr$(true)ipts/x.py)"`, `scr"$(echo a b)"ipts`);
 - the root in another case (`Scripts/`);
 - binary or non-UTF-8 files that may name `scripts` (also as UTF-16), compressed archives (gzip, bzip2,
   xz, zip) whose contents name it, and symlinks whose target names it.
