@@ -1,11 +1,11 @@
-# Scanner pins for the learn-ukrainian/machinery security workflows
-# (issue #12682, machinery move contract v3 section 5), its pre-publication
-# gate (amendment PUBLIC-1104 item 3) and its bootstrap CI Gate (machinery move
-# plan v1 section 4 step 4). This file is the record; secret-scan.yml,
-# sast.yml, ci-gate.yml and prepublication-gate.sh carry the same values and
-# are not read from here.
-# Bump a pin by changing it here and in the workflow together, with the new
-# upstream evidence. Never move to an older release to clear a finding.
+# Scanner pins for the learn-ukrainian/machinery security scans (issue
+# #12682, machinery move contract v3 section 5), its pre-publication gate
+# (amendment PUBLIC-1104 item 3) and its bootstrap CI Gate (machinery move
+# plan v1 section 4 step 4). This file is the record; ci-gate.yml (whose
+# secret-scan and sast jobs are the repository's security scans) and
+# prepublication-gate.sh carry the same values and are not read from here.
+# Bump a pin by changing it here, in ci-gate.yml and, where it carries the
+# pin, in prepublication-gate.sh together, with the new upstream evidence. Never move to an older release to clear a finding.
 # Upstream checks below were made on 2026-11-03.
 
 # TruffleHog (secret scan)
@@ -23,9 +23,10 @@ TRUFFLEHOG_LINUX_AMD64_BINARY_SHA256=bcbdd2627c3f96e641edec60e3ccf36fc12afa4ffea
 TRUFFLEHOG_ACTION_SHA=31ce31ee1abbcc7dc8eee5764c17121c3044c8b2
 #   Commit of tag v3.99.7 of trufflesecurity/trufflehog (2026-10-24), the
 #   action script the public repository's .github/workflows/ci.yml pins.
-#   secret-scan.yml runs the CLI with the command line this script builds
-#   (git file://, --since-commit, --branch, --fail, --no-update) without its
-#   `docker run` wrapper, because the self-hosted runner has no Docker.
+#   The secret-scan job of ci-gate.yml runs the CLI with the command line this
+#   script builds (git file://, --since-commit, --branch, --fail, --no-update)
+#   without its `docker run` wrapper: it runs the checksum-verified release
+#   binary under `env -i` instead of a container image.
 TRUFFLEHOG_FLAGS=--results=verified,unknown,unverified --exclude-detectors=Lob --fail-on-scan-errors --exclude-paths=.trufflehogignore
 #   `unverified` is added to the contract's --results=verified,unknown by
 #   claude-cto decision on 2026-11-03 (#12682), for the private repository only.
@@ -43,9 +44,10 @@ SEMGREP_VERSION=1.183.0
 #   https://github.com/semgrep/semgrep/releases/tag/v1.183.0
 #   The release has no binary assets; the install comes from PyPI.
 SEMGREP_WHEEL_MANYLINUX_2_34_X86_64_SHA256=f36115c4d0cb43056ceb308273421a2f6a35e055e7e029601e130850f836646e
-#   https://pypi.org/project/semgrep/1.183.0/ (uploaded 2026-10-29). sast.yml
-#   pins all 66 wheels of the dependency closure for CPython 3.12 on x86_64
-#   Linux by SHA-256.
+#   https://pypi.org/project/semgrep/1.183.0/ (uploaded 2026-10-29). The sast
+#   job of ci-gate.yml pins all 66 packages of the dependency closure for
+#   CPython 3.12 on x86_64 Linux by SHA-256, with 76 wheel hashes because some
+#   packages accept more than one wheel.
 SEMGREP_CORE_LINUX_X86_64_SHA256=e19fedac1f7c292522b498a8f8394361e6ed389aeef9dd754c26d181bf3d8460
 #   semgrep-1.183.0.data/purelib/semgrep/bin/semgrep-core inside that wheel
 #   (checked 2026-11-04 after verifying the wheel against the pin above).
@@ -58,14 +60,15 @@ SEMGREP_RULES_COMMIT=16b9e6d45f10649f6a531ec4838ed9924372c3bc
 #   permits scanning one's own code.
 SEMGREP_CONFIGS=python/lang python/correctness python/jinja2 python/jwt python/requests python/sh generic/secrets bash/lang yaml/github-actions yaml/kubernetes
 
-# GitHub actions used by the workflows
+# GitHub actions used by the workflow
 ACTIONS_CHECKOUT=3d3c42e5aac5ba805825da76410c181273ba90b1
 #   actions/checkout tag v7.0.1 (the latest release; rechecked 2026-11-05)
 ACTIONS_SETUP_PYTHON=6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
 #   actions/setup-python tag v7.1.0 (the latest release; rechecked 2026-11-05)
 
-# Bootstrap CI Gate (ci-gate.yml). It also runs the TruffleHog and Semgrep
-# pins above unchanged, and uses no actions besides the two above.
+# Bootstrap CI Gate (ci-gate.yml). Its secret-scan and sast jobs run the
+# TruffleHog and Semgrep pins above, and it uses no actions besides the two
+# above.
 # Upstream checks below were made on 2026-11-05.
 CI_GATE_RUNNER=ubuntu-24.04
 #   GitHub-hosted Ubuntu 24.04 x64 image, https://github.com/actions/runner-images

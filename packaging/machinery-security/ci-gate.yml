@@ -12,9 +12,9 @@
 # - Jobs: Ruff over lu_machinery/ with the source repository's Ruff version and
 #   lint settings (the extracted tree has no Ruff configuration yet); compileall
 #   of lu_machinery on the pinned Python; actionlint (with a pinned ShellCheck) and zizmor (offline) over
-#   .github/workflows/; the TruffleHog secret scan and the Semgrep SAST scan
-#   from secret-scan.yml and sast.yml, redeclared here as hosted jobs with the
-#   same pins, failure handling and redaction.
+#   .github/workflows/; the TruffleHog secret scan and the Semgrep SAST scan.
+#   The secret-scan and sast jobs below are the only definition of each scan
+#   for the machinery repository.
 # - NOT in this bootstrap: importing lu_machinery and running its tests. Both
 #   need the step 8 packaging. Step 8 adds those jobs to `needs` of CI Gate and
 #   to the gate's expected job list in the same change.
@@ -323,9 +323,17 @@ jobs:
         if: always()
         run: rm -rf "$RUNNER_TEMP/zizmor" "$RUNNER_TEMP/zizmor-venv" "$RUNNER_TEMP/zizmor-requirements.txt"
 
-  # From secret-scan.yml: same pins, flags, failure handling and redaction. Added
-  # here: the hosted runner, the scanned commit count and the exclusion
-  # coverage check.
+  # Blocking secret scan with the pinned TruffleHog CLI (pins.txt).
+  # - pull_request and merge_group scan the commits between base and head;
+  #   workflow_dispatch scans the full history of the dispatched ref.
+  # - Verified, unknown and unverified results are reported (pins.txt records
+  #   why). Findings fail the job (exit 183), and so do scanner errors
+  #   (--fail-on-scan-errors), any other non-zero exit, unparsable output and
+  #   results arriving with a zero exit.
+  # - The CLI is the checksum-verified release binary, not a container, run
+  #   with the command line of the pinned upstream action script (pins.txt).
+  # - The job also fails when the range holds no commit, or when the root
+  #   .trufflehogignore is missing or leaves no Python or workflow file in scope.
   secret-scan:
     name: Secret scan (TruffleHog)
     runs-on: ubuntu-24.04
@@ -550,8 +558,24 @@ jobs:
         if: always()
         run: rm -rf "$RUNNER_TEMP/secret-scan" "$RUNNER_TEMP/trufflehog"
 
-  # From sast.yml: same pins, rule configs, failure handling and redaction. Added
-  # here: the hosted runner and the scanned file counts.
+  # Blocking SAST with the pinned Semgrep CE and the semgrep/semgrep-rules
+  # checkout at the pinned commit (pins.txt).
+  # - Rules come only from local directories of that checkout. No registry name
+  #   (p/..., r/..., auto) is used, so nothing is fetched from semgrep.dev and
+  #   metrics stay off. A missing checkout, a commit mismatch or a missing or
+  #   empty rule directory fails the job.
+  # - Findings fail the job (--error, exit 1), and so do scanner errors: any
+  #   other non-zero exit, warning-level errors (--strict), errors in the JSON
+  #   output, unparsable output, results arriving with a zero exit, and a scan
+  #   that covered no Python file.
+  # - Exclusions: Semgrep's built-in ignore list applies while the repository
+  #   has no .semgrepignore (it skips test/, tests/, vendor/, build/, dist/ and
+  #   similar), and files over 1 MB are skipped (Semgrep's default
+  #   --max-target-bytes). prepublication-gate.sh allows exactly these two skip
+  #   reasons and refuses a .semgrepignore anywhere in the history.
+  # - The scanner runs with PYTHONSAFEPATH=1, so no Python module in the
+  #   checkout is imported. Suppressions (.semgrepignore, nosemgrep comments)
+  #   are repository content and are reviewed in the diff, like this workflow.
   sast:
     name: SAST (Semgrep CE)
     runs-on: ubuntu-24.04

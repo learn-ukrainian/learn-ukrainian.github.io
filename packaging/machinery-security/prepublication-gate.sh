@@ -12,9 +12,10 @@
 #   reachable commit and annotated tag object plus every path name, because
 #   the git source reads neither content that only a merge commit introduces
 #   nor annotated tags.
-# - Semgrep CE 1.183.0 runs the configurations that sast.yml lists, from the
-#   semgrep-rules checkout at the pinned commit, over the final tree of every
-#   ref and over every distinct (path, blob) version reachable from the refs.
+# - Semgrep CE 1.183.0 runs the configurations that the sast job of
+#   ci-gate.yml lists, from the semgrep-rules checkout at the pinned commit,
+#   over the final tree of every ref and over every distinct (path, blob)
+#   version reachable from the refs.
 # - Any finding, missing input, scanner error, malformed scanner output or
 #   unclassified skip blocks the push. Raw findings and scanner stderr stay in
 #   the private output directory (mode 0700) and are never printed; the log
@@ -59,8 +60,9 @@ readonly SEMGREP_CONFIGS=(
 # Files the configured languages cover by name. Each one must be scanned or
 # skipped for an allowed reason; generic/secrets also reads other text files.
 readonly SEMGREP_COVERED_NAMES=('*.py' '*.pyi' '*.sh' '*.bash' '*.yml' '*.yaml')
-# Skip reasons that match sast.yml's exclusions: Semgrep's built-in ignore
-# list and its default 1 MB target limit. Any other reason blocks.
+# Skip reasons that match the exclusions of the sast job in ci-gate.yml (see
+# the comment above that job): Semgrep's built-in ignore list and its default
+# 1 MB target limit. Any other reason blocks.
 readonly SEMGREP_ALLOWED_SKIPS='["semgrepignore_patterns_match","exceeded_size_limit"]'
 readonly CLEARANCE_SCHEMA=machinery-prepublication-clearance/v1
 readonly DIGEST_HEADER="machinery-prepublication-gate history-digest v1"
@@ -134,7 +136,8 @@ What scan checks:
     ${SEMGREP_CONFIGS[*]}
     from semgrep-rules $SEMGREP_RULES_COMMIT, over each ref's final
     tree and over every distinct (path, blob) version in the reachable history,
-    with Semgrep's built-in ignore list and 1 MB target limit as in sast.yml.
+    with Semgrep's built-in ignore list and 1 MB target limit as in the
+    sast job of ci-gate.yml.
   Blocks on: any finding; a missing or mismatched scanner, rules commit, rule
   directory or ignore file; a missing ref or object; a shallow, grafted or
   partial clone; a ref that moved during the scan; a non-commit ref target; a
@@ -171,7 +174,8 @@ Exit codes:
 
 Related:
   packaging/machinery-security/pins.txt (pins and their upstream evidence),
-  secret-scan.yml and sast.yml (the repository's own checks after publication),
+  ci-gate.yml (the repository's own checks after publication, including its
+  secret-scan and sast jobs),
   .trufflehogignore (the reviewed exclusions); amendment PUBLIC-1104 item 3.
 EOF
 }
@@ -504,7 +508,7 @@ done < "$work/raw-diffs" > "$work/pairs-unsorted"
 sort -z -u "$work/pairs-unsorted" > "$work/pairs"
 [ "$gitlinks" -eq 0 ] || note_fail_closed "the history has $gitlinks submodule (gitlink) entr(ies) whose content is outside the scan"
 [ "$odd_modes" -eq 0 ] || note_fail_closed "the history has $odd_modes tree entr(ies) with an unknown mode"
-[ "$ignore_files" -eq 0 ] || note_fail_closed "the history has $ignore_files .semgrepignore version(s); exclusions would differ from sast.yml's"
+[ "$ignore_files" -eq 0 ] || note_fail_closed "the history has $ignore_files .semgrepignore version(s); exclusions would differ from the ci-gate.yml sast job's"
 n_pairs=0
 while IFS= read -r -d '' pair; do
   n_pairs=$((n_pairs + 1))
