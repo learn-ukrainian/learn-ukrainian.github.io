@@ -693,3 +693,38 @@ def test_session_supervisor_state_root_ignores_git_redirection(layout: Layout) -
     assert hostile.returncode == 1
     assert "cannot resolve canonical state root" in hostile.stderr
     assert hostile.stdout == ""
+
+
+@pytest.mark.parametrize("via", ["symlinked-checkout", "symlinked-lib-directory"])
+def test_machinery_dir_is_the_physical_package_when_reached_through_a_symlink(tmp_path: Path, via: str) -> None:
+    """Defect class: sourced helpers taken from a symlinked path instead of the physical package.
+
+    A planted environment value is replaced, and the value is readonly once set.
+    """
+    real = (tmp_path / "real").resolve()
+    (real / "scripts" / "lib").mkdir(parents=True)
+    shutil.copy2(REPO / "scripts/lib/launcher_core.sh", real / "scripts/lib/launcher_core.sh")
+    if via == "symlinked-checkout":
+        (tmp_path / "alias").symlink_to(real)
+    else:
+        (tmp_path / "alias" / "scripts").mkdir(parents=True)
+        (tmp_path / "alias" / "scripts" / "lib").symlink_to(real / "scripts" / "lib")
+    core = tmp_path / "alias" / "scripts/lib/launcher_core.sh"
+    result = subprocess.run(
+        [
+            "bash",
+            "-euo",
+            "pipefail",
+            "-c",
+            'source "$1"; source "$1"; printf "%s\\n" "$LC_MACHINERY_DIR"; readonly -p | grep -c " LC_MACHINERY_DIR="',
+            "bash",
+            str(core),
+        ],
+        env=_clean_env(LC_MACHINERY_DIR="/planted"),
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.splitlines() == [str(real / "scripts"), "1"]

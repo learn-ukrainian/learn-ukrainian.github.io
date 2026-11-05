@@ -31,6 +31,10 @@ that read the state root.
 The runtime root is never configured. It is the code that is running, and a re-exec
 from a linked worktree (``scripts/dispatcher/primary.py``) still resolves that code's own
 primary from Git metadata, not from this configuration.
+
+Machinery code finds its own files through :func:`machinery_root` (the package directory
+this module is in, one level below the runtime root) and :func:`machinery_path` (a
+contained, package-relative path under it), never by spelling the package's name.
 """
 
 from __future__ import annotations
@@ -83,6 +87,7 @@ MACHINERY_ENV_VARS = (PRIMARY_ROOT_ENV, GITHUB_SLUG_ENV, STATE_ROOT_ENV, RULES_D
 DEFAULT_GITHUB_SLUG = "learn-ukrainian/learn-ukrainian.github.io"
 RULES_DIR_REL = "agents_extensions/shared/rules"
 RUNTIME_ROOT = Path(__file__).resolve().parents[2]
+_MACHINERY_ROOT = Path(__file__).resolve().parents[1]
 # GitHub owner (alphanumerics and inner hyphens) / repository name.
 _GITHUB_SLUG_RE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}")
 
@@ -227,6 +232,53 @@ def machinery_roots(env: Mapping[str, str] | None = None) -> MachineryRoots:
         rules_dir=rules_dir(env=env),
         interpreter=project_interpreter(env=env),
     )
+
+
+def machinery_root() -> Path:
+    """The machinery package directory: the resolved directory that holds ``common/``.
+
+    It is found from this file's own location, so it names the package wherever the code
+    runs from and whatever the package is called. It is never configured, and it is not
+    the checkout-level runtime root of :func:`machinery_roots`.
+    """
+    return _MACHINERY_ROOT
+
+
+def machinery_path(relative: str) -> Path:
+    """The machinery file or directory at package-relative ``relative``, which need not exist.
+
+    ``relative`` is a trusted, package-relative path such as ``"config/model_catalog.yaml"``.
+    The checks are ``path_safety.safe_join``'s, made stricter: an empty, absolute or
+    NUL-bearing value, and any empty, ``.``, ``..`` or ``:``/``\\``-bearing component, raise
+    ``ValueError``; so does a path whose resolved location leaves :func:`machinery_root`,
+    such as one through a symlink that points outside the package, or one that cannot be
+    resolved (a symlink loop). Unlike ``safe_join`` there is no release live-data exception:
+    a machinery file never resolves outside the package. The returned path is logical
+    (symlinks inside the package are not expanded). This module must load without the
+    package (hooks load it by file; the AGY store contract projects it without
+    ``path_safety.py``), so the checks are inlined rather than imported.
+    """
+    if not isinstance(relative, str):
+        raise TypeError(f"machinery_path takes a str, got {type(relative).__name__}")
+    if not relative or "\x00" in relative:
+        raise ValueError("machinery path must be a non-empty relative path without NUL")
+    if os.path.isabs(relative):
+        raise ValueError(f"machinery path must be package-relative, got absolute {relative!r}")
+    components = relative.split("/")
+    if relative.endswith("/"):
+        components.pop()
+    for component in components:
+        if component in ("", ".", "..") or ":" in component or "\\" in component:
+            raise ValueError(f"machinery path has an invalid component {component!r}: {relative!r}")
+    root = machinery_root()
+    logical = root.joinpath(*components)
+    try:
+        resolved = logical.resolve()
+    except (OSError, RuntimeError) as exc:
+        raise ValueError(f"machinery path {relative!r} cannot be resolved: {exc}") from exc
+    if os.path.commonpath([root, resolved]) != str(root):
+        raise ValueError(f"machinery path {relative!r} resolves outside the machinery package: {resolved}")
+    return logical
 
 
 def main_checkout_root(repo_root: Path) -> Path:

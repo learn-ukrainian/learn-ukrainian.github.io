@@ -1405,8 +1405,10 @@ def _print_status(report: dict[str, object]) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.common.test_slots",
+        prog=f"python {entry}",
         description=(
             "Run a test command inside host-wide test slots, or show who holds and waits for them (#10662).\n"
             "Use it to wrap test commands that start several processes. Dispatch-worker pytest runs and the "
@@ -1415,9 +1417,9 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.common.test_slots run -- .venv/bin/python -m pytest -n 4 -q tests/x.py\n"
-            "  .venv/bin/python -m scripts.common.test_slots run --slots 2 -- bash scripts/some_suite.sh\n"
-            "  .venv/bin/python -m scripts.common.test_slots status --json\n\n"
+            f"  .venv/bin/python {entry} run -- .venv/bin/python -m pytest -n 4 -q tests/x.py\n"
+            f"  .venv/bin/python {entry} run --slots 2 -- bash scripts/some_suite.sh\n"
+            f"  .venv/bin/python {entry} status --json\n\n"
             "Environment: LU_TEST_SLOTS (on|off; default on, off under CI=true), LU_TEST_SLOTS_COUNT (pool size;\n"
             "default half the CPUs rounded down, at least 2), LU_TEST_SLOTS_WAIT_S (default 3600), LU_TEST_SLOTS_DIR.\n"
             "LU_TEST_THREAD_CAP (off preserves native thread settings; otherwise applies native thread caps).\n\n"

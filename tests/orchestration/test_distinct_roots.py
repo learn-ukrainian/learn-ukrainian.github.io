@@ -365,3 +365,34 @@ def test_unset_configuration_keeps_todays_systemd_exec_start() -> None:
 def test_unset_configuration_serves_the_checkout_rules(clean_env, api_client) -> None:
     body = api_client.get("/api/rules?scope=core&format=json").json()
     assert body["markdown"] == (REPO / rules_core.CORE_REL).read_text(encoding="utf-8").rstrip() + "\n"
+
+
+def test_machinery_path_refuses_absolute_traversal_and_escaping_symlink_inputs(monkeypatch, tmp_path: Path) -> None:
+    """Defect class: a package-relative machinery lookup that names a file outside the package."""
+    assert rr.machinery_root() == Path(rr.__file__).resolve().parents[1] == REPO / "scripts"
+    package = (tmp_path / "package").resolve()
+    (package / "config").mkdir(parents=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (package / "escape").symlink_to(outside)
+    (package / "inside").symlink_to(package / "config")
+    (package / "loop").symlink_to(package / "loop")
+    monkeypatch.setattr(rr, "_MACHINERY_ROOT", package)
+    assert rr.machinery_path("config/model_catalog.yaml") == package / "config" / "model_catalog.yaml"
+    assert rr.machinery_path("inside/model_catalog.yaml") == package / "inside" / "model_catalog.yaml"
+    for value in (
+        "/etc/passwd",
+        str(package / "config" / "model_catalog.yaml"),
+        "../outside/x",
+        "config/../../outside/x",
+        "config/..",
+        "./config",
+        "config//x",
+        "",
+        "config/\x00",
+        "escape",
+        "escape/x",
+        "loop/x",
+    ):
+        with pytest.raises(ValueError):
+            rr.machinery_path(value)

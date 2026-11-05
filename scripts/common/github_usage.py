@@ -39,7 +39,10 @@ SCHEMA = (
     "CREATE INDEX usage_at ON usage(at)",
 )
 _REPOSITORY = Path(__file__).resolve().parents[2]
-_GH_ENTRY = "scripts/opsec/gh_entry.py"
+# The ``gh`` shim's entry script, as the repository-relative name ``_script_name`` reports. The
+# machinery package is this file's parent package directory (``repo_root.machinery_root``);
+# workflows check this module out with a minimal file set, so it does not import repo_root.
+_GH_ENTRY = (Path(__file__).resolve().parents[1] / "opsec" / "gh_entry.py").relative_to(_REPOSITORY).as_posix()
 _PYTHON = re.compile(r"python[0-9.]*")
 _SHELL = re.compile(r"bash|dash|sh|zsh")
 _CORRUPT = frozenset({11, 26})

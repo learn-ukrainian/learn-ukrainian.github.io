@@ -9218,21 +9218,6 @@
       "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
     },
     {
-      "path": "scripts/check_issue_task_quality.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/check_issue_task_quality.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/check_issue_task_quality.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
       "path": "scripts/check_review_issues.py",
       "code": "arg-type",
       "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
@@ -14933,21 +14918,6 @@
       "message": "Missing return statement"
     },
     {
-      "path": "scripts/fleet_repos.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/fleet_repos.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/fleet_repos.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
       "path": "scripts/gemini_output.py",
       "code": "arg-type",
       "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
@@ -19056,36 +19026,6 @@
       "path": "scripts/lint/lint_test_assertions.py",
       "code": "union-attr",
       "message": "Item \"With\" of \"AsyncFor | AsyncWith | For | If | While | With\" has no attribute \"orelse\""
-    },
-    {
-      "path": "scripts/lint_ipa.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/lint_ipa.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/lint_ipa.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
-      "path": "scripts/lint_prompts.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/lint_prompts.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/lint_prompts.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
     },
     {
       "path": "scripts/manifest_utils.py",
@@ -29206,21 +29146,6 @@
       "path": "scripts/research/research_quality.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"empty\""
-    },
-    {
-      "path": "scripts/research_quality.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/research_quality.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/research_quality.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
     },
     {
       "path": "scripts/review/budget_grant.py",
