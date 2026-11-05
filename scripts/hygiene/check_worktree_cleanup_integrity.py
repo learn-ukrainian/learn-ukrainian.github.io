@@ -55,7 +55,22 @@ _append_event = _check_primary_integrity._append_event
 _resolve_main_root = _check_primary_integrity._resolve_main_root
 _running_dispatches = _check_primary_integrity._running_dispatches
 
+from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.common.safe_unit_install import InstallError, check_state_paths, load_unit
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mp(relative: str) -> str:
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
 
 LABEL = "com.learn-ukrainian.worktree-cleanup"
 EX_CONFIG = 78
@@ -253,7 +268,7 @@ def check_worktree_cleanup_integrity(
         "ALERT: worktree-cleanup scheduled job is red — "
         f"{'; '.join(reasons)}. NOT repaired (detection only). "
         "From the merged primary on main: "
-        ".venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py install. "
+        f".venv/bin/python {_mp('orchestration/install_worktree_cleanup_launchd.py')} install. "
         f"Evidence preserved under {sdir}/events.jsonl."
     )
 
@@ -264,7 +279,7 @@ def main(argv: list[str] | None = None) -> int:
         "Use for read-only macOS checks; never repairs or reloads launchd.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python -m scripts.hygiene.check_worktree_cleanup_integrity --quiet\n"
+        f"  .venv/bin/python -m {_mod('hygiene', 'check_worktree_cleanup_integrity')} --quiet\n"
         "Outputs: alerts and local telemetry events for red or dark jobs.\n"
         "Exit codes: 0 healthy or not applicable; 1 red, dark or unsafe job.\n"
         "Related: #9894; docs/runbooks/launchd-inventory.md",

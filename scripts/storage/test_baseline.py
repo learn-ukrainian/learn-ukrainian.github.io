@@ -22,6 +22,22 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.repo_root import machinery_root
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 OUTCOMES = {"passed", "skipped", "failed", "error"}
 _OUTCOME_CODE = {"passed": 0, "skipped": 1, "failed": 2, "error": 3}
 _CODE_OUTCOME = {code: outcome for outcome, code in _OUTCOME_CODE.items()}
@@ -352,17 +368,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Capture CI JUnit baselines and compare test IDs across jobs.\nUse at each migration phase; never infer missing CI outcomes from a local run.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.storage.test_baseline capture --junit pytest.xml --job pytest-1 --source-sha abc123 --output baseline.json
-  .venv/bin/python -m scripts.storage.test_baseline compare --old old.json --new new.json --dispositions dispositions.json
+        epilog=f"""Examples:
+  .venv/bin/python -m {_mod('storage', 'test_baseline')} capture --junit pytest.xml --job pytest-1 --source-sha abc123 --output baseline.json
+  .venv/bin/python -m {_mod('storage', 'test_baseline')} compare --old old.json --new new.json --dispositions dispositions.json
 
 Outputs: capture writes deterministic JSON with per-job IDs; compare reports passing additions
 and skipped -> passed improvements (passed -> skipped still needs a disposition).
 Exit codes: 0 means captured or every changed ID is disposed; 1 means invalid input or missing disposition.
 Related: issue #8809, spec v3.3 sections 5 and 8.4.
-Disposition JSON keys: renamed [{old,new}], fixture [{id,fixture}],
-needs_artifact [{id,host_run}]. Jobs may be included for provenance.
-host_run is a JUnit path object {junit:"path.xml"} or a pytest -rA transcript
+Disposition JSON keys: renamed [{{old,new}}], fixture [{{id,fixture}}],
+needs_artifact [{{id,host_run}}]. Jobs may be included for provenance.
+host_run is a JUnit path object {{junit:"path.xml"}} or a pytest -rA transcript
 with PASSED <exact ID> and a summary containing zero failures/errors.""",
     )
     sub = parser.add_subparsers(dest="command", required=True)

@@ -41,6 +41,16 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.repo_root import machinery_path, machinery_root
+
+
+def _mp(relative: str) -> str:
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("mypy_baseline.json")
 SCHEMA = "mypy-ratchet-baseline.v1"
@@ -729,7 +739,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--baseline",
         type=Path,
         default=BASELINE_PATH,
-        help="Baseline JSON (default: scripts/lint/mypy_baseline.json).",
+        help=f"Baseline JSON (default: {_mp('lint/mypy_baseline.json')}).",
     )
     parser.add_argument(
         "--root",

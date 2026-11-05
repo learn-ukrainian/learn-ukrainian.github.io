@@ -16,6 +16,26 @@ from collections import Counter, deque
 from dataclasses import dataclass
 from pathlib import Path
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.repo_root import machinery_path, machinery_root
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mp(relative: str) -> str:
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LITERAL_TEMP = re.compile(
     r"(?<![\w./~])[/](?:(?:private[/]|var[/])?tmp|dev[/]shm)"
@@ -99,107 +119,107 @@ SKIPPED_AST_NODES = frozenset(
 # Remote job hosts have their own exit/signal traps and no local TMPDIR lease.
 ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     (
-        "scripts/agent_runtime/_smoke_pty_agents.sh",
+        _mp("agent_runtime/_smoke_pty_agents.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "bbde142ffb6490869b6843635b499c5891e9209299d5b86c4b000489023caa09:1",
     ),
     (
-        "scripts/agent_runtime/adapters/_template.py",
+        _mp("agent_runtime/adapters/_template.py"),
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702).",
         "2d478c815c365293b10ec511e722c6a22f7736d8cc6be2b3985b1a24ba65e77a:1",
     ),
     (
-        "scripts/agent_runtime/adapters/agy.py",
+        _mp("agent_runtime/adapters/agy.py"),
         "Existing path detection/privacy rule; not a temp directory producer. Expanded checks retain exact legacy fingerprints (#9702).",
         "070742859e9c156f98a28b760fad19ead849323a2ee4d7cb08e2594d990a6930:1 379b0e61e2c2edde93dea6849b152d61faf80670f394b5716d8f0838a4e09282:1 71791fb958d7ff89af03c3548cc42d32b77e66d590797219239c1fc48d693ede:1",
     ),
     (
-        "scripts/agent_runtime/adapters/codex.py",
+        _mp("agent_runtime/adapters/codex.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "ff4085b6369840dac94f3275a55ea3987a1a7fbacb4453523484672c26d88a60:1",
     ),
     (
-        "scripts/agent_runtime/adapters/gemini.py",
+        _mp("agent_runtime/adapters/gemini.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "d61cf614a1d4563709473adf907ddaf1d4b91ef2978797f5c6894aabd4d1fbef:1",
     ),
     (
-        "scripts/agent_runtime/adapters/grok_build.py",
+        _mp("agent_runtime/adapters/grok_build.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "65ac4ffed6e73f13cf2e7b8f0720172cf8d1c26c59849d6fc3d0e56b1e54c165:1 7009f9f12d534bf2226eecf2d0245c59285f4016d25b49f60e30edc23d7b8791:1",
     ),
     (
-        "scripts/agent_runtime/attempt_boundary.py",
+        _mp("agent_runtime/attempt_boundary.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "336a91794a2dd6fc26badabeae0558935c18b7072f9e4aaa73566a0f1d4b85ce:1",
     ),
     (
-        "scripts/agent_runtime/codex_hook_probe.py",
+        _mp("agent_runtime/codex_hook_probe.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "31fcb0ce94467070940aa78ebd4b9696d631c621282b0d2b90385855feb4f801:1 3d65f55d5f0db0ee06d2b17b472f8ada4aec9ba3dd133e7dbc978bd84345a5f8:1 66d6c5cf9813f10c85a1059019205fdf60a501d17bc4c59baf6e734f895cd951:1 a7689df548cbda2b2cf3449fb5a0ea6381755a4b33d98d7152b45b5aaaef23cf:1 bb9fdcd5f0ab4744f878a64288b5a377792450e7aef59663a9af5cfb7b927f74:1",
     ),
     (
-        "scripts/agent_runtime/env_sanitize.py",
+        _mp("agent_runtime/env_sanitize.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "df609e52aff528177c6d4cda7725564ea25af9a2d765f2de916d35d64c00d39f:1",
     ),
     (
-        "scripts/agent_runtime/runner.py",
+        _mp("agent_runtime/runner.py"),
         "Existing path detection/privacy rule; not a temp directory producer. Expanded checks retain exact legacy fingerprints (#9702).",
         "157c5504e246d91fc39c7a97000388fbb49ded2a1e940ab30d4a92310a851018:1 27e2a870d20bcd60a938424c008e9548500d4fdf66554af3ef7e89d14db9e54e:1 5626cf9c36f6c39aa27b49c3c3a28c37bd827034ba92e47f0e39bb9f8b0cf4d9:1 62727a005096ecac61c899e122a56d6728b1ea730538ef7070f6a36f78924ed1:1 a09bdb0bbd6dd2c2efc822b650fd74694f00d2234214ff99883dce2c68b26383:1",
     ),
     (
-        "scripts/agent_runtime/trail_isolation.py",
+        _mp("agent_runtime/trail_isolation.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "01703b3d21d72b6e41b5099d9488db2b7694f1c74d5014049431c6ef16bd837b:1",
     ),
     (
-        "scripts/ai_agent_bridge/_acp_execution.py",
+        _mp("ai_agent_bridge/_acp_execution.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "bea382265465ea02401846d25d95ec489f7027dea9f66e84c2b577b74cc0fcee:1",
     ),
     (
-        "scripts/ai_agent_bridge/_agy.py",
+        _mp("ai_agent_bridge/_agy.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "aa58c8f3fac55b6716c1f17725ea574b98c1740d94fd59e3e0e472a6c32cfdd8:1 eb8a73e39f847acdd103c7e40afa373eea3483b0cd5261a32d9556d4e199134c:1",
     ),
     (
-        "scripts/ai_agent_bridge/_job_host_forward.py",
+        _mp("ai_agent_bridge/_job_host_forward.py"),
         "Remote context; existing exit/signal cleanup traps own these files.",
         "66f0b828ce73cfa521a936ddc20086f876b0339568006cb5c280cad2c7d909df:1 bd9d67583ba97d091f3b3ae74e469afcda27b7119795018bc4f0b456c76a8d6d:1",
     ),
     (
-        "scripts/ai_agent_bridge/_monitor_cache.py",
+        _mp("ai_agent_bridge/_monitor_cache.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "ceff49eeeeabf6388b91f671c47980f648800645c0776ad9db6677928480627e:1",
     ),
     (
-        "scripts/ai_agent_bridge/_review_safety.py",
+        _mp("ai_agent_bridge/_review_safety.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "8c3853ebd61587ba05f106d99f2ad8ebd3904140aa53da1a394913b7d53067c6:1",
     ),
     (
-        "scripts/ai_agent_bridge/_review_worktree.py",
+        _mp("ai_agent_bridge/_review_worktree.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "40b071e6b3f317c938fd82f2e4b3af9d79a7d093110da33ea1271fdfaad92e87:1 d0003d8c19baf7ef0a880863275f9f688e694a54b98fca61e830a23a42356b91:1",
     ),
     (
-        "scripts/ai_agent_bridge/_ui_agy.py",
+        _mp("ai_agent_bridge/_ui_agy.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "21e5a1283de9be881a0d3d4336d1515e78903f155af63effe5a69b6837475f17:1 b4701c89aaedd849e3fa95cd0528de301ec06a6a62b67a8e117ff38ec1240819:1",
     ),
     (
-        "scripts/ai_agent_bridge/_ui_codex.py",
+        _mp("ai_agent_bridge/_ui_codex.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2f0039b6f6f39973b850edc9ae3e5d44e97e867b3100e389e38c31b38ec09fe4:1 86bbaca3bd72d7dce324066bc7911fe0ad32c21af44191bc6e6a6180820c6ed1:1",
     ),
     (
-        "scripts/ai_agent_bridge/openai_proxy.py",
+        _mp("ai_agent_bridge/openai_proxy.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "dc055b00bb74f1636fd2dad29dd5ea4a465530e2f2922d1b73b41b346e797916:1",
     ),
     (
-        "scripts/ai_llm/fallback.py",
+        _mp("ai_llm/fallback.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "d61cf614a1d4563709473adf907ddaf1d4b91ef2978797f5c6894aabd4d1fbef:1",
     ),
@@ -209,17 +229,17 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "ceff49eeeeabf6388b91f671c47980f648800645c0776ad9db6677928480627e:1",
     ),
     (
-        "scripts/api/main.py",
+        _mp("api/main.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "493e9ddc5b962f5aa0af552de2391e379476588e4edda19d063a3da3b48ad127:1",
     ),
     (
-        "scripts/api/opsec_scan.py",
+        _mp("api/opsec_scan.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "50f5927d6114b6c3db54f70bb61068dfd94692452ba74b8cb3d67f071b8ba19f:1",
     ),
     (
-        "scripts/api/release_snapshot.py",
+        _mp("api/release_snapshot.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:1",
     ),
@@ -359,7 +379,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "0edeb3ce1bd445cd16d89434ba41aedc818f7cb3170c1d14445d68bdfad6d597:1 49c6d40642d698c2220cc73d6de4541e02573cf01ee6d3fd1757e764e83b0809:1 6cfe1bfb2382413cd9e03c81a7fec3bb3c18f74b450eb004f7fc505dc47c890e:1 a2c31804b5481240afd8190574e473eb1219e2218060d2effc6bf9e6331c1e84:1 ce79491850f4dd9f295c47e4e40baab9d9a83d78a3325e1b366fc0e4e2e1f4da:1",
     ),
     (
-        "scripts/bakeoff/score_b1_writer_output.py",
+        _mp("bakeoff/score_b1_writer_output.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "7e4dae9e05d91e209210e7d12286a64aa57328d5f6bd745818f2ad381923f982:1",
     ),
@@ -419,48 +439,48 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "567d1a2ce94560555e9c9d48358ee767614a812487e939051f188416967ac4f2:1 a4b24ada95971b11223fe6969f2f981509c635e03415ebcc849f4f44a5a69937:1",
     ),
     (
-        "scripts/ci/components.py",
+        _mp("ci/components.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "b2b6de688b012b416c9798b4fcb3a0557a8c4817750ba5c4b2155f8134050fc1:1",
     ),
     (
-        "scripts/ci/cursor_cloud_full_pytest.sh",
+        _mp("ci/cursor_cloud_full_pytest.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "afa3da731cde6c7643e80f802690aaa2b564113125b1fc3c4e9b45ee570bb7bf:1",
     ),
     (
-        "scripts/ci/data_tier.py",
+        _mp("ci/data_tier.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "775208f8feb1fc5c7f37b3bc5e78a7170b870f112c25ed1ba44bf1d4d3234e17:1",
     ),
     (
-        "scripts/ci/flake_ledger.py",
+        _mp("ci/flake_ledger.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "85f11b303a50dcd9aac967a500d1f85731477fac5e094cc53dec22ef5bb4af79:1",
     ),
     (
-        "scripts/ci/split_tests.py",
+        _mp("ci/split_tests.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:1",
     ),
     (
-        "scripts/common/github_client.py",
+        _mp("common/github_client.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:2",
     ),
     (
-        "scripts/common/pytest_scratch.py",
+        _mp("common/pytest_scratch.py"),
         "Read-only sandbox fallback: a fresh 0700 directory under TMPDIR, else shared memory, when the shared "
         "scratch root cannot be written (#11317).",
         "7cae75542a9198566a8b0ab24d2d419fc1076e026764e18f632d7aa8fd8c4456:1",
     ),
     (
-        "scripts/common/scratch.py",
+        _mp("common/scratch.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "734d70dd80103658a3af0240c447c005c3a42aaba07220515eebba41e0b00cee:1 b839113a6d989306201fbcf9450dc67ebf118a950c7b8f5e6976dfe548f3f229:1",
     ),
     (
-        "scripts/common/task_scratch.py",
+        _mp("common/task_scratch.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "89b2ddf4ee70bdcd40872ec1807535fb3941fcbf3d7ff8dc30b557e44716a963:1",
     ),
@@ -505,12 +525,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "3e5ac5ff259db1b3a45b6b8a6e7f84c45befc97735a9e9ccdb5fdf422516ba07:1 52ccec40c03ecc9d1cb4496aff26984b804654b3354e3b26ed667fc9a3ad47e6:1 683bc12f9222df18c0caf3302ebeff8f35778ff07374307eceedf5dad19e291a:1",
     ),
     (
-        "scripts/deploy_codex_home.py",
+        _mp("deploy_codex_home.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "8fa4be117c429a9cce308b0e6e13d918871de83e437d699c8d68b154ed95e23a:1",
     ),
     (
-        "scripts/deploy_prompts.sh",
+        _mp("deploy_prompts.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "3c5471bf57ce54b688cc0d43fe7eb378f6cab5d98f4ba088a634e81f41b0e877:1",
     ),
@@ -525,17 +545,17 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "f468a21d19528114d762d72ca95814a9a4f6c36b0056bd34b2d1b5147a0663ef:1",
     ),
     (
-        "scripts/fleet/ignored_task_output.py",
+        _mp("fleet/ignored_task_output.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "07cf0a83874fe534719152f1a60cfd070ffda392d9c49b2b1ffeb4c31d03e314:1",
     ),
     (
-        "scripts/fleet/sibling_git.py",
+        _mp("fleet/sibling_git.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "026eadbac42cb1f329a6c3801ab70634ae52edf4f5b1eb648fd000e5e47713de:1 aee6946c6a992d9451a6b5c5a42cd42c4c5a25a3f3b50ddfd147690b58b09e62:1",
     ),
     (
-        "scripts/fleet/terminal_abandon.py",
+        _mp("fleet/terminal_abandon.py"),
         "Same-directory manifest (#10594) and detached-bundle (#10624) staging for batch_state validation "
         "before atomic os.replace; managed scratch helpers allocate outside the preservation parent. "
         "Exclusive tempfile creation and finally cleanup retain existing digest-copy ownership.",
@@ -543,12 +563,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "f13f80d80757a114fe3aa614b3a23b5a2a00a66cca06151dffd8cef5be4100f9:1",
     ),
     (
-        "scripts/fleet_comms/artifacts.py",
+        _mp("fleet_comms/artifacts.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "d2890a23d18c5e0e8a4e48c1f15eb999b4f633191b82bf7ae1cb0d56b9f0bd58:1",
     ),
     (
-        "scripts/fleet_comms/cli.py",
+        _mp("fleet_comms/cli.py"),
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702).",
         "5caaa57aef52cbd95255244af892939f3ab92dad4e07eca0bc94a5584c4f8a17:1",
     ),
@@ -558,12 +578,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "4c64dcfc00853598399469b30d558cf6365d315319f9cc68898b81b5ba9cf17d:1",
     ),
     (
-        "scripts/hygiene/check_tmp_usability.py",
+        _mp("hygiene/check_tmp_usability.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "68879d7367a938c34b0396a745974e853a597e2f89258e57cfefcfb97ce5db65:1 68ea47e29cd51c13df5b21d939e71e98ac2fb884722139765f33fd12d668d454:1 90fb6be782315eaedfd593db7baf663eb9c2322e8da931b4ede84609316533b9:1",
     ),
     (
-        "scripts/hygiene/tmp_sweep.py",
+        _mp("hygiene/tmp_sweep.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "62994ee11e00aedb27e76607a22fc811aff6008d382f7dbb1aafd4b53d6510a4:1 68782b0f7a4aebb35242cb39273aad586a90a9a8d31b656c94cc747028f90ec8:1 71270c137767b302f78cffaac26b75d61fbf6997cd0a39a78b043f0f52ac4e89:1 f04e9756d512b56fe969cc26bb7c4b6215728d3491dc1eb7af534b9322ec92f6:1",
     ),
@@ -693,42 +713,42 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "15b74063857626b6999f5c31494e0c58d053773ed30c039d615276a99869f109:1 1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 47665105f277df7bf89515cf27d28719e03ab749bbc8495d78f2a27ba0dc921a:1 90ceaa68e89230e057ee91ba763cb83cb34fd94808ab4b22e325d8ebf0ad6978:1",
     ),
     (
-        "scripts/lib/deploy_extensions.sh",
+        _mp("lib/deploy_extensions.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "1a078f1e92aa553b0c8551e1504e20c7763848768e2d30c1849299358a2c39f0:1 28435ee717f4fec4b3eb74041537f3c4b0e3e57bf75e8923f9b87d09d3850578:1",
     ),
     (
-        "scripts/lib/driver_scope.sh",
+        _mp("lib/driver_scope.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "3a551725531996d814535301069877e169a7e0f9c86164341e602d1f2efa1b43:1",
     ),
     (
-        "scripts/lib/kimi_coding_oauth.py",
+        _mp("lib/kimi_coding_oauth.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "3a92568d336a6660762078817766d04a8bfda2a366d3eba2ebf0a3120d1e9dc0:1 e16020d500f2e1ce9c24902d87f88dc43af3a93da51c578d58863650071e7432:1",
     ),
     (
-        "scripts/lib/launcher_core.sh",
+        _mp("lib/launcher_core.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "d0f7f69348d794fbcb1386a7000fda2078482a089ebabc1790809c4bbe398ee2:3",
     ),
     (
-        "scripts/lib/profile_resolver.sh",
+        _mp("lib/profile_resolver.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2e76b29fcf264565d28db8b51deb4e973a9784a416c3ffbd1644456c38350b5d:1 b7bef2fe62310b810aad578634836b08a09f128cd5b46c82f7a6ac3badb0f824:1",
     ),
     (
-        "scripts/lib/rules_core.sh",
+        _mp("lib/rules_core.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "fffd60be46c1718004db9e44356b17be805e39cdcde98323a3b50b0239638d2e:1",
     ),
     (
-        "scripts/lib/session_supervisor.sh",
+        _mp("lib/session_supervisor.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "3a551725531996d814535301069877e169a7e0f9c86164341e602d1f2efa1b43:2",
     ),
     (
-        "scripts/maintenance/claude_session_scratch.py",
+        _mp("maintenance/claude_session_scratch.py"),
         "Existing temp inventory/cleanup tooling; migration tracked in #9702.",
         "7f2d2173e4933e843a43a0d57cbf3a2ee3933a11be752269752428cc02552b1d:1 c649da8e164c7a8b68f692304b79d5ac74bcc3db2258511744721e904522d49d:1",
     ),
@@ -743,106 +763,106 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "5ecb3be0f0bd0b487c9a078f0a13a31b9e03b367b0e07a735ab6a9386ea9b802:1",
     ),
     (
-        "scripts/ops/smoketest_bridge_stdout_only.sh",
+        _mp("ops/smoketest_bridge_stdout_only.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "74102d52c8618aa51f6c938599b82c72d49e9ad44ddbba1e56811d78b64d1352:1 9584123907dfa5d3d51e321bd88a09011133916fa8085cfa4c5130de96e3cf9f:1",
     ),
     (
-        "scripts/opsec/git_push.py",
+        _mp("opsec/git_push.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:1",
     ),
     (
-        "scripts/orchestration/claudex_supervisor.py",
+        _mp("orchestration/claudex_supervisor.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "e482bf84ac2d965f49751eaaa8e73e974e0f141ce6fcd9d43773b12716fa70a9:2",
     ),
     (
-        "scripts/orchestration/codex_transport_health.py",
+        _mp("orchestration/codex_transport_health.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "72d31d3e0b8eee72b268dd5163f03f775de89bdb8f2ed40fab3c5325ce30b71b:1",
     ),
     (
-        "scripts/orchestration/dispatch_isolation.py",
+        _mp("orchestration/dispatch_isolation.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:1",
     ),
     (
-        "scripts/orchestration/install_backup_timer.py",
+        _mp("orchestration/install_backup_timer.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "da47170feba9b27f39517670475e7ac18cbd19d899099dac53904f3bc2bd6575:1",
     ),
     (
-        "scripts/orchestration/install_data_tier_timer.py",
+        _mp("orchestration/install_data_tier_timer.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "160032b82aedcb2e4da07d504500f6e23fa3fe1cd7b040e941ab79de0af3360c:1",
     ),
     (
-        "scripts/orchestration/issue_stream_audit.py",
+        _mp("orchestration/issue_stream_audit.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702. "
         "publish_cache stages its atomic os.replace in the cache's own directory and unlinks it (#10793).",
         "190bf8f61e9cdcfae7b5495b37b89ef5dcee3c2ba1e12ed4aa6faf8f4f250465:1 "
         "8640cf7f0d0116eec5bc28feaf76e1e70769ffd900775c0ba583c1b91735f6d3:1",
     ),
     (
-        "scripts/orchestration/job_host_exec.py",
+        _mp("orchestration/job_host_exec.py"),
         "Remote context; existing exit/signal cleanup traps own these files. Expanded checks retain exact legacy fingerprints (#9702).",
         "1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 27aa61ac8f66a6b34cfed0dd8cf8e12e93aeb31cdea4813f6f09c6062576c8fa:1 3569f08b00e9114418242100f1b22462198be378022613efeef593b3ff6fd02e:1",
     ),
     (
-        "scripts/orchestration/red_ci_known_failures.py",
+        _mp("orchestration/red_ci_known_failures.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "6fc1251070848cb64ab73fce1f4d6fbe71bda1e8ace49bd1d5c2d933895f9f64:1",
     ),
     (
-        "scripts/orchestration/run_scheduled_backup.sh",
+        _mp("orchestration/run_scheduled_backup.sh"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "118d177d0ada209f9a9ddcfa00ebb99bfd900c07c176472d151ddc55615c246b:1 18fccc03f78bdd2232d842266ac496c5f8d25cf5b6427a8a2047bcaba19bb394:1 38cc41a12e748996c6eaa46fbf21404aa86957e9f05a3187d0a7b8bae6b7054a:1 7bf902c111b2ba180154459ba20e3e48d4ba892fb4f4cfc837af6bed6bac932d:1",
     ),
     (
-        "scripts/orchestration/safe_git_context.py",
+        _mp("orchestration/safe_git_context.py"),
         "TemporaryDirectory uses caller-supplied temp_root; mkdtemp is nested under that directory. "
         "Both producers are cleaned in __exit__ (#10931).",
         "c7f063a156b2bbdaf8c2b495fbcd710fa830943229aefac0374f0c5ae1ddf081:1 "
         "f818768d90cbaa8d857ef53c4b59c06fbc238580cf5f5f581073fa2b8ace0a21:1",
     ),
     (
-        "scripts/orchestration/scheduled_worktree_cleanup.py",
+        _mp("orchestration/scheduled_worktree_cleanup.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "8a49e7f855f6235992a2b3f7987f233d29ec00a16be2c1d9524ec46172db1b0b:1",
     ),
     (
-        "scripts/orchestration/session_markers.py",
+        _mp("orchestration/session_markers.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "bdc12da7c1a1cacb60552bd2d04a868c7b6bd05260b38b3e1bb18b1aba442143:1",
     ),
     (
-        "scripts/orchestration/task_family/git_safety.py",
+        _mp("orchestration/task_family/git_safety.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "e482bf84ac2d965f49751eaaa8e73e974e0f141ce6fcd9d43773b12716fa70a9:1",
     ),
     (
-        "scripts/orchestration/task_family/storage.py",
+        _mp("orchestration/task_family/storage.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "e482bf84ac2d965f49751eaaa8e73e974e0f141ce6fcd9d43773b12716fa70a9:2",
     ),
     (
-        "scripts/orchestration/task_lifecycle.py",
+        _mp("orchestration/task_lifecycle.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "0da86b958be6edc6c52b22b808308b79e953eb50667247079c3957349c6ee252:1",
     ),
     (
-        "scripts/orchestration/tmp_leak_sweep.py",
+        _mp("orchestration/tmp_leak_sweep.py"),
         "Existing temp inventory/cleanup tooling; migration tracked in #9702. Expanded checks retain exact legacy fingerprints (#9702).",
         "599560e7b81b3cf50ff1dd25e273f5e6bb4350f5ee283a230971326dc28d442e:1 8ed7036da011b956010e72215eaf8552127d32872e66a4a73871a41ba1744245:1 a7ed122ad42ceb013420dcde9f53af08e03d42fac049f375bc62a5d05fb39ada:1 f18c6c9fec60b901e4149456bdaebeeb7651baeee96f8df7b177c198ef96e839:1",
     ),
     (
-        "scripts/orchestration/worktree_artifacts.py",
+        _mp("orchestration/worktree_artifacts.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "4c3503ba9ca216639ef3a294976dfcee2b8daabcb3249fca813b087ef39194ce:1",
     ),
     (
-        "scripts/path_safety.py",
+        _mp("path_safety.py"),
         "Path detector: the host tmux socket directory the delete guard refuses (tmux's system-temp fallback).",
         "11dbdae01fba30c122ef54ba0be76454d6797aa4f60f90fc56d30390a2efe991:1",
     ),
@@ -1387,7 +1407,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "db25448c4b9d1e16f78a9ca6998674ef77ac330e64bc9ecc868c57d5f8ac6a32:1",
     ),
     (
-        "scripts/publish/github.py",
+        _mp("publish/github.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "dbaab3a0aaf4b0a051af47bab8ab694314213bad42497d182de9ac3964655760:1 fb991a7e78a72dd5b15e04f358c2dfd36240f012aa15761c12cde7daf16ad059:1",
     ),
@@ -1437,12 +1457,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "19885884b91924ff86ca0793c946ea8cffffdbade930b20ae0bad38c2e317a42:1",
     ),
     (
-        "scripts/review/closeout_cli.py",
+        _mp("review/closeout_cli.py"),
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702).",
         "b3aa9a5d42617c0b68719c98f3fb48d2bf30b2aebbc3b71ba0ae3b0746329db8:1",
     ),
     (
-        "scripts/review/isolation.py",
+        _mp("review/isolation.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "0c4a24a5b2217cc910dd3a8f10d2885b296c5057b1d9f7ee569ad8d7c9c126c8:2 1399a12817031f99c9e5baf31b8ec41de26895f8775004dffb7cca51e19e8ed5:1 50f5927d6114b6c3db54f70bb61068dfd94692452ba74b8cb3d67f071b8ba19f:1 7adf98a094d640e98a114fbecaf18d76685206b5b43a1c57ba7bdf54601af8d7:1 80bcc2b818fbf35f7701fc734548e4b25b33100a670ad437dd02b0a5bfc5f2f1:1 b6e8214926c174fc8840f66ddf361629ae9c5f419f1ff7d506632af5c6956d75:1 c3e429c871ac7222790902c626bc5e793892258e58d37d19eb454233e062a785:1 d5fc1eb24e8bbab559bafaf7ac43f736a99350fb3734e2f51aaa8c46f1146113:1 de34243d9b85056a2d8d885f11d4970101fe6fe6fb75baffd2a26625b0c25e3e:1",
     ),
@@ -1452,12 +1472,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "36248c4de2a67026e213c4b9c9467ec5e62a7410f9fde1054d0cae98c046afd2:1 69fd712f2a2715265a9f6d8b775c4bc8cd79887e4ed238960ec00d9ace05baf6:1",
     ),
     (
-        "scripts/review/record_cf_verdict.py",
+        _mp("review/record_cf_verdict.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "080c9905699287f19da9efeddb4554ac15a67d1da6550a5a8f670aa951ddf735:1",
     ),
     (
-        "scripts/review/seeds/manifest.py",
+        _mp("review/seeds/manifest.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "8a49e7f855f6235992a2b3f7987f233d29ec00a16be2c1d9524ec46172db1b0b:1",
     ),
@@ -1467,27 +1487,27 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "51280e7b85ce3602ad9f74ff35902664ac5c419e5970309331dd90bcf18c33b5:1 8a49e7f855f6235992a2b3f7987f233d29ec00a16be2c1d9524ec46172db1b0b:1",
     ),
     (
-        "scripts/review/snapshot.py",
+        _mp("review/snapshot.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:1 28aed85a91948e6dd80f12190d70504ca4184939f8340da27a27e0b4550641fc:1",
     ),
     (
-        "scripts/storage/artifacts.py",
+        _mp("storage/artifacts.py"),
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
         "5463af4fb2b73991e76b5e211403bdaf04d97813e1f3db8ab01853459c3e6dae:1 6872c6f40a0d28e1e45ac21457f6f8cb21877564cbbeb4571d6300fdbcfe9000:1 6db0dc5cb067379ddf46e6e671b0c1156648bc2fc0b14c2d60e8623cbe6d8caa:2 7c04326230eb9f14f45d886e4c20be927c2a43dd057153afafa96777ad76ff3c:1 8876f45fa2c4ca7c3b980c4434d042d6826637cc6ebf9b1ec0299911ab23aa6e:1 bedf9f2066a6c83a44aad2e8351953b0dc5795afcf0e5c90d343919a7518da86:2 cf16324e1d49563de02f3f93814b70da371b6174ec5edd79d4d0d51ecfc24fe6:1 dacc78f94ff3dea2b3218c26a80de645b748551b2b997781ca845839bde854cb:2 f70dbcd33477f87413a5a6c7ea47859602ac1f65a2bf9c48eec4439a8007dc10:1",
     ),
     (
-        "scripts/storage/build_classification_table.py",
+        _mp("storage/build_classification_table.py"),
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
         "1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 6d5be74edda0bef1c874b37524180a9d00e74786df83c224eeb3f0886d1eddb0:1 de38a4b3d27869748216e8d8b2b660b8a1fab17ddb59a80dc44d7689f7f26715:1",
     ),
     (
-        "scripts/storage/install_data_volume_dropins.py",
+        _mp("storage/install_data_volume_dropins.py"),
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702).",
         "555147d6feaab79ab3052f2cc60928944aa8adfd6f9a30beff6b67a8fee2da8f:1",
     ),
     (
-        "scripts/storage/paths.py",
+        _mp("storage/paths.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "32a439e034e2413660306849879079698906485d55b251cee04fdaa6288b5f87:1",
     ),
@@ -1497,7 +1517,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "52af38f6251f9e39cb674f363f5e0652ead9f8bb8f24b4079121eaf28b686d80:1",
     ),
     (
-        "scripts/tools/analyze_dead_code.py",
+        _mp("tools/analyze_dead_code.py"),
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702).",
         "52652b6d0a20d65322c20815f487b7b711c635229463d4251d6a7b8a9f1e2f03:1",
     ),
@@ -1507,12 +1527,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "c5a34065e28c708b3a82f5dc06a894600feed4833a04fae2b126166246943b43:1",
     ),
     (
-        "scripts/tools/coverage_report.py",
+        _mp("tools/coverage_report.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "a4b24ada95971b11223fe6969f2f981509c635e03415ebcc849f4f44a5a69937:1",
     ),
     (
-        "scripts/tools/detach_session_task.py",
+        _mp("tools/detach_session_task.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "7757667a47ea473867ae48f130b8db264eb7f91b334a4bf1b72a680db1eb0ff1:1",
     ),
@@ -2613,7 +2633,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Flag literal system-temp paths and unmanaged tempfile/mktemp calls outside the counted allowlist.\nUse before review; worker scratch belongs under the managed TMPDIR lease.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths --repo .\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths scripts/a.py tests/b.py\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths --changed-from origin/main\nOutputs: source locations, counted fingerprints and remediation; no writes or literal path contents.\nExit codes: 0 clean; 1 findings; 2 invalid arguments or source read/parse error.\nRelated: #8755; workflow.md; scripts.hygiene.lint_raw_rm_rf.",
+        epilog='Examples:\n  .venv/bin/python -m ' + _mod("hygiene", "lint_tmp_paths") + '\n  .venv/bin/python -m ' + _mod("hygiene", "lint_tmp_paths") + ' --repo .\n  .venv/bin/python -m ' + _mod("hygiene", "lint_tmp_paths") + ' scripts/a.py tests/b.py\n  .venv/bin/python -m ' + _mod("hygiene", "lint_tmp_paths") + ' --changed-from origin/main\nOutputs: source locations, counted fingerprints and remediation; no writes or literal path contents.\nExit codes: 0 clean; 1 findings; 2 invalid arguments or source read/parse error.\nRelated: #8755; workflow.md; ' + _mod("hygiene", "lint_raw_rm_rf") + '.',
     )
     parser.add_argument(
         "--repo", type=Path, default=REPO_ROOT, help="Repository to scan (default this checkout; example .)."
@@ -2657,7 +2677,7 @@ def main(argv: list[str] | None = None) -> int:
             'Fix producers: use "$TMPDIR/..." in shell or '
             "tempfile.TemporaryDirectory()/NamedTemporaryFile() in Python with explicit dir= from the managed lease. "
             "For a fixture, path detector, or deferred legacy use, add/update ALLOWLIST in "
-            "scripts/hygiene/lint_tmp_paths.py: (repository-relative path, specific reason "
+            f"{_mp('hygiene/lint_tmp_paths.py')}: (repository-relative path, specific reason "
             "citing a follow-up issue such as #9702, counted fingerprint shown above). "
             "Merge the fingerprint into the file's existing entry; the number is the maximum "
             "allowed count of that exact stripped line or complete producer call, never a whole-file exemption."

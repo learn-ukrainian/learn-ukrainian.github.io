@@ -21,8 +21,23 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import machinery_path, machinery_root, resolve_repo_root
 from scripts.common.task_scratch import mount_points
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mp(relative: str) -> str:
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
 
 SCHEMA = "batch-state-retention.v1"
 EXCLUDED = frozenset({"tasks", "preserved", "reports", "branch-archive"})
@@ -221,12 +236,12 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.hygiene.batch_state_retention\n"
-            "  .venv/bin/python -m scripts.hygiene.batch_state_retention --json --stale-days 14\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'batch_state_retention')}\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'batch_state_retention')} --json --stale-days 14\n"
             "Outputs: stdout table (or --json); no files written, nothing deleted.\n"
             "Exit codes: 0 report complete; 1 some directories could not be scanned; "
             "2 invalid arguments or malformed retention list.\n"
-            "Related: #9737; scripts/hygiene/batch_state_retention.json; docs/runbooks/tmp-retention.md."
+            f"Related: #9737; {_mp('hygiene/batch_state_retention.json')}; docs/runbooks/tmp-retention.md."
         ),
     )
     parser.add_argument(
@@ -238,7 +253,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--retention-list",
         type=Path,
         default=RETENTION_LIST,
-        help="Evidence-retention list (default scripts/hygiene/batch_state_retention.json).",
+        help=f"Evidence-retention list (default {_mp('hygiene/batch_state_retention.json')}).",
     )
     parser.add_argument(
         "--stale-days", type=float, default=7, help="Days without any write before a directory is stale (default 7)."

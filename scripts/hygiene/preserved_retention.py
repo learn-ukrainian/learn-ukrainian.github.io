@@ -18,10 +18,22 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
+from scripts.common.repo_root import machinery_root
 from scripts.common.task_scratch import ContainmentError, _remove_invocation_dir, fd_mount_id
 from scripts.fleet import ignored_task_output, pr_identity
 from scripts.hygiene.batch_state_retention import default_batch_root
 from scripts.orchestration.worktree_git import _TERMINAL_DISPATCH_STATUSES
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
 
 RELEASE_AGE_DAYS = 3
 
@@ -390,7 +402,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Delete direct preserved task entries with verified times older than 3 days.\nUse --expire-older-than-hours N for age-only residue expiry without proof rules.\nDefault evidence retention keeps unknown times and live tasks. Default: DRY-RUN.\nOrdinary manifests need old ISO 8601 preservation times; held/pinned entries need terminal task identity, old finished_at and read-only or pushed/landed proof.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.preserved_retention\n  .venv/bin/python -m scripts.hygiene.preserved_retention --apply\nOutputs: one JSON-line receipt per entry under batch_state/reports/; one stdout summary.\nMissing explicit keep-lists refuse all deletion. An absent default is empty only in dry-run; --apply refuses it unless --allow-empty-keep-list is passed.\nOnly --apply deletes; Git ancestry checks are local and PR probes are read-only. Receipts include lstat bytes and typed release reasons.\nExit codes: 0 scan complete (skips allowed); 1 I/O/deletion error or unreadable keep-list; 2 invalid arguments/configuration.\nRelated: C-2428; docs/runbooks/tmp-retention.md. Without backstop, unknown provenance is kept; RELEASE_AGE_DAYS configures held/pin age (default 3 days).",
+        epilog='Examples:\n  .venv/bin/python -m ' + _mod("hygiene", "preserved_retention") + '\n  .venv/bin/python -m ' + _mod("hygiene", "preserved_retention") + ' --apply\nOutputs: one JSON-line receipt per entry under batch_state/reports/; one stdout summary.\nMissing explicit keep-lists refuse all deletion. An absent default is empty only in dry-run; --apply refuses it unless --allow-empty-keep-list is passed.\nOnly --apply deletes; Git ancestry checks are local and PR probes are read-only. Receipts include lstat bytes and typed release reasons.\nExit codes: 0 scan complete (skips allowed); 1 I/O/deletion error or unreadable keep-list; 2 invalid arguments/configuration.\nRelated: C-2428; docs/runbooks/tmp-retention.md. Without backstop, unknown provenance is kept; RELEASE_AGE_DAYS configures held/pin age (default 3 days).',
     )
     parser.add_argument("--batch-root", type=Path, help="State root (default: primary checkout batch_state; example fixture/batch_state).")
     parser.add_argument("--keep-list", type=Path, help="Plain entry names, one per line (example keep.txt; default: batch_state/preserved-keep.txt). Explicit paths must be readable. An absent default is empty in dry-run; apply requires --allow-empty-keep-list.")

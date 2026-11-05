@@ -36,12 +36,28 @@ GATE5_TARGET_DAYS = 7
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.common.repo_root import machinery_path, machinery_root
 from scripts.hygiene.lane_disk_retention import (
     scan_dispatch_worktrees,
     scan_home_session_hints,
 )
 from scripts.orchestration.worktree_git import primary_checkout_root, resolve_repo_root
 from scripts.path_safety import assert_delete_target
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mp(relative: str) -> str:
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -380,13 +396,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Write a dry, digest-stamped retention plan from the lane disk scanner; it never mutates.\n"
-            "Use for dispatch-worktree retention evidence; not for temp scratch (use scripts.hygiene.tmp_sweep)."
+            f"Use for dispatch-worktree retention evidence; not for temp scratch (use {_mod('hygiene', 'tmp_sweep')})."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/hygiene/retention_engine.py plan\n"
-            "  .venv/bin/python scripts/hygiene/retention_engine.py latest\n"
+            f"  .venv/bin/python {_mp('hygiene/retention_engine.py')} plan\n"
+            f"  .venv/bin/python {_mp('hygiene/retention_engine.py')} latest\n"
             "Outputs: plan writes plan-<stamp>-<digest>.json, latest.json and the Gate 5 observation log under "
             "--plan-dir; every subcommand prints JSON to stdout.\n"
             "Exit codes: 0 success; 2 invalid usage.\n"

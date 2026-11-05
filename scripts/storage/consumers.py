@@ -17,6 +17,22 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.repo_root import machinery_root
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 CLASSIFICATION = Path("registry/artifacts/classification-v1.tsv")
 
 # These names are intentionally listed and emitted for phase review. Generic
@@ -343,9 +359,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Scan tracked code for literal phase paths and known dynamic path bases.\nUse before each migration phase to enumerate consumers for review and executed checks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.storage.consumers scan --phase P1
-  .venv/bin/python -m scripts.storage.consumers scan --phase P2 --repo-root /path/to/checkout
+        epilog=f"""Examples:
+  .venv/bin/python -m {_mod('storage', 'consumers')} scan --phase P1
+  .venv/bin/python -m {_mod('storage', 'consumers')} scan --phase P2 --repo-root /path/to/checkout
 
 Outputs: registry/artifacts/consumers-<phase>.tsv with artifact, consumer, and empty check columns.
 Exit codes: 0 means the scan completed; 1 means Git or classification input failed.

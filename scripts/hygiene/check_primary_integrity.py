@@ -49,10 +49,26 @@ from pathlib import Path
 from typing import Any
 
 try:
+    from scripts.common.repo_root import machinery_path, machinery_root
     from scripts.common.safe_unit_install import InstallError, install_unit, open_state_log
 except ModuleNotFoundError:  # direct file-path invocation
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.common.repo_root import machinery_path, machinery_root
     from scripts.common.safe_unit_install import InstallError, install_unit, open_state_log
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mp(relative: str) -> str:
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
 
 # Git commit hooks inject GIT_DIR / GIT_INDEX_FILE / etc. into the environment.
 from scripts.orchestration.task_record_store import read_task_record
@@ -440,11 +456,11 @@ def main(argv: list[str] | None = None) -> int:
         "Use for attachment checks; repair requires an explicit --fix and a safe, idle checkout.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python -m scripts.hygiene.check_primary_integrity --quiet\n"
-        "  .venv/bin/python -m scripts.hygiene.check_primary_integrity --fix\n"
+        f"  .venv/bin/python -m {_mod('hygiene', 'check_primary_integrity')} --quiet\n"
+        f"  .venv/bin/python -m {_mod('hygiene', 'check_primary_integrity')} --fix\n"
         "Outputs: local telemetry state and events; --fix may reattach a safe detached HEAD.\n"
         "Exit codes: 0 healthy or safely repaired; 1 unrepaired drift.\n"
-        "Related: #9894; scripts/hygiene/check_worktree_cleanup_integrity.py",
+        f"Related: #9894; {_mp('hygiene/check_worktree_cleanup_integrity.py')}",
     )
     parser.add_argument(
         "--fix",

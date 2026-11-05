@@ -38,12 +38,24 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
 from scripts.common.jsonl import jsonl_lines, physical_lines
+from scripts.common.repo_root import machinery_root
 from scripts.common.scratch import ensure_scratch_root
 from scripts.orchestration import worktree_git as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
 from scripts.orchestration.task_record_store import read_task_record
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 from scripts.storage import topology as storage_topology
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
 
 AGENTS = frozenset({"codex", "claude", "grok", "agy", "kimi", "cursor", "deepseek", "gemini", "glm"})
 PROTECTED = frozenset({"main", "master", "gh-pages", "production"})
@@ -2093,7 +2105,7 @@ def _record_relocation(repo: Path, name: str, checksum: str, size: int, source: 
         "bulk_source": source,
         "bundle": name,
         "event": "bundle-relocated",
-        "restore": f"python -m scripts.hygiene.branch_sweep --restore-bundle {shlex.quote(name)}",
+        "restore": f"python -m {_mod('hygiene', 'branch_sweep')} --restore-bundle {shlex.quote(name)}",
         "sha256": checksum,
         "size_bytes": size,
     }
@@ -2256,9 +2268,9 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.hygiene.branch_sweep --json\n"
-            "  .venv/bin/python -m scripts.hygiene.branch_sweep --apply --json\n"
-            "  .venv/bin/python -m scripts.hygiene.branch_sweep --archive-after-days 14 --json\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'branch_sweep')} --json\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'branch_sweep')} --apply --json\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'branch_sweep')} --archive-after-days 14 --json\n"
             "Outputs: stdout decisions. --apply appends batch_state/branch-archive/evidence.jsonl on the\n"
             "control-plane checkout before deleting qualifying remote and local refs, then appends an outcome\n"
             "line (remote_deleted, local_deleted, error) and prunes tracking refs.\n"

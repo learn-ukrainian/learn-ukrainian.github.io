@@ -9,6 +9,7 @@ import os
 import re
 import shutil
 import stat
+import sys
 from collections import Counter
 from collections.abc import Callable, Iterable
 from contextlib import suppress
@@ -16,6 +17,26 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import psutil
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.repo_root import machinery_path, machinery_root
+
+
+def _machinery_top() -> str:
+    package = __package__ or ""
+    top = package.partition(".")[0]
+    return top or machinery_root().name
+
+
+def _mp(relative: str) -> str:
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
 
 _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 _SESSION_RE = re.compile(r"(?<![a-zA-Z0-9-])[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}(?![a-zA-Z0-9-])", re.I)
@@ -398,16 +419,16 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Report and remove proven-ended Claude session scratch.\nUse at hygiene time; never use age as evidence of session death.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.maintenance.claude_session_scratch
-  .venv/bin/python -m scripts.maintenance.claude_session_scratch --apply
+        epilog=f"""Examples:
+  .venv/bin/python -m {_mod('maintenance', 'claude_session_scratch')}
+  .venv/bin/python -m {_mod('maintenance', 'claude_session_scratch')} --apply
 Outputs:
   JSON counts/bytes on stdout; --apply deletes only proven-ended session directories.
   Live, unknown and symlink entries are kept. No report files are written.
 Exit codes:
   0 report complete; 1 per-entry errors (remaining entries still processed).
 Related:
-  #8783; scripts/orchestration/scheduled_worktree_cleanup.py; thread_handoff.py
+  #8783; {_mp('orchestration/scheduled_worktree_cleanup.py')}; thread_handoff.py
 """,
     )
     parser.add_argument(
