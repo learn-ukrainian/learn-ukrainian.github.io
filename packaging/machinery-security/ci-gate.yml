@@ -428,9 +428,10 @@ jobs:
           import sys
 
           # Escapes both engines read alike; groups with flags, POSIX classes,
-          # {,n} (a quantifier in Python, a literal in Go) and non-ASCII text
-          # are refused.
-          ESCAPES = set(".^$*+?()[]{}|\\/-dDwWsS")
+          # {,n} (a quantifier in Python, a literal in Go), \s and \S (Python's
+          # ASCII \s also matches \v, Go's does not) and non-ASCII text are
+          # refused.
+          ESCAPES = set(".^$*+?()[]{}|\\/-dDwW")
           # Go's \s is [\t\n\f\r ]; Go's line scanner drops one trailing \r.
           SKIP = re.compile(r"[\t\n\f\r ]*(#|$)")
 
