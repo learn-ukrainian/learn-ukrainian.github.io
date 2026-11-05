@@ -1804,3 +1804,86 @@ def test_r6_f3_refusal_is_decided_at_the_choke_point() -> None:
         "holds an opening that is refused (never closes)",
         "never closes",
     ]
+
+
+# -- the counting checks on a frozen tree (decision FROZEN-INPUT-1105) -------------------------
+
+check_rename_counts = _load("machinery_move_check_rename_counts", "check_rename_counts.py")
+
+COUNT_MAP = {
+    "scripts/dispatch.py": M,
+    "scripts/lib/__init__.py": M,
+    "scripts/lib/db.py": M,
+    "scripts/review/__init__.py": P,
+    "scripts/review/findings.py": M,
+    "scripts/review/fixloop.py": P,
+    "scripts/x.py": P,
+    "scripts/app/__init__.py": P,
+    "scripts/app/run.py": P,
+}
+# (file, input, output): every form a tool may write.
+COUNT_FORMS = [
+    (
+        "run.sh",
+        "cat scripts/dispatch.py ./scripts/dispatch.py\n",
+        "cat lu_machinery/dispatch.py ./lu_machinery/dispatch.py\n",
+    ),
+    ("scripts/app/run.py", "from lib.db import open_db\n", "from lu_machinery.lib.db import open_db\n"),
+    ("scripts/app/run.py", "from ..lib import db\n", "from lu_machinery.lib import db\n"),
+    (
+        "scripts/app/run.py",
+        "    from scripts.review import findings, fixloop\n",
+        "    from lu_machinery.review import findings\n    from scripts.review import fixloop\n",
+    ),
+]
+
+
+def _count(tmp_path: Path, pairs: list[tuple[str, str, str]], residue: list[dict] | None = None) -> tuple[int, dict]:
+    before, after = tmp_path / "before", tmp_path / "after"
+    for rel, old, new in pairs:
+        for root, text in ((before, old), (after, new)):
+            (root / rel).parent.mkdir(parents=True, exist_ok=True)
+            with (root / rel).open("a", encoding="utf-8") as handle:
+                handle.write(text)
+    map_path, report, out = tmp_path / "map.json", tmp_path / "report.json", tmp_path / "out.json"
+    map_path.write_text(json.dumps(COUNT_MAP), encoding="utf-8")
+    report.write_text(json.dumps({"rewrites": [], "unresolved": residue or [], "inventory": []}), encoding="utf-8")
+    argv = ["--tree-sha", "0" * 40, "--map", str(map_path), "--input", str(before), "--output", str(after)]
+    code = check_rename_counts.main([*argv, "--report", str(report), "--out", str(out)])
+    return code, json.loads(out.read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("pair", COUNT_FORMS, ids=["plain", "unprefixed", "relative", "split"])
+def test_counting_checks_accept_each_mapped_form(tmp_path: Path, pair: tuple[str, str, str]) -> None:
+    code, result = _count(tmp_path, [pair])
+
+    assert code == 0, result
+    assert result["summary"]["unsound"] == result["summary"]["incomplete"] == result["summary"]["uncovered"] == 0
+
+
+def test_counting_checks_accept_a_reported_leftover(tmp_path: Path) -> None:
+    text = 'see "scr" + "ipts/dispatch.py"\nrun scripts/dispatch.py later\n'  # unchanged by the tools
+    pair = ("notes.txt", text, text)
+    residue = [{"path": "notes.txt", "line": 2, "kind": "not_plain", "before": "scripts/dispatch.py"}]
+
+    code, result = _count(tmp_path, [pair], residue)
+
+    assert code == 0, result
+    assert [f["fragment"] for f in result["fragments"]] == ["scr", "ipts"]  # listed, not failing
+
+
+@pytest.mark.parametrize(
+    ("pair", "failure"),
+    [
+        (("run.sh", "cat scripts/x.py\n", "cat lu_machinery/x.py\n"), "unsound"),  # a product name renamed
+        (("run.sh", "cat scripts/dispatch.py\n", "cat lu_machinery/dispatch.py \n"), "unsound"),  # a stray byte
+        (("run.sh", "cat scripts/dispatch.py\n", "cat scripts/dispatch.py\n"), "uncovered"),  # left, not reported
+        (("run.sh", "cat scripts/dispatch.py\n", "cat lu_machinery/dispatch.pyc\n"), "unsound"),  # changed more
+    ],
+    ids=["product-renamed", "stray-byte", "left-unreported", "changed-more"],
+)
+def test_counting_checks_fail_on_each_defect(tmp_path: Path, pair: tuple[str, str, str], failure: str) -> None:
+    code, result = _count(tmp_path, [pair])
+
+    assert code == 1
+    assert result["summary"][failure] >= 1, result

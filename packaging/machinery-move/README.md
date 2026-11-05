@@ -1,7 +1,8 @@
 # Machinery move: `lu_machinery` rename tools
 
 Step 6 of the machinery move renames machinery code from the `scripts` package to
-`lu_machinery` in a disposable clone. These three tools do the renaming. Product code keeps
+`lu_machinery` in a disposable clone. These three tools do the renaming, and
+`check_rename_counts.py` checks one run of them. Product code keeps
 the name `scripts`. Run them on a filtered clone, or on a throwaway copy for a dry run. Never
 run them on the live product tree.
 
@@ -181,6 +182,30 @@ part of the residue that needs renaming.
 
 If anything goes wrong while one file is processed, that file is reported as `tool_error` and
 left unchanged.
+
+## Counting checks on the frozen tree
+
+Acceptance is judged on one frozen tree: the commit the clone was taken from. After `--apply` of
+all three tools on a copy of that tree, `check_rename_counts.py` compares the copy with the
+untouched tree and reads the three reports. It parses nothing: it compares bytes, finds
+`scripts` tokens by regular expressions and looks names up in the map.
+
+```bash
+"$TOOL_PYTHON" packaging/machinery-move/check_rename_counts.py --tree-sha "$SHA" --map ownership.json \
+  --input "$FROZEN" --output "$CLONE" --report py.json --report np.json --report st.json --out counts.json
+```
+
+- **Soundness.** Every difference is one mapped substitution with identical bytes around it:
+  `scripts` becomes `lu_machinery` at a machinery token. It may also be an unprefixed import
+  (`lib.x` to `lu_machinery.lib.x`), a relative import (resolved from the file's own path), or a
+  mixed `from scripts.P import x, y` split into one line for each owner.
+- **Completeness.** In each file, the machinery tokens before equal the plain substitutions plus
+  the machinery tokens left after. Every token left is named, with its exact text, by an
+  unresolved or inventory entry of its file at or before its line.
+- **Fragments.** Each proper fragment of `scripts` next to a quote, a backtick, `$`, a brace, a
+  backslash or a line end is listed with whether an entry covers its line.
+
+It prints the tree SHA and exits 1 when soundness or completeness fails.
 
 ## Isolated LibCST environment
 
