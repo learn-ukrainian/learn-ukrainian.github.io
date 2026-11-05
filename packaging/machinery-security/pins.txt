@@ -22,14 +22,15 @@ TRUFFLEHOG_LINUX_AMD64_BINARY_SHA256=bcbdd2627c3f96e641edec60e3ccf36fc12afa4ffea
 #   refuses any other executable.
 TRUFFLEHOG_ACTION_SHA=31ce31ee1abbcc7dc8eee5764c17121c3044c8b2
 #   Commit of tag v3.99.7 of trufflesecurity/trufflehog (2026-10-24), the
-#   action script the public repository's .github/workflows/ci.yml pins.
+#   action script the source repository's .github/workflows/ci.yml pins.
 #   The secret-scan job of ci-gate.yml runs the CLI with the command line this
 #   script builds (git file://, --since-commit, --branch, --fail, --no-update)
 #   without its `docker run` wrapper: it runs the checksum-verified release
 #   binary under `env -i` instead of a container image.
 TRUFFLEHOG_FLAGS=--results=verified,unknown,unverified --exclude-detectors=Lob --fail-on-scan-errors --exclude-paths=.trufflehogignore
 #   `unverified` is added to the contract's --results=verified,unknown by
-#   claude-cto decision on 2026-11-03 (#12682), for the private repository only.
+#   claude-cto decision on 2026-11-03 (#12682). The decision applies to the
+#   public machinery repository (restated as UNVERIFIED-SCOPE-1105 on 2026-11-05).
 #   Reason: on the vendor's canary repository trufflesecurity/test_keys,
 #   TruffleHog 3.99.0 reports 3 results with verified,unknown and 8 with
 #   verified,unknown,unverified. The 4 extra cloud access keys and the PrivateKey
