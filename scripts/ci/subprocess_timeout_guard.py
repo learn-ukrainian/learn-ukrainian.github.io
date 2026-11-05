@@ -54,13 +54,16 @@ TESTS_TIMEOUT_PREAMBLE = (
     "heavier scripts). Popen must bound wait()/communicate() instead.\n"
 )
 
-UNALLOWLISTED_PREAMBLE = (
-    f"Timeout-less subprocess calls under {_PACKAGE_NAME}/ not in allowlist (issue #7176).\n"
+_UNALLOWLISTED_DETAIL = (
     "Pass an explicit timeout= (typically 30 for git fixtures/helpers, 60–120 for "
     "heavier scripts) to bound the subprocess call. Popen callers must bound "
     ".wait() / .communicate() instead.\n"
     "Each reported line starts with the paste-ready allowlist key "
     "path::qualname::callee::shape.\n"
+)
+UNALLOWLISTED_PREAMBLE = (
+    f"Timeout-less subprocess calls under {_PACKAGE_NAME}/ not in allowlist (issue #7176).\n"
+    + _UNALLOWLISTED_DETAIL
 )
 
 STALE_PREAMBLE = (
