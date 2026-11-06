@@ -60,7 +60,7 @@ deploy_agent_extensions() {
     local scripts_dir helper_project_root status_helper status_python status_rc=0
     scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
     helper_project_root="$(cd "$scripts_dir/.." && pwd)"
-    status_helper="$scripts_dir/deploy/update_agent_deploy_status.py"
+    status_helper="$scripts_dir/agent_deploy/update_agent_deploy_status.py"
 
     # A missing interpreter must not read as an unsafe .agent root: the
     # resolver prints its own "project interpreter not found" line. The helper

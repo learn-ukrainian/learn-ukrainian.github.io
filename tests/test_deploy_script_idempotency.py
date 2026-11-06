@@ -324,13 +324,13 @@ def _copy_deploy_harness(target: Path) -> None:
         CHECK_SCRIPT,
         ORPHAN_PATHS_FILE,
         # deploy_prompts.sh delegates the .agent reap to this helper (fd-bound
-        # deletion, see scripts/deploy/reap_agent_mirrors.py). The fixture must
+        # deletion, see scripts/agent_deploy/reap_agent_mirrors.py). The fixture must
         # mirror every file the script actually invokes, or deploy exits non-zero
         # here for a reason that has nothing to do with the behaviour under test.
-        Path("scripts/deploy/agent_directory.py"),
-        Path("scripts/deploy/retire_codex_skills.py"),
-        Path("scripts/deploy/reap_agent_mirrors.py"),
-        Path("scripts/deploy/sync_agent_mirror.py"),
+        Path("scripts/agent_deploy/agent_directory.py"),
+        Path("scripts/agent_deploy/retire_codex_skills.py"),
+        Path("scripts/agent_deploy/reap_agent_mirrors.py"),
+        Path("scripts/agent_deploy/sync_agent_mirror.py"),
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
@@ -473,7 +473,7 @@ def test_mirror_sync_resolves_relative_path_wrapper_before_fchdir(tmp_path, monk
         repo,
         [
             sys.executable,
-            "scripts/deploy/sync_agent_mirror.py",
+            "scripts/agent_deploy/sync_agent_mirror.py",
             "--source-root",
             "agents_extensions/shared",
             "--agent-root",
@@ -611,7 +611,7 @@ def test_rsync_identity_entrypoints(tmp_path, monkeypatch, route, refused, entry
     # so the sibling-prefix positive control is not mistaken for its contents.
     # Every synthetic installed file remains under this root; real roots stay.
     monkeypatch.setattr(tripwire, "real_roots", (*tripwire.real_roots, str(installation) + os.sep))
-    helper_path = str(REPO_ROOT / "scripts/deploy/sync_agent_mirror.py")
+    helper_path = str(REPO_ROOT / "scripts/agent_deploy/sync_agent_mirror.py")
     args = [sys.executable, helper_path]
     args += ["--resolve-rsync"] if entrypoint == "resolve" else [
         "--source-root", str(source), "--agent-root", str(destination),
@@ -623,7 +623,7 @@ def test_rsync_identity_entrypoints(tmp_path, monkeypatch, route, refused, entry
         result = subprocess.run(args, cwd=tmp_path, capture_output=True, text=True, timeout=10)
         # In-process evidence supplies statement coverage; the subprocess above
         # remains the actual CLI/exec proof and uses the unmodified tripwire.
-        monkeypatch.syspath_prepend(str(REPO_ROOT / "scripts/deploy"))
+        monkeypatch.syspath_prepend(str(REPO_ROOT / "scripts/agent_deploy"))
         monkeypatch.chdir(tmp_path)
         helper = runpy.run_path(helper_path)
         if refused:
@@ -674,7 +674,7 @@ def test_rsync_resolution_refuses_unknown_or_unsafe_target(tmp_path, monkeypatch
         (tools / "rsync").symlink_to("rsync")
     monkeypatch.setenv("PATH", str(tools))
     result = subprocess.run(
-        [sys.executable, str(REPO_ROOT / "scripts/deploy/sync_agent_mirror.py"), "--resolve-rsync"],
+        [sys.executable, str(REPO_ROOT / "scripts/agent_deploy/sync_agent_mirror.py"), "--resolve-rsync"],
         capture_output=True,
         text=True,
         timeout=10,
@@ -686,8 +686,8 @@ def test_rsync_resolution_refuses_unknown_or_unsafe_target(tmp_path, monkeypatch
 
 def test_rsync_resolution_validates_actual_target_and_sync_failure_closes_fd(tmp_path, monkeypatch, capsys):
     """Direct coverage supplements the real gate and directory-swap integration tests."""
-    monkeypatch.syspath_prepend(str(REPO_ROOT / "scripts/deploy"))
-    helper = runpy.run_path(str(REPO_ROOT / "scripts/deploy/sync_agent_mirror.py"))
+    monkeypatch.syspath_prepend(str(REPO_ROOT / "scripts/agent_deploy"))
+    helper = runpy.run_path(str(REPO_ROOT / "scripts/agent_deploy/sync_agent_mirror.py"))
     home = tmp_path / "home"
     bundled = home / ".local/share/cursor-agent/bin"
     bundled.mkdir(parents=True)

@@ -134,8 +134,8 @@ def main(argv: list[str]) -> int:
         "Used by deploy_prompts.sh; --resolve-rsync only validates the tool, without syncing.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python scripts/deploy/sync_agent_mirror.py --resolve-rsync\n"
-        "  .venv/bin/python scripts/deploy/sync_agent_mirror.py "
+        "  .venv/bin/python scripts/agent_deploy/sync_agent_mirror.py --resolve-rsync\n"
+        "  .venv/bin/python scripts/agent_deploy/sync_agent_mirror.py "
         "--source-root agents_extensions/shared --agent-root .agent\n"
         "Outputs: validated executable on stdout, or shared files copied into .agent.\n"
         "Exit codes: 0 success; 1 unsafe/missing tool or sync failure; 2 invalid arguments.\n"

@@ -72,8 +72,8 @@ def _make_worktree_fixture(tmp_path: Path, *, primary_venv: bool) -> tuple[Path,
     for rel in (
         "scripts/lib/deploy_extensions.sh",
         "scripts/lib/project_interpreter.sh",
-        "scripts/deploy/update_agent_deploy_status.py",
-        "scripts/deploy/agent_directory.py",
+        "scripts/agent_deploy/update_agent_deploy_status.py",
+        "scripts/agent_deploy/agent_directory.py",
     ):
         (worktree / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / rel, worktree / rel)
