@@ -17,17 +17,56 @@ Contract of :func:`load_configured_module`:
   ``scripts.lib.readonly_sqlite.import_named_module`` refuses it.
 * ``product_root`` is the product checkout the module must come from. It
   defaults to :func:`scripts.common.repo_root.product_root`, resolved at each
-  call (C-4746); a refusal there refuses the load. A given root must be an
-  absolute path to a directory that has a ``scripts/`` directory; it is checked
-  before anything is imported.
-* The module is imported with :func:`importlib.import_module`. It takes the
-  per-module import lock, reuses ``sys.modules``, binds the module on its parent
-  package, and removes a module whose import raised, ``BaseException`` included.
-* The module must be a file under the product root's ``scripts/`` directory. A
-  module cached from another checkout and a namespace package are refused.
+  call (C-4746); a refusal there refuses the load, with no fallback to another
+  checkout. A given root must be an absolute path to a directory that has a
+  ``scripts/`` directory; it is checked before anything is imported.
+* The product's ``scripts`` package is found in that root, not on ``sys.path``
+  (C-4764): once the machinery runs from its own repository, the product
+  checkout is not on the import path. A module is accepted when its file and
+  every package search path resolve (symlinks followed) under the root's
+  ``scripts/`` directory; a namespace package is accepted only as a package
+  above the module, never as the module itself.
+* First, every part of the name that is already cached is checked, each on its
+  own, and then every uncached part that can be found without running product
+  code. A refusal there runs no product code and changes no cache entry: a
+  cached module from another checkout is refused and left cached, never evicted
+  or rebound. An ordinary-imported namespace whose missing ancestor makes its
+  search path uninspectable is refused too, without rebuilding cache entries
+  or reading private namespace metadata.
+* Then the parts are imported one at a time, as an ordinary import imports
+  them: a cached module is used as it is, and only the uncached parts at the
+  end of the name run, from the one below the deepest cached part (or from the
+  top-level package). Missing ancestors of a cached part are never run again.
+  Each part is found before it runs: the top-level package by the file finder
+  in the root, every other part by the import system in its parent's search
+  path, which is checked
+  again after the parent's own code has run. The found spec is checked, then
+  the part is imported and checked once more. No part of the requested name
+  outside the root runs, even after a package changes its own search path.
+* A scoped, thread-aware :class:`importlib.abc.MetaPathFinder` guards the named
+  module and its ancestors. Every resolution, including a retry after another
+  thread's failed import, returns a root-checked spec or raises before execution.
+  Guarded names never fall through to ambient resolution. Nested calls restore
+  the outer scope; other threads and unrelated names retain ordinary resolution.
+* Every part, including the top-level package, is imported with
+  :func:`importlib.import_module`, which takes the per-module
+  import lock, reuses ``sys.modules``, binds the module on its parent package,
+  and removes a module whose import raised, ``BaseException`` included. No lock
+  of this module's own is held while product code runs or an import lock is
+  awaited, so a product module may call this function again from any thread.
+* Standard-library, installed and machinery imports made by the product code
+  are not confined: this is an origin check for the named product modules, not
+  a sandbox for product code.
+* Missing cached ancestors and a foreign checkout first on ``sys.path`` at entry
+  are supported, including when an ordinary import already initializing the
+  target later fails. Hostile mutation of ``sys.modules`` or ``sys.path`` by
+  other code during this call is outside the contract. Ordinary import cache
+  insertion and failed-import cleanup remain inside the contract.
 
 A refusal raises :class:`ConfiguredModuleError`, an ``ImportError``. An import
-that fails raises what the import raised. Callers keep their own data-file
+that fails raises what the import raised; a part of the name that does not
+exist raises ``ModuleNotFoundError`` naming it, after the parts before it are
+imported, as an ordinary import does. Callers keep their own data-file
 validation, error contracts and callable checks.
 
 Example:
@@ -37,7 +76,14 @@ Example:
 from __future__ import annotations
 
 import importlib
+import importlib.abc
+import importlib.machinery
 import re
+import sys
+import threading
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
+from importlib.machinery import ModuleSpec
 from pathlib import Path
 from types import ModuleType
 
@@ -45,6 +91,14 @@ from scripts.common import repo_root
 
 _SQLITE_MODULES = frozenset({"sqlite3", "_sqlite3"})
 _NAME_RE = re.compile(r"scripts(?:\.[a-z_][a-z0-9_]*)+")
+_TOP = "scripts"
+_FINDER_LOCK = threading.Lock()
+# The file finder's loaders, in the order the import system's path hook uses them.
+_LOADER_DETAILS = (
+    (importlib.machinery.ExtensionFileLoader, importlib.machinery.EXTENSION_SUFFIXES),
+    (importlib.machinery.SourceFileLoader, importlib.machinery.SOURCE_SUFFIXES),
+    (importlib.machinery.SourcelessFileLoader, importlib.machinery.BYTECODE_SUFFIXES),
+)
 
 
 class ConfiguredModuleError(ImportError):
@@ -60,7 +114,24 @@ def load_configured_module(name: str, *, product_root: Path | None = None) -> Mo
     if _NAME_RE.fullmatch(name) is None:
         raise ConfiguredModuleError(f"configured module name is not a lowercase scripts.* name: {name!r}", name=name)
     scripts_dir = _scripts_dir(name, product_root)
-    return _in_this_checkout(name, importlib.import_module(name), scripts_dir)
+    parts = name.split(".")
+    prefixes = [".".join(parts[:index]) for index in range(1, len(parts) + 1)]
+    for prefix in prefixes:
+        cached = sys.modules.get(prefix)
+        if cached is not None:
+            _check_module(name, prefix, cached, scripts_dir, is_leaf=prefix == name)
+    # As an ordinary import: only the uncached parts at the end of the name run, starting below the
+    # deepest cached one; a cached module is used as it is, never rebuilt from its missing ancestors.
+    start = len(prefixes)
+    while start > 0 and prefixes[start - 1] not in sys.modules:
+        start -= 1
+    _preflight(name, prefixes, start, scripts_dir)
+    with _confined_imports(name, prefixes, scripts_dir):
+        if start == len(prefixes):
+            return _load_part(name, name, scripts_dir)
+        for prefix in prefixes[start:]:
+            module = _load_part(name, prefix, scripts_dir)
+    return module
 
 
 def _scripts_dir(name: str, product_root: Path | None) -> Path:
@@ -77,8 +148,148 @@ def _scripts_dir(name: str, product_root: Path | None) -> Path:
     return scripts_dir
 
 
-def _in_this_checkout(name: str, module: ModuleType, scripts_dir: Path) -> ModuleType:
+def _preflight(name: str, prefixes: list[str], start: int, scripts_dir: Path) -> None:
+    """Check every part from ``start`` on that can be found without running product code, before any runs.
+
+    Found as the import system would find it: the top-level package in the root, each other part in
+    the search path of the cached part before ``start`` or of the part found before it. The walk ends
+    at the first part that does not exist; the import then raises ``ModuleNotFoundError`` for it, as
+    an ordinary import does.
+    """
+    if start == 0:
+        search = [str(scripts_dir.parent)]
+    else:
+        parent = prefixes[start - 1]
+        search = _check_search_paths(name, parent, getattr(sys.modules.get(parent), "__path__", None), scripts_dir)
+    for prefix in prefixes[start:]:
+        spec = _find_spec(prefix, search)
+        if spec is None:
+            return
+        search = _check_spec(name, prefix, spec, scripts_dir, is_leaf=prefix == name)
+
+
+class _ProductFinder(importlib.abc.MetaPathFinder):
+    """One call's names and root, guarded only in its owning thread."""
+
+    def __init__(self, name: str, prefixes: list[str], scripts_dir: Path) -> None:
+        self.name = name
+        self.prefixes = frozenset(prefixes)
+        self.scripts_dir = scripts_dir
+        self.thread = threading.current_thread()
+
+    def find_spec(
+        self, fullname: str, path: Iterable[str] | None = None, target: ModuleType | None = None
+    ) -> ModuleSpec | None:
+        if threading.current_thread() is not self.thread or fullname not in self.prefixes:
+            return None
+        if fullname == _TOP:
+            search = [str(self.scripts_dir.parent)]
+        else:
+            parent_name = fullname.rpartition(".")[0]
+            parent = sys.modules.get(parent_name)
+            if parent is None:
+                raise ConfiguredModuleError(f"{parent_name} is not cached while {self.name} loads", name=self.name)
+            _check_module(self.name, parent_name, parent, self.scripts_dir, is_leaf=False)
+            search = _check_search_paths(self.name, parent_name, path, self.scripts_dir)
+        spec = _find_spec(fullname, search)
+        if spec is None:
+            raise ModuleNotFoundError(f"No module named {fullname!r}", name=fullname)
+        _check_spec(self.name, fullname, spec, self.scripts_dir, is_leaf=fullname == self.name)
+        return spec
+
+
+@contextmanager
+def _confined_imports(name: str, prefixes: list[str], scripts_dir: Path) -> Iterator[None]:
+    """Replace the list so an import traversing an earlier list cannot skip a finder at cleanup."""
+    finder = _ProductFinder(name, prefixes, scripts_dir)
+    with _FINDER_LOCK:
+        sys.meta_path = [finder, *sys.meta_path]
+    try:
+        yield
+    finally:
+        with _FINDER_LOCK:
+            sys.meta_path = [registered for registered in sys.meta_path if registered is not finder]
+
+
+def _load_part(name: str, prefix: str, scripts_dir: Path) -> ModuleType:
+    """Import ``prefix`` from its parent's checked search path, checking it before and after it runs.
+
+    A cached ``prefix`` is returned by the import as it is, without its parent, as an ordinary import
+    returns it; it was checked before anything ran.
+    """
+    module = _import(prefix, scripts_dir)
+    _check_module(name, prefix, module, scripts_dir, is_leaf=prefix == name)
+    return module
+
+
+def _import(name: str, scripts_dir: Path) -> ModuleType:
+    """The ordinary import of one checked part of a configured name: this module's one import site."""
+    return _in_this_checkout(name, importlib.import_module(name), scripts_dir)
+
+
+def _find_spec(prefix: str, entries: list[str]) -> ModuleSpec | None:
+    """The file-system spec the import system would find for ``prefix`` in ``entries``, without importing.
+
+    As the path finder does: the first regular module or package wins; otherwise the namespace
+    portions of every entry form one namespace package.
+    """
+    portions: list[str] = []
+    for entry in entries:
+        spec = importlib.machinery.FileFinder(entry, *_LOADER_DETAILS).find_spec(prefix)
+        if spec is None:
+            continue
+        if spec.loader is not None:
+            return spec
+        portions.extend(spec.submodule_search_locations or [])
+    if not portions:
+        return None
+    namespace = ModuleSpec(prefix, None, is_package=True)
+    namespace.submodule_search_locations = portions
+    return namespace
+
+
+def _check_module(name: str, prefix: str, module: ModuleType, scripts_dir: Path, *, is_leaf: bool) -> None:
     origin = getattr(module, "__file__", None)
-    if not isinstance(origin, str) or not Path(origin).resolve().is_relative_to(scripts_dir):
-        raise ConfiguredModuleError(f"{name} is not a file in this checkout's scripts/: {origin!r}", name=name)
+    if (origin is None and is_leaf) or (
+        origin is not None and not (isinstance(origin, str) and _inside(origin, scripts_dir))
+    ):
+        raise ConfiguredModuleError(_not_here(prefix, origin, scripts_dir), name=name)
+    _check_search_paths(name, prefix, getattr(module, "__path__", None), scripts_dir)
+
+
+def _check_spec(name: str, prefix: str, spec: ModuleSpec, scripts_dir: Path, *, is_leaf: bool) -> list[str]:
+    origin = spec.origin if spec.has_location else None
+    if (origin is None and is_leaf) or (origin is not None and not _inside(origin, scripts_dir)):
+        raise ConfiguredModuleError(_not_here(prefix, origin, scripts_dir), name=name)
+    return _check_search_paths(name, prefix, spec.submodule_search_locations, scripts_dir)
+
+
+def _check_search_paths(name: str, prefix: str, paths: Iterable[str] | None, scripts_dir: Path) -> list[str]:
+    try:
+        entries = [] if paths is None else list(paths)
+    except KeyError as exc:
+        raise ConfiguredModuleError(
+            f"{prefix} package search path is unavailable while loading {name}: missing ancestor {exc}", name=name
+        ) from exc
+    for entry in entries:
+        if not isinstance(entry, str) or not _inside(entry, scripts_dir):
+            raise ConfiguredModuleError(
+                f"{prefix} searches outside this checkout's scripts/ ({scripts_dir}): {entry!r}", name=name
+            )
+    return entries
+
+
+def _not_here(prefix: str, origin: object, scripts_dir: Path) -> str:
+    return f"{prefix} is not a file in this checkout's scripts/ ({scripts_dir}): {origin!r}"
+
+
+def _inside(path: str, scripts_dir: Path) -> bool:
+    try:
+        return Path(path).resolve().is_relative_to(scripts_dir)
+    except (OSError, RuntimeError, ValueError):
+        return False
+
+
+def _in_this_checkout(name: str, module: ModuleType, scripts_dir: Path) -> ModuleType:
+    _check_module(name, name, module, scripts_dir, is_leaf=False)
     return module

@@ -1411,8 +1411,11 @@ def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, cap
     import yaml
 
     from scripts.dispatcher import store
-    from scripts.review.receipts import ledger
+    from scripts.ops.product_entry import load_configured_module
     from scripts.review.review_contract import build_item_packet, render_item_packet, validate_ukrainian_reply_claims
+
+    # The receipt ledger is product code: load it from the product checkout, as the review hooks do.
+    ledger = load_configured_module("scripts.review.receipts.ledger")
 
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     claim = 'VESUM reports "attested" for the example.'

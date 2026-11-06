@@ -36,12 +36,14 @@ from pathlib import Path
 import pytest
 
 from scripts.lib import rules_core
+from tests.helpers import machinery_package, product_checkout
 
 REPO = Path(__file__).resolve().parents[1]
 CORE_FILES = (Path(rules_core.CORE_REL).name, Path(rules_core.CONTENT_ADDENDUM_REL).name)
 _ABSENT_VIEW = pytest.StashKey[Path]()
 _BYPASS_VIEW = pytest.StashKey[Path]()
-_LAUNCHER_LOADER = ("scripts", "lib", "rules_core.sh")
+_LAUNCH_VIEW = pytest.StashKey[Path]()
+_LAUNCHER_LOADER = (machinery_package(), "lib", "rules_core.sh")
 # What the stub does in place of the launcher loader: no core, no seat, launch as before.
 _LOADER_STUB = """#!/usr/bin/env bash
 # Test-only: the real helpers with the loader replaced by one that loads nothing.
@@ -57,23 +59,48 @@ rules_core_load() {{
 Overrides = Mapping[tuple[str, ...], "Path | str | None"]
 
 
-def _link_tree(source: Path, view: Path, rel: tuple[str, ...], overrides: Overrides) -> None:
+def _link_tree(sources: tuple[Path, ...], view: Path, rel: tuple[str, ...], overrides: Overrides) -> None:
+    """Link every entry of ``sources`` into ``view``; the first source holding an entry wins.
+
+    A directory present as a real directory in several sources, or holding an override, is
+    linked entry by entry, so the view is the union of the sources.
+    """
     view.mkdir(parents=True, exist_ok=True)
-    seen: set[str] = set()
-    for entry in source.iterdir():
-        if entry.name == ".git":
-            continue
-        seen.add(entry.name)
-        key = (*rel, entry.name)
+    entries: dict[str, list[Path]] = {}
+    for source in sources:
+        for entry in source.iterdir():
+            if entry.name != ".git":
+                entries.setdefault(entry.name, []).append(entry)
+    for name, found in entries.items():
+        key = (*rel, name)
+        directories = tuple(entry for entry in found if entry.is_dir())
+        merged = len(found) > 1 and len(directories) == len(found) and not any(e.is_symlink() for e in found)
         if key in overrides:
-            _apply(view / entry.name, overrides[key])
-        elif any(path[: len(key)] == key for path in overrides):
-            _link_tree(entry, view / entry.name, key, overrides)
+            _apply(view / name, overrides[key])
+        elif directories and (merged or any(path[: len(key)] == key for path in overrides)):
+            _link_tree(directories, view / name, key, overrides)
         else:
-            (view / entry.name).symlink_to(entry)
+            (view / name).symlink_to(found[0])
     for key, action in overrides.items():
-        if key[:-1] == rel and key[-1] not in seen:
+        if key[:-1] == rel and key[-1] not in entries:
             _apply(view / key[-1], action)
+
+
+def _view_sources() -> tuple[Path, ...]:
+    """The product checkout, then this machinery checkout: one source when they are the same.
+
+    Once the machinery is extracted, a launcher runs from the product checkout (root wrappers,
+    product data, the linked machinery package) and its machinery-owned files come from here.
+    """
+    product = product_checkout()
+    if product.resolve() == REPO.resolve():
+        return (product,)
+    # Two checkouts only in the extracted layout: the machinery side must be the tested machinery
+    # tree, never an unrenamed source checkout whose scripts/ still holds the machinery.
+    assert machinery_package() != "scripts" and not (REPO / "scripts" / "common" / "repo_root.py").exists(), (
+        f"the machinery side of a checkout view is an unrenamed source checkout: {REPO}"
+    )
+    return (product, REPO)
 
 
 def _apply(target: Path, action: Path | str | None) -> None:
@@ -85,7 +112,7 @@ def _apply(target: Path, action: Path | str | None) -> None:
 
 
 def _build_view(view: Path, overrides: Overrides) -> Path:
-    _link_tree(REPO, view, (), overrides)
+    _link_tree(_view_sources(), view, (), overrides)
     if not (view / ".venv").exists():
         (view / ".venv").symlink_to(Path(sys.prefix))
     subprocess.run(["git", "init", "-q", "-b", "main", str(view)], check=True, timeout=30)
@@ -113,6 +140,19 @@ def absent_checkout(request: pytest.FixtureRequest) -> Path:
         factory = request.getfixturevalue("tmp_path_factory")
         stash[_ABSENT_VIEW] = checkout_view(factory.mktemp("rules-core-absent") / "checkout", None)
     return stash[_ABSENT_VIEW]
+
+
+def launch_checkout(request: pytest.FixtureRequest) -> Path:
+    """This session's checkout view with the real rules core, to run the tracked wrappers from.
+
+    Its own Git repository and interpreter link make it a primary checkout wherever the tests run
+    (a dispatch worktree, or an extracted machinery tree beside a product checkout without a venv).
+    """
+    stash = request.config.stash
+    if _LAUNCH_VIEW not in stash:
+        factory = request.getfixturevalue("tmp_path_factory")
+        stash[_LAUNCH_VIEW] = _build_view(factory.mktemp("launch") / "checkout", {})
+    return stash[_LAUNCH_VIEW]
 
 
 def bypass_checkout(request: pytest.FixtureRequest) -> Path:

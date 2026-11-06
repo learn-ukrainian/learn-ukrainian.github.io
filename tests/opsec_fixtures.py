@@ -13,6 +13,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers import machinery_package
+
 TOKEN = "SENTINEL-HOST-TOKEN"
 ROOT = Path(__file__).resolve().parents[1]
 MATCHER = """import re
@@ -138,9 +140,11 @@ def copy_publisher_scripts(source: Path, destination: Path) -> None:
         pending.extend((source / package).rglob("*.py"))
     visited = set()
 
+    package_name = machinery_package()
+
     def stage(module: str) -> None:
         parts = module.split(".")
-        if parts[0] != "scripts":
+        if parts[0] != package_name:
             return
         # Package initializers can have dependencies of their own.
         for length in range(1, len(parts) + 1):
@@ -154,13 +158,13 @@ def copy_publisher_scripts(source: Path, destination: Path) -> None:
                 shutil.copy2(path, target)
                 pending.append(path)
 
-    stage("scripts")
+    stage(package_name)
     while pending:
         path = pending.pop()
         if path in visited:
             continue
         visited.add(path)
-        module = ("scripts", *path.relative_to(source).with_suffix("").parts)
+        module = (package_name, *path.relative_to(source).with_suffix("").parts)
         package = ".".join(module[:-1])
         for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"), filename=str(path))):
             if isinstance(node, ast.Import):
@@ -180,24 +184,27 @@ def copy_publisher_scripts(source: Path, destination: Path) -> None:
 def gh_shim_sandbox(tmp_path):
     root = tmp_path / "public-fixture"
     root.mkdir()
-    scripts = root / "scripts"
+    scripts = root / machinery_package()
     scripts.mkdir()
-    copy_publisher_scripts(ROOT / "scripts", scripts)
+    copy_publisher_scripts(ROOT / machinery_package(), scripts)
     # The advisory classifier reads workflow policy as well as importing code.
     workflow = root / ".github/workflows/ci.yml"
     workflow.parent.mkdir(parents=True)
     shutil.copy2(ROOT / ".github/workflows/ci.yml", workflow)
-    # The merge gate's learner-content check reads the deploy path policy data.
-    deploy_paths = scripts / "curriculum/deploy_paths.v1.json"
+    # The merge gate's learner-content check reads the deploy path policy data, a product file
+    # that stays under the product checkout's scripts/ when the machinery package moves.
+    from scripts.common.repo_root import product_root
+
+    deploy_paths = root / "scripts/curriculum/deploy_paths.v1.json"
     deploy_paths.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(ROOT / "scripts/curriculum/deploy_paths.v1.json", deploy_paths)
+    shutil.copy2(product_root() / "scripts/curriculum/deploy_paths.v1.json", deploy_paths)
     # Those reads go through product_root() (C-4746), so this fake checkout carries the product marker.
     marker = root / "curriculum/l2-uk-en/curriculum.yaml"
     marker.parent.mkdir(parents=True)
     marker.write_text("")
     shim = scripts / "agent_runtime/shims/gh"
     shim.parent.mkdir(parents=True)
-    shutil.copy2(ROOT / "scripts/agent_runtime/shims/gh", shim)
+    shutil.copy2(ROOT / machinery_package() / "agent_runtime/shims/gh", shim)
     (scripts / "config").mkdir()
     (scripts / "config/fleet_repos.yaml").write_text(json.dumps({"repos": CATALOG}))
     (root / ".venv").symlink_to(Path(sys.executable).parent.parent, target_is_directory=True)

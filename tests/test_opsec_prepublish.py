@@ -17,6 +17,7 @@ import pytest
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 from scripts.opsec import prepublish as gate
+from tests.helpers import machinery_package
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, install_override, synthetic_rules
 
 
@@ -828,7 +829,7 @@ def real_tooling():
     import yaml
 
     override = os.environ.get("LU_OPSEC_TEST_TOOLING")
-    repos = yaml.safe_load((ROOT / "scripts/config/fleet_repos.yaml").read_text())["repos"]
+    repos = yaml.safe_load((ROOT / machinery_package() / "config/fleet_repos.yaml").read_text())["repos"]
     path = (
         Path(override)
         if override

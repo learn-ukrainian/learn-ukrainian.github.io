@@ -782,19 +782,55 @@ def test_research_missing_configured_target_keeps_file_not_found(tmp_path, monke
     assert caught.value.filename == str(REPO_ROOT.joinpath(*missing.split(".")).with_suffix(".py"))
 
 
-def test_research_existing_module_dependency_error_is_not_translated(tmp_path, monkeypatch):
+@pytest.fixture
+def product_checkout_root(tmp_path, monkeypatch):
+    """``tmp_path`` as the selected, self-contained product checkout whose ``scripts`` package is cached.
+
+    The machinery's cached ``scripts`` and ``scripts.audit`` are hidden for the test, as once the
+    machinery is extracted (C-4764): the loader refuses a cached package from another checkout.
+    """
+    import importlib.util
+    import sys
+
+    from scripts.common import repo_root
+    from scripts.research import registry
+
+    # The product's research-check data travels with the product checkout.
+    config = registry._check_config_path(tmp_path)
+    config.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(registry._check_config_path(repo_root.product_root()), config)
+    for relative in ("__init__.py", "audit/__init__.py"):
+        (tmp_path / "scripts" / relative).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / "scripts" / relative).write_text("")
+    marker = tmp_path / repo_root.PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n")
+    spec = importlib.util.spec_from_file_location(
+        "scripts", tmp_path / "scripts" / "__init__.py", submodule_search_locations=[str(tmp_path / "scripts")]
+    )
+    package = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(package)
+    monkeypatch.delitem(sys.modules, "scripts.audit", raising=False)
+    monkeypatch.setitem(sys.modules, "scripts", package)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
+    before = set(sys.modules)
+    yield tmp_path
+    for name in set(sys.modules) - before:
+        if name.startswith("scripts."):
+            sys.modules.pop(name, None)
+
+
+def test_research_existing_module_dependency_error_is_not_translated(product_checkout_root, tmp_path, monkeypatch):
     import json
     import sys
 
-    import scripts.audit
     from scripts.research import registry as reg
 
     name = "scripts.audit.loader_slice_dependency"
-    (tmp_path / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")
+    (tmp_path / "scripts" / "audit" / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")
     path = tmp_path / "research.json"
     path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
     monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
-    monkeypatch.setattr(scripts.audit, "__path__", [str(tmp_path)])
     with pytest.raises(ModuleNotFoundError) as caught:
         reg._load_configured_module("check_module")
     assert caught.value.name == "loader_slice_missing_dependency"
