@@ -1315,7 +1315,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     (
         "scripts/projects/open_model_data/upload_to_huggingface.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
-        "35f512e89d45d97b853c3a99363dac434eab977a7881748828c5dd3e741386f0:1 55caf14511ead12180f1e44cb7f5103f3ecf2bc0ce14685c5ef012b872147e8a:1",
+        "35f512e89d45d97b853c3a99363dac434eab977a7881748828c5dd3e741386f0:1 cd222ec08b8ecc752640976c249a000a3051bcd56802cdc23971ec5162715483:1",
     ),
     (
         "scripts/projects/open_model_data/v4_dataset_quality_evaluation.py",
