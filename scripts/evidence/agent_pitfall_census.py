@@ -20,9 +20,8 @@ from pathlib import Path
 
 
 def _mp(relative: str) -> str:
-    package = __package__ or ""
-    top = package.partition(".")[0]
-    return f"{top or Path(__file__).parents[1].name}/{relative}"
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
 
 
 # Windows chosen from the measured X-Agent adoption curve in this script:
@@ -135,13 +134,16 @@ def _path_bucket(path: str) -> str | None:
         return "ci_yml"
     if path.startswith(".github/workflows/"):
         return "workflows_other"
+    # scripts/review/ stays a product prefix. That directory is split: product
+    # files remain there after extraction, so a generated machinery prefix
+    # would miss them (#12785 F2). scripts/delegate.py is that file's path in
+    # the closed census window; the file was deleted later (#11807).
     if (
         path.startswith("scripts/delegate.py")
         or path.startswith("scripts/review/")
         or path.startswith(_mp("orchestration") + '/')
         or path.startswith(_mp("fleet") + '/')
         or path.startswith(_mp("agent_runtime") + '/')
-        or path.startswith("scripts/runtime/")
         or "/hooks/" in path
     ):
         return "delivery"

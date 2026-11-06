@@ -35,6 +35,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import os
 import subprocess
 import sys
 from collections import Counter, defaultdict
@@ -55,6 +56,12 @@ from scripts.ci.components import (
     scan_runtime_edges,
 )
 from scripts.common.repo_root import machinery_path
+
+
+def _machinery_top() -> str:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("boundary_baseline.json")
@@ -420,7 +427,7 @@ def _entries_from_rows(rows: object, where: str) -> Counter[tuple[str, str]]:
         count = row.get("count")
         if (
             not isinstance(path, str)
-            or not path.startswith("scripts/")
+            or not path.startswith(f"{_machinery_top()}/")
             or path.startswith(("/", "\\"))
             or ".." in Path(path).parts
             or not isinstance(module, str)
@@ -429,7 +436,7 @@ def _entries_from_rows(rows: object, where: str) -> Counter[tuple[str, str]]:
             or isinstance(count, bool)
             or count < 1
         ):
-            raise ValueError(f"{where}: an entry needs a scripts path, scripts module, and count >= 1")
+            raise ValueError(f"{where}: an entry needs a machinery package path, a scripts module, and count >= 1")
         key = (path, module)
         if key in seen:
             raise ValueError(f"{where}: duplicate entry {path} {module}")

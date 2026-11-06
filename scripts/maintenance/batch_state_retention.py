@@ -26,8 +26,10 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-for _path in (REPO_ROOT, SCRIPTS_DIR):
+# The package directory, from the unresolved file location. A literal scripts/
+# join is the machinery package name (design-v1 amendment 1).
+_PACKAGE_DIR = Path(os.path.abspath(__file__)).parents[1]
+for _path in (REPO_ROOT, _PACKAGE_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
@@ -37,9 +39,7 @@ from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES, Worktr
 
 
 def _mp(relative: str) -> str:
-    package = __package__ or ""
-    top = package.partition(".")[0]
-    return f"{top or Path(__file__).parents[1].name}/{relative}"
+    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
 
 
 DEFAULT_BATCH_STATE = REPO_ROOT / "batch_state"
