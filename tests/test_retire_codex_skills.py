@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -345,3 +346,32 @@ def test_replaced_discovery_tree_is_retained_with_original_untouched(repo: Path,
     assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert (saved / "example/SKILL.md").read_bytes() == PAYLOAD
     assert (captures(repo)[0] / "example/SKILL.md").read_bytes() == PAYLOAD
+
+
+def _tree(root: Path) -> dict[str, bytes | None]:
+    return {
+        path.relative_to(root).as_posix(): (None if path.is_dir() else path.read_bytes())
+        for path in sorted(root.rglob("*"))
+    }
+
+
+@pytest.mark.parametrize("unknown", [False, True])
+def test_target_and_source_roots_are_separate(repo: Path, tmp_path: Path, unknown: bool) -> None:
+    """Provenance comes from the source checkout; capture happens only under the target."""
+    target = tmp_path / "target"
+    legacy = target / ".codex/skills/example/SKILL.md"
+    legacy.parent.mkdir(parents=True)
+    legacy.write_bytes(PAYLOAD)
+    shutil.rmtree(repo / ".codex")
+    if unknown:
+        (target / ".codex/skills/custom").mkdir()
+        (target / ".codex/skills/custom/SKILL.md").write_bytes(b"operator-owned skill\n")
+    source_before, target_before = _tree(repo), _tree(target)
+    assert migration.migrate(target, "verify", source_root=repo) == (1 if unknown else 0)
+    assert migration.migrate(target, "apply", source_root=repo) == (1 if unknown else 0)
+    assert _tree(repo) == source_before
+    if unknown:
+        assert _tree(target) == target_before
+        return
+    assert not (target / ".codex/skills").exists()
+    assert (captures(target)[0] / "example/SKILL.md").read_bytes() == PAYLOAD
