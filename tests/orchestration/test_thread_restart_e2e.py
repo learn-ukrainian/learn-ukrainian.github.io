@@ -216,8 +216,8 @@ def init_repo(
                 # Deploy status breadcrumbs (PR #5814 r6): deploy_prompts.sh now
                 # invokes this helper, so fixture repos must ship it and its
                 # sibling import.
-                "scripts/deploy/update_agent_deploy_status.py",
-                "scripts/deploy/agent_directory.py",
+                "scripts/agent_deploy/update_agent_deploy_status.py",
+                "scripts/agent_deploy/agent_directory.py",
             ]
         )
         sources.extend(str(path) for path in launcher_library_files(REPO_ROOT))

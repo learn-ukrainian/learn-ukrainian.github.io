@@ -17,7 +17,10 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from agent_directory import open_agent_directory
+if __package__:
+    from .agent_directory import open_agent_directory
+else:  # run by path: this file's directory is first on sys.path
+    from agent_directory import open_agent_directory  # type: ignore[no-redef]
 
 STATUS_FILE = "last-deploy-status"
 FAILURE_LOG = "last-deploy-failure.log"

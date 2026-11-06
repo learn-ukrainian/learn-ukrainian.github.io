@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
 import pytest
 
-from scripts.deploy import retire_codex_skills as migration
+from scripts.agent_deploy import retire_codex_skills as migration
 
 PAYLOAD = b"---\nname: example\ndescription: Example skill.\n---\nCanonical content.\n"
 
@@ -65,11 +66,11 @@ def test_python_runtime_cache_is_retained_without_execution(
     cache = python_skill / name
     payload = b"Opaque runtime bytes, never load or unmarshal them"
     cache.write_bytes(payload)
-    assert migration.migrate(repo, "verify") == 0
-    assert migration.migrate(repo, "apply") == 0
+    assert migration.migrate(repo, "verify", source_root=repo) == 0
+    assert migration.migrate(repo, "apply", source_root=repo) == 0
     retained = captures(repo)[0] / cache.relative_to(repo / ".codex/skills")
     assert retained.read_bytes() == payload
-    assert migration.migrate(repo, "apply") == 0
+    assert migration.migrate(repo, "apply", source_root=repo) == 0
     assert retained.read_bytes() == payload
 
 
@@ -84,7 +85,7 @@ def test_python_runtime_cache_is_retained_without_execution(
 def test_unknown_cache_content_is_preserved_and_rejected(repo: Path, python_skill: Path, name: str) -> None:
     cache = python_skill / name
     cache.write_bytes(b"User content")
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert cache.read_bytes() == b"User content"
     assert not captures(repo)
 
@@ -124,7 +125,7 @@ def test_runtime_cache_requires_regular_tracked_source_and_safe_entries(
         python_skill.symlink_to(outside, target_is_directory=True)
     else:
         (python_skill / "nested").mkdir()
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert python_skill.exists()
     assert not captures(repo)
 
@@ -143,18 +144,18 @@ def test_runtime_cache_write_during_capture_is_retained_with_error(
             writer.truncate()
 
         monkeypatch.setattr(migration, "rename_exclusive", capture_then_write)
-        assert migration.migrate(repo, "apply") == 1
+        assert migration.migrate(repo, "apply", source_root=repo) == 1
     retained = captures(repo)[0] / cache.relative_to(repo / ".codex/skills")
     assert retained.read_bytes() == b"Concurrent cache write"
 
 
 def test_capture_is_retained_and_repeated_run_never_removes_backup(repo: Path) -> None:
-    assert migration.migrate(repo, "apply") == 0
+    assert migration.migrate(repo, "apply", source_root=repo) == 0
     retained = captures(repo)
     assert len(retained) == 1
     assert not (repo / ".codex/skills").exists()
     assert (retained[0] / "example/SKILL.md").read_bytes() == PAYLOAD
-    assert migration.migrate(repo, "apply") == 0
+    assert migration.migrate(repo, "apply", source_root=repo) == 0
     assert captures(repo) == retained
     assert (retained[0] / "example/SKILL.md").read_bytes() == PAYLOAD
 
@@ -176,20 +177,20 @@ def test_modified_or_replaced_file_before_capture_is_retained_and_reports_error(
         original(*args)
 
     monkeypatch.setattr(migration, "rename_exclusive", edit_then_capture)
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     expected = b"User replacement" if replace else b"User edit"
     assert (captures(repo)[0] / "example/SKILL.md").read_bytes() == expected
 
 
 def test_open_file_descriptor_write_after_success_survives(repo: Path) -> None:
     with (repo / ".codex/skills/example/SKILL.md").open("r+b", buffering=0) as writer:
-        assert migration.migrate(repo, "apply") == 0
+        assert migration.migrate(repo, "apply", source_root=repo) == 0
         writer.seek(0)
         writer.write(b"Late writer content")
         writer.truncate()
     retained = captures(repo)[0] / "example/SKILL.md"
     assert retained.read_bytes() == b"Late writer content"
-    assert migration.migrate(repo, "apply") == 0
+    assert migration.migrate(repo, "apply", source_root=repo) == 0
     assert retained.read_bytes() == b"Late writer content"
 
 
@@ -203,7 +204,7 @@ def test_open_file_descriptor_write_during_capture_survives_with_error(repo: Pat
             writer.truncate()
 
         monkeypatch.setattr(migration, "rename_exclusive", capture_then_write)
-        assert migration.migrate(repo, "apply") == 1
+        assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert (captures(repo)[0] / "example/SKILL.md").read_bytes() == b"Concurrent writer content"
 
 
@@ -231,7 +232,7 @@ def test_symlink_swaps_never_touch_external_victim(
         monkeypatch.setattr(migration, "rename_exclusive", swap_then_capture)
     else:
         swap()
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert (external / "SKILL.md").read_bytes() == b"External victim"
     assert sorted(p.name for p in external.iterdir()) == ["SKILL.md"]
     # The source tree is never reaped, even when its former name is redirected.
@@ -249,7 +250,7 @@ def test_recreated_active_tree_is_preserved_and_reported(repo: Path, monkeypatch
         recreated.write_bytes(b"New local skill")
 
     monkeypatch.setattr(migration, "rename_exclusive", capture_then_recreate)
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert (repo / ".codex/skills/local/SKILL.md").read_bytes() == b"New local skill"
     assert (captures(repo)[0] / "example/SKILL.md").read_bytes() == PAYLOAD
 
@@ -263,11 +264,11 @@ def test_interruption_after_capture_and_retry_preserve_backup(repo: Path, monkey
 
     monkeypatch.setattr(migration, "rename_exclusive", capture_then_interrupt)
     with pytest.raises(KeyboardInterrupt):
-        migration.migrate(repo, "apply")
+        migration.migrate(repo, "apply", source_root=repo)
     retained = captures(repo)
     assert len(retained) == 1
     monkeypatch.setattr(migration, "rename_exclusive", original)
-    assert migration.migrate(repo, "apply") == 0
+    assert migration.migrate(repo, "apply", source_root=repo) == 0
     assert captures(repo) == retained
     assert (retained[0] / "example/SKILL.md").read_bytes() == PAYLOAD
 
@@ -281,7 +282,7 @@ def test_rename_failure_preserves_source_and_prior_backups(repo: Path, monkeypat
         raise OSError("Injected rename failure")
 
     monkeypatch.setattr(migration, "rename_exclusive", refuse)
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert (repo / ".codex/skills/example/SKILL.md").read_bytes() == PAYLOAD
     assert (previous / "SKILL.md").read_bytes() == b"Previous user backup"
 
@@ -292,7 +293,7 @@ def test_capture_name_collision_never_reuses_backup(repo: Path, monkeypatch: pyt
     previous.mkdir(parents=True)
     (previous / "marker").write_bytes(b"Retain me")
     monkeypatch.setattr(migration.uuid, "uuid4", lambda: fixed)
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert (previous / "marker").read_bytes() == b"Retain me"
     assert (repo / ".codex/skills/example/SKILL.md").read_bytes() == PAYLOAD
 
@@ -325,7 +326,7 @@ def test_git_probe_timeout_preserves_active_content(repo: Path, monkeypatch: pyt
         raise subprocess.TimeoutExpired("git provenance", 30)
 
     monkeypatch.setattr(migration.subprocess, "run", timeout)
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert (repo / ".codex/skills/example/SKILL.md").read_bytes() == PAYLOAD
     assert captures(repo) == []
 
@@ -342,6 +343,35 @@ def test_replaced_discovery_tree_is_retained_with_original_untouched(repo: Path,
         original(*args)
 
     monkeypatch.setattr(migration, "rename_exclusive", replace_then_capture)
-    assert migration.migrate(repo, "apply") == 1
+    assert migration.migrate(repo, "apply", source_root=repo) == 1
     assert (saved / "example/SKILL.md").read_bytes() == PAYLOAD
     assert (captures(repo)[0] / "example/SKILL.md").read_bytes() == PAYLOAD
+
+
+def _tree(root: Path) -> dict[str, bytes | None]:
+    return {
+        path.relative_to(root).as_posix(): (None if path.is_dir() else path.read_bytes())
+        for path in sorted(root.rglob("*"))
+    }
+
+
+@pytest.mark.parametrize("unknown", [False, True])
+def test_target_and_source_roots_are_separate(repo: Path, tmp_path: Path, unknown: bool) -> None:
+    """Provenance comes from the source checkout; capture happens only under the target."""
+    target = tmp_path / "target"
+    legacy = target / ".codex/skills/example/SKILL.md"
+    legacy.parent.mkdir(parents=True)
+    legacy.write_bytes(PAYLOAD)
+    shutil.rmtree(repo / ".codex")
+    if unknown:
+        (target / ".codex/skills/custom").mkdir()
+        (target / ".codex/skills/custom/SKILL.md").write_bytes(b"operator-owned skill\n")
+    source_before, target_before = _tree(repo), _tree(target)
+    assert migration.migrate(target, "verify", source_root=repo) == (1 if unknown else 0)
+    assert migration.migrate(target, "apply", source_root=repo) == (1 if unknown else 0)
+    assert _tree(repo) == source_before
+    if unknown:
+        assert _tree(target) == target_before
+        return
+    assert not (target / ".codex/skills").exists()
+    assert (captures(target)[0] / "example/SKILL.md").read_bytes() == PAYLOAD
