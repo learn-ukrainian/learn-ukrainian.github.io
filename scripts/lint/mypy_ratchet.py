@@ -968,6 +968,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     root = args.root.resolve()
     baseline = args.baseline if args.baseline.is_absolute() else root / args.baseline
     try:
+        # A renamed layout needs its verified rename map in every mode, so a
+        # missing or broken artifact fails before a baseline is written.
+        _baseline_spelling()
         targets = [DEFAULT_TARGET] if args.write_baseline else _python_targets(args.paths, root)
         if args.write_baseline:
             current, fatal = collect_errors(

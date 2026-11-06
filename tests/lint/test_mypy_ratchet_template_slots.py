@@ -504,6 +504,17 @@ def test_missing_or_broken_map_fails_explicitly(
     assert code == 1
     assert "mypy ratchet could not run: " in output
     assert expected in output
+    written = tmp_path / "written.json"
+    default = Path(ratchet.BASELINE_PATH)
+    for argv in (
+        ["--write-baseline", "--no-incremental"],
+        ["--root", str(elsewhere), "--baseline", str(written), "--write-baseline", "--no-incremental"],
+    ):
+        code, output = _run_main(ratchet, argv, capsys)
+        assert code == 1, output
+        assert expected in output
+    assert not written.exists()
+    assert not default.exists()
 
 
 def test_source_layout_needs_no_map_and_respells_nothing() -> None:
