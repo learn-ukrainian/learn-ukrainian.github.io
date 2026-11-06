@@ -54,13 +54,16 @@ TESTS_TIMEOUT_PREAMBLE = (
     "heavier scripts). Popen must bound wait()/communicate() instead.\n"
 )
 
-UNALLOWLISTED_PREAMBLE = (
-    "Timeout-less subprocess calls under scripts/ not in allowlist (issue #7176).\n"
+_UNALLOWLISTED_DETAIL = (
     "Pass an explicit timeout= (typically 30 for git fixtures/helpers, 60–120 for "
     "heavier scripts) to bound the subprocess call. Popen callers must bound "
     ".wait() / .communicate() instead.\n"
     "Each reported line starts with the paste-ready allowlist key "
     "path::qualname::callee::shape.\n"
+)
+UNALLOWLISTED_PREAMBLE = (
+    f"Timeout-less subprocess calls under {_PACKAGE_NAME}/ not in allowlist (issue #7176).\n"
+    + _UNALLOWLISTED_DETAIL
 )
 
 STALE_PREAMBLE = (
@@ -376,7 +379,7 @@ def check_paths(
 
 def build_parser() -> argparse.ArgumentParser:
     description = (
-        "Check Python files under tests/ and scripts/ for timeout-less subprocess calls.\n"
+        f"Check Python files under tests/ and {_PACKAGE_NAME}/ for timeout-less subprocess calls.\n"
         "Use as a pre-commit hook or local check before push; do not use for non-Python or third-party files."
     )
     epilog = (
@@ -389,7 +392,7 @@ def build_parser() -> argparse.ArgumentParser:
         "  No files written or modified.\n\n"
         "Exit codes:\n"
         "  0: Clean (no unallowlisted or timeout-less subprocess calls found)\n"
-        "  1: Violations found (timeout-less call in tests/ or unallowlisted call in scripts/)\n"
+        f"  1: Violations found (timeout-less call in tests/ or unallowlisted call in {_PACKAGE_NAME}/)\n"
         "  2: Usage or syntax error (invalid arguments, missing path, or Python syntax error)\n\n"
         "Related:\n"
         "  tests/test_subprocess_timeout_guard.py (CI backstop test)\n"
@@ -405,7 +408,7 @@ def build_parser() -> argparse.ArgumentParser:
         "paths",
         nargs="*",
         type=Path,
-        help="Optional specific Python test/script files or directories to check (default: scan all tests/ and scripts/)",
+        help=f"Optional specific Python test/script files or directories to check (default: scan all tests/ and {_PACKAGE_NAME}/)",
     )
     parser.add_argument(
         "--root",

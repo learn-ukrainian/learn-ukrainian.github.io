@@ -92,6 +92,11 @@ from urllib.parse import urlsplit
 
 from scripts.agent_runtime.codex_accounts import CodexAccountRefused, codex_account_home
 
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+
 MAX_LINE = 8 * 1024 * 1024
 REASONS = frozenset(
     {
@@ -1006,9 +1011,9 @@ def build_parser() -> argparse.ArgumentParser:
         "Measure content-free context bytes and provider token categories from a frozen sample.\n"
         "Use for local baselines; never use to set thresholds or infer policy or cost."
     )
-    epilog = """Examples:
-  .venv/bin/python scripts/ops/context_cost_report.py freeze --manifest batch_state/monitor-blocker-dedupe/sample.json
-  .venv/bin/python scripts/ops/context_cost_report.py report --manifest batch_state/monitor-blocker-dedupe/sample.json --text
+    epilog = f"""Examples:
+  .venv/bin/python {_MACHINERY}/ops/context_cost_report.py freeze --manifest batch_state/monitor-blocker-dedupe/sample.json
+  .venv/bin/python {_MACHINERY}/ops/context_cost_report.py report --manifest batch_state/monitor-blocker-dedupe/sample.json --text
 Outputs: freeze writes a private mode-0600 manifest; report prints content-free JSON or a short table.
 Exit codes: 0 success (including explicit unknowns); 1 IO/manifest error; 2 invalid arguments.
 Related: docs/runbooks/context-cost-baseline.md; #10421."""

@@ -21,6 +21,8 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
+from scripts.common.repo_root import machinery_path
+
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
 except ModuleNotFoundError as exc:
@@ -412,7 +414,7 @@ def _adapters_dir(ctx: MonitorContext) -> Path:
     """
     if ctx.root is not None:
         return ctx.root / "runtime_adapters_fixture_stub"
-    return ctx.roots.project_root / "scripts" / "agent_runtime" / "adapters"
+    return machinery_path("agent_runtime/adapters")
 
 
 def list_runtime_agents(ctx: MonitorContext, unreadable: dict[str, int] | None = None) -> list[dict[str, Any]]:

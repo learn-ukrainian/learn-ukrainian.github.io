@@ -37,7 +37,12 @@ class ServiceDefinition:
 
 SERVICE_DEFINITIONS: tuple[ServiceDefinition, ...] = (
     ServiceDefinition("sources", 8766, ".mcp/servers/sources/server.py", "learn-ukrainian"),
-    ServiceDefinition("api", 8765, "scripts.api.main:app", "learn-ukrainian"),
+    ServiceDefinition(
+        "api",
+        8765,
+        f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}.main:app",
+        "learn-ukrainian",
+    ),
     ServiceDefinition("astro", 4321, "astro", "learn-ukrainian"),
     ServiceDefinition("work", 8769, "-m work_projection", "sibling"),
 )
