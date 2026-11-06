@@ -201,6 +201,25 @@ def test_a_foreign_cached_part_below_a_missing_package_is_refused_before_anythin
     assert product.ran() == []
 
 
+def test_a_cached_module_is_used_without_rerunning_its_missing_ancestors(product):
+    """As an ordinary import: a cached module, or a cached parent of the module, is used as it is."""
+    product.write(
+        "pkg/__init__.py", product.recording("pkg", "import sys\nassert 'scripts.pkg.sub' not in sys.modules\n")
+    )
+    product.write("pkg/sub/__init__.py", product.recording("sub"))
+    product.write("pkg/sub/leaf.py", product.recording("leaf", "VALUE = 17\n"))
+    product.write("pkg/sub/other.py", product.recording("other", "VALUE = 18\n"))
+    product.names.extend(["scripts.pkg.sub.leaf", "scripts.pkg.sub.other"])
+    leaf = load_configured_module("scripts.pkg.sub.leaf")
+    sys.modules.pop("scripts.pkg")
+
+    assert load_configured_module("scripts.pkg.sub.leaf") is leaf
+    assert load_configured_module("scripts.pkg.sub.other").VALUE == 18
+
+    assert product.ran() == ["scripts", "pkg", "sub", "leaf", "other"]
+    assert "scripts.pkg" not in sys.modules
+
+
 def test_a_load_waiting_on_an_ordinary_import_does_not_deadlock(product, monkeypatch):
     """A product module, imported the ordinary way in one thread, calls the loader while another thread waits for it."""
     load_configured_module(product.leaf("VALUE = 1\n"))

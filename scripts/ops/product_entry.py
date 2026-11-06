@@ -31,9 +31,13 @@ Contract of :func:`load_configured_module`:
   code. A refusal there runs no product code and changes no cache entry: a
   cached module from another checkout is refused and left cached, never evicted
   or rebound.
-* Then the parts are imported one at a time, from the top. Each part is found
-  before it runs: the top-level package by the file finder in the root, every
-  other part by the import system in its parent's search path, which is checked
+* Then the parts are imported one at a time, as an ordinary import imports
+  them: a cached module is used as it is, and only the uncached parts at the
+  end of the name run, from the one below the deepest cached part (or from the
+  top-level package). Missing ancestors of a cached part are never run again.
+  Each part is found before it runs: the top-level package by the file finder
+  in the root, every other part by the import system in its parent's search
+  path, which is checked
   again after the parent's own code has run. The found spec is checked, then
   the part is imported and checked once more. So no module outside the root
   runs because of this call, whatever a package's code did to its search path.
@@ -103,9 +107,18 @@ def load_configured_module(name: str, *, product_root: Path | None = None) -> Mo
         cached = sys.modules.get(prefix)
         if cached is not None:
             _check_module(name, prefix, cached, scripts_dir, is_leaf=prefix == name)
-    _preflight(name, prefixes, scripts_dir)
-    module = _load_top_level(name, scripts_dir)
-    for prefix in prefixes[1:]:
+    # As an ordinary import: only the uncached parts at the end of the name run, starting below the
+    # deepest cached one; a cached module is used as it is, never rebuilt from its missing ancestors.
+    start = len(prefixes)
+    while start > 0 and prefixes[start - 1] not in sys.modules:
+        start -= 1
+    _preflight(name, prefixes, start, scripts_dir)
+    if start == len(prefixes):
+        return _load_part(name, name, scripts_dir)
+    if start == 0:
+        _load_top_level(name, scripts_dir)
+        start = 1
+    for prefix in prefixes[start:]:
         module = _load_part(name, prefix, scripts_dir)
     return module
 
@@ -124,19 +137,19 @@ def _scripts_dir(name: str, product_root: Path | None) -> Path:
     return scripts_dir
 
 
-def _preflight(name: str, prefixes: list[str], scripts_dir: Path) -> None:
-    """Check every uncached part that can be found without running product code, before any runs.
+def _preflight(name: str, prefixes: list[str], start: int, scripts_dir: Path) -> None:
+    """Check every part from ``start`` on that can be found without running product code, before any runs.
 
     Found as the import system would find it: the top-level package in the root, each other part in
-    its parent's cached search path or found spec. The walk ends at the first part that does not
-    exist; the import then raises ``ModuleNotFoundError`` for it, as an ordinary import does.
+    the search path of the cached part before ``start`` or of the part found before it. The walk ends
+    at the first part that does not exist; the import then raises ``ModuleNotFoundError`` for it, as
+    an ordinary import does.
     """
-    search: list[str] = [str(scripts_dir.parent)]
-    for prefix in prefixes:
-        cached = sys.modules.get(prefix)
-        if cached is not None:
-            search = list(getattr(cached, "__path__", None) or [])
-            continue
+    if start == 0:
+        search = [str(scripts_dir.parent)]
+    else:
+        search = list(getattr(sys.modules.get(prefixes[start - 1]), "__path__", None) or [])
+    for prefix in prefixes[start:]:
         spec = _find_spec(prefix, search)
         if spec is None:
             return
@@ -163,14 +176,20 @@ def _load_top_level(name: str, scripts_dir: Path) -> ModuleType:
 
 
 def _load_part(name: str, prefix: str, scripts_dir: Path) -> ModuleType:
-    """Import ``prefix`` from its parent's checked search path, checking it before and after it runs."""
-    parent_name = prefix.rpartition(".")[0]
-    parent = sys.modules.get(parent_name)
-    if parent is None:
-        raise ConfiguredModuleError(f"{parent_name} was removed from the module cache while {name} loaded", name=name)
-    # The parent's own code has run by now: its search path is checked as that code left it.
-    _check_module(name, parent_name, parent, scripts_dir, is_leaf=False)
+    """Import ``prefix`` from its parent's checked search path, checking it before and after it runs.
+
+    A cached ``prefix`` is returned by the import as it is, without its parent, as an ordinary import
+    returns it; it was checked before anything ran.
+    """
     if prefix not in sys.modules:
+        parent_name = prefix.rpartition(".")[0]
+        parent = sys.modules.get(parent_name)
+        if parent is None:
+            raise ConfiguredModuleError(
+                f"{parent_name} was removed from the module cache while {name} loaded", name=name
+            )
+        # The parent's own code has run by now: its search path is checked as that code left it.
+        _check_module(name, parent_name, parent, scripts_dir, is_leaf=False)
         spec = importlib.util.find_spec(prefix)
         if spec is None:
             raise ModuleNotFoundError(f"No module named {prefix!r}", name=prefix)
