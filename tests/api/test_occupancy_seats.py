@@ -75,6 +75,26 @@ def _open_driver_lease(db_path: Path, *, agent: str = "claude", task_id: str = "
     )
 
 
+def test_occupancy_mapped_host_without_product_routes_is_unavailable_not_idle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Only the occupancy router is mounted, so the Atlas provider is the registry-only adapter.
+
+    Its host-load cache belongs to the product routes and its entry lookup raises
+    ``LookupError`` by contract; the endpoint must report the mapped host unavailable
+    (never idle on a guess) instead of answering 500 (C-4730).
+    """
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    atlas = product_contribution.atlas_provider()
+    assert type(atlas).__name__ == "_RegistryOnlyAtlas"
+    resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
+    assert resp.status_code == 200
+    host = resp.json()["hosts"]["host-teacher"]
+    assert host["status"] == "unavailable"
+    assert host["idle_or_empty"] is False
+
+
 @pytest.mark.usefixtures("_product_host_load")
 def test_occupancy_session_stream_driver_keeps_low_load_host_busy(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
