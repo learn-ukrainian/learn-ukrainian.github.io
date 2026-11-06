@@ -161,11 +161,13 @@ def test_readonly_sources_generation_allowed(tmp_path, monkeypatch, target):
         sqlite3.connect(paths[target])
 
 
+@pytest.mark.parametrize("via", ["direct", "alias", "alias_of_alias"])
 @pytest.mark.parametrize("name", ["vesum.db", "vesum_shadow_v680.db"])
 @pytest.mark.parametrize("opener", [sqlite3.connect, sqlite3.dbapi2.connect, sqlite3.Connection])
 @pytest.mark.parametrize("form", FORMS)
-def test_lexicon_symlink_out_of_data_is_refused(tmp_path, monkeypatch, name, opener, form):
-    # The protected name alone decides: the symlink target lies outside every data root.
+def test_lexicon_symlink_out_of_data_is_refused(tmp_path, monkeypatch, via, name, opener, form):
+    # The protected name alone decides: the symlink target lies outside every data root,
+    # and an external alias reaches the protected name only as an intermediate hop.
     data = tmp_path / "checkout" / "data"
     data.mkdir(parents=True)
     store = tmp_path / "store" / "lexicon.db"
@@ -174,9 +176,15 @@ def test_lexicon_symlink_out_of_data_is_refused(tmp_path, monkeypatch, name, ope
         conn.execute("CREATE TABLE witness(value)")
     before = store.read_bytes()
     (data / name).symlink_to(store)
+    alias = tmp_path / "alias.db"
+    alias.symlink_to(data / name)
+    alias_of_alias = tmp_path / "links" / "alias.db"
+    alias_of_alias.parent.mkdir()
+    alias_of_alias.symlink_to(Path("..") / "alias.db")
     monkeypatch.setattr(guard, "DATA_ROOTS", frozenset({data.resolve()}))
+    target = {"direct": data / name, "alias": alias, "alias_of_alias": alias_of_alias}[via]
     with pytest.raises(pytest.fail.Exception, match="Writable SQLite open"):
-        _open(opener, data / name, form)
+        _open(opener, target, form)
     assert store.read_bytes() == before
 
 
