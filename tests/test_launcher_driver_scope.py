@@ -51,7 +51,8 @@ def test_forwarder_finishes_close_and_reaps_children_after_repeated_signal(
     attempts = tmp_path / "attempts"
     closed = tmp_path / "closed"
     client_pid = tmp_path / "client-pid"
-    core = _write(tmp_path / "launcher_core.sh", (REPO / "scripts/lib/launcher_core.sh").read_text())
+    # Keep the package layout: the core names its modules from its own location.
+    core = _write(tmp_path / "scripts/lib/launcher_core.sh", (REPO / "scripts/lib/launcher_core.sh").read_text())
     provider = _write(tmp_path / "provider.py", """import signal, sys
 from pathlib import Path
 def stop(sig, frame):
