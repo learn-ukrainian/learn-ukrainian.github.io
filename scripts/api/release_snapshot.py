@@ -33,7 +33,11 @@ from scripts.common.release_layout import (
     RELEASES_RELATIVE_PATH,
 )
 
-ARCHIVE_PATHS: tuple[str, ...] = ("scripts", "schemas")
+# The machinery package directory, named by this file's location (design-v1 amendment 1), is always
+# archived. The product's code and schema directories are archived when the commit has them; in this
+# checkout the machinery package is the product's code directory, so the names are deduplicated.
+MACHINERY_ARCHIVE_PATH = Path(os.path.abspath(__file__)).parents[1].name
+ARCHIVE_PATHS: tuple[str, ...] = tuple(dict.fromkeys((MACHINERY_ARCHIVE_PATH, "scripts", "schemas")))
 
 # A hung lsof must not stall release pruning or API startup. On timeout the
 # probe fails closed and pruning is skipped, same as when lsof is missing.
@@ -44,6 +48,8 @@ LSOF_TIMEOUT_S = 10.0
 # stderr to keep.
 GIT_ARCHIVE_DEADLINE_S = 300.0
 GIT_KILL_WAIT_S = 5.0
+# Listing which code paths a commit has is one small tree read.
+GIT_LS_TREE_TIMEOUT_S = 30.0
 STDERR_TAIL_BYTES = 4096
 
 
@@ -148,8 +154,24 @@ class _StrictArchiveInfo(tarfile.TarInfo):
         return member
 
 
-def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
-    """Extract the selected tracked code paths into a new staging directory."""
+def _present_archive_paths(repo_root: Path, sha: str) -> tuple[str, ...]:
+    """The :data:`ARCHIVE_PATHS` the commit has as directories; the machinery package is required."""
+    try:
+        listing = subprocess.run(
+            ["git", "-C", str(repo_root), "--no-optional-locks", "ls-tree", "-d", "--name-only", sha, "--",
+             *ARCHIVE_PATHS],
+            env=sanitized_git_env(), capture_output=True, text=True, check=True, timeout=GIT_LS_TREE_TIMEOUT_S,
+        ).stdout.splitlines()
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise ReleaseSnapshotError(f"could not list the release code paths at {sha}") from exc
+    present = tuple(name for name in ARCHIVE_PATHS if name in listing)
+    if MACHINERY_ARCHIVE_PATH not in present:
+        raise ReleaseSnapshotError(f"release commit {sha} has no {MACHINERY_ARCHIVE_PATH}/ directory")
+    return present
+
+
+def _extract_archive(repo_root: Path, sha: str, staging_dir: Path, paths: Sequence[str] = ARCHIVE_PATHS) -> None:
+    """Extract the tracked code ``paths`` (see :func:`_present_archive_paths`) into a new staging directory."""
     command = [
         "git",
         "-C",
@@ -158,7 +180,7 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
         "archive",
         "--format=tar",
         sha,
-        *ARCHIVE_PATHS,
+        *paths,
     ]
     # stderr goes to a file, not a pipe: git can never block on a full stderr
     # pipe while the reader waits on stdout.
@@ -270,6 +292,9 @@ def _archive_files(release_dir: Path) -> Iterable[Path]:
     for source_dir in ARCHIVE_PATHS:
         directory = release_dir / source_dir
         if not directory.is_dir():
+            # A product path the commit lacks was never archived; the manifest digest covers the rest.
+            if source_dir != MACHINERY_ARCHIVE_PATH and not directory.exists() and not directory.is_symlink():
+                continue
             raise ReleaseSnapshotError(f"release archive is missing {source_dir}/")
         for path in sorted(directory.rglob("*")):
             if path.is_file() and not path.is_symlink():
@@ -392,7 +417,7 @@ def build_release(
         shutil.rmtree(staging_dir)
     staging_dir.mkdir()
     try:
-        _extract_archive(repo_root, sha, staging_dir)
+        _extract_archive(repo_root, sha, staging_dir, _present_archive_paths(repo_root, sha))
         manifest = _manifest_for(staging_dir, sha)
         _write_manifest(staging_dir, manifest)
         verify_release(staging_dir, sha)

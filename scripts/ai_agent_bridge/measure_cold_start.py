@@ -33,7 +33,7 @@ try:
     from scripts.api.telemetry.transcript_tokens import usage_input_tokens
     from scripts.lib.context_profiles import resolve_profile
 except ModuleNotFoundError as exc:
-    if __package__ or exc.name != "scripts":
+    if __package__ or exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     sys.path.insert(0, os.fspath(PROJECT_ROOT))
     from scripts.api.telemetry.transcript_tokens import usage_input_tokens

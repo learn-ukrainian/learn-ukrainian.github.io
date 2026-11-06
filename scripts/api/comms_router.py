@@ -45,7 +45,7 @@ from pydantic import BaseModel
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 

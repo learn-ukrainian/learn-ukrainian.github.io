@@ -119,7 +119,8 @@ def _dispatcher_code() -> dict:
             return None
 
     head = (git_out("rev-parse", "HEAD") or "").strip() or None
-    status = git_out("status", "--porcelain", "--", "scripts", "schemas")
+    package = Path(os.path.abspath(__file__)).parents[1].name  # the machinery package directory
+    status = git_out("status", "--porcelain", "--", package, "schemas")
     return {"root": str(root), "head": head, "clean": status == ""}
 
 
